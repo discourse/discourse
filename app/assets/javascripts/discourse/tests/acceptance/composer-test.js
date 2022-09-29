@@ -1,4 +1,11 @@
-import { click, currentURL, fillIn, settled, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  fillIn,
+  settled,
+  triggerEvent,
+  visit,
+} from "@ember/test-helpers";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
 import { cloneJSON } from "discourse-common/lib/object";
 import TopicFixtures from "discourse/tests/fixtures/topic";
@@ -93,6 +100,28 @@ acceptance("Composer", function (needs) {
       document.documentElement.style.getPropertyValue("--composer-height"),
       "",
       "removes --composer-height property when composer is closed"
+    );
+  });
+
+  test("Composer height adjustment", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await triggerEvent(document.querySelector(".grippie"), "mousedown");
+    await triggerEvent(document.querySelector(".grippie"), "mousemove");
+    await triggerEvent(document.querySelector(".grippie"), "mouseup");
+    await visit("/"); // reload page
+    await click("#create-topic");
+
+    const expectedHeight = localStorage.getItem(
+      "__test_discourse_composerHeight"
+    );
+    const actualHeight =
+      document.documentElement.style.getPropertyValue("--composer-height");
+
+    assert.strictEqual(
+      expectedHeight,
+      actualHeight,
+      "Updated height is persistent"
     );
   });
 

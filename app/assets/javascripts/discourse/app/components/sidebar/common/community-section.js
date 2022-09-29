@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
+import { tracked } from "@glimmer/tracking";
 
 import {
   customSectionLinks,
@@ -13,29 +14,18 @@ export default class SidebarCommunitySection extends Component {
   @service appEvents;
   @service siteSettings;
 
+  @tracked sectionLinks;
+  @tracked moreSectionLinks;
+  @tracked moreSecondarySectionLinks;
+
+  callbackId;
   headerActionsIcon;
   headerActions;
-  sectionLinks;
-  moreSectionLinks;
-  moreSecondarySectionLinks;
-  callbackId;
 
   constructor() {
     super(...arguments);
 
-    this.moreSectionLinks = this.#initializeSectionLinks([
-      ...this.defaultMoreSectionLinks,
-      ...customSectionLinks,
-    ]);
-
-    this.moreSecondarySectionLinks = this.#initializeSectionLinks([
-      ...this.defaultMoreSecondarySectionLinks,
-      ...secondaryCustomSectionLinks,
-    ]);
-
-    this.sectionLinks = this.#initializeSectionLinks(
-      this.defaultMainSectionLinks
-    );
+    this.refreshSectionLinks();
 
     this.callbackId = this.topicTrackingState.onStateChange(() => {
       this.sectionLinks.forEach((sectionLink) => {
@@ -62,6 +52,22 @@ export default class SidebarCommunitySection extends Component {
   // Override in child
   get defaultMoreSecondarySectionLinks() {
     return [];
+  }
+
+  refreshSectionLinks() {
+    this.moreSectionLinks = this.#initializeSectionLinks([
+      ...this.defaultMoreSectionLinks,
+      ...customSectionLinks,
+    ]);
+
+    this.moreSecondarySectionLinks = this.#initializeSectionLinks([
+      ...this.defaultMoreSecondarySectionLinks,
+      ...secondaryCustomSectionLinks,
+    ]);
+
+    this.sectionLinks = this.#initializeSectionLinks(
+      this.defaultMainSectionLinks
+    );
   }
 
   #initializeSectionLinks(sectionLinkClasses) {

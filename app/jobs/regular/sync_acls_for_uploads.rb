@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  # Sometimes we need to update a _lot_ of ACLs on S3 (such as when secure media
+  # Sometimes we need to update a _lot_ of ACLs on S3 (such as when secure uploads
   # is enabled), and since it takes ~1s per upload to update the ACL, this is
   # best spread out over many jobs instead of having to do the whole thing serially.
   class SyncAclsForUploads < ::Jobs::Base

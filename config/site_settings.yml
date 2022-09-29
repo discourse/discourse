@@ -123,6 +123,11 @@ basic:
     default: false
     client: true
     validator: "AllowUserLocaleEnabledValidator"
+  set_locale_from_cookie:
+    default: false
+    hidden: true
+    client: true
+    validator: "AllowUserLocaleEnabledValidator"
   support_mixed_text_direction:
     client: true
     default: false
@@ -1360,9 +1365,21 @@ files:
   secure_media:
     default: false
     client: true
+    hidden: true
   secure_media_allow_embed_images_in_emails:
     default: true
+    hidden: true
   secure_media_max_email_embed_image_size_kb:
+    default: 1024
+    min: 1
+    max: 10240
+    hidden: true
+  secure_uploads:
+    default: false
+    client: true
+  secure_uploads_allow_embed_images_in_emails:
+    default: true
+  secure_uploads_max_email_embed_image_size_kb:
     default: 1024
     min: 1
     max: 10240
@@ -2267,6 +2284,7 @@ uncategorized:
   get_a_room_threshold: 3
   dominating_topic_minimum_percent: 20
   disable_avatar_education_message: false
+  pm_warn_user_last_seen_months_ago: 24
 
   global_notice:
     default: ""

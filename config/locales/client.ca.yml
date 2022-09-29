@@ -1862,6 +1862,13 @@ ca:
     go_back: "vés enrere"
     not_logged_in_user: "pàgina d'usuari amb resum de l'activitat actual i preferències "
     current_user: "vés a la meva pàgina d'usuari"
+    user_menu:
+      tabs:
+        replies: "Respostes"
+        mentions: "Mencions"
+        likes: "'M'agrada'"
+        bookmarks: "Preferits"
+        profile: "Perfil"
     topics:
       new_messages_marker: "darrera visita"
       bulk:
@@ -2893,6 +2900,8 @@ ca:
       more: "Més..."
       all_categories: "Totes les categories"
       sections:
+        about:
+          header_link_text: "Quant a"
         messages:
           header_link_text: "Missatges"
           links:

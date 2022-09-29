@@ -147,12 +147,15 @@ vi:
       has_already_been_used: "đã được sử dụng"
       inclusion: không được bao gồm trong danh sách
       invalid: là không hợp lệ
+      invalid_timezone: "'%{tz}' không phải là múi giờ hợp lệ"
+      contains_censored_words: "chứa các từ được kiểm duyệt sau: %{censored_words}"
       less_than: phải nhỏ hơn %{count}
       less_than_or_equal_to: phải nhỏ hơn hoặc bằng %{count}
       not_a_number: không phải là số
       not_an_integer: phải là một số nguyên
       odd: phải là số lẻ
       record_invalid: ! "Xác nhận thất bại: %{errors}"
+      max_emojis: "không thể có nhiều hơn %{max_emojis_count} biểu tượng cảm xúc"
       emojis_disabled: "không thể có biểu tượng cảm xúc"
       ip_address_already_screened: "đã được bao gồm trong một quy tắc hiện có"
       restrict_dependent_destroy:
@@ -178,19 +181,40 @@ vi:
       default_categories_already_selected: "Bạn không thể chọn một danh mục được sử dụng trong danh sách khác."
       default_tags_already_selected: "Bạn không thể chọn một thẻ được sử dụng trong danh sách khác."
       s3_upload_bucket_is_required: "Bạn không thể tải lên S3 mà chưa thiết lập 's3_upload_bucket'."
+      enable_s3_uploads_is_required: "Bạn không thể cho phép sử dụng kho lưu trữ S3 trừ khi bạn đã bật tính năng tải lên S3."
       page_publishing_requirements: "Không thể bật xuất bản trang nếu phương tiện bảo mật được bật."
+      s3_backup_requires_s3_settings: "Bạn không thể sử dụng S3 làm vị trí sao lưu trừ khi bạn đã cung cấp '%{setting_name}'."
+      second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Bạn không thể thực thi 2FA nếu DiscourseConnect được bật."
+      local_login_cannot_be_disabled_if_second_factor_enforced: "Bạn không thể tắt đăng nhập cục bộ nếu 2FA được thực thi. Tắt 2FA được thực thi trước khi tắt đăng nhập cục bộ."
+      cannot_enable_s3_uploads_when_s3_enabled_globally: "Bạn không thể bật tải lên S3 vì tải lên S3 đã được bật trên toàn cầu và việc bật cấp trang web này có thể gây ra các vấn đề nghiêm trọng với tải lên"
+      cors_origins_should_not_have_trailing_slash: "Bạn không nên thêm dấu gạch chéo (/) vào nguồn gốc CORS."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Tác nhân người dùng phải dài ít nhất 3 ký tự để tránh xếp hạng không chính xác giới hạn người dùng."
+      slow_down_crawler_user_agent_cannot_be_popular_browsers: "Bạn không thể thêm bất kỳ giá trị nào sau đây vào cài đặt: %{values}."
+      strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Bạn không thể tắt siêu dữ liệu hình ảnh dải nếu bật 'hình ảnh tối ưu hóa phương tiện tổng hợp' được bật. Tắt 'đã bật hình ảnh tối ưu hóa phương tiện tổng hợp' trước khi tắt siêu dữ liệu hình ảnh dải."
+      twitter_summary_large_image_no_svg: "Hình ảnh tóm tắt trên Twitter được sử dụng cho twitter: siêu dữ liệu hình ảnh không được là hình ảnh .svg."
     conflicting_google_user_id: 'ID Tài khoản Google cho tài khoản này đã thay đổi; cần có sự can thiệp của nhân viên vì lý do an ninh. Vui lòng liên hệ với nhân viên và chỉ họ đến <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì không thể tìm thấy máy chủ %{hostname}. Thay vì xem trước, chỉ một liên kết sẽ xuất hiện trong bài đăng của bạn :cry:"
       error_response: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì máy chủ web trả về mã lỗi là %{status_code}. Thay vì xem trước, chỉ một liên kết sẽ xuất hiện trong bài đăng của bạn. :cry:"
       missing_data:
         other: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì không thể tìm thấy các thẻ oEmbed / OpenGraph sau: %{missing_attributes}"
+  word_connector:
+    comma: ", "
   invite:
+    invite_exists: "Bạn đã mời <b>%{email}</b>."
+    invalid_email: "%{email} không phải là một địa chỉ email hợp lệ."
+    rate_limit:
+      other: "Bạn đã gửi %{count} lời mời trong 24 giờ qua, vui lòng đợi %{time_left} lời mời trước khi thử lại."
+    confirm_email: "<p>Bạn sắp hoàn thành! Chúng tôi đã gửi một thư kích hoạt đến địa chỉ email của bạn. Vui lòng làm theo hướng dẫn trong thư để kích hoạt tài khoản của bạn.</p><p>Nếu nó không đến, hãy kiểm tra thư mục thư rác của bạn.</p>"
+    cant_invite_to_group: "Bạn không được phép mời người dùng vào (các) nhóm được chỉ định. Đảm bảo rằng bạn là chủ sở hữu của (các) nhóm mà bạn đang cố gắng mời tham gia."
     disabled_errors:
+      discourse_connect_enabled: "Lời mời bị tắt vì DiscourseConnect được bật."
       invalid_access: "Bạn không được phép xem tài nguyên đã yêu cầu."
+    requires_groups: "Lời mời không được lưu vì không thể truy cập được chủ đề được chỉ định. Thêm một trong các nhóm sau: %{groups}."
     domain_not_allowed: "Email của bạn không thể được sử dụng để đổi lời mời này."
   bulk_invite:
     file_should_be_csv: "Tệp được tải lên phải có định dạng csv."
+    max_rows: "%{max_bulk_invites} lời mời đầu tiên đã được gửi. Hãy thử chia tệp thành các phần nhỏ hơn."
     error: "Đã xảy ra lỗi khi tải lên tệp đó. Vui lòng thử lại sau."
   invite_link:
     email_taken: "Email này đã được sử dụng. Nếu bạn đã có tài khoản, vui lòng đăng nhập hoặc đặt lại mật khẩu."
@@ -305,6 +329,12 @@ vi:
   rss_description:
     latest: "Chủ đề mới nhất"
     top: "Top chủ đề"
+    top_all: "Các chủ đề hàng đầu mọi thời điểm"
+    top_yearly: "Các chủ đề hàng đầu hàng năm"
+    top_quarterly: "Các chủ đề hàng đầu hàng quý"
+    top_monthly: "Các chủ đề hàng đầu hàng tháng"
+    top_weekly: "Các chủ đề hàng đầu hàng tuần"
+    top_daily: "Chủ đề hàng ngày"
     posts: "Bài viết mới nhất"
     private_posts: "Tin nhắn cá nhân mới nhất"
     group_posts: "Bài viết mới từ %{group_name}"
@@ -312,14 +342,21 @@ vi:
     user_posts: "Bài viết mới của @%{username}"
     user_topics: "Chủ đề mới của @%{username}"
     tag: "Những chủ đề được gắn thẻ"
+    badge: "%{display_name} huy hiệu trên %{site_title}"
   too_late_to_edit: "Bài đăng đã được tạo từ rất lâu. Nó không thể được chỉnh sửa hoặc xóa nữa."
   edit_conflict: "Bài đăng đó đã được chỉnh sửa bởi một người dùng khác và các thay đổi của bạn không thể lưu được nữa."
   revert_version_same: "Phiên bản hiện tại giống với phiên bản mà bạn muốn hoàn nguyên."
+  cannot_edit_on_slow_mode: "Chủ đề này đang ở chế độ chậm. Để khuyến khích thảo luận có suy nghĩ, cân nhắc, hiện không được phép chỉnh sửa các bài đăng cũ trong chủ đề này ở chế độ chậm."
   excerpt_image: "hình ảnh"
   bookmarks:
     errors:
+      already_bookmarked_post: "Bạn không thể đánh dấu cùng một bài viết hai lần."
       already_bookmarked: "Bạn không thể đánh dấu cùng một %{type} hai lần."
+      too_many: "Xin lỗi, bạn không thể thêm nhiều hơn %{limit} dấu trang, hãy truy cập <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> để xóa một số."
+      cannot_set_past_reminder: "Bạn không thể đặt lời nhắc đánh dấu trong quá khứ."
+      cannot_set_reminder_in_distant_future: "Bạn không thể đặt lời nhắc đánh dấu hơn 10 năm trong tương lai."
       time_must_be_provided: "Thời gian phải được cung cấp cho tất cả các lời nhắc"
+      for_topic_must_use_first_post: "Bạn chỉ có thể sử dụng bài viết đầu tiên để đánh dấu chủ đề."
       bookmarkable_id_type_required: "Tên và loại của bản ghi để đánh dấu là bắt buộc."
       invalid_bookmarkable: "Một %{type} không thể được đánh dấu."
     reminders:
@@ -331,7 +368,11 @@ vi:
       next_month: "Tháng t"
       custom: "Ngày giờ tùy chỉnh"
   groups:
+    success:
+      bulk_add:
+        other: "%{count} người dùng đã được thêm vào nhóm."
     errors:
+      grant_trust_level_not_valid: "'%{trust_level}' không phải là mức tin cậy hợp lệ."
       can_not_modify_automatic: "Bạn không thể sửa một nhóm tự động"
       member_already_exist:
         other: "Những người dùng sau đã là thành viên của nhóm này: %{username}"
@@ -339,8 +380,12 @@ vi:
       invalid_incoming_email: "'%{email}' không phải là email hợp lệ."
       email_already_used_in_group: "'%{email}' đã được sử dụng trong nhóm '%{group_name}'."
       email_already_used_in_category: "'%{email}' đã được sử dụng trong danh mục '%{category_name}'."
+      cant_allow_membership_requests: "Bạn không thể cho phép yêu cầu thành viên cho một nhóm mà không có bất kỳ chủ sở hữu nào."
+      already_requested_membership: "Bạn đã yêu cầu thành viên cho nhóm này."
       adding_too_many_users:
         other: "Có thể thêm tối đa %{count} người dùng cùng một lúc"
+      usernames_or_emails_required: "Tên người dùng hoặc email phải có mặt"
+      no_invites_with_discourse_connect: "Bạn chỉ có thể mời những người dùng đã đăng ký khi DiscourseConnect được bật"
     default_names:
       everyone: "Mọi người"
       admins: "quản trị"
@@ -987,6 +1032,8 @@ vi:
     summary_score_threshold: "Số điểm tối thiểu yêu cầu cho một bài viết bao gồm 'Tóm tắt chủ đề này'"
     summary_percent_filter: "Khi người dùng nhấn 'Tóm tắt chủ đề này', hiển thị phí trên % của bài viết"
     summary_max_results: "Các bài đăng tối đa được trả về bởi 'Tóm tắt Chủ đề này'"
+    enable_personal_messages: "KHÔNG ĐƯỢC PHÉP, hãy sử dụng cài đặt 'nhóm hỗ trợ tin nhắn cá nhân' để thay thế. Cho phép người dùng cấp độ tin cậy 1 (có thể định cấu hình thông qua độ tin cậy tối thiểu để gửi tin nhắn) tạo tin nhắn và trả lời tin nhắn. Lưu ý rằng nhân viên luôn có thể gửi tin nhắn bất kể điều gì."
+    personal_message_enabled_groups: "Cho phép người dùng trong các nhóm này tạo tin nhắn và trả lời tin nhắn. Nhóm cấp độ tin cậy bao gồm tất cả các cấp độ tin cậy trên con số đó, ví dụ: việc chọn trust_level_1 cũng cho phép người dùng trust_level_2, 3, 4 gửi PM. Lưu ý rằng nhân viên luôn có thể gửi tin nhắn bất kể điều gì."
     enable_system_message_replies: "Cho phép người dùng trả lời tin nhắn hệ thống, ngay cả khi tin nhắn cá nhân bị tắt"
     long_polling_base_url: "URL chính sử dụng cho vòng gọi dài (khi một CDN phục vụ nội dung động, hãy chắc chắn để thiết lập này là vòng gọi gốc), vd: http://origin.site.com"
     polling_interval: "When not long polling, how often should logged on clients poll in milliseconds"
@@ -1098,6 +1145,7 @@ vi:
     min_trust_to_create_topic: "Bậc tin tưởng tối thiểu để tạo một chủ đề mới."
     min_trust_to_edit_wiki_post: "Bậc tin cậy tối thiểu cần thiết để có thể sửa bài viết được đánh dấu là wiki."
     min_trust_to_allow_self_wiki: "Bậc tin cậy tối thiểu cần thiết để người dùng có thể đánh dấu bài viết của họ là wiki."
+    min_trust_to_send_messages: "KHÔNG ĐƯỢC PHÉP, hãy sử dụng cài đặt 'nhóm hỗ trợ tin nhắn cá nhân' để thay thế. Mức độ tin cậy tối thiểu cần thiết để tạo tin nhắn cá nhân mới."
     newuser_max_links: "Bao nhiêu liên kết tài khoản mới có thể thêm vào bài viết."
     newuser_max_attachments: "Bao nhiêu đính kèm tài khoản mới có thể thêm vào bài viết"
     newuser_max_mentions_per_post: "Số tối đa thông báo @name mà thành viên mới có thể sử dụng trong bài viết."
@@ -1262,6 +1310,7 @@ vi:
       reply_by_email_address_is_empty: "Bạn phải thiết lập 'reply by email address' trước khi kích hoạt trả lời bằng email."
       email_polling_disabled: "Bạn phải kích hoạt bằng tay hoặc POP3 polling trước khi kích hoạt trả lời bằng email."
       user_locale_not_enabled: "Bạn phải bật 'allow user locale' trước khi kích hoạt thiết lập này."
+      personal_message_enabled_groups_invalid: "Bạn phải chỉ định ít nhất một nhóm cho cài đặt này. Nếu bạn không muốn bất kỳ ai ngoại trừ nhân viên gửi PM, hãy chọn nhóm nhân viên."
       min_username_length_range: "Bạn không thiết lập giá trị nhỏ nhất lớn hơn giá trị lớn nhất"
       max_username_length_range: "Bạn không thể thiết lập số tối đa nhỏ hơn số tối thiểu"
   search:

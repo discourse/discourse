@@ -24,7 +24,6 @@
 
   .keyboard-visible &.open {
     height: 100%; // Android: Reduces composer jumpiness when the keyboard toggles
-    height: calc(100% - (10px + env(keyboard-inset-height)));
   }
 
   .keyboard-visible body.ios-safari-composer-hacks &.open {

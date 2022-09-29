@@ -1615,6 +1615,8 @@ zh_CN:
       enabled: "此站点处于只读模式。您可以继续浏览，但是回复、点赞和其他操作暂时被禁用。"
       login_disabled: "当站点处于只读模式时，登录被禁用。"
       logout_disabled: "当站点处于只读模式时，退出被禁用。"
+    staff_writes_only_mode:
+      enabled: "本站点处于工作人员专用模式。请继续浏览，但回复、赞和其他操作仅限于管理人员。"
     too_few_topics_and_posts_notice_MF: >-
       让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">开始讨论</a>吧！现在有 {currentTopics, plural, one {<strong>#</strong> 个话题} other {<strong>#</strong> 个话题}}和 {currentPosts, plural, one {<strong>#</strong> 个帖子} other {<strong>#</strong> 个帖子}}。访客需要阅读和回复更多 - 我们建议至少 {requiredTopics, plural, one {<strong>#</strong> 个话题} other {<strong>#</strong> 个话题}}和 {requiredPosts, plural, one {<strong>#</strong> 个帖子} other {<strong>#</strong> 个帖子}}。只有管理人员可以看到此消息。
     too_few_topics_notice_MF: >-
@@ -1645,7 +1647,7 @@ zh_CN:
       hide_forever: "不，谢谢"
       hidden_for_session: "好的，我们会在明天问您。您也可以随时使用“登录”来创建帐户。"
       intro: "您好！看起来您很喜欢讨论，但您还没有注册帐户。"
-      value_prop: "厌倦了每次从头浏览相同的帖子？当您注册后，您总是可以从上次看到的位置继续阅读。成为用户，您还可以收到新回复通知、保存书签以及使用“赞”来感谢他人。我们可以共同努力使这个社区变得更好。 :heart:"
+      value_prop: "厌倦了每次从头浏览相同的帖子？当你注册后，总是可以从上次看到的位置继续阅读。有了账户，你还可以收到新回复通知、保存书签以及使用“赞”来感谢他人。我们可以一起努力，使这个社区变得更好。 :heart:"
     summary:
       enabled_description: "您正在查看此话题的摘要：社区确定的最有趣的帖子。"
       description:
@@ -2077,7 +2079,7 @@ zh_CN:
             other: "确定吗？您共有 %{count} 个未读书签提醒。"
           messages:
             other: "确定吗？你有 %{count} 条未读的个人信息。"
-        dismiss: "标记为已读"
+        dismiss: "忽略"
         cancel: "取消"
       group_message_summary:
         other: "您的 %{group_name} 收件箱中有 %{count} 条消息"
@@ -2255,16 +2257,45 @@ zh_CN:
     view_all: "查看所有%{tab}"
     user_menu:
       generic_no_items: "此列表中没有内容。"
-      sr_menu_tabs: "菜单选项卡"
+      sr_menu_tabs: "用户菜单标签"
       view_all_notifications: "查看所有通知"
       view_all_bookmarks: "查看所有书签"
       view_all_messages: "查看所有个人消息"
+      tabs:
+        all_notifications: "所有通知"
+        replies: "回复"
+        replies_with_unread:
+          other: "回复 - %{count} 个未读回复"
+        mentions: "提及"
+        mentions_with_unread:
+          other: "提及 - %{count} 个未读提及"
+        likes: "赞"
+        likes_with_unread:
+          other: "赞 - %{count} 个未读赞"
+        watching: "关注的主题"
+        watching_with_unread:
+          other: "关注的主题 - %{count} 未读的关注主题"
+        messages: "私信"
+        messages_with_unread:
+          other: "私信 - %{count} 条未读私信"
+        bookmarks: "书签"
+        bookmarks_with_unread:
+          other: "书签 - %{count} 个未读书签"
+        review_queue: "审核队列"
+        review_queue_with_unread:
+          other: "审核队列 - %{count} 个项目需要审核"
+        other_notifications: "其他通知"
+        other_notifications_with_unread:
+          other: "其他通知 - %{count} 个未读通知"
+        profile: "个人资料"
       reviewable:
         view_all: "查看所有审查项目"
         queue: "队列"
         deleted_user: "(删除用户)"
+        deleted_post: "(已删除的帖子)"
         post_number_with_topic_title: "帖子 #%{post_number} - %{title}"
         new_post_in_topic: "%{title} 中的新帖子"
+        user_requires_approval: "%{username} 需要批准"
         default_item: "可审查项目 #%{reviewable_id}"
     topics:
       new_messages_marker: "上次访问"
@@ -3271,6 +3302,7 @@ zh_CN:
         today: "今天"
         other_periods: "查看热门："
     browser_update: '很抱歉， <a href="https://www.discourse.org/faq/#browser">你的浏览器不受支持</a>。请 <a href="https://browsehappy.com">切换到支持的浏览器</a> 查看丰富的内容、登录和回复。'
+    safari_13_warning: 该站点将很快停止对 iOS 和 Safari 13 及以下版本的支持。简化的只读版本仍将可用。 (<a href="https://meta.discourse.org/t/224747">查看更多信息</a>)
     permission_types:
       full: "创建/回复/查看"
       create_post: "回复/查看"
@@ -3600,6 +3632,8 @@ zh_CN:
       all_categories: "所有类别"
       all_tags: "所有标签"
       sections:
+        about:
+          header_link_text: "关于"
         messages:
           header_link_text: "消息"
           header_action_title: "创建个人消息"
@@ -4752,6 +4786,7 @@ zh_CN:
         suspended: "已封禁？"
         staged: "暂存？"
         show_admin_profile: "管理员"
+        manage_user: "管理用户"
         show_public_profile: "显示公开个人资料"
         impersonate: "模拟"
         action_logs: "操作日志"

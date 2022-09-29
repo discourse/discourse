@@ -1242,13 +1242,13 @@ RSpec.describe PostRevisor do
         expect(post.reload.upload_references.pluck(:upload_id)).to contain_exactly(image2.id, image3.id, image4.id)
       end
 
-      context "with secure media uploads" do
+      context "with secure uploads uploads" do
         let!(:image5) { Fabricate(:secure_upload) }
         before do
           Jobs.run_immediately!
           setup_s3
           SiteSetting.authorized_extensions = "png|jpg|gif|mp4"
-          SiteSetting.secure_media = true
+          SiteSetting.secure_uploads = true
           stub_upload(image5)
         end
 

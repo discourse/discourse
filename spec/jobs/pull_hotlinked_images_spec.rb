@@ -222,14 +222,14 @@ RSpec.describe Jobs::PullHotlinkedImages do
       expect(post.raw).to eq(raw)
     end
 
-    context "when secure media enabled for an upload that has already been downloaded and exists" do
+    context "when secure uploads enabled for an upload that has already been downloaded and exists" do
       it "doesnt redownload the secure upload" do
         setup_s3
-        SiteSetting.secure_media = true
+        SiteSetting.secure_uploads = true
 
         upload = Fabricate(:secure_upload_s3, secure: true)
         stub_s3(upload)
-        url = Upload.secure_media_url_from_upload_url(upload.url)
+        url = Upload.secure_uploads_url_from_upload_url(upload.url)
         url = Discourse.base_url + url
         post = Fabricate(:post, raw: "<img src='#{url}'>")
         upload.update(access_control_post: post)
@@ -240,12 +240,12 @@ RSpec.describe Jobs::PullHotlinkedImages do
       context "when the upload original_sha1 is missing" do
         it "redownloads the upload" do
           setup_s3
-          SiteSetting.secure_media = true
+          SiteSetting.secure_uploads = true
 
           upload = Fabricate(:upload_s3, secure: true)
           stub_s3(upload)
-          Upload.stubs(:signed_url_from_secure_media_url).returns(upload.url)
-          url = Upload.secure_media_url_from_upload_url(upload.url)
+          Upload.stubs(:signed_url_from_secure_uploads_url).returns(upload.url)
+          url = Upload.secure_uploads_url_from_upload_url(upload.url)
           url = Discourse.base_url + url
           post = Fabricate(:post, raw: "<img src='#{url}'>")
           upload.update(access_control_post: post)
@@ -261,12 +261,12 @@ RSpec.describe Jobs::PullHotlinkedImages do
       context "when the upload access_control_post is different to the current post" do
         it "redownloads the upload" do
           setup_s3
-          SiteSetting.secure_media = true
+          SiteSetting.secure_uploads = true
 
           upload = Fabricate(:secure_upload_s3, secure: true)
           stub_s3(upload)
-          Upload.stubs(:signed_url_from_secure_media_url).returns(upload.url)
-          url = Upload.secure_media_url_from_upload_url(upload.url)
+          Upload.stubs(:signed_url_from_secure_uploads_url).returns(upload.url)
+          url = Upload.secure_uploads_url_from_upload_url(upload.url)
           url = Discourse.base_url + url
           post = Fabricate(:post, raw: "<img src='#{url}'>")
           upload.update(access_control_post: Fabricate(:post))
@@ -466,14 +466,14 @@ RSpec.describe Jobs::PullHotlinkedImages do
         expect(subject.should_download_image?(Fabricate(:upload).url)).to eq(false)
       end
 
-      context "when secure media enabled" do
-        it 'should return false for secure-media-upload url' do
+      context "when secure uploads enabled" do
+        it 'should return false for secure-upload url' do
           setup_s3
-          SiteSetting.secure_media = true
+          SiteSetting.secure_uploads = true
 
           upload = Fabricate(:upload_s3, secure: true)
           stub_s3(upload)
-          url = Upload.secure_media_url_from_upload_url(upload.url)
+          url = Upload.secure_uploads_url_from_upload_url(upload.url)
           expect(subject.should_download_image?(url)).to eq(false)
         end
       end

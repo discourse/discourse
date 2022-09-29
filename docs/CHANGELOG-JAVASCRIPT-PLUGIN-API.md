@@ -7,6 +7,14 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2022-09-27
+
+### Added
+
+- Adds `registerHighlightJSPlugin`, which allows users to register custom
+  HighlightJS plugins. See https://highlightjs.readthedocs.io/en/latest/plugin-api.html
+  for documentation.
+
 ## [1.3.0] - 2022-05-29
 
 ### Added

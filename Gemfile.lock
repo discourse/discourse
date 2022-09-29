@@ -5,14 +5,6 @@ GIT
     mail (2.8.0.edge)
       mini_mime (>= 0.1.1)
 
-GIT
-  remote: https://github.com/discourse/rubocop-discourse.git
-  revision: a5aea6e5f150b1eb7765a805bec0ff618cb718b3
-  specs:
-    rubocop-discourse (2.5.0)
-      rubocop (>= 1.1.0)
-      rubocop-rspec (>= 2.0.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -97,8 +89,18 @@ GEM
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     byebug (11.1.3)
+    capybara (3.37.1)
+      addressable
+      matrix
+      mini_mime (>= 0.1.3)
+      nokogiri (~> 1.8)
+      rack (>= 1.6.0)
+      rack-test (>= 0.6.3)
+      regexp_parser (>= 1.5, < 3.0)
+      xpath (~> 3.2)
     cbor (0.5.9.6)
     certified (1.0.0)
+    childprocess (4.1.0)
     chunky_png (1.4.0)
     coderay (1.1.3)
     colored2 (3.1.2)
@@ -116,7 +118,6 @@ GEM
     debug_inspector (1.1.0)
     diff-lcs (1.5.0)
     diffy (3.4.2)
-    digest (3.1.0)
     discourse-ember-rails (0.18.6)
       active_model_serializers
       ember-data-source (>= 1.0.0.beta.5)
@@ -147,29 +148,10 @@ GEM
     faker (2.23.0)
       i18n (>= 1.8.11, < 2)
     fakeweb (1.3.0)
-    faraday (1.10.0)
-      faraday-em_http (~> 1.0)
-      faraday-em_synchrony (~> 1.0)
-      faraday-excon (~> 1.1)
-      faraday-httpclient (~> 1.0)
-      faraday-multipart (~> 1.0)
-      faraday-net_http (~> 1.0)
-      faraday-net_http_persistent (~> 1.0)
-      faraday-patron (~> 1.0)
-      faraday-rack (~> 1.0)
-      faraday-retry (~> 1.0)
+    faraday (2.5.2)
+      faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
-    faraday-em_http (1.0.0)
-    faraday-em_synchrony (1.0.0)
-    faraday-excon (1.1.0)
-    faraday-httpclient (1.0.1)
-    faraday-multipart (1.0.4)
-      multipart-post (~> 2)
-    faraday-net_http (1.0.1)
-    faraday-net_http_persistent (1.2.0)
-    faraday-patron (1.0.0)
-    faraday-rack (1.0.0)
-    faraday-retry (1.0.3)
+    faraday-net_http (3.0.0)
     fast_blank (1.0.1)
     fast_xs (0.8.0)
     fastimage (2.2.6)
@@ -235,6 +217,7 @@ GEM
       nokogiri (>= 1.5.9)
     lru_redux (1.1.0)
     lz4-ruby (0.3.3)
+    matrix (0.4.2)
     maxminddb (0.1.22)
     memory_profiler (1.0.0)
     message_bus (4.2.0)
@@ -254,24 +237,17 @@ GEM
     msgpack (1.5.6)
     multi_json (1.15.0)
     multi_xml (0.6.0)
-    multipart-post (2.2.3)
     mustache (1.1.1)
     net-http (0.2.2)
       uri
-    net-imap (0.2.3)
-      digest
+    net-imap (0.3.0)
       net-protocol
-      strscan
-    net-pop (0.1.1)
-      digest
+    net-pop (0.1.2)
       net-protocol
-      timeout
     net-protocol (0.1.3)
       timeout
-    net-smtp (0.3.1)
-      digest
+    net-smtp (0.3.2)
       net-protocol
-      timeout
     nio4r (2.5.8)
     nokogiri (1.13.8)
       mini_portile2 (~> 2.8.0)
@@ -290,12 +266,12 @@ GEM
       version_gem (~> 1.1)
     oauth-tty (1.0.3)
       version_gem (~> 1.1)
-    oauth2 (1.4.7)
-      faraday (>= 0.8, < 2.0)
+    oauth2 (1.4.11)
+      faraday (>= 0.17.3, < 3.0)
       jwt (>= 1.0, < 3.0)
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
-      rack (>= 1.2, < 3)
+      rack (>= 1.2, < 4)
     oj (3.13.14)
     omniauth (1.9.2)
       hashie (>= 3.4.6)
@@ -313,8 +289,8 @@ GEM
     omniauth-oauth (1.2.0)
       oauth
       omniauth (>= 1.0, < 3)
-    omniauth-oauth2 (1.7.2)
-      oauth2 (~> 1.4)
+    omniauth-oauth2 (1.7.3)
+      oauth2 (>= 1.4, < 3)
       omniauth (>= 1.9, < 3)
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
@@ -346,7 +322,7 @@ GEM
     rack (2.2.4)
     rack-mini-profiler (3.0.0)
       rack (>= 1.2.0)
-    rack-protection (3.0.0)
+    rack-protection (3.0.1)
       rack
     rack-test (2.0.2)
       rack (>= 1.3)
@@ -383,7 +359,7 @@ GEM
     redis (4.7.1)
     redis-namespace (1.9.0)
       redis (>= 4)
-    regexp_parser (2.5.0)
+    regexp_parser (2.6.0)
     request_store (1.5.1)
       rack (>= 1.4)
     rexml (3.2.5)
@@ -435,6 +411,9 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.21.0)
       parser (>= 3.1.1.0)
+    rubocop-discourse (3.0)
+      rubocop (>= 1.1.0)
+      rubocop-rspec (>= 2.0.0)
     rubocop-rspec (2.13.2)
       rubocop (~> 1.33)
     ruby-prof (1.4.3)
@@ -459,6 +438,11 @@ GEM
     seed-fu (2.3.9)
       activerecord (>= 3.1)
       activesupport (>= 3.1)
+    selenium-webdriver (4.5.0)
+      childprocess (>= 0.5, < 5.0)
+      rexml (~> 3.2, >= 3.2.5)
+      rubyzip (>= 1.2.2, < 3.0)
+      websocket (~> 1.0)
     shoulda-matchers (5.2.0)
       activesupport (>= 5.2.0)
     sidekiq (6.5.7)
@@ -483,7 +467,6 @@ GEM
       sprockets (>= 3.0.0)
     sshkey (2.0.0)
     stackprof (0.2.21)
-    strscan (3.0.4)
     test-prof (1.0.10)
     thor (1.2.1)
     tilt (2.0.11)
@@ -503,6 +486,10 @@ GEM
     uri (0.11.0)
     uri_template (0.7.0)
     version_gem (1.1.0)
+    webdrivers (5.1.0)
+      nokogiri (~> 1.6)
+      rubyzip (>= 1.3.0)
+      selenium-webdriver (~> 4.0)
     webmock (3.18.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
@@ -510,7 +497,10 @@ GEM
     webpush (1.1.0)
       hkdf (~> 0.2)
       jwt (~> 2.0)
+    websocket (1.2.9)
     xorcist (1.1.3)
+    xpath (3.2.0)
+      nokogiri (~> 1.8)
     yaml-lint (0.0.10)
     zeitwerk (2.6.0)
 
@@ -542,6 +532,7 @@ DEPENDENCIES
   bootsnap
   bullet
   byebug
+  capybara
   cbor
   certified
   colored2
@@ -626,7 +617,7 @@ DEPENDENCIES
   rspec-rails
   rss
   rswag-specs
-  rubocop-discourse!
+  rubocop-discourse
   ruby-prof
   ruby-readability
   rubyzip
@@ -634,6 +625,7 @@ DEPENDENCIES
   sassc (= 2.0.1)
   sassc-rails
   seed-fu
+  selenium-webdriver
   shoulda-matchers
   sidekiq
   simplecov
@@ -646,6 +638,7 @@ DEPENDENCIES
   uglifier
   unf
   unicorn
+  webdrivers
   webmock
   webpush
   xorcist

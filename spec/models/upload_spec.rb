@@ -399,9 +399,9 @@ RSpec.describe Upload do
 
       let(:upload) { Fabricate(:upload, original_filename: "small.pdf", extension: "pdf", secure: true) }
 
-      it 'marks a local attachment as secure if secure media enabled' do
+      it 'marks a local attachment as secure if secure uploads enabled' do
         upload.update!(secure: false, access_control_post: Fabricate(:private_message_post))
-        enable_secure_media
+        enable_secure_uploads
 
         expect { upload.update_secure_status }
           .to change { upload.secure }
@@ -409,7 +409,7 @@ RSpec.describe Upload do
         expect(upload.secure).to eq(true)
       end
 
-      it 'marks a local attachment as not secure if secure media enabled' do
+      it 'marks a local attachment as not secure if secure uploads enabled' do
         expect { upload.update_secure_status }
           .to change { upload.secure }
 
@@ -428,9 +428,9 @@ RSpec.describe Upload do
       expect(upload.secure).to eq(false)
     end
 
-    context "with secure media enabled" do
+    context "with secure uploads enabled" do
       before do
-        enable_secure_media
+        enable_secure_uploads
       end
 
       it "does not mark an image upload as not secure when there is no access control post id, to avoid unintentional exposure" do
@@ -543,9 +543,9 @@ RSpec.describe Upload do
     end
   end
 
-  def enable_secure_media
+  def enable_secure_uploads
     setup_s3
-    SiteSetting.secure_media = true
+    SiteSetting.secure_uploads = true
     stub_upload(upload)
   end
 
@@ -568,54 +568,54 @@ RSpec.describe Upload do
     end
   end
 
-  describe ".secure_media_url_from_upload_url" do
+  describe ".secure_uploads_url_from_upload_url" do
     before do
       # must be done so signed_url_for_path exists
-      enable_secure_media
+      enable_secure_uploads
     end
 
-    it "gets the secure media url from an S3 upload url" do
+    it "gets the secure uploads url from an S3 upload url" do
       upload = Fabricate(:upload_s3, secure: true)
       url = upload.url
-      secure_url = Upload.secure_media_url_from_upload_url(url)
+      secure_url = Upload.secure_uploads_url_from_upload_url(url)
       expect(secure_url).not_to include(SiteSetting.Upload.absolute_base_url)
     end
   end
 
-  describe ".secure_media_url?" do
-    it "works for a secure media url with or without schema + host" do
-      url = "//localhost:3000/secure-media-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
-      expect(Upload.secure_media_url?(url)).to eq(true)
-      url = "/secure-media-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
-      expect(Upload.secure_media_url?(url)).to eq(true)
-      url = "http://localhost:3000/secure-media-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
-      expect(Upload.secure_media_url?(url)).to eq(true)
+  describe ".secure_uploads_url?" do
+    it "works for a secure uploads url with or without schema + host" do
+      url = "//localhost:3000/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
+      expect(Upload.secure_uploads_url?(url)).to eq(true)
+      url = "/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
+      expect(Upload.secure_uploads_url?(url)).to eq(true)
+      url = "http://localhost:3000/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
+      expect(Upload.secure_uploads_url?(url)).to eq(true)
     end
 
     it "does not get false positives on a topic url" do
-      url = "/t/secure-media-uploads-are-cool/42839"
-      expect(Upload.secure_media_url?(url)).to eq(false)
+      url = "/t/secure-uploads-are-cool/42839"
+      expect(Upload.secure_uploads_url?(url)).to eq(false)
     end
 
-    it "returns true only for secure media URL for actual media (images/video/audio)" do
-      url = "/secure-media-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.mp4"
-      expect(Upload.secure_media_url?(url)).to eq(true)
-      url = "/secure-media-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
-      expect(Upload.secure_media_url?(url)).to eq(true)
-      url = "/secure-media-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.mp3"
-      expect(Upload.secure_media_url?(url)).to eq(true)
-      url = "/secure-media-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.pdf"
-      expect(Upload.secure_media_url?(url)).to eq(false)
+    it "returns true only for secure uploads URL for actual media (images/video/audio)" do
+      url = "/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.mp4"
+      expect(Upload.secure_uploads_url?(url)).to eq(true)
+      url = "/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
+      expect(Upload.secure_uploads_url?(url)).to eq(true)
+      url = "/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.mp3"
+      expect(Upload.secure_uploads_url?(url)).to eq(true)
+      url = "/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.pdf"
+      expect(Upload.secure_uploads_url?(url)).to eq(false)
     end
 
     it "does not work for regular upload urls" do
       url = "/uploads/default/test_0/original/1X/e1864389d8252958586c76d747b069e9f68827e3.png"
-      expect(Upload.secure_media_url?(url)).to eq(false)
+      expect(Upload.secure_uploads_url?(url)).to eq(false)
     end
 
     it "does not raise for invalid URLs" do
       url = "http://URL:%20https://google.com"
-      expect(Upload.secure_media_url?(url)).to eq(false)
+      expect(Upload.secure_uploads_url?(url)).to eq(false)
     end
   end
 

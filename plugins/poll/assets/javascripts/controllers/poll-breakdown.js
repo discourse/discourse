@@ -8,9 +8,10 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { htmlSafe } from "@ember/template";
 import loadScript from "discourse/lib/load-script";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import bootbox from "bootbox";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend(ModalFunctionality, {
+  dialog: service(),
   model: null,
   charts: null,
   groupedBy: null,
@@ -64,7 +65,7 @@ export default Controller.extend(ModalFunctionality, {
         if (error) {
           popupAjaxError(error);
         } else {
-          bootbox.alert(I18n.t("poll.error_while_fetching_voters"));
+          this.dialog.alert(I18n.t("poll.error_while_fetching_voters"));
         }
       })
       .then((result) => {

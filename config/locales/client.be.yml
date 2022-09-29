@@ -908,6 +908,13 @@ be:
     go_back: "вярнуцца назад"
     not_logged_in_user: "старонка карыстальніка з вынікам бягучай дзейнасці і наладамі"
     current_user: "перайсці да Вашай старонкі карыстальніка"
+    user_menu:
+      tabs:
+        replies: "Адказы"
+        mentions: "згадкі"
+        likes: "сімпатыі"
+        bookmarks: "закладкі"
+        profile: "Профіль"
     topics:
       new_messages_marker: "апошні візыт"
       bulk:
@@ -1342,6 +1349,8 @@ be:
       more: "Яшчэ ..."
       all_categories: "Усе катэгорыі"
       sections:
+        about:
+          header_link_text: "Аб тэме"
         messages:
           header_link_text: "Паведамленні"
           links:

@@ -239,6 +239,8 @@ module("Integration | Component | user-menu", function (hooks) {
             },
           },
         ];
+      } else if (queryParams.filter_by_types === "replied,quoted") {
+        data = [];
       } else {
         throw new Error(
           `unexpected notification type ${queryParams.filter_by_types}`
@@ -285,6 +287,22 @@ module("Integration | Component | user-menu", function (hooks) {
       "active tab is now the likes tab"
     );
     assert.strictEqual(queryAll("#quick-access-likes ul li").length, 3);
+
+    await click("#user-menu-button-replies");
+    assert.ok(exists("#quick-access-replies.quick-access-panel"));
+    assert.strictEqual(
+      queryParams.filter_by_types,
+      "replied,quoted",
+      "request params has filter_by_types set to `replied` and `quoted`"
+    );
+    assert.strictEqual(queryParams.silent, "true");
+    activeTabs = queryAll(".top-tabs .btn.active");
+    assert.strictEqual(activeTabs.length, 1);
+    assert.strictEqual(
+      activeTabs[0].id,
+      "user-menu-button-replies",
+      "active tab is now the replies tab"
+    );
 
     await click("#user-menu-button-review-queue");
     assert.ok(exists("#quick-access-review-queue.quick-access-panel"));

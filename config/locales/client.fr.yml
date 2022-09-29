@@ -1717,7 +1717,6 @@ fr:
       hide_forever: "non merci"
       hidden_for_session: "Très bien, nous vous le demanderons demain. Vous pouvez aussi utiliser le bouton « Se connecter » pour vous créer un compte."
       intro: "Bonjour ! Vous semblez apprécier la discussion, mais n'avez pas encore créé de compte."
-      value_prop: "Vous en avez assez de faire défiler les mêmes messages ? En créant un compte, vous pourrez toujours revenir là où vous en étiez. Avec un compte, vous pouvez aussi recevoir des notifications de nouvelles réponses, enregistrer des signets et utiliser des cœurs pour remercier les autres. Nous pouvons travailler ensemble pour rendre cette communauté formidable. :heart:"
     summary:
       enabled_description: "Vous visualisez un résumé de ce sujet : les messages les plus intéressants choisis par la communauté."
       description:
@@ -2166,6 +2165,9 @@ fr:
           default:
             one: "Vous avez %{count} notification importante. Voulez-vous continuer?"
             other: "Vous avez %{count} notifications importantes. Voulez-vous continuer?"
+          messages:
+            one: "Êtes-vous sûr·e ? Vous avez %{count} message personnel non lu."
+            other: "Êtes-vous sûr·e ? Vous avez %{count} messages personnels non lus."
         dismiss: "Vu"
         cancel: "Annuler"
       group_message_summary:
@@ -2346,12 +2348,30 @@ fr:
     view_all: "voir les %{tab}"
     user_menu:
       generic_no_items: "Cette liste ne contient aucun élément."
-      sr_menu_tabs: "Onglets du menu"
+      sr_menu_tabs: "Onglets du menu utilisateur"
       view_all_notifications: "Afficher toutes les notifications"
       view_all_bookmarks: "voir tous les signets"
       view_all_messages: "voir tous les messages personnels"
+      tabs:
+        all_notifications: "Toutes les notifications"
+        replies: "Réponses"
+        mentions: "Mentions"
+        likes: "« J'aime » attribués"
+        watching: "Sujets suivis"
+        messages: "Messages directs"
+        bookmarks: "Signets"
+        review_queue: "Examiner la file d'attente"
+        other_notifications: "Autres notifications"
+        profile: "Profil"
       reviewable:
+        view_all: "Afficher tous les éléments à examiner"
         queue: "File d'attente"
+        deleted_user: "(utilisateur supprimé)"
+        deleted_post: "(message supprimé)"
+        post_number_with_topic_title: "publication #%{post_number} - %{title}"
+        new_post_in_topic: "nouvelle contribution dans %{title}"
+        user_requires_approval: "%{username} requiert une approbation"
+        default_item: "élément à examiner #%{reviewable_id}"
     topics:
       new_messages_marker: "dernière visite"
       bulk:
@@ -2855,6 +2875,7 @@ fr:
         one: "Ce message a reçu %{count} réponse. Cliquez pour développer l'affichage"
         other: "Ce message a reçu %{count} réponses. Cliquez pour développer l'affichage"
       expand_collapse: "développer/réduire"
+      sr_below_embedded_posts_description: "réponses à la publication #%{post_number}"
       sr_embedded_reply_description: "réponse de @%{username} au message #%{post_number}"
       locked: "un responsable a verrouillé ce message pour empêcher sa modification"
       gap:
@@ -3411,6 +3432,8 @@ fr:
         this_week: "Semaine"
         today: "Aujourd'hui"
         other_periods: "voir le top :"
+    browser_update: 'Malheureusement, <a href="https://www.discourse.org/faq/#browser">votre navigateur n''est pas pris en charge</a>. Merci de <a href="https://browsehappy.com">mettre à jour votre navigateur</a> pour afficher le contenu enrichi, vous connecter et répondre.'
+    safari_13_warning: Ce site va bientôt supprimer la prise en charge des versions 13 et inférieures d'iOS et de Safari. Une version simplifiée en lecture seule restera disponible. (<a href="https://meta.discourse.org/t/224747">plus d'informations</a>)
     permission_types:
       full: "Créer/Répondre/Voir"
       create_post: "Répondre/Voir"
@@ -3501,6 +3524,7 @@ fr:
         edit: "%{shortcut} Modifier le message"
         delete: "%{shortcut} Supprimer le message"
         mark_muted: "%{shortcut} Mettre le sujet en sourdine"
+        mark_regular: "%{shortcut} Sujet normal (par défaut)"
         mark_tracking: "%{shortcut} Suivre le sujet"
         mark_watching: "%{shortcut} Surveiller le sujet"
         print: "%{shortcut} Imprimer le sujet"
@@ -3749,6 +3773,8 @@ fr:
       all_categories: "Toutes les catégories"
       all_tags: "Toutes les étiquettes"
       sections:
+        about:
+          header_link_text: "À propos"
         messages:
           header_link_text: "Messages"
           header_action_title: "créer un message direct"
@@ -4892,6 +4918,7 @@ fr:
         suspended: "Suspendu ?"
         staged: "Distant ?"
         show_admin_profile: "Administration"
+        manage_user: "Gérer l'utilisateur"
         show_public_profile: "Afficher le profil public"
         impersonate: "Incarner"
         action_logs: "Journaux d'actions"

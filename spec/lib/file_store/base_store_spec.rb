@@ -173,9 +173,9 @@ RSpec.describe FileStore::BaseStore do
       expect(file.class).to eq(File)
     end
 
-    it "should return the file when secure media are enabled" do
+    it "should return the file when secure uploads are enabled" do
       SiteSetting.login_required = true
-      SiteSetting.secure_media = true
+      SiteSetting.secure_uploads = true
 
       stub_request(:head, "https://s3-upload-bucket.s3.#{SiteSetting.s3_region}.amazonaws.com/")
       signed_url = Discourse.store.signed_url_for_path(upload_s3.url)

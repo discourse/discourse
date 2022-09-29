@@ -53,7 +53,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       clear: both;
     }
     a.card-huge-avatar {
-      outline: none;
+      display: block;
     }
     .bio {
       @include line-clamp(2);
@@ -70,6 +70,11 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       .user-profile-link {
         display: flex;
         align-items: center;
+
+        &:focus {
+          border: 1px solid;
+          @include default-focus;
+        }
       }
 
       .d-icon {

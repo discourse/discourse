@@ -19,7 +19,7 @@ import {
   validateUploadedFile,
 } from "discourse/lib/uploads";
 import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
-import bootbox from "bootbox";
+import { inject as service } from "@ember/service";
 import { run } from "@ember/runloop";
 import escapeRegExp from "discourse-common/utils/escape-regexp";
 
@@ -36,6 +36,7 @@ import escapeRegExp from "discourse-common/utils/escape-regexp";
 // functionality and event binding.
 //
 export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
+  dialog: service(),
   uploadRootPath: "/uploads",
   uploadTargetBound: false,
   useUploadPlaceholders: true,
@@ -186,7 +187,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         // _not_ been handled by an upload handler.
         const fileCount = Object.keys(unhandledFiles).length;
         if (maxFiles > 0 && fileCount > maxFiles) {
-          bootbox.alert(
+          this.dialog.alert(
             I18n.t("post.errors.too_many_dragged_and_dropped_files", {
               count: maxFiles,
             })

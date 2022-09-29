@@ -640,9 +640,9 @@ ru:
           title: "На это сообщение поступила жалоба"
           flagged_by: "Кто пожаловался"
         reviewable_queued_topic:
-          title: "Тема в очереди"
+          title: "Тема на премодерации"
         reviewable_queued_post:
-          title: "Сообщение в очереди"
+          title: "Сообщение на премодерации"
         reviewable_user:
           title: "Пользователь"
         reviewable_post:
@@ -1173,7 +1173,7 @@ ru:
       dismiss_messages_tooltip: "Отметить все уведомления о непрочитанных личных сообщениях как прочитанные"
       no_messages_title: "У вас нет личных сообщений"
       no_messages_body: >
-        Необходимо непубличное общение с кем-то из участников форума? Напишите личное сообщение, кликнув на аватар участника и нажав на кнопку %{icon}.<br><br>. Если вам необходима помощь, вы можете написать нам на адрес, указанный на <a href='%{aboutUrl}'>этой</a> странице.
+        Необходимо непубличное общение с кем-то из участников форума? Напишите личное сообщение, кликнув на аватар участника и нажав на кнопку %{icon}.<br><br>Если вам необходима помощь, вы можете написать нам на адрес, указанный на <a href='%{aboutUrl}'>этой</a> странице.
       no_bookmarks_title: "Вы ещё ничего не добавили в закладки"
       no_bookmarks_body: >
         Начните добавлять сообщения в закладки с помощью кнопки %{icon} , и они будут перечислены здесь для быстрого доступа. Вы также можете настроить напоминание о закладке!
@@ -1828,6 +1828,8 @@ ru:
       enabled: "Сайт работает в режиме \"только для чтения\". Сейчас вы можете продолжать просматривать сайт, но другие действия будут недоступны."
       login_disabled: "Вход отключён, пока сайт находится в режиме «только для чтения»"
       logout_disabled: "Выход отключён, пока сайт находится в режиме «только для чтения»"
+    staff_writes_only_mode:
+      enabled: "Сайт находится в режиме 'только для персонала'. Пожалуйста, продолжайте просмотр, но отвечать, выражать симпатии и выполнять другие действия, влияющие на контент, могут только сотрудники."
     too_few_topics_and_posts_notice_MF: >-
       Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">приступим к обсуждению!</a> Есть {currentTopics, plural, one {<strong>#</strong> тема} few {<strong>#</strong> темы} other {<strong>#</strong> тем}} и {currentPosts, plural, one {<strong>#</strong> сообщение} few {<strong>#</strong> сообщения} other {<strong>#</strong> сообщений}}. Пользователи должны больше читать и отвечать – мы рекомендуем по крайней мере {requiredTopics, plural, one {<strong>#</strong> тему} few {<strong>#</strong> темы} other {<strong>#</strong> тем}} и {requiredPosts, plural, one {<strong>#</strong> сообщение} few {<strong>#</strong> сообщения} other {<strong>#</strong> сообщений}}. Только сотрудники могут видеть это сообщение.
     too_few_topics_notice_MF: >-
@@ -2385,30 +2387,30 @@ ru:
         confirm_body: "Уведомления были успешно включены."
         custom: "Уведомления от пользователя %{username} на сайте %{site_title}"
       titles:
-        mentioned: "Упомянутый"
+        mentioned: "Упомянут"
         replied: "Новый ответ"
-        quoted: "цитируемый"
-        edited: "отредактированный"
+        quoted: "Процитировано"
+        edited: "Отредактировано"
         liked: "Новая симпатия"
         private_message: "Новое личное сообщение"
         invited_to_private_message: "Приглашён в личное сообщение"
         invitee_accepted: "Приглашение принято"
         posted: "Новое сообщение"
         moved_post: "Сообщение перемещено"
-        linked: "связанный"
+        linked: "Связано"
         bookmark_reminder: "Напоминание о закладке"
         bookmark_reminder_with_name: "Напоминание о закладке - %{name}"
-        granted_badge: "награда получена"
-        invited_to_topic: "приглашён в тему"
-        group_mentioned: "упомянутая группа"
-        group_message_summary: "новые групповые сообщения"
+        granted_badge: "Получена награда"
+        invited_to_topic: "Приглашён в тему"
+        group_mentioned: "Упомянута группа"
+        group_message_summary: "Новые групповые сообщения"
         watching_first_post: "Новая тема"
         topic_reminder: "Напоминание о теме"
-        liked_consolidated: "новые симпатии"
+        liked_consolidated: "Новые симпатии"
         post_approved: "Сообщение утверждено"
-        membership_request_consolidated: "новые запросы на вступление"
-        reaction: "новая реакция"
-        votes_released: "Голосование было опубликовано"
+        membership_request_consolidated: "Новые запросы на членство"
+        reaction: "Новая реакция"
+        votes_released: "Голосование опубликовано"
     upload_selector:
       uploading: "Загрузка"
       processing: "Обработка загружаемого контента"
@@ -2549,16 +2551,69 @@ ru:
     view_all: "Просмотреть все %{tab}"
     user_menu:
       generic_no_items: "Нет элементов в списке."
-      sr_menu_tabs: "Вкладки меню"
+      sr_menu_tabs: "Вкладки меню пользователя"
       view_all_notifications: "Просмотреть все уведомления"
       view_all_bookmarks: "Просмотреть все закладки"
       view_all_messages: "Просмотреть все личные сообщения"
+      tabs:
+        all_notifications: "Все уведомления"
+        replies: "Ответы"
+        replies_with_unread:
+          one: "Ответы - %{count} непрочитанный ответ"
+          few: "Ответы - %{count} непрочитанных ответа"
+          many: "Ответы - %{count} непрочитанных ответов"
+          other: "Ответы - %{count} непрочитанных ответов"
+        mentions: "Упоминания"
+        mentions_with_unread:
+          one: "Упоминания - %{count} непрочитанное упоминание"
+          few: "Упоминания - %{count} непрочитанных упоминания"
+          many: "Упоминания - %{count} непрочитанных упоминаний"
+          other: "Упоминания - %{count} непрочитанных упоминаний"
+        likes: "Симпатии"
+        likes_with_unread:
+          one: "Симпатии - %{count} непрочитанное сообщение"
+          few: "Симпатии - %{count} непрочитанных сообщения"
+          many: "Симпатии - %{count} непрочитанных сообщений"
+          other: "Симпатии - %{count} непрочитанных сообщений"
+        watching: "Наблюдаемые темы"
+        watching_with_unread:
+          one: "Наблюдаемые темы - %{count} непрочитанная тема"
+          few: "Наблюдаемые темы - %{count} непрочитанных темы"
+          many: "Наблюдаемые темы - %{count} непрочитанных тем"
+          other: "Наблюдаемые темы - %{count} непрочитанных тем"
+        messages: "Личные сообщения"
+        messages_with_unread:
+          one: "Личные сообщения - %{count} непрочитанное сообщение"
+          few: "Личные сообщения - %{count} непрочитанных сообщения"
+          many: "Личные сообщения - %{count} непрочитанных сообщений"
+          other: "Личные сообщения - %{count} непрочитанных сообщений"
+        bookmarks: "Закладки"
+        bookmarks_with_unread:
+          one: "Закладки - %{count} непрочитанная закладка"
+          few: "Закладки - %{count} непрочитанных закладки"
+          many: "Закладки - %{count} непрочитанных закладок"
+          other: "Закладки - %{count} непрочитанных закладок"
+        review_queue: "Премодерация"
+        review_queue_with_unread:
+          one: "Премодерация – %{count} элемент требует проверки"
+          few: "Премодерация – %{count} элемента требуют проверки"
+          many: "Премодерация – %{count} элементов требуют проверки"
+          other: "Премодерация – %{count} элементов требуют проверки"
+        other_notifications: "Другие уведомления"
+        other_notifications_with_unread:
+          one: "Другие уведомления - %{count} непрочитанное уведомление"
+          few: "Другие уведомления - %{count} непрочитанных уведомления"
+          many: "Другие уведомления - %{count} непрочитанных уведомлений"
+          other: "Другие уведомления - %{count} непрочитанных уведомлений"
+        profile: "Профиль"
       reviewable:
         view_all: "Просмотреть все сообщения, находящиеся на премодерации"
         queue: "Очередь"
         deleted_user: "(удалённый пользователь)"
+        deleted_post: "(удалённое сообщение)"
         post_number_with_topic_title: "Cообщение #%{post_number} - %{title}"
         new_post_in_topic: "Новое сообщение в теме %{title}"
+        user_requires_approval: "Пользователь %{username} требует одобрения"
         default_item: "Премодерируемый элемент #%{reviewable_id}"
     topics:
       new_messages_marker: "последний визит"
@@ -3745,6 +3800,7 @@ ru:
         today: "За сегодня"
         other_periods: "Просмотреть самые обсуждаемые:"
     browser_update: 'К сожалению, <a href="https://www.discourse.org/faq/#browser">ваш браузер безнадёжно устарел</a> . Пожалуйста, <a href="https://browsehappy.com">обновите его</a> для полноценной работы с сайтом.'
+    safari_13_warning: Этот сайт скоро прекратит поддержку iOS и Safari версии 13 и ниже. Упрощённая версия только для чтения останется доступной. (<a href="https://meta.discourse.org/t/224747">больше информации</a>)
     permission_types:
       full: "Создавать / Отвечать / Просматривать"
       create_post: "Отвечать / Просматривать"
@@ -4119,6 +4175,8 @@ ru:
       all_categories: "Все разделы"
       all_tags: "Все теги"
       sections:
+        about:
+          header_link_text: "О форуме"
         messages:
           header_link_text: "Личные сообщения"
           header_action_title: "Создать личное сообщение"
@@ -5287,6 +5345,7 @@ ru:
         suspended: "Заморожен?"
         staged: "Имитация?"
         show_admin_profile: "Администратор"
+        manage_user: "Управление пользователем"
         show_public_profile: "Показать публичный профиль"
         impersonate: "Представиться как пользователь"
         action_logs: "Журнал действий"

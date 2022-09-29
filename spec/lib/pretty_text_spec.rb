@@ -1125,19 +1125,19 @@ RSpec.describe PrettyText do
       end
     end
 
-    describe "#strip_secure_media" do
+    describe "#strip_secure_uploads" do
       before do
         setup_s3
         SiteSetting.s3_cdn_url = "https://s3.cdn.com"
-        SiteSetting.secure_media = true
+        SiteSetting.secure_uploads = true
         SiteSetting.login_required = true
       end
 
       it "replaces secure video content" do
         html = <<~HTML
           <video width="100%" height="100%" controls="">
-            <source src="#{base_url}/secure-media-uploads/original/1X/some-video.mp4">
-              <a href="#{base_url}/secure-media-uploads/original/1X/some-video.mp4">Video label</a>
+            <source src="#{base_url}/secure-uploads/original/1X/some-video.mp4">
+              <a href="#{base_url}/secure-uploads/original/1X/some-video.mp4">Video label</a>
             </source>
           </video>
         HTML
@@ -1145,58 +1145,58 @@ RSpec.describe PrettyText do
         md = PrettyText.format_for_email(html, post)
 
         expect(md).not_to include('<video')
-        expect(md.to_s).to match(I18n.t("emails.secure_media_placeholder"))
+        expect(md.to_s).to match(I18n.t("emails.secure_uploads_placeholder"))
         expect(md.to_s).not_to match(SiteSetting.Upload.s3_cdn_url)
       end
 
       it "replaces secure audio content" do
         html = <<~HTML
           <audio controls>
-            <source src="#{base_url}/secure-media-uploads/original/1X/some-audio.mp3">
-              <a href="#{base_url}/secure-media-uploads/original/1X/some-audio.mp3">Audio label</a>
+            <source src="#{base_url}/secure-uploads/original/1X/some-audio.mp3">
+              <a href="#{base_url}/secure-uploads/original/1X/some-audio.mp3">Audio label</a>
             </source>
           </audio>
         HTML
 
         md = PrettyText.format_for_email(html, post)
 
-        expect(md).not_to include('<video')
-        expect(md.to_s).to match(I18n.t("emails.secure_media_placeholder"))
+        expect(md).not_to include('<audio')
+        expect(md.to_s).to match(I18n.t("emails.secure_uploads_placeholder"))
         expect(md.to_s).not_to match(SiteSetting.Upload.s3_cdn_url)
       end
 
-      it "replaces secure media within a link with a placeholder, keeping the url in an attribute" do
-        url = "#{Discourse.base_url}\/secure-media-uploads/original/1X/testimage.png"
+      it "replaces secure uploads within a link with a placeholder, keeping the url in an attribute" do
+        url = "#{Discourse.base_url}\/secure-uploads/original/1X/testimage.png"
         html = <<~HTML
-        <a href=\"#{url}\"><img src=\"/secure-media-uploads/original/1X/testimage.png\"></a>
+        <a href=\"#{url}\"><img src=\"/secure-uploads/original/1X/testimage.png\"></a>
         HTML
         md = PrettyText.format_for_email(html, post)
         expect(md).not_to include('<img')
         expect(md).to include("Redacted")
-        expect(md).to include("data-stripped-secure-media=\"#{url}\"")
+        expect(md).to include("data-stripped-secure-upload=\"#{url}\"")
       end
 
       it "does not create nested redactions from double processing because of the view media link" do
-        url = "#{Discourse.base_url}\/secure-media-uploads/original/1X/testimage.png"
+        url = "#{Discourse.base_url}\/secure-uploads/original/1X/testimage.png"
         html = <<~HTML
-        <a href=\"#{url}\"><img src=\"/secure-media-uploads/original/1X/testimage.png\"></a>
+        <a href=\"#{url}\"><img src=\"/secure-uploads/original/1X/testimage.png\"></a>
         HTML
         md = PrettyText.format_for_email(html, post)
         md = PrettyText.format_for_email(md, post)
 
-        expect(md.scan(/stripped-secure-view-media/).length).to eq(1)
+        expect(md.scan(/stripped-secure-view-upload/).length).to eq(1)
         expect(md.scan(/Redacted/).length).to eq(1)
       end
 
       it "replaces secure images with a placeholder, keeping the url in an attribute" do
-        url = "/secure-media-uploads/original/1X/testimage.png"
+        url = "/secure-uploads/original/1X/testimage.png"
         html = <<~HTML
         <img src=\"#{url}\" width=\"20\" height=\"20\">
         HTML
         md = PrettyText.format_for_email(html, post)
         expect(md).not_to include('<img')
         expect(md).to include("Redacted")
-        expect(md).to include("data-stripped-secure-media=\"#{url}\"")
+        expect(md).to include("data-stripped-secure-upload=\"#{url}\"")
         expect(md).to include("data-width=\"20\"")
         expect(md).to include("data-height=\"20\"")
       end

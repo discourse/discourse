@@ -97,7 +97,7 @@ const ORIGINAL_SETTINGS = {
   enable_personal_messages: true,
   personal_message_enabled_groups: "11", // TL1 group
   unicode_usernames: false,
-  secure_media: false,
+  secure_uploads: false,
   external_emoji_url: "",
   remove_muted_tags_from_latest: "always",
   enable_group_directory: true,

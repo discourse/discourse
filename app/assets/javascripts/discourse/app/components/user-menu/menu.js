@@ -45,11 +45,14 @@ const CORE_TOP_TABS = [
     }
 
     get count() {
-      return this.getUnreadCountForType("replied");
+      return (
+        this.getUnreadCountForType("replied") +
+        this.getUnreadCountForType("quoted")
+      );
     }
 
     get notificationTypes() {
-      return ["replied"];
+      return ["replied", "quoted"];
     }
 
     get linkWhenActive() {

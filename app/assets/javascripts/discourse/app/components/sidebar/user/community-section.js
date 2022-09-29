@@ -1,5 +1,6 @@
 import I18n from "I18n";
 
+import { bind } from "discourse-common/utils/decorators";
 import Composer from "discourse/models/composer";
 import { getOwner } from "discourse-common/lib/get-owner";
 import PermissionType from "discourse/models/permission-type";
@@ -12,6 +13,7 @@ import AboutSectionLink from "discourse/lib/sidebar/common/community-section/abo
 import FAQSectionLink from "discourse/lib/sidebar/common/community-section/faq-section-link";
 import AdminSectionLink from "discourse/lib/sidebar/user/community-section/admin-section-link";
 import BadgesSectionLink from "discourse/lib/sidebar/common/community-section/badges-section-link";
+import ReviewSectionLink from "discourse/lib/sidebar/user/community-section/review-section-link";
 import SidebarCommonCommunitySection from "discourse/components/sidebar/common/community-section";
 
 import { action } from "@ember/object";
@@ -29,19 +31,48 @@ export default class SidebarUserCommunitySection extends SidebarCommonCommunityS
         title: I18n.t("sidebar.sections.community.header_action_title"),
       },
     ];
+
+    this.appEvents.on(
+      "user-reviewable-count:changed",
+      this._refreshSectionLinks
+    );
+  }
+
+  willDestroy() {
+    this.appEvents.off(
+      "user-reviewable-count:changed",
+      this._refreshSectionLinks
+    );
+  }
+
+  @bind
+  _refreshSectionLinks() {
+    return this.refreshSectionLinks();
   }
 
   get defaultMainSectionLinks() {
-    return [
+    const links = [
       EverythingSectionLink,
       TrackedSectionLink,
       MyPostsSectionLink,
       AdminSectionLink,
     ];
+
+    if (this.currentUser.reviewable_count > 0) {
+      links.push(ReviewSectionLink);
+    }
+
+    return links;
   }
 
   get defaultMoreSectionLinks() {
-    return [GroupsSectionLink, UsersSectionLink, BadgesSectionLink];
+    const links = [GroupsSectionLink, UsersSectionLink, BadgesSectionLink];
+
+    if (this.currentUser.reviewable_count === 0) {
+      links.push(ReviewSectionLink);
+    }
+
+    return links;
   }
 
   get defaultMoreSecondarySectionLinks() {

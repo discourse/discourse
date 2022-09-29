@@ -1,3 +1,6 @@
+$invite-bg: absolute-image-url("/branded-background.svg");
+$invite-mobile-bg: absolute-image-url("/branded-background-mobile.svg");
+
 .caps-lock-warning {
   color: var(--danger);
   font-size: $font-down-1;
@@ -31,10 +34,30 @@
   }
 }
 
+body.invite-page {
+  background-image: $invite-bg;
+  background-size: 110vw 110vh; // crops better than cover at various viewport sizes
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-color: var(--secondary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, Arial, sans-serif;
+  @include breakpoint("mobile-extra-large") {
+    background: $invite-mobile-bg;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: bottom;
+  }
+  .d-header {
+    display: none;
+  }
+}
+
 // Create Account + Login
 .d-modal.create-account,
 .d-modal.login-modal,
-.invites-show {
+.invites-show,
+.admin-invite-page {
   .modal-inner-container {
     position: relative;
   }
@@ -310,12 +333,14 @@
     border-radius: 10px;
     margin-top: 25px;
     border-top: 6px solid var(--tertiary);
+    background-color: var(--secondary);
   }
 
   .invite-form {
     margin-bottom: 50px;
-    max-width: 33em;
-    border-top: 6px solid var(--tertiary);
+    box-shadow: 0 4px 19px 6px rgba(0, 0, 0, 0.05);
+    padding: 1em 3em;
+    max-width: calc(33em - 6em);
     .tip {
       display: block;
     }

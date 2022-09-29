@@ -35,6 +35,7 @@ export default UserChooserComponent.extend({
           } else {
             reconstructed.isUser = true;
             reconstructed.name = item.name;
+            reconstructed.showUserStatus = this.showUserStatus;
           }
         } else if (item.name) {
           reconstructed.id = item.name;

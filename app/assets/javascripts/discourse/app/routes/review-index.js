@@ -51,7 +51,7 @@ export default DiscourseRoute.extend({
   },
 
   activate() {
-    this.messageBus.subscribe("/reviewable_claimed", (data) => {
+    this._updateClaimedBy = (data) => {
       const reviewables = this.controller.reviewables;
       if (reviewables) {
         const user = data.user
@@ -63,12 +63,9 @@ export default DiscourseRoute.extend({
           }
         });
       }
-    });
+    };
 
-    const channel = this.currentUser.enable_redesigned_user_menu
-      ? `/reviewable_counts/${this.currentUser.id}`
-      : "/reviewable_counts";
-    this.messageBus.subscribe(channel, (data) => {
+    this._updateReviewables = (data) => {
       if (data.updates) {
         this.controller.reviewables.forEach((reviewable) => {
           const updates = data.updates[reviewable.id];
@@ -77,19 +74,31 @@ export default DiscourseRoute.extend({
           }
         });
       }
-    });
+    };
+
+    this.messageBus.subscribe("/reviewable_claimed", this._updateClaimedBy);
+    this.messageBus.subscribe(
+      this._reviewableCountsChannel(),
+      this._updateReviewables
+    );
   },
 
   deactivate() {
-    this.messageBus.unsubscribe("/reviewable_claimed");
-    const channel = this.currentUser.enable_redesigned_user_menu
-      ? `/reviewable_counts/${this.currentUser.id}`
-      : "/reviewable_counts";
-    this.messageBus.unsubscribe(channel);
+    this.messageBus.unsubscribe("/reviewable_claimed", this._updateClaimedBy);
+    this.messageBus.unsubscribe(
+      this._reviewableCountsChannel(),
+      this._updateReviewables
+    );
   },
 
   @action
   refreshRoute() {
     this.refresh();
+  },
+
+  _reviewableCountsChannel() {
+    return this.currentUser.redesigned_user_menu_enabled
+      ? `/reviewable_counts/${this.currentUser.id}`
+      : "/reviewable_counts";
   },
 });

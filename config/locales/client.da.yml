@@ -2232,6 +2232,13 @@ da:
     not_logged_in_user: "bruger side, med oversigt over aktivitet og indstillinger"
     current_user: "gå til din brugerside"
     view_all: "vis alle %{tab}"
+    user_menu:
+      tabs:
+        replies: "Svar"
+        mentions: "Omtaler"
+        likes: "Syntes godt om"
+        bookmarks: "Bogmærker"
+        profile: "Profil"
     topics:
       new_messages_marker: "sidste besøg"
       bulk:
@@ -3557,6 +3564,8 @@ da:
       more: "Mere..."
       all_categories: "Alle kategorier"
       sections:
+        about:
+          header_link_text: "Om"
         messages:
           header_link_text: "Beskeder"
           links:
