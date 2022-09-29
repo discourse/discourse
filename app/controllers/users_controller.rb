@@ -643,6 +643,7 @@ class UsersController < ApplicationController
   end
 
   def create
+    p "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
     params.require(:email)
     params.require(:username)
     params.require(:invite_code) if SiteSetting.require_invite_code
@@ -757,6 +758,8 @@ class UsersController < ApplicationController
       # add them to the review queue if they need to be approved
       user.activate if user.active?
 
+      self.initialize_credits(user)
+
       render json: {
         success: true,
         active: user.active?,
@@ -798,6 +801,25 @@ class UsersController < ApplicationController
       success: false,
       message: I18n.t("login.something_already_taken")
     }
+  end
+
+  def initialize_credits(params)
+    # Initialize the credit balance of created users
+    UserCustomField.create!(
+      [
+        {
+          user_id: params[:id].to_i,
+          name: 'credit_balance',
+          value: 100
+        },
+        {
+          user_id: params[:id].to_i,
+          name: 'good_actor',
+          value: true
+        }
+      ]
+    )
+    p "========================"
   end
 
   def password_reset_show
