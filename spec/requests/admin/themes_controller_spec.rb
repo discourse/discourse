@@ -141,6 +141,13 @@ describe Admin::ThemesController do
       expect(response.status).to eq(201)
     end
 
+    it 'should not be able to import a theme by moderator' do
+      sign_in(Fabricate(:moderator))
+
+      post "/admin/themes/import.json", params: { theme: theme_json_file }
+      expect(response.status).to eq(404)
+    end
+
     it 'imports a theme' do
       post "/admin/themes/import.json", params: { theme: theme_json_file }
       expect(response.status).to eq(201)
