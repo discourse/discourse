@@ -1,8 +1,9 @@
 import I18n from "I18n";
 import Route from "@ember/routing/route";
-import bootbox from "bootbox";
+import { inject as service } from "@ember/service";
 
 export default Route.extend({
+  dialog: service(),
   model(params) {
     return {
       model: this.modelFor("adminCustomizeEmailStyle"),
@@ -26,17 +27,15 @@ export default Route.extend({
         transition.intent.name !== this.routeName
       ) {
         transition.abort();
-        bootbox.confirm(
-          I18n.t("admin.customize.theme.unsaved_changes_alert"),
-          I18n.t("admin.customize.theme.discard"),
-          I18n.t("admin.customize.theme.stay"),
-          (result) => {
-            if (!result) {
-              this._shouldAlertUnsavedChanges = false;
-              transition.retry();
-            }
-          }
-        );
+        this.dialog.confirm({
+          message: I18n.t("admin.customize.theme.unsaved_changes_alert"),
+          confirmButtonLabel: "admin.customize.theme.discard",
+          cancelButtonLabel: "admin.customize.theme.stay",
+          didConfirm: () => {
+            this._shouldAlertUnsavedChanges = false;
+            transition.retry();
+          },
+        });
       }
     },
   },

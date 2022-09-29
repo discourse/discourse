@@ -223,7 +223,7 @@ acceptance("Composer", function (needs) {
     assert.ok(exists(".d-modal"), "it pops up a confirmation dialog");
 
     await click(".modal-footer .discard-draft");
-    assert.ok(!exists(".bootbox.modal"), "the confirmation can be cancelled");
+    assert.ok(!exists(".modal-body"), "the confirmation can be cancelled");
   });
 
   test("Create a topic with server side errors", async function (assert) {

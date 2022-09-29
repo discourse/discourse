@@ -1,13 +1,14 @@
 import Controller, { inject as controller } from "@ember/controller";
 import I18n from "I18n";
 import { action } from "@ember/object";
-import bootbox from "bootbox";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend(bufferedProperty("emailTemplate"), {
   adminCustomizeEmailTemplates: controller(),
+  dialog: service(),
   emailTemplate: null,
   saved: false,
 
@@ -42,20 +43,19 @@ export default Controller.extend(bufferedProperty("emailTemplate"), {
   @action
   revertChanges() {
     this.set("saved", false);
-    bootbox.confirm(
-      I18n.t("admin.customize.email_templates.revert_confirm"),
-      (result) => {
-        if (result) {
-          this.emailTemplate
-            .revert()
-            .then((props) => {
-              const buffered = this.buffered;
-              buffered.setProperties(props);
-              this.commitBuffer();
-            })
-            .catch(popupAjaxError);
-        }
-      }
-    );
+
+    this.dialog.yesNoConfirm({
+      title: I18n.t("admin.customize.email_templates.revert_confirm"),
+      didConfirm: () => {
+        return this.emailTemplate
+          .revert()
+          .then((props) => {
+            const buffered = this.buffered;
+            buffered.setProperties(props);
+            this.commitBuffer();
+          })
+          .catch(popupAjaxError);
+      },
+    });
   },
 });
