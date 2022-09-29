@@ -239,9 +239,9 @@
             {{/if}}
           </div>
         </ComposerEditor>
-        {{#if (eq this.model.action "createTopic")}}
         {{!-- Text area for sponsor(s) --}}
-        <ComposerEditorSponsor 
+        {{!-- {{#if (eq this.model.action "createTopic")}} --}}
+        {{!-- <ComposerEditorSponsor 
           @topic={{this.topic}} 
           @composer={{this.model}} 
           @lastValidatedAt={{this.lastValidatedAt}} 
@@ -296,13 +296,13 @@
                 {{/if}}
 
                 <div class="title-and-category {{if this.showPreview "with-preview"}}">
-                  {{!-- <ComposerTitle 
+                  <ComposerTitle 
                     @composer={{this.model}} 
                     @lastValidatedAt={{this.lastValidatedAt}} 
                     @focusTarget={{this.focusTarget}} 
-                  /> --}}
+                  />
 
-                  {{!-- {{#if this.model.showCategoryChooser}}
+                  {{#if this.model.showCategoryChooser}}
                     <div class="category-input">
                       <CategoryChooser 
                         @value={{this.model.categoryId}} 
@@ -316,9 +316,9 @@
                       />
                       <PopupInputTip @validation={{this.categoryValidation}} />
                     </div>
-                  {{/if}} --}}
+                  {{/if}}
 
-                  {{!-- {{#if this.canEditTags}}
+                  {{#if this.canEditTags}}
                     <MiniTagChooser 
                       @value={{this.model.tags}} 
                       @onChange={{action (mut this.model.tags)}} 
@@ -330,7 +330,7 @@
                       }} 
                     />
                     <PopupInputTip @validation={{this.tagValidation}} />
-                  {{/if}} --}}
+                  {{/if}}
 
                   <PluginOutlet 
                     @name="after-title-and-category" 
@@ -357,9 +357,9 @@
               />
             {{/unless}}
           </div>
-        </ComposerEditorSponsor>
+        </ComposerEditorSponsor> --}}
         {{!-- Text area for opinion --}}
-        <ComposerEditorOpinion
+        {{!-- <ComposerEditorOpinion
           @topic={{this.topic}} 
           @composer={{this.model}} 
           @lastValidatedAt={{this.lastValidatedAt}} 
@@ -414,13 +414,13 @@
                 {{/if}}
 
                 <div class="title-and-category {{if this.showPreview "with-preview"}}">
-                  {{!-- <ComposerTitle 
+                  <ComposerTitle 
                     @composer={{this.model}} 
                     @lastValidatedAt={{this.lastValidatedAt}} 
                     @focusTarget={{this.focusTarget}} 
-                  /> --}}
+                  />
 
-                  {{!-- {{#if this.model.showCategoryChooser}}
+                  {{#if this.model.showCategoryChooser}}
                     <div class="category-input">
                       <CategoryChooser 
                         @value={{this.model.categoryId}} 
@@ -434,9 +434,9 @@
                       />
                       <PopupInputTip @validation={{this.categoryValidation}} />
                     </div>
-                  {{/if}} --}}
+                  {{/if}}
 
-                  {{!-- {{#if this.canEditTags}}
+                  {{#if this.canEditTags}}
                     <MiniTagChooser 
                       @value={{this.model.tags}} 
                       @onChange={{action (mut this.model.tags)}} 
@@ -448,7 +448,7 @@
                       }} 
                     />
                     <PopupInputTip @validation={{this.tagValidation}} />
-                  {{/if}} --}}
+                  {{/if}}
 
                   <PluginOutlet 
                     @name="after-title-and-category" 
@@ -475,8 +475,8 @@
               />
             {{/unless}}
           </div>
-        </ComposerEditorOpinion>
-        {{/if}}
+        </ComposerEditorOpinion> --}}
+        {{!-- {{/if}} --}}
 
         <PluginOutlet 
           @name="composer-after-composer-editor" 
