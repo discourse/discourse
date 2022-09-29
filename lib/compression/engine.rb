@@ -22,6 +22,6 @@ module Compression
       @strategy = strategy
     end
 
-    delegate :extension, :decompress, :compress, :strip_directory, to: :@strategy
+    delegate :extension, :decompress, :compress, to: :@strategy
   end
 end
