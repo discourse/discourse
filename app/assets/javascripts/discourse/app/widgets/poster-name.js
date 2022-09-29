@@ -5,6 +5,7 @@ import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import RawHtml from "discourse/widgets/raw-html";
 
 let sanitizeName = function (name) {
   return name.toLowerCase().replace(/[\s\._-]/g, "");
@@ -92,7 +93,9 @@ export default createWidget("poster-name", {
     const classNames = nameFirst
       ? ["first", "full-name"]
       : ["first", "username"];
-
+    console.log("username", username)
+    console.log("name", name)
+    console.log("nameFirst", nameFirst)
     if (attrs.staff) {
       classNames.push("staff");
     }
@@ -108,6 +111,7 @@ export default createWidget("poster-name", {
     if (attrs.new_user) {
       classNames.push("new-user");
     }
+    console.log("classNames", classNames)
 
     const primaryGroupName = attrs.primary_group_name;
     if (primaryGroupName && primaryGroupName.length) {
@@ -123,7 +127,9 @@ export default createWidget("poster-name", {
     }
 
     const afterNameContents = this.afterNameContents(attrs);
+    const credits = this.creditsIndicator(attrs);
     nameContents = nameContents.concat(afterNameContents);
+    nameContents = nameContents.concat(credits);
 
     const contents = [
       h("span", { className: classNames.join(" ") }, nameContents),
@@ -173,6 +179,18 @@ export default createWidget("poster-name", {
       contents.push(this.attach("post-user-status", attrs.user.status));
     }
     contents.push(...applyDecorators(this, "after-name", attrs, this.state));
+    return contents;
+  },
+
+  creditsIndicator(attrs) {
+    const contents = [];
+    if (attrs.userCustomFields && attrs.userCustomFields.credit_balance) {
+      const credits = attrs.userCustomFields.credit_balance
+      let html = new RawHtml({
+        html: `<span style="margin-left: 5px;">${credits} <-- credit balance</span>`
+      })
+      contents.push(html)
+    }
     return contents;
   },
 });
