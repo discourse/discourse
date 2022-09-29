@@ -222,7 +222,7 @@ class Stylesheet::Manager::Builder
     sha1s = []
 
     (theme&.upload_fields || []).map do |upload_field|
-      sha1s << upload_field.upload.sha1
+      sha1s << upload_field.upload&.sha1
     end
 
     Digest::SHA1.hexdigest(sha1s.sort!.join("\n"))
