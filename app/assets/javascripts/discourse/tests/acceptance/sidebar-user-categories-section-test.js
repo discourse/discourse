@@ -254,6 +254,25 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
   });
 
+  test("category section link have the right title", async function (assert) {
+    const categories = Site.current().categories;
+
+    // Category with link HTML tag in description
+    const category = categories.find((c) => c.id === 28);
+
+    updateCurrentUser({
+      sidebar_category_ids: [category.id],
+    });
+
+    await visit("/");
+
+    assert.strictEqual(
+      query(`.sidebar-section-link-${category.slug}`).title,
+      category.description_text,
+      "category description without HTML entity is used as the link's title"
+    );
+  });
+
   test("visiting category discovery new route", async function (assert) {
     const { category1 } = setupUserSidebarCategories();
 

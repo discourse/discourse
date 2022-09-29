@@ -41,7 +41,7 @@ export default class CategorySectionLink {
   }
 
   get title() {
-    return this.category.description_excerpt;
+    return this.category.description_text;
   }
 
   get text() {
