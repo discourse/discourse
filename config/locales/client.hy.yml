@@ -152,11 +152,11 @@ hy:
         disabled: "հեռացրել է այս բանները %{when}: Այն այլևս չի հայտնվի յուրաքանչյուր էջի վերևում:"
       forwarded: "վերահասցեագրել նշված նամակը"
     topic_admin_menu: "թեմայի ադմինի գործողություններ"
-    wizard_required: "Բարի գալուստ Ձեր նոր Discourse! Սկսենք <a href='%{url}' data-auto-route='true'>տեղակայման մասնագետ</a>-ի հետ ✨"
     emails_are_disabled: "Բոլոր ելքային էլ. նամակները անջատվել են ադմինիստրատորի կողմից: Էլ. փոստով ոչ մի տեսակի ծանուցում չի ուղարկվի:"
     software_update_prompt:
       dismiss: "Չեղարկել"
     bootstrap_mode_disabled: "Սկզբնաբեռնման(Bootstrap) ռեժիմը կանջատվի 24 ժամվա ընթացքում:"
+    bootstrap_invite_button_title: "Ուղարկել Հրավերներ"
     themes:
       default_description: "Լռելյայն"
     s3:
@@ -186,6 +186,8 @@ hy:
     not_implemented: "Այդ հատկանիշը դեռևս չի իրագործվել, ներողություն!"
     no_value: "Ոչ"
     yes_value: "Այո"
+    ok_value: "ՕԿ"
+    cancel_value: "Չեղարկել"
     submit: "Հաստատել"
     generic_error: "Տեղի է ունեցել սխալ, ներողություն:"
     generic_error_with_reason: "Տեղի է ունեցել սխալ՝ %{error}"
@@ -1786,6 +1788,13 @@ hy:
     go_back: "ետ գնալ"
     not_logged_in_user: "օգտատիրոջ էջը՝ ընթացիկ ակտիվության և նախընտրությունների ամփոփումով"
     current_user: "գնալ իմ էջը"
+    user_menu:
+      tabs:
+        replies: "Պատասխաններ"
+        mentions: "Հիշատակումներ"
+        likes: "Հավանում"
+        bookmarks: "Էջանշաններ"
+        profile: "Պրոֆիլ"
     topics:
       new_messages_marker: "վերջին այցելությունը"
       bulk:
@@ -2279,10 +2288,6 @@ hy:
         confirm:
           one: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այդ հրապարակումը:"
           other: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այդ%{count} գրառումները:"
-      merge:
-        confirm:
-          one: "Դուք համոզվա՞ծ եք, որ ցանկանում եք միավորել այդ հրապարակումները:"
-          other: "Դուք համոզվա՞ծ եք, որ ցանկանում եք միավորել այդ %{count} գրառումները:"
       revisions:
         controls:
           first: "Առաջին խմբագրությունը"
@@ -2761,7 +2766,6 @@ hy:
     download_calendar:
       download: "Ներբեռնել"
     tagging:
-      all_tags: "Բոլոր Թեգերը"
       other_tags: "Այլ Թեգեր"
       selector_all_tags: "բոլոր թեգերը"
       selector_no_tags: "առանց թեգերի"
@@ -2869,10 +2873,6 @@ hy:
         member: "անդամ"
         regular: "սովորական"
         leader: "առաջնորդ"
-    user_activity:
-      no_activity_others: "Ակտիվություն չկա:"
-      no_replies_others: "Պատասխան չկա:"
-      no_likes_others: "Հավանած գրառումներ չկան:"
     sidebar:
       unread_count:
         one: "%{count} չկարդացած"
@@ -2881,7 +2881,10 @@ hy:
         one: "%{count} նոր"
         other: "%{count} նոր"
       more: "Ավելին..."
+      all_categories: "Բոլոր կատեգորիաները"
       sections:
+        about:
+          header_link_text: "Մասին"
         messages:
           header_link_text: "Հաղորդագրություններ"
           links:
@@ -2893,15 +2896,20 @@ hy:
             unread_with_count: "Չկարդացած (%{count})"
             archive: "Արխիվ"
         tags:
-          header_link_title: "բոլոր թեգերը"
           header_link_text: "Թեգեր"
         categories:
-          header_link_title: "բոլոր կատեգորիաները"
           header_link_text: "Կատեգորիաներ"
         community:
-          header_link_title: "գլխավոր էջ"
           header_link_text: "Համայնք"
           links:
+            about:
+              content: "Մասին"
+            admin:
+              content: "Ադմին"
+            badges:
+              content: "Կրծքանշաններ"
+            faq:
+              content: "ՀՏՀ"
             tracked:
               content: "Հետևած"
             groups:
@@ -3922,7 +3930,6 @@ hy:
         cant_delete_all_too_many_posts:
           one: "Հնարավոր չէ ջնջել բոլոր գրառումները, քանի որ օգտատերն ունի ավելի քան %{count} գրառում: (delete_all_posts_max)"
           other: "Հնարավոր չէ ջնջել բոլոր գրառումները, քանի որ օգտատերն ունի ավելի քան %{count} գրառում: (delete_all_posts_max)"
-        delete_confirm: "Սովորաբար ավելի նախընտրելի է անվանազրկել օգտատիրոջը, քան ջնջել նրանց՝ գոյություն ունեցող քննարկումների պարունակությունը ջնջելուց խուսափելու համար: <br><br>Դուք ՀԱՄՈԶՎԱ՞Ծ ԵՔ, որ ցանկանում եք ջնջել այս օգտատիրոջը: Սա մշտական է!"
         delete_and_block: "Ջնջել և <b>արգելափակել</b> այս էլ. և IP հասցեները:"
         delete_dont_block: "Միայն ջնջել "
         deleting_user: "Օգտատերը ջնջվում է..."

@@ -591,8 +591,7 @@ fr:
               invalid_url: "L'URL de substitution n'est pas valide"
       <<: *errors
   uncategorized_category_name: "Sans catégorie"
-  vip_category_name: "Salon"
-  vip_category_description: "Une catégorie réservée aux membres avec un niveau de confiance 3 et plus."
+  general_category_name: "Général"
   meta_category_name: "Commentaires sur le site"
   meta_category_description: "Discussions à propos du site, son organisation, son fonctionnement et comment nous pouvons l'améliorer."
   staff_category_name: "Responsables"
@@ -613,29 +612,6 @@ fr:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Vous voulez peut-être fermer ce sujet via l'administration :wrench: (dans le coin supérieur droit et en bas) afin que les réponses ne s'accumulent pas après une annonce.
-  lounge_welcome:
-    title: "Bienvenue dans le salon"
-    body: |2
-
-      Félicitations ! :confetti_ball:
-
-      Si vous voyez ce sujet, vous avez été promu au statut d'**habitué(e)** (niveau de confiance 3).
-
-      Dorénavant vous pouvez :
-
-      * Modifier le titre de n'importe quel sujet
-      * Modifier la catégorie de n'importe quel sujet
-      * Avoir des liens qui sont suivis ([automatic nofollow](https://fr.wikipedia.org/wiki/Nofollow) est ôté)
-      * Accéder à la catégorie privée Salon qui est réservée aux utilisateurs de niveau de confiance 3 et plus
-      * Masquer le spam avec un seul signalement
-
-      Voilà la [liste des habitués actuels](%{base_path}/badges/3/regular). N'hésitez pas à les saluer.
-
-      Merci pour votre contribution à notre communauté !
-
-      (Pour plus d'informations sur les niveaux de confiance, [voir ce sujet][trust]. Notez que seuls les utilisateurs qui continuent de remplir les conditions gardent leur statut d'habitués.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "À LIRE EN PREMIER : Guide de démarrage pour les administrateurs"
   category:
     topic_prefix: "À propos de la catégorie %{category}"
@@ -1487,7 +1463,6 @@ fr:
     summary_percent_filter: "Quand un utilisateur clique sur « Résumer ce sujet », montrer le top % des messages"
     summary_max_results: "Nombre maximal de messages inclus dans le résultat de « Résumer ce sujet »"
     summary_timeline_button: "Afficher un bouton \"Résumer\" dans la timeline de chaque sujet"
-    enable_personal_messages: "Autoriser les utilisateurs de niveau de confiance n (défini par le paramètre 'min trust to send messages') à envoyer des messages directs et à y répondre. Veuillez noter que les responsables peuvent envoyer des messages directs dans tous les cas."
     enable_system_message_replies: "Permettre aux utilisateurs de répondre aux messages système, même si les messages directs sont désactivés."
     enable_chunked_encoding: "Activer les réponses d'encodage par bloc par le serveur. Cette fonctionnalité fonctionne dans la plupart des configurations, mais certains proxys peuvent mettre les réponses en mémoire tampon et risquent donc de les retarder"
     long_polling_base_url: "Racine de l'URL utilisée pour les requêtes longues (dans le cas de l'utilisation d'un CDN pour fournir du contenu dynamique, pensez à le configurer en mode « origin pull »). Par exemple : http://origin.site.com"
@@ -1555,6 +1530,7 @@ fr:
     post_menu: "Choisissez les éléments qui apparaissent dans le menu du message, ainsi que leur ordre. Exemple like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Les éléments du menu qui seront masqués par défaut jusqu'à extension du menu."
     share_links: "Choisissez les éléments qui apparaissent dans la fenêtre de partage, ainsi que leur ordre."
+    allow_username_in_share_links: "Autoriser l'inclusion de noms d'utilisateur dans les liens partagés. Ceci est utile pour attribuer les badges en fonction du nombre de visiteurs uniques."
     site_contact_username: "Un nom d'utilisateur de responsable valide pour envoyer tous les messages automatiques. Si vous laissez ce champ vide, le compte système par défaut sera utilisé."
     site_contact_group_name: "Un nom de groupe valide à inviter à tous les messages directs automatiques."
     send_welcome_message: "Envoyer à tous les nouveaux utilisateurs un message de bienvenue avec un guide de démarrage rapide."
@@ -1663,6 +1639,7 @@ fr:
     top_topics_formula_first_post_likes_multiplier: "formule permettant d'obtenir la valeur du multiplicateur des premiers « J'aime » (n) dans les sujets tendance : « log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count) »"
     top_topics_formula_least_likes_per_post_multiplier: "formule permettant d'obtenir la valeur du multiplicateur du plus petit nombre de « J'aime » par message (n) dans les sujets tendance : « log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count) »"
     enable_safe_mode: "Permettre aux utilisateurs d'utiliser le mode sans échec pour déboguer les extensions."
+    enable_sidebar: "Active la barre latérale expérimentale."
     rate_limit_create_topic: "Après la création d'un sujet, les utilisateurs doivent attendre (n) secondes avant de pouvoir en créer un nouveau."
     rate_limit_create_post: "Après avoir publié un message, les utilisateurs doivent attendre (n) secondes avant de pouvoir en publier un autre."
     rate_limit_new_user_create_topic: "Après la création d'un sujet, les nouveaux utilisateurs doivent attendre (n) secondes avant de pouvoir en créer un nouveau."
@@ -1753,7 +1730,6 @@ fr:
     min_trust_to_edit_wiki_post: "Le niveau de confiance minimal requis pour modifier les messages de type wiki."
     min_trust_to_edit_post: "Le niveau de confiance minimal requis pour modifier des messages."
     min_trust_to_allow_self_wiki: "Le niveau de confiance minimal requis pour transformer ses propres messages en type wiki."
-    min_trust_to_send_messages: "Le niveau de confiance minimal pour être autorisé à créer des nouveaux messages directs."
     min_trust_to_send_email_messages: "Le niveau de confiance minimal pour envoyer un message privé par courriel."
     min_trust_to_flag_posts: "Le niveau de confiance minimal requis pour signaler des messages"
     min_trust_to_post_links: "Le niveau de confiance minimal requis pour inclure des liens dans les messages"
@@ -4401,7 +4377,6 @@ fr:
     register:
       button: "Créer"
       title: "Créer un compte administrateur"
-      help: "créer un nouveau compte pour commencer"
       no_emails: "Malheureusement aucune adresse courriel d'administrateur n'a été définie lors de la configuration. Veuillez ajouter un courriel de développeur dans le fichier de configuration ou <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>créer un compte administrateur depuis la console</a>."
     confirm_email:
       title: "Confirmer votre adresse courriel"
@@ -4411,9 +4386,9 @@ fr:
       message: "<p>Nous avons renvoyé le courriel d'activation à <b>%{email}</b>"
   safe_mode:
     title: "Activer le mode sans échec"
-    description: "Le mode sans échec vous permet de tester votre site sans charger les extensions ou personnalisations."
-    no_customizations: "Désactiver le thème actuel"
-    only_official: "Désactiver les extensions non officielles"
+    description: "Le mode sans échec vous permet de tester votre site sans charger d'extension ni de thème."
+    no_themes: "Désactiver les thèmes et leurs composants"
+    no_unofficial_plugins: "Désactiver les extensions non officielles"
     no_plugins: "Désactiver toutes les extensions"
     enter: "Activer le mode sans échec"
     must_select: "Vous devez sélectionner au moins une option pour activer le mode sans échec."

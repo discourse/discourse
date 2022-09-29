@@ -5,13 +5,13 @@ require "mini_mime"
 class UploadsController < ApplicationController
   include ExternalUploadHelpers
 
-  requires_login except: [:show, :show_short, :show_secure]
+  requires_login except: [:show, :show_short, :_show_secure_deprecated, :show_secure]
 
-  skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show, :show_short, :show_secure]
+  skip_before_action :preload_json, :check_xhr, :redirect_to_login_if_required, only: [:show, :show_short, :_show_secure_deprecated, :show_secure]
   protect_from_forgery except: :show
 
-  before_action :is_asset_path, :apply_cdn_headers, only: [:show, :show_short, :show_secure]
-  before_action :external_store_check, only: [:show_secure]
+  before_action :is_asset_path, :apply_cdn_headers, only: [:show, :show_short, :_show_secure_deprecated, :show_secure]
+  before_action :external_store_check, only: [:_show_secure_deprecated, :show_secure]
 
   SECURE_REDIRECT_GRACE_SECONDS = 5
 
@@ -111,7 +111,7 @@ class UploadsController < ApplicationController
     sha1 = Upload.sha1_from_base62_encoded(params[:base62])
 
     if upload = Upload.find_by(sha1: sha1)
-      if upload.secure? && SiteSetting.secure_media?
+      if upload.secure? && SiteSetting.secure_uploads?
         return handle_secure_upload_request(upload)
       end
 
@@ -123,6 +123,13 @@ class UploadsController < ApplicationController
     else
       render_404
     end
+  end
+
+  # Kept to avoid rebaking old posts with /show-secure-uploads/ in their
+  # contents, this will ensure the uploads in these posts continue to
+  # work in future.
+  def _show_secure_deprecated
+    show_secure
   end
 
   def show_secure
@@ -139,9 +146,9 @@ class UploadsController < ApplicationController
     return render_404 if upload.blank?
 
     return render_404 if SiteSetting.prevent_anons_from_downloading_files && current_user.nil?
-    return handle_secure_upload_request(upload, path_with_ext) if SiteSetting.secure_media?
+    return handle_secure_upload_request(upload, path_with_ext) if SiteSetting.secure_uploads?
 
-    # we don't want to 404 here if secure media gets disabled
+    # we don't want to 404 here if secure uploads gets disabled
     # because all posts with secure uploads will show broken media
     # until rebaked, which could take some time
     #

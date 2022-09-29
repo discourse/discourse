@@ -254,7 +254,6 @@ ar:
       forwarded: "أعاد توجيه الرسالة الإلكترونية أعلاه"
     topic_admin_menu: "إجراءات الموضوع"
     skip_to_main_content: "تخطي إلى المحتوى الرئيسي"
-    wizard_required: "مرحبًا بك في Discourse! لنبدأ من <a href='%{url}' data-auto-route='true'>معالج الإعداد</a> ✨"
     emails_are_disabled: "أوقف أحد المسؤولين البريد الصادر بشكلٍ عام. ولن يتم إرسال إشعارات عبر البريد الإلكتروني أيًا كان نوعها."
     software_update_prompt:
       message: "لقد حدَّثنا هذا الموقع، <span>يُرجى التحديث </span>، أو قد تواجه سلوكًا غير متوقَّع."
@@ -267,6 +266,7 @@ ar:
       many: "أنت في وضع تمهيد التشغيل لتسهيل إطلاق موقعك الجديد. سيتم منح جميع المستخدمين الجُدد مستوى الثقة 1 وتفعيل الرسائل الإلكترونية التلخيصية لهم. وسيتم إيقاف هذا الوضع تلقائيًا عند انضمام %{count} مستخدمًا."
       other: "أنت في وضع تمهيد التشغيل لتسهيل إطلاق موقعك الجديد. سيتم منح جميع المستخدمين الجُدد مستوى الثقة 1 وتفعيل الرسائل الإلكترونية التلخيصية لهم. وسيتم إيقاف هذا الوضع تلقائيًا عند انضمام %{count} مستخدم."
     bootstrap_mode_disabled: "سيتم إيقاف وضع تمهيد التشغيل خلال 24 ساعة."
+    bootstrap_invite_button_title: "إرسال الدعوات"
     themes:
       default_description: "افتراضي"
     s3:
@@ -299,6 +299,8 @@ ar:
     not_implemented: "عذرًا، لم يتم تنفيذ هذه الميزة بعد."
     no_value: "لا"
     yes_value: "نعم"
+    ok_value: "حسنًا"
+    cancel_value: "إلغاء"
     submit: "إرسال"
     generic_error: "عذرًا، حدث خطأ."
     generic_error_with_reason: "حدث خطأ: %{error}"
@@ -2638,6 +2640,13 @@ ar:
     not_logged_in_user: "صفحة المستخدم مع ملخص عن نشاطه الحالي وتفضيلاته"
     current_user: "الانتقال إلى صفحة المستخدم"
     view_all: "عرض الكل %{tab}"
+    user_menu:
+      tabs:
+        replies: "الردود"
+        mentions: "الإشارات"
+        likes: "الاعجابات"
+        bookmarks: "الإشارات المرجعية"
+        profile: "الملف الشخصي"
     topics:
       new_messages_marker: "آخر زيارة"
       bulk:
@@ -3425,14 +3434,6 @@ ar:
           few: "هل تريد بالتأكيد حذف %{count} منشورات؟"
           many: "هل تريد بالتأكيد حذف %{count} منشورًا؟"
           other: "هل تريد بالتأكيد حذف %{count} منشور؟"
-      merge:
-        confirm:
-          zero: "هل تريد بالتأكيد دمج %{count} منشور؟"
-          one: "هل تريد بالتأكيد دمج هذا المنشور؟"
-          two: "هل تريد بالتأكيد دمج هذين المنشورين (%{count})؟"
-          few: "هل تريد بالتأكيد دمج %{count} منشورات؟"
-          many: "هل تريد بالتأكيد دمج %{count} منشورًا؟"
-          other: "هل تريد بالتأكيد دمج %{count} منشور؟"
       revisions:
         controls:
           first: "أول مراجعة"
@@ -4065,7 +4066,6 @@ ar:
       google: "تقويم جوجل"
       ics: "ICS"
     tagging:
-      all_tags: "كل الوسوم"
       other_tags: "وسوم أخرى"
       selector_all_tags: "كل الوسوم"
       selector_no_tags: "لا توجد وسوم"
@@ -4254,14 +4254,11 @@ ar:
       unsupported_file_picked: "لقد اخترت ملفًا غير مدعوم. أنواع الملفات المدعومة - %{types}."
     user_activity:
       no_activity_title: "لا يوجد نشاط."
-      no_activity_others: "لا يوجد نشاط."
       no_replies_title: "لم ترد على أي مواضيع حتى الآن"
-      no_replies_others: "لا توجد ردود."
       no_drafts_title: "لم تبدأ أي مسودات"
       no_drafts_body: "لست مستعدًا للنشر؟ سنقوم تلقائيًا بحفظ مسودة جديدة وإدراجها هنا كلما بدأت في إنشاء موضوع أو رد أو رسالة شخصية. حدد زر الإلغاء لتجاهل المُسَوَّدَة أو حفظها للمتابعة لاحقًا."
       no_likes_title: "لم بالإعجاب بأي مواضيع حتى الآن"
       no_likes_body: "هناك طريقة رائعة للتقدّم والبدء في المساهمة هي البَدْء في قراءة المحادثات التي جرت بالفعل، واختيار %{heartIcon} على المشاركات التي تريدها."
-      no_likes_others: "لا توجد منشورات سجَّلت إعجابك بها."
       no_topics_title: "لم تنشئ أي مواضيع حتى الآن"
       no_read_topics_title: "لم تقرأ أي مواضيع حتى الآن"
       no_read_topics_body: "بمجرد البَدْء في قراءة المناقشات، سترى قائمة هنا. لبدء القراءة، ابحث عن الموضوعات التي تهمك في <a href='%{topUrl}'>أعلى</a> أو <a href='%{categoriesUrl}'>فئات</a> أو البحث عن طريق الكلمة الرئيسية %{searchIcon}"
@@ -4289,7 +4286,10 @@ ar:
         many: "%{count} جديدًا"
         other: "%{count} جديدة"
       more: "المزيد..."
+      all_categories: "كل الفئات"
       sections:
+        about:
+          header_link_text: "نبذة"
         messages:
           header_link_text: "الرسائل"
           links:
@@ -4301,19 +4301,24 @@ ar:
             unread_with_count: "غير المقروءة (%{count})"
             archive: "الأرشيف"
         tags:
-          header_link_title: "كل الوسوم"
           header_link_text: "الوسوم"
         categories:
-          header_link_title: "كل الفئات"
           header_link_text: "الفئات"
         community:
-          header_link_title: "الصفحة الرئيسية"
           header_link_text: "المجتمع"
           header_action_title: "إنشاء موضوع جديد"
           links:
+            about:
+              content: "نبذة"
+            admin:
+              content: "مسؤول"
+            badges:
+              content: "الشارات"
             everything:
               content: "كل شىء"
               title: "جميع الموضوعات"
+            faq:
+              content: "الأسئلة الشائعة"
             tracked:
               content: "المتتبَّعة"
               title: "جميع المواضيع المُتَعَقبة"
@@ -5548,7 +5553,6 @@ ar:
           few: "يتعذَّر حذف جميع المنشورات لأن المستخدم لديه أكثر من %{count} منشورات. (delete_all_posts_max)"
           many: "يتعذَّر حذف جميع المنشورات لأن المستخدم لديه أكثر من %{count} منشورًا. (delete_all_posts_max)"
           other: "يتعذَّر حذف جميع المنشورات لأن المستخدم لديه أكثر من %{count} منشور. (delete_all_posts_max)"
-        delete_confirm: "يُفضَّل عامةً إخفاء هوية المستخدمين بدلًا من حذفهم لتجنُّب إزالة المحتوى من المناقشات الحالية.<br><br>هل تريد بالتأكيد حذف هذا المستخدم؟ هذا الإجراء دائم!"
         delete_and_block: "حذف هذا البريد الإلكتروني وعنوان IP و<b>حظرهما</b>"
         delete_dont_block: "الحذف فقط"
         deleting_user: "جارٍ حذف المستخدم..."
@@ -5683,7 +5687,6 @@ ar:
         recommended: "نوصيك بتخصيص النص التالي ليلائم احتياجاتك:"
         show_overriden: "إظهار النصوص المخصَّصة فقط"
         locale: "اللغة:"
-        fallback_locale_warning: "أنت تجري تعديلًا على لغة بناءً على %{fallback}. لن يتمكن المستخدمون الذين اختاروا%{fallback} كلغة لواجهتهم من رؤية تغييراتك."
         more_than_50_results: "هناك أكثر من 50 نتيجة. يُرجى تحسين البحث."
       settings:
         show_overriden: "إظهار النصوص المخصَّصة فقط"

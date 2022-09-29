@@ -12,7 +12,7 @@ class PostBookmarkable < BaseBookmarkable
   end
 
   def self.preload_associations
-    [{ topic: [:topic_users, :tags] }, :user]
+    [{ topic: [:tags] }, :user]
   end
 
   def self.list_query(user, guardian)

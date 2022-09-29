@@ -203,9 +203,9 @@ RSpec.describe InvitesController do
       it 'works' do
         sign_in(user)
 
-        post '/invites.json', params: { email: 'test@example.com', topic_id: topic.id }
+        post '/invites.json', params: { email: 'test@example.com', topic_id: topic.id, invite_to_topic: true }
         expect(response.status).to eq(200)
-        expect(Jobs::InviteEmail.jobs.first['args'].first['invite_to_topic']).to be_falsey
+        expect(Jobs::InviteEmail.jobs.first['args'].first['invite_to_topic']).to be_truthy
       end
 
       it 'fails when topic_id is invalid' do

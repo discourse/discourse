@@ -210,10 +210,10 @@ RSpec.describe SiteSettings::Validations do
           expect { subject.validate_enable_page_publishing("t") }.not_to raise_error
         end
 
-        context "if secure media is enabled" do
+        context "if secure uploads is enabled" do
           let(:error_message) { I18n.t("errors.site_settings.page_publishing_requirements") }
           before do
-            enable_secure_media
+            enable_secure_uploads
           end
 
           it "is not ok" do
@@ -223,8 +223,8 @@ RSpec.describe SiteSettings::Validations do
       end
     end
 
-    describe "#validate_secure_media" do
-      let(:error_message) { I18n.t("errors.site_settings.secure_media_requirements") }
+    describe "#validate_secure_uploads" do
+      let(:error_message) { I18n.t("errors.site_settings.secure_uploads_requirements") }
 
       context "when the new value is true" do
         context 'if site setting for enable_s3_uploads is enabled' do
@@ -233,7 +233,7 @@ RSpec.describe SiteSettings::Validations do
           end
 
           it "should be ok" do
-            expect { subject.validate_secure_media("t") }.not_to raise_error
+            expect { subject.validate_secure_uploads("t") }.not_to raise_error
           end
         end
 
@@ -243,7 +243,7 @@ RSpec.describe SiteSettings::Validations do
           end
 
           it "is not ok" do
-            expect { subject.validate_secure_media("t") }.to raise_error(Discourse::InvalidParameters, error_message)
+            expect { subject.validate_secure_uploads("t") }.to raise_error(Discourse::InvalidParameters, error_message)
           end
 
           context "if global s3 setting is enabled" do
@@ -252,7 +252,7 @@ RSpec.describe SiteSettings::Validations do
             end
 
             it "should be ok" do
-              expect { subject.validate_secure_media("t") }.not_to raise_error
+              expect { subject.validate_secure_uploads("t") }.not_to raise_error
             end
           end
         end

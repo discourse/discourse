@@ -57,7 +57,7 @@ class UrlHelper
   end
 
   def self.secure_proxy_without_cdn(url)
-    self.absolute(Upload.secure_media_url_from_upload_url(url), nil)
+    self.absolute(Upload.secure_uploads_url_from_upload_url(url), nil)
   end
 
   def self.escape_uri(uri)
@@ -105,14 +105,14 @@ class UrlHelper
   end
 
   def self.cook_url(url, secure: false, local: nil)
-    is_secure = SiteSetting.secure_media && secure
+    is_secure = SiteSetting.secure_uploads && secure
     local = is_local(url) if local.nil?
     return url if !local
 
     url = is_secure ? secure_proxy_without_cdn(url) : absolute_without_cdn(url)
 
-    # we always want secure media to come from
-    # Discourse.base_url_no_prefix/secure-media-uploads
+    # we always want secure uploads to come from
+    # Discourse.base_url_no_prefix/secure-uploads
     # to avoid asset_host mixups
     return schemaless(url) if is_secure
 

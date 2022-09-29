@@ -100,12 +100,15 @@ te:
     share:
       close: "మూసివేయి"
     emails_are_disabled: "బయటకు వెళ్లే అన్ని ఈమెయిల్లూ అధికారి నిశేధించాడు. ఇప్పుడు ఎటువంటి ఈమెయిల్ ప్రకటనలూ పంపవీలవదు."
+    bootstrap_invite_button_title: "ఆహ్వానాలు పంపు"
     themes:
       default_description: "అప్రమేయ"
     edit: "ఈ విషయపు శీర్షిక మరియు వర్గం సవరించు"
     not_implemented: "ఈ ఫీచరు ఇంకా ఇంప్లిమెటు చేయలేదు. క్షమాపణలు!"
     no_value: "లేదు"
     yes_value: "అవును"
+    ok_value: "సరే"
+    cancel_value: "రద్దుచేయి"
     generic_error: "క్షమించాలి, ఒక దోషం తలెత్తింది"
     generic_error_with_reason: "ఒక దోషం జరిగింది: %{error}"
     sign_up: "సైన్ అప్"
@@ -803,6 +806,13 @@ te:
     go_back: "వెనక్కు మరలు"
     not_logged_in_user: "సభ్యుని ప్రస్తుత కలాపాల మరియు అభిరూపాల సారాంశ పుట"
     current_user: "మీ సభ్యపుటకు వెళ్లు"
+    user_menu:
+      tabs:
+        replies: "జవాబులు"
+        mentions: "ప్రస్తావనలు"
+        likes: "ఇచ్చిన ఇష్టాలు "
+        bookmarks: "పేజీకలు"
+        profile: "ప్రవర"
     topics:
       bulk:
         defer: "వాయిదావేయి"
@@ -1356,6 +1366,8 @@ te:
         one: "%{count} కొత్త"
         other: "%{count} కొత్త"
       sections:
+        about:
+          header_link_text: "గురించి"
         messages:
           header_link_text: "సందేశాలు"
           links:
@@ -1366,11 +1378,18 @@ te:
         tags:
           header_link_text: "ట్యాగులు"
         categories:
-          header_link_title: "అన్ని వర్గాలు"
           header_link_text: "వర్గాలు"
         community:
           header_link_text: "కమ్యునిటీ"
           links:
+            about:
+              content: "గురించి"
+            admin:
+              content: "అధికారి"
+            badges:
+              content: "బ్యాడ్జీలు"
+            faq:
+              content: "తవసం"
             tracked:
               content: "గమనించారు"
             groups:

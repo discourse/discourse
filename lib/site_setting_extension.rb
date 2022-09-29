@@ -542,6 +542,15 @@ module SiteSettingExtension
       end
     end
 
+    # Any group_list setting, e.g. personal_message_enabled_groups, will have
+    # a getter defined with _map on the end, e.g. personal_message_enabled_groups_map,
+    # to avoid having to manually split and convert to integer for these settings.
+    if type_supervisor.get_type(name) == :group_list
+      define_singleton_method("#{clean_name}_map") do
+        self.public_send(clean_name).to_s.split("|").map(&:to_i)
+      end
+    end
+
     define_singleton_method "#{clean_name}?" do
       self.public_send clean_name
     end
@@ -592,5 +601,4 @@ module SiteSettingExtension
   def logger
     Rails.logger
   end
-
 end

@@ -73,6 +73,7 @@ de:
       file_too_big: "Die unkomprimierte Datei ist zu groß."
       unknown_file_type: "Die Datei, die du hochgeladen hast, scheint kein gültiges Discourse-Theme zu sein."
       not_allowed_theme: "`%{repo}` ist nicht in der Liste der zulässigen Themes (überprüfe die globale Einstellung `allowed_theme_repos`)."
+      ssh_key_gone: "Du hast zu lange mit der Installation des Themas gewartet und der SSH-Schlüssel ist abgelaufen. Bitte versuche es noch einmal."
     errors:
       component_no_user_selectable: "Theme-Komponenten können nicht vom Benutzer auswählbar sein"
       component_no_default: "Theme-Komponenten können nicht Standard-Theme sein"
@@ -596,8 +597,8 @@ de:
               invalid: "ist nicht gültig"
       <<: *errors
   uncategorized_category_name: "Nicht kategorisiert"
-  vip_category_name: "Lounge"
-  vip_category_description: "Eine Kategorie exklusiv für Mitglieder mit Vertrauensstufe 3 oder höher."
+  general_category_name: "Allgemein"
+  general_category_description: "Erstelle hier Themen, die in keine andere bestehende Kategorie passen."
   meta_category_name: "Feedback"
   meta_category_description: "Diskussionen über dieses Forum, seine Organisation, wie es funktioniert und wie wir es verbessern können."
   staff_category_name: "Team"
@@ -618,29 +619,6 @@ de:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Du solltest dieses Thema eventuell mittels Themen-Administration :wrench: (oben rechts oder unten) schließen, damit sich bei dieser Ankündigung nicht die Antworten anhäufen.
-  lounge_welcome:
-    title: "Willkommen in der Lounge"
-    body: |2
-
-      Gratuliere! :confetti_ball:
-
-      Wenn du dieses Thema sehen kannst, wurdest du vor Kurzem zum **Stammgast** (Vertrauensstufe 3) befördert.
-
-      Du kannst nun &hellip;
-
-      * den Titel eines jeden Themas ändern
-      * Themen in andere Kategorien verschieben
-      * Links veröffentlichen, die von Suchmaschinen weiterverfolgt werden (das automatische [nofollow](https://de.wikipedia.org/wiki/Nofollow) wird entfernt)
-      * auf die private Lounge-Kategorie zugreifen, die für Benutzer mit Vertrauensstufe 3 oder höher sichtbar ist
-      * Spam durch eine einzige Meldung ausblenden
-
-      Hier ist die [aktuelle Liste aller Stammgäste](%{base_path}/badges/3/regular). Vergiss nicht, Hallo zu sagen!
-
-      Vielen Dank dafür, dass du ein wichtiger Teil dieser Community bist!
-
-      (Wenn du mehr über Vertrauensstufen wissen möchtest, kannst du [dieses Thema lesen][trust]. Beachte bitte, dass nur jene Mitglieder Stammgäste bleiben, die auch im Laufe der Zeit die Anforderungen erfüllen.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "ZUERST LESEN: Administrator-Kurzanleitung"
   category:
     topic_prefix: "Über die Kategorie %{category}"
@@ -1500,7 +1478,8 @@ de:
     summary_percent_filter: "Zeige die Top-% der Beiträge eines Themas in der „Dieses Thema zusammenfassen“-Ansicht."
     summary_max_results: "Maximale Anzahl der Beiträge in der „Dieses Thema zusammenfassen“-Ansicht"
     summary_timeline_button: "Schaltfläche \"Zusammenfassen\" in der Zeitleiste anzeigen"
-    enable_personal_messages: "Erlaube Benutzern mit der Vertrauensstufe 1 (konfigurierbar über die minimale Vertrauensstufe zum Senden von Nachrichten), Nachrichten zu erstellen und auf Nachrichten zu antworten. Beachte, dass das Team immer Nachrichten senden kann."
+    enable_personal_messages: "VERALTET, nutze stattdessen nun die Einstellung \"Gruppen mit aktivierten persönlichen Nachrichten\". \nErlaube Benutzern mit der Vertrauensstufe 1 (konfigurierbar über die minimale Vertrauensstufe zum Senden von Nachrichten), Nachrichten zu erstellen und auf Nachrichten zu antworten. Beachte, dass das Team immer Nachrichten senden kann."
+    personal_message_enabled_groups: "Erlaube Nutzern innerhalb dieser Gruppen, Nachrichten zu erstellen und auf Nachrichten zu antworten. Vertrauensstufengruppen schließen alle Vertrauensstufen über dieser Nummer ein. Wenn du z.B. Vertrauensstufe 1 auswählst, können auch Benutzer der Vertrauensstufen 2, 3 und 4 PMs versenden. Beachte, dass Mitarbeiter/innen immer Nachrichten senden können, egal welche Stufe sie wählen."
     enable_system_message_replies: "Erlaube Benutzern, auf Systemnachrichten zu antworten, auch wenn persönliche Nachrichten deaktiviert sind"
     enable_chunked_encoding: "Aktiviere „chunked encoding“-Antworten durch den Server. Diese Funktion ist mit den meisten Set-ups kompatibel, aber einige Proxys können puffern, wodurch die Antworten verzögert werden"
     long_polling_base_url: "Basis-URL für Long Polling (wenn zum Ausliefern von dynamischen Inhalten ein CDN verwendet wird, setze dies auf Origin-Pull), z. B. http://origin.site.com"
@@ -1568,6 +1547,7 @@ de:
     post_menu: "Legt fest, welche Funktionen in welcher Reihenfolge im Beitragsmenü auftauchen. Beispiel: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Die Einträge im Menü eines Beitrags, die standardmäßig hinter einer erweiterbaren Ellipse versteckt werden sollen."
     share_links: "Legt fest, welche Dienste in welcher Reihenfolge im Teilen-Dialog auftauchen."
+    allow_username_in_share_links: "Erlaube Benutzernamen in Freigabelinks zu verwenden. Dies ist nützlich, um Abzeichen für einzelne Besucher zu vergeben."
     site_contact_username: "Gültiger Benutzername eines Team-Mitglieds, in dessen Namen alle automatisch erzeugten Nachrichten versendet werden sollen. Falls leer, wird das Standard-System-Konto verwendet."
     site_contact_group_name: "Ein gültiger Name einer Gruppe, die zu allen automatisch versendeten privaten Nachrichten eingeladen wird."
     send_welcome_message: "Sende allen neuen Benutzern eine Begrüßungsnachricht mit einer Kurzanleitung."
@@ -1677,6 +1657,8 @@ de:
     top_topics_formula_first_post_likes_multiplier: "Wert des Multiplikators (n) für die „Gefällt mir“-Angaben des ersten Beitrags in der Formel für angesagte Themen: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "Wert des Multiplikators (n) für die wenigsten „Gefällt mir“-Angaben pro Beitrag in der Formel für angesagte Themen: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     enable_safe_mode: "Erlaube Benutzern, den abgesicherten Modus zu betreten, um Plug-ins zu debuggen."
+    enable_experimental_sidebar_hamburger: "Ermöglicht die Aktivierung der experimentellen Seitenleiste und des Benutzer-Hamburger-Dropdown-Menüs."
+    enable_sidebar: "Aktiviert die experimentelle Seitenleiste."
     rate_limit_create_topic: "Nach Erstellen eines Themas muss ein Benutzer (n) Sekunden warten, bevor ein weiteres Thema erstellt werden kann."
     rate_limit_create_post: "Nach Schreiben eines Beitrags muss ein Benutzer (n) Sekunden warten, bevor ein weiterer Beitrag erstellt werden kann."
     rate_limit_new_user_create_topic: "Nach Erstellen eines Themas muss ein neuer Benutzer (n) Sekunden warten, bevor ein weiteres Thema erstellt werden kann."
@@ -1767,7 +1749,7 @@ de:
     min_trust_to_edit_wiki_post: "Minimale Vertrauensstufe, um als Wiki markierte Beiträge bearbeiten zu können."
     min_trust_to_edit_post: "Minimale Vertrauensstufe, um Beiträge bearbeiten zu können."
     min_trust_to_allow_self_wiki: "Minimale Vertrauensstufe, die ein Benutzer haben muss, um einen eigenen Wiki-Eintrag zu erstellen."
-    min_trust_to_send_messages: "Minimale Vertrauensstufe, um neue persönliche Nachrichten zu erstellen."
+    min_trust_to_send_messages: "VERALTET, verwende stattdessen die Einstellung „Gruppen mit aktivierten persönlichen Nachrichten“. Die Mindestvertrauensstufe, die zum Erstellen neuer persönlicher Nachrichten erforderlich ist."
     min_trust_to_send_email_messages: "Minimale Vertrauensstufe, um persönliche Nachrichten per E-Mail zu versenden."
     min_trust_to_flag_posts: "Minimale Vertrauensstufe, um Beiträge melden zu können"
     min_trust_to_post_links: "Minimale Vertrauensstufe, um Links in Beiträge einzufügen"
@@ -1872,6 +1854,7 @@ de:
     max_emails_per_day_per_user: "Maximale Anzahl von E-Mails, die den Benutzern pro Tag gesendet werden. 0 zum Deaktivieren des Limits"
     enable_staged_users: "Erstelle automatisch vorbereitete Benutzer, wenn eingehende E-Mails verarbeitet werden."
     maximum_staged_users_per_email: "Maximale Anzahl vorbereiteter Benutzer, wenn eine eingehende E-Mail bearbeitet wird."
+    maximum_recipients_per_new_group_email: "Blockiere eingehende E-Mails mit zu vielen Empfängern."
     auto_generated_allowlist: "Liste von E-Mail-Adressen, die nicht auf automatisch generierte Inhalte überprüft werden. Beispiel: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Eingehende E-Mails blockieren, die als automatisch generiert erkannt werden."
     ignore_by_title: "Ignoriere eingehende E-Mails basierend auf ihrem Betreff."
@@ -2112,6 +2095,7 @@ de:
     heading_font: "Schriftart für Überschriften auf der Website. Themes können diese Schriftart mit der benutzerdefinierten CSS-Eigenschaft `--heading-font-family` überschreiben."
     enable_sitemap: "Generiere eine Sitemap für Deine Website und füge sie in die robots.txt-Datei ein."
     sitemap_page_size: "Anzahl der URLs, die auf jeder Sitemap-Seite enthalten sein sollen. Max 50.000"
+    enable_user_status: "(experimentell) Erlaubt es den Nutzern, eine eigene Statusmeldung (Emoji + Beschreibung) einzustellen."
     short_title: "Der Kurztitel wird beim Benutzer auf dem Startbildschirm, im Startmenü oder an anderen Stellen mit begrenztem Platz verwendet. Er sollte auf 12 Zeichen begrenzt sein."
     dashboard_hidden_reports: "Erlaube das Ausblenden der angegebenen Berichte im Dashboard."
     dashboard_visible_tabs: "Wähle aus, welche Dashboard-Registerkarten sichtbar sind."
@@ -2127,6 +2111,9 @@ de:
     use_name_for_username_suggestions: "Verwende den vollen Namen eines Benutzers, wenn du Benutzernamen vorschlägst."
     suggest_weekends_in_date_pickers: "Beziehe die Wochenenden (Samstag und Sonntag) in die Datumsvorschläge mit ein (deaktiviere dies, wenn du Discourse nur an Wochentagen von Montag bis Freitag benutzt)."
     splash_screen: "Zeigt einen temporären Ladebildschirm an, während Website-Assets geladen werden"
+    default_sidebar_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt Kategorien der Seitenleiste angezeigt."
+    default_sidebar_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt Tags der Seitenleiste angezeigt."
+    enable_new_user_profile_nav_groups: "EXPERIMENTELL: Benutzern der ausgewählten Gruppen wird das neue Benutzerprofil-Navigationsmenü angezeigt"
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
@@ -2154,6 +2141,7 @@ de:
       reply_by_email_address_is_empty: "Du musst „reply by email address“ definieren, bevor Antworten per E-Mail aktiviert wird."
       email_polling_disabled: "Du musst entweder manuelle oder POP3-Abfragen aktivieren, bevor Antworten per E-Mail aktiviert wird."
       user_locale_not_enabled: "Du musst erst „allow user locale“ aktivieren, bevor du diese Einstellung aktivierst."
+      personal_message_enabled_groups_invalid: "Du musst mindestens eine Gruppe für diese Einstellung angeben. Wenn du nicht möchtest, dass jemand außer den Mitarbeitern PMs verschickt, wähle die Gruppe der Mitarbeiter."
       invalid_regex: "Regulärer Ausdruck ist ungültig oder nicht erlaubt."
       invalid_regex_with_message: "Die Regex '%{regex}' hat einen Fehler: %{message}"
       email_editable_enabled: "Du musst „email editable“ deaktivieren, bevor du diese Einstellung aktivierst."
@@ -3029,6 +3017,15 @@ de:
         Du hast auf eine E-Mail-Zusammenfassung geantwortet, was nicht zulässig ist.
 
         Wenn du denkst, dass dies ein Fehler ist, [kontaktiere ein Team-Mitglied](%{base_url}/about).
+    email_reject_too_many_recipients:
+      title: "E-Mail lehnt zu viele Empfänger ab"
+      subject_template: "[%{email_prefix}] E-Mail-Problem - Zu viele Empfänger"
+      text_body_template: |
+        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (mit dem Titel %{former_title}) hat nicht funktioniert.
+
+        Du hast versucht, an mehr als %{max_recipients_count} Personen zu schreiben und unser System hat deine E-Mail automatisch als Spam markiert.
+
+        Wenn du glaubst, dass dies ein Fehler ist, [kontaktiere einen Mitarbeiter](%{base_url}/about).
     email_error_notification:
       title: "Benachrichtigung zu E-Mail-Fehler"
       subject_template: "[%{email_prefix}] E-Mail-Problem -- POP-Authentifizierungsfehler"
@@ -4389,6 +4386,7 @@ de:
       invalid_token: "Ungültiges Token."
     email_input: "Administrator-E-Mail"
     submit_button: "E-Mail senden"
+    safe_mode: "Abgesicherter Modus: Deaktivieren Sie alle Themen/Plugins beim Anmelden"
   performance_report:
     initial_post_raw: Dieses Thema enthält tägliche Leistungsberichte für deine Website.
     initial_topic_title: Berichte zur Website-Leistung
@@ -4427,7 +4425,7 @@ de:
     register:
       button: "Registrieren"
       title: "Administrator-Konto registrieren"
-      help: "registriere ein neues Konto, um loszulegen"
+      help: "Registriere ein neues Konto, um loszulegen."
       no_emails: "Leider wurde bei der Einrichtung keine Administrator-E-Mail-Adresse festgelegt, sodass es schwer sein könnte, die Konfiguration abzuschließen. Bitte füge eine Entwickler-E-Mail-Adresse in der Konfigurationsdatei hinzu oder <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>erstelle ein Administrator-Konto über die Konsole</a>."
     confirm_email:
       title: "Bestätige deine E-Mail-Adresse"
@@ -4437,9 +4435,9 @@ de:
       message: "<p>Wir haben die Aktivierungs-E-Mail noch einmal an <b>%{email}</b> gesendet"
   safe_mode:
     title: "Abgesicherten Modus betreten"
-    description: "Der abgesicherte Modus ermöglicht es dir, deine Website zu testen, ohne Plug-ins oder Website-Anpassungen zu laden."
-    no_customizations: "Aktuelles Theme deaktivieren"
-    only_official: "Inoffizielle Plug-ins deaktivieren"
+    description: "Der abgesicherte Modus ermöglicht es dir, deine Website zu testen, ohne Plugins oder Themes zu laden."
+    no_themes: "Themen und Themenkomponenten deaktivieren"
+    no_unofficial_plugins: "Inoffizielle Plug-ins deaktivieren"
     no_plugins: "Alle Plug-ins deaktivieren"
     enter: "Abgesicherten Modus betreten"
     must_select: "Du musst mindestens eine Option auswählen, um den abgesicherten Modus zu betreten."

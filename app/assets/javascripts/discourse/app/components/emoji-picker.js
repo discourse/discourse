@@ -41,6 +41,10 @@ export default Component.extend({
   usePopper: true,
   placement: "auto", // one of popper.js' placements, see https://popper.js.org/docs/v2/constructors/#options
   initialFilter: "",
+  elements: {
+    searchInput: ".emoji-picker-search-container input",
+    picker: ".emoji-picker-emoji-area",
+  },
 
   init() {
     this._super(...arguments);
@@ -245,8 +249,116 @@ export default Component.extend({
 
   @action
   keydown(event) {
-    if (event.code === "Escape") {
+    const arrowKeys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
+    const emojis = document.querySelectorAll(".emoji-picker-emoji-area .emoji");
+
+    let currentEmoji;
+
+    this.set(
+      "hoveredEmoji",
+      this._codeWithDiversity(event.target.title, this.selectedDiversity)
+    );
+
+    if (
+      event.key === "ArrowDown" &&
+      this._focusedOn(this.elements.searchInput)
+    ) {
+      emojis[0].focus();
+      event.preventDefault();
+      return false;
+    }
+
+    if (event.key === "Escape") {
       this.onClose(event);
+      const path = event.path || (event.composedPath && event.composedPath());
+
+      const fromChatComposer = path.find((e) =>
+        e?.classList?.contains("chat-composer-container")
+      );
+
+      const fromTopicComposer = path.find((e) =>
+        e?.classList?.contains("d-editor")
+      );
+
+      if (fromTopicComposer) {
+        document.querySelector(".d-editor-input")?.focus();
+      } else if (fromChatComposer) {
+        document.querySelector(".chat-composer-input")?.focus();
+      } else {
+        document.querySelector("textarea")?.focus();
+      }
+
+      return false;
+    }
+
+    if (arrowKeys.includes(event.key)) {
+      if (!this._focusedOn(this.elements.picker)) {
+        return;
+      }
+
+      Array.from(emojis).find((e, index) => {
+        currentEmoji = index;
+        return e.isEqualNode(event.target);
+      });
+
+      if (event.key === "ArrowRight") {
+        let nextEmoji = currentEmoji + 1;
+
+        if (nextEmoji < emojis.length) {
+          emojis[nextEmoji].focus();
+        } else if (nextEmoji >= emojis.length) {
+          emojis[0].focus();
+        }
+      }
+
+      if (event.key === "ArrowLeft") {
+        const previousEmoji = currentEmoji - 1;
+        if (currentEmoji > 0) {
+          emojis[previousEmoji].focus();
+        }
+      }
+
+      const active = emojis[currentEmoji];
+
+      if (event.key === "ArrowDown") {
+        // source: https://stackoverflow.com/a/49090383/349424
+        // look for same element type with
+        // - higher offsetTop
+        // - same offsetLeft
+        const emojiBelow = [...emojis]
+          .filter((c) => c.offsetTop > active.offsetTop)
+          .find((c) => c.offsetLeft === active.offsetLeft);
+
+        emojiBelow?.focus();
+      }
+
+      if (event.key === "ArrowUp") {
+        // look for same element type with
+        // - lower offsetTop
+        // - same offsetLeft
+        const emojiAbove = [...emojis]
+          .reverse()
+          .filter((c) => c.offsetTop < active.offsetTop)
+          .find((c) => c.offsetLeft === active.offsetLeft);
+
+        if (emojiAbove) {
+          emojiAbove.focus();
+        } else {
+          document.querySelector(this.elements.searchInput).focus();
+        }
+      }
+
+      event.preventDefault();
+      return false;
+    }
+
+    if (event.key === "Enter") {
+      if (!this._focusedOn(".emoji")) {
+        return;
+      }
+      this.onEmojiSelection(event);
+      this.onClose(event);
+      event.preventDefault();
       return false;
     }
   },
@@ -254,6 +366,11 @@ export default Component.extend({
   @action
   onFilterChange(event) {
     this._applyFilter(event.target.value);
+  },
+
+  _focusedOn(item) {
+    // returns the item currently being focused on
+    return document.activeElement.closest(item) ? document.activeElement : null;
   },
 
   _applyFilter(filter) {
@@ -286,8 +403,9 @@ export default Component.extend({
   _replaceEmoji(code) {
     const escaped = emojiUnescape(`:${escapeExpression(code)}:`, {
       lazy: true,
+      tabIndex: "0",
     });
-    return htmlSafe(`<span>${escaped}</span>`);
+    return htmlSafe(escaped);
   },
 
   _codeWithDiversity(code, selectedDiversity) {

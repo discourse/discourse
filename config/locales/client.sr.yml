@@ -188,7 +188,6 @@ sr:
         disabled: "je uklonio ovaj baner%{when}. Više se neće pojavljivati na vrhu svake stranice."
       forwarded: "je prosledio/la navedenu e-poštu"
     topic_admin_menu: "opcije teme"
-    wizard_required: "Dobrodošli na Vaš novi Discourse! Počnimo sa <a href='%{url}' data-auto-route='true'>instalacijom</a>"
     emails_are_disabled: "Sva odlazeća epošta je onemogućena globalno od strane administratora. Ni jedna notifikacija neće biti poslata."
     software_update_prompt:
       message: "Ažurirali smo ovaj sajt, <span>molimo vas rifrešujte</span>, u suprotnom može doći do nepredviđenih rezultata."
@@ -225,6 +224,8 @@ sr:
     not_implemented: "Ova stavka nije jos omogućena za sad, izvinjavamo se."
     no_value: "Ne"
     yes_value: "Da"
+    ok_value: "U redu"
+    cancel_value: "Odustani"
     submit: "Potvrdi"
     generic_error: "Izvinite, pojavila se greška."
     generic_error_with_reason: "Došlo je do greške: %{error}"
@@ -1182,6 +1183,13 @@ sr:
     go_back: "idi nazad"
     not_logged_in_user: "stranica korisnika sa sažetkom trenutnih aktivnosti i postavki"
     current_user: "idi na korisničku stranicu"
+    user_menu:
+      tabs:
+        replies: "Odgovori"
+        mentions: "Spominjanja"
+        likes: "Lajkova"
+        bookmarks: "Markiraj"
+        profile: "Profil"
     topics:
       new_messages_marker: "poslednja poseta"
       bulk:
@@ -1811,6 +1819,8 @@ sr:
         other: "%{count} nova"
       more: "Više..."
       sections:
+        about:
+          header_link_text: "O nama"
         messages:
           header_link_text: "Poruke"
           links:
@@ -1822,12 +1832,18 @@ sr:
             unread_with_count: "Nepročitane (%{count})"
             archive: "Arhiviraj"
         categories:
-          header_link_title: "sve kategorije"
           header_link_text: "Kategorije"
         community:
-          header_link_title: "home"
           header_link_text: "Zajednica"
           links:
+            about:
+              content: "O nama"
+            admin:
+              content: "Admin"
+            badges:
+              content: "Značke"
+            faq:
+              content: "FAQ (često postavljana pitanja)"
             tracked:
               content: "Praćeno"
             groups:

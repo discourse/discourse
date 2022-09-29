@@ -160,12 +160,12 @@ nb_NO:
       forwarded: "videresendte e-posten voer"
     topic_admin_menu: "handlinger for tråd"
     skip_to_main_content: "Gå til hovedinnhold"
-    wizard_required: "Velkommen til ditt nye Discourse! Kom i gang med <a href='%{url}' data-auto-route='true'>oppstartsveiviseren</a> ✨"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
     software_update_prompt:
       message: "Vi har oppdatert dette nettstedet, <span>Oppdater</span>, eller du kan oppleve uventet oppførsel."
       dismiss: "Avslå"
     bootstrap_mode_disabled: "Oppstartsmodus vil bli deaktivert i løpet av 24 timer."
+    bootstrap_invite_button_title: "Send invitasjoner"
     themes:
       default_description: "Forvalg"
     s3:
@@ -197,6 +197,8 @@ nb_NO:
     not_implemented: "Beklager, den funksjonen er ikke blitt implementert enda."
     no_value: "Nei"
     yes_value: "Ja"
+    ok_value: "OK"
+    cancel_value: "Avbryt"
     submit: "Utfør"
     generic_error: "Beklager, det har oppstått en feil."
     generic_error_with_reason: "Det oppstod et problem: %{error}"
@@ -2143,6 +2145,13 @@ nb_NO:
     not_logged_in_user: "brukerside med oppsummering av nåværende aktivtet og preferanser."
     current_user: "gå til din brukerside"
     view_all: "se alle %{tab}"
+    user_menu:
+      tabs:
+        replies: "Svar"
+        mentions: "Omtalelser"
+        likes: "Likes tildelt"
+        bookmarks: "Bokmerker"
+        profile: "Profil"
     topics:
       new_messages_marker: "siste besøk"
       bulk:
@@ -2733,10 +2742,6 @@ nb_NO:
         confirm:
           one: "Er du sikker på at du ønsker å slette dette innlegget?"
           other: "Er du sikker på at du ønsker å slette de %{count} innleggene?"
-      merge:
-        confirm:
-          one: "Er du sikker på at du vil flette disse postene?"
-          other: "Er du sikker på at du vil flette de %{count} innleggene?"
       revisions:
         controls:
           first: "Første versjon"
@@ -3265,7 +3270,6 @@ nb_NO:
     download_calendar:
       download: "Last ned"
     tagging:
-      all_tags: "Alle stikkord"
       other_tags: "Andre stikkord"
       selector_all_tags: "alle stikkord"
       selector_no_tags: "ingen stikkord"
@@ -3411,10 +3415,6 @@ nb_NO:
       detailed_name: "%{level}: %{name}"
     pick_files_button:
       unsupported_file_picked: "Du har plukket en ustøttet fil. Filtyper som støttes – %{types}."
-    user_activity:
-      no_activity_others: "Ingen aktivitet."
-      no_replies_others: "Ingen svar."
-      no_likes_others: "Ingen likte innlegg. "
     fullscreen_table:
       expand_btn: "Utvid tabell"
     sidebar:
@@ -3425,7 +3425,10 @@ nb_NO:
         one: "%{count} ny"
         other: "%{count} nye"
       more: "Mer…"
+      all_categories: "Alle kategorier"
       sections:
+        about:
+          header_link_text: "Om"
         messages:
           header_link_text: "Meldinger"
           links:
@@ -3437,15 +3440,20 @@ nb_NO:
             unread_with_count: "Ulest (%{count})"
             archive: "Arkiver"
         tags:
-          header_link_title: "alle stikkord"
           header_link_text: "Stikkord"
         categories:
-          header_link_title: "alle kategorier"
           header_link_text: "Kategorier"
         community:
-          header_link_title: "hjem"
           header_link_text: "Gemenskap"
           links:
+            about:
+              content: "Om"
+            admin:
+              content: "Administrator"
+            badges:
+              content: "Merker"
+            faq:
+              content: "O-S-S"
             tracked:
               content: "Overvåkes"
             groups:

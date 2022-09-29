@@ -18,9 +18,9 @@ permissions:
 jobs:
   build:
     name: ${{ matrix.target }} ${{ matrix.build_type }}
-    runs-on: ubuntu-latest
-    container: discourse/discourse_test:slim${{ startsWith(matrix.build_type, 'frontend') && '-browsers' || '' }}
-    timeout-minutes: 60
+    runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
+    container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}
+    timeout-minutes: 20
 
     env:
       DISCOURSE_HOSTNAME: www.example.com
@@ -28,19 +28,21 @@ jobs:
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
-      USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' && matrix.target == 'core' }}
+      USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' }}
 
     strategy:
       fail-fast: false
 
       matrix:
-        build_type: [backend, frontend, annotations]
+        build_type: [backend, frontend, system, annotations]
         target: [core, plugins]
         exclude:
           - build_type: annotations
             target: plugins
           - build_type: frontend
             target: core # Handled by core_frontend_tests job (below)
+          - build_type: system
+            target: plugins # Enable once at least 1 plugin has system tests
 
     steps:
       - uses: actions/checkout@v3
@@ -145,18 +147,45 @@ jobs:
         if: steps.app-cache.outputs.cache-hit != 'true'
         run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
+      - name: Fetch turbo_rspec_runtime.log cache
+        uses: actions/cache@v3
+        id: test-runtime-cache
+        if: matrix.build_type == 'backend' && matrix.target == 'core'
+        with:
+          path: tmp/turbo_rspec_runtime.log
+          key: rspec-runtime-backend-core
+
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
         run: bin/turbo_rspec --verbose
 
       - name: Plugin RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
-        run: bin/rake plugin:spec
+        run: bin/rake plugin:turbo_spec
 
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: bin/rake plugin:qunit['*','1200000']
+        run: QUNIT_PARALLEL=3 bin/rake plugin:qunit['*','1200000']
         timeout-minutes: 30
+
+      - name: Ember Build for System Tests
+        if: matrix.build_type == 'system'
+        run: bin/ember-cli --build
+
+      - name: Core System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'core'
+        run: bin/system_rspec
+
+      - name: Plugin System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'plugins'
+        run: bin/system_rspec plugins/*/spec/system
+
+      - name: Upload failed system test screenshots
+        uses: actions/upload-artifact@v3
+        if: matrix.build_type == 'system' && failure()
+        with:
+          name: failed-system-test-screenshots
+          path: tmp/screenshots/*.png
 
       - name: Check Annotations
         if: matrix.build_type == 'annotations'
@@ -177,14 +206,21 @@ jobs:
 
   core_frontend_tests:
     name: core frontend (${{ matrix.browser }})
-    runs-on: ubuntu-latest
-    container: discourse/discourse_test:slim-browsers
-    timeout-minutes: 30
+    runs-on: ubuntu-20.04-8core
+    container:
+      image: discourse/discourse_test:slim-browsers
+      options: --user discourse
+
+    timeout-minutes: 35
 
     strategy:
       fail-fast: false
       matrix:
-        browser: ["Chrome", "Firefox", "Headless Firefox"]
+        browser: ["Chrome", "Firefox ESR", "Firefox Evergreen"]
+
+    env:
+      TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
+      TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
 
     steps:
       - uses: actions/checkout@v2
@@ -216,23 +252,16 @@ jobs:
       - name: Ember Build
         working-directory: ./app/assets/javascripts/discourse
         run: |
-          sudo -E -u discourse mkdir /tmp/emberbuild
-          sudo -E -u discourse -H yarn ember build --environment=test  -o /tmp/emberbuild
+          mkdir /tmp/emberbuild
+          yarn ember build --environment=test  -o /tmp/emberbuild
 
-      - name: Core QUnit 1
-        if: ${{ always() }}
+      - name: Core QUnit
         working-directory: ./app/assets/javascripts/discourse
-        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=1 --launch "${{ matrix.browser }}" --random
-        timeout-minutes: 20
+        run: yarn ember exam --path /tmp/emberbuild --load-balance --parallel=5  --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
+        timeout-minutes: 15
 
-      - name: Core QUnit 2
+      - uses: actions/upload-artifact@v3
         if: ${{ always() }}
-        working-directory: ./app/assets/javascripts/discourse
-        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=2 --launch "${{ matrix.browser }}" --random
-        timeout-minutes: 20
-
-      - name: Core QUnit 3
-        if: ${{ always() }}
-        working-directory: ./app/assets/javascripts/discourse
-        run: sudo -E -u discourse -H yarn ember exam --path /tmp/emberbuild --split=3 --partition=3 --launch "${{ matrix.browser }}" --random
-        timeout-minutes: 20
+        with:
+          name: ember-exam-execution-${{matrix.browser}}
+          path: ./app/assets/javascripts/discourse/test-execution-*.json

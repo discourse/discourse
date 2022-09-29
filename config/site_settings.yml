@@ -123,6 +123,11 @@ basic:
     default: false
     client: true
     validator: "AllowUserLocaleEnabledValidator"
+  set_locale_from_cookie:
+    default: false
+    hidden: true
+    client: true
+    validator: "AllowUserLocaleEnabledValidator"
   support_mixed_text_direction:
     client: true
     default: false
@@ -168,7 +173,7 @@ basic:
     client: true
     refresh: true
     type: list
-    list_type: compact
+    list_type: simple
     default: "latest|new|unread|top|categories"
     regex: "latest"
     regex_error: "site_settings.errors.must_include_latest"
@@ -222,6 +227,9 @@ basic:
       - twitter
       - facebook
       - email
+  allow_username_in_share_links:
+    client: true
+    default: true
   share_quote_visibility:
     client: true
     type: enum
@@ -369,7 +377,6 @@ basic:
   sitemap_page_size:
     default: 10000
   enable_user_status:
-    hidden: true
     client: true
     default: false
 
@@ -815,6 +822,13 @@ posting:
     client: true
   enable_system_message_replies:
     default: true
+  personal_message_enabled_groups:
+    default: "11" # auto group trust_level_1
+    type: group_list
+    client: true
+    allow_any: false
+    refresh: true
+    validator: "PersonalMessageEnabledGroupsValidator"
   editing_grace_period: 300
   editing_grace_period_max_diff: 100
   editing_grace_period_max_diff_high_trust: 400
@@ -952,7 +966,7 @@ posting:
     client: true
     default: false
   highlighted_languages:
-    default: "apache|bash|cs|cpp|css|coffeescript|diff|xml|http|ini|json|java|javascript|makefile|markdown|nginx|objectivec|ruby|perl|php|python|sql|handlebars"
+    default: "bash|c|cpp|csharp|css|diff|go|graphql|ini|java|javascript|json|kotlin|lua|makefile|markdown|objectivec|perl|php|php-template|plaintext|python|python-repl|r|ruby|rust|scss|shell|sql|swift|typescript|xml|yaml|wasm"
     choices: "HighlightJs.languages"
     type: list
     client: true
@@ -1202,6 +1216,9 @@ email:
   max_emails_per_day_per_user: 100
   enable_staged_users: true
   maximum_staged_users_per_email: 10
+  maximum_recipients_per_new_group_email:
+    default: 10
+    min: 1
   auto_generated_allowlist:
     default: ""
     type: list
@@ -1348,9 +1365,21 @@ files:
   secure_media:
     default: false
     client: true
+    hidden: true
   secure_media_allow_embed_images_in_emails:
     default: true
+    hidden: true
   secure_media_max_email_embed_image_size_kb:
+    default: 1024
+    min: 1
+    max: 10240
+    hidden: true
+  secure_uploads:
+    default: false
+    client: true
+  secure_uploads_allow_embed_images_in_emails:
+    default: true
+  secure_uploads_max_email_embed_image_size_kb:
     default: 1024
     min: 1
     max: 10240
@@ -1988,10 +2017,26 @@ developer:
   enable_experimental_sidebar_hamburger:
     default: false
     client: true
-    hidden: true
   enable_sidebar:
-    default: false
+    default: true
     client: true
+  default_sidebar_categories:
+    type: category_list
+    default: ""
+    client: true
+  default_sidebar_tags:
+    type: tag_list
+    default: ""
+    client: true
+  enable_new_user_profile_nav_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+  include_associated_account_ids:
+    default: false
     hidden: true
 
 embedding:
@@ -2239,6 +2284,7 @@ uncategorized:
   get_a_room_threshold: 3
   dominating_topic_minimum_percent: 20
   disable_avatar_education_message: false
+  pm_warn_user_last_seen_months_ago: 24
 
   global_notice:
     default: ""
@@ -2254,7 +2300,7 @@ uncategorized:
     hidden: true
 
   # Category IDs
-  lounge_category_id:
+  general_category_id:
     default: -1
     hidden: true
   meta_category_id:
@@ -2326,9 +2372,6 @@ uncategorized:
     default: -1
     hidden: true
     client: true
-  lounge_welcome_topic_id:
-    default: -1
-    hidden: true
   admin_quick_start_topic_id:
     default: -1
     hidden: true

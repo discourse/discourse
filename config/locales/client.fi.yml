@@ -156,7 +156,6 @@ fi:
         disabled: "poistettu banneri näkyvistä %{when}. Sitä ei enää näytetä jokaisen sivun ylälaidassa."
       forwarded: "välitetty yllä oleva sähköposti"
     topic_admin_menu: "ketjun toiminnot"
-    wizard_required: "Tervetuloa uuteen Discourseesi! Aloitetaan <a href='%{url}' data-auto-route='true'>ohjattu asennus</a> ✨"
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
     software_update_prompt:
       message: "Sivusto on juuri päivitetty, <span>päivitä sivu</span>, tai sivusto voi käyttäytyä odottamattomasti."
@@ -165,6 +164,7 @@ fi:
       one: "Jotta sivusto saisi lentävämmän lähdön, olet aloitustilassa. Kaikki käyttäjät nousevat heti luottamustasolle 1, ja päivittäiset sähköpostitiivistelmät kytketään päälle. Tila kytkeytyy pois päältä, kun %{count} käyttäjä on liittynyt."
       other: "Jotta sivusto saisi lentävämmän lähdön, olet aloitustilassa. Kaikki käyttäjät nousevat heti luottamustasolle 1, ja päivittäiset sähköpostitiivistelmät kytketään päälle. Tila kytkeytyy pois päältä, kun %{count} käyttäjää on liittynyt."
     bootstrap_mode_disabled: "Aloitustila poistetaan käytöstä seuraavan 24 tunnin aikana."
+    bootstrap_invite_button_title: "Lähetä kutsuja"
     themes:
       default_description: "Oletus"
     s3:
@@ -196,6 +196,8 @@ fi:
     not_implemented: "Tätä toimintoa ei ole vielä toteutettu, pahoittelut!"
     no_value: "Ei"
     yes_value: "Kyllä"
+    ok_value: "OK"
+    cancel_value: "Peruuta"
     submit: "Lähetä"
     generic_error: "On tapahtunut virhe."
     generic_error_with_reason: "Tapahtui virhe: %{error}"
@@ -2174,6 +2176,13 @@ fi:
     not_logged_in_user: "käyttäjäsivu, jossa on yhteenveto käyttäjän viimeaikaisesta toiminnasta sekä käyttäjäasetukset"
     current_user: "siirry omalle käyttäjäsivullesi"
     view_all: "näytä kaikki %{tab}"
+    user_menu:
+      tabs:
+        replies: "Vastaukset"
+        mentions: "Maininnat"
+        likes: "Tykkäykset"
+        bookmarks: "Kirjanmerkit"
+        profile: "Profiili"
     topics:
       new_messages_marker: "edellinen vierailu"
       bulk:
@@ -2779,10 +2788,6 @@ fi:
         confirm:
           one: "Oletko varma, että haluat poistaa viestin?"
           other: "Oletko varma, että haluat poistaa %{count} viestiä?"
-      merge:
-        confirm:
-          one: "Oletko varma, että haluat yhdistää nämä viestit?"
-          other: "Oletko varma, että haluat yhdistää nämä %{count} viestiä?"
       revisions:
         controls:
           first: "Ensimmäinen revisio"
@@ -3310,7 +3315,6 @@ fi:
     download_calendar:
       download: "Lataa"
     tagging:
-      all_tags: "Kaikki tunnisteet"
       other_tags: "Muut tunnisteet"
       selector_all_tags: "kaikki tunnisteet"
       selector_no_tags: "ei tunnisteita"
@@ -3455,10 +3459,6 @@ fi:
         regular: "mestari"
         leader: "johtaja"
       detailed_name: "%{level}: %{name}"
-    user_activity:
-      no_activity_others: "Ei toimintaa."
-      no_replies_others: "Ei vastauksia."
-      no_likes_others: "Ei tykättyjä viestejä."
     sidebar:
       unread_count:
         one: "%{count} lukematta"
@@ -3467,7 +3467,10 @@ fi:
         one: "%{count} uusi"
         other: "%{count} uutta"
       more: "Lisää..."
+      all_categories: "Kaikki alueet"
       sections:
+        about:
+          header_link_text: "Tietoa"
         messages:
           header_link_text: "Viestit"
           links:
@@ -3479,15 +3482,20 @@ fi:
             unread_with_count: "Lukematta (%{count})"
             archive: "Arkisto"
         tags:
-          header_link_title: "kaikki tunnisteet"
           header_link_text: "Tunnisteet"
         categories:
-          header_link_title: "kaikki alueet"
           header_link_text: "Alueet"
         community:
-          header_link_title: "aloitus"
           header_link_text: "Yhteisö"
           links:
+            about:
+              content: "Tietoa"
+            admin:
+              content: "Ylläpitäjä"
+            badges:
+              content: "Kunniamerkit"
+            faq:
+              content: "UKK"
             tracked:
               content: "Seuratut"
             groups:
@@ -4637,7 +4645,6 @@ fi:
         cant_delete_all_too_many_posts:
           one: "Kaikkia viestejä ei voi poistaa, koska käyttäjällä on enemmän kuin %{count} viesti. (delete_all_posts_max)"
           other: "Kaikkia viestejä ei voi poistaa, koska käyttäjällä on enemmän kuin %{count} viestiä. (delete_all_posts_max)"
-        delete_confirm: "On yleisesti kannattavampaa anonymisoida käyttäjä kuin poistaa hänet, jottei olemassa olevista keskusteluista poistu sisältöä.<br><br>Oletko VARMA, että haluat poistaa tämän käyttäjän? Peruuttaminen ei ole mahdollista!"
         delete_and_block: "Poista ja <b>estä</b> tämä sähköposti ja IP-osoite"
         delete_dont_block: "Ainoastaan poista"
         deleting_user: "Poistetaan käyttäjää..."
@@ -4767,7 +4774,6 @@ fi:
         recommended: "On suositeltavaa muokata seuraavaa tekstiä tarpeidesi mukaan:"
         show_overriden: "Näytä vain korvatut"
         locale: "Kieli:"
-        fallback_locale_warning: "Olet muokkaamassa kieltä, joka perustuu kieleen %{fallback}. Käyttäjät, jotka valitsevat näyttöliittymänsä kieleksi kielen %{fallback}, eivät näe muutoksiasi."
         more_than_50_results: "Hakutuloksia on yli 50. Rajaa hakuasi."
       settings:
         show_overriden: "Näytä vain korvatut"

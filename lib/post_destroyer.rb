@@ -335,7 +335,7 @@ class PostDestroyer
     Jobs.enqueue(
       :send_system_message,
       user_id: @post.user_id,
-      message_type: notify_responders ? :flags_agreed_and_post_deleted_for_responders : :flags_agreed_and_post_deleted,
+      message_type: notify_responders ? "flags_agreed_and_post_deleted_for_responders" : "flags_agreed_and_post_deleted",
       message_options: {
         flagged_post_raw_content: notify_responders ? options[:parent_post].raw : @post.raw,
         flagged_post_response_raw_content: @post.raw,

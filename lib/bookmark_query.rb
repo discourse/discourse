@@ -10,7 +10,7 @@ class BookmarkQuery
   end
 
   def self.preload(bookmarks, object)
-    preload_polymorphic_associations(bookmarks)
+    preload_polymorphic_associations(bookmarks, object.guardian)
     if @preload
       @preload.each { |preload| preload.call(bookmarks, object) }
     end
@@ -20,11 +20,13 @@ class BookmarkQuery
   # life easier, which conditionally chooses the bookmark serializer to use based
   # on the type, and we want the associations all loaded ahead of time to make
   # sure we are not doing N+1s.
-  def self.preload_polymorphic_associations(bookmarks)
+  def self.preload_polymorphic_associations(bookmarks, guardian)
     Bookmark.registered_bookmarkables.each do |registered_bookmarkable|
-      registered_bookmarkable.perform_preload(bookmarks)
+      registered_bookmarkable.perform_preload(bookmarks, guardian)
     end
   end
+
+  attr_reader :guardian, :count
 
   def initialize(user:, guardian: nil, params: {})
     @user = user
@@ -32,6 +34,7 @@ class BookmarkQuery
     @guardian = guardian || Guardian.new(@user)
     @page = @params[:page].to_i
     @limit = @params[:limit].present? ? @params[:limit].to_i : @params[:per_page]
+    @count = 0
   end
 
   def list_all(&blk)
@@ -70,6 +73,8 @@ class BookmarkQuery
         bookmarks.reminder_at ASC,
         bookmarks.updated_at DESC"
     )
+
+    @count = results.count
 
     if @page.positive?
       results = results.offset(@page * @params[:per_page])

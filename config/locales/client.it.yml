@@ -179,7 +179,6 @@ it:
       forwarded: "ha inoltrato l'email sopra"
     topic_admin_menu: "azioni argomento"
     skip_to_main_content: "Passa al contenuto principale"
-    wizard_required: "Benvenuto al tuo nuovo sito Discourse! Inizia la <a href='%{url}' data-auto-route='true'>procedura guidata di configurazione</a> ✨"
     emails_are_disabled: "Tutte le e-mail in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviato nessun tipo di notifica via e-mail."
     emails_are_disabled_non_staff: "La posta in uscita è stata disattivata per gli utenti al di fuori dello staff."
     software_update_prompt:
@@ -189,6 +188,7 @@ it:
       one: "Per rendere più facile il lancio del nuovo sito, sei in modalità bootstrap. A tutti i nuovi utenti verrà concesso il livello di attendibilità 1 e verranno attivate le email di riepilogo giornaliere. Questa modalità verrà disattivata automaticamente quando %{count} utente si sarà unito."
       other: "Per rendere più facile il lancio del nuovo sito, sei in modalità bootstrap. A tutti i nuovi utenti verrà concesso il livello di attendibilità 1 e verranno attivate le email di riepilogo giornaliere. Questa modalità verrà disattivata automaticamente quando %{count} utenti si saranno uniti."
     bootstrap_mode_disabled: "La modalità bootstrap sarà disattivata entro 24 ore."
+    bootstrap_invite_button_title: "Manda Inviti"
     themes:
       default_description: "Predefinito"
       broken_theme_alert: "Il sito potrebbe non funzionare a causa di errori in un tema / componente."
@@ -225,6 +225,8 @@ it:
     not_implemented: "Spiacenti! Questa funzione non è stata ancora implementata."
     no_value: "No"
     yes_value: "Sì"
+    ok_value: "OK"
+    cancel_value: "Annulla"
     submit: "Invia"
     generic_error: "Spiacenti, c'è stato un errore."
     generic_error_with_reason: "Si è verificato un errore: %{error}"
@@ -1053,6 +1055,7 @@ it:
       dismiss_notifications: "Ignora tutti"
       dismiss_notifications_tooltip: "Imposta tutte le notifiche non lette come lette "
       dismiss_bookmarks_tooltip: "Contrassegna tutti i promemoria dei segnalibri non letti come già letti"
+      dismiss_messages_tooltip: "Segna come lette tutte le notifiche di messaggi personali non letti"
       no_messages_title: "Non hai messaggi"
       no_messages_body: >
         Hai la necessità di avere una conversazione privata con qualcuno? Invia un messaggio selezionando l'avatar e utilizzando il pulsante del messaggio %{icon}<br><br> Se hai bisogno di aiuto, puoi <a href='%{aboutUrl}'>inviare un messaggio a un membro dello staff</a>.
@@ -1648,7 +1651,6 @@ it:
       set_custom_status: "Imposta stato personalizzato"
       what_are_you_doing: "Cosa fai?"
       remove_status: "Rimuovi lo stato"
-      until: "Fino a:"
     loading: " Caricamento..."
     errors:
       prev_page: "durante il caricamento"
@@ -1712,7 +1714,6 @@ it:
       hide_forever: "no grazie"
       hidden_for_session: "OK, te lo chiederemo domani. Puoi sempre utilizzare \"Accedi\" anche per creare un account."
       intro: "Ciao! Sembra che la discussione ti interessi, ma non hai ancora registrato un account."
-      value_prop: "Non ti piace dover scorrere gli stessi messaggi? Quando crei un account, riprenderai sempre dall'ultimo messaggio letto. Potrai anche ricevere notifiche di nuove risposte, salvare segnalibri e usare i \"mi piace\" per ringraziare gli altri. Possiamo lavorare tutti insieme per rendere questa comunità un posto fantastico. :heart:"
     summary:
       enabled_description: "Stai visualizzando un riepilogo dell'argomento: è la comunità a determinare quali sono i messaggi più interessanti."
       description:
@@ -1966,6 +1967,8 @@ it:
       similar_topics: "Il tuo argomento è simile a..."
       drafts_offline: "bozze offline"
       edit_conflict: "modifica conflitto"
+      esc: "esc"
+      esc_label: "Clicca o premi Esc per chiudere"
       group_mentioned_limit:
         one: "<b>Attenzione!</b> Hai menzionato <a href='%{group_link}'>%{group}</a>, tuttavia questo gruppo ha più membri rispetto al limite di %{count} menzione di utente configurato dall'amministratore. Non ci saranno notifiche."
         other: "<b>Attenzione!</b> Hai menzionato <a href='%{group_link}'>%{group}</a>, tuttavia questo gruppo ha più membri rispetto al limite di %{count} menzioni di utenti configurato dall'amministratore. Non ci saranno notifiche."
@@ -2057,6 +2060,7 @@ it:
       abandon: "chiudi il composer e scarta la bozza"
       enter_fullscreen: "Espandi il composer a tutto schermo"
       exit_fullscreen: "esci dal composer a tutto schermo"
+      exit_fullscreen_prompt: "Premi <kbd>ESC</kbd> per uscire dallo schermo intero."
       show_toolbar: "mostra la barra degli strumenti del Composer"
       hide_toolbar: "nascondi la barra degli strumenti del Composer"
       modal_ok: "OK"
@@ -2161,6 +2165,9 @@ it:
           default:
             one: "Sei sicuro/a? Hai %{count} notifica importante."
             other: "Sei sicuro? Hai %{count} notifiche importanti."
+          messages:
+            one: "Sei sicuro/a? Hai %{count} messaggio personale non letto."
+            other: "Sei sicuro/a? Hai %{count} messaggi personali non letti."
         dismiss: "Ignora"
         cancel: "Annulla"
       group_message_summary:
@@ -2341,15 +2348,20 @@ it:
     view_all: "visualizza tutto in %{tab}"
     user_menu:
       generic_no_items: "Non ci sono elementi in questo elenco."
-      sr_menu_tabs: "Schede del menu"
       view_all_notifications: "visualizza tutte le notifiche"
       view_all_bookmarks: "visualizza tutti i segnalibri"
+      view_all_messages: "visualizza tutti i messaggi personali"
+      tabs:
+        replies: "Risposte"
+        mentions: "Menzioni"
+        likes: "Mi piace - Assegnati"
+        bookmarks: "Segnalibri"
+        profile: "Profilo"
       reviewable:
         queue: "Coda"
         deleted_user: "(utente cancellato)"
         post_number_with_topic_title: "messaggio #%{post_number} - %{title}"
         new_post_in_topic: "nuovo messaggio in %{title}"
-        suspicious_user: "utente sospetto %{username}"
         default_item: "elemento da rivedere #%{reviewable_id}"
     topics:
       new_messages_marker: "ultima visita"
@@ -2992,10 +3004,6 @@ it:
         confirm:
           one: "Vuoi davvero eliminare il messaggio?"
           other: "Vuoi davvero eliminare questi %{count} messaggi?"
-      merge:
-        confirm:
-          one: "Sicuro di voler unire questi messaggi?"
-          other: "Sicuro di voler unire questi %{count} messaggi?"
       revisions:
         controls:
           first: "Prima revisione"
@@ -3562,7 +3570,6 @@ it:
       google: "Google Calendar"
       ics: "ICS"
     tagging:
-      all_tags: "Tutte le Etichette"
       other_tags: "Altre Etichette"
       selector_all_tags: "tutte le etichette"
       selector_no_tags: "nessuna etichetta"
@@ -3724,14 +3731,13 @@ it:
     user_activity:
       no_activity_title: "Ancora nessuna attività"
       no_activity_body: "Ti diamo il benvenuto nella nostra comunità! Sei nuovo/a e non hai ancora contribuito a nessuna discussione. Per cominciare, clicca su <a href='%{topUrl}'>Popolari</a> o <a href='%{categoriesUrl}'>Categorie</a> e inizia a leggere! Seleziona %{heartIcon} sui post che ti piacciono o che vuoi approfondire. A mano a mano che partecipi, le tue attività saranno elencate qui."
-      no_activity_others: "Nessuna attività."
       no_replies_title: "Non hai ancora risposto a nessun argomento"
-      no_replies_others: "Nessuna risposta."
+      no_replies_title_others: "%{username} non ha ancora risposto a nessun argomento"
       no_drafts_title: "Non hai iniziato nessuna bozza"
       no_drafts_body: "Non sei ancora pronto/a a pubblicare? Salveremo automaticamente una nuova bozza e la elencheremo qui ogni volta che inizierai a scrivere un argomento, una risposta o un messaggio personale. Seleziona il pulsante Annulla per eliminare o salvare la bozza e continuare a scrivere più avanti."
       no_likes_title: "Non hai ancora messo \"mi piace\" a nessun argomento"
+      no_likes_title_others: "%{username} non ha ancora messo Mi piace a nessun argomento"
       no_likes_body: "Un ottimo modo per iniziare a contribuire è mettersi a leggere le conversazioni già avvenute e assegnare un %{heartIcon} ai post che ti piacciono!"
-      no_likes_others: "Nessun messaggio con \"Mi piace\"."
       no_topics_title: "Non hai ancora avviato nessun argomento"
       no_topics_body: "È sempre meglio <a href='%{searchUrl}'>cercare</a> argomenti di conversazione già esistenti prima di iniziarne uno nuovo, ma se sei sicuro che l'argomento che desideri non sia già presente, procedi a creare un nuovo argomento tutto tuo. Cerca il pulsante <kbd>+ Nuovo Argomento</kbd> vicino all'elenco di argomenti, categorie o etichette per iniziare a creare un nuovo argomento in quell'area."
       no_topics_title_others: "%{username} non ha ancora iniziato nessun argomento"
@@ -3754,9 +3760,11 @@ it:
         other: "%{count} nuovi"
       toggle_section: "inverti sezione"
       more: "Altro..."
+      all_categories: "Tutte le categorie"
       sections:
+        about:
+          header_link_text: "Informazioni su"
         messages:
-          header_link_title: "messaggi personali"
           header_link_text: "Messaggi"
           header_action_title: "crea un messaggio personale"
           links:
@@ -3770,23 +3778,28 @@ it:
         tags:
           none: "Non hai aggiunto nessuna etichetta."
           click_to_get_started: "Clicca qui per iniziare."
-          header_link_title: "tutte le etichette"
           header_link_text: "Etichette"
           header_action_title: "modifica le etichette nella barra laterale"
         categories:
           none: "Non hai aggiunto nessuna categoria."
           click_to_get_started: "Clicca qui per iniziare."
-          header_link_title: "tutte le categorie"
           header_link_text: "Categorie"
           header_action_title: "modifica le categorie nella barra laterale"
         community:
-          header_link_title: "home"
           header_link_text: "Comunità"
           header_action_title: "crea un nuovo argomento"
           links:
+            about:
+              content: "Informazioni su"
+            admin:
+              content: "Amministrazione"
+            badges:
+              content: "Distintivi"
             everything:
               content: "Tutti"
               title: "Tutti gli argomenti"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Seguite"
               title: "Tutti gli argomenti seguiti"
@@ -3802,6 +3815,10 @@ it:
               draft_count:
                 one: "%{count} bozza"
                 other: "%{count} bozze"
+    welcome_topic_banner:
+      title: "Crea il tuo argomento di benvenuto"
+      button_title: "Inizia a modificare"
+    until: "Fino a:"
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:
@@ -4358,6 +4375,8 @@ it:
           import_web_advanced: "Avanzate..."
           import_file_tip: "File .tar.gz, .zip, o .dcstyle.json contenente il tema"
           is_private: "Il tema è in un archivio git privato"
+          finish_install: "Completa l'installazione del tema"
+          last_attempt: "Il processo di installazione non si è concluso, ultimo tentativo:"
           remote_branch: "Nome del branch (opzionale)"
           public_key: "Concedi l'accesso all'archivio con la seguente chiave pubblica:"
           public_key_note: "Dopo l’inserimento di un URL valido di archivio riservato, verrà generata e qui visualizzata una corrispondente chiave SSH."
@@ -4368,6 +4387,8 @@ it:
           install_git_repo: "Da un archivio git"
           install_create: "Crea nuovo"
           duplicate_remote_theme: "Il componente del tema «%{name}» è già installato, sei sicuro di volerne installare un'altra copia?"
+          force_install: "Il tema non può essere installato perché il repository Git è inaccessibile. Sei sicuro di voler continuare l'installazione?"
+          create_placeholder: "Crea Segnaposto"
           about_theme: "Informazioni su"
           license: "Licenza"
           version: "Versione:"
@@ -4998,7 +5019,8 @@ it:
         cant_delete_all_too_many_posts:
           one: "Impossibile cancellare tutti i messaggi perché l'utente ha più di %{count} messaggio. (delete_all_posts_max)"
           other: "Impossibile cancellare tutti i messaggi perché l'utente ha più di %{count} messaggi. (delete_all_posts_max.)"
-        delete_confirm: "E' preferibile rendere anonimo un utente anziché eliminarlo, per evitare di rimuovere contenuti dalle discussioni esistenti.<br><br> Sei SICURO di voler eliminare questo utente? Questa azione è permanente!"
+        delete_confirm_title: "Vuoi DAVVERO eliminare questo utente? Questa operazione è irreversibile!"
+        delete_confirm: "In genere è preferibile rendere anonimi gli utenti piuttosto che eliminarli, per evitare di rimuoverne i contenuti dalle discussioni esistenti."
         delete_and_block: "Elimina e <b>blocca</b> questa email e indirizzo IP"
         delete_dont_block: "Elimina soltanto"
         deleting_user: "Cancellazione utente..."
@@ -5129,7 +5151,6 @@ it:
         recommended: "Consigliamo di personalizzare il seguente testo per adattarlo alle tue necessità:"
         show_overriden: "Mostra solo le opzioni sovrascritte"
         locale: "Lingua:"
-        fallback_locale_warning: "Stai modificando una lingua in base a %{fallback}. Gli utenti che scelgono %{fallback} come lingua dell'interfaccia non visualizzeranno le modifiche apportate."
         more_than_50_results: "Ci sono più di 50 risultati. Restringi i criteri di ricerca."
       settings:
         show_overriden: "Mostra solo le opzioni sovrascritte"

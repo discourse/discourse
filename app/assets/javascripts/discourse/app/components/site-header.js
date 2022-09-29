@@ -80,14 +80,6 @@ const SiteHeaderComponent = MountWidget.extend(
       return this._isRTL() ? "user-menu" : "hamburger-panel";
     },
 
-    _leftMenuAction() {
-      return this._isRTL() ? "toggleUserMenu" : "toggleHamburger";
-    },
-
-    _rightMenuAction() {
-      return this._isRTL() ? "toggleHamburger" : "toggleUserMenu";
-    },
-
     _handlePanDone(event) {
       const menuPanels = document.querySelectorAll(".menu-panel");
       const menuOrigin = this._panMenuOrigin;
@@ -185,7 +177,20 @@ const SiteHeaderComponent = MountWidget.extend(
         this.docAt = header.offsetTop;
       }
 
-      const main = document.querySelector("#main");
+      const headerRect = header.getBoundingClientRect();
+      let headerOffsetCalc = headerRect.top + headerRect.height;
+
+      if (window.scrollY < 0) {
+        headerOffsetCalc += window.scrollY;
+      }
+
+      const newValue = `${headerOffsetCalc}px`;
+      if (newValue !== this.currentHeaderOffsetValue) {
+        this.currentHeaderOffsetValue = newValue;
+        document.documentElement.style.setProperty("--header-offset", newValue);
+      }
+
+      const main = document.querySelector(".ember-application");
       const offsetTop = main ? main.offsetTop : 0;
       const offset = window.pageYOffset - offsetTop;
       if (offset >= this.docAt) {
@@ -223,6 +228,17 @@ const SiteHeaderComponent = MountWidget.extend(
 
       if (this.currentUser?.redesigned_user_menu_enabled) {
         this.appEvents.on("user-menu:rendered", this, "_animateMenu");
+      }
+
+      if (
+        this.siteSettings.enable_experimental_sidebar_hamburger &&
+        !this.sidebarEnabled
+      ) {
+        this.appEvents.on(
+          "sidebar-hamburger-dropdown:rendered",
+          this,
+          "_animateMenu"
+        );
       }
 
       this.dispatch("notifications:changed", "user-notifications");
@@ -341,6 +357,17 @@ const SiteHeaderComponent = MountWidget.extend(
         this.appEvents.off("user-menu:rendered", this, "_animateMenu");
       }
 
+      if (
+        this.siteSettings.enable_experimental_sidebar_hamburger &&
+        !this.sidebarEnabled
+      ) {
+        this.appEvents.off(
+          "sidebar-hamburger-dropdown:rendered",
+          this,
+          "_animateMenu"
+        );
+      }
+
       if (this.currentUser) {
         this.currentUser.off("status-changed", this, "queueRerender");
       }
@@ -373,6 +400,7 @@ const SiteHeaderComponent = MountWidget.extend(
 
     _animateMenu() {
       const menuPanels = document.querySelectorAll(".menu-panel");
+
       if (menuPanels.length === 0) {
         if (this.site.mobileView) {
           this._animate = true;

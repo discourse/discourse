@@ -273,7 +273,7 @@ RSpec.describe TopicQuery do
 
       list = TopicQuery.new(moderator, category: diff_category.slug).list_latest
       expect(list.topics.size).to eq(1)
-      expect(list.preload_key).to eq("topic_list_c/different-category/#{diff_category.id}/l/latest")
+      expect(list.preload_key).to eq("topic_list")
 
       # Defaults to no category filter when slug does not exist
       expect(TopicQuery.new(moderator, category: 'made up slug').list_latest.topics.size).to eq(2)
@@ -425,6 +425,10 @@ RSpec.describe TopicQuery do
 
       it "can return topics with all specified tags" do
         expect(TopicQuery.new(moderator, tags: [tag.name, other_tag.name], match_all_tags: true).list_latest.topics.map(&:id)).to eq([tagged_topic3.id])
+      end
+
+      it "can return topics with tag intersections using truthy/falsey values" do
+        expect(TopicQuery.new(moderator, tags: [tag.name, other_tag.name], match_all_tags: "false").list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic2.id, tagged_topic3.id].sort)
       end
 
       it "returns an empty relation when an invalid tag is passed" do
@@ -1087,12 +1091,18 @@ RSpec.describe TopicQuery do
       TopicUser.update_last_read(user, topic, post_number, post_number, 10000)
     end
 
-    it 'returns the correct suggestions' do
+    before do
+      user.change_trust_level!(4)
+      sender.change_trust_level!(4)
+    end
 
+    it 'returns the correct suggestions' do
       pm_to_group = create_pm(sender, target_group_names: [group_with_user.name])
       pm_to_user = create_pm(sender, target_usernames: [user.username])
 
-      old_unrelated_pm = create_pm(target_usernames: [user.username])
+      other_user = Fabricate(:user)
+      other_user.change_trust_level!(1)
+      old_unrelated_pm = create_pm(other_user, target_usernames: [user.username])
       read(user, old_unrelated_pm, 1)
 
       related_by_user_pm = create_pm(sender, target_usernames: [user.username])
@@ -1109,7 +1119,7 @@ RSpec.describe TopicQuery do
         eq([related_by_user_pm.id])
       )
 
-      SiteSetting.enable_personal_messages = false
+      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
       expect(TopicQuery.new(user).list_related_for(pm_to_group)).to be_blank
       expect(TopicQuery.new(user).list_related_for(pm_to_user)).to be_blank
     end
@@ -1147,7 +1157,7 @@ RSpec.describe TopicQuery do
 
     context 'when logged in' do
       def suggested_for(topic)
-        topic_query.list_suggested_for(topic).topics.map { |t| t.id }
+        topic_query.list_suggested_for(topic)&.topics&.map { |t| t.id }
       end
 
       let(:topic) { Fabricate(:topic) }
@@ -1232,6 +1242,8 @@ RSpec.describe TopicQuery do
         before do
           group.add(group_user)
           another_group.add(user)
+          Group.user_trust_level_change!(user.id, user.trust_level)
+          Group.user_trust_level_change!(group_user.id, group_user.trust_level)
         end
 
         context 'as user not part of group' do
@@ -1247,6 +1259,16 @@ RSpec.describe TopicQuery do
 
           it 'should return the group topics' do
             expect(suggested_topics).to match_array([private_group_topic.id, private_message.id])
+          end
+
+          context "when enable_personal_messages is false" do
+            before do
+              SiteSetting.enable_personal_messages = false
+            end
+
+            it 'should not return topics by the group user' do
+              expect(suggested_topics).to eq(nil)
+            end
           end
         end
 

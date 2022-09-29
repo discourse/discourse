@@ -1,15 +1,27 @@
 # frozen_string_literal: true
 
 module EmberCli
-  ASSETS = %w(
-    discourse.js
-    admin.js
-    wizard.js
-    ember_jquery.js
-    pretty-text-bundle.js
-    start-discourse.js
-    vendor.js
-  ) + Dir.glob("app/assets/javascripts/discourse/scripts/*.js").map { |f| File.basename(f) }
+  def self.assets
+    @assets ||= begin
+      assets = %w(
+        discourse.js
+        admin.js
+        wizard.js
+        ember_jquery.js
+        markdown-it-bundle.js
+        start-discourse.js
+        vendor.js
+      )
+      assets += Dir.glob("app/assets/javascripts/discourse/scripts/*.js").map { |f| File.basename(f) }
+
+      Discourse.find_plugin_js_assets(include_disabled: true).each do |file|
+        next if file.ends_with?("_extra") # these are still handled by sprockets
+        assets << "#{file}.js"
+      end
+
+      assets
+    end
+  end
 
   def self.script_chunks
     return @@chunk_infos if defined? @@chunk_infos
@@ -29,6 +41,13 @@ module EmberCli
   end
 
   def self.is_ember_cli_asset?(name)
-    ASSETS.include?(name) || name.start_with?("chunk.")
+    assets.include?(name) || name.start_with?("chunk.")
+  end
+
+  def self.ember_version
+    @version ||= begin
+      ember_source_package_raw = File.read("#{Rails.root}/app/assets/javascripts/node_modules/ember-source/package.json")
+      JSON.parse(ember_source_package_raw)["version"]
+    end
   end
 end

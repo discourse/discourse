@@ -109,6 +109,16 @@ module Discourse
       nil
     end
 
+    class CommandError < RuntimeError
+      attr_reader :status, :stdout, :stderr
+      def initialize(message, status: nil, stdout: nil, stderr: nil)
+        super(message)
+        @status = status
+        @stdout = stdout
+        @stderr = stderr
+      end
+    end
+
     private
 
     class CommandRunner
@@ -145,7 +155,12 @@ module Discourse
 
         if !status.exited? || !success_status_codes.include?(status.exitstatus)
           failure_message = "#{failure_message}\n" if !failure_message.blank?
-          raise "#{caller[0]}: #{failure_message}#{stderr}"
+          raise CommandError.new(
+            "#{caller[0]}: #{failure_message}#{stderr}",
+            stdout: stdout,
+            stderr: stderr,
+            status: status
+          )
         end
 
         stdout
@@ -382,12 +397,19 @@ module Discourse
 
   def self.find_plugin_js_assets(args)
     plugins = self.find_plugins(args).select do |plugin|
-      plugin.js_asset_exists?
+      plugin.js_asset_exists? || plugin.extra_js_asset_exists? || plugin.admin_js_asset_exists?
     end
 
     plugins = apply_asset_filters(plugins, :js, args[:request])
 
-    plugins.map { |plugin| "plugins/#{plugin.directory_name}" }
+    plugins.flat_map do |plugin|
+      assets = []
+      assets << "plugins/#{plugin.directory_name}" if plugin.js_asset_exists?
+      assets << "plugins/#{plugin.directory_name}_extra" if plugin.extra_js_asset_exists?
+      # TODO: make admin asset only load for admins
+      assets << "plugins/#{plugin.directory_name}_admin" if plugin.admin_js_asset_exists?
+      assets
+    end
   end
 
   def self.assets_digest
@@ -1062,5 +1084,11 @@ module Discourse
     ThemeField.force_recompilation!
     Theme.all.each(&:update_javascript_cache!)
     Theme.expire_site_cache!
+  end
+
+  def self.anonymous_locale(request)
+    locale = HttpLanguageParser.parse(request.cookies["locale"]) if SiteSetting.set_locale_from_cookie
+    locale ||= HttpLanguageParser.parse(request.env["HTTP_ACCEPT_LANGUAGE"]) if SiteSetting.set_locale_from_accept_language_header
+    locale
   end
 end

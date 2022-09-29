@@ -150,10 +150,10 @@ et:
         disabled: "eemaldas selle bänneri %{when}. Seda ei kuvata enam iga lehe ülaosas."
       forwarded: "edastas ülaltoodud e-kirja"
     topic_admin_menu: "teema toimingud"
-    wizard_required: "Tere tulemast uude Discourse’i! Alusta <a href='%{url}' data-auto-route='true'>häälestusviisardiga</a> ✨"
     emails_are_disabled: "Kõik väljuvad meilid on administraatori poolt blokeeritud. Ühtegi teavitust meili teel ei saadeta."
     software_update_prompt:
       dismiss: "Ignoreeri"
+    bootstrap_invite_button_title: "Saada kutsed"
     themes:
       default_description: "Vaikimisi"
     s3:
@@ -179,6 +179,8 @@ et:
     not_implemented: "Seda omadust pole veel rakendatud, vabandame!"
     no_value: "Ei"
     yes_value: "Jah"
+    ok_value: "OK"
+    cancel_value: "Tühista"
     submit: "Saada"
     generic_error: "Vabandust, tekkis viga."
     generic_error_with_reason: "Tekkis viga: %{error}"
@@ -1547,6 +1549,13 @@ et:
     not_logged_in_user: "kasutajaleht koos toimingute ja eelistuste kokkuvõttega"
     current_user: "mine oma kasutajalehele"
     view_all: "vaata kõiki %{tab}"
+    user_menu:
+      tabs:
+        replies: "Vastused"
+        mentions: "Mainimisi"
+        likes: "Meeldimisi antud"
+        bookmarks: "Järjehoidjat"
+        profile: "Profiil"
     topics:
       new_messages_marker: "viimane visiit"
       bulk:
@@ -2027,10 +2036,6 @@ et:
         confirm:
           one: "Oled sa kindel, et soovid seda postitust kustutada?"
           other: "Oled sa kindel, et soovid neid %{count} postitust kustutada?"
-      merge:
-        confirm:
-          one: "Oled kindel, et soovid need postitused ühendada?"
-          other: "Oled kindel, et soovid need %{count} postitust ühendada?"
       revisions:
         controls:
           first: "Esimene redaktsioon"
@@ -2451,7 +2456,6 @@ et:
     download_calendar:
       download: "Lae alla"
     tagging:
-      all_tags: "Kõik sildid"
       other_tags: "Muud sildid"
       selector_all_tags: "kõik sildid"
       selector_no_tags: "sildid puuduvad"
@@ -2528,10 +2532,6 @@ et:
         member: "liige"
         regular: "tavaline"
         leader: "juht"
-    user_activity:
-      no_activity_others: "Tegevusi pole."
-      no_replies_others: "Vastuseid pole."
-      no_likes_others: "Meeldimisega postitusi veel pole."
     sidebar:
       unread_count:
         one: "%{count} lugemata"
@@ -2540,7 +2540,10 @@ et:
         one: "%{count} uus"
         other: "%{count} uut"
       more: "Veel..."
+      all_categories: "Kõik foorumid"
       sections:
+        about:
+          header_link_text: "Teave"
         messages:
           header_link_text: "Sõnumid"
           links:
@@ -2552,15 +2555,20 @@ et:
             unread_with_count: "Lugemata (%{count})"
             archive: "Arhiiv"
         tags:
-          header_link_title: "kõik sildid"
           header_link_text: "Sildid"
         categories:
-          header_link_title: "kõik foorumid"
           header_link_text: "Liigid"
         community:
-          header_link_title: "avaleht"
           header_link_text: "Kogukond"
           links:
+            about:
+              content: "Teave"
+            admin:
+              content: "Admin"
+            badges:
+              content: "Märgised"
+            faq:
+              content: "KKK"
             tracked:
               content: "Jälgitud"
             groups:

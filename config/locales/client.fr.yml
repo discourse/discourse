@@ -179,7 +179,6 @@ fr:
       forwarded: "a transmis le courriel ci-dessus"
     topic_admin_menu: "actions du sujet"
     skip_to_main_content: "Passer au contenu principal"
-    wizard_required: "Bienvenue sur votre nouveau Discourse ! Démarrons par <a href='%{url}' data-auto-route='true'>l'assistant de configuration</a> ✨"
     emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification par courriel ne sera envoyée."
     emails_are_disabled_non_staff: "L'envoi de courriel est désactivé pour les utilisateurs ne faisant pas partie des responsables."
     software_update_prompt:
@@ -189,6 +188,8 @@ fr:
       one: "Pour faciliter son lancement, votre nouveau site se trouve en mode d'amorçage. Chaque nouvel utilisateur se verra accorder le niveau de confiance 1 et recevra des résumés quotidiens par courriel. Ce mode sera automatiquement désactivé dès que votre site possédera %{count} utilisateur."
       other: "Pour faciliter son lancement, votre nouveau site se trouve en mode d'amorçage. Chaque nouvel utilisateur se verra accorder le niveau de confiance 1 et recevra des résumés quotidiens par courriel. Ce mode sera automatiquement désactivé dès que votre site possédera %{count} utilisateurs."
     bootstrap_mode_disabled: "Le mode d'amorçage sera désactivé dans les prochaines 24 heures."
+    bootstrap_invite_button_title: "Envoyer des invitations"
+    bootstrap_wizard_link_title: "Fin de l'assistant d'installation"
     themes:
       default_description: "Par défaut"
       broken_theme_alert: "Votre site risque de ne pas fonctionner car un thème ou un composant de thème a déclenché une ou plusieurs erreurs."
@@ -225,6 +226,8 @@ fr:
     not_implemented: "Cette fonctionnalité n'est pas encore disponible."
     no_value: "Non"
     yes_value: "Oui"
+    ok_value: "OK"
+    cancel_value: "Annuler"
     submit: "Envoyer"
     generic_error: "Nous sommes désolés, une erreur est survenue."
     generic_error_with_reason: "Une erreur est survenue : %{error}"
@@ -1052,6 +1055,8 @@ fr:
       dismiss: "Vu"
       dismiss_notifications: "Tout vu"
       dismiss_notifications_tooltip: "Marquer les notifications comme lues"
+      dismiss_bookmarks_tooltip: "Marquer tous les rappels de favoris non-lus comme lus"
+      dismiss_messages_tooltip: "Marquer toutes les notifications de messages directs non-lues comme lues"
       no_messages_title: "Vous n'avez aucun message"
       no_messages_body: >
         Besoin d'échanger directement avec une personne en-dehors de la conversation principale ? Sélectionnez son avatar et utilisez le bouton %{icon} pour lui écrire un message.<br><br>Pour obtenir de l'aide, <a href='%{aboutUrl}'>adressez-vous à l'un des responsables du site</a>.
@@ -1179,7 +1184,7 @@ fr:
         personal: "Personnels"
         latest: "Récents"
         sent: "Envoyés"
-        unread: "Non lues"
+        unread: "Non lus"
         unread_with_count:
           one: "Non lu (%{count})"
           other: "Non lu (%{count})"
@@ -1197,6 +1202,7 @@ fr:
         read_more_in_group: "Envie d'en lire encore&nbsp;? Consultez d'autres messages dans %{groupLink}."
         read_more: "Envie d'en lire encore&nbsp;? Consultez d'autres messages dans vos <a href='%{basePath}/u/%{username}/messages'>messages personnels</a>."
         read_more_group_pm_MF: "Il reste { UNREAD, plural, =0 {} one {1 sujet <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'>non lu</a>} other {# sujets <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'>non lus</a>} } { NEW, plural, =0 {} one { { BOTH, select, true { et } false {} other {} }1 <a href='{basePath}/u/{username}/messages/group/{groupName}/new'>nouveau</a> sujet} other { { BOTH, select, true { et } false {} other {} } # <a href='{basePath}/u/{username}/messages/group/{groupName}/new'>nouveaux</a> sujets}}, ou vous pouvez aussi consulter les autres sujets dans {groupLink}"
+        read_more_personal_pm_MF: "Il reste { UNREAD, plural, =0 {} one {un message <a href='{basePath}/u/{username}/messages/unread'>non lu</a>} other {# messages <a href='{basePath}/u/{username}/messages//unread'>non lus</a>} } { NEW, plural, =0 {} one { { BOTH, select, true { et } false {} other {} }un <a href='{basePath}/u/{username}/messages/new'>nouveau</a> message} other { { BOTH, select, true { et } false {} other {} } # <a href='{basePath}/u/{username}/messages/new'>nouveaux</a> messages}}, ou vous pouvez aussi consulter les autres <a href='{basePath}/u/{username}/messages'>messages personnels</a>"
       preferences_nav:
         account: "Compte"
         security: "Sécurité"
@@ -1648,7 +1654,6 @@ fr:
       set_custom_status: "Définir un statut personnalisé"
       what_are_you_doing: "« Que faites-vous ? »"
       remove_status: "Supprimer le statut"
-      until: "Jusqu'à :"
     loading: "Chargement…"
     errors:
       prev_page: "lors du chargement de"
@@ -1877,6 +1882,7 @@ fr:
       categories_only: "Catégories seules"
       categories_with_featured_topics: "Catégories avec sujets à la une"
       categories_and_latest_topics: "Catégories et sujets récents"
+      categories_and_latest_topics_created_date: "Catégories et Sujets récents (trier par date de création du sujet)"
       categories_and_top_topics: "Catégories et meilleurs sujets"
       categories_boxes: "Boîtes avec sous-catégories"
       categories_boxes_with_topics: "Boîtes avec sujets à la une"
@@ -2055,6 +2061,7 @@ fr:
       abandon: "fermer le panneau d'édition et supprimer le brouillon"
       enter_fullscreen: "utiliser l'éditeur plein écran"
       exit_fullscreen: "sortir de l'éditeur plein écran"
+      exit_fullscreen_prompt: "Appuyer sur <kbd>ESC</kbd> pour sortir du plein écran"
       show_toolbar: "afficher la barre d'outils de l'éditeur"
       hide_toolbar: "masquer la barre d'outils de l'éditeur"
       modal_ok: "OK"
@@ -2098,6 +2105,7 @@ fr:
       ignore: "Ignorer"
       image_alt_text:
         aria_label: Texte alternatif pour l'image
+      delete_image_button: Supprimer l'image
     notifications:
       tooltip:
         regular:
@@ -2157,6 +2165,9 @@ fr:
           default:
             one: "Vous avez %{count} notification importante. Voulez-vous continuer?"
             other: "Vous avez %{count} notifications importantes. Voulez-vous continuer?"
+          messages:
+            one: "Êtes-vous sûr·e ? Vous avez %{count} message personnel non lu."
+            other: "Êtes-vous sûr·e ? Vous avez %{count} messages personnels non lus."
         dismiss: "Vu"
         cancel: "Annuler"
       group_message_summary:
@@ -2337,10 +2348,30 @@ fr:
     view_all: "voir les %{tab}"
     user_menu:
       generic_no_items: "Cette liste ne contient aucun élément."
-      sr_menu_tabs: "Onglets du menu"
+      sr_menu_tabs: "Onglets du menu utilisateur"
       view_all_notifications: "Afficher toutes les notifications"
+      view_all_bookmarks: "voir tous les signets"
+      view_all_messages: "voir tous les messages personnels"
+      tabs:
+        all_notifications: "Toutes les notifications"
+        replies: "Réponses"
+        mentions: "Mentions"
+        likes: "« J'aime » attribués"
+        watching: "Sujets suivis"
+        messages: "Messages directs"
+        bookmarks: "Signets"
+        review_queue: "Examiner la file d'attente"
+        other_notifications: "Autres notifications"
+        profile: "Profil"
       reviewable:
+        view_all: "Afficher tous les éléments à examiner"
         queue: "File d'attente"
+        deleted_user: "(utilisateur supprimé)"
+        deleted_post: "(message supprimé)"
+        post_number_with_topic_title: "publication #%{post_number} - %{title}"
+        new_post_in_topic: "nouvelle contribution dans %{title}"
+        user_requires_approval: "%{username} requiert une approbation"
+        default_item: "élément à examiner #%{reviewable_id}"
     topics:
       new_messages_marker: "dernière visite"
       bulk:
@@ -2844,6 +2875,7 @@ fr:
         one: "Ce message a reçu %{count} réponse. Cliquez pour développer l'affichage"
         other: "Ce message a reçu %{count} réponses. Cliquez pour développer l'affichage"
       expand_collapse: "développer/réduire"
+      sr_below_embedded_posts_description: "réponses à la publication #%{post_number}"
       sr_embedded_reply_description: "réponse de @%{username} au message #%{post_number}"
       locked: "un responsable a verrouillé ce message pour empêcher sa modification"
       gap:
@@ -2984,10 +3016,6 @@ fr:
         confirm:
           one: "Voulez-vous vraiment supprimer ce message ?"
           other: "Voulez-vous vraiment supprimer ces %{count} messages ?"
-      merge:
-        confirm:
-          one: "Voulez-vous vraiment fusionner ces messages ?"
-          other: "Voulez-vous vraiment fusionner ces %{count} messages ?"
       revisions:
         controls:
           first: "Première révision"
@@ -3404,6 +3432,8 @@ fr:
         this_week: "Semaine"
         today: "Aujourd'hui"
         other_periods: "voir le top :"
+    browser_update: 'Malheureusement, <a href="https://www.discourse.org/faq/#browser">votre navigateur n''est pas pris en charge</a>. Merci de <a href="https://browsehappy.com">mettre à jour votre navigateur</a> pour afficher le contenu enrichi, vous connecter et répondre.'
+    safari_13_warning: Ce site va bientôt supprimer la prise en charge des versions 13 et inférieures d'iOS et de Safari. Une version simplifiée en lecture seule restera disponible. (<a href="https://meta.discourse.org/t/224747">plus d'informations</a>)
     permission_types:
       full: "Créer/Répondre/Voir"
       create_post: "Répondre/Voir"
@@ -3494,6 +3524,7 @@ fr:
         edit: "%{shortcut} Modifier le message"
         delete: "%{shortcut} Supprimer le message"
         mark_muted: "%{shortcut} Mettre le sujet en sourdine"
+        mark_regular: "%{shortcut} Sujet normal (par défaut)"
         mark_tracking: "%{shortcut} Suivre le sujet"
         mark_watching: "%{shortcut} Surveiller le sujet"
         print: "%{shortcut} Imprimer le sujet"
@@ -3714,14 +3745,11 @@ fr:
     user_activity:
       no_activity_title: "Aucune activité pour le moment."
       no_activity_body: "Bienvenue dans notre communauté ! Vous êtes tout nouveau ici et n'avez pas encore contribué aux discussions. Dans un premier temps, visitez <a href='%{topUrl}'>Top</a> ou <a href='%{categoriesUrl}'>Catégories</a> et commencez simplement à lire ! Sélectionnez %{heartIcon} sur les publications que vous aimez ou sur lesquelles vous souhaitez en savoir plus. Au fur et à mesure de votre participation, votre activité sera listée ici."
-      no_activity_others: "Aucune activité."
       no_replies_title: "Vous n'avez publié de réponse à aucun sujet pour le moment"
-      no_replies_others: "Aucune réponse."
       no_drafts_title: "Vous n'avez enregistré aucun brouillon"
       no_drafts_body: "Vous n'êtes pas tout à fait prêt à publier ? Nous enregistrerons automatiquement un nouveau brouillon et le répertorierons ici chaque fois que vous commencerez à rédiger un sujet, une réponse ou un message personnel. Sélectionnez le bouton Annuler pour supprimer, ou enregistrez votre brouillon pour continuer plus tard."
       no_likes_title: "Vous n'avez encore aimé aucun sujet"
       no_likes_body: "Une excellente façon d'intervenir et de commencer à contribuer est de commencer à lire les conversations qui ont déjà eu lieu et de sélectionner le %{heartIcon} sur les publications que vous aimez !"
-      no_likes_others: "Aucun message aimé."
       no_topics_title: "Vous n'avez pas encore créé de sujet"
       no_topics_title_others: "%{username} n'a pas encore commencé de sujets."
       no_read_topics_title: "Vous n'avez lu aucun sujet pour le moment"
@@ -3742,9 +3770,12 @@ fr:
         one: "%{count} nouveau"
         other: "%{count} nouveaux"
       more: "Plus…"
+      all_categories: "Toutes les catégories"
+      all_tags: "Toutes les étiquettes"
       sections:
+        about:
+          header_link_text: "À propos"
         messages:
-          header_link_title: "messages directs"
           header_link_text: "Messages"
           header_action_title: "créer un message direct"
           links:
@@ -3752,29 +3783,36 @@ fr:
             sent: "Envoyés"
             new: "Nouveau"
             new_with_count: "Nouveau (%{count})"
-            unread: "Non lues"
+            unread: "Non lus"
             unread_with_count: "Non lu (%{count})"
             archive: "Archivés"
         tags:
           none: "Vous n'avez ajouté aucune étiquette."
           click_to_get_started: "Cliquez ici pour commencer."
-          header_link_title: "toutes les étiquettes"
           header_link_text: "Étiquettes"
+          header_action_title: "Modifier les étiquettes de votre barre latérale"
         categories:
           none: "Vous n'avez ajouté aucune catégorie."
           click_to_get_started: "Cliquez ici pour commencer."
-          header_link_title: "toutes les catégories"
           header_link_text: "Catégories"
+          header_action_title: "Modifier les catégories de votre barre latérale"
         community:
-          header_link_title: "accueil"
           header_link_text: "Communauté"
           header_action_title: "créer un nouveau sujet"
           links:
+            about:
+              content: "À propos"
+            admin:
+              content: "Administrateur"
+            badges:
+              content: "Badges"
             everything:
               content: "Tout"
               title: "Tous les sujets"
+            faq:
+              content: "FAQ"
             tracked:
-              content: "Suivies"
+              content: "Suivis"
               title: "Tous les sujets suivis"
             groups:
               content: "Groupes"
@@ -3785,6 +3823,10 @@ fr:
             my_posts:
               content: "Mes messages"
               title: "Mes publications"
+              draft_count:
+                one: "%{count} brouillon"
+                other: "%{count} brouillons"
+    until: "Jusqu'à :"
   admin_js:
     type_to_filter: "commencez votre saisie pour filtrer…"
     admin:
@@ -4876,6 +4918,7 @@ fr:
         suspended: "Suspendu ?"
         staged: "Distant ?"
         show_admin_profile: "Administration"
+        manage_user: "Gérer l'utilisateur"
         show_public_profile: "Afficher le profil public"
         impersonate: "Incarner"
         action_logs: "Journaux d'actions"
@@ -4973,7 +5016,6 @@ fr:
         cant_delete_all_too_many_posts:
           one: "Impossible de supprimer tous les messages parce que l'utilisateur a plus d'un message. (delete_all_posts_max)"
           other: "Impossible de supprimer tous les messages parce que l'utilisateur a plus de %{count} messages. (delete_all_posts_max)"
-        delete_confirm: "Il est généralement préférable d'anonymiser les utilisateurs plutôt que de les supprimer, afin d'éviter de supprimer du contenu dans les discussions existantes. <br><br>Voulez-vous vraiment supprimer cet utilisateur ? Cette opération est irréversible !"
         delete_and_block: "Supprimer et <b>bloquer</b> cette adresse courriel et adresse IP."
         delete_dont_block: "Supprimer uniquement"
         deleting_user: "Suppression de l'utilisateur…"
@@ -5104,7 +5146,6 @@ fr:
         recommended: "Nous vous recommandons de personnaliser le texte suivant selon vos besoins :"
         show_overriden: "Afficher uniquement les textes modifiés"
         locale: "Langue :"
-        fallback_locale_warning: "Vous modifiez une langue basée sur %{fallback}. Les utilisateurs qui choisissent %{fallback} comme langue d'interface ne verront pas vos modifications."
         more_than_50_results: "Il y a plus de 50 résultats. Veuillez affiner votre recherche."
       settings:
         show_overriden: "Afficher uniquement les paramètres modifiés"

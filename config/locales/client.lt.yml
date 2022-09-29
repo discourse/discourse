@@ -199,7 +199,6 @@ lt:
       forwarded: "persiuntė minėtą el. laišką"
     topic_admin_menu: "temos veiksmai"
     skip_to_main_content: "Pereiti prie pagrindinio turinio"
-    wizard_required: "Sveiki, tai jūsų naujasis Discourse! Pradėkime nuo<a href='%{url}' data-auto-route='true'>Instliacijos</a>✨"
     emails_are_disabled: "Visos išeinančios elektroninės žinutės buvo uždraustos administratoriaus. Jokių papildų įspėjamųjų žinučių nebus išsiųsta"
     emails_are_disabled_non_staff: "Siunčiamas el. laiškas buvo išjungtas ne darbuotojams."
     software_update_prompt:
@@ -211,6 +210,7 @@ lt:
       many: "Norėdami palengvinti naujos svetainės paleidimą, jūs esate paleidimo režime. Visiems naujiems vartotojams bus suteiktas 1 lygio pasitikėjimas ir bus įgalinti kasdieniniai elektroninio pašto santraukos atnaujinimai. Tai bus automatiškai išjungta, kai pasieksite %{count} vartotojų ribą."
       other: "Norėdami palengvinti naujos svetainės paleidimą, jūs esate paleidimo režime. Visiems naujiems vartotojams bus suteiktas 1 lygio pasitikėjimas ir bus įgalinti kasdieniniai elektroninio pašto santraukos atnaujinimai. Tai bus automatiškai išjungta, kai pasieksite %{count} vartotojų ribą."
     bootstrap_mode_disabled: "Paleidimo režimas bus išjungtas per 24 valandas."
+    bootstrap_invite_button_title: "Siųsti pakvietimą"
     themes:
       default_description: "Numatytasis"
       broken_theme_alert: "Jūsų svetainė gali neveikti, nes temoje / komponente yra klaidų."
@@ -244,6 +244,8 @@ lt:
     not_implemented: "Ši funkcija dar neveikia, atsiprašome!"
     no_value: "Ne."
     yes_value: "Taip"
+    ok_value: "OK"
+    cancel_value: "Atšaukti"
     submit: "Pateikti"
     generic_error: "Atsiprašome, įvyko klaida."
     generic_error_with_reason: "Įvyko klaida: %{error}"
@@ -2194,6 +2196,13 @@ lt:
     not_logged_in_user: "Vartotojo puslapis su veiksmų ir nustatymų aprašymu"
     current_user: "eitį i savo vartotojo puslapį"
     view_all: "peržiūrėti visus %{tab}"
+    user_menu:
+      tabs:
+        replies: "Atsakymai"
+        mentions: "Paminėjimai"
+        likes: "Patikimai"
+        bookmarks: "Žymės"
+        profile: "Profilis"
     topics:
       new_messages_marker: "paskutinis apsilankymas"
       bulk:
@@ -3346,7 +3355,6 @@ lt:
       google: "„Google“ kalendorius"
       ics: "ICS"
     tagging:
-      all_tags: "Visos žymos"
       other_tags: "Kitos žymos"
       selector_all_tags: "visos žymos"
       selector_no_tags: "nėra žymų"
@@ -3475,14 +3483,11 @@ lt:
       unsupported_file_picked: "Pasirinkote nepalaikomą failą. Palaikomi failų tipai - %{types}."
     user_activity:
       no_activity_title: "Dar nėra jokios veiklos"
-      no_activity_others: "Jokios veiklos."
       no_replies_title: "Jūs dar neatsakėte į jokias temas"
-      no_replies_others: "Jokių atsakymų."
       no_drafts_title: "Nepradėjote jokių juodraščių"
       no_drafts_body: "Ne visai pasiruošęs paskelbti? Mes automatiškai išsaugosime naują juodraštį ir pateiksime jį čia, kai tik pradėsite rašyti temą, atsakymą ar asmeninę žinutę. Pasirinkite atšaukimo mygtuką, kad atmestumėte juodraštį arba išsaugotumėte, kad galėtumėte tęsti vėliau."
       no_likes_title: "Jums dar nepatiko jokios temos"
       no_likes_body: "Puikus būdas prisidėti yra pradėti skaityti jau įvykusius pokalbius ir pasirinkti %{heartIcon} įrašus, kurie jums patinka!"
-      no_likes_others: "Patinkančių įrašų nėra."
       no_topics_title: "Dar nepradėjote jokių temų"
       no_read_topics_title: "Dar neskaitėte jokių temų"
     no_group_messages_title: "Grupės pranešimų nerasta"
@@ -3505,7 +3510,10 @@ lt:
         many: "%{count} nauja"
         other: "%{count} nauja"
       more: "Daugiau..."
+      all_categories: "Visos kategorijos"
       sections:
+        about:
+          header_link_text: "Apie"
         messages:
           header_link_text: "Žinutės"
           links:
@@ -3517,19 +3525,24 @@ lt:
             unread_with_count: "Neperskaitytas (%{count})"
             archive: "Archyvuoti"
         tags:
-          header_link_title: "visos žymos"
           header_link_text: "Žymos"
         categories:
-          header_link_title: "visos kategorijos"
           header_link_text: "Kategorijos"
         community:
-          header_link_title: "pradinis"
           header_link_text: "Bendruomenė"
           header_action_title: "sukurti naują temą"
           links:
+            about:
+              content: "Apie"
+            admin:
+              content: "Adminas"
+            badges:
+              content: "Trofėjai"
             everything:
               content: "Viskas"
               title: "Visos temos"
+            faq:
+              content: "DUK"
             tracked:
               content: "Sekami"
               title: "Visos stebimos temos"
@@ -4713,7 +4726,6 @@ lt:
         recommended: "Mes rekomenduojame pakeisti sekančius tekstus, kad jie atitiktų tavo poreikius:"
         show_overriden: "Rodyti tik pakeistus"
         locale: "Kalba:"
-        fallback_locale_warning: "Jūs redaguojate kalbą pagal %{fallback}. Vartotojai, pasirinkę %{fallback} , nematys jūsų pakeitimų."
         more_than_50_results: "Yra daugiau nei 50 rezultatų. Prašome patikslinti paiešką."
       settings:
         show_overriden: "Rodyti tik pakeistus"

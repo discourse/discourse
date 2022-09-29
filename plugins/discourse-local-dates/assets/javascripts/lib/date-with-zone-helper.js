@@ -14,6 +14,19 @@ import { getProperties } from "@ember/object";
   duration between two dates, eg for duration: "1.weeks", "2.months"...
 */
 export default class DateWithZoneHelper {
+  static fromDatetime(datetime, timezone, localTimezone) {
+    return new DateWithZoneHelper({
+      year: datetime.year(),
+      month: datetime.month(),
+      day: datetime.date(),
+      hour: datetime.hour(),
+      minute: datetime.minute(),
+      second: datetime.second(),
+      timezone,
+      localTimezone,
+    });
+  }
+
   constructor(params = {}) {
     this.timezone = params.timezone || "UTC";
     this.localTimezone = params.localTimezone || moment.tz.guess();
@@ -75,19 +88,6 @@ export default class DateWithZoneHelper {
     }
 
     return this.datetime.tz(this.localTimezone).toISOString(true);
-  }
-
-  static fromDatetime(datetime, timezone, localTimezone) {
-    return new DateWithZoneHelper({
-      year: datetime.year(),
-      month: datetime.month(),
-      day: datetime.date(),
-      hour: datetime.hour(),
-      minute: datetime.minute(),
-      second: datetime.second(),
-      timezone,
-      localTimezone,
-    });
   }
 
   _fromDatetime(datetime, timezone, localTimezone) {

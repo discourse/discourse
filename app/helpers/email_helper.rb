@@ -67,6 +67,10 @@ module EmailHelper
           border-color: #454545 !important;
         }
 
+        [data-stripped-secure-upload] {
+          border-color: #454545 !important;
+        }
+
         [dm='text-color'] {
           color: #dddddd;
         }

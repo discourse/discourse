@@ -976,7 +976,6 @@ class Topic < ActiveRecord::Base
         topic_user.destroy
 
         if user.id == removed_by&.id
-          removed_by = Discourse.system_user
           add_small_action(removed_by, "user_left", user.username)
         else
           add_small_action(removed_by, "removed_user", user.username)

@@ -79,7 +79,10 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 import { on } from "@ember/object/evented";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
-import { registerHighlightJSLanguage } from "discourse/lib/highlight-syntax";
+import {
+  registerHighlightJSLanguage,
+  registerHighlightJSPlugin,
+} from "discourse/lib/highlight-syntax";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
@@ -98,14 +101,15 @@ import { consolePrefix } from "discourse/lib/source-identifier";
 import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
 import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
 import DiscourseURL from "discourse/lib/url";
-import { registerNotificationTypeRenderer } from "discourse/lib/notification-item";
+import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
+import { registerModelTransformer } from "discourse/lib/model-transformers";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-const PLUGIN_API_VERSION = "1.3.0";
+const PLUGIN_API_VERSION = "1.4.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -491,7 +495,7 @@ class PluginApi {
       name === "hamburger-menu:generalLinks" ||
       name === "hamburger-menu:footerLinks"
     ) {
-      const siteSettings = this.container.lookup("site-settings:main");
+      const siteSettings = this.container.lookup("service:site-settings");
 
       if (siteSettings.enable_experimental_sidebar_hamburger) {
         try {
@@ -1372,6 +1376,26 @@ class PluginApi {
   }
 
   /**
+   * Registers custom HighlightJS plugins.
+   *
+   * See https://highlightjs.readthedocs.io/en/latest/plugin-api.html
+   * for instructions on how to define a new plugin for HighlightJS.
+   * This API exposes the Function Based Plugins interface
+   *
+   * Example:
+   *
+   * let aPlugin = {
+       'after:highlightElement': ({ el, result, text }) => {
+         console.log(el);
+       }
+     }
+   * api.registerHighlightJSPlugin(aPlugin);
+   **/
+  registerHighlightJSPlugin(plugin) {
+    registerHighlightJSPlugin(plugin);
+  }
+
+  /**
    * Adds global notices to display.
    *
    * Example:
@@ -1674,7 +1698,7 @@ class PluginApi {
   /**
    * EXPERIMENTAL. Do not use.
    * Support for adding a navigation link to Sidebar Community section under the "More..." links drawer by returning a
-   * class which extends from the BaseSectionLink class interface. See `lib/sidebar/community-section/base-section-link.js`
+   * class which extends from the BaseSectionLink class interface. See `lib/sidebar/user/community-section/base-section-link.js`
    * for documentation on the BaseSectionLink class interface.
    *
    * ```
@@ -1733,7 +1757,7 @@ class PluginApi {
   /**
    * EXPERIMENTAL. Do not use.
    * Support for adding a Sidebar section by returning a class which extends from the BaseCustomSidebarSection
-   * class interface. See `lib/sidebar/base-custom-sidebar-section.js` for documentation on the BaseCustomSidebarSection class
+   * class interface. See `lib/sidebar/user/base-custom-sidebar-section.js` for documentation on the BaseCustomSidebarSection class
    * interface.
    *
    * ```
@@ -1857,12 +1881,12 @@ class PluginApi {
   /**
    * EXPERIMENTAL. Do not use.
    * Register a custom renderer for a notification type or override the
-   * renderer of an existing type. See lib/notification-items/base.js for
+   * renderer of an existing type. See lib/notification-types/base.js for
    * documentation and the default renderer.
    *
    * ```
-   * api.registerNotificationTypeRenderer("your_notification_type", (NotificationItemBase) => {
-   *   return class extends NotificationItemBase {
+   * api.registerNotificationTypeRenderer("your_notification_type", (NotificationTypeBase) => {
+   *   return class extends NotificationTypeBase {
    *     get label() {
    *       return "some label";
    *     }
@@ -1874,8 +1898,8 @@ class PluginApi {
    * });
    * ```
    * @callback renderDirectorRegistererCallback
-   * @param {NotificationItemBase} The base class from which the returned class should inherit.
-   * @returns {NotificationItemBase} A class that inherits from NotificationItemBase.
+   * @param {NotificationTypeBase} The base class from which the returned class should inherit.
+   * @returns {NotificationTypeBase} A class that inherits from NotificationTypeBase.
    *
    * @param {string} notificationType - ID of the notification type (i.e. the key value of your notification type in the `Notification.types` enum on the server side).
    * @param {renderDirectorRegistererCallback} func - Callback function that returns a subclass from the class it receives as its argument.
@@ -1925,6 +1949,37 @@ class PluginApi {
    */
   registerUserMenuTab(func) {
     registerUserMenuTab(func);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Apply transformation using a callback on a list of model instances of a
+   * specific type. Currently, this API only works on lists rendered in the
+   * user menu such as notifications, bookmarks and topics (i.e. messages), but
+   * it may be extended to other lists in other parts of the app.
+   *
+   * You can pass an `async` callback to this API and it'll be `await`ed and
+   * block rendering until the callback finishes executing.
+   *
+   * ```
+   * api.registerModelTransformer("topic", async (topics) => {
+   *   for (const topic of topics) {
+   *     const decryptedTitle = await decryptTitle(topic.encrypted_title);
+   *     if (decryptedTitle) {
+   *       topic.fancy_title = decryptedTitle;
+   *     }
+   *   }
+   * });
+   * ```
+   *
+   * @callback registerModelTransformerCallback
+   * @param {Object[]} A list of model instances
+   *
+   * @param {string} modelName - Model type on which transformation should be applied. Currently valid types are "topic", "notification" and "bookmark".
+   * @param {registerModelTransformerCallback} transformer - Callback function that receives a list of model objects of the specified type and applies transformation on them.
+   */
+  registerModelTransformer(modelName, transformer) {
+    registerModelTransformer(modelName, transformer);
   }
 }
 

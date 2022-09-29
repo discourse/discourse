@@ -27,7 +27,7 @@ export default function interceptClick(e) {
 
   if (
     !href ||
-    href === "#" ||
+    href.startsWith("#") ||
     currentTarget.getAttribute("target") ||
     currentTarget.dataset.emberAction ||
     currentTarget.dataset.autoRoute ||

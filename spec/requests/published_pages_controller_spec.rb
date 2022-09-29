@@ -4,6 +4,7 @@ RSpec.describe PublishedPagesController do
   fab!(:published_page) { Fabricate(:published_page) }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
+  fab!(:user2) { Fabricate(:user) }
 
   context "when enabled" do
     before do
@@ -39,6 +40,14 @@ RSpec.describe PublishedPagesController do
     end
 
     describe "#show" do
+
+      it 'records a view' do
+        sign_in(user2)
+        expect do
+          get published_page.path
+        end.to change(TopicViewItem, :count).by(1)
+      end
+
       it "returns 404 for a missing article" do
         get "/pub/no-article-here-no-thx"
         expect(response.status).to eq(404)
@@ -91,10 +100,10 @@ RSpec.describe PublishedPagesController do
           published_page.topic.tags = [Fabricate(:tag, name: "recipes")]
         end
 
-        context "when secure media is enabled" do
+        context "when secure uploads is enabled" do
           before do
             setup_s3
-            SiteSetting.secure_media = true
+            SiteSetting.secure_uploads = true
           end
 
           it "returns 404" do

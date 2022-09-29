@@ -128,6 +128,11 @@ discourseModule("Unit | Utility | emoji", function () {
       "emoji when inline translation enabled",
       { enable_inline_emoji_translation: true }
     );
+    assert.strictEqual(
+      emojiUnescape(":smile:", { tabIndex: "0" }),
+      `<img width=\"20\" height=\"20\" src='/images/emoji/google_classic/smile.png?v=${v}' title='smile' alt='smile' class='emoji' tabindex='0'>`,
+      "emoji when tabindex is enabled"
+    );
   });
 
   test("Emoji search", function (assert) {

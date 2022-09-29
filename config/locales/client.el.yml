@@ -156,11 +156,11 @@ el:
         disabled: "το αφαίρεσε από ανακοίνωση στις %{when}. Δε θα εμφανίζεται πλέον στην κορυφή κάθε σελίδας."
       forwarded: "προώθησε το παραπάνω email"
     topic_admin_menu: "ρυθμίσεις θέματος"
-    wizard_required: "Καλώς ήλθατε στο νέο σας Discourse! Ας αρχίσουμε με τον <a href='%{url}' data-auto-route='true'>οδηγό εγκατάστασης</a> ✨"
     emails_are_disabled: "Όλα τα εξερχόμενα emails έχουν απενεργοποιηθεί καθολικά από κάποιον διαχειριστή. Δε θα σταλεί καμία ειδοποίηση email."
     software_update_prompt:
       dismiss: "Απόρριψη"
     bootstrap_mode_disabled: "Η λειτουργία bootstrap θα απενεργοποιηθεί εντός 24 ωρών."
+    bootstrap_invite_button_title: "Αποστολή Προσκλήσεων"
     themes:
       default_description: "Προεπιλογή"
     s3:
@@ -190,6 +190,8 @@ el:
     not_implemented: "Αυτή η λειτουργία δεν έχει υλοποιηθεί ακόμα, συγγνώμη!"
     no_value: "Όχι"
     yes_value: "Ναι"
+    ok_value: "OK"
+    cancel_value: "Ακύρωση"
     submit: "Υποβολή"
     generic_error: "Λυπάμαι, προέκυψε κάποιο σφάλμα."
     generic_error_with_reason: "Προέκυψε ένα σφάλμα: %{error}"
@@ -1922,6 +1924,13 @@ el:
     go_back: "επιστροφή"
     not_logged_in_user: "σελίδα λογαριασμού που περιέχει σύνοψη της τρέχουσας δραστηριότητας και τις προτιμήσεις"
     current_user: "πήγαινε στη σελίδα του λογαριασμού σου"
+    user_menu:
+      tabs:
+        replies: "Απαντήσεις"
+        mentions: "Αναφορές"
+        likes: "Μου αρέσει"
+        bookmarks: "Σελιδοδείκτες"
+        profile: "Προφίλ"
     topics:
       new_messages_marker: "τελευταία επίσκεψη"
       bulk:
@@ -2442,10 +2451,6 @@ el:
         confirm:
           one: "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτήν την ανάρτηση;"
           other: "Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτές τις %{count} αναρτήσεις;"
-      merge:
-        confirm:
-          one: "Είσαι σίγουρος πως θέλεις να συγχωνεύσεις αυτές τις δημοσιεύσεις;"
-          other: "Είσαι σίγουρος πως θέλεις να συγχωνεύσεις αυτές τις %{count} αναρτήσεις;"
       revisions:
         controls:
           first: "Πρώτη αναθεώρηση"
@@ -2931,7 +2936,6 @@ el:
     download_calendar:
       download: "Κατέβασμα"
     tagging:
-      all_tags: "Όλες οι Ετικέτες"
       other_tags: "Άλλες ετικέτες"
       selector_all_tags: "όλες οι ετικέτες"
       selector_no_tags: "καμία ετικέτα"
@@ -3058,10 +3062,6 @@ el:
         member: "μέλος"
         regular: "τακτικός"
         leader: "αρχηγός"
-    user_activity:
-      no_activity_others: "Χωρίς δραστηριότητα."
-      no_replies_others: "Χωρίς απαντήσεις."
-      no_likes_others: "Καμία αρεστή ανάρτηση."
     sidebar:
       unread_count:
         one: "%{count} μη αναγνωσμένο"
@@ -3070,7 +3070,10 @@ el:
         one: "%{count} νέο"
         other: "%{count} νέα"
       more: "Περισσότερα..."
+      all_categories: "Όλες οι κατηγορίες"
       sections:
+        about:
+          header_link_text: "Σχετικά"
         messages:
           header_link_text: "Μηνύματα"
           links:
@@ -3082,15 +3085,20 @@ el:
             unread_with_count: "Μη αναγνωσμένα (%{count})"
             archive: "Αρχείο"
         tags:
-          header_link_title: "όλες οι ετικέτες"
           header_link_text: "Ετικέτες"
         categories:
-          header_link_title: "όλες οι κατηγορίες"
           header_link_text: "Κατηγορίες"
         community:
-          header_link_title: "αρχική Σελίδα"
           header_link_text: "Κοινότητα"
           links:
+            about:
+              content: "Σχετικά"
+            admin:
+              content: "Διαχείριση"
+            badges:
+              content: "Παράσημα"
+            faq:
+              content: "Συχνές ερωτήσεις"
             tracked:
               content: "Παρακολουθείται"
             groups:
@@ -4145,7 +4153,6 @@ el:
         cant_delete_all_too_many_posts:
           one: "Δεν γίνεται να σβήσεις όλες τις αναρτήσεις επειδή ο χρήστης έχει περισσότερες από %{count} αναρτήσεις. (Η ρύθμιση «delete_all_posts_max»)"
           other: "Δεν γίνεται να σβήσεις όλες τις αναρτήσεις επειδή ο χρήστης έχει περισσότερες από %{count} αναρτήσεις. (Η ρύθμιση «delete_all_posts_max»)"
-        delete_confirm: "Είναι γενικά προτιμότερο να ανωνυμοποιούνται οι χρήστες αντί να διαγράφονται, για να αποφεύγεται η αφαίρεση περιεχομένου από υπάρχουσες συζητήσεις.<br><br>Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτόν τον χρήστη; Αυτό είναι μόνιμο!"
         delete_and_block: "Σβήσε και <b>απόκλεισε</b> αυτή την διεύθυνση email και τη διεύθυνση IP "
         delete_dont_block: "Μόνο διαγραφή"
         deleting_user: "Διαγραφή χρήστη..."

@@ -227,7 +227,7 @@ module DiscourseNarrativeBot
     @@cooked_triggers = {}
 
     def cook(trigger)
-      @@cooked_triggers[trigger] ||= PrettyText.cook("@#{self.discobot_username} #{trigger}")
+      @@cooked_triggers[trigger] ||= PrettyText.cook("@#{self.discobot_username}\\s+#{trigger}")
     end
 
     def match_trigger?(trigger)

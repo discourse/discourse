@@ -6,7 +6,7 @@ import {
   authorizesOneOrMoreExtensions,
   uploadIcon,
 } from "discourse/lib/uploads";
-import { cancel, run, scheduleOnce } from "@ember/runloop";
+import { cancel, scheduleOnce } from "@ember/runloop";
 import {
   cannotPostAgain,
   durationTextFromSeconds,
@@ -18,9 +18,7 @@ import discourseComputed, {
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
 import I18n from "I18n";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import { Promise } from "rsvp";
-import bootbox from "bootbox";
 import { buildQuote } from "discourse/lib/quote";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -34,14 +32,8 @@ import { inject as service } from "@ember/service";
 import { shortDate } from "discourse/lib/formatter";
 import showModal from "discourse/lib/show-modal";
 
-function loadDraft(store, opts) {
-  let promise = Promise.resolve();
-
-  opts = opts || {};
-
-  let draft = opts.draft;
-  const draftKey = opts.draftKey;
-  const draftSequence = opts.draftSequence;
+async function loadDraft(store, opts = {}) {
+  let { draft, draftKey, draftSequence } = opts;
 
   try {
     if (draft && typeof draft === "string") {
@@ -51,29 +43,27 @@ function loadDraft(store, opts) {
     draft = null;
     Draft.clear(draftKey, draftSequence);
   }
-  if (
-    draft &&
-    ((draft.title && draft.title !== "") || (draft.reply && draft.reply !== ""))
-  ) {
-    const composer = store.createRecord("composer");
-    const serializedFields = Composer.serializedFieldsForDraft();
 
-    let attrs = {
-      draftKey,
-      draftSequence,
-      draft: true,
-      composerState: Composer.DRAFT,
-      topic: opts.topic,
-    };
-
-    serializedFields.forEach((f) => {
-      attrs[f] = draft[f] || opts[f];
-    });
-
-    promise = promise.then(() => composer.open(attrs)).then(() => composer);
+  if (!draft?.title && !draft?.reply) {
+    return;
   }
 
-  return promise;
+  let attrs = {
+    draftKey,
+    draftSequence,
+    draft: true,
+    composerState: Composer.DRAFT,
+    topic: opts.topic,
+  };
+
+  Composer.serializedFieldsForDraft().forEach((f) => {
+    attrs[f] = draft[f] || opts[f];
+  });
+
+  const composer = store.createRecord("composer");
+  await composer.open(attrs);
+
+  return composer;
 }
 
 const _popupMenuOptionsCallbacks = [];
@@ -95,6 +85,7 @@ export function addPopupMenuOptionsCallback(callback) {
 export default Controller.extend({
   topicController: controller("topic"),
   router: service(),
+  dialog: service(),
 
   checkedMessages: false,
   messageCount: null,
@@ -108,6 +99,7 @@ export default Controller.extend({
   topic: null,
   linkLookup: null,
   showPreview: true,
+  composerHeight: null,
   forcePreview: and("site.mobileView", "showPreview"),
   whisperOrUnlistTopic: or("isWhispering", "model.unlistTopic"),
   categories: alias("site.categoriesList"),
@@ -211,14 +203,17 @@ export default Controller.extend({
 
   @discourseComputed("model.canEditTitle", "model.creatingPrivateMessage")
   canEditTags(canEditTitle, creatingPrivateMessage) {
-    if (creatingPrivateMessage && (this.site.mobileView || !this.isStaffUser)) {
+    if (creatingPrivateMessage && this.site.mobileView) {
       return false;
     }
 
+    const isPrivateMessage =
+      creatingPrivateMessage || this.get("model.topic.isPrivateMessage");
+
     return (
-      this.site.can_tag_topics &&
       canEditTitle &&
-      (!this.get("model.topic.isPrivateMessage") || this.site.can_tag_pms)
+      this.site.can_tag_topics &&
+      (!isPrivateMessage || this.site.can_tag_pms)
     );
   },
 
@@ -337,7 +332,17 @@ export default Controller.extend({
         })
       );
 
-      if (this.site.mobileView) {
+      if (this.capabilities.touch) {
+        options.push(
+          this._setupPopupMenuOption(() => {
+            return {
+              action: "applyFormatCode",
+              icon: "code",
+              label: "composer.code_title",
+            };
+          })
+        );
+
         options.push(
           this._setupPopupMenuOption(() => {
             return {
@@ -431,53 +436,43 @@ export default Controller.extend({
   // - openOpts: this object will be passed to this.open if fallbackToNewTopic is
   // true or topic is provided
   @action
-  focusComposer(opts = {}) {
-    return this._openComposerForFocus(opts).then(() => {
-      this._focusAndInsertText(opts.insertText);
-    });
+  async focusComposer(opts = {}) {
+    await this._openComposerForFocus(opts);
+    this._focusAndInsertText(opts.insertText);
   },
 
-  _openComposerForFocus(opts) {
+  async _openComposerForFocus(opts) {
     if (this.get("model.viewOpen")) {
-      return Promise.resolve();
-    } else {
-      const opened = this.openIfDraft();
-      if (opened) {
-        return Promise.resolve();
-      }
+      return;
+    }
 
-      if (opts.topic) {
-        return this.open(
-          Object.assign(
-            {
-              action: Composer.REPLY,
-              draftKey: opts.topic.get("draft_key"),
-              draftSequence: opts.topic.get("draft_sequence"),
-              topic: opts.topic,
-            },
-            opts.openOpts || {}
-          )
-        );
-      }
+    const opened = this.openIfDraft();
+    if (opened) {
+      return;
+    }
 
-      if (opts.fallbackToNewTopic) {
-        return this.open(
-          Object.assign(
-            {
-              action: Composer.CREATE_TOPIC,
-              draftKey: Composer.NEW_TOPIC_KEY,
-            },
-            opts.openOpts || {}
-          )
-        );
-      }
+    if (opts.topic) {
+      return await this.open({
+        action: Composer.REPLY,
+        draftKey: opts.topic.get("draft_key"),
+        draftSequence: opts.topic.get("draft_sequence"),
+        topic: opts.topic,
+        ...(opts.openOpts || {}),
+      });
+    }
+
+    if (opts.fallbackToNewTopic) {
+      return await this.open({
+        action: Composer.CREATE_TOPIC,
+        draftKey: Composer.NEW_TOPIC_KEY,
+        ...(opts.openOpts || {}),
+      });
     }
   },
 
   _focusAndInsertText(insertText) {
     scheduleOnce("afterRender", () => {
-      const input = document.querySelector("textarea.d-editor-input");
-      input && input.focus();
+      document.querySelector("textarea.d-editor-input")?.focus();
 
       if (insertText) {
         this.model.appendText(insertText, null, { new_line: true });
@@ -487,19 +482,30 @@ export default Controller.extend({
 
   @action
   openIfDraft(event) {
-    if (this.get("model.viewDraft")) {
-      // when called from shortcut, ensure we don't propagate the key to
-      // the composer input title
-      if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-
-      this.set("model.composeState", Composer.OPEN);
-      return true;
+    if (!this.get("model.viewDraft")) {
+      return false;
     }
 
-    return false;
+    // when called from shortcut, ensure we don't propagate the key to
+    // the composer input title
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    this.set("model.composeState", Composer.OPEN);
+
+    document.documentElement.style.setProperty(
+      "--composer-height",
+      this.get("model.composerHeight")
+    );
+
+    return true;
+  },
+
+  @action
+  removeFullScreenExitPrompt() {
+    this.set("model.showFullScreenExitPrompt", false);
   },
 
   actions: {
@@ -511,37 +517,29 @@ export default Controller.extend({
       this.close();
     },
 
-    openComposer(options, post, topic) {
-      this.open(options).then(() => {
-        let url;
-        if (post) {
-          url = post.url;
-        }
-        if (!post && topic) {
-          url = topic.url;
-        }
+    async openComposer(options, post, topic) {
+      await this.open(options);
 
-        let topicTitle;
-        if (topic) {
-          topicTitle = topic.title;
-        }
+      let url = post?.url || topic?.url;
+      const topicTitle = topic?.title;
 
-        if (!url || !topicTitle) {
-          return;
-        }
+      if (!url || !topicTitle) {
+        return;
+      }
 
-        url = `${location.protocol}//${location.host}${url}`;
-        const link = `[${escapeExpression(topicTitle)}](${url})`;
-        const continueDiscussion = I18n.t("post.continue_discussion", {
-          postLink: link,
-        });
+      url = `${location.protocol}//${location.host}${url}`;
+      const link = `[${escapeExpression(topicTitle)}](${url})`;
+      const continueDiscussion = I18n.t("post.continue_discussion", {
+        postLink: link,
+      });
 
-        const reply = this.get("model.reply");
-        if (!reply || !reply.includes(continueDiscussion)) {
-          this.model.prependText(continueDiscussion, {
-            new_line: true,
-          });
-        }
+      const reply = this.get("model.reply");
+      if (reply?.includes(continueDiscussion)) {
+        return;
+      }
+
+      this.model.prependText(continueDiscussion, {
+        new_line: true,
       });
     },
 
@@ -629,7 +627,7 @@ export default Controller.extend({
             });
             this.appEvents.trigger("composer-messages:create", {
               extraClass: "custom-body",
-              templateName: "custom-body",
+              templateName: "education",
               body,
             });
             return false;
@@ -652,26 +650,18 @@ export default Controller.extend({
     },
 
     // Toggle the reply view
-    toggle() {
+    async toggle() {
       this.closeAutocomplete();
 
-      if (
-        isEmpty(this.get("model.reply")) &&
-        isEmpty(this.get("model.title"))
-      ) {
-        this.close();
-      } else {
-        if (
-          this.get("model.composeState") === Composer.OPEN ||
-          this.get("model.composeState") === Composer.FULLSCREEN
-        ) {
-          this.shrink();
-        } else {
-          this.cancelComposer();
-        }
-      }
+      const composer = this.model;
 
-      return false;
+      if (isEmpty(composer?.reply) && isEmpty(composer?.title)) {
+        this.close();
+      } else if (composer?.viewOpenOrFullscreen) {
+        this.shrink();
+      } else {
+        await this.cancelComposer();
+      }
     },
 
     fullscreenComposer() {
@@ -680,7 +670,7 @@ export default Controller.extend({
     },
 
     // Import a quote from the post
-    importQuote(toolbarEvent) {
+    async importQuote(toolbarEvent) {
       const postStream = this.get("topic.postStream");
       let postId = this.get("model.post.id");
 
@@ -704,22 +694,21 @@ export default Controller.extend({
         }
       }
 
-      if (postId) {
-        this.set("model.loading", true);
-
-        return this.store.find("post", postId).then((post) => {
-          const quote = buildQuote(post, post.raw, {
-            full: true,
-          });
-
-          toolbarEvent.addText(quote);
-          this.set("model.loading", false);
-        });
+      if (!postId) {
+        return;
       }
+
+      this.set("model.loading", true);
+
+      const post = await this.store.find("post", postId);
+      const quote = buildQuote(post, post.raw, { full: true });
+
+      toolbarEvent.addText(quote);
+      this.set("model.loading", false);
     },
 
-    cancel() {
-      this.cancelComposer();
+    async cancel() {
+      await this.cancelComposer();
     },
 
     save(ignore, event) {
@@ -747,8 +736,15 @@ export default Controller.extend({
         return;
       }
 
-      if (this.get("model.viewOpen") || this.get("model.viewFullscreen")) {
+      const composer = this.model;
+
+      if (composer?.viewOpen) {
         this.shrink();
+      }
+
+      if (composer?.viewFullscreen) {
+        this.toggleFullscreen();
+        this.focusComposer();
       }
     },
 
@@ -780,7 +776,7 @@ export default Controller.extend({
           if (body) {
             this.appEvents.trigger("composer-messages:create", {
               extraClass: "custom-body",
-              templateName: "custom-body",
+              templateName: "education",
               body,
             });
           }
@@ -792,7 +788,7 @@ export default Controller.extend({
       mentions.forEach((mention) => {
         this.appEvents.trigger("composer-messages:create", {
           extraClass: "custom-body",
-          templateName: "custom-body",
+          templateName: "education",
           body: I18n.t(`composer.cannot_see_mention.${mention.reason}`, {
             username: mention.name,
           }),
@@ -803,12 +799,16 @@ export default Controller.extend({
     hereMention(count) {
       this.appEvents.trigger("composer-messages:create", {
         extraClass: "custom-body",
-        templateName: "custom-body",
+        templateName: "education",
         body: I18n.t("composer.here_mention", {
           here: this.siteSettings.here_mention,
           count,
         }),
       });
+    },
+
+    applyFormatCode() {
+      this.toolbarEvent.formatCode();
     },
 
     applyUnorderedList() {
@@ -839,7 +839,11 @@ export default Controller.extend({
 
     const composer = this.model;
 
-    if (composer.cantSubmitPost) {
+    if (composer?.cantSubmitPost) {
+      if (composer?.viewFullscreen) {
+        this.toggleFullscreen();
+      }
+
       this.set("lastValidatedAt", Date.now());
       return;
     }
@@ -867,7 +871,7 @@ export default Controller.extend({
           timeLeft: durationTextFromSeconds(timeLeft),
         });
 
-        bootbox.alert(message);
+        this.dialog.alert(message);
         return;
       } else {
         // Edge case where the user tries to post again immediately.
@@ -894,41 +898,37 @@ export default Controller.extend({
         currentTopic.id !== composer.get("topic.id") &&
         (this.isStaffUser || !currentTopic.closed)
       ) {
-        const message =
-          "<h1>" + I18n.t("composer.posting_not_on_topic") + "</h1>";
-
-        let buttons = [
-          {
-            label: I18n.t("composer.cancel"),
-            class: "d-modal-cancel",
-            link: true,
-          },
-        ];
-
-        buttons.push({
-          label:
-            I18n.t("composer.reply_here") +
-            "<br/><div class='topic-title overflow-ellipsis'>" +
-            currentTopic.get("fancyTitle") +
-            "</div>",
-          class: "btn btn-reply-here",
-          callback: () => {
-            composer.setProperties({ topic: currentTopic, post: null });
-            this.save(true);
-          },
+        this.dialog.alert({
+          title: I18n.t("composer.posting_not_on_topic"),
+          buttons: [
+            {
+              label:
+                I18n.t("composer.reply_original") +
+                "<br/><div class='topic-title overflow-ellipsis'>" +
+                this.get("model.topic.fancyTitle") +
+                "</div>",
+              class: "btn-primary btn-reply-on-original",
+              action: () => this.save(true),
+            },
+            {
+              label:
+                I18n.t("composer.reply_here") +
+                "<br/><div class='topic-title overflow-ellipsis'>" +
+                currentTopic.get("fancyTitle") +
+                "</div>",
+              class: "btn-reply-here",
+              action: () => {
+                composer.setProperties({ topic: currentTopic, post: null });
+                this.save(true);
+              },
+            },
+            {
+              label: I18n.t("composer.cancel"),
+              class: "btn-flat btn-text btn-reply-where-cancel",
+            },
+          ],
+          class: "reply-where-modal",
         });
-
-        buttons.push({
-          label:
-            I18n.t("composer.reply_original") +
-            "<br/><div class='topic-title overflow-ellipsis'>" +
-            this.get("model.topic.fancyTitle") +
-            "</div>",
-          class: "btn-primary btn-reply-on-original",
-          callback: () => this.save(true),
-        });
-
-        bootbox.dialog(message, buttons, { classes: "reply-where-modal" });
         return;
       }
     }
@@ -994,10 +994,14 @@ export default Controller.extend({
         }
 
         if (result.responseJson.route_to) {
+          // TODO: await this:
           this.destroyDraft();
           if (result.responseJson.message) {
-            return bootbox.alert(result.responseJson.message, () => {
-              DiscourseURL.routeTo(result.responseJson.route_to);
+            return this.dialog.alert({
+              message: result.responseJson.message,
+              didConfirm: () => {
+                DiscourseURL.routeTo(result.responseJson.route_to);
+              },
             });
           }
           return DiscourseURL.routeTo(result.responseJson.route_to);
@@ -1019,7 +1023,9 @@ export default Controller.extend({
       .catch((error) => {
         composer.set("disableDrafts", false);
         if (error) {
-          this.appEvents.one("composer:will-open", () => bootbox.alert(error));
+          this.appEvents.one("composer:will-open", () =>
+            this.dialog.alert(error)
+          );
         }
       });
 
@@ -1064,9 +1070,7 @@ export default Controller.extend({
       @param {Boolean} [opts.skipDraftCheck]
       @param {Boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
   **/
-  open(opts) {
-    opts = opts || {};
-
+  async open(opts = {}) {
     if (!opts.draftKey) {
       throw new Error("composer opened without a proper draft key");
     }
@@ -1119,15 +1123,15 @@ export default Controller.extend({
       composerModel = null;
     }
 
-    let promise = new Promise((resolve, reject) => {
-      if (composerModel && composerModel.replyDirty) {
+    try {
+      if (composerModel?.replyDirty) {
         // If we're already open, we don't have to do anything
         if (
           composerModel.composeState === Composer.OPEN &&
           composerModel.draftKey === opts.draftKey &&
           !opts.action
         ) {
-          return resolve();
+          return;
         }
 
         // If it's the same draft, just open it up again.
@@ -1137,13 +1141,13 @@ export default Controller.extend({
         ) {
           composerModel.set("composeState", Composer.OPEN);
           if (!opts.action) {
-            return resolve();
+            return;
           }
         }
 
-        return this.cancelComposer()
-          .then(() => this.open(opts))
-          .then(resolve, reject);
+        await this.cancelComposer();
+        await this.open(opts);
+        return;
       }
 
       if (composerModel && composerModel.action !== opts.action) {
@@ -1152,124 +1156,123 @@ export default Controller.extend({
 
       // we need a draft sequence for the composer to work
       if (opts.draftSequence === undefined) {
-        return Draft.get(opts.draftKey)
-          .then((data) => {
-            if (opts.skipDraftCheck) {
-              data.draft = undefined;
-              return data;
-            }
-            return this.confirmDraftAbandon(data);
-          })
-          .then((data) => {
-            if (!opts.draft && data.draft) {
-              opts.draft = data.draft;
-            }
-            opts.draftSequence = data.draft_sequence;
-            return this._setModel(composerModel, opts);
-          })
-          .then(resolve, reject);
+        let data = await Draft.get(opts.draftKey);
+
+        if (opts.skipDraftCheck) {
+          data.draft = undefined;
+        } else {
+          data = await this.confirmDraftAbandon(data);
+        }
+
+        opts.draft ||= data.draft;
+        opts.draftSequence = data.draft_sequence;
+
+        await this._setModel(composerModel, opts);
+        return;
       }
+
       // otherwise, do the draft check async
-      else if (!opts.draft && !opts.skipDraftCheck) {
-        Draft.get(opts.draftKey)
-          .then((data) => {
-            return this.confirmDraftAbandon(data);
-          })
-          .then((data) => {
-            if (data.draft) {
-              opts.draft = data.draft;
-              opts.draftSequence = data.draft_sequence;
-              return this.open(opts);
-            }
-          });
-      }
+      if (!opts.draft && !opts.skipDraftCheck) {
+        let data = await Draft.get(opts.draftKey);
+        data = await this.confirmDraftAbandon(data);
 
-      this._setModel(composerModel, opts).then(resolve, reject);
-    });
-
-    promise = promise.finally(() => {
-      this.skipAutoSave = false;
-    });
-    return promise;
-  },
-
-  // Given a potential instance and options, set the model for this composer.
-  _setModel(optionalComposerModel, opts) {
-    let promise = Promise.resolve();
-
-    this.set("linkLookup", null);
-
-    promise = promise.then(() => {
-      if (opts.draft) {
-        return loadDraft(this.store, opts).then((model) => {
-          if (!model) {
-            throw new Error("draft was not found");
-          }
-          return model;
-        });
-      } else {
-        let model =
-          optionalComposerModel || this.store.createRecord("composer");
-        return model.open(opts).then(() => model);
-      }
-    });
-
-    promise.then((composerModel) => {
-      this.set("model", composerModel);
-
-      composerModel.setProperties({
-        composeState: Composer.OPEN,
-        isWarning: false,
-        hasTargetGroups: opts.hasGroups,
-      });
-
-      if (!this.model.targetRecipients) {
-        if (opts.usernames) {
-          deprecated("`usernames` is deprecated, use `recipients` instead.");
-          this.model.set("targetRecipients", opts.usernames);
-        } else if (opts.recipients) {
-          this.model.set("targetRecipients", opts.recipients);
+        if (data.draft) {
+          opts.draft = data.draft;
+          opts.draftSequence = data.draft_sequence;
+          await this.open(opts);
         }
       }
 
-      if (
-        opts.topicTitle &&
-        opts.topicTitle.length <= this.siteSettings.max_topic_title_length
-      ) {
-        this.model.set("title", opts.topicTitle);
+      await this._setModel(composerModel, opts);
+    } finally {
+      this.skipAutoSave = false;
+    }
+  },
+
+  // Given a potential instance and options, set the model for this composer.
+  async _setModel(optionalComposerModel, opts) {
+    this.set("linkLookup", null);
+
+    let composerModel;
+    if (opts.draft) {
+      composerModel = await loadDraft(this.store, opts);
+
+      if (!composerModel) {
+        throw new Error("draft was not found");
       }
+    } else {
+      const model =
+        optionalComposerModel || this.store.createRecord("composer");
 
-      if (opts.topicCategoryId) {
-        this.model.set("categoryId", opts.topicCategoryId);
-      }
+      await model.open(opts);
+      composerModel = model;
+    }
 
-      if (opts.topicTags && this.site.can_tag_topics) {
-        let tags = escapeExpression(opts.topicTags)
-          .split(",")
-          .slice(0, this.siteSettings.max_tags_per_topic);
+    this.set("model", composerModel);
 
-        tags.forEach(
-          (tag, index, array) =>
-            (array[index] = tag.substring(0, this.siteSettings.max_tag_length))
-        );
-
-        this.model.set("tags", tags);
-      }
-
-      if (opts.topicBody) {
-        this.model.set("reply", opts.topicBody);
-      }
-
-      const defaultComposerHeight =
-        this.model.action === "reply" ? "300px" : "400px";
-
-      document.documentElement.style.setProperty(
-        "--composer-height",
-        defaultComposerHeight
-      );
+    composerModel.setProperties({
+      composeState: Composer.OPEN,
+      isWarning: false,
+      hasTargetGroups: opts.hasGroups,
     });
 
-    return promise;
+    if (!this.model.targetRecipients) {
+      if (opts.usernames) {
+        deprecated("`usernames` is deprecated, use `recipients` instead.");
+        this.model.set("targetRecipients", opts.usernames);
+      } else if (opts.recipients) {
+        this.model.set("targetRecipients", opts.recipients);
+      }
+    }
+
+    if (
+      opts.topicTitle &&
+      opts.topicTitle.length <= this.siteSettings.max_topic_title_length
+    ) {
+      this.model.set("title", opts.topicTitle);
+    }
+
+    if (opts.topicCategoryId) {
+      this.model.set("categoryId", opts.topicCategoryId);
+    }
+
+    if (opts.topicTags && this.site.can_tag_topics) {
+      let tags = escapeExpression(opts.topicTags)
+        .split(",")
+        .slice(0, this.siteSettings.max_tags_per_topic);
+
+      tags.forEach(
+        (tag, index, array) =>
+          (array[index] = tag.substring(0, this.siteSettings.max_tag_length))
+      );
+
+      this.model.set("tags", tags);
+    }
+
+    if (opts.topicBody) {
+      this.model.set("reply", opts.topicBody);
+    }
+
+    const defaultComposerHeight = this._getDefaultComposerHeight();
+
+    this.set("model.composerHeight", defaultComposerHeight);
+    document.documentElement.style.setProperty(
+      "--composer-height",
+      defaultComposerHeight
+    );
+  },
+
+  _getDefaultComposerHeight() {
+    if (this.keyValueStore.getItem("composerHeight")) {
+      return this.keyValueStore.getItem("composerHeight");
+    }
+
+    // The two custom properties below can be overriden by themes/plugins to set different default composer heights.
+    if (this.model.action === "reply") {
+      return "var(--reply-composer-height, 300px)";
+    } else {
+      return "var(--new-topic-composer-height, 400px)";
+    }
   },
 
   viewNewReply() {
@@ -1278,24 +1281,24 @@ export default Controller.extend({
     return false;
   },
 
-  destroyDraft(draftSequence = null) {
+  async destroyDraft(draftSequence = null) {
     const key = this.get("model.draftKey");
-    if (key) {
-      if (key === Composer.NEW_TOPIC_KEY) {
-        this.currentUser.set("has_topic_draft", false);
-      }
-
-      if (this._saveDraftPromise) {
-        return this._saveDraftPromise.then(() => this.destroyDraft());
-      }
-
-      const sequence = draftSequence || this.get("model.draftSequence");
-      return Draft.clear(key, sequence).then(() =>
-        this.appEvents.trigger("draft:destroyed", key)
-      );
-    } else {
-      return Promise.resolve();
+    if (!key) {
+      return;
     }
+
+    if (key === Composer.NEW_TOPIC_KEY) {
+      this.currentUser.set("has_topic_draft", false);
+    }
+
+    if (this._saveDraftPromise) {
+      await this._saveDraftPromise;
+      return await this.destroyDraft();
+    }
+
+    const sequence = draftSequence || this.get("model.draftSequence");
+    await Draft.clear(key, sequence);
+    this.appEvents.trigger("draft:destroyed", key);
   },
 
   confirmDraftAbandon(data) {
@@ -1310,30 +1313,34 @@ export default Controller.extend({
       return data;
     }
 
-    if (_checkDraftPopup) {
-      return new Promise((resolve) => {
-        bootbox.dialog(I18n.t("drafts.abandon.confirm"), [
-          {
-            label: I18n.t("drafts.abandon.no_value"),
-            callback: () => resolve(data),
-          },
+    if (!_checkDraftPopup) {
+      data.draft = null;
+      return data;
+    }
+
+    return new Promise((resolve) => {
+      this.dialog.alert({
+        message: I18n.t("drafts.abandon.confirm"),
+        buttons: [
           {
             label: I18n.t("drafts.abandon.yes_value"),
             class: "btn-danger",
-            icon: iconHTML("far-trash-alt"),
-            callback: () => {
+            icon: "far-trash-alt",
+            action: () => {
               this.destroyDraft(data.draft_sequence).finally(() => {
                 data.draft = null;
                 resolve(data);
               });
             },
           },
-        ]);
+          {
+            label: I18n.t("drafts.abandon.no_value"),
+            class: "btn-resume-editing",
+            action: () => resolve(data),
+          },
+        ],
       });
-    } else {
-      data.draft = null;
-      return data;
-    }
+    });
   },
 
   cancelComposer() {
@@ -1343,7 +1350,7 @@ export default Controller.extend({
       cancel(this._saveDraftDebounce);
     }
 
-    let promise = new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
         const modal = showModal("discard-draft", {
           model: this.model,
@@ -1351,7 +1358,7 @@ export default Controller.extend({
         });
         modal.setProperties({
           onDestroyDraft: () => {
-            this.destroyDraft()
+            return this.destroyDraft()
               .then(() => {
                 this.model.clearState();
                 this.close();
@@ -1366,10 +1373,10 @@ export default Controller.extend({
             this.model.clearState();
             this.close();
             this.appEvents.trigger("composer:cancelled");
-            resolve();
+            return resolve();
           },
           // needed to resume saving drafts if composer stays open
-          onDismissModal: () => reject(),
+          onDismissModal: () => resolve(),
         });
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
@@ -1383,9 +1390,7 @@ export default Controller.extend({
             resolve();
           });
       }
-    });
-
-    return promise.finally(() => {
+    }).finally(() => {
       this.skipAutoSave = false;
     });
   },
@@ -1402,26 +1407,19 @@ export default Controller.extend({
   },
 
   _saveDraft() {
-    const model = this.model;
-    if (model) {
-      if (model.draftSaving) {
-        // in test debounce is Ember.run, this will cause
-        // an infinite loop
-        if (!isTesting()) {
-          this._saveDraftDebounce = discourseDebounce(
-            this,
-            this._saveDraft,
-            2000
-          );
-        }
-      } else {
-        this._saveDraftPromise = model
-          .saveDraft(this.currentUser)
-          .finally(() => {
-            this._lastDraftSaved = Date.now();
-            this._saveDraftPromise = null;
-          });
-      }
+    if (!this.model) {
+      return;
+    }
+
+    if (this.model.draftSaving) {
+      this._saveDraftDebounce = discourseDebounce(this, this._saveDraft, 2000);
+    } else {
+      this._saveDraftPromise = this.model
+        .saveDraft(this.currentUser)
+        .finally(() => {
+          this._lastDraftSaved = Date.now();
+          this._saveDraftPromise = null;
+        });
     }
   },
 
@@ -1440,8 +1438,11 @@ export default Controller.extend({
       if (Date.now() - this._lastDraftSaved > 15000) {
         this._saveDraft();
       } else {
-        let method = isTesting() ? run : discourseDebounce;
-        this._saveDraftDebounce = method(this, this._saveDraft, 2000);
+        this._saveDraftDebounce = discourseDebounce(
+          this,
+          this._saveDraft,
+          2000
+        );
       }
     }
   },
@@ -1477,15 +1478,25 @@ export default Controller.extend({
   collapse() {
     this._saveDraft();
     this.set("model.composeState", Composer.DRAFT);
+    document.documentElement.style.setProperty("--composer-height", "40px");
   },
 
   toggleFullscreen() {
     this._saveDraft();
-    if (this.get("model.composeState") === Composer.FULLSCREEN) {
-      this.set("model.composeState", Composer.OPEN);
+
+    const composer = this.model;
+
+    if (composer?.viewFullscreen) {
+      composer?.set("composeState", Composer.OPEN);
     } else {
-      this.set("model.composeState", Composer.FULLSCREEN);
+      composer?.set("composeState", Composer.FULLSCREEN);
+      composer?.set("showFullScreenExitPrompt", true);
     }
+  },
+
+  @discourseComputed("model.viewFullscreen", "model.showFullScreenExitPrompt")
+  showFullScreenPrompt(isFullscreen, showExitPrompt) {
+    return isFullscreen && showExitPrompt && !this.capabilities.touch;
   },
 
   close() {
@@ -1497,7 +1508,8 @@ export default Controller.extend({
     elem.classList.remove("fullscreen-composer");
     elem.classList.remove("composer-open");
 
-    document.activeElement && document.activeElement.blur();
+    document.activeElement?.blur();
+    document.documentElement.style.removeProperty("--composer-height");
     this.setProperties({ model: null, lastValidatedAt: null });
   },
 

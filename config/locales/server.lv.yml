@@ -122,6 +122,7 @@ lv:
         bio_raw: "Par Mani"
     errors:
       <<: *errors
+  general_category_name: "Vispārīgi"
   staff_category_name: "Personāls"
   trust_levels:
     admin: "Administrators"

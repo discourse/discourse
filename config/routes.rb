@@ -391,6 +391,7 @@ Discourse::Application.routes.draw do
     end
     get "session/scopes" => "session#scopes"
     get "composer_messages" => "composer_messages#index"
+    get "composer_messages/user_not_seen_in_a_while" => "composer_messages#user_not_seen_in_a_while"
 
     resources :static
     post "login" => "static#enter"
@@ -586,7 +587,12 @@ Discourse::Application.routes.draw do
     end
     # used to download attachments (old route)
     get "uploads/:site/:id/:sha" => "uploads#show", constraints: { site: /\w+/, id: /\d+/, sha: /\h{16}/, format: /.*/ }
-    get "secure-media-uploads/*path(.:extension)" => "uploads#show_secure", constraints: { extension: /[a-z0-9\._]+/i }
+
+    # NOTE: secure-media-uploads is the old form, all new URLs generated for
+    # secure uploads will be secure-uploads, this is left in for backwards
+    # compat without needing to rebake all posts for each site.
+    get "secure-media-uploads/*path(.:extension)" => "uploads#_show_secure_deprecated", constraints: { extension: /[a-z0-9\._]+/i }
+    get "secure-uploads/*path(.:extension)" => "uploads#show_secure", constraints: { extension: /[a-z0-9\._]+/i }
 
     get "posts" => "posts#latest", id: "latest_posts", constraints: { format: /(json|rss)/ }
     get "private-posts" => "posts#latest", id: "private_posts", constraints: { format: /(json|rss)/ }
@@ -832,7 +838,7 @@ Discourse::Application.routes.draw do
 
     # Topic routes
     get "t/id_for/:slug" => "topics#id_for_slug"
-    get "t/external_id/:external_id" => "topics#show_by_external_id", format: :json, constrains: { external_id: /\A[\w-]+\z/ }
+    get "t/external_id/:external_id" => "topics#show_by_external_id", format: :json, constraints: { external_id: /[\w-]+/ }
     get "t/:slug/:topic_id/print" => "topics#show", format: :html, print: 'true', constraints: { topic_id: /\d+/ }
     get "t/:slug/:topic_id/wordpress" => "topics#wordpress", constraints: { topic_id: /\d+/ }
     get "t/:topic_id/wordpress" => "topics#wordpress", constraints: { topic_id: /\d+/ }

@@ -193,4 +193,26 @@ RSpec.describe Email::Processor do
       ))
     end
   end
+
+  describe 'when group email recipients exceeds maximum_recipients_per_new_group_email site setting' do
+    let(:mail) { file_from_fixtures("cc.eml", "emails").read }
+
+    it 'rejects the email with the right response' do
+      SiteSetting.maximum_recipients_per_new_group_email = 3
+
+      processor = Email::Processor.new(mail)
+      processor.process!
+
+      rejection_raw = ActionMailer::Base.deliveries.first.body.to_s
+
+      expect(rejection_raw).to eq(
+        I18n.t("system_messages.email_reject_too_many_recipients.text_body_template",
+          destination: '["someone@else.com"]',
+          former_title: 'The more, the merrier',
+          max_recipients_count: 3,
+          base_url: Discourse.base_url,
+        )
+      )
+    end
+  end
 end

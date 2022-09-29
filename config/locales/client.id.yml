@@ -151,7 +151,6 @@ id:
       forwarded: "meneruskan email di atas"
     topic_admin_menu: "tindakan topik"
     skip_to_main_content: "Lewati ke konten utama"
-    wizard_required: "Selamat datang di Discourse baru Anda! Mari kita mulai dengan <a href='%{url}' data-auto-route='true'>wizard pengaturan</a> ✨"
     emails_are_disabled: "Semua surel yang keluar telah dinonaktifkan oleh administrator. Tidak ada pemberitahuan email yang akan dikirimkan."
     emails_are_disabled_non_staff: "Surel keluar telah dimatikan untuk pengguna yang bukan staf."
     software_update_prompt:
@@ -196,6 +195,8 @@ id:
     not_implemented: "Maaf, fitur ini belum diimplementasikan."
     no_value: "Tidak"
     yes_value: "Ya"
+    ok_value: "OK"
+    cancel_value: "Batal"
     submit: "Kirimkan"
     generic_error: "Maaf, terjadi kesalahan."
     generic_error_with_reason: "Terjadi kesalahan: %{error}"
@@ -1519,6 +1520,13 @@ id:
           count:
             label: Pos
     new_item: "baru"
+    user_menu:
+      tabs:
+        replies: "balasan"
+        mentions: "Balasan-balasan"
+        likes: "Likes Diberikan"
+        bookmarks: "Markah"
+        profile: "Profil"
     topics:
       bulk:
         select_all: "Pilih Semua"
@@ -1792,6 +1800,8 @@ id:
       new_count:
         other: "%{count} baru"
       sections:
+        about:
+          header_link_text: "Tentang"
         messages:
           header_link_text: "Pesan-pesan"
           links:
@@ -1804,11 +1814,15 @@ id:
         tags:
           header_link_text: "Label"
         categories:
-          header_link_title: "Semua kategori"
           header_link_text: "Kategori"
         community:
-          header_link_title: "beranda"
           links:
+            about:
+              content: "Tentang"
+            admin:
+              content: "Admin"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Dilacak"
             groups:

@@ -4,10 +4,18 @@ import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
 import showModal from "discourse/lib/show-modal";
+import { inject as service } from "@ember/service";
+import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
+import Notification from "discourse/models/notification";
 
 export default class UserMenuNotificationsList extends UserMenuItemsList {
+  @service currentUser;
+  @service siteSettings;
+  @service site;
+  @service store;
+
   get filterByTypes() {
-    return null;
+    return this.args.filterByTypes;
   }
 
   get dismissTypes() {
@@ -23,7 +31,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
   }
 
   get showDismiss() {
-    return this.items.some((item) => !item.read);
+    return this.items.some((item) => !item.notification.read);
   }
 
   get dismissTitle() {
@@ -47,11 +55,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     }
   }
 
-  get itemComponent() {
-    return "user-menu/notification-item";
-  }
-
-  fetchItems() {
+  async fetchItems() {
     const params = {
       limit: 30,
       recent: true,
@@ -64,10 +68,19 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
       params.filter_by_types = types.join(",");
       params.silent = true;
     }
-    return this.store
+    const collection = await this.store
       .findStale("notification", params)
-      .refresh()
-      .then((c) => c.content);
+      .refresh();
+    const notifications = collection.content;
+    await Notification.applyTransformations(notifications);
+    return notifications.map((notification) => {
+      return new UserMenuNotificationItem({
+        notification,
+        currentUser: this.currentUser,
+        siteSettings: this.siteSettings,
+        site: this.site,
+      });
+    });
   }
 
   dismissWarningModal() {
@@ -95,7 +108,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
       ajax("/notifications/mark-read", opts).then(() => {
         if (dismissTypes) {
           const unreadNotificationCountsHash = {
-            ...this.currentUser.grouped_unread_high_priority_notifications,
+            ...this.currentUser.grouped_unread_notifications,
           };
           dismissTypes.forEach((type) => {
             const typeId = this.site.notification_types[type];
@@ -104,16 +117,13 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
             }
           });
           this.currentUser.set(
-            "grouped_unread_high_priority_notifications",
+            "grouped_unread_notifications",
             unreadNotificationCountsHash
           );
         } else {
           this.currentUser.set("all_unread_notifications_count", 0);
           this.currentUser.set("unread_high_priority_notifications", 0);
-          this.currentUser.set(
-            "grouped_unread_high_priority_notifications",
-            {}
-          );
+          this.currentUser.set("grouped_unread_notifications", {});
         }
         this.refreshList();
         postRNWebviewMessage("markRead", "1");

@@ -179,13 +179,10 @@ te:
             hex:
               invalid: "ఇది చెల్లని రంగు"
       <<: *errors
-  vip_category_name: "అడ్డా"
-  vip_category_description: "నమ్మకం స్థాయి మూడు లేదా ఆపై ఉన్న సభ్యులకు మాత్రమే పరిమితమైన వర్గం"
+  general_category_name: "సాధారణ"
   meta_category_description: "ఈ సైటు గురించి చర్చ. ఎలా మొదలైంది. ఎలా పని చేస్తుంది. ఇంకా ఎలా మెరుగు పరచవచ్చు."
   staff_category_name: "సిబ్బంది"
   staff_category_description: "సిబ్బంది చర్చలకు ప్రైవేటు వర్గం. విషయాలు కేవలం అధికారులకు మరియు నిర్వాహకులకు మాత్రమే కనిపిస్తాయి."
-  lounge_welcome:
-    title: "అడ్డాకు స్వాగతం."
   category:
     topic_prefix: "%{category} వర్గం గురించి"
     errors:

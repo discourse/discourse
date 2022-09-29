@@ -830,7 +830,8 @@ RSpec.describe Topic do
 
         context "when PMs are enabled for TL3 or higher only" do
           before do
-            SiteSetting.min_trust_to_send_messages = 3
+            SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
+            SiteSetting.enable_personal_messages = false
           end
 
           it 'should raise error' do
@@ -882,6 +883,10 @@ RSpec.describe Topic do
       end
 
       describe 'by email' do
+        before do
+          Group.refresh_automatic_groups!
+        end
+
         it 'should be able to invite a user' do
           expect(topic.invite(user, user1.email)).to eq(true)
           expect(topic.allowed_users).to include(user1)
@@ -1138,7 +1143,7 @@ RSpec.describe Topic do
 
             expect(topic.invite_group(topic.user, admins)).to eq(true)
             expect(topic.posts.last.action_code).to eq("removed_user")
-            expect(topic.allowed_users).to match_array([user0, user3, Discourse.system_user])
+            expect(topic.allowed_users).to match_array([user0, user3])
             expect(other_topic.allowed_users).to match_array([user1])
           end
 
@@ -1156,7 +1161,7 @@ RSpec.describe Topic do
             admins.add(user1)
 
             expect(topic.invite_group(topic.user, admins)).to eq(true)
-            expect(topic.allowed_users).to match_array([topic.user, Discourse.system_user])
+            expect(topic.allowed_users).to match_array([topic.user])
           end
         end
       end
@@ -2817,7 +2822,7 @@ RSpec.describe Topic do
 
         post = Post.last
 
-        expect(post.user).to eq(Discourse.system_user)
+        expect(post.user).to eq(user1)
         expect(post.post_type).to eq(Post.types[:small_action])
         expect(post.action_code).to eq('user_left')
       end
@@ -2909,7 +2914,7 @@ RSpec.describe Topic do
       Reviewable.set_priorities(low: 2.0, medium: 6.0, high: 9.0)
       SiteSetting.num_flaggers_to_close_topic = 2
       SiteSetting.reviewable_default_visibility = 'medium'
-      SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:high]
+      SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivities[:high]
       post = Fabricate(:post)
       @topic = post.topic
       @reviewable = Fabricate(:reviewable_flagged_post, target: post, topic: @topic)

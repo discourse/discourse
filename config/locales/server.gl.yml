@@ -553,8 +553,7 @@ gl:
               too_many: "Demasiadas palabras para esa acción"
       <<: *errors
   uncategorized_category_name: "Sen categoría"
-  vip_category_name: "Sala VIP"
-  vip_category_description: "Unha categoría exclusiva para membros cun nivel de confianza 3 ou superior."
+  general_category_name: "Xeral"
   meta_category_name: "Opinións sobre o sitio"
   meta_category_description: "Discusións sobre este sitio, a súa organización, como funciona e como se pode mellorar."
   staff_category_name: "Equipo"
@@ -575,29 +574,6 @@ gl:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Quizais queira pechar este tema a través do administrador :wrench: (na parte superior dereita ou na parte inferior) para que as respostas non se acumulen no anuncio.
-  lounge_welcome:
-    title: "Dámoslle a benvida á Sala VIP"
-    body: |2
-
-      Parabéns! :confetti_ball:
-
-      Se pode ver este tema é porque hai pouco que foi promovido a usuario **habitual** (nivel de confianza 3).
-
-      Agora pode &hellip;
-
-      * Editar o título de calquera tema
-      * Cambiar a categoría de calquera tema
-      * As súas ligazóns serán fiábeis (retirarase [a etiqueta nofollow](https://en.wikipedia.org/wiki/Nofollow))
-      * Acceder á categoría privada Sala VIP só visíbel para usuarios cun nivel de confianza 3 ou superior
-      * Agochar o lixo cunha soa alerta
-
-      Consulte aquí a [listaxe actual de usuarios habituais](%{base_path}/badges/3/regular). Asegúrese de saudar.
-
-      Grazas por ser parte importante da comunidade!
-
-      (Para máis información sobre os niveis de confianza, [mire este tema][trust]. Repare en que só os membros que continúen cumprindo os requirimentos ao longo do tempo seguirán considerándose habituais.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "LER PRIMEIRO: Guía de comezo rápido para administradores"
   category:
     topic_prefix: "Acerca da categoría %{category}"
@@ -1631,7 +1607,6 @@ gl:
     min_trust_to_edit_wiki_post: "O nivel de confianza mínimo requirido para editar unha publicación marcada como wiki."
     min_trust_to_edit_post: "O nivel de confianza mínimo requirido para editar publicacións."
     min_trust_to_allow_self_wiki: "O nivel de confianza mínimo requirido para facer que un usuario converta as súas publicacións a wiki."
-    min_trust_to_send_messages: "O nivel de confianza mínimo requirido para crear novas mensaxes persoais."
     min_trust_to_flag_posts: "O nivel de confianza mínimo requirido para denunciar publicacións"
     min_trust_to_post_links: "O nivel de confianza mínimo requirido para incluír ligazóns nas publicacións"
     min_trust_to_post_embedded_media: "O nivel de confianza mínimo requirido para incorporar elementos multimedia a unha publicación"
@@ -3981,7 +3956,6 @@ gl:
     register:
       button: "Rexistrarse"
       title: "Rexistrar conta de administrador"
-      help: "rexistrar unha nova conta para comezar"
       no_emails: "Por desgraza, non se determinaron enderezos de correo de administrador durante a definición inicial, polo que pode ser difícil finalizar a configuración. Engada, por favor, un correo de desenvolvedor no ficheiro de configuración ou <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>mire de crear unha conta de administrador desde a consola</a>."
     confirm_email:
       title: "Confirme o seu correo electrónico"
@@ -3991,9 +3965,7 @@ gl:
       message: "<p>Volvémoslle enviar o correo de activación a <b>%{email}</b>"
   safe_mode:
     title: "Entrar en modo seguro"
-    description: "O modo seguro permítelle probar o seu sitio sen cargar complementos nin outras personalizacións."
-    no_customizations: "Desactivar tema actual"
-    only_official: "Desactivar complementos non oficiais"
+    no_unofficial_plugins: "Desactivar complementos non oficiais"
     no_plugins: "Desactivar todos os complementos"
     enter: "Entrar en modo seguro"
     must_select: "Debe seleccionar polo menos unha opción para entrar no modo seguro."

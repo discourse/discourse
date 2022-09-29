@@ -399,9 +399,9 @@ RSpec.describe Upload do
 
       let(:upload) { Fabricate(:upload, original_filename: "small.pdf", extension: "pdf", secure: true) }
 
-      it 'marks a local attachment as secure if secure media enabled' do
+      it 'marks a local attachment as secure if secure uploads enabled' do
         upload.update!(secure: false, access_control_post: Fabricate(:private_message_post))
-        enable_secure_media
+        enable_secure_uploads
 
         expect { upload.update_secure_status }
           .to change { upload.secure }
@@ -409,7 +409,7 @@ RSpec.describe Upload do
         expect(upload.secure).to eq(true)
       end
 
-      it 'marks a local attachment as not secure if secure media enabled' do
+      it 'marks a local attachment as not secure if secure uploads enabled' do
         expect { upload.update_secure_status }
           .to change { upload.secure }
 
@@ -428,9 +428,9 @@ RSpec.describe Upload do
       expect(upload.secure).to eq(false)
     end
 
-    context "with secure media enabled" do
+    context "with secure uploads enabled" do
       before do
-        enable_secure_media
+        enable_secure_uploads
       end
 
       it "does not mark an image upload as not secure when there is no access control post id, to avoid unintentional exposure" do
@@ -543,9 +543,9 @@ RSpec.describe Upload do
     end
   end
 
-  def enable_secure_media
+  def enable_secure_uploads
     setup_s3
-    SiteSetting.secure_media = true
+    SiteSetting.secure_uploads = true
     stub_upload(upload)
   end
 
@@ -568,54 +568,152 @@ RSpec.describe Upload do
     end
   end
 
-  describe ".secure_media_url_from_upload_url" do
+  describe ".secure_uploads_url_from_upload_url" do
     before do
       # must be done so signed_url_for_path exists
-      enable_secure_media
+      enable_secure_uploads
     end
 
-    it "gets the secure media url from an S3 upload url" do
+    it "gets the secure uploads url from an S3 upload url" do
       upload = Fabricate(:upload_s3, secure: true)
       url = upload.url
-      secure_url = Upload.secure_media_url_from_upload_url(url)
+      secure_url = Upload.secure_uploads_url_from_upload_url(url)
       expect(secure_url).not_to include(SiteSetting.Upload.absolute_base_url)
     end
   end
 
-  describe ".secure_media_url?" do
-    it "works for a secure media url with or without schema + host" do
-      url = "//localhost:3000/secure-media-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
-      expect(Upload.secure_media_url?(url)).to eq(true)
-      url = "/secure-media-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
-      expect(Upload.secure_media_url?(url)).to eq(true)
-      url = "http://localhost:3000/secure-media-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
-      expect(Upload.secure_media_url?(url)).to eq(true)
+  describe ".secure_uploads_url?" do
+    it "works for a secure uploads url with or without schema + host" do
+      url = "//localhost:3000/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
+      expect(Upload.secure_uploads_url?(url)).to eq(true)
+      url = "/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
+      expect(Upload.secure_uploads_url?(url)).to eq(true)
+      url = "http://localhost:3000/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
+      expect(Upload.secure_uploads_url?(url)).to eq(true)
     end
 
     it "does not get false positives on a topic url" do
-      url = "/t/secure-media-uploads-are-cool/42839"
-      expect(Upload.secure_media_url?(url)).to eq(false)
+      url = "/t/secure-uploads-are-cool/42839"
+      expect(Upload.secure_uploads_url?(url)).to eq(false)
     end
 
-    it "returns true only for secure media URL for actual media (images/video/audio)" do
-      url = "/secure-media-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.mp4"
-      expect(Upload.secure_media_url?(url)).to eq(true)
-      url = "/secure-media-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
-      expect(Upload.secure_media_url?(url)).to eq(true)
-      url = "/secure-media-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.mp3"
-      expect(Upload.secure_media_url?(url)).to eq(true)
-      url = "/secure-media-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.pdf"
-      expect(Upload.secure_media_url?(url)).to eq(false)
+    it "returns true only for secure uploads URL for actual media (images/video/audio)" do
+      url = "/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.mp4"
+      expect(Upload.secure_uploads_url?(url)).to eq(true)
+      url = "/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
+      expect(Upload.secure_uploads_url?(url)).to eq(true)
+      url = "/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.mp3"
+      expect(Upload.secure_uploads_url?(url)).to eq(true)
+      url = "/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.pdf"
+      expect(Upload.secure_uploads_url?(url)).to eq(false)
     end
 
     it "does not work for regular upload urls" do
       url = "/uploads/default/test_0/original/1X/e1864389d8252958586c76d747b069e9f68827e3.png"
-      expect(Upload.secure_media_url?(url)).to eq(false)
+      expect(Upload.secure_uploads_url?(url)).to eq(false)
     end
 
     it "does not raise for invalid URLs" do
       url = "http://URL:%20https://google.com"
-      expect(Upload.secure_media_url?(url)).to eq(false)
+      expect(Upload.secure_uploads_url?(url)).to eq(false)
+    end
+  end
+
+  describe "#dominant_color" do
+    let(:white_image) { Fabricate(:image_upload, color: "white") }
+    let(:red_image) { Fabricate(:image_upload, color: "red") }
+    let(:not_an_image) {
+      upload = Fabricate(:upload)
+
+      file = Tempfile.new(['invalid', '.txt'])
+      file << "Not really an image"
+      file.rewind
+
+      upload.update(url: Discourse.store.store_upload(file, upload), extension: "txt")
+      upload
+    }
+    let(:invalid_image) {
+      upload = Fabricate(:upload)
+
+      file = Tempfile.new(['invalid', '.png'])
+      file << "Not really an image"
+      file.rewind
+
+      upload.update(url: Discourse.store.store_upload(file, upload))
+      upload
+    }
+
+    it "correctly identifies and stores an image's dominant color" do
+      expect(white_image.dominant_color).to eq(nil)
+      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("FFFFFF")
+      expect(white_image.dominant_color).to eq("FFFFFF")
+
+      expect(red_image.dominant_color).to eq(nil)
+      expect(red_image.dominant_color(calculate_if_missing: true)).to eq("FF0000")
+      expect(red_image.dominant_color).to eq("FF0000")
+    end
+
+    it "can be backfilled" do
+      expect(white_image.dominant_color).to eq(nil)
+      expect(red_image.dominant_color).to eq(nil)
+
+      Upload.backfill_dominant_colors!(5)
+
+      white_image.reload
+      red_image.reload
+
+      expect(white_image.dominant_color).to eq("FFFFFF")
+      expect(red_image.dominant_color).to eq("FF0000")
+    end
+
+    it "stores an empty string for non-image uploads" do
+      expect(not_an_image.dominant_color).to eq(nil)
+      expect(not_an_image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(not_an_image.dominant_color).to eq("")
+    end
+
+    it "correctly handles invalid image files" do
+      expect(invalid_image.dominant_color).to eq(nil)
+      expect(invalid_image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(invalid_image.dominant_color).to eq("")
+    end
+
+    it "correctly handles unparsable ImageMagick output" do
+      Discourse::Utils.stubs(:execute_command).returns('someinvalidoutput')
+
+      expect(invalid_image.dominant_color).to eq(nil)
+
+      expect {
+        invalid_image.dominant_color(calculate_if_missing: true)
+      }.to raise_error(/Calculated dominant color but unable to parse output/)
+
+      expect(invalid_image.dominant_color).to eq(nil)
+    end
+
+    it "correctly handles download failures" do
+      white_image.stubs(:local?).returns(true)
+      Discourse.store.stubs(:download).returns(nil)
+
+      expect(invalid_image.dominant_color).to eq(nil)
+      expect(invalid_image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(invalid_image.dominant_color).to eq("")
+    end
+
+    it "is validated for length" do
+      u = Fabricate(:upload)
+
+      # Acceptable values
+      u.update!(dominant_color: nil)
+      u.update!(dominant_color: "")
+      u.update!(dominant_color: "abcdef")
+
+      expect {
+        u.update!(dominant_color: "toomanycharacters")
+      }.to raise_error(ActiveRecord::RecordInvalid)
+
+      expect {
+        u.update!(dominant_color: "abcd")
+      }.to raise_error(ActiveRecord::RecordInvalid)
     end
   end
 end

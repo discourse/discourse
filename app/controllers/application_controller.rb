@@ -400,11 +400,8 @@ class ApplicationController < ActionController::Base
     if check_current_user && (user = current_user rescue nil)
       locale = user.effective_locale
     else
-      if SiteSetting.set_locale_from_accept_language_header
-        locale = locale_from_header
-      else
-        locale = SiteSetting.default_locale
-      end
+      locale = Discourse.anonymous_locale(request)
+      locale ||= SiteSetting.default_locale
     end
 
     if !I18n.locale_available?(locale)
@@ -444,19 +441,23 @@ class ApplicationController < ActionController::Base
     session[:mobile_view] = params[:mobile_view] if params.has_key?(:mobile_view)
   end
 
-  NO_CUSTOM = "no_custom"
+  NO_THEMES = "no_themes"
   NO_PLUGINS = "no_plugins"
-  ONLY_OFFICIAL = "only_official"
+  NO_UNOFFICIAL_PLUGINS = "no_unofficial_plugins"
   SAFE_MODE = "safe_mode"
+
+  LEGACY_NO_THEMES = "no_custom"
+  LEGACY_NO_UNOFFICIAL_PLUGINS = "only_official"
 
   def resolve_safe_mode
     return unless guardian.can_enable_safe_mode?
 
     safe_mode = params[SAFE_MODE]
-    if safe_mode
-      request.env[NO_CUSTOM] = !!safe_mode.include?(NO_CUSTOM)
-      request.env[NO_PLUGINS] = !!safe_mode.include?(NO_PLUGINS)
-      request.env[ONLY_OFFICIAL] = !!safe_mode.include?(ONLY_OFFICIAL)
+    if safe_mode&.is_a?(String)
+      safe_mode = safe_mode.split(",")
+      request.env[NO_THEMES] = safe_mode.include?(NO_THEMES) || safe_mode.include?(LEGACY_NO_THEMES)
+      request.env[NO_PLUGINS] = safe_mode.include?(NO_PLUGINS)
+      request.env[NO_UNOFFICIAL_PLUGINS] = safe_mode.include?(NO_UNOFFICIAL_PLUGINS) || safe_mode.include?(LEGACY_NO_UNOFFICIAL_PLUGINS)
     end
   end
 
@@ -464,7 +465,7 @@ class ApplicationController < ActionController::Base
     return if request.format == "js"
 
     resolve_safe_mode
-    return if request.env[NO_CUSTOM]
+    return if request.env[NO_THEMES]
 
     theme_id = nil
 
@@ -619,10 +620,6 @@ class ApplicationController < ActionController::Base
   end
 
   private
-
-  def locale_from_header
-    HttpLanguageParser.parse(request.env["HTTP_ACCEPT_LANGUAGE"])
-  end
 
   def preload_anonymous_data
     store_preloaded("site", Site.json_for(guardian))

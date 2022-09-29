@@ -8,8 +8,15 @@ import { setup } from "qunit-dom";
 setEnvironment("testing");
 
 document.addEventListener("discourse-booted", () => {
+  // eslint-disable-next-line no-undef
+  if (!EmberENV.TESTS_FILE_LOADED) {
+    throw new Error(
+      'The tests file was not loaded. Make sure your tests index.html includes "assets/tests.js".'
+    );
+  }
+
   const script = document.getElementById("plugin-test-script");
-  if (script && !requirejs.entries["discourse/tests/active-plugins"]) {
+  if (script && !requirejs.entries["discourse/tests/plugin-tests"]) {
     throw new Error(
       `Plugin JS payload failed to load from ${script.src}. Is the Rails server running?`
     );
@@ -41,7 +48,10 @@ document.addEventListener("discourse-booted", () => {
   if (QUnit.config.seed === undefined) {
     // If we're running in browser, default to random order. Otherwise, let Ember Exam
     // handle randomization.
-    QUnit.config.seed = true;
+    QUnit.config.seed = Math.random().toString(36).slice(2);
+  } else {
+    // Don't reorder when specifying a seed
+    QUnit.config.reorder = false;
   }
 
   loader.loadModules();
@@ -53,4 +63,5 @@ document.addEventListener("discourse-booted", () => {
     setupEmberOnerrorValidation: !skipCore,
   });
 });
+
 window.EmberENV.TESTS_FILE_LOADED = true;

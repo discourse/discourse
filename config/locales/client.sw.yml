@@ -138,11 +138,11 @@ sw:
       banner:
         enabled: "aligeuza hili kuwa bango %{when}. Itaonekana juu ya kila ukurasa mpaka itakapo ondolewa na mtumiaji."
         disabled: "aliondoa hili bango %{when}. Halitaonekana tena juu ya kila ukurasa."
-    wizard_required: "Karibu Discourse! Tuanze na <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "Utumaji wa barua pepe umezuiliwa na msimamizi. Hakuna taarifa za utumwaji wa barua pepe zitakazotumwa."
     software_update_prompt:
       dismiss: "Ondosha"
     bootstrap_mode_disabled: "Halitumizi ya Bootstrap itasitishwa baada ya masaa 24."
+    bootstrap_invite_button_title: "Tuma Mialiko"
     themes:
       default_description: "Halisi"
     s3:
@@ -166,6 +166,8 @@ sw:
     not_implemented: "Samahani, kipengele hicho hakijatekelezwa bado."
     no_value: "Hapana"
     yes_value: "Ndiyo"
+    ok_value: "Vema"
+    cancel_value: "Ghairi"
     submit: "Wasilisha"
     generic_error: "Samahani, hitilafu imetokea."
     generic_error_with_reason: "Hitilafu imetokea: %{error}"
@@ -1423,6 +1425,13 @@ sw:
     go_back: "rudi nyuma"
     not_logged_in_user: "karatasi ya kwanza yenye muhtasari wa shughuli na mapendekezo ya sasa"
     current_user: "nenda kwenye ukurasa wako"
+    user_menu:
+      tabs:
+        replies: "Majibu"
+        mentions: "Kutajwa"
+        likes: "Upendo Uliotolewa"
+        bookmarks: "Mialamisho"
+        profile: "Maelezo mafupi"
     topics:
       new_messages_marker: "Mara ya mwisho imetembelewa"
       bulk:
@@ -2175,7 +2184,6 @@ sw:
     download_calendar:
       download: "Pakua"
     tagging:
-      all_tags: "Lebo Zote"
       other_tags: "Lebo Zingine"
       selector_all_tags: "lebo zote"
       selector_no_tags: "hakuna lebo"
@@ -2249,10 +2257,6 @@ sw:
         member: "mwanachama"
         regular: "kawaida"
         leader: "kiongozi"
-    user_activity:
-      no_activity_others: "Hakuna shughuli."
-      no_replies_others: "Hakuna majibu."
-      no_likes_others: "Hakuna machapisho yaliyopendwa."
     sidebar:
       unread_count:
         one: "%{count} haijasomwa"
@@ -2261,7 +2265,10 @@ sw:
         one: "Mada mpya %{count}"
         other: "Mada mpya %{count} "
       more: "Zaidi"
+      all_categories: "Kategoria Zote"
       sections:
+        about:
+          header_link_text: "Kuhusu"
         messages:
           header_link_text: "Ujumbe"
           links:
@@ -2272,15 +2279,20 @@ sw:
             unread_with_count: "Haijasomwa (%{count})"
             archive: "Hifadhi"
         tags:
-          header_link_title: "lebo zote"
           header_link_text: "Lebo"
         categories:
-          header_link_title: "kategoria zote"
           header_link_text: "Kategoria"
         community:
-          header_link_title: "nyumbani"
           header_link_text: "Jumuiya"
           links:
+            about:
+              content: "Kuhusu"
+            admin:
+              content: "Msimamizi"
+            badges:
+              content: "Beji"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Imefuatiliwa"
             groups:

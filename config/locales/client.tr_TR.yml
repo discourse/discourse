@@ -141,10 +141,10 @@ tr_TR:
       removed_group: "%{who} %{when} kaldırıldı"
       autobumped: "%{when} tarihinde otomatik olarak yükseltti"
       autoclosed:
-        enabled: "%{when} tarihinde kapatıldı"
+        enabled: "%{when} kapatıldı"
         disabled: "%{when} tarihinde açıldı"
       closed:
-        enabled: "%{when} tarihinde kapatıldı"
+        enabled: "%{when} kapatıldı"
         disabled: "%{when} tarihinde açıldı"
       archived:
         enabled: "%{when} tarihinde arşivlendi"
@@ -164,8 +164,8 @@ tr_TR:
       forwarded: "yukarıdaki e-postayı iletti"
     topic_admin_menu: "konu eylemleri"
     skip_to_main_content: "Ana içeriğe atla"
-    wizard_required: "Yeni Discourse'una hoşgeldin! Haydi kuruluma başlayalım! <a href='%{url}' data-auto-route='true'>Kurulum Sihirbazı</a> ✨"
     emails_are_disabled: "Giden tüm e-postalar yönetici tarafından devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
+    emails_are_disabled_non_staff: "Giden e-posta, personel olmayan kullanıcılar için devre dışı bırakıldı."
     software_update_prompt:
       message: "Siteyi güncelledik, <span>lütfen sayfayı yenileyin</span>, aksi takdirde beklenmedik durumlarla karşılaşabilirsiniz."
       dismiss: "Kapat"
@@ -173,6 +173,8 @@ tr_TR:
       one: "Yeni sitenizi başlatmayı kolaylaştırmak için önyükleme modundasınız. Tüm yeni kullanıcılara güven düzeyi 1 verilir ve günlük e-posta özeti e-postaları etkinleştirilir. Bu, %{count} kullanıcı katıldığında otomatik olarak kapatılacaktır."
       other: "Yeni sitenizi başlatmayı kolaylaştırmak için önyükleme modundasınız. Tüm yeni kullanıcılara güven düzeyi 1 verilir ve günlük e-posta özeti e-postaları etkinleştirilir. Bu, %{count} kullanıcı katıldığında otomatik olarak kapatılacaktır."
     bootstrap_mode_disabled: "Önyükleme modu 24 saat içinde devre dışı bırakılacak."
+    bootstrap_invite_button_title: "Davetleri Gönder"
+    bootstrap_wizard_link_title: "Kurulum sihirbazını bitir"
     themes:
       default_description: "Varsayılan"
       broken_theme_alert: "Bir tema veya bileşende hata olduğu için siteniz çalışmayabilir."
@@ -208,6 +210,8 @@ tr_TR:
     not_implemented: "Bu özellik henüz geliştirilmedi, üzgünüz!"
     no_value: "Hayır"
     yes_value: "Evet"
+    ok_value: "Tamam"
+    cancel_value: "İptal et"
     submit: "Gönder"
     generic_error: "Üzgünüz, bir hata oluştu."
     generic_error_with_reason: "Bir hata oluştu: %{error}"
@@ -1619,7 +1623,6 @@ tr_TR:
       set_custom_status: "Özel bir durum ayarla"
       what_are_you_doing: "Ne yapıyorsun?"
       remove_status: "Durumu kaldır"
-      until: "Şuna kadar:"
     loading: "Yükleniyor..."
     errors:
       prev_page: "şu adresi yüklemeye çalışırken:"
@@ -1683,7 +1686,6 @@ tr_TR:
       hide_forever: "hayır teşekkürler"
       hidden_for_session: "Tamam, sana yarın yeniden soracağız. \"Giriş Yap\" bağlantısını kullanarak da hesap oluşturabilirsin."
       intro: "Merhaba! Tartışmanın tadını çıkarıyor gibisiniz, ancak henüz bir hesap için kaydolmadınız."
-      value_prop: "Aynı gönderiler arasında gezinmekten bıktınız mı? Bir hesap oluşturursanız, kaldığınız yere geri dönebilirsiniz. Ayrıca bir hesabınız olursa yeni yanıtlardan haberdar olabilir, yer imlerini kaydedebilir ve başkalarına teşekkür etmek için beğenileri kullanabilirsiniz. Bu topluluğu harika kılmak için hep birlikte çalışabiliriz. :heart:"
     summary:
       enabled_description: "Bu konunun özetini görüntülüyorsun: Okuyucularımızın en çok ilgisini çeken gönderiler"
       description:
@@ -2017,6 +2019,7 @@ tr_TR:
       abandon: "yazım alanını kapat ve taslağı sil"
       enter_fullscreen: "tam ekran yaratıcıya gir"
       exit_fullscreen: "tam ekran yaratıcıdan çık"
+      exit_fullscreen_prompt: "Tam ekrandan çıkmak için <kbd>ESC</kbd> tuşuna basın"
       show_toolbar: "editör araç çubuğunu göster"
       hide_toolbar: "editör araç çubuğunu gizle"
       modal_ok: "Tamam"
@@ -2304,16 +2307,21 @@ tr_TR:
     view_all: "tümünü görüntüle %{tab}"
     user_menu:
       generic_no_items: "Bu listede hiç öğe yok."
-      sr_menu_tabs: "Menü sekmeleri"
       view_all_notifications: "tüm bildirimleri görüntüle"
       view_all_bookmarks: "tüm yer imlerini görüntüle"
+      tabs:
+        replies: "Yanıtlar"
+        mentions: "Bahsedilenler"
+        likes: "Beğeni"
+        bookmarks: "İmlenenler"
+        profile: "Profil"
       reviewable:
         view_all: "tüm gözden geçirme öğeleri"
         queue: "Kuyruk"
         deleted_user: "(silinmiş kullanıcı)"
         post_number_with_topic_title: "gönderi #%{post_number} - %{title}"
         new_post_in_topic: "%{title} başlığıyla yeni gönderi"
-        suspicious_user: "şüpheli kullanıcı %{username}"
+        user_requires_approval: "%{username} onay bekliyor"
         default_item: "gözden geçirme öğesi #%{reviewable_id}"
     topics:
       new_messages_marker: "son ziyaret"
@@ -2956,8 +2964,8 @@ tr_TR:
           other: "%{count} tane gönderiyi silmek istediğinize emin misiniz?"
       merge:
         confirm:
-          one: "Bu yayınları birleştirmek istediğinize emin misiniz?"
-          other: "%{count} gönderiyi birleştirmek istediğinizden emin misiniz?"
+          one: "Bu %{count} gönderiyi birleştirmek istediğinizden emin misiniz?"
+          other: "Bu %{count} gönderiyi birleştirmek istediğinizden emin misiniz?"
       revisions:
         controls:
           first: "İlk revizyon"
@@ -3371,6 +3379,7 @@ tr_TR:
         this_week: "Hafta"
         today: "Bugün"
         other_periods: "en çok ilgi görenlere bak:"
+    safari_13_warning: Bu site yakında iOS ve Safari sürüm 13 ve altını desteklemeyecek. Basitleştirilmiş ve salt okunur bir sürüm var olmaya devam edecek. (<a href="https://meta.discourse.org/t/224747">detaylı bilgi</a>)
     permission_types:
       full: "Oluştur / Yanıtla / Bak"
       create_post: "Yanıtla / Bak"
@@ -3520,7 +3529,7 @@ tr_TR:
       google: "Google Takvim"
       ics: "ICS"
     tagging:
-      all_tags: "Tüm Etiketler"
+      all_tags: "Tüm etiketler"
       other_tags: "Diğer Etiketler"
       selector_all_tags: "tüm etiketler"
       selector_no_tags: "etiket yok"
@@ -3675,12 +3684,11 @@ tr_TR:
     user_activity:
       no_activity_title: "Henüz etkinlik yok"
       no_activity_body: "Topluluğumuza hoş geldiniz! Burada çok yenisiniz ve tartışmalara henüz katkıda bulunmadınız. İlk adım olarak <a href='%{topUrl}'>en çok okunanları</a> veya <a href='%{categoriesUrl}'>kategorileri</a> ziyaret edebilir ve okumaya başlayabilirsiniz! Beğendiğiniz veya hakkında daha fazla bilgi edinmek istediğiniz gönderilerde lütfen %{heartIcon} kullanarak beğeninizi belirtin. Paylaşımlara katıldıkça, etkinliğiniz burada listelenecek."
-      no_activity_others: "Etkinlik yok."
       no_replies_title: "Henüz hiçbir konuyu yanıtlamadınız."
-      no_replies_others: "Yanıt yok."
+      no_replies_title_others: "%{username} henüz hiçbir konuya cevap vermedi"
       no_drafts_title: "Hiç taslak başlatmadınız"
       no_likes_title: "Henüz hiçbir konuyu beğenmedin"
-      no_likes_others: "Beğenilen gönderi yok."
+      no_likes_title_others: "%{username} henüz hiçbir konuyu beğenmedi"
       no_topics_title: "Henüz herhangi bir konu başlatmadın"
       no_topics_title_others: "%{username} kullanıcısı henüz herhangi bir konu başlatmadı"
       no_read_topics_title: "Henüz herhangi bir konu okumadın"
@@ -3699,9 +3707,12 @@ tr_TR:
         other: "%{count} yeni"
       toggle_section: "bölümü değiştir"
       more: "Daha..."
+      all_categories: "Tüm kategoriler"
+      all_tags: "Tüm etiketler"
       sections:
+        about:
+          header_link_text: "Hakkında"
         messages:
-          header_link_title: "kişisel mesajlar"
           header_link_text: "İletiler"
           header_action_title: "kişisel bir mesaj oluştur"
           links:
@@ -3713,19 +3724,24 @@ tr_TR:
             unread_with_count: "Okunmamış (%{count})"
             archive: "Arşiv"
         tags:
-          header_link_title: "tüm etiketler"
           header_link_text: "Etiketler"
         categories:
-          header_link_title: "tüm kategoriler"
           header_link_text: "Kategoriler"
         community:
-          header_link_title: "anasayfa"
           header_link_text: "Topluluk"
           header_action_title: "yeni konu oluştur"
           links:
+            about:
+              content: "Hakkında"
+            admin:
+              content: "Yönetici"
+            badges:
+              content: "Rozetler"
             everything:
               content: "Her şey"
               title: "Tüm konular"
+            faq:
+              content: "SSS"
             tracked:
               content: "Takipte"
               title: "Tüm izlenen konular"
@@ -3741,6 +3757,11 @@ tr_TR:
               draft_count:
                 one: "%{count} taslak"
                 other: "%{count} taslak"
+    welcome_topic_banner:
+      title: "Hoş Geldiniz konulu gönderinizi oluşturun"
+      description: 'Hoş geldiniz konulu gönderiniz, yeni katılanların okuyacağı ilk şeydir. Bunu bir paragraf “kısa bir sunum” veya “misyon anlatımınız” olarak düşünün'
+      button_title: "Düzenlemeye Başla"
+    until: "Şuna kadar:"
   admin_js:
     type_to_filter: "filtrelemek için yaz..."
     admin:
@@ -4925,7 +4946,8 @@ tr_TR:
         cant_delete_all_too_many_posts:
           one: "Tüm gönderileri silemezsiniz çünkü kullanıcının %{count} 'ten daha fazla gönderisi var. (delete_all_posts_max)"
           other: "Tüm gönderileri silemezsin çünkü kullanıcının %{count} 'ten fazla gönderisi var. (delete_all_posts_max)"
-        delete_confirm: "İçeriği mevcut tartışmalardan kaldırmaktan kaçınmak veya kullanıcıları silmek yerine genellikle anonimleştirmek tercih edilir. <br><br>Bu kullanıcıyı silmek istediğinizden emin misiniz? Bu geri alınamaz!"
+        delete_confirm_title: "Bu kullanıcıyı silmek istediğinizden emin misiniz? Bu kalıcıdır!"
+        delete_confirm: "Mevcut tartışmalardan içerik kaldırmamak için kullanıcıları silmek yerine anonimleştirmek genellikle tercih edilir."
         delete_and_block: "Sil ve bu e-posta ve IP adresini <b>engelle</b>"
         delete_dont_block: "Yalnızca sil"
         deleting_user: "Kullanıcı siliniyor..."
@@ -5056,7 +5078,6 @@ tr_TR:
         recommended: "Sıradaki metni isteğine göre uyarlamanı öneririz:"
         show_overriden: "Yalnızca iptal edilenleri göster"
         locale: "Dil:"
-        fallback_locale_warning: "%{fallback} diline dayalı bir dili düzenliyorsunuz. Arayüz dili olarak %{fallback} seçen kullanıcılar değişikliklerinizi görmez."
         more_than_50_results: "50 den fazla sonuç var. Lütfen aramanızı daraltın."
       settings:
         show_overriden: "Yalnızca geçersiz kılınanları göster"

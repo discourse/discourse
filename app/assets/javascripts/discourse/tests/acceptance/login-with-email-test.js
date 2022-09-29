@@ -6,6 +6,10 @@ import {
 import { click, fillIn, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import { test } from "qunit";
+import DiscourseURL from "discourse/lib/url";
+import sinon from "sinon";
+
+const TOKEN = "sometoken";
 
 acceptance("Login with email", function (needs) {
   needs.settings({
@@ -17,6 +21,20 @@ acceptance("Login with email", function (needs) {
   needs.pretender((server, helper) => {
     server.post("/u/email-login", () =>
       helper.response({ success: "OK", user_found: userFound })
+    );
+
+    server.get(`/session/email-login/${TOKEN}.json`, () =>
+      helper.response({
+        token: TOKEN,
+        can_login: true,
+        token_email: "blah@example.com",
+      })
+    );
+
+    server.post(`/session/email-login/${TOKEN}`, () =>
+      helper.response({
+        success: true,
+      })
     );
   });
 
@@ -82,5 +100,22 @@ acceptance("Login with email", function (needs) {
     );
 
     userFound = false;
+  });
+
+  test("finish login UI", async function (assert) {
+    await visit(`/session/email-login/${TOKEN}`);
+    sinon.stub(DiscourseURL, "redirectTo");
+    await click(".email-login .btn-primary");
+    assert.true(DiscourseURL.redirectTo.calledWith("/"), "redirects to home");
+  });
+
+  test("finish login UI - safe mode", async function (assert) {
+    await visit(`/session/email-login/${TOKEN}?safe_mode=no_themes,no_plugins`);
+    sinon.stub(DiscourseURL, "redirectTo");
+    await click(".email-login .btn-primary");
+    assert.true(
+      DiscourseURL.redirectTo.calledWith("/?safe_mode=no_themes%2Cno_plugins"),
+      "redirects to home with safe mode"
+    );
   });
 });

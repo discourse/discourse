@@ -7,8 +7,6 @@ class CookedPostProcessor
   include CookedProcessorMixin
 
   LIGHTBOX_WRAPPER_CSS_CLASS = "lightbox-wrapper"
-  LOADING_SIZE = 10
-  LOADING_COLORS = 32
   GIF_SOURCES_REGEXP = /(giphy|tenor)\.com\//
 
   attr_reader :cooking_options, :doc
@@ -24,7 +22,7 @@ class CookedPostProcessor
     @cooking_options = post.cooking_options || opts[:cooking_options] || {}
     @cooking_options[:topic_id] = post.topic_id
     @cooking_options = @cooking_options.symbolize_keys
-    @with_secure_media = @post.with_secure_media?
+    @with_secure_uploads = @post.with_secure_uploads?
     @category_id = @post&.topic&.category_id
 
     cooked = post.cook(post.raw, @cooking_options)
@@ -32,7 +30,7 @@ class CookedPostProcessor
     @has_oneboxes = post.post_analyzer.found_oneboxes?
     @size_cache = {}
 
-    @disable_loading_image = !!opts[:disable_loading_image]
+    @disable_dominant_color = !!opts[:disable_dominant_color]
     @omit_nofollow = post.omit_nofollow?
   end
 
@@ -193,10 +191,6 @@ class CookedPostProcessor
         end
       end
 
-      unless @disable_loading_image
-        upload.create_thumbnail!(LOADING_SIZE, LOADING_SIZE, format: 'png', colors: LOADING_COLORS)
-      end
-
       return if upload.animated?
 
       if img.ancestors('.onebox, .onebox-body, .quote').blank? && !img.classes.include?("onebox")
@@ -205,10 +199,6 @@ class CookedPostProcessor
 
       optimize_image!(img, upload, cropped: crop)
     end
-  end
-
-  def loading_image(upload)
-    upload.thumbnail(LOADING_SIZE, LOADING_SIZE)
   end
 
   def each_responsive_ratio
@@ -223,7 +213,7 @@ class CookedPostProcessor
   def optimize_image!(img, upload, cropped: false)
     w, h = img["width"].to_i, img["height"].to_i
 
-    # note: optimize_urls cooks the src and data-small-upload further after this
+    # note: optimize_urls cooks the src further after this
     thumbnail = upload.thumbnail(w, h)
     if thumbnail && thumbnail.filesize.to_i < upload.filesize
       img["src"] = thumbnail.url
@@ -235,21 +225,21 @@ class CookedPostProcessor
         resized_h = (h * ratio).to_i
 
         if !cropped && upload.width && resized_w > upload.width
-          cooked_url = UrlHelper.cook_url(upload.url, secure: @post.with_secure_media?)
+          cooked_url = UrlHelper.cook_url(upload.url, secure: @post.with_secure_uploads?)
           srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0$/, "")}x"
         elsif t = upload.thumbnail(resized_w, resized_h)
-          cooked_url = UrlHelper.cook_url(t.url, secure: @post.with_secure_media?)
+          cooked_url = UrlHelper.cook_url(t.url, secure: @post.with_secure_uploads?)
           srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0$/, "")}x"
         end
 
-        img["srcset"] = "#{UrlHelper.cook_url(img["src"], secure: @post.with_secure_media?)}#{srcset}" if srcset.present?
+        img["srcset"] = "#{UrlHelper.cook_url(img["src"], secure: @post.with_secure_uploads?)}#{srcset}" if srcset.present?
       end
     else
       img["src"] = upload.url
     end
 
-    if small_upload = loading_image(upload)
-      img["data-small-upload"] = small_upload.url
+    if !@disable_dominant_color && (color = upload.dominant_color(calculate_if_missing: true).presence)
+      img["data-dominant-color"] = color
     end
   end
 
@@ -260,7 +250,7 @@ class CookedPostProcessor
     lightbox.add_child(img)
 
     # then, the link to our larger image
-    src = UrlHelper.cook_url(img["src"], secure: @post.with_secure_media?)
+    src = UrlHelper.cook_url(img["src"], secure: @post.with_secure_uploads?)
     a = create_link_node("lightbox", src)
     img.add_next_sibling(a)
 
@@ -329,11 +319,11 @@ class CookedPostProcessor
       end
     end
 
-    %w{src data-small-upload}.each do |selector|
+    %w{src}.each do |selector|
       @doc.css("img[#{selector}]").each do |img|
         custom_emoji = img["class"]&.include?("emoji-custom") && Emoji.custom?(img["title"])
         img[selector] = UrlHelper.cook_url(
-          img[selector].to_s, secure: @post.with_secure_media? && !custom_emoji
+          img[selector].to_s, secure: @post.with_secure_uploads? && !custom_emoji
         )
       end
     end
@@ -378,13 +368,23 @@ class CookedPostProcessor
     still_an_image = true
 
     if info&.too_large?
-      add_large_image_placeholder!(img)
+      if img.ancestors('.onebox, .onebox-body').blank?
+        add_large_image_placeholder!(img)
+      else
+        img.remove
+      end
+
       still_an_image = false
     elsif info&.download_failed?
-      add_broken_image_placeholder!(img)
+      if img.ancestors('.onebox, .onebox-body').blank?
+        add_broken_image_placeholder!(img)
+      else
+        img.remove
+      end
+
       still_an_image = false
     elsif info&.downloaded? && upload = info&.upload
-      img["src"] = UrlHelper.cook_url(upload.url, secure: @with_secure_media)
+      img["src"] = UrlHelper.cook_url(upload.url, secure: @with_secure_uploads)
       img.delete(PrettyText::BLOCKED_HOTLINKED_SRC_ATTR)
     end
 

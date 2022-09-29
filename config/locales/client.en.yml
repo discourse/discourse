@@ -251,6 +251,8 @@ en:
     not_implemented: "That feature hasn't been implemented yet, sorry!"
     no_value: "No"
     yes_value: "Yes"
+    ok_value: "OK"
+    cancel_value: "Cancel"
     submit: "Submit"
     generic_error: "Sorry, an error has occurred."
     generic_error_with_reason: "An error occurred: %{error}"
@@ -1803,7 +1805,6 @@ en:
       set_custom_status: "Set custom status"
       what_are_you_doing: "What are you doing?"
       remove_status: "Remove status"
-      until: "Until:"
 
     loading: "Loading..."
     errors:
@@ -1837,6 +1838,8 @@ en:
       enabled: "This site is in read only mode. Please continue to browse, but replying, likes, and other actions are disabled for now."
       login_disabled: "Login is disabled while the site is in read only mode."
       logout_disabled: "Logout is disabled while the site is in read only mode."
+    staff_writes_only_mode:
+      enabled: "This site is in staff only mode. Please continue to browse, but replying, likes, and other actions are limited to staff members only."
     too_few_topics_and_posts_notice_MF: >-
       Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">start the discussion!</a>
       There {currentTopics, plural, one {is <strong>#</strong> topic} other {are <strong>#</strong> topics}} and
@@ -1885,7 +1888,7 @@ en:
       hide_forever: "no thanks"
       hidden_for_session: "OK, we'll ask you tomorrow. You can always use 'Log In' to create an account, too."
       intro: "Hello! Looks like you’re enjoying the discussion, but you haven’t signed up for an account yet."
-      value_prop: "Tired of scrolling through the same posts? when you create an account you’ll always come back to where you left off. With an account you can also be notified of new replies, save bookmarks, and use likes to thank others. We can all work together to make this community great. :heart:"
+      value_prop: "Tired of scrolling through the same posts? When you create an account you’ll always come back to where you left off. With an account you can also be notified of new replies, save bookmarks, and use likes to thank others. We can all work together to make this community great. :heart:"
 
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
@@ -2163,6 +2166,8 @@ en:
       similar_topics: "Your topic is similar to..."
       drafts_offline: "drafts offline"
       edit_conflict: "edit conflict"
+      esc: "esc"
+      esc_label: "Click or press Esc to dismiss"
 
       group_mentioned_limit:
         one: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} user. Nobody will be notified."
@@ -2259,6 +2264,7 @@ en:
       abandon: "close composer and discard draft"
       enter_fullscreen: "enter fullscreen composer"
       exit_fullscreen: "exit fullscreen composer"
+      exit_fullscreen_prompt: "Press <kbd>ESC</kbd> to exit full screen"
       show_toolbar: "show composer toolbar"
       hide_toolbar: "hide composer toolbar"
       modal_ok: "OK"
@@ -2269,6 +2275,9 @@ en:
         body: "Right now this message is only being sent to yourself!"
       slow_mode:
         error: "This topic is in slow mode. You already posted recently; you can post again in %{timeLeft}."
+      user_not_seen_in_a_while:
+        single: "The person you are messaging, <b>%{usernames}</b>, hasn’t been seen here in a very long time – %{time_ago}. They may not receive your message. You may wish to seek out alternate methods of contacting %{usernames}."
+        multiple: "The following people you are messaging: <b>%{usernames}</b>, haven’t been seen here in a very long time – %{time_ago}. They may not receive your message. You may wish to seek out alternate methods of contacting them."
 
       admin_options_title: "Optional staff settings for this topic"
 
@@ -2307,7 +2316,7 @@ en:
       image_alt_text:
         aria_label: Alt text for image
 
-      delete_image_button: Delete Image  
+      delete_image_button: Delete Image
 
     notifications:
       tooltip:
@@ -2565,17 +2574,53 @@ en:
     view_all: "view all %{tab}"
     user_menu:
       generic_no_items: "There are no items in this list."
-      sr_menu_tabs: "Menu tabs"
+      sr_menu_tabs: "User menu tabs"
       view_all_notifications: "view all notifications"
       view_all_bookmarks: "view all bookmarks"
       view_all_messages: "view all personal messages"
+      tabs:
+        all_notifications: "All notifications"
+        replies: "Replies"
+        replies_with_unread:
+          one: "Replies - %{count} unread reply"
+          other: "Replies - %{count} unread replies"
+        mentions: "Mentions"
+        mentions_with_unread:
+          one: "Mentions - %{count} unread mention"
+          other: "Mentions - %{count} unread mentions"
+        likes: "Likes"
+        likes_with_unread:
+          one: "Likes - %{count} unread like"
+          other: "Likes - %{count} unread likes"
+        watching: "Watched topics"
+        watching_with_unread:
+          one: "Watched topics - %{count} unread watched topic"
+          other: "Watched topics - %{count} unread watched topics"
+        messages: "Personal messages"
+        messages_with_unread:
+          one: "Personal messages - %{count} unread message"
+          other: "Personal messages - %{count} unread messages"
+        bookmarks: "Bookmarks"
+        bookmarks_with_unread:
+          one: "Bookmarks - %{count} unread bookmark"
+          other: "Bookmarks - %{count} unread bookmarks"
+        review_queue: "Review queue"
+        review_queue_with_unread:
+          one: "Review queue - %{count} item needs review"
+          other: "Review queue - %{count} items need review"
+        other_notifications: "Other notifications"
+        other_notifications_with_unread:
+          one: "Other notifications - %{count} unread notification"
+          other: "Other notifications - %{count} unread notifications"
+        profile: "Profile"
       reviewable:
         view_all: "view all review items"
         queue: "Queue"
         deleted_user: "(deleted user)"
+        deleted_post: "(deleted post)"
         post_number_with_topic_title: "post #%{post_number} - %{title}"
         new_post_in_topic: "new post in %{title}"
-        suspicious_user: "suspicious user %{username}"
+        user_requires_approval: "%{username} requires approval"
         default_item: "reviewable item #%{reviewable_id}"
 
     topics:
@@ -3287,12 +3332,12 @@ en:
       delete:
         confirm:
           one: "Are you sure you want to delete that post?"
-          other: "Are you sure you want to delete those %{count} posts?"
+          other: "Are you sure you want to delete these %{count} posts?"
 
       merge:
         confirm:
-          one: "Are you sure you want to merge those posts?"
-          other: "Are you sure you want to merge those %{count} posts?"
+          one: "Are you sure you want to merge these posts?"
+          other: "Are you sure you want to merge these %{count} posts?"
 
       revisions:
         controls:
@@ -3729,6 +3774,8 @@ en:
 
     browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is unsupported</a>. Please <a href="https://browsehappy.com">switch to a supported browser</a> to view rich content, log in and reply.'
 
+    safari_13_warning: This site will soon remove support for iOS and Safari versions 13 and below. A simplified read-only version will remain available. (<a href="https://meta.discourse.org/t/224747">more information</a>)
+
     permission_types:
       full: "Create / Reply / See"
       create_post: "Reply / See"
@@ -3884,7 +3931,7 @@ en:
       google: "Google Calendar"
       ics: "ICS"
     tagging:
-      all_tags: "All Tags"
+      all_tags: "All tags"
       other_tags: "Other Tags"
       selector_all_tags: "all tags"
       selector_no_tags: "no tags"
@@ -4059,14 +4106,14 @@ en:
     user_activity:
       no_activity_title: "No activity yet"
       no_activity_body: "Welcome to our community! You are brand new here and have not yet contributed to discussions. As a first step, visit <a href='%{topUrl}'>Top</a> or <a href='%{categoriesUrl}'>Categories</a> and just start reading! Select %{heartIcon} on posts that you like or want to learn more about. As you participate, your activity will be listed here."
-      no_activity_others: "No activity."
       no_replies_title: "You have not replied to any topics yet"
-      no_replies_others: "No replies."
+      no_replies_title_others: "%{username} has not replied to any topics yet"
+      no_replies_body: "When you <a href='%{searchUrl}'>discover</a> an interesting conversation that you wish to contribute to, press the <kbd>Reply</kbd> button directly under any post to begin replying to that specific post. Or, if you’d prefer to reply to the general topic rather than any individual post or person, look for the <kbd>Reply</kbd> button at the very bottom of the topic, or under the topic timeline."
       no_drafts_title: "You haven’t started any drafts"
       no_drafts_body: "Not quite ready to post? We’ll automatically save a new draft and list it here whenever you start composing a topic, reply, or personal message. Select the cancel button to discard or save your draft to continue later."
       no_likes_title: "You haven’t liked any topics yet"
+      no_likes_title_others: "%{username} has not liked any topics yet"
       no_likes_body: "A great way to jump in and start contributing is to start reading conversations that have already taken place, and select the %{heartIcon} on posts that you like!"
-      no_likes_others: "No liked posts."
       no_topics_title: "You have not started any topics yet"
       no_topics_body: "It’s always best to <a href='%{searchUrl}'>search</a> for existing topics of conversation before starting a new one, but if you’re confident the topic you want isn’t out there already, go ahead and start a new topic of your very own. Look for the <kbd>+ New Topic</kbd> button at the top right of the topic list, category, or tag to begin creating a new topic in that area."
       no_topics_title_others: "%{username} has not started any topics yet"
@@ -4093,9 +4140,12 @@ en:
         other: "%{count} new"
       toggle_section: "toggle section"
       more: "More..."
+      all_categories: "All categories"
+      all_tags: "All tags"
       sections:
+        about:
+          header_link_text: "About"
         messages:
-          header_link_title: "personal messages"
           header_link_text: "Messages"
           header_action_title: "create a personal message"
           links:
@@ -4109,23 +4159,28 @@ en:
         tags:
           none: "You have not added any tags."
           click_to_get_started: "Click here to get started."
-          header_link_title: "all tags"
           header_link_text: "Tags"
           header_action_title: "edit your sidebar tags"
         categories:
           none: "You have not added any categories."
           click_to_get_started: "Click here to get started."
-          header_link_title: "all categories"
           header_link_text: "Categories"
           header_action_title: "edit your sidebar categories"
         community:
-          header_link_title: "home"
           header_link_text: "Community"
           header_action_title: "create a new topic"
           links:
+            about:
+              content: "About"
+            admin:
+              content: "Admin"
+            badges:
+              content: "Badges"
             everything:
               content: "Everything"
               title: "All topics"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Tracked"
               title: "All tracked topics"
@@ -4141,11 +4196,17 @@ en:
               draft_count:
                 one: "%{count} draft"
                 other: "%{count} drafts"
+            review:
+              content: "Review"
+              title: "review"
+              pending_count: "%{count} pending"
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
       description: 'Your welcome topic is the first thing new arrivals will read. Think of it as your one paragraph "elevator pitch" or "mission statement"'
       button_title: "Start Editing"
+
+    until: "Until:"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -5281,6 +5342,7 @@ en:
         suspended: "Suspended?"
         staged: "Staged?"
         show_admin_profile: "Admin"
+        manage_user: "Manage user"
         show_public_profile: "Show Public Profile"
         impersonate: "Impersonate"
         action_logs: "Action Logs"
@@ -5382,7 +5444,8 @@ en:
         cant_delete_all_too_many_posts:
           one: "Can't delete all posts because the user has more than %{count} post. (delete_all_posts_max)"
           other: "Can't delete all posts because the user has more than %{count} posts. (delete_all_posts_max)"
-        delete_confirm: "It is generally preferable to anonymize users rather than deleting them, to avoid removing content from existing discussions.<br><br>Are you SURE you want to delete this user? This is permanent!"
+        delete_confirm_title: "Are you SURE you want to delete this user? This is permanent!"
+        delete_confirm: "It is generally preferable to anonymize users rather than deleting them, to avoid removing content from existing discussions."
         delete_and_block: "Delete and <b>block</b> this email and IP address"
         delete_dont_block: "Delete only"
         deleting_user: "Deleting user..."
@@ -5517,7 +5580,6 @@ en:
         recommended: "We recommend customizing the following text to suit your needs:"
         show_overriden: "Only show overridden"
         locale: "Language:"
-        fallback_locale_warning: "You are editing a language based on %{fallback}. Users who choose %{fallback} as their interface language won't see your changes."
         more_than_50_results: "There are more than 50 results. Please refine your search."
 
       settings: # used by theme and site settings

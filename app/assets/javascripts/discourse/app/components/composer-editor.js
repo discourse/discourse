@@ -816,7 +816,6 @@ export default Component.extend(ComposerUploadUppy, {
 
     extraButtons(toolbar) {
       toolbar.addButton({
-        tabindex: "0",
         id: "quote",
         group: "fontStyles",
         icon: "far-comment",

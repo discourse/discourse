@@ -28,7 +28,7 @@ workbox.routing.registerRoute(
     plugins: [
       new workbox.cacheableResponse.Plugin({
         statuses: [200] // opaque responses will return status code '0'
-      }), // for s3 secure media signed urls
+      }), // for s3 secure uploads signed urls
       new workbox.expiration.Plugin({
         maxAgeSeconds: 7* 24 * 60 * 60, // 7 days
         maxEntries: 250,

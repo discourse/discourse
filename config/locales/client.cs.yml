@@ -200,7 +200,6 @@ cs:
       forwarded: "přeposlat výše uvedený e-mail"
     topic_admin_menu: "Akce tématu."
     skip_to_main_content: "Přeskočit na hlavní obsah"
-    wizard_required: "Vítejte ve vašem novém Discourse! Začněte s <a href='%{url}' data-auto-route='true'>nastavením pomocí průvodce</a> ✨"
     emails_are_disabled: "Všechny odchozí emaily byly administrátorem vypnuty. Žádné odchozí emaily nebudou odeslány."
     emails_are_disabled_non_staff: "Odchozí e-maily byly zakázány pro uživatele, kteří nejsou personál."
     software_update_prompt:
@@ -212,6 +211,7 @@ cs:
       many: "Aby se váš web jednodušeji rozjel, nachází se v režimu bootstrap. Všichni noví uživatelé začínají s důveryhodností 1 a mají povolené denní odesílání souhrnných emailů. Tento režim se automaticky vypne, jakmile se zaregistruje alespoň %{count} uživatelů."
       other: "Aby se váš web jednodušeji rozjel, nachází se v režimu bootstrap. Všichni noví uživatelé začínají s důveryhodností 1 a mají povolené denní odesílání souhrnných emailů. Tento režim se automaticky vypne, jakmile se zaregistruje alespoň %{count} uživatelů."
     bootstrap_mode_disabled: "Režim bootstrap bude deaktivován v následujících 24 hodinách."
+    bootstrap_invite_button_title: "Poslat pozvánky"
     themes:
       default_description: "Výchozí"
       broken_theme_alert: "Váš web nemusí fungovat, protože motiv/komponenta obsahuje chyby."
@@ -247,6 +247,8 @@ cs:
     not_implemented: "Tato funkce ještě nebyla naprogramována, omlouváme se."
     no_value: "Ne"
     yes_value: "Ano"
+    ok_value: "OK"
+    cancel_value: "Zrušit"
     submit: "Odeslat"
     generic_error: "Bohužel nastala chyba."
     generic_error_with_reason: "Nastala chyba: %{error}"
@@ -1840,6 +1842,13 @@ cs:
     go_back: "jít zpět"
     not_logged_in_user: "stránka uživatele s přehledem o aktuální činnosti a nastavení"
     current_user: "jít na vaši uživatelskou stránku"
+    user_menu:
+      tabs:
+        replies: "Odpovědi"
+        mentions: "Zmínění"
+        likes: "Nová 'líbí se'"
+        bookmarks: "Záložky"
+        profile: "Profil"
     topics:
       new_messages_marker: "poslední návštěva"
       bulk:
@@ -2326,12 +2335,6 @@ cs:
           few: "Jsi si jistý, že chceš smazat tyto všechny %{count} příspěvky? "
           many: "Jsi si jistý, že chceš smazat tyto všechny %{count} příspěvky? "
           other: "Jsi si jistý, že chceš smazat tyto všechny %{count} příspěvky? "
-      merge:
-        confirm:
-          one: "Opravdu chceš sloučit tyto příspěvky?"
-          few: "Opravdu chceš sloučit %{count} příspěvky?"
-          many: "Opravdu chceš sloučit %{count} příspěvků?"
-          other: "Opravdu chceš sloučit %{count} příspěvků?"
       revisions:
         controls:
           first: "První revize"
@@ -2784,7 +2787,6 @@ cs:
     download_calendar:
       download: "Stáhnout"
     tagging:
-      all_tags: "Všechny štítky"
       other_tags: "Ostatní štítky "
       selector_all_tags: "všechny štítky"
       selector_no_tags: "bez štítků"
@@ -2873,8 +2875,6 @@ cs:
         member: "člen"
         regular: "pravidelný uživatel"
         leader: "vůdce"
-    user_activity:
-      no_replies_others: "Žádné odpovědi."
     sidebar:
       unread_count:
         one: "%{count} nepřečtené"
@@ -2887,7 +2887,10 @@ cs:
         many: "%{count} nových"
         other: "%{count} nové"
       more: "Více..."
+      all_categories: "Všechny kategorie"
       sections:
+        about:
+          header_link_text: "O fóru"
         messages:
           header_link_text: "Zprávy"
           links:
@@ -2898,15 +2901,20 @@ cs:
             unread_with_count: "Nepřečtená (%{count})"
             archive: "Archív"
         tags:
-          header_link_title: "všechny štítky"
           header_link_text: "Tagy"
         categories:
-          header_link_title: "všechny kategorie"
           header_link_text: "Kategorie"
         community:
-          header_link_title: "domů"
           header_link_text: "Komunita"
           links:
+            about:
+              content: "O fóru"
+            admin:
+              content: "Administrace"
+            badges:
+              content: "Odznaky"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Sledované"
             groups:

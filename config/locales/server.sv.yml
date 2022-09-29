@@ -73,6 +73,7 @@ sv:
       file_too_big: "Den okomprimerade filen är för stor."
       unknown_file_type: "Filen som du laddade upp verkar inte vara ett giltigt Discourse-tema."
       not_allowed_theme: "`%{repo}` finns inte i listan över tillåtna teman (bocka för den globala inställningen `allowed_theme_repos`)."
+      ssh_key_gone: "Du väntade för länge med att installera temat så SSH-nyckeln har löpt ut. Vi ber dig försöka igen."
     errors:
       component_no_user_selectable: "Temakomponenter kan inte väljas av användaren"
       component_no_default: "Temakomponenter kan inte vara standardtema"
@@ -596,8 +597,8 @@ sv:
               invalid: "är inte giltig"
       <<: *errors
   uncategorized_category_name: "Ej kategoriserad"
-  vip_category_name: "Lounge"
-  vip_category_description: "En kategori endast för medlemmar med förtroendenivån 3 eller högre."
+  general_category_name: "Allmänt"
+  general_category_description: "Skapa ämnen här som inte passar in i någon annan befintlig kategori."
   meta_category_name: "Feedback om webbplatsen"
   meta_category_description: "Diskussion om den här webbplatsen, dess organisation, hur den fungerar och hur vi kan förbättra den."
   staff_category_name: "Personal"
@@ -618,9 +619,6 @@ sv:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Det vore kanske bra att stänga det här ämnet via admin :wrench: (längst upp till höger eller i botten), så att inte svar läggs på hög vid ett meddelande.
-  lounge_welcome:
-    title: "Välkommen till loungen"
-    body: "\nGrattis! :confetti_ball:\n\nOm du kan se det här ämnet så har du nyligen blivit upphöjd till **regelbunden** användare (förtroendenivå 3). \n\nDu kan nu &hellip;\n\n* Redigera rubriken för alla ämnen\n* Ändra kategorin för alla ämnen\n* Få alla dina länkar följda ([automatiskt nofollow](http://en.wikipedia.org/wiki/Nofollow) är borttagna)\n* Få åtkomst till en privat Lounge-kategori som endast är synlig för användare som har förtroendenivå 3 eller högre\n* Dölja skräppost med en enda flagga\n\nHär är den [aktuella listan över regelbundna användare](%{base_path}/badges/3/regular). Glöm inte att hälsa.\n\nTack för att du är en viktig del av det här forumet!\n\n(För mer information om förtroendenivåer, [se det här ämnet][trust]. Notera att endast medlemmar som fortsätter att uppfylla kraven över tid kommer att fortsätta vara regelbundna medlemmar.)\n\n[trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/\n"
   admin_quick_start_title: "LÄS MIG FÖRST: Administratörers Snabbstartsguide"
   category:
     topic_prefix: "Om kategorin %{category}"
@@ -678,6 +676,7 @@ sv:
       public_group_membership: "Du går med i/lämnar grupper lite för ofta. Vi ber dig vänta %{time_left} innan du försöker igen."
       topics_per_day: "Du har uppnått det högsta tillåtna antalet nya ämnen per dag. Du kan skapa fler nya ämnen om %{time_left}."
       pms_per_day: "Du har uppnått det maximala antalet meddelanden per dag. Du kan skapa fler nya meddelanden om %{time_left}."
+      create_like: "Wow! Du har delat med dig av mycket kärlek! Du har nått det maximala antalet gilla-markeringar inom en 24-timmarsperiod, men när du får ökat förtroende kommer du att få fler gilla-markeringar per dag. Du kommer att kunna gilla inlägg igen om %{time_left}."
       create_bookmark: "Du har uppnått det maximala antalet dagliga bokmärken. Du kan skapa fler bokmärken om %{time_left}."
       edit_post: "Du har uppnått det maximala antalet dagliga redigeringar. Du kan göra fler redigeringar om %{time_left}."
       live_post_counts: "Du ber om beräkning av live-inlägg för ofta. Var god vänta %{time_left} innan du försöker igen."
@@ -1479,7 +1478,6 @@ sv:
     summary_percent_filter: "Visa högsta % av inläggen när en användare bockar i 'Sammanfatta det här ämnet'"
     summary_max_results: "Maximalt antal inlägg som returneras av 'Sammanfatta detta ämne'"
     summary_timeline_button: "Visa en \"Sammanfatta\"-knapp på tidslinjen"
-    enable_personal_messages: "Tillåt användare med förtroendenivå 1 (konfigurera genom minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen alltid kan skicka meddelanden oavsett."
     enable_system_message_replies: "Tillåter användare att svara på systemmeddelanden, även om personliga meddelanden har inaktiverats"
     enable_chunked_encoding: "Aktivera packade kodningssvar (chunked) från servern. Den här funktionen fungerar på de flesta inställningar, men vissa proxyservrar kan buffra, vilket gör att svaren fördröjs"
     long_polling_base_url: "URL som används för long polling (när en CDN levererar dynamiskt innehåll, kontrollera att det här är inställt till origin pull) se: http://origin.site.com"
@@ -1547,6 +1545,7 @@ sv:
     post_menu: "Bestäm vilka objekt som visas i inläggsmenyn och i vilken ordning. Exempel: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Standardinställning för vilka menyobjekt som döljs i inläggsmenyn om inte utvidgnings-ellipsen har klickats på."
     share_links: "Bestäm vilka objekt som syns i den delade dialogen, och i vilken ordning."
+    allow_username_in_share_links: "Tillåt att användarnamn omfattas i delningslänkar. Detta är användbart för att tilldela utmärkelser baserat på unika besökare."
     site_contact_username: "Ett giltigt personalanvändarnamn att skicka alla automatiserade meddelanden ifrån. Om det lämnas tomt används standard-System-kontot."
     site_contact_group_name: "Ett giltigt gruppnamn som ska bjudas in för alla automatiserade meddelanden."
     send_welcome_message: "Skicka ett välkomstmeddelande till alla nya användare tillsammans med en snabbstartsguide."
@@ -1656,6 +1655,8 @@ sv:
     top_topics_formula_first_post_likes_multiplier: "värde av första inläggsgillningsmultiplikatorn (n) i formeln för toppämnen: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "värde av minsta inläggsgillningsmultiplikatorn (n) i formeln för toppämnen: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     enable_safe_mode: "Tillåt användare att gå in i säkert läge för att felsöka tillägg."
+    enable_experimental_sidebar_hamburger: "Tillåter att experimentellt sidofält och användarens hamburgarmeny aktiveras."
+    enable_sidebar: "Aktiverar experimentellt sidofält."
     rate_limit_create_topic: "Efter att ha skapat ett ämne, måste användare vänta (n) sekunder innan de kan skapa ett nytt."
     rate_limit_create_post: "Efter att ha skrivit ett inlägg, måste användare vänta (n) sekunder innan de skriver ett nytt."
     rate_limit_new_user_create_topic: "Efter att ha skapat ett ämne, måste nya användare vänta (n) sekunder innan de kan skapa ett nytt."
@@ -1746,7 +1747,6 @@ sv:
     min_trust_to_edit_wiki_post: "Lägsta förtroendenivå som krävs för att redigera inlägg markerade som wiki."
     min_trust_to_edit_post: "Lägsta förtroendenivå som krävs för att skapa ett inlägg."
     min_trust_to_allow_self_wiki: "Lägsta förtroendenivå som krävs för att göra användares egna inlägg wiki."
-    min_trust_to_send_messages: "Lägsta förtroendenivå som krävs för att skapa nya privata meddelanden."
     min_trust_to_send_email_messages: "Lägsta förtroendenivå som krävs för att skicka privata meddelanden via e-post."
     min_trust_to_flag_posts: "Lägsta förtroendenivå som krävs för att flagga ett inlägg."
     min_trust_to_post_links: "Lägsta förtroendenivå som krävs för att inkludera länkar i ett inlägg."
@@ -1851,6 +1851,7 @@ sv:
     max_emails_per_day_per_user: "Högsta antal e-postmeddelanden att skicka till användare per dag. Ange 0 för att inaktivera gränsen"
     enable_staged_users: "Skapa automatiskt arrangerade användare vid bearbetning av inkommande e-post."
     maximum_staged_users_per_email: "Högsta antal arrangerade användare skapade vid bearbetning av inkommande e-post."
+    maximum_recipients_per_new_group_email: "Blockera inkommande e-postmeddelanden med för många mottagare."
     auto_generated_allowlist: "Lista över e-postadresser som inte undersöks för autogenererat innehåll. Exempel: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Blockera inkommande e-post som identifieras som autogenererat."
     ignore_by_title: "Ignorera inkommande e-post baserat på dess rubrik."
@@ -2106,6 +2107,9 @@ sv:
     use_name_for_username_suggestions: "Använd en användares fullständiga namn när det föreslås användarnamn."
     suggest_weekends_in_date_pickers: "Inkludera helger (lördag och söndag) i förslagen till datumval (inaktivera detta om du endast använder Discourse på vardagar, måndag till fredag)."
     splash_screen: "Visar en tillfällig laddningsskärm medan webbplatsens tillgångar laddas"
+    default_sidebar_categories: "Valda kategorier kommer att visas under sidofältets sektion Kategorier som standard."
+    default_sidebar_tags: "Valda taggar kommer att visas under sidofältets sektion Taggar som standard."
+    enable_new_user_profile_nav_groups: "EXPERIMENTELL: Användare i de valda grupperna visas den nya navigeringsmenyn för användarprofiler."
     errors:
       invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."
       invalid_email: "Felaktig e-postadress."
@@ -2954,6 +2958,15 @@ sv:
         Du svarade på en sammanfattning som skickades via e-post, vilket inte är tillåtet.
 
         Om du tror att det här är ett misstag, [kontakta personal](%{base_url}/about).
+    email_reject_too_many_recipients:
+      title: "Avvisa E-post För många mottagare"
+      subject_template: "[%{email_prefix}] E-postfel -- För många mottagare"
+      text_body_template: |
+        Vi beklagar, men ditt e-postmeddelande till %{destination} (titeln %{former_title}) fungerade inte.
+
+        Du försökte maila mer än %{max_recipients_count} personer och vårt system har automatiskt taggat din e-post som skräppost.
+
+        Om du anser att detta är ett fel, [kontakta en medarbetare](%{base_url}/about).
     email_error_notification:
       title: "E-postfelsavisering"
       subject_template: "[%{email_prefix}] E-postfel -- POP-autentiseringsfel"
@@ -4012,6 +4025,7 @@ sv:
       invalid_token: "Ogiltigt bevis.."
     email_input: "E-post till administratör"
     submit_button: "Skicka e-post"
+    safe_mode: "Säkert läge: inaktivera alla teman/tillägg när du loggar in"
   performance_report:
     initial_post_raw: Det här ämnet innehåller dagliga prestandarapporter för din webbplats.
     initial_topic_title: Prestandarapporter för webbplatsen
@@ -4050,7 +4064,7 @@ sv:
     register:
       button: "Registrera"
       title: "Registrera ett admin-konto"
-      help: "registrera ett nytt konto för att kunna starta"
+      help: "Registrera ett nytt konto för att komma igång."
       no_emails: "Tyvärr angavs inga administratörers e-postadresser under installationen, så att det kan bli svårt att slutföra konfigureringen. Lägg till en utvecklares e-postadress i konfigurationsfilen eller <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>skapa ett administratörskonto från konsolen</a>."
     confirm_email:
       title: "Bekräfta din e-postadress"
@@ -4060,9 +4074,9 @@ sv:
       message: "<p>Vi har sänt om aktiveringsbrevet till <b>%{email}</b>"
   safe_mode:
     title: "Gå över i felsäkert läge"
-    description: "I felsäkert läge kan du testa din webbplats utan att ladda några plugins eller webbplatsanpassningar."
-    no_customizations: "Stäng av nuvarande tema"
-    only_official: "Inaktivera alla inofficiella plugins"
+    description: "I felsäkert läge kan du testa din webbplats utan att ladda några tillägg eller teman."
+    no_themes: "Inaktivera teman och temakomponenter"
+    no_unofficial_plugins: "Inaktivera alla inofficiella plugins"
     no_plugins: "Inaktivera alla plugins"
     enter: "Starta felsäkert läge"
     must_select: "Du måste välja minst ett alternativ för att aktivera felsäkert läge."

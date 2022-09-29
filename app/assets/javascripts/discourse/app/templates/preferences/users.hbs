@@ -21,7 +21,7 @@
   <div class="instructions">{{i18n "user.muted_users_instructions"}}</div>
 </div>
 
-{{#if this.siteSettings.enable_personal_messages}}
+{{#if this.showMessageSettings}}
   <div class="control-group user-allow-pm">
     <div class="controls">
       <PreferenceCheckbox @labelKey="user.allow_private_messages_from_specific_users" @checked={{this.model.user_option.enable_allowed_pm_users}} @disabled={{this.disableAllowPmUsersSetting}} />

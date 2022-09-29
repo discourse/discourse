@@ -327,16 +327,13 @@ sw:
             word:
               too_many: "Maneno mengi sana kwa ajili ya shughuli hiyo"
       <<: *errors
-  vip_category_name: "Majilisi"
-  vip_category_description: "Kategoria ya wanachama wa kiwango cha 3 cha uaminifu au zaidi."
+  general_category_name: "Jumla"
   meta_category_name: "Majibu ya Mtandao"
   meta_category_description: "Majadiliano kuhusu tovuti, shirika, jinsi inavyofanya kazi, na jinsi tunaweza kuiboresha."
   staff_category_name: "Wasaidizi"
   staff_category_description: "Kategoria binafsi kwa ajili ya majadiliano ya wasaidizi. Mada zitaonwa na wasimamizi na viongozi tu."
   discourse_welcome_topic:
     title: "Karibu kwenye Discourse"
-  lounge_welcome:
-    title: "Karibu kwenye Majilisi"
   category:
     topic_prefix: "Kuhusu kategoria %{category}"
     errors:
@@ -870,7 +867,6 @@ sw:
     min_trust_to_edit_wiki_post: "Kiwango cha chini cha uaminifu kinachohitajika kuhariri machapisho ambayo ni wiki."
     min_trust_to_edit_post: "Kiwango cha chini cha uaminifu kinachohitajika kabla ya kuhariri machapisho."
     min_trust_to_allow_self_wiki: "Kiwango cha chini cha uaminifu kinachohitajika na mtumiaji kuweza kufanya chapisho lake liwe wiki."
-    min_trust_to_send_messages: "kiwango cha chini cha uaminifu kinachohitajika kabla ya kuandika ujumbe mpya binafsi."
     min_trust_to_flag_posts: "Kiwango cha chini cha uaminifu kinachohitajika kabla ya kuweka bendera kwenye machapisho."
     min_trust_to_post_links: "Kiwango cha chini cha uaminifu kinachohitajika kabla ya kuweka viungo kwenye machapisho."
     newuser_max_links: "Viungo vingapi mtumiaji mpya anaweza kuongeza kwenye chapisho."
@@ -2004,15 +2000,13 @@ sw:
     register:
       button: "Jisajili"
       title: "Sajili Akaunti ya Kiongozi"
-      help: "sajili akaunti mpya kuanza"
     confirm_email:
       title: "Thibitisha Barua pepe yako"
     resend_email:
       title: "Tuma Tena Barua Pepe ya Uanzisho"
       message: "<p>Tumekutumia tena barua ya uanzishaji<b>%{email}</b>"
   safe_mode:
-    no_customizations: "Sitisha dhima ya sasa"
-    only_official: "Sitisha programu-jalizi zisizo rasmi"
+    no_unofficial_plugins: "Sitisha programu-jalizi zisizo rasmi"
     no_plugins: "Sitisha programu-jalizi zote"
     enter: "Ingia Hali-tumizi iliyo salama"
   wizard:

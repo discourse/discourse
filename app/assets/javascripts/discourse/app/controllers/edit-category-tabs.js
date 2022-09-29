@@ -6,11 +6,12 @@ import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import PermissionType from "discourse/models/permission-type";
-import bootbox from "bootbox";
 import { extractError } from "discourse/lib/ajax-error";
 import { underscore } from "@ember/string";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend({
+  dialog: service(),
   selectedTab: "general",
   saving: false,
   deleting: false,
@@ -112,35 +113,30 @@ export default Controller.extend({
           }
         })
         .catch((error) => {
-          bootbox.alert(extractError(error));
+          this.dialog.alert(extractError(error));
           this.set("saving", false);
         });
     },
 
     deleteCategory() {
       this.set("deleting", true);
-      bootbox.confirm(
-        I18n.t("category.delete_confirm"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        (result) => {
-          if (result) {
-            this.model
-              .destroy()
-              .then(() => {
-                this.transitionToRoute("discovery.categories");
-              })
-              .catch(() => {
-                this.displayErrors([I18n.t("category.delete_error")]);
-              })
-              .finally(() => {
-                this.set("deleting", false);
-              });
-          } else {
-            this.set("deleting", false);
-          }
-        }
-      );
+      this.dialog.yesNoConfirm({
+        message: I18n.t("category.delete_confirm"),
+        didConfirm: () => {
+          this.model
+            .destroy()
+            .then(() => {
+              this.transitionToRoute("discovery.categories");
+            })
+            .catch(() => {
+              this.displayErrors([I18n.t("category.delete_error")]);
+            })
+            .finally(() => {
+              this.set("deleting", false);
+            });
+        },
+        didCancel: () => this.set("deleting", false),
+      });
     },
 
     toggleDeleteTooltip() {

@@ -392,6 +392,15 @@ createWidget("revamped-hamburger-menu-wrapper", {
     ];
   },
 
+  click(event) {
+    if (
+      event.target.closest(".sidebar-section-header-button") ||
+      event.target.closest(".sidebar-section-link")
+    ) {
+      this.sendWidgetAction("toggleHamburger");
+    }
+  },
+
   clickOutside() {
     this.sendWidgetAction("toggleHamburger");
   },
@@ -407,13 +416,20 @@ createWidget("revamped-user-menu-wrapper", {
       new RenderGlimmer(
         this,
         "div.widget-component-connector",
-        hbs`<UserMenu::Menu />`
+        hbs`<UserMenu::Menu @closeUserMenu={{@data.closeUserMenu}} />`,
+        {
+          closeUserMenu: this.closeUserMenu.bind(this),
+        }
       ),
     ];
   },
 
-  clickOutside() {
+  closeUserMenu() {
     this.sendWidgetAction("toggleUserMenu");
+  },
+
+  clickOutside() {
+    this.closeUserMenu();
   },
 });
 
@@ -589,16 +605,21 @@ export default createWidget("header", {
   toggleHamburger() {
     if (
       this.siteSettings.enable_experimental_sidebar_hamburger &&
-      (this.attrs.sidebarEnabled || this.site.mobileView)
+      this.attrs.sidebarEnabled
     ) {
       this.sendWidgetAction("toggleSidebar");
     } else {
       this.state.hamburgerVisible = !this.state.hamburgerVisible;
       this.toggleBodyScrolling(this.state.hamburgerVisible);
 
-      // auto focus on first link in dropdown
       schedule("afterRender", () => {
-        document.querySelector(".hamburger-panel .menu-links a")?.focus();
+        if (this.siteSettings.enable_experimental_sidebar_hamburger) {
+          // Remove focus from hamburger toggle button
+          document.querySelector("#toggle-hamburger-menu").blur();
+        } else {
+          // auto focus on first link in dropdown
+          document.querySelector(".hamburger-panel .menu-links a")?.focus();
+        }
       });
     }
   },

@@ -1,8 +1,11 @@
-import GlimmerComponent from "discourse/components/glimmer";
+import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { NO_REMINDER_ICON } from "discourse/models/bookmark";
 import UserMenuTab, { CUSTOM_TABS_CLASSES } from "discourse/lib/user-menu/tab";
+import { inject as service } from "@ember/service";
+import getUrl from "discourse-common/lib/get-url";
+import DiscourseURL from "discourse/lib/url";
 
 const DEFAULT_TAB_ID = "all-notifications";
 const DEFAULT_PANEL_COMPONENT = "user-menu/notifications-list";
@@ -22,6 +25,10 @@ const CORE_TOP_TABS = [
     get panelComponent() {
       return DEFAULT_PANEL_COMPONENT;
     }
+
+    get linkWhenActive() {
+      return `${this.currentUser.path}/notifications`;
+    }
   },
 
   class extends UserMenuTab {
@@ -36,6 +43,21 @@ const CORE_TOP_TABS = [
     get panelComponent() {
       return "user-menu/replies-notifications-list";
     }
+
+    get count() {
+      return (
+        this.getUnreadCountForType("replied") +
+        this.getUnreadCountForType("quoted")
+      );
+    }
+
+    get notificationTypes() {
+      return ["replied", "quoted"];
+    }
+
+    get linkWhenActive() {
+      return `${this.currentUser.path}/notifications/responses`;
+    }
   },
 
   class extends UserMenuTab {
@@ -49,6 +71,18 @@ const CORE_TOP_TABS = [
 
     get panelComponent() {
       return "user-menu/mentions-notifications-list";
+    }
+
+    get count() {
+      return this.getUnreadCountForType("mentioned");
+    }
+
+    get notificationTypes() {
+      return ["mentioned"];
+    }
+
+    get linkWhenActive() {
+      return `${this.currentUser.path}/notifications/mentions`;
     }
   },
 
@@ -67,6 +101,50 @@ const CORE_TOP_TABS = [
 
     get shouldDisplay() {
       return !this.currentUser.likes_notifications_disabled;
+    }
+
+    get count() {
+      return this.getUnreadCountForType("liked");
+    }
+
+    // TODO(osama): reaction is a type used by the reactions plugin, but it's
+    // added here temporarily unitl we add a plugin API for extending
+    // filterByTypes in lists
+    get notificationTypes() {
+      return ["liked", "liked_consolidated", "reaction"];
+    }
+
+    get linkWhenActive() {
+      return `${this.currentUser.path}/notifications/likes-received`;
+    }
+  },
+
+  class extends UserMenuTab {
+    get id() {
+      return "watching";
+    }
+
+    get icon() {
+      return "discourse-bell-exclamation";
+    }
+
+    get panelComponent() {
+      return "user-menu/watching-notifications-list";
+    }
+
+    get count() {
+      return (
+        this.getUnreadCountForType("posted") +
+        this.getUnreadCountForType("watching_first_post")
+      );
+    }
+
+    get notificationTypes() {
+      return ["posted", "watching_first_post"];
+    }
+
+    get linkWhenActive() {
+      return `${this.currentUser.path}/notifications`;
     }
   },
 
@@ -88,9 +166,15 @@ const CORE_TOP_TABS = [
     }
 
     get shouldDisplay() {
-      return (
-        this.siteSettings.enable_personal_messages || this.currentUser.staff
-      );
+      return this.currentUser?.allowPersonalMessages;
+    }
+
+    get notificationTypes() {
+      return ["private_message"];
+    }
+
+    get linkWhenActive() {
+      return `${this.currentUser.path}/messages`;
     }
   },
 
@@ -109,6 +193,14 @@ const CORE_TOP_TABS = [
 
     get count() {
       return this.getUnreadCountForType("bookmark_reminder");
+    }
+
+    get notificationTypes() {
+      return ["bookmark_reminder"];
+    }
+
+    get linkWhenActive() {
+      return `${this.currentUser.path}/activity/bookmarks`;
     }
   },
 
@@ -132,12 +224,71 @@ const CORE_TOP_TABS = [
     get count() {
       return this.currentUser.get("reviewable_count");
     }
+
+    get linkWhenActive() {
+      return getUrl("/review");
+    }
   },
 ];
 
-export default class UserMenu extends GlimmerComponent {
+const CORE_BOTTOM_TABS = [
+  class extends UserMenuTab {
+    get id() {
+      return "profile";
+    }
+
+    get icon() {
+      return "user";
+    }
+
+    get panelComponent() {
+      return "user-menu/profile-tab-content";
+    }
+
+    get linkWhenActive() {
+      return `${this.currentUser.path}/summary`;
+    }
+  },
+];
+
+const CORE_OTHER_NOTIFICATIONS_TAB = class extends UserMenuTab {
+  constructor(currentUser, siteSettings, site, otherNotificationTypes) {
+    super(...arguments);
+    this.otherNotificationTypes = otherNotificationTypes;
+  }
+
+  get id() {
+    return "other-notifications";
+  }
+
+  get icon() {
+    return "discourse-other-tab";
+  }
+
+  get panelComponent() {
+    return "user-menu/other-notifications-list";
+  }
+
+  get count() {
+    return this.otherNotificationTypes.reduce((sum, notificationType) => {
+      return sum + this.getUnreadCountForType(notificationType);
+    }, 0);
+  }
+
+  get notificationTypes() {
+    return this.otherNotificationTypes;
+  }
+};
+
+export default class UserMenu extends Component {
+  @service currentUser;
+  @service siteSettings;
+  @service site;
+  @service appEvents;
+
   @tracked currentTabId = DEFAULT_TAB_ID;
   @tracked currentPanelComponent = DEFAULT_PANEL_COMPONENT;
+  @tracked currentNotificationTypes;
 
   constructor() {
     super(...arguments);
@@ -162,7 +313,6 @@ export default class UserMenu extends GlimmerComponent {
     CUSTOM_TABS_CLASSES.forEach((tabClass) => {
       const tab = new tabClass(this.currentUser, this.siteSettings, this.site);
       if (tab.shouldDisplay) {
-        // ensure the review queue tab is always last
         if (reviewQueueTabIndex === -1) {
           tabs.push(tab);
         } else {
@@ -172,6 +322,15 @@ export default class UserMenu extends GlimmerComponent {
       }
     });
 
+    tabs.push(
+      new CORE_OTHER_NOTIFICATIONS_TAB(
+        this.currentUser,
+        this.siteSettings,
+        this.site,
+        this.#notificationTypesForTheOtherTab(tabs)
+      )
+    );
+
     return tabs.map((tab, index) => {
       tab.position = index;
       return tab;
@@ -179,33 +338,50 @@ export default class UserMenu extends GlimmerComponent {
   }
 
   get _bottomTabs() {
+    const tabs = [];
+
+    CORE_BOTTOM_TABS.forEach((tabClass) => {
+      const tab = new tabClass(this.currentUser, this.siteSettings, this.site);
+      if (tab.shouldDisplay) {
+        tabs.push(tab);
+      }
+    });
+
     const topTabsLength = this.topTabs.length;
-    return this._coreBottomTabs.map((tab, index) => {
+    return tabs.map((tab, index) => {
       tab.position = index + topTabsLength;
       return tab;
     });
   }
 
-  get _coreBottomTabs() {
-    return [
-      {
-        id: "preferences",
-        icon: "user-cog",
-        href: `${this.currentUser.path}/preferences`,
-      },
-    ];
+  #notificationTypesForTheOtherTab(tabs) {
+    const usedNotificationTypes = tabs
+      .filter((tab) => tab.notificationTypes)
+      .map((tab) => tab.notificationTypes)
+      .flat();
+    return Object.keys(this.site.notification_types).filter(
+      (notificationType) => !usedNotificationTypes.includes(notificationType)
+    );
   }
 
   @action
-  changeTab(tab) {
+  handleTabClick(tab) {
     if (this.currentTabId !== tab.id) {
       this.currentTabId = tab.id;
       this.currentPanelComponent = tab.panelComponent;
+      this.currentNotificationTypes = tab.notificationTypes;
+    } else if (tab.linkWhenActive) {
+      DiscourseURL.routeTo(tab.linkWhenActive);
     }
   }
 
   @action
   triggerRenderedAppEvent() {
     this.appEvents.trigger("user-menu:rendered");
+  }
+
+  @action
+  focusFirstTab(topTabsContainerElement) {
+    topTabsContainerElement.querySelector(".btn.active")?.focus();
   }
 }

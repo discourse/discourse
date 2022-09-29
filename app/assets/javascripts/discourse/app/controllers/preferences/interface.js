@@ -13,6 +13,7 @@ import { computed } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { reload } from "discourse/helpers/page-reloader";
+import { propertyEqual } from "discourse/lib/computed";
 
 const USER_HOMES = {
   1: "latest",
@@ -33,6 +34,7 @@ export default Controller.extend({
   selectedDarkColorSchemeId: null,
   preferencesController: controller("preferences"),
   makeColorSchemeDefault: true,
+  canPreviewColorScheme: propertyEqual("model.id", "currentUser.id"),
 
   init() {
     this._super(...arguments);
@@ -352,8 +354,12 @@ export default Controller.extend({
     loadColorScheme(colorSchemeId) {
       this.setProperties({
         selectedColorSchemeId: colorSchemeId,
-        previewingColorScheme: true,
+        previewingColorScheme: this.canPreviewColorScheme,
       });
+
+      if (!this.canPreviewColorScheme) {
+        return;
+      }
 
       if (colorSchemeId < 0) {
         const defaultTheme = this.userSelectableThemes.findBy(
@@ -375,8 +381,12 @@ export default Controller.extend({
     loadDarkColorScheme(colorSchemeId) {
       this.setProperties({
         selectedDarkColorSchemeId: colorSchemeId,
-        previewingColorScheme: true,
+        previewingColorScheme: this.canPreviewColorScheme,
       });
+
+      if (!this.canPreviewColorScheme) {
+        return;
+      }
 
       if (colorSchemeId === -1) {
         // load preview of regular scheme when dark scheme is disabled

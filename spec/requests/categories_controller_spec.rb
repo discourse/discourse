@@ -21,7 +21,7 @@ RSpec.describe CategoriesController do
 
       expect(response.body).to have_tag("div#data-preloaded") do |element|
         json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
-        expect(json['topic_list_latest']).to include(%{"more_topics_url":"/latest"})
+        expect(json['topic_list']).to include(%{"more_topics_url":"/latest"})
       end
     end
 
@@ -137,6 +137,71 @@ RSpec.describe CategoriesController do
 
       subsubcategory_response = subcategory_response["subcategory_list"][0]
       expect(subsubcategory_response["topics"].map { |c| c['id'] }).to contain_exactly(topic3.id)
+    end
+
+    describe 'topics filtered by tag for categories when requested' do
+      fab!(:tag) { Fabricate(:tag, name: "test-tag") }
+      fab!(:tag_2) { Fabricate(:tag, name: "second-test-tag") }
+      let(:topics_with_filter_tag) { [] }
+
+      before do
+        SiteSetting.max_category_nesting = 3
+      end
+
+      it 'includes filtered topics for categories' do
+        2.times do |i|
+          topics_with_filter_tag << Fabricate(:topic, category: category, tags: [tag])
+          Fabricate(:topic, category: category, tags: [tag_2])
+        end
+        CategoryFeaturedTopic.feature_topics
+
+        get "/categories.json?tag=#{tag.name}&include_topics=true"
+        expect(response.status).to eq(200)
+
+        category_list = response.parsed_body["category_list"]
+        category_response = category_list["categories"].find { |c| c["id"] == category.id }
+
+        expect(category_response["topics"].map { |c| c['id'] }).to contain_exactly(*topics_with_filter_tag.map(&:id))
+      end
+
+      it 'includes filtered topics for subcategories' do
+        subcategory = Fabricate(:category, user: admin, parent_category: category)
+
+        2.times do |i|
+          topics_with_filter_tag << Fabricate(:topic, category: subcategory, tags: [tag])
+          Fabricate(:topic, category: subcategory, tags: [tag_2])
+        end
+        CategoryFeaturedTopic.feature_topics
+
+        get "/categories.json?tag=#{tag.name}&include_subcategories=true&include_topics=true"
+        expect(response.status).to eq(200)
+
+        category_list = response.parsed_body["category_list"]
+        category_response = category_list["categories"].find { |c| c["id"] == category.id }
+        subcategory_response = category_response["subcategory_list"][0]
+
+        expect(subcategory_response["topics"].map { |c| c['id'] }).to contain_exactly(*topics_with_filter_tag.map(&:id))
+      end
+
+      it 'includes filtered topics for subsubcategories' do
+        subcategory = Fabricate(:category, user: admin, parent_category: category)
+        subsubcategory = Fabricate(:category, user: admin, parent_category: subcategory)
+
+        2.times do |i|
+          topics_with_filter_tag << Fabricate(:topic, category: subsubcategory, tags: [tag])
+          Fabricate(:topic, category: subsubcategory, tags: [tag_2])
+        end
+        CategoryFeaturedTopic.feature_topics
+
+        get "/categories.json?tag=#{tag.name}&include_subcategories=true&include_topics=true"
+        expect(response.status).to eq(200)
+
+        category_list = response.parsed_body["category_list"]
+        category_response = category_list["categories"].find { |c| c["id"] == category.id }
+        subsubcategory_response = category_response["subcategory_list"][0]["subcategory_list"][0]
+
+        expect(subsubcategory_response["topics"].map { |c| c['id'] }).to contain_exactly(*topics_with_filter_tag.map(&:id))
+      end
     end
 
     describe 'categories and latest topics - ordered by created date' do

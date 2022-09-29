@@ -1,4 +1,11 @@
-import { click, currentURL, fillIn, settled, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  fillIn,
+  settled,
+  triggerEvent,
+  visit,
+} from "@ember/test-helpers";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
 import { cloneJSON } from "discourse-common/lib/object";
 import TopicFixtures from "discourse/tests/fixtures/topic";
@@ -21,8 +28,8 @@ import {
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "I18n";
 import { test } from "qunit";
-import { Promise } from "rsvp";
 import sinon from "sinon";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 acceptance("Composer", function (needs) {
   needs.user({
@@ -55,6 +62,67 @@ acceptance("Composer", function (needs) {
       topicList.post_stream.posts[2].post_type = 4;
       return helper.response(topicList);
     });
+  });
+
+  needs.hooks.afterEach(() => toggleCheckDraftPopup(false));
+
+  test("Composer is opened", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      "var(--new-topic-composer-height, 400px)",
+      "sets --composer-height to 400px when creating topic"
+    );
+
+    await fillIn(
+      ".d-editor-input",
+      "this is the *content* of a new topic post"
+    );
+    await click(".toggle-minimize");
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      "40px",
+      "sets --composer-height to 40px when composer is minimized to draft mode"
+    );
+
+    await click(".toggle-fullscreen");
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      "var(--new-topic-composer-height, 400px)",
+      "sets --composer-height back to 400px when composer is opened from draft mode"
+    );
+
+    await fillIn(".d-editor-input", "");
+    await click(".toggle-minimize");
+    assert.strictEqual(
+      document.documentElement.style.getPropertyValue("--composer-height"),
+      "",
+      "removes --composer-height property when composer is closed"
+    );
+  });
+
+  test("Composer height adjustment", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await triggerEvent(document.querySelector(".grippie"), "mousedown");
+    await triggerEvent(document.querySelector(".grippie"), "mousemove");
+    await triggerEvent(document.querySelector(".grippie"), "mouseup");
+    await visit("/"); // reload page
+    await click("#create-topic");
+
+    const expectedHeight = localStorage.getItem(
+      "__test_discourse_composerHeight"
+    );
+    const actualHeight =
+      document.documentElement.style.getPropertyValue("--composer-height");
+
+    assert.strictEqual(
+      expectedHeight,
+      actualHeight,
+      "Updated height is persistent"
+    );
   });
 
   test("composer controls", async function (assert) {
@@ -143,9 +211,9 @@ acceptance("Composer", function (needs) {
     await fillIn("#reply-title", "this title triggers an error");
     await fillIn(".d-editor-input", "this is the *content* of a post");
     await click("#reply-control button.create");
-    assert.ok(exists(".bootbox.modal"), "it pops up an error message");
-    await click(".bootbox.modal a.btn-primary");
-    assert.ok(!exists(".bootbox.modal"), "it dismisses the error");
+    assert.ok(exists(".dialog-body"), "it pops up an error message");
+    await click(".dialog-footer .btn-primary");
+    assert.ok(!exists(".dialog-body"), "it dismisses the error");
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
   });
 
@@ -184,13 +252,14 @@ acceptance("Composer", function (needs) {
     await fillIn("#reply-title", "This title doesn't matter");
     await fillIn(".d-editor-input", "custom message");
     await click("#reply-control button.create");
+
     assert.strictEqual(
-      query(".bootbox .modal-body").innerText,
+      query("#dialog-holder .dialog-body").innerText,
       "This is a custom response"
     );
     assert.strictEqual(currentURL(), "/", "it doesn't change routes");
 
-    await click(".bootbox .btn-primary");
+    await click(".dialog-footer .btn-primary");
     assert.strictEqual(
       currentURL(),
       "/faq",
@@ -278,7 +347,10 @@ acceptance("Composer", function (needs) {
     await fillIn(".d-editor-input", "this is the content of the first reply");
 
     await visit("/t/this-is-a-test-topic/9");
-    assert.strictEqual(currentURL(), "/t/this-is-a-test-topic/9");
+    assert.ok(
+      currentURL().startsWith("/t/this-is-a-test-topic/9"),
+      "moves to second topic"
+    );
     await click("#topic-footer-buttons .btn.create");
     assert.ok(
       exists(".discard-draft-modal.modal"),
@@ -370,34 +442,27 @@ acceptance("Composer", function (needs) {
 
   test("Editing a post stages new content", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(".topic-post:nth-of-type(1) button.show-more-actions");
-    await click(".topic-post:nth-of-type(1) button.edit");
+    await click(".topic-post button.show-more-actions");
+    await click(".topic-post button.edit");
 
     await fillIn(".d-editor-input", "will return empty json");
     await fillIn("#reply-title", "This is the new text for the title");
 
-    // when this promise resolves, the request had already started because
-    // this promise will be resolved by the pretender
-    const promise = new Promise((resolve) => {
-      window.resolveLastPromise = resolve;
+    pretender.put("/posts/:post_id", async () => {
+      // at this point, request is in flight, so post is staged
+      assert.strictEqual(count(".topic-post.staged"), 1);
+      assert.ok(query(".topic-post").classList.contains("staged"));
+      assert.strictEqual(
+        query(".topic-post.staged .cooked").innerText.trim(),
+        "will return empty json"
+      );
+
+      return response(200, {});
     });
 
-    // click to trigger the save, but wait until the request starts
-    click("#reply-control button.create");
-    await promise;
+    await click("#reply-control button.create");
 
-    // at this point, request is in flight, so post is staged
-    assert.strictEqual(count(".topic-post.staged"), 1);
-    assert.ok(query(".topic-post:nth-of-type(1)").className.includes("staged"));
-    assert.strictEqual(
-      query(".topic-post.staged .cooked").innerText.trim(),
-      "will return empty json"
-    );
-
-    // finally, finish request and wait for last render
-    window.resolveLastPromise();
     await visit("/t/internationalization-localization/280");
-
     assert.strictEqual(count(".topic-post.staged"), 0);
   });
 
@@ -509,6 +574,12 @@ acceptance("Composer", function (needs) {
       "it expands composer to full screen"
     );
 
+    assert.strictEqual(
+      count(".composer-fullscreen-prompt"),
+      1,
+      "the exit fullscreen prompt is visible"
+    );
+
     await click(".toggle-fullscreen");
 
     assert.strictEqual(
@@ -532,6 +603,34 @@ acceptance("Composer", function (needs) {
       count("#reply-control.open"),
       1,
       "from draft, it expands composer back to open state"
+    );
+  });
+
+  test("Composer fullscreen submit button", async function (assert) {
+    await visit("/t/this-is-a-test-topic/9");
+    await click(".topic-post:nth-of-type(1) button.reply");
+
+    assert.strictEqual(
+      count("#reply-control.open"),
+      1,
+      "it starts in open state by default"
+    );
+
+    await click(".toggle-fullscreen");
+
+    assert.strictEqual(
+      count("#reply-control button.create"),
+      1,
+      "it shows composer submit button in fullscreen"
+    );
+
+    await fillIn(".d-editor-input", "too short");
+    await click("#reply-control button.create");
+
+    assert.strictEqual(
+      count("#reply-control.open"),
+      1,
+      "it goes back to open state if there's errors"
     );
   });
 
@@ -687,109 +786,91 @@ acceptance("Composer", function (needs) {
   });
 
   test("Checks for existing draft", async function (assert) {
-    try {
-      toggleCheckDraftPopup(true);
+    toggleCheckDraftPopup(true);
 
-      await visit("/t/internationalization-localization/280");
+    await visit("/t/internationalization-localization/280");
 
-      await click(".topic-post:nth-of-type(1) button.show-more-actions");
-      await click(".topic-post:nth-of-type(1) button.edit");
+    await click(".topic-post:nth-of-type(1) button.show-more-actions");
+    await click(".topic-post:nth-of-type(1) button.edit");
 
-      assert.strictEqual(
-        query(".modal-body").innerText,
-        I18n.t("drafts.abandon.confirm")
-      );
+    assert.strictEqual(
+      query(".dialog-body").innerText,
+      I18n.t("drafts.abandon.confirm")
+    );
 
-      await click(".modal-footer .btn.btn-default");
-    } finally {
-      toggleCheckDraftPopup(false);
-    }
+    await click(".dialog-footer .btn-resume-editing");
   });
 
   test("Can switch states without abandon popup", async function (assert) {
-    try {
-      toggleCheckDraftPopup(true);
+    toggleCheckDraftPopup(true);
 
-      await visit("/t/internationalization-localization/280");
+    await visit("/t/internationalization-localization/280");
 
-      const longText = "a".repeat(256);
+    const longText = "a".repeat(256);
 
-      sinon.stub(Draft, "get").returns(
-        Promise.resolve({
-          draft: null,
-          draft_sequence: 0,
-        })
-      );
+    sinon.stub(Draft, "get").resolves({
+      draft: null,
+      draft_sequence: 0,
+    });
 
-      await click(".btn-primary.create.btn");
+    await click(".btn-primary.create.btn");
 
-      await fillIn(".d-editor-input", longText);
+    await fillIn(".d-editor-input", longText);
 
-      assert.ok(
-        exists(
-          '.action-title a[href="/t/internationalization-localization/280"]'
-        ),
-        "the mode should be: reply to post"
-      );
+    assert.ok(
+      exists(
+        '.action-title a[href="/t/internationalization-localization/280"]'
+      ),
+      "the mode should be: reply to post"
+    );
 
-      await click("article#post_3 button.reply");
+    await click("article#post_3 button.reply");
 
-      const composerActions = selectKit(".composer-actions");
-      await composerActions.expand();
-      await composerActions.selectRowByValue("reply_as_new_topic");
+    const composerActions = selectKit(".composer-actions");
+    await composerActions.expand();
+    await composerActions.selectRowByValue("reply_as_new_topic");
 
-      assert.ok(!exists(".modal-body"), "abandon popup shouldn't come");
+    assert.ok(!exists(".modal-body"), "abandon popup shouldn't come");
 
-      assert.ok(
-        query(".d-editor-input").value.includes(longText),
-        "entered text should still be there"
-      );
+    assert.ok(
+      query(".d-editor-input").value.includes(longText),
+      "entered text should still be there"
+    );
 
-      assert.ok(
-        !exists(
-          '.action-title a[href="/t/internationalization-localization/280"]'
-        ),
-        "mode should have changed"
-      );
-    } finally {
-      toggleCheckDraftPopup(false);
-    }
+    assert.ok(
+      !exists(
+        '.action-title a[href="/t/internationalization-localization/280"]'
+      ),
+      "mode should have changed"
+    );
   });
 
   test("Loading draft also replaces the recipients", async function (assert) {
-    try {
-      toggleCheckDraftPopup(true);
+    toggleCheckDraftPopup(true);
 
-      sinon.stub(Draft, "get").returns(
-        Promise.resolve({
-          draft:
-            '{"reply":"hello","action":"privateMessage","title":"hello","categoryId":null,"archetypeId":"private_message","metaData":null,"recipients":"codinghorror","composerTime":9159,"typingTime":2500}',
-          draft_sequence: 0,
-        })
-      );
+    sinon.stub(Draft, "get").resolves({
+      draft:
+        '{"reply":"hello","action":"privateMessage","title":"hello","categoryId":null,"archetypeId":"private_message","metaData":null,"recipients":"codinghorror","composerTime":9159,"typingTime":2500}',
+      draft_sequence: 0,
+    });
 
-      await visit("/u/charlie");
-      await click("button.compose-pm");
-      await click(".modal .btn-default");
+    await visit("/u/charlie");
+    await click("button.compose-pm");
+    await click(".dialog-footer .btn-resume-editing");
 
-      const privateMessageUsers = selectKit("#private-message-users");
-      assert.strictEqual(privateMessageUsers.header().value(), "codinghorror");
-    } finally {
-      toggleCheckDraftPopup(false);
-    }
+    const privateMessageUsers = selectKit("#private-message-users");
+    assert.strictEqual(privateMessageUsers.header().value(), "codinghorror");
   });
 
   test("Loads tags and category from draft payload", async function (assert) {
     updateCurrentUser({ has_topic_draft: true });
 
-    sinon.stub(Draft, "get").returns(
-      Promise.resolve({
-        draft:
-          '{"reply":"Hey there","action":"createTopic","title":"Draft topic","categoryId":2,"tags":["fun", "times"],"archetypeId":"regular","metaData":null,"composerTime":25269,"typingTime":8100}',
-        draft_sequence: 0,
-        draft_key: NEW_TOPIC_KEY,
-      })
-    );
+    sinon.stub(Draft, "get").resolves({
+      draft:
+        '{"reply":"Hey there","action":"createTopic","title":"Draft topic","categoryId":2,"tags":["fun", "times"],"archetypeId":"regular","metaData":null,"composerTime":25269,"typingTime":8100}',
+      draft_sequence: 0,
+      draft_key: NEW_TOPIC_KEY,
+    });
 
     await visit("/latest");
     assert.strictEqual(

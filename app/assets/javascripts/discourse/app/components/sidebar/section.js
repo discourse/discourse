@@ -1,9 +1,12 @@
-import GlimmerComponent from "discourse/components/glimmer";
+import Component from "@glimmer/component";
+import { inject as service } from "@ember/service";
 
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 
-export default class SidebarSection extends GlimmerComponent {
+export default class SidebarSection extends Component {
+  @service keyValueStore;
+
   @tracked displaySection;
   collapsedSidebarSectionKey = `sidebar-section-${this.args.sectionName}-collapsed`;
 
@@ -35,6 +38,11 @@ export default class SidebarSection extends GlimmerComponent {
       this.keyValueStore.remove(this.collapsedSidebarSectionKey);
     } else {
       this.keyValueStore.setItem(this.collapsedSidebarSectionKey, true);
+    }
+
+    // remove focus from the toggle, but only on click
+    if (!event.key) {
+      document.activeElement.blur();
     }
   }
 

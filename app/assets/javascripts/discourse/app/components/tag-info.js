@@ -9,6 +9,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 
 export default Component.extend({
+  dialog: service(),
   tagName: "",
   loading: false,
   tagInfo: null,
@@ -159,13 +160,13 @@ export default Component.extend({
                 this.set("newSynonyms", null);
                 this.loadTagInfo();
               } else if (response.failed_tags) {
-                bootbox.alert(
+                this.dialog.alert(
                   I18n.t("tagging.add_synonyms_failed", {
                     tag_names: Object.keys(response.failed_tags).join(", "),
                   })
                 );
               } else {
-                bootbox.alert(I18n.t("generic_error"));
+                this.dialog.alert(I18n.t("generic_error"));
               }
             })
             .catch(popupAjaxError);

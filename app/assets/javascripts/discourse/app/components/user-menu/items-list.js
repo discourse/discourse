@@ -1,15 +1,15 @@
-import GlimmerComponent from "discourse/components/glimmer";
+import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import Session from "discourse/models/session";
 
-export default class UserMenuItemsList extends GlimmerComponent {
+export default class UserMenuItemsList extends Component {
   @tracked loading = false;
   @tracked items = [];
 
   constructor() {
     super(...arguments);
-    this._load();
+    this.#load();
   }
 
   get itemsCacheKey() {}
@@ -28,49 +28,50 @@ export default class UserMenuItemsList extends GlimmerComponent {
     return "user-menu/items-list-empty-state";
   }
 
-  get itemComponent() {
-    throw new Error(
-      `the itemComponent property must be implemented in ${this.constructor.name}`
-    );
-  }
-
-  fetchItems() {
+  async fetchItems() {
     throw new Error(
       `the fetchItems method must be implemented in ${this.constructor.name}`
     );
   }
 
-  refreshList() {
-    this._load();
+  async refreshList() {
+    await this.#load();
   }
 
   dismissWarningModal() {
     return null;
   }
 
-  _load() {
-    const cached = this._getCachedItems();
+  async #load() {
+    const cached = this.#getCachedItems();
     if (cached?.length) {
       this.items = cached;
     } else {
       this.loading = true;
     }
-    this.fetchItems()
-      .then((items) => {
-        this._setCachedItems(items);
-        this.items = items;
-      })
-      .finally(() => (this.loading = false));
+    try {
+      const items = await this.fetchItems();
+      this.#setCachedItems(items);
+      this.items = items;
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(
+        `an error occurred when loading items for ${this.constructor.name}`,
+        err
+      );
+    } finally {
+      this.loading = false;
+    }
   }
 
-  _getCachedItems() {
+  #getCachedItems() {
     const key = this.itemsCacheKey;
     if (key) {
       return Session.currentProp(`user-menu-items:${key}`);
     }
   }
 
-  _setCachedItems(newItems) {
+  #setCachedItems(newItems) {
     const key = this.itemsCacheKey;
     if (key) {
       Session.currentProp(`user-menu-items:${key}`, newItems);

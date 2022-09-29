@@ -1,28 +1,35 @@
+:root {
+  --d-sidebar-section-link-prefix-margin-right: 0.4rem;
+  --d-sidebar-section-link-prefix-width: 20px;
+}
+
 .sidebar-section-link-wrapper {
   display: flex;
   align-items: center;
+  position: relative;
 
   .sidebar-section-link {
-    box-sizing: border-box;
     display: inline-flex;
     width: 100%;
     align-items: center;
-    padding: 0.35em 0.5em;
     color: var(--primary-high);
-    font-size: var(--font-down-1);
     transition: background-color 0.25s;
 
     &:focus,
     &:hover {
       background: var(--d-sidebar-highlight-color);
-      .sidebar-section-link-prefix.icon svg.prefix-badge {
-        background: var(--d-sidebar-highlight-color);
-      }
+      outline: none;
     }
 
     &.active {
       color: var(--primary);
-      font-weight: bold;
+      background: var(--d-sidebar-highlight-color);
+
+      .sidebar-section-link-prefix {
+        &.icon {
+          color: var(--primary-high);
+        }
+      }
     }
 
     .sidebar-section-link-content-badge {
@@ -33,6 +40,11 @@
       font-size: var(--font-down-1);
       font-weight: normal;
       margin-left: auto;
+    }
+
+    .sidebar-section-link-suffix {
+      margin-left: 0.25rem;
+      font-size: var(--font-down-4);
     }
 
     .sidebar-section-link-content-text {
@@ -63,36 +75,63 @@
   .sidebar-section-link-group-messages-new,
   .sidebar-section-link-group-messages-unread,
   .sidebar-section-link-group-messages-archive {
-    margin-left: 0.5em;
+    .sidebar-section-link-content-text {
+      margin-left: calc(
+        var(--d-sidebar-section-link-prefix-margin-right) +
+          var(--d-sidebar-section-link-prefix-width)
+      );
+    }
+  }
+
+  .sidebar-section-link-review {
+    .sidebar-section-link-content-badge {
+      color: var(--danger);
+    }
   }
 
   .sidebar-section-link-prefix {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: var(--d-sidebar-section-link-prefix-width);
+    height: var(--d-sidebar-section-link-prefix-width);
+    margin-right: var(--d-sidebar-section-link-prefix-margin-right);
+
     &.image {
       img {
-        border-radius: 50%;
-        width: 20px;
+        border-radius: 100%;
         aspect-ratio: auto 20 / 20;
-        height: 20px;
-        margin-right: 0.75em;
+        width: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
+        height: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
       }
     }
 
     &.text {
-      border-radius: 3px;
-      background: rgba(var(--primary-rgb), 0.1);
       text-align: center;
-      font-size: var(--font-down-1);
-      padding: 0.2em 0.5em;
-      margin-right: 0.25em;
+
+      .prefix-text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 100%;
+        background: rgba(var(--primary-rgb), 0.1);
+        width: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
+        height: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
+      }
     }
 
     &.icon {
       position: relative;
-      margin-right: 0.75em;
+      color: var(--primary-medium);
 
-      svg.prefix-badge {
+      svg {
+        font-size: var(--font-down-1);
+      }
+
+      .prefix-badge {
         position: absolute;
-        background-color: var(--primary-very-low);
+        background-color: transparent;
         border-radius: 50%;
         padding: 2px 2px 3px;
         color: var(--primary-high);
@@ -100,25 +139,29 @@
         width: 0.5rem;
         top: -0.2em;
         right: 0;
-        margin-right: -0.6em;
+        margin-right: -0.2em;
       }
     }
   }
 
-  .sidebar-section-link-suffix.icon {
-    align-items: center;
-    display: flex;
-    margin-left: 0.5em;
-  }
-
   .sidebar-section-link-hover {
+    margin-left: auto;
+
     .sidebar-section-hover-button {
       display: none;
       color: var(--primary-medium);
       border: none;
       background: transparent;
-      padding: 0.35em 0.5em;
+      padding: 0 0 0 0.5em;
+      height: 100%;
       transition: background-color 0.25s;
+
+      &:focus,
+      .discourse-no-touch & {
+        &:hover {
+          color: var(--primary);
+        }
+      }
 
       svg {
         font-size: var(--font-down-1);
@@ -137,10 +180,4 @@
       display: block;
     }
   }
-}
-
-#main-outlet-wrapper
-  .sidebar-section-link-wrapper:not(.sidebar-more-section-links-details-content
-    .sidebar-section-link-wrapper) {
-  margin-left: 1.5em;
 }

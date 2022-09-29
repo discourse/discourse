@@ -5,7 +5,8 @@ const fetch = require("node-fetch");
 const { encode } = require("html-entities");
 const cleanBaseURL = require("clean-base-url");
 const path = require("path");
-const { promises: fs } = require("fs");
+const fs = require("fs");
+const fsPromises = fs.promises;
 const { JSDOM } = require("jsdom");
 const { shouldLoadPluginTestJs } = require("discourse/lib/plugin-js");
 const { Buffer } = require("node:buffer");
@@ -231,13 +232,31 @@ async function applyBootstrap(bootstrap, template, response, baseURL, preload) {
 
 async function buildFromBootstrap(proxy, baseURL, req, response, preload) {
   try {
-    const template = await fs.readFile(
+    const template = await fsPromises.readFile(
       path.join(cwd(), "dist", "index.html"),
       "utf8"
     );
 
     let url = new URL(`${proxy}${baseURL}bootstrap.json`);
     url.searchParams.append("for_url", req.url);
+
+    const forUrlSearchParams = new URL(req.url, "https://dummy-origin.invalid")
+      .searchParams;
+
+    const mobileView = forUrlSearchParams.get("mobile_view");
+    if (mobileView) {
+      url.searchParams.append("mobile_view", mobileView);
+    }
+
+    const reqUrlSafeMode = forUrlSearchParams.get("safe_mode");
+    if (reqUrlSafeMode) {
+      url.searchParams.append("safe_mode", reqUrlSafeMode);
+    }
+
+    const reqUrlPreviewThemeId = forUrlSearchParams.get("preview_theme_id");
+    if (reqUrlPreviewThemeId) {
+      url.searchParams.append("preview_theme_id", reqUrlPreviewThemeId);
+    }
 
     const res = await fetch(url, { headers: req.headers });
     const json = await res.json();
@@ -319,7 +338,7 @@ async function handleRequest(proxy, baseURL, req, res) {
 
     const newCSP = csp
       .replaceAll(proxy, `http://${originalHost}`)
-      .replaceAll("script-src ", `script-src ${emberCliAdditions}`);
+      .replaceAll("script-src ", `script-src ${emberCliAdditions} `);
 
     res.set("content-security-policy", newCSP);
   }
@@ -360,12 +379,56 @@ module.exports = {
 
   contentFor(type, config) {
     if (shouldLoadPluginTestJs() && type === "test-plugin-js") {
-      return `
-        <script src="${config.rootURL}assets/discourse/tests/active-plugins.js"></script>
-        <script src="${config.rootURL}assets/admin-plugins.js"></script>
-      `;
+      const scripts = [];
+
+      const pluginInfos = this.app.project
+        .findAddonByName("discourse-plugins")
+        .pluginInfos();
+
+      for (const {
+        pluginName,
+        directoryName,
+        hasJs,
+        hasAdminJs,
+      } of pluginInfos) {
+        if (hasJs) {
+          scripts.push({
+            src: `plugins/${directoryName}.js`,
+            name: pluginName,
+          });
+        }
+
+        if (fs.existsSync(`../plugins/${directoryName}_extras.js.erb`)) {
+          scripts.push({
+            src: `plugins/${directoryName}_extras.js`,
+            name: pluginName,
+          });
+        }
+
+        if (hasAdminJs) {
+          scripts.push({
+            src: `plugins/${directoryName}_admin.js`,
+            name: pluginName,
+          });
+        }
+      }
+
+      return scripts
+        .map(
+          ({ src, name }) =>
+            `<script src="${config.rootURL}assets/${src}" data-discourse-plugin="${name}"></script>`
+        )
+        .join("\n");
     } else if (shouldLoadPluginTestJs() && type === "test-plugin-tests-js") {
-      return `<script id="plugin-test-script" src="${config.rootURL}assets/discourse/tests/plugin-tests.js"></script>`;
+      return this.app.project
+        .findAddonByName("discourse-plugins")
+        .pluginInfos()
+        .filter(({ hasTests }) => hasTests)
+        .map(
+          ({ directoryName, pluginName }) =>
+            `<script src="${config.rootURL}assets/plugins/test/${directoryName}_tests.js" data-discourse-plugin="${pluginName}"></script>`
+        )
+        .join("\n");
     }
   },
 
@@ -386,6 +449,16 @@ to serve API requests. For example:
     baseURL = rootURL === "" ? "/" : cleanBaseURL(rootURL || baseURL);
 
     const rawMiddleware = express.raw({ type: () => true, limit: "100mb" });
+
+    app.use(
+      "/favicon.ico",
+      express.static(
+        path.join(
+          __dirname,
+          "../../../../../../public/images/discourse-logo-sketch-small.png"
+        )
+      )
+    );
 
     app.use(rawMiddleware, async (req, res, next) => {
       try {

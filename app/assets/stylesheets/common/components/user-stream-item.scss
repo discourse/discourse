@@ -26,6 +26,15 @@
     }
   }
 
+  .user-stream-item__header {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .user-stream-item__details {
+    flex-grow: 1;
+  }
+
   .type,
   span.name {
     color: var(--primary);
@@ -34,18 +43,15 @@
   .time,
   .delete-info,
   .draft-type {
-    float: right;
+    line-height: var(--line-height-small);
     color: var(--primary-medium);
     font-size: $font-down-2;
+    padding-top: 5px;
   }
 
   .notification .time {
     margin-left: auto;
     float: none;
-  }
-
-  .draft-type {
-    clear: right;
   }
 
   .delete-info .d-icon {
@@ -54,20 +60,15 @@
 
   .expand-item,
   .collapse-item {
-    float: right;
     margin-right: 0.5em;
-    line-height: $line-height-small;
+    margin-left: 0.25em;
+    line-height: var(--line-height-small);
+    padding-top: 3px;
     color: var(--primary-medium);
   }
 
   .avatar-link {
-    float: left;
-    margin-right: 4px;
-  }
-
-  .title {
-    @include ellipsis;
-    display: block;
+    margin-right: 0.5em;
   }
 
   .name {
@@ -81,10 +82,8 @@
     padding: 3px 5px 5px 5px;
   }
 
-  .remove-bookmark,
   .remove-draft {
     float: right;
-    margin-top: -4px;
   }
 
   .notification {

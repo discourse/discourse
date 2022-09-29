@@ -85,24 +85,14 @@ module SeedData
 
       if include_welcome_topics
         # Welcome Topic
-        topics << {
-          site_setting_name: 'welcome_topic_id',
-          title: I18n.t('discourse_welcome_topic.title'),
-          raw: I18n.t('discourse_welcome_topic.body', base_path: Discourse.base_path),
-          after_create: proc do |post|
-            post.topic.update_pinned(true, true)
-          end
-        }
-
-        # Lounge Welcome Topic
-        if lounge_category = Category.find_by(id: SiteSetting.lounge_category_id)
+        if general_category = Category.find_by(id: SiteSetting.general_category_id)
           topics << {
-            site_setting_name: 'lounge_welcome_topic_id',
-            title: I18n.t('lounge_welcome.title'),
-            raw: I18n.t('lounge_welcome.body', base_path: Discourse.base_path),
-            category: lounge_category,
+            site_setting_name: 'welcome_topic_id',
+            title: I18n.t('discourse_welcome_topic.title'),
+            raw: I18n.t('discourse_welcome_topic.body', base_path: Discourse.base_path),
+            category: general_category,
             after_create: proc do |post|
-              post.topic.update_pinned(true)
+              post.topic.update_pinned(true, true)
             end
           }
         end

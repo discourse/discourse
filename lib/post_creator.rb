@@ -398,7 +398,7 @@ class PostCreator
   end
 
   def update_uploads_secure_status
-    @post.update_uploads_secure_status(source: "post creator") if SiteSetting.secure_media?
+    @post.update_uploads_secure_status(source: "post creator") if SiteSetting.secure_uploads?
   end
 
   def delete_owned_bookmarks
@@ -431,7 +431,7 @@ class PostCreator
 
   def ensure_in_allowed_users
     return unless @topic.private_message? && @topic.id
-    return if @post.whisper?
+    return if @post.whisper? || @post.post_type == Post.types[:small_action]
     return if @topic.topic_allowed_users.exists?(user_id: @user.id)
 
     return if @topic

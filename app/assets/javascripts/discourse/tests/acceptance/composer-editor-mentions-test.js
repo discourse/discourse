@@ -1,11 +1,30 @@
 import { test } from "qunit";
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  exists,
+  fakeTime,
+  loggedInUser,
+  query,
+} from "discourse/tests/helpers/qunit-helpers";
 import { setCaretPosition } from "discourse/lib/utilities";
 
 acceptance("Composer - editor mentions", function (needs) {
+  let clock = null;
+  const status = {
+    emoji: "tooth",
+    description: "off to dentist",
+    ends_at: "2100-02-01T09:00:00.000Z",
+  };
+
   needs.user();
   needs.settings({ enable_mentions: true });
+
+  needs.hooks.afterEach(() => {
+    if (clock) {
+      clock.restore();
+    }
+  });
 
   needs.pretender((server, helper) => {
     server.get("/u/search/users", () => {
@@ -16,6 +35,7 @@ acceptance("Composer - editor mentions", function (needs) {
             name: "Some User",
             avatar_template:
               "https://avatars.discourse.org/v3/letter/t/41988e/{size}.png",
+            status,
           },
           {
             username: "user2",
@@ -102,6 +122,39 @@ acceptance("Composer - editor mentions", function (needs) {
       query(".d-editor-input").value,
       "abc @user 123",
       "should replace mention correctly"
+    );
+  });
+
+  test("shows status on search results when mentioning a user", async function (assert) {
+    const timezone = loggedInUser().timezone;
+    const now = moment(status.ends_at).add(-1, "hour").format();
+    clock = fakeTime(now, timezone, true);
+
+    await visit("/");
+    await click("#create-topic");
+
+    // emulate typing in "abc @u"
+    const editor = query(".d-editor-input");
+    await fillIn(".d-editor-input", "@");
+    await setCaretPosition(editor, 5);
+    await triggerKeyEvent(".d-editor-input", "keyup", "@");
+    await fillIn(".d-editor-input", "@u");
+    await setCaretPosition(editor, 6);
+    await triggerKeyEvent(".d-editor-input", "keyup", "U");
+
+    assert.ok(
+      exists(`.autocomplete .emoji[title='${status.emoji}']`),
+      "status emoji is shown"
+    );
+    assert.equal(
+      query(".autocomplete .status-description").textContent.trim(),
+      status.description,
+      "status description is shown"
+    );
+    assert.equal(
+      query(".autocomplete .relative-date").textContent.trim(),
+      "1h",
+      "status expiration time is shown"
     );
   });
 });

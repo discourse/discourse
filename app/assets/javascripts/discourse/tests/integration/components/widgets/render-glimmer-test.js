@@ -7,12 +7,23 @@ import widgetHbs from "discourse/widgets/hbs-compiler";
 import Widget from "discourse/widgets/widget";
 import ClassicComponent from "@ember/component";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
+import { bind } from "discourse-common/utils/decorators";
 
 class DemoWidget extends Widget {
   static actionTriggered = false;
   tagName = "div.my-widget";
 
-  html(attrs) {
+  buildKey() {
+    return "abc";
+  }
+
+  defaultState() {
+    return {
+      actionTriggered: false,
+    };
+  }
+
+  html(attrs, state) {
     return [
       this.attach("button", {
         label: "rerender",
@@ -25,23 +36,29 @@ class DemoWidget extends Widget {
         hbs`<div class='glimmer-content'>
               arg1={{@data.arg1}} dynamicArg={{@data.dynamicArg}}
             </div>
-            <DemoComponent @arg1={{@data.arg1}} @dynamicArg={{@data.dynamicArg}} @action={{@data.actionForComponentToTrigger}}/>`,
+            <DemoComponent @arg1={{@data.arg1}} @dynamicArg={{@data.dynamicArg}} @action={{@data.actionForComponentToTrigger}} @widgetActionTriggered={{@data.widgetActionTriggered}}/>`,
         {
           ...attrs,
           actionForComponentToTrigger: this.actionForComponentToTrigger,
+          widgetActionTriggered: state.actionTriggered,
         }
       ),
     ];
   }
   dummyAction() {}
+
+  @bind
   actionForComponentToTrigger() {
+    this.state.actionTriggered = true;
     DemoWidget.actionTriggered = true;
+    this.scheduleRerender();
   }
 }
 
 class DemoComponent extends ClassicComponent {
   static eventLog = [];
   classNames = ["demo-component"];
+  layout = hbs`<DButton class="component-action-button" @label="component_action" @action={{@action}} /><p class='action-state'>{{@widgetActionTriggered}}</p>`;
 
   init() {
     DemoComponent.eventLog.push("init");
@@ -63,8 +80,41 @@ class DemoComponent extends ClassicComponent {
   willDestroy() {
     DemoComponent.eventLog.push("willDestroy");
   }
+}
 
-  layout = hbs`<DButton class="component-action-button" @label="component_action" @action={{@action}} />`;
+class ToggleDemoWidget extends Widget {
+  static actionTriggered = false;
+  tagName = "div.my-widget";
+
+  buildKey() {
+    return "abc";
+  }
+
+  defaultState() {
+    return {
+      showOne: true,
+    };
+  }
+
+  html(attrs, state) {
+    const output = [
+      this.attach("button", {
+        label: "toggle",
+        className: "toggleButton",
+        action: "toggleComponent",
+      }),
+    ];
+    if (state.showOne) {
+      output.push(new RenderGlimmer(this, "div.glimmer-wrapper", hbs`One`, {}));
+    } else {
+      output.push(new RenderGlimmer(this, "div.glimmer-wrapper", hbs`Two`, {}));
+    }
+    return output;
+  }
+
+  toggleComponent() {
+    this.state.showOne = !this.state.showOne;
+  }
 }
 
 module("Integration | Component | Widget | render-glimmer", function (hooks) {
@@ -74,11 +124,13 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
     DemoComponent.eventLog = [];
     DemoWidget.actionTriggered = false;
     this.registry.register("widget:demo-widget", DemoWidget);
+    this.registry.register("widget:toggle-demo-widget", ToggleDemoWidget);
     this.registry.register("component:demo-component", DemoComponent);
   });
 
   hooks.afterEach(function () {
     this.registry.unregister("widget:demo-widget");
+    this.registry.unregister("widget:toggle-demo-widget");
     this.registry.unregister("component:demo-component");
   });
 
@@ -195,6 +247,37 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
     assert.true(DemoWidget.actionTriggered, "widget event is triggered");
   });
 
+  test("modify widget state with component action", async function (assert) {
+    await render(
+      hbs`<MountWidget @widget="demo-widget" @args={{hash arg1="val1"}} />`
+    );
+
+    assert.false(
+      DemoWidget.actionTriggered,
+      "widget event has not been triggered yet"
+    );
+
+    assert.strictEqual(
+      query(".action-state").innerText,
+      "false",
+      "eventTriggered is false in nested component"
+    );
+
+    assert.true(
+      exists("div.demo-component button"),
+      "component button is rendered"
+    );
+
+    await click("div.demo-component button");
+    assert.true(DemoWidget.actionTriggered, "widget event is triggered");
+
+    assert.strictEqual(
+      query(".action-state").innerText,
+      "true",
+      "eventTriggered is true in nested component"
+    );
+  });
+
   test("developer ergonomics", function (assert) {
     assert.throws(
       () => {
@@ -217,5 +300,14 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
     // eslint-disable-next-line no-new
     new RenderGlimmer(this, "div", hbs`<TheCorrectCompiler />`);
     assert.true(true, "it doesn't raise an error for correct params");
+  });
+
+  test("multiple adjacent components", async function (assert) {
+    await render(hbs`<MountWidget @widget="toggle-demo-widget" />`);
+    assert.strictEqual(query("div.glimmer-wrapper").innerText, "One");
+    await click(".toggleButton");
+    assert.strictEqual(query("div.glimmer-wrapper").innerText, "Two");
+    await click(".toggleButton");
+    assert.strictEqual(query("div.glimmer-wrapper").innerText, "One");
   });
 });

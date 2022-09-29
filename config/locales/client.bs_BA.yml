@@ -42,6 +42,7 @@ bs_BA:
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
       wrap_ago: "%{date} prije"
+      wrap_on: "na %{date}"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -177,11 +178,11 @@ bs_BA:
         disabled: "maknuo banner %{when}. Banner se više neće prikazivati na vrhu svake stranice."
       forwarded: "gornji email proslijeđen"
     topic_admin_menu: "akcije u vezi teme"
-    wizard_required: "Dobrodošli na vaš novi Discourse! Odpočnimo sa <a href='%{url}' data-auto-route='true'>čarobnjakom za postavke</a> ✨"
     emails_are_disabled: "Sve odlazeće email poruke su globalno onemogućene od strane administratora. Ni jedna notifikacija bilo koje vrste neće biti poslana."
     software_update_prompt:
       dismiss: "Odpusti"
     bootstrap_mode_disabled: "Bootstrap način rada će biti isključen u toku 24 sata."
+    bootstrap_invite_button_title: "Pošalji Pozivnice"
     themes:
       default_description: "Uobičajen"
     s3:
@@ -211,6 +212,8 @@ bs_BA:
     not_implemented: "Nažalost ta funkcionalnost nije još implementirana!"
     no_value: "Ne"
     yes_value: "Da"
+    ok_value: "OK"
+    cancel_value: "Odustani"
     submit: "Potvrdi"
     generic_error: "Uff, došlo je do greške."
     generic_error_with_reason: "Došlo je do greške: %{error}"
@@ -1941,6 +1944,13 @@ bs_BA:
     go_back: "go back"
     not_logged_in_user: "user page with summary of current activity and preferences"
     current_user: "go to your user page"
+    user_menu:
+      tabs:
+        replies: "Odgovori"
+        mentions: "Spomenuto"
+        likes: "Lajkovi"
+        bookmarks: "Zabilješke"
+        profile: "Profil"
     topics:
       new_messages_marker: "zadnja posjeta"
       bulk:
@@ -2442,11 +2452,6 @@ bs_BA:
           one: "Jeste li sigurni da želite izbrisati taj post?"
           few: "Jeste li sigurni da želite izbrisati one postove %{count}?"
           other: "Jeste li sigurni da želite izbrisati one postove %{count}?"
-      merge:
-        confirm:
-          one: "Jeste li sigurni da želite spojiti te postove?"
-          few: "Jeste li sigurni da želite spojiti te postove %{count}?"
-          other: "Jeste li sigurni da želite spojiti te postove %{count}?"
       revisions:
         controls:
           first: "First revision"
@@ -2938,7 +2943,6 @@ bs_BA:
     download_calendar:
       download: "Skinuti"
     tagging:
-      all_tags: "Sve oznake"
       other_tags: "Druge oznake"
       selector_all_tags: "sve oznake"
       selector_no_tags: "bez oznaka"
@@ -3066,8 +3070,6 @@ bs_BA:
         member: "član"
         regular: "pokretač"
         leader: "vođa"
-    user_activity:
-      no_replies_others: "Nema odgovora."
     sidebar:
       unread_count:
         one: "%{count} nepročitana"
@@ -3078,7 +3080,10 @@ bs_BA:
         few: "%{count} nova"
         other: "%{count} novih"
       more: "Više..."
+      all_categories: "Sve kategorije"
       sections:
+        about:
+          header_link_text: "O nama"
         messages:
           header_link_text: "Poruke"
           links:
@@ -3090,15 +3095,20 @@ bs_BA:
             unread_with_count: "Nepročitano (%{count})"
             archive: "Arhiva"
         tags:
-          header_link_title: "sve oznake"
           header_link_text: "Oznake"
         categories:
-          header_link_title: "Sve kategorije"
           header_link_text: "Kategorije"
         community:
-          header_link_title: "naslovnica"
           header_link_text: "Zajednica"
           links:
+            about:
+              content: "O nama"
+            admin:
+              content: "Admin"
+            badges:
+              content: "Bedž"
+            faq:
+              content: "Česta pitanja"
             tracked:
               content: "Praćeno"
             groups:

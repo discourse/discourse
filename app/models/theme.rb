@@ -6,7 +6,7 @@ require 'json_schemer'
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 59
+  BASE_COMPILER_VERSION = 63
 
   attr_accessor :child_components
 
@@ -157,8 +157,11 @@ class Theme < ActiveRecord::Base
     get_set_cache "compiler_version" do
       dependencies = [
         BASE_COMPILER_VERSION,
-        Ember::VERSION,
+        EmberCli.ember_version,
         GlobalSetting.cdn_url,
+        GlobalSetting.s3_cdn_url,
+        GlobalSetting.s3_endpoint,
+        GlobalSetting.s3_bucket,
         Discourse.current_hostname
       ]
       Digest::SHA1.hexdigest(dependencies.join)

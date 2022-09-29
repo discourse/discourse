@@ -103,6 +103,9 @@ class Group < ActiveRecord::Base
   AUTO_GROUP_IDS = Hash[*AUTO_GROUPS.to_a.flatten.reverse]
   STAFF_GROUPS = [:admins, :moderators, :staff]
 
+  AUTO_GROUPS_ADD = "add"
+  AUTO_GROUPS_REMOVE = "remove"
+
   IMAP_SETTING_ATTRIBUTES = [
     "imap_server",
     "imap_port",
@@ -493,7 +496,7 @@ class Group < ActiveRecord::Base
     if removed_user_ids.present?
       Jobs.enqueue(
         :publish_group_membership_updates,
-        user_ids: removed_user_ids, group_id: group.id, type: :remove
+        user_ids: removed_user_ids, group_id: group.id, type: AUTO_GROUPS_REMOVE
       )
     end
 
@@ -526,7 +529,7 @@ class Group < ActiveRecord::Base
     if added_user_ids.present?
       Jobs.enqueue(
         :publish_group_membership_updates,
-        user_ids: added_user_ids, group_id: group.id, type: :add
+        user_ids: added_user_ids, group_id: group.id, type: AUTO_GROUPS_ADD
       )
     end
 

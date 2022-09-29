@@ -69,9 +69,12 @@ export default Controller.extend({
 
   actions: {
     showFeaturedTopicModal() {
-      showModal("feature-topic-on-profile", {
+      const modal = showModal("feature-topic-on-profile", {
         model: this.model,
         title: "user.feature_topic_on_profile.title",
+      });
+      modal.set("onClose", () => {
+        document.querySelector(".feature-topic-on-profile-btn")?.focus();
       });
     },
 

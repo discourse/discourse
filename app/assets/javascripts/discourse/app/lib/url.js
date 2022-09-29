@@ -19,6 +19,7 @@ const SERVER_SIDE_ONLY = [
   /^\/assets\//,
   /^\/uploads\//,
   /^\/secure-media-uploads\//,
+  /^\/secure-uploads\//,
   /^\/stylesheets\//,
   /^\/site_customizations\//,
   /^\/raw\//,
@@ -72,29 +73,6 @@ export function groupPath(subPath) {
 let _jumpScheduled = false;
 let _transitioning = false;
 let lockOn = null;
-
-export function jumpToElement(elementId) {
-  if (_jumpScheduled || isEmpty(elementId)) {
-    return;
-  }
-
-  const selector = `#main #${elementId}, a[name=${elementId}]`;
-  _jumpScheduled = true;
-
-  schedule("afterRender", function () {
-    if (lockOn) {
-      lockOn.clearLock();
-    }
-
-    lockOn = new LockOn(selector, {
-      finished() {
-        _jumpScheduled = false;
-        lockOn = null;
-      },
-    });
-    lockOn.lock();
-  });
-}
 
 const DiscourseURL = EmberObject.extend({
   isJumpScheduled() {
@@ -237,8 +215,8 @@ const DiscourseURL = EmberObject.extend({
     // Scroll to the same page, different anchor
     const m = /^#(.+)$/.exec(path);
     if (m) {
-      jumpToElement(m[1]);
-      return this.replaceState(path);
+      this.jumpToElement(m[1]);
+      return;
     }
 
     const oldPath = this.router.currentURL;
@@ -479,9 +457,33 @@ const DiscourseURL = EmberObject.extend({
     transition._discourse_original_url = path;
 
     const promise = transition.promise || transition;
-    promise.then(() => jumpToElement(elementId));
+    promise.then(() => this.jumpToElement(elementId));
+  },
+
+  jumpToElement(elementId) {
+    if (_jumpScheduled || isEmpty(elementId)) {
+      return;
+    }
+
+    const selector = `#main #${elementId}, a[name=${elementId}]`;
+    _jumpScheduled = true;
+
+    schedule("afterRender", function () {
+      if (lockOn) {
+        lockOn.clearLock();
+      }
+
+      lockOn = new LockOn(selector, {
+        finished() {
+          _jumpScheduled = false;
+          lockOn = null;
+        },
+      });
+      lockOn.lock();
+    });
   },
 });
+
 let _urlInstance = DiscourseURL.create();
 
 export function setURLContainer(container) {

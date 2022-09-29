@@ -4,22 +4,21 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 
+const HIDE_SIDEBAR_KEY = "sidebar-hidden";
+
 export default Controller.extend({
   queryParams: ["enable_sidebar"],
 
   showTop: true,
   showFooter: false,
   router: service(),
-  showSidebar: null,
-  hideSidebarKey: "sidebar-hidden",
+  showSidebar: false,
   enable_sidebar: null,
 
   init() {
     this._super(...arguments);
-
-    this.showSidebar = this.site.mobileView
-      ? false
-      : this.currentUser && !this.keyValueStore.getItem(this.hideSidebarKey);
+    this.showSidebar =
+      this.canDisplaySidebar && !this.keyValueStore.getItem(HIDE_SIDEBAR_KEY);
   },
 
   @discourseComputed
@@ -32,16 +31,24 @@ export default Controller.extend({
   },
 
   @discourseComputed
+  canDisplaySidebar() {
+    return this.currentUser || !this.siteSettings.login_required;
+  },
+
+  @discourseComputed
   loginRequired() {
     return this.siteSettings.login_required && !this.currentUser;
   },
 
-  @discourseComputed
-  showBootstrapModeNotice() {
+  @discourseComputed(
+    "siteSettings.bootstrap_mode_enabled",
+    "router.currentRouteName"
+  )
+  showBootstrapModeNotice(bootstrapModeEnabled, currentRouteName) {
     return (
       this.currentUser?.get("staff") &&
-      this.siteSettings.bootstrap_mode_enabled &&
-      !this.router.currentRouteName.startsWith("wizard")
+      bootstrapModeEnabled &&
+      !currentRouteName.startsWith("wizard")
     );
   },
 
@@ -57,9 +64,18 @@ export default Controller.extend({
   @discourseComputed(
     "enable_sidebar",
     "siteSettings.enable_sidebar",
-    "router.currentRouteName"
+    "router.currentRouteName",
+    "canDisplaySidebar"
   )
-  sidebarEnabled(sidebarQueryParamOverride, enableSidebar, currentRouteName) {
+  sidebarEnabled(
+    sidebarQueryParamOverride,
+    enableSidebar,
+    currentRouteName,
+    canDisplaySidebar
+  ) {
+    if (!canDisplaySidebar) {
+      return false;
+    }
     if (sidebarQueryParamOverride === "1") {
       return true;
     }
@@ -72,7 +88,17 @@ export default Controller.extend({
       return false;
     }
 
+    // Always return dropdown on mobile
+    if (this.site.mobileView) {
+      return false;
+    }
+
     return enableSidebar;
+  },
+
+  @discourseComputed("router.currentRouteName")
+  showSiteHeader(currentRouteName) {
+    return !currentRouteName.startsWith("wizard");
   },
 
   @action
@@ -86,9 +112,9 @@ export default Controller.extend({
 
     if (this.site.desktopView) {
       if (this.showSidebar) {
-        this.keyValueStore.removeItem(this.hideSidebarKey);
+        this.keyValueStore.removeItem(HIDE_SIDEBAR_KEY);
       } else {
-        this.keyValueStore.setItem(this.hideSidebarKey);
+        this.keyValueStore.setItem(HIDE_SIDEBAR_KEY, "true");
       }
     }
   },

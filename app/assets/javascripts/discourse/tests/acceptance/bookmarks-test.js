@@ -303,8 +303,8 @@ acceptance("Bookmarking", function (needs) {
   });
 
   test("The topic level bookmark button deletes all bookmarks if several posts on the topic are bookmarked", async function (assert) {
-    const yesButton = "a.btn-primary";
-    const noButton = "a.btn-default";
+    const yesButton = ".dialog-footer .btn-primary";
+    const noButton = ".dialog-footer .btn-default";
 
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal(1);
@@ -336,6 +336,7 @@ acceptance("Bookmarking", function (needs) {
 
     // open the modal and accept deleting
     await click("#topic-footer-button-bookmark");
+    // pauseTest();
     await click(yesButton);
 
     assert.ok(
@@ -412,7 +413,7 @@ acceptance("Bookmarking", function (needs) {
       "the footer button says Clear Bookmarks because there is more than one"
     );
     await click("#topic-footer-button-bookmark");
-    await click("a.btn-primary");
+    await click(".dialog-footer .btn-primary");
 
     assert.ok(
       !exists(".topic-post:first-child button.bookmark.bookmarked"),

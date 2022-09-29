@@ -2,6 +2,7 @@ import {
   applyPretender,
   exists,
   resetSite,
+  testCleanup,
   testsInitialized,
   testsTornDown,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -11,8 +12,13 @@ import pretender, {
   resetPretender,
 } from "discourse/tests/helpers/create-pretender";
 import { resetSettings } from "discourse/tests/helpers/site-settings";
-import { setDefaultOwner } from "discourse-common/lib/get-owner";
-import { setApplication, setResolver } from "@ember/test-helpers";
+import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
+import {
+  getSettledState,
+  isSettled,
+  setApplication,
+  setResolver,
+} from "@ember/test-helpers";
 import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
 import Application from "../app";
 import MessageBus from "message-bus-client";
@@ -144,6 +150,23 @@ function setupToolbar() {
     label: "Plugin",
     value: Array.from(pluginNames),
   });
+
+  // Abort tests when the qunit controls are clicked
+  document.querySelector("#qunit").addEventListener("click", ({ target }) => {
+    if (!target.closest("#qunit-testrunner-toolbar")) {
+      // Outside toolbar, carry on
+      return;
+    }
+
+    if (target.closest("label[for=qunit-urlconfig-hidepassed]")) {
+      // This one can be toggled during tests, carry on
+      return;
+    }
+
+    if (["INPUT", "SELECT", "LABEL"].includes(target.tagName)) {
+      document.querySelector("#qunit-abort-tests-button")?.click();
+    }
+  });
 }
 
 function reportMemoryUsageAfterTests() {
@@ -217,12 +240,13 @@ export default function setupTests(config) {
     setupDataElement.remove();
   }
 
+  let app;
   QUnit.testStart(function (ctx) {
     bootbox.$body = $("#ember-testing");
     let settings = resetSettings();
     resetThemeSettings();
 
-    const app = createApplication(config, settings);
+    app = createApplication(config, settings);
 
     const cdn = setupData ? setupData.cdn : null;
     const baseUri = setupData ? setupData.baseUri : "";
@@ -296,6 +320,8 @@ export default function setupTests(config) {
   });
 
   QUnit.testDone(function () {
+    testCleanup(getOwner(app), app);
+
     sinon.restore();
     resetPretender();
     clearPresenceState();
@@ -319,6 +345,7 @@ export default function setupTests(config) {
     flushMap();
 
     MessageBus.unsubscribe("*");
+    localStorage.clear();
   });
 
   if (getUrlParameter("qunit_disable_auto_start") === "1") {
@@ -367,6 +394,7 @@ export default function setupTests(config) {
 
   setupToolbar();
   reportMemoryUsageAfterTests();
+  patchFailedAssertion();
 }
 
 function getUrlParameter(name) {
@@ -394,4 +422,20 @@ function replaceUrlParameter(name, value) {
       formElement.value = value;
     }
   });
+}
+
+function patchFailedAssertion() {
+  const oldPushResult = QUnit.assert.pushResult;
+
+  QUnit.assert.pushResult = function (resultInfo) {
+    if (!resultInfo.result && !isSettled()) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "ℹ️ Hint: when the assertion failed, the Ember runloop was not in a settled state. Maybe you missed an `await` further up the test? Or maybe you need to manually add `await settled()` before your assertion?",
+        getSettledState()
+      );
+    }
+
+    oldPushResult.call(this, resultInfo);
+  };
 }

@@ -149,11 +149,14 @@ group :assets do
 end
 
 group :test do
+  gem 'capybara', require: false
   gem 'webmock', require: false
   gem 'fakeweb', require: false
   gem 'minitest', require: false
   gem 'simplecov', require: false
+  gem 'selenium-webdriver', require: false
   gem "test-prof"
+  gem 'webdrivers', require: false
 end
 
 group :test, :development do
@@ -170,7 +173,7 @@ group :test, :development do
   gem 'shoulda-matchers', require: false
   gem 'rspec-html-matchers'
   gem 'byebug', require: ENV['RM_INFO'].nil?, platform: :mri
-  gem 'rubocop-discourse', require: false, github: 'discourse/rubocop-discourse'
+  gem 'rubocop-discourse', require: false
   gem 'parallel_tests'
 
   gem 'rswag-specs'

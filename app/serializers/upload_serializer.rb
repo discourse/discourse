@@ -13,9 +13,10 @@ class UploadSerializer < ApplicationSerializer
              :short_url,
              :short_path,
              :retain_hours,
-             :human_filesize
+             :human_filesize,
+             :dominant_color
 
   def url
-    object.for_site_setting ? object.url : UrlHelper.cook_url(object.url, secure: SiteSetting.secure_media? && object.secure)
+    object.for_site_setting ? object.url : UrlHelper.cook_url(object.url, secure: SiteSetting.secure_uploads? && object.secure)
   end
 end

@@ -184,11 +184,11 @@ sk:
       banner:
         enabled: "Téma je odteraz baner %{when} Bude sa zobrazovať navrchu každej stránky, pokiaľ ju používateľ nezavrie."
         disabled: "odstránil(a) tento oznam %{when}. Už sa viac nebude zobrazovať navrchu každej stránky."
-    wizard_required: "Vitajte vo vašom novom Discourse! Začnime so <a href='%{url}' data-auto-route='true'>sprievodcom nastavením</a>✨ "
     emails_are_disabled: "Odosielanie emailov bolo globálne vypnuté administrátorom. Žiadne emailové notifikácie nebudú odoslané."
     software_update_prompt:
       dismiss: "Zahodiť"
     bootstrap_mode_disabled: "Zavádzací režim bude zrušený v priebehu nasledujúcich 24 hodín."
+    bootstrap_invite_button_title: "Poslať pozvánky"
     themes:
       default_description: "Predvolené"
     s3:
@@ -213,6 +213,8 @@ sk:
     not_implemented: "Ľutujeme, táto funkcia ešte nie je implementovaná."
     no_value: "Nie"
     yes_value: "Áno"
+    ok_value: "OK"
+    cancel_value: "Zrušiť"
     submit: "Odoslať"
     generic_error: "Ľutujeme, nastala chyba."
     generic_error_with_reason: "Nastala chyba: %{error}"
@@ -1411,6 +1413,13 @@ sk:
     go_back: "späť"
     not_logged_in_user: "používateľská stránka so súhrnom aktivít a nastavení"
     current_user: "prejsť na Vašu používateľskú stránku"
+    user_menu:
+      tabs:
+        replies: "Odpovede"
+        mentions: "Zmienky"
+        likes: "Rozdaných 'páči sa mi'"
+        bookmarks: "Záložky"
+        profile: "Profil"
     topics:
       new_messages_marker: "posledná návševa"
       bulk:
@@ -2203,7 +2212,6 @@ sk:
     download_calendar:
       download: "Stiahnuť"
     tagging:
-      all_tags: "Všetky štítky"
       selector_all_tags: "všetky štítky"
       selector_no_tags: "žiadne štítky"
       changed: "zmenené štítky:"
@@ -2267,8 +2275,6 @@ sk:
         member: "člen"
         regular: "bežný"
         leader: "vodca"
-    user_activity:
-      no_activity_others: "Žiadna aktivita"
     sidebar:
       unread_count:
         one: "%{count} neprečítaná"
@@ -2281,7 +2287,10 @@ sk:
         many: "%{count} nových"
         other: "%{count} nových"
       more: "Viac ..."
+      all_categories: "Všetky kategórie"
       sections:
+        about:
+          header_link_text: "O stránke"
         messages:
           header_link_text: "Správy"
           links:
@@ -2293,15 +2302,20 @@ sk:
             unread_with_count: "Neprečítaná (%{count})"
             archive: "Archív"
         tags:
-          header_link_title: "všetky štítky"
           header_link_text: "Štítky"
         categories:
-          header_link_title: "všetky kategórie"
           header_link_text: "Kategórie"
         community:
-          header_link_title: "domov"
           header_link_text: "Komunita"
           links:
+            about:
+              content: "O stránke"
+            admin:
+              content: "Administrátor"
+            badges:
+              content: "Odznaky"
+            faq:
+              content: "Časté otázky"
             tracked:
               content: "Pozorované"
             groups:

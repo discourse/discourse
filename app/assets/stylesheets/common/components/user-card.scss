@@ -38,7 +38,6 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   background: var(--secondary) center center;
   background-size: cover;
   transition: opacity 0.2s, transform 0.2s;
-  -webkit-transition: opacity 0.2s, -webkit-transform 0.2s;
   opacity: 0;
   @include transform(scale(0.9));
   &.show {
@@ -54,7 +53,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       clear: both;
     }
     a.card-huge-avatar {
-      outline: none;
+      display: block;
     }
     .bio {
       @include line-clamp(2);
@@ -71,6 +70,11 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       .user-profile-link {
         display: flex;
         align-items: center;
+
+        &:focus {
+          border: 1px solid;
+          @include default-focus;
+        }
       }
 
       .d-icon {

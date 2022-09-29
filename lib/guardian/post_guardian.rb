@@ -50,10 +50,10 @@ module PostGuardian
         (!SiteSetting.allow_flagging_staff?) &&
         post&.user&.staff?
 
+      # TODO (martin) Remove enable_personal_messages here once plugins have been changed.
       if action_key == :notify_user &&
-         (!SiteSetting.enable_personal_messages? ||
-         !@user.has_trust_level?(SiteSetting.min_trust_to_send_messages))
-
+          (!@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map) ||
+           !SiteSetting.enable_personal_messages)
         return false
       end
 
@@ -232,7 +232,7 @@ module PostGuardian
   def can_delete_post_action?(post_action)
     return false unless is_my_own?(post_action) && !post_action.is_private_message?
 
-    post_action.created_at > SiteSetting.post_undo_action_window_mins.minutes.ago
+    post_action.created_at > SiteSetting.post_undo_action_window_mins.minutes.ago && !post_action.post&.topic&.archived?
   end
 
   def can_see_post?(post)
@@ -296,7 +296,7 @@ module PostGuardian
   end
 
   def can_view_raw_email?(post)
-    post && (is_staff? || post.user_id == @user.id)
+    post && is_staff?
   end
 
   def can_unhide?(post)

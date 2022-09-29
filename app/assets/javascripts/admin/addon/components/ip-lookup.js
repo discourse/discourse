@@ -3,13 +3,15 @@ import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import copyText from "discourse/lib/copy-text";
 import discourseComputed from "discourse-common/utils/decorators";
 import discourseLater from "discourse-common/lib/later";
+import { inject as service } from "@ember/service";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Component.extend({
   classNames: ["ip-lookup"],
+  dialog: service(),
 
   @discourseComputed("other_accounts.length", "totalOthersWithSameIP")
   otherAccountsToDelete(otherAccountsLength, totalOthersWithSameIP) {
@@ -89,29 +91,27 @@ export default Component.extend({
     },
 
     deleteOtherAccounts() {
-      bootbox.confirm(
-        I18n.t("ip_lookup.confirm_delete_other_accounts"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        (confirmed) => {
-          if (confirmed) {
-            this.setProperties({
-              other_accounts: null,
-              otherAccountsLoading: true,
-              totalOthersWithSameIP: null,
-            });
+      this.dialog.yesNoConfirm({
+        message: I18n.t("ip_lookup.confirm_delete_other_accounts"),
+        didConfirm: () => {
+          this.setProperties({
+            other_accounts: null,
+            otherAccountsLoading: true,
+            totalOthersWithSameIP: null,
+          });
 
-            ajax("/admin/users/delete-others-with-same-ip.json", {
-              type: "DELETE",
-              data: {
-                ip: this.ip,
-                exclude: this.userId,
-                order: "trust_level DESC",
-              },
-            }).then(() => this.send("lookup"));
-          }
-        }
-      );
+          ajax("/admin/users/delete-others-with-same-ip.json", {
+            type: "DELETE",
+            data: {
+              ip: this.ip,
+              exclude: this.userId,
+              order: "trust_level DESC",
+            },
+          })
+            .catch(popupAjaxError)
+            .finally(this.send("lookup"));
+        },
+      });
     },
   },
 });

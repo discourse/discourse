@@ -90,8 +90,8 @@ const Site = RestModel.extend({
     for (const category of categories) {
       if (category.isTracked) {
         if (
-          !this.siteSettings.suppress_uncategorized_badge ||
-          category.id !== this.uncategorized_category_id
+          this.siteSettings.allow_uncategorized_topics ||
+          !category.isUncategorizedCategory
         ) {
           trackedCategories.push(category);
         }

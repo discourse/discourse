@@ -128,10 +128,6 @@ module ApplicationHelper
     path
   end
 
-  def self.splash_screen_nonce
-    @splash_screen_nonce ||= SecureRandom.hex
-  end
-
   def preload_script(script)
     scripts = [script]
 
@@ -342,17 +338,19 @@ module ApplicationHelper
   end
 
   def render_sitelinks_search_tag
-    json = {
-      '@context' => 'http://schema.org',
-      '@type' => 'WebSite',
-      url: Discourse.base_url,
-      potentialAction: {
-        '@type' => 'SearchAction',
-        target: "#{Discourse.base_url}/search?q={search_term_string}",
-        'query-input' => 'required name=search_term_string',
+    if current_page?('/') || current_page?(Discourse.base_path)
+      json = {
+        '@context' => 'http://schema.org',
+        '@type' => 'WebSite',
+        url: Discourse.base_url,
+        potentialAction: {
+          '@type' => 'SearchAction',
+          target: "#{Discourse.base_url}/search?q={search_term_string}",
+          'query-input' => 'required name=search_term_string',
+        }
       }
-    }
-    content_tag(:script, MultiJson.dump(json).html_safe, type: 'application/ld+json')
+      content_tag(:script, MultiJson.dump(json).html_safe, type: 'application/ld+json')
+    end
   end
 
   def gsub_emoji_to_unicode(str)
@@ -418,7 +416,7 @@ module ApplicationHelper
   end
 
   def customization_disabled?
-    request.env[ApplicationController::NO_CUSTOM]
+    request.env[ApplicationController::NO_THEMES]
   end
 
   def include_ios_native_app_banner?
@@ -441,15 +439,15 @@ module ApplicationHelper
   end
 
   def allow_third_party_plugins?
-    allow_plugins? && !request.env[ApplicationController::ONLY_OFFICIAL]
+    allow_plugins? && !request.env[ApplicationController::NO_UNOFFICIAL_PLUGINS]
   end
 
   def normalized_safe_mode
     safe_mode = []
 
-    safe_mode << ApplicationController::NO_CUSTOM if customization_disabled?
+    safe_mode << ApplicationController::NO_THEMES if customization_disabled?
     safe_mode << ApplicationController::NO_PLUGINS if !allow_plugins?
-    safe_mode << ApplicationController::ONLY_OFFICIAL if !allow_third_party_plugins?
+    safe_mode << ApplicationController::NO_UNOFFICIAL_PLUGINS if !allow_third_party_plugins?
 
     safe_mode.join(",")
   end

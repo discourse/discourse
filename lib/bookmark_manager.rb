@@ -144,16 +144,24 @@ class BookmarkManager
 
   def update_user_option(bookmark, options)
     return if !options[:save_user_preferences]
+    return if options[:auto_delete_preference].blank?
+
     @user.user_option.update!(
       bookmark_auto_delete_preference: bookmark.auto_delete_preference
     )
   end
 
   def bookmark_model_options_with_defaults(options)
+    model_options = {
+      pinned: options[:pinned]
+    }
+
     if options[:auto_delete_preference].blank?
-      options[:auto_delete_preference] = Bookmark.auto_delete_preferences[:never]
+      model_options[:auto_delete_preference] = Bookmark.auto_delete_preferences[:never]
+    else
+      model_options[:auto_delete_preference] = options[:auto_delete_preference]
     end
 
-    options.slice(:auto_delete_preference, :pinned)
+    model_options
   end
 end

@@ -1,66 +1,104 @@
+:root {
+  --d-sidebar-section-header-text-font-size: var(--font-up-1);
+}
+
 .sidebar-section-wrapper {
-  margin-bottom: 1em;
-
-  .sidebar-section-header {
-    display: flex;
-    text-transform: uppercase;
-    font-size: 1em;
-    font-weight: bold;
-    align-items: stretch;
-
-    .select-kit {
-      .btn {
-        background: transparent;
-        &:focus,
-        &:hover {
-          background: var(--d-sidebar-highlight-color);
+  .discourse-no-touch & {
+    &:hover {
+      .sidebar-section-header-wrapper {
+        .btn.dropdown-select-box-header,
+        .sidebar-section-header-button {
+          opacity: 1;
         }
       }
+    }
+  }
+
+  .sidebar-section-header-wrapper {
+    display: flex;
+
+    .discourse-no-touch & {
+      &:hover {
+        background: var(--d-sidebar-highlight-color);
+      }
+    }
+
+    &:focus-within {
+      background: var(--d-sidebar-highlight-color);
+    }
+
+    .btn.dropdown-select-box-header,
+    .sidebar-section-header-button {
+      .discourse-no-touch & {
+        transition: all 0.25s;
+        opacity: 0;
+      }
+
+      background: transparent;
+      border: none;
+      margin-right: calc(var(--d-sidebar-row-horizontal-padding) / 3 * -1);
+      padding: calc(var(--d-sidebar-row-horizontal-padding) / 5)
+        calc(var(--d-sidebar-row-horizontal-padding) / 3);
+
       .d-icon {
         font-size: var(--font-down-1);
         color: var(--primary-medium);
-        margin-right: 0;
+        margin: 0;
       }
-      summary {
-        padding: 0.25em 0.5em;
+
+      &:focus {
+        outline: none;
+        background: var(--primary-medium);
+        .d-icon {
+          color: var(--primary-very-low);
+        }
+      }
+
+      .discourse-no-touch & {
+        &:hover {
+          background: var(--primary-medium);
+          .d-icon {
+            color: var(--primary-very-low);
+          }
+        }
       }
     }
   }
 
-  .sidebar-section-header-link,
-  .sidebar-section-header-text {
-    @include ellipsis;
+  .sidebar-section-header {
     flex: 1 1 auto;
     color: var(--primary);
-    font-size: var(--font-down-1);
-    padding: 0.25em 0.5em;
-  }
+    align-items: center;
+    min-width: 0;
+    padding: 0;
 
-  .sidebar-section-header-link {
-    &:visited {
-      color: var(--primary);
-    }
-    &:focus,
-    &:hover {
-      background: var(--d-sidebar-highlight-color);
+    &.sidebar-section-header-collapsable {
+      justify-content: flex-start;
     }
   }
 
-  .sidebar-section-header-button {
-    background: none;
-    border: none;
-    padding: 0.25em 0.5em;
+  .sidebar-section-header-text {
+    line-height: normal;
+    margin-right: 0.25em;
+    font-size: var(--d-sidebar-section-header-text-font-size);
+    @include ellipsis;
+  }
 
-    .d-icon {
+  .sidebar-section-header-caret {
+    display: flex;
+    flex: 0 0 auto;
+    width: var(--d-sidebar-section-link-prefix-width);
+    height: var(--d-sidebar-section-link-prefix-width);
+    margin-right: var(--d-sidebar-section-link-prefix-margin-right);
+    align-items: center;
+    justify-content: center;
+
+    svg {
       font-size: var(--font-down-1);
       color: var(--primary-medium);
     }
-
-    &:focus,
-    &:hover {
-      background: var(--d-sidebar-highlight-color);
-    }
   }
+
   .select-kit-collection {
     .texts {
       font-size: var(--font-0);
@@ -74,57 +112,23 @@
 
   .sidebar-section-message-wrapper {
     display: flex;
+    padding-top: 0;
+    height: initial;
   }
 
   .sidebar-section-message {
-    padding: 0.25em 0.5em;
-    font-size: var(--font-down-1);
-    color: var(--primary-high);
-  }
-
-  .sidebar-section-header-caret {
-    flex: 0 0 auto;
-    width: 1.5em;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    border: none;
-    background: transparent;
-    padding: 0;
-
-    .d-icon {
-      top: -0.1em; // visual alignment
-    }
-
-    .discourse-no-touch & {
-      &:hover {
-        svg {
-          color: var(--primary-high);
-        }
-      }
-    }
-
-    svg {
-      display: block;
-      flex: 0 0 auto;
-      transition: color 0.25s;
-    }
-
-    .d-icon {
-      font-size: $font-down-1;
-      color: var(--primary-medium);
-    }
+    color: var(--primary);
+    padding-left: calc(
+      var(--d-sidebar-section-link-prefix-width) +
+        var(--d-sidebar-section-link-prefix-margin-right)
+    );
   }
 
   .sidebar-section-content {
+    padding-bottom: 1em;
+
     hr {
       margin: 0em 1.5em;
     }
-  }
-}
-
-#main-outlet-wrapper .sidebar-section-wrapper {
-  .sidebar-section-message-wrapper {
-    margin-left: 1.5em;
   }
 }

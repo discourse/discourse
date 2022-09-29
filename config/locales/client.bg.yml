@@ -159,12 +159,12 @@ bg:
       forwarded: "препрати горния имейл"
     topic_admin_menu: "действия по темата"
     skip_to_main_content: "Прескачане към основното съдържание"
-    wizard_required: "Добре дошли във вашия нов Discourse! Нека започнем с <a href='%{url}' data-auto-route='true'>съветника за настройка</a> ✨"
     emails_are_disabled: "Всички изходящи имейли са изцяло забранени от администратора. Няма да бъдат изпращани никакви имейл известия."
     software_update_prompt:
       message: "Актуализирахме този сайт, <span>моля, презаредете</span>, или може да изпитате неочаквано поведение."
       dismiss: "Отмени"
     bootstrap_mode_disabled: "Режимът на стартиране ще бъде изключен в следващите 24 часа. "
+    bootstrap_invite_button_title: "Изпрати поканите"
     themes:
       default_description: "По подразбиране"
     s3:
@@ -197,6 +197,8 @@ bg:
     not_implemented: "Тази функционалност все още не е добавена."
     no_value: "Не"
     yes_value: "Да"
+    ok_value: "Ок"
+    cancel_value: "Прекрати"
     submit: "Изпрати"
     generic_error: "Съжаляваме, възникна грешка."
     generic_error_with_reason: "Грешка: %{error}"
@@ -2053,6 +2055,13 @@ bg:
     go_back: "Назад "
     not_logged_in_user: "Потребителска страница с история на текущата дейност и предпочитания"
     current_user: "Отиди към потребителската страница "
+    user_menu:
+      tabs:
+        replies: "Отговори"
+        mentions: "Споменавания"
+        likes: "Дадени харесвания"
+        bookmarks: "Отметки"
+        profile: "Профил"
     topics:
       new_messages_marker: "последно посещение"
       bulk:
@@ -2917,7 +2926,6 @@ bg:
     download_calendar:
       download: "Изтегли"
     tagging:
-      all_tags: "Всички тагове"
       other_tags: "Други тагове"
       selector_all_tags: "всички тагове"
       selector_no_tags: "няма тагове"
@@ -2990,7 +2998,10 @@ bg:
         one: "%{count} нов"
         other: "%{count} нови"
       more: "Още..."
+      all_categories: "Всички категории"
       sections:
+        about:
+          header_link_text: "Относно"
         messages:
           header_link_text: "Съобщения"
           links:
@@ -3002,15 +3013,20 @@ bg:
             unread_with_count: "Непрочетен (%{count})"
             archive: "Архив"
         tags:
-          header_link_title: "всички тагове"
           header_link_text: "Тагове"
         categories:
-          header_link_title: "всички категории"
           header_link_text: "Категории"
         community:
-          header_link_title: "начало"
           header_link_text: "Общност "
           links:
+            about:
+              content: "Относно"
+            admin:
+              content: "Администратор"
+            badges:
+              content: "Значки"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Следени"
             groups:

@@ -1,0 +1,31 @@
+<Sidebar::Section
+  @sectionName="community"
+  @headerLinkText={{i18n "sidebar.sections.community.header_link_text"}}
+  @headerActionsIcon={{this.headerActionsIcon}}
+  @headerActions={{this.headerActions}}
+  @collapsable={{@collapsable}} >
+
+  {{#if this.displayShortSiteDescription}}
+    <Sidebar::SectionMessage>
+      {{this.siteSettings.short_site_description}}
+    </Sidebar::SectionMessage>
+  {{/if}}
+
+  {{#each this.sectionLinks as |sectionLink|}}
+    <Sidebar::SectionLink
+      @linkName={{sectionLink.name}}
+      @href={{sectionLink.href}}
+      @route={{sectionLink.route}}
+      @query={{sectionLink.query}}
+      @title={{sectionLink.title}}
+      @content={{sectionLink.text}}
+      @currentWhen={{sectionLink.currentWhen}}
+      @badgeText={{sectionLink.badgeText}}
+      @model={{sectionLink.model}}
+      @models={{sectionLink.models}}
+      @prefixType={{sectionLink.prefixType}}
+      @prefixValue={{sectionLink.prefixValue}} />
+  {{/each}}
+
+  <Sidebar::MoreSectionLinks @sectionLinks={{this.moreSectionLinks}} @secondarySectionLinks={{this.moreSecondarySectionLinks}} />
+</Sidebar::Section>

@@ -4,12 +4,13 @@ import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 
 import { bind } from "discourse-common/utils/decorators";
-import GlimmerComponent from "discourse/components/glimmer";
+import Component from "@glimmer/component";
 
-export default class SidebarMoreSectionLinks extends GlimmerComponent {
+export default class SidebarMoreSectionLinks extends Component {
+  @service router;
+
   @tracked shouldDisplaySectionLinks = false;
   @tracked activeSectionLink;
-  @service router;
 
   #allLinks = [...this.args.sectionLinks, ...this.args.secondarySectionLinks];
 
@@ -72,8 +73,8 @@ export default class SidebarMoreSectionLinks extends GlimmerComponent {
   }
 
   @action
-  toggleSectionLinks() {
-    this.shouldDisplaySectionLinks = !this.shouldDisplaySectionLinks;
+  toggleSectionLinks(element) {
+    this.shouldDisplaySectionLinks = element.target.hasAttribute("open");
   }
 
   #removeClickEventListener() {

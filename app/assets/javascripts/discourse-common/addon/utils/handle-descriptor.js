@@ -1,17 +1,18 @@
-import EmberObject, { computed, get } from "@ember/object";
+import CoreObject from "@ember/object/core";
+import { computed, get } from "@ember/object";
 import extractValue from "./extract-value";
 
 export default function handleDescriptor(target, key, desc, params = []) {
   const val = extractValue(desc);
 
-  if (typeof val === "function" && target instanceof EmberObject) {
+  if (typeof val === "function" && target instanceof CoreObject) {
     // We're in a native class, so convert the method to a getter first
     desc.writable = false;
     desc.initializer = undefined;
     desc.value = undefined;
     desc.get = callUserSuppliedGet(params, val);
 
-    return computed(target, key, desc);
+    return computed(...params)(target, key, desc);
   } else {
     return {
       enumerable: desc.enumerable,

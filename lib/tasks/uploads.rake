@@ -518,16 +518,16 @@ task "uploads:sync_s3_acls" => :environment do
   end
 end
 
-task "uploads:disable_secure_media" => :environment do
+task "uploads:disable_secure_uploads" => :environment do
   RailsMultisite::ConnectionManagement.each_connection do |db|
     unless Discourse.store.external?
       puts "This task only works for external storage."
       exit 1
     end
 
-    puts "Disabling secure media and resetting uploads to not secure in #{db}...", ""
+    puts "Disabling secure upload and resetting uploads to not secure in #{db}...", ""
 
-    SiteSetting.secure_media = false
+    SiteSetting.secure_uploads = false
 
     secure_uploads = Upload.joins(:upload_references).where(upload_references: { target_type: 'Post' }).where(secure: true)
     secure_upload_count = secure_uploads.count
@@ -537,7 +537,7 @@ task "uploads:disable_secure_media" => :environment do
     secure_uploads.update_all(
       secure: false,
       security_last_changed_at: Time.zone.now,
-      security_last_changed_reason: "marked as not secure by disable_secure_media task"
+      security_last_changed_reason: "marked as not secure by disable_secure_uploads task"
     )
 
     post_ids_to_rebake = DB.query_single(
@@ -550,11 +550,11 @@ task "uploads:disable_secure_media" => :environment do
     puts "", "Rebaking and uploading complete!", ""
   end
 
-  puts "", "Secure media is now disabled!", ""
+  puts "", "Secure uploads are now disabled!", ""
 end
 
 ##
-# Run this task whenever the secure_media or login_required
+# Run this task whenever the secure_uploads or login_required
 # settings are changed for a Discourse instance to update
 # the upload secure flag and S3 upload ACLs. Any uploads that
 # have their secure status changed will have all associated posts
@@ -569,12 +569,12 @@ task "uploads:secure_upload_analyse_and_update" => :environment do
     puts "Analyzing security for uploads in #{db}...", ""
     all_upload_ids_changed, post_ids_to_rebake = nil
     Upload.transaction do
-      # If secure media is enabled we need to first set the access control post of
+      # If secure upload is enabled we need to first set the access control post of
       # all post uploads (even uploads that are linked to multiple posts). If the
-      # upload is not set to secure media then this has no other effect on the upload,
-      # but we _must_ know what the access control post is because the with_secure_media?
+      # upload is not set to secure upload then this has no other effect on the upload,
+      # but we _must_ know what the access control post is because the with_secure_uploads?
       # method is on the post, and this knows about the category security & PM status
-      if SiteSetting.secure_media?
+      if SiteSetting.secure_uploads?
         update_uploads_access_control_post
       end
 

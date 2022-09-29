@@ -160,7 +160,6 @@ pt:
       forwarded: "encaminhou o e-mail acima"
     topic_admin_menu: "ações do tópico"
     skip_to_main_content: "Saltar para o conteúdo principal"
-    wizard_required: "Bem-vindo ao seu novo Discourse! Vamos começar com <a href='%{url}' data-auto-route='true'>o assistente de configuração</a> ✨"
     emails_are_disabled: "Todos os envios de e-mail foram globalmente desativados por um administrador. Nenhum e-mail de notificação será enviado."
     software_update_prompt:
       message: "Atualizámos este site, <span>por favor recarregue a página</span> ou poderá experienciar um comportamento inesperado."
@@ -169,6 +168,7 @@ pt:
       one: "Para que o início do teu Site seja o mais simples possível, estás agora em modo de inicialização simples. A todos os novos utilizadores será concedido o Nível de Confiança 1 e o resumo por e-mail enviado diariamente estará ativado. Isto será automaticamente desligado quando %{count} utilizador se tiver juntado ao fórum."
       other: "Para que o início do teu Site seja o mais simples possível, estás agora em modo de inicialização simples. A todos os novos utilizadores será concedido o Nível de Confiança 1 e o resumo por e-mail enviado diariamente estará ativado. Isto será automaticamente desligado quando %{count} utilizadores se tiverem juntado ao fórum."
     bootstrap_mode_disabled: "O modo de inicialização simples será desactivado em 24 horas."
+    bootstrap_invite_button_title: "Enviar Convites"
     themes:
       default_description: "Predefinição"
       broken_theme_alert: "Seu site pode não funcionar porque um tema ou componente têm erros."
@@ -203,6 +203,8 @@ pt:
     not_implemented: "Essa funcionalidade ainda não foi implementada, pedimos desculpa!"
     no_value: "Não"
     yes_value: "Sim"
+    ok_value: "CONFIRMAR"
+    cancel_value: "Cancelar"
     submit: "Submeter"
     generic_error: "Pedimos desculpa, ocorreu um erro."
     generic_error_with_reason: "Ocorreu um erro: %{error}"
@@ -2187,6 +2189,13 @@ pt:
     not_logged_in_user: "página de utilizador com resumo da atividade atual e preferências "
     current_user: "ir para a sua página de utilizador"
     view_all: "ver todos %{tab}"
+    user_menu:
+      tabs:
+        replies: "Respostas"
+        mentions: "Menções"
+        likes: "Gostos Dados"
+        bookmarks: "Marcadores"
+        profile: "Perfil"
     topics:
       new_messages_marker: "última visita"
       bulk:
@@ -3282,7 +3291,6 @@ pt:
       download: "Transferir"
       add_to_calendar: "Adicionar ao calendário"
     tagging:
-      all_tags: "Todas as Etiquetas"
       other_tags: "Outras Tags"
       selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sem etiquetas"
@@ -3418,8 +3426,6 @@ pt:
         regular: "habitual"
         leader: "líder"
       detailed_name: "%{level}: %{name}"
-    user_activity:
-      no_likes_others: "Sem publicações gostadas."
     sidebar:
       unread_count:
         one: "%{count} não lido"
@@ -3428,7 +3434,10 @@ pt:
         one: "%{count} novo"
         other: "%{count} novos"
       more: "Mais..."
+      all_categories: "Todas as categorias"
       sections:
+        about:
+          header_link_text: "Sobre"
         messages:
           header_link_text: "Mensagens"
           links:
@@ -3440,15 +3449,20 @@ pt:
             unread_with_count: "Não Lido (%{count})"
             archive: "Arquivo"
         tags:
-          header_link_title: "todas as etiquetas"
           header_link_text: "Etiquetas"
         categories:
-          header_link_title: "todas as categorias"
           header_link_text: "Categorias"
         community:
-          header_link_title: "início"
           header_link_text: "Comunidade"
           links:
+            about:
+              content: "Sobre"
+            admin:
+              content: "Administrador"
+            badges:
+              content: "Crachás"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Seguido"
             groups:

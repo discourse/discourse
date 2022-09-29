@@ -10,6 +10,7 @@ class Upload < ActiveRecord::Base
   SEEDED_ID_THRESHOLD = 0
   URL_REGEX ||= /(\/original\/\dX[\/\.\w]*\/(\h+)[\.\w]*)/
   MAX_IDENTIFY_SECONDS = 5
+  DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS = 5
 
   belongs_to :user
   belongs_to :access_control_post, class_name: 'Post'
@@ -36,6 +37,7 @@ class Upload < ActiveRecord::Base
 
   validates_presence_of :filesize
   validates_presence_of :original_filename
+  validates :dominant_color, length: { is: 6 }, allow_blank: true, allow_nil: true
 
   validates_with UploadValidator
 
@@ -184,7 +186,7 @@ class Upload < ActiveRecord::Base
     "upload://#{short_url_basename}"
   end
 
-  def uploaded_before_secure_media_enabled?
+  def uploaded_before_secure_uploads_enabled?
     original_sha1.blank?
   end
 
@@ -202,14 +204,14 @@ class Upload < ActiveRecord::Base
   end
 
   def self.consider_for_reuse(upload, post)
-    return upload if !SiteSetting.secure_media? || upload.blank? || post.blank?
-    return nil if !upload.matching_access_control_post?(post) || upload.uploaded_before_secure_media_enabled?
+    return upload if !SiteSetting.secure_uploads? || upload.blank? || post.blank?
+    return nil if !upload.matching_access_control_post?(post) || upload.uploaded_before_secure_uploads_enabled?
     upload
   end
 
-  def self.secure_media_url?(url)
+  def self.secure_uploads_url?(url)
     # we do not want to exclude topic links that for whatever reason
-    # have secure-media-uploads in the URL e.g. /t/secure-media-uploads-are-cool/223452
+    # have secure-uploads in the URL e.g. /t/secure-uploads-are-cool/223452
     route = UrlHelper.rails_route_from_url(url)
     return false if route.blank?
     route[:action] == "show_secure" && route[:controller] == "uploads" && FileHelper.is_supported_media?(url)
@@ -217,14 +219,14 @@ class Upload < ActiveRecord::Base
     false
   end
 
-  def self.signed_url_from_secure_media_url(url)
+  def self.signed_url_from_secure_uploads_url(url)
     route = UrlHelper.rails_route_from_url(url)
     url = Rails.application.routes.url_for(route.merge(only_path: true))
     secure_upload_s3_path = url[url.index(route[:path])..-1]
     Discourse.store.signed_url_for_path(secure_upload_s3_path)
   end
 
-  def self.secure_media_url_from_upload_url(url)
+  def self.secure_uploads_url_from_upload_url(url)
     return url if !url.include?(SiteSetting.Upload.absolute_base_url)
     uri = URI.parse(url)
     Rails.application.routes.url_for(
@@ -314,6 +316,76 @@ class Upload < ActiveRecord::Base
 
   def thumbnail_height
     get_dimension(:thumbnail_height)
+  end
+
+  def dominant_color(calculate_if_missing: false)
+    val = read_attribute(:dominant_color)
+    if val.nil? && calculate_if_missing
+      calculate_dominant_color!
+      read_attribute(:dominant_color)
+    else
+      val
+    end
+  end
+
+  def calculate_dominant_color!(local_path = nil)
+    color = nil
+
+    if !FileHelper.is_supported_image?("image.#{extension}") || extension == "svg"
+      color = ""
+    end
+
+    if color.nil?
+      local_path ||=
+        if local?
+          Discourse.store.path_for(self)
+        else
+          Discourse.store.download(self)&.path
+        end
+
+      if local_path.nil?
+        # Download failed. Could be too large to download, or file could be missing in s3
+        color = ""
+      end
+
+      color ||= begin
+        data = Discourse::Utils.execute_command(
+          "nice",
+          "-n",
+          "10",
+          "convert",
+          local_path,
+          "-resize",
+          "1x1",
+          "-define",
+          "histogram:unique-colors=true",
+          "-format",
+          "%c",
+          "histogram:info:",
+          timeout: DOMINANT_COLOR_COMMAND_TIMEOUT_SECONDS
+        )
+
+        # Output format:
+        # 1: (110.873,116.226,93.8821) #6F745E srgb(43.4798%,45.5789%,36.8165%)
+
+        color = data[/#([0-9A-F]{6})/, 1]
+
+        raise "Calculated dominant color but unable to parse output:\n#{data}" if color.nil?
+
+        color
+      rescue Discourse::Utils::CommandError => e
+        # Timeout or unable to parse image
+        # This can happen due to bad user input - ignore and save
+        # an empty string to prevent re-evaluation
+        ""
+      end
+    end
+
+    if persisted?
+      self.update_column(:dominant_color, color)
+    else
+      self.dominant_color = color
+    end
   end
 
   def target_image_quality(local_path, test_quality)
@@ -522,6 +594,12 @@ class Upload < ActiveRecord::Base
     Upload.where(sha1: sha1s.uniq).pluck(:id)
   end
 
+  def self.backfill_dominant_colors!(count)
+    Upload.where(dominant_color: nil).order("id desc").first(count).each do |upload|
+      upload.calculate_dominant_color!
+    end
+  end
+
   private
 
   def short_url_basename
@@ -553,10 +631,11 @@ end
 #  secure                       :boolean          default(FALSE), not null
 #  access_control_post_id       :bigint
 #  original_sha1                :string
-#  verification_status          :integer          default(1), not null
 #  animated                     :boolean
+#  verification_status          :integer          default(1), not null
 #  security_last_changed_at     :datetime
 #  security_last_changed_reason :string
+#  dominant_color               :text
 #
 # Indexes
 #
@@ -564,6 +643,7 @@ end
 #  index_uploads_on_access_control_post_id  (access_control_post_id)
 #  index_uploads_on_etag                    (etag)
 #  index_uploads_on_extension               (lower((extension)::text))
+#  index_uploads_on_id                      (id) WHERE (dominant_color IS NULL)
 #  index_uploads_on_id_and_url              (id,url)
 #  index_uploads_on_original_sha1           (original_sha1)
 #  index_uploads_on_sha1                    (sha1) UNIQUE

@@ -200,11 +200,11 @@ sl:
         disabled: "je odstranil ta oglasni trak %{when}. Ne bo se več pojavljal na vrhu vsake strani."
       forwarded: "zgoraj navedeno sporočilo je bilo posredovano"
     topic_admin_menu: "dejanja teme"
-    wizard_required: "Dobrodošli v vašem novem Discoursu! Začnimo s <a href='%{url}' data-auto-route='true'>čarovnikom za nastavitve</a> ✨"
     emails_are_disabled: "Vsa odhodna e-pošta je bila globalno onemogočena iz strani administratorja. E-poštna obvestila ne bodo poslana."
     software_update_prompt:
       dismiss: "Opusti"
     bootstrap_mode_disabled: "Zagonski način bo onemogočen v 24 urah."
+    bootstrap_invite_button_title: "Pošlji povabila"
     themes:
       default_description: "Privzeto"
     s3:
@@ -235,6 +235,8 @@ sl:
     not_implemented: "Oprosti, ta funkcija še ni bila implementirana!"
     no_value: "Ne"
     yes_value: "Da"
+    ok_value: "V redu"
+    cancel_value: "Prekliči"
     submit: "Išči"
     generic_error: "Ups, prišlo je do napake."
     generic_error_with_reason: "Napaka: %{error}"
@@ -2111,6 +2113,13 @@ sl:
     go_back: "pojdi nazaj"
     not_logged_in_user: "stran uporabnika s povzetkom trenutnih aktivnosti in nastavitev"
     current_user: "pojdi na svojo uporabniško stran"
+    user_menu:
+      tabs:
+        replies: "Odgovori"
+        mentions: "Omembe"
+        likes: "Dani všečki"
+        bookmarks: "Zaznamki"
+        profile: "Profil"
     topics:
       new_messages_marker: "zadnji obisk"
       bulk:
@@ -2709,12 +2718,6 @@ sl:
           two: "Ali ste prepričani da hočete izbrisati ta %{count} prispevka?"
           few: "Ali ste prepričani da hočete izbrisati te %{count} prispevke?"
           other: "Ali ste prepričani da hočete izbrisati teh %{count} prispevkov?"
-      merge:
-        confirm:
-          one: "Ali ste prepričani da hočete združiti ta %{count} prispevek?"
-          two: "Ali ste prepričani da hočete združiti ta %{count} prispevka?"
-          few: "Ali ste prepričani da hočete združiti te %{count} prispevke?"
-          other: "Ali ste prepričani da hočete združiti teh %{count} prispevkov?"
       revisions:
         controls:
           first: "Prva verzija"
@@ -3231,7 +3234,6 @@ sl:
     download_calendar:
       download: "Naloži"
     tagging:
-      all_tags: "Vse oznake"
       other_tags: "Druge oznake"
       selector_all_tags: "vse oznake"
       selector_no_tags: "brez oznak"
@@ -3388,7 +3390,10 @@ sl:
         few: "%{count} nove"
         other: "%{count} novih"
       more: "Več..."
+      all_categories: "Vse kategorije"
       sections:
+        about:
+          header_link_text: "O nas"
         messages:
           header_link_text: "Sporočila"
           links:
@@ -3400,15 +3405,20 @@ sl:
             unread_with_count: "Neprebrana (%{count})"
             archive: "Arhiv"
         tags:
-          header_link_title: "vse oznake"
           header_link_text: "Oznake"
         categories:
-          header_link_title: "vse kategorije"
           header_link_text: "Kategorije"
         community:
-          header_link_title: "domov"
           header_link_text: "Skupnost"
           links:
+            about:
+              content: "O nas"
+            admin:
+              content: "Admin"
+            badges:
+              content: "Značke"
+            faq:
+              content: "Pravila skupnosti"
             tracked:
               content: "Sledim"
             groups:
@@ -4062,7 +4072,6 @@ sl:
           two: "Uporabnik ne more biti izbrisan, če ima prispevke. Izbrišite vse prispevke preden izbrišete uporabnika. (Prispevki starejši od %{count} dni ne morejo biti izbrisani.)"
           few: "Uporabnik ne more biti izbrisan, če ima prispevke. Izbrišite vse prispevke preden izbrišete uporabnika. (Prispevki starejši od %{count} dni ne morejo biti izbrisani.)"
           other: "Uporabnik ne more biti izbrisan, če ima prispevke. Izbrišite vse prispevke preden izbrišete uporabnika. (Prispevki starejši od %{count} dni ne morejo biti izbrisani.)"
-        delete_confirm: "Navadno je bolj primerno da se uporabnike anonimizira in ne izbriše, ker se z brisanjem odstrani tudi vsebina iz obstoječih razprav. <br><br>Ali ste PREPRIČANI da hočete odstraniti tega uporabnika? To dejanje je trajno!"
         delete_and_block: "Izbriši in <b>blokiraj</b> ta e-naslov in IP naslov"
         delete_dont_block: "Samo izbriši"
         deleted: "Ta uporabnik je bil izbrisan"
@@ -4170,7 +4179,6 @@ sl:
         go_back: "Nazaj na iskalnik"
         show_overriden: "Prikaži samo preglašene/spremenjene"
         locale: "Jezik:"
-        fallback_locale_warning: "Urejate jezik ki temelji na %{fallback}. Uporabniki, ki za jezik vmesnika izberejo %{fallback} ne bodo videli sprememb."
         more_than_50_results: "Našli smo več kot 50 zadetkov. Določite bolj natančno iskalne kriterije."
       settings:
         show_overriden: "Prikaži samo preglašene/spremenjene"

@@ -136,10 +136,10 @@ sq:
       visible:
         enabled: "listuar %{when}"
         disabled: "çlistuar %{when}"
-    wizard_required: "Mirseerdhët tek faqja juaj e re Discourse! Le t'ia nisim me <a href='%{url}' data-auto-route='true'>\"setup wizard\"</a> ✨"
     emails_are_disabled: "Emailat janë çaktivizuar globalisht nga administratori i faqes. Asnjë njoftim me email nuk do të dërgohet. "
     software_update_prompt:
       dismiss: "Hiqe"
+    bootstrap_invite_button_title: "Dërgo ftesa"
     themes:
       default_description: "Paracaktuar"
     s3:
@@ -161,6 +161,8 @@ sq:
     not_implemented: "Kjo veçori nuk është implementuar akoma, na vjen keq!"
     no_value: "Jo"
     yes_value: "Po"
+    ok_value: "OK"
+    cancel_value: "Anulo"
     generic_error: "Na vjen keq, por sapo ndodhi një gabim."
     generic_error_with_reason: "Pati një gabim: %{error}"
     sign_up: "Regjistrohu"
@@ -1141,6 +1143,13 @@ sq:
     go_back: "kthehu mbrapa"
     not_logged_in_user: "faqja e përdoruesit me një përmbledhje të aktivitetit dhe preferencave"
     current_user: "shko tek profili yt"
+    user_menu:
+      tabs:
+        replies: "Përgjigjet"
+        mentions: "Përmendje"
+        likes: "Pëlqimet"
+        bookmarks: "Të preferuarat"
+        profile: "Profili"
     topics:
       new_messages_marker: "vizita e fundit"
       bulk:
@@ -1862,7 +1871,6 @@ sq:
     download_calendar:
       download: "Shkarko"
     tagging:
-      all_tags: "Të gjitha etiketat"
       selector_all_tags: "të gjitha etiketat"
       selector_no_tags: "asnjë etiketë"
       changed: "etiketat e ndryshuara:"
@@ -1938,7 +1946,10 @@ sq:
         one: "%{count} e re"
         other: "%{count} të reja"
       more: "Më shuMë..."
+      all_categories: "Të gjitha kategoritë"
       sections:
+        about:
+          header_link_text: "Rreth"
         messages:
           header_link_text: "Mesazhet"
           links:
@@ -1950,15 +1961,20 @@ sq:
             unread_with_count: "Të palexuara (%{count})"
             archive: "Arkivi"
         tags:
-          header_link_title: "të gjitha etiketat"
           header_link_text: "Etiketat"
         categories:
-          header_link_title: "kategoritë"
           header_link_text: "Categories"
         community:
-          header_link_title: "kryefaqja"
           header_link_text: "Komuniteti"
           links:
+            about:
+              content: "Rreth"
+            admin:
+              content: "Admin"
+            badges:
+              content: "Stemat"
+            faq:
+              content: "Pyetje të shpeshta"
             tracked:
               content: "Gjurmuar"
             groups:

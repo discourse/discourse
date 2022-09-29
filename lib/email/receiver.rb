@@ -33,6 +33,14 @@ module Email
     class OldDestinationError          < ProcessingError; end
     class ReplyToDigestError           < ProcessingError; end
 
+    class TooManyRecipientsError < ProcessingError
+      attr_reader :recipients_count
+
+      def initialize(recipients_count:)
+        @recipients_count = recipients_count
+      end
+    end
+
     attr_reader :incoming_email
     attr_reader :raw_email
     attr_reader :mail
@@ -47,6 +55,7 @@ module Email
     def initialize(mail_string, opts = {})
       raise EmptyEmailError if mail_string.blank?
       @staged_users = []
+      @created_staged_users = []
       @raw_email = mail_string
 
       COMMON_ENCODINGS.each do |encoding|
@@ -84,7 +93,7 @@ module Email
           post
         rescue Exception => e
           @incoming_email.update_columns(error: e.class.name) if @incoming_email
-          delete_staged_users
+          delete_created_staged_users
           raise
         end
       end
@@ -154,6 +163,11 @@ module Email
         log_and_validate_user(user)
       else
         raise UserNotFoundError unless SiteSetting.enable_staged_users
+      end
+
+      recipients = get_all_recipients(@mail)
+      if recipients.size > SiteSetting.maximum_recipients_per_new_group_email
+        raise TooManyRecipientsError.new(recipients_count: recipients.size)
       end
 
       body, elided = select_body
@@ -228,6 +242,23 @@ module Email
 
       raise InactiveUserError if !user.active && !user.staged
       raise SilencedUserError if user.silenced?
+    end
+
+    def get_all_recipients(mail)
+      recipients = Set.new
+
+      %i(to cc bcc).each do |field|
+        next if mail[field].blank?
+
+        mail[field].each do |address_field|
+          begin
+            address_field.decoded
+            recipients << address_field.address.downcase
+          end
+        end
+      end
+
+      recipients
     end
 
     def is_bounce?
@@ -668,11 +699,9 @@ module Email
         end
     end
 
-    def find_or_create_user(email, display_name, raise_on_failed_create: false)
-      user = nil
-
+    def find_or_create_user(email, display_name, raise_on_failed_create: false, user: nil)
       User.transaction do
-        user = User.find_by_email(email)
+        user ||= User.find_by_email(email)
 
         if user.nil? && SiteSetting.enable_staged_users
           raise EmailNotAllowed unless EmailValidator.allowed?(email)
@@ -685,12 +714,14 @@ module Email
               name: display_name.presence || User.suggest_name(email),
               staged: true
             )
-            @staged_users << user
+            @created_staged_users << user
           rescue PG::UniqueViolation, ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
             raise if raise_on_failed_create
             user = nil
           end
         end
+
+        @staged_users << user if user&.staged?
       end
 
       user
@@ -1297,7 +1328,11 @@ module Email
       end
 
       if result.post
-        @incoming_email.update_columns(topic_id: result.post.topic_id, post_id: result.post.id)
+        IncomingEmail.transaction do
+          @incoming_email.update_columns(topic_id: result.post.topic_id, post_id: result.post.id)
+          result.post.update(outbound_message_id: @incoming_email.message_id)
+        end
+
         if result.post.topic&.private_message? && !is_bounce?
           add_other_addresses(result.post, user, @mail)
 
@@ -1328,6 +1363,8 @@ module Email
     end
 
     def add_other_addresses(post, sender, mail_object)
+      max_staged_users_post = nil
+
       %i(to cc bcc).each do |d|
         next if mail_object[d].blank?
 
@@ -1337,17 +1374,21 @@ module Email
             email = address_field.address.downcase
             display_name = address_field.display_name.try(:to_s)
             next unless email["@"]
+
             if should_invite?(email)
-              user = find_or_create_user(email, display_name)
+              user = User.find_by_email(email)
+
+              # cap number of staged users created per email
+              if (!user || user.staged) && @staged_users.count >= SiteSetting.maximum_staged_users_per_email
+                max_staged_users_post ||= post.topic.add_moderator_post(sender, I18n.t("emails.incoming.maximum_staged_user_per_email_reached"), import_mode: @opts[:import_mode])
+                next
+              end
+
+              user = find_or_create_user(email, display_name, user: user)
               if user && can_invite?(post.topic, user)
                 post.topic.topic_allowed_users.create!(user_id: user.id)
                 TopicUser.auto_notification_for_staging(user.id, post.topic_id, TopicUser.notification_reasons[:auto_watch])
                 post.topic.add_small_action(sender, "invited_user", user.username, import_mode: @opts[:import_mode])
-              end
-              # cap number of staged users created per email
-              if @staged_users.count > SiteSetting.maximum_staged_users_per_email
-                post.topic.add_moderator_post(sender, I18n.t("emails.incoming.maximum_staged_user_per_email_reached"), import_mode: @opts[:import_mode])
-                return
               end
             end
           rescue ActiveRecord::RecordInvalid, EmailNotAllowed
@@ -1383,8 +1424,8 @@ module Email
       end
     end
 
-    def delete_staged_users
-      @staged_users.each do |user|
+    def delete_created_staged_users
+      @created_staged_users.each do |user|
         if @incoming_email.user&.id == user.id
           @incoming_email.update_columns(user_id: nil)
         end

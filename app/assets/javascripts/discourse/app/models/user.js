@@ -1,7 +1,7 @@
 import EmberObject, { computed, get, getProperties } from "@ember/object";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
-import { alias, equal, filterBy, gt, or } from "@ember/object/computed";
+import { alias, equal, filterBy, gt, mapBy, or } from "@ember/object/computed";
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import { A } from "@ember/array";
 import Badge from "discourse/models/badge";
@@ -314,14 +314,18 @@ const User = RestModel.extend({
 
   sidebarCategoryIds: alias("sidebar_category_ids"),
 
-  @discourseComputed("sidebar_tag_names.[]")
-  sidebarTagNames(sidebarTagNames) {
-    if (!sidebarTagNames || sidebarTagNames.length === 0) {
+  @discourseComputed("sidebar_tags.[]")
+  sidebarTags(sidebarTags) {
+    if (!sidebarTags || sidebarTags.length === 0) {
       return [];
     }
 
-    return sidebarTagNames;
+    return sidebarTags.sort((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
   },
+
+  sidebarTagNames: mapBy("sidebarTags", "name"),
 
   @discourseComputed("sidebar_category_ids.[]")
   sidebarCategories(sidebarCategoryIds) {
@@ -329,16 +333,9 @@ const User = RestModel.extend({
       return [];
     }
 
-    return Site.current().categoriesList.filter((category) => {
-      if (
-        this.siteSettings.suppress_uncategorized_badge &&
-        category.isUncategorizedCategory
-      ) {
-        return false;
-      }
-
-      return sidebarCategoryIds.includes(category.id);
-    });
+    return Site.current().categoriesList.filter((category) =>
+      sidebarCategoryIds.includes(category.id)
+    );
   },
 
   changeUsername(new_username) {
@@ -446,6 +443,7 @@ const User = RestModel.extend({
         );
         User.current().setProperties(userProps);
         this.setProperties(updatedState);
+        return result;
       })
       .finally(() => {
         this.set("isSaving", false);
@@ -574,25 +572,27 @@ const User = RestModel.extend({
     });
   },
 
-  loadUserAction(id) {
-    const stream = this.stream;
-    return ajax(`/user_actions/${id}.json`).then((result) => {
-      if (result && result.user_action) {
-        const ua = result.user_action;
+  async loadUserAction(id) {
+    const result = await ajax(`/user_actions/${id}.json`);
 
-        if ((this.get("stream.filter") || ua.action_type) !== ua.action_type) {
-          return;
-        }
-        if (!this.get("stream.filter") && !this.inAllStream(ua)) {
-          return;
-        }
+    if (!result?.user_action) {
+      return;
+    }
 
-        ua.title = emojiUnescape(escapeExpression(ua.title));
-        const action = UserAction.collapseStream([UserAction.create(ua)]);
-        stream.set("itemsLoaded", stream.get("itemsLoaded") + 1);
-        stream.get("content").insertAt(0, action[0]);
-      }
-    });
+    const ua = result.user_action;
+
+    if ((this.get("stream.filter") || ua.action_type) !== ua.action_type) {
+      return;
+    }
+
+    if (!this.get("stream.filter") && !this.inAllStream(ua)) {
+      return;
+    }
+
+    ua.title = emojiUnescape(escapeExpression(ua.title));
+    const action = UserAction.collapseStream([UserAction.create(ua)]);
+    this.stream.set("itemsLoaded", this.stream.get("itemsLoaded") + 1);
+    this.stream.get("content").insertAt(0, action[0]);
   },
 
   inAllStream(ua) {
@@ -624,6 +624,18 @@ const User = RestModel.extend({
   @discourseComputed("filteredGroups", "numGroupsToDisplay")
   showMoreGroupsLink(filteredGroups, numGroupsToDisplay) {
     return filteredGroups.length > numGroupsToDisplay;
+  },
+
+  isInAnyGroups(groupIds) {
+    if (!this.groups) {
+      return;
+    }
+
+    // auto group ID 0 is "everyone"
+    return (
+      groupIds.includes(0) ||
+      this.groups.mapBy("id").some((groupId) => groupIds.includes(groupId))
+    );
   },
 
   // The user's stat count, excluding PMs.
@@ -1047,6 +1059,11 @@ const User = RestModel.extend({
     this.appEvents.trigger("user-drafts:changed");
   },
 
+  updateReviewableCount(count) {
+    this.set("reviewable_count", count);
+    this.appEvents.trigger("user-reviewable-count:changed", count);
+  },
+
   isInDoNotDisturb() {
     return (
       this.do_not_disturb_until &&
@@ -1061,6 +1078,18 @@ const User = RestModel.extend({
   )
   trackedTags(trackedTags, watchedTags, watchingFirstPostTags) {
     return [...trackedTags, ...watchedTags, ...watchingFirstPostTags];
+  },
+
+  @discourseComputed("staff", "groups.[]")
+  allowPersonalMessages() {
+    return (
+      this.staff ||
+      this.isInAnyGroups(
+        this.siteSettings.personal_message_enabled_groups
+          .split("|")
+          .map((groupId) => parseInt(groupId, 10))
+      )
+    );
   },
 });
 

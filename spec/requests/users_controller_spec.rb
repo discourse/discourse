@@ -13,6 +13,10 @@ RSpec.describe UsersController do
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:inactive_user) { Fabricate(:inactive_user) }
 
+  before do
+    Group.refresh_automatic_groups!
+  end
+
   # Unfortunately, there are tests that depend on the user being created too
   # late for fab! to work.
   let(:user_deferred) { Fabricate(:user) }
@@ -533,6 +537,14 @@ RSpec.describe UsersController do
       expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
       args = Jobs::CriticalUserEmail.jobs.first["args"].first
       expect(args["user_id"]).to eq(admin.id)
+    end
+
+    it 'passes through safe mode' do
+      put "/u/admin-login", params: { email: admin.email, use_safe_mode: true }
+      expect(response.status).to eq(200)
+      expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
+      args = Jobs::CriticalUserEmail.jobs.first["args"].first
+      expect(args["email_token"]).to end_with("?safe_mode=no_plugins,no_themes")
     end
 
     context 'when email is incorrect' do
@@ -5468,6 +5480,55 @@ RSpec.describe UsersController do
       expect(response.status).to eq(200)
       expect(response.parsed_body['bookmarks']).to eq([])
     end
+
+  end
+
+  describe "#bookmarks excerpts" do
+    fab!(:user) { Fabricate(:user) }
+    let!(:topic) { Fabricate(:topic, user: user) }
+    let!(:post) { Fabricate(:post, topic: topic) }
+    let!(:bookmark) { Fabricate(:bookmark, name: 'Test', user: user, bookmarkable: topic) }
+
+    it "uses the first post of the topic for the bookmarks excerpt" do
+      TopicUser.change(user.id, bookmark.bookmarkable.id, { last_read_post_number: post.post_number })
+
+      sign_in(user)
+
+      get "/u/#{user.username}/bookmarks.json"
+      expect(response.status).to eq(200)
+      bookmark_list = response.parsed_body["user_bookmark_list"]["bookmarks"]
+      expected_excerpt = PrettyText.excerpt(topic.first_post.cooked, 300, keep_emoji_images: true)
+      expect(bookmark_list.first["excerpt"]).to eq(expected_excerpt)
+    end
+
+    describe "bookmarkable_url" do
+      context "with the link_to_first_unread_post option" do
+        it "is a full topic URL to the first unread post in the topic when the option is set" do
+          TopicUser.change(user.id, bookmark.bookmarkable.id, { last_read_post_number: post.post_number })
+
+          sign_in(user)
+
+          get "/u/#{user.username}/user-menu-bookmarks.json"
+          expect(response.status).to eq(200)
+          bookmark_list = response.parsed_body["bookmarks"]
+
+          expect(bookmark_list.first["bookmarkable_url"]).to end_with("/t/#{topic.slug}/#{topic.id}/#{post.post_number + 1}")
+        end
+
+        it "is a full topic URL to the first post in the topic when the option isn't set" do
+          TopicUser.change(user.id, bookmark.bookmarkable.id, { last_read_post_number: post.post_number })
+
+          sign_in(user)
+
+          get "/u/#{user.username}/bookmarks.json"
+          expect(response.status).to eq(200)
+          bookmark_list = response.parsed_body["user_bookmark_list"]["bookmarks"]
+
+          expect(bookmark_list.first["bookmarkable_url"]).to end_with("/t/#{topic.slug}/#{topic.id}")
+        end
+      end
+    end
+
   end
 
   describe "#private_message_topic_tracking_state" do
@@ -5801,17 +5862,11 @@ RSpec.describe UsersController do
         expect(response.status).to eq(403)
       end
 
-      it "responds with 403 if private messages are disabled and the user isn't staff" do
-        SiteSetting.enable_personal_messages = false
+      it "responds with 403 if personal_message_enabled_groups does not include the user and the user isn't staff" do
+        SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
+        user.update(trust_level: 1)
         get "/u/#{user.username}/user-menu-private-messages"
         expect(response.status).to eq(403)
-      end
-
-      it "doesn't respond with 403 if private messages are disabled and the user is staff" do
-        SiteSetting.enable_personal_messages = false
-        user.update!(moderator: true)
-        get "/u/#{user.username}/user-menu-private-messages"
-        expect(response.status).to eq(200)
       end
 
       it "sends an array of unread private_message notifications" do

@@ -89,11 +89,6 @@ export default Component.extend(KeyEnterEscape, {
           passive: false,
         });
     });
-
-    if (this._visualViewportResizing()) {
-      this.viewportResize();
-      window.visualViewport.addEventListener("resize", this.viewportResize);
-    }
   },
 
   @bind
@@ -107,6 +102,11 @@ export default Component.extend(KeyEnterEscape, {
     const minHeight = parseInt(getComputedStyle(this.element).minHeight, 10);
     size = Math.max(minHeight, size);
 
+    this.set("composer.composerHeight", `${size}px`);
+    this.keyValueStore.set({
+      key: "composerHeight",
+      value: this.get("composer.composerHeight"),
+    });
     document.documentElement.style.setProperty(
       "--composer-height",
       size ? `${size}px` : ""
@@ -169,41 +169,8 @@ export default Component.extend(KeyEnterEscape, {
     throttle(this, this.performDragHandler, event, THROTTLE_RATE);
   },
 
-  @bind
-  viewportResize() {
-    const composerVH = window.visualViewport.height * 0.01,
-      doc = document.documentElement;
-
-    doc.style.setProperty("--composer-vh", `${composerVH}px`);
-
-    const viewportWindowDiff =
-      this.windowInnerHeight - window.visualViewport.height;
-
-    viewportWindowDiff > 0
-      ? doc.classList.add("keyboard-visible")
-      : doc.classList.remove("keyboard-visible");
-
-    // adds bottom padding when using a hardware keyboard and the accessory bar is visible
-    // accessory bar height is 55px, using 75 allows a small buffer
-    doc.style.setProperty(
-      "--composer-ipad-padding",
-      `${viewportWindowDiff < 75 ? viewportWindowDiff : 0}px`
-    );
-  },
-
-  _visualViewportResizing() {
-    return (
-      (this.capabilities.isIpadOS || this.site.mobileView) &&
-      window.visualViewport !== undefined
-    );
-  },
-
   didInsertElement() {
     this._super(...arguments);
-
-    if (this._visualViewportResizing()) {
-      this.set("windowInnerHeight", window.innerHeight);
-    }
 
     this.setupComposerResizeEvents();
 
@@ -223,10 +190,6 @@ export default Component.extend(KeyEnterEscape, {
 
   willDestroyElement() {
     this._super(...arguments);
-
-    if (this._visualViewportResizing()) {
-      window.visualViewport.removeEventListener("resize", this.viewportResize);
-    }
 
     START_DRAG_EVENTS.forEach((startDragEvent) => {
       this.element

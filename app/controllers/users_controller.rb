@@ -961,7 +961,11 @@ class UsersController < ApplicationController
 
       if user = User.with_email(params[:email]).admins.human_users.first
         email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:email_login])
-        Jobs.enqueue(:critical_user_email, type: "admin_login", user_id: user.id, email_token: email_token.token)
+        token_string = email_token.token
+        if params["use_safe_mode"]
+          token_string += "?safe_mode=no_plugins,no_themes"
+        end
+        Jobs.enqueue(:critical_user_email, type: "admin_login", user_id: user.id, email_token: token_string)
         @message = I18n.t("admin_login.success")
       else
         @message = I18n.t("admin_login.errors.unknown_email_address")
@@ -1795,7 +1799,7 @@ class UsersController < ApplicationController
       raise Discourse::InvalidAccess.new("username doesn't match current_user's username")
     end
 
-    if !current_user.staff? && !SiteSetting.enable_personal_messages
+    if !current_user.staff? && !current_user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
       raise Discourse::InvalidAccess.new("personal messages are disabled.")
     end
 

@@ -14,7 +14,7 @@ RSpec.describe CookedPostProcessor do
       RAW
     end
 
-    let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+    let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
     let(:post_process) { sequence("post_process") }
 
     it "post process in sequence" do
@@ -258,7 +258,7 @@ RSpec.describe CookedPostProcessor do
         before { SiteSetting.responsive_post_image_sizes = "1|1.5|3" }
 
         it "includes responsive images on demand" do
-          upload.update!(width: 2000, height: 1500, filesize: 10000)
+          upload.update!(width: 2000, height: 1500, filesize: 10000, dominant_color: "FFFFFF")
           post = Fabricate(:post, raw: "hello <img src='#{upload.url}'>")
 
           # fake some optimized images
@@ -284,17 +284,6 @@ RSpec.describe CookedPostProcessor do
             filesize: 800
           )
 
-          # Fake a loading image
-          _optimized_image = OptimizedImage.create!(
-            url: "/#{upload_path}/10x10.png",
-            width: CookedPostProcessor::LOADING_SIZE,
-            height: CookedPostProcessor::LOADING_SIZE,
-            upload_id: upload.id,
-            sha1: SecureRandom.hex,
-            extension: '.png',
-            filesize: 123
-          )
-
           cpp = CookedPostProcessor.new(post)
 
           cpp.add_to_size_cache(upload.url, 2000, 1500)
@@ -302,7 +291,7 @@ RSpec.describe CookedPostProcessor do
 
           html = cpp.html
 
-          expect(html).to include(%Q|data-small-upload="//test.localhost/#{upload_path}/10x10.png"|)
+          expect(html).to include(%Q|data-dominant-color="FFFFFF"|)
           # 1.5x is skipped cause we have a missing thumb
           expect(html).to include("srcset=\"//test.localhost/#{upload_path}/666x500.jpg, //test.localhost/#{upload_path}/1998x1500.jpg 3x\"")
           expect(html).to include("src=\"//test.localhost/#{upload_path}/666x500.jpg\"")
@@ -316,7 +305,7 @@ RSpec.describe CookedPostProcessor do
 
           html = cpp.html
 
-          expect(html).to include(%Q|data-small-upload="//cdn.localhost/#{upload_path}/10x10.png"|)
+          expect(html).to include(%Q|data-dominant-color="FFFFFF"|)
           expect(html).to include("srcset=\"//cdn.localhost/#{upload_path}/666x500.jpg, //cdn.localhost/#{upload_path}/1998x1500.jpg 3x\"")
           expect(html).to include("src=\"//cdn.localhost/#{upload_path}/666x500.jpg\"")
         end
@@ -416,7 +405,7 @@ RSpec.describe CookedPostProcessor do
           HTML
         end
 
-        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+        let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
 
         before do
           SiteSetting.max_image_height = 2000
@@ -496,7 +485,7 @@ RSpec.describe CookedPostProcessor do
             stub_upload(upload)
 
             SiteSetting.login_required = true
-            SiteSetting.secure_media = true
+            SiteSetting.secure_uploads = true
           end
 
           let(:optimized_size) { "600x500" }
@@ -507,7 +496,7 @@ RSpec.describe CookedPostProcessor do
 
           let(:cooked_html) do
             <<~HTML
-            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/secure-media-uploads/original/1X/#{upload.sha1}.png" data-download-href="//test.localhost/uploads/short-url/#{upload.base62_sha1}.unknown?dl=1" title="large.png"><img src="" alt="large.png" data-base62-sha1="#{upload.base62_sha1}" width="600" height="500"><div class="meta">
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/secure-uploads/original/1X/#{upload.sha1}.png" data-download-href="//test.localhost/uploads/short-url/#{upload.base62_sha1}.unknown?dl=1" title="large.png"><img src="" alt="large.png" data-base62-sha1="#{upload.base62_sha1}" width="600" height="500"><div class="meta">
             <svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">large.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg>
             </div></a></div></p>
             HTML
@@ -556,7 +545,7 @@ RSpec.describe CookedPostProcessor do
           HTML
         end
 
-        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+        let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
 
         before do
           SiteSetting.create_thumbnails = true
@@ -580,7 +569,7 @@ RSpec.describe CookedPostProcessor do
           HTML
         end
 
-        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+        let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
 
         before do
           SiteSetting.create_thumbnails = true
@@ -604,7 +593,7 @@ RSpec.describe CookedPostProcessor do
           HTML
         end
 
-        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+        let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
 
         before do
           SiteSetting.create_thumbnails = true
@@ -631,7 +620,7 @@ RSpec.describe CookedPostProcessor do
           HTML
         end
 
-        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+        let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
 
         before do
           set_subfolder "/subfolder"
@@ -671,7 +660,7 @@ RSpec.describe CookedPostProcessor do
           HTML
         end
 
-        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+        let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
 
         before do
           SiteSetting.max_image_height = 2000
@@ -699,7 +688,7 @@ RSpec.describe CookedPostProcessor do
           HTML
         end
 
-        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+        let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
 
         before do
           SiteSetting.max_image_height = 2000
@@ -727,7 +716,7 @@ RSpec.describe CookedPostProcessor do
           HTML
         end
 
-        let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+        let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
 
         before do
           SiteSetting.max_image_height = 2000
@@ -817,7 +806,7 @@ RSpec.describe CookedPostProcessor do
           ![alttext|1750x2000|thumbnail](#{upload2.url})
         MD
 
-        CookedPostProcessor.new(post, disable_loading_image: true).post_process
+        CookedPostProcessor.new(post, disable_dominant_color: true).post_process
 
         expect(post.reload.image_upload_id).to eq(upload2.id)
       end
@@ -959,7 +948,7 @@ RSpec.describe CookedPostProcessor do
     it "adds lightbox and optimizes images" do
       post = Fabricate(:post, raw: "![image|1024x768, 50%](#{upload.short_url})")
 
-      cpp = CookedPostProcessor.new(post, disable_loading_image: true)
+      cpp = CookedPostProcessor.new(post, disable_dominant_color: true)
       cpp.post_process
 
       doc = Nokogiri::HTML5::fragment(cpp.html)
@@ -974,7 +963,7 @@ RSpec.describe CookedPostProcessor do
       upload.update!(animated: true)
       post = Fabricate(:post, raw: "![image|1024x768, 50%](#{upload.short_url})")
 
-      cpp = CookedPostProcessor.new(post, disable_loading_image: true)
+      cpp = CookedPostProcessor.new(post, disable_dominant_color: true)
       cpp.post_process
 
       doc = Nokogiri::HTML5::fragment(cpp.html)
@@ -992,7 +981,7 @@ RSpec.describe CookedPostProcessor do
 
       it "marks giphy images as animated" do
         post = Fabricate(:post, raw: "![tennis-gif|311x280](https://media2.giphy.com/media/7Oifk90VrCdNe/giphy.webp)")
-        cpp = CookedPostProcessor.new(post, disable_loading_image: true)
+        cpp = CookedPostProcessor.new(post, disable_dominant_color: true)
         cpp.post_process
 
         doc = Nokogiri::HTML5::fragment(cpp.html)
@@ -1001,7 +990,7 @@ RSpec.describe CookedPostProcessor do
 
       it "marks giphy images as animated" do
         post = Fabricate(:post, raw: "![cat](https://media1.tenor.com/images/20c7ddd5e84c7427954f430439c5209d/tenor.gif)")
-        cpp = CookedPostProcessor.new(post, disable_loading_image: true)
+        cpp = CookedPostProcessor.new(post, disable_dominant_color: true)
         cpp.post_process
 
         doc = Nokogiri::HTML5::fragment(cpp.html)
@@ -1016,7 +1005,7 @@ RSpec.describe CookedPostProcessor do
         [/quote]
       MD
 
-      cpp = CookedPostProcessor.new(post, disable_loading_image: true)
+      cpp = CookedPostProcessor.new(post, disable_dominant_color: true)
       cpp.post_process
 
       doc = Nokogiri::HTML5::fragment(cpp.html)
@@ -1031,7 +1020,7 @@ RSpec.describe CookedPostProcessor do
 
       post = Fabricate(:post, raw: "https://discourse.org")
 
-      cpp = CookedPostProcessor.new(post, disable_loading_image: true)
+      cpp = CookedPostProcessor.new(post, disable_dominant_color: true)
       cpp.post_process
 
       doc = Nokogiri::HTML5::fragment(cpp.html)
@@ -1085,13 +1074,13 @@ RSpec.describe CookedPostProcessor do
         Oneboxer.unstub(:onebox)
       end
 
-      context "when the post is with_secure_media and the upload is secure and secure media is enabled" do
+      context "when the post is with_secure_uploads and the upload is secure and secure uploads is enabled" do
         before do
           setup_s3
           upload.update(secure: true)
 
           SiteSetting.login_required = true
-          SiteSetting.secure_media = true
+          SiteSetting.secure_uploads = true
         end
 
         it "does not use the direct URL, uses the cooked URL instead (because of the private ACL preventing w/h fetch)" do
@@ -1102,7 +1091,7 @@ RSpec.describe CookedPostProcessor do
 
           PostHotlinkedMedia.create!(url: "//image.com/avatar.png", post: post, status: 'downloaded', upload: upload)
 
-          cooked_url = "https://localhost/secure-media-uploads/test.png"
+          cooked_url = "https://localhost/secure-uploads/test.png"
           UrlHelper.expects(:cook_url).with(upload.url, secure: true).returns(cooked_url)
 
           cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
@@ -1132,6 +1121,44 @@ RSpec.describe CookedPostProcessor do
       expect(cpp.doc.to_s).to include(I18n.t("upload.placeholders.too_large_humanized", max_size: "4 MB"))
     end
 
+    it "removes large images from onebox" do
+      url = 'https://example.com/article'
+
+      Oneboxer.stubs(:onebox).with(url, anything).returns <<~HTML
+        <aside class="onebox allowlistedgeneric" data-onebox-src="https://example.com/article">
+          <header class="source">
+            <img src="https://example.com/favicon.ico" class="site-icon">
+            <a href="https://example.com/article" target="_blank" rel="nofollow ugc noopener">Example Site</a>
+          </header>
+          <article class="onebox-body">
+            <img src="https://example.com/article.jpeg" class="thumbnail">
+            <h3><a href="https://example.com/article" target="_blank" rel="nofollow ugc noopener">Lorem Ispum</a></h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tellus neque, malesuada ac neque ac, tempus tincidunt lectus.</p>
+          </article>
+        </aside>
+      HTML
+
+      post = Fabricate(:post, raw: url)
+
+      PostHotlinkedMedia.create!(url: "//example.com/favicon.ico", post: post, status: 'too_large')
+      PostHotlinkedMedia.create!(url: "//example.com/article.jpeg", post: post, status: 'too_large')
+
+      cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
+      cpp.post_process
+
+      expect(cpp.doc).to match_html <<~HTML
+        <aside class="onebox allowlistedgeneric" data-onebox-src="https://example.com/article">
+          <header class="source">
+            <a href="https://example.com/article" target="_blank" rel="noopener nofollow ugc">Example Site</a>
+          </header>
+          <article class="onebox-body">
+            <h3><a href="https://example.com/article" target="_blank" rel="noopener nofollow ugc">Lorem Ispum</a></h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tellus neque, malesuada ac neque ac, tempus tincidunt lectus.</p>
+          </article>
+        </aside>
+      HTML
+    end
+
     it "replaces broken image placeholder" do
       url = 'https://image.com/my-avatar'
       image_url = 'https://image.com/avatar.png'
@@ -1147,6 +1174,44 @@ RSpec.describe CookedPostProcessor do
 
       expect(cpp.doc.to_s).to have_tag("span.broken-image")
       expect(cpp.doc.to_s).to include(I18n.t("post.image_placeholder.broken"))
+    end
+
+    it "removes broken images from onebox" do
+      url = 'https://example.com/article'
+
+      Oneboxer.stubs(:onebox).with(url, anything).returns <<~HTML
+        <aside class="onebox allowlistedgeneric" data-onebox-src="https://example.com/article">
+          <header class="source">
+            <img src="https://example.com/favicon.ico" class="site-icon">
+            <a href="https://example.com/article" target="_blank" rel="nofollow ugc noopener">Example Site</a>
+          </header>
+          <article class="onebox-body">
+            <img src="https://example.com/article.jpeg" class="thumbnail">
+            <h3><a href="https://example.com/article" target="_blank" rel="nofollow ugc noopener">Lorem Ispum</a></h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tellus neque, malesuada ac neque ac, tempus tincidunt lectus.</p>
+          </article>
+        </aside>
+      HTML
+
+      post = Fabricate(:post, raw: url)
+
+      PostHotlinkedMedia.create!(url: "//example.com/favicon.ico", post: post, status: 'download_failed')
+      PostHotlinkedMedia.create!(url: "//example.com/article.jpeg", post: post, status: 'download_failed')
+
+      cpp = CookedPostProcessor.new(post, invalidate_oneboxes: true)
+      cpp.post_process
+
+      expect(cpp.doc).to match_html <<~HTML
+        <aside class="onebox allowlistedgeneric" data-onebox-src="https://example.com/article">
+          <header class="source">
+            <a href="https://example.com/article" target="_blank" rel="noopener nofollow ugc">Example Site</a>
+          </header>
+          <article class="onebox-body">
+            <h3><a href="https://example.com/article" target="_blank" rel="noopener nofollow ugc">Lorem Ispum</a></h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tellus neque, malesuada ac neque ac, tempus tincidunt lectus.</p>
+          </article>
+        </aside>
+      HTML
     end
   end
 
@@ -1352,8 +1417,8 @@ RSpec.describe CookedPostProcessor do
           HTML
         end
 
-        it "doesn't use CDN for secure media" do
-          SiteSetting.secure_media = true
+        it "doesn't use CDN for secure uploads" do
+          SiteSetting.secure_uploads = true
 
           stored_path = Discourse.store.get_path_for_upload(upload)
           upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{stored_path}")
@@ -1366,11 +1431,11 @@ RSpec.describe CookedPostProcessor do
 
           expect(cpp.html).to match_html <<~HTML
             <p>This post has a local emoji <img src="https://local.cdn.com/images/emoji/twitter/+1.png?v=#{Emoji::EMOJI_VERSION}" title=":+1:" class="emoji" alt=":+1:" loading="lazy" width="20" height="20"> and an external upload</p>
-            <p><img src="/secure-media-uploads/#{stored_path}" alt="smallest.png" data-base62-sha1="#{upload.base62_sha1}" width="10" height="20"></p>
+            <p><img src="/secure-uploads/#{stored_path}" alt="smallest.png" data-base62-sha1="#{upload.base62_sha1}" width="10" height="20"></p>
           HTML
         end
 
-        it "doesn't use the secure media URL for custom emoji" do
+        it "doesn't use the secure uploads URL for custom emoji" do
           CustomEmoji.create!(name: 'trout', upload: upload)
           Emoji.clear_cache
           Emoji.load_custom
@@ -1419,9 +1484,9 @@ RSpec.describe CookedPostProcessor do
             HTML
           end
 
-          it "oneboxes video using secure url when secure_media is enabled" do
+          it "oneboxes video using secure url when secure_uploads is enabled" do
             SiteSetting.login_required = true
-            SiteSetting.secure_media = true
+            SiteSetting.secure_uploads = true
             video_upload.update_column(:secure, true)
 
             the_post = Fabricate(:post, raw: "This post has an S3 video onebox:\n#{video_upload.url}")
@@ -1429,7 +1494,7 @@ RSpec.describe CookedPostProcessor do
             cpp = CookedPostProcessor.new(the_post)
             cpp.post_process_oneboxes
 
-            secure_url = video_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-media-uploads")
+            secure_url = video_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-uploads")
 
             expect(cpp.html).to match_html <<~HTML
               <p>This post has an S3 video onebox:</p><div class="onebox video-onebox">
@@ -1441,9 +1506,9 @@ RSpec.describe CookedPostProcessor do
             HTML
           end
 
-          it "oneboxes only audio/video and not images when secure_media is enabled" do
+          it "oneboxes only audio/video and not images when secure_uploads is enabled" do
             SiteSetting.login_required = true
-            SiteSetting.secure_media = true
+            SiteSetting.secure_uploads = true
 
             video_upload.update_column(:secure, true)
 
@@ -1476,8 +1541,8 @@ RSpec.describe CookedPostProcessor do
             cpp = CookedPostProcessor.new(the_post)
             cpp.post_process_oneboxes
 
-            secure_video_url = video_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-media-uploads")
-            secure_audio_url = audio_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-media-uploads")
+            secure_video_url = video_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-uploads")
+            secure_audio_url = audio_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-uploads")
 
             expect(cpp.html).to match_html <<~HTML
               <p>This post has a video upload.</p>
@@ -1515,7 +1580,7 @@ RSpec.describe CookedPostProcessor do
       RAW
     end
 
-    let(:cpp) { CookedPostProcessor.new(post, disable_loading_image: true) }
+    let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
 
     it "does remove user ids" do
       cpp.remove_user_ids

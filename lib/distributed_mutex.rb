@@ -4,7 +4,7 @@
 # Expiration happens when the current time is greater than the expire time
 class DistributedMutex
   DEFAULT_VALIDITY = 60
-  CHECK_READONLY_ATTEMPTS = 10
+  CHECK_READONLY_ATTEMPTS = 5
 
   LOCK_SCRIPT = DiscourseRedis::EvalHelper.new <<~LUA
     local now = redis.call("time")[1]
@@ -85,7 +85,9 @@ class DistributedMutex
 
       return expire_time if expire_time
 
-      sleep 0.001
+      # Exponential backoff, max duration 1s
+      interval = attempts < 10 ? (0.001 * 2**attempts) : 1
+      sleep interval
 
       # in readonly we will never be able to get a lock
       if @using_global_redis && Discourse.recently_readonly?

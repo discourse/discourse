@@ -1,5 +1,4 @@
 import Component from "@ember/component";
-import bootbox from "bootbox";
 import { isBlank } from "@ember/utils";
 import {
   authorizedExtensions,
@@ -8,6 +7,7 @@ import {
 import { action } from "@ember/object";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import I18n from "I18n";
+import { inject as service } from "@ember/service";
 
 // This picker is intended to be used with UppyUploadMixin or with
 // ComposerUploadUppy, which is why there are no change events registered
@@ -18,6 +18,7 @@ import I18n from "I18n";
 // is sometimes useful if you need to do something outside the uppy upload with
 // the file, such as directly using JSON or CSV data from a file in JS.
 export default Component.extend({
+  dialog: service(),
   fileInputId: null,
   fileInputClass: null,
   fileInputDisabled: false,
@@ -87,7 +88,7 @@ export default Component.extend({
       const message = I18n.t("pick_files_button.unsupported_file_picked", {
         types: this.acceptedFileTypesString,
       });
-      bootbox.alert(message);
+      this.dialog.alert(message);
       return;
     }
     this.onFilesPicked(files);

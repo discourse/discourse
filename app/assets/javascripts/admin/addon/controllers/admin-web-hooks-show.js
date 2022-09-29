@@ -2,15 +2,16 @@ import Controller, { inject as controller } from "@ember/controller";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
 import { alias } from "@ember/object/computed";
-import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import { extractDomainFromUrl } from "discourse/lib/utilities";
 import { isAbsoluteURL } from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend({
   adminWebHooks: controller(),
+  dialog: service(),
   eventTypes: alias("adminWebHooks.eventTypes"),
   defaultEventTypes: alias("adminWebHooks.defaultEventTypes"),
   contentTypes: alias("adminWebHooks.contentTypes"),
@@ -113,39 +114,28 @@ export default Controller.extend({
         domain.match(/127\.\d+\.\d+\.\d+/) ||
         isAbsoluteURL(url)
       ) {
-        return bootbox.confirm(
-          I18n.t("admin.web_hooks.warn_local_payload_url"),
-          I18n.t("no_value"),
-          I18n.t("yes_value"),
-          (result) => {
-            if (result) {
-              return saveWebHook();
-            }
-          }
-        );
+        return this.dialog.yesNoConfirm({
+          message: I18n.t("admin.web_hooks.warn_local_payload_url"),
+          didConfirm: () => saveWebHook(),
+        });
       }
 
       return saveWebHook();
     },
 
     destroy() {
-      return bootbox.confirm(
-        I18n.t("admin.web_hooks.delete_confirm"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        (result) => {
-          if (result) {
-            const model = this.model;
-            model
-              .destroyRecord()
-              .then(() => {
-                this.adminWebHooks.get("model").removeObject(model);
-                this.transitionToRoute("adminWebHooks");
-              })
-              .catch(popupAjaxError);
-          }
-        }
-      );
+      return this.dialog.yesNoConfirm({
+        message: I18n.t("admin.web_hooks.delete_confirm"),
+        didConfirm: () => {
+          this.model
+            .destroyRecord()
+            .then(() => {
+              this.adminWebHooks.get("model").removeObject(this.model);
+              this.transitionToRoute("adminWebHooks");
+            })
+            .catch(popupAjaxError);
+        },
+      });
     },
   },
 });

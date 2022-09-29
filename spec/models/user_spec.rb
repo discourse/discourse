@@ -2067,21 +2067,25 @@ RSpec.describe User do
     end
 
     context "with redesigned_user_menu_enabled on" do
-      it "adds all_unread_notifications and grouped_unread_high_priority_notifications to the payload" do
+      before do
+        SiteSetting.enable_experimental_sidebar_hamburger = true
+      end
+
+      it "adds all_unread_notifications and grouped_unread_notifications to the payload" do
         user.update!(admin: true)
-        user.enable_redesigned_user_menu
-        Fabricate(:notification, user: user)
+        Fabricate(:notification, user: user, notification_type: 1)
         Fabricate(:notification, notification_type: 15, high_priority: true, read: false, user: user)
+
         messages = MessageBus.track_publish("/notification/#{user.id}") do
           user.publish_notifications_state
         end
+
         expect(messages.size).to eq(1)
 
         message = messages.first
+
         expect(message.data[:all_unread_notifications_count]).to eq(2)
-        expect(message.data[:grouped_unread_high_priority_notifications]).to eq({ 15 => 1 })
-      ensure
-        user.disable_redesigned_user_menu
+        expect(message.data[:grouped_unread_notifications]).to eq({ 1 => 1, 15 => 1 })
       end
     end
   end
@@ -2598,35 +2602,44 @@ RSpec.describe User do
   end
 
   describe 'Granting admin or moderator status' do
-    fab!(:reviewable_user) { Fabricate(:reviewable_user) }
+    context 'when granting admin status' do
+      context 'when there is a reviewable' do
+        fab!(:user) { Fabricate(:reviewable_user) }
 
-    it 'approves the associated reviewable when granting admin status' do
-      reviewable_user.target.grant_admin!
+        context 'when the user isn’t approved yet' do
+          it 'approves the associated reviewable' do
+            expect { user.target.grant_admin! }.to change { user.reload.dup }.to be_approved
+          end
+        end
 
-      expect(reviewable_user.reload.status).to eq Reviewable.statuses[:approved]
+        context "when the user is already approved" do
+          before do
+            user.perform(Discourse.system_user, :approve_user)
+          end
+
+          it 'does nothing' do
+            expect { user.target.grant_admin! }.not_to change { user.reload.approved? }
+          end
+        end
+      end
+
+      context 'when there is no reviewable' do
+        let(:user) { Fabricate(:user, approved: false) }
+
+        it 'approves the user' do
+          expect { user.grant_admin! }.to change { user.reload.approved }.to true
+        end
+      end
     end
 
-    it 'does nothing when the user is already approved' do
-      reviewable_user = Fabricate(:reviewable_user)
-      reviewable_user.perform(Discourse.system_user, :approve_user)
+    context 'when granting moderator status' do
+      context 'when there is a reviewable' do
+        let(:user) { Fabricate(:reviewable_user) }
 
-      reviewable_user.target.grant_admin!
-
-      expect(reviewable_user.reload.status).to eq Reviewable.statuses[:approved]
-    end
-
-    it 'approves the associated reviewable when granting moderator status' do
-      reviewable_user.target.grant_moderation!
-
-      expect(reviewable_user.reload.status).to eq Reviewable.statuses[:approved]
-    end
-
-    it 'approves the user if there is no reviewable' do
-      user = Fabricate(:user, approved: false)
-
-      user.grant_admin!
-
-      expect(user.approved).to eq(true)
+        it 'approves the associated reviewable' do
+          expect { user.target.grant_moderation! }.to change { user.reload.dup }.to be_approved
+        end
+      end
     end
   end
 
@@ -2808,8 +2821,8 @@ RSpec.describe User do
     end
   end
 
-  describe "#grouped_unread_high_priority_notifications" do
-    it "returns a map of high priority types to their unread count" do
+  describe "#grouped_unread_notifications" do
+    it "returns a map of types to their unread count" do
       Fabricate(:notification, user: user, notification_type: 1, high_priority: true, read: true)
       Fabricate(:notification, user: user, notification_type: 1, high_priority: true, read: false)
       Fabricate(:notification, user: user, notification_type: 1, high_priority: false, read: true)
@@ -2826,7 +2839,7 @@ RSpec.describe User do
       # notification for another user. it shouldn't be included
       Fabricate(:notification, notification_type: 4, high_priority: true, read: false)
 
-      expect(user.grouped_unread_high_priority_notifications).to eq({ 1 => 1, 2 => 1 })
+      expect(user.grouped_unread_notifications).to eq({ 1 => 2, 2 => 1 })
     end
   end
 
@@ -2949,6 +2962,24 @@ RSpec.describe User do
         user_ids: [user.id],
         data: { unseen_reviewable_count: 0 }
       )
+    end
+  end
+
+  describe "#bump_last_seen_notification!" do
+    it "doesn't error if there are no notifications" do
+      Notification.destroy_all
+      expect(user.bump_last_seen_notification!).to eq(false)
+      expect(user.reload.seen_notification_id).to eq(0)
+    end
+
+    it "updates seen_notification_id to the last notification that the user can see" do
+      last_notification = Fabricate(:notification, user: user)
+      deleted_notification = Fabricate(:notification, user: user)
+      deleted_notification.topic.trash!
+      someone_else_notification = Fabricate(:notification, user: Fabricate(:user))
+
+      expect(user.bump_last_seen_notification!).to eq(true)
+      expect(user.reload.seen_notification_id).to eq(last_notification.id)
     end
   end
 end

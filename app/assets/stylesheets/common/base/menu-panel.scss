@@ -102,8 +102,9 @@
   .menu-tabs-container {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     border-left: 1px solid var(--primary-low);
+    padding: 0.75em 0 0;
+    overflow-y: auto;
   }
 
   .tabs-list {
@@ -136,9 +137,13 @@
     }
   }
 
+  .bottom-tabs {
+    border-top: 1px solid var(--primary-low);
+  }
+
   .panel-body-contents {
     display: flex;
-    flex-direction: row;
+    flex-direction: row-reverse;
   }
 
   .quick-access-panel {
@@ -146,6 +151,7 @@
     padding: 0.75em;
     justify-content: space-between;
     box-sizing: border-box;
+    min-width: 0; // makes sure menu tabs don't go off screen
 
     .double-user,
     .multi-user {
@@ -175,6 +181,59 @@
           // we don't need the link focus because we're styling the parent
           outline: 0;
         }
+      }
+    }
+  }
+
+  #quick-access-profile {
+    display: inline;
+    max-height: 99%; //  macOS Chrome sometimes adds an unneeded scrollbar at 100%
+
+    ul {
+      flex-wrap: nowrap;
+      height: 100%;
+      align-items: center;
+      overflow-y: auto; // really short viewports
+    }
+    li {
+      flex: 1 1 auto;
+      max-height: 3em; // prevent buttons from getting too tall
+      > * {
+        // button, a, and everything else
+        height: 100%;
+        align-items: center;
+        margin: 0;
+        padding: 0 0.5em;
+      }
+      .d-icon {
+        padding-top: 0;
+      }
+    }
+
+    .set-user-status {
+      .emoji {
+        padding-top: 0;
+      }
+    }
+
+    .profile-tab-btn {
+      .relative-date {
+        font-size: $font-down-3;
+        color: var(--primary-medium);
+      }
+
+      justify-content: unset;
+      line-height: $line-height-large;
+      width: 100%;
+
+      .d-icon {
+        padding: 0;
+      }
+    }
+
+    .do-not-disturb {
+      .d-icon-toggle-on {
+        color: var(--tertiary);
       }
     }
   }
@@ -398,7 +457,8 @@
         }
       }
 
-      a {
+      a,
+      .profile-tab-btn {
         display: flex;
         margin: 0.25em;
         padding: 0em 0.25em;
@@ -598,33 +658,5 @@ div.menu-links-header {
   .fa,
   button {
     color: var(--primary-med-or-secondary-med);
-  }
-}
-
-// Sidebar-hamburger hybrid
-
-.hamburger-menu.revamped {
-  --d-sidebar-highlight-color: var(--highlight-medium);
-  width: var(--d-sidebar-width);
-
-  .panel-body-content {
-    width: 100%;
-    min-width: 0; // prevent content blowing out width
-  }
-
-  .sidebar-section-wrapper {
-    .sidebar-section-header-button {
-      opacity: 1;
-    }
-
-    .sidebar-section-link.active {
-      font-weight: normal;
-      color: var(--primary-high);
-      background: var(--tertiary-low);
-    }
-  }
-
-  .sidebar-footer-wrapper {
-    padding: 0.5em 0 0;
   }
 }

@@ -5,7 +5,6 @@ import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
 import OpenComposer from "discourse/mixins/open-composer";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import { findAll } from "discourse/models/login-method";
 import { getOwner } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
@@ -18,7 +17,7 @@ import showModal from "discourse/lib/show-modal";
 function unlessReadOnly(method, message) {
   return function () {
     if (this.site.isReadOnly) {
-      bootbox.alert(message);
+      this.dialog.alert(message);
     } else {
       this[method]();
     }
@@ -28,7 +27,7 @@ function unlessReadOnly(method, message) {
 function unlessStrictlyReadOnly(method, message) {
   return function () {
     if (this.site.isReadOnly && !this.site.isStaffWritesOnly) {
-      bootbox.alert(message);
+      this.dialog.alert(message);
     } else {
       this[method]();
     }
@@ -39,6 +38,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
   siteTitle: setting("title"),
   shortSiteDescription: setting("short_site_description"),
   documentTitle: service(),
+  dialog: service(),
 
   actions: {
     toggleAnonymous() {

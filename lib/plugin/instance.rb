@@ -715,19 +715,22 @@ class Plugin::Instance
     handlebars_includes.each { |hb| contents << "require_asset('#{hb}')" }
     javascript_includes.each { |js| contents << "require_asset('#{js}')" }
 
-    each_globbed_asset do |f, is_dir|
-      contents << (is_dir ? "depend_on('#{f}')" : "require_asset('#{f}')")
-    end
-
-    if contents.present?
-      contents.insert(0, "<%")
-      contents << "%>"
-      Discourse::Utils.atomic_write_file(js_file_path, contents.join("\n"))
-    else
-      begin
-        File.delete(js_file_path)
+    if !contents.present?
+      [js_file_path, extra_js_file_path].each do |f|
+        File.delete(f)
       rescue Errno::ENOENT
       end
+      return
+    end
+
+    contents.insert(0, "<%")
+    contents << "%>"
+
+    Discourse::Utils.atomic_write_file(extra_js_file_path, contents.join("\n"))
+
+    begin
+      File.delete(js_file_path)
+    rescue Errno::ENOENT
     end
   end
 
@@ -838,7 +841,17 @@ class Plugin::Instance
   end
 
   def js_asset_exists?
-    File.exist?(js_file_path)
+    # If assets/javascripts exists, ember-cli will output a .js file
+    File.exist?("#{File.dirname(@path)}/assets/javascripts")
+  end
+
+  def extra_js_asset_exists?
+    File.exist?(extra_js_file_path)
+  end
+
+  def admin_js_asset_exists?
+    # If this directory exists, ember-cli will output a .js file
+    File.exist?("#{File.dirname(@path)}/admin/assets/javascripts")
   end
 
   # Receives an array with two elements:
@@ -1080,7 +1093,11 @@ class Plugin::Instance
   end
 
   def js_file_path
-    @file_path ||= "#{Plugin::Instance.js_path}/#{directory_name}.js.erb"
+    "#{Plugin::Instance.js_path}/#{directory_name}.js.erb"
+  end
+
+  def extra_js_file_path
+    @extra_js_file_path ||= "#{Plugin::Instance.js_path}/#{directory_name}_extra.js.erb"
   end
 
   def register_assets!

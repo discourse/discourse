@@ -1,11 +1,13 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import Group from "discourse/models/group";
 import I18n from "I18n";
-import bootbox from "bootbox";
 import cookie from "discourse/lib/cookie";
 import { next } from "@ember/runloop";
+import { inject as service } from "@ember/service";
 
 export default DiscourseRoute.extend({
+  dialog: service(),
+
   beforeModel(transition) {
     const params = transition.to.queryParams;
 
@@ -32,12 +34,12 @@ export default DiscourseRoute.extend({
                   })
                 );
               } else {
-                bootbox.alert(
+                this.dialog.alert(
                   I18n.t("composer.cant_send_pm", { username: groupName })
                 );
               }
             })
-            .catch(() => bootbox.alert(I18n.t("generic_error")));
+            .catch(() => this.dialog.alert(I18n.t("generic_error")));
         } else {
           e.send("createNewMessageViaParams", {
             topicTitle: params.title,

@@ -11,7 +11,6 @@ export default DiscourseRoute.extend({
     return draftsStream.findItems(this.site).then(() => {
       return {
         stream: draftsStream,
-        isAnotherUsersPage: !this.isCurrentUser(user),
         emptyState: this.emptyState(),
       };
     });

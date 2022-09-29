@@ -156,7 +156,6 @@ gl:
         disabled: "eliminou este báner %{when}. Xa non aparecerá máis na banda superior de todas as páxinas."
       forwarded: "reenviou a mensaxe de correo anterior"
     topic_admin_menu: "accións do tema"
-    wizard_required: "Este é o novo Discourse! Pode comezar co <a href='%{url}' data-auto-route='true'>asistente de configuración</a> ✨"
     emails_are_disabled: "Todos as mensaxes de correo saíntes foron desactivadas globalmente por un administrador. Non se enviará ningún tipo de notificación por correo electrónico."
     software_update_prompt:
       dismiss: "Desbotar"
@@ -164,6 +163,7 @@ gl:
       one: "Para facilitar o lanzamento do seu novo sitio, está en modo de arranque. Todos os novos usuarios recibirán o nivel de confianza 1 e terán activadas as mensaxes de correo de resumo diario. Isto desactivarase automaticamente cando se una %{count} usuario."
       other: "Para facilitar o lanzamento do seu novo sitio, está en modo de arranque. Todos os novos usuarios recibirán nivel de confianza 1 e terán activadas as mensaxes de correo de resumo diario. Isto desactivarase automaticamente cando se unan %{count} usuarios."
     bootstrap_mode_disabled: "O modo Bootstrap desactivarase nun prazo de 24 horas."
+    bootstrap_invite_button_title: "Enviar convites"
     themes:
       default_description: "Predeterminado"
     s3:
@@ -195,6 +195,8 @@ gl:
     not_implemented: "Sentímolo pero esta funcionalidade non se implementou aínda!"
     no_value: "Non"
     yes_value: "Si"
+    ok_value: "De acordo"
+    cancel_value: "Cancelar"
     submit: "Enviar"
     generic_error: "Sentímolo pero produciuse un erro."
     generic_error_with_reason: "Produciuse un erro: %{error}"
@@ -2108,6 +2110,13 @@ gl:
     not_logged_in_user: "páxina do usuario cun resumo das actividades e preferencias actuais"
     current_user: "ir á súa páxina do usuario"
     view_all: "ver todas %{tab}"
+    user_menu:
+      tabs:
+        replies: "Réplicas"
+        mentions: "Mencións"
+        likes: "Gústame"
+        bookmarks: "Marcadores"
+        profile: "Perfil"
     topics:
       new_messages_marker: "última visita"
       bulk:
@@ -2689,10 +2698,6 @@ gl:
         confirm:
           one: "Confirma a eliminación desta publicación?"
           other: "Confirma a eliminación destas %{count} publicacións?"
-      merge:
-        confirm:
-          one: "Confirma a combinación desas publicacións?"
-          other: "Confirma a combinación destas %{count} publicacións?"
       revisions:
         controls:
           first: "Primeira revisión"
@@ -3213,7 +3218,6 @@ gl:
     download_calendar:
       download: "Descargar"
     tagging:
-      all_tags: "Todas as etiquetas"
       other_tags: "Outras etiquetas"
       selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sen etiquetas"
@@ -3346,10 +3350,6 @@ gl:
         member: "membro"
         regular: "habitual"
         leader: "líder"
-    user_activity:
-      no_activity_others: "Sen actividade."
-      no_replies_others: "Sen respostas."
-      no_likes_others: "Ningún Gústame en publicacións."
     sidebar:
       unread_count:
         one: "%{count} pendente de lectura"
@@ -3358,7 +3358,10 @@ gl:
         one: "%{count} novo"
         other: "%{count} novos"
       more: "Máis..."
+      all_categories: "Todas as categorías"
       sections:
+        about:
+          header_link_text: "Verbo de"
         messages:
           header_link_text: "Mensaxes"
           links:
@@ -3370,15 +3373,20 @@ gl:
             unread_with_count: "(%{count}) pendente de ler"
             archive: "Arquivo"
         tags:
-          header_link_title: "todas as etiquetas"
           header_link_text: "Etiquetas"
         categories:
-          header_link_title: "todas as categorías"
           header_link_text: "Categorías"
         community:
-          header_link_title: "inicio"
           header_link_text: "Comunidade"
           links:
+            about:
+              content: "Verbo de"
+            admin:
+              content: "Administración"
+            badges:
+              content: "Insignias"
+            faq:
+              content: "PMF"
             tracked:
               content: "Seguido"
             groups:
@@ -4502,7 +4510,6 @@ gl:
         cant_delete_all_too_many_posts:
           one: "Non é posíbel eliminar todas as publicacións porque o usuario ten máis dunha publicación. (delete_all_posts_max)"
           other: "Non é posíbel eliminar todas as publicacións porque o usuario ten máis de %{count} publicacións. (delete_all_posts_max)"
-        delete_confirm: "Xeralmente é preferíbel anonimizar os usuarios mellor ca eliminalos, para evitar retirar contido das discusións existentes.<br><br>Está SEGURO de que quere eliminar este usuario? Isto é permanente!"
         delete_and_block: "Eliminar e <b>bloquear</b> este enderezo de correo e de IP"
         delete_dont_block: "Só eliminar"
         deleting_user: "Eliminando usuario..."
@@ -4627,7 +4634,6 @@ gl:
         recommended: "Recomendamos personalizar o seguinte texto para axeitalo ás súas necesidades:"
         show_overriden: "Amosar só os cambios"
         locale: "Idioma:"
-        fallback_locale_warning: "Está a editar un idioma baseado en %{fallback}. Os usuarios que escollan %{fallback} como idioma de interface non verán os cambios."
         more_than_50_results: "Hai máis de 50 resultados. Restrinxa a busca."
       settings:
         show_overriden: "Amosar só os cambios"

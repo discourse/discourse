@@ -275,14 +275,21 @@ acceptance("Group - Authenticated", function (needs) {
     await click(".group-details-button button.btn-danger");
 
     assert.strictEqual(
-      query(".bootbox .modal-body").innerHTML,
+      query(".dialog-body").textContent.trim(),
       I18n.t("admin.groups.delete_with_messages_confirm", {
         count: 2,
       }),
       "it should warn about orphan messages"
     );
 
-    await click(".modal-footer .btn-default");
+    await click(".dialog-footer .btn-default");
+
+    await visit("/g/discourse/activity/posts");
+
+    assert.ok(
+      ".user-stream-item a.avatar-link[href='/u/awesomerobot']",
+      "avatar link contains href (is tabbable)"
+    );
   });
 
   test("Moderator Viewing Group", async function (assert) {

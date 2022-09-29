@@ -162,12 +162,12 @@ ca:
       forwarded: "el missatge de dalt s'ha reenviat"
     topic_admin_menu: "accions del tema"
     skip_to_main_content: "Vés al contingut principal"
-    wizard_required: "Us donem la benvinguda al vostre nou Discourse! Comencem amb <a href='%{url}' data-auto-route='true'>l'assistent de configuració</a> ✨"
     emails_are_disabled: "Tots els correus sortints han estat globalment inhabilitats per un administrador. No s'enviarà cap notificació de cap mena per correu electrònic."
     software_update_prompt:
       message: "Hem actualitzat aquest lloc, <span>si us plau actualitzeu</span>, o podeu experimentar un comportament inesperat."
       dismiss: "Descarta-ho"
     bootstrap_mode_disabled: "El mode d'arrencada serà desactivat d'aquí a 24 hores."
+    bootstrap_invite_button_title: "Envia invitacions"
     themes:
       default_description: "Per defecte"
     s3:
@@ -200,6 +200,8 @@ ca:
     not_implemented: "Ho sentim! Aquesta funcionalitat encara no s'ha implementat."
     no_value: "No"
     yes_value: "Sí"
+    ok_value: "D'acord"
+    cancel_value: "Cancel·la"
     submit: "Envia"
     generic_error: "Ho sentim, s'ha produït un error."
     generic_error_with_reason: "Hi ha hagut un error: %{error}"
@@ -1860,6 +1862,13 @@ ca:
     go_back: "vés enrere"
     not_logged_in_user: "pàgina d'usuari amb resum de l'activitat actual i preferències "
     current_user: "vés a la meva pàgina d'usuari"
+    user_menu:
+      tabs:
+        replies: "Respostes"
+        mentions: "Mencions"
+        likes: "'M'agrada'"
+        bookmarks: "Preferits"
+        profile: "Perfil"
     topics:
       new_messages_marker: "darrera visita"
       bulk:
@@ -2338,10 +2347,6 @@ ca:
         confirm:
           one: "Esteu segur que voleu suprimir aquesta publicació?"
           other: "Esteu segur que voleu suprimir aquestes %{count} publicacions?"
-      merge:
-        confirm:
-          one: "Esteu segur que voleu combinar aquesta publicació?"
-          other: "Esteu segur que voleu combinar aquests %{count}missatges?"
       revisions:
         controls:
           first: "Primera revisió"
@@ -2789,7 +2794,6 @@ ca:
     download_calendar:
       download: "Descarrega"
     tagging:
-      all_tags: "Totes les etiquetes"
       other_tags: "Altres etiquetes"
       selector_all_tags: "totes les etiquetes"
       selector_no_tags: "sense etiquetes"
@@ -2886,10 +2890,6 @@ ca:
         member: "membre"
         regular: "habitual"
         leader: "líder"
-    user_activity:
-      no_activity_others: "No hi ha activitat."
-      no_replies_others: "No hi ha respostes."
-      no_likes_others: "Publicacions sense 'm'agrada'."
     sidebar:
       unread_count:
         one: "%{count} no llegit"
@@ -2898,7 +2898,10 @@ ca:
         one: "%{count} nou"
         other: "%{count} nous"
       more: "Més..."
+      all_categories: "Totes les categories"
       sections:
+        about:
+          header_link_text: "Quant a"
         messages:
           header_link_text: "Missatges"
           links:
@@ -2910,15 +2913,20 @@ ca:
             unread_with_count: "No llegit (%{count})"
             archive: "Arxiva"
         tags:
-          header_link_title: "totes les etiquetes"
           header_link_text: "Etiquetes"
         categories:
-          header_link_title: "totes les categories"
           header_link_text: "Categories"
         community:
-          header_link_title: "pàgina principal"
           header_link_text: "Comunitat"
           links:
+            about:
+              content: "Quant a"
+            admin:
+              content: "Administració"
+            badges:
+              content: "Insígnies"
+            faq:
+              content: "PMF"
             tracked:
               content: "Seguit"
             groups:
@@ -3896,7 +3904,6 @@ ca:
         cant_delete_all_too_many_posts:
           one: "No es poden suprimir totes les publicacions perquè l'usuari té més d'%{count} publicació. (delete_all_posts_max)"
           other: "No es poden suprimir totes les publicacions perquè l'usuari té més de %{count} publicacions. (delete_all_posts_max)"
-        delete_confirm: "En general, és preferible fer anònims els usuaris en lloc de suprimir-los, per a evitar que s'esborrin els continguts de les discussions existents. <br><br> Esteu SEGUR que voleu suprimir aquest usuari? Això és permanent!"
         delete_and_block: "Suprimeix i <b>bloca</i> aquest correu electrònic i aquesta adreça IP"
         delete_dont_block: "Només suprimeix"
         deleting_user: "Suprimint l'usuari..."

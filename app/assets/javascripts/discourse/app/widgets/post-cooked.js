@@ -6,6 +6,8 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import { isValidLink } from "discourse/lib/click-track";
 import { number } from "discourse/lib/formatter";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
+import { escape } from "pretty-text/sanitizer";
+import domFromString from "discourse-common/lib/dom-from-string";
 
 let _beforeAdoptDecorators = [];
 let _afterAdoptDecorators = [];
@@ -31,6 +33,8 @@ function createDetachedElement(nodeName) {
 }
 
 export default class PostCooked {
+  originalQuoteContents = null;
+
   constructor(attrs, decoratorHelper, currentUser) {
     this.attrs = attrs;
     this.expanding = false;
@@ -52,13 +56,12 @@ export default class PostCooked {
   }
 
   init() {
+    this.originalQuoteContents = null;
     const cookedDiv = this._computeCooked();
-    const $cookedDiv = $(cookedDiv);
 
-    this._insertQuoteControls($cookedDiv);
-    this._showLinkCounts($cookedDiv);
-    this._applySearchHighlight($cookedDiv);
-
+    this._insertQuoteControls(cookedDiv);
+    this._showLinkCounts(cookedDiv);
+    this._applySearchHighlight(cookedDiv);
     this._decorateAndAdopt(cookedDiv);
 
     return cookedDiv;
@@ -72,8 +75,7 @@ export default class PostCooked {
     _afterAdoptDecorators.forEach((d) => d(cooked, this.decoratorHelper));
   }
 
-  _applySearchHighlight($html) {
-    const html = $html[0];
+  _applySearchHighlight(html) {
     const highlight = this.attrs.highlightTerm;
 
     if (highlight && highlight.length > 2) {
@@ -89,7 +91,7 @@ export default class PostCooked {
     }
   }
 
-  _showLinkCounts($html) {
+  _showLinkCounts(html) {
     const linkCounts = this.attrs.linkCounts;
     if (!linkCounts) {
       return;
@@ -99,7 +101,7 @@ export default class PostCooked {
     // for that one (the best element is the most significant one to the
     // viewer)
     const bestElements = new Map();
-    $html[0].querySelectorAll("aside.onebox").forEach((onebox) => {
+    html.querySelectorAll("aside.onebox").forEach((onebox) => {
       // look in headings first
       for (let i = 1; i <= 6; ++i) {
         const hLinks = onebox.querySelectorAll(`h${i} a[href]`);
@@ -121,10 +123,8 @@ export default class PostCooked {
         return;
       }
 
-      $html.find("a[href]").each((i, e) => {
-        const $link = $(e);
-        const href = $link.attr("href");
-
+      html.querySelectorAll("a[href]").forEach((link) => {
+        const href = link.getAttribute("href");
         let valid = href === lc.url;
 
         // this might be an attachment
@@ -132,24 +132,29 @@ export default class PostCooked {
           valid = href.includes(lc.url);
         }
 
-        // Match server-side behaviour for internal links with query params
+        // match server-side behavior for internal links with query params
         if (lc.internal && /\?/.test(href)) {
           valid = href.split("?")[0] === lc.url;
         }
 
         // don't display badge counts on category badge & oneboxes (unless when explicitly stated)
-        if (valid && isValidLink($link[0])) {
-          const $onebox = $link.closest(".onebox");
+        if (valid && isValidLink(link)) {
+          const onebox = link.closest(".onebox");
+
           if (
-            $onebox.length === 0 ||
-            !bestElements.has($onebox[0]) ||
-            bestElements.get($onebox[0]) === $link[0]
+            !onebox ||
+            !bestElements.has(onebox) ||
+            bestElements.get(onebox) === link
           ) {
             const title = I18n.t("topic_map.clicks", { count: lc.clicks });
-            $link.append(
-              ` <span class='badge badge-notification clicks' title='${title}'>${number(
-                lc.clicks
-              )}</span>`
+
+            link.appendChild(document.createTextNode(" "));
+            link.appendChild(
+              domFromString(
+                `<span class='badge badge-notification clicks' title='${title}'>${number(
+                  lc.clicks
+                )}</span>`
+              )[0]
             );
           }
         }
@@ -157,21 +162,31 @@ export default class PostCooked {
     });
   }
 
-  _toggleQuote($aside) {
+  async _toggleQuote(aside) {
     if (this.expanding) {
       return;
     }
 
     this.expanding = true;
-    const blockQuote = $aside[0].querySelector("blockquote");
-    $aside.data("expanded", !$aside.data("expanded"));
+    const blockQuote = aside.querySelector("blockquote");
 
-    const finished = () => (this.expanding = false);
+    if (!blockQuote) {
+      return;
+    }
 
-    if ($aside.data("expanded")) {
-      this._updateQuoteElements($aside, "chevron-up");
+    if (aside.dataset.expanded) {
+      delete aside.dataset.expanded;
+    } else {
+      aside.dataset.expanded = true;
+    }
+
+    const quoteId = blockQuote.id;
+
+    if (aside.dataset.expanded) {
+      this._updateQuoteElements(aside, "chevron-up");
+
       // Show expanded quote
-      $aside.data("original-contents", blockQuote.innerHTML);
+      this.originalQuoteContents.set(quoteId, blockQuote.innerHTML);
 
       const originalText =
         blockQuote.textContent.trim() ||
@@ -179,51 +194,45 @@ export default class PostCooked {
 
       blockQuote.innerHTML = spinnerHTML;
 
-      let topicId = this.attrs.topicId;
-      if ($aside.data("topic")) {
-        topicId = $aside.data("topic");
-      }
+      const topicId = parseInt(aside.dataset.topic || this.attrs.topicId, 10);
+      const postId = parseInt(aside.dataset.post, 10);
 
-      const postId = parseInt($aside.data("post"), 10);
-      topicId = parseInt(topicId, 10);
+      try {
+        const result = await ajax(`/posts/by_number/${topicId}/${postId}`);
 
-      ajax(`/posts/by_number/${topicId}/${postId}`)
-        .then((result) => {
-          const post = this.decoratorHelper.getModel();
-          const quotedPosts = post.quoted || {};
-          quotedPosts[result.id] = result;
-          post.set("quoted", quotedPosts);
+        const post = this.decoratorHelper.getModel();
+        const quotedPosts = post.quoted || {};
+        quotedPosts[result.id] = result;
+        post.set("quoted", quotedPosts);
 
-          const div = createDetachedElement("div");
-          div.classList.add("expanded-quote");
-          div.dataset.postId = result.id;
-          div.innerHTML = result.cooked;
+        const div = createDetachedElement("div");
+        div.classList.add("expanded-quote");
+        div.dataset.postId = result.id;
+        div.innerHTML = result.cooked;
 
-          this._decorateAndAdopt(div);
+        this._decorateAndAdopt(div);
 
-          highlightHTML(div, originalText, {
-            matchCase: true,
-          });
-
-          blockQuote.innerHTML = "";
-          blockQuote.appendChild(div);
-          finished();
-        })
-        .catch((e) => {
-          if ([403, 404].includes(e.jqXHR.status)) {
-            const icon = e.jqXHR.status === 403 ? "lock" : "far-trash-alt";
-            blockQuote.innerHTML = `<div class='expanded-quote icon-only'>${iconHTML(
-              icon
-            )}</div>`;
-          }
+        highlightHTML(div, originalText, {
+          matchCase: true,
         });
+
+        blockQuote.innerHTML = "";
+        blockQuote.appendChild(div);
+      } catch (e) {
+        if ([403, 404].includes(e.jqXHR.status)) {
+          const icon = e.jqXHR.status === 403 ? "lock" : "far-trash-alt";
+          blockQuote.innerHTML = `<div class='expanded-quote icon-only'>${iconHTML(
+            icon
+          )}</div>`;
+        }
+      }
     } else {
       // Hide expanded quote
-      this._updateQuoteElements($aside, "chevron-down");
-      blockQuote.innerHTML = $aside.data("original-contents");
-      finished();
+      this._updateQuoteElements(aside, "chevron-down");
+      blockQuote.innerHTML = this.originalQuoteContents.get(blockQuote.id);
     }
-    return false;
+
+    this.expanding = false;
   }
 
   _urlForPostNumber(postNumber) {
@@ -232,72 +241,103 @@ export default class PostCooked {
       : this.attrs.topicUrl;
   }
 
-  _updateQuoteElements($aside, desc) {
-    let navLink = "";
+  _updateQuoteElements(aside, desc) {
     const quoteTitle = I18n.t("post.follow_quote");
-    let postNumber = $aside.data("post");
-    let topicNumber = $aside.data("topic");
+    const postNumber = aside.dataset.post;
+    const topicNumber = aside.dataset.topic;
 
     // If we have a post reference
-    if (topicNumber && topicNumber === this.attrs.topicId && postNumber) {
-      let icon = iconHTML("arrow-up");
+    let navLink = "";
+    if (
+      topicNumber &&
+      postNumber &&
+      topicNumber === this.attrs.topicId?.toString()
+    ) {
+      const icon = iconHTML("arrow-up");
       navLink = `<a href='${this._urlForPostNumber(
         postNumber
       )}' title='${quoteTitle}' class='btn-flat back'>${icon}</a>`;
     }
 
     // Only add the expand/contract control if it's not a full post
+    const titleElement = aside.querySelector(".title");
     let expandContract = "";
-    const isExpanded = $aside.data("expanded") === true;
-    if (!$aside.data("full")) {
-      let icon = iconHTML(desc, { title: "post.expand_collapse" });
-      const quoteId = $aside.find("blockquote").attr("id");
-      expandContract = `<button aria-controls="${quoteId}" aria-expanded="${isExpanded}" class="quote-toggle btn-flat">${icon}</button>`;
-      $(".title", $aside).css("cursor", "pointer");
-    }
-    if (this.ignoredUsers && this.ignoredUsers.length > 0) {
-      const username = $aside.find(".title").text().trim().slice(0, -1);
-      if (username.length > 0 && this.ignoredUsers.includes(username)) {
-        $aside.find("p").remove();
-        $aside.addClass("ignored-user");
+
+    if (!aside.dataset.full) {
+      const icon = iconHTML(desc, { title: "post.expand_collapse" });
+      const quoteId = aside.querySelector("blockquote")?.id;
+
+      if (quoteId) {
+        const isExpanded = aside.dataset.expanded === "true";
+        expandContract = `<button aria-controls="${quoteId}" aria-expanded="${isExpanded}" class="quote-toggle btn-flat">${icon}</button>`;
+
+        if (titleElement) {
+          titleElement.style.cursor = "pointer";
+        }
       }
     }
-    $(".quote-controls", $aside).html(expandContract + navLink);
+
+    if (this.ignoredUsers?.length && titleElement) {
+      const username = titleElement.innerText.trim().slice(0, -1);
+
+      if (username.length > 0 && this.ignoredUsers.includes(username)) {
+        aside.querySelectorAll("p").forEach((el) => el.remove());
+        aside.classList.add("ignored-user");
+      }
+    }
+
+    const quoteControls = aside.querySelector(".quote-controls");
+    if (quoteControls) {
+      quoteControls.innerHTML = expandContract + navLink;
+    }
   }
 
-  _insertQuoteControls($html) {
-    const $quotes = $html.find("aside.quote");
-    if ($quotes.length === 0) {
+  _insertQuoteControls(html) {
+    const quotes = html.querySelectorAll("aside.quote");
+    if (quotes.length === 0) {
       return;
     }
 
-    $quotes.each((index, e) => {
-      const $aside = $(e);
-      if ($aside.data("post")) {
-        const quoteId = `quote-id-${$aside.data("topic")}-${$aside.data(
-          "post"
-        )}-${index}`;
-        $aside.find("blockquote").attr("id", quoteId);
+    this.originalQuoteContents = new Map();
 
-        this._updateQuoteElements($aside, "chevron-down");
-        const $title = $(".title", $aside);
+    quotes.forEach((aside, index) => {
+      if (aside.dataset.post) {
+        const quoteId = `quote-id-${aside.dataset.topic}-${aside.dataset.post}-${index}`;
+
+        const blockquote = aside.querySelector("blockquote");
+        if (blockquote) {
+          blockquote.id = quoteId;
+        }
+
+        this._updateQuoteElements(aside, "chevron-down");
+        const title = aside.querySelector(".title");
+
+        if (!title) {
+          return;
+        }
 
         // If post/topic is not found then display username, skip controls
-        if (e.classList.contains("quote-post-not-found") && $title.length) {
-          e.querySelector(".title").innerHTML = e.dataset.username;
+        if (aside.classList.contains("quote-post-not-found")) {
+          if (aside.dataset.username) {
+            title.innerHTML = escape(aside.dataset.username);
+          } else {
+            title.remove();
+          }
+
           return;
         }
 
         // Unless it's a full quote, allow click to expand
-        if (!($aside.data("full") || $title.data("has-quote-controls"))) {
-          $title.on("click", (e2) => {
-            let $target = $(e2.target);
-            if ($target.closest("a").length) {
+        if (!aside.dataset.full && !title.dataset.hasQuoteControls) {
+          title.addEventListener("click", (e) => {
+            if (e.target.closest("a")) {
               return true;
             }
-            this._toggleQuote($aside);
+
+            this._toggleQuote(aside);
           });
-          $title.data("has-quote-controls", true);
+
+          title.dataset.hasQuoteControls = true;
         }
       }
     });

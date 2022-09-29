@@ -82,6 +82,7 @@ en:
       file_too_big: "The uncompressed file is too big."
       unknown_file_type: "The file you uploaded does not appear to be a valid Discourse theme."
       not_allowed_theme: "`%{repo}` is not in the list of allowed themes (check `allowed_theme_repos` global setting)."
+      ssh_key_gone: "You waited too long to install the theme and SSH key expired. Please try again."
     errors:
       component_no_user_selectable: "Theme components can't be user-selectable"
       component_no_default: "Theme components can't be default theme"
@@ -138,7 +139,7 @@ en:
         unsubscribe_not_allowed: "Happens when unsubscribing via email is not allowed for this user."
         email_not_allowed: "Happens when the email address is not on the allowlist or is on the blocklist."
       unrecognized_error: "Unrecognized Error"
-    secure_media_placeholder: "Redacted: This site has secure media enabled, visit the topic or click View Media to see the attached media."
+    secure_uploads_placeholder: "Redacted: This site has secure uploads enabled, visit the topic or click View Media to see the attached uploads."
     view_redacted_media: "View Media"
 
   errors: &errors
@@ -209,7 +210,7 @@ en:
       page_publishing_requirements: "Page publishing cannot be enabled if secure media is enabled."
       s3_backup_requires_s3_settings: "You cannot use S3 as backup location unless you've provided the '%{setting_name}'."
       s3_bucket_reused: "You cannot use the same bucket for 's3_upload_bucket' and 's3_backup_bucket'. Choose a different bucket or use a different path for each bucket."
-      secure_media_requirements: "S3 uploads must be enabled before enabling secure media."
+      secure_uploads_requirements: "S3 uploads must be enabled before enabling secure uploads."
       share_quote_facebook_requirements: "You must set a Facebook app id to enable quote sharing for Facebook."
       second_factor_cannot_enforce_with_socials: "You cannot enforce 2FA with social logins enabled. You must first disable login via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "You cannot enforce 2FA if local logins are disabled."
@@ -645,11 +646,10 @@ en:
             linkable_type:
               invalid: "is not valid"
 
-
   uncategorized_category_name: "Uncategorized"
 
-  vip_category_name: "Lounge"
-  vip_category_description: "A category exclusive to members with trust level 3 and higher."
+  general_category_name: "General"
+  general_category_description: "Create topics here that don’t fit into any other existing category."
 
   meta_category_name: "Site Feedback"
   meta_category_description: "Discussion about this site, its organization, how it works, and how we can improve it."
@@ -673,30 +673,6 @@ en:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       You may want to close this topic via the admin :wrench: (at the upper right and bottom), so that replies don't pile up on an announcement.
-
-  lounge_welcome:
-    title: "Welcome to the Lounge"
-    body: |
-
-      Congratulations! :confetti_ball:
-
-      If you can see this topic, you were recently promoted to **regular** (trust level 3).
-
-      You can now &hellip;
-
-      * Edit the title of any topic
-      * Change the category of any topic
-      * Have all your links followed ([automatic nofollow](https://en.wikipedia.org/wiki/Nofollow) is removed)
-      * Access a private Lounge category only visible to users at trust level 3 and higher
-      * Hide spam with a single flag
-
-      Here's the [current list of fellow regulars](%{base_path}/badges/3/regular). Be sure to say hi.
-
-      Thanks for being an important part of this community!
-
-      (For more information on trust levels, [see this topic][trust]. Please note that only members who continue to meet the requirements over time will remain regulars.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
 
   admin_quick_start_title: "READ ME FIRST: Admin Quick Start Guide"
 
@@ -1590,7 +1566,8 @@ en:
     summary_max_results: "Maximum posts returned by 'Summarize This Topic'"
     summary_timeline_button: "Show a 'Summarize' button in the timeline"
 
-    enable_personal_messages: "Allow trust level 1 (configurable via min trust to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
+    enable_personal_messages: "DEPRECATED, use the 'personal message enabled groups' setting instead. Allow trust level 1 (configurable via min trust to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
+    personal_message_enabled_groups: "Allow users within these groups to create messages and reply to messages. Trust level groups include all trust levels above that number, for example choosing trust_level_1 also allows trust_level_2, 3, 4 users to send PMs. Note that staff can always send messages no matter what."
     enable_system_message_replies: "Allows users to reply to system messages, even if personal messages are disabled"
     enable_chunked_encoding: "Enable chunked encoding responses by the server. This feature works on most setups however some proxies may buffer, causing responses to be delayed"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
@@ -1664,6 +1641,7 @@ en:
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
     share_links: "Determine which items appear on the share dialog, and in what order."
+    allow_username_in_share_links: "Allow usernames to be included in share links. This is useful to reward badges based on unique visitors."
     site_contact_username: "A valid staff username to send all automated messages from. If left blank the default System account will be used."
     site_contact_group_name: "A valid name of a group that gets invited to all automatically sent private messages."
     send_welcome_message: "Send all new users a welcome message with a quick start guide."
@@ -1794,6 +1772,8 @@ en:
     top_topics_formula_least_likes_per_post_multiplier: "value of least likes per post multiplier (n) in top topics formula: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
 
     enable_safe_mode: "Allow users to enter safe mode to debug plugins."
+    enable_experimental_sidebar_hamburger: "Allows experimental sidebar and user hamburger dropdown menu to be enabled."
+    enable_sidebar: "Enables experimental sidebar."
 
     rate_limit_create_topic: "After creating a topic, users must wait (n) seconds before creating another topic."
     rate_limit_create_post: "After posting, users must wait (n) seconds before creating another post."
@@ -1910,7 +1890,7 @@ en:
 
     min_trust_to_allow_self_wiki: "The minimum trust level required to make user's own post wiki."
 
-    min_trust_to_send_messages: "The minimum trust level required to create new personal messages."
+    min_trust_to_send_messages: "DEPRECATED, use the 'personal message enabled groups' setting instead. The minimum trust level required to create new personal messages."
     min_trust_to_send_email_messages: "The minimum trust level required to send personal messages via email."
     min_trust_to_flag_posts: "The minimum trust level required to flag posts"
     min_trust_to_post_links: "The minimum trust level required to include links in posts"
@@ -2041,6 +2021,7 @@ en:
     max_emails_per_day_per_user: "Maximum number of emails to send users per day. 0 to disable the limit"
     enable_staged_users: "Automatically create staged users when processing incoming emails."
     maximum_staged_users_per_email: "Maximum number of staged users created when processing an incoming email."
+    maximum_recipients_per_new_group_email: "Block incoming emails with too many recipients."
     auto_generated_allowlist: "List of email addresses that won't be checked for auto-generated content. Example: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Block incoming emails identified as being auto generated."
     ignore_by_title: "Ignore incoming emails based on their title."
@@ -2168,6 +2149,8 @@ en:
 
     disable_avatar_education_message: "Disable education message for changing avatar."
 
+    pm_warn_user_last_seen_months_ago: "When creating a new PM warn users when target recepient has not been seen more than n months ago."
+
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
 
     header_dropdown_category_count: "How many categories can be displayed in the header dropdown menu."
@@ -2236,9 +2219,12 @@ en:
     bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode (set to 0 to disable)"
 
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments."
-    secure_media: 'Limits access to ALL uploads (images, video, audio, text, pdfs, zips, and others). If “login required” is enabled, only logged-in users can access uploads. Otherwise, access will be limited only for media uploads in private messages and private categories. WARNING: This setting is complex and requires deep administrative understanding. See <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">the secure media topic on Meta</a> for details.'
-    secure_media_allow_embed_images_in_emails: "Allows embedding secure images that would normally be redacted in emails, if their size is smaller than the 'secure media max email embed image size kb' setting."
-    secure_media_max_email_embed_image_size_kb: "The size cutoff for secure images that will be embedded in emails if the 'secure media allow embed in emails' setting is enabled. Without that setting enabled, this setting has no effect."
+    secure_media: 'DEPRECATED: Use the secure_uploads setting instead, will be removed in Discourse 3.0.'
+    secure_uploads: 'Limits access to ALL uploads (images, video, audio, text, pdfs, zips, and others). If "login required” is enabled, only logged-in users can access uploads. Otherwise, access will be limited only for media uploads in private messages and private categories. WARNING: This setting is complex and requires deep administrative understanding. See <a target="_blank" href="https://meta.discourse.org/t/-/140017">the secure uploads topic on Meta</a> for details.'
+    secure_media_allow_embed_images_in_emails: "DEPRECATED: Use secure_uploads_allow_embed_images_in_emails, will remove in Discourse 3.0."
+    secure_uploads_allow_embed_images_in_emails: "Allows embedding secure images that would normally be redacted in emails, if their size is smaller than the 'secure uploads max email embed image size kb' setting."
+    secure_media_max_email_embed_image_size_kb: "DEPRECATED: Use secure_uploads_max_email_embed_image_size_kb, will be removed in Discourse 3.0."
+    secure_uploads_max_email_embed_image_size_kb: "The size cutoff for secure images that will be embedded in emails if the 'secure uploads allow embed in emails' setting is enabled. Without that setting enabled, this setting has no effect."
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
 
     enable_emoji: "Enable emoji"
@@ -2356,6 +2342,8 @@ en:
     enable_sitemap: "Generate a sitemap for your site and include it in the robots.txt file."
     sitemap_page_size: "Number of URLs to include in each sitemap page. Max 50.000"
 
+    enable_user_status: "(experimental) Allow users to set custom status message (emoji + description)."
+
     short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be limited to 12 characters."
 
     dashboard_hidden_reports: "Allow to hide the specified reports from the dashboard."
@@ -2377,6 +2365,9 @@ en:
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
 
     splash_screen: "Displays a temporary loading screen while site assets load"
+    default_sidebar_categories: "Selected categories will be displayed under Sidebar's Categories section by default."
+    default_sidebar_tags: "Selected tags will be displayed under Sidebar's Tags section by default."
+    enable_new_user_profile_nav_groups: "EXPERIMENTAL: Users of the selected groups will be shown the new user profile navigation menu"
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -2405,6 +2396,7 @@ en:
       reply_by_email_address_is_empty: "You must set a 'reply by email address' before enabling reply by email."
       email_polling_disabled: "You must enable either manual or POP3 polling before enabling reply by email."
       user_locale_not_enabled: "You must first enable 'allow user locale' before enabling this setting."
+      personal_message_enabled_groups_invalid: "You must specify at least one group for this setting. If you do not want anyone except staff to send PMs, choose the staff group."
       invalid_regex: "Regex is invalid or not allowed."
       invalid_regex_with_message: "The regex '%{regex}' has an error: %{message}"
       email_editable_enabled: "You must disable 'email editable' before enabling this setting."
@@ -3354,6 +3346,16 @@ en:
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         You replied to a Summary email, which is not accepted.
+
+        If you believe this is an error, [contact a staff member](%{base_url}/about).
+
+    email_reject_too_many_recipients:
+      title: "Email Reject Too Many Recipients"
+      subject_template: "[%{email_prefix}] Email issue -- Too Many Recipients"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        You attempted to email more than %{max_recipients_count} people and our system automatically tagged your email as spam.
 
         If you believe this is an error, [contact a staff member](%{base_url}/about).
 
@@ -4831,6 +4833,7 @@ en:
       invalid_token: "Invalid token."
     email_input: "Admin Email"
     submit_button: "Send Email"
+    safe_mode: "Safe Mode: disable all themes/plugins when logging in"
 
   performance_report:
     initial_post_raw: This topic includes daily performance reports for your site.
@@ -4872,7 +4875,7 @@ en:
     register:
       button: "Register"
       title: "Register Admin Account"
-      help: "register a new account to get started"
+      help: "Register a new account to get started."
       no_emails: "Unfortunately, no administrator emails were defined during setup, so finalizing the configuration may be difficult. Please add a developer email in the configuration file or <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>create an administrator account from console</a>."
     confirm_email:
       title: "Confirm your Email"
@@ -4883,9 +4886,9 @@ en:
 
   safe_mode:
     title: "Enter safe mode"
-    description: "Safe mode allows you to test your site without loading plugins or site customizations."
-    no_customizations: "Disable current theme"
-    only_official: "Disable unofficial plugins"
+    description: "Safe mode allows you to test your site without loading plugins or themes."
+    no_themes: "Disable themes and theme components"
+    no_unofficial_plugins: "Disable unofficial plugins"
     no_plugins: "Disable all plugins"
     enter: "Enter Safe Mode"
     must_select: "You must select at least one option to enter safe mode."

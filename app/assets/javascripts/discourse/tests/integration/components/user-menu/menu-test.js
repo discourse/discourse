@@ -21,16 +21,6 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.ok(notifications[2].classList.contains("liked-consolidated"));
   });
 
-  test("notifications panel has a11y attributes", async function (assert) {
-    await render(template);
-    const panel = query("#quick-access-all-notifications");
-    assert.strictEqual(panel.getAttribute("tabindex"), "-1");
-    assert.strictEqual(
-      panel.getAttribute("aria-labelledby"),
-      "user-menu-button-all-notifications"
-    );
-  });
-
   test("active tab has a11y attributes that indicate it's active", async function (assert) {
     await render(template);
     const activeTab = query(".top-tabs.tabs-list .btn.active");
@@ -48,12 +38,13 @@ module("Integration | Component | user-menu", function (hooks) {
   test("the menu has a group of tabs at the top", async function (assert) {
     await render(template);
     const tabs = queryAll(".top-tabs.tabs-list .btn");
-    assert.strictEqual(tabs.length, 6);
+    assert.strictEqual(tabs.length, 8);
     [
       "all-notifications",
       "replies",
       "mentions",
       "likes",
+      "watching",
       "messages",
       "bookmarks",
     ].forEach((tab, index) => {
@@ -70,10 +61,10 @@ module("Integration | Component | user-menu", function (hooks) {
     await render(template);
     const tabs = queryAll(".bottom-tabs.tabs-list .btn");
     assert.strictEqual(tabs.length, 1);
-    const preferencesTab = tabs[0];
-    assert.ok(preferencesTab.href.endsWith("/u/eviltrout/preferences"));
-    assert.strictEqual(preferencesTab.dataset.tabNumber, "6");
-    assert.strictEqual(preferencesTab.getAttribute("tabindex"), "-1");
+    const profileTab = tabs[0];
+    assert.strictEqual(profileTab.id, "user-menu-button-profile");
+    assert.strictEqual(profileTab.dataset.tabNumber, "8");
+    assert.strictEqual(profileTab.getAttribute("tabindex"), "-1");
   });
 
   test("likes tab is hidden if current user's like notifications frequency is 'never'", async function (assert) {
@@ -82,11 +73,11 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.ok(!exists("#user-menu-button-likes"));
 
     const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
-    assert.strictEqual(tabs.length, 6);
+    assert.strictEqual(tabs.length, 8);
 
     assert.deepEqual(
       tabs.map((t) => t.dataset.tabNumber),
-      ["0", "1", "2", "3", "4", "5"],
+      ["0", "1", "2", "3", "4", "5", "6", "7"],
       "data-tab-number of the tabs has no gaps when the likes tab is hidden"
     );
   });
@@ -95,7 +86,27 @@ module("Integration | Component | user-menu", function (hooks) {
     this.currentUser.set("can_review", true);
     await render(template);
     const tab = query("#user-menu-button-review-queue");
-    assert.strictEqual(tab.dataset.tabNumber, "6");
+    assert.strictEqual(tab.dataset.tabNumber, "7");
+
+    const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
+    assert.strictEqual(tabs.length, 10);
+
+    assert.deepEqual(
+      tabs.map((t) => t.dataset.tabNumber),
+      ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+      "data-tab-number of the tabs has no gaps when the reviewables tab is show"
+    );
+  });
+
+  test("messages tab isn't shown if current user isn't staff and user does not belong to personal_message_enabled_groups", async function (assert) {
+    this.currentUser.set("moderator", false);
+    this.currentUser.set("admin", false);
+    this.currentUser.set("groups", []);
+    this.siteSettings.personal_message_enabled_groups = "13"; // trust_level_3 auto group ID;
+
+    await render(template);
+
+    assert.ok(!exists("#user-menu-button-messages"));
 
     const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
     assert.strictEqual(tabs.length, 8);
@@ -103,33 +114,15 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.deepEqual(
       tabs.map((t) => t.dataset.tabNumber),
       ["0", "1", "2", "3", "4", "5", "6", "7"],
-      "data-tab-number of the tabs has no gaps when the reviewables tab is show"
-    );
-  });
-
-  test("messages tab isn't shown if current user isn't staff and enable_personal_messages setting is disabled", async function (assert) {
-    this.currentUser.set("moderator", false);
-    this.currentUser.set("admin", false);
-    this.siteSettings.enable_personal_messages = false;
-
-    await render(template);
-
-    assert.ok(!exists("#user-menu-button-messages"));
-
-    const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
-    assert.strictEqual(tabs.length, 6);
-
-    assert.deepEqual(
-      tabs.map((t) => t.dataset.tabNumber),
-      ["0", "1", "2", "3", "4", "5"],
       "data-tab-number of the tabs has no gaps when the messages tab is hidden"
     );
   });
 
-  test("messages tab is shown if current user is staff even if enable_personal_messages setting is disabled", async function (assert) {
+  test("messages tab is shown if current user is staff even if they do not belong to personal_message_enabled_groups", async function (assert) {
     this.currentUser.set("moderator", true);
     this.currentUser.set("admin", false);
-    this.siteSettings.enable_personal_messages = false;
+    this.currentUser.set("groups", []);
+    this.siteSettings.personal_message_enabled_groups = "999";
 
     await render(template);
 
@@ -181,7 +174,9 @@ module("Integration | Component | user-menu", function (hooks) {
             },
           },
         ];
-      } else if (queryParams.filter_by_types === "liked,liked_consolidated") {
+      } else if (
+        queryParams.filter_by_types === "liked,liked_consolidated,reaction"
+      ) {
         data = [
           {
             id: 60,
@@ -244,6 +239,8 @@ module("Integration | Component | user-menu", function (hooks) {
             },
           },
         ];
+      } else if (queryParams.filter_by_types === "replied,quoted") {
+        data = [];
       } else {
         throw new Error(
           `unexpected notification type ${queryParams.filter_by_types}`
@@ -278,8 +275,8 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.ok(exists("#quick-access-likes.quick-access-panel"));
     assert.strictEqual(
       queryParams.filter_by_types,
-      "liked,liked_consolidated",
-      "request params has filter_by_types set to `liked` and `liked_consolidated"
+      "liked,liked_consolidated,reaction",
+      "request params has filter_by_types set to `liked`, `liked_consolidated` and `reaction`"
     );
     assert.strictEqual(queryParams.silent, "true");
     activeTabs = queryAll(".top-tabs .btn.active");
@@ -290,6 +287,22 @@ module("Integration | Component | user-menu", function (hooks) {
       "active tab is now the likes tab"
     );
     assert.strictEqual(queryAll("#quick-access-likes ul li").length, 3);
+
+    await click("#user-menu-button-replies");
+    assert.ok(exists("#quick-access-replies.quick-access-panel"));
+    assert.strictEqual(
+      queryParams.filter_by_types,
+      "replied,quoted",
+      "request params has filter_by_types set to `replied` and `quoted`"
+    );
+    assert.strictEqual(queryParams.silent, "true");
+    activeTabs = queryAll(".top-tabs .btn.active");
+    assert.strictEqual(activeTabs.length, 1);
+    assert.strictEqual(
+      activeTabs[0].id,
+      "user-menu-button-replies",
+      "active tab is now the replies tab"
+    );
 
     await click("#user-menu-button-review-queue");
     assert.ok(exists("#quick-access-review-queue.quick-access-panel"));
