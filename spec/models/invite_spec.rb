@@ -60,11 +60,13 @@ RSpec.describe Invite do
 
       invite = Fabricate.build(:invite, email: 'test@example.com', domain: 'example.com', invited_by: user)
       expect(invite).not_to be_valid
+      expect(invite.errors.full_messages).to include(I18n.t('invite.email_xor_domain'))
     end
 
     it 'checks if redemption_count is less or equal than max_redemptions_allowed' do
       invite = Fabricate.build(:invite, redemption_count: 2, max_redemptions_allowed: 1, invited_by: user)
       expect(invite).not_to be_valid
+      expect(invite.errors.full_messages.first).to include(I18n.t('invite.redemption_count_less_than_max', max_redemptions_allowed: 1))
     end
   end
 

@@ -70,7 +70,7 @@ class Invite < ActiveRecord::Base
 
   def email_xor_domain
     if email.present? && domain.present?
-      errors.add(:base, :email_xor_domain)
+      errors.add(:base, I18n.t('invite.email_xor_domain'))
     end
   end
 
