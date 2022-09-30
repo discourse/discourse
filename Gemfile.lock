@@ -240,7 +240,7 @@ GEM
     mustache (1.1.1)
     net-http (0.2.2)
       uri
-    net-imap (0.3.0)
+    net-imap (0.3.1)
       net-protocol
     net-pop (0.1.2)
       net-protocol
