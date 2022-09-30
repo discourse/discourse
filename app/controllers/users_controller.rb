@@ -52,6 +52,7 @@ class UsersController < ApplicationController
   after_action :add_noindex_header, only: [:show, :my_redirect]
 
   allow_in_staff_writes_only_mode :admin_login
+  allow_in_staff_writes_only_mode :email_login
 
   MAX_RECENT_SEARCHES = 5
 
