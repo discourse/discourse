@@ -255,7 +255,7 @@ RSpec.describe ReviewablesController do
     end
 
     describe "#user_menu_list" do
-      it "renders each reviewable with its basic serializers" do
+      it "renders each reviewable using its basic serializers" do
         reviewable_user = Fabricate(:reviewable_user, payload: { username: "someb0dy" })
         reviewable_flagged_post = Fabricate(:reviewable_flagged_post)
         reviewable_queued_post = Fabricate(:reviewable_queued_post)
@@ -284,40 +284,38 @@ RSpec.describe ReviewablesController do
       end
 
       it "returns JSON containing basic information of reviewables" do
-        reviewable1 = Fabricate(:reviewable)
-        reviewable2 = Fabricate(:reviewable, status: Reviewable.statuses[:approved])
+        reviewable = Fabricate(:reviewable)
         get "/review/user-menu-list.json"
         expect(response.status).to eq(200)
         reviewables = response.parsed_body["reviewables"]
-        expect(reviewables.size).to eq(2)
-        expect(reviewables[0]["flagger_username"]).to eq(reviewable1.created_by.username)
-        expect(reviewables[0]["id"]).to eq(reviewable1.id)
-        expect(reviewables[0]["type"]).to eq(reviewable1.type)
+        expect(reviewables.size).to eq(1)
+        expect(reviewables[0]["flagger_username"]).to eq(reviewable.created_by.username)
+        expect(reviewables[0]["id"]).to eq(reviewable.id)
+        expect(reviewables[0]["type"]).to eq(reviewable.type)
         expect(reviewables[0]["pending"]).to eq(true)
-
-        expect(reviewables[1]["flagger_username"]).to eq(reviewable2.created_by.username)
-        expect(reviewables[1]["id"]).to eq(reviewable2.id)
-        expect(reviewables[1]["type"]).to eq(reviewable2.type)
-        expect(reviewables[1]["pending"]).to eq(false)
       end
 
-      it "puts pending reviewables on top" do
-        approved1 = Fabricate(
+      it "responds with pending reviewables only" do
+        Fabricate(
           :reviewable,
           status: Reviewable.statuses[:approved]
         )
-        pending = Fabricate(
+        pending1 = Fabricate(
           :reviewable,
           status: Reviewable.statuses[:pending]
         )
-        approved2 = Fabricate(
+        Fabricate(
           :reviewable,
           status: Reviewable.statuses[:approved]
+        )
+        pending2 = Fabricate(
+          :reviewable,
+          status: Reviewable.statuses[:pending]
         )
         get "/review/user-menu-list.json"
         expect(response.status).to eq(200)
         reviewables = response.parsed_body["reviewables"]
-        expect(reviewables.map { |r| r["id"] }).to eq([pending.id, approved2.id, approved1.id])
+        expect(reviewables.map { |r| r["id"] }).to eq([pending2.id, pending1.id])
       end
     end
 
