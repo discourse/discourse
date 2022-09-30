@@ -984,6 +984,8 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
   });
 
   test("adding section link via plugin API with callback function", async function (assert) {
+    let teardownCalled = false;
+
     withPluginApi("1.2.0", (api) => {
       api.addCommunitySectionLink((baseSectionLink) => {
         return class CustomSectionLink extends baseSectionLink {
@@ -1005,6 +1007,10 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
           get text() {
             return "my summary";
+          }
+
+          get teardown() {
+            teardownCalled = true;
           }
         };
       });
@@ -1035,24 +1041,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "eviltrout summary",
       "displays the right title for the link"
     );
-  });
-
-  test("clean up topic tracking state state changed callbacks when section is destroyed", async function (assert) {
-    await visit("/");
-
-    const topicTrackingState = this.container.lookup(
-      "service:topic-tracking-state"
-    );
-
-    const initialCallbackCount = Object.keys(
-      topicTrackingState.stateChangeCallbacks
-    ).length;
 
     await click(".btn-sidebar-toggle");
 
-    assert.ok(
-      Object.keys(topicTrackingState.stateChangeCallbacks).length <
-        initialCallbackCount
-    );
+    assert.ok(teardownCalled, "section link teardown callback was called");
   });
 });

@@ -39,6 +39,8 @@ export default class SidebarUserCommunitySection extends SidebarCommonCommunityS
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
+
     this.appEvents.off(
       "user-reviewable-count:changed",
       this._refreshSectionLinks
