@@ -11,6 +11,7 @@ class SessionController < ApplicationController
   requires_login only: [:second_factor_auth_show, :second_factor_auth_perform]
 
   allow_in_staff_writes_only_mode :create
+  allow_in_staff_writes_only_mode :email_login
 
   ACTIVATE_USER_KEY = "activate_user"
 
@@ -375,6 +376,7 @@ class SessionController < ApplicationController
       elsif payload = login_error_check(user)
         return render json: payload
       else
+        raise Discourse::ReadOnly if staff_writes_only_mode? && !user&.staff?
         user.update_timezone_if_missing(params[:timezone])
         log_on_user(user)
         return render json: success_json

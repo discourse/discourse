@@ -129,6 +129,27 @@ RSpec.describe SessionController do
       SiteSetting.enable_local_logins_via_email = true
     end
 
+    context "when in staff writes only mode" do
+      use_redis_snapshotting
+
+      before do
+        Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
+      end
+
+      it "allows admins to login" do
+        user.update!(admin: true)
+        post "/session/email-login/#{email_token.token}.json"
+        expect(response.status).to eq(200)
+        expect(session[:current_user_id]).to eq(user.id)
+      end
+
+      it "does not allow other users to login" do
+        post "/session/email-login/#{email_token.token}.json"
+        expect(response.status).to eq(503)
+        expect(session[:current_user_id]).to eq(nil)
+      end
+    end
+
     context "when local logins via email disabled" do
       before { SiteSetting.enable_local_logins_via_email = false }
 
