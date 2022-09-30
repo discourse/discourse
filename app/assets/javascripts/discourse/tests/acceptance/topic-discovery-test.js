@@ -30,7 +30,7 @@ acceptance("Topic Discovery", function (needs) {
 
     assert.strictEqual(
       query("a[data-user-card=eviltrout] img.avatar").getAttribute("title"),
-      "Evil Trout - Most Posts",
+      "eviltrout - Most Posts",
       "it shows user's full name in avatar title"
     );
 

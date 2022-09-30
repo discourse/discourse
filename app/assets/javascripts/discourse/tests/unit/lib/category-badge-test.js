@@ -24,7 +24,7 @@ discourseModule("Unit | Utility | category-badge", function () {
     assert.strictEqual(tag.tagName, "A", "it creates a `a` wrapper tag");
     assert.strictEqual(
       tag.className.trim(),
-      "badge-wrapper",
+      "badge-wrapper bullet",
       "it has the correct class"
     );
 
