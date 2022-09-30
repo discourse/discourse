@@ -21,7 +21,7 @@ acceptance("Emoji", function (needs) {
     assert.strictEqual(
       normalizeHtml(query(".d-editor-preview").innerHTML.trim()),
       normalizeHtml(
-        `<p>this is an emoji <img src="/images/emoji/google_classic/blonde_woman.png?v=${v}" title=":blonde_woman:" class="emoji" alt=":blonde_woman:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;"></p>`
+        `<p>this is an emoji <img src="/images/emoji/twitter/blonde_woman.png?v=${v}" title=":blonde_woman:" class="emoji" alt=":blonde_woman:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;"></p>`
       )
     );
   });
@@ -36,7 +36,7 @@ acceptance("Emoji", function (needs) {
     assert.strictEqual(
       normalizeHtml(query(".d-editor-preview").innerHTML.trim()),
       normalizeHtml(
-        `<p>this is an emoji <img src="/images/emoji/google_classic/blonde_woman/5.png?v=${v}" title=":blonde_woman:t5:" class="emoji" alt=":blonde_woman:t5:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;"></p>`
+        `<p>this is an emoji <img src="/images/emoji/twitter/blonde_woman/5.png?v=${v}" title=":blonde_woman:t5:" class="emoji" alt=":blonde_woman:t5:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;"></p>`
       )
     );
   });

@@ -627,7 +627,7 @@ export function applyDefaultHandlers(pretender) {
       });
     }
 
-    if (data.raw === "custom message") {
+    if (data.raw === "custom message that is a good length") {
       return response(200, {
         success: true,
         action: "custom",

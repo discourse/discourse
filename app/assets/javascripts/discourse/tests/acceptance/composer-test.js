@@ -250,7 +250,7 @@ acceptance("Composer", function (needs) {
     await visit("/");
     await click("#create-topic");
     await fillIn("#reply-title", "This title doesn't matter");
-    await fillIn(".d-editor-input", "custom message");
+    await fillIn(".d-editor-input", "custom message that is a good length");
     await click("#reply-control button.create");
 
     assert.strictEqual(
