@@ -814,8 +814,8 @@ class UsersController < ApplicationController
         },
         {
           user_id: params[:id].to_i,
-          name: 'good_actor',
-          value: true
+          name: 'actor_polarity',
+          value: 1
         }
       ]
     )
