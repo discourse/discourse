@@ -1,6 +1,14 @@
 <div class="sidebar-section-link-wrapper">
   {{#if @href}}
     <a href={{@href}} rel="noopener noreferrer" target="_blank" class={{this.classNames}} title={{@title}}>
+      <Sidebar::SectionLinkPrefix
+        @prefixType={{@prefixType}}
+        @prefixValue={{@prefixValue}}
+        @prefixCSSClass={{@prefixCSSClass}}
+        @prefixCSS={{this.prefixCSS}}
+        @prefixBadge={{@prefixBadge}}
+      />
+
       <span class="sidebar-section-link-content-text">
         {{@content}}
       </span>
@@ -14,25 +22,14 @@
       @current-when={{@currentWhen}}
       @title={{@title}}
     >
-      {{#if @prefixValue}}
-        <span class="sidebar-section-link-prefix {{@prefixType}} {{@prefixCSSClass}}" style={{this.prefixCSS}}>
-          {{#if (eq @prefixType "image")}}
-            <img src={{@prefixValue}} class="prefix-image">
-          {{/if}}
 
-          {{#if (eq @prefixType "text")}}
-            {{@prefixValue}}
-          {{/if}}
-
-          {{#if (eq @prefixType "icon")}}
-            {{d-icon @prefixValue class="prefix-icon"}}
-          {{/if}}
-
-          {{#if @prefixBadge}}
-            {{d-icon @prefixBadge class="prefix-badge"}}
-          {{/if}}
-        </span>
-      {{/if}}
+      <Sidebar::SectionLinkPrefix
+        @prefixType={{@prefixType}}
+        @prefixValue={{@prefixValue}}
+        @prefixCSSClass={{@prefixCSSClass}}
+        @prefixCSS={{this.prefixCSS}}
+        @prefixBadge={{@prefixBadge}}
+      />
 
       <span class="sidebar-section-link-content-text">
         {{@content}}
@@ -45,7 +42,7 @@
       {{/if}}
 
       {{#if @suffixValue}}
-        <span class="sidebar-section-link-suffix {{@suffixType}} {{@suffixCSSClass}}">
+        <span class={{concat-class "sidebar-section-link-suffix" @suffixType @suffixCSSClass}}>
           {{#if (eq @suffixType "icon")}}
             {{d-icon @suffixValue}}
           {{/if}}

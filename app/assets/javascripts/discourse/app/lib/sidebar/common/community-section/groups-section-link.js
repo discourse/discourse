@@ -22,4 +22,8 @@ export default class GroupsSectionLink extends BaseSectionLink {
   get shouldDisplay() {
     return this.siteSettings.enable_group_directory;
   }
+
+  get prefixValue() {
+    return "user-friends";
+  }
 }

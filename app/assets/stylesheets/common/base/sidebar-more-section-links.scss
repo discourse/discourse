@@ -12,9 +12,18 @@
     list-style: none;
     box-sizing: border-box;
 
-    .d-icon {
-      margin-left: auto;
-      color: var(--primary-medium);
+    .sidebar-more-section-links-icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--d-sidebar-section-link-prefix-width);
+      height: var(--d-sidebar-section-link-prefix-width);
+      margin-right: var(--d-sidebar-section-link-prefix-margin-right);
+
+      .d-icon {
+        color: var(--primary-medium);
+        font-size: var(--font-down-1);
+      }
     }
 
     &::before {
@@ -35,7 +44,7 @@
     margin: 0 calc(var(--d-sidebar-row-horizontal-padding) * 2 / 3);
 
     .sidebar-row {
-      padding: calc(var(--d-sidebar-row-horizontal-padding) / 3);
+      padding: 0.33rem calc(var(--d-sidebar-row-horizontal-padding) / 3);
     }
   }
 

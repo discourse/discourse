@@ -1291,6 +1291,7 @@ email:
   max_participant_names:
     default: 10
     hidden: true
+  require_change_email_confirmation: false
 
 files:
   max_image_size_kb:

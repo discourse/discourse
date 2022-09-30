@@ -221,6 +221,9 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
             );
 
             this._triggerInProgressUploadsEvent();
+            if (this.inProgressUploads.length === 0) {
+              this._allUploadsComplete();
+            }
           })
           .catch((errResponse) => {
             displayErrorForUpload(errResponse, this.siteSettings, file.name);
@@ -235,7 +238,11 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
           upload
         );
         this.uploadDone(deepMerge(upload, { file_name: file.name }));
+
         this._triggerInProgressUploadsEvent();
+        if (this.inProgressUploads.length === 0) {
+          this._allUploadsComplete();
+        }
       }
     });
 
@@ -257,17 +264,6 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
           `upload-mixin:${this.id}:upload-cancelled`,
           file.id
         );
-      });
-    });
-
-    this._uppyInstance.on("complete", () => {
-      run(() => {
-        if (this.isDestroying || this.isDestroyed) {
-          return;
-        }
-
-        this.appEvents.trigger(`upload-mixin:${this.id}:all-uploads-complete`);
-        this._reset();
       });
     });
 
@@ -484,5 +480,14 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
   // default onDragOver and removes it onDragLeave
   _uploadDropTargetOptions() {
     return { target: this.element };
+  },
+
+  _allUploadsComplete() {
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    this.appEvents.trigger(`upload-mixin:${this.id}:all-uploads-complete`);
+    this._reset();
   },
 });

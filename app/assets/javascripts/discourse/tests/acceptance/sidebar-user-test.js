@@ -169,5 +169,27 @@ acceptance(
         "displays the mobile icon for the button"
       );
     });
+
+    test("clean up topic tracking state state changed callbacks when sidebar is destroyed", async function (assert) {
+      this.siteSettings.tagging_enabled = true;
+
+      await visit("/");
+
+      const topicTrackingState = this.container.lookup(
+        "service:topic-tracking-state"
+      );
+
+      const initialCallbackCount = Object.keys(
+        topicTrackingState.stateChangeCallbacks
+      ).length;
+
+      await click(".btn-sidebar-toggle");
+
+      assert.strictEqual(
+        Object.keys(topicTrackingState.stateChangeCallbacks).length,
+        initialCallbackCount - 3,
+        "the 3 topic tracking state change callbacks are removed"
+      );
+    });
   }
 );
