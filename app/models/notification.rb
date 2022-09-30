@@ -29,6 +29,13 @@ class Notification < ActiveRecord::Base
       .order("NOT notifications.read DESC")
       .order("notifications.created_at DESC")
   end
+  scope :for_user_menu, ->(user_id, limit: 30) do
+    where(user_id: user_id)
+      .visible
+      .prioritized
+      .includes(:topic)
+      .limit(limit)
+  end
 
   attr_accessor :skip_send_email
 

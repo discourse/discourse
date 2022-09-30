@@ -1746,11 +1746,10 @@ class UsersController < ApplicationController
       raise Discourse::InvalidAccess.new("username doesn't match current_user's username")
     end
 
-    reminder_notifications = Notification.unread_type(
-      current_user,
-      Notification.types[:bookmark_reminder],
-      USER_MENU_LIST_LIMIT
-    )
+    reminder_notifications = Notification
+      .for_user_menu(current_user.id, limit: USER_MENU_LIST_LIMIT)
+      .unread
+      .where(notification_type: Notification.types[:bookmark_reminder])
 
     if reminder_notifications.size < USER_MENU_LIST_LIMIT
       exclude_bookmark_ids = reminder_notifications
@@ -1804,12 +1803,9 @@ class UsersController < ApplicationController
     end
 
     unread_notifications = Notification
-      .unread_types(
-        current_user,
-        [Notification.types[:private_message], Notification.types[:group_message_summary]],
-        USER_MENU_LIST_LIMIT
-      )
-      .prioritized
+      .for_user_menu(current_user.id, limit: USER_MENU_LIST_LIMIT)
+      .unread
+      .where(notification_type: [Notification.types[:private_message], Notification.types[:group_message_summary]])
       .to_a
 
     if unread_notifications.size < USER_MENU_LIST_LIMIT
@@ -1826,15 +1822,11 @@ class UsersController < ApplicationController
         end
       end
       read_notifications = Notification
+        .for_user_menu(current_user.id, limit: limit)
         .where(
           read: true,
           notification_type: Notification.types[:group_message_summary],
-          user_id: current_user.id
         )
-        .visible
-        .includes(:topic)
-        .prioritized
-        .limit(limit)
         .to_a
     end
 
