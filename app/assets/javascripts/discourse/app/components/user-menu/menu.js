@@ -170,7 +170,7 @@ const CORE_TOP_TABS = [
     }
 
     get notificationTypes() {
-      return ["private_message"];
+      return ["private_message", "group_message_summary"];
     }
 
     get linkWhenActive() {

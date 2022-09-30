@@ -7,9 +7,21 @@ import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item"
 import UserMenuMessageItem from "discourse/lib/user-menu/message-item";
 import Topic from "discourse/models/topic";
 
+function parseDateString(date) {
+  if (date) {
+    return new Date(date);
+  }
+}
+
+async function initializeNotifications(rawList) {
+  const notifications = rawList.map((n) => Notification.create(n));
+  await Notification.applyTransformations(notifications);
+  return notifications;
+}
+
 export default class UserMenuMessagesList extends UserMenuNotificationsList {
   get dismissTypes() {
-    return ["private_message"];
+    return this.filterByTypes;
   }
 
   get showAllHref() {
@@ -51,9 +63,10 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     );
     const content = [];
 
-    const notifications = data.notifications.map((n) => Notification.create(n));
-    await Notification.applyTransformations(notifications);
-    notifications.forEach((notification) => {
+    const unreadNotifications = await initializeNotifications(
+      data.unread_notifications
+    );
+    unreadNotifications.forEach((notification) => {
       content.push(
         new UserMenuNotificationItem({
           notification,
@@ -66,12 +79,39 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
 
     const topics = data.topics.map((t) => Topic.create(t));
     await Topic.applyTransformations(topics);
-    content.push(
-      ...topics.map((topic) => {
-        return new UserMenuMessageItem({ message: topic });
-      })
+
+    const readNotifications = await initializeNotifications(
+      data.read_notifications
     );
 
+    let latestReadNotificationDate = parseDateString(
+      readNotifications[0]?.created_at
+    );
+    let latestMessageDate = parseDateString(topics[0]?.bumped_at);
+
+    while (latestReadNotificationDate || latestMessageDate) {
+      if (
+        !latestReadNotificationDate ||
+        (latestMessageDate && latestReadNotificationDate < latestMessageDate)
+      ) {
+        content.push(new UserMenuMessageItem({ message: topics[0] }));
+        topics.shift();
+        latestMessageDate = parseDateString(topics[0]?.bumped_at);
+      } else {
+        content.push(
+          new UserMenuNotificationItem({
+            notification: readNotifications[0],
+            currentUser: this.currentUser,
+            siteSettings: this.siteSettings,
+            site: this.site,
+          })
+        );
+        readNotifications.shift();
+        latestReadNotificationDate = parseDateString(
+          readNotifications[0]?.created_at
+        );
+      }
+    }
     return content;
   }
 

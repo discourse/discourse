@@ -15,14 +15,26 @@ class Notification < ActiveRecord::Base
   scope :recent, lambda { |n = nil| n ||= 10; order('notifications.created_at desc').limit(n) }
   scope :visible , lambda { joins('LEFT JOIN topics ON notifications.topic_id = topics.id')
     .where('topics.id IS NULL OR topics.deleted_at IS NULL') }
-  scope :unread_type, ->(user, type, limit = 20) do
-    where(user_id: user.id, read: false, notification_type: type).visible.includes(:topic).limit(limit)
+  scope :unread_type, ->(user, type, limit = 30) do
+    unread_types(user, [type], limit)
   end
-  scope :prioritized, ->(limit = nil) do
+  scope :unread_types, ->(user, types, limit = 30) do
+    where(user_id: user.id, read: false, notification_type: types)
+      .visible
+      .includes(:topic)
+      .limit(limit)
+  end
+  scope :prioritized, ->() do
     order("notifications.high_priority AND NOT notifications.read DESC")
       .order("NOT notifications.read DESC")
       .order("notifications.created_at DESC")
-      .limit(limit || 30)
+  end
+  scope :for_user_menu, ->(user_id, limit: 30) do
+    where(user_id: user_id)
+      .visible
+      .prioritized
+      .includes(:topic)
+      .limit(limit)
   end
 
   attr_accessor :skip_send_email
@@ -226,7 +238,8 @@ class Notification < ActiveRecord::Base
     notifications = user.notifications
       .includes(:topic)
       .visible
-      .prioritized(count)
+      .prioritized
+      .limit(count)
 
     if types.present?
       notifications = notifications.where(notification_type: types)

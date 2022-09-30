@@ -1746,11 +1746,10 @@ class UsersController < ApplicationController
       raise Discourse::InvalidAccess.new("username doesn't match current_user's username")
     end
 
-    reminder_notifications = Notification.unread_type(
-      current_user,
-      Notification.types[:bookmark_reminder],
-      USER_MENU_LIST_LIMIT
-    )
+    reminder_notifications = Notification
+      .for_user_menu(current_user.id, limit: USER_MENU_LIST_LIMIT)
+      .unread
+      .where(notification_type: Notification.types[:bookmark_reminder])
 
     if reminder_notifications.size < USER_MENU_LIST_LIMIT
       exclude_bookmark_ids = reminder_notifications
@@ -1803,29 +1802,37 @@ class UsersController < ApplicationController
       raise Discourse::InvalidAccess.new("personal messages are disabled.")
     end
 
-    message_notifications = Notification.unread_type(
-      current_user,
-      Notification.types[:private_message],
-      USER_MENU_LIST_LIMIT
-    )
+    unread_notifications = Notification
+      .for_user_menu(current_user.id, limit: USER_MENU_LIST_LIMIT)
+      .unread
+      .where(notification_type: [Notification.types[:private_message], Notification.types[:group_message_summary]])
+      .to_a
 
-    if message_notifications.size < USER_MENU_LIST_LIMIT
-      exclude_topic_ids = message_notifications.map(&:topic_id).uniq
+    if unread_notifications.size < USER_MENU_LIST_LIMIT
+      exclude_topic_ids = unread_notifications.filter_map(&:topic_id).uniq
+      limit = USER_MENU_LIST_LIMIT - unread_notifications.size
       messages_list = TopicQuery.new(
         current_user,
-        per_page: USER_MENU_LIST_LIMIT - message_notifications.size
-      ).list_private_messages(current_user) do |query|
+        per_page: limit
+      ).list_private_messages_direct_and_groups(current_user) do |query|
         if exclude_topic_ids.present?
           query.where("topics.id NOT IN (?)", exclude_topic_ids)
         else
           query
         end
       end
+      read_notifications = Notification
+        .for_user_menu(current_user.id, limit: limit)
+        .where(
+          read: true,
+          notification_type: Notification.types[:group_message_summary],
+        )
+        .to_a
     end
 
-    if message_notifications.present?
-      serialized_notifications = ActiveModel::ArraySerializer.new(
-        message_notifications,
+    if unread_notifications.present?
+      serialized_unread_notifications = ActiveModel::ArraySerializer.new(
+        unread_notifications,
         each_serializer: NotificationSerializer,
         scope: guardian
       )
@@ -1840,8 +1847,17 @@ class UsersController < ApplicationController
       )[:topics]
     end
 
+    if read_notifications.present?
+      serialized_read_notifications = ActiveModel::ArraySerializer.new(
+        read_notifications,
+        each_serializer: NotificationSerializer,
+        scope: guardian
+      )
+    end
+
     render json: {
-      notifications: serialized_notifications || [],
+      unread_notifications: serialized_unread_notifications || [],
+      read_notifications: serialized_read_notifications || [],
       topics: serialized_messages || []
     }
   end
@@ -2026,14 +2042,5 @@ class UsersController < ApplicationController
       FoundUserSerializer
 
     { users: ActiveModel::ArraySerializer.new(users, each_serializer: each_serializer).as_json }
-  end
-
-  def find_unread_notifications_of_type(type, limit)
-    current_user
-      .notifications
-      .visible
-      .includes(:topic)
-      .where(read: false, notification_type: type)
-      .limit(limit)
   end
 end
