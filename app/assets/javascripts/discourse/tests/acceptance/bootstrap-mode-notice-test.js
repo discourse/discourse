@@ -36,8 +36,8 @@ acceptance("Bootstrap Mode Notice", function (needs) {
       "it transitions to the wizard page"
     );
 
-    await visit("/");
     set(this.siteSettings, "bootstrap_mode_enabled", false);
+    await visit("/");
     await settled();
     assert.ok(
       !exists(".bootstrap-mode-notice"),
