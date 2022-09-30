@@ -211,6 +211,7 @@ acceptance("Topic", function (needs) {
   });
 
   test("Deleting a topic", async function (assert) {
+    this.siteSettings.min_topic_views_for_delete_confirm = 10000;
     await visit("/t/internationalization-localization/280");
     await click(".topic-post:nth-of-type(1) button.show-more-actions");
     await click(".widget-button.delete");
