@@ -2051,13 +2051,4 @@ class UsersController < ApplicationController
 
     { users: ActiveModel::ArraySerializer.new(users, each_serializer: each_serializer).as_json }
   end
-
-  def find_unread_notifications_of_type(type, limit)
-    current_user
-      .notifications
-      .visible
-      .includes(:topic)
-      .where(read: false, notification_type: type)
-      .limit(limit)
-  end
 end
