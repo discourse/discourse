@@ -839,8 +839,6 @@ export default Controller.extend({
 
     const composer = this.model;
 
-    console.log("composer", composer)
-
     if (composer?.cantSubmitPost) {
       if (composer?.viewFullscreen) {
         this.toggleFullscreen();

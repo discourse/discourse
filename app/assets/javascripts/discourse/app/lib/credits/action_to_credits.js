@@ -2,7 +2,7 @@
 
 const ACTION_PRICE_LIST = {
 	createTopic: 2,
-	replyToTopic: 1
+	reply: 1
 }
 
 export const getActionCost = (action) => {

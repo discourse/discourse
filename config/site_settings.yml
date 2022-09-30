@@ -632,11 +632,11 @@ users:
   public_user_custom_fields:
     type: list
     list_type: simple
-    default: "credit_balance|good_actor"
+    default: "credit_balance|actor_polarity"
   staff_user_custom_fields:
     type: list
     list_type: simple
-    default: "credit_balance|good_actor"
+    default: "credit_balance|actor_polarity"
   enable_user_directory:
     client: true
     default: true

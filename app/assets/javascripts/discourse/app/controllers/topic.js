@@ -30,6 +30,10 @@ import { openBookmarkModal } from "discourse/controllers/bookmark";
 let customPostMessageCallbacks = {};
 
 const RETRIES_ON_RATE_LIMIT = 4;
+const META_TAG_SUMMARY = 'summary'
+const META_TAG_SPONSOR = 'sponsor'
+const META_TAG_OPINION = 'opinion'
+const ACTION_REPLY = 'replyToTopic'
 
 export function resetCustomPostMessageCallbacks() {
   customPostMessageCallbacks = {};
@@ -591,7 +595,7 @@ export default Controller.extend(bufferedProperty("model"), {
           action: Composer.REPLY,
           draftKey: topic.get("draft_key"),
           draftSequence: topic.get("draft_sequence"),
-          meta_tag: 'summary'
+          meta_tag: META_TAG_SUMMARY
         };
 
         if (quotedText) {
@@ -641,7 +645,7 @@ export default Controller.extend(bufferedProperty("model"), {
           action: Composer.REPLY,
           draftKey: topic.get("draft_key"),
           draftSequence: topic.get("draft_sequence"),
-          meta_tag: 'sponsor'
+          meta_tag: META_TAG_SPONSOR
         };
 
         if (quotedText) {
@@ -691,7 +695,7 @@ export default Controller.extend(bufferedProperty("model"), {
           action: Composer.REPLY,
           draftKey: topic.get("draft_key"),
           draftSequence: topic.get("draft_sequence"),
-          meta_tag: 'opinion'
+          meta_tag: META_TAG_OPINION
         };
 
         if (quotedText) {
