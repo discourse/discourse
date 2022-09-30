@@ -35,7 +35,14 @@ export default class SidebarCommunitySection extends Component {
   }
 
   willDestroy() {
-    this.sectionLinks.forEach((sectionLink) => sectionLink.teardown());
+    [
+      ...this.sectionLinks,
+      ...this.moreSectionLinks,
+      ...this.moreSecondarySectionLinks,
+    ].forEach((sectionLink) => {
+      sectionLink.teardown?.();
+    });
+
     this.topicTrackingState.offStateChange(this.callbackId);
   }
 
