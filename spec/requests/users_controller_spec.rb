@@ -5939,12 +5939,20 @@ RSpec.describe UsersController do
       end
 
       it "sends an array of read group_message_summary notifications" do
+        read_group_message_summary_notification2 = Fabricate(
+          :notification,
+          read: true,
+          user: user,
+          notification_type: Notification.types[:group_message_summary],
+          created_at: 5.minutes.ago
+        )
         get "/u/#{user.username}/user-menu-private-messages"
         expect(response.status).to eq(200)
 
-        unread_notifications = response.parsed_body["read_notifications"]
-        expect(unread_notifications.map { |notification| notification["id"] }).to eq([
-          read_group_message_summary_notification.id
+        read_notifications = response.parsed_body["read_notifications"]
+        expect(read_notifications.map { |notification| notification["id"] }).to eq([
+          read_group_message_summary_notification.id,
+          read_group_message_summary_notification2.id
         ])
       end
 
