@@ -1809,7 +1809,7 @@ class UsersController < ApplicationController
         [Notification.types[:private_message], Notification.types[:group_message_summary]],
         USER_MENU_LIST_LIMIT
       )
-      .prioritized(USER_MENU_LIST_LIMIT)
+      .prioritized
       .to_a
 
     if unread_notifications.size < USER_MENU_LIST_LIMIT
@@ -1833,7 +1833,8 @@ class UsersController < ApplicationController
         )
         .visible
         .includes(:topic)
-        .prioritized(limit)
+        .prioritized
+        .limit(limit)
         .to_a
     end
 

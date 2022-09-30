@@ -24,11 +24,10 @@ class Notification < ActiveRecord::Base
       .includes(:topic)
       .limit(limit)
   end
-  scope :prioritized, ->(limit = nil) do
+  scope :prioritized, ->() do
     order("notifications.high_priority AND NOT notifications.read DESC")
       .order("NOT notifications.read DESC")
       .order("notifications.created_at DESC")
-      .limit(limit || 30)
   end
 
   attr_accessor :skip_send_email
@@ -232,7 +231,8 @@ class Notification < ActiveRecord::Base
     notifications = user.notifications
       .includes(:topic)
       .visible
-      .prioritized(count)
+      .prioritized
+      .limit(count)
 
     if types.present?
       notifications = notifications.where(notification_type: types)
