@@ -33,6 +33,14 @@
     }
   }
 
+  // Firefox for Android hack
+  @supports (-moz-appearance: none) {
+    .keyboard-visible #reply-control.open {
+      position: sticky;
+      height: calc(100vh - var(--header-offset, 4em));
+    }
+  }
+
   .reply-to {
     justify-content: space-between;
     margin-bottom: 6px;

@@ -20,11 +20,11 @@ module Compression
       end
     end
 
-    def decompress(dest_path, compressed_file_path, max_size, allow_non_root_folder: false)
+    def decompress(dest_path, compressed_file_path, max_size)
       @strategies.reverse.reduce(compressed_file_path) do |to_decompress, strategy|
-        last_extension = strategy.extension
-        strategy.decompress(dest_path, to_decompress, max_size, allow_non_root_folder: allow_non_root_folder)
-        to_decompress.gsub(last_extension, '')
+        next_compressed_file = strategy.decompress(dest_path, to_decompress, max_size)
+        FileUtils.rm_rf(to_decompress)
+        next_compressed_file
       end
     end
   end

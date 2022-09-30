@@ -58,8 +58,7 @@ class EmailUpdater
     end
 
     if @change_req.change_state.blank? || @change_req.change_state == EmailChangeRequest.states[:complete]
-      @change_req.change_state = if @user.staff?
-        # Staff users must confirm their old email address first.
+      @change_req.change_state = if SiteSetting.require_change_email_confirmation || @user.staff?
         EmailChangeRequest.states[:authorizing_old]
       else
         EmailChangeRequest.states[:authorizing_new]

@@ -339,19 +339,17 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
           file.name,
           upload
         );
+
+        if (this.inProgressUploads.length === 0) {
+          this.appEvents.trigger(
+            `${this.composerEventPrefix}:all-uploads-complete`
+          );
+          this._reset();
+        }
       });
     });
 
     this._uppyInstance.on("upload-error", this._handleUploadError);
-
-    this._uppyInstance.on("complete", () => {
-      run(() => {
-        this.appEvents.trigger(
-          `${this.composerEventPrefix}:all-uploads-complete`
-        );
-        this._reset();
-      });
-    });
 
     this._uppyInstance.on("cancel-all", () => {
       // uppyInstance.reset() also fires cancel-all, so we want to
@@ -553,6 +551,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       isUploading: false,
       isProcessingUpload: false,
       isCancellable: false,
+      inProgressUploads: [],
     });
     this._resetPreProcessors();
     this.fileInputEl.value = "";

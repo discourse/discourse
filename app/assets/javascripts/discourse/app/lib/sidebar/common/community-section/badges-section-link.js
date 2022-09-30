@@ -22,4 +22,8 @@ export default class BadgesSectionLink extends BaseSectionLink {
   get shouldDisplay() {
     return this.siteSettings.enable_badges;
   }
+
+  get prefixValue() {
+    return "certificate";
+  }
 }

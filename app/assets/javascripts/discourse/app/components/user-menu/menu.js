@@ -218,7 +218,9 @@ const CORE_TOP_TABS = [
     }
 
     get shouldDisplay() {
-      return this.currentUser.can_review;
+      return (
+        this.currentUser.can_review && this.currentUser.get("reviewable_count")
+      );
     }
 
     get count() {

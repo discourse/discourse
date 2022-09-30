@@ -13,14 +13,10 @@
 .hamburger-panel .revamped {
   --d-sidebar-highlight-color: var(--highlight-medium);
   --d-sidebar-row-horizontal-padding: 0.5rem;
-  width: var(--d-sidebar-width);
-
-  .sidebar-row {
-    padding: 0.25rem var(--d-sidebar-row-horizontal-padding);
-    height: 27px;
-    align-items: center;
-    font-size: var(--font-down-1);
-  }
+  --d-sidebar-row-height: 30px;
+  // 1.25rem gets text left-aligned with the hamburger icon
+  --d-sidebar-row-horizontal-padding: 0.66rem;
+  --d-sidebar-row-vertical-padding: 0.33rem;
 
   .panel-body-content {
     width: 100%;

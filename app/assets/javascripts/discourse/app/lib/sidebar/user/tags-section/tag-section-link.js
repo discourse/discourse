@@ -64,4 +64,12 @@ export default class TagSectionLink {
       });
     }
   }
+
+  get prefixType() {
+    return "icon";
+  }
+
+  get prefixValue() {
+    return "tag";
+  }
 }
