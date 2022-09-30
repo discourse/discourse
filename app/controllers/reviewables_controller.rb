@@ -71,9 +71,11 @@ class ReviewablesController < ApplicationController
   end
 
   def user_menu_list
-    reviewables = Reviewable.list_for(current_user, limit: 30, status: :pending).to_a
     json = {
-      reviewables: reviewables.map! { |r| r.basic_serializer.new(r, scope: guardian, root: nil).as_json }
+      reviewables: Reviewable.basic_serializers_for_list(
+        Reviewable.user_menu_list_for(current_user),
+        current_user
+      ).as_json
     }
     render_json_dump(json, rest_serializer: true)
   end

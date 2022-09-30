@@ -30,8 +30,11 @@ class NotificationsController < ApplicationController
       limit = (params[:limit] || 15).to_i
       limit = 50 if limit > 50
 
+      include_reviewables = false
       if SiteSetting.enable_experimental_sidebar_hamburger
         notifications = Notification.prioritized_list(current_user, count: limit, types: notification_types)
+        # notification_types is blank for the "all notifications" user menu tab
+        include_reviewables = notification_types.blank? && guardian.can_see_review_queue?
       else
         notifications = Notification.recent_report(current_user, limit, notification_types)
       end
@@ -43,26 +46,28 @@ class NotificationsController < ApplicationController
         end
       end
 
-      if !params.has_key?(:silent) && params[:bump_last_seen_reviewable] && !@readonly_mode
+      if !params.has_key?(:silent) && params[:bump_last_seen_reviewable] && !@readonly_mode && include_reviewables
         current_user_id = current_user.id
         Scheduler::Defer.later "bump last seen reviewable for user" do
           # we lookup current_user again in the background thread to avoid
-          # concurrency issues where the objects returned by the current_user
-          # and/or methods are changed by the time the deferred block is
-          # executed
-          user = User.find_by(id: current_user_id)
-          next if user.blank?
-          new_guardian = Guardian.new(user)
-          if new_guardian.can_see_review_queue?
-            user.bump_last_seen_reviewable!
-          end
+          # concurrency issues where the user object returned by the
+          # current_user controller method is changed by the time the deferred
+          # block is executed
+          User.find_by(id: current_user_id)&.bump_last_seen_reviewable!
         end
       end
 
-      render_json_dump(
+      json = {
         notifications: serialize_data(notifications, NotificationSerializer),
         seen_notification_id: current_user.seen_notification_id
-      )
+      }
+      if include_reviewables
+        json[:pending_reviewables] = Reviewable.basic_serializers_for_list(
+          Reviewable.user_menu_list_for(current_user),
+          current_user
+        ).as_json
+      end
+      render_json_dump(json)
     else
       offset = params[:offset].to_i
 
