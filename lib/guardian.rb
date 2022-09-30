@@ -402,9 +402,7 @@ class Guardian
       if object.private_message?
         return true if is_admin?
 
-        # TODO (martin) Remove enable_personal_messages here once plugins have been changed.
-        if !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map) ||
-            !SiteSetting.enable_personal_messages
+        if !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
           return false
         end
         return false if object.reached_recipients_limit? && !is_staff?
@@ -458,8 +456,7 @@ class Guardian
     # User disabled private message
     (is_staff? || is_group || target.user_option.allow_private_messages) &&
     # User can send PMs, this can be covered by trust levels as well via AUTO_GROUPS
-    # TODO (martin) Remove enable_personal_messages here once plugins have been changed.
-    (is_staff? || (@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map) || SiteSetting.enable_personal_messages) || notify_moderators) &&
+    (is_staff? || (@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)) || notify_moderators) &&
     # Can't send PMs to suspended users
     (is_staff? || is_group || !target.suspended?) &&
     # Check group messageable level
@@ -474,8 +471,7 @@ class Guardian
     # User is authenticated
     return false if !authenticated?
     # User is trusted enough
-    # TODO (martin) Remove enable_personal_messages here once plugins have been changed.
-    (@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map) || SiteSetting.enable_personal_messages) &&
+    @user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map) &&
       @user.has_trust_level_or_staff?(SiteSetting.min_trust_to_send_email_messages)
   end
 

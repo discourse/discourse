@@ -197,7 +197,6 @@ RSpec.describe ListController do
       before do
         group.add(user)
         SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
-        SiteSetting.enable_personal_messages = false
         Group.refresh_automatic_groups!
       end
 

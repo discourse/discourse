@@ -831,7 +831,6 @@ RSpec.describe Topic do
         context "when PMs are enabled for TL3 or higher only" do
           before do
             SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
-            SiteSetting.enable_personal_messages = false
           end
 
           it 'should raise error' do
