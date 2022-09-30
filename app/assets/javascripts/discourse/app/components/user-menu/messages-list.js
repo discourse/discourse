@@ -13,6 +13,12 @@ function parseDateString(date) {
   }
 }
 
+async function initializeNotifications(rawList) {
+  const notifications = rawList.map((n) => Notification.create(n));
+  await Notification.applyTransformations(notifications);
+  return notifications;
+}
+
 export default class UserMenuMessagesList extends UserMenuNotificationsList {
   get dismissTypes() {
     return this.filterByTypes;
@@ -57,10 +63,9 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     );
     const content = [];
 
-    const unreadNotifications = data.unread_notifications.map((n) =>
-      Notification.create(n)
+    const unreadNotifications = await initializeNotifications(
+      data.unread_notifications
     );
-    await Notification.applyTransformations(unreadNotifications);
     unreadNotifications.forEach((notification) => {
       content.push(
         new UserMenuNotificationItem({
@@ -75,10 +80,9 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     const topics = data.topics.map((t) => Topic.create(t));
     await Topic.applyTransformations(topics);
 
-    const readNotifications = data.read_notifications.map((n) =>
-      Notification.create(n)
+    const readNotifications = await initializeNotifications(
+      data.read_notifications
     );
-    await Notification.applyTransformations(readNotifications);
 
     let latestReadNotificationDate = parseDateString(
       readNotifications[0]?.created_at
