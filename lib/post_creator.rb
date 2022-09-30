@@ -173,18 +173,16 @@ class PostCreator
   end
 
   def create
-    p "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-    p @post
-    p @opts
-    p "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
     if valid?
       transaction do
+        credit_balance_validation
         build_post_stats
         create_topic
         create_post_notice
         save_post
         save_meta_tag_custom_field
         save_user_generated_tags
+        deduct_credits
         UserActionManager.post_created(@post)
         extract_links
         track_topic
@@ -537,6 +535,21 @@ class PostCreator
   end
 
   private
+
+  def credit_balance_validation
+    @user = User.where(id: @post[:user_id]).first
+    return if @user[:admin] 
+    credits = UserCustomField.select(:value).where(user_id: @user[:id], name: 'credit_balance').first
+    @credit_balance = credits[:value].to_i
+    @action_cost = @opts[:action_cost].to_i
+    raise Discourse::NotFound if @credit_balance < @action_cost
+  end
+
+  def deduct_credits
+    return if @user[:admin] 
+    @credit_balance -= @action_cost
+    UserCustomField.where(user_id: @user[:id], name: 'credit_balance').update_all(value: @credit_balance)
+  end
 
   def create_topic
     return if @topic

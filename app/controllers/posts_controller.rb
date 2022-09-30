@@ -751,6 +751,7 @@ class PostsController < ApplicationController
       :draft_key,
       :meta_tag,
       :user_generated_tags,
+      :action_cost,
       :subtitle
     ]
 

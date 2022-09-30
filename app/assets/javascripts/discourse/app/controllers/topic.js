@@ -26,6 +26,7 @@ import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { openBookmarkModal } from "discourse/controllers/bookmark";
+import { getActionCost } from "discourse/lib/credits/action_to_credits";
 
 let customPostMessageCallbacks = {};
 
@@ -593,6 +594,7 @@ export default Controller.extend(bufferedProperty("model"), {
       } else {
         const opts = {
           action: Composer.REPLY,
+          action_cost: getActionCost(Composer.REPLY),
           draftKey: topic.get("draft_key"),
           draftSequence: topic.get("draft_sequence"),
           meta_tag: META_TAG_SUMMARY
@@ -643,6 +645,7 @@ export default Controller.extend(bufferedProperty("model"), {
       } else {
         const opts = {
           action: Composer.REPLY,
+          action_cost: getActionCost(Composer.REPLY),
           draftKey: topic.get("draft_key"),
           draftSequence: topic.get("draft_sequence"),
           meta_tag: META_TAG_SPONSOR
@@ -693,6 +696,7 @@ export default Controller.extend(bufferedProperty("model"), {
       } else {
         const opts = {
           action: Composer.REPLY,
+          action_cost: getActionCost(Composer.REPLY),
           draftKey: topic.get("draft_key"),
           draftSequence: topic.get("draft_sequence"),
           meta_tag: META_TAG_OPINION

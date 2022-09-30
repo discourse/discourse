@@ -10,7 +10,6 @@ export function includeAttributes(...attributes) {
 }
 
 export function transformBasicPost(post) {
-  console.log("post", post)
   // Note: it can be dangerous to not use `get` in Ember code, but this is significantly
   // faster and has tests to confirm it works. We only call `get` when the property is a CP
   const postAtts = {

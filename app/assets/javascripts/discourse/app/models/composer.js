@@ -74,7 +74,8 @@ const CLOSED = "closed",
     no_bump: "noBump",
     draft_key: "draftKey",
     meta_tag: "meta_tag",
-    user_generated_tags: "user_generated_tags"
+    user_generated_tags: "user_generated_tags",
+    action_cost: "action_cost"
   },
   _update_serializer = {
     raw: "reply",
@@ -102,7 +103,8 @@ const CLOSED = "closed",
     postId: "post.id",
     recipients: "targetRecipients",
     meta_tag: "meta_tag",
-    user_generated_tags: "user_generated_tags"
+    user_generated_tags: "user_generated_tags",
+    action_cost: "action_cost"
   },
   _add_draft_fields = {},
   FAST_REPLY_LENGTH_THRESHOLD = 10000;
@@ -760,7 +762,6 @@ const Composer = RestModel.extend({
       opts.meta_tag = 'summary'
     }
     opts.action_cost = getActionCost(opts.action)
-    console.log("opts", opts)
 
     let promise = Promise.resolve();
 
@@ -1129,17 +1130,19 @@ const Composer = RestModel.extend({
       composeState: SAVING,
       stagedPost: state === "staged" && createdPost,
     });
-    console.log("composer", composer)
+    
+    // Incorporate the custom contents to the post data
     createdPost.setProperties({
-      // Incorporate the meta tag
       meta_tag: composer.meta_tag
     })
     createdPost.setProperties({
-      // Incorporate the user-generated tags
       user_generated_tags: this.parseUserGeneratedTags(composer.tags)
     })
     createdPost.setProperties({
       subtitle: composer.subtitle
+    })
+    createdPost.setProperties({
+      action_cost: composer.action_cost
     })
 
     return createdPost

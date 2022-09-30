@@ -91,6 +91,7 @@ class PostSerializer < BasicPostSerializer
              :user_status,
              :meta_tag,
              :user_generated_tags,
+             :action_cost,
              :subtitle
 
   def initialize(object, opts)
@@ -128,7 +129,11 @@ class PostSerializer < BasicPostSerializer
   end
 
   def subtitle
-    "subtitle"
+    ""
+  end
+
+  def action_cost
+    ""
   end
 
   def topic_html_title

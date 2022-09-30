@@ -1089,8 +1089,7 @@ export default Controller.extend({
       editReason: null,
       scopedCategoryId: null,
       prioritizedCategoryId: null,
-      skipAutoSave: true,
-      meta_tag: opts.meta_tag
+      skipAutoSave: true
     });
 
     this.set("skipJumpOnSave", !!opts.skipJumpOnSave);
