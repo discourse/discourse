@@ -351,6 +351,37 @@ RSpec.describe Stylesheet::Manager do
       expect(digest1).not_to eq(digest2)
     end
 
+    it 'can generate digest with a missing upload record' do
+      theme = Fabricate(:theme)
+
+      upload = UploadCreator.new(image, "logo.png").create_for(-1)
+      field = ThemeField.create!(
+        theme_id: theme.id,
+        target_id: Theme.targets[:common],
+        name: "logo",
+        value: "",
+        upload_id: upload.id,
+        type_id: ThemeField.types[:theme_upload_var]
+      )
+
+      manager = manager(theme.id)
+
+      builder = Stylesheet::Manager::Builder.new(
+        target: :desktop_theme, theme: theme, manager: manager
+      )
+
+      digest1 = builder.digest
+      upload.delete
+
+      builder = Stylesheet::Manager::Builder.new(
+        target: :desktop_theme, theme: theme.reload, manager: manager
+      )
+
+      digest2 = builder.digest
+
+      expect(digest1).not_to eq(digest2)
+    end
+
     it 'returns different digest based on target' do
       theme = Fabricate(:theme)
       builder = Stylesheet::Manager::Builder.new(target: :desktop_theme, theme: theme, manager: manager)
