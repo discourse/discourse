@@ -217,6 +217,12 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
         group_name: "jokers",
       })
     );
+
+    assert.strictEqual(
+      items[1].textContent.trim().replaceAll(/\s+/g, " "),
+      "mixtape Test Topic 0003"
+    );
+
     assert.strictEqual(
       items[2].textContent.trim(),
       I18n.t("notifications.group_message_summary", {
@@ -224,6 +230,12 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
         group_name: "jokers",
       })
     );
+
+    assert.strictEqual(
+      items[3].textContent.trim().replaceAll(/\s+/g, " "),
+      "mixtape Test Topic 0002"
+    );
+
     assert.strictEqual(
       items[4].textContent.trim(),
       I18n.t("notifications.group_message_summary", {
@@ -232,14 +244,6 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
       })
     );
 
-    assert.strictEqual(
-      items[1].textContent.trim().replaceAll(/\s+/g, " "),
-      "mixtape Test Topic 0003"
-    );
-    assert.strictEqual(
-      items[3].textContent.trim().replaceAll(/\s+/g, " "),
-      "mixtape Test Topic 0002"
-    );
     assert.strictEqual(
       items[5].textContent.trim().replaceAll(/\s+/g, " "),
       "mixtape Test Topic 0001"
