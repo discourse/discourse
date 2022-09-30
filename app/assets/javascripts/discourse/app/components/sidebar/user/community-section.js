@@ -1,6 +1,5 @@
 import I18n from "I18n";
 
-import { bind } from "discourse-common/utils/decorators";
 import Composer from "discourse/models/composer";
 import { getOwner } from "discourse-common/lib/get-owner";
 import PermissionType from "discourse/models/permission-type";
@@ -31,50 +30,25 @@ export default class SidebarUserCommunitySection extends SidebarCommonCommunityS
         title: I18n.t("sidebar.sections.community.header_action_title"),
       },
     ];
-
-    this.appEvents.on(
-      "user-reviewable-count:changed",
-      this._refreshSectionLinks
-    );
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-
-    this.appEvents.off(
-      "user-reviewable-count:changed",
-      this._refreshSectionLinks
-    );
-  }
-
-  @bind
-  _refreshSectionLinks() {
-    return this.refreshSectionLinks();
   }
 
   get defaultMainSectionLinks() {
-    const links = [
+    return [
       EverythingSectionLink,
       TrackedSectionLink,
       MyPostsSectionLink,
       AdminSectionLink,
+      ReviewSectionLink,
     ];
-
-    if (this.currentUser.reviewable_count > 0) {
-      links.push(ReviewSectionLink);
-    }
-
-    return links;
   }
 
   get defaultMoreSectionLinks() {
-    const links = [GroupsSectionLink, UsersSectionLink, BadgesSectionLink];
-
-    if (this.currentUser.reviewable_count === 0) {
-      links.push(ReviewSectionLink);
-    }
-
-    return links;
+    return [
+      GroupsSectionLink,
+      UsersSectionLink,
+      BadgesSectionLink,
+      ReviewSectionLink,
+    ];
   }
 
   get defaultMoreSecondarySectionLinks() {

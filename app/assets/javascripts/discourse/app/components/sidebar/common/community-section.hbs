@@ -13,6 +13,7 @@
 
   {{#each this.sectionLinks as |sectionLink|}}
     <Sidebar::SectionLink
+      @shouldDisplay={{sectionLink.shouldDisplay}}
       @linkName={{sectionLink.name}}
       @href={{sectionLink.href}}
       @route={{sectionLink.route}}
