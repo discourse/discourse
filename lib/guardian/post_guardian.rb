@@ -232,7 +232,7 @@ module PostGuardian
   def can_delete_post_action?(post_action)
     return false unless is_my_own?(post_action) && !post_action.is_private_message?
 
-    post_action.created_at > SiteSetting.post_undo_action_window_mins.minutes.ago && !post_action.post.topic&.archived?
+    post_action.created_at > SiteSetting.post_undo_action_window_mins.minutes.ago && !post_action.post&.topic&.archived?
   end
 
   def can_see_post?(post)

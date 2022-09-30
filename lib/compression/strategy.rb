@@ -9,19 +9,20 @@ module Compression
       file_name.include?(extension)
     end
 
-    def decompress(dest_path, compressed_file_path, max_size, allow_non_root_folder: false)
+    def decompress(dest_path, compressed_file_path, max_size)
       sanitized_compressed_file_path = sanitize_path(compressed_file_path)
+      sanitized_dest_path = sanitize_path(dest_path)
 
       get_compressed_file_stream(sanitized_compressed_file_path) do |compressed_file|
         available_size = calculate_available_size(max_size)
 
         entries_of(compressed_file).each do |entry|
-          entry_path = build_entry_path(
-            compressed_file, sanitize_path(dest_path),
-            sanitized_compressed_file_path, entry,
-            allow_non_root_folder
-          )
+          entry_path = build_entry_path(sanitized_dest_path, entry, sanitized_compressed_file_path)
+          if !is_safe_path_for_extraction?(entry_path, sanitized_dest_path)
+            next
+          end
 
+          FileUtils.mkdir_p(File.dirname(entry_path))
           if is_file?(entry)
             remaining_size = extract_file(entry, entry_path, available_size)
             available_size = remaining_size
@@ -29,16 +30,8 @@ module Compression
             extract_folder(entry, entry_path)
           end
         end
+        decompression_results_path(sanitized_dest_path, sanitized_compressed_file_path)
       end
-    end
-
-    def strip_directory(from, to, relative: false)
-      sanitized_from = sanitize_path(from) rescue nil
-      sanitized_to = sanitize_path(to) rescue nil
-      return unless sanitized_from && sanitized_to
-
-      glob_path = relative ? "#{sanitized_from}/*/*" : "#{sanitized_from}/**"
-      FileUtils.mv(Dir.glob(glob_path), sanitized_to) if File.directory?(sanitized_from)
     end
 
     private
@@ -91,6 +84,10 @@ module Compression
       end
 
       remaining_size
+    end
+
+    def is_safe_path_for_extraction?(path, dest_directory)
+      File.expand_path(path).start_with?(dest_directory)
     end
   end
 end

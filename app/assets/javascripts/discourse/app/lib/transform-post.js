@@ -57,7 +57,7 @@ export function transformBasicPost(post) {
     showFlagDelete: false,
     canRecover: post.can_recover,
     canEdit: post.can_edit,
-    canFlag: !isEmpty(post.get("flagsAvailable")),
+    canFlag: !post.get("topic.deleted") && !isEmpty(post.get("flagsAvailable")),
     canReviewTopic: false,
     reviewableId: post.reviewable_id,
     reviewableScoreCount: post.reviewable_score_count,

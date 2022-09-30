@@ -65,7 +65,7 @@ RSpec.describe ThemeStore::ZipExporter do
     file = 'discourse-header-icons.zip'
     Dir.chdir(dir) do
       available_size = SiteSetting.decompressed_theme_max_file_size_mb
-      Compression::Zip.new.decompress(dir, file, available_size, allow_non_root_folder: true)
+      Compression::Zip.new.decompress(dir, file, available_size)
       `rm #{file}`
 
       folders = Dir.glob("**/*").reject { |f| File.file?(f) }
