@@ -13,29 +13,6 @@ module DiscourseTagging
           ON tgm.tag_group_id = tg.id
   SQL
 
-  ANCESTOR_TAG_IDS_SQL ||= <<~SQL
-    WITH RECURSIVE ancestors AS (
-      SELECT
-        tgm.tag_id,
-        tg.parent_tag_id
-      FROM
-        tag_group_memberships tgm
-        INNER JOIN tag_groups tg ON tg.id = tgm.tag_group_id
-      WHERE
-        tg.parent_tag_id IS NOT NULL
-        AND tgm.tag_id IN (:tag_ids)
-      UNION
-      SELECT
-        tgm.tag_id,
-        tg.parent_tag_id
-      FROM
-        tag_group_memberships tgm
-        INNER JOIN tag_groups tg ON tg.id = tgm.tag_group_id
-        INNER JOIN ancestors ON tgm.tag_id = ancestors.parent_tag_id
-    )
-    SELECT * FROM ancestors
-  SQL
-
   def self.tag_topic_by_names(topic, guardian, tag_names_arg, append: false)
     if guardian.can_tag?(topic)
       tag_names = DiscourseTagging.tags_for_saving(tag_names_arg, guardian) || []
@@ -116,7 +93,14 @@ module DiscourseTagging
         # add missing mandatory parent tags
         tag_ids = tags.map(&:id)
 
-        parent_tags_map = DB.query(ANCESTOR_TAG_IDS_SQL, tag_ids: tag_ids).inject({}) do |h, v|
+        parent_tags_map = DB.query("
+          SELECT tgm.tag_id, tg.parent_tag_id
+            FROM tag_groups tg
+          INNER JOIN tag_group_memberships tgm
+              ON tgm.tag_group_id = tg.id
+           WHERE tg.parent_tag_id IS NOT NULL
+             AND tgm.tag_id IN (?)
+        ", tag_ids).inject({}) do |h, v|
           h[v.tag_id] ||= []
           h[v.tag_id] << v.parent_tag_id
           h
