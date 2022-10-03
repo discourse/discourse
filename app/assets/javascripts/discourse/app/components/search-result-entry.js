@@ -11,6 +11,7 @@ export default Component.extend({
 
   @action
   logClick(topicId) {
+    // Important: Don't prevent default handling of clicks
     if (this.searchLogId && topicId) {
       logSearchLinkClick({
         searchLogId: this.searchLogId,
