@@ -48,6 +48,10 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   actions: {
+    showSecondFactorKey() {
+      this.enableShowSecondFactorKey();
+    },
+
     enableSecondFactor() {
       if (!this.secondFactorToken || !this.secondFactorName) {
         this.set(
