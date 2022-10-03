@@ -32,6 +32,18 @@ class ImportScripts::XenForo < ImportScripts::Base
     import_posts
   end
 
+  def import_avatar(id, imported_user)
+    filename = File.join(AVATAR_DIR, 'l', (id / 1000).to_s, "#{id}.jpg")
+    unless File.exist?(filename)
+      return nil
+    end
+    upload = create_upload(imported_user.id, filename, "avatar_#{id}")
+    return if !upload.persisted?
+    imported_user.create_user_avatar
+    imported_user.user_avatar.update(custom_upload_id: upload.id)
+    imported_user.update(uploaded_avatar_id: upload.id)
+  end
+
   def import_users
     puts '', "creating users"
 
@@ -59,7 +71,10 @@ class ImportScripts::XenForo < ImportScripts::Base
           created_at: Time.zone.at(user['created_at']),
           last_seen_at: Time.zone.at(user['last_visit_time']),
           moderator: user['is_moderator'] == 1 || user['is_staff'] == 1,
-          admin: user['is_admin'] == 1 }
+          admin: user['is_admin'] == 1,
+          post_create_action: proc do |u|
+            import_avatar(user['id'], u)
+          end
       end
     end
   end
