@@ -216,6 +216,7 @@ const Category = RestModel.extend({
         mailinglist_mirror: this.mailinglist_mirror,
         parent_category_id: this.parent_category_id,
         uploaded_logo_id: this.get("uploaded_logo.id"),
+        uploaded_logo_dark_id: this.get("uploaded_logo_dark.id"),
         uploaded_background_id: this.get("uploaded_background.id"),
         allow_badges: this.allow_badges,
         custom_fields: this.custom_fields,

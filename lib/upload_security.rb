@@ -29,6 +29,7 @@ class UploadSecurity
     profile_background
     card_background
     category_logo
+    category_logo_dark
     category_background
     group_flair
     badge_image

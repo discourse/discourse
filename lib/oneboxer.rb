@@ -382,6 +382,7 @@ module Oneboxer
         name: category.name,
         color: category.color,
         logo_url: category.uploaded_logo&.url,
+        logo_dark_url: category.uploaded_logo_dark&.url,
         description: category.description,
         has_subcategories: category.subcategories.present?,
         subcategories: category.subcategories.collect { |sc| { name: sc.name, color: sc.color, url: sc.url } }

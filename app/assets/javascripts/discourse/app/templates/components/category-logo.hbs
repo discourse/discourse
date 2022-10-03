@@ -1,0 +1,14 @@
+{{#if this.category}}
+  <div class="{{this.class}} aspect-image" style={{this.style}}>
+    {{#if (and this.category.uploaded_logo.url this.category.uploaded_logo_dark.url)}}
+      <picture>
+        <source srcset={{this.category.uploaded_logo_dark.url}} width={{this.category.uploaded_logo_dark.width}} height={{this.category.uploaded_logo_dark.height}} media="(prefers-color-scheme: dark)">
+        <CdnImg @src={{this.category.uploaded_logo.url}} @width={{this.category.uploaded_logo.width}} @height={{this.category.uploaded_logo.height}} @alt={{this.alt}}/>
+      </picture>
+    {{else if this.category.uploaded_logo.url}}
+      <CdnImg @src={{this.category.uploaded_logo.url}} @width={{this.category.uploaded_logo.width}} @height={{this.category.uploaded_logo.height}} @alt={{this.alt}}/>
+    {{else}}
+      <CdnImg @src={{this.category.uploaded_logo_dark.url}} @width={{this.category.uploaded_logo_dark.width}} @height={{this.category.uploaded_logo_dark.height}} @alt={{this.alt}}/>
+    {{/if}}
+  </div>
+{{/if}}

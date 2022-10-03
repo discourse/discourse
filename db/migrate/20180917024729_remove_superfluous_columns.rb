@@ -10,6 +10,7 @@ class RemoveSuperfluousColumns < ActiveRecord::Migration[5.2]
       },
     categories: %i{
         logo_url
+        logo_dark_url
         background_url
         suppress_from_homepage
       },
