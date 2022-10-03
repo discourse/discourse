@@ -30,6 +30,7 @@ class ImportScripts::XenForo < ImportScripts::Base
     import_users
     import_categories
     import_posts
+    import_likes
   end
 
   def import_avatar(id, imported_user)
@@ -162,6 +163,29 @@ class ImportScripts::XenForo < ImportScripts::Base
     end
 
     @prefix_as_category = true
+  end
+
+  def import_likes
+    puts '', 'importing likes'
+    total_count = mysql_query("SELECT COUNT(*) AS count FROM #{TABLE_PREFIX}liked_content WHERE content_type = 'post'").first["count"]
+    batches(BATCH_SIZE) do |offset|
+      results = mysql_query(
+        "SELECT like_id, content_id, like_user_id, like_date 
+         FROM #{TABLE_PREFIX}liked_content
+         WHERE content_type = 'post'
+         ORDER BY like_id
+         LIMIT #{BATCH_SIZE}
+         OFFSET #{offset};"
+      )
+      break if results.size < 1
+      create_likes(results, total: total_count, offset: offset) do |row|
+        {
+           post_id: row['content_id'],
+           user_id: row['like_user_id'],
+           created_at: Time.zone.at(row['like_date'])
+        }
+      end
+    end
   end
 
   def import_posts
