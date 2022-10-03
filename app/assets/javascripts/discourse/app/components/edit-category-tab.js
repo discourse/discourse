@@ -51,7 +51,7 @@ export default Component.extend({
   },
 
   @action
-  selectTab(event) {
+  select(event) {
     event?.preventDefault();
     this.set("selectedTab", this.tab);
     if (!this.newCategory) {
