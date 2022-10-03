@@ -26,6 +26,7 @@ export default class ReviewSectionLink extends BaseSectionLink {
   _refreshCanDisplay() {
     if (!this.currentUser.can_review) {
       this.canDisplay = false;
+      return;
     }
 
     if (this.inMoreDrawer) {
