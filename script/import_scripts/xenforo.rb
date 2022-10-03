@@ -2,6 +2,18 @@
 
 require "mysql2"
 
+begin
+  require 'php_serialize' # https://github.com/jqr/php-serialize
+rescue LoadError
+  puts
+  puts 'php_serialize not found.'
+  puts 'Add to Gemfile, like this: '
+  puts
+  puts "echo gem \\'php-serialize\\' >> Gemfile"
+  puts "bundle install"
+  exit
+end
+
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 # Call it like this:
@@ -30,6 +42,7 @@ class ImportScripts::XenForo < ImportScripts::Base
     import_users
     import_categories
     import_posts
+    import_private_messages
     import_likes
   end
 
@@ -263,6 +276,60 @@ class ImportScripts::XenForo < ImportScripts::Base
       end
     end
 
+  end
+
+  def import_private_messages
+    puts "", "importing private messages..."
+    post_count = mysql_query("SELECT COUNT(*) count FROM xf_conversation_message").first["count"]
+    batches(BATCH_SIZE) do |offset|
+      posts = mysql_query <<-SQL
+        SELECT c.conversation_id, c.recipients, c.title, m.message, m.user_id, m.message_date, m.message_id, IF(c.first_message_id != m.message_id, c.first_message_id, 0) as topic_id 
+        FROM xf_conversation_master c 
+        LEFT JOIN xf_conversation_message m ON m.conversation_id = c.conversation_id 
+        ORDER BY c.conversation_id, m.message_id 
+        LIMIT #{BATCH_SIZE}
+        OFFSET #{offset}
+      SQL
+      break if posts.size < 1
+      next if all_records_exist? :posts, posts.map { |post| "pm_#{post["message_id"]}" }
+      create_posts(posts, total: post_count, offset: offset) do |post|
+        user_id = user_id_from_imported_user_id(post["user_id"]) || Discourse::SYSTEM_USER_ID
+        title = post["title"]
+        message_id = "pm_#{post["message_id"]}"
+        raw = process_xenforo_post(post["message"], 0)
+        if raw.present?
+          msg = {
+            id: message_id,
+            user_id: user_id,
+            raw: raw,
+            created_at:  Time.zone.at(post["message_date"].to_i),
+            import_mode: true
+          }
+          unless post["topic_id"] > 0
+            msg[:title] = post["title"]
+            msg[:archetype] = Archetype.private_message
+            to_user_array = PHP.unserialize(post['recipients'])
+            if to_user_array.size > 0
+              discourse_user_ids = to_user_array.keys.map { |id| user_id_from_imported_user_id(id) }
+              usernames = User.where(id: [discourse_user_ids]).pluck(:username)
+              msg[:target_usernames] = usernames.join(',')
+            end
+          else
+            topic_id = post["topic_id"]
+            if t = topic_lookup_from_imported_post_id("pm_#{topic_id}")
+              msg[:topic_id] = t[:topic_id]
+            else
+              puts "Topic ID #{topic_id} not found, skipping post #{post['message_id']} from #{post['user_id']}"
+              next
+            end
+          end
+          msg
+        else
+          puts "Empty message, skipping post #{post['message_id']}"
+          next
+        end
+      end
+    end
   end
 
   def process_xenforo_post(raw, import_id)
