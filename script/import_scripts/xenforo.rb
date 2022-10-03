@@ -101,6 +101,7 @@ class ImportScripts::XenForo < ImportScripts::Base
                title,
                description,
                parent_node_id,
+               node_name,
                display_order
           FROM #{TABLE_PREFIX}node
       ORDER BY parent_node_id, display_order
@@ -113,7 +114,11 @@ class ImportScripts::XenForo < ImportScripts::Base
         id: c['id'],
         name: c['title'],
         description: c['description'],
-        position: c['display_order']
+        position: c['display_order'],
+        post_create_action: proc do |category|
+          url = "board/#{c['node_name']}"
+          Permalink.find_or_create_by(url: url, category_id: category.id) 
+        end
       }
     end
 
@@ -127,7 +132,11 @@ class ImportScripts::XenForo < ImportScripts::Base
         name: c['title'],
         description: c['description'],
         position: c['display_order'],
-        parent_category_id: category_id_from_imported_category_id(c['parent_node_id'])
+        parent_category_id: category_id_from_imported_category_id(c['parent_node_id']),
+        post_create_action: proc do |category|
+          url = "board/#{c['node_name']}"
+          Permalink.find_or_create_by(url: url, category_id: category.id) 
+        end
       }
     end
 
@@ -246,6 +255,9 @@ class ImportScripts::XenForo < ImportScripts::Base
               @category_mappings[m['category_id']].try(:[], :category_id)
           end
           mapped[:title] = CGI.unescapeHTML(m['title'])
+          mapped[:post_create_action] = proc do |pp|
+            Permalink.find_or_create_by(url: "threads/#{m['topic_id']}", topic_id: pp.topic_id)
+          end
         else
           parent = topic_lookup_from_imported_post_id(m['first_post_id'])
           if parent
