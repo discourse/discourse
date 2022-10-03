@@ -134,12 +134,14 @@ export default Component.extend({
   },
 
   @action
-  quit() {
+  quit(event) {
+    event?.preventDefault();
     this.router.transitionTo("discovery.latest");
   },
 
   @action
-  exitEarly() {
+  exitEarly(event) {
+    event?.preventDefault();
     const step = this.step;
     step.validate();
 

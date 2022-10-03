@@ -49,19 +49,19 @@
   <div class="wizard-container__buttons">
 
     {{#if this.showNextButton}}
-      <button {{on "click" (action "nextStep")}} disabled={{this.saving}} type="button" class="wizard-container__button primary {{this.nextButtonClass}}">
+      <button {{on "click" this.nextStep}} disabled={{this.saving}} type="button" class="wizard-container__button primary {{this.nextButtonClass}}">
         {{i18n this.nextButtonLabel}}
       </button>
     {{/if}}
 
     {{#if this.showFinishButton}}
-      <button {{on "click" (action "exitEarly")}} disabled={{this.saving}} type="button" class="wizard-container__button jump-in">
+      <button {{on "click" this.exitEarly}} disabled={{this.saving}} type="button" class="wizard-container__button jump-in">
         {{i18n "wizard.jump_in"}}
       </button>
     {{/if}}
 
     {{#if this.showJumpInButton}}
-      <button {{on "click" (action "quit")}} disabled={{this.saving}} type="button" class="wizard-container__button {{this.jumpInButtonClass}}">
+      <button {{on "click" this.quit}} disabled={{this.saving}} type="button" class="wizard-container__button {{this.jumpInButtonClass}}">
         {{i18n this.jumpInButtonLabel}}
       </button>
     {{/if}}
