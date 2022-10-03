@@ -83,7 +83,7 @@
     "qunit-dom": "^2.0.0",
     "sass": "^1.55.0",
     "select-kit": "^1.0.0",
-    "sinon": "^14.0.0",
+    "sinon": "^14.0.1",
     "tippy.js": "^6.3.7",
     "virtual-dom": "^2.1.1",
     "webpack": "^5.74.0",
