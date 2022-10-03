@@ -276,7 +276,7 @@ class ImportScripts::XenForo < ImportScripts::Base
     end
 
     # [URL=...]...[/URL]
-    s.gsub!(/\[url="?(.+?)"?\](.+)\[\/url\]/i) { "[#{$2}](#{$1})" }
+    s.gsub!(/\[url="?(.+?)"?\](.+?)\[\/url\]/i) { "[#{$2}](#{$1})" }
 
     # [IMG]...[/IMG]
     s.gsub!(/\[\/?img\]/i, "")
@@ -292,19 +292,19 @@ class ImportScripts::XenForo < ImportScripts::Base
     s.gsub!(/\[youtube\](.+?)\[\/youtube\]/i) { "\nhttps://www.youtube.com/watch?v=#{$1}\n" }
 
     # [youtube=425,350]id[/youtube]
-    s.gsub!(/\[youtube="?(.+?)"?\](.+)\[\/youtube\]/i) { "\nhttps://www.youtube.com/watch?v=#{$2}\n" }
+    s.gsub!(/\[youtube="?(.+?)"?\](.+?)\[\/youtube\]/i) { "\nhttps://www.youtube.com/watch?v=#{$2}\n" }
 
     # [MEDIA=youtube]id[/MEDIA]
     s.gsub!(/\[MEDIA=youtube\](.+?)\[\/MEDIA\]/i) { "\nhttps://www.youtube.com/watch?v=#{$1}\n" }
 
     # [ame="youtube_link"]title[/ame]
-    s.gsub!(/\[ame="?(.+?)"?\](.+)\[\/ame\]/i) { "\n#{$1}\n" }
+    s.gsub!(/\[ame="?(.+?)"?\](.+?)\[\/ame\]/i) { "\n#{$1}\n" }
 
     # [VIDEO=youtube;<id>]...[/VIDEO]
     s.gsub!(/\[video=youtube;([^\]]+)\].*?\[\/video\]/i) { "\nhttps://www.youtube.com/watch?v=#{$1}\n" }
 
     # [USER=706]@username[/USER]
-    s.gsub!(/\[user="?(.+?)"?\](.+)\[\/user\]/i) { $2 }
+    s.gsub!(/\[user="?(.+?)"?\](.+?)\[\/user\]/i) { $2 }
 
     # Remove the color tag
     s.gsub!(/\[color=[#a-z0-9]+\]/i, "")
