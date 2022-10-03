@@ -221,6 +221,7 @@ class ImportScripts::XenForo < ImportScripts::Base
                #{@prefix_as_category ? 't.prefix_id' : 't.node_id'} category_id,
                t.title title,
                t.first_post_id first_post_id,
+               t.view_count,
                p.user_id user_id,
                p.message raw,
                p.post_date created_at
@@ -255,6 +256,7 @@ class ImportScripts::XenForo < ImportScripts::Base
               @category_mappings[m['category_id']].try(:[], :category_id)
           end
           mapped[:title] = CGI.unescapeHTML(m['title'])
+          mapped[:views] = m['view_count']
           mapped[:post_create_action] = proc do |pp|
             Permalink.find_or_create_by(url: "threads/#{m['topic_id']}", topic_id: pp.topic_id)
           end
