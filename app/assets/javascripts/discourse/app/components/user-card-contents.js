@@ -221,7 +221,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   },
 
   @action
-  showUserAndClose(user, event) {
+  handleShowUser(user, event) {
     event?.preventDefault();
     // Invokes `showUser` argument. Convert to `this.args.showUser` when
     // refactoring this to a glimmer component.
@@ -254,6 +254,10 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     deleteUser() {
       this.user.delete();
       this._close();
+    },
+
+    showUser(user) {
+      this.handleShowUser(user);
     },
 
     checkEmail(user) {
