@@ -440,16 +440,23 @@ class ImportScripts::XenForo < ImportScripts::Base
     s.gsub!(/\[\/color\]/i, "")
 
     if Dir.exist? ATTACHMENT_DIR
-      s = process_xf_attachments(:gallery, s)
-      s = process_xf_attachments(:attachment, s)
+      s = process_xf_attachments(:gallery, s, import_id)
+      s = process_xf_attachments(:attachment, s, import_id)
     end
 
     s
   end
 
-  def process_xf_attachments(xf_type, s)
+  def process_xf_attachments(xf_type, s, import_id)
     ids = Set.new
     ids.merge(s.scan(get_xf_regexp(xf_type)).map { |x| x[0].to_i })
+    
+    # not all attachments have an [ATTACH=] tag so we need to get the other ID's from the xf_attachment table
+    if xf_type == :attachment && import_id > 0
+      sql = "SELECT attachment_id FROM #{TABLE_PREFIX}attachment WHERE content_id=#{import_id} and content_type='post';"
+      ids.merge(mysql_query(sql).to_a.map { |v| v["attachment_id"].to_i})
+    end
+    
     ids.each do |id|
       next unless id
       sql = get_xf_sql(xf_type, id).squish!
@@ -463,11 +470,13 @@ class ImportScripts::XenForo < ImportScripts::Base
       original_filename = results.first['filename']
       result = results.first
       upload = import_xf_attachment(result['data_id'], result['file_hash'], result['user_id'], original_filename)
-      next unless upload
-      if upload.present? && upload.persisted?
-        s.gsub!(get_xf_regexp(xf_type, id), @uploader.html_for_upload(upload, original_filename))
+      if upload && upload.present? && upload.persisted?
+        html = @uploader.html_for_upload(upload, original_filename)
+        unless s.gsub!(get_xf_regexp(xf_type, id), html)
+          s = s + "\n\n#{html}\n\n"
+        end
       else
-        STDERR.puts "Could not find upload: #{upload.id}. Skipping attachment id #{id}"
+        STDERR.puts "Could not process upload: #{original_filename}. Skipping attachment id #{id}"
       end
     end
     s
@@ -501,18 +510,19 @@ class ImportScripts::XenForo < ImportScripts::Base
     case type
     when :gallery
       <<-SQL
-		SELECT m.media_id, m.media_title, a.attachment_id, a.data_id, d.filename, d.file_hash,d.user_id
-		FROM xengallery_media as m
-		INNER JOIN #{TABLE_PREFIX}attachment a on m.attachment_id = a.attachment_id
-		INNER JOIN #{TABLE_PREFIX}attachment_data d on a.data_id = d.data_id
-		WHERE media_id = #{id}
+        SELECT m.media_id, m.media_title, a.attachment_id, a.data_id, d.filename, d.file_hash, d.user_id
+        FROM xengallery_media AS m
+        INNER JOIN #{TABLE_PREFIX}attachment a ON (m.attachment_id = a.attachment_id AND a.content_type = 'xengallery_media')
+        INNER JOIN #{TABLE_PREFIX}attachment_data d ON a.data_id = d.data_id
+        WHERE media_id = #{id}
       SQL
     when :attachment
       <<-SQL
-		SELECT a.attachment_id, a.data_id, d.filename, d.file_hash, d.user_id
-		FROM #{TABLE_PREFIX}attachment AS a
-		INNER JOIN #{TABLE_PREFIX}attachment_data d ON a.data_id = d.data_id
-		WHERE attachment_id = #{id}
+        SELECT a.attachment_id, a.data_id, d.filename, d.file_hash, d.user_id
+        FROM #{TABLE_PREFIX}attachment AS a 
+        INNER JOIN #{TABLE_PREFIX}attachment_data d ON a.data_id = d.data_id
+        WHERE attachment_id = #{id}
+        AND content_type = 'post'
       SQL
     end
   end
