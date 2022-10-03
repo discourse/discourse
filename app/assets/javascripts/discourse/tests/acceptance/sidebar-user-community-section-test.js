@@ -711,7 +711,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
   });
 
   test("review link is not shown when user cannot review", async function (assert) {
-    updateCurrentUser({ can_review: false });
+    updateCurrentUser({ can_review: false, reviewable_count: 0 });
 
     await visit("/");
 
