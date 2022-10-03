@@ -143,6 +143,23 @@ module(
       assert.strictEqual(this.subject.header().label(), "");
     });
 
+    test("with allowUncategorized=null and generalCategoryId present, but not set", async function (assert) {
+      this.siteSettings.allow_uncategorized_topics = false;
+      this.siteSettings.general_category_id = -1;
+
+      await render(hbs`
+        <CategoryChooser
+          @value={{this.value}}
+          @options={{hash
+            allowUncategorized=null
+          }}
+        />
+      `);
+
+      assert.strictEqual(this.subject.header().value(), null);
+      assert.strictEqual(this.subject.header().label(), "category…");
+    });
+
     test("with allowUncategorized=null none=true", async function (assert) {
       this.siteSettings.allow_uncategorized_topics = false;
 
