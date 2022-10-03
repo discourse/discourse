@@ -459,7 +459,7 @@ class ImportScripts::XenForo < ImportScripts::Base
     
     ids.each do |id|
       next unless id
-      sql = get_xf_sql(xf_type, id).squish!
+      sql = get_xf_sql(xf_type, id).dup.squish!
       results = mysql_query(sql)
       if results.size < 1
         # Strip attachment
