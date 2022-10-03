@@ -41,11 +41,32 @@ RSpec.describe Invite do
     end
 
     it 'allows only valid domains' do
-      invite = Fabricate.build(:invite, domain: 'example', invited_by: user)
+      invite = Fabricate.build(:invite, email: nil, domain: 'example', invited_by: user)
       expect(invite).not_to be_valid
 
-      invite = Fabricate.build(:invite, domain: 'example.com', invited_by: user)
+      invite = Fabricate.build(:invite, email: nil, domain: 'example.com', invited_by: user)
       expect(invite).to be_valid
+    end
+
+    it 'allows only email or only domain to be present' do
+      invite = Fabricate.build(:invite, email: nil, invited_by: user)
+      expect(invite).to be_valid
+
+      invite = Fabricate.build(:invite, email: nil, domain: 'example.com', invited_by: user)
+      expect(invite).to be_valid
+
+      invite = Fabricate.build(:invite, email: 'test@example.com', invited_by: user)
+      expect(invite).to be_valid
+
+      invite = Fabricate.build(:invite, email: 'test@example.com', domain: 'example.com', invited_by: user)
+      expect(invite).not_to be_valid
+      expect(invite.errors.full_messages).to include(I18n.t('invite.email_xor_domain'))
+    end
+
+    it 'checks if redemption_count is less or equal than max_redemptions_allowed' do
+      invite = Fabricate.build(:invite, redemption_count: 2, max_redemptions_allowed: 1, invited_by: user)
+      expect(invite).not_to be_valid
+      expect(invite.errors.full_messages.first).to include(I18n.t('invite.redemption_count_less_than_max', max_redemptions_allowed: 1))
     end
   end
 
@@ -355,7 +376,7 @@ RSpec.describe Invite do
     fab!(:inviter) { Fabricate(:user) }
 
     fab!(:pending_invite) { Fabricate(:invite, invited_by: inviter, email: 'pending@example.com') }
-    fab!(:pending_link_invite) { Fabricate(:invite, invited_by: inviter, max_redemptions_allowed: 5) }
+    fab!(:pending_link_invite) { Fabricate(:invite, invited_by: inviter, email: nil, max_redemptions_allowed: 5) }
     fab!(:pending_invite_from_another_user) { Fabricate(:invite) }
 
     fab!(:expired_invite) { Fabricate(:invite, invited_by: inviter, email: 'expired@example.com', expires_at: 1.day.ago) }

@@ -25,7 +25,23 @@ export default class SidebarCommunitySection extends Component {
   constructor() {
     super(...arguments);
 
-    this.refreshSectionLinks();
+    this.moreSectionLinks = this.#initializeSectionLinks(
+      [...this.defaultMoreSectionLinks, ...customSectionLinks],
+      { inMoreDrawer: true }
+    );
+
+    this.moreSecondarySectionLinks = this.#initializeSectionLinks(
+      [
+        ...this.defaultMoreSecondarySectionLinks,
+        ...secondaryCustomSectionLinks,
+      ],
+      { inMoreDrawer: true }
+    );
+
+    this.sectionLinks = this.#initializeSectionLinks(
+      this.defaultMainSectionLinks,
+      { inMoreDrawer: false }
+    );
 
     this.callbackId = this.topicTrackingState.onStateChange(() => {
       this.sectionLinks.forEach((sectionLink) => {
@@ -61,41 +77,20 @@ export default class SidebarCommunitySection extends Component {
     return [];
   }
 
-  refreshSectionLinks() {
-    this.moreSectionLinks = this.#initializeSectionLinks([
-      ...this.defaultMoreSectionLinks,
-      ...customSectionLinks,
-    ]);
-
-    this.moreSecondarySectionLinks = this.#initializeSectionLinks([
-      ...this.defaultMoreSecondarySectionLinks,
-      ...secondaryCustomSectionLinks,
-    ]);
-
-    this.sectionLinks = this.#initializeSectionLinks(
-      this.defaultMainSectionLinks
-    );
+  #initializeSectionLinks(sectionLinkClasses, { inMoreDrawer } = {}) {
+    return sectionLinkClasses.map((sectionLinkClass) => {
+      return this.#initializeSectionLink(sectionLinkClass, inMoreDrawer);
+    });
   }
 
-  #initializeSectionLinks(sectionLinkClasses) {
-    return sectionLinkClasses.reduce((links, sectionLinkClass) => {
-      const sectionLink = this.#initializeSectionLink(sectionLinkClass);
-
-      if (sectionLink.shouldDisplay) {
-        links.push(sectionLink);
-      }
-
-      return links;
-    }, []);
-  }
-
-  #initializeSectionLink(sectionLinkClass) {
+  #initializeSectionLink(sectionLinkClass, inMoreDrawer) {
     return new sectionLinkClass({
       topicTrackingState: this.topicTrackingState,
       currentUser: this.currentUser,
       appEvents: this.appEvents,
       router: this.router,
       siteSettings: this.siteSettings,
+      inMoreDrawer,
     });
   }
 }

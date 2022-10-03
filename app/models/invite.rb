@@ -31,8 +31,10 @@ class Invite < ActiveRecord::Base
   validates_presence_of :invited_by_id
   validates :email, email: true, allow_blank: true
   validate :ensure_max_redemptions_allowed
+  validate :valid_redemption_count
   validate :valid_domain, if: :will_save_change_to_domain?
   validate :user_doesnt_already_exist, if: :will_save_change_to_email?
+  validate :email_xor_domain
 
   before_create do
     self.invite_key ||= SecureRandom.base58(10)
@@ -63,6 +65,12 @@ class Invite < ActiveRecord::Base
     if user && user.id != self.invited_users&.first&.user_id
       self.email_already_exists = true
       errors.add(:base, user_exists_error_msg(email))
+    end
+  end
+
+  def email_xor_domain
+    if email.present? && domain.present?
+      errors.add(:base, I18n.t('invite.email_xor_domain'))
     end
   end
 
@@ -253,9 +261,17 @@ class Invite < ActiveRecord::Base
       limit = invited_by&.staff? ? SiteSetting.invite_link_max_redemptions_limit
                                  : SiteSetting.invite_link_max_redemptions_limit_users
 
-      if !self.max_redemptions_allowed.between?(1, limit)
+      if self.email.present? && self.max_redemptions_allowed != 1
+        errors.add(:max_redemptions_allowed, I18n.t("invite.max_redemptions_allowed_one"))
+      elsif !self.max_redemptions_allowed.between?(1, limit)
         errors.add(:max_redemptions_allowed, I18n.t("invite_link.max_redemptions_limit", max_limit: limit))
       end
+    end
+  end
+
+  def valid_redemption_count
+    if self.redemption_count > self.max_redemptions_allowed
+      errors.add(:redemption_count, I18n.t("invite.redemption_count_less_than_max", max_redemptions_allowed: self.max_redemptions_allowed))
     end
   end
 

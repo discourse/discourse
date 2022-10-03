@@ -5797,9 +5797,21 @@ RSpec.describe UsersController do
   end
 
   describe "#user_menu_messages" do
+    fab!(:group1) { Fabricate(:group, has_messages: true, users: [user]) }
+    fab!(:group2) { Fabricate(:group, has_messages: true, users: [user, user1]) }
+    fab!(:group3) { Fabricate(:group, has_messages: true, users: [user1]) }
+
     fab!(:message_without_notification) { Fabricate(:private_message_post, recipient: user).topic }
     fab!(:message_with_read_notification) { Fabricate(:private_message_post, recipient: user).topic }
     fab!(:message_with_unread_notification) { Fabricate(:private_message_post, recipient: user).topic }
+    fab!(:archived_message) { Fabricate(:private_message_post, recipient: user).topic }
+
+    fab!(:group_message1) { Fabricate(:group_private_message_post, recipients: group1).topic }
+    fab!(:group_message2) { Fabricate(:group_private_message_post, recipients: group2).topic }
+    fab!(:group_message3) { Fabricate(:group_private_message_post, recipients: group3).topic }
+
+    fab!(:archived_group_message1) { Fabricate(:group_private_message_post, recipients: group1).topic }
+    fab!(:archived_group_message2) { Fabricate(:group_private_message_post, recipients: group2).topic }
 
     fab!(:user1_message_without_notification) do
       Fabricate(:private_message_post, recipient: user1).topic
@@ -5810,16 +5822,18 @@ RSpec.describe UsersController do
     fab!(:user1_message_with_unread_notification) do
       Fabricate(:private_message_post, recipient: user1).topic
     end
+    fab!(:user1_archived_message) { Fabricate(:private_message_post, recipient: user1).topic }
 
-    fab!(:unread_notification) do
+    fab!(:unread_pm_notification) do
       Fabricate(
         :private_message_notification,
         read: false,
         user: user,
-        topic: message_with_unread_notification
+        topic: message_with_unread_notification,
+        created_at: 4.minutes.ago
       )
     end
-    fab!(:read_notification) do
+    fab!(:read_pm_notification) do
       Fabricate(
         :private_message_notification,
         read: true,
@@ -5828,7 +5842,27 @@ RSpec.describe UsersController do
       )
     end
 
-    fab!(:user1_unread_notification) do
+    fab!(:unread_group_message_summary_notification) do
+      Fabricate(
+        :notification,
+        read: false,
+        user: user,
+        notification_type: Notification.types[:group_message_summary],
+        created_at: 2.minutes.ago
+      )
+    end
+
+    fab!(:read_group_message_summary_notification) do
+      Fabricate(
+        :notification,
+        read: true,
+        user: user,
+        notification_type: Notification.types[:group_message_summary],
+        created_at: 1.minutes.ago
+      )
+    end
+
+    fab!(:user1_unread_pm_notification) do
       Fabricate(
         :private_message_notification,
         read: false,
@@ -5836,13 +5870,37 @@ RSpec.describe UsersController do
         topic: user1_message_with_unread_notification
       )
     end
-    fab!(:user1_read_notification) do
+    fab!(:user1_read_pm_notification) do
       Fabricate(
         :private_message_notification,
         read: true,
         user: user1,
         topic: user1_message_with_read_notification
       )
+    end
+
+    fab!(:user1_unread_group_message_summary_notification) do
+      Fabricate(
+        :notification,
+        read: false,
+        user: user1,
+        notification_type: Notification.types[:group_message_summary],
+      )
+    end
+    fab!(:user1_read_group_message_summary_notification) do
+      Fabricate(
+        :notification,
+        read: true,
+        user: user1,
+        notification_type: Notification.types[:group_message_summary],
+      )
+    end
+
+    before do
+      UserArchivedMessage.archive!(user.id, archived_message)
+      UserArchivedMessage.archive!(user1.id, user1_archived_message)
+      GroupArchivedMessage.archive!(group1.id, archived_group_message1)
+      GroupArchivedMessage.archive!(group2.id, archived_group_message2)
     end
 
     context "when logged out" do
@@ -5873,33 +5931,62 @@ RSpec.describe UsersController do
         get "/u/#{user.username}/user-menu-private-messages"
         expect(response.status).to eq(200)
 
-        notifications = response.parsed_body["notifications"]
-        expect(notifications.map { |notification| notification["id"] }).to contain_exactly(
-          unread_notification.id
+        unread_notifications = response.parsed_body["unread_notifications"]
+        expect(unread_notifications.map { |notification| notification["id"] }).to eq([
+          unread_pm_notification.id,
+          unread_group_message_summary_notification.id
+        ])
+      end
+
+      it "sends an array of read group_message_summary notifications" do
+        read_group_message_summary_notification2 = Fabricate(
+          :notification,
+          read: true,
+          user: user,
+          notification_type: Notification.types[:group_message_summary],
+          created_at: 5.minutes.ago
         )
+        get "/u/#{user.username}/user-menu-private-messages"
+        expect(response.status).to eq(200)
+
+        read_notifications = response.parsed_body["read_notifications"]
+        expect(read_notifications.map { |notification| notification["id"] }).to eq([
+          read_group_message_summary_notification.id,
+          read_group_message_summary_notification2.id
+        ])
       end
 
       it "responds with an array of PM topics that are not associated with any of the unread private_message notifications" do
+        group_message1.update!(bumped_at: 1.minutes.ago)
+        message_without_notification.update!(bumped_at: 3.minutes.ago)
+        group_message2.update!(bumped_at: 6.minutes.ago)
+        message_with_read_notification.update!(bumped_at: 10.minutes.ago)
+        read_group_message_summary_notification.destroy!
+
         get "/u/#{user.username}/user-menu-private-messages"
         expect(response.status).to eq(200)
 
         topics = response.parsed_body["topics"]
-        expect(topics.map { |topic| topic["id"] }).to contain_exactly(
+        expect(topics.map { |topic| topic["id"] }).to eq([
+          group_message1.id,
           message_without_notification.id,
+          group_message2.id,
           message_with_read_notification.id
-        )
+        ])
       end
 
       it "fills up the remaining of the USER_MENU_LIST_LIMIT limit with PM topics" do
-        stub_const(UsersController, "USER_MENU_LIST_LIMIT", 2) do
+        stub_const(UsersController, "USER_MENU_LIST_LIMIT", 3) do
           get "/u/#{user.username}/user-menu-private-messages"
         end
         expect(response.status).to eq(200)
-        notifications = response.parsed_body["notifications"]
-        expect(notifications.size).to eq(1)
+        unread_notifications = response.parsed_body["unread_notifications"]
+        expect(unread_notifications.size).to eq(2)
 
         topics = response.parsed_body["topics"]
+        read_notifications = response.parsed_body["read_notifications"]
         expect(topics.size).to eq(1)
+        expect(read_notifications.size).to eq(1)
 
         message2 = Fabricate(:private_message_post, recipient: user).topic
         Fabricate(
@@ -5913,11 +6000,13 @@ RSpec.describe UsersController do
           get "/u/#{user.username}/user-menu-private-messages"
         end
         expect(response.status).to eq(200)
-        notifications = response.parsed_body["notifications"]
-        expect(notifications.size).to eq(2)
+        unread_notifications = response.parsed_body["unread_notifications"]
+        expect(unread_notifications.size).to eq(2)
 
         topics = response.parsed_body["topics"]
+        read_notifications = response.parsed_body["read_notifications"]
         expect(topics.size).to eq(0)
+        expect(read_notifications.size).to eq(0)
       end
     end
   end

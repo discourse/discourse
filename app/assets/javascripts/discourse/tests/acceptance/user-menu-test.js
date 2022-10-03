@@ -805,7 +805,7 @@ acceptance("User menu - Dismiss button", function (needs) {
         const copy = cloneJSON(
           UserMenuFixtures["/u/:username/user-menu-private-messages"]
         );
-        copy.notifications = [];
+        copy.unread_notifications = [];
         return helper.response(copy);
       } else {
         return helper.response(
@@ -941,7 +941,7 @@ acceptance("User menu - Dismiss button", function (needs) {
     assert.ok(markRead, "mark-read request is sent");
     assert.strictEqual(
       markReadRequestBody,
-      "dismiss_types=private_message",
+      "dismiss_types=private_message%2Cgroup_message_summary",
       "mark-read request specifies private_message types"
     );
     assert.notOk(exists(".user-menu .notifications-dismiss"));
