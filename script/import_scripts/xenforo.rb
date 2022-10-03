@@ -398,15 +398,24 @@ class ImportScripts::XenForo < ImportScripts::Base
     # [URL=...]...[/URL]
     s.gsub!(/\[url="?(.+?)"?\](.+?)\[\/url\]/i) { "[#{$2}](#{$1})" }
 
+    # [URL]...[/URL]
+    s.gsub!(/\[url\](.+?)\[\/url\]/i) { " #{$1} " }
+
     # [IMG]...[/IMG]
     s.gsub!(/\[\/?img\]/i, "")
 
     # convert list tags to ul and list=1 tags to ol
     # (basically, we're only missing list=a here...)
-    s.gsub!(/\[list\](.*?)\[\/list:u\]/m, '[ul]\1[/ul]')
-    s.gsub!(/\[list=1\](.*?)\[\/list:o\]/m, '[ol]\1[/ol]')
+    s.gsub!(/\[list\](.*?)\[\/list\]/im, '[ul]\1[/ul]')
+    s.gsub!(/\[list=1\](.*?)\[\/list\]/im, '[ol]\1[/ol]')
+    s.gsub!(/\[list\](.*?)\[\/list:u\]/im, '[ul]\1[/ul]')
+    s.gsub!(/\[list=1\](.*?)\[\/list:o\]/im, '[ol]\1[/ol]')
+
     # convert *-tags to li-tags so bbcode-to-md can do its magic on phpBB's lists:
+    s.gsub!(/\[\*\]\n/, '')
     s.gsub!(/\[\*\](.*?)\[\/\*:m\]/, '[li]\1[/li]')
+    s.gsub!(/\[\*\](.*?)\n/, '[li]\1[/li]')
+    s.gsub!(/\[\*=1\]/, '')
 
     # [YOUTUBE]<id>[/YOUTUBE]
     s.gsub!(/\[youtube\](.+?)\[\/youtube\]/i) { "\nhttps://www.youtube.com/watch?v=#{$1}\n" }
