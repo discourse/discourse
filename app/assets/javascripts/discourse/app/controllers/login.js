@@ -189,6 +189,10 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   actions: {
+    forgotPassword() {
+      this.handleForgotPassword();
+    },
+
     login() {
       if (this.loginDisabled) {
         return;
