@@ -49,4 +49,17 @@
       @include ellipsis;
     }
   }
+
+  #navigation-bar {
+    margin-top: 1em;
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    overflow-x: scroll;
+    margin-bottom: 0;
+    padding-bottom: 0.5em;
+    a {
+      white-space: nowrap;
+    }
+  }
 }

@@ -1,0 +1,105 @@
+<div class="user-navigation-container">
+  {{#if (gt @user.groupsWithMessages.length 0)}}
+    <ol class="category-breadcrumb">
+      <li>
+        <UserNav::MessagesGroupsDropdown @user={{@user}} @pmTaggingEnabled={{@pmTaggingEnabled}} @value={{this.messagesDropdownvalue}} />
+      </li>
+    </ol>
+  {{/if}}
+
+  <ul id="navigation-bar" class="messages-nav nav-pills action-list">
+    {{#if @isPersonal}}
+      <li>
+        <LinkTo @route="userPrivateMessages.index" @model={{@user}}>
+          {{i18n "categories.latest"}}
+        </LinkTo>
+      </li>
+
+      <li class="archive">
+        <LinkTo @route="userPrivateMessages.sent" @model={{@user}}>
+          {{i18n "user.messages.sent"}}
+        </LinkTo>
+      </li>
+
+      {{#if @viewingSelf}}
+        <li class="archive">
+          <LinkTo @route="userPrivateMessages.new" @model={{@user}} class="new">
+            {{@newLinkText}}
+          </LinkTo>
+        </li>
+
+        <li class="archive">
+          <LinkTo @route="userPrivateMessages.unread" @model={{@user}} class="unread">
+            {{@unreadLinkText}}
+          </LinkTo>
+        </li>
+      {{/if}}
+
+      <li class="archive">
+        <LinkTo @route="userPrivateMessages.archive" @model={{@user}}>
+          {{i18n "user.messages.archive"}}
+        </LinkTo>
+      </li>
+    {{/if}}
+
+    {{#each @user.groups as |group|}}
+      {{#if (and @isGroup (eq @groupFilter group.name))}}
+        {{#if @viewingSelf}}
+          <li class="archive">
+            <LinkTo @route="userPrivateMessages.group" @model={{group.name}}>
+              {{i18n "categories.latest"}}
+            </LinkTo>
+          </li>
+
+          <li class="archive">
+            <LinkTo @route="userPrivateMessages.groupNew" @model={{group.name}} class="new">
+              {{@newLinkText}}
+            </LinkTo>
+          </li>
+
+          <li class="archive">
+            <LinkTo @route="userPrivateMessages.groupUnread" @model={{group.name}} class="unread">
+              {{@unreadLinkText}}
+            </LinkTo>
+          </li>
+        {{/if}}
+
+        <li class="archive">
+          <LinkTo @route="userPrivateMessages.groupArchive" @model={{group.name}}>
+            {{i18n "user.messages.archive"}}
+          </LinkTo>
+        </li>
+      {{/if}}
+    {{/each}}
+
+    {{#if this.displayTags}}
+      <li class="tags">
+        <LinkTo @route="userPrivateMessages.tags" @model={{@user}}>
+          {{i18n "user.messages.all_tags"}}
+        </LinkTo>
+      </li>
+
+      {{#if @tagId}}
+        <li class="archive">
+          <LinkTo @route="userPrivateMessages.tagsShow" @model={{@tagId}}>
+            {{@tagId}}
+          </LinkTo>
+        </li>
+      {{/if}}
+    {{/if}}
+
+    <PluginOutlet @name="user-messages-nav" @tagName="span" @connectorTagName="li" @args={{hash model=@user}} />
+  </ul>
+
+  {{#if this.site.desktopView}}
+    <div class="navigation-controls">
+      {{#if @isGroup}}
+        <GroupNotificationsButton @value={{@group.group_user.notification_level}} @onChange={{action @changeGroupNotificationLevel}} />
+      {{/if}}
+
+      {{#if @showNewPM}}
+        <DButton @class="btn-primary new-private-message" @action={{route-action "composePrivateMessage"}} @icon="envelope" @label="user.new_private_message" />
+      {{/if}}
+    </div>
+  {{/if}}
+</div>
