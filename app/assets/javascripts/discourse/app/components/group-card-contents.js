@@ -78,7 +78,7 @@ export default Component.extend(CardContentsBase, CleansUp, {
   },
 
   @action
-  showGroupAndClose(group, event) {
+  handleShowGroup(group, event) {
     event?.preventDefault();
     // Invokes `showGroup` argument. Convert to `this.args.showGroup` when
     // refactoring this to a glimmer component.
@@ -99,6 +99,10 @@ export default Component.extend(CardContentsBase, CleansUp, {
         recipients: this.get("group.name"),
         hasGroups: true,
       });
+    },
+
+    showGroup(group) {
+      this.handleShowGroup(group);
     },
   },
 });
