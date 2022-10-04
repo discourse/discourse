@@ -278,6 +278,8 @@ discourseModule("Unit | Utilities", function () {
       "000\n[code]111",
       // complex test
       "000\n\n```\n111\n```\n\n000\n\n`111 111`\n\n000\n\n[code]\n111\n[/code]\n\n    111\n\t111\n\n000`111",
+      // indented open code blocks
+      "000\n\t```111\n\t111\n\t111```\n000",
     ];
 
     texts.forEach((text) => {
