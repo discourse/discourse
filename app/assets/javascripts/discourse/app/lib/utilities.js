@@ -471,7 +471,7 @@ const CODE_BLOCKS_REGEX =
 //       |
 //       +------- paragraphs starting with 4 spaces or tab
 
-const OPEN_CODE_BLOCKS_REGEX = /`[^`]+|^```[^]*?|\[code\][^]*?/gm;
+const OPEN_CODE_BLOCKS_REGEX = /^(  |\t).*|`[^`]+|^```[^]*?|\[code\][^]*?/gm;
 
 export function inCodeBlock(text, pos) {
   let end = 0;
