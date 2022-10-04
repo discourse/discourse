@@ -50,6 +50,9 @@ class Guardian
     def is_system_user?
       false
     end
+    def bot?
+      false
+    end
     def secure_category_ids
       []
     end
