@@ -1118,6 +1118,7 @@ sl:
         move_to_archive: "Arhiv"
         failed_to_move: "Premik izbranih sporočil ni uspel (mogoče je vaša povezava prekinjena)"
         tags: "Oznake"
+        all_tags: "Vse oznake"
       preferences_nav:
         account: "Račun"
         security: "Varnost"
@@ -3429,6 +3430,9 @@ sl:
             my_posts:
               content: "Moji prispevki"
               title: "Moji prispevki"
+            review:
+              content: "Pregled"
+              title: "pregled"
   admin_js:
     type_to_filter: "vnesite za filter..."
     admin:

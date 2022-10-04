@@ -1136,6 +1136,7 @@ vi:
         move_to_archive: "Lưu trữ"
         failed_to_move: "Lỗi khi chuyển các tin nhắn đã chọn (có thể do lỗi mạng)"
         tags: "Thẻ"
+        all_tags: "Tất cả thẻ"
         warnings: "Cảnh báo chính thức"
         read_more_in_group: "Muốn đọc thêm? Duyệt các tin nhắn khác bằng %{groupLink}."
         read_more: "Muốn đọc thêm? Duyệt các tin nhắn khác trong <a href='%{basePath}/u/%{username}/messages'>tin nhắn cá nhân</a>."
@@ -3652,6 +3653,9 @@ vi:
               title: "Bài viết của tôi"
               draft_count:
                 other: "%{count} bản nháp"
+            review:
+              content: "Review"
+              title: "review"
     until: "Cho đến khi:"
   admin_js:
     type_to_filter: "gõ để lọc..."

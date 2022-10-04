@@ -85,6 +85,7 @@ fa_IR:
         bounced_email_error: "ایمیل یک گزارش برگشتی است."
         screened_email_error: "وقتی که ارسال کننده ایمیل پیش از این در حال نمایش باشد، اتفاق می‌افتد."
       unrecognized_error: "خطای نامشخص"
+    secure_uploads_placeholder: "ویرایش شده: این سایت بارگذاری ایمن را فعال کرده است، از موضوع دیدن کنید یا برای مشاهده بارگذاری‌های پیوست روی مشاهده رسانه کلیک کنید."
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
@@ -136,6 +137,7 @@ fa_IR:
     site_settings:
       default_categories_already_selected: "شما نمیتوانید دسته‌بندی‌ای را که در یک فهرست دیگر استفاده شده را انتخاب کنید."
       s3_upload_bucket_is_required: "شما نمیتوانید بارگذاری به S3 را فعال کنید مگر اینکه 's3_upload_bucket' را ارائه دهید."
+      secure_uploads_requirements: "قبل از فعال کردن بارگذاری‌های ایمن، بارگذاری‌های S3 باید فعال شوند."
   word_connector:
     comma: "، "
   invite:
@@ -146,6 +148,9 @@ fa_IR:
     invalid_email: "آدرس ایمیل %{email} معتبر نیست."
     disabled_errors:
       invalid_access: "شما اجازه مشاهده منبع درخواست شده را ندارید."
+    max_redemptions_allowed_one: "برای دعوت‌نامه‌های ایمیل باید 1 باشد."
+    redemption_count_less_than_max: "باید کمتر از %{max_redemptions_allowed} باشد."
+    email_xor_domain: "فیلدهای ایمیل و دامنه به طور همزمان مجاز نیستند"
   bulk_invite:
     file_should_be_csv: "فرمت فایل بارگذاری شده می بایست csv باشد."
     error: "خطایی هنگام آپلود فایل مربوطه رخ داده است. لطفا بعدا امتحان کنید."

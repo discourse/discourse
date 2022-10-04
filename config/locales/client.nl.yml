@@ -1128,6 +1128,7 @@ nl:
         move_to_archive: "Archiveren"
         failed_to_move: "Het verplaatsen van geselecteerde berichten is niet gelukt (misschien is uw netwerkverbinding verbroken)"
         tags: "Tags"
+        all_tags: "Alle tags"
         warnings: "Officiële waarschuwingen"
       preferences_nav:
         account: "Account"
@@ -3535,6 +3536,9 @@ nl:
               content: "Gebruikers"
             my_posts:
               content: "Mijn berichten"
+            review:
+              content: "Beoordelen"
+              title: "beoordelen"
   admin_js:
     type_to_filter: "typ om te filteren..."
     admin:

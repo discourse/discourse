@@ -1248,6 +1248,7 @@ hr:
         move_to_archive: "Arhiva"
         failed_to_move: "Neuspješno premještanje odabranih poruka (možda vam je mreža nedostupna)"
         tags: "Oznake"
+        all_tags: "Sve oznake"
         warnings: "Službena upozorenja"
         read_more_in_group: "Želite li pročitati više? Pregledajte ostale poruke u %{groupLink}."
         read_more: "Želite li pročitati više? Pregledajte ostale poruke u <a href='%{basePath}/u/%{username}/messages'>osobnim porukama</a>."
@@ -3939,6 +3940,9 @@ hr:
               content: "Korisnika"
             my_posts:
               content: "Moje objave"
+            review:
+              content: "Osvrt"
+              title: "osvrt"
   admin_js:
     type_to_filter: "upiši za filtriranje"
     admin:

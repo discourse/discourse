@@ -120,7 +120,6 @@ nl:
         unsubscribe_not_allowed: "Gebeurt wanneer uitschrijven via e-mail niet is toegestaan voor deze gebruiker."
         email_not_allowed: "Gebeurt wanneer het e-mailadres zich niet op de acceptatielijst of wel op de blokkeerlijst bevindt."
       unrecognized_error: "Niet-herkende fout"
-    secure_media_placeholder: "Geredigeerd: deze website heeft beveiligde media ingeschakeld. Bezoek het topic of klik op Media weergeven om de bijgevoegde media te zien."
     view_redacted_media: "Media weergeven"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -188,7 +187,6 @@ nl:
       enable_s3_uploads_is_required: "U kunt geen inventory naar S3 inschakelen voordat u de S3-uploads hebt ingeschakeld."
       s3_backup_requires_s3_settings: "U kunt S3 niet als back-uplocatie gebruiken voordat u de '%{setting_name}' hebt opgegeven."
       s3_bucket_reused: "U kunt niet dezelfde bucket voor 's3_upload_bucket' en 's3_backup_bucket' gebruiken. Kies een andere bucket of gebruik een ander pad voor elke bucket."
-      secure_media_requirements: "S3-uploads moeten zijn ingeschakeld voordat u beveiligde media inschakelt."
       second_factor_cannot_be_enforced_with_disabled_local_login: "U kunt geen 2FA afdwingen als lokale aanmeldingen zijn uitgeschakeld."
       local_login_cannot_be_disabled_if_second_factor_enforced: "U kunt geen lokale aanmelding uitschakelen als 2FA is afgedwongen. Schakel afgedwongen 2FA uit voordat u lokale aanmeldingen uitschakelt."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "U kunt geen S3-uploads inschakelen, omdat S3-uploads al globaal zijn ingeschakeld, en inschakelen hiervan op websiteniveau kan kritieke problemen met uploads veroorzaken"
@@ -1750,7 +1748,6 @@ nl:
     show_create_topics_notice: "Als de website minder dan 5 publieke topics heeft, een melding tonen waarin beheerders wordt gevraagd een aantal topics te maken."
     delete_drafts_older_than_n_days: "Concepten ouder dan (n) dagen verwijderen."
     bootstrap_mode_min_users: "Minimale aantal vereiste gebruikers om bootstrapmodus uit te schakelen (stel dit in op 0 om uit te schakelen)"
-    secure_media: 'Beperkt toegang tot ALLE uploads (afbeeldingen, video, audio, tekst, pdf’s, zips en andere). Als ‘aanmelding vereist’ is ingeschakeld, hebben alleen aangemelde gebruikers toegang tot uploads. Anders is toegang beperkt tot media-uploads in privéberichten en privécategorieën. WAARSCHUWING: deze instelling is complex en vereist grondige kennis van beheer. Zie <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">het topic over beveiligde media op Meta</a> voor details.'
     slug_generation_method: "Kies een slug-generatiemodus. 'encoded' genereert een percentage-coderingsstring. 'none' schakelt de slug helemaal uit."
     enable_emoji: "Emoji inschakelen"
     enable_emoji_shortcuts: "Gebruikelijke smileyteksten zoals :) :p :( worden naar emoji geconverteerd"

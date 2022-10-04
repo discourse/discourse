@@ -1198,6 +1198,7 @@ es:
         move_to_archive: "Archivar"
         failed_to_move: "No se han podido mover los mensajes seleccionados (podrías estar teniendo problemas de conexión)"
         tags: "Etiquetas"
+        all_tags: "Todas las etiquetas"
         warnings: "Advertencias oficiales"
         read_more_in_group: "¿Quieres leer más? Consulta otros mensajes de %{groupLink}."
         read_more: "¿Quieres seguir leyendo? Echa un vistazo a otros mensajes en tus <a href='%{basePath}/u/%{username}/messages'>mensajes personales</a>."
@@ -3831,6 +3832,9 @@ es:
               draft_count:
                 one: "%{count} borrador"
                 other: "%{count} borradores"
+            review:
+              content: "Revisión"
+              title: "revisión"
     welcome_topic_banner:
       title: "Crea tu tema de bienvenida"
       description: 'Tu tema de bienvenid es lo primero que la gente nueva leerá al llegar. Piensa en este párrafo como si fuera un "discurso breve" o una "declaración de motivos"'

@@ -1009,6 +1009,7 @@ ca:
         move_to_archive: "Arxiva"
         failed_to_move: "Error en moure els missatges seleccionats (potser ha caigut la xarxa)."
         tags: "Etiquetes"
+        all_tags: "Totes les etiquetes"
       preferences_nav:
         account: "Compte"
         security: "Seguretat"
@@ -2936,6 +2937,9 @@ ca:
               content: "Usuaris"
             my_posts:
               content: "Les meves publicacions"
+            review:
+              content: "Revisa"
+              title: "revisa"
   admin_js:
     type_to_filter: "escriu per a filtrar..."
     admin:

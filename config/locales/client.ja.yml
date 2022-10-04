@@ -1105,6 +1105,7 @@ ja:
         move_to_archive: "アーカイブ"
         failed_to_move: "選択されたメッセージを移動できませんでした (ネットワークがダウンしている可能性があります)"
         tags: "タグ"
+        all_tags: "すべてのタグ"
         warnings: "運営スタッフからの警告"
         read_more_in_group: "もっと読みますか？%{groupLink} での他のメッセージを閲覧できます。"
         read_more: "もっと読みますか？<a href='%{basePath}/u/%{username}/messages'>個人メッセージ</a>で他のメッセージを閲覧できます。"
@@ -3442,6 +3443,9 @@ ja:
               content: "自分の投稿"
               draft_count:
                 other: "%{count} 下書き"
+            review:
+              content: "レビュー"
+              title: "レビュー"
   admin_js:
     type_to_filter: "フィルタの種類..."
     admin:

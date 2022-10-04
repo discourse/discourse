@@ -1311,6 +1311,7 @@ pl_PL:
         move_to_archive: "Archiwum"
         failed_to_move: "Nie udało się przenieść zaznaczonych wiadomości (prawdopodobnie wystąpił problem z Twoim połączeniem)"
         tags: "Tagi"
+        all_tags: "Wszystkie tagi"
         warnings: "Oficjalne ostrzeżenia"
         read_more_in_group: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w %{groupLink}."
         read_more: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w <a href='%{basePath}/u/%{username}/messages'>wiadomościach osobistych</a>."
@@ -4150,6 +4151,9 @@ pl_PL:
                 few: "%{count} szkice"
                 many: "%{count} szkice"
                 other: "%{count} szkice"
+            review:
+              content: "Sprawdź"
+              title: "sprawdź"
     welcome_topic_banner:
       title: "Stwórz swój temat powitalny"
       description: 'Twój temat powitalny jest pierwszą rzeczą, którą przeczytają nowicjusze. Postaraj się w jednym akapicie wyrazić najważniejsze informacje, jakie chcesz przekazać nowym użytkownikom forum.'

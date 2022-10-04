@@ -73,6 +73,7 @@ fr:
       file_too_big: "Le fichier non compressé est trop volumineux."
       unknown_file_type: "Le fichier que vous avez essayé d'envoyer ne semble pas être un thème Discourse valide."
       not_allowed_theme: "« %{repo} » n'est pas repris dans la liste des thèmes autorisés (vérifier le paramètre général « allowed_theme_repos »)."
+      ssh_key_gone: "Vous avez attendu trop longtemps pour installer le thème et la clé SSH a expiré. Veuillez réessayer."
     errors:
       component_no_user_selectable: "Les composants du thème ne peuvent pas être sélectionnés par les utilisateurs"
       component_no_default: "Les composants du thème ne peuvent pas être un thème par défaut"
@@ -129,7 +130,6 @@ fr:
         unsubscribe_not_allowed: "Se produit lorsque le désabonnement via courriel n'est pas autorisé pour cet utilisateur."
         email_not_allowed: "Se produit quand l'adresse courriel n'est pas reprise dans la liste autorisée ou se trouve dans la liste des expéditeurs indésirables."
       unrecognized_error: "Erreur non reconnue"
-    secure_media_placeholder: "Masqué : ce site a activé la sécurisation des médias. Visitez le sujet ou cliquez sur « Afficher le média » pour le voir."
     view_redacted_media: "Afficher le média"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -199,7 +199,6 @@ fr:
       page_publishing_requirements: "La publication de pages ne peut pas être activée si la sécurisation des médias est activée."
       s3_backup_requires_s3_settings: "Utiliser S3 comme emplacement de sauvegarde nécessite de renseigner le paramètre « %{setting_name} »."
       s3_bucket_reused: "Il n'est pas possible d'utiliser le même bucket pour « s3_upload_bucket » et « s3_backup_bucket ». Choisissez un autre bucket ou utilisez un chemin d'accès différent pour chaque bucket."
-      secure_media_requirements: "L'envoi de fichiers sur S3 doit être activé avant d'activer la sécurisation des médias."
       share_quote_facebook_requirements: "Vous devez définir un identifiant d'application Facebook pour activer le partage de citation vers Facebook."
       second_factor_cannot_enforce_with_socials: "Vous ne pouvez pas rendre obligatoire l'authentification à deux facteurs lorsque des connexions aux réseaux sociaux sont activées. Vous devez d'abord désactiver la connexion via : %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Vous ne pouvez pas rendre obligatoire l'authentification à deux facteurs lorsque les connexions locales sont désactivées."
@@ -1978,9 +1977,6 @@ fr:
     delete_merged_stub_topics_after_days: "Délai (en jours) de suppression automatique des sujets fusionnés, c'est-à-dire les sujets sans réponses résultant de la fusion de deux sujets par déplacement de messages. Si la valeur est fixée à 0, les sujets fusionnés ne seront pas supprimés."
     bootstrap_mode_min_users: "Nombre minimal d'utilisateurs nécessaire pour désactiver le mode d'amorçage (mettre à 0 pour désactiver)"
     prevent_anons_from_downloading_files: "Empêcher les utilisateurs anonymes de télécharger les pièces jointes."
-    secure_media: 'Limite l''accès à TOUS les fichiers envoyés (image, vidéo, audio, texte, PDF, ZIP, etc.). Si le paramètre « connexion requise » est activé, seuls les utilisateurs connectés peuvent accéder aux fichiers envoyés. Sinon, l''accès sera limité uniquement aux médias des messages et catégories privés. ATTENTION : ce paramètre est complexe et nécessite des connaissances d''administration approfondies. Consultez <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">ce sujet sur les médias sécurisés</a> pour en savoir plus.'
-    secure_media_allow_embed_images_in_emails: "Autorise l'intégration d'images sécurisées (qui seraient autrement expurgées) dans les courriels, si leur taille est inférieure à la valeur du paramètre « secure media max email embed image size kb »."
-    secure_media_max_email_embed_image_size_kb: "La taille maximale d'images sécurisées qui seront intégrées dans des courriels si le paramètre « secure media allow embed in emails » est activé. Si celui-ci n'est pas activé, ce paramètre est sans effet."
     slug_generation_method: "Choisissez une méthode de génération d'identifiant. « encoded » générera des chaînes de caractères encodées avec des pourcentages. « none » désactivera complètement les identifiants."
     enable_emoji: "Activer les émojis"
     enable_emoji_shortcuts: "Les textes de smiley courants « :) », « :p » ou « :( » seront convertis en émojis"

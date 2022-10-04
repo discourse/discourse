@@ -1038,6 +1038,7 @@ zh_TW:
         move_to_archive: "封存"
         failed_to_move: "移動所選郵件失敗（請檢查網路連線）"
         tags: "標籤"
+        all_tags: "所有標籤"
         read_more: "想看更多？到<a href='%{basePath}/u/%{username}/messages'>個人訊息</a>瀏覽其他訊息。"
       preferences_nav:
         account: "帳號"
@@ -2851,6 +2852,9 @@ zh_TW:
               content: "我的貼文"
               draft_count:
                 other: "%{count}草稿"
+            review:
+              content: "審核"
+              title: "審核"
   admin_js:
     type_to_filter: "輸入要搜尋的文字..."
     admin:

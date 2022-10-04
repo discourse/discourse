@@ -129,7 +129,6 @@ hr:
         unsubscribe_not_allowed: "Događa se kada ovom korisniku nije dopuštena odjava putem e-pošte."
         email_not_allowed: "Događa se kada adresa e-pošte nije na popisu dopuštenih ili je na popisu blokiranih."
       unrecognized_error: "Neprepoznata pogreška"
-    secure_media_placeholder: "Redigirano: Ova stranica ima omogućen siguran medij. Posjetite temu ili kliknite Prikaži medije da biste vidjeli priloženi medij."
     view_redacted_media: "Pregledajte medije"
   errors: &errors
     format: ! "%{attribute} %{message}"

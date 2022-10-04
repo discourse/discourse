@@ -1145,6 +1145,7 @@ pt:
         move_to_archive: "Arquivo"
         failed_to_move: "Falha ao mover as mensagens selecionadas (talvez a sua rede esteja em baixo)"
         tags: "Etiquetas"
+        all_tags: "Todas as Etiquetas"
         warnings: "Avisos Oficiais"
       preferences_nav:
         account: "Conta"
@@ -3472,6 +3473,9 @@ pt:
               content: "Utilizadores"
             my_posts:
               content: "As Minhas publicações"
+            review:
+              content: "Revisão"
+              title: "revisão"
   admin_js:
     type_to_filter: "digite para filtrar..."
     admin:

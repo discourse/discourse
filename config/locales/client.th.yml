@@ -851,6 +851,7 @@ th:
         move_to_archive: "เก็บเข้าคลัง"
         failed_to_move: "เกิดความผิดพลาดในการย้ายข้อความที่เลือก (เครือข่ายของคุณอาจล่ม)"
         tags: "แท็ก"
+        all_tags: "แท็กทั้งหมด"
       preferences_nav:
         account: "บัญชี"
         security: "ความปลอดภัย"
@@ -2491,6 +2492,9 @@ th:
               content: "โพสต์ของฉัน"
               draft_count:
                 other: "%{count}แบบร่าง"
+            review:
+              content: "รีวิว"
+              title: "รีวิว"
   admin_js:
     type_to_filter: "พิมพ์เพื่อกรอง..."
     admin:

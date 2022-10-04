@@ -121,7 +121,6 @@ gl:
         unsubscribe_not_allowed: "Sucede cando a este usuario non se lle permite cancelar a subscrición vía correo electrónico."
         email_not_allowed: "Sucede cando o enderezo electrónico non está na listaxe de elementos permitidos ou está na de bloqueados."
       unrecognized_error: "Erro non recoñecido"
-    secure_media_placeholder: "Redactado: este sitio ten activados elementos multimedia seguros; visite o tema ou prema en Ver contido multimedia para ver o contido multimedia anexado."
     view_redacted_media: "Ver contido multimedia"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -191,7 +190,6 @@ gl:
       page_publishing_requirements: "A publicación de páxinas non se pode activar se está activados multimedia seguros."
       s3_backup_requires_s3_settings: "Non se pode utilizar S3 como localización da copia de seguranza a menos que proporcionara '%{setting_name}'."
       s3_bucket_reused: "Non pode utilizar o mesmo contedor (bucket) para 's3_upload_bucket' e 's3_backup_bucket'. Elixa un contedor diferente ou utilice un camiño distinto para cada un deles."
-      secure_media_requirements: "Débese activar a carga de S3 antes de habilitar multimedia seguros."
       share_quote_facebook_requirements: "Debe definir un ID de aplicación de Facebook para activar o reparto de cota para Facebook."
       second_factor_cannot_enforce_with_socials: "Non pode forzar 2FA tendo o activo o inicio de sesión con redes sociais. Primeiro debe desactivar o inicio de sesión con: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Non pode aplicar 2FA se os inicios de sesión locais están desactivados."
@@ -1839,9 +1837,6 @@ gl:
     delete_drafts_older_than_n_days: "Eliminar borradores con máis de (n) días de antigüidade."
     bootstrap_mode_min_users: "Número mínimo de usuarios necesarios para desactivar o modo de arranque (estabelecer en 0 para desactivar)"
     prevent_anons_from_downloading_files: "Evitar que usuarios anónimos descarguen anexos."
-    secure_media: 'Limita o acceso a TODO o que se cargase (imaxes, vídeo, son, texto, pdf, zip e outros). Se está activado o «requírese inicio de sesión», só os usuarios con sesión activa poden acceder ás cargas. En caso contrario, o acceso limitarase só para as cargas de multimedia en mensaxes privadas e categorías privadas. AVISO: este axuste é complexo e require unha comprensión administrativa profunda. Véxase <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">o tema de multimedia seguro en Meta</a> para saber máis.'
-    secure_media_allow_embed_images_in_emails: "Permite incorporar imaxes seguras que normalmente se engadirían nos correos electrónicos, se o seu tamaño é menor que o axuste de tamaño máx. de imaxe incorporada en correo en kb."
-    secure_media_max_email_embed_image_size_kb: "O tamaño de corte para imaxes seguras que se incorporarán nos correos se está activado o axuste «multimedia seguro que se permite incorporar nas mensaxes de correo». Se este axuste non está activado, non terá efecto."
     slug_generation_method: "Escolla un método de xeración de abreviacións. Con «codificado» xerarase unha cadea con codificación porcentual, con «ningún» desactivarase a abreviación amigábel."
     enable_emoji: "Activar emojis"
     enable_emoji_shortcuts: "As cariñas habituais en texto como :) :p :( converterase en emojis"

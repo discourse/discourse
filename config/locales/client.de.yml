@@ -1198,6 +1198,7 @@ de:
         move_to_archive: "Archivieren"
         failed_to_move: "Die ausgewählten Nachrichten konnten nicht verschoben werden. Vielleicht gibt es ein Netzwerkproblem."
         tags: "Schlagwörter"
+        all_tags: "Alle Schlagwörter"
         warnings: "Offizielle Warnungen"
         read_more_in_group: "Möchtest Du mehr lesen? Entdecke andere Nachrichten in %{groupLink}."
         read_more: "Möchtest Du mehr lesen? Durchsuche andere Nachrichten in <a href='%{basePath}/u/%{username}/messages'>persönliche Nachrichten</a>."
@@ -2077,6 +2078,9 @@ de:
         body: "Im Augenblick wird diese Nachricht nur an dich selbst gesendet!"
       slow_mode:
         error: "Dieses Thema befindet sich im langsamen Modus. Du hast bereits kürzlich gepostet. Du kannst erneut in %{timeLeft} posten."
+      user_not_seen_in_a_while:
+        single: "Die Person, der du eine Nachricht sendest, <b>%{usernames}</b>, wurde hier schon lange nicht mehr gesehen - %{time_ago}. Es kann sein, dass sie deine Nachricht nicht erhält. Du solltest nach alternativen Methoden suchen, um %{usernames}zu kontaktieren."
+        multiple: "Die folgenden Personen, die du anschreibst: <b>%{usernames}</b>, wurden hier schon sehr lange nicht mehr gesehen - %{time_ago}. Es kann sein, dass sie deine Nachricht nicht erhalten. Du solltest nach alternativen Methoden suchen, um sie zu kontaktieren."
       admin_options_title: "Optionale Team-Einstellungen für dieses Thema"
       composer_actions:
         reply: Antworten
@@ -3868,6 +3872,10 @@ de:
               draft_count:
                 one: "%{count} Entwurf"
                 other: "%{count} Entwürfe"
+            review:
+              content: "Überprüfen"
+              title: "überprüfen"
+              pending_count: "%{count} ausstehend"
     welcome_topic_banner:
       title: "Erstelle dein Willkommensthema"
       description: 'Dein Willkommensthema ist das erste, was Neuankömmlinge lesen werden. Sieh es als deinen einseitigen "Elevator Pitch" oder "Mission Statement" an.'
