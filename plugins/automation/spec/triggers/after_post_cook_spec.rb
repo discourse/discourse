@@ -2,7 +2,7 @@
 
 require_relative '../discourse_automation_helper'
 
-describe 'After post cooked' do
+describe DiscourseAutomation::Triggerable::AFTER_POST_COOK do
   before do
     SiteSetting.discourse_automation_enabled = true
   end
@@ -14,7 +14,7 @@ describe 'After post cooked' do
     Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::AFTER_POST_COOK)
   end
 
-  context 'Filtered to a tag' do
+  context 'when filtered to a tag' do
 
     let(:filtered_tag) {
       Fabricate(:tag)

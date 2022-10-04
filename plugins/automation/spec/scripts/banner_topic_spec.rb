@@ -15,7 +15,7 @@ describe 'BannerTopic' do
   end
   fab!(:topic) { Fabricate(:topic) }
 
-  context 'banner until is set' do
+  context 'when banner until is set' do
     before do
       freeze_time
       automation.upsert_field!('banner_until', 'date_time', { value: 10.days.from_now })
@@ -34,7 +34,7 @@ describe 'BannerTopic' do
     end
   end
 
-  context 'banner until is not set' do
+  context 'when banner until is not set' do
     it 'banners the topic' do
       expect(topic.bannered_until).to be_nil
       expect(topic.archetype).to eq(Archetype.default)

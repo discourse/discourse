@@ -24,7 +24,7 @@ describe 'AppendLastCheckedBy' do
     I18n.t("discourse_automation.scriptables.append_last_checked_by.#{key}")
   end
 
-  context "#trigger!" do
+  describe "#trigger!" do
     it 'works for newly created post' do
       cooked, checked_at, date_time = trigger_automation(post)
 

@@ -17,7 +17,7 @@ describe 'UserAddedToGroup' do
     automation.upsert_field!('joined_group', 'group', { value: tracked_group.id }, target: 'trigger')
   end
 
-  context 'group is tracked' do
+  context 'when group is tracked' do
     it 'fires the trigger' do
       list = capture_contexts do
         tracked_group.add(user)
@@ -28,7 +28,7 @@ describe 'UserAddedToGroup' do
     end
   end
 
-  context 'group is not tracked' do
+  context 'when group is not tracked' do
     let(:untracked_group) { Fabricate(:group) }
 
     it 'doesn’t fire the trigger' do

@@ -9,8 +9,8 @@ describe 'PointInTime' do
     Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::POINT_IN_TIME)
   end
 
-  context 'updating trigger' do
-    context 'date is in future' do
+  context 'when updating trigger' do
+    context 'when date is in future' do
       it 'creates a pending automation' do
         expect {
           automation.upsert_field!('execute_at', 'date_time', { value: 2.hours.from_now }, target: 'trigger')
@@ -22,13 +22,13 @@ describe 'PointInTime' do
       end
     end
 
-    context 'date is in past' do
+    context 'when date is in past' do
       it 'doesn’t create a pending automation' do
         expect {
           automation.upsert_field!('execute_at', 'date_time', { value: 2.hours.ago }, target: 'trigger')
-        }.to change {
+        }.not_to change {
           DiscourseAutomation::PendingAutomation.count
-        }.by(0)
+        }
       end
     end
   end

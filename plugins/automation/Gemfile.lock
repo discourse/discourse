@@ -2,31 +2,32 @@ GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.2)
-    parallel (1.20.1)
-    parser (3.0.0.0)
+    json (2.6.2)
+    parallel (1.22.1)
+    parser (3.1.2.1)
       ast (~> 2.4.1)
-    rainbow (3.0.0)
-    regexp_parser (2.1.1)
+    rainbow (3.1.1)
+    regexp_parser (2.6.0)
     rexml (3.2.5)
-    rubocop (1.12.0)
+    rubocop (1.36.0)
+      json (~> 2.3)
       parallel (~> 1.10)
-      parser (>= 3.0.0.0)
+      parser (>= 3.1.2.1)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
-      rexml
-      rubocop-ast (>= 1.2.0, < 2.0)
+      rexml (>= 3.2.5, < 4.0)
+      rubocop-ast (>= 1.20.1, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 3.0)
-    rubocop-ast (1.4.1)
-      parser (>= 2.7.1.5)
-    rubocop-discourse (2.4.1)
+    rubocop-ast (1.21.0)
+      parser (>= 3.1.1.0)
+    rubocop-discourse (3.0)
       rubocop (>= 1.1.0)
       rubocop-rspec (>= 2.0.0)
-    rubocop-rspec (2.2.0)
-      rubocop (~> 1.0)
-      rubocop-ast (>= 1.1.0)
+    rubocop-rspec (2.13.2)
+      rubocop (~> 1.33)
     ruby-progressbar (1.11.0)
-    unicode-display_width (2.0.0)
+    unicode-display_width (2.3.0)
 
 PLATFORMS
   arm64-darwin-20
@@ -40,4 +41,4 @@ DEPENDENCIES
   rubocop-discourse
 
 BUNDLED WITH
-   2.2.13
+   2.3.4

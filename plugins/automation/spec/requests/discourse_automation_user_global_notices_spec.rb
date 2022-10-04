@@ -14,7 +14,7 @@ describe DiscourseAutomation::UserGlobalNoticesController do
       )
     end
 
-    context 'user is not logged in' do
+    context 'when user is not logged in' do
       it 'raises a 403' do
         delete "/user-global-notices/#{notice_1.id}.json"
 
@@ -22,7 +22,7 @@ describe DiscourseAutomation::UserGlobalNoticesController do
       end
     end
 
-    context 'user is owner of the notice' do
+    context 'when user is owner of the notice' do
       before { sign_in(user_1) }
 
       it 'destroys the notice' do
@@ -32,7 +32,7 @@ describe DiscourseAutomation::UserGlobalNoticesController do
       end
     end
 
-    context 'user is not owner of the notice' do
+    context 'when user is not owner of the notice' do
       before { sign_in(Fabricate(:user)) }
 
       it 'raises a 404' do

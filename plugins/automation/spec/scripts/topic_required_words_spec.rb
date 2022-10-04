@@ -20,13 +20,13 @@ describe 'TopicRequiredWords' do
     automation.upsert_field!('words', 'text_list', { value: ['#foo', '#bar'] })
   end
 
-  context 'editing/creating a post' do
+  describe 'editing/creating a post' do
     before do
       automation.upsert_field!('restricted_topic', 'text', { value: topic.id }, target: 'trigger')
     end
 
-    context 'topic has a topic_required_words automation associated' do
-      context 'post has at least a required word' do
+    context 'when topic has a topic_required_words automation associated' do
+      context 'when post has at least a required word' do
         it 'validates the post' do
           post_creator = PostCreator.new(user, topic_id: topic.id, raw: 'this is quite cool #foo')
           post = post_creator.create
@@ -34,7 +34,7 @@ describe 'TopicRequiredWords' do
         end
       end
 
-      context 'post has no required word' do
+      context 'when post has no required word' do
         it 'doesn’t validate the post' do
           post_creator = PostCreator.new(user, topic_id: topic.id, raw: 'this is quite cool')
           post = post_creator.create
@@ -43,8 +43,8 @@ describe 'TopicRequiredWords' do
       end
     end
 
-    context 'topic has no topic_required_words automation associated' do
-      context 'post has no required word' do
+    context 'when topic has no topic_required_words automation associated' do
+      context 'when post has no required word' do
         it 'validates the post' do
           no_automation_topic = create_topic(category: category)
           post_creator = PostCreator.new(user, topic_id: no_automation_topic.id, raw: 'this is quite cool')
@@ -55,7 +55,7 @@ describe 'TopicRequiredWords' do
     end
   end
 
-  context 'moving posts' do
+  describe 'moving posts' do
     fab!(:admin) { Fabricate(:admin) }
     fab!(:first_post) { Fabricate(:post, topic: topic, raw: "this is quite cool #foo") }
     fab!(:post) { Fabricate(:post, topic: topic, raw: "this is quite cool #bar") }

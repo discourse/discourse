@@ -6,7 +6,7 @@ describe 'Core extensions' do
   fab!(:automation_1) { Fabricate(:automation) }
   fab!(:automation_2) { Fabricate(:automation) }
 
-  context 'plugin_api' do
+  describe 'plugin_api' do
     describe '#add_triggerable_to_scriptable' do
       it 'adds the triggerable as a possibility for a scriptable' do
         plugin = Plugin::Instance.new nil, '/tmp/test.rb'

@@ -11,7 +11,7 @@ describe StalledTopicFinder do
     freeze_time
   end
 
-  context 'default' do
+  describe 'default' do
     # topic with only stalled OP
     fab!(:topic_1) { create_topic(user: user) }
     # topic with recent replies
@@ -32,7 +32,7 @@ describe StalledTopicFinder do
     end
   end
 
-  context 'filter by tags' do
+  describe 'filter by tags' do
     fab!(:tag_1) { Fabricate(:tag) }
     # tagged topic with replies
     fab!(:topic_1) { create_topic(tags: [tag_1.name], user: user) }
@@ -55,7 +55,7 @@ describe StalledTopicFinder do
     end
   end
 
-  context 'filter by categories' do
+  describe 'filter by categories' do
     fab!(:category_1) { Fabricate(:category) }
 
     # topic with stalled replies and category
@@ -77,7 +77,7 @@ describe StalledTopicFinder do
     end
   end
 
-  context 'filter recent topic owner replies' do
+  describe 'filter recent topic owner replies' do
     fab!(:another_user) { Fabricate(:user) }
     # replies from topic owner
     fab!(:topic_1) { create_topic(user: user) }

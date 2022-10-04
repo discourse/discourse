@@ -20,7 +20,7 @@ describe 'AppendLastEditedBy' do
     [cooked, updated_at]
   end
 
-  context "#trigger!" do
+  describe "#trigger!" do
     it 'works for newly created post' do
       freeze_time
 

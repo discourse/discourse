@@ -7,7 +7,7 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
     fab!(:automation) { Fabricate(:automation) }
 
     describe 'access' do
-      context 'user is not logged in' do
+      context 'when user is not logged in' do
         before { sign_out }
 
         it 'raises a 404' do
@@ -16,8 +16,8 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
         end
       end
 
-      context 'user is logged in' do
-        context 'user is admin' do
+      context 'when user is logged in' do
+        context 'when user is admin' do
           before { sign_in(Fabricate(:admin)) }
 
           it 'triggers the automation' do
@@ -30,7 +30,7 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
           end
         end
 
-        context 'user is moderator' do
+        context 'when user is moderator' do
           before { sign_in(Fabricate(:moderator)) }
 
           it 'raises a 404' do
@@ -39,7 +39,7 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
           end
         end
 
-        context 'user is regular' do
+        context 'when user is regular' do
           before { sign_in(Fabricate(:user)) }
 
           it 'raises a 404' do
@@ -49,7 +49,7 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
         end
       end
 
-      context 'using a user api key' do
+      context 'when using a user api key' do
         before { sign_out }
 
         let(:admin) { Fabricate(:admin) }

@@ -4,7 +4,7 @@ require_relative '../discourse_automation_helper'
 
 describe DiscourseAutomation::Automation do
   describe '#trigger!' do
-    context 'is not enabled' do
+    context 'when not enabled' do
       fab!(:automation) { Fabricate(:automation, enabled: false) }
 
       it 'doesn’t do anything' do
@@ -16,7 +16,7 @@ describe DiscourseAutomation::Automation do
       end
     end
 
-    context 'is enabled' do
+    context 'when enabled' do
       fab!(:automation) { Fabricate(:automation, enabled: true) }
 
       it 'runs the script' do
@@ -49,17 +49,17 @@ describe DiscourseAutomation::Automation do
     end
   end
 
-  context 'automation’s script has a required field' do
+  context 'when automation’s script has a required field' do
     before do
       DiscourseAutomation::Scriptable.add('required_dogs') do
         field :dog, component: :text, required: true
       end
     end
 
-    context 'field is not filled' do
+    context 'when field is not filled' do
       fab!(:automation) { Fabricate(:automation, enabled: false, script: 'required_dogs') }
 
-      context 'validating automation' do
+      context 'when validating automation' do
         it 'raises an error' do
           expect {
             automation.fields.create!(name: 'dog', component: 'text', metadata: { value: nil }, target: 'script')
@@ -69,17 +69,17 @@ describe DiscourseAutomation::Automation do
     end
   end
 
-  context 'automation’s trigger has a required field' do
+  context 'when automation’s trigger has a required field' do
     before do
       DiscourseAutomation::Triggerable.add('required_dogs') do
         field :dog, component: :text, required: true
       end
     end
 
-    context 'field is not filled' do
+    context 'when field is not filled' do
       fab!(:automation) { Fabricate(:automation, enabled: false, trigger: 'required_dogs') }
 
-      context 'validating automation' do
+      context 'when validating automation' do
         it 'raises an error' do
           expect {
             automation.fields.create!(name: 'dog', component: 'text', metadata: { value: nil }, target: 'trigger')

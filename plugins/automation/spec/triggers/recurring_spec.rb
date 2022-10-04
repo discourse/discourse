@@ -19,8 +19,8 @@ describe 'Recurring' do
     automation.upsert_field!('recurrence', 'period', metadata, target: 'trigger')
   end
 
-  context 'updating trigger' do
-    context 'date is in future' do
+  describe 'updating trigger' do
+    context 'when date is in future' do
       before do
         freeze_time Time.parse('2021-06-04 10:00 UTC')
       end
@@ -37,18 +37,18 @@ describe 'Recurring' do
       end
     end
 
-    context 'date is in past' do
+    context 'when date is in past' do
       it 'doesn’t create a pending trigger' do
         expect {
           automation.upsert_field!('start_date', 'date_time', { value: 2.hours.ago }, target: 'trigger')
-        }.to change {
+        }.not_to change {
           DiscourseAutomation::PendingAutomation.count
-        }.by(0)
+        }
       end
     end
   end
 
-  context 'trigger is called' do
+  context 'when trigger is called' do
     before do
       freeze_time Time.zone.parse('2021-06-04 10:00')
       automation.fields.insert!(name: 'start_date', component: 'date_time', metadata: { value: 2.hours.ago }, target: 'trigger', created_at: Time.now, updated_at: Time.now)
@@ -74,7 +74,7 @@ describe 'Recurring' do
       expect(pending_automation.execute_at).to be_within_one_minute_of(start_date + 7.days)
     end
 
-    context 'every_month' do
+    describe 'every_month' do
       before do
         upsert_period_field!(1, 'month')
       end
@@ -87,7 +87,7 @@ describe 'Recurring' do
       end
     end
 
-    context 'every_day' do
+    describe 'every_day' do
       before do
         upsert_period_field!(1, 'day')
       end
@@ -101,7 +101,7 @@ describe 'Recurring' do
       end
     end
 
-    context 'every_weekday' do
+    describe 'every_weekday' do
       it 'creates the next iteration one day after without Saturday/Sunday' do
         upsert_period_field!(1, 'weekday')
         automation.trigger!
@@ -127,7 +127,7 @@ describe 'Recurring' do
       end
     end
 
-    context 'every_hour' do
+    describe 'every_hour' do
       before do
         upsert_period_field!(1, 'hour')
       end
@@ -140,7 +140,7 @@ describe 'Recurring' do
       end
     end
 
-    context 'every_minute' do
+    describe 'every_minute' do
       before do
         upsert_period_field!(1, 'minute')
       end
@@ -153,7 +153,7 @@ describe 'Recurring' do
       end
     end
 
-    context 'every_year' do
+    describe 'every_year' do
       before do
         upsert_period_field!(1, 'year')
       end
@@ -167,7 +167,7 @@ describe 'Recurring' do
       end
     end
 
-    context 'every_other_week' do
+    describe 'every_other_week' do
       before do
         upsert_period_field!(2, 'week')
       end

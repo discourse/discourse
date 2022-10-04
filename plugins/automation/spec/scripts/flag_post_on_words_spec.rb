@@ -18,18 +18,18 @@ describe 'FlagPostsOnWords' do
     )
   end
 
-  context 'editing/creating a post' do
-    context 'editing a post' do
+  context 'when editing/creating a post' do
+    context 'when editing a post' do
       fab!(:post) { Fabricate(:post) }
 
-      context 'post has flagged words' do
+      context 'when post has flagged words' do
         it 'flags the post' do
           post.revise(post.user, raw: 'this is another cool topic foo bar')
           expect(post.reviewable_flag).to be_present
         end
       end
 
-      context 'post has no/not all flagged words' do
+      context 'when post has no/not all flagged words' do
         it 'doesn’t flag the post' do
           post.revise(post.user, raw: 'this is another cool topic')
           expect(post.reviewable_flag).to_not be_present
@@ -40,8 +40,8 @@ describe 'FlagPostsOnWords' do
       end
     end
 
-    context 'creating a post' do
-      context 'post has flagged words' do
+    context 'when creating a post' do
+      context 'when post has flagged words' do
         it 'flags the post' do
           post_creator = PostCreator.new(user, topic_id: topic.id, raw: 'this is quite bar cool a very cool foo post')
           post = post_creator.create
@@ -49,7 +49,7 @@ describe 'FlagPostsOnWords' do
         end
       end
 
-      context 'post has no/not all flagged words' do
+      context 'when post has no/not all flagged words' do
         it 'doesn’t flag the post' do
           post_creator = PostCreator.new(user, topic_id: topic.id, raw: 'this is quite cool a very cool post')
           post = post_creator.create

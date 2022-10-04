@@ -22,7 +22,7 @@ describe 'UserGlobalNotice' do
   end
 
   describe 'script' do
-    context 'StalledTopic trigger' do
+    describe 'StalledTopic trigger' do
       it 'creates a notice for the topic owner' do
         expect do
           automation_1.trigger!(

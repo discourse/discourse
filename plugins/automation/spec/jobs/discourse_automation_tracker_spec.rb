@@ -21,7 +21,7 @@ describe Jobs::DiscourseAutomationTracker do
       automation.upsert_field!('gift_exchangers_group', 'group', { value: 1 }, target: 'script')
     end
 
-    context 'pending automation is in past' do
+    context 'when pending automation is in past' do
       before do
         automation.upsert_field!('execute_at', 'date_time', { value: 2.hours.from_now }, target: 'trigger')
       end
@@ -37,7 +37,7 @@ describe Jobs::DiscourseAutomationTracker do
       end
     end
 
-    context 'pending automation is in future' do
+    context 'when pending automation is in future' do
       before do
         automation.upsert_field!('execute_at', 'date_time', { value: 2.hours.from_now }, target: 'trigger')
       end
@@ -45,9 +45,9 @@ describe Jobs::DiscourseAutomationTracker do
       it 'doesn’t consume the pending automation' do
         expect {
           Jobs::DiscourseAutomationTracker.new.execute
-        }.to change {
+        }.not_to change {
           automation.pending_automations.count
-        }.by(0)
+        }
       end
     end
   end
@@ -74,7 +74,7 @@ describe Jobs::DiscourseAutomationTracker do
       )
     }
 
-    context 'pending pm is in past' do
+    context 'when pending pm is in past' do
       before do
         pending_pm.update!(execute_at: 2.hours.ago)
       end
@@ -88,7 +88,7 @@ describe Jobs::DiscourseAutomationTracker do
       end
     end
 
-    context 'pending pm is in future' do
+    context 'when pending pm is in future' do
       before do
         pending_pm.update!(execute_at: 2.hours.from_now)
       end
@@ -96,9 +96,9 @@ describe Jobs::DiscourseAutomationTracker do
       it 'doesn’t consume the pending pm' do
         expect {
           Jobs::DiscourseAutomationTracker.new.execute
-        }.to change {
+        }.not_to change {
           automation.pending_pms.count
-        }.by(0)
+        }
       end
     end
   end

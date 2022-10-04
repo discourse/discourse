@@ -20,7 +20,7 @@ describe 'GiftExchange' do
     automation.upsert_field!('giftee_assignment_messages', 'pms', { value: [{ title: 'Gift %%YEAR%%', raw: '@%%GIFTER_USERNAME%% you should send a gift to %%GIFTEE_USERNAME%%' }] }, target: 'script')
   end
 
-  context 'ran from point_in_time trigger' do
+  context 'when run from point_in_time trigger' do
     before do
       automation.upsert_field!('execute_at', 'date_time', { value: 3.hours.from_now }, target: 'trigger')
     end

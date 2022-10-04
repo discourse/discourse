@@ -12,7 +12,7 @@ describe 'SendPms' do
     automation.upsert_field!('sendable_pms', 'pms', { value: [{ title: 'A message from %%SENDER_USERNAME%%', raw: 'This is a message sent to @%%RECEIVER_USERNAME%%' }] })
   end
 
-  context 'ran from stalled_wiki trigger' do
+  context 'when run from stalled_wiki trigger' do
     fab!(:post_creator_1) { Fabricate(:user, admin: true) }
     fab!(:post_1) { Fabricate(:post, user: post_creator_1) }
 
@@ -36,7 +36,7 @@ describe 'SendPms' do
     end
   end
 
-  context 'ran from user_added_to_group trigger' do
+  context 'when run from user_added_to_group trigger' do
     fab!(:user_1) { Fabricate(:user) }
     fab!(:tracked_group_1) { Fabricate(:group) }
 

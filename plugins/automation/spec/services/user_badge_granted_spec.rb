@@ -16,7 +16,7 @@ describe DiscourseAutomation::UserBadgeGrantedHandler do
     SiteSetting.discourse_automation_enabled = true
   end
 
-  context 'badge is not tracked' do
+  context 'when badge is not tracked' do
     it 'doesn’t trigger the automation' do
       list = capture_contexts do
         described_class.handle(automation, tracked_badge.id, user.id)
@@ -25,17 +25,17 @@ describe DiscourseAutomation::UserBadgeGrantedHandler do
     end
   end
 
-  context 'badge is tracked' do
+  context 'when badge is tracked' do
     before do
       automation.upsert_field!('badge', 'choices', { value: tracked_badge.id }, target: 'trigger')
     end
 
-    context 'only trigger on first grant' do
+    describe 'only trigger on first grant' do
       before do
         automation.upsert_field!('only_first_grant', 'boolean', { value: true }, target: 'trigger')
       end
 
-      context 'badge has been granted two times' do
+      context 'when badge has been granted two times' do
         before do
           BadgeGranter.grant(tracked_badge, user)
           BadgeGranter.grant(tracked_badge, user)
@@ -49,7 +49,7 @@ describe DiscourseAutomation::UserBadgeGrantedHandler do
         end
       end
 
-      context 'badge has not been granted already' do
+      context 'when badge has not been granted already' do
         it 'triggers the automation' do
           list = capture_contexts do
             described_class.handle(automation, tracked_badge.id, user.id)
@@ -60,7 +60,7 @@ describe DiscourseAutomation::UserBadgeGrantedHandler do
         end
       end
 
-      context 'user doesn’t exist' do
+      context 'when user doesn’t exist' do
         it 'raises an error' do
           expect {
             described_class.handle(automation, tracked_badge.id, -999)

@@ -11,7 +11,7 @@ describe 'PostCreatedEdited' do
   fab!(:user) { Fabricate(:user) }
   fab!(:automation) { Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::POST_CREATED_EDITED) }
 
-  context 'editing/creating a post' do
+  context 'when editing/creating a post' do
     it 'fires the trigger' do
       post = nil
 
@@ -32,12 +32,12 @@ describe 'PostCreatedEdited' do
       expect(list[0]['action'].to_s).to eq('edit')
     end
 
-    context 'trust_levels are restricted' do
+    context 'when trust_levels are restricted' do
       before do
         automation.upsert_field!('valid_trust_levels', 'trust-levels', { value: [0] }, target: 'trigger')
       end
 
-      context 'trust level is allowed' do
+      context 'when trust level is allowed' do
         it 'fires the trigger' do
           list = capture_contexts do
             user.trust_level = TrustLevel[0]
@@ -49,7 +49,7 @@ describe 'PostCreatedEdited' do
         end
       end
 
-      context 'trust level is not allowed' do
+      context 'when trust level is not allowed' do
         it 'doesn’t fire the trigger' do
           list = capture_contexts do
             user.trust_level = TrustLevel[1]
@@ -61,12 +61,12 @@ describe 'PostCreatedEdited' do
       end
     end
 
-    context 'category is restricted' do
+    context 'when category is restricted' do
       before do
         automation.upsert_field!('restricted_category', 'category', { value: Category.first.id }, target: 'trigger')
       end
 
-      context 'category is allowed' do
+      context 'when category is allowed' do
         it 'fires the trigger' do
           list = capture_contexts do
             PostCreator.create(user, basic_topic_params.merge({ category: Category.first.id }))
@@ -77,7 +77,7 @@ describe 'PostCreatedEdited' do
         end
       end
 
-      context 'category is not allowed' do
+      context 'when category is not allowed' do
         fab!(:category) { Fabricate(:category) }
 
         it 'doesn’t fire the trigger' do

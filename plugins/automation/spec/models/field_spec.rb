@@ -3,7 +3,7 @@
 require_relative '../discourse_automation_helper'
 
 describe DiscourseAutomation::Field do
-  context 'post field' do
+  describe 'post field' do
     DiscourseAutomation::Scriptable.add('test_post_field') do
       field :foo, component: :post
     end
@@ -26,7 +26,7 @@ describe DiscourseAutomation::Field do
     end
   end
 
-  context 'period field' do
+  describe 'period field' do
     DiscourseAutomation::Scriptable.add('test_period_field') do
       field :foo, component: :period
     end

@@ -17,7 +17,7 @@ describe 'PinTopic' do
     automation.upsert_field!('pinnable_topic', 'text', { value: topic.id }, target: 'script')
   end
 
-  context 'not pinned globally' do
+  context 'when not pinned globally' do
     it 'works' do
       expect(topic.pinned_at).to be_nil
 
@@ -30,7 +30,7 @@ describe 'PinTopic' do
     end
   end
 
-  context 'pinned globally' do
+  context 'when pinned globally' do
     before do
       automation.upsert_field!('pinned_globally', 'boolean', { value: true })
     end
@@ -47,7 +47,7 @@ describe 'PinTopic' do
     end
   end
 
-  context 'pinned until' do
+  describe 'pinned until' do
     before do
       freeze_time
       automation.upsert_field!('pinned_until', 'date_time', { value: 10.days.from_now })

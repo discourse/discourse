@@ -17,7 +17,7 @@ describe 'UserBadgeGranted' do
     automation.upsert_field!('badge', 'choices', { value: tracked_badge.id }, target: 'trigger')
   end
 
-  context 'a badge is granted' do
+  context 'when a badge is granted' do
     it 'fires the trigger' do
       contexts = capture_contexts do
         BadgeGranter.grant(tracked_badge, user)

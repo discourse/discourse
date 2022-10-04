@@ -25,13 +25,13 @@ describe 'AutoResponder' do
     end
   end
 
-  context 'present word_answer list' do
+  context 'with present word_answer list' do
     before do
       automation.upsert_field!('word_answer_list', 'key-value', { value: [{ key: 'fooz?|bar', value: 'this is %%KEY%%' }, { key: 'bar', value: 'this is %%KEY%%' }].to_json })
     end
 
-    context 'post is first post' do
-      context 'topic title contains keywords' do
+    context 'when post is first post' do
+      context 'when topic title contains keywords' do
         it 'creates an answer' do
           topic = Fabricate(:topic, title: 'What a foo day to walk')
           post = create_post(topic: topic, raw: 'this is a post with no keyword')
@@ -41,7 +41,7 @@ describe 'AutoResponder' do
         end
       end
 
-      context 'post and topic title contain keyword' do
+      context 'when post and topic title contain keyword' do
         it 'creates only one answer' do
           topic = Fabricate(:topic, title: 'What a foo day to walk')
           post = create_post(topic: topic, raw: 'this is a post with foo keyword')
@@ -52,7 +52,7 @@ describe 'AutoResponder' do
       end
     end
 
-    context 'post contains a keyword' do
+    context 'when post contains a keyword' do
       it 'creates an answer' do
         post = create_post(topic: topic, raw: 'this is foo a post with foo')
         automation.trigger!('post' => post)
@@ -60,7 +60,7 @@ describe 'AutoResponder' do
         expect(topic.reload.posts.last.raw).to eq('this is foo')
       end
 
-      context 'post has direct replies from answering user' do
+      context 'when post has direct replies from answering user' do
         fab!(:answering_user) { Fabricate(:user) }
 
         before do
@@ -73,13 +73,13 @@ describe 'AutoResponder' do
 
           expect {
             automation.trigger!('post' => post_1)
-          }.to change {
+          }.not_to change {
             Post.count
-          }.by(0)
+          }
         end
       end
 
-      context 'user is replying to own post' do
+      context 'when user is replying to own post' do
         fab!(:answering_user) { Fabricate(:user) }
 
         before do
@@ -92,14 +92,14 @@ describe 'AutoResponder' do
 
           expect {
             automation.trigger!('post' => post_2)
-          }.to change {
+          }.not_to change {
             Post.count
-          }.by(0)
+          }
         end
       end
     end
 
-    context 'post contains two keywords' do
+    context 'when post contains two keywords' do
       it 'creates an answer with both answers' do
         post = create_post(topic: topic, raw: 'this is a post with FOO and bar')
         automation.trigger!('post' => post)
@@ -108,19 +108,19 @@ describe 'AutoResponder' do
       end
     end
 
-    context 'post doesn’t contain a keyword' do
+    context 'when post doesn’t contain a keyword' do
       it 'doesn’t create an answer' do
         post = create_post(topic: topic, raw: 'this is a post with no keyword')
 
         expect {
           automation.trigger!('post' => post)
-        }.to change {
+        }.not_to change {
           Post.count
-        }.by(0)
+        }
       end
     end
 
-    context 'post contains two keywords' do
+    context 'when post contains two keywords' do
       it 'creates an answer with both answers' do
         post = create_post(topic: topic, raw: 'this is a post with foo and bar')
         automation.trigger!('post' => post)
@@ -129,20 +129,20 @@ describe 'AutoResponder' do
       end
     end
 
-    context 'post doesn’t contain a keyword' do
+    context 'when post doesn’t contain a keyword' do
       it 'doesn’t create an answer' do
         post = create_post(topic: topic, raw: 'this is a post bfoo with no keyword fooa')
 
         expect {
           automation.trigger!('post' => post)
-        }.to change {
+        }.not_to change {
           Post.count
-        }.by(0)
+        }
       end
     end
   end
 
-  context 'empty word_answer list' do
+  context 'when word_answer list is empty' do
     it 'exits early with no error' do
       expect {
         post = create_post(topic: topic, raw: 'this is a post with foo and bar')

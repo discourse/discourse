@@ -122,13 +122,13 @@ describe DiscourseAutomation::Scriptable do
 
   describe '.utils' do
     describe '.fetch_report' do
-      context 'the report doesn’t exist' do
+      context 'when the report doesn’t exist' do
         it 'does nothing' do
           expect(automation.scriptable.utils.fetch_report(:foo)).to eq(nil)
         end
       end
 
-      context 'the report exists' do
+      context 'when the report exists' do
         it 'returns the data' do
           freeze_time DateTime.parse("2022-02-25")
           Fabricate(:like, user: Fabricate(:user))
@@ -147,8 +147,8 @@ describe DiscourseAutomation::Scriptable do
         expect(output).to eq('hello siberian cat')
       end
 
-      context 'using the REPORT key' do
-        context 'no filters specified' do
+      context 'when using the REPORT key' do
+        context 'with no filters specified' do
           it 'replaces REPORT key' do
             freeze_time DateTime.parse("2022-02-22")
             Fabricate(:like, user: Fabricate(:user))
@@ -160,7 +160,7 @@ describe DiscourseAutomation::Scriptable do
           end
         end
 
-        context 'dates specified' do
+        context 'with dates specified' do
           it 'replaces REPORT key using dates' do
             freeze_time DateTime.parse("2022-02-14")
             group = Fabricate(:group)
@@ -173,7 +173,7 @@ describe DiscourseAutomation::Scriptable do
           end
         end
 
-        context 'filters specified' do
+        context 'with filters specified' do
           it 'replaces REPORT key using filters' do
             freeze_time DateTime.parse("2022-02-15")
             group = Fabricate(:group)
@@ -191,7 +191,7 @@ describe DiscourseAutomation::Scriptable do
     describe '.send_pm' do
       let(:user) { Fabricate(:user) }
 
-      context 'pms is delayed' do
+      context 'when pm is delayed' do
         it 'creates a pending pm' do
           expect {
             DiscourseAutomation::Scriptable::Utils.send_pm(
@@ -207,7 +207,7 @@ describe DiscourseAutomation::Scriptable do
         end
       end
 
-      context 'pms is not delayed' do
+      context 'when pm is not delayed' do
         it 'creates a pm' do
           expect {
             DiscourseAutomation::Scriptable::Utils.send_pm(

@@ -14,7 +14,7 @@ describe Jobs::StalledTopicTracker do
     )
   }
 
-  context 'find stalled topics' do
+  describe 'find stalled topics' do
     fab!(:user_1) { Fabricate(:user) }
     fab!(:topic_1) { Fabricate(:topic, user: user_1, created_at: 1.month.ago) }
 

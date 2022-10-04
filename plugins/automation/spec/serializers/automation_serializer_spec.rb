@@ -12,7 +12,7 @@ describe DiscourseAutomation::AutomationSerializer do
     )
   }
 
-  context 'has pending automations' do
+  context 'when there are pending automations' do
     before do
       automation.pending_automations.create!(execute_at: 2.hours.from_now)
     end
@@ -23,21 +23,21 @@ describe DiscourseAutomation::AutomationSerializer do
     end
   end
 
-  context 'has no pending automation' do
+  context 'when has no pending automation' do
     it 'doesn’t have a next_pending_automation_at field' do
       serializer = DiscourseAutomation::AutomationSerializer.new(automation, scope: Guardian.new(user), root: false)
       expect(serializer.next_pending_automation_at).to_not be
     end
   end
 
-  context 'script with fields limited to a specific trigger' do
+  context 'when script with fields limited to a specific trigger' do
     before do
       DiscourseAutomation::Scriptable.add('foo') do
         field :bar, component: :text, triggerable: DiscourseAutomation::Triggerable::TOPIC
       end
     end
 
-    context 'automation is not using the specific trigger' do
+    context 'when automation is not using the specific trigger' do
       fab!(:automation) do
         Fabricate(
           :automation,
@@ -52,7 +52,7 @@ describe DiscourseAutomation::AutomationSerializer do
       end
     end
 
-    context 'automation is using the specific trigger' do
+    context 'when automation is using the specific trigger' do
       fab!(:automation) do
         Fabricate(
           :automation,

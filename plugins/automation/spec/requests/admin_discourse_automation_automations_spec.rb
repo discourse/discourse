@@ -6,7 +6,7 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
   fab!(:automation) { Fabricate(:automation) }
 
   describe '#show' do
-    context 'logged in as an admin' do
+    context 'when logged in as an admin' do
       before { sign_in(Fabricate(:admin)) }
 
       it 'shows the automation' do
@@ -16,7 +16,7 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
       end
     end
 
-    context 'logged in as a regular user' do
+    context 'when logged in as a regular user' do
       before { sign_in(Fabricate(:user)) }
 
       it 'raises a 404' do
@@ -27,7 +27,7 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
   end
 
   describe '#update' do
-    context 'logged in as an admin' do
+    context 'when logged in as an admin' do
       before { sign_in(Fabricate(:admin)) }
 
       it 'updates the automation' do
@@ -35,7 +35,7 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
         expect(response.status).to eq(200)
       end
 
-      context 'invalid field’s component' do
+      describe 'invalid field’s component' do
         it 'errors' do
           put "/admin/plugins/discourse-automation/automations/#{automation.id}.json", params: {
             automation: {
@@ -51,7 +51,7 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
         end
       end
 
-      context 'required field' do
+      context 'with required field' do
         before do
           DiscourseAutomation::Scriptable.add('test_required') do
             field :foo, component: :text, required: true
@@ -72,7 +72,7 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
         end
       end
 
-      context 'invalid field’s metadata' do
+      context 'with invalid field’s metadata' do
         it 'errors' do
           put "/admin/plugins/discourse-automation/automations/#{automation.id}.json", params: {
             automation: {
@@ -89,7 +89,7 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
       end
     end
 
-    context 'logged in as a regular user' do
+    context 'when logged in as a regular user' do
       before { sign_in(Fabricate(:user)) }
 
       it 'raises a 404' do
@@ -102,7 +102,7 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
   describe '#destroy' do
     fab!(:automation) { Fabricate(:automation) }
 
-    context 'logged in as an admin' do
+    context 'when logged in as an admin' do
       before { sign_in(Fabricate(:admin)) }
 
       it 'destroys the automation' do
@@ -111,7 +111,7 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
       end
     end
 
-    context 'logged in as a regular user' do
+    context 'when logged in as a regular user' do
       before { sign_in(Fabricate(:user)) }
 
       it 'raises a 404' do

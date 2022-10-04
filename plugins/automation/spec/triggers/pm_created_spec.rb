@@ -14,12 +14,12 @@ describe 'PMCreated' do
   let(:basic_topic_params) { { title: 'hello world topic', raw: 'my name is fred', archetype: Archetype.private_message, target_usernames: [target_user.username] } }
   fab!(:automation) { Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::PM_CREATED) }
 
-  context 'creating a PM' do
+  context 'when creating a PM' do
     before do
       automation.upsert_field!('restricted_user', 'user', { value: target_user.username }, target: 'trigger')
     end
 
-    context 'user is not targeted' do
+    context 'when user is not targeted' do
       fab!(:user2) { Fabricate(:user) }
 
       it "doesn't fire the trigger" do
@@ -40,12 +40,12 @@ describe 'PMCreated' do
       expect(list[0]['kind']).to eq('pm_created')
     end
 
-    context 'trust_levels are restricted' do
+    context 'when trust_levels are restricted' do
       before do
         automation.upsert_field!('valid_trust_levels', 'trust-levels', { value: [2] }, target: 'trigger')
       end
 
-      context 'trust level is allowed' do
+      context 'when trust level is allowed' do
         it 'fires the trigger' do
           list = capture_contexts do
             user.trust_level = TrustLevel[2]
@@ -58,7 +58,7 @@ describe 'PMCreated' do
         end
       end
 
-      context 'trust level is not allowed' do
+      context 'when trust level is not allowed' do
         it 'doesn’t fire the trigger' do
           list = capture_contexts do
             user.trust_level = TrustLevel[1]
@@ -71,7 +71,7 @@ describe 'PMCreated' do
       end
     end
 
-    context 'staff users ignored' do
+    context 'when staff users ignored' do
       before do
         automation.upsert_field!('ignore_staff', 'boolean', { value: true }, target: 'trigger')
       end

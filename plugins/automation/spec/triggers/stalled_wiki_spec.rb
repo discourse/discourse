@@ -15,13 +15,13 @@ describe 'StalledWiki' do
     post_creator.create
   }
 
-  context 'default' do
+  describe 'default' do
     before do
       automation.upsert_field!('stalled_after', 'choices', { value: 'PT10H' }, target: 'trigger')
       automation.upsert_field!('retriggered_after', 'choices', { value: 'PT1H' }, target: 'trigger')
     end
 
-    context 'post has been revised recently' do
+    context 'when the post has been revised recently' do
       it 'doesn’t trigger' do
         post.revise(post_creator_1, { wiki: true }, { force_new_version: true, revised_at: 40.minutes.ago })
 
@@ -33,7 +33,7 @@ describe 'StalledWiki' do
       end
     end
 
-    context 'post hasn’t been revised recently' do
+    context 'when the post hasn’t been revised recently' do
       it 'triggers' do
         post.revise(post_creator_1, { wiki: true }, { force_new_version: true, revised_at: 1.month.ago })
 
@@ -45,14 +45,14 @@ describe 'StalledWiki' do
         expect(list[0]["kind"]).to eq('stalled_wiki')
       end
 
-      context 'trigger has a category' do
+      context 'when trigger has a category' do
         before do
           automation.upsert_field!('stalled_after', 'choices', { value: 'PT10H' }, target: 'trigger')
           automation.upsert_field!('retriggered_after', 'choices', { value: 'PT1H' }, target: 'trigger')
           automation.upsert_field!('restricted_category', 'category', { value: Category.last.id }, target: 'trigger')
         end
 
-        context 'the post is in this category' do
+        context 'when the post is in this category' do
           before do
             post.topic.update(category: Category.last)
           end
@@ -69,7 +69,7 @@ describe 'StalledWiki' do
           end
         end
 
-        context 'the post is not in this category' do
+        context 'when the post is not in this category' do
           it 'doesn’t trigger' do
             post.revise(post_creator_1, { wiki: true }, { force_new_version: true, revised_at: 40.minutes.ago })
 
@@ -82,7 +82,7 @@ describe 'StalledWiki' do
         end
       end
 
-      context 'trigger hasn’t been running recently' do
+      context 'when trigger hasn’t been running recently' do
         before do
           freeze_time 2.hours.from_now
         end
@@ -110,7 +110,7 @@ describe 'StalledWiki' do
         end
       end
 
-      context 'trigger has been running recently' do
+      context 'when trigger has been running recently' do
         before do
           freeze_time 2.hours.from_now
         end

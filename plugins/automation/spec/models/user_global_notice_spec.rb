@@ -5,7 +5,7 @@ require_relative '../discourse_automation_helper'
 describe DiscourseAutomation::UserGlobalNotice do
   fab!(:user_1) { Fabricate(:user) }
 
-  context 'creating duplicates' do
+  describe 'creating duplicates' do
     it 'prevents creating duplicates' do
       row = { user_id: user_1.id, notice: 'foo', identifier: 'bar', created_at: Time.now, updated_at: Time.now }
 
