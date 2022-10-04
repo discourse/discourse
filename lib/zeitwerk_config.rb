@@ -12,6 +12,8 @@ module ActiveSupport::Dependencies::ZeitwerkIntegration::Inflector
     'regular' => 'Jobs',
     'scheduled' => 'Jobs',
     'version' => 'Discourse',
+    'ssrf_detector' => 'SSRFDetector',
+    'http' => 'HTTP',
   }
 
   def self.camelize(basename, abspath)
