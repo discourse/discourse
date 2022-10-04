@@ -460,7 +460,7 @@ export function postRNWebviewMessage(prop, value) {
 }
 
 const CODE_BLOCKS_REGEX =
-  /^(    |\t).*|`[^`]+`|^```[^]*?^```|\[code\][^]*?\[\/code\]/gm;
+  /^(  |\t).*|`[^`]+`|^```[^]*?^```|\[code\][^]*?\[\/code\]/gm;
 //|      ^     |   ^   |      ^      |           ^           |
 //       |         |          |                  |
 //       |         |          |       code blocks between [code]
