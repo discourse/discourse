@@ -469,7 +469,7 @@ const CODE_BLOCKS_REGEX =
 //       |         |
 //       |         +----- inline code between backticks
 //       |
-//       +------- paragraphs starting with 4 spaces or tab
+//       +------- paragraphs starting with 2 spaces or tab
 
 const OPEN_CODE_BLOCKS_REGEX = /^(  |\t).*|`[^`]+|^```[^]*?|\[code\][^]*?/gm;
 
