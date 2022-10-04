@@ -196,10 +196,11 @@ class Stylesheet::Manager
     end.join("\n").html_safe
   end
 
-  def stylesheet_link_tag(target = :desktop, media = 'all')
+  def stylesheet_link_tag(target = :desktop, media = 'all', preload_callback = nil)
     stylesheets = stylesheet_details(target, media)
     stylesheets.map do |stylesheet|
       href = stylesheet[:new_href]
+      preload_callback.call(href, 'style') if preload_callback
       theme_id = stylesheet[:theme_id]
       data_theme_id = theme_id ? "data-theme-id=\"#{theme_id}\"" : ""
       theme_name = stylesheet[:theme_name]

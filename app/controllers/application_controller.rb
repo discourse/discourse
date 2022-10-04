@@ -50,6 +50,7 @@ class ApplicationController < ActionController::Base
   after_action  :ensure_vary_header
   after_action  :add_noindex_header, if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
   after_action  :add_noindex_header_to_non_canonical, if: -> { request.get? && !(request.format && request.format.json?) && !request.xhr? }
+  around_action :link_preload
 
   HONEYPOT_KEY ||= 'HONEYPOT_KEY'
   CHALLENGE_KEY ||= 'CHALLENGE_KEY'
@@ -1007,5 +1008,11 @@ class ApplicationController < ActionController::Base
     end
 
     result
+  end
+
+  def link_preload
+    @links_to_preload = []
+    yield
+    response.headers['Link'] = @links_to_preload.join(', ') if !@links_to_preload.empty?
   end
 end
