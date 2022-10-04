@@ -4,8 +4,8 @@
       <div class="category-box-heading">
         <a href={{c.url}}>
           {{#unless c.isMuted}}
-            {{#if (or c.uploaded_logo.url c.uploaded_logo_dark.url)}}
-              <CategoryLogo @category={{c}} @class="logo" @alt="" />
+            {{#if c.uploaded_logo.url}}
+              <CategoryLogo @category={{c}} @class="logo" />
             {{/if}}
           {{/unless}}
 

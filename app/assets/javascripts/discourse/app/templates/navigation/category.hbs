@@ -1,8 +1,8 @@
 <AddCategoryTagClasses @category={{this.category}} />
 
 <section class="category-heading">
-  {{#if (or this.category.uploaded_logo.url this.category.uploaded_logo_dark.url)}}
-    <CategoryLogo @category={{this.category}} @class="category-logo" @alt="" />
+  {{#if this.category.uploaded_logo.url}}
+    <CategoryLogo @category={{this.category}} @class="category-logo" />
     {{#if this.category.description}}
       <p>{{dir-span this.category.description htmlSafe="true"}}</p>
     {{/if}}

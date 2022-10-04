@@ -113,10 +113,10 @@
     height: auto;
 
     img {
-      width: 100%;
       height: inherit;
       max-width: initial;
-      max-height: initial;
+      max-height: var(--max-height);
+      width: calc(var(--max-height) * var(--aspect-ratio));
     }
   }
 }
