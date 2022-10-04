@@ -19,7 +19,7 @@ import { ajax } from "discourse/lib/ajax";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { buildQuote } from "discourse/lib/quote";
 import { deepMerge } from "discourse-common/lib/object";
-import { escapeExpression } from "discourse/lib/utilities";
+import { escapeExpression, modKeysPressed } from "discourse/lib/utilities";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
@@ -323,6 +323,9 @@ export default Controller.extend(bufferedProperty("model"), {
 
   @action
   jumpTop(event) {
+    if (event && modKeysPressed(event).length > 0) {
+      return false;
+    }
     event?.preventDefault();
     DiscourseURL.routeTo(this.get("model.firstPostUrl"), {
       skipIfOnScreen: false,

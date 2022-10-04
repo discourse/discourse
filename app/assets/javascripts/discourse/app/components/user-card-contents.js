@@ -14,7 +14,7 @@ import { isEmpty } from "@ember/utils";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { dasherize } from "@ember/string";
 import { emojiUnescape } from "discourse/lib/text";
-import { escapeExpression } from "discourse/lib/utilities";
+import { escapeExpression, modKeysPressed } from "discourse/lib/utilities";
 
 export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   elementId: "user-card",
@@ -222,6 +222,9 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
 
   @action
   handleShowUser(user, event) {
+    if (event && modKeysPressed(event).length > 0) {
+      return false;
+    }
     event?.preventDefault();
     // Invokes `showUser` argument. Convert to `this.args.showUser` when
     // refactoring this to a glimmer component.

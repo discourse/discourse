@@ -23,7 +23,7 @@ import { buildQuote } from "discourse/lib/quote";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { emojiUnescape } from "discourse/lib/text";
-import { escapeExpression } from "discourse/lib/utilities";
+import { escapeExpression, modKeysPressed } from "discourse/lib/utilities";
 import { getOwner } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
@@ -528,6 +528,9 @@ export default Controller.extend({
 
   @action
   viewNewReply(event) {
+    if (event && modKeysPressed(event).length > 0) {
+      return false;
+    }
     event?.preventDefault();
     DiscourseURL.routeTo(this.get("model.createdPost.url"));
     this.close();

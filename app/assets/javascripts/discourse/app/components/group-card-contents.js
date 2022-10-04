@@ -7,6 +7,7 @@ import { Promise } from "rsvp";
 import discourseComputed from "discourse-common/utils/decorators";
 import { groupPath } from "discourse/lib/url";
 import { setting } from "discourse/lib/computed";
+import { modKeysPressed } from "discourse/lib/utilities";
 
 const maxMembersToDisplay = 10;
 
@@ -79,6 +80,9 @@ export default Component.extend(CardContentsBase, CleansUp, {
 
   @action
   handleShowGroup(group, event) {
+    if (event && modKeysPressed(event).length > 0) {
+      return false;
+    }
     event?.preventDefault();
     // Invokes `showGroup` argument. Convert to `this.args.showGroup` when
     // refactoring this to a glimmer component.

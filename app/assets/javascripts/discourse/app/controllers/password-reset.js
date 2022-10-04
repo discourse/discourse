@@ -9,6 +9,7 @@ import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
+import { modKeysPressed } from "discourse/lib/utilities";
 
 export default Controller.extend(PasswordValidation, {
   isDeveloper: alias("model.is_developer"),
@@ -49,6 +50,9 @@ export default Controller.extend(PasswordValidation, {
 
   @action
   done(event) {
+    if (event && modKeysPressed(event).length > 0) {
+      return false;
+    }
     event?.preventDefault();
     this.set("redirected", true);
     DiscourseURL.redirectTo(this.redirectTo || "/");
