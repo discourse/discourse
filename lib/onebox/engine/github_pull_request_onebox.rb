@@ -39,6 +39,22 @@ module Onebox
 
         result['body'], result['excerpt'] = compute_body(result['body'])
 
+        if commit_match = link.match(/commits\/(\h+)/)
+          url = "https://api.github.com/repos/#{match[:owner]}/#{match[:repository]}/commits/#{commit_match[1]}"
+          result['commit'] = ::MultiJson.load(URI.parse(url).open(read_timeout: timeout))
+          result['body'], result['excerpt'] = compute_body(result['commit']['body'])
+        elsif comment_match = link.match(/#issuecomment-(\d+)/)
+          url = "https://api.github.com/repos/#{match[:owner]}/#{match[:repository]}/issues/comments/#{comment_match[1]}"
+          result['comment'] = ::MultiJson.load(URI.parse(url).open(read_timeout: timeout))
+          result['body'], result['excerpt'] = compute_body(result['comment']['body'])
+        elsif review_match = link.match(/#discussion_r(\d+)/)
+          url = "https://api.github.com/repos/#{match[:owner]}/#{match[:repository]}/pulls/comments/#{review_match[1]}"
+          result['discussion'] = ::MultiJson.load(URI.parse(url).open(read_timeout: timeout))
+          result['body'], result['excerpt'] = compute_body(result['discussion']['body'])
+        else
+          result['pr'] = true
+        end
+
         result
       end
     end
