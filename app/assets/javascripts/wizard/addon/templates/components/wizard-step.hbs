@@ -49,31 +49,31 @@
   <div class="wizard-container__buttons">
 
     {{#if this.showNextButton}}
-      <button {{on "click" this.nextStep}} disabled={{this.saving}} type="button" class="wizard-container__button primary {{this.nextButtonClass}}">
+      <button {{action "nextStep"}} disabled={{this.saving}} type="button" class="wizard-container__button primary {{this.nextButtonClass}}">
         {{i18n this.nextButtonLabel}}
       </button>
     {{/if}}
 
     {{#if this.showFinishButton}}
-      <button {{on "click" this.exitEarly}} disabled={{this.saving}} type="button" class="wizard-container__button jump-in">
+      <button {{action "exitEarly"}} disabled={{this.saving}} type="button" class="wizard-container__button jump-in">
         {{i18n "wizard.jump_in"}}
       </button>
     {{/if}}
 
     {{#if this.showJumpInButton}}
-      <button {{on "click" this.quit}} disabled={{this.saving}} type="button" class="wizard-container__button {{this.jumpInButtonClass}}">
+      <button {{action "quit"}} disabled={{this.saving}} type="button" class="wizard-container__button {{this.jumpInButtonClass}}">
         {{i18n this.jumpInButtonLabel}}
       </button>
     {{/if}}
   </div>
 
   <div class="wizard-container__step-progress">
-    <a href {{on "click" this.backStep}} class="wizard-container__link back {{unless this.showBackButton "inactive"}}">{{d-icon "chevron-left"}}</a>
+    <a href {{action "backStep"}} class="wizard-container__link back {{unless this.showBackButton "inactive"}}">{{d-icon "chevron-left"}}</a>
 
     <span class="wizard-container__step-text">{{bound-i18n "wizard.step-text"}}</span>
     <span class="wizard-container__step-count">{{bound-i18n "wizard.step" current=this.step.displayIndex total=this.wizard.totalSteps}}</span>
 
-    <a href {{on "click" this.nextStep}} class="wizard-container__link {{unless this.showNextButton "inactive"}}">{{d-icon "chevron-right"}}</a>
+    <a href {{action "nextStep"}} class="wizard-container__link {{unless this.showNextButton "inactive"}}">{{d-icon "chevron-right"}}</a>
 
   </div>
 

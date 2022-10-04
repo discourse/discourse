@@ -7,7 +7,7 @@ import { classify, dasherize } from "@ember/string";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import optionalService from "discourse/lib/optional-service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { action, set } from "@ember/object";
+import { set } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
 
 let _components = {};
@@ -121,7 +121,7 @@ export default Component.extend({
   },
 
   @bind
-  _performConfirmed(performableAction) {
+  _performConfirmed(action) {
     let reviewable = this.reviewable;
 
     let performAction = () => {
@@ -140,7 +140,7 @@ export default Component.extend({
       });
 
       return ajax(
-        `/review/${reviewable.id}/perform/${performableAction.id}?version=${version}`,
+        `/review/${reviewable.id}/perform/${action.id}?version=${version}`,
         {
           type: "PUT",
           data,
@@ -173,16 +173,13 @@ export default Component.extend({
         .finally(() => this.set("updating", false));
     };
 
-    if (performableAction.client_action) {
-      let actionMethod =
-        this[`client${classify(performableAction.client_action)}`];
+    if (action.client_action) {
+      let actionMethod = this[`client${classify(action.client_action)}`];
       if (actionMethod) {
         return actionMethod.call(this, reviewable, performAction);
       } else {
         // eslint-disable-next-line no-console
-        console.error(
-          `No handler for ${performableAction.client_action} found`
-        );
+        console.error(`No handler for ${action.client_action} found`);
         return;
       }
     } else {
@@ -212,16 +209,14 @@ export default Component.extend({
     }
   },
 
-  @action
-  explainReviewable(reviewable, event) {
-    event?.preventDefault();
-    showModal("explain-reviewable", {
-      title: "review.explain.title",
-      model: reviewable,
-    });
-  },
-
   actions: {
+    explainReviewable(reviewable) {
+      showModal("explain-reviewable", {
+        title: "review.explain.title",
+        model: reviewable,
+      });
+    },
+
     edit() {
       this.set("editing", true);
       this.set("_updates", { payload: {} });
@@ -264,18 +259,18 @@ export default Component.extend({
       set(this._updates, fieldId, event.target.value);
     },
 
-    perform(performableAction) {
+    perform(action) {
       if (this.updating) {
         return;
       }
 
-      let msg = performableAction.get("confirm_message");
-      let requireRejectReason = performableAction.get("require_reject_reason");
-      let customModal = performableAction.get("custom_modal");
+      let msg = action.get("confirm_message");
+      let requireRejectReason = action.get("require_reject_reason");
+      let customModal = action.get("custom_modal");
       if (msg) {
         bootbox.confirm(msg, (answer) => {
           if (answer) {
-            return this._performConfirmed(performableAction);
+            return this._performConfirmed(action);
           }
         });
       } else if (requireRejectReason) {
@@ -284,7 +279,7 @@ export default Component.extend({
           model: this.reviewable,
         }).setProperties({
           performConfirmed: this._performConfirmed,
-          action: performableAction,
+          action,
         });
       } else if (customModal) {
         showModal(customModal, {
@@ -292,10 +287,10 @@ export default Component.extend({
           model: this.reviewable,
         }).setProperties({
           performConfirmed: this._performConfirmed,
-          action: performableAction,
+          action,
         });
       } else {
-        return this._performConfirmed(performableAction);
+        return this._performConfirmed(action);
       }
     },
   },

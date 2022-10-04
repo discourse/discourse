@@ -110,8 +110,7 @@ export default DiscoverySortableController.extend(
     },
 
     @action
-    showInserted(event) {
-      event?.preventDefault();
+    showInserted() {
       const tracker = this.topicTrackingState;
       this.list.loadBefore(tracker.newIncoming, true);
       tracker.resetTracking();

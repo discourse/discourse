@@ -120,7 +120,7 @@
             <div class="controls" style="margin-top: 5px">
               {{this.resetPasswordProgress}}
               {{#unless this.resetPasswordLoading}}
-                <a href class="instructions" {{on "click" this.resetPassword}}>{{ i18n "user.second_factor.forgot_password" }}</a>
+                <a href class="instructions" {{action "resetPassword"}}>{{ i18n "user.second_factor.forgot_password" }}</a>
               {{/unless}}
             </div>
           </div>

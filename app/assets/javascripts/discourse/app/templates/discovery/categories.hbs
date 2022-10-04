@@ -3,7 +3,7 @@
 <DiscoveryCategories @refresh={{action "refresh"}}>
   {{#if (and this.topicTrackingState.hasIncoming this.isCategoriesRoute)}}
     <div class="show-more {{if this.hasTopics "has-topics"}}">
-      <div role="button" class="alert alert-info clickable" {{on "click" this.showInserted}}>
+      <div role="button" class="alert alert-info clickable" {{action "showInserted"}}>
         <CountI18n @key="topic_count_" @suffix={{this.topicTrackingState.filter}} @count={{this.topicTrackingState.incomingCount}} />
       </div>
     </div>

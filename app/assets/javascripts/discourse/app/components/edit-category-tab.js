@@ -2,7 +2,6 @@ import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import { action } from "@ember/object";
 import { empty } from "@ember/object/computed";
 import getURL from "discourse-common/lib/get-url";
 import { propertyEqual } from "discourse/lib/computed";
@@ -50,12 +49,13 @@ export default Component.extend({
     return getURL(`/c/${slugPart}/edit/${this.tab}`);
   },
 
-  @action
-  select(event) {
-    event?.preventDefault();
-    this.set("selectedTab", this.tab);
-    if (!this.newCategory) {
-      DiscourseURL.routeTo(this.fullSlug);
-    }
+  actions: {
+    select() {
+      this.set("selectedTab", this.tab);
+
+      if (!this.newCategory) {
+        DiscourseURL.routeTo(this.fullSlug);
+      }
+    },
   },
 });

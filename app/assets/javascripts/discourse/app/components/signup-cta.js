@@ -1,19 +1,15 @@
 import Component from "@ember/component";
 import discourseLater from "discourse-common/lib/later";
-import { action } from "@ember/object";
 import { on } from "@ember/object/evented";
 
 export default Component.extend({
   action: "showCreateAccount",
 
-  @action
-  neverShow(event) {
-    event?.preventDefault();
-    this.keyValueStore.setItem("anon-cta-never", "t");
-    this.session.set("showSignupCta", false);
-  },
-
   actions: {
+    neverShow() {
+      this.keyValueStore.setItem("anon-cta-never", "t");
+      this.session.set("showSignupCta", false);
+    },
     hideForSession() {
       this.session.set("hideSignupCta", true);
       this.keyValueStore.setItem("anon-cta-hidden", Date.now());

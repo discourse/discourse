@@ -32,7 +32,7 @@
             {{/if}}
             {{#if this.model.number_of_suspensions}}
               <div>
-                <a href {{on "click" this.showSuspensions}}>
+                <a href {{action "showSuspensions"}}>
                   <span class="suspensions">{{this.model.number_of_suspensions}}</span>{{i18n "user.staff_counters.suspensions"}}
                 </a>
               </div>

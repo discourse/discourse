@@ -30,7 +30,7 @@
           <td class="email-address"><a href="mailto:{{l.to_address}}">{{l.to_address}}</a></td>
           <td>
             {{#if l.has_bounce_key}}
-              <a href {{on "click" (fn this.handleShowIncomingEmail l.id)}}>
+              <a href {{action "showIncomingEmail" l.id}}>
                 {{l.email_type}}
               </a>
             {{else}}
@@ -39,7 +39,7 @@
           </td>
           <td class="email-details">
             {{#if l.has_bounce_key}}
-              <a href {{on "click" (fn this.handleShowIncomingEmail l.id)}} title={{i18n "admin.email.details_title"}}>
+              <a href {{action "showIncomingEmail" l.id}} title={{i18n "admin.email.details_title"}}>
                 {{d-icon "info-circle"}}
               </a>
             {{/if}}

@@ -43,8 +43,7 @@ export default Component.extend({
   },
 
   @action
-  prefillSettings(provider, event) {
-    event?.preventDefault();
+  prefillSettings(provider) {
     this.form.setProperties(emailProviderDefaultSettings(provider, "smtp"));
   },
 

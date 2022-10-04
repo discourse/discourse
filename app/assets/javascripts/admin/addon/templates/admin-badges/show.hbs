@@ -88,9 +88,9 @@
       </div>
 
       {{#if this.hasQuery}}
-        <a href {{on "click" (fn this.showPreview this.buffered "false")}}>{{i18n "admin.badges.preview.link_text"}}</a>
+        <a href {{action "preview" this.buffered "false"}}>{{i18n "admin.badges.preview.link_text"}}</a>
         |
-        <a href {{on "click" (fn this.showPreview this.buffered "true")}}>{{i18n "admin.badges.preview.plan_text"}}</a>
+        <a href {{action "preview" this.buffered "true"}}>{{i18n "admin.badges.preview.plan_text"}}</a>
         {{#if this.preview_loading}}
           {{i18n "loading"}}
         {{/if}}

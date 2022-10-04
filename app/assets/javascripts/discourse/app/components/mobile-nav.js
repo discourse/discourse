@@ -1,6 +1,5 @@
 import { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import deprecated from "discourse-common/lib/deprecated";
@@ -57,27 +56,27 @@ export default Component.extend({
     this.router.off("routeDidChange", this, this.currentRouteChanged);
   },
 
-  @action
-  toggleExpanded(event) {
-    event?.preventDefault();
-    this.toggleProperty("expanded");
+  actions: {
+    toggleExpanded() {
+      this.toggleProperty("expanded");
 
-    next(() => {
-      if (this.expanded) {
-        $(window)
-          .off("click.mobile-nav")
-          .on("click.mobile-nav", (e) => {
-            if (!this.element || this.isDestroying || this.isDestroyed) {
-              return;
-            }
+      next(() => {
+        if (this.expanded) {
+          $(window)
+            .off("click.mobile-nav")
+            .on("click.mobile-nav", (e) => {
+              if (!this.element || this.isDestroying || this.isDestroyed) {
+                return;
+              }
 
-            const expander = this.element.querySelector(".expander");
-            if (expander && e.target !== expander) {
-              this.set("expanded", false);
-              $(window).off("click.mobile-nav");
-            }
-          });
-      }
-    });
+              const expander = this.element.querySelector(".expander");
+              if (expander && e.target !== expander) {
+                this.set("expanded", false);
+                $(window).off("click.mobile-nav");
+              }
+            });
+        }
+      });
+    },
   },
 });

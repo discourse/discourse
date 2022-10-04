@@ -41,7 +41,7 @@
               <DButton @action={{action "cancelEditingTopic"}} @class="btn-default cancel-edit" @icon="times" @ariaLabel="composer.cancel" />
 
               {{#if this.canRemoveTopicFeaturedLink}}
-                <a href {{on "click" this.removeFeaturedLink}} class="remove-featured-link" title={{i18n "composer.remove_featured_link"}}>
+                <a href {{action "removeFeaturedLink"}} class="remove-featured-link" title={{i18n "composer.remove_featured_link"}}>
                   {{d-icon "times-circle"}}
                   {{this.featuredLinkDomain}}
                 </a>
@@ -61,13 +61,13 @@
 
             {{#if this.model.details.loaded}}
               <TopicStatus @topic={{this.model}} />
-              <a href={{this.model.url}} {{on "click" this.jumpTop}} class="fancy-title">
+              <a href={{this.model.url}} {{action "jumpTop"}} class="fancy-title">
                 {{html-safe this.model.fancyTitle}}
               </a>
             {{/if}}
 
             {{#if this.model.details.can_edit}}
-              <a href {{on "click" this.editTopic}} class="edit-topic" title={{i18n "edit"}}>{{d-icon "pencil-alt"}}</a>
+              <a href {{action "editTopic"}} class="edit-topic" title={{i18n "edit"}}>{{d-icon "pencil-alt"}}</a>
             {{/if}}
 
             <PluginOutlet @name="topic-title-suffix" @tagName="" @args={{hash model=this.model}} />

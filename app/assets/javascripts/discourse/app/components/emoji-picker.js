@@ -240,8 +240,7 @@ export default Component.extend({
   },
 
   @action
-  onCategorySelection(sectionName, event) {
-    event?.preventDefault();
+  onCategorySelection(sectionName) {
     const section = document.querySelector(
       `.emoji-picker-emoji-area .section[data-section="${sectionName}"]`
     );

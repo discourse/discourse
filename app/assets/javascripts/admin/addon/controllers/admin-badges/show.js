@@ -134,12 +134,6 @@ export default class AdminBadgesShowController extends Controller.extend(
   }
 
   @action
-  showPreview(badge, explain, event) {
-    event?.preventDefault();
-    this.send("preview", badge, explain);
-  }
-
-  @action
   save() {
     if (!this.saving) {
       let fields = [

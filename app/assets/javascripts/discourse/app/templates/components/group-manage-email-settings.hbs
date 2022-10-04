@@ -3,7 +3,7 @@
   <p>{{i18n "groups.manage.email.smtp_instructions"}}</p>
 
   <label for="enable_smtp">
-    <Input @type="checkbox" @checked={{this.group.smtp_enabled}} id="enable_smtp" tabindex="1" {{on "change" this.smtpEnabledChange}} />
+    <Input @type="checkbox" @checked={{this.group.smtp_enabled}} id="enable_smtp" tabindex="1" {{on "change" (action "smtpEnabledChange")}} />
     {{i18n "groups.manage.email.enable_smtp"}}
   </label>
 
@@ -23,7 +23,7 @@
       <div class="alert alert-warning">{{i18n "groups.manage.email.imap_alpha_warning"}}</div>
 
       <label for="enable_imap">
-        <Input @type="checkbox" disabled={{not this.enableImapSettings}} @checked={{this.group.imap_enabled}} id="enable_imap" tabindex="8" {{on "change" this.imapEnabledChange}} />
+        <Input @type="checkbox" disabled={{not this.enableImapSettings}} @checked={{this.group.imap_enabled}} id="enable_imap" tabindex="8" {{on "change" (action "imapEnabledChange")}} />
         {{i18n "groups.manage.email.enable_imap"}}
       </label>
 

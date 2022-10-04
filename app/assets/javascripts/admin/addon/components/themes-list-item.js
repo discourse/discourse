@@ -3,7 +3,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { escape } from "pretty-text/sanitizer";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import { action } from "@ember/object";
 
 const MAX_COMPONENTS = 4;
 
@@ -60,9 +59,9 @@ export default Component.extend({
     return childrenCount - MAX_COMPONENTS;
   },
 
-  @action
-  toggleChildrenExpanded(event) {
-    event?.preventDefault();
-    this.toggleProperty("childrenExpanded");
+  actions: {
+    toggleChildrenExpanded() {
+      this.toggleProperty("childrenExpanded");
+    },
   },
 });

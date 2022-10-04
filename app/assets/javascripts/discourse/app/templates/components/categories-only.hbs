@@ -20,7 +20,7 @@
 
   {{#if this.mutedCategories}}
     <div class="muted-categories">
-      <a href class="muted-categories-link" {{on "click" this.toggleShowMuted}}>
+      <a href class="muted-categories-link" {{action "toggleShowMuted"}}>
         <h3 class="muted-categories-heading">{{i18n "categories.muted"}}</h3>
         {{#if this.mutedToggleIcon}}
           {{d-icon this.mutedToggleIcon}}

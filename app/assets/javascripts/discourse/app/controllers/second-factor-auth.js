@@ -212,8 +212,7 @@ export default Controller.extend({
   },
 
   @action
-  useAnotherMethod(newMethod, event) {
-    event?.preventDefault();
+  useAnotherMethod(newMethod) {
     this.set("userSelectedMethod", newMethod);
   },
 

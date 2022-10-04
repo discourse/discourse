@@ -3,7 +3,7 @@
 {{/if}}
 {{#if this.show}}
   <div class="location-box">
-    <a href class="close pull-right" {{on "click" this.hide}}>{{d-icon "times"}}</a>
+    <a href class="close pull-right" {{action "hide"}}>{{d-icon "times"}}</a>
     {{#if this.copied}}
       <DButton @class="btn-hover pull-right" @icon="copy" @label="ip_lookup.copied" />
     {{else}}

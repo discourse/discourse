@@ -148,6 +148,25 @@ acceptance("User menu", function (needs) {
       exists(".user-menu"),
       "clicking on the same item again closes the menu"
     );
+
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-review-queue");
+    // this may not be ideal because it actually attempts to open a new tab
+    // which gets blocked by the browser, but otherwise it seems harmless and
+    // doesn't cause the test to fail. if it causes problems for you, feel free
+    // to remove the ctrl+click tests.
+    await click("#quick-access-review-queue li.reviewable.reviewed a", {
+      ctrlKey: true,
+    });
+    assert.strictEqual(
+      currentURL(),
+      "/review/17",
+      "ctrl-clicking on an item doesn't navigate to a new page"
+    );
+    assert.ok(
+      exists(".user-menu"),
+      "ctrl-clicking on an item doesn't close the menu"
+    );
   });
 
   test("tabs have title attributes", async function (assert) {

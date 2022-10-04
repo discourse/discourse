@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import EmberObject, { action } from "@ember/object";
+import EmberObject from "@ember/object";
 import I18n from "I18n";
 import LinkLookup from "discourse/lib/link-lookup";
 import { not } from "@ember/object/computed";
@@ -54,13 +54,11 @@ export default Component.extend({
     this.set("messageCount", messages.get("length"));
   },
 
-  @action
-  closeMessage(message, event) {
-    event?.preventDefault();
-    this._removeMessage(message);
-  },
-
   actions: {
+    closeMessage(message) {
+      this._removeMessage(message);
+    },
+
     hideMessage(message) {
       this._removeMessage(message);
       // kind of hacky but the visibility depends on this
