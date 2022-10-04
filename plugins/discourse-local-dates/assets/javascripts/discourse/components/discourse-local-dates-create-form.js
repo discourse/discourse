@@ -1,7 +1,7 @@
 /* global Pikaday:true */
 import computed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { Promise } from "rsvp";
@@ -304,6 +304,12 @@ export default Component.extend({
       : I18n.t("discourse_local_dates.create.form.until");
 
     return dateTime.isValid() ? dateTime.format("LLLL") : emptyText;
+  },
+
+  @action
+  updateFormat(format, event) {
+    event?.preventDefault();
+    this.format = format;
   },
 
   actions: {

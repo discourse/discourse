@@ -30,19 +30,19 @@
       <div id="display-modes">
         <ul class="nav nav-pills">
           <li>
-            <a href class={{this.inlineClass}} {{action "displayInline"}} title={{i18n "post.revisions.displays.inline.title"}}>
+            <a href class={{this.inlineClass}} {{on "click" this.displayInline}} title={{i18n "post.revisions.displays.inline.title"}}>
               {{d-icon "far-square"}}
               {{i18n "post.revisions.displays.inline.button"}}
             </a>
           </li>
           <li>
-            <a href class={{this.sideBySideClass}} {{action "displaySideBySide"}} title={{i18n "post.revisions.displays.side_by_side.title"}}>
+            <a href class={{this.sideBySideClass}} {{on "click" this.displaySideBySide}} title={{i18n "post.revisions.displays.side_by_side.title"}}>
               {{d-icon "columns"}}
               {{i18n "post.revisions.displays.side_by_side.button"}}
             </a>
           </li>
           <li>
-            <a href class={{this.sideBySideMarkdownClass}} {{action "displaySideBySideMarkdown"}} title={{i18n "post.revisions.displays.side_by_side_markdown.title"}}>
+            <a href class={{this.sideBySideMarkdownClass}} {{on "click" this.displaySideBySideMarkdown}} title={{i18n "post.revisions.displays.side_by_side_markdown.title"}}>
               {{d-icon "columns"}}
               {{i18n "post.revisions.displays.side_by_side_markdown.button"}}
             </a>

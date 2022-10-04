@@ -211,6 +211,15 @@ export default Controller.extend(CanCheckEmails, {
     }
   },
 
+  @action
+  showSuspensions(event) {
+    event?.preventDefault();
+    this.adminTools.showActionLogs(this, {
+      target_user: this.get("model.username"),
+      action_name: "suspend_user",
+    });
+  },
+
   actions: {
     collapseProfile() {
       this.set("forceExpand", false);
@@ -218,13 +227,6 @@ export default Controller.extend(CanCheckEmails, {
 
     expandProfile() {
       this.set("forceExpand", true);
-    },
-
-    showSuspensions() {
-      this.adminTools.showActionLogs(this, {
-        target_user: this.get("model.username"),
-        action_name: "suspend_user",
-      });
     },
 
     adminDelete() {

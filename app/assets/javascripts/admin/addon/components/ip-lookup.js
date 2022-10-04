@@ -1,6 +1,6 @@
 import AdminUser from "admin/models/admin-user";
 import Component from "@ember/component";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import copyText from "discourse/lib/copy-text";
@@ -19,6 +19,12 @@ export default Component.extend({
     const total = Math.min(50, totalOthersWithSameIP || 0);
     const visible = Math.min(50, otherAccountsLength || 0);
     return Math.max(visible, total);
+  },
+
+  @action
+  hide(event) {
+    event?.preventDefault();
+    this.set("show", false);
   },
 
   actions: {
@@ -53,10 +59,6 @@ export default Component.extend({
           });
         });
       }
-    },
-
-    hide() {
-      this.set("show", false);
     },
 
     copy() {

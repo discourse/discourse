@@ -1,3 +1,4 @@
+import { action } from "@ember/object";
 import { alias, equal } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
@@ -92,11 +93,13 @@ export default Component.extend({
     this.category.updatePermission(this.group_name, type);
   },
 
-  actions: {
-    removeRow() {
-      this.category.removePermission(this.group_name);
-    },
+  @action
+  removeRow(event) {
+    event?.preventDefault();
+    this.category.removePermission(this.group_name);
+  },
 
+  actions: {
     setPermissionReply() {
       if (this.type <= PermissionType.CREATE_POST) {
         this.updatePermission(PermissionType.READONLY);

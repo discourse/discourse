@@ -10,7 +10,7 @@
       <TrackSelected @selectedList={{this.selected}} @selectedId={{this.post.topic}} @class="bulk-select" />
     {{/if}}
 
-    <a href={{this.post.url}} {{action "logClick" this.post.topic_id}} class="search-link{{if this.post.topic.visited " visited"}}" role="heading" aria-level="2">
+    <a href={{this.post.url}} {{on "click" (fn this.logClick this.post.topic_id)}} class="search-link{{if this.post.topic.visited " visited"}}" role="heading" aria-level="2">
       {{raw "topic-status" topic=this.post.topic showPrivateMessageIcon=true}}
       <span class="topic-title">
         {{#if this.post.useTopicTitleHeadline}}

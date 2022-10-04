@@ -508,11 +508,32 @@ export default Controller.extend({
     this.set("model.showFullScreenExitPrompt", false);
   },
 
-  actions: {
-    togglePreview() {
-      this.toggleProperty("showPreview");
-    },
+  @action
+  async cancel(event) {
+    event?.preventDefault();
+    await this.cancelComposer();
+  },
 
+  @action
+  cancelUpload(event) {
+    event?.preventDefault();
+    this.set("model.uploadCancelled", true);
+  },
+
+  @action
+  togglePreview(event) {
+    event?.preventDefault();
+    this.toggleProperty("showPreview");
+  },
+
+  @action
+  viewNewReply(event) {
+    event?.preventDefault();
+    DiscourseURL.routeTo(this.get("model.createdPost.url"));
+    this.close();
+  },
+
+  actions: {
     closeComposer() {
       this.close();
     },
@@ -541,10 +562,6 @@ export default Controller.extend({
       this.model.prependText(continueDiscussion, {
         new_line: true,
       });
-    },
-
-    cancelUpload() {
-      this.set("model.uploadCancelled", true);
     },
 
     onPopupMenuAction(menuAction) {
@@ -705,10 +722,6 @@ export default Controller.extend({
 
       toolbarEvent.addText(quote);
       this.set("model.loading", false);
-    },
-
-    async cancel() {
-      await this.cancelComposer();
     },
 
     save(ignore, event) {
@@ -1273,12 +1286,6 @@ export default Controller.extend({
     } else {
       return "var(--new-topic-composer-height, 400px)";
     }
-  },
-
-  viewNewReply() {
-    DiscourseURL.routeTo(this.get("model.createdPost.url"));
-    this.close();
-    return false;
   },
 
   async destroyDraft(draftSequence = null) {

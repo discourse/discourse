@@ -26,7 +26,7 @@
           {{#if this.user.profile_hidden}}
             <span class="card-huge-avatar">{{bound-avatar this.user "huge"}}</span>
           {{else}}
-            <a href={{this.user.path}} {{action "showUser" this.user}} class="card-huge-avatar">{{bound-avatar this.user "huge"}}</a>
+            <a href={{this.user.path}} {{on "click" (fn this.handleShowUser this.user)}} class="card-huge-avatar">{{bound-avatar this.user "huge"}}</a>
           {{/if}}
 
           <UserAvatarFlair @user={{this.user}} />
@@ -40,7 +40,7 @@
                 {{if this.nameFirst this.user.name (format-username this.user.username)}}
               </span>
             {{else}}
-              <a href={{this.user.path}} {{action "showUser" this.user}} class="user-profile-link">
+              <a href={{this.user.path}} {{on "click" (fn this.handleShowUser this.user)}} class="user-profile-link">
                 <span id="discourse-user-card-title" class="name-username-wrapper">
                   {{if this.nameFirst this.user.name (format-username this.user.username)}}
                 </span>
@@ -48,7 +48,7 @@
               </a>
             {{/if}}
           </h1>
-          <PluginOutlet @name="user-card-after-username" @connectorTagName="div" @args={{hash user=this.user showUser=(action "showUser" this.user)}} />
+          <PluginOutlet @name="user-card-after-username" @connectorTagName="div" @args={{hash user=this.user showUser=(fn this.handleShowUser this.user)}} />
           {{#if this.nameFirst}}
             <h2 class="username">{{this.user.username}}</h2>
           {{else}}

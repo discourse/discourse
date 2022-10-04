@@ -1,3 +1,4 @@
+import { action } from "@ember/object";
 import { alias, notEmpty } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import I18n from "I18n";
@@ -41,23 +42,27 @@ export default Controller.extend({
     };
   },
 
+  @action
+  sortByCount(event) {
+    event?.preventDefault();
+    this.setProperties({
+      sortProperties: ["totalCount:desc", "id"],
+      sortedByCount: true,
+      sortedByName: false,
+    });
+  },
+
+  @action
+  sortById(event) {
+    event?.preventDefault();
+    this.setProperties({
+      sortProperties: ["id"],
+      sortedByCount: false,
+      sortedByName: true,
+    });
+  },
+
   actions: {
-    sortByCount() {
-      this.setProperties({
-        sortProperties: ["totalCount:desc", "id"],
-        sortedByCount: true,
-        sortedByName: false,
-      });
-    },
-
-    sortById() {
-      this.setProperties({
-        sortProperties: ["id"],
-        sortedByCount: false,
-        sortedByName: true,
-      });
-    },
-
     showUploader() {
       showModal("tag-upload");
     },
