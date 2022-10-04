@@ -18,7 +18,6 @@ export default Controller.extend({
   isPersonal: equal("pmView", "user"),
   group: null,
   groupFilter: alias("group.name"),
-  currentPath: alias("router._router.currentPath"),
   currentRouteName: readOnly("router.currentRouteName"),
   pmTaggingEnabled: alias("site.can_tag_pms"),
   tagId: null,
