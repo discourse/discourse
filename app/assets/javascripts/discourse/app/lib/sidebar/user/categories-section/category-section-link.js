@@ -37,7 +37,7 @@ export default class CategorySectionLink {
   }
 
   get currentWhen() {
-    return "discovery.unreadCategory discovery.topCategory discovery.newCategory discovery.latestCategory";
+    return "discovery.unreadCategory discovery.topCategory discovery.newCategory discovery.latestCategory discovery.category";
   }
 
   get title() {
@@ -84,7 +84,7 @@ export default class CategorySectionLink {
     } else if (this.totalNew > 0) {
       return "discovery.newCategory";
     } else {
-      return "discovery.latestCategory";
+      return "discovery.category";
     }
   }
 }
