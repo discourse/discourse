@@ -300,6 +300,14 @@ RSpec.describe Guardian do
         expect(Guardian.new(moderator).can_send_private_message?(another_user)).to be_truthy
         expect(Guardian.new(admin).can_send_private_message?(another_user)).to be_truthy
       end
+
+      it "returns true for bot user" do
+        expect(Guardian.new(Fabricate(:user, id: -19876)).can_send_private_message?(another_user)).to be_truthy
+      end
+
+      it "returns true for system user" do
+        expect(Guardian.new(Discourse.system_user).can_send_private_message?(another_user)).to be_truthy
+      end
     end
 
     context "when target user is suspended" do
