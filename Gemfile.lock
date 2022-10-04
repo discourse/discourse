@@ -1,4 +1,12 @@
 GIT
+  remote: https://github.com/discourse/discourse-seed-fu.git
+  revision: 576b69a3687388d760531ec7e8b9bb017d1a6861
+  specs:
+    seed-fu (2.3.9)
+      activerecord (>= 3.1)
+      activesupport (>= 3.1)
+
+GIT
   remote: https://github.com/discourse/mail.git
   revision: 5b700fc95ee66378e0cf2559abc73c8bc3062a4b
   specs:
@@ -435,9 +443,6 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    seed-fu (2.3.9)
-      activerecord (>= 3.1)
-      activesupport (>= 3.1)
     selenium-webdriver (4.5.0)
       childprocess (>= 0.5, < 5.0)
       rexml (~> 3.2, >= 3.2.5)
@@ -624,7 +629,7 @@ DEPENDENCIES
   sanitize
   sassc (= 2.0.1)
   sassc-rails
-  seed-fu
+  seed-fu!
   selenium-webdriver
   shoulda-matchers
   sidekiq
@@ -645,4 +650,4 @@ DEPENDENCIES
   yaml-lint
 
 BUNDLED WITH
-   2.3.18
+   2.3.21

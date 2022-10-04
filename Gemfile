@@ -39,7 +39,7 @@ gem 'sprockets', '3.7.2'
 # allows us to precompile all our templates in the unicorn master
 gem 'actionview_precompiler', require: false
 
-gem 'seed-fu'
+gem 'seed-fu', git: 'https://github.com/discourse/discourse-seed-fu.git'
 
 gem 'mail', git: 'https://github.com/discourse/mail.git'
 gem 'mini_mime'
