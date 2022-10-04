@@ -725,6 +725,7 @@ RSpec.describe Topic do
       before do
         SiteSetting.max_topic_invitations_per_day = 1
         RateLimiter.enable
+        Group.refresh_automatic_groups!
       end
 
       after do
@@ -778,6 +779,10 @@ RSpec.describe Topic do
     describe 'private message' do
       fab!(:user) { trust_level_2 }
       fab!(:topic) { Fabricate(:private_message_topic, user: trust_level_2) }
+
+      before do
+        Group.refresh_automatic_groups!
+      end
 
       describe 'by username' do
         it 'should be able to invite a user' do
@@ -1028,9 +1033,11 @@ RSpec.describe Topic do
   end
 
   describe 'private message' do
+    fab!(:pm_user) { Fabricate(:user) }
     fab!(:topic) do
+      Group.refresh_automatic_groups!
       PostCreator.new(
-        Fabricate(:user),
+        pm_user,
         title: "This is a private message",
         raw: "This is my message to you-ou-ou",
         archetype: Archetype.private_message,
@@ -2469,6 +2476,7 @@ RSpec.describe Topic do
     end
 
     it "limits according to max_personal_messages_per_day" do
+      Group.refresh_automatic_groups!
       create_post(user: user, archetype: 'private_message', target_usernames: [user1.username, user2.username])
       expect {
         create_post(user: user, archetype: 'private_message', target_usernames: [user1.username, user2.username])

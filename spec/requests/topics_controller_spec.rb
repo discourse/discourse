@@ -3136,6 +3136,10 @@ RSpec.describe TopicsController do
       end
 
       context "with private message" do
+        before_all do
+          Group.refresh_automatic_groups!
+        end
+
         fab!(:group) do
           Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|
             g.add(user_2)
@@ -3647,6 +3651,10 @@ RSpec.describe TopicsController do
       fab!(:topic) { Fabricate(:topic, user: user) }
       fab!(:post) { Fabricate(:post, user: user, topic: topic) }
 
+      before do
+        Group.refresh_automatic_groups!
+      end
+
       it "raises an error when the user doesn't have permission to convert topic" do
         sign_in(user)
         put "/t/#{topic.id}/convert-topic/private.json"
@@ -3672,6 +3680,10 @@ RSpec.describe TopicsController do
     describe 'converting private message to public topic' do
       fab!(:topic) { Fabricate(:private_message_topic, user: user) }
       fab!(:post) { Fabricate(:post, user: post_author1, topic: topic) }
+
+      before do
+        Group.refresh_automatic_groups!
+      end
 
       it "raises an error when the user doesn't have permission to convert topic" do
         sign_in(user)
@@ -4490,6 +4502,10 @@ RSpec.describe TopicsController do
   end
 
   describe '#private_message_reset_new' do
+    before_all do
+      Group.refresh_automatic_groups!
+    end
+
     fab!(:group) do
       Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|
         g.add(user_2)
@@ -4634,6 +4650,10 @@ RSpec.describe TopicsController do
   end
 
   describe '#archive_message' do
+    before_all do
+      Group.refresh_automatic_groups!
+    end
+
     fab!(:group) do
       Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|
         g.add(user)

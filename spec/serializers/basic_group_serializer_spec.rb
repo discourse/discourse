@@ -45,6 +45,7 @@ RSpec.describe BasicGroupSerializer do
       let(:guardian) { Guardian.new(Fabricate(:moderator)) }
 
       it 'should be present' do
+        Group.refresh_automatic_groups!
         expect(subject.as_json[:has_messages]).to eq(true)
       end
     end

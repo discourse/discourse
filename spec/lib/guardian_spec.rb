@@ -367,7 +367,8 @@ RSpec.describe Guardian do
       SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
       expect(Guardian.new(trust_level_0).can_send_private_message?(group)).to eq(false)
 
-      # group membership trumps personal_message_enabled_groups setting
+      # user must have both a group from personal_message_enabled_groups to send messages in general,
+      # and be a member of this group to send the message to this group for this messageable_level
       group.add(trust_level_0)
       expect(Guardian.new(trust_level_0).can_send_private_message?(group)).to eq(true)
     end

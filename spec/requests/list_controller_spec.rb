@@ -238,6 +238,7 @@ RSpec.describe ListController do
         group.add(user)
         sign_in(user)
         SiteSetting.unicode_usernames = false
+        Group.refresh_automatic_groups!
       end
 
       it 'should return the right response when user does not belong to group' do
