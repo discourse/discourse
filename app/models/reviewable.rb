@@ -28,8 +28,8 @@ class Reviewable < ActiveRecord::Base
   belongs_to :topic
   belongs_to :category
 
-  has_many :reviewable_histories
-  has_many :reviewable_scores, -> { order(created_at: :desc) }
+  has_many :reviewable_histories, dependent: :destroy
+  has_many :reviewable_scores, -> { order(created_at: :desc) }, dependent: :destroy
 
   enum :status, {
     pending: 0,
