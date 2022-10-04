@@ -1,5 +1,4 @@
 import Component from "@ember/component";
-import { action } from "@ember/object";
 import I18n from "I18n";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -49,15 +48,15 @@ export default Component.extend({
     );
   },
 
-  @action
-  toggleSecondFactorMethod(event) {
-    event?.preventDefault();
-    const secondFactorMethod = this.secondFactorMethod;
-    this.set("secondFactorToken", "");
-    if (secondFactorMethod === SECOND_FACTOR_METHODS.TOTP) {
-      this.set("secondFactorMethod", SECOND_FACTOR_METHODS.BACKUP_CODE);
-    } else {
-      this.set("secondFactorMethod", SECOND_FACTOR_METHODS.TOTP);
-    }
+  actions: {
+    toggleSecondFactorMethod() {
+      const secondFactorMethod = this.secondFactorMethod;
+      this.set("secondFactorToken", "");
+      if (secondFactorMethod === SECOND_FACTOR_METHODS.TOTP) {
+        this.set("secondFactorMethod", SECOND_FACTOR_METHODS.BACKUP_CODE);
+      } else {
+        this.set("secondFactorMethod", SECOND_FACTOR_METHODS.TOTP);
+      }
+    },
   },
 });

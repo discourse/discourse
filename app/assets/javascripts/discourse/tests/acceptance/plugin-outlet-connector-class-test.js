@@ -52,12 +52,12 @@ acceptance("Plugin Outlet - Connector Class", function (needs) {
     Ember.TEMPLATES[
       `${PREFIX}/user-profile-primary/hello`
     ] = hbs`<span class='hello-username'>{{model.username}}</span>
-        <button class='say-hello' {{on "click" (action "sayHello")}}></button>
+        <button class='say-hello' {{action "sayHello"}}></button>
         <span class='hello-result'>{{hello}}</span>`;
     // eslint-disable-next-line no-undef
     Ember.TEMPLATES[
       `${PREFIX}/user-profile-primary/hi`
-    ] = hbs`<button class='say-hi' {{on "click" (action "sayHi")}}></button>
+    ] = hbs`<button class='say-hi' {{action "sayHi"}}></button>
         <span class='hi-result'>{{hi}}</span>`;
     // eslint-disable-next-line no-undef
     Ember.TEMPLATES[

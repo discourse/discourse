@@ -53,7 +53,7 @@
                   {{else if email.resent}}
                     <span>{{i18n "user.email.resent_label"}}</span>
                   {{else}}
-                    <a {{on "click" (fn this.resendConfirmationEmail email)}} href>{{i18n "user.email.resend_label"}}</a>
+                    <a {{action "resendConfirmationEmail" email}} href>{{i18n "user.email.resend_label"}}</a>
                   {{/if}}
                 {{/unless}}
               </div>

@@ -1,6 +1,5 @@
 import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
-import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -44,23 +43,6 @@ export default Controller.extend({
     }
   },
 
-  @action
-  showInserted(event) {
-    event?.preventDefault();
-    const webHookId = this.get("model.extras.web_hook_id");
-
-    ajax(`/admin/api/web_hooks/${webHookId}/events/bulk`, {
-      type: "GET",
-      data: { ids: this.incomingEventIds },
-    }).then((data) => {
-      const objects = data.map((webHookEvent) =>
-        this.store.createRecord("web-hook-event", webHookEvent)
-      );
-      this.model.unshiftObjects(objects);
-      this.set("incomingEventIds", []);
-    });
-  },
-
   actions: {
     loadMore() {
       this.model.loadMore();
@@ -77,6 +59,21 @@ export default Controller.extend({
       ).catch((error) => {
         this.set("pingDisabled", false);
         popupAjaxError(error);
+      });
+    },
+
+    showInserted() {
+      const webHookId = this.get("model.extras.web_hook_id");
+
+      ajax(`/admin/api/web_hooks/${webHookId}/events/bulk`, {
+        type: "GET",
+        data: { ids: this.incomingEventIds },
+      }).then((data) => {
+        const objects = data.map((event) =>
+          this.store.createRecord("web-hook-event", event)
+        );
+        this.model.unshiftObjects(objects);
+        this.set("incomingEventIds", []);
       });
     },
   },

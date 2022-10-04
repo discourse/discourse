@@ -14,7 +14,6 @@ import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
 import { isEmpty } from "@ember/utils";
-import { action } from "@ember/object";
 import { gt, or } from "@ember/object/computed";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { setTransient } from "discourse/lib/page-tracker";
@@ -392,24 +391,22 @@ export default Controller.extend({
     }
   },
 
-  @action
-  createTopic(searchTerm, event) {
-    event?.preventDefault();
-    let topicCategory;
-    if (searchTerm.includes("category:")) {
-      const match = searchTerm.match(/category:(\S*)/);
-      if (match && match[1]) {
-        topicCategory = match[1];
-      }
-    }
-    this.composer.open({
-      action: Composer.CREATE_TOPIC,
-      draftKey: Composer.NEW_TOPIC_KEY,
-      topicCategory,
-    });
-  },
-
   actions: {
+    createTopic(searchTerm) {
+      let topicCategory;
+      if (searchTerm.includes("category:")) {
+        const match = searchTerm.match(/category:(\S*)/);
+        if (match && match[1]) {
+          topicCategory = match[1];
+        }
+      }
+      this.composer.open({
+        action: Composer.CREATE_TOPIC,
+        draftKey: Composer.NEW_TOPIC_KEY,
+        topicCategory,
+      });
+    },
+
     selectAll() {
       this.selected.addObjects(this.get("model.posts").mapBy("topic"));
 

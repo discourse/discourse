@@ -1,15 +1,15 @@
 <DModalBody @title="poll.ui_builder.title" @class="poll-ui-builder">
   <div class="input-group poll-type">
-    <a href {{on "click" (fn this.updatePollType "regular")}} class="poll-type-value {{if this.isRegular "active"}}">
+    <a href {{action (mut this.pollType) "regular"}} class="poll-type-value {{if this.isRegular "active"}}">
       {{i18n "poll.ui_builder.poll_type.regular"}}
     </a>
 
-    <a href {{on "click" (fn this.updatePollType "multiple")}} class="poll-type-value {{if this.isMultiple "active"}}">
+    <a href {{action (mut this.pollType) "multiple"}} class="poll-type-value {{if this.isMultiple "active"}}">
       {{i18n "poll.ui_builder.poll_type.multiple"}}
     </a>
 
     {{#if this.showNumber}}
-      <a href {{on "click" (fn this.updatePollType "number")}} class="poll-type-value {{if this.isNumber "active"}}">
+      <a href {{action (mut this.pollType) "number"}} class="poll-type-value {{if this.isNumber "active"}}">
         {{i18n "poll.ui_builder.poll_type.number"}}
       </a>
     {{/if}}

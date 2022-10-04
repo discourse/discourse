@@ -1,6 +1,4 @@
 import Component from "@ember/component";
-import { action } from "@ember/object";
-
 export default Component.extend({
   tagName: "",
 
@@ -12,14 +10,12 @@ export default Component.extend({
     this.set("editing", false);
   },
 
-  @action
-  edit(event) {
-    event?.preventDefault();
-    this.set("buffer", this.value);
-    this.toggleProperty("editing");
-  },
-
   actions: {
+    edit() {
+      this.set("buffer", this.value);
+      this.toggleProperty("editing");
+    },
+
     save() {
       // Action has to toggle 'editing' property.
       this.action(this.buffer);

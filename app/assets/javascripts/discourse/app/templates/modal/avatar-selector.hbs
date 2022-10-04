@@ -2,7 +2,7 @@
   {{#if this.showSelectableAvatars}}
     <div class="selectable-avatars">
       {{#each this.selectableAvatars as |avatar|}}
-        <a href class="selectable-avatar" {{on "click" (fn this.selectAvatar avatar)}}>
+        <a href class="selectable-avatar" {{action "selectAvatar" avatar}}>
           {{bound-avatar-template avatar "huge"}}
         </a>
       {{/each}}

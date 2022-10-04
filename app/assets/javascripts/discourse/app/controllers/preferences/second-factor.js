@@ -3,7 +3,6 @@ import CanCheckEmails from "discourse/mixins/can-check-emails";
 import Controller from "@ember/controller";
 import I18n from "I18n";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -92,27 +91,6 @@ export default Controller.extend(CanCheckEmails, {
     this.set("dirty", true);
   },
 
-  @action
-  resetPassword(event) {
-    event?.preventDefault();
-
-    this.setProperties({
-      resetPasswordLoading: true,
-      resetPasswordProgress: "",
-    });
-
-    return this.model
-      .changePassword()
-      .then(() => {
-        this.set(
-          "resetPasswordProgress",
-          I18n.t("user.change_password.success")
-        );
-      })
-      .catch(popupAjaxError)
-      .finally(() => this.set("resetPasswordLoading", false));
-  },
-
   actions: {
     confirmPassword() {
       if (!this.password) {
@@ -121,6 +99,24 @@ export default Controller.extend(CanCheckEmails, {
       this.markDirty();
       this.loadSecondFactors();
       this.set("password", null);
+    },
+
+    resetPassword() {
+      this.setProperties({
+        resetPasswordLoading: true,
+        resetPasswordProgress: "",
+      });
+
+      return this.model
+        .changePassword()
+        .then(() => {
+          this.set(
+            "resetPasswordProgress",
+            I18n.t("user.change_password.success")
+          );
+        })
+        .catch(popupAjaxError)
+        .finally(() => this.set("resetPasswordLoading", false));
     },
 
     disableAllSecondFactors() {

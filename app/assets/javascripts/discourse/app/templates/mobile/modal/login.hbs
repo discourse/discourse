@@ -16,7 +16,7 @@
             <Input @value={{this.loginName}} class={{value-entered this.loginName}} @type="email" id="login-account-name" autocorrect="off" autocapitalize="off" disabled={{this.showSecondFactor}} autofocus="autofocus" />
             <label class="alt-placeholder" for="login-account-name">{{i18n "login.email_placeholder"}}</label>
             {{#if this.showLoginWithEmailLink}}
-              <a href id="email-login-link" {{on "click" this.emailLogin}}>
+              <a href id="email-login-link" {{action (unless this.processingEmailLink "emailLogin")}}>
                 {{i18n "email_login.login_link"}}
               </a>
             {{/if}}
@@ -24,7 +24,7 @@
           <div class="input-group">
             <Input @value={{this.loginPassword}} class={{value-entered this.loginPassword}} @type="password" id="login-account-password" maxlength="200" disabled={{this.showSecondFactor}} />
             <label class="alt-placeholder" for="login-account-password">{{i18n "login.password"}}</label>
-            <a href id="forgot-password-link" {{on "click" this.handleForgotPassword}}>{{i18n "forgot_password.action"}}</a>
+            <a href id="forgot-password-link" {{action "showForgotPassword"}}>{{i18n "forgot_password.action"}}</a>
           </div>
         </div>
         <SecondFactorForm @secondFactorMethod={{this.secondFactorMethod}} @secondFactorToken={{this.secondFactorToken}} @class={{this.secondFactorClass}} @backupEnabled={{this.backupEnabled}} @isLogin={{true}}>

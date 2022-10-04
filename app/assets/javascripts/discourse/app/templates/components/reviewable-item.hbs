@@ -10,7 +10,7 @@
     <span class="status">
       {{reviewable-status this.reviewable.status}}
     </span>
-    <a href {{on "click" (fn this.explainReviewable this.reviewable)}} title={{i18n "review.explain.why"}} class="explain">
+    <a href {{action "explainReviewable" this.reviewable}} title={{i18n "review.explain.why"}} class="explain">
       {{d-icon "question-circle"}}
     </a>
   </div>

@@ -1,6 +1,5 @@
 import DiscoveryController from "discourse/controllers/discovery";
 import { inject as controller } from "@ember/controller";
-import { action } from "@ember/object";
 import { dasherize } from "@ember/string";
 import discourseComputed from "discourse-common/utils/decorators";
 import { reads } from "@ember/object/computed";
@@ -51,19 +50,17 @@ export default DiscoveryController.extend({
         : style;
     return dasherize(componentName);
   },
-
-  @action
-  showInserted(event) {
-    event?.preventDefault();
-    const tracker = this.topicTrackingState;
-    // Move inserted into topics
-    this.model.loadBefore(tracker.get("newIncoming"), true);
-    tracker.resetTracking();
-  },
-
   actions: {
     refresh() {
       this.send("triggerRefresh");
+    },
+    showInserted() {
+      const tracker = this.topicTrackingState;
+
+      // Move inserted into topics
+      this.model.loadBefore(tracker.get("newIncoming"), true);
+      tracker.resetTracking();
+      return false;
     },
   },
 });

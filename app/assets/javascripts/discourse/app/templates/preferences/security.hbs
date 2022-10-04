@@ -2,7 +2,7 @@
   <div class="control-group pref-password">
     <label class="control-label">{{i18n "user.password.title"}}</label>
     <div class="controls">
-      <a href {{on "click" this.changePassword}} class="btn btn-default">
+      <a href {{action "changePassword"}} class="btn btn-default">
         {{d-icon "envelope"}}
         {{#if this.model.no_password}}
           {{i18n "user.change_password.set_password"}}
@@ -58,7 +58,7 @@
     </div>
 
     {{#if this.canShowAllAuthTokens}}
-      <a href {{on "click" this.toggleShowAllAuthTokens}}>
+      <a href {{action "toggleShowAllAuthTokens"}}>
         {{#if this.showAllAuthTokens}}
           {{d-icon "caret-up"}} {{i18n "user.auth_tokens.show_few"}}
         {{else}}
@@ -67,7 +67,7 @@
       </a>
     {{/if}}
 
-    <a href {{on "click" (fn this.revokeAuthToken null)}} class="pull-right text-danger">{{d-icon "sign-out-alt"}} {{i18n "user.auth_tokens.log_out_all"}}</a>
+    <a href {{action "revokeAuthToken"}} class="pull-right text-danger">{{d-icon "sign-out-alt"}} {{i18n "user.auth_tokens.log_out_all"}}</a>
   </div>
 {{/if}}
 

@@ -1,6 +1,5 @@
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
-import { action } from "@ember/object";
 import { gt } from "@ember/object/computed";
 import { historyHeat } from "discourse/widgets/post-edits-indicator";
 import { longDate } from "discourse/lib/formatter";
@@ -19,18 +18,18 @@ export default Component.extend({
     return longDate(updatedAt);
   },
 
-  @action
-  showEditHistory(event) {
-    event?.preventDefault();
-    let postId = this.get("reviewable.post_id");
-    this.store.find("post", postId).then((post) => {
-      let historyController = showModal("history", {
-        model: post,
-        modalClass: "history-modal",
+  actions: {
+    showEditHistory() {
+      let postId = this.get("reviewable.post_id");
+      this.store.find("post", postId).then((post) => {
+        let historyController = showModal("history", {
+          model: post,
+          modalClass: "history-modal",
+        });
+        historyController.refresh(postId, "latest");
+        historyController.set("post", post);
+        historyController.set("topicController", null);
       });
-      historyController.refresh(postId, "latest");
-      historyController.set("post", post);
-      historyController.set("topicController", null);
-    });
+    },
   },
 });

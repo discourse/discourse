@@ -6,7 +6,6 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import { exportEntity } from "discourse/lib/export-csv";
 import { observes } from "discourse-common/utils/decorators";
 import { outputExportResult } from "discourse/lib/export-result";
-import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 
 export default Controller.extend({
@@ -27,15 +26,6 @@ export default Controller.extend({
     discourseDebounce(this, this._debouncedShow, INPUT_DELAY);
   },
 
-  @action
-  edit(record, event) {
-    event?.preventDefault();
-    if (!record.get("editing")) {
-      this.set("savedIpAddress", record.get("ip_address"));
-    }
-    record.set("editing", true);
-  },
-
   actions: {
     allow(record) {
       record.set("action_name", "do_nothing");
@@ -45,6 +35,13 @@ export default Controller.extend({
     block(record) {
       record.set("action_name", "block");
       record.save();
+    },
+
+    edit(record) {
+      if (!record.get("editing")) {
+        this.set("savedIpAddress", record.get("ip_address"));
+      }
+      record.set("editing", true);
     },
 
     cancel(record) {

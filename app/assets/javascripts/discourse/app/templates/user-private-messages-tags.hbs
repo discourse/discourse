@@ -7,12 +7,12 @@
 <div class="tag-sort-options">
   {{i18n "tagging.sort_by"}}
   <span class="tag-sort-count {{if this.sortedByCount "active"}}">
-    <a href {{on "click" this.sortByCount}}>
+    <a href {{action "sortByCount"}}>
       {{i18n "tagging.sort_by_count"}}
     </a>
   </span>
   <span class="tag-sort-name {{if this.sortedByName "active"}}">
-    <a href {{on "click" this.sortById}}>
+    <a href {{action "sortById"}}>
       {{i18n "tagging.sort_by_name"}}
     </a>
   </span>

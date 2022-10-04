@@ -81,10 +81,10 @@ export default Controller.extend(BulkTopicSelection, {
   },
 
   @action
-  showInserted(event) {
-    event?.preventDefault();
+  showInserted() {
     this.model.loadBefore(this.pmTopicTrackingState.newIncoming);
     this.pmTopicTrackingState.resetIncomingTracking();
+    return false;
   },
 
   @action

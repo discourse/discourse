@@ -50,8 +50,7 @@ export default Component.extend({
   },
 
   @action
-  toggleShowMuted(event) {
-    event?.preventDefault();
+  toggleShowMuted() {
     this.toggleProperty("showMuted");
   },
 });

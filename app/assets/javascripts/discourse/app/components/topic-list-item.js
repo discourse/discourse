@@ -251,7 +251,6 @@ export default Component.extend({
       if (wantsNewWindow(e)) {
         return true;
       }
-      e.preventDefault();
       return this.navigateToTopic(topic, e.target.getAttribute("href"));
     }
 
@@ -265,7 +264,6 @@ export default Component.extend({
       if (wantsNewWindow(e)) {
         return true;
       }
-      e.preventDefault();
       return this.navigateToTopic(topic, topic.lastUnreadUrl);
     }
 
