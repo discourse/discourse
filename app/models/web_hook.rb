@@ -15,6 +15,7 @@ class WebHook < ActiveRecord::Base
   validates_presence_of :content_type
   validates_presence_of :last_delivery_status
   validates_presence_of :web_hook_event_types, unless: :wildcard_web_hook?
+  validate :ensure_payload_url_allowed, if: :payload_url_changed?
 
   before_save :strip_url
 
@@ -112,6 +113,23 @@ class WebHook < ActiveRecord::Base
 
   def self.guardian
     Guardian.new(Discourse.system_user)
+  end
+
+  # This check is to improve UX
+  # IPs are re-checked at request time
+  def ensure_payload_url_allowed
+    return if payload_url.blank?
+    uri = URI(payload_url.strip)
+
+    allowed = begin
+      FinalDestination::SSRFDetector.lookup_and_filter_ips(uri.hostname).present?
+    rescue FinalDestination::SSRFDetector::DisallowedIpError
+      false
+    end
+
+    if !allowed
+      self.errors.add(:base, I18n.t("webhooks.payload_url.blocked_or_internal"))
+    end
   end
 end
 

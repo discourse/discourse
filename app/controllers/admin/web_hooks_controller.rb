@@ -84,22 +84,12 @@ class Admin::WebHooksController < Admin::AdminController
   end
 
   def redeliver_event
-    web_hook_event = WebHookEvent.find(params[:event_id])
+    web_hook_event = WebHookEvent.find_by(id: params[:event_id])
 
     if web_hook_event
       web_hook = web_hook_event.web_hook
-      conn = Excon.new(URI(web_hook.payload_url).to_s,
-                       ssl_verify_peer: web_hook.verify_certificate,
-                       retry_limit: 0)
-
-      now = Time.zone.now
-      response = conn.post(headers: MultiJson.load(web_hook_event.headers), body: web_hook_event.payload)
-      web_hook_event.update!(
-        status: response.status,
-        response_headers: MultiJson.dump(response.headers),
-        response_body: response.body,
-        duration: ((Time.zone.now - now) * 1000).to_i
-      )
+      emitter = WebHookEmitter.new(web_hook, web_hook_event)
+      emitter.emit!(headers: MultiJson.load(web_hook_event.headers), body: web_hook_event.payload)
       render_serialized(web_hook_event, AdminWebHookEventSerializer, root: 'web_hook_event')
     else
       render json: failed_json

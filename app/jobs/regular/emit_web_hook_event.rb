@@ -9,7 +9,6 @@ module Jobs
     PING_EVENT = 'ping'
     MAX_RETRY_COUNT = 4
     RETRY_BACKOFF = 5
-    REQUEST_TIMEOUT = 20
 
     def execute(args)
       @arguments = args
@@ -43,39 +42,13 @@ module Jobs
     end
 
     def send_webhook!
-      uri = URI(@web_hook.payload_url.strip)
-      conn = Excon.new(
-        uri.to_s,
-        ssl_verify_peer: @web_hook.verify_certificate,
-        retry_limit: 0,
-        write_timeout: REQUEST_TIMEOUT,
-        read_timeout: REQUEST_TIMEOUT,
-        connect_timeout: REQUEST_TIMEOUT
-      )
-
       web_hook_body = build_webhook_body
       web_hook_event = create_webhook_event(web_hook_body)
+      uri = URI(@web_hook.payload_url.strip)
       web_hook_headers = build_webhook_headers(uri, web_hook_body, web_hook_event)
-      web_hook_response = nil
 
-      begin
-        now = Time.zone.now
-        web_hook_response = conn.post(headers: web_hook_headers, body: web_hook_body)
-        web_hook_event.update!(
-          headers: MultiJson.dump(web_hook_headers),
-          status: web_hook_response.status,
-          response_headers: MultiJson.dump(web_hook_response.headers),
-          response_body: web_hook_response.body,
-          duration: ((Time.zone.now - now) * 1000).to_i
-        )
-      rescue => e
-        web_hook_event.update!(
-          headers: MultiJson.dump(web_hook_headers),
-          status: -1,
-          response_headers: MultiJson.dump(error: e),
-          duration: ((Time.zone.now - now) * 1000).to_i
-        )
-      end
+      emitter = WebHookEmitter.new(@web_hook, web_hook_event)
+      web_hook_response = emitter.emit!(headers: web_hook_headers, body: web_hook_body)
 
       publish_webhook_event(web_hook_event)
       process_webhook_response(web_hook_response)
@@ -151,12 +124,12 @@ module Jobs
       headers = {
         'Accept' => '*/*',
         'Connection' => 'close',
-        'Content-Length' => web_hook_body.bytesize,
+        'Content-Length' => web_hook_body.bytesize.to_s,
         'Content-Type' => content_type,
         'Host' => uri.host,
         'User-Agent' => "Discourse/#{Discourse::VERSION::STRING}",
         'X-Discourse-Instance' => Discourse.base_url,
-        'X-Discourse-Event-Id' => web_hook_event.id,
+        'X-Discourse-Event-Id' => web_hook_event.id.to_s,
         'X-Discourse-Event-Type' => @arguments[:event_type]
       }
 

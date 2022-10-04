@@ -162,7 +162,7 @@ module Onebox
 
       def follow_redirect!
         begin
-          http = Net::HTTP.start(
+          http = FinalDestination::HTTP.start(
             uri.host,
             uri.port,
             use_ssl: uri.scheme == 'https',
