@@ -312,12 +312,13 @@ class Stylesheet::Manager
     %[<link href="#{href}" rel="preload" as="style"/>].html_safe
   end
 
-  def color_scheme_stylesheet_link_tag(color_scheme_id = nil, media = 'all')
+  def color_scheme_stylesheet_link_tag(color_scheme_id = nil, media = 'all', preload_callback = nil)
     stylesheet = color_scheme_stylesheet_details(color_scheme_id, media)
 
     return '' if !stylesheet
 
     href = stylesheet[:new_href]
+    preload_callback.call(href, 'style') if preload_callback
 
     css_class = media == 'all' ? "light-scheme" : "dark-scheme"
 
