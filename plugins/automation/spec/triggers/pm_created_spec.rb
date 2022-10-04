@@ -6,6 +6,7 @@ describe 'PMCreated' do
   before do
     SiteSetting.discourse_automation_enabled = true
     SiteSetting.personal_email_time_window_seconds = 0
+    Group.refresh_automatic_groups!
   end
 
   fab!(:user) { Fabricate(:user) }
