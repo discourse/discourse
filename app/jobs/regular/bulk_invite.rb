@@ -105,6 +105,7 @@ module Jobs
         if @user_fields[key] == :nil
           save_log "Invalid User Field '#{key}'"
           @warnings += 1
+          next
         end
 
         # Automatically correct user field value
