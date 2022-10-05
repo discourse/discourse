@@ -325,7 +325,7 @@ discourseModule("Unit | Utilities", function () {
     assert.deepEqual(
       mergeSortedLists([5, 4, 3, 2, 1], [6, 2, 1], comparator),
       [6, 5, 4, 3, 2, 2, 1, 1],
-      "it correctly merges lists they share common items"
+      "it correctly merges lists that share common items"
     );
   });
 });
