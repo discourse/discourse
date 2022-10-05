@@ -1107,6 +1107,7 @@ ro:
         move_to_archive: "Arhivează"
         failed_to_move: "Mutarea mesajelor selectate a eșuat (poate că v-a căzut rețeaua)"
         tags: "Etichete"
+        all_tags: "Toate etichetele"
       preferences_nav:
         account: "Cont"
         security: "Securitate"
@@ -2978,6 +2979,9 @@ ro:
               content: "Utilizatori"
             my_posts:
               content: "Postările mele"
+            review:
+              content: "Revizuire"
+              title: "revizuire"
   admin_js:
     type_to_filter: "tastează pentru a filtra..."
     admin:

@@ -1122,6 +1122,7 @@ nb_NO:
         move_to_archive: "Arkiver"
         failed_to_move: "Kunne ikke flytte valgte meldinger (kanskje nettforbindelsen din er nede)"
         tags: "Stikkord"
+        all_tags: "Alle stikkord"
         warnings: "Offisielle advarsler"
       preferences_nav:
         account: "Konto"
@@ -3463,6 +3464,9 @@ nb_NO:
               content: "Brukere"
             my_posts:
               content: "Mine innlegg"
+            review:
+              content: "Gjennomgang"
+              title: "gjennomgang"
   admin_js:
     type_to_filter: "skriv for å filtrere…"
     admin:

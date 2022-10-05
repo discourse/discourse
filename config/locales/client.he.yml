@@ -1316,6 +1316,7 @@ he:
         move_to_archive: "ארכיון"
         failed_to_move: "העברת ההודעות שנבחרו נכשלה (אולי אין תקשורת)"
         tags: "תגיות"
+        all_tags: "כל התגיות"
         warnings: "אזהרות רשמיות"
         read_more_in_group: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב־%{groupLink}."
         read_more: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב<a href='%{basePath}/u/%{username}/messages'>הודעות הפרטיות</a>."
@@ -1828,6 +1829,8 @@ he:
       enabled: "אתר זה נמצא במצב קריאה בלבד. אנא המשיכו לשוטט, אך תגובות, לייקים, ופעולות נוספות כרגע אינם מאופשרים."
       login_disabled: "הכניסה מושבתת בזמן שהאתר במצב קריאה בלבד."
       logout_disabled: "היציאה מושבתת בזמן שהאתר במצב של קריאה בלבד."
+    staff_writes_only_mode:
+      enabled: "אתר זה נמצא במצב סגל בלבד. אפשר להמשיך לשוטט, אך תגובות, לייקים, ופעולות נוספות כרגע מוגבלות לחברי הסגל בלבד."
     too_few_topics_and_posts_notice_MF: >-
       הבה <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">נתחיל להתדיין!</a> כרגע יש {currentTopics, plural, one {נושא <strong>אחד</strong>} other {<strong>#</strong> נושאים}} ו{currentPosts, plural, one {פוסט <strong>אחד</strong>} other {־<strong>#</strong> פוסטים}}. המבקרים זקוקים ליותר מכך כדי לקרוא ולהיות מעורבים – אנו ממליצים על {requiredTopics, plural, one {נושא<strong>אחד</strong>} other {<strong>#</strong> נושאים}} ו{requiredPosts, plural, one {פוסט <strong>אחד</strong>} other {־<strong>#</strong> פוסטים}} לפחות. רק חברי הסגל יכולים לראות את ההודעה הזאת.
     too_few_topics_notice_MF: >-
@@ -1861,6 +1864,7 @@ he:
       hide_forever: "לא תודה"
       hidden_for_session: "סבבה, השאלה תופיע מחר. תמיד ניתן להשתמש ב‚כניסה’ גם כדי ליצור חשבון."
       intro: "שלום! נראה שאתם נהנים מהדיון, אבל לא נרשמתם לחשבון עדיין."
+      value_prop: "נמאס לך לעיין באותם הפוסטים? יצירת חשבון תאפשר לך לחזור בדיוק לנקודה בה עזבת בפעם האחרונה. חשבון מאפשר לך גם לקבל התראות על תגובות חדשות, לשמור סימניות ולהשתמש בלייקים כדי להודות לאחרים. כולנו יכולים לפעול ביחד כדי שהקהילה הזאת תהיה מצוינת. :heart:"
     summary:
       enabled_description: "אתם צופים בסיכום נושא זה: הפוסטים המעניינים ביותר כפי שסומנו על ידי הקהילה."
       description:
@@ -2128,6 +2132,8 @@ he:
       similar_topics: "הנושא שלך דומה ל..."
       drafts_offline: "טיוטות מנותקות"
       edit_conflict: "עריכת סתירה"
+      esc: "esc"
+      esc_label: "יש ללחוץ עם העכבר או על Esc כדי להתעלם"
       group_mentioned_limit:
         one: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד משתמש %{count}. אף אחד לא יקבל הודעה."
         two: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד %{count} משתמשים. אף אחד לא יקבל הודעה."
@@ -2244,6 +2250,9 @@ he:
         body: "כרגע ההודעה הזו נשלחת רק אליכם!"
       slow_mode:
         error: "נושא זה נמצא במצב אטי. כבר פרסמת לאחרונה; אפשר לפרסם שוב בעוד %{timeLeft}."
+      user_not_seen_in_a_while:
+        single: "ניסית לשלוח הודעה אל <b>%{usernames}</b>, זה זמן רב שלא נרשמה פעילות של משתמש זה במערכת – %{time_ago}. יכול להיות שההודעה שלך לא תתקבל. כדאי לחפש דרכים אחרות ליצור קשר עם %{usernames}."
+        multiple: "ניסית לשלוח הודעה אל <b>%{usernames}</b>, זה זמן רב שלא נרשמה פעילות של משתמשים אלו במערכת – %{time_ago}. יכול להיות שההודעה שלך לא תתקבל. כדאי לחפש דרכים אחרות ליצור קשר אתם קשר."
       admin_options_title: "אפשרויות סגל כרשות לנושא זה"
       composer_actions:
         reply: השב
@@ -2562,6 +2571,11 @@ he:
         bookmarks: "סימניות"
         review_queue: "תור סקירה"
         other_notifications: "התראות אחרות"
+        other_notifications_with_unread:
+          one: "התראות אחרות - התראה %{count} שלא נקראה"
+          two: "התראות אחרות - %{count} התראות שלא נקראו"
+          many: "התראות אחרות - %{count} התראות שלא נקראו"
+          other: "התראות אחרות - %{count} התראות שלא נקראו"
         profile: "פרופיל"
       reviewable:
         view_all: "הצגת כל הפריטים לסקירה"
@@ -4184,6 +4198,10 @@ he:
                 two: "%{count} טיוטות"
                 many: "%{count} טיוטות"
                 other: "%{count} טיוטות"
+            review:
+              content: "סקירה"
+              title: "סקירה"
+              pending_count: "%{count} ממתינים"
     welcome_topic_banner:
       title: "כאן ניתן ליצור את נושא קבלת הפנים שלך"
       description: 'נושא קבלת הפנים שלך הוא הדבר הראשון שמצטרפים חדשים יקראו. אפשר לחשוב על זה כעל „נאום מעלית” או „הצהרת כוונות” במשפט אחד'

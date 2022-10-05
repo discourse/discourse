@@ -1165,6 +1165,7 @@ ur:
         move_to_archive: "آر کائیو"
         failed_to_move: "منتخب شدہ پیغامات کو منتقل کرنے میں ناکامی (شاید آپ کے نیٹ ورک بند ہے)"
         tags: "ٹیگز"
+        all_tags: "تمام ٹیگز"
         warnings: "آفیشل انتباہات"
         read_more_in_group: "مزید پڑھنا چاہتے ہیں؟ دوسرے پیغامات کو %{groupLink}میں براؤز کریں۔"
         read_more: "مزید پڑھنا چاہتے ہیں؟ دوسرے پیغامات کو <a href='%{basePath}/u/%{username}/messages'>ذاتی پیغامات</a>میں براؤز کریں۔"
@@ -3681,6 +3682,9 @@ ur:
               content: "صارفین"
             my_posts:
               content: "میری پوسٹ"
+            review:
+              content: "جائزہ لیں"
+              title: "جائزہ لیں"
   admin_js:
     type_to_filter: "فِلٹر کرنے کے لئے ٹائپ کریں..."
     admin:

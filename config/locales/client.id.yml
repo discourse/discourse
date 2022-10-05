@@ -1829,6 +1829,9 @@ id:
               content: "Grup"
             users:
               content: "Pengguna"
+            review:
+              content: "Ulasan"
+              title: "ulasan"
   admin_js:
     type_to_filter: "ketik untuk memfilter..."
     admin:

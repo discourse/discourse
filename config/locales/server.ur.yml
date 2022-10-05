@@ -128,7 +128,6 @@ ur:
         unsubscribe_not_allowed: "ہو جاتا ہے جب اِس صارف کیلئے ای میل کے ذریعے سبسکرِپشن ختم کرنے کی اجازت نہ ہو۔"
         email_not_allowed: "ایسا ہوتا ہے جب ای میل ایڈریس اجازت یافتہ فہرست میں نہ ہو یا بلاک لسٹ میں ہو۔"
       unrecognized_error: "نامعلوم خرابی"
-    secure_media_placeholder: "ریڈیکٹڈ: اس سائٹ پر محفوظ میڈیا فعال ہے، موضوع ملاحظہ کریں یا منسلک میڈیا کو دیکھنے کے لیے میڈیا دیکھیں پر کلک کریں۔"
     view_redacted_media: "میڈیا دیکھیں"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -198,7 +197,6 @@ ur:
       page_publishing_requirements: "اگر محفوظ میڈیا فعال ہو تو صفحہ کی اشاعت کو فعال نہیں کیا جا سکتا۔"
       s3_backup_requires_s3_settings: "آپ S3 کو بیک اپ کے طور پر استعمال نہیں کرسکتے جب تک کہ آپ نے '%{setting_name}' فراہم نہیں کیا ہو۔"
       s3_bucket_reused: "آپ 's3_upload_bucket' اور 's3_backup_bucket' کیلئے ایک ہی بَکِّٹ کا استعمال نہیں کرسکتے۔ ایک مختلف بَکِّٹ کا انتخاب کریں یا ہر بَکِّٹ کیلئے ایک مختلف راستہ استعمال کریں۔"
-      secure_media_requirements: "محفوظ میڈیا کو فعال کرنے سے پہلے S3 اپ لوڈز کا فعال ہونا ضروری ہے۔"
       share_quote_facebook_requirements: "فیس بک کے لیے اِقْتِباس شیئرنگ کو فعال کرنے کے لیے آپ کو فیس بک ایپ آئی ڈی سیٹ کرنی ہوگی۔"
       second_factor_cannot_enforce_with_socials: "آپ سوشل لاگ ان کے فعال ہونے کے ساتھ 2FA نافذ نہیں کر سکتے۔ آپ کو پہلے لاگ ان کو غیر فعال کرنا ہوگا بذریعہ: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "اگر مقامی لاگ ان غیر فعال ہیں تو آپ 2FA نافذ نہیں کر سکتے۔"

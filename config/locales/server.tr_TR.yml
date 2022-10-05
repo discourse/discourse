@@ -130,7 +130,6 @@ tr_TR:
         unsubscribe_not_allowed: "Bu kullanıcı için e-posta aboneliği iptal edilmiş."
         email_not_allowed: "E-posta adresi izin verilenler listesinde olmadığında veya engellenenler listesinde olduğunda gerçekleşir."
       unrecognized_error: "Bilinmeyen Hata"
-    secure_media_placeholder: "Düzeltildi: Bu site güvenli medyayı etkinleştirdi, konuyu ziyaret edin veya ekli medyayı görmek için Medyayı Görüntüle'yi tıklayın."
     view_redacted_media: "Medyayı Görüntüle"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -200,7 +199,6 @@ tr_TR:
       page_publishing_requirements: "Güvenli ortam etkinleştirilirse sayfa yayınlama etkinleştirilemez."
       s3_backup_requires_s3_settings: "'%{setting_name} verisini sağlamadıysanız S3'ü yedekleme konumu olarak kullanamazsınız."
       s3_bucket_reused: "Aynı sepeti 's3_upload_bucket' ve 's3_backup_bucket' için kullanamazsınız. Farklı bir sepet seçin veya her sepet için farklı bir yol kullanın."
-      secure_media_requirements: "Güvenli medyayı etkinleştirmeden önce S3 yüklemelerinin etkinleştirilmesi gerekir."
       share_quote_facebook_requirements: "Facebook paylaşımını etkinleştirmek için bir Facebook uygulaması kimliği ayarlamanız gerekir."
       second_factor_cannot_enforce_with_socials: "Sosyal oturum açma etkinken 2FA'yı zorunlu kılamazsınız. Önce şu yollarla oturum açmayı devre dışı bırakmalısınız: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Yerel girişler devre dışı bırakılmışsa 2FA'yı uygulayamazsınız."

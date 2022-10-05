@@ -129,7 +129,6 @@ es:
         unsubscribe_not_allowed: "Sucede cuando no se le permite a este usuario anular la subscripción por correo electrónico."
         email_not_allowed: "Ocurre cuando la dirección de correo electrónico no está en la lista de permitidos o está en la lista de bloqueo."
       unrecognized_error: "Error no identificado"
-    secure_media_placeholder: "Censurado: este sitio tiene activada la seguridad multimedia. Visita el tema o haz clic en «Ver multimedia» para ver el adjunto."
     view_redacted_media: "Ver multimedia"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -199,7 +198,6 @@ es:
       page_publishing_requirements: "No se puede activar la publicación de páginas si secure media está activado."
       s3_backup_requires_s3_settings: "No puedes usar S3 como método de respaldo salvo que hayas rellenado «%{setting_name}»."
       s3_bucket_reused: "No puedes usar el mismo bucket para «s3_upload_bucket» y «s3_backup_bucket». Selecciona otro bucket o usa una ruta diferente para cada bucket."
-      secure_media_requirements: "Se debe activar la subida de S3 antes de activar medios seguros."
       share_quote_facebook_requirements: "Debes establecer la app id de Facebook para activar compartir citas en Facebook."
       second_factor_cannot_enforce_with_socials: "No puedes obligar el uso de 2FA con inicios de sesión usando redes sociales. Desactiva primero los inicios de sesión con %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "No puedes obligar a usar la autenticación de dos factores si los inicios de sesión locales están desactivados."
@@ -1995,9 +1993,6 @@ es:
     delete_merged_stub_topics_after_days: "Número de días que hay que esperar antes de eliminar automáticamente los temas pendientes totalmente fusionados. Poner a 0 para no eliminar nunca los temas pendientes."
     bootstrap_mode_min_users: "Número mínimo de usuarios requerido para desactivar el modo de arranque (establece en 0 para desactivar esta opción)"
     prevent_anons_from_downloading_files: "Impedir que usuarios anónimos descarguen archivos adjuntos."
-    secure_media: 'Limita el acceso a los medios subidos (imágenes, video, audio). Si está activado «inicio de sesión requerido», solo los usuarios que hayan iniciado sesión pueden acceder a los medios subidos. En caso contrario, se limitará el acceso únicamente a los medios subidos en mensajes privados. ADVERTENCIA: se deben activar las subidas S3 antes de poder activar esta configuración. Ver <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">the secure media topic on Meta</a> para más detalles.'
-    secure_media_allow_embed_images_in_emails: "Permite incrustar imágenes seguras que normalmente serían quitadas de los correos electrónicos si su tamaño es menor que la configuración de 'secure media max email embed image size kb'."
-    secure_media_max_email_embed_image_size_kb: "El tamaño límite para las imágenes seguras que se incrustarán en los correos electrónicos si está activada la configuración «los medios seguros permiten su incrustación en los correos electrónicos». Sin esa configuración activada, esta configuración no tiene efecto."
     slug_generation_method: "Elegir un método de generación de slug. «encoded» generará cadenas con código porcentual. «none» desactivará completamente el slug."
     enable_emoji: "Activar emoji"
     enable_emoji_shortcuts: "Texto común de emoticones como :) :p :( se convertirán a emojis"

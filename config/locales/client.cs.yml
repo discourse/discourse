@@ -1013,6 +1013,7 @@ cs:
         move_to_archive: "Archivovat"
         failed_to_move: "Nepodařilo se přesunout vybrané zprávy (možná vám spadlo připojení)"
         tags: "Štítek"
+        all_tags: "Všechny štítky"
       preferences_nav:
         account: "Účet"
         security: "Zabezpečení"

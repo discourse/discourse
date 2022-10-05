@@ -130,7 +130,6 @@ it:
         unsubscribe_not_allowed: "Succede quando annullare l'iscrizione tramite email non è consentito per questo utente."
         email_not_allowed: "Succede quando l'indirizzo e-mail non è nella lista di contatti permessi o è in quella di contatti bloccati."
       unrecognized_error: "Errore Non Riconosciuto"
-    secure_media_placeholder: "Oscurato: l'opzione per la sicurezza dei contenuti multimediali è attivata su questo sito; visita l'argomento o clicca su Visualizza media per vedere gli allegati."
     view_redacted_media: "Visualizza media"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -200,7 +199,6 @@ it:
       page_publishing_requirements: "La pubblicazione di pagine non può essere attivata se sono attivati i supporti sicuri."
       s3_backup_requires_s3_settings: "Non è possibile utilizzare S3 per i backup a meno che non sia stato fornito '%{setting_name}'."
       s3_bucket_reused: "Non puoi usare lo stesso bucket per 's3_upload_bucket' e 's3_backup_bucket'. Scegli un bucket differente, o un percorso diverso per ciascun bucket."
-      secure_media_requirements: "I caricamenti S3 devono essere abilitati prima di abilitare i contenuti multimediali sicuri."
       share_quote_facebook_requirements: "Devi impostare un ID app Facebook per attivare la condivisione delle citazioni per Facebook."
       second_factor_cannot_enforce_with_socials: "Non si può applicare l'autenticazione a due fattori se l'acceso tramite social è attivo. Devi prima disattivarlo tramite %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Non è possibile applicare l'autenticazione a due fattori se gli accessi locali sono disabilitati."
@@ -246,6 +244,7 @@ it:
       invalid_access: "Non hai il permesso di visualizzare la risorsa richiesta."
     requires_groups: "L'invito non è stato salvato perché l'argomento specificato non è accessibile. Aggiungi uno dei seguenti gruppi: %{groups}."
     domain_not_allowed: "La tua email non può essere usata per riscattare l’invito."
+    max_redemptions_allowed_one: "per gli inviti via e-mail dovrebbe essere 1."
   bulk_invite:
     file_should_be_csv: "Il file caricato deve essere in formato csv."
     max_rows: "I primi %{max_bulk_invites} inviti sono stati spediti. Prova a dividere il file in parti più piccole."
@@ -1981,9 +1980,6 @@ it:
     delete_merged_stub_topics_after_days: "Numero di giorni di attesa prima di eliminare automaticamente gli argomenti stub completamente uniti. Impostare a 0 per non eliminare mai gli argomenti stub."
     bootstrap_mode_min_users: "Numero minimo di utenti richiesto per disabilitare la modalità bootstrap (imposta a 0 per disattivare)"
     prevent_anons_from_downloading_files: "Impedisci agli utenti anonimi di scaricare allegati."
-    secure_media: 'Limita l''accesso a TUTTI i caricamenti (immagini, video, audio, testo, pdf, zip, ecc.). Se “login richiesto” è attivato, solo gli utenti registrati possono accedere ai caricamenti. In caso contrario, l''accesso sarà limitato solo per i media caricati in messaggi privati e categorie private. ATTENZIONE: Questa impostazione è complessa e richiede una profonda competenza amministrativa. Per maggiori dettagli visita <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">l''argomento sui media sicuri su Meta</a>.'
-    secure_media_allow_embed_images_in_emails: "Consente di incorporare immagini protette che normalmente verrebbero oscurate nelle e-mail, se le loro dimensioni sono inferiori a quelle dell'impostazione \"Secure media max email embed image size kb\"."
-    secure_media_max_email_embed_image_size_kb: "Limite di dimensione per le immagini protette che verranno incorporate nelle e-mail se l'impostazione \"secure media allow embed in emails\" è abilitata. Se tale impostazione non è abilitata, anche questa non avrà alcun effetto."
     slug_generation_method: "Scegli un metodo di generazione delle abbreviazioni. 'encoded' genererà la stringa di codifica percentuale. 'none' disattiverà completamente le abbreviazioni."
     enable_emoji: "Attiva gli emoji"
     enable_emoji_shortcuts: "Smiley comuni come :) :p :( verranno convertiti in emoji"

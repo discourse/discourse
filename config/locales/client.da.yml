@@ -1150,6 +1150,7 @@ da:
         move_to_archive: "Arkiv"
         failed_to_move: "Kunne ikke flytte valgte beskeder (måske er dit netværket nede)"
         tags: "Mærker"
+        all_tags: "Alle Mærker"
         warnings: "Officielle Advarsler"
       preferences_nav:
         account: "Konto"
@@ -3600,6 +3601,9 @@ da:
               content: "Brugere"
             my_posts:
               content: "Mine indlæg"
+            review:
+              content: "Anmeldelse"
+              title: "anmeldelse"
   admin_js:
     type_to_filter: "skriv for at filtrere…"
     admin:

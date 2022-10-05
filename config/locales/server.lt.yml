@@ -171,7 +171,6 @@ lt:
       enable_s3_uploads_is_required: "Negalite įgalinti S3 inventoriaus naudojimo, nebent įjungėte S3 įkėlimus."
       page_publishing_requirements: "Puslapio publikavimo įjungti negalima, jei įjungta saugi laikmena."
       s3_backup_requires_s3_settings: "Negalite naudoti S3 kaip atsarginės vietos, nebent nurodėte „%{setting_name}“."
-      secure_media_requirements: "Prieš įjungiant saugią laikmeną, turi būti įjungtas S3 įkėlimas."
       share_quote_facebook_requirements: "Jei norite įgalinti „Facebook“ citatų bendrinimą, turite nustatyti „Facebook“ programos ID."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Negalite vykdyti 2FA, jei vietiniai prisijungimai išjungti."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Negalite vykdyti 2FA, jei DiscoureConnect yra įjungtas."

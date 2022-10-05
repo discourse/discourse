@@ -1197,6 +1197,7 @@ it:
         move_to_archive: "Archivia"
         failed_to_move: "Errore nello spostare i messaggi selezionati (forse la tua connessione non è attiva)"
         tags: "Etichette"
+        all_tags: "Tutte le Etichette"
         warnings: "Avvertimenti ufficiali"
         read_more_in_group: "Vuoi continuare a leggere? Sfoglia altri messaggi in %{groupLink}."
         read_more: "Vuoi saperne di più? Leggi altri messaggi in <a href='%{basePath}/u/%{username}/messages'>messaggi personali</a>."
@@ -3815,6 +3816,10 @@ it:
               draft_count:
                 one: "%{count} bozza"
                 other: "%{count} bozze"
+            review:
+              content: "Revisiona"
+              title: "revisiona"
+              pending_count: "%{count} in attesa"
     welcome_topic_banner:
       title: "Crea il tuo argomento di benvenuto"
       button_title: "Inizia a modificare"

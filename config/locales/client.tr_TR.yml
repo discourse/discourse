@@ -1175,6 +1175,7 @@ tr_TR:
         move_to_archive: "Arşiv"
         failed_to_move: "Seçilen iletilerin taşınması başarısız oldu (muhtemelen şebeke çöktü)"
         tags: "Etiketler"
+        all_tags: "Tüm Etiketler"
         warnings: "Resmi Uyarılar"
         read_more_in_group: "Daha fazla okumak ister misin? %{groupLink} bağlantısındaki diğer iletilere göz atın."
         read_more: "Daha fazla okumak isterseniz <a href='%{basePath}/u/%{username}/messages'>kişisel iletiler altında</a> diğer iletilere göz atın."
@@ -3757,6 +3758,9 @@ tr_TR:
               draft_count:
                 one: "%{count} taslak"
                 other: "%{count} taslak"
+            review:
+              content: "Gözden geçirmeler"
+              title: "gözden geçirmeler"
     welcome_topic_banner:
       title: "Hoş Geldiniz konulu gönderinizi oluşturun"
       description: 'Hoş geldiniz konulu gönderiniz, yeni katılanların okuyacağı ilk şeydir. Bunu bir paragraf “kısa bir sunum” veya “misyon anlatımınız” olarak düşünün'

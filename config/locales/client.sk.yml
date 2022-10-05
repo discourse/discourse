@@ -817,6 +817,7 @@ sk:
         move_to_archive: "Archív"
         failed_to_move: "Zlyhalo presunutie označených správ (možno je chyba vo vašom pripojení)"
         tags: "Štítky"
+        all_tags: "Všetky štítky"
       preferences_nav:
         account: "Účet"
         security: "Bezpečnosť"

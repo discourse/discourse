@@ -721,6 +721,7 @@ sw:
         move_to_archive: "Hifadhi"
         failed_to_move: "Uhamishaji wa ujumbe uliochaguliwa umeshindikana (laba hauna mtandao wa intaneti uko chini)"
         tags: "Lebo"
+        all_tags: "Lebo Zote"
       preferences_nav:
         account: "Akaunti"
         security: "Ulinzi"

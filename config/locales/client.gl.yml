@@ -1084,6 +1084,7 @@ gl:
         move_to_archive: "Arquivo"
         failed_to_move: "Produciuse un fallo ao mover as mensaxes seleccionadas (quizais a rede está caída)"
         tags: "Etiquetas"
+        all_tags: "Todas as etiquetas"
       preferences_nav:
         account: "Conta"
         security: "Seguranza"
@@ -3396,6 +3397,9 @@ gl:
               content: "Usuarios"
             my_posts:
               content: "As miñas publicacións"
+            review:
+              content: "Revisar"
+              title: "revisar"
   admin_js:
     type_to_filter: "escriba para filtrar..."
     admin:
