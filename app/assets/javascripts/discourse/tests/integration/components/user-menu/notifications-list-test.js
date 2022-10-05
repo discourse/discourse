@@ -126,7 +126,7 @@ module(
       );
     });
 
-    test("all notifications tab shows pending reviewables", async function (assert) {
+    test("all notifications tab shows pending reviewables and sorts them with unread notifications based on their creation date", async function (assert) {
       pretender.get("/notifications", () => {
         return response({
           notifications: [
@@ -215,19 +215,19 @@ module(
       const items = queryAll("ul li");
       assert.ok(
         items[0].textContent.includes("hello world 0011"),
-        "pending reviewables and unread notifications are sorted according to their created_at timestamp"
+        "the first pending reviewable is displayed 1st because it's most recent among pending reviewables and unread notifications"
       );
       assert.ok(
         items[1].textContent.includes("Unread notification #01"),
-        "pending reviewables and unread notifications are sorted according to their created_at timestamp"
+        "the first unread notification is displayed 2nd because it's the 2nd most recent among pending reviewables and unread notifications"
       );
       assert.ok(
         items[2].textContent.includes("Unread notification #02"),
-        "pending reviewables and unread notifications are sorted according to their created_at timestamp"
+        "the second unread notification is displayed 3rd because it's the 3rd most recent among pending reviewables and unread notifications"
       );
       assert.ok(
         items[3].textContent.includes("hello world 0033"),
-        "pending reviewables and unread notifications are sorted according to their created_at timestamp"
+        "the second pending reviewable is displayed 4th because it's the 4th most recent among pending reviewables and unread notifications"
       );
       assert.ok(
         items[4].textContent.includes("Read notification #01"),
