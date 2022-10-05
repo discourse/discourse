@@ -534,6 +534,14 @@ class Reviewable < ActiveRecord::Base
     results
   end
 
+  def self.user_menu_list_for(user, limit: 30)
+    list_for(user, limit: limit, status: :pending).to_a
+  end
+
+  def self.basic_serializers_for_list(reviewables, user)
+    reviewables.map { |r| r.basic_serializer.new(r, scope: user.guardian, root: nil) }
+  end
+
   def serializer
     self.class.serializer_for(self)
   end

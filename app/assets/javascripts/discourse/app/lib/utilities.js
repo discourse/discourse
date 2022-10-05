@@ -606,5 +606,31 @@ function clipboardCopyFallback(text) {
   return success;
 }
 
+// this function takes 2 sorted lists and returns another sorted list that
+// contains both of the original lists.
+// you need to provide a callback as the 3rd argument that will be called with
+// an item from the first list (1st callback argument) and another item from
+// the second list (2nd callback argument). The callback should return true if
+// its 2nd argument should go before its 1st argument and return false
+// otherwise.
+export function mergeSortedLists(list1, list2, comparator) {
+  let index1 = 0;
+  let index2 = 0;
+  const merged = [];
+  while (index1 < list1.length || index2 < list2.length) {
+    if (
+      index1 === list1.length ||
+      (index2 < list2.length && comparator(list1[index1], list2[index2]))
+    ) {
+      merged.push(list2[index2]);
+      index2++;
+    } else {
+      merged.push(list1[index1]);
+      index1++;
+    }
+  }
+  return merged;
+}
+
 // This prevents a mini racer crash
 export default {};

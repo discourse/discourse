@@ -2,11 +2,16 @@ import UserMenuItemsList from "discourse/components/user-menu/items-list";
 import I18n from "I18n";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import { postRNWebviewMessage } from "discourse/lib/utilities";
+import {
+  mergeSortedLists,
+  postRNWebviewMessage,
+} from "discourse/lib/utilities";
 import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import Notification from "discourse/models/notification";
+import UserMenuReviewable from "discourse/models/user-menu-reviewable";
+import UserMenuReviewableItem from "discourse/lib/user-menu/reviewable-item";
 
 export default class UserMenuNotificationsList extends UserMenuItemsList {
   @service currentUser;
@@ -31,7 +36,11 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
   }
 
   get showDismiss() {
-    return this.items.some((item) => !item.notification.read);
+    return Object.keys(
+      this.currentUser.get("grouped_unread_notifications") || {}
+    ).any((key) => {
+      return this.currentUser.get(`grouped_unread_notifications.${key}`) > 0;
+    });
   }
 
   get dismissTitle() {
@@ -60,27 +69,70 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
       limit: 30,
       recent: true,
       bump_last_seen_reviewable: true,
-      silent: this.currentUser.enforcedSecondFactor,
     };
+
+    if (this.currentUser.enforcedSecondFactor) {
+      params.silent = true;
+    }
 
     const types = this.filterByTypes;
     if (types?.length > 0) {
       params.filter_by_types = types.join(",");
       params.silent = true;
     }
-    const collection = await this.store
-      .findStale("notification", params)
-      .refresh();
-    const notifications = collection.content;
-    await Notification.applyTransformations(notifications);
-    return notifications.map((notification) => {
-      return new UserMenuNotificationItem({
-        notification,
-        currentUser: this.currentUser,
-        siteSettings: this.siteSettings,
-        site: this.site,
+
+    const content = [];
+    const data = await ajax("/notifications", { data: params });
+
+    const notifications = await Notification.initializeNotifications(
+      data.notifications
+    );
+
+    const reviewables = data.pending_reviewables?.map((r) =>
+      UserMenuReviewable.create(r)
+    );
+
+    if (reviewables?.length) {
+      const firstReadNotificationIndex = notifications.findIndex((n) => n.read);
+      const unreadNotifications = notifications.splice(
+        0,
+        firstReadNotificationIndex
+      );
+      mergeSortedLists(
+        unreadNotifications,
+        reviewables,
+        (notification, reviewable) => {
+          const notificationCreatedAt = new Date(notification.created_at);
+          const reviewableCreatedAt = new Date(reviewable.created_at);
+          return reviewableCreatedAt > notificationCreatedAt;
+        }
+      ).forEach((item) => {
+        const props = {
+          currentUser: this.currentUser,
+          siteSettings: this.siteSettings,
+          site: this.site,
+        };
+        if (item instanceof Notification) {
+          props.notification = item;
+          content.push(new UserMenuNotificationItem(props));
+        } else {
+          props.reviewable = item;
+          content.push(new UserMenuReviewableItem(props));
+        }
       });
+    }
+
+    notifications.forEach((notification) => {
+      content.push(
+        new UserMenuNotificationItem({
+          notification,
+          currentUser: this.currentUser,
+          siteSettings: this.siteSettings,
+          site: this.site,
+        })
+      );
     });
+    return content;
   }
 
   dismissWarningModal() {

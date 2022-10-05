@@ -38,4 +38,12 @@ shared_examples "basic reviewable attributes" do
       expect(subject[:flagger_username]).to eq("gg.osama")
     end
   end
+
+  describe "#created_at" do
+    it "serializes the reviewable's created_at field correctly" do
+      time = 10.minutes.ago
+      reviewable.update!(created_at: time)
+      expect(subject[:created_at]).to eq(time)
+    end
+  end
 end

@@ -12,6 +12,7 @@ import {
   getRawSize,
   inCodeBlock,
   initializeDefaultHomepage,
+  mergeSortedLists,
   setCaretPosition,
   setDefaultHomepage,
   slugify,
@@ -287,6 +288,45 @@ discourseModule("Unit | Utilities", function () {
         }
       }
     });
+  });
+
+  test("mergeSortedLists", function (assert) {
+    const comparator = (a, b) => b > a;
+    assert.deepEqual(
+      mergeSortedLists([], [1, 2, 3], comparator),
+      [1, 2, 3],
+      "it doesn't error when the first list is blank"
+    );
+    assert.deepEqual(
+      mergeSortedLists([3, 2, 1], [], comparator),
+      [3, 2, 1],
+      "it doesn't error when the second list is blank"
+    );
+    assert.deepEqual(
+      mergeSortedLists([], [], comparator),
+      [],
+      "it doesn't error when the both lists are blank"
+    );
+    assert.deepEqual(
+      mergeSortedLists([5, 4, 0, -1], [1], comparator),
+      [5, 4, 1, 0, -1],
+      "it correctly merges lists when one list has 1 item only"
+    );
+    assert.deepEqual(
+      mergeSortedLists([2], [1], comparator),
+      [2, 1],
+      "it correctly merges lists when both lists has 1 item each"
+    );
+    assert.deepEqual(
+      mergeSortedLists([1], [1], comparator),
+      [1, 1],
+      "it correctly merges lists when both lists has 1 item and their items are identical"
+    );
+    assert.deepEqual(
+      mergeSortedLists([5, 4, 3, 2, 1], [6, 2, 1], comparator),
+      [6, 5, 4, 3, 2, 2, 1, 1],
+      "it correctly merges lists that share common items"
+    );
   });
 });
 

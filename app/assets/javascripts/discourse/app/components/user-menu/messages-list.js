@@ -6,18 +6,7 @@ import I18n from "I18n";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import UserMenuMessageItem from "discourse/lib/user-menu/message-item";
 import Topic from "discourse/models/topic";
-
-function parseDateString(date) {
-  if (date) {
-    return new Date(date);
-  }
-}
-
-async function initializeNotifications(rawList) {
-  const notifications = rawList.map((n) => Notification.create(n));
-  await Notification.applyTransformations(notifications);
-  return notifications;
-}
+import { mergeSortedLists } from "discourse/lib/utilities";
 
 export default class UserMenuMessagesList extends UserMenuNotificationsList {
   get dismissTypes() {
@@ -63,7 +52,7 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     );
     const content = [];
 
-    const unreadNotifications = await initializeNotifications(
+    const unreadNotifications = await Notification.initializeNotifications(
       data.unread_notifications
     );
     unreadNotifications.forEach((notification) => {
@@ -80,38 +69,29 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     const topics = data.topics.map((t) => Topic.create(t));
     await Topic.applyTransformations(topics);
 
-    const readNotifications = await initializeNotifications(
+    const readNotifications = await Notification.initializeNotifications(
       data.read_notifications
     );
 
-    let latestReadNotificationDate = parseDateString(
-      readNotifications[0]?.created_at
-    );
-    let latestMessageDate = parseDateString(topics[0]?.bumped_at);
-
-    while (latestReadNotificationDate || latestMessageDate) {
-      if (
-        !latestReadNotificationDate ||
-        (latestMessageDate && latestReadNotificationDate < latestMessageDate)
-      ) {
-        content.push(new UserMenuMessageItem({ message: topics[0] }));
-        topics.shift();
-        latestMessageDate = parseDateString(topics[0]?.bumped_at);
-      } else {
+    mergeSortedLists(readNotifications, topics, (notification, topic) => {
+      const notificationCreatedAt = new Date(notification.created_at);
+      const topicBumpedAt = new Date(topic.bumped_at);
+      return topicBumpedAt > notificationCreatedAt;
+    }).forEach((item) => {
+      if (item instanceof Notification) {
         content.push(
           new UserMenuNotificationItem({
-            notification: readNotifications[0],
+            notification: item,
             currentUser: this.currentUser,
             siteSettings: this.siteSettings,
             site: this.site,
           })
         );
-        readNotifications.shift();
-        latestReadNotificationDate = parseDateString(
-          readNotifications[0]?.created_at
-        );
+      } else {
+        content.push(new UserMenuMessageItem({ message: item }));
       }
-    }
+    });
+
     return content;
   }
 
