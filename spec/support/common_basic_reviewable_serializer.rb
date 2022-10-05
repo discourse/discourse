@@ -40,7 +40,7 @@ shared_examples "basic reviewable attributes" do
   end
 
   describe "#created_at" do
-    it "equals the reviewable's created_at timestamp" do
+    it "serializes the reviewable's created_at field correctly" do
       time = 10.minutes.ago
       reviewable.update!(created_at: time)
       expect(subject[:created_at]).to eq(time)
