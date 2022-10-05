@@ -161,6 +161,13 @@ acceptance(
           ),
           `personal message ${type} link is marked as active`
         );
+
+        assert.notOk(
+          exists(
+            `.sidebar-section-messages .sidebar-section-link-personal-messages-${type} .sidebar-section-link-prefix`
+          ),
+          `prefix is not displayed for ${type} personal message section link`
+        );
       });
     });
 
