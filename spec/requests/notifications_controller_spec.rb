@@ -216,7 +216,7 @@ RSpec.describe NotificationsController do
             user.update!(admin: true)
             Fabricate(:reviewable)
             expect {
-              get "/notifications.json", params: { recent: true, silent: true }
+              get "/notifications.json", params: { recent: true }
               expect(response.status).to eq(200)
             }.not_to change { user.reload.last_seen_reviewable_id }
           end
