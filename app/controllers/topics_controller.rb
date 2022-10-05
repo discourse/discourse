@@ -708,7 +708,7 @@ class TopicsController < ApplicationController
 
   def invite
     topic = Topic.find_by(id: params[:topic_id])
-    raise Discourse::InvalidParameters.new unless topic
+    raise Discourse::InvalidParameters.new unless topic&.private_message?
 
     username_or_email = params[:user] ? fetch_username : fetch_email
 
