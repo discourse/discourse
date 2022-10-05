@@ -5,7 +5,7 @@ import { module, test } from "qunit";
 module("Unit | Route | review-index", function (hooks) {
   setupTest(hooks);
 
-  test("subscribes and unsubscribes /reviewable_counts when user menu not enabled", function (assert) {
+  test("subscribes and unsubscribes /reviewable_counts MessageBus channel when user menu not enabled", function (assert) {
     const currentUser = User.create({ redesigned_user_menu_enabled: false });
     this.owner.unregister("service:current-user");
     this.owner.register("service:current-user", currentUser, {
