@@ -129,37 +129,39 @@ export default Component.extend({
   },
 
   _triggerAction(event) {
-    let { action } = this;
+    let { action, route, href } = this;
 
-    if (action) {
-      if (typeof action === "string") {
-        // Note: This is deprecated in new Embers and needs to be removed in the future.
-        // There is already a warning in the console.
-        this.sendAction("action", this.actionParam);
-      } else if (typeof action === "object" && action.value) {
-        if (this.forwardEvent) {
-          action.value(this.actionParam, event);
-        } else {
-          action.value(this.actionParam);
-        }
-      } else if (typeof this.action === "function") {
-        if (this.forwardEvent) {
-          action(this.actionParam, event);
-        } else {
-          action(this.actionParam);
+    if (action || route || href?.length) {
+      if (action) {
+        if (typeof action === "string") {
+          // Note: This is deprecated in new Embers and needs to be removed in the future.
+          // There is already a warning in the console.
+          this.sendAction("action", this.actionParam);
+        } else if (typeof action === "object" && action.value) {
+          if (this.forwardEvent) {
+            action.value(this.actionParam, event);
+          } else {
+            action.value(this.actionParam);
+          }
+        } else if (typeof this.action === "function") {
+          if (this.forwardEvent) {
+            action(this.actionParam, event);
+          } else {
+            action(this.actionParam);
+          }
         }
       }
-    }
 
-    if (this.route) {
-      this.router.transitionTo(this.route);
-    }
+      if (route) {
+        this.router.transitionTo(route);
+      }
 
-    if (this.href && this.href.length) {
-      DiscourseURL.routeTo(this.href);
-    }
+      if (href?.length) {
+        DiscourseURL.routeTo(href);
+      }
 
-    event.preventDefault();
-    event.stopPropagation();
+      event.preventDefault();
+      event.stopPropagation();
+    }
   },
 });
