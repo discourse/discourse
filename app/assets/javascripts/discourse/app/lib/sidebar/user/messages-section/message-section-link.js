@@ -73,10 +73,14 @@ export default class MessageSectionLink {
   }
 
   get prefixType() {
-    return "icon";
+    if (this._isInbox) {
+      return "icon";
+    }
   }
 
   get prefixValue() {
-    return "inbox";
+    if (this._isInbox) {
+      return "inbox";
+    }
   }
 }
