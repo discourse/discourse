@@ -33,13 +33,7 @@ export default class TagSectionLink extends BaseTagSectionLink {
   }
 
   get route() {
-    if (this.totalUnread > 0) {
-      return "tag.showUnread";
-    } else if (this.totalNew > 0) {
-      return "tag.showNew";
-    } else {
-      return "tag.show";
-    }
+    return "tag.show";
   }
 
   get currentWhen() {

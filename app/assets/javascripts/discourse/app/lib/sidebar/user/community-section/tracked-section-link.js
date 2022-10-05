@@ -64,13 +64,7 @@ export default class TrackedSectionLink extends BaseSectionLink {
   }
 
   get route() {
-    if (this.totalUnread > 0) {
-      return "discovery.unread";
-    } else if (this.totalNew > 0) {
-      return "discovery.new";
-    } else {
-      return "discovery.latest";
-    }
+    return "discovery.latest";
   }
 
   get prefixValue() {

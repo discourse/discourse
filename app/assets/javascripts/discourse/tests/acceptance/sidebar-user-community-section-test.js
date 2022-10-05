@@ -583,11 +583,6 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "it displays the right unread count"
     );
 
-    assert.ok(
-      query(".sidebar-section-link-everything").href.endsWith("/unread"),
-      "it links to unread filter"
-    );
-
     // simulate reading topic 2
     await publishToMessageBus("/unread", {
       topic_id: 2,
@@ -637,11 +632,6 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "it displays the new count once there are no unread topics"
     );
 
-    assert.ok(
-      query(".sidebar-section-link-everything").href.endsWith("/new"),
-      "it links to new filter"
-    );
-
     await publishToMessageBus("/unread", {
       topic_id: 1,
       message_type: "read",
@@ -657,11 +647,6 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
         ".sidebar-section-link-everything .sidebar-section-link-content-badge"
       ),
       "it removes new count once there are no new topics"
-    );
-
-    assert.ok(
-      query(".sidebar-section-link-everything").href.endsWith("/latest"),
-      "it links to latest filter"
     );
   });
 
@@ -871,11 +856,6 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "it displays the right unread count"
     );
 
-    assert.ok(
-      query(".sidebar-section-link-tracked").href.endsWith("/unread?f=tracked"),
-      "it links to unread url with tracked filter"
-    );
-
     // simulate reading topic id 2
     await publishToMessageBus("/unread", {
       topic_id: 2,
@@ -922,11 +902,6 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "it displays the new count once there are no tracked unread topics"
     );
 
-    assert.ok(
-      query(".sidebar-section-link-tracked").href.endsWith("/new?f=tracked"),
-      "it links to new url with tracked filter"
-    );
-
     // simulate reading topic id 1
     await publishToMessageBus("/unread", {
       topic_id: 1,
@@ -942,11 +917,6 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
         ".sidebar-section-link-tracked .sidebar-section-link-content-badge"
       ),
       "it removes new count once there are no tracked new topics"
-    );
-
-    assert.ok(
-      query(".sidebar-section-link-tracked").href.endsWith("/latest?f=tracked"),
-      "it links to latest url with tracked filter"
     );
   });
 
