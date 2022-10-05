@@ -610,7 +610,7 @@ function clipboardCopyFallback(text) {
 // contains both of the original lists.
 // you need to provide a callback as the 3rd argument that will be called with
 // an item from the first list (1st callback argument) and another item from
-// the second list (2nd callback argument). the callback should return true if
+// the second list (2nd callback argument). The callback should return true if
 // its 2nd argument should go before its 1st argument and return false
 // otherwise.
 export function mergeSortedLists(list1, list2, comparator) {
