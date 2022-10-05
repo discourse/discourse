@@ -1,4 +1,3 @@
-import Component from "@ember/component";
+import templateOnly from "@ember/component/template-only";
 
-// TODO: Remove in December 2021
-export default Component.extend({});
+export default templateOnly();

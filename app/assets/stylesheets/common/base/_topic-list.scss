@@ -99,13 +99,13 @@
   }
 }
 
-.category-logo.aspect-image {
+.aspect-image {
   width: auto;
   max-height: 150px;
 }
 
 @supports (--custom: property) {
-  .category-logo.aspect-image {
+  .aspect-image {
     --max-height: 150px;
     max-height: var(--max-height);
     width: calc(var(--max-height) * var(--aspect-ratio));

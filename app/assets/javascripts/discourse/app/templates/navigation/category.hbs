@@ -2,7 +2,7 @@
 
 <section class="category-heading">
   {{#if this.category.uploaded_logo.url}}
-    <CategoryLogo @category={{this.category}} @class="category-logo" />
+    <CategoryLogo @category={{this.category}} />
     {{#if this.category.description}}
       <p>{{dir-span this.category.description htmlSafe="true"}}</p>
     {{/if}}

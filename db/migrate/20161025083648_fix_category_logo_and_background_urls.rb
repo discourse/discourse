@@ -7,7 +7,7 @@ class FixCategoryLogoAndBackgroundUrls < ActiveRecord::Migration[4.2]
     DB.exec <<-SQL
       UPDATE categories
          SET logo_url = replace(logo_url, '#{Discourse.asset_host}', '')
-           , background_url = replace(background_dark_url, '#{Discourse.asset_host}', '')
+           , background_url = replace(background_url, '#{Discourse.asset_host}', '')
     SQL
   end
 

@@ -242,14 +242,24 @@ RSpec.describe Jobs::CleanUpUploads do
     expect(Upload.exists?(id: category_logo_upload.id)).to eq(true)
   end
 
-  it "does not delete category background url uploads" do
-    category_logo_upload = fabricate_upload
-    Fabricate(:category, uploaded_background: category_logo_upload)
+  it "does not delete category dark logo uploads" do
+    category_logo_dark_upload = fabricate_upload
+    Fabricate(:category, uploaded_logo_dark: category_logo_dark_upload)
 
     Jobs::CleanUpUploads.new.execute(nil)
 
     expect(Upload.exists?(id: expired_upload.id)).to eq(false)
-    expect(Upload.exists?(id: category_logo_upload.id)).to eq(true)
+    expect(Upload.exists?(id: category_logo_dark_upload.id)).to eq(true)
+  end
+
+  it "does not delete category background uploads" do
+    category_background_upload = fabricate_upload
+    Fabricate(:category, uploaded_background: category_background_upload)
+
+    Jobs::CleanUpUploads.new.execute(nil)
+
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
+    expect(Upload.exists?(id: category_background_upload.id)).to eq(true)
   end
 
   it "does not delete post uploads" do
