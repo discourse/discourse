@@ -107,24 +107,17 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
           return reviewableCreatedAt > notificationCreatedAt;
         }
       ).forEach((item) => {
+        const props = {
+          currentUser: this.currentUser,
+          siteSettings: this.siteSettings,
+          site: this.site,
+        };
         if (item instanceof Notification) {
-          content.push(
-            new UserMenuNotificationItem({
-              notification: item,
-              currentUser: this.currentUser,
-              siteSettings: this.siteSettings,
-              site: this.site,
-            })
-          );
+          props.notification = item;
+          content.push(new UserMenuNotificationItem(props));
         } else {
-          content.push(
-            new UserMenuReviewableItem({
-              reviewable: item,
-              currentUser: this.currentUser,
-              siteSettings: this.siteSettings,
-              site: this.site,
-            })
-          );
+          props.reviewable = item;
+          content.push(new UserMenuReviewableItem(props));
         }
       });
     }
