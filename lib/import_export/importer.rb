@@ -170,6 +170,8 @@ module ImportExport
     end
 
     def import_translation_overrides
+      return if @translation_overrides.blank?
+
       puts "Importing translation overrides..."
 
       @translation_overrides.each do |tu|
