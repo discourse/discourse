@@ -188,7 +188,7 @@ RSpec.describe NotificationsController do
             Discourse.clear_redis_readonly!
           end
 
-          it "should not bump last seen reviewable if the user can't seen reviewables" do
+          it "should not bump last seen reviewable if the user can't see reviewables" do
             SiteSetting.enable_experimental_sidebar_hamburger = true
             Fabricate(:reviewable)
             expect {
