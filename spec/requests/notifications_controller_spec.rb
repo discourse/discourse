@@ -181,7 +181,7 @@ RSpec.describe NotificationsController do
             Fabricate(:reviewable)
             Discourse.received_redis_readonly!
             expect {
-              get "/notifications.json", params: { recent: true }
+              get "/notifications.json", params: { recent: true, bump_last_seen_reviewable: true }
               expect(response.status).to eq(200)
             }.not_to change { user.reload.last_seen_reviewable_id }
           ensure
