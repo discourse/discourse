@@ -13,6 +13,7 @@ import {
   inCodeBlock,
   initializeDefaultHomepage,
   mergeSortedLists,
+  modKeysPressed,
   setCaretPosition,
   setDefaultHomepage,
   slugify,
@@ -25,6 +26,9 @@ import {
   chromeTest,
   discourseModule,
 } from "discourse/tests/helpers/qunit-helpers";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { click, render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 
 discourseModule("Unit | Utilities", function () {
   test("escapeExpression", function (assert) {
@@ -327,6 +331,54 @@ discourseModule("Unit | Utilities", function () {
       [6, 5, 4, 3, 2, 2, 1, 1],
       "it correctly merges lists that share common items"
     );
+  });
+
+  discourseModule("modKeysPressed", function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("returns an array of modifier keys pressed during keyboard or mouse event", async function (assert) {
+      let i = 0;
+
+      this.handleClick = (event) => {
+        if (i === 0) {
+          assert.deepEqual(modKeysPressed(event), []);
+        } else if (i === 1) {
+          assert.deepEqual(modKeysPressed(event), ["alt"]);
+        } else if (i === 2) {
+          assert.deepEqual(modKeysPressed(event), ["shift"]);
+        } else if (i === 3) {
+          assert.deepEqual(modKeysPressed(event), ["meta"]);
+        } else if (i === 4) {
+          assert.deepEqual(modKeysPressed(event), ["ctrl"]);
+        } else if (i === 5) {
+          assert.deepEqual(modKeysPressed(event), [
+            "alt",
+            "shift",
+            "meta",
+            "ctrl",
+          ]);
+        }
+      };
+
+      await render(hbs`<button id="btn" {{on "click" this.handleClick}} />`);
+
+      await click("#btn");
+      i++;
+      await click("#btn", { altKey: true });
+      i++;
+      await click("#btn", { shiftKey: true });
+      i++;
+      await click("#btn", { metaKey: true });
+      i++;
+      await click("#btn", { ctrlKey: true });
+      i++;
+      await click("#btn", {
+        altKey: true,
+        shiftKey: true,
+        metaKey: true,
+        ctrlKey: true,
+      });
+    });
   });
 });
 

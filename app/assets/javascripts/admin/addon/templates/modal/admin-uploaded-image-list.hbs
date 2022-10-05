@@ -1,7 +1,7 @@
 <DModalBody @class="uploaded-image-list">
   <div class="selectable-avatars">
     {{#each this.images as |image|}}
-      <a href class="selectable-avatar" {{action "remove" image}}>
+      <a href class="selectable-avatar" {{on "click" (fn this.remove image)}}>
         {{bound-avatar-template image "huge"}}
       </a>
     {{else}}

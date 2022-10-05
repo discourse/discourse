@@ -25,7 +25,7 @@
           <span>&middot;</span>
         {{/if}}
         <span>
-          <a href="" class="toggle-second-factor-method {{method.class}}" {{action "useAnotherMethod" method.id}}>
+          <a href class="toggle-second-factor-method {{method.class}}" {{on "click" (fn this.useAnotherMethod method.id)}}>
             {{i18n method.translationKey}}
           </a>
         </span>

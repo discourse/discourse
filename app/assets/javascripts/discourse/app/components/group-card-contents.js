@@ -1,3 +1,4 @@
+import { action } from "@ember/object";
 import { alias, gt } from "@ember/object/computed";
 import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
@@ -6,6 +7,7 @@ import { Promise } from "rsvp";
 import discourseComputed from "discourse-common/utils/decorators";
 import { groupPath } from "discourse/lib/url";
 import { setting } from "discourse/lib/computed";
+import { modKeysPressed } from "discourse/lib/utilities";
 
 const maxMembersToDisplay = 10;
 
@@ -70,11 +72,25 @@ export default Component.extend(CardContentsBase, CleansUp, {
     this._close();
   },
 
-  actions: {
-    close() {
-      this._close();
-    },
+  @action
+  close(event) {
+    event?.preventDefault();
+    this._close();
+  },
 
+  @action
+  handleShowGroup(group, event) {
+    if (event && modKeysPressed(event).length > 0) {
+      return false;
+    }
+    event?.preventDefault();
+    // Invokes `showGroup` argument. Convert to `this.args.showGroup` when
+    // refactoring this to a glimmer component.
+    this.showGroup(group);
+    this._close();
+  },
+
+  actions: {
     cancelFilter() {
       const postStream = this.postStream;
       postStream.cancelFilter();
@@ -90,8 +106,7 @@ export default Component.extend(CardContentsBase, CleansUp, {
     },
 
     showGroup(group) {
-      this.showGroup(group);
-      this._close();
+      this.handleShowGroup(group);
     },
   },
 });

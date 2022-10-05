@@ -115,7 +115,7 @@
           <ul class="formats">
             {{#each this.previewedFormats as |previewedFormat|}}
               <li class="format">
-                <a class="moment-format" href {{action (mut this.format) previewedFormat.format}}>
+                <a class="moment-format" href {{on "click" (fn this.updateFormat previewedFormat.format)}}>
                   {{previewedFormat.format}}
                 </a>
                 <span class="previewed-format">

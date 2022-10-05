@@ -19,7 +19,7 @@ import { ajax } from "discourse/lib/ajax";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { buildQuote } from "discourse/lib/quote";
 import { deepMerge } from "discourse-common/lib/object";
-import { escapeExpression } from "discourse/lib/utilities";
+import { escapeExpression, modKeysPressed } from "discourse/lib/utilities";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
@@ -311,6 +311,58 @@ export default Controller.extend(bufferedProperty("model"), {
       .finally(() => {
         this.set("loadingPostIds", false);
       });
+  },
+
+  @action
+  editTopic(event) {
+    event?.preventDefault();
+    if (this.get("model.details.can_edit")) {
+      this.set("editingTopic", true);
+    }
+  },
+
+  @action
+  jumpTop(event) {
+    if (event && modKeysPressed(event).length > 0) {
+      return false;
+    }
+    event?.preventDefault();
+    DiscourseURL.routeTo(this.get("model.firstPostUrl"), {
+      skipIfOnScreen: false,
+      keepFilter: true,
+    });
+  },
+
+  @action
+  removeFeaturedLink(event) {
+    event?.preventDefault();
+    this.set("buffered.featured_link", null);
+  },
+
+  @action
+  selectAll(event) {
+    event?.preventDefault();
+    const smallActionsPostIds = this._smallActionPostIds();
+    this.set("selectedPostIds", [
+      ...this.get("model.postStream.stream").filter(
+        (postId) => !smallActionsPostIds.has(postId)
+      ),
+    ]);
+    this._forceRefreshPostStream();
+  },
+
+  @action
+  deselectAll(event) {
+    event?.preventDefault();
+    this.set("selectedPostIds", []);
+    this._forceRefreshPostStream();
+  },
+
+  @action
+  toggleMultiSelect(event) {
+    event?.preventDefault();
+    this.toggleProperty("multiSelect");
+    this._forceRefreshPostStream();
   },
 
   actions: {
@@ -822,13 +874,6 @@ export default Controller.extend(bufferedProperty("model"), {
       this._jumpToPostNumber(postNumber);
     },
 
-    jumpTop() {
-      DiscourseURL.routeTo(this.get("model.firstPostUrl"), {
-        skipIfOnScreen: false,
-        keepFilter: true,
-      });
-    },
-
     jumpBottom() {
       // When a topic only has one lengthy post
       const jumpEnd = this.model.highest_post_number === 1 ? true : false;
@@ -857,26 +902,6 @@ export default Controller.extend(bufferedProperty("model"), {
 
     jumpToPostId(postId) {
       this._jumpToPostId(postId);
-    },
-
-    toggleMultiSelect() {
-      this.toggleProperty("multiSelect");
-      this._forceRefreshPostStream();
-    },
-
-    selectAll() {
-      const smallActionsPostIds = this._smallActionPostIds();
-      this.set("selectedPostIds", [
-        ...this.get("model.postStream.stream").filter(
-          (postId) => !smallActionsPostIds.has(postId)
-        ),
-      ]);
-      this._forceRefreshPostStream();
-    },
-
-    deselectAll() {
-      this.set("selectedPostIds", []);
-      this._forceRefreshPostStream();
     },
 
     togglePostSelection(post) {
@@ -971,13 +996,6 @@ export default Controller.extend(bufferedProperty("model"), {
       this.get("model.postStream")
         .filterParticipant(user.username)
         .then(() => this.updateQueryParams);
-    },
-
-    editTopic() {
-      if (this.get("model.details.can_edit")) {
-        this.set("editingTopic", true);
-      }
-      return false;
     },
 
     cancelEditingTopic() {
@@ -1157,10 +1175,6 @@ export default Controller.extend(bufferedProperty("model"), {
         .convertTopic("private")
         .then(() => window.location.reload())
         .catch(popupAjaxError);
-    },
-
-    removeFeaturedLink() {
-      this.set("buffered.featured_link", null);
     },
 
     resetBumpDate() {
