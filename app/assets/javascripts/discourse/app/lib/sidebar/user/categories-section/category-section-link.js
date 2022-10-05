@@ -79,12 +79,6 @@ export default class CategorySectionLink {
   }
 
   get route() {
-    if (this.totalUnread > 0) {
-      return "discovery.unreadCategory";
-    } else if (this.totalNew > 0) {
-      return "discovery.newCategory";
-    } else {
-      return "discovery.category";
-    }
+    return "discovery.category";
   }
 }
