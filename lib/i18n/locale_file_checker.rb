@@ -32,6 +32,21 @@ class LocaleFileChecker
     @errors
   end
 
+  def load_default_locale_files(locale)
+    @locale = locale.to_s
+    locale_files.each do |locale_path|
+      if locale_path.match(Regexp.new "#{Rails.root}/#{YML_DIRS[0]}/server")
+        @locale_server_yaml = YAML.load_file(locale_path)
+      end
+
+      if locale_path.match(Regexp.new "#{Rails.root}/#{YML_DIRS[0]}/client")
+        @locale_client_yaml = YAML.load_file(locale_path)
+      end
+    end
+
+    {server: @locale_server_yaml, client: @locale_client_yaml}
+  end
+
   private
 
   YML_DIRS = ["config/locales", "plugins/**/locales"]
