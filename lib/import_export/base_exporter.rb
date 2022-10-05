@@ -178,6 +178,12 @@ module ImportExport
       data
     end
 
+    def export_translation_overrides
+      @export_data[:translation_overrides] = TranslationOverride.all.select(:locale, :translation_key, :value)
+
+      self
+    end
+
     def default_filename_prefix
       raise "Overwrite me!"
     end
