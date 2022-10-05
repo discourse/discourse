@@ -152,6 +152,8 @@ GEM
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.0)
+    faraday-retry (2.0.0)
+      faraday (~> 2.0)
     fast_blank (1.0.1)
     fast_xs (0.8.0)
     fastimage (2.2.6)
@@ -551,6 +553,8 @@ DEPENDENCIES
   fabrication
   faker (~> 2.16)
   fakeweb
+  faraday
+  faraday-retry
   fast_blank
   fast_xs
   fastimage
@@ -645,4 +649,4 @@ DEPENDENCIES
   yaml-lint
 
 BUNDLED WITH
-   2.3.18
+   2.3.22
