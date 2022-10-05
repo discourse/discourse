@@ -69,7 +69,7 @@ module Jobs
       end
 
       if SiteSetting.mute_all_categories_by_default
-        users = users.watching_topic_when_mute_categories_by_default(post.topic)
+        users = users.watching_topic(post.topic)
       end
 
       DiscourseEvent.trigger(:notify_mailing_list_subscribers, users, post)
