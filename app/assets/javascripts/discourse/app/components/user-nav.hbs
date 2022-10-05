@@ -9,44 +9,12 @@
           </LinkTo>
         </li>
 
-        <UserNav::DropdownList
-          @icon="stream"
-          @text={{i18n "user.activity_stream"}}
-          @isActive={{eq @currentParentRoute "userActivity"}}
-          @class="user-activity" >
-
-          <:submenu>
-            <DNavigationItem @route="userActivity.index">{{i18n "user.filters.all"}}</DNavigationItem>
-            <DNavigationItem @route="userActivity.topics">{{i18n "user_action_groups.4"}}</DNavigationItem>
-            <DNavigationItem @route="userActivity.replies">{{i18n "user_action_groups.5"}}</DNavigationItem>
-
-            {{#if @showRead}}
-              <DNavigationItem @route="userActivity.read" @title={{i18n "user.read_help"}}>
-                {{i18n "user.read"}}
-              </DNavigationItem>
-            {{/if}}
-
-            {{#if @showDrafts}}
-              <DNavigationItem @route="userActivity.drafts">
-                {{this.draftLabel}}
-              </DNavigationItem>
-            {{/if}}
-
-            {{#if (gt @user.pending_posts_count 0)}}
-              <DNavigationItem @route="userActivity.pending">
-                {{this.pendingLabel}}
-              </DNavigationItem>
-            {{/if}}
-
-            <DNavigationItem @route="userActivity.likesGiven">{{i18n "user_action_groups.1"}}</DNavigationItem>
-
-            {{#if @showBookmarks}}
-              <DNavigationItem @route="userActivity.bookmarks">{{i18n "user_action_groups.3"}}</DNavigationItem>
-            {{/if}}
-
-            <PluginOutlet @name="user-activity-bottom" @tagName="span" @connectorTagName="li" @args={{hash model=@user}} />
-          </:submenu>
-        </UserNav::DropdownList>
+        <li class="user-activity">
+          <LinkTo @route="userActivity">
+            {{d-icon "stream"}}
+            {{i18n "user.activity_stream"}}
+          </LinkTo>
+        </li>
       {{/unless}}
 
       {{#if @showNotificationsTab}}
