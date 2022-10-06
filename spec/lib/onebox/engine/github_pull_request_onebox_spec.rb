@@ -49,4 +49,30 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
       expect(html).not_to include("test comment")
     end
   end
+
+  context "with commit links" do
+    before do
+      @link = "https://github.com/discourse/discourse/pull/1253/commits/d7d3be1130c665cc7fab9f05dbf32335229137a6"
+      @uri = "https://api.github.com/repos/discourse/discourse/commits/d7d3be1130c665cc7fab9f05dbf32335229137a6"
+
+      stub_request(:get, @uri).to_return(status: 200, body: onebox_response(described_class.onebox_name + "_commit"))
+    end
+
+    it "includes commit name" do
+      expect(html).to include("Add audio onebox")
+    end
+  end
+
+  context "with comment links" do
+    before do
+      @link = "https://github.com/discourse/discourse/pull/1253/#issuecomment-21597425"
+      @uri = "https://api.github.com/repos/discourse/discourse/issues/comments/21597425"
+
+      stub_request(:get, @uri).to_return(status: 200, body: onebox_response(described_class.onebox_name + "_comment"))
+    end
+
+    it "includes comment" do
+      expect(html).to include("You&#39;ve signed the CLA")
+    end
+  end
 end
