@@ -13,7 +13,7 @@ class Wizard
       @wizard.append_step('introduction') do |step|
         step.banner = "welcome-illustration"
 
-        step.add_field(id: 'title', type: 'text', required: true, value: SiteSetting.title)
+        step.add_field(id: 'title', type: 'text', required: true, value: SiteSetting.title == SiteSetting.defaults[:title] ? "" : SiteSetting.title)
         step.add_field(id: 'site_description', type: 'text', required: false, value: SiteSetting.site_description)
         step.add_field(id: 'contact_email', type: 'text', required: true, value: SiteSetting.contact_email)
 
