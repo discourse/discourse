@@ -127,6 +127,9 @@ GEM
       railties (>= 3.1)
     discourse-ember-source (3.12.2.3)
     discourse-fonts (0.0.9)
+    discourse-seed-fu (2.3.12)
+      activerecord (>= 3.1)
+      activesupport (>= 3.1)
     discourse_dev_assets (0.0.4)
       faker (~> 2.16)
       literate_randomizer
@@ -437,9 +440,6 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    seed-fu (2.3.9)
-      activerecord (>= 3.1)
-      activesupport (>= 3.1)
     selenium-webdriver (4.5.0)
       childprocess (>= 0.5, < 5.0)
       rexml (~> 3.2, >= 3.2.5)
@@ -545,6 +545,7 @@ DEPENDENCIES
   discourse-ember-rails (= 0.18.6)
   discourse-ember-source (~> 3.12.2)
   discourse-fonts
+  discourse-seed-fu
   discourse_dev_assets
   email_reply_trimmer
   ember-handlebars-template (= 0.8.0)
@@ -628,7 +629,6 @@ DEPENDENCIES
   sanitize
   sassc (= 2.0.1)
   sassc-rails
-  seed-fu
   selenium-webdriver
   shoulda-matchers
   sidekiq
