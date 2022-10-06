@@ -1065,7 +1065,6 @@ end
 #  default_list_filter                       :string(20)       default("all")
 #  allow_unlimited_owner_edits_on_first_post :boolean          default(FALSE), not null
 #  default_slow_mode_seconds                 :integer
-#  logo_dark_url                             :string
 #  uploaded_logo_dark_id                     :integer
 #
 # Indexes
