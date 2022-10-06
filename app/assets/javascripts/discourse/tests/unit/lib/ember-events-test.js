@@ -1,6 +1,6 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "ember-qunit";
-import { click, doubleClick, render } from "@ember/test-helpers";
+import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 
 /* eslint-disable ember/require-tagless-components */
@@ -160,154 +160,95 @@ module("Unit | Lib | ember-events", function (hooks) {
     });
   });
 
-  module("custom `action` modifier", function () {
-    test("`action` can target a function", async function (assert) {
+  module("nested `{{action}}` usage inside classic", function () {
+    test("it handles click events and allows propagation by default", async function (assert) {
       let i = 0;
 
       this.setProperties({
+        onParentClick: () => this.set("parentClicked", i++),
         onChildClick: () => this.set("childClicked", i++),
+        parentClicked: undefined,
         childClicked: undefined,
       });
 
       await render(hbs`
-        <button id="childButton" {{action this.onChildClick}} />
+        <ExampleClassicButton id="parentButton" @onClick={{this.onParentClick}}>
+          <button id="childButton" {{action this.onChildClick}} />
+        </ExampleClassicButton>
       `);
 
       await click("#childButton");
 
       assert.strictEqual(this.childClicked, 0);
+      assert.strictEqual(this.parentClicked, 1);
     });
 
-    test("`action` can target a method on the current context by name", async function (assert) {
+    test("it handles click events and can prevent event propagation", async function (assert) {
       let i = 0;
 
       this.setProperties({
+        onParentClick: () => this.set("parentClicked", i++),
         onChildClick: () => this.set("childClicked", i++),
+        parentClicked: undefined,
         childClicked: undefined,
       });
 
       await render(hbs`
-        <button id="childButton" {{action 'onChildClick'}} />
+        <ExampleClassicButton id="parentButton" @onClick={{this.onParentClick}}>
+          <button id="childButton" {{action this.onChildClick bubbles=false}} />
+        </ExampleClassicButton>
       `);
 
       await click("#childButton");
 
       assert.strictEqual(this.childClicked, 0);
+      assert.strictEqual(this.parentClicked, undefined);
     });
+  });
 
-    test("`action` can specify an event other than `click` via `on`", async function (assert) {
+  module("nested `{{action}}` usage inside glimmer", function () {
+    test("it handles click events and allows propagation by default", async function (assert) {
       let i = 0;
 
       this.setProperties({
-        onDblClick: () => this.set("dblClicked", i++),
-        dblClicked: undefined,
+        onParentClick: () => this.set("parentClicked", i++),
+        onChildClick: () => this.set("childClicked", i++),
+        parentClicked: undefined,
+        childClicked: undefined,
       });
 
       await render(hbs`
-        <button id="childButton" {{action this.onDblClick on='dblclick'}} />
+        <ExampleGlimmerButton id="parentButton" @onClick={{this.onParentClick}}>
+          <button id="childButton" {{action this.onChildClick}} />
+        </ExampleGlimmerButton>
       `);
 
-      await doubleClick("#childButton");
+      await click("#childButton");
 
-      assert.strictEqual(this.dblClicked, 0);
+      assert.strictEqual(this.childClicked, 0);
+      assert.strictEqual(this.parentClicked, 1);
     });
 
-    module("nested `action` usage inside classic", function () {
-      test("it handles click events and allows propagation by default", async function (assert) {
-        let i = 0;
+    test("it handles click events and can prevent event propagation", async function (assert) {
+      let i = 0;
 
-        this.setProperties({
-          onParentClick: () => this.set("parentClicked", i++),
-          onChildClick: () => this.set("childClicked", i++),
-          parentClicked: undefined,
-          childClicked: undefined,
-        });
-
-        await render(hbs`
-          <ExampleClassicButton id="parentButton" @onClick={{this.onParentClick}}>
-            <button id="childButton" {{action this.onChildClick}} />
-          </ExampleClassicButton>
-        `);
-
-        await click("#childButton");
-
-        assert.strictEqual(this.childClicked, 0);
-        assert.strictEqual(this.parentClicked, 1);
+      this.setProperties({
+        onParentClick: () => this.set("parentClicked", i++),
+        onChildClick: () => this.set("childClicked", i++),
+        parentClicked: undefined,
+        childClicked: undefined,
       });
 
-      test("it handles click events and can prevent event propagation", async function (assert) {
-        let i = 0;
+      await render(hbs`
+        <ExampleGlimmerButton id="parentButton" @onClick={{this.onParentClick}}>
+          <button id="childButton" {{action this.onChildClick bubbles=false}} />
+        </ExampleGlimmerButton>
+      `);
 
-        this.setProperties({
-          onParentClick: () => this.set("parentClicked", i++),
-          onChildClick: (event) => {
-            event.stopPropagation();
-            this.set("childClicked", i++);
-          },
-          parentClicked: undefined,
-          childClicked: undefined,
-        });
+      await click("#childButton");
 
-        await render(hbs`
-          <ExampleClassicButton id="parentButton" @onClick={{this.onParentClick}}>
-            <button id="childButton" {{action this.onChildClick}} />
-          </ExampleClassicButton>
-        `);
-
-        await click("#childButton");
-
-        assert.strictEqual(this.childClicked, 0);
-        assert.strictEqual(this.parentClicked, undefined);
-      });
-    });
-
-    module("nested `action` usage inside glimmer", function () {
-      test("it handles click events and allows propagation by default", async function (assert) {
-        let i = 0;
-
-        this.setProperties({
-          onParentClick: () => this.set("parentClicked", i++),
-          onChildClick: () => this.set("childClicked", i++),
-          parentClicked: undefined,
-          childClicked: undefined,
-        });
-
-        await render(hbs`
-          <ExampleGlimmerButton id="parentButton" @onClick={{this.onParentClick}}>
-            <button id="childButton" {{action this.onChildClick}} />
-          </ExampleGlimmerButton>
-        `);
-
-        await click("#childButton");
-
-        assert.strictEqual(this.childClicked, 0);
-        assert.strictEqual(this.parentClicked, 1);
-      });
-
-      test("it handles click events and can prevent event propagation", async function (assert) {
-        let i = 0;
-
-        this.setProperties({
-          onParentClick: () => this.set("parentClicked", i++),
-          onChildClick: (event) => {
-            event.stopPropagation();
-            this.set("childClicked", i++);
-          },
-          parentClicked: undefined,
-          childClicked: undefined,
-        });
-
-        await render(hbs`
-          <ExampleGlimmerButton id="parentButton" @onClick={{this.onParentClick}}>
-            <button id="childButton" {{action this.onChildClick}} />
-          </ExampleGlimmerButton>
-        `);
-
-        await click("#childButton");
-
-        assert.strictEqual(this.childClicked, 0);
-        assert.strictEqual(this.parentClicked, undefined);
-      });
+      assert.strictEqual(this.childClicked, 0);
+      assert.strictEqual(this.parentClicked, undefined);
     });
   });
 });
