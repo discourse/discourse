@@ -345,6 +345,7 @@ after_initialize do
   end
 
   register_topic_custom_field_type(DiscourseAutomation::CUSTOM_FIELD, [:integer])
+  register_topic_custom_field_type(DiscourseAutomation::Scriptable::AUTO_RESPONDER_TRIGGERED_IDS, [:integer])
   register_user_custom_field_type(DiscourseAutomation::CUSTOM_FIELD, [:integer])
   register_post_custom_field_type(DiscourseAutomation::CUSTOM_FIELD, [:integer])
   register_post_custom_field_type('stalled_wiki_triggered_at', :string)

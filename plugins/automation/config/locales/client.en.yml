@@ -172,6 +172,9 @@ en:
               description: "Expects a valid Zapier webhook URL, eg: https://hooks.zapier.com/hooks/catch/xxx/yyy/"
         auto_responder:
           fields:
+            once:
+              label: Once
+              description: Only responds once by topic
             word_answer_list:
               label: List of word/answer pairs
               description: "Defines a list of key/value groups, where the `key` is the searched term, and `value` the text of the reply. Note that `value` accepts `%%KEY%%` as a placeholder to be replaced by the value of `key` in the reply. Note that `key` will be evaluated as a regex, and special chars like `.` should be escaped if you actually mean a dot, eg: `\\.`"

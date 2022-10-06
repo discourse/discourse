@@ -97,6 +97,35 @@ describe 'AutoResponder' do
           }
         end
       end
+
+      context 'when once is used' do
+        before do
+          automation.upsert_field!('once', 'boolean', { value: true }, target: 'script')
+        end
+
+        it 'allows only one response by automation' do
+          post = create_post(topic: topic, raw: 'this is a post with foo and bar')
+          automation.trigger!('post' => post)
+
+          expect(post.topic.reload.posts_count).to eq(2)
+
+          post = create_post(topic: topic, raw: 'this is another post with foo and bar')
+          automation.trigger!('post' => post)
+
+          expect(post.topic.reload.posts_count).to eq(3)
+
+          another_automation = Fabricate(
+            :automation,
+            script: DiscourseAutomation::Scriptable::AUTO_RESPONDER
+          )
+          another_automation.upsert_field!('once', 'boolean', { value: true }, target: 'script')
+          another_automation.upsert_field!('word_answer_list', 'key-value', { value: [{ key: '', value: 'this is the reply' }].to_json })
+          post = create_post(topic: topic, raw: 'this is the last post with foo and bar')
+          another_automation.trigger!('post' => post)
+
+          expect(post.topic.reload.posts_count).to eq(5)
+        end
+      end
     end
 
     context 'when post contains two keywords' do
