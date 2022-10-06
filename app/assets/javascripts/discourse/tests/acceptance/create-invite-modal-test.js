@@ -229,3 +229,17 @@ acceptance(
     });
   }
 );
+
+acceptance(
+  "Invites - Create Invite on Site with must_approve_users Setting",
+  function (needs) {
+    needs.user();
+    needs.settings({ must_approve_users: true });
+
+    test("hides `Arrive at Topic` field on sites with `must_approve_users`", async function (assert) {
+      await visit("/u/eviltrout/invited/pending");
+      await click(".user-invite-buttons .btn:first-child");
+      assert.ok(!exists(".invite-to-topic"));
+    });
+  }
+);

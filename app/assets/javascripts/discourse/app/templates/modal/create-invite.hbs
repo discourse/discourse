@@ -59,7 +59,7 @@
       </div>
     {{/if}}
 
-    {{#if this.currentUser.staff}}
+    {{#if this.canArriveAtTopic}}
       <div class="input-group invite-to-topic">
         <label for="invite-topic">{{d-icon "hand-point-right"}}{{i18n "user.invited.invite.invite_to_topic"}}</label>
         <TopicChooser @value={{this.buffered.topicId}} @content={{this.topics}} @onChange={{action "onChangeTopic"}} @options={{hash
