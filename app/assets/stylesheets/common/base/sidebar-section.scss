@@ -32,6 +32,10 @@
       .discourse-no-touch & {
         transition: all 0.25s;
         opacity: 0;
+
+        &:focus {
+          opacity: 1;
+        }
       }
 
       background: transparent;
@@ -74,6 +78,10 @@
 
     &.sidebar-section-header-collapsable {
       justify-content: flex-start;
+
+      &:focus {
+        background: transparent;
+      }
     }
   }
 
