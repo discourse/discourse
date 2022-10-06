@@ -86,9 +86,12 @@ CRITICAL_HOST_ENV_VARS = %w{
   DISCOURSE_REDIS_HOST
   DISCOURSE_REDIS_SLAVE_HOST
   DISCOURSE_REDIS_REPLICA_HOST
+  DISCOURSE_MESSAGE_BUS_REDIS_HOST
+  DISCOURSE_MESSAGE_BUS_REDIS_REPLICA_HOST
 }
 
 DEFAULT_DB_NAME = "discourse"
+DEFAULT_REDIS_PORT = 6379
 
 HOST_RESOLVER_CACHE = {}
 HOST_HEALTHY_CACHE = {}
@@ -203,10 +206,11 @@ class HealthyCache
   end
 end
 
-def redis_healthcheck(host:, password:)
+def redis_healthcheck(host:, password:, port: DEFAULT_REDIS_PORT)
   client_opts = {
     host: host,
     password: password,
+    port: port,
     timeout: 1,
   }
   if !nilempty(ENV['DISCOURSE_REDIS_USE_SSL']).nil? then
@@ -260,6 +264,16 @@ HEALTH_CHECKS = {
     redis_healthcheck(
       host: addr,
       password: ENV["DISCOURSE_REDIS_PASSWORD"])},
+  "DISCOURSE_MESSAGE_BUS_REDIS_HOST": lambda { |addr|
+    redis_healthcheck(
+      host: addr,
+      port: env_as_int("DISCOURSE_MESSAGE_BUS_REDIS_PORT", DEFAULT_REDIS_PORT),
+      password: ENV["DISCOURSE_MESSAGE_BUS_REDIS_PASSWORD"])},
+  "DISCOURSE_MESSAGE_BUS_REDIS_REPLICA_HOST": lambda { |addr|
+    redis_healthcheck(
+      host: addr,
+      port: env_as_int("DISCOURSE_MESSAGE_BUS_REDIS_REPLICA_PORT", DEFAULT_REDIS_PORT),
+      password: ENV["DISCOURSE_MESSAGE_BUS_REDIS_PASSWORD"])},
 }
 
 def log(msg)
@@ -292,7 +306,7 @@ end
 
 def send_counter(name, description, labels, value)
   host = "localhost"
-  port = ENV.fetch("DISCOURSE_PROMETHEUS_COLLECTOR_PORT", 9405).to_i
+  port = env_as_int("DISCOURSE_PROMETHEUS_COLLECTOR_PORT", 9405)
 
   if labels
     labels = labels.map do |k, v|
@@ -362,6 +376,14 @@ def env_srv_name(env_name)
   nilempty(ENV[env_srv_var(env_name)])
 end
 
+def env_as_int(env_name, default = nil)
+  val = ENV.fetch(env_name, default)
+  if nilempty(val).nil?
+    return val
+  end
+  val.to_i
+end
+
 def run_and_report(hostname_vars)
   errors = run(hostname_vars)
   if errors.empty?
@@ -428,13 +450,18 @@ end
 # If any of the host variables are an explicit IP we will not attempt to cache
 # them.
 all_hostname_vars = CRITICAL_HOST_ENV_VARS.select do |name|
-  begin
-    host = ENV[name]
-    next if nilempty(host).nil?
-    IPAddr.new(host)
+  host = ENV[name]
+  if nilempty(host).nil?
+    # don't attempt to cache host vars that aren't present in the environment
     false
-  rescue IPAddr::InvalidAddressError, IPAddr::AddressFamilyError
-    true
+  else
+    begin
+      IPAddr.new(host)
+      # host is an IPv4 / IPv6 address
+      false
+    rescue IPAddr::InvalidAddressError, IPAddr::AddressFamilyError
+      true
+    end
   end
 end
 
@@ -443,8 +470,8 @@ end
 # is that no filtering based on priority will be performed.
 CRITICAL_HOST_ENV_VARS.each do |v|
   if (name = env_srv_name(v))
-    max = ENV.fetch("#{env_srv_var(v)}_PRIORITY_LE", SRV_PRIORITY_THRESHOLD_MAX).to_i
-    min = ENV.fetch("#{env_srv_var(v)}_PRIORITY_GE", SRV_PRIORITY_THRESHOLD_MIN).to_i
+    max = env_as_int("#{env_srv_var(v)}_PRIORITY_LE", SRV_PRIORITY_THRESHOLD_MAX)
+    min = env_as_int("#{env_srv_var(v)}_PRIORITY_GE", SRV_PRIORITY_THRESHOLD_MIN)
     if max > SRV_PRIORITY_THRESHOLD_MAX ||
         min < SRV_PRIORITY_THRESHOLD_MIN ||
         min > max
