@@ -7,20 +7,20 @@ import { tracked } from "@glimmer/tracking";
 export default class SidebarSection extends Component {
   @service keyValueStore;
 
-  @tracked displaySection;
+  @tracked displaySectionContent;
   collapsedSidebarSectionKey = `sidebar-section-${this.args.sectionName}-collapsed`;
 
   constructor() {
     super(...arguments);
 
     if (this.args.collapsable) {
-      this.displaySection =
+      this.displaySectionContent =
         this.keyValueStore.getItem(this.collapsedSidebarSectionKey) ===
         undefined
           ? true
           : false;
     } else {
-      this.displaySection = true;
+      this.displaySectionContent = true;
     }
   }
 
@@ -32,9 +32,9 @@ export default class SidebarSection extends Component {
 
   @action
   toggleSectionDisplay() {
-    this.displaySection = !this.displaySection;
+    this.displaySectionContent = !this.displaySectionContent;
 
-    if (this.displaySection) {
+    if (this.displaySectionContent) {
       this.keyValueStore.remove(this.collapsedSidebarSectionKey);
     } else {
       this.keyValueStore.setItem(this.collapsedSidebarSectionKey, true);
@@ -54,7 +54,7 @@ export default class SidebarSection extends Component {
   }
 
   get headerCaretIcon() {
-    return this.displaySection ? "angle-down" : "angle-right";
+    return this.displaySectionContent ? "angle-down" : "angle-right";
   }
 
   get isSingleHeaderAction() {
@@ -63,5 +63,13 @@ export default class SidebarSection extends Component {
 
   get isMultipleHeaderActions() {
     return this.args.headerActions?.length > 1;
+  }
+
+  get displaySection() {
+    if (this.args.displaySection === undefined) {
+      return true;
+    }
+
+    return this.args.displaySection;
   }
 }

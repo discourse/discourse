@@ -125,7 +125,6 @@ ko:
         unsubscribe_not_allowed: "이 사용자에게 이메일을 통한 구독 취소가 허용되지 않은 경우 발생합니다."
         email_not_allowed: "이메일 주소가 화이트리스트에 없거나 블랙리스트에 있을 때 발생합니다."
       unrecognized_error: "인식되지 않은 오류"
-    secure_media_placeholder: "수정됨 :이 사이트에 보안 미디어가 활성화되어 있습니다. 주제를 방문하거나 미디어 보기를 클릭하여 첨부된 미디어를 확인하세요."
     view_redacted_media: "미디어 보기"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -189,7 +188,6 @@ ko:
       page_publishing_requirements: "보안 미디어를 활성화한 경우 페이지 게시를 활성화할 수 없습니다."
       s3_backup_requires_s3_settings: "'%{setting_name}' 설정을 제공하지 않으면 S3를 백업 위치로 사용할 수 없습니다."
       s3_bucket_reused: "'s3_upload_bucket' 및 's3_backup_bucket'에 동일한 버킷을 사용할 수 없습니다. 다른 버킷을 선택하거나 각 버킷에 다른 경로를 사용하세요."
-      secure_media_requirements: "보안 미디어를 활성화하기 전에 S3 업로드를 활성화해야 합니다."
       share_quote_facebook_requirements: "Facebook 인용 공유를 활성화하려면 Facebook 앱 ID를 설정해야 합니다."
       second_factor_cannot_enforce_with_socials: "소셜 로그인이 활성화된 상태에서는 2FA를 적용할 수 없습니다. 먼저 다음을 통해 로그인을 비활성화해야 합니다. %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "로컬 로그인이 비활성화된 경우 2FA를 적용할 수 없습니다."
@@ -1879,9 +1877,6 @@ ko:
     delete_merged_stub_topics_after_days: "완전히 병합된 스텁 주제를 자동으로 삭제하기 전에 대기할 일 수입니다. 스텁 주제를 삭제하지 않으려면 0으로 설정하세요."
     bootstrap_mode_min_users: "부트스트랩 모드를 비활성화하기 위한 최소 사용자 수(비활성화하려면 0으로 설정)"
     prevent_anons_from_downloading_files: "익명 사용자가 첨부 파일을 다운로드하지 못하도록 합니다."
-    secure_media: '모든 업로드(이미지, 비디오, 오디오, 텍스트, pdf, zip 및 기타)에 대한 액세스를 제한합니다. ''로그인 필요''가 활성화된 경우 로그인한 사용자만 업로드에 액세스할 수 있습니다. 그렇지 않으면 비공개 메시지 및 비공개 카테고리의 미디어 업로드에 대해서만 액세스가 제한됩니다. 경고: 이 설정은 복잡하며 관리에 대한 지식이 충분해야 합니다. 자세한 내용은 <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">Meta의 보안 미디어 주제</a>를 참조하세요.'
-    secure_media_allow_embed_images_in_emails: "크기가 '보안 미디어 최대 이메일 임베드 이미지 크기 kb' 설정보다 작은 경우 일반적으로 이메일에서 수정되는 보안 이미지 임베드를 허용합니다."
-    secure_media_max_email_embed_image_size_kb: "'보안 미디어에서 이메일에 임베드 허용' 설정이 활성화된 경우 이메일에 임베드할 보안 이미지의 크기 컷오프입니다. 이 설정을 활성화하지 않으면 효과가 없습니다."
     slug_generation_method: "슬러그 생성 방법을 선택합니다. 'encoded'는 퍼센트 인코딩 스트링을 생성합니다. 'none'은 슬러그를 완전히 비활성화합니다."
     enable_emoji: "이모티콘 활성화"
     enable_emoji_shortcuts: ":) : p :( 같은 일반적인 스마일 텍스트는 이모티콘으로 변환됩니다."

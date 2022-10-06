@@ -131,7 +131,6 @@ pl_PL:
         unsubscribe_not_allowed: "Zdarza się, kiedy anulowanie subskrypcji przez e‐mail nie jest dozwolone dla tego użytkownika."
         email_not_allowed: "Zdarza się, gdy adres e-mail nie znajduje się na liście dozwolonych adresów lub jest na liście zablokowanych."
       unrecognized_error: "Niezidentyfikowany błąd"
-    secure_media_placeholder: "Zredagowano: Ta strona posiada włączone zabezpieczone media, odwiedź wątek lub kliknij przycisk Zobacz media, aby zobaczyć załączone media."
     view_redacted_media: "Wyświetl załączniki"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -213,7 +212,6 @@ pl_PL:
       page_publishing_requirements: "Nie można włączyć publikowania stron, jeśli włączone są bezpieczne media."
       s3_backup_requires_s3_settings: "Nie możesz używać S3 do tworzenia kopii zapasowych bez podania \"%{setting_name}\"."
       s3_bucket_reused: "Nie możesz używać tego samego bucketu jako \"s3_upload_bucket\" i \"s3_backup_bucket\". Wybierz inny bucket albo podaj różne ścieżki dla każdego z bucketów."
-      secure_media_requirements: "Przesyłanie S3 musi być włączone przed włączeniem bezpiecznych mediów."
       share_quote_facebook_requirements: "Aby włączyć udostępnianie na Facebooku, musisz ustawić identyfikator aplikacji Facebook."
       second_factor_cannot_enforce_with_socials: "Nie można wymusić 2FA z włączonym logowaniu społecznościowym. Najpierw musisz wyłączyć logowanie przez: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Nie można wymusić 2FA, jeśli lokalne logowanie jest wyłączone."
@@ -2086,9 +2084,6 @@ pl_PL:
     delete_merged_stub_topics_after_days: "Liczba dni, po których wątki, z których zostały przeniesione wszystkie posty, zostaną automatycznie usunięte. Aby to wyłączyć, ustaw wartość na 0."
     bootstrap_mode_min_users: "Minimalna liczba użytkowników potrzebnych do wyłączenia trybu rozruchowego (ustaw 0, aby wyłączyć)"
     prevent_anons_from_downloading_files: "Zablokuj możliwość pobierania załączników przez anonimowych użytkowników."
-    secure_media: 'Ogranicza dostęp do WSZYSTKICH przesłanych plików (obrazów, wideo, audio, tekstu, plików PDF, zip i innych). Jeśli opcja „wymagane logowanie” jest włączona, tylko zalogowani użytkownicy mają dostęp do przesyłanych plików. W przeciwnym razie dostęp będzie ograniczony tylko do przesłanych multimediów w wiadomościach prywatnych i kategoriach prywatnych. OSTRZEŻENIE: to ustawienie jest złożone i wymaga głębokiego zrozumienia administracyjnego. Zobacz <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">ten artykuł</a>, aby dowiedzieć się więcej.'
-    secure_media_allow_embed_images_in_emails: "Umożliwia osadzanie bezpiecznych obrazów, które normalnie byłyby redagowane w wiadomościach e-mail, jeśli ich rozmiar jest mniejszy niż ustawienie'secure media max email embed image size kb'."
-    secure_media_max_email_embed_image_size_kb: "Limit rozmiaru dla zabezpieczonych obrazów, które zostaną osadzone w wiadomości e-mail, gdy włączone jest ustawienie 'secure media allow embed in emails'. Bez tego ustawienia podany limit nie ma zastosowania."
     slug_generation_method: "Wybierz metodę tworzenia ślimaka. 'Zakodowane\" stworzy procentowy ciąg kodujący, \"żadne\" wyłączy tą metodę."
     enable_emoji: "Włącz obsługę emoji"
     enable_emoji_shortcuts: "Typowe tekstowe buźki, takie jak :) :p :( zostaną przekonwertowane na emoji"

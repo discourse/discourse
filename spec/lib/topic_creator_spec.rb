@@ -410,6 +410,7 @@ RSpec.describe TopicCreator do
           TopicCreator.any_instance.expects(:watch_topic).returns(true)
           SiteSetting.allow_duplicate_topic_titles = true
           SiteSetting.enable_staged_users = true
+          Group.refresh_automatic_groups!
         end
 
         it "should be possible for a regular user to send private message" do
@@ -442,7 +443,6 @@ RSpec.describe TopicCreator do
         end
 
         it "personal_message_enabled_groups setting should be checked when sending private message" do
-          SiteSetting.enable_personal_messages = false
           SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
 
           expect do
@@ -452,6 +452,10 @@ RSpec.describe TopicCreator do
       end
 
       context 'with to emails' do
+        before do
+          Group.refresh_automatic_groups!
+        end
+
         it 'works for staff' do
           SiteSetting.min_trust_to_send_email_messages = 'staff'
           expect(TopicCreator.create(admin, Guardian.new(admin), pm_to_email_valid_attrs)).to be_valid

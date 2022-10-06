@@ -193,6 +193,7 @@ RSpec.describe UserSearch do
         search_for("", topic_id: pm_topic.id, searching_user: mr_b)
       end.to raise_error(Discourse::InvalidAccess)
 
+      Group.refresh_automatic_groups!
       pm_topic.invite(pm_topic.user, mr_b.username)
 
       results = search_for("", topic_id: pm_topic.id, searching_user: mr_b)

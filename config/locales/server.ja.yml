@@ -126,7 +126,6 @@ ja:
         unsubscribe_not_allowed: "このユーザーがメール経由で購読を解除できない場合に発生します。"
         email_not_allowed: "メールリストがホワイトリストにないか、ブラックリストに含まれている場合に発生します。"
       unrecognized_error: "不明なエラー"
-    secure_media_placeholder: "編集済み: このサイトではセキュリティで保護されたメディアが有効になっています。トピックにアクセスしたり、「メディアを表示」をクリックすると、添付されたメディアが表示されます。"
     view_redacted_media: "メディアを表示"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -190,7 +189,6 @@ ja:
       page_publishing_requirements: "セキュリティで保護されているメディアが有効である場合、ページの公開を有効にできません。"
       s3_backup_requires_s3_settings: "'%{setting_name}' が入力されていない場合、S3 をバックアップとして使用することはできません。"
       s3_bucket_reused: "'s3_upload_bucket' and 's3_backup_bucket' に同じバケットを使用することはできません。別のバケットを選択するか、バケットごとに異なるパスを使用してください。"
-      secure_media_requirements: "セキュリティで保護されたメディアを有効にする前に、S3 アップロードを有効にする必要があります。"
       share_quote_facebook_requirements: "Facebook に引用を共有できるようにするには、Facebook アプリの ID を設定する必要があります。"
       second_factor_cannot_enforce_with_socials: "ソーシャルログインが有効になっている状態で 2FA を適用することはできません。先に、%{auth_provider_names} でログインを無効にする必要があります。"
       second_factor_cannot_be_enforced_with_disabled_local_login: "ログインが無効になっている場合、2FA を適用することはできません。"
@@ -1858,9 +1856,6 @@ ja:
     delete_merged_stub_topics_after_days: "完全にマージされたスタブトピックを自動的に削除するまで待機する日数。0 に設定すると、スタブトピックは削除されません。"
     bootstrap_mode_min_users: "ブートストラップモードを無効にするために必要な最低ユーザー数 (0 に設定すると無効になります)"
     prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードできないようにする。"
-    secure_media: 'すべてのアップロード (画像、動画、音声、テキスト、pdf、zip など) へのアクセスを制限する。“login required” が有効である場合、ログイン済みのユーザーのみがアップロードにアクセスできます。そうでない場合は、個人メッセージと非公開カテゴリのメディアアップロードのアクセスのみが制限されます。警告: この設定は複雑であるため、管理を十分に理解している必要があります。詳細については、<a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">メタに関するセキュリティで保護されたメディアのトピック</a>をご覧ください。'
-    secure_media_allow_embed_images_in_emails: "通常はメールで編集されるセキュリティで保護された画像のサイズが 'secure media max email embed image size kb' 設定よりも小さい場合、その埋め込みを許可する。"
-    secure_media_max_email_embed_image_size_kb: "'secure media allow embed in emails' 設定が有効である場合にメールに埋め込まれるセキュリティで保護された画像のサイズのカットオフ。その設定が有効でない場合、この設定の効果はありません。"
     slug_generation_method: "スラッグ生成方法を選択します。'encode' はパーセントエンコード文字列を生成します。'none'は、スラッグを無効にします。"
     enable_emoji: "絵文字を有効にする"
     enable_emoji_shortcuts: ":) :p :( などの一般的なスマイリーテキストは絵文字に変換されます"

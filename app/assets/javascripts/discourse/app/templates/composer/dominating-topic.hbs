@@ -1,4 +1,4 @@
-<a href {{action this.closeMessage this.message}} class="close" aria-label={{i18n "composer.esc_label"}}>
+<a href {{on "click" (fn this.closeMessage this.message)}} class="close" aria-label={{i18n "composer.esc_label"}}>
   {{i18n "composer.esc"}} {{d-icon "times"}}
 </a>
 

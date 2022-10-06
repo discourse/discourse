@@ -1198,6 +1198,7 @@ fr:
         move_to_archive: "Archiver"
         failed_to_move: "Impossible de déplacer les messages sélectionnés (votre connexion est peut-être en panne)"
         tags: "Étiquettes"
+        all_tags: "Toutes les étiquettes"
         warnings: "Avertissements officiels"
         read_more_in_group: "Envie d'en lire encore&nbsp;? Consultez d'autres messages dans %{groupLink}."
         read_more: "Envie d'en lire encore&nbsp;? Consultez d'autres messages dans vos <a href='%{basePath}/u/%{username}/messages'>messages personnels</a>."
@@ -1970,6 +1971,8 @@ fr:
       similar_topics: "Votre sujet est similaire à…"
       drafts_offline: "brouillons hors ligne"
       edit_conflict: "conflit de modification"
+      esc: "Échap"
+      esc_label: "Cliquer ou presser la touche Échap pour fermer"
       group_mentioned_limit:
         one: "<b>Attention !</b> Vous avez mentionné <a href='%{group_link}'>%{group}</a>, cependant ce groupe comprend plus de membres que le nombre limite de mentions de %{count} utilisateur configuré par l'administrateur. Personne ne sera notifié."
         other: "<b>Attention !</b> Vous avez mentionné <a href='%{group_link}'>%{group}</a>, cependant ce groupe comprend plus de membres que le nombre limite de mentions de %{count} utilisateurs configuré par l'administrateur. Personne ne sera notifié."
@@ -3826,6 +3829,9 @@ fr:
               draft_count:
                 one: "%{count} brouillon"
                 other: "%{count} brouillons"
+            review:
+              content: "À examiner"
+              title: "à examiner"
     until: "Jusqu'à :"
   admin_js:
     type_to_filter: "commencez votre saisie pour filtrer…"

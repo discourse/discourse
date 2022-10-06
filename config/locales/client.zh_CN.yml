@@ -1139,6 +1139,7 @@ zh_CN:
         move_to_archive: "归档"
         failed_to_move: "无法移动所选消息（可能您的网络已掉线）"
         tags: "标签"
+        all_tags: "所有标签"
         warnings: "官方警告"
         read_more_in_group: "想阅读更多？浏览%{groupLink}或中的其他话题。"
         read_more: "想阅读更多内容？ 请在 <a href='%{basePath}/u/%{username}/messages/personal'>个人私信</a>中浏览其他消息。"
@@ -1894,6 +1895,8 @@ zh_CN:
       similar_topics: "您的话题类似于…"
       drafts_offline: "离线草稿"
       edit_conflict: "编辑冲突"
+      esc: "esc"
+      esc_label: "单击或按 Esc 关闭"
       group_mentioned_limit:
         other: "<b>警告</b>！您提及了 <a href='%{group_link}'> %{group} </a>，但是此群组的成员数量超过了管理员配置的 %{count} 个用户的最大可提及数量限制。没有人会收到通知。"
       group_mentioned:
@@ -1989,6 +1992,9 @@ zh_CN:
         body: "目前，此消息只发给您自己！"
       slow_mode:
         error: "本话题处于慢速模式。您最近已经发帖；您可以在 %{timeLeft}后再次发帖。"
+      user_not_seen_in_a_while:
+        single: "你正在向用户发送消息：<b>%{usernames}</b>，已经很久没来过了 —— %{time_ago}。他可能不会收到你的消息。你可能需要使用其它的方法来联系%{usernames}。"
+        multiple: "你正在向这些用户发送消息：<b>%{usernames}</b>，已经很久没来过了 —— %{time_ago}。他们可能不会收到你的消息。你可能需要使用其它的方法来联系他们。"
       admin_options_title: "此话题的可选管理人员设置"
       composer_actions:
         reply: 回复
@@ -3684,6 +3690,10 @@ zh_CN:
               title: "我的帖子"
               draft_count:
                 other: "%{count} 草稿"
+            review:
+              content: "审核"
+              title: "审核"
+              pending_count: "%{count} 待处理"
     welcome_topic_banner:
       title: "创建你的欢迎话题"
       description: '你的欢迎话题是新来的人首先会读到的东西。可以把它看作是你的一段 "电梯推销 "或 "使命宣言"。'

@@ -1133,6 +1133,7 @@ bg:
         move_to_archive: "Архив"
         failed_to_move: "Грешка при преместването на съобщенията (може би интернета ви спря?)"
         tags: "Етикети"
+        all_tags: "Всички тагове"
         warnings: "Официални предупреждения"
         read_more_in_group: "Искате ли да прочетете повече? Разгледайте други съобщения в %{groupLink}."
         read_more: "Искате ли да прочетете повече? Разгледайте други съобщения в <a href='%{basePath}/u/%{username}/messages'>лични съобщения</a>."
@@ -3036,6 +3037,9 @@ bg:
               content: "Потребители"
             my_posts:
               content: "Моите публикации"
+            review:
+              content: "Преглед"
+              title: "преглед"
   admin_js:
     type_to_filter: "филтрирай..."
     admin:

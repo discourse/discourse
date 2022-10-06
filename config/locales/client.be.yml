@@ -1381,6 +1381,9 @@ be:
               content: "карыстальнікаў"
             my_posts:
               content: "мае паведамленні"
+            review:
+              content: "Патрабуе перагляду"
+              title: "патрабуе перагляду"
   admin_js:
     admin:
       moderator: "Мадэратар"

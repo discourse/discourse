@@ -118,8 +118,7 @@ class TopicTrackingState
   end
 
   def self.publish_unmuted(topic)
-    return if !SiteSetting.mute_all_categories_by_default
-    user_ids = User.watching_topic_when_mute_categories_by_default(topic)
+    user_ids = User.watching_topic(topic)
       .where("users.last_seen_at > ?", 7.days.ago)
       .order("users.last_seen_at DESC")
       .limit(100)

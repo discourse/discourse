@@ -1,3 +1,4 @@
+import { action } from "@ember/object";
 import { alias, equal, gt, not, or } from "@ember/object/computed";
 import discourseComputed, {
   observes,
@@ -313,6 +314,24 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
+  @action
+  displayInline(event) {
+    event?.preventDefault();
+    this.set("viewMode", "inline");
+  },
+
+  @action
+  displaySideBySide(event) {
+    event?.preventDefault();
+    this.set("viewMode", "side_by_side");
+  },
+
+  @action
+  displaySideBySideMarkdown(event) {
+    event?.preventDefault();
+    this.set("viewMode", "side_by_side_markdown");
+  },
+
   actions: {
     loadFirstVersion() {
       this.refresh(this.get("model.post_id"), this.get("model.first_revision"));
@@ -344,16 +363,6 @@ export default Controller.extend(ModalFunctionality, {
 
     revertToVersion() {
       this.revert(this.post, this.get("model.current_revision"));
-    },
-
-    displayInline() {
-      this.set("viewMode", "inline");
-    },
-    displaySideBySide() {
-      this.set("viewMode", "side_by_side");
-    },
-    displaySideBySideMarkdown() {
-      this.set("viewMode", "side_by_side_markdown");
     },
   },
 });

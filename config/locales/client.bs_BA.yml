@@ -1043,6 +1043,7 @@ bs_BA:
         move_to_archive: "Arhiva"
         failed_to_move: "Greška u pomjeranju označenih poruka (vjerovatni mrežni problemi)"
         tags: "Oznake"
+        all_tags: "Sve oznake"
       preferences_nav:
         account: "Račun"
         security: "Security"
@@ -3118,6 +3119,9 @@ bs_BA:
               content: "Users"
             my_posts:
               content: "Moje objave"
+            review:
+              content: "Pregled"
+              title: "pregled"
   admin_js:
     type_to_filter: "kucaj da sortiraš..."
     admin:

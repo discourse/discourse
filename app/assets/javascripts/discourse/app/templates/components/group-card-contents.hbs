@@ -13,14 +13,14 @@
     {{else}}
       <div class="card-row first-row">
         <div class="group-card-avatar">
-          <a href={{this.groupPath}} {{action "showGroup" this.group}} class="card-huge-avatar">
+          <a href={{this.groupPath}} {{on "click" (fn this.handleShowGroup this.group)}} class="card-huge-avatar">
             <AvatarFlair @flairName={{this.group.name}} @flairUrl={{this.group.flair_url}} @flairBgColor={{this.group.flair_bg_color}} @flairColor={{this.group.flair_color}} />
           </a>
         </div>
         <div class="names">
           <span>
             <h1 class={{this.group.name}}>
-              <a href={{this.groupPath}} {{action "showGroup" this.group}} class="group-page-link">{{this.group.name}}</a>
+              <a href={{this.groupPath}} {{on "click" (fn this.handleShowGroup this.group)}} class="group-page-link">{{this.group.name}}</a>
             </h1>
             {{#if this.group.full_name}}
               <h2 class="full-name">{{this.group.full_name}}</h2>
@@ -53,10 +53,10 @@
         <div class="card-row third-row">
           <div class="members metadata">
             {{#each this.group.members as |user|}}
-              <a {{action "close"}} href={{user.path}} class="card-tiny-avatar">{{bound-avatar user "tiny"}}</a>
+              <a {{on "click" this.close}} href={{user.path}} class="card-tiny-avatar">{{bound-avatar user "tiny"}}</a>
             {{/each}}
             {{#if this.showMoreMembers}}
-              <a href={{this.groupPath}} {{action "showGroup" this.group}} class="more-members-link">
+              <a href={{this.groupPath}} {{on "click" (fn this.handleShowGroup this.group)}} class="more-members-link">
                 <span class="more-members-count">+{{this.moreMembersCount}} {{i18n "more"}}</span>
               </a>
             {{/if}}

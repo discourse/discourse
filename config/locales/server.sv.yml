@@ -130,7 +130,7 @@ sv:
         unsubscribe_not_allowed: "Det händer när avprenumeration via e-post inte tillåts för den här användaren."
         email_not_allowed: "Händer när e-postadressen inte står på vitlistan eller om den står på svartlistan."
       unrecognized_error: "Okänt fel"
-    secure_media_placeholder: "Redigerad: Denna webbplats har säkerhet för medier aktiverad, gå till ämnet eller klicka på \"Visa media\" för att se bifogade medier."
+    secure_uploads_placeholder: "Redigerad: Denna webbplats har säkerhet för uppladdningar aktiverad, gå till ämnet eller klicka på \"Visa media\" för att se bifogade uppladdningar."
     view_redacted_media: "Visa media"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -200,7 +200,6 @@ sv:
       page_publishing_requirements: "Sidpublicering kan inte aktiveras om säkra medier är aktiverade."
       s3_backup_requires_s3_settings: "Du kan inte använda S3 som säkerhetskopieringsplats innan du har angivit '%{setting_name}'."
       s3_bucket_reused: "Du kan inte använda samma behållare för 's3_upload_bucket' och 's3_backup_bucket'. Välj en annan behållare eller använd en annan sökväg för varje behållare."
-      secure_media_requirements: "S3-uppladdningar måste ha aktiverats innan du aktiverar säkra medier."
       share_quote_facebook_requirements: "Du måste ange ett Facebook-app-id för att möjliggöra delning av citat på Facebook."
       second_factor_cannot_enforce_with_socials: "Du kan inte tvinga 2FA med sociala inloggningar aktiverade. Du måste först inaktivera inloggning via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Du kan inte genomdriva 2FA om lokala inloggningar är inaktiverade."
@@ -1996,9 +1995,7 @@ sv:
     delete_merged_stub_topics_after_days: "Antal dagar att vänta innan helt sammanslagna stub-ämnen raderas automatiskt. Ställ in till 0 för att aldrig radera stub-ämnen."
     bootstrap_mode_min_users: "Minsta antal användare som krävs för att inaktivera bootstrap-läget (ange 0 för att inaktivera)"
     prevent_anons_from_downloading_files: "Förhindra att anonyma användare hämtar bilagor."
-    secure_media: 'Begränsar åtkomst för ALLA uppladdningar (bilder, video, ljud, text, pdf, zip med flera). Om "inloggning krävs" har aktiverats kan endast inloggade användare komma åt uppladdningar. Annars begränsas åtkomst endast till uppladdning av media i privata meddelanden samt privata kategorier. VARNING: Den här inställningen är komplex och kräver djupa administrativa kunskaper. Se detaljer i <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">ämnet för säkra media i Meta</a>.'
-    secure_media_allow_embed_images_in_emails: "Gör det möjligt att bädda in säkra bilder som normalt skulle begränsas i e-postmeddelanden, under förutsättning att deras storlek är mindre än inställningen för säkra medias maxstorlek för inbäddning av bild, 'secure media max email embed image size kb'."
-    secure_media_max_email_embed_image_size_kb: "Storleksbegränsningen för säkra bilder som kommer att bäddas in i e-postmeddelanden om inställningen för att tillåta inbäddningar för säkra media i e-post är aktiverad, 'secure media allow embed in emails' . Om inställningen inte är aktiverad har den här inställningen ingen effekt."
+    secure_media_allow_embed_images_in_emails: "UTFASAT: Använd secure_uploads_allow_embed_images_in_emails, kommer att tas bort i Discourse 3.0."
     slug_generation_method: "Välj en genereringsmetod för etiketter. Ange 'none' för att inaktivera generering av etiketter. "
     enable_emoji: "Aktivera emoji"
     enable_emoji_shortcuts: "Vanlig smileytext som :): p :( kommer att konverteras till emojier"

@@ -7,5 +7,11 @@ export default class Notification extends RestModel {
     await applyModelTransformations("notification", notifications);
   }
 
+  static async initializeNotifications(rawList) {
+    const notifications = rawList.map((n) => this.create(n));
+    await this.applyTransformations(notifications);
+    return notifications;
+  }
+
   @tracked read;
 }

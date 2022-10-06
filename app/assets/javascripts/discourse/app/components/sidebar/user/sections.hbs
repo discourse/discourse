@@ -18,7 +18,8 @@
       @headerActionsIcon={{customSection.actionsIcon}}
       @headerActions={{customSection.actions}}
       @willDestroy={{customSection.willDestroy}}
-      @collapsable={{@collapsableSections}}>
+      @collapsable={{@collapsableSections}}
+      @displaySection={{customSection.displaySection}}>
 
       {{#each customSection.links as |link|}}
         <Sidebar::SectionLink

@@ -54,7 +54,9 @@ module Helpers
     args[:title] ||= "This is my title #{Helpers.next_seq}"
     args[:raw] ||= "This is the raw body of my post, it is cool #{Helpers.next_seq}"
     args[:topic_id] = args[:topic].id if args[:topic]
+    automated_group_refresh_required = args[:user].blank?
     user = args.delete(:user) || Fabricate(:user)
+    Group.refresh_automatic_groups! if automated_group_refresh_required
     args[:category] = args[:category].id if args[:category].is_a?(Category)
     creator = PostCreator.new(user, args)
     post = creator.create

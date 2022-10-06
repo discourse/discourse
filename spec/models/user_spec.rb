@@ -1601,6 +1601,8 @@ RSpec.describe User do
     fab!(:unactivated_old_with_post) { Fabricate(:user, active: false, created_at: 1.month.ago) }
 
     before do
+      Group.refresh_automatic_groups!
+
       PostCreator.new(Discourse.system_user,
                       title: "Welcome to our Discourse",
                       raw: "This is a welcome message",

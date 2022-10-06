@@ -1130,6 +1130,7 @@ fi:
         move_to_archive: "Arkisto"
         failed_to_move: "Valittujen viestien siirto epäonnistui (vika saattaa olla verkkoyhteydessäsi)"
         tags: "Tunnisteet"
+        all_tags: "Kaikki tunnisteet"
         warnings: "Viralliset varoitukset"
       preferences_nav:
         account: "Tili"
@@ -3505,6 +3506,9 @@ fi:
               content: "Käyttäjät"
             my_posts:
               content: "Viestini"
+            review:
+              content: "Käsittele"
+              title: "käsittele"
   admin_js:
     type_to_filter: "kirjoita suodattaaksesi..."
     admin:

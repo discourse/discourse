@@ -4140,7 +4140,7 @@ en:
         one: "%{count} new"
         other: "%{count} new"
       toggle_section: "toggle section"
-      more: "More..."
+      more: "More"
       all_categories: "All categories"
       all_tags: "All tags"
       sections:

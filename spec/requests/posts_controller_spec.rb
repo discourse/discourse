@@ -1067,6 +1067,7 @@ RSpec.describe PostsController do
       end
 
       it "can send a message to a group" do
+        Group.refresh_automatic_groups!
         group = Group.create(name: 'test_group', messageable_level: Group::ALIAS_LEVELS[:nobody])
         user1 = user
         group.add(user1)
@@ -1100,6 +1101,7 @@ RSpec.describe PostsController do
       end
 
       it "can send a message to a group with caps" do
+        Group.refresh_automatic_groups!
         group = Group.create(name: 'Test_group', messageable_level: Group::ALIAS_LEVELS[:nobody])
         user1 = user
         group.add(user1)
@@ -1303,6 +1305,7 @@ RSpec.describe PostsController do
         user_4 = Fabricate(:user, username: "Iyi_Iyi")
         user_4.update_attribute(:username, "İyi_İyi")
         user_4.update_attribute(:username_lower, "İyi_İyi".downcase)
+        Group.refresh_automatic_groups!
 
         post "/posts.json", params: {
           raw: 'this is the test content',
@@ -1461,6 +1464,10 @@ RSpec.describe PostsController do
 
     describe 'warnings' do
       fab!(:user_2) { Fabricate(:user) }
+
+      before do
+        Group.refresh_automatic_groups!
+      end
 
       context 'as a staff user' do
         before do
@@ -1898,6 +1905,10 @@ RSpec.describe PostsController do
     include_examples "action requires login", :get, "/posts/system/deleted.json"
 
     describe "when logged in" do
+      before do
+        Group.refresh_automatic_groups!
+      end
+
       it "raises an error if the user doesn't have permission to see the deleted posts" do
         sign_in(user)
         get "/posts/system/deleted.json"

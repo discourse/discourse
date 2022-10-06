@@ -50,10 +50,7 @@ module PostGuardian
         (!SiteSetting.allow_flagging_staff?) &&
         post&.user&.staff?
 
-      # TODO (martin) Remove enable_personal_messages here once plugins have been changed.
-      if action_key == :notify_user &&
-          (!@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map) ||
-           !SiteSetting.enable_personal_messages)
+      if action_key == :notify_user && !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
         return false
       end
 

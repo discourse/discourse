@@ -1192,6 +1192,7 @@ hu:
         move_to_archive: "Archiválás"
         failed_to_move: "A kijelölt üzenetek áthelyezése nem sikerült (lehet, hogy nincs hálózat)"
         tags: "Címkék"
+        all_tags: "Összes címke"
         warnings: "Hivatalos figyelmeztetések"
         read_more_in_group: "Szeretne többet olvasni? Nézzen meg más témákat itt: %{groupLink}."
         read_more: "Szeretne többet olvasni? Böngésszen a többi üzenet között a <a href='%{basePath}/u/%{username}/messages'>személyes üzenetekben</a>."
@@ -3442,6 +3443,9 @@ hu:
               content: "Felhasználók"
             my_posts:
               content: "Saját bejegyzéseim"
+            review:
+              content: "Áttekintés"
+              title: "áttekintés"
     welcome_topic_banner:
       title: "Hozzon létre üdvözlő témát"
       description: 'Az üdvözlő téma az első, amit az újonnan érkezők olvasnak. Gondoljon rá úgy mint egy bekezdésnyi bemutatkozóra vagy „küldetésnyilatkozatra”.'

@@ -130,7 +130,6 @@ pt_BR:
         unsubscribe_not_allowed: "Ocorre quando não é permitido cancelar a associação por e-mail para este(a) usuário(a)"
         email_not_allowed: "Acontece quando o endereço de e-mail não está na lista de permissões ou está na lista de proibições."
       unrecognized_error: "Erro desconhecido"
-    secure_media_placeholder: "Redigido: este site tem mídias seguras ativada, acesse o tópico ou clique em Visualizar mídias para exibir as mídias anexas."
     view_redacted_media: "Exibir mídias"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -200,7 +199,6 @@ pt_BR:
       page_publishing_requirements: "A publicação da página não pode ser ativada se houver mídias seguras ativadas."
       s3_backup_requires_s3_settings: "Você não pode usar o S3 como local de backup, a não ser que você tenha informado o \"%{setting_name}\"."
       s3_bucket_reused: "Você não pode usar o mesmo bucket para \"s3_upload_bucket\" e \"s3_backup_bucke\"'. Escolha um bucket diferente ou use um caminho diferente para cada bucket."
-      secure_media_requirements: "Envios S3 devem ser ativados antes da mídia segura."
       share_quote_facebook_requirements: "É preciso definir uma id do app Facebook para permitir o compartilhamento de citação para Facebook."
       second_factor_cannot_enforce_with_socials: "Você não pode aplicar 2FA com entrada com contas de redes sociais ativada. Primeiro você deve desativar a entrada com conta via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Você não pode impor a 2FA se a autenticação local estiver desativada."
@@ -1975,9 +1973,6 @@ pt_BR:
     delete_merged_stub_topics_after_days: "Quantidade de dias para aguardar antes de excluir automaticamente tópicos de stub totalmente mesclados. Defina para 0 para nunca excluir tópicos de stub."
     bootstrap_mode_min_users: "Quantidade mínima de usuários(as) necessários(as) para desativar o modo de inicialização (defina como 0 para desativar)"
     prevent_anons_from_downloading_files: "Impeça que usuários(as) anônimos(as) baixem anexos."
-    secure_media: 'Limita acesso a TODOS os envios (imagens, vídeo, áudio, texto, pdfs, zips e muito mais). Se “É necessário entrar com a conta” estiver ativado, apenas usuários(as) que entraram com a conta podem acessar os envios. Caso contrário, o acesso será limitado apenas a envios de mídias em mensagens e categorias privadas. AVISO: esta configuração é complexa e requer conhecimento de administração. Consulte <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">o tópico de mídias seguras em Meta</a> para obter detalhes.'
-    secure_media_allow_embed_images_in_emails: "Permite incorporação de imagens seguras que geralmente seriam escritas em e-mails, caso seu tamanho seja menor do que a configuração \"tamanho máx. de imagem incorporada no e-mail, em KB\"."
-    secure_media_max_email_embed_image_size_kb: "A redução de tamanho para imagens seguras que serão incorporadas nos e-mails se a configuração \"Permissão de incorporação de mídias seguras no e-mail\". Caso não esteja ativada, esta configuração não terá efeito."
     slug_generation_method: "Escolha um método para geração de slug. \"Codificado\" irá gerar linhas com \"%\". 'Nenhum\" irá desativar a geração de slugs."
     enable_emoji: "Ativar emoji"
     enable_emoji_shortcuts: "Texto com carinhas comuns como :): p :( será convertido em emojis"
