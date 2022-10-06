@@ -69,6 +69,12 @@
   }
 }
 
+.tabs-list .btn {
+  .user-menu-revamped & {
+    padding: 1.2em 1.4em;
+  }
+}
+
 .hamburger-panel .revamped {
   --d-sidebar-row-horizontal-padding: 1rem;
   --d-sidebar-highlight-color: var(--primary-low);
