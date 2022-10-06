@@ -32,6 +32,42 @@ RSpec.describe Wizard::Builder do
     expect(wizard.steps).to be_blank
   end
 
+  describe 'introduction' do
+    let(:introduction_step) { wizard.steps.find { |s| s.id == 'introduction' } }
+
+    it 'should not prefill default site setting values' do
+      fields = introduction_step.fields
+      title_field = fields.first
+      description_field = fields.second
+      contact_email_field = fields.third
+
+      expect(title_field.id).to eq('title')
+      expect(title_field.value).to eq("")
+      expect(description_field.id).to eq('site_description')
+      expect(description_field.value).to eq("")
+      expect(contact_email_field.id).to eq('contact_email')
+      expect(contact_email_field.value).to eq("")
+    end
+
+    it 'should prefill overridden site setting values' do
+      SiteSetting.title = "foobar"
+      SiteSetting.site_description = "lorem ipsum"
+      SiteSetting.contact_email = "foobar@example.com"
+
+      fields = introduction_step.fields
+      title_field = fields.first
+      description_field = fields.second
+      contact_email_field = fields.third
+
+      expect(title_field.id).to eq('title')
+      expect(title_field.value).to eq("foobar")
+      expect(description_field.id).to eq('site_description')
+      expect(description_field.value).to eq("lorem ipsum")
+      expect(contact_email_field.id).to eq('contact_email')
+      expect(contact_email_field.value).to eq("foobar@example.com")
+    end
+  end
+
   describe 'privacy step' do
     let(:privacy_step) { wizard.steps.find { |s| s.id == 'privacy' } }
 
