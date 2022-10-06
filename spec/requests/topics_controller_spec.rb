@@ -4057,7 +4057,7 @@ RSpec.describe TopicsController do
             email: 'someguy@email.com'
           }
 
-          expect(response.status).to eq(400)
+          expect(response.status).to eq(422)
         end
       end
 
@@ -4069,13 +4069,13 @@ RSpec.describe TopicsController do
             email: user.email
           }
 
-          expect(response.status).to eq(400)
+          expect(response.status).to eq(404)
         end
       end
 
       it 'requires an email parameter' do
         post "/t/#{topic.id}/invite.json"
-        expect(response.status).to eq(400)
+        expect(response.status).to eq(422)
       end
 
       context "when PM has reached maximum allowed numbers of recipients" do
