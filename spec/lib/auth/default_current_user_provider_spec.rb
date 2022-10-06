@@ -797,8 +797,8 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
 
   describe "first admin user" do
     before do
-      user.update(admin: false, email: "blah@test.com")
-      Rails.configuration.developer_emails = "blah@test.com"
+      user.update!(admin: false, email: "blah@test.com")
+      Rails.configuration.stubs(:developer_emails).returns(["blah@test.com"])
     end
 
     it "makes the user into an admin if their email is in DISCOURSE_DEVELOPER_EMAILS" do
