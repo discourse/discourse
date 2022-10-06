@@ -77,12 +77,6 @@
                   <DButton @ariaExpanded={{this.collapsedInfoState.isExpanded}} @ariaLabel={{this.collapsedInfoState.ariaLabel}} @ariaControls="collapsed-info-panel" @class="btn-default" @label={{concat "user." this.collapsedInfoState.label}} @icon={{this.collapsedInfoState.icon}} @action={{action this.collapsedInfoState.action}} />
                 </li>
               {{/if}}
-
-              {{#if (and this.site.mobileView this.currentUser.redesigned_user_page_nav_enabled)}}
-                <li>
-                  <DButton @class="btn-default toggle-mobile-user-menu" @action={{this.toggleUserNav}} @icon="bars" @label="hamburger_menu" />
-                </li>
-              {{/if}}
             </ul>
           </section>
 
@@ -237,8 +231,6 @@
     {{#if this.currentUser.redesigned_user_page_nav_enabled}}
       <div class="new-user-wrapper">
         <UserNav
-          @shouldDisplay={{this.displayUserNav}}
-          @toggleUserNav={{this.toggleUserNav}}
           @user={{this.model}}
           @showNotificationsTab={{this.showNotificationsTab}}
           @showPrivateMessages={{this.showPrivateMessages}}
@@ -249,11 +241,9 @@
           @showDrafts={{this.showDrafts}}
           @showBookmarks={{this.showBookmarks}} />
 
-        {{#if (or this.site.desktopView (not this.displayUserNav))}}
-          <div class="new-user-content-wrapper">
-            {{outlet}}
-          </div>
-        {{/if}}
+        <div class="new-user-content-wrapper">
+          {{outlet}}
+        </div>
       </div>
     {{else}}
       <div class='user-content-wrapper'>

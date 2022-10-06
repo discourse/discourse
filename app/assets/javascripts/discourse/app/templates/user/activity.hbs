@@ -1,8 +1,8 @@
 {{#if this.currentUser.redesigned_user_page_nav_enabled}}
   <DSection @pageClass="user-activity" />
 
-  <div class="user-navigation-container">
-    <ul id="navigation-bar" class="nav-pills action-list">
+  <div class="user-navigation user-navigation-secondary">
+    <ul class="nav-pills action-list">
       <DNavigationItem @route="userActivity.index">{{i18n "user.filters.all"}}</DNavigationItem>
       <DNavigationItem @route="userActivity.topics">{{i18n "user_action_groups.4"}}</DNavigationItem>
       <DNavigationItem @route="userActivity.replies">{{i18n "user_action_groups.5"}}</DNavigationItem>

@@ -1,79 +1,77 @@
-{{#if @shouldDisplay}}
-  <section class="user-primary-navigation" {{did-insert this.registerClickListener}} {{will-destroy this.unregisterClickListener}}>
-    <ul class="main-nav nav nav-pills user-nav">
-      {{#unless @user.profile_hidden}}
-        <li class="summary">
-          <LinkTo @route="user.summary">
-            {{d-icon "user"}}
-            {{i18n "user.summary.title"}}
-          </LinkTo>
-        </li>
+<section class="user-navigation user-navigation-primary">
+  <ul class="main-nav nav nav-pills user-nav">
+    {{#unless @user.profile_hidden}}
+      <li class="summary">
+        <LinkTo @route="user.summary">
+          {{d-icon "user"}}
+          {{i18n "user.summary.title"}}
+        </LinkTo>
+      </li>
 
-        <li class="user-activity">
-          <LinkTo @route="userActivity">
-            {{d-icon "stream"}}
-            {{i18n "user.activity_stream"}}
-          </LinkTo>
-        </li>
-      {{/unless}}
+      <li class="user-activity">
+        <LinkTo @route="userActivity">
+          {{d-icon "stream"}}
+          {{i18n "user.activity_stream"}}
+        </LinkTo>
+      </li>
+    {{/unless}}
 
-      {{#if @showNotificationsTab}}
-        <li class="user-notifications">
-          <LinkTo @route="userNotifications">
-            {{d-icon "bell" class="glyph"}}{{i18n "user.notifications"}}
-          </LinkTo>
-        </li>
-      {{/if}}
+    {{#if @showNotificationsTab}}
+      <li class="user-notifications">
+        <LinkTo @route="userNotifications">
+          {{d-icon "bell" class="glyph"}}{{i18n "user.notifications"}}
+        </LinkTo>
+      </li>
+    {{/if}}
 
-      {{#if @showPrivateMessages}}
-        <li class="private-messages">
-          <LinkTo @route="userPrivateMessages">
-            {{d-icon "far-envelope"}}
-            {{i18n "user.private_messages"}}
-          </LinkTo>
-        </li>
-      {{/if}}
+    {{#if @showPrivateMessages}}
+      <li class="private-messages">
+        <LinkTo @route="userPrivateMessages">
+          {{d-icon "far-envelope"}}
+          {{i18n "user.private_messages"}}
+        </LinkTo>
+      </li>
+    {{/if}}
 
-      {{#if @canInviteToForum}}
-        <li class="invited">
-          <LinkTo @route="userInvited">
-            {{d-icon "user-plus"}}
-            {{i18n "user.invited.title"}}
-          </LinkTo>
-        </li>
-      {{/if}}
+    {{#if @canInviteToForum}}
+      <li class="invited">
+        <LinkTo @route="userInvited">
+          {{d-icon "user-plus"}}
+          {{i18n "user.invited.title"}}
+        </LinkTo>
+      </li>
+    {{/if}}
 
-      {{#if @showBadges}}
-        <li class="badges">
-          <LinkTo @route="user.badges">
-            {{d-icon "certificate"}}
-            {{i18n "badges.title"}}
-          </LinkTo>
-        </li>
-      {{/if}}
+    {{#if @showBadges}}
+      <li class="badges">
+        <LinkTo @route="user.badges">
+          {{d-icon "certificate"}}
+          {{i18n "badges.title"}}
+        </LinkTo>
+      </li>
+    {{/if}}
 
-      <PluginOutlet
-        @name="user-main-nav"
-        @connectorTagName="li"
-        @args={{hash model=@user}} />
+    <PluginOutlet
+      @name="user-main-nav"
+      @connectorTagName="li"
+      @args={{hash model=@user}} />
 
-      {{#if @user.can_edit}}
-        <li class="preferences">
-          <LinkTo @route="preferences">
-            {{d-icon "cog"}}
-            {{i18n "user.preferences"}}
-          </LinkTo>
-        </li>
-      {{/if}}
+    {{#if @user.can_edit}}
+      <li class="preferences">
+        <LinkTo @route="preferences">
+          {{d-icon "cog"}}
+          {{i18n "user.preferences"}}
+        </LinkTo>
+      </li>
+    {{/if}}
 
-      {{#if (and this.site.mobileView this.currentUser.staff)}}
-        <li class="admin">
-          <a href={{@user.adminPath}} >
-            {{d-icon "wrench"}}
-            {{i18n "admin.user.manage_user"}}
-          </a>
-        </li>
-      {{/if}}
-    </ul>
-  </section>
-{{/if}}
+    {{#if (and this.site.mobileView this.currentUser.staff)}}
+      <li class="admin">
+        <a href={{@user.adminPath}} >
+          {{d-icon "wrench"}}
+          {{i18n "admin.user.manage_user"}}
+        </a>
+      </li>
+    {{/if}}
+  </ul>
+</section>
