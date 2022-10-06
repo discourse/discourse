@@ -1,6 +1,6 @@
 // eslint-disable-next-line ember/no-classic-components
 import Component from "@ember/component";
-import { modifier } from "ember-modifier";
+import { actionModifier } from "./ember-action-modifier";
 
 /**
  * Classic Ember components (i.e. "@ember/component") rely upon "event
@@ -210,33 +210,6 @@ function rewireActionModifier(appInstance) {
     }
   };
 }
-
-const actionModifier = modifier(
-  (element, [context, callback, ...args], { on }) => {
-    const handler = (event) => {
-      const fn = typeof callback === "string" ? context[callback] : callback;
-      if (fn === undefined) {
-        throw new Error(
-          "Unexpected callback for `action` modifier. Please provide either a function or the name of a method on the current context."
-        );
-      }
-
-      if (args.length > 0) {
-        return fn.call(context, ...args);
-      } else {
-        return fn.call(context, event);
-      }
-    };
-
-    const eventName = on ?? "click";
-    element.addEventListener(eventName, handler);
-
-    return () => {
-      element.removeEventListener(eventName, handler);
-    };
-  },
-  { eager: false }
-);
 
 function addComponentEventListeners(component, events) {
   if (events?.length > 0) {
