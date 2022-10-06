@@ -666,6 +666,19 @@ RSpec.describe Upload do
       expect(red_image.dominant_color).to eq("FF0000")
     end
 
+    it "is backfilled by the job" do
+      expect(white_image.dominant_color).to eq(nil)
+      expect(red_image.dominant_color).to eq(nil)
+
+      Jobs::BackfillDominantColors.new.execute({})
+
+      white_image.reload
+      red_image.reload
+
+      expect(white_image.dominant_color).to eq("FFFFFF")
+      expect(red_image.dominant_color).to eq("FF0000")
+    end
+
     it "stores an empty string for non-image uploads" do
       expect(not_an_image.dominant_color).to eq(nil)
       expect(not_an_image.dominant_color(calculate_if_missing: true)).to eq("")
