@@ -21,10 +21,22 @@ export function applyLocalDates(dates, siteSettings) {
 
   const currentUserTZ = moment.tz.guess();
 
-  dates.forEach((element) => {
+  dates.forEach((element, index, arr) => {
     const opts = buildOptionsFromElement(element, siteSettings);
 
+    if (
+      element.attributes["data-range"]?.value === "to" &&
+      index !== 0 &&
+      arr[index - 1].attributes["data-range"]?.value === "from"
+    ) {
+      const fromElement = arr[index - 1];
+      if (_rangeIsSameLocalDay(fromElement, element)) {
+        opts.sameLocalDayAsFrom = true;
+      }
+    }
+
     const localDateBuilder = new LocalDateBuilder(opts, currentUserTZ).build();
+
     element.innerText = "";
     element.insertAdjacentHTML(
       "beforeend",
@@ -43,6 +55,17 @@ export function applyLocalDates(dates, siteSettings) {
     }
     element.classList.add(...classes);
   });
+}
+
+function _rangeIsSameLocalDay(fromElement, toElement) {
+  const timezone = fromElement.attributes["data-timezone"].value;
+  const from = moment(_getDateFromElement(fromElement)).tz(timezone);
+  const to = moment(_getDateFromElement(toElement)).tz(timezone);
+  return from.isSame(to, "day");
+}
+
+function _getDateFromElement(element) {
+  return `${element.attributes["data-date"].value}T${element.attributes["data-time"].value}`;
 }
 
 function buildOptionsFromElement(element, siteSettings) {
@@ -85,6 +108,7 @@ function buildOptionsFromMarkdownTag(element) {
   opts.displayedTimezone = element.attributes["data-displayed-timezone"];
   opts.format = element.attributes["data-format"];
   opts.countdown = element.attributes["data-countdown"];
+  opts.range = element.attributes["data-range"];
 
   return opts;
 }
@@ -189,7 +213,11 @@ function initializeDiscourseLocalDates(api) {
         this.metadata.discourseLocalDateStartRangeOpts = null;
         return "";
       }
-      if (this.element.attributes["data-range"] === "true") {
+      if (
+        this.element.attributes["data-range"] === "true" ||
+        this.element.attributes["data-range"] === "from" ||
+        this.element.attributes["data-range"] === "to"
+      ) {
         this.metadata.discourseLocalDateStartRangeOpts =
           buildOptionsFromMarkdownTag(this.element);
         return "";

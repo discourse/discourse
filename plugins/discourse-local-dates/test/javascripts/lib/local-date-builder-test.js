@@ -86,6 +86,20 @@ module("lib:local-date-builder", function () {
     );
   });
 
+  test("time", function (assert) {
+    assert.buildsCorrectDate(
+      {
+        "time": "12:22:00",
+        "date": "2022-10-07",
+        "timezone": "Asia/Singapore",
+        "localTimezone": "Asia/Singapore",
+        "sameLocalDayAsFrom": true
+      },
+      { formatted: "12:22 PM (Singapore)" },
+      "it displays the time only as the date is the same local day as 'from'"
+    );
+  });
+
   test("option[format]", function (assert) {
     freezeTime({ date: "2020-03-11" }, () => {
       assert.buildsCorrectDate(
