@@ -1,7 +1,6 @@
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
 import ItsATrap from "@discourse/itsatrap";
@@ -11,7 +10,6 @@ import {
 } from "discourse/lib/time-shortcut";
 
 export default Controller.extend(ModalFunctionality, {
-  userStatusService: service("user-status"),
   showDeleteButton: false,
   prefilledDateTime: null,
   timeShortcuts: null,
