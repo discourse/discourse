@@ -7,6 +7,6 @@
     <span class="category-name">{{dir-span this.category.name}}</span>
   </div>
   {{#if this.category.uploaded_logo.url}}
-    <CdnImg @src={{this.category.uploaded_logo.url}} @class="category-logo" @width={{this.category.uploaded_logo.width}} @height={{this.category.uploaded_logo.height}} @alt="" />
+    <CategoryLogo @category={{this.category}} />
   {{/if}}
 </a>

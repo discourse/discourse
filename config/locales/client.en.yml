@@ -3450,6 +3450,7 @@ en:
       name: "Category Name"
       description: "Description"
       logo: "Category Logo Image"
+      logo_dark: "Dark Mode Category Logo Image"
       background_image: "Category Background Image"
       badge_colors: "Badge colors"
       background_color: "Background color"
