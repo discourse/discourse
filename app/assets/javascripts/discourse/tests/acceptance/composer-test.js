@@ -227,12 +227,17 @@ acceptance("Composer", function (needs) {
   });
 
   test("Create a topic with server side errors", async function (assert) {
+    pretender.post("/posts", function () {
+      return response(422, { errors: ["That title has already been taken"] });
+    });
+
     await visit("/");
     await click("#create-topic");
     await fillIn("#reply-title", "this title triggers an error");
     await fillIn(".d-editor-input", "this is the *content* of a post");
     await click("#reply-control button.create");
     assert.ok(exists(".dialog-body"), "it pops up an error message");
+
     await click(".dialog-footer .btn-primary");
     assert.ok(!exists(".dialog-body"), "it dismisses the error");
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
@@ -255,6 +260,17 @@ acceptance("Composer", function (needs) {
   });
 
   test("Create an enqueued Topic", async function (assert) {
+    pretender.post("/posts", function () {
+      return response(200, {
+        success: true,
+        action: "enqueued",
+        pending_post: {
+          id: 1234,
+          raw: "enqueue this content please",
+        },
+      });
+    });
+
     await visit("/");
     await click("#create-topic");
     await fillIn("#reply-title", "Internationalization Localization");
@@ -380,7 +396,7 @@ acceptance("Composer", function (needs) {
 
     await click(".modal-footer button.keep-editing");
 
-    assert.ok(invisible(".discard-draft-modal.modal"));
+    assert.ok(invisible(".discard-draft-modal.modal"), "hides modal");
     await click("#topic-footer-buttons .btn.create");
     assert.ok(
       exists(".discard-draft-modal.modal"),
@@ -397,8 +413,18 @@ acceptance("Composer", function (needs) {
   });
 
   test("Create an enqueued Reply", async function (assert) {
-    await visit("/t/internationalization-localization/280");
+    pretender.post("/posts", function () {
+      return response(200, {
+        success: true,
+        action: "enqueued",
+        pending_post: {
+          id: 1234,
+          raw: "enqueue this content please",
+        },
+      });
+    });
 
+    await visit("/t/internationalization-localization/280");
     assert.ok(!exists(".pending-posts .reviewable-item"));
 
     await click("#topic-footer-buttons .btn.create");
@@ -415,12 +441,10 @@ acceptance("Composer", function (needs) {
         "enqueue this content please",
       "it doesn't insert the post"
     );
-
     assert.ok(visible(".d-modal"), "it pops up a modal");
 
     await click(".modal-footer button");
     assert.ok(invisible(".d-modal"), "the modal can be dismissed");
-
     assert.ok(exists(".pending-posts .reviewable-item"));
   });
 
