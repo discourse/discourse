@@ -99,7 +99,7 @@ RSpec.describe ApplicationHelper do
       expect(@links_to_preload.size).to eq(2)
     end
 
-    it "doesn't adds resources to the preload list when it's not availiable" do
+    it "doesn't add resources to the preload list when it's not available" do
       @links_to_preload = nil
       add_resource_preload_list('/assets/discourse.js', 'script')
       add_resource_preload_list('/assets/discourse.css', 'style')
