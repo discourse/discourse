@@ -7,7 +7,7 @@
       {{on "focus" this.focus}}
       {{on "blur" this.blur}}
     >
-      {{#if @emoji}}
+      {{#if @status.emoji}}
         {{html-safe this.emojiHtml}}
       {{else}}
         {{d-icon "discourse-emojis"}}
@@ -15,11 +15,15 @@
     </button>
     <Input
       class="user-status-description"
-      @value={{@description}}
+      @value={{@status.description}}
       placeholder={{i18n "user_status.what_are_you_doing"}}
       {{on "input" this.setDefaultEmoji}}
       {{on "focus" this.focus}}
       {{on "blur" this.blur}} />
   </div>
 </div>
-<EmojiPicker @isActive={{this.emojiPickerIsActive}} @emojiSelected={{action "emojiSelected"}} @onEmojiPickerClose={{action "onEmojiPickerOutsideClick"}} @placement="bottom" />
+<EmojiPicker
+  @isActive={{this.emojiPickerIsActive}}
+  @emojiSelected={{action "emojiSelected"}}
+  @onEmojiPickerClose={{action "onEmojiPickerOutsideClick"}}
+  @placement="bottom"/>
