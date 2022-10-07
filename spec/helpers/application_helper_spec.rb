@@ -90,6 +90,47 @@ RSpec.describe ApplicationHelper do
     end
   end
 
+  describe "add_resource_preload_list" do
+    it "adds resources to the preload list when it's availiable" do
+      @links_to_preload = []
+      add_resource_preload_list('/assets/discourse.js', 'script')
+      add_resource_preload_list('/assets/discourse.css', 'style')
+
+      expect(@links_to_preload.size).to eq(2)
+    end
+
+    it "doesn't adds resources to the preload list when it's not availiable" do
+      @links_to_preload = nil
+      add_resource_preload_list('/assets/discourse.js', 'script')
+      add_resource_preload_list('/assets/discourse.css', 'style')
+
+      expect(@links_to_preload).to eq(nil)
+    end
+
+    it "adds resources to the preload list when preload_script is called" do
+      @links_to_preload = []
+      helper.preload_script('discourse')
+
+      expect(@links_to_preload.size).to eq(1)
+    end
+
+    it "adds resources to the preload list when discourse_stylesheet_link_tag is called" do
+      @links_to_preload = []
+      helper.discourse_stylesheet_link_tag(:desktop)
+
+      expect(@links_to_preload.size).to eq(1)
+    end
+
+    it "adds resources as the correct type" do
+      @links_to_preload = []
+      helper.discourse_stylesheet_link_tag(:desktop)
+      helper.preload_script('discourse')
+
+      expect(@links_to_preload[0]).to match(/as="style"/)
+      expect(@links_to_preload[1]).to match(/as="script"/)
+    end
+  end
+
   describe "escape_unicode" do
     it "encodes tags" do
       expect(helper.escape_unicode("<tag>")).to eq("\u003ctag>")
