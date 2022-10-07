@@ -22,4 +22,8 @@
       {{on "blur" this.blur}} />
   </div>
 </div>
-<EmojiPicker @isActive={{this.emojiPickerIsActive}} @emojiSelected={{action "emojiSelected"}} @onEmojiPickerClose={{action "onEmojiPickerOutsideClick"}} @placement="bottom" />
+<EmojiPicker
+  @isActive={{this.emojiPickerIsActive}}
+  @emojiSelected={{action "emojiSelected"}}
+  @onEmojiPickerClose={{action "onEmojiPickerOutsideClick"}}
+  @placement="bottom"/>
