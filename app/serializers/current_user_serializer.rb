@@ -68,6 +68,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :timezone,
              :featured_topic,
              :skip_new_user_tips,
+             :skip_first_notification_tips,
              :do_not_disturb_until,
              :has_topic_draft,
              :can_review,
@@ -280,6 +281,12 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def skip_new_user_tips
     object.user_option.skip_new_user_tips
+  end
+
+  def skip_first_notification_tips
+    !SiteSetting.enable_onboarding_popups ||
+      object.user_option.skip_new_user_tips ||
+      object.user_option.skip_first_notification_tips
   end
 
   def include_primary_group_id?

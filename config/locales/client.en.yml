@@ -1816,6 +1816,10 @@ en:
       primary: "Got it!"
       secondary: "don't show me these tips"
 
+      first_notification:
+        title: "Your first notification!"
+        content: "Notifications are used to keep you up-to-date with what is happening in community."
+
     loading: "Loading..."
     errors:
       prev_page: "while trying to load"

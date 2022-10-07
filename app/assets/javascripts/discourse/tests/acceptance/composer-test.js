@@ -61,6 +61,7 @@ acceptance("Composer", function (needs) {
     ],
   });
   needs.pretender((server, helper) => {
+    server.put("/u/kris.json", () => helper.response({ user: {} }));
     server.post("/uploads/lookup-urls", () => {
       return helper.response([]);
     });

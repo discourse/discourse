@@ -17,6 +17,10 @@ class UserUpdater
     muted_tags: :muted
   }
 
+  POPUP_OPTION_ATTR = [
+    :skip_first_notification_tips,
+  ]
+
   OPTION_ATTR = [
     :mailing_list_mode,
     :mailing_list_mode_frequency,
@@ -48,7 +52,7 @@ class UserUpdater
     :timezone,
     :skip_new_user_tips,
     :default_calendar
-  ]
+  ] + POPUP_OPTION_ATTR
 
   NOTIFICATION_SCHEDULE_ATTRS = -> {
     attrs = [:enabled]

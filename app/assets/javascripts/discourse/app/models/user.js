@@ -104,6 +104,7 @@ let userOptionFields = [
   "title_count_mode",
   "timezone",
   "skip_new_user_tips",
+  "skip_first_notification_tips",
   "default_calendar",
   "bookmark_auto_delete_preference",
 ];
@@ -441,7 +442,7 @@ const User = RestModel.extend({
           "external_links_in_new_tab",
           "dynamic_favicon"
         );
-        User.current().setProperties(userProps);
+        User.current()?.setProperties(userProps);
         this.setProperties(updatedState);
         return result;
       })

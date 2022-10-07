@@ -29,6 +29,7 @@ acceptance("Composer Actions", function (needs) {
   });
   needs.site({ can_tag_topics: true });
   needs.pretender((server, helper) => {
+    server.put("/u/kris.json", () => helper.response({ user: {} }));
     const cardResponse = cloneJSON(userFixtures["/u/shade/card.json"]);
     server.get("/u/shade/card.json", () => helper.response(cardResponse));
   });

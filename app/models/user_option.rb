@@ -268,6 +268,7 @@ end
 #  oldest_search_log_date           :datetime
 #  bookmark_auto_delete_preference  :integer          default(3), not null
 #  enable_experimental_sidebar      :boolean          default(FALSE)
+#  skip_first_notification_tips     :boolean          default(FALSE)
 #
 # Indexes
 #

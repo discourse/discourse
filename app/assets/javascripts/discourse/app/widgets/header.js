@@ -13,6 +13,7 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { hbs } from "ember-cli-htmlbars";
+import { hidePopup, showPopup } from "discourse/lib/popup";
 
 let _extraHeaderIcons = [];
 
@@ -87,8 +88,13 @@ createWidget("header-notifications", {
         const count = unread + reviewables;
         if (count > 0) {
           if (this._shouldHighlightAvatar()) {
-            this._addAvatarHighlight(contents);
+            if (this.siteSettings.enable_onboarding_popups) {
+              contents.push(h("span.ring"));
+            } else {
+              this._addAvatarHighlight(contents);
+            }
           }
+
           contents.push(
             this.attach("link", {
               action: attrs.action,
@@ -118,7 +124,11 @@ createWidget("header-notifications", {
         const unreadHighPriority = user.unread_high_priority_notifications;
         if (!!unreadHighPriority) {
           if (this._shouldHighlightAvatar()) {
-            this._addAvatarHighlight(contents);
+            if (this.siteSettings.enable_onboarding_popups) {
+              contents.push(h("span.ring"));
+            } else {
+              this._addAvatarHighlight(contents);
+            }
           }
 
           // add the counter for the unread high priority
@@ -151,6 +161,10 @@ createWidget("header-notifications", {
   },
 
   _addAvatarHighlight(contents) {
+    if (this.siteSettings.enable_onboarding_popups) {
+      return;
+    }
+
     contents.push(h("span.ring"));
     contents.push(h("span.ring-backdrop-spotlight"));
     contents.push(
@@ -183,6 +197,45 @@ createWidget("header-notifications", {
         ])
       )
     );
+  },
+
+  didRenderWidget() {
+    if (
+      !this.siteSettings.enable_onboarding_popups ||
+      !this._shouldHighlightAvatar()
+    ) {
+      return;
+    }
+
+    showPopup({
+      id: "first-notification",
+      currentUser: this.currentUser,
+
+      titleText: I18n.t("popup.first_notification.title"),
+      contentText: I18n.t("popup.first_notification.content"),
+
+      reference: document
+        .querySelector(".badge-notification")
+        ?.parentElement?.querySelector(".avatar"),
+
+      placement: "bottom-end",
+    });
+  },
+
+  destroy() {
+    if (!this.siteSettings.enable_onboarding_popups) {
+      return;
+    }
+
+    hidePopup("first-notification");
+  },
+
+  willRerenderWidget() {
+    if (!this.siteSettings.enable_onboarding_popups) {
+      return;
+    }
+
+    hidePopup("first-notification");
   },
 });
 
