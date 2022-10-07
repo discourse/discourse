@@ -7,6 +7,7 @@ import {
   exists,
   publishToMessageBus,
   query,
+  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { NotificationLevels } from "discourse/lib/notification-levels";
@@ -175,7 +176,7 @@ acceptance(
       updateCurrentUser({
         groups: [
           {
-            name: "group1",
+            name: "group3",
             has_messages: true,
           },
           {
@@ -183,7 +184,7 @@ acceptance(
             has_messages: false,
           },
           {
-            name: "group3",
+            name: "group1",
             has_messages: true,
           },
         ],
@@ -191,18 +192,16 @@ acceptance(
 
       await visit("/");
 
-      assert.ok(
-        exists(
-          ".sidebar-section-messages .sidebar-section-link-group-messages-inbox.group1"
-        ),
-        "displays group1 inbox link"
+      const groupSectionLinks = queryAll(
+        ".sidebar-section-messages .sidebar-section-link"
       );
 
-      assert.ok(
-        exists(
-          ".sidebar-section-messages .sidebar-section-link-group-messages-inbox.group3"
-        ),
-        "displays group3 inbox link"
+      assert.deepEqual(
+        groupSectionLinks
+          .toArray()
+          .map((sectionLink) => sectionLink.textContent.trim()),
+        ["Inbox", "group1", "group3"],
+        "displays group section links sorted by name"
       );
 
       await visit("/u/eviltrout/messages/group/GrOuP1");
