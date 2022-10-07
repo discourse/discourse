@@ -1,4 +1,4 @@
-<div class="user-navigation-container">
+<div class="user-navigation user-navigation-secondary">
   {{#if (gt @user.groupsWithMessages.length 0)}}
     <ol class="category-breadcrumb">
       <li>
@@ -7,7 +7,7 @@
     </ol>
   {{/if}}
 
-  <ul id="navigation-bar" class="messages-nav nav-pills action-list">
+  <ul class="messages-nav nav-pills action-list">
     {{#if @isPersonal}}
       <li>
         <LinkTo @route="userPrivateMessages.index" @model={{@user}}>
