@@ -73,3 +73,9 @@ $mobile-breakpoint: 700px;
     }
   }
 }
+
+.select-kit.bookmark-actions-dropdown {
+  .select-kit-body {
+    max-width: 350px;
+  }
+}

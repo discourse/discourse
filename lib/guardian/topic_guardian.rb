@@ -183,7 +183,7 @@ module TopicGuardian
   end
 
   def can_convert_topic?(topic)
-    return false unless SiteSetting.enable_personal_messages?
+    return false unless @user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
     return false if topic.blank?
     return false if topic.trashed?
     return false if topic.is_category_topic?

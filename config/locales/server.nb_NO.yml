@@ -392,8 +392,7 @@ nb_NO:
               too_many: "For mange ord for den handlingen"
       <<: *errors
   uncategorized_category_name: "Ukategorisert"
-  vip_category_name: "Salong"
-  vip_category_description: "En kategori tilgjengelig for brukere på tillitsnivå 3 og høyere."
+  general_category_name: "Generelt"
   meta_category_name: "Tilbakemeldinger"
   meta_category_description: "Diskusjon om dette nettstedet, hvordan det er organisert, hvordan det fungerer og hvordan vi kan forbedre det."
   staff_category_name: "Stab"
@@ -414,8 +413,6 @@ nb_NO:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Vi anbefaler at du stenger dette emnet ved hjelp av Admin :wrench: knappen (oppe til høyre og i bunnen), slik at svar ikke hoper seg opp på en kunngjøring som denne.
-  lounge_welcome:
-    title: "Velkommen til salongen"
   category:
     topic_prefix: "Om kategorien %{category} "
     post_template: "%{replace_paragraph}\n\nBruk de følgende avsnittene for en lengre beskrivelse, eller for å formulere retningslinjer eller regler for kategorien:\n\n- Hvorfor skal folk bruke denne kategorien? Hva er den ment for?\n\n- Hvordan skiller den seg fra de andre kategoriene vi allerede har?\n\n- Hva skal emner i denne kategorien generelt sett inneholde?\n\n- Trenger vi denne kategorien? Kan vi slå den sammen med en annen kategori eller underkategori?\n"
@@ -1395,7 +1392,6 @@ nb_NO:
     register:
       button: "Registrer"
       title: "Registrer administratorkonto"
-      help: "registrer en ny konto for å komme igang"
     confirm_email:
       title: "Bekreft din e-postadresse"
     resend_email:

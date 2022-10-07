@@ -2,9 +2,10 @@ import Controller from "@ember/controller";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend(ModalFunctionality, {
+  dialog: service(),
   loading: true,
   reseeding: false,
   categories: null,
@@ -35,11 +36,11 @@ export default Controller.extend(ModalFunctionality, {
         },
         type: "POST",
       })
-        .then(
-          () => this.send("closeModal"),
-          () => bootbox.alert(I18n.t("generic_error"))
-        )
-        .finally(() => this.set("reseeding", false));
+        .catch(() => this.dialog.alert(I18n.t("generic_error")))
+        .finally(() => {
+          this.set("reseeding", false);
+          this.send("closeModal");
+        });
     },
   },
 });

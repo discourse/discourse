@@ -4,6 +4,7 @@ import updateTabCount from "discourse/lib/update-tab-count";
 
 export default Service.extend({
   appEvents: service(),
+  currentUser: service(),
   contextCount: null,
   notificationCount: null,
   _title: null,
@@ -53,8 +54,8 @@ export default Service.extend({
     this._renderTitle();
   },
 
-  updateNotificationCount(count) {
-    if (!this.session.hasFocus) {
+  updateNotificationCount(count, { forced = false } = {}) {
+    if (!this.session.hasFocus || forced) {
       this.notificationCount = count;
       this._renderFavicon();
       this._renderTitle();

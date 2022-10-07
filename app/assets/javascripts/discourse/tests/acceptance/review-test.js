@@ -2,8 +2,10 @@ import {
   acceptance,
   count,
   exists,
+  loggedInUser,
   publishToMessageBus,
   query,
+  updateCurrentUser,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
@@ -210,7 +212,8 @@ acceptance("Review", function (needs) {
     );
   });
 
-  test("Reviewables can become stale", async function (assert) {
+  test("Reviewables can become stale when redesigned_user_menu_enabled is false", async function (assert) {
+    updateCurrentUser({ redesigned_user_menu_enabled: false });
     await visit("/review");
 
     const reviewable = query(`[data-reviewable-id="1234"]`);
@@ -222,6 +225,36 @@ acceptance("Review", function (needs) {
     assert.ok(!exists(".stale-help"));
 
     await publishToMessageBus("/reviewable_counts", {
+      review_count: 1,
+      updates: {
+        1234: { last_performing_username: "foo", status: 1 },
+      },
+    });
+
+    assert.ok(reviewable.className.includes("reviewable-stale"));
+    assert.strictEqual(count("[data-reviewable-id=1234] .status .approved"), 1);
+    assert.strictEqual(count(".stale-help"), 1);
+    assert.ok(query(".stale-help").innerText.includes("foo"));
+
+    await visit("/");
+    await visit("/review"); // reload review
+
+    assert.strictEqual(count(".stale-help"), 0);
+  });
+
+  test("Reviewables can become stale when redesigned_user_menu_enabled is true", async function (assert) {
+    updateCurrentUser({ redesigned_user_menu_enabled: true });
+    await visit("/review");
+
+    const reviewable = query(`[data-reviewable-id="1234"]`);
+    assert.notOk(reviewable.className.includes("reviewable-stale"));
+    assert.strictEqual(
+      count(`[data-reviewable-id="1234"] .status .pending`),
+      1
+    );
+    assert.ok(!exists(".stale-help"));
+
+    await publishToMessageBus(`/reviewable_counts/${loggedInUser().id}`, {
       review_count: 1,
       updates: {
         1234: { last_performing_username: "foo", status: 1 },

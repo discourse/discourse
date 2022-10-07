@@ -257,10 +257,10 @@ module Email
     end
 
     def inline_secure_images(attachments, attachments_index)
-      stripped_media = @fragment.css('[data-stripped-secure-media]')
+      stripped_media = @fragment.css('[data-stripped-secure-media], [data-stripped-secure-upload]')
       upload_shas = {}
       stripped_media.each do |div|
-        url = div['data-stripped-secure-media']
+        url = div['data-stripped-secure-media'] || div['data-stripped-secure-upload']
         filename = File.basename(url)
         filename_bare = filename.gsub(File.extname(filename), "")
         sha1 = filename_bare.partition('_').first
@@ -269,7 +269,9 @@ module Email
       uploads = Upload.select(:original_filename, :sha1).where(sha1: upload_shas.values)
 
       stripped_media.each do |div|
-        upload = uploads.find { |upl| upl.sha1 == upload_shas[div['data-stripped-secure-media']] }
+        upload = uploads.find do |upl|
+          upl.sha1 == (upload_shas[div['data-stripped-secure-media']] || upload_shas[div['data-stripped-secure-upload']])
+        end
         next if !upload
 
         if attachments[attachments_index[upload.sha1]]
@@ -294,7 +296,7 @@ module Email
     def to_html
       # needs to be before class + id strip because we need to style redacted
       # media and also not double-redact already redacted from lower levels
-      replace_secure_media_urls if SiteSetting.secure_media?
+      replace_secure_uploads_urls if SiteSetting.secure_uploads?
       strip_classes_and_ids
       replace_relative_urls
 
@@ -369,13 +371,13 @@ module Email
       end
     end
 
-    def replace_secure_media_urls
+    def replace_secure_uploads_urls
       # strip again, this can be done at a lower level like in the user
       # notification template but that may not catch everything
-      PrettyText.strip_secure_media(@fragment)
+      PrettyText.strip_secure_uploads(@fragment)
 
-      style('div.secure-media-notice', 'border: 5px solid #e9e9e9; padding: 5px; display: inline-block;')
-      style('div.secure-media-notice a', "color: #{SiteSetting.email_link_color}")
+      style('div.secure-upload-notice', 'border: 5px solid #e9e9e9; padding: 5px; display: inline-block;')
+      style('div.secure-upload-notice a', "color: #{SiteSetting.email_link_color}")
     end
 
     def correct_first_body_margin

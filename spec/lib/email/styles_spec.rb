@@ -208,32 +208,32 @@ RSpec.describe Email::Styles do
     end
   end
 
-  describe "replace_secure_media_urls" do
+  describe "replace_secure_uploads_urls" do
     before do
       setup_s3
-      SiteSetting.secure_media = true
+      SiteSetting.secure_uploads = true
     end
 
     let(:attachments) { { 'testimage.png' => stub(url: 'email/test.png') } }
-    it "replaces secure media within a link with a placeholder" do
-      frag = html_fragment("<a href=\"#{Discourse.base_url}\/secure-media-uploads/original/1X/testimage.png\"><img src=\"/secure-media-uploads/original/1X/testimage.png\"></a>")
+    it "replaces secure uploads within a link with a placeholder" do
+      frag = html_fragment("<a href=\"#{Discourse.base_url}\/secure-uploads/original/1X/testimage.png\"><img src=\"/secure-uploads/original/1X/testimage.png\"></a>")
       expect(frag.at('img')).not_to be_present
       expect(frag.to_s).to include("Redacted")
     end
 
     it "replaces secure images with a placeholder" do
-      frag = html_fragment("<img src=\"/secure-media-uploads/original/1X/testimage.png\">")
+      frag = html_fragment("<img src=\"/secure-uploads/original/1X/testimage.png\">")
       expect(frag.at('img')).not_to be_present
       expect(frag.to_s).to include("Redacted")
     end
 
-    it "does not replace topic links with secure-media-uploads in the name" do
-      frag = html_fragment("<a href=\"#{Discourse.base_url}\/t/secure-media-uploads/235723\">Visit Topic</a>")
+    it "does not replace topic links with secure-uploads in the name" do
+      frag = html_fragment("<a href=\"#{Discourse.base_url}\/t/secure-uploads/235723\">Visit Topic</a>")
       expect(frag.to_s).not_to include("Redacted")
     end
 
     it "works in lightboxes with missing srcset attribute" do
-      frag = html_fragment("<a href=\"#{Discourse.base_url}\/secure-media-uploads/original/1X/testimage.png\" class=\"lightbox\"><img src=\"/secure-media-uploads/original/1X/testimage.png\"></a>")
+      frag = html_fragment("<a href=\"#{Discourse.base_url}\/secure-uploads/original/1X/testimage.png\" class=\"lightbox\"><img src=\"/secure-uploads/original/1X/testimage.png\"></a>")
       expect(frag.at('img')).not_to be_present
       expect(frag.to_s).to include("Redacted")
     end
@@ -241,8 +241,8 @@ RSpec.describe Email::Styles do
     it "works in lightboxes with srcset attribute set" do
       frag = html_fragment(
         <<~HTML
-          <a href="#{Discourse.base_url}/secure-media-uploads/original/1X/testimage.png" class="lightbox">
-            <img src="/secure-media-uploads/original/1X/testimage.png" srcset="/secure-media-uploads/optimized/1X/testimage.png, /secure-media-uploads/original/1X/testimage.png 1.5x" />
+          <a href="#{Discourse.base_url}/secure-uploads/original/1X/testimage.png" class="lightbox">
+            <img src="/secure-uploads/original/1X/testimage.png" srcset="/secure-uploads/optimized/1X/testimage.png, /secure-uploads/original/1X/testimage.png 1.5x" />
           </a>
         HTML
       )
@@ -252,7 +252,7 @@ RSpec.describe Email::Styles do
     end
 
     it "skips links with no images as children" do
-      frag = html_fragment("<a href=\"#{Discourse.base_url}\/secure-media-uploads/original/1X/testimage.png\"><span>Clearly not an image</span></a>")
+      frag = html_fragment("<a href=\"#{Discourse.base_url}\/secure-uploads/original/1X/testimage.png\"><span>Clearly not an image</span></a>")
       expect(frag.to_s).to include("not an image")
     end
 
@@ -261,16 +261,16 @@ RSpec.describe Email::Styles do
   describe "inline_secure_images" do
     before do
       setup_s3
-      SiteSetting.secure_media = true
+      SiteSetting.secure_uploads = true
     end
 
     fab!(:upload) { Fabricate(:upload, original_filename: 'testimage.png', secure: true, sha1: '123456') }
     let(:attachments) { [stub(url: 'cid:email/test.png')] }
     let(:attachments_index) { { upload.sha1 => 0 } }
-    let(:html) { "<a href=\"#{Discourse.base_url}\/secure-media-uploads/original/1X/123456.png\"><img src=\"/secure-media-uploads/original/1X/123456.png\" width=\"20\" height=\"30\"></a>" }
+    let(:html) { "<a href=\"#{Discourse.base_url}\/secure-uploads/original/1X/123456.png\"><img src=\"/secure-uploads/original/1X/123456.png\" width=\"20\" height=\"30\"></a>" }
 
     def strip_and_inline
-      # strip out the secure media
+      # strip out the secure uploads
       styler = Email::Styles.new(html)
       styler.format_basic
       styler.format_html
@@ -285,7 +285,7 @@ RSpec.describe Email::Styles do
     it "inlines attachments where stripped-secure-media data attr is present" do
       strip_and_inline
       expect(@frag.to_s).to include("cid:email/test.png")
-      expect(@frag.css('[data-stripped-secure-media]')).not_to be_present
+      expect(@frag.css('[data-stripped-secure-upload]')).not_to be_present
       expect(@frag.children.attr('style').value).to eq("width: 20px; height: 30px;")
     end
 
@@ -294,17 +294,17 @@ RSpec.describe Email::Styles do
       strip_and_inline
 
       expect(@frag.to_s).not_to include("cid:email/test.png")
-      expect(@frag.css('[data-stripped-secure-media]')).to be_present
+      expect(@frag.css('[data-stripped-secure-upload]')).to be_present
     end
 
     context "when an optimized image is used instead of the original" do
-      let(:html) { "<a href=\"#{Discourse.base_url}\/secure-media-uploads/optimized/2X/1/123456_2_20x30.png\"><img src=\"/secure-media-uploads/optimized/2X/1/123456_2_20x30.png\" width=\"20\" height=\"30\"></a>" }
+      let(:html) { "<a href=\"#{Discourse.base_url}\/secure-uploads/optimized/2X/1/123456_2_20x30.png\"><img src=\"/secure-uploads/optimized/2X/1/123456_2_20x30.png\" width=\"20\" height=\"30\"></a>" }
 
       it "inlines attachments where the stripped-secure-media data attr is present" do
         optimized = Fabricate(:optimized_image, upload: upload, width: 20, height: 30)
         strip_and_inline
         expect(@frag.to_s).to include("cid:email/test.png")
-        expect(@frag.css('[data-stripped-secure-media]')).not_to be_present
+        expect(@frag.css('[data-stripped-secure-upload]')).not_to be_present
         expect(@frag.children.attr('style').value).to eq("width: 20px; height: 30px;")
       end
     end
@@ -321,11 +321,11 @@ RSpec.describe Email::Styles do
         <<~HTML
 <aside class="onebox allowlistedgeneric">
   <header class="source">
-      <img src="#{Discourse.base_url}/secure-media-uploads/original/1X/#{siteicon.sha1}.ico" class="site-icon" width="64" height="64">
+      <img src="#{Discourse.base_url}/secure-uploads/original/1X/#{siteicon.sha1}.ico" class="site-icon" width="64" height="64">
       <a href="https://test.com/article" target="_blank" rel="noopener" title="02:33PM - 24 October 2020">Test</a>
   </header>
   <article class="onebox-body">
-    <div class="aspect-image" style="--aspect-ratio:20/30;"><img src="#{Discourse.base_url}/secure-media-uploads/optimized/2X/1/123456_2_20x30.png" class="thumbnail d-lazyload" width="20" height="30" srcset="#{Discourse.base_url}/secure-media-uploads/optimized/2X/1/123456_2_20x30.png"></div>
+    <div class="aspect-image" style="--aspect-ratio:20/30;"><img src="#{Discourse.base_url}/secure-uploads/optimized/2X/1/123456_2_20x30.png" class="thumbnail d-lazyload" width="20" height="30" srcset="#{Discourse.base_url}/secure-uploads/optimized/2X/1/123456_2_20x30.png"></div>
 
 <h3><a href="https://test.com/article" target="_blank" rel="noopener">Test</a></h3>
 
@@ -344,7 +344,7 @@ RSpec.describe Email::Styles do
         strip_and_inline
         expect(@frag.to_s).to include("cid:email/test.png")
         expect(@frag.to_s).to include("cid:email/test2.ico")
-        expect(@frag.css('[data-stripped-secure-media]')).not_to be_present
+        expect(@frag.css('[data-stripped-secure-upload]')).not_to be_present
         expect(@frag.css('[data-embedded-secure-image]')[0].attr('style')).to eq('width: 16px; height: 16px;')
         expect(@frag.css('[data-embedded-secure-image]')[1].attr('style')).to eq('width: 60px; max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;')
       end
@@ -354,11 +354,11 @@ RSpec.describe Email::Styles do
           <<~HTML
 <aside class="onebox allowlistedgeneric">
   <header class="source">
-      <img src="#{Discourse.base_url}/secure-media-uploads/original/1X/#{siteicon.sha1}.ico" class="site-icon" width="64" height="64">
+      <img src="#{Discourse.base_url}/secure-uploads/original/1X/#{siteicon.sha1}.ico" class="site-icon" width="64" height="64">
       <a href="https://test.com/article" target="_blank" rel="noopener" title="02:33PM - 24 October 2020">Test</a>
   </header>
   <article class="onebox-body">
-    <img src="#{Discourse.base_url}/secure-media-uploads/original/1X/123456.png" class="thumbnail onebox-avatar" width="20" height="30">
+    <img src="#{Discourse.base_url}/secure-uploads/original/1X/123456.png" class="thumbnail onebox-avatar" width="20" height="30">
 
 <h3><a href="https://test.com/article" target="_blank" rel="noopener">Test</a></h3>
 
@@ -376,7 +376,7 @@ RSpec.describe Email::Styles do
           strip_and_inline
           expect(@frag.to_s).to include("cid:email/test.png")
           expect(@frag.to_s).to include("cid:email/test2.ico")
-          expect(@frag.css('[data-stripped-secure-media]')).not_to be_present
+          expect(@frag.css('[data-stripped-secure-upload]')).not_to be_present
           expect(@frag.css('[data-embedded-secure-image]')[1].attr('style')).to eq('width: 60px; max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;')
         end
       end
@@ -405,7 +405,7 @@ RSpec.describe Email::Styles do
       </div>
       <div class="user">
         <a href="https://github.com/udan11" target="_blank" rel="noopener">
-          <img alt="udan11" src="#{Discourse.base_url}/secure-media-uploads/original/1X/123456.png" class="onebox-avatar-inline" width="20" height="20">
+          <img alt="udan11" src="#{Discourse.base_url}/secure-uploads/original/1X/123456.png" class="onebox-avatar-inline" width="20" height="20">
           udan11
         </a>
       </div>
@@ -428,7 +428,7 @@ RSpec.describe Email::Styles do
         it "keeps the special onebox styles" do
           strip_and_inline
           expect(@frag.to_s).to include("cid:email/test.png")
-          expect(@frag.css('[data-stripped-secure-media]')).not_to be_present
+          expect(@frag.css('[data-stripped-secure-upload]')).not_to be_present
           expect(@frag.css('[data-embedded-secure-image]')[0].attr('style')).to eq('width: 20px; height: 20px; float: none; vertical-align: middle; max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;')
         end
       end

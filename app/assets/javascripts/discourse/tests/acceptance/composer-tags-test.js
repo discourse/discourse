@@ -1,5 +1,6 @@
 import {
   acceptance,
+  exists,
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -97,5 +98,29 @@ acceptance("Composer - Tags", function (needs) {
 
     await click("#reply-control button.create");
     assert.notStrictEqual(currentURL(), "/");
+  });
+
+  test("users who cannot tag PMs do not see the selector", async function (assert) {
+    await visit("/u/charlie");
+    await click("button.compose-pm");
+
+    assert.notOk(exists(".composer-fields .mini-tag-chooser"));
+  });
+});
+
+acceptance("Composer - Tags (PMs)", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    server.post("/uploads/lookup-urls", () => {
+      return helper.response([]);
+    });
+  });
+  needs.site({ can_tag_topics: true, can_tag_pms: true });
+
+  test("users who can tag PMs see the selector", async function (assert) {
+    await visit("/u/charlie");
+    await click("button.compose-pm");
+
+    assert.ok(exists(".composer-fields .mini-tag-chooser"));
   });
 });

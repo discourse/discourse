@@ -6,7 +6,7 @@ RSpec.describe TopicConverter do
     fab!(:author) { Fabricate(:user) }
     fab!(:category) { Fabricate(:category, topic_count: 1) }
     fab!(:private_message) { Fabricate(:private_message_topic, user: author) } # creates a topic without a first post
-    let(:first_post) { create_post(user: author, topic: private_message) }
+    let(:first_post) { create_post(user: author, topic: private_message, allow_uncategorized_topics: false) }
     let(:other_user) { private_message.topic_allowed_users.find { |u| u.user != author }.user }
 
     let(:uncategorized_category) do
@@ -167,6 +167,17 @@ RSpec.describe TopicConverter do
 
         expect(topic.reload.topic_allowed_users.where(user_id: author.id).count).to eq(1)
         expect(topic_user.reload.notification_level).to eq(TopicUser.notification_levels[:watching])
+      end
+
+      it "invites only users with regular posts" do
+        post2 = Fabricate(:post, topic: topic)
+        whipser_post = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
+        small_action_post = Fabricate(:post, topic: topic, post_type: Post.types[:small_action])
+
+        topic.convert_to_private_message(admin)
+
+        expect(topic.reload.topic_allowed_users.pluck(:user_id))
+          .to contain_exactly(admin.id, post.user_id, post2.user_id)
       end
 
       it "changes user_action type" do

@@ -10,7 +10,7 @@ class ThemeTranslationParser
   end
 
   def self.check_contains_hashes(hash)
-    hash.all? { |key, value| value.is_a?(String) || (value.is_a?(Hash) && self.check_contains_hashes(value)) }
+    hash.all? { |_key, value| value.is_a?(String) || (value.is_a?(Hash) && self.check_contains_hashes(value)) }
   end
 
   def load
@@ -21,13 +21,18 @@ class ThemeTranslationParser
     rescue Psych::SyntaxError, Psych::DisallowedClass => e
       raise InvalidYaml.new(e.message)
     end
-    raise InvalidYaml.new(I18n.t("themes.locale_errors.invalid_yaml")) unless parsed.is_a?(Hash) && ThemeTranslationParser.check_contains_hashes(parsed)
-    raise InvalidYaml.new(I18n.t("themes.locale_errors.top_level_locale")) unless parsed.keys.length == 1 && parsed.keys[0] == @setting_field.name
 
+    raise InvalidYaml.new(I18n.t("themes.locale_errors.invalid_yaml")) if !parsed.is_a?(Hash)
+    raise InvalidYaml.new(I18n.t("themes.locale_errors.top_level_locale")) if parsed.keys.length != 1 || parsed.keys.first != @setting_field.name
+
+    key = @setting_field.name.to_sym
     parsed.deep_symbolize_keys!
+    parsed[key] ||= {}
 
-    parsed[@setting_field.name.to_sym].slice!(*INTERNAL_KEYS) if @internal
-    parsed[@setting_field.name.to_sym].except!(*INTERNAL_KEYS) if !@internal
+    raise InvalidYaml.new(I18n.t("themes.locale_errors.invalid_yaml")) if !ThemeTranslationParser.check_contains_hashes(parsed)
+
+    parsed[key].slice!(*INTERNAL_KEYS) if @internal
+    parsed[key].except!(*INTERNAL_KEYS) if !@internal
 
     parsed
   end

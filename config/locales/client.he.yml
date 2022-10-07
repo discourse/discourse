@@ -284,6 +284,8 @@ he:
     not_implemented: "יכולת זו עדיין לא מומשה, עמך הסליחה!"
     no_value: "לא"
     yes_value: "כן"
+    ok_value: "או קיי"
+    cancel_value: "ביטול"
     submit: "הגשה"
     generic_error: "ארעה שגיאה, עמך הסליחה."
     generic_error_with_reason: "ארעה שגיאה: %{error}"
@@ -1314,6 +1316,7 @@ he:
         move_to_archive: "ארכיון"
         failed_to_move: "העברת ההודעות שנבחרו נכשלה (אולי אין תקשורת)"
         tags: "תגיות"
+        all_tags: "כל התגיות"
         warnings: "אזהרות רשמיות"
         read_more_in_group: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב־%{groupLink}."
         read_more: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב<a href='%{basePath}/u/%{username}/messages'>הודעות הפרטיות</a>."
@@ -1794,7 +1797,6 @@ he:
       set_custom_status: "הגדרת מצב משלך"
       what_are_you_doing: "מה מעלליך?"
       remove_status: "הסרת מצב"
-      until: "עד:"
     loading: "טוען..."
     errors:
       prev_page: "בזמן הניסיון לטעון"
@@ -1827,6 +1829,8 @@ he:
       enabled: "אתר זה נמצא במצב קריאה בלבד. אנא המשיכו לשוטט, אך תגובות, לייקים, ופעולות נוספות כרגע אינם מאופשרים."
       login_disabled: "הכניסה מושבתת בזמן שהאתר במצב קריאה בלבד."
       logout_disabled: "היציאה מושבתת בזמן שהאתר במצב של קריאה בלבד."
+    staff_writes_only_mode:
+      enabled: "אתר זה נמצא במצב סגל בלבד. אפשר להמשיך לשוטט, אך תגובות, לייקים, ופעולות נוספות כרגע מוגבלות לחברי הסגל בלבד."
     too_few_topics_and_posts_notice_MF: >-
       הבה <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">נתחיל להתדיין!</a> כרגע יש {currentTopics, plural, one {נושא <strong>אחד</strong>} other {<strong>#</strong> נושאים}} ו{currentPosts, plural, one {פוסט <strong>אחד</strong>} other {־<strong>#</strong> פוסטים}}. המבקרים זקוקים ליותר מכך כדי לקרוא ולהיות מעורבים – אנו ממליצים על {requiredTopics, plural, one {נושא<strong>אחד</strong>} other {<strong>#</strong> נושאים}} ו{requiredPosts, plural, one {פוסט <strong>אחד</strong>} other {־<strong>#</strong> פוסטים}} לפחות. רק חברי הסגל יכולים לראות את ההודעה הזאת.
     too_few_topics_notice_MF: >-
@@ -2128,6 +2132,8 @@ he:
       similar_topics: "הנושא שלך דומה ל..."
       drafts_offline: "טיוטות מנותקות"
       edit_conflict: "עריכת סתירה"
+      esc: "esc"
+      esc_label: "יש ללחוץ עם העכבר או על Esc כדי להתעלם"
       group_mentioned_limit:
         one: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד משתמש %{count}. אף אחד לא יקבל הודעה."
         two: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד %{count} משתמשים. אף אחד לא יקבל הודעה."
@@ -2244,6 +2250,9 @@ he:
         body: "כרגע ההודעה הזו נשלחת רק אליכם!"
       slow_mode:
         error: "נושא זה נמצא במצב אטי. כבר פרסמת לאחרונה; אפשר לפרסם שוב בעוד %{timeLeft}."
+      user_not_seen_in_a_while:
+        single: "ניסית לשלוח הודעה אל <b>%{usernames}</b>, זה זמן רב שלא נרשמה פעילות של משתמש זה במערכת – %{time_ago}. יכול להיות שההודעה שלך לא תתקבל. כדאי לחפש דרכים אחרות ליצור קשר עם %{usernames}."
+        multiple: "ניסית לשלוח הודעה אל <b>%{usernames}</b>, זה זמן רב שלא נרשמה פעילות של משתמשים אלו במערכת – %{time_ago}. יכול להיות שההודעה שלך לא תתקבל. כדאי לחפש דרכים אחרות ליצור קשר אתם קשר."
       admin_options_title: "אפשרויות סגל כרשות לנושא זה"
       composer_actions:
         reply: השב
@@ -2548,17 +2557,34 @@ he:
     view_all: "להציג את כל %{tab}"
     user_menu:
       generic_no_items: "אין פריטים ברשימה זו."
-      sr_menu_tabs: "לשוניות תפריט"
+      sr_menu_tabs: "לשוניות תפריט משתמש"
       view_all_notifications: "הצגת כל ההתראות"
       view_all_bookmarks: "הצגת כל הסימניות"
       view_all_messages: "הצגת כל ההודעות האישיות"
+      tabs:
+        all_notifications: "כל ההתראות"
+        replies: "תשובות"
+        mentions: "אזכורים"
+        likes: "לייקים שהוענקו"
+        watching: "נושאים במעקב"
+        messages: "הודעות פרטיות"
+        bookmarks: "סימניות"
+        review_queue: "תור סקירה"
+        other_notifications: "התראות אחרות"
+        other_notifications_with_unread:
+          one: "התראות אחרות - התראה %{count} שלא נקראה"
+          two: "התראות אחרות - %{count} התראות שלא נקראו"
+          many: "התראות אחרות - %{count} התראות שלא נקראו"
+          other: "התראות אחרות - %{count} התראות שלא נקראו"
+        profile: "פרופיל"
       reviewable:
         view_all: "הצגת כל הפריטים לסקירה"
         queue: "תור"
         deleted_user: "(משתמש שנמחק)"
+        deleted_post: "(פוסט שנמחק)"
         post_number_with_topic_title: "פוסט מס׳ %{post_number} - %{title}"
         new_post_in_topic: "פוסט חדש תחת %{title}"
-        suspicious_user: "משתמש חשוד %{username}"
+        user_requires_approval: "דרישת אישור מצד %{username}"
         default_item: "פריט מס׳ %{reviewable_id} לסקירה"
     topics:
       new_messages_marker: "ביקור אחרון"
@@ -3293,10 +3319,10 @@ he:
           other: "למחוק את %{count} הפוסטים האלה?"
       merge:
         confirm:
-          one: "האם אתם בטוחים שאתם מעוניינים למזג פוסטים אלו?"
-          two: "האם אתם בטוחים שאתם מעוניינים למזג %{count} פוסטים אלו?"
-          many: "האם אתם בטוחים שאתם מעוניינים למזג %{count} פוסטים אלו?"
-          other: "האם אתם בטוחים שאתם מעוניינים למזג %{count} פוסטים אלו?"
+          one: "למזג את הפוסטים האלו?"
+          two: "למזג את %{count} הפוסטים האלו?"
+          many: "למזג את %{count} הפוסטים האלו?"
+          other: "למזג את %{count} הפוסטים האלו?"
       revisions:
         controls:
           first: "מהדורה ראשונה"
@@ -3742,6 +3768,7 @@ he:
         today: "היום"
         other_periods: "להציג את המובילים:"
     browser_update: 'אתרע מזלך וכי <a href="https://www.discourse.org/faq/#browser">דפדפנך אינו נתמך עוד</a>. נא <a href="https://browsehappy.com">לעבור לדפדפן נתמך</a> כדי לצפות בתוכן עשיר, להיכנס ולהגיב.'
+    safari_13_warning: אתר זה יסיר בקרוב את התמיכה בגרסאות 13 ומטה של Safari ושל iOS. גרסה מופשאת לקריאה בלבד תישאר זמינה עבורם. (<a href="https://meta.discourse.org/t/224747">מידע נוסף</a>)
     permission_types:
       full: "יצירה / תגובה / צפייה"
       create_post: "תגובה / צפייה"
@@ -4079,14 +4106,14 @@ he:
     user_activity:
       no_activity_title: "אין פעילות עדיין"
       no_activity_body: "ברוך בואך לקהילה שלנו! הצטרפת ממש לא מזמן וטרם תרמת לדיונים. כצעד ראשון, כדאי לבקר ב<a href='%{topUrl}'>מובילים</a> או ב<a href='%{categoriesUrl}'>קטגוריות</a> ופשוט להתחיל לקרוא. ניתן לבחור ב־%{heartIcon} בפוסטים שנשאו חן בעיניך או שמעניין אותך ללמוד עליהם יותר. הפעילות שלך תופיע כאן."
-      no_activity_others: "אין פעילות."
       no_replies_title: "עדיין לא הגבת לאף נושא"
-      no_replies_others: "אין תגובות."
+      no_replies_title_others: "אין עדיין אף תגובה של %{username} על נושא כלשהו"
+      no_replies_body: "כאשר <a href='%{searchUrl}'>נחשפת</a> לדיון מעניין שבא לך להשתתף בו, יש ללחוץ על הכפתור <kbd>תגובה</kbd> ישירות מתחת לכל פוסט שהוא כדי להתחיל להגיב לאותו פוסט מסוים. או, אם העדפתך היא להגיב לנושא הכללי במקום לפוסט או מישהו מסוים, כדאי לחפש את כפתור ה<kbd>תגובה</kbd> בתחתית הנושא או מתחת לציר הזמן של הנושא."
       no_drafts_title: "לא התחלת טיוטות"
       no_drafts_body: "לא סיימת לכתוב את הפוסט? אנו נשמור טיוטה חדשה אוטומטית ונציג אותה כאן עם כל כתיבה של נושא, תגובה או הודעה פרטית חדשים. יש לבחור בכפתור הביטול כדי להתעלם או לשמור את הטיוטה שלך ולהמשיך אחר כך."
       no_likes_title: "עדיין לא סימנת אף נושא בלייק"
+      no_likes_title_others: "אין עדיין אף לייק של %{username} על נושא כלשהו"
       no_likes_body: "דרך נפלאה לקפוץ ישירות פנימה ולהתחיל לתרום היא להתחיל לקרוא דיונים שכבר נערכו ולבחור בסמל %{heartIcon} על פוסטים שאהבת!"
-      no_likes_others: "אין פוסטים שנעשה להם לייק."
       no_topics_title: "עדיין לא פתחת אף נושא"
       no_topics_body: "תמיד עדיף <a href='%{searchUrl}'>לחפש</a> דיונים קיימים בטרם פתיחת חדשים, אבל אם בוודאות לא נתקלת בנושא המבוקש, אפשר פשוט לפתוח נושא חדש משלך. הכפתור <kbd>+ נושא חדש</kbd> אמור להופיע בפינה השמאלית העליונה של רשימת נושאים, קטגוריה או תגית כדי להתחיל ליצור נושא חדש באזור הזה."
       no_topics_title_others: "לא נפתח עוד אף נושא על ידי %{username}"
@@ -4113,9 +4140,12 @@ he:
         other: "חדש (%{count})"
       toggle_section: "החלפת מצב הצגת סעיף"
       more: "עוד…"
+      all_categories: "כל הקטגוריות"
+      all_tags: "כל התגיות"
       sections:
+        about:
+          header_link_text: "אודות"
         messages:
-          header_link_title: "הודעות פרטיות"
           header_link_text: "הודעות"
           header_action_title: "יצירת הודעה פרטית"
           links:
@@ -4129,23 +4159,28 @@ he:
         tags:
           none: "עדיין לא הוספת תגיות."
           click_to_get_started: "ללחוץ כאן כדי להתחיל."
-          header_link_title: "כל התגיות"
           header_link_text: "תגיות"
           header_action_title: "לערוך את תגיות סרגל הצד שלך"
         categories:
           none: "עדיין לא הוספת קטגוריות."
           click_to_get_started: "ללחוץ כאן כדי להתחיל."
-          header_link_title: "כל הקטגוריות"
           header_link_text: "קטגוריות"
           header_action_title: "לערוך את קטגוריות סרגל הצד שלך"
         community:
-          header_link_title: "בית"
           header_link_text: "קהילה"
           header_action_title: "יצירת נושא חדש"
           links:
+            about:
+              content: "על אודות"
+            admin:
+              content: "הנהלה"
+            badges:
+              content: "עיטורים"
             everything:
               content: "הכול"
               title: "כל הנושאים"
+            faq:
+              content: "שאלות נפוצות"
             tracked:
               content: "במעקב"
               title: "כל הנושאים במעקב"
@@ -4163,10 +4198,15 @@ he:
                 two: "%{count} טיוטות"
                 many: "%{count} טיוטות"
                 other: "%{count} טיוטות"
+            review:
+              content: "סקירה"
+              title: "סקירה"
+              pending_count: "%{count} ממתינים"
     welcome_topic_banner:
       title: "כאן ניתן ליצור את נושא קבלת הפנים שלך"
       description: 'נושא קבלת הפנים שלך הוא הדבר הראשון שמצטרפים חדשים יקראו. אפשר לחשוב על זה כעל „נאום מעלית” או „הצהרת כוונות” במשפט אחד'
       button_title: "להתחיל לערוך"
+    until: "עד:"
   admin_js:
     type_to_filter: "הקלידו לסינון..."
     admin:
@@ -5285,6 +5325,7 @@ he:
         suspended: "מושעה?"
         staged: "מבוים?"
         show_admin_profile: "מנהל ראשי"
+        manage_user: "ניהול משתמש"
         show_public_profile: "הצג פרופיל פומבי"
         impersonate: "התחזה"
         action_logs: "יומני פעולות"
@@ -5388,7 +5429,8 @@ he:
           two: "לא ניתן למחוק את כל הפוסטים בגלל שלמשתמשים יותר מ %{count} פוסטים. (delete_all_posts_max)"
           many: "לא ניתן למחוק את כל הפוסטים בגלל שלמשתמשים יותר מ %{count} פוסטים. (delete_all_posts_max)"
           other: "לא ניתן להסיר את כל הפוסטים בגלל שלמשתמשים יותר מ %{count} פוסטים. (delete_all_posts_max)"
-        delete_confirm: "בדרך כלל מומלץ להפוך משתמשים לאלמונים מאשר למחוק אותם כדי למנוע הסרת תוכן מדיונים קיימים.<br><br>האם בוודאות ברצונך למחוק את המשתמש הזה? מדובר בפעולה בלתי הפיכה!"
+        delete_confirm_title: "למחוק את המשתמש הזה? המחיקה היא לצמיתות!"
+        delete_confirm: "עדיף להפוך משתמשים לאלמוניים במקום למחוק אותם כדי להימנע מהסרת תוכן מדיונים קיימים."
         delete_and_block: "מחיקה ו<b>חסימה</b> של כתובות הדוא״ל וה־IP האלו"
         delete_dont_block: "מחיקה בלבד"
         deleting_user: "משתמש נמחק…"
@@ -5521,7 +5563,6 @@ he:
         recommended: "אנו ממליצים לערוך את הטקסט הבא כדי שיתאים לצרכים שלך:"
         show_overriden: "להציג רק את אלו שנדרסו"
         locale: "שפה:"
-        fallback_locale_warning: "בחרת לערוך שפה שמבוססת על %{fallback}. משתמשים שבוחרים ב%{fallback} כשפת מנשק המשתמש שלהם לא יראו את השינויים שלך."
         more_than_50_results: "יש למעלה מ־50 תוצאות. נא למקד את החיפוש שלך."
       settings:
         show_overriden: "להציג רק את אלו שנדרסו"

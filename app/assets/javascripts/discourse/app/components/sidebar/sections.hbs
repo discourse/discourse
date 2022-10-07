@@ -1,48 +1,5 @@
-<div class="sidebar-sections">
-  <Sidebar::CommunitySection @collapsable={{@collapsableSections}}/>
-  <Sidebar::CategoriesSection @collapsable={{@collapsableSections}}/>
-
-  {{#if this.siteSettings.tagging_enabled}}
-    <Sidebar::TagsSection @collapsable={{@collapsableSections}}/>
-  {{/if}}
-
-  {{#if this.siteSettings.enable_personal_messages}}
-    <Sidebar::MessagesSection @collapsable={{@collapsableSections}}/>
-  {{/if}}
-
-  {{#each this.customSections as |customSection|}}
-    <Sidebar::Section
-      @sectionName={{customSection.name}}
-      @headerLinkText={{customSection.text}}
-      @headerLinkTitle={{customSection.title}}
-      @headerActionsIcon={{customSection.actionsIcon}}
-      @headerActions={{customSection.actions}}
-      @willDestroy={{customSection.willDestroy}}
-      @collapsable={{@collapsableSections}}>
-
-      {{#each customSection.links as |link|}}
-        <Sidebar::SectionLink
-          @linkName={{link.name}}
-          @route={{link.route}}
-          @model={{link.model}}
-          @models={{link.models}}
-          @title={{link.title}}
-          @prefixColor={{link.prefixColor}}
-          @prefixBadge={{link.prefixBadge}}
-          @prefixType={{link.prefixType}}
-          @prefixValue={{link.prefixValue}}
-          @prefixCSSClass={{link.prefixCSSClass}}
-          @suffixType={{link.suffixType}}
-          @suffixValue={{link.suffixValue}}
-          @suffixCSSClass={{link.suffixCSSClass}}
-          @hoverType={{link.hoverType}}
-          @hoverValue={{link.hoverValue}}
-          @hoverAction={{link.hoverAction}}
-          @hoverTitle={{link.hoverTitle}}
-          @currentWhen={{link.currentWhen}}
-          @willDestroy={{link.willDestroy}}
-          @content={{link.text}} />
-      {{/each}}
-    </Sidebar::Section>
-  {{/each}}
-</div>
+{{#if @currentUser}}
+  <Sidebar::User::Sections @collapsableSections={{@collapsableSections}}/>
+{{else}}
+  <Sidebar::Anonymous::Sections @collapsableSections={{@collapsableSections}}/>
+{{/if}}

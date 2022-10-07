@@ -13,6 +13,10 @@ RSpec.describe UserMerger do
   fab!(:p5) { Fabricate(:post) }
   fab!(:p6) { Fabricate(:post) }
 
+  before do
+    Group.refresh_automatic_groups!
+  end
+
   def merge_users!(source = nil, target =  nil)
     source ||= source_user
     target ||= target_user

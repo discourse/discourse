@@ -965,6 +965,7 @@ RSpec.describe PostCreator do
     fab!(:target_user2) { Fabricate(:moderator) }
     fab!(:unrelated_user) { Fabricate(:user) }
     let(:post) do
+      Group.refresh_automatic_groups!
       PostCreator.create!(user,
         title: 'hi there welcome to my topic',
         raw: "this is my awesome message @#{unrelated_user.username_lower}",
@@ -1041,6 +1042,21 @@ RSpec.describe PostCreator do
       )
     end
 
+    it 'does not add whisperers to allowed users of the topic' do
+      unrelated_user.update!(admin: true)
+
+      PostCreator.create!(
+        unrelated_user,
+        raw: "This is a whisper that I am testing",
+        topic_id: post.topic_id,
+        post_type: Post.types[:small_action],
+      )
+
+      expect(post.topic.topic_allowed_users.map(&:user_id)).to contain_exactly(
+        target_user1.id, target_user2.id, user.id
+      )
+    end
+
     it 'does not increase posts count for small actions' do
       topic = Fabricate(:private_message_topic, user: Fabricate(:user))
 
@@ -1048,6 +1064,7 @@ RSpec.describe PostCreator do
 
       1.upto(3) do |i|
         user = Fabricate(:user)
+        Group.refresh_automatic_groups!
         topic.invite(topic.user, user.username)
         topic.reload
         expect(topic.posts_count).to eq(1)
@@ -1076,6 +1093,7 @@ RSpec.describe PostCreator do
     end
 
     it "works as expected" do
+      Group.refresh_automatic_groups!
       # Invalid archetype
       creator = PostCreator.new(user, base_args)
       creator.create
@@ -1144,9 +1162,9 @@ RSpec.describe PostCreator do
   end
 
   describe 'private message to group' do
-    let(:target_user1) { coding_horror }
+    fab!(:target_user1) { coding_horror }
     fab!(:target_user2) { Fabricate(:moderator) }
-    let(:group) do
+    let!(:group) do
       g = Fabricate.build(:group, messageable_level: Group::ALIAS_LEVELS[:everyone])
       g.add(target_user1)
       g.add(target_user2)
@@ -1155,6 +1173,7 @@ RSpec.describe PostCreator do
     end
     fab!(:unrelated) { Fabricate(:user) }
     let(:post) do
+      Group.refresh_automatic_groups!
       PostCreator.create!(user,
         title: 'hi there welcome to my topic',
         raw: "this is my awesome message @#{unrelated.username_lower}",
@@ -1824,7 +1843,7 @@ RSpec.describe PostCreator do
     end
   end
 
-  describe "secure media uploads" do
+  describe "secure uploads uploads" do
     fab!(:image_upload) { Fabricate(:upload, secure: true) }
     fab!(:user2) { Fabricate(:user) }
     fab!(:public_topic) { Fabricate(:topic) }
@@ -1832,7 +1851,7 @@ RSpec.describe PostCreator do
     before do
       setup_s3
       SiteSetting.authorized_extensions = "png|jpg|gif|mp4"
-      SiteSetting.secure_media = true
+      SiteSetting.secure_uploads = true
       stub_upload(image_upload)
     end
 

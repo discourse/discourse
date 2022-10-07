@@ -33,7 +33,21 @@ export default {
       timezone: "Australia/Brisbane",
       skip_new_user_tips: false,
       can_review: true,
-      ignored_users: []
+      ignored_users: [],
+      groups: [
+        {
+          id: 10,
+          automatic: true,
+          name: "trust_level_0",
+          display_name: "trust_level_0",
+        },
+        {
+          id: 11,
+          automatic: true,
+          name: "trust_level_1",
+          display_name: "trust_level_1",
+        }
+      ]
     },
   },
 };

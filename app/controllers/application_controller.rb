@@ -400,11 +400,8 @@ class ApplicationController < ActionController::Base
     if check_current_user && (user = current_user rescue nil)
       locale = user.effective_locale
     else
-      if SiteSetting.set_locale_from_accept_language_header
-        locale = locale_from_header
-      else
-        locale = SiteSetting.default_locale
-      end
+      locale = Discourse.anonymous_locale(request)
+      locale ||= SiteSetting.default_locale
     end
 
     if !I18n.locale_available?(locale)
@@ -623,10 +620,6 @@ class ApplicationController < ActionController::Base
   end
 
   private
-
-  def locale_from_header
-    HttpLanguageParser.parse(request.env["HTTP_ACCEPT_LANGUAGE"])
-  end
 
   def preload_anonymous_data
     store_preloaded("site", Site.json_for(guardian))

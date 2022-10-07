@@ -6,7 +6,7 @@ RSpec.describe UploadsController, type: [:multisite, :request] do
 
   before do
     setup_s3
-    SiteSetting.secure_media = true
+    SiteSetting.secure_uploads = true
     upload.update(secure: true)
   end
 

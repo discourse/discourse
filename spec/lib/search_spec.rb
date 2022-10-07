@@ -583,10 +583,10 @@ RSpec.describe Search do
     end
 
     context 'with personal-direct and group_messages flags' do
-      let(:current) { Fabricate(:user, admin: true, username: "current_user") }
-      let(:participant) { Fabricate(:user, username: "participant_1") }
-      let(:participant_2) { Fabricate(:user, username: "participant_2") }
-      let(:non_participant) { Fabricate(:user, username: "non_participant") }
+      let!(:current) { Fabricate(:user, admin: true, username: "current_user") }
+      let!(:participant) { Fabricate(:user, username: "participant_1") }
+      let!(:participant_2) { Fabricate(:user, username: "participant_2") }
+      let!(:non_participant) { Fabricate(:user, username: "non_participant") }
 
       let(:group) do
         group = Fabricate(:group, has_messages: true)
@@ -596,6 +596,7 @@ RSpec.describe Search do
       end
 
       def create_pm(users:, group: nil)
+        Group.refresh_automatic_groups!
         pm = Fabricate(:private_message_post_one_user, user: users.first).topic
         users[1..-1].each do |u|
           pm.invite(users.first, u.username)
@@ -1903,7 +1904,7 @@ RSpec.describe Search do
       results = Search.new('#9998').execute
       expect(results.posts.length).to eq(1)
 
-      results = Search.new('#777').execute
+      results = Search.new('#nonexistent').execute
       expect(results.posts.length).to eq(0)
 
       results = Search.new('xxx #:').execute

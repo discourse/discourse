@@ -344,7 +344,7 @@ RSpec.describe OptimizedImage do
       end
 
       context "when the thumbnail is properly generated" do
-        context "with secure media disabled" do
+        context "with secure uploads disabled" do
           let(:s3_upload) { Fabricate(:upload_s3) }
           let(:optimized_path) { %r{/optimized/\d+X.*/#{s3_upload.sha1}_2_100x200\.png} }
 

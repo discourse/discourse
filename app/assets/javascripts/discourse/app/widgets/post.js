@@ -11,7 +11,6 @@ import I18n from "I18n";
 import PostCooked from "discourse/widgets/post-cooked";
 import { Promise } from "rsvp";
 import RawHtml from "discourse/widgets/raw-html";
-import bootbox from "bootbox";
 import { dateNode } from "discourse/helpers/node";
 import { h } from "virtual-dom";
 import hbs from "discourse/widgets/hbs-compiler";
@@ -814,6 +813,7 @@ export function addPostClassesCallback(callback) {
 
 export default createWidget("post", {
   buildKey: (attrs) => `post-${attrs.id}`,
+  services: ["dialog"],
   shadowTree: true,
 
   buildAttributes(attrs) {
@@ -918,7 +918,7 @@ export default createWidget("post", {
     const { remaining, max } = result;
     const threshold = Math.ceil(max * 0.1);
     if (remaining === threshold) {
-      bootbox.alert(I18n.t("post.few_likes_left"));
+      this.dialog.alert(I18n.t("post.few_likes_left"));
       kvs.set({ key: "lastWarnedLikes", value: Date.now() });
     }
   },

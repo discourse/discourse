@@ -1,12 +1,11 @@
-<div class="clearfix info">
-  <a href={{@item.userUrl}} data-user-card={{@item.username}} class="avatar-link"><div class="avatar-wrapper">{{avatar @item imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
-  <span class="time">{{format-date @item.created_at}}</span>
-  {{#if @item.draftType}}
-    <span class="draft-type">{{html-safe @item.draftType}}</span>
-  {{else}}
-    <ExpandPost @item={{@item}} />
-  {{/if}}
-  <div class="stream-topic-details">
+<div class="user-stream-item__header info">
+  <a href={{this.userUrl}} data-user-card={{(or @item.draft_username @item.username)}} class="avatar-link">
+    <div class="avatar-wrapper">
+      {{avatar @item imageSize="large" extraClasses="actor" ignoreTitle="true"}}
+    </div>
+  </a>
+
+  <div class="user-stream-item__details">
     <div class="stream-topic-title">
       <TopicStatus @topic={{@item}} @disableActions={{true}} />
       <span class="title">
@@ -19,6 +18,13 @@
     </div>
     <div class="category">{{category-link @item.category}}</div>
   </div>
+
+  {{#if @item.draftType}}
+    <span class="draft-type">{{html-safe @item.draftType}}</span>
+  {{else}}
+    <ExpandPost @item={{@item}} />
+  {{/if}}
+  <span class="time">{{format-date @item.created_at}}</span>
 
   {{#if @item.deleted_by}}
     <span class="delete-info">
@@ -50,12 +56,12 @@
   <div class="user-stream-item-actions child-actions">
     {{d-icon child.icon class="icon"}}
     {{#each child.items as |grandChild|}}
-      {{#if grandChild.removableBookmark}}
-        <DButton @class="btn-default remove-bookmark" @action={{action @removeBookmark grandChild}} @icon="times" @label="bookmarks.remove" />
-      {{else}}
-        <a href={{grandChild.userUrl}} data-user-card={{grandChild.username}} class="avatar-link"><div class="avatar-wrapper">{{avatar grandChild imageSize="tiny" extraClasses="actor" ignoreTitle="true" avatarTemplatePath="acting_avatar_template"}}</div></a>
-        {{#if grandChild.edit_reason}} &mdash; <span class="edit-reason">{{grandChild.edit_reason}}</span>{{/if}}
-      {{/if}}
+      <a href={{grandChild.userUrl}} data-user-card={{grandChild.username}} class="avatar-link">
+        <div class="avatar-wrapper">
+          {{avatar grandChild imageSize="tiny" extraClasses="actor" ignoreTitle="true" avatarTemplatePath="acting_avatar_template"}}
+        </div>
+      </a>
+      {{#if grandChild.edit_reason}} &mdash; <span class="edit-reason">{{grandChild.edit_reason}}</span>{{/if}}
     {{/each}}
   </div>
 {{/each}}

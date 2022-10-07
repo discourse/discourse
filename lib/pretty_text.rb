@@ -63,20 +63,10 @@ module PrettyText
     end
   end
 
-  def self.ctx_load_manifest(ctx, name)
-    manifest = File.read("#{Rails.root}/app/assets/javascripts/#{name}")
+  def self.ctx_load_directory(ctx, path)
     root_path = "#{Rails.root}/app/assets/javascripts/"
-
-    manifest.each_line do |l|
-      l = l.chomp
-      if l =~ /\/\/= require (\.\/)?(.*)$/
-        apply_es6_file(ctx, root_path, Regexp.last_match[2])
-      elsif l =~ /\/\/= require_tree (\.\/)?(.*)$/
-        path = Regexp.last_match[2]
-        Dir["#{root_path}/#{path}/**"].sort.each do |f|
-          apply_es6_file(ctx, root_path, f.sub(root_path, '')[1..-1].sub(/\.js(.es6)?$/, ''))
-        end
-      end
+    Dir["#{root_path}#{path}/**/*"].sort.each do |f|
+      apply_es6_file(ctx, root_path, f.sub(root_path, '').sub(/\.js(.es6)?$/, ''))
     end
   end
 
@@ -103,13 +93,14 @@ module PrettyText
       ctx.attach("__helpers.#{method}", PrettyText::Helpers.method(method))
     end
 
-    ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/mini-loader.js")
-    ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/handlebars-shim.js")
-    ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/node_modules/xss/dist/xss.min.js")
-    ctx.load("#{Rails.root}/lib/pretty_text/vendor-shims.js")
-    ctx_load_manifest(ctx, "pretty-text-bundle.js")
-    ctx_load_manifest(ctx, "markdown-it-bundle.js")
     root_path = "#{Rails.root}/app/assets/javascripts/"
+    ctx_load(ctx, "#{root_path}/mini-loader.js")
+    ctx_load(ctx, "#{root_path}/handlebars-shim.js")
+    ctx_load(ctx, "#{root_path}/node_modules/xss/dist/xss.js")
+    ctx.load("#{Rails.root}/lib/pretty_text/vendor-shims.js")
+    ctx_load_directory(ctx, "pretty-text/addon")
+    ctx_load_directory(ctx, "pretty-text/engines/discourse-markdown")
+    ctx_load(ctx, "#{root_path}/node_modules/markdown-it/dist/markdown-it.js")
 
     apply_es6_file(ctx, root_path, "discourse-common/addon/lib/get-url")
     apply_es6_file(ctx, root_path, "discourse-common/addon/lib/object")
@@ -497,14 +488,14 @@ module PrettyText
     end
   end
 
-  def self.strip_secure_media(doc)
+  def self.strip_secure_uploads(doc)
     # images inside a lightbox or other link
     doc.css('a[href]').each do |a|
-      next if !Upload.secure_media_url?(a['href'])
+      next if !Upload.secure_uploads_url?(a['href'])
 
       non_image_media = %w(video audio).include?(a&.parent&.name)
       target = non_image_media ? a.parent : a
-      next if target.to_s.include?('stripped-secure-view-media')
+      next if target.to_s.include?('stripped-secure-view-media') || target.to_s.include?('stripped-secure-view-upload')
 
       next if a.css('img[src]').empty? && !non_image_media
 
@@ -518,12 +509,12 @@ module PrettyText
         else
           url = img['src']
         end
-        a.add_next_sibling secure_media_placeholder(doc, url, width: img['width'], height: img['height'])
+        a.add_next_sibling secure_uploads_placeholder(doc, url, width: img['width'], height: img['height'])
         a.remove
       else
         width = non_image_media ? nil : a.at_css('img').attr('width')
         height = non_image_media ? nil : a.at_css('img').attr('height')
-        target.add_next_sibling secure_media_placeholder(doc, a['href'], width: width, height: height)
+        target.add_next_sibling secure_uploads_placeholder(doc, a['href'], width: width, height: height)
         target.remove
       end
     end
@@ -560,20 +551,20 @@ module PrettyText
         height = 16
       end
 
-      if Upload.secure_media_url?(url)
-        img.add_next_sibling secure_media_placeholder(doc, url, onebox_type: onebox_type, width: width, height: height)
+      if Upload.secure_uploads_url?(url)
+        img.add_next_sibling secure_uploads_placeholder(doc, url, onebox_type: onebox_type, width: width, height: height)
         img.remove
       end
     end
   end
 
-  def self.secure_media_placeholder(doc, url, onebox_type: false, width: nil, height: nil)
+  def self.secure_uploads_placeholder(doc, url, onebox_type: false, width: nil, height: nil)
     data_width = width ? "data-width=#{width}" : ''
     data_height = height ? "data-height=#{height}" : ''
     data_onebox_type = onebox_type ? "data-onebox-type='#{onebox_type}'" : ''
     <<~HTML
-    <div class="secure-media-notice" data-stripped-secure-media="#{url}" #{data_onebox_type} #{data_width} #{data_height}>
-      #{I18n.t('emails.secure_media_placeholder')} <a class='stripped-secure-view-media' href="#{url}">#{I18n.t("emails.view_redacted_media")}</a>.
+    <div class="secure-upload-notice" data-stripped-secure-upload="#{url}" #{data_onebox_type} #{data_width} #{data_height}>
+      #{I18n.t('emails.secure_uploads_placeholder')} <a class='stripped-secure-view-upload' href="#{url}">#{I18n.t("emails.view_redacted_media")}</a>.
     </div>
     HTML
   end
@@ -581,7 +572,7 @@ module PrettyText
   def self.format_for_email(html, post = nil)
     doc = Nokogiri::HTML5.fragment(html)
     DiscourseEvent.trigger(:reduce_cooked, doc, post)
-    strip_secure_media(doc) if post&.with_secure_media?
+    strip_secure_uploads(doc) if post&.with_secure_uploads?
     strip_image_wrapping(doc)
     convert_vimeo_iframes(doc)
     make_all_links_absolute(doc)

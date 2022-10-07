@@ -84,9 +84,9 @@ acceptance("User Preferences - Sidebar", function (needs) {
       "contains the right request body to update user's sidebar category links"
     );
 
-    assert.ok(exists(".modal-body"), "error message is displayed");
+    assert.ok(exists(".dialog-body"), "error message is displayed");
 
-    await click(".modal .d-button-label");
+    await click(".dialog-footer .btn-primary");
 
     assert.ok(
       !exists(".sidebar-section-categories .sidebar-section-link-howto"),
@@ -152,9 +152,9 @@ acceptance("User Preferences - Sidebar", function (needs) {
       "contains the right request body to update user's sidebar tag links"
     );
 
-    assert.ok(exists(".modal-body"), "error message is displayed");
+    assert.ok(exists(".dialog-body"), "error message is displayed");
 
-    await click(".modal .d-button-label");
+    await click(".dialog-footer .btn-primary");
 
     assert.ok(
       !exists(".sidebar-section-tags .sidebar-section-link-gazelle"),

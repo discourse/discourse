@@ -9,7 +9,7 @@ RSpec.describe ReviewableSerializer do
     json = described_class.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
 
     expect(json[:id]).to eq(reviewable.id)
-    expect(json[:status]).to eq(reviewable.status)
+    expect(json[:status]).to eq(reviewable.status_for_database)
     expect(json[:type]).to eq(reviewable.type)
     expect(json[:created_at]).to eq(reviewable.created_at)
     expect(json[:category_id]).to eq(reviewable.category_id)

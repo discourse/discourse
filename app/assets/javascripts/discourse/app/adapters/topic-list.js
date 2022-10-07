@@ -32,7 +32,7 @@ export default RestAdapter.extend({
     const params = findArgs.params;
 
     return PreloadStore.getAndRemove(
-      "topic_list_" + filter,
+      "topic_list",
       finderFor(filter, params)
     ).then(function (result) {
       result.filter = filter;

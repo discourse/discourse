@@ -34,6 +34,44 @@ html(){
 }
 ```
 
+You can also include function references in the `data` object, and use them as actions within the Ember component.
+You will need to `bind` the function to ensure it maintains a reference to the widget, and you'll need to manually
+call `this.scheduleRerender()` after making any changes to widget state (the normal widget auto-rerendering does not apply).
+
+Note that the @bind decorator will only work if you're using class-based Widget syntax. When using createWidget, you'll need to
+call `.bind(this)` manually when passing the function to RenderGlimmer.
+
+For example:
+```
+createWidget("my-widget", {
+  tagName: "div",
+  buildKey: () => `my-widget`,
+
+  defaultState() {
+    return { counter: 0 };
+  },
+
+  html(args, state){
+    return [
+      new RenderGlimmer(
+        this,
+        "div.my-wrapper-class",
+        hbs`<MyComponent @counter={{@data.counter}} @incrementCounter={{@data.incrementCounter}} />`,
+        {
+          counter: state.counter,
+          incrementCounter: this.incrementCounter.bind(this),
+        }
+      ),
+    ]
+  },
+
+  incrementCounter() {
+    this.state.counter++;
+    this.scheduleRerender();
+  },
+});
+```
+
 */
 
 export default class RenderGlimmer {

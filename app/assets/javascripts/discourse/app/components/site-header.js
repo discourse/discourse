@@ -177,7 +177,20 @@ const SiteHeaderComponent = MountWidget.extend(
         this.docAt = header.offsetTop;
       }
 
-      const main = document.querySelector("#main");
+      const headerRect = header.getBoundingClientRect();
+      let headerOffsetCalc = headerRect.top + headerRect.height;
+
+      if (window.scrollY < 0) {
+        headerOffsetCalc += window.scrollY;
+      }
+
+      const newValue = `${headerOffsetCalc}px`;
+      if (newValue !== this.currentHeaderOffsetValue) {
+        this.currentHeaderOffsetValue = newValue;
+        document.documentElement.style.setProperty("--header-offset", newValue);
+      }
+
+      const main = document.querySelector(".ember-application");
       const offsetTop = main ? main.offsetTop : 0;
       const offset = window.pageYOffset - offsetTop;
       if (offset >= this.docAt) {

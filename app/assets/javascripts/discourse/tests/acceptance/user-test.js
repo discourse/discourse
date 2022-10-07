@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import EmberObject from "@ember/object";
 import User from "discourse/models/user";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -6,10 +7,12 @@ import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
   exists,
+  publishToMessageBus,
   query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import * as logout from "discourse/lib/logout";
 import { click, currentRouteName, visit } from "@ember/test-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import { test } from "qunit";
@@ -305,3 +308,27 @@ acceptance(
     });
   }
 );
+
+acceptance("User - Logout", function (needs) {
+  needs.user({ username: "eviltrout" });
+
+  test("Dialog works", async function (assert) {
+    sinon.stub(logout, "default");
+    await visit("/u/eviltrout");
+    await publishToMessageBus("/logout");
+
+    assert.ok(exists(".dialog-body"));
+    assert.ok(
+      !exists(".dialog-footer .btn-default"),
+      "no cancel button present"
+    );
+    assert.strictEqual(
+      query(".dialog-footer .btn-primary").innerText,
+      I18n.t("home"),
+      "primary dialog button is present"
+    );
+
+    await click(".dialog-overlay");
+    assert.ok(logout.default.called, "logout helper was called");
+  });
+});

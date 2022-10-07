@@ -162,12 +162,12 @@ module SiteSettings::Validations
     validate_error :s3_upload_bucket_is_required if SiteSetting.s3_upload_bucket.blank?
   end
 
-  def validate_secure_media(new_val)
-    validate_error :secure_media_requirements if new_val == "t" && !SiteSetting.Upload.enable_s3_uploads
+  def validate_secure_uploads(new_val)
+    validate_error :secure_uploads_requirements if new_val == "t" && !SiteSetting.Upload.enable_s3_uploads
   end
 
   def validate_enable_page_publishing(new_val)
-    validate_error :page_publishing_requirements if new_val == "t" && SiteSetting.secure_media?
+    validate_error :page_publishing_requirements if new_val == "t" && SiteSetting.secure_uploads?
   end
 
   def validate_share_quote_buttons(new_val)

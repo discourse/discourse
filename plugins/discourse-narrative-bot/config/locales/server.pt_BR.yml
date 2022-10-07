@@ -84,6 +84,15 @@ pt_BR:
       "10":
         quote: "Tudo o que a mente humana pode conceber e acreditar, ela pode conquistar."
         author: "Napoleon Hill"
+      "11":
+        quote: "Paz em casa, paz no mundo."
+        author: "Mustafa Kemal Atatürk"
+      "12":
+        quote: "A educação não é uma forma de escapar da pobreza, é uma forma de combatê-la."
+        author: "Julius Nyerere"
+      "13":
+        quote: "Uma jornada de mil milhas deve começar com um único passo."
+        author: "Lao Tzu"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:

@@ -209,4 +209,15 @@ acceptance("Do not disturb - new user menu", function (needs) {
       "the Do Not Disturb button has the toggle-off icon"
     );
   });
+
+  test("user menu gets closed when the DnD modal is opened", async function (assert) {
+    this.siteSettings.enable_user_status = true;
+
+    await visit("/");
+    await click(".header-dropdown-toggle.current-user");
+    await click("#user-menu-button-profile");
+    await click("#quick-access-profile .do-not-disturb .btn");
+
+    assert.notOk(exists(".user-menu"));
+  });
 });

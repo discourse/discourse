@@ -18,14 +18,16 @@ import { and, notEmpty } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse-common/lib/later";
 
+import { inject as service } from "@ember/service";
+
 const BOOKMARK_BINDINGS = {
   enter: { handler: "saveAndClose" },
   "d d": { handler: "delete" },
 };
 
 export default Component.extend({
+  dialog: service(),
   tagName: "",
-
   errorMessage: null,
   selectedReminderType: null,
   _closeWithoutSaving: null,
@@ -227,7 +229,7 @@ export default Component.extend({
   _handleSaveError(e) {
     this._savingBookmarkManually = false;
     if (typeof e === "string") {
-      bootbox.alert(e);
+      this.dialog.alert(e);
     } else {
       popupAjaxError(e);
     }
@@ -259,7 +261,11 @@ export default Component.extend({
     KeyboardShortcuts.unpause();
   },
 
-  showExistingReminderAt: notEmpty("model.reminderAt"),
+  @discourseComputed("model.reminderAt")
+  showExistingReminderAt(reminderAt) {
+    return reminderAt && Date.parse(reminderAt) > new Date().getTime();
+  },
+
   showDelete: notEmpty("model.id"),
   userHasTimezoneSet: notEmpty("userTimezone"),
   editingExistingBookmark: and("model", "model.id"),

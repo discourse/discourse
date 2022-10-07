@@ -1,6 +1,6 @@
 {{#if this.selectedHtml}}
   <li>
-    <a href {{action "toggleExpanded"}} class="expander">
+    <a href {{on "click" this.toggleExpanded}} class="expander">
       <span class="selection">{{html-safe this.selectedHtml}}</span>
       {{d-icon "caret-down"}}
     </a>

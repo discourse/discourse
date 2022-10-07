@@ -167,21 +167,32 @@ task 'plugin:install_gems', :plugin do |t, args|
   puts "Done"
 end
 
-desc 'run plugin specs'
-task 'plugin:spec', :plugin do |t, args|
-  args.with_defaults(plugin: "*")
-
-  params = ['--profile']
+def spec(plugin, parallel: false)
+  params = []
+  params << '--profile' if !parallel
   params << '--fail-fast' if ENV['RSPEC_FAILFAST']
   params << "--seed #{ENV['RSPEC_SEED']}" if Integer(ENV['RSPEC_SEED'], exception: false)
 
   ruby = `which ruby`.strip
-  files = Dir.glob("./plugins/#{args[:plugin]}/spec/**/*_spec.rb").sort
+  files = Dir.glob("./plugins/#{plugin}/spec/**/*_spec.rb").sort
   if files.length > 0
-    sh "LOAD_PLUGINS=1 #{ruby} -S rspec #{files.join(' ')} #{params.join(' ')}"
+    cmd = parallel ? "bin/turbo_rspec" : "bin/rspec"
+    sh "LOAD_PLUGINS=1 #{cmd} #{files.join(' ')} #{params.join(' ')}"
   else
     abort "No specs found."
   end
+end
+
+desc 'run plugin specs'
+task 'plugin:spec', :plugin do |t, args|
+  args.with_defaults(plugin: "*")
+  spec(args[:plugin])
+end
+
+desc 'run plugin specs in parallel'
+task 'plugin:turbo_spec', :plugin do |t, args|
+  args.with_defaults(plugin: "*")
+  spec(args[:plugin], parallel: true)
 end
 
 desc 'run plugin qunit tests'

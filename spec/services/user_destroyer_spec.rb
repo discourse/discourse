@@ -106,7 +106,7 @@ RSpec.describe UserDestroyer do
       it 'sets the reviewable user as rejected' do
         UserDestroyer.new(admin).destroy(reviewable.target)
 
-        expect(reviewable.reload.status).to eq(Reviewable.statuses[:rejected])
+        expect(reviewable.reload).to be_rejected
       end
     end
 

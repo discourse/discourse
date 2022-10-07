@@ -35,7 +35,8 @@ class SiteSerializer < ApplicationSerializer
     :categories,
     :markdown_additional_options,
     :displayed_about_plugin_stat_groups,
-    :show_welcome_topic_banner
+    :show_welcome_topic_banner,
+    :anonymous_default_sidebar_tags
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -216,6 +217,14 @@ class SiteSerializer < ApplicationSerializer
 
   def show_welcome_topic_banner
     Site.show_welcome_topic_banner?(scope)
+  end
+
+  def anonymous_default_sidebar_tags
+    User.new.sidebar_tags.pluck(:name)
+  end
+
+  def include_anonymous_default_sidebar_tags?
+    SiteSetting.default_sidebar_tags.present?
   end
 
   private

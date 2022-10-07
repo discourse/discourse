@@ -11,7 +11,7 @@ class UserTopicBookmarkSerializer < UserPostTopicBookmarkBaseSerializer
   end
 
   def first_post
-    @first_post ||= topic.posts.find { |post| post.post_number == 1 }
+    @first_post ||= topic.first_post
   end
 
   def deleted

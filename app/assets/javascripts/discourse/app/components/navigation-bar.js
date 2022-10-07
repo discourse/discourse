@@ -1,5 +1,6 @@
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import { action } from "@ember/object";
 import DiscourseURL from "discourse/lib/url";
 import FilterModeMixin from "discourse/mixins/filter-mode";
 import { next } from "@ember/runloop";
@@ -61,33 +62,33 @@ export default Component.extend(FilterModeMixin, {
     DiscourseURL.appEvents.off("dom:clean", this, this.ensureDropClosed);
   },
 
-  actions: {
-    toggleDrop() {
-      this.set("expanded", !this.expanded);
+  @action
+  toggleDrop(event) {
+    event?.preventDefault();
+    this.set("expanded", !this.expanded);
 
-      if (this.expanded) {
-        DiscourseURL.appEvents.on("dom:clean", this, this.ensureDropClosed);
+    if (this.expanded) {
+      DiscourseURL.appEvents.on("dom:clean", this, this.ensureDropClosed);
 
-        next(() => {
-          if (!this.expanded) {
-            return;
-          }
+      next(() => {
+        if (!this.expanded) {
+          return;
+        }
 
-          $(this.element.querySelector(".drop a")).on("click", () => {
-            this.element.querySelector(".drop").style.display = "none";
+        $(this.element.querySelector(".drop a")).on("click", () => {
+          this.element.querySelector(".drop").style.display = "none";
 
-            next(() => {
-              this.ensureDropClosed();
-            });
-            return true;
-          });
-
-          $(window).on("click.navigation-bar", () => {
+          next(() => {
             this.ensureDropClosed();
-            return true;
           });
+          return true;
         });
-      }
-    },
+
+        $(window).on("click.navigation-bar", () => {
+          this.ensureDropClosed();
+          return true;
+        });
+      });
+    }
   },
 });

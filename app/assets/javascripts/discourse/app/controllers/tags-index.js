@@ -1,3 +1,4 @@
+import { action } from "@ember/object";
 import { alias, notEmpty } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import I18n from "I18n";
@@ -7,10 +8,12 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 
+import { inject as service } from "@ember/service";
+
 export default Controller.extend({
+  dialog: service(),
   sortedByCount: true,
   sortedByName: false,
-
   canAdminTags: alias("currentUser.staff"),
   groupedByCategory: notEmpty("model.extras.categories"),
   groupedByTagGroup: notEmpty("model.extras.tag_groups"),
@@ -39,23 +42,27 @@ export default Controller.extend({
     };
   },
 
+  @action
+  sortByCount(event) {
+    event?.preventDefault();
+    this.setProperties({
+      sortProperties: ["totalCount:desc", "id"],
+      sortedByCount: true,
+      sortedByName: false,
+    });
+  },
+
+  @action
+  sortById(event) {
+    event?.preventDefault();
+    this.setProperties({
+      sortProperties: ["id"],
+      sortedByCount: false,
+      sortedByName: true,
+    });
+  },
+
   actions: {
-    sortByCount() {
-      this.setProperties({
-        sortProperties: ["totalCount:desc", "id"],
-        sortedByCount: true,
-        sortedByName: false,
-      });
-    },
-
-    sortById() {
-      this.setProperties({
-        sortProperties: ["id"],
-        sortedByCount: false,
-        sortedByName: true,
-      });
-    },
-
     showUploader() {
       showModal("tag-upload");
     },
@@ -67,7 +74,7 @@ export default Controller.extend({
           const tags = result["tags"];
 
           if (tags.length === 0) {
-            bootbox.alert(I18n.t("tagging.delete_no_unused_tags"));
+            this.dialog.alert(I18n.t("tagging.delete_no_unused_tags"));
             return;
           }
 

@@ -197,6 +197,8 @@ bg:
     not_implemented: "Тази функционалност все още не е добавена."
     no_value: "Не"
     yes_value: "Да"
+    ok_value: "Ок"
+    cancel_value: "Прекрати"
     submit: "Изпрати"
     generic_error: "Съжаляваме, възникна грешка."
     generic_error_with_reason: "Грешка: %{error}"
@@ -1131,6 +1133,7 @@ bg:
         move_to_archive: "Архив"
         failed_to_move: "Грешка при преместването на съобщенията (може би интернета ви спря?)"
         tags: "Етикети"
+        all_tags: "Всички тагове"
         warnings: "Официални предупреждения"
         read_more_in_group: "Искате ли да прочетете повече? Разгледайте други съобщения в %{groupLink}."
         read_more: "Искате ли да прочетете повече? Разгледайте други съобщения в <a href='%{basePath}/u/%{username}/messages'>лични съобщения</a>."
@@ -2053,6 +2056,13 @@ bg:
     go_back: "Назад "
     not_logged_in_user: "Потребителска страница с история на текущата дейност и предпочитания"
     current_user: "Отиди към потребителската страница "
+    user_menu:
+      tabs:
+        replies: "Отговори"
+        mentions: "Споменавания"
+        likes: "Дадени харесвания"
+        bookmarks: "Отметки"
+        profile: "Профил"
     topics:
       new_messages_marker: "последно посещение"
       bulk:
@@ -2917,7 +2927,6 @@ bg:
     download_calendar:
       download: "Изтегли"
     tagging:
-      all_tags: "Всички тагове"
       other_tags: "Други тагове"
       selector_all_tags: "всички тагове"
       selector_no_tags: "няма тагове"
@@ -2990,7 +2999,10 @@ bg:
         one: "%{count} нов"
         other: "%{count} нови"
       more: "Още..."
+      all_categories: "Всички категории"
       sections:
+        about:
+          header_link_text: "Относно"
         messages:
           header_link_text: "Съобщения"
           links:
@@ -3002,15 +3014,20 @@ bg:
             unread_with_count: "Непрочетен (%{count})"
             archive: "Архив"
         tags:
-          header_link_title: "всички тагове"
           header_link_text: "Тагове"
         categories:
-          header_link_title: "всички категории"
           header_link_text: "Категории"
         community:
-          header_link_title: "начало"
           header_link_text: "Общност "
           links:
+            about:
+              content: "Относно"
+            admin:
+              content: "Администратор"
+            badges:
+              content: "Значки"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Следени"
             groups:
@@ -3020,6 +3037,9 @@ bg:
               content: "Потребители"
             my_posts:
               content: "Моите публикации"
+            review:
+              content: "Преглед"
+              title: "преглед"
   admin_js:
     type_to_filter: "филтрирай..."
     admin:

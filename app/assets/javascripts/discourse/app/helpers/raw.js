@@ -13,8 +13,8 @@ function renderRaw(ctx, template, templateName, params) {
     const viewClass = context.registry.resolve(`raw-view:${templateName}`);
 
     if (viewClass) {
+      setOwner(params, getOwner(context));
       params.view = viewClass.create(params, context);
-      setOwner(params.view, getOwner(context.site));
     }
 
     if (!params.view) {

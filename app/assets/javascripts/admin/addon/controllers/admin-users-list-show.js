@@ -59,10 +59,10 @@ export default Controller.extend(CanCheckEmails, {
       page,
     })
       .then((result) => {
-        if (result && result.length > 0) {
-          this._results[page] = result;
-          this.set("model", this._results.flat());
-        } else {
+        this._results[page] = result;
+        this.set("model", this._results.flat());
+
+        if (result.length === 0) {
           this._canLoadMore = false;
         }
       })

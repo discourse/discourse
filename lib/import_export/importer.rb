@@ -10,6 +10,7 @@ module ImportExport
       @groups = data[:groups]
       @categories = data[:categories]
       @topics = data[:topics]
+      @translation_overrides = data[:translation_overrides]
 
       # To support legacy `category_export` script
       if data[:category].present?
@@ -25,6 +26,7 @@ module ImportExport
       import_groups
       import_categories
       import_topics
+      import_translation_overrides
 
       self
     ensure
@@ -165,6 +167,18 @@ module ImportExport
       puts ""
 
       self
+    end
+
+    def import_translation_overrides
+      return if @translation_overrides.blank?
+
+      puts "Importing translation overrides..."
+
+      @translation_overrides.each do |tu|
+        TranslationOverride.upsert!(tu[:locale], tu[:translation_key], tu[:value])
+      end
+
+      TranslationOverride.reload_all_overrides!
     end
 
     def new_user_id(external_user_id)

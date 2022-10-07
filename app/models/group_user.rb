@@ -120,7 +120,7 @@ class GroupUser < ActiveRecord::Base
     return if group.grant_trust_level.nil?
     return if self.destroyed_by_association&.active_record == User # User is being destroyed, so don't try to recalculate
 
-    Promotion.recalculate(user)
+    Promotion.recalculate(user, use_previous_trust_level: true)
   end
 
   def set_category_notifications

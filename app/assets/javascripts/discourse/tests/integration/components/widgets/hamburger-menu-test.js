@@ -34,7 +34,7 @@ module("Integration | Component | Widget | hamburger-menu", function (hooks) {
   });
 
   test("staff menu - not staff", async function (assert) {
-    this.currentUser.set("staff", false);
+    this.currentUser.setProperties({ admin: false, moderator: false });
 
     await render(hbs`<MountWidget @widget="hamburger-menu" />`);
 

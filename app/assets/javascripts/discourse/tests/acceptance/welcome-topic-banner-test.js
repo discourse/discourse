@@ -8,9 +8,9 @@ acceptance("Welcome Topic Banner", function (needs) {
 
   test("Navigation", async function (assert) {
     await visit("/");
-    assert.ok(exists(".welcome-topic-banner"), "has the welcome topic banner");
+    assert.ok(exists(".welcome-cta"), "has the welcome topic banner");
     assert.ok(
-      exists("button.welcome-topic-cta"),
+      exists("button.welcome-cta__button"),
       "has the welcome topic edit button"
     );
   });

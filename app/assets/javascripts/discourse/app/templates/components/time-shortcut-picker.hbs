@@ -20,8 +20,10 @@
           </div>
         </div>
         <div class="control-group custom-date-time-wrap custom-relative-wrap">
-          <label class="control-label">{{i18n "relative_time_picker.relative"}}</label>
-          <RelativeTimePicker @onChange={{action "relativeTimeChanged"}} />
+          <label class="control-label" for="bookmark-relative-time-picker">
+            {{i18n "relative_time_picker.relative"}}
+          </label>
+          <RelativeTimePicker @id="bookmark-relative-time-picker" @onChange={{action "relativeTimeChanged"}} />
         </div>
       {{/if}}
     {{/if}}

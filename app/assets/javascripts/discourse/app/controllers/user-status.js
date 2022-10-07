@@ -3,7 +3,6 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import ItsATrap from "@discourse/itsatrap";
 import {
@@ -90,7 +89,7 @@ export default Controller.extend(ModalFunctionality, {
 
   _handleError(e) {
     if (typeof e === "string") {
-      bootbox.alert(e);
+      this.dialog.alert(e);
     } else {
       popupAjaxError(e);
     }

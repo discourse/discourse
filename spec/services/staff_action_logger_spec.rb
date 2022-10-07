@@ -132,7 +132,8 @@ RSpec.describe StaffActionLogger do
 
     it 'creates a new UserHistory record' do
       expect { log_trust_level_change }.to change { UserHistory.count }.by(1)
-      expect(UserHistory.last.details).to include "new trust level: #{new_trust_level}"
+      expect(UserHistory.last.previous_value).to eq(old_trust_level.to_s)
+      expect(UserHistory.last.new_value).to eq(new_trust_level.to_s)
     end
   end
 

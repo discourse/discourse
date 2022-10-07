@@ -25,20 +25,22 @@ export default {
     const siteSettings = container.lookup("service:site-settings");
 
     if (user) {
-      const channel = user.enable_redesigned_user_menu
+      const channel = user.redesigned_user_menu_enabled
         ? `/reviewable_counts/${user.id}`
         : "/reviewable_counts";
+
       bus.subscribe(channel, (data) => {
         if (data.reviewable_count >= 0) {
-          user.set("reviewable_count", data.reviewable_count);
+          user.updateReviewableCount(data.reviewable_count);
         }
+
         if (user.redesigned_user_menu_enabled) {
           user.set("unseen_reviewable_count", data.unseen_reviewable_count);
         }
       });
 
       bus.subscribe(
-        `/notification/${user.get("id")}`,
+        `/notification/${user.id}`,
         (data) => {
           const store = container.lookup("service:store");
           const oldUnread = user.unread_notifications;
@@ -51,8 +53,7 @@ export default {
               data.unread_high_priority_notifications,
             read_first_notification: data.read_first_notification,
             all_unread_notifications_count: data.all_unread_notifications_count,
-            grouped_unread_high_priority_notifications:
-              data.grouped_unread_high_priority_notifications,
+            grouped_unread_notifications: data.grouped_unread_notifications,
           });
 
           if (
@@ -77,10 +78,9 @@ export default {
             {},
             { cacheKey: "recent-notifications" }
           );
-          const lastNotification =
-            data.last_notification && data.last_notification.notification;
+          const lastNotification = data.last_notification?.notification;
 
-          if (stale && stale.hasResults && lastNotification) {
+          if (stale?.hasResults && lastNotification) {
             const oldNotifications = stale.results.get("content");
             const staleIndex = oldNotifications.findIndex(
               (n) => n.id === lastNotification.id
@@ -116,6 +116,7 @@ export default {
                 }
               })
               .filter(Boolean);
+
             stale.results.set("content", newNotifications);
           }
         },
@@ -154,6 +155,7 @@ export default {
           }
           return site.updateCategory(c);
         });
+
         (data.deleted_categories || []).forEach((id) =>
           site.removeCategory(id)
         );
@@ -167,6 +169,7 @@ export default {
         bus.subscribe(alertChannel(user), (data) =>
           onNotification(data, siteSettings, user)
         );
+
         initDesktopNotifications(bus, appEvents);
 
         if (isPushNotificationsEnabled(user)) {

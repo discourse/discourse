@@ -1,39 +1,60 @@
 <div class="search-area">
   <p>{{i18n "admin.site_text.description"}}</p>
 
-  <TextField @value={{this.q}} @placeholderKey="admin.site_text.search" @class="no-blur site-text-search" @autofocus="true" @key-up={{action "search"}} />
+  <TextField
+    @value={{this.q}}
+    @placeholderKey="admin.site_text.search"
+    @class="no-blur site-text-search"
+    @autofocus="true"
+    @key-up={{action "search"}}
+  />
 
   <div class="reseed">
-    <DButton @action={{route-action "showReseedModal"}} @class="btn-default" @label="admin.reseed.action.label" @title="admin.reseed.action.title" @icon="sync" />
+    <DButton
+      @action={{route-action "showReseedModal"}}
+      @class="btn-default"
+      @label="admin.reseed.action.label"
+      @title="admin.reseed.action.title"
+      @icon="sync"
+    />
   </div>
 
   <p class="filter-options">
     <div class="locale">
       <label>{{i18n "admin.site_text.locale"}}</label>
-      <ComboBox @valueProperty="value" @content={{this.availableLocales}} @value={{this.locale}} @onChange={{action "updateLocale"}} @class="locale-search" @options={{hash filterable=true}} />
+      <ComboBox
+        @valueProperty="value"
+        @content={{this.availableLocales}}
+        @value={{this.locale}}
+        @onChange={{action "updateLocale"}}
+        @class="locale-search"
+        @options={{hash filterable=true}}
+      />
     </div>
 
     <label>
-      <Input @type="checkbox" @checked={{this.overridden}} {{on "click" (action "toggleOverridden")}} />
+      <Input
+        @type="checkbox"
+        @checked={{this.overridden}}
+        {{on "click" (action "toggleOverridden")}}
+      />
       {{i18n "admin.site_text.show_overriden"}}
     </label>
   </p>
 </div>
 
 <ConditionalLoadingSpinner @condition={{this.searching}}>
-  {{#if this.showFallbackLocaleWarning}}
-    <div class="alert alert-info">
-      {{d-icon "exclamation-circle"}}
-      {{i18n "admin.site_text.fallback_locale_warning" fallback=this.fallbackLocaleFullName}}
-    </div>
-  {{/if}}
-
   {{#if this.siteTexts.extras.recommended}}
     <p><b>{{i18n "admin.site_text.recommended"}}</b></p>
   {{/if}}
 
   {{#each this.siteTexts as |siteText|}}
-    <SiteTextSummary @siteText={{siteText}} @editAction={{action "edit"}} @term={{this.q}} @searchRegex={{this.siteTexts.extras.regex}} />
+    <SiteTextSummary
+      @siteText={{siteText}}
+      @editAction={{action "edit"}}
+      @term={{this.q}}
+      @searchRegex={{this.siteTexts.extras.regex}}
+    />
   {{/each}}
 
   {{#if this.siteTexts.extras.has_more}}

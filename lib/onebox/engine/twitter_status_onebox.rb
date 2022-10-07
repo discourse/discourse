@@ -11,7 +11,8 @@ module Onebox
       always_https
 
       def self.===(other)
-        !Onebox.options.twitter_client.twitter_credentials_missing? && super
+        client = Onebox.options.twitter_client
+        client && !client.twitter_credentials_missing? && super
       end
 
       def http_params

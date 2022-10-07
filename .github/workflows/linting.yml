@@ -64,19 +64,19 @@ jobs:
         run: yarn install
 
       - name: Rubocop
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         run: bundle exec rubocop --parallel .
 
       - name: ESLint (core)
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         run: yarn eslint app/assets/javascripts
 
       - name: ESLint (core plugins)
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         run: yarn eslint plugins
 
       - name: Prettier
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         run: |
           yarn prettier -v
           yarn pprettier --list-different \
@@ -86,7 +86,7 @@ jobs:
             "plugins/**/assets/javascripts/**/*.js"
 
       - name: Ember template lint
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         run: |
           yarn ember-template-lint \
             --no-error-on-unmatched-pattern \
@@ -94,9 +94,9 @@ jobs:
             "plugins/**/assets/javascripts/**/*.hbs"
 
       - name: English locale lint (core)
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         run: bundle exec ruby script/i18n_lint.rb "config/**/locales/{client,server}.en.yml"
 
       - name: English locale lint (core plugins)
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         run: bundle exec ruby script/i18n_lint.rb "plugins/**/locales/{client,server}.en.yml"

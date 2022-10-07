@@ -27,7 +27,7 @@ const REPLACEMENTS = {
   "notification.group_mentioned": "users",
   "notification.quoted": "quote-right",
   "notification.replied": "reply",
-  "notification.posted": "reply",
+  "notification.posted": "discourse-bell-exclamation",
   "notification.edited": "pencil-alt",
   "notification.bookmark_reminder": "discourse-bookmark-clock",
   "notification.liked": "heart",

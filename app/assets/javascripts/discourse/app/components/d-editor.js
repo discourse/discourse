@@ -50,7 +50,7 @@ let _createCallbacks = [];
 
 class Toolbar {
   constructor(opts) {
-    const { site, siteSettings } = opts;
+    const { siteSettings, capabilities } = opts;
     this.shortcuts = {};
     this.context = null;
 
@@ -106,16 +106,16 @@ class Toolbar {
         }),
     });
 
-    this.addButton({
-      id: "code",
-      group: "insertions",
-      shortcut: "E",
-      preventFocus: true,
-      trimLeading: true,
-      action: (...args) => this.context.send("formatCode", args),
-    });
+    if (!capabilities.touch) {
+      this.addButton({
+        id: "code",
+        group: "insertions",
+        shortcut: "E",
+        preventFocus: true,
+        trimLeading: true,
+        action: (...args) => this.context.send("formatCode", args),
+      });
 
-    if (!site.mobileView) {
       this.addButton({
         id: "bullet",
         group: "extras",
@@ -354,7 +354,7 @@ export default Component.extend(TextareaTextManipulation, {
   @discourseComputed()
   toolbar() {
     const toolbar = new Toolbar(
-      this.getProperties("site", "siteSettings", "showLink")
+      this.getProperties("site", "siteSettings", "showLink", "capabilities")
     );
     toolbar.context = this;
 
@@ -708,6 +708,7 @@ export default Component.extend(TextareaTextManipulation, {
           this.applySurround(selected, head, tail, exampleKey, opts),
         applyList: (head, exampleKey, opts) =>
           this._applyList(selected, head, exampleKey, opts),
+        formatCode: (...args) => this.send("formatCode", args),
         addText: (text) => this.addText(selected, text),
         getText: () => this.value,
         toggleDirection: () => this._toggleDirection(),

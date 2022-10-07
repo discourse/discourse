@@ -350,4 +350,41 @@ RSpec.describe CurrentUserSerializer do
       expect(serializer.as_json[:likes_notifications_disabled]).to eq(false)
     end
   end
+
+  describe '#redesigned_user_page_nav_enabled' do
+    fab!(:group) { Fabricate(:group) }
+    fab!(:group2) { Fabricate(:group) }
+
+    it "is false when enable_new_user_profile_nav_groups site setting has not been set" do
+      expect(serializer.as_json[:redesigned_user_page_nav_enabled]).to eq(false)
+    end
+
+    it 'is false if user does not belong to any of the configured groups in the enable_new_user_profile_nav_groups site setting' do
+      SiteSetting.enable_new_user_profile_nav_groups = "#{group.id}|#{group2.id}"
+
+      expect(serializer.as_json[:redesigned_user_page_nav_enabled]).to eq(false)
+    end
+
+    it 'is true if user belongs one of the configured groups in the enable_new_user_profile_nav_groups site setting' do
+      SiteSetting.enable_new_user_profile_nav_groups = "#{group.id}|#{group2.id}"
+      group.add(user)
+
+      expect(serializer.as_json[:redesigned_user_page_nav_enabled]).to eq(true)
+    end
+  end
+
+  describe '#associated_account_ids' do
+    before do
+      UserAssociatedAccount.create(user_id: user.id, provider_name: "twitter", provider_uid: "1", info: { nickname: "sam" })
+    end
+
+    it 'should not include associated account ids by default' do
+      expect(serializer.as_json[:associated_account_ids]).to be_nil
+    end
+
+    it 'should include associated account ids when site setting enabled' do
+      SiteSetting.include_associated_account_ids = true
+      expect(serializer.as_json[:associated_account_ids]).to eq({ "twitter" => "1" })
+    end
+  end
 end

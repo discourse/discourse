@@ -40,12 +40,17 @@ let define, requirejs;
   }
 
   Module.prototype.makeRequire = function () {
-    return (
-      this._require ||
-      (this._require = function (dep) {
-        return requirejs(resolve(dep, this.name));
-      })
-    );
+    if (this._require) {
+      return this._require;
+    }
+    this._require = (dep) => {
+      return requirejs(resolve(dep, this.name));
+    };
+    this._require.has = (dep) => {
+      const moduleName = resolve(dep, this.name);
+      return require.has(moduleName);
+    };
+    return this._require;
   };
 
   define = function (name, deps, callback) {
@@ -105,6 +110,12 @@ let define, requirejs;
 
   function requireFrom(name, origin) {
     let mod = JS_MODULES[name] || registry[name];
+
+    if (!mod) {
+      name = name + "/index";
+      mod = registry[name];
+    }
+
     if (!mod) {
       throw new Error(
         "Could not find module `" + name + "` imported from `" + origin + "`"
@@ -126,6 +137,11 @@ let define, requirejs;
 
     if (mod && mod.callback instanceof Alias) {
       mod = registry[mod.callback.name];
+    }
+
+    if (!mod) {
+      name = name + "/index";
+      mod = registry[name];
     }
 
     if (!mod) {
@@ -206,4 +222,12 @@ let define, requirejs;
     requirejs.entries = requirejs._eak_seen = registry = {};
     seen = {};
   };
+  require.has = function (moduleName) {
+    return (
+      Boolean(registry[moduleName]) || Boolean(registry[moduleName + "/index"])
+    );
+  };
+
+  globalThis.define = define;
+  globalThis.require = require;
 })();

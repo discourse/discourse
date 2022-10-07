@@ -1067,6 +1067,7 @@ RSpec.describe PostsController do
       end
 
       it "can send a message to a group" do
+        Group.refresh_automatic_groups!
         group = Group.create(name: 'test_group', messageable_level: Group::ALIAS_LEVELS[:nobody])
         user1 = user
         group.add(user1)
@@ -1100,6 +1101,7 @@ RSpec.describe PostsController do
       end
 
       it "can send a message to a group with caps" do
+        Group.refresh_automatic_groups!
         group = Group.create(name: 'Test_group', messageable_level: Group::ALIAS_LEVELS[:nobody])
         user1 = user
         group.add(user1)
@@ -1303,6 +1305,7 @@ RSpec.describe PostsController do
         user_4 = Fabricate(:user, username: "Iyi_Iyi")
         user_4.update_attribute(:username, "İyi_İyi")
         user_4.update_attribute(:username_lower, "İyi_İyi".downcase)
+        Group.refresh_automatic_groups!
 
         post "/posts.json", params: {
           raw: 'this is the test content',
@@ -1461,6 +1464,10 @@ RSpec.describe PostsController do
 
     describe 'warnings' do
       fab!(:user_2) { Fabricate(:user) }
+
+      before do
+        Group.refresh_automatic_groups!
+      end
 
       context 'as a staff user' do
         before do
@@ -1750,6 +1757,23 @@ RSpec.describe PostsController do
         expect(response.status).to eq(200)
       end
     end
+
+    context "with a tagged topic" do
+      let(:tag) { Fabricate(:tag) }
+      it "works" do
+        SiteSetting.tagging_enabled = true
+
+        post_revision.post.topic.update(tags: [tag])
+
+        get "/posts/#{post_revision.post_id}/revisions/latest.json"
+        expect(response.status).to eq(200)
+
+        SiteSetting.tagging_enabled = false
+
+        get "/posts/#{post_revision.post_id}/revisions/latest.json"
+        expect(response.status).to eq(200)
+      end
+    end
   end
 
   describe '#revert' do
@@ -1881,6 +1905,10 @@ RSpec.describe PostsController do
     include_examples "action requires login", :get, "/posts/system/deleted.json"
 
     describe "when logged in" do
+      before do
+        Group.refresh_automatic_groups!
+      end
+
       it "raises an error if the user doesn't have permission to see the deleted posts" do
         sign_in(user)
         get "/posts/system/deleted.json"
@@ -2175,11 +2203,18 @@ RSpec.describe PostsController do
     describe "when logged in" do
       let(:post) { Fabricate(:post, deleted_at: 2.hours.ago, user: Fabricate(:user), raw_email: 'email_content') }
 
-      it "raises an error if the user doesn't have permission to view raw email" do
+      it 'returns 403 when trying to view raw as user that created the post' do
+        sign_in(post.user)
+
+        get "/posts/#{post.id}/raw-email.json"
+        expect(response.status).to eq(403)
+      end
+
+      it "returns 403 when trying to view raw email as a normal user" do
         sign_in(user)
 
         get "/posts/#{post.id}/raw-email.json"
-        expect(response).to be_forbidden
+        expect(response.status).to eq(403)
       end
 
       it "can view raw email" do

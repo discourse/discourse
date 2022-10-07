@@ -5,10 +5,12 @@ import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import UserMenuMessageItem from "discourse/lib/user-menu/message-item";
+import Topic from "discourse/models/topic";
+import { mergeSortedLists } from "discourse/lib/utilities";
 
 export default class UserMenuMessagesList extends UserMenuNotificationsList {
   get dismissTypes() {
-    return ["private_message"];
+    return this.filterByTypes;
   }
 
   get showAllHref() {
@@ -36,7 +38,7 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
   }
 
   get #unreadMessaagesNotifications() {
-    const key = `grouped_unread_high_priority_notifications.${this.site.notification_types.private_message}`;
+    const key = `grouped_unread_notifications.${this.site.notification_types.private_message}`;
     // we're retrieving the value with get() so that Ember tracks the property
     // and re-renders the UI when it changes.
     // we can stop using `get()` when the User model is refactored into native
@@ -44,29 +46,53 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     return this.currentUser.get(key) || 0;
   }
 
-  fetchItems() {
-    return ajax(
+  async fetchItems() {
+    const data = await ajax(
       `/u/${this.currentUser.username}/user-menu-private-messages`
-    ).then((data) => {
-      const content = [];
-      data.notifications.forEach((rawNotification) => {
-        const notification = Notification.create(rawNotification);
+    );
+    const content = [];
+
+    const unreadNotifications = await Notification.initializeNotifications(
+      data.unread_notifications
+    );
+    unreadNotifications.forEach((notification) => {
+      content.push(
+        new UserMenuNotificationItem({
+          notification,
+          currentUser: this.currentUser,
+          siteSettings: this.siteSettings,
+          site: this.site,
+        })
+      );
+    });
+
+    const topics = data.topics.map((t) => Topic.create(t));
+    await Topic.applyTransformations(topics);
+
+    const readNotifications = await Notification.initializeNotifications(
+      data.read_notifications
+    );
+
+    mergeSortedLists(readNotifications, topics, (notification, topic) => {
+      const notificationCreatedAt = new Date(notification.created_at);
+      const topicBumpedAt = new Date(topic.bumped_at);
+      return topicBumpedAt > notificationCreatedAt;
+    }).forEach((item) => {
+      if (item instanceof Notification) {
         content.push(
           new UserMenuNotificationItem({
-            notification,
+            notification: item,
             currentUser: this.currentUser,
             siteSettings: this.siteSettings,
             site: this.site,
           })
         );
-      });
-      content.push(
-        ...data.topics.map((topic) => {
-          return new UserMenuMessageItem({ message: topic });
-        })
-      );
-      return content;
+      } else {
+        content.push(new UserMenuMessageItem({ message: item }));
+      }
     });
+
+    return content;
   }
 
   dismissWarningModal() {

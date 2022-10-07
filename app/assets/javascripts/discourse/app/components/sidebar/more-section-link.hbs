@@ -1,4 +1,5 @@
 <Sidebar::SectionLink
+  @shouldDisplay={{@sectionLink.shouldDisplay}}
   @linkName={{@sectionLink.name}}
   @route={{@sectionLink.route}}
   @href={{@sectionLink.href}}
@@ -8,4 +9,6 @@
   @currentWhen={{@sectionLink.currentWhen}}
   @badgeText={{@sectionLink.badgeText}}
   @model={{@sectionLink.model}}
-  @models={{@sectionLink.models}} />
+  @models={{@sectionLink.models}}
+  @prefixType={{@sectionLink.prefixType}}
+  @prefixValue={{@sectionLink.prefixValue}} />

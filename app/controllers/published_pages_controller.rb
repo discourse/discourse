@@ -94,7 +94,7 @@ private
   end
 
   def ensure_publish_enabled
-    if !SiteSetting.enable_page_publishing? || SiteSetting.secure_media
+    if !SiteSetting.enable_page_publishing? || SiteSetting.secure_uploads
       raise Discourse::NotFound
     end
   end

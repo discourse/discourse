@@ -29,7 +29,8 @@
     display: flex;
     margin-right: 0.5em;
 
-    > a {
+    > a,
+    button {
       border: none;
       padding: 6px 12px;
       color: var(--primary);
@@ -52,7 +53,8 @@
       }
     }
 
-    a.active {
+    a.active,
+    button.active {
       color: var(--secondary);
       background-color: var(--quaternary);
 

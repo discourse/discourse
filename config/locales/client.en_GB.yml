@@ -162,7 +162,7 @@ en_GB:
         anonymize_yes: "Yes, anonymise this account"
         anonymize_failed: "There was a problem anonymising the account."
         merge_failed: "There was an error whilst merging the users."
-        delete_confirm: "It is generally preferable to anonymise users rather than deleting them, to avoid removing content from existing discussions.<br><br>Are you SURE you want to delete this user? This is permanent!"
+        delete_confirm: "It is generally preferable to anonymise users rather than deleting them, to avoid removing content from existing discussions."
       site_text:
         description: "You can customise any of the text on your forum. Please start by searching below:"
       badges:

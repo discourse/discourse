@@ -13,6 +13,7 @@ import userPresent, {
 import { bind } from "discourse-common/utils/decorators";
 import Evented from "@ember/object/evented";
 import { isTesting } from "discourse-common/config/environment";
+import getURL from "discourse-common/lib/get-url";
 
 const PRESENCE_INTERVAL_S = 30;
 const PRESENCE_DEBOUNCE_MS = isTesting() ? 0 : 500;
@@ -213,9 +214,9 @@ class PresenceChannelState extends EmberObject.extend(Evented) {
 
       await this._resubscribe();
       return;
-    } else {
-      this.lastSeenId = message_id;
     }
+
+    this.lastSeenId = message_id;
 
     if (this.countOnly && data.count_delta !== undefined) {
       this.set("count", this.count + data.count_delta);
@@ -228,11 +229,13 @@ class PresenceChannelState extends EmberObject.extend(Evented) {
         const users = data.entering_users.map((u) => User.create(u));
         this.users.addObjects(users);
       }
+
       if (data.leaving_user_ids) {
         const leavingIds = new Set(data.leaving_user_ids);
         const toRemove = this.users.filter((u) => leavingIds.has(u.id));
         this.users.removeObjects(toRemove);
       }
+
       this.set("count", this.users.length);
       this.trigger("change");
     } else {
@@ -470,7 +473,7 @@ export default class PresenceService extends Service {
     channelsToLeave.forEach((ch) => data.append("leave_channels[]", ch));
 
     data.append("authenticity_token", Session.currentProp("csrfToken"));
-    navigator.sendBeacon("/presence/update", data);
+    navigator.sendBeacon(getURL("/presence/update"), data);
   }
 
   _dedupQueue() {

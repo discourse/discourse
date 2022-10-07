@@ -16,6 +16,7 @@ export default class LocalDateBuilder {
     this.time = params.time;
     this.date = params.date;
     this.recurring = params.recurring;
+    this.sameLocalDayAsFrom = params.sameLocalDayAsFrom;
     this.timezones = Array.from(
       new Set((params.timezones || []).filter(Boolean))
     );
@@ -233,6 +234,10 @@ export default class LocalDateBuilder {
           localDate.add(1, "day").datetime.endOf("day")
         );
 
+      if (this.sameLocalDayAsFrom) {
+        return this._timeOnlyFormat(localDate, displayedTimezone);
+      }
+
       if (inCalendarRange && sameTimezone) {
         const date = localDate.datetimeWithZone(this.localTimezone);
 
@@ -292,5 +297,9 @@ export default class LocalDateBuilder {
       .datetimeWithZone(displayedTimezone)
       .format(format);
     return `${formatted} (${this._zoneWithoutPrefix(displayedTimezone)})`;
+  }
+
+  _timeOnlyFormat(localTime, displayedTimezone) {
+    return this._formatWithZone(localTime, displayedTimezone, "LT");
   }
 }

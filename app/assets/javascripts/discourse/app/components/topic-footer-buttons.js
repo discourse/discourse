@@ -15,9 +15,9 @@ export default Component.extend({
   // Allow us to extend it
   layoutName: "components/topic-footer-buttons",
 
-  @discourseComputed("topic.isPrivateMessage")
-  canArchive(isPM) {
-    return this.siteSettings.enable_personal_messages && isPM;
+  @discourseComputed("canSendPms", "topic.isPrivateMessage")
+  canArchive(canSendPms, isPM) {
+    return canSendPms && isPM;
   },
 
   inlineButtons: getTopicFooterButtons(),
@@ -43,7 +43,12 @@ export default Component.extend({
 
   @discourseComputed("topic.isPrivateMessage")
   showNotificationsButton(isPM) {
-    return !isPM || this.siteSettings.enable_personal_messages;
+    return !isPM || this.canSendPms;
+  },
+
+  @discourseComputed("currentUser.allowPersonalMessages")
+  canSendPms() {
+    return this.currentUser?.allowPersonalMessages;
   },
 
   canInviteTo: alias("topic.details.can_invite_to"),

@@ -7,17 +7,20 @@ import { action } from "@ember/object";
 const HIDE_SIDEBAR_KEY = "sidebar-hidden";
 
 export default Controller.extend({
-  queryParams: ["enable_sidebar"],
+  queryParams: [{ sidebarQueryParamOverride: "enable_sidebar" }],
 
   showTop: true,
   showFooter: false,
   router: service(),
   showSidebar: false,
-  enable_sidebar: null,
+  sidebarQueryParamOverride: null,
+  sidebarDisabledRouteOverride: false,
+  showSiteHeader: true,
 
   init() {
     this._super(...arguments);
-    this.showSidebar = !this.keyValueStore.getItem(HIDE_SIDEBAR_KEY);
+    this.showSidebar =
+      this.canDisplaySidebar && !this.keyValueStore.getItem(HIDE_SIDEBAR_KEY);
   },
 
   @discourseComputed
@@ -27,6 +30,11 @@ export default Controller.extend({
       this.siteSettings.allow_new_registrations &&
       !this.siteSettings.enable_discourse_connect
     );
+  },
+
+  @discourseComputed
+  canDisplaySidebar() {
+    return this.currentUser || !this.siteSettings.login_required;
   },
 
   @discourseComputed
@@ -56,20 +64,30 @@ export default Controller.extend({
   },
 
   @discourseComputed(
-    "enable_sidebar",
+    "sidebarQueryParamOverride",
     "siteSettings.enable_sidebar",
-    "router.currentRouteName"
+    "canDisplaySidebar",
+    "sidebarDisabledRouteOverride"
   )
-  sidebarEnabled(sidebarQueryParamOverride, enableSidebar, currentRouteName) {
+  sidebarEnabled(
+    sidebarQueryParamOverride,
+    enableSidebar,
+    canDisplaySidebar,
+    sidebarDisabledRouteOverride
+  ) {
+    if (!canDisplaySidebar) {
+      return false;
+    }
+
+    if (sidebarDisabledRouteOverride) {
+      return false;
+    }
+
     if (sidebarQueryParamOverride === "1") {
       return true;
     }
 
     if (sidebarQueryParamOverride === "0") {
-      return false;
-    }
-
-    if (currentRouteName.startsWith("wizard")) {
       return false;
     }
 

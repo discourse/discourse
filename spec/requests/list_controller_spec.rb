@@ -191,12 +191,13 @@ RSpec.describe ListController do
   describe '#private_messages_group' do
     fab!(:user) { Fabricate(:user) }
 
-    describe 'with personal_messages disabled' do
+    describe 'when user not in personal_message_enabled_groups group' do
       let!(:topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
 
       before do
         group.add(user)
-        SiteSetting.enable_personal_messages = false
+        SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
+        Group.refresh_automatic_groups!
       end
 
       it 'should display group private messages for an admin' do
@@ -237,6 +238,7 @@ RSpec.describe ListController do
         group.add(user)
         sign_in(user)
         SiteSetting.unicode_usernames = false
+        Group.refresh_automatic_groups!
       end
 
       it 'should return the right response when user does not belong to group' do
@@ -264,6 +266,7 @@ RSpec.describe ListController do
       before do
         sign_in(user)
         SiteSetting.unicode_usernames = true
+        Group.refresh_automatic_groups!
       end
 
       it 'Returns a 200 with unicode group name' do

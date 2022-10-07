@@ -3,8 +3,9 @@ import {
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
+import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { set } from "@ember/object";
 
 acceptance("Admin - Badges - Show", function (needs) {
   needs.user();
@@ -36,6 +37,24 @@ acceptance("Admin - Badges - Show", function (needs) {
     assert.ok(
       exists(".image-uploader"),
       "image uploader becomes visible after clicking the upload image radio button"
+    );
+
+    // SQL fields
+    assert.false(exists("label[for=query]"), "sql input is hidden by default");
+    set(this.siteSettings, "enable_badge_sql", true);
+    await settled();
+    assert.true(exists("label[for=query]"), "sql input shows when enabled");
+
+    assert.false(
+      exists("input[name=auto_revoke]"),
+      "does not show sql-specific options when query is blank"
+    );
+
+    await fillIn(".ace-wrapper textarea", "SELECT 1");
+
+    assert.true(
+      exists("input[name=auto_revoke]"),
+      "shows sql-specific options when query is present"
     );
   });
 

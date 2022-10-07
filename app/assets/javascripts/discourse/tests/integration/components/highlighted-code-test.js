@@ -17,7 +17,7 @@ module("Integration | Component | highlighted-code", function (hooks) {
     await render(hbs`<HighlightedCode @lang="ruby" @code={{this.code}} />`);
 
     assert.strictEqual(
-      query("code.ruby.hljs .hljs-function .hljs-keyword").innerText.trim(),
+      query("code.language-ruby.hljs .hljs-keyword").innerText.trim(),
       "def"
     );
   });

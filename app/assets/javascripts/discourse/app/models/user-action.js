@@ -1,4 +1,4 @@
-import { and, equal, or } from "@ember/object/computed";
+import { equal, or } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import categoryFromId from "discourse-common/utils/category-macro";
 import RestModel from "discourse/models/rest";
@@ -108,7 +108,6 @@ const UserAction = RestModel.extend({
   mentionType: equal("action_type", UserActionTypes.mentions),
   isPM: or("messageSentType", "messageReceivedType"),
   postReplyType: or("postType", "replyType"),
-  removableBookmark: and("bookmarkType", "sameUser"),
 
   addChild(action) {
     let groups = this.childGroups;

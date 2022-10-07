@@ -172,7 +172,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
     end
   end
 
-  describe 'secure uploads' do
+  describe 'secure uploadss' do
     let(:store) { FileStore::S3Store.new }
     let(:client) { Aws::S3::Client.new(stub_responses: true) }
     let(:resource) { Aws::S3::Resource.new(client: client) }
@@ -209,10 +209,10 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
       end
     end
 
-    describe "when secure media are enabled" do
+    describe "when secure uploads are enabled" do
       before do
         SiteSetting.login_required = true
-        SiteSetting.secure_media = true
+        SiteSetting.secure_uploads = true
         s3_helper.stubs(:s3_client).returns(client)
         Discourse.stubs(:store).returns(store)
       end

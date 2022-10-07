@@ -252,14 +252,11 @@ bg:
             hex:
               invalid: "този цвят не е валиден "
       <<: *errors
-  vip_category_name: "Салон"
-  vip_category_description: "Категоята е само за членове с ниво на доверие 3 и по-високо."
+  general_category_name: "Основни"
   meta_category_name: "Заявка към сайта"
   meta_category_description: "Дискусия за сайта, неговата организация, как той работи, и как можем да го подобрим."
   staff_category_name: "Персонал"
   staff_category_description: "Частна категория за дискусии на персонала. Темите са видими само за админи и модератори."
-  lounge_welcome:
-    title: "Добре дошли в Салона"
   category:
     topic_prefix: "За %{category} категория"
     errors:
@@ -1275,7 +1272,6 @@ bg:
     register:
       button: "Регистриране"
       title: "Регистриране на Админ акаунт"
-      help: "регистрирайте нов профил за да започнете"
     confirm_email:
       title: "Потвърдете имейл адреса си"
     resend_email:

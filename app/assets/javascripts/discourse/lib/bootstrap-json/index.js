@@ -381,31 +381,54 @@ module.exports = {
     if (shouldLoadPluginTestJs() && type === "test-plugin-js") {
       const scripts = [];
 
-      if (process.env.EMBER_CLI_PLUGIN_ASSETS === "1") {
-        const pluginInfos = this.app.project
-          .findAddonByName("discourse-plugins")
-          .pluginInfos();
+      const pluginInfos = this.app.project
+        .findAddonByName("discourse-plugins")
+        .pluginInfos();
 
-        for (const { name, hasJs } of pluginInfos) {
-          if (hasJs) {
-            scripts.push(`plugins/${name}.js`);
-          }
-
-          if (fs.existsSync(`../plugins/${name}_extras.js.erb`)) {
-            scripts.push(`plugins/${name}_extras.js`);
-          }
+      for (const {
+        pluginName,
+        directoryName,
+        hasJs,
+        hasAdminJs,
+      } of pluginInfos) {
+        if (hasJs) {
+          scripts.push({
+            src: `plugins/${directoryName}.js`,
+            name: pluginName,
+          });
         }
-      } else {
-        scripts.push("discourse/tests/active-plugins.js");
+
+        if (fs.existsSync(`../plugins/${directoryName}_extras.js.erb`)) {
+          scripts.push({
+            src: `plugins/${directoryName}_extras.js`,
+            name: pluginName,
+          });
+        }
+
+        if (hasAdminJs) {
+          scripts.push({
+            src: `plugins/${directoryName}_admin.js`,
+            name: pluginName,
+          });
+        }
       }
 
-      scripts.push("admin-plugins.js");
-
       return scripts
-        .map((s) => `<script src="${config.rootURL}assets/${s}"></script>`)
+        .map(
+          ({ src, name }) =>
+            `<script src="${config.rootURL}assets/${src}" data-discourse-plugin="${name}"></script>`
+        )
         .join("\n");
     } else if (shouldLoadPluginTestJs() && type === "test-plugin-tests-js") {
-      return `<script id="plugin-test-script" src="${config.rootURL}assets/discourse/tests/plugin-tests.js"></script>`;
+      return this.app.project
+        .findAddonByName("discourse-plugins")
+        .pluginInfos()
+        .filter(({ hasTests }) => hasTests)
+        .map(
+          ({ directoryName, pluginName }) =>
+            `<script src="${config.rootURL}assets/plugins/test/${directoryName}_tests.js" data-discourse-plugin="${pluginName}"></script>`
+        )
+        .join("\n");
     }
   },
 
@@ -426,6 +449,16 @@ to serve API requests. For example:
     baseURL = rootURL === "" ? "/" : cleanBaseURL(rootURL || baseURL);
 
     const rawMiddleware = express.raw({ type: () => true, limit: "100mb" });
+
+    app.use(
+      "/favicon.ico",
+      express.static(
+        path.join(
+          __dirname,
+          "../../../../../../public/images/discourse-logo-sketch-small.png"
+        )
+      )
+    );
 
     app.use(rawMiddleware, async (req, res, next) => {
       try {

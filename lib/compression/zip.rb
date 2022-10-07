@@ -35,17 +35,12 @@ module Compression
       yield(zip_file)
     end
 
-    def build_entry_path(compressed_file, dest_path, compressed_file_path, entry, allow_non_root_folder)
-      folder_name = compressed_file_path.split('/').last.gsub('.zip', '')
-      root = root_folder_present?(compressed_file, allow_non_root_folder) ? '' : "#{folder_name}/"
-
-      File.join(dest_path, "#{root}#{entry.name}").tap do |entry_path|
-        FileUtils.mkdir_p(File.dirname(entry_path))
-      end
+    def build_entry_path(dest_path, entry, _)
+      File.join(dest_path, entry.name)
     end
 
-    def root_folder_present?(filenames, allow_non_root_folder)
-      filenames.map { |p| p.name.split('/').first }.uniq.size == 1 || allow_non_root_folder
+    def decompression_results_path(dest_path, _)
+      dest_path
     end
 
     def extract_file(entry, entry_path, available_size)

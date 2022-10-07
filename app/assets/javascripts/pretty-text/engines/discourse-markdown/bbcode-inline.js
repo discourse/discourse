@@ -61,6 +61,10 @@ function tokenizeBBCode(state, silent, ruler) {
   } else {
     tagInfo.rule = rule;
 
+    if (tagInfo.closing && state.tokens.at(-1)?.meta === "bbcode") {
+      state.push("text", "", 0);
+    }
+
     let token = state.push("text", "", 0);
     token.content = state.src.slice(pos, pos + tagInfo.length);
     token.meta = "bbcode";
@@ -73,7 +77,6 @@ function tokenizeBBCode(state, silent, ruler) {
       token: state.tokens.length - 1,
       level: state.level,
       end: -1,
-      jump: 0,
     });
 
     state.pos = pos + tagInfo.length;

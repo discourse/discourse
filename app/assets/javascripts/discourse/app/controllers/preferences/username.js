@@ -5,11 +5,12 @@ import { propertyEqual, setting } from "discourse/lib/computed";
 import Controller from "@ember/controller";
 import I18n from "I18n";
 import User from "discourse/models/user";
-import bootbox from "bootbox";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend({
+  dialog: service(),
   taken: false,
   saving: false,
   errorMessage: null,
@@ -70,25 +71,21 @@ export default Controller.extend({
         return;
       }
 
-      return bootbox.confirm(
-        I18n.t("user.change_username.confirm"),
-        I18n.t("no_value"),
-        I18n.t("yes_value"),
-        (result) => {
-          if (result) {
-            this.set("saving", true);
-            this.model
-              .changeUsername(this.newUsername)
-              .then(() => {
-                DiscourseURL.redirectTo(
-                  userPath(this.newUsername.toLowerCase() + "/preferences")
-                );
-              })
-              .catch(popupAjaxError)
-              .finally(() => this.set("saving", false));
-          }
-        }
-      );
+      return this.dialog.yesNoConfirm({
+        title: I18n.t("user.change_username.confirm"),
+        didConfirm: () => {
+          this.set("saving", true);
+          this.model
+            .changeUsername(this.newUsername)
+            .then(() => {
+              DiscourseURL.redirectTo(
+                userPath(this.newUsername.toLowerCase() + "/preferences")
+              );
+            })
+            .catch(popupAjaxError)
+            .finally(() => this.set("saving", false));
+        },
+      });
     },
   },
 });

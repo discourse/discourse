@@ -42,6 +42,15 @@ RSpec.describe UserProfile do
         end
       end
 
+      context "when it is > 3000 characters" do
+        before { profile.location = "a" * 3500 }
+
+        it "is not valid" do
+          expect(profile.valid?).to eq(false)
+          expect(profile.errors.full_messages).to include(/Location is too long \(maximum is 3000 characters\)/)
+        end
+      end
+
       context "when it does not contain watched words" do
         it { is_expected.to be_valid }
       end
@@ -60,6 +69,15 @@ RSpec.describe UserProfile do
           profile.valid?
           expect(profile.errors[:base].size).to eq(1)
           expect(profile.errors.messages[:base]).to include(/you can't post the word/)
+        end
+      end
+
+      context "when it is > 3000 characters" do
+        before { profile.bio_raw = "a" * 3500 }
+
+        it "is not valid" do
+          expect(profile.valid?).to eq(false)
+          expect(profile.errors.full_messages).to include(/About Me is too long \(maximum is 3000 characters\)/)
         end
       end
 
@@ -128,6 +146,11 @@ RSpec.describe UserProfile do
 
         user_profile.website = 'user - https://forum.example.com/user'
         expect { user_profile.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      end
+
+      it "does not allow > 3000 characters" do
+        user_profile.website = "a" * 3500
+        expect(user_profile).to_not be_valid
       end
     end
 

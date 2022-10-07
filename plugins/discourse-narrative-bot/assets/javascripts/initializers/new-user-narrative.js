@@ -46,21 +46,21 @@ function initialize(api) {
     subscribe() {
       this._super(...arguments);
 
-      this.messageBus.subscribe(`/topic/${this.get("model.id")}`, (data) => {
+      this.messageBus.subscribe(`/topic/${this.model.id}`, (data) => {
         const topic = this.model;
 
         // scroll only for discobot (-2 is discobot id)
         if (
-          topic.get("isPrivateMessage") &&
+          topic.isPrivateMessage &&
           this.currentUser &&
-          this.currentUser.get("id") !== data.user_id &&
+          this.currentUser.id !== data.user_id &&
           data.user_id === -2 &&
           data.type === "created"
         ) {
           const postNumber = data.post_number;
           const notInPostStream =
             topic.get("highest_post_number") <= postNumber;
-          const postNumberDifference = postNumber - topic.get("currentPost");
+          const postNumberDifference = postNumber - topic.currentPost;
 
           if (
             notInPostStream &&
@@ -116,7 +116,7 @@ function initialize(api) {
 }
 
 export default {
-  name: "new-user-narratve",
+  name: "new-user-narrative",
 
   initialize(container) {
     const siteSettings = container.lookup("service:site-settings");

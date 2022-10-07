@@ -27,10 +27,10 @@ RSpec.describe TopicUploadSecurityManager do
     context "when the topic category is read restricted" do
       let(:category) { Fabricate(:private_category, group: group) }
 
-      context "when secure media is enabled" do
+      context "when secure uploads is enabled" do
         before do
           setup_s3
-          SiteSetting.secure_media = true
+          SiteSetting.secure_uploads = true
 
           [upload, upload2, upload3].each { |upl| stub_upload(upl) }
         end
@@ -49,7 +49,7 @@ RSpec.describe TopicUploadSecurityManager do
         end
       end
 
-      context "when secure media is disabled" do
+      context "when secure uploads is disabled" do
         it "changes the upload secure statuses to false and updates ACLs and rebakes" do
           expect_upload_status_to_change_and_rebake
         end
@@ -59,10 +59,10 @@ RSpec.describe TopicUploadSecurityManager do
     context "when the topic is a private message" do
       let(:topic) { Fabricate(:private_message_topic, category: category, user: user) }
 
-      context "when secure media is enabled" do
+      context "when secure uploads is enabled" do
         before do
           setup_s3
-          SiteSetting.secure_media = true
+          SiteSetting.secure_uploads = true
 
           [upload, upload2, upload3].each { |upl| stub_upload(upl) }
         end
@@ -81,7 +81,7 @@ RSpec.describe TopicUploadSecurityManager do
         end
       end
 
-      context "when secure media is disabled" do
+      context "when secure uploads is disabled" do
         it "changes the upload secure statuses to false and updates ACLs and rebakes" do
           expect_upload_status_to_change_and_rebake
         end
@@ -89,10 +89,10 @@ RSpec.describe TopicUploadSecurityManager do
     end
 
     context "when the topic is public" do
-      context "when secure media is enabled" do
+      context "when secure uploads is enabled" do
         before do
           setup_s3
-          SiteSetting.secure_media = true
+          SiteSetting.secure_uploads = true
 
           [upload, upload2, upload3].each { |upl| stub_upload(upl) }
         end
@@ -125,7 +125,7 @@ RSpec.describe TopicUploadSecurityManager do
 
       before do
         setup_s3
-        SiteSetting.secure_media = true
+        SiteSetting.secure_uploads = true
 
         [upload, upload2, upload3].each { |upl| stub_upload(upl) }
       end
@@ -142,9 +142,9 @@ RSpec.describe TopicUploadSecurityManager do
           expect(upload3.reload.access_control_post).to eq(post4)
         end
 
-        context "when secure media is not enabled" do
+        context "when secure uploads is not enabled" do
           before do
-            SiteSetting.secure_media = false
+            SiteSetting.secure_uploads = false
           end
 
           it "does not change the upload secure status and does not set the access control post" do

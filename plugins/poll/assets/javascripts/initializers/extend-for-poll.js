@@ -31,15 +31,15 @@ function initializePolls(api) {
 
   api.modifyClass("controller:topic", {
     pluginId: PLUGIN_ID,
+
     subscribe() {
       this._super(...arguments);
-      this.messageBus.subscribe("/polls/" + this.get("model.id"), (msg) => {
+      this.messageBus.subscribe(`/polls/${this.model.id}`, (msg) => {
         const post = this.get("model.postStream").findLoadedPost(msg.post_id);
-        if (post) {
-          post.set("polls", msg.polls);
-        }
+        post?.set("polls", msg.polls);
       });
     },
+
     unsubscribe() {
       this.messageBus.unsubscribe("/polls/*");
       this._super(...arguments);

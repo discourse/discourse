@@ -53,7 +53,7 @@ RSpec.describe Middleware::AnonymousCache do
       end
     end
 
-    context "with header-based locale locale" do
+    context "with header or cookie based custom locale" do
       it "handles different languages" do
         # Normally does not check the language header
         french1 = new_helper("HTTP_ACCEPT_LANGUAGE" => "fr").cache_key
@@ -76,6 +76,9 @@ RSpec.describe Middleware::AnonymousCache do
         expect(none).to eq(english)
         expect(french1).to eq(french2)
         expect(french1).not_to eq(none)
+
+        SiteSetting.set_locale_from_cookie = true
+        expect(new_helper("HTTP_COOKIE" => "locale=es;").cache_key).to include("l=es")
       end
     end
 

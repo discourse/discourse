@@ -92,6 +92,7 @@ RSpec.describe Wizard::StepUpdater do
           updater.update
           expect(updater.success?).to eq(true)
           expect(wizard.completed_steps?('styling')).to eq(true)
+          expect(updater.refresh_required?).to eq(true)
           theme = Theme.find_by(id: SiteSetting.default_theme_id)
           expect(theme.color_scheme.base_scheme_id).to eq('Dark')
         end
@@ -112,6 +113,7 @@ RSpec.describe Wizard::StepUpdater do
             homepage_style: 'latest'
           )
           expect { updater.update }.not_to change { Theme.count }
+          expect(updater.refresh_required?).to eq(true)
           theme.reload
           expect(theme.color_scheme.base_scheme_id).to eq('Neutral')
         end

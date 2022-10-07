@@ -333,18 +333,9 @@ const User = RestModel.extend({
       return [];
     }
 
-    return Site.current()
-      .categoriesList.filter((category) => {
-        if (
-          this.siteSettings.suppress_uncategorized_badge &&
-          category.isUncategorizedCategory
-        ) {
-          return false;
-        }
-
-        return sidebarCategoryIds.includes(category.id);
-      })
-      .sort((a, b) => a.name.localeCompare(b.name));
+    return Site.current().categoriesList.filter((category) =>
+      sidebarCategoryIds.includes(category.id)
+    );
   },
 
   changeUsername(new_username) {
@@ -581,25 +572,27 @@ const User = RestModel.extend({
     });
   },
 
-  loadUserAction(id) {
-    const stream = this.stream;
-    return ajax(`/user_actions/${id}.json`).then((result) => {
-      if (result && result.user_action) {
-        const ua = result.user_action;
+  async loadUserAction(id) {
+    const result = await ajax(`/user_actions/${id}.json`);
 
-        if ((this.get("stream.filter") || ua.action_type) !== ua.action_type) {
-          return;
-        }
-        if (!this.get("stream.filter") && !this.inAllStream(ua)) {
-          return;
-        }
+    if (!result?.user_action) {
+      return;
+    }
 
-        ua.title = emojiUnescape(escapeExpression(ua.title));
-        const action = UserAction.collapseStream([UserAction.create(ua)]);
-        stream.set("itemsLoaded", stream.get("itemsLoaded") + 1);
-        stream.get("content").insertAt(0, action[0]);
-      }
-    });
+    const ua = result.user_action;
+
+    if ((this.get("stream.filter") || ua.action_type) !== ua.action_type) {
+      return;
+    }
+
+    if (!this.get("stream.filter") && !this.inAllStream(ua)) {
+      return;
+    }
+
+    ua.title = emojiUnescape(escapeExpression(ua.title));
+    const action = UserAction.collapseStream([UserAction.create(ua)]);
+    this.stream.set("itemsLoaded", this.stream.get("itemsLoaded") + 1);
+    this.stream.get("content").insertAt(0, action[0]);
   },
 
   inAllStream(ua) {
@@ -631,6 +624,18 @@ const User = RestModel.extend({
   @discourseComputed("filteredGroups", "numGroupsToDisplay")
   showMoreGroupsLink(filteredGroups, numGroupsToDisplay) {
     return filteredGroups.length > numGroupsToDisplay;
+  },
+
+  isInAnyGroups(groupIds) {
+    if (!this.groups) {
+      return;
+    }
+
+    // auto group ID 0 is "everyone"
+    return (
+      groupIds.includes(0) ||
+      this.groups.mapBy("id").some((groupId) => groupIds.includes(groupId))
+    );
   },
 
   // The user's stat count, excluding PMs.
@@ -1054,6 +1059,11 @@ const User = RestModel.extend({
     this.appEvents.trigger("user-drafts:changed");
   },
 
+  updateReviewableCount(count) {
+    this.set("reviewable_count", count);
+    this.appEvents.trigger("user-reviewable-count:changed", count);
+  },
+
   isInDoNotDisturb() {
     return (
       this.do_not_disturb_until &&
@@ -1068,6 +1078,18 @@ const User = RestModel.extend({
   )
   trackedTags(trackedTags, watchedTags, watchingFirstPostTags) {
     return [...trackedTags, ...watchedTags, ...watchingFirstPostTags];
+  },
+
+  @discourseComputed("staff", "groups.[]")
+  allowPersonalMessages() {
+    return (
+      this.staff ||
+      this.isInAnyGroups(
+        this.siteSettings.personal_message_enabled_groups
+          .split("|")
+          .map((groupId) => parseInt(groupId, 10))
+      )
+    );
   },
 });
 

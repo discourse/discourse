@@ -15,7 +15,10 @@ class ReviewableScoreSerializer < ApplicationSerializer
     contains_media: 'review_media_unless_trust_level',
   }
 
-  attributes :id, :score, :agree_stats, :status, :reason, :created_at, :reviewed_at
+  attributes :id, :score, :agree_stats, :reason, :created_at, :reviewed_at
+
+  attribute :status_for_database, key: :status
+
   has_one :user, serializer: BasicUserSerializer, root: 'users'
   has_one :score_type, serializer: ReviewableScoreTypeSerializer
   has_one :reviewable_conversation, serializer: ReviewableConversationSerializer

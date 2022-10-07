@@ -192,10 +192,12 @@ RSpec.describe Site do
     end
 
     it "returns false when the user is not first admin who logs in" do
+      admin = Fabricate(:admin)
       first_post = Fabricate(:post, created_at: 25.days.ago)
       SiteSetting.welcome_topic_id = first_post.topic.id
 
-      expect(Site.show_welcome_topic_banner?(Guardian.new(Fabricate(:admin)))).to eq(false)
+      expect(Site.show_welcome_topic_banner?(Guardian.new(admin))).to eq(false)
+      expect(Discourse.cache.read(Site.welcome_topic_banner_cache_key(admin.id))).to eq(false)
     end
 
     it "returns true when welcome topic is less than month old" do
@@ -206,6 +208,7 @@ RSpec.describe Site do
       SiteSetting.welcome_topic_id = first_post.topic.id
 
       expect(Site.show_welcome_topic_banner?(Guardian.new(admin))).to eq(true)
+      expect(Discourse.cache.read(Site.welcome_topic_banner_cache_key(admin.id))).to eq(true)
     end
 
     it "returns false when welcome topic is more than month old" do
@@ -216,6 +219,7 @@ RSpec.describe Site do
       SiteSetting.welcome_topic_id = first_post.topic.id
 
       expect(Site.show_welcome_topic_banner?(Guardian.new(admin))).to eq(false)
+      expect(Discourse.cache.read(Site.welcome_topic_banner_cache_key(admin.id))).to eq(false)
     end
 
     it "returns false when welcome topic has been edited" do
@@ -226,6 +230,7 @@ RSpec.describe Site do
       SiteSetting.welcome_topic_id = first_post.topic.id
 
       expect(Site.show_welcome_topic_banner?(Guardian.new(admin))).to eq(false)
+      expect(Discourse.cache.read(Site.welcome_topic_banner_cache_key(admin.id))).to eq(false)
     end
   end
 

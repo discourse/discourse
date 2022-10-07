@@ -1,4 +1,5 @@
 import Controller from "@ember/controller";
+import { action } from "@ember/object";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
 import { allowsImages } from "discourse/lib/uploads";
@@ -132,6 +133,15 @@ export default Controller.extend(ModalFunctionality, {
     );
   },
 
+  @action
+  selectAvatar(url, event) {
+    event?.preventDefault();
+    this.user
+      .selectAvatar(url)
+      .then(() => window.location.reload())
+      .catch(popupAjaxError);
+  },
+
   actions: {
     uploadComplete() {
       this.set("selected", "custom");
@@ -157,13 +167,6 @@ export default Controller.extend(ModalFunctionality, {
           }
         })
         .finally(() => this.set("gravatarRefreshDisabled", false));
-    },
-
-    selectAvatar(url) {
-      this.user
-        .selectAvatar(url)
-        .then(() => window.location.reload())
-        .catch(popupAjaxError);
     },
 
     saveAvatarSelection() {

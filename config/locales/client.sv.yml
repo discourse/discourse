@@ -226,6 +226,8 @@ sv:
     not_implemented: "Denna funktion har tyvärr inte implementerats än!"
     no_value: "Nej"
     yes_value: "Ja"
+    ok_value: "OK"
+    cancel_value: "Avbryt"
     submit: "Skicka"
     generic_error: "Tyvärr, ett fel har inträffat."
     generic_error_with_reason: "Ett fel inträffade: %{error}"
@@ -1195,6 +1197,7 @@ sv:
         move_to_archive: "Arkiv"
         failed_to_move: "Misslyckades med att flytta de markerade meddelandena (kanske ligger ditt nätverk nere)"
         tags: "Taggar"
+        all_tags: "Alla taggar"
         warnings: "Officiella varningar"
         read_more_in_group: "Vill du läsa mer? Bläddra bland andra meddelanden i %{groupLink}."
         read_more: "Vill du läsa mer? Bläddra bland andra meddelanden i <a href='%{basePath}/u/%{username}/messages'>personliga meddelanden</a>."
@@ -1652,7 +1655,6 @@ sv:
       set_custom_status: "Ställ in anpassad status"
       what_are_you_doing: "Vad gör du?"
       remove_status: "Ta bort status"
-      until: "T.o.m.:"
     loading: "Laddar..."
     errors:
       prev_page: "medan vi försökte ladda"
@@ -1685,6 +1687,8 @@ sv:
       enabled: "Webbplatsen är i skrivskyddat läge. Du kan fortsätta bläddra på sidan, men att skriva inlägg, gilla och andra interaktioner är inaktiverat för tillfället."
       login_disabled: "Det går inte att logga in medan webbplatsen är i skrivskyddat läge."
       logout_disabled: "Det går inte att logga ut medan webbplatsen är i skrivskyddat läge."
+    staff_writes_only_mode:
+      enabled: "Webbplatsen är i läget endast för personal. Du kan fortsätta bläddra på sidan, men att skriva inlägg, gilla och andra åtgärder är begränsat till personal."
     too_few_topics_and_posts_notice_MF: >-
       Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">inleda diskussionen!</a> Det {currentTopics, plural, one {finns <strong>#</strong> ämne} other {finns <strong>#</strong> ämnen}} och {currentPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Besökare behöver mer att läsa och svara på – vi rekommenderar åtminstone {requiredTopics, plural, one {<strong>#</strong> ämne} other {<strong>#</strong> ämnen}} och {requiredPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Enbart personal kan se detta meddelande.
     too_few_topics_notice_MF: >-
@@ -1716,7 +1720,7 @@ sv:
       hide_forever: "nej tack"
       hidden_for_session: "Ok, vi frågar dig imorgon. Du kan alltid använda 'Logga in' för att skapa ett konto, också."
       intro: "Hejsan! Det verkar som du gillar diskussionen, men du har ännu inte registrerat dig för ett konto."
-      value_prop: "Trött på att bläddra igenom samma inlägg? när du skapar ett konto kommer du alltid tillbaka där du slutade. Med ett konto kan du också bli notifierad om nya svar, spara bokmärken och använda gillningar för att tacka andra. Vi kan alla arbeta tillsammans för att göra denna gemenskap fantastisk. :heart:"
+      value_prop: "Trött på att bläddra igenom samma inlägg? När du skapar ett konto kommer du alltid tillbaka där du slutade. Med ett konto kan du också bli aviserad om nya svar, spara bokmärken och använda gillningar för att tacka andra. Vi kan alla arbeta tillsammans för att göra denna gemenskap fantastisk. :heart:"
     summary:
       enabled_description: "Sammanfattning över de inlägg som användarna tycker är mest intressanta."
       description:
@@ -1970,6 +1974,8 @@ sv:
       similar_topics: "Ditt ämne liknar..."
       drafts_offline: "utkast offline"
       edit_conflict: "redigera konflikt"
+      esc: "esc"
+      esc_label: "Klicka eller tryck på Esc för att avfärda"
       group_mentioned_limit:
         one: "<b>Varning!</b> Du nämnde <a href='%{group_link}'>%{group}</a> och denna grupp har fler medlemmar än vad administratorn tillåter för omnämningar. Begränsningsregeln för omnämnanden är satt till %{count} användare. Ingen kommer därför att aviseras."
         other: "<b>Varning!</b> Du nämnde <a href='%{group_link}'>%{group}</a> och denna grupp har fler medlemmar än vad administratorn tillåter för omnämningar. Begränsningsregeln för omnämnanden är satt till %{count} användare. Ingen kommer därför att aviseras."
@@ -2072,6 +2078,9 @@ sv:
         body: "Just nu skickas det här meddelandet bara till dig själv!"
       slow_mode:
         error: "Detta ämne är i långsamt läge. Du publicerade nyligen, och kan publicera igen om %{timeLeft}."
+      user_not_seen_in_a_while:
+        single: "Personen du skickar meddelanden till, <b>%{usernames}</b>, har inte setts här på väldigt länge – %{time_ago}. De kanske inte får ditt meddelande. Kanske vill du söka efter alternativa metoder för att kontakta %{usernames}?"
+        multiple: "Följande personer du skickar meddelanden till, <b>%{usernames}</b>, har inte setts här på väldigt länge – %{time_ago}. De kanske inte får ditt meddelande. Kanske vill du söka efter alternativa metoder för att kontakta dem?"
       admin_options_title: "Valfria personalinställningar för detta ämne"
       composer_actions:
         reply: Svara
@@ -2352,17 +2361,53 @@ sv:
     view_all: "visa alla %{tab}"
     user_menu:
       generic_no_items: "Det finns inga objekt i den här listan."
-      sr_menu_tabs: "Menyflikar"
+      sr_menu_tabs: "Flikar i användarmenyn"
       view_all_notifications: "visa alla aviseringar"
       view_all_bookmarks: "visa alla bokmärken"
       view_all_messages: "visa alla personliga meddelanden"
+      tabs:
+        all_notifications: "Alla aviseringar"
+        replies: "Svar"
+        replies_with_unread:
+          one: "Svar - %{count} oläst svar"
+          other: "Svar - %{count} olästa svar"
+        mentions: "Omnämnanden"
+        mentions_with_unread:
+          one: "Omnämnanden - %{count} oläst omnämnande"
+          other: "Omnämnanden - %{count} olästa omnämnanden"
+        likes: "Gillar"
+        likes_with_unread:
+          one: "Gillningar - %{count} oläst gillning"
+          other: "Gillningar - %{count} olästa gillningar"
+        watching: "Bevakade ämnen"
+        watching_with_unread:
+          one: "Bevakade ämnen - %{count} oläst bevakat ämne"
+          other: "Bevakade ämnen - %{count} olästa bevakade ämnen"
+        messages: "Personliga meddelanden"
+        messages_with_unread:
+          one: "Personliga meddelanden - %{count} oläst meddelande"
+          other: "Personliga meddelanden - %{count} olästa meddelanden"
+        bookmarks: "Bokmärken"
+        bookmarks_with_unread:
+          one: "Bokmärken - %{count} oläst bokmärke"
+          other: "Bokmärken - %{count} olästa bokmärken"
+        review_queue: "Granskningskö"
+        review_queue_with_unread:
+          one: "Granskningskö - %{count} objekt behöver granskas"
+          other: "Granskningskö - %{count} objekt behöver granskas"
+        other_notifications: "Andra aviseringar"
+        other_notifications_with_unread:
+          one: "Andra aviseringar - %{count} oläst avisering"
+          other: "Andra aviseringar - %{count} olästa aviseringar"
+        profile: "Profil"
       reviewable:
         view_all: "visa alla granskningsobjekt"
         queue: "Kö"
         deleted_user: "(raderad användare)"
+        deleted_post: "(raderat inlägg)"
         post_number_with_topic_title: "inlägg nr %{post_number} - %{title}"
         new_post_in_topic: "nytt inlägg i %{title}"
-        suspicious_user: "misstänkt användare %{username}"
+        user_requires_approval: "%{username} kräver godkännande"
         default_item: "granskningsbart objekt nr %{reviewable_id}"
     topics:
       new_messages_marker: "senaste besök"
@@ -3011,7 +3056,7 @@ sv:
       merge:
         confirm:
           one: "Är du säker på att du vill slå ihop dessa inlägg?"
-          other: "Är du säker på att du vill sammanfoga de %{count} inläggen?"
+          other: "Är du säker på att du vill slå ihop dessa %{count} inlägg?"
       revisions:
         controls:
           first: "Första version"
@@ -3429,6 +3474,7 @@ sv:
         today: "Idag"
         other_periods: "se toppen för:"
     browser_update: 'Tyvärr stöds inte <a href="https://www.discourse.org/faq/#browser">din webbläsare</a>. Vänligen <a href="https://browsehappy.com">byt till en webbläsare som stöds</a> för att se innehåll, logga in och svara.'
+    safari_13_warning: Den här webbplatsens stöd för iOS och Safari i version 13 och äldre avlägsnas inom kort. En förenklad skrivskyddad version kommer att förbli tillgänglig. (<a href="https://meta.discourse.org/t/224747">mer information</a>)
     permission_types:
       full: "Skapa / svara / se"
       create_post: "Svara / se"
@@ -3740,14 +3786,14 @@ sv:
     user_activity:
       no_activity_title: "Ingen aktivitet än"
       no_activity_body: "Välkommen till vårt forum! Du är helt ny här och har ännu inte bidragit i diskussioner. Du kan börja med att gå till <a href='%{topUrl}'>Topp</a> eller <a href='%{categoriesUrl}'>Kategorier</a> och sätta igång att läsa! Välj %{heartIcon} på inlägg som du gillar eller vill lära dig mer om. I takt med att du deltar kommer din aktivitet att visas här."
-      no_activity_others: "Ingen aktivitet."
       no_replies_title: "Du har inte svarat på några ämnen än"
-      no_replies_others: "Inga svar."
+      no_replies_title_others: "%{username} har inte svarat på några ämnen ännu"
+      no_replies_body: "När du <a href='%{searchUrl}'>upptäcker</a> en intressant konversation som du vill bidra till trycker du på knappen <kbd>Svara</kbd> direkt under ett inlägg för att börja svara på det specifika inlägget. Om du föredrar att svara på det allmänna ämnet snarare än på ett enskilt inlägg eller en enskild person, kan du leta efter knappen <kbd>Svara</kbd> längst ner i ämnet eller under ämnets tidslinje."
       no_drafts_title: "Du har inte startat några utkast"
       no_drafts_body: "Inte riktigt redo att göra ett inlägg? Vi sparar automatiskt ett nytt utkast och visar det i listan här när du börjar skriva ett ämne, svar eller personligt meddelande. Välj avbryt-knappen för att ta bort eller spara ditt utkast för att fortsätta senare."
       no_likes_title: "Du har inte gillat några ämnen än"
+      no_likes_title_others: "%{username} har inte gillat några ämnen ännu"
       no_likes_body: "Ett bra sätt att hoppa in och börja bidra är att börja läsa samtal som redan har ägt rum, och välja %{heartIcon} på inlägg som du gillar!"
-      no_likes_others: "Inga gillade inlägg."
       no_topics_title: "Du har inte startat några ämnen än"
       no_topics_body: "Det är alltid bäst att <a href='%{searchUrl}'>söka</a> efter befintliga samtalsämnen innan du startar ett nytt, men om du är säker på att ämnet du vill ha inte redan finns där, var så god och starta ett nytt eget ämne. Leta efter knappen <kbd>+ Nytt ämne</kbd> längst upp till höger i ämneslistan, kategorin eller taggen för att börja skapa ett nytt ämne inom det området."
       no_topics_title_others: "%{username} har inte startat några ämnen än"
@@ -3770,9 +3816,12 @@ sv:
         other: "%{count} nya"
       toggle_section: "växla avsnitt"
       more: "Mer..."
+      all_categories: "Alla kategorier"
+      all_tags: "Alla taggar"
       sections:
+        about:
+          header_link_text: "Om"
         messages:
-          header_link_title: "personliga meddelanden"
           header_link_text: "Meddelanden"
           header_action_title: "skapa ett personligt meddelande"
           links:
@@ -3786,23 +3835,28 @@ sv:
         tags:
           none: "Du har inte lagt till några taggar."
           click_to_get_started: "Klicka här för att komma igång."
-          header_link_title: "alla taggar"
           header_link_text: "Taggar"
           header_action_title: "redigera sidofältets taggar"
         categories:
           none: "Du har inte lagt till några kategorier."
           click_to_get_started: "Klicka här för att komma igång."
-          header_link_title: "alla kategorier"
           header_link_text: "Kategorier"
           header_action_title: "redigera sidofältets kategorier"
         community:
-          header_link_title: "start"
           header_link_text: "Community"
           header_action_title: "skapa ett nytt ämne"
           links:
+            about:
+              content: "Om"
+            admin:
+              content: "Admin"
+            badges:
+              content: "Utmärkelser"
             everything:
               content: "Allting"
               title: "Alla ämnen"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Följda"
               title: "Alla följda ämnen"
@@ -3818,10 +3872,15 @@ sv:
               draft_count:
                 one: "%{count} utkast"
                 other: "%{count} utkast"
+            review:
+              content: "Granska"
+              title: "granska"
+              pending_count: "%{count} väntande"
     welcome_topic_banner:
       title: "Skapa ditt välkomstämne"
       description: 'Ditt välkomstämne är det första som nykomlingar läser. Tänk på det som din "snabbpresentation" eller "målbeskrivning" i ett enda stycke.'
       button_title: "Börja redigera"
+    until: "T.o.m.:"
   admin_js:
     type_to_filter: "skriv för att filtrera..."
     admin:
@@ -4926,6 +4985,7 @@ sv:
         suspended: "Avstängd?"
         staged: "Arrangerad?"
         show_admin_profile: "Administratör"
+        manage_user: "Hantera användare"
         show_public_profile: "Visa offentlig profil"
         impersonate: "Imitera"
         action_logs: "Åtgärdslogg"
@@ -5023,7 +5083,8 @@ sv:
         cant_delete_all_too_many_posts:
           one: "Kan inte radera alla inlägg, då användaren har fler än %{count} inlägg. (delete_all_posts_max)"
           other: "Kan inte radera alla inlägg, då användaren har fler än %{count} inlägg. (delete_all_posts_max)"
-        delete_confirm: "Det är generellt att föredra att anonymisera användare snarare än att ta bort dem för att undvika att ta bort innehåll från befintliga diskussioner. <br><br> Är du säker på att du vill ta bort den här användaren? Detta görs permanent!"
+        delete_confirm_title: "Är du SÄKER på att du vill radera den här användaren? Detta är permanent!"
+        delete_confirm: "I allmänhet är det att föredra att anonymisera användare istället för att radera dem, för att undvika att innehåll från befintliga diskussioner tas bort."
         delete_and_block: "Radera och <b>blockera</b> denna e-postadress och IP-adress"
         delete_dont_block: "Radera enbart"
         deleting_user: "Raderar användaren..."
@@ -5154,7 +5215,6 @@ sv:
         recommended: "Vi rekommenderar att du anpassar följande texter:"
         show_overriden: "Visa bara överskrivna"
         locale: "Språk:"
-        fallback_locale_warning: "Du redigerar ett språk baserat på %{fallback}. Användare som väljer %{fallback} som sitt gränssnittsspråk kommer inte att se dina ändringar."
         more_than_50_results: "Det blev fler än 50 resultat. Förfina din sökning."
       settings:
         show_overriden: "Visa bara överskrivna"

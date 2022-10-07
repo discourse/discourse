@@ -149,25 +149,25 @@ RSpec.describe Post do
     end
   end
 
-  describe "with_secure_media?" do
+  describe "with_secure_uploads?" do
     let(:topic) { Fabricate(:topic) }
     let!(:post) { Fabricate(:post, topic: topic) }
-    it "returns false if secure media is not enabled" do
-      expect(post.with_secure_media?).to eq(false)
+    it "returns false if secure uploads is not enabled" do
+      expect(post.with_secure_uploads?).to eq(false)
     end
 
-    context "when secure media is enabled" do
+    context "when secure uploads is enabled" do
       before do
         setup_s3
         SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
-        SiteSetting.secure_media = true
+        SiteSetting.secure_uploads = true
       end
 
       context "if login_required" do
         before { SiteSetting.login_required = true }
 
         it "returns true" do
-          expect(post.with_secure_media?).to eq(true)
+          expect(post.with_secure_uploads?).to eq(true)
         end
       end
 
@@ -178,7 +178,7 @@ RSpec.describe Post do
         end
 
         it "returns true" do
-          expect(post.with_secure_media?).to eq(true)
+          expect(post.with_secure_uploads?).to eq(true)
         end
       end
 
@@ -186,7 +186,7 @@ RSpec.describe Post do
         let(:topic) { Fabricate(:private_message_topic) }
 
         it "returns true" do
-          expect(post.with_secure_media?).to eq(true)
+          expect(post.with_secure_uploads?).to eq(true)
         end
       end
     end
@@ -1476,11 +1476,11 @@ RSpec.describe Post do
         expect(post.reload.upload_references.pluck(:id)).to_not contain_exactly(post_uploads_ids)
       end
 
-      context "when secure media is enabled" do
+      context "when secure uploads is enabled" do
         before do
           setup_s3
         SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
-        SiteSetting.secure_media = true
+        SiteSetting.secure_uploads = true
         end
 
         it "sets the access_control_post_id on uploads in the post that don't already have the value set" do
@@ -1523,7 +1523,7 @@ RSpec.describe Post do
 
         setup_s3
         SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
-        SiteSetting.secure_media = true
+        SiteSetting.secure_uploads = true
 
         attachment_upload.update!(original_filename: "hello.csv")
 
@@ -1531,8 +1531,8 @@ RSpec.describe Post do
         stub_upload(image_upload)
       end
 
-      it "marks image and attachment uploads as secure in PMs when secure_media is ON" do
-        SiteSetting.secure_media = true
+      it "marks image and attachment uploads as secure in PMs when secure_uploads is ON" do
+        SiteSetting.secure_uploads = true
         post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
         post.link_post_uploads
         post.update_uploads_secure_status(source: "test")
@@ -1543,8 +1543,8 @@ RSpec.describe Post do
         )
       end
 
-      it "marks image uploads as not secure in PMs when when secure_media is ON" do
-        SiteSetting.secure_media = false
+      it "marks image uploads as not secure in PMs when when secure_uploads is ON" do
+        SiteSetting.secure_uploads = false
         post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:private_message_topic, user: user))
         post.link_post_uploads
         post.update_uploads_secure_status(source: "test")
@@ -1556,7 +1556,7 @@ RSpec.describe Post do
       end
 
       it "marks attachments as secure when relevant setting is enabled" do
-        SiteSetting.secure_media = true
+        SiteSetting.secure_uploads = true
         private_category = Fabricate(:private_category, group: Fabricate(:group))
         post = Fabricate(:post, raw: raw, user: user, topic: Fabricate(:topic, user: user, category: private_category))
         post.link_post_uploads
@@ -1697,7 +1697,7 @@ RSpec.describe Post do
     it "correctly identifies secure uploads" do
       setup_s3
       SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
-      SiteSetting.secure_media = true
+      SiteSetting.secure_uploads = true
 
       upload1 = Fabricate(:upload_s3, secure: true)
       upload2 = Fabricate(:upload_s3, secure: true)

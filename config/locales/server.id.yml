@@ -254,10 +254,7 @@ id:
             hex:
               invalid: "bukan warna yang valid."
       <<: *errors
-  vip_category_name: "Lounge / Santai"
   staff_category_name: "Staf"
-  lounge_welcome:
-    title: "Selamat datang di Lounge"
   category:
     topic_prefix: "Tentang kategori %{category}"
     errors:

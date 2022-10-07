@@ -2,9 +2,9 @@
 
 RSpec.describe SpamRule::AutoSilence do
   before do
-    SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:disabled]
+    SiteSetting.hide_post_sensitivity = Reviewable.sensitivities[:disabled]
     Reviewable.set_priorities(high: 4.0)
-    SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:low]
+    SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivities[:low]
     SiteSetting.num_users_to_silence_new_user = 2
   end
 
@@ -20,7 +20,7 @@ RSpec.describe SpamRule::AutoSilence do
 
     it 'delivers punishment when user should be silenced' do
       Reviewable.set_priorities(high: 2.0)
-      SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:low]
+      SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivities[:low]
       SiteSetting.num_users_to_silence_new_user = 1
       PostActionCreator.spam(Discourse.system_user, post)
       subject.perform
@@ -194,7 +194,7 @@ RSpec.describe SpamRule::AutoSilence do
       end
 
       it 'returns false if silence_new_user_sensitivity is disabled' do
-        SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivity[:disabled]
+        SiteSetting.silence_new_user_sensitivity = Reviewable.sensitivities[:disabled]
         PostActionCreator.spam(flagger, post)
         PostActionCreator.spam(flagger2, post)
         expect(subject.should_autosilence?).to eq(false)

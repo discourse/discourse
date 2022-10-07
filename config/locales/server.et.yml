@@ -277,8 +277,7 @@ et:
             payload_url:
               invalid: "URL on vigane. URL peab sisaldama http:// või https://. Ning tühikud ei ole lubatud."
       <<: *errors
-  vip_category_name: "Lounge"
-  vip_category_description: "Liik, mis on eksklusiivne kasutajatele, kellel on usaldustase 3 või kõrgem."
+  general_category_name: "Üldine"
   meta_category_name: "Saidi tagasiside."
   meta_category_description: "Arutelu selle saidi, tema korralduse, töömeetodite ja arenguvõimaluste kohta."
   staff_category_name: "Meeskond"
@@ -299,8 +298,6 @@ et:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Ilmselt peaksid sa selle teema administreerimise alt sulgema :wrench: (üleval paremal ja allääres), et teadandele vastuseid ei kuhjuks.
-  lounge_welcome:
-    title: "Tere tulemast Lounge'i"
   category:
     topic_prefix: "Liigist %{category}"
     post_template: "%{replace_paragraph}\n\nKasuta järgnevaid lõikusid pikema kirjelduse jaoks või foorumi juhendi või reeglite jaoks:\n\n- Miks peaksid inimesed seda foorumit kasutama? Mille jaoks see on?\n\n- Mille poolest erineb see meie teistest foorumitest?\n\n- Mis infot peaksid selle foorumi teemad sisaldama?\n\n- Kas meil on seda foorumit vaja? Kas me saame seda foorumit ühendada teise foorumiga või alamfoorumiga?\n"
@@ -1010,7 +1007,6 @@ et:
     register:
       button: "Registreeru"
       title: "Registreeri adminni konto"
-      help: "alustamiseks registreeri uus konto"
     resend_email:
       title: "Saada aktiveerimismeil uuesti"
   safe_mode:

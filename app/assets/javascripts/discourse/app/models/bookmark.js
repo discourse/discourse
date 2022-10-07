@@ -12,6 +12,7 @@ import getURL from "discourse-common/lib/get-url";
 import { longDate } from "discourse/lib/formatter";
 import { none } from "@ember/object/computed";
 import { capitalize } from "@ember/string";
+import { applyModelTransformations } from "discourse/lib/model-transformers";
 
 export const AUTO_DELETE_PREFERENCES = {
   NEVER: 0,
@@ -167,6 +168,10 @@ Bookmark.reopenClass({
     args.currentUser = args.currentUser || User.current();
     args.user = User.create(args.user);
     return this._super(args);
+  },
+
+  async applyTransformations(bookmarks) {
+    await applyModelTransformations("bookmark", bookmarks);
   },
 });
 

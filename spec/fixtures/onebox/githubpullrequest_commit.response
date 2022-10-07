@@ -1,0 +1,134 @@
+{
+  "sha": "d7d3be1130c665cc7fab9f05dbf32335229137a6",
+  "node_id": "MDY6Q29tbWl0NzU2OTU3ODpkN2QzYmUxMTMwYzY2NWNjN2ZhYjlmMDVkYmYzMjMzNTIyOTEzN2E2",
+  "commit": {
+    "author": {
+      "name": "James Anderson",
+      "email": "me@jamesaanderson.com",
+      "date": "2013-07-26T02:03:23Z"
+    },
+    "committer": {
+      "name": "James Anderson",
+      "email": "me@jamesaanderson.com",
+      "date": "2013-07-26T02:03:23Z"
+    },
+    "message": "Add audio onebox\nhttp://meta.discourse.org/t/audio-html5-tag/8168",
+    "tree": {
+      "sha": "20c3841a2f4d2153d880b266cc9307296d8e07c6",
+      "url": "https://api.github.com/repos/discourse/discourse/git/trees/20c3841a2f4d2153d880b266cc9307296d8e07c6"
+    },
+    "url": "https://api.github.com/repos/discourse/discourse/git/commits/d7d3be1130c665cc7fab9f05dbf32335229137a6",
+    "comment_count": 0,
+    "verification": {
+      "verified": false,
+      "reason": "unsigned",
+      "signature": null,
+      "payload": null
+    }
+  },
+  "url": "https://api.github.com/repos/discourse/discourse/commits/d7d3be1130c665cc7fab9f05dbf32335229137a6",
+  "html_url": "https://github.com/discourse/discourse/commit/d7d3be1130c665cc7fab9f05dbf32335229137a6",
+  "comments_url": "https://api.github.com/repos/discourse/discourse/commits/d7d3be1130c665cc7fab9f05dbf32335229137a6/comments",
+  "author": {
+    "login": "jamesaanderson",
+    "id": 2722987,
+    "node_id": "MDQ6VXNlcjI3MjI5ODc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/2722987?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/jamesaanderson",
+    "html_url": "https://github.com/jamesaanderson",
+    "followers_url": "https://api.github.com/users/jamesaanderson/followers",
+    "following_url": "https://api.github.com/users/jamesaanderson/following{/other_user}",
+    "gists_url": "https://api.github.com/users/jamesaanderson/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/jamesaanderson/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/jamesaanderson/subscriptions",
+    "organizations_url": "https://api.github.com/users/jamesaanderson/orgs",
+    "repos_url": "https://api.github.com/users/jamesaanderson/repos",
+    "events_url": "https://api.github.com/users/jamesaanderson/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/jamesaanderson/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "committer": {
+    "login": "jamesaanderson",
+    "id": 2722987,
+    "node_id": "MDQ6VXNlcjI3MjI5ODc=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/2722987?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/jamesaanderson",
+    "html_url": "https://github.com/jamesaanderson",
+    "followers_url": "https://api.github.com/users/jamesaanderson/followers",
+    "following_url": "https://api.github.com/users/jamesaanderson/following{/other_user}",
+    "gists_url": "https://api.github.com/users/jamesaanderson/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/jamesaanderson/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/jamesaanderson/subscriptions",
+    "organizations_url": "https://api.github.com/users/jamesaanderson/orgs",
+    "repos_url": "https://api.github.com/users/jamesaanderson/repos",
+    "events_url": "https://api.github.com/users/jamesaanderson/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/jamesaanderson/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "parents": [
+    {
+      "sha": "9c617d051e08a4a0335d8375e91d87a58c7e720e",
+      "url": "https://api.github.com/repos/discourse/discourse/commits/9c617d051e08a4a0335d8375e91d87a58c7e720e",
+      "html_url": "https://github.com/discourse/discourse/commit/9c617d051e08a4a0335d8375e91d87a58c7e720e"
+    }
+  ],
+  "stats": {
+    "total": 20,
+    "additions": 19,
+    "deletions": 1
+  },
+  "files": [
+    {
+      "sha": "4bf610116998b798fd7255aaf835ce2ffc3d0dc7",
+      "filename": "app/assets/stylesheets/application/compose.css.scss",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "blob_url": "https://github.com/discourse/discourse/blob/d7d3be1130c665cc7fab9f05dbf32335229137a6/app%2Fassets%2Fstylesheets%2Fapplication%2Fcompose.css.scss",
+      "raw_url": "https://github.com/discourse/discourse/raw/d7d3be1130c665cc7fab9f05dbf32335229137a6/app%2Fassets%2Fstylesheets%2Fapplication%2Fcompose.css.scss",
+      "contents_url": "https://api.github.com/repos/discourse/discourse/contents/app%2Fassets%2Fstylesheets%2Fapplication%2Fcompose.css.scss?ref=d7d3be1130c665cc7fab9f05dbf32335229137a6",
+      "patch": "@@ -299,6 +299,9 @@\n         webkit-border-radius: 4px;\n         ms-border-radius: 4px;\n       }\n+      audio {\n+        max-width: 100%;\n+      }\n     }\n     #wmd-preview {\n       border: 1px dashed $gray;"
+    },
+    {
+      "sha": "f925244a588046d6caf2bc807c719a59569ad3c2",
+      "filename": "app/assets/stylesheets/application/topic-post.css.scss",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "blob_url": "https://github.com/discourse/discourse/blob/d7d3be1130c665cc7fab9f05dbf32335229137a6/app%2Fassets%2Fstylesheets%2Fapplication%2Ftopic-post.css.scss",
+      "raw_url": "https://github.com/discourse/discourse/raw/d7d3be1130c665cc7fab9f05dbf32335229137a6/app%2Fassets%2Fstylesheets%2Fapplication%2Ftopic-post.css.scss",
+      "contents_url": "https://api.github.com/repos/discourse/discourse/contents/app%2Fassets%2Fstylesheets%2Fapplication%2Ftopic-post.css.scss?ref=d7d3be1130c665cc7fab9f05dbf32335229137a6",
+      "patch": "@@ -515,6 +515,9 @@\n     img {\n       max-width: 100%;\n     }\n+    audio {\n+      max-width: 100%;\n+    }\n     .topic-body {\n       position: relative;\n       .contents {"
+    },
+    {
+      "sha": "c2fda69aa041b7075287c5144fd74bd746d27aaf",
+      "filename": "lib/oneboxer/audio_onebox.rb",
+      "status": "added",
+      "additions": 12,
+      "deletions": 0,
+      "changes": 12,
+      "blob_url": "https://github.com/discourse/discourse/blob/d7d3be1130c665cc7fab9f05dbf32335229137a6/lib%2Foneboxer%2Faudio_onebox.rb",
+      "raw_url": "https://github.com/discourse/discourse/raw/d7d3be1130c665cc7fab9f05dbf32335229137a6/lib%2Foneboxer%2Faudio_onebox.rb",
+      "contents_url": "https://api.github.com/repos/discourse/discourse/contents/lib%2Foneboxer%2Faudio_onebox.rb?ref=d7d3be1130c665cc7fab9f05dbf32335229137a6",
+      "patch": "@@ -0,0 +1,12 @@\n+require_dependency 'oneboxer/base_onebox'\n+\n+module Oneboxer\n+  class AudioOnebox < BaseOnebox\n+\n+    matcher /^https?:\\/\\/.*\\.mp3$/\n+\n+    def onebox\n+      \"<audio controls><source src='#{@url}'><a href='#{@url}'>#{@url}</a></audio>\"\n+    end\n+  end\n+end"
+    },
+    {
+      "sha": "e3924069face09f9f716afd09b166af83da496a9",
+      "filename": "lib/oneboxer/video_onebox.rb",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2,
+      "blob_url": "https://github.com/discourse/discourse/blob/d7d3be1130c665cc7fab9f05dbf32335229137a6/lib%2Foneboxer%2Fvideo_onebox.rb",
+      "raw_url": "https://github.com/discourse/discourse/raw/d7d3be1130c665cc7fab9f05dbf32335229137a6/lib%2Foneboxer%2Fvideo_onebox.rb",
+      "contents_url": "https://api.github.com/repos/discourse/discourse/contents/lib%2Foneboxer%2Fvideo_onebox.rb?ref=d7d3be1130c665cc7fab9f05dbf32335229137a6",
+      "patch": "@@ -3,7 +3,7 @@\n module Oneboxer\n   class VideoOnebox < BaseOnebox\n     \n-    matcher /^https?:\\/\\/.*\\.(mov|mp4|ogg)$/\n+    matcher /^https?:\\/\\/.*\\.(mov|mp4)$/\n \n     def onebox\n       \"<video width='100%' height='100%' controls><source src='#{@url}'><a href='#{@url}'>#{@url}</a></video>\""
+    }
+  ]
+}

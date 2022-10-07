@@ -17,8 +17,8 @@ const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
 
 const _builders = {};
-let _extraButtons = {};
 export let apiExtraButtons = {};
+let _extraButtons = {};
 let _buttonsToRemove = {};
 
 export function addButton(name, builder) {
@@ -26,9 +26,12 @@ export function addButton(name, builder) {
 }
 
 export function resetPostMenuExtraButtons() {
-  _buttonsToRemove = {};
-  apiExtraButtons = {};
+  for (const key of Object.keys(apiExtraButtons)) {
+    delete apiExtraButtons[key];
+  }
+
   _extraButtons = {};
+  _buttonsToRemove = {};
 }
 
 export function removeButton(name, callback) {

@@ -161,7 +161,7 @@ RSpec.describe UploadRecovery do
         end
 
         it 'does not create a duplicate upload when secure uploads are enabled' do
-          SiteSetting.secure_media = true
+          SiteSetting.secure_uploads = true
           upload.verification_status = Upload.verification_statuses[:invalid_etag]
           upload.save!
 

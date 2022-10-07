@@ -87,12 +87,18 @@ sup img.emoji {
 
     .section-group,
     .results {
+      display: flex;
+      flex-wrap: wrap;
       img.emoji {
-        padding: 0.25em;
+        padding: 0.25em 0.28em;
         cursor: pointer;
+        margin: 0;
+        display: inline-flex;
 
-        &:hover {
-          background: $tertiary-low;
+        &:hover,
+        &:focus {
+          background: var(--tertiary-low);
+          border-radius: 3px;
         }
       }
     }
@@ -102,10 +108,6 @@ sup img.emoji {
 
       &:empty {
         display: none;
-      }
-
-      img.emoji {
-        padding: 0.5em;
       }
     }
   }

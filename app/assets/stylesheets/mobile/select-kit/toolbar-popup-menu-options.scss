@@ -1,0 +1,16 @@
+// ensure popupmenu options has scroll behavior on limited screen space
+#reply-control {
+  &.composer-action-createTopic {
+    .toolbar-popup-menu-options .select-kit-collection {
+      // fits popup menu inside textarea in create topic composer
+      max-height: 155px;
+    }
+  }
+
+  &.composer-action-reply {
+    .toolbar-popup-menu-options .select-kit-collection {
+      // fits popup menu to textarea in reply composer
+      max-height: 230px;
+    }
+  }
+}

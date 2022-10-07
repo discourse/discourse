@@ -2499,6 +2499,7 @@ export default {
       last_posted_at: null,
       last_seen_at: null,
       created_at: "2019-03-06T19:06:20.340Z",
+      can_delete_account: true,
       can_edit: true,
       can_edit_username: true,
       can_edit_email: true,

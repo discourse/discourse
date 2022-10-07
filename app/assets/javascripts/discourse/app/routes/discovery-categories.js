@@ -31,6 +31,10 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
       return this._findCategoriesAndTopics("latest");
     } else if (style === "categories_and_top_topics") {
       return this._findCategoriesAndTopics("top");
+    } else {
+      // The server may have serialized this. Based on the logic above, we don't need it
+      // so remove it to avoid it being used later by another TopicList route.
+      PreloadStore.remove("topic_list");
     }
 
     return CategoryList.list(this.store);
@@ -77,7 +81,7 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
   _findCategoriesAndTopics(filter) {
     return hash({
       wrappedCategoriesList: PreloadStore.getAndRemove("categories_list"),
-      topicsList: PreloadStore.getAndRemove(`topic_list_${filter}`),
+      topicsList: PreloadStore.getAndRemove("topic_list"),
     }).then((response) => {
       let { wrappedCategoriesList, topicsList } = response;
       let categoriesList =

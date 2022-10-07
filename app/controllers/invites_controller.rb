@@ -140,6 +140,7 @@ class InvitesController < ApplicationController
       topic_id: topic&.id,
       group_ids: groups&.map(&:id),
       expires_at: params[:expires_at],
+      invite_to_topic: params[:invite_to_topic]
     )
 
     if invite.present?

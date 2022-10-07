@@ -67,7 +67,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Check RubyGems Licenses
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         run: |
           licensed cache
           licensed status
@@ -76,14 +76,14 @@ jobs:
         run: yarn install
 
       - name: Check Yarn Licenses
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         run: |
           yarn global add licensee
           yarn global upgrade licensee
           licensee --errors-only
 
       - name: Check Ember CLI Workspace Licenses
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         working-directory: ./app/assets/javascripts
         run: |
           licensee --errors-only

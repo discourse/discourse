@@ -6,13 +6,14 @@ import {
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import bootbox from "bootbox";
-import { authorizedExtensions } from "discourse/lib/uploads";
+import { authorizedExtensions, dialog } from "discourse/lib/uploads";
 import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 import { skip, test } from "qunit";
 import { Promise } from "rsvp";
 import sinon from "sinon";
+
+let uploadNumber = 1;
 
 function pretender(server, helper) {
   server.post("/uploads/lookup-urls", () => {
@@ -22,27 +23,53 @@ function pretender(server, helper) {
         short_path: "/uploads/short-url/yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
         short_url: "upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
       },
+      {
+        url: "/images/discourse-logo-sketch-small.png",
+        short_path: "/uploads/short-url/sdfljsdfgjlkwg4328.jpeg",
+        short_url: "upload://sdfljsdfgjlkwg4328.jpeg",
+      },
     ]);
   });
 
   server.post(
     "/uploads.json",
     () => {
-      return helper.response({
-        extension: "jpeg",
-        filesize: 126177,
-        height: 800,
-        human_filesize: "123 KB",
-        id: 202,
-        original_filename: "avatar.PNG.jpg",
-        retain_hours: null,
-        short_path: "/uploads/short-url/yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
-        short_url: "upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
-        thumbnail_height: 320,
-        thumbnail_width: 690,
-        url: "/images/discourse-logo-sketch-small.png",
-        width: 1920,
-      });
+      let response = null;
+      if (uploadNumber === 1) {
+        response = {
+          extension: "jpeg",
+          filesize: 126177,
+          height: 800,
+          human_filesize: "123 KB",
+          id: 202,
+          original_filename: "avatar.PNG.jpg",
+          retain_hours: null,
+          short_path: "/uploads/short-url/yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
+          short_url: "upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg",
+          thumbnail_height: 320,
+          thumbnail_width: 690,
+          url: "/images/discourse-logo-sketch-small.png",
+          width: 1920,
+        };
+        uploadNumber += 1;
+      } else {
+        response = {
+          extension: "jpeg",
+          filesize: 4322,
+          height: 800,
+          human_filesize: "566 KB",
+          id: 202,
+          original_filename: "avatar2.PNG.jpg",
+          retain_hours: null,
+          short_path: "/uploads/short-url/sdfljsdfgjlkwg4328.jpeg",
+          short_url: "upload://sdfljsdfgjlkwg4328.jpeg",
+          thumbnail_height: 320,
+          thumbnail_width: 690,
+          url: "/images/discourse-logo-sketch-small.png",
+          width: 1920,
+        };
+      }
+      return helper.response(response);
     },
     500 // this delay is important to slow down the uploads a bit so we can click elements in the UI like the cancel button
   );
@@ -55,6 +82,9 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     simultaneous_uploads: 2,
     enable_rich_text_paste: true,
   });
+  needs.hooks.afterEach(() => {
+    uploadNumber = 1;
+  });
 
   test("should insert the Uploading placeholder then the complete image placeholder", async function (assert) {
     await visit("/");
@@ -63,7 +93,8 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const appEvents = loggedInUser().appEvents;
     const done = assert.async();
 
-    appEvents.on("composer:all-uploads-complete", () => {
+    appEvents.on("composer:all-uploads-complete", async () => {
+      await settled();
       assert.strictEqual(
         query(".d-editor-input").value,
         "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
@@ -82,6 +113,35 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     appEvents.trigger("composer:add-files", image);
   });
 
+  test("should handle adding one file for upload then adding another when the first is still in progress", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await fillIn(".d-editor-input", "The image:\n");
+    const appEvents = loggedInUser().appEvents;
+    const done = assert.async();
+
+    appEvents.on("composer:all-uploads-complete", async () => {
+      await settled();
+      assert.strictEqual(
+        query(".d-editor-input").value,
+        "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n![avatar2.PNG|690x320](upload://sdfljsdfgjlkwg4328.jpeg)\n"
+      );
+      done();
+    });
+
+    let image2Added = false;
+    appEvents.on("composer:upload-started", () => {
+      if (!image2Added) {
+        appEvents.trigger("composer:add-files", image2);
+        image2Added = true;
+      }
+    });
+
+    const image1 = createFile("avatar.png");
+    const image2 = createFile("avatar2.png");
+    appEvents.trigger("composer:add-files", image1);
+  });
+
   test("should handle placeholders correctly even if the OS rewrites ellipses", async function (assert) {
     const execCommand = document.execCommand;
     sinon.stub(document, "execCommand").callsFake(function (...args) {
@@ -97,7 +157,8 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const appEvents = loggedInUser().appEvents;
     const done = assert.async();
 
-    appEvents.on("composer:all-uploads-complete", () => {
+    appEvents.on("composer:all-uploads-complete", async () => {
+      await settled();
       assert.strictEqual(
         query(".d-editor-input").value,
         "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
@@ -125,15 +186,16 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const image2 = createFile("avatar2.png");
     const done = assert.async();
     appEvents.on("composer:uploads-aborted", async () => {
+      await settled();
       assert.strictEqual(
-        query(".bootbox .modal-body").innerHTML,
+        query(".dialog-body").textContent.trim(),
         I18n.t("post.errors.too_many_dragged_and_dropped_files", {
           count: 2,
         }),
         "it should warn about too many files added"
       );
 
-      await click(".modal-footer .btn-primary");
+      await click(".dialog-footer .btn-primary");
 
       done();
     });
@@ -149,8 +211,9 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const done = assert.async();
 
     appEvents.on("composer:uploads-aborted", async () => {
+      await settled();
       assert.strictEqual(
-        query(".bootbox .modal-body").innerHTML,
+        query(".dialog-body").textContent.trim(),
         I18n.t("post.errors.upload_not_authorized", {
           authorized_extensions: authorizedExtensions(
             false,
@@ -160,7 +223,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
         "it should warn about unauthorized extensions"
       );
 
-      await click(".modal-footer .btn-primary");
+      await click(".dialog-footer .btn-primary");
 
       done();
     });
@@ -220,7 +283,8 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       );
     });
 
-    appEvents.on("composer:all-uploads-complete", () => {
+    appEvents.on("composer:all-uploads-complete", async () => {
+      await settled();
       assert.strictEqual(
         query(".d-editor-input").value,
         "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
@@ -250,7 +314,8 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       );
     });
 
-    appEvents.on("composer:all-uploads-complete", () => {
+    appEvents.on("composer:all-uploads-complete", async () => {
+      await settled();
       assert.strictEqual(
         query(".d-editor-input").value,
         "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n Text after the image."
@@ -283,7 +348,8 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       );
     });
 
-    appEvents.on("composer:all-uploads-complete", () => {
+    appEvents.on("composer:all-uploads-complete", async () => {
+      await settled();
       assert.strictEqual(
         query(".d-editor-input").value,
         "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n Text after the image."
@@ -308,7 +374,8 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       );
     });
 
-    appEvents.on("composer:all-uploads-complete", () => {
+    appEvents.on("composer:all-uploads-complete", async () => {
+      await settled();
       assert.strictEqual(
         query(".d-editor-input").value,
         "![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
@@ -334,7 +401,8 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       );
     });
 
-    appEvents.on("composer:all-uploads-complete", () => {
+    appEvents.on("composer:all-uploads-complete", async () => {
+      await settled();
       assert.strictEqual(
         query(".d-editor-input").value,
         "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n"
@@ -438,14 +506,14 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
 
     appEvents.on("composer:upload-error", async () => {
       sinon.assert.calledOnce(stub);
+      await settled();
       assert.strictEqual(
-        query(".bootbox .modal-body").innerHTML,
+        query(".dialog-body").textContent.trim(),
         "There was an error uploading the file, the gif was way too cool.",
         "it should show the error message from the server"
       );
 
-      await click(".modal-footer .btn-primary");
-
+      await click(".dialog-footer .btn-primary");
       done();
     });
 
@@ -465,7 +533,7 @@ acceptance("Uppy Composer Attachment - Upload Handler", function (needs) {
       api.addComposerUploadHandler(["png"], (files) => {
         const file = files[0];
         const isNativeFile = file instanceof File ? "WAS" : "WAS NOT";
-        bootbox.alert(
+        dialog.alert(
           `This is an upload handler test for ${file.name}. The file ${isNativeFile} a native file object.`
         );
       });
@@ -480,12 +548,13 @@ acceptance("Uppy Composer Attachment - Upload Handler", function (needs) {
     const done = assert.async();
 
     appEvents.on("composer:uploads-aborted", async () => {
+      await settled();
       assert.strictEqual(
-        query(".bootbox .modal-body").innerHTML,
+        query(".dialog-body").textContent.trim(),
         "This is an upload handler test for handler-test.png. The file WAS a native file object.",
-        "it should show the bootbox triggered by the upload handler"
+        "it should show the dialog triggered by the upload handler"
       );
-      await click(".modal-footer .btn");
+      await click(".dialog-footer .btn-primary");
       done();
     });
 

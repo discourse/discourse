@@ -57,6 +57,9 @@ require 'shoulda-matchers'
 require 'sidekiq/testing'
 require 'test_prof/recipes/rspec/let_it_be'
 require 'test_prof/before_all/adapters/active_record'
+require 'webdrivers'
+require 'selenium-webdriver'
+require 'capybara/rails'
 
 # The shoulda-matchers gem no longer detects the test framework
 # you're using or mixes itself into that framework automatically.
@@ -71,6 +74,11 @@ end
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+
+require Rails.root.join("spec/system/page_objects/pages/base.rb")
+require Rails.root.join("spec/system/page_objects/modals/base.rb")
+Dir[Rails.root.join("spec/system/page_objects/**/*.rb")].each { |f| require f }
+
 Dir[Rails.root.join("spec/fabricators/*.rb")].each { |f| require f }
 require_relative './helpers/redis_snapshot_helper'
 
@@ -81,6 +89,10 @@ if ENV['LOAD_PLUGINS'] == "1"
   end
 
   Dir[Rails.root.join("plugins/*/spec/fabricators/**/*.rb")].each do |f|
+    require f
+  end
+
+  Dir[Rails.root.join("plugins/*/spec/system/page_objects/**/*.rb")].each do |f|
     require f
   end
 end
@@ -177,6 +189,7 @@ RSpec.configure do |config|
   config.include MessageBus
   config.include RSpecHtmlMatchers
   config.include IntegrationHelpers, type: :request
+  config.include SystemHelpers, type: :system
   config.include WebauthnIntegrationHelpers
   config.include SiteSettingsHelpers
   config.include SidekiqHelpers
@@ -228,7 +241,41 @@ RSpec.configure do |config|
 
     SiteSetting.provider = TestLocalProcessProvider.new
 
-    WebMock.disable_net_connect!
+    WebMock.disable_net_connect!(
+      allow_localhost: true,
+      allow: [Webdrivers::Chromedriver.base_url]
+    )
+
+    Capybara.configure do |capybara_config|
+      capybara_config.server_host = "localhost"
+      capybara_config.server_port = 31337
+    end
+
+    chrome_browser_options = Selenium::WebDriver::Chrome::Options.new(
+      logging_prefs: { "browser" => "ALL", "driver" => "ALL" }
+    ).tap do |options|
+      options.add_argument("--window-size=1400,1400")
+      options.add_argument("--no-sandbox")
+      options.add_argument("--disable-dev-shm-usage")
+    end
+
+    Capybara.register_driver :selenium_chrome do |app|
+      Capybara::Selenium::Driver.new(
+        app,
+        browser: :chrome,
+        capabilities: chrome_browser_options,
+      )
+    end
+
+    Capybara.register_driver :selenium_chrome_headless do |app|
+      chrome_browser_options.add_argument("--headless")
+
+      Capybara::Selenium::Driver.new(
+        app,
+        browser: :chrome,
+        capabilities: chrome_browser_options,
+      )
+    end
 
     if ENV['ELEVATED_UPLOADS_ID']
       DB.exec "SELECT setval('uploads_id_seq', 10000)"
@@ -246,14 +293,14 @@ RSpec.configure do |config|
     end
   end
 
-  config.after :each do |x|
-    if x.exception && ex = RspecErrorTracker.last_exception
+  config.after :each do |example|
+    if example.exception && ex = RspecErrorTracker.last_exception
       # magic in a cause if we have none
-      unless x.exception.cause
-        class << x.exception
+      unless example.exception.cause
+        class << example.exception
           attr_accessor :cause
         end
-        x.exception.cause = ex
+        example.exception.cause = ex
       end
     end
 
@@ -286,8 +333,53 @@ RSpec.configure do |config|
   end
 
   # Match the request hostname to the value in `database.yml`
-  config.before(:all, type: [:request, :multisite]) { host! "test.localhost" }
-  config.before(:each, type: [:request, :multisite]) { host! "test.localhost" }
+  config.before(:all, type: [:request, :multisite, :system]) { host! "test.localhost" }
+  config.before(:each, type: [:request, :multisite, :system]) { host! "test.localhost" }
+
+  last_driven_by = nil
+  config.before(:each, type: :system) do |example|
+    if example.metadata[:js]
+      driver = "selenium_chrome"
+      driver += "_headless" unless ENV["SELENIUM_HEADLESS"] == "0"
+      driven_by driver.to_sym
+    end
+    setup_system_test
+  end
+
+  config.after(:each, type: :system) do |example|
+    # This is disabled by default because it is super verbose,
+    # if you really need to dig into how selenium is communicating
+    # for system tests then enable it.
+    if ENV["SELENIUM_VERBOSE_DRIVER_LOGS"]
+      puts "~~~~~~ DRIVER LOGS: ~~~~~~~"
+      page.driver.browser.logs.get(:driver).each do |log|
+        puts log.message
+      end
+    end
+
+    # Recommended that this is not disabled, since it makes debugging
+    # failed system tests a lot trickier.
+    if ENV["SELENIUM_DISABLE_VERBOSE_JS_LOGS"].blank?
+      if example.exception
+        skip_js_errors = false
+        if example.exception.kind_of?(RSpec::Core::MultipleExceptionError)
+          puts "~~~~~~ SYSTEM TEST ERRORS: ~~~~~~~"
+          example.exception.all_exceptions.each do |ex|
+            puts ex.message
+          end
+
+          skip_js_errors = true
+        end
+
+        if !skip_js_errors
+          puts "~~~~~~ JS ERRORS: ~~~~~~~"
+          page.driver.browser.logs.get(:browser).each do |log|
+            puts log.message
+          end
+        end
+      end
+    end
+  end
 
   config.before(:each, type: :multisite) do
     Rails.configuration.multisite = true # rubocop:disable Discourse/NoDirectMultisiteManipulation

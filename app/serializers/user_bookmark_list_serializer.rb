@@ -15,6 +15,6 @@ class UserBookmarkListSerializer < ApplicationSerializer
   end
 
   def include_more_bookmarks_url?
-    @include_more_bookmarks_url ||= object.bookmarks.size == object.per_page
+    @include_more_bookmarks_url ||= object.has_more
   end
 end

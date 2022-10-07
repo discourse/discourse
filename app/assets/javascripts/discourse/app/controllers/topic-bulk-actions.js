@@ -6,6 +6,8 @@ import { Promise } from "rsvp";
 import Topic from "discourse/models/topic";
 import bootbox from "bootbox";
 
+import { inject as service } from "@ember/service";
+
 const _buttons = [];
 
 const alwaysTrue = () => true;
@@ -118,7 +120,7 @@ addBulkButton("deleteTopics", "delete", {
 // Modal for performing bulk actions on topics
 export default Controller.extend(ModalFunctionality, {
   userPrivateMessages: controller("user-private-messages"),
-
+  dialog: service(),
   tags: null,
   emptyTags: empty("tags"),
   categoryId: alias("model.category.id"),
@@ -151,7 +153,7 @@ export default Controller.extend(ModalFunctionality, {
 
     return this._processChunks(operation)
       .catch(() => {
-        bootbox.alert(I18n.t("generic_error"));
+        this.dialog.alert(I18n.t("generic_error"));
       })
       .finally(() => {
         this.set("loading", false);

@@ -245,6 +245,10 @@ html.composer-open {
         text-overflow: ellipsis;
       }
 
+      .select-kit-body {
+        max-width: 450px;
+      }
+
       // below needed for text-overflow: ellipsis;
       .selected-name {
         max-width: 100%;
@@ -421,6 +425,11 @@ html.composer-open {
           background-color: var(--highlight-low);
           text-decoration: none;
         }
+
+        .relative-date {
+          font-size: var(--font-down-3);
+          padding-top: 10em;
+        }
       }
     }
   }
@@ -495,14 +504,6 @@ div.ac-wrap {
   }
 }
 
-@-webkit-keyframes transformer {
-  90% {
-    -webkit-filter: opacity(1);
-  }
-  100% {
-    -webkit-filter: opacity(0);
-  }
-}
 @keyframes transformer {
   90% {
     opacity: 1;
@@ -538,14 +539,8 @@ body:not(.ios-safari-composer-hacks) {
       min-height: calc(var(--min-height) - 4em);
     }
     padding-bottom: var(--composer-ipad-padding);
-  }
-}
-
-.show-preview {
-  @media screen and (max-width: 850px) {
-    .d-editor-button-bar {
-      font-size: $font-down-1;
-    }
+    padding-bottom: calc(10px + env(keyboard-inset-height));
+    box-sizing: border-box;
   }
 }
 

@@ -30,8 +30,14 @@ module Compression
       yield(gzip)
     end
 
-    def build_entry_path(_compressed_file, dest_path, compressed_file_path, entry, _allow_non_root_folder)
-      compressed_file_path.gsub(extension, '')
+    def build_entry_path(dest_path, _, compressed_file_path)
+      basename = File.basename(compressed_file_path)
+      basename.gsub!(/#{Regexp.escape(extension)}$/, '')
+      File.join(dest_path, basename)
+    end
+
+    def decompression_results_path(dest_path, compressed_file_path)
+      build_entry_path(dest_path, nil, compressed_file_path)
     end
 
     def extract_file(entry, entry_path, available_size)

@@ -135,7 +135,7 @@ HTML
     baked = Theme.lookup_field(theme.id, :mobile, "header")
 
     expect(baked).to include(field.javascript_cache.url)
-    expect(field.javascript_cache.content).to include('HTMLBars')
+    expect(field.javascript_cache.content).to include('@ember/template-factory')
     expect(field.javascript_cache.content).to include('raw-handlebars')
   end
 

@@ -136,11 +136,12 @@ function rule(state) {
         }
       } else if (token.tag === "a") {
         if (mapped) {
-          // when secure media is enabled we want the full /secure-media-uploads/
+          // when secure uploads is enabled we want the full /secure-media-uploads or /secure-uploads
           // url to take advantage of access control security
           if (
-            state.md.options.discourse.limitedSiteSettings.secureMedia &&
-            mapped.url.includes("secure-media-uploads")
+            state.md.options.discourse.limitedSiteSettings.secureUploads &&
+            (mapped.url.includes("secure-media-uploads") ||
+              mapped.url.includes("secure-uploads"))
           ) {
             token.attrs[srcIndex][1] = mapped.url;
           } else {

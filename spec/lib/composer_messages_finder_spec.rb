@@ -501,4 +501,26 @@ RSpec.describe ComposerMessagesFinder do
       expect(edit_post_finder.find).to eq(nil)
     end
   end
+
+  describe '#user_not_seen_in_a_while' do
+    fab!(:user_1) { Fabricate(:user, last_seen_at: 3.years.ago) }
+    fab!(:user_2) { Fabricate(:user, last_seen_at: 2.years.ago) }
+    fab!(:user_3) { Fabricate(:user, last_seen_at: 6.months.ago) }
+
+    before do
+      SiteSetting.pm_warn_user_last_seen_months_ago = 24
+    end
+
+    it 'returns users that have not been seen recently' do
+      users = ComposerMessagesFinder.user_not_seen_in_a_while([user_1.username, user_2.username, user_3.username])
+      expect(users).to contain_exactly(user_1.username, user_2.username)
+    end
+
+    it 'accounts for pm_warn_user_last_seen_months_ago site setting' do
+      SiteSetting.pm_warn_user_last_seen_months_ago = 30
+      users = ComposerMessagesFinder.user_not_seen_in_a_while([user_1.username, user_2.username, user_3.username])
+      expect(users).to contain_exactly(user_1.username)
+    end
+  end
+
 end

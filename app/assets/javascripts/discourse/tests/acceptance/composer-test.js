@@ -1,4 +1,11 @@
-import { click, currentURL, fillIn, settled, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  fillIn,
+  settled,
+  triggerEvent,
+  visit,
+} from "@ember/test-helpers";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
 import { cloneJSON } from "discourse-common/lib/object";
 import TopicFixtures from "discourse/tests/fixtures/topic";
@@ -32,8 +39,27 @@ acceptance("Composer", function (needs) {
   });
   needs.settings({
     enable_whispers: true,
+    general_category_id: 1,
   });
-  needs.site({ can_tag_topics: true });
+  needs.site({
+    can_tag_topics: true,
+    categories: [
+      {
+        id: 1,
+        name: "General",
+        slug: "general",
+        permission: 1,
+        topic_template: null,
+      },
+      {
+        id: 2,
+        name: "test too",
+        slug: "test-too",
+        permission: 1,
+        topic_template: "",
+      },
+    ],
+  });
   needs.pretender((server, helper) => {
     server.post("/uploads/lookup-urls", () => {
       return helper.response([]);
@@ -62,10 +88,12 @@ acceptance("Composer", function (needs) {
   test("Composer is opened", async function (assert) {
     await visit("/");
     await click("#create-topic");
+    // Check that General category is selected
+    assert.strictEqual(selectKit(".category-chooser").header().value(), "1");
 
     assert.strictEqual(
       document.documentElement.style.getPropertyValue("--composer-height"),
-      "400px",
+      "var(--new-topic-composer-height, 400px)",
       "sets --composer-height to 400px when creating topic"
     );
 
@@ -83,7 +111,7 @@ acceptance("Composer", function (needs) {
     await click(".toggle-fullscreen");
     assert.strictEqual(
       document.documentElement.style.getPropertyValue("--composer-height"),
-      "400px",
+      "var(--new-topic-composer-height, 400px)",
       "sets --composer-height back to 400px when composer is opened from draft mode"
     );
 
@@ -93,6 +121,28 @@ acceptance("Composer", function (needs) {
       document.documentElement.style.getPropertyValue("--composer-height"),
       "",
       "removes --composer-height property when composer is closed"
+    );
+  });
+
+  test("Composer height adjustment", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await triggerEvent(document.querySelector(".grippie"), "mousedown");
+    await triggerEvent(document.querySelector(".grippie"), "mousemove");
+    await triggerEvent(document.querySelector(".grippie"), "mouseup");
+    await visit("/"); // reload page
+    await click("#create-topic");
+
+    const expectedHeight = localStorage.getItem(
+      "__test_discourse_composerHeight"
+    );
+    const actualHeight =
+      document.documentElement.style.getPropertyValue("--composer-height");
+
+    assert.strictEqual(
+      expectedHeight,
+      actualHeight,
+      "Updated height is persistent"
     );
   });
 
@@ -186,10 +236,10 @@ acceptance("Composer", function (needs) {
     await fillIn("#reply-title", "this title triggers an error");
     await fillIn(".d-editor-input", "this is the *content* of a post");
     await click("#reply-control button.create");
-    assert.ok(exists(".bootbox.modal"), "it pops up an error message");
+    assert.ok(exists(".dialog-body"), "it pops up an error message");
 
-    await click(".bootbox.modal a.btn-primary");
-    assert.ok(!exists(".bootbox.modal"), "it dismisses the error");
+    await click(".dialog-footer .btn-primary");
+    assert.ok(!exists(".dialog-body"), "it dismisses the error");
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
   });
 
@@ -239,13 +289,14 @@ acceptance("Composer", function (needs) {
     await fillIn("#reply-title", "This title doesn't matter");
     await fillIn(".d-editor-input", "custom message");
     await click("#reply-control button.create");
+
     assert.strictEqual(
-      query(".bootbox .modal-body").innerText,
+      query("#dialog-holder .dialog-body").innerText,
       "This is a custom response"
     );
     assert.strictEqual(currentURL(), "/", "it doesn't change routes");
 
-    await click(".bootbox .btn-primary");
+    await click(".dialog-footer .btn-primary");
     assert.strictEqual(
       currentURL(),
       "/faq",
@@ -333,7 +384,10 @@ acceptance("Composer", function (needs) {
     await fillIn(".d-editor-input", "this is the content of the first reply");
 
     await visit("/t/this-is-a-test-topic/9");
-    assert.strictEqual(currentURL(), "/t/this-is-a-test-topic/9");
+    assert.ok(
+      currentURL().startsWith("/t/this-is-a-test-topic/9"),
+      "moves to second topic"
+    );
     await click("#topic-footer-buttons .btn.create");
     assert.ok(
       exists(".discard-draft-modal.modal"),
@@ -785,11 +839,11 @@ acceptance("Composer", function (needs) {
     await click(".topic-post:nth-of-type(1) button.edit");
 
     assert.strictEqual(
-      query(".modal-body").innerText,
+      query(".dialog-body").innerText,
       I18n.t("drafts.abandon.confirm")
     );
 
-    await click(".modal-footer .btn.btn-default");
+    await click(".dialog-footer .btn-resume-editing");
   });
 
   test("Can switch states without abandon popup", async function (assert) {
@@ -847,7 +901,7 @@ acceptance("Composer", function (needs) {
 
     await visit("/u/charlie");
     await click("button.compose-pm");
-    await click(".modal .btn-default");
+    await click(".dialog-footer .btn-resume-editing");
 
     const privateMessageUsers = selectKit("#private-message-users");
     assert.strictEqual(privateMessageUsers.header().value(), "codinghorror");

@@ -97,6 +97,10 @@ RSpec.describe TopicViewSerializer do
   end
 
   describe '#suggested_topics' do
+    before do
+      Group.refresh_automatic_groups!
+    end
+
     fab!(:topic2) { Fabricate(:topic) }
 
     before do
@@ -127,6 +131,10 @@ RSpec.describe TopicViewSerializer do
     end
 
     describe 'with private messages' do
+      before do
+        Group.refresh_automatic_groups!
+      end
+
       fab!(:topic) do
         Fabricate(:private_message_topic,
           highest_post_number: 1,
@@ -164,6 +172,10 @@ RSpec.describe TopicViewSerializer do
   describe '#suggested_group_name' do
     fab!(:pm) { Fabricate(:private_message_post).topic }
     fab!(:group) { Fabricate(:group) }
+
+    before do
+      Group.refresh_automatic_groups!
+    end
 
     it 'is nil for a regular topic' do
       json = serialize_topic(topic, user)
@@ -473,10 +485,10 @@ RSpec.describe TopicViewSerializer do
           expect(json[:published_page][:slug]).to eq(published_page.slug)
         end
 
-        context "when secure media is enabled" do
+        context "when secure uploads is enabled" do
           before do
             setup_s3
-            SiteSetting.secure_media = true
+            SiteSetting.secure_uploads = true
           end
 
           it "doesn't return the published page" do

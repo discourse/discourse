@@ -156,7 +156,7 @@ RSpec.describe SpamRule::FlagSockpuppets do
 
       described_class.new(post2).perform
 
-      expect(flagged_post.reload.status).to eq(Reviewable.statuses[:rejected])
+      expect(flagged_post.reload).to be_rejected
     end
 
     it "doesn't flag the post if another post of the same user was rejected by staff before" do

@@ -22,9 +22,11 @@ Fabricator(:upload) do
 end
 
 Fabricator(:image_upload, from: :upload) do
-  after_create do |upload|
+  transient color: "white"
+
+  after_create do |upload, transients|
     file = Tempfile.new(['fabricated', '.png'])
-    `convert -size #{upload.width}x#{upload.height} xc:white "#{file.path}"`
+    `convert -size #{upload.width}x#{upload.height} xc:#{transients[:color]} "#{file.path}"`
 
     upload.url = Discourse.store.store_upload(file, upload)
     upload.sha1 = Upload.generate_digest(file.path)

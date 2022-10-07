@@ -62,6 +62,22 @@ function namespaceModules(tree, pluginDirectoryName) {
   });
 }
 
+function parsePluginName(pluginRbPath) {
+  const pluginRb = fs.readFileSync(pluginRbPath, "utf8");
+  // Match parsing logic in `lib/plugin/metadata.rb`
+  for (const line of pluginRb.split("\n")) {
+    if (line.startsWith("#")) {
+      const [attribute, value] = line.slice(1).split(":", 2);
+      if (attribute.trim() === "name") {
+        return value.trim();
+      }
+    }
+  }
+  throw new Error(
+    `Unable to parse plugin name from metadata in ${pluginRbPath}`
+  );
+}
+
 module.exports = {
   name: require("./package").name,
 
@@ -72,35 +88,112 @@ module.exports = {
       .filter(
         (dirent) =>
           (dirent.isDirectory() || dirent.isSymbolicLink()) &&
-          !dirent.name.startsWith(".")
+          !dirent.name.startsWith(".") &&
+          fs.existsSync(path.resolve(root, dirent.name, "plugin.rb"))
       );
 
     return pluginDirectories.map((directory) => {
-      const name = directory.name;
-      const jsDirectory = path.resolve(root, name, "assets/javascripts");
+      const directoryName = directory.name;
+      const pluginName = parsePluginName(
+        path.resolve(root, directoryName, "plugin.rb")
+      );
+      const jsDirectory = path.resolve(
+        root,
+        directoryName,
+        "assets/javascripts"
+      );
+      const adminJsDirectory = path.resolve(
+        root,
+        directoryName,
+        "admin/assets/javascripts"
+      );
+      const testDirectory = path.resolve(
+        root,
+        directoryName,
+        "test/javascripts"
+      );
       const hasJs = fs.existsSync(jsDirectory);
-      return { name, jsDirectory, hasJs };
+      const hasAdminJs = fs.existsSync(adminJsDirectory);
+      const hasTests = fs.existsSync(testDirectory);
+      return {
+        pluginName,
+        directoryName,
+        jsDirectory,
+        adminJsDirectory,
+        testDirectory,
+        hasJs,
+        hasAdminJs,
+        hasTests,
+      };
     });
   },
 
   generatePluginsTree() {
+    const appTree = this._generatePluginAppTree();
+    const testTree = this._generatePluginTestTree();
+    const adminTree = this._generatePluginAdminTree();
+    return mergeTrees([appTree, testTree, adminTree]);
+  },
+
+  _generatePluginAppTree() {
     const trees = this.pluginInfos()
       .filter((p) => p.hasJs)
-      .map(({ name, jsDirectory }) => {
-        let tree = new WatchedDir(jsDirectory);
+      .map(({ pluginName, directoryName, jsDirectory }) =>
+        this._buildAppTree({
+          directory: jsDirectory,
+          pluginName,
+          outputFile: `assets/plugins/${directoryName}.js`,
+        })
+      );
+    return mergeTrees(trees);
+  },
+
+  _generatePluginAdminTree() {
+    const trees = this.pluginInfos()
+      .filter((p) => p.hasAdminJs)
+      .map(({ pluginName, directoryName, adminJsDirectory }) =>
+        this._buildAppTree({
+          directory: adminJsDirectory,
+          pluginName,
+          outputFile: `assets/plugins/${directoryName}_admin.js`,
+        })
+      );
+    return mergeTrees(trees);
+  },
+
+  _buildAppTree({ directory, pluginName, outputFile }) {
+    let tree = new WatchedDir(directory);
+
+    tree = fixLegacyExtensions(tree);
+    tree = unColocateConnectors(tree);
+    tree = namespaceModules(tree, pluginName);
+
+    tree = RawHandlebarsCompiler(tree);
+    tree = this.compileTemplates(tree);
+
+    tree = this.processedAddonJsFiles(tree);
+
+    return concat(mergeTrees([tree]), {
+      inputFiles: ["**/*.js"],
+      outputFile,
+      allowNone: true,
+    });
+  },
+
+  _generatePluginTestTree() {
+    const trees = this.pluginInfos()
+      .filter((p) => p.hasTests)
+      .map(({ pluginName, directoryName, testDirectory }) => {
+        let tree = new WatchedDir(testDirectory);
 
         tree = fixLegacyExtensions(tree);
-        tree = unColocateConnectors(tree);
-        tree = namespaceModules(tree, name);
-
-        tree = RawHandlebarsCompiler(tree);
-        tree = this.compileTemplates(tree);
-
+        tree = namespaceModules(tree, pluginName);
         tree = this.processedAddonJsFiles(tree);
 
         return concat(mergeTrees([tree]), {
           inputFiles: ["**/*.js"],
-          outputFile: `assets/plugins/${name}.js`,
+          outputFile: `assets/plugins/test/${directoryName}_tests.js`,
+          allowNone: true,
         });
       });
     return mergeTrees(trees);

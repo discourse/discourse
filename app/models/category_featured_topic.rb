@@ -60,24 +60,19 @@ class CategoryFeaturedTopic < ActiveRecord::Base
 
     # Add topics, even if they're in secured categories or invisible
     query = TopicQuery.new(Discourse.system_user, query_opts)
-    results = query.list_category_topic_ids(c).uniq
+    results = query.list_category_topic_ids(c)
 
     # Add some topics that are visible to everyone:
     anon_query = TopicQuery.new(nil, query_opts.merge(except_topic_ids: [c.topic_id] + results))
-    results += anon_query.list_category_topic_ids(c).uniq
+    results += anon_query.list_category_topic_ids(c)
 
+    results.uniq!
     return if results == existing
 
     CategoryFeaturedTopic.transaction do
       CategoryFeaturedTopic.where(category_id: c.id).delete_all
-      if results
-        results.each_with_index do |topic_id, idx|
-          begin
-            c.category_featured_topics.create(topic_id: topic_id, rank: idx)
-          rescue PG::UniqueViolation
-            # If another process features this topic, just ignore it
-          end
-        end
+      results.each_with_index do |topic_id, idx|
+        c.category_featured_topics.create(topic_id: topic_id, rank: idx)
       end
     end
   end
