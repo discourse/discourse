@@ -39,7 +39,39 @@ module Onebox
 
         result['body'], result['excerpt'] = compute_body(result['body'])
 
+        if result['commit'] = load_commit(link)
+          result['body'], result['excerpt'] = compute_body(result['commit']['body'])
+        elsif result['comment'] = load_comment(link)
+          result['body'], result['excerpt'] = compute_body(result['comment']['body'])
+        elsif result['discussion'] = load_review(link)
+          result['body'], result['excerpt'] = compute_body(result['discussion']['body'])
+        else
+          result['pr'] = true
+        end
+
         result
+      end
+
+      def load_commit(link)
+        if commit_match = link.match(/commits\/(\h+)/)
+          load_json("https://api.github.com/repos/#{match[:owner]}/#{match[:repository]}/commits/#{commit_match[1]}")
+        end
+      end
+
+      def load_comment(link)
+        if comment_match = link.match(/#issuecomment-(\d+)/)
+          load_json("https://api.github.com/repos/#{match[:owner]}/#{match[:repository]}/issues/comments/#{comment_match[1]}")
+        end
+      end
+
+      def load_review(link)
+        if review_match = link.match(/#discussion_r(\d+)/)
+          load_json("https://api.github.com/repos/#{match[:owner]}/#{match[:repository]}/pulls/comments/#{review_match[1]}")
+        end
+      end
+
+      def load_json(url)
+        ::MultiJson.load(URI.parse(url).open(read_timeout: timeout))
       end
     end
   end

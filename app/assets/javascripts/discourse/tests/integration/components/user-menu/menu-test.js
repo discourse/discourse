@@ -82,8 +82,9 @@ module("Integration | Component | user-menu", function (hooks) {
     );
   });
 
-  test("reviewables tab is shown if current user can review", async function (assert) {
+  test("reviewables tab is shown if current user can review and there are pending reviewables", async function (assert) {
     this.currentUser.set("can_review", true);
+    this.currentUser.set("reviewable_count", 1);
     await render(template);
     const tab = query("#user-menu-button-review-queue");
     assert.strictEqual(tab.dataset.tabNumber, "7");
@@ -96,6 +97,13 @@ module("Integration | Component | user-menu", function (hooks) {
       ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
       "data-tab-number of the tabs has no gaps when the reviewables tab is show"
     );
+  });
+
+  test("reviewables tab is not shown if current user can review but there are no pending reviewables", async function (assert) {
+    this.currentUser.set("can_review", true);
+    this.currentUser.set("reviewable_count", 0);
+    await render(template);
+    assert.notOk(exists("#user-menu-button-review-queue"));
   });
 
   test("messages tab isn't shown if current user isn't staff and user does not belong to personal_message_enabled_groups", async function (assert) {
@@ -146,6 +154,7 @@ module("Integration | Component | user-menu", function (hooks) {
 
   test("changing tabs", async function (assert) {
     this.currentUser.set("can_review", true);
+    this.currentUser.set("reviewable_count", 1);
     await render(template);
     let queryParams;
     pretender.get("/notifications", (request) => {

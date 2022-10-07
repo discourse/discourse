@@ -3,13 +3,14 @@ import I18n from "I18n";
 import { tracked } from "@glimmer/tracking";
 
 import { bind } from "discourse-common/utils/decorators";
+import BaseTagSectionLink from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
 
-export default class TagSectionLink {
+export default class TagSectionLink extends BaseTagSectionLink {
   @tracked totalUnread = 0;
   @tracked totalNew = 0;
 
-  constructor({ tagName, topicTrackingState }) {
-    this.tagName = tagName;
+  constructor({ topicTrackingState }) {
+    super(...arguments);
     this.topicTrackingState = topicTrackingState;
     this.refreshCounts();
   }
@@ -27,30 +28,16 @@ export default class TagSectionLink {
     }
   }
 
-  get name() {
-    return this.tagName;
-  }
-
   get models() {
     return [this.tagName];
   }
 
   get route() {
-    if (this.totalUnread > 0) {
-      return "tag.showUnread";
-    } else if (this.totalNew > 0) {
-      return "tag.showNew";
-    } else {
-      return "tag.show";
-    }
+    return "tag.show";
   }
 
   get currentWhen() {
     return "tag.show tag.showNew tag.showUnread tag.showTop";
-  }
-
-  get text() {
-    return this.tagName;
   }
 
   get badgeText() {
@@ -63,13 +50,5 @@ export default class TagSectionLink {
         count: this.totalNew,
       });
     }
-  }
-
-  get prefixType() {
-    return "icon";
-  }
-
-  get prefixValue() {
-    return "tag";
   }
 }

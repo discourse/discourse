@@ -6,7 +6,7 @@ RSpec.describe TopicConverter do
     fab!(:author) { Fabricate(:user) }
     fab!(:category) { Fabricate(:category, topic_count: 1) }
     fab!(:private_message) { Fabricate(:private_message_topic, user: author) } # creates a topic without a first post
-    let(:first_post) { create_post(user: author, topic: private_message) }
+    let(:first_post) { create_post(user: author, topic: private_message, allow_uncategorized_topics: false) }
     let(:other_user) { private_message.topic_allowed_users.find { |u| u.user != author }.user }
 
     let(:uncategorized_category) do

@@ -55,7 +55,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       this.controllerFor("application").send("toggleSidebar");
     },
 
-    logout: unlessReadOnly(
+    logout: unlessStrictlyReadOnly(
       "_handleLogout",
       I18n.t("read_only_mode.logout_disabled")
     ),

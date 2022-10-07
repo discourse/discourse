@@ -27,7 +27,7 @@
               {{#if item.editing}}
                 <TextField @value={{item.ip_address}} @autofocus="autofocus" />
               {{else}}
-                <a href {{action "edit" item}} class="inline-editable-field">
+                <a href {{on "click" (fn this.edit item)}} class="inline-editable-field">
                   {{#if item.isRange}}
                     <strong>{{item.ip_address}}</strong>
                   {{else}}

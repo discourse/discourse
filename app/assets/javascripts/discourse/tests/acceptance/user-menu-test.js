@@ -119,6 +119,7 @@ acceptance("User menu", function (needs) {
   });
 
   test("clicking on user menu items", async function (assert) {
+    updateCurrentUser({ reviewable_count: 1 });
     await visit("/");
     await click(".d-header-icons .current-user");
     await click("#user-menu-button-review-queue");
@@ -147,28 +148,10 @@ acceptance("User menu", function (needs) {
       exists(".user-menu"),
       "clicking on the same item again closes the menu"
     );
-
-    await click(".d-header-icons .current-user");
-    await click("#user-menu-button-review-queue");
-    // this may not be ideal because it actually attempts to open a new tab
-    // which gets blocked by the browser, but otherwise it seems harmless and
-    // doesn't cause the test to fail. if it causes problems for you, feel free
-    // to remove the ctrl+click tests.
-    await click("#quick-access-review-queue li.reviewable.reviewed a", {
-      ctrlKey: true,
-    });
-    assert.strictEqual(
-      currentURL(),
-      "/review/17",
-      "ctrl-clicking on an item doesn't navigate to a new page"
-    );
-    assert.ok(
-      exists(".user-menu"),
-      "ctrl-clicking on an item doesn't close the menu"
-    );
   });
 
   test("tabs have title attributes", async function (assert) {
+    updateCurrentUser({ reviewable_count: 1 });
     withPluginApi("0.1", (api) => {
       api.registerUserMenuTab((UserMenuTab) => {
         return class extends UserMenuTab {
@@ -208,7 +191,10 @@ acceptance("User menu", function (needs) {
       "user-menu-button-messages": I18n.t("user_menu.tabs.messages"),
       "user-menu-button-bookmarks": I18n.t("user_menu.tabs.bookmarks"),
       "user-menu-button-tiny-tab-1": "Custom title: 73",
-      "user-menu-button-review-queue": I18n.t("user_menu.tabs.review_queue"),
+      "user-menu-button-review-queue": I18n.t(
+        "user_menu.tabs.review_queue_with_unread",
+        { count: 1 }
+      ),
       "user-menu-button-other-notifications": I18n.t(
         "user_menu.tabs.other_notifications"
       ),
@@ -235,6 +221,7 @@ acceptance("User menu", function (needs) {
   });
 
   test("tabs added via the plugin API", async function (assert) {
+    updateCurrentUser({ reviewable_count: 1 });
     withPluginApi("0.1", (api) => {
       api.registerUserMenuTab((UserMenuTab) => {
         return class extends UserMenuTab {
@@ -674,6 +661,7 @@ acceptance("User menu", function (needs) {
   });
 
   test("the active tab can be clicked again to navigate to a page", async function (assert) {
+    updateCurrentUser({ reviewable_count: 1 });
     withPluginApi("0.1", (api) => {
       api.registerUserMenuTab((UserMenuTab) => {
         return class extends UserMenuTab {
@@ -798,7 +786,7 @@ acceptance("User menu - Dismiss button", function (needs) {
         const copy = cloneJSON(
           UserMenuFixtures["/u/:username/user-menu-private-messages"]
         );
-        copy.notifications = [];
+        copy.unread_notifications = [];
         return helper.response(copy);
       } else {
         return helper.response(
@@ -934,7 +922,7 @@ acceptance("User menu - Dismiss button", function (needs) {
     assert.ok(markRead, "mark-read request is sent");
     assert.strictEqual(
       markReadRequestBody,
-      "dismiss_types=private_message",
+      "dismiss_types=private_message%2Cgroup_message_summary",
       "mark-read request specifies private_message types"
     );
     assert.notOk(exists(".user-menu .notifications-dismiss"));

@@ -806,7 +806,7 @@ posting:
   max_emojis_in_title: 1
   allow_uncategorized_topics:
     client: true
-    default: true
+    default: false
     refresh: true
   allow_duplicate_topic_titles: false
   allow_duplicate_topic_titles_category: false
@@ -2304,6 +2304,7 @@ uncategorized:
   general_category_id:
     default: -1
     hidden: true
+    client: true
   meta_category_id:
     default: -1
     hidden: true

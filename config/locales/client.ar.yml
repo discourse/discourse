@@ -1369,6 +1369,7 @@ ar:
         move_to_archive: "أرشفة"
         failed_to_move: "فشل نقل الرسائل المحدَّدة (قد تكون شبكتك متوقفة)"
         tags: "الوسوم"
+        all_tags: "كل الوسوم"
         warnings: "تحذيرات رسمية"
         read_more_in_group: "هل ترغب في قراءة المزيد؟ تصفح الرسائل الأخرى في %{groupLink}."
         read_more: "هل ترغب في قراءة المزيد؟ تصفح الرسائل الأخرى في <a href='%{basePath}/u/%{username}/messages'>الرسائل الشخصية</a>."
@@ -4329,6 +4330,9 @@ ar:
               content: "المستخدمون"
             my_posts:
               content: "منشوراتي"
+            review:
+              content: "المراجعة"
+              title: "المراجعة"
   admin_js:
     type_to_filter: "اكتب للتصفية..."
     admin:

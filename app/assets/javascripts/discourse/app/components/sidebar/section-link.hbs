@@ -1,68 +1,70 @@
-<div class="sidebar-section-link-wrapper">
-  {{#if @href}}
-    <a href={{@href}} rel="noopener noreferrer" target="_blank" class={{this.classNames}} title={{@title}}>
-      <Sidebar::SectionLinkPrefix
-        @prefixType={{@prefixType}}
-        @prefixValue={{@prefixValue}}
-        @prefixCSSClass={{@prefixCSSClass}}
-        @prefixCSS={{this.prefixCSS}}
-        @prefixBadge={{@prefixBadge}}
-      />
+{{#if this.shouldDisplay}}
+  <div class="sidebar-section-link-wrapper">
+    {{#if @href}}
+      <a href={{@href}} rel="noopener noreferrer" target="_blank" class={{this.classNames}} title={{@title}}>
+        <Sidebar::SectionLinkPrefix
+          @prefixType={{@prefixType}}
+          @prefixValue={{@prefixValue}}
+          @prefixCSSClass={{@prefixCSSClass}}
+          @prefixCSS={{this.prefixCSS}}
+          @prefixBadge={{@prefixBadge}}
+        />
 
-      <span class="sidebar-section-link-content-text">
-        {{@content}}
-      </span>
-    </a>
-  {{else}}
-    <Sidebar::SectionLinkTo
-      @class={{this.classNames}}
-      @route={{@route}}
-      @query={{@query}}
-      @models={{this.models}}
-      @current-when={{@currentWhen}}
-      @title={{@title}}
-    >
-
-      <Sidebar::SectionLinkPrefix
-        @prefixType={{@prefixType}}
-        @prefixValue={{@prefixValue}}
-        @prefixCSSClass={{@prefixCSSClass}}
-        @prefixCSS={{this.prefixCSS}}
-        @prefixBadge={{@prefixBadge}}
-      />
-
-      <span class="sidebar-section-link-content-text">
-        {{@content}}
-      </span>
-
-      {{#if @badgeText}}
-        <span class="sidebar-section-link-content-badge">
-          {{@badgeText}}
+        <span class="sidebar-section-link-content-text">
+          {{@content}}
         </span>
-      {{/if}}
+      </a>
+    {{else}}
+      <Sidebar::SectionLinkTo
+        @class={{this.classNames}}
+        @route={{@route}}
+        @query={{@query}}
+        @models={{this.models}}
+        @current-when={{@currentWhen}}
+        @title={{@title}}
+      >
 
-      {{#if @suffixValue}}
-        <span class={{concat-class "sidebar-section-link-suffix" @suffixType @suffixCSSClass}}>
-          {{#if (eq @suffixType "icon")}}
-            {{d-icon @suffixValue}}
-          {{/if}}
+        <Sidebar::SectionLinkPrefix
+          @prefixType={{@prefixType}}
+          @prefixValue={{@prefixValue}}
+          @prefixCSSClass={{@prefixCSSClass}}
+          @prefixCSS={{this.prefixCSS}}
+          @prefixBadge={{@prefixBadge}}
+        />
+
+        <span class="sidebar-section-link-content-text">
+          {{@content}}
         </span>
-      {{/if}}
 
-      {{#if @hoverValue}}
-        <span class="sidebar-section-link-hover">
-          <button
-            type="button"
-            title={{@hoverTitle}}
-            class="sidebar-section-hover-button"
-            {{on "click" @hoverAction}}
-            >
-            {{#if (eq @hoverType "icon")}}
-              {{d-icon @hoverValue class="hover-icon"}}
+        {{#if @badgeText}}
+          <span class="sidebar-section-link-content-badge">
+            {{@badgeText}}
+          </span>
+        {{/if}}
+
+        {{#if @suffixValue}}
+          <span class={{concat-class "sidebar-section-link-suffix" @suffixType @suffixCSSClass}}>
+            {{#if (eq @suffixType "icon")}}
+              {{d-icon @suffixValue}}
             {{/if}}
-          </button>
-        </span>
-      {{/if}}
-    </Sidebar::SectionLinkTo>
-  {{/if}}
-</div>
+          </span>
+        {{/if}}
+
+        {{#if @hoverValue}}
+          <span class="sidebar-section-link-hover">
+            <button
+              type="button"
+              title={{@hoverTitle}}
+              class="sidebar-section-hover-button"
+              {{on "click" @hoverAction}}
+              >
+              {{#if (eq @hoverType "icon")}}
+                {{d-icon @hoverValue class="hover-icon"}}
+              {{/if}}
+            </button>
+          </span>
+        {{/if}}
+      </Sidebar::SectionLinkTo>
+    {{/if}}
+  </div>
+{{/if}}

@@ -1117,6 +1117,7 @@ fa_IR:
         move_to_archive: "بایگانی"
         failed_to_move: "انتقال پیام‌های انتخاب شده با اشکال مواجه شد (شاید اتصال شما در دسترس نیست)"
         tags: "برچسب‌ها"
+        all_tags: "تمام برچسب‌ها"
         warnings: "هشدارهای رسمی"
       preferences_nav:
         account: "حساب کاربری"
@@ -3351,6 +3352,10 @@ fa_IR:
               draft_count:
                 one: "%{count} پیش‌نویس"
                 other: "%{count} پیش‌نویس"
+            review:
+              content: "بازنگری"
+              title: "بازنگری"
+              pending_count: "%{count} در انتظار"
     until: "تا وقتی که:"
   admin_js:
     type_to_filter: "بنویسید تا فیلتر کنید..."

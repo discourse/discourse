@@ -1,5 +1,5 @@
 import Controller from "@ember/controller";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { exportEntity } from "discourse/lib/export-csv";
@@ -31,11 +31,13 @@ export default Controller.extend({
         this.set(
           "userHistoryActions",
           result.extras.user_history_actions
-            .map((action) => ({
-              id: action.id,
-              action_id: action.action_id,
-              name: I18n.t("admin.logs.staff_actions.actions." + action.id),
-              name_raw: action.id,
+            .map((historyAction) => ({
+              id: historyAction.id,
+              action_id: historyAction.action_id,
+              name: I18n.t(
+                "admin.logs.staff_actions.actions." + historyAction.id
+              ),
+              name_raw: historyAction.id,
             }))
             .sort((a, b) => a.name.localeCompare(b.name))
         );
@@ -75,61 +77,74 @@ export default Controller.extend({
     this.scheduleRefresh();
   },
 
-  actions: {
-    filterActionIdChanged(filterActionId) {
-      if (filterActionId) {
-        this.changeFilters({
-          action_name: filterActionId,
-          action_id: this.userHistoryActions.findBy("id", filterActionId)
-            .action_id,
-        });
-      }
-    },
-
-    clearFilter(key) {
-      if (key === "actionFilter") {
-        this.set("filterActionId", null);
-        this.changeFilters({
-          action_name: null,
-          action_id: null,
-          custom_type: null,
-        });
-      } else {
-        this.changeFilters({ [key]: null });
-      }
-    },
-
-    clearAllFilters() {
-      this.set("filterActionId", null);
-      this.resetFilters();
-    },
-
-    filterByAction(logItem) {
+  @action
+  filterActionIdChanged(filterActionId) {
+    if (filterActionId) {
       this.changeFilters({
-        action_name: logItem.get("action_name"),
-        action_id: logItem.get("action"),
-        custom_type: logItem.get("custom_type"),
+        action_name: filterActionId,
+        action_id: this.userHistoryActions.findBy("id", filterActionId)
+          .action_id,
       });
-    },
+    }
+  },
 
-    filterByStaffUser(acting_user) {
-      this.changeFilters({ acting_user: acting_user.username });
-    },
+  @action
+  clearFilter(key, event) {
+    event?.preventDefault();
+    if (key === "actionFilter") {
+      this.set("filterActionId", null);
+      this.changeFilters({
+        action_name: null,
+        action_id: null,
+        custom_type: null,
+      });
+    } else {
+      this.changeFilters({ [key]: null });
+    }
+  },
 
-    filterByTargetUser(target_user) {
-      this.changeFilters({ target_user: target_user.username });
-    },
+  @action
+  clearAllFilters(event) {
+    event?.preventDefault();
+    this.set("filterActionId", null);
+    this.resetFilters();
+  },
 
-    filterBySubject(subject) {
-      this.changeFilters({ subject });
-    },
+  @action
+  filterByAction(logItem, event) {
+    event?.preventDefault();
+    this.changeFilters({
+      action_name: logItem.get("action_name"),
+      action_id: logItem.get("action"),
+      custom_type: logItem.get("custom_type"),
+    });
+  },
 
-    exportStaffActionLogs() {
-      exportEntity("staff_action").then(outputExportResult);
-    },
+  @action
+  filterByStaffUser(acting_user, event) {
+    event?.preventDefault();
+    this.changeFilters({ acting_user: acting_user.username });
+  },
 
-    loadMore() {
-      this.model.loadMore();
-    },
+  @action
+  filterByTargetUser(target_user, event) {
+    event?.preventDefault();
+    this.changeFilters({ target_user: target_user.username });
+  },
+
+  @action
+  filterBySubject(subject, event) {
+    event?.preventDefault();
+    this.changeFilters({ subject });
+  },
+
+  @action
+  exportStaffActionLogs() {
+    exportEntity("staff_action").then(outputExportResult);
+  },
+
+  @action
+  loadMore() {
+    this.model.loadMore();
   },
 });

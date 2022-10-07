@@ -265,7 +265,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  scope :watching_topic_when_mute_categories_by_default, ->(topic) do
+  scope :watching_topic, ->(topic) do
     joins(DB.sql_fragment("LEFT JOIN category_users ON category_users.user_id = users.id AND category_users.category_id = :category_id", category_id: topic.category_id))
       .joins(DB.sql_fragment("LEFT JOIN topic_users ON topic_users.user_id = users.id AND topic_users.topic_id = :topic_id",  topic_id: topic.id))
       .joins("LEFT JOIN tag_users ON tag_users.user_id = users.id AND tag_users.tag_id IN (#{topic.tag_ids.join(",").presence || 'NULL'})")

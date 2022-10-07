@@ -1075,6 +1075,7 @@ lv:
         move_to_archive: "Arhivēt"
         failed_to_move: "Neizdevās pārvietot izvēlētas ziņas (varbūt pazudis pieslēgums internetam)"
         tags: "Birkas"
+        all_tags: "Visi tagi"
         warnings: "Oficiālie brīdinājumi"
       preferences_nav:
         account: "Konts"
@@ -2854,6 +2855,9 @@ lv:
               content: "Lietotāji"
             my_posts:
               content: "Mani ieraksti"
+            review:
+              content: "Pārskats"
+              title: "pārskats"
   admin_js:
     type_to_filter: "ievadiet, lai atlasītu..."
     admin:

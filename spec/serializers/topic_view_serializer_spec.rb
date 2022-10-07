@@ -98,7 +98,6 @@ RSpec.describe TopicViewSerializer do
 
   describe '#suggested_topics' do
     before do
-      SiteSetting.enable_personal_messages = false
       Group.refresh_automatic_groups!
     end
 
@@ -133,7 +132,6 @@ RSpec.describe TopicViewSerializer do
 
     describe 'with private messages' do
       before do
-        SiteSetting.enable_personal_messages = true
         Group.refresh_automatic_groups!
       end
 

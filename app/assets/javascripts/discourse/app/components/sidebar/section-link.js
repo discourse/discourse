@@ -8,6 +8,14 @@ export default class SectionLink extends Component {
     }
   }
 
+  get shouldDisplay() {
+    if (this.args.shouldDisplay === undefined) {
+      return true;
+    }
+
+    return this.args.shouldDisplay;
+  }
+
   get classNames() {
     let classNames = [
       "sidebar-section-link",

@@ -31,7 +31,7 @@
       <span class="components">{{html-safe this.childrenString}}</span>
 
       {{#if this.displayHasMore}}
-        <a href {{action "toggleChildrenExpanded"}} class="others-count">
+        <a href {{on "click" this.toggleChildrenExpanded}} class="others-count">
           {{#if this.childrenExpanded}}
             {{i18n "admin.customize.theme.collapse"}}
           {{else}}

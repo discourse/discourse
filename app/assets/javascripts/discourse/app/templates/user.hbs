@@ -32,7 +32,7 @@
             {{/if}}
             {{#if this.model.number_of_suspensions}}
               <div>
-                <a href {{action "showSuspensions"}}>
+                <a href {{on "click" this.showSuspensions}}>
                   <span class="suspensions">{{this.model.number_of_suspensions}}</span>{{i18n "user.staff_counters.suspensions"}}
                 </a>
               </div>
@@ -267,7 +267,7 @@
             {{#if this.showNotificationsTab}}
               <li class="user-notifications">
                 <LinkTo @route="userNotifications">
-                  {{d-icon "comment" class="glyph"}}{{i18n 'user.notifications'}}
+                  {{d-icon "bell" class="glyph"}}{{i18n 'user.notifications'}}
                 </LinkTo>
               </li>
             {{/if}}

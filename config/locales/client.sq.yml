@@ -620,6 +620,7 @@ sq:
         move_to_archive: "Arkivo"
         failed_to_move: "Nuk i transferuam dot mesazhet e zgjedhura (ka mundësi që të jeni shkëputur nga rrjeti)"
         tags: "Etiketat"
+        all_tags: "Të gjitha etiketat"
       preferences_nav:
         account: "Llogaria"
         security: "Siguria"

@@ -9,10 +9,10 @@
 </div>
 
 <div class="preview-nav">
-  <a href class="preview-nav-button {{if this.previewTopic "active"}}" {{action "setPreviewTopic"}}>
+  <a href class="preview-nav-button {{if this.previewTopic "active"}}" {{on "click" this.setPreviewTopic}}>
     {{i18n "wizard.previews.topic_preview"}}
   </a>
-  <a href class="preview-nav-button {{unless this.previewTopic "active"}}" {{action "setPreviewHomepage"}}>
+  <a href class="preview-nav-button {{unless this.previewTopic "active"}}" {{on "click" this.setPreviewHomepage}}>
     {{i18n "wizard.previews.homepage_preview"}}
   </a>
 </div>

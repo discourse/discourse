@@ -307,11 +307,13 @@ pt_BR:
         unbookmark_with_reminder: "Clique para remover todos os favoritos e lembretes neste tópico."
     bookmarks:
       created: "Você marcou esta postagem como favorita. %{name}"
+      created_generic: "Você favoritou isso. %{name}"
       create: "Criar favorito"
       edit: "Editar favorito"
       not_bookmarked: "marcar postagem como favorita"
       remove_reminder_keep_bookmark: "Remover lembrete e manter favorito"
       created_with_reminder: "Você marcou esta postagem com um lembrete em %{date}. %{name}"
+      created_with_reminder_generic: "Você marcou isso como lembrete em %{date}. %{name}"
       remove: "Remover favorito"
       delete: "Excluir favorito"
       confirm_delete: "Tem certeza de que deseja excluir este favorito? O lembrete também será excluído."
@@ -322,7 +324,11 @@ pt_BR:
       list_permission_denied: "Você não tem permissão para visualizar os favoritos deste usuário(a)."
       no_user_bookmarks: "Você não tem postagens favoritas. Os favoritos permitem que você consulte rapidamente postagens específicas."
       auto_delete_preference:
+        label: "Após ser notificado"
+        never: "Manter Marcador"
         when_reminder_sent: "Excluir favorito"
+        on_owner_reply: "Excluir marcador, após responder"
+        clear_reminder: "Manter marcador e limpar lembretes"
       search_placeholder: "Pesquisar os favoritos por nome, título do tópico ou conteúdo da postagem"
       search: "Pesquisar"
       reminders:
@@ -728,6 +734,7 @@ pt_BR:
             allow_unknown_sender_topic_replies: "Permita que remetentes desconhecidos respondam a tópicos."
             allow_unknown_sender_topic_replies_hint: "Permite que remetentes desconhecidos(as) respondam a tópicos de grupo. Se não estiver ativado, será criado um novo tópico para respostas de endereços de e-mail de usuários(as) não convidados para o tópico."
             from_alias: "De Alias"
+            from_alias_hint: "Nome alternativo para ser utilizado como endereço de origem para enviar emails SMTP. Observe que isso pode não ser compatível com todos os provedores de email, consulte a documentação do seu provedor."
           mailboxes:
             synchronized: "Caixa de mensagens sincronizada"
             none_found: "Nenhuma caixa de mensagens foi encontrada nesta conta de e-mail."
@@ -1086,6 +1093,7 @@ pt_BR:
       enable_quoting: "Ativar resposta citando o texto destacado"
       enable_defer: "Ativar adiamento para marcar tópicos como não lidos"
       experimental_sidebar:
+        enable: "Ativar barra lateral experimental"
         options: "Opções"
         categories_section: "Seção de Categorias"
         categories_section_instruction: "As categorias selecionadas serão exibidas na seção de categorias do painel lateral."
@@ -1187,6 +1195,7 @@ pt_BR:
         move_to_archive: "Arquivar"
         failed_to_move: "Falha ao mover as mensagens selecionadas (talvez você esteja sem conexão com a internet)"
         tags: "Etiquetas"
+        all_tags: "Todas as etiquetas"
         warnings: "Avisos oficiais"
         read_more_in_group: "Quer ler mais? Veja outras mensagens em %{groupLink}."
         read_more: "Quer ler mais? Veja outras mensagens em <a href='%{basePath}/u/%{username}/messages'>mensagens pessoais</a>."
@@ -1566,7 +1575,9 @@ pt_BR:
         title: "Resumo"
         stats: "Estatísticas"
         time_read: "tempo de leitura"
+        time_read_title: "%{duration} (todo o período)"
         recent_time_read: "tempo de leitura recente"
+        recent_time_read_title: "%{duration} (nos últimos 60 dias)"
         topic_count:
           one: "tópico criado"
           other: "tópicos criados"
@@ -1638,6 +1649,9 @@ pt_BR:
         the_topic: "o tópico"
     user_status:
       save: "Salvar"
+      set_custom_status: "Definir status customizados"
+      what_are_you_doing: "O que você está fazendo?"
+      remove_status: "Remover status"
     loading: "Carregando..."
     errors:
       prev_page: "ao tentar carregar"
@@ -1697,6 +1711,7 @@ pt_BR:
       other: respostas
     signup_cta:
       sign_up: "Cadastrar-se"
+      hide_session: "Talvez mais tarde"
       hide_forever: "não, obrigado(a)"
       hidden_for_session: "Ok, vamos perguntar amanhã. Você sempre pode usar \"Entrar\" para criar uma conta também."
       intro: "Olá! Parece que você está gostando da discussão, mas ainda não cadastou uma conta."
@@ -1951,6 +1966,7 @@ pt_BR:
       similar_topics: "Seu tópico é parecido com..."
       drafts_offline: "rascunhos off-line"
       edit_conflict: "editar conflito"
+      esc: "esc"
       group_mentioned_limit:
         one: "<b>Aviso!</b> Você menciou <a href='%{group_link}'>%{group}</a>, mas este grupo tem mais membros do que o limite de menções configurado pelo(a) administrador(a) de %{count} usuário(a). Ninguém será notificado(a)."
         other: "<b>Aviso!</b> Você menciou <a href='%{group_link}'>%{group}</a>, mas este grupo tem mais membros do que o limite de menções configurado pelo(a) administrador(a) de %{count} usuários(as). Ninguém será notificado(a)."
@@ -2085,6 +2101,7 @@ pt_BR:
       ignore: "Ignorar"
       image_alt_text:
         aria_label: Texto alternativo para imagem
+      delete_image_button: Excluir Imagem
     notifications:
       tooltip:
         regular:
@@ -2126,6 +2143,7 @@ pt_BR:
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> aceitou o seu convite"
+      invitee_accepted_your_invitation: "aceitou seu convite"
       moved_post: "<span>%{username}</span> moveu %{description}"
       linked: "<span>%{username}</span> %{description}"
       granted_badge: "Ganhou \"%{description}'"
@@ -2225,6 +2243,8 @@ pt_BR:
       in: "em"
       in_this_topic: "neste tópico"
       in_this_topic_tooltip: "mudar para pesquisa de todos os tópicos"
+      in_messages: "nas mensagens"
+      in_messages_tooltip: "mudar para pesquisa de tópicos regulares"
       in_topics_posts: "em todos os tópicos e postagens"
       enter_hint: "ou pressione Enter"
       in_posts_by: "em postagens por %{username}"
@@ -2320,11 +2340,19 @@ pt_BR:
     current_user: "ir para a sua página do(a) usuário(a)"
     view_all: "exibir tudo %{tab}"
     user_menu:
+      generic_no_items: "Não há itens nesta lista."
+      view_all_notifications: "ver todas as notificações"
+      view_all_bookmarks: "ver todos os favoritos"
+      view_all_messages: "ver todas as mensagens pessoais"
       tabs:
+        all_notifications: "Todas as notificações"
         replies: "Respostas"
         mentions: "Menções"
         likes: "Curtidas"
+        messages: "Mensagens pessoais"
         bookmarks: "Favoritos"
+        review_queue: "Fila de revisão"
+        other_notifications: "Outras notificações"
         profile: "Perfil"
     topics:
       new_messages_marker: "último acesso"
@@ -3012,6 +3040,9 @@ pt_BR:
         viewing_summary: "visualizando um resumo deste tópico"
         post_number: "%{username}, postagem #%{post_number}"
         show_all: "Exibir tudo"
+      share:
+        title: "Compartilhar Publicação #%{post_number}"
+        instructions: "Compartilhar o link desta publicação:"
     category:
       none: "(sem categoria)"
       all: "Todas as categorias"
@@ -3724,6 +3755,9 @@ pt_BR:
             my_posts:
               content: "Minhas postagens"
               title: "Minhas publicações"
+            review:
+              content: "Revisar"
+              title: "revisar"
     welcome_topic_banner:
       title: "Crie seu tópico de Boas-Vindas"
       button_title: "Começar a Editar"
@@ -4815,6 +4849,7 @@ pt_BR:
         suspended: "Suspenso(a)?"
         staged: "Encenado(a)?"
         show_admin_profile: "Administrador(a)"
+        manage_user: "Gerenciar usuário"
         show_public_profile: "Exibir perfil público"
         impersonate: "Representar"
         action_logs: "Registro de atividades"

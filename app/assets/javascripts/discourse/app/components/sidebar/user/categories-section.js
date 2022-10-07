@@ -21,6 +21,8 @@ export default class SidebarUserCategoriesSection extends SidebarCommonCategorie
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
+
     this.topicTrackingState.offStateChange(this.callbackId);
   }
 

@@ -3,6 +3,7 @@ import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
 import { isDocumentRTL } from "discourse/lib/text-direction";
+import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 
 export default Component.extend({
@@ -91,15 +92,26 @@ export default Component.extend({
     return this.theme.getError(target, fieldName);
   },
 
+  @action
+  toggleShowAdvanced(event) {
+    event?.preventDefault();
+    this.toggleProperty("showAdvanced");
+  },
+
+  @action
+  toggleAddField(event) {
+    event?.preventDefault();
+    this.toggleProperty("addingField");
+  },
+
+  @action
+  toggleMaximize(event) {
+    event?.preventDefault();
+    this.toggleProperty("maximized");
+    next(() => this.appEvents.trigger("ace:resize"));
+  },
+
   actions: {
-    toggleShowAdvanced() {
-      this.toggleProperty("showAdvanced");
-    },
-
-    toggleAddField() {
-      this.toggleProperty("addingField");
-    },
-
     cancelAddField() {
       this.set("addingField", false);
     },
@@ -112,11 +124,6 @@ export default Component.extend({
       this.theme.setField(this.currentTargetName, name, "");
       this.setProperties({ newFieldName: "", addingField: false });
       this.fieldAdded(this.currentTargetName, name);
-    },
-
-    toggleMaximize() {
-      this.toggleProperty("maximized");
-      next(() => this.appEvents.trigger("ace:resize"));
     },
 
     onlyOverriddenChanged(value) {

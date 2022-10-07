@@ -925,6 +925,7 @@ hy:
         move_to_archive: "Արխիվացնել"
         failed_to_move: "Չհաջողվեց տեղափոխել ընտրված հաղորդագրությունները (հնարավոր է՝ համացանցի հետ կապված խնդիր կա)"
         tags: "Թեգեր"
+        all_tags: "Բոլոր Թեգերը"
       preferences_nav:
         account: "Հաշիվ"
         security: "Անվտանգություն"
@@ -2919,6 +2920,9 @@ hy:
               content: "Օգտատերեր"
             my_posts:
               content: "Իմ Գրառումները"
+            review:
+              content: "Վերանայում"
+              title: "վերանայում"
   admin_js:
     type_to_filter: "գրեք ֆիլտրելու համար..."
     admin:

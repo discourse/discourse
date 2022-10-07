@@ -124,7 +124,6 @@ pt:
         unsubscribe_not_allowed: "Acontece quando desubescrever via e-mail não é permitido para este utilizador."
         email_not_allowed: "Acontece quando o endereço de email não está na lista de permissões ou está na lista de bloqueio."
       unrecognized_error: "Erro Desconhecido"
-    secure_media_placeholder: "Editado: este site tem mídia segura habilitada, visite o tópico ou clique em Exibir Mídia para ver a mídia anexada."
     view_redacted_media: "Exibir media"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -194,7 +193,6 @@ pt:
       page_publishing_requirements: "A publicação de página não pode ser ativada se a media segura estiver ativada."
       s3_backup_requires_s3_settings: "Não pode utilizar S3 como local para cópia de segurança a não ser que providencie '%{setting_name}'."
       s3_bucket_reused: "Não pode utilizar o mesmo balde para 's3_upload_bucket' e 's3_backup_bucket'. Escolha um balde diferente ou use uma localização diferente para cada balde."
-      secure_media_requirements: "Envios para S3 deve estar ativado antes de ativar média segura."
       share_quote_facebook_requirements: "Você tem de definir um ID de Aplicação do Facebook para ativar a partilha de citações para o Facebook."
       second_factor_cannot_enforce_with_socials: "Você não pode aplicar o 2FA com logins sociais ativados. Você tem primeiro de desativar o login via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Não pode forçar 2FA se logins locais estiver desativado."

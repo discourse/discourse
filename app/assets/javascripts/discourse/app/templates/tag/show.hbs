@@ -40,7 +40,7 @@
               {{else}}
                 {{#if this.topicTrackingState.hasIncoming}}
                   <div class="show-more {{if this.hasTopics "has-topics"}}">
-                    <a tabindex="0" href {{action "showInserted"}} class="alert alert-info clickable">
+                    <a tabindex="0" href {{on "click" this.showInserted}} class="alert alert-info clickable">
                       <CountI18n @key="topic_count_" @suffix={{this.topicTrackingState.filter}} @count={{this.topicTrackingState.incomingCount}} />
                     </a>
                   </div>

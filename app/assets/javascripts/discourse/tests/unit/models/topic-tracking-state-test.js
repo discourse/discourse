@@ -760,6 +760,33 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         );
       });
 
+      test("watched topics in muted categories are added to the state", async function (assert) {
+        trackingState.currentUser.setProperties({
+          muted_category_ids: [123],
+        });
+
+        trackingState.trackMutedOrUnmutedTopic({
+          topic_id: 222,
+          message_type: "unmuted",
+        });
+
+        await publishToMessageBus("/new", newTopicPayload);
+
+        assert.deepEqual(
+          trackingState.findState(222),
+          {
+            category_id: 123,
+            topic_tag_ids: [44],
+            tags: ["pending"],
+            last_read_post_number: null,
+            highest_post_number: 1,
+            created_at: "2012-11-31 12:00:00 UTC",
+            archetype: "regular",
+          },
+          "topic state updated"
+        );
+      });
+
       test("topics in muted tags do not get added to the state", async function (assert) {
         trackingState.currentUser.set("muted_tags", ["pending"]);
 

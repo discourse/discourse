@@ -1106,6 +1106,7 @@ ko:
         move_to_archive: "보관"
         failed_to_move: "선택한 메시지를 이동하지 못했습니다(네트워크가 다운되었을 수 있음)"
         tags: "태그"
+        all_tags: "모든 태그"
         warnings: "공식 경고"
         read_more_in_group: "더 읽고 싶으신가요? %{groupLink}에서 다른 메시지를 찾아보세요."
       preferences_nav:
@@ -3505,6 +3506,9 @@ ko:
               content: "내 글"
               draft_count:
                 other: "초안 %{count}"
+            review:
+              content: "검토"
+              title: "검토"
   admin_js:
     type_to_filter: "필터링하려면 입력..."
     admin:

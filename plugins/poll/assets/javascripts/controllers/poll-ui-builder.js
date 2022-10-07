@@ -398,4 +398,10 @@ export default Controller.extend(ModalFunctionality, {
   removeOption(option) {
     this.pollOptions.removeObject(option);
   },
+
+  @action
+  updatePollType(pollType, event) {
+    event?.preventDefault();
+    this.pollType = pollType;
+  },
 });

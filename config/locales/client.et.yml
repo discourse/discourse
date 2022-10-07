@@ -873,6 +873,7 @@ et:
         move_to_archive: "Arhiiv"
         failed_to_move: "Valitud sõnumite teisaldamine ebaõnnestus (võrguühendus võib olla häiritud)"
         tags: "Sildid"
+        all_tags: "Kõik sildid"
       preferences_nav:
         account: "Konto"
         security: "Turve"
@@ -2578,6 +2579,9 @@ et:
               content: "Kasutajad"
             my_posts:
               content: "Minu"
+            review:
+              content: "Vaata üle"
+              title: "vaata üle"
   admin_js:
     type_to_filter: "filtreerimiseks trüki..."
     admin:

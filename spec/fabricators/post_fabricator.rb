@@ -143,6 +143,25 @@ Fabricator(:private_message_post, from: :post) do
   raw "Ssshh! This is our secret conversation!"
 end
 
+Fabricator(:group_private_message_post, from: :post) do
+  transient :recipients
+  user
+  topic do |attrs|
+    Fabricate(:private_message_topic,
+      user: attrs[:user],
+      created_at: attrs[:created_at],
+      subtype: TopicSubtype.user_to_user,
+      topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: attrs[:user]),
+      ],
+      topic_allowed_groups: [
+        Fabricate.build(:topic_allowed_group, group: attrs[:recipients] || Fabricate(:group))
+      ]
+    )
+  end
+  raw "Ssshh! This is our group secret conversation!"
+end
+
 Fabricator(:private_message_post_one_user, from: :post) do
   user
   topic do |attrs|

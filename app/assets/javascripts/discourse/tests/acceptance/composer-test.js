@@ -39,8 +39,27 @@ acceptance("Composer", function (needs) {
   });
   needs.settings({
     enable_whispers: true,
+    general_category_id: 1,
   });
-  needs.site({ can_tag_topics: true });
+  needs.site({
+    can_tag_topics: true,
+    categories: [
+      {
+        id: 1,
+        name: "General",
+        slug: "general",
+        permission: 1,
+        topic_template: null,
+      },
+      {
+        id: 2,
+        name: "test too",
+        slug: "test-too",
+        permission: 1,
+        topic_template: "",
+      },
+    ],
+  });
   needs.pretender((server, helper) => {
     server.post("/uploads/lookup-urls", () => {
       return helper.response([]);
@@ -69,6 +88,8 @@ acceptance("Composer", function (needs) {
   test("Composer is opened", async function (assert) {
     await visit("/");
     await click("#create-topic");
+    // Check that General category is selected
+    assert.strictEqual(selectKit(".category-chooser").header().value(), "1");
 
     assert.strictEqual(
       document.documentElement.style.getPropertyValue("--composer-height"),

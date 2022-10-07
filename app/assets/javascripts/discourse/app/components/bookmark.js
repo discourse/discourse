@@ -261,7 +261,11 @@ export default Component.extend({
     KeyboardShortcuts.unpause();
   },
 
-  showExistingReminderAt: notEmpty("model.reminderAt"),
+  @discourseComputed("model.reminderAt")
+  showExistingReminderAt(reminderAt) {
+    return reminderAt && Date.parse(reminderAt) > new Date().getTime();
+  },
+
   showDelete: notEmpty("model.id"),
   userHasTimezoneSet: notEmpty("userTimezone"),
   editingExistingBookmark: and("model", "model.id"),

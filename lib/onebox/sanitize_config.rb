@@ -14,7 +14,7 @@ module Onebox
         'iframe' => %w[allowfullscreen frameborder height scrolling src width data-original-href data-unsanitized-src],
         'source' => %w[src type],
         'video' => %w[controls height loop width autoplay muted poster controlslist playsinline],
-        'path' => %w[d],
+        'path' => %w[d fill-rule],
         'svg' => ['aria-hidden', 'width', 'height', 'viewbox'],
         'div' => [:data], # any data-* attributes,
         'span' => [:data], # any data-* attributes

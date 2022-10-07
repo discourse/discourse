@@ -1,10 +1,11 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, render } from "@ember/test-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import NotificationFixtures from "discourse/tests/fixtures/notification-fixtures";
 import { hbs } from "ember-cli-htmlbars";
+import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import I18n from "I18n";
 
@@ -78,11 +79,10 @@ module(
       );
     });
 
-    test("has a dismiss button if some notifications are not read", async function (assert) {
-      notificationsData.forEach((notification) => {
-        notification.read = true;
+    test("has a dismiss button if some notification types have unread notifications", async function (assert) {
+      this.currentUser.set("grouped_unread_notifications", {
+        [NOTIFICATION_TYPES.mentioned]: 1,
       });
-      notificationsData[0].read = false;
       await render(template);
       const dismissButton = query(
         ".panel-body-bottom .btn.notifications-dismiss"
@@ -109,9 +109,8 @@ module(
 
     test("dismiss button makes a request to the server and then refreshes the notifications list", async function (assert) {
       await render(template);
-      notificationsData = getNotificationsData();
-      notificationsData.forEach((notification) => {
-        notification.read = true;
+      this.currentUser.set("grouped_unread_notifications", {
+        [NOTIFICATION_TYPES.mentioned]: 1,
       });
       assert.strictEqual(notificationsFetches, 1);
       await click(".panel-body-bottom .btn.notifications-dismiss");
@@ -124,6 +123,115 @@ module(
       assert.ok(
         !exists(".panel-body-bottom .btn.notifications-dismiss"),
         "dismiss button is not shown"
+      );
+    });
+
+    test("all notifications tab shows pending reviewables and sorts them with unread notifications based on their creation date", async function (assert) {
+      pretender.get("/notifications", () => {
+        return response({
+          notifications: [
+            {
+              id: 6,
+              user_id: 1,
+              notification_type: NOTIFICATION_TYPES.mentioned,
+              read: false,
+              high_priority: false,
+              created_at: "2021-11-25T19:31:13.241Z",
+              post_number: 6,
+              topic_id: 10,
+              fancy_title: "Unread notification #01",
+              slug: "unread-notification-01",
+              data: {
+                topic_title: "Unread notification #01",
+                original_post_id: 20,
+                original_post_type: 1,
+                original_username: "discobot",
+                revision_number: null,
+                display_username: "discobot",
+              },
+            },
+            {
+              id: 13,
+              user_id: 1,
+              notification_type: NOTIFICATION_TYPES.replied,
+              read: false,
+              high_priority: false,
+              created_at: "2021-08-25T19:31:13.241Z",
+              post_number: 6,
+              topic_id: 10,
+              fancy_title: "Unread notification #02",
+              slug: "unread-notification-02",
+              data: {
+                topic_title: "Unread notification #02",
+                original_post_id: 20,
+                original_post_type: 1,
+                original_username: "discobot",
+                revision_number: null,
+                display_username: "discobot",
+              },
+            },
+            {
+              id: 81,
+              user_id: 1,
+              notification_type: NOTIFICATION_TYPES.mentioned,
+              read: true,
+              high_priority: false,
+              created_at: "2022-10-25T19:31:13.241Z",
+              post_number: 6,
+              topic_id: 10,
+              fancy_title: "Read notification #01",
+              slug: "read-notification-01",
+              data: {
+                topic_title: "Read notification #01",
+                original_post_id: 20,
+                original_post_type: 1,
+                original_username: "discobot",
+                revision_number: null,
+                display_username: "discobot",
+              },
+            },
+          ],
+          pending_reviewables: [
+            {
+              flagger_username: "sayo2",
+              id: 83,
+              pending: true,
+              topic_fancy_title: "anything hello world 0011",
+              type: "ReviewableQueuedPost",
+              created_at: "2022-09-25T19:31:13.241Z",
+            },
+            {
+              flagger_username: "sayo2",
+              id: 78,
+              pending: true,
+              topic_fancy_title: "anything hello world 0033",
+              type: "ReviewableQueuedPost",
+              created_at: "2021-06-25T19:31:13.241Z",
+            },
+          ],
+        });
+      });
+      await render(template);
+      const items = queryAll("ul li");
+      assert.ok(
+        items[0].textContent.includes("hello world 0011"),
+        "the first pending reviewable is displayed 1st because it's most recent among pending reviewables and unread notifications"
+      );
+      assert.ok(
+        items[1].textContent.includes("Unread notification #01"),
+        "the first unread notification is displayed 2nd because it's the 2nd most recent among pending reviewables and unread notifications"
+      );
+      assert.ok(
+        items[2].textContent.includes("Unread notification #02"),
+        "the second unread notification is displayed 3rd because it's the 3rd most recent among pending reviewables and unread notifications"
+      );
+      assert.ok(
+        items[3].textContent.includes("hello world 0033"),
+        "the second pending reviewable is displayed 4th because it's the 4th most recent among pending reviewables and unread notifications"
+      );
+      assert.ok(
+        items[4].textContent.includes("Read notification #01"),
+        "read notifications come after the pending reviewables and unread notifications"
       );
     });
   }

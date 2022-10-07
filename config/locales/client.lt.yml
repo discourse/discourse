@@ -1153,6 +1153,7 @@ lt:
         move_to_archive: "Archyvuoti"
         failed_to_move: "Įvyko klaida! (patikrinkite interneto ryšį)"
         tags: "Gairės"
+        all_tags: "Visos žymos"
         warnings: "Oficialūs įspėjimai"
         read_more_in_group: "Norite skaityti daugiau? Naršykite kitus pranešimus %{groupLink}."
       preferences_nav:
@@ -3553,6 +3554,9 @@ lt:
               content: "Vartotojai"
             my_posts:
               content: "Mano Įrašai"
+            review:
+              content: "Peržiūra"
+              title: "peržiūra"
   admin_js:
     type_to_filter: "įrašyk kažką dėl filtro..."
     admin:

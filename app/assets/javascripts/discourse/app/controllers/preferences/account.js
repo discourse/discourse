@@ -2,7 +2,7 @@ import { gt, not, or } from "@ember/object/computed";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import Controller from "@ember/controller";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { findAll } from "discourse/models/login-method";
@@ -132,6 +132,20 @@ export default Controller.extend(CanCheckEmails, {
     return findAll().length > 0;
   },
 
+  @action
+  resendConfirmationEmail(email, event) {
+    event?.preventDefault();
+    email.set("resending", true);
+    this.model
+      .addEmail(email.email)
+      .then(() => {
+        email.set("resent", true);
+      })
+      .finally(() => {
+        email.set("resending", false);
+      });
+  },
+
   actions: {
     save() {
       this.set("saved", false);
@@ -155,18 +169,6 @@ export default Controller.extend(CanCheckEmails, {
 
     destroyEmail(email) {
       this.model.destroyEmail(email);
-    },
-
-    resendConfirmationEmail(email) {
-      email.set("resending", true);
-      this.model
-        .addEmail(email.email)
-        .then(() => {
-          email.set("resent", true);
-        })
-        .finally(() => {
-          email.set("resending", false);
-        });
     },
 
     delete() {

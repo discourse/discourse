@@ -8,12 +8,14 @@ export default class BaseCommunitySectionLink {
     appEvents,
     router,
     siteSettings,
+    inMoreDrawer,
   } = {}) {
     this.router = router;
     this.topicTrackingState = topicTrackingState;
     this.currentUser = currentUser;
     this.appEvents = appEvents;
     this.siteSettings = siteSettings;
+    this.inMoreDrawer = inMoreDrawer;
   }
 
   /**
