@@ -72,11 +72,10 @@ export default Controller.extend(ModalFunctionality, {
       emoji: this.status.emoji,
       ends_at: this.status.endsAt?.toISOString(),
     };
-    this.userStatusService
-      .set(newStatus)
-      .then(() => {
-        this.send("closeModal");
-      })
+
+    this.model
+      .saveAction(newStatus)
+      .then(() => this.send("closeModal"))
       .catch((e) => this._handleError(e));
   },
 

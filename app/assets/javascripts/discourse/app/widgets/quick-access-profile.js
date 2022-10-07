@@ -26,6 +26,7 @@ createWidgetFrom(QuickAccessItem, "logout-item", {
 
 createWidgetFrom(QuickAccessItem, "user-status-item", {
   tagName: "li.user-status",
+  services: ["userStatus"],
 
   html() {
     const status = this.currentUser.status;
@@ -43,6 +44,7 @@ createWidgetFrom(QuickAccessItem, "user-status-item", {
       modalClass: "user-status",
       model: {
         status: this.currentUser.status,
+        saveAction: (status) => this.userStatus.set(status),
       },
     });
   },
