@@ -178,6 +178,12 @@ class UserUpdater
       end
     end
 
+    if attributes.key?(:skip_new_user_tips)
+      POPUP_OPTION_ATTR.each do |attribute|
+        user.user_option.public_send("#{attribute}=", user.user_option.skip_new_user_tips)
+      end
+    end
+
     # automatically disable digests when mailing_list_mode is enabled
     user.user_option.email_digests = false if user.user_option.mailing_list_mode
 
