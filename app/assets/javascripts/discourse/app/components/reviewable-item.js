@@ -270,12 +270,12 @@ export default Component.extend({
         return;
       }
 
-      let msg = performableAction.get("confirm_message");
+      const message = performableAction.get("confirm_message");
       let requireRejectReason = performableAction.get("require_reject_reason");
       let customModal = performableAction.get("custom_modal");
-      if (msg) {
+      if (message) {
         this.dialog.confirm({
-          message: msg,
+          message,
           didConfirm: () => this._performConfirmed(performableAction),
         });
       } else if (requireRejectReason) {
