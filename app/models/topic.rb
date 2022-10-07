@@ -1779,6 +1779,13 @@ class Topic < ActiveRecord::Base
       SiteSetting.max_topic_invitations_per_day,
       1.day.to_i
     ).performed!
+
+    RateLimiter.new(
+      invited_by,
+      "topic-invitations-per-minute",
+      SiteSetting.max_topic_invitations_per_minute,
+      1.day.to_i
+    ).performed!
   end
 
   def cannot_permanently_delete_reason(user)
