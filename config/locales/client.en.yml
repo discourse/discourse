@@ -254,6 +254,7 @@ en:
     ok_value: "OK"
     cancel_value: "Cancel"
     submit: "Submit"
+    delete: "Delete"
     generic_error: "Sorry, an error has occurred."
     generic_error_with_reason: "An error occurred: %{error}"
     sign_up: "Sign Up"
@@ -1918,6 +1919,9 @@ en:
       leave_message: "Do you really want to leave this message?"
       remove_allowed_user: "Do you really want to remove %{name} from this message?"
       remove_allowed_group: "Do you really want to remove %{name} from this message?"
+      leave: "Leave"
+      remove_group: "Remove group"
+      remove_user: "Remove user"
 
     email: "Email"
     username: "Username"
@@ -2169,6 +2173,7 @@ en:
       edit_conflict: "edit conflict"
       esc: "esc"
       esc_label: "Click or press Esc to dismiss"
+      ok_proceed: "Ok, proceed"
 
       group_mentioned_limit:
         one: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} user. Nobody will be notified."
@@ -2669,7 +2674,7 @@ en:
         remove_tags: "Remove All Tags"
         confirm_remove_tags:
           one: "All tags will be removed from this topic. Are you sure?"
-          other: "All tags will be removed from <b>%{count}</b> topics. Are you sure?"
+          other: "All tags will be removed from %{count} topics. Are you sure?"
         progress:
           one: "Progress: <strong>%{count}</strong> topic"
           other: "Progress: <strong>%{count}</strong> topics"
@@ -3998,7 +4003,6 @@ en:
       tag_list_joiner: ", "
       delete_unused: "Delete Unused Tags"
       delete_unused_description: "Delete all tags which are not attached to any topics or personal messages"
-      cancel_delete_unused: "Cancel"
       filters:
         without_category: "%{filter} %{tag} topics"
         with_category: "%{filter} %{tag} topics in %{category}"

@@ -1,7 +1,6 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { next, schedule } from "@ember/runloop";
-import bootbox from "bootbox";
 import { openBookmarkModal } from "discourse/controllers/bookmark";
 import { ajax } from "discourse/lib/ajax";
 import {
@@ -11,8 +10,10 @@ import {
 import Scrolling from "discourse/mixins/scrolling";
 import I18n from "I18n";
 import { Promise } from "rsvp";
+import { inject as service } from "@ember/service";
 
 export default Component.extend(Scrolling, {
+  dialog: service(),
   classNames: ["bookmark-list-wrapper"],
 
   didInsertElement() {
@@ -64,12 +65,10 @@ export default Component.extend(Scrolling, {
       if (!bookmark.reminder_at) {
         return deleteBookmark();
       }
-      bootbox.confirm(I18n.t("bookmarks.confirm_delete"), (result) => {
-        if (result) {
-          deleteBookmark();
-        } else {
-          resolve(false);
-        }
+      this.dialog.deleteConfirm({
+        message: I18n.t("bookmarks.confirm_delete"),
+        didConfirm: () => deleteBookmark(),
+        didCancel: () => resolve(false),
       });
     });
   },

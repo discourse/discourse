@@ -2,11 +2,12 @@ import I18n from "I18n";
 import Mixin from "@ember/object/mixin";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { Promise } from "rsvp";
-import bootbox from "bootbox";
 import { extractError } from "discourse/lib/ajax-error";
 import { next } from "@ember/runloop";
+import { inject as service } from "@ember/service";
 
 export default Mixin.create(ModalFunctionality, {
+  dialog: service(),
   errorMessage: null,
   reason: null,
   message: null,
@@ -40,15 +41,15 @@ export default Mixin.create(ModalFunctionality, {
         (this.message && this.message.length > 1))
     ) {
       this.send("hideModal");
-      bootbox.confirm(I18n.t("admin.user.confirm_cancel_penalty"), (result) => {
-        if (result) {
+      this.dialog.confirm({
+        message: I18n.t("admin.user.confirm_cancel_penalty"),
+        didConfirm: () => {
           next(() => {
             this.set("confirmClose", true);
             this.send("closeModal");
           });
-        } else {
-          next(() => this.send("reopenModal"));
-        }
+        },
+        didCancel: () => this.send("reopenModal"),
       });
       return false;
     }

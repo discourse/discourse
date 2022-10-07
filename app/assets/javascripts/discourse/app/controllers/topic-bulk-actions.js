@@ -4,7 +4,6 @@ import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { Promise } from "rsvp";
 import Topic from "discourse/models/topic";
-import bootbox from "bootbox";
 
 import { inject as service } from "@ember/service";
 
@@ -320,16 +319,12 @@ export default Controller.extend(ModalFunctionality, {
     },
 
     removeTags() {
-      bootbox.confirm(
-        I18n.t("topics.bulk.confirm_remove_tags", {
+      this.dialog.deleteConfirm({
+        message: I18n.t("topics.bulk.confirm_remove_tags", {
           count: this.get("model.topics").length,
         }),
-        (result) => {
-          if (result) {
-            this.performAndRefresh({ type: "remove_tags" });
-          }
-        }
-      );
+        didConfirm: () => this.performAndRefresh({ type: "remove_tags" }),
+      });
     },
   },
 });
