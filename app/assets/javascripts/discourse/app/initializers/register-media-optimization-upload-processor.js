@@ -17,7 +17,7 @@ export default {
                 return Promise.resolve();
               }
 
-              container
+              return container
                 .lookup("service:media-optimization-worker")
                 .optimizeImage(data, opts);
             },

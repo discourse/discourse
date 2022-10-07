@@ -356,7 +356,7 @@ export default createWidget("search-menu", {
   },
 
   keyDown(e) {
-    if (e.which === 27 /* escape */) {
+    if (e.key === "Escape") {
       this.sendWidgetAction("toggleSearchMenu");
       e.preventDefault();
       return false;
@@ -366,7 +366,7 @@ export default createWidget("search-menu", {
       return;
     }
 
-    if (e.which === 65 /* a */) {
+    if (e.key === "A") {
       if (document.activeElement?.classList.contains("search-link")) {
         if (document.querySelector("#reply-control.open")) {
           // add a link and focus composer
@@ -387,8 +387,8 @@ export default createWidget("search-menu", {
       }
     }
 
-    const up = e.which === 38;
-    const down = e.which === 40;
+    const up = e.key === "ArrowUp";
+    const down = e.key === "ArrowDown";
     if (up || down) {
       let focused = document.activeElement.closest(".search-menu")
         ? document.activeElement
@@ -442,7 +442,7 @@ export default createWidget("search-menu", {
     }
 
     const searchInput = document.querySelector("#search-term");
-    if (e.which === 13 && e.target === searchInput) {
+    if (e.key === "Enter" && e.target === searchInput) {
       const recentEnterHit =
         this.state._lastEnterTimestamp &&
         Date.now() - this.state._lastEnterTimestamp < SECOND_ENTER_MAX_DELAY;
@@ -462,7 +462,7 @@ export default createWidget("search-menu", {
       this.state._lastEnterTimestamp = Date.now();
     }
 
-    if (e.target === searchInput && e.which === 8 /* backspace */) {
+    if (e.target === searchInput && e.key === "Backspace") {
       if (!searchInput.value) {
         this.clearTopicContext();
         this.clearPMInboxContext();

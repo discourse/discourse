@@ -1068,6 +1068,7 @@ acceptance("Composer - Customizations", function (needs) {
 
 acceptance("Composer - Focus Open and Closed", function (needs) {
   needs.user();
+  needs.settings({ allow_uncategorized_topics: true });
 
   test("Focusing a composer which is not open with create topic", async function (assert) {
     await visit("/t/internationalization-localization/280");
