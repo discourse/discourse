@@ -1,6 +1,6 @@
 <div class="themes-list-header">
-  <DButton @action={{action "changeView"}} @actionParam={{this.THEMES}} @class={{concat "themes-tab " "tab " (if this.themesTabActive "btn-danger active" "")}} @label="admin.customize.theme.title" />
-  <DButton @action={{action "changeView"}} @actionParam={{this.COMPONENTS}} @class={{concat "components-tab " "tab " (if this.componentsTabActive "btn-danger active" "")}} @label="admin.customize.theme.components" @icon="puzzle-piece" />
+  <DButton @action={{action "changeView"}} @actionParam={{this.THEMES}} @class={{concat "themes-tab " "tab " (if this.themesTabActive "active" "")}} @label="admin.customize.theme.title" />
+  <DButton @action={{action "changeView"}} @actionParam={{this.COMPONENTS}} @class={{concat "components-tab " "tab " (if this.componentsTabActive "active" "")}} @label="admin.customize.theme.components" @icon="puzzle-piece" />
 </div>
 
 <div class="themes-list-container">
