@@ -1820,6 +1820,10 @@ en:
         title: "Your first notification!"
         content: "Notifications are used to keep you up-to-date with what is happening in community."
 
+      topic_timeline:
+        title: "Topic timeline"
+        content: "Scroll quickly through a post using the topic timeline."
+
     loading: "Loading..."
     errors:
       prev_page: "while trying to load"

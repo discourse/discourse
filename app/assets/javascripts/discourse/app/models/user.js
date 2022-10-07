@@ -105,6 +105,7 @@ let userOptionFields = [
   "timezone",
   "skip_new_user_tips",
   "skip_first_notification_tips",
+  "skip_topic_timeline_tips",
   "default_calendar",
   "bookmark_auto_delete_preference",
 ];
