@@ -91,7 +91,7 @@ RSpec.describe ApplicationHelper do
   end
 
   describe "add_resource_preload_list" do
-    it "adds resources to the preload list when it's availiable" do
+    it "adds resources to the preload list when it's available" do
       @links_to_preload = []
       add_resource_preload_list('/assets/discourse.js', 'script')
       add_resource_preload_list('/assets/discourse.css', 'style')
