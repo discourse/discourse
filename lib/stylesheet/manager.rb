@@ -196,11 +196,10 @@ class Stylesheet::Manager
     end.join("\n").html_safe
   end
 
-  def stylesheet_link_tag(target = :desktop, media = 'all', preload_callback = nil)
+  def stylesheet_link_tag(target = :desktop, media = 'all')
     stylesheets = stylesheet_details(target, media)
     stylesheets.map do |stylesheet|
       href = stylesheet[:new_href]
-      preload_callback.call(href, 'style') if preload_callback
       theme_id = stylesheet[:theme_id]
       data_theme_id = theme_id ? "data-theme-id=\"#{theme_id}\"" : ""
       theme_name = stylesheet[:theme_name]
@@ -312,13 +311,12 @@ class Stylesheet::Manager
     %[<link href="#{href}" rel="preload" as="style"/>].html_safe
   end
 
-  def color_scheme_stylesheet_link_tag(color_scheme_id = nil, media = 'all', preload_callback = nil)
+  def color_scheme_stylesheet_link_tag(color_scheme_id = nil, media = 'all')
     stylesheet = color_scheme_stylesheet_details(color_scheme_id, media)
 
     return '' if !stylesheet
 
     href = stylesheet[:new_href]
-    preload_callback.call(href, 'style') if preload_callback
 
     css_class = media == 'all' ? "light-scheme" : "dark-scheme"
 

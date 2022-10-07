@@ -21,8 +21,8 @@
 
     <%= build_plugin_html 'server:before-script-load' %>
 
-    <% add_resource_preload_list(script_asset_path("start-discourse"), "script") %>
-    <% add_resource_preload_list(script_asset_path("browser-update"), "script") %>
+    <link rel="preload" href="<%= script_asset_path "start-discourse" %>" as="script">
+    <link rel="preload" href="<%= script_asset_path "browser-update" %>" as="script">
     <%= preload_script 'browser-detect' %>
 
     <%= preload_script "locales/#{I18n.locale}" %>
