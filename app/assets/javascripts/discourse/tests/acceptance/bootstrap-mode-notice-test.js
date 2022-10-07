@@ -4,7 +4,7 @@ import { click, currentURL, settled, visit } from "@ember/test-helpers";
 import { set } from "@ember/object";
 
 acceptance("Bootstrap Mode Notice", function (needs) {
-  needs.user();
+  needs.user({ admin: true });
   needs.site({ wizard_required: true });
   needs.settings({
     bootstrap_mode_enabled: true,
