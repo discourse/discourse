@@ -41,6 +41,9 @@ createWidgetFrom(QuickAccessItem, "user-status-item", {
     showModal("user-status", {
       title: "user_status.set_custom_status",
       modalClass: "user-status",
+      model: {
+        status: this.currentUser.status,
+      },
     });
   },
 

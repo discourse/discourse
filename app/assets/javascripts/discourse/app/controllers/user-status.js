@@ -18,10 +18,10 @@ export default Controller.extend(ModalFunctionality, {
   _itsatrap: null,
 
   onShow() {
-    const currentStatus = { ...this.currentUser.status };
+    const currentStatus = { ...this.model.status };
     this.setProperties({
       status: currentStatus,
-      showDeleteButton: !!this.currentUser.status,
+      showDeleteButton: !!this.model.status,
       timeShortcuts: this._buildTimeShortcuts(),
       prefilledDateTime: currentStatus?.ends_at,
     });

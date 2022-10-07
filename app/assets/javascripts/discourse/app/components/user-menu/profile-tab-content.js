@@ -59,6 +59,7 @@ export default class UserMenuProfileTabContent extends Component {
     showModal("user-status", {
       title: "user_status.set_custom_status",
       modalClass: "user-status",
+      model: { status: this.currentUser.status },
     });
   }
 }
