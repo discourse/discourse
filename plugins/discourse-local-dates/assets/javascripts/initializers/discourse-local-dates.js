@@ -58,6 +58,12 @@ export function applyLocalDates(dates, siteSettings) {
 }
 
 function _rangeIsSameLocalDay(fromElement, toElement) {
+  if (
+    !fromElement.attributes["data-time"] ||
+    !toElement.attributes["data-time"]
+  ) {
+    return false;
+  }
   const timezone = fromElement.attributes["data-timezone"].value;
   const from = moment(_getDateFromElement(fromElement)).tz(timezone);
   const to = moment(_getDateFromElement(toElement)).tz(timezone);

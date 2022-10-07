@@ -11,7 +11,7 @@ const PARIS = "Europe/Paris";
 const LAGOS = "Africa/Lagos";
 const LONDON = "Europe/London";
 
-function freezeTime({ date, timezone }, cb) {
+export function freezeTime({ date, timezone }, cb) {
   date = date || "2020-01-22 10:34";
   const newTimezone = timezone || PARIS;
   const previousZone = moment.tz.guess();
@@ -89,11 +89,11 @@ module("lib:local-date-builder", function () {
   test("time", function (assert) {
     assert.buildsCorrectDate(
       {
-        "time": "12:22:00",
-        "date": "2022-10-07",
-        "timezone": "Asia/Singapore",
-        "localTimezone": "Asia/Singapore",
-        "sameLocalDayAsFrom": true
+        time: "12:22:00",
+        date: "2022-10-07",
+        timezone: "Asia/Singapore",
+        localTimezone: "Asia/Singapore",
+        sameLocalDayAsFrom: true,
       },
       { formatted: "12:22 PM (Singapore)" },
       "it displays the time only as the date is the same local day as 'from'"
