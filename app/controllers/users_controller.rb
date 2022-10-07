@@ -1965,6 +1965,10 @@ class UsersController < ApplicationController
       end
     end
 
+    if SiteSetting.enable_user_status
+      permitted << { status: [:emoji, :description] }
+    end
+
     result = params
       .permit(permitted, theme_ids: [])
       .reverse_merge(
