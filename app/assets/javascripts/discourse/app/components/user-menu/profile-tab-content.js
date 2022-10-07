@@ -64,6 +64,7 @@ export default class UserMenuProfileTabContent extends Component {
       model: {
         status: this.currentUser.status,
         saveAction: (status) => this.userStatus.set(status),
+        deleteAction: () => this.userStatus.clear(),
       },
     });
   }

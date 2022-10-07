@@ -45,6 +45,7 @@ createWidgetFrom(QuickAccessItem, "user-status-item", {
       model: {
         status: this.currentUser.status,
         saveAction: (status) => this.userStatus.set(status),
+        deleteAction: () => this.userStatus.clear(),
       },
     });
   },

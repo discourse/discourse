@@ -54,8 +54,8 @@ export default Controller.extend(ModalFunctionality, {
 
   @action
   delete() {
-    this.userStatusService
-      .clear()
+    this.model
+      .deleteAction()
       .then(() => this.send("closeModal"))
       .catch((e) => this._handleError(e));
   },
