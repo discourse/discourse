@@ -1120,12 +1120,12 @@ const Composer = RestModel.extend({
         saving = false;
 
         // Update topic_count for the category
+        const postCategoryId = parseInt(createdPost.category, 10) || 1;
         const category = this.site.categories.find(
-          (x) => x.id === (parseInt(createdPost.category, 10) || 1)
+          (x) => x.id === postCategoryId
         );
-        if (category) {
-          category.incrementProperty("topic_count");
-        }
+
+        category?.incrementProperty("topic_count");
       }
 
       this.clearState();
