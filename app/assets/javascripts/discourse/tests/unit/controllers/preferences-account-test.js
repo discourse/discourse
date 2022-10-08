@@ -5,11 +5,14 @@ module("Unit | Controller | preferences/account", function (hooks) {
   setupTest(hooks);
 
   test("updating of associated accounts", function (assert) {
+    const siteSettings = this.owner.lookup("service:site-settings");
+    siteSettings.enable_google_oauth2_logins = true;
+
+    const site = this.owner.lookup("service:site");
+    site.set("isMobileDevice", false);
+
     const controller = this.owner.lookup("controller:preferences/account");
     controller.setProperties({
-      siteSettings: {
-        enable_google_oauth2_logins: true,
-      },
       model: {
         id: 70,
         second_factor_enabled: true,
@@ -17,9 +20,6 @@ module("Unit | Controller | preferences/account", function (hooks) {
       },
       currentUser: {
         id: 1234,
-      },
-      site: {
-        isMobileDevice: false,
       },
     });
 

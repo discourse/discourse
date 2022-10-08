@@ -9,15 +9,13 @@ module("Unit | Controller | reorder-categories", function (hooks) {
     const controller = this.owner.lookup("controller:reorder-categories");
     const store = createStore();
 
-    const categories = [
+    const site = this.owner.lookup("service:site");
+    site.set("categories", [
       store.createRecord("category", { id: 1, position: 0 }),
       store.createRecord("category", { id: 2, position: 0 }),
       store.createRecord("category", { id: 3, position: 0 }),
-    ];
+    ]);
 
-    controller.setProperties({
-      site: { categories },
-    });
     controller.reorder();
 
     controller.categoriesOrdered.forEach((category, index) => {
@@ -53,9 +51,9 @@ module("Unit | Controller | reorder-categories", function (hooks) {
     });
 
     const expectedOrderSlugs = ["parent", "child2", "child1", "other"];
-    controller.setProperties({
-      site: { categories: [child2, parent, other, child1] },
-    });
+    const site = this.owner.lookup("service:site");
+    site.set("categories", [child2, parent, other, child1]);
+
     controller.reorder();
 
     assert.deepEqual(
@@ -86,9 +84,8 @@ module("Unit | Controller | reorder-categories", function (hooks) {
       slug: "test",
     });
 
-    controller.setProperties({
-      site: { categories: [elem1, elem2, elem3] },
-    });
+    const site = this.owner.lookup("service:site");
+    site.set("categories", [elem1, elem2, elem3]);
 
     // Move category 'foo' from position 0 to position 2
     controller.send("change", elem1, { target: { value: "2" } });
@@ -129,9 +126,8 @@ module("Unit | Controller | reorder-categories", function (hooks) {
       slug: "test",
     });
 
-    controller.setProperties({
-      site: { categories: [elem1, child1, elem2, elem3] },
-    });
+    const site = this.owner.lookup("service:site");
+    site.set("categories", [elem1, child1, elem2, elem3]);
 
     controller.send("change", elem1, { target: { value: 3 } });
 
@@ -181,9 +177,8 @@ module("Unit | Controller | reorder-categories", function (hooks) {
       slug: "test",
     });
 
-    controller.setProperties({
-      site: { categories: [elem1, child1, child2, elem2, elem3] },
-    });
+    const site = this.owner.lookup("service:site");
+    site.set("categories", [elem1, child1, child2, elem2, elem3]);
 
     controller.reorder();
 

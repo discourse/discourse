@@ -1,14 +1,9 @@
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
 import EmberObject from "@ember/object";
-import { registerRouter } from "discourse/mapping-router";
 
 module("Unit | Controller | avatar-selector", function (hooks) {
   setupTest(hooks);
-
-  hooks.beforeEach(function () {
-    registerRouter(this.owner);
-  });
 
   test("avatarTemplate", function (assert) {
     const user = EmberObject.create({
@@ -21,9 +16,7 @@ module("Unit | Controller | avatar-selector", function (hooks) {
       custom_avatar_upload_id: 3,
     });
     const controller = this.owner.lookup("controller:avatar-selector");
-    controller.setProperties({
-      user,
-    });
+    controller.setProperties({ user });
 
     user.set("avatar_template", "system");
     assert.strictEqual(

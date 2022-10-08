@@ -1,12 +1,18 @@
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
 import User from "discourse/models/user";
-import Site from "discourse/models/site";
 
 module("Unit | Controller | preferences/profile", function (hooks) {
   setupTest(hooks);
 
   test("prepare custom field data", function (assert) {
+    const site = this.owner.lookup("service:site");
+    site.set("user_fields", [
+      { position: 1, id: 1, editable: true },
+      { position: 2, id: 2, editable: true },
+      { position: 3, id: 3, editable: true },
+    ]);
+
     const controller = this.owner.lookup("controller:preferences/profile");
     controller.setProperties({
       model: User.create({
@@ -23,15 +29,6 @@ module("Unit | Controller | preferences/profile", function (hooks) {
         id: 1234,
       },
     });
-
-    Site.currentProp("user_fields", [
-      { position: 1, id: 1, editable: true },
-      { position: 2, id: 2, editable: true },
-      { position: 3, id: 3, editable: true },
-    ]);
-
-    // Since there are no injections in unit tests
-    controller.set("site", Site.current());
 
     controller.send("_updateUserFields");
 

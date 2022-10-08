@@ -19,9 +19,7 @@ module("Unit | Controller | admin-customize-themes-show", function (hooks) {
     const controller = this.owner.lookup(
       "controller:admin-customize-themes-show"
     );
-    controller.setProperties({
-      model: remoteTheme,
-    });
+    controller.setProperties({ model: remoteTheme });
 
     assert.deepEqual(
       controller.remoteThemeLink,
@@ -44,9 +42,7 @@ module("Unit | Controller | admin-customize-themes-show", function (hooks) {
     const controller = this.owner.lookup(
       "controller:admin-customize-themes-show"
     );
-    controller.setProperties({
-      model: remoteTheme,
-    });
+    controller.setProperties({ model: remoteTheme });
 
     assert.deepEqual(
       controller.remoteThemeLink,
