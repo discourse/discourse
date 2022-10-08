@@ -8,10 +8,10 @@ RSpec.describe UploadSecurity do
   let(:opts) { { type: type, creating: true } }
   subject { described_class.new(upload, opts) }
 
-  context "when secure media is enabled" do
+  context "when secure uploads is enabled" do
     before do
       setup_s3
-      SiteSetting.secure_media = true
+      SiteSetting.secure_uploads = true
     end
 
     context "when login_required (everything should be secure except public context items)" do
@@ -126,7 +126,7 @@ RSpec.describe UploadSecurity do
       end
     end
 
-    context "when the access control post has_secure_media?" do
+    context "when the access control post has_secure_uploads?" do
       before do
         upload.update(access_control_post_id: post_in_secure_context.id)
       end
@@ -138,7 +138,7 @@ RSpec.describe UploadSecurity do
         before do
           post_in_secure_context.trash!
         end
-        it "still determines whether the post has secure media; returns true" do
+        it "still determines whether the post has secure uploads; returns true" do
           expect(subject.should_be_secure?).to eq(true)
         end
       end
@@ -180,7 +180,7 @@ RSpec.describe UploadSecurity do
         upload.update(original_filename: 'test.pdf')
       end
 
-      context "when the access control post has_secure_media?" do
+      context "when the access control post has_secure_uploads?" do
         before do
           upload.update(access_control_post: post_in_secure_context)
         end
@@ -191,9 +191,9 @@ RSpec.describe UploadSecurity do
     end
   end
 
-  context "when secure media is disabled" do
+  context "when secure uploads is disabled" do
     before do
-      SiteSetting.secure_media = false
+      SiteSetting.secure_uploads = false
     end
     it "returns false" do
       expect(subject.should_be_secure?).to eq(false)

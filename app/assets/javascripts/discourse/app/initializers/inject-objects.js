@@ -19,7 +19,7 @@ export default {
             dropFrom: "2.9",
           }
         );
-        return container.lookup("site-settings:main");
+        return container.lookup("service:site-settings");
       },
     });
     Object.defineProperty(app, "User", {

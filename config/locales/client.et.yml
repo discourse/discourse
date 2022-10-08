@@ -150,10 +150,10 @@ et:
         disabled: "eemaldas selle bänneri %{when}. Seda ei kuvata enam iga lehe ülaosas."
       forwarded: "edastas ülaltoodud e-kirja"
     topic_admin_menu: "teema toimingud"
-    wizard_required: "Tere tulemast uude Discourse’i! Alusta <a href='%{url}' data-auto-route='true'>häälestusviisardiga</a> ✨"
     emails_are_disabled: "Kõik väljuvad meilid on administraatori poolt blokeeritud. Ühtegi teavitust meili teel ei saadeta."
     software_update_prompt:
       dismiss: "Ignoreeri"
+    bootstrap_invite_button_title: "Saada kutsed"
     themes:
       default_description: "Vaikimisi"
     s3:
@@ -179,6 +179,8 @@ et:
     not_implemented: "Seda omadust pole veel rakendatud, vabandame!"
     no_value: "Ei"
     yes_value: "Jah"
+    ok_value: "OK"
+    cancel_value: "Tühista"
     submit: "Saada"
     generic_error: "Vabandust, tekkis viga."
     generic_error_with_reason: "Tekkis viga: %{error}"
@@ -432,6 +434,7 @@ et:
       forever: "Igavesti"
       relative: "Suhteline aeg"
       none: "Pole vaja"
+      never: "Mitte kunagi"
       custom: "Vali kuupäev ja kellaaeg"
       select_timeframe: "Vali ajavahemik"
     user_action:
@@ -870,6 +873,7 @@ et:
         move_to_archive: "Arhiiv"
         failed_to_move: "Valitud sõnumite teisaldamine ebaõnnestus (võrguühendus võib olla häiritud)"
         tags: "Sildid"
+        all_tags: "Kõik sildid"
       preferences_nav:
         account: "Konto"
         security: "Turve"
@@ -1207,7 +1211,6 @@ et:
       other: vastuseid
     signup_cta:
       sign_up: "Liitu"
-      hide_session: "Tuleta mulle homme meelde"
       hide_forever: "tänan, ei"
     summary:
       enabled_description: "Vaatad selle teema kokkuvõtet: kõige huvipakkuvamad postitused valib kogukond."
@@ -1429,6 +1432,7 @@ et:
       title: "teavitused @name mainimiste, oma postitustele ja teemadele vastamiste, sõnumite, jne kohta"
       none: "Hetkel ei saa teavitusi laadida."
       empty: "Teavitusi ei leitud."
+      watching_first_post_label: "Uus teema"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -1438,6 +1442,7 @@ et:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -1545,6 +1550,13 @@ et:
     not_logged_in_user: "kasutajaleht koos toimingute ja eelistuste kokkuvõttega"
     current_user: "mine oma kasutajalehele"
     view_all: "vaata kõiki %{tab}"
+    user_menu:
+      tabs:
+        replies: "Vastused"
+        mentions: "Mainimisi"
+        likes: "Meeldimisi antud"
+        bookmarks: "Järjehoidjat"
+        profile: "Profiil"
     topics:
       new_messages_marker: "viimane visiit"
       bulk:
@@ -2025,10 +2037,6 @@ et:
         confirm:
           one: "Oled sa kindel, et soovid seda postitust kustutada?"
           other: "Oled sa kindel, et soovid neid %{count} postitust kustutada?"
-      merge:
-        confirm:
-          one: "Oled kindel, et soovid need postitused ühendada?"
-          other: "Oled kindel, et soovid need %{count} postitust ühendada?"
       revisions:
         controls:
           first: "Esimene redaktsioon"
@@ -2449,7 +2457,6 @@ et:
     download_calendar:
       download: "Lae alla"
     tagging:
-      all_tags: "Kõik sildid"
       other_tags: "Muud sildid"
       selector_all_tags: "kõik sildid"
       selector_no_tags: "sildid puuduvad"
@@ -2526,14 +2533,18 @@ et:
         member: "liige"
         regular: "tavaline"
         leader: "juht"
-    user_activity:
-      no_activity_others: "Tegevusi pole."
-      no_replies_others: "Vastuseid pole."
-      no_likes_others: "Meeldimisega postitusi veel pole."
     sidebar:
-      unread_count: "%{count} lugemata"
-      new_count: "%{count} uus"
+      unread_count:
+        one: "%{count} lugemata"
+        other: "%{count} lugemata"
+      new_count:
+        one: "%{count} uus"
+        other: "%{count} uut"
+      more: "Veel..."
+      all_categories: "Kõik foorumid"
       sections:
+        about:
+          header_link_text: "Teave"
         messages:
           header_link_text: "Sõnumid"
           links:
@@ -2545,19 +2556,32 @@ et:
             unread_with_count: "Lugemata (%{count})"
             archive: "Arhiiv"
         tags:
-          header_link_title: "kõik sildid"
           header_link_text: "Sildid"
         categories:
-          header_link_title: "kõik foorumid"
           header_link_text: "Liigid"
-        topics:
-          header_link_title: "avaleht"
-          header_link_text: "Teemad"
+        community:
+          header_link_text: "Kogukond"
           links:
+            about:
+              content: "Teave"
+            admin:
+              content: "Admin"
+            badges:
+              content: "Märgised"
+            faq:
+              content: "KKK"
             tracked:
               content: "Jälgitud"
+            groups:
+              content: "Grupid"
+              title: "Kõik grupid"
+            users:
+              content: "Kasutajad"
             my_posts:
               content: "Minu"
+            review:
+              content: "Vaata üle"
+              title: "vaata üle"
   admin_js:
     type_to_filter: "filtreerimiseks trüki..."
     admin:
@@ -3525,14 +3549,13 @@ et:
           topics: "Teemasid"
   wizard_js:
     wizard:
-      done: "Tehtud"
       back: "Tagasi"
       next: "Järgmine"
+      step-text: "Samm"
       step: "%{current} %{total}st"
       upload: "Lae üles"
       uploading: "Laen üles..."
       upload_error: "Vabandame, selle faili üleslaadimisel tekkis viga. Palun proovi uuesti."
-      quit: "Võib-olla hiljem"
       invites:
         add_user: "lisa"
         none_added: "Sa ei ole kutsunud ühtegi tiimi liiget. Oled Sa kindel, et soovid jätkata?"

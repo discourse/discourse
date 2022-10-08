@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe CspReportsController do
+RSpec.describe CspReportsController do
   describe '#create' do
     before do
       SiteSetting.content_security_policy = true

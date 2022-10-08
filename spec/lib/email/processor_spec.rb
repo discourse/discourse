@@ -2,7 +2,7 @@
 
 require "email/processor"
 
-describe Email::Processor do
+RSpec.describe Email::Processor do
   after do
     Discourse.redis.flushdb
   end
@@ -69,7 +69,7 @@ describe Email::Processor do
     end
   end
 
-  context "known error" do
+  describe "known error" do
     let(:mail) { "From: #{from}\nTo: bar@foo.com" }
     let(:mail2) { "From: #{from}\nTo: foo@foo.com" }
     let(:mail3) { "From: #{from}\nTo: foobar@foo.com" }
@@ -84,7 +84,7 @@ describe Email::Processor do
 
       expect {
         Email::Processor.process!(mail2)
-      }.to change { EmailLog.count }.by(0)
+      }.not_to change { EmailLog.count }
 
       freeze_time(Date.today + 1)
 
@@ -97,7 +97,7 @@ describe Email::Processor do
     end
   end
 
-  context "unrecognized error" do
+  describe "unrecognized error" do
     let(:mail) { "Date: Fri, 15 Jan 2016 00:12:43 +0100\nFrom: #{from}\nTo: bar@foo.com\nSubject: FOO BAR\n\nFoo foo bar bar?" }
     let(:mail2) { "Date: Fri, 15 Jan 2016 00:12:43 +0100\nFrom: #{from}\nTo: foo@foo.com\nSubject: BAR BAR\n\nBar bar bar bar?" }
 
@@ -140,7 +140,7 @@ describe Email::Processor do
     end
   end
 
-  context "from reply to email address" do
+  describe "from reply to email address" do
     let(:mail) { "Date: Fri, 15 Jan 2016 00:12:43 +0100\nFrom: reply@bar.com\nTo: reply@bar.com\nSubject: FOO BAR\n\nFoo foo bar bar?" }
 
     it "ignores the email" do
@@ -148,11 +148,11 @@ describe Email::Processor do
 
       expect {
         Email::Processor.process!(mail)
-      }.to change { EmailLog.count }.by(0)
+      }.not_to change { EmailLog.count }
     end
   end
 
-  context "mailinglist mirror" do
+  describe "mailinglist mirror" do
     before do
       SiteSetting.email_in = true
       Fabricate(:mailinglist_mirror_category)
@@ -191,6 +191,28 @@ describe Email::Processor do
         short_url: "#{Discourse.base_url}/p/#{post.id}",
         number_of_days: 2
       ))
+    end
+  end
+
+  describe 'when group email recipients exceeds maximum_recipients_per_new_group_email site setting' do
+    let(:mail) { file_from_fixtures("cc.eml", "emails").read }
+
+    it 'rejects the email with the right response' do
+      SiteSetting.maximum_recipients_per_new_group_email = 3
+
+      processor = Email::Processor.new(mail)
+      processor.process!
+
+      rejection_raw = ActionMailer::Base.deliveries.first.body.to_s
+
+      expect(rejection_raw).to eq(
+        I18n.t("system_messages.email_reject_too_many_recipients.text_body_template",
+          destination: '["someone@else.com"]',
+          former_title: 'The more, the merrier',
+          max_recipients_count: 3,
+          base_url: Discourse.base_url,
+        )
+      )
     end
   end
 end

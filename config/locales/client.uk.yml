@@ -235,7 +235,6 @@ uk:
       forwarded: "переслано вищевказаний електронний лист"
     topic_admin_menu: "дії теми"
     skip_to_main_content: "Перейти до основного вмісту"
-    wizard_required: "Запрошуємо до вашого нового Discourse! Давайте розпочнемо з <a href='%{url}' data-auto-route='true'>майстра налаштування</a> ✨"
     emails_are_disabled: "Надсилання повідомлень електронною поштою було глобально вимкнено адміністратором. Жодне сповіщення електронною поштою не буде надіслано."
     emails_are_disabled_non_staff: "Вихідну електронну пошту було вимкнено для користувачів, які не є персоналом."
     software_update_prompt:
@@ -247,6 +246,8 @@ uk:
       many: "Задля спрощення запуску вашого нового сайту, сайт зараз у режимі початкового спеціального режиму. Усі нові користувачі отримають рівень довіри 1 та увімкнена щоденна розсилка підсумків електронною поштою. Цей режим буде автоматично вимкнено, коли буде мінімально потрібна кількість зареєстрованих користувачів — %{count}."
       other: "Задля спрощення запуску вашого нового сайту, сайт зараз у режимі початкового спеціального режиму. Усі нові користувачі отримають рівень довіри 1 та увімкнена щоденна розсилка підсумків електронною поштою. Цей режим буде автоматично вимкнено, коли буде мінімально потрібна кількість зареєстрованих користувачів — %{count}."
     bootstrap_mode_disabled: "Режим Bootstrap буде вимкнено через 24 години."
+    bootstrap_invite_button_title: "Надіслати запрошення"
+    bootstrap_wizard_link_title: "Завершити роботу майстра налаштування"
     themes:
       default_description: "Промовчання"
       broken_theme_alert: "Ваш сайт не може працювати, оскільки тема / компонент має помилки."
@@ -283,6 +284,8 @@ uk:
     not_implemented: "Цей функціонал ще не реалізовано, даруйте!"
     no_value: "Ні"
     yes_value: "Так"
+    ok_value: "OK"
+    cancel_value: "Скасувати"
     submit: "Надіслати"
     generic_error: "Даруйте, виникла помилка."
     generic_error_with_reason: "Виникла помилка: %{error}"
@@ -686,6 +689,8 @@ uk:
       relative: "Відносна"
     time_shortcut:
       now: "Зараз"
+      in_one_hour: "За одну годину"
+      in_two_hours: "Через дві години"
       later_today: "Пізніше сьогодні"
       two_days: "Два дні"
       next_business_day: "Наступний робочий день"
@@ -706,6 +711,7 @@ uk:
       forever: "Назавжди"
       relative: "Через вказаний час"
       none: "Нічого не потрібно"
+      never: "Ніколи"
       last_custom: "Використовувати раніше встановлені дату та час"
       custom: "Вибрати дату та час"
       select_timeframe: "Вибір таймфрейма"
@@ -1163,6 +1169,8 @@ uk:
       dismiss: "Відкинути"
       dismiss_notifications: "Відкинути все"
       dismiss_notifications_tooltip: "Позначити всі сповіщення як прочитані"
+      dismiss_bookmarks_tooltip: "Позначити всі непрочитані нагадування про закладки як прочитані"
+      dismiss_messages_tooltip: "Позначати всі сповіщення про непрочитані особисті повідомлення як прочитані"
       no_messages_title: "У вас немає повідомлень"
       no_messages_body: >
         Потрібна особиста розмова з кимось, поза звичайним спілкуванням? Надішліть їм повідомлення, вибравши їх аватар і натиснувши кнопку повідомлення %{icon}<br><br> Якщо вам потрібна допомога, ви можете <a href='%{aboutUrl}'>надіслати повідомлення співробітнику</a>.
@@ -1204,6 +1212,10 @@ uk:
       experimental_sidebar:
         enable: "Увімкнути експериментальну бічну панель"
         options: "Налаштування"
+        categories_section: "Розділ категорій"
+        categories_section_instruction: "Вибрані категорії будуть відображатися у списку категорій бічної панелі."
+        tags_section: "Розділ Теги"
+        tags_section_instruction: "Вибрані теги відображатимуться в розділі тегів бічної панелі."
       change: "змінити"
       featured_topic: "Закріплені теми"
       moderator: "%{user} є модератором"
@@ -1304,6 +1316,7 @@ uk:
         move_to_archive: "Архівувати"
         failed_to_move: "Не вдалося перемістити обрані повідомлення (можливо, у вас мережа зникла)"
         tags: "Теги"
+        all_tags: "Усі мітки"
         warnings: "Офіційні попередження"
         read_more_in_group: "Бажаєте дізнатися більше? Перегляньте інші повідомлення в %{groupLink}."
         read_more: "Хочете прочитати більше? Перегляньте інші повідомлення в <a href='%{basePath}/u/%{username}/messages'>особистих повідомленнях</a>."
@@ -1320,6 +1333,7 @@ uk:
         tags: "Мітки"
         interface: "Інтерфейс"
         apps: "Програми"
+        sidebar: "Бічна панель"
       change_password:
         success: "(лист надіслано)"
         in_progress: "(надсилання листа)"
@@ -1782,6 +1796,7 @@ uk:
       save: "Зберегти"
       set_custom_status: "Встановити власний статус"
       what_are_you_doing: "Що ви робите?"
+      remove_status: "Видалити статус"
     loading: "Завантаження..."
     errors:
       prev_page: "при спробі завантаження"
@@ -1843,11 +1858,11 @@ uk:
       other: відповідь
     signup_cta:
       sign_up: "Зареєструватись"
-      hide_session: "Нагадати мені завтра"
+      hide_session: "Можливо пізніше"
       hide_forever: "ні дякую"
       hidden_for_session: "Гаразд, ми запитаємо вас завтра. Ви завжди можете використати 'Увійти', щоб створити обліковий запис теж."
       intro: "Вітаємо! Схоже, вам подобається обговорення, але ви ще не зареєстрували акаунт."
-      value_prop: "Коли ви створюєте обліковий запис, ми точно пам’ятаємо, що ви прочитали, тому ви завжди повертаєтеся туди, де зупинилися. Ви також отримуєте повідомлення, тут та електронною поштою, коли хтось відповідає вам. І ви можете, в повідомленнях, поставити - мені подобається. :heartpulse:"
+      value_prop: "Втомились від прокручування тих самих повідомлень? Якщо ви створите акаунт, ви завжди будете повертатися до тих записів, на яких зупинилися. За допомогою облікового запису ви також зможете отримувати повідомлення про нові відповіді, зберігати закладки і використовувати вподобайки для подяки іншим. Ми можемо працювати разом, щоб зробити цю спільноту цікавою. :heart:"
     summary:
       enabled_description: "Ви переглядаєте витяг з теми - тільки найцікавіші повідомлення на думку спільноти."
       description:
@@ -2015,6 +2030,7 @@ uk:
       categories_only: "Тільки розділи"
       categories_with_featured_topics: "Розділи та їх найкращі теми"
       categories_and_latest_topics: "Розділи та список останніх тем форуму"
+      categories_and_latest_topics_created_date: "Категорії та останні теми (сортувати за датою створення теми)"
       categories_and_top_topics: "Категорії та головні теми"
       categories_boxes: "Коробки з підкатегорій"
       categories_boxes_with_topics: "Коробки з Обраними Темами"
@@ -2066,11 +2082,6 @@ uk:
         few: "Введіть хоча б %{count} елементів."
         many: "Введіть хоча б %{count} елементів."
         other: "Введіть хоча б %{count} елемент."
-      invalid_selection_length:
-        one: "Виділення має бути не менше %{count} символа."
-        few: "Виділення має бути не менше %{count} символів."
-        many: "Виділення має бути не менше %{count} символів."
-        other: "Виділення має бути не менше %{count} символів."
       components:
         tag_drop:
           filter_for_more: Шукати більше...
@@ -2179,6 +2190,7 @@ uk:
       create_shared_draft: "Створити Загальний проект"
       edit_shared_draft: "Редагувати загальну чернетку"
       title: "Або натисніть %{modifier}Enter"
+      users_placeholder: "Додайте користувачів або групи"
       title_placeholder: "Про що це обговорення, у одному короткому реченні?"
       title_or_link_placeholder: "Введіть назву, або вставте тут посилання"
       edit_reason_placeholder: "чому Ви редагуєте допис?"
@@ -2223,6 +2235,7 @@ uk:
       abandon: "закрити композитор та скасувати чернетку"
       enter_fullscreen: "введіть повноекранний композитор"
       exit_fullscreen: "вийти з повноекранного режиму композитора"
+      exit_fullscreen_prompt: "Натисніть <kbd>ESC</kbd>, щоб вийти з повноекранного режиму"
       show_toolbar: "Показати панель редактора"
       hide_toolbar: "приховати панель редактора"
       modal_ok: "OK"
@@ -2266,6 +2279,7 @@ uk:
       ignore: "Ігнорувати"
       image_alt_text:
         aria_label: Альтернативний текст для зображення
+      delete_image_button: Видалити зображення
     notifications:
       tooltip:
         regular:
@@ -2288,6 +2302,8 @@ uk:
       empty: "Повідомлення не знайдені."
       post_approved: "Ваш пост був схвалений"
       reviewable_items: "пункти, що вимагають розгляду"
+      watching_first_post_label: "Нова тема"
+      user_moved_post: "%{username} переміщено"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2302,6 +2318,12 @@ uk:
         few: "<span class='multi-user'>%{username}, %{username2} та %{count} інших</span> , %{description}"
         many: "<span class='multi-user'>%{username}, %{username2} та %{count} інших</span> , %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} та %{count} інших</span> , %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} та %{count} інший"
+        few: "%{username}, %{username2} та %{count} інші"
+        many: "%{username}, %{username2} та %{count} інші"
+        other: "%{username}, %{username2} та %{count} інші"
       liked_consolidated_description:
         one: "Сподобався %{count} ваш пост"
         few: "Сподобалося %{count} ваших поста"
@@ -2312,6 +2334,7 @@ uk:
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> принял ваше приглашение"
+      invitee_accepted_your_invitation: "прийняв ваше запрошення"
       moved_post: "<span>%{username}</span> moved %{description}"
       linked: "<span>%{username}</span> %{description}"
       granted_badge: "Заслужив(а) '%{description}'"
@@ -2328,10 +2351,21 @@ uk:
       votes_released: "%{description} - завершено"
       dismiss_confirmation:
         body:
-          one: "Ви впевнені? У вас є %{count} важливе повідомлення."
-          few: "Ви впевнені? У вас є %{count} важливих повідомлення."
-          many: "Ви впевнені? У вас є %{count} важливих повідомлень."
-          other: "Ви впевнені? У вас є %{count} важливих повідомлень."
+          default:
+            one: "Ви впевнені? У вас є %{count} важливе повідомлення."
+            few: "Ви впевнені? У вас є %{count} важливих повідомлення."
+            many: "Ви впевнені? У вас є %{count} важливих повідомлень."
+            other: "Ви впевнені? У вас є %{count} важливих повідомлень."
+          bookmarks:
+            one: "Ти впевнений? У вас %{count} непрочитане нагадування про закладки."
+            few: "Ти впевнений? У вас %{count} непрочитані нагадування про закладки."
+            many: "Ти впевнений? У вас %{count} непрочитаних нагадувань про закладки."
+            other: "Ти впевнений? У вас %{count} непрочитаних нагадувань про закладки."
+          messages:
+            one: "Ви впевнені? У вас є %{count} непрочитане особисте повідомлення."
+            few: "Ви впевнені? У вас є %{count} непрочитані особисті повідомлення."
+            many: "Ви впевнені? У вас є %{count} непрочитаних особистих повідомлень."
+            other: "Ви впевнені? У вас є %{count} непрочитаних особистих повідомлень."
         dismiss: "Відкинути"
         cancel: "Скасувати"
       group_message_summary:
@@ -2514,6 +2548,72 @@ uk:
     not_logged_in_user: "сторінка користувача з підсумком поточної діяльності та налаштуваннями"
     current_user: "перейти до Вашої сторінки користувача"
     view_all: "Переглянути всі %{tab}"
+    user_menu:
+      generic_no_items: "Немає записів у цьому списку."
+      sr_menu_tabs: "Вкладки меню користувача"
+      view_all_notifications: "Переглянути всі сповіщення"
+      view_all_bookmarks: "переглянути всі закладки"
+      view_all_messages: "переглянути всі особисті повідомлення"
+      tabs:
+        all_notifications: "Всі сповіщення"
+        replies: "Відповіді"
+        replies_with_unread:
+          one: "Відповіді - %{count} непрочитане"
+          few: "Відповіді - %{count} непрочитані"
+          many: "Відповіді - %{count} непрочитаних"
+          other: "Відповіді - %{count} непрочитаних"
+        mentions: "Згадки"
+        mentions_with_unread:
+          one: "Згадки - %{count} непрочитана згадка"
+          few: "Згадки - %{count} непрочитані згадки"
+          many: "Згадки - %{count} непрочитаних згадок"
+          other: "Згадки - %{count} непрочитаних згадок"
+        likes: "Вподобані"
+        likes_with_unread:
+          one: "Вподобайки - %{count} непрочитане"
+          few: "Вподобайки - %{count} непрочитані"
+          many: "Вподобайки - %{count} непрочитаних"
+          other: "Вподобайки - %{count} непрочитаних"
+        watching: "Теми які ви відстежуєте"
+        watching_with_unread:
+          one: "Теми які відстежуються - %{count} непрочитана"
+          few: "Теми які відстежуються - %{count} непрочитані теми"
+          many: "Теми які відстежуються - %{count} непрочитаних тем"
+          other: "Теми які відстежуються - %{count} непрочитаних тем"
+        messages: "Особисті повідомлення"
+        messages_with_unread:
+          one: "Особисті повідомлення – %{count} непрочитане повідомлення"
+          few: "Особисті повідомлення – %{count} непрочитані повідомлення"
+          many: "Особисті повідомлення – %{count} непрочитаних повідомлень"
+          other: "Особисті повідомлення – %{count} непрочитаних повідомлень"
+        bookmarks: "Закладки"
+        bookmarks_with_unread:
+          one: "Закладки — %{count} непрочитана закладка"
+          few: "Закладки — %{count} непрочитані закладки"
+          many: "Закладки — %{count} непрочитаних закладок"
+          other: "Закладки — %{count} непрочитаних закладок"
+        review_queue: "Премодерація"
+        review_queue_with_unread:
+          one: "Черга премодерації- %{count} елемент потребує рецензування"
+          few: "Черга премодерації- %{count} елементи потребують рецензування"
+          many: "Черга премодерації - %{count} елементів потребують рецензування"
+          other: "Черга премодерації – %{count} елементи потребують рецензування"
+        other_notifications: "Інші сповіщення"
+        other_notifications_with_unread:
+          one: "Інші сповіщення – %{count} непрочитане повідомлення"
+          few: "Інші сповіщення – %{count} непрочитані повідомлення"
+          many: "Інші сповіщення – %{count} непрочитаних повідомлень"
+          other: "Інші сповіщення – %{count} непрочитаних повідомлень"
+        profile: "Профіль"
+      reviewable:
+        view_all: "переглянути всі дописи, що знаходяться на премодерації"
+        queue: "Черга"
+        deleted_user: "(видалений користувач)"
+        deleted_post: "(видалений запис)"
+        post_number_with_topic_title: "допис #%{post_number} - %{title}"
+        new_post_in_topic: "новий допис в темі %{title}"
+        user_requires_approval: "Користувач %{username} вимагає схвалення"
+        default_item: "премодерований елемент #%{reviewable_id}"
     topics:
       new_messages_marker: "останнє відвідування"
       bulk:
@@ -3248,10 +3348,10 @@ uk:
           other: "Ви впевнені, що хочете видалити %{count} повідомлень?"
       merge:
         confirm:
-          one: "Ви впевнені, що хочете об’єднати ці повідомлення?"
-          few: "Are you sure you want to merge those %{count} posts?"
-          many: "Are you sure you want to merge those %{count} posts?"
-          other: "Are you sure you want to merge those %{count} posts?"
+          one: "Ви впевнені, що хочете об’єднати це повідомлення?"
+          few: "Ви впевнені, що хочете об’єднати ці %{count} повідомлення?"
+          many: "Ви впевнені, що хочете об’єднати ці %{count} повідомлень?"
+          other: "Ви впевнені, що хочете об’єднати ці %{count} повідомлень?"
       revisions:
         controls:
           first: "Перша версія"
@@ -3677,7 +3777,7 @@ uk:
           other: "%{categoryName} (%{count})"
         help: "Останні теми в категорії %{categoryName}"
       top:
-        title: "Top"
+        title: "Топ"
         help: "Найактивніші теми за останній рік, місяць, квартал, тиждень або день"
         all:
           title: "Весь час"
@@ -3698,7 +3798,8 @@ uk:
         this_week: "Тиждень"
         today: "Today"
         other_periods: "дивитися TOP:"
-    browser_update: 'На жаль, <a href="https://www.discourse.org/faq/#browser">ваш браузер занадто старий для цього сайту</a>. Будь ласка, <a href="https://browsehappy.com">оновіть браузер</a> для повноцінної роботи з сайтом.'
+    browser_update: 'На жаль, <a href="https://www.discourse.org/faq/#browser">ваш браузер не підтримується</a>. Будь ласка, <a href="https://browsehappy.com">перейдіть на підтримуваний браузер</a> , щоб повноцінно переглянути вміст, увійти та відповісти.'
+    safari_13_warning: Цей сайт незабаром перестане підтримувати версії iOS і Safari 13 і нижче. Спрощена версія "тільки для читання" залишиться доступною. (<a href="https://meta.discourse.org/t/224747">більше інформації</a>)
     permission_types:
       full: "Створювати / Відповідати / Бачити"
       create_post: "Відповідати / Бачити"
@@ -3721,6 +3822,7 @@ uk:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Поєднання клавіш"
+      short_title: "Гарячі клавіші"
       jump_to:
         title: "Перейти до"
         home: "%{shortcut} Головна"
@@ -3855,7 +3957,7 @@ uk:
       google: "Календар Google"
       ics: "ICS"
     tagging:
-      all_tags: "Усі мітки"
+      all_tags: "Всі теги"
       other_tags: "Інші мітки"
       selector_all_tags: "усі мітки"
       selector_no_tags: "без міток"
@@ -4035,15 +4137,16 @@ uk:
     user_activity:
       no_activity_title: "Ще немає активності"
       no_activity_body: "Ласкаво просимо до нашої спільноти! Ви тут зовсім новачок і ще не долучилися до обговорень. Як перший крок, відвідайте <a href='%{topUrl}'>Топ</a> або <a href='%{categoriesUrl}'>Категорії</a> і просто почніть читати! Позначте %{heartIcon} публікації, які вам подобаються або про які потрібно дізнатися більше. Якщо ви цього ще не зробили, допоможіть іншим познайомитися з вами, додавши зображення та коротку інформацію про себе у профілі користувача."
-      no_activity_others: "Немає активностей."
       no_replies_title: "Ви ще не відповіли на жодну тему"
-      no_replies_others: "Немає відповідей"
+      no_replies_title_others: "%{username} ще не відповів у жодній темі"
+      no_replies_body: "Коли ви <a href='%{searchUrl}'>відкрити</a> цікаву розмову, до якої хочете зробити внесок, натисніть кнопку <kbd>Відповісти</kbd> безпосередньо в будь-якому повідомленні, щоб почати відповідати на це повідомлення. Або, якщо ви волієте відповідати на тему загалом, а не на конкретне повідомлення чи конкретній особі, шукайте кнопку <kbd>Відповідь</kbd> в самій нижній частині теми, або в списку шкали часу теми праворуч."
       no_drafts_title: "Ви не маєте чернеток"
       no_drafts_body: "Не готові до публікації? Ми автоматично збережемо нову чернетку та покажемо її тут при створенні Вами нового допису. Натисніть кнопку для скасування, щоб відхилити збереження тексту, або зберегти чернетку, щоб продовжити роботу з нею пізніше."
       no_likes_title: "Ви ще не вподобали жодної теми"
+      no_likes_title_others: "%{username} ще не вподобав жодної теми"
       no_likes_body: "Чудовий спосіб долучитись та почати робити внесок – це почати читати обговорення, та позначати %{heartIcon} публікації, які вам подобаються!"
-      no_likes_others: "Вподобаних повідомлень немає."
       no_topics_title: "Ви ще не розпочали жодної теми"
+      no_topics_body: "Завжди краще <a href='%{searchUrl}'>шукати</a> існуючі теми перед початком нової теми, але якщо ви впевнені, що така тема ще не почата, то розпочніть нову тему. Знайдіть кнопку <kbd>+ Нова тема</kbd> у верхньому правому куті списку тем, категорій, або тегів для створення нової теми в цій області."
       no_topics_title_others: "Користувач %{username} ще не розпочав жодної теми"
       no_read_topics_title: "Ви ще не читали жодної теми"
       no_read_topics_body: "Коли ви почнете читати обговорення, ви побачите тут список тем. Щоб почати читати, шукайте теми, які вас зацікавлять в <a href='%{topUrl}'>Топ</a> або у <a href='%{categoriesUrl}'>Категорії</a> або шукайте за ключовим словом %{searchIcon}"
@@ -4056,11 +4159,24 @@ uk:
     second_factor_auth:
       redirect_after_success: "Аутентифікація другого фактора успішна. Перенаправлення на попередню сторінку…"
     sidebar:
-      unread_count: "%{count} непрочитана"
-      new_count: "%{count} нова"
+      unread_count:
+        one: "%{count} непрочитана"
+        few: "%{count} непрочитаних"
+        many: "%{count} непрочитаних"
+        other: "%{count} непрочитана"
+      new_count:
+        one: "%{count} нова"
+        few: "%{count} нових"
+        many: "%{count} нова"
+        other: "%{count} нова"
+      toggle_section: "Переключити розділ"
+      more: "Ще..."
+      all_categories: "Всі категорії"
+      all_tags: "Всі теги"
       sections:
+        about:
+          header_link_text: "Про"
         messages:
-          header_link_title: "особисті повідомлення"
           header_link_text: "Повідомлення"
           header_action_title: "створити особисте повідомлення"
           links:
@@ -4072,25 +4188,39 @@ uk:
             unread_with_count: "Непрочитані (%{count})"
             archive: "Архів"
         tags:
-          header_link_title: "усі мітки"
+          none: "Ви не додали жодного тегу."
+          click_to_get_started: "Натисніть тут, щоб почати."
           header_link_text: "Теги"
+          header_action_title: "Редагувати теги бічної панелі"
         categories:
-          header_link_title: "усі розділи"
+          none: "Ви не додали жодної категорії."
+          click_to_get_started: "Натисніть тут, щоб почати."
           header_link_text: "Категорії"
-        topics:
-          header_link_title: "головна"
-          header_link_text: "Теми"
+          header_action_title: "редагувати категорії бічної панелі"
+        community:
+          header_link_text: "Спільнота"
           header_action_title: "створити нову тему"
           links:
+            about:
+              content: "Про"
+            admin:
+              content: "Адмін"
+            badges:
+              content: "Нагороди"
             everything:
               content: "Усе"
               title: "Всі теми"
+            faq:
+              content: "Часті запитання"
             tracked:
               content: "Відстежувані"
               title: "Усі відстежувані теми"
-            bookmarked:
-              content: "В закладках"
-              title: "Всі теми з закладками"
+            groups:
+              content: "Групи"
+              title: "Усі групи"
+            users:
+              content: "Користувачі"
+              title: "Всі користувачі"
             my_posts:
               content: "Мої дописи"
               title: "Мої дописи"
@@ -4099,6 +4229,14 @@ uk:
                 few: "%{count} чернетки"
                 many: "%{count} чернетки"
                 other: "%{count} чернетки"
+            review:
+              content: "Переглянути"
+              title: "переглянути"
+    welcome_topic_banner:
+      title: "Створіть тему привітання"
+      description: 'Ваша привітальна тема – це перше, що прочитають новачки. Думайте про це як про «початкову презентацію» або «заяву про місію» з одного абзацу.'
+      button_title: "Почати редагування"
+    until: "До:"
   admin_js:
     type_to_filter: "введіть, щоб фільтрувати..."
     admin:
@@ -4666,6 +4804,8 @@ uk:
           import_web_advanced: "Додатково..."
           import_file_tip: ".tar.gz, .zip, або .dcstyle .json файл, який містить тему"
           is_private: "Тема знаходиться в приватному репозиторії git"
+          finish_install: "Завершити встановлення теми"
+          last_attempt: "Процес встановлення не завершено, остання спроба:"
           remote_branch: "Назва гілки (не обов’язково)"
           public_key: "Надайте доступ до сховища з наступним відкритим ключем:"
           public_key_note: "Після введення коректної адреси приватного сховища вище, тут буде згенеровано і показано SSH ключ."
@@ -4676,6 +4816,8 @@ uk:
           install_git_repo: "Зі сховища git"
           install_create: "Створити новий"
           duplicate_remote_theme: "Компонент теми «%{name}» уже встановлений. Ви впевнені, що хочете встановити іншу копію?"
+          force_install: "Тему неможливо встановити, тому що не доступний репозиторій Git. Ви впевнені, що хочете продовжити установку?"
+          create_placeholder: "Створити заповнювач"
           about_theme: "Про"
           license: "Ліцензія"
           version: "Версія:"
@@ -4858,6 +5000,7 @@ uk:
         last_seen_user: "Востаннє помічено користувача:"
         no_result: "Нічого не знайдено для зведення новин."
         reply_key: "Ключ відповіді"
+        post_link_with_smtp: "Пошта & SMTP Подробиці"
         skipped_reason: "Причина пропуску"
         incoming_emails:
           from_address: "Від"
@@ -4887,6 +5030,7 @@ uk:
             address_placeholder: "name@example.com"
             type_placeholder: "дайджест, підписка..."
             reply_key_placeholder: "Ключ відповіді"
+            smtp_transaction_response_placeholder: "SMTP ID"
       moderation_history:
         performed_by: "Виконано користувачем "
         no_results: "Історія модерації недоступна."
@@ -5071,6 +5215,7 @@ uk:
           few: "показати %{count} слів"
           many: "показати %{count} слів"
           other: "показати %{count} слів"
+        case_sensitive: "(з урахуванням регістру)"
         download: Завантажити
         clear_all: Скинути все
         clear_all_confirm: "Ви впевнені, що хочете видалити всі контрольні слова на %{action}?"
@@ -5108,6 +5253,8 @@ uk:
           exists: "Вже існує"
           upload: "Додати з файлу"
           upload_successful: "Завантаження пройшло успішно. Слова додані."
+          case_sensitivity_label: "З урахуванням регістру"
+          case_sensitivity_description: "Тільки слова з відповідним регістром"
         test:
           button_label: "Тест"
           modal_title: "%{action}: Тест контрольованих слів"
@@ -5208,6 +5355,7 @@ uk:
         suspended: "Призупинено?"
         staged: "Недокористувач?"
         show_admin_profile: "Адмін"
+        manage_user: "Керування користувачем"
         show_public_profile: "Показати публічний профіль"
         impersonate: "Втілитися"
         action_logs: "Журнал дій"
@@ -5311,7 +5459,8 @@ uk:
           few: "Не вдалось визначити видалити всі повідомлення, тому що у користувача більш %{count} повідомлень. (Налаштування delete_all_posts_max.)"
           many: "Не вдалось визначити видалити всі повідомлення, тому що у користувача більш %{count} повідомлень. (Налаштування delete_all_posts_max.)"
           other: "Не вдалось визначити видалити всі повідомлення, тому що у користувача більш %{count} повідомлень. (Налаштування delete_all_posts_max.)"
-        delete_confirm: "Зазвичай краще анонімізувати користувачів, ніж видаляти їх, щоб уникнути видалення контенту з існуючих обговорень. <br><br>Ви впевнені, що хочете видалити цього користувача? Це назавжди!"
+        delete_confirm_title: "Ви ВПЕВНЕНІ, що хочете видалити цього користувача? Це назавжди!"
+        delete_confirm: "Загалом краще анонімізувати користувачів, а не видаляти їх, щоб уникнути видалення вмісту з існуючих обговорень."
         delete_and_block: "Видалити та <b>заблокувати</b> цей e-mail та IP адресу"
         delete_dont_block: "Лише видалення"
         deleting_user: "Видалити користувача..."
@@ -5444,7 +5593,6 @@ uk:
         recommended: "Ми рекомендуємо змінити наступний текст під ваші потреби:"
         show_overriden: "Показувати тільки перевизначені"
         locale: "Мова:"
-        fallback_locale_warning: "Ви редагуєте мову на основі %{fallback}. Користувачі, які обрали %{fallback} як мову інтерфейсу, не бачитимуть ваших змін."
         more_than_50_results: "Знайдено понад 50 результатів. Будь ласка виправте параметри пошуку."
       settings:
         show_overriden: "Показувати тільки перевизначені"
@@ -5667,15 +5815,16 @@ uk:
           replace: "Замінити"
   wizard_js:
     wizard:
-      done: "Виконано"
-      finish: "Закінчено"
+      jump_in: "Готово!"
+      finish: "Вийти з налаштування"
       back: "Назад"
       next: "Далі"
+      configure_more: "Більше налаштувань..."
+      step-text: "Крок"
       step: "%{current} з %{total}"
       upload: "Вивантажити"
       uploading: "Вивантаження..."
       upload_error: "Даруйте, під час завантаження цього файлу трапилася помилка. Будь ласка, спробуйте ще раз."
-      quit: "Можливо пізніше"
       staff_count:
         one: "У вашій спільноті %{count} співробітник (це ви)."
         few: "У вашій спільноті %{count} співробітника, включаючи вас."

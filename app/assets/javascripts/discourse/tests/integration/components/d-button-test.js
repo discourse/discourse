@@ -3,7 +3,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render, triggerKeyEvent } from "@ember/test-helpers";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 
 module("Integration | Component | d-button", function (hooks) {
   setupRenderingTest(hooks);
@@ -220,10 +220,10 @@ module("Integration | Component | d-button", function (hooks) {
       hbs`<DButton @action={{this.action}} @onKeyDown={{this.onKeyDown}} />`
     );
 
-    await triggerKeyEvent(".btn", "keydown", 32);
+    await triggerKeyEvent(".btn", "keydown", "Space");
     assert.strictEqual(this.foo, "bar");
 
-    await triggerKeyEvent(".btn", "keydown", 13);
+    await triggerKeyEvent(".btn", "keydown", "Enter");
     assert.strictEqual(this.foo, "bar");
   });
 
@@ -235,10 +235,10 @@ module("Integration | Component | d-button", function (hooks) {
 
     await render(hbs`<DButton @action={{this.action}} />`);
 
-    await triggerKeyEvent(".btn", "keydown", 32);
+    await triggerKeyEvent(".btn", "keydown", "Space");
     assert.strictEqual(this.foo, null);
 
-    await triggerKeyEvent(".btn", "keydown", 13);
+    await triggerKeyEvent(".btn", "keydown", "Enter");
     assert.strictEqual(this.foo, "bar");
   });
 });

@@ -47,8 +47,7 @@ class SpamRule::FlagSockpuppets
   private
 
   def flag_post(post, message)
-    can_trust_user = ReviewableFlaggedPost.where(status: Reviewable.statuses[:rejected], target_created_by: post.user).exists?
-    return if can_trust_user
+    return if ReviewableFlaggedPost.rejected.exists?(target_created_by: post.user)
 
     PostActionCreator.create(Discourse.system_user, post, :spam, message: message)
   end

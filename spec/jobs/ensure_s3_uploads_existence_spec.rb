@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::EnsureS3UploadsExistence do
-  context "S3 inventory enabled" do
+  context "with S3 inventory enabled" do
     before do
       setup_s3
       SiteSetting.enable_s3_inventory = true
@@ -27,7 +27,7 @@ RSpec.describe Jobs::EnsureS3UploadsExistence do
     end
   end
 
-  context "S3 inventory disabled" do
+  context "with S3 inventory disabled" do
     before { SiteSetting.enable_s3_inventory = false }
 
     it "doesn't execute" do

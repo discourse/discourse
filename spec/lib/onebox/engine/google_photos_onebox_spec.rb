@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::GooglePhotosOnebox do
+RSpec.describe Onebox::Engine::GooglePhotosOnebox do
   let(:link) { "https://photos.app.goo.gl/pXA7T8zBX4WZWVMT7" }
   let(:html) { described_class.new(link).to_html }
 

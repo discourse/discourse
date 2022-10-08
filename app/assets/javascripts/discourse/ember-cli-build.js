@@ -10,9 +10,35 @@ const discourseScss = require("./lib/discourse-scss");
 const generateScriptsTree = require("./lib/scripts");
 const funnel = require("broccoli-funnel");
 
+const SILENCED_WARN_PREFIXES = [
+  "Setting the `jquery-integration` optional feature flag",
+  "The Ember Classic edition has been deprecated",
+  "Setting the `template-only-glimmer-components` optional feature flag to `false`",
+  "DEPRECATION: Invoking the `<LinkTo>` component with positional arguments is deprecated",
+];
+
 module.exports = function (defaults) {
   let discourseRoot = resolve("../../../..");
   let vendorJs = discourseRoot + "/vendor/assets/javascripts/";
+
+  // Silence the warnings listed in SILENCED_WARN_PREFIXES
+  const ui = defaults.project.ui;
+  const oldWriteWarning = ui.writeWarnLine.bind(ui);
+  ui.writeWarnLine = (message, ...args) => {
+    if (!SILENCED_WARN_PREFIXES.some((prefix) => message.startsWith(prefix))) {
+      return oldWriteWarning(message, ...args);
+    }
+  };
+
+  // Silence warnings which go straight to console.warn (e.g. template compiler deprecations)
+  /* eslint-disable no-console */
+  const oldConsoleWarn = console.warn.bind(console);
+  console.warn = (message, ...args) => {
+    if (!SILENCED_WARN_PREFIXES.some((prefix) => message.startsWith(prefix))) {
+      return oldConsoleWarn(message, ...args);
+    }
+  };
+  /* eslint-enable no-console */
 
   const isProduction = EmberApp.env().includes("production");
   const isTest = EmberApp.env().includes("test");
@@ -119,6 +145,13 @@ module.exports = function (defaults) {
       "/app/assets/javascripts/discourse/public/assets/scripts/module-shims.js"
   );
 
+  const discoursePluginsTree = app.project
+    .findAddonByName("discourse-plugins")
+    .generatePluginsTree();
+
+  const terserPlugin = app.project.findAddonByName("ember-cli-terser");
+  const applyTerser = (tree) => terserPlugin.postprocessTree("all", tree);
+
   return mergeTrees([
     createI18nTree(discourseRoot, vendorJs),
     app.toTree(),
@@ -127,18 +160,20 @@ module.exports = function (defaults) {
       files: ["highlight-test-bundle.min.js"],
       destDir: "assets/highlightjs",
     }),
-    concat(mergeTrees([app.options.adminTree]), {
-      outputFile: `assets/admin.js`,
-    }),
-    concat(mergeTrees([app.options.wizardTree]), {
-      outputFile: `assets/wizard.js`,
-    }),
-    prettyTextEngine(vendorJs, "discourse-markdown"),
-    concat("public/assets/scripts", {
-      outputFile: `assets/start-discourse.js`,
-      headerFiles: [`start-app.js`],
-      inputFiles: [`discourse-boot.js`],
-    }),
+    applyTerser(
+      concat(mergeTrees([app.options.adminTree]), {
+        inputFiles: ["**/*.js"],
+        outputFile: `assets/admin.js`,
+      })
+    ),
+    applyTerser(
+      concat(mergeTrees([app.options.wizardTree]), {
+        inputFiles: ["**/*.js"],
+        outputFile: `assets/wizard.js`,
+      })
+    ),
+    applyTerser(prettyTextEngine(app)),
     generateScriptsTree(app),
+    applyTerser(discoursePluginsTree),
   ]);
 };

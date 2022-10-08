@@ -2,7 +2,7 @@
 
 require 'mini_racer'
 
-describe JsLocaleHelper do
+RSpec.describe JsLocaleHelper do
 
   module StubLoadTranslations
     def set_translations(locale, translations)
@@ -31,7 +31,7 @@ describe JsLocaleHelper do
 
   end
 
-  context "message format" do
+  describe "message format" do
     def message_format_filename(locale)
       Rails.root + "lib/javascripts/locale/#{locale}.js"
     end

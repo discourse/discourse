@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe MailingListModeSiteSetting do
+RSpec.describe MailingListModeSiteSetting do
   describe 'valid_value?' do
     it 'returns true for a valid value as an int' do
       expect(MailingListModeSiteSetting.valid_value?(1)).to eq(true)

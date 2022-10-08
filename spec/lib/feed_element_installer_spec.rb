@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'feed_element_installer'
-describe FeedElementInstaller do
+RSpec.describe FeedElementInstaller do
   describe '#install_rss_element' do
     let(:raw_feed) { file_from_fixtures('feed.rss', 'feed').read }
 

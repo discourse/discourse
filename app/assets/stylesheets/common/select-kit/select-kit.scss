@@ -42,6 +42,7 @@
       border: 1px solid var(--primary-low);
       box-shadow: shadow("dropdown");
       background: var(--secondary);
+      max-width: 600px;
     }
 
     .select-kit-collection {
@@ -177,8 +178,10 @@
     }
 
     &[data-popper-reference-hidden] {
-      visibility: hidden;
-      pointer-events: none;
+      html:not(.ios-device) & {
+        visibility: hidden;
+        pointer-events: none;
+      }
     }
   }
 

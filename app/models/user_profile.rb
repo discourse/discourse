@@ -13,9 +13,9 @@ class UserProfile < ActiveRecord::Base
   has_many :user_profile_views, dependent: :destroy
 
   validates :bio_raw, length: { maximum: 3000 }, watched_words: true
-  validates :website, url: true, allow_blank: true, if: :validate_website?
+  validates :website, url: true, length: { maximum: 3000 }, allow_blank: true, if: :validate_website?
+  validates :location, length: { maximum: 3000 }, watched_words: true
   validates :user, presence: true
-  validates :location, watched_words: true
 
   validate :website_domain_validator, if: :validate_website?
 
@@ -164,7 +164,7 @@ class UserProfile < ActiveRecord::Base
   end
 
   def apply_watched_words
-    self.location = PrettyText.cook(location).gsub(/^<p>(.*)<\/p>$/, "\\1")
+    self.location = WordWatcher.apply_to_text(location)
   end
 
   def website_domain_validator
@@ -188,8 +188,8 @@ end
 # Table name: user_profiles
 #
 #  user_id                      :integer          not null, primary key
-#  location                     :string
-#  website                      :string
+#  location                     :string(3000)
+#  website                      :string(3000)
 #  bio_raw                      :text
 #  bio_cooked                   :text
 #  dismissed_banner_key         :integer

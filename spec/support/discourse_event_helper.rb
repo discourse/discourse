@@ -9,16 +9,25 @@ module DiscourseEvent::TestHelper
     end
   end
 
-  def track_events
+  def track_events(event_name = nil, args: nil)
     @events_trigger = events_trigger = []
     yield
     @events_trigger = nil
+
+    if event_name
+      events_trigger = events_trigger.filter do |event|
+        next if event[:event_name] != event_name
+        next if args && event[:params] != args
+        true
+      end
+    end
+
     events_trigger
   end
 
-  def track(event_type)
-    events = track_events { yield }
-    events.find { |e| e[:event_name] == event_type }
+  def track(event_name, args: nil)
+    events = track_events(event_name, args: args) { yield }
+    events.first
   end
 
 end

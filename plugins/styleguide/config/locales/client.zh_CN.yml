@@ -87,3 +87,8 @@ zh_CN:
           title: "旋转的图标"
         empty_state:
           title: "空状态"
+        rich_tooltip:
+          title: "富工具提示"
+          description: "描述"
+          header: "页眉"
+          hover_to_see: "悬停查看工具提示"

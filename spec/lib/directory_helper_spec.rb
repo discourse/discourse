@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DirectoryHelper do
+RSpec.describe DirectoryHelper do
   class DummyClass
     include DirectoryHelper
   end

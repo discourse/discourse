@@ -3,7 +3,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { blur, click, fillIn, render } from "@ember/test-helpers";
 import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 
 module("Integration | Component | secret-value-list", function (hooks) {
   setupRenderingTest(hooks);

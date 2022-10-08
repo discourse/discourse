@@ -3,7 +3,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import Topic from "discourse/models/topic";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 
 module("Integration | Component | topic-list-item", function (hooks) {
   setupRenderingTest(hooks);

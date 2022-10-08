@@ -6,8 +6,11 @@ import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend({
+  router: service(),
+
   lockImageUrl: getURL("/images/lock.svg"),
 
   @discourseComputed("model")
@@ -41,7 +44,20 @@ export default Controller.extend({
       })
         .then((result) => {
           if (result.success) {
-            DiscourseURL.redirectTo("/");
+            let destination = "/";
+
+            const safeMode = new URL(
+              this.router.currentURL,
+              window.location.origin
+            ).searchParams.get("safe_mode");
+
+            if (safeMode) {
+              const params = new URLSearchParams();
+              params.set("safe_mode", safeMode);
+              destination += `?${params.toString()}`;
+            }
+
+            DiscourseURL.redirectTo(destination);
           } else {
             this.set("model.error", result.error);
           }

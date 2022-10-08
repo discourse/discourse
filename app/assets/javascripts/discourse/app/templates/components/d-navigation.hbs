@@ -6,6 +6,9 @@
 {{/unless}}
 
 <div class="navigation-controls">
+  {{#if (and this.notCategoriesRoute this.site.mobileView this.canBulk)}}
+    <BulkSelectToggle @parentController={{"discovery/topics"}} @tagName=""/>
+  {{/if}}
 
   {{#if this.showCategoryAdmin}}
     <CategoriesAdminDropdown @onChange={{action "selectCategoryAdminDropdownAction"}} @options={{hash

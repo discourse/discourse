@@ -20,7 +20,7 @@ acceptance("Composer - Edit conflict", function (needs) {
       ".d-editor-input",
       "hello world hello world hello world hello world hello world"
     );
-    assert.ok(lastBody.indexOf("originalText") === -1);
+    assert.ok(!lastBody.includes("originalText"));
   });
 
   test("Should send originalText when editing a reply", async function (assert) {
@@ -31,6 +31,6 @@ acceptance("Composer - Edit conflict", function (needs) {
       ".d-editor-input",
       "hello world hello world hello world hello world hello world"
     );
-    assert.ok(lastBody.indexOf("originalText") > -1);
+    assert.ok(lastBody.includes("originalText"));
   });
 });

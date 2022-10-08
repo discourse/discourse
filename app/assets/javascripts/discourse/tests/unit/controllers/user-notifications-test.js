@@ -1,10 +1,11 @@
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
 import sinon from "sinon";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import EmberObject from "@ember/object";
 import * as showModal from "discourse/lib/show-modal";
 import User from "discourse/models/user";
+import I18n from "I18n";
 
 module("Unit | Controller | user-notifications", function (hooks) {
   setupTest(hooks);
@@ -15,12 +16,8 @@ module("Unit | Controller | user-notifications", function (hooks) {
       EmberObject.create({ read: false }),
     ];
     const controller = this.owner.lookup("controller:user-notifications");
-    controller.setProperties({
-      model,
-    });
-    pretender.put("/notifications/mark-read", () => {
-      return [200];
-    });
+    controller.setProperties({ model });
+    pretender.put("/notifications/mark-read", () => response({}));
 
     await controller.markRead();
 
@@ -37,9 +34,7 @@ module("Unit | Controller | user-notifications", function (hooks) {
     ];
     const controller = this.owner.lookup("controller:user-notifications");
     controller.setProperties({ model });
-    pretender.put("/notifications/mark-read", () => {
-      return [500];
-    });
+    pretender.put("/notifications/mark-read", () => response(500));
 
     assert.rejects(controller.markRead());
     assert.deepEqual(
@@ -57,9 +52,7 @@ module("Unit | Controller | user-notifications", function (hooks) {
       model: [],
       currentUser,
     });
-    sinon.stub(controller, "markRead").callsFake(() => {
-      markRead = true;
-    });
+    sinon.stub(controller, "markRead").callsFake(() => (markRead = true));
 
     controller.send("resetNew");
 
@@ -74,17 +67,19 @@ module("Unit | Controller | user-notifications", function (hooks) {
       .returns({
         setProperties: (properties) => (capturedProperties = properties),
       });
+
     const currentUser = User.create({ unread_high_priority_notifications: 1 });
     const controller = this.owner.lookup("controller:user-notifications");
-    controller.setProperties({
-      currentUser,
-    });
+    controller.setProperties({ currentUser });
     const markReadFake = sinon.fake();
     sinon.stub(controller, "markRead").callsFake(markReadFake);
 
     controller.send("resetNew");
 
-    assert.strictEqual(capturedProperties.count, 1);
+    assert.strictEqual(
+      capturedProperties.confirmationMessage,
+      I18n.t("notifications.dismiss_confirmation.body.default", { count: 1 })
+    );
     capturedProperties.dismissNotifications();
     assert.strictEqual(markReadFake.callCount, 1);
   });

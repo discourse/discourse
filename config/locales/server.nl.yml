@@ -120,7 +120,6 @@ nl:
         unsubscribe_not_allowed: "Gebeurt wanneer uitschrijven via e-mail niet is toegestaan voor deze gebruiker."
         email_not_allowed: "Gebeurt wanneer het e-mailadres zich niet op de acceptatielijst of wel op de blokkeerlijst bevindt."
       unrecognized_error: "Niet-herkende fout"
-    secure_media_placeholder: "Geredigeerd: deze website heeft beveiligde media ingeschakeld. Bezoek het topic of klik op Media weergeven om de bijgevoegde media te zien."
     view_redacted_media: "Media weergeven"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -188,7 +187,6 @@ nl:
       enable_s3_uploads_is_required: "U kunt geen inventory naar S3 inschakelen voordat u de S3-uploads hebt ingeschakeld."
       s3_backup_requires_s3_settings: "U kunt S3 niet als back-uplocatie gebruiken voordat u de '%{setting_name}' hebt opgegeven."
       s3_bucket_reused: "U kunt niet dezelfde bucket voor 's3_upload_bucket' en 's3_backup_bucket' gebruiken. Kies een andere bucket of gebruik een ander pad voor elke bucket."
-      secure_media_requirements: "S3-uploads moeten zijn ingeschakeld voordat u beveiligde media inschakelt."
       second_factor_cannot_be_enforced_with_disabled_local_login: "U kunt geen 2FA afdwingen als lokale aanmeldingen zijn uitgeschakeld."
       local_login_cannot_be_disabled_if_second_factor_enforced: "U kunt geen lokale aanmelding uitschakelen als 2FA is afgedwongen. Schakel afgedwongen 2FA uit voordat u lokale aanmeldingen uitschakelt."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "U kunt geen S3-uploads inschakelen, omdat S3-uploads al globaal zijn ingeschakeld, en inschakelen hiervan op websiteniveau kan kritieke problemen met uploads veroorzaken"
@@ -515,8 +513,7 @@ nl:
               too_many: "Te veel woorden voor die actie"
       <<: *errors
   uncategorized_category_name: "Ongecategoriseerd"
-  vip_category_name: "Lounge"
-  vip_category_description: "Een exclusieve categorie voor leden met vertrouwensniveau 3 en hoger."
+  general_category_name: "Algemeen"
   meta_category_name: "Feedback op website"
   meta_category_description: "Discussies over deze website, de organisatie, hoe deze werkt en hoe we deze kunnen verbeteren."
   staff_category_name: "Staf"
@@ -537,29 +534,6 @@ nl:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Mogelijk wilt u dit topic sluiten via de :wrench: voor beheer (rechtsboven en -beneden), zodat er bij een aankondiging geen antwoorden opstapelen.
-  lounge_welcome:
-    title: "Welkom in de Lounge"
-    body: |2
-
-      Gefeliciteerd! :confetti_ball:
-
-      Als u dit topic kunt zien, bent u onlangs gepromoveerd naar **vaste gebruiker** (vertrouwensniveau 3).
-
-      U kunt nu &hellip;
-
-      * De titel van elk topic bewerken
-      * De categorie van elk topic wijzigen
-      * Al uw koppelingen laten volgen ([automatic nofollow](https://nl.wikipedia.org/wiki/Nofollow) is verwijderd)
-      * Een privécategorie Lounge benaderen, die alleen zichtbaar is voor gebruikers met vertrouwensniveau 3 en hoger
-      * Spam verbergen met één markering
-
-      Hier is de [huidige lijst van vaste gebruikers](%{base_path}/badges/3/regular). Zeg zeker even hallo.
-
-      Bedankt dat u een belangrijk onderdeel bent van deze gemeenschap!
-
-      ([Bekijk dit topic][trust] voor meer informatie over vertrouwensniveaus. Let erop dat alleen leden die na verloop van tijd aan de voorwaarden blijven voldoen vaste gebruikers blijven.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "LEES MIJ EERST: Snelstartgids voor beheerders"
   category:
     topic_prefix: "Over de categorie %{category}"
@@ -1549,7 +1523,6 @@ nl:
     min_trust_to_edit_wiki_post: "Het minimale vertrouwensniveau dat nodig is om een bericht te bewerken dat als wiki is gemarkeerd."
     min_trust_to_edit_post: "Het minimale vertrouwensniveau dat nodig is om berichten te bewerken."
     min_trust_to_allow_self_wiki: "Het minimale vertrouwensniveau dat nodig is om een gebruiker een eigen bericht naar een wiki te laten omzetten."
-    min_trust_to_send_messages: "Het minimale vertrouwensniveau dat nodig is om nieuwe persoonlijke berichten te maken."
     min_trust_to_flag_posts: "Het minimale vertrouwensniveau dat nodig is om berichten te markeren"
     min_trust_to_post_links: "Het minimale vertrouwensniveau dat nodig is om koppelingen in berichten op te nemen"
     min_trust_to_post_embedded_media: "Het minimale vertrouwensniveau dat nodig is om media-items in een bericht in te bedden"
@@ -1775,7 +1748,6 @@ nl:
     show_create_topics_notice: "Als de website minder dan 5 publieke topics heeft, een melding tonen waarin beheerders wordt gevraagd een aantal topics te maken."
     delete_drafts_older_than_n_days: "Concepten ouder dan (n) dagen verwijderen."
     bootstrap_mode_min_users: "Minimale aantal vereiste gebruikers om bootstrapmodus uit te schakelen (stel dit in op 0 om uit te schakelen)"
-    secure_media: 'Beperkt toegang tot ALLE uploads (afbeeldingen, video, audio, tekst, pdf’s, zips en andere). Als ‘aanmelding vereist’ is ingeschakeld, hebben alleen aangemelde gebruikers toegang tot uploads. Anders is toegang beperkt tot media-uploads in privéberichten en privécategorieën. WAARSCHUWING: deze instelling is complex en vereist grondige kennis van beheer. Zie <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">het topic over beveiligde media op Meta</a> voor details.'
     slug_generation_method: "Kies een slug-generatiemodus. 'encoded' genereert een percentage-coderingsstring. 'none' schakelt de slug helemaal uit."
     enable_emoji: "Emoji inschakelen"
     enable_emoji_shortcuts: "Gebruikelijke smileyteksten zoals :) :p :( worden naar emoji geconverteerd"
@@ -2859,7 +2831,6 @@ nl:
     register:
       button: "Registreren"
       title: "Beheerdersaccount registreren"
-      help: "registreer een nieuwe account om te beginnen"
     confirm_email:
       title: "Bevestig uw e-mailadres"
     resend_email:
@@ -2867,70 +2838,27 @@ nl:
       message: "<p>We hebben de activeringsmail opnieuw naar <b>%{email}</b> verstuurd"
   safe_mode:
     title: "Veilige modus starten"
-    no_customizations: "Huidige thema uitschakelen"
-    only_official: "Niet-officiële plug-ins uitschakelen"
+    no_unofficial_plugins: "Niet-officiële plug-ins uitschakelen"
     no_plugins: "Alle plug-ins uitschakelen"
     enter: "Veilige modus starten"
   wizard:
     title: "Discourse instellen"
     step:
-      locale:
-        title: "Welkom bij uw Discourse!"
-        fields:
-          default_locale:
-            description: "Wat is de standaardtaal voor uw gemeenschap?"
-      forum_title:
-        title: "Naam"
-        fields:
-          title:
-            label: "Naam van uw community"
-            placeholder: "Jane's Hangout"
       introduction:
         fields:
-          welcome:
-            label: "Welkomsttopic"
+          title:
+            placeholder: "Jane's Hangout"
+          default_locale:
+            label: "Taal"
       privacy:
-        title: "Toegang"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Openbaar"
-                description: "Iedereen heeft toegang tot deze gemeenschap"
-              restricted:
-                label: "Privé"
-                description: "Alleen aangemelde gebruikers hebben toegang tot deze gemeenschap"
-          privacy_options:
-            choices:
-              open:
-                label: "Gebruikers kunnen zichzelf aanmelden."
-              invite_only:
-                label: "Gebruikers moeten door vertrouwde gebruikers of een staflid worden uitgenodigd voordat ze kunnen registreren."
-              must_approve:
-                label: "Gebruikers kunnen zelf registreren, maar moeten door een staflid worden goedgekeurd."
-      contact:
-        title: "Contact"
-        fields:
-          contact_email:
-            label: "E-mail"
-            placeholder: "naam@example.com"
-          contact_url:
-            label: "Webpagina"
-            placeholder: "https://www.example.com/contact-us"
-          site_contact:
-            label: "Geautomatiseerde berichten"
-      corporate:
-        title: "Organisatie"
-        fields:
-          company_name:
-            label: "Bedrijfsnaam"
-            placeholder: "Voorbeeldorganisatie"
-          governing_law:
-            label: "Toepasselijk recht"
-            placeholder: "Californische wet"
-          city_for_disputes:
-            label: "Stad voor geschillen"
-            placeholder: "San Francisco, Californië"
+          login_required:
+            placeholder: "Privé"
+            extra_description: "Alleen aangemelde gebruikers hebben toegang tot deze gemeenschap"
+          must_approve_users:
+            placeholder: "Heeft goedkeuring nodig"
+      ready:
+        title: "Uw Discourse is gereed!"
       styling:
         fields:
           body_font:
@@ -2951,24 +2879,32 @@ nl:
                 label: "Categorieën en nieuwste topics"
               categories_and_top_topics:
                 label: "Categorieën en toptopics"
-      logos:
-        title: "Logo's"
+      branding:
         fields:
           logo:
             label: "Primair logo"
-            description: "De logoafbeelding links bovenaan op uw website. Gebruik een brede rechthoekige afbeelding met een hoogte van 120 en een hoogte-breedteverhouding groter dan 3:1"
           logo_small:
             label: "Vierkant logo"
-            description: "Een vierkante versie van uw logo. Wordt linksboven op uw website weergegeven bij het naar beneden scrollen, in de browser en bij het delen op sociale platformen. Idealiter groter dan 512x512."
-      icons:
-        title: "Pictogrammen"
-        fields:
           favicon:
             label: "Browserpictogram"
-            description: "Pictogramafbeelding die uw website vertegenwoordigt in webbrowsers en er goed uitziet bij kleine afmetingen. Aanbevolen afbeeldingsextensies zijn PNG of JPG. Standaard wordt het vierkante logo gebruikt."
           large_icon:
             label: "Groot pictogram"
-            description: "Pictogramafbeelding die uw website vertegenwoordigt op moderne apparaten en er goed uitziet bij grotere afmetingen. Moet idealiter groter zijn dan 512 x 512. Standaard wordt het vierkante logo gebruikt."
+      corporate:
+        fields:
+          company_name:
+            label: "Bedrijfsnaam"
+            placeholder: "Voorbeeldorganisatie"
+          governing_law:
+            label: "Toepasselijk recht"
+            placeholder: "Californische wet"
+          contact_url:
+            label: "Webpagina"
+            placeholder: "https://www.example.com/contact-us"
+          city_for_disputes:
+            label: "Stad voor geschillen"
+            placeholder: "San Francisco, Californië"
+          site_contact:
+            label: "Geautomatiseerde berichten"
       invites:
         title: "Staf uitnodigen"
         description: "U bent bijna klaar! Nodig wat mensen uit om te helpen met het <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>seeden van uw discussies</a> met interessante topics en berichten om uw gemeenschap op te zetten."

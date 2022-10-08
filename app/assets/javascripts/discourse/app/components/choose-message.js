@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { get } from "@ember/object";
+import { action, get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { next } from "@ember/runloop";
 import { observes } from "discourse-common/utils/decorators";
@@ -63,12 +63,11 @@ export default Component.extend({
     );
   },
 
-  actions: {
-    chooseMessage(message) {
-      const messageId = get(message, "id");
-      this.set("selectedTopicId", messageId);
-      next(() => $(`#choose-message-${messageId}`).prop("checked", "true"));
-      return false;
-    },
+  @action
+  chooseMessage(message, event) {
+    event?.preventDefault();
+    const messageId = get(message, "id");
+    this.set("selectedTopicId", messageId);
+    next(() => $(`#choose-message-${messageId}`).prop("checked", "true"));
   },
 });

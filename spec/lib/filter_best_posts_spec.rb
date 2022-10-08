@@ -3,7 +3,7 @@
 require 'filter_best_posts'
 require 'topic_view'
 
-describe FilterBestPosts do
+RSpec.describe FilterBestPosts do
 
   fab!(:topic) { Fabricate(:topic) }
   fab!(:coding_horror) { Fabricate(:coding_horror) }

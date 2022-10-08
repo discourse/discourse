@@ -27,7 +27,7 @@
               {{#if item.editing}}
                 <TextField @value={{item.ip_address}} @autofocus="autofocus" />
               {{else}}
-                <a href {{action "edit" item}} class="inline-editable-field">
+                <a href {{on "click" (fn this.edit item)}} class="inline-editable-field">
                   {{#if item.isRange}}
                     <strong>{{item.ip_address}}</strong>
                   {{else}}
@@ -63,9 +63,7 @@
             <td class="col actions">
               {{#if item.editing}}
                 <DButton @class="btn-default" @action={{action "save"}} @actionParam={{item}} @label="admin.logs.save" />
-                <a href {{action "cancel" item}} class="cancel-action">
-                  {{i18n "cancel"}}
-                </a>
+                <DButton @class="btn-flat" @action={{action "cancel" item}} @translatedLabel={{i18n "cancel"}} />
               {{else}}
                 <DButton @class="btn-default btn-danger" @action={{action "destroy"}} @actionParam={{item}} @icon="far-trash-alt" />
                 <DButton @class="btn-default" @action={{action "edit"}} @actionParam={{item}} @icon="pencil-alt" />

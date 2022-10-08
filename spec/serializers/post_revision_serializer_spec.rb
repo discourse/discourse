@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-describe PostRevisionSerializer do
+RSpec.describe PostRevisionSerializer do
   fab!(:post) { Fabricate(:post, version: 2) }
 
-  context 'hidden tags' do
+  context 'with hidden tags' do
     fab!(:public_tag) { Fabricate(:tag, name: 'public') }
     fab!(:public_tag2) { Fabricate(:tag, name: 'visible') }
     fab!(:hidden_tag) { Fabricate(:tag, name: 'hidden') }

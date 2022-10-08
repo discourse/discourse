@@ -2,7 +2,7 @@
 
 require 'post_merger'
 
-describe PostMerger do
+RSpec.describe PostMerger do
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }

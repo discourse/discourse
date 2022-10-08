@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Admin::ThemesController do
+RSpec.describe Admin::ThemesController do
   fab!(:admin) { Fabricate(:admin) }
 
   it "is a subclass of AdminController" do
@@ -16,8 +16,9 @@ describe Admin::ThemesController do
       post "/admin/themes/generate_key_pair.json"
       expect(response.status).to eq(200)
       json = response.parsed_body
-      expect(json["private_key"]).to include("RSA PRIVATE KEY")
+      expect(json["private_key"]).to eq(nil)
       expect(json["public_key"]).to include("ssh-rsa ")
+      expect(Discourse.redis.get("ssh_key_#{json["public_key"]}")).not_to eq(nil)
     end
   end
 
@@ -139,6 +140,33 @@ describe Admin::ThemesController do
       expect(response.status).to eq(201)
     end
 
+    it 'can lookup a private key by public key' do
+      Discourse.redis.setex('ssh_key_abcdef', 1.hour, 'rsa private key')
+
+      ThemeStore::GitImporter.any_instance.stubs(:import!)
+      RemoteTheme.stubs(:extract_theme_info).returns(
+        'name' => 'discourse-brand-header',
+        'component' => true
+      )
+      RemoteTheme.any_instance.stubs(:update_from_remote)
+
+      post '/admin/themes/import.json', params: {
+        remote: '    https://github.com/discourse/discourse-brand-header.git       ',
+        public_key: 'abcdef',
+      }
+
+      expect(RemoteTheme.last.private_key).to eq('rsa private key')
+
+      expect(response.status).to eq(201)
+    end
+
+    it 'should not be able to import a theme by moderator' do
+      sign_in(Fabricate(:moderator))
+
+      post "/admin/themes/import.json", params: { theme: theme_json_file }
+      expect(response.status).to eq(404)
+    end
+
     it 'imports a theme' do
       post "/admin/themes/import.json", params: { theme: theme_json_file }
       expect(response.status).to eq(201)
@@ -149,6 +177,25 @@ describe Admin::ThemesController do
       expect(json["theme"]["theme_fields"].length).to eq(2)
       expect(json["theme"]["auto_update"]).to eq(false)
       expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
+    end
+
+    it 'can fail if theme is not accessible' do
+      post "/admin/themes/import.json", params: {
+        remote: 'git@github.com:discourse/discourse-inexistent-theme.git'
+      }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to contain_exactly(I18n.t("themes.import_error.git"))
+    end
+
+    it 'can force install theme' do
+      post "/admin/themes/import.json", params: {
+        remote: 'git@github.com:discourse/discourse-inexistent-theme.git',
+        force: true
+      }
+
+      expect(response.status).to eq(201)
+      expect(response.parsed_body["theme"]["name"]).to eq("discourse-inexistent-theme")
     end
 
     it 'fails to import with an error if uploads are not allowed' do

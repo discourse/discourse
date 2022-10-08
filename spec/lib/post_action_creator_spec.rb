@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
-describe PostActionCreator do
+RSpec.describe PostActionCreator do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
   fab!(:post) { Fabricate(:post) }
   let(:like_type_id) { PostActionType.types[:like] }
+
+  before do
+    Group.refresh_automatic_groups!
+  end
 
   describe "rate limits" do
     before do
@@ -25,7 +29,6 @@ describe PostActionCreator do
   end
 
   describe "messaging" do
-
     it "doesn't generate title longer than 255 characters" do
       topic = Fabricate(:topic, title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sit amet rutrum neque. Pellentesque suscipit vehicula facilisis. Phasellus lacus sapien, aliquam nec convallis sit amet, vestibulum laoreet ante. Curabitur et pellentesque tortor. Donec non.")
       post = Fabricate(:post, topic: topic)
@@ -119,7 +122,7 @@ describe PostActionCreator do
     end
   end
 
-  context "flags" do
+  describe "flags" do
     it "will create a reviewable if one does not exist" do
       result = PostActionCreator.create(user, post, :inappropriate)
       expect(result.success?).to eq(true)
@@ -167,7 +170,7 @@ describe PostActionCreator do
       end
     end
 
-    context "existing reviewable" do
+    context "with existing reviewable" do
       let!(:reviewable) {
         PostActionCreator.create(Fabricate(:user), post, :inappropriate).reviewable
       }
@@ -237,7 +240,7 @@ describe PostActionCreator do
     end
   end
 
-  context "take_action" do
+  describe "take_action" do
     before do
       PostActionCreator.create(Fabricate(:user), post, :inappropriate)
     end
@@ -256,8 +259,7 @@ describe PostActionCreator do
     end
   end
 
-  context "queue_for_review" do
-
+  describe "queue_for_review" do
     it 'fails if the user is not a staff member' do
       creator = PostActionCreator.new(
         user, post,

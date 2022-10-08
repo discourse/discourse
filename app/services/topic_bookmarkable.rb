@@ -12,7 +12,16 @@ class TopicBookmarkable < BaseBookmarkable
   end
 
   def self.preload_associations
-    [:topic_users, :tags, { posts: :user }]
+    [:tags, { first_post: :user }]
+  end
+
+  def self.perform_custom_preload!(topic_bookmarks, guardian)
+    topics = topic_bookmarks.map(&:bookmarkable)
+    topic_user_lookup = TopicUser.lookup_for(guardian.user, topics)
+
+    topics.each do |topic|
+      topic.user_data = topic_user_lookup[topic.id]
+    end
   end
 
   def self.list_query(user, guardian)
@@ -36,16 +45,14 @@ class TopicBookmarkable < BaseBookmarkable
   end
 
   def self.reminder_handler(bookmark)
-    bookmark.user.notifications.create!(
-      notification_type: Notification.types[:bookmark_reminder],
+    send_reminder_notification(
+      bookmark,
       topic_id: bookmark.bookmarkable_id,
       post_number: 1,
       data: {
         title: bookmark.bookmarkable.title,
-        display_username: bookmark.user.username,
-        bookmark_name: bookmark.name,
         bookmarkable_url: bookmark.bookmarkable.first_post.url
-      }.to_json
+      }
     )
   end
 

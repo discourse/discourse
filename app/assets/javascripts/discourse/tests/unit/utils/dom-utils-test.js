@@ -2,7 +2,7 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 import domUtils from "discourse-common/utils/dom-utils";
 
 discourseModule("utils:dom-utils", function (hooks) {

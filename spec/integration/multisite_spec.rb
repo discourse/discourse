@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'multisite', type: [:multisite, :request] do
+RSpec.describe 'multisite', type: [:multisite, :request] do
   it "should always allow /srv/status through" do
     get "http://unknown.com/srv/status"
     expect(response.status).to eq(200)

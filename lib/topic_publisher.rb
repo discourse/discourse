@@ -46,6 +46,14 @@ class TopicPublisher
       end
     end
 
+    Jobs.enqueue(
+      :notify_tag_change,
+      post_id: @topic.first_post.id,
+      notified_user_ids: [@topic.first_post.user_id, @published_by.id].uniq,
+      diff_tags: @topic.tags.map(&:name),
+      force: true,
+    )
+
     MessageBus.publish("/topic/#{@topic.id}", reload_topic: true, refresh_stream: true)
 
     @topic

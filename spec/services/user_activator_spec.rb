@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserActivator do
+RSpec.describe UserActivator do
   fab!(:user) { Fabricate(:user) }
   let!(:email_token) { Fabricate(:email_token, user: user) }
 

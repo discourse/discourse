@@ -145,6 +145,14 @@ class PostDestroyer
   # show up in the topic
   # Permanent option allows to hard delete.
   def perform_delete
+    # All posts in the topic must be force deleted if the first is force
+    # deleted (except @post which is destroyed by current instance).
+    if @topic && @post.is_first_post? && permanent?
+      @topic.ordered_posts.with_deleted.reverse_order.find_each do |post|
+        PostDestroyer.new(@user, post, @opts).destroy if post.id != @post.id
+      end
+    end
+
     Post.transaction do
       permanent? ? @post.destroy! : @post.trash!(@user)
       if @post.topic
@@ -327,7 +335,7 @@ class PostDestroyer
     Jobs.enqueue(
       :send_system_message,
       user_id: @post.user_id,
-      message_type: notify_responders ? :flags_agreed_and_post_deleted_for_responders : :flags_agreed_and_post_deleted,
+      message_type: notify_responders ? "flags_agreed_and_post_deleted_for_responders" : "flags_agreed_and_post_deleted",
       message_options: {
         flagged_post_raw_content: notify_responders ? options[:parent_post].raw : @post.raw,
         flagged_post_response_raw_content: @post.raw,

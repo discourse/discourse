@@ -15,14 +15,12 @@ import { getApplication, getContext, settled } from "@ember/test-helpers";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { run } from "@ember/runloop";
 import { setupApplicationTest } from "ember-qunit";
-import { Promise } from "rsvp";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import deprecated from "discourse-common/lib/deprecated";
 import { restoreBaseUri } from "discourse-common/lib/get-url";
-import { flushMap } from "discourse/services/store";
 import { initSearchData } from "discourse/widgets/search-menu";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { isEmpty } from "@ember/utils";
@@ -47,6 +45,7 @@ import sinon from "sinon";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import { clearExtraKeyboardShortcutHelp } from "discourse/lib/keyboard-shortcuts";
 import { clearResolverOptions } from "discourse-common/resolver";
+import { clearResolverOptions as clearLegacyResolverOptions } from "discourse-common/lib/legacy-resolver";
 import { clearNavItems } from "discourse/models/nav-item";
 import {
   cleanUpComposerUploadHandler,
@@ -63,12 +62,20 @@ import {
   setTestPresence,
 } from "discourse/lib/user-presence";
 import PreloadStore from "discourse/lib/preload-store";
-import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-topics-section-links";
+import { resetDefaultSectionLinks as resetTopicsSectionLinks } from "discourse/lib/sidebar/custom-community-section-links";
 import {
   clearBlockDecorateCallbacks,
   clearTagDecorateCallbacks,
   clearTextDecorateCallbacks,
 } from "discourse/lib/to-markdown";
+import { clearTagsHtmlCallbacks } from "discourse/lib/render-tags";
+import { clearToolbarCallbacks } from "discourse/components/d-editor";
+import { clearExtraHeaderIcons } from "discourse/widgets/header";
+import { resetSidebarSection } from "discourse/lib/sidebar/custom-sections";
+import { resetNotificationTypeRenderers } from "discourse/lib/notification-types-manager";
+import { resetUserMenuTabs } from "discourse/lib/user-menu/tab";
+import { reset as resetLinkLookup } from "discourse/lib/link-lookup";
+import { resetModelTransformers } from "discourse/lib/model-transformers";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -105,6 +112,7 @@ export function fakeTime(timeString, timezone = null, advanceTime = false) {
   return sinon.useFakeTimers({
     now: now.valueOf(),
     shouldAdvanceTime: advanceTime,
+    shouldClearNativeTimers: true,
   });
 }
 
@@ -152,8 +160,6 @@ export function testCleanup(container, app) {
     });
   }
 
-  flushMap();
-  localStorage.clear();
   User.resetCurrent();
   resetExtraClasses();
   clearOutletCache();
@@ -192,6 +198,16 @@ export function testCleanup(container, app) {
   clearTagDecorateCallbacks();
   clearBlockDecorateCallbacks();
   clearTextDecorateCallbacks();
+  clearResolverOptions();
+  clearLegacyResolverOptions();
+  clearTagsHtmlCallbacks();
+  clearToolbarCallbacks();
+  resetSidebarSection();
+  resetNotificationTypeRenderers();
+  clearExtraHeaderIcons();
+  resetUserMenuTabs();
+  resetLinkLookup();
+  resetModelTransformers();
 }
 
 export function discourseModule(name, options) {
@@ -207,9 +223,7 @@ export function discourseModule(name, options) {
         this.registry = this.container.registry;
         this.owner = this.container;
         this.siteSettings = currentSettings();
-        clearResolverOptions();
       });
-      hooks.afterEach(() => testCleanup(this.container));
 
       this.getController = function (controllerName, properties) {
         let controller = this.container.lookup(`controller:${controllerName}`);
@@ -238,7 +252,6 @@ export function discourseModule(name, options) {
     },
     afterEach() {
       options?.afterEach?.call(this);
-      testCleanup(this.container);
     },
   });
 }
@@ -438,15 +451,11 @@ QUnit.assert.containsInstance = function (collection, klass, message) {
 };
 
 export async function selectDate(selector, date) {
-  return new Promise((resolve) => {
-    const elem = document.querySelector(selector);
-    elem.value = date;
-    const evt = new Event("input", { bubbles: true, cancelable: false });
-    elem.dispatchEvent(evt);
-    elem.blur();
-
-    resolve();
-  });
+  const elem = document.querySelector(selector);
+  elem.value = date;
+  const evt = new Event("input", { bubbles: true, cancelable: false });
+  elem.dispatchEvent(evt);
+  elem.blur();
 }
 
 export function queryAll(selector, context) {
@@ -479,11 +488,15 @@ export function exists(selector) {
   return count(selector) > 0;
 }
 
-export function publishToMessageBus(channelPath, ...args) {
+export async function publishToMessageBus(channelPath, ...args) {
   args = cloneJSON(args);
-  MessageBus.callbacks
+
+  const promises = MessageBus.callbacks
     .filterBy("channel", channelPath)
-    .forEach((c) => c.func(...args));
+    .map((callback) => callback.func(...args));
+
+  await Promise.allSettled(promises);
+  await settled();
 }
 
 export async function selectText(selector, endOffset = null) {

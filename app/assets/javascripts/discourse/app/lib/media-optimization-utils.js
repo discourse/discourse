@@ -32,7 +32,7 @@ async function fileToDrawable(file) {
   }
 }
 
-function drawableToimageData(drawable) {
+function drawableToImageData(drawable) {
   const width = drawable.width,
     height = drawable.height,
     sx = 0,
@@ -80,7 +80,7 @@ function jpegDecodeFailure(type, imageData) {
 
 export async function fileToImageData(file) {
   const drawable = await fileToDrawable(file);
-  const imageData = drawableToimageData(drawable);
+  const imageData = drawableToImageData(drawable);
 
   if (isTransparent(file.type, imageData)) {
     throw "Image has transparent pixels, won't convert to JPEG!";

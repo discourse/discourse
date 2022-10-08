@@ -2,7 +2,7 @@
 
 require 'quote_comparer'
 
-describe QuoteComparer do
+RSpec.describe QuoteComparer do
 
   describe "#missing?" do
     fab!(:post) { Fabricate(:post, raw: "This has **text** we _are_ matching") }
@@ -19,12 +19,12 @@ describe QuoteComparer do
       expect(QuoteComparer.new(post.topic_id, nil, "test")).to be_missing
     end
 
-    it "returns false for only missing text" do
-      expect(QuoteComparer.new(post.topic_id, post.post_number, nil)).to_not be_missing
+    it "returns a falsey value for only missing text" do
+      expect(QuoteComparer.new(post.topic_id, post.post_number, nil).missing?).to be(nil)
     end
 
-    it "returns false for no missing topic and post" do
-      expect(QuoteComparer.new(post.topic_id, post.post_number, "test")).to_not be_missing
+    it "returns a falsey value for no missing topic and post" do
+      expect(QuoteComparer.new(post.topic_id, post.post_number, "test").missing?).to be(nil)
     end
   end
 

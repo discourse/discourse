@@ -4,7 +4,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { gt } from "@ember/object/computed";
 
 export default Controller.extend({
-  faqOverriden: gt("siteSettings.faq_url.length", 0),
+  faqOverridden: gt("siteSettings.faq_url.length", 0),
 
   @discourseComputed("model.contact_url", "model.contact_email")
   contactInfo(url, email) {

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SecureSession do
+RSpec.describe SecureSession do
   it "operates correctly" do
     s = SecureSession.new("abc")
 

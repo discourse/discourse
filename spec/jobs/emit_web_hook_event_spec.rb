@@ -2,7 +2,7 @@
 
 require 'excon'
 
-describe Jobs::EmitWebHookEvent do
+RSpec.describe Jobs::EmitWebHookEvent do
   fab!(:post_hook) { Fabricate(:web_hook) }
   fab!(:inactive_hook) { Fabricate(:inactive_web_hook) }
   fab!(:post) { Fabricate(:post) }
@@ -120,7 +120,7 @@ describe Jobs::EmitWebHookEvent do
             web_hook_id: post_hook.id,
             event_type: described_class::PING_EVENT
           )
-        end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(0)
+        end.not_to change { Jobs::EmitWebHookEvent.jobs.size }
       end
 
       it 'properly logs error on rescue' do

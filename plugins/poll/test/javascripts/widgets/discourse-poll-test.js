@@ -3,7 +3,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, render } from "@ember/test-helpers";
 import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
 
@@ -12,12 +12,10 @@ let requests = 0;
 module("Integration | Component | Widget | discourse-poll", function (hooks) {
   setupRenderingTest(hooks);
 
-  pretender.put("/polls/vote", () => {
-    ++requests;
-    return [
-      200,
-      { "Content-Type": "application/json" },
-      {
+  hooks.beforeEach(function () {
+    pretender.put("/polls/vote", () => {
+      ++requests;
+      return response({
         poll: {
           name: "poll",
           type: "regular",
@@ -39,8 +37,8 @@ module("Integration | Component | Widget | discourse-poll", function (hooks) {
           chart_type: "bar",
         },
         vote: ["1f972d1df351de3ce35a787c89faad29"],
-      },
-    ];
+      });
+    });
   });
 
   const template = hbs`
@@ -160,13 +158,10 @@ module("Integration | Component | Widget | discourse-poll", function (hooks) {
     });
 
     await render(template);
-
     assert.ok(exists(".poll-buttons .cast-votes[disabled=true]"));
 
     await click("li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']");
-
     await click(".poll-buttons .cast-votes");
-
     assert.ok(exists(".chosen"));
   });
 });

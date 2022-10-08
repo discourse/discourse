@@ -760,6 +760,8 @@ class TopicView
         :image_upload
       )
 
+    @posts = @posts.includes({ user: :user_status }) if SiteSetting.enable_user_status
+
     @posts = apply_default_scope(@posts)
     @posts = filter_post_types(@posts)
     @posts = @posts.with_deleted if @guardian.can_see_deleted_posts?(@topic.category)

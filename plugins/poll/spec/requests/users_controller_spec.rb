@@ -2,8 +2,7 @@
 
 require "rails_helper"
 
-describe Admin::UsersController do
-
+RSpec.describe Admin::UsersController do
   let(:admin) { Fabricate(:admin) }
 
   before { sign_in(admin) }
@@ -11,7 +10,7 @@ describe Admin::UsersController do
   describe '#destroy' do
     let(:delete_me) { Fabricate(:user) }
 
-    context "user has voted" do
+    context "when user has voted" do
       let!(:topic) { Fabricate(:topic, user: admin) }
       let!(:post) { Fabricate(:post, topic: topic, user: admin, raw: "[poll]\n- a\n- b\n[/poll]") }
 
@@ -26,5 +25,4 @@ describe Admin::UsersController do
       end
     end
   end
-
 end

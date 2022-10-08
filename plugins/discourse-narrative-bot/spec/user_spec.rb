@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe User do
+RSpec.describe User do
   let(:user) { Fabricate(:user) }
   let(:profile_page_url) { "#{Discourse.base_url}/users/#{user.username}" }
 
@@ -32,7 +32,7 @@ describe User do
     end
 
     describe 'welcome post' do
-      context 'disabled' do
+      context 'when disabled' do
         before do
           SiteSetting.disable_discourse_narrative_bot_welcome_post = true
         end
@@ -57,7 +57,7 @@ describe User do
         end
       end
 
-      context 'enabled' do
+      context 'when enabled' do
         before do
           SiteSetting.disable_discourse_narrative_bot_welcome_post = false
         end
@@ -121,7 +121,7 @@ describe User do
         expect {
           user.user_option.save!
         }.to change { Topic.count }.by(-1)
-          .and change { UserHistory.count }.by(0)
+          .and not_change { UserHistory.count }
           .and change { user.unread_high_priority_notifications }.by(-1)
           .and change { user.notifications.count }.by(-1)
       end

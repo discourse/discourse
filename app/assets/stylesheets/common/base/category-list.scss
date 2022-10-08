@@ -78,7 +78,7 @@
       }
     }
 
-    .logo.aspect-image img {
+    .category-logo.aspect-image img {
       display: block;
       width: auto;
       height: 40px;
@@ -86,7 +86,7 @@
     }
 
     @supports (--custom: property) {
-      .logo.aspect-image img {
+      .category-logo.aspect-image img {
         --height: 40px;
         height: var(--height);
         width: calc(var(--height) * var(--aspect-ratio));
@@ -110,7 +110,7 @@
   }
 
   &.no-logos {
-    .logo {
+    .category-logo {
       display: none;
     }
   }
@@ -241,7 +241,7 @@
         min-width: 0;
         @include ellipsis;
       }
-      .logo img {
+      .category-logo img {
         display: inline-block;
         --height: 20px;
         height: var(--height);

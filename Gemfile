@@ -18,7 +18,7 @@ else
   # this allows us to include the bits of rails we use without pieces we do not.
   #
   # To issue a rails update bump the version number here
-  rails_version = '7.0.3'
+  rails_version = '7.0.3.1'
   gem 'actionmailer', rails_version
   gem 'actionpack', rails_version
   gem 'actionview', rails_version
@@ -39,7 +39,7 @@ gem 'sprockets', '3.7.2'
 # allows us to precompile all our templates in the unicorn master
 gem 'actionview_precompiler', require: false
 
-gem 'seed-fu'
+gem 'discourse-seed-fu'
 
 gem 'mail', git: 'https://github.com/discourse/mail.git'
 gem 'mini_mime'
@@ -105,7 +105,8 @@ gem 'omniauth-oauth2', require: false
 
 gem 'omniauth-google-oauth2'
 
-gem 'oj'
+# pending: https://github.com/ohler55/oj/issues/789
+gem 'oj', '3.13.14'
 
 gem 'pg'
 gem 'mini_sql'
@@ -148,11 +149,14 @@ group :assets do
 end
 
 group :test do
+  gem 'capybara', require: false
   gem 'webmock', require: false
   gem 'fakeweb', require: false
   gem 'minitest', require: false
   gem 'simplecov', require: false
+  gem 'selenium-webdriver', require: false
   gem "test-prof"
+  gem 'webdrivers', require: false
 end
 
 group :test, :development do
@@ -169,7 +173,7 @@ group :test, :development do
   gem 'shoulda-matchers', require: false
   gem 'rspec-html-matchers'
   gem 'byebug', require: ENV['RM_INFO'].nil?, platform: :mri
-  gem "rubocop-discourse", require: false
+  gem 'rubocop-discourse', require: false
   gem 'parallel_tests'
 
   gem 'rswag-specs'
@@ -267,6 +271,9 @@ gem 'colored2', require: false
 gem 'maxminddb'
 
 gem 'rails_failover', require: false
+
+gem 'faraday'
+gem 'faraday-retry'
 
 # workaround for faraday-net_http, see
 # https://github.com/ruby/net-imap/issues/16#issuecomment-803086765

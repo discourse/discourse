@@ -1,4 +1,4 @@
-import EmberObject, { set } from "@ember/object";
+import EmberObject, { action, set } from "@ember/object";
 import { alias, and, gt, gte, not, or } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
@@ -14,7 +14,7 @@ import { isEmpty } from "@ember/utils";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { dasherize } from "@ember/string";
 import { emojiUnescape } from "discourse/lib/text";
-import { escapeExpression } from "discourse/lib/utilities";
+import { escapeExpression, modKeysPressed } from "discourse/lib/utilities";
 
 export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   elementId: "user-card",
@@ -220,6 +220,18 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     this._close();
   },
 
+  @action
+  handleShowUser(user, event) {
+    if (event && modKeysPressed(event).length > 0) {
+      return false;
+    }
+    event?.preventDefault();
+    // Invokes `showUser` argument. Convert to `this.args.showUser` when
+    // refactoring this to a glimmer component.
+    this.showUser(user);
+    this._close();
+  },
+
   actions: {
     close() {
       this._close();
@@ -247,9 +259,8 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
       this._close();
     },
 
-    showUser(username) {
-      this.showUser(username);
-      this._close();
+    showUser(user) {
+      this.handleShowUser(user);
     },
 
     checkEmail(user) {

@@ -3,12 +3,11 @@ import { alias, not, or, readOnly } from "@ember/object/computed";
 import { areCookiesEnabled, escapeExpression } from "discourse/lib/utilities";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { next, schedule } from "@ember/runloop";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import { escape } from "pretty-text/sanitizer";
 import { extractError } from "discourse/lib/ajax-error";
@@ -19,6 +18,7 @@ import { isEmpty } from "@ember/utils";
 import { setting } from "discourse/lib/computed";
 import showModal from "discourse/lib/show-modal";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
+import { inject as service } from "@ember/service";
 
 // This is happening outside of the app via popup
 const AuthErrors = [
@@ -33,6 +33,7 @@ export default Controller.extend(ModalFunctionality, {
   createAccount: controller(),
   forgotPassword: controller(),
   application: controller(),
+  dialog: service(),
 
   loggingIn: false,
   loggedIn: false,
@@ -132,7 +133,66 @@ export default Controller.extend(ModalFunctionality, {
     return canLoginLocalWithEmail;
   },
 
+  @action
+  emailLogin(event) {
+    event?.preventDefault();
+
+    if (this.processingEmailLink) {
+      return;
+    }
+
+    if (isEmpty(this.loginName)) {
+      this.flash(I18n.t("login.blank_username"), "info");
+      return;
+    }
+
+    this.set("processingEmailLink", true);
+
+    ajax("/u/email-login", {
+      data: { login: this.loginName.trim() },
+      type: "POST",
+    })
+      .then((data) => {
+        const loginName = escapeExpression(this.loginName);
+        const isEmail = loginName.match(/@/);
+        let key = `email_login.complete_${isEmail ? "email" : "username"}`;
+        if (data.user_found === false) {
+          this.flash(
+            I18n.t(`${key}_not_found`, {
+              email: loginName,
+              username: loginName,
+            }),
+            "error"
+          );
+        } else {
+          let postfix = data.hide_taken ? "" : "_found";
+          this.flash(
+            I18n.t(`${key}${postfix}`, {
+              email: loginName,
+              username: loginName,
+            })
+          );
+        }
+      })
+      .catch((e) => this.flash(extractError(e), "error"))
+      .finally(() => this.set("processingEmailLink", false));
+  },
+
+  @action
+  handleForgotPassword(event) {
+    event?.preventDefault();
+    const forgotPasswordController = this.forgotPassword;
+    if (forgotPasswordController) {
+      forgotPasswordController.set("accountEmailOrUsername", this.loginName);
+    }
+    this.send("showForgotPassword");
+  },
+
   actions: {
+    forgotPassword() {
+      this.handleForgotPassword();
+    },
+
     login() {
       if (this.loginDisabled) {
         return;
@@ -199,7 +259,7 @@ export default Controller.extend(ModalFunctionality, {
               });
             } else if (result.reason === "suspended") {
               this.send("closeModal");
-              bootbox.alert(result.error);
+              this.dialog.alert(result.error);
             } else {
               this.flash(result.error, "error");
             }
@@ -294,56 +354,6 @@ export default Controller.extend(ModalFunctionality, {
         }
       }
       this.send("showCreateAccount");
-    },
-
-    forgotPassword() {
-      const forgotPasswordController = this.forgotPassword;
-      if (forgotPasswordController) {
-        forgotPasswordController.set("accountEmailOrUsername", this.loginName);
-      }
-      this.send("showForgotPassword");
-    },
-
-    emailLogin() {
-      if (this.processingEmailLink) {
-        return;
-      }
-
-      if (isEmpty(this.loginName)) {
-        this.flash(I18n.t("login.blank_username"), "info");
-        return;
-      }
-
-      this.set("processingEmailLink", true);
-
-      ajax("/u/email-login", {
-        data: { login: this.loginName.trim() },
-        type: "POST",
-      })
-        .then((data) => {
-          const loginName = escapeExpression(this.loginName);
-          const isEmail = loginName.match(/@/);
-          let key = `email_login.complete_${isEmail ? "email" : "username"}`;
-          if (data.user_found === false) {
-            this.flash(
-              I18n.t(`${key}_not_found`, {
-                email: loginName,
-                username: loginName,
-              }),
-              "error"
-            );
-          } else {
-            let postfix = data.hide_taken ? "" : "_found";
-            this.flash(
-              I18n.t(`${key}${postfix}`, {
-                email: loginName,
-                username: loginName,
-              })
-            );
-          }
-        })
-        .catch((e) => this.flash(extractError(e), "error"))
-        .finally(() => this.set("processingEmailLink", false));
     },
 
     authenticateSecurityKey() {

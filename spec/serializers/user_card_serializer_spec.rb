@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserCardSerializer do
+RSpec.describe UserCardSerializer do
   context "with a TL0 user seen as anonymous" do
     let(:user) { Fabricate.build(:user, trust_level: 0, user_profile: Fabricate.build(:user_profile)) }
     let(:serializer) { described_class.new(user, scope: Guardian.new, root: false) }

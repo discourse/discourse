@@ -73,19 +73,37 @@ module ImportScripts::PhpBB3
     def get_recipient_user_ids(to_address)
       return [] if to_address.blank?
 
-      # to_address looks like this: "u_91:u_1234:u_200"
-      # The "u_" prefix is discarded and the rest is a user_id.
+      # to_address looks like this: "u_91:u_1234:g_200"
+      # If there is a "u_" prefix, the prefix is discarded and the rest is a user_id
       user_ids = to_address.split(':')
       user_ids.uniq!
-      user_ids.map! { |u| u[2..-1].to_i }
+      user_ids.map! { |u| u[2..-1].to_i if u[0..1] == 'u_' }.compact
+    end
+
+    def get_recipient_group_ids(to_address)
+      return [] if to_address.blank?
+
+      # to_address looks like this: "u_91:u_1234:g_200"
+      # If there is a "g_" prefix, the prefix is discarded and the rest is a group_id
+      group_ids = to_address.split(':')
+      group_ids.uniq!
+      group_ids.map! { |g| g[2..-1].to_i if g[0..1] == 'g_' }.compact
     end
 
     def get_recipient_usernames(row)
       import_user_ids = get_recipient_user_ids(row[:to_address])
-
-      import_user_ids.map! do |import_user_id|
+      usernames = import_user_ids.map do |import_user_id|
         @lookup.find_user_by_import_id(@settings.prefix(import_user_id)).try(:username)
       end.compact
+
+      import_group_ids = get_recipient_group_ids(row[:to_address])
+      import_group_ids.each do |import_group_id|
+        group = @lookup.find_group_by_import_id(@settings.prefix(import_group_id))
+        next unless group
+        usernames = usernames + group.users.pluck(:username)
+      end
+
+      usernames.uniq
     end
 
     def get_topic_title(row)

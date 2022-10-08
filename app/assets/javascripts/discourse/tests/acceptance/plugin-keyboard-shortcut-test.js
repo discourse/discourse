@@ -13,22 +13,19 @@ acceptance("Plugin Keyboard Shortcuts - Logged In", function (needs) {
   needs.user();
 
   test("a plugin can add a keyboard shortcut", async function (assert) {
-    // Initialize the app (required in the legacy testing env)
-    await visit("/");
-
     withPluginApi("0.8.38", (api) => {
       api.addKeyboardShortcut("]", () => {
-        $("#qunit-fixture").html(
-          "<div id='added-element'>Test adding plugin shortcut</div>"
-        );
+        document.querySelector(
+          "#qunit-fixture"
+        ).innerHTML = `<div id="added-element">Test adding plugin shortcut</div>`;
       });
     });
 
     await visit("/t/this-is-a-test-topic/9");
     await triggerKeyEvent(document, "keypress", "]".charCodeAt(0));
-    assert.strictEqual(
-      $("#added-element").length,
-      1,
+
+    assert.ok(
+      document.querySelector("#added-element"),
       "the keyboard shortcut callback fires successfully"
     );
   });
@@ -36,9 +33,6 @@ acceptance("Plugin Keyboard Shortcuts - Logged In", function (needs) {
 
 acceptance("Plugin Keyboard Shortcuts - Anonymous", function () {
   test("a plugin can add a keyboard shortcut with an option", async function (assert) {
-    // Initialize the app (required in the legacy testing env)
-    await visit("/");
-
     let spy = sinon.spy(KeyboardShortcuts, "_bindToPath");
     withPluginApi("0.8.38", (api) => {
       api.addKeyboardShortcut("]", () => {}, {
@@ -70,6 +64,7 @@ acceptance("Plugin Keyboard Shortcuts - Anonymous", function () {
     });
     await visit("/");
     await triggerKeyEvent(document, "keypress", "?".charCodeAt(0));
+
     assert.ok(exists(".shortcut-category-new_category"));
     assert.strictEqual(count(".shortcut-category-new_category li"), 1);
   });

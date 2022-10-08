@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SecondFactor::Actions::GrantAdmin do
+RSpec.describe SecondFactor::Actions::GrantAdmin do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
 

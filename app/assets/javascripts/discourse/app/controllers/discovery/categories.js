@@ -1,5 +1,6 @@
 import DiscoveryController from "discourse/controllers/discovery";
 import { inject as controller } from "@ember/controller";
+import { action } from "@ember/object";
 import { dasherize } from "@ember/string";
 import discourseComputed from "discourse-common/utils/decorators";
 import { reads } from "@ember/object/computed";
@@ -23,7 +24,10 @@ export default DiscoveryController.extend({
   category: null,
 
   canEdit: reads("currentUser.staff"),
-
+  @discourseComputed
+  isCategoriesRoute() {
+    return this.router.currentRouteName === "discovery.categories";
+  },
   @discourseComputed("model.parentCategory")
   categoryPageStyle(parentCategory) {
     let style = this.siteSettings.desktop_category_page_style;
@@ -40,22 +44,26 @@ export default DiscoveryController.extend({
     }
 
     const componentName =
-      parentCategory && style === "categories_and_latest_topics"
+      parentCategory &&
+      (style === "categories_and_latest_topics" ||
+        style === "categories_and_latest_topics_created_date")
         ? "categories_only"
         : style;
     return dasherize(componentName);
   },
+
+  @action
+  showInserted(event) {
+    event?.preventDefault();
+    const tracker = this.topicTrackingState;
+    // Move inserted into topics
+    this.model.loadBefore(tracker.get("newIncoming"), true);
+    tracker.resetTracking();
+  },
+
   actions: {
     refresh() {
       this.send("triggerRefresh");
-    },
-    showInserted() {
-      const tracker = this.topicTrackingState;
-
-      // Move inserted into topics
-      this.model.loadBefore(tracker.get("newIncoming"), true);
-      tracker.resetTracking();
-      return false;
     },
   },
 });

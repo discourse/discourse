@@ -40,6 +40,15 @@ class BaseBookmarkable
   end
 
   ##
+  #
+  # Implementations can define their own preloading logic here
+  # @param [Array] bookmarks_of_type The list of bookmarks to preload data for. Already filtered to be of the correct class.
+  # @param [Guardian] guardian An instance of Guardian for the current_user
+  def self.perform_custom_preload!(bookmarks_of_type, guardian)
+    nil
+  end
+
+  ##
   # This is where the main query to filter the bookmarks by the provided bookmarkable
   # type should occur. This should join on additional tables that are required later
   # on to preload additional data for serializers, and also is the place where the
@@ -96,6 +105,33 @@ class BaseBookmarkable
   # @return [void]
   def self.reminder_handler(bookmark)
     raise NotImplementedError
+  end
+
+  ##
+  # Can be used by the inheriting class via reminder_handler, most of the
+  # time we just want to make a Notification for a bookmark reminder, this
+  # gives consumers a way to do it without having provide all of the required
+  # data themselves.
+  #
+  # @param [Bookmark] bookmark          The bookmark that we are sending the reminder notification for.
+  # @param [Hash]     notification_data Any data, either top-level (e.g. topic_id, post_number) or inside
+  #                                     the data sub-key, which should be stored when the notification is
+  #                                     created.
+  # @return [void]
+  def self.send_reminder_notification(bookmark, notification_data)
+    if notification_data[:data].blank? ||
+        notification_data[:data][:bookmarkable_url].blank? ||
+        notification_data[:data][:title].blank?
+      raise Discourse::InvalidParameters.new("A `data` key must be present with at least `bookmarkable_url` and `title` entries.")
+    end
+
+    notification_data[:data] = notification_data[:data].merge(
+      display_username: bookmark.user.username,
+      bookmark_name: bookmark.name,
+      bookmark_id: bookmark.id
+    ).to_json
+    notification_data[:notification_type] = Notification.types[:bookmark_reminder]
+    bookmark.user.notifications.create!(notification_data)
   end
 
   ##

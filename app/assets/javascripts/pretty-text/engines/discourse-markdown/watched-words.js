@@ -1,3 +1,8 @@
+import {
+  createWatchedWordRegExp,
+  toWatchedWord,
+} from "discourse-common/utils/watched-words";
+
 const MAX_MATCHES = 100;
 
 function isLinkOpen(str) {
@@ -47,10 +52,12 @@ export function setup(helper) {
 
     if (md.options.discourse.watchedWordsReplace) {
       Object.entries(md.options.discourse.watchedWordsReplace).map(
-        ([word, replacement]) => {
+        ([regexpString, options]) => {
+          const word = toWatchedWord({ [regexpString]: options });
+
           matchers.push({
-            pattern: new RegExp(word, "gi"),
-            replacement,
+            pattern: createWatchedWordRegExp(word),
+            replacement: options.replacement,
             link: false,
           });
         }
@@ -59,10 +66,12 @@ export function setup(helper) {
 
     if (md.options.discourse.watchedWordsLink) {
       Object.entries(md.options.discourse.watchedWordsLink).map(
-        ([word, replacement]) => {
+        ([regexpString, options]) => {
+          const word = toWatchedWord({ [regexpString]: options });
+
           matchers.push({
-            pattern: new RegExp(word, "gi"),
-            replacement,
+            pattern: createWatchedWordRegExp(word),
+            replacement: options.replacement,
             link: true,
           });
         }

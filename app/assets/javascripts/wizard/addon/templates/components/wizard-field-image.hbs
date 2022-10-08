@@ -2,7 +2,7 @@
   {{component this.previewComponent field=this.field fieldClass=this.fieldClass wizard=this.wizard}}
 {{/if}}
 
-<label class="wizard-btn wizard-btn-upload {{if this.uploading "disabled"}}">
+<label class="wizard-container__button wizard-container__button-upload {{if this.uploading "disabled"}}">
   {{#if this.uploading}}
     {{i18n "wizard.uploading"}}
   {{else}}

@@ -72,6 +72,11 @@ export default Controller.extend({
     return !allowPrivateMessages;
   },
 
+  @discourseComputed("currentUser.allowPersonalMessages")
+  showMessageSettings() {
+    return this.currentUser?.allowPersonalMessages;
+  },
+
   @action
   save() {
     this.set("saved", false);

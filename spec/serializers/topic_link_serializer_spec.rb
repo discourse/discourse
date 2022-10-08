@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicLinkSerializer do
+RSpec.describe TopicLinkSerializer do
 
   it "correctly serializes the topic link" do
     post = Fabricate(:post, raw: 'https://meta.discourse.org/')

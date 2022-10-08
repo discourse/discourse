@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-describe StaticController do
+RSpec.describe StaticController do
   fab!(:upload) { Fabricate(:upload) }
 
-  context '#favicon' do
+  describe '#favicon' do
     let(:filename) { 'smallest.png' }
     let(:file) { file_from_fixtures(filename) }
 
@@ -17,7 +17,7 @@ describe StaticController do
       end
     end
 
-    describe 'local store' do
+    context 'with local store' do
       it 'returns the default favicon if favicon has not been configured' do
         get '/favicon/proxied'
 
@@ -37,7 +37,7 @@ describe StaticController do
       end
     end
 
-    describe 'external store' do
+    context 'with external store' do
       let(:upload) do
         Upload.create!(
           url: '//s3-upload-bucket.s3-us-east-1.amazonaws.com/somewhere/a.png',
@@ -66,7 +66,7 @@ describe StaticController do
     end
   end
 
-  context '#brotli_asset' do
+  describe '#brotli_asset' do
     it 'returns a non brotli encoded 404 if asset is missing' do
       get "/brotli_asset/missing.js"
 
@@ -133,7 +133,7 @@ describe StaticController do
     end
   end
 
-  context '#cdn_asset' do
+  describe '#cdn_asset' do
     let (:site) { RailsMultisite::ConnectionManagement.current_db }
 
     it 'can serve assets' do
@@ -155,7 +155,7 @@ describe StaticController do
     end
   end
 
-  context '#show' do
+  describe '#show' do
     before do
       post = create_post
       SiteSetting.tos_topic_id = post.topic.id
@@ -208,7 +208,7 @@ describe StaticController do
         expect(response.status).to eq(404)
       end
 
-      context "modal pages" do
+      context "with modal pages" do
         it "should return the right response for /signup" do
           get "/signup"
           expect(response.status).to eq(200)
@@ -266,7 +266,7 @@ describe StaticController do
       end
     end
 
-    context "crawler view" do
+    context "with crawler view" do
       it "should include correct title" do
         get '/faq', headers: { 'HTTP_USER_AGENT' => 'Googlebot' }
         expect(response.status).to eq(200)
@@ -274,7 +274,7 @@ describe StaticController do
       end
     end
 
-    context "plugin api extensions" do
+    context "with plugin api extensions" do
       after do
         Rails.application.reload_routes!
         StaticController::CUSTOM_PAGES.clear

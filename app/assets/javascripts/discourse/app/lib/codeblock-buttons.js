@@ -1,4 +1,5 @@
-import { cancel, later } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import Mobile from "discourse/lib/mobile";
 import { bind } from "discourse-common/utils/decorators";
 import showModal from "discourse/lib/show-modal";
@@ -188,7 +189,7 @@ export default class CodeblockButtons {
       delete this._fadeCopyCodeblocksRunners[commandId];
     }
 
-    this._fadeCopyCodeblocksRunners[commandId] = later(() => {
+    this._fadeCopyCodeblocksRunners[commandId] = discourseLater(() => {
       button.classList.remove("action-complete");
       button.innerHTML = state;
       delete this._fadeCopyCodeblocksRunners[commandId];

@@ -1,7 +1,7 @@
 import EmberObject, { computed, get, getProperties } from "@ember/object";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
-import { alias, equal, filterBy, gt, or } from "@ember/object/computed";
+import { alias, equal, filterBy, gt, mapBy, or } from "@ember/object/computed";
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import { A } from "@ember/array";
 import Badge from "discourse/models/badge";
@@ -32,7 +32,8 @@ import { url } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
 import { htmlSafe } from "@ember/template";
 import Evented from "@ember/object/evented";
-import { cancel, later } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import { isTesting } from "discourse-common/config/environment";
 
 export const SECOND_FACTOR_METHODS = {
@@ -105,7 +106,6 @@ let userOptionFields = [
   "skip_new_user_tips",
   "default_calendar",
   "bookmark_auto_delete_preference",
-  "enable_experimental_sidebar",
 ];
 
 export function addSaveableUserOptionField(fieldName) {
@@ -314,14 +314,18 @@ const User = RestModel.extend({
 
   sidebarCategoryIds: alias("sidebar_category_ids"),
 
-  @discourseComputed("sidebar_tag_names.[]")
-  sidebarTagNames(sidebarTagNames) {
-    if (!sidebarTagNames || sidebarTagNames.length === 0) {
+  @discourseComputed("sidebar_tags.[]")
+  sidebarTags(sidebarTags) {
+    if (!sidebarTags || sidebarTags.length === 0) {
       return [];
     }
 
-    return sidebarTagNames;
+    return sidebarTags.sort((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
   },
+
+  sidebarTagNames: mapBy("sidebarTags", "name"),
 
   @discourseComputed("sidebar_category_ids.[]")
   sidebarCategories(sidebarCategoryIds) {
@@ -329,16 +333,9 @@ const User = RestModel.extend({
       return [];
     }
 
-    return Site.current().categoriesList.filter((category) => {
-      if (
-        this.siteSettings.suppress_uncategorized_badge &&
-        category.isUncategorizedCategory
-      ) {
-        return false;
-      }
-
-      return sidebarCategoryIds.includes(category.id);
-    });
+    return Site.current().categoriesList.filter((category) =>
+      sidebarCategoryIds.includes(category.id)
+    );
   },
 
   changeUsername(new_username) {
@@ -368,13 +365,13 @@ const User = RestModel.extend({
 
   save(fields) {
     const data = this.getProperties(
-      userFields.filter((uf) => !fields || fields.indexOf(uf) !== -1)
+      userFields.filter((uf) => !fields || fields.includes(uf))
     );
 
     let filteredUserOptionFields = [];
     if (fields) {
-      filteredUserOptionFields = userOptionFields.filter(
-        (uo) => fields.indexOf(uo) !== -1
+      filteredUserOptionFields = userOptionFields.filter((uo) =>
+        fields.includes(uo)
       );
     } else {
       filteredUserOptionFields = userOptionFields;
@@ -446,6 +443,7 @@ const User = RestModel.extend({
         );
         User.current().setProperties(userProps);
         this.setProperties(updatedState);
+        return result;
       })
       .finally(() => {
         this.set("isSaving", false);
@@ -574,25 +572,27 @@ const User = RestModel.extend({
     });
   },
 
-  loadUserAction(id) {
-    const stream = this.stream;
-    return ajax(`/user_actions/${id}.json`).then((result) => {
-      if (result && result.user_action) {
-        const ua = result.user_action;
+  async loadUserAction(id) {
+    const result = await ajax(`/user_actions/${id}.json`);
 
-        if ((this.get("stream.filter") || ua.action_type) !== ua.action_type) {
-          return;
-        }
-        if (!this.get("stream.filter") && !this.inAllStream(ua)) {
-          return;
-        }
+    if (!result?.user_action) {
+      return;
+    }
 
-        ua.title = emojiUnescape(escapeExpression(ua.title));
-        const action = UserAction.collapseStream([UserAction.create(ua)]);
-        stream.set("itemsLoaded", stream.get("itemsLoaded") + 1);
-        stream.get("content").insertAt(0, action[0]);
-      }
-    });
+    const ua = result.user_action;
+
+    if ((this.get("stream.filter") || ua.action_type) !== ua.action_type) {
+      return;
+    }
+
+    if (!this.get("stream.filter") && !this.inAllStream(ua)) {
+      return;
+    }
+
+    ua.title = emojiUnescape(escapeExpression(ua.title));
+    const action = UserAction.collapseStream([UserAction.create(ua)]);
+    this.stream.set("itemsLoaded", this.stream.get("itemsLoaded") + 1);
+    this.stream.get("content").insertAt(0, action[0]);
   },
 
   inAllStream(ua) {
@@ -624,6 +624,18 @@ const User = RestModel.extend({
   @discourseComputed("filteredGroups", "numGroupsToDisplay")
   showMoreGroupsLink(filteredGroups, numGroupsToDisplay) {
     return filteredGroups.length > numGroupsToDisplay;
+  },
+
+  isInAnyGroups(groupIds) {
+    if (!this.groups) {
+      return;
+    }
+
+    // auto group ID 0 is "everyone"
+    return (
+      groupIds.includes(0) ||
+      this.groups.mapBy("id").some((groupId) => groupIds.includes(groupId))
+    );
   },
 
   // The user's stat count, excluding PMs.
@@ -1047,6 +1059,11 @@ const User = RestModel.extend({
     this.appEvents.trigger("user-drafts:changed");
   },
 
+  updateReviewableCount(count) {
+    this.set("reviewable_count", count);
+    this.appEvents.trigger("user-reviewable-count:changed", count);
+  },
+
   isInDoNotDisturb() {
     return (
       this.do_not_disturb_until &&
@@ -1061,6 +1078,18 @@ const User = RestModel.extend({
   )
   trackedTags(trackedTags, watchedTags, watchingFirstPostTags) {
     return [...trackedTags, ...watchedTags, ...watchingFirstPostTags];
+  },
+
+  @discourseComputed("staff", "groups.[]")
+  allowPersonalMessages() {
+    return (
+      this.staff ||
+      this.isInAnyGroups(
+        this.siteSettings.personal_message_enabled_groups
+          .split("|")
+          .map((groupId) => parseInt(groupId, 10))
+      )
+    );
   },
 });
 
@@ -1177,25 +1206,65 @@ User.reopenClass(Singleton, {
   },
 });
 
+User.reopenClass({
+  create(args) {
+    args = args || {};
+    this.deleteStatusTrackingFields(args);
+    return this._super(args);
+  },
+
+  deleteStatusTrackingFields(args) {
+    // every user instance has to have it's own tracking fields
+    // when creating a new user model
+    // its _subscribersCount and _clearStatusTimerId fields
+    // should be equal to 0 and null
+    // here we makes sure that even if these fields
+    // will be passed in args they won't be set anyway
+    //
+    // this is something that could be implemented by making these fields private,
+    // but EmberObject doesn't support private fields
+    if (args.hasOwnProperty("_subscribersCount")) {
+      delete args._subscribersCount;
+    }
+    if (args.hasOwnProperty("_clearStatusTimerId")) {
+      delete args._clearStatusTimerId;
+    }
+  },
+});
+
 // user status tracking
 User.reopen(Evented, {
+  _subscribersCount: 0,
   _clearStatusTimerId: null,
 
   // always call stopTrackingStatus() when done with a user
   trackStatus() {
-    this.addObserver("status", this, "_statusChanged");
+    if (this._subscribersCount === 0) {
+      this.addObserver("status", this, "_statusChanged");
 
-    this.appEvents.on("user-status:changed", this, this._updateStatus);
+      this.appEvents.on("user-status:changed", this, this._updateStatus);
 
-    if (this.status && this.status.ends_at) {
-      this._scheduleStatusClearing(this.status.ends_at);
+      if (this.status && this.status.ends_at) {
+        this._scheduleStatusClearing(this.status.ends_at);
+      }
     }
+
+    this._subscribersCount++;
   },
 
   stopTrackingStatus() {
-    this.removeObserver("status", this, "_statusChanged");
-    this.appEvents.off("user-status:changed", this, this._updateStatus);
-    this._unscheduleStatusClearing();
+    if (this._subscribersCount === 0) {
+      return;
+    }
+
+    if (this._subscribersCount === 1) {
+      // the last subscriber is unsubscribing
+      this.removeObserver("status", this, "_statusChanged");
+      this.appEvents.off("user-status:changed", this, this._updateStatus);
+      this._unscheduleStatusClearing();
+    }
+
+    this._subscribersCount--;
   },
 
   _statusChanged(sender, key) {
@@ -1220,7 +1289,11 @@ User.reopen(Evented, {
 
     const utcNow = moment.utc();
     const remaining = moment.utc(endsAt).diff(utcNow, "milliseconds");
-    this._clearStatusTimerId = later(this, "_autoClearStatus", remaining);
+    this._clearStatusTimerId = discourseLater(
+      this,
+      "_autoClearStatus",
+      remaining
+    );
   },
 
   _unscheduleStatusClearing() {
@@ -1233,7 +1306,9 @@ User.reopen(Evented, {
   },
 
   _updateStatus(statuses) {
-    this.set("status", statuses[this.id]);
+    if (statuses.hasOwnProperty(this.id)) {
+      this.set("status", statuses[this.id]);
+    }
   },
 });
 

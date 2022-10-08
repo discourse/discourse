@@ -87,3 +87,8 @@ he:
           title: "שבשבות"
         empty_state:
           title: "מצב ריק"
+        rich_tooltip:
+          title: "חלונית תיאור עשירה"
+          description: "תיאור"
+          header: "כותרת"
+          hover_to_see: "יש לעבור מעל כדי לראות חלונית תיאור"

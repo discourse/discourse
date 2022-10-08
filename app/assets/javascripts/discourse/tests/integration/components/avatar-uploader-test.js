@@ -2,16 +2,14 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { createFile } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
-import pretender from "discourse/tests/helpers/create-pretender";
+import { hbs } from "ember-cli-htmlbars";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module("Integration | Component | avatar-uploader", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    pretender.post("/uploads.json", () => {
-      return [200, { "Content-Type": "application/json" }, {}];
-    });
+    pretender.post("/uploads.json", () => response({}));
   });
 
   test("default", async function (assert) {

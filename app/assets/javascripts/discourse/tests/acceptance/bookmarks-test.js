@@ -215,15 +215,15 @@ acceptance("Bookmarking", function (needs) {
 
     await click("#delete-bookmark");
 
-    assert.ok(exists(".bootbox.modal"), "it asks for delete confirmation");
+    assert.ok(exists(".dialog-body"), "it asks for delete confirmation");
     assert.ok(
-      query(".bootbox.modal").innerText.includes(
+      query(".dialog-body").innerText.includes(
         I18n.t("bookmarks.confirm_delete")
       ),
       "it shows delete confirmation message"
     );
 
-    await click(".bootbox.modal .btn-primary");
+    await click(".dialog-footer .btn-danger");
 
     assert.notOk(
       exists(".topic-post:first-child button.bookmark.bookmarked"),
@@ -303,8 +303,8 @@ acceptance("Bookmarking", function (needs) {
   });
 
   test("The topic level bookmark button deletes all bookmarks if several posts on the topic are bookmarked", async function (assert) {
-    const yesButton = "a.btn-primary";
-    const noButton = "a.btn-default";
+    const yesButton = ".dialog-footer .btn-primary";
+    const noButton = ".dialog-footer .btn-default";
 
     await visit("/t/internationalization-localization/280");
     await openBookmarkModal(1);
@@ -336,6 +336,7 @@ acceptance("Bookmarking", function (needs) {
 
     // open the modal and accept deleting
     await click("#topic-footer-button-bookmark");
+    // pauseTest();
     await click(yesButton);
 
     assert.ok(
@@ -412,7 +413,7 @@ acceptance("Bookmarking", function (needs) {
       "the footer button says Clear Bookmarks because there is more than one"
     );
     await click("#topic-footer-button-bookmark");
-    await click("a.btn-primary");
+    await click(".dialog-footer .btn-primary");
 
     assert.ok(
       !exists(".topic-post:first-child button.bookmark.bookmarked"),
@@ -443,15 +444,15 @@ acceptance("Bookmarking", function (needs) {
     await click("#topic-footer-button-bookmark");
     await click("#delete-bookmark");
 
-    assert.ok(exists(".bootbox.modal"), "it asks for delete confirmation");
+    assert.ok(exists(".dialog-body"), "it asks for delete confirmation");
     assert.ok(
-      query(".bootbox.modal").innerText.includes(
+      query(".dialog-body").innerText.includes(
         I18n.t("bookmarks.confirm_delete")
       ),
       "it shows delete confirmation message"
     );
 
-    await click(".bootbox.modal .btn-primary");
+    await click(".dialog-footer .btn-danger");
 
     assert.strictEqual(
       query("#topic-footer-button-bookmark").innerText,

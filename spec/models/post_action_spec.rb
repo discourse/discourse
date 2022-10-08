@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostAction do
+RSpec.describe PostAction do
   it { is_expected.to rate_limit }
 
   fab!(:moderator) { Fabricate(:moderator) }
@@ -20,8 +20,7 @@ describe PostAction do
     expect(pa).not_to be_valid
   end
 
-  context "messaging" do
-
+  describe "messaging" do
     it "notifies moderators (integration test)" do
       post = create_post
       mod = moderator
@@ -88,7 +87,7 @@ describe PostAction do
       expect(topic.message_archived?(mod)).to eq(true)
     end
 
-    context "category group moderators" do
+    context "with category group moderators" do
       fab!(:group_user) { Fabricate(:group_user) }
       let(:group) { group_user.group }
 
@@ -109,7 +108,6 @@ describe PostAction do
         expect(readable_by_groups).to include(group.id)
       end
     end
-
   end
 
   describe "update_counters" do
@@ -520,7 +518,7 @@ describe PostAction do
       post = Fabricate(:post, user: mod)
 
       Reviewable.set_priorities(high: 2.0)
-      SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:low]
+      SiteSetting.hide_post_sensitivity = Reviewable.sensitivities[:low]
       Discourse.stubs(:site_contact_user).returns(admin)
 
       PostActionCreator.spam(eviltrout, post)
@@ -535,7 +533,7 @@ describe PostAction do
       post = Fabricate(:post, user: mod)
 
       Reviewable.set_priorities(high: 8.0)
-      SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:low]
+      SiteSetting.hide_post_sensitivity = Reviewable.sensitivities[:low]
       Discourse.stubs(:site_contact_user).returns(admin)
 
       PostActionCreator.spam(eviltrout, post)
@@ -565,7 +563,7 @@ describe PostAction do
       walterwhite = Fabricate(:walter_white)
 
       Reviewable.set_priorities(high: 3.0)
-      SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:low]
+      SiteSetting.hide_post_sensitivity = Reviewable.sensitivities[:low]
       Discourse.stubs(:site_contact_user).returns(admin)
 
       PostActionCreator.spam(eviltrout, post)
@@ -679,7 +677,7 @@ describe PostAction do
       expect(post.hidden).to eq(false)
     end
 
-    context "topic auto closing" do
+    context "with topic auto closing" do
       fab!(:topic) { Fabricate(:topic) }
       let(:post1) { create_post(topic: topic) }
       let(:post2) { create_post(topic: topic) }
@@ -689,9 +687,9 @@ describe PostAction do
       fab!(:flagger2) { Fabricate(:user) }
 
       before do
-        SiteSetting.hide_post_sensitivity = Reviewable.sensitivity[:disabled]
+        SiteSetting.hide_post_sensitivity = Reviewable.sensitivities[:disabled]
         Reviewable.set_priorities(high: 4.5)
-        SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:low]
+        SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivities[:low]
         SiteSetting.num_flaggers_to_close_topic = 2
         SiteSetting.num_hours_to_close_topic = 1
       end
@@ -735,7 +733,7 @@ describe PostAction do
         expect(topic_status_update.status_type).to eq(TopicTimer.types[:open])
       end
 
-      context "on a staff post" do
+      context "when on a staff post" do
         fab!(:staff_user) { Fabricate(:user, moderator: true) }
         fab!(:topic) { Fabricate(:topic, user: staff_user) }
 
@@ -755,7 +753,7 @@ describe PostAction do
 
         SiteSetting.num_flaggers_to_close_topic = 1
         Reviewable.set_priorities(high: 0.5)
-        SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:low]
+        SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivities[:low]
 
         post = Fabricate(:post, topic: topic)
         PostActionCreator.spam(flagger1, post)
@@ -774,7 +772,7 @@ describe PostAction do
         freeze_time timer.execute_at
         SiteSetting.num_flaggers_to_close_topic = 10
         Reviewable.set_priorities(high: 10.0)
-        SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivity[:low]
+        SiteSetting.auto_close_topic_sensitivity = Reviewable.sensitivities[:low]
 
         Jobs::ToggleTopicClosed.new.execute(topic_timer_id: timer.id, state: false)
 
@@ -802,6 +800,7 @@ describe PostAction do
   end
 
   it "prevents user to act twice at the same time" do
+    Group.refresh_automatic_groups!
     # flags are already being tested
     all_types_except_flags = PostActionType.types.except(*PostActionType.flag_types_without_custom.keys)
     all_types_except_flags.values.each do |action|
@@ -988,7 +987,7 @@ describe PostAction do
       expect(event).to be_present
     end
 
-    context "resolving flags" do
+    context "when resolving flags" do
       let(:result) { PostActionCreator.spam(eviltrout, post) }
       let(:post_action) { result.post_action }
       let(:reviewable) { result.reviewable }

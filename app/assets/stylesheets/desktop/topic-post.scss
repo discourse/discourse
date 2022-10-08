@@ -382,15 +382,6 @@ video {
   }
 }
 
-@-webkit-keyframes fadein {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 @keyframes fadein {
   from {
     opacity: 0;
@@ -470,6 +461,7 @@ blockquote {
 .topic-body {
   width: calc(#{$topic-body-width} + (#{$topic-body-width-padding} * 2));
   float: left;
+  min-width: 0; // prevents some elements, like <pre>, from blowing out the width
   position: relative;
   border-top: 1px solid var(--primary-low);
   padding: 12px 0 0 0;
@@ -493,6 +485,7 @@ blockquote {
   width: $topic-avatar-width;
   float: left;
   z-index: z("base") + 1;
+  height: 100%;
 }
 
 .gap {

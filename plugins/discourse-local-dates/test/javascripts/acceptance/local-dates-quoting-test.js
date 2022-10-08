@@ -2,7 +2,7 @@ import { cloneJSON } from "discourse-common/lib/object";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
-  queryAll,
+  query,
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
@@ -15,17 +15,17 @@ acceptance("Local Dates - quoting", function (needs) {
   needs.pretender((server, helper) => {
     const topicResponse = cloneJSON(topicFixtures["/t/280/1.json"]);
     const firstPost = topicResponse.post_stream.posts[0];
-    firstPost.cooked += `<div class='select-local-date-test'>This is a test <span data-date="2022-06-17" data-time="10:00:00" class="discourse-local-date cooked-date past" data-displayed-timezone="Australia/Perth" data-timezone="Australia/Brisbane" data-email-preview="2022-06-17T00:00:00Z UTC" aria-label="Brisbane Friday, June 17, 2022 
+    firstPost.cooked += `<div class='select-local-date-test'>This is a test <span data-date="2022-06-17" data-time="10:00:00" class="discourse-local-date cooked-date past" data-displayed-timezone="Australia/Perth" data-timezone="Australia/Brisbane" data-email-preview="2022-06-17T00:00:00Z UTC" aria-label="Brisbane Friday, June 17, 2022
 	<br />
 	<svg class='fa d-icon d-icon-clock svg-icon svg-string'
 		xmlns=&quot;http://www.w3.org/2000/svg&quot;>
 		<use href=&quot;#clock&quot; />
-	</svg> 10:00 AM, Paris Friday, June 17, 2022 
+	</svg> 10:00 AM, Paris Friday, June 17, 2022
 	<br />
 	<svg class='fa d-icon d-icon-clock svg-icon svg-string'
 		xmlns=&quot;http://www.w3.org/2000/svg&quot;>
 		<use href=&quot;#clock&quot; />
-	</svg> 2:00 AM, Los Angeles Thursday, June 16, 2022 
+	</svg> 2:00 AM, Los Angeles Thursday, June 16, 2022
 	<br />
 	<svg class='fa d-icon d-icon-clock svg-icon svg-string'
 		xmlns=&quot;http://www.w3.org/2000/svg&quot;>
@@ -48,7 +48,7 @@ acceptance("Local Dates - quoting", function (needs) {
     await selectText("#post_1 .select-local-date-test");
     await click(".insert-quote");
     assert.strictEqual(
-      queryAll(".d-editor-input").val().trim(),
+      query(".d-editor-input").value.trim(),
       `[quote=\"Uwe Keim, post:1, topic:280, username:uwe_keim\"]
 This is a test [date=2022-06-17 time=10:00:00 timezone="Australia/Brisbane" displayedTimezone="Australia/Perth"]
 [/quote]`,
@@ -87,7 +87,7 @@ acceptance("Local Dates - quoting range", function (needs) {
     await selectText("#post_1 .select-local-date-test");
     await click(".insert-quote");
     assert.strictEqual(
-      queryAll(".d-editor-input").val().trim(),
+      query(".d-editor-input").value.trim(),
       `[quote=\"Uwe Keim, post:1, topic:280, username:uwe_keim\"]
 Some text [date-range from=2022-06-17T09:30:00 to=2022-06-18T10:30:00 format="LL" timezone="Australia/Brisbane" timezones="Africa/Accra|Australia/Brisbane|Europe/Paris"]
 [/quote]`,
@@ -129,7 +129,7 @@ acceptance(
       await selectText("#post_1 .select-local-date-test");
       await click(".insert-quote");
       assert.strictEqual(
-        queryAll(".d-editor-input").val().trim(),
+        query(".d-editor-input").value.trim(),
         `[quote=\"Uwe Keim, post:1, topic:280, username:uwe_keim\"]
 Testing countdown [date=2022-06-21 time=09:30:00 format="LL" timezone="Australia/Brisbane" countdown="true"]
 

@@ -7,15 +7,16 @@ import I18n from "I18n";
 import NavItem from "discourse/models/nav-item";
 import Topic from "discourse/models/topic";
 import { readOnly } from "@ember/object/computed";
-import bootbox from "bootbox";
 import { endWith } from "discourse/lib/computed";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 
 export default DiscoverySortableController.extend(
   BulkTopicSelection,
   FilterModeMixin,
   {
     application: controller(),
+    dialog: service(),
 
     tag: null,
     additionalTags: null,
@@ -108,7 +109,8 @@ export default DiscoverySortableController.extend(
     },
 
     @action
-    showInserted() {
+    showInserted(event) {
+      event?.preventDefault();
       const tracker = this.topicTrackingState;
       this.list.loadBefore(tracker.newIncoming, true);
       tracker.resetTracking();
@@ -164,15 +166,14 @@ export default DiscoverySortableController.extend(
           });
       }
 
-      bootbox.confirm(confirmText, (result) => {
-        if (!result) {
-          return;
-        }
-
-        this.tag
-          .destroyRecord()
-          .then(() => this.transitionToRoute("tags.index"))
-          .catch(() => bootbox.alert(I18n.t("generic_error")));
+      this.dialog.deleteConfirm({
+        message: confirmText,
+        didConfirm: () => {
+          return this.tag
+            .destroyRecord()
+            .then(() => this.transitionToRoute("tags.index"))
+            .catch(() => this.dialog.alert(I18n.t("generic_error")));
+        },
       });
     },
 

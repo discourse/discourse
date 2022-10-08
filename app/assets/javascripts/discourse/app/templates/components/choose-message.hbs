@@ -11,7 +11,7 @@
     {{#each this.messages as |m|}}
       <div class="controls existing-message">
         <label class="radio">
-          <input id="choose-message-{{m.id}}" {{action "chooseMessage" m}} type="radio" name="choose_message_id">
+          <input id="choose-message-{{m.id}}" {{on "click" (fn this.chooseMessage m)}} type="radio" name="choose_message_id">
           <span class="message-title">
             {{m.title}}
           </span>

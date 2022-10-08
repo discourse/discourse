@@ -1,16 +1,18 @@
+import { action } from "@ember/object";
 import { alias, notEmpty } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 
+import { inject as service } from "@ember/service";
+
 export default Controller.extend({
+  dialog: service(),
   sortedByCount: true,
   sortedByName: false,
-
   canAdminTags: alias("currentUser.staff"),
   groupedByCategory: notEmpty("model.extras.categories"),
   groupedByTagGroup: notEmpty("model.extras.tag_groups"),
@@ -39,23 +41,27 @@ export default Controller.extend({
     };
   },
 
+  @action
+  sortByCount(event) {
+    event?.preventDefault();
+    this.setProperties({
+      sortProperties: ["totalCount:desc", "id"],
+      sortedByCount: true,
+      sortedByName: false,
+    });
+  },
+
+  @action
+  sortById(event) {
+    event?.preventDefault();
+    this.setProperties({
+      sortProperties: ["id"],
+      sortedByCount: false,
+      sortedByName: true,
+    });
+  },
+
   actions: {
-    sortByCount() {
-      this.setProperties({
-        sortProperties: ["totalCount:desc", "id"],
-        sortedByCount: true,
-        sortedByName: false,
-      });
-    },
-
-    sortById() {
-      this.setProperties({
-        sortProperties: ["id"],
-        sortedByCount: false,
-        sortedByName: true,
-      });
-    },
-
     showUploader() {
       showModal("tag-upload");
     },
@@ -67,7 +73,7 @@ export default Controller.extend({
           const tags = result["tags"];
 
           if (tags.length === 0) {
-            bootbox.alert(I18n.t("tagging.delete_no_unused_tags"));
+            this.dialog.alert(I18n.t("tagging.delete_no_unused_tags"));
             return;
           }
 
@@ -84,23 +90,20 @@ export default Controller.extend({
                   tags: joinedTags,
                 });
 
-          const string = I18n.t("tagging.delete_unused_confirmation", {
+          const message = I18n.t("tagging.delete_unused_confirmation", {
             count: tags.length,
             tags: tagsString,
           });
 
-          bootbox.confirm(
-            string,
-            I18n.t("tagging.cancel_delete_unused"),
-            I18n.t("tagging.delete_unused"),
-            (proceed) => {
-              if (proceed) {
-                ajax("/tags/unused", { type: "DELETE" })
-                  .then(() => this.send("triggerRefresh"))
-                  .catch(popupAjaxError);
-              }
-            }
-          );
+          this.dialog.deleteConfirm({
+            message,
+            confirmButtonLabel: "tagging.delete_unused",
+            didConfirm: () => {
+              return ajax("/tags/unused", { type: "DELETE" })
+                .then(() => this.send("triggerRefresh"))
+                .catch(popupAjaxError);
+            },
+          });
         })
         .catch(popupAjaxError);
     },

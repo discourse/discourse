@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe QunitController do
+RSpec.describe QunitController do
   describe "#theme" do
     let(:theme) { Fabricate(:theme, name: 'main-theme') }
     let(:component) { Fabricate(:theme, component: true, name: 'enabled-component') }
@@ -29,7 +29,7 @@ describe QunitController do
       end
     end
 
-    context "non-admin users on production" do
+    context "with non-admin users on production" do
       before do
         # We need to call sign_in before stubbing the method because SessionController#become
         # checks for the current env when the file is loaded.
@@ -51,7 +51,7 @@ describe QunitController do
       end
     end
 
-    context "admin users" do
+    context "with admin users" do
       before do
         sign_in(Fabricate(:admin))
       end

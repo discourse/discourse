@@ -185,6 +185,13 @@ module ImportScripts::PhpBB3::BBCode
       end
     end
 
+    def visit_YOUTUBE(xml_node, md_node)
+      youtube_id = xml_node.attr("content")
+      md_node.text = "https://www.youtube.com/watch?v=" + youtube_id
+      md_node.prefix_linebreaks = md_node.postfix_linebreaks = 1
+      md_node.skip_children
+    end
+
     def visit_QUOTE(xml_node, md_node)
       if post = quoted_post(xml_node)
         md_node.prefix = %Q{[quote="#{post[:username]}, post:#{post[:post_number]}, topic:#{post[:topic_id]}"]\n}

@@ -222,6 +222,15 @@ export default Controller.extend(
     @discourseComputed
     ssoPath: () => getUrl("/session/sso"),
 
+    @discourseComputed
+    disclaimerHtml() {
+      return I18n.t("create_account.disclaimer", {
+        tos_link: this.siteSettings.tos_url || getUrl("/tos"),
+        privacy_link:
+          this.siteSettings.privacy_policy_url || getUrl("/privacy"),
+      });
+    },
+
     @discourseComputed("authOptions.associate_url", "authOptions.auth_provider")
     associateHtml(url, provider) {
       if (!url) {

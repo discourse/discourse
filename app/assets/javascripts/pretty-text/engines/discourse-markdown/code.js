@@ -53,9 +53,9 @@ function render(tokens, idx, options, env, slf, md) {
   const acceptableCodeClasses =
     md.options.discourse.acceptableCodeClasses || [];
 
-  if (TEXT_CODE_CLASSES.indexOf(tag) > -1) {
+  if (TEXT_CODE_CLASSES.includes(tag)) {
     className = "lang-nohighlight";
-  } else if (acceptableCodeClasses.indexOf(tag) > -1) {
+  } else if (acceptableCodeClasses.includes(tag)) {
     className = `lang-${tag}`;
   } else {
     className = "lang-nohighlight";
@@ -91,7 +91,7 @@ export function setup(helper) {
       if (tag === "code" && name === "class") {
         const m = /^lang\-(.+)$/.exec(value);
         if (m) {
-          return helper.getOptions().acceptableCodeClasses.indexOf(m[1]) !== -1;
+          return helper.getOptions().acceptableCodeClasses.includes(m[1]);
         }
       }
     },

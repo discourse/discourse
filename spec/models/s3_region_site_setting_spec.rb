@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe S3RegionSiteSetting do
+RSpec.describe S3RegionSiteSetting do
 
   describe 'valid_value?' do
     it 'returns true for a valid S3 region' do

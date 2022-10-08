@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-shared_examples "a generic error" do
+RSpec.shared_examples "a generic error" do
   let(:result) { creator.create_errors_json(obj) }
 
   it "should have a result object" do
@@ -12,7 +12,7 @@ shared_examples "a generic error" do
   end
 end
 
-describe JsonError do
+RSpec.describe JsonError do
 
   let(:creator) { Object.new.extend(JsonError) }
 

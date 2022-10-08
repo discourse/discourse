@@ -87,7 +87,8 @@ class PostSerializer < BasicPostSerializer
              :reviewable_id,
              :reviewable_score_count,
              :reviewable_score_pending_count,
-             :user_suspended
+             :user_suspended,
+             :user_status
 
   def initialize(object, opts)
     super(object, opts)
@@ -549,6 +550,14 @@ class PostSerializer < BasicPostSerializer
 
   def include_user_suspended?
     object.user&.suspended?
+  end
+
+  def include_user_status?
+    SiteSetting.enable_user_status && object.user&.has_status?
+  end
+
+  def user_status
+    UserStatusSerializer.new(object.user&.user_status, root: false)
   end
 
 private

@@ -1,4 +1,5 @@
-import { cancel, later, schedule } from "@ember/runloop";
+import { cancel, schedule } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import DiscourseRoute from "discourse/routes/discourse";
 import DiscourseURL from "discourse/lib/url";
 import { ID_CONSTRAINT } from "discourse/models/topic";
@@ -7,9 +8,10 @@ import { isEmpty } from "@ember/utils";
 import { inject as service } from "@ember/service";
 import { setTopicId } from "discourse/lib/topic-list-tracker";
 import showModal from "discourse/lib/show-modal";
-import { isTesting } from "discourse-common/config/environment";
+import TopicFlag from "discourse/lib/flag-targets/topic-flag";
+import PostFlag from "discourse/lib/flag-targets/post-flag";
 
-const SCROLL_DELAY = isTesting() ? 0 : 500;
+const SCROLL_DELAY = 500;
 
 const TopicRoute = DiscourseRoute.extend({
   screenTrack: service(),
@@ -94,14 +96,14 @@ const TopicRoute = DiscourseRoute.extend({
   @action
   showFlags(model) {
     let controller = showModal("flag", { model });
-    controller.setProperties({ flagTopic: false });
+    controller.setProperties({ flagTarget: new PostFlag() });
   },
 
   @action
   showFlagTopic() {
     const model = this.modelFor("topic");
     let controller = showModal("flag", { model });
-    controller.setProperties({ flagTopic: true });
+    controller.setProperties({ flagTarget: new TopicFlag() });
   },
 
   @action
@@ -231,7 +233,7 @@ const TopicRoute = DiscourseRoute.extend({
 
       this.setProperties({
         lastScrollPos: parseInt($(document).scrollTop(), 10),
-        scheduledReplace: later(
+        scheduledReplace: discourseLater(
           this,
           "_replaceUnlessScrolling",
           postUrl,
@@ -270,7 +272,7 @@ const TopicRoute = DiscourseRoute.extend({
 
     this.setProperties({
       lastScrollPos: currentPos,
-      scheduledReplace: later(
+      scheduledReplace: discourseLater(
         this,
         "_replaceUnlessScrolling",
         url,

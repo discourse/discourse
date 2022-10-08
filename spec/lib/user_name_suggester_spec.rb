@@ -2,7 +2,7 @@
 
 require 'user_name_suggester'
 
-describe UserNameSuggester do
+RSpec.describe UserNameSuggester do
   describe '.suggest' do
     before do
       SiteSetting.min_username_length = 3

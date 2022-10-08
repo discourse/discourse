@@ -42,8 +42,22 @@ RSpec.describe UserProfile do
         end
       end
 
+      context "when it is > 3000 characters" do
+        before { profile.location = "a" * 3500 }
+
+        it "is not valid" do
+          expect(profile.valid?).to eq(false)
+          expect(profile.errors.full_messages).to include(/Location is too long \(maximum is 3000 characters\)/)
+        end
+      end
+
       context "when it does not contain watched words" do
         it { is_expected.to be_valid }
+      end
+
+      it "is not cooked" do
+        profile.location = "https://discourse.org"
+        expect { profile.save! }.not_to change { profile.location }
       end
     end
 
@@ -55,6 +69,15 @@ RSpec.describe UserProfile do
           profile.valid?
           expect(profile.errors[:base].size).to eq(1)
           expect(profile.errors.messages[:base]).to include(/you can't post the word/)
+        end
+      end
+
+      context "when it is > 3000 characters" do
+        before { profile.bio_raw = "a" * 3500 }
+
+        it "is not valid" do
+          expect(profile.valid?).to eq(false)
+          expect(profile.errors.full_messages).to include(/About Me is too long \(maximum is 3000 characters\)/)
         end
       end
 
@@ -100,7 +123,7 @@ RSpec.describe UserProfile do
       expect(user_profile).not_to be_valid
     end
 
-    context "website validation" do
+    context "with website validation" do
       let(:user_profile) { Fabricate.build(:user_profile, user: Fabricate(:user)) }
 
       it "should not allow invalid URLs" do
@@ -123,6 +146,11 @@ RSpec.describe UserProfile do
 
         user_profile.website = 'user - https://forum.example.com/user'
         expect { user_profile.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      end
+
+      it "does not allow > 3000 characters" do
+        user_profile.website = "a" * 3500
+        expect(user_profile).to_not be_valid
       end
     end
 
@@ -217,7 +245,7 @@ RSpec.describe UserProfile do
         expect(user_profile.bio_processed).to eq("<p>I love http://discourse.org</p>")
       end
 
-      context 'tl3_links_no_follow is false' do
+      context 'when tl3_links_no_follow is false' do
         before { SiteSetting.tl3_links_no_follow = false }
 
         it 'includes the link without nofollow if the user is trust level 3 or higher' do
@@ -243,7 +271,7 @@ RSpec.describe UserProfile do
         end
       end
 
-      context 'tl3_links_no_follow is true' do
+      context 'when tl3_links_no_follow is true' do
         before { SiteSetting.tl3_links_no_follow = true }
 
         it 'includes the link with nofollow if the user is trust level 3 or higher' do
@@ -256,7 +284,7 @@ RSpec.describe UserProfile do
     end
   end
 
-  context '.import_url_for_user' do
+  describe '.import_url_for_user' do
     fab!(:user) { Fabricate(:user) }
 
     before do

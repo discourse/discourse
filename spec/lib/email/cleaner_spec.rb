@@ -2,7 +2,7 @@
 
 require "email/receiver"
 
-describe Email::Cleaner do
+RSpec.describe Email::Cleaner do
   it 'removes attachments from raw message' do
     email = email(:attached_txt_file)
 

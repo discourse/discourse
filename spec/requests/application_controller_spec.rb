@@ -665,17 +665,17 @@ RSpec.describe ApplicationController do
       expect(response.body).to include(nonce)
     end
 
-    it 'when splash screen is enabled it adds the same nonce to the policy and the inline splash script' do
+    it 'when splash screen is enabled it adds the fingerprint to the policy' do
       SiteSetting.content_security_policy = true
       SiteSetting.splash_screen = true
 
       get '/latest'
-      nonce = ApplicationHelper.splash_screen_nonce
+      fingerprint = SplashScreenHelper.fingerprint
       expect(response.headers).to include('Content-Security-Policy')
 
       script_src = parse(response.headers['Content-Security-Policy'])['script-src']
-      expect(script_src.to_s).to include(nonce)
-      expect(response.body).to include(nonce)
+      expect(script_src.to_s).to include(fingerprint)
+      expect(response.body).to include(SplashScreenHelper.inline_splash_screen_script)
     end
 
     def parse(csp_string)
@@ -733,7 +733,7 @@ RSpec.describe ApplicationController do
     expect(response.headers['X-Robots-Tag']).to be_nil
   end
 
-  context "default locale" do
+  context "with default locale" do
     before do
       SiteSetting.default_locale = :fr
       sign_in(Fabricate(:user))
@@ -793,8 +793,8 @@ RSpec.describe ApplicationController do
       { HTTP_ACCEPT_LANGUAGE: locale }
     end
 
-    context "allow_user_locale disabled" do
-      context "accept-language header differs from default locale" do
+    context "with allow_user_locale disabled" do
+      context "when accept-language header differs from default locale" do
         before do
           SiteSetting.allow_user_locale = false
           SiteSetting.default_locale = "en"
@@ -821,8 +821,8 @@ RSpec.describe ApplicationController do
       end
     end
 
-    context "set_locale_from_accept_language_header enabled" do
-      context "accept-language header differs from default locale" do
+    context "with set_locale_from_accept_language_header enabled" do
+      context "when accept-language header differs from default locale" do
         before do
           SiteSetting.allow_user_locale = true
           SiteSetting.set_locale_from_accept_language_header = true
@@ -872,7 +872,7 @@ RSpec.describe ApplicationController do
         end
       end
 
-      context "the preferred locale includes a region" do
+      context "when the preferred locale includes a region" do
         it "returns the locale and region separated by an underscore" do
           SiteSetting.allow_user_locale = true
           SiteSetting.set_locale_from_accept_language_header = true
@@ -884,12 +884,50 @@ RSpec.describe ApplicationController do
         end
       end
 
-      context 'accept-language header is not set' do
+      context 'when accept-language header is not set' do
         it 'uses the site default locale' do
           SiteSetting.allow_user_locale = true
           SiteSetting.default_locale = 'en'
 
           get "/bootstrap.json", headers: headers("")
+          expect(response.status).to eq(200)
+          expect(response.parsed_body['bootstrap']['locale_script']).to end_with("en.js")
+        end
+      end
+    end
+
+    context "with set_locale_from_cookie enabled" do
+      context "when cookie locale differs from default locale" do
+        before do
+          SiteSetting.allow_user_locale = true
+          SiteSetting.set_locale_from_cookie = true
+          SiteSetting.default_locale = "en"
+        end
+
+        context "with an anonymous user" do
+          it "uses the locale from the cookie" do
+            get "/bootstrap.json", headers: { Cookie: "locale=es" }
+            expect(response.status).to eq(200)
+            expect(response.parsed_body['bootstrap']['locale_script']).to end_with("es.js")
+            expect(I18n.locale.to_s).to eq(SiteSettings::DefaultsProvider::DEFAULT_LOCALE) # doesn't leak after requests
+          end
+        end
+
+        context "when the preferred locale includes a region" do
+          it "returns the locale and region separated by an underscore" do
+            get "/bootstrap.json", headers: { Cookie: "locale=zh-CN" }
+            expect(response.status).to eq(200)
+            expect(response.parsed_body['bootstrap']['locale_script']).to end_with("zh_CN.js")
+          end
+        end
+      end
+
+      context 'when locale cookie is not set' do
+        it 'uses the site default locale' do
+          SiteSetting.allow_user_locale = true
+          SiteSetting.default_locale = 'en'
+
+          get "/bootstrap.json", headers: { Cookie: "" }
           expect(response.status).to eq(200)
           expect(response.parsed_body['bootstrap']['locale_script']).to end_with("en.js")
         end
@@ -1048,7 +1086,7 @@ RSpec.describe ApplicationController do
       admin # to skip welcome wizard at home page `/`
     end
 
-    context "login_required" do
+    context "with login_required" do
       before do
         SiteSetting.login_required = true
       end
@@ -1072,7 +1110,7 @@ RSpec.describe ApplicationController do
       end
     end
 
-    context "login not required" do
+    context "with login not required" do
       before do
         SiteSetting.login_required = false
       end

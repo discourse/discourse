@@ -77,7 +77,7 @@ export default Mixin.create({
     const property = get(this.selectKit, type);
 
     if (!property) {
-      if (content.indexOf(item) > -1) {
+      if (content.includes(item)) {
         return item;
       }
     } else if (typeof property === "string") {

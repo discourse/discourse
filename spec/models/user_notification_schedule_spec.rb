@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserNotificationSchedule do
+RSpec.describe UserNotificationSchedule do
   fab!(:user) { Fabricate(:user) }
 
   describe "validations" do

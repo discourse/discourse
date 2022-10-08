@@ -525,7 +525,7 @@ export function setup(opts, siteSettings, state) {
   getOptions.f = () => opts.discourse;
 
   opts.discourse.limitedSiteSettings = {
-    secureMedia: siteSettings.secure_media,
+    secureUploads: siteSettings.secure_uploads,
     enableDiffhtmlPreview: siteSettings.enable_diffhtml_preview,
     traditionalMarkdownLinebreaks: siteSettings.traditional_markdown_linebreaks,
     enableMarkdownLinkify: siteSettings.enable_markdown_linkify,

@@ -216,6 +216,7 @@ const Category = RestModel.extend({
         mailinglist_mirror: this.mailinglist_mirror,
         parent_category_id: this.parent_category_id,
         uploaded_logo_id: this.get("uploaded_logo.id"),
+        uploaded_logo_dark_id: this.get("uploaded_logo_dark.id"),
         uploaded_background_id: this.get("uploaded_background.id"),
         allow_badges: this.allow_badges,
         custom_fields: this.custom_fields,
@@ -344,7 +345,7 @@ let _uncategorized;
 
 Category.reopenClass({
   slugEncoded() {
-    let siteSettings = getOwner(this).lookup("site-settings:main");
+    let siteSettings = getOwner(this).lookup("service:site-settings");
     return siteSettings.slug_generation_method === "encoded";
   },
 
@@ -584,8 +585,8 @@ Category.reopenClass({
       if (
         ((emptyTerm && !category.get("parent_category_id")) ||
           (!emptyTerm &&
-            (category.get("name").toLowerCase().indexOf(term) === 0 ||
-              category.get("slug").toLowerCase().indexOf(slugTerm) === 0))) &&
+            (category.get("name").toLowerCase().startsWith(term) ||
+              category.get("slug").toLowerCase().startsWith(slugTerm)))) &&
         validCategoryParent(category)
       ) {
         data.push(category);
@@ -602,7 +603,7 @@ Category.reopenClass({
             category.get("slug").toLowerCase().indexOf(slugTerm) > 0) &&
           validCategoryParent(category)
         ) {
-          if (data.indexOf(category) === -1) {
+          if (!data.includes(category)) {
             data.push(category);
           }
         }

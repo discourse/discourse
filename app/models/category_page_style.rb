@@ -12,6 +12,7 @@ class CategoryPageStyle < EnumSiteSetting
     @values ||= [
       { name: 'category_page_style.categories_only', value: 'categories_only' },
       { name: 'category_page_style.categories_with_featured_topics', value: 'categories_with_featured_topics' },
+      { name: 'category_page_style.categories_and_latest_topics_created_date', value: 'categories_and_latest_topics_created_date' },
       { name: 'category_page_style.categories_and_latest_topics', value: 'categories_and_latest_topics' },
       { name: 'category_page_style.categories_and_top_topics', value: 'categories_and_top_topics' },
       { name: 'category_page_style.categories_boxes', value: 'categories_boxes' },

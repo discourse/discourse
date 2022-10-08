@@ -84,6 +84,8 @@ class RobotsTxtController < ApplicationController
       result[:agents] << { name: 'Googlebot', disallow: deny_paths_googlebot }
     end
 
+    DiscourseEvent.trigger(:robots_info, result)
+
     result
   end
 end

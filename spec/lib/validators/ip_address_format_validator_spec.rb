@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe IpAddressFormatValidator do
+RSpec.describe IpAddressFormatValidator do
 
   let(:record) { Fabricate.build(:screened_ip_address, ip_address: '99.232.23.123') }
   let(:validator) { described_class.new(attributes: :ip_address) }

@@ -2,7 +2,7 @@
 
 require 'seed_data/categories'
 
-describe SeedData::Categories do
+RSpec.describe SeedData::Categories do
   subject { SeedData::Categories.with_default_locale }
 
   def create_category(name = "staff_category_id")
@@ -42,8 +42,8 @@ describe SeedData::Categories do
 
       it "does not create another category" do
         expect { create_category }
-          .to change { Category.count }.by(0)
-          .and change { Topic.count }.by(0)
+          .to not_change { Category.count }
+          .and not_change { Topic.count }
       end
 
       it "creates a missing 'About Category' topic" do
@@ -51,7 +51,7 @@ describe SeedData::Categories do
         Topic.delete(category.topic_id)
 
         expect { create_category }
-          .to change { Category.count }.by(0)
+          .to not_change { Category.count }
           .and change { Topic.count }.by(1)
 
         category.reload
@@ -93,6 +93,22 @@ describe SeedData::Categories do
       end
     end
 
+    it "does not seed the general category for non-new sites" do
+      Fabricate(:user) # If the site has human users don't seed
+
+      expect { create_category("general_category_id") }
+        .to not_change { Category.count }
+        .and not_change { Topic.count }
+    end
+
+    it "seeds the general category for new sites" do
+      expect { create_category("general_category_id") }
+        .to change { Category.count }
+        .and change { Topic.count }
+
+      expect(Category.last.name).to eq("General")
+    end
+
     it "does not override permissions of existing category when not forced" do
       create_category("lounge_category_id")
 
@@ -103,7 +119,7 @@ describe SeedData::Categories do
       expect(category.category_groups.first).to have_attributes(permissions(:trust_level_2, :full))
 
       expect { create_category("lounge_category_id") }
-        .to change { CategoryGroup.count }.by(0)
+        .not_to change { CategoryGroup.count }
 
       category.reload
       expect(category.category_groups.first).to have_attributes(permissions(:trust_level_2, :full))
@@ -158,13 +174,13 @@ describe SeedData::Categories do
   describe "#reseed_options" do
     it "returns only existing categories as options" do
       create_category("meta_category_id")
-      create_category("lounge_category_id")
+      create_category("general_category_id")
       Post.last.revise(Fabricate(:admin), raw: "Hello world")
 
       expected_options = [
         { id: "uncategorized_category_id", name: I18n.t("uncategorized_category_name"), selected: true },
         { id: "meta_category_id", name: I18n.t("meta_category_name"), selected: true },
-        { id: "lounge_category_id", name: I18n.t("vip_category_name"), selected: false }
+        { id: "general_category_id", name: I18n.t("general_category_name"), selected: false }
       ]
 
       expect(subject.reseed_options).to eq(expected_options)

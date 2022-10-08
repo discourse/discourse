@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Middleware::AnonymousCache do
+RSpec.describe Middleware::AnonymousCache do
   let(:middleware) { Middleware::AnonymousCache.new(lambda { |_| [200, {}, []] }) }
 
   def env(opts = {})
@@ -12,7 +12,7 @@ describe Middleware::AnonymousCache do
       Middleware::AnonymousCache::Helper.new(env(opts))
     end
 
-    context "cacheable?" do
+    describe "#cacheable?" do
       it "true by default" do
         expect(new_helper.cacheable?).to eq(true)
       end
@@ -38,7 +38,7 @@ describe Middleware::AnonymousCache do
       end
     end
 
-    context "per theme cache" do
+    describe "per theme cache" do
       it "handles theme keys" do
         theme = Fabricate(:theme, user_selectable: true)
 
@@ -53,7 +53,7 @@ describe Middleware::AnonymousCache do
       end
     end
 
-    context "with header-based locale locale" do
+    context "with header or cookie based custom locale" do
       it "handles different languages" do
         # Normally does not check the language header
         french1 = new_helper("HTTP_ACCEPT_LANGUAGE" => "fr").cache_key
@@ -76,6 +76,9 @@ describe Middleware::AnonymousCache do
         expect(none).to eq(english)
         expect(french1).to eq(french2)
         expect(french1).not_to eq(none)
+
+        SiteSetting.set_locale_from_cookie = true
+        expect(new_helper("HTTP_COOKIE" => "locale=es;").cache_key).to include("l=es")
       end
     end
 
@@ -93,7 +96,7 @@ describe Middleware::AnonymousCache do
       expect(key1).not_to eq(key2)
     end
 
-    context "cached" do
+    context "when cached" do
       let!(:helper) do
         new_helper("ANON_CACHE_DURATION" => 10)
       end
@@ -151,7 +154,7 @@ describe Middleware::AnonymousCache do
     end
   end
 
-  context 'background request rate limit' do
+  describe 'background request rate limit' do
     it 'will rate limit background requests' do
 
       app = Middleware::AnonymousCache.new(
@@ -194,7 +197,7 @@ describe Middleware::AnonymousCache do
     end
   end
 
-  context 'force_anonymous!' do
+  describe '#force_anonymous!' do
     before do
       RateLimiter.enable
     end
@@ -260,7 +263,7 @@ describe Middleware::AnonymousCache do
     end
   end
 
-  context 'invalid request payload' do
+  describe 'invalid request payload' do
     it 'returns 413 for GET request with payload' do
       status, headers, _ = middleware.call(env.tap do |environment|
         environment[Rack::RACK_INPUT].write("test")
@@ -271,7 +274,7 @@ describe Middleware::AnonymousCache do
     end
   end
 
-  context "crawler blocking" do
+  describe "crawler blocking" do
     let :non_crawler do
       {
         "HTTP_USER_AGENT" =>

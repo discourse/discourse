@@ -1,6 +1,7 @@
 <div class="modal-outer-container">
   <div class="modal-middle-container">
     <div class="modal-inner-container">
+      <PluginOutlet @name="above-modal-header" @connectorTagName="div" />
       <div class="modal-header {{this.headerClass}}">
         {{#if this.dismissable}}
           <DButton @icon="times" @action={{route-action "closeModal" "initiatedByCloseButton"}} @class="btn-flat modal-close close" @title="modal.close" />

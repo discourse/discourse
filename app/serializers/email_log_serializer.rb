@@ -5,7 +5,8 @@ class EmailLogSerializer < ApplicationSerializer
 
   attributes :reply_key,
              :bounced,
-             :has_bounce_key
+             :has_bounce_key,
+             :smtp_transaction_response
 
   has_one :user, serializer: BasicUserSerializer, embed: :objects
 

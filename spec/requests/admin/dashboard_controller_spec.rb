@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Admin::DashboardController do
+RSpec.describe Admin::DashboardController do
   before do
     AdminDashboardData.stubs(:fetch_cached_stats).returns(reports: [])
     Jobs::VersionCheck.any_instance.stubs(:execute).returns(true)
@@ -27,7 +27,7 @@ describe Admin::DashboardController do
     end
 
     describe '#index' do
-      context 'version checking is enabled' do
+      context 'when version checking is enabled' do
         before do
           SiteSetting.version_checks = true
         end
@@ -40,7 +40,7 @@ describe Admin::DashboardController do
         end
       end
 
-      context 'version checking is disabled' do
+      context 'when version checking is disabled' do
         before do
           SiteSetting.version_checks = false
         end

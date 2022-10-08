@@ -32,7 +32,7 @@ export default DesktopNotificationConfig.extend({
       this.siteSettings.push_notifications_prompt &&
       !isNotSupported &&
       this.currentUser &&
-      anyPosts &&
+      (this.capabilities.isPwa || anyPosts) &&
       Notification.permission !== "denied" &&
       Notification.permission !== "granted" &&
       !isEnabled &&

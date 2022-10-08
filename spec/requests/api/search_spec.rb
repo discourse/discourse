@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'swagger_helper'
 
-describe 'groups' do
+RSpec.describe 'groups' do
 
   let(:admin) { Fabricate(:admin) }
 

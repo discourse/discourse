@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-describe ThemeModifierSet do
+RSpec.describe ThemeModifierSet do
   describe "#resolve_modifiers_for_themes" do
     it "returns nil for unknown modifier" do
       expect(ThemeModifierSet.resolve_modifier_for_themes([1, 2], :unknown_modifier)).to eq(nil)

@@ -3,6 +3,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { propertyEqual } from "discourse/lib/computed";
+import { userPath } from "discourse/lib/url";
 
 export default Component.extend({
   classNameBindings: [
@@ -34,5 +35,10 @@ export default Component.extend({
     if (postUser.primary_group_name) {
       return `group-${postUser.primary_group_name}`;
     }
+  },
+
+  @discourseComputed("post.user.username")
+  userUrl(username) {
+    return userPath(username.toLowerCase());
   },
 });

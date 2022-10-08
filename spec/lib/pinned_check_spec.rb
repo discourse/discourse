@@ -2,7 +2,7 @@
 
 require 'pinned_check'
 
-describe PinnedCheck do
+RSpec.describe PinnedCheck do
 
   let(:pinned_at) { 12.hours.ago }
   let(:unpinned_topic) { Fabricate.build(:topic) }

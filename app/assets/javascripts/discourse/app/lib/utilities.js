@@ -152,7 +152,7 @@ export function hostnameValid(hostname) {
 }
 
 export function extractDomainFromUrl(url) {
-  if (url.indexOf("://") > -1) {
+  if (url.includes("://")) {
     url = url.split("/")[2];
   } else {
     url = url.split("/")[0];
@@ -441,7 +441,7 @@ export function areCookiesEnabled() {
   // see: https://github.com/Modernizr/Modernizr/blob/400db4043c22af98d46e1d2b9cbc5cb062791192/feature-detects/cookies.js
   try {
     document.cookie = "cookietest=1";
-    let ret = document.cookie.indexOf("cookietest=") !== -1;
+    let ret = document.cookie.includes("cookietest=");
     document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
     return ret;
   } catch (e) {
@@ -460,18 +460,18 @@ export function postRNWebviewMessage(prop, value) {
 }
 
 const CODE_BLOCKS_REGEX =
-  /^(    |\t).*|`[^`]+`|^```[^]*?^```|\[code\][^]*?\[\/code\]/gm;
-//                        |      ^     |   ^   |      ^      |           ^           |
-//                               |         |          |                  |
-//                               |         |          |       code blocks between [code]
-//                               |         |          |
-//                               |         |          +--- code blocks between three backticks
-//                               |         |
-//                               |         +----- inline code between backticks
-//                               |
-//                               +------- paragraphs starting with 4 spaces or tab
+  /^(  |\t).*|`[^`]+`|^```[^]*?^```|\[code\][^]*?\[\/code\]/gm;
+//|    ^     |   ^   |      ^      |           ^           |
+//     |         |          |                  |
+//     |         |          |       code blocks between [code]
+//     |         |          |
+//     |         |          +--- code blocks between three backticks
+//     |         |
+//     |         +----- inline code between backticks
+//     |
+//     +------- paragraphs starting with 2 spaces or tab
 
-const OPEN_CODE_BLOCKS_REGEX = /`[^`]+|^```[^]*?|\[code\][^]*?/gm;
+const OPEN_CODE_BLOCKS_REGEX = /^(  |\t).*|`[^`]+|^```[^]*?|\[code\][^]*?/gm;
 
 export function inCodeBlock(text, pos) {
   let end = 0;
@@ -487,6 +487,12 @@ export function inCodeBlock(text, pos) {
   // code block.
   const lastOpenBlock = text.slice(end).search(OPEN_CODE_BLOCKS_REGEX);
   return lastOpenBlock !== -1 && pos >= end + lastOpenBlock;
+}
+
+// Return an array of modifier keys that are pressed during a given `MouseEvent`
+// or `KeyboardEvent`.
+export function modKeysPressed(event) {
+  return ["alt", "shift", "meta", "ctrl"].filter((key) => event[`${key}Key`]);
 }
 
 export function translateModKey(string) {
@@ -527,7 +533,7 @@ export function clipboardCopy(text) {
   return clipboardCopyFallback(text);
 }
 
-// Use this verison of clipboardCopy if you must use an AJAX call
+// Use this version of clipboardCopy if you must use an AJAX call
 // to retrieve/generate server-side text to copy to the clipboard,
 // otherwise this write function will error in certain browsers, because
 // the time taken from the user event to the clipboard text being copied
@@ -604,6 +610,32 @@ function clipboardCopyFallback(text) {
   selection.removeAllRanges();
   window.document.body.removeChild(span);
   return success;
+}
+
+// this function takes 2 sorted lists and returns another sorted list that
+// contains both of the original lists.
+// you need to provide a callback as the 3rd argument that will be called with
+// an item from the first list (1st callback argument) and another item from
+// the second list (2nd callback argument). The callback should return true if
+// its 2nd argument should go before its 1st argument and return false
+// otherwise.
+export function mergeSortedLists(list1, list2, comparator) {
+  let index1 = 0;
+  let index2 = 0;
+  const merged = [];
+  while (index1 < list1.length || index2 < list2.length) {
+    if (
+      index1 === list1.length ||
+      (index2 < list2.length && comparator(list1[index1], list2[index2]))
+    ) {
+      merged.push(list2[index2]);
+      index2++;
+    } else {
+      merged.push(list1[index1]);
+      index1++;
+    }
+  }
+  return merged;
 }
 
 // This prevents a mini racer crash

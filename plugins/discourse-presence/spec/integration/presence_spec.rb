@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "discourse-presence" do
+RSpec.describe "discourse-presence" do
   describe 'PresenceChannel configuration' do
     fab!(:user) { Fabricate(:user) }
     fab!(:user2) { Fabricate(:user) }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe InviteRedeemer do
+RSpec.describe InviteRedeemer do
   fab!(:admin) { Fabricate(:admin) }
 
   describe '.create_user_from_invite' do
@@ -242,7 +242,7 @@ describe InviteRedeemer do
       expect(invite.invited_users.first).to be_present
     end
 
-    context 'invite_link' do
+    context 'with invite_link' do
       fab!(:invite_link) { Fabricate(:invite, email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required]) }
       let(:invite_redeemer) { InviteRedeemer.new(invite: invite_link, email: 'foo@example.com') }
 

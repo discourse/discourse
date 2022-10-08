@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DiscoursePoll::Poll do
+RSpec.describe DiscoursePoll::Poll do
   fab!(:user) { Fabricate(:user) }
   fab!(:user_2) { Fabricate(:user) }
 

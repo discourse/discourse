@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe ::DiscoursePoll::PollsValidator do
+RSpec.describe ::DiscoursePoll::PollsValidator do
   let(:post) { Fabricate(:post) }
   subject { described_class.new(post) }
 

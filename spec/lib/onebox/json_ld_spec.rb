@@ -2,7 +2,7 @@
 
 require 'onebox/json_ld'
 
-describe Onebox::JsonLd do
+RSpec.describe Onebox::JsonLd do
   it 'logs warning and returns an empty hash if received json is invalid' do
     invalid_json = "{\"@type\":invalid-json}"
     doc = Nokogiri::HTML("<script type=\"application/ld+json\">#{invalid_json}</script>")

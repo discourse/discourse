@@ -113,7 +113,14 @@ class PostRevisor
         DB.after_commit do
           post = tc.topic.ordered_posts.first
           notified_user_ids = [post.user_id, post.last_editor_id].uniq
-          Jobs.enqueue(:notify_tag_change, post_id: post.id, notified_user_ids: notified_user_ids, diff_tags: ((tags - prev_tags) | (prev_tags - tags)))
+          if !SiteSetting.disable_tags_edit_notifications
+            Jobs.enqueue(
+              :notify_tag_change,
+              post_id: post.id,
+              notified_user_ids: notified_user_ids,
+              diff_tags: ((tags - prev_tags) | (prev_tags - tags))
+            )
+          end
         end
       end
     end
@@ -623,6 +630,7 @@ class PostRevisor
 
     update_topic_excerpt
     update_category_description
+    hide_welcome_topic_banner
   end
 
   def update_topic_excerpt
@@ -642,6 +650,15 @@ class PostRevisor
     else
       @post.errors.add(:base, I18n.t("category.errors.description_incomplete"))
     end
+  end
+
+  def hide_welcome_topic_banner
+    return unless guardian.is_admin?
+    return unless @topic.id == SiteSetting.welcome_topic_id
+    return unless Discourse.cache.read(Site.welcome_topic_banner_cache_key(@editor.id))
+
+    Discourse.cache.write(Site.welcome_topic_banner_cache_key(@editor.id), false)
+    MessageBus.publish("/site/welcome-topic-banner", false)
   end
 
   def advance_draft_sequence

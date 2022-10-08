@@ -86,6 +86,15 @@ cs:
       "10":
         quote: "Cokoli si mysl člověka dokáže představit a věřit, toho může dosáhnout."
         author: "Napoleon Hill"
+      "11":
+        quote: "Mír doma, mír ve světě."
+        author: "Mustafa Kemal Atatürk"
+      "12":
+        quote: "Vzdělání není způsob jak uniknout chudobě, je to způsob, jak s ní bojovat."
+        author: "Julius Nyerere"
+      "13":
+        quote: "I cesta tisíc mil dlouhá začíná prvním krokem."
+        author: "Lao Tzu"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:

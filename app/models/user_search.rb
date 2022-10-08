@@ -179,10 +179,16 @@ class UserSearch
     ids = search_ids
     return User.where("0=1") if ids.empty?
 
-    User.joins("JOIN (SELECT unnest uid, row_number() OVER () AS rn
+    results = User.joins("JOIN (SELECT unnest uid, row_number() OVER () AS rn
       FROM unnest('{#{ids.join(",")}}'::int[])
     ) x on uid = users.id")
       .order("rn")
+
+    if SiteSetting.enable_user_status
+      results = results.includes(:user_status)
+    end
+
+    results
   end
 
 end

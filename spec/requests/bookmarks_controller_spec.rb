@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe BookmarksController do
+RSpec.describe BookmarksController do
   let(:current_user) { Fabricate(:user) }
   let(:bookmark_post) { Fabricate(:post) }
   let(:bookmark_topic) { Fabricate(:topic) }

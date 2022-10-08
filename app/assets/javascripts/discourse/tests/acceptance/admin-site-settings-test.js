@@ -2,7 +2,7 @@ import {
   acceptance,
   count,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import {
   click,
@@ -14,8 +14,6 @@ import {
 import siteSettingFixture from "discourse/tests/fixtures/site-settings";
 import { test } from "qunit";
 import pretender from "discourse/tests/helpers/create-pretender";
-
-const ENTER_KEYCODE = 13;
 
 acceptance("Admin - Site Settings", function (needs) {
   let updatedTitle;
@@ -58,7 +56,7 @@ acceptance("Admin - Site Settings", function (needs) {
     await visit("/admin/site_settings");
 
     assert.strictEqual(
-      queryAll(".row.setting .setting-label h3 a").attr("href"),
+      query(".row.setting .setting-label h3 a").getAttribute("href"),
       "/admin/logs/staff_action_logs?filters=%7B%22subject%22%3A%22title%22%2C%22action_name%22%3A%22change_site_setting%22%7D&force_refresh=true",
       "it links to the staff action log"
     );
@@ -108,7 +106,7 @@ acceptance("Admin - Site Settings", function (needs) {
     );
 
     await fillIn(".input-setting-string", "Test");
-    await triggerKeyEvent(".input-setting-string", "keydown", ENTER_KEYCODE);
+    await triggerKeyEvent(".input-setting-string", "keydown", "Enter");
     assert.ok(
       exists(".row.setting.overridden"),
       "saving via Enter key marks setting as overridden"
@@ -176,13 +174,13 @@ acceptance("Admin - Site Settings", function (needs) {
     await click(".select-kit-header.multi-select-header");
 
     await fillIn(".select-kit-filter input", "cat.?.domain");
-    await triggerKeyEvent(".select-kit-filter input", "keydown", ENTER_KEYCODE);
+    await triggerKeyEvent(".select-kit-filter input", "keydown", "Enter");
 
     await fillIn(".select-kit-filter input", "*.domain");
-    await triggerKeyEvent(".select-kit-filter input", "keydown", ENTER_KEYCODE);
+    await triggerKeyEvent(".select-kit-filter input", "keydown", "Enter");
 
     await fillIn(".select-kit-filter input", "proper.com");
-    await triggerKeyEvent(".select-kit-filter input", "keydown", ENTER_KEYCODE);
+    await triggerKeyEvent(".select-kit-filter input", "keydown", "Enter");
 
     await click("button.ok");
 

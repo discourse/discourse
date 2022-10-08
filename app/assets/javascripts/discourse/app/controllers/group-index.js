@@ -219,7 +219,9 @@ export default Controller.extend({
     document
       .querySelectorAll("input.bulk-select:not(:checked)")
       .forEach((checkbox) => {
-        checkbox.checked = true;
+        if (!checkbox.checked) {
+          checkbox.click();
+        }
       });
   },
 
@@ -228,7 +230,9 @@ export default Controller.extend({
     document
       .querySelectorAll("input.bulk-select:checked")
       .forEach((checkbox) => {
-        checkbox.checked = false;
+        if (checkbox.checked) {
+          checkbox.click();
+        }
       });
   },
 

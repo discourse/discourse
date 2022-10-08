@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe PostsController do
+RSpec.describe PostsController do
   let!(:user) { log_in }
   let!(:title) { "Testing Poll Plugin" }
 

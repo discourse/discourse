@@ -40,6 +40,10 @@ export default {
     const router = container.lookup("router:main");
 
     router.on("routeDidChange", (transition) => {
+      if (transition.isAborted) {
+        return;
+      }
+
       scheduleOnce("afterRender", container, _clean, transition);
     });
   },

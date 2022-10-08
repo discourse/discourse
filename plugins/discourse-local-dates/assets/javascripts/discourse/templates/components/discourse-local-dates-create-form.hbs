@@ -34,7 +34,7 @@
             @translatedLabel={{this.formattedTo}}
             @class="date-time" />
           {{#if this.toFilled}}
-            <DButton @icon="times" action={{action "eraseToDateTime"}} @class="delete-to-date" />
+            <DButton @icon="times" @action={{action "eraseToDateTime"}} @class="delete-to-date" />
           {{/if}}
         </div>
 
@@ -115,7 +115,7 @@
           <ul class="formats">
             {{#each this.previewedFormats as |previewedFormat|}}
               <li class="format">
-                <a class="moment-format" href {{action (mut this.format) previewedFormat.format}}>
+                <a class="moment-format" href {{on "click" (fn this.updateFormat previewedFormat.format)}}>
                   {{previewedFormat.format}}
                 </a>
                 <span class="previewed-format">
@@ -156,9 +156,10 @@
       @label="discourse_local_dates.create.form.insert" />
   {{/if}}
 
-  <a class="cancel-action" href {{action "cancel"}}>
-    {{i18n "cancel"}}
-  </a>
+  <DButton
+    @class="btn-flat"
+    @action={{action "cancel"}}
+    @translatedLabel={{i18n "cancel"}} />
 
   <DButton
     @class="btn-default advanced-mode-btn"

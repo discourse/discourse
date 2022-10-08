@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::TypeformOnebox do
+RSpec.describe Onebox::Engine::TypeformOnebox do
   it 'Appends the embed widget param when is missing' do
     raw_preview = Onebox.preview('https://basvanleeuwen1.typeform.com/to/NzdRpx').to_s
     query_params = get_query_params(raw_preview)

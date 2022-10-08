@@ -11,6 +11,7 @@ module Jobs
       post = Post.find_by(id: @post_id)
       return if post.nil?
       return if post.cook_method == Post.cook_methods[:raw_html]
+      return if post.topic.nil?
 
       hotlinked_map = post.post_hotlinked_media.preload(:upload).map { |r| [r.url, r] }.to_h
 

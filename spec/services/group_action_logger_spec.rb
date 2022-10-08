@@ -36,7 +36,7 @@ RSpec.describe GroupActionLogger do
   end
 
   describe '#log_add_user_to_group' do
-    describe 'as a group owner' do
+    context 'as a group owner' do
       it 'should create the right record' do
         subject.log_add_user_to_group(user)
 
@@ -68,7 +68,7 @@ RSpec.describe GroupActionLogger do
   end
 
   describe '#log_remove_user_from_group' do
-    describe 'as group owner' do
+    context 'as group owner' do
       it 'should create the right record' do
         subject.log_remove_user_from_group(user)
 

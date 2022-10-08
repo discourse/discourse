@@ -40,9 +40,9 @@ export default {
       return;
     }
 
-    const messageBus = container.lookup("message-bus:main"),
-      user = container.lookup("current-user:main"),
-      siteSettings = container.lookup("site-settings:main");
+    const messageBus = container.lookup("service:message-bus"),
+      user = container.lookup("service:current-user"),
+      siteSettings = container.lookup("service:site-settings");
 
     messageBus.alwaysLongPoll = !isProduction();
     messageBus.shouldLongPollCallback = () =>

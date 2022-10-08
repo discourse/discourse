@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ThemesInstallTask do
+RSpec.describe ThemesInstallTask do
   fab!(:admin) { Fabricate(:admin) }
 
   before do

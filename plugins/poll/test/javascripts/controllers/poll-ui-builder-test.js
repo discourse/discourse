@@ -196,8 +196,9 @@ discourseModule("Unit | Controller | poll-ui-builder", function () {
     controller.currentUser = { staff: false };
     controller.notifyPropertyChange("pollResults");
 
-    assert.ok(
-      controller.pollResults.filterBy("value", "staff_only").length === 0,
+    assert.strictEqual(
+      controller.pollResults.filterBy("value", "staff_only").length,
+      0,
       "staff_only is not present"
     );
   });
@@ -212,8 +213,9 @@ discourseModule("Unit | Controller | poll-ui-builder", function () {
     controller.currentUser = { staff: true };
     controller.notifyPropertyChange("pollResults");
 
-    assert.ok(
-      controller.pollResults.filterBy("value", "staff_only").length === 1,
+    assert.strictEqual(
+      controller.pollResults.filterBy("value", "staff_only").length,
+      1,
       "staff_only is present"
     );
   });

@@ -8,7 +8,7 @@ import {
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 
 module("Integration | Component | simple-list", function (hooks) {
   setupRenderingTest(hooks);
@@ -39,7 +39,7 @@ module("Integration | Component | simple-list", function (hooks) {
     );
 
     await fillIn(".add-value-input", "eviltrout");
-    await triggerKeyEvent(".add-value-input", "keydown", 13); // enter
+    await triggerKeyEvent(".add-value-input", "keydown", "Enter");
 
     assert.strictEqual(
       count(".values .value"),

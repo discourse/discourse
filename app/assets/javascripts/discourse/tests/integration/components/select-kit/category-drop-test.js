@@ -8,7 +8,7 @@ import {
 import Category from "discourse/models/category";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { set } from "@ember/object";
 import sinon from "sinon";

@@ -100,8 +100,8 @@ module Middleware
       end
 
       def key_locale
-        if SiteSetting.set_locale_from_accept_language_header
-          HttpLanguageParser.parse(@env["HTTP_ACCEPT_LANGUAGE"])
+        if locale = Discourse.anonymous_locale(@request)
+          locale
         else
           "" # No need to key, it is the same for all anon users
         end

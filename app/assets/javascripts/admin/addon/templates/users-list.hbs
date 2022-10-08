@@ -12,11 +12,11 @@
 
       <li class="admin-actions">
         {{#if this.currentUser.can_invite_to_forum}}
-          <DButton @class="btn-default" @action={{route-action "sendInvites"}} @title="admin.invite.button_title" @icon="user-plus" @label="admin.invite.button_text" />
+          <DButton @class="btn-flat" @action={{route-action "sendInvites"}} @title="admin.invite.button_title" @icon="user-plus" @label="admin.invite.button_text" />
         {{/if}}
 
         {{#if this.currentUser.admin}}
-          <DButton @class="btn-default" @action={{route-action "exportUsers"}} @title="admin.export_csv.button_title.user" @icon="download" @label="admin.export_csv.button_text" />
+          <DButton @class="btn-flat" @action={{route-action "exportUsers"}} @title="admin.export_csv.button_title.user" @icon="download" @label="admin.export_csv.button_text" />
         {{/if}}
       </li>
     </ul>

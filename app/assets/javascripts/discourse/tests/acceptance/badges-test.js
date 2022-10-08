@@ -9,7 +9,10 @@ acceptance("Badges", function (needs) {
   test("Visit Badge Pages", async function (assert) {
     await visit("/badges");
 
-    assert.ok($("body.badges-page").length, "has body class");
+    assert.ok(
+      document.body.classList.contains("badges-page"),
+      "has body class"
+    );
     assert.ok(exists(".badge-groups .badge-card"), "has a list of badges");
 
     await visit("/badges/9/autobiographer");
@@ -23,6 +26,9 @@ acceptance("Badges", function (needs) {
     const availableBadgeTitles = selectKit(".select-kit");
     await visit("/badges/50/custombadge");
     await availableBadgeTitles.expand();
-    assert.ok(availableBadgeTitles.rowByIndex(1).name() === "CustomBadge");
+    assert.strictEqual(
+      availableBadgeTitles.rowByIndex(1).name(),
+      "CustomBadge"
+    );
   });
 });

@@ -87,3 +87,8 @@ fr:
           title: "Icônes de chargement"
         empty_state:
           title: "État vide"
+        rich_tooltip:
+          title: "Info-bulle enrichie"
+          description: "Description"
+          header: "En-tête"
+          hover_to_see: "Survolez pour afficher une info-bulle"

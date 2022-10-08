@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 bs_BA:
+  site_settings:
+    styleguide_enabled: 'Omogućite put "/styleguide" za pomoć u oblikovanju Discoursea'
+    styleguide_admin_only: "Ograničava vidljivost stilskog vodiča na administratore"

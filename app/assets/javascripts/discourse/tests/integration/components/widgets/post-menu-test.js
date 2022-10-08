@@ -2,7 +2,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { count, exists } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { withPluginApi } from "discourse/lib/plugin-api";
 

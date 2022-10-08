@@ -5,8 +5,15 @@
         <a href title="{{user.name}}">
           {{avatar user imageSize="tiny"}}
           <span class='username'>{{format-username user.username}}</span>
-          <span class='name'>{{user.name}}</span>
-          {{decorate-username-selector user.username}}
+          {{#if user.status}}
+            {{emoji user.status.emoji}}
+            <span class='status-description' title='{{user.status.description}}'>
+              {{user.status.description}}
+            </span>
+            {{#if user.status.ends_at}}
+              {{format-age user.status.ends_at}}
+            {{/if}}
+          {{/if}}
         </a>
       </li>
     {{/each}}

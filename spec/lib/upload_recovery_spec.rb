@@ -111,7 +111,7 @@ RSpec.describe UploadRecovery do
         .to eq(File.read(file_from_fixtures("smallest.png")))
     end
 
-    context 'S3 store' do
+    describe 'S3 store' do
       before do
         setup_s3
         stub_s3_store
@@ -161,7 +161,7 @@ RSpec.describe UploadRecovery do
         end
 
         it 'does not create a duplicate upload when secure uploads are enabled' do
-          SiteSetting.secure_media = true
+          SiteSetting.secure_uploads = true
           upload.verification_status = Upload.verification_statuses[:invalid_etag]
           upload.save!
 

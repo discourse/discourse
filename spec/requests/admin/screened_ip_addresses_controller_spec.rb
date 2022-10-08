@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Admin::ScreenedIpAddressesController do
+RSpec.describe Admin::ScreenedIpAddressesController do
 
   it "is a subclass of AdminController" do
     expect(Admin::ScreenedIpAddressesController < Admin::AdminController).to eq(true)

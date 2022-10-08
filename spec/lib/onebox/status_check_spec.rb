@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::StatusCheck do
+RSpec.describe Onebox::StatusCheck do
   before do
     stub_request(:get, "http://www.amazon.com/200-url").to_return(status: 200)
     stub_request(:get, "http://www.amazon.com/201-url").to_return(status: 201)

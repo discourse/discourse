@@ -417,12 +417,14 @@ export default Component.extend(KeyEnterEscape, {
     return getAbsoluteURL(postUrl(topic.slug, topic.id, postNumber));
   },
 
-  @discourseComputed("topic.details.can_create_post", "composerVisible")
-  embedQuoteButton(canCreatePost, composerOpened) {
+  @discourseComputed(
+    "topic.details.can_create_post",
+    "topic.details.can_reply_as_new_topic"
+  )
+  embedQuoteButton(canCreatePost, canReplyAsNewTopic) {
     return (
-      (canCreatePost || composerOpened) &&
-      this.currentUser &&
-      this.currentUser.get("enable_quoting")
+      (canCreatePost || canReplyAsNewTopic) &&
+      this.currentUser?.get("enable_quoting")
     );
   },
 

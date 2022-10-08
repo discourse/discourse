@@ -1,4 +1,5 @@
-import { cancel, later } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import { Promise } from "rsvp";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -158,7 +159,7 @@ function organizeResults(r, options) {
 
   if (r.users) {
     r.users.every(function (u) {
-      if (exclude.indexOf(u.username) === -1) {
+      if (!exclude.includes(u.username)) {
         users.push(u);
         results.push(u);
       }
@@ -178,7 +179,7 @@ function organizeResults(r, options) {
         options.term.toLowerCase() === g.name.toLowerCase() ||
         results.length < limit
       ) {
-        if (exclude.indexOf(g.name) === -1) {
+        if (!exclude.includes(g.name)) {
           groups.push(g);
           results.push(g);
         }
@@ -206,7 +207,7 @@ export function skipSearch(term, allowEmails, lastSeenUsers = false) {
   if (lastSeenUsers) {
     return false;
   }
-  if (term.indexOf("@") > -1 && !allowEmails) {
+  if (term.includes("@") && !allowEmails) {
     return true;
   }
 
@@ -253,7 +254,7 @@ export default function userSearch(options) {
 
     let clearPromise;
     if (!isTesting()) {
-      clearPromise = later(() => resolve(CANCELLED_STATUS), 5000);
+      clearPromise = discourseLater(() => resolve(CANCELLED_STATUS), 5000);
     }
 
     if (skipSearch(term, options.allowEmails, options.lastSeenUsers)) {

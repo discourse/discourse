@@ -1,7 +1,7 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | user-info", function (hooks) {
@@ -49,5 +49,46 @@ module("Integration | Component | user-info", function (hooks) {
 
     this.set("includeAvatar", false);
     assert.notOk(exists(".user-image"));
+  });
+
+  test("shows status if enabled and user has status", async function (assert) {
+    this.currentUser.name = "Evil Trout";
+    this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
+
+    await render(
+      hbs`<UserInfo @user={{this.currentUser}} @showStatus={{true}} />`
+    );
+
+    assert.ok(exists(".user-status-message"));
+  });
+
+  test("doesn't show status if enabled but user doesn't have status", async function (assert) {
+    this.currentUser.name = "Evil Trout";
+
+    await render(
+      hbs`<UserInfo @user={{this.currentUser}} @showStatus={{true}} />`
+    );
+
+    assert.notOk(exists(".user-status-message"));
+  });
+
+  test("doesn't show status if disabled", async function (assert) {
+    this.currentUser.name = "Evil Trout";
+    this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
+
+    await render(
+      hbs`<UserInfo @user={{this.currentUser}} @showStatus={{false}} />`
+    );
+
+    assert.notOk(exists(".user-status-message"));
+  });
+
+  test("doesn't show status by default", async function (assert) {
+    this.currentUser.name = "Evil Trout";
+    this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
+
+    await render(hbs`<UserInfo @user={{this.currentUser}} />`);
+
+    assert.notOk(exists(".user-status-message"));
   });
 });

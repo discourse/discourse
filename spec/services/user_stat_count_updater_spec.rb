@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserStatCountUpdater do
+RSpec.describe UserStatCountUpdater do
   fab!(:user) { Fabricate(:user) }
   fab!(:user_stat) { user.user_stat }
   fab!(:post) { Fabricate(:post) }

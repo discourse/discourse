@@ -200,6 +200,10 @@ class UserOption < ActiveRecord::Base
       email_messages_level == UserOption.email_level_types[:never]
   end
 
+  def likes_notifications_disabled?
+    like_notification_frequency == UserOption.like_notification_frequency_type[:never]
+  end
+
   def self.user_tzinfo(user_id)
     timezone = UserOption.where(user_id: user_id).pluck(:timezone).first || 'UTC'
 

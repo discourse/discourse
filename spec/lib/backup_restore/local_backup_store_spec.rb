@@ -3,7 +3,7 @@
 require 'backup_restore/local_backup_store'
 require_relative 'shared_examples_for_backup_store'
 
-describe BackupRestore::LocalBackupStore do
+RSpec.describe BackupRestore::LocalBackupStore do
   before do
     @root_directory = Dir.mktmpdir
     @paths = []

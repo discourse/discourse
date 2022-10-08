@@ -4,7 +4,7 @@ require "s3_helper"
 require "s3_inventory"
 require "file_store/s3_store"
 
-describe "S3Inventory", type: :multisite do
+RSpec.describe "S3Inventory", type: :multisite do
   let(:client) { Aws::S3::Client.new(stub_responses: true) }
   let(:helper) { S3Helper.new(SiteSetting.Upload.s3_upload_bucket.downcase, "", client: client) }
   let(:inventory) { S3Inventory.new(helper, :upload) }

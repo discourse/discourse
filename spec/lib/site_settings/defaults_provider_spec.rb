@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SiteSettings::DefaultsProvider do
+RSpec.describe SiteSettings::DefaultsProvider do
   let(:provider_local) do
     SiteSettings::LocalProcessProvider.new
   end

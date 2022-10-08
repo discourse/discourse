@@ -1,13 +1,12 @@
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
 import { settled } from "@ember/test-helpers";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import EmberObject from "@ember/object";
-import { next } from "@ember/runloop";
-import { Promise } from "rsvp";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
+import { next } from "@ember/runloop";
 
 function topicWithStream(streamDetails) {
   let topic = Topic.create();
@@ -25,7 +24,7 @@ module("Unit | Controller | topic", function (hooks) {
     assert.notOk(controller.editingTopic, "we are not editing by default");
 
     controller.set("model.details.can_edit", false);
-    controller.send("editTopic");
+    controller.editTopic();
 
     assert.notOk(
       controller.editingTopic,
@@ -33,7 +32,7 @@ module("Unit | Controller | topic", function (hooks) {
     );
 
     controller.set("model.details.can_edit", true);
-    controller.send("editTopic");
+    controller.editTopic();
 
     assert.ok(
       controller.editingTopic,
@@ -54,20 +53,15 @@ module("Unit | Controller | topic", function (hooks) {
     const model = Topic.create();
     let destroyed = false;
     let modalDisplayed = false;
-    model.destroy = () => {
-      destroyed = true;
-      return Promise.resolve();
-    };
+    model.destroy = async () => (destroyed = true);
+
+    const siteSettings = this.owner.lookup("service:site-settings");
+    siteSettings.min_topic_views_for_delete_confirm = 5;
 
     const controller = this.owner.lookup("controller:topic");
     controller.setProperties({
       model,
-      siteSettings: {
-        min_topic_views_for_delete_confirm: 5,
-      },
-      deleteTopicModal: () => {
-        modalDisplayed = true;
-      },
+      deleteTopicModal: () => (modalDisplayed = true),
     });
 
     model.set("views", 10000);
@@ -147,15 +141,12 @@ module("Unit | Controller | topic", function (hooks) {
     controller.setProperties({ model });
 
     controller.set("selectedPostIds", [1, 2]);
-
     assert.notOk(controller.selectedAllPosts, "not all posts are selected");
 
     controller.selectedPostIds.pushObject(3);
-
     assert.ok(controller.selectedAllPosts, "all posts are selected");
 
     controller.selectedPostIds.pushObject(42);
-
     assert.ok(
       controller.selectedAllPosts,
       "all posts (including filtered posts) are selected"
@@ -165,7 +156,6 @@ module("Unit | Controller | topic", function (hooks) {
       "postStream.isMegaTopic": true,
       posts_count: 1,
     });
-
     assert.ok(
       controller.selectedAllPosts,
       "it uses the topic's post count for mega-topics"
@@ -183,7 +173,6 @@ module("Unit | Controller | topic", function (hooks) {
     });
     const controller = this.owner.lookup("controller:topic");
     controller.setProperties({ model });
-    const selectedPostIds = controller.selectedPostIds;
 
     assert.strictEqual(
       controller.selectedPostsUsername,
@@ -191,32 +180,28 @@ module("Unit | Controller | topic", function (hooks) {
       "no username when no selected posts"
     );
 
-    selectedPostIds.pushObject(1);
-
+    controller.selectedPostIds.pushObject(1);
     assert.strictEqual(
       controller.selectedPostsUsername,
       "gary",
       "username of the selected posts"
     );
 
-    selectedPostIds.pushObject(2);
-
+    controller.selectedPostIds.pushObject(2);
     assert.strictEqual(
       controller.selectedPostsUsername,
       "gary",
       "username of all the selected posts when same user"
     );
 
-    selectedPostIds.pushObject(3);
-
+    controller.selectedPostIds.pushObject(3);
     assert.strictEqual(
       controller.selectedPostsUsername,
       undefined,
       "no username when more than 1 user"
     );
 
-    selectedPostIds.replace(2, 1, [42]);
-
+    controller.selectedPostIds.replace(2, 1, [42]);
     assert.strictEqual(
       controller.selectedPostsUsername,
       undefined,
@@ -225,13 +210,13 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("showSelectedPostsAtBottom", function (assert) {
-    const site = EmberObject.create({ mobileView: false });
     const model = Topic.create({ posts_count: 3 });
     const controller = this.owner.lookup("controller:topic");
-    controller.setProperties({ model, site });
+    controller.setProperties({ model });
 
     assert.notOk(controller.showSelectedPostsAtBottom, "false on desktop");
 
+    const site = this.owner.lookup("service:site");
     site.set("mobileView", true);
 
     assert.notOk(
@@ -240,7 +225,6 @@ module("Unit | Controller | topic", function (hooks) {
     );
 
     model.set("posts_count", 4);
-
     assert.ok(
       controller.showSelectedPostsAtBottom,
       "true when mobile and more than 3 posts"
@@ -263,36 +247,31 @@ module("Unit | Controller | topic", function (hooks) {
       model,
       currentUser,
     });
-    const selectedPostIds = controller.selectedPostIds;
 
     assert.notOk(
       controller.canDeleteSelected,
       "false when no posts are selected"
     );
 
-    selectedPostIds.pushObject(1);
-
+    controller.selectedPostIds.pushObject(1);
     assert.notOk(
       controller.canDeleteSelected,
       "false when can't delete one of the selected posts"
     );
 
-    selectedPostIds.replace(0, 1, [2, 3]);
-
+    controller.selectedPostIds.replace(0, 1, [2, 3]);
     assert.ok(
       controller.canDeleteSelected,
       "true when all selected posts can be deleted"
     );
 
-    selectedPostIds.pushObject(1);
-
+    controller.selectedPostIds.pushObject(1);
     assert.notOk(
       controller.canDeleteSelected,
       "false when all posts are selected and user is staff"
     );
 
     currentUser.set("admin", true);
-
     assert.ok(
       controller.canDeleteSelected,
       "true when all posts are selected and user is staff"
@@ -312,14 +291,13 @@ module("Unit | Controller | topic", function (hooks) {
 
     const controller = this.owner.lookup("controller:topic");
     controller.setProperties({ model });
-    const selectedPostIds = controller.selectedPostIds;
 
     assert.notOk(
       controller.canMergeTopic,
       "can't merge topic when no posts are selected"
     );
 
-    selectedPostIds.pushObject(1);
+    controller.selectedPostIds.pushObject(1);
 
     assert.notOk(
       controller.canMergeTopic,
@@ -330,15 +308,15 @@ module("Unit | Controller | topic", function (hooks) {
 
     assert.ok(controller.canMergeTopic, "can merge topic");
 
-    selectedPostIds.removeObject(1);
-    selectedPostIds.pushObject(2);
+    controller.selectedPostIds.removeObject(1);
+    controller.selectedPostIds.pushObject(2);
 
     assert.ok(
       controller.canMergeTopic,
       "can merge topic when 1st post is not a regular post"
     );
 
-    selectedPostIds.pushObject(3);
+    controller.selectedPostIds.pushObject(3);
 
     assert.ok(
       controller.canMergeTopic,
@@ -348,7 +326,6 @@ module("Unit | Controller | topic", function (hooks) {
 
   test("canChangeOwner", function (assert) {
     const currentUser = User.create({ admin: false });
-
     const model = topicWithStream({
       posts: [
         { id: 1, username: "gary" },
@@ -356,30 +333,23 @@ module("Unit | Controller | topic", function (hooks) {
       ],
       stream: [1, 2],
     });
-    model.set("currentUser", { admin: false });
+    model.set("currentUser", currentUser);
 
     const controller = this.owner.lookup("controller:topic");
-    controller.setProperties({
-      model,
-      currentUser,
-    });
-    const selectedPostIds = controller.selectedPostIds;
+    controller.setProperties({ model, currentUser });
 
     assert.notOk(controller.canChangeOwner, "false when no posts are selected");
 
-    selectedPostIds.pushObject(1);
-
+    controller.selectedPostIds.pushObject(1);
     assert.notOk(controller.canChangeOwner, "false when not admin");
 
     currentUser.set("admin", true);
-
     assert.ok(
       controller.canChangeOwner,
       "true when admin and one post is selected"
     );
 
-    selectedPostIds.pushObject(2);
-
+    controller.selectedPostIds.pushObject(2);
     assert.notOk(
       controller.canChangeOwner,
       "false when admin but more than 1 user"
@@ -388,7 +358,6 @@ module("Unit | Controller | topic", function (hooks) {
 
   test("modCanChangeOwner", function (assert) {
     const currentUser = User.create({ moderator: false });
-
     const model = topicWithStream({
       posts: [
         { id: 1, username: "gary" },
@@ -396,33 +365,26 @@ module("Unit | Controller | topic", function (hooks) {
       ],
       stream: [1, 2],
     });
-    model.set("currentUser", { moderator: false });
+    model.set("currentUser", currentUser);
+
+    const siteSettings = this.owner.lookup("service:site-settings");
+    siteSettings.moderators_change_post_ownership = true;
 
     const controller = this.owner.lookup("controller:topic");
-    controller.setProperties({
-      model,
-      currentUser,
-      siteSettings: {
-        moderators_change_post_ownership: true,
-      },
-    });
-    const selectedPostIds = controller.selectedPostIds;
+    controller.setProperties({ model, currentUser });
 
     assert.notOk(controller.canChangeOwner, "false when no posts are selected");
 
-    selectedPostIds.pushObject(1);
-
+    controller.selectedPostIds.pushObject(1);
     assert.notOk(controller.canChangeOwner, "false when not moderator");
 
     currentUser.set("moderator", true);
-
     assert.ok(
       controller.canChangeOwner,
       "true when moderator and one post is selected"
     );
 
-    selectedPostIds.pushObject(2);
-
+    controller.selectedPostIds.pushObject(2);
     assert.notOk(
       controller.canChangeOwner,
       "false when moderator but more than 1 user"
@@ -441,36 +403,29 @@ module("Unit | Controller | topic", function (hooks) {
     });
 
     const controller = this.owner.lookup("controller:topic");
-    controller.setProperties({
-      model,
-    });
-    const selectedPostIds = controller.selectedPostIds;
+    controller.setProperties({ model });
 
     assert.notOk(controller.canMergePosts, "false when no posts are selected");
 
-    selectedPostIds.pushObject(1);
-
+    controller.selectedPostIds.pushObject(1);
     assert.notOk(
       controller.canMergePosts,
       "false when only one post is selected"
     );
 
-    selectedPostIds.pushObject(2);
-
+    controller.selectedPostIds.pushObject(2);
     assert.notOk(
       controller.canMergePosts,
       "false when selected posts are from different users"
     );
 
-    selectedPostIds.replace(1, 1, [3]);
-
+    controller.selectedPostIds.replace(1, 1, [3]);
     assert.notOk(
       controller.canMergePosts,
       "false when selected posts can't be deleted"
     );
 
-    selectedPostIds.replace(1, 1, [4]);
-
+    controller.selectedPostIds.replace(1, 1, [4]);
     assert.ok(
       controller.canMergePosts,
       "true when all selected posts are deletable and by the same user"
@@ -489,7 +444,6 @@ module("Unit | Controller | topic", function (hooks) {
     );
 
     controller.send("selectAll");
-
     assert.strictEqual(
       controller.selectedPostsCount,
       3,
@@ -497,7 +451,6 @@ module("Unit | Controller | topic", function (hooks) {
     );
 
     controller.send("deselectAll");
-
     assert.strictEqual(
       controller.selectedPostsCount,
       0,
@@ -507,35 +460,32 @@ module("Unit | Controller | topic", function (hooks) {
 
   test("togglePostSelection", function (assert) {
     const controller = this.owner.lookup("controller:topic");
-    const selectedPostIds = controller.selectedPostIds;
 
     assert.strictEqual(
-      selectedPostIds[0],
+      controller.selectedPostIds[0],
       undefined,
       "no posts selected by default"
     );
 
     controller.send("togglePostSelection", { id: 1 });
-
     assert.strictEqual(
-      selectedPostIds[0],
+      controller.selectedPostIds[0],
       1,
       "adds the selected post id if not already selected"
     );
 
     controller.send("togglePostSelection", { id: 1 });
-
     assert.strictEqual(
-      selectedPostIds[0],
+      controller.selectedPostIds[0],
       undefined,
       "removes the selected post id if already selected"
     );
   });
 
   test("selectBelow", function (assert) {
-    const site = EmberObject.create({
-      post_types: { small_action: 3, whisper: 4 },
-    });
+    const site = this.owner.lookup("service:site");
+    site.set("post_types", { small_action: 3, whisper: 4 });
+
     const model = topicWithStream({
       stream: [1, 2, 3, 4, 5, 6, 7, 8],
       posts: [
@@ -546,43 +496,22 @@ module("Unit | Controller | topic", function (hooks) {
     });
 
     const controller = this.owner.lookup("controller:topic");
-    controller.setProperties({ site, model });
-    let selectedPostIds = controller.selectedPostIds;
+    controller.setProperties({ model });
 
-    assert.strictEqual(
-      selectedPostIds[0],
-      undefined,
+    assert.deepEqual(
+      controller.selectedPostIds,
+      [],
       "no posts selected by default"
     );
 
     controller.send("selectBelow", { id: 3 });
-
-    assert.strictEqual(selectedPostIds[0], 3, "selected post #3");
-    assert.strictEqual(
-      selectedPostIds[1],
-      4,
-      "also selected 1st post below post #3"
-    );
-    assert.strictEqual(
-      selectedPostIds[2],
-      5,
-      "also selected 2nd post below post #3"
-    );
-    assert.strictEqual(
-      selectedPostIds[3],
-      8,
-      "also selected 3rd post below post #3"
-    );
+    assert.deepEqual(controller.selectedPostIds, [3, 4, 5, 8]);
   });
 
   test("selectReplies", async function (assert) {
-    pretender.get("/posts/1/reply-ids.json", () => {
-      return [
-        200,
-        { "Content-Type": "application/json" },
-        [{ id: 2, level: 1 }],
-      ];
-    });
+    pretender.get("/posts/1/reply-ids.json", () =>
+      response([{ id: 2, level: 1 }])
+    );
 
     const model = topicWithStream({
       posts: [{ id: 1 }, { id: 2 }],
@@ -640,9 +569,7 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("deletePost - no modal is shown if post does not have replies", function (assert) {
-    pretender.get("/posts/2/reply-ids.json", () => {
-      return [200, { "Content-Type": "application/json" }, []];
-    });
+    pretender.get("/posts/2/reply-ids.json", () => response([]));
 
     let destroyed;
     const post = EmberObject.create({

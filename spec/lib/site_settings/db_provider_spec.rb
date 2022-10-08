@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SiteSettings::DbProvider do
+RSpec.describe SiteSettings::DbProvider do
 
   def expect_same_setting(actual, expected)
     expect(actual.name).to eq(expected.name)

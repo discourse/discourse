@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TimelineLookup do
+RSpec.describe TimelineLookup do
   it "returns an empty array for empty input" do
     expect(TimelineLookup.build([])).to eq([])
   end

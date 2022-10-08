@@ -15,10 +15,6 @@
               <DButton @action={{b.action}} @type="button" @actionParam={{b}} @translatedTitle={{b.title}} @label={{b.label}} @icon={{b.icon}} @class={{b.className}} @preventFocus={{b.preventFocus}} @tabindex={{b.tabindex}} @onKeyDown={{this.rovingButtonBar}} />
             {{/if}}
           {{/each}}
-
-          {{#unless group.lastGroup}}
-            <div class="d-editor-spacer"></div>
-          {{/unless}}
         {{/each}}
       </div>
 

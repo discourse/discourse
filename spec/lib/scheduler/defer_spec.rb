@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-describe Scheduler::Defer do
+RSpec.describe Scheduler::Defer do
   class DeferInstance
     include Scheduler::Deferrable
   end

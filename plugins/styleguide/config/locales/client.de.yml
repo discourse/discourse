@@ -87,3 +87,8 @@ de:
           title: "Spinner"
         empty_state:
           title: "Leerer Zustand"
+        rich_tooltip:
+          title: "Reichhaltiger Tooltip"
+          description: "Beschreibung"
+          header: "Kopfzeile"
+          hover_to_see: "Bewege den Mauszeiger, um einen Tooltip zu sehen"

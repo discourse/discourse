@@ -2,8 +2,7 @@
 
 require 'imap/sync'
 
-describe Imap::Sync do
-
+RSpec.describe Imap::Sync do
   before do
     SiteSetting.tagging_enabled = true
     SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
@@ -39,7 +38,7 @@ describe Imap::Sync do
     )
   end
 
-  context 'no previous sync' do
+  describe 'no previous sync' do
     let(:from) { 'john@free.fr' }
     let(:subject) { 'Testing email post' }
     let(:message_id) { "#{SecureRandom.hex}@example.com" }
@@ -128,9 +127,9 @@ describe Imap::Sync do
         .and change { IncomingEmail.count }.by(1)
 
       expect { sync_handler.process }
-        .to change { Topic.count }.by(0)
-        .and change { Post.where(post_type: Post.types[:regular]).count }.by(0)
-        .and change { IncomingEmail.count }.by(0)
+        .to not_change { Topic.count }
+        .and not_change { Post.where(post_type: Post.types[:regular]).count }
+        .and not_change { IncomingEmail.count }
     end
 
     it 'creates a new incoming email if the message ID does not match the receiver post id regex' do
@@ -155,9 +154,9 @@ describe Imap::Sync do
         incoming_email = Fabricate(:incoming_email, message_id: message_id)
 
         expect { sync_handler.process }
-          .to change { Topic.count }.by(0)
-          .and change { Post.where(post_type: Post.types[:regular]).count }.by(0)
-          .and change { IncomingEmail.count }.by(0)
+          .to not_change { Topic.count }
+          .and not_change { Post.where(post_type: Post.types[:regular]).count }
+          .and not_change { IncomingEmail.count }
 
         incoming_email.reload
         expect(incoming_email.message_id).to eq(message_id)
@@ -169,7 +168,7 @@ describe Imap::Sync do
     end
   end
 
-  context 'previous sync' do
+  describe 'previous sync' do
     let(:subject) { 'Testing email post' }
 
     let(:first_from) { 'john@free.fr' }
@@ -248,7 +247,7 @@ describe Imap::Sync do
       )
 
       expect { sync_handler.process }
-        .to change { Topic.count }.by(0)
+        .to not_change { Topic.count }
         .and change { Post.where(post_type: Post.types[:regular]).count }.by(1)
         .and change { IncomingEmail.count }.by(1)
 
@@ -276,9 +275,9 @@ describe Imap::Sync do
       )
 
       expect { sync_handler.process }
-        .to change { Topic.count }.by(0)
-        .and change { Post.where(post_type: Post.types[:regular]).count }.by(0)
-        .and change { IncomingEmail.count }.by(0)
+        .to not_change { Topic.count }
+        .and not_change { Post.where(post_type: Post.types[:regular]).count }
+        .and not_change { IncomingEmail.count }
 
       topic = Topic.last
       expect(topic.title).to eq(subject)
@@ -527,7 +526,7 @@ describe Imap::Sync do
 
   end
 
-  context 'invalidated previous sync' do
+  describe 'invalidated previous sync' do
     let(:subject) { 'Testing email post' }
 
     let(:first_from) { 'john@free.fr' }
@@ -618,9 +617,9 @@ describe Imap::Sync do
       )
 
       expect { sync_handler.process }
-        .to change { Topic.count }.by(0)
-        .and change { Post.where(post_type: Post.types[:regular]).count }.by(0)
-        .and change { IncomingEmail.count }.by(0)
+        .to not_change { Topic.count }
+        .and not_change { Post.where(post_type: Post.types[:regular]).count }
+        .and not_change { IncomingEmail.count }
 
       imap_data = Topic.last.incoming_email.pluck(:imap_uid_validity, :imap_uid, :imap_group_id)
       expect(imap_data).to contain_exactly([2, 111, group.id], [2, 222, group.id])

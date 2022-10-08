@@ -1,5 +1,5 @@
 import I18n from "I18n";
-import bootbox from "bootbox";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 export function extractError(error, defaultMessage) {
   if (error instanceof Error) {
@@ -64,5 +64,6 @@ export function throwAjaxError(undoCallback) {
 }
 
 export function popupAjaxError(error) {
-  bootbox.alert(extractError(error));
+  const dialog = getOwner(this).lookup("service:dialog");
+  dialog.alert(extractError(error));
 }

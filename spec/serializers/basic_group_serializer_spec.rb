@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe BasicGroupSerializer do
+RSpec.describe BasicGroupSerializer do
   let(:guardian) { Guardian.new }
   fab!(:group) { Fabricate(:group) }
   subject { described_class.new(group, scope: guardian, root: false) }
@@ -41,10 +41,15 @@ describe BasicGroupSerializer do
   describe '#has_messages' do
     fab!(:group) { Fabricate(:group, has_messages: true) }
 
+    before do
+      Group.refresh_automatic_groups!
+    end
+
     describe 'for a staff user' do
       let(:guardian) { Guardian.new(Fabricate(:moderator)) }
 
       it 'should be present' do
+        Group.refresh_automatic_groups!
         expect(subject.as_json[:has_messages]).to eq(true)
       end
     end

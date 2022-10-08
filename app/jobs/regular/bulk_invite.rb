@@ -9,6 +9,8 @@ module Jobs
 
       @logs         = []
       @sent         = 0
+      @skipped      = 0
+      @warnings     = 0
       @failed       = 0
       @groups       = {}
       @user_fields  = {}
@@ -39,8 +41,14 @@ module Jobs
       invites.each do |invite|
         if EmailAddressValidator.valid_value?(invite[:email])
           # email is valid
-          send_invite(invite)
-          @sent += 1
+          result = send_invite(invite)
+          if Invite === result
+            @sent += 1
+          elsif User === result
+            @skipped += 1
+          else
+            @failed += 1
+          end
         else
           # invalid email
           save_log "Invalid Email '#{invite[:email]}"
@@ -58,7 +66,7 @@ module Jobs
       if group_names
         group_names = group_names.split(';')
 
-        group_names.each { |group_name|
+        group_names.each do |group_name|
           group = fetch_group(group_name)
 
           if group && can_edit_group?(group)
@@ -67,9 +75,9 @@ module Jobs
           else
             # invalid group
             save_log "Invalid Group '#{group_name}'"
-            @failed += 1
+            @warnings += 1
           end
-        }
+        end
       end
 
       groups
@@ -82,7 +90,7 @@ module Jobs
         topic = Topic.find_by_id(topic_id)
         if topic.nil?
           save_log "Invalid Topic ID '#{topic_id}'"
-          @failed += 1
+          @warnings += 1
         end
       end
 
@@ -94,7 +102,11 @@ module Jobs
 
       fields.each do |key, value|
         @user_fields[key] ||= UserField.includes(:user_field_options).where('name ILIKE ?', key).first || :nil
-        next if @user_fields[key] == :nil
+        if @user_fields[key] == :nil
+          save_log "Invalid User Field '#{key}'"
+          @warnings += 1
+          next
+        end
 
         # Automatically correct user field value
         if @user_fields[key].field_type == "dropdown"
@@ -139,6 +151,8 @@ module Jobs
             user.locale = locale
             user.save!
           end
+
+          user
         else
           if user_fields.present? || locale.present?
             user = User.where(staged: true).find_by_email(email)
@@ -171,8 +185,8 @@ module Jobs
         end
       rescue => e
         save_log "Error inviting '#{email}' -- #{Rails::Html::FullSanitizer.new.sanitize(e.message)}"
-        @sent -= 1
-        @failed += 1
+
+        nil
       end
     end
 
@@ -182,17 +196,22 @@ module Jobs
 
     def notify_user
       if @current_user
-        if (@sent > 0 && @failed == 0)
+        if @sent > 0 && @failed == 0
           SystemMessage.create_from_system_user(
             @current_user,
             :bulk_invite_succeeded,
-            sent: @sent
+            sent: @sent,
+            skipped: @skipped,
+            warnings: @warnings,
+            logs: @logs.join("\n")
           )
         else
           SystemMessage.create_from_system_user(
             @current_user,
             :bulk_invite_failed,
             sent: @sent,
+            skipped: @skipped,
+            warnings: @warnings,
             failed: @failed,
             logs: @logs.join("\n")
           )

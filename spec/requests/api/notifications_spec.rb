@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'swagger_helper'
 
-describe 'notifications' do
+RSpec.describe 'notifications' do
 
   let(:admin) { Fabricate(:admin) }
   let!(:notification) { Fabricate(:notification, user: admin) }

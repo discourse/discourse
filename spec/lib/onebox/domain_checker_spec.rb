@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::DomainChecker do
+RSpec.describe Onebox::DomainChecker do
   describe '.is_blocked?' do
     before do
       SiteSetting.blocked_onebox_domains = "api.cat.org|kitten.cloud"

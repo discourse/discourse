@@ -157,14 +157,21 @@
     details.advanced-filters,
     details.search-advanced-additional-options {
       margin-top: 1em;
-
       > summary {
         color: var(--tertiary);
         cursor: pointer;
+        padding-top: 0.25em;
+        padding-bottom: 0.25em;
+        &:focus-visible {
+          background-color: var(--tertiary-very-low);
+        }
       }
       &[open] > summary {
         color: var(--primary);
         margin-bottom: 1em;
+        &:focus-visible {
+          background-color: var(--tertiary-very-low);
+        }
       }
     }
 

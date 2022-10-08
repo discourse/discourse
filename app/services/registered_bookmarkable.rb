@@ -55,18 +55,25 @@ class RegisteredBookmarkable
   #
   # [{ topic: [:topic_users, :tags] }, :user]
   #
+  # For more advanced preloading, bookmarkable classes can implement `perform_custom_preload!`
+  #
   # @param [Array] bookmarks The array of bookmarks after initial listing and filtering, note this is
   #                          array _not_ an ActiveRecord::Relation.
   # @return [void]
-  def perform_preload(bookmarks)
-    return if !bookmarkable_klass.has_preloads?
+  def perform_preload(bookmarks, guardian)
+    bookmarks_of_type = Bookmark.select_type(bookmarks, bookmarkable_klass.model.to_s)
+    return if bookmarks_of_type.empty?
 
-    ActiveRecord::Associations::Preloader
-      .new(
-        records: Bookmark.select_type(bookmarks, bookmarkable_klass.model.to_s),
-        associations: [bookmarkable: bookmarkable_klass.preload_associations]
-      )
-      .call
+    if bookmarkable_klass.has_preloads?
+      ActiveRecord::Associations::Preloader
+        .new(
+          records: bookmarks_of_type,
+          associations: [bookmarkable: bookmarkable_klass.preload_associations]
+        )
+        .call
+    end
+
+    bookmarkable_klass.perform_custom_preload!(bookmarks_of_type, guardian)
   end
 
   def can_send_reminder?(bookmark)

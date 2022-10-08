@@ -7,7 +7,7 @@ import {
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 import Theme, { COMPONENTS, THEMES } from "admin/models/theme";
 import I18n from "I18n";
 

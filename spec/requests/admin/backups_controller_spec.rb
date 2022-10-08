@@ -46,7 +46,7 @@ RSpec.describe Admin::BackupsController do
       expect(response.status).to eq(403)
     end
 
-    context "html format" do
+    context "with html format" do
       it "preloads important data" do
         get "/admin/backups.html"
         expect(response.status).to eq(200)
@@ -57,7 +57,7 @@ RSpec.describe Admin::BackupsController do
       end
     end
 
-    context "json format" do
+    context "with json format" do
       it "returns a list of all the backups" do
         begin
           create_backup_files(backup_filename, backup_filename2)

@@ -105,3 +105,27 @@
     font-family: monospace;
   }
 }
+
+.admin-email {
+  .email-list {
+    .sent-email-reply-key {
+      .reply-key {
+        word-break: break-word;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 125px;
+      }
+    }
+
+    .sent-email-post-link-with-smtp-response {
+      width: 100%;
+      display: inline-block;
+      word-break: break-word;
+
+      code {
+        font-size: var(--font-down-2);
+      }
+    }
+  }
+}

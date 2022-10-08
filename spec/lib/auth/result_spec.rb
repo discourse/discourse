@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-describe Auth::Result do
+RSpec.describe Auth::Result do
   fab!(:initial_email) { "initialemail@example.org" }
   fab!(:initial_username) { "initialusername" }
   fab!(:initial_name) { "Initial Name" }

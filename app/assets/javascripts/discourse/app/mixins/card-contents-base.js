@@ -1,5 +1,5 @@
 import { alias, match } from "@ember/object/computed";
-import { next, schedule, throttle } from "@ember/runloop";
+import { schedule, throttle } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import Mixin from "@ember/object/mixin";
 import afterTransition from "discourse/lib/after-transition";
@@ -7,6 +7,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { inject as service } from "@ember/service";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { bind } from "discourse-common/utils/decorators";
+import discourseLater from "discourse-common/lib/later";
 
 const DEFAULT_SELECTOR = "#main-outlet";
 
@@ -279,10 +280,10 @@ export default Mixin.create({
         // note: we DO NOT use afterRender here cause _positionCard may
         // run afterwards, if we allowed this to happen the usercard
         // may be offscreen and we may scroll all the way to it on focus
-        next(null, () => {
+        discourseLater(() => {
           const firstLink = this.element.querySelector("a");
           firstLink && firstLink.focus();
-        });
+        }, 350);
       }
     });
   },
@@ -345,11 +346,12 @@ export default Mixin.create({
   @bind
   _clickOutsideHandler(event) {
     if (this.visible) {
-      const $target = $(event.target);
       if (
-        $target.closest(`[data-${this.elementId}]`).data(this.elementId) ||
-        $target.closest(`a.${this.triggeringLinkClass}`).length > 0 ||
-        $target.closest(`#${this.elementId}`).length > 0
+        event.target
+          .closest(`[data-${this.elementId}]`)
+          ?.getAttribute(`data-${this.elementId}`) ||
+        event.target.closest(`a.${this.triggeringLinkClass}`) ||
+        event.target.closest(`#${this.elementId}`)
       ) {
         return;
       }
@@ -363,8 +365,8 @@ export default Mixin.create({
   @bind
   _escListener(event) {
     if (this.visible && event.key === "Escape") {
-      this._close();
       this.cardTarget?.focus();
+      this._close();
       return;
     }
   },

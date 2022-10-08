@@ -3,7 +3,7 @@
 require "rails_helper"
 require "ostruct"
 
-describe "topics/show.html.erb" do
+RSpec.describe "topics/show.html.erb" do
   fab!(:topic) { Fabricate(:topic) }
 
   it "add nofollow to RSS alternate link for topic" do

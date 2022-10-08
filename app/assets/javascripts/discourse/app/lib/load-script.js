@@ -48,11 +48,6 @@ export function loadCSS(url) {
 }
 
 export default function loadScript(url, opts = {}) {
-  // TODO: Remove this once plugins have been updated not to use it:
-  if (url === "defer/html-sanitizer-bundle") {
-    return Promise.resolve();
-  }
-
   if (_loaded[url]) {
     return Promise.resolve();
   }

@@ -1,7 +1,7 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-describe ThemeField do
+RSpec.describe ThemeField do
   fab!(:theme) { Fabricate(:theme) }
 
   describe "scope: find_by_theme_ids" do
@@ -134,6 +134,7 @@ HTML
     expect(javascript_cache.content).to include("testing-div")
     expect(javascript_cache.content).to include("string_setting")
     expect(javascript_cache.content).to include("test text \\\" 123!")
+    expect(javascript_cache.content).to include("define(\"discourse/theme-#{theme_field.theme_id}/discourse/templates/my-template\"")
   end
 
   it "correctly generates errors for transpiled css" do
@@ -186,18 +187,18 @@ HTML
     expect(js_field.value_baked).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery\"")
     expect(js_field.value_baked).to include("console.log('hello from .js.es6');")
 
-    expect(hbs_field.reload.value_baked).to include('Ember.TEMPLATES["javascripts/discovery"]')
+    expect(hbs_field.reload.value_baked).to include("define(\"discourse/theme-#{theme.id}/discourse/templates/discovery\", [\"exports\", \"@ember/template-factory\"]")
     expect(raw_hbs_field.reload.value_baked).to include('addRawTemplate("discovery"')
     expect(hbr_field.reload.value_baked).to include('addRawTemplate("other_discovery"')
     expect(unknown_field.reload.value_baked).to eq("")
     expect(unknown_field.reload.error).to eq(I18n.t("themes.compile_error.unrecognized_extension", extension: "blah"))
 
     # All together
-    expect(theme.javascript_cache.content).to include('Ember.TEMPLATES["javascripts/discovery"]')
+    expect(theme.javascript_cache.content).to include("define(\"discourse/theme-#{theme.id}/discourse/templates/discovery\", [\"exports\", \"@ember/template-factory\"]")
     expect(theme.javascript_cache.content).to include('addRawTemplate("discovery"')
     expect(theme.javascript_cache.content).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery\"")
     expect(theme.javascript_cache.content).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery-2\"")
-    expect(theme.javascript_cache.content).to include("var settings =")
+    expect(theme.javascript_cache.content).to include("const settings =")
   end
 
   def create_upload_theme_field!(name)
@@ -342,6 +343,14 @@ HTML
         fr1.update(value: "fr: 'valuewithoutclosequote")
         expect { fr1.raw_translation_data }.to raise_error(ThemeTranslationParser::InvalidYaml)
       end
+
+      it "works when locale file doesn't contain translations" do
+        fr1.update(value: "fr:")
+        expect(fr1.translation_data).to eq(
+          fr: {},
+          en: { somestring1: "helloworld", group: { key1: "enval1" } }
+        )
+      end
     end
 
     describe "#translation_data" do
@@ -402,7 +411,7 @@ HTML
     end
   end
 
-  context "SVG sprite theme fields" do
+  describe "SVG sprite theme fields" do
     let(:upload) { Fabricate(:upload) }
     let(:theme) { Fabricate(:theme) }
     let(:theme_field) { ThemeField.create!(theme: theme, target_id: 0, name: SvgSprite.theme_sprite_variable_name, upload: upload, value: "", value_baked: "baked", type_id: ThemeField.types[:theme_upload_var]) }
@@ -429,8 +438,7 @@ HTML
     end
   end
 
-  context 'local js assets' do
-
+  describe 'local js assets' do
     let :js_content do
       "// not transpiled; console.log('hello world');"
     end
@@ -504,6 +512,7 @@ HTML
 
         expect(val["theme_uploads"]["test_js"]).to eq(js_field.upload.url)
         expect(val["theme_uploads_local"]["test_js"]).to eq(js_field.javascript_cache.local_url)
+        expect(val["theme_uploads_local"]["test_js"]).to start_with("/theme-javascripts/")
 
       end
 
@@ -514,5 +523,4 @@ HTML
       expect(theme.scss_variables).not_to include("theme_uploads")
     end
   end
-
 end

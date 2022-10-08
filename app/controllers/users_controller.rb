@@ -12,14 +12,14 @@ class UsersController < ApplicationController
     :notification_level, :revoke_auth_token, :register_second_factor_security_key,
     :create_second_factor_security_key, :feature_topic, :clear_featured_topic,
     :bookmarks, :invited, :check_sso_email, :check_sso_payload,
-    :recent_searches, :reset_recent_searches
+    :recent_searches, :reset_recent_searches, :user_menu_bookmarks, :user_menu_messages
   ]
 
   skip_before_action :check_xhr, only: [
     :show, :badges, :password_reset_show, :password_reset_update, :update, :account_created,
     :activate_account, :perform_account_activation, :avatar,
     :my_redirect, :toggle_anon, :admin_login, :confirm_admin, :email_login, :summary,
-    :feature_topic, :clear_featured_topic, :bookmarks
+    :feature_topic, :clear_featured_topic, :bookmarks, :user_menu_bookmarks, :user_menu_messages
   ]
 
   before_action :second_factor_check_confirmed_password, only: [
@@ -52,6 +52,7 @@ class UsersController < ApplicationController
   after_action :add_noindex_header, only: [:show, :my_redirect]
 
   allow_in_staff_writes_only_mode :admin_login
+  allow_in_staff_writes_only_mode :email_login
 
   MAX_RECENT_SEARCHES = 5
 
@@ -961,7 +962,11 @@ class UsersController < ApplicationController
 
       if user = User.with_email(params[:email]).admins.human_users.first
         email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:email_login])
-        Jobs.enqueue(:critical_user_email, type: "admin_login", user_id: user.id, email_token: email_token.token)
+        token_string = email_token.token
+        if params["use_safe_mode"]
+          token_string += "?safe_mode=no_plugins,no_themes"
+        end
+        Jobs.enqueue(:critical_user_email, type: "admin_login", user_id: user.id, email_token: token_string)
         @message = I18n.t("admin_login.success")
       else
         @message = I18n.t("admin_login.errors.unknown_email_address")
@@ -1108,10 +1113,12 @@ class UsersController < ApplicationController
     RateLimiter.new(nil, "activate-edit-email-hr-#{request.remote_ip}", 5, 1.hour).performed!
 
     if params[:username].present?
+      RateLimiter.new(nil, "activate-edit-email-hr-username-#{params[:username]}", 5, 1.hour).performed!
       @user = User.find_by_username_or_email(params[:username])
       raise Discourse::InvalidAccess.new unless @user.present?
       raise Discourse::InvalidAccess.new unless @user.confirm_password?(params[:password])
     elsif user_key = session[SessionController::ACTIVATE_USER_KEY]
+      RateLimiter.new(nil, "activate-edit-email-hr-user-key-#{user_key}", 5, 1.hour).performed!
       @user = User.where(id: user_key.to_i).first
     end
 
@@ -1191,11 +1198,7 @@ class UsersController < ApplicationController
     options[:category_id] = category_id if category_id
 
     results = UserSearch.new(term, options).search
-
-    user_fields = [:username, :upload_avatar_template]
-    user_fields << :name if SiteSetting.enable_names?
-
-    to_render = { users: results.as_json(only: user_fields, methods: [:avatar_template]) }
+    to_render = serialize_found_users(results)
 
     # blank term is only handy for in-topic search of users after @
     # we do not want group results ever if term is blank
@@ -1738,6 +1741,128 @@ class UsersController < ApplicationController
     end
   end
 
+  USER_MENU_LIST_LIMIT = 20
+  def user_menu_bookmarks
+    if !current_user.username_equals_to?(params[:username])
+      raise Discourse::InvalidAccess.new("username doesn't match current_user's username")
+    end
+
+    reminder_notifications = Notification
+      .for_user_menu(current_user.id, limit: USER_MENU_LIST_LIMIT)
+      .unread
+      .where(notification_type: Notification.types[:bookmark_reminder])
+
+    if reminder_notifications.size < USER_MENU_LIST_LIMIT
+      exclude_bookmark_ids = reminder_notifications
+        .filter_map { |notification| notification.data_hash[:bookmark_id] }
+
+      bookmark_list = UserBookmarkList.new(
+        user: current_user,
+        guardian: guardian,
+        params: {
+          per_page: USER_MENU_LIST_LIMIT - reminder_notifications.size
+        }
+      )
+      bookmark_list.load do |query|
+        if exclude_bookmark_ids.present?
+          query.where("bookmarks.id NOT IN (?)", exclude_bookmark_ids)
+        end
+      end
+    end
+
+    if reminder_notifications.present?
+      serialized_notifications = ActiveModel::ArraySerializer.new(
+        reminder_notifications,
+        each_serializer: NotificationSerializer,
+        scope: guardian
+      )
+    end
+
+    if bookmark_list
+      bookmark_list.bookmark_serializer_opts = { link_to_first_unread_post: true }
+      serialized_bookmarks = serialize_data(
+        bookmark_list,
+        UserBookmarkListSerializer,
+        scope: guardian,
+        root: false
+      )[:bookmarks]
+    end
+
+    render json: {
+      notifications: serialized_notifications || [],
+      bookmarks: serialized_bookmarks || []
+    }
+  end
+
+  def user_menu_messages
+    if !current_user.username_equals_to?(params[:username])
+      raise Discourse::InvalidAccess.new("username doesn't match current_user's username")
+    end
+
+    if !current_user.staff? && !current_user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
+      raise Discourse::InvalidAccess.new("personal messages are disabled.")
+    end
+
+    unread_notifications = Notification
+      .for_user_menu(current_user.id, limit: USER_MENU_LIST_LIMIT)
+      .unread
+      .where(notification_type: [Notification.types[:private_message], Notification.types[:group_message_summary]])
+      .to_a
+
+    if unread_notifications.size < USER_MENU_LIST_LIMIT
+      exclude_topic_ids = unread_notifications.filter_map(&:topic_id).uniq
+      limit = USER_MENU_LIST_LIMIT - unread_notifications.size
+      messages_list = TopicQuery.new(
+        current_user,
+        per_page: limit
+      ).list_private_messages_direct_and_groups(current_user) do |query|
+        if exclude_topic_ids.present?
+          query.where("topics.id NOT IN (?)", exclude_topic_ids)
+        else
+          query
+        end
+      end
+      read_notifications = Notification
+        .for_user_menu(current_user.id, limit: limit)
+        .where(
+          read: true,
+          notification_type: Notification.types[:group_message_summary],
+        )
+        .to_a
+    end
+
+    if unread_notifications.present?
+      serialized_unread_notifications = ActiveModel::ArraySerializer.new(
+        unread_notifications,
+        each_serializer: NotificationSerializer,
+        scope: guardian
+      )
+    end
+
+    if messages_list
+      serialized_messages = serialize_data(
+        messages_list,
+        TopicListSerializer,
+        scope: guardian,
+        root: false
+      )[:topics]
+    end
+
+    if read_notifications.present?
+      serialized_read_notifications = ActiveModel::ArraySerializer.new(
+        read_notifications,
+        each_serializer: NotificationSerializer,
+        scope: guardian
+      )
+    end
+
+    render json: {
+      unread_notifications: serialized_unread_notifications || [],
+      read_notifications: serialized_read_notifications || [],
+      topics: serialized_messages || []
+    }
+  end
+
   private
 
   def clean_custom_field_values(field)
@@ -1824,7 +1949,7 @@ class UsersController < ApplicationController
     permitted.concat UserUpdater::TAG_NAMES.keys
     permitted << UserUpdater::NOTIFICATION_SCHEDULE_ATTRS
 
-    if current_user&.user_option&.enable_experimental_sidebar
+    if SiteSetting.enable_experimental_sidebar_hamburger
       if params.has_key?(:sidebar_category_ids) && params[:sidebar_category_ids].blank?
         params[:sidebar_category_ids] = []
       end
@@ -1910,5 +2035,13 @@ class UsersController < ApplicationController
       can_see_invite_details: false,
       error: message
     }
+  end
+
+  def serialize_found_users(users)
+    each_serializer = SiteSetting.enable_user_status? ?
+      FoundUserWithStatusSerializer :
+      FoundUserSerializer
+
+    { users: ActiveModel::ArraySerializer.new(users, each_serializer: each_serializer).as_json }
   end
 end

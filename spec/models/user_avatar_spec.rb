@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserAvatar do
+RSpec.describe UserAvatar do
   fab!(:user) { Fabricate(:user) }
   let(:avatar) { user.create_user_avatar! }
 
@@ -120,7 +120,7 @@ describe UserAvatar do
     end
   end
 
-  context '.import_url_for_user' do
+  describe '.import_url_for_user' do
 
     it 'creates user_avatar record if missing' do
       user = Fabricate(:user)

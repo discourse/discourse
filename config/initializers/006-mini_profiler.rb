@@ -45,10 +45,12 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
     /^\/site_customizations/,
     /^\/uploads/,
     /^\/secure-media-uploads/,
+    /^\/secure-uploads/,
     /^\/javascripts\//,
     /^\/images\//,
     /^\/stylesheets\//,
-    /^\/favicon\/proxied/
+    /^\/favicon\/proxied/,
+    /^\/theme-javascripts/
   ]
 
   # we DO NOT WANT mini-profiler loading on anything but real desktops and laptops
@@ -72,7 +74,8 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
   #  does not get clobbered.
   Rack::MiniProfiler.config.cookie_path = Discourse.base_path.presence || "/"
 
-  Rack::MiniProfiler.config.position = 'left'
+  Rack::MiniProfiler.config.position = "right"
+
   Rack::MiniProfiler.config.backtrace_ignores ||= []
   Rack::MiniProfiler.config.backtrace_ignores << /lib\/rack\/message_bus.rb/
   Rack::MiniProfiler.config.backtrace_ignores << /config\/initializers\/silence_logger/

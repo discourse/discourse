@@ -333,6 +333,7 @@ RSpec.describe BookmarkManager do
         bookmarkable_type: "Post",
         options: { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent], save_user_preferences: true }
       )
+      user.user_option.reload
       expect(user.user_option.bookmark_auto_delete_preference).to eq(Bookmark.auto_delete_preferences[:when_reminder_sent])
 
       bookmark = Bookmark.find_by(user: user)
@@ -342,6 +343,29 @@ RSpec.describe BookmarkManager do
         reminder_at: 1.day.from_now,
         options: { auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply], save_user_preferences: true }
       )
+      user.user_option.reload
+      expect(user.user_option.bookmark_auto_delete_preference).to eq(Bookmark.auto_delete_preferences[:on_owner_reply])
+    end
+
+    it "does not save user preferences when save_user_preferences is false" do
+      user.user_option.update(bookmark_auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
+      subject.create_for(
+        bookmarkable_id: post.id,
+        bookmarkable_type: "Post",
+        options: { auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent], save_user_preferences: false }
+      )
+      user.user_option.reload
+      expect(user.user_option.bookmark_auto_delete_preference).to eq(Bookmark.auto_delete_preferences[:on_owner_reply])
+    end
+
+    it "does not save user preferences when save_user_preferences is true and auto_delete_preference is nil" do
+      user.user_option.update(bookmark_auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply])
+      subject.create_for(
+        bookmarkable_id: post.id,
+        bookmarkable_type: "Post",
+        options: { auto_delete_preference: nil, save_user_preferences: true }
+      )
+      user.user_option.reload
       expect(user.user_option.bookmark_auto_delete_preference).to eq(Bookmark.auto_delete_preferences[:on_owner_reply])
     end
   end

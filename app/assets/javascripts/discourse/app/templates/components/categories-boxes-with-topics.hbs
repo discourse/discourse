@@ -5,7 +5,7 @@
         <a href={{c.url}}>
           {{#unless c.isMuted}}
             {{#if c.uploaded_logo.url}}
-              <CdnImg @src={{c.uploaded_logo.url}} @class="logo" @width={{c.uploaded_logo.width}} @height={{c.uploaded_logo.height}} @alt="" />
+              <CategoryLogo @category={{c}} />
             {{/if}}
           {{/unless}}
 

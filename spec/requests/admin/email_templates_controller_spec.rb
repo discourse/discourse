@@ -17,7 +17,7 @@ RSpec.describe Admin::EmailTemplatesController do
     I18n.reload!
   end
 
-  context "#index" do
+  describe "#index" do
     it "raises an error if you aren't logged in" do
       get '/admin/customize/email_templates.json'
       expect(response.status).to eq(404)
@@ -63,7 +63,7 @@ RSpec.describe Admin::EmailTemplatesController do
     end
   end
 
-  context "#update" do
+  describe "#update" do
     it "raises an error if you aren't logged in" do
       put '/admin/customize/email_templates/some_id', params: {
         email_template: { subject: 'Subject', body: 'Body' }
@@ -256,7 +256,7 @@ RSpec.describe Admin::EmailTemplatesController do
 
   end
 
-  context "#revert" do
+  describe "#revert" do
     it "raises an error if you aren't logged in" do
       delete '/admin/customize/email_templates/some_id', headers: headers
       expect(response.status).to eq(404)

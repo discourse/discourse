@@ -194,7 +194,7 @@ export function buildResolver(baseName) {
 
     findConnectorTemplate(parsedName) {
       const full = parsedName.fullNameWithoutType.replace("components/", "");
-      if (full.indexOf("connectors") === 0) {
+      if (full.startsWith("connectors")) {
         return Ember.TEMPLATES[`javascripts/${full}`];
       }
     },
@@ -271,7 +271,7 @@ export function buildResolver(baseName) {
     // (similar to how discourse lays out templates)
     findAdminTemplate(parsedName) {
       let decamelized = decamelize(parsedName.fullNameWithoutType);
-      if (decamelized.indexOf("components") === 0) {
+      if (decamelized.startsWith("components")) {
         let comPath = `admin/templates/${decamelized}`;
         const compTemplate =
           Ember.TEMPLATES[`javascripts/${comPath}`] || Ember.TEMPLATES[comPath];
@@ -285,8 +285,8 @@ export function buildResolver(baseName) {
       }
 
       if (
-        decamelized.indexOf("admin") === 0 ||
-        decamelized.indexOf("javascripts/admin") === 0
+        decamelized.startsWith("admin") ||
+        decamelized.startsWith("javascripts/admin")
       ) {
         decamelized = decamelized.replace(/^admin\_/, "admin/templates/");
         decamelized = decamelized.replace(/^admin\./, "admin/templates/");

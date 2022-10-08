@@ -2,7 +2,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { count, exists, queryAll } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 
 const topCategoryIds = [2, 3, 1];
@@ -34,7 +34,7 @@ module("Integration | Component | Widget | hamburger-menu", function (hooks) {
   });
 
   test("staff menu - not staff", async function (assert) {
-    this.currentUser.set("staff", false);
+    this.currentUser.setProperties({ admin: false, moderator: false });
 
     await render(hbs`<MountWidget @widget="hamburger-menu" />`);
 
@@ -68,7 +68,7 @@ module("Integration | Component | Widget | hamburger-menu", function (hooks) {
   });
 
   test("general links", async function (assert) {
-    this.owner.unregister("current-user:main");
+    this.owner.unregister("service:current-user");
 
     await render(hbs`<MountWidget @widget="hamburger-menu" />`);
 
@@ -86,7 +86,7 @@ module("Integration | Component | Widget | hamburger-menu", function (hooks) {
   let maxCategoriesToDisplay;
 
   test("top categories - anonymous", async function (assert) {
-    this.owner.unregister("current-user:main");
+    this.owner.unregister("service:current-user");
     this.siteSettings.header_dropdown_category_count = 8;
 
     await render(hbs`<MountWidget @widget="hamburger-menu" />`);
@@ -102,7 +102,7 @@ module("Integration | Component | Widget | hamburger-menu", function (hooks) {
   });
 
   test("top categories - allow_uncategorized_topics", async function (assert) {
-    this.owner.unregister("current-user:main");
+    this.owner.unregister("service:current-user");
     this.siteSettings.allow_uncategorized_topics = false;
     this.siteSettings.header_dropdown_category_count = 8;
 
@@ -136,7 +136,6 @@ module("Integration | Component | Widget | hamburger-menu", function (hooks) {
               last_read_post_number: 1,
               highest_post_number: 2,
               notification_level: NotificationLevels.TRACKING,
-              unread_not_too_old: true,
             });
           }
         } else {

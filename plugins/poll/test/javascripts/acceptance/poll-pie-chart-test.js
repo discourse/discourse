@@ -1,7 +1,7 @@
 import {
   acceptance,
+  count,
   query,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
@@ -25,7 +25,7 @@ acceptance("Rendering polls with pie charts", function (needs) {
     );
 
     assert.strictEqual(
-      queryAll(".info-number", poll)[1].innerHTML,
+      poll.querySelectorAll(".info-number")[1].innerHTML,
       "5",
       "it should display the right number of votes"
     );
@@ -37,7 +37,7 @@ acceptance("Rendering polls with pie charts", function (needs) {
     );
 
     assert.strictEqual(
-      queryAll(".poll-results-chart", poll).length,
+      count(".poll-results-chart", poll),
       1,
       "Renders the chart div instead of bar container"
     );

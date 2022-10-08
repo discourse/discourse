@@ -8,7 +8,7 @@ class ReviewablePost < Reviewable
   def self.queue_for_review_if_possible(post, created_or_edited_by)
     return unless SiteSetting.review_every_post
     return if post.post_type != Post.types[:regular] || post.topic.private_message?
-    return if Reviewable.where(target: post, status: Reviewable.statuses[:pending]).exists?
+    return if Reviewable.pending.where(target: post).exists?
     return if created_or_edited_by.bot? || created_or_edited_by.staff? || created_or_edited_by.has_trust_level?(TrustLevel[4])
     system_user = Discourse.system_user
 
@@ -116,7 +116,7 @@ end
 #
 #  id                      :bigint           not null, primary key
 #  type                    :string           not null
-#  status                  :integer          default(0), not null
+#  status                  :integer          default("pending"), not null
 #  created_by_id           :integer          not null
 #  reviewable_by_moderator :boolean          default(FALSE), not null
 #  reviewable_by_group_id  :integer
@@ -137,6 +137,7 @@ end
 #
 # Indexes
 #
+#  idx_reviewables_score_desc_created_at_desc                  (score,created_at)
 #  index_reviewables_on_reviewable_by_group_id                 (reviewable_by_group_id)
 #  index_reviewables_on_status_and_created_at                  (status,created_at)
 #  index_reviewables_on_status_and_score                       (status,score)

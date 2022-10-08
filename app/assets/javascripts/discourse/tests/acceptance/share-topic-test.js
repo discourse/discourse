@@ -5,7 +5,6 @@ import {
   acceptance,
   exists,
   query,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
@@ -45,9 +44,9 @@ acceptance("Share and Invite modal", function (needs) {
     );
 
     assert.ok(
-      queryAll("input.invite-link")
-        .val()
-        .includes("/t/internationalization-localization/280?u=eviltrout"),
+      query("input.invite-link").value.includes(
+        "/t/internationalization-localization/280?u=eviltrout"
+      ),
       "it shows the topic sharing url"
     );
 
@@ -135,8 +134,29 @@ acceptance("Share url with badges disabled - desktop", function (needs) {
     await click("#topic-footer-button-share-and-invite");
 
     assert.notOk(
-      queryAll("input.invite-link").val().includes("?u=eviltrout"),
+      query("input.invite-link").value.includes("?u=eviltrout"),
       "it doesn't add the username param when badges are disabled"
+    );
+  });
+});
+
+acceptance("With username in share links disabled - desktop", function (needs) {
+  needs.user();
+  needs.settings({ allow_username_in_share_links: false });
+
+  needs.pretender((server, helper) => {
+    server.get("/c/feature/find_by_slug.json", () =>
+      helper.response(200, CategoryFixtures["/c/1/show.json"])
+    );
+  });
+
+  test("topic footer button - username in share links disabled - desktop", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-button-share-and-invite");
+
+    assert.notOk(
+      query("input.invite-link").value.includes("?u=eviltrout"),
+      "it doesn't add the username param when username in share links are disabled"
     );
   });
 });

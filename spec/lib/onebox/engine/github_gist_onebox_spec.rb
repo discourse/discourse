@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::GithubGistOnebox do
+RSpec.describe Onebox::Engine::GithubGistOnebox do
   before do
     @link = "https://gist.github.com/karreiro/208fdd59fc4b4c39283b"
 
@@ -8,7 +8,7 @@ describe Onebox::Engine::GithubGistOnebox do
       .to_return(status: 200, body: onebox_response(described_class.onebox_name))
   end
 
-  include_context "engines"
+  include_context "with engines"
   it_behaves_like "an engine"
 
   describe "#data" do

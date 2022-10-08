@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::BulkInvite do
+RSpec.describe Jobs::BulkInvite do
   describe '#execute' do
     fab!(:user) { Fabricate(:user) }
     fab!(:admin) { Fabricate(:admin) }
@@ -9,7 +9,7 @@ describe Jobs::BulkInvite do
     fab!(:topic) { Fabricate(:topic) }
     let(:staged_user) { Fabricate(:user, staged: true, active: false) }
     let(:email) { 'test@discourse.org' }
-    let(:invites) { [{ email: staged_user.email }, { email: 'test2@discourse.org' }, { email: 'test@discourse.org', groups: 'GROUP1;group2', topic_id: topic.id }] }
+    let(:invites) { [{ email: user.email }, { email: staged_user.email }, { email: 'test2@discourse.org' }, { email: 'test@discourse.org', groups: 'GROUP1;group2', topic_id: topic.id }, { email: 'invalid' }] }
 
     it 'raises an error when the invites array is missing' do
       expect { Jobs::BulkInvite.new.execute(current_user_id: user.id) }
@@ -34,6 +34,12 @@ describe Jobs::BulkInvite do
       expect(invite.email).to eq(email)
       expect(invite.invited_groups.pluck(:group_id)).to contain_exactly(group1.id, group2.id)
       expect(invite.topic_invites.pluck(:topic_id)).to contain_exactly(topic.id)
+
+      post = Post.last
+      expect(post.raw).to include("3 invites")
+      expect(post.raw).to include("1 skipped")
+      expect(post.raw).to include("0 warning")
+      expect(post.raw).to include("1 error")
     end
 
     it 'does not create invited groups for automatic groups' do
@@ -47,6 +53,9 @@ describe Jobs::BulkInvite do
       invite = Invite.last
       expect(invite.email).to eq(email)
       expect(invite.invited_groups.pluck(:group_id)).to contain_exactly(group1.id)
+
+      post = Post.last
+      expect(post.raw).to include("1 warning")
     end
 
     it 'does not create invited groups record if the user can not manage the group' do
@@ -106,7 +115,7 @@ describe Jobs::BulkInvite do
       expect(new_staged_user.user_fields[user_field.id.to_s]).to eq('value 3')
     end
 
-    context 'invites are more than 200' do
+    context 'when there are more than 200 invites' do
       let(:bulk_invites) { [] }
 
       before do

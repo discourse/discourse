@@ -7,7 +7,7 @@ export default {
   name: "csrf-token",
   initialize(container) {
     // Add a CSRF token to all AJAX requests
-    let session = container.lookup("session:main");
+    let session = container.lookup("service:session");
     session.set(
       "csrfToken",
       document.head.querySelector("meta[name=csrf-token]")?.content

@@ -160,12 +160,12 @@ nb_NO:
       forwarded: "videresendte e-posten voer"
     topic_admin_menu: "handlinger for tråd"
     skip_to_main_content: "Gå til hovedinnhold"
-    wizard_required: "Velkommen til ditt nye Discourse! Kom i gang med <a href='%{url}' data-auto-route='true'>oppstartsveiviseren</a> ✨"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
     software_update_prompt:
       message: "Vi har oppdatert dette nettstedet, <span>Oppdater</span>, eller du kan oppleve uventet oppførsel."
       dismiss: "Avslå"
     bootstrap_mode_disabled: "Oppstartsmodus vil bli deaktivert i løpet av 24 timer."
+    bootstrap_invite_button_title: "Send invitasjoner"
     themes:
       default_description: "Forvalg"
     s3:
@@ -197,6 +197,8 @@ nb_NO:
     not_implemented: "Beklager, den funksjonen er ikke blitt implementert enda."
     no_value: "Nei"
     yes_value: "Ja"
+    ok_value: "OK"
+    cancel_value: "Avbryt"
     submit: "Utfør"
     generic_error: "Beklager, det har oppstått en feil."
     generic_error_with_reason: "Det oppstod et problem: %{error}"
@@ -563,6 +565,7 @@ nb_NO:
       forever: "For alltid"
       relative: "Relativ tid"
       none: "Ingen behov"
+      never: "Aldri"
       last_custom: "Siste egendefinerte datotid"
       custom: "Egendefinert dato og tid"
       select_timeframe: "Velg et tidsrom"
@@ -1119,6 +1122,7 @@ nb_NO:
         move_to_archive: "Arkiver"
         failed_to_move: "Kunne ikke flytte valgte meldinger (kanskje nettforbindelsen din er nede)"
         tags: "Stikkord"
+        all_tags: "Alle stikkord"
         warnings: "Offisielle advarsler"
       preferences_nav:
         account: "Konto"
@@ -1611,11 +1615,9 @@ nb_NO:
       other: svar
     signup_cta:
       sign_up: "Registrer deg"
-      hide_session: "Spør meg igjen i morgen"
       hide_forever: "nei takk"
       hidden_for_session: "OK, vi vil spørre deg i morgen. Du kan alltid bruke \"Logg Inn\" for å opprette en konto."
       intro: "Hei! Ser ut som du liker diskusjonen, men du har ikke registrert deg for en konto ennå."
-      value_prop: "Når du oppretter en konto, husker vi nøyaktig det du har lest, så du kommer alltid tilbake der du slapp av. Du får også varslinger, her og via e-post, når noen svarer på deg. Du kan like innlegg for å dele kjærligheten. :heartpulse:"
     summary:
       enabled_description: "Du ser for øyeblikket en oppsummering av dette emnet: de mest interessante innleggene ifølge brukerne."
       description_time_MF: "Det {replyCount, plural, one {er <b>#</b> svar} other {er <b>#</b> svarer}} med en estimert lesetid på <b>{readingTime, plural, one {# minutt} other {# minutter}}</b>."
@@ -1796,9 +1798,6 @@ nb_NO:
       min_content_not_reached:
         one: "Velg minst %{count} element."
         other: "Velg minst %{count} elementer."
-      invalid_selection_length:
-        one: "Utvalg må være minst %{count} tegn."
-        other: "Valg må være minst %{count} tegn."
       components:
         tag_drop:
           filter_for_more: Filter for mer...
@@ -1970,6 +1969,7 @@ nb_NO:
       empty: "Ingen varsler funnet."
       post_approved: "Ditt innlegg ble godkjent"
       reviewable_items: "elementer som krever gjennomgang"
+      watching_first_post_label: "Nytt emne"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -1982,6 +1982,10 @@ nb_NO:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} og én annen</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} og %{count} andre</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} og én annen"
+        other: "%{username}, %{username2} og %{count} andre"
       liked_consolidated_description:
         one: "likte %{count} av dine innlegg"
         other: "likte %{count} av dine innlegg"
@@ -2142,6 +2146,13 @@ nb_NO:
     not_logged_in_user: "brukerside med oppsummering av nåværende aktivtet og preferanser."
     current_user: "gå til din brukerside"
     view_all: "se alle %{tab}"
+    user_menu:
+      tabs:
+        replies: "Svar"
+        mentions: "Omtalelser"
+        likes: "Likes tildelt"
+        bookmarks: "Bokmerker"
+        profile: "Profil"
     topics:
       new_messages_marker: "siste besøk"
       bulk:
@@ -2732,10 +2743,6 @@ nb_NO:
         confirm:
           one: "Er du sikker på at du ønsker å slette dette innlegget?"
           other: "Er du sikker på at du ønsker å slette de %{count} innleggene?"
-      merge:
-        confirm:
-          one: "Er du sikker på at du vil flette disse postene?"
-          other: "Er du sikker på at du vil flette de %{count} innleggene?"
       revisions:
         controls:
           first: "Første versjon"
@@ -3129,7 +3136,6 @@ nb_NO:
         this_week: "Den siste uken"
         today: "I dag"
         other_periods: "se toppen:"
-    browser_update: 'Dessverre er <a href="https://www.discourse.org/faq/#browser">nettleseren din for gammel for å fungere på denne siden</a>. Vennligst <a href="https://browsehappy.com">oppgrader nettleseren din</a> for å se rik innhold, logge inn og svar.'
     permission_types:
       full: "Opprett / Svar / Se"
       create_post: "Svar / Se"
@@ -3265,7 +3271,6 @@ nb_NO:
     download_calendar:
       download: "Last ned"
     tagging:
-      all_tags: "Alle stikkord"
       other_tags: "Andre stikkord"
       selector_all_tags: "alle stikkord"
       selector_no_tags: "ingen stikkord"
@@ -3411,16 +3416,20 @@ nb_NO:
       detailed_name: "%{level}: %{name}"
     pick_files_button:
       unsupported_file_picked: "Du har plukket en ustøttet fil. Filtyper som støttes – %{types}."
-    user_activity:
-      no_activity_others: "Ingen aktivitet."
-      no_replies_others: "Ingen svar."
-      no_likes_others: "Ingen likte innlegg. "
     fullscreen_table:
       expand_btn: "Utvid tabell"
     sidebar:
-      unread_count: "%{count} ulest"
-      new_count: "%{count} ny"
+      unread_count:
+        one: "%{count} ulest"
+        other: "%{count} uleste"
+      new_count:
+        one: "%{count} ny"
+        other: "%{count} nye"
+      more: "Mer…"
+      all_categories: "Alle kategorier"
       sections:
+        about:
+          header_link_text: "Om"
         messages:
           header_link_text: "Meldinger"
           links:
@@ -3432,19 +3441,32 @@ nb_NO:
             unread_with_count: "Ulest (%{count})"
             archive: "Arkiver"
         tags:
-          header_link_title: "alle stikkord"
           header_link_text: "Stikkord"
         categories:
-          header_link_title: "alle kategorier"
           header_link_text: "Kategorier"
-        topics:
-          header_link_title: "hjem"
-          header_link_text: "Emner"
+        community:
+          header_link_text: "Gemenskap"
           links:
+            about:
+              content: "Om"
+            admin:
+              content: "Administrator"
+            badges:
+              content: "Merker"
+            faq:
+              content: "O-S-S"
             tracked:
               content: "Overvåkes"
+            groups:
+              content: "Grupper"
+              title: "Alle grupper"
+            users:
+              content: "Brukere"
             my_posts:
               content: "Mine innlegg"
+            review:
+              content: "Gjennomgang"
+              title: "gjennomgang"
   admin_js:
     type_to_filter: "skriv for å filtrere…"
     admin:
@@ -4665,14 +4687,13 @@ nb_NO:
           topics: "Emner"
   wizard_js:
     wizard:
-      done: "Ferdig"
       back: "Forrige"
       next: "Neste"
+      step-text: "Steg"
       step: "%{current} av %{total}"
       upload: "Last opp"
       uploading: "Laster opp…"
       upload_error: "Beklager, det skjedde en feil ved opplastingen av den filen. Vennligst prøv igjen."
-      quit: "Kanskje senere"
       staff_count:
         one: "Din gemenskap har ett stabsmedlem (deg)."
         other: " Ditt fellesskap har %{count} stab, inkludert deg selv."

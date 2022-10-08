@@ -30,10 +30,10 @@ export default function identifySource(error) {
 
   let plugin;
 
-  if (isDevelopment()) {
-    // Source-mapped:
-    plugin = plugin || error.stack.match(/plugins\/([\w-]+)\//)?.[1];
+  // Source-mapped:
+  plugin = plugin || error.stack.match(/plugins\/([\w-]+)\//)?.[1];
 
+  if (isDevelopment()) {
     // Un-source-mapped:
     plugin = plugin || error.stack.match(/assets\/plugins\/([\w-]+)\.js/)?.[1];
   }
@@ -58,7 +58,7 @@ export function getThemeInfo(id) {
   return {
     id,
     name,
-    path: getURL(`/admin/customize/themes/${id}?safe_mode=no_custom`),
+    path: getURL(`/admin/customize/themes/${id}?safe_mode=no_themes`),
   };
 }
 

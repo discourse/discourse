@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # frozen_string_literal: true
 
-describe TopicTitleLengthValidator do
+RSpec.describe TopicTitleLengthValidator do
 
   # simulate Rails behavior (singleton)
   def validate

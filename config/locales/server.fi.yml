@@ -127,7 +127,6 @@ fi:
         unsubscribe_not_allowed: "Näin käy, kun tämä käyttäjä ei voi perua tilausta sähköpostitse."
         email_not_allowed: "Näin käy, kun sähköpostiosoite ei ole sallittujen listalla tai on kiellettyjen listalla."
       unrecognized_error: "Tuntematon virhe"
-    secure_media_placeholder: "Piilotettu: Tällä sivustolla on suojattu sisältö käytössä, vieraile ketjussa tai näytä sisältö napsauttamalla Näytä sisältö -painiketta."
     view_redacted_media: "Näytä sisältö"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -197,7 +196,6 @@ fi:
       page_publishing_requirements: "Sivun julkaisua ei voida ottaa käyttöön, jos suojattu media on käytössä."
       s3_backup_requires_s3_settings: "Et voi käyttää S3:a varmuuskopiosijaintina, ellei %{setting_name} ei ole määritetty."
       s3_bucket_reused: "Sama säiliö ei voi olla sekä 's3_upload_bucket' että 's3_backup_bucket'. Valitse eri säiliö tai määritä eri polku jokaiselle säiliölle."
-      secure_media_requirements: "S3-lataukset täytyy ottaa käyttöön ennen suojatun median käyttöönottoa."
       share_quote_facebook_requirements: "Facebook-sovellustunnus on määritettävä, jotta lainausten jakaminen Facebookiin on mahdollista."
       second_factor_cannot_enforce_with_socials: "Et voi pakottaa 2FA-asetusta käyttöön, kun yhteisökirjautuminen on aktiivisena. Poista yhteisökirjautuminen käytöstä täällä: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Et voi pakottaa kaksivaiheista tunnistusta, jos paikallinen kirjautuminen on pois käytöstä."
@@ -570,8 +568,7 @@ fi:
               invalid_url: "Korvaava URL-osoite on virheellinen"
       <<: *errors
   uncategorized_category_name: "Luokittelematon"
-  vip_category_name: "Lounge"
-  vip_category_description: "Alue luottamustason 3 ja ylemmille käyttäjille."
+  general_category_name: "Yleistä"
   meta_category_name: "Sivuston palaute"
   meta_category_description: "Keskustelua tästä sivustosta, sen järjestämisestä, siitä miten se toimii ja miten sitä voisi parantaa."
   staff_category_name: "Henkilökunta"
@@ -592,29 +589,6 @@ fi:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Saattaa olla hyvä sulkea tämä ketju ylläpitäjän :wrench: -valikon kautta (oikealla ylhäällä sekä sivun alaosassa), jottei vastauksia kasaannu ilmoituksen alle.
-  lounge_welcome:
-    title: "Tervetuloa Loungeen"
-    body: |2
-
-      Onnittelut! :confetti_ball:
-
-      Jos näet tämän ketjun, sinut on juuri ylennetty **mestariksi** (luottamustaso 3).
-
-      Voit nyt &hellip;
-
-      * Muokata minkä hyvänsä ketjun otsikkoa
-      * Siirtää minkä tahansa ketjun toiselle alueelle
-      * Lisätä linkkejä, joita hakukoneet seuraavat ([nofollow](https://en.wikipedia.org/wiki/Nofollow) on poistettu)
-      * Päästä suljetulle Lounge-alueelle, joka näkyy vain luottamustason 3 ja korkeammille käyttäjille
-      * Piilottaa roskapostiviestin yhdellä liputuksella
-
-      Tässä on nykyinen [lista mestareista](%{base_path}/badges/3/regular). Käyhän moikkaamassa.
-
-      Kiitos, että olet tämän yhteisön arvokas jäsen!
-
-      (Lisää tietoa luottamustasoista saat [tästä englanninkielisestä ketjusta][trust]. Huomaa, että pysyäksesi mestarina sinun pitää täyttää vaatimukset jatkossakin.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "LUE ENSIN: Ylläpitäjän pika-aloitusopas"
   category:
     topic_prefix: "Tietoa alueesta %{category}"
@@ -662,7 +636,6 @@ fi:
       public_group_membership: "Liityt tai poistut ryhmistä hieman liian usein. Odota %{time_left} ja yritä sitten uudelleen."
       topics_per_day: "Olet saavuttanut päivittäin sallittujen uusien ketjujen enimmäismäärän. Odota %{time_left} ja yritä sitten uudelleen."
       pms_per_day: "Olet saavuttanut päivässä sallitun viestien enimmäismäärän. Odota %{time_left} ja yritä sitten uudelleen."
-      create_like: "Vau! Olet jakanut paljon rakkautta! Olet saavuttanut päivittäisten tykkäysten ylärajan tälle päivälle, mutta kun saavutat korkeamman luottamustason, ansaitset enemmän päivittäisiä tykkäyksiä. Odota %{time_left} ja yritä sitten uudelleen."
       create_bookmark: "Olet saavuttanut päivittäisten kirjanmerkkien enimmäismäärän. Odota %{time_left} ja yritä sitten uudelleen."
       edit_post: "Olet saavuttanut päivittäisten muokkausten enimmäismäärän. Odota %{time_left} ja yritä sitten uudelleen."
       live_post_counts: "Kysyt viestimääriä liian nopealla tahdilla. Odota %{time_left} ja yritä sitten uudelleen."
@@ -1686,7 +1659,6 @@ fi:
     min_trust_to_edit_wiki_post: "Wiki-viestin muokkaamiseen vaadittava luottamustaso."
     min_trust_to_edit_post: "Viestin muokkaamiseen vaadittava luottamustaso."
     min_trust_to_allow_self_wiki: "Minimiluottamustaso, jolla käyttäjä voi tehdä omasta viestistään wiki-viestin."
-    min_trust_to_send_messages: "Vähimmäisluottamustaso, jolla voi aloittaa yksityisviestiketjuja."
     min_trust_to_send_email_messages: "Vähimmäisluottamustaso, jolla voi lähettää yksityisviestejä sähköpostitse."
     min_trust_to_flag_posts: "Vähimmäisluottamustaso, jolla voi merkitä viestejä"
     min_trust_to_post_links: "Vähimmäisluottamustaso, jolla voi lisätä linkkejä viesteihin"
@@ -1926,9 +1898,6 @@ fi:
     delete_merged_stub_topics_after_days: "Kuinka montaa päivää odotetaan ennen kuin täysin yhdistetyt tynkäketjut poistetaan automaattisesti. Jos asetat arvoksi 0, tynkäketjuja ei poistetan koskaan."
     bootstrap_mode_min_users: "Vähimmäismäärä käyttäjiä, joka vaaditaan aloitustilan poistamiseen (aseta 0 poistaaksesi käytöstä)"
     prevent_anons_from_downloading_files: "Estä tuntemattomia käyttäjiä lataamasta liitteitä."
-    secure_media: 'Rajoittaa pääsyä KAIKKIIN latauksiin (kuvat, videot, äänet, tekstit, pdf-tiedostot, zip-tiedostot ja muut). Jos "sisäänkirjautuminen vaaditaan" on käytössä, vain kirjautuneilla käyttäjillä on pääsy latauksiin. Muussa tapauksessa pääsy rajoitetaan vain yksityisviesteihin ja yksityisiin alueisiin ladattuihin mediatiedostoihin. VAROITUS: Tämä asetus on monimutkainen ja vaatii syvällistä hallinnollista ymmärrystä. Katso lisätietoja <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">turvallista mediaa käsittelevästä ketjusta Metassa</a>.'
-    secure_media_allow_embed_images_in_emails: "Sallii turvallisten kuvien upottamisen, jotka normaalisti karsittaisiin sähköposteissa, jos niiden koko on pienempi kuin \"secure media max email embed image size kb\" -asetus."
-    secure_media_max_email_embed_image_size_kb: "Sähköposteihin upotettavien turvallisten kuvien kokoraja, jos \"secure media allow embed in emails\" -asetus on käytössä. Ilman kyseistä asetusta tällä asetuksella ei ole vaikutusta."
     slug_generation_method: "Valitse polkutunnuksen luomisen metodi, 'encoded' käyttää prosenttikoodausta, 'none' poistaa polkutunnukset käytöstä."
     enable_emoji: "Ota emoji käyttöön"
     enable_emoji_shortcuts: "Yleiset tekstiemojit, kuten :), :p ja :(, muunnetaan emojeiksi"
@@ -4146,7 +4115,6 @@ fi:
     register:
       button: "Rekisteröidy"
       title: "Rekisteröi ylläpitäjän tili"
-      help: "aloita rekisteröimällä uusi tili"
       no_emails: "Ylläpitäjän sähköpostiosoitetta ei määritetty asennuksen aikana, joten asennuksen viimeistely voi olla vaikeaa. Lisää kehittäjän sähköpostiosoite määritystiedostoon tai <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>luo ylläpitäjän tili konsolissa</a>."
     confirm_email:
       title: "Vahvista sähköpostisi"
@@ -4156,88 +4124,30 @@ fi:
       message: "<p>Lähetimme uuden aktivointiviestin osoitteeseen <b>%{email}</b>"
   safe_mode:
     title: "Siirry vikasietotilaan"
-    description: "Vikasietotilassa voit testata sivustoasi ilman lisäosia ja sivuston mukautuksia."
-    no_customizations: "Poista nykyinen teema käytöstä"
-    only_official: "Poista epäviralliset lisäosat käytöstä"
+    no_unofficial_plugins: "Poista epäviralliset lisäosat käytöstä"
     no_plugins: "Poista kaikki lisäosat käytöstä"
     enter: "Siirry vikasietotilaan"
     must_select: "Ainakin yksi on valittava, jotta voi siirtyä vikasietotilaan."
   wizard:
     title: "Discoursen asennus"
     step:
-      locale:
-        title: "Tervetuloa Discourseen!"
-        fields:
-          default_locale:
-            description: "Mikä on yhteisön oletuskieli?"
-      forum_title:
-        title: "Nimi"
-        description: "Nimi on merkittävä asia, sillä se on <i>ensimmäinen</i> asia, jonka potentiaalinen vierailija saa tietää yhteisöstäsi. Mitä valitsemasi nimi kertoo yhteisöstä?"
+      introduction:
         fields:
           title:
-            label: "Yhteisön nimi"
             placeholder: "Jennin mesta"
           site_description:
             placeholder: "Paikka, jossa Jenni ja hänen ystävänsä voivat keskustella kivoista jutuista"
-          short_site_description:
-            placeholder: "Paras yhteisö ikinä missään"
-      introduction:
-        title: "Johdanto"
-        disabled: "<p>Ketjua otsikolla “%{topic_title}” ei löytynyt.</p> <ul> <li>Jos olet muuttanut otsikkoa, muuta sivuston esittelytekstiä muokkaamalla sitä ketjua.</li> <li>Jos olet poistanut ketjun, luo uusi ketju otsikolla “%{topic_title}”. Ketjun ensimmäisen viestin sisältö on sivustosi esittelyteksti.</li> </ul>"
-        fields:
-          welcome:
-            label: "Tervetuloa-ketju"
-            description: "<p>Kuinka kuvailisit yhteisöä hississä ventovieraalle, jos sinulla olisi minuutti aikaa?</p> <ul> <li>Keille nämä keskustelut on suunnattu?</li> <li>Mistä täällä puhutaan?</li> <li>Miksi täällä kannattaa käydä?</li> </ul> <p>Tervetuloa-ketju on ensimmäinen asia, jonka palstalle saapunut näkee. Ajattele sitä <b>yhden kappaleen mittaisena</b> \"hissipuheena\" tai \"perimmäisenä tavoitteena\".</p>"
-            one_paragraph: "Pidä tervetuloviesti yhden kappaleen mittaisena."
-            extra_description: "Jos olet epävarma, voit ohittaa tämän vaiheen ja muokata tervetuloketjua myöhemmin."
+          default_locale:
+            label: "Kieli"
       privacy:
-        title: "Käyttöoikeudet"
-        description: "<p>Onko yhteisö avoin kaikille vai onko sitä rajattu jäsenyyden, kutsujen tai hyväksynnän avulla? Jos haluat, voit määritellä asioita aluksi yksityisesti ja muuttaa sivuston julkiseksi myöhemmin.</p>"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Julkinen"
-                description: "Kenellä tahansa on pääsy yhteisöön"
-              restricted:
-                label: "Yksityinen"
-                description: "Vain kirjautuneilla käyttäjillä on pääsy yhteisöön"
-          privacy_options:
-            description: "Kuinka uudet käyttäjät voivat luoda käyttäjätilin?"
-            choices:
-              open:
-                label: "Käyttäjät voivat luoda tilin itsenäisesti."
-              invite_only:
-                label: "Luotettujen käyttäjien tai henkilökunnan on kutsuttava käyttäjät tilin luomista varten."
-              must_approve:
-                label: "Käyttäjät voivat luoda tilin itsenäisesti, mutta henkilökunnan on hyväksyttävä ne."
-      contact:
-        title: "Yhteystiedot"
-        fields:
-          contact_email:
-            label: "Sähköposti"
-            placeholder: "nimi@esimerkki.fi"
-            description: "Tätä yhteisöä ylläpitävän henkilön tai ryhmän sähköpostiosoite. Käytetään vastaanottamaan kriittisiä huomautuksia käsittelemättömistä merkinnöistä ja tietoturvapäivityksistä. Se näkyy myös <a href='%{base_path}/about' target='_blank'>Tietoja</a>-sivulla kiireellisiä yhteydenottoja varten."
-          contact_url:
-            label: "Verkkosivu"
-            placeholder: "https://www.esimerkki.fi/ota-yhteytta"
-            description: "Sinun tai organisaatiosi yleinen yhteydenottosivu. Näkyy <a href='%{base_path}/about' target='_blank'>Tietoja</a>-sivulla."
-          site_contact:
-            label: "Automaattiset viestit"
-            description: "Kaikki Discoursen automaattiset yksityisviestit lähetetään tältä käyttäjältä, kuten varoitukset merkinnöistä ja ilmoitukset valmistuneista varmuuskopioista."
-      corporate:
-        title: "Organisaatio"
-        description: "Tämä tieto lisätään <a href='%{base_path}/tos' target='blank'>käyttöehtoihin</a>, joka on henkilökunta-alueella sijaitseva ketju, jota voit muokata tarpeen mukaan. Jos sinulla ei ole yritystä, voit ohittaa tämän vaiheen."
-        fields:
-          company_name:
-            label: "Yrityksen nimi"
-            placeholder: "Esimerkkiorganisaatio"
-          governing_law:
-            label: "Sovellettava lainsäädäntö"
-            placeholder: "Kalifornian laki"
-          city_for_disputes:
-            label: "Kaupunki, jonka oikeudessa riidat ratkotaan"
-            placeholder: "San Francisco, Kalifornia"
+          login_required:
+            placeholder: "Yksityinen"
+            extra_description: "Vain kirjautuneilla käyttäjillä on pääsy yhteisöön"
+          must_approve_users:
+            placeholder: "Vie hyväksyttäväksi"
+      ready:
+        title: "Discourse-sivustosi on valmis!"
       styling:
         fields:
           body_font:
@@ -4258,24 +4168,34 @@ fi:
                 label: "Alueet ja tuoreimmat ketjut"
               categories_and_top_topics:
                 label: "Alueet ja suosittuja ketjuja"
-      logos:
-        title: "Logot"
+      branding:
         fields:
           logo:
             label: "Ensisijainen logo"
-            description: "Sivuston vasemmassa yläkulmassa oleva logokuva. Käytä leveää suorakulmaista kuvaa, jonka korkeus on 120 ja kuvasuhde suurempi kuin 3:1"
           logo_small:
             label: "Neliölogo"
-            description: "Neliön muotoinen versio sivuston logosta. Näkyy sivuston vasemmassa yläkulmassa, kun vierität selaimessa sivua alaspäin, sekä sosiaalisen median julkaisuissa. Mielellään suurempi kuin 512x512."
-      icons:
-        title: "Kuvakkeet"
-        fields:
           favicon:
             label: "Selaimen kuvake"
-            description: "Kuvake, jota käytetään kuvaamaan sivustoa selaimissa, ja joka näyttää hyvältä pienissä kokoluokissa. Suositellut tiedostomuodot ovat PNG tai JPG. Käytämme oletuksena neliön muotoista logoa."
           large_icon:
             label: "Suuri kuvake"
-            description: "Kuvake, jota käytetään kuvaamaan sivustoa moderneilla laitteilla, ja joka näyttää hyvältä suuremmissa kokoluokissa. Mielellään suurempi kuin 512 × 512. Käytämme oletuksena neliön muotoista logoa."
+      corporate:
+        fields:
+          company_name:
+            label: "Yrityksen nimi"
+            placeholder: "Esimerkkiorganisaatio"
+          governing_law:
+            label: "Sovellettava lainsäädäntö"
+            placeholder: "Kalifornian laki"
+          contact_url:
+            label: "Verkkosivu"
+            placeholder: "https://www.esimerkki.fi/ota-yhteytta"
+            description: "Sinun tai organisaatiosi yleinen yhteydenottosivu. Näkyy <a href='%{base_path}/about' target='_blank'>Tietoja</a>-sivulla."
+          city_for_disputes:
+            label: "Kaupunki, jonka oikeudessa riidat ratkotaan"
+            placeholder: "San Francisco, Kalifornia"
+          site_contact:
+            label: "Automaattiset viestit"
+            description: "Kaikki Discoursen automaattiset yksityisviestit lähetetään tältä käyttäjältä, kuten varoitukset merkinnöistä ja ilmoitukset valmistuneista varmuuskopioista."
       invites:
         title: "Kutsu henkilökuntaa"
         description: "Melkein valmista! Kutsu vielä joitakin ihmisiä <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>pohjustamaan keskusteluita</a> mielenkiintoisilla aiheilla ja vastauksilla, jotta yhteisösi pääsee alkuun."

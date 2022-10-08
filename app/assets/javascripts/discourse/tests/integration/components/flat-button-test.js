@@ -1,7 +1,7 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, render, triggerKeyEvent } from "@ember/test-helpers";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 
 module("Integration | Component | flat-button", function (hooks) {
   setupRenderingTest(hooks);
@@ -14,10 +14,10 @@ module("Integration | Component | flat-button", function (hooks) {
 
     await render(hbs`<FlatButton @action={{this.action}} />`);
 
-    await triggerKeyEvent(".btn-flat", "keydown", 32);
+    await triggerKeyEvent(".btn-flat", "keydown", "Space");
     assert.strictEqual(this.foo, null);
 
-    await triggerKeyEvent(".btn-flat", "keydown", 13);
+    await triggerKeyEvent(".btn-flat", "keydown", "Enter");
     assert.strictEqual(this.foo, "bar");
   });
 

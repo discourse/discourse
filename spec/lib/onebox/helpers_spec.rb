@@ -51,7 +51,7 @@ RSpec.describe Onebox::Helpers do
       expect(described_class.fetch_html_doc(uri).to_s).to match("success")
     end
 
-    context "canonical link" do
+    context "with canonical link" do
       it "follows canonical link" do
         uri = 'https://www.example.com'
         stub_request(:get, uri).to_return(status: 200, body: "<!DOCTYPE html><link rel='canonical' href='http://foobar.com/'/><p>invalid</p>")
@@ -133,7 +133,7 @@ RSpec.describe Onebox::Helpers do
   end
 
   describe "user_agent" do
-    context "default" do
+    context "with default" do
       it "has the default Discourse user agent" do
         stub_request(:get, "http://example.com/some-resource")
           .with(headers: { "user-agent" => /Discourse Forum Onebox/ })
@@ -143,7 +143,7 @@ RSpec.describe Onebox::Helpers do
       end
     end
 
-    context "Custom option" do
+    context "with custom option" do
       around do |example|
         previous_options = Onebox.options.to_h
         Onebox.options = { user_agent: "EvilTroutBot v0.1" }
@@ -172,6 +172,15 @@ RSpec.describe Onebox::Helpers do
     it { expect(described_class.normalize_url_for_output('//example.com/hello')).to eq("//example.com/hello") }
     it { expect(described_class.normalize_url_for_output('example.com/hello')).to eq("") }
     it { expect(described_class.normalize_url_for_output('linear-gradient(310.77deg, #29AA9F 0%, #098EA6 100%)')).to eq("") }
+  end
+
+  describe '.get_absolute_image_url' do
+    it { expect(described_class.get_absolute_image_url('//meta.discourse.org/favicon.ico', 'https://meta.discourse.org')).to eq('https://meta.discourse.org/favicon.ico') }
+    it { expect(described_class.get_absolute_image_url('http://meta.discourse.org/favicon.ico', 'https://meta.discourse.org')).to eq('http://meta.discourse.org/favicon.ico') }
+    it { expect(described_class.get_absolute_image_url('https://meta.discourse.org/favicon.ico', 'https://meta.discourse.org')).to eq('https://meta.discourse.org/favicon.ico') }
+    it { expect(described_class.get_absolute_image_url('/favicon.ico', 'https://meta.discourse.org')).to eq('https://meta.discourse.org/favicon.ico') }
+    it { expect(described_class.get_absolute_image_url('/favicon.ico', 'https://meta.discourse.org/forum/subdir')).to eq('https://meta.discourse.org/favicon.ico') }
+    it { expect(described_class.get_absolute_image_url('../favicon.ico', 'https://meta.discourse.org/forum/subdir/')).to eq('https://meta.discourse.org/forum/favicon.ico') }
   end
 
   describe '.uri_encode' do

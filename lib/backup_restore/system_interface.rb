@@ -47,9 +47,13 @@ module BackupRestore
       BackupRestore.clear_shutdown_signal!
 
       Thread.new do
-        while BackupRestore.is_operation_running?
-          exit if BackupRestore.should_shutdown?
-          sleep 0.1
+        Thread.current.name = "shutdown_wait"
+
+        RailsMultisite::ConnectionManagement.with_connection(@current_db) do
+          while BackupRestore.is_operation_running?
+            exit if BackupRestore.should_shutdown?
+            sleep 0.1
+          end
         end
       end
     end

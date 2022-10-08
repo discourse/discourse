@@ -20,7 +20,7 @@ export default {
       return;
     }
 
-    this.currentUser = container.lookup("current-user:main");
+    this.currentUser = container.lookup("service:current-user");
 
     getAndClearUnhandledThemeErrors().forEach((e) => {
       reportThemeError(this.currentUser, e);
@@ -47,7 +47,7 @@ export default {
 
 function reportToLogster(name, error) {
   const data = {
-    message: `${name} theme/component is throwing errors`,
+    message: `${name} theme/component is throwing errors:\n${error.name}: ${error.message}`,
     stacktrace: error.stack,
   };
 

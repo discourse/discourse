@@ -1,0 +1,54 @@
+.new-user-wrapper {
+  .user-navigation {
+    width: 100%;
+
+    .nav-pills {
+      margin: 0.5em 0;
+      overflow-x: auto;
+
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      li {
+        a {
+          display: flex;
+          flex-direction: row;
+          padding: 0.5em 0.5em;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+
+  .user-nav-dropdown-list-item {
+    flex-direction: column;
+  }
+
+  .user-nav-dropdown-chevron {
+    margin-left: auto;
+  }
+
+  .user-nav-dropdown-button {
+    width: 100%;
+  }
+
+  .user-nav-dropdown-submenu {
+    box-sizing: border-box;
+    position: relative;
+    top: 0;
+    box-shadow: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(50%, 1fr));
+    padding: 0.5em 0 1em 1.65em;
+
+    li a {
+      box-sizing: border-box;
+      padding: 0.75em 1em;
+      width: 100%;
+      @include ellipsis;
+    }
+  }
+}

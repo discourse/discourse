@@ -50,6 +50,9 @@ $topic-progress-height: 42px;
       align-self: start;
       @include sticky;
       top: calc(var(--header-offset, 60px) + 2em);
+      .footer-nav-ipad & {
+        top: calc(var(--header-offset, 60px) + var(--footer-nav-height) + 2em);
+      }
       margin-left: 1em;
       z-index: z("timeline");
 

@@ -5,8 +5,8 @@ class UserBookmarkList
 
   PER_PAGE = 20
 
-  attr_reader :bookmarks, :per_page
-  attr_accessor :more_bookmarks_url
+  attr_reader :bookmarks, :per_page, :has_more
+  attr_accessor :more_bookmarks_url, :bookmark_serializer_opts
 
   def initialize(user:, guardian:, params:)
     @user = user
@@ -17,10 +17,13 @@ class UserBookmarkList
     @params[:per_page] = PER_PAGE if @params[:per_page] > PER_PAGE
 
     @bookmarks = []
+    @bookmark_serializer_opts = {}
   end
 
-  def load
-    @bookmarks = BookmarkQuery.new(user: @user, guardian: @guardian, params: @params).list_all
+  def load(&blk)
+    query = BookmarkQuery.new(user: @user, guardian: @guardian, params: @params)
+    @bookmarks = query.list_all(&blk)
+    @has_more = (@params[:page].to_i + 1) * @params[:per_page] < query.count
     @bookmarks
   end
 

@@ -126,7 +126,6 @@ ja:
         unsubscribe_not_allowed: "このユーザーがメール経由で購読を解除できない場合に発生します。"
         email_not_allowed: "メールリストがホワイトリストにないか、ブラックリストに含まれている場合に発生します。"
       unrecognized_error: "不明なエラー"
-    secure_media_placeholder: "編集済み: このサイトではセキュリティで保護されたメディアが有効になっています。トピックにアクセスしたり、「メディアを表示」をクリックすると、添付されたメディアが表示されます。"
     view_redacted_media: "メディアを表示"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -190,7 +189,6 @@ ja:
       page_publishing_requirements: "セキュリティで保護されているメディアが有効である場合、ページの公開を有効にできません。"
       s3_backup_requires_s3_settings: "'%{setting_name}' が入力されていない場合、S3 をバックアップとして使用することはできません。"
       s3_bucket_reused: "'s3_upload_bucket' and 's3_backup_bucket' に同じバケットを使用することはできません。別のバケットを選択するか、バケットごとに異なるパスを使用してください。"
-      secure_media_requirements: "セキュリティで保護されたメディアを有効にする前に、S3 アップロードを有効にする必要があります。"
       share_quote_facebook_requirements: "Facebook に引用を共有できるようにするには、Facebook アプリの ID を設定する必要があります。"
       second_factor_cannot_enforce_with_socials: "ソーシャルログインが有効になっている状態で 2FA を適用することはできません。先に、%{auth_provider_names} でログインを無効にする必要があります。"
       second_factor_cannot_be_enforced_with_disabled_local_login: "ログインが無効になっている場合、2FA を適用することはできません。"
@@ -545,8 +543,7 @@ ja:
               invalid_url: "置換 URL は無効です"
       <<: *errors
   uncategorized_category_name: "未分類"
-  vip_category_name: "ラウンジ"
-  vip_category_description: "信頼レベル 3 以上のメンバーのみが参加できるカテゴリです。"
+  general_category_name: "一般"
   meta_category_name: "サイトに関する意見"
   meta_category_description: "このサイト、組織、仕組み、および改善に関するディスカッションです。"
   staff_category_name: "スタッフ"
@@ -567,29 +564,6 @@ ja:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       お知らせに返信が溜まらないように、管理からこのトピックをクローズすることができます :wrench: (右上と下)。
-  lounge_welcome:
-    title: "ラウンジへようこそ"
-    body: |2
-
-      おめでとうございます！ :confetti_ball:
-
-      このトピックを閲覧できるのであれば、最近**レギュラー** (信頼レベル 3) に昇格したということです。
-
-      次のことができるようになりました &hellip;
-
-      * トピックのタイトルの編集
-      * トピックのカテゴリの変更
-      * すべてのリンクのフォロー ([自動 nofollow](https://en.wikipedia.org/wiki/Nofollow) が削除されました)
-      * 信頼レベル 3 以上のユーザーのみが閲覧できる非公開のラウンジカテゴリへのアクセス
-      * 1 回の通報による迷惑の非表示
-
-      [現在のレギュラーユーザーのリスト](%{base_path}/badges/3/regular)をご覧ください。ご挨拶しましょう。
-
-      このコミュニティの大切な一員としての活動に感謝いたします！
-
-      (信頼レベルについて詳しくは、[こちらのトピック][trust] をご覧ください。要件を継続して満たすメンバーのみがレギュラーレベルを維持することができます。)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "最初にお読みください: 管理者クイックスタートガイド"
   category:
     topic_prefix: "%{category} カテゴリについて"
@@ -635,7 +609,6 @@ ja:
       public_group_membership: "グループへの参加/退出を頻繁に行い過ぎているようです。%{time_left}経ってから、もう一度お試しください。"
       topics_per_day: "1 日に作成できる新規トピックの上限に達しました。%{time_left}後に新しいトピックを作成できるようになります。"
       pms_per_day: "1 日に作成できるメッセージの上限に達しました。%{time_left}後に新しいメッセージを作成できるようになります。"
-      create_like: "わぉ！愛をたくさん分かち合っていますね！今日の「いいね！」の上限に達しました。信頼レベルが高くなると、1 日に「いいね！」できる上限が高くなります。%{time_left}経ったら、また投稿に「いいね！」できるようになります。"
       create_bookmark: "1 日のブックマークの上限に達しました。%{time_left}経ってから、ブックマークを設定してください。"
       edit_post: "1 日に編集できる回数の上限に達しました。%{time_left}経ってから、編集を送信してください。"
       live_post_counts: "ライブ投稿の件数を短時間で尋ねています。%{time_left}経ってから、もう一度お試しください。"
@@ -1643,7 +1616,6 @@ ja:
     min_trust_to_edit_wiki_post: "ウィキとしてマークされた投稿を編集するために必要な最低信頼レベル。"
     min_trust_to_edit_post: "投稿を編集するために必要な最低信頼レベル。"
     min_trust_to_allow_self_wiki: "ユーザー自身の投稿をウィキにするために必要な最低信頼レベル。"
-    min_trust_to_send_messages: "新しい個人メッセージを作成するために必要な最低信頼レベル。"
     min_trust_to_send_email_messages: "メールで個人メッセージを送信するために必要な最低信頼レベル。"
     min_trust_to_flag_posts: "投稿を通報するために必要な最低信頼レベル"
     min_trust_to_post_links: "投稿にリンクを含めるために必要な最低信頼レベル"
@@ -1884,9 +1856,6 @@ ja:
     delete_merged_stub_topics_after_days: "完全にマージされたスタブトピックを自動的に削除するまで待機する日数。0 に設定すると、スタブトピックは削除されません。"
     bootstrap_mode_min_users: "ブートストラップモードを無効にするために必要な最低ユーザー数 (0 に設定すると無効になります)"
     prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードできないようにする。"
-    secure_media: 'すべてのアップロード (画像、動画、音声、テキスト、pdf、zip など) へのアクセスを制限する。“login required” が有効である場合、ログイン済みのユーザーのみがアップロードにアクセスできます。そうでない場合は、個人メッセージと非公開カテゴリのメディアアップロードのアクセスのみが制限されます。警告: この設定は複雑であるため、管理を十分に理解している必要があります。詳細については、<a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">メタに関するセキュリティで保護されたメディアのトピック</a>をご覧ください。'
-    secure_media_allow_embed_images_in_emails: "通常はメールで編集されるセキュリティで保護された画像のサイズが 'secure media max email embed image size kb' 設定よりも小さい場合、その埋め込みを許可する。"
-    secure_media_max_email_embed_image_size_kb: "'secure media allow embed in emails' 設定が有効である場合にメールに埋め込まれるセキュリティで保護された画像のサイズのカットオフ。その設定が有効でない場合、この設定の効果はありません。"
     slug_generation_method: "スラッグ生成方法を選択します。'encode' はパーセントエンコード文字列を生成します。'none'は、スラッグを無効にします。"
     enable_emoji: "絵文字を有効にする"
     enable_emoji_shortcuts: ":) :p :( などの一般的なスマイリーテキストは絵文字に変換されます"
@@ -4063,7 +4032,6 @@ ja:
     register:
       button: "登録"
       title: "管理者アカウントの登録"
-      help: "まず、新しいアカウントを登録してください"
       no_emails: "残念ながら、セットアップ中に管理者メールが定義されなかったため、構成を完了するのが困難です。構成ファイルに開発者のメールアドレスを追加するか、<a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>コンソールから管理者アカウントを作成</a>してください。"
     confirm_email:
       title: "メールの確認"
@@ -4073,88 +4041,30 @@ ja:
       message: "<p><b>%{email}</b> にアクティベーションメールを再送信しました"
   safe_mode:
     title: "セーフモードを開始"
-    description: "セーフモードでは、プラグインやサイトのカスタマイズを読み込まずにサイトをテストすることができます。"
-    no_customizations: "現在のテーマを無効にする"
-    only_official: "非公式のプラグインを無効にする"
+    no_unofficial_plugins: "非公式のプラグインを無効にする"
     no_plugins: "すべてのプラグインを無効にする"
     enter: "セーフモードを開始"
     must_select: "セーフモードを開始するには、少なくとも 1 つのオプションを選択する必要があります。"
   wizard:
     title: "Discourse のセットアップ"
     step:
-      locale:
-        title: "Discourse へようこそ！"
-        fields:
-          default_locale:
-            description: "コミュニティで使用するデフォルトの言語は何ですか？"
-      forum_title:
-        title: "名前"
-        description: "あなたの名前は遠くから見える標識であり、潜在的な訪問者がコミュニティについて<i>最初</i>に気づくものです。名前とタイトルはコミュニティをどのように説明していますか？"
+      introduction:
         fields:
           title:
-            label: "コミュニティの名前"
             placeholder: "純子のたまり場"
           site_description:
             placeholder: "純子と純子の仲間がワイワイする場所"
-          short_site_description:
-            placeholder: "史上最高のコミュニティ"
-      introduction:
-        title: "紹介"
-        disabled: "<p>タイトル “%{topic_title}” のトピックが見つかりませんでした。</p><ul><li>タイトルを変更した場合は、トピックを編集してサイトの紹介文を変更してください。</li><li>このトピックを削除してしまった場合は、タイトルが “%{topic_title}” の別のトピックを作成してください。最初の投稿のコンテンツはあなたのサイトの紹介文です。</li></ul>"
-        fields:
-          welcome:
-            label: "ようこそ - トピック"
-            description: "<p>エレベーターで約 1 分間、知らない人にどのようにコミュニティを説明しますか？</p><ul><li>誰を対象にしたディスカッションか</li><li>ここで何を見つけられるか</li><li>なぜアクセスする必要があるのか</li></ul><p>新たにたどり着いた人が最初に読むのがあなたのようこそトピックです。<b>1 段落</b>にまとめた 'エレベーターピッチ' または 'ミッションステートメント' として考えてください。 </p>"
-            one_paragraph: "ようこそメッセージを 1 段落に制限してください。"
-            extra_description: "よくわからない場合は、このステップを省略して、後でようこそトピックを編集することができます。"
+          default_locale:
+            label: "言語"
       privacy:
-        title: "アクセス"
-        description: "<p>あなたのコミュニティは誰にでもオープンされていますか、それともメンバーシップ、招待、または承認によって制限されていますか？必要に応じて、非公開でセットアップしてから、後で公開に切り替えることができます。</p>"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "公開"
-                description: "このコミュニティには誰でもアクセスできる"
-              restricted:
-                label: "非公開"
-                description: "ログインユーザーのみがこのコミュニティにアクセスできる"
-          privacy_options:
-            description: "新しいユーザーはどのようにしてアカウントに登録しますか？"
-            choices:
-              open:
-                label: "ユーザーは自己登録できます。"
-              invite_only:
-                label: "ユーザーは信頼できるユーザーまたはスタッフから招待されてから登録する必要があります。"
-              must_approve:
-                label: "ユーザーは自己登録できますが、スタッフによる承認が必要です。"
-      contact:
-        title: "連絡先"
-        fields:
-          contact_email:
-            label: "メール"
-            placeholder: "name@example.com"
-            description: "このコミュニティの責任者またはグループのメールアドレス。未対応の通知、セキュリティ更新などの重要な通知に使用され、緊急時のコミュニティ連絡先として、<a href='%{base_path}/about' target='_blank'>あなたの自己紹介ページ</a>にも表示されます。"
-          contact_url:
-            label: "ウェブページ"
-            placeholder: "https://www.example.com/contact-us"
-            description: "あなたまたは組織の一般的な連絡先ウェブページ。<a href='%{base_path}/about' target='_blank'>あなたの自己紹介ページ</a>に表示されます。"
-          site_contact:
-            label: "自動メッセージ"
-            description: "通報の警告やバックアップ完了の通知など、Discourse のすべての自動個人メッセージはこのユーザーから送信されます。"
-      corporate:
-        title: "組織"
-        description: "この情報は、あなたの<a href='%{base_path}/tos' target='blank'>利用規約</a>に入力されます。これは、「スタッフ」カテゴリで編集できるトピックです。会社がない場合は、今のところはこのステップを省略できます。"
-        fields:
-          company_name:
-            label: "会社名"
-            placeholder: "組織の例"
-          governing_law:
-            label: "準拠法"
-            placeholder: "カリフォルニア州法"
-          city_for_disputes:
-            label: "紛争都市"
-            placeholder: "カリフォルニア州サンフランシスコ"
+          login_required:
+            placeholder: "非公開"
+            extra_description: "ログインユーザーのみがこのコミュニティにアクセスできる"
+          must_approve_users:
+            placeholder: "要承認"
+      ready:
+        title: "あなたの Discourse の準備が整いました！"
       styling:
         fields:
           body_font:
@@ -4175,24 +4085,34 @@ ja:
                 label: "カテゴリと最新トピック"
               categories_and_top_topics:
                 label: "カテゴリと人気トピック"
-      logos:
-        title: "ロゴ"
+      branding:
         fields:
           logo:
             label: "プライマリーロゴ"
-            description: "サイトの左上にあるロゴ画像です。高さ 120、縦横比 3：1を超える広幅の長方形の画像を使用してください。"
           logo_small:
             label: "正方形のロゴ"
-            description: "正方形バージョンのロゴ。ブラウザで下にスクロールしたときにサイトの左上に、またソーシャルプラットフォームで共有したときに表示されます。512x512 よりも大きいサイズが最適です。"
-      icons:
-        title: "アイコン"
-        fields:
           favicon:
             label: "ブラウザアイコン"
-            description: "ウェブブラウザでサイトを表現するために使用され、小さいサイズで見栄えが良いアイコン画像。推奨される画像の拡張子は PNG または JPG です。デフォルトでは正方形のロゴを使用します。"
           large_icon:
             label: "大きなアイコン"
-            description: "最新のデバイスでサイトを表現するために使用され、大きなサイズで見栄えの良いアイコン画像。512 × 512 より大きいサイズが最適です。デフォルトでは正方形のロゴを使用します。"
+      corporate:
+        fields:
+          company_name:
+            label: "会社名"
+            placeholder: "組織の例"
+          governing_law:
+            label: "準拠法"
+            placeholder: "カリフォルニア州法"
+          contact_url:
+            label: "ウェブページ"
+            placeholder: "https://www.example.com/contact-us"
+            description: "あなたまたは組織の一般的な連絡先ウェブページ。<a href='%{base_path}/about' target='_blank'>あなたの自己紹介ページ</a>に表示されます。"
+          city_for_disputes:
+            label: "紛争都市"
+            placeholder: "カリフォルニア州サンフランシスコ"
+          site_contact:
+            label: "自動メッセージ"
+            description: "通報の警告やバックアップ完了の通知など、Discourse のすべての自動個人メッセージはこのユーザーから送信されます。"
       invites:
         title: "スタッフの招待"
         description: "ほぼ完了です！コミュニティを始動させるために、興味深いトピックや返信で<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>ディスカッションを生み出せる</a>人を何人が招待しましょう。"

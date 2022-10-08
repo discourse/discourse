@@ -10,7 +10,6 @@ a.loading-onebox {
     border: 2px solid var(--primary-low-mid);
     border-right-color: transparent;
     border-radius: 50%;
-    -webkit-animation: rotate-forever 1s infinite linear;
     animation: rotate-forever 1s infinite linear;
   }
 }
@@ -155,8 +154,6 @@ aside.onebox {
       &.onebox-full-image {
         max-height: none;
         max-width: none;
-        width: initial;
-        height: initial;
       }
     }
 
@@ -445,8 +442,8 @@ pre.onebox code {
 
   .github-icon-container {
     display: flex;
-    align-items: flex-start;
-    margin-right: 5px;
+    align-items: center;
+    margin-right: 10px;
   }
 
   .github-icon {
@@ -529,8 +526,8 @@ pre.onebox code {
 
   .github-icon-container {
     display: flex;
-    align-items: flex-start;
-    margin-right: 5px;
+    align-items: center;
+    margin-right: 10px;
   }
 
   .github-icon {

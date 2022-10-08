@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
-describe WebhooksController do
+RSpec.describe WebhooksController do
   before { Discourse.redis.flushdb }
 
   let(:email) { "em@il.com" }
   let(:message_id) { "12345@il.com" }
 
-  context "mailgun" do
-
+  describe "#mailgun" do
     let(:token) { "705a8ccd2ce932be8e98c221fe701c1b4a0afcb8bbd57726de" }
     let(:timestamp) { Time.now.to_i }
     let(:data) { "#{timestamp}#{token}" }
@@ -81,7 +80,7 @@ describe WebhooksController do
     end
   end
 
-  context "sendgrid" do
+  describe "#sendgrid" do
     it "works" do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
@@ -106,7 +105,7 @@ describe WebhooksController do
     end
   end
 
-  context "mailjet" do
+  describe "#mailjet" do
     it "works" do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
@@ -127,7 +126,7 @@ describe WebhooksController do
     end
   end
 
-  context "mandrill" do
+  describe "#mandrill" do
     it "works" do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
@@ -155,7 +154,15 @@ describe WebhooksController do
     end
   end
 
-  context "postmark" do
+  describe "#mandrill_head" do
+    it "works" do
+      head "/webhooks/mandrill.json"
+
+      expect(response.status).to eq(200)
+    end
+  end
+
+  describe "#postmark" do
     it "works" do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
@@ -190,7 +197,7 @@ describe WebhooksController do
     end
   end
 
-  context "sparkpost" do
+  describe "#sparkpost" do
     it "works" do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)

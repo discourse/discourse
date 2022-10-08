@@ -12,6 +12,7 @@ import getURL from "discourse-common/lib/get-url";
 import { longDate } from "discourse/lib/formatter";
 import { none } from "@ember/object/computed";
 import { capitalize } from "@ember/string";
+import { applyModelTransformations } from "discourse/lib/model-transformers";
 
 export const AUTO_DELETE_PREFERENCES = {
   NEVER: 0,
@@ -116,7 +117,7 @@ const Bookmark = RestModel.extend({
     const newTags = [];
 
     tags.forEach(function (tag) {
-      if (title.toLowerCase().indexOf(tag) === -1) {
+      if (!title.toLowerCase().includes(tag)) {
         newTags.push(tag);
       }
     });
@@ -143,7 +144,8 @@ const Bookmark = RestModel.extend({
     // for topic level bookmarks we want to jump to the last unread post URL,
     // which the topic-link helper does by default if no linked post number is
     // provided
-    const linkedPostNumber = this.for_topic ? null : this.linked_post_number;
+    const linkedPostNumber =
+      this.bookmarkable_type === "Topic" ? null : this.linked_post_number;
 
     return Topic.create({
       id: this.topic_id,
@@ -166,6 +168,10 @@ Bookmark.reopenClass({
     args.currentUser = args.currentUser || User.current();
     args.user = User.create(args.user);
     return this._super(args);
+  },
+
+  async applyTransformations(bookmarks) {
+    await applyModelTransformations("bookmark", bookmarks);
   },
 });
 

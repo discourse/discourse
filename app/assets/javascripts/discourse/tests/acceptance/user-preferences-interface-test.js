@@ -2,7 +2,7 @@ import {
   acceptance,
   count,
   exists,
-  queryAll,
+  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import cookie, { removeCookie } from "discourse/lib/cookie";
@@ -11,6 +11,7 @@ import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
+import userFixtures from "discourse/tests/fixtures/user-fixtures";
 
 acceptance("User Preferences - Interface", function (needs) {
   needs.user();
@@ -22,7 +23,7 @@ acceptance("User Preferences - Interface", function (needs) {
       assert.ok(!exists(".saved"), "it hasn't been saved yet");
       await click(".save-changes");
       assert.ok(exists(".saved"), "it displays the saved message");
-      queryAll(".saved").remove();
+      query(".saved").remove();
     };
 
     await visit("/u/eviltrout/preferences/interface");
@@ -147,6 +148,14 @@ acceptance(
           success: "OK",
         });
       });
+      server.get("/color-scheme-stylesheet/3.json", () => {
+        return helper.response({
+          new_href: "3.css",
+        });
+      });
+      server.get("/u/charlie.json", () => {
+        return helper.response(userFixtures["/u/charlie.json"]);
+      });
     });
 
     test("show option to disable dark mode", async function (assert) {
@@ -187,8 +196,8 @@ acceptance(
       await visit("/u/eviltrout/preferences/interface");
       assert.ok(exists(".light-color-scheme"), "has light scheme dropdown");
       assert.strictEqual(
-        queryAll(".light-color-scheme .selected-name").data("value"),
-        session.userColorSchemeId,
+        query(".light-color-scheme .selected-name").dataset.value,
+        session.userColorSchemeId.toString(),
         "user's selected color scheme is selected value in light scheme dropdown"
       );
     });
@@ -237,15 +246,15 @@ acceptance(
         assert.ok(!exists(".saved"), "it hasn't been saved yet");
         await click(".save-changes");
         assert.ok(exists(".saved"), "it displays the saved message");
-        queryAll(".saved").remove();
+        query(".saved").remove();
       };
 
       await visit("/u/eviltrout/preferences/interface");
       assert.ok(exists(".light-color-scheme"), "has regular dropdown");
       assert.ok(exists(".dark-color-scheme"), "has dark color scheme dropdown");
       assert.strictEqual(
-        queryAll(".dark-color-scheme .selected-name").data("value"),
-        session.userDarkSchemeId,
+        query(".dark-color-scheme .selected-name").dataset.value,
+        session.userDarkSchemeId.toString(),
         "sets site default as selected dark scheme"
       );
       assert.ok(
@@ -308,6 +317,38 @@ acceptance(
         selectKit(".dark-color-scheme .combobox").header().value(),
         session.userDarkSchemeId.toString(),
         "resets dark scheme dropdown"
+      );
+    });
+
+    test("preview the color scheme only in current user's profile", async function (assert) {
+      let site = Site.current();
+
+      site.set("default_dark_color_scheme", { id: 1, name: "Dark" });
+      site.set("user_color_schemes", [
+        { id: 2, name: "Cool Breeze" },
+        { id: 3, name: "Dark Night", is_dark: true },
+      ]);
+
+      await visit("/u/eviltrout/preferences/interface");
+
+      await selectKit(".light-color-scheme .combobox").expand();
+      await selectKit(".light-color-scheme .combobox").selectRowByValue(3);
+
+      assert.ok(
+        document.querySelector("link#cs-preview-light").href.endsWith("/3.css"),
+        "correct stylesheet loaded"
+      );
+
+      document.querySelector("link#cs-preview-light").remove();
+
+      await visit("/u/charlie/preferences/interface");
+
+      await selectKit(".light-color-scheme .combobox").expand();
+      await selectKit(".light-color-scheme .combobox").selectRowByValue(3);
+
+      assert.notOk(
+        document.querySelector("link#cs-preview-light"),
+        "stylesheet not loaded"
       );
     });
   }

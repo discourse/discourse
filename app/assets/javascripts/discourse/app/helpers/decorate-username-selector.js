@@ -10,7 +10,7 @@ export function resetUsernameDecorators() {
   usernameDecorators = [];
 }
 
-export default registerUnbound("decorate-username-selector", (username) => {
+export function decorateUsername(username) {
   const decorations = [];
 
   usernameDecorators.forEach((decorator) => {
@@ -18,4 +18,8 @@ export default registerUnbound("decorate-username-selector", (username) => {
   });
 
   return decorations.length ? htmlSafe(decorations.join("")) : "";
+}
+
+export default registerUnbound("decorate-username-selector", (username) => {
+  return decorateUsername(username);
 });

@@ -6,6 +6,7 @@ import DirtyKeys from "discourse/lib/dirty-keys";
 import { WidgetClickHook } from "discourse/widgets/hooks";
 import { camelize } from "@ember/string";
 import { getRegister } from "discourse-common/lib/get-owner";
+import ArrayProxy from "@ember/array/proxy";
 
 let _cleanCallbacks = {};
 export function addWidgetCleanCallback(widgetName, fn) {
@@ -18,6 +19,7 @@ export function resetWidgetCleanCallbacks() {
 }
 
 export default Component.extend({
+  layoutName: "components/mount-widget",
   _tree: null,
   _rootNode: null,
   _timeout: null,
@@ -36,6 +38,10 @@ export default Component.extend({
     this._widgetClass =
       queryRegistry(name) || this.register.lookupFactory(`widget:${name}`);
 
+    if (this._widgetClass?.class) {
+      this._widgetClass = this._widgetClass.class;
+    }
+
     if (!this._widgetClass) {
       // eslint-disable-next-line no-console
       console.error(`Error: Could not find widget: ${name}`);
@@ -43,6 +49,7 @@ export default Component.extend({
 
     this._childEvents = [];
     this._connected = [];
+    this._childComponents = ArrayProxy.create({ content: [] });
     this._dispatched = [];
     this.dirtyKeys = new DirtyKeys(name);
   },
@@ -150,5 +157,13 @@ export default Component.extend({
         console.log(Date.now() - t0);
       }
     }
+  },
+
+  mountChildComponent(info) {
+    this._childComponents.pushObject(info);
+  },
+
+  unmountChildComponent(info) {
+    this._childComponents.removeObject(info);
   },
 });

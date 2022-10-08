@@ -5,7 +5,7 @@ import { createWidget } from "discourse/widgets/widget";
 import { actionDescriptionHtml } from "discourse/widgets/post-small-action";
 import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
-import { later } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import { relativeAge } from "discourse/lib/formatter";
 import renderTags from "discourse/lib/render-tags";
 import renderTopicFeaturedLink from "discourse/lib/render-topic-featured-link";
@@ -444,7 +444,7 @@ export default createWidget("topic-timeline", {
     const stream = this.attrs.topic.get("postStream");
 
     // a little debounce to avoid flashing
-    later(() => {
+    discourseLater(() => {
       if (!this.state.position === scrollPosition) {
         return;
       }

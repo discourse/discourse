@@ -18,17 +18,13 @@ export default MultiSelectComponent.extend({
   },
 
   modifyComponentForRow(collection) {
-    if (
-      collection === MAIN_COLLECTION &&
-      this.settingName &&
-      this.settingName.indexOf("color") > -1
-    ) {
+    if (collection === MAIN_COLLECTION && this.settingName?.includes("color")) {
       return "create-color-row";
     }
   },
 
   selectedChoiceComponent: computed("settingName", function () {
-    if (this.settingName && this.settingName.indexOf("color") > -1) {
+    if (this.settingName?.includes("color")) {
       return "selected-choice-color";
     } else {
       return "selected-choice";

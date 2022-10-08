@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostActionUsersController do
+RSpec.describe PostActionUsersController do
   fab!(:user) { Fabricate(:user) }
   let(:post) { Fabricate(:post, user: sign_in(user)) }
 

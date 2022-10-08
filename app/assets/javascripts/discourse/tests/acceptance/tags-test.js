@@ -502,7 +502,6 @@ acceptance("Tag info", function (needs) {
     await visit("/tags/c/feature/2/planters");
 
     await click(".nav-item_latest a[href]");
-    // await pauseTest();
     assert.strictEqual(currentURL(), "/tags/c/feature/2/planters/l/latest");
 
     await click(".nav-item_top a[href]");

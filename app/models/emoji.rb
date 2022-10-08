@@ -94,6 +94,7 @@ class Emoji
       e.name = name
       e.tonable = Emoji.tonable_emojis.include?(name)
       e.url = Emoji.url_for(filename)
+      e.group = groups[name] || DEFAULT_GROUP
     end
   end
 
@@ -120,6 +121,24 @@ class Emoji
     end
     global_emoji_cache.clear
     site_emoji_cache.clear
+  end
+
+  def self.groups_file
+    @groups_file ||= "#{Rails.root}/lib/emoji/groups.json"
+  end
+
+  def self.groups
+    @groups ||= begin
+      groups = {}
+
+      File.open(groups_file, "r:UTF-8") { |f| JSON.parse(f.read) }.each do |group|
+        group["icons"].each do |icon|
+          groups[icon["name"]] = group["name"]
+        end
+      end
+
+      groups
+    end
   end
 
   def self.db_file

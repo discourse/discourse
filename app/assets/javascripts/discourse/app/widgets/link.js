@@ -131,6 +131,6 @@ export default createWidget("link", {
       this.sendWidgetEvent("linkClicked", this.attrs);
     }
 
-    return DiscourseURL.routeToTag($(e.target).closest("a")[0]);
+    return DiscourseURL.routeToTag(e.target.closest("a"));
   },
 });

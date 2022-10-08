@@ -56,7 +56,7 @@ task "release_note:plugins:generate", :from, :to, :plugin_glob, :org do |t, args
 
     puts "### #{name}\n\n"
     CHANGE_TYPES.each do |ct|
-      print_changes(ct[:heading], changes[ct], "####")
+      print_changes_plugin(ct[:heading], changes[ct])
     end
   end
 
@@ -103,6 +103,14 @@ def print_changes(heading, changes, importance)
 
   puts "#{importance} #{heading}", ""
   puts changes.to_a, ""
+end
+
+def print_changes_plugin(heading, changes)
+  return if changes.length == 0
+
+  puts "[details=\"#{heading}\"]\n", ""
+  puts changes.to_a, ""
+  puts "[/details]\n", ""
 end
 
 def better(line)

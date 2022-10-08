@@ -7,7 +7,7 @@ Fabricator(:post) do
   post_type Post.types[:regular]
 
   # Fabrication bypasses PostCreator, for performance reasons, where the counts are updated so we have to handle this manually here.
-  after_save do |post, _transients|
+  after_create do |post, _transients|
     UserStatCountUpdater.increment!(post)
   end
 end
@@ -127,6 +127,7 @@ Fabricator(:post_with_external_links, from: :post) do
 end
 
 Fabricator(:private_message_post, from: :post) do
+  transient :recipient
   user
   topic do |attrs|
     Fabricate(:private_message_topic,
@@ -135,11 +136,30 @@ Fabricator(:private_message_post, from: :post) do
       subtype: TopicSubtype.user_to_user,
       topic_allowed_users: [
         Fabricate.build(:topic_allowed_user, user: attrs[:user]),
-        Fabricate.build(:topic_allowed_user, user: Fabricate(:user))
+        Fabricate.build(:topic_allowed_user, user: attrs[:recipient] || Fabricate(:user))
       ]
     )
   end
   raw "Ssshh! This is our secret conversation!"
+end
+
+Fabricator(:group_private_message_post, from: :post) do
+  transient :recipients
+  user
+  topic do |attrs|
+    Fabricate(:private_message_topic,
+      user: attrs[:user],
+      created_at: attrs[:created_at],
+      subtype: TopicSubtype.user_to_user,
+      topic_allowed_users: [
+        Fabricate.build(:topic_allowed_user, user: attrs[:user]),
+      ],
+      topic_allowed_groups: [
+        Fabricate.build(:topic_allowed_group, group: attrs[:recipients] || Fabricate(:group))
+      ]
+    )
+  end
+  raw "Ssshh! This is our group secret conversation!"
 end
 
 Fabricator(:private_message_post_one_user, from: :post) do

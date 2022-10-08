@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # frozen_string_literal: true
 
-describe 'rate limiter integration' do
+RSpec.describe 'rate limiter integration' do
 
   before do
     RateLimiter.enable

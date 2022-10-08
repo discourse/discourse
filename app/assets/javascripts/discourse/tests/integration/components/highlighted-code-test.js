@@ -2,7 +2,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { query } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 
 const LONG_CODE_BLOCK = "puts a\n".repeat(15000);
 
@@ -17,7 +17,7 @@ module("Integration | Component | highlighted-code", function (hooks) {
     await render(hbs`<HighlightedCode @lang="ruby" @code={{this.code}} />`);
 
     assert.strictEqual(
-      query("code.ruby.hljs .hljs-function .hljs-keyword").innerText.trim(),
+      query("code.language-ruby.hljs .hljs-keyword").innerText.trim(),
       "def"
     );
   });

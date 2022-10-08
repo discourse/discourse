@@ -10,20 +10,20 @@ class Barber::Precompiler
 
   def precompiler
     if !@precompiler
-
+      loader = File.read("#{Rails.root}/app/assets/javascripts/mini-loader.js")
       source = File.read("#{Rails.root}/app/assets/javascripts/discourse-common/addon/lib/raw-handlebars.js")
-      transpiler = DiscourseJsProcessor::Transpiler.new(skip_module: true)
-      transpiled = transpiler.perform(source)
 
-      # very hacky but lets us use ES6. I'm ashamed of this code -RW
-      transpiled = transpiled[transpiled.index('var RawHandlebars = ')...transpiled.index('export ')]
+      transpiled = DiscourseJsProcessor.transpile(source, "#{Rails.root}/app/assets/javascripts/", "discourse-common/lib/raw-handlebars")
 
       @precompiler = StringIO.new <<~JS
-        var __RawHandlebars;
-        (function() {
-          #{transpiled};
-          __RawHandlebars = RawHandlebars;
-        })();
+        let __RawHandlebars;
+
+        (function(){
+          #{loader}
+          define("handlebars", ["exports"], function(exports){ exports.default = Handlebars; })
+          #{transpiled}
+          __RawHandlebars = require("discourse-common/lib/raw-handlebars").default;
+        })()
 
         Barber = {
           precompile: function(string) {
@@ -31,6 +31,7 @@ class Barber::Precompiler
           }
         };
       JS
+
     end
 
     @precompiler

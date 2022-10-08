@@ -2,10 +2,10 @@
 
 require 'site_settings/validations'
 
-describe SiteSettings::Validations do
+RSpec.describe SiteSettings::Validations do
   subject { Class.new.include(described_class).new }
 
-  context "default_categories" do
+  describe "default_categories" do
     fab!(:category) { Fabricate(:category) }
 
     it "supports valid categories" do
@@ -31,7 +31,7 @@ describe SiteSettings::Validations do
     end
   end
 
-  context "s3 buckets reusage" do
+  describe "s3 buckets reusage" do
     let(:error_message) { I18n.t("errors.site_settings.s3_bucket_reused") }
 
     shared_examples "s3 bucket validation" do
@@ -210,10 +210,10 @@ describe SiteSettings::Validations do
           expect { subject.validate_enable_page_publishing("t") }.not_to raise_error
         end
 
-        context "if secure media is enabled" do
+        context "if secure uploads is enabled" do
           let(:error_message) { I18n.t("errors.site_settings.page_publishing_requirements") }
           before do
-            enable_secure_media
+            enable_secure_uploads
           end
 
           it "is not ok" do
@@ -223,8 +223,8 @@ describe SiteSettings::Validations do
       end
     end
 
-    describe "#validate_secure_media" do
-      let(:error_message) { I18n.t("errors.site_settings.secure_media_requirements") }
+    describe "#validate_secure_uploads" do
+      let(:error_message) { I18n.t("errors.site_settings.secure_uploads_requirements") }
 
       context "when the new value is true" do
         context 'if site setting for enable_s3_uploads is enabled' do
@@ -233,7 +233,7 @@ describe SiteSettings::Validations do
           end
 
           it "should be ok" do
-            expect { subject.validate_secure_media("t") }.not_to raise_error
+            expect { subject.validate_secure_uploads("t") }.not_to raise_error
           end
         end
 
@@ -243,7 +243,7 @@ describe SiteSettings::Validations do
           end
 
           it "is not ok" do
-            expect { subject.validate_secure_media("t") }.to raise_error(Discourse::InvalidParameters, error_message)
+            expect { subject.validate_secure_uploads("t") }.to raise_error(Discourse::InvalidParameters, error_message)
           end
 
           context "if global s3 setting is enabled" do
@@ -252,7 +252,7 @@ describe SiteSettings::Validations do
             end
 
             it "should be ok" do
-              expect { subject.validate_secure_media("t") }.not_to raise_error
+              expect { subject.validate_secure_uploads("t") }.not_to raise_error
             end
           end
         end
@@ -308,7 +308,7 @@ describe SiteSettings::Validations do
     end
   end
 
-  context "slow_down_crawler_user_agents" do
+  describe "slow_down_crawler_user_agents" do
     let(:too_short_message) do
       I18n.t(
         "errors.site_settings.slow_down_crawler_user_agent_must_be_at_least_3_characters"

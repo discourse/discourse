@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::CloudAppOnebox do
+RSpec.describe Onebox::Engine::CloudAppOnebox do
   before do
     stub_request(:get, "https://cl.ly/0m2a2u2k440O").to_return(status: 200, body: onebox_response("cloudapp-gif"))
     stub_request(:get, "https://cl.ly/0T0c2J3S373X").to_return(status: 200, body: onebox_response("cloudapp-mp4"))

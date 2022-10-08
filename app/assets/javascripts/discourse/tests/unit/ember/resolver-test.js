@@ -317,6 +317,7 @@ module("Unit | Ember | resolver", function (hooks) {
       "admin/templates/dashboard_general",
       "admin-baz-qux",
       "javascripts/admin/plugin-template",
+      "admin/templates/components/my-admin-component",
     ]);
 
     // Switches prefix to admin/templates when camelized
@@ -394,6 +395,20 @@ module("Unit | Ember | resolver", function (hooks) {
       "template:admin-plugin/template",
       "javascripts/admin/plugin-template",
       "looks up templates in plugins"
+    );
+
+    lookupTemplate(
+      assert,
+      "template:foo",
+      undefined,
+      "doesn't return admin templates for regular controllers"
+    );
+
+    lookupTemplate(
+      assert,
+      "template:components/my-admin-component",
+      "admin/templates/components/my-admin-component",
+      "returns admin-defined component templates"
     );
   });
 

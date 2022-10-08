@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::CreateLinkedTopic do
+RSpec.describe Jobs::CreateLinkedTopic do
   it "returns when the post cannot be found" do
     expect { Jobs::CreateLinkedTopic.new.perform(post_id: 1, sync_exec: true) }.not_to raise_error
   end

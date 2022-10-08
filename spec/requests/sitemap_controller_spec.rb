@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe SitemapController do
+RSpec.describe SitemapController do
   describe 'before_action :check_sitemap_enabled' do
     it 'returns a 404 if sitemap is disabled' do
       Sitemap.touch(Sitemap::RECENT_SITEMAP_NAME)

@@ -2,7 +2,7 @@
 
 require 'pbkdf2'
 
-describe Pbkdf2 do
+RSpec.describe Pbkdf2 do
   # trivial test to ensure this does not regress during extraction
   it "hashes stuff correctly" do
     expect(Pbkdf2.hash_password('test', 'abcd', 100)).to eq("0313a6aca54dd4c5d82a699a8a0f0ffb0191b4ef62414b8d9dbc11c0c5ac04da")

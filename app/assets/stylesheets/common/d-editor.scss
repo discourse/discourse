@@ -15,6 +15,7 @@
   flex: 1;
   flex-direction: column;
   max-width: 100%;
+  min-width: 0;
 }
 
 .d-editor-textarea-wrapper {
@@ -199,7 +200,8 @@
 
     .scale-btn-container,
     .alt-text-readonly-container,
-    .alt-text-edit-container {
+    .alt-text-edit-container,
+    .delete-image-button {
       background: var(--secondary);
       display: flex;
       height: var(--resizer-height);
@@ -244,6 +246,7 @@
 
       .alt-text-edit-btn {
         cursor: pointer;
+        color: var(--tertiary);
 
         svg {
           padding-right: 0.5em;
@@ -281,6 +284,15 @@
       }
     }
 
+    .delete-image-button {
+      cursor: pointer;
+      color: var(--danger);
+
+      .d-icon-trash-alt {
+        margin-left: 0.5em;
+      }
+    }
+
     svg {
       pointer-events: none;
     }
@@ -293,22 +305,20 @@
 
 // d-editor bar button sizing
 .d-editor-button-bar {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(2.35em, 1fr));
+  @include breakpoint(tablet) {
+    // occupy available space on narrower screens
+    grid-template-columns: repeat(auto-fit, minmax(2em, 1fr));
+  }
+  @include breakpoint(mobile-medium) {
+    font-size: var(--font-down-1);
+  }
   align-items: center;
   border-bottom: 1px solid var(--primary-low);
   width: 100%;
   box-sizing: border-box;
-
-  .d-editor-spacer {
-    height: 1em;
-    display: inline-block;
-    border-left: 1px solid var(--primary-low);
-    margin: 0 0.25em;
-
-    .mobile-view & {
-      display: none;
-    }
-  }
+  flex-shrink: 0;
 
   .btn:focus {
     @include default-focus;
@@ -322,27 +332,14 @@
     .d-icon {
       color: currentColor;
     }
-    &:hover {
-      color: var(--primary-low);
+    .discourse-no-touch & {
+      &:hover {
+        color: var(--primary-low);
+      }
     }
   }
 
-  // ensures items grow/shrink on mobile to fit available space
-  @include breakpoint(mobile-large) {
-    .btn {
-      flex-grow: 1;
-      flex-shrink: 1;
-      flex-basis: auto;
-      padding-left: 0.25em;
-      padding-right: 0.25em;
-    }
-
-    .select-kit.toolbar-popup-menu-options {
-      flex-grow: 1;
-      flex-basis: auto;
-      .select-kit-header .select-kit-header-wrapper {
-        justify-content: center;
-      }
-    }
+  .select-kit-header-wrapper {
+    justify-content: center;
   }
 }

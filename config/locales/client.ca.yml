@@ -86,6 +86,9 @@ ca:
         x_days:
           one: "%{count} dia"
           other: "%{count} dies"
+        over_x_years:
+          one: "més d'%{count} any"
+          other: "més de %{count} anys"
         date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
@@ -116,6 +119,7 @@ ca:
       previous_month: "Mes anterior"
       next_month: "Mes següent"
       placeholder: data
+      from_placeholder: "des de la data"
       to_placeholder: "fins a la data"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
@@ -158,12 +162,12 @@ ca:
       forwarded: "el missatge de dalt s'ha reenviat"
     topic_admin_menu: "accions del tema"
     skip_to_main_content: "Vés al contingut principal"
-    wizard_required: "Us donem la benvinguda al vostre nou Discourse! Comencem amb <a href='%{url}' data-auto-route='true'>l'assistent de configuració</a> ✨"
     emails_are_disabled: "Tots els correus sortints han estat globalment inhabilitats per un administrador. No s'enviarà cap notificació de cap mena per correu electrònic."
     software_update_prompt:
       message: "Hem actualitzat aquest lloc, <span>si us plau actualitzeu</span>, o podeu experimentar un comportament inesperat."
       dismiss: "Descarta-ho"
     bootstrap_mode_disabled: "El mode d'arrencada serà desactivat d'aquí a 24 hores."
+    bootstrap_invite_button_title: "Envia invitacions"
     themes:
       default_description: "Per defecte"
     s3:
@@ -196,6 +200,8 @@ ca:
     not_implemented: "Ho sentim! Aquesta funcionalitat encara no s'ha implementat."
     no_value: "No"
     yes_value: "Sí"
+    ok_value: "D'acord"
+    cancel_value: "Cancel·la"
     submit: "Envia"
     generic_error: "Ho sentim, s'ha produït un error."
     generic_error_with_reason: "Hi ha hagut un error: %{error}"
@@ -276,6 +282,8 @@ ca:
         unbookmark_with_reminder: "Feu clic per eliminar tots els marcadors i recordatoris d’aquest tema."
     bookmarks:
       created: "Heu marcat com a preferida aquesta publicació. %{name}"
+      create: "Crea un marcador"
+      edit: "Edita el marcador"
       not_bookmarked: "marca aquesta publicació com a preferit"
       remove_reminder_keep_bookmark: "Elimina el recordatori i mantén el marcador"
       created_with_reminder: "Heu marcat aquesta publicació amb un recordatori de %{date}. %{name}"
@@ -542,6 +550,7 @@ ca:
       forever: "Sempre"
       relative: "Temps relatiu"
       none: "No cal cap"
+      never: "Mai"
       custom: "Data i hora personalitzades"
       select_timeframe: "Seleccioneu un període de temps"
     user_action:
@@ -1000,6 +1009,7 @@ ca:
         move_to_archive: "Arxiva"
         failed_to_move: "Error en moure els missatges seleccionats (potser ha caigut la xarxa)."
         tags: "Etiquetes"
+        all_tags: "Totes les etiquetes"
       preferences_nav:
         account: "Compte"
         security: "Seguretat"
@@ -1392,10 +1402,8 @@ ca:
       other: respostes
     signup_cta:
       sign_up: "Registre"
-      hide_session: "Recorda-m'ho demà"
       hide_forever: "no, gràcies"
       intro: "Bon dia! Sembla que gaudiu de la discussió, però no heu registrat un compte."
-      value_prop: "Quan creeu un compte, recordem exactament el que heu llegit, de manera que sempre torneu allà on ho vau deixar. També rebreu notificacions, ací i via correu, quan algú us respon. I podeu dir que us agraden les publicacions per a compartir l'amor. :heartpulse:"
     summary:
       enabled_description: "Ara veieu un resum del tema: les publicacions més interessants segons la comunitat."
       enable: "Resumeix aquest tema"
@@ -1696,6 +1704,7 @@ ca:
       empty: "No hi ha notificacions."
       post_approved: "La vostra publicació ha estat aprovada"
       reviewable_items: "elements que requereixen revisió"
+      watching_first_post_label: "Tema nou"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -1708,6 +1717,10 @@ ca:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} i %{count} altre</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} i %{count} altres</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} i %{count} altre"
+        other: "%{username}, %{username2} i %{count} altres"
       liked_consolidated_description:
         one: "li agrada %{count} de les vostres publicacions"
         other: " %{count} de les vostres publicacions té 'M'agrada'"
@@ -1850,6 +1863,13 @@ ca:
     go_back: "vés enrere"
     not_logged_in_user: "pàgina d'usuari amb resum de l'activitat actual i preferències "
     current_user: "vés a la meva pàgina d'usuari"
+    user_menu:
+      tabs:
+        replies: "Respostes"
+        mentions: "Mencions"
+        likes: "'M'agrada'"
+        bookmarks: "Preferits"
+        profile: "Perfil"
     topics:
       new_messages_marker: "darrera visita"
       bulk:
@@ -2328,10 +2348,6 @@ ca:
         confirm:
           one: "Esteu segur que voleu suprimir aquesta publicació?"
           other: "Esteu segur que voleu suprimir aquestes %{count} publicacions?"
-      merge:
-        confirm:
-          one: "Esteu segur que voleu combinar aquesta publicació?"
-          other: "Esteu segur que voleu combinar aquests %{count}missatges?"
       revisions:
         controls:
           first: "Primera revisió"
@@ -2779,7 +2795,6 @@ ca:
     download_calendar:
       download: "Descarrega"
     tagging:
-      all_tags: "Totes les etiquetes"
       other_tags: "Altres etiquetes"
       selector_all_tags: "totes les etiquetes"
       selector_no_tags: "sense etiquetes"
@@ -2876,14 +2891,18 @@ ca:
         member: "membre"
         regular: "habitual"
         leader: "líder"
-    user_activity:
-      no_activity_others: "No hi ha activitat."
-      no_replies_others: "No hi ha respostes."
-      no_likes_others: "Publicacions sense 'm'agrada'."
     sidebar:
-      unread_count: "%{count} no llegit"
-      new_count: "%{count} nou"
+      unread_count:
+        one: "%{count} no llegit"
+        other: "%{count} no llegits"
+      new_count:
+        one: "%{count} nou"
+        other: "%{count} nous"
+      more: "Més..."
+      all_categories: "Totes les categories"
       sections:
+        about:
+          header_link_text: "Quant a"
         messages:
           header_link_text: "Missatges"
           links:
@@ -2895,19 +2914,32 @@ ca:
             unread_with_count: "No llegit (%{count})"
             archive: "Arxiva"
         tags:
-          header_link_title: "totes les etiquetes"
           header_link_text: "Etiquetes"
         categories:
-          header_link_title: "totes les categories"
           header_link_text: "Categories"
-        topics:
-          header_link_title: "pàgina principal"
-          header_link_text: "Temes"
+        community:
+          header_link_text: "Comunitat"
           links:
+            about:
+              content: "Quant a"
+            admin:
+              content: "Administració"
+            badges:
+              content: "Insígnies"
+            faq:
+              content: "PMF"
             tracked:
               content: "Seguit"
+            groups:
+              content: "Grups"
+              title: "Tots els grups"
+            users:
+              content: "Usuaris"
             my_posts:
               content: "Les meves publicacions"
+            review:
+              content: "Revisa"
+              title: "revisa"
   admin_js:
     type_to_filter: "escriu per a filtrar..."
     admin:
@@ -3876,7 +3908,6 @@ ca:
         cant_delete_all_too_many_posts:
           one: "No es poden suprimir totes les publicacions perquè l'usuari té més d'%{count} publicació. (delete_all_posts_max)"
           other: "No es poden suprimir totes les publicacions perquè l'usuari té més de %{count} publicacions. (delete_all_posts_max)"
-        delete_confirm: "En general, és preferible fer anònims els usuaris en lloc de suprimir-los, per a evitar que s'esborrin els continguts de les discussions existents. <br><br> Esteu SEGUR que voleu suprimir aquest usuari? Això és permanent!"
         delete_and_block: "Suprimeix i <b>bloca</i> aquest correu electrònic i aquesta adreça IP"
         delete_dont_block: "Només suprimeix"
         deleting_user: "Suprimint l'usuari..."
@@ -4176,15 +4207,13 @@ ca:
           replace: "Reemplaça"
   wizard_js:
     wizard:
-      done: "Fet"
-      finish: "Acaba"
       back: "Enrere"
       next: "Següent"
+      step-text: "Pas"
       step: "%{current} de %{total}"
       upload: "Carrega"
       uploading: "Carregant..."
       upload_error: "S'ha produït un error en carregar aquest fitxer. Torneu-ho a provar."
-      quit: "Potser més tard"
       staff_count:
         one: "La comunitat té %{count}membre responsable (vós inclòs)."
         other: "La comunitat té %{count} membres responsables (vós inclòs)."

@@ -2,14 +2,13 @@
 
 require 'discourse_plugin_registry'
 
-describe DiscoursePluginRegistry do
-
+RSpec.describe DiscoursePluginRegistry do
   class TestRegistry < DiscoursePluginRegistry; end
 
   let(:registry) { TestRegistry }
   let(:registry_instance) { registry.new }
 
-  context '::define_register' do
+  describe '.define_register' do
     let(:fresh_registry) { Class.new(TestRegistry) }
 
     let(:plugin_class) do
@@ -39,7 +38,7 @@ describe DiscoursePluginRegistry do
       expect(fresh_registry.test_things[:test]).to eq(nil)
     end
 
-    context '::define_filtered_register' do
+    describe '.define_filtered_register' do
       it 'works' do
         fresh_registry.define_filtered_register(:test_things)
         expect(fresh_registry.test_things.length).to eq(0)
@@ -55,42 +54,42 @@ describe DiscoursePluginRegistry do
     end
   end
 
-  context '#stylesheets' do
+  describe '#stylesheets' do
     it 'defaults to an empty Set' do
       registry.reset!
       expect(registry.stylesheets).to eq(Hash.new)
     end
   end
 
-  context '#mobile_stylesheets' do
+  describe '#mobile_stylesheets' do
     it 'defaults to an empty Set' do
       registry.reset!
       expect(registry.mobile_stylesheets).to eq(Hash.new)
     end
   end
 
-  context '#javascripts' do
+  describe '#javascripts' do
     it 'defaults to an empty Set' do
       registry.reset!
       expect(registry.javascripts).to eq(Set.new)
     end
   end
 
-  context '#auth_providers' do
+  describe '#auth_providers' do
     it 'defaults to an empty Set' do
       registry.reset!
       expect(registry.auth_providers).to eq(Set.new)
     end
   end
 
-  context '#admin_javascripts' do
+  describe '#admin_javascripts' do
     it 'defaults to an empty Set' do
       registry.reset!
       expect(registry.admin_javascripts).to eq(Set.new)
     end
   end
 
-  context '#seed_data' do
+  describe '#seed_data' do
     it 'defaults to an empty Set' do
       registry.reset!
       expect(registry.seed_data).to be_a(Hash)
@@ -98,7 +97,7 @@ describe DiscoursePluginRegistry do
     end
   end
 
-  context '.register_html_builder' do
+  describe '.register_html_builder' do
     it "can register and build html" do
       DiscoursePluginRegistry.register_html_builder(:my_html) { "<b>my html</b>" }
       expect(DiscoursePluginRegistry.build_html(:my_html)).to eq('<b>my html</b>')
@@ -114,7 +113,7 @@ describe DiscoursePluginRegistry do
     end
   end
 
-  context '.register_css' do
+  describe '.register_css' do
     let(:plugin_directory_name) { "hello" }
 
     before do
@@ -134,7 +133,7 @@ describe DiscoursePluginRegistry do
     end
   end
 
-  context '.register_js' do
+  describe '.register_js' do
     before do
       registry_instance.register_js('hello.js')
     end
@@ -148,7 +147,7 @@ describe DiscoursePluginRegistry do
     end
   end
 
-  context '.register_auth_provider' do
+  describe '.register_auth_provider' do
     let(:registry) { DiscoursePluginRegistry }
     let(:auth_provider) do
       provider = Auth::AuthProvider.new
@@ -170,7 +169,7 @@ describe DiscoursePluginRegistry do
 
   end
 
-  context '.register_service_worker' do
+  describe '.register_service_worker' do
     let(:registry) { DiscoursePluginRegistry }
 
     before do
@@ -189,14 +188,14 @@ describe DiscoursePluginRegistry do
     end
   end
 
-  context '.register_archetype' do
+  describe '.register_archetype' do
     it "delegates archetypes to the Archetype component" do
       Archetype.expects(:register).with('threaded', hello: 123)
       registry_instance.register_archetype('threaded', hello: 123)
     end
   end
 
-  context '#register_asset' do
+  describe '#register_asset' do
     let(:registry) { DiscoursePluginRegistry }
     let(:plugin_directory_name) { "my_plugin" }
 
@@ -247,7 +246,7 @@ describe DiscoursePluginRegistry do
     end
   end
 
-  context '#register_seed_data' do
+  describe '#register_seed_data' do
     let(:registry) { DiscoursePluginRegistry }
 
     after do
@@ -262,5 +261,4 @@ describe DiscoursePluginRegistry do
       expect(registry.seed_data["admin_quick_start_filename"]).to eq(File.expand_path("../docs/BANANA-QUICK-START.md", __FILE__))
     end
   end
-
 end

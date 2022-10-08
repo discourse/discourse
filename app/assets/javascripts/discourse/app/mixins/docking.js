@@ -1,6 +1,7 @@
 import Mixin from "@ember/object/mixin";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { cancel, later } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import { isTesting } from "discourse-common/config/environment";
 
 const INITIAL_DELAY_MS = isTesting() ? 0 : 50;
@@ -38,7 +39,11 @@ export default Mixin.create({
     });
 
     // dockCheck might happen too early on full page refresh
-    this._initialTimer = later(this, this.safeDockCheck, INITIAL_DELAY_MS);
+    this._initialTimer = discourseLater(
+      this,
+      this.safeDockCheck,
+      INITIAL_DELAY_MS
+    );
   },
 
   willDestroyElement() {

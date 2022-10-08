@@ -58,7 +58,8 @@ class ReviewablesController < ApplicationController
       end,
       meta: filters.merge(
         total_rows_reviewables: total_rows, types: meta_types, reviewable_types: Reviewable.types,
-        reviewable_count: Reviewable.list_for(current_user).count
+        reviewable_count: current_user.reviewable_count,
+        unseen_reviewable_count: current_user.unseen_reviewable_count
       )
     }
     if (offset + PER_PAGE) < total_rows
@@ -66,6 +67,16 @@ class ReviewablesController < ApplicationController
     end
     json.merge!(hash)
 
+    render_json_dump(json, rest_serializer: true)
+  end
+
+  def user_menu_list
+    json = {
+      reviewables: Reviewable.basic_serializers_for_list(
+        Reviewable.user_menu_list_for(current_user),
+        current_user
+      ).as_json
+    }
     render_json_dump(json, rest_serializer: true)
   end
 
@@ -259,7 +270,7 @@ protected
   end
 
   def allowed_statuses
-    @allowed_statuses ||= (%i[reviewed all] + Reviewable.statuses.keys)
+    @allowed_statuses ||= (%i[reviewed all] + Reviewable.statuses.symbolize_keys.keys)
   end
 
   def version_required

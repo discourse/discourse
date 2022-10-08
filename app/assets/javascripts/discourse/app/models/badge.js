@@ -45,14 +45,10 @@ const Badge = RestModel.extend({
       type = "PUT";
     }
 
-    return ajax(url, { type, data })
-      .then((json) => {
-        this.updateFromJson(json);
-        return this;
-      })
-      .catch((error) => {
-        throw new Error(error);
-      });
+    return ajax(url, { type, data }).then((json) => {
+      this.updateFromJson(json);
+      return this;
+    });
   },
 
   destroy() {

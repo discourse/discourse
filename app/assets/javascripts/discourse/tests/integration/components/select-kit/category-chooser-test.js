@@ -3,7 +3,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import I18n from "I18n";
 import createStore from "discourse/tests/helpers/create-store";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 module(
@@ -112,6 +112,40 @@ module(
 
     test("with allowUncategorized=null", async function (assert) {
       this.siteSettings.allow_uncategorized_topics = false;
+
+      await render(hbs`
+        <CategoryChooser
+          @value={{this.value}}
+          @options={{hash
+            allowUncategorized=null
+          }}
+        />
+      `);
+
+      assert.strictEqual(this.subject.header().value(), null);
+      assert.strictEqual(this.subject.header().label(), "category…");
+    });
+
+    test("with allowUncategorized=null and generalCategoryId present", async function (assert) {
+      this.siteSettings.allow_uncategorized_topics = false;
+      this.siteSettings.general_category_id = 4;
+
+      await render(hbs`
+        <CategoryChooser
+          @value={{this.value}}
+          @options={{hash
+            allowUncategorized=null
+          }}
+        />
+      `);
+
+      assert.strictEqual(this.subject.header().value(), null);
+      assert.strictEqual(this.subject.header().label(), "");
+    });
+
+    test("with allowUncategorized=null and generalCategoryId present, but not set", async function (assert) {
+      this.siteSettings.allow_uncategorized_topics = false;
+      this.siteSettings.general_category_id = -1;
 
       await render(hbs`
         <CategoryChooser

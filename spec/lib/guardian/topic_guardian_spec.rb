@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicGuardian do
+RSpec.describe TopicGuardian do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:tl3_user) { Fabricate(:leader) }
   fab!(:moderator) { Fabricate(:moderator) }

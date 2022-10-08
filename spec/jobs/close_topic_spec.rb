@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::CloseTopic do
+RSpec.describe Jobs::CloseTopic do
   fab!(:admin) { Fabricate(:admin) }
 
   fab!(:topic) do

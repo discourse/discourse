@@ -2,7 +2,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, render } from "@ember/test-helpers";
 import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
+import { hbs } from "ember-cli-htmlbars";
 import sinon from "sinon";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
@@ -92,7 +92,8 @@ module("Integration | Component | Widget | user-menu", function (hooks) {
   });
 
   test("private messages - disabled", async function (assert) {
-    this.siteSettings.enable_personal_messages = false;
+    this.currentUser.setProperties({ admin: false, moderator: false });
+    this.siteSettings.personal_message_enabled_groups = "13"; // trust_level_3 auto group ID;
 
     await render(hbs`<MountWidget @widget="user-menu" />`);
 
@@ -100,7 +101,7 @@ module("Integration | Component | Widget | user-menu", function (hooks) {
   });
 
   test("private messages - enabled", async function (assert) {
-    this.siteSettings.enable_personal_messages = true;
+    this.siteSettings.personal_message_enabled_groups = "11"; // trust_level_1 auto group ID;
 
     await render(hbs`<MountWidget @widget="user-menu" />`);
 

@@ -2,7 +2,7 @@
 
 require 'file_store/local_store'
 
-describe FileStore::LocalStore do
+RSpec.describe FileStore::LocalStore do
 
   let(:store) { FileStore::LocalStore.new }
 

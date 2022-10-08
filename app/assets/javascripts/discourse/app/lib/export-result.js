@@ -1,10 +1,12 @@
 import I18n from "I18n";
-import bootbox from "bootbox";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 export function outputExportResult(result) {
+  const dialog = getOwner(this).lookup("service:dialog");
+
   if (result.success) {
-    bootbox.alert(I18n.t("admin.export_csv.success"));
+    dialog.alert(I18n.t("admin.export_csv.success"));
   } else {
-    bootbox.alert(I18n.t("admin.export_csv.failed"));
+    dialog.alert(I18n.t("admin.export_csv.failed"));
   }
 }

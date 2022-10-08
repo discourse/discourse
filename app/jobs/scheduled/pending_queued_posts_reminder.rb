@@ -27,7 +27,7 @@ module Jobs
     end
 
     def should_notify_ids
-      ReviewableQueuedPost.where(status: Reviewable.statuses[:pending]).where(
+      ReviewableQueuedPost.pending.where(
         'created_at < ?', SiteSetting.notify_about_queued_posts_after.to_f.hours.ago
       ).pluck(:id)
     end

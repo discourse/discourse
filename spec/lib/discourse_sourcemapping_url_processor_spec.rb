@@ -2,7 +2,7 @@
 
 require 'discourse_sourcemapping_url_processor'
 
-describe DiscourseSourcemappingUrlProcessor do
+RSpec.describe DiscourseSourcemappingUrlProcessor do
   def process(input)
     env = Sprockets::Environment.new
     env.context_class.class_eval do

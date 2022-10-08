@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe HighlightJs do
+RSpec.describe HighlightJs do
   it 'can list languages' do
     expect(HighlightJs.languages).to include('thrift')
   end

@@ -2,7 +2,7 @@
 
 require 'content_buffer'
 
-describe ContentBuffer do
+RSpec.describe ContentBuffer do
 
   it "handles deletion across lines properly" do
     c = ContentBuffer.new("a\nbc\nc")

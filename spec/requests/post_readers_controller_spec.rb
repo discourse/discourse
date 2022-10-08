@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostReadersController do
+RSpec.describe PostReadersController do
   describe '#index' do
     fab!(:admin) { Fabricate(:admin) }
     fab!(:reader) { Fabricate(:user) }
@@ -13,7 +13,7 @@ describe PostReadersController do
       @post = Fabricate(:post, topic: @group_message, post_number: 3)
     end
 
-    context 'When the user has access to readers data' do
+    context 'when the user has access to readers data' do
       before do
         @group.update!(publish_read_state: true)
         @group.add(admin)

@@ -2,7 +2,7 @@
   {{#unless this.complete}}
     <PluginOutlet @name="create-account-before-modal-body" @tagName="span" @connectorTagName="div" />
     <DModalBody @class={{this.modalBodyClasses}} @preventModalAlertHiding={{true}}>
-      <div class="create-account-form">
+      <div class="create-account-form {{this.authOptions.auth_provider}}">
         <div class="login-welcome-header" id="create-account-title">
           <h1 class="login-title">{{i18n "create_account.header_title"}}</h1> <img src={{this.wavingHandURL}} alt="" class="waving-hand">
           <p class="login-subheader">{{i18n "create_account.subheader_title"}}</p>
@@ -28,7 +28,7 @@
                 <span class="more-info">{{i18n "user.email.instructions"}}</span>
               </div>
 
-              <div class="input-group">
+              <div class="input-group create-account__username">
                 <Input @value={{this.accountUsername}} disabled={{this.usernameDisabled}} class={{value-entered this.accountUsername}} id="new-account-username" name="username" maxlength={{this.maxUsernameLength}} aria-describedby="username-validation" aria-invalid={{this.usernameValidation.failed}} autocomplete="off" />
                 <label class="alt-placeholder" for="new-account-username">
                   {{i18n "user.username.title"}}
@@ -41,7 +41,7 @@
                 <span class="more-info">{{i18n "user.username.instructions"}}</span>
               </div>
 
-              <div class="input-group">
+              <div class="input-group create-account__fullname">
                 {{#if this.fullnameRequired}}
                   <TextField @disabled={{this.nameDisabled}} @value={{this.accountName}} @id="new-account-name" @class={{value-entered this.accountName}} @aria-describedby="fullname-validation" @aria-invalid={{this.nameValidation.failed}} />
                   <label class="alt-placeholder" for="new-account-name">
@@ -66,7 +66,7 @@
                     authOptions=this.authOptions
                   }} />
 
-              <div class="input-group">
+              <div class="input-group create-account__password">
                 {{#if this.passwordRequired}}
                   <PasswordField @value={{this.accountPassword}} @class={{value-entered this.accountPassword}} @type="password" @id="new-account-password" @autocomplete="current-password" @capsLockOn={{this.capsLockOn}} @aria-describedby="password-validation" @aria-invalid={{this.passwordValidation.failed}} />
                   <label class="alt-placeholder" for="new-account-password">
@@ -91,7 +91,7 @@
               </div>
 
               {{#if this.requireInviteCode }}
-                <div class="input-group">
+                <div class="input-group create-account__invite-code">
                   <Input @value={{this.inviteCode}} class={{value-entered this.inviteCode}} id="inviteCode" />
                   <label class="alt-placeholder" for="invite-code">{{i18n "user.invite_code.title"}}</label>
                   <span class="more-info">{{i18n "user.invite_code.instructions"}}</span>

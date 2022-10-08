@@ -50,7 +50,7 @@ let _createCallbacks = [];
 
 class Toolbar {
   constructor(opts) {
-    const { site, siteSettings } = opts;
+    const { siteSettings, capabilities } = opts;
     this.shortcuts = {};
     this.context = null;
 
@@ -106,16 +106,16 @@ class Toolbar {
         }),
     });
 
-    this.addButton({
-      id: "code",
-      group: "insertions",
-      shortcut: "E",
-      preventFocus: true,
-      trimLeading: true,
-      action: (...args) => this.context.send("formatCode", args),
-    });
+    if (!capabilities.touch) {
+      this.addButton({
+        id: "code",
+        group: "insertions",
+        shortcut: "E",
+        preventFocus: true,
+        trimLeading: true,
+        action: (...args) => this.context.send("formatCode", args),
+      });
 
-    if (!site.mobileView) {
       this.addButton({
         id: "bullet",
         group: "extras",
@@ -354,7 +354,7 @@ export default Component.extend(TextareaTextManipulation, {
   @discourseComputed()
   toolbar() {
     const toolbar = new Toolbar(
-      this.getProperties("site", "siteSettings", "showLink")
+      this.getProperties("site", "siteSettings", "showLink", "capabilities")
     );
     toolbar.context = this;
 
@@ -363,6 +363,12 @@ export default Component.extend(TextareaTextManipulation, {
     if (this.extraButtons) {
       this.extraButtons(toolbar);
     }
+
+    const firstButton = toolbar.groups.mapBy("buttons").flat().firstObject;
+    if (firstButton) {
+      firstButton.tabindex = 0;
+    }
+
     return toolbar;
   },
 
@@ -602,7 +608,7 @@ export default Component.extend(TextareaTextManipulation, {
   },
 
   _applyList(sel, head, exampleKey, opts) {
-    if (sel.value.indexOf("\n") !== -1) {
+    if (sel.value.includes("\n")) {
       this.applySurround(sel, head, "", exampleKey, opts);
     } else {
       const [hval, hlen] = getHead(head);
@@ -611,10 +617,9 @@ export default Component.extend(TextareaTextManipulation, {
       }
 
       const trimmedPre = sel.pre.trim();
-      const number =
-        sel.value.indexOf(hval) === 0
-          ? sel.value.slice(hlen)
-          : `${hval}${sel.value}`;
+      const number = sel.value.startsWith(hval)
+        ? sel.value.slice(hlen)
+        : `${hval}${sel.value}`;
       const preLines = trimmedPre.length ? `${trimmedPre}\n\n` : "";
 
       const trimmedPost = sel.post.trim();
@@ -703,6 +708,7 @@ export default Component.extend(TextareaTextManipulation, {
           this.applySurround(selected, head, tail, exampleKey, opts),
         applyList: (head, exampleKey, opts) =>
           this._applyList(selected, head, exampleKey, opts),
+        formatCode: (...args) => this.send("formatCode", args),
         addText: (text) => this.addText(selected, text),
         getText: () => this.value,
         toggleDirection: () => this._toggleDirection(),
@@ -740,7 +746,7 @@ export default Component.extend(TextareaTextManipulation, {
 
       const sel = this.getSelected("", { lineVal: true });
       const selValue = sel.value;
-      const hasNewLine = selValue.indexOf("\n") !== -1;
+      const hasNewLine = selValue.includes("\n");
       const isBlankLine = sel.lineVal.trim().length === 0;
       const isFourSpacesIndent =
         this.siteSettings.code_formatting_style === FOUR_SPACES_INDENT;

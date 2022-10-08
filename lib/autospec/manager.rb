@@ -10,7 +10,6 @@ require "socket_server"
 module Autospec; end
 
 class Autospec::Manager
-
   def self.run(opts = {})
     self.new(opts).run
   end
@@ -23,12 +22,6 @@ class Autospec::Manager
     @mutex = Mutex.new
     @signal = ConditionVariable.new
     @runners = [ruby_runner]
-
-    if ENV["QUNIT"] == "1"
-      @runners << javascript_runner
-    else
-      puts "Skipping JS tests, run them in the browser at /qunit or add QUNIT=1 to env"
-    end
   end
 
   def run
@@ -384,5 +377,4 @@ class Autospec::Manager
     puts exception.message
     puts exception.backtrace.join("\n")
   end
-
 end

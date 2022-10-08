@@ -27,9 +27,12 @@
   .admin-container {
     padding: 0;
   }
-  .error-message {
+  .error-message,
+  .raw-error {
     margin-top: 5px;
     margin-bottom: 5px;
+  }
+  .error-message {
     .fa {
       color: var(--danger);
     }

@@ -1,9 +1,9 @@
 import Category from "discourse/models/category";
 import Component from "@ember/component";
 import I18n from "I18n";
-import bootbox from "bootbox";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import discourseComputed from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { or } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -13,6 +13,7 @@ export default Component.extend(bufferedProperty("host"), {
   tagName: "tr",
   categoryId: null,
   category: null,
+  dialog: service(),
 
   editing: or("host.isNew", "editToggled"),
 
@@ -61,12 +62,13 @@ export default Component.extend(bufferedProperty("host"), {
     },
 
     delete() {
-      bootbox.confirm(I18n.t("admin.embedding.confirm_delete"), (result) => {
-        if (result) {
-          this.host.destroyRecord().then(() => {
+      return this.dialog.confirm({
+        message: I18n.t("admin.embedding.confirm_delete"),
+        didConfirm: () => {
+          return this.host.destroyRecord().then(() => {
             this.deleteHost(this.host);
           });
-        }
+        },
       });
     },
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "constants match ruby" do
+RSpec.describe "constants match ruby" do
 
   let(:ctx) { MiniRacer::Context.new }
 

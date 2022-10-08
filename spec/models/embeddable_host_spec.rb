@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe EmbeddableHost do
+RSpec.describe EmbeddableHost do
   it "trims http" do
     eh = EmbeddableHost.new(host: 'http://example.com')
     expect(eh).to be_valid
