@@ -48,7 +48,7 @@
     }
     > li {
       margin-right: 0;
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       border: 1px solid var(--primary-medium);
     }
     > li > a {
@@ -139,7 +139,7 @@
     position: relative;
     display: inline-block;
     top: -1px;
-    font-size: $font-0;
+    font-size: var(--font-0);
     line-height: $line-height-small;
     padding: 0.15em 0.4em 0.2em 0.4em;
     .d-icon {
@@ -303,11 +303,11 @@ tr.category-topic-link {
   }
 
   h3 {
-    font-size: $font-up-2;
+    font-size: var(--font-up-2);
   }
 
   h4 {
-    font-size: $font-up-1;
+    font-size: var(--font-up-1);
   }
 
   .category-name {
@@ -321,7 +321,7 @@ tr.category-topic-link {
   }
 
   .category-topic-link .main-link .age {
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
   }
 
   .category-description td {
@@ -359,7 +359,7 @@ tr.category-topic-link {
       float: left;
       margin: 3px 1em 0 0;
       font-weight: normal;
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       .value {
         font-weight: bold;
       }
@@ -409,7 +409,7 @@ tr.category-topic-link {
 
 .category-heading {
   p {
-    font-size: $font-up-1;
+    font-size: var(--font-up-1);
     margin-bottom: 0.75em;
   }
 }
@@ -438,7 +438,7 @@ td .main-link {
 }
 .topic-list {
   .num.posts-map {
-    font-size: $font-up-2;
+    font-size: var(--font-up-2);
     padding: 0;
     button {
       padding: 0;
@@ -466,7 +466,7 @@ td .main-link {
 
 .category-list .category.muted a.category-title-link {
   color: var(--primary-medium);
-  font-size: $font-down-1;
+  font-size: var(--font-down-1);
 }
 
 .muted-categories-link {

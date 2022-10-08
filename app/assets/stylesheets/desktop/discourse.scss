@@ -56,7 +56,7 @@ input,
 button,
 select,
 textarea {
-  font-size: $font-0;
+  font-size: var(--font-0);
   font-weight: normal;
   line-height: $line-height-medium;
 }
@@ -65,7 +65,7 @@ select,
 textarea {
   display: inline-block;
   margin-bottom: 9px;
-  font-size: $font-0;
+  font-size: var(--font-0);
   line-height: $line-height-large;
   color: var(--primary);
 }

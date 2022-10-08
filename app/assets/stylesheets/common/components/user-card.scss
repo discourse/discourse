@@ -179,7 +179,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       }
     }
     .profile-hidden {
-      font-size: $font-up-1;
+      font-size: var(--font-up-1);
       margin-top: 0.5em;
     }
   }

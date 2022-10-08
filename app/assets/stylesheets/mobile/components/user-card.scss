@@ -37,16 +37,16 @@ $avatar_width: 120px;
     }
   }
   h1 {
-    font-size: $font-up-3;
+    font-size: var(--font-up-3);
     .d-icon {
-      font-size: $font-down-2;
+      font-size: var(--font-down-2);
     }
   }
   h2 {
-    font-size: $font-0;
+    font-size: var(--font-0);
   }
   h3 {
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
   }
 }
 

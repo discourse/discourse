@@ -37,11 +37,11 @@
     text-align: right;
 
     .value {
-      font-size: $font-up-1;
+      font-size: var(--font-up-1);
       font-weight: bold;
     }
     .unit {
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
     }
     .badge-notification {
       display: block;
@@ -77,7 +77,7 @@
     }
     a.last-posted-at,
     a.last-posted-at:visited {
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       color: var(--primary-med-or-secondary-high);
     }
     .title {
@@ -102,11 +102,11 @@
       }
 
       h3 {
-        font-size: $font-up-2;
+        font-size: var(--font-up-2);
       }
 
       h4 {
-        font-size: $font-up-1;
+        font-size: var(--font-up-1);
       }
     }
 
@@ -141,7 +141,7 @@
 
   .discourse-tags {
     .discourse-tag {
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
     }
   }
 

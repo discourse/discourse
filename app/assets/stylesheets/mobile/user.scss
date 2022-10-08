@@ -128,14 +128,14 @@
 
       .featured-topic {
         text-align: center;
-        font-size: $font-0;
+        font-size: var(--font-0);
       }
 
       .location-and-website {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        font-size: $font-0;
+        font-size: var(--font-0);
         .d-icon {
           width: 0.8em;
           height: 0.8em;
@@ -391,7 +391,7 @@
     .label {
       display: block;
       color: var(--primary-medium);
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       margin: 0.5em 0 0.15em 0;
     }
 

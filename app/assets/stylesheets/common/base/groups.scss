@@ -108,7 +108,7 @@
     }
 
     .groups-info-name {
-      font-size: $font-up-1;
+      font-size: var(--font-up-1);
       font-weight: bold;
       color: var(--primary);
     }
@@ -150,7 +150,7 @@
     .control-instructions {
       color: $primary-medium;
       margin-bottom: 10px;
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       line-height: $line-height-large;
     }
 

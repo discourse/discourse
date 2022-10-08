@@ -207,7 +207,7 @@
         align-items: center;
 
         .discourse-tags {
-          font-size: $font-down-1;
+          font-size: var(--font-down-1);
         }
       }
     }

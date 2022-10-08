@@ -13,7 +13,7 @@ div.poll {
 
   li {
     cursor: pointer;
-    font-size: $font-up-1;
+    font-size: var(--font-up-1);
   }
 
   li[data-poll-option-id] {
@@ -39,7 +39,7 @@ div.poll {
     padding: 1em 0;
 
     .info-label {
-      font-size: $font-up-4;
+      font-size: var(--font-up-4);
       line-height: $line-height-medium;
     }
 
@@ -54,7 +54,7 @@ div.poll {
     padding: 0.5em 1em;
 
     .poll-results-number-rating {
-      font-size: $font-up-5;
+      font-size: var(--font-up-5);
     }
   }
 

@@ -13,7 +13,7 @@
   }
 
   .posts-map {
-    font-size: $font-up-1;
+    font-size: var(--font-up-1);
     font-weight: bold;
     color: var(--primary-medium);
   }
@@ -39,7 +39,7 @@
     @extend .topic-list-main-link;
     flex: 0 1 auto;
     max-width: 65%;
-    font-size: $font-0;
+    font-size: var(--font-0);
     .badge-wrapper {
       max-width: 100%;
       .badge-category-bg {
@@ -49,7 +49,7 @@
 
     .top-row {
       margin-bottom: 0.1em;
-      font-size: $font-up-1;
+      font-size: var(--font-up-1);
     }
   }
   .topic-stats {

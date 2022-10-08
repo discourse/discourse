@@ -21,7 +21,7 @@
 
         .texts .name,
         .icons .d-icon {
-          font-size: $font-0;
+          font-size: var(--font-0);
           font-weight: normal;
         }
 

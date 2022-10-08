@@ -143,7 +143,7 @@
   .description {
     margin-bottom: 1em;
     text-align: center;
-    font-size: $font-0;
+    font-size: var(--font-0);
     color: var(--primary-med-or-secondary-high);
     position: relative;
     @include line-clamp(4);
@@ -160,7 +160,7 @@
   }
 
   h3 {
-    font-size: $font-up-2;
+    font-size: var(--font-up-2);
     margin-bottom: 0.5em;
     margin-top: 0.25em;
     line-height: $line-height-medium;
@@ -260,7 +260,7 @@
   }
 
   h3 {
-    font-size: $font-up-2;
+    font-size: var(--font-up-2);
     text-align: center;
     overflow: hidden;
   }
@@ -331,7 +331,7 @@
   margin-bottom: 0;
   border-top: 1px solid var(--primary-low);
   .category-description {
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
   }
   .category-logo.aspect-image {
     --max-height: 75px;
@@ -342,7 +342,7 @@
   > h3 a.category-title-link,
   > h4 a.category-title-link {
     color: var(--primary-medium);
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
   }
   > .category-description,
   tr.category-description {

@@ -24,7 +24,7 @@
     width: 500px;
   }
   h1 {
-    font-size: $font-up-4;
+    font-size: var(--font-up-4);
     line-height: $line-height-medium;
     overflow-wrap: break-word;
     width: 100%;
@@ -46,7 +46,7 @@
   width: 60%;
   margin-left: auto;
   margin-right: auto;
-  font-size: $font-up-4;
+  font-size: var(--font-up-4);
   text-align: center;
   line-height: $line-height-medium;
 
@@ -74,7 +74,7 @@
       display: block;
       margin-top: 2px;
       margin-bottom: 2px;
-      font-size: $font-up-2;
+      font-size: var(--font-up-2);
     }
   }
   .jump-form {
@@ -84,7 +84,7 @@
       height: 20px;
       text-align: center;
       margin-bottom: 0;
-      font-size: $font-up-1;
+      font-size: var(--font-up-1);
     }
     button.btn {
       float: right;
@@ -106,7 +106,7 @@
   bottom: 0;
   position: fixed;
   width: 100%;
-  font-size: $font-0;
+  font-size: var(--font-0);
   z-index: z("dropdown");
 }
 

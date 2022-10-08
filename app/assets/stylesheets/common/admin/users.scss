@@ -63,7 +63,7 @@
   }
   .long-value {
     margin-left: 12px;
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     button {
       margin-left: 10px;
     }

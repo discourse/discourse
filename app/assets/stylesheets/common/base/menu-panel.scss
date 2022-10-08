@@ -218,7 +218,7 @@
 
     .profile-tab-btn {
       .relative-date {
-        font-size: $font-down-3;
+        font-size: var(--font-down-3);
         color: var(--primary-medium);
       }
 
@@ -289,7 +289,7 @@
     }
 
     .new {
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       margin-left: 0.5em;
       color: var(--primary-med-or-secondary-med);
     }
@@ -324,7 +324,7 @@
       background-color: transparent;
       display: inline;
       padding: 0;
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       line-height: $line-height-large;
     }
     .badge-wrapper {
@@ -349,11 +349,11 @@
   b.topics-count {
     color: var(--primary-med-or-secondary-med);
     font-weight: normal;
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
   }
 
   div.discourse-tags {
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
   }
 }
 

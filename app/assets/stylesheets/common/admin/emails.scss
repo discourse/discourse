@@ -10,7 +10,7 @@
   }
   .reply-key {
     display: block;
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     color: var(--primary-medium);
   }
   .username div {
@@ -53,7 +53,7 @@
   }
   .error-description {
     color: var(--primary-medium);
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
   }
   hr {
     margin: 0;

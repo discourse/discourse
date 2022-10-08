@@ -5,7 +5,7 @@ div.ac-wrap.composer-user-selector-limited {
   .btn-primary {
     margin-left: 0.5em;
     padding: 3px 6px 2px;
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     min-height: unset;
   }
 }

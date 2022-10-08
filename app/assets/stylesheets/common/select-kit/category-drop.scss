@@ -4,7 +4,7 @@
       min-width: auto;
 
       .badge-wrapper {
-        font-size: $font-0;
+        font-size: var(--font-0);
         font-weight: normal;
         max-width: 260px;
 
@@ -60,7 +60,7 @@
           margin-left: 0.5em;
           font-weight: normal;
           color: var(--primary-medium);
-          font-size: $font-down-1;
+          font-size: var(--font-down-1);
         }
 
         .badge-wrapper {

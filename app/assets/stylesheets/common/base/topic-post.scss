@@ -56,7 +56,7 @@ $quote-share-maxwidth: 150px;
   }
 
   span {
-    font-size: $font-0;
+    font-size: var(--font-0);
     margin-right: 8px;
     display: inline-block;
     @include ellipsis;
@@ -66,7 +66,7 @@ $quote-share-maxwidth: 150px;
     }
   }
   .fa {
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     color: var(--primary-med-or-secondary-med);
   }
   .svg-icon-title {
@@ -676,7 +676,7 @@ aside.quote {
       padding: 3px 5px;
       text-align: center;
       font-weight: normal;
-      font-size: $font-down-2;
+      font-size: var(--font-down-2);
       line-height: $line-height-small;
     }
   }
@@ -700,19 +700,19 @@ aside.quote {
     color: var(--primary);
     line-height: $line-height-large;
     font-weight: normal;
-    font-size: $font-0;
+    font-size: var(--font-0);
   }
 
   h4 {
     margin: 1px 0 2px 0;
     color: var(--primary-med-or-secondary-med);
     font-weight: normal;
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     line-height: $line-height-small;
   }
 
   span.domain {
-    font-size: $font-down-2;
+    font-size: var(--font-down-2);
     color: var(--primary-med-or-secondary-med);
   }
 
@@ -863,7 +863,7 @@ aside.quote {
     right: -4px;
   }
   .fa {
-    font-size: $font-up-4;
+    font-size: var(--font-up-4);
   }
 }
 .topic-map .poster .avatar-flair {
@@ -882,7 +882,7 @@ aside.quote {
     right: 0;
   }
   .d-icon {
-    font-size: $font-down-2;
+    font-size: var(--font-down-2);
   }
 }
 
@@ -936,7 +936,7 @@ aside.quote {
   &.whisper,
   &.post-locked {
     .d-icon {
-      font-size: $font-0;
+      font-size: var(--font-0);
     }
   }
 
@@ -1028,9 +1028,9 @@ pre {
     @include unselectable;
     top: 0;
     min-height: 0;
-    font-size: $font-down-2;
+    font-size: var(--font-down-2);
     min-height: 0;
-    font-size: $font-down-2;
+    font-size: var(--font-down-2);
     opacity: 0.7;
 
     &.action-complete {
@@ -1055,7 +1055,7 @@ kbd {
   box-sizing: border-box;
   color: var(--primary);
   display: inline-flex;
-  font-size: $font-down-1;
+  font-size: var(--font-down-1);
   justify-content: center;
   line-height: $line-height-large;
   margin: 0 0.15em;
@@ -1086,7 +1086,7 @@ blockquote > *:last-child {
   cursor: pointer;
   text-transform: uppercase;
   font-weight: bold;
-  font-size: $font-down-1;
+  font-size: var(--font-down-1);
 }
 
 .who-liked,
@@ -1149,7 +1149,7 @@ blockquote > *:last-child {
     padding: 1em 0;
     text-transform: uppercase;
     font-weight: bold;
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     color: var(--primary-medium);
     min-width: 0; // Allows flex container to shrink
 
@@ -1165,7 +1165,7 @@ blockquote > *:last-child {
       flex: 1 1 100%;
       text-transform: none;
       font-weight: normal;
-      font-size: $font-up-1;
+      font-size: var(--font-up-1);
       order: 12;
       word-break: break-word;
       min-width: 0; // Allows content like oneboxes to shrink
@@ -1216,7 +1216,7 @@ blockquote > *:last-child {
       .topic-post-visited-message {
         background-color: var(--secondary);
         color: var(--danger-medium);
-        font-size: $font-down-1;
+        font-size: var(--font-down-1);
         padding: 0 8px;
       }
     }
@@ -1291,7 +1291,7 @@ a.mention-group {
     > .d-icon {
       color: var(--primary-med-or-secondary-med);
       margin-right: 6px;
-      font-size: $font-0;
+      font-size: var(--font-0);
       line-height: $line-height-large;
     }
 
@@ -1306,7 +1306,7 @@ a.mention-group {
     > span.help {
       display: inline-block;
       color: var(--primary-med-or-secondary-med);
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       font-style: italic;
       line-height: $line-height-large;
       margin-bottom: 1px;

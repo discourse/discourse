@@ -213,7 +213,7 @@
   border-top: 1px solid var(--primary-low);
 
   .topic-statuses {
-    font-size: $font-up-2;
+    font-size: var(--font-up-2);
   }
 
   .reviewable-meta-data {
@@ -221,7 +221,7 @@
     display: flex;
     width: 100%;
     margin-bottom: 0.5em;
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     align-items: baseline;
     .reviewable-type {
       margin-right: 0.25em;
@@ -237,7 +237,7 @@
       }
     }
     .score {
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
     }
   }
 
@@ -304,7 +304,7 @@
   }
 
   .d-icon {
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     color: var(--primary-medium);
   }
 
@@ -375,7 +375,7 @@
 .reviewable-item {
   .show-raw-email {
     color: var(--primary-medium);
-    font-size: $font-down-2;
+    font-size: var(--font-down-2);
   }
   .post-title {
     background-color: yellow;
@@ -450,7 +450,7 @@
       font-weight: bold;
       color: var(--primary);
       display: block;
-      font-size: $font-up-2;
+      font-size: var(--font-up-2);
       margin-right: 0.75em;
     }
   }

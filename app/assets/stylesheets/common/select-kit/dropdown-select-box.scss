@@ -29,7 +29,7 @@
           .d-icon {
             flex: 0 0 100%;
             overflow: hidden;
-            font-size: $font-up-2;
+            font-size: var(--font-up-2);
             margin-right: 0;
           }
         }
@@ -45,7 +45,7 @@
           .name {
             flex: 1 1 auto;
             font-weight: bold;
-            font-size: $font-0;
+            font-size: var(--font-0);
             color: var(--primary);
             padding: 0;
             @include ellipsis;
@@ -54,7 +54,7 @@
 
           .desc {
             flex: 1 1 auto;
-            font-size: $font-down-1;
+            font-size: var(--font-down-1);
             font-weight: normal;
             color: var(--primary-medium);
             white-space: normal;

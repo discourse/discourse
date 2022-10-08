@@ -228,7 +228,7 @@ pre.codeblock-buttons:hover {
   .topic-meta-data h5 {
     position: absolute;
     z-index: z("base");
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     a {
       font-weight: bold;
       color: var(--primary-low-mid-or-secondary-high);
@@ -269,7 +269,7 @@ pre.codeblock-buttons:hover {
     }
     .number,
     .d-icon {
-      font-size: $font-up-2;
+      font-size: var(--font-up-2);
       line-height: $line-height-medium;
     }
     button .d-icon,
@@ -307,7 +307,7 @@ pre.codeblock-buttons:hover {
       }
       .fa {
         margin: 0;
-        font-size: $font-up-2;
+        font-size: var(--font-up-2);
         line-height: 52px;
       }
     }
@@ -407,7 +407,7 @@ video {
 }
 
 .deleted-user-avatar {
-  font-size: $font-up-6;
+  font-size: var(--font-up-6);
 }
 
 .info-line {
@@ -563,14 +563,14 @@ blockquote {
     margin-top: 10px;
   }
   p {
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     margin: 0 0 10px 0;
   }
   p.cancel {
     margin: 10px 0 0 0;
   }
   h3 {
-    font-size: $font-up-4;
+    font-size: var(--font-up-4);
     color: var(--primary);
     margin-bottom: 5px;
     .d-icon {

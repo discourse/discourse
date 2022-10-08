@@ -48,7 +48,7 @@
     margin-bottom: 10px;
     input {
       margin-bottom: 0;
-      font-size: $font-down-2;
+      font-size: var(--font-down-2);
       .ios-device & {
         font-size: var(--font-down-2);
       }
@@ -86,7 +86,7 @@
     vertical-align: top;
 
     .title {
-      font-size: $font-up-4;
+      font-size: var(--font-up-4);
       font-weight: bold;
       margin-bottom: 0.25em;
       display: flex;
@@ -99,7 +99,7 @@
         margin-left: 0.5em;
       }
       a {
-        font-size: $font-down-2;
+        font-size: var(--font-down-2);
       }
     }
 
@@ -120,7 +120,7 @@
     }
 
     div.remote-url {
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       margin-bottom: 7px;
     }
 
@@ -135,7 +135,7 @@
     }
 
     .mini-title {
-      font-size: $font-up-1;
+      font-size: var(--font-up-1);
       font-weight: bold;
       margin-bottom: 7px;
     }
@@ -264,7 +264,7 @@
         overflow: hidden;
         display: flex;
         font-weight: bold;
-        font-size: $font-up-1;
+        font-size: var(--font-up-1);
 
         .icons {
           margin-left: auto;
@@ -274,7 +274,7 @@
       .components-list {
         margin-top: 5px;
         display: inline-block;
-        font-size: $font-down-1;
+        font-size: var(--font-down-1);
         align-items: baseline;
         color: var(--primary-high);
 
@@ -368,7 +368,7 @@
   .editor-information {
     display: flex;
     align-items: center;
-    font-size: $font-up-1;
+    font-size: var(--font-up-1);
     margin-bottom: 0.5em;
 
     .editor-back-button {
@@ -501,7 +501,7 @@
 
     .ace_placeholder {
       font-family: inherit;
-      font-size: $font-up-1;
+      font-size: var(--font-up-1);
       color: $primary-high;
     }
 
@@ -572,7 +572,7 @@
     .description {
       margin: 0.15em 0 0;
       color: var(--primary-high);
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       line-height: $line-height-medium;
     }
 
@@ -585,7 +585,7 @@
 
   .status-message {
     display: block;
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     margin-top: 8px;
   }
 
@@ -759,7 +759,7 @@ table.permalinks {
       }
       div.label {
         display: block;
-        font-size: $font-down-1;
+        font-size: var(--font-down-1);
         color: var(--primary-medium);
       }
       td.controls,
@@ -875,7 +875,7 @@ table.permalinks {
 
 .reseed-modal {
   .options-group-title {
-    font-size: $font-up-2;
+    font-size: var(--font-up-2);
     font-weight: bold;
     margin: 8px 0;
   }

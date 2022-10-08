@@ -19,12 +19,12 @@
 
 .modal-header {
   h3 {
-    font-size: $font-up-3;
+    font-size: var(--font-up-3);
   }
 }
 
 .close {
-  font-size: $font-up-3;
+  font-size: var(--font-up-3);
   text-decoration: none;
   &:visited {
     color: var(--primary-high);

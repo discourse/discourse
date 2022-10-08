@@ -139,7 +139,7 @@ $mobile-breakpoint: 700px;
     .label {
       display: block;
       color: var(--primary-medium);
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       margin: 0.5em 0 0.15em 0;
     }
     tr {
@@ -205,7 +205,7 @@ $mobile-breakpoint: 700px;
     }
     .site-text-search {
       padding: 0.5em;
-      font-size: $font-0;
+      font-size: var(--font-0);
       width: 50%;
     }
     .reseed {
@@ -230,7 +230,7 @@ $mobile-breakpoint: 700px;
     }
     h3 {
       font-weight: normal;
-      font-size: $font-0;
+      font-size: var(--font-0);
       @include breakpoint(mobile-extra-large) {
         word-wrap: break-word;
       }
@@ -296,7 +296,7 @@ $mobile-breakpoint: 700px;
   width: 27%;
   float: left;
   li a span.count {
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     float: right;
     margin-right: 10px;
     background-color: var(--primary-low);
@@ -387,7 +387,7 @@ $mobile-breakpoint: 700px;
     background-color: var(--secondary);
     padding: 12px 12px 5px;
     .powered-by {
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       position: absolute;
       bottom: -10px;
       left: 10px;
@@ -546,7 +546,7 @@ $mobile-breakpoint: 700px;
     }
   }
   h1 {
-    font-size: $font-up-3;
+    font-size: var(--font-up-3);
     line-height: $line-height-medium;
     color: var(--primary);
   }
@@ -695,7 +695,7 @@ $mobile-breakpoint: 700px;
 
 section.details {
   h1 {
-    font-size: $font-up-3;
+    font-size: var(--font-up-3);
     color: var(--primary);
     padding: 5px 10px;
     margin: 30px 0 5px 0;
