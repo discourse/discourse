@@ -29,7 +29,10 @@ export default Mixin.create({
     this.userFields.forEach((userField) => {
       let validation = EmberObject.create({ ok: true });
 
-      if (userField.field.required && isEmpty(userField.value)) {
+      if (
+        userField.field.required &&
+        (!userField.value || isEmpty(userField.value))
+      ) {
         validation = EmberObject.create({
           failed: true,
           reason: I18n.t("user_fields.required", {
@@ -39,6 +42,7 @@ export default Mixin.create({
         });
       } else if (
         this.accountPassword &&
+        userField.field.field_type === "text" &&
         userField.value &&
         userField.value
           .toLowerCase()
