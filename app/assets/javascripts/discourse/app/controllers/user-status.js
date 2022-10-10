@@ -1,7 +1,6 @@
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
 import ItsATrap from "@discourse/itsatrap";
@@ -11,17 +10,16 @@ import {
 } from "discourse/lib/time-shortcut";
 
 export default Controller.extend(ModalFunctionality, {
-  userStatusService: service("user-status"),
   showDeleteButton: false,
   prefilledDateTime: null,
   timeShortcuts: null,
   _itsatrap: null,
 
   onShow() {
-    const currentStatus = { ...this.currentUser.status };
+    const currentStatus = { ...this.model.status };
     this.setProperties({
       status: currentStatus,
-      showDeleteButton: !!this.currentUser.status,
+      showDeleteButton: !!this.model.status,
       timeShortcuts: this._buildTimeShortcuts(),
       prefilledDateTime: currentStatus?.ends_at,
     });
@@ -54,8 +52,8 @@ export default Controller.extend(ModalFunctionality, {
 
   @action
   delete() {
-    this.userStatusService
-      .clear()
+    this.model
+      .deleteAction()
       .then(() => this.send("closeModal"))
       .catch((e) => this._handleError(e));
   },
@@ -72,11 +70,10 @@ export default Controller.extend(ModalFunctionality, {
       emoji: this.status.emoji,
       ends_at: this.status.endsAt?.toISOString(),
     };
-    this.userStatusService
-      .set(newStatus)
-      .then(() => {
-        this.send("closeModal");
-      })
+
+    this.model
+      .saveAction(newStatus)
+      .then(() => this.send("closeModal"))
       .catch((e) => this._handleError(e));
   },
 
