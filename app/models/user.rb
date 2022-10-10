@@ -1682,10 +1682,12 @@ class User < ActiveRecord::Base
 
   def sidebar_tags
     return custom_sidebar_tags if custom_sidebar_tags.present?
+
     if SiteSetting.default_sidebar_tags.present?
       tag_names = SiteSetting.default_sidebar_tags.split("|") - DiscourseTagging.hidden_tag_names(guardian)
       return Tag.where(name: tag_names)
     end
+
     Tag.none
   end
 

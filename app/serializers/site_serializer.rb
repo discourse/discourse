@@ -224,7 +224,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def include_anonymous_default_sidebar_tags?
-    SiteSetting.default_sidebar_tags.present?
+    scope.anonymous? && SiteSetting.tagging_enabled && SiteSetting.default_sidebar_tags.present?
   end
 
   private
