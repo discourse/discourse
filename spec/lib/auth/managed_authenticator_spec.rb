@@ -254,6 +254,48 @@ RSpec.describe Auth::ManagedAuthenticator do
         expect(user.user_profile.location).to eq("DiscourseVille")
       end
     end
+
+    describe 'match by username' do
+      SiteSetting.username_change_period = 0
+      authenticator = Class.new(described_class) do
+        def name
+          "myauth"
+        end
+        def match_by_email
+          false
+        end
+        def match_by_username
+          true
+        end
+      end.new
+
+      it 'works normally' do
+        user = Fabricate(:user)
+        result = authenticator.after_authenticate(hash.deep_merge(info: { nickname: user.username }))
+        expect(result.user.id).to eq(user.id)
+        expect(UserAssociatedAccount.find_by(provider_name: 'myauth', provider_uid: "1234").user_id).to eq(user.id)
+      end
+
+      it 'works if there is already an association with the target account' do
+        user = Fabricate(:user, username: "IAmGroot")
+        result = authenticator.after_authenticate(hash)
+        expect(result.user.id).to eq(user.id)
+      end
+
+      it 'does not match if match_by_username is false' do
+        authenticator = Class.new(described_class) do
+          def name
+            "myauth"
+          end
+          def match_by_username
+            false
+          end
+        end.new
+        user = Fabricate(:user, username: "coolguy")
+        result = authenticator.after_authenticate(hash)
+        expect(result.user).to eq(nil)
+      end
+    end
   end
 
   describe 'description_for_user' do
