@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
 
 export default class SectionLink extends Component {
   willDestroy() {
@@ -42,14 +41,14 @@ export default class SectionLink extends Component {
     return [];
   }
 
-  get prefixColorCSS() {
+  get prefixColor() {
     const color = this.args.prefixColor;
 
     if (!color || !color.match(/^\w{6}$/)) {
-      return htmlSafe("");
+      return "";
     }
 
-    return htmlSafe("color: #" + color);
+    return "#" + color;
   }
 
   get prefixCSS() {
