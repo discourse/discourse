@@ -256,33 +256,44 @@ RSpec.describe Auth::ManagedAuthenticator do
     end
 
     describe 'match by username' do
-      SiteSetting.username_change_period = 0
-      authenticator = Class.new(described_class) do
-        def name
-          "myauth"
-        end
-        def match_by_email
-          false
-        end
-        def match_by_username
-          true
-        end
-      end.new
+      let(:user_match_authenticator) {
+        Class.new(described_class) do
+          def name
+            "myauth"
+          end
+          def match_by_email
+            false
+          end
+          def match_by_username
+            true
+          end
+        end.new
+      }
 
       it 'works normally' do
+        SiteSetting.username_change_period = 0
         user = Fabricate(:user)
-        result = authenticator.after_authenticate(hash.deep_merge(info: { nickname: user.username }))
+        result = user_match_authenticator.after_authenticate(hash.deep_merge(info: { nickname: user.username }))
         expect(result.user.id).to eq(user.id)
         expect(UserAssociatedAccount.find_by(provider_name: 'myauth', provider_uid: "1234").user_id).to eq(user.id)
       end
 
       it 'works if there is already an association with the target account' do
+        SiteSetting.username_change_period = 0
         user = Fabricate(:user, username: "IAmGroot")
-        result = authenticator.after_authenticate(hash)
+        result = user_match_authenticator.after_authenticate(hash)
         expect(result.user.id).to eq(user.id)
       end
 
+      it 'does not match if username_change_period isn\'t 0' do
+        SiteSetting.username_change_period = 3
+        user = Fabricate(:user, username: "IAmGroot")
+        result = user_match_authenticator.after_authenticate(hash)
+        expect(result.user).to eq(nil)
+      end
+
       it 'does not match if match_by_username is false' do
+        SiteSetting.username_change_period = 0
         authenticator = Class.new(described_class) do
           def name
             "myauth"
@@ -291,7 +302,7 @@ RSpec.describe Auth::ManagedAuthenticator do
             false
           end
         end.new
-        user = Fabricate(:user, username: "coolguy")
+        user = Fabricate(:user, username: "IAmGroot")
         result = authenticator.after_authenticate(hash)
         expect(result.user).to eq(nil)
       end
