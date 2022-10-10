@@ -209,7 +209,7 @@ class UserUpdater
         update_sidebar_tag_section_links(attributes[:sidebar_tag_names])
       end
 
-      if attributes.key?(:status)
+      if SiteSetting.enable_user_status?
         update_user_status(attributes[:status])
       end
 

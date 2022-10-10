@@ -158,6 +158,7 @@ export default Controller.extend(CanCheckEmails, {
       model: {
         status,
         saveAction: async (s) => this.set("newStatus", s),
+        deleteAction: async () => this.set("newStatus", null),
       },
     });
   },
