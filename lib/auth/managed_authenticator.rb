@@ -140,7 +140,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
   def find_user_by_username(auth_token)
     username = auth_token.dig(:info, :nickname)
     if username
-      User.find_by_username_lower(username.downcase)
+      User.find_by_username(username)
     end
   end
 

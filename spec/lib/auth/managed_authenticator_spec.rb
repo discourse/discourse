@@ -299,6 +299,18 @@ RSpec.describe Auth::ManagedAuthenticator do
         expect(result.user).to eq(nil)
       end
 
+      it 'does not match if default match_by_username not overriden' do
+        SiteSetting.username_change_period = 0
+        authenticator = Class.new(described_class) do
+          def name
+            "myauth"
+          end
+        end.new
+        user = Fabricate(:user, username: "IAmGroot")
+        result = authenticator.after_authenticate(hash)
+        expect(result.user).to eq(nil)
+      end
+
       it 'does not match if match_by_username is false' do
         SiteSetting.username_change_period = 0
         authenticator = Class.new(described_class) do
