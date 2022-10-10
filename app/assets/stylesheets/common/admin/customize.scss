@@ -189,6 +189,8 @@
       text-align: center;
 
       &.active {
+        background-color: var(--quaternary);
+        color: var(--secondary);
         font-weight: 700;
       }
     }

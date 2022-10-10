@@ -1,6 +1,5 @@
 import {
   acceptance,
-  count,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -123,9 +122,11 @@ acceptance("flagging", function (needs) {
     const silenceUntilCombobox = selectKit(".silence-until .combobox");
     await silenceUntilCombobox.expand();
     await silenceUntilCombobox.selectRowByValue("tomorrow");
+    assert.ok(exists(".modal-body"));
     await fillIn(".silence-reason", "for breaking the rules");
+
     await click(".perform-silence");
-    assert.ok(!exists(".bootbox.modal:visible"));
+    assert.ok(!exists(".modal-body"));
   });
 
   test("Gets dismissable warning from canceling incomplete silence from take action", async function (assert) {
@@ -140,17 +141,17 @@ acceptance("flagging", function (needs) {
     await silenceUntilCombobox.selectRowByValue("tomorrow");
     await fillIn(".silence-reason", "for breaking the rules");
     await click(".d-modal-cancel");
-    assert.strictEqual(count(".bootbox.modal:visible"), 1);
+    assert.ok(exists(".dialog-body"));
 
-    await click(".modal-footer .btn-default");
-    assert.ok(!exists(".bootbox.modal:visible"));
+    await click(".dialog-footer .btn-default");
+    assert.ok(!exists(".dialog-body"));
     assert.ok(exists(".silence-user-modal"), "it shows the silence modal");
 
     await click(".d-modal-cancel");
-    assert.strictEqual(count(".bootbox.modal:visible"), 1);
+    assert.ok(exists(".dialog-body"));
 
-    await click(".modal-footer .btn-primary");
-    assert.ok(!exists(".bootbox.modal:visible"));
+    await click(".dialog-footer .btn-primary");
+    assert.ok(!exists(".dialog-body"));
   });
 
   test("CTRL + ENTER accepts the modal", async function (assert) {

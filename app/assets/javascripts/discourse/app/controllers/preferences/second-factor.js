@@ -5,14 +5,14 @@ import I18n from "I18n";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
-import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import { findAll } from "discourse/models/login-method";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend(CanCheckEmails, {
+  dialog: service(),
   loading: false,
   dirty: false,
   resetPasswordLoading: false,
@@ -127,34 +127,21 @@ export default Controller.extend(CanCheckEmails, {
       if (this.loading) {
         return;
       }
-      const message = I18n.t("user.second_factor.disable_confirm");
-      const buttons = [
-        {
-          label: I18n.t("cancel"),
-          class: "d-modal-cancel",
-          link: true,
-        },
-        {
-          icon: iconHTML("ban"),
-          label: I18n.t("user.second_factor.disable"),
-          class: "btn-danger btn-icon-text",
-          callback: () => {
-            this.model
-              .disableAllSecondFactors()
-              .then(() => {
-                const usernameLower = this.model.username.toLowerCase();
-                DiscourseURL.redirectTo(
-                  userPath(`${usernameLower}/preferences`)
-                );
-              })
-              .catch((e) => this.handleError(e))
-              .finally(() => this.set("loading", false));
-          },
-        },
-      ];
 
-      bootbox.dialog(message, buttons, {
-        classes: "disable-second-factor-modal",
+      this.dialog.deleteConfirm({
+        title: I18n.t("user.second_factor.disable_confirm"),
+        confirmButtonLabel: "user.second_factor.disable",
+        confirmButtonIcon: "ban",
+        didConfirm: () => {
+          this.model
+            .disableAllSecondFactors()
+            .then(() => {
+              const usernameLower = this.model.username.toLowerCase();
+              DiscourseURL.redirectTo(userPath(`${usernameLower}/preferences`));
+            })
+            .catch((e) => this.handleError(e))
+            .finally(() => this.set("loading", false));
+        },
       });
     },
 

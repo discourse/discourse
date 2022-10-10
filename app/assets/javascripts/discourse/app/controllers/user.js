@@ -17,13 +17,6 @@ export default Controller.extend(CanCheckEmails, {
   dialog: service(),
   userNotifications: controller("user-notifications"),
   adminTools: optionalService(),
-  displayUserNav: false,
-
-  init() {
-    this._super(...arguments);
-
-    this.displayUserNav = this.site.desktopView;
-  },
 
   @discourseComputed("model.username")
   viewingSelf(username) {
@@ -194,11 +187,6 @@ export default Controller.extend(CanCheckEmails, {
       },
     }
   ),
-
-  @action
-  toggleUserNav() {
-    this.toggleProperty("displayUserNav");
-  },
 
   get displayTopLevelAdminButton() {
     if (!this.currentUser?.staff) {

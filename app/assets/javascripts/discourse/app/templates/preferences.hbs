@@ -1,75 +1,153 @@
-<DSection @pageClass="user-preferences" @class="user-secondary-navigation">
-  <MobileNav @class="preferences-nav" @desktopClass="preferences-list action-list nav-stacked">
-    <li class="nav-account">
-      <LinkTo @route="preferences.account">
-        {{i18n "user.preferences_nav.account"}}
-      </LinkTo>
-    </li>
-    <li class="nav-security">
-      <LinkTo @route="preferences.security">
-        {{i18n "user.preferences_nav.security"}}
-      </LinkTo>
-    </li>
-    <li class="nav-profile">
-      <LinkTo @route="preferences.profile">
-        {{i18n "user.preferences_nav.profile"}}
-      </LinkTo>
-    </li>
-    <li class="nav-emails">
-      <LinkTo @route="preferences.emails">
-        {{i18n "user.preferences_nav.emails"}}
-      </LinkTo>
-    </li>
-    <li class="nav-notifications">
-      <LinkTo @route="preferences.notifications">
-        {{i18n "user.preferences_nav.notifications"}}
-      </LinkTo>
-    </li>
-    {{#if this.model.can_change_tracking_preferences}}
-      <li class="indent nav-categories">
-        <LinkTo @route="preferences.categories">
-          {{i18n "user.preferences_nav.categories"}}
-        </LinkTo>
-      </li>
-    {{/if}}
-    <li class="indent nav-users">
-      <LinkTo @route="preferences.users">
-        {{i18n "user.preferences_nav.users"}}
-      </LinkTo>
-    </li>
-    {{#if (and this.model.can_change_tracking_preferences this.siteSettings.tagging_enabled)}}
-      <li class="indent nav-tags">
-        <LinkTo @route="preferences.tags">
-          {{i18n "user.preferences_nav.tags"}}
-        </LinkTo>
-      </li>
-    {{/if}}
-    <li class="nav-interface">
-      <LinkTo @route="preferences.interface">
-        {{i18n "user.preferences_nav.interface"}}
-      </LinkTo>
-    </li>
+{{#if this.currentUser.redesigned_user_page_nav_enabled}}
+  <DSection @pageClass="user-preferences" />
 
-    {{#if this.siteSettings.enable_experimental_sidebar_hamburger}}
-      <li class="indent nav-sidebar">
-        <LinkTo @route="preferences.sidebar">
-          {{i18n "user.preferences_nav.sidebar"}}
+  <div class="user-navigation user-navigation-secondary">
+    <ul class="nav-pills action-list">
+      <li class="nav-account">
+        <LinkTo @route="preferences.account">
+          {{i18n "user.preferences_nav.account"}}
         </LinkTo>
       </li>
-    {{/if}}
-
-    <PluginOutlet @name="user-preferences-nav-under-interface" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
-
-    {{#if this.model.userApiKeys}}
-      <li class="nav-apps">
-        <LinkTo @route="preferences.apps">
-          {{i18n "user.preferences_nav.apps"}}
+      <li class="nav-security">
+        <LinkTo @route="preferences.security">
+          {{i18n "user.preferences_nav.security"}}
         </LinkTo>
       </li>
-    {{/if}}
-    <PluginOutlet @name="user-preferences-nav" @tagName="span" @connectorTagName="li" @args={{hash model=this.model}} />
-  </MobileNav>
-</DSection>
+      <li class="nav-profile">
+        <LinkTo @route="preferences.profile">
+          {{i18n "user.preferences_nav.profile"}}
+        </LinkTo>
+      </li>
+      <li class="nav-emails">
+        <LinkTo @route="preferences.emails">
+          {{i18n "user.preferences_nav.emails"}}
+        </LinkTo>
+      </li>
+      <li class="nav-notifications">
+        <LinkTo @route="preferences.notifications">
+          {{i18n "user.preferences_nav.notifications"}}
+        </LinkTo>
+      </li>
+      {{#if this.model.can_change_tracking_preferences}}
+        <li class="indent nav-categories">
+          <LinkTo @route="preferences.categories">
+            {{i18n "user.preferences_nav.categories"}}
+          </LinkTo>
+        </li>
+      {{/if}}
+      <li class="indent nav-users">
+        <LinkTo @route="preferences.users">
+          {{i18n "user.preferences_nav.users"}}
+        </LinkTo>
+      </li>
+      {{#if (and this.model.can_change_tracking_preferences this.siteSettings.tagging_enabled)}}
+        <li class="indent nav-tags">
+          <LinkTo @route="preferences.tags">
+            {{i18n "user.preferences_nav.tags"}}
+          </LinkTo>
+        </li>
+      {{/if}}
+      <li class="nav-interface">
+        <LinkTo @route="preferences.interface">
+          {{i18n "user.preferences_nav.interface"}}
+        </LinkTo>
+      </li>
+
+      {{#if this.siteSettings.enable_experimental_sidebar_hamburger}}
+        <li class="indent nav-sidebar">
+          <LinkTo @route="preferences.sidebar">
+            {{i18n "user.preferences_nav.sidebar"}}
+          </LinkTo>
+        </li>
+      {{/if}}
+
+      <PluginOutlet @name="user-preferences-nav-under-interface" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
+
+      {{#if this.model.userApiKeys}}
+        <li class="nav-apps">
+          <LinkTo @route="preferences.apps">
+            {{i18n "user.preferences_nav.apps"}}
+          </LinkTo>
+        </li>
+      {{/if}}
+
+      <PluginOutlet @name="user-preferences-nav" @connectorTagName="li" @args={{hash model=this.model}} />
+    </ul>
+  </div>
+{{else}}
+  <DSection @pageClass="user-preferences" @class="user-secondary-navigation">
+    <MobileNav @class="preferences-nav" @desktopClass="preferences-list action-list nav-stacked">
+      <li class="nav-account">
+        <LinkTo @route="preferences.account">
+          {{i18n "user.preferences_nav.account"}}
+        </LinkTo>
+      </li>
+      <li class="nav-security">
+        <LinkTo @route="preferences.security">
+          {{i18n "user.preferences_nav.security"}}
+        </LinkTo>
+      </li>
+      <li class="nav-profile">
+        <LinkTo @route="preferences.profile">
+          {{i18n "user.preferences_nav.profile"}}
+        </LinkTo>
+      </li>
+      <li class="nav-emails">
+        <LinkTo @route="preferences.emails">
+          {{i18n "user.preferences_nav.emails"}}
+        </LinkTo>
+      </li>
+      <li class="nav-notifications">
+        <LinkTo @route="preferences.notifications">
+          {{i18n "user.preferences_nav.notifications"}}
+        </LinkTo>
+      </li>
+      {{#if this.model.can_change_tracking_preferences}}
+        <li class="indent nav-categories">
+          <LinkTo @route="preferences.categories">
+            {{i18n "user.preferences_nav.categories"}}
+          </LinkTo>
+        </li>
+      {{/if}}
+      <li class="indent nav-users">
+        <LinkTo @route="preferences.users">
+          {{i18n "user.preferences_nav.users"}}
+        </LinkTo>
+      </li>
+      {{#if (and this.model.can_change_tracking_preferences this.siteSettings.tagging_enabled)}}
+        <li class="indent nav-tags">
+          <LinkTo @route="preferences.tags">
+            {{i18n "user.preferences_nav.tags"}}
+          </LinkTo>
+        </li>
+      {{/if}}
+      <li class="nav-interface">
+        <LinkTo @route="preferences.interface">
+          {{i18n "user.preferences_nav.interface"}}
+        </LinkTo>
+      </li>
+
+      {{#if this.siteSettings.enable_experimental_sidebar_hamburger}}
+        <li class="indent nav-sidebar">
+          <LinkTo @route="preferences.sidebar">
+            {{i18n "user.preferences_nav.sidebar"}}
+          </LinkTo>
+        </li>
+      {{/if}}
+
+      <PluginOutlet @name="user-preferences-nav-under-interface" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
+
+      {{#if this.model.userApiKeys}}
+        <li class="nav-apps">
+          <LinkTo @route="preferences.apps">
+            {{i18n "user.preferences_nav.apps"}}
+          </LinkTo>
+        </li>
+      {{/if}}
+      <PluginOutlet @name="user-preferences-nav" @tagName="span" @connectorTagName="li" @args={{hash model=this.model}} />
+    </MobileNav>
+  </DSection>
+{{/if}}
 
 <section class="user-content user-preferences">
   <PluginOutlet @name="above-user-preferences" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />

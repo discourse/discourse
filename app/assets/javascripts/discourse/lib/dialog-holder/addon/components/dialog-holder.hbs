@@ -21,7 +21,7 @@
           {{#each this.dialog.buttons as |button|}}
             <DButton @icon={{button.icon}} @class={{button.class}} @action={{action "handleButtonAction" button}} @translatedLabel={{button.label}} />
           {{else}}
-            <DButton @class="btn-primary" @action={{this.dialog.didConfirmWrapped}} @icon={{this.dialog.confirmButtonIcon}} @label={{this.dialog.confirmButtonLabel}} />
+            <DButton @class={{this.dialog.confirmButtonClass}} @action={{this.dialog.didConfirmWrapped}} @icon={{this.dialog.confirmButtonIcon}} @label={{this.dialog.confirmButtonLabel}} />
             {{#if this.dialog.shouldDisplayCancel}}
               <DButton @class="btn-default" @action={{this.dialog.cancel}} @label={{this.dialog.cancelButtonLabel}} />
             {{/if}}

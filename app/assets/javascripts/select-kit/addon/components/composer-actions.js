@@ -9,10 +9,10 @@ import discourseComputed from "discourse-common/utils/decorators";
 import Draft from "discourse/models/draft";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import I18n from "I18n";
-import bootbox from "bootbox";
 import { camelize } from "@ember/string";
 import { equal, gt } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
+import { inject as service } from "@ember/service";
 
 // Component can get destroyed and lose state
 let _topicSnapshot = null;
@@ -26,6 +26,7 @@ export function _clearSnapshots() {
 }
 
 export default DropdownSelectBoxComponent.extend({
+  dialog: service(),
   seq: 0,
   pluginApiIdentifiers: ["composer-actions"],
   classNames: ["composer-actions"],
@@ -283,14 +284,13 @@ export default DropdownSelectBoxComponent.extend({
   replyAsNewTopicSelected(options) {
     Draft.get("new_topic").then((response) => {
       if (response.draft) {
-        bootbox.confirm(
-          I18n.t("composer.composer_actions.reply_as_new_topic.confirm"),
-          (result) => {
-            if (result) {
-              this._replyAsNewTopicSelect(options);
-            }
-          }
-        );
+        this.dialog.confirm({
+          message: I18n.t(
+            "composer.composer_actions.reply_as_new_topic.confirm"
+          ),
+          confirmButtonLabel: "composer.ok_proceed",
+          didConfirm: () => this._replyAsNewTopicSelect(options),
+        });
       } else {
         this._replyAsNewTopicSelect(options);
       }

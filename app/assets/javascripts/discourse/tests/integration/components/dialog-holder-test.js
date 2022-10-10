@@ -364,4 +364,28 @@ module("Integration | Component | dialog-holder", function (hooks) {
     assert.notOk(query(".dialog-footer"), "no footer");
     assert.notOk(query(".dialog-header"), "no header");
   });
+
+  test("delete confirm", async function (assert) {
+    await render(hbs`<DialogHolder />`);
+
+    this.dialog.deleteConfirm({ message: "A delete confirm message" });
+    await settled();
+
+    assert.strictEqual(
+      query(".dialog-body").innerText.trim(),
+      "A delete confirm message",
+      "dialog message is shown"
+    );
+
+    assert.strictEqual(
+      query(".dialog-footer .btn-danger").innerText.trim(),
+      I18n.t("delete"),
+      "dialog primary button use danger class and label is Delete"
+    );
+
+    assert.notOk(
+      query(".dialog-footer .btn-primary"),
+      ".btn-primary element is not present in the dialog"
+    );
+  });
 });

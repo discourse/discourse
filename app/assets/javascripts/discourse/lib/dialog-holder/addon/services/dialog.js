@@ -12,6 +12,7 @@ export default Service.extend({
 
   confirmButtonIcon: null,
   confirmButtonLabel: null,
+  confirmButtonClass: null,
   cancelButtonLabel: null,
   shouldDisplayCancel: null,
 
@@ -29,6 +30,7 @@ export default Service.extend({
 
       confirmButtonIcon,
       confirmButtonLabel = "ok_value",
+      confirmButtonClass = "btn-primary",
       cancelButtonLabel = "cancel_value",
       shouldDisplayCancel,
 
@@ -47,6 +49,7 @@ export default Service.extend({
       title,
       titleElementId: title !== null ? "dialog-title" : null,
 
+      confirmButtonClass,
       confirmButtonLabel,
       confirmButtonIcon,
       cancelButtonLabel,
@@ -105,6 +108,14 @@ export default Service.extend({
       ...params,
       confirmButtonLabel: "yes_value",
       cancelButtonLabel: "no_value",
+    });
+  },
+
+  deleteConfirm(params) {
+    return this.confirm({
+      ...params,
+      confirmButtonClass: "btn-danger",
+      confirmButtonLabel: params.confirmButtonLabel || "delete",
     });
   },
 

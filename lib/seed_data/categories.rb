@@ -64,7 +64,8 @@ module SeedData
           color: '808281',
           text_color: 'FFFFFF',
           permissions: { everyone: :full },
-          force_permissions: true
+          force_permissions: true,
+          sidebar: true
         },
         {
           site_setting_name: 'staff_category_id',
@@ -74,7 +75,8 @@ module SeedData
           color: 'E45735',
           text_color: 'FFFFFF',
           permissions: { staff: :full },
-          force_permissions: true
+          force_permissions: true,
+          sidebar: true
         },
         {
           site_setting_name: 'general_category_id',
@@ -84,7 +86,8 @@ module SeedData
           color: '25AAE2',
           text_color: 'FFFFFF',
           permissions: { everyone: :full },
-          force_permissions: true
+          force_permissions: true,
+          sidebar: true
         }
       ]
 
@@ -96,7 +99,7 @@ module SeedData
     end
 
     def create_category(site_setting_name:, name:, description:, position:, color:, text_color:,
-                        permissions:, force_permissions:, force_existence: false)
+                        permissions:, force_permissions:, force_existence: false, sidebar: false)
       category_id = SiteSetting.get(site_setting_name)
 
       if should_create_category?(category_id, force_existence)
@@ -114,6 +117,12 @@ module SeedData
         category.save!
 
         SiteSetting.set(site_setting_name, category.id)
+
+        if sidebar
+          sidebar_categories = SiteSetting.default_sidebar_categories.split('|')
+          sidebar_categories << category.id
+          SiteSetting.set('default_sidebar_categories', sidebar_categories.join('|'))
+        end
       elsif category = Category.find_by(id: category_id)
         if description.present? && (category.topic_id.blank? || !Topic.exists?(category.topic_id))
           category.description = description

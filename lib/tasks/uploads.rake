@@ -905,6 +905,7 @@ def analyze_missing_s3
       [:user_profiles, :profile_background_upload_id],
       [:user_profiles, :card_background_upload_id],
       [:categories, :uploaded_logo_id],
+      [:categories, :uploaded_logo_dark_id],
       [:categories, :uploaded_background_id],
       [:custom_emojis, :upload_id],
       [:theme_fields, :upload_id],

@@ -1,22 +1,24 @@
 .new-user-wrapper {
-  .user-nav {
-    flex-direction: column;
+  .user-navigation {
+    width: 100%;
 
-    > li {
-      width: 100%;
+    .nav-pills {
+      margin: 0.5em 0;
+      overflow-x: auto;
 
-      .d-icon {
-        margin-right: 0.5em;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
       }
 
-      &:not(:first-of-type) {
-        border-top: 1px solid var(--primary-low);
-      }
-
-      > a,
-      button {
-        padding: 1em 0.75em;
-        width: 100%;
+      li {
+        a {
+          display: flex;
+          flex-direction: row;
+          padding: 0.5em 0.5em;
+          white-space: nowrap;
+        }
       }
     }
   }
@@ -47,19 +49,6 @@
       padding: 0.75em 1em;
       width: 100%;
       @include ellipsis;
-    }
-  }
-
-  #navigation-bar {
-    margin-top: 1em;
-    display: flex;
-    flex-wrap: nowrap;
-    width: 100%;
-    overflow-x: scroll;
-    margin-bottom: 0;
-    padding-bottom: 0.5em;
-    a {
-      white-space: nowrap;
     }
   }
 }
