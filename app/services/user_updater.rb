@@ -344,7 +344,7 @@ class UserUpdater
     if status.blank?
       @user.clear_status!
     else
-      @user.set_status!(status[:description], status[:emoji])
+      @user.set_status!(status[:description], status[:emoji], status[:ends_at])
     end
   end
 

@@ -1966,7 +1966,7 @@ class UsersController < ApplicationController
     end
 
     if SiteSetting.enable_user_status
-      permitted << { status: [:emoji, :description] }
+      permitted << { status: [:emoji, :description, :ends_at] }
     end
 
     result = params
