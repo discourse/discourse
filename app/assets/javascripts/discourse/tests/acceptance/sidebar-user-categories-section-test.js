@@ -88,12 +88,18 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     const category1 = categories[0];
     const category2 = categories[1];
     const category3 = categories[5];
+    const category4 = categories[24];
 
     updateCurrentUser({
-      sidebar_category_ids: [category1.id, category2.id, category3.id],
+      sidebar_category_ids: [
+        category1.id,
+        category2.id,
+        category3.id,
+        category4.id,
+      ],
     });
 
-    return { category1, category2, category3 };
+    return { category1, category2, category3, category4 };
   };
 
   test("clicking on section header link", async function (assert) {
@@ -170,13 +176,14 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.deepEqual(
       categoryNames,
-      ["abc", "aBC", "efg"],
+      ["abc", "aBC", "efg", "Sub Category"],
       "category section links are displayed in the right order"
     );
   });
 
   test("category section links", async function (assert) {
-    const { category1, category2, category3 } = setupUserSidebarCategories();
+    const { category1, category2, category3, category4 } =
+      setupUserSidebarCategories();
 
     await visit("/");
 
@@ -184,22 +191,15 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       count(
         ".sidebar-section-categories .sidebar-section-link:not(.sidebar-section-link-all-categories)"
       ),
-      3,
-      "there should only be 3 section link under the section"
+      4,
+      "there should only be 4 section link under the section"
     );
 
     assert.ok(
       exists(
-        `.sidebar-section-link-${category1.slug} .prefix-icon.d-icon-square-full`
+        `.sidebar-section-link-${category1.slug} .sidebar-section-link-prefix .prefix-span[style="background: #${category1.color}"]`
       ),
-      "category1 section link is rendered with right prefix icon"
-    );
-
-    assert.ok(
-      exists(
-        `.sidebar-section-link-${category1.slug} .sidebar-section-link-prefix[style="color: #${category1.color}"]`
-      ),
-      "category1 section link is rendered with right prefix icon color"
+      "category1 section link is rendered with solid prefix icon color"
     );
 
     assert.strictEqual(
@@ -251,6 +251,13 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
         `.sidebar-section-link-${category3.slug} .sidebar-section-link-prefix .prefix-badge.d-icon-lock`
       ),
       "category3 section link is rendered with lock prefix badge icon as it is read restricted"
+    );
+
+    assert.ok(
+      exists(
+        `.sidebar-section-link-${category4.slug} .sidebar-section-link-prefix .prefix-span[style="background: linear-gradient(90deg, #${category4.parentCategory.color} 50%, #${category4.color} 50%)"]`
+      ),
+      "sub category section link is rendered with double prefix color"
     );
   });
 

@@ -49,11 +49,15 @@ export default class CategorySectionLink {
   }
 
   get prefixType() {
-    return "icon";
+    return "span";
   }
 
-  get prefixValue() {
-    return "square-full";
+  get prefixCSS() {
+    if (this.category.parentCategory) {
+      return `background: linear-gradient(90deg, #${this.category.parentCategory.color} 50%, #${this.category.color} 50%)`;
+    } else {
+      return `background: #${this.category.color}`;
+    }
   }
 
   get prefixColor() {

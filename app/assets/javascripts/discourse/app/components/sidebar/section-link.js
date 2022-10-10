@@ -42,7 +42,7 @@ export default class SectionLink extends Component {
     return [];
   }
 
-  get prefixCSS() {
+  get prefixColorCSS() {
     const color = this.args.prefixColor;
 
     if (!color || !color.match(/^\w{6}$/)) {
@@ -50,5 +50,9 @@ export default class SectionLink extends Component {
     }
 
     return htmlSafe("color: #" + color);
+  }
+
+  get prefixCSS() {
+    return this.args.prefixCSS;
   }
 }
