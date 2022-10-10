@@ -438,6 +438,9 @@ class TopicQuery
 
     topics = topics.to_a
 
+    # These don't need to be shown in the topic list
+    topics = topics.reject { |t| [SiteSetting.privacy_topic_id, SiteSetting.tos_topic_id].include?(t[:id]) }
+
     if options[:preload_posters]
       user_ids = []
       topics.each do |ft|
