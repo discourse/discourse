@@ -37,6 +37,15 @@ export default Mixin.create({
           }),
           element: userField.field.element,
         });
+      } else if (
+        this.accountPassword &&
+        userField.value === this.accountPassword
+      ) {
+        validation = EmberObject.create({
+          failed: true,
+          reason: I18n.t("user.password.same_as_field"),
+          element: userField.field.element,
+        });
       }
 
       userField.set("validation", validation);

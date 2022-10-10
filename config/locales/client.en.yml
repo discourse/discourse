@@ -1718,6 +1718,7 @@ en:
         common: "That password is too common."
         same_as_username: "Your password is the same as your username."
         same_as_email: "Your password is the same as your email."
+        same_as_field: "Your password is the same."
         ok: "Your password looks good."
         instructions: "at least %{count} characters"
         required: "Please enter a password"
