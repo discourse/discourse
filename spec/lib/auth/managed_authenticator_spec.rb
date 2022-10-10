@@ -285,6 +285,13 @@ RSpec.describe Auth::ManagedAuthenticator do
         expect(result.user.id).to eq(user.id)
       end
 
+      it 'works if the username is different case' do
+        SiteSetting.username_change_period = 0
+        user = Fabricate(:user, username: "IAMGROOT")
+        result = user_match_authenticator.after_authenticate(hash)
+        expect(result.user.id).to eq(user.id)
+      end
+
       it 'does not match if username_change_period isn\'t 0' do
         SiteSetting.username_change_period = 3
         user = Fabricate(:user, username: "IAmGroot")
