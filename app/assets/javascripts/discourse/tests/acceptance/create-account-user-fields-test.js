@@ -46,9 +46,6 @@ acceptance("Create Account - User Fields", function (needs) {
 
     await fillIn("#new-account-name", "Dr. Good Tuna");
     await fillIn("#new-account-password", "cool password bro");
-    // without this double fill, field will sometimes being empty
-    // got consistent repro by having browser search bar focused when starting test
-    await fillIn("#new-account-email", "good.tuna@test.com");
     await fillIn("#new-account-email", "good.tuna@test.com");
     await fillIn("#new-account-username", "goodtuna");
 
@@ -76,6 +73,26 @@ acceptance("Create Account - User Fields", function (needs) {
       count("#modal-alert:visible"),
       1,
       "hitting Enter triggers action"
+    );
+  });
+
+  test("shows validation error for user fields", async function (assert) {
+    await visit("/");
+    await click("header .sign-up-button");
+
+    await fillIn("#new-account-password", "cool password bro");
+    await fillIn(".user-field-whats-your-dad-like input", "cool password bro");
+
+    await click(".modal-footer .btn-primary");
+
+    assert.ok(
+      exists(".user-field-what-is-your-pets-name .tip.bad"),
+      "shows required field error"
+    );
+
+    assert.ok(
+      exists(".user-field-whats-your-dad-like .tip.bad"),
+      "shows same as password error"
     );
   });
 });

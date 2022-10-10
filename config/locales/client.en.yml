@@ -1038,6 +1038,7 @@ en:
     user_fields:
       none: "(select an option)"
       required: 'Please enter a value for "%{name}"'
+      same_as_password: 'Your password should not be repeated in other fields.'
 
     user:
       said: "%{username}:"
