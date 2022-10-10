@@ -39,7 +39,10 @@ export default Mixin.create({
         });
       } else if (
         this.accountPassword &&
-        userField.value === this.accountPassword
+        userField.value &&
+        userField.value
+          .toLowerCase()
+          .includes(this.accountPassword.toLowerCase())
       ) {
         validation = EmberObject.create({
           failed: true,
