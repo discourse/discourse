@@ -8,6 +8,13 @@ export default class SidebarAnonymousTagsSection extends Component {
   @service topicTrackingState;
   @service site;
 
+  get displaySection() {
+    return (
+      this.site.anonymous_default_sidebar_tags?.length > 0 ||
+      this.site.top_tags?.length > 0
+    );
+  }
+
   @cached
   get sectionLinks() {
     let tags;
