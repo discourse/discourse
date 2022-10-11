@@ -91,6 +91,11 @@ fa_IR:
             restricted_tags:
               label: برچسب‌ها
       scriptables:
+        auto_responder:
+          fields:
+            once:
+              label: یک بار
+              description: فقط یک بار بر اساس موضوع پاسخ می‌دهد
         post:
           fields:
             creator:
