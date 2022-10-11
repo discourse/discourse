@@ -424,4 +424,6 @@ RSpec.describe UserSerializer do
       end
     end
   end
+
+  include_examples "#display_sidebar_tags", UserSerializer
 end

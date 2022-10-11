@@ -1,7 +1,11 @@
 import I18n from "I18n";
 import { test } from "qunit";
 import { click, visit } from "@ember/test-helpers";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  exists,
+  updateCurrentUser,
+} from "discourse/tests/helpers/qunit-helpers";
 
 acceptance(
   "Sidebar - Logged on user - Experimental sidebar and hamburger setting disabled",
@@ -171,7 +175,7 @@ acceptance(
     });
 
     test("clean up topic tracking state state changed callbacks when sidebar is destroyed", async function (assert) {
-      this.siteSettings.tagging_enabled = true;
+      updateCurrentUser({ display_sidebar_tags: true });
 
       await visit("/");
 
