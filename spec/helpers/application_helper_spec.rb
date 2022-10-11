@@ -5,6 +5,7 @@ RSpec.describe ApplicationHelper do
   describe "preload_script" do
     def script_tag(url)
       <<~HTML
+          <link rel="preload" href="#{url}" as="script">
           <script defer src="#{url}"></script>
       HTML
     end

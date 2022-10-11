@@ -143,9 +143,16 @@ module ApplicationHelper
 
   def preload_script_url(url)
     add_resource_preload_list(url, 'script')
-    <<~HTML.html_safe
-      <script defer src="#{url}"></script>
-    HTML
+    if ENV['PRELOAD_LINK_HEADER']
+      <<~HTML.html_safe
+        <script defer src="#{url}"></script>
+      HTML
+    else
+      <<~HTML.html_safe
+        <link rel="preload" href="#{url}" as="script">
+        <script defer src="#{url}"></script>
+      HTML
+    end
   end
 
   def add_resource_preload_list(resource_url, type)

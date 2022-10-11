@@ -1126,14 +1126,36 @@ RSpec.describe ApplicationController do
   end
 
   describe 'preload Link header' do
-    it "should have the Link header with assets on full page requests" do
-      get("/latest")
-      expect(response.headers).to include('Link')
+    context "with ENV['PRELOAD_LINK_HEADER']" do
+      before do
+        ENV['PRELOAD_LINK_HEADER'] = '1'
+      end
+
+      it "should have the Link header with assets on full page requests" do
+        get("/latest")
+        expect(response.headers).to include('Link')
+      end
+
+      it "shouldn't have the Link header on xhr api requests" do
+        get("/latest.json")
+        expect(response.headers).not_to include('Link')
+      end
     end
 
-    it "shouldn't have the Link header on xhr api requests" do
-      get("/latest.json")
-      expect(response.headers).not_to include('Link')
+    context "without ENV['PRELOAD_LINK_HEADER']" do
+      before do
+        ENV['PRELOAD_LINK_HEADER'] = nil
+      end
+
+      it "shouldn't have the Link header with assets on full page requests" do
+        get("/latest")
+        expect(response.headers).not_to include('Link')
+      end
+
+      it "shouldn't have the Link header on xhr api requests" do
+        get("/latest.json")
+        expect(response.headers).not_to include('Link')
+      end
     end
   end
 end
