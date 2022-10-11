@@ -143,7 +143,7 @@ module ApplicationHelper
 
   def preload_script_url(url)
     add_resource_preload_list(url, 'script')
-    if ENV['PRELOAD_LINK_HEADER']
+    if GlobalSetting.preload_link_header
       <<~HTML.html_safe
         <script defer src="#{url}"></script>
       HTML

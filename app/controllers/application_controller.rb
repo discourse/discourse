@@ -50,7 +50,7 @@ class ApplicationController < ActionController::Base
   after_action  :ensure_vary_header
   after_action  :add_noindex_header, if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
   after_action  :add_noindex_header_to_non_canonical, if: :spa_boot_request?
-  around_action :link_preload, if: -> { spa_boot_request? && ENV['PRELOAD_LINK_HEADER'] }
+  around_action :link_preload, if: -> { spa_boot_request? && GlobalSetting.preload_link_header }
 
   HONEYPOT_KEY ||= 'HONEYPOT_KEY'
   CHALLENGE_KEY ||= 'CHALLENGE_KEY'
