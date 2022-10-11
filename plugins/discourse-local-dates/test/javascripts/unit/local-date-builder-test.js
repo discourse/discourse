@@ -1,5 +1,5 @@
 import I18n from "I18n";
-import LocalDateBuilder from "./local-date-builder";
+import LocalDateBuilder from "../lib/local-date-builder";
 import sinon from "sinon";
 import QUnit, { module, test } from "qunit";
 
@@ -10,6 +10,7 @@ const NEW_YORK = "America/New_York";
 const PARIS = "Europe/Paris";
 const LAGOS = "Africa/Lagos";
 const LONDON = "Europe/London";
+const SINGAPORE = "Asia/Singapore";
 
 export function freezeTime({ date, timezone }, cb) {
   date = date || "2020-01-22 10:34";
@@ -61,13 +62,30 @@ QUnit.assert.buildsCorrectDate = function (options, expected, message) {
   }
 };
 
-module("lib:local-date-builder", function () {
+module("Unit | Library | local-date-builder", function () {
   test("date", function (assert) {
     freezeTime({ date: "2020-03-11" }, () => {
       assert.buildsCorrectDate(
         { date: "2020-03-22", timezone: PARIS },
         { formatted: "March 22, 2020" },
         "it displays the date without time"
+      );
+    });
+
+    freezeTime({ date: "2022-10-11", timezone: "Asia/Singapore" }, () => {
+      const localDateBuilder = new LocalDateBuilder(
+        {
+          date: "2022-10-12",
+          timezone: SINGAPORE,
+          localTimezone: SINGAPORE,
+        },
+        SINGAPORE
+      );
+
+      assert.strictEqual(
+        localDateBuilder.build().formatted,
+        "Tomorrow",
+        "Displays relative day"
       );
     });
   });
@@ -91,8 +109,8 @@ module("lib:local-date-builder", function () {
       {
         time: "12:22:00",
         date: "2022-10-07",
-        timezone: "Asia/Singapore",
-        localTimezone: "Asia/Singapore",
+        timezone: SINGAPORE,
+        localTimezone: SINGAPORE,
         sameLocalDayAsFrom: true,
       },
       { formatted: "12:22 PM (Singapore)" },
