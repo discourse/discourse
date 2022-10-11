@@ -148,6 +148,16 @@ RSpec.describe Stylesheet::Manager do
       })
     end
 
+    it "stylesheet_link_tag calls the preload callback when set" do
+      preload_list = []
+      preload_callback = ->(href, type) { preload_list << [href, type] }
+
+      manager = manager(theme.id)
+      expect {
+        manager.stylesheet_link_tag(:desktop_theme, 'all', preload_callback)
+      }.to change(preload_list, :size)
+    end
+
     context "with stylesheet order" do
       let(:z_child_theme) do
         Fabricate(:theme, component: true, name: "ze component").tap do |z|
@@ -636,6 +646,17 @@ RSpec.describe Stylesheet::Manager do
 
       details2 = manager.color_scheme_stylesheet_details(nil, "all")
       expect(details1[:new_href]).not_to eq(details2[:new_href])
+    end
+
+    it "calls the preload callback when set" do
+      preload_list = []
+      cs = Fabricate(:color_scheme, name: 'Funky')
+      theme = Fabricate(:theme, color_scheme_id: cs.id)
+      preload_callback = ->(href, type) { preload_list << [href, type] }
+
+      expect {
+        manager.color_scheme_stylesheet_link_tag(theme.id, 'all', preload_callback)
+      }.to change(preload_list, :size).by(1)
     end
 
     context "with theme colors" do
