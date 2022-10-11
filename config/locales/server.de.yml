@@ -4522,7 +4522,7 @@ de:
               subcategories_with_featured_topics:
                 label: "Unterkategorien mit hervorgehobenen Themen"
       branding:
-        title: "Community Branding"
+        title: "Customize Logos"
         fields:
           logo:
             label: "Hauptlogo"

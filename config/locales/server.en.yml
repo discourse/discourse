@@ -662,7 +662,7 @@ en:
   staff_category_description: "Private category for staff discussions. Topics are only visible to admins and moderators."
 
   discourse_welcome_topic:
-    title: "Welcome to Discourse"
+    title: "Welcome to our community!"
     body: |
 
       The first paragraph of this pinned topic will be visible as a welcome message to all new visitors on your homepage. It's important!
@@ -4975,7 +4975,7 @@ en:
                 label: "Subcategories with Featured Topics"
 
       branding:
-        title: "Community Branding"
+        title: "Customize Logos"
         fields:
           logo:
             label: "Primary Logo"
@@ -4991,7 +4991,7 @@ en:
             description: "Icon used to represent your site on mobile devices that looks good at larger sizes. Ideally greater than 512x512. Square logo used by default."
 
       corporate:
-        title: "Contact & Org"
+        title: "Your Organization"
 
         fields:
           company_name:
