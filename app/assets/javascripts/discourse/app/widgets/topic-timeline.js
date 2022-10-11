@@ -9,7 +9,7 @@ import discourseLater from "discourse-common/lib/later";
 import { relativeAge } from "discourse/lib/formatter";
 import renderTags from "discourse/lib/render-tags";
 import renderTopicFeaturedLink from "discourse/lib/render-topic-featured-link";
-import { hidePopup, showPopup } from "discourse/lib/popup";
+import { hidePopup } from "discourse/lib/popup";
 
 const SCROLLER_HEIGHT = 50;
 const LAST_READ_HEIGHT = 20;
@@ -601,8 +601,12 @@ export default createWidget("topic-timeline", {
   },
 
   didRenderWidget() {
-    showPopup({
-      id: "topic-timeline",
+    if (!this.currentUser || !this.siteSettings.enable_onboarding_popups) {
+      return;
+    }
+
+    this.currentUser.showPopup({
+      id: "topic_timeline",
       currentUser: this.currentUser,
 
       titleText: I18n.t("popup.topic_timeline.title"),
@@ -615,10 +619,10 @@ export default createWidget("topic-timeline", {
   },
 
   destroy() {
-    hidePopup("topic-timeline");
+    hidePopup("topic_timeline");
   },
 
   willRerenderWidget() {
-    hidePopup("topic-timeline");
+    hidePopup("topic_timeline");
   },
 });

@@ -13,7 +13,7 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { hbs } from "ember-cli-htmlbars";
-import { hidePopup, showPopup } from "discourse/lib/popup";
+import { hidePopup } from "discourse/lib/popup";
 
 let _extraHeaderIcons = [];
 
@@ -161,10 +161,6 @@ createWidget("header-notifications", {
   },
 
   _addAvatarHighlight(contents) {
-    if (this.siteSettings.enable_onboarding_popups) {
-      return;
-    }
-
     contents.push(h("span.ring"));
     contents.push(h("span.ring-backdrop-spotlight"));
     contents.push(
@@ -201,15 +197,15 @@ createWidget("header-notifications", {
 
   didRenderWidget() {
     if (
+      !this.currentUser ||
       !this.siteSettings.enable_onboarding_popups ||
       !this._shouldHighlightAvatar()
     ) {
       return;
     }
 
-    showPopup({
-      id: "first-notification",
-      currentUser: this.currentUser,
+    this.currentUser.showPopup({
+      id: "first_notification",
 
       titleText: I18n.t("popup.first_notification.title"),
       contentText: I18n.t("popup.first_notification.content"),
@@ -223,19 +219,11 @@ createWidget("header-notifications", {
   },
 
   destroy() {
-    if (!this.siteSettings.enable_onboarding_popups) {
-      return;
-    }
-
-    hidePopup("first-notification");
+    hidePopup("first_notification");
   },
 
   willRerenderWidget() {
-    if (!this.siteSettings.enable_onboarding_popups) {
-      return;
-    }
-
-    hidePopup("first-notification");
+    hidePopup("first_notification");
   },
 });
 

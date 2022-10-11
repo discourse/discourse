@@ -17,11 +17,6 @@ class UserUpdater
     muted_tags: :muted
   }
 
-  POPUP_OPTION_ATTR = [
-    :skip_first_notification_tips,
-    :skip_topic_timeline_tips,
-  ]
-
   OPTION_ATTR = [
     :mailing_list_mode,
     :mailing_list_mode_frequency,
@@ -52,8 +47,9 @@ class UserUpdater
     :title_count_mode,
     :timezone,
     :skip_new_user_tips,
+    :seen_popups,
     :default_calendar
-  ] + POPUP_OPTION_ATTR
+  ]
 
   NOTIFICATION_SCHEDULE_ATTRS = -> {
     attrs = [:enabled]
@@ -184,8 +180,10 @@ class UserUpdater
     end
 
     if attributes.key?(:skip_new_user_tips)
-      POPUP_OPTION_ATTR.each do |attribute|
-        user.user_option.public_send("#{attribute}=", user.user_option.skip_new_user_tips)
+      user.user_option.seen_popups = if user.user_option.skip_new_user_tips
+        OnboardingPopup.types.values
+      else
+        nil
       end
     end
 
