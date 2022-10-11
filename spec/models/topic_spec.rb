@@ -723,7 +723,6 @@ RSpec.describe Topic do
 
     context 'with rate limits' do
       before do
-        SiteSetting.max_topic_invitations_per_day = 1
         RateLimiter.enable
         Group.refresh_automatic_groups!
       end
@@ -732,30 +731,68 @@ RSpec.describe Topic do
         RateLimiter.clear_all!
       end
 
-      it "rate limits topic invitations" do
-        start = Time.now.tomorrow.beginning_of_day
-        freeze_time(start)
+      context 'when per day' do
+        before do
+          SiteSetting.max_topic_invitations_per_day = 1
+        end
 
-        topic = Fabricate(:topic, user: trust_level_2)
+        it "rate limits topic invitations" do
+          start = Time.now.tomorrow.beginning_of_day
+          freeze_time(start)
 
-        topic.invite(topic.user, user.username)
+          topic = Fabricate(:topic, user: trust_level_2)
 
-        expect {
-          topic.invite(topic.user, user1.username)
-        }.to raise_error(RateLimiter::LimitExceeded)
+          topic.invite(topic.user, user.username)
+
+          expect {
+            topic.invite(topic.user, user1.username)
+          }.to raise_error(RateLimiter::LimitExceeded)
+        end
+
+        it "rate limits PM invitations" do
+          start = Time.now.tomorrow.beginning_of_day
+          freeze_time(start)
+
+          topic = Fabricate(:private_message_topic, user: trust_level_2)
+
+          topic.invite(topic.user, user.username)
+
+          expect {
+            topic.invite(topic.user, user1.username)
+          }.to raise_error(RateLimiter::LimitExceeded)
+        end
       end
 
-      it "rate limits PM invitations" do
-        start = Time.now.tomorrow.beginning_of_day
-        freeze_time(start)
+      context 'when per minute' do
+        before do
+          SiteSetting.max_topic_invitations_per_minute = 1
+        end
 
-        topic = Fabricate(:private_message_topic, user: trust_level_2)
+        it "rate limits topic invitations" do
+          start = Time.now.tomorrow.beginning_of_minute
+          freeze_time(start)
 
-        topic.invite(topic.user, user.username)
+          topic = Fabricate(:topic, user: trust_level_2)
 
-        expect {
-          topic.invite(topic.user, user1.username)
-        }.to raise_error(RateLimiter::LimitExceeded)
+          topic.invite(topic.user, user.username)
+
+          expect {
+            topic.invite(topic.user, user1.username)
+          }.to raise_error(RateLimiter::LimitExceeded)
+        end
+
+        it "rate limits PM invitations" do
+          start = Time.now.tomorrow.beginning_of_minute
+          freeze_time(start)
+
+          topic = Fabricate(:private_message_topic, user: trust_level_2)
+
+          topic.invite(topic.user, user.username)
+
+          expect {
+            topic.invite(topic.user, user1.username)
+          }.to raise_error(RateLimiter::LimitExceeded)
+        end
       end
     end
 

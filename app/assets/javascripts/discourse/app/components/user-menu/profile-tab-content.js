@@ -6,6 +6,8 @@ import showModal from "discourse/lib/show-modal";
 export default class UserMenuProfileTabContent extends Component {
   @service currentUser;
   @service siteSettings;
+  @service userStatus;
+
   saving = false;
 
   get showToggleAnonymousButton() {
@@ -59,6 +61,11 @@ export default class UserMenuProfileTabContent extends Component {
     showModal("user-status", {
       title: "user_status.set_custom_status",
       modalClass: "user-status",
+      model: {
+        status: this.currentUser.status,
+        saveAction: (status) => this.userStatus.set(status),
+        deleteAction: () => this.userStatus.clear(),
+      },
     });
   }
 }

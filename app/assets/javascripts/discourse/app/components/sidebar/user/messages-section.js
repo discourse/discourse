@@ -122,18 +122,20 @@ export default class SidebarUserMessagesSection extends Component {
   get groupMessagesSectionLinks() {
     const links = [];
 
-    this.currentUser.groupsWithMessages.forEach((group) => {
-      GROUP_MESSAGES_INBOX_FILTERS.forEach((groupMessageLink) => {
-        links.push(
-          new GroupMessageSectionLink({
-            group,
-            type: groupMessageLink,
-            currentUser: this.currentUser,
-            pmTopicTrackingState: this.pmTopicTrackingState,
-          })
-        );
+    this.currentUser.groupsWithMessages
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .forEach((group) => {
+        GROUP_MESSAGES_INBOX_FILTERS.forEach((groupMessageLink) => {
+          links.push(
+            new GroupMessageSectionLink({
+              group,
+              type: groupMessageLink,
+              currentUser: this.currentUser,
+              pmTopicTrackingState: this.pmTopicTrackingState,
+            })
+          );
+        });
       });
-    });
 
     return links;
   }

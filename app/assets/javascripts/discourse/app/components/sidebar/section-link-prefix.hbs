@@ -1,5 +1,5 @@
-{{#if @prefixValue}}
-  <span class={{concat-class "sidebar-section-link-prefix" @prefixType @prefixCSSClass}} style={{@prefixCSS}}>
+{{#if @prefixType}}
+  <span class={{concat-class "sidebar-section-link-prefix" @prefixType @prefixCSSClass}} style={{html-safe (concat "color: " @prefixColor)}}>
     {{#if (eq @prefixType "image")}}
       <img src={{@prefixValue}} class="prefix-image">
     {{/if}}
@@ -12,6 +12,10 @@
 
     {{#if (eq @prefixType "icon")}}
       {{d-icon @prefixValue class="prefix-icon"}}
+    {{/if}}
+
+    {{#if (eq @prefixType "span")}}
+      <span style={{@prefixCSS}} class="prefix-span"></span>
     {{/if}}
 
     {{#if @prefixBadge}}
