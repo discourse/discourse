@@ -5,20 +5,21 @@
     .nav-pills {
       margin: 0.5em 0;
       overflow-x: auto;
-
       scrollbar-width: none;
 
       &::-webkit-scrollbar {
         display: none;
       }
+    }
+  }
 
+  .user-navigation-secondary {
+    font-size: var(--font-up-1);
+
+    .nav-pills {
+      flex-wrap: nowrap;
       li {
-        a {
-          display: flex;
-          flex-direction: row;
-          padding: 0.5em 0.5em;
-          white-space: nowrap;
-        }
+        flex: 1 0 auto;
       }
     }
   }
@@ -50,5 +51,19 @@
       width: 100%;
       @include ellipsis;
     }
+  }
+
+  #navigation-bar {
+    flex-wrap: nowrap;
+  }
+
+  .navigation-controls {
+    margin-top: 1em;
+  }
+}
+
+.new-user-content-wrapper {
+  .user-content {
+    margin-top: 2em;
   }
 }

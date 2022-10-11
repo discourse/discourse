@@ -3,9 +3,9 @@
     // Grid layout
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 5fr;
+    grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
-    grid-gap: 20px;
+    grid-gap: 0;
 
     .user-navigation-secondary {
       grid-column-start: 1;
@@ -25,7 +25,8 @@
     }
 
     .user-content {
-      margin-top: 1em;
+      padding: 0;
+      margin-top: 2em;
       grid-column-start: 1;
       grid-column-end: 3;
       grid-row-start: 1;
