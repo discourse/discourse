@@ -5,6 +5,7 @@ import {
   exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import Site from "discourse/models/site";
 
 acceptance("Sidebar - Anonymous Tags Section", function (needs) {
   needs.settings({
@@ -18,12 +19,13 @@ acceptance("Sidebar - Anonymous Tags Section", function (needs) {
     top_tags: ["design", "development", "fun"],
   });
 
-  test("tag section links", async function (assert) {
+  test("tag section links when site has top tags", async function (assert) {
     await visit("/");
 
     const categories = queryAll(
       ".sidebar-section-tags .sidebar-section-link-wrapper"
     );
+
     assert.strictEqual(categories.length, 4);
     assert.strictEqual(categories[0].textContent.trim(), "design");
     assert.strictEqual(categories[1].textContent.trim(), "development");
@@ -34,22 +36,11 @@ acceptance("Sidebar - Anonymous Tags Section", function (needs) {
       "all tags link is visible"
     );
   });
-});
 
-acceptance("Sidebar - Anonymous Tags Section - default tags", function (needs) {
-  needs.settings({
-    enable_experimental_sidebar_hamburger: true,
-    enable_sidebar: true,
-    suppress_uncategorized_badge: false,
-    tagging_enabled: true,
-  });
+  test("tag section links when site has default sidebar tags configured", async function (assert) {
+    const site = Site.current();
+    site.set("anonymous_default_sidebar_tags", ["random", "meta"]);
 
-  needs.site({
-    top_tags: ["design", "development", "fun"],
-    anonymous_default_sidebar_tags: ["random", "meta"],
-  });
-
-  test("tag section links", async function (assert) {
     await visit("/");
 
     const categories = queryAll(
@@ -64,26 +55,25 @@ acceptance("Sidebar - Anonymous Tags Section - default tags", function (needs) {
       "all tags link is visible"
     );
   });
+
+  test("tag section is hidden when tagging is disabled", async function (assert) {
+    this.siteSettings.tagging_enabled = false;
+
+    await visit("/");
+
+    assert.ok(!exists(".sidebar-section-tags"), "section is not visible");
+  });
+
+  test("tag section is hidden when anonymous has no visible top tags and site has not default sidebar tags configured", async function (assert) {
+    const site = Site.current();
+
+    site.setProperties({
+      top_tags: [],
+      anonymous_default_sidebar_tags: [],
+    });
+
+    await visit("/");
+
+    assert.ok(!exists(".sidebar-section-tags"), "section is not visible");
+  });
 });
-
-acceptance(
-  "Sidebar - Anonymous Tags Section - Tagging disabled",
-  function (needs) {
-    needs.settings({
-      enable_experimental_sidebar_hamburger: true,
-      enable_sidebar: true,
-      suppress_uncategorized_badge: false,
-      tagging_enabled: false,
-    });
-
-    needs.site({
-      top_tags: ["design", "development", "fun"],
-    });
-
-    test("tag section links", async function (assert) {
-      await visit("/");
-
-      assert.ok(!exists(".sidebar-section-tags"), "section is not visible");
-    });
-  }
-);
