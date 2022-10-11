@@ -3,6 +3,7 @@ import {
   exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import { click } from "@ember/test-helpers";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import { displayPollBuilderButton } from "discourse/plugins/poll/helpers/display-poll-builder-button";
 import { test } from "qunit";
