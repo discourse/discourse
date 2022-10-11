@@ -155,7 +155,8 @@ body.invite-page {
       &:last-child {
         margin-bottom: 2em;
       }
-      input {
+      input,
+      .select-kit-header {
         padding: 0.75em 0.77em;
         border-radius: 0.25em;
         min-width: 250px;
@@ -175,7 +176,8 @@ body.invite-page {
         color: var(--primary-medium);
         min-height: 1.4em; // prevents height increase due to tips
       }
-      label.alt-placeholder {
+      label.alt-placeholder,
+      .user-field.dropdown label.control-label {
         color: var(--primary-medium);
         font-size: 16px;
         font-weight: normal;
@@ -187,6 +189,14 @@ body.invite-page {
         border-radius: 0.25em;
         transition: 0.2s ease all;
       }
+      .user-field.dropdown label.control-label {
+        z-index: 999;
+        top: -8px;
+        left: calc(1em - 0.25em);
+        background-color: var(--secondary);
+        padding: 0 0.25em 0 0.25em;
+        font-size: $font-down-1;
+      }
       input:focus + label.alt-placeholder,
       input.value-entered + label.alt-placeholder {
         top: -8px;
@@ -194,7 +204,6 @@ body.invite-page {
         background-color: var(--secondary);
         padding: 0 0.25em 0 0.25em;
         font-size: $font-down-1;
-        color: var(--primary-medium);
       }
       input.alt-placeholder:invalid {
         color: var(--primary);
@@ -261,8 +270,19 @@ body.invite-page {
             background-color: var(--secondary);
             padding: 0 0.25em 0 0.25em;
             font-size: 14px;
-            color: var(--primary-high);
+            color: var(--primary-medium);
           }
+        }
+        span.name {
+          color: var(--primary-medium);
+        }
+        .select-kit-row span.name {
+          color: var(--primary);
+        }
+        .select-kit.combo-box.is-expanded summary {
+          outline: none;
+          border: 1px solid var(--tertiary);
+          box-shadow: 0 0 0 2px rgba(var(--tertiary-rgb), 0.25);
         }
         .controls .checkbox-label {
           input[type="checkbox"].ember-checkbox {
