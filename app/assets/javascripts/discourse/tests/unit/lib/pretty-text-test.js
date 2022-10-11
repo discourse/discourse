@@ -958,7 +958,7 @@ eviltrout</p>
   test("URLs in BBCode tags", function (assert) {
     assert.cooked(
       "[img]http://eviltrout.com/eviltrout.png[/img][img]http://samsaffron.com/samsaffron.png[/img]",
-      '<p><img src="http://eviltrout.com/eviltrout.png" alt/><img src="http://samsaffron.com/samsaffron.png" alt/></p>',
+      '<p><img src="http://eviltrout.com/eviltrout.png" alt role="presentation"/><img src="http://samsaffron.com/samsaffron.png" alt role="presentation"/></p>',
       "images are properly parsed"
     );
 
@@ -1167,7 +1167,7 @@ eviltrout</p>
     );
     assert.cookedPara(
       "[img]http://eviltrout.com/eviltrout.png[/img]",
-      '<img src="http://eviltrout.com/eviltrout.png" alt>',
+      '<img src="http://eviltrout.com/eviltrout.png" alt role="presentation">',
       "links images"
     );
     assert.cookedPara(
@@ -1215,7 +1215,7 @@ eviltrout</p>
     );
     assert.cookedPara(
       "[url=http://www.example.com][img]http://example.com/logo.png[/img][/url]",
-      '<a href="http://www.example.com" data-bbcode="true"><img src="http://example.com/logo.png" alt></a>',
+      '<a href="http://www.example.com" data-bbcode="true"><img src="http://example.com/logo.png" alt role="presentation"></a>',
       "supports [url] with an embedded [img]"
     );
   });
