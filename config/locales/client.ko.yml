@@ -184,6 +184,7 @@ ko:
     ok_value: "확인"
     cancel_value: "취소"
     submit: "확인"
+    delete: "삭제하기"
     generic_error: "죄송합니다. 오류가 발생했습니다."
     generic_error_with_reason: "오류가 발생했습니다. %{error}"
     sign_up: "회원가입"
@@ -1622,6 +1623,8 @@ ko:
       leave_message: "이 메시지를 남길까요?"
       remove_allowed_user: "%{name} 님을 메시지에서 제거할까요?"
       remove_allowed_group: "%{name} 님을 메시지에서 제거할까요?"
+      leave: "나가기"
+      remove_user: "사용자 삭제"
     email: "이메일"
     username: "사용자명"
     last_seen: "마지막 접속"
@@ -3352,7 +3355,6 @@ ko:
       tag_list_joiner: ", "
       delete_unused: "사용하지 않은 태그 삭제"
       delete_unused_description: "주제 또는 개인 메시지에 첨부되지 않은 모든 태그 삭제"
-      cancel_delete_unused: "취소"
       filters:
         without_category: "%{filter} %{tag} 주제"
         with_category: "%{category}의 %{filter} %{tag} 주제"
@@ -3464,7 +3466,7 @@ ko:
         other: "%{count} unread"
       new_count:
         other: "%{count} new"
-      more: "더 보기..."
+      more: "더 보기"
       all_categories: "모든 카테고리"
       all_tags: "모든 태그"
       sections:

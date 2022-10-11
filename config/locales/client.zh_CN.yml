@@ -200,6 +200,7 @@ zh_CN:
     ok_value: "确定"
     cancel_value: "取消"
     submit: "提交"
+    delete: "删除"
     generic_error: "抱歉，出错了。"
     generic_error_with_reason: "出错了：%{error}"
     sign_up: "注册"
@@ -355,7 +356,7 @@ zh_CN:
     switch_to_anon: "进入匿名模式"
     switch_from_anon: "退出匿名模式"
     banner:
-      close: "关闭此横幅"
+      close: "忽略此横幅"
       edit: "编辑"
     pwa:
       install_banner: "要<a href>在此设备上安装%{title}</a> 吗？"
@@ -912,6 +913,7 @@ zh_CN:
     user_fields:
       none: "（选择一个选项）"
       required: '请为“%{name}”输入一个值。'
+      same_as_password: '你的密码不应重复出现在其他字段中。'
     user:
       said: "%{username}："
       profile: "个人资料"
@@ -1672,6 +1674,9 @@ zh_CN:
       leave_message: "真的要离开此消息吗？"
       remove_allowed_user: "真的要将 %{name} 从此消息中移除吗？"
       remove_allowed_group: "真的要将 %{name} 从此消息中移除吗？"
+      leave: "离开"
+      remove_group: "移除群组"
+      remove_user: "移除用户"
     email: "电子邮件"
     username: "用户名"
     last_seen: "最后活动"
@@ -1896,7 +1901,8 @@ zh_CN:
       drafts_offline: "离线草稿"
       edit_conflict: "编辑冲突"
       esc: "esc"
-      esc_label: "单击或按 Esc 关闭"
+      esc_label: "单击或按 Esc 忽略"
+      ok_proceed: "好的，继续"
       group_mentioned_limit:
         other: "<b>警告</b>！您提及了 <a href='%{group_link}'> %{group} </a>，但是此群组的成员数量超过了管理员配置的 %{count} 个用户的最大可提及数量限制。没有人会收到通知。"
       group_mentioned:
@@ -3011,6 +3017,7 @@ zh_CN:
       name: "类别名称"
       description: "描述"
       logo: "类别徽标图片"
+      logo_dark: "深色模式类别 Logo 图片"
       background_image: "类别背景图片"
       badge_colors: "徽章颜色"
       background_color: "背景色"
@@ -3509,7 +3516,6 @@ zh_CN:
       tag_list_joiner: "，"
       delete_unused: "删除未使用的标签"
       delete_unused_description: "删除所有未与话题或个人消息关联的标签"
-      cancel_delete_unused: "取消"
       filters:
         without_category: "%{filter}%{tag}话题"
         with_category: "%{category}中的%{filter}%{tag}话题"
@@ -3634,7 +3640,7 @@ zh_CN:
       new_count:
         other: "%{count} 新"
       toggle_section: "切换部分"
-      more: "更多…"
+      more: "更多"
       all_categories: "所有类别"
       all_tags: "所有标签"
       sections:

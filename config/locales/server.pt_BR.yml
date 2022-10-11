@@ -2721,18 +2721,9 @@ pt_BR:
     bulk_invite_succeeded:
       title: "Convites em massa realizados"
       subject_template: "Seus convites foram enviados com êxito."
-      text_body_template: "Seu arquivo de convites em massa para usuários(as) foi processado: %{sent} convites enviados por e-mail."
     bulk_invite_failed:
       title: "Os convites em massa falharam"
       subject_template: "Seus convites em massa não foram enviados, entre em contato com os(as) moderadores(as)."
-      text_body_template: |
-        Seu arquivo de convites em massa para usuários(as) foi processado, %{sent} convites foram enviados por e-mail com %{failed} erro(s).
-
-        Aqui está o registro:
-
-        ``` texto
-        %{logs}
-        ```
     user_added_to_group_as_owner:
       title: "Adicionado ao grupo como proprietário(a)"
       subject_template: "Você foi adicionado(a) como um(a) dos(as) proprietários(as) do grupo %{group_name}"

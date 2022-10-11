@@ -229,6 +229,7 @@ sv:
     ok_value: "OK"
     cancel_value: "Avbryt"
     submit: "Skicka"
+    delete: "Radera"
     generic_error: "Tyvärr, ett fel har inträffat."
     generic_error_with_reason: "Ett fel inträffade: %{error}"
     sign_up: "Registrera"
@@ -969,6 +970,7 @@ sv:
     user_fields:
       none: "(välj ett alternativ)"
       required: 'Ange ett värde för "%{name}"'
+      same_as_password: 'Ditt lösenord ska inte upprepas i andra fält.'
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -1745,6 +1747,9 @@ sv:
       leave_message: "Vill du verkligen lämna detta meddelande?"
       remove_allowed_user: "Vill du verkligen ta bort %{name} från det här meddelandet?"
       remove_allowed_group: "Vill du verkligen ta bort %{name} från det här meddelandet?"
+      leave: "Lämna"
+      remove_group: "Ta bort grupp"
+      remove_user: "Ta bort användare"
     email: "E-post"
     username: "Användarnamn"
     last_seen: "Sedd"
@@ -1976,6 +1981,7 @@ sv:
       edit_conflict: "redigera konflikt"
       esc: "esc"
       esc_label: "Klicka eller tryck på Esc för att avfärda"
+      ok_proceed: "Ok, fortsätt"
       group_mentioned_limit:
         one: "<b>Varning!</b> Du nämnde <a href='%{group_link}'>%{group}</a> och denna grupp har fler medlemmar än vad administratorn tillåter för omnämningar. Begränsningsregeln för omnämnanden är satt till %{count} användare. Ingen kommer därför att aviseras."
         other: "<b>Varning!</b> Du nämnde <a href='%{group_link}'>%{group}</a> och denna grupp har fler medlemmar än vad administratorn tillåter för omnämningar. Begränsningsregeln för omnämnanden är satt till %{count} användare. Ingen kommer därför att aviseras."
@@ -3162,6 +3168,7 @@ sv:
       name: "Kategorinamn"
       description: "Beskrivning"
       logo: "Kategori logotypbild"
+      logo_dark: "Kategorilogotypbild för mörkt läge"
       background_image: "Kategori bakgrundsbild"
       badge_colors: "Utmärkelsefärg"
       background_color: "Bakgrundsfärg"
@@ -3688,7 +3695,6 @@ sv:
       tag_list_joiner: ", "
       delete_unused: "Radera oanvända taggar"
       delete_unused_description: "Radera alla taggar som inte är kopplade till något ämne eller personliga meddelanden"
-      cancel_delete_unused: "Avbryt"
       filters:
         without_category: "%{filter} %{tag} ämnen"
         with_category: "%{filter} %{tag} ämnen i %{category}"
@@ -3815,7 +3821,7 @@ sv:
         one: "%{count} ny"
         other: "%{count} nya"
       toggle_section: "växla avsnitt"
-      more: "Mer..."
+      more: "Mer"
       all_categories: "Alla kategorier"
       all_tags: "Alla taggar"
       sections:

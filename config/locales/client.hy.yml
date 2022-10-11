@@ -189,6 +189,7 @@ hy:
     ok_value: "ՕԿ"
     cancel_value: "Չեղարկել"
     submit: "Հաստատել"
+    delete: "Ջնջել"
     generic_error: "Տեղի է ունեցել սխալ, ներողություն:"
     generic_error_with_reason: "Տեղի է ունեցել սխալ՝ %{error}"
     sign_up: "Գրանցվել"
@@ -1338,6 +1339,8 @@ hy:
       leave_message: "Դուք իսկապե՞ս ցանկանում եք թողնել այս հաղորդագրությունը:"
       remove_allowed_user: "Դուք իսկապե՞ս ցանկանում եք հեռացնել %{name}-ը այս հաղորդագրությունից:"
       remove_allowed_group: "Դուք իսկապե՞ս ցանկանում եք հեռացնել %{name}-ը այս հաղորդագրությունից:"
+      leave: "Լքել"
+      remove_user: "Հեռացնել օգտատիրոջը"
     email: "Էլ. հասցե"
     username: "Օգտանուն"
     last_seen: "Ակտիվ էր"
@@ -2809,7 +2812,6 @@ hy:
         other: "%{tags} և ևս %{count}"
       delete_unused: "Ջնջել Չօգտագործված Թեգերը"
       delete_unused_description: "Ջնջել բոլոր թեգերը, որոնք կցված չեն որևէ թեմայի կամ անձնական հաղորդագրության"
-      cancel_delete_unused: "Չեղարկել"
       filters:
         without_category: "%{filter} %{tag} թեմա"
         with_category: "%{filter} %{tag} թեմա %{category}-ում"
@@ -2881,7 +2883,7 @@ hy:
       new_count:
         one: "%{count} նոր"
         other: "%{count} նոր"
-      more: "Ավելին..."
+      more: "Ավելին"
       all_categories: "Բոլոր կատեգորիաները"
       sections:
         about:

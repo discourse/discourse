@@ -228,6 +228,7 @@ it:
     ok_value: "OK"
     cancel_value: "Annulla"
     submit: "Invia"
+    delete: "Cancella"
     generic_error: "Spiacenti, c'è stato un errore."
     generic_error_with_reason: "Si è verificato un errore: %{error}"
     sign_up: "Iscriviti"
@@ -1739,6 +1740,8 @@ it:
       leave_message: "Vuoi veramente abbandonare questo messaggio?"
       remove_allowed_user: "Vuoi davvero rimuovere %{name} da questo messaggio?"
       remove_allowed_group: "Vuoi davvero rimuovere %{name} da questo messaggio?"
+      leave: "Abbandona"
+      remove_user: "Rimuovi utente"
     email: "Email"
     username: "Nome utente"
     last_seen: "Ultima visita"
@@ -3634,7 +3637,6 @@ it:
       tag_list_joiner: ", "
       delete_unused: "Elimina Etichette Inutilizzate"
       delete_unused_description: "Elimina tutte le etichette che non sono usate in alcun argomento o messaggio personale"
-      cancel_delete_unused: "Annulla"
       filters:
         without_category: "%{filter} %{tag} argomenti"
         with_category: "%{filter} %{tag} argomenti in %{category}"
@@ -3760,7 +3762,7 @@ it:
         one: "%{count} nuovo"
         other: "%{count} nuovi"
       toggle_section: "inverti sezione"
-      more: "Altro..."
+      more: "Altro"
       all_categories: "Tutte le categorie"
       sections:
         about:

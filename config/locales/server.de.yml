@@ -259,6 +259,7 @@ de:
     max_redemptions_limit: "sollte zwischen 2 und %{max_limit} sein."
   topic_invite:
     failed_to_invite: "Der Benutzer kann nicht in dieses Thema eingeladen werden, ohne Mitglied in einer der folgenden Gruppen zu sein: %{group_names}"
+    not_pm: "Du kannst nur zu privaten Nachrichten einladen."
     user_exists: "Entschuldige, dieser Benutzer ist bereits eingeladen worden. Du kannst einen Benutzer nur einmal zu einem Thema einladen."
     muted_topic: "Entschuldige, dieser Benutzer hat dieses Thema stummgeschaltet."
     receiver_does_not_allow_pm: "Entschuldige, dieser Benutzer erlaubt es dir nicht, ihm private Nachrichten zu senden."
@@ -1674,6 +1675,7 @@ de:
     max_personal_messages_per_day: "Maximale Anzahl neuer persönlicher Nachrichtenthemen, die ein Benutzer pro Tag erstellen kann."
     max_invites_per_day: "Maximale Anzahl an Einladungen, die ein Benutzer pro Tag verschicken kann."
     max_topic_invitations_per_day: "Maximale Anzahl an Thema-Einladungen, die ein Benutzer pro Tag verschicken kann."
+    max_topic_invitations_per_minute: "Maximale Anzahl an Thema-Einladungen, die ein Benutzer pro Minute verschicken kann."
     max_logins_per_ip_per_hour: "Maximale Anzahl der erlaubten Anmeldungen pro IP-Adresse und Stunde"
     max_logins_per_ip_per_minute: "Maximale Anzahl der erlaubten Anmeldungen pro IP-Adresse und Minute"
     max_post_deletions_per_minute: "Maximale Anzahl von Beiträgen, die ein Benutzer pro Minute löschen kann. Auf 0 setzen, um das Löschen von Beiträgen zu deaktivieren."
@@ -2793,18 +2795,23 @@ de:
     bulk_invite_succeeded:
       title: "Masseneinladung erfolgreich"
       subject_template: "Masseneinladung von Benutzern erfolgreich verarbeitet"
-      text_body_template: "Deine Masseneinladung von Benutzern wurde erfolgreich verarbeitet, insgesamt wurden %{sent} Einladungen per E-Mail verschickt."
+      text_body_template: |
+        Deine Masseneinladungsdatei wurde verarbeitet, %{sent} Einladungen verschickt, %{skipped} übersprungen und %{warnings} Warnung(en).
+
+        ```` Text
+        %{logs}
+        ````
     bulk_invite_failed:
       title: "Masseneinladung fehlgeschlagen"
       subject_template: "Bei der Verarbeitung der Masseneinladung von Benutzern sind Fehler aufgetreten"
       text_body_template: |
-        Deine Datei zur Massenbenutzereinladung wurde verarbeitet, %{sent} Einladungen wurden verschickt mit %{failed} Fehler(n).
+        Deine Masseneinladungsdatei wurde verarbeitet, %{sent} Einladungen verschickt, %{skipped} übersprungen, %{warnings} Warnung(en) und %{failed} Fehler.
 
         Hier ist das Protokoll:
 
-        ``` text
+        ```` Text
         %{logs}
-        ```
+        ````
     user_added_to_group_as_owner:
       title: "Als Eigentümer zur Gruppe hinzugefügt"
       subject_template: "Du wurdest als Eigentümer der Gruppe %{group_name} hinzugefügt"

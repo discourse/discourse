@@ -200,6 +200,7 @@ sv:
       page_publishing_requirements: "Sidpublicering kan inte aktiveras om säkra medier är aktiverade."
       s3_backup_requires_s3_settings: "Du kan inte använda S3 som säkerhetskopieringsplats innan du har angivit '%{setting_name}'."
       s3_bucket_reused: "Du kan inte använda samma behållare för 's3_upload_bucket' och 's3_backup_bucket'. Välj en annan behållare eller använd en annan sökväg för varje behållare."
+      secure_uploads_requirements: "S3-uppladdningar måste ha aktiverats innan du aktiverar säkra uppladdningar."
       share_quote_facebook_requirements: "Du måste ange ett Facebook-app-id för att möjliggöra delning av citat på Facebook."
       second_factor_cannot_enforce_with_socials: "Du kan inte tvinga 2FA med sociala inloggningar aktiverade. Du måste först inaktivera inloggning via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Du kan inte genomdriva 2FA om lokala inloggningar är inaktiverade."
@@ -246,6 +247,9 @@ sv:
       invalid_access: "Du har inte behörighet att visa den efterfrågade resursen."
     requires_groups: "Inbjudan sparades inte eftersom det angivna ämnet är otillgängligt. Lägg till en av följande grupper: %{groups}."
     domain_not_allowed: "Din e-post kan inte användas för att lösa in denna inbjudan."
+    max_redemptions_allowed_one: "för e-postinbjudningar ska vara 1."
+    redemption_count_less_than_max: "bör vara mindre än %{max_redemptions_allowed}."
+    email_xor_domain: "E-post- och domänfält är inte tillåtna samtidigt"
   bulk_invite:
     file_should_be_csv: "De uppladdade filerna skall vara i csv-format."
     max_rows: "De första %{max_bulk_invites} inbjudningarna har skickats ut. Prova att dela upp filen i mindre delar."
@@ -255,6 +259,7 @@ sv:
     max_redemptions_limit: "bör vara mellan 2 och %{max_limit}."
   topic_invite:
     failed_to_invite: "Användaren kan inte bjudas in till detta ämne utan gruppmedlemskap i någon av de följande grupperna: %{group_names}."
+    not_pm: "Du kan bara bjuda in till privata meddelanden."
     user_exists: "Tyvärr har den användaren redan bjudits in. Du kan endast bjuda in en användare till ett ämne en gång."
     muted_topic: "Tyvärr tystade den användaren detta ämne."
     receiver_does_not_allow_pm: "Tyvärr tillåter inte den användaren att du skickar privata meddelanden till dem."
@@ -1477,6 +1482,8 @@ sv:
     summary_percent_filter: "Visa högsta % av inläggen när en användare bockar i 'Sammanfatta det här ämnet'"
     summary_max_results: "Maximalt antal inlägg som returneras av 'Sammanfatta detta ämne'"
     summary_timeline_button: "Visa en \"Sammanfatta\"-knapp på tidslinjen"
+    enable_personal_messages: "UTFASAT, använd inställningen \"personal message enabled groups\" istället. Tillåt användare med förtroendenivå 1 (konfigurera genom minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen alltid kan skicka meddelanden oavsett."
+    personal_message_enabled_groups: "Tillåt användare inom dessa grupper att skapa meddelanden och svara på meddelanden. Förtroendenivågrupper omfattar alla förtroendenivåer över det numret, om till exempel förtroendenivå_1 väljs tillåts också användare på förtroendenivå_2, 3, 4 att skicka PM. Observera att personal alltid kan skicka meddelanden oavsett vad."
     enable_system_message_replies: "Tillåter användare att svara på systemmeddelanden, även om personliga meddelanden har inaktiverats"
     enable_chunked_encoding: "Aktivera packade kodningssvar (chunked) från servern. Den här funktionen fungerar på de flesta inställningar, men vissa proxyservrar kan buffra, vilket gör att svaren fördröjs"
     long_polling_base_url: "URL som används för long polling (när en CDN levererar dynamiskt innehåll, kontrollera att det här är inställt till origin pull) se: http://origin.site.com"
@@ -1668,6 +1675,7 @@ sv:
     max_personal_messages_per_day: "Max antal nya privatmeddelandeämnen en användare kan skapa per dag."
     max_invites_per_day: "Max antal inbjudningar en användare kan skicka per dag."
     max_topic_invitations_per_day: "Max antal ämnesinbjudningar en användare kan skicka per dag."
+    max_topic_invitations_per_minute: "Max. antal ämnesinbjudningar en användare kan skicka per minut."
     max_logins_per_ip_per_hour: "Maximalt antal inloggningar tillåtna per IP-adress per timme"
     max_logins_per_ip_per_minute: "Maximalt antal inloggningar tillåtna per IP-adress per minut"
     max_post_deletions_per_minute: "Maximalt antal inlägg som en användare kan radera per minut. Ställ in till 0 för att inaktivera inläggsraderingar."
@@ -1746,6 +1754,7 @@ sv:
     min_trust_to_edit_wiki_post: "Lägsta förtroendenivå som krävs för att redigera inlägg markerade som wiki."
     min_trust_to_edit_post: "Lägsta förtroendenivå som krävs för att skapa ett inlägg."
     min_trust_to_allow_self_wiki: "Lägsta förtroendenivå som krävs för att göra användares egna inlägg wiki."
+    min_trust_to_send_messages: "UTFASAT, använd inställningen \"personal message enabled group\" istället. Den lägsta förtroendenivån som krävs för att skapa nya personliga meddelanden."
     min_trust_to_send_email_messages: "Lägsta förtroendenivå som krävs för att skicka privata meddelanden via e-post."
     min_trust_to_flag_posts: "Lägsta förtroendenivå som krävs för att flagga ett inlägg."
     min_trust_to_post_links: "Lägsta förtroendenivå som krävs för att inkludera länkar i ett inlägg."
@@ -1870,6 +1879,7 @@ sv:
     raw_email_max_length: "Hur många tecken ska lagras för inkommande e-post."
     raw_rejected_email_max_length: "Hur många tecken ska lagras för avvisad inkommande e-post."
     delete_rejected_email_after_days: "Ta bort avvisade e-postmeddelanden som är äldre än (n) dagar."
+    require_change_email_confirmation: "Kräv att användare som inte är anställda bekräftar sin gamla e-postadress innan de ändrar den. Gäller inte personalanvändare, de behöver alltid bekräfta sin gamla e-postadress."
     manual_polling_enabled: "Flytta e-post med hjälp av API för e-postsvar."
     pop3_polling_enabled: "Poll via POP3 för e-postsvar."
     pop3_polling_ssl: "Använd SSL vid anslutning till POP3-servern. (Rekommenderat)"
@@ -1948,6 +1958,7 @@ sv:
     enable_mobile_theme: "Mobila enheter använder ett mobilvänligt tema, med möjligheten att byta till standardsidan. Inaktivera detta om du vill använda en anpassad stilmall som är helt responsiv."
     dominating_topic_minimum_percent: "Procentandel av antalet inlägg som en användare måste skriva i ett ämne innan de påminns om att de är för dominerande."
     disable_avatar_education_message: "Inaktivera hjälpmeddelande för byte av avatar."
+    pm_warn_user_last_seen_months_ago: "När du skapar ett nytt PM varnas användare om det är mer än n månader sedan målmottagaren sågs till."
     suppress_uncategorized_badge: "Visa inte utmärkelsen för okategoriserade ämnen i ämneslistan."
     header_dropdown_category_count: "Hur många kategorier kan visas i rubrikens rullgardinsmeny."
     permalink_normalizations: "Tillämpa följande regex innan matchning av permalänkar, till exempel: /(topic.*)\\?.*/\\1 kommer att rensa bort söksträngar från ämnesvägen. Formatet är regex+sträng, använd \\1 osv. för att komma åt grupperingar."
@@ -1995,7 +2006,12 @@ sv:
     delete_merged_stub_topics_after_days: "Antal dagar att vänta innan helt sammanslagna stub-ämnen raderas automatiskt. Ställ in till 0 för att aldrig radera stub-ämnen."
     bootstrap_mode_min_users: "Minsta antal användare som krävs för att inaktivera bootstrap-läget (ange 0 för att inaktivera)"
     prevent_anons_from_downloading_files: "Förhindra att anonyma användare hämtar bilagor."
+    secure_media: 'UTFASAT: Använd inställningen secure_uploads istället, kommer att tas bort i Discourse 3.0.'
+    secure_uploads: 'Begränsar åtkomst för ALLA uppladdningar (bilder, video, ljud, text, pdf, zip med flera). Om "login required" har aktiverats kan endast inloggade användare komma åt uppladdningar. Annars begränsas åtkomst endast till uppladdning av media i privata meddelanden samt privata kategorier. VARNING: Den här inställningen är komplex och kräver djupa administrativa kunskaper. Se detaljer i <a target="_blank" href="https://meta.discourse.org/t/-/140017">ämnet för säkra uppladdningar i Meta</a>.'
     secure_media_allow_embed_images_in_emails: "UTFASAT: Använd secure_uploads_allow_embed_images_in_emails, kommer att tas bort i Discourse 3.0."
+    secure_uploads_allow_embed_images_in_emails: "Gör det möjligt att bädda in säkra bilder som normalt skulle begränsas i e-postmeddelanden, under förutsättning att deras storlek är mindre än inställningen för säkra medias maxstorlek för inbäddning av bild, 'secure uploads max email embed image size kb'."
+    secure_media_max_email_embed_image_size_kb: "UTFASAT: Använd secure_uploads_max_email_embed_image_size_kb, kommer att tas bort i Discourse 3.0."
+    secure_uploads_max_email_embed_image_size_kb: "Storleksbegränsningen för säkra bilder som kommer att bäddas in i e-postmeddelanden om inställningen för att tillåta inbäddningar för säkra uppladdningar i e-post är aktiverad, 'secure uploads allow embed in emails' . Om inställningen inte är aktiverad har den här inställningen ingen effekt."
     slug_generation_method: "Välj en genereringsmetod för etiketter. Ange 'none' för att inaktivera generering av etiketter. "
     enable_emoji: "Aktivera emoji"
     enable_emoji_shortcuts: "Vanlig smileytext som :): p :( kommer att konverteras till emojier"
@@ -2089,6 +2105,7 @@ sv:
     heading_font: "Typsnitt som används för rubriker på webbplatsen. Teman kan åsidosätta via CSS-anpassade egenskapen `--heading-font-family`."
     enable_sitemap: "Skapa en webbplatskarta för din webbplats och inkludera den i filen robots.txt."
     sitemap_page_size: "Antal webbadresser som ska inkluderas på varje webbplatskartsida. Max 50.000"
+    enable_user_status: "(experimentell) Tillåt användare att ställa in anpassat statusmeddelande (emoji + beskrivning)."
     short_title: "Den korta titeln kommer att användas på användarens startskärm, startapparat eller andra platser där utrymmet kan vara begränsat. Den bör begränsas till 12 tecken."
     dashboard_hidden_reports: "Tillåt att de specificerade rapporterna döljs från översiktspanelen."
     dashboard_visible_tabs: "Välj vilka flikar på översiktspanelen som ska vara synliga."
@@ -2134,6 +2151,7 @@ sv:
       reply_by_email_address_is_empty: "Du måste ställa in en 'reply by email address' innan du aktiverar svar via e-post."
       email_polling_disabled: "Du måste aktivera antingen manuell polling eller POP3-polling innan du aktiverar svar via e-post."
       user_locale_not_enabled: "Du måste först aktivera 'allow user locale' innan du aktiverar den här inställningen."
+      personal_message_enabled_groups_invalid: "Du måste ange minst en grupp för den här inställningen. Om du inte vill att någon förutom personal ska skicka PM, välj personalgrupp."
       invalid_regex: "Vanligt uttryck är ogiltigt eller inte tillåtet."
       invalid_regex_with_message: "Det har uppstått ett fel i regex '%{regex}': %{message}"
       email_editable_enabled: "Du måste inaktivera 'e-post kan redigeras' innan du aktiverar den här inställningen."
@@ -2741,12 +2759,17 @@ sv:
     bulk_invite_succeeded:
       title: "Massinbjudan lyckades"
       subject_template: "Massinbjudan av användare behandlades utan fel"
-      text_body_template: "Din massinbjudan av användare behandlades, %{sent} inbjudningar skickades."
+      text_body_template: |
+        Din fil för massinbjudan av användare behandlades, %{sent} inbjudningar skickades, %{skipped} hoppades över, med %{warnings} varning(ar).
+
+        `` text
+        %{logs}
+        ```
     bulk_invite_failed:
       title: "Massinbjudan misslyckades"
       subject_template: "Massinbjudan av användare genererade fel"
       text_body_template: |
-        Din inbjudningsfil för användare per bulk behandlades, %{sent}inbjudningar skickades med %{failed}fel .
+        Din fil för massinbjudan av användare behandlades, %{sent} inbjudningar skickades, %{skipped} hoppades över, med %{warnings} varning(ar) och %{failed} fel.
 
         Här är loggen:
 

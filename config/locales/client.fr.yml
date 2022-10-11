@@ -229,6 +229,7 @@ fr:
     ok_value: "OK"
     cancel_value: "Annuler"
     submit: "Envoyer"
+    delete: "Supprimer"
     generic_error: "Nous sommes désolés, une erreur est survenue."
     generic_error_with_reason: "Une erreur est survenue : %{error}"
     sign_up: "S'inscrire"
@@ -1742,6 +1743,8 @@ fr:
       leave_message: "Voulez-vous vraiment quitter cette conversation ?"
       remove_allowed_user: "Voulez-vous vraiment supprimer %{name} de ce message direct ?"
       remove_allowed_group: "Voulez-vous vraiment supprimer %{name} de ce message direct ?"
+      leave: "Quitter"
+      remove_user: "Supprimer l'utilisateur"
     email: "Courriel"
     username: "Nom d'utilisateur"
     last_seen: "Vu"
@@ -3650,7 +3653,6 @@ fr:
       tag_list_joiner: ", "
       delete_unused: "Supprimer les étiquettes inutilisées"
       delete_unused_description: "Supprimer toutes les étiquettes qui ne sont pas associées à des sujets ou messages directs"
-      cancel_delete_unused: "Annuler"
       filters:
         without_category: "%{filter} %{tag} sujets"
         with_category: "%{filter} %{tag} sujets dans %{category}"
@@ -3772,7 +3774,7 @@ fr:
       new_count:
         one: "%{count} nouveau"
         other: "%{count} nouveaux"
-      more: "Plus…"
+      more: "Plus"
       all_categories: "Toutes les catégories"
       all_tags: "Toutes les étiquettes"
       sections:

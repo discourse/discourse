@@ -1317,7 +1317,6 @@ ro:
       subject_template: "Restaurare eşuată"
     bulk_invite_succeeded:
       subject_template: "Invitația multiplă a fost procesată cu succes"
-      text_body_template: "Fișierul tău de invitații multiple a fost procesat, %{sent} (de) invitații trimise."
     bulk_invite_failed:
       subject_template: "Invitația multiplă a fost procesată cu erori"
     csv_export_failed:

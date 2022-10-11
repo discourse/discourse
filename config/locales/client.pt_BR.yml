@@ -228,6 +228,7 @@ pt_BR:
     ok_value: "Ok"
     cancel_value: "Cancelar"
     submit: "Enviar"
+    delete: "Excluir"
     generic_error: "Desculpe, ocorreu um erro."
     generic_error_with_reason: "Ocorreu um erro: %{error}"
     sign_up: "Cadastrar-se"
@@ -1739,6 +1740,8 @@ pt_BR:
       leave_message: "Tem certeza de que quer sair desta mensagem?"
       remove_allowed_user: "Tem certeza de que quer remover %{name} desta mensagem?"
       remove_allowed_group: "Tem certeza de que quer remover %{name} desta mensagem?"
+      leave: "Sair"
+      remove_user: "Remover usuário"
     email: "E-mail"
     username: "Nome do(a) usuário(a)"
     last_seen: "Visto(a)"
@@ -3590,7 +3593,6 @@ pt_BR:
       tag_list_joiner: ", "
       delete_unused: "Excluir etiquetas não usadas"
       delete_unused_description: "Excluir todas as etiquetas que não foram anexadas a nenhum tópico ou mensagens pessoais"
-      cancel_delete_unused: "Cancelar"
       filters:
         without_category: "%{filter} %{tag} tópicos"
         with_category: "%{filter} %{tag} tópicos em %{category}"
@@ -3704,7 +3706,7 @@ pt_BR:
       new_count:
         one: "%{count} nova"
         other: "%{count} novas"
-      more: "Mais..."
+      more: "Mais"
       all_categories: "Todas as categorias"
       all_tags: "Todas as etiquetas"
       sections:

@@ -287,6 +287,7 @@ he:
     ok_value: "או קיי"
     cancel_value: "ביטול"
     submit: "הגשה"
+    delete: "מחיקה"
     generic_error: "ארעה שגיאה, עמך הסליחה."
     generic_error_with_reason: "ארעה שגיאה: %{error}"
     sign_up: "הרשמה"
@@ -1083,6 +1084,7 @@ he:
     user_fields:
       none: "(יש לבחור אפשרות)"
       required: 'נא למלא ערך עבור „%{name}”'
+      same_as_password: 'אין לחזור על הסיסמה שלך בשדות אחרים.'
     user:
       said: "%{username}:"
       profile: "פרופיל"
@@ -1891,6 +1893,9 @@ he:
       leave_message: "האם אתה באמת רוצה לעזוב את ההודעה הזו?"
       remove_allowed_user: "להסיר את %{name} מהודעה זו?"
       remove_allowed_group: "להסיר את %{name} מהודעה זו?"
+      leave: "עזוב"
+      remove_group: "הסרת קבוצה"
+      remove_user: "הסרת משתמש/ת"
     email: "דוא״ל"
     username: "שם משתמש"
     last_seen: "נצפה"
@@ -2134,6 +2139,7 @@ he:
       edit_conflict: "עריכת סתירה"
       esc: "esc"
       esc_label: "יש ללחוץ עם העכבר או על Esc כדי להתעלם"
+      ok_proceed: "בסדר, להמשיך"
       group_mentioned_limit:
         one: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד משתמש %{count}. אף אחד לא יקבל הודעה."
         two: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד %{count} משתמשים. אף אחד לא יקבל הודעה."
@@ -3428,6 +3434,7 @@ he:
       name: "שם הקטגוריה"
       description: "תיאור"
       logo: "תמונת לוגו לקטגוריה"
+      logo_dark: "תמונת לוגו של קטגוריה במצב כהה"
       background_image: "תמונת רקע לקטגוריה"
       badge_colors: "צבעי העיטורים"
       background_color: "צבע רקע"
@@ -4008,7 +4015,6 @@ he:
       tag_list_joiner: ", "
       delete_unused: "מחיקת תגיות שאינן בשימוש"
       delete_unused_description: "למחוק את כל התגיות שאינן מקושרות לנושאים או להודעות פרטיות כלל"
-      cancel_delete_unused: "ביטול"
       filters:
         without_category: "%{filter} %{tag} נושאים"
         with_category: "%{filter} %{tag} נושאים ב%{category}"
@@ -4139,7 +4145,7 @@ he:
         many: "חדש (%{count})"
         other: "חדש (%{count})"
       toggle_section: "החלפת מצב הצגת סעיף"
-      more: "עוד…"
+      more: "עוד"
       all_categories: "כל הקטגוריות"
       all_tags: "כל התגיות"
       sections:

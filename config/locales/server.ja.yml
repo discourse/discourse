@@ -2470,18 +2470,9 @@ ja:
     bulk_invite_succeeded:
       title: "一括招待に成功しました"
       subject_template: "ユーザーの一括招待に成功しました"
-      text_body_template: "ユーザーの一括招待ファイルが処理され、%{sent} 件の招待が送信されました。"
     bulk_invite_failed:
       title: "一括招待に失敗しました"
       subject_template: "ユーザーの一括招待中にエラーが発生しました"
-      text_body_template: |
-        あなたの一括ユーザー招待ファイルは処理されました。招待を %{sent} 通メール送信し、%{failed} 個のエラーが発生しました。
-
-        こちらがログです。
-
-        ``` text
-        %{logs}
-        ```
     user_added_to_group_as_owner:
       title: "オーナーとしてグループに追加しました"
       subject_template: "%{group_name} グループのオーナーとして追加されました"
