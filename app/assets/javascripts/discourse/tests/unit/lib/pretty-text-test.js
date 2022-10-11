@@ -987,6 +987,11 @@ eviltrout</p>
       '<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot"></p>',
       "It allows data images"
     );
+
+    assert.cooked(
+      "![](http://folksy.com/images/folksy-colour.png)",
+      '<p><img src="http://folksy.com/images/folksy-colour.png" alt role="presentation"></p>'
+    );
   });
 
   test("attachment", function (assert) {
