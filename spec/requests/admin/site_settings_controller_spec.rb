@@ -52,6 +52,16 @@ RSpec.describe Admin::SiteSettingsController do
         expect(SiteSetting.search_tokenize_chinese).to eq(true)
       end
 
+      it 'throws an error when trying to change a deprecated setting with override = false' do
+        SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
+        put "/admin/site_settings/enable_personal_messages.json", params: {
+          enable_personal_messages: false
+        }
+
+        expect(response.status).to eq(422)
+        expect(SiteSetting.personal_message_enabled_groups).to eq(Group::AUTO_GROUPS[:trust_level_4])
+      end
+
       it 'allows value to be a blank string' do
         put "/admin/site_settings/test_setting.json", params: {
           test_setting: ''
