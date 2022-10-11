@@ -309,7 +309,7 @@ export default Component.extend({
   @action
   updateFormat(format, event) {
     event?.preventDefault();
-    this.format = format;
+    this.set("format", format);
   },
 
   actions: {
