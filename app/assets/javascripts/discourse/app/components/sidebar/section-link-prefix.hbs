@@ -15,7 +15,7 @@
     {{/if}}
 
     {{#if (eq @prefixType "span")}}
-      <span style={{@prefixCSS}} class="prefix-span"></span>
+      <span style={{html-safe @prefixCSS}} class="prefix-span"></span>
     {{/if}}
 
     {{#if @prefixBadge}}
