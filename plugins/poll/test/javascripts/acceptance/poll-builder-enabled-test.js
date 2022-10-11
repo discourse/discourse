@@ -24,6 +24,22 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
       exists(".select-kit-row[data-value='showPollBuilder']"),
       "it shows the builder button"
     );
+
+    await click(".select-kit-row[data-value='showPollBuilder']");
+    assert.true(
+      exists(".poll-type-value-regular.active"),
+      "regular type is active"
+    );
+    await click(".poll-type-value-multiple");
+    assert.true(
+      exists(".poll-type-value-multiple.active"),
+      "multiple type is active"
+    );
+    await click(".poll-type-value-regular");
+    assert.true(
+      exists(".poll-type-value-regular.active"),
+      "regular type is active"
+    );
   });
 
   test("regular user - insufficient trust level", async function (assert) {
