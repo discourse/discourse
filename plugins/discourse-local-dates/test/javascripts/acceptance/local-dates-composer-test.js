@@ -9,7 +9,10 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Local Dates - composer", function (needs) {
   needs.user();
-  needs.settings({ discourse_local_dates_enabled: true });
+  needs.settings({
+    discourse_local_dates_enabled: true,
+    discourse_local_dates_default_formats: "LLL|LTS|LL|LLLL",
+  });
 
   test("composer bbcode", async function (assert) {
     const getAttr = (attr) => {
@@ -121,5 +124,11 @@ acceptance("Local Dates - composer", function (needs) {
       query(".pika-table .is-selected"),
       "deleting selected TO date works"
     );
+
+    await click(".advanced-mode-btn");
+
+    assert.strictEqual(query("input.format-input").value, "");
+    await click("ul.formats a.moment-format");
+    assert.strictEqual(query("input.format-input").value, "LLL");
   });
 });
