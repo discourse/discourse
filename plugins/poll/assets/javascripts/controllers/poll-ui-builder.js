@@ -402,6 +402,6 @@ export default Controller.extend(ModalFunctionality, {
   @action
   updatePollType(pollType, event) {
     event?.preventDefault();
-    this.pollType = pollType;
+    this.set("pollType", pollType);
   },
 });
