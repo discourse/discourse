@@ -155,7 +155,8 @@ body.invite-page {
       &:last-child {
         margin-bottom: 2em;
       }
-      input {
+      input,
+      .select-kit-header {
         padding: 0.75em 0.77em;
         border-radius: 0.25em;
         min-width: 250px;
@@ -263,6 +264,12 @@ body.invite-page {
             font-size: 14px;
             color: var(--primary-high);
           }
+        }
+        span.name {
+          color: var(--primary-medium);
+        }
+        .select-kit-row span.name {
+          color: var(--primary);
         }
         .controls .checkbox-label {
           input[type="checkbox"].ember-checkbox {
