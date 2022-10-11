@@ -46,43 +46,26 @@ const CORE_TOP_TABS = [
 
     get count() {
       return (
+        this.getUnreadCountForType("mentioned") +
+        this.getUnreadCountForType("posted") +
+        this.getUnreadCountForType("quoted") +
         this.getUnreadCountForType("replied") +
-        this.getUnreadCountForType("quoted")
+        this.getUnreadCountForType("watching_first_post")
       );
     }
 
     get notificationTypes() {
-      return ["replied", "quoted"];
+      return [
+        "mentioned",
+        "posted",
+        "quoted",
+        "replied",
+        "watching_first_post",
+      ];
     }
 
     get linkWhenActive() {
       return `${this.currentUser.path}/notifications/responses`;
-    }
-  },
-
-  class extends UserMenuTab {
-    get id() {
-      return "mentions";
-    }
-
-    get icon() {
-      return "at";
-    }
-
-    get panelComponent() {
-      return "user-menu/mentions-notifications-list";
-    }
-
-    get count() {
-      return this.getUnreadCountForType("mentioned");
-    }
-
-    get notificationTypes() {
-      return ["mentioned"];
-    }
-
-    get linkWhenActive() {
-      return `${this.currentUser.path}/notifications/mentions`;
     }
   },
 
@@ -116,35 +99,6 @@ const CORE_TOP_TABS = [
 
     get linkWhenActive() {
       return `${this.currentUser.path}/notifications/likes-received`;
-    }
-  },
-
-  class extends UserMenuTab {
-    get id() {
-      return "watching";
-    }
-
-    get icon() {
-      return "discourse-bell-exclamation";
-    }
-
-    get panelComponent() {
-      return "user-menu/watching-notifications-list";
-    }
-
-    get count() {
-      return (
-        this.getUnreadCountForType("posted") +
-        this.getUnreadCountForType("watching_first_post")
-      );
-    }
-
-    get notificationTypes() {
-      return ["posted", "watching_first_post"];
-    }
-
-    get linkWhenActive() {
-      return `${this.currentUser.path}/notifications`;
     }
   },
 
