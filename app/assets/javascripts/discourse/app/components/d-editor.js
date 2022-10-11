@@ -17,7 +17,7 @@ import I18n from "I18n";
 import ItsATrap from "@discourse/itsatrap";
 import { Promise } from "rsvp";
 import { SKIP } from "discourse/lib/autocomplete";
-import { categoryHashtagTriggerRule } from "discourse/lib/category-hashtags";
+import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
@@ -28,7 +28,6 @@ import { linkSeenMentions } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import loadScript from "discourse/lib/load-script";
 import { resolveCachedShortUrls } from "pretty-text/upload-short-url";
-import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
 import { siteDir } from "discourse/lib/text-direction";
@@ -463,27 +462,9 @@ export default Component.extend(TextareaTextManipulation, {
   },
 
   _applyCategoryHashtagAutocomplete() {
-    const siteSettings = this.siteSettings;
-
-    this._$textarea.autocomplete({
-      template: findRawTemplate("category-tag-autocomplete"),
-      key: "#",
-      afterComplete: (value) => {
-        this.set("value", value);
-        schedule("afterRender", this, this.focusTextArea);
-      },
-      transformComplete: (obj) => {
-        return obj.text;
-      },
-      dataSource: (term) => {
-        if (term.match(/\s/)) {
-          return null;
-        }
-        return searchCategoryTag(term, siteSettings);
-      },
-      triggerRule: (textarea, opts) => {
-        return categoryHashtagTriggerRule(textarea, opts);
-      },
+    setupHashtagAutocomplete(this._$textarea, this.siteSettings, (value) => {
+      this.set("value", value);
+      schedule("afterRender", this, this.focusTextArea);
     });
   },
 

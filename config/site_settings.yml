@@ -2021,6 +2021,10 @@ developer:
   enable_experimental_sidebar_hamburger:
     default: false
     client: true
+  enable_experimental_hashtag_autocomplete:
+    default: false
+    client: true
+    hidden: true
   enable_sidebar:
     default: true
     client: true
