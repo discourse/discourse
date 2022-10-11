@@ -287,6 +287,7 @@ ru:
     ok_value: "ОК"
     cancel_value: "Нет"
     submit: "Отправить"
+    delete: "Удалить"
     generic_error: "Извините, произошла ошибка."
     generic_error_with_reason: "Произошла ошибка: %{error}"
     sign_up: "Регистрация"
@@ -1083,6 +1084,7 @@ ru:
     user_fields:
       none: "(выберите)"
       required: 'Пожалуйста, введите значение для "%{name}"'
+      same_as_password: 'Указанный пароль не должен фигурировать в других полях.'
     user:
       said: "%{username}:"
       profile: "Профиль"
@@ -1891,6 +1893,9 @@ ru:
       leave_message: "Вы действительно хотите выйти из этого сообщения?"
       remove_allowed_user: "Вы действительно хотите удалить %{name} из этого сообщения?"
       remove_allowed_group: "Вы действительно хотите удалить %{name} из этого сообщения?"
+      leave: "Покинуть"
+      remove_group: "Удалить группу"
+      remove_user: "Удалить пользователя"
     email: "Email"
     username: "Псевдоним"
     last_seen: "Был"
@@ -2123,7 +2128,7 @@ ru:
       more_emoji: "ещё..."
       options: "Настройки"
       whisper: "скрытое сообщение"
-      unlist: "Тема скрыта"
+      unlist: "тема скрыта"
       add_warning: "Официальное предупреждение"
       toggle_whisper: "Скрытое сообщение"
       toggle_unlisted: "Скрыть"
@@ -2134,6 +2139,7 @@ ru:
       edit_conflict: "редактировать конфликт"
       esc: "Esc"
       esc_label: "Нажмите клавишу 'Esc' для закрытия"
+      ok_proceed: "OK"
       group_mentioned_limit:
         one: "<b>Внимание!</b> Вы упомянули <a href='%{group_link}'>%{group}</a>, в которой больше участников, чем установленный администратором лимит упоминаний на %{count} пользователя. Никто не получит уведомление."
         few: "<b>Внимание!</b> Вы упомянули <a href='%{group_link}'>%{group}</a>, в которой больше участников, чем установленный администратором лимит упоминаний на %{count} пользователей. Никто не получит уведомление."
@@ -3464,6 +3470,7 @@ ru:
       name: "Название раздела"
       description: "Описание"
       logo: "Логотип раздела"
+      logo_dark: "Логотип, используемый в тёмном режиме"
       background_image: "Фоновое изображение раздела"
       badge_colors: "Цвета наград"
       background_color: "Цвет фона"
@@ -3574,7 +3581,7 @@ ru:
         appearance: "Внешний вид"
         email: "Email"
       list_filters:
-        all: "Все непрочитанные темы"
+        all: "Все темы"
         none: "Без подразделов"
       colors_disabled: "Вы не можете выбирать цвета, поскольку не указан стиль раздела."
     flagging:
@@ -4046,7 +4053,6 @@ ru:
       tag_list_joiner: ", "
       delete_unused: "Удалить неиспользуемые теги"
       delete_unused_description: "Удалите все теги, которые не прикреплены к темам или личным сообщениям"
-      cancel_delete_unused: "Отменить"
       filters:
         without_category: "%{filter} темы с тегом %{tag}"
         with_category: "%{filter} темы с тегом %{tag} в разделе %{category}"
@@ -4177,7 +4183,7 @@ ru:
         many: "%{count} новых"
         other: "%{count} непрочитанных"
       toggle_section: "Свернуть / развернуть секцию"
-      more: "Ещё..."
+      more: "Ещё"
       all_categories: "Все разделы"
       all_tags: "Все теги"
       sections:

@@ -1536,7 +1536,6 @@ fa_IR:
     bulk_invite_succeeded:
       title: "دعوت عمومی موفق"
       subject_template: "دعوت گروهی کاربران با موفقیت انجام شد"
-      text_body_template: "فایل دعوت گروهی کاربر شما پردازش شد، %{sent} دعوتنامه ارسال شد. "
     bulk_invite_failed:
       title: "دعوت گروهی ناموفق"
       subject_template: "دعوت انبوه کاربر با مشکل پردازش شد"

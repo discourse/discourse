@@ -2560,18 +2560,9 @@ ko:
     bulk_invite_succeeded:
       title: "일괄 초대 성공"
       subject_template: "일괄 사용자 초대가 처리되었습니다"
-      text_body_template: "일괄 사용자 초대 파일이 처리되어 %{sent}명에게 초대를 발송했습니다."
     bulk_invite_failed:
       title: "일괄 초대 실패"
       subject_template: "일괄 사용자 초대 처리 중에 오류가 발생했습니다"
-      text_body_template: |
-        일괄 사용자 초대 파일이 처리되어 %{sent}명에게 초대를 발송했고 %{failed}개의 오류가 발생했습니다.
-
-        로그:
-
-        ``` text
-        %{logs}
-        ```
     user_added_to_group_as_owner:
       title: "그룹에 소유자로 추가됨"
       subject_template: "%{group_name} 그룹의 소유자로 추가되었습니다"

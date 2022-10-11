@@ -202,6 +202,7 @@ nl:
     ok_value: "OK"
     cancel_value: "Annuleren"
     submit: "Versturen"
+    delete: "Verwijderen"
     generic_error: "Sorry, er is iets fout gegaan."
     generic_error_with_reason: "Er is iets fout gegaan: %{error}"
     sign_up: "Registreren"
@@ -1646,6 +1647,8 @@ nl:
       leave_message: "Weet u zeker dat u dit bericht wilt verlaten?"
       remove_allowed_user: "Wilt u %{name} echt uit dit bericht verwijderen?"
       remove_allowed_group: "Wilt u %{name} echt uit dit bericht verwijderen?"
+      leave: "Verlaten"
+      remove_user: "Gebruiker verwijderen"
     email: "E-mailadres"
     username: "Gebruikersnaam"
     last_seen: "Gezien"
@@ -3396,7 +3399,6 @@ nl:
       tag_list_joiner: ", "
       delete_unused: "Ongebruikte tags verwijderen"
       delete_unused_description: "Alle tags verwijderen die niet aan topics of persoonlijke berichten zijn gekoppeld"
-      cancel_delete_unused: "Annuleren"
       filters:
         without_category: "%{filter} %{tag} topics"
         with_category: "%{filter} %{tag} topics in %{category}"
@@ -3497,7 +3499,7 @@ nl:
       new_count:
         one: "%{count} nieuw"
         other: "%{count} nieuw"
-      more: "Meer..."
+      more: "Meer"
       all_categories: "Alle categorieën"
       sections:
         about:

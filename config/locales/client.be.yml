@@ -95,6 +95,7 @@ be:
     ok_value: "Добра"
     cancel_value: "адмяніць"
     submit: "Адправіць"
+    delete: "выдаляць"
     generic_error: "Выбачайце, здарылася памылка."
     generic_error_with_reason: "Паўстала памылка: %{error}"
     sign_up: "Рэгістрацыя"
@@ -728,6 +729,7 @@ be:
       disable: "Паказаць выдаленыя паведамленні"
     private_message_info:
       title: "Паказаць выдаленыя паведамленні..."
+      remove_user: "выдаліць карыстальніка"
     email: "Электронная пошта"
     username: "Імя карыстальніка"
     last_seen: "заўважаны апошні раз"
@@ -1314,7 +1316,6 @@ be:
       sort_by: "Сартаваць па:"
       sort_by_count: "падлічваць"
       sort_by_name: "Імя"
-      cancel_delete_unused: "адмяніць"
       notifications:
         watching:
           title: "Сачыць"
@@ -1346,7 +1347,7 @@ be:
         regular: "рэгулярны"
         leader: "лідэр"
     sidebar:
-      more: "Яшчэ ..."
+      more: "Больш"
       all_categories: "Усе катэгорыі"
       sections:
         about:

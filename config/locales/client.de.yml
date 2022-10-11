@@ -229,6 +229,7 @@ de:
     ok_value: "OK"
     cancel_value: "Abbrechen"
     submit: "Absenden"
+    delete: "Löschen"
     generic_error: "Entschuldigung, ein Fehler ist aufgetreten."
     generic_error_with_reason: "Ein Fehler ist aufgetreten: %{error}"
     sign_up: "Registrieren"
@@ -969,6 +970,7 @@ de:
     user_fields:
       none: "(wähle eine Option aus)"
       required: 'Bitte gib einen Wert für „%{name}“ ein'
+      same_as_password: 'Dein Passwort sollte nicht in anderen Feldern wiederholt werden.'
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -1745,6 +1747,9 @@ de:
       leave_message: "Möchtest du diese Unterhaltung wirklich verlassen?"
       remove_allowed_user: "Willst du %{name} wirklich aus dieser Nachricht entfernen?"
       remove_allowed_group: "Willst du %{name} wirklich aus dieser Nachricht entfernen?"
+      leave: "Verlassen"
+      remove_group: "Gruppe entfernen"
+      remove_user: "Benutzer entfernen"
     email: "E-Mail-Adresse"
     username: "Benutzername"
     last_seen: "Zuletzt gesehen"
@@ -1976,6 +1981,7 @@ de:
       edit_conflict: "Konflikt bearbeiten"
       esc: "esc"
       esc_label: "Klicken oder Esc drücken, um zu schließen"
+      ok_proceed: "Ok, weiter"
       group_mentioned_limit:
         one: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzer. Deshalb wird niemand benachrichtigt."
         other: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzern. Deshalb wird niemand benachrichtigt."
@@ -3162,6 +3168,7 @@ de:
       name: "Name der Kategorie"
       description: "Beschreibung"
       logo: "Logo für Kategorie"
+      logo_dark: "Logobild der Kategorie „Dunkelmodus“."
       background_image: "Hintergrundbild für Kategorie"
       badge_colors: "Farben des Abzeichens"
       background_color: "Hintergrundfarbe"
@@ -3688,7 +3695,6 @@ de:
       tag_list_joiner: ", "
       delete_unused: "Nicht verwendete Schlagwörter löschen"
       delete_unused_description: "Alle Schlagwörter löschen, die keinem Thema und keiner Nachricht zugeordnet sind."
-      cancel_delete_unused: "Abbrechen"
       filters:
         without_category: "%{filter} %{tag} Themen"
         with_category: "%{filter} %{tag} Themen in %{category}"
@@ -3815,7 +3821,7 @@ de:
         one: "%{count} neue"
         other: "%{count} neue"
       toggle_section: "Abschnitt umschalten"
-      more: "Mehr …"
+      more: "Mehr"
       all_categories: "Alle Kategorien"
       all_tags: "Alle Schlagwörter"
       sections:

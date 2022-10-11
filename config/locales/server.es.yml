@@ -2774,18 +2774,9 @@ es:
     bulk_invite_succeeded:
       title: "Invitación en masa realizada con éxito"
       subject_template: "Invitación masiva procesada con éxito"
-      text_body_template: "Tu archivo de invitación masiva ha sido procesada, se han enviado %{sent} invitaciones por correo electrónico."
     bulk_invite_failed:
       title: "La invitación en masa falló"
       subject_template: "Invitación masiva procesada con algunos errores"
-      text_body_template: |
-        Tu archivo de invitación masiva ha sido procesado, se han enviado por correo electrónico %{sent} invitaciones con %{failed} error(es).
-
-        Este es el registro:
-
-        ```text
-        %{logs}
-        ```
     user_added_to_group_as_owner:
       title: "Te han añadido como propietario a un grupo"
       subject_template: "Te han añadido como propietario al grupo %{group_name}"

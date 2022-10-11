@@ -191,6 +191,7 @@ th:
     ok_value: "ตกลง"
     cancel_value: "ยกเลิก"
     submit: "ตกลง"
+    delete: "ลบ"
     generic_error: "ขออภัย เกิดข้อผิดพลาดขึ้น"
     generic_error_with_reason: "เกิดข้อผิดพลาดขึ้น: %{error}"
     sign_up: "สมัครสมาชิก"
@@ -1219,6 +1220,8 @@ th:
       leave_message: "คุณต้องการละทิ้งข้อความนี้จริงๆใช่หรือไม่"
       remove_allowed_user: "คุณต้องการลบ %{name} จากข้อความนี้ใช่หรือไม่"
       remove_allowed_group: "คุณต้องการลบ %{name} จากข้อความนี้ใช่หรือไม่"
+      leave: "ออก"
+      remove_user: "ลบผู้ใช้"
     email: "อีเมล"
     username: "ชื่อผู้ใช้"
     last_seen: "เห็น"
@@ -2402,7 +2405,6 @@ th:
         other: "%{tags}และอีก%{count}"
       delete_unused: "ลบแท็กที่ไม่ได้ใช้"
       delete_unused_description: "ลบแท็กทั้งหมดที่ไม่ได้ถูกติดในกระทู้หรือข้อความส่วนตัวใดๆ"
-      cancel_delete_unused: "ยกเลิก"
       filters:
         without_category: "%{filter} %{tag} กระทู้"
         with_category: "%{filter} %{tag} กระทู้ใน %{category}"
@@ -2451,7 +2453,7 @@ th:
         other: "%{count} ยังไม่อ่าน"
       new_count:
         other: "%{count} ใหม่"
-      more: "อื่นๆ..."
+      more: "อื่น"
       all_categories: "หมวดหมู่ทั้งหมด"
       sections:
         about:

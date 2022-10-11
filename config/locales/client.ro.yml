@@ -227,6 +227,7 @@ ro:
     ok_value: "Ok"
     cancel_value: "Anulare"
     submit: "Trimite"
+    delete: "Șterge"
     generic_error: "A apărut o eroare."
     generic_error_with_reason: "A apărut o eroare: %{error}"
     sign_up: "Înregistrare"
@@ -1514,6 +1515,8 @@ ro:
       leave_message: "Sigur părăsești acest mesaj?"
       remove_allowed_user: "Chiar dorești să îl elimini pe %{name} din acest mesaj privat?"
       remove_allowed_group: "Ești sigur că vrei să îl scoți pe %{name} din acest mesaj?"
+      leave: "Părăsește"
+      remove_user: "Șterge utilizator"
     email: "Email"
     username: "Nume utilizator"
     last_seen: "Văzut"
@@ -2853,7 +2856,6 @@ ro:
       sort_by_name: "nume"
       manage_groups: "Gestionare grupuri de etichete"
       manage_groups_description: "Definește grupuri pentru a organiza etichetele"
-      cancel_delete_unused: "Anulează"
       filters:
         without_category: "%{filter} %{tag} subiecte"
         with_category: "%{filter} %{tag} subiecte în %{category}"
@@ -2940,7 +2942,7 @@ ro:
         one: "%{count} nou"
         few: "%{count} noi"
         other: "%{count} nou"
-      more: "Mai multe..."
+      more: "Mai multe"
       all_categories: "Toate categoriile"
       sections:
         about:
