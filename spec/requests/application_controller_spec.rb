@@ -1128,7 +1128,7 @@ RSpec.describe ApplicationController do
   describe 'preload Link header' do
     context "with GlobalSetting.preload_link_header" do
       before do
-        GlobalSetting.preload_link_header = '1'
+        global_setting :preload_link_header, true
       end
 
       it "should have the Link header with assets on full page requests" do
@@ -1144,7 +1144,7 @@ RSpec.describe ApplicationController do
 
     context "without GlobalSetting.preload_link_header" do
       before do
-        GlobalSetting.preload_link_header = nil
+        global_setting :preload_link_header, false
       end
 
       it "shouldn't have the Link header with assets on full page requests" do
