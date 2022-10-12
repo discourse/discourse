@@ -37,7 +37,7 @@ export default class CategorySectionLink {
   }
 
   get currentWhen() {
-    return "discovery.unreadCategory discovery.topCategory discovery.newCategory discovery.latestCategory";
+    return "discovery.unreadCategory discovery.topCategory discovery.newCategory discovery.latestCategory discovery.category";
   }
 
   get title() {
@@ -49,11 +49,15 @@ export default class CategorySectionLink {
   }
 
   get prefixType() {
-    return "icon";
+    return "span";
   }
 
-  get prefixValue() {
-    return "square-full";
+  get prefixCSS() {
+    if (this.category.parentCategory) {
+      return `background: linear-gradient(90deg, #${this.category.parentCategory.color} 50%, #${this.category.color} 50%)`;
+    } else {
+      return `background: #${this.category.color}`;
+    }
   }
 
   get prefixColor() {
@@ -79,12 +83,6 @@ export default class CategorySectionLink {
   }
 
   get route() {
-    if (this.totalUnread > 0) {
-      return "discovery.unreadCategory";
-    } else if (this.totalNew > 0) {
-      return "discovery.newCategory";
-    } else {
-      return "discovery.latestCategory";
-    }
+    return "discovery.category";
   }
 }

@@ -210,7 +210,7 @@ task 'javascript:update_constants' => :environment do
 
   emoji_buttons = groups_json.map do |group|
     <<~HTML
-			<button type="button" data-section="#{group["name"]}" {{action this.onCategorySelection "#{group["name"]}"}} class="btn btn-default category-button emoji">
+			<button type="button" data-section="#{group["name"]}" {{on "click" (fn this.onCategorySelection "#{group["name"]}")}} class="btn btn-default category-button emoji">
 				 {{replace-emoji ":#{group["tabicon"]}:"}}
 			</button>
     HTML

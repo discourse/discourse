@@ -79,6 +79,19 @@ RSpec.describe ListController do
       expect(parsed["topic_list"]["topics"].length).to eq(1)
     end
 
+    it 'filters out privacy policy and tos topics' do
+      tos_topic = create_topic
+      SiteSetting.tos_topic_id = tos_topic.id
+
+      pp_topic = create_topic
+      SiteSetting.privacy_topic_id = pp_topic.id
+
+      get "/latest.json"
+      expect(response.status).to eq(200)
+      parsed = response.parsed_body
+      expect(parsed["topic_list"]["topics"].length).to eq(1)
+    end
+
     it "shows correct title if topic list is set for homepage" do
       get "/latest"
 
@@ -197,7 +210,6 @@ RSpec.describe ListController do
       before do
         group.add(user)
         SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
-        SiteSetting.enable_personal_messages = false
         Group.refresh_automatic_groups!
       end
 
@@ -239,6 +251,7 @@ RSpec.describe ListController do
         group.add(user)
         sign_in(user)
         SiteSetting.unicode_usernames = false
+        Group.refresh_automatic_groups!
       end
 
       it 'should return the right response when user does not belong to group' do
@@ -266,6 +279,7 @@ RSpec.describe ListController do
       before do
         sign_in(user)
         SiteSetting.unicode_usernames = true
+        Group.refresh_automatic_groups!
       end
 
       it 'Returns a 200 with unicode group name' do

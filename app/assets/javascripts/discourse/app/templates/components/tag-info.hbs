@@ -17,7 +17,7 @@
         <div class="tag-name-wrapper">
           {{discourse-tag this.tagInfo.name tagName="div"}}
           {{#if this.canAdminTag}}
-            <a href {{action "edit"}} class="edit-tag" title={{i18n "tagging.edit_tag"}}>{{d-icon "pencil-alt"}}</a>
+            <a href {{on "click" this.edit}} class="edit-tag" title={{i18n "tagging.edit_tag"}}>{{d-icon "pencil-alt"}}</a>
           {{/if}}
         </div>
         <div class="tag-description-wrapper">
@@ -56,10 +56,10 @@
             <div class="tag-box">
               {{discourse-tag tag.id pmOnly=tag.pmOnly tagName="div"}}
               {{#if this.editSynonymsMode}}
-                <a href {{action "unlinkSynonym" tag}} class="unlink-synonym">
+                <a href {{on "click" (fn this.unlinkSynonym tag)}} class="unlink-synonym">
                   {{d-icon "unlink" title="tagging.remove_synonym"}}
                 </a>
-                <a href {{action "deleteSynonym" tag}} class="delete-synonym">
+                <a href {{on "click" (fn this.deleteSynonym tag)}} class="delete-synonym">
                   {{d-icon "far-trash-alt" title="tagging.delete_tag"}}
                 </a>
               {{/if}}

@@ -308,6 +308,10 @@ class Auth::DefaultCurrentUserProvider
     }
   end
 
+  # This is also used to set the first admin of the site via
+  # the finish installation & register -> user account activation
+  # for signup flow, since all admin emails are stored in
+  # DISCOURSE_DEVELOPER_EMAILS for self-hosters.
   def make_developer_admin(user)
     if  user.active? &&
         !user.admin &&
@@ -315,6 +319,7 @@ class Auth::DefaultCurrentUserProvider
         Rails.configuration.developer_emails.include?(user.email)
       user.admin = true
       user.save
+      Group.refresh_automatic_groups!(:staff, :admins)
     end
   end
 

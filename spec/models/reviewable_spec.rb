@@ -7,6 +7,9 @@ RSpec.describe Reviewable, type: :model do
 
     let(:reviewable) { Fabricate.build(:reviewable, created_by: admin) }
 
+    it { is_expected.to have_many(:reviewable_scores).dependent(:destroy) }
+    it { is_expected.to have_many(:reviewable_histories).dependent(:destroy) }
+
     it "can create a reviewable object" do
       expect(reviewable).to be_present
       expect(reviewable.pending?).to eq(true)

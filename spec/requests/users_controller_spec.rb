@@ -5535,6 +5535,7 @@ RSpec.describe UsersController do
     fab!(:user_2) { Fabricate(:user) }
 
     fab!(:private_message) do
+      Group.refresh_automatic_groups!
       create_post(
         user: user1,
         target_usernames: [user_2.username],

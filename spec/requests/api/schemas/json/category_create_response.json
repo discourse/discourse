@@ -239,6 +239,12 @@
             "null"
           ]
         },
+        "uploaded_logo_dark": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "uploaded_background": {
           "type": [
             "string",
@@ -293,6 +299,7 @@
         "topic_featured_link_allowed",
         "search_priority",
         "uploaded_logo",
+        "uploaded_logo_dark",
         "uploaded_background"
       ]
     }

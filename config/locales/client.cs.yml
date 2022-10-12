@@ -250,6 +250,7 @@ cs:
     ok_value: "OK"
     cancel_value: "Zrušit"
     submit: "Odeslat"
+    delete: "Smazat"
     generic_error: "Bohužel nastala chyba."
     generic_error_with_reason: "Nastala chyba: %{error}"
     sign_up: "Registrace"
@@ -1013,6 +1014,7 @@ cs:
         move_to_archive: "Archivovat"
         failed_to_move: "Nepodařilo se přesunout vybrané zprávy (možná vám spadlo připojení)"
         tags: "Štítek"
+        all_tags: "Všechny štítky"
       preferences_nav:
         account: "Účet"
         security: "Zabezpečení"
@@ -1440,6 +1442,8 @@ cs:
       leave_message: "Opravdu chcete opustit tuto zprávu?"
       remove_allowed_user: "Určitě chcete odstranit %{name} z této zprávy?"
       remove_allowed_group: "Opravdu chcete odstranit %{name} z této zprávy?"
+      leave: "Opustit skupinu"
+      remove_user: "Odebrat uživatele"
     email: "Email"
     username: "Uživatelské jméno"
     last_seen: "Naposledy viděn"
@@ -2810,7 +2814,6 @@ cs:
       upload: "Nahrát tagy"
       upload_instructions: "Jeden na řádek, případně se skupinou tagů ve formátu 'jméno_tagu,skupina_tagu'."
       upload_successful: "Tagy úspěšně nahrány"
-      cancel_delete_unused: "Zrušit"
       filters:
         without_category: "%{filter} %{tag} témata"
         with_category: "%{filter} %{tag} témata v %{category}"
@@ -2886,7 +2889,7 @@ cs:
         few: "%{count} nová"
         many: "%{count} nových"
         other: "%{count} nové"
-      more: "Více..."
+      more: "Více"
       all_categories: "Všechny kategorie"
       sections:
         about:

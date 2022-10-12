@@ -238,6 +238,7 @@ sl:
     ok_value: "V redu"
     cancel_value: "Prekliči"
     submit: "Išči"
+    delete: "Izbriši"
     generic_error: "Ups, prišlo je do napake."
     generic_error_with_reason: "Napaka: %{error}"
     sign_up: "Registracija"
@@ -1118,6 +1119,7 @@ sl:
         move_to_archive: "Arhiv"
         failed_to_move: "Premik izbranih sporočil ni uspel (mogoče je vaša povezava prekinjena)"
         tags: "Oznake"
+        all_tags: "Vse oznake"
       preferences_nav:
         account: "Račun"
         security: "Varnost"
@@ -1604,6 +1606,8 @@ sl:
       leave_message: "Ali hočete res zapustiti to sporočilo?"
       remove_allowed_user: "Ali resnično želite odstraniti %{name} s tega sporočila?"
       remove_allowed_group: "Ali resnično želite odstraniti %{name} s tega sporočila?"
+      leave: "Zapusti"
+      remove_user: "Odstrani uporabnika"
     email: "E-naslov"
     username: "Uporabniško ime"
     last_seen: "Viden"
@@ -3300,7 +3304,6 @@ sl:
       tag_list_joiner: ", "
       delete_unused: "Izbriši neuporabljene oznake"
       delete_unused_description: "Izbriši vse oznake, ki se ne uporabljajo na nobeni temi ali zasebnem sporočilu"
-      cancel_delete_unused: "Prekliči"
       filters:
         without_category: "%{filter} %{tag} teme"
         with_category: "%{filter} %{tag} teme v %{category}"
@@ -3389,7 +3392,7 @@ sl:
         two: "%{count} novi"
         few: "%{count} nove"
         other: "%{count} novih"
-      more: "Več..."
+      more: "Več"
       all_categories: "Vse kategorije"
       sections:
         about:
@@ -3429,6 +3432,9 @@ sl:
             my_posts:
               content: "Moji prispevki"
               title: "Moji prispevki"
+            review:
+              content: "Pregled"
+              title: "pregled"
   admin_js:
     type_to_filter: "vnesite za filter..."
     admin:

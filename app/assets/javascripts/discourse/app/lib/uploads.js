@@ -135,9 +135,6 @@ export function validateUploadedFile(file, opts) {
   return true;
 }
 
-export const IMAGES_EXTENSIONS_REGEX =
-  /(png|jpe?g|gif|svg|ico|heic|heif|webp)/i;
-
 function extensionsToArray(exts) {
   return exts
     .toLowerCase()
@@ -155,12 +152,10 @@ function staffExtensions(siteSettings) {
 }
 
 function imagesExtensions(staff, siteSettings) {
-  let exts = extensions(siteSettings).filter((ext) =>
-    IMAGES_EXTENSIONS_REGEX.test(ext)
-  );
+  let exts = extensions(siteSettings).filter((ext) => isImage(`.${ext}`));
   if (staff) {
     const staffExts = staffExtensions(siteSettings).filter((ext) =>
-      IMAGES_EXTENSIONS_REGEX.test(ext)
+      isImage(`.${ext}`)
     );
     exts = exts.concat(staffExts);
   }
@@ -234,7 +229,7 @@ export function authorizesOneOrMoreImageExtensions(staff, siteSettings) {
 }
 
 export function isImage(path) {
-  return /\.(png|webp|jpe?g|gif|svg|ico)$/i.test(path);
+  return /\.(png|webp|jpe?g|gif|svg|ico|heic|heif)$/i.test(path);
 }
 
 export function isVideo(path) {
@@ -252,9 +247,7 @@ function uploadTypeFromFileName(fileName) {
 export function allowsImages(staff, siteSettings) {
   return (
     authorizesAllExtensions(staff, siteSettings) ||
-    IMAGES_EXTENSIONS_REGEX.test(
-      authorizedExtensions(staff, siteSettings).join()
-    )
+    authorizedExtensions(staff, siteSettings).some((ext) => isImage(`.${ext}`))
   );
 }
 

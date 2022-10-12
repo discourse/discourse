@@ -122,7 +122,6 @@ da:
         unsubscribe_not_allowed: "Det sker, når afmelding via e-mail ikke er tilladt for denne bruger."
         email_not_allowed: "Det sker, når emailadressen ikke er på tilladelseslisten eller er på blokeringslisten."
       unrecognized_error: "Ikke-genkendt Fejl"
-    secure_media_placeholder: "Bortredigeret: Dette websted har aktiveret sikre medier, gå til emnet, eller klik på Vis medier for at se det vedhæftede medie."
     view_redacted_media: "Vis Medie"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -192,7 +191,6 @@ da:
       page_publishing_requirements: "Sideudgivelse kan ikke aktiveres, hvis sikre medier er aktiveret."
       s3_backup_requires_s3_settings: "Du kan ikke bruge S3 som backupplacering, medmindre du har angivet '%{setting_name}'."
       s3_bucket_reused: "Du kan ikke bruge den samme spand til 's3_upload_bucket' og 's3_backup_bucket'. Vælg en anden spand, eller brug en anden sti til hver spand."
-      secure_media_requirements: "S3-overførsler skal være aktiveret, før sikre medier aktiveres."
       share_quote_facebook_requirements: "Du skal indstille et Facebook-app-id for at aktivere citatdeling for Facebook."
       second_factor_cannot_enforce_with_socials: "Du kan ikke gennemtvinge 2FA med sociale logins aktiveret. Du skal først deaktivere login via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Du kan ikke gennemtvinge 2FA, hvis lokale logins er deaktiveret."

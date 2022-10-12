@@ -29,10 +29,11 @@
           @prefixValue={{@prefixValue}}
           @prefixCSSClass={{@prefixCSSClass}}
           @prefixCSS={{this.prefixCSS}}
+          @prefixColor={{this.prefixColor}}
           @prefixBadge={{@prefixBadge}}
         />
 
-        <span class="sidebar-section-link-content-text">
+        <span class={{concat-class "sidebar-section-link-content-text" @contentCSSClass}}>
           {{@content}}
         </span>
 

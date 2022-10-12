@@ -205,12 +205,14 @@ export default createPreviewComponent(628, 322, {
   },
 
   @action
-  setPreviewHomepage() {
+  setPreviewHomepage(event) {
+    event?.preventDefault();
     this.set("previewTopic", false);
   },
 
   @action
-  setPreviewTopic() {
+  setPreviewTopic(event) {
+    event?.preventDefault();
     this.set("previewTopic", true);
   },
 });

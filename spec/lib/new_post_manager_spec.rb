@@ -22,6 +22,7 @@ RSpec.describe NewPostManager do
     fab!(:other_user) { Fabricate(:user) }
 
     it "doesn't enqueue private messages" do
+      Group.refresh_automatic_groups!
       SiteSetting.approve_unless_trust_level = 4
 
       manager = NewPostManager.new(user,

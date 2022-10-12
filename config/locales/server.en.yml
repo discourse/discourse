@@ -279,6 +279,7 @@ en:
 
   topic_invite:
     failed_to_invite: "The user cannot be invited into this topic without a group membership in either one of the following groups: %{group_names}."
+    not_pm: "You can only invite to private messages."
     user_exists: "Sorry, that user has already been invited. You may only invite a user to a topic once."
     muted_topic: "Sorry, that user muted this topic."
     receiver_does_not_allow_pm: "Sorry, that user does not allow you to send them private messages."
@@ -661,7 +662,7 @@ en:
   staff_category_description: "Private category for staff discussions. Topics are only visible to admins and moderators."
 
   discourse_welcome_topic:
-    title: "Welcome to Discourse"
+    title: "Welcome to our community!"
     body: |
 
       The first paragraph of this pinned topic will be visible as a welcome message to all new visitors on your homepage. It's important!
@@ -1791,6 +1792,7 @@ en:
     max_personal_messages_per_day: "Maximum number of new personal message topics a user can create per day."
     max_invites_per_day: "Maximum number of invites a user can send per day."
     max_topic_invitations_per_day: "Maximum number of topic invitations a user can send per day."
+    max_topic_invitations_per_minute: "Maximum number of topic invitations a user can send per minute."
 
     max_logins_per_ip_per_hour: "Maximum number of logins allowed per IP address per hour"
     max_logins_per_ip_per_minute: "Maximum number of logins allowed per IP address per minute"
@@ -3091,13 +3093,18 @@ en:
     bulk_invite_succeeded:
       title: "Bulk Invite Succeeded"
       subject_template: "Bulk user invite processed successfully"
-      text_body_template: "Your bulk user invite file was processed, %{sent} invites mailed."
+      text_body_template: |
+        Your bulk user invite file was processed, %{sent} invites mailed, %{skipped} skipped and %{warnings} warning(s).
+
+        ``` text
+        %{logs}
+        ```
 
     bulk_invite_failed:
       title: "Bulk Invite Failed"
       subject_template: "Bulk user invite processed with errors"
       text_body_template: |
-        Your bulk user invite file was processed, %{sent} invites mailed with %{failed} error(s).
+        Your bulk user invite file was processed, %{sent} invites mailed, %{skipped} skipped, %{warnings} warning(s) and %{failed} error(s).
 
         Here's the log:
 
@@ -4968,7 +4975,7 @@ en:
                 label: "Subcategories with Featured Topics"
 
       branding:
-        title: "Community Branding"
+        title: "Customize Logos"
         fields:
           logo:
             label: "Primary Logo"
@@ -4984,7 +4991,7 @@ en:
             description: "Icon used to represent your site on mobile devices that looks good at larger sizes. Ideally greater than 512x512. Square logo used by default."
 
       corporate:
-        title: "Contact & Org"
+        title: "Your Organization"
 
         fields:
           company_name:

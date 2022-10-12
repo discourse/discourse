@@ -257,6 +257,7 @@ hr:
     ok_value: "U redu"
     cancel_value: "Odustani"
     submit: "Pošalji"
+    delete: "Pobriši"
     generic_error: "Dogodila se greška, ispričavamo se."
     generic_error_with_reason: "Dogodila se greška: %{error}"
     sign_up: "Učlani se"
@@ -1248,6 +1249,7 @@ hr:
         move_to_archive: "Arhiva"
         failed_to_move: "Neuspješno premještanje odabranih poruka (možda vam je mreža nedostupna)"
         tags: "Oznake"
+        all_tags: "Sve oznake"
         warnings: "Službena upozorenja"
         read_more_in_group: "Želite li pročitati više? Pregledajte ostale poruke u %{groupLink}."
         read_more: "Želite li pročitati više? Pregledajte ostale poruke u <a href='%{basePath}/u/%{username}/messages'>osobnim porukama</a>."
@@ -1802,6 +1804,8 @@ hr:
       leave_message: "Želite li zaista ostaviti ovu poruku?"
       remove_allowed_user: "Želite li zaista ukloniti %{name} iz ove poruke?"
       remove_allowed_group: "Želite li zaista ukloniti %{name} iz ove poruke?"
+      leave: "Napustiti"
+      remove_user: "Ukloni korisnika"
     email: "E-mail"
     username: "Korisničko ime"
     last_seen: "Viđeno"
@@ -3771,7 +3775,6 @@ hr:
       tag_list_joiner: ", "
       delete_unused: "Izbriši neiskorištene oznake"
       delete_unused_description: "Izbrišite sve tagove koji nisu dodijeljeni niti jednoj temi ili privatnoj poruci."
-      cancel_delete_unused: "Odustani"
       filters:
         without_category: "%{filter} %{tag} teme"
         with_category: "%{filter} %{tag} tema u %{category}"
@@ -3895,7 +3898,7 @@ hr:
         one: "%{count} novi"
         few: "%{count} novih"
         other: "%{count} novi"
-      more: "Više..."
+      more: "Više"
       all_categories: "Sve kategorije"
       sections:
         about:
@@ -3939,6 +3942,9 @@ hr:
               content: "Korisnika"
             my_posts:
               content: "Moje objave"
+            review:
+              content: "Osvrt"
+              title: "osvrt"
   admin_js:
     type_to_filter: "upiši za filtriranje"
     admin:

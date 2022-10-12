@@ -1207,7 +1207,6 @@ sw:
     bulk_invite_succeeded:
       title: "Mualiko wa Watumiaji Wengi Umefanikiwa"
       subject_template: "Mualiko wa Watumiaji Wengi umefanikiwa"
-      text_body_template: "Mualiko wa Watumiaji Wengi wa faili umefanyiwa uchakataji, mialiko %{sent} imetumwa."
     bulk_invite_failed:
       title: "Mualiko wa Watumiaji Wengi Umeshindikana"
       subject_template: "Mualiko wa Watumiaji Wengi umepata hitilafu"

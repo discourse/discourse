@@ -2,7 +2,7 @@
   <h3>{{this.formattedName}}</h3>
   <div class="controls">
     <label class="radio">
-      <input id="radio_{{this.flag.name_key}}" {{action "changePostActionType" this.flag}} type="radio" name="post_action_type_index">
+      <input id="radio_{{this.flag.name_key}}" {{on "click" (action "changePostActionType" this.flag)}} type="radio" name="post_action_type_index">
 
       <div class="flag-action-type-details">
         <span class="description">{{html-safe this.flag.description}}</span>
@@ -19,7 +19,7 @@
 {{else}}
   <div class="controls {{this.flag.name_key}}">
     <label class="radio">
-      <input id="radio_{{this.flag.name_key}}" {{action "changePostActionType" this.flag}} type="radio" name="post_action_type_index">
+      <input id="radio_{{this.flag.name_key}}" {{on "click" (action "changePostActionType" this.flag)}} type="radio" name="post_action_type_index">
       <div class="flag-action-type-details">
         <strong>{{this.formattedName}}</strong>
         {{#if this.showDescription}}

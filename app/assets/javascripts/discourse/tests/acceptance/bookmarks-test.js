@@ -215,15 +215,15 @@ acceptance("Bookmarking", function (needs) {
 
     await click("#delete-bookmark");
 
-    assert.ok(exists(".bootbox.modal"), "it asks for delete confirmation");
+    assert.ok(exists(".dialog-body"), "it asks for delete confirmation");
     assert.ok(
-      query(".bootbox.modal").innerText.includes(
+      query(".dialog-body").innerText.includes(
         I18n.t("bookmarks.confirm_delete")
       ),
       "it shows delete confirmation message"
     );
 
-    await click(".bootbox.modal .btn-primary");
+    await click(".dialog-footer .btn-danger");
 
     assert.notOk(
       exists(".topic-post:first-child button.bookmark.bookmarked"),
@@ -444,15 +444,15 @@ acceptance("Bookmarking", function (needs) {
     await click("#topic-footer-button-bookmark");
     await click("#delete-bookmark");
 
-    assert.ok(exists(".bootbox.modal"), "it asks for delete confirmation");
+    assert.ok(exists(".dialog-body"), "it asks for delete confirmation");
     assert.ok(
-      query(".bootbox.modal").innerText.includes(
+      query(".dialog-body").innerText.includes(
         I18n.t("bookmarks.confirm_delete")
       ),
       "it shows delete confirmation message"
     );
 
-    await click(".bootbox.modal .btn-primary");
+    await click(".dialog-footer .btn-danger");
 
     assert.strictEqual(
       query("#topic-footer-button-bookmark").innerText,

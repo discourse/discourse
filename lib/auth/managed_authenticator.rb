@@ -24,6 +24,11 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     true
   end
 
+  # Depending on the authenticator, this could be insecure, so it's disabled by default
+  def match_by_username
+    false
+  end
+
   def primary_email_verified?(auth_token)
     # Omniauth providers should only provide verified emails in the :info hash.
     # This method allows additional checks to be added
@@ -62,6 +67,16 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     if match_by_email &&
         association.user.nil? &&
         (user = find_user_by_email(auth_token))
+
+      UserAssociatedAccount.where(user: user, provider_name: auth_token[:provider]).destroy_all # Destroy existing associations for the new user
+      association.user = user
+    end
+
+    # Matching an account by username
+    if match_by_username &&
+        association.user.nil? &&
+        SiteSetting.username_change_period.zero? &&
+        (user = find_user_by_username(auth_token))
 
       UserAssociatedAccount.where(user: user, provider_name: auth_token[:provider]).destroy_all # Destroy existing associations for the new user
       association.user = user
@@ -119,6 +134,13 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     email = auth_token.dig(:info, :email)
     if email && primary_email_verified?(auth_token)
       User.find_by_email(email)
+    end
+  end
+
+  def find_user_by_username(auth_token)
+    username = auth_token.dig(:info, :nickname)
+    if username
+      User.find_by_username(username)
     end
   end
 

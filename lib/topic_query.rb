@@ -173,8 +173,7 @@ class TopicQuery
     return if !topic.private_message?
     return if @user.blank?
 
-    # TODO (martin) Remove enable_personal_messages here once plugins have been changed.
-    if !SiteSetting.enable_personal_messages || !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
+    if !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
       return
     end
 
@@ -201,13 +200,10 @@ class TopicQuery
   # Return a list of suggested topics for a topic
   def list_suggested_for(topic, pm_params: nil)
 
-    # TODO (martin) Remove enable_personal_messages here once plugins have been changed.
     # Don't suggest messages unless we have a user, and private messages are
     # enabled.
     if topic.private_message? && (
-        @user.blank? ||
-          !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map) ||
-          !SiteSetting.enable_personal_messages
+        @user.blank? || !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
     )
       return
     end
@@ -441,6 +437,9 @@ class TopicQuery
     end
 
     topics = topics.to_a
+
+    # These don't need to be shown in the topic list
+    topics = topics.reject { |t| [SiteSetting.privacy_topic_id, SiteSetting.tos_topic_id].include?(t[:id]) }
 
     if options[:preload_posters]
       user_ids = []

@@ -8,12 +8,18 @@ export default class UserStatusPicker extends Component {
   tagName = "";
   isFocused = false;
   emojiPickerIsActive = false;
-  emoji = null;
-  description = null;
 
-  @computed("emoji")
+  didInsertElement() {
+    this._super(...arguments);
+
+    if (!this.status) {
+      this.set("status", {});
+    }
+  }
+
+  @computed("status.emoji")
   get emojiHtml() {
-    const emoji = escapeExpression(`:${this.emoji}:`);
+    const emoji = escapeExpression(`:${this.status.emoji}:`);
     return emojiUnescape(emoji);
   }
 
@@ -24,7 +30,7 @@ export default class UserStatusPicker extends Component {
 
   @action
   emojiSelected(emoji) {
-    this.set("emoji", emoji);
+    this.set("status.emoji", emoji);
     this.set("emojiPickerIsActive", false);
 
     scheduleOnce("afterRender", () => {
@@ -44,8 +50,8 @@ export default class UserStatusPicker extends Component {
 
   @action
   setDefaultEmoji() {
-    if (!this.emoji) {
-      this.set("emoji", "speech_balloon");
+    if (!this.status.emoji) {
+      this.set("status.emoji", "speech_balloon");
     }
   }
 

@@ -635,7 +635,6 @@ RSpec.describe GroupsController do
       expect(body["messageable"]).to eq(true)
 
       SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
-      SiteSetting.enable_personal_messages = false
 
       get "/groups/#{group.name}/messageable.json"
       expect(response.status).to eq(200)

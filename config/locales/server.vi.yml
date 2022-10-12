@@ -1582,18 +1582,9 @@ vi:
     bulk_invite_succeeded:
       title: "Mời hàng loạt thành công"
       subject_template: "Mời thành viên hàng loạt đã được thực hiện thành công"
-      text_body_template: "File mời thành viên hàng loạt của bạn đã được thực hiện, %{sent} lời mời đã được gửi."
     bulk_invite_failed:
       title: "Mời hàng loạt không thành công"
       subject_template: "Có lỗi khi thực hiện mời thành viên hàng loạt"
-      text_body_template: |
-        Tệp mời người dùng hàng loạt của bạn đã được xử lý, %{sent} lời mời được gửi qua thư với %{failed} (các) lỗi.
-
-        Đây là nhật ký:
-
-        ``` text
-        %{logs}
-        ```
     user_added_to_group_as_owner:
       title: "Đã thêm vào Nhóm với tư cách là Chủ sở hữu"
       subject_template: "Bạn đã được thêm vào với tư cách là chủ sở hữu của nhóm %{group_name}"

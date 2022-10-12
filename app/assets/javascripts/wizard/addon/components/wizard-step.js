@@ -134,12 +134,14 @@ export default Component.extend({
   },
 
   @action
-  quit() {
+  quit(event) {
+    event?.preventDefault();
     this.router.transitionTo("discovery.latest");
   },
 
   @action
-  exitEarly() {
+  exitEarly(event) {
+    event?.preventDefault();
     const step = this.step;
     step.validate();
 
@@ -156,7 +158,9 @@ export default Component.extend({
   },
 
   @action
-  backStep() {
+  backStep(event) {
+    event?.preventDefault();
+
     if (this.saving) {
       return;
     }
@@ -165,7 +169,9 @@ export default Component.extend({
   },
 
   @action
-  nextStep() {
+  nextStep(event) {
+    event?.preventDefault();
+
     if (this.saving) {
       return;
     }

@@ -1051,18 +1051,9 @@ sl:
     bulk_invite_succeeded:
       title: "Množično povabilo je uspelo"
       subject_template: "Množično povabilo uporabnikov je uspelo"
-      text_body_template: "Vaše datoteka za množično povabilo uporabnikov je bila obdelana, %{sent} poslanih povabil."
     bulk_invite_failed:
       title: "Množično povabilo ni uspelo"
       subject_template: "Množično pobvabilo uporabnikov je končalo z napakami"
-      text_body_template: |
-        Vaša datoteka za množično povabilo uporabnikov je bila obdelana, %{sent} poslanih povabil z %{failed} napakami.
-
-        Tukaj je dnevnik napak:
-
-        ``` text
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "CSV izvoz uspel"
       subject_template: "[%{export_title}] Izvoz podatkov končan"

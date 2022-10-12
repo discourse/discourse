@@ -229,6 +229,7 @@ hu:
     ok_value: "Rendben"
     cancel_value: "Mégse"
     submit: "Beküldés"
+    delete: "Törlés"
     generic_error: "Sajnos hiba történt."
     generic_error_with_reason: "Hiba történt: %{error}"
     sign_up: "Regisztráció"
@@ -1192,6 +1193,7 @@ hu:
         move_to_archive: "Archiválás"
         failed_to_move: "A kijelölt üzenetek áthelyezése nem sikerült (lehet, hogy nincs hálózat)"
         tags: "Címkék"
+        all_tags: "Összes címke"
         warnings: "Hivatalos figyelmeztetések"
         read_more_in_group: "Szeretne többet olvasni? Nézzen meg más témákat itt: %{groupLink}."
         read_more: "Szeretne többet olvasni? Böngésszen a többi üzenet között a <a href='%{basePath}/u/%{username}/messages'>személyes üzenetekben</a>."
@@ -1730,6 +1732,8 @@ hu:
       leave_message: "Biztos, hogy elhagyja a beszélgetést?"
       remove_allowed_user: "Biztos, hogy eltávolítja a következőt ebből az üzenetből: %{name}?"
       remove_allowed_group: "Biztos, hogy eltávolítja a következőt ebből az üzenetből: %{name}?"
+      leave: "Elhagyás"
+      remove_user: "Felhasználó eltávolítása"
     email: "E-mail"
     username: "Felhasználónév"
     last_seen: "Látva"
@@ -3330,7 +3334,6 @@ hu:
       sort_by_count: "besorol"
       sort_by_name: "név"
       manage_groups: "Címke csoport kezelése"
-      cancel_delete_unused: "Visszavon"
       filters:
         without_category: "%{filter} %{tag} Témák"
         with_category: "%{filter} %{tag} Témák a %{category}"
@@ -3403,7 +3406,7 @@ hu:
       new_count:
         one: "%{count} új"
         other: "%{count} új"
-      more: "Továbbiak..."
+      more: "Több"
       all_categories: "Minden kategória"
       sections:
         about:
@@ -3442,6 +3445,9 @@ hu:
               content: "Felhasználók"
             my_posts:
               content: "Saját bejegyzéseim"
+            review:
+              content: "Áttekintés"
+              title: "áttekintés"
     welcome_topic_banner:
       title: "Hozzon létre üdvözlő témát"
       description: 'Az üdvözlő téma az első, amit az újonnan érkezők olvasnak. Gondoljon rá úgy mint egy bekezdésnyi bemutatkozóra vagy „küldetésnyilatkozatra”.'

@@ -1,22 +1,25 @@
 .new-user-wrapper {
-  .user-nav {
-    flex-direction: column;
+  .user-navigation {
+    width: 100%;
 
-    > li {
-      width: 100%;
+    .nav-pills {
+      margin: 0.5em 0;
+      overflow-x: auto;
+      scrollbar-width: none;
 
-      .d-icon {
-        margin-right: 0.5em;
+      &::-webkit-scrollbar {
+        display: none;
       }
+    }
+  }
 
-      &:not(:first-of-type) {
-        border-top: 1px solid var(--primary-low);
-      }
+  .user-navigation-secondary {
+    font-size: var(--font-up-1);
 
-      > a,
-      button {
-        padding: 1em 0.75em;
-        width: 100%;
+    .nav-pills {
+      flex-wrap: nowrap;
+      li {
+        flex: 1 0 auto;
       }
     }
   }
@@ -48,5 +51,19 @@
       width: 100%;
       @include ellipsis;
     }
+  }
+
+  #navigation-bar {
+    flex-wrap: nowrap;
+  }
+
+  .navigation-controls {
+    margin-top: 1em;
+  }
+}
+
+.new-user-content-wrapper {
+  .user-content {
+    margin-top: 2em;
   }
 }

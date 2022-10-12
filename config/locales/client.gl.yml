@@ -198,6 +198,7 @@ gl:
     ok_value: "De acordo"
     cancel_value: "Cancelar"
     submit: "Enviar"
+    delete: "Eliminar"
     generic_error: "Sentímolo pero produciuse un erro."
     generic_error_with_reason: "Produciuse un erro: %{error}"
     sign_up: "Crear unha conta"
@@ -1084,6 +1085,7 @@ gl:
         move_to_archive: "Arquivo"
         failed_to_move: "Produciuse un fallo ao mover as mensaxes seleccionadas (quizais a rede está caída)"
         tags: "Etiquetas"
+        all_tags: "Todas as etiquetas"
       preferences_nav:
         account: "Conta"
         security: "Seguranza"
@@ -1593,6 +1595,8 @@ gl:
       leave_message: "Confirma o abandono desta mensaxe?"
       remove_allowed_user: "Confirma que quere retirar a %{name} desta mensaxe?"
       remove_allowed_group: "Confirma que quere retirar a %{name} desta mensaxe?"
+      leave: "Abandonar"
+      remove_user: "Retirar usuario"
     email: "Correo electrónico"
     username: "Nome de usuario"
     last_seen: "Visto"
@@ -3271,7 +3275,6 @@ gl:
       tag_list_joiner: ", "
       delete_unused: "Eliminar etiquetas sen usar"
       delete_unused_description: "Eliminar todas as etiquetas que non estean asociadas a ningún tema ou mensaxe privada"
-      cancel_delete_unused: "Cancelar"
       filters:
         without_category: "%{filter} %{tag} temas"
         with_category: "%{filter}%{tag} temas en %{category}"
@@ -3357,7 +3360,7 @@ gl:
       new_count:
         one: "%{count} novo"
         other: "%{count} novos"
-      more: "Máis..."
+      more: "Máis"
       all_categories: "Todas as categorías"
       sections:
         about:
@@ -3396,6 +3399,9 @@ gl:
               content: "Usuarios"
             my_posts:
               content: "As miñas publicacións"
+            review:
+              content: "Revisar"
+              title: "revisar"
   admin_js:
     type_to_filter: "escriba para filtrar..."
     admin:

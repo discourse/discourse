@@ -45,7 +45,7 @@ export default ComboBoxComponent.extend({
       return Category.findUncategorized();
     } else {
       const generalCategoryId = this.siteSettings.general_category_id;
-      if (!generalCategoryId) {
+      if (!generalCategoryId || generalCategoryId < 0) {
         return this.defaultItem(null, htmlSafe(I18n.t("category.choose")));
       }
     }

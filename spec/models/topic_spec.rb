@@ -723,38 +723,76 @@ RSpec.describe Topic do
 
     context 'with rate limits' do
       before do
-        SiteSetting.max_topic_invitations_per_day = 1
         RateLimiter.enable
+        Group.refresh_automatic_groups!
       end
 
       after do
         RateLimiter.clear_all!
       end
 
-      it "rate limits topic invitations" do
-        start = Time.now.tomorrow.beginning_of_day
-        freeze_time(start)
+      context 'when per day' do
+        before do
+          SiteSetting.max_topic_invitations_per_day = 1
+        end
 
-        topic = Fabricate(:topic, user: trust_level_2)
+        it "rate limits topic invitations" do
+          start = Time.now.tomorrow.beginning_of_day
+          freeze_time(start)
 
-        topic.invite(topic.user, user.username)
+          topic = Fabricate(:topic, user: trust_level_2)
 
-        expect {
-          topic.invite(topic.user, user1.username)
-        }.to raise_error(RateLimiter::LimitExceeded)
+          topic.invite(topic.user, user.username)
+
+          expect {
+            topic.invite(topic.user, user1.username)
+          }.to raise_error(RateLimiter::LimitExceeded)
+        end
+
+        it "rate limits PM invitations" do
+          start = Time.now.tomorrow.beginning_of_day
+          freeze_time(start)
+
+          topic = Fabricate(:private_message_topic, user: trust_level_2)
+
+          topic.invite(topic.user, user.username)
+
+          expect {
+            topic.invite(topic.user, user1.username)
+          }.to raise_error(RateLimiter::LimitExceeded)
+        end
       end
 
-      it "rate limits PM invitations" do
-        start = Time.now.tomorrow.beginning_of_day
-        freeze_time(start)
+      context 'when per minute' do
+        before do
+          SiteSetting.max_topic_invitations_per_minute = 1
+        end
 
-        topic = Fabricate(:private_message_topic, user: trust_level_2)
+        it "rate limits topic invitations" do
+          start = Time.now.tomorrow.beginning_of_minute
+          freeze_time(start)
 
-        topic.invite(topic.user, user.username)
+          topic = Fabricate(:topic, user: trust_level_2)
 
-        expect {
-          topic.invite(topic.user, user1.username)
-        }.to raise_error(RateLimiter::LimitExceeded)
+          topic.invite(topic.user, user.username)
+
+          expect {
+            topic.invite(topic.user, user1.username)
+          }.to raise_error(RateLimiter::LimitExceeded)
+        end
+
+        it "rate limits PM invitations" do
+          start = Time.now.tomorrow.beginning_of_minute
+          freeze_time(start)
+
+          topic = Fabricate(:private_message_topic, user: trust_level_2)
+
+          topic.invite(topic.user, user.username)
+
+          expect {
+            topic.invite(topic.user, user1.username)
+          }.to raise_error(RateLimiter::LimitExceeded)
+        end
       end
     end
 
@@ -778,6 +816,10 @@ RSpec.describe Topic do
     describe 'private message' do
       fab!(:user) { trust_level_2 }
       fab!(:topic) { Fabricate(:private_message_topic, user: trust_level_2) }
+
+      before do
+        Group.refresh_automatic_groups!
+      end
 
       describe 'by username' do
         it 'should be able to invite a user' do
@@ -831,7 +873,6 @@ RSpec.describe Topic do
         context "when PMs are enabled for TL3 or higher only" do
           before do
             SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
-            SiteSetting.enable_personal_messages = false
           end
 
           it 'should raise error' do
@@ -1029,9 +1070,11 @@ RSpec.describe Topic do
   end
 
   describe 'private message' do
+    fab!(:pm_user) { Fabricate(:user) }
     fab!(:topic) do
+      Group.refresh_automatic_groups!
       PostCreator.new(
-        Fabricate(:user),
+        pm_user,
         title: "This is a private message",
         raw: "This is my message to you-ou-ou",
         archetype: Archetype.private_message,
@@ -2470,6 +2513,7 @@ RSpec.describe Topic do
     end
 
     it "limits according to max_personal_messages_per_day" do
+      Group.refresh_automatic_groups!
       create_post(user: user, archetype: 'private_message', target_usernames: [user1.username, user2.username])
       expect {
         create_post(user: user, archetype: 'private_message', target_usernames: [user1.username, user2.username])

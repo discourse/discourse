@@ -7,13 +7,15 @@ import { action } from "@ember/object";
 const HIDE_SIDEBAR_KEY = "sidebar-hidden";
 
 export default Controller.extend({
-  queryParams: ["enable_sidebar"],
+  queryParams: [{ sidebarQueryParamOverride: "enable_sidebar" }],
 
   showTop: true,
   showFooter: false,
   router: service(),
   showSidebar: false,
-  enable_sidebar: null,
+  sidebarQueryParamOverride: null,
+  sidebarDisabledRouteOverride: false,
+  showSiteHeader: true,
 
   init() {
     this._super(...arguments);
@@ -62,29 +64,30 @@ export default Controller.extend({
   },
 
   @discourseComputed(
-    "enable_sidebar",
+    "sidebarQueryParamOverride",
     "siteSettings.enable_sidebar",
-    "router.currentRouteName",
-    "canDisplaySidebar"
+    "canDisplaySidebar",
+    "sidebarDisabledRouteOverride"
   )
   sidebarEnabled(
     sidebarQueryParamOverride,
     enableSidebar,
-    currentRouteName,
-    canDisplaySidebar
+    canDisplaySidebar,
+    sidebarDisabledRouteOverride
   ) {
     if (!canDisplaySidebar) {
       return false;
     }
+
+    if (sidebarDisabledRouteOverride) {
+      return false;
+    }
+
     if (sidebarQueryParamOverride === "1") {
       return true;
     }
 
     if (sidebarQueryParamOverride === "0") {
-      return false;
-    }
-
-    if (currentRouteName.startsWith("wizard")) {
       return false;
     }
 
@@ -94,11 +97,6 @@ export default Controller.extend({
     }
 
     return enableSidebar;
-  },
-
-  @discourseComputed("router.currentRouteName")
-  showSiteHeader(currentRouteName) {
-    return !currentRouteName.startsWith("wizard");
   },
 
   @action

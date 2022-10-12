@@ -564,4 +564,49 @@ acceptance("Sidebar - Plugin API", function (needs) {
       "does not display my favourite topic custom section link when current route does not match the link's route"
     );
   });
+
+  test("Section that is not displayed via displaySection", async function (assert) {
+    withPluginApi("1.3.0", (api) => {
+      api.addSidebarSection((BaseCustomSidebarSection) => {
+        return class extends BaseCustomSidebarSection {
+          get name() {
+            return "test-chat-channels";
+          }
+
+          get text() {
+            return "chat channels text";
+          }
+
+          get actionsIcon() {
+            return "cog";
+          }
+
+          get actions() {
+            return [
+              {
+                id: "browseChannels",
+                title: "Browse channels",
+                action: () => {},
+              },
+            ];
+          }
+
+          get links() {
+            return [];
+          }
+
+          get displaySection() {
+            return false;
+          }
+        };
+      });
+    });
+
+    await visit("/");
+
+    assert.notOk(
+      exists(".sidebar-section-test-chat-channels"),
+      "does not display the section"
+    );
+  });
 });

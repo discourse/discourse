@@ -123,8 +123,11 @@ export default createWidget("poster-name", {
       }
     }
 
-    const afterNameContents = this.afterNameContents(attrs);
+    const afterNameContents =
+      applyDecorators(this, "after-name", attrs, this.state) || [];
     const credits = this.creditsIndicator(attrs);
+    
+
     nameContents = nameContents.concat(afterNameContents);
     nameContents = nameContents.concat(credits);
 
@@ -163,20 +166,17 @@ export default createWidget("poster-name", {
       );
     }
 
+    if (this.siteSettings.enable_user_status) {
+      this.addUserStatus(contents, attrs);
+    }
+
     return contents;
   },
 
-  afterNameContents(attrs) {
-    const contents = [];
-    if (
-      this.siteSettings.enable_user_status &&
-      attrs.user &&
-      attrs.user.status
-    ) {
+  addUserStatus(contents, attrs) {
+    if (attrs.user && attrs.user.status) {
       contents.push(this.attach("post-user-status", attrs.user.status));
     }
-    contents.push(...applyDecorators(this, "after-name", attrs, this.state));
-    return contents;
   },
 
   creditsIndicator(attrs) {

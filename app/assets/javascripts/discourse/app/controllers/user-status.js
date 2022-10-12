@@ -1,7 +1,6 @@
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
 import ItsATrap from "@discourse/itsatrap";
@@ -11,26 +10,18 @@ import {
 } from "discourse/lib/time-shortcut";
 
 export default Controller.extend(ModalFunctionality, {
-  userStatusService: service("user-status"),
-
-  emoji: null,
-  description: null,
-  endsAt: null,
-
   showDeleteButton: false,
   prefilledDateTime: null,
   timeShortcuts: null,
   _itsatrap: null,
 
   onShow() {
-    const status = this.currentUser.status;
+    const currentStatus = { ...this.model.status };
     this.setProperties({
-      emoji: status?.emoji,
-      description: status?.description,
-      endsAt: status?.ends_at,
-      showDeleteButton: !!status,
+      status: currentStatus,
+      showDeleteButton: !!this.model.status,
       timeShortcuts: this._buildTimeShortcuts(),
-      prefilledDateTime: status?.ends_at,
+      prefilledDateTime: currentStatus?.ends_at,
     });
 
     this.set("_itsatrap", new ItsATrap());
@@ -42,7 +33,7 @@ export default Controller.extend(ModalFunctionality, {
     this.set("timeShortcuts", null);
   },
 
-  @discourseComputed("emoji", "description")
+  @discourseComputed("status.emoji", "status.description")
   statusIsSet(emoji, description) {
     return !!emoji && !!description;
   },
@@ -61,29 +52,28 @@ export default Controller.extend(ModalFunctionality, {
 
   @action
   delete() {
-    this.userStatusService
-      .clear()
+    this.model
+      .deleteAction()
       .then(() => this.send("closeModal"))
       .catch((e) => this._handleError(e));
   },
 
   @action
   onTimeSelected(_, time) {
-    this.set("endsAt", time);
+    this.set("status.endsAt", time);
   },
 
   @action
   saveAndClose() {
-    const status = {
-      description: this.description,
-      emoji: this.emoji,
-      ends_at: this.endsAt?.toISOString(),
+    const newStatus = {
+      description: this.status.description,
+      emoji: this.status.emoji,
+      ends_at: this.status.endsAt?.toISOString(),
     };
-    this.userStatusService
-      .set(status)
-      .then(() => {
-        this.send("closeModal");
-      })
+
+    this.model
+      .saveAction(newStatus)
+      .then(() => this.send("closeModal"))
       .catch((e) => this._handleError(e));
   },
 

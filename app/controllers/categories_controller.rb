@@ -353,6 +353,7 @@ class CategoriesController < ApplicationController
         :auto_close_hours,
         :auto_close_based_on_last_post,
         :uploaded_logo_id,
+        :uploaded_logo_dark_id,
         :uploaded_background_id,
         :slug,
         :allow_badges,

@@ -200,6 +200,7 @@ vi:
     ok_value: "OK"
     cancel_value: "Huỷ"
     submit: "Gửi đi"
+    delete: "Xóa"
     generic_error: "Rất tiếc, đã có lỗi xảy ra."
     generic_error_with_reason: "Đã xảy ra lỗi: %{error}"
     sign_up: "Đăng ký"
@@ -1136,6 +1137,7 @@ vi:
         move_to_archive: "Lưu trữ"
         failed_to_move: "Lỗi khi chuyển các tin nhắn đã chọn (có thể do lỗi mạng)"
         tags: "Thẻ"
+        all_tags: "Tất cả thẻ"
         warnings: "Cảnh báo chính thức"
         read_more_in_group: "Muốn đọc thêm? Duyệt các tin nhắn khác bằng %{groupLink}."
         read_more: "Muốn đọc thêm? Duyệt các tin nhắn khác trong <a href='%{basePath}/u/%{username}/messages'>tin nhắn cá nhân</a>."
@@ -1662,6 +1664,8 @@ vi:
       leave_message: "Bạn có thực sự muốn để lại tin nhắn này không?"
       remove_allowed_user: "Bạn thực sự muốn xóa %{name} từ tin nhắn này?"
       remove_allowed_group: "Bạn thực sự muốn xóa %{name} từ tin nhắn này?"
+      leave: "Rời nhóm"
+      remove_user: "Xoá người dùng"
     email: "Email"
     username: "Username"
     last_seen: "Đã xem"
@@ -3474,7 +3478,6 @@ vi:
       tag_list_joiner: ", "
       delete_unused: "Xóa thẻ không sử dụng"
       delete_unused_description: "Xóa tất cả các thẻ không được đính kèm với bất kỳ chủ đề hoặc tin nhắn cá nhân nào"
-      cancel_delete_unused: "Hủy"
       filters:
         without_category: "%{filter} %{tag} chủ đề"
         with_category: "%{filter} %{tag} chủ đề trong %{category}"
@@ -3597,7 +3600,7 @@ vi:
       new_count:
         other: "%{count} mới"
       toggle_section: "phần chuyển đổi"
-      more: "Thêm..."
+      more: "Thêm"
       all_categories: "Tất cả danh mục"
       sections:
         about:
@@ -3652,6 +3655,9 @@ vi:
               title: "Bài viết của tôi"
               draft_count:
                 other: "%{count} bản nháp"
+            review:
+              content: "Review"
+              title: "review"
     until: "Cho đến khi:"
   admin_js:
     type_to_filter: "gõ để lọc..."
