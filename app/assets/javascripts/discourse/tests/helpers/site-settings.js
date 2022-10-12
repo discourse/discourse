@@ -102,6 +102,7 @@ const ORIGINAL_SETTINGS = {
   remove_muted_tags_from_latest: "always",
   enable_group_directory: true,
   default_sidebar_categories: "",
+  default_sidebar_tags: "",
 };
 
 let siteSettings = Object.assign({}, ORIGINAL_SETTINGS);
