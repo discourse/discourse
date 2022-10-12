@@ -704,21 +704,21 @@ RSpec.describe Upload do
     end
 
     it "correctly handles error when file is too large to download" do
-      white_image.stubs(:local?).returns(true)
-      Discourse.store.stubs(:download).returns(nil)
+      white_image.stubs(:local?).returns(false)
+      FileStore::LocalStore.any_instance.stubs(:download).returns(nil).once
 
-      expect(invalid_image.dominant_color).to eq(nil)
-      expect(invalid_image.dominant_color(calculate_if_missing: true)).to eq("")
-      expect(invalid_image.dominant_color).to eq("")
+      expect(white_image.dominant_color).to eq(nil)
+      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(white_image.dominant_color).to eq("")
     end
 
     it "correctly handles error when file has HTTP error" do
-      white_image.stubs(:local?).returns(true)
-      Discourse.store.stubs(:download).raises(OpenURI::HTTPError)
+      white_image.stubs(:local?).returns(false)
+      FileStore::LocalStore.any_instance.stubs(:download).raises(OpenURI::HTTPError.new("Error", nil)).once
 
-      expect(invalid_image.dominant_color).to eq(nil)
-      expect(invalid_image.dominant_color(calculate_if_missing: true)).to eq("")
-      expect(invalid_image.dominant_color).to eq("")
+      expect(white_image.dominant_color).to eq(nil)
+      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")
+      expect(white_image.dominant_color).to eq("")
     end
 
     it "is validated for length" do
