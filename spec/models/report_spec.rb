@@ -1220,7 +1220,7 @@ RSpec.describe Report do
         page_view_logged_in_report = reports.data.find { |r| r[:req] == "page_view_logged_in" }
         page_view_anon_report = reports.data.find { |r| r[:req] == "page_view_anon" }
 
-        expect(page_view_crawler_report[:color]).to eql("rgba(228,87,53,0.75)")
+        expect(page_view_crawler_report[:color]).to eql("rgba(200,0,1,0.75)")
         expect(page_view_crawler_report[:data][0][:y]).to eql(3)
 
         expect(page_view_logged_in_report[:color]).to eql("rgba(0,136,204,1)")
