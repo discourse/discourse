@@ -1793,6 +1793,9 @@ en:
         title: "Flair"
         none: "(none)"
         instructions: "icon displayed next to your profile picture"
+      status:
+        title: "Custom Status"
+        not_set: "Not set"
       primary_group:
         title: "Primary Group"
         none: "(none)"

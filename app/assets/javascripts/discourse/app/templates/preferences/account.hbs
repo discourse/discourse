@@ -173,6 +173,24 @@
   </div>
 {{/if}}
 
+{{#if this.canSelectUserStatus}}
+  <div class="control-group pref-user-status">
+    <label class="control-label">{{i18n "user.status.title"}}</label>
+    <div class="controls">
+      {{#if this.newStatus}}
+        <UserStatusMessage @status={{this.newStatus}} @showDescription={{true}} />
+      {{else}}
+        <span class="static">{{i18n "user.status.not_set"}}</span>
+      {{/if}}
+      <DButton
+        @action={{action "showUserStatusModal"}}
+        @actionParam={{this.newStatus}}
+        @class="btn-default btn-small pad-left"
+        @icon="pencil-alt"/>
+    </div>
+  </div>
+{{/if}}
+
 {{#if this.canSelectPrimaryGroup}}
   <div class="control-group pref-primary-group">
     <label class="control-label">{{i18n "user.primary_group.title"}}</label>

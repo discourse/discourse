@@ -69,6 +69,7 @@ let userFields = [
   "user_notification_schedule",
   "sidebar_category_ids",
   "sidebar_tag_names",
+  "status",
 ];
 
 export function addSaveableUserField(fieldName) {
