@@ -374,6 +374,16 @@ RSpec.describe Stylesheet::Manager do
         type_id: ThemeField.types[:theme_upload_var]
       )
 
+      upload2 = UploadCreator.new(image2, "icon.png").create_for(-1)
+      field = ThemeField.create!(
+        theme_id: theme.id,
+        target_id: Theme.targets[:common],
+        name: "icon",
+        value: "",
+        upload_id: upload2.id,
+        type_id: ThemeField.types[:theme_upload_var]
+      )
+
       manager = manager(theme.id)
 
       builder = Stylesheet::Manager::Builder.new(
