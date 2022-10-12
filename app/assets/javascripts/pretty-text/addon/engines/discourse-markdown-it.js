@@ -253,7 +253,13 @@ function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
     }
   }
 
-  token.attrs[token.attrIndex("alt")][1] = altSplit.join("|");
+  const altValue = altSplit.join("|").trim();
+  if (altValue === "") {
+    token.attrSet("role", "presentation");
+  } else {
+    token.attrSet("alt", altValue);
+  }
+
   return slf.renderToken(tokens, idx, options);
 }
 
