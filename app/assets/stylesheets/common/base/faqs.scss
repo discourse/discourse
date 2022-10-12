@@ -14,7 +14,7 @@
     }
   }
   .mobile-view & {
-    font-size: $font-0;
+    font-size: var(--font-0);
   }
   li {
     margin-bottom: 8px;

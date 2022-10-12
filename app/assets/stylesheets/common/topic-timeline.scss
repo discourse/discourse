@@ -99,7 +99,7 @@
           margin-top: 0;
           display: block;
           line-height: $line-height-medium;
-          font-size: $font-up-2;
+          font-size: var(--font-up-2);
           @include line-clamp(4);
         }
         a {

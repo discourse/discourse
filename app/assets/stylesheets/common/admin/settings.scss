@@ -94,7 +94,7 @@
     .desc,
     .validation-error {
       padding-top: 3px;
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       line-height: $line-height-large;
     }
     .validation-error {
@@ -104,7 +104,7 @@
       color: var(--primary-medium);
     }
     h3 {
-      font-size: $font-0;
+      font-size: var(--font-0);
       font-weight: normal;
     }
   }

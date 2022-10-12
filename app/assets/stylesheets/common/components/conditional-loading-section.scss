@@ -9,7 +9,7 @@
     flex-direction: column;
 
     .title {
-      font-size: $font-up-1;
+      font-size: var(--font-up-1);
       font-weight: 700;
     }
   }

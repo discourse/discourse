@@ -21,11 +21,11 @@
   vertical-align: middle;
 
   .discourse-tag {
-    font-size: $font-0;
+    font-size: var(--font-0);
   }
 
   .tag-count {
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     vertical-align: middle;
     line-height: $line-height-small;
   }
@@ -47,7 +47,7 @@
 }
 
 .discourse-tag-count {
-  font-size: $font-down-1;
+  font-size: var(--font-down-1);
   color: var(--primary-medium);
 }
 
@@ -72,7 +72,7 @@
   }
 
   &.large {
-    font-size: $font-up-3;
+    font-size: var(--font-up-3);
   }
 
   &.box {
@@ -122,7 +122,7 @@
 
 .d-header .topic-header-extra {
   .discourse-tags {
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
   }
   .discourse-tags + .topic-featured-link {
     margin-left: 8px;
@@ -144,14 +144,14 @@
 .topic-list-item {
   .discourse-tags {
     font-weight: normal;
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
   }
 }
 
 .mobile-view .topic-list-item .discourse-tags {
   display: inline-flex;
   flex-wrap: wrap;
-  font-size: $font-down-1;
+  font-size: var(--font-down-1);
   margin-top: 0;
   .discourse-tag {
     margin-right: 0.2em;
@@ -169,7 +169,7 @@ header .discourse-tag {
 .list-tags {
   display: inline-block;
   margin-right: 3px;
-  font-size: $font-down-1;
+  font-size: var(--font-down-1);
 }
 
 .tag-chooser {
@@ -372,7 +372,7 @@ section.tag-info {
     }
     .edit-tag {
       color: var(--primary-high);
-      font-size: $font-down-2;
+      font-size: var(--font-down-2);
       margin-left: 0.5em;
     }
   }

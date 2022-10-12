@@ -171,7 +171,7 @@
     padding: 10px 30px 10px 15px;
     background-color: var(--secondary);
     li > a {
-      font-size: $font-0;
+      font-size: var(--font-0);
     }
     border-bottom: 1px solid var(--primary-low);
   }
@@ -228,7 +228,7 @@
               align-items: center;
             }
             .discourse-tags {
-              font-size: $font-down-1;
+              font-size: var(--font-down-1);
             }
           }
         }
@@ -240,7 +240,7 @@
       box-sizing: border-box;
     }
     p {
-      font-size: $font-0;
+      font-size: var(--font-0);
     }
     .archetype-option {
       margin-bottom: 20px;
@@ -269,7 +269,7 @@
 
   // password reset modal
   .modal-body.forgot-password-modal p {
-    font-size: $font-0;
+    font-size: var(--font-0);
   }
 
   pre code {
@@ -462,7 +462,7 @@
 
 .custom-message-length {
   color: var(--primary-medium);
-  font-size: $font-down-1;
+  font-size: var(--font-down-1);
 }
 
 .jump-to-post-modal {

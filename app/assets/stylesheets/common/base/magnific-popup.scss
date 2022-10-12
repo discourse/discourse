@@ -271,7 +271,7 @@ button {
   padding: 0 0 18px 10px;
   color: $controls-color;
   font-style: normal;
-  font-size: $font-up-5;
+  font-size: var(--font-up-5);
   font-family: Arial, Baskerville, monospace;
 
   &:hover,
@@ -306,7 +306,7 @@ button {
   top: 0;
   right: 0;
   color: $controls-text-color;
-  font-size: $font-down-1;
+  font-size: var(--font-down-1);
   line-height: $line-height-medium;
 }
 
@@ -458,7 +458,7 @@ button {
     small {
       color: $caption-subtitle-color;
       display: block;
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       line-height: $line-height-medium;
     }
     figure {

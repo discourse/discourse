@@ -62,7 +62,7 @@
   }
 
   .d-icon-home {
-    font-size: $font-up-6;
+    font-size: var(--font-up-6);
   }
 
   .panel {
@@ -180,7 +180,7 @@
 
   .d-icon {
     width: 100%;
-    font-size: $font-up-4;
+    font-size: var(--font-up-4);
     line-height: $line-height-large;
     display: inline-block;
     color: var(--header_primary-low-mid);
@@ -292,7 +292,7 @@
   .header-title {
     padding: 0;
     margin: 0;
-    font-size: $font-up-3;
+    font-size: var(--font-up-3);
     width: 100%;
   }
   .categories-wrapper {
@@ -340,7 +340,7 @@ $mobile-avatar-height: 1.532em;
 .topic-header-participants {
   display: flex;
   align-items: center;
-  font-size: $font-down-1;
+  font-size: var(--font-down-1);
   @include ellipsis;
   &:not(:first-child) {
     margin-left: 5px;

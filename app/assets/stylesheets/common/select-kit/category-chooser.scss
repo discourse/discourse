@@ -15,7 +15,7 @@
         }
 
         .topic-count {
-          font-size: $font-down-1;
+          font-size: var(--font-down-1);
           color: var(--primary-medium);
           white-space: nowrap;
           margin-left: 0.5em;
@@ -30,7 +30,7 @@
 
         .category-desc {
           flex: 1 1 auto;
-          font-size: $font-down-1;
+          font-size: var(--font-down-1);
           line-height: $line-height-large;
         }
       }

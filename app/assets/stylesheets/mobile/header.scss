@@ -26,7 +26,7 @@
     max-width: 100%;
   }
   #site-text-logo {
-    font-size: $font-up-1;
+    font-size: var(--font-up-1);
   }
   .extra-info-wrapper {
     .extra-info {
@@ -35,7 +35,7 @@
         min-height: 2.25em;
       }
       .header-title {
-        font-size: $font-0;
+        font-size: var(--font-0);
         // the margin-bottom here is fragile, changing it can cause tag alignment issues
         margin: 0 0 0.35em 0;
         .archetype-private_message & {

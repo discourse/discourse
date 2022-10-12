@@ -141,7 +141,7 @@
     .login-welcome-header {
       .login-title {
         line-height: $line-height-small;
-        font-size: $font-up-6;
+        font-size: var(--font-up-6);
       }
       p.login-subheader {
         font-size: var(--font-up-1);
@@ -276,7 +276,7 @@
     padding: 3em 2em 1em;
 
     .login-title {
-      font-size: $font-up-6;
+      font-size: var(--font-up-6);
       line-height: $line-height-medium;
     }
     p.login-subheader {

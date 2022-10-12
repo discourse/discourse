@@ -16,7 +16,7 @@
 // --------------------------------------------------
 
 .badge-wrapper {
-  font-size: $font-down-1;
+  font-size: var(--font-down-1);
   white-space: nowrap;
   position: relative;
   display: inline-flex;
@@ -166,7 +166,7 @@
   padding: 0.21em 0.42em;
   min-width: 0.5em;
   color: var(--secondary);
-  font-size: $font-down-2;
+  font-size: var(--font-down-2);
   line-height: $line-height-small;
   text-align: center;
   background-color: var(--primary-low-mid-or-secondary-low);
@@ -216,7 +216,7 @@
 
 .badge-posts {
   font-weight: normal;
-  font-size: $font-0;
+  font-size: var(--font-0);
   line-height: $line-height-small;
   &[href] {
     color: var(--primary-med-or-secondary-med);
@@ -232,5 +232,5 @@
   color: var(--primary);
   background-color: var(--primary-low);
   border-color: var(--primary-low);
-  font-size: $font-down-1;
+  font-size: var(--font-down-1);
 }

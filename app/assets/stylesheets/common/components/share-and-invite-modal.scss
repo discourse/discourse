@@ -18,13 +18,13 @@
     align-items: center;
 
     .title {
-      font-size: $font-0;
+      font-size: var(--font-0);
       font-weight: normal;
       margin-bottom: 8px;
 
       .post-date {
         color: var(--primary-medium);
-        font-size: $font-down-1;
+        font-size: var(--font-down-1);
       }
     }
   }
@@ -50,7 +50,7 @@
       flex-direction: row;
 
       .social-link {
-        font-size: $font-up-6;
+        font-size: var(--font-up-6);
         margin-right: 8px;
       }
     }

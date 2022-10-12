@@ -314,7 +314,7 @@
     border: 1px solid var(--primary-low);
 
     .title {
-      font-size: $font-0;
+      font-size: var(--font-0);
     }
 
     .spinner {
@@ -338,7 +338,7 @@
     }
 
     .d-icon {
-      font-size: $font-up-1;
+      font-size: var(--font-up-1);
       margin: 0 0.25em 0 0;
       color: var(--primary-low-mid);
     }
@@ -377,7 +377,7 @@
 
       .d-icon {
         margin-right: 5px;
-        font-size: $font-down-1;
+        font-size: var(--font-down-1);
       }
     }
 
@@ -567,7 +567,7 @@
   }
 
   .version-number {
-    font-size: $font-up-2;
+    font-size: var(--font-up-2);
     line-height: $line-height-small;
     box-sizing: border-box;
     font-weight: bold;
@@ -582,13 +582,13 @@
     }
 
     h4 {
-      font-size: $font-down-2;
+      font-size: var(--font-down-2);
       margin-bottom: 0.5em;
     }
 
     .sha-link {
       display: inline-flex;
-      font-size: $font-down-2;
+      font-size: var(--font-down-2);
       font-weight: normal;
     }
   }
@@ -606,7 +606,7 @@
     }
     .face {
       margin: 0 0.75em 0 0;
-      font-size: $font-up-3;
+      font-size: var(--font-up-3);
     }
   }
   &.critical .version-notes .normal-note {
@@ -616,7 +616,7 @@
     display: none;
   }
   .fa {
-    font-size: $font-up-4;
+    font-size: var(--font-up-4);
   }
   .up-to-date {
     color: var(--success);
@@ -631,7 +631,7 @@
 
 .update-nag {
   .d-icon {
-    font-size: $font-up-3;
+    font-size: var(--font-up-3);
   }
 }
 
@@ -691,7 +691,7 @@
     padding-right: 0.5em;
     width: 75%;
     .header {
-      font-size: $font-up-1;
+      font-size: var(--font-up-1);
       font-weight: bold;
       margin-bottom: 0.5em;
     }

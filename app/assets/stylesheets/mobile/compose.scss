@@ -202,9 +202,9 @@
 
     .selected-name {
       .name {
-        font-size: $font-down-1;
+        font-size: var(--font-down-1);
         .badge-wrapper {
-          font-size: $font-0;
+          font-size: var(--font-0);
         }
       }
     }

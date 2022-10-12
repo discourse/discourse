@@ -129,7 +129,7 @@
   .modal-footer {
     box-sizing: border-box;
     margin: 0 auto;
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     padding: 1.25em;
   }
 
@@ -266,6 +266,6 @@
     display: none;
   }
   h1.login-title {
-    font-size: $font-up-3;
+    font-size: var(--font-up-3);
   }
 }

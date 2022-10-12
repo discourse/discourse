@@ -70,7 +70,7 @@
 
 .show-badge .badge-user-info {
   .earned {
-    font-size: $font-up-2;
+    font-size: var(--font-up-2);
     margin-bottom: 1em;
   }
 }
@@ -81,7 +81,7 @@
   .load-more {
     padding-top: 30px;
     display: block;
-    font-size: $font-up-2;
+    font-size: var(--font-up-2);
   }
 }
 
@@ -96,11 +96,11 @@
   }
   .date {
     display: inline-block;
-    font-size: $font-up-1;
+    font-size: var(--font-up-1);
     margin-left: 10px;
   }
   .post-link {
-    font-size: $font-up-2;
+    font-size: var(--font-up-2);
     width: 500px;
     margin: 0;
     padding: 0;
@@ -137,7 +137,7 @@
     top: 5px;
     font-weight: bold;
     color: var(--primary-medium);
-    font-size: $font-up-2;
+    font-size: var(--font-up-2);
   }
 
   .favorite-btn {
@@ -195,9 +195,9 @@
 
       h3 {
         margin-bottom: 0.25em;
-        font-size: $font-up-1;
+        font-size: var(--font-up-1);
         @media screen and (min-width: 900px) {
-          font-size: $font-up-2;
+          font-size: var(--font-up-2);
         }
       }
     }
@@ -215,7 +215,7 @@
     .badge-contents {
       padding: 0 5%;
       h3 {
-        font-size: $font-up-3;
+        font-size: var(--font-up-3);
       }
     }
   }
@@ -259,7 +259,7 @@
   }
 
   .title {
-    font-size: $font-up-1;
+    font-size: var(--font-up-1);
   }
 }
 

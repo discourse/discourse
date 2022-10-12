@@ -3,14 +3,14 @@
 .list-controls {
   a.badge-category {
     padding: 3px 12px;
-    font-size: $font-up-1;
+    font-size: var(--font-up-1);
   }
 
   .combo-box .combo-box-header {
     background: var(--secondary);
     color: var(--primary);
     border: 1px solid var(--primary-medium);
-    font-size: $font-0;
+    font-size: var(--font-0);
     transition: none;
     height: 100%;
     &:focus {
@@ -95,7 +95,7 @@
   p {
     margin-top: 0;
     line-height: $line-height-large;
-    font-size: $font-up-3;
+    font-size: var(--font-up-3);
   }
 }
 
@@ -145,13 +145,13 @@
   .post-excerpt {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
-    font-size: $font-down-2;
+    font-size: var(--font-down-2);
     word-break: break-word;
   }
 }
 
 .topic-list-main-link {
-  font-size: $font-up-1;
+  font-size: var(--font-up-1);
   a.title {
     padding: 15px 0;
     word-break: break-word;
@@ -210,7 +210,7 @@
       background-color: var(--secondary);
       color: var(--danger-medium);
       padding: 0 8px;
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
     }
   }
 
@@ -225,7 +225,7 @@
 
   td {
     color: var(--primary-medium);
-    font-size: $font-0;
+    font-size: var(--font-0);
   }
 
   .main-link {
@@ -253,12 +253,12 @@
     }
     .d-icon {
       vertical-align: middle;
-      font-size: $font-down-5;
+      font-size: var(--font-down-5);
     }
   }
 
   .link-bottom-line {
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -282,7 +282,7 @@
 
   .topic-excerpt {
     display: block;
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     margin-top: 0.33em;
     color: var(--primary-high);
     word-wrap: break-word;
@@ -360,7 +360,7 @@
     padding: 0;
     border: 0;
     color: var(--danger-medium);
-    font-size: $font-0;
+    font-size: var(--font-0);
     cursor: default;
   }
 }
@@ -368,7 +368,7 @@
 .topic-list {
   .alert {
     margin-bottom: 0;
-    font-size: $font-0;
+    font-size: var(--font-0);
   }
   .spinner {
     margin-top: 40px;

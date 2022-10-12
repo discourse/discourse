@@ -83,12 +83,12 @@
   &.is-loading {
     &.btn-text {
       .d-button-label {
-        font-size: $font-down-2;
+        font-size: var(--font-down-2);
       }
 
       &.btn-small {
         .loading-icon {
-          font-size: $font-down-1;
+          font-size: var(--font-down-1);
           margin-right: 0.2em;
         }
       }
@@ -177,7 +177,7 @@
   }
   &:before {
     margin-right: 9px;
-    font-size: $font-0;
+    font-size: var(--font-0);
   }
   .d-icon,
   &.btn:hover .d-icon {

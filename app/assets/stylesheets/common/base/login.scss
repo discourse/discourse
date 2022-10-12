@@ -3,7 +3,7 @@ $invite-mobile-bg: absolute-image-url("/branded-background-mobile.svg");
 
 .caps-lock-warning {
   color: var(--danger);
-  font-size: $font-down-1;
+  font-size: var(--font-down-1);
   font-weight: bold;
 }
 
@@ -203,7 +203,7 @@ body.invite-page {
         left: calc(1em - 0.25em);
         background-color: var(--secondary);
         padding: 0 0.25em 0 0.25em;
-        font-size: $font-down-1;
+        font-size: var(--font-down-1);
       }
       input.alt-placeholder:invalid {
         color: var(--primary);
@@ -220,7 +220,7 @@ body.invite-page {
 
       #forgot-password-link,
       #email-login-link {
-        font-size: $font-down-1;
+        font-size: var(--font-down-1);
       }
 
       .tip:not(:empty) + label.more-info {
@@ -400,7 +400,7 @@ body.invite-page {
     .instructions {
       color: var(--primary-medium);
       margin: 0;
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       font-weight: normal;
       line-height: $line-height-medium;
     }
@@ -432,7 +432,7 @@ button#new-account-link {
   align-items: center;
   p {
     margin: 0;
-    font-size: $font-0;
+    font-size: var(--font-0);
   }
   a {
     display: inline-block;

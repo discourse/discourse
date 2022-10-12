@@ -159,7 +159,7 @@ a.reply-to-tab {
     .number,
     .d-icon {
       color: var(--primary-high-or-secondary-low);
-      font-size: $font-up-1;
+      font-size: var(--font-up-1);
     }
     .avatar + a {
       float: left;
@@ -189,7 +189,7 @@ a.reply-to-tab {
       border-left: 1px solid var(--primary-low);
       .fa {
         margin: 0;
-        font-size: $font-up-2;
+        font-size: var(--font-up-2);
         line-height: 52px;
       }
     }
@@ -255,7 +255,7 @@ a.reply-to-tab {
   }
   a.badge-category,
   a.badge-category-parent {
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     vertical-align: top;
   }
 }
@@ -305,7 +305,7 @@ button.select-post {
 }
 
 .deleted-user-avatar {
-  font-size: $font-up-5;
+  font-size: var(--font-up-5);
 }
 
 span.btn-text {
@@ -344,7 +344,7 @@ span.highlighted {
 
 .topic-meta-data {
   margin-left: 50px;
-  font-size: $font-down-1;
+  font-size: var(--font-down-1);
   .names {
     line-height: $line-height-medium;
     display: flex;

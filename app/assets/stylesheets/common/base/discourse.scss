@@ -73,10 +73,10 @@ body {
 
 // setting a static limit on big and small prevents nesting abuse
 big {
-  font-size: $font-up-5;
+  font-size: var(--font-up-5);
 }
 small {
-  font-size: $font-down-2;
+  font-size: var(--font-down-2);
 }
 
 blockquote {
@@ -469,7 +469,7 @@ table {
 
     .relative-date {
       text-align: left;
-      font-size: $font-down-3;
+      font-size: var(--font-down-3);
       padding-top: 3px;
       margin-left: 0.75em;
       color: var(--primary-medium);
@@ -544,7 +544,7 @@ table {
 
   .skip-new-user-tips,
   .read-later-link {
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     text-decoration: underline;
   }
 
@@ -606,7 +606,7 @@ table {
 .content-list {
   h3 {
     color: var(--primary-medium);
-    font-size: $font-up-1;
+    font-size: var(--font-up-1);
     padding-left: 5px;
     margin-bottom: 10px;
   }
@@ -658,7 +658,7 @@ table {
     font-family: $heading-font-family;
 
     font-weight: bold;
-    font-size: $font-up-2;
+    font-size: var(--font-up-2);
     line-height: $line-height-large;
   }
 
@@ -718,7 +718,7 @@ table {
 
 #loading-message {
   position: absolute;
-  font-size: $font-up-5;
+  font-size: var(--font-up-5);
   text-align: center;
   top: 120px;
   left: 500px;

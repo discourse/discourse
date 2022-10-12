@@ -80,7 +80,7 @@
         cursor: default;
         color: var(--primary-med-or-secondary-med);
         line-height: $td-posters-more-lh;
-        font-size: $font-down-1;
+        font-size: var(--font-down-1);
       }
     }
   }
@@ -110,7 +110,7 @@
     width: auto;
     color: var(--primary-med-or-secondary-med);
     text-align: left;
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     margin-top: 5px;
     .fa {
       margin-right: 2px;
@@ -238,7 +238,7 @@
   // slightly smaller font, tighten spacing on nav pills
   .nav-pills {
     > li > a {
-      font-size: $font-0;
+      font-size: var(--font-0);
       padding: 7px 10px;
     }
   }
@@ -251,7 +251,7 @@
     // smaller table cell spacing
     .topic-list-data {
       padding: 10px;
-      font-size: $font-0;
+      font-size: var(--font-0);
     }
   }
 }
