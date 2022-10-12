@@ -83,7 +83,8 @@ module.exports = function (defaults) {
     vendorFiles: {
       // Freedom patch - includes bug fix and async stack support
       // https://github.com/discourse/backburner.js/commits/discourse-patches
-      backburner: "node_modules/backburner.js/dist/named-amd/backburner.js",
+      backburner:
+        "node_modules/@discourse/backburner.js/dist/named-amd/backburner.js",
     },
   });
 
