@@ -235,9 +235,12 @@ $quote-share-maxwidth: 150px;
     align-items: center;
   }
 
-  img.emoji {
-    width: 1em;
-    height: 1em;
+  .user-status-message {
+    display: flex;
+    img.emoji {
+      width: 1em;
+      height: 1em;
+    }
   }
 }
 
