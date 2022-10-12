@@ -102,4 +102,34 @@ module("Integration | Component | select-kit/api", function (hooks) {
 
     assert.strictEqual(query("#test").innerText, "foo");
   });
+
+  test("modifySelectKit(identifier).replaceContent", async function (assert) {
+    setDefaultState(this, null, { content: DEFAULT_CONTENT });
+
+    withPluginApi("0.8.43", (api) => {
+      api.modifySelectKit("combo-box").replaceContent(() => {
+        return {
+          id: "alpaca",
+          name: "Alpaca",
+        };
+      });
+      api.modifySelectKit("combo-box").replaceContent(() => {});
+    });
+
+    await render(hbs`
+      <ComboBox @value={{this.value}} @content={{this.content}} @onChange={{this.onChange}} />
+      <SingleSelect @value={{this.value}} @content={{this.content}} @onChange={{this.onChange}} />
+    `);
+    await this.comboBox.expand();
+
+    assert.strictEqual(this.comboBox.rows().length, 1);
+
+    const replacementRow = this.comboBox.rowByIndex(0);
+    assert.ok(replacementRow.exists());
+    assert.strictEqual(replacementRow.value(), "alpaca");
+
+    await this.comboBox.collapse();
+
+    assert.notOk(this.singleSelect.rowByValue("alpaca").exists());
+  });
 });
