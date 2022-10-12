@@ -134,13 +134,10 @@ gem 'cose', require: false
 gem 'addressable'
 gem 'json_schemer'
 
-if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("3.1")
-  # net-smtp, net-imap and net-pop were removed from default gems in Ruby 3.1
-  gem "net-smtp", "~> 0.2.1", require: false
-  gem "net-imap", "~> 0.2.1", require: false
-  gem "net-pop", "~> 0.1.1", require: false
-  gem "digest", "3.0.0", require: false
-end
+gem "net-smtp", require: false
+gem "net-imap", require: false
+gem "net-pop", require: false
+gem "digest", require: false
 
 # Gems used only for assets and not required in production environments by default.
 # Allow everywhere for now cause we are allowing asset debugging in production
