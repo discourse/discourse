@@ -118,6 +118,7 @@ GEM
     debug_inspector (1.1.0)
     diff-lcs (1.5.0)
     diffy (3.4.2)
+    digest (3.1.0)
     discourse-ember-rails (0.18.6)
       active_model_serializers
       ember-data-source (>= 1.0.0.beta.5)
@@ -542,6 +543,7 @@ DEPENDENCIES
   cppjieba_rb
   css_parser
   diffy
+  digest
   discourse-ember-rails (= 0.18.6)
   discourse-ember-source (~> 3.12.2)
   discourse-fonts
@@ -588,6 +590,9 @@ DEPENDENCIES
   multi_json
   mustache
   net-http
+  net-imap
+  net-pop
+  net-smtp
   nokogiri
   oj (= 3.13.14)
   omniauth
