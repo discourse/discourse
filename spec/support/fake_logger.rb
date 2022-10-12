@@ -10,6 +10,7 @@ class FakeLogger
     @warnings = []
     @errors = []
     @fatals = []
+    @level = Logger::DEBUG
   end
 
   def debug(message)
