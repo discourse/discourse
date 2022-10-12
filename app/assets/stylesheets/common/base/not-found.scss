@@ -5,7 +5,7 @@
 
   h1.title {
     font-size: var(--font-up-5);
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
   }
 
   &-search {

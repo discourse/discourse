@@ -9,7 +9,7 @@
     max-width: 100%;
     @include ellipsis;
     vertical-align: text-top;
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
   }
   &.with-topics {
     .subcategories-with-subcategories {
@@ -163,7 +163,7 @@
     font-size: var(--font-up-2);
     margin-bottom: 0.5em;
     margin-top: 0.25em;
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
     text-align: center;
     color: var(--primary);
     overflow: hidden;
@@ -189,7 +189,7 @@
       }
       .category-text-title {
         order: 2;
-        line-height: $line-height-medium;
+        line-height: var(--line-height-medium);
         overflow: hidden;
         margin-bottom: 0.25em;
         word-wrap: break-word;

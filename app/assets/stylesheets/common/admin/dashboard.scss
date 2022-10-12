@@ -568,7 +568,7 @@
 
   .version-number {
     font-size: var(--font-up-2);
-    line-height: $line-height-small;
+    line-height: var(--line-height-small);
     box-sizing: border-box;
     font-weight: bold;
     margin-bottom: 2em;

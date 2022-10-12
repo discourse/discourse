@@ -315,7 +315,7 @@
 
   .blurb {
     font-size: var(--font-0);
-    line-height: $line-height-large;
+    line-height: var(--line-height-large);
     color: var(--primary-medium);
     .date {
       color: var(--primary-high);
@@ -342,14 +342,14 @@
   .search-link {
     .topic-title {
       font-size: var(--font-up-1);
-      line-height: $line-height-medium;
+      line-height: var(--line-height-medium);
       color: var(--primary);
     }
     .topic-statuses {
       display: inline-block;
       flex-shrink: 0;
       font-size: 1.3em;
-      line-height: $line-height-medium;
+      line-height: var(--line-height-medium);
       color: var(--primary-medium);
       span {
         line-height: 1;

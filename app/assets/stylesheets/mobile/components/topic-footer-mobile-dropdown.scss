@@ -6,7 +6,7 @@
         border-bottom: 1px solid rgba(var(--primary-low-rgb), 0.5);
 
         .name {
-          line-height: $line-height-medium;
+          line-height: var(--line-height-medium);
         }
 
         &:last-child {

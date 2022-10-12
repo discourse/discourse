@@ -35,7 +35,7 @@
   display: block;
   word-wrap: break-word;
   font-size: var(--font-down-2);
-  line-height: $line-height-large;
+  line-height: var(--line-height-large);
   .search-highlight {
     color: var(--primary-high-or-secondary-low);
   }

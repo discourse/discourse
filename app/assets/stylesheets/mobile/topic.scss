@@ -15,7 +15,7 @@
 #topic-title {
   h1 {
     font-size: var(--font-up-3);
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
     a {
       color: var(--primary);
       vertical-align: middle;
@@ -78,7 +78,7 @@
   margin-left: auto;
   margin-right: auto;
   font-size: var(--font-up-4);
-  line-height: $line-height-medium;
+  line-height: var(--line-height-medium);
 
   .topic-retry {
     display: block;

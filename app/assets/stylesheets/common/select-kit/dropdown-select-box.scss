@@ -35,7 +35,7 @@
         }
 
         .texts {
-          line-height: $line-height-medium;
+          line-height: var(--line-height-medium);
           flex: 1 1 0%;
           align-items: flex-start;
           display: flex;

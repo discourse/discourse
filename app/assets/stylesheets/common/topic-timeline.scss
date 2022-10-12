@@ -77,7 +77,7 @@
       }
       .post-excerpt {
         max-width: 650px;
-        line-height: $line-height-large;
+        line-height: var(--line-height-large);
         display: block;
         @include line-clamp(8);
         @media screen and (max-height: 425px) {
@@ -98,7 +98,7 @@
         h2 {
           margin-top: 0;
           display: block;
-          line-height: $line-height-medium;
+          line-height: var(--line-height-medium);
           font-size: var(--font-up-2);
           @include line-clamp(4);
         }

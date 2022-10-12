@@ -309,7 +309,7 @@
   }
 
   .badge-notification {
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
     vertical-align: text-top;
   }
 

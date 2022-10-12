@@ -101,7 +101,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     margin-bottom: 5px;
   }
   h1 {
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
     .d-icon {
       color: var(--primary);
     }

@@ -72,7 +72,7 @@
 
 .d-header-icons {
   .d-icon {
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
   }
   .active .icon {
     &:after {

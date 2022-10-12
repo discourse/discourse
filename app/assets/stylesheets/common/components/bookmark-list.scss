@@ -34,7 +34,7 @@ $mobile-breakpoint: 700px;
       display: inline-block;
       margin-right: 1em;
       margin-bottom: 0.25em;
-      line-height: $line-height-medium;
+      line-height: var(--line-height-medium);
       span {
         word-break: break-word;
       }

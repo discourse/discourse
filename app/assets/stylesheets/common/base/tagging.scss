@@ -27,7 +27,7 @@
   .tag-count {
     font-size: var(--font-down-1);
     vertical-align: middle;
-    line-height: $line-height-small;
+    line-height: var(--line-height-small);
   }
 }
 

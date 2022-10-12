@@ -40,7 +40,7 @@ div.poll {
 
     .info-label {
       font-size: var(--font-up-4);
-      line-height: $line-height-medium;
+      line-height: var(--line-height-medium);
     }
 
     .info-text {

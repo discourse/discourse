@@ -181,7 +181,7 @@
   .d-icon {
     width: 100%;
     font-size: var(--font-up-4);
-    line-height: $line-height-large;
+    line-height: var(--line-height-large);
     display: inline-block;
     color: var(--header_primary-low-mid);
   }
@@ -250,7 +250,7 @@
   display: flex;
   align-items: center;
   height: 100%;
-  line-height: $line-height-medium;
+  line-height: var(--line-height-medium);
   padding: 0 1.5em 0 0.5em;
   // we need to hide overflow in both to truncate the title in a flexbox
   overflow: hidden;

@@ -223,7 +223,7 @@
       }
 
       justify-content: unset;
-      line-height: $line-height-large;
+      line-height: var(--line-height-large);
       width: 100%;
 
       .d-icon {
@@ -325,7 +325,7 @@
       display: inline;
       padding: 0;
       font-size: var(--font-down-1);
-      line-height: $line-height-large;
+      line-height: var(--line-height-large);
     }
     .badge-wrapper {
       &.bar,

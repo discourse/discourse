@@ -1,7 +1,7 @@
 @mixin user-item-flex {
   display: flex;
   flex-direction: column;
-  line-height: $line-height-medium;
+  line-height: var(--line-height-medium);
   color: var(--primary-high-or-secondary-low);
 }
 
@@ -82,7 +82,7 @@ $search-pad-horizontal: 0.5em;
     .search-result-topic {
       .first-line {
         display: block;
-        line-height: $line-height-medium;
+        line-height: var(--line-height-medium);
       }
 
       .second-line {

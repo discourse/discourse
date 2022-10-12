@@ -58,7 +58,7 @@ select,
 textarea {
   font-size: var(--font-0);
   font-weight: normal;
-  line-height: $line-height-medium;
+  line-height: var(--line-height-medium);
 }
 
 select,
@@ -66,7 +66,7 @@ textarea {
   display: inline-block;
   margin-bottom: 9px;
   font-size: var(--font-0);
-  line-height: $line-height-large;
+  line-height: var(--line-height-large);
   color: var(--primary);
 }
 
@@ -77,7 +77,7 @@ textarea {
 
 select,
 input[type="file"] {
-  line-height: $line-height-large;
+  line-height: var(--line-height-large);
 }
 
 select {

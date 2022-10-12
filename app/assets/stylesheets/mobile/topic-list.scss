@@ -52,7 +52,7 @@
       border: 1px solid var(--primary-medium);
     }
     > li > a {
-      line-height: $line-height-large;
+      line-height: var(--line-height-large);
       display: flex;
       align-items: center;
       .d-icon {
@@ -118,7 +118,7 @@
   }
 
   .main-link {
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
     position: relative;
     z-index: z("base") + 1; // Intentionally overlapping category to create bigger tap target
     font-size: var(--font-up-1);
@@ -140,7 +140,7 @@
     display: inline-block;
     top: -1px;
     font-size: var(--font-0);
-    line-height: $line-height-small;
+    line-height: var(--line-height-small);
     padding: 0.15em 0.4em 0.2em 0.4em;
     .d-icon {
       color: var(--secondary);

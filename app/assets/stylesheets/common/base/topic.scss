@@ -196,7 +196,7 @@ $topic-progress-height: 42px;
   h4 {
     display: inline;
     font-size: var(--font-up-2);
-    line-height: $line-height-small;
+    line-height: var(--line-height-small);
   }
   .d-icon {
     position: absolute;
@@ -377,7 +377,7 @@ a.badge-category {
 .suggested-topics h3 .badge-wrapper.bullet span.badge-category {
   // Override vertical-align: text-top from `badges.css.scss`
   vertical-align: baseline;
-  line-height: $line-height-medium;
+  line-height: var(--line-height-medium);
 }
 
 .suggested-topics h3 .badge-wrapper.bullet,

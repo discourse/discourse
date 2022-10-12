@@ -103,11 +103,11 @@
       margin-bottom: 12px;
 
       h1 {
-        line-height: $line-height-small;
+        line-height: var(--line-height-small);
       }
 
       h2 {
-        line-height: $line-height-medium;
+        line-height: var(--line-height-medium);
       }
 
       .user-profile-avatar {

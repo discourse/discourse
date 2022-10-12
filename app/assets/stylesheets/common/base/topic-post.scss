@@ -84,7 +84,7 @@ $quote-share-maxwidth: 150px;
 .cooked,
 .d-editor-preview {
   word-wrap: break-word;
-  line-height: $line-height-large;
+  line-height: var(--line-height-large);
 
   > *:first-child {
     margin-top: 0;
@@ -97,7 +97,7 @@ $quote-share-maxwidth: 150px;
   h5,
   h6 {
     margin: 30px 0 10px;
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
     a.anchor {
       opacity: 0;
       transition: opacity 0.25s;
@@ -677,7 +677,7 @@ aside.quote {
       text-align: center;
       font-weight: normal;
       font-size: var(--font-down-2);
-      line-height: $line-height-small;
+      line-height: var(--line-height-small);
     }
   }
 
@@ -698,7 +698,7 @@ aside.quote {
   h3 {
     margin-bottom: 4px;
     color: var(--primary);
-    line-height: $line-height-large;
+    line-height: var(--line-height-large);
     font-weight: normal;
     font-size: var(--font-0);
   }
@@ -708,7 +708,7 @@ aside.quote {
     color: var(--primary-med-or-secondary-med);
     font-weight: normal;
     font-size: var(--font-down-1);
-    line-height: $line-height-small;
+    line-height: var(--line-height-small);
   }
 
   span.domain {
@@ -1057,7 +1057,7 @@ kbd {
   display: inline-flex;
   font-size: var(--font-down-1);
   justify-content: center;
-  line-height: $line-height-large;
+  line-height: var(--line-height-large);
   margin: 0 0.15em;
   min-width: 24px;
   padding: 0.15em 0.6em;
@@ -1184,7 +1184,7 @@ blockquote > *:last-child {
     > p {
       margin: 0;
       padding-right: 0.5em;
-      line-height: $line-height-medium;
+      line-height: var(--line-height-medium);
       flex: 1 1;
     }
   }
@@ -1292,7 +1292,7 @@ a.mention-group {
       color: var(--primary-med-or-secondary-med);
       margin-right: 6px;
       font-size: var(--font-0);
-      line-height: $line-height-large;
+      line-height: var(--line-height-large);
     }
 
     > span.url {
@@ -1308,7 +1308,7 @@ a.mention-group {
       color: var(--primary-med-or-secondary-med);
       font-size: var(--font-down-1);
       font-style: italic;
-      line-height: $line-height-large;
+      line-height: var(--line-height-large);
       margin-bottom: 1px;
     }
 
@@ -1522,7 +1522,7 @@ a.mention-group {
 
       .text {
         margin-left: 0.5em;
-        line-height: $line-height-medium;
+        line-height: var(--line-height-medium);
       }
     }
   }
