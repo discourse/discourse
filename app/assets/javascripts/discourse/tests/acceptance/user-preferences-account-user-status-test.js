@@ -1,5 +1,6 @@
 import {
   acceptance,
+  exists,
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -35,7 +36,7 @@ acceptance("User Profile - Account - User Status", function (needs) {
   test("doesn't render status block if status is disabled in site settings", async function (assert) {
     this.siteSettings.enable_user_status = false;
     await visit(`/u/${username}/preferences/account`);
-    assert.notOk(query(".pref-user-status"));
+    assert.notOk(exists(".pref-user-status"));
   });
 
   test("renders status block if status is enabled in site settings", async function (assert) {
@@ -44,11 +45,11 @@ acceptance("User Profile - Account - User Status", function (needs) {
     await visit(`/u/${username}/preferences/account`);
 
     assert.ok(
-      query(".pref-user-status .user-status-message"),
+      exists(".pref-user-status .user-status-message"),
       "status is shown"
     );
     assert.ok(
-      query(`.pref-user-status .emoji[alt='${status.emoji}`),
+      exists(`.pref-user-status .emoji[alt='${status.emoji}']`),
       "status emoji is correct"
     );
     assert.equal(
@@ -66,18 +67,18 @@ acceptance("User Profile - Account - User Status", function (needs) {
 
     await visit(`/u/${username}/preferences/account`);
     assert.notOk(
-      query(".pref-user-status .user-status-message"),
+      exists(".pref-user-status .user-status-message"),
       "status isn't shown"
     );
 
     await setStatus(status);
 
     assert.ok(
-      query(".pref-user-status .user-status-message"),
+      exists(".pref-user-status .user-status-message"),
       "status is shown"
     );
     assert.ok(
-      query(`.pref-user-status .emoji[alt='${status.emoji}`),
+      exists(`.pref-user-status .emoji[alt='${status.emoji}']`),
       "status emoji is correct"
     );
     assert.equal(
@@ -97,11 +98,11 @@ acceptance("User Profile - Account - User Status", function (needs) {
     await setStatus(newStatus);
 
     assert.ok(
-      query(".pref-user-status .user-status-message"),
+      exists(".pref-user-status .user-status-message"),
       "status is shown"
     );
     assert.ok(
-      query(`.pref-user-status .emoji[alt='${newStatus.emoji}`),
+      exists(`.pref-user-status .emoji[alt='${newStatus.emoji}']`),
       "status emoji is correct"
     );
     assert.equal(
@@ -121,7 +122,7 @@ acceptance("User Profile - Account - User Status", function (needs) {
     await click(".btn.delete-status");
 
     assert.notOk(
-      query(".pref-user-status .user-status-message"),
+      exists(".pref-user-status .user-status-message"),
       "status isn't shown"
     );
   });
