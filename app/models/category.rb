@@ -315,7 +315,7 @@ class Category < ActiveRecord::Base
 
   def clear_related_site_settings
     if self.id == SiteSetting.general_category_id
-      SiteSetting.general_category_id = nil
+      SiteSetting.general_category_id = -1
     end
   end
 
