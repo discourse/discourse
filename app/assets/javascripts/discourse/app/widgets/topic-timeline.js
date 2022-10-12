@@ -607,7 +607,6 @@ export default createWidget("topic-timeline", {
 
     this.currentUser.showPopup({
       id: "topic_timeline",
-      currentUser: this.currentUser,
 
       titleText: I18n.t("popup.topic_timeline.title"),
       contentText: I18n.t("popup.topic_timeline.content"),
