@@ -61,7 +61,6 @@ a.loading-onebox {
       clear: both;
       padding-bottom: 25px;
       .metric {
-        display: inline-block;
         padding-left: 33px;
         float: left;
       }
@@ -727,7 +726,6 @@ aside.onebox.xkcd .onebox-body img {
     float: left;
     background: absolute-image-url("/favicons/pdf_64px.png") no-repeat;
     background-size: 48px 48px;
-    display: inline-block;
   }
   .filesize {
     color: gray;
