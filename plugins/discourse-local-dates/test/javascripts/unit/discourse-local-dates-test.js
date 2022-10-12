@@ -1,6 +1,6 @@
 import { module, test } from "qunit";
 import { applyLocalDates } from "../initializers/discourse-local-dates";
-import { freezeTime } from "../lib/local-date-builder-test";
+import { freezeTime } from "./local-date-builder-test";
 
 module("Unit | Discourse Local Dates | discourse-local-dates", function () {
   function createElementFromHTML(htmlString) {
@@ -72,7 +72,7 @@ module("Unit | Discourse Local Dates | discourse-local-dates", function () {
         );
         assert.equal(
           to.querySelector(".relative-time").textContent,
-          "Thursday"
+          "Yesterday"
         );
       }
     );
