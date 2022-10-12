@@ -9,35 +9,40 @@
 
   <ul class="messages-nav nav-pills action-list">
     {{#if @isPersonal}}
-      <li>
+      <li class="messages-latest">
         <LinkTo @route="userPrivateMessages.index" @model={{@user}}>
-          {{i18n "categories.latest"}}
+          {{d-icon "envelope"}}
+          <span>{{i18n "categories.latest"}}</span>
         </LinkTo>
       </li>
 
-      <li class="archive">
+      <li class="messages-sent">
         <LinkTo @route="userPrivateMessages.sent" @model={{@user}}>
-          {{i18n "user.messages.sent"}}
+          {{d-icon "reply"}}
+          <span>{{i18n "user.messages.sent"}}</span>
         </LinkTo>
       </li>
 
       {{#if @viewingSelf}}
-        <li class="archive">
+        <li class="messages-new">
           <LinkTo @route="userPrivateMessages.new" @model={{@user}} class="new">
-            {{@newLinkText}}
+            {{d-icon "exclamation-circle"}}
+            <span>{{@newLinkText}}</span>
           </LinkTo>
         </li>
 
-        <li class="archive">
+        <li class="messages-unread">
           <LinkTo @route="userPrivateMessages.unread" @model={{@user}} class="unread">
-            {{@unreadLinkText}}
+            {{d-icon "plus-circle"}}
+            <span>{{@unreadLinkText}}</span>
           </LinkTo>
         </li>
       {{/if}}
 
-      <li class="archive">
+      <li class="messages-archive">
         <LinkTo @route="userPrivateMessages.archive" @model={{@user}}>
-          {{i18n "user.messages.archive"}}
+          {{d-icon "archive"}}
+          <span>{{i18n "user.messages.archive"}}</span>
         </LinkTo>
       </li>
     {{/if}}
@@ -45,28 +50,32 @@
     {{#each @user.groups as |group|}}
       {{#if (and @isGroup (eq @groupFilter group.name))}}
         {{#if @viewingSelf}}
-          <li class="archive">
+          <li class="messages-group-latest">
             <LinkTo @route="userPrivateMessages.group" @model={{group.name}}>
-              {{i18n "categories.latest"}}
+              {{d-icon "envelope"}}
+              <span>{{i18n "categories.latest"}}</span>
             </LinkTo>
           </li>
 
-          <li class="archive">
+          <li class="messages-group-new">
             <LinkTo @route="userPrivateMessages.groupNew" @model={{group.name}} class="new">
-              {{@newLinkText}}
+              {{d-icon "exclamation-circle"}}
+              <span>{{@newLinkText}}</span>
             </LinkTo>
           </li>
 
-          <li class="archive">
+          <li class="messages-group-unread">
             <LinkTo @route="userPrivateMessages.groupUnread" @model={{group.name}} class="unread">
-              {{@unreadLinkText}}
+              {{d-icon "plus-circle"}}
+              <span>{{@unreadLinkText}}</span>
             </LinkTo>
           </li>
         {{/if}}
 
-        <li class="archive">
+        <li class="messages-group-archive">
           <LinkTo @route="userPrivateMessages.groupArchive" @model={{group.name}}>
-            {{i18n "user.messages.archive"}}
+            {{d-icon "archive"}}
+            <span>{{i18n "user.messages.archive"}}</span>
           </LinkTo>
         </li>
       {{/if}}
@@ -75,7 +84,8 @@
     {{#if this.displayTags}}
       <li class="tags">
         <LinkTo @route="userPrivateMessages.tags" @model={{@user}}>
-          {{i18n "user.messages.all_tags"}}
+          {{d-icon "tag"}}
+          <span>{{i18n "user.messages.all_tags"}}</span>
         </LinkTo>
       </li>
 

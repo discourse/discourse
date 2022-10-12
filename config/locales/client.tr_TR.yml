@@ -213,6 +213,7 @@ tr_TR:
     ok_value: "Tamam"
     cancel_value: "İptal et"
     submit: "Gönder"
+    delete: "Sil"
     generic_error: "Üzgünüz, bir hata oluştu."
     generic_error_with_reason: "Bir hata oluştu: %{error}"
     sign_up: "Kayıt Ol"
@@ -1656,6 +1657,8 @@ tr_TR:
       enabled: "Bu site salt-okunur modda. Lütfen taramayı sürdürün; ancak yanıtlama, beğenme ve diğer eylemler şu an için devre dışı durumda."
       login_disabled: "Site salt-okunur modda iken giriş işlemi devre dışı bırakılır ."
       logout_disabled: "Site salt-okunur modda iken çıkış işlemi yapılamaz."
+    staff_writes_only_mode:
+      enabled: "Bu site sadece personellerinin kullanabileceği moddadır. Lütfen göz atmaya devam edin, ancak yanıtlama, beğenme ve diğer işlemler yalnızca personel üyeleriyle sınırlıdır."
     too_few_topics_and_posts_notice_MF: >-
       Haydi <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">tartışmaya başlayalım!</a> Şu an{currentTopics, plural, one { <strong>#</strong> konu} other { <strong>#</strong> konu}} ve {currentPosts, plural, one {<strong>#</strong> gönderi} other {<strong>#</strong> gönderi}} var. Ziyaretçilerin okumak ve yanıtlamak için daha fazlasına ihtiyacı var - en azından {requiredTopics, plural, one {<strong>#</strong> konu} other {<strong>#</strong> konu}} ve {requiredPosts, plural, one {<strong>#</strong> gönderi} other {<strong>#</strong> gönderi}} olmasını tavsiye ediyoruz. Bu iletiyi yalnızca personel görebilir.
     too_few_topics_notice_MF: >-
@@ -1710,6 +1713,8 @@ tr_TR:
       leave_message: "Gerçekten bu iletiden çıkmak mı istiyorsunuz?"
       remove_allowed_user: "Bu iletiden %{name} adlı kullanıcıyı çıkarmak istediğinize emin misiniz?"
       remove_allowed_group: "Gerçekten %{name} adlı kullanıcıyı bu iletiden kaldırmak istiyor musunuz?"
+      leave: "Ayrıl"
+      remove_user: "Kullanıcıyı kaldır"
     email: "E-posta"
     username: "Kullanıcı Adı"
     last_seen: "Görülen"
@@ -1937,6 +1942,8 @@ tr_TR:
       similar_topics: "Konun şunlara benziyor..."
       drafts_offline: "çevrimdışı taslaklar"
       edit_conflict: "çakışmayı düzenle"
+      esc: "esc"
+      esc_label: "Kapatmak için tıklayın veya Esc tuşuna basın"
       group_mentioned_limit:
         one: "<b>Uyarı!</b> <a href='%{group_link}'>%{group}</a> grubundan bahsettiniz; ancak bu grubun yönetici tarafından yapılandırılan %{count} kullanıcılı ifade sınırından daha fazla üyesi var. Kimseye haber verilmeyecek."
         other: "<b>Uyarı!</b> Bahsettiğiniz <a href='%{group_link}'>%{group}</a> bu grubun yöneticisi tarafından yapılandırılmış %{count} kullanıcı sınırından daha fazla üyesi vardır. Kimseye haber verilmeyecek."
@@ -2031,6 +2038,9 @@ tr_TR:
         body: "Bu ileti şu an yalnızca size gönderiliyor!"
       slow_mode:
         error: "Bu konu yavaş kipte. Son zamanlarda zaten bir şeyler yazdınız; %{timeLeft} yeniden yazabilirsiniz."
+      user_not_seen_in_a_while:
+        single: "Mesaj yazdığınız kişi, <b>%{usernames}</b>, çok uzun zamandır buralarda görülmedi – %{time_ago}. Mesajınızı almayacak olabilirler. %{usernames} ile iletişime geçmek için alternatif yöntemler denemek isteyebilirsiniz."
+        multiple: "Mesaj yazdığınız kişiler, <b>%{usernames}</b>, çok uzun zamandır buralarda görülmedi – %{time_ago}. Mesajınızı almayacak olabilirler. Onlarla iletişime geçmek için alternatif yöntemler denemek isteyebilirsiniz."
       admin_options_title: "Bu başlık için isteğe bağlı görevli ayarları"
       composer_actions:
         reply: Yanıt
@@ -3069,6 +3079,7 @@ tr_TR:
       name: "Kategori Adı"
       description: "Açıklama"
       logo: "Kategori Logo Resmi"
+      logo_dark: "Karanlık Mod Kategorisi Logo Resmi"
       background_image: "Kategori Arka Plan Resmi"
       badge_colors: "Rozet renkleri"
       background_color: "Arka plan rengi"
@@ -3587,7 +3598,6 @@ tr_TR:
       tag_list_joiner: ", "
       delete_unused: "Kullanılmayan Etiketleri Sil"
       delete_unused_description: "Hiçbir konuya veya kişisel mesaja eklenmeyen tüm etiketleri sil"
-      cancel_delete_unused: "İptal"
       filters:
         without_category: "%{filter} %{tag} konular"
         with_category: "%{category} içerisindeki konular %{filter} %{tag}"
@@ -3707,7 +3717,7 @@ tr_TR:
         one: "%{count} yeni"
         other: "%{count} yeni"
       toggle_section: "bölümü değiştir"
-      more: "Daha..."
+      more: "Daha fazla"
       all_categories: "Tüm kategoriler"
       all_tags: "Tüm etiketler"
       sections:

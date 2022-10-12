@@ -7,7 +7,9 @@
     <meta name="discourse_theme_id" content="<%= theme_id %>">
     <meta name="discourse_current_homepage" content="<%= current_homepage %>">
 
-    <%= render partial: "common/discourse_preload_stylesheet" %>
+    <%- if GlobalSetting.preload_link_header %>
+      <%= render partial: "common/discourse_preload_stylesheet" %>
+    <%- end %>
     <%= render partial: "layouts/head" %>
     <%= discourse_csrf_tags %>
 
@@ -21,8 +23,13 @@
 
     <%= build_plugin_html 'server:before-script-load' %>
 
-    <link rel="preload" href="<%= script_asset_path "start-discourse" %>" as="script">
-    <link rel="preload" href="<%= script_asset_path "browser-update" %>" as="script">
+    <%- if GlobalSetting.preload_link_header %>
+      <% add_resource_preload_list(script_asset_path("start-discourse"), "script") %>
+      <% add_resource_preload_list(script_asset_path("browser-update"), "script") %>
+    <%- else %>
+      <link rel="preload" href="<%= script_asset_path "start-discourse" %>" as="script">
+      <link rel="preload" href="<%= script_asset_path "browser-update" %>" as="script">
+    <%- end %>  
     <%= preload_script 'browser-detect' %>
 
     <%= preload_script "locales/#{I18n.locale}" %>

@@ -1526,7 +1526,6 @@ pt:
       subject_template: "A restauração falhou"
     bulk_invite_succeeded:
       subject_template: "Convites de utilizadores em massa processados com sucesso"
-      text_body_template: "O seu ficheiro de convites de utilizadores em massa foi processado, %{sent} convites enviados."
     bulk_invite_failed:
       subject_template: "Convite de utilizadores em massa processado com erros"
     csv_export_succeeded:

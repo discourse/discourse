@@ -1047,7 +1047,6 @@ bg:
       subject_template: "Възстановяването се провали"
     bulk_invite_succeeded:
       subject_template: "Груповата потребителска покана e обработена успешно"
-      text_body_template: "Вашата групова потребителска покана от файл е обработена, %{sent} имейл покани бяха изпратени."
     bulk_invite_failed:
       subject_template: "Груповата потребителска покана завърши с грешки"
     csv_export_failed:

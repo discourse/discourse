@@ -302,6 +302,7 @@ ar:
     ok_value: "حسنًا"
     cancel_value: "إلغاء"
     submit: "إرسال"
+    delete: "حذف"
     generic_error: "عذرًا، حدث خطأ."
     generic_error_with_reason: "حدث خطأ: %{error}"
     sign_up: "الاشتراك"
@@ -1961,6 +1962,8 @@ ar:
       leave_message: "هل تريد حقًا مغادرة هذه الرسالة؟"
       remove_allowed_user: "هل تريد حقًا إزالة %{name} من هذه الرسالة؟"
       remove_allowed_group: "هل تريد حقًا إزالة %{name} من هذه الرسالة؟"
+      leave: "مغادرة"
+      remove_user: "إزالة مستخدم"
     email: "البريد الإلكتروني"
     username: "اسم المستخدم"
     last_seen: "آخر ظهور"
@@ -4159,7 +4162,6 @@ ar:
       tag_list_joiner: "، "
       delete_unused: "حذف الوسوم غير المستخدمة"
       delete_unused_description: "حذف جميع الوسوم غير المرتبطة بأي موضوعات أو رسائل خاصة"
-      cancel_delete_unused: "إلغاء"
       filters:
         without_category: "%{filter} موضوعات %{tag}"
         with_category: "موضوعات ‏%{filter} التي تحمل الوسم %{tag} في الفئة %{category}"
@@ -4286,7 +4288,7 @@ ar:
         few: "%{count} جديد"
         many: "%{count} جديدًا"
         other: "%{count} جديدة"
-      more: "المزيد..."
+      more: "المزيد"
       all_categories: "كل الفئات"
       sections:
         about:

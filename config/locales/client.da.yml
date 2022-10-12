@@ -205,6 +205,7 @@ da:
     ok_value: "OK"
     cancel_value: "Annuller"
     submit: "Udfør"
+    delete: "Slet"
     generic_error: "Beklager, der opstod en fejl."
     generic_error_with_reason: "Der opstod en fejl: %{error}"
     sign_up: "Tilmeld"
@@ -1676,6 +1677,8 @@ da:
       leave_message: "Vil du virkelig forlade denne besked?"
       remove_allowed_user: "Ønsker du virkelig at fjerne %{name} fra denne besked?"
       remove_allowed_group: "Er du sikker på du vil fjerne %{name} fra denne besked?"
+      leave: "Forlad"
+      remove_user: "Fjern bruger"
     email: "E-mail"
     username: "Brugernavn"
     last_seen: "Sidst set"
@@ -3445,7 +3448,6 @@ da:
       tag_list_joiner: ", "
       delete_unused: "Slet Ubrugte Mærker"
       delete_unused_description: "Slet alle mærker, der ikke er knyttet til nogen emner eller personlige beskeder"
-      cancel_delete_unused: "Annuller"
       filters:
         without_category: "%{filter} %{tag} emner"
         with_category: "%{filter} %{tag} emner i %{category}"
@@ -3562,7 +3564,7 @@ da:
       new_count:
         one: "%{count} ny"
         other: "%{count} nye"
-      more: "Mere..."
+      more: "Flere"
       all_categories: "Alle kategorier"
       sections:
         about:

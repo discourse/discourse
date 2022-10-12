@@ -2034,11 +2034,9 @@ ca:
     bulk_invite_succeeded:
       title: "Invitació massiva reeixida"
       subject_template: "La invitació d'usuaris massiva s'ha processat amb èxit"
-      text_body_template: "S'ha processat el fitxer d'invitació massiva; %{sent} invitacions enviades."
     bulk_invite_failed:
       title: "Invitació massiva fallida"
       subject_template: "La invitació massiva d'usuaris s'ha processat amb errors"
-      text_body_template: "S'ha processat el fitxer d'invitació massiva. %{sent} invitacions enviades amb %{failed} error(s). \n\nVet aquí el registre: \n\n```text\n%{logs}\n```\n"
     csv_export_succeeded:
       title: "Exportació de CSV reeixida"
       subject_template: "[%{export_title}] Exportació de dades completada"

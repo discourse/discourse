@@ -163,6 +163,7 @@ sq:
     yes_value: "Po"
     ok_value: "OK"
     cancel_value: "Anulo"
+    delete: "Fshij"
     generic_error: "Na vjen keq, por sapo ndodhi një gabim."
     generic_error_with_reason: "Pati një gabim: %{error}"
     sign_up: "Regjistrohu"
@@ -925,6 +926,7 @@ sq:
       title: "Mesazh"
       remove_allowed_user: "A doni vërtet të hiqni %{name} nga ky mesazh?"
       remove_allowed_group: "Doni me të vërtetë të hiqni %{name} nga ky mesazh? "
+      remove_user: "Hiq anëtar"
     email: "Email"
     username: "Emri i përdoruesit"
     last_seen: "Shikuar"
@@ -1882,7 +1884,6 @@ sq:
       sort_by: "Rendit sipas:"
       sort_by_count: "numri"
       sort_by_name: "emër"
-      cancel_delete_unused: "Anulo"
       filters:
         without_category: "%{filter} %{tag} temat"
         with_category: "%{filter} %{tag} temat në %{category}"
@@ -1946,7 +1947,7 @@ sq:
       new_count:
         one: "%{count} e re"
         other: "%{count} të reja"
-      more: "Më shuMë..."
+      more: "Më shumë"
       all_categories: "Të gjitha kategoritë"
       sections:
         about:

@@ -216,6 +216,7 @@ sk:
     ok_value: "OK"
     cancel_value: "Zrušiť"
     submit: "Odoslať"
+    delete: "Odstrániť"
     generic_error: "Ľutujeme, nastala chyba."
     generic_error_with_reason: "Nastala chyba: %{error}"
     sign_up: "Registrácia"
@@ -1173,6 +1174,8 @@ sk:
       title: "Správa"
       remove_allowed_user: "Skutočne chcete odstrániť %{name} z tejto správy?"
       remove_allowed_group: "Skutočne chcete odstrániť %{name} z tejto správy?"
+      leave: "Opustiť"
+      remove_user: "Odstrániť používateľa"
     email: "Email"
     username: "Používateľské meno"
     last_seen: "Videné"
@@ -2225,7 +2228,6 @@ sk:
       sort_by_name: "mena"
       manage_groups: "Spravovať skupinu štítkov"
       manage_groups_description: "Zadefinujte skupiny pre usporiadanie štítkov"
-      cancel_delete_unused: "Zrušiť"
       filters:
         without_category: "%{filter} %{tag} tém"
       notifications:
@@ -2287,7 +2289,7 @@ sk:
         few: "%{count} nové"
         many: "%{count} nových"
         other: "%{count} nových"
-      more: "Viac ..."
+      more: "Viac"
       all_categories: "Všetky kategórie"
       sections:
         about:

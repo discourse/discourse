@@ -1141,6 +1141,9 @@ en:
         You will be notified in this panel about activity directly relevant to you, including replies to your topics and posts, when someone <b>@mentions</b> you or quotes you, and replies to topics you are watching. Notifications will also be sent to your email when you haven’t logged in for a while.
         <br><br>
         Look for the %{icon} to decide which specific topics, categories and tags you want to be notified about. For more, see your <a href='%{preferencesUrl}'>notification preferences</a>.
+      no_other_notifications_title: "You don’t have any other notifications yet"
+      no_other_notifications_body: >
+        You will be notified in this panel about other kinds of activity that may be relevant to you - for example, when someone links to or edits one of your posts.
       no_notifications_page_title: "You don’t have any notifications yet"
       no_notifications_page_body: >
         You will be notified about activity directly relevant to you, including replies to your topics and posts, when someone <b>@mentions</b> you or quotes you, and replies to topics you are watching. Notifications will also be sent to your email when you haven’t logged in for a while.

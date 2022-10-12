@@ -3,32 +3,50 @@
 
   <div class="user-navigation user-navigation-secondary">
     <ul class="nav-pills action-list">
-      <DNavigationItem @route="userActivity.index">{{i18n "user.filters.all"}}</DNavigationItem>
-      <DNavigationItem @route="userActivity.topics">{{i18n "user_action_groups.4"}}</DNavigationItem>
-      <DNavigationItem @route="userActivity.replies">{{i18n "user_action_groups.5"}}</DNavigationItem>
+      <DNavigationItem @route="userActivity.index">
+        {{d-icon "stream"}}
+        <span>{{i18n "user.filters.all"}}</span>
+      </DNavigationItem>
+      <DNavigationItem @route="userActivity.topics">
+        {{d-icon "list-ul"}}
+        <span>{{i18n "user_action_groups.4"}}</span>
+      </DNavigationItem>
+      <DNavigationItem @route="userActivity.replies">
+        {{d-icon "reply"}}
+        <span>{{i18n "user_action_groups.5"}}</span>
+      </DNavigationItem>
 
       {{#if this.user.showRead}}
         <DNavigationItem @route="userActivity.read" @title={{i18n "user.read_help"}}>
-          {{i18n "user.read"}}
+          {{d-icon "history"}}
+          <span>{{i18n "user.read"}}</span>
         </DNavigationItem>
       {{/if}}
 
       {{#if this.user.showDrafts}}
         <DNavigationItem @route="userActivity.drafts">
-          {{this.draftLabel}}
+          {{d-icon "pencil-alt"}}
+          <span>{{this.draftLabel}}</span>
         </DNavigationItem>
       {{/if}}
 
       {{#if (gt this.model.pending_posts_count 0)}}
         <DNavigationItem @route="userActivity.pending">
-          {{this.pendingLabel}}
+          {{d-icon "clock"}}
+          <span>{{this.pendingLabel}}</span>
         </DNavigationItem>
       {{/if}}
 
-      <DNavigationItem @route="userActivity.likesGiven">{{i18n "user_action_groups.1"}}</DNavigationItem>
+      <DNavigationItem @route="userActivity.likesGiven">
+        {{d-icon "heart"}}
+        <span>{{i18n "user_action_groups.1"}}</span>
+      </DNavigationItem>
 
       {{#if this.user.showBookmarks}}
-        <DNavigationItem @route="userActivity.bookmarks">{{i18n "user_action_groups.3"}}</DNavigationItem>
+        <DNavigationItem @route="userActivity.bookmarks">
+          {{d-icon "bookmark"}}
+          <span>{{i18n "user_action_groups.3"}}</span>
+        </DNavigationItem>
       {{/if}}
 
       <PluginOutlet @name="user-activity-bottom" @connectorTagName="li" @args={{hash model=this.model}} />

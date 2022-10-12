@@ -204,6 +204,7 @@ fa_IR:
     ok_value: "تایید"
     cancel_value: "انصراف"
     submit: "ارسال"
+    delete: "حذف"
     generic_error: "متأسفیم، خطایی روی داده."
     generic_error_with_reason: "خطایی روی داد: %{error}"
     sign_up: "ثبت نام"
@@ -908,6 +909,7 @@ fa_IR:
       copied: "کپی شده"
     user_fields:
       none: "(یک گزینه انتخاب کنید)"
+      same_as_password: 'رمز عبور شما نباید در قسمت‌های دیگر تکرار شود.'
     user:
       said: "%{username}:"
       profile: "نمایه"
@@ -1614,6 +1616,9 @@ fa_IR:
       leave_message: "واقعا میخواهید این پیام را ترک کنید؟"
       remove_allowed_user: "آیا واقعا می خواهید اسم %{name} از پیام برداشته شود ؟ "
       remove_allowed_group: "آیا از حذف %{name} از این پیام اطمینان دارید؟"
+      leave: "ترک کردن"
+      remove_group: "حذف گروه"
+      remove_user: "حذف کاربر"
     email: "ایمیل"
     username: "نام‌کاربری"
     last_seen: "مشاهده شد"
@@ -1833,6 +1838,7 @@ fa_IR:
       similar_topics: "موضوع شما شبیه است به..."
       drafts_offline: "پیش‌نویس‌های آفلاین"
       edit_conflict: "ویرایش تناقض"
+      ok_proceed: "باشه، ادامه دهید"
       group_mentioned:
         one: "با اشاره به %{group}، به <a href='%{group_link}'>%{count} نفر</a> اطلاعیه ارسال می‌شود. مطمئن هستید؟"
         other: "با اشاره به %{group}، به <a href='%{group_link}'>%{count} نفر</a> اطلاعیه ارسال می‌شود. مطمئن هستید؟"
@@ -2780,6 +2786,7 @@ fa_IR:
       name: "نام دسته‌بندی"
       description: "توضیحات"
       logo: "تصویر لوگو برای دسته‌بندی"
+      logo_dark: "حالت تیره دسته‌بندی تصویر لوگو"
       background_image: "تصویر پس‌زمینه برای دسته‌بندی"
       badge_colors: "رنگ نشان‌ها"
       background_color: "رنگ پس‌زمینه"
@@ -3205,7 +3212,6 @@ fa_IR:
       tag_list_joiner: "، "
       delete_unused: "پاک کردن برچسب های استفاده نشده"
       delete_unused_description: "پاک کردن همه ی برچسب هایی که به هیچ مبحث یا پیامی تعلق ندارند"
-      cancel_delete_unused: "لغو کردن"
       filters:
         without_category: "%{filter} %{tag} موضوعات"
         with_category: "%{filter} %{tag} موضوعات در %{category}"
@@ -3295,7 +3301,7 @@ fa_IR:
         one: "%{count} تازه"
         other: "%{count} تازه"
       toggle_section: "تغییر بخش"
-      more: "بیشتر..."
+      more: "بیشتر"
       all_categories: "همه‌ی دسته‌بندی‌ها"
       all_tags: "همه برچسب‌ها"
       sections:

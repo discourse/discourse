@@ -193,6 +193,7 @@ el:
     ok_value: "OK"
     cancel_value: "Ακύρωση"
     submit: "Υποβολή"
+    delete: "Σβήσιμο"
     generic_error: "Λυπάμαι, προέκυψε κάποιο σφάλμα."
     generic_error_with_reason: "Προέκυψε ένα σφάλμα: %{error}"
     sign_up: "Εγγραφή"
@@ -1445,6 +1446,8 @@ el:
       leave_message: "Σίγουρα θελετε να αφήσετε αυτό το μήνυμα;"
       remove_allowed_user: "Θέλεις σίγουρα να αφαιρέσεις τον/την %{name} από αυτή τη συζήτηση;"
       remove_allowed_group: "Θέλεις σίγουρα να αφαιρέσεις τον/την %{name} από αυτό το μήνυμα;"
+      leave: "Αποχώρηση"
+      remove_user: "Αφαίρεση χρήστη"
     email: "Email"
     username: "Όνομα Χρήστη"
     last_seen: "Εθεάθη"
@@ -2989,7 +2992,6 @@ el:
       delete_no_unused_tags: "Δεν υπάρχουν αχρησιμοποίητες ετικέτες."
       delete_unused: "Διαγραφή αχρησιμοποίητων ετικετών"
       delete_unused_description: "Διαγράψτε όλες τις ετικέτες που δεν επισυνάπτονται σε θέματα ή προσωπικά μηνύματα"
-      cancel_delete_unused: "Άκυρο"
       filters:
         without_category: "%{filter} %{tag} νήματα"
         with_category: "%{filter} %{tag} νήματα στην %{category}"
@@ -3070,7 +3072,7 @@ el:
       new_count:
         one: "%{count} νέο"
         other: "%{count} νέα"
-      more: "Περισσότερα..."
+      more: "Περισσότερα"
       all_categories: "Όλες οι κατηγορίες"
       sections:
         about:

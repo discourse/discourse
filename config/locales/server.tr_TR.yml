@@ -130,6 +130,7 @@ tr_TR:
         unsubscribe_not_allowed: "Bu kullanıcı için e-posta aboneliği iptal edilmiş."
         email_not_allowed: "E-posta adresi izin verilenler listesinde olmadığında veya engellenenler listesinde olduğunda gerçekleşir."
       unrecognized_error: "Bilinmeyen Hata"
+    secure_uploads_placeholder: "Düzeltildi: Bu sitede güvenli yükleme modu etkin, konuyu ziyaret edin veya ekli yüklemeleri görmek için Medyayı Görüntüle'yi tıklayın."
     view_redacted_media: "Medyayı Görüntüle"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -199,6 +200,7 @@ tr_TR:
       page_publishing_requirements: "Güvenli ortam etkinleştirilirse sayfa yayınlama etkinleştirilemez."
       s3_backup_requires_s3_settings: "'%{setting_name} verisini sağlamadıysanız S3'ü yedekleme konumu olarak kullanamazsınız."
       s3_bucket_reused: "Aynı sepeti 's3_upload_bucket' ve 's3_backup_bucket' için kullanamazsınız. Farklı bir sepet seçin veya her sepet için farklı bir yol kullanın."
+      secure_uploads_requirements: "Güvenli yükleme modunu etkinleştirilmeden önce S3 yüklemeleri etkinleştirilmelidir."
       share_quote_facebook_requirements: "Facebook paylaşımını etkinleştirmek için bir Facebook uygulaması kimliği ayarlamanız gerekir."
       second_factor_cannot_enforce_with_socials: "Sosyal oturum açma etkinken 2FA'yı zorunlu kılamazsınız. Önce şu yollarla oturum açmayı devre dışı bırakmalısınız: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Yerel girişler devre dışı bırakılmışsa 2FA'yı uygulayamazsınız."
@@ -241,6 +243,9 @@ tr_TR:
       invalid_access: "İstenilen kaynağı görüntüleyebilmeniz için izniniz yok."
     requires_groups: "Belirtilen konuya erişilemediğinden davet kaydedilmedi. Aşağıdaki gruplardan birini ekleyin: %{groups}."
     domain_not_allowed: "E-postanız bu daveti değerlendirmek için kullanılamaz."
+    max_redemptions_allowed_one: "e-posta davetleri için 1 olmalıdır."
+    redemption_count_less_than_max: "%{max_redemptions_allowed} değerinden küçük olmalıdır."
+    email_xor_domain: "E-posta ve alan adı alanları aynı anda kullanılamaz"
   bulk_invite:
     file_should_be_csv: "Yüklenen dosya csv formatında olmalıdır."
     max_rows: "İlk olarak %{max_bulk_invites} davetiyeleri gönderildi. Dosyayı daha küçük parçalara bölmeyi deneyin."
@@ -250,6 +255,7 @@ tr_TR:
     max_redemptions_limit: "2 ile %{max_limit} arasında olmalıdır."
   topic_invite:
     failed_to_invite: "Kullanıcı, aşağıdaki gruplardan birinde grup üyeliği olmadan bu konuya davet edilemez: %{group_names}."
+    not_pm: "Sadece özel mesajlara davet edebilirsiniz."
     user_exists: "Üzgünüz, bu kullanıcı zaten davet edildi. Konuya yalnızca bir kullanıcı davet edebilirsiniz."
     muted_topic: "Üzgünüz, o kullanıcı bu konuyu sessize aldı."
     receiver_does_not_allow_pm: "Üzgünüz, bu kullanıcı onlara özel ileti göndermenize izin vermiyor."
@@ -1642,6 +1648,7 @@ tr_TR:
     max_personal_messages_per_day: "Bir kullanıcının günlük oluşturabileceği maksimum yeni kişisel ileti konusu sayısı."
     max_invites_per_day: "Bir günde, bir kullanıcının yollayabileceği en fazla davet sayısı."
     max_topic_invitations_per_day: "Bir günde, bir kullanıcının yollayabileceği en fazla başlık daveti sayısı."
+    max_topic_invitations_per_minute: "Bir dakikada, bir kullanıcının yollayabileceği en fazla başlık daveti sayısı."
     max_logins_per_ip_per_hour: "Her IP adresi için saat başına izin verilen maksimum giriş sayısı"
     max_logins_per_ip_per_minute: "Her IP adresi için dakika başına izin verilen maksimum giriş sayısı"
     max_post_deletions_per_minute: "Bir kullanıcının dakikada silebileceği maksimum gönderi sayısı. Gönderi silme işlemlerini devre dışı bırakmak için 0 girin."
@@ -1840,6 +1847,7 @@ tr_TR:
     raw_email_max_length: "Gelen e-posta için kaç karakter saklanması gerektiği."
     raw_rejected_email_max_length: "Reddedilmiş gelen e-posta için kaç karakter saklanması gerektiği."
     delete_rejected_email_after_days: "(n) günden daha eski reddedilen e-postaları silin."
+    require_change_email_confirmation: "Personel dışı kullanıcıların, değiştirmeden önce eski e-posta adreslerini onaylamalarını isteyin. Personel kullanıcıları için geçerli değildir, çünkü onların zaten her zaman eski e-posta adreslerini onaylamaları gerekir."
     manual_polling_enabled: "E-posta yanıtları için API'yı kullanarak e-postaları aktarın."
     pop3_polling_enabled: "E-posta yanıtları için POP3 üzerinden sorgula"
     pop3_polling_ssl: "POP3 sunucusuna bağlanırken SSL kullanın. (Tavsiye edilir)"
@@ -1913,6 +1921,7 @@ tr_TR:
     enable_mobile_theme: "Mobil cihazlar mobil uyumlu temayı kullanır, dilerse masaüstü görünüme geçebilirler. Eğer özel, duyarlı bir biçim kullanıyorsanız bunu devre dışı bırakın."
     dominating_topic_minimum_percent: "Konuyu domine ettiğine dair uyarı almadan önce konudaki gönderilerin yüzde kaçının kullanıcıya ait olması gerekir."
     disable_avatar_education_message: "Avatar değiştirme için eğitici iletileri kapat."
+    pm_warn_user_last_seen_months_ago: "Yeni bir PM oluştururken, hedef alıcı n aydan daha uzun bir süre görülmediyse kullanıcıları uyarın."
     suppress_uncategorized_badge: "Kategorisiz konular için olan rozeti konu listesinde gösterme."
     header_dropdown_category_count: "Kaç kategori aşağı açılır menüde gösterilebilir."
     permalink_normalizations: "Kalıcı bağlantıları eşleştirmeden önce aşağıdaki regex'i uygula, mesela: /(\\/topic.*)\\?.*/\\1 konu yönlendirmelerindeki sorgu dizelerini kaldırır. Formatlama regex+string, yakalamalara erişmek \\1 vs."
@@ -1955,6 +1964,7 @@ tr_TR:
     delete_drafts_older_than_n_days: "(n) günden eski taslakları sil."
     bootstrap_mode_min_users: "bootstrap modunun edilgen olması için gereken en az kullanıcı sayısı (edilgen bırakmak için 0 yapın)"
     prevent_anons_from_downloading_files: "Anonim kullanıcıların ekleri indirmesini önle."
+    secure_media: 'KALDIRILDI: Bunun yerine secure_uploads ayarını kullanın, Discourse 3.0''da kaldırılacaktır.'
     slug_generation_method: "Slug üretim yöntemi seçin. 'kodlanmış' seçeneği yüzde kodlamalı metin oluşturur. 'hiçbiri' seçeneği slug'ı devre dışı bırakır."
     enable_emoji: "Emojiyi etkinleştir"
     enable_emoji_shortcuts: ":): p :( gibi yaygın gülen yüz ifadeleri emojilere dönüştürülecek"
@@ -2588,20 +2598,9 @@ tr_TR:
     bulk_invite_succeeded:
       title: "Toplu Davet Başarılı"
       subject_template: "Toplu davet gönderimi başarıyla tamamlandı"
-      text_body_template: "Toplu davet dosyanız işlendi, %{sent} davetiye gönderildi."
     bulk_invite_failed:
       title: "Toplu Davet Başarısız Oldu"
       subject_template: "Toplu davet gönderiminde hata oluştu"
-      text_body_template: |
-        Toplu davet dosyanız işlendi, %{sent} davetiye %{failed} hata(lar) ile gönderildi.
-
-        Kayıtları aşağıda bulabilirsiniz:
-
-        ```
-        ``` text
-        %{logs}
-
-        ```
     user_added_to_group_as_owner:
       title: "Grup Sahibi Olarak Eklendi"
       subject_template: "%{group_name} grubuna grubun sahibi olarak eklendiniz"

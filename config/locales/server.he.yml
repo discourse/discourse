@@ -277,6 +277,7 @@ he:
     max_redemptions_limit: "אמור להיות בין 2 לבין %{max_limit}."
   topic_invite:
     failed_to_invite: "לא ניתן להזמין את המשתמש לנושא הזה בהעדר חברות באחת הקבוצות הבאות: %{group_names}"
+    not_pm: "אפשר להזמין להודעות פרטיות בלבד."
     user_exists: "כבר נשלחה הזמנה למשתמש זה. ניתן להזמין משתמש לנושא פעם אחת בלבד, עמך הסליחה."
     muted_topic: "המשתמש הזה השתיק את הנושא הזה, עמך הסליחה."
     receiver_does_not_allow_pm: "משתמש זה לא מאשר לך לשלוח אליו הודעות פרטיות, עמך הסליחה."
@@ -1778,6 +1779,7 @@ he:
     max_personal_messages_per_day: "מספר ההודעות האישיות החדשות המרבי שמשתמשים יכולים ליצור ביום."
     max_invites_per_day: "מספר מקסימלי של הזמנות שיכולים משתמשים לשלוח ביום."
     max_topic_invitations_per_day: "מספר מירבי של הזמנות לנושא שמשתמשים יכולים לשלוח ביום. "
+    max_topic_invitations_per_minute: "מספר מירבי של הזמנות לנושא שמשתמשים יכולים לשלוח בדקה."
     max_logins_per_ip_per_hour: "מספר כניסות מרבי מורשה לכל כתובת IP בשעה"
     max_logins_per_ip_per_minute: "מספר כניסות מרבי מורשה לכל כתובת IP בדקה"
     max_post_deletions_per_minute: "מספר הפוסטים המרבי שמשתמש יכול למחוק בדקה אחת. 0 ישבית מחיקת פוסטים."
@@ -2936,18 +2938,9 @@ he:
     bulk_invite_succeeded:
       title: "הזמנה קבוצתית הצליחה"
       subject_template: "ההזמנה הקבוצתית עובדה בהצלחה"
-      text_body_template: "ההזמנה המרוכזת שלך עובדה, %{sent} הזמנות נשלחו."
     bulk_invite_failed:
       title: "הזמנה קבוצתית נכשלה"
       subject_template: "ההזמנה המרוכזת עובדה עם שגיאות"
-      text_body_template: |
-        ההזמנה הקבוצתית שלך עברה עיבוד, %{sent} הזמנות נשלחו בדוא״ל עם %{failed} תקלה/ות.
-
-        הנה התיעוד:
-        ``` text
-
-        %{logs}
-        ```
     user_added_to_group_as_owner:
       title: "נוסף לקבוצה כבעלים"
       subject_template: "נוספת לקבוצה %{group_name} כבעלים"

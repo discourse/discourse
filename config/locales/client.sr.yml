@@ -227,6 +227,7 @@ sr:
     ok_value: "U redu"
     cancel_value: "Odustani"
     submit: "Potvrdi"
+    delete: "Obriši"
     generic_error: "Izvinite, pojavila se greška."
     generic_error_with_reason: "Došlo je do greške: %{error}"
     sign_up: "Registrujte se"
@@ -1018,6 +1019,7 @@ sr:
       disable: "Prikaži Obrisane Poruke"
     private_message_info:
       title: "Privatna poruka"
+      remove_user: "Ukloni člana"
     email: "E-mail"
     username: "Korisničko Ime"
     last_seen: "Viđen"
@@ -1772,7 +1774,6 @@ sr:
       description: "Opis"
       sort_by_count: "broj"
       sort_by_name: "ime foruma"
-      cancel_delete_unused: "Odustani"
       filters:
         without_category: "%{filter} %{tag} teme"
       notifications:
@@ -1817,7 +1818,7 @@ sr:
         one: "%{count} nova"
         few: "%{count} novih"
         other: "%{count} nova"
-      more: "Više..."
+      more: "Više"
       sections:
         about:
           header_link_text: "O nama"

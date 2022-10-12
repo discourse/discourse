@@ -4,14 +4,14 @@
       <li class="summary">
         <LinkTo @route="user.summary">
           {{d-icon "user"}}
-          {{i18n "user.summary.title"}}
+          <span>{{i18n "user.summary.title"}}</span>
         </LinkTo>
       </li>
 
       <li class="user-activity">
         <LinkTo @route="userActivity">
           {{d-icon "stream"}}
-          {{i18n "user.activity_stream"}}
+          <span>{{i18n "user.activity_stream"}}</span>
         </LinkTo>
       </li>
     {{/unless}}
@@ -19,7 +19,8 @@
     {{#if @showNotificationsTab}}
       <li class="user-notifications">
         <LinkTo @route="userNotifications">
-          {{d-icon "bell" class="glyph"}}{{i18n "user.notifications"}}
+          {{d-icon "bell" class="glyph"}}
+          <span>{{i18n "user.notifications"}}</span>
         </LinkTo>
       </li>
     {{/if}}
@@ -28,7 +29,7 @@
       <li class="private-messages">
         <LinkTo @route="userPrivateMessages">
           {{d-icon "far-envelope"}}
-          {{i18n "user.private_messages"}}
+          <span>{{i18n "user.private_messages"}}</span>
         </LinkTo>
       </li>
     {{/if}}
@@ -37,7 +38,7 @@
       <li class="invited">
         <LinkTo @route="userInvited">
           {{d-icon "user-plus"}}
-          {{i18n "user.invited.title"}}
+          <span>{{i18n "user.invited.title"}}</span>
         </LinkTo>
       </li>
     {{/if}}
@@ -46,7 +47,7 @@
       <li class="badges">
         <LinkTo @route="user.badges">
           {{d-icon "certificate"}}
-          {{i18n "badges.title"}}
+          <span>{{i18n "badges.title"}}</span>
         </LinkTo>
       </li>
     {{/if}}
@@ -60,7 +61,7 @@
       <li class="preferences">
         <LinkTo @route="preferences">
           {{d-icon "cog"}}
-          {{i18n "user.preferences"}}
+          <span>{{i18n "user.preferences"}}</span>
         </LinkTo>
       </li>
     {{/if}}
@@ -69,7 +70,7 @@
       <li class="admin">
         <a href={{@user.adminPath}} >
           {{d-icon "wrench"}}
-          {{i18n "admin.user.manage_user"}}
+          <span>{{i18n "admin.user.manage_user"}}</span>
         </a>
       </li>
     {{/if}}

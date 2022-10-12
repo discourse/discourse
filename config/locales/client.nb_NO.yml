@@ -200,6 +200,7 @@ nb_NO:
     ok_value: "OK"
     cancel_value: "Avbryt"
     submit: "Utfør"
+    delete: "Slett"
     generic_error: "Beklager, det har oppstått en feil."
     generic_error_with_reason: "Det oppstod et problem: %{error}"
     sign_up: "Registrer deg"
@@ -1637,6 +1638,8 @@ nb_NO:
       leave_message: "Ønsker du virkelig å legge igjen denne meldingen?"
       remove_allowed_user: "Er du sikker på at du vil fjerne %{name} fra denne meldingen?"
       remove_allowed_group: "Vil du virkelig fjerne %{name} fra denne meldingen?"
+      leave: "Forlat"
+      remove_user: "Slett bruker"
     email: "E-post"
     username: "Brukernavn"
     last_seen: "Sett"
@@ -3323,7 +3326,6 @@ nb_NO:
       tag_list_joiner: ", "
       delete_unused: "Slett ubrukte stikkord"
       delete_unused_description: "Slett alle tagger som ikke er knyttet til noen emner eller personlige meldinger"
-      cancel_delete_unused: "Avbryt"
       filters:
         without_category: "%{filter} %{tag} emner"
         with_category: "%{filter} %{tag} emner i %{category}"
@@ -3425,7 +3427,7 @@ nb_NO:
       new_count:
         one: "%{count} ny"
         other: "%{count} nye"
-      more: "Mer…"
+      more: "Mer"
       all_categories: "Alle kategorier"
       sections:
         about:

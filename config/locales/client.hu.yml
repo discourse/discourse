@@ -229,6 +229,7 @@ hu:
     ok_value: "Rendben"
     cancel_value: "Mégse"
     submit: "Beküldés"
+    delete: "Törlés"
     generic_error: "Sajnos hiba történt."
     generic_error_with_reason: "Hiba történt: %{error}"
     sign_up: "Regisztráció"
@@ -1731,6 +1732,8 @@ hu:
       leave_message: "Biztos, hogy elhagyja a beszélgetést?"
       remove_allowed_user: "Biztos, hogy eltávolítja a következőt ebből az üzenetből: %{name}?"
       remove_allowed_group: "Biztos, hogy eltávolítja a következőt ebből az üzenetből: %{name}?"
+      leave: "Elhagyás"
+      remove_user: "Felhasználó eltávolítása"
     email: "E-mail"
     username: "Felhasználónév"
     last_seen: "Látva"
@@ -3331,7 +3334,6 @@ hu:
       sort_by_count: "besorol"
       sort_by_name: "név"
       manage_groups: "Címke csoport kezelése"
-      cancel_delete_unused: "Visszavon"
       filters:
         without_category: "%{filter} %{tag} Témák"
         with_category: "%{filter} %{tag} Témák a %{category}"
@@ -3404,7 +3406,7 @@ hu:
       new_count:
         one: "%{count} új"
         other: "%{count} új"
-      more: "Továbbiak..."
+      more: "Több"
       all_categories: "Minden kategória"
       sections:
         about:

@@ -2643,11 +2643,9 @@ it:
     bulk_invite_succeeded:
       title: "Invito di Massa Riuscito"
       subject_template: "Invito di massa processato con successo"
-      text_body_template: "Il tuo file con l'invito di massa è stato processato, %{sent} inviti spediti."
     bulk_invite_failed:
       title: "Invito di Massa Fallito"
       subject_template: "Invito di massa processato con errori"
-      text_body_template: "Il tuo file di invito di utenti in massa è stato elaborato, %{sent} inviti inviati con errore/i %{failed}. \n\nEcco il registro:\n\n``` text\n%{logs}\n```\n"
     user_added_to_group_as_owner:
       title: "Aggiunto al gruppo come proprietario"
       subject_template: "Sei stato aggiunto come proprietario del gruppo %{group_name}"

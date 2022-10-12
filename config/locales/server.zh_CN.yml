@@ -249,6 +249,7 @@ zh_CN:
     max_redemptions_limit: "应介于 2 和 %{max_limit} 之间。"
   topic_invite:
     failed_to_invite: "如果用户不是以下任一群组的成员，则无法被邀请加入此话题：%{group_names}。"
+    not_pm: "你只能邀请接收私人消息。"
     user_exists: "抱歉，该用户已被邀请。您一次只可以邀请一个用户加入话题。"
     muted_topic: "抱歉，该用户已将此话题设为免打扰。"
     receiver_does_not_allow_pm: "抱歉，该用户不允许您向他们发送私信。"
@@ -1621,6 +1622,7 @@ zh_CN:
     max_personal_messages_per_day: "用户每天可以创建的新个人消息话题的最大数量。"
     max_invites_per_day: "用户每天可以发送的最大邀请数。"
     max_topic_invitations_per_day: "用户每天可以发送的最大话题邀请数。"
+    max_topic_invitations_per_minute: "用户每分钟可发送的最大话题邀请数。"
     max_logins_per_ip_per_hour: "每个 IP 地址每小时允许的最大登录次数"
     max_logins_per_ip_per_minute: "每个 IP 地址每分钟允许的最大登录次数"
     max_post_deletions_per_minute: "用户每分钟可以删除的最大帖子数。设置为 0 将禁用帖子删除。"
@@ -1952,6 +1954,10 @@ zh_CN:
     bootstrap_mode_min_users: "禁用引导模式所需的最小用户数（设置为 0 将禁用）"
     prevent_anons_from_downloading_files: "阻止匿名用户下载附件。"
     secure_media: '已弃用：改用 secure_uploads 设置，将在 Discourse 3.0 中删除。'
+    secure_media_allow_embed_images_in_emails: "已弃用：使用 secure_uploads_allow_embed_images_in_emails，将在 Discourse 3.0 中删除。"
+    secure_uploads_allow_embed_images_in_emails: "如果小于 'secure media max email embed image size kb' 设置，则允许嵌入通常会在电子邮件中编辑的安全上传。"
+    secure_media_max_email_embed_image_size_kb: "已弃用：使用 secure_uploads_max_email_embed_image_size_kb，将在 Discourse 3.0 中删除。"
+    secure_uploads_max_email_embed_image_size_kb: "如果启用了 'secure media allow embed in emails' 设置，将被嵌入到电子邮件的安全上传的大小限制；如果不启用，则此设置无效。"
     slug_generation_method: "选择一种缩略名生成方法。'encoded' 将生成百分比编码字符串。'none' 将完全禁用缩略名。"
     enable_emoji: "启用表情符号"
     enable_emoji_shortcuts: "常见的笑脸文字（如 :) :p :(）将被转换为表情符号"
@@ -2709,16 +2715,21 @@ zh_CN:
     bulk_invite_succeeded:
       title: "批量邀请成功"
       subject_template: "批量用户邀请处理成功"
-      text_body_template: "您的批量用户邀请文件已被处理，发送了 %{sent} 个邀请。"
+      text_body_template: |
+        你的批量用户邀请文件已被处理， %{sent}个邀请已发送，其中 %{skipped} 个跳过和 %{warnings} 个警告。
+
+        ``` text
+        %{logs}
+        ```
     bulk_invite_failed:
       title: "批量邀请失败"
       subject_template: "批量用户邀请已被处理，但存在错误"
       text_body_template: |
-        您的批量用户邀请已被处理，%{sent} 个邀请已发送，其中 %{failed} 个存在错误。
+        你的批量用户邀请文件已被处理， %{sent}个邀请已发送，其中 %{skipped} 个跳过， %{warnings} 个警告和 %{failed} 个错误。
 
-        以下为日志：
+        下面是日志：
 
-        ```text
+        ``` text
         %{logs}
         ```
     user_added_to_group_as_owner:

@@ -2195,18 +2195,9 @@ nl:
     bulk_invite_succeeded:
       title: "Bulkuitnodiging geslaagd"
       subject_template: "Bulkuitnodiging aan gebruikers verwerkt"
-      text_body_template: "Uw bestand voor een bulkuitnodiging aan gebruikers is verwerkt. Er zijn %{sent} uitnodigingen verstuurd."
     bulk_invite_failed:
       title: "Bulkuitnodiging mislukt"
       subject_template: "Bulkuitnodiging aan gebruikers verwerkt, met fouten"
-      text_body_template: |
-        Uw bestand voor bulkuitnodiging aan gebruikers is verwerkt, %{sent} uitnodigingen verstuurd met %{failed} fout(en).
-
-        Hier zijn de details:
-
-        ``` text
-        %{logs}
-        ```
     user_added_to_group_as_owner:
       title: "Toegevoegd aan groep als eigenaar"
     user_added_to_group_as_member:
