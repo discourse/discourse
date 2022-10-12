@@ -1032,6 +1032,11 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@discourse/backburner.js@^2.7.1-0":
+  version "2.7.1-0"
+  resolved "https://registry.yarnpkg.com/@discourse/backburner.js/-/backburner.js-2.7.1-0.tgz#0fc5f93c8f3ee013af2beed55d30ff10362d8f06"
+  integrity sha512-r0cjllX/niPSxot/lpz0Tj9CXmyYoFE6kvEN9oL0D0sOGpknmK9FielZqcPGxuD/Z8vOb67penUElHRjH+F4cQ==
+
 "@discourse/itsatrap@^2.0.10":
   version "2.0.10"
   resolved "https://registry.yarnpkg.com/@discourse/itsatrap/-/itsatrap-2.0.10.tgz#c7e750eeb32b54e769e952c4ecc472213eb1385a"
@@ -2580,10 +2585,6 @@ backbone@^1.1.2:
   integrity sha512-RLmDrRXkVdouTg38jcgHhyQ/2zjg7a8E6sz2zxfz21Hh17xDJYUHBZimVIt5fUyS8vbfpeSmTL3gUjTEvUV3qQ==
   dependencies:
     underscore ">=1.8.3"
-
-"backburner.js@https://github.com/discourse/backburner.js#discourse-patches":
-  version "2.7.0"
-  resolved "https://github.com/discourse/backburner.js#4b227c302c8a2bfa604dcdcca3802ed018423683"
 
 backo2@1.0.2:
   version "1.0.2"
