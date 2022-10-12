@@ -79,6 +79,12 @@ module.exports = function (defaults) {
 
     // We need to build tests in prod for theme tests
     tests: true,
+
+    vendorFiles: {
+      // Freedom patch - includes bug fix and async stack support
+      // https://github.com/discourse/backburner.js/commits/discourse-patches
+      backburner: "node_modules/backburner.js/dist/named-amd/backburner.js",
+    },
   });
 
   // Patching a private method is not great, but there's no other way for us to tell

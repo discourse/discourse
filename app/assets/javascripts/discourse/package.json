@@ -37,6 +37,7 @@
     "admin": "^1.0.0",
     "discourse-plugins": "^1.0.0",
     "babel-plugin-ember-template-compilation": "^1.0.2",
+    "backburner.js": "https://github.com/discourse/backburner.js#discourse-patches",
     "bootstrap": "3.4.1",
     "broccoli-asset-rev": "^3.0.0",
     "deepmerge": "^4.2.2",

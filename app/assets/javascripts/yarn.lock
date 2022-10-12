@@ -2581,6 +2581,10 @@ backbone@^1.1.2:
   dependencies:
     underscore ">=1.8.3"
 
+"backburner.js@https://github.com/discourse/backburner.js#discourse-patches":
+  version "2.7.0"
+  resolved "https://github.com/discourse/backburner.js#4b227c302c8a2bfa604dcdcca3802ed018423683"
+
 backo2@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/backo2/-/backo2-1.0.2.tgz#31ab1ac8b129363463e35b3ebb69f4dfcfba7947"
