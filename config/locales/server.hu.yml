@@ -1183,7 +1183,6 @@ hu:
       subject_template: "Visszaállítás sikertelen"
     bulk_invite_succeeded:
       subject_template: "A csoportos felhasználó-meghívás feldolgozása sikeres"
-      text_body_template: "A csoportos felhasználó-meghívás feldolgozása sikeres, %{sent} meghívó lett kiküldve."
     bulk_invite_failed:
       subject_template: "Hiba a csoportos felhasználó-meghívás feldolgozásakor"
     csv_export_succeeded:

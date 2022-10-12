@@ -215,7 +215,12 @@ class Site
     return show_welcome_topic_banner unless show_welcome_topic_banner.nil?
 
     show_welcome_topic_banner = if (user_id == User.first_login_admin_id)
-      Post.find_by("topic_id = :topic_id AND post_number = 1 AND version = 1 AND created_at > :created_at", topic_id: SiteSetting.welcome_topic_id, created_at: 1.month.ago).present?
+      Post.joins(:topic)
+        .find_by(
+          "topics.id = :topic_id AND topics.deleted_at IS NULL AND posts.post_number = 1 AND posts.version = 1 AND posts.created_at > :created_at",
+          topic_id: SiteSetting.welcome_topic_id,
+          created_at: 1.month.ago
+        ).present?
     else
       false
     end

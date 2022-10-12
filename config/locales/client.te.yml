@@ -109,6 +109,7 @@ te:
     yes_value: "అవును"
     ok_value: "సరే"
     cancel_value: "రద్దుచేయి"
+    delete: "తొలగించు"
     generic_error: "క్షమించాలి, ఒక దోషం తలెత్తింది"
     generic_error_with_reason: "ఒక దోషం జరిగింది: %{error}"
     sign_up: "సైన్ అప్"
@@ -1321,7 +1322,6 @@ te:
       add_synonyms: "కలుపు"
       description: "వివరణ"
       sort_by_name: "పేరు"
-      cancel_delete_unused: "రద్దుచేయి"
       filters:
         without_category: "%{filter} %{tag} విషయాలు"
       notifications:
@@ -1365,6 +1365,7 @@ te:
       new_count:
         one: "%{count} కొత్త"
         other: "%{count} కొత్త"
+      more: "ఇంకా"
       sections:
         about:
           header_link_text: "గురించి"

@@ -1167,7 +1167,6 @@ sk:
       subject_template: "Obnova zlyhala"
     bulk_invite_succeeded:
       subject_template: "Zpracovanie pozvania viacerých používateľov bolo úspešné"
-      text_body_template: "Váš súbor na hromadné pozvanie používateľov bol zpracovaný, emailom bolo poslaných %{sent} prihlášok."
     bulk_invite_failed:
       subject_template: "Zpracovanie pozvania viacerých používateľov dopadlo s chybami"
     csv_export_failed:

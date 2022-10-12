@@ -5,6 +5,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { scheduleOnce } from "@ember/runloop";
+import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend({
   queryParams: ["filters"],
@@ -146,5 +147,26 @@ export default Controller.extend({
   @action
   loadMore() {
     this.model.loadMore();
+  },
+
+  @action
+  showDetailsModal(model, event) {
+    event?.preventDefault();
+    showModal("admin-staff-action-log-details", {
+      model,
+      admin: true,
+      modalClass: "log-details-modal",
+    });
+  },
+
+  @action
+  showCustomDetailsModal(model, event) {
+    event?.preventDefault();
+    let modal = showModal("admin-theme-change", {
+      model,
+      admin: true,
+      modalClass: "history-modal",
+    });
+    modal.loadDiff();
   },
 });

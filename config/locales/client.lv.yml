@@ -206,6 +206,7 @@ lv:
     ok_value: "Labi"
     cancel_value: "Atcelt"
     submit: "Iesniegt"
+    delete: "Dzēst"
     generic_error: "Atvainojiet, ir notikusi kļūda."
     generic_error_with_reason: "Notikusi kļūda: %{error}"
     sign_up: "Reģistrēties"
@@ -1543,6 +1544,8 @@ lv:
       leave_message: "Vai tiešām vēlaties atstāt šo ziņu?"
       remove_allowed_user: "Vai jūs tiešām gribat dzēst %{name} no šīs ziņas?"
       remove_allowed_group: "Vai jūs tiešām gribat dzēst %{name} no šīs ziņas?"
+      leave: "Iziet"
+      remove_user: "Noņemt lietotāju"
     email: "E-pasts"
     username: "Lietotājvārds"
     last_seen: "Redzēts"
@@ -2752,7 +2755,6 @@ lv:
       sort_by_name: "vārda"
       manage_groups: "Pārvaldīt tagu grupas"
       manage_groups_description: "Izveidot grupas, lai organizētu tagus"
-      cancel_delete_unused: "Atcelt"
       filters:
         without_category: "%{filter} %{tag} tēmas"
         with_category: "%{filter} %{tag} tēmas sadaļā %{category}"
@@ -2816,7 +2818,7 @@ lv:
         zero: "%{count} jaunas"
         one: "%{count} jauna"
         other: "%{count} jauna"
-      more: "Vairāk..."
+      more: "Vairāk"
       all_categories: "Visas sadaļas"
       sections:
         about:

@@ -182,6 +182,7 @@ et:
     ok_value: "OK"
     cancel_value: "Tühista"
     submit: "Saada"
+    delete: "Kustuta"
     generic_error: "Vabandust, tekkis viga."
     generic_error_with_reason: "Tekkis viga: %{error}"
     sign_up: "Liitu"
@@ -1225,6 +1226,8 @@ et:
       title: "Sõnum"
       remove_allowed_user: "Kas soovid tõesti %{name} sellest sõnumist eemaldada?"
       remove_allowed_group: "Kas soovid tõesti %{name} sellest sõnumist eemaldada?"
+      leave: "Lahku"
+      remove_user: "Eemalda kasutaja"
     email: "Meiliaadress"
     username: "Kasutajanimi"
     last_seen: "Vaadatud"
@@ -2471,7 +2474,6 @@ et:
       sort_by_name: "nimi"
       manage_groups: "Halda siltide gruppe"
       manage_groups_description: "Määra siltide organiseerimiseks grupid"
-      cancel_delete_unused: "Tühista"
       filters:
         without_category: "%{filter} %{tag} teemat"
         with_category: "%{filter} %{tag} teemat %{category} foorumis"
@@ -2540,7 +2542,7 @@ et:
       new_count:
         one: "%{count} uus"
         other: "%{count} uut"
-      more: "Veel..."
+      more: "Veel"
       all_categories: "Kõik foorumid"
       sections:
         about:

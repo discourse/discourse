@@ -188,6 +188,7 @@ ja:
     ok_value: "OK"
     cancel_value: "キャンセル"
     submit: "送信"
+    delete: "削除"
     generic_error: "申し訳ありません。エラーが発生しました。"
     generic_error_with_reason: "エラーが発生しました: %{error}"
     sign_up: "アカウントを登録"
@@ -1623,6 +1624,8 @@ ja:
       leave_message: "このメッセージを閉じてもよろしいですか？"
       remove_allowed_user: "このメッセージから %{name} を削除してもよろしいですか？"
       remove_allowed_group: "このメッセージから %{name} を削除してもよろしいですか？"
+      leave: "退出"
+      remove_user: "ユーザーを削除"
     email: "メール"
     username: "ユーザー名"
     last_seen: "アクセス"
@@ -3304,7 +3307,6 @@ ja:
       tag_list_joiner: "、"
       delete_unused: "未使用のタグを削除"
       delete_unused_description: "どのトピックまたは個人メッセージにも添付されていないすべてのタグを削除します"
-      cancel_delete_unused: "キャンセル"
       filters:
         without_category: "%{filter} %{tag} トピック"
         with_category: "%{filter} %{category} の %{tag} 件のトピック"
@@ -3402,7 +3404,7 @@ ja:
         other: "未読 %{count}"
       new_count:
         other: "新規 %{count}"
-      more: "もっと..."
+      more: "もっと"
       all_categories: "すべてのカテゴリ"
       sections:
         about:

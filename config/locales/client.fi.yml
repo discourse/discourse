@@ -199,6 +199,7 @@ fi:
     ok_value: "OK"
     cancel_value: "Peruuta"
     submit: "Lähetä"
+    delete: "Poista"
     generic_error: "On tapahtunut virhe."
     generic_error_with_reason: "Tapahtui virhe: %{error}"
     sign_up: "Rekisteröidy"
@@ -1651,6 +1652,8 @@ fi:
       leave_message: "Haluatko varmasti poistua tästä viestistä?"
       remove_allowed_user: "Haluatko varmasti poistaa käyttäjän %{name} tästä viestistä?"
       remove_allowed_group: "Haluatko varmasti poistaa käyttäjän %{name} tästä viestistä?"
+      leave: "Poistu"
+      remove_user: "Poista käyttäjä"
     email: "Sähköposti"
     username: "Käyttäjätunnus"
     last_seen: "Nähty"
@@ -3369,7 +3372,6 @@ fi:
       tag_list_joiner: ", "
       delete_unused: "Poista käyttämättömät tunnisteet"
       delete_unused_description: "Poista kaikki tunnisteet, joita ei ole liitetty ketjuihin tai yksityisviesteihin"
-      cancel_delete_unused: "Peruuta"
       filters:
         without_category: "%{filter} %{tag} ketjut"
         with_category: "%{filter} %{tag} ketjut alueella %{category}"
@@ -3467,7 +3469,7 @@ fi:
       new_count:
         one: "%{count} uusi"
         other: "%{count} uutta"
-      more: "Lisää..."
+      more: "Lisää"
       all_categories: "Kaikki alueet"
       sections:
         about:

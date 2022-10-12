@@ -2538,18 +2538,9 @@ fi:
     bulk_invite_succeeded:
       title: "Massakutsun lähetys onnistui"
       subject_template: "Massakutsun käsittely onnistui"
-      text_body_template: "Massakutsutiedostosi on käsitelty, %{sent} kutsua lähetetty."
     bulk_invite_failed:
       title: "Massakutsun lähetys epäonnistui"
       subject_template: "Massakutsun käsittelyssä tapahtui virhe"
-      text_body_template: |
-        Massakutsutiedostosi käsiteltiin, %{sent} kutsua lähetettiin, joista %{failed} virhe(ttä).
-
-        Tässä loki:
-
-        ``` text
-        %{logs}
-        ```
     user_added_to_group_as_owner:
       title: "Lisätty ryhmään omistajana"
       subject_template: "Sinut on lisätty ryhmän %{group_name} omistajaksi"

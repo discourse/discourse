@@ -2762,18 +2762,9 @@ fr:
     bulk_invite_succeeded:
       title: "Invitation en masse réussie"
       subject_template: "Envoi des invitations en masse réussi"
-      text_body_template: "Votre envoi d'invitations en masse a été effectué. %{sent} invitations ont été envoyées."
     bulk_invite_failed:
       title: "Invitation en masse échouée"
       subject_template: "Envoi des invitations en masse effectué avec des erreurs"
-      text_body_template: |
-        Votre envoi d'invitations en masse a été effectué. %{sent} invitations ont été envoyées avec %{failed} erreur(s).
-
-        Voici le détail :
-
-        ```text
-        %{logs}
-        ```
     user_added_to_group_as_owner:
       title: "Désigné(e) comme propriétaire du groupe"
       subject_template: "Vous avez été désigné(e) comme l'un(e) des propriétaire du groupe %{group_name}"

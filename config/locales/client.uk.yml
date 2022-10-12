@@ -287,6 +287,7 @@ uk:
     ok_value: "OK"
     cancel_value: "Скасувати"
     submit: "Надіслати"
+    delete: "Видалити"
     generic_error: "Даруйте, виникла помилка."
     generic_error_with_reason: "Виникла помилка: %{error}"
     sign_up: "Зареєструватись"
@@ -1889,6 +1890,8 @@ uk:
       leave_message: "Ви дійсно хочете залишити це повідомлення?"
       remove_allowed_user: "Ви впевнені, що хочете видалити %{name} з цього повідомлення?"
       remove_allowed_group: "Ви впевнені, що хочете видалити %{name} з цього повідомлення?"
+      leave: "Покинути"
+      remove_user: "Вилучити користувача"
     email: "Електронна пошта"
     username: "Ім'я користувача"
     last_seen: "Помічено востаннє"
@@ -4039,7 +4042,6 @@ uk:
       tag_list_joiner: ", "
       delete_unused: "Вилучити невикористовувані мітки"
       delete_unused_description: "Вилучити усі мітки, які не прикріплені до жодної теми чи особистих повідомлень"
-      cancel_delete_unused: "Скасувати"
       filters:
         without_category: "%{filter} %{tag} тем"
         with_category: "%{filter} %{tag} тем у %{category}"
@@ -4170,7 +4172,7 @@ uk:
         many: "%{count} нова"
         other: "%{count} нова"
       toggle_section: "Переключити розділ"
-      more: "Ще..."
+      more: "Більше"
       all_categories: "Всі категорії"
       all_tags: "Всі теги"
       sections:

@@ -209,6 +209,7 @@ ur:
     ok_value: "ٹھیک ہے"
     cancel_value: "منسوخ"
     submit: "شائع"
+    delete: "مٹائیں"
     generic_error: "معذرت، ایک تکنیکی خرابی کا سامنا کرنا پڑا ہے۔"
     generic_error_with_reason: "ایک تکنیکی خرابی پیش آئی: %{error}"
     sign_up: "سائن اپ"
@@ -1689,6 +1690,8 @@ ur:
       leave_message: "کیا آپ واقعی یہ پیغام بھیجنا چاہتے ہیں؟"
       remove_allowed_user: "کیا آپ واقعی اِس پیغام سے %{name} ہٹانا چاہتے ہیں؟"
       remove_allowed_group: "کیا آپ واقعی اِس پیغام سے %{name} ہٹانا چاہتے ہیں؟"
+      leave: "چھوڑ دیں"
+      remove_user: "صارف خارج کریں"
     email: "اِی میل"
     username: "صارف نام"
     last_seen: "دیکھا گیا"
@@ -3523,7 +3526,6 @@ ur:
       tag_list_joiner: "، "
       delete_unused: "غیر استعمال شدہ ٹیگز مٹائیں"
       delete_unused_description: "تمام اُن ٹیگز کو مٹائیں جو کسی بھی ٹاپک یا ذاتی پیغام سے منسلک نہیں ہیں"
-      cancel_delete_unused: "منسوخ"
       filters:
         without_category: "%{filter} %{tag} ٹاپکس"
         with_category: "%{filter} %{tag} ٹاپکس %{category} میں"
@@ -3643,7 +3645,7 @@ ur:
       new_count:
         one: "%{count} نیا"
         other: "%{count} نئے"
-      more: "مزید..."
+      more: "مزید"
       all_categories: "تمام زُمرَہ جات"
       sections:
         about:

@@ -2472,18 +2472,9 @@ gl:
     bulk_invite_succeeded:
       title: "Convite en masa correcto"
       subject_template: "O convite en masa procesouse correctamente"
-      text_body_template: "O seu ficheiro de convites en masa foi procesado; enviáronse %{sent} convites por correo electrónico."
     bulk_invite_failed:
       title: "Erro no convite en masa"
       subject_template: "Convites en masa procesados con algúns erros"
-      text_body_template: |
-        O seu ficheiro de convites en masa foi procesado; enviáronse %{sent} convites por correo electrónico con %{failed} erros.
-
-        Velaquí está o rexistro:
-
-        ``` text
-        %{logs}
-        ```
     user_added_to_group_as_owner:
       title: "Engadido ao grupo como propietario"
       subject_template: "Vostede foi engadido como un propietario do grupo %{group_name}"

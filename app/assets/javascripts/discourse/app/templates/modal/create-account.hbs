@@ -112,7 +112,7 @@
                       {{!-- adding the value-entered class here to
                       be able to detect if the user field has a value
                       entered --}}
-                      <UserField @field={{f.field}} @value={{f.value}} @class={{value-entered f.value}} />
+                      <UserField @field={{f.field}} @value={{f.value}} @class={{value-entered f.value}} @validation={{f.validation}} />
                     </div>
                   {{/each}}
                 </div>

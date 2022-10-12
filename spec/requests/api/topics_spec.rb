@@ -229,7 +229,7 @@ RSpec.describe 'topics' do
 
         let(:username) { Fabricate(:user).username }
         let(:request_body) { { user: username } }
-        let(:id) { Fabricate(:topic).id }
+        let(:id) { Fabricate(:private_message_topic).id }
 
         run_test! do |response|
           data = JSON.parse(response.body)

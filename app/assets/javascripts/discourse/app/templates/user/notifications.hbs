@@ -2,36 +2,41 @@
   <DSection @pageClass="user-notifications" />
 
   <div class="user-navigation user-navigation-secondary">
-    <ul id="navigation-bar" class="messages-nav nav-pills action-list">
+    <ul id="navigation-bar" class="notifications-nav nav-pills action-list">
       <li>
         <LinkTo @route="userNotifications.index">
-          {{i18n "user.filters.all"}}
+          {{d-icon "bell"}}
+          <span>{{i18n "user.filters.all"}}</span>
         </LinkTo>
       </li>
 
       <li>
         <LinkTo @route="userNotifications.responses">
-          {{i18n "user_action_groups.6"}}
+          {{d-icon "reply"}}
+          <span>{{i18n "user_action_groups.6"}}</span>
         </LinkTo>
       </li>
 
       <li>
         <LinkTo @route="userNotifications.likesReceived">
-          {{i18n "user_action_groups.2"}}
+          {{d-icon "heart"}}
+          <span>{{i18n "user_action_groups.2"}}</span>
         </LinkTo>
       </li>
 
       {{#if this.siteSettings.enable_mentions}}
         <li>
           <LinkTo @route="userNotifications.mentions">
-            {{i18n "user_action_groups.7"}}
+            {{d-icon "at"}}
+            <span>{{i18n "user_action_groups.7"}}</span>
           </LinkTo>
         </li>
       {{/if}}
 
       <li>
         <LinkTo @route="userNotifications.edits">
-          {{i18n "user_action_groups.11"}}
+          {{d-icon "pencil-alt"}}
+          <span>{{i18n "user_action_groups.11"}}</span>
         </LinkTo>
       </li>
 

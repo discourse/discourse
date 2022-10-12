@@ -2395,18 +2395,9 @@ ur:
     bulk_invite_succeeded:
       title: "بَلک مدعو کامیاب"
       subject_template: "بَلک صارف دعوت ناموں پر کامیابی سے عملدرآمد ہو گیا"
-      text_body_template: "آپ کے بَلک صارف دعوت نامے فائل پر عملدرآمد کر دیا گیا، %{sent} دعوتیں میل کر دی گئیں۔"
     bulk_invite_failed:
       title: "بَلک مدعو ناکام"
       subject_template: "بَلک صارف دعوت ناموں پر خرابں کے ساتھ عملدرآمد ہو گیا"
-      text_body_template: |
-        آپ کے بَلک صارف دعوت نامے فائل پر عملدرآمد کر دیا گیا، %{sent} دعوتیں میل کر دی گئیں اور %{failed} خرابی(وں) کا سامنا کرنا پڑا۔
-
-        یہ لاگ ہے:
-
-        ``` text
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "CSV ایکسپورٹ کامیاب"
       subject_template: "[%{export_title}] ڈَیٹا ایکسپورٹ مکمل"

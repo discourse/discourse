@@ -142,10 +142,21 @@ module ApplicationHelper
   end
 
   def preload_script_url(url)
-    <<~HTML.html_safe
-      <link rel="preload" href="#{url}" as="script">
-      <script defer src="#{url}"></script>
-    HTML
+    add_resource_preload_list(url, 'script')
+    if GlobalSetting.preload_link_header
+      <<~HTML.html_safe
+        <script defer src="#{url}"></script>
+      HTML
+    else
+      <<~HTML.html_safe
+        <link rel="preload" href="#{url}" as="script">
+        <script defer src="#{url}"></script>
+      HTML
+    end
+  end
+
+  def add_resource_preload_list(resource_url, type)
+    @links_to_preload << %Q(<#{resource_url}>; rel="preload"; as="#{type}") if !@links_to_preload.nil?
   end
 
   def discourse_csrf_tags
@@ -589,7 +600,7 @@ module ApplicationHelper
         stylesheet_manager
       end
 
-    manager.stylesheet_link_tag(name, 'all')
+    manager.stylesheet_link_tag(name, 'all', self.method(:add_resource_preload_list))
   end
 
   def discourse_preload_color_scheme_stylesheets
@@ -605,10 +616,10 @@ module ApplicationHelper
 
   def discourse_color_scheme_stylesheets
     result = +""
-    result << stylesheet_manager.color_scheme_stylesheet_link_tag(scheme_id, 'all')
+    result << stylesheet_manager.color_scheme_stylesheet_link_tag(scheme_id, 'all', self.method(:add_resource_preload_list))
 
     if dark_scheme_id != -1
-      result << stylesheet_manager.color_scheme_stylesheet_link_tag(dark_scheme_id, '(prefers-color-scheme: dark)')
+      result << stylesheet_manager.color_scheme_stylesheet_link_tag(dark_scheme_id, '(prefers-color-scheme: dark)', self.method(:add_resource_preload_list))
     end
 
     result.html_safe

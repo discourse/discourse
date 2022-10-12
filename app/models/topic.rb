@@ -1029,11 +1029,9 @@ class Topic < ActiveRecord::Base
   end
 
   def invite(invited_by, username_or_email, group_ids = nil, custom_message = nil)
-    target_user = User.find_by_username_or_email(username_or_email)
     guardian = Guardian.new(invited_by)
-    is_email = username_or_email =~ /^.+@.+$/
 
-    if target_user
+    if target_user = User.find_by_username_or_email(username_or_email)
       if topic_allowed_users.exists?(user_id: target_user.id)
         raise UserExists.new(I18n.t("topic_invite.user_exists"))
       end
@@ -1064,7 +1062,7 @@ class Topic < ActiveRecord::Base
       else
         !!invite_to_topic(invited_by, target_user, group_ids, guardian)
       end
-    elsif is_email && guardian.can_invite_via_email?(self)
+    elsif username_or_email =~ /^.+@.+$/ && guardian.can_invite_via_email?(self)
       !!Invite.generate(invited_by,
         email: username_or_email,
         topic: self,
@@ -1781,6 +1779,13 @@ class Topic < ActiveRecord::Base
       SiteSetting.max_topic_invitations_per_day,
       1.day.to_i
     ).performed!
+
+    RateLimiter.new(
+      invited_by,
+      "topic-invitations-per-minute",
+      SiteSetting.max_topic_invitations_per_minute,
+      1.day.to_i
+    ).performed!
   end
 
   def cannot_permanently_delete_reason(user)
@@ -1853,8 +1858,9 @@ class Topic < ActiveRecord::Base
       ))
     end
 
+    rate_limit_topic_invitation(invited_by)
+
     Topic.transaction do
-      rate_limit_topic_invitation(invited_by)
       topic_allowed_users.create!(user_id: target_user.id) unless topic_allowed_users.exists?(user_id: target_user.id)
 
       user_in_allowed_group = (user.group_ids & topic_allowed_groups.map(&:group_id)).present?

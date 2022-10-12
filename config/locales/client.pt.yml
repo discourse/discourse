@@ -206,6 +206,7 @@ pt:
     ok_value: "CONFIRMAR"
     cancel_value: "Cancelar"
     submit: "Submeter"
+    delete: "Eliminar"
     generic_error: "Pedimos desculpa, ocorreu um erro."
     generic_error_with_reason: "Ocorreu um erro: %{error}"
     sign_up: "Inscrever-se"
@@ -1651,6 +1652,8 @@ pt:
       leave_message: "Quer mesmo deixar esta mensagem?"
       remove_allowed_user: "Deseja mesmo remover %{name} desta mensagem?"
       remove_allowed_group: "Deseja mesmo remover %{name} desta mensagem?"
+      leave: "Sair"
+      remove_user: "Remover utilizador"
     email: "E-mail"
     username: "Nome de utilizador"
     last_seen: "Visto"
@@ -3339,7 +3342,6 @@ pt:
       tag_list_joiner: ", "
       delete_unused: "Excluir tags não utilizadas"
       delete_unused_description: "Exclua todas as tags que não estão anexadas a algum tópico ou mensagem pessoal"
-      cancel_delete_unused: "Cancelar"
       filters:
         without_category: "%{filter} %{tag} tópicos"
         with_category: "%{filter} %{tag} tópicos em %{category}"
@@ -3434,7 +3436,7 @@ pt:
       new_count:
         one: "%{count} novo"
         other: "%{count} novos"
-      more: "Mais..."
+      more: "Mais"
       all_categories: "Todas as categorias"
       sections:
         about:

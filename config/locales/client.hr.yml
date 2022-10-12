@@ -257,6 +257,7 @@ hr:
     ok_value: "U redu"
     cancel_value: "Odustani"
     submit: "Pošalji"
+    delete: "Pobriši"
     generic_error: "Dogodila se greška, ispričavamo se."
     generic_error_with_reason: "Dogodila se greška: %{error}"
     sign_up: "Učlani se"
@@ -1803,6 +1804,8 @@ hr:
       leave_message: "Želite li zaista ostaviti ovu poruku?"
       remove_allowed_user: "Želite li zaista ukloniti %{name} iz ove poruke?"
       remove_allowed_group: "Želite li zaista ukloniti %{name} iz ove poruke?"
+      leave: "Napustiti"
+      remove_user: "Ukloni korisnika"
     email: "E-mail"
     username: "Korisničko ime"
     last_seen: "Viđeno"
@@ -3772,7 +3775,6 @@ hr:
       tag_list_joiner: ", "
       delete_unused: "Izbriši neiskorištene oznake"
       delete_unused_description: "Izbrišite sve tagove koji nisu dodijeljeni niti jednoj temi ili privatnoj poruci."
-      cancel_delete_unused: "Odustani"
       filters:
         without_category: "%{filter} %{tag} teme"
         with_category: "%{filter} %{tag} tema u %{category}"
@@ -3896,7 +3898,7 @@ hr:
         one: "%{count} novi"
         few: "%{count} novih"
         other: "%{count} novi"
-      more: "Više..."
+      more: "Više"
       all_categories: "Sve kategorije"
       sections:
         about:

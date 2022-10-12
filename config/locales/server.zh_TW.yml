@@ -1913,18 +1913,9 @@ zh_TW:
     bulk_invite_succeeded:
       title: "批量邀請成功"
       subject_template: "批次使用者邀請已完成處理"
-      text_body_template: "你的批次使用者邀請已經完成，寄出 %{sent} 封邀請郵件。"
     bulk_invite_failed:
       title: "批量邀請失敗"
       subject_template: "批次使用者邀請處理已經完成，發生了些錯誤"
-      text_body_template: |
-        大量邀請已經完成，發出了 %{sent} 個邀請並且 %{failed} 個失敗。
-
-        查看系統日誌（log）：
-
-        ```
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "CSV 檔匯出成功"
       subject_template: "[%{export_title}] 資料匯出已完成"

@@ -215,6 +215,7 @@ bs_BA:
     ok_value: "OK"
     cancel_value: "Odustani"
     submit: "Potvrdi"
+    delete: "Delete"
     generic_error: "Uff, došlo je do greške."
     generic_error_with_reason: "Došlo je do greške: %{error}"
     sign_up: "Učlani se"
@@ -1491,6 +1492,8 @@ bs_BA:
       leave_message: "Da li zaista želite da napustite ovu poruku?"
       remove_allowed_user: "Da li zaista želite da uklonite %{name} sa ove privatne poruke?"
       remove_allowed_group: "Da li zaista želite da uklonite %{name} sa ove poruke?"
+      leave: "Napusti"
+      remove_user: "Ukloni korisnika"
     email: "Email"
     username: "Ime"
     last_seen: "Viđen"
@@ -3003,7 +3006,6 @@ bs_BA:
       delete_no_unused_tags: "Nema neiskorištenih oznaka."
       delete_unused: "Brisanje neiskorištenih oznaka"
       delete_unused_description: "Izbrišite sve oznake koje nisu vezane za teme ili lične poruke"
-      cancel_delete_unused: "Odustani"
       filters:
         without_category: "%{filter} %{tag} topics"
         with_category: "%{filter} %{tag} teme ove kategorije %{category}"
@@ -3080,7 +3082,7 @@ bs_BA:
         one: "%{count} novi"
         few: "%{count} nova"
         other: "%{count} novih"
-      more: "Više..."
+      more: "Još"
       all_categories: "Sve kategorije"
       sections:
         about:

@@ -200,6 +200,7 @@ bg:
     ok_value: "Ок"
     cancel_value: "Прекрати"
     submit: "Изпрати"
+    delete: "Изтрий"
     generic_error: "Съжаляваме, възникна грешка."
     generic_error_with_reason: "Грешка: %{error}"
     sign_up: "Регистрация"
@@ -1606,6 +1607,8 @@ bg:
       leave_message: "Сигурни ли сте, че искате да оставите това съобщение?"
       remove_allowed_user: "Сигурни ли сте, че искате да премахнете %{name} от това съобщение?"
       remove_allowed_group: "Сигурни ли сте, че искате да премахнете %{name} от това съобщение?"
+      leave: "Напусни"
+      remove_user: "Премахни потребител"
     email: "Имейл"
     username: "Потребителско име"
     last_seen: "Видяно"
@@ -2940,7 +2943,6 @@ bg:
       sort_by_count: "брой"
       sort_by_name: "име"
       manage_groups_description: "Дефинирай групи за организране на етикетите"
-      cancel_delete_unused: "Отмени"
       filters:
         without_category: "%{filter} %{tag} теми"
       notifications:
@@ -2998,7 +3000,7 @@ bg:
       new_count:
         one: "%{count} нов"
         other: "%{count} нови"
-      more: "Още..."
+      more: "Повече"
       all_categories: "Всички категории"
       sections:
         about:

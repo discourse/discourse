@@ -18,8 +18,13 @@ class Admin::SiteSettingsController < Admin::AdminController
     value = params[id]
     value.strip! if value.is_a?(String)
 
-    new_setting_name = SiteSettings::DeprecatedSettings::SETTINGS.find do |old_name, new_name, _, _|
-      break new_name if old_name == id
+    new_setting_name = SiteSettings::DeprecatedSettings::SETTINGS.find do |old_name, new_name, override, _|
+      if old_name == id
+        if !override
+          raise Discourse::InvalidParameters, "You cannot change this site setting because it is deprecated, use #{new_name} instead."
+        end
+        break new_name
+      end
     end
     id = new_setting_name if new_setting_name
 

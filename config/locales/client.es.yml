@@ -229,6 +229,7 @@ es:
     ok_value: "Aceptar"
     cancel_value: "Cancelar"
     submit: "Enviar"
+    delete: "Eliminar"
     generic_error: "Lo sentimos, ha ocurrido un error."
     generic_error_with_reason: "Ha ocurrido un error: %{error}"
     sign_up: "Registrarse"
@@ -1742,6 +1743,9 @@ es:
       leave_message: "¿Quieres abandonar este mensaje?"
       remove_allowed_user: "¿Quieres quitar a %{name} de este mensaje?"
       remove_allowed_group: "¿Quieres quitar a %{name} de este mensaje?"
+      leave: "Abandonar"
+      remove_group: "Quitar grupo"
+      remove_user: "Eliminar usuario"
     email: "Correo electrónico"
     username: "Nombre de usuario"
     last_seen: "Visto por última vez"
@@ -1971,6 +1975,9 @@ es:
       similar_topics: "Tu tema es similar a..."
       drafts_offline: "borradores sin conexión"
       edit_conflict: "conflicto de edición"
+      esc: "esc"
+      esc_label: "Haz clic o pulsa escape para cerrar"
+      ok_proceed: "Vale, continuar"
       group_mentioned_limit:
         one: "<b>Aviso</b> Has mencionado al grupo <a href='%{group_link}'>%{group}</a>, pero tiene más miembros que los que los administradores permiten mencionar (%{count} usuario) de una vez. No se notificará a nadie."
         other: "<b>Aviso</b> Has mencionado al grupo <a href='%{group_link}'>%{group}</a>, pero tiene más miembros que los que los administradores permiten mencionar (%{count} usuarios) de una vez. No se notificará a nadie."
@@ -2073,6 +2080,9 @@ es:
         body: "¡Vas a enviarte este mensaje solo a ti mismo!"
       slow_mode:
         error: "Este tema está en modo lento. Hace poco que has publicado, pero podrás volver a hacerlo en %{timeLeft}."
+      user_not_seen_in_a_while:
+        single: "<b>%{usernames}</b> (la persona a la que le estás mandando un mensaje) hace tiempo que no se pasa por aquí – %{time_ago}. Puede que no reciba tu mensaje. Igual es mejor que busques otro método alternativo para contactar a %{usernames}."
+        multiple: "Las siguientes personas: <b>%{usernames}</b> hace tiempo que no se pasan por aquí – %{time_ago}. Puede que no reciban tu mensaje. Igual es mejor que busques otro método alternativo para contactarles."
       admin_options_title: "Configuración opcional del personal para este tema"
       composer_actions:
         reply: Responder
@@ -2170,6 +2180,9 @@ es:
           bookmarks:
             one: "¿Seguro? Tienes %{count} recordatorio de marcadores sin leer."
             other: "¿Seguro? Tienes %{count} recordatorios de marcadores sin leer."
+          messages:
+            one: "¿Seguro? Tienes %{count} mensaje personal sin leer."
+            other: "¿Seguro? Tienes %{count} mensajes personales sin leer."
         dismiss: "Descartar"
         cancel: "Cancelar"
       group_message_summary:
@@ -2361,7 +2374,14 @@ es:
           one: "Respuestas - %{count} sin leer"
           other: "Respuestas - %{count} sin leer"
         mentions: "Menciones"
+        mentions_with_unread:
+          one: "Menciones - %{count} mención sin leer"
+          other: "Menciones - %{count} menciones sin leer"
         likes: "Me gusta dados"
+        likes_with_unread:
+          one: "Me gusta - %{count} me gusta sin leer"
+          other: "Me gusta - %{count} me gusta sin leer"
+        messages: "Mensajes personales"
         bookmarks: "Marcadores"
         review_queue: "Cola de revisión"
         other_notifications: "Otras notificaciones"
@@ -3649,7 +3669,6 @@ es:
       tag_list_joiner: ", "
       delete_unused: "Eliminar etiquetas sin usar"
       delete_unused_description: "Eliminar todas las etiquetas que no estén asociadas a ningún tema o mensaje personal"
-      cancel_delete_unused: "Cancelar"
       filters:
         without_category: "%{filter} %{tag} temas"
         with_category: "%{filter} %{tag} temas en %{category}"
@@ -3775,7 +3794,7 @@ es:
         one: "%{count} nuevo"
         other: "%{count} nuevos"
       toggle_section: "mostrar/ocultar sección"
-      more: "Más..."
+      more: "Más"
       all_categories: "Todas las categorías"
       all_tags: "Todas las etiquetas"
       sections:
@@ -3835,6 +3854,7 @@ es:
             review:
               content: "Revisión"
               title: "revisión"
+              pending_count: "%{count} pendiente(s)"
     welcome_topic_banner:
       title: "Crea tu tema de bienvenida"
       description: 'Tu tema de bienvenid es lo primero que la gente nueva leerá al llegar. Piensa en este párrafo como si fuera un "discurso breve" o una "declaración de motivos"'
