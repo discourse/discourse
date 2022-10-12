@@ -13,6 +13,7 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { hbs } from "ember-cli-htmlbars";
+import { hidePopup } from "discourse/lib/popup";
 
 let _extraHeaderIcons = [];
 
@@ -87,8 +88,13 @@ createWidget("header-notifications", {
         const count = unread + reviewables;
         if (count > 0) {
           if (this._shouldHighlightAvatar()) {
-            this._addAvatarHighlight(contents);
+            if (this.siteSettings.enable_onboarding_popups) {
+              contents.push(h("span.ring"));
+            } else {
+              this._addAvatarHighlight(contents);
+            }
           }
+
           contents.push(
             this.attach("link", {
               action: attrs.action,
@@ -118,7 +124,11 @@ createWidget("header-notifications", {
         const unreadHighPriority = user.unread_high_priority_notifications;
         if (!!unreadHighPriority) {
           if (this._shouldHighlightAvatar()) {
-            this._addAvatarHighlight(contents);
+            if (this.siteSettings.enable_onboarding_popups) {
+              contents.push(h("span.ring"));
+            } else {
+              this._addAvatarHighlight(contents);
+            }
           }
 
           // add the counter for the unread high priority
@@ -183,6 +193,37 @@ createWidget("header-notifications", {
         ])
       )
     );
+  },
+
+  didRenderWidget() {
+    if (
+      !this.currentUser ||
+      !this.siteSettings.enable_onboarding_popups ||
+      !this._shouldHighlightAvatar()
+    ) {
+      return;
+    }
+
+    this.currentUser.showPopup({
+      id: "first_notification",
+
+      titleText: I18n.t("popup.first_notification.title"),
+      contentText: I18n.t("popup.first_notification.content"),
+
+      reference: document
+        .querySelector(".badge-notification")
+        ?.parentElement?.querySelector(".avatar"),
+
+      placement: "bottom-end",
+    });
+  },
+
+  destroy() {
+    hidePopup("first_notification");
+  },
+
+  willRerenderWidget() {
+    hidePopup("first_notification");
   },
 });
 

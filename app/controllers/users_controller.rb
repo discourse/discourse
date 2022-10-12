@@ -1966,7 +1966,7 @@ class UsersController < ApplicationController
     end
 
     result = params
-      .permit(permitted, theme_ids: [])
+      .permit(permitted, theme_ids: [], seen_popups: [])
       .reverse_merge(
         ip_address: request.remote_ip,
         registration_ip_address: request.remote_ip

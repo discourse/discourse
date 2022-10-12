@@ -47,6 +47,7 @@ class UserUpdater
     :title_count_mode,
     :timezone,
     :skip_new_user_tips,
+    :seen_popups,
     :default_calendar
   ]
 
@@ -175,6 +176,14 @@ class UserUpdater
         else
           user.user_option.public_send("#{attribute}=", attributes[attribute])
         end
+      end
+    end
+
+    if attributes.key?(:skip_new_user_tips)
+      user.user_option.seen_popups = if user.user_option.skip_new_user_tips
+        OnboardingPopup.types.values
+      else
+        nil
       end
     end
 

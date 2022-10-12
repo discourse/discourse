@@ -35,6 +35,7 @@ import Evented from "@ember/object/evented";
 import { cancel } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { isTesting } from "discourse-common/config/environment";
+import { hidePopup, showNextPopup, showPopup } from "discourse/lib/popup";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -104,6 +105,7 @@ let userOptionFields = [
   "title_count_mode",
   "timezone",
   "skip_new_user_tips",
+  "seen_popups",
   "default_calendar",
   "bookmark_auto_delete_preference",
 ];
@@ -441,7 +443,7 @@ const User = RestModel.extend({
           "external_links_in_new_tab",
           "dynamic_favicon"
         );
-        User.current().setProperties(userProps);
+        User.current()?.setProperties(userProps);
         this.setProperties(updatedState);
         return result;
       })
@@ -1090,6 +1092,65 @@ const User = RestModel.extend({
           .map((groupId) => parseInt(groupId, 10))
       )
     );
+  },
+
+  showPopup(options) {
+    const popupTypes = Site.currentProp("onboarding_popup_types");
+    if (!popupTypes[options.id]) {
+      // eslint-disable-next-line no-console
+      console.warn("Cannot display popup with type =", options.id);
+      return;
+    }
+
+    const seenPopups = this.seen_popups || [];
+    if (seenPopups.includes(popupTypes[options.id])) {
+      return;
+    }
+
+    showPopup({
+      ...options,
+      onDismiss: () => this.hidePopupForever(options.id),
+      onDismissAll: () => this.hidePopupForever(),
+    });
+  },
+
+  hidePopupForever(popupId) {
+    // Empty popupId means all popups.
+    const popupTypes = Site.currentProp("onboarding_popup_types");
+    if (popupId && !popupTypes[popupId]) {
+      // eslint-disable-next-line no-console
+      console.warn("Cannot hide popup with type =", popupId);
+      return;
+    }
+
+    // Hide any shown popups.
+    let seenPopups = this.seen_popups || [];
+    if (popupId) {
+      hidePopup(popupId);
+      if (!seenPopups.includes(popupTypes[popupId])) {
+        seenPopups.push(popupTypes[popupId]);
+      }
+    } else {
+      Object.keys(popupTypes).forEach(hidePopup);
+      seenPopups = Object.values(popupTypes);
+    }
+
+    // Show next popup in queue.
+    showNextPopup();
+
+    // Save seen popups on the server.
+    if (!this.user_option) {
+      this.set("user_option", {});
+    }
+    this.set("seen_popups", seenPopups);
+    this.set("user_option.seen_popups", seenPopups);
+    if (popupId) {
+      return this.save(["seen_popups"]);
+    } else {
+      this.set("skip_new_user_tips", true);
+      this.set("user_option.skip_new_user_tips", true);
+      return this.save(["seen_popups", "skip_new_user_tips"]);
+    }
   },
 });
 

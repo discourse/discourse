@@ -71,6 +71,7 @@ export default Component.extend({
     this._connected.forEach((v) => v.destroy());
     this._connected.length = 0;
 
+    traverseCustomWidgets(this._tree, (w) => w.destroy());
     this._rootNode = patch(this._rootNode, diff(this._tree, null));
     this._tree = null;
   },
