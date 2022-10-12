@@ -197,7 +197,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.ok(
       exists(
-        `.sidebar-section-link-${category1.slug} .sidebar-section-link-prefix .prefix-span[style="background: #${category1.color}"]`
+        `.sidebar-section-link-${category1.slug} .sidebar-section-link-prefix .prefix-span[style="background: linear-gradient(90deg, #${category1.color} 50%, #${category1.color} 50%)"]`
       ),
       "category1 section link is rendered with solid prefix icon color"
     );
