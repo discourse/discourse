@@ -1,5 +1,4 @@
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
-import User from "discourse/models/user";
 import { test } from "qunit";
 import { click, currentURL, settled, visit } from "@ember/test-helpers";
 
@@ -39,10 +38,6 @@ acceptance("Bootstrap Mode Notice", function (needs) {
     this.siteSettings.bootstrap_mode_enabled = false;
     await visit("/");
     await settled();
-    if (exists(".bootstrap-mode-notice")) {
-      // eslint-disable-next-line no-console
-      console.log("current user", JSON.stringify(User.current()));
-    }
     assert.ok(
       !exists(".bootstrap-mode-notice"),
       "removes the notice when bootstrap mode is disabled"
