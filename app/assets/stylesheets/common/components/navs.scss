@@ -34,7 +34,7 @@
       padding: 6px 12px;
       color: var(--primary);
       font-size: var(--font-up-1);
-      line-height: $line-height-small;
+      line-height: var(--line-height-small);
       box-sizing: border-box;
       min-height: 30px;
       display: flex;
@@ -88,7 +88,7 @@
     margin: 0;
     padding: 0.75em;
     font-size: var(--font-up-1);
-    line-height: $line-height-small;
+    line-height: var(--line-height-small);
     cursor: pointer;
     color: var(--primary);
     @include ellipsis;
@@ -120,6 +120,6 @@
     width: 1.25em;
     text-align: center;
     margin-right: 0.25em;
-    line-height: $line-height-large;
+    line-height: var(--line-height-large);
   }
 }

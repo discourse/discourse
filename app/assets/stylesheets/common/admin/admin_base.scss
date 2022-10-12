@@ -145,7 +145,7 @@ $mobile-breakpoint: 700px;
     tr {
       grid-template-columns: repeat(3, 1fr);
       display: grid;
-      line-height: $line-height-medium;
+      line-height: var(--line-height-medium);
       padding: 8px 0;
       min-width: 0;
       td {
@@ -547,7 +547,7 @@ $mobile-breakpoint: 700px;
   }
   h1 {
     font-size: var(--font-up-3);
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
     color: var(--primary);
   }
   .controls {
@@ -708,7 +708,7 @@ section.details {
   clear: both;
   text-align: right;
   .btn {
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
   }
   @media (max-width: $mobile-breakpoint) {
     .btn {

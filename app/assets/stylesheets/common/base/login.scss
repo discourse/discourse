@@ -325,7 +325,7 @@ body.invite-page {
       .instructions {
         margin-top: 0.15em;
         color: var(--primary-medium);
-        line-height: $line-height-medium;
+        line-height: var(--line-height-medium);
       }
     }
   }
@@ -402,7 +402,7 @@ body.invite-page {
       margin: 0;
       font-size: var(--font-down-1);
       font-weight: normal;
-      line-height: $line-height-medium;
+      line-height: var(--line-height-medium);
     }
     .tip {
       font-size: var(--font-down-1);

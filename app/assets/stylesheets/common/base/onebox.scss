@@ -372,14 +372,14 @@ pre.onebox code ol.lines li:before {
   text-align: right;
   padding-right: 5px;
   font-size: var(--font-down-1);
-  line-height: $line-height-large;
+  line-height: var(--line-height-large);
   content: counter(li-counter);
   counter-increment: li-counter;
 }
 
 pre.onebox code ol {
   margin-left: 0;
-  line-height: $line-height-large;
+  line-height: var(--line-height-large);
 }
 pre.onebox code {
   background-color: var(--primary-very-low);
@@ -647,7 +647,7 @@ aside.onebox.twitterstatus .onebox-body {
 
   .date {
     display: flex;
-    line-height: $line-height-small;
+    line-height: var(--line-height-small);
 
     .timestamp {
       color: var(--primary-medium);
@@ -690,7 +690,7 @@ aside.onebox.twitterstatus .onebox-body {
       .album-title {
         width: 100%;
         font-size: var(--font-up-1);
-        line-height: $line-height-large;
+        line-height: var(--line-height-large);
         color: #ccc;
         text-decoration: none;
       }

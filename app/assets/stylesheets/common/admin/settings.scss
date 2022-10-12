@@ -81,7 +81,7 @@
         padding: 3px 5px 3px 18px;
         margin: 3px 0 3px 5px;
         position: relative;
-        line-height: $line-height-small;
+        line-height: var(--line-height-small);
         cursor: default;
         border: 1px dashed var(--primary-low-mid);
         border-radius: 3px;
@@ -95,7 +95,7 @@
     .validation-error {
       padding-top: 3px;
       font-size: var(--font-down-1);
-      line-height: $line-height-large;
+      line-height: var(--line-height-large);
     }
     .validation-error {
       color: var(--danger);

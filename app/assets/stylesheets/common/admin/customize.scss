@@ -502,7 +502,7 @@
     .ace_placeholder {
       font-family: inherit;
       font-size: var(--font-up-1);
-      color: $primary-high;
+      color: var(--primary-high);
     }
 
     .status-actions {
@@ -573,7 +573,7 @@
       margin: 0.15em 0 0;
       color: var(--primary-high);
       font-size: var(--font-down-1);
-      line-height: $line-height-medium;
+      line-height: var(--line-height-medium);
     }
 
     .invalid .hex input {

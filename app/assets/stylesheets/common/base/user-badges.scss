@@ -3,7 +3,7 @@
   padding: 3px 8px;
   color: var(--primary);
   border: 1px solid var(--primary-low);
-  line-height: $line-height-large;
+  line-height: var(--line-height-large);
   display: inline-flex;
   align-items: center;
   background-color: var(--secondary);

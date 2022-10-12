@@ -94,7 +94,7 @@
   max-width: 100%;
   p {
     margin-top: 0;
-    line-height: $line-height-large;
+    line-height: var(--line-height-large);
     font-size: var(--font-up-3);
   }
 }
@@ -215,7 +215,7 @@
   }
 
   .topic-list-data {
-    line-height: $line-height-large;
+    line-height: var(--line-height-large);
     text-align: left;
     vertical-align: middle;
   }
@@ -286,7 +286,7 @@
     margin-top: 0.33em;
     color: var(--primary-high);
     word-wrap: break-word;
-    line-height: $line-height-large;
+    line-height: var(--line-height-large);
     padding-right: 20px;
   }
 
@@ -424,5 +424,5 @@ div.education {
 .topic-post-badges {
   white-space: nowrap;
   align-self: center;
-  line-height: $line-height-medium;
+  line-height: var(--line-height-medium);
 }

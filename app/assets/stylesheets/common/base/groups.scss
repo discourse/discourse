@@ -86,7 +86,7 @@
           span {
             width: 100%;
             word-break: break-word;
-            line-height: $line-height-medium;
+            line-height: var(--line-height-medium);
           }
         }
       }
@@ -148,10 +148,10 @@
   }
   &.groups-notifications-form {
     .control-instructions {
-      color: $primary-medium;
+      color: var(--primary-medium);
       margin-bottom: 10px;
       font-size: var(--font-down-1);
-      line-height: $line-height-large;
+      line-height: var(--line-height-large);
     }
 
     .category-selector,

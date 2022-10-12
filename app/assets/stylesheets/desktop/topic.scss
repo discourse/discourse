@@ -25,7 +25,7 @@
   }
   h1 {
     font-size: var(--font-up-4);
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
     overflow-wrap: break-word;
     width: 100%;
     a {
@@ -48,7 +48,7 @@
   margin-right: auto;
   font-size: var(--font-up-4);
   text-align: center;
-  line-height: $line-height-medium;
+  line-height: var(--line-height-medium);
 
   .topic-retry {
     display: block;

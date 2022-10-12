@@ -572,7 +572,7 @@
     color: var(--primary-medium);
     margin-bottom: 10px;
     font-size: var(--font-down-1);
-    line-height: $line-height-large;
+    line-height: var(--line-height-large);
 
     a[href] {
       color: var(--tertiary);

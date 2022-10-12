@@ -24,14 +24,14 @@
 
         .category-status {
           color: var(--primary);
-          line-height: $line-height-large;
+          line-height: var(--line-height-large);
           flex: 1 1 auto;
         }
 
         .category-desc {
           flex: 1 1 auto;
           font-size: var(--font-down-1);
-          line-height: $line-height-large;
+          line-height: var(--line-height-large);
         }
       }
     }

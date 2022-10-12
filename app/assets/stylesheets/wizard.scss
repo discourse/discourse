@@ -253,7 +253,7 @@ body.wizard {
   &__step-title {
     font-size: 2.75em;
     color: var(--primary);
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
     margin: 0 0 1.5em 0;
     @include breakpoint("medium") {
       font-size: var(--font-up-5);

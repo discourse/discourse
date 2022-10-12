@@ -36,7 +36,7 @@
 
   button.bulk-select {
     padding: 0;
-    line-height: $line-height-large;
+    line-height: var(--line-height-large);
   }
 
   .topic-list-data.bulk-select {
@@ -118,7 +118,7 @@
     a {
       color: var(--primary-med-or-secondary-med);
       margin-right: 3px;
-      line-height: $line-height-large;
+      line-height: var(--line-height-large);
     }
   }
   .activity {

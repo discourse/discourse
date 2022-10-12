@@ -270,7 +270,7 @@ pre.codeblock-buttons:hover {
     .number,
     .d-icon {
       font-size: var(--font-up-2);
-      line-height: $line-height-medium;
+      line-height: var(--line-height-medium);
     }
     button .d-icon,
     button:hover .d-icon {

@@ -153,7 +153,7 @@
     a.badge-category {
       display: inline-block;
       padding: 6px 8px;
-      line-height: $line-height-medium;
+      line-height: var(--line-height-medium);
     }
   }
 }
@@ -167,7 +167,7 @@
   min-width: 0.5em;
   color: var(--secondary);
   font-size: var(--font-down-2);
-  line-height: $line-height-small;
+  line-height: var(--line-height-small);
   text-align: center;
   background-color: var(--primary-low-mid-or-secondary-low);
   &[href] {
@@ -217,7 +217,7 @@
 .badge-posts {
   font-weight: normal;
   font-size: var(--font-0);
-  line-height: $line-height-small;
+  line-height: var(--line-height-small);
   &[href] {
     color: var(--primary-med-or-secondary-med);
   }

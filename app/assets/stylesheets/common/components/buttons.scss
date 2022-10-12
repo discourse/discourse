@@ -260,7 +260,7 @@
 .btn-flat {
   background: transparent;
   border: 0;
-  line-height: $line-height-small;
+  line-height: var(--line-height-small);
   transition: color 0.25s, background 0.25s;
   .d-icon {
     color: var(--primary-low-mid);

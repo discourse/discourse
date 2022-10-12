@@ -90,7 +90,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: $heading-font-family;
+  font-family: var(--heading-font-family);
   margin-top: 0;
   margin-bottom: 0.5rem;
 }
@@ -145,7 +145,7 @@ input {
     margin-top: 0.17em;
     margin-right: 0.43em;
     margin-left: 0.1em;
-    line-height: $line-height-small;
+    line-height: var(--line-height-small);
     cursor: pointer;
     flex-shrink: 0; // Adding for safety, Safari will shrink checkboxes
   }
@@ -534,7 +534,7 @@ table {
   right: 70px;
   top: 60px;
   width: 230px;
-  line-height: $line-height-medium;
+  line-height: var(--line-height-medium);
 
   .first-notification,
   .read-later {
@@ -655,11 +655,11 @@ table {
   }
 
   .control-label {
-    font-family: $heading-font-family;
+    font-family: var(--heading-font-family);
 
     font-weight: bold;
     font-size: var(--font-up-2);
-    line-height: $line-height-large;
+    line-height: var(--line-height-large);
   }
 
   .controls {
@@ -860,7 +860,7 @@ table {
 }
 
 .broken-theme-alert {
-  font-size: $base-font-size;
+  font-size: var(--base-font-size);
   font-weight: bold;
   padding: 5px 0;
   background: var(--danger);

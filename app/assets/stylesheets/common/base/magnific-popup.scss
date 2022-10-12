@@ -261,7 +261,7 @@ button {
 .mfp-close {
   width: 44px;
   height: 44px;
-  line-height: $line-height-large;
+  line-height: var(--line-height-large);
   position: absolute;
   right: 0;
   top: 0;
@@ -307,7 +307,7 @@ button {
   right: 0;
   color: $controls-text-color;
   font-size: var(--font-down-1);
-  line-height: $line-height-medium;
+  line-height: var(--line-height-medium);
 }
 
 // Navigation arrows
@@ -459,7 +459,7 @@ button {
       color: $caption-subtitle-color;
       display: block;
       font-size: var(--font-down-1);
-      line-height: $line-height-medium;
+      line-height: var(--line-height-medium);
     }
     figure {
       margin: 0;
@@ -475,7 +475,7 @@ button {
   }
   .mfp-title {
     text-align: left;
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
     color: $caption-title-color;
     word-wrap: break-word;
     padding-right: 36px; // leave some space for counter at right side
@@ -561,7 +561,7 @@ button {
           right: 0;
           width: 35px;
           height: 35px;
-          line-height: $line-height-large;
+          line-height: var(--line-height-large);
           background: rgba(0, 0, 0, 0.6);
           position: fixed;
           text-align: center;

@@ -448,7 +448,7 @@ div.ac-wrap div.item a.remove,
 .remove-link {
   margin-left: 4px;
   font-size: var(--font-down-1);
-  line-height: $line-height-small;
+  line-height: var(--line-height-small);
   padding: 1px 3.5px;
   border-radius: 12px;
   box-sizing: border-box;
@@ -471,10 +471,10 @@ div.ac-wrap {
   div.item {
     float: left;
     padding: 4px 10px;
-    line-height: $line-height-large;
+    line-height: var(--line-height-large);
     span {
       display: inline-block;
-      line-height: $line-height-medium;
+      line-height: var(--line-height-medium);
     }
   }
 

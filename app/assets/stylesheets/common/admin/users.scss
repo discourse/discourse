@@ -40,7 +40,7 @@
     margin-left: 12px;
     @media (max-width: $mobile-breakpoint) {
       margin-left: 0;
-      line-height: $line-height-large;
+      line-height: var(--line-height-large);
       margin-top: 5px;
     }
   }

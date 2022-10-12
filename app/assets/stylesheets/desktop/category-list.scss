@@ -95,7 +95,7 @@
       border-left: 6px solid;
       h3,
       h4 {
-        line-height: $line-height-medium;
+        line-height: var(--line-height-medium);
         a[href] {
           color: var(--primary);
         }

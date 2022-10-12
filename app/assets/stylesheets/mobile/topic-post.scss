@@ -134,7 +134,7 @@ a.reply-to-tab {
 .topic-map {
   margin: 10px 0;
   h4 {
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
   }
   .user {
     float: left;
@@ -154,7 +154,7 @@ a.reply-to-tab {
       }
     }
     .number {
-      line-height: $line-height-medium;
+      line-height: var(--line-height-medium);
     }
     .number,
     .d-icon {
@@ -346,7 +346,7 @@ span.highlighted {
   margin-left: 50px;
   font-size: var(--font-down-1);
   .names {
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
     display: flex;
     flex-wrap: wrap;
 
