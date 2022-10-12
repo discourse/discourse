@@ -183,7 +183,7 @@ export default createWidget("poster-name", {
     const contents = [];
     if (attrs.userCustomFields && attrs.userCustomFields.credit_balance) {
       const credits = attrs.userCustomFields.credit_balance
-      const imgUrl = '/assets/credits/credit_coin.svg'
+      const imgUrl = '/images/credits/credit_coin.svg'
       let html = new RawHtml({
         html: `
           <div style='margin-left: 7.5px;' title='Credit balance'>
