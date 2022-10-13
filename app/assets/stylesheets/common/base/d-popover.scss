@@ -8,12 +8,23 @@ $d-popover-border: var(--primary-low);
   box-shadow: shadow("menu-panel");
 }
 
+.tippy-box > .tippy-svg-arrow:after,
+.tippy-box > .tippy-svg-arrow > svg {
+  width: 1.5em;
+  height: 1.5em;
+}
+
 .tippy-box[data-placement^="top"] .tippy-svg-arrow > svg {
   top: 12px;
 }
 .tippy-box[data-placement^="bottom"] .tippy-svg-arrow > svg {
   top: -10px;
 }
+
+.tippy-box[data-placement^="left"] > .tippy-svg-arrow > svg {
+  left: 10px;
+}
+
 .tippy-rounded-arrow {
   fill: $d-popover-background;
   .svg-arrow {
