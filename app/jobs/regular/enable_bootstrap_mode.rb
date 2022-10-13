@@ -7,6 +7,7 @@ module Jobs
     def execute(args)
       raise Discourse::InvalidParameters.new(:user_id) unless args[:user_id].present?
       return if SiteSetting.bootstrap_mode_enabled
+      return if !SiteSetting.show_create_topics_notice
 
       user = User.find_by(id: args[:user_id])
       return unless user.is_singular_admin?
