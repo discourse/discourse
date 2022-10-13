@@ -29,12 +29,12 @@ const controllerOpts = {
     "site.show_welcome_topic_banner",
     "model.listParams.f"
   )
-  showEditWelcomeTopicBanner(filter, showWelcomeTopicBanner, tracked) {
+  showEditWelcomeTopicBanner(filter, showWelcomeTopicBanner, hasListParams) {
     return (
       this.currentUser?.staff &&
       filter === "latest" &&
       showWelcomeTopicBanner &&
-      !tracked
+      !hasListParams
     );
   },
 
