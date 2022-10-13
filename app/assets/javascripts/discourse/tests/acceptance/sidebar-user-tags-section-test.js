@@ -58,6 +58,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
         pm_only: false,
       },
     ],
+    display_sidebar_tags: true,
   });
 
   needs.pretender((server, helper) => {
@@ -88,6 +89,17 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
         );
       });
     });
+  });
+
+  test("section is not displayed when display_sidebar_tags property is false", async function (assert) {
+    updateCurrentUser({ display_sidebar_tags: false });
+
+    await visit("/");
+
+    assert.notOk(
+      exists(".sidebar-section-tags"),
+      "tags section is not displayed"
+    );
   });
 
   test("clicking on section header button", async function (assert) {

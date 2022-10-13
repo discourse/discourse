@@ -13,6 +13,7 @@ acceptance("User Preferences - Sidebar", function (needs) {
   needs.user({
     sidebar_category_ids: [],
     sidebar_tags: [],
+    display_sidebar_tags: true,
   });
 
   needs.settings({
@@ -51,8 +52,8 @@ acceptance("User Preferences - Sidebar", function (needs) {
     });
   });
 
-  test("user should not see tag chooser when tagging is disabled", async function (assert) {
-    this.siteSettings.tagging_enabled = false;
+  test("user should not see tag chooser when display_sidebar_tags property is false", async function (assert) {
+    updateCurrentUser({ display_sidebar_tags: false });
 
     await visit("/u/eviltrout/preferences/sidebar");
 
