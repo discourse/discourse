@@ -5,9 +5,10 @@ import { schedule } from "@ember/runloop";
 import { filterBy, reads } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import I18n from "I18n";
-import bootbox from "bootbox";
+import { inject as service } from "@ember/service";
 
 export default class AutomationEdit extends Controller {
+  @service dialog;
   error = null;
   isUpdatingAutomation = false;
   isTriggeringAutomation = false;
@@ -90,29 +91,21 @@ export default class AutomationEdit extends Controller {
   }
 
   _confirmReset(callback) {
-    bootbox.confirm(
-      I18n.t("discourse_automation.confirm_automation_reset"),
-      I18n.t("no_value"),
-      I18n.t("yes_value"),
-      (result) => {
-        if (result) {
-          callback && callback();
-        }
-      }
-    );
+    this.dialog.yesNoConfirm({
+      message: I18n.t("discourse_automation.confirm_automation_reset"),
+      didConfirm: () => {
+        return callback && callback();
+      },
+    });
   }
 
   _confirmTrigger(callback) {
-    bootbox.confirm(
-      I18n.t("discourse_automation.confirm_automation_trigger"),
-      I18n.t("no_value"),
-      I18n.t("yes_value"),
-      (result) => {
-        if (result) {
-          callback && callback();
-        }
-      }
-    );
+    this.dialog.yesNoConfirm({
+      message: I18n.t("discourse_automation.confirm_automation_trigger"),
+      didConfirm: () => {
+        return callback && callback();
+      },
+    });
   }
 
   _showError(error) {

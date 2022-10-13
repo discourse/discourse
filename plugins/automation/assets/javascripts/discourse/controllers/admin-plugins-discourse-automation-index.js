@@ -1,11 +1,12 @@
 import Controller from "@ember/controller";
 import I18n from "I18n";
-import bootbox from "bootbox";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { action } from "@ember/object";
 import escape from "discourse-common/lib/escape";
+import { inject as service } from "@ember/service";
 
 export default class AutomationIndex extends Controller {
+  @service dialog;
   @action
   editAutomation(automation) {
     this.transitionToRoute(
@@ -21,18 +22,16 @@ export default class AutomationIndex extends Controller {
 
   @action
   destroyAutomation(automation) {
-    bootbox.confirm(
-      I18n.t("discourse_automation.destroy_automation.confirm", {
+    this.dialog.deleteConfirm({
+      message: I18n.t("discourse_automation.destroy_automation.confirm", {
         name: escape(automation.name),
       }),
-      (result) => {
-        if (result) {
-          automation
-            .destroyRecord()
-            .then(() => this.send("triggerRefresh"))
-            .catch(popupAjaxError);
-        }
-      }
-    );
+      didConfirm: () => {
+        return automation
+          .destroyRecord()
+          .then(() => this.send("triggerRefresh"))
+          .catch(popupAjaxError);
+      },
+    });
   }
 }
