@@ -418,5 +418,12 @@ export default Controller.extend({
         lightStylesheet.remove();
       }
     },
+
+    resetSeenPopups(event) {
+      event.preventDefault();
+      this.model.set("seen_popups", null);
+      this.model.set("user_option.seen_popups", null);
+      return this.model.save(["seen_popups"]);
+    },
   },
 });
