@@ -1838,6 +1838,10 @@ en:
         title: "Topic timeline"
         content: "Scroll quickly through a post using the topic timeline."
 
+      user_card:
+        title: "User cards"
+        content: "Quickly view more user details by clicking on their avatar"
+
     loading: "Loading..."
     errors:
       prev_page: "while trying to load"

@@ -25,6 +25,7 @@ import { transformBasicPost } from "discourse/lib/transform-post";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 import showModal from "discourse/lib/show-modal";
 import { nativeShare } from "discourse/lib/pwa-utils";
+import { hidePopup } from "discourse/lib/popup";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);
@@ -927,5 +928,32 @@ export default createWidget("post", {
       this.dialog.alert(I18n.t("post.few_likes_left"));
       kvs.set({ key: "lastWarnedLikes", value: Date.now() });
     }
+  },
+
+  didRenderWidget() {
+    if (!this.currentUser || !this.siteSettings.enable_onboarding_popups) {
+      return;
+    }
+
+    const post = document.querySelector(".onscreen-post");
+
+    this.currentUser.showPopup({
+      id: "user_card",
+
+      titleText: I18n.t("popup.user_card.title"),
+      contentText: I18n.t("popup.user_card.content"),
+
+      reference: post?.querySelector(".post-avatar .trigger-user-card"),
+
+      placement: "right",
+    });
+  },
+
+  destroy() {
+    hidePopup("user_card");
+  },
+
+  willRerenderWidget() {
+    hidePopup("user_card");
   },
 });

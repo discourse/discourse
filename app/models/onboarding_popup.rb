@@ -5,6 +5,7 @@ class OnboardingPopup
     @types ||= Enum.new(
       first_notification: 1,
       topic_timeline: 2,
+      user_card: 4,
     )
   end
 end
