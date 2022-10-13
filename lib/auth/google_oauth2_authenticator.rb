@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
-  GROUPS_SCOPE ||= "admin.directory.group.readonly"
+  GROUPS_SCOPE ||= "https://www.googleapis.com/auth/admin.directory.group.readonly"
   GROUPS_DOMAIN ||= "admin.googleapis.com"
   GROUPS_PATH ||= "/admin/directory/v1/groups"
+  OAUTH2_BASE_URL ||= "https://oauth2.googleapis.com"
 
   def name
     "google_oauth2"
@@ -102,8 +103,8 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
 
     payload = {
       iss: service_account_info["client_email"],
-      aud: "https://oauth2.googleapis.com/token",
-      scope: "https://www.googleapis.com/auth/#{GROUPS_SCOPE}",
+      aud: "#{OAUTH2_BASE_URL}/token",
+      scope: GROUPS_SCOPE,
       iat: Time.now.to_i,
       exp: Time.now.to_i + 60,
       sub: SiteSetting.google_oauth2_hd_groups_service_account_admin_email
@@ -116,7 +117,7 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
     client = OAuth2::Client.new(
       SiteSetting.google_oauth2_client_id,
       SiteSetting.google_oauth2_client_secret,
-      site: 'https://oauth2.googleapis.com'
+      site: OAUTH2_BASE_URL
     )
 
     token_response = client.request(:post, '/token', body: {
