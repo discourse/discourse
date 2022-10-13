@@ -23,6 +23,12 @@
   left: 11px;
 }
 
+.tippy-box[data-theme~="d-onboarding"][data-placement^="top"]
+  > .tippy-svg-arrow
+  > svg {
+  top: 11px;
+}
+
 .tippy-box[data-theme~="d-onboarding"][data-placement^="bottom"]
   > .tippy-svg-arrow
   > svg {

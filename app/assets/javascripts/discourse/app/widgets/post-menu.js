@@ -709,6 +709,10 @@ export default createWidget("post-menu", {
   },
 
   showMoreActions() {
+    if (this.currentUser) {
+      this.currentUser.hidePopupForever("post_menu");
+    }
+
     this.state.collapsed = false;
     const likesPromise = !this.state.likedUsers.length
       ? this.getWhoLiked()
