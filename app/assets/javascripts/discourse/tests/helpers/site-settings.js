@@ -101,6 +101,7 @@ const ORIGINAL_SETTINGS = {
   external_emoji_url: "",
   remove_muted_tags_from_latest: "always",
   enable_group_directory: true,
+  default_sidebar_categories: "",
 };
 
 let siteSettings = Object.assign({}, ORIGINAL_SETTINGS);

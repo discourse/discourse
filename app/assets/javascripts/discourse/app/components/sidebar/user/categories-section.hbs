@@ -1,33 +1,35 @@
-<Sidebar::Section
-  @sectionName="categories"
-  @headerLinkText={{i18n "sidebar.sections.categories.header_link_text"}}
-  @headerActions={{array (hash action=this.editTracked title=(i18n "sidebar.sections.categories.header_action_title"))}}
-  @headerActionsIcon="pencil-alt"
-  @collapsable={{@collapsable}} >
+{{#if this.shouldDisplay}}
+  <Sidebar::Section
+    @sectionName="categories"
+    @headerLinkText={{i18n "sidebar.sections.categories.header_link_text"}}
+    @headerActions={{array (hash action=this.editTracked title=(i18n "sidebar.sections.categories.header_action_title"))}}
+    @headerActionsIcon="pencil-alt"
+    @collapsable={{@collapsable}} >
 
-  {{#if (gt this.sectionLinks.length 0)}}
-    {{#each this.sectionLinks as |sectionLink|}}
-      <Sidebar::SectionLink
-        @linkName={{sectionLink.name}}
-        @route={{sectionLink.route}}
-        @query={{sectionLink.query}}
-        @title={{sectionLink.title}}
-        @content={{sectionLink.text}}
-        @currentWhen={{sectionLink.currentWhen}}
-        @model={{sectionLink.model}}
-        @badgeText={{sectionLink.badgeText}}
-        @prefixBadge={{sectionLink.prefixBadge}}
-        @prefixType={{sectionLink.prefixType}}
-        @prefixValue={{sectionLink.prefixValue}}
-        @prefixColor={{sectionLink.prefixColor}}
-        @prefixElementColors={{sectionLink.prefixElementColors}} >
-      </Sidebar::SectionLink>
-    {{/each}}
-  {{else}}
-    <Sidebar::SectionMessage>
-      {{html-safe this.noCategoriesText}}
-    </Sidebar::SectionMessage>
-  {{/if}}
+    {{#if (gt this.sectionLinks.length 0)}}
+      {{#each this.sectionLinks as |sectionLink|}}
+        <Sidebar::SectionLink
+          @linkName={{sectionLink.name}}
+          @route={{sectionLink.route}}
+          @query={{sectionLink.query}}
+          @title={{sectionLink.title}}
+          @content={{sectionLink.text}}
+          @currentWhen={{sectionLink.currentWhen}}
+          @model={{sectionLink.model}}
+          @badgeText={{sectionLink.badgeText}}
+          @prefixBadge={{sectionLink.prefixBadge}}
+          @prefixType={{sectionLink.prefixType}}
+          @prefixValue={{sectionLink.prefixValue}}
+          @prefixColor={{sectionLink.prefixColor}}
+          @prefixElementColors={{sectionLink.prefixElementColors}} >
+        </Sidebar::SectionLink>
+      {{/each}}
+    {{else}}
+      <Sidebar::SectionMessage>
+        {{html-safe this.noCategoriesText}}
+      </Sidebar::SectionMessage>
+    {{/if}}
 
-  <Sidebar::Common::AllCategoriesSectionLink />
-</Sidebar::Section>
+    <Sidebar::Common::AllCategoriesSectionLink />
+  </Sidebar::Section>
+{{/if}}

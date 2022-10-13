@@ -103,6 +103,8 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
   };
 
   test("clicking on section header link", async function (assert) {
+    setupUserSidebarCategories();
+
     await visit("/t/280");
     await click(".sidebar-section-categories .sidebar-section-header");
 
@@ -113,6 +115,8 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
   });
 
   test("clicking on section header button", async function (assert) {
+    setupUserSidebarCategories();
+
     await visit("/");
     await click(".sidebar-section-categories .sidebar-section-header-button");
 
@@ -123,8 +127,28 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
   });
 
-  test("category section links when user has not added any categories", async function (assert) {
+  test("categories section is hidden when user has not added any categories and there are no default categories configured", async function (assert) {
+    updateCurrentUser({ sidebar_category_ids: [] });
+
     await visit("/");
+
+    assert.notOk(
+      exists(".sidebar-section-categories"),
+      "categories section is not shown"
+    );
+  });
+
+  test("categories section is shown when user has not added any categories but default categories have been configured", async function (assert) {
+    updateCurrentUser({ sidebar_category_ids: [] });
+    const categories = Site.current().categories;
+    this.siteSettings.default_sidebar_categories = `${categories[0].id}|${categories[1].id}`;
+
+    await visit("/");
+
+    assert.ok(
+      exists(".sidebar-section-categories"),
+      "categories section is shown"
+    );
 
     assert.ok(
       exists(".sidebar-section-message"),

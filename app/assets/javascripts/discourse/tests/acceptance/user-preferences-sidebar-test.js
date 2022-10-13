@@ -100,7 +100,32 @@ acceptance("User Preferences - Sidebar", function (needs) {
     );
   });
 
-  test("user adding categories to sidebar", async function (assert) {
+  test("user adding categories to sidebar when default sidebar categories have not been configured", async function (assert) {
+    await visit("/u/eviltrout/preferences/sidebar");
+
+    assert.notOk(exists(".sidebar-section-categories"));
+
+    const categorySelector = selectKit(".category-selector");
+    await categorySelector.expand();
+    await categorySelector.selectKitSelectRowByName("support");
+    await categorySelector.selectKitSelectRowByName("bug");
+
+    await click(".save-changes");
+
+    assert.ok(
+      exists(".sidebar-section-categories .sidebar-section-link-support"),
+      "support category has been added to sidebar"
+    );
+
+    assert.ok(
+      exists(".sidebar-section-categories .sidebar-section-link-bug"),
+      "bug category has been added to sidebar"
+    );
+  });
+
+  test("user adding categories to sidebar when default sidebar categories have been configured", async function (assert) {
+    this.siteSettings.default_sidebar_categories = "5";
+
     await visit("/");
     await click(".sidebar-section-categories .sidebar-section-header-button");
 
