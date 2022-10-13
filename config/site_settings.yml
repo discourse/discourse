@@ -429,6 +429,11 @@ login:
   google_oauth2_hd_groups:
     default: false
     validator: GoogleOauth2HdGroupsValidator
+  google_oauth2_hd_groups_service_account_admin_email:
+    default: ""
+  google_oauth2_hd_groups_service_account_json:
+    default: ""
+    textarea: true
   enable_twitter_logins:
     default: false
   twitter_consumer_key:
