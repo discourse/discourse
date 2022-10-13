@@ -65,4 +65,10 @@
       background: var(--d-sidebar-highlight-color);
     }
   }
+
+  @include breakpoint("tablet") {
+    .sidebar-footer-actions-keyboard-shortcuts {
+      display: none;
+    }
+  }
 }
