@@ -194,9 +194,13 @@ header .discourse-tag {
 .autocomplete {
   a {
     color: var(--primary-medium);
+
+    .hashtag-autocomplete__text {
+      color: var(--primary-medium) !important;
+    }
   }
 
-  .d-icon-tag {
+  .d-icon {
     padding-right: 5px;
     vertical-align: middle;
     height: 0.9em;

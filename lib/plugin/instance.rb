@@ -1086,6 +1086,10 @@ class Plugin::Instance
     About.add_plugin_stat_group(plugin_stat_group_name, show_in_ui: show_in_ui, &block)
   end
 
+  def register_hashtag_data_source(type, &block)
+    HashtagService.register_data_source(type, &block)
+  end
+
   protected
 
   def self.js_path

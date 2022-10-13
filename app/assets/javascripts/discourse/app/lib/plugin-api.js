@@ -104,6 +104,7 @@ import DiscourseURL from "discourse/lib/url";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
+import { registerHashtagSearchParam } from "discourse/lib/hashtag-autocomplete";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -1980,6 +1981,10 @@ class PluginApi {
    */
   registerModelTransformer(modelName, transformer) {
     registerModelTransformer(modelName, transformer);
+  }
+
+  registerHashtagSearchParam(param, context, priority) {
+    registerHashtagSearchParam(param, context, priority);
   }
 }
 
