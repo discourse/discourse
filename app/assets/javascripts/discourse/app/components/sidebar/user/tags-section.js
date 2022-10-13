@@ -13,6 +13,7 @@ export default class SidebarUserTagsSection extends Component {
   @service topicTrackingState;
   @service pmTopicTrackingState;
   @service currentUser;
+  @service siteSettings;
 
   constructor() {
     super(...arguments);
@@ -61,6 +62,20 @@ export default class SidebarUserTagsSection extends Component {
     return `${I18n.t("sidebar.sections.tags.none")} <a href="${url}">${I18n.t(
       "sidebar.sections.tags.click_to_get_started"
     )}</a>`;
+  }
+
+  /**
+   * If a site has no default sidebar tags configured, show tags section if the user has personal sidebar tags configured.
+   * Otherwise, hide the tags section from the sidebar for the user.
+   *
+   * If a site has default sidebar tags configured, always display the tags section.
+   */
+  get shouldDisplay() {
+    if (this.siteSettings.default_sidebar_tags.length > 0) {
+      return true;
+    } else {
+      return this.currentUser.sidebarTags.length > 0;
+    }
   }
 
   @action
