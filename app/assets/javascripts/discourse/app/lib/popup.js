@@ -23,6 +23,7 @@ export function showPopup(options) {
     showOnCreate: true,
     hideOnClick: false,
     trigger: "manual",
+    theme: "d-onboarding",
 
     // It must be interactive to make buttons work.
     interactive: true,

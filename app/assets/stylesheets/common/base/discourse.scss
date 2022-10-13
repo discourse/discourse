@@ -570,25 +570,6 @@ table {
   animation-name: ping;
 }
 
-.onboarding-popup-container {
-  min-width: 300px;
-  padding: 0.5em;
-  text-align: left;
-
-  .onboarding-popup-title {
-    font-size: $font-up-2;
-    font-weight: bold;
-  }
-
-  .onboarding-popup-content {
-    margin-top: 0.25em;
-  }
-
-  .onboarding-popup-buttons {
-    margin-top: 1em;
-  }
-}
-
 .fade {
   opacity: 0;
   transition: opacity 0.15s linear;
