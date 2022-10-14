@@ -291,6 +291,36 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
   });
 
+  test("category section links - sidebar_list_destination set to unread", async function (assert) {
+    updateCurrentUser({
+      user_option: {
+        sidebar_list_destination: "unread",
+      },
+    });
+    const { category1 } = setupUserSidebarCategories();
+
+    await visit("/");
+
+    await click(`.sidebar-section-link-${category1.slug}`);
+
+    assert.strictEqual(
+      currentURL(),
+      `/c/${category1.slug}/${category1.id}/l/new`,
+      "it should transition to the category1 new/unread page"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-categories .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(`.sidebar-section-link-${category1.slug}.active`),
+      "the category1 section link is marked as active"
+    );
+  });
+
   test("category section link for category with 3-digit hex code for color", async function (assert) {
     const { category1 } = setupUserSidebarCategories();
     category1.set("color", "888");
@@ -545,66 +575,3 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
   });
 });
-
-acceptance(
-  "Sidebar - Logged on user - Categories Section - sidebar_destination_topic set to unread",
-  function (needs) {
-    needs.user({
-      sidebar_category_ids: [],
-      user_option: {
-        sidebar_list_destination: "unread",
-      },
-    });
-
-    needs.settings({
-      enable_experimental_sidebar_hamburger: true,
-      enable_sidebar: true,
-      suppress_uncategorized_badge: false,
-    });
-
-    needs.pretender((server, helper) => {
-      server.get(`/c/:categorySlug/:categoryId/l/new.json`, () => {
-        return helper.response(
-          cloneJSON(discoveryFixture["/c/bug/1/l/latest.json"])
-        );
-      });
-    });
-
-    const setupUserSidebarCategories = function () {
-      const categories = Site.current().categories;
-      const category1 = categories[0];
-      const category2 = categories[1];
-
-      updateCurrentUser({
-        sidebar_category_ids: [category1.id, category2.id],
-      });
-
-      return { category1, category2 };
-    };
-
-    test("category section links", async function (assert) {
-      const { category1 } = setupUserSidebarCategories();
-
-      await visit("/");
-
-      await click(`.sidebar-section-link-${category1.slug}`);
-
-      assert.strictEqual(
-        currentURL(),
-        `/c/${category1.slug}/${category1.id}/l/new`,
-        "it should transition to the category1 new/unread page"
-      );
-
-      assert.strictEqual(
-        count(".sidebar-section-categories .sidebar-section-link.active"),
-        1,
-        "only one link is marked as active"
-      );
-
-      assert.ok(
-        exists(`.sidebar-section-link-${category1.slug}.active`),
-        "the category1 section link is marked as active"
-      );
-    });
-  }
-);
