@@ -239,6 +239,10 @@ registerButton("reply-small", (attrs) => {
     title: "post.controls.reply",
     icon: "reply",
     className: "reply",
+    translatedAriaLabel: I18n.t("post.sr_reply_to", {
+      post_number: attrs.post_number,
+      username: attrs.username,
+    }),
   };
 
   return args;
@@ -323,6 +327,10 @@ registerButton("reply", (attrs, state, siteSettings, postMenuSettings) => {
     title: "post.controls.reply",
     icon: "reply",
     className: "reply create fade-out",
+    translatedAriaLabel: I18n.t("post.sr_reply_to", {
+      post_number: attrs.post_number,
+      username: attrs.username,
+    }),
   };
 
   if (!attrs.canCreatePost) {
