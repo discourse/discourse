@@ -552,7 +552,7 @@ acceptance(
     needs.user({
       sidebar_category_ids: [],
       user_option: {
-        sidebar_topic_destination: "unread",
+        sidebar_list_destination: "unread",
       },
     });
 

@@ -1019,11 +1019,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 });
 
 acceptance(
-  "Sidebar - Logged on user - Community Section - sidebar_topic_destination set to unread",
+  "Sidebar - Logged on user - Community Section - sidebar_list_destination set to unread",
   function (needs) {
     needs.user({
       user_option: {
-        sidebar_topic_destination: "unread",
+        sidebar_list_destination: "unread",
       },
     });
 

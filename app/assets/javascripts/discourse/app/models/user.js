@@ -109,7 +109,7 @@ let userOptionFields = [
   "seen_popups",
   "default_calendar",
   "bookmark_auto_delete_preference",
-  "sidebar_topic_destination",
+  "sidebar_list_destination",
 ];
 
 export function addSaveableUserOptionField(fieldName) {
@@ -342,9 +342,9 @@ const User = RestModel.extend({
     );
   },
 
-  @discourseComputed("user_option.sidebar_topic_destination")
-  sidebarTopicDestination(sidebarTopicDestination) {
-    return sidebarTopicDestination;
+  @discourseComputed("user_option.sidebar_list_destination")
+  sidebarListDestination(sidebarListDestination) {
+    return sidebarListDestination;
   },
 
   changeUsername(new_username) {

@@ -63,7 +63,7 @@ export default class EverythingSectionLink extends BaseSectionLink {
   }
 
   get route() {
-    return this.currentUser?.sidebarTopicDestination === "unread"
+    return this.currentUser?.sidebarListDestination === "unread"
       ? "discovery.new"
       : "discovery.latest";
   }

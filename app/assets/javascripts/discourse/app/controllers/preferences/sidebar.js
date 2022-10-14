@@ -9,15 +9,15 @@ export default class extends Controller {
   @tracked saved = false;
   @tracked selectedSidebarCategories = [];
   @tracked selectedSidebarTagNames = [];
-  @tracked newSidebarTopicDestination =
-    this.currentUser.user_option.sidebar_topic_destination;
-  @tracked sidebarTopicDestionations = [
+  @tracked newSidebarListDestination =
+    this.currentUser.user_option.sidebar_list_destination;
+  @tracked sidebarListDestionations = [
     {
-      name: I18n.t("user.experimental_sidebar.topic_destination_latest"),
+      name: I18n.t("user.experimental_sidebar.list_destination_latest"),
       value: "latest",
     },
     {
-      name: I18n.t("user.experimental_sidebar.topic_destination_unread"),
+      name: I18n.t("user.experimental_sidebar.list_destination_unread_new"),
       value: "unread",
     },
   ];
@@ -34,8 +34,8 @@ export default class extends Controller {
     this.model.set("sidebar_tag_names", this.selectedSidebarTagNames);
 
     this.model.set(
-      "user_option.sidebar_topic_destination",
-      this.newSidebarTopicDestination
+      "user_option.sidebar_list_destination",
+      this.newSidebarListDestination
     );
 
     this.model
@@ -45,8 +45,8 @@ export default class extends Controller {
           this.model.set("sidebar_tags", result.user.sidebar_tags);
         }
         this.model.set(
-          "user_option.sidebar_topic_destination",
-          result.user.user_option.sidebar_topic_destination
+          "user_option.sidebar_list_destination",
+          result.user.user_option.sidebar_list_destination
         );
 
         this.saved = true;
