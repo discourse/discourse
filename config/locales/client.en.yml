@@ -720,6 +720,8 @@ en:
         reset_to_default: "Reset to default"
       group:
         all: "all groups"
+      sort:
+        label: "Sort by %{criteria}"
 
     group_histories:
       actions:
