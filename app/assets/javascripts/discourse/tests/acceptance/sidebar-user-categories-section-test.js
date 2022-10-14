@@ -242,7 +242,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.strictEqual(
       currentURL(),
-      `/c/${category1.slug}/${category1.id}/l/latest`,
+      `/c/${category1.slug}/${category1.id}`,
       "it should transition to the category1 page"
     );
 
@@ -261,7 +261,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.strictEqual(
       currentURL(),
-      `/c/${category2.slug}/${category2.id}/l/latest`,
+      `/c/${category2.slug}/${category2.id}`,
       "it should transition to the category2's page"
     );
 

@@ -82,6 +82,6 @@ export default class CategorySectionLink {
   get route() {
     return this.currentUser?.sidebarListDestination === "unread"
       ? "discovery.newCategory"
-      : "discovery.latestCategory";
+      : "discovery.category";
   }
 }
