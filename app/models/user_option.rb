@@ -14,6 +14,7 @@ class UserOption < ActiveRecord::Base
   scope :human_users, -> { where('user_id > 0') }
 
   enum default_calendar: { none_selected: 0, ics: 1, google: 2 }, _scopes: false
+  enum sidebar_topic_destination: { latest: 0, unread: 1 }, _scopes: false
 
   def self.ensure_consistency!
     sql = <<~SQL
@@ -269,6 +270,7 @@ end
 #  bookmark_auto_delete_preference  :integer          default(3), not null
 #  enable_experimental_sidebar      :boolean          default(FALSE)
 #  seen_popups                      :integer          is an Array
+#  sidebar_topic_destination        :integer          default("latest")
 #
 # Indexes
 #

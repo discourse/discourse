@@ -1017,3 +1017,51 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     assert.ok(teardownCalled, "section link teardown callback was called");
   });
 });
+
+acceptance(
+  "Sidebar - Logged on user - Community Section - sidebar_topic_destination set to unread",
+  function (needs) {
+    needs.user({
+      user_option: {
+        sidebar_topic_destination: "unread",
+      },
+    });
+
+    needs.settings({
+      enable_experimental_sidebar_hamburger: true,
+      enable_sidebar: true,
+    });
+
+    needs.pretender((server, helper) => {
+      server.get("/new.json", () => {
+        return helper.response(cloneJSON(topicFixtures["/latest.json"]));
+      });
+    });
+
+    test("clicking on everything link", async function (assert) {
+      await visit("/t/280");
+      await click(
+        ".sidebar-section-community .sidebar-section-link-everything"
+      );
+
+      assert.strictEqual(
+        currentURL(),
+        "/new",
+        "it should transition to the new/unread page"
+      );
+
+      assert.strictEqual(
+        count(".sidebar-section-community .sidebar-section-link.active"),
+        1,
+        "only one link is marked as active"
+      );
+
+      assert.ok(
+        exists(
+          ".sidebar-section-community .sidebar-section-link-everything.active"
+        ),
+        "the everything link is marked as active"
+      );
+    });
+  }
+);

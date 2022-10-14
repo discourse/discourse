@@ -9,9 +9,10 @@ export default class CategorySectionLink {
   @tracked totalUnread = 0;
   @tracked totalNew = 0;
 
-  constructor({ category, topicTrackingState }) {
+  constructor({ category, topicTrackingState, currentUser }) {
     this.category = category;
     this.topicTrackingState = topicTrackingState;
+    this.currentUser = currentUser;
     this.refreshCounts();
   }
 
@@ -79,6 +80,8 @@ export default class CategorySectionLink {
   }
 
   get route() {
-    return "discovery.category";
+    return this.currentUser?.sidebarTopicDestination === "unread"
+      ? "discovery.newCategory"
+      : "discovery.latestCategory";
   }
 }

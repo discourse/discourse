@@ -35,4 +35,13 @@
   </div>
 {{/if}}
 
+<div class="control-group preferences-sidebar-navigation">
+  <legend class="control-label">{{i18n "user.experimental_sidebar.navigation_section"}}</legend>
+
+  <div class="controls controls-dropdown">
+    <label>{{i18n "user.experimental_sidebar.topic_destination_instruction"}}</label>
+    <ComboBox @valueProperty="value" @content={{this.sidebarTopicDestionations}} @value={{this.newSidebarTopicDestination}} @onChange={{action (mut this.newSidebarTopicDestination)}} />
+  </div>
+</div>
+
 <SaveControls @model={{this.model}} @action={{action "save"}} @saved={{this.saved}} />

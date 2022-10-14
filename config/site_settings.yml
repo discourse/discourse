@@ -2056,6 +2056,23 @@ sidebar:
     type: tag_list
     default: ""
     client: true
+  default_sidebar_list_destination:
+    hidden: true
+    default: "default"
+    type: "list"
+    choices:
+      - "default"
+      - "unread"
+  enable_new_user_profile_nav_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+  include_associated_account_ids:
+    default: false
+    hidden: true
 
 embedding:
   embed_by_username:
