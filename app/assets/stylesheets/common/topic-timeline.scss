@@ -212,7 +212,6 @@
     }
 
     .start-date {
-      @include unselectable;
       color: var(--primary-med-or-secondary-med);
     }
 
@@ -296,7 +295,6 @@
     }
 
     .now-date {
-      @include unselectable;
       display: inline-block;
       color: var(--primary-med-or-secondary-med);
       margin-top: 0.5em;

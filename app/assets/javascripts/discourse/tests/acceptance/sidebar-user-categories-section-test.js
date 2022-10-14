@@ -78,6 +78,12 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       });
     });
 
+    server.get(`/c/:categorySlug/:categoryId/none/l/latest.json`, () => {
+      return helper.response(
+        cloneJSON(discoveryFixture["/c/bug/1/l/latest.json"])
+      );
+    });
+
     server.get("/c/:categorySlug/:categoryId/find_by_slug.json", () => {
       return helper.response(cloneJSON(categoryFixture["/c/1/show.json"]));
     });
@@ -285,6 +291,20 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
   });
 
+  test("category section link for category with 3-digit hex code for color", async function (assert) {
+    const { category1 } = setupUserSidebarCategories();
+    category1.set("color", "888");
+
+    await visit("/");
+
+    assert.ok(
+      exists(
+        `.sidebar-section-link-${category1.slug} .sidebar-section-link-prefix .prefix-span[style="background: linear-gradient(90deg, #888 50%, #888 50%)"]`
+      ),
+      "category1 section link is rendered with the right solid prefix icon color"
+    );
+  });
+
   test("category section link have the right title", async function (assert) {
     const categories = Site.current().categories;
 
@@ -352,6 +372,40 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     assert.ok(
       exists(`.sidebar-section-link-${category1.slug}.active`),
       "the category1 section link is marked as active for the top route"
+    );
+  });
+
+  test("visiting category discovery no subcategoriees route", async function (assert) {
+    const { category1 } = setupUserSidebarCategories();
+
+    await visit(`/c/${category1.slug}/${category1.id}/none`);
+
+    assert.strictEqual(
+      count(".sidebar-section-categories .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(`.sidebar-section-link-${category1.slug}.active`),
+      "the category1 section link is marked as active for the none route"
+    );
+  });
+
+  test("visiting category discovery includes all subcategories route", async function (assert) {
+    const { category1 } = setupUserSidebarCategories();
+
+    await visit(`/c/${category1.slug}/${category1.id}/all`);
+
+    assert.strictEqual(
+      count(".sidebar-section-categories .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(`.sidebar-section-link-${category1.slug}.active`),
+      "the category1 section link is marked as active for the all route"
     );
   });
 

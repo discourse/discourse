@@ -26,11 +26,21 @@ export function actionDescriptionHtml(actionCode, createdAt, username, path) {
   return htmlSafe(I18n.t(`action_codes.${actionCode}`, { who, when, path }));
 }
 
-export function actionDescription(actionCode, createdAt, username) {
+export function actionDescription(
+  actionCode,
+  createdAt,
+  username,
+  path = null
+) {
   return computed(actionCode, createdAt, function () {
     const ac = this.get(actionCode);
     if (ac) {
-      return actionDescriptionHtml(ac, this.get(createdAt), this.get(username));
+      return actionDescriptionHtml(
+        ac,
+        this.get(createdAt),
+        this.get(username),
+        path ? this.get(path) : null
+      );
     }
   });
 }

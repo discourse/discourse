@@ -53,11 +53,13 @@ export default class SectionLink extends Component {
 
   get prefixElementColors() {
     const prefixElementColors = this.args.prefixElementColors.filter((color) =>
-      color?.match(/^\w{6}$/)
+      color?.slice(0, 6)
     );
+
     if (prefixElementColors.length === 1) {
       prefixElementColors.push(prefixElementColors[0]);
     }
+
     return prefixElementColors.map((color) => `#${color} 50%`).join(", ");
   }
 }
