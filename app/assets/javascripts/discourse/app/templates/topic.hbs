@@ -13,7 +13,7 @@
 
   <PluginOutlet @name="topic-above-post-stream" @tagName="span" @connectorTagName="div" @args={{hash model=this.model editFirstPost=(action "editFirstPost")}} />
 
-  {{#if this.model.postStream.loaded}}
+  {{#if (and this.controllerReady this.model.postStream.loaded)}}
     {{#if this.model.postStream.firstPostPresent}}
       <TopicTitle @cancelled={{action "cancelEditingTopic"}} @save={{action "finishedEditingTopic"}} @model={{this.model}}>
         {{#if this.editingTopic}}

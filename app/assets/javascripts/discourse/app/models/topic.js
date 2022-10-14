@@ -24,7 +24,7 @@ import DiscourseURL, { userPath } from "discourse/lib/url";
 import deprecated from "discourse-common/lib/deprecated";
 import { applyModelTransformations } from "discourse/lib/model-transformers";
 
-export function loadTopicView(topic, args) {
+export async function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
   const url = `${getURL("/t/")}${topic.id}`;
   const jsonUrl = (data.nearPost ? `${url}/${data.nearPost}` : url) + ".json";
@@ -33,12 +33,12 @@ export function loadTopicView(topic, args) {
   delete data.__type;
   delete data.store;
 
-  return PreloadStore.getAndRemove(`topic_${topic.id}`, () =>
+  const json = await PreloadStore.getAndRemove(`topic_${topic.id}`, () =>
     ajax(jsonUrl, { data })
-  ).then((json) => {
-    topic.updateFromJson(json);
-    return json;
-  });
+  );
+
+  topic.updateFromJson(json);
+  return json;
 }
 
 export const ID_CONSTRAINT = /^\d+$/;
