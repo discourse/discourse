@@ -4230,7 +4230,7 @@ en:
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
-      description: 'Your welcome topic is the first thing new arrivals will read. Think of it as your one paragraph "elevator pitch" or "mission statement"'
+      description: 'Your welcome topic is the first thing new members will read. Think of it as your “elevator pitch” or “mission statement.” Let everyone know who this community is for, what they can expect to find here, and what you’d like them to do first.'
       button_title: "Start Editing"
 
     until: "Until:"
