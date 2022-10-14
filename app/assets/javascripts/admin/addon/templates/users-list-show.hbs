@@ -15,22 +15,24 @@
 
 <LoadMore @class="users-list-container" @selector=".users-list tr" @action={{action "loadMore"}}>
   {{#if this.model}}
-    <table class="table users-list grid">
+    <table class="table users-list grid" role="table" aria-label={{this.title}}>
       <thead>
-        <TableHeaderToggle @field="username" @labelKey="username" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
-        <TableHeaderToggle @class={{if this.showEmails "" "hidden"}} @field="email" @labelKey="email" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
-        <TableHeaderToggle @field="last_emailed" @labelKey="admin.users.last_emailed" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
-        <TableHeaderToggle @field="seen" @labelKey="last_seen" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
-        <TableHeaderToggle @field="topics_viewed" @labelKey="admin.user.topics_entered" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
-        <TableHeaderToggle @field="posts_read" @labelKey="admin.user.posts_read_count" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
-        <TableHeaderToggle @field="read_time" @labelKey="admin.user.time_read" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
-        <TableHeaderToggle @field="created" @labelKey="created" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
-        <PluginOutlet @name="admin-users-list-thead-after" @args={{hash order=this.order asc=this.asc}} />
+        <tr>
+          <TableHeaderToggle @field="username" @labelKey="username" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
+          <TableHeaderToggle @class={{if this.showEmails "" "hidden"}} @field="email" @labelKey="email" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
+          <TableHeaderToggle @field="last_emailed" @labelKey="admin.users.last_emailed" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
+          <TableHeaderToggle @field="seen" @labelKey="last_seen" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
+          <TableHeaderToggle @field="topics_viewed" @labelKey="admin.user.topics_entered" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
+          <TableHeaderToggle @field="posts_read" @labelKey="admin.user.posts_read_count" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
+          <TableHeaderToggle @field="read_time" @labelKey="admin.user.time_read" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
+          <TableHeaderToggle @field="created" @labelKey="created" @order={{this.order}} @asc={{this.asc}} @automatic={{true}} />
+          <PluginOutlet @name="admin-users-list-thead-after" @args={{hash order=this.order asc=this.asc}} />
 
-        {{#if this.siteSettings.must_approve_users}}
-          <th>{{i18n "admin.users.approved"}}</th>
-        {{/if}}
-        <th>&nbsp;</th>
+          {{#if this.siteSettings.must_approve_users}}
+            <th>{{i18n "admin.users.approved"}}</th>
+          {{/if}}
+          <th>&nbsp;</th>
+        </tr>
       </thead>
       <tbody>
         {{#each this.model as |user|}}
