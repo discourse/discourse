@@ -1,17 +1,12 @@
 // Overrides for Windows High Contrast Mode
 
-// Mixins:
-@mixin whcm-highlight-text {
-  @media (forced-colors: active) {
-    color: Highlight;
-  }
-}
+/*
+  Some @media (forced-colors: active) {} styles
+  have also been used inside mixins in:
+  - common/components/buttons.scss
 
-@mixin whcm-button-text {
-  @media (forced-colors: active) {
-    color: ButtonText;
-  }
-}
+  See file above for overrides.
+*/
 
 // Select Kit
 .select-kit {
