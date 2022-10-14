@@ -2,9 +2,10 @@ import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
 import Site from "discourse/models/site";
+import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 
 acceptance("Welcome Topic Banner", function (needs) {
-  needs.user();
+  needs.user({ admin: true });
   needs.site({ show_welcome_topic_banner: true });
 
   test("Is shown on latest", async function (assert) {
@@ -64,11 +65,4 @@ acceptance("Welcome Topic Banner", function (needs) {
     );
   });
 
-  test("Does not show on /new page", async function (assert) {
-    await visit("/new");
-    assert.ok(
-      !exists(".welcome-cta"),
-      "does not have the welcome topic banner"
-    );
-  });
 });
