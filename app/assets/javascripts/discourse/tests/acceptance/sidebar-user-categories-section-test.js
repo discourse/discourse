@@ -25,7 +25,7 @@ acceptance(
       enable_sidebar: true,
     });
 
-    needs.user();
+    needs.user({ admin: false });
 
     test("uncategorized category is not shown", async function (assert) {
       const categories = Site.current().categories;
@@ -61,6 +61,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
   needs.user({
     sidebar_category_ids: [],
     sidebar_tags: [],
+    admin: false,
   });
 
   needs.settings({
@@ -542,6 +543,26 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     assert.ok(
       Object.keys(topicTrackingState.stateChangeCallbacks).length <
         initialCallbackCount
+    );
+  });
+
+  test("section link to admin site settings page when default sidebar categories have not been configured", async function (assert) {
+    setupUserSidebarCategories();
+    updateCurrentUser({ admin: true });
+
+    await visit("/");
+
+    assert.ok(
+      exists(".sidebar-section-link-configure-default-sidebar-categories"),
+      "section link to configure default sidebar categories is shown"
+    );
+
+    await click(".sidebar-section-link-configure-default-sidebar-categories");
+
+    assert.strictEqual(
+      currentURL(),
+      "/admin/site_settings/category/all_results?filter=default_sidebar_categories",
+      "it links to the admin site settings page correctly"
     );
   });
 });

@@ -49,11 +49,15 @@ export default class SidebarUserCategoriesSection extends SidebarCommonCategorie
    * If a site has default sidebar categories configured, always show categories section for the user.
    */
   get shouldDisplay() {
-    if (this.siteSettings.default_sidebar_categories.length > 0) {
+    if (this.hasDefaultSidebarCategories) {
       return true;
     } else {
       return this.categories.length > 0;
     }
+  }
+
+  get hasDefaultSidebarCategories() {
+    return this.siteSettings.default_sidebar_categories.length > 0;
   }
 
   @action

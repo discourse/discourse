@@ -31,5 +31,16 @@
     {{/if}}
 
     <Sidebar::Common::AllCategoriesSectionLink />
+
+    {{#if (and this.currentUser.admin (not this.hasDefaultSidebarCategories))}}
+      <Sidebar::SectionLink
+        @linkName="configure-default-sidebar-categories"
+        @content={{i18n "sidebar.sections.categories.configure_defaults"}}
+        @prefixType="icon"
+        @prefixValue="wrench"
+        @route="adminSiteSettingsCategory"
+        @model="sidebar"
+        @query={{hash filter="default_sidebar_categories"}} />
+    {{/if}}
   </Sidebar::Section>
 {{/if}}
