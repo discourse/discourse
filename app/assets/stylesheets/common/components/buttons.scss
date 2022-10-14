@@ -27,10 +27,7 @@
     color: $icon-color;
     margin-right: 0.45em;
     transition: color 0.25s;
-
-    @media (forced-colors: active) {
-      color: ButtonText;
-    }
+    @include whcm-button-text;
   }
   .d-button-label + .d-icon {
     margin-left: 0.45em;
@@ -46,10 +43,7 @@
     color: $hover-text-color;
     .d-icon {
       color: $hover-icon-color;
-
-      @media (forced-colors: active) {
-        color: Highlight;
-      }
+      @include whcm-highlight-text;
     }
   }
   &:focus {
@@ -58,10 +52,7 @@
     color: $hover-text-color;
     .d-icon {
       color: $hover-icon-color;
-
-      @media (forced-colors: active) {
-        color: Highlight;
-      }
+      @include whcm-highlight-text;
     }
   }
   &[href] {

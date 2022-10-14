@@ -1,0 +1,38 @@
+// Overrides for Windows High Contrast Mode
+
+// Mixins:
+@mixin whcm-highlight-text {
+  @media (forced-colors: active) {
+    color: Highlight;
+  }
+}
+
+@mixin whcm-button-text {
+  @media (forced-colors: active) {
+    color: ButtonText;
+  }
+}
+
+// Select Kit
+.select-kit {
+  .select-kit-row {
+    &:hover,
+    &:focus {
+      @media (forced-colors: active) {
+        outline: 2px auto transparent;
+      }
+    }
+  }
+}
+
+// Search
+.search-container .search-filters {
+  details.advanced-filters,
+  details.search-advanced-additional-options {
+    > summary {
+      &:focus-visible {
+        outline: 2px solid transparent;
+      }
+    }
+  }
+}

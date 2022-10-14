@@ -223,13 +223,6 @@
       background: var(--highlight-medium);
     }
 
-    &:focus,
-    &:hover {
-      @media (forced-colors: active) {
-        outline: 2px auto transparent;
-      }
-    }
-
     .discourse-tag,
     .discourse-tag:visited,
     .discourse-tag:hover {
