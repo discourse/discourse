@@ -92,6 +92,30 @@ RSpec.describe ListController do
       expect(parsed["topic_list"]["topics"].length).to eq(1)
     end
 
+    it 'filters out the welcome topic if un-edited' do
+      welcome_topic = create_topic
+      create_post(topic_id: welcome_topic.id)
+      SiteSetting.welcome_topic_id = welcome_topic.id
+
+      get "/latest.json"
+      expect(response.status).to eq(200)
+      parsed = response.parsed_body
+      expect(parsed["topic_list"]["topics"].length).to eq(1)
+    end
+
+    it 'does not filter out the welcome topic if edited' do
+      welcome_topic = create_topic
+      SiteSetting.welcome_topic_id = welcome_topic.id
+      welcome_post = create_post(raw: "hello", topic_id: welcome_topic.id)
+
+      welcome_post.revisions.create!(user_id: welcome_post.user_id, post_id: welcome_post.id, number: 2)
+
+      get "/latest.json"
+      expect(response.status).to eq(200)
+      parsed = response.parsed_body
+      expect(parsed["topic_list"]["topics"].length).to eq(2)
+    end
+
     it "shows correct title if topic list is set for homepage" do
       get "/latest"
 

@@ -439,7 +439,11 @@ class TopicQuery
     topics = topics.to_a
 
     # These don't need to be shown in the topic list
-    topics = topics.reject { |t| [SiteSetting.privacy_topic_id, SiteSetting.tos_topic_id].include?(t[:id]) }
+    if (topics.pluck(:id) & [SiteSetting.privacy_topic_id, SiteSetting.tos_topic_id, SiteSetting.welcome_topic_id]).any?
+      welcome_topic = Topic.find_by(id: SiteSetting.welcome_topic_id)
+      topics = topics.reject { |t| [SiteSetting.privacy_topic_id, SiteSetting.tos_topic_id].include?(t[:id]) ||
+        (t[:id] == welcome_topic&.id && welcome_topic&.first_post&.revisions&.count == 0) }
+    end
 
     if options[:preload_posters]
       user_ids = []
