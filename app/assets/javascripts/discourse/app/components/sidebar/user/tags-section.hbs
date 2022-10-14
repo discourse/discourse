@@ -27,5 +27,16 @@
     {{/if}}
 
     <Sidebar::Common::AllTagsSectionLink />
+
+    {{#if (and this.currentUser.admin (not this.hasDefaultSidebarTags))}}
+      <Sidebar::SectionLink
+        @linkName="configure-default-sidebar-tags"
+        @content={{i18n "sidebar.sections.tags.configure_defaults"}}
+        @prefixType="icon"
+        @prefixValue="wrench"
+        @route="adminSiteSettingsCategory"
+        @model="sidebar"
+        @query={{hash filter="default_sidebar_tags"}} />
+    {{/if}}
   </Sidebar::Section>
 {{/if}}

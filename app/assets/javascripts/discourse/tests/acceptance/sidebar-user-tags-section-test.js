@@ -59,6 +59,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       },
     ],
     display_sidebar_tags: true,
+    admin: false,
   });
 
   needs.pretender((server, helper) => {
@@ -421,6 +422,25 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     assert.ok(
       Object.keys(topicTrackingState.stateChangeCallbacks).length <
         initialCallbackCount
+    );
+  });
+
+  test("section link to admin site settings page when default sidebar tags have not been configured", async function (assert) {
+    updateCurrentUser({ admin: true });
+
+    await visit("/");
+
+    assert.ok(
+      exists(".sidebar-section-link-configure-default-sidebar-tags"),
+      "section link to configure default sidebar tags is shown"
+    );
+
+    await click(".sidebar-section-link-configure-default-sidebar-tags");
+
+    assert.strictEqual(
+      currentURL(),
+      "/admin/site_settings/category/all_results?filter=default_sidebar_tags",
+      "it links to the admin site settings page correctly"
     );
   });
 });
