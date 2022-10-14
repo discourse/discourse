@@ -19,7 +19,6 @@ class HashtagService
       end.take(limit).map do |category|
         HashtagItem.new.tap do |item|
           item.text = category[:name]
-          item.color = category[:color]
           item.slug = category[:slug]
           item.icon = "folder"
         end
@@ -49,7 +48,6 @@ class HashtagService
     attr_accessor :text
     attr_accessor :slug
     attr_accessor :icon
-    attr_accessor :color
   end
 
   def initialize(guardian)
