@@ -2,7 +2,6 @@ import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
 import Site from "discourse/models/site";
-import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 
 acceptance("Welcome Topic Banner", function (needs) {
   needs.user({ admin: true });
@@ -64,5 +63,4 @@ acceptance("Welcome Topic Banner", function (needs) {
       "does not have the welcome topic banner"
     );
   });
-
 });
