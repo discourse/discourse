@@ -282,6 +282,7 @@
     {{#if this.hasSettings}}
       <div class="control-unit">
         <div class="mini-title">{{i18n "admin.customize.theme.theme_settings"}}</div>
+        <p><i>{{i18n "admin.customize.theme.overriden_settings_explanation"}}</i></p>
         <DSection @class="form-horizontal theme settings control-unit">
           {{#each this.settings as |setting|}}
             <ThemeSettingEditor @setting={{setting}} @model={{this.model}} @class="theme-setting control-unit" />

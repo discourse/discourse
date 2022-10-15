@@ -4844,6 +4844,7 @@ en:
           has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
           add: "Add"
           theme_settings: "Theme Settings"
+          overriden_settings_explanation: "Overridden settings are marked with a dot and have a highlighted color. To reset these settings to the default value, press the reset button next to them."
           no_settings: "This theme has no settings."
           theme_translations: "Theme Translations"
           empty: "No items"
