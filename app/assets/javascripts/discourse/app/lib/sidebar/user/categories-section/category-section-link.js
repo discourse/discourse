@@ -80,8 +80,14 @@ export default class CategorySectionLink {
   }
 
   get route() {
-    return this.currentUser?.sidebarListDestination === "unread"
-      ? "discovery.newCategory"
-      : "discovery.category";
+    if (this.currentUser?.sidebarListDestination === "unread_new") {
+      if (this.totalUnread > 0) {
+        return "discovery.unreadCategory";
+      }
+      if (this.totalNew > 0) {
+        return "discovery.newCategory";
+      }
+    }
+    return "discovery.category";
   }
 }

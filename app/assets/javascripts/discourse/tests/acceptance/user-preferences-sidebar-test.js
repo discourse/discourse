@@ -47,7 +47,7 @@ acceptance("User Preferences - Sidebar", function (needs) {
               { name: "gazelle", pm_only: false },
             ],
             user_option: {
-              sidebar_list_destination: "unread",
+              sidebar_list_destination: "unread_new",
             },
           },
         });

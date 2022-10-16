@@ -63,9 +63,15 @@ export default class EverythingSectionLink extends BaseSectionLink {
   }
 
   get route() {
-    return this.currentUser?.sidebarListDestination === "unread"
-      ? "discovery.new"
-      : "discovery.latest";
+    if (this.currentUser?.sidebarListDestination === "unread_new") {
+      if (this.totalUnread > 0) {
+        return "discovery.unread";
+      }
+      if (this.totalNew > 0) {
+        return "discovery.new";
+      }
+    }
+    return "discovery.latest";
   }
 
   get prefixValue() {

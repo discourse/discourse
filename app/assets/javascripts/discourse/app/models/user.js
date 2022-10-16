@@ -1,7 +1,15 @@
 import EmberObject, { computed, get, getProperties } from "@ember/object";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
-import { alias, equal, filterBy, gt, mapBy, or } from "@ember/object/computed";
+import {
+  alias,
+  equal,
+  filterBy,
+  gt,
+  mapBy,
+  or,
+  readOnly,
+} from "@ember/object/computed";
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import { A } from "@ember/array";
 import Badge from "discourse/models/badge";
@@ -342,10 +350,7 @@ const User = RestModel.extend({
     );
   },
 
-  @discourseComputed("user_option.sidebar_list_destination")
-  sidebarListDestination(sidebarListDestination) {
-    return sidebarListDestination;
-  },
+  sidebarListDestination: readOnly("user_option.sidebar_list_destination"),
 
   changeUsername(new_username) {
     return ajax(userPath(`${this.username_lower}/preferences/username`), {
