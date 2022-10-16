@@ -10,7 +10,7 @@
     }
     .name {
       color: var(--primary-high);
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       margin-left: 0.5em;
       overflow: hidden;
       white-space: nowrap;

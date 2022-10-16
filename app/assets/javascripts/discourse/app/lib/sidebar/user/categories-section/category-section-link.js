@@ -37,7 +37,7 @@ export default class CategorySectionLink {
   }
 
   get currentWhen() {
-    return "discovery.unreadCategory discovery.topCategory discovery.newCategory discovery.latestCategory discovery.category";
+    return "discovery.unreadCategory discovery.topCategory discovery.newCategory discovery.latestCategory discovery.category discovery.categoryNone discovery.categoryAll";
   }
 
   get title() {
@@ -52,12 +52,8 @@ export default class CategorySectionLink {
     return "span";
   }
 
-  get prefixCSS() {
-    if (this.category.parentCategory) {
-      return `background: linear-gradient(90deg, #${this.category.parentCategory.color} 50%, #${this.category.color} 50%)`;
-    } else {
-      return `background: #${this.category.color}`;
-    }
+  get prefixElementColors() {
+    return [this.category.parentCategory?.color, this.category.color];
   }
 
   get prefixColor() {

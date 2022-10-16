@@ -74,4 +74,14 @@ acceptance("Sidebar - Mobile - User with sidebar enabled", function (needs) {
       "displays the desktop icon for the button"
     );
   });
+
+  test("keyboard shortcuts button is hidden", async function (assert) {
+    await visit("/");
+    await click(".hamburger-dropdown");
+
+    assert.notOk(
+      exists(".sidebar-footer-actions-keyboard-shortcuts"),
+      "keyboard shortcuts button is not shown on mobile"
+    );
+  });
 });

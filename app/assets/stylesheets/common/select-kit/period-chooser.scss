@@ -24,7 +24,7 @@
           }
 
           .top-date-string {
-            font-size: $font-down-1;
+            font-size: var(--font-down-1);
             color: var(--primary-med-or-secondary-high);
             font-weight: normal;
             text-transform: uppercase;
@@ -34,7 +34,7 @@
         .d-icon {
           color: var(--primary);
           opacity: 1;
-          font-size: $font-up-3;
+          font-size: var(--font-up-3);
         }
 
         &.is-focused,
@@ -49,7 +49,7 @@
       .period-chooser-row {
         font-weight: bold;
         padding: 5px;
-        font-size: $font-up-1;
+        font-size: var(--font-up-1);
         align-items: center;
         display: flex;
 
@@ -63,7 +63,7 @@
 
         .top-date-string {
           font-weight: normal;
-          font-size: $font-down-1;
+          font-size: var(--font-down-1);
           color: var(--primary-med-or-secondary-high);
           text-transform: uppercase;
           margin-left: 5px;

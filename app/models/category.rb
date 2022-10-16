@@ -70,6 +70,7 @@ class Category < ActiveRecord::Base
 
   after_create :create_category_definition
   after_destroy :trash_category_definition
+  after_destroy :clear_related_site_settings
 
   before_save :apply_permissions
   before_save :downcase_email
@@ -310,6 +311,12 @@ class Category < ActiveRecord::Base
 
   def trash_category_definition
     self.topic&.trash!
+  end
+
+  def clear_related_site_settings
+    if self.id == SiteSetting.general_category_id
+      SiteSetting.general_category_id = -1
+    end
   end
 
   def topic_url

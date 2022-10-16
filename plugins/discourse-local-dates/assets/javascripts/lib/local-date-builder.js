@@ -67,12 +67,12 @@ export default class LocalDateBuilder {
     }
 
     const previews = this._generatePreviews(localDate, displayedTimezone);
-
+    const hasTime = hour !== undefined;
     return {
       pastEvent:
         !this.recurring &&
         moment.tz(this.localTimezone).isAfter(localDate.datetime),
-      formatted: this._applyFormatting(localDate, displayedTimezone),
+      formatted: this._applyFormatting(localDate, displayedTimezone, hasTime),
       previews,
       textPreview: this._generateTextPreviews(previews),
     };
@@ -210,7 +210,7 @@ export default class LocalDateBuilder {
     return duration < 0 ? dates.reverse() : dates;
   }
 
-  _applyFormatting(localDate, displayedTimezone) {
+  _applyFormatting(localDate, displayedTimezone, hasTime) {
     if (this.countdown) {
       const diffTime = moment.tz(this.localTimezone).diff(localDate.datetime);
 
@@ -241,7 +241,7 @@ export default class LocalDateBuilder {
       if (inCalendarRange && sameTimezone) {
         const date = localDate.datetimeWithZone(this.localTimezone);
 
-        if (date.hours() === 0 && date.minutes() === 0) {
+        if (hasTime && date.hours() === 0 && date.minutes() === 0) {
           return date.format("dddd");
         }
 

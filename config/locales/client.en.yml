@@ -720,6 +720,8 @@ en:
         reset_to_default: "Reset to default"
       group:
         all: "all groups"
+      sort:
+        label: "Sort by %{criteria}"
 
     group_histories:
       actions:
@@ -1793,6 +1795,9 @@ en:
         title: "Flair"
         none: "(none)"
         instructions: "icon displayed next to your profile picture"
+      status:
+        title: "Custom Status"
+        not_set: "Not set"
       primary_group:
         title: "Primary Group"
         none: "(none)"
@@ -1811,6 +1816,18 @@ en:
       set_custom_status: "Set custom status"
       what_are_you_doing: "What are you doing?"
       remove_status: "Remove status"
+
+    popup:
+      primary: "Got it!"
+      secondary: "don't show me these tips"
+
+      first_notification:
+        title: "Your first notification!"
+        content: "Notifications are used to keep you up to date with what is happening in the community."
+
+      topic_timeline:
+        title: "Topic timeline"
+        content: "Scroll quickly through a post using the topic timeline."
 
     loading: "Loading..."
     errors:
@@ -3193,6 +3210,7 @@ en:
       gap:
         one: "view %{count} hidden reply"
         other: "view %{count} hidden replies"
+      sr_reply_to: "Reply to post #%{post_number} by @%{username}"
 
       notice:
         new_user: "This is the first time %{user} has posted — let’s welcome them to our community!"
@@ -4213,7 +4231,7 @@ en:
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
-      description: 'Your welcome topic is the first thing new arrivals will read. Think of it as your one paragraph "elevator pitch" or "mission statement"'
+      description: 'Your welcome topic is the first thing new members will read. Think of it as your “elevator pitch” or “mission statement.” Let everyone know who this community is for, what they can expect to find here, and what you’d like them to do first.'
       button_title: "Start Editing"
 
     until: "Until:"
@@ -4826,6 +4844,7 @@ en:
           has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
           add: "Add"
           theme_settings: "Theme Settings"
+          overriden_settings_explanation: "Overridden settings are marked with a dot and have a highlighted color. To reset these settings to the default value, press the reset button next to them."
           no_settings: "This theme has no settings."
           theme_translations: "Theme Translations"
           empty: "No items"

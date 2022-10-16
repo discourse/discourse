@@ -58,6 +58,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
         pm_only: false,
       },
     ],
+    display_sidebar_tags: true,
   });
 
   needs.pretender((server, helper) => {
@@ -90,6 +91,17 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     });
   });
 
+  test("section is not displayed when display_sidebar_tags property is false", async function (assert) {
+    updateCurrentUser({ display_sidebar_tags: false });
+
+    await visit("/");
+
+    assert.notOk(
+      exists(".sidebar-section-tags"),
+      "tags section is not displayed"
+    );
+  });
+
   test("clicking on section header button", async function (assert) {
     await visit("/");
     await click(".sidebar-section-tags .sidebar-section-header-button");
@@ -101,12 +113,29 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
   });
 
-  test("section content when user has not added any tags", async function (assert) {
+  test("tags section is hidden when user has not added any tags and there are no default tags configured", async function (assert) {
     updateCurrentUser({
       sidebar_tags: [],
     });
 
     await visit("/");
+
+    assert.notOk(
+      exists(".sidebar-section-tags"),
+      "tags section is not displayed"
+    );
+  });
+
+  test("tags section is shown when user has not added any tags but default tags have been configured", async function (assert) {
+    updateCurrentUser({
+      sidebar_tags: [],
+    });
+
+    this.siteSettings.default_sidebar_tags = "tag1|tag2";
+
+    await visit("/");
+
+    assert.ok(exists(".sidebar-section-tags"), "tags section is shown");
 
     assert.strictEqual(
       query(

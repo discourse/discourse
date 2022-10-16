@@ -23,18 +23,18 @@ $mobile-breakpoint: 700px;
     }
   }
   .d-icon.bookmark-pinned {
-    font-size: $font-down-2;
+    font-size: var(--font-down-2);
     margin-right: 0.2em;
   }
   .bookmark-metadata {
-    font-size: $font-down-2;
+    font-size: var(--font-down-2);
     margin-bottom: 0.25em;
 
     &-item {
       display: inline-block;
       margin-right: 1em;
       margin-bottom: 0.25em;
-      line-height: $line-height-medium;
+      line-height: var(--line-height-medium);
       span {
         word-break: break-word;
       }

@@ -8,6 +8,20 @@ RSpec.describe SiteSerializer do
     Site.clear_cache
   end
 
+  describe '#onboarding_popup_types' do
+    it 'is included if enable_onboarding_popups' do
+      SiteSetting.enable_onboarding_popups = true
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized[:onboarding_popup_types]).to eq(OnboardingPopup.types)
+    end
+
+    it 'is not included if enable_onboarding_popups is disabled' do
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized[:onboarding_popup_types]).to eq(nil)
+    end
+  end
+
   it "includes category custom fields only if its preloaded" do
     category.custom_fields["enable_marketplace"] = true
     category.save_custom_fields

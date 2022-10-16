@@ -1965,8 +1965,12 @@ class UsersController < ApplicationController
       end
     end
 
+    if SiteSetting.enable_user_status
+      permitted << { status: [:emoji, :description, :ends_at] }
+    end
+
     result = params
-      .permit(permitted, theme_ids: [])
+      .permit(permitted, theme_ids: [], seen_popups: [])
       .reverse_merge(
         ip_address: request.remote_ip,
         registration_ip_address: request.remote_ip

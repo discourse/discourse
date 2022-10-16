@@ -6,7 +6,8 @@
           @prefixType={{@prefixType}}
           @prefixValue={{@prefixValue}}
           @prefixCSSClass={{@prefixCSSClass}}
-          @prefixCSS={{this.prefixCSS}}
+          @prefixColor={{this.prefixColor}}
+          @prefixElementColors={{this.prefixElementColors}}
           @prefixBadge={{@prefixBadge}}
         />
 
@@ -28,12 +29,12 @@
           @prefixType={{@prefixType}}
           @prefixValue={{@prefixValue}}
           @prefixCSSClass={{@prefixCSSClass}}
-          @prefixCSS={{this.prefixCSS}}
           @prefixColor={{this.prefixColor}}
+          @prefixElementColors={{this.prefixElementColors}}
           @prefixBadge={{@prefixBadge}}
         />
 
-        <span class="sidebar-section-link-content-text">
+        <span class={{concat-class "sidebar-section-link-content-text" @contentCSSClass}}>
           {{@content}}
         </span>
 

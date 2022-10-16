@@ -12,7 +12,7 @@
     max-width: 90vw;
   }
   #revision-numbers {
-    line-height: $line-height-large;
+    line-height: var(--line-height-large);
   }
   img {
     max-width: 95%;

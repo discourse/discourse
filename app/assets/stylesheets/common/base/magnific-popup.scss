@@ -261,7 +261,7 @@ button {
 .mfp-close {
   width: 44px;
   height: 44px;
-  line-height: $line-height-large;
+  line-height: var(--line-height-large);
   position: absolute;
   right: 0;
   top: 0;
@@ -271,7 +271,7 @@ button {
   padding: 0 0 18px 10px;
   color: $controls-color;
   font-style: normal;
-  font-size: $font-up-5;
+  font-size: var(--font-up-5);
   font-family: Arial, Baskerville, monospace;
 
   &:hover,
@@ -306,8 +306,8 @@ button {
   top: 0;
   right: 0;
   color: $controls-text-color;
-  font-size: $font-down-1;
-  line-height: $line-height-medium;
+  font-size: var(--font-down-1);
+  line-height: var(--line-height-medium);
 }
 
 // Navigation arrows
@@ -458,8 +458,8 @@ button {
     small {
       color: $caption-subtitle-color;
       display: block;
-      font-size: $font-down-1;
-      line-height: $line-height-medium;
+      font-size: var(--font-down-1);
+      line-height: var(--line-height-medium);
     }
     figure {
       margin: 0;
@@ -475,7 +475,7 @@ button {
   }
   .mfp-title {
     text-align: left;
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
     color: $caption-title-color;
     word-wrap: break-word;
     padding-right: 36px; // leave some space for counter at right side
@@ -561,7 +561,7 @@ button {
           right: 0;
           width: 35px;
           height: 35px;
-          line-height: $line-height-large;
+          line-height: var(--line-height-large);
           background: rgba(0, 0, 0, 0.6);
           position: fixed;
           text-align: center;

@@ -387,4 +387,6 @@ RSpec.describe CurrentUserSerializer do
       expect(serializer.as_json[:associated_account_ids]).to eq({ "twitter" => "1" })
     end
   end
+
+  include_examples "#display_sidebar_tags", described_class
 end

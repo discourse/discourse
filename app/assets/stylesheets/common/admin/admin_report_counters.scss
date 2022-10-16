@@ -34,7 +34,7 @@
 
       .d-icon-minus {
         color: var(--primary-medium);
-        font-size: $font-down-3;
+        font-size: var(--font-down-3);
       }
 
       &.high-trending-up,

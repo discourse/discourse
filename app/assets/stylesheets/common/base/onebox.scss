@@ -19,7 +19,7 @@ a.loading-onebox {
 
   margin-top: 15px;
   padding: 12px;
-  font-size: $font-0;
+  font-size: var(--font-0);
   > .source {
     margin-bottom: 12px;
     margin-right: 10px;
@@ -34,7 +34,7 @@ a.loading-onebox {
         padding-right: 10px;
       }
       position: absolute;
-      font-size: $font-0;
+      font-size: var(--font-0);
       img.favicon {
         margin-right: 3px;
       }
@@ -61,7 +61,6 @@ a.loading-onebox {
       clear: both;
       padding-bottom: 25px;
       .metric {
-        display: inline-block;
         padding-left: 33px;
         float: left;
       }
@@ -96,7 +95,7 @@ aside.onebox {
   border: 5px solid var(--primary-low);
   margin: 1em 0;
   padding: 1em;
-  font-size: $font-0;
+  font-size: var(--font-0);
   background: var(--secondary);
 
   header {
@@ -129,7 +128,7 @@ aside.onebox {
 
     h3,
     h4 {
-      font-size: $font-up-1;
+      font-size: var(--font-up-1);
       margin: 0 0 10px 0;
     }
 
@@ -371,15 +370,15 @@ pre.onebox code ol.lines li:before {
   color: #afafaf;
   text-align: right;
   padding-right: 5px;
-  font-size: $font-down-1;
-  line-height: $line-height-large;
+  font-size: var(--font-down-1);
+  line-height: var(--line-height-large);
   content: counter(li-counter);
   counter-increment: li-counter;
 }
 
 pre.onebox code ol {
   margin-left: 0;
-  line-height: $line-height-large;
+  line-height: var(--line-height-large);
 }
 pre.onebox code {
   background-color: var(--primary-very-low);
@@ -453,7 +452,7 @@ pre.onebox code {
   }
 
   .branches {
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     code {
       word-break: break-all;
     }
@@ -577,7 +576,7 @@ pre.onebox code {
 
 .onebox-body .build_status {
   padding: 2px;
-  font-size: $font-down-1;
+  font-size: var(--font-down-1);
 }
 
 .onebox-body .status_tag.open {
@@ -647,7 +646,7 @@ aside.onebox.twitterstatus .onebox-body {
 
   .date {
     display: flex;
-    line-height: $line-height-small;
+    line-height: var(--line-height-small);
 
     .timestamp {
       color: var(--primary-medium);
@@ -674,7 +673,7 @@ aside.onebox.twitterstatus .onebox-body {
   .outer-box {
     position: absolute;
     z-index: z("base");
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     color: #fff;
     background-color: rgba(0, 0, 0, 0.6);
     @include ellipsis;
@@ -689,8 +688,8 @@ aside.onebox.twitterstatus .onebox-body {
 
       .album-title {
         width: 100%;
-        font-size: $font-up-1;
-        line-height: $line-height-large;
+        font-size: var(--font-up-1);
+        line-height: var(--line-height-large);
         color: #ccc;
         text-decoration: none;
       }
@@ -727,7 +726,6 @@ aside.onebox.xkcd .onebox-body img {
     float: left;
     background: absolute-image-url("/favicons/pdf_64px.png") no-repeat;
     background-size: 48px 48px;
-    display: inline-block;
   }
   .filesize {
     color: gray;

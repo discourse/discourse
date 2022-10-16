@@ -19,7 +19,7 @@
 
     .item {
       display: inline;
-      font-size: $font-up-1;
+      font-size: var(--font-up-1);
     }
 
     .all-reports .report-url {
@@ -67,11 +67,11 @@
     }
 
     .value {
-      font-size: $font-up-1;
+      font-size: var(--font-up-1);
     }
 
     .icon {
-      font-size: $font-up-1;
+      font-size: var(--font-up-1);
       font-weight: 700;
     }
   }
@@ -96,7 +96,7 @@
 
     .d-icon {
       color: currentColor;
-      font-size: $font-up-5;
+      font-size: var(--font-up-5);
       display: block;
       margin: 0.25em auto;
     }

@@ -122,6 +122,7 @@ RSpec.describe UserAction do
         log_test_action(action_type: UserAction::ASSIGNED)
         private_post.custom_fields ||= {}
         private_post.custom_fields["action_code_who"] = 'testing'
+        private_post.custom_fields["action_code_path"] = '/p/1234'
         private_post.custom_fields["random_field"] = 'random_value'
         private_post.save!
       end
@@ -133,6 +134,7 @@ RSpec.describe UserAction do
 
         expect(user_action_row.action_type).to eq(UserAction::ASSIGNED)
         expect(user_action_row.action_code_who).to eq('testing')
+        expect(user_action_row.action_code_path).to eq('/p/1234')
       end
     end
 
