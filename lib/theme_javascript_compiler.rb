@@ -25,6 +25,38 @@ class ThemeJavascriptCompiler
     JS
   end
 
+  def append_tree(tree, for_tests: false)
+    root_name = "discourse"
+
+    # Replace legacy extensions
+    tree.transform_keys! do |filename|
+      if filename.ends_with? ".js.es6"
+        filename.sub(/\.js\.es6\z/, ".js")
+      elsif filename.ends_with? ".raw.hbs"
+        filename.sub(/\.raw\.hbs\z/, ".hbr")
+      else
+        filename
+      end
+    end
+
+    # Transpile and write to output
+    tree.each_pair do |filename, content|
+      module_name, extension = filename.split(".", 2)
+      module_name = "test/#{module_name}" if for_tests
+      if extension == "js"
+        append_module(content, module_name)
+      elsif extension == "hbs"
+        append_ember_template(module_name, content)
+      elsif extension == "hbr"
+        append_raw_template(module_name.sub("discourse/templates/", ""), content)
+      else
+        append_js_error("unknown file extension '#{extension}' (#{filename})")
+      end
+    rescue CompileError => e
+      append_js_error "#{e.message} (#{filename})"
+    end
+  end
+
   def append_ember_template(name, hbs_template)
     name = "/#{name}" if !name.start_with?("/")
     module_name = "discourse/theme-#{@theme_id}#{name}"
@@ -93,7 +125,8 @@ class ThemeJavascriptCompiler
   end
 
   def append_js_error(message)
-    @content << "console.error('Theme Transpilation Error:', #{message.inspect});"
+    message = "[THEME #{@theme_id} '#{@theme_name}'] Compile error: #{message}"
+    append_raw_script "console.error(#{message.to_json});"
   end
 
   private

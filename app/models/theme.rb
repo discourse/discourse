@@ -118,12 +118,12 @@ class Theme < ActiveRecord::Base
     all_extra_js = theme_fields
       .where(target_id: Theme.targets[:extra_js])
       .order(:name, :id)
-      .pluck(:value_baked)
-      .join("\n")
+      .pluck(:name, :value)
+      .to_h
 
     if all_extra_js.present?
       js_compiler = ThemeJavascriptCompiler.new(id, name)
-      js_compiler.append_raw_script(all_extra_js)
+      js_compiler.append_tree(all_extra_js)
       settings_hash = build_settings_hash
       js_compiler.prepend_settings(settings_hash) if settings_hash.present?
       javascript_cache || build_javascript_cache
@@ -707,14 +707,17 @@ class Theme < ActiveRecord::Base
   end
 
   def baked_js_tests_with_digest
-    content = theme_fields
+    tests_tree = theme_fields
       .where(target_id: Theme.targets[:tests_js])
       .order(name: :asc)
-      .each(&:ensure_baked!)
-      .map(&:value_baked)
-      .join("\n")
+      .pluck(:name, :value)
+      .to_h
 
-    return [nil, nil] if content.blank?
+    return [nil, nil] if tests_tree.blank?
+
+    compiler = ThemeJavascriptCompiler.new(id, name)
+    compiler.append_tree(tests_tree, for_tests: true)
+    content = compiler.content
 
     content = <<~JS + content
       (function() {
