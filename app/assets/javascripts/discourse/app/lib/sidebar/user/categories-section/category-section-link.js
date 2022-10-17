@@ -4,6 +4,7 @@ import { tracked } from "@glimmer/tracking";
 
 import { bind } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
+import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sidebar";
 
 export default class CategorySectionLink {
   @tracked totalUnread = 0;
@@ -80,7 +81,7 @@ export default class CategorySectionLink {
   }
 
   get route() {
-    if (this.currentUser?.sidebarListDestination === "unread_new") {
+    if (this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION) {
       if (this.totalUnread > 0) {
         return "discovery.unreadCategory";
       }
