@@ -45,6 +45,6 @@ export default Component.extend({
 
   @discourseComputed("post.topic.title", "post.post_number")
   titleAriaLabel(title, postNumber) {
-    return `${title} - ${I18n.t("groups.aria_post_number", { postNumber })}`;
+    return I18n.t("groups.aria_post_number", { postNumber, title });
   },
 });
