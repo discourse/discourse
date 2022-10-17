@@ -42,13 +42,13 @@
   {{#if (or this.site.siteSettings.invite_only this.site.siteSettings.bootstrap_mode_enabled)}}
     <DButton @icon="user-plus" @action={{action "inviteUsers"}} @class="btn-primary" @title="bootstrap_invite_button_title" />
   {{/if}}
-  
-  {{#if this.site.siteSettings.wizard_required}}
-    <LinkTo @route="wizard.index" class="btn-primary">
+
+  {{!-- {{#if this.site.siteSettings.wizard_required}} --}}
+    <LinkTo @route="wizard.index" class="btn-primary bootstrap-wizard-link">
       {{d-icon "pencil-alt"}}
       {{i18n "bootstrap_wizard_link_title"}}
     </LinkTo>
-  {{/if}}
+  {{!-- {{/if}} --}}
 
   <CreateTopicButton @canCreateTopic={{this.canCreateTopic}} @action={{action "clickCreateTopicButton"}} @disabled={{this.createTopicButtonDisabled}} @label={{this.createTopicLabel}} @btnClass={{this.createTopicClass}} @canCreateTopicOnTag={{this.canCreateTopicOnTag}} />
 
