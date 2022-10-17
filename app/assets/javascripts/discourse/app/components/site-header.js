@@ -251,39 +251,41 @@ const SiteHeaderComponent = MountWidget.extend(
         this.currentUser.on("status-changed", this, "queueRerender");
       }
 
-      if (
-        this.currentUser &&
-        !this.get("currentUser.read_first_notification")
-      ) {
-        document.body.classList.add("unread-first-notification");
-      }
+      if (!this.siteSettings.enable_onboarding_popups) {
+        if (
+          this.currentUser &&
+          !this.get("currentUser.read_first_notification")
+        ) {
+          document.body.classList.add("unread-first-notification");
+        }
 
-      // Allow first notification to be dismissed on a click anywhere
-      if (
-        this.currentUser &&
-        !this.get("currentUser.read_first_notification") &&
-        !this.get("currentUser.enforcedSecondFactor")
-      ) {
-        this._dismissFirstNotification = (e) => {
-          if (document.body.classList.contains("unread-first-notification")) {
-            document.body.classList.remove("unread-first-notification");
-          }
-          if (
-            !e.target.closest("#current-user") &&
-            !e.target.closest(".ring-backdrop") &&
-            this.currentUser &&
-            !this.get("currentUser.read_first_notification") &&
-            !this.get("currentUser.enforcedSecondFactor")
-          ) {
-            this.eventDispatched(
-              "header:dismiss-first-notification-mask",
-              "header"
-            );
-          }
-        };
-        document.addEventListener("click", this._dismissFirstNotification, {
-          once: true,
-        });
+        // Allow first notification to be dismissed on a click anywhere
+        if (
+          this.currentUser &&
+          !this.get("currentUser.read_first_notification") &&
+          !this.get("currentUser.enforcedSecondFactor")
+        ) {
+          this._dismissFirstNotification = (e) => {
+            if (document.body.classList.contains("unread-first-notification")) {
+              document.body.classList.remove("unread-first-notification");
+            }
+            if (
+              !e.target.closest("#current-user") &&
+              !e.target.closest(".ring-backdrop") &&
+              this.currentUser &&
+              !this.get("currentUser.read_first_notification") &&
+              !this.get("currentUser.enforcedSecondFactor")
+            ) {
+              this.eventDispatched(
+                "header:dismiss-first-notification-mask",
+                "header"
+              );
+            }
+          };
+          document.addEventListener("click", this._dismissFirstNotification, {
+            once: true,
+          });
+        }
       }
 
       const header = document.querySelector("header.d-header");

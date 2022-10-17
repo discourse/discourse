@@ -18,7 +18,7 @@ div.poll {
       display: inline;
     }
     .info-number {
-      font-size: $font-up-6;
+      font-size: var(--font-up-6);
     }
     p {
       margin: 0;

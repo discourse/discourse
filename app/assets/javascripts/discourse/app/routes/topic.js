@@ -23,6 +23,7 @@ const TopicRoute = DiscourseRoute.extend({
       isTransitioning: false,
       scheduledReplace: null,
       lastScrollPos: null,
+      controllerReady: true,
     });
   },
 

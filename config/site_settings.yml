@@ -379,6 +379,9 @@ basic:
   enable_user_status:
     client: true
     default: false
+  enable_onboarding_popups:
+    client: true
+    default: false
 
 login:
   invite_only:
@@ -426,6 +429,11 @@ login:
   google_oauth2_hd_groups:
     default: false
     validator: GoogleOauth2HdGroupsValidator
+  google_oauth2_hd_groups_service_account_admin_email:
+    default: ""
+  google_oauth2_hd_groups_service_account_json:
+    default: ""
+    textarea: true
   enable_twitter_logins:
     default: false
   twitter_consumer_key:
@@ -2025,6 +2033,18 @@ developer:
     default: false
     client: true
     hidden: true
+  enable_new_user_profile_nav_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+  include_associated_account_ids:
+    default: false
+    hidden: true
+
+sidebar:
   enable_sidebar:
     default: true
     client: true
@@ -2036,16 +2056,6 @@ developer:
     type: tag_list
     default: ""
     client: true
-  enable_new_user_profile_nav_groups:
-    client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
-  include_associated_account_ids:
-    default: false
-    hidden: true
 
 embedding:
   embed_by_username:

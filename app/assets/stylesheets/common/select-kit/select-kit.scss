@@ -158,7 +158,7 @@
       align-items: center;
       white-space: nowrap;
       overflow: hidden;
-      line-height: $line-height-medium;
+      line-height: var(--line-height-medium);
 
       .d-icon {
         margin-left: 5px;

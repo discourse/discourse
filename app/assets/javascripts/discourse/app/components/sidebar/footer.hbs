@@ -9,11 +9,13 @@
           @class="sidebar-footer-actions-button sidebar-footer-actions-toggle-mobile-view" />
       {{/if}}
 
-      <DButton
-        @action={{route-action "showKeyboardShortcutsHelp"}}
-        @title="keyboard_shortcuts_help.title"
-        @icon="keyboard"
-        @class="sidebar-footer-actions-button sidebar-footer-actions-keyboard-shortcuts" />
+      {{#if this.site.desktopView}}
+        <DButton
+          @action={{route-action "showKeyboardShortcutsHelp"}}
+          @title="keyboard_shortcuts_help.title"
+          @icon="keyboard"
+          @class="sidebar-footer-actions-button sidebar-footer-actions-keyboard-shortcuts" />
+      {{/if}}
     </div>
   </div>
 </div>

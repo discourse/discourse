@@ -225,7 +225,7 @@ class Stylesheet::Manager::Builder
       sha1s << upload_field.upload&.sha1
     end
 
-    Digest::SHA1.hexdigest(sha1s.sort!.join("\n"))
+    Digest::SHA1.hexdigest(sha1s.compact.sort!.join("\n"))
   end
 
   def default_digest

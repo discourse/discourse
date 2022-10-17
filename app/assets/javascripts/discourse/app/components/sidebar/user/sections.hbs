@@ -2,7 +2,7 @@
   <Sidebar::User::CommunitySection @collapsable={{@collapsableSections}}/>
   <Sidebar::User::CategoriesSection @collapsable={{@collapsableSections}}/>
 
-  {{#if this.siteSettings.tagging_enabled}}
+  {{#if this.currentUser.display_sidebar_tags}}
     <Sidebar::User::TagsSection @collapsable={{@collapsableSections}}/>
   {{/if}}
 

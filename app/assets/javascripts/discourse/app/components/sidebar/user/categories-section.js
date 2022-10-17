@@ -42,6 +42,24 @@ export default class SidebarUserCategoriesSection extends SidebarCommonCategorie
     )}</a>`;
   }
 
+  /**
+   * If a site has no default sidebar categories configured, show categories section if the user has categories configured.
+   * Otherwise, hide the categories section from the sidebar for the user.
+   *
+   * If a site has default sidebar categories configured, always show categories section for the user.
+   */
+  get shouldDisplay() {
+    if (this.hasDefaultSidebarCategories) {
+      return true;
+    } else {
+      return this.categories.length > 0;
+    }
+  }
+
+  get hasDefaultSidebarCategories() {
+    return this.siteSettings.default_sidebar_categories.length > 0;
+  }
+
   @action
   editTracked() {
     this.router.transitionTo("preferences.sidebar", this.currentUser);

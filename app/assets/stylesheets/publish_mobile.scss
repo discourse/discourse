@@ -5,7 +5,7 @@
     width: auto;
 
     .published-page-title {
-      font-size: $font-up-3;
+      font-size: var(--font-up-3);
       width: 100%;
       overflow: hidden;
       white-space: nowrap;

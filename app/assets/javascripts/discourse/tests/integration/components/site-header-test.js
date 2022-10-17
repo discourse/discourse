@@ -162,8 +162,6 @@ module("Integration | Component | site-header", function (hooks) {
     await triggerKeyEvent(document, "keydown", "ArrowDown");
     await triggerKeyEvent(document, "keydown", "ArrowDown");
     await triggerKeyEvent(document, "keydown", "ArrowDown");
-    await triggerKeyEvent(document, "keydown", "ArrowDown");
-    await triggerKeyEvent(document, "keydown", "ArrowDown");
 
     focusedTab = document.activeElement;
     assert.strictEqual(

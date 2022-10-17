@@ -1,8 +1,10 @@
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import Theme from "admin/models/theme";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
 
-discourseModule("Unit | Controller | admin-customize-themes-show", function () {
+module("Unit | Controller | admin-customize-themes-show", function (hooks) {
+  setupTest(hooks);
+
   test("can display source url for remote themes", function (assert) {
     const repoUrl = "https://github.com/discourse/discourse-brand-header.git";
     const remoteTheme = Theme.create({
@@ -13,12 +15,14 @@ discourseModule("Unit | Controller | admin-customize-themes-show", function () {
         remote_url: repoUrl,
       },
     });
-    const controller = this.getController("admin-customize-themes-show", {
-      model: remoteTheme,
-    });
+
+    const controller = this.owner.lookup(
+      "controller:admin-customize-themes-show"
+    );
+    controller.setProperties({ model: remoteTheme });
 
     assert.deepEqual(
-      controller.get("remoteThemeLink"),
+      controller.remoteThemeLink,
       repoUrl,
       "returns theme's repo URL"
     );
@@ -34,12 +38,14 @@ discourseModule("Unit | Controller | admin-customize-themes-show", function () {
         branch: "beta",
       },
     });
-    const controller = this.getController("admin-customize-themes-show", {
-      model: remoteTheme,
-    });
+
+    const controller = this.owner.lookup(
+      "controller:admin-customize-themes-show"
+    );
+    controller.setProperties({ model: remoteTheme });
 
     assert.deepEqual(
-      controller.get("remoteThemeLink"),
+      controller.remoteThemeLink,
       "https://github.com/discourse/discourse-brand-header/tree/beta",
       "returns theme's repo URL to branch"
     );

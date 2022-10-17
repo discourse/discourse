@@ -340,7 +340,13 @@ class Upload < ActiveRecord::Base
         if local?
           Discourse.store.path_for(self)
         else
-          Discourse.store.download(self)&.path
+          begin
+            Discourse.store.download(self)&.path
+          rescue OpenURI::HTTPError => e
+            # Some issue with downloading the image from a remote store.
+            # Assume the upload is broken and save an empty string to prevent re-evaluation
+            nil
+          end
         end
 
       if local_path.nil?
@@ -373,10 +379,6 @@ class Upload < ActiveRecord::Base
         raise "Calculated dominant color but unable to parse output:\n#{data}" if color.nil?
 
         color
-      rescue OpenURI::HTTPError => e
-        # Some issue with downloading the image from a remote store.
-        # Assume the upload is broken and save an empty string to prevent re-evaluation
-        ""
       rescue Discourse::Utils::CommandError => e
         # Timeout or unable to parse image
         # This can happen due to bad user input - ignore and save

@@ -10,7 +10,7 @@ class Emoji
 
   include ActiveModel::SerializerSupport
 
-  attr_accessor :name, :url, :tonable, :group
+  attr_accessor :name, :url, :tonable, :group, :search_aliases
 
   def self.global_emoji_cache
     @global_emoji_cache ||= DistributedCache.new("global_emoji_cache", namespace: false)
@@ -95,6 +95,7 @@ class Emoji
       e.tonable = Emoji.tonable_emojis.include?(name)
       e.url = Emoji.url_for(filename)
       e.group = groups[name] || DEFAULT_GROUP
+      e.search_aliases = search_aliases[name] || []
     end
   end
 

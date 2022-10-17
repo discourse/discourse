@@ -44,7 +44,7 @@
         a {
           white-space: nowrap;
           color: var(--primary);
-          line-height: $line-height-medium;
+          line-height: var(--line-height-medium);
           font-weight: bold;
           display: block;
           padding: 0.75em;

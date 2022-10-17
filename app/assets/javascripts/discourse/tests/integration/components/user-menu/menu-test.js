@@ -38,23 +38,17 @@ module("Integration | Component | user-menu", function (hooks) {
   test("the menu has a group of tabs at the top", async function (assert) {
     await render(template);
     const tabs = queryAll(".top-tabs.tabs-list .btn");
-    assert.strictEqual(tabs.length, 8);
-    [
-      "all-notifications",
-      "replies",
-      "mentions",
-      "likes",
-      "watching",
-      "messages",
-      "bookmarks",
-    ].forEach((tab, index) => {
-      assert.strictEqual(tabs[index].id, `user-menu-button-${tab}`);
-      assert.strictEqual(tabs[index].dataset.tabNumber, index.toString());
-      assert.strictEqual(
-        tabs[index].getAttribute("aria-controls"),
-        `quick-access-${tab}`
-      );
-    });
+    assert.strictEqual(tabs.length, 6);
+    ["all-notifications", "replies", "likes", "messages", "bookmarks"].forEach(
+      (tab, index) => {
+        assert.strictEqual(tabs[index].id, `user-menu-button-${tab}`);
+        assert.strictEqual(tabs[index].dataset.tabNumber, index.toString());
+        assert.strictEqual(
+          tabs[index].getAttribute("aria-controls"),
+          `quick-access-${tab}`
+        );
+      }
+    );
   });
 
   test("the menu has a group of tabs at the bottom", async function (assert) {
@@ -63,7 +57,7 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.strictEqual(tabs.length, 1);
     const profileTab = tabs[0];
     assert.strictEqual(profileTab.id, "user-menu-button-profile");
-    assert.strictEqual(profileTab.dataset.tabNumber, "8");
+    assert.strictEqual(profileTab.dataset.tabNumber, "6");
     assert.strictEqual(profileTab.getAttribute("tabindex"), "-1");
   });
 
@@ -73,11 +67,11 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.ok(!exists("#user-menu-button-likes"));
 
     const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
-    assert.strictEqual(tabs.length, 8);
+    assert.strictEqual(tabs.length, 6);
 
     assert.deepEqual(
       tabs.map((t) => t.dataset.tabNumber),
-      ["0", "1", "2", "3", "4", "5", "6", "7"],
+      ["0", "1", "2", "3", "4", "5"],
       "data-tab-number of the tabs has no gaps when the likes tab is hidden"
     );
   });
@@ -87,14 +81,14 @@ module("Integration | Component | user-menu", function (hooks) {
     this.currentUser.set("reviewable_count", 1);
     await render(template);
     const tab = query("#user-menu-button-review-queue");
-    assert.strictEqual(tab.dataset.tabNumber, "7");
+    assert.strictEqual(tab.dataset.tabNumber, "5");
 
     const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
-    assert.strictEqual(tabs.length, 10);
+    assert.strictEqual(tabs.length, 8);
 
     assert.deepEqual(
       tabs.map((t) => t.dataset.tabNumber),
-      ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+      ["0", "1", "2", "3", "4", "5", "6", "7"],
       "data-tab-number of the tabs has no gaps when the reviewables tab is show"
     );
   });
@@ -117,11 +111,11 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.ok(!exists("#user-menu-button-messages"));
 
     const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
-    assert.strictEqual(tabs.length, 8);
+    assert.strictEqual(tabs.length, 6);
 
     assert.deepEqual(
       tabs.map((t) => t.dataset.tabNumber),
-      ["0", "1", "2", "3", "4", "5", "6", "7"],
+      ["0", "1", "2", "3", "4", "5"],
       "data-tab-number of the tabs has no gaps when the messages tab is hidden"
     );
   });
@@ -160,32 +154,7 @@ module("Integration | Component | user-menu", function (hooks) {
     pretender.get("/notifications", (request) => {
       queryParams = request.queryParams;
       let data;
-      if (queryParams.filter_by_types === "mentioned") {
-        data = [
-          {
-            id: 6,
-            user_id: 1,
-            notification_type: NOTIFICATION_TYPES.mentioned,
-            read: true,
-            high_priority: false,
-            created_at: "2021-11-25T19:31:13.241Z",
-            post_number: 6,
-            topic_id: 10,
-            fancy_title: "Greetings!",
-            slug: "greetings",
-            data: {
-              topic_title: "Greetings!",
-              original_post_id: 20,
-              original_post_type: 1,
-              original_username: "discobot",
-              revision_number: null,
-              display_username: "discobot",
-            },
-          },
-        ];
-      } else if (
-        queryParams.filter_by_types === "liked,liked_consolidated,reaction"
-      ) {
+      if (queryParams.filter_by_types === "liked,liked_consolidated,reaction") {
         data = [
           {
             id: 60,
@@ -248,8 +217,32 @@ module("Integration | Component | user-menu", function (hooks) {
             },
           },
         ];
-      } else if (queryParams.filter_by_types === "replied,quoted") {
-        data = [];
+      } else if (
+        queryParams.filter_by_types ===
+        "mentioned,posted,quoted,replied,watching_first_post"
+      ) {
+        data = [
+          {
+            id: 6,
+            user_id: 1,
+            notification_type: NOTIFICATION_TYPES.mentioned,
+            read: true,
+            high_priority: false,
+            created_at: "2021-11-25T19:31:13.241Z",
+            post_number: 6,
+            topic_id: 10,
+            fancy_title: "Greetings!",
+            slug: "greetings",
+            data: {
+              topic_title: "Greetings!",
+              original_post_id: 20,
+              original_post_type: 1,
+              original_username: "discobot",
+              revision_number: null,
+              display_username: "discobot",
+            },
+          },
+        ];
       } else {
         throw new Error(
           `unexpected notification type ${queryParams.filter_by_types}`
@@ -263,23 +256,6 @@ module("Integration | Component | user-menu", function (hooks) {
       ];
     });
 
-    await click("#user-menu-button-mentions");
-    assert.ok(exists("#quick-access-mentions.quick-access-panel"));
-    assert.strictEqual(
-      queryParams.filter_by_types,
-      "mentioned",
-      "request params has filter_by_types set to `mentioned`"
-    );
-    assert.strictEqual(queryParams.silent, "true");
-    let activeTabs = queryAll(".top-tabs .btn.active");
-    assert.strictEqual(activeTabs.length, 1);
-    assert.strictEqual(
-      activeTabs[0].id,
-      "user-menu-button-mentions",
-      "active tab is now the mentions tab"
-    );
-    assert.strictEqual(queryAll("#quick-access-mentions ul li").length, 1);
-
     await click("#user-menu-button-likes");
     assert.ok(exists("#quick-access-likes.quick-access-panel"));
     assert.strictEqual(
@@ -288,7 +264,7 @@ module("Integration | Component | user-menu", function (hooks) {
       "request params has filter_by_types set to `liked`, `liked_consolidated` and `reaction`"
     );
     assert.strictEqual(queryParams.silent, "true");
-    activeTabs = queryAll(".top-tabs .btn.active");
+    let activeTabs = queryAll(".top-tabs .btn.active");
     assert.strictEqual(activeTabs.length, 1);
     assert.strictEqual(
       activeTabs[0].id,
@@ -301,8 +277,8 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.ok(exists("#quick-access-replies.quick-access-panel"));
     assert.strictEqual(
       queryParams.filter_by_types,
-      "replied,quoted",
-      "request params has filter_by_types set to `replied` and `quoted`"
+      "mentioned,posted,quoted,replied,watching_first_post",
+      "request params has filter_by_types set to `mentioned`, `posted`, `quoted`, `replied` and `watching_first_post`"
     );
     assert.strictEqual(queryParams.silent, "true");
     activeTabs = queryAll(".top-tabs .btn.active");

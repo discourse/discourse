@@ -124,7 +124,7 @@
       margin-right: 0.25em;
     }
     .deleted-user {
-      font-size: $font-up-2;
+      font-size: var(--font-up-2);
     }
   }
   .created_at {
@@ -297,7 +297,7 @@ table.screened-ip-addresses {
 
   .tag {
     background: var(--primary-low);
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     margin-right: 0.1em;
     padding: 0.5em;
   }

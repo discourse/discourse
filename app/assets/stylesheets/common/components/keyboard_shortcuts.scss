@@ -74,7 +74,7 @@
     }
 
     kbd {
-      font-family: $base-font-family;
+      font-family: var(--font-family);
       font-weight: bold;
     }
   }

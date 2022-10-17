@@ -2,10 +2,10 @@
   &.combo-box {
     &.tag-drop {
       .tag-drop-header {
-        font-size: $font-0;
+        font-size: var(--font-0);
 
         .d-icon {
-          font-size: $font-0;
+          font-size: var(--font-0);
         }
       }
 

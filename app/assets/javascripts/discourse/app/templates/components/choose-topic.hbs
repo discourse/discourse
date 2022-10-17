@@ -13,7 +13,7 @@
   {{#if this.noResults}}
     <p>{{i18n "choose_topic.none_found"}}</p>
   {{else}}
-    <div class="choose-topic-list">
+    <div class="choose-topic-list" role="radiogroup">
       {{#each this.topics as |t|}}
         <div class="controls existing-topic">
           <label class="radio">

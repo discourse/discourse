@@ -14,6 +14,8 @@ export default Controller.extend(ModalFunctionality, {
     ).then((posts) => {
       if (posts.length > 0) {
         this.set("latest_post", posts[0]);
+        // slightly hacky, but default d-modal focus gets reset
+        document.querySelector(".d-modal .modal-close")?.focus();
       }
     });
   },

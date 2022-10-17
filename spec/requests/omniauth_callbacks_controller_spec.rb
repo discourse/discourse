@@ -786,9 +786,7 @@ RSpec.describe Users::OmniauthCallbacksController do
       end
 
       context "when groups are enabled" do
-        let(:strategy_class) { Auth::OmniAuthStrategies::DiscourseGoogleOauth2 }
-        let(:groups_url) { "#{strategy_class::GROUPS_DOMAIN}#{strategy_class::GROUPS_PATH}" }
-        let(:groups_scope) { strategy_class::DEFAULT_SCOPE + strategy_class::GROUPS_SCOPE }
+        let(:private_key) { OpenSSL::PKey::RSA.generate(2048) }
         let(:group1) { { id: "12345", name: "group1" } }
         let(:group2) { { id: "67890", name: "group2" } }
         let(:uid) { "12345" }
@@ -796,22 +794,50 @@ RSpec.describe Users::OmniauthCallbacksController do
         let(:domain) { "mydomain.com" }
 
         def mock_omniauth_for_groups(groups)
-          raw_groups = groups.map { |group| OmniAuth::AuthHash.new(group) }
           mock_auth = OmniAuth.config.mock_auth[:google_oauth2]
-          mock_auth[:extra][:raw_groups] = raw_groups
           OmniAuth.config.mock_auth[:google_oauth2] = mock_auth
           Rails.application.env_config["omniauth.auth"] = mock_auth
+
+          SiteSetting.google_oauth2_hd_groups_service_account_admin_email = "admin@example.com"
+          SiteSetting.google_oauth2_hd_groups_service_account_json = {
+            "private_key" => private_key.to_s,
+            "client_email": "discourse-group-sync@example.iam.gserviceaccount.com",
+          }.to_json
+          SiteSetting.google_oauth2_hd_groups = true
+
+          stub_request(:post, "https://oauth2.googleapis.com/token").to_return do |request|
+            jwt = Rack::Utils.parse_query(request.body)["assertion"]
+            decoded_token = JWT.decode(jwt, private_key.public_key, true, { algorithm: 'RS256' })
+            {
+              status: 200,
+              body: { "access_token" => token, "type" => "bearer" }.to_json,
+              headers: { "Content-Type" => "application/json" }
+            }
+          end
+
+          stub_request(:get, "https://admin.googleapis.com/admin/directory/v1/groups?userKey=#{mock_auth.uid}").
+            with(headers: { "Authorization" => "Bearer #{token}" }).
+            to_return do
+              {
+                status: 200,
+                body: { groups: groups }.to_json,
+                headers: {
+                  "Content-Type" => "application/json"
+                }
+              }
+            end
         end
 
         before do
           SiteSetting.google_oauth2_hd = domain
+          SiteSetting.google_oauth2_hd_groups_service_account_admin_email = "test@example.com"
+          SiteSetting.google_oauth2_hd_groups_service_account_json = "{}"
           SiteSetting.google_oauth2_hd_groups = true
         end
 
         it "updates associated groups" do
           mock_omniauth_for_groups([group1, group2])
           get "/auth/google_oauth2/callback.json", params: {
-            scope: groups_scope.split(' '),
             code: 'abcde',
             hd: domain
           }
@@ -829,7 +855,6 @@ RSpec.describe Users::OmniauthCallbacksController do
 
           mock_omniauth_for_groups([group1])
           get "/auth/google_oauth2/callback.json", params: {
-            scope: groups_scope.split(' '),
             code: 'abcde',
             hd: domain
           }
@@ -842,7 +867,6 @@ RSpec.describe Users::OmniauthCallbacksController do
 
           mock_omniauth_for_groups([])
           get "/auth/google_oauth2/callback.json", params: {
-            scope: groups_scope.split(' '),
             code: 'abcde',
             hd: domain
           }
@@ -858,7 +882,6 @@ RSpec.describe Users::OmniauthCallbacksController do
           mock_omniauth_for_groups([])
 
           get "/auth/google_oauth2/callback.json", params: {
-            scope: groups_scope.split(' '),
             code: 'abcde',
             hd: domain
           }

@@ -69,7 +69,7 @@ sup img.emoji {
 
       .trash-recent {
         background: none;
-        font-size: $font-down-1;
+        font-size: var(--font-down-1);
 
         &:hover .d-icon {
           color: var(--danger-hover);

@@ -525,6 +525,20 @@ RSpec.describe UserUpdater do
       end
     end
 
+    context 'when skip_new_user_tips is edited' do
+      it 'updates all fields' do
+        UserUpdater.new(Discourse.system_user, user).update(skip_new_user_tips: true)
+
+        expect(user.user_option.skip_new_user_tips).to eq(true)
+        expect(user.user_option.seen_popups).to eq(OnboardingPopup.types.values)
+
+        UserUpdater.new(Discourse.system_user, user).update(skip_new_user_tips: false)
+
+        expect(user.user_option.skip_new_user_tips).to eq(false)
+        expect(user.user_option.seen_popups).to eq(nil)
+      end
+    end
+
     it "logs the action" do
       user = Fabricate(:user, name: 'Billy Bob')
 

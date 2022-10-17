@@ -1771,13 +1771,13 @@ HTML
 
   it "supports img bbcode" do
     cooked = PrettyText.cook "[img]http://www.image/test.png[/img]"
-    html = "<p><img src=\"http://www.image/test.png\" alt=\"\"></p>"
+    html = "<p><img src=\"http://www.image/test.png\" alt=\"\" role=\"presentation\"></p>"
     expect(cooked).to eq(html)
   end
 
   it "provides safety for img bbcode" do
     cooked = PrettyText.cook "[img]http://aaa.com<script>alert(1);</script>[/img]"
-    html = '<p><img src="http://aaa.com&lt;script&gt;alert(1);&lt;/script&gt;" alt=""></p>'
+    html = '<p><img src="http://aaa.com&lt;script&gt;alert(1);&lt;/script&gt;" alt="" role="presentation"></p>'
     expect(cooked).to eq(html)
   end
 
@@ -1862,10 +1862,10 @@ HTML
 
       html = <<~HTML
         <p><img src="http://png.com/my.png" alt="title with | title" width="220" height="100"><br>
-        <img src="http://png.com/my.png" alt=""><br>
-        <img src="http://png.com/my.png" alt="" width="220" height="100"><br>
+        <img src="http://png.com/my.png" alt="" role="presentation"><br>
+        <img src="http://png.com/my.png" alt="" width="220" height="100" role="presentation"><br>
         <img src="http://png.com/my.png" alt="stuff"><br>
-        <img src="http://png.com/my.png" alt="" title="some title" width="110" height="50"></p>
+        <img src="http://png.com/my.png" alt="" title="some title" width="110" height="50" role="presentation"></p>
       HTML
 
       expect(cooked).to eq(html.strip)
@@ -1881,11 +1881,11 @@ HTML
       MD
 
       html = <<~HTML
-        <p><img src="http://png.com/my.png" alt="" width="110" height="50"><br>
-        <img src="http://png.com/my.png" alt="" width="110" height="50"><br>
-        <img src="http://png.com/my.png" alt="" width="110" height="50"><br>
-        <img src="http://png.com/my.png" alt="" width="150" height="68"><br>
-        <img src="http://png.com/my.png" alt="" width="110" height="50"></p>
+        <p><img src="http://png.com/my.png" alt="" width="110" height="50" role="presentation"><br>
+        <img src="http://png.com/my.png" alt="" width="110" height="50" role="presentation"><br>
+        <img src="http://png.com/my.png" alt="" width="110" height="50" role="presentation"><br>
+        <img src="http://png.com/my.png" alt="" width="150" height="68" role="presentation"><br>
+        <img src="http://png.com/my.png" alt="" width="110" height="50" role="presentation"></p>
       HTML
 
       expect(cooked).to eq(html.strip)

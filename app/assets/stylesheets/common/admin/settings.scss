@@ -81,7 +81,7 @@
         padding: 3px 5px 3px 18px;
         margin: 3px 0 3px 5px;
         position: relative;
-        line-height: $line-height-small;
+        line-height: var(--line-height-small);
         cursor: default;
         border: 1px dashed var(--primary-low-mid);
         border-radius: 3px;
@@ -94,8 +94,8 @@
     .desc,
     .validation-error {
       padding-top: 3px;
-      font-size: $font-down-1;
-      line-height: $line-height-large;
+      font-size: var(--font-down-1);
+      line-height: var(--line-height-large);
     }
     .validation-error {
       color: var(--danger);
@@ -104,13 +104,26 @@
       color: var(--primary-medium);
     }
     h3 {
-      font-size: $font-0;
+      font-size: var(--font-0);
       font-weight: normal;
     }
   }
   .setting.overridden {
+    input {
+      background-color: var(--highlight-medium);
+    }
     h3 {
-      color: var(--highlight-high);
+      position: relative;
+      &:before {
+        content: "";
+        position: absolute;
+        top: 0.5rem;
+        left: -1rem;
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 100%;
+        background-color: var(--highlight-high);
+      }
     }
   }
   .setting.overridden.string {

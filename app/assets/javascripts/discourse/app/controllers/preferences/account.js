@@ -11,6 +11,7 @@ import getURL from "discourse-common/lib/get-url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 import { next } from "@ember/runloop";
+import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend(CanCheckEmails, {
   dialog: service(),
@@ -22,16 +23,19 @@ export default Controller.extend(CanCheckEmails, {
       "title",
       "primary_group_id",
       "flair_group_id",
+      "status",
     ];
     this.set("revoking", {});
   },
 
   canEditName: setting("enable_names"),
+  canSelectUserStatus: setting("enable_user_status"),
   canSaveUser: true,
 
   newNameInput: null,
   newTitleInput: null,
   newPrimaryGroupInput: null,
+  newStatus: null,
 
   revoking: null,
 
@@ -146,6 +150,19 @@ export default Controller.extend(CanCheckEmails, {
       });
   },
 
+  @action
+  showUserStatusModal(status) {
+    showModal("user-status", {
+      title: "user_status.set_custom_status",
+      modalClass: "user-status",
+      model: {
+        status,
+        saveAction: async (s) => this.set("newStatus", s),
+        deleteAction: async () => this.set("newStatus", null),
+      },
+    });
+  },
+
   actions: {
     save() {
       this.set("saved", false);
@@ -155,6 +172,7 @@ export default Controller.extend(CanCheckEmails, {
         title: this.newTitleInput,
         primary_group_id: this.newPrimaryGroupInput,
         flair_group_id: this.newFlairGroupId,
+        status: this.newStatus,
       });
 
       return this.model

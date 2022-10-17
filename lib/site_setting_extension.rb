@@ -234,36 +234,42 @@ module SiteSettingExtension
     }
 
     defaults.all(default_locale)
-      .reject { |s, _| !include_hidden && hidden_settings.include?(s) }
-      .map do |s, v|
+      .reject do |setting_name, _|
+        if !include_hidden && hidden_settings.include?(setting_name)
+          true
+        elsif categories[setting_name].to_s == "sidebar" && !SiteSetting.enable_experimental_sidebar_hamburger
+          true
+        else
+          false
+        end
+      end.map do |s, v|
+        type_hash = type_supervisor.type_hash(s)
+        default = defaults.get(s, default_locale).to_s
 
-      type_hash = type_supervisor.type_hash(s)
-      default = defaults.get(s, default_locale).to_s
+        value = public_send(s)
+        value = value.map(&:to_s).join("|") if type_hash[:type].to_s == "uploaded_image_list"
 
-      value = public_send(s)
-      value = value.map(&:to_s).join("|") if type_hash[:type].to_s == "uploaded_image_list"
+        if type_hash[:type].to_s == "upload" &&
+          default.to_i < Upload::SEEDED_ID_THRESHOLD
 
-      if type_hash[:type].to_s == "upload" &&
-         default.to_i < Upload::SEEDED_ID_THRESHOLD
+          default = default_uploads[default.to_i]
+        end
 
-        default = default_uploads[default.to_i]
-      end
+        opts = {
+          setting: s,
+          description: description(s),
+          default: default,
+          value: value.to_s,
+          category: categories[s],
+          preview: previews[s],
+          secret: secret_settings.include?(s),
+          placeholder: placeholder(s)
+        }.merge!(type_hash)
 
-      opts = {
-        setting: s,
-        description: description(s),
-        default: default,
-        value: value.to_s,
-        category: categories[s],
-        preview: previews[s],
-        secret: secret_settings.include?(s),
-        placeholder: placeholder(s)
-      }.merge!(type_hash)
+        opts[:plugin] = plugins[s] if plugins[s]
 
-      opts[:plugin] = plugins[s] if plugins[s]
-
-      opts
-    end.unshift(locale_setting_hash)
+        opts
+      end.unshift(locale_setting_hash)
   end
 
   def description(setting)

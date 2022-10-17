@@ -140,6 +140,12 @@ createWidget("reply-to-tab", {
     return { loading: false };
   },
 
+  buildAttributes() {
+    return {
+      tabindex: "0",
+    };
+  },
+
   html(attrs, state) {
     const icon = state.loading ? h("div.spinner.small") : iconNode("share");
     const name = prioritizeNameFallback(
