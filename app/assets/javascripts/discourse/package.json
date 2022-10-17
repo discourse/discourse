@@ -45,7 +45,7 @@
     "discourse-ensure-deprecation-order": "^1.0.0",
     "discourse-hbr": "^1.0.0",
     "discourse-widget-hbs": "^1.0.0",
-    "ember-auto-import": "^2.4.2",
+    "ember-auto-import": "^2.4.3",
     "ember-auto-import-chunks-json-generator": "^1.0.0",
     "ember-buffered-proxy": "^2.1.1",
     "ember-cached-decorator-polyfill": "^1.0.1",

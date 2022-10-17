@@ -148,5 +148,10 @@ RSpec.describe Emoji do
       emoji = Emoji.create_from_db_item("name" => "scotland")
       expect(emoji.group).to eq("flags")
     end
+
+    it "sets the search aliases of the emoji" do
+      emoji = Emoji.create_from_db_item("name" => "sad")
+      expect(emoji.search_aliases).to contain_exactly("frowning_face", "slightly_frowning_face", "sob", "crying_cat_face", "cry", "face_holding_back_tears")
+    end
   end
 end

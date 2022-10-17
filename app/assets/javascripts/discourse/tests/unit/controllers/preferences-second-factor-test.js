@@ -1,13 +1,17 @@
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 
-discourseModule("Unit | Controller | preferences/second-factor", function () {
+module("Unit | Controller | preferences/second-factor", function (hooks) {
+  setupTest(hooks);
+
   test("displayOAuthWarning when OAuth login methods are enabled", function (assert) {
-    const controller = this.getController("preferences/second-factor", {
-      siteSettings: {
-        enable_google_oauth2_logins: true,
-      },
-    });
-    assert.strictEqual(controller.get("displayOAuthWarning"), true);
+    const siteSettings = this.owner.lookup("service:site-settings");
+    siteSettings.enable_google_oauth2_logins = true;
+
+    const controller = this.owner.lookup(
+      "controller:preferences/second-factor"
+    );
+
+    assert.strictEqual(controller.displayOAuthWarning, true);
   });
 });

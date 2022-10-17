@@ -3,7 +3,6 @@
     width: 100%;
 
     .nav-pills {
-      margin: 0.5em 0;
       overflow-x: auto;
       scrollbar-width: none;
 
@@ -55,10 +54,6 @@
 
   #navigation-bar {
     flex-wrap: nowrap;
-  }
-
-  .navigation-controls {
-    margin-top: 1em;
   }
 }
 
