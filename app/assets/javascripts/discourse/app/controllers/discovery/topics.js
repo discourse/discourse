@@ -24,10 +24,17 @@ const controllerOpts = {
   showTopicPostBadges: not("new"),
   redirectedReason: alias("currentUser.redirected_to_top.reason"),
 
-  @discourseComputed("model.filter", "site.show_welcome_topic_banner")
-  showEditWelcomeTopicBanner(filter, showWelcomeTopicBanner) {
+  @discourseComputed(
+    "model.filter",
+    "site.show_welcome_topic_banner",
+    "model.listParams.f"
+  )
+  showEditWelcomeTopicBanner(filter, showWelcomeTopicBanner, hasListParams) {
     return (
-      this.currentUser?.staff && filter === "latest" && showWelcomeTopicBanner
+      this.currentUser?.staff &&
+      filter === "latest" &&
+      showWelcomeTopicBanner &&
+      !hasListParams
     );
   },
 
