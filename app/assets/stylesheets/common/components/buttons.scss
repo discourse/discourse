@@ -27,6 +27,7 @@
     color: $icon-color;
     margin-right: 0.45em;
     transition: color 0.25s;
+    // For Windows High Contrast (see whcm.scss for more)
     @media (forced-colors: active) {
       color: ButtonText;
     }
@@ -45,6 +46,7 @@
     color: $hover-text-color;
     .d-icon {
       color: $hover-icon-color;
+      // For Windows High Contrast (see whcm.scss for more)
       @media (forced-colors: active) {
         color: Highlight;
       }

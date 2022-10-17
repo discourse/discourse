@@ -19,15 +19,3 @@
     }
   }
 }
-
-// Search
-.search-container .search-filters {
-  details.advanced-filters,
-  details.search-advanced-additional-options {
-    > summary {
-      &:focus-visible {
-        outline: 2px solid transparent;
-      }
-    }
-  }
-}
