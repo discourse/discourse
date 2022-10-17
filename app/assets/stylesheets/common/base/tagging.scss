@@ -196,6 +196,14 @@ header .discourse-tag {
     color: var(--primary-medium);
   }
 
+  .d-icon-tag {
+    padding-right: 5px;
+    vertical-align: middle;
+    height: 0.9em;
+  }
+}
+
+.hashtag-autocomplete {
   .d-icon {
     padding-right: 5px;
     vertical-align: middle;

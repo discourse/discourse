@@ -60,6 +60,7 @@ class HashtagService
     attr_accessor :text
     attr_accessor :slug
     attr_accessor :icon
+    attr_accessor :type
   end
 
   def initialize(guardian)
@@ -116,6 +117,7 @@ class HashtagService
       .each do |type|
         data = @@data_sources[type].call(guardian, term, limit)
         next if !data.all? { |item| item.kind_of?(HashtagItem) }
+        data.each { |item| item.type = type }
         results.concat(data)
 
         break if results.length >= limit
