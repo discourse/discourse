@@ -229,11 +229,11 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def anonymous_default_sidebar_tags
-    User.new.sidebar_tags.pluck(:name)
+    SiteSetting.default_sidebar_tags.split("|") - DiscourseTagging.hidden_tag_names(scope)
   end
 
   def include_anonymous_default_sidebar_tags?
-    scope.anonymous? && SiteSetting.tagging_enabled && SiteSetting.default_sidebar_tags.present?
+    scope.anonymous? && SiteSetting.enable_experimental_sidebar_hamburger && SiteSetting.tagging_enabled && SiteSetting.default_sidebar_tags.present?
   end
 
   private
