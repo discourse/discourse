@@ -2062,7 +2062,7 @@ sidebar:
     type: "list"
     choices:
       - "default"
-      - "unread"
+      - "unread_new"
 
 embedding:
   embed_by_username:

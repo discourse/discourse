@@ -54,6 +54,6 @@ class UserOptionSerializer < ApplicationSerializer
   end
 
   def sidebar_list_destination
-    object.sidebar_list_destination || SiteSetting.default_sidebar_list_destination
+    object.sidebar_list_none_selected? ? SiteSetting.default_sidebar_list_destination : object.sidebar_list_destination
   end
 end
