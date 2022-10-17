@@ -1,8 +1,7 @@
 import { Promise } from "rsvp";
-
 import Service from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import { bind, on } from "discourse-common/utils/decorators";
+import { bind } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { deepEqual, deepMerge } from "discourse-common/lib/object";
 import {
@@ -21,13 +20,24 @@ const PrivateMessageTopicTrackingState = Service.extend({
   filter: null,
   activeGroup: null,
 
-  @on("init")
-  _setup() {
+  init() {
+    this._super(...arguments);
+
     this.states = new Map();
     this.statesModificationCounter = 0;
     this.isTracking = false;
     this.newIncoming = [];
     this.stateChangeCallbacks = new Map();
+  },
+
+  willDestroy() {
+    this._super(...arguments);
+
+    if (this.currentUser) {
+      this.messageBus.unsubscribe(this.userChannel(), this._processMessage);
+    }
+
+    this.messageBus.unsubscribe(this.groupChannel("*"), this._processMessage);
   },
 
   onStateChange(key, callback) {
@@ -43,14 +53,6 @@ const PrivateMessageTopicTrackingState = Service.extend({
       return Promise.resolve();
     }
 
-    this._establishChannels();
-
-    return this._loadInitialState().finally(() => {
-      this.set("isTracking", true);
-    });
-  },
-
-  _establishChannels() {
     this.messageBus.subscribe(this.userChannel(), this._processMessage);
 
     this.currentUser.groupsWithMessages?.forEach((group) => {
@@ -58,6 +60,10 @@ const PrivateMessageTopicTrackingState = Service.extend({
         this.groupChannel(group.id),
         this._processMessage
       );
+    });
+
+    return this._loadInitialState().finally(() => {
+      this.set("isTracking", true);
     });
   },
 

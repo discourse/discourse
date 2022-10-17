@@ -1,4 +1,7 @@
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed, {
+  bind,
+  observes,
+} from "discourse-common/utils/decorators";
 import Service from "@ember/service";
 import I18n from "I18n";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
@@ -29,32 +32,41 @@ export default Service.extend({
       this.set("text", text);
     }
 
-    this.messageBus.subscribe("/logs_error_rate_exceeded", (data) => {
-      const duration = data.duration;
-      const rate = data.rate;
-      let siteSettingLimit = 0;
+    this.messageBus.subscribe("/logs_error_rate_exceeded", this.onLogRateLimit);
+  },
 
-      if (duration === "minute") {
-        siteSettingLimit = this.siteSettings.alert_admins_if_errors_per_minute;
-      } else if (duration === "hour") {
-        siteSettingLimit = this.siteSettings.alert_admins_if_errors_per_hour;
-      }
+  willDestroy() {
+    this._super(...arguments);
 
-      let translationKey = rate === siteSettingLimit ? "reached" : "exceeded";
-      translationKey += `_${duration}_MF`;
+    this.messageBus.unsubscribe(
+      "/logs_error_rate_exceeded",
+      this.onLogRateLimit
+    );
+  },
 
-      this.set(
-        "text",
-        I18n.messageFormat(`logs_error_rate_notice.${translationKey}`, {
-          relativeAge: autoUpdatingRelativeAge(
-            new Date(data.publish_at * 1000)
-          ),
-          rate,
-          limit: siteSettingLimit,
-          url: getURL("/logs"),
-        })
-      );
-    });
+  @bind
+  onLogRateLimit(data) {
+    const { duration, rate } = data;
+    let siteSettingLimit = 0;
+
+    if (duration === "minute") {
+      siteSettingLimit = this.siteSettings.alert_admins_if_errors_per_minute;
+    } else if (duration === "hour") {
+      siteSettingLimit = this.siteSettings.alert_admins_if_errors_per_hour;
+    }
+
+    let translationKey = rate === siteSettingLimit ? "reached" : "exceeded";
+    translationKey += `_${duration}_MF`;
+
+    this.set(
+      "text",
+      I18n.messageFormat(`logs_error_rate_notice.${translationKey}`, {
+        relativeAge: autoUpdatingRelativeAge(new Date(data.publish_at * 1000)),
+        rate,
+        limit: siteSettingLimit,
+        url: getURL("/logs"),
+      })
+    );
   },
 
   @discourseComputed("text")

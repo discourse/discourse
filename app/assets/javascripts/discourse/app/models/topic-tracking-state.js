@@ -1,5 +1,5 @@
 import EmberObject, { get } from "@ember/object";
-import discourseComputed, { bind, on } from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { deepEqual, deepMerge } from "discourse-common/lib/object";
 import DiscourseURL from "discourse/lib/url";
@@ -46,11 +46,31 @@ function hasMutedTags(topicTags, mutedTags, siteSettings) {
 const TopicTrackingState = EmberObject.extend({
   messageCount: 0,
 
-  @on("init")
-  _setup() {
+  init() {
+    this._super(...arguments);
+
     this.states = new Map();
     this.stateChangeCallbacks = {};
     this._trackedTopicLimit = 4000;
+  },
+
+  willDestroy() {
+    this._super(...arguments);
+
+    this.messageBus.unsubscribe("/latest", this._processChannelPayload);
+
+    if (this.currentUser) {
+      this.messageBus.unsubscribe("/new", this._processChannelPayload);
+      this.messageBus.unsubscribe(`/unread`, this._processChannelPayload);
+      this.messageBus.unsubscribe(
+        `/unread/${this.currentUser.id}`,
+        this._processChannelPayload
+      );
+    }
+
+    this.messageBus.unsubscribe("/delete", this.onDeleteMessage);
+    this.messageBus.unsubscribe("/recover", this.onRecoverMessage);
+    this.messageBus.unsubscribe("/destroy", this.onDestroyMessage);
   },
 
   /**
@@ -74,26 +94,34 @@ const TopicTrackingState = EmberObject.extend({
       );
     }
 
-    this.messageBus.subscribe("/delete", (msg) => {
-      this.modifyStateProp(msg, "deleted", true);
-      this.incrementMessageCount();
-    });
+    this.messageBus.subscribe("/delete", this.onDeleteMessage);
+    this.messageBus.subscribe("/recover", this.onRecoverMessage);
+    this.messageBus.subscribe("/destroy", this.onDestroyMessage);
+  },
 
-    this.messageBus.subscribe("/recover", (msg) => {
-      this.modifyStateProp(msg, "deleted", false);
-      this.incrementMessageCount();
-    });
+  @bind
+  onDeleteMessage(msg) {
+    this.modifyStateProp(msg, "deleted", true);
+    this.incrementMessageCount();
+  },
 
-    this.messageBus.subscribe("/destroy", (msg) => {
-      this.incrementMessageCount();
-      const currentRoute = DiscourseURL.router.currentRoute.parent;
-      if (
-        currentRoute.name === "topic" &&
-        parseInt(currentRoute.params.id, 10) === msg.topic_id
-      ) {
-        DiscourseURL.redirectTo("/");
-      }
-    });
+  @bind
+  onRecoverMessage(msg) {
+    this.modifyStateProp(msg, "deleted", false);
+    this.incrementMessageCount();
+  },
+
+  @bind
+  onDestroyMessage(msg) {
+    this.incrementMessageCount();
+    const currentRoute = DiscourseURL.router.currentRoute.parent;
+
+    if (
+      currentRoute.name === "topic" &&
+      parseInt(currentRoute.params.id, 10) === msg.topic_id
+    ) {
+      DiscourseURL.redirectTo("/");
+    }
   },
 
   mutedTopics() {
@@ -280,7 +308,7 @@ const TopicTrackingState = EmberObject.extend({
    * @param {String} filter - Valid values are all, categories, and any topic list
    *                          filters e.g. latest, unread, new. As well as this
    *                          specific category and tag URLs like tag/test/l/latest,
-   *                          c/cat/subcat/6/l/latest or tags/c/cat/subcat/6/test/l/latest.
+   *                          c/cat/sub-cat/6/l/latest or tags/c/cat/sub-cat/6/test/l/latest.
    */
   trackIncoming(filter) {
     this.newIncoming = [];
@@ -312,7 +340,7 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   /**
-   * Used to determine whether toshow the message at the top of the topic list
+   * Used to determine whether to show the message at the top of the topic list
    * e.g. "see 1 new or updated topic"
    *
    * @method incomingCount
@@ -555,7 +583,7 @@ const TopicTrackingState = EmberObject.extend({
   },
 
   /**
-   * Using the array of tags provided, tallys up all topics via forEachTracked
+   * Using the array of tags provided, tallies up all topics via forEachTracked
    * that we are tracking, separated into new/unread/total.
    *
    * Total is only counted if opts.includeTotal is specified.
