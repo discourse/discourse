@@ -1177,7 +1177,7 @@ en:
       enable_quoting: "Enable quote reply for highlighted text"
       enable_defer: "Enable defer to mark topics unread"
       experimental_sidebar:
-        enable: "Enable experimental sidebar"
+        enable: "Enable sidebar"
         options: "Options"
         categories_section: "Categories Section"
         categories_section_instruction: "Selected categories will be displayed under Sidebar's categories section."
@@ -4189,6 +4189,7 @@ en:
           click_to_get_started: "Click here to get started."
           header_link_text: "Tags"
           header_action_title: "edit your sidebar tags"
+          configure_defaults: "Configure defaults"
         categories:
           none: "You have not added any categories."
           click_to_get_started: "Click here to get started."
@@ -5666,6 +5667,7 @@ en:
           search: "Search"
           groups: "Groups"
           dashboard: "Dashboard"
+          sidebar: "Sidebar"
         secret_list:
           invalid_input: "Input fields cannot be empty or contain vertical bar character."
         default_categories:
