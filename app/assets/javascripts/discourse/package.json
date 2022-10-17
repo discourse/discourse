@@ -80,7 +80,7 @@
     "node-fetch": "^2.6.6",
     "pretender": "^3.4.7",
     "pretty-text": "^1.0.0",
-    "qunit": "^2.19.1",
+    "qunit": "^2.19.2",
     "qunit-dom": "^2.0.0",
     "sass": "^1.55.0",
     "select-kit": "^1.0.0",
