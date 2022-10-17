@@ -86,5 +86,44 @@ RSpec.describe ThemeJavascriptCompiler do
       expect(compiler.content).to include('define("discourse/theme-1/components/mycomponent"')
       expect(compiler.content).to include('define("discourse/theme-1/discourse/templates/components/mycomponent"')
     end
+
+    it "handles colocated components" do
+      compiler.append_tree(
+        {
+          "discourse/components/mycomponent.js" => <<~JS,
+            import Component from "@glimmer/component";
+            export default class MyComponent extends Component {}
+          JS
+          "discourse/components/mycomponent.hbs" => "{{my-component-template}}"
+        }
+      )
+      expect(compiler.content).to include("__COLOCATED_TEMPLATE__ =")
+      expect(compiler.content).to include("setComponentTemplate")
+    end
+
+    it "prints error when default export missing" do
+      compiler.append_tree(
+        {
+          "discourse/components/mycomponent.js" => <<~JS,
+            import Component from "@glimmer/component";
+            class MyComponent extends Component {}
+          JS
+          "discourse/components/mycomponent.hbs" => "{{my-component-template}}"
+        }
+      )
+      expect(compiler.content).to include("__COLOCATED_TEMPLATE__ =")
+      expect(compiler.content).to include("throw new Error")
+    end
+
+    it "handles template-only components" do
+      compiler.append_tree(
+        {
+          "discourse/components/mycomponent.hbs" => "{{my-component-template}}"
+        }
+      )
+      expect(compiler.content).to include("__COLOCATED_TEMPLATE__ =")
+      expect(compiler.content).to include("setComponentTemplate")
+      expect(compiler.content).to include("@ember/component/template-only")
+    end
   end
 end

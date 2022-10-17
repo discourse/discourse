@@ -39,6 +39,46 @@ class ThemeJavascriptCompiler
       end
     end
 
+    # Handle colocated components
+    tree.dup.each_pair do |filename, content|
+      is_component_template = filename.end_with?(".hbs") && filename.start_with?("#{root_name}/components/")
+      next if !is_component_template
+      template_contents = content
+
+      hbs_invocation_options = {
+        moduleName: filename,
+        parseOptions: {
+          srcName: filename
+        }
+      }
+      hbs_invocation = "hbs(#{template_contents.to_json}, #{hbs_invocation_options.to_json})"
+
+      prefix = <<~JS
+        import { hbs } from 'ember-cli-htmlbars';
+        const __COLOCATED_TEMPLATE__ = #{hbs_invocation};
+      JS
+
+      js_filename = filename.sub(/\.hbs\z/, ".js")
+      js_contents = tree[js_filename] # May be nil for template-only component
+      if js_contents && !js_contents.include?("export default")
+        message = "#{filename} does not contain a `default export`. Did you forget to export the component class?"
+        js_contents += "throw new Error(#{message.to_json});"
+      end
+
+      if js_contents.nil?
+        # No backing class, use template-only
+        js_contents = <<~JS
+          import templateOnly from '@ember/component/template-only';
+          export default templateOnly();
+        JS
+      end
+
+      js_contents = prefix + js_contents
+
+      tree[js_filename] = js_contents
+      tree.delete(filename)
+    end
+
     # Transpile and write to output
     tree.each_pair do |filename, content|
       module_name, extension = filename.split(".", 2)

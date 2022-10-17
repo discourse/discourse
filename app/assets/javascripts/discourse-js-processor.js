@@ -4,6 +4,7 @@
 
 const makeEmberTemplateCompilerPlugin =
   require("babel-plugin-ember-template-compilation").default;
+const colocatedBabelPlugin = require("colocated-babel-plugin").default;
 const precompile = require("ember-template-compiler").precompile;
 const Handlebars = require("handlebars").default;
 
@@ -50,6 +51,7 @@ function buildTemplateCompilerBabelPlugins({ themeId }) {
   }
 
   return [
+    colocatedBabelPlugin,
     require("widget-hbs-compiler").WidgetHbsCompiler,
     [
       makeEmberTemplateCompilerPlugin(() => compileFunction),

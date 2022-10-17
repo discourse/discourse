@@ -157,6 +157,7 @@ class DiscourseJsProcessor
       load_file_in_context(ctx, "node_modules/babel-plugin-ember-template-compilation/src/plugin.js", wrap_in_module: "babel-plugin-ember-template-compilation/index")
       load_file_in_context(ctx, "node_modules/babel-plugin-ember-template-compilation/src/expression-parser.js", wrap_in_module: "babel-plugin-ember-template-compilation/expression-parser")
       load_file_in_context(ctx, "node_modules/babel-import-util/src/index.js", wrap_in_module: "babel-import-util")
+      load_file_in_context(ctx, "node_modules/ember-cli-htmlbars/lib/colocated-babel-plugin.js", wrap_in_module: "colocated-babel-plugin")
 
       # Widget HBS compiler
       widget_hbs_compiler_source = File.read("#{Rails.root}/lib/javascripts/widget-hbs-compiler.js")
