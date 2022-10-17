@@ -14,7 +14,7 @@ class UserOption < ActiveRecord::Base
   scope :human_users, -> { where('user_id > 0') }
 
   enum default_calendar: { none_selected: 0, ics: 1, google: 2 }, _scopes: false
-  enum sidebar_list_destination: { latest: 0, unread_new: 1 }, _scopes: false, _default: SiteSetting.default_sidebar_list_destination
+  enum sidebar_list_destination: { default: 0, unread_new: 1 }, _scopes: false, _default: SiteSetting.default_sidebar_list_destination
 
   def self.ensure_consistency!
     sql = <<~SQL

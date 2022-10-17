@@ -15,8 +15,8 @@ export default class extends Controller {
 
     this.sidebarListDestinations = [
       {
-        name: I18n.t("user.experimental_sidebar.list_destination_latest"),
-        value: "latest",
+        name: I18n.t("user.experimental_sidebar.list_destination_default"),
+        value: "default",
       },
       {
         name: I18n.t("user.experimental_sidebar.list_destination_unread_new"),

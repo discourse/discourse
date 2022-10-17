@@ -307,7 +307,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     assert.strictEqual(
       currentURL(),
       `/c/${category1.slug}/${category1.id}`,
-      "it should transition to the category1 latest page"
+      "it should transition to the category1 default view page"
     );
 
     assert.strictEqual(
