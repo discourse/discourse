@@ -87,12 +87,15 @@ createWidget("topic-participant", {
         linkContents.push(this.attach("avatar-flair", autoFlairAttrs));
       }
     }
-
     return h(
       "a.poster.trigger-user-card",
       {
         className: state.toggled ? "toggled" : null,
-        attributes: { title: attrs.username, "data-user-card": attrs.username },
+        attributes: {
+          title: attrs.username,
+          "data-user-card": attrs.username,
+          href: `/u/${attrs.username}`,
+        },
       },
       linkContents
     );
