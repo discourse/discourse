@@ -419,8 +419,7 @@ export default Controller.extend({
       }
     },
 
-    resetSeenPopups(event) {
-      event.preventDefault();
+    resetSeenPopups() {
       this.model.set("seen_popups", null);
       this.model.set("user_option.seen_popups", null);
       return this.model.save(["seen_popups"]);
