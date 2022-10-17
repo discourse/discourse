@@ -14,30 +14,42 @@ class HashtagService
     @@data_sources = {}
 
     register_data_source("category") do |guardian, term, limit|
-      Site.new(guardian).categories.select do |category|
-        category[:name].downcase.include?(term.downcase)
-      end.take(limit).map do |category|
-        HashtagItem.new.tap do |item|
-          item.text = category[:name]
-          item.slug = category[:slug]
-          item.icon = "folder"
+      Site
+        .new(guardian)
+        .categories
+        .select { |category| category[:name].downcase.include?(term) }
+        .take(limit)
+        .map do |category|
+          HashtagItem.new.tap do |item|
+            item.text = category[:name]
+            item.slug = category[:slug]
+            item.icon = "folder"
+          end
         end
-      end
     end
 
     register_data_source("tag") do |guardian, term, limit|
-      tags_with_counts, _ = DiscourseTagging.filter_allowed_tags(
-        guardian,
-        term: term,
-        with_context: true,
-        limit: limit
-      )
-      TagsController.tag_counts_json(tags_with_counts).take(limit).map do |tag|
-        HashtagItem.new.tap do |item|
-          item.text = "#{tag[:name]} x #{tag[:count]}"
-          item.slug = tag[:name]
-          item.icon = "tag"
-        end
+      if SiteSetting.tagging_enabled
+        tags_with_counts, _ =
+          DiscourseTagging.filter_allowed_tags(
+            guardian,
+            term: term,
+            with_context: true,
+            limit: limit,
+            for_input: true,
+          )
+        TagsController
+          .tag_counts_json(tags_with_counts)
+          .take(limit)
+          .map do |tag|
+            HashtagItem.new.tap do |item|
+              item.text = "#{tag[:name]} x #{tag[:count]}"
+              item.slug = tag[:name]
+              item.icon = "tag"
+            end
+          end
+      else
+        []
       end
     end
   end
@@ -67,13 +79,15 @@ class HashtagService
     end
 
     # Try to resolve hashtags as categories first
-    category_slugs_and_ids = all_slugs.map { |slug| [slug, Category.query_from_hashtag_slug(slug)&.id] }.to_h
-    category_ids_and_urls = Category
-      .secured(guardian)
-      .select(:id, :slug, :parent_category_id) # fields required for generating category URL
-      .where(id: category_slugs_and_ids.values)
-      .map { |c| [c.id, c.url] }
-      .to_h
+    category_slugs_and_ids =
+      all_slugs.map { |slug| [slug, Category.query_from_hashtag_slug(slug)&.id] }.to_h
+    category_ids_and_urls =
+      Category
+        .secured(guardian)
+        .select(:id, :slug, :parent_category_id) # fields required for generating category URL
+        .where(id: category_slugs_and_ids.values)
+        .map { |c| [c.id, c.url] }
+        .to_h
     categories_hashtags = {}
     category_slugs_and_ids.each do |slug, id|
       if category_url = category_ids_and_urls[id]
@@ -85,27 +99,27 @@ class HashtagService
     tag_hashtags = {}
     if SiteSetting.tagging_enabled
       tag_slugs += (all_slugs - categories_hashtags.keys)
-      DiscourseTagging.filter_visible(Tag.where_name(tag_slugs), guardian).each do |tag|
-        tag_hashtags[tag.name] = tag.full_url
-      end
+      DiscourseTagging
+        .filter_visible(Tag.where_name(tag_slugs), guardian)
+        .each { |tag| tag_hashtags[tag.name] = tag.full_url }
     end
 
     { categories: categories_hashtags, tags: tag_hashtags }
   end
 
-  def search(term, order, limit = 5)
+  def search(term, types_in_priority_order, limit = 5)
     results = []
+    term = term.downcase
 
-    order.select { |type| @@data_sources.keys.include?(type) }.each do |type|
-      if @@data_sources.key?(type)
+    types_in_priority_order
+      .select { |type| @@data_sources.keys.include?(type) }
+      .each do |type|
         data = @@data_sources[type].call(guardian, term, limit)
         next if !data.all? { |item| item.kind_of?(HashtagItem) }
         results.concat(data)
-      end
 
-      # don't want to keep querying if we already reached the limit
-      break if results.length == limit
-    end
+        break if results.length >= limit
+      end
 
     results.take(limit)
   end
