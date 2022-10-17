@@ -42,7 +42,7 @@
     <DButton @id="save-bookmark" @label="bookmarks.save" @class="btn-primary" @action={{action "saveAndClose"}} />
     <DModalCancel @close={{action "closeWithoutSavingBookmark"}} />
     {{#if this.showDelete}}
-      <DButton @id="delete-bookmark" @icon="trash-alt" @class="delete-bookmark btn-danger" @action={{action "delete"}} />
+      <DButton @id="delete-bookmark" @icon="trash-alt" @class="delete-bookmark btn-danger" @action={{action "delete"}} @ariaLabel="post.bookmarks.actions.delete_bookmark.name" @title="post.bookmarks.actions.delete_bookmark.name" />
     {{/if}}
   </div>
 </ConditionalLoadingSpinner>
