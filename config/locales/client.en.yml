@@ -4194,6 +4194,7 @@ en:
           click_to_get_started: "Click here to get started."
           header_link_text: "Categories"
           header_action_title: "edit your sidebar categories"
+          configure_defaults: "Configure defaults"
         community:
           header_link_text: "Community"
           header_action_title: "create a new topic"
