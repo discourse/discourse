@@ -39,6 +39,17 @@
       category=this.category
       tag=this.tag}} />
 
+  {{#if (or this.site.siteSettings.invite_only this.site.siteSettings.bootstrap_mode_enabled)}}
+    <DButton @icon="user-plus" @action={{action "inviteUsers"}} @class="btn-primary" @title="bootstrap_invite_button_title" />
+  {{/if}}
+  
+  {{#if this.site.siteSettings.wizard_required}}
+    <LinkTo @route="wizard.index" class="btn-primary">
+      {{d-icon "pencil-alt"}}
+      {{i18n "bootstrap_wizard_link_title"}}
+    </LinkTo>
+  {{/if}}
+
   <CreateTopicButton @canCreateTopic={{this.canCreateTopic}} @action={{action "clickCreateTopicButton"}} @disabled={{this.createTopicButtonDisabled}} @label={{this.createTopicLabel}} @btnClass={{this.createTopicClass}} @canCreateTopicOnTag={{this.canCreateTopicOnTag}} />
 
   <PluginOutlet @name="after-create-topic-button" @connectorTagName="div" @tagName="" @args={{hash
