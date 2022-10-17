@@ -39,16 +39,18 @@
       category=this.category
       tag=this.tag}} />
 
-  {{#if (or this.site.siteSettings.invite_only this.site.siteSettings.bootstrap_mode_enabled)}}
+  {{#if (and (or this.site.siteSettings.invite_only this.site.siteSettings.bootstrap_mode_enabled) this.currentUser.admin)}}
     <DButton @icon="user-plus" @action={{action "inviteUsers"}} @class="btn-primary" @title="bootstrap_invite_button_title" />
   {{/if}}
 
-  {{!-- {{#if this.site.siteSettings.wizard_required}} --}}
-    <LinkTo @route="wizard.index" class="btn-primary bootstrap-wizard-link">
-      {{d-icon "pencil-alt"}}
-      {{i18n "bootstrap_wizard_link_title"}}
-    </LinkTo>
-  {{!-- {{/if}} --}}
+  {{#if (and this.site.siteSettings.wizard_required this.currentUser.admin)}}
+    {{#unless this.site.mobileView}}
+      <LinkTo @route="wizard.index" class="btn-primary bootstrap-wizard-link">
+        {{d-icon "pencil-alt"}}
+        {{i18n "bootstrap_wizard_link_title"}}
+      </LinkTo>
+    {{/unless}}
+  {{/if}}
 
   <CreateTopicButton @canCreateTopic={{this.canCreateTopic}} @action={{action "clickCreateTopicButton"}} @disabled={{this.createTopicButtonDisabled}} @label={{this.createTopicLabel}} @btnClass={{this.createTopicClass}} @canCreateTopicOnTag={{this.canCreateTopicOnTag}} />
 

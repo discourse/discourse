@@ -1,6 +1,6 @@
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
-import { click, currentURL, settled, visit } from "@ember/test-helpers";
+import { settled, visit } from "@ember/test-helpers";
 import { set } from "@ember/object";
 
 acceptance("Bootstrap Mode Notice", function (needs) {
