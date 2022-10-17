@@ -79,19 +79,6 @@ RSpec.describe ListController do
       expect(parsed["topic_list"]["topics"].length).to eq(1)
     end
 
-    it 'filters out privacy policy and tos topics' do
-      tos_topic = create_topic
-      SiteSetting.tos_topic_id = tos_topic.id
-
-      pp_topic = create_topic
-      SiteSetting.privacy_topic_id = pp_topic.id
-
-      get "/latest.json"
-      expect(response.status).to eq(200)
-      parsed = response.parsed_body
-      expect(parsed["topic_list"]["topics"].length).to eq(1)
-    end
-
     it "shows correct title if topic list is set for homepage" do
       get "/latest"
 
