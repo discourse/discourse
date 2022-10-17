@@ -10,6 +10,23 @@ RSpec.describe HashtagService do
 
   before { Site.clear_cache }
 
+  def register_bookmark_data_source
+    HashtagService.register_data_source("bookmark") do |guardian_scoped, term, limit|
+      guardian_scoped
+        .user
+        .bookmarks
+        .where("name ILIKE ?", "%#{term}%")
+        .limit(limit)
+        .map do |bm|
+          HashtagService::HashtagItem.new.tap do |item|
+            item.text = bm.name
+            item.slug = bm.name.gsub(" ", "-")
+            item.icon = "bookmark"
+          end
+        end
+    end
+  end
+
   describe "#search" do
     it "returns search results for tags and categories by default" do
       expect(subject.search("book", %w[category tag]).map(&:text)).to eq(
@@ -78,6 +95,30 @@ RSpec.describe HashtagService do
 
       expect(subject.search("book", %w[category tag bookmark]).map(&:text)).to eq(
         ["Book Club", "great-books x 0", "read review of this fantasy book"],
+      )
+    end
+
+    it "handles refs for categories that have a parent" do
+      parent = Fabricate(:category, name: "Hobbies", slug: "hobbies")
+      category1.update!(parent_category: parent)
+      expect(subject.search("book", %w[category tag]).map(&:ref)).to eq(
+        %w[hobbies:book-club great-books],
+      )
+    end
+
+    it "appends type suffixes for the ref on conflicting slugs on items that are not the top priority type" do
+      Fabricate(:tag, name: "book-club")
+      expect(subject.search("book", %w[category tag]).map(&:ref)).to eq(
+        %w[book-club great-books book-club::tag],
+      )
+
+      Fabricate(:bookmark, user: user, name: "book club")
+      guardian.user.reload
+
+      register_bookmark_data_source
+
+      expect(subject.search("book", %w[category tag bookmark]).map(&:ref)).to eq(
+        %w[book-club great-books book-club::tag book-club::bookmark],
       )
     end
 

@@ -14,15 +14,29 @@ class HashtagService
     @@data_sources = {}
 
     register_data_source("category") do |guardian, term, limit|
-      Site
-        .new(guardian)
-        .categories
+      guardian_categories = Site.new(guardian).categories
+
+      guardian_categories
         .select { |category| category[:name].downcase.include?(term) }
         .take(limit)
         .map do |category|
           HashtagItem.new.tap do |item|
             item.text = category[:name]
             item.slug = category[:slug]
+
+            # Single-level category heirarchy should be enough to distinguish between
+            # categories here.
+            item.ref =
+              if category[:parent_category_id]
+                parent_category =
+                  guardian_categories.find { |c| c[:id] === category[:parent_category_id] }
+                category[:slug] if !parent_category
+
+                parent_slug = parent_category[:slug]
+                "#{parent_slug}:#{category[:slug]}"
+              else
+                category[:slug]
+              end
             item.icon = "folder"
           end
         end
@@ -57,17 +71,28 @@ class HashtagService
   clear_data_sources
 
   class HashtagItem
+    # The text to display in the UI autocomplete menu for the item.
     attr_accessor :text
+
+    # Canonical slug for the item. Different from the ref, which can
+    # have the type as a suffix to distinguish between conflicts.
     attr_accessor :slug
+
+    # The icon to display in the UI autocomplete menu for the item.
     attr_accessor :icon
+
+    # Distinguishes between different entities e.g. tag, category.
     attr_accessor :type
+
+    # Used in the textbox when the item is selected.
+    attr_accessor :ref
   end
 
   def initialize(guardian)
     @guardian = guardian
   end
 
-  def load_from_slugs(slugs)
+  def lookup(slugs)
     all_slugs = []
     tag_slugs = []
 
@@ -110,18 +135,50 @@ class HashtagService
 
   def search(term, types_in_priority_order, limit = 5)
     results = []
+    slugs_by_type = {}
     term = term.downcase
+    types_in_priority_order =
+      types_in_priority_order.select { |type| @@data_sources.keys.include?(type) }
 
-    types_in_priority_order
-      .select { |type| @@data_sources.keys.include?(type) }
-      .each do |type|
-        data = @@data_sources[type].call(guardian, term, limit)
-        next if !data.all? { |item| item.kind_of?(HashtagItem) }
-        data.each { |item| item.type = type }
-        results.concat(data)
-
-        break if results.length >= limit
+    types_in_priority_order.each do |type|
+      data = @@data_sources[type].call(guardian, term, limit - results.length)
+      if !data.all? { |item|
+           item.kind_of?(HashtagItem) && item.slug.present? && item.text.present?
+         }
+        next
       end
+      next if data.empty?
+      data.each do |item|
+        item.type = type
+        item.ref = item.ref || item.slug
+      end
+      slugs_by_type[type] = data.map(&:slug)
+
+      results.concat(data)
+
+      break if results.length >= limit
+    end
+
+    # Any items that are _not_ the top-ranked type (which could possibly not be
+    # the same as the first item in the types_in_priority_order if there was
+    # no data for that type) that have conflicting slugs with other items for
+    # other types need to have a ::type suffix added to their ref.
+    #
+    # This will be used for the lookup method above if one of these items is
+    # chosen in the UI, otherwise there is no way to determine whether a hashtag is
+    # for a category or a tag etc.
+    #
+    # For example, if there is a category with the slug #general and a tag
+    # with the slug #general, then the tag will have its ref changed to #general::tag
+    top_ranked_type = slugs_by_type.keys.first
+    results.each do |hashtag_item|
+      next if hashtag_item.type == top_ranked_type
+
+      other_slugs = results.reject { |r| r.type === hashtag_item.type }.map(&:slug)
+      if other_slugs.include?(hashtag_item.slug)
+        hashtag_item.ref = "#{hashtag_item.slug}::#{hashtag_item.type}"
+      end
+    end
 
     results.take(limit)
   end

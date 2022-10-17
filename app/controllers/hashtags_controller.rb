@@ -5,7 +5,7 @@ class HashtagsController < ApplicationController
 
   def show
     raise Discourse::InvalidParameters.new(:slugs) if !params[:slugs].is_a?(Array)
-    render json: HashtagService.new(guardian).load_from_slugs(params[:slugs])
+    render json: HashtagService.new(guardian).lookup(params[:slugs])
   end
 
   def search

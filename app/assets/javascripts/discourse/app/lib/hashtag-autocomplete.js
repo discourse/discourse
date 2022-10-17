@@ -1,5 +1,4 @@
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
 import discourseLater from "discourse-common/lib/later";
 import { INPUT_DELAY, isTesting } from "discourse-common/config/environment";
 import { cancel } from "@ember/runloop";
@@ -69,7 +68,7 @@ function _setupExperimental(context, $textArea, siteSettings, afterComplete) {
     key: "#",
     afterComplete,
     treatAsTextarea: $textArea[0].tagName === "INPUT",
-    transformComplete: (obj) => obj.slug,
+    transformComplete: (obj) => obj.ref,
     dataSource: (term) => {
       if (term.match(/\s/)) {
         return null;
@@ -148,10 +147,6 @@ function _searchRequest(term, context, resultFunc) {
   let returnVal = CANCELLED_STATUS;
   currentSearch
     .then((r) => {
-      // TODO (martin) temporary solution until we decide what to do with suffixes
-      r.results
-        .filterBy("type", "tag")
-        .forEach((item) => (item.slug = r.slug + TAG_HASHTAG_POSTFIX));
       returnVal = r.results;
     })
     .finally(() => {
