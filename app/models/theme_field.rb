@@ -153,30 +153,6 @@ class ThemeField < ActiveRecord::Base
     [doc.to_s, errors&.join("\n")]
   end
 
-  def process_extra_js(content)
-    errors = []
-
-    js_compiler = ThemeJavascriptCompiler.new(theme_id, theme.name)
-    filename, extension = name.split(".", 2)
-    filename = "test/#{filename}" if js_tests_field?
-    begin
-      case extension
-      when "js.es6", "js"
-        js_compiler.append_module(content, filename, include_variables: true)
-      when "hbs"
-        js_compiler.append_ember_template(filename, content)
-      when "hbr", "raw.hbs"
-        js_compiler.append_raw_template(filename.sub("discourse/templates/", ""), content)
-      else
-        raise ThemeJavascriptCompiler::CompileError.new(I18n.t("themes.compile_error.unrecognized_extension", extension: extension))
-      end
-    rescue ThemeJavascriptCompiler::CompileError => ex
-      errors << ex.message
-    end
-
-    [js_compiler.content, errors&.join("\n")]
-  end
-
   def validate_svg_sprite_xml
     upload = Upload.find(self.upload_id) rescue nil
 
@@ -377,8 +353,8 @@ class ThemeField < ActiveRecord::Base
       self.compiler_version = Theme.compiler_version
       DB.after_commit { CSP::Extension.clear_theme_extensions_cache! }
     elsif extra_js_field? || js_tests_field?
-      self.value_baked, self.error = process_extra_js(self.value)
-      self.error = nil unless self.error.present?
+      self.error = nil
+      self.value_baked = "baked"
       self.compiler_version = Theme.compiler_version
     elsif basic_scss_field?
       ensure_scss_compiles!

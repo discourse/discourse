@@ -2,7 +2,6 @@
 
 RSpec.describe ThemeJavascriptCompiler do
   let(:compiler) { ThemeJavascriptCompiler.new(1, 'marks') }
-  let(:theme_id) { 22 }
 
   describe "#append_raw_template" do
     it 'uses the correct template paths' do
@@ -70,6 +69,22 @@ RSpec.describe ThemeJavascriptCompiler do
       expect do
         compiler.append_ember_template("sometemplate", "{{invalidtemplate")
       end.to raise_error(ThemeJavascriptCompiler::CompileError, /Parse error on line 1/)
+    end
+  end
+
+  describe "#append_tree" do
+    it "can handle multiple modules" do
+      compiler.append_tree(
+        {
+          "discourse/components/mycomponent.js" => <<~JS,
+            import Component from "@glimmer/component";
+            export default class MyComponent extends Component {}
+          JS
+          "discourse/templates/components/mycomponent.hbs" => "{{my-component-template}}"
+        }
+      )
+      expect(compiler.content).to include('define("discourse/theme-1/components/mycomponent"')
+      expect(compiler.content).to include('define("discourse/theme-1/discourse/templates/components/mycomponent"')
     end
   end
 end
