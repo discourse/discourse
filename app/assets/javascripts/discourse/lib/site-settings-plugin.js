@@ -31,7 +31,7 @@ class SiteSettingsPlugin extends Plugin {
       } else {
         inputFile = "site_settings.yml";
       }
-      let file = path + "/" + inputFile;
+      const file = path + "/" + inputFile;
       let yaml;
       try {
         yaml = fs.readFileSync(file, { encoding: "UTF-8" });
@@ -39,7 +39,7 @@ class SiteSettingsPlugin extends Plugin {
         // the plugin does not have a config file, go to the next file
         return;
       }
-      let loaded = Yaml.load(yaml, { json: true });
+      const loaded = Yaml.load(yaml, { json: true });
       parsed = deepmerge(parsed, loaded);
     });
 
@@ -52,7 +52,7 @@ class SiteSettingsPlugin extends Plugin {
         }
       }
     }
-    let contents = `var CLIENT_SITE_SETTINGS_WITH_DEFAULTS  = ${JSON.stringify(
+    const contents = `var CLIENT_SITE_SETTINGS_WITH_DEFAULTS  = ${JSON.stringify(
       clientSettings
     )}`;
 
@@ -72,7 +72,7 @@ module.exports.parsePluginClientSettings = function (discourseRoot) {
     settings = settings.concat(glob.sync(discourseRoot + "/plugins/*/config"));
   }
 
-  let loadedSettings = new SiteSettingsPlugin(settings, "site_settings.yml");
+  const loadedSettings = new SiteSettingsPlugin(settings, "site_settings.yml");
 
   return concat(mergeTrees([loadedSettings]), {
     inputFiles: [],
