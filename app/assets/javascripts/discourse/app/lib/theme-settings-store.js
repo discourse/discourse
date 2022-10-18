@@ -1,4 +1,5 @@
 import { get } from "@ember/object";
+import { cloneJSON } from "discourse-common/lib/object";
 
 const originalSettings = {};
 const settings = {};
@@ -11,7 +12,7 @@ export function registerSettings(
   if (settings[themeId] && !force) {
     return;
   }
-  originalSettings[themeId] = Object.assign({}, settingsObject);
+  originalSettings[themeId] = cloneJSON(settingsObject);
   const s = {};
   Object.keys(settingsObject).forEach((key) => {
     Object.defineProperty(s, key, {
@@ -41,7 +42,14 @@ export function getObjectForTheme(themeId) {
 export function resetSettings() {
   Object.keys(originalSettings).forEach((themeId) => {
     Object.keys(originalSettings[themeId]).forEach((key) => {
-      settings[themeId][key] = originalSettings[themeId][key];
+      const original = originalSettings[themeId][key];
+      if (original && typeof original === "object") {
+        // special handling for the theme_uploads and theme_uploads_local magic
+        // objects in settings
+        settings[themeId][key] = cloneJSON(original);
+      } else {
+        settings[themeId][key] = original;
+      }
     });
   });
 }
