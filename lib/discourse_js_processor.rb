@@ -142,7 +142,7 @@ class DiscourseJsProcessor
       JS
 
       # define/require support
-      load_file_in_context(ctx, "mini-loader.js")
+      load_file_in_context(ctx, "node_modules/loader.js/dist/loader/loader.js")
 
       # Babel
       load_file_in_context(ctx, "node_modules/@babel/standalone/babel.js")
