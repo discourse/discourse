@@ -29,6 +29,7 @@ module TopicQueryParams
   private
 
   def hide_welcome_topic?
+    return false if !SiteSetting.bootstrap_mode_enabled
     return false if @guardian.is_admin?
     Site.welcome_topic_exists_and_is_not_edited?
   end
