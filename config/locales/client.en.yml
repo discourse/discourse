@@ -1393,7 +1393,7 @@ en:
         edit_title: "Edit Authenticator"
         edit_description: "Authenticator Name"
         enable_security_key_description: |
-          When you have your <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardware security key</a> prepared, press the Register button below.
+          When you have your <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardware security key</a> or compatible mobile device prepared, press the Register button below.
         totp:
           title: "Token-Based Authenticators"
           add: "Add Authenticator"
@@ -1401,14 +1401,16 @@ en:
           name_and_code_required_error: "You must provide a name and the code from your authenticator app."
         security_key:
           register: "Register"
-          title: "Security Keys"
-          add: "Add Security Key"
+          title: "Physical Security Keys"
+          add: "Add Physical Security Key"
           default_name: "Main Security Key"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "The security key registration process either timed out or was cancelled."
           already_added_error: "You have already registered this security key. You don’t have to register it again."
-          edit: "Edit Security Key"
+          edit: "Edit Physical Security Key"
           save: "Save"
-          edit_description: "Security Key Name"
+          edit_description: "Physical Security Key Name"
           name_required_error: "You must provide a name for your security key."
 
       change_about:
@@ -2008,7 +2010,7 @@ en:
       second_factor_backup_title: "Two-Factor Backup"
       second_factor_backup_description: "Please enter one of your backup codes:"
       second_factor: "Log in using Authenticator app"
-      security_key_description: "When you have your physical security key prepared press the Authenticate with Security Key button below."
+      security_key_description: "When you have your physical security key or compatible mobile device prepared press the Authenticate with Security Key button below."
       security_key_alternative: "Try another way"
       security_key_authenticate: "Authenticate with Security Key"
       security_key_not_allowed_error: "The security key authentication process either timed out or was cancelled."
