@@ -40,7 +40,7 @@
       tag=this.tag}} />
 
   {{#if (and (or this.site.siteSettings.invite_only this.site.siteSettings.bootstrap_mode_enabled) this.currentUser.admin)}}
-    <DButton @icon="user-plus" @action={{action "inviteUsers"}} @class="btn" @title="bootstrap_invite_button_title" />
+    <DButton @icon="user-plus" @action={{action "inviteUsers"}} @class="btn-primary" @title="bootstrap_invite_button_title" />
   {{/if}}
 
   {{#if (and this.site.siteSettings.wizard_required this.currentUser.admin)}}
