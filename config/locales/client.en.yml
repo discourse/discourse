@@ -888,6 +888,7 @@ en:
         group_type: "Group type"
         is_group_user: "Member"
         is_group_owner: "Owner"
+        search_results: "Search results will appear below."
       title:
         one: "Group"
         other: "Groups"
