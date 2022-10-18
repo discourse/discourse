@@ -12,6 +12,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 
 acceptance(
   "Sidebar - Logged on user - Tags section - tagging disabled",
@@ -232,6 +233,118 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     assert.ok(
       exists(`.sidebar-section-link-tag2.active`),
       "the tag2 section link is marked as active"
+    );
+  });
+
+  test("clicking tag section links - sidebar_list_destination set to unread/new and no unread or new topics", async function (assert) {
+    updateCurrentUser({
+      user_option: {
+        sidebar_list_destination: "unread_new",
+      },
+    });
+
+    await visit("/");
+    await click(".sidebar-section-link-tag1");
+
+    assert.strictEqual(
+      currentURL(),
+      "/tag/tag1",
+      "it should transition to tag1's topics discovery page"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-tags .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(`.sidebar-section-link-tag1.active`),
+      "the tag1 section link is marked as active"
+    );
+  });
+
+  test("clicking tag section links - sidebar_list_destination set to unread/new with new topics", async function (assert) {
+    updateCurrentUser({
+      user_option: {
+        sidebar_list_destination: "unread_new",
+      },
+    });
+
+    this.container.lookup("service:topic-tracking-state").loadStates([
+      {
+        topic_id: 1,
+        highest_post_number: 1,
+        last_read_post_number: null,
+        created_at: "2022-05-11T03:09:31.959Z",
+        category_id: 1,
+        notification_level: null,
+        created_in_new_period: true,
+        treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        tags: ["tag1"],
+      },
+    ]);
+
+    await visit("/");
+    await click(".sidebar-section-link-tag1");
+
+    assert.strictEqual(
+      currentURL(),
+      "/tag/tag1/l/new",
+      "it should transition to tag1's topics new page"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-tags .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(`.sidebar-section-link-tag1.active`),
+      "the tag1 section link is marked as active"
+    );
+  });
+
+  test("clicking tag section links - sidebar_list_destination set to unread/new with unread topics", async function (assert) {
+    updateCurrentUser({
+      user_option: {
+        sidebar_list_destination: "unread_new",
+      },
+    });
+
+    this.container.lookup("service:topic-tracking-state").loadStates([
+      {
+        topic_id: 1,
+        highest_post_number: 2,
+        last_read_post_number: 1,
+        created_at: "2022-05-11T03:09:31.959Z",
+        category_id: 1,
+        notification_level: NotificationLevels.TRACKING,
+        created_in_new_period: true,
+        treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        tags: ["tag1"],
+      },
+    ]);
+
+    await visit("/");
+    await click(".sidebar-section-link-tag1");
+
+    assert.strictEqual(
+      currentURL(),
+      "/tag/tag1/l/unread",
+      "it should transition to tag1's topics unread page"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-tags .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(`.sidebar-section-link-tag1.active`),
+      "the tag1 section link is marked as active"
     );
   });
 
