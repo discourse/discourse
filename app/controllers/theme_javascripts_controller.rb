@@ -9,10 +9,10 @@ class ThemeJavascriptsController < ApplicationController
     :preload_json,
     :redirect_to_login_if_required,
     :verify_authenticity_token,
-    only: [:show, :show_tests]
+    only: [:show, :show_map, :show_tests]
   )
 
-  before_action :is_asset_path, :no_cookies, :apply_cdn_headers, only: [:show, :show_tests]
+  before_action :is_asset_path, :no_cookies, :apply_cdn_headers, only: [:show, :show_map, :show_tests]
 
   def show
     raise Discourse::NotFound unless last_modified.present?
@@ -21,18 +21,29 @@ class ThemeJavascriptsController < ApplicationController
     # Security: safe due to route constraint
     cache_file = "#{DISK_CACHE_PATH}/#{params[:digest]}.js"
 
-    unless File.exist?(cache_file)
-      content = query.pluck_first(:content)
-      raise Discourse::NotFound if content.nil?
-
-      FileUtils.mkdir_p(DISK_CACHE_PATH)
-      File.write(cache_file, content)
+    write_if_not_cached(cache_file) do
+      content, has_source_map = query.pluck_first(:content, "source_map IS NOT NULL")
+      if has_source_map
+        content += "\n//# sourceMappingURL=#{params[:digest]}.map?__ws=#{Discourse.current_hostname}\n"
+      end
+      content
     end
 
-    # this is only required for NGINX X-SendFile it seems
-    response.headers["Content-Length"] = File.size(cache_file).to_s
-    set_cache_control_headers
-    send_file(cache_file, disposition: :inline)
+    serve_file(cache_file)
+  end
+
+  def show_map
+    raise Discourse::NotFound unless last_modified.present?
+    return render body: nil, status: 304 if not_modified?
+
+    # Security: safe due to route constraint
+    cache_file = "#{DISK_CACHE_PATH}/#{params[:digest]}.map"
+
+    write_if_not_cached(cache_file) do
+      query.pluck_first(:source_map)
+    end
+
+    serve_file(cache_file)
   end
 
   def show_tests
@@ -48,14 +59,11 @@ class ThemeJavascriptsController < ApplicationController
     @cache_file = "#{TESTS_DISK_CACHE_PATH}/#{digest}.js"
     return render body: nil, status: 304 if not_modified?
 
-    if !File.exist?(@cache_file)
-      FileUtils.mkdir_p(TESTS_DISK_CACHE_PATH)
-      File.write(@cache_file, content)
+    write_if_not_cached(@cache_file) do
+      content
     end
 
-    response.headers["Content-Length"] = File.size(@cache_file).to_s
-    set_cache_control_headers
-    send_file(@cache_file, disposition: :inline)
+    serve_file @cache_file
   end
 
   private
@@ -93,5 +101,23 @@ class ThemeJavascriptsController < ApplicationController
       response.headers['Last-Modified'] = last_modified.httpdate if last_modified
       immutable_for(1.year)
     end
+  end
+
+  def write_if_not_cached(cache_file)
+    unless File.exist?(cache_file)
+      content = yield
+      raise Discourse::NotFound if content.nil?
+
+      FileUtils.mkdir_p(File.dirname(cache_file))
+      File.write(cache_file, content)
+    end
+  end
+
+  def serve_file(cache_file)
+    # this is only required for NGINX X-SendFile it seems
+    response.headers["Content-Length"] = File.size(cache_file).to_s
+    set_cache_control_headers
+    type = cache_file.end_with?(".map") ? "application/json" : "text/javascript"
+    send_file(cache_file, type: type, disposition: :inline)
   end
 end

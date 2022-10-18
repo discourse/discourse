@@ -6,7 +6,7 @@ require 'json_schemer'
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 64
+  BASE_COMPILER_VERSION = 65
 
   attr_accessor :child_components
 
@@ -127,7 +127,7 @@ class Theme < ActiveRecord::Base
       settings_hash = build_settings_hash
       js_compiler.prepend_settings(settings_hash) if settings_hash.present?
       javascript_cache || build_javascript_cache
-      javascript_cache.update!(content: js_compiler.content)
+      javascript_cache.update!(content: js_compiler.content, source_map: js_compiler.source_map)
     else
       javascript_cache&.destroy!
     end
@@ -717,13 +717,17 @@ class Theme < ActiveRecord::Base
 
     compiler = ThemeJavascriptCompiler.new(id, name)
     compiler.append_tree(tests_tree, for_tests: true)
-    content = compiler.content
-
-    content = <<~JS + content
+    compiler.append_raw_script "test_setup.js", <<~JS
       (function() {
         require("discourse/lib/theme-settings-store").registerSettings(#{self.id}, #{cached_default_settings.to_json}, { force: true });
       })();
     JS
+    content = compiler.content
+
+    if compiler.source_map
+      content += "\n//# sourceMappingURL=data:application/json;base64,#{Base64.strict_encode64(compiler.source_map)}\n"
+    end
+
     [content, Digest::SHA1.hexdigest(content)]
   end
 

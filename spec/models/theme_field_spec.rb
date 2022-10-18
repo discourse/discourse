@@ -3,6 +3,8 @@
 
 RSpec.describe ThemeField do
   fab!(:theme) { Fabricate(:theme) }
+  before { ThemeJavascriptCompiler.disable_terser! }
+  after { ThemeJavascriptCompiler.enable_terser! }
 
   describe "scope: find_by_theme_ids" do
     it "returns result in the specified order" do
@@ -194,6 +196,26 @@ HTML
     expect(theme.javascript_cache.content).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery-2\"")
     expect(theme.javascript_cache.content).to include("const settings =")
     expect(theme.javascript_cache.content).to include("[THEME #{theme.id} '#{theme.name}'] Compile error: unknown file extension 'blah' (discourse/controllers/discovery.blah)")
+
+    # Check sourcemap
+    expect(theme.javascript_cache.source_map).to eq(nil)
+    ThemeJavascriptCompiler.enable_terser!
+    js_field.update(compiler_version: "0")
+    theme.save!
+
+    expect(theme.javascript_cache.source_map).not_to eq(nil)
+    map = JSON.parse(theme.javascript_cache.source_map)
+
+    expect(map["sources"]).to contain_exactly(
+      "discourse/controllers/discovery-2.js",
+      "discourse/controllers/discovery.blah",
+      "discourse/controllers/discovery.js",
+      "discourse/templates/discovery.js",
+      "discovery.js",
+      "other_discovery.js"
+    )
+    expect(map["sourceRoot"]).to eq("theme-#{theme.id}/")
+    expect(map["sourcesContent"].length).to eq(6)
   end
 
   def create_upload_theme_field!(name)

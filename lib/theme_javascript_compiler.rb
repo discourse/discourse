@@ -7,16 +7,78 @@ class ThemeJavascriptCompiler
   class CompileError < StandardError
   end
 
-  attr_accessor :content
+  @@terser_disabled = false
+  def self.disable_terser!
+    raise "Tests only" if !Rails.env.test?
+    @@terser_disabled = true
+  end
+
+  def self.enable_terser!
+    raise "Tests only" if !Rails.env.test?
+    @@terser_disabled = false
+  end
 
   def initialize(theme_id, theme_name)
     @theme_id = theme_id
-    @content = +""
+    @output_tree = []
     @theme_name = theme_name
   end
 
+  def compile!
+    if !@compiled
+      @compiled = true
+      @output_tree.freeze
+      output = if !has_content?
+        { "code" => "" }
+      elsif @@terser_disabled
+        { "code" => raw_content }
+      else
+        DiscourseJsProcessor::Transpiler.new.terser(@output_tree.to_h, terser_config)
+      end
+      @content = output["code"]
+      @source_map = output["map"]
+    end
+    [@content, @source_map]
+  rescue DiscourseJsProcessor::TranspileError => e
+    message = "[THEME #{@theme_id} '#{@theme_name}'] Compile error: #{e.message}"
+    @content = "console.error(#{message.to_json});\n"
+    [@content, @source_map]
+  end
+
+  def terser_config
+    # Based on https://github.com/ember-cli/ember-cli-terser/blob/28df3d90a5/index.js#L12-L26
+    {
+      sourceMap: { includeSources: true, root: "theme-#{@theme_id}/" },
+      compress: {
+        negate_iife: false,
+        sequences: 30,
+      },
+      output: {
+        semicolons: false,
+      },
+    }
+  end
+
+  def content
+    compile!
+    @content
+  end
+
+  def source_map
+    compile!
+    @source_map
+  end
+
+  def raw_content
+    @output_tree.map { |filename, source| source }.join("")
+  end
+
+  def has_content?
+    @output_tree.present?
+  end
+
   def prepend_settings(settings_hash)
-    @content.prepend <<~JS
+    @output_tree.prepend ['settings.js', <<~JS]
       (function() {
         if ('require' in window) {
           require("discourse/lib/theme-settings-store").registerSettings(#{@theme_id}, #{settings_hash.to_json});
@@ -90,16 +152,17 @@ class ThemeJavascriptCompiler
       elsif extension == "hbr"
         append_raw_template(module_name.sub("discourse/templates/", ""), content)
       else
-        append_js_error("unknown file extension '#{extension}' (#{filename})")
+        append_js_error(filename, "unknown file extension '#{extension}' (#{filename})")
       end
     rescue CompileError => e
-      append_js_error "#{e.message} (#{filename})"
+      append_js_error filename, "#{e.message} (#{filename})"
     end
   end
 
   def append_ember_template(name, hbs_template)
-    name = "/#{name}" if !name.start_with?("/")
-    module_name = "discourse/theme-#{@theme_id}#{name}"
+    module_name = name
+    module_name = "/#{module_name}" if !module_name.start_with?("/")
+    module_name = "discourse/theme-#{@theme_id}#{module_name}"
 
     # Some themes are colocating connector JS under `/connectors`. Move template to /templates to avoid module name clash
     if (match = COLOCATED_CONNECTOR_REGEX.match(module_name)) && !match[:prefix].end_with?("/templates")
@@ -114,7 +177,7 @@ class ThemeJavascriptCompiler
     JS
 
     template_module = DiscourseJsProcessor.transpile(script, "", module_name, theme_id: @theme_id)
-    content << <<~JS
+    @output_tree << ["#{name}.js", <<~JS]
       if ('define' in window) {
       #{template_module}
       }
@@ -130,8 +193,12 @@ class ThemeJavascriptCompiler
 
   def append_raw_template(name, hbs_template)
     compiled = DiscourseJsProcessor::Transpiler.new.compile_raw_template(hbs_template, theme_id: @theme_id)
-    @content << <<~JS
+    source_for_comment = hbs_template.gsub("*/", '*\/').indent(4, ' ')
+    @output_tree << ["#{name}.js", <<~JS]
       (function() {
+        /*
+      #{source_for_comment}
+        */
         const addRawTemplate = requirejs('discourse-common/lib/raw-templates').addRawTemplate;
         const template = requirejs('discourse-common/lib/raw-handlebars').template(#{compiled});
         addRawTemplate(#{raw_template_name(name)}, template);
@@ -141,11 +208,12 @@ class ThemeJavascriptCompiler
     raise CompileError.new ex.message
   end
 
-  def append_raw_script(script)
-    @content << script + "\n"
+  def append_raw_script(filename, script)
+    @output_tree << [filename, script + "\n"]
   end
 
   def append_module(script, name, include_variables: true)
+    original_filename = name
     name = "discourse/theme-#{@theme_id}/#{name.gsub(/^discourse\//, '')}"
 
     # Some themes are colocating connector JS under `/templates/connectors`. Move out of templates to avoid module name clash
@@ -155,7 +223,7 @@ class ThemeJavascriptCompiler
 
     script = "#{theme_settings}#{script}" if include_variables
     transpiler = DiscourseJsProcessor::Transpiler.new
-    @content << <<~JS
+    @output_tree << ["#{original_filename}.js", <<~JS]
       if ('define' in window) {
       #{transpiler.perform(script, "", name).strip}
       }
@@ -164,9 +232,9 @@ class ThemeJavascriptCompiler
     raise CompileError.new ex.message
   end
 
-  def append_js_error(message)
+  def append_js_error(filename, message)
     message = "[THEME #{@theme_id} '#{@theme_name}'] Compile error: #{message}"
-    append_raw_script "console.error(#{message.to_json});"
+    append_raw_script filename, "console.error(#{message.to_json});"
   end
 
   private
