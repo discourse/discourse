@@ -995,8 +995,7 @@ RSpec.describe ListController do
     end
 
     it "is shown to non-admins when there is an edit" do
-      post.revise(post.user, raw: "#{post.raw}2")
-      post.revise(post.user, raw: 'another updated body', revised_at: post.updated_at + 2.minutes)
+      post.revise(post.user, { raw: "#{post.raw}2" }, revised_at: post.updated_at + 2.minutes)
       post.reload
       expect(post.version).to eq(2)
 
