@@ -5,7 +5,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { inject as service } from "@ember/service";
-import showModal from "discourse/lib/show-modal";
 
 export default Component.extend(FilterModeMixin, {
   router: service(),
@@ -162,10 +161,6 @@ export default Component.extend(FilterModeMixin, {
       } else {
         this.createTopic();
       }
-    },
-
-    inviteUsers() {
-      showModal("create-invite");
     },
   },
 });
