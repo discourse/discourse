@@ -72,7 +72,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
         display: flex;
         align-items: center;
 
-        &:focus {
+        &:focus-visible {
           border: 1px solid;
           @include default-focus;
         }
