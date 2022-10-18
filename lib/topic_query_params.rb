@@ -19,11 +19,8 @@ module TopicQueryParams
     options[:no_subcategories] = options[:no_subcategories] == 'true' if options[:no_subcategories].present?
 
     if hide_welcome_topic?
-      if options[:except_topic_ids].nil?
-        options[:except_topic_ids] = [SiteSetting.welcome_topic_id]
-      else
-        options[:except_topic_ids] << SiteSetting.welcome_topic_id
-      end
+      options[:except_topic_ids] ||= []
+      options[:except_topic_ids] << SiteSetting.welcome_topic_id
     end
 
     options
