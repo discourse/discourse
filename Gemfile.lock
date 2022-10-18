@@ -239,7 +239,7 @@ GEM
     mini_suffix (0.3.3)
       ffi (~> 1.9)
     minitest (5.16.3)
-    mocha (1.15.0)
+    mocha (1.16.0)
     msgpack (1.6.0)
     multi_json (1.15.0)
     multi_xml (0.6.0)
