@@ -15,6 +15,7 @@ import Site from "discourse/models/site";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import categoryFixture from "discourse/tests/fixtures/category-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 
 acceptance(
   "Sidebar - Logged on user - Categories Section - allow_uncategorized_topics disabled",
@@ -289,6 +290,124 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
         `.sidebar-section-link-${category4.slug} .sidebar-section-link-prefix .prefix-span[style="background: linear-gradient(90deg, #${category4.parentCategory.color} 50%, #${category4.color} 50%)"]`
       ),
       "sub category section link is rendered with double prefix color"
+    );
+  });
+
+  test("clicking section links - sidebar_list_destination set to unread/new and no unread or new topics", async function (assert) {
+    updateCurrentUser({
+      user_option: {
+        sidebar_list_destination: "unread_new",
+      },
+    });
+    const { category1 } = setupUserSidebarCategories();
+
+    await visit("/");
+
+    await click(`.sidebar-section-link-${category1.slug}`);
+
+    assert.strictEqual(
+      currentURL(),
+      `/c/${category1.slug}/${category1.id}`,
+      "it should transition to the category1 default view page"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-categories .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(`.sidebar-section-link-${category1.slug}.active`),
+      "the category1 section link is marked as active"
+    );
+  });
+
+  test("clicking section links - sidebar_list_destination set to unread/new with new topics", async function (assert) {
+    const { category1 } = setupUserSidebarCategories();
+    const topicTrackingState = this.container.lookup(
+      "service:topic-tracking-state"
+    );
+    topicTrackingState.states.set("t112", {
+      last_read_post_number: null,
+      id: 112,
+      notification_level: NotificationLevels.TRACKING,
+      category_id: category1.id,
+      created_in_new_period: true,
+    });
+    updateCurrentUser({
+      user_option: {
+        sidebar_list_destination: "unread_new",
+      },
+    });
+
+    await visit("/");
+
+    await click(`.sidebar-section-link-${category1.slug}`);
+
+    assert.strictEqual(
+      currentURL(),
+      `/c/${category1.slug}/${category1.id}/l/new`,
+      "it should transition to the category1 new page"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-categories .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(`.sidebar-section-link-${category1.slug}.active`),
+      "the category1 section link is marked as active"
+    );
+  });
+
+  test("clicking section links - sidebar_list_destination set to unread/new with new and unread topics", async function (assert) {
+    const { category1 } = setupUserSidebarCategories();
+    const topicTrackingState = this.container.lookup(
+      "service:topic-tracking-state"
+    );
+    topicTrackingState.states.set("t112", {
+      last_read_post_number: null,
+      id: 112,
+      notification_level: NotificationLevels.TRACKING,
+      category_id: category1.id,
+      created_in_new_period: true,
+    });
+    topicTrackingState.states.set("t113", {
+      last_read_post_number: 1,
+      highest_post_number: 2,
+      id: 113,
+      notification_level: NotificationLevels.TRACKING,
+      category_id: category1.id,
+      created_in_new_period: true,
+    });
+    updateCurrentUser({
+      user_option: {
+        sidebar_list_destination: "unread_new",
+      },
+    });
+
+    await visit("/");
+
+    await click(`.sidebar-section-link-${category1.slug}`);
+
+    assert.strictEqual(
+      currentURL(),
+      `/c/${category1.slug}/${category1.id}/l/unread`,
+      "it should transition to the category1 unread page"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-categories .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(`.sidebar-section-link-${category1.slug}.active`),
+      "the category1 section link is marked as active"
     );
   });
 

@@ -4,14 +4,16 @@ import { tracked } from "@glimmer/tracking";
 
 import { bind } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
+import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sidebar";
 
 export default class CategorySectionLink {
   @tracked totalUnread = 0;
   @tracked totalNew = 0;
 
-  constructor({ category, topicTrackingState }) {
+  constructor({ category, topicTrackingState, currentUser }) {
     this.category = category;
     this.topicTrackingState = topicTrackingState;
+    this.currentUser = currentUser;
     this.refreshCounts();
   }
 
@@ -79,6 +81,14 @@ export default class CategorySectionLink {
   }
 
   get route() {
+    if (this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION) {
+      if (this.totalUnread > 0) {
+        return "discovery.unreadCategory";
+      }
+      if (this.totalNew > 0) {
+        return "discovery.newCategory";
+      }
+    }
     return "discovery.category";
   }
 }
