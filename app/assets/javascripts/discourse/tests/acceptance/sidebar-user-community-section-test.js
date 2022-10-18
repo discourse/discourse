@@ -162,9 +162,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
   test("clicking on everything link - sidebar_list_destination set to unread/new and no unread or new topics", async function (assert) {
     updateCurrentUser({
-      user_option: {
-        sidebar_list_destination: "unread_new",
-      },
+      sidebar_list_destination: "unread_new",
     });
 
     await visit("/t/280");
@@ -201,9 +199,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       created_in_new_period: true,
     });
     updateCurrentUser({
-      user_option: {
-        sidebar_list_destination: "unread_new",
-      },
+      sidebar_list_destination: "unread_new",
     });
     await visit("/t/280");
     await click(".sidebar-section-community .sidebar-section-link-everything");
@@ -248,9 +244,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       created_in_new_period: true,
     });
     updateCurrentUser({
-      user_option: {
-        sidebar_list_destination: "unread_new",
-      },
+      sidebar_list_destination: "unread_new",
     });
     await visit("/t/280");
     await click(".sidebar-section-community .sidebar-section-link-everything");
@@ -299,9 +293,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
   test("clicking on tracked link - sidebar_list_destination set to unread/new and no unread or new topics", async function (assert) {
     updateCurrentUser({
-      user_option: {
-        sidebar_list_destination: "unread_new",
-      },
+      sidebar_list_destination: "unread_new",
     });
 
     await visit("/t/280");
@@ -340,9 +332,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       created_in_new_period: true,
     });
     updateCurrentUser({
-      user_option: {
-        sidebar_list_destination: "unread_new",
-      },
+      sidebar_list_destination: "unread_new",
     });
     await visit("/t/280");
     await click(".sidebar-section-community .sidebar-section-link-tracked");
@@ -389,9 +379,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       created_in_new_period: true,
     });
     updateCurrentUser({
-      user_option: {
-        sidebar_list_destination: "unread_new",
-      },
+      sidebar_list_destination: "unread_new",
     });
     await visit("/t/280");
     await click(".sidebar-section-community .sidebar-section-link-tracked");

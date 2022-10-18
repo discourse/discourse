@@ -350,7 +350,7 @@ const User = RestModel.extend({
     );
   },
 
-  sidebarListDestination: readOnly("user_option.sidebar_list_destination"),
+  sidebarListDestination: readOnly("sidebar_list_destination"),
 
   changeUsername(new_username) {
     return ajax(userPath(`${this.username_lower}/preferences/username`), {
