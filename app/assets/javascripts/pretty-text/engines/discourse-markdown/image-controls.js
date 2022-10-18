@@ -85,10 +85,10 @@ function buildImageEditAltTextControls(altText) {
   return `
   <span class="alt-text-edit-container" hidden="true">
     <input class="alt-text-input" type="text" value="${altText}" />
-    <button class="alt-text-edit-ok btn-primary">
+    <button class="alt-text-edit-ok btn btn-primary">
         <svg class="fa d-icon d-icon-check svg-icon svg-string"><use href="#check"></use></svg>
     </button>
-    <button class="alt-text-edit-cancel btn-default">
+    <button class="alt-text-edit-cancel btn btn-default">
         <svg class="fa d-icon d-icon-times svg-icon svg-string"><use href="#times"></use></svg>
     </button>
   </span>
@@ -174,10 +174,10 @@ export function setup(helper) {
       "span[hidden=true]",
       "input[type=text]",
       "input[class=alt-text-input]",
-      "button[class=alt-text-edit-ok btn-primary]",
+      "button[class=alt-text-edit-ok btn btn-primary]",
       "svg[class=fa d-icon d-icon-check svg-icon svg-string]",
       "use[href=#check]",
-      "button[class=alt-text-edit-cancel btn-default]",
+      "button[class=alt-text-edit-cancel btn btn-default]",
       "svg[class=fa d-icon d-icon-times svg-icon svg-string]",
       "svg[class=fa d-icon d-icon-trash-alt svg-icon svg-string]",
       "use[href=#times]",
