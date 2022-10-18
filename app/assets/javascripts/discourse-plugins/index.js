@@ -7,6 +7,7 @@ const mergeTrees = require("broccoli-merge-trees");
 const fs = require("fs");
 const concat = require("broccoli-concat");
 const RawHandlebarsCompiler = require("discourse-hbr/raw-handlebars-compiler");
+const DiscoursePluginColocatedTemplateProcessor = require("./colocated-template-compiler");
 
 function fixLegacyExtensions(tree) {
   return new Funnel(tree, {
@@ -169,6 +170,8 @@ module.exports = {
     tree = namespaceModules(tree, pluginName);
 
     tree = RawHandlebarsCompiler(tree);
+
+    tree = new DiscoursePluginColocatedTemplateProcessor(tree);
     tree = this.compileTemplates(tree);
 
     tree = this.processedAddonJsFiles(tree);

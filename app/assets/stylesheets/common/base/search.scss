@@ -163,6 +163,7 @@
         padding-top: 0.25em;
         padding-bottom: 0.25em;
         &:focus-visible {
+          outline: 2px solid transparent;
           background-color: var(--tertiary-very-low);
         }
       }

@@ -52,6 +52,10 @@ export default class SectionLink extends Component {
   }
 
   get prefixElementColors() {
+    if (!this.args.prefixElementColors) {
+      return;
+    }
+
     const prefixElementColors = this.args.prefixElementColors.filter((color) =>
       color?.slice(0, 6)
     );

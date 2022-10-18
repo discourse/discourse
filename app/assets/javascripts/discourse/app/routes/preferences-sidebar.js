@@ -12,6 +12,7 @@ export default RestrictedUserRoute.extend({
     if (this.siteSettings.tagging_enabled) {
       props.selectedSidebarTagNames = user.sidebarTagNames;
     }
+    props.newSidebarListDestination = user.sidebarListDestination;
 
     controller.setProperties(props);
   },
