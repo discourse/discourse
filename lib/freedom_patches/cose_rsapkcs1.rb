@@ -44,7 +44,5 @@ module COSE
     end
 
     register(RSAPKCS1.new(-257, 'RS256', hash_function: 'SHA256'))
-    register(RSAPKCS1.new(-258, 'RS384', hash_function: 'SHA384'))
-    register(RSAPKCS1.new(-259, 'RS512', hash_function: 'SHA512'))
   end
 end

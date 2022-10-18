@@ -48,7 +48,8 @@ class UserUpdater
     :timezone,
     :skip_new_user_tips,
     :seen_popups,
-    :default_calendar
+    :default_calendar,
+    :sidebar_list_destination
   ]
 
   NOTIFICATION_SCHEDULE_ATTRS = -> {

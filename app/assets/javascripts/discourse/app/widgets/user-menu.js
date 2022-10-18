@@ -313,6 +313,14 @@ export default createWidget("user-menu", {
     }
   },
 
+  keyDown(e) {
+    if (e.key === "Escape") {
+      this.sendWidgetAction("toggleUserMenu");
+      e.preventDefault();
+      return false;
+    }
+  },
+
   quickAccess(type) {
     if (this.state.currentQuickAccess !== type) {
       this.state.currentQuickAccess = type;

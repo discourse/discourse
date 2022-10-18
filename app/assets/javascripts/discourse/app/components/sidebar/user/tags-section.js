@@ -71,11 +71,15 @@ export default class SidebarUserTagsSection extends Component {
    * If a site has default sidebar tags configured, always display the tags section.
    */
   get shouldDisplay() {
-    if (this.siteSettings.default_sidebar_tags.length > 0) {
+    if (this.hasDefaultSidebarTags) {
       return true;
     } else {
       return this.currentUser.sidebarTags.length > 0;
     }
+  }
+
+  get hasDefaultSidebarTags() {
+    return this.siteSettings.default_sidebar_tags.length > 0;
   }
 
   @action

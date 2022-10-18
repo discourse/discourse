@@ -1177,12 +1177,16 @@ en:
       enable_quoting: "Enable quote reply for highlighted text"
       enable_defer: "Enable defer to mark topics unread"
       experimental_sidebar:
-        enable: "Enable experimental sidebar"
+        enable: "Enable sidebar"
         options: "Options"
         categories_section: "Categories Section"
         categories_section_instruction: "Selected categories will be displayed under Sidebar's categories section."
         tags_section: "Tags Section"
         tags_section_instruction: "Selected tags will be displayed under Sidebar's tags section."
+        navigation_section: "Navigation"
+        list_destination_instruction: "When I click a topic list link in the sidebar with new or unread topics, take me to"
+        list_destination_default: "Default"
+        list_destination_unread_new: "New/Unread"
       change: "change"
       featured_topic: "Featured Topic"
       moderator: "%{user} is a moderator"
@@ -4189,11 +4193,13 @@ en:
           click_to_get_started: "Click here to get started."
           header_link_text: "Tags"
           header_action_title: "edit your sidebar tags"
+          configure_defaults: "Configure defaults"
         categories:
           none: "You have not added any categories."
           click_to_get_started: "Click here to get started."
           header_link_text: "Categories"
           header_action_title: "edit your sidebar categories"
+          configure_defaults: "Configure defaults"
         community:
           header_link_text: "Community"
           header_action_title: "create a new topic"
@@ -5665,6 +5671,7 @@ en:
           search: "Search"
           groups: "Groups"
           dashboard: "Dashboard"
+          sidebar: "Sidebar"
         secret_list:
           invalid_input: "Input fields cannot be empty or contain vertical bar character."
         default_categories:
