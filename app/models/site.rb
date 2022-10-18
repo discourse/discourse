@@ -208,12 +208,17 @@ class Site
   end
 
   def self.welcome_topic_exists_and_is_not_edited?
-    Post.joins(:topic)
-      .find_by(
-        "topics.id = :topic_id AND topics.deleted_at IS NULL AND posts.post_number = 1 AND posts.version = 1 AND posts.created_at > :created_at",
-        topic_id: SiteSetting.welcome_topic_id,
-        created_at: 1.month.ago
-      ).present?
+    sql = <<~SQL
+      SELECT 1 FROM posts
+      JOIN topics
+      ON posts.topic_id = topics.id
+      WHERE posts.topic_id = #{SiteSetting.welcome_topic_id}
+      AND topics.deleted_at IS NULL
+      AND posts.post_number = 1
+      AND posts.version = 1
+      AND posts.created_at > '#{1.month.ago}';
+    SQL
+    DB.exec(sql) == 1
   end
 
   def self.show_welcome_topic_banner?(guardian)
