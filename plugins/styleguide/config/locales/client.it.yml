@@ -86,7 +86,9 @@ it:
         spinners:
           title: "Icone di Caricamento"
         empty_state:
-          title: "Status Vuoto"
+          title: "Stato Vuoto"
         rich_tooltip:
+          title: "Descrizione estesa"
           description: "Descrizione"
           header: "Intestazione"
+          hover_to_see: "Passa il mouse per vedere una descrizione"

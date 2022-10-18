@@ -58,8 +58,6 @@ cs:
     bad_color_scheme: "Motiv nelze aktualizovat, neplatná paleta barev"
     other_error: "Něco se pokazilo při aktualizaci skinu (theme)"
     ember_selector_error: "Omlouváme se – použití selektorů CSS #ember nebo .ember-view není povoleno, protože tyto názvy jsou dynamicky generovány za běhu a časem se budou měnit, což nakonec povede k nefunkčnímu CSS. Zkuste jiný selektor."
-    compile_error:
-      unrecognized_extension: "Nerozpoznaná přípona souboru: %{extension}"
     import_error:
       generic: Při importu tohoto motivu došlo k chybě
       upload: "Chyba při vytváření položky pro upload: %{name}. %{errors}"
@@ -364,7 +362,6 @@ cs:
   staff_category_name: "Redakce"
   staff_category_description: "Privátní kategorie pro diskuze redakce. Témata jsou viditelná pouze pro moderátory a správce."
   discourse_welcome_topic:
-    title: "Vítejte v Discourse"
     body: |2
 
       První odstavec tohoto připnutého tématu se zobrazí na domovské stránce jako uvítací zpráva pro všechny nové návštěvníky. Je to důležité!

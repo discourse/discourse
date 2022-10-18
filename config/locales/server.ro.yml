@@ -328,8 +328,6 @@ ro:
   meta_category_description: "Discuții despre acest forum, organizare, funcționare și cum îl putem îmbunătăți."
   staff_category_name: "Echipa"
   staff_category_description: "Categorie privată pentru discuțiile personalului. Subiectele sunt vizibile numai pentru admini și moderatori."
-  discourse_welcome_topic:
-    title: "Bine ai venit la Discourse"
   category:
     topic_prefix: "Despre categoria %{category}"
     post_template: "%{replace_paragraph}\n\nFolosește următoarele paragrafe pentru a scrie o descriere mai lungă sau pentru a seta regulile ori îndreptarul categoriei:\n\n- De ce să folosească lumea această categorie? Care e destinația ei?\n\n- Prin ce anume se deosebește de alte categorii pe care le avem deja?\n\n- Ce ar trebui să conțină, în general, subiectele din această categorie?\n\n- Chiar avem nevoie de aceasta categorie? N-am putea-o combina cu o altă categorie sau subcategorie deja existentă?\n"

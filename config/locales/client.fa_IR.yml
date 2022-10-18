@@ -629,6 +629,8 @@ fa_IR:
         reset_to_default: "بازگردانی به پیش‌فرض"
       group:
         all: "همه گروه‌ها"
+      sort:
+        label: "مرتب‌سازی براساس %{criteria}"
     group_histories:
       actions:
         change_group_setting: "تغییر تنظیمات گروه"
@@ -1000,6 +1002,9 @@ fa_IR:
       no_bookmarks_title: "شما هنوز چیزی را نشانه‌گذاری نکرده‌اید"
       no_bookmarks_search: "هیچ نشانکی با درخواست جستجوی شده یافت نشد."
       no_notifications_title: "شما هنوز هیچ اطلاعیه‌ای ندارید"
+      no_other_notifications_title: "شما هنوز هیچ آگاه‌سازی دیگری ندارید"
+      no_other_notifications_body: >
+        در این پنل در مورد سایر فعالیت‌هایی که ممکن است به شما مرتبط باشند - به عنوان مثال، زمانی که شخصی به یکی از نوشته‌های شما پیوند می‌دهد یا ویرایش می‌کند، به شما اطلاع داده می‌شود.
       no_notifications_page_title: "شما هنوز هیچ آگاه‌سازی ندارید"
       first_notification: "اولین پیام اطلاع‌رسانی شما! برای شروع آن‌را انتخاب کنید."
       dynamic_favicon: "نمایش تعداد در ایکون بروسر"
@@ -1023,12 +1028,15 @@ fa_IR:
       enable_quoting: "فعال کردن نقل قول گرفتن از متن انتخاب شده"
       enable_defer: "تاخیر را برای علامت زدن مباحث به عنوان خوانده نشده فعال کن"
       experimental_sidebar:
-        enable: "فعال کردن نوار کناری آزمایشی"
+        enable: "فعال کردن نوار کناری"
         options: "تنظیمات"
         categories_section: "بخش دسته‌بندی‌ها"
         categories_section_instruction: "دسته‌بندی‌های انتخاب شده در بخش دسته‌بندی نوار کناری نمایش داده می‌شود."
         tags_section: "بخش برچسب‌ها"
         tags_section_instruction: "برچسب‌های انتخاب شده در بخش برچسب‌ها نوار کناری نمایش داده می‌شود."
+        navigation_section: "ناوبری"
+        list_destination_default: "پیش‌فرض"
+        list_destination_unread_new: "جدید/خوانده نشده"
       change: "تغییر"
       featured_topic: "مبحث برجسته"
       moderator: "%{user} یک مدیر است"
@@ -1187,13 +1195,15 @@ fa_IR:
           name_and_code_required_error: "شما باید یک نام، و کد برنامه احراز هویت خود را ارائه کنید."
         security_key:
           register: "ثبت‌نام"
-          title: "کلیدهای امنیتی"
-          add: "افزودن کلید امنیتی"
+          title: "کلیدهای امنیتی فیزیکی"
+          add: "افزودن کلیدهای امنیتی فیزیکی"
           default_name: "کلید امنیتی اصلی"
+          iphone_default_name: "آیفون"
+          android_default_name: "اندروید"
           not_allowed_error: "روند ثبت کلید امنیتی به پایان رسیده است یا لغو شده است."
-          edit: "کلید امنیتی را ویرایش کنید"
+          edit: "ویرایش کلیدهای امنیتی فیزیکی"
           save: "ذخیره"
-          edit_description: "نام کلید امنیتی"
+          edit_description: "نام کلیدهای امنیتی فیزیکی"
           name_required_error: "شما باید یک نام برای کلید امنیتی خود انتخاب کنید."
       change_about:
         title: "تغییر «درباره‌ی من»"
@@ -1522,6 +1532,9 @@ fa_IR:
       flair:
         none: "(هیچی)"
         instructions: "آیکون نمایش داده شده در کنار تصویر پروفایل شما"
+      status:
+        title: "وضعیت سفارشی"
+        not_set: "تنظیم نشده"
       primary_group:
         title: "گروه اصلی"
         none: "(هیچی)"
@@ -1537,6 +1550,15 @@ fa_IR:
       set_custom_status: "تنظیم وضعیت سفارشی"
       what_are_you_doing: "داری چیکار می‌کنی؟"
       remove_status: "حذف وضعیت"
+    popup:
+      primary: "فهمیدم!"
+      secondary: "این نکات را به من نشان نده"
+      first_notification:
+        title: "اولین آگاه‌سازی شما!"
+        content: "آگاه‌سازی‌ها برای این است که هر آنچه در انجمن اتفاق می‌افتد را به شما اطلاع بدهد، مورد استفاده قرار می‌گیرد."
+      topic_timeline:
+        title: "جدول زمانی موضوع"
+        content: "با استفاده از جدول زمانی موضوع، به سرعت در یک نوشته پیمایش کنید."
     loading: "بارگذاری..."
     errors:
       prev_page: "هنگام تلاش برای بارگذاری"
@@ -1672,7 +1694,6 @@ fa_IR:
       second_factor_backup_title: "پشتیبانگیری از ورود دو مرحله ای"
       second_factor_backup_description: "لطفا یکی از کدهای پشتیبان را وارد کنید:"
       second_factor: "ورود از طریق اپ کدساز"
-      security_key_description: "وقتی کلید امنیتی فیزیکی خود را آماده کردید٬ دکمه تایید اعتبار زیر را فشار دهید."
       security_key_alternative: "روش دیگری را امتحان کنید"
       security_key_authenticate: "تأیید اعتبار با کلید امنیتی"
       security_key_not_allowed_error: "روند تأیید اعتبار کلید امنیتی به پایان رسیده است یا لغو شده است."
@@ -2611,6 +2632,7 @@ fa_IR:
       gap:
         one: "%{count} پاسخ پنهان را مشاهده کنید"
         other: "%{count} پاسخ پنهان را مشاهده کنید"
+      sr_reply_to: "پاسخ به نوشته #%{post_number} توسط @%{username}"
       notice:
         new_user: "اولین بار است که %{user} پست ارسال می کند - بیایید ورودش به انجمن را خوشامد بگوییم!"
       unread: "نوشته‌ی خوانده نشده"
@@ -3323,11 +3345,13 @@ fa_IR:
           click_to_get_started: "برای شروع اینجا را کلیک کنید."
           header_link_text: "برچسب"
           header_action_title: "برچسب‌های نوار کناری خود را ویرایش کنید"
+          configure_defaults: "تنظیمات پیش‌فرض"
         categories:
           none: "شما هنوز هیچ دسته‌بندی اضافه نکرده‌اید."
           click_to_get_started: "برای شروع اینجا را کلیک کنید."
           header_link_text: "دسته‌بندی‌ها"
           header_action_title: "دسته‌بندی‌های نوار کناری خود را ویرایش کنید"
+          configure_defaults: "تنظیمات پیش‌فرض"
         community:
           header_link_text: "انجمن"
           header_action_title: "ایجاد موضوع جدید"
@@ -4349,6 +4373,7 @@ fa_IR:
           search: "جستجو"
           groups: "گروه‌ها"
           dashboard: "پیشخوان"
+          sidebar: "نوار کناری"
         default_categories:
           modal_yes: "بله"
       badges:

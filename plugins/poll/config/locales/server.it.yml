@@ -40,6 +40,13 @@ it:
     user_cant_post_in_topic: "Non puoi votare perché non puoi pubblicare messaggi in questo argomento."
     topic_must_be_open_to_vote: "L'argomento deve essere aperto per poter votare."
     poll_must_be_open_to_vote: "Il sondaggio deve essere aperto per poter votare."
+    one_vote_per_user: "È consentito solo 1 voto per questo sondaggio."
+    max_vote_per_user:
+      one: È consentito solo %{count} voto per questo sondaggio.
+      other: È consentito un massimo di %{count} voti per questo sondaggio.
+    min_vote_per_user:
+      one: Almeno %{count} voto è richiesto per questo sondaggio.
+      other: Almeno %{count} voti sono richiesti per questo sondaggio.
     topic_must_be_open_to_toggle_status: "L'argomento deve essere aperto per commutare lo stato."
     only_staff_or_op_can_toggle_status: "Solo un membro dello staff o l'autore originale possono commutare lo stato di un sondaggio."
     insufficient_rights_to_create: "Non sei autorizzato a creare sondaggi."

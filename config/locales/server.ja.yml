@@ -58,8 +58,6 @@ ja:
     bad_color_scheme: "テーマを更新できません。無効なカラーパレットです"
     other_error: "テーマの更新中に問題が発生しました"
     ember_selector_error: "#ember または .ember-view CSS セレクタは使用できません。これらの名前はランタイムに動的に生成されるため、時間の経過とともに変化し、最終的には CSS が破損するためです。別のセレクタを試してください。"
-    compile_error:
-      unrecognized_extension: "ファイル拡張子を認識できません: %{extension}"
     import_error:
       generic: テーマをインポート中にエラーが発生しました
       about_json: "インポートエラー: about.json が存在しないか無効です。これは Discourseテーマですか？"
@@ -549,7 +547,6 @@ ja:
   staff_category_name: "スタッフ"
   staff_category_description: "スタッフディスカッション用の非公開カテゴリです。トピックは管理者とモデレーターのみが閲覧できます。"
   discourse_welcome_topic:
-    title: "Discourse へようこそ"
     body: |2
 
       この固定トピックの最初の写真は、ようこそメッセージとしてホームページを初めて訪問するすべてのユーザーに表示されるものであるため、重要です！

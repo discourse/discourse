@@ -553,6 +553,8 @@ sq:
       enable_quoting: "Aktivizo citimin në përgjigje për tekstin e përzgjedhur"
       experimental_sidebar:
         options: "Opsione"
+        navigation_section: "Shfletimi"
+        list_destination_default: "Paracaktuar"
       change: "ndrysho"
       moderator: "%{user} është moderator"
       admin: "%{user} është admin"

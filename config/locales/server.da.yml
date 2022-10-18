@@ -58,8 +58,6 @@ da:
     bad_color_scheme: "Kan ikke opdatere tema, ugyldigt farvepalette"
     other_error: "Der opstod en fejl under opdatering af temaet"
     ember_selector_error: "Beklager — brug af #ember eller .ember-view CSS-vælgere er ikke tilladt, da disse navne genereres dynamisk på kørselstidspunktet og ændres over tid, hvilket i sidste ende resulterer i ødelagt CSS. Prøv en anden vælger."
-    compile_error:
-      unrecognized_extension: "Ikke-genkendt filtypenavn: %{extension}"
     import_error:
       generic: Der opstod en fejl under importering af dette tema
       about_json: "Importfejl: about.json eksisterer ikke, eller er ugyldig. Er du sikker på, at dette er et Discourse tema?"
@@ -567,7 +565,6 @@ da:
   staff_category_name: "Personale"
   staff_category_description: "Privat kategori for personale diskussioner. Emner er kun synlige for administratorer og moderatorer."
   discourse_welcome_topic:
-    title: "Velkommen til Discourse"
     body: |2
 
       Det første afsnit af dette fastgjorte emne vil kunne ses som en velkomstbesked for alle nye besøgende på din hjemmeside. Dette er vigtigt!
@@ -1452,7 +1449,6 @@ da:
     google_oauth2_client_id: "Klient ID til din Google application."
     google_oauth2_client_secret: "Klient hemmelighed til din Google-applikation."
     google_oauth2_prompt: "En valgfri mellemrums-afgrænset liste over strengværdier, der specificerer, om godkendelsesserveren beder brugeren om gen-godkendelse og samtykke. Se <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> for de mulige værdier."
-    google_oauth2_hd_groups: "(eksperimentel) Hent brugernes Google-grupper på det hostede domæne ved godkendelse. Hentede Google-grupper kan bruges til at give automatisk Discourse gruppemedlemskab (se gruppeindstillinger)."
     enable_twitter_logins: "Aktivér Twitter-godkendelse, kræver twitter_consumer_key og twitter_consumer_secret. Se <a href='https://meta.discourse.org/t/13395' target='_blank'>Konfiguration af Twitter-login (og rige indlejringer) for Discourse</a>."
     twitter_consumer_key: "Forbrugernøgle til Twitter-godkendelse, registreret på <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Forbrugerhemmelighed til Twitter-godkendelse, registreret på <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"

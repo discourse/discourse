@@ -1038,6 +1038,8 @@ bg:
       enable_defer: "Активирайте отлагане, за да маркирате темите като непрочетени"
       experimental_sidebar:
         options: "Опции"
+        navigation_section: "Навигация"
+        list_destination_default: "По подразбиране"
       change: "промени"
       featured_topic: "Представена тема"
       moderator: "%{user} е модератор"
@@ -1207,8 +1209,6 @@ bg:
         edit: "Редактирай"
         edit_title: "Редактиране на Authenticator"
         edit_description: "Име на Authenticator"
-        enable_security_key_description: |
-          Когато сте <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">хардуерен ключ за сигурност</a> , натиснете бутона Регистриране по-долу.
         totp:
           title: "Authenticator, базиран на токени"
           add: "Добавете Authenticator"
@@ -1216,14 +1216,10 @@ bg:
           name_and_code_required_error: "Трябва да предоставите име и кода от вашето приложение за удостоверяване."
         security_key:
           register: "Регистриране"
-          title: "Ключове за сигурност"
-          add: "Добавете ключ за сигурност"
           default_name: "Основен ключ за сигурност"
           not_allowed_error: "Процесът на регистрация на ключ за сигурност или е изтекъл, или е бил анулиран."
           already_added_error: "Вече сте регистрирали този ключ за сигурност. Не е нужно да го регистрирате отново."
-          edit: "Редактиране на ключа за сигурност"
           save: "Запази"
-          edit_description: "Име на ключа за сигурност"
           name_required_error: "Трябва да посочите име за вашия ключ за сигурност."
       change_about:
         title: "Смяна на За мен"
@@ -1663,7 +1659,6 @@ bg:
       second_factor_backup_title: "Двуфакторно резервно копие"
       second_factor_backup_description: "Моля, въведете един от вашите резервни кодове:"
       second_factor: "Влезте с помощта на приложението Authenticator"
-      security_key_description: "Когато сте подготвили вашия физически ключ за сигурност, натиснете бутона Удостоверяване с ключ за сигурност по-долу."
       security_key_alternative: "Опитайте друг начин"
       security_key_authenticate: "Удостоверяване с ключ за сигурност"
       security_key_not_allowed_error: "Процесът на удостоверяване на ключа за сигурност или изтече, или беше анулиран."
