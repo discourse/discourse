@@ -156,7 +156,7 @@ module TestSetup
     Bookmark.reset_bookmarkables
 
     # Make sure only the default category and tag hashtag data sources are registered.
-    HashtagService.clear_data_sources
+    HashtagAutocompleteService.clear_data_sources
 
     OmniAuth.config.test_mode = false
   end

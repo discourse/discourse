@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe HashtagService do
+RSpec.describe HashtagAutocompleteService do
   fab!(:user) { Fabricate(:user) }
   fab!(:category1) { Fabricate(:category, name: "Book Club", slug: "book-club") }
   fab!(:tag1) { Fabricate(:tag, name: "great-books") }
@@ -11,14 +11,14 @@ RSpec.describe HashtagService do
   before { Site.clear_cache }
 
   def register_bookmark_data_source
-    HashtagService.register_data_source("bookmark") do |guardian_scoped, term, limit|
+    HashtagAutocompleteService.register_data_source("bookmark") do |guardian_scoped, term, limit|
       guardian_scoped
         .user
         .bookmarks
         .where("name ILIKE ?", "%#{term}%")
         .limit(limit)
         .map do |bm|
-          HashtagService::HashtagItem.new.tap do |item|
+          HashtagAutocompleteService::HashtagItem.new.tap do |item|
             item.text = bm.name
             item.slug = bm.name.gsub(" ", "-")
             item.icon = "bookmark"
@@ -78,14 +78,14 @@ RSpec.describe HashtagService do
       Fabricate(:bookmark, user: user, name: "cool rock song")
       guardian.user.reload
 
-      HashtagService.register_data_source("bookmark") do |guardian_scoped, term, limit|
+      HashtagAutocompleteService.register_data_source("bookmark") do |guardian_scoped, term, limit|
         guardian_scoped
           .user
           .bookmarks
           .where("name ILIKE ?", "%#{term}%")
           .limit(limit)
           .map do |bm|
-            HashtagService::HashtagItem.new.tap do |item|
+            HashtagAutocompleteService::HashtagItem.new.tap do |item|
               item.text = bm.name
               item.slug = bm.name.dasherize
               item.icon = "bookmark"

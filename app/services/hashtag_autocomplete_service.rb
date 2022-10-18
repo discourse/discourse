@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class HashtagService
+class HashtagAutocompleteService
   HASHTAGS_PER_REQUEST = 20
 
   attr_reader :guardian
@@ -84,7 +84,9 @@ class HashtagService
     # Distinguishes between different entities e.g. tag, category.
     attr_accessor :type
 
-    # Used in the textbox when the item is selected.
+    # Inserted into the textbox when an autocomplete item is selected,
+    # and must be unique so it can be used for lookups via the #lookup
+    # method above.
     attr_accessor :ref
   end
 
@@ -96,7 +98,7 @@ class HashtagService
     all_slugs = []
     tag_slugs = []
 
-    slugs[0..HashtagService::HASHTAGS_PER_REQUEST].each do |slug|
+    slugs[0..HashtagAutocompleteService::HASHTAGS_PER_REQUEST].each do |slug|
       if slug.end_with?(PrettyText::Helpers::TAG_HASHTAG_POSTFIX)
         tag_slugs << slug.chomp(PrettyText::Helpers::TAG_HASHTAG_POSTFIX)
       else

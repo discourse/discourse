@@ -1086,14 +1086,14 @@ class Plugin::Instance
     About.add_plugin_stat_group(plugin_stat_group_name, show_in_ui: show_in_ui, &block)
   end
 
-  # Registers a new record type to be searched via the HashtagService and the
+  # Registers a new record type to be searched via the HashtagAutocompleteService and the
   # /hashtags/search endpoint. The data returned by the block must be an array
-  # with each item an instance of HashtagService::HashtagItem.
+  # with each item an instance of HashtagAutocompleteService::HashtagItem.
   #
   # See also registerHashtagSearchParam in the plugin JS API, otherwise the
   # clientside hashtag search code will use the new type registered here.
   def register_hashtag_data_source(type, &block)
-    HashtagService.register_data_source(type, &block)
+    HashtagAutocompleteService.register_data_source(type, &block)
   end
 
   protected

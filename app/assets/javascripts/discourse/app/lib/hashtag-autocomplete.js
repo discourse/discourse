@@ -148,10 +148,10 @@ function _searchRequest(term, context, resultFunc) {
   currentSearch
     .then((r) => {
       returnVal = r.results;
+      resultFunc(returnVal);
     })
     .finally(() => {
       currentSearch = null;
-      resultFunc(returnVal);
     });
   return currentSearch;
 }
