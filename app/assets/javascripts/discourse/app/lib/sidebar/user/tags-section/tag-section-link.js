@@ -4,14 +4,16 @@ import { tracked } from "@glimmer/tracking";
 
 import { bind } from "discourse-common/utils/decorators";
 import BaseTagSectionLink from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
+import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sidebar";
 
 export default class TagSectionLink extends BaseTagSectionLink {
   @tracked totalUnread = 0;
   @tracked totalNew = 0;
 
-  constructor({ topicTrackingState }) {
+  constructor({ topicTrackingState, currentUser }) {
     super(...arguments);
     this.topicTrackingState = topicTrackingState;
+    this.currentUser = currentUser;
     this.refreshCounts();
   }
 
@@ -33,6 +35,14 @@ export default class TagSectionLink extends BaseTagSectionLink {
   }
 
   get route() {
+    if (this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION) {
+      if (this.totalUnread > 0) {
+        return "tag.showUnread";
+      }
+      if (this.totalNew > 0) {
+        return "tag.showNew";
+      }
+    }
     return "tag.show";
   }
 
