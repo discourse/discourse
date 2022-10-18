@@ -95,6 +95,7 @@ class ThemeField < ActiveRecord::Base
           js_compiler.append_ember_template("discourse/templates/#{name}", hbs_template)
         end
       rescue ThemeJavascriptCompiler::CompileError => ex
+        js_compiler.append_js_error("discourse/templates/#{name}", ex.message)
         errors << ex.message
       end
 
@@ -128,25 +129,23 @@ class ThemeField < ActiveRecord::Base
 
         js_compiler.append_module(js, "discourse/initializers/#{initializer_name}", include_variables: true)
       rescue ThemeJavascriptCompiler::CompileError => ex
+        js_compiler.append_js_error("discourse/initializers/#{initializer_name}", ex.message)
         errors << ex.message
       end
 
       node.remove
     end
 
-    doc.css('script').each do |node|
+    doc.css('script').each_with_index do |node, index|
       next unless inline_javascript?(node)
-      js_compiler.append_raw_script(node.inner_html)
+      js_compiler.append_raw_script("_html/#{Theme.targets[self.target_id]}/#{name}_#{index + 1}.js", node.inner_html)
       node.remove
     end
 
-    errors.each do |error|
-      js_compiler.append_js_error(error)
-    end
-
     settings_hash = theme.build_settings_hash
-    js_compiler.prepend_settings(settings_hash) if js_compiler.content.present? && settings_hash.present?
+    js_compiler.prepend_settings(settings_hash) if js_compiler.has_content? && settings_hash.present?
     javascript_cache.content = js_compiler.content
+    javascript_cache.source_map = js_compiler.source_map
     javascript_cache.save!
 
     doc.add_child("<script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>") if javascript_cache.content.present?
@@ -239,6 +238,7 @@ class ThemeField < ActiveRecord::Base
     end
 
     javascript_cache.content = js_compiler.content
+    javascript_cache.source_map = js_compiler.source_map
     javascript_cache.save!
     doc = ""
     doc = "<script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>" if javascript_cache.content.present?

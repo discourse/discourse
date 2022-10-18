@@ -2,6 +2,9 @@
 RSpec.describe ThemeJavascriptsController do
   include ActiveSupport::Testing::TimeHelpers
 
+  before { ThemeJavascriptCompiler.disable_terser! }
+  after { ThemeJavascriptCompiler.enable_terser! }
+
   def clear_disk_cache
     if Dir.exist?(ThemeJavascriptsController::DISK_CACHE_PATH)
       `rm -rf #{ThemeJavascriptsController::DISK_CACHE_PATH}`
@@ -53,6 +56,40 @@ RSpec.describe ThemeJavascriptsController do
       javascript_cache.destroy!
 
       get "/theme-javascripts/#{javascript_cache.digest}.js"
+      expect(response.status).to eq(404)
+    end
+
+    it "adds sourceMappingUrl if there is a source map" do
+      digest = SecureRandom.hex(20)
+      javascript_cache.update(digest: digest)
+      get "/theme-javascripts/#{digest}.js"
+      expect(response.status).to eq(200)
+      expect(response.body).to eq('console.log("hello");')
+
+      digest = SecureRandom.hex(20)
+      javascript_cache.update(digest: digest, source_map: '{fakeSourceMap: true}')
+      get "/theme-javascripts/#{digest}.js"
+      expect(response.status).to eq(200)
+      expect(response.body).to eq <<~JS
+        console.log("hello");
+        //# sourceMappingURL=#{digest}.map?__ws=test.localhost
+      JS
+    end
+  end
+
+  describe "#show_map" do
+    it "returns a source map when present" do
+      get "/theme-javascripts/#{javascript_cache.digest}.map"
+      expect(response.status).to eq(404)
+
+      digest = SecureRandom.hex(20)
+      javascript_cache.update(digest: digest, source_map: '{fakeSourceMap: true}')
+      get "/theme-javascripts/#{digest}.map"
+      expect(response.status).to eq(200)
+      expect(response.body).to eq("{fakeSourceMap: true}")
+
+      javascript_cache.destroy
+      get "/theme-javascripts/#{digest}.map"
       expect(response.status).to eq(404)
     end
   end
@@ -132,6 +169,14 @@ RSpec.describe ThemeJavascriptsController do
       get "/theme-javascripts/tests/#{component.id}-#{digest}.js"
       expect(response.status).to eq(200)
       expect(response.body).to include("assert.ok(343434);")
+    end
+
+    it "includes inline sourcemap" do
+      ThemeJavascriptCompiler.enable_terser!
+      content, digest = component.baked_js_tests_with_digest
+      get "/theme-javascripts/tests/#{component.id}-#{digest}.js"
+      expect(response.status).to eq(200)
+      expect(response.body).to include("//# sourceMappingURL=data:application/json;base64,")
     end
   end
 end

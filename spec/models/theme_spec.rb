@@ -5,6 +5,9 @@ RSpec.describe Theme do
     Theme.clear_cache!
   end
 
+  before { ThemeJavascriptCompiler.disable_terser! }
+  after { ThemeJavascriptCompiler.enable_terser! }
+
   fab! :user do
     Fabricate(:user)
   end
