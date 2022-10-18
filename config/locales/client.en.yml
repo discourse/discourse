@@ -922,6 +922,7 @@ en:
         no_filter_matches: "No members match that search."
       topics: "Topics"
       posts: "Posts"
+      aria_post_number: "%{title} - post #%{postNumber}"
       mentions: "Mentions"
       messages: "Messages"
       notification_level: "Default notification level for group messages"
