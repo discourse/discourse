@@ -422,9 +422,9 @@ export default Controller.extend({
 
     resetSeenPopups() {
       this.model.set("skip_new_user_tips", false);
-      this.model.set("seen_popups", "");
+      this.model.set("seen_popups", null);
       this.model.set("user_option.skip_new_user_tips", false);
-      this.model.set("user_option.seen_popups", "");
+      this.model.set("user_option.seen_popups", null);
       return this.model.save(["skip_new_user_tips", "seen_popups"]);
     },
   },
