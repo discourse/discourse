@@ -36,6 +36,7 @@ import extractValue from "discourse-common/utils/extract-value";
 import handleDescriptor from "discourse-common/utils/handle-descriptor";
 import isDescriptor from "discourse-common/utils/is-descriptor";
 import macroAlias from "discourse-common/utils/macro-alias";
+import discourseDebounce from "discourse-common/lib/debounce";
 
 export default function discourseComputedDecorator(...params) {
   // determine if user called as @discourseComputed('blah', 'blah') or @discourseComputed
@@ -84,6 +85,24 @@ export function readOnly(target, name, desc) {
       let value = extractValue(desc);
       return value.readOnly();
     },
+  };
+}
+
+export function debounce(delay) {
+  return function (target, name, descriptor) {
+    return {
+      enumerable: descriptor.enumerable,
+      configurable: descriptor.configurable,
+      writable: descriptor.writable,
+      initializer() {
+        const originalFunction = descriptor.value;
+        const debounced = function (...args) {
+          return discourseDebounce(this, originalFunction, ...args, delay);
+        };
+
+        return debounced;
+      },
+    };
   };
 }
 
