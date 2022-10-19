@@ -429,6 +429,8 @@ module.exports = {
             `<script src="${config.rootURL}assets/plugins/test/${directoryName}_tests.js" data-discourse-plugin="${pluginName}"></script>`
         )
         .join("\n");
+    } else if (shouldLoadPluginTestJs() && type === "test-plugin-css") {
+      return `<link rel="stylesheet" href="${config.rootURL}bootstrap/plugin-css-for-tests.css" data-discourse-plugin="_all" />`;
     }
   },
 
