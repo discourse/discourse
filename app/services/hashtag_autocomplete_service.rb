@@ -95,6 +95,8 @@ class HashtagAutocompleteService
   end
 
   def lookup(slugs)
+    raise Discourse::InvalidParameters.new(:slugs) if !slugs.is_a?(Array)
+
     all_slugs = []
     tag_slugs = []
 
@@ -136,6 +138,8 @@ class HashtagAutocompleteService
   end
 
   def search(term, types_in_priority_order, limit = 5)
+    raise Discourse::InvalidParameters.new(:order) if !types_in_priority_order.is_a?(Array)
+
     results = []
     slugs_by_type = {}
     term = term.downcase
@@ -144,12 +148,13 @@ class HashtagAutocompleteService
 
     types_in_priority_order.each do |type|
       data = @@data_sources[type].call(guardian, term, limit - results.length)
-      if !data.all? { |item|
-           item.kind_of?(HashtagItem) && item.slug.present? && item.text.present?
-         }
-        next
-      end
       next if data.empty?
+
+      all_data_items_valid = data.all? do |item|
+        item.kind_of?(HashtagItem) && item.slug.present? && item.text.present?
+      end
+      next if !all_data_items_valid
+
       data.each do |item|
         item.type = type
         item.ref = item.ref || item.slug

@@ -204,17 +204,19 @@ header .discourse-tag {
 }
 
 .hashtag-autocomplete {
-  ul li a {
-    align-items: center;
-    color: var(--primary-medium);
-    display: flex;
+  .hashtag-autocomplete__option {
+    .hashtag-autocomplete__link {
+      align-items: center;
+      color: var(--primary-medium);
+      display: flex;
 
-    .d-icon {
-      padding-right: 0.5em;
-    }
+      .d-icon {
+        padding-right: 0.5em;
+      }
 
-    .hashtag-autocomplete__text {
-      flex: 1;
+      .hashtag-autocomplete__text {
+        flex: 1;
+      }
     }
   }
 }
