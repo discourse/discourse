@@ -3,6 +3,8 @@
 
 RSpec.describe ThemeField do
   fab!(:theme) { Fabricate(:theme) }
+  before { ThemeJavascriptCompiler.disable_terser! }
+  after { ThemeJavascriptCompiler.enable_terser! }
 
   describe "scope: find_by_theme_ids" do
     it "returns result in the specified order" do
@@ -111,7 +113,7 @@ HTML
     field.ensure_baked!
     expect(field.error).not_to eq(nil)
     expect(field.value_baked).to include("<script defer=\"\" src=\"#{field.javascript_cache.url}\" data-theme-id=\"1\"></script>")
-    expect(field.javascript_cache.content).to include("Theme Transpilation Error:")
+    expect(field.javascript_cache.content).to include("[THEME 1 'Default'] Compile error")
 
     field.update!(value: '')
     field.ensure_baked!
@@ -183,15 +185,9 @@ HTML
     theme.save!
 
     js_field.reload
-    expect(js_field.value_baked).to include("if ('define' in window) {")
-    expect(js_field.value_baked).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery\"")
-    expect(js_field.value_baked).to include("console.log('hello from .js.es6');")
-
-    expect(hbs_field.reload.value_baked).to include("define(\"discourse/theme-#{theme.id}/discourse/templates/discovery\", [\"exports\", \"@ember/template-factory\"]")
-    expect(raw_hbs_field.reload.value_baked).to include('addRawTemplate("discovery"')
-    expect(hbr_field.reload.value_baked).to include('addRawTemplate("other_discovery"')
-    expect(unknown_field.reload.value_baked).to eq("")
-    expect(unknown_field.reload.error).to eq(I18n.t("themes.compile_error.unrecognized_extension", extension: "blah"))
+    expect(js_field.value_baked).to eq("baked")
+    expect(js_field.value_baked).to eq("baked")
+    expect(js_field.value_baked).to eq("baked")
 
     # All together
     expect(theme.javascript_cache.content).to include("define(\"discourse/theme-#{theme.id}/discourse/templates/discovery\", [\"exports\", \"@ember/template-factory\"]")
@@ -199,6 +195,27 @@ HTML
     expect(theme.javascript_cache.content).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery\"")
     expect(theme.javascript_cache.content).to include("define(\"discourse/theme-#{theme.id}/controllers/discovery-2\"")
     expect(theme.javascript_cache.content).to include("const settings =")
+    expect(theme.javascript_cache.content).to include("[THEME #{theme.id} '#{theme.name}'] Compile error: unknown file extension 'blah' (discourse/controllers/discovery.blah)")
+
+    # Check sourcemap
+    expect(theme.javascript_cache.source_map).to eq(nil)
+    ThemeJavascriptCompiler.enable_terser!
+    js_field.update(compiler_version: "0")
+    theme.save!
+
+    expect(theme.javascript_cache.source_map).not_to eq(nil)
+    map = JSON.parse(theme.javascript_cache.source_map)
+
+    expect(map["sources"]).to contain_exactly(
+      "discourse/controllers/discovery-2.js",
+      "discourse/controllers/discovery.blah",
+      "discourse/controllers/discovery.js",
+      "discourse/templates/discovery.js",
+      "discovery.js",
+      "other_discovery.js"
+    )
+    expect(map["sourceRoot"]).to eq("theme-#{theme.id}/")
+    expect(map["sourcesContent"].length).to eq(6)
   end
 
   def create_upload_theme_field!(name)

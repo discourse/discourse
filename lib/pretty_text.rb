@@ -94,7 +94,7 @@ module PrettyText
     end
 
     root_path = "#{Rails.root}/app/assets/javascripts/"
-    ctx_load(ctx, "#{root_path}/mini-loader.js")
+    ctx_load(ctx, "#{root_path}/node_modules/loader.js/dist/loader/loader.js")
     ctx_load(ctx, "#{root_path}/handlebars-shim.js")
     ctx_load(ctx, "#{root_path}/node_modules/xss/dist/xss.js")
     ctx.load("#{Rails.root}/lib/pretty_text/vendor-shims.js")

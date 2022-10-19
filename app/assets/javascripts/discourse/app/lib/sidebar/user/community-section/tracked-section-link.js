@@ -3,6 +3,7 @@ import I18n from "I18n";
 import { tracked } from "@glimmer/tracking";
 import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
 import { isTrackedTopic } from "discourse/lib/topic-list-tracked-filter";
+import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sidebar";
 
 export default class TrackedSectionLink extends BaseSectionLink {
   @tracked totalUnread = 0;
@@ -64,6 +65,14 @@ export default class TrackedSectionLink extends BaseSectionLink {
   }
 
   get route() {
+    if (this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION) {
+      if (this.totalUnread > 0) {
+        return "discovery.unread";
+      }
+      if (this.totalNew > 0) {
+        return "discovery.new";
+      }
+    }
     return "discovery.latest";
   }
 

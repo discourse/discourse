@@ -185,4 +185,30 @@ RSpec.describe DiscourseJsProcessor do
       )
     end
   end
+
+  describe "Transpiler#terser" do
+    it "can minify code and provide sourcemaps" do
+      sources = {
+        "multiply.js" => "let multiply = (firstValue, secondValue) => firstValue * secondValue;",
+        "add.js" => "let add = (firstValue, secondValue) => firstValue + secondValue;"
+      }
+
+      result = DiscourseJsProcessor::Transpiler.new.terser(sources, { sourceMap: { includeSources: true } })
+      expect(result.keys).to contain_exactly("code", "map")
+
+      begin
+        # Check the code still works
+        ctx = MiniRacer::Context.new
+        ctx.eval(result["code"])
+        expect(ctx.eval("multiply(2, 3)")).to eq(6)
+        expect(ctx.eval("add(2, 3)")).to eq(5)
+      ensure
+        ctx.dispose
+      end
+
+      map = JSON.parse(result["map"])
+      expect(map["sources"]).to contain_exactly(*sources.keys)
+      expect(map["sourcesContent"]).to contain_exactly(*sources.values)
+    end
+  end
 end

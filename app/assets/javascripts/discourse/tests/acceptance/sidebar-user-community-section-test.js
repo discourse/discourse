@@ -297,6 +297,123 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
   });
 
+  test("clicking on tracked link - sidebar_list_destination set to unread/new and no unread or new topics", async function (assert) {
+    updateCurrentUser({
+      user_option: {
+        sidebar_list_destination: "unread_new",
+      },
+    });
+
+    await visit("/t/280");
+    await click(".sidebar-section-community .sidebar-section-link-tracked");
+    assert.strictEqual(
+      currentURL(),
+      "/latest?f=tracked",
+      "it should transition to the latest tracked url"
+    );
+
+    assert.ok(
+      exists(".sidebar-section-community .sidebar-section-link-tracked.active"),
+      "the tracked link is marked as active"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-community .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+  });
+
+  test("clicking on tracked link - sidebar_list_destination set to unread/new with new topics", async function (assert) {
+    const categories = Site.current().categories;
+    const category = categories.find((c) => c.id === 1001);
+    category.set("notification_level", NotificationLevels.TRACKING);
+
+    const topicTrackingState = this.container.lookup(
+      "service:topic-tracking-state"
+    );
+    topicTrackingState.states.set("t112", {
+      last_read_post_number: null,
+      id: 112,
+      notification_level: NotificationLevels.TRACKING,
+      category_id: 1001,
+      created_in_new_period: true,
+    });
+    updateCurrentUser({
+      user_option: {
+        sidebar_list_destination: "unread_new",
+      },
+    });
+    await visit("/t/280");
+    await click(".sidebar-section-community .sidebar-section-link-tracked");
+
+    assert.strictEqual(
+      currentURL(),
+      "/new?f=tracked",
+      "it should transition to the tracked new page"
+    );
+
+    assert.ok(
+      exists(".sidebar-section-community .sidebar-section-link-tracked.active"),
+      "the tracked link is marked as active"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-community .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+  });
+
+  test("clicking on tracked link - sidebar_list_destination set to unread/new with new and unread topics", async function (assert) {
+    const categories = Site.current().categories;
+    const category = categories.find((c) => c.id === 1001);
+    category.set("notification_level", NotificationLevels.TRACKING);
+
+    const topicTrackingState = this.container.lookup(
+      "service:topic-tracking-state"
+    );
+    topicTrackingState.states.set("t112", {
+      last_read_post_number: null,
+      id: 112,
+      notification_level: NotificationLevels.TRACKING,
+      category_id: 1001,
+      created_in_new_period: true,
+    });
+    topicTrackingState.states.set("t113", {
+      last_read_post_number: 1,
+      highest_post_number: 2,
+      id: 113,
+      notification_level: NotificationLevels.TRACKING,
+      category_id: 1001,
+      created_in_new_period: true,
+    });
+    updateCurrentUser({
+      user_option: {
+        sidebar_list_destination: "unread_new",
+      },
+    });
+    await visit("/t/280");
+    await click(".sidebar-section-community .sidebar-section-link-tracked");
+
+    assert.strictEqual(
+      currentURL(),
+      "/unread?f=tracked",
+      "it should transition to the tracked unread page"
+    );
+
+    assert.ok(
+      exists(".sidebar-section-community .sidebar-section-link-tracked.active"),
+      "the tracked link is marked as active"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-community .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+  });
+
   test("clicking on users link", async function (assert) {
     await visit("/t/280");
 

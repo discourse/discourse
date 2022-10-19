@@ -142,7 +142,7 @@ class DiscourseJsProcessor
       JS
 
       # define/require support
-      load_file_in_context(ctx, "mini-loader.js")
+      load_file_in_context(ctx, "node_modules/loader.js/dist/loader/loader.js")
 
       # Babel
       load_file_in_context(ctx, "node_modules/@babel/standalone/babel.js")
@@ -152,11 +152,16 @@ class DiscourseJsProcessor
         }
       JS
 
+      # Terser
+      load_file_in_context(ctx, "node_modules/source-map/dist/source-map.js")
+      load_file_in_context(ctx, "node_modules/terser/dist/bundle.min.js")
+
       # Template Compiler
       load_file_in_context(ctx, "node_modules/ember-source/dist/ember-template-compiler.js")
       load_file_in_context(ctx, "node_modules/babel-plugin-ember-template-compilation/src/plugin.js", wrap_in_module: "babel-plugin-ember-template-compilation/index")
       load_file_in_context(ctx, "node_modules/babel-plugin-ember-template-compilation/src/expression-parser.js", wrap_in_module: "babel-plugin-ember-template-compilation/expression-parser")
       load_file_in_context(ctx, "node_modules/babel-import-util/src/index.js", wrap_in_module: "babel-import-util")
+      load_file_in_context(ctx, "node_modules/ember-cli-htmlbars/lib/colocated-babel-plugin.js", wrap_in_module: "colocated-babel-plugin")
 
       # Widget HBS compiler
       widget_hbs_compiler_source = File.read("#{Rails.root}/lib/javascripts/widget-hbs-compiler.js")
@@ -196,6 +201,8 @@ class DiscourseJsProcessor
       ctx.eval <<~JS
         globalThis.compileRawTemplate = require('discourse-js-processor').compileRawTemplate;
         globalThis.transpile = require('discourse-js-processor').transpile;
+        globalThis.minify = require('discourse-js-processor').minify;
+        globalThis.getMinifyResult = require('discourse-js-processor').getMinifyResult;
       JS
 
       ctx
@@ -218,9 +225,16 @@ class DiscourseJsProcessor
       @ctx
     end
 
+    # Call a method in the global scope of the v8 context.
+    # The `fetch_result_call` kwarg provides a workaround for the lack of mini_racer async
+    # result support. The first call can perform some async operation, and then `fetch_result_call`
+    # will be called to fetch the result.
     def self.v8_call(*args, **kwargs)
+      fetch_result_call = kwargs.delete(:fetch_result_call)
       mutex.synchronize do
-        v8.call(*args, **kwargs)
+        result = v8.call(*args, **kwargs)
+        result = v8.call(fetch_result_call) if fetch_result_call
+        result
       end
     rescue MiniRacer::RuntimeError => e
       message = e.message
@@ -275,5 +289,8 @@ class DiscourseJsProcessor
       self.class.v8_call("compileRawTemplate", source, theme_id)
     end
 
+    def terser(tree, opts)
+      self.class.v8_call("minify", tree, opts, fetch_result_call: "getMinifyResult")
+    end
   end
 end

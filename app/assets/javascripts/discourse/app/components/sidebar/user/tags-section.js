@@ -48,6 +48,7 @@ export default class SidebarUserTagsSection extends Component {
           new TagSectionLink({
             tagName: tag.name,
             topicTrackingState: this.topicTrackingState,
+            currentUser: this.currentUser,
           })
         );
       }
