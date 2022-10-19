@@ -2,7 +2,7 @@
 
 class ThemeJavascriptCompiler
 
-  COLOCATED_CONNECTOR_REGEX = /\A(?<prefix>.*)\/connectors\/(?<outlet>[^\/]+)\/(?<name>[^\/\.]+)\z/
+  COLOCATED_CONNECTOR_REGEX = /\A(?<prefix>.*\/?)connectors\/(?<outlet>[^\/]+)\/(?<name>[^\/\.]+)\.(?<extension>.+)\z/
 
   class CompileError < StandardError
   end
@@ -101,6 +101,23 @@ class ThemeJavascriptCompiler
       end
     end
 
+    # Some themes are colocating connector JS under `/connectors`. Move template to /templates to avoid module name clash
+    tree.transform_keys! do |filename|
+      match = COLOCATED_CONNECTOR_REGEX.match(filename)
+      next filename if !match
+
+      is_template = match[:extension] == "hbs"
+      is_in_templates_directory = match[:prefix].split("/").last == "templates"
+
+      if is_template && !is_in_templates_directory
+        "#{match[:prefix]}templates/connectors/#{match[:outlet]}/#{match[:name]}.#{match[:extension]}"
+      elsif !is_template && is_in_templates_directory
+        "#{match[:prefix].chomp('templates/')}connectors/#{match[:outlet]}/#{match[:name]}.#{match[:extension]}"
+      else
+        filename
+      end
+    end
+
     # Handle colocated components
     tree.dup.each_pair do |filename, content|
       is_component_template = filename.end_with?(".hbs") && filename.start_with?("#{root_name}/components/")
@@ -164,11 +181,6 @@ class ThemeJavascriptCompiler
     module_name = "/#{module_name}" if !module_name.start_with?("/")
     module_name = "discourse/theme-#{@theme_id}#{module_name}"
 
-    # Some themes are colocating connector JS under `/connectors`. Move template to /templates to avoid module name clash
-    if (match = COLOCATED_CONNECTOR_REGEX.match(module_name)) && !match[:prefix].end_with?("/templates")
-      module_name = "#{match[:prefix]}/templates/connectors/#{match[:outlet]}/#{match[:name]}"
-    end
-
     # Mimics the ember-cli implementation
     # https://github.com/ember-cli/ember-cli-htmlbars/blob/d5aa14b3/lib/template-compiler-plugin.js#L18-L26
     script = <<~JS
@@ -215,11 +227,6 @@ class ThemeJavascriptCompiler
   def append_module(script, name, include_variables: true)
     original_filename = name
     name = "discourse/theme-#{@theme_id}/#{name.gsub(/^discourse\//, '')}"
-
-    # Some themes are colocating connector JS under `/templates/connectors`. Move out of templates to avoid module name clash
-    if (match = COLOCATED_CONNECTOR_REGEX.match(name)) && match[:prefix].end_with?("/templates")
-      name = "#{match[:prefix].delete_suffix("/templates")}/connectors/#{match[:outlet]}/#{match[:name]}"
-    end
 
     script = "#{theme_settings}#{script}" if include_variables
     transpiler = DiscourseJsProcessor::Transpiler.new
