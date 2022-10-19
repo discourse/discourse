@@ -2,15 +2,14 @@ import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
+import Ember from "ember";
 
 acceptance("CustomHTML template", function (needs) {
   needs.hooks.beforeEach(() => {
-    // eslint-disable-next-line no-undef
     Ember.TEMPLATES["top"] = hbs`<span class='top-span'>TOP</span>`;
   });
 
   needs.hooks.afterEach(() => {
-    // eslint-disable-next-line no-undef
     delete Ember.TEMPLATES["top"];
   });
 

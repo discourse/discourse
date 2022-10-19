@@ -6,20 +6,19 @@ import {
 import { hbs } from "ember-cli-htmlbars";
 import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
+import Ember from "ember";
 
 const CONNECTOR =
   "javascripts/single-test/connectors/user-profile-primary/hello";
 
 acceptance("Plugin Outlet - Single Template", function (needs) {
   needs.hooks.beforeEach(() => {
-    // eslint-disable-next-line no-undef
     Ember.TEMPLATES[
       CONNECTOR
     ] = hbs`<span class='hello-username'>{{model.username}}</span>`;
   });
 
   needs.hooks.afterEach(() => {
-    // eslint-disable-next-line no-undef
     delete Ember.TEMPLATES[CONNECTOR];
   });
 

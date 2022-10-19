@@ -4,6 +4,7 @@ import { start } from "ember-qunit";
 import loadEmberExam from "ember-exam/test-support/load";
 import * as QUnit from "qunit";
 import { setup } from "qunit-dom";
+import Ember from "ember";
 
 setEnvironment("testing");
 
@@ -27,7 +28,6 @@ document.addEventListener("discourse-booted", () => {
   const skipCore = params.get("qunit_skip_core") === "1";
   const disableAutoStart = params.get("qunit_disable_auto_start") === "1";
 
-  // eslint-disable-next-line no-undef
   Ember.ENV.LOG_STACKTRACE_ON_DEPRECATION = false;
 
   document.body.insertAdjacentHTML(

@@ -1,4 +1,4 @@
-/* global Ember */
+import Ember from "ember";
 import { dasherize, decamelize } from "@ember/string";
 import deprecated from "discourse-common/lib/deprecated";
 import { findHelper } from "discourse-common/lib/helpers";

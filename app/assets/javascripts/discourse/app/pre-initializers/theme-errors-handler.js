@@ -8,6 +8,7 @@ import identifySource, {
   consolePrefix,
   getThemeInfo,
 } from "discourse/lib/source-identifier";
+import Ember from "ember";
 
 const showingErrors = new Set();
 
@@ -52,7 +53,6 @@ function reportToLogster(name, error) {
   };
 
   // TODO: To be moved out into a logster-provided lib
-  // eslint-disable-next-line no-undef
   Ember.$.ajax(getURL("/logs/report_js_error"), {
     data,
     type: "POST",

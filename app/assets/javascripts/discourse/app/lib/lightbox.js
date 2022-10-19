@@ -34,8 +34,7 @@ export default function (elem, siteSettings) {
       mainClass: "mfp-zoom-in",
       tClose: I18n.t("lightbox.close"),
       tLoading: spinnerHTML,
-      // eslint-disable-next-line no-undef
-      prependTo: Ember.testing && document.getElementById("ember-testing"),
+      prependTo: isTesting() && document.getElementById("ember-testing"),
 
       gallery: {
         enabled: true,

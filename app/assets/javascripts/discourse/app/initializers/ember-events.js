@@ -1,3 +1,5 @@
+import Ember from "ember";
+
 let initializedOnce = false;
 
 export default {
@@ -10,7 +12,6 @@ export default {
       return;
     }
 
-    // eslint-disable-next-line no-undef
     Ember.EventDispatcher.reopen({
       events: {
         touchend: "touchEnd",
