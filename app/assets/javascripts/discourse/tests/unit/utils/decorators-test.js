@@ -5,9 +5,11 @@ import { clearRender, render, settled } from "@ember/test-helpers";
 import discourseComputed, {
   afterRender,
   debounce,
+  observes,
 } from "discourse-common/utils/decorators";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import EmberObject from "@ember/object";
 
 const fooComponent = Component.extend({
   classNames: ["foo-component"],
@@ -52,14 +54,23 @@ class NativeComponent extends Component {
   }
 }
 
-class TestStub {
-  counter = 0;
+const TestStub = EmberObject.extend({
+  counter: 0,
+  otherCounter: 0,
 
   @debounce(50)
   increment(value) {
     this.counter += value;
-  }
-}
+  },
+
+  // Note: it only works in this particular order:
+  // `@observes()` first, then `@debounce()`
+  @observes("prop")
+  @debounce(50)
+  react() {
+    this.otherCounter++;
+  },
+});
 
 module("Unit | Utils | decorators", function (hooks) {
   setupRenderingTest(hooks);
@@ -121,7 +132,7 @@ module("Unit | Utils | decorators", function (hooks) {
   });
 
   test("debounce", async function (assert) {
-    const stub = new TestStub();
+    const stub = TestStub.create();
 
     stub.increment(1);
     stub.increment(1);
@@ -136,5 +147,16 @@ module("Unit | Utils | decorators", function (hooks) {
     await settled();
 
     assert.strictEqual(stub.counter, 6);
+  });
+
+  test("debounce works with @observe", async function (assert) {
+    const stub = TestStub.create();
+
+    stub.set("prop", 1);
+    stub.set("prop", 2);
+    stub.set("prop", 3);
+    await settled();
+
+    assert.strictEqual(stub.otherCounter, 1);
   });
 });

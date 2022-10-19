@@ -91,15 +91,14 @@ export function readOnly(target, name, desc) {
 export function debounce(delay) {
   return function (target, name, descriptor) {
     return {
-      configurable: true,
-      get() {
-        const bound = emberBind(this, descriptor.value);
+      enumerable: descriptor.enumerable,
+      configurable: descriptor.configurable,
+      writable: descriptor.writable,
+      initializer() {
+        const originalFunction = descriptor.value;
         const debounced = function (...args) {
-          return discourseDebounce(this, bound, ...args, delay);
+          return discourseDebounce(this, originalFunction, ...args, delay);
         };
-
-        const attributes = { ...descriptor, value: debounced };
-        Object.defineProperty(this, name, attributes);
 
         return debounced;
       },
