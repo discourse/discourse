@@ -17,7 +17,7 @@ export default class HorizontalOverflowNav extends Component {
       ".user-navigation-secondary a.active"
     );
 
-    activeElement.scrollIntoView({
+    activeElement?.scrollIntoView({
       block: "nearest",
       inline: "center",
     });
