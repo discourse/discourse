@@ -408,6 +408,10 @@ zh_TW:
           attributes:
             word:
               too_many: "超出描述該動作的字數"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "無效"
       <<: *errors
   uncategorized_category_name: "尚未分類"
   general_category_name: "一般"
@@ -416,7 +420,6 @@ zh_TW:
   staff_category_name: "管理員"
   staff_category_description: "讓工作人員進行討論的私人分類。此分類下的討論話題只有管理員與板主才看得到。"
   discourse_welcome_topic:
-    title: "歡迎來到 Discourse"
     body: |2
 
       置頂主題的第一段是訪客在主頁看到的歡迎消息。這很重要！
@@ -1225,6 +1228,8 @@ zh_TW:
     top_topics_formula_first_post_likes_multiplier: "熱門主題公式中首貼讚的數量的因子的值（n）：`log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "熱門主題公式中贊和貼文數量的比例的最小值（n）：`log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     enable_safe_mode: "允許使用者進入安全模式以偵錯插件（plugins）。"
+    enable_experimental_sidebar_hamburger: "允許啟用實驗側選單和漢堡下拉選單。"
+    enable_sidebar: "啟用實驗性側選單。"
     rate_limit_create_topic: "建立新討論話題之後，使用者必須間隔多少秒 (n) 才能再建立新討論話題"
     rate_limit_create_post: "建立新貼文之後，使用者必須間隔多少秒 (n) 才能再建立新貼文"
     rate_limit_new_user_create_topic: "建立一個話題後，新使用者必須等待 (n) 秒才能建立另一個新話題"
@@ -1549,6 +1554,8 @@ zh_TW:
     push_notifications_prompt: "顯示使用者同意提示"
     short_title: "短標題將用於使用者的主螢幕、啟動器或其他可能空白鍵有限的地方，它應限制為12個字。"
     dashboard_general_tab_activity_metrics: "選擇在一般頁面中要顯示為活躍指標的報告"
+    default_sidebar_categories: "選定的分類將預設顯示在側選單的分類段落中。"
+    default_sidebar_tags: "選定的標籤將預設顯示在側選單的標籤段落中。"
     errors:
       invalid_email: "無效的電子郵件地址"
       invalid_username: "沒有使用者使用該使用者名稱。"
@@ -1608,7 +1615,7 @@ zh_TW:
   most_recent_poster: "當前大部分貼文作者"
   frequent_poster: "頻繁發文者"
   redirected_to_top_reasons:
-    new_user: "歡迎來到我們的社區！這是我們最近的熱門主題。"
+    new_user: "歡迎來到我們的社群！這是最近的熱門主題。"
     not_seen_in_a_month: "歡迎回來！我們已經好久沒見到你了。這些是你不在時的最熱門主題。"
   merge_posts:
     edit_reason:
@@ -2743,7 +2750,7 @@ zh_TW:
       name: 資深
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">授與</a>全域編輯、置頂、關閉、存檔、分割和合併、更多的讚
       long_description: |
-        當您達到信任等級4 時，將授予此徽章。您是該工作人員所選擇的社區的領導者，並且您在此處為您的行動和單詞中的其他社區樹立了積極的榜樣。您可以編輯所有貼文，採用常見主題版主操作，例如置頂，關閉，取消列表，存檔，拆分和合併。
+        當您達到信任等級 4 時，將授予此徽章。您是工作人員所選擇的社群領導者，您在此處以您的行動和文字，為其他社群成員樹立積極的榜樣。您可以編輯所有文章，執行諸如置頂、關閉、取消顯示、封存、拆分和合併等管理功能。
     welcome:
       name: 歡迎
       description: 得到一個贊
@@ -2758,7 +2765,7 @@ zh_TW:
       name: 年度紀念日
       description: 一年活躍使用者，至少發了一個貼文
       long_description: |
-        當您成為該年度會員並且該年度至少有一個貼文時，將頒發此徽章。感謝您堅持並為我們的社區做出貢獻，沒有你我們無法做到。
+        當您成為會員滿一年，並且在該年度至少有一個貼文，則會授予此徽章。感謝您堅持為我們的社群做出貢獻。沒有你我們做不到。
     nice_post:
       name: 不錯的回覆
       description: 回覆被讚了 10 次

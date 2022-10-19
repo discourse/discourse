@@ -696,6 +696,8 @@ sr:
       enable_quoting: "Omogući citirani odgovor označenog teksta"
       experimental_sidebar:
         options: "Opcije"
+        navigation_section: "Navigacija"
+        list_destination_default: "zadato"
       change: "promeni"
       moderator: "%{user} je moderator"
       admin: "%{user} je administrator"

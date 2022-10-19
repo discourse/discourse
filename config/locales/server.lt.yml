@@ -59,8 +59,6 @@ lt:
     bad_color_scheme: "Negalima atnaujinti temos, netinkama spalvų paletė"
     other_error: "Įvyko klaida atnaujinant temą"
     ember_selector_error: "Atsiprašome, naudoti #ember arba .ember-view CSS parinkiklius neleidžiama, nes šie pavadinimai dinamiškai generuojami vykdymo metu ir laikui bėgant keisis, o tai galiausiai sugadins CSS. Išbandykite kitą parinkiklį."
-    compile_error:
-      unrecognized_extension: "Neatpažintas failo plėtinys: %{extension}"
     import_error:
       generic: Importuojant šią temą įvyko klaida
       about_json: "Importo klaida: about.json neegzistuoja arba yra neteisingas. Ar tikrai tai Discourse tema?"
@@ -494,7 +492,6 @@ lt:
   staff_category_name: "Personalas"
   staff_category_description: "Privati kategorija personalo diskusijoms. Temos matomos tik administratoriams ir moderatoriams."
   discourse_welcome_topic:
-    title: "Sveiki atvykę į Discourse"
     body: |2
 
       Pirmoji šios prisegtos temos pastraipa bus matoma kaip sveikinimo žinutė visiems naujiems pagrindinio puslapio lankytojams. Tai svarbu!
@@ -1521,7 +1518,6 @@ lt:
       empty_selectable_avatars: "Prieš įgalindami šį nustatymą, pirmiausia turite įkelti bent du pasirinktus avatarus."
       allowed_unicode_usernames:
         leading_trailing_slash: "Reguliarioji išraiška neturi prasidėti ir baigtis pasviruoju brūkšniu."
-      google_oauth2_hd_groups: "Prieš įjungdami šį nustatymą, pirmiausia turite nustatyti „google oauth2 hd“."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

@@ -1451,8 +1451,6 @@ ar:
         edit: "تعديل"
         edit_title: "تعديل تطبيق المصادقة"
         edit_description: "اسم تطبيق المصادقة"
-        enable_security_key_description: |
-          عندما يكون <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">مفتاح الأمان المحمول</a> لديك جاهزًا، اضغط على الزر "تسجيل" أدناه.
         totp:
           title: "تطبيقات المصادقة المعتمدة على الرموز المميزة"
           add: "إضافة تطبيق مصادقة"
@@ -1460,14 +1458,10 @@ ar:
           name_and_code_required_error: "يجب عليك إدخال اسم، والرمز من تطبيق المصادقة."
         security_key:
           register: "التسجيل"
-          title: "مفاتيح الأمان"
-          add: "إضافة مفتاح أمان"
           default_name: "مفتاح الأمان الرئيسي"
           not_allowed_error: "انتهت مهلة عملية تسجيل مفتاح الأمان أو تم إلغاؤها."
           already_added_error: "لقد سجَّلت مفتاح الأمان هذا بالفعل. ليس عليك تسجيله مرة أخرى."
-          edit: "تعديل مفتاح الأمان"
           save: "حفظ"
-          edit_description: "اسم مفتاح الأمان"
           name_required_error: "يجب عليك إدخال اسم لمفتاح الأمان."
       change_about:
         title: "تغيير \"نبذة عني\""
@@ -2019,7 +2013,6 @@ ar:
       second_factor_backup_title: "الرمز الاحتياطي للمصادقة الثنائية"
       second_factor_backup_description: "يُرجى إدخال أحد الرموز الاحتياطية:"
       second_factor: "تسجيل الدخول باستخدام تطبيق المصادقة"
-      security_key_description: "عندما يكون مفتاح الأمان المادي جاهزًا، اضغط على زر \"المصادقة باستخدام مفتاح الأمان\" أدناه."
       security_key_alternative: "جرِّب طريقة أخرى"
       security_key_authenticate: "المصادقة باستخدام مفتاح الأمان"
       security_key_not_allowed_error: "انتهت مهلة عملية المصادقة باستخدام مفتاح الأمان أو تم إلغاؤها."

@@ -991,6 +991,8 @@ gl:
       enable_defer: "Activar a opción de diferir para marcar os temas como non lidos"
       experimental_sidebar:
         options: "Opcións"
+        navigation_section: "Navegación"
+        list_destination_default: "Predeterminado"
       change: "cambiar"
       featured_topic: "Tema de actualidade"
       moderator: "%{user} é moderador"
@@ -1153,8 +1155,6 @@ gl:
         edit: "Editar"
         edit_title: "Editar autenticador"
         edit_description: "Nome do autenticador"
-        enable_security_key_description: |
-          Cando teña a súa <a href="https://www.google.com/search?q=hardware+security+key" target="_blank"> clave de equipo seguro</a> preparada, prema o botón Rexistrarse, a seguir.
         totp:
           title: "Autenticadores que usan códigos"
           add: "Engadir autenticador"
@@ -1162,14 +1162,12 @@ gl:
           name_and_code_required_error: "Debe escribir un nome e o código da app autenticadora."
         security_key:
           register: "Rexistrarse"
-          title: "Clave de seguranza"
-          add: "Engadir clave de seguranza"
           default_name: "Clave de seguranza principal"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "O proceso de rexistro da clave de seguranza esgotou o tempo ou foi anulado."
           already_added_error: "Xa rexistrou esta clave de seguranza. Non precisa volver rexistrala."
-          edit: "Editar clave de seguranza"
           save: "Gardar"
-          edit_description: "Nome da clave de seguranza"
           name_required_error: "Debe escribir un nome para a clave de seguranza."
       change_about:
         title: "Cambiar «Verbo de min»"
@@ -1648,7 +1646,6 @@ gl:
       second_factor_backup_title: "Copia de seguranza de dobre paso"
       second_factor_backup_description: "Escriba un dos códigos de copia de seguranza:"
       second_factor: "Iniciar sesión cunha app autenticadora"
-      security_key_description: "Cando teña a clave de seguranza preparada, prema no botón Autenticar con clave de seguranza que se amosa a continuación."
       security_key_alternative: "Tentalo doutro xeito"
       security_key_authenticate: "Autenticar con clave de seguranza"
       security_key_not_allowed_error: "O proceso de autenticación da clave de seguranza esgotou o tempo ou foi cancelado."

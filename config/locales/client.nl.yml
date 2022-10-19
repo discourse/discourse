@@ -1033,6 +1033,8 @@ nl:
       enable_defer: "Negeren voor markeren van topics als ongelezen inschakelen"
       experimental_sidebar:
         options: "Opties"
+        navigation_section: "Navigatie"
+        list_destination_default: "Standaard"
       change: "wijzigen"
       featured_topic: "Aanbevolen topic"
       moderator: "%{user} is een moderator"
@@ -1198,8 +1200,6 @@ nl:
         edit: "Bewerken"
         edit_title: "Authenticator bewerken"
         edit_description: "Naam van authenticator"
-        enable_security_key_description: |
-          Druk wanneer u uw <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardwarebeveiligingssleutel</a> gereed hebt op de onderstaande knop Registreren.
         totp:
           title: "Op tokens gebaseerde authenticators"
           add: "Authenticator toevoegen"
@@ -1207,14 +1207,12 @@ nl:
           name_and_code_required_error: "U moet een naam en de code van uw authenticator-app opgeven."
         security_key:
           register: "Registreren"
-          title: "Beveiligingssleutels"
-          add: "Beveiligingssleutel toevoegen"
           default_name: "Hoofdbeveiligingssleutel"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "Het registratieproces van de beveiligingssleutel had een time-out of is geannuleerd."
           already_added_error: "U hebt deze beveiligingssleutel al geregistreerd. U hoeft deze niet opnieuw te registreren."
-          edit: "Beveiligingssleutel bewerken"
           save: "Opslaan"
-          edit_description: "Naam van beveiligingssleutel"
           name_required_error: "U moet een naam voor uw beveiligingssleutel opgeven."
       change_about:
         title: "Over mij wijzigen"
@@ -1702,7 +1700,6 @@ nl:
       second_factor_backup_title: "Tweefactor-back-up"
       second_factor_backup_description: "Voer één van uw back-upcodes in:"
       second_factor: "Aanmelden met authenticator-app"
-      security_key_description: "Houd uw fysieke beveiligingssleutel gereed en klik op de onderstaande knop Authenticeren met beveiligingssleutel."
       security_key_alternative: "Andere manier proberen"
       security_key_authenticate: "Authenticeren met beveiligingssleutel"
       security_key_not_allowed_error: "Het authenticatieproces van de beveiligingssleutel had een time-out of is geannuleerd."

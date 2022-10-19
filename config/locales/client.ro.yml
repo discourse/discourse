@@ -1016,6 +1016,8 @@ ro:
       enable_defer: "Activează afișarea subiectelor necitite"
       experimental_sidebar:
         options: "Opțiuni"
+        navigation_section: "Navigare"
+        list_destination_default: "Implicit"
       change: "Schimbă"
       featured_topic: "Subiect recomandat"
       moderator: "%{user} este moderator"
@@ -1144,11 +1146,8 @@ ro:
         edit: "Editează"
         security_key:
           register: "Înregistrare"
-          title: "Chei de securitate"
-          add: "Adaugă cheie de securitate"
           default_name: "Cheie de securitate principală"
           save: "Salvează"
-          edit_description: "Nume cheie de securitate"
           name_required_error: "Trebuie să oferi un nume pentru cheia de securitate."
       change_about:
         title: "Schimbare date personale"

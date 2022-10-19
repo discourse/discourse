@@ -788,6 +788,8 @@ et:
       enable_quoting: "Luba esiletõstetud tekstile tsitaadiga vastata"
       experimental_sidebar:
         options: "Võimalused"
+        navigation_section: "Navigatsioon"
+        list_destination_default: "Vaikimisi"
       change: "muuda"
       featured_topic: "Esile tõstetud teema"
       moderator: "%{user} on moderaator"
@@ -915,6 +917,8 @@ et:
         edit: "Muuda"
         security_key:
           register: "Registreeru"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           save: "Salvesta"
       change_about:
         title: "Muuda minu andmeid"

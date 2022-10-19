@@ -1211,12 +1211,13 @@ uk:
       enable_quoting: "Увімкнути відповіді на цитати для виділеного тексту"
       enable_defer: "Увімкнути відкладання позначення тем непрочитаними"
       experimental_sidebar:
-        enable: "Увімкнути експериментальну бічну панель"
         options: "Налаштування"
         categories_section: "Розділ категорій"
         categories_section_instruction: "Вибрані категорії будуть відображатися у списку категорій бічної панелі."
         tags_section: "Розділ Теги"
         tags_section_instruction: "Вибрані теги відображатимуться в розділі тегів бічної панелі."
+        navigation_section: "Навігація"
+        list_destination_default: "За замовчуванням"
       change: "змінити"
       featured_topic: "Закріплені теми"
       moderator: "%{user} є модератором"
@@ -1395,8 +1396,6 @@ uk:
         edit: "Редагувати"
         edit_title: "Редагувати автентифікатор"
         edit_description: "Назва автентифікатора"
-        enable_security_key_description: |
-          Якщо у вас підготовлено <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">фізичний ключ безпеки</a> , натисніть кнопку "Зареєструвати" нижче.
         totp:
           title: "Автентифікатори на токенах"
           add: "Додати автентифікатор"
@@ -1404,14 +1403,12 @@ uk:
           name_and_code_required_error: "Ви повинні вказати ім'я та код з програми авторизації."
         security_key:
           register: "Зареєструватися"
-          title: "Ключі безпеки"
-          add: "Додати ключ безпеки"
           default_name: "Головний Ключ Безпеки"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "Час реєстрації ключа безпеки минув, або він був скасований."
           already_added_error: "Ви вже зареєстрували цей ключ безпеки. Вам не потрібно реєструвати його знову."
-          edit: "Змінити Ключ Безпеки"
           save: "Зберегти"
-          edit_description: "Назва Ключа Безпеки"
           name_required_error: "Ви повинні вказати ім'я для вашого ключа безпеки."
       change_about:
         title: "Змінити інформацію про мене"
@@ -1947,7 +1944,6 @@ uk:
       second_factor_backup_title: "Двофакторний резервний код"
       second_factor_backup_description: "Введіть запасний код:"
       second_factor: "Увійти за допомогою програми аутентифікації"
-      security_key_description: "Коли ви підготуєте свій фізичний ключ безпеки, натисніть кнопку Аутентификация з ключем безпеки нижче."
       security_key_alternative: "Спробуйте інший спосіб"
       security_key_authenticate: "Аутентифікація з Ключем Безпеки."
       security_key_not_allowed_error: "Час перевірки автентичності ключа безпеки минув або було скасовано."
@@ -4236,7 +4232,6 @@ uk:
               title: "переглянути"
     welcome_topic_banner:
       title: "Створіть тему привітання"
-      description: 'Ваша привітальна тема – це перше, що прочитають новачки. Думайте про це як про «початкову презентацію» або «заяву про місію» з одного абзацу.'
       button_title: "Почати редагування"
     until: "До:"
   admin_js:
@@ -5650,6 +5645,7 @@ uk:
           search: "Пошук"
           groups: "Групи"
           dashboard: "Майстерня"
+          sidebar: "Бічна панель"
         secret_list:
           invalid_input: "поля введення не можуть бути порожніми, або містити символ вертикальної риски."
         default_categories:

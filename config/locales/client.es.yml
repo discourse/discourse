@@ -193,7 +193,7 @@ es:
     themes:
       default_description: "Por defecto"
       broken_theme_alert: "Puede que tu sitio no funcione, un tema o componente está causando errores."
-      error_caused_by: "Causado por '%{name}'. <a target='blank' href='%{path}'>Haz clic aquí</a> para actualizar, reconfigurar o update, reconfigure or desctivar."
+      error_caused_by: "Causado por «%{name}». <a target='blank' href='%{path}'>Haz clic aquí</a> para actualizar, reconfigurar o desctivar."
       only_admins: "(este mensaje solo lo ven los administradores del sitio)"
     broken_decorator_alert: "Puede que las publicaciones no se muestren correctamente porque uno de los decoradores de publicaciones de tu sitio está causando errores."
     s3:
@@ -970,6 +970,7 @@ es:
     user_fields:
       none: "(selecciona una opción)"
       required: 'Introduce un valor para «%{name}»'
+      same_as_password: 'Tu contraseña no debe repetirse en otros campos.'
     user:
       said: "%{username}:"
       profile: "Perfil"
@@ -1068,6 +1069,9 @@ es:
       no_notifications_title: "No tienes ninguna notificación todavía"
       no_notifications_body: >
         En esta pestaña te avisaremos sobre actividad relevante para ti incluyendo respuestas a tus temas y mensajes, <b>@menciones</b> o citas, y respuestas a los temas que estés siguiendo. También te notificaremos por correo electrónico si hace tiempo que no te conectas.<br><br>A través del icono %{icon} puedes decidir sobre qué temas, categorías y etiquetas quieres que te avisemos. Ve a tus <a href='%{preferencesUrl}'>preferencias de notificaciones</a> para más detalles.
+      no_other_notifications_title: "Todavía no tienes otras notificaciones"
+      no_other_notifications_body: >
+        En este panel se te notificará otro tipo de actividad que puede ser relevante para ti, por ejemplo, cuando alguien enlaza o edita una de tus publicaciones.
       no_notifications_page_title: "Todavía no tienes notificaciones"
       no_notifications_page_body: >
         Te notificaremos de actividad relevante para ti, como cuando alguien responda a tus temas o mensajes, te <b>@mencione</b> o cite, y también cuando alguien responda a temas que estés vigilando. Además, te mandaremos las notificaciones a tu correo electrónico cuando no te hayamos visto por aquí en un tiempo. <br><br>Busca el icono %{icon} para decidir las categorías o etiquetas sobre las que quieres que mandemos notificaciones. Para más ajustes, pásate por tus <a href='%{preferencesUrl}'>preferencias de notificaciones</a>.
@@ -1097,7 +1101,6 @@ es:
       enable_quoting: "Activar respuesta citando el texto seleccionado"
       enable_defer: "Activar diferir para marcar temas no leídos"
       experimental_sidebar:
-        enable: "Activar la barra lateral experimental"
         options: "Opciones"
         categories_section: "Sección de categorías"
         categories_section_instruction: "Las categorías que elijas aparecerán en esta categoría de la barra lateral."
@@ -1273,8 +1276,6 @@ es:
         edit: "Editar"
         edit_title: "Editar autenticador"
         edit_description: "Nombre del autenticador"
-        enable_security_key_description: |
-          Cuando tengas tu <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">clave de seguridad</a> preparada, pulsa el botón de Registrar más abajo.
         totp:
           title: "Autenticación basada en tokens"
           add: "Añadir autentificador"
@@ -1282,14 +1283,10 @@ es:
           name_and_code_required_error: "Debes introducir un nombre y un código de tu aplicación de autentificación."
         security_key:
           register: "Registrar"
-          title: "Claves de seguridad"
-          add: "Añadir clave de seguridad"
           default_name: "Clave de seguridad principal"
           not_allowed_error: "El proceso de registro de clave de seguridad se canceló o se agotó el tiempo."
           already_added_error: "Ya registraste esta clave de seguridad. No tienes que registrarla de nuevo."
-          edit: "Editar clave de seguridad"
           save: "Guardar"
-          edit_description: "Nombre de la clave de seguridad"
           name_required_error: "Debes introducir un nombre para tu clave de seguridad."
       change_about:
         title: "Cambiar «Acerca de mí»"
@@ -1641,6 +1638,9 @@ es:
         title: "Icono"
         none: "(ninguno)"
         instructions: "icono que se muestra junto a tu foto de perfil"
+      status:
+        title: "Estado personalizado"
+        not_set: "No establecido"
       primary_group:
         title: "Grupo principal"
         none: "(ninguno)"
@@ -1656,6 +1656,15 @@ es:
       set_custom_status: "Escribir estado personalizado"
       what_are_you_doing: "¿Qué estás haciendo?"
       remove_status: "Quitar estado"
+    popup:
+      primary: "¡Entendido!"
+      secondary: "no mostrarme estos consejos"
+      first_notification:
+        title: "¡Tu primera notificación!"
+        content: "Las notificaciones se utilizan para mantenerte al día de lo que ocurre en la comunidad."
+      topic_timeline:
+        title: "Cronología del tema"
+        content: "Desplázate rápidamente por una publicación utilizando la cronología del tema."
     loading: "Cargando..."
     errors:
       prev_page: "mientras se intentaba cargar"
@@ -1688,6 +1697,8 @@ es:
       enabled: "Este sitio está en modo de solo lectura. Puedes continuar navegando pero algunas acciones como responder o dar me gusta no están disponibles por ahora."
       login_disabled: "No se puede iniciar sesión mientras el foro se encuentre en modo de solo lectura."
       logout_disabled: "No se puede cerrar sesión mientras el sitio se encuentre en modo de solo lectura."
+    staff_writes_only_mode:
+      enabled: "Este sitio está en modo solo para el personal. Sigue navegando, pero las respuestas, los «me gusta» y otras acciones están limitadas solo a los miembros del personal."
     too_few_topics_and_posts_notice_MF: >-
       <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">¡Comencemos la discusión!</a> Hay {currentTopics, plural, one {<strong>#</strong> tema} other {<strong>#</strong> temas}} y {currentPosts, plural, one {<strong>#</strong> publicación} other {<strong>#</strong> publicaciones}}. Los visitantes necesitan más contenido para leer y responder – nosotros recomendamos al menos {requiredTopics, plural, one {<strong>#</strong> tema} other {<strong>#</strong> temas}} y {requiredPosts, plural, one {<strong>#</strong> publicación} other {<strong>#</strong> publicaciones}}. Solo los miembros del equipo pueden ver este mensaje.
     too_few_topics_notice_MF: >-
@@ -1719,6 +1730,7 @@ es:
       hide_forever: "no, gracias"
       hidden_for_session: "Vale, te preguntamos mañana. También puedes darle a «Iniciar sesión» para crear tu cuenta."
       intro: "¡Hola! Parece que estás disfrutando del tema, pero no has creado una cuenta todavía."
+      value_prop: "¿Cansado de recorrer las mismas publicaciones? Si creas una cuenta, siempre volverás al punto donde lo dejaste. Con una cuenta también puedes recibir notificaciones de nuevas respuestas, guardar marcadores y utilizar los «me gusta» para dar las gracias a los demás. Podemos trabajar todos juntos para hacer grande esta comunidad :heart:"
     summary:
       enabled_description: "Estás viendo un resumen de este tema: las publicaciones más interesantes de acuerdo a la comunidad."
       description:
@@ -1745,7 +1757,7 @@ es:
       remove_allowed_group: "¿Quieres quitar a %{name} de este mensaje?"
       leave: "Abandonar"
       remove_group: "Quitar grupo"
-      remove_user: "Eliminar usuario"
+      remove_user: "Quitar usuario"
     email: "Correo electrónico"
     username: "Nombre de usuario"
     last_seen: "Visto por última vez"
@@ -1801,7 +1813,6 @@ es:
       second_factor_backup_title: "Código de respaldo de la autenticación de dos factores"
       second_factor_backup_description: "Introduce uno de los códigos de respaldo:"
       second_factor: "Iniciar sesión utilizando la aplicación de autenticación"
-      security_key_description: "Cuando tengas tu clave de seguridad física preparada, presiona el botón de autenticar con clave de seguridad que se encuentra debajo."
       security_key_alternative: "Probar de otra manera"
       security_key_authenticate: "Autenticar con clave de seguridad"
       security_key_not_allowed_error: "La autenticación de la clave de seguridad fue cancelada o se agotó el tiempo."
@@ -1887,7 +1898,7 @@ es:
       categories_only: "Solo categorías"
       categories_with_featured_topics: "Categorías con temas destacados"
       categories_and_latest_topics: "Categorías y temas recientes"
-      categories_and_latest_topics_created_date: "Categorías y últimos temas (ordenar por la fecha de creación de los temas)"
+      categories_and_latest_topics_created_date: "Categorías y temas más recientes (ordenar por fecha de creación del tema)"
       categories_and_top_topics: "Categorías y temas destacados"
       categories_boxes: "Cajas con subcategorías"
       categories_boxes_with_topics: "Cajas con temas destacados"
@@ -2381,12 +2392,29 @@ es:
         likes_with_unread:
           one: "Me gusta - %{count} me gusta sin leer"
           other: "Me gusta - %{count} me gusta sin leer"
+        watching: "Temas observados"
+        watching_with_unread:
+          one: "Temas observados - %{count} tema observado no leído"
+          other: "Temas observados - %{count} temas observados no leídos"
         messages: "Mensajes personales"
+        messages_with_unread:
+          one: "Mensajes personales - %{count} mensaje no leído"
+          other: "Mensajes personales - %{count} mensajes no leídos"
         bookmarks: "Marcadores"
+        bookmarks_with_unread:
+          one: "Marcadores - %{count} marcador no leído"
+          other: "Marcadores - %{count} marcadores no leídos"
         review_queue: "Cola de revisión"
+        review_queue_with_unread:
+          one: "Cola de revisión - %{count} elemento necesita revisión"
+          other: "Cola de revisión - %{count} elementos necesitan revisión"
         other_notifications: "Otras notificaciones"
+        other_notifications_with_unread:
+          one: "Otras notificaciones - %{count} notificación no leída"
+          other: "Otras notificaciones - %{count} notificaciones no leídas"
         profile: "Perfil"
       reviewable:
+        view_all: "ver todos los artículos de revisión"
         queue: "Cola"
         deleted_user: "(usuario eliminado)"
         deleted_post: "(publicación eliminada)"
@@ -3038,6 +3066,10 @@ es:
         confirm:
           one: "¿Seguro que quieres eliminar esa publicación?"
           other: "¿Seguro de que quieres eliminar esas %{count} publicaciones?"
+      merge:
+        confirm:
+          one: "¿Seguro que quieres fusionar estas publicaciones?"
+          other: "¿Seguro que quieres fusionar estas %{count} publicaciones?"
       revisions:
         controls:
           first: "Primera edición"
@@ -3143,6 +3175,7 @@ es:
       name: "Nombre de la categoría"
       description: "Descripción"
       logo: "Imagen (logo) para la categoría"
+      logo_dark: "Imagen del logotipo de la categoría en modo oscuro"
       background_image: "Imagen de fondo de la categoría"
       badge_colors: "Colores de las insignias"
       background_color: "Color de fondo"
@@ -3719,7 +3752,7 @@ es:
       topics:
         none:
           unread: "No tienes temas sin leer."
-          unseen: "No te queda ningún mensaje sin leer."
+          unseen: "Has visto todos los temas."
           new: "No tienes temas nuevos."
           read: "Todavía no has leído ningún tema."
           posted: "Todavía no has publicado en ningún tema."
@@ -3768,6 +3801,7 @@ es:
       no_activity_body: "¡Te damos la bienvenida a la comunidad! Acabas de llegar, por lo que todavía no has participado. Como primer paso, visita los <a href='%{topUrl}'>Destacados</a> o las <a href='%{categoriesUrl}'>Categorías</a> y empieza a leer. Dale al botón %{heartIcon} en las publicaciones que te gusten o sobre las que quieras saber más. Aquí verás tu actividad una vez empieces a participar."
       no_replies_title: "Todavía no has respondido a ningún tema"
       no_replies_title_others: "%{username} todavía no ha respondido a ningún tema"
+      no_replies_body: "Cuando <a href='%{searchUrl}'>descubras</a> una conversación interesante a la que quieras contribuir, pulsa el botón <kbd>Responder</kbd> directamente debajo de cualquier mensaje para empezar a responder a ese mensaje específico. O, si prefieres responder al tema en general en lugar de a un mensaje o a una persona en particular, busca el botón <kbd>Responder</kbd> en la parte inferior del tema, o debajo de la cronología del tema."
       no_drafts_title: "Todavía no has empezado ningún borrador"
       no_drafts_body: "¿Todavía no quieres publicarlo? Vamos a guardar un borrador automáticamente y lo pondremos aquí cuando vayas a empezar a escribir un tema, respuesta o mensaje personal. Dale al botón de cancelar para descartarlo o guardar el borrador y seguir luego."
       no_likes_title: "Todavía no le has dado a me gusta en ningún tema"
@@ -3857,7 +3891,6 @@ es:
               pending_count: "%{count} pendiente(s)"
     welcome_topic_banner:
       title: "Crea tu tema de bienvenida"
-      description: 'Tu tema de bienvenid es lo primero que la gente nueva leerá al llegar. Piensa en este párrafo como si fuera un "discurso breve" o una "declaración de motivos"'
       button_title: "Empezar a editar"
     until: "Hasta:"
   admin_js:
@@ -4107,7 +4140,7 @@ es:
             badges:
               create: Crear nuevas medallas.
               show: Obtener información sobre las medallas.
-              update: Editar medallas.
+              update: Actualizar una medalla.
               delete: Eliminar medallas.
               list_user_badges: Listar las medallas de los usuarios.
               assign_badge_to_user: Dar medallas a los usuarios.
@@ -4429,6 +4462,7 @@ es:
           install_create: "Crear nuevo"
           duplicate_remote_theme: "El componente de tema «%{name}» ya está instalado, ¿seguro que quieres instalar otra copia?"
           force_install: "No se ha podido instalar el tema porque su repositorio Git no es accesible. ¿Seguro que quieres continuar con la instalación?"
+          create_placeholder: "Crear marcador de posición"
           about_theme: "Acerca de"
           license: "Licencia"
           version: "Versión:"
@@ -4609,6 +4643,7 @@ es:
         last_seen_user: "Último usuario visto:"
         no_result: "No se han encontrado resultados para el resumen."
         reply_key: "Clave de respuesta"
+        post_link_with_smtp: "Detalles de publicación y SMTP"
         skipped_reason: "Omitir motivo"
         incoming_emails:
           from_address: "De"
@@ -4860,6 +4895,7 @@ es:
           upload: "Añadir desde archivo"
           upload_successful: "Subida completada. Las palabras se han añadido."
           case_sensitivity_label: "Distingue entre mayúsculas y minúsculas"
+          case_sensitivity_description: "Solo palabras con caracteres coincidentes"
         test:
           button_label: "Prueba"
           modal_title: "%{action}: Prueba de palabras vigiladas"

@@ -59,8 +59,6 @@ ur:
     bad_color_scheme: "تِھیم اَپ ڈَیٹ نہیں ہو سکتی، غلط رنگ پیلیٹ"
     other_error: "تِھیم اَپ ڈَیٹ کرتے ہوے کچھ غلط ہو گیا"
     ember_selector_error: "معذرت – #ember یا .ember-view CSS سلیکٹرز استعمال کرنے کی اجازت نہیں ہے، کیونکہ یہ نام متحرک طور پر رن ٹائم پر بنائے جاتے ہیں اور وقت کے ساتھ ساتھ تبدیل ہوتے جائیں گے، جس کے نتیجے میں CSS ٹوٹ جاتا ہے۔ کوئی مختلف سلیکٹر آزمائیں۔"
-    compile_error:
-      unrecognized_extension: "نامعلوم فائل ایکسٹینشن: %{extension}"
     import_error:
       generic: اس تھیم کو درآمد کرتے وقت ایک خرابی پیش آگئی
       about_json: "درآمد کی خرابی: about.json موجود نہیں ہے، یا غلط ہے۔ کیا آپ کو یقین ہے کہ یہ ایک ڈسکورس تھیم ہے؟"
@@ -587,7 +585,6 @@ ur:
   staff_category_name: "سٹاف"
   staff_category_description: "اسٹاف کی گفتگو کیلئے ذاتی زُمرہ۔ ٹاپک صرف ایڈمن اور ماڈریٹرز کو نظر آتے ہیں۔"
   discourse_welcome_topic:
-    title: "ڈسکورس میں خوش آمدید"
     body: |2
 
       اس پِن کیے گئے ٹاپک کا پہلا پیراگراف آپ کے ہَوم پیج پر تمام نئے زائرین کو ایک خوش آمدید پیغام کے طور پر نظر آئے گا۔ یہ اہم ہے!
@@ -1561,7 +1558,6 @@ ur:
     google_oauth2_client_secret: "آپ کی گُوگل ایپلی کیشن کا کلائنٹ سیکرٹ."
     google_oauth2_prompt: "خالی جگہ سے علیحدہ کردہ سٹرنگ وَیلِیوز کی ایک اختیاری فہرست جو اِس بات کی وضاحت کرتی ہے کہ اَوتھرائزیشن سرور صارف کو دوبارہ تصدیق اور رضامندی کیلئے پوچھتا ہے کہ نہیں۔ ممکنہ اقدار کیلئے <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> دیکھیے۔"
     google_oauth2_hd: "ایک اختیاری گُوگل اَیپس ہوسٹِڈ ڈومَین جس تک کہ سائن اِن محدود ہو گا۔ مزید تفصیلات کیلئے <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> ملاحظہ کریں۔"
-    google_oauth2_hd_groups: "(تجرباتی) توثیق پر میزبان ڈومین پر صارفین کے گوگل گروپس کو بازیافت کریں۔ بازیافت شدہ گوگل گروپس کو خودکار ڈسکورس گروپ ممبرشپ دینے کے لیے استعمال کیا جا سکتا ہے (گروپ سیٹنگز دیکھیں)۔"
     enable_twitter_logins: "ٹویٹر توثیق فعال کریں۔ twitter_consumer_key اور twitter_consumer_secret ضروری ہیں۔ دیکھیے <a href='https://meta.discourse.org/t/13395' target='_blank'>ڈسکورس کیلئے ٹویٹر لاگ اِن ترتیب دیں (اور رِچ اَیمبَیڈ)</a>۔"
     twitter_consumer_key: "ٹویٹر توثیق کیلئے کنزِیُومر کِی، <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/app</a> پر رجسٹر کردہ"
     twitter_consumer_secret: "ٹویٹر توثیق کیلئے کنزِیُومر سیکرٹ، <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/app</a> پر رجسٹر کردہ"

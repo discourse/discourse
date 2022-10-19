@@ -1029,6 +1029,8 @@ nb_NO:
       enable_defer: "Aktiver utsettelse for å merke emner ulest"
       experimental_sidebar:
         options: "Alternativer"
+        navigation_section: "Navigasjon"
+        list_destination_default: "Forvalg"
       change: "Endre"
       featured_topic: "Utvalgte emne"
       moderator: "%{user} er en moderator"
@@ -1189,8 +1191,6 @@ nb_NO:
         edit: "Rediger"
         edit_title: "Rediger autentisering"
         edit_description: "Autentiserings navn"
-        enable_security_key_description: |
-          Når du har din <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">maskinvaresikkerhetsnøkkel</a> klargjort, trykk på Registrer knappen nedenfor.
         totp:
           title: "Token-baserte autentiseringer"
           add: "Legg til autentisering"
@@ -1198,14 +1198,10 @@ nb_NO:
           name_and_code_required_error: "Du må angi et navn og koden fra din autentiseringsapp."
         security_key:
           register: "Registrer"
-          title: "Sikkerhetsnøkler"
-          add: "Legg til sikkerhetsnøkkel"
           default_name: "Hoved sikkerhetsnøkkel"
           not_allowed_error: "Sikkerhetsnøkkelens prosess ble enten tidsavbrutt eller kansellert."
           already_added_error: "Du har allerede registrert denne sikkerhetsnøkkelen. Du trenger ikke å registrere den igjen."
-          edit: "Rediger sikkerhetsnøkkel"
           save: "Lagre"
-          edit_description: "Navn på sikkerhetsnøkkel"
           name_required_error: "Du må angi et navn for sikkerhetsnøkkelen."
       change_about:
         title: "Rediger om meg"
@@ -1693,7 +1689,6 @@ nb_NO:
       second_factor_backup_title: "To-faktor sikkerhetskopiering"
       second_factor_backup_description: "Vennligst skriv en av reservekodene dine:"
       second_factor: "Logg inn med Authenticator-app"
-      security_key_description: "Når du har din fysiske sikkerhetsnøkkel klargjort trykk på autentiseringen med sikkerhetsnøkkelknappen nedenfor."
       security_key_alternative: "Prøv en annen måte"
       security_key_authenticate: "Autentiser med sikkerhetsnøkkel"
       security_key_not_allowed_error: "Autentiseringsprosessen for sikkerhetsnøkkelen ble enten tidsavbrutt eller kansellert."
