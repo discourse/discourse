@@ -295,9 +295,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
   test("clicking section links - sidebar_list_destination set to unread/new and no unread or new topics", async function (assert) {
     updateCurrentUser({
-      user_option: {
-        sidebar_list_destination: "unread_new",
-      },
+      sidebar_list_destination: "unread_new",
     });
     const { category1 } = setupUserSidebarCategories();
 
@@ -336,9 +334,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       created_in_new_period: true,
     });
     updateCurrentUser({
-      user_option: {
-        sidebar_list_destination: "unread_new",
-      },
+      sidebar_list_destination: "unread_new",
     });
 
     await visit("/");
@@ -384,9 +380,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       created_in_new_period: true,
     });
     updateCurrentUser({
-      user_option: {
-        sidebar_list_destination: "unread_new",
-      },
+      sidebar_list_destination: "unread_new",
     });
 
     await visit("/");

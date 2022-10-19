@@ -46,6 +46,10 @@ export default class extends Controller {
         if (result.user.sidebar_tags) {
           this.model.set("sidebar_tags", result.user.sidebar_tags);
         }
+        this.model.set(
+          "sidebar_list_destination",
+          this.newSidebarListDestination
+        );
 
         this.saved = true;
       })

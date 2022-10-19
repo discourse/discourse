@@ -238,9 +238,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
   test("clicking tag section links - sidebar_list_destination set to unread/new and no unread or new topics", async function (assert) {
     updateCurrentUser({
-      user_option: {
-        sidebar_list_destination: "unread_new",
-      },
+      sidebar_list_destination: "unread_new",
     });
 
     await visit("/");
@@ -266,9 +264,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
   test("clicking tag section links - sidebar_list_destination set to unread/new with new topics", async function (assert) {
     updateCurrentUser({
-      user_option: {
-        sidebar_list_destination: "unread_new",
-      },
+      sidebar_list_destination: "unread_new",
     });
 
     this.container.lookup("service:topic-tracking-state").loadStates([
@@ -308,9 +304,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
   test("clicking tag section links - sidebar_list_destination set to unread/new with unread topics", async function (assert) {
     updateCurrentUser({
-      user_option: {
-        sidebar_list_destination: "unread_new",
-      },
+      sidebar_list_destination: "unread_new",
     });
 
     this.container.lookup("service:topic-tracking-state").loadStates([
