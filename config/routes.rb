@@ -771,6 +771,7 @@ Discourse::Application.routes.draw do
     end
 
     get "hashtags" => "hashtags#show"
+    get "hashtags/search" => "hashtags#search"
 
     TopTopic.periods.each do |period|
       get "top/#{period}.rss", to: redirect("top.rss?period=#{period}", status: 301)
