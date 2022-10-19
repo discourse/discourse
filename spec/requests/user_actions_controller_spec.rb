@@ -169,15 +169,4 @@ RSpec.describe UserActionsController do
       end
     end
   end
-
-  describe '#private_messages' do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:tag) { Fabricate(:tag) }
-
-    it 'returns 200 if tag exists' do
-      get "/u/#{user.username}/messages/tags/#{tag.name}"
-
-      expect(response.status).to eq(200)
-    end
-  end
 end

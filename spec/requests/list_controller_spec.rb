@@ -186,6 +186,16 @@ RSpec.describe ListController do
       expect(response.parsed_body["topic_list"]["topics"].first["id"])
         .to eq(private_message.id)
     end
+
+    it 'should work for users who are allowed and direct links' do
+      SiteSetting.pm_tags_allowed_for_groups = group.name
+      group.add(user)
+      sign_in(user)
+
+      get "/u/#{user.username}/messages/tags/#{tag.name}"
+
+      expect(response.status).to eq(200)
+    end
   end
 
   describe '#private_messages_group' do
