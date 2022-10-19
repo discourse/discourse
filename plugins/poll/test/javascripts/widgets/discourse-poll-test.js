@@ -1,7 +1,12 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, render } from "@ember/test-helpers";
-import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
+import {
+  count,
+  exists,
+  query,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import EmberObject from "@ember/object";
@@ -85,7 +90,10 @@ module("Integration | Component | Widget | discourse-poll", function (hooks) {
     await click("li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']");
     assert.strictEqual(requests, 1);
     assert.strictEqual(count(".chosen"), 1);
-    assert.strictEqual(query(".chosen").innerText, "100%yes");
+    assert.deepEqual(
+      Array.from(queryAll(".chosen span")).map((span) => span.innerText),
+      ["100%", "yes"]
+    );
 
     await click(".toggle-results");
     assert.strictEqual(

@@ -105,5 +105,11 @@ if (process.argv.includes("-t")) {
     "/plugins/": {
       target,
     },
+    "/bootstrap/plugin-css-for-tests.css": {
+      target,
+    },
+    "/stylesheets/": {
+      target,
+    },
   };
 }
