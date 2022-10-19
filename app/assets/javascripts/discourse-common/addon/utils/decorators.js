@@ -94,8 +94,8 @@ export function debounce(delay) {
       configurable: true,
       get() {
         const bound = emberBind(this, descriptor.value);
-        const debounced = function () {
-          return discourseDebounce(bound, delay);
+        const debounced = function (...args) {
+          return discourseDebounce(this, bound, ...args, delay);
         };
 
         const attributes = { ...descriptor, value: debounced };

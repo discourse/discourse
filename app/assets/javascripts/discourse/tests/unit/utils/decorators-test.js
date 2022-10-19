@@ -56,8 +56,8 @@ class TestStub {
   counter = 0;
 
   @debounce(50)
-  increment() {
-    this.counter++;
+  increment(value) {
+    this.counter += value;
   }
 }
 
@@ -123,17 +123,18 @@ module("Unit | Utils | decorators", function (hooks) {
   test("debounce", async function (assert) {
     const stub = new TestStub();
 
-    stub.increment();
-    stub.increment();
-    stub.increment();
+    stub.increment(1);
+    stub.increment(1);
+    stub.increment(1);
     await settled();
 
     assert.strictEqual(stub.counter, 1);
 
-    stub.increment();
-    stub.increment();
+    stub.increment(500);
+    stub.increment(1000);
+    stub.increment(5);
     await settled();
 
-    assert.strictEqual(stub.counter, 2);
+    assert.strictEqual(stub.counter, 6);
   });
 });
