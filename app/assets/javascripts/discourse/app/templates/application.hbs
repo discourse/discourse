@@ -1,7 +1,7 @@
 <DiscourseRoot>
   <a href="#main-container" id="skip-link">{{i18n "skip_to_main_content"}}</a>
   <DDocument />
-  <PluginOutlet @name="above-site-header" @connectorTagName="div" />
+  <PluginOutlet @name="above-site-header" @connectorTagName="div" @args={{hash currentPath=this.router._router.currentPath}} />
 
   {{#if this.showSiteHeader}}
     <SiteHeader
