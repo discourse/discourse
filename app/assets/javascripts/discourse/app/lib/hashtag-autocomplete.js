@@ -1,6 +1,6 @@
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import discourseLater from "discourse-common/lib/later";
-import { INPUT_DELAY } from "discourse-common/config/environment";
+import { INPUT_DELAY, isTesting } from "discourse-common/config/environment";
 import { cancel } from "@ember/runloop";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import { ajax } from "discourse/lib/ajax";
@@ -119,9 +119,11 @@ function _searchGeneric(term, siteSettings, context) {
   }
 
   return new Promise((resolve) => {
-    let timeoutPromise = discourseLater(() => {
-      resolve(CANCELLED_STATUS);
-    }, 5000);
+    let timeoutPromise = isTesting()
+      ? null
+      : discourseLater(() => {
+          resolve(CANCELLED_STATUS);
+        }, 5000);
 
     if (term === "") {
       return resolve(CANCELLED_STATUS);
