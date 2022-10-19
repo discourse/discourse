@@ -1,5 +1,6 @@
 import { buildResolver, setResolverOption } from "discourse-common/resolver";
 import { module, test } from "qunit";
+import Ember from "ember";
 
 let originalTemplates;
 let resolver;
@@ -12,7 +13,6 @@ function lookupTemplate(assert, name, expectedTemplate, message) {
 
 function setTemplates(lookupTemplateStrings) {
   lookupTemplateStrings.forEach(function (lookupTemplateString) {
-    // eslint-disable-next-line no-undef
     Ember.TEMPLATES[lookupTemplateString] = lookupTemplateString;
   });
 }
@@ -21,9 +21,7 @@ const DiscourseResolver = buildResolver("discourse");
 
 module("Unit | Ember | resolver", function (hooks) {
   hooks.beforeEach(function () {
-    // eslint-disable-next-line no-undef
     originalTemplates = Ember.TEMPLATES;
-    // eslint-disable-next-line no-undef
     Ember.TEMPLATES = {};
 
     resolver = DiscourseResolver.create({
@@ -32,7 +30,6 @@ module("Unit | Ember | resolver", function (hooks) {
   });
 
   hooks.afterEach(function () {
-    // eslint-disable-next-line no-undef
     Ember.TEMPLATES = originalTemplates;
   });
 
