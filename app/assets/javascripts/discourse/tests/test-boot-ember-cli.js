@@ -61,6 +61,7 @@ document.addEventListener("discourse-booted", () => {
     loadTests: false,
     startTests: !disableAutoStart,
     setupEmberOnerrorValidation: !skipCore,
+    setupTestIsolationValidation: true,
   });
 });
 
