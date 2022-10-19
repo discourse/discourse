@@ -89,16 +89,24 @@
     gap: 0 0.5em;
     border-bottom: 1px solid var(--primary-low);
 
+    .horizontal-overflow-nav {
+      position: relative;
+      min-width: 0;
+      width: 100%;
+    }
+
     .select-kit .select-kit-header {
       height: 100%;
       padding: 0.5em 1em;
+    }
+
+    .category-breadcrumb {
       @include breakpoint(large) {
         font-size: var(--font-down-1);
       }
-    }
-
-    .category-breadcrumb > li {
-      margin: 0;
+      > li {
+        margin: 0;
+      }
     }
 
     .navigation-controls {
@@ -123,7 +131,7 @@
       .d-icon {
         pointer-events: none;
         margin-bottom: 0.2em;
-        color: var(--tertiary);
+        color: var(--quaternary);
       }
       &.transparent {
         // hiding with opacity so we can transition visibility
