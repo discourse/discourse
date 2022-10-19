@@ -208,12 +208,15 @@ class Site
   end
 
   def self.welcome_topic_exists_and_is_not_edited?
-    Post.joins(:topic)
-      .where(
-        "topics.id = :topic_id AND topics.deleted_at IS NULL AND posts.post_number = 1 AND posts.version = 1 AND posts.created_at > :created_at",
-        topic_id: SiteSetting.welcome_topic_id,
-        created_at: 1.month.ago
-      ).exists?
+    if @welcome_topic_exists_and_is_not_edited != false
+      @welcome_topic_exists_and_is_not_edited = Post.joins(:topic)
+        .where(
+          "topics.id = :topic_id AND topics.deleted_at IS NULL AND posts.post_number = 1 AND posts.version = 1 AND posts.created_at > :created_at",
+          topic_id: SiteSetting.welcome_topic_id,
+          created_at: 1.month.ago
+        ).exists?
+    end
+    @welcome_topic_exists_and_is_not_edited
   end
 
   def self.show_welcome_topic_banner?(guardian)
