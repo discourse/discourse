@@ -127,14 +127,14 @@ export function withFrozenTime(timeString, timezone, callback) {
 
 let _pretenderCallbacks = {};
 
-export function resetSite(siteSettings, extras) {
-  let siteAttrs = Object.assign(
-    {},
-    siteFixtures["site.json"].site,
-    extras || {}
-  );
-  siteAttrs.siteSettings = siteSettings;
-  PreloadStore.store("site", siteAttrs);
+export function resetSite(siteSettings, extras = {}) {
+  const siteAttrs = {
+    ...siteFixtures["site.json"].site,
+    ...extras,
+    siteSettings,
+  };
+
+  PreloadStore.store("site", cloneJSON(siteAttrs));
   Site.resetCurrent();
 }
 
