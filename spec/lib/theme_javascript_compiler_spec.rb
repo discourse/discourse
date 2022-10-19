@@ -37,24 +37,33 @@ RSpec.describe ThemeJavascriptCompiler do
     it 'separates colocated connectors to avoid module name clash' do
       # Colocated under `/connectors`
       compiler = ThemeJavascriptCompiler.new(1, 'marks')
-      compiler.append_ember_template("connectors/outlet/blah-1", "{{var}}")
-      compiler.append_module("console.log('test')", "connectors/outlet/blah-1")
+      compiler.append_tree({
+        "connectors/outlet/blah-1.hbs" => "{{var}}",
+        "connectors/outlet/blah-1.js" => "console.log('test')"
+      })
       expect(compiler.raw_content.to_s).to include("discourse/theme-1/connectors/outlet/blah-1")
       expect(compiler.raw_content.to_s).to include("discourse/theme-1/templates/connectors/outlet/blah-1")
+      expect(JSON.parse(compiler.source_map)["sources"]).to contain_exactly("connectors/outlet/blah-1.js", "templates/connectors/outlet/blah-1.js")
 
       # Colocated under `/templates/connectors`
       compiler = ThemeJavascriptCompiler.new(1, 'marks')
-      compiler.append_ember_template("templates/connectors/outlet/blah-1", "{{var}}")
-      compiler.append_module("console.log('test')", "templates/connectors/outlet/blah-1")
+      compiler.append_tree({
+        "templates/connectors/outlet/blah-1.hbs" => "{{var}}",
+        "templates/connectors/outlet/blah-1.js" => "console.log('test')"
+      })
       expect(compiler.raw_content.to_s).to include("discourse/theme-1/connectors/outlet/blah-1")
       expect(compiler.raw_content.to_s).to include("discourse/theme-1/templates/connectors/outlet/blah-1")
+      expect(JSON.parse(compiler.source_map)["sources"]).to contain_exactly("connectors/outlet/blah-1.js", "templates/connectors/outlet/blah-1.js")
 
       # Not colocated
       compiler = ThemeJavascriptCompiler.new(1, 'marks')
-      compiler.append_ember_template("templates/connectors/outlet/blah-1", "{{var}}")
-      compiler.append_module("console.log('test')", "connectors/outlet/blah-1")
+      compiler.append_tree({
+        "templates/connectors/outlet/blah-1.hbs" => "{{var}}",
+        "connectors/outlet/blah-1.js" => "console.log('test')"
+      })
       expect(compiler.raw_content.to_s).to include("discourse/theme-1/connectors/outlet/blah-1")
       expect(compiler.raw_content.to_s).to include("discourse/theme-1/templates/connectors/outlet/blah-1")
+      expect(JSON.parse(compiler.source_map)["sources"]).to contain_exactly("connectors/outlet/blah-1.js", "templates/connectors/outlet/blah-1.js")
     end
   end
 
