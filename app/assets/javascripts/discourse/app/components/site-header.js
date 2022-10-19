@@ -512,7 +512,7 @@ export default SiteHeaderComponent.extend({
       schedule("afterRender", () => {
         document.documentElement.style.setProperty(
           "--header-offset",
-          header.offsetHeight + "px"
+          `${header.offsetHeight}px`
         );
       });
     }
