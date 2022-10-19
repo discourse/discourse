@@ -5793,7 +5793,7 @@ en:
       embedding:
         get_started: "If you'd like to embed Discourse on another website, begin by adding its host."
         confirm_delete: "Are you sure you want to delete that host?"
-        sample: "Paste the following HTML code into your site to create and embed discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
+        sample: "Paste the following HTML code into your site to create and embed Discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
         title: "Embedding"
         host: "Allowed Hosts"
         class_name: "Class Name"
