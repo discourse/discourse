@@ -1,9 +1,10 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import Component from "@ember/component";
-import { clearRender, render } from "@ember/test-helpers";
+import { clearRender, render, settled } from "@ember/test-helpers";
 import discourseComputed, {
   afterRender,
+  debounce,
 } from "discourse-common/utils/decorators";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
@@ -51,6 +52,15 @@ class NativeComponent extends Component {
   }
 }
 
+class TestStub {
+  counter = 0;
+
+  @debounce(50)
+  increment() {
+    this.counter++;
+  }
+}
+
 module("Unit | Utils | decorators", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -58,7 +68,7 @@ module("Unit | Utils | decorators", function (hooks) {
     this.registry.register("component:foo-component", fooComponent);
     this.set("baz", 0);
 
-    await render(hbs`{{foo-component baz=baz}}`);
+    await render(hbs`<FooComponent @baz={{this.baz}} />`);
 
     assert.ok(exists(document.querySelector(".foo-component")));
     assert.strictEqual(this.baz, 1);
@@ -108,5 +118,22 @@ module("Unit | Utils | decorators", function (hooks) {
       "hello, Joffrey",
       "rerenders the component when arguments change"
     );
+  });
+
+  test("debounce", async function (assert) {
+    const stub = new TestStub();
+
+    stub.increment();
+    stub.increment();
+    stub.increment();
+    await settled();
+
+    assert.strictEqual(stub.counter, 1);
+
+    stub.increment();
+    stub.increment();
+    await settled();
+
+    assert.strictEqual(stub.counter, 2);
   });
 });
