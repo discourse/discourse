@@ -1,12 +1,14 @@
 /* global Pikaday:true */
-import computed, { observes } from "discourse-common/utils/decorators";
+import computed, {
+  debounce,
+  observes,
+} from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { Promise } from "rsvp";
 import { cookAsync } from "discourse/lib/text";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { isEmpty } from "@ember/utils";
 import loadScript from "discourse/lib/load-script";
 import { notEmpty } from "@ember/object/computed";
@@ -59,25 +61,19 @@ export default Component.extend({
   },
 
   @observes("computedConfig.{from,to,options}", "options", "isValid", "isRange")
-  _renderPreview() {
-    discourseDebounce(
-      this,
-      function () {
-        const markup = this.markup;
-        if (markup) {
-          cookAsync(markup).then((result) => {
-            this.set("currentPreview", result);
-            schedule("afterRender", () => {
-              applyLocalDates(
-                document.querySelectorAll(".preview .discourse-local-date"),
-                this.siteSettings
-              );
-            });
-          });
-        }
-      },
-      INPUT_DELAY
-    );
+  @debounce(INPUT_DELAY)
+  async _renderPreview() {
+    if (this.markup) {
+      const result = await cookAsync(this.markup);
+      this.set("currentPreview", result);
+
+      schedule("afterRender", () => {
+        applyLocalDates(
+          document.querySelectorAll(".preview .discourse-local-date"),
+          this.siteSettings
+        );
+      });
+    }
   },
 
   @computed("date", "toDate", "toTime")
