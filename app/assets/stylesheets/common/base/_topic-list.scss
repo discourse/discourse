@@ -108,14 +108,12 @@
   .category-logo.aspect-image {
     --max-height: 150px;
     max-height: var(--max-height);
-    width: calc(var(--max-height) * var(--aspect-ratio));
     max-width: 100%;
     height: auto;
 
     img {
-      width: 100%;
+      width: calc(var(--max-height) * var(--aspect-ratio));
       height: inherit;
-      max-width: initial;
       max-height: var(--max-height);
     }
   }
