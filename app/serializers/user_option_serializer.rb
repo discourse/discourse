@@ -34,7 +34,8 @@ class UserOptionSerializer < ApplicationSerializer
              :timezone,
              :skip_new_user_tips,
              :default_calendar,
-             :oldest_search_log_date
+             :oldest_search_log_date,
+             :seen_popups,
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs
