@@ -13,7 +13,7 @@ export default class HorizontalOverflowNav extends Component {
 
   @bind
   scrollToActive() {
-    let activeElement = document.querySelector(
+    const activeElement = document.querySelector(
       ".user-navigation-secondary a.active"
     );
 
