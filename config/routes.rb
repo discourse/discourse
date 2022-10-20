@@ -478,7 +478,7 @@ Discourse::Application.routes.draw do
       get "#{root_path}/:username/messages/:filter" => "user_actions#private_messages", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/messages/group/:group_name" => "user_actions#private_messages", constraints: { username: RouteFormat.username, group_name: RouteFormat.username }
       get "#{root_path}/:username/messages/group/:group_name/:filter" => "user_actions#private_messages", constraints: { username: RouteFormat.username, group_name: RouteFormat.username }
-      get "#{root_path}/:username/messages/tags/:tag_id" => "user_actions#private_messages", constraints: StaffConstraint.new
+      get "#{root_path}/:username/messages/tags/:tag_id" => "list#private_messages_tag", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username.json" => "users#show", constraints: { username: RouteFormat.username }, defaults: { format: :json }
       get({ "#{root_path}/:username" => "users#show", constraints: { username: RouteFormat.username } }.merge(index == 1 ? { as: 'user' } : {}))
       put "#{root_path}/:username" => "users#update", constraints: { username: RouteFormat.username }, defaults: { format: :json }
