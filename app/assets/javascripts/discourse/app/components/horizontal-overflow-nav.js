@@ -4,7 +4,7 @@ import { bind } from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 
-export default class UserNavPreferencesNav extends Component {
+export default class HorizontalOverflowNav extends Component {
   @service site;
   @tracked hasScroll;
   @tracked hideRightScroll = false;
@@ -13,9 +13,14 @@ export default class UserNavPreferencesNav extends Component {
 
   @bind
   scrollToActive() {
-    document
-      .querySelector(".user-navigation-secondary a.active")
-      .scrollIntoView({ inline: "center" });
+    const activeElement = document.querySelector(
+      ".user-navigation-secondary a.active"
+    );
+
+    activeElement?.scrollIntoView({
+      block: "nearest",
+      inline: "center",
+    });
   }
 
   @bind
@@ -60,7 +65,7 @@ export default class UserNavPreferencesNav extends Component {
 
   @action
   horizScroll(element) {
-    let scrollSpeed = 50;
+    let scrollSpeed = 100;
     let siblingTarget = element.target.previousElementSibling;
 
     if (element.target.dataset.direction === "left") {
@@ -71,8 +76,6 @@ export default class UserNavPreferencesNav extends Component {
     this.scrollInterval = setInterval(function () {
       siblingTarget.scrollLeft += scrollSpeed;
     }, 50);
-
-    this.scrollTimer;
 
     element.target.addEventListener("mouseup", this.stopScroll);
     element.target.addEventListener("mouseleave", this.stopScroll);

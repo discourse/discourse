@@ -7,7 +7,7 @@
     </ol>
   {{/if}}
 
-  <ul class="messages-nav nav-pills action-list">
+  <HorizontalOverflowNav>
     {{#if @isPersonal}}
       <li class="messages-latest">
         <LinkTo @route="userPrivateMessages.index" @model={{@user}}>
@@ -99,7 +99,7 @@
     {{/if}}
 
     <PluginOutlet @name="user-messages-nav" @connectorTagName="li" @args={{hash model=@user}} />
-  </ul>
+  </HorizontalOverflowNav>
 
   {{#if this.site.desktopView}}
     <div class="navigation-controls">

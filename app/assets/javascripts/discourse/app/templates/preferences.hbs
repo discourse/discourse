@@ -1,12 +1,14 @@
 {{#if this.currentUser.redesigned_user_page_nav_enabled}}
   <DSection @pageClass="user-preferences" />
-
-  <UserNav::PreferencesNav
-    @user={{this.model}}
-    @viewingSelf={{this.viewingSelf}}
-    @model={{this.model}}
-    @siteSettings={{this.siteSettings}}
-  />
+  <div class="user-navigation user-navigation-secondary">
+    <HorizontalOverflowNav>
+      <UserNav::PreferencesNav
+          @user={{this.model}}
+          @viewingSelf={{this.viewingSelf}}
+          @model={{this.model}}
+          @siteSettings={{this.siteSettings}}/>
+    </HorizontalOverflowNav>
+  </div>
 {{else}}
   <DSection @pageClass="user-preferences" @class="user-secondary-navigation">
     <MobileNav @class="preferences-nav" @desktopClass="preferences-list action-list nav-stacked">
