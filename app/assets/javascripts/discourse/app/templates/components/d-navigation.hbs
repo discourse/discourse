@@ -17,7 +17,7 @@
   {{/if}}
 
   {{#if (and this.category this.showCategoryEdit)}}
-    <DButton @class="btn-default edit-category" @action={{this.editCategory}} @icon="wrench" @ariaLabel="category.edit" />
+    <DButton @class="btn-default edit-category" @action={{this.editCategory}} @icon="wrench" @title="category.edit_title" />
   {{/if}}
 
   {{#if this.tag}}

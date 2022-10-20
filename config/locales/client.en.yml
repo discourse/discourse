@@ -3455,6 +3455,7 @@ en:
       all: "All categories"
       choose: "category&hellip;"
       edit: "Edit"
+      edit_title: "Edit this category"
       edit_dialog_title: "Edit: %{categoryName}"
       view: "View Topics in Category"
       back: "Back to category"
