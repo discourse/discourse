@@ -186,22 +186,23 @@ class DiscourseConnect < DiscourseConnectBase
 
   def synchronize_groups(user)
     names = (groups || "").split(",").map(&:downcase)
-    ids = Group.where('LOWER(NAME) in (?) AND NOT automatic', names).pluck(:id)
 
-    group_users = GroupUser
-      .where('group_id IN (SELECT id FROM groups WHERE NOT automatic)')
-      .where(user_id: user.id)
+    to_be_added = Group.where('LOWER(NAME) in (?) AND NOT automatic', names)
+    to_be_removed = Group.joins(:group_users).where(automatic: false, group_users: { user_id: user.id })
 
-    delete_group_users = group_users
-    if ids.length > 0
-      delete_group_users = group_users.where('group_id NOT IN (?)', ids)
+    if to_be_added.present?
+      to_be_removed = to_be_removed.where("groups.id NOT IN (?)", to_be_added.map(&:id)).to_a
     end
-    delete_group_users.destroy_all
 
-    ids -= group_users.where('group_id IN (?)', ids).pluck(:group_id)
+    if to_be_removed.present?
+      to_be_added = to_be_added.where("groups.id NOT IN (?)", to_be_removed.map(&:id)).to_a
+    end
 
-    ids.each do |group_id|
-      GroupUser.create(group_id: group_id, user_id: user.id)
+    if to_be_added.present? || to_be_removed.present?
+      GroupUser.transaction do
+        add_user_to_groups(user, to_be_added) if to_be_added.present?
+        remove_user_from_groups(user, to_be_removed) if to_be_removed.present?
+      end
     end
   end
 
@@ -211,24 +212,32 @@ class DiscourseConnect < DiscourseConnectBase
       return
     end
 
+    to_be_added = nil
     if add_groups
       split = add_groups.split(",").map(&:downcase)
       if split.length > 0
-        Group.where('LOWER(name) in (?) AND NOT automatic', split).pluck(:id).each do |id|
-          unless GroupUser.where(group_id: id, user_id: user.id).exists?
-            GroupUser.create(group_id: id, user_id: user.id)
-          end
+        to_be_added = Group.where('LOWER(name) in (?) AND NOT automatic', split)
+        if already_member = GroupUser.where(user_id: user.id).pluck(:group_id).presence
+          to_be_added = to_be_added.where("id NOT IN (?)", already_member)
         end
       end
     end
 
+    to_be_removed = nil
     if remove_groups
       split = remove_groups.split(",").map(&:downcase)
       if split.length > 0
-        GroupUser
-          .where(user_id: user.id)
-          .where('group_id IN (SELECT id FROM groups WHERE LOWER(name) in (?))', split)
-          .destroy_all
+        to_be_removed = Group
+          .joins(:group_users)
+          .where(automatic: false, group_users: { user_id: user.id })
+          .where("LOWER(name) IN (?)", split)
+      end
+    end
+
+    if to_be_added || to_be_removed
+      GroupUser.transaction do
+        add_user_to_groups(user, to_be_added) if to_be_added
+        remove_user_from_groups(user, to_be_removed) if to_be_removed
       end
     end
   end
@@ -393,5 +402,19 @@ class DiscourseConnect < DiscourseConnectBase
     end
 
     name.presence || User.suggest_name(name_suggester_input)
+  end
+
+  def add_user_to_groups(user, groups)
+    groups.each do |group|
+      GroupUser.create!(user_id: user.id, group_id: group.id)
+      GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
+    end
+  end
+
+  def remove_user_from_groups(user, groups)
+    GroupUser.where(user_id: user.id, group_id: groups.map(&:id)).destroy_all
+    groups.each do |group|
+      GroupActionLogger.new(Discourse.system_user, group).log_remove_user_from_group(user)
+    end
   end
 end
