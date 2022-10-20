@@ -58,6 +58,11 @@ export default {
 
     app.register("location:discourse-location", DiscourseLocation);
 
+    const caps = container.lookup("service:capabilities");
+    app.register("capabilities:main", caps, { instantiate: false });
+    app.inject("controller", "capabilities", "service:capabilities");
+    app.inject("component", "capabilities", "service:capabilities");
+
     ALL_TARGETS.forEach((t) => {
       app.inject(t, "appEvents", "service:app-events");
       app.inject(t, "pmTopicTrackingState", "service:pm-topic-tracking-state");

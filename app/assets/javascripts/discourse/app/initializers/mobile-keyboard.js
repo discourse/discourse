@@ -6,7 +6,7 @@ export default {
 
   initialize(container) {
     const site = container.lookup("service:site");
-    this.capabilities = container.lookup("capabilities:main");
+    this.capabilities = container.lookup("service:capabilities");
 
     if (!this.capabilities.isIpadOS && !site.mobileView) {
       return;

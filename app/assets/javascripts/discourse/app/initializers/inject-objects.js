@@ -5,7 +5,8 @@ import deprecated from "discourse-common/lib/deprecated";
 
 export default {
   name: "inject-objects",
-  after: "export-application-global",
+  after: "sniff-capabilities",
+
   initialize(container, app) {
     // This is required for Ember CLI tests to work
     setDefaultOwner(app.__container__);

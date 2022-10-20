@@ -7,7 +7,7 @@ export default {
   after: "inject-objects",
 
   initialize(container) {
-    const caps = container.lookup("capabilities:main");
+    const caps = container.lookup("service:capabilities");
     if (caps.isAppWebview) {
       window
         .matchMedia("(prefers-color-scheme: dark)")

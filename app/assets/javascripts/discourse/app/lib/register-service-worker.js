@@ -8,7 +8,7 @@ export function registerServiceWorker(
   const isSecured = document.location.protocol === "https:";
 
   if (isSecured && "serviceWorker" in navigator) {
-    const caps = container.lookup("capabilities:main");
+    const caps = container.lookup("service:capabilities");
     const isAppleBrowser =
       caps.isSafari ||
       (caps.isIOS && !window.matchMedia("(display-mode: standalone)").matches);
