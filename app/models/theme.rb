@@ -530,6 +530,13 @@ class Theme < ActiveRecord::Base
       self.settings.each do |setting|
         settings_hash[setting.name] = setting.default
       end
+
+      theme_uploads = build_theme_uploads_hash
+      settings_hash['theme_uploads'] = theme_uploads if theme_uploads.present?
+
+      theme_uploads_local = build_local_theme_uploads_hash
+      settings_hash['theme_uploads_local'] = theme_uploads_local if theme_uploads_local.present?
+
       settings_hash
     end
   end
@@ -540,21 +547,32 @@ class Theme < ActiveRecord::Base
       hash[setting.name] = setting.value
     end
 
-    theme_uploads = {}
-    theme_uploads_local = {}
-
-    upload_fields.each do |field|
-      if field.upload&.url
-        theme_uploads[field.name] = Discourse.store.cdn_url(field.upload.url)
-      end
-      if field.javascript_cache
-        theme_uploads_local[field.name] = field.javascript_cache.local_url
-      end
-    end
-
+    theme_uploads = build_theme_uploads_hash
     hash['theme_uploads'] = theme_uploads if theme_uploads.present?
+
+    theme_uploads_local = build_local_theme_uploads_hash
     hash['theme_uploads_local'] = theme_uploads_local if theme_uploads_local.present?
 
+    hash
+  end
+
+  def build_theme_uploads_hash
+    hash = {}
+    upload_fields.each do |field|
+      if field.upload&.url
+        hash[field.name] = Discourse.store.cdn_url(field.upload.url)
+      end
+    end
+    hash
+  end
+
+  def build_local_theme_uploads_hash
+    hash = {}
+    upload_fields.each do |field|
+      if field.javascript_cache
+        hash[field.name] = field.javascript_cache.local_url
+      end
+    end
     hash
   end
 

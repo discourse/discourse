@@ -126,6 +126,34 @@ RSpec.describe ThemeJavascriptsController do
       expect(response.body).to include("assert.ok(true);")
     end
 
+    it "includes theme uploads URLs in the settings object" do
+      SiteSetting.authorized_extensions = "*"
+      js_file = Tempfile.new(["vendorlib", ".js"])
+      js_file.write("console.log(123);\n")
+      js_file.rewind
+      js_upload = UploadCreator.new(js_file, "vendorlib.js").create_for(Discourse::SYSTEM_USER_ID)
+      component.set_field(
+        type: :theme_upload_var,
+        target: :common,
+        name: "vendorlib",
+        upload_id: js_upload.id
+      )
+      component.save!
+      _, digest = component.baked_js_tests_with_digest
+
+      get "/theme-javascripts/tests/#{component.id}-#{digest}.js"
+      expect(response.body).to include(
+        "require(\"discourse/lib/theme-settings-store\").registerSettings(" +
+        "#{component.id}, {\"num_setting\":5,\"theme_uploads\":{\"vendorlib\":" +
+        "\"/uploads/default/test_#{ENV['TEST_ENV_NUMBER']}/original/1X/#{js_upload.sha1}.js\"},\"theme_uploads_local\":{\"vendorlib\":" +
+        "\"/theme-javascripts/#{js_upload.sha1}.js?__ws=test.localhost\"}}, { force: true });"
+      )
+      expect(response.body).to include("assert.ok(true);")
+    ensure
+      js_file&.close
+      js_file&.unlink
+    end
+
     it "responds with 404 if digest is not a 40 chars hex" do
       digest = Rack::Utils.escape('../../../../../../../../../../etc/passwd').gsub('.', '%2E')
       get "/theme-javascripts/tests/#{component.id}-#{digest}.js"
