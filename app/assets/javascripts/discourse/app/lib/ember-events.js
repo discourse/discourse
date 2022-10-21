@@ -1,5 +1,6 @@
 // eslint-disable-next-line ember/no-classic-components
 import Component from "@ember/component";
+import EmberObject from "@ember/object";
 import { actionModifier } from "./ember-action-modifier";
 
 /**
@@ -124,7 +125,8 @@ function rewireClassicComponentEvents(app) {
     allEventMethods[methodName] = event;
   }
 
-  Component.reopen({
+  // Avoid Component.reopen to stop `ember.component.reopen` deprecation warning
+  EmberObject.reopen.call(Component, {
     /**
      * @param {string | typeof INTERNAL} name
      * @param {unknown[]} args
