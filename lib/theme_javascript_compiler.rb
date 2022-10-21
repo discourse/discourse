@@ -232,7 +232,7 @@ class ThemeJavascriptCompiler
     transpiler = DiscourseJsProcessor::Transpiler.new
     @output_tree << ["#{original_filename}.js", <<~JS]
       if ('define' in window) {
-      #{transpiler.perform(script, "", name).strip}
+      #{transpiler.perform(script, "", name, theme_id: @theme_id).strip}
       }
     JS
   rescue MiniRacer::RuntimeError, DiscourseJsProcessor::TranspileError => ex

@@ -110,6 +110,15 @@ RSpec.describe ThemeJavascriptCompiler do
       expect(compiler.raw_content).to include("setComponentTemplate")
     end
 
+    it "applies theme AST transforms to colocated components" do
+      compiler = ThemeJavascriptCompiler.new(12345678910, 'my theme name')
+      compiler.append_tree(
+        { "discourse/components/mycomponent.hbs" => '{{theme-i18n "my_translation_key"}}' }
+      )
+      template_compiled_line = compiler.raw_content.lines.find { |l| l.include?('"block":') }
+      expect(template_compiled_line).to include("12345678910")
+    end
+
     it "prints error when default export missing" do
       compiler.append_tree(
         {
