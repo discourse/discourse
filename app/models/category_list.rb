@@ -121,6 +121,11 @@ class CategoryList
 
     @categories = self.class.order_categories(@categories)
 
+    modifiers = []
+    # some plugins may need to change the categories cached on site load
+    DiscourseEvent.trigger(:query_categories_list, modifiers, @categories, @guardian, @options)
+    modifiers.each { |mod| @categories = mod.call(@categories) }
+
     @categories = @categories.to_a
 
     include_subcategories = @options[:include_subcategories] == true

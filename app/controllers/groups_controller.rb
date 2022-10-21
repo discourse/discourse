@@ -80,6 +80,11 @@ class GroupsController < ApplicationController
       type_filters = type_filters - %i[my owner]
     end
 
+    modifiers = []
+    # some plugins may need to change the query
+    DiscourseEvent.trigger(:query_groups_list, modifiers, groups, @guardian, params)
+    modifiers.each { |mod| groups = mod.call(groups) }
+
     type_filters.delete(:non_automatic)
 
     # count the total before doing pagination
