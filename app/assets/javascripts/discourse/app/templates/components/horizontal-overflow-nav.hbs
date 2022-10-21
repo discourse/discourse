@@ -1,4 +1,5 @@
 {{!-- template-lint-disable no-down-event-binding --}}
+{{!-- template-lint-disable no-invalid-interactive --}}
 
 <div class="horizontal-overflow-nav {{if this.hasScroll "has-scroll"}}">
   {{#if this.hasScroll}}
@@ -6,7 +7,7 @@
       role="button"
       {{on "mousedown" this.horizScroll}}
       data-direction="left"
-      class="nav-overflow__scroll-left btn-flat {{if this.hideLeftScroll "transparent"}}"
+      class="horizontal-overflow-nav__scroll-left {{if this.hideLeftScroll "disabled"}}"
     >
       {{d-icon "chevron-left"}}
     </a>
@@ -16,7 +17,8 @@
     {{on-resize this.checkScroll}}
     {{on "scroll" this.watchScroll}}
     {{did-insert this.scrollToActive}}
-    class="nav-pills action-list"
+    {{on "mousedown" this.scrollDrag}}
+    class="nav-pills action-list {{@className}}"
   >
     {{yield}}
   </ul>
@@ -25,7 +27,7 @@
     <a
       role="button"
       {{on "mousedown" this.horizScroll}}
-      class="nav-overflow__scroll-right btn-flat {{if this.hideRightScroll "transparent"}}"
+      class="horizontal-overflow-nav__scroll-right {{if this.hideRightScroll "disabled"}}"
     >
       {{d-icon "chevron-right"}}
     </a>

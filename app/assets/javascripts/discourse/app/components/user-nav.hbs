@@ -1,5 +1,5 @@
 <section class="user-navigation user-navigation-primary">
-  <ul class="main-nav nav nav-pills user-nav">
+  <HorizontalOverflowNav @className="main-nav nav user-nav">
     {{#unless @user.profile_hidden}}
       <li class="summary">
         <LinkTo @route="user.summary">
@@ -74,5 +74,5 @@
         </a>
       </li>
     {{/if}}
-  </ul>
+  </HorizontalOverflowNav>
 </section>
