@@ -60,9 +60,10 @@ const Site = RestModel.extend({
   @discourseComputed("categoriesByCount", "categories.[]")
   sortedCategories(categories) {
     const children = new Map();
+    let parentId;
 
     categories.forEach((category) => {
-      const parentId = parseInt(category.parent_category_id, 10) || -1;
+      parentId = parseInt(category.parent_category_id, 10) || -1;
       const group = children.get(parentId) || [];
       group.pushObject(category);
 
@@ -72,7 +73,7 @@ const Site = RestModel.extend({
     const reduce = (values) =>
       values.flatMap((c) => [c, reduce(children.get(c.id) || [])]).flat();
 
-    return reduce(children.get(-1));
+    return reduce(children.get(parentId));
   },
 
   // Returns it in the correct order, by setting
