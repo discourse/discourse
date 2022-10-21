@@ -2,7 +2,6 @@
 
 #mixin for all guardian methods dealing with topic permissions
 module TopicGuardian
-
   def can_remove_allowed_users?(topic, target_user = nil)
     is_staff? ||
     (topic.user == @user && @user.has_trust_level?(TrustLevel[2])) ||
@@ -197,6 +196,70 @@ module TopicGuardian
 
   def can_see_deleted_topics?(category)
     is_staff? || is_category_group_moderator?(category)
+  end
+
+  # Accepts an array of `Topic#id` and returns an array of `Topic#id` which the user can see.
+  def can_see_topic_ids(topic_ids: [], hide_deleted: true)
+    return topic_ids if is_admin?
+    return [] if topic_ids.compact.blank?
+
+    default_scope = Topic.unscoped.where(id: topic_ids)
+
+    # When `hide_deleted` is `true`, hide deleted topics if user is not staff or category moderator
+    if hide_deleted && !is_staff?
+      default_scope = default_scope.where("deleted_at IS NULL")
+
+      if category_group_moderation_enabled?
+        default_scope = default_scope.or(
+          Topic.unscoped.where("deleted_at IS NOT NULL AND topics.category_id IN (#{category_group_moderator_scope.select(:id).to_sql})")
+        )
+      end
+    end
+
+    # Filter out topics with shared drafts if user cannot see shared drafts
+    if !can_see_shared_draft?
+      default_scope = default_scope.left_outer_joins(:shared_draft).where("shared_drafts.id IS NULL")
+    end
+
+    # Staged users are allowed to see their own topics in read restricted categories when Category#email_in and
+    # Category#email_in_allow_strangers has been configured.
+    staged_conditional_filter =
+      if is_staged?
+        <<~SQL
+        OR topics.id IN (
+          SELECT
+            topics.id
+          FROM topics
+          INNER JOIN categories ON categories.id = topics.category_id
+          WHERE categories.read_restricted
+          AND categories.email_in IS NOT NULL
+          AND categories.email_in_allow_strangers
+          AND topics.user_id = #{user.id.to_i}
+          AND topics.id IN (#{topic_ids.join(",")})
+        )
+        SQL
+      else
+        nil
+      end
+
+    regular_topic_scope = default_scope.listable_topics.secured(self, custom_sql_condition: staged_conditional_filter)
+    scope = regular_topic_scope
+
+    if authenticated?
+      custom_sql_condition = nil
+
+      if is_moderator?
+        custom_sql_condition = <<~SQL
+        OR topics.subtype = '#{TopicSubtype.moderator_warning}'
+        OR topics.id IN (#{Topic.has_flag_scope.select(:topic_id).to_sql})
+        SQL
+      end
+
+      private_message_scope = default_scope.private_messages_for_user(user, custom_sql_condition: custom_sql_condition)
+      scope = scope.or(private_message_scope)
+    end
+
+    Topic.unscoped.merge(scope).pluck(:id)
   end
 
   def can_see_topic?(topic, hide_deleted = true)

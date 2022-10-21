@@ -285,12 +285,22 @@ class Topic < ActiveRecord::Base
     JOIN group_users gu ON gu.user_id = :user_id AND gu.group_id = tg.group_id
   SQL
 
-  scope :private_messages_for_user, ->(user) do
-    private_messages.where(
-      "topics.id IN (#{PRIVATE_MESSAGES_SQL_USER})
-      OR topics.id IN (#{PRIVATE_MESSAGES_SQL_GROUP})",
-      user_id: user.id
-    )
+  scope :private_messages_for_user, ->(user, opts = {}) do
+    private_message_scope = private_messages
+
+    sql = <<~SQL
+    topics.id IN (#{PRIVATE_MESSAGES_SQL_USER})
+    OR topics.id IN (#{PRIVATE_MESSAGES_SQL_GROUP})
+    SQL
+
+    if opts[:custom_sql_condition]
+      sql = <<~SQL
+      #{sql}
+      #{opts[:custom_sql_condition]}
+      SQL
+    end
+
+    private_message_scope.where(sql, user_id: user.id)
   end
 
   scope :listable_topics, -> { where('topics.archetype <> ?', Archetype.private_message) }
@@ -303,7 +313,7 @@ class Topic < ActiveRecord::Base
 
   scope :exclude_scheduled_bump_topics, -> { where.not(id: TopicTimer.scheduled_bump_topics) }
 
-  scope :secured, lambda { |guardian = nil|
+  scope :secured, lambda { |guardian = nil, opts = {}|
     ids = guardian.secure_category_ids if guardian
 
     # Query conditions
@@ -313,7 +323,19 @@ class Topic < ActiveRecord::Base
       ["NOT read_restricted"]
     end
 
-    where("topics.category_id IS NULL OR topics.category_id IN (SELECT id FROM categories WHERE #{condition[0]})", condition[1])
+    sql = <<~SQL
+    topics.category_id IS NULL
+    OR topics.category_id IN (SELECT id FROM categories WHERE #{condition[0]})
+    SQL
+
+    if opts[:custom_sql_condition]
+      sql = <<~SQL
+      #{sql}
+      #{opts[:custom_sql_condition]}
+      SQL
+    end
+
+    where(sql, condition[1])
   }
 
   scope :in_category_and_subcategories, lambda { |category_id|
@@ -423,8 +445,12 @@ class Topic < ActiveRecord::Base
     posts.where(post_type: Post.types[:regular], user_deleted: false).order('score desc nulls last').limit(1).first
   end
 
+  def self.has_flag_scope
+    ReviewableFlaggedPost.pending_and_default_visible
+  end
+
   def has_flags?
-    ReviewableFlaggedPost.pending.default_visible.where(topic_id: id).exists?
+    self.class.has_flag_scope.exists?(topic_id: self.id)
   end
 
   def is_official_warning?
