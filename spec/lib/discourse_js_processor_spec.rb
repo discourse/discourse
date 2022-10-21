@@ -47,9 +47,7 @@ RSpec.describe DiscourseJsProcessor do
 
         const template = function (attrs, state) {
           var _r = [];
-
           _r.push(somevalue);
-
           return _r;
         };
       });
