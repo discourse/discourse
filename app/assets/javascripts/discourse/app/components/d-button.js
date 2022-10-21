@@ -118,8 +118,7 @@ export default Component.extend({
   },
 
   click(event) {
-    this._triggerAction(event);
-    return false;
+    return this._triggerAction(event);
   },
 
   mouseDown(event) {
@@ -162,6 +161,8 @@ export default Component.extend({
 
       event.preventDefault();
       event.stopPropagation();
+
+      return false;
     }
   },
 });
