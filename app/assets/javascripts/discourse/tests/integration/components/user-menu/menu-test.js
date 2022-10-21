@@ -36,6 +36,7 @@ module("Integration | Component | user-menu", function (hooks) {
   });
 
   test("the menu has a group of tabs at the top", async function (assert) {
+    this.currentUser.set("can_send_private_messages", true);
     await render(template);
     const tabs = queryAll(".top-tabs.tabs-list .btn");
     assert.strictEqual(tabs.length, 6);
@@ -52,6 +53,7 @@ module("Integration | Component | user-menu", function (hooks) {
   });
 
   test("the menu has a group of tabs at the bottom", async function (assert) {
+    this.currentUser.set("can_send_private_messages", true);
     await render(template);
     const tabs = queryAll(".bottom-tabs.tabs-list .btn");
     assert.strictEqual(tabs.length, 1);
@@ -63,6 +65,7 @@ module("Integration | Component | user-menu", function (hooks) {
 
   test("likes tab is hidden if current user's like notifications frequency is 'never'", async function (assert) {
     this.currentUser.set("likes_notifications_disabled", true);
+    this.currentUser.set("can_send_private_messages", true);
     await render(template);
     assert.ok(!exists("#user-menu-button-likes"));
 
@@ -79,6 +82,7 @@ module("Integration | Component | user-menu", function (hooks) {
   test("reviewables tab is shown if current user can review and there are pending reviewables", async function (assert) {
     this.currentUser.set("can_review", true);
     this.currentUser.set("reviewable_count", 1);
+    this.currentUser.set("can_send_private_messages", true);
     await render(template);
     const tab = query("#user-menu-button-review-queue");
     assert.strictEqual(tab.dataset.tabNumber, "5");
