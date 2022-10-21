@@ -100,11 +100,11 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.notOk(exists("#user-menu-button-review-queue"));
   });
 
-  test("messages tab isn't shown if current user isn't staff and user does not belong to personal_message_enabled_groups", async function (assert) {
+  test("messages tab isn't shown if current user does not have can_send_private_messages permission", async function (assert) {
     this.currentUser.set("moderator", false);
     this.currentUser.set("admin", false);
     this.currentUser.set("groups", []);
-    this.siteSettings.personal_message_enabled_groups = "13"; // trust_level_3 auto group ID;
+    this.currentUser.set("can_send_private_messages", false);
 
     await render(template);
 
@@ -120,11 +120,11 @@ module("Integration | Component | user-menu", function (hooks) {
     );
   });
 
-  test("messages tab is shown if current user is staff even if they do not belong to personal_message_enabled_groups", async function (assert) {
+  test("messages tab is shown if user has can_send_private_messages permission", async function (assert) {
     this.currentUser.set("moderator", true);
     this.currentUser.set("admin", false);
     this.currentUser.set("groups", []);
-    this.siteSettings.personal_message_enabled_groups = "999";
+    this.currentUser.set("can_send_private_messages", true);
 
     await render(template);
 
