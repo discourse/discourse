@@ -72,9 +72,9 @@ export default Controller.extend({
     return !allowPrivateMessages;
   },
 
-  @discourseComputed("currentUser.allowPersonalMessages")
+  @discourseComputed("currentUser.can_send_private_messages")
   showMessageSettings() {
-    return this.currentUser?.allowPersonalMessages;
+    return this.currentUser?.can_send_private_messages;
   },
 
   @action

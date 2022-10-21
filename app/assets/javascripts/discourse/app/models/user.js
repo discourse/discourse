@@ -640,6 +640,8 @@ const User = RestModel.extend({
     return filteredGroups.length > numGroupsToDisplay;
   },
 
+  // NOTE: This only includes groups *visible* to the user via the serializer,
+  // so be wary when using this.
   isInAnyGroups(groupIds) {
     if (!this.groups) {
       return;
@@ -1092,18 +1094,6 @@ const User = RestModel.extend({
   )
   trackedTags(trackedTags, watchedTags, watchingFirstPostTags) {
     return [...trackedTags, ...watchedTags, ...watchingFirstPostTags];
-  },
-
-  @discourseComputed("staff", "groups.[]")
-  allowPersonalMessages() {
-    return (
-      this.staff ||
-      this.isInAnyGroups(
-        this.siteSettings.personal_message_enabled_groups
-          .split("|")
-          .map((groupId) => parseInt(groupId, 10))
-      )
-    );
   },
 
   showPopup(options) {

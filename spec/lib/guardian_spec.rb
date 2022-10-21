@@ -856,6 +856,17 @@ RSpec.describe Guardian do
         topic.category.update!(reviewable_by_group_id: group.id, topic_id: post.topic.id)
         expect(Guardian.new(user_gm).can_see?(topic)).to be_truthy
       end
+
+      it 'allows staged user to view own topic in restricted category when Category#email_in and Category#email_in_allow_strangers is set' do
+        secure_category = Fabricate(:category, read_restricted: true, email_in: "foo2@bar.com", email_in_allow_strangers: true)
+        topic_in_secure_category = Fabricate(:topic, category: secure_category, user: user)
+
+        expect(Guardian.new(user).can_see?(topic_in_secure_category)).to eq(false)
+
+        user.update!(staged: true)
+
+        expect(Guardian.new(user).can_see?(topic_in_secure_category)).to eq(true)
+      end
     end
 
     describe 'a Post' do
