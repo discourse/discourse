@@ -15,7 +15,7 @@
 
 {{#if this.model.can_change_location}}
   <div class="control-group pref-location">
-    <label class="control-label">{{i18n "user.location"}}</label>
+    <label class="control-label" for="edit-location">{{i18n "user.location"}}</label>
     <div class="controls">
       <Input @type="text" @value={{this.model.location}} class="input-xxlarge" id="edit-location" />
     </div>
@@ -24,9 +24,9 @@
 
 {{#if this.model.can_change_website}}
   <div class="control-group pref-website">
-    <label class="control-label">{{i18n "user.website"}}</label>
+    <label class="control-label" for="edit-website">{{i18n "user.website"}}</label>
     <div class="controls">
-      <Input @type="text" @value={{this.model.website}} class="input-xxlarge" />
+      <Input @type="text" @value={{this.model.website}} class="input-xxlarge" id="edit-website"/>
     </div>
   </div>
 {{/if}}
