@@ -1097,7 +1097,12 @@ const User = RestModel.extend({
   },
 
   showPopup(options) {
+    // Check if onboarding popups are enabled.
     const popupTypes = Site.currentProp("onboarding_popup_types");
+    if (!popupTypes) {
+      return;
+    }
+
     if (!popupTypes[options.id]) {
       // eslint-disable-next-line no-console
       console.warn("Cannot display popup with type =", options.id);
@@ -1117,8 +1122,13 @@ const User = RestModel.extend({
   },
 
   hidePopupForever(popupId) {
-    // Empty popupId means all popups.
+    // Check if onboarding popups are enabled.
     const popupTypes = Site.currentProp("onboarding_popup_types");
+    if (!popupTypes) {
+      return;
+    }
+
+    // Empty popupId means all popups.
     if (popupId && !popupTypes[popupId]) {
       // eslint-disable-next-line no-console
       console.warn("Cannot hide popup with type =", popupId);

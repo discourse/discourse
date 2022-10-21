@@ -64,6 +64,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :groups,
              :second_factor_enabled,
              :ignored_users,
+             :auto_track_topics_after_msecs,
              :title_count_mode,
              :timezone,
              :featured_topic,
@@ -131,6 +132,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def dynamic_favicon
     object.user_option.dynamic_favicon
+  end
+
+  def auto_track_topics_after_msecs
+    object.user_option.auto_track_topics_after_msecs
   end
 
   def title_count_mode

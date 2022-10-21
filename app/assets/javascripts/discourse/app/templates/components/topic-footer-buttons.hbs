@@ -1,4 +1,6 @@
 <div class="topic-footer-main-buttons">
+  <OnboardingPopup @id="topic_menu" />
+
   <TopicAdminMenuButton @topic={{this.topic}} @openUpwards="true" @toggleMultiSelect={{this.toggleMultiSelect}} @showTopicSlowModeUpdate={{this.showTopicSlowModeUpdate}} @deleteTopic={{this.deleteTopic}} @recoverTopic={{this.recoverTopic}} @toggleFeaturedOnProfile={{this.toggleFeaturedOnProfile}} @toggleClosed={{this.toggleClosed}} @toggleArchived={{this.toggleArchived}} @toggleVisibility={{this.toggleVisibility}} @showTopicTimerModal={{this.showTopicTimerModal}} @showFeatureTopic={{this.showFeatureTopic}} @showChangeTimestamp={{this.showChangeTimestamp}} @resetBumpDate={{this.resetBumpDate}} @convertToPublicTopic={{this.convertToPublicTopic}} @convertToPrivateMessage={{this.convertToPrivateMessage}} />
 
   {{#if this.site.mobileView}}
@@ -30,6 +32,11 @@
 
 {{#if this.showNotificationsButton}}
   <TopicNotificationsButton @notificationLevel={{this.topic.details.notification_level}} @topic={{this.topic}} />
+  {{#if this.onboardingPopupContent}}
+    <OnboardingPopup @id="topic_notification_levels"
+                     @selector=".notifications-button"
+                     @content={{this.onboardingPopupContent}} />
+  {{/if}}
 {{/if}}
 
 <PluginOutlet @name="after-topic-footer-buttons" @args={{hash topic=this.topic}} @connectorTagName="span" />

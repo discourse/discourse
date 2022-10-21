@@ -1838,6 +1838,18 @@ en:
         title: "Topic timeline"
         content: "Scroll quickly through a post using the topic timeline."
 
+      topic_notification_levels:
+        title: "You are now tracking this topic"
+        content: "When you spend %{duration} reading a topic, we assume you are interested and so will notify you when there is activity. Look for this bell to adjust your notification preferences for specific topics or whole categories."
+
+      topic_menu:
+        title: "Topic menu"
+        content: "Reply, share or add topics to your bookmarks. Flag topics for moderator attention."
+
+      suggested_topics:
+        title: "Keep reading!"
+        content: "Here are some topics we think you might like to read next."
+
     loading: "Loading..."
     errors:
       prev_page: "while trying to load"

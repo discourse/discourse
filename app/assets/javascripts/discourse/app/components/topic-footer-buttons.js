@@ -4,6 +4,9 @@ import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
 import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 import { getTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import I18n from "I18n";
+import { duration } from "discourse/lib/formatter";
 
 export default Component.extend({
   elementId: "topic-footer-buttons",
@@ -66,4 +69,19 @@ export default Component.extend({
   @discourseComputed("topic.message_archived")
   archiveLabel: (archived) =>
     archived ? "topic.move_to_inbox.title" : "topic.archive_message.title",
+
+  @discourseComputed(
+    "currentUser.auto_track_topics_after_msecs",
+    "topic.details.notification_level"
+  )
+  onboardingPopupContent(autoTrackDuration, notificationLevel) {
+    if (
+      autoTrackDuration > 0 &&
+      notificationLevel >= NotificationLevels.TRACKING
+    ) {
+      return I18n.t("popup.topic_notification_levels.content", {
+        duration: duration(autoTrackDuration / 1000, { format: "medium" }),
+      });
+    }
+  },
 });
