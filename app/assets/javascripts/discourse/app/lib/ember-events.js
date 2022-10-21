@@ -219,7 +219,17 @@ function addComponentEventListeners(component, events) {
     if (element) {
       for (const { event, method } of events) {
         element.addEventListener(event, (e) => {
-          return component.trigger.call(component, INTERNAL, method, e);
+          const ret = component.trigger.call(component, INTERNAL, method, e);
+          // If an event handler returns `false`, assume the intent is to stop
+          // propagation and default event handling, as per the behavior
+          // encoded in Ember's `EventDispatcher`.
+          //
+          // See: https://github.com/emberjs/ember.js/blob/7d9095f38911d30aebb0e67ceec13e4a9818088b/packages/%40ember/-internals/views/lib/system/event_dispatcher.ts#L331-L337
+          if (ret === false) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+          return ret;
         });
       }
     } else {
