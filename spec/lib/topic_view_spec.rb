@@ -1000,8 +1000,8 @@ RSpec.describe TopicView do
   describe "#queued_posts_enabled?" do
     subject(:topic_view) { described_class.new(topic, user) }
 
-    let(:topic) { Fabricate.build(:topic) }
-    let(:user) { Fabricate.build(:user, id: 1) }
+    let(:topic) { Fabricate(:topic) }
+    let(:user) { Fabricate(:user, id: 1) }
     let(:category) { topic.category }
 
     before do
