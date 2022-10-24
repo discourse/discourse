@@ -171,7 +171,7 @@
     padding: 10px 30px 10px 15px;
     background-color: var(--secondary);
     li > a {
-      font-size: $font-0;
+      font-size: var(--font-0);
     }
     border-bottom: 1px solid var(--primary-low);
   }
@@ -228,7 +228,7 @@
               align-items: center;
             }
             .discourse-tags {
-              font-size: $font-down-1;
+              font-size: var(--font-down-1);
             }
           }
         }
@@ -240,7 +240,7 @@
       box-sizing: border-box;
     }
     p {
-      font-size: $font-0;
+      font-size: var(--font-0);
     }
     .archetype-option {
       margin-bottom: 20px;
@@ -269,7 +269,7 @@
 
   // password reset modal
   .modal-body.forgot-password-modal p {
-    font-size: $font-0;
+    font-size: var(--font-0);
   }
 
   pre code {
@@ -279,48 +279,39 @@
 }
 
 .reply-where-modal {
-  max-width: 400px;
-
-  h1 {
-    margin: 0;
-    font-size: $font-up-2;
-  }
-
-  .d-modal-cancel {
-    width: 100%;
-    margin: 0.5em 0;
+  .dialog-footer {
+    display: block;
   }
 
   .btn {
     display: block;
     text-align: left;
-    font-size: $font-up-1;
-    line-height: $line-height-medium;
     margin-bottom: 0.75em;
-    font-weight: bold;
+    margin-right: 0;
     overflow: hidden;
     width: 100%;
+
     &:first-of-type {
       margin-top: 0.25em;
     }
+
+    &.btn-reply-on-original,
+    &.btn-reply-here {
+      font-size: var(--font-up-1);
+      line-height: var(--line-height-medium);
+      font-weight: bold;
+    }
+
     .topic-title {
       font-weight: normal;
     }
   }
 }
 
-.d-modal-cancel {
-  margin-left: 1em;
-  color: var(--primary-medium);
-  &:hover {
-    color: var(--danger);
-  }
-}
-
 .delete-user-modal {
   .modal-footer {
     .btn {
-      line-height: $line-height-medium;
+      line-height: var(--line-height-medium);
     }
   }
 }
@@ -461,7 +452,7 @@
   .flag-action-type-details {
     width: 100%;
     max-width: 500px;
-    line-height: $line-height-large;
+    line-height: var(--line-height-large);
   }
 }
 
@@ -471,7 +462,7 @@
 
 .custom-message-length {
   color: var(--primary-medium);
-  font-size: $font-down-1;
+  font-size: var(--font-down-1);
 }
 
 .jump-to-post-modal {

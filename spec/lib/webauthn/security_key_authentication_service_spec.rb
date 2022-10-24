@@ -37,7 +37,7 @@ require 'webauthn/security_key_registration_service'
 #
 # The origin params just need to be whatever your localhost URL for Discourse is.
 
-describe Webauthn::SecurityKeyAuthenticationService do
+RSpec.describe Webauthn::SecurityKeyAuthenticationService do
   let(:security_key_user) { current_user }
   let!(:security_key) do
     Fabricate(

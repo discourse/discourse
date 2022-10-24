@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
-describe GroupArchivedMessage do
+RSpec.describe GroupArchivedMessage do
   fab!(:user) { Fabricate(:user) }
   fab!(:user_2) { Fabricate(:user) }
+
+  before_all do
+    Group.refresh_automatic_groups!
+  end
 
   fab!(:group) do
     Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|

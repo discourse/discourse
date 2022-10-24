@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Migration::TableDropper do
+RSpec.describe Migration::TableDropper do
 
   def table_exists?(table_name)
     DB.exec(<<~SQL) > 0

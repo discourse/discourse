@@ -152,11 +152,11 @@ hy:
         disabled: "հեռացրել է այս բանները %{when}: Այն այլևս չի հայտնվի յուրաքանչյուր էջի վերևում:"
       forwarded: "վերահասցեագրել նշված նամակը"
     topic_admin_menu: "թեմայի ադմինի գործողություններ"
-    wizard_required: "Բարի գալուստ Ձեր նոր Discourse! Սկսենք <a href='%{url}' data-auto-route='true'>տեղակայման մասնագետ</a>-ի հետ ✨"
     emails_are_disabled: "Բոլոր ելքային էլ. նամակները անջատվել են ադմինիստրատորի կողմից: Էլ. փոստով ոչ մի տեսակի ծանուցում չի ուղարկվի:"
     software_update_prompt:
       dismiss: "Չեղարկել"
     bootstrap_mode_disabled: "Սկզբնաբեռնման(Bootstrap) ռեժիմը կանջատվի 24 ժամվա ընթացքում:"
+    bootstrap_invite_button_title: "Ուղարկել Հրավերներ"
     themes:
       default_description: "Լռելյայն"
     s3:
@@ -186,7 +186,10 @@ hy:
     not_implemented: "Այդ հատկանիշը դեռևս չի իրագործվել, ներողություն!"
     no_value: "Ոչ"
     yes_value: "Այո"
+    ok_value: "ՕԿ"
+    cancel_value: "Չեղարկել"
     submit: "Հաստատել"
+    delete: "Ջնջել"
     generic_error: "Տեղի է ունեցել սխալ, ներողություն:"
     generic_error_with_reason: "Տեղի է ունեցել սխալ՝ %{error}"
     sign_up: "Գրանցվել"
@@ -484,6 +487,7 @@ hy:
       next_week: "Հաջորդ շաբաթ"
       next_month: "Հաջորդ ամիս"
       forever: "Ընդմիշտ"
+      never: "Երբեք"
       custom: "Սահմանել հիշեցումների ամսաթիվն ու ժամանակը:"
       select_timeframe: "Ընտրել ժամանակահատված"
     user_action:
@@ -835,6 +839,8 @@ hy:
       enable_defer: "Սեղմել <<Հետաձգում>> կոճակը, նշելով որպես չընթերցված թեմաներ "
       experimental_sidebar:
         options: "Տարբերակներ"
+        navigation_section: "Նավիգացիա"
+        list_destination_default: "Լռելյայն"
       change: "փոխել"
       featured_topic: "Հանրահայտ թեմա"
       moderator: "%{user}-ը մոդերատոր է"
@@ -922,6 +928,7 @@ hy:
         move_to_archive: "Արխիվացնել"
         failed_to_move: "Չհաջողվեց տեղափոխել ընտրված հաղորդագրությունները (հնարավոր է՝ համացանցի հետ կապված խնդիր կա)"
         tags: "Թեգեր"
+        all_tags: "Բոլոր Թեգերը"
       preferences_nav:
         account: "Հաշիվ"
         security: "Անվտանգություն"
@@ -978,14 +985,12 @@ hy:
           name_and_code_required_error: "Դուք պետք է նշեք նույնականացման հավելվածի կոդը և անվանումը:"
         security_key:
           register: "Գրանցվել"
-          title: "Անվտանգության Բանալիներ"
-          add: "Ավելացնել Անվտանգության Բանալին"
           default_name: "Անվտանգության Գլխավոր Բանալին"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "Անվտանգության բանալու գրանցման ժամանակը վերջացել է կամ չեղյալ է հայտարարվել:"
           already_added_error: "Դուք արդեն գրանցել եք այս անվտանգության բանալին: Պետք չէ այն նորից գրանցել:"
-          edit: "Խմբագրել Անվտանգության Բանալին"
           save: "Պահպանել"
-          edit_description: "Անվտանգության Բանալիների անվանումը"
           name_required_error: "Դուք պետք է նշեք անվտանգության բանալու անվանումը "
       change_about:
         title: "Փոփոխել Իմ Մասին բաժինը"
@@ -1315,10 +1320,8 @@ hy:
       other: պատասխան
     signup_cta:
       sign_up: "Գրանցվել"
-      hide_session: "Հիշեցնել ինձ վաղը"
       hide_forever: "ոչ, շնորհակալություն"
       intro: "Ողջույն! Կարծես թե Դուք վայելում եք քննարկումը, սակայն դեռևս հաշիվ չեք գրանցել:"
-      value_prop: "Երբ Դուք ստեղծում եք հաշիվ, մենք հստակ հիշում ենք, թե Դուք ինչ եք կադացել, այսպիսով՝ Դուք միշտ վերադառնում եք ճիշտ այնտեղ, որտեղ կանգնել էիք: Դուք նաև ստանում եք ծանուցումներ այստեղ և էլ. փոստով, երբ որևէ մեկը պատասխանում է Ձեզ: Եվ Դուք կարող եք հավանել գրառումներ՝ կիսվելով սիրով: :heartpulse:"
     summary:
       enabled_description: "Դուք դիտում եք այս թեմայի ամփոփումը՝ համայնքի կողմից որոշված ամենահետաքրքիր գրառումները:"
       enable: "Ամփոփել Այս Թեման"
@@ -1336,6 +1339,8 @@ hy:
       leave_message: "Դուք իսկապե՞ս ցանկանում եք թողնել այս հաղորդագրությունը:"
       remove_allowed_user: "Դուք իսկապե՞ս ցանկանում եք հեռացնել %{name}-ը այս հաղորդագրությունից:"
       remove_allowed_group: "Դուք իսկապե՞ս ցանկանում եք հեռացնել %{name}-ը այս հաղորդագրությունից:"
+      leave: "Լքել"
+      remove_user: "Հեռացնել օգտատիրոջը"
     email: "Էլ. հասցե"
     username: "Օգտանուն"
     last_seen: "Ակտիվ էր"
@@ -1623,6 +1628,7 @@ hy:
       empty: "Ծանուցումներ չեն գտնվել:"
       post_approved: "Ձեր գրառումը հաստատված է"
       reviewable_items: "վերանայում պահանջող կետեր"
+      watching_first_post_label: "Նոր Թեմա"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -1635,6 +1641,10 @@ hy:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} and %{count} other</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} և ևս %{count}-ը</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} and %{count} other"
+        other: "%{username}, %{username2} և ևս %{count}-ը"
       liked_consolidated_description:
         one: "հավանել է Ձեր %{count} գրառում"
         other: "հավանել է Ձեր %{count} գրառումը"
@@ -1782,6 +1792,13 @@ hy:
     go_back: "ետ գնալ"
     not_logged_in_user: "օգտատիրոջ էջը՝ ընթացիկ ակտիվության և նախընտրությունների ամփոփումով"
     current_user: "գնալ իմ էջը"
+    user_menu:
+      tabs:
+        replies: "Պատասխաններ"
+        mentions: "Հիշատակումներ"
+        likes: "Հավանում"
+        bookmarks: "Էջանշաններ"
+        profile: "Պրոֆիլ"
     topics:
       new_messages_marker: "վերջին այցելությունը"
       bulk:
@@ -2275,10 +2292,6 @@ hy:
         confirm:
           one: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այդ հրապարակումը:"
           other: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այդ%{count} գրառումները:"
-      merge:
-        confirm:
-          one: "Դուք համոզվա՞ծ եք, որ ցանկանում եք միավորել այդ հրապարակումները:"
-          other: "Դուք համոզվա՞ծ եք, որ ցանկանում եք միավորել այդ %{count} գրառումները:"
       revisions:
         controls:
           first: "Առաջին խմբագրությունը"
@@ -2757,7 +2770,6 @@ hy:
     download_calendar:
       download: "Ներբեռնել"
     tagging:
-      all_tags: "Բոլոր Թեգերը"
       other_tags: "Այլ Թեգեր"
       selector_all_tags: "բոլոր թեգերը"
       selector_no_tags: "առանց թեգերի"
@@ -2800,7 +2812,6 @@ hy:
         other: "%{tags} և ևս %{count}"
       delete_unused: "Ջնջել Չօգտագործված Թեգերը"
       delete_unused_description: "Ջնջել բոլոր թեգերը, որոնք կցված չեն որևէ թեմայի կամ անձնական հաղորդագրության"
-      cancel_delete_unused: "Չեղարկել"
       filters:
         without_category: "%{filter} %{tag} թեմա"
         with_category: "%{filter} %{tag} թեմա %{category}-ում"
@@ -2865,14 +2876,18 @@ hy:
         member: "անդամ"
         regular: "սովորական"
         leader: "առաջնորդ"
-    user_activity:
-      no_activity_others: "Ակտիվություն չկա:"
-      no_replies_others: "Պատասխան չկա:"
-      no_likes_others: "Հավանած գրառումներ չկան:"
     sidebar:
-      unread_count: "%{count} չկարդացած"
-      new_count: "%{count} նոր"
+      unread_count:
+        one: "%{count} չկարդացած"
+        other: "%{count} չկարդացած"
+      new_count:
+        one: "%{count} նոր"
+        other: "%{count} նոր"
+      more: "Ավելին"
+      all_categories: "Բոլոր կատեգորիաները"
       sections:
+        about:
+          header_link_text: "Մասին"
         messages:
           header_link_text: "Հաղորդագրություններ"
           links:
@@ -2884,19 +2899,32 @@ hy:
             unread_with_count: "Չկարդացած (%{count})"
             archive: "Արխիվ"
         tags:
-          header_link_title: "բոլոր թեգերը"
           header_link_text: "Թեգեր"
         categories:
-          header_link_title: "բոլոր կատեգորիաները"
           header_link_text: "Կատեգորիաներ"
-        topics:
-          header_link_title: "գլխավոր էջ"
-          header_link_text: "Թեմաներ"
+        community:
+          header_link_text: "Համայնք"
           links:
+            about:
+              content: "Մասին"
+            admin:
+              content: "Ադմին"
+            badges:
+              content: "Կրծքանշաններ"
+            faq:
+              content: "ՀՏՀ"
             tracked:
               content: "Հետևած"
+            groups:
+              content: "Խմբեր"
+              title: "Բոլոր խմբերը"
+            users:
+              content: "Օգտատերեր"
             my_posts:
               content: "Իմ Գրառումները"
+            review:
+              content: "Վերանայում"
+              title: "վերանայում"
   admin_js:
     type_to_filter: "գրեք ֆիլտրելու համար..."
     admin:
@@ -3908,7 +3936,6 @@ hy:
         cant_delete_all_too_many_posts:
           one: "Հնարավոր չէ ջնջել բոլոր գրառումները, քանի որ օգտատերն ունի ավելի քան %{count} գրառում: (delete_all_posts_max)"
           other: "Հնարավոր չէ ջնջել բոլոր գրառումները, քանի որ օգտատերն ունի ավելի քան %{count} գրառում: (delete_all_posts_max)"
-        delete_confirm: "Սովորաբար ավելի նախընտրելի է անվանազրկել օգտատիրոջը, քան ջնջել նրանց՝ գոյություն ունեցող քննարկումների պարունակությունը ջնջելուց խուսափելու համար: <br><br>Դուք ՀԱՄՈԶՎԱ՞Ծ ԵՔ, որ ցանկանում եք ջնջել այս օգտատիրոջը: Սա մշտական է!"
         delete_and_block: "Ջնջել և <b>արգելափակել</b> այս էլ. և IP հասցեները:"
         delete_dont_block: "Միայն ջնջել "
         deleting_user: "Օգտատերը ջնջվում է..."
@@ -4222,15 +4249,13 @@ hy:
           replace: "Փոխարինել"
   wizard_js:
     wizard:
-      done: "Կատարված է"
-      finish: "Ավարտել"
       back: "Ետ"
       next: "Հաջորդը"
+      step-text: "Քայլը"
       step: "%{current} %{total}-ից"
       upload: "Վերբեռնել"
       uploading: "Վերբեռնում..."
       upload_error: "Ներողություն, այդ ֆայլը վերբեռնելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
-      quit: "Միգուցե ավելի ուշ"
       staff_count:
         one: "Ձեր համայնքը ունի անձնակազմի %{count} անդամ՝ Դուք:"
         other: "Ձեր համայնքն ունի անձնակազմի %{count} անդամ՝ Դուք ներառյալ:"

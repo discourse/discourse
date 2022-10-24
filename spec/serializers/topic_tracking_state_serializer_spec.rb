@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicTrackingStateSerializer do
+RSpec.describe TopicTrackingStateSerializer do
   fab!(:user) { Fabricate(:user) }
   fab!(:post) { create_post }
 
@@ -14,7 +14,6 @@ describe TopicTrackingStateSerializer do
     expect(serialized[:created_at]).to be_present
     expect(serialized[:notification_level]).to eq(nil)
     expect(serialized[:created_in_new_period]).to eq(true)
-    expect(serialized[:unread_not_too_old]).to eq(true)
     expect(serialized[:treat_as_new_topic_start_date]).to be_present
     expect(serialized.has_key?(:tags)).to eq(false)
   end

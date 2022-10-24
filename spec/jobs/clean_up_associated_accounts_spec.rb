@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::CleanUpAssociatedAccounts do
+RSpec.describe Jobs::CleanUpAssociatedAccounts do
   subject { Jobs::CleanUpAssociatedAccounts.new.execute({}) }
 
   it "deletes the correct records" do

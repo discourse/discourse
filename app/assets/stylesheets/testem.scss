@@ -19,3 +19,8 @@ $love: #fa6c8d !default;
 @import "common/foundation/mixins";
 @import "desktop";
 @import "color_definitions";
+
+#ember-testing-container {
+  box-sizing: border-box;
+  max-height: 100vh;
+}

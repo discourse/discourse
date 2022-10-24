@@ -120,7 +120,7 @@ const TopicList = RestModel.extend({
   loadBefore(topic_ids, storeInSession) {
     // refresh dupes
     this.topics.removeObjects(
-      this.topics.filter((topic) => topic_ids.indexOf(topic.id) >= 0)
+      this.topics.filter((topic) => topic_ids.includes(topic.id))
     );
 
     const url = `${getURL("/")}${this.filter}.json?topic_ids=${topic_ids.join(

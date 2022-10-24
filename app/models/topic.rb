@@ -3,7 +3,6 @@
 class Topic < ActiveRecord::Base
   class UserExists < StandardError; end
   class NotAllowed < StandardError; end
-  include ActionView::Helpers::SanitizeHelper
   include RateLimiter::OnCreateRecord
   include HasCustomFields
   include Trashable
@@ -976,7 +975,6 @@ class Topic < ActiveRecord::Base
         topic_user.destroy
 
         if user.id == removed_by&.id
-          removed_by = Discourse.system_user
           add_small_action(removed_by, "user_left", user.username)
         else
           add_small_action(removed_by, "removed_user", user.username)
@@ -1031,16 +1029,17 @@ class Topic < ActiveRecord::Base
   end
 
   def invite(invited_by, username_or_email, group_ids = nil, custom_message = nil)
-    target_user = User.find_by_username_or_email(username_or_email)
     guardian = Guardian.new(invited_by)
-    is_email = username_or_email =~ /^.+@.+$/
 
-    if target_user
+    if target_user = User.find_by_username_or_email(username_or_email)
       if topic_allowed_users.exists?(user_id: target_user.id)
         raise UserExists.new(I18n.t("topic_invite.user_exists"))
       end
 
-      ensure_can_invite!(target_user, invited_by)
+      comm_screener = UserCommScreener.new(acting_user: invited_by, target_user_ids: target_user.id)
+      if comm_screener.ignoring_or_muting_actor?(target_user.id)
+        raise NotAllowed.new(I18n.t("not_accepting_pms", username: target_user.username))
+      end
 
       if TopicUser
           .where(topic: self,
@@ -1050,15 +1049,11 @@ class Topic < ActiveRecord::Base
         raise NotAllowed.new(I18n.t("topic_invite.muted_topic"))
       end
 
-      if !target_user.staff? &&
-         target_user&.user_option&.enable_allowed_pm_users &&
-         !AllowedPmUser.where(user: target_user, allowed_pm_user: invited_by).exists?
+      if comm_screener.disallowing_pms_from_actor?(target_user.id)
         raise NotAllowed.new(I18n.t("topic_invite.receiver_does_not_allow_pm"))
       end
 
-      if !target_user.staff? &&
-         invited_by&.user_option&.enable_allowed_pm_users &&
-         !AllowedPmUser.where(user: invited_by, allowed_pm_user: target_user).exists?
+      if UserCommScreener.new(acting_user: target_user, target_user_ids: invited_by.id).disallowing_pms_from_actor?(invited_by.id)
         raise NotAllowed.new(I18n.t("topic_invite.sender_does_not_allow_pm"))
       end
 
@@ -1067,7 +1062,7 @@ class Topic < ActiveRecord::Base
       else
         !!invite_to_topic(invited_by, target_user, group_ids, guardian)
       end
-    elsif is_email && guardian.can_invite_via_email?(self)
+    elsif username_or_email =~ /^.+@.+$/ && guardian.can_invite_via_email?(self)
       !!Invite.generate(invited_by,
         email: username_or_email,
         topic: self,
@@ -1075,22 +1070,6 @@ class Topic < ActiveRecord::Base
         custom_message: custom_message,
         invite_to_topic: true
       )
-    end
-  end
-
-  def ensure_can_invite!(target_user, invited_by)
-    if MutedUser
-        .where(user: target_user, muted_user: invited_by)
-        .joins(:muted_user)
-        .where('NOT admin AND NOT moderator')
-        .exists?
-      raise NotAllowed
-    elsif IgnoredUser
-        .where(user: target_user, ignored_user: invited_by)
-        .joins(:ignored_user)
-        .where('NOT admin AND NOT moderator')
-        .exists?
-      raise NotAllowed
     end
   end
 
@@ -1374,11 +1353,11 @@ class Topic < ActiveRecord::Base
   end
 
   def public_topic_timer
-    @public_topic_timer ||= topic_timers.find_by(deleted_at: nil, public_type: true)
+    @public_topic_timer ||= topic_timers.find_by(public_type: true)
   end
 
   def slow_mode_topic_timer
-    @slow_mode_topic_timer ||= topic_timers.find_by(deleted_at: nil, status_type: TopicTimer.types[:clear_slow_mode])
+    @slow_mode_topic_timer ||= topic_timers.find_by(status_type: TopicTimer.types[:clear_slow_mode])
   end
 
   def delete_topic_timer(status_type, by_user: Discourse.system_user)
@@ -1775,9 +1754,10 @@ class Topic < ActiveRecord::Base
     email_addresses.to_a
   end
 
-  def create_invite_notification!(target_user, notification_type, username, post_number: 1)
-    invited_by = User.find_by_username(username)
-    ensure_can_invite!(target_user, invited_by)
+  def create_invite_notification!(target_user, notification_type, invited_by, post_number: 1)
+    if UserCommScreener.new(acting_user: invited_by, target_user_ids: target_user.id).ignoring_or_muting_actor?(target_user.id)
+      raise NotAllowed.new(I18n.t("not_accepting_pms", username: target_user.username))
+    end
 
     target_user.notifications.create!(
       notification_type: notification_type,
@@ -1785,7 +1765,7 @@ class Topic < ActiveRecord::Base
       post_number: post_number,
       data: {
         topic_title: self.title,
-        display_username: username,
+        display_username: invited_by.username,
         original_user_id: user.id,
         original_username: user.username
       }.to_json
@@ -1799,10 +1779,22 @@ class Topic < ActiveRecord::Base
       SiteSetting.max_topic_invitations_per_day,
       1.day.to_i
     ).performed!
+
+    RateLimiter.new(
+      invited_by,
+      "topic-invitations-per-minute",
+      SiteSetting.max_topic_invitations_per_minute,
+      1.day.to_i
+    ).performed!
   end
 
   def cannot_permanently_delete_reason(user)
-    if self.posts_count > 0
+    all_posts_count = Post.with_deleted
+      .where(topic_id: self.id)
+      .where(post_type: [Post.types[:regular], Post.types[:moderator_action], Post.types[:whisper]])
+      .count
+
+    if posts_count > 0 || all_posts_count > 1
       I18n.t('post.cannot_permanently_delete.many_posts')
     elsif self.deleted_by_id == user&.id && self.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
       time_left = RateLimiter.time_left(Post::PERMANENT_DELETE_TIMER.to_i - Time.zone.now.to_i + self.deleted_at.to_i)
@@ -1866,8 +1858,9 @@ class Topic < ActiveRecord::Base
       ))
     end
 
+    rate_limit_topic_invitation(invited_by)
+
     Topic.transaction do
-      rate_limit_topic_invitation(invited_by)
       topic_allowed_users.create!(user_id: target_user.id) unless topic_allowed_users.exists?(user_id: target_user.id)
 
       user_in_allowed_group = (user.group_ids & topic_allowed_groups.map(&:group_id)).present?
@@ -1876,7 +1869,7 @@ class Topic < ActiveRecord::Base
       create_invite_notification!(
         target_user,
         Notification.types[:invited_to_private_message],
-        invited_by.username
+        invited_by
       )
     end
   end
@@ -1904,7 +1897,7 @@ class Topic < ActiveRecord::Base
         create_invite_notification!(
           target_user,
           Notification.types[:invited_to_topic],
-          invited_by.username
+          invited_by
         )
       end
     end

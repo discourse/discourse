@@ -2,7 +2,7 @@
 
 require 'file_helper'
 
-describe FileHelper do
+RSpec.describe FileHelper do
 
   let(:url) { "https://eviltrout.com/trout.png" }
   let(:png) { File.read("#{Rails.root}/spec/fixtures/images/cropped.png") }

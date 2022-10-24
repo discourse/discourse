@@ -87,3 +87,6 @@ pl_PL:
           title: "Ładowanie"
         empty_state:
           title: "Pusty stan"
+        rich_tooltip:
+          description: "Opis"
+          header: "Nagłówek"

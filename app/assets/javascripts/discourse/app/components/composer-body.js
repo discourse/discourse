@@ -1,4 +1,5 @@
-import { cancel, later, schedule, throttle } from "@ember/runloop";
+import { cancel, schedule, throttle } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import discourseComputed, {
   bind,
   observes,
@@ -62,7 +63,7 @@ export default Component.extend(KeyEnterEscape, {
     // One second from now, check to see if the last key was hit when
     // we recorded it. If it was, the user paused typing.
     cancel(this._lastKeyTimeout);
-    this._lastKeyTimeout = later(() => {
+    this._lastKeyTimeout = discourseLater(() => {
       if (lastKeyUp !== this._lastKeyUp) {
         return;
       }
@@ -88,11 +89,6 @@ export default Component.extend(KeyEnterEscape, {
           passive: false,
         });
     });
-
-    if (this._visualViewportResizing()) {
-      this.viewportResize();
-      window.visualViewport.addEventListener("resize", this.viewportResize);
-    }
   },
 
   @bind
@@ -106,8 +102,14 @@ export default Component.extend(KeyEnterEscape, {
     const minHeight = parseInt(getComputedStyle(this.element).minHeight, 10);
     size = Math.max(minHeight, size);
 
-    ["--reply-composer-height", "--new-topic-composer-height"].forEach((prop) =>
-      document.documentElement.style.setProperty(prop, size ? `${size}px` : "")
+    this.set("composer.composerHeight", `${size}px`);
+    this.keyValueStore.set({
+      key: "composerHeight",
+      value: this.get("composer.composerHeight"),
+    });
+    document.documentElement.style.setProperty(
+      "--composer-height",
+      size ? `${size}px` : ""
     );
 
     this._triggerComposerResized();
@@ -167,41 +169,8 @@ export default Component.extend(KeyEnterEscape, {
     throttle(this, this.performDragHandler, event, THROTTLE_RATE);
   },
 
-  @bind
-  viewportResize() {
-    const composerVH = window.visualViewport.height * 0.01,
-      doc = document.documentElement;
-
-    doc.style.setProperty("--composer-vh", `${composerVH}px`);
-
-    const viewportWindowDiff =
-      this.windowInnerHeight - window.visualViewport.height;
-
-    viewportWindowDiff > 0
-      ? doc.classList.add("keyboard-visible")
-      : doc.classList.remove("keyboard-visible");
-
-    // adds bottom padding when using a hardware keyboard and the accessory bar is visible
-    // accessory bar height is 55px, using 75 allows a small buffer
-    doc.style.setProperty(
-      "--composer-ipad-padding",
-      `${viewportWindowDiff < 75 ? viewportWindowDiff : 0}px`
-    );
-  },
-
-  _visualViewportResizing() {
-    return (
-      (this.capabilities.isIpadOS || this.site.mobileView) &&
-      window.visualViewport !== undefined
-    );
-  },
-
   didInsertElement() {
     this._super(...arguments);
-
-    if (this._visualViewportResizing()) {
-      this.set("windowInnerHeight", window.innerHeight);
-    }
 
     this.setupComposerResizeEvents();
 
@@ -215,15 +184,12 @@ export default Component.extend(KeyEnterEscape, {
     afterTransition($(this.element), () => {
       triggerOpen();
     });
-    positioningWorkaround($(this.element));
+
+    positioningWorkaround(this.element);
   },
 
   willDestroyElement() {
     this._super(...arguments);
-
-    if (this._visualViewportResizing()) {
-      window.visualViewport.removeEventListener("resize", this.viewportResize);
-    }
 
     START_DRAG_EVENTS.forEach((startDragEvent) => {
       this.element

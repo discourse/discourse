@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Auth::DefaultCurrentUserProvider do
+RSpec.describe Auth::DefaultCurrentUserProvider do
   # careful using fab! here is can lead to an erratic test
   # we want a distinct user object per test so last_seen_at is
   # handled correctly
@@ -50,7 +50,7 @@ describe Auth::DefaultCurrentUserProvider do
     expect(provider.current_user).to eq(nil)
   end
 
-  context "server header api" do
+  describe "server header api" do
     it "raises for a revoked key" do
       api_key = ApiKey.create!
       params = { "HTTP_API_USERNAME" => user.username.downcase, "HTTP_API_KEY" => api_key.key }
@@ -214,7 +214,7 @@ describe Auth::DefaultCurrentUserProvider do
       end
     end
 
-    context "rate limiting" do
+    context "with rate limiting" do
       before do
         RateLimiter.enable
       end
@@ -435,7 +435,7 @@ describe Auth::DefaultCurrentUserProvider do
 
   end
 
-  context "events" do
+  describe "events" do
     before do
       @refreshes = 0
 
@@ -472,8 +472,7 @@ describe Auth::DefaultCurrentUserProvider do
     end
   end
 
-  context "rate limiting" do
-
+  describe "rate limiting" do
     before do
       RateLimiter.enable
     end
@@ -622,7 +621,7 @@ describe Auth::DefaultCurrentUserProvider do
     expect(user.staged).to eq(false)
   end
 
-  context "user api" do
+  describe "user api" do
     fab! :user do
       Fabricate(:user)
     end
@@ -705,8 +704,7 @@ describe Auth::DefaultCurrentUserProvider do
       end
     end
 
-    context "rate limiting" do
-
+    context "with rate limiting" do
       before do
         RateLimiter.enable
       end
@@ -794,6 +792,36 @@ describe Auth::DefaultCurrentUserProvider do
       user_provider = TestProvider.new(env)
       user_provider.log_off_user({}, user_provider.cookie_jar)
       expect(UserAuthToken.find_by(user_id: user.id)).to be_nil
+    end
+  end
+
+  describe "first admin user" do
+    before do
+      user.update!(admin: false, email: "blah@test.com")
+      Rails.configuration.stubs(:developer_emails).returns(["blah@test.com"])
+    end
+
+    it "makes the user into an admin if their email is in DISCOURSE_DEVELOPER_EMAILS" do
+      @provider = provider('/')
+      @provider.log_on_user(user, {}, @provider.cookie_jar)
+      expect(user.reload.admin).to eq(true)
+      user2 = Fabricate(:user)
+      @provider.log_on_user(user2, {}, @provider.cookie_jar)
+      expect(user2.reload.admin).to eq(false)
+    end
+
+    it "adds the user to the correct staff/admin auto groups" do
+      @provider = provider('/')
+      @provider.log_on_user(user, {}, @provider.cookie_jar)
+      user.reload
+      expect(user.in_any_groups?([Group::AUTO_GROUPS[:staff]])).to eq(true)
+      expect(user.in_any_groups?([Group::AUTO_GROUPS[:admins]])).to eq(true)
+    end
+
+    it "runs the job to enable bootstrap mode" do
+      @provider = provider('/')
+      @provider.log_on_user(user, {}, @provider.cookie_jar)
+      expect_job_enqueued(job: :enable_bootstrap_mode, args: { user_id: user.id })
     end
   end
 end

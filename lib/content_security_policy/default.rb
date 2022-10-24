@@ -75,7 +75,7 @@ class ContentSecurityPolicy
         end
 
         if SiteSetting.splash_screen
-          sources << "'nonce-#{ApplicationHelper.splash_screen_nonce}'"
+          sources << "'#{SplashScreenHelper.fingerprint}'"
         end
       end
     end

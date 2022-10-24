@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Admin::PluginsController do
+RSpec.describe Admin::PluginsController do
 
   it "is a subclass of AdminController" do
     expect(Admin::PluginsController < Admin::AdminController).to eq(true)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicListItemSerializer do
+RSpec.describe TopicListItemSerializer do
   let(:topic) do
     date = Time.zone.now
 

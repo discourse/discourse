@@ -2,7 +2,7 @@
 
 require 'rotp'
 
-describe SessionController do
+RSpec.describe SessionController do
   let(:user) { Fabricate(:user) }
   let(:email_token) { Fabricate(:email_token, user: user) }
 
@@ -54,14 +54,14 @@ describe SessionController do
       end
     end
 
-    context 'missing token' do
+    context 'with missing token' do
       it 'returns the right response' do
         get "/session/email-login"
         expect(response.status).to eq(404)
       end
     end
 
-    context 'valid token' do
+    context 'with valid token' do
       it 'returns information' do
         get "/session/email-login/#{email_token.token}.json"
 
@@ -88,7 +88,7 @@ describe SessionController do
         expect(response.status).to eq(403)
       end
 
-      context 'user has 2-factor logins' do
+      context 'when user has 2-factor logins' do
         let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
         let!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user: user) }
 
@@ -102,7 +102,7 @@ describe SessionController do
         end
       end
 
-      context 'user has security key enabled' do
+      context 'when user has security key enabled' do
         let!(:user_security_key) { Fabricate(:user_security_key, user: user) }
 
         it "includes that information in the response" do
@@ -129,6 +129,27 @@ describe SessionController do
       SiteSetting.enable_local_logins_via_email = true
     end
 
+    context "when in staff writes only mode" do
+      use_redis_snapshotting
+
+      before do
+        Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
+      end
+
+      it "allows admins to login" do
+        user.update!(admin: true)
+        post "/session/email-login/#{email_token.token}.json"
+        expect(response.status).to eq(200)
+        expect(session[:current_user_id]).to eq(user.id)
+      end
+
+      it "does not allow other users to login" do
+        post "/session/email-login/#{email_token.token}.json"
+        expect(response.status).to eq(503)
+        expect(session[:current_user_id]).to eq(nil)
+      end
+    end
+
     context "when local logins via email disabled" do
       before { SiteSetting.enable_local_logins_via_email = false }
 
@@ -144,14 +165,14 @@ describe SessionController do
       end
     end
 
-    context 'missing token' do
+    context 'with missing token' do
       it 'returns the right response' do
         post "/session/email-login"
         expect(response.status).to eq(404)
       end
     end
 
-    context 'invalid token' do
+    context 'with invalid token' do
       it 'returns the right response' do
         post "/session/email-login/adasdad.json"
 
@@ -176,7 +197,7 @@ describe SessionController do
       end
     end
 
-    context 'valid token' do
+    context 'with valid token' do
       it 'returns success' do
         post "/session/email-login/#{email_token.token}.json"
 
@@ -284,7 +305,7 @@ describe SessionController do
         expect(session[:current_user_id]).to eq(nil)
       end
 
-      context 'user has 2-factor logins' do
+      context 'when user has 2-factor logins' do
         let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
         let!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user: user) }
 
@@ -362,7 +383,7 @@ describe SessionController do
         end
       end
 
-      context "user has only security key enabled" do
+      context "when user has only security key enabled" do
         let!(:user_security_key) do
           Fabricate(
             :user_security_key,
@@ -437,7 +458,7 @@ describe SessionController do
         end
       end
 
-      context "user has security key and totp enabled" do
+      context "when user has security key and totp enabled" do
         let!(:user_security_key) do
           Fabricate(
             :user_security_key,
@@ -479,7 +500,7 @@ describe SessionController do
     end
   end
 
-  context 'logoff support' do
+  describe 'logoff support' do
     it 'can log off users cleanly' do
       user = Fabricate(:user)
       sign_in(user)
@@ -552,7 +573,7 @@ describe SessionController do
       sso
     end
 
-    context 'in staff writes only mode' do
+    context 'when in staff writes only mode' do
       use_redis_snapshotting
 
       before do
@@ -1266,7 +1287,7 @@ describe SessionController do
       end
     end
 
-    context "in readonly mode" do
+    context "when in readonly mode" do
       use_redis_snapshotting
 
       before do
@@ -1663,7 +1684,7 @@ describe SessionController do
   end
 
   describe '#create' do
-    context 'read only mode' do
+    context 'when read only mode' do
       use_redis_snapshotting
 
       before do
@@ -1687,7 +1708,7 @@ describe SessionController do
       end
     end
 
-    context 'staff writes only mode' do
+    context 'when in staff writes only mode' do
       use_redis_snapshotting
 
       before do
@@ -1712,7 +1733,7 @@ describe SessionController do
       end
     end
 
-    context 'local login is disabled' do
+    context 'when local login is disabled' do
       before do
         SiteSetting.enable_local_logins = false
 
@@ -1723,7 +1744,7 @@ describe SessionController do
       it_behaves_like "failed to continue local login"
     end
 
-    context 'SSO is enabled' do
+    context 'when SSO is enabled' do
       before do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
         SiteSetting.enable_discourse_connect = true
@@ -1735,7 +1756,7 @@ describe SessionController do
       it_behaves_like "failed to continue local login"
     end
 
-    context 'local login via email is disabled' do
+    context 'when local login via email is disabled' do
       before do
         SiteSetting.enable_local_logins_via_email = false
         EmailToken.confirm(email_token.token)
@@ -2112,7 +2133,7 @@ describe SessionController do
         end
       end
 
-      context 'login has leading and trailing space' do
+      context 'when login has leading and trailing space' do
         let(:username) { " #{user.username} " }
         let(:email) { " #{user.email} " }
 
@@ -2248,7 +2269,7 @@ describe SessionController do
         )
       end
 
-      context "and the 'must approve users' site setting is enabled" do
+      context "when the 'must approve users' site setting is enabled" do
         before { SiteSetting.must_approve_users = true }
 
         it "shows the 'not approved' error message" do
@@ -2261,7 +2282,7 @@ describe SessionController do
       end
     end
 
-    context 'rate limited' do
+    context 'when rate limited' do
       it 'rate limits login' do
         SiteSetting.max_logins_per_ip_per_hour = 2
         RateLimiter.enable
@@ -2421,14 +2442,14 @@ describe SessionController do
   end
 
   describe '#one_time_password' do
-    context 'missing token' do
+    context 'with missing token' do
       it 'returns the right response' do
         get "/session/otp"
         expect(response.status).to eq(404)
       end
     end
 
-    context 'invalid token' do
+    context 'with invalid token' do
       it 'returns the right response' do
         get "/session/otp/asd1231dasd123"
 
@@ -2594,7 +2615,7 @@ describe SessionController do
     context 'for an existing username' do
       fab!(:user) { Fabricate(:user) }
 
-      context 'local login is disabled' do
+      context 'when local login is disabled' do
         before do
           SiteSetting.enable_local_logins = false
           post "/session/forgot_password.json", params: { login: user.username }
@@ -2602,7 +2623,7 @@ describe SessionController do
         it_behaves_like "failed to continue local login"
       end
 
-      context 'SSO is enabled' do
+      context 'when SSO is enabled' do
         before do
           SiteSetting.discourse_connect_url = "https://www.example.com/sso"
           SiteSetting.enable_discourse_connect = true
@@ -2614,7 +2635,7 @@ describe SessionController do
         it_behaves_like "failed to continue local login"
       end
 
-      context "local logins are disabled" do
+      context "when local logins are disabled" do
         before do
           SiteSetting.enable_local_logins = false
 
@@ -2625,7 +2646,7 @@ describe SessionController do
         it_behaves_like "failed to continue local login"
       end
 
-      context "local logins via email are disabled" do
+      context "when local logins via email are disabled" do
         before do
           SiteSetting.enable_local_logins_via_email = false
         end
@@ -2648,7 +2669,7 @@ describe SessionController do
       end
     end
 
-    context 'do nothing to system username' do
+    context 'when doing nothing to system username' do
       let(:system) { Discourse.system_user }
 
       it 'generates no token for system username' do

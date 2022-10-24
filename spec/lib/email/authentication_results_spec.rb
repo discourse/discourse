@@ -2,7 +2,7 @@
 
 require "email/authentication_results"
 
-describe Email::AuthenticationResults do
+RSpec.describe Email::AuthenticationResults do
   describe "#results" do
     it "parses 'Nearly Trivial Case: Service Provided, but No Authentication Done' correctly" do
       # https://tools.ietf.org/html/rfc8601#appendix-B.2

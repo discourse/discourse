@@ -12,6 +12,8 @@ import {
   getRawSize,
   inCodeBlock,
   initializeDefaultHomepage,
+  mergeSortedLists,
+  modKeysPressed,
   setCaretPosition,
   setDefaultHomepage,
   slugify,
@@ -24,6 +26,9 @@ import {
   chromeTest,
   discourseModule,
 } from "discourse/tests/helpers/qunit-helpers";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { click, render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 
 discourseModule("Unit | Utilities", function () {
   test("escapeExpression", function (assert) {
@@ -266,18 +271,23 @@ discourseModule("Unit | Utilities", function () {
 
   test("inCodeBlock", function (assert) {
     const texts = [
-      // closed code blocks
+      // CLOSED CODE BLOCKS:
       "000\n\n    111\n\n000",
       "000 `111` 000",
       "000\n```\n111\n```\n000",
       "000\n[code]111[/code]\n000",
-      // open code blocks
+      // OPEN CODE BLOCKS:
       "000\n\n    111",
       "000 `111",
       "000\n```\n111",
       "000\n[code]111",
-      // complex test
+      // COMPLEX TEST:
       "000\n\n```\n111\n```\n\n000\n\n`111 111`\n\n000\n\n[code]\n111\n[/code]\n\n    111\n\t111\n\n000`111",
+      // INDENTED OPEN CODE BLOCKS:
+      // - Using tab
+      "000\n\t```111\n\t111\n\t111```\n000",
+      // - Using spaces
+      `000\n  \`\`\`111\n  111\n  111\`\`\`\n000`,
     ];
 
     texts.forEach((text) => {
@@ -286,6 +296,93 @@ discourseModule("Unit | Utilities", function () {
           assert.strictEqual(inCodeBlock(text, i), text[i] === "1");
         }
       }
+    });
+  });
+
+  test("mergeSortedLists", function (assert) {
+    const comparator = (a, b) => b > a;
+    assert.deepEqual(
+      mergeSortedLists([], [1, 2, 3], comparator),
+      [1, 2, 3],
+      "it doesn't error when the first list is blank"
+    );
+    assert.deepEqual(
+      mergeSortedLists([3, 2, 1], [], comparator),
+      [3, 2, 1],
+      "it doesn't error when the second list is blank"
+    );
+    assert.deepEqual(
+      mergeSortedLists([], [], comparator),
+      [],
+      "it doesn't error when the both lists are blank"
+    );
+    assert.deepEqual(
+      mergeSortedLists([5, 4, 0, -1], [1], comparator),
+      [5, 4, 1, 0, -1],
+      "it correctly merges lists when one list has 1 item only"
+    );
+    assert.deepEqual(
+      mergeSortedLists([2], [1], comparator),
+      [2, 1],
+      "it correctly merges lists when both lists has 1 item each"
+    );
+    assert.deepEqual(
+      mergeSortedLists([1], [1], comparator),
+      [1, 1],
+      "it correctly merges lists when both lists has 1 item and their items are identical"
+    );
+    assert.deepEqual(
+      mergeSortedLists([5, 4, 3, 2, 1], [6, 2, 1], comparator),
+      [6, 5, 4, 3, 2, 2, 1, 1],
+      "it correctly merges lists that share common items"
+    );
+  });
+
+  discourseModule("modKeysPressed", function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("returns an array of modifier keys pressed during keyboard or mouse event", async function (assert) {
+      let i = 0;
+
+      this.handleClick = (event) => {
+        if (i === 0) {
+          assert.deepEqual(modKeysPressed(event), []);
+        } else if (i === 1) {
+          assert.deepEqual(modKeysPressed(event), ["alt"]);
+        } else if (i === 2) {
+          assert.deepEqual(modKeysPressed(event), ["shift"]);
+        } else if (i === 3) {
+          assert.deepEqual(modKeysPressed(event), ["meta"]);
+        } else if (i === 4) {
+          assert.deepEqual(modKeysPressed(event), ["ctrl"]);
+        } else if (i === 5) {
+          assert.deepEqual(modKeysPressed(event), [
+            "alt",
+            "shift",
+            "meta",
+            "ctrl",
+          ]);
+        }
+      };
+
+      await render(hbs`<button id="btn" {{on "click" this.handleClick}} />`);
+
+      await click("#btn");
+      i++;
+      await click("#btn", { altKey: true });
+      i++;
+      await click("#btn", { shiftKey: true });
+      i++;
+      await click("#btn", { metaKey: true });
+      i++;
+      await click("#btn", { ctrlKey: true });
+      i++;
+      await click("#btn", {
+        altKey: true,
+        shiftKey: true,
+        metaKey: true,
+        ctrlKey: true,
+      });
     });
   });
 });

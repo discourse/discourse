@@ -121,6 +121,10 @@
 
                 <DButton @class="btn-primary" @action={{action "submit"}} @type="submit" @disabled={{this.submitDisabled}} @label="invites.accept_invite" />
 
+                <div class="disclaimer">
+                  {{html-safe this.disclaimerHtml}}
+                </div>
+
                 {{#if this.errorMessage}}
                   <br><br>
                   <div class="alert alert-error">{{this.errorMessage}}</div>

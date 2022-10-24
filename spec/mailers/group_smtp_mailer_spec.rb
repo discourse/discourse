@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'email/receiver'
 
-describe GroupSmtpMailer do
+RSpec.describe GroupSmtpMailer do
   let(:group) do
     Fabricate(:group,
               name: 'Testers',

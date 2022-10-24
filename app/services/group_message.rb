@@ -27,23 +27,23 @@ class GroupMessage
   end
 
   def create
-    unless sent_recently?
-      post = PostCreator.create(
-        Discourse.system_user,
-        target_group_names: [@group_name],
-        archetype: Archetype.private_message,
-        subtype: TopicSubtype.system_message,
-        title: I18n.t("system_messages.#{@message_type}.subject_template", message_params),
-        raw: I18n.t("system_messages.#{@message_type}.text_body_template", message_params)
-      )
-      remember_message_sent
-      post
-    else
-      false
-    end
+    return false if sent_recently?
+
+    post = PostCreator.create(
+      Discourse.system_user,
+      target_group_names: [@group_name],
+      archetype: Archetype.private_message,
+      subtype: TopicSubtype.system_message,
+      title: I18n.t("system_messages.#{@message_type}.subject_template", message_params),
+      raw: I18n.t("system_messages.#{@message_type}.text_body_template", message_params)
+    )
+    remember_message_sent
+    post
   end
 
-  def delete_previous!(match_raw: true)
+  def delete_previous!(respect_sent_recently: true, match_raw: true)
+    return false if respect_sent_recently && sent_recently?
+
     posts = Post
       .joins(topic: { topic_allowed_groups: :group })
       .where(topic: {

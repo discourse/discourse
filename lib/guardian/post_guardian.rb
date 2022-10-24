@@ -50,10 +50,7 @@ module PostGuardian
         (!SiteSetting.allow_flagging_staff?) &&
         post&.user&.staff?
 
-      if action_key == :notify_user &&
-         (!SiteSetting.enable_personal_messages? ||
-         !@user.has_trust_level?(SiteSetting.min_trust_to_send_messages))
-
+      if action_key == :notify_user && !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
         return false
       end
 
@@ -232,7 +229,7 @@ module PostGuardian
   def can_delete_post_action?(post_action)
     return false unless is_my_own?(post_action) && !post_action.is_private_message?
 
-    post_action.created_at > SiteSetting.post_undo_action_window_mins.minutes.ago
+    post_action.created_at > SiteSetting.post_undo_action_window_mins.minutes.ago && !post_action.post&.topic&.archived?
   end
 
   def can_see_post?(post)
@@ -296,7 +293,7 @@ module PostGuardian
   end
 
   def can_view_raw_email?(post)
-    post && (is_staff? || post.user_id == @user.id)
+    post && is_staff?
   end
 
   def can_unhide?(post)

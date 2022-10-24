@@ -18,3 +18,6 @@ te:
           title: "వర్గాల జాబితా"
         suggested_topics:
           title: "సూచించే విషయాలు"
+        rich_tooltip:
+          description: "వివరణ"
+          header: "హెడర్"

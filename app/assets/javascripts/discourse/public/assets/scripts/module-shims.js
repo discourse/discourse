@@ -18,3 +18,16 @@ define("ember-addons/ember-computed-decorators", [
   );
   return decorators;
 });
+
+// Based on https://github.com/emberjs/ember-jquery-legacy
+// The addon has out-of-date dependences, but it's super simple so we can reproduce here instead:
+define("ember-jquery-legacy", ["exports"], function (exports) {
+  exports.normalizeEvent = function (e) {
+    if (e instanceof Event) {
+      return e;
+    }
+    // __originalEvent is a private escape hatch of Ember's EventDispatcher to allow accessing `originalEvent` without
+    // triggering a deprecation message.
+    return e.__originalEvent || e.originalEvent;
+  };
+});

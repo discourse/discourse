@@ -16,7 +16,7 @@ acceptance("Account Created", function () {
 
     assert.ok(exists(".account-created"));
     assert.strictEqual(
-      query(".account-created .ac-message").innerText.trim(),
+      query(".account-created .success-info").innerText.trim(),
       "Hello World",
       "it displays the message"
     );
@@ -35,7 +35,7 @@ acceptance("Account Created", function () {
 
     assert.ok(exists(".account-created"));
     assert.strictEqual(
-      query(".account-created .ac-message").innerText.trim(),
+      query(".account-created .success-info").innerText.trim(),
       "Hello World",
       "it displays the message"
     );
@@ -43,7 +43,7 @@ acceptance("Account Created", function () {
     await click(".activation-controls .resend");
 
     assert.strictEqual(currentRouteName(), "account-created.resent");
-    const email = query(".account-created .ac-message b").innerText;
+    const email = query(".account-created b").innerText;
     assert.strictEqual(email, "eviltrout@example.com");
   });
 
@@ -88,7 +88,7 @@ acceptance("Account Created", function () {
     await click(".activation-controls .btn-primary");
 
     assert.strictEqual(currentRouteName(), "account-created.resent");
-    const email = query(".account-created .ac-message b").innerText;
+    const email = query(".account-created b").innerText;
     assert.strictEqual(email, "newemail@example.com");
   });
 });

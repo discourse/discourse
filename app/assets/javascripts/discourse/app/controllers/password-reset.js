@@ -1,4 +1,5 @@
 import DiscourseURL, { userPath } from "discourse/lib/url";
+import { action } from "@ember/object";
 import { alias, or, readOnly } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import I18n from "I18n";
@@ -8,6 +9,7 @@ import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
+import { modKeysPressed } from "discourse/lib/utilities";
 
 export default Controller.extend(PasswordValidation, {
   isDeveloper: alias("model.is_developer"),
@@ -45,6 +47,16 @@ export default Controller.extend(PasswordValidation, {
   },
 
   lockImageUrl: getURL("/images/lock.svg"),
+
+  @action
+  done(event) {
+    if (event && modKeysPressed(event).length > 0) {
+      return false;
+    }
+    event?.preventDefault();
+    this.set("redirected", true);
+    DiscourseURL.redirectTo(this.redirectTo || "/");
+  },
 
   actions: {
     submit() {
@@ -125,11 +137,6 @@ export default Controller.extend(PasswordValidation, {
           });
         }
       );
-    },
-
-    done() {
-      this.set("redirected", true);
-      DiscourseURL.redirectTo(this.redirectTo || "/");
     },
   },
 });

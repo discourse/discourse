@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DraftSequence do
+RSpec.describe DraftSequence do
   fab!(:user) { Fabricate(:user) }
 
   describe '.next' do

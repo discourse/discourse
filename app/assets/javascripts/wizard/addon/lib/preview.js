@@ -191,7 +191,10 @@ export function createPreviewComponent(width, height, obj) {
           avatarSize,
           avatarSize
         );
-        ctx.fillStyle = darkLightDiff(colors.primary, colors.secondary, 45, 55);
+        // accounts for hard-set color variables in solarized themes
+        ctx.fillStyle =
+          colors.primary_low_mid ||
+          darkLightDiff(colors.primary, colors.secondary, 45, 55);
 
         const pathScale = headerHeight / 1200;
         // search icon SVG path

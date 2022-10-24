@@ -1,21 +1,18 @@
-{{#unless this.skipHeader}}
-  <thead class="topic-list-header">
-    {{raw "topic-list-header"
-      canBulkSelect=this.canBulkSelect
-      toggleInTitle=this.toggleInTitle
-      hideCategory=this.hideCategory
-      showPosters=this.showPosters
-      showLikes=this.showLikes
-      showOpLikes=this.showOpLikes
-      order=this.order
-      ascending=this.ascending
-      sortable=this.sortable
-      listTitle=this.listTitle
-      bulkSelectEnabled=this.bulkSelectEnabled
-      canDoBulkActions=this.canDoBulkActions
-    }}
-  </thead>
-{{/unless}}
+<thead class="topic-list-header">
+  {{raw "topic-list-header"
+    canBulkSelect=this.canBulkSelect
+    toggleInTitle=this.toggleInTitle
+    hideCategory=this.hideCategory
+    showPosters=this.showPosters
+    showLikes=this.showLikes
+    showOpLikes=this.showOpLikes
+    order=this.order
+    ascending=this.ascending
+    sortable=this.sortable
+    listTitle=this.listTitle
+    bulkSelectEnabled=this.bulkSelectEnabled
+    canDoBulkActions=this.canDoBulkActions}}
+</thead>
 
 <PluginOutlet @name="before-topic-list-body" @args={{hash
     topics=this.topics

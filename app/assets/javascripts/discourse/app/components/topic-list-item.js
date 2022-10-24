@@ -82,11 +82,7 @@ export default Component.extend({
           `.indicator-topic-${data.topic_id}`
         ).classList;
 
-        if (data.show_indicator) {
-          nodeClassList.remove("read");
-        } else {
-          nodeClassList.add("read");
-        }
+        nodeClassList.toggle("read", !data.show_indicator);
       });
     }
 
@@ -95,8 +91,7 @@ export default Component.extend({
         const rawTopicLink = this.element.querySelector(".raw-topic-link");
 
         rawTopicLink &&
-          topicTitleDecorators &&
-          topicTitleDecorators.forEach((cb) =>
+          topicTitleDecorators?.forEach((cb) =>
             cb(this.topic, rawTopicLink, "topic-list-item-title")
           );
       }
@@ -256,6 +251,7 @@ export default Component.extend({
       if (wantsNewWindow(e)) {
         return true;
       }
+      e.preventDefault();
       return this.navigateToTopic(topic, e.target.getAttribute("href"));
     }
 
@@ -269,6 +265,7 @@ export default Component.extend({
       if (wantsNewWindow(e)) {
         return true;
       }
+      e.preventDefault();
       return this.navigateToTopic(topic, topic.lastUnreadUrl);
     }
 

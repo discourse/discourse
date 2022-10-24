@@ -24,21 +24,22 @@ function cleanUpPolls() {
 
 function initializePolls(api) {
   const register = getRegister(api),
-    pollGroupableUserFields =
-      api.container.lookup("site-settings:main").poll_groupable_user_fields;
+    pollGroupableUserFields = api.container.lookup(
+      "service:site-settings"
+    ).poll_groupable_user_fields;
   cleanUpPolls();
 
   api.modifyClass("controller:topic", {
     pluginId: PLUGIN_ID,
+
     subscribe() {
       this._super(...arguments);
-      this.messageBus.subscribe("/polls/" + this.get("model.id"), (msg) => {
+      this.messageBus.subscribe(`/polls/${this.model.id}`, (msg) => {
         const post = this.get("model.postStream").findLoadedPost(msg.post_id);
-        if (post) {
-          post.set("polls", msg.polls);
-        }
+        post?.set("polls", msg.polls);
       });
     },
+
     unsubscribe() {
       this.messageBus.unsubscribe("/polls/*");
       this._super(...arguments);

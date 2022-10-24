@@ -88,10 +88,13 @@ pl_PL:
         author: "Napoleon Hill"
       "11":
         quote: "Pokój w domu, pokój na świecie."
+        author: "Mustafa Kemal Atatürk"
       "12":
         quote: "Edukacja nie jest sposobem na wyrwanie się z ubóstwa, to jest sposób na walkę z nim."
+        author: "Julius Nyerere"
       "13":
         quote: "Podróż o długości tysiąca mil musi rozpocząć się od jednego kroku."
+        author: "Lao Tzu"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:

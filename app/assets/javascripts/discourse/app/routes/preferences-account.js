@@ -31,6 +31,7 @@ export default RestrictedUserRoute.extend({
       newTitleInput: user.get("title"),
       newPrimaryGroupInput: user.get("primary_group_id"),
       newFlairGroupId: user.get("flair_group_id"),
+      newStatus: user.status,
     });
   },
 

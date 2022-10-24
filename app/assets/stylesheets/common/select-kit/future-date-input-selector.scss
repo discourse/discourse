@@ -5,7 +5,7 @@
 
       .future-date-input-selector-header {
         .btn-clear {
-          line-height: $line-height-large;
+          line-height: var(--line-height-large);
         }
       }
 

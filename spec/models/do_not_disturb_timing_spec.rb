@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DoNotDisturbTiming do
+RSpec.describe DoNotDisturbTiming do
   fab!(:user) { Fabricate(:user) }
 
   describe "validations" do

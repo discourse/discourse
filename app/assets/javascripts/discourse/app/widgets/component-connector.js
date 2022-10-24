@@ -2,21 +2,35 @@ import { getOwner } from "@ember/application";
 import { scheduleOnce } from "@ember/runloop";
 
 export default class ComponentConnector {
-  constructor(widget, componentName, opts, trackedProperties) {
+  constructor(
+    widget,
+    componentName,
+    opts,
+    trackedProperties,
+    { applyStyle = true } = {}
+  ) {
     this.widget = widget;
     this.opts = opts;
     this.componentName = componentName;
     this.trackedProperties = trackedProperties || [];
+    this.applyStyle = applyStyle;
+    this._component = null;
   }
 
   init() {
     const elem = document.createElement("div");
-    elem.style.display = "inline-flex";
+    if (this.applyStyle) {
+      elem.style.display = "inline-flex";
+    }
     elem.className = "widget-component-connector";
     this.elem = elem;
     scheduleOnce("afterRender", this, this.connectComponent);
 
     return this.elem;
+  }
+
+  destroy() {
+    this._component?.destroy();
   }
 
   update(prev) {
@@ -54,6 +68,7 @@ export default class ComponentConnector {
 
     mounted._connected.push(component);
     component.renderer.appendTo(component, elem);
+    this._component = component;
   }
 }
 

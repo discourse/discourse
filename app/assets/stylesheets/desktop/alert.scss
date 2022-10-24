@@ -1,0 +1,23 @@
+.alert-bootstrap-mode {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+
+  .col-text {
+    width: 85%;
+  }
+  .col-button {
+    width: 15%;
+    display: flex;
+    flex-direction: column;
+    .alert--button,
+    .alert--link {
+      align-self: center;
+      justify-content: flex-end;
+    }
+    .alert--link {
+      font-weight: bold;
+      padding-top: 5px;
+    }
+  }
+}

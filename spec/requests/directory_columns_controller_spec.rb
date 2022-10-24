@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DirectoryColumnsController do
+RSpec.describe DirectoryColumnsController do
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
 

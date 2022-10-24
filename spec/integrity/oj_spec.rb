@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'Oj' do
+RSpec.describe 'Oj' do
   it "is enabled" do
     classes = Set.new
     tracer = TracePoint.new(:c_call) { |tp| classes << tp.defined_class }

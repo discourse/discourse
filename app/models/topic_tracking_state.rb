@@ -118,8 +118,7 @@ class TopicTrackingState
   end
 
   def self.publish_unmuted(topic)
-    return if !SiteSetting.mute_all_categories_by_default
-    user_ids = User.watching_topic_when_mute_categories_by_default(topic)
+    user_ids = User.watching_topic(topic)
       .where("users.last_seen_at > ?", 7.days.ago)
       .order("users.last_seen_at DESC")
       .limit(100)
@@ -171,7 +170,6 @@ class TopicTrackingState
       created_at: post.created_at,
       category_id: post.topic.category_id,
       archetype: post.topic.archetype,
-      unread_not_too_old: true
     }
 
     if tags
@@ -278,7 +276,7 @@ class TopicTrackingState
   end
 
   def self.include_tags_in_report?
-    SiteSetting.tagging_enabled && (@include_tags_in_report || SiteSetting.enable_experimental_sidebar)
+    SiteSetting.tagging_enabled && (@include_tags_in_report || SiteSetting.enable_experimental_sidebar_hamburger)
   end
 
   def self.include_tags_in_report=(v)

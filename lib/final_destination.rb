@@ -36,7 +36,7 @@ class FinalDestination
 
   def initialize(url, opts = nil)
     @url = url
-    @uri = uri(escape_url) if @url
+    @uri = uri(normalized_url) if @url
 
     @opts = opts || {}
     @force_get_hosts = @opts[:force_get_hosts] || []
@@ -192,13 +192,13 @@ class FinalDestination
 
     if @limit < 0
       @status = :too_many_redirects
-      log(:warn, "FinalDestination could not resolve URL (too many redirects): #{@uri}") if @verbose
+      log(:warn, "FinalDestination could not resolve URL (too many redirects): #{@uri}")
       return
     end
 
     unless validate_uri
       @status = :invalid_address
-      log(:warn, "FinalDestination could not resolve URL (invalid URI): #{@uri}") if @verbose
+      log(:warn, "FinalDestination could not resolve URL (invalid URI): #{@uri}")
       return
     end
 
@@ -344,10 +344,10 @@ class FinalDestination
     @status = :failure
     @status_code = response.status
 
-    log(:warn, "FinalDestination could not resolve URL (status #{response.status}): #{@uri}") if @verbose
+    log(:warn, "FinalDestination could not resolve URL (status #{response.status}): #{@uri}")
     nil
   rescue Excon::Errors::Timeout
-    log(:warn, "FinalDestination could not resolve URL (timeout): #{@uri}") if @verbose
+    log(:warn, "FinalDestination could not resolve URL (timeout): #{@uri}")
     nil
   end
 
@@ -417,8 +417,8 @@ class FinalDestination
     false
   end
 
-  def escape_url
-    UrlHelper.escape_uri(@url)
+  def normalized_url
+    UrlHelper.normalized_encode(@url)
   end
 
   def private_ranges
@@ -427,6 +427,7 @@ class FinalDestination
   end
 
   def log(log_level, message)
+    return unless @verbose
     return if @status_code == 404
 
     Rails.logger.public_send(
@@ -518,6 +519,12 @@ class FinalDestination
     end
 
     result
+  rescue Timeout::Error
+    log(:warn, "FinalDestination could not resolve URL (timeout): #{@uri}")
+    nil
+  rescue OpenSSL::SSL::SSLError => exception
+    log(:warn, "An error with SSL occurred: #{@uri} #{exception.message}")
+    nil
   rescue StandardError
     unsafe_close ? [:ok, headers_subset] : raise
   end

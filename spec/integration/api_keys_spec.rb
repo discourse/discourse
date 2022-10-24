@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'api keys' do
+RSpec.describe 'api keys' do
   let(:user) { Fabricate(:user) }
   let(:api_key) { ApiKey.create!(user_id: user.id, created_by_id: Discourse.system_user) }
 
@@ -61,7 +61,7 @@ describe 'api keys' do
   end
 end
 
-describe 'user api keys' do
+RSpec.describe 'user api keys' do
   let(:user) { Fabricate(:user) }
   let(:user_api_key) { Fabricate(:readonly_user_api_key, user: user) }
 

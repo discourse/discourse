@@ -202,16 +202,16 @@ table.api-keys {
     }
 
     .scope-resource-name {
-      font-size: $font-up-1;
+      font-size: var(--font-up-1);
     }
 
     .scope-tooltip {
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
     }
 
     .scope-name {
       font-weight: bold;
-      font-size: $font-0;
+      font-size: var(--font-0);
       display: inline;
     }
   }
@@ -310,7 +310,7 @@ table.api-keys {
     margin-top: 10px;
   }
   label {
-    font-size: $font-0;
+    font-size: var(--font-0);
   }
   &.content-list {
     width: 100%;

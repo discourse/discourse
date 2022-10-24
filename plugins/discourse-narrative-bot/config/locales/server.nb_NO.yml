@@ -152,13 +152,13 @@ nb_NO:
       hello:
         title: "Heisann!"
         message: |-
-          Takk for at du ble med i %{title}og velkommen!
+          Takk for at du ble med i %{title} og velkommen!
 
           - Jeg er bare en robot, men [våre vennlige ansatte](%{base_uri}/about) er også her for å hjelpe hvis du må nå en person.
 
-          - Av sikkerhetshensyn begrenser vi midlertidig hva nye brukere kan gjøre. Du får [nye evner](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (og [badges](%{base_uri}/badges)) da vi blir kjent med deg.
+          - Av sikkerhetshensyn begrenser vi midlertidig hva nye brukere kan gjøre. Du får [nye evner](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (og [badges](%{base_uri}/badges)) når vi blir kjent med deg.
 
-          - Vi tror på [sivilt samfunns oppførsel til enhver tid (%{base_uri}/retningslinjer).
+          - Vi tror på [sivilisert oppførsel i fellesskapet](%{base_uri}/retningslinjer) til enhver tid.
       onebox:
         instructions: |-
           Neste, kan du dele en av disse lenkene med meg? Svar med **en lenke på en linje selv**, og den vil automatisk utvide til å inkludere en ny sammendrag.

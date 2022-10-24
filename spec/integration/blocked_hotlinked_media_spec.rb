@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "hotlinked media blocking" do
+RSpec.describe "hotlinked media blocking" do
   let(:hotlinked_url) { "http://example.com/images/2/2e/Longcat1.png" }
   let(:onebox_url) { "http://example.com/onebox" }
   let(:png) { Base64.decode64("R0lGODlhAQABALMAAAAAAIAAAACAAICAAAAAgIAAgACAgMDAwICAgP8AAAD/AP//AAAA//8A/wD//wBiZCH5BAEAAA8ALAAAAAABAAEAAAQC8EUAOw==") }

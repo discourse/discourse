@@ -42,7 +42,7 @@ de:
     poll_must_be_open_to_vote: "Die Umfrage muss zum Abstimmen gestartet sein."
     one_vote_per_user: "Für diese Umfrage ist nur eine Stimme erlaubt."
     max_vote_per_user:
-      one: Nur %{count} Stimmen sind für diese Umfrage erlaubt.
+      one: Für diese Umfrage ist nur %{count} Stimme erlaubt.
       other: Für diese Umfrage sind maximal %{count} Stimmen erlaubt.
     min_vote_per_user:
       one: Für diese Umfrage ist mindestens %{count} Stimme erforderlich.

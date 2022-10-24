@@ -40,13 +40,13 @@ module("Unit | Utility | oneboxer", function () {
     await loadOnebox(element);
 
     assert.ok(
-      localCache["http://somegoodurl.com"].outerHTML.indexOf(
+      localCache["http://somegoodurl.com"].outerHTML.includes(
         "Yet another collaboration tool"
-      ) !== -1,
+      ),
       "stores the html of the onebox in a local cache"
     );
     assert.ok(
-      loadOnebox(element).indexOf("Yet another collaboration tool") !== -1,
+      loadOnebox(element).includes("Yet another collaboration tool"),
       "it returns the html from the cache"
     );
   });

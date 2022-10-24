@@ -1,0 +1,11 @@
+{
+  "extends": "../../../../jsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "discourse-widget-hbs/*": ["./addon/*"],
+      "discourse/*": ["../discourse/app/*"],
+      "discourse-common/*": ["../discourse-common/addon/*"]
+    }
+  },
+}

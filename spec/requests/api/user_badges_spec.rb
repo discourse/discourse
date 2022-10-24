@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'swagger_helper'
 
-describe 'user_badges' do
+RSpec.describe 'user_badges' do
 
   let(:admin) { Fabricate(:admin) }
 

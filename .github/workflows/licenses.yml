@@ -10,6 +10,9 @@ concurrency:
   group: licenses-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: run
@@ -61,7 +64,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Check RubyGems Licenses
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         run: |
           licensed cache
           licensed status
@@ -70,14 +73,14 @@ jobs:
         run: yarn install
 
       - name: Check Yarn Licenses
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         run: |
           yarn global add licensee
           yarn global upgrade licensee
           licensee --errors-only
 
       - name: Check Ember CLI Workspace Licenses
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         working-directory: ./app/assets/javascripts
         run: |
           licensee --errors-only

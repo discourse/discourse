@@ -33,8 +33,10 @@ module GroupGuardian
   def can_see_group_messages?(group)
     return true if is_admin?
     return true if is_moderator? && group.id == Group::AUTO_GROUPS[:moderators]
+    return false if user.blank?
 
-    SiteSetting.enable_personal_messages? && group.users.include?(user)
+    user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map) &&
+      group.users.include?(user)
   end
 
   def can_associate_groups?

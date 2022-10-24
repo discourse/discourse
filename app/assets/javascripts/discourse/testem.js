@@ -2,11 +2,11 @@ const TapReporter = require("testem/lib/reporters/tap_reporter");
 const { shouldLoadPluginTestJs } = require("discourse/lib/plugin-js");
 
 class Reporter {
+  failReports = [];
+
   constructor() {
     this._tapReporter = new TapReporter(...arguments);
   }
-
-  failReports = [];
 
   reportMetadata(tag, metadata) {
     if (tag === "summary-line") {
@@ -18,7 +18,7 @@ class Reporter {
 
   report(prefix, data) {
     if (data.failed) {
-      this.failReports.push([prefix, data]);
+      this.failReports.push([prefix, data, this._tapReporter.id]);
     }
     this._tapReporter.report(prefix, data);
   }
@@ -28,11 +28,14 @@ class Reporter {
 
     if (this.failReports.length > 0) {
       process.stdout.write("\nFailures:\n\n");
-      this.failReports.forEach(([prefix, data]) => {
+
+      this.failReports.forEach(([prefix, data, id]) => {
         if (process.env.GITHUB_ACTIONS) {
           process.stdout.write(`::error ::QUnit Test Failure: ${data.name}\n`);
         }
-        this.report(prefix, data);
+
+        this._tapReporter.id = id;
+        this._tapReporter.report(prefix, data);
       });
     }
   }
@@ -44,7 +47,7 @@ module.exports = {
   launch_in_ci: ["Chrome"],
   // launch_in_dev: ["Chrome"] // Ember-CLI always launches testem in 'CI' mode
   tap_failed_tests_only: false,
-  parallel: 1, // disable parallel tests for stability
+  parallel: -1,
   browser_start_timeout: 120,
   browser_args: {
     Chrome: [
@@ -60,15 +63,16 @@ module.exports = {
       "--js-flags=--max_old_space_size=4096",
     ].filter(Boolean),
     Firefox: ["-headless", "--width=1440", "--height=900"],
-    "Headless Firefox": ["--width=1440", "--height=900"],
-  },
-  browser_paths: {
-    "Headless Firefox": "/opt/firefox-evergreen/firefox",
   },
   reporter: Reporter,
 };
 
-const target = `http://localhost:${process.env.UNICORN_PORT || "3000"}`;
+if (process.env.TESTEM_FIREFOX_PATH) {
+  module.exports.browser_paths ||= {};
+  module.exports.browser_paths["Firefox"] = process.env.TESTEM_FIREFOX_PATH;
+}
+
+const target = `http://127.0.0.1:${process.env.UNICORN_PORT || "3000"}`;
 
 if (process.argv.includes("-t")) {
   // Running testem without ember cli. Probably for theme-qunit
@@ -95,16 +99,16 @@ if (process.argv.includes("-t")) {
 } else if (shouldLoadPluginTestJs()) {
   // Running with ember cli, but we want to pass through plugin request to Rails
   module.exports.proxies = {
-    "/assets/discourse/tests/active-plugins.js": {
-      target,
-    },
-    "/assets/admin-plugins.js": {
-      target,
-    },
-    "/assets/discourse/tests/plugin-tests.js": {
+    "/assets/plugins/*_extra.js": {
       target,
     },
     "/plugins/": {
+      target,
+    },
+    "/bootstrap/plugin-css-for-tests.css": {
+      target,
+    },
+    "/stylesheets/": {
       target,
     },
   };

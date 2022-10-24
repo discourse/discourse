@@ -1,18 +1,23 @@
 import Controller from "@ember/controller";
-import discourseComputed from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
+import { tracked } from "@glimmer/tracking";
 
-export default Controller.extend({
-  routing: service("-routing"),
+export default class AdminBadgesController extends Controller {
+  @service router;
 
-  @discourseComputed("routing.currentRouteName")
-  selectedRoute() {
-    const currentRoute = this.routing.currentRouteName;
+  // Set by the route
+  @tracked badgeGroupings;
+  @tracked badgeTypes;
+  @tracked protectedSystemFields;
+  @tracked badgeTriggers;
+
+  get selectedRoute() {
+    const currentRoute = this.router.currentRouteName;
     const indexRoute = "adminBadges.index";
     if (currentRoute === indexRoute) {
       return "adminBadges.show";
     } else {
-      return this.routing.currentRouteName;
+      return currentRoute;
     }
-  },
-});
+  }
+}

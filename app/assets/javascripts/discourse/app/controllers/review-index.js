@@ -106,7 +106,7 @@ export default Controller.extend({
       }
 
       let newList = this.reviewables.reject((reviewable) => {
-        return ids.indexOf(reviewable.id) !== -1;
+        return ids.includes(reviewable.id);
       });
 
       if (newList.length === 0) {

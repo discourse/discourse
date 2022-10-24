@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe IntegerSettingValidator do
+RSpec.describe IntegerSettingValidator do
   describe '#valid_value?' do
 
     shared_examples "for all IntegerSettingValidator opts" do

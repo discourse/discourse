@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UsernameSettingValidator do
+RSpec.describe UsernameSettingValidator do
   describe '#valid_value?' do
     subject(:validator) { described_class.new }
 
@@ -18,7 +18,7 @@ describe UsernameSettingValidator do
       expect(validator.valid_value?('no way')).to eq(false)
     end
 
-    context "regex support" do
+    context "with regex support" do
       fab!(:darthvader) { Fabricate(:user, username: 'darthvader') }
       fab!(:luke) { Fabricate(:user, username: 'luke') }
 

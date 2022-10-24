@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 # rubocop:disable Discourse/OnlyTopLevelMultisiteSpecs
 
-shared_context "backups" do
+RSpec.shared_context "with backups" do
   before { create_backups }
   after { remove_backups }
 
@@ -15,7 +15,7 @@ shared_context "backups" do
   let(:backup5) { BackupFile.new(filename: "multi-2.tar.gz", size: 19, last_modified: Time.parse("2018-11-27T03:16:54Z")) }
 end
 
-shared_examples "backup store" do
+RSpec.shared_examples "backup store" do
   it "creates the correct backup store" do
     expect(store).to be_a(expected_type)
   end
@@ -46,7 +46,7 @@ shared_examples "backup store" do
   end
 
   context "with backup files" do
-    include_context "backups"
+    include_context "with backups"
 
     describe "#files" do
       it "sorts files by last modified date in descending order" do
@@ -208,13 +208,13 @@ shared_examples "backup store" do
   end
 end
 
-shared_examples "remote backup store" do
+RSpec.shared_examples "remote backup store" do
   it "is a remote store" do
     expect(store.remote?).to eq(true)
   end
 
   context "with backups" do
-    include_context "backups"
+    include_context "with backups"
 
     describe "#upload_file" do
       def upload_file

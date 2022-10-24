@@ -76,6 +76,7 @@ be:
       topic_html: 'Тэма: <span class="topic-title">%{topicTitle}</span>'
       close: "схаваць"
     emails_are_disabled: "Адпраўка паведамленняў па электроннай пошце было глабальна адключана адміністратарам. Ні адно апавяшчэнне па электроннай пошце не будзе даслана."
+    bootstrap_invite_button_title: "Адправіць запрашэнні"
     s3:
       regions:
         ap_northeast_1: "Азія (Токіа)"
@@ -91,7 +92,10 @@ be:
     not_implemented: "Гэты функцыянал яшчэ не рэалізаваны, прабачце!"
     no_value: "Не"
     yes_value: "Так"
+    ok_value: "Добра"
+    cancel_value: "адмяніць"
     submit: "Адправіць"
+    delete: "выдаляць"
     generic_error: "Выбачайце, здарылася памылка."
     generic_error_with_reason: "Паўстала памылка: %{error}"
     sign_up: "Рэгістрацыя"
@@ -249,6 +253,7 @@ be:
         other: "дзён"
     time_shortcut:
       tomorrow: "заўтра"
+      never: "ніколі"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'> %{user} <"
       you_posted_topic: "<a href='%{userUrl}'> Вы <"
@@ -462,6 +467,7 @@ be:
         regular: "звычайны"
       experimental_sidebar:
         options: "Налады"
+        navigation_section: "рух"
       tag_settings: "Цэтлікі"
       watched_tags_instructions: "Вы будзеце аўтаматычна адсочваць усе новыя тэмы па гэтых цэтліках. Таксама вам будуць прыходзіць паведамленні пра новыя пасты і тэмы, а падлік непрачытаных і новых пастоў адлюструюцца побач з тэмамі."
       tracked_tags_instructions: "Вы будзеце аўтаматычна адсочваць усе тэмы па гэтых цэтліках. Падлік непрачытаных і новых пастоў побач адлюструюцца побач з тэмамі."
@@ -516,6 +522,8 @@ be:
         edit: "рэдагаваць"
         security_key:
           register: "рэгістрацыя"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           save: "Захаваць"
       change_about:
         title: "Змяніць інфу аба мяне"
@@ -713,7 +721,6 @@ be:
       other: адказы
     signup_cta:
       sign_up: "рэгістрацыя"
-      hide_session: "Нагадаць мне заўтра"
       hide_forever: "няма дзякуй"
     summary:
       enable: "Падсумаваць гэтую тэму"
@@ -725,6 +732,7 @@ be:
       disable: "Паказаць выдаленыя паведамленні"
     private_message_info:
       title: "Паказаць выдаленыя паведамленні..."
+      remove_user: "выдаліць карыстальніка"
     email: "Электронная пошта"
     username: "Імя карыстальніка"
     last_seen: "заўважаны апошні раз"
@@ -850,6 +858,7 @@ be:
           label: "Стварыць новую тэму"
       ignore: "ігнараваць"
     notifications:
+      watching_first_post_label: "Стварыць новую тэму"
       dismiss_confirmation:
         cancel: "Адмяніць"
       popup:
@@ -904,6 +913,13 @@ be:
     go_back: "вярнуцца назад"
     not_logged_in_user: "старонка карыстальніка з вынікам бягучай дзейнасці і наладамі"
     current_user: "перайсці да Вашай старонкі карыстальніка"
+    user_menu:
+      tabs:
+        replies: "Адказы"
+        mentions: "згадкі"
+        likes: "сімпатыі"
+        bookmarks: "закладкі"
+        profile: "Профіль"
     topics:
       new_messages_marker: "апошні візыт"
       bulk:
@@ -1303,7 +1319,6 @@ be:
       sort_by: "Сартаваць па:"
       sort_by_count: "падлічваць"
       sort_by_name: "Імя"
-      cancel_delete_unused: "адмяніць"
       notifications:
         watching:
           title: "Сачыць"
@@ -1334,12 +1349,12 @@ be:
         member: "член"
         regular: "рэгулярны"
         leader: "лідэр"
-    user_activity:
-      no_activity_others: "Няма актыўнасці."
-      no_replies_others: "Няма адказаў."
-      no_likes_others: "Не спадабалася паведамленні."
     sidebar:
+      more: "Больш"
+      all_categories: "Усе катэгорыі"
       sections:
+        about:
+          header_link_text: "Аб тэме"
         messages:
           header_link_text: "Паведамленні"
           links:
@@ -1351,14 +1366,28 @@ be:
         tags:
           header_link_text: "тэгі"
         categories:
-          header_link_title: "усе катэгорыі"
           header_link_text: "катэгорыі"
-        topics:
-          header_link_title: "дома"
-          header_link_text: "Тэмы"
+        community:
+          header_link_text: "супольнасць"
           links:
+            about:
+              content: "Аб тэме"
+            admin:
+              content: "адміністратар"
+            badges:
+              content: "значкі"
+            faq:
+              content: "Пытанні і адказы"
+            groups:
+              content: "Групы"
+              title: "Усе групы"
+            users:
+              content: "карыстальнікаў"
             my_posts:
               content: "мае паведамленні"
+            review:
+              content: "Патрабуе перагляду"
+              title: "патрабуе перагляду"
   admin_js:
     admin:
       moderator: "Мадэратар"
@@ -1984,13 +2013,11 @@ be:
           topics: "тэмы"
   wizard_js:
     wizard:
-      done: "Выканана"
       back: "Назад"
       next: "Далей"
       upload: "Запампаваць"
       uploading: "Запампоўванне..."
       upload_error: "Выбачайце, пры загрузцы гэтага файла адбылася памылка. Калі ласка, паспрабуйце яшчэ раз."
-      quit: "Мабыць пазней"
       invites:
         add_user: "дадаць"
         roles:

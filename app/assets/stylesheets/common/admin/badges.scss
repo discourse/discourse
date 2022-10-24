@@ -47,7 +47,7 @@
       }
       .list-badge {
         float: right;
-        font-size: $font-down-1;
+        font-size: var(--font-down-1);
         font-weight: normal;
         padding: 0 6px;
         color: var(--secondary);
@@ -66,7 +66,7 @@
       margin: 0;
       margin-top: 5px;
       color: var(--primary-medium);
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
     }
     .badge-grouping-control {
       display: flex;

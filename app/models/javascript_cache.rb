@@ -12,7 +12,7 @@ class JavascriptCache < ActiveRecord::Base
   end
 
   def local_url
-    "#{Discourse.base_url}#{path}"
+    "#{Discourse.base_path}#{path}"
   end
 
   private
@@ -41,6 +41,7 @@ end
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  theme_id       :bigint
+#  source_map     :text
 #
 # Indexes
 #

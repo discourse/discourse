@@ -15,10 +15,10 @@ export default Component.extend({
       this._clearFlash();
     }
 
-    let fixedParent = $(this.element).closest(".d-modal.fixed-modal");
-    if (fixedParent.length) {
+    let fixedParent = this.element.closest(".d-modal.fixed-modal");
+    if (fixedParent) {
       this.set("fixed", true);
-      fixedParent.modal("show");
+      $(fixedParent).modal("show");
     }
 
     scheduleOnce("afterRender", this, this._afterFirstRender);

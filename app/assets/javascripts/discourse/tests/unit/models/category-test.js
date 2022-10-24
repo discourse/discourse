@@ -128,8 +128,6 @@ module("Unit | Model | category", function () {
       bah,
       "we can find a category with english slug whose parent slug is CJK"
     );
-
-    sinon.restore();
   });
 
   test("findSingleBySlug", function (assert) {
@@ -368,8 +366,6 @@ module("Unit | Model | category", function () {
       [child_category1, category2, read_restricted_category],
       "prioritize non read_restricted with limit"
     );
-
-    sinon.restore();
   });
 
   test("search with category slug", function (assert) {

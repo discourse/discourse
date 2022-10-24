@@ -1,5 +1,5 @@
+import { debounce } from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -7,7 +7,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 const PLUGIN_ID = "new-user-narrative";
 
 function initialize(api) {
-  const messageBus = api.container.lookup("message-bus:main");
+  const messageBus = api.container.lookup("service:message-bus");
   const currentUser = api.getCurrentUser();
   const appEvents = api.container.lookup("service:app-events");
 
@@ -46,21 +46,21 @@ function initialize(api) {
     subscribe() {
       this._super(...arguments);
 
-      this.messageBus.subscribe(`/topic/${this.get("model.id")}`, (data) => {
+      this.messageBus.subscribe(`/topic/${this.model.id}`, (data) => {
         const topic = this.model;
 
         // scroll only for discobot (-2 is discobot id)
         if (
-          topic.get("isPrivateMessage") &&
+          topic.isPrivateMessage &&
           this.currentUser &&
-          this.currentUser.get("id") !== data.user_id &&
+          this.currentUser.id !== data.user_id &&
           data.user_id === -2 &&
           data.type === "created"
         ) {
           const postNumber = data.post_number;
           const notInPostStream =
             topic.get("highest_post_number") <= postNumber;
-          const postNumberDifference = postNumber - topic.get("currentPost");
+          const postNumberDifference = postNumber - topic.currentPost;
 
           if (
             notInPostStream &&
@@ -74,28 +74,22 @@ function initialize(api) {
       // No need to unsubscribe, core unsubscribes /topic/* routes
     },
 
+    @debounce(500)
     _scrollToDiscobotPost(postNumber) {
-      discourseDebounce(
-        this,
-        function () {
-          const post = document.querySelector(
-            `.topic-post article#post_${postNumber}`
-          );
-
-          if (!post || isElementInViewport(post)) {
-            return;
-          }
-
-          const viewportOffset = post.getBoundingClientRect();
-
-          window.scrollTo({
-            top: window.scrollY + viewportOffset.top - headerOffset(),
-            behavior: "smooth",
-          });
-        },
-        postNumber,
-        500
+      const post = document.querySelector(
+        `.topic-post article#post_${postNumber}`
       );
+
+      if (!post || isElementInViewport(post)) {
+        return;
+      }
+
+      const viewportOffset = post.getBoundingClientRect();
+
+      window.scrollTo({
+        top: window.scrollY + viewportOffset.top - headerOffset(),
+        behavior: "smooth",
+      });
     },
   });
 
@@ -116,10 +110,10 @@ function initialize(api) {
 }
 
 export default {
-  name: "new-user-narratve",
+  name: "new-user-narrative",
 
   initialize(container) {
-    const siteSettings = container.lookup("site-settings:main");
+    const siteSettings = container.lookup("service:site-settings");
     if (siteSettings.discourse_narrative_bot_enabled) {
       withPluginApi("0.8.7", initialize);
     }

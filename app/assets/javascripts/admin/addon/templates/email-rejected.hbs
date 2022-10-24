@@ -48,10 +48,10 @@
           </td>
           <td>{{email.subject}}</td>
           <td class="error">
-            <a href {{action "showIncomingEmail" email.id}}>{{email.error}}</a>
+            <a href {{on "click" (fn this.handleShowIncomingEmail email.id)}}>{{email.error}}</a>
           </td>
           <td class="email-details">
-            <a href {{action "showIncomingEmail" email.id}} title={{i18n "admin.email.details_title"}}>
+            <a href {{on "click" (fn this.handleShowIncomingEmail email.id)}} title={{i18n "admin.email.details_title"}}>
               {{d-icon "info-circle"}}
             </a>
           </td>

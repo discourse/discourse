@@ -27,6 +27,9 @@
         {{if this.nameFirst (format-username @user.username) @user.name}}
       {{/if}}
     </span>
+    {{#if (and @showStatus @user.status)}}
+      <UserStatusMessage @status={{@user.status}} @showDescription={{true}} @showTooltip={{false}} />
+    {{/if}}
     <PluginOutlet @name="after-user-name" @tagName="span" @connectorTagName="span" @args={{hash user=this.user}} />
   </div>
   <div class="title">{{@user.title}}</div>

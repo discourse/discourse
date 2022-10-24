@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PluginStore do
+RSpec.describe PluginStore do
   let(:store) { PluginStore.new("my_plugin_2") }
 
   def set(k, v)

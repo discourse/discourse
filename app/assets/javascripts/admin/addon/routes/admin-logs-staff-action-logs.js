@@ -1,6 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import EmberObject from "@ember/object";
-import showModal from "discourse/lib/show-modal";
 
 export default DiscourseRoute.extend({
   queryParams: {
@@ -43,17 +42,6 @@ export default DiscourseRoute.extend({
   },
 
   actions: {
-    showDetailsModal(model) {
-      showModal("admin-staff-action-log-details", { model, admin: true });
-      this.controllerFor("modal").set("modalClass", "log-details-modal");
-    },
-
-    showCustomDetailsModal(model) {
-      let modal = showModal("admin-theme-change", { model, admin: true });
-      this.controllerFor("modal").set("modalClass", "history-modal");
-      modal.loadDiff();
-    },
-
     onFiltersChange(filters) {
       if (filters && Object.keys(filters) === 0) {
         this.transitionTo("adminLogs.staffActionLogs");

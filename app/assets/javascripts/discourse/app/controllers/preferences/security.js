@@ -1,4 +1,5 @@
 import Controller from "@ember/controller";
+import { action } from "@ember/object";
 import { gt } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
@@ -51,59 +52,62 @@ export default Controller.extend(CanCheckEmails, {
     DEFAULT_AUTH_TOKENS_COUNT
   ),
 
+  @action
+  changePassword(event) {
+    event?.preventDefault();
+    if (!this.passwordProgress) {
+      this.set("passwordProgress", I18n.t("user.change_password.in_progress"));
+      return this.model
+        .changePassword()
+        .then(() => {
+          // password changed
+          this.setProperties({
+            changePasswordProgress: false,
+            passwordProgress: I18n.t("user.change_password.success"),
+          });
+        })
+        .catch(() => {
+          // password failed to change
+          this.setProperties({
+            changePasswordProgress: false,
+            passwordProgress: I18n.t("user.change_password.error"),
+          });
+        });
+    }
+  },
+
+  @action
+  toggleShowAllAuthTokens(event) {
+    event?.preventDefault();
+    this.toggleProperty("showAllAuthTokens");
+  },
+
+  @action
+  revokeAuthToken(token, event) {
+    event?.preventDefault();
+    ajax(
+      userPath(
+        `${this.get("model.username_lower")}/preferences/revoke-auth-token`
+      ),
+      {
+        type: "POST",
+        data: token ? { token_id: token.id } : {},
+      }
+    )
+      .then(() => {
+        if (!token) {
+          logout();
+        } // All sessions revoked
+      })
+      .catch(popupAjaxError);
+  },
+
   actions: {
     save() {
       this.set("saved", false);
 
       return this.model
         .then(() => this.set("saved", true))
-        .catch(popupAjaxError);
-    },
-
-    changePassword() {
-      if (!this.passwordProgress) {
-        this.set(
-          "passwordProgress",
-          I18n.t("user.change_password.in_progress")
-        );
-        return this.model
-          .changePassword()
-          .then(() => {
-            // password changed
-            this.setProperties({
-              changePasswordProgress: false,
-              passwordProgress: I18n.t("user.change_password.success"),
-            });
-          })
-          .catch(() => {
-            // password failed to change
-            this.setProperties({
-              changePasswordProgress: false,
-              passwordProgress: I18n.t("user.change_password.error"),
-            });
-          });
-      }
-    },
-
-    toggleShowAllAuthTokens() {
-      this.toggleProperty("showAllAuthTokens");
-    },
-
-    revokeAuthToken(token) {
-      ajax(
-        userPath(
-          `${this.get("model.username_lower")}/preferences/revoke-auth-token`
-        ),
-        {
-          type: "POST",
-          data: token ? { token_id: token.id } : {},
-        }
-      )
-        .then(() => {
-          if (!token) {
-            logout();
-          } // All sessions revoked
-        })
         .catch(popupAjaxError);
     },
 

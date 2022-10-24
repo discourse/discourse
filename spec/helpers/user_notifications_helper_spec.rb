@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserNotificationsHelper do
+RSpec.describe UserNotificationsHelper do
   let(:upload_path) { Discourse.store.upload_path }
 
   describe '#email_excerpt' do

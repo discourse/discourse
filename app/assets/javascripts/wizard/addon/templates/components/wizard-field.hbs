@@ -1,18 +1,20 @@
-<label for={{this.field.id}}>
-  <span class="label-value">
-    {{this.field.label}}
+{{#if this.field.label}}
+  <label for={{this.field.id}}>
+    <span class="wizard-container__label">
+      {{this.field.label}}
+    </span>
 
     {{#if this.field.required}}
-      <span class="field-required">*</span>
+      <span class="wizard-container__label required">*</span>
     {{/if}}
-  </span>
 
-  {{#if this.field.description}}
-    <div class="field-description">{{html-safe this.field.description}}</div>
-  {{/if}}
-</label>
+    {{#if this.field.description}}
+      <div class="wizard-container__description">{{html-safe this.field.description}}</div>
+    {{/if}}
+  </label>
+{{/if}}
 
-<div class="input-area">
+<div class="wizard-container__input">
   {{component
     this.inputComponentName
     field=this.field
@@ -23,9 +25,9 @@
 </div>
 
 {{#if this.field.errorDescription}}
-  <div class="field-error-description">{{html-safe this.field.errorDescription}}</div>
+  <div class="wizard-container__description error">{{html-safe this.field.errorDescription}}</div>
 {{/if}}
 
 {{#if this.field.extra_description}}
-  <div class="field-extra-description">{{html-safe this.field.extra_description}}</div>
+  <div class="wizard-container__description extra">{{html-safe this.field.extra_description}}</div>
 {{/if}}

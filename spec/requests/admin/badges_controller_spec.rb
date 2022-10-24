@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Admin::BadgesController do
+RSpec.describe Admin::BadgesController do
   context "while logged in as an admin" do
     fab!(:admin) { Fabricate(:admin) }
     fab!(:badge) { Fabricate(:badge) }

@@ -301,8 +301,8 @@ class TopicView
   end
 
   def image_url
-    url = desired_post&.image_url if @post_number > 1
-    url || @topic.image_url
+    return @topic.image_url if @post_number == 1
+    desired_post&.image_url
   end
 
   def filter_posts(opts = {})
@@ -759,6 +759,8 @@ class TopicView
         :topic,
         :image_upload
       )
+
+    @posts = @posts.includes({ user: :user_status }) if SiteSetting.enable_user_status
 
     @posts = apply_default_scope(@posts)
     @posts = filter_post_types(@posts)

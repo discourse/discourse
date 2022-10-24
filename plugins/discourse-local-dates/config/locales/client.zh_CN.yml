@@ -41,4 +41,4 @@ zh_CN:
             every_three_months: "每三个月"
             every_six_months: "每六个月"
             every_year: "每年"
-      default_title: "%{site_name} 事件"
+      default_title: "%{site_name}事件"

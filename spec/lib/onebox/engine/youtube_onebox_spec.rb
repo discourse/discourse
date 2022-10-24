@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::YoutubeOnebox do
+RSpec.describe Onebox::Engine::YoutubeOnebox do
   before do
     stub_request(:get, "https://www.youtube.com/watch?feature=player_embedded&v=21Lk4YiASMo").to_return(status: 200, body: onebox_response("youtube"))
     stub_request(:get, "https://youtu.be/21Lk4YiASMo").to_return(status: 200, body: onebox_response("youtube"))

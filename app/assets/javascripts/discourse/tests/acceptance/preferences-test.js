@@ -78,6 +78,7 @@ function preferencesPretender(server, helper) {
 acceptance("User Preferences", function (needs) {
   needs.user();
   needs.pretender(preferencesPretender);
+
   test("update some fields", async function (assert) {
     await visit("/u/eviltrout/preferences");
 
@@ -232,7 +233,7 @@ acceptance("User Preferences", function (needs) {
     await click(".new-security-key");
     assert.ok(exists("#security-key-name"), "shows security key name input");
 
-    fillIn("#security-key-name", "");
+    await fillIn("#security-key-name", "");
 
     // The following tests can only run when Webauthn is enabled. This is not
     // always the case, for example on a browser running on a non-standard port
@@ -240,7 +241,7 @@ acceptance("User Preferences", function (needs) {
       await click(".add-security-key");
 
       assert.ok(
-        query(".alert-error").innerHTML.indexOf("provide a name") > -1,
+        query(".alert-error").innerHTML.includes("provide a name"),
         "shows name missing error message"
       );
     }
@@ -326,6 +327,7 @@ acceptance(
     });
   }
 );
+
 acceptance(
   "Avatar selector when selectable avatars allows staff to upload",
   function (needs) {
@@ -341,7 +343,7 @@ acceptance(
     });
 
     test("allows staff to upload", async function (assert) {
-      await updateCurrentUser({
+      updateCurrentUser({
         trust_level: 3,
         moderator: true,
         admin: false,
@@ -358,9 +360,10 @@ acceptance(
         )
       );
     });
+
     test("disallow non-staff", async function (assert) {
       await visit("/u/eviltrout/preferences");
-      await updateCurrentUser({
+      updateCurrentUser({
         trust_level: 3,
         moderator: false,
         admin: false,
@@ -394,7 +397,7 @@ acceptance(
 
     test("with a tl3 user", async function (assert) {
       await visit("/u/eviltrout/preferences");
-      await updateCurrentUser({
+      updateCurrentUser({
         trust_level: 3,
         moderator: false,
         admin: false,
@@ -410,9 +413,10 @@ acceptance(
         )
       );
     });
+
     test("with a tl2 user", async function (assert) {
       await visit("/u/eviltrout/preferences");
-      await updateCurrentUser({
+      updateCurrentUser({
         trust_level: 2,
         moderator: false,
         admin: false,
@@ -428,9 +432,10 @@ acceptance(
         )
       );
     });
+
     test("always allow staff to upload", async function (assert) {
       await visit("/u/eviltrout/preferences");
-      await updateCurrentUser({
+      updateCurrentUser({
         trust_level: 2,
         moderator: true,
         admin: false,
@@ -468,63 +473,6 @@ acceptance("User Preferences when badges are disabled", function (needs) {
     assert.ok(exists(".user-preferences"), "it shows the preferences");
   });
 });
-
-acceptance(
-  "User can select a topic to feature on profile if site setting in enabled",
-  function (needs) {
-    needs.user();
-    needs.settings({ allow_featured_topic_on_user_profiles: true });
-    needs.pretender((server, helper) => {
-      server.put("/u/eviltrout/feature-topic", () => {
-        return helper.response({
-          success: true,
-        });
-      });
-    });
-
-    test("setting featured topic on profile", async function (assert) {
-      await visit("/u/eviltrout/preferences/profile");
-
-      assert.ok(
-        !exists(".featured-topic-link"),
-        "no featured topic link to present"
-      );
-      assert.ok(
-        !exists(".clear-feature-topic-on-profile-btn"),
-        "clear button not present"
-      );
-
-      const selectTopicBtn = query(
-        ".feature-topic-on-profile-btn:nth-of-type(1)"
-      );
-      assert.ok(exists(selectTopicBtn), "feature topic button is present");
-
-      await click(selectTopicBtn);
-
-      assert.ok(
-        exists(".feature-topic-on-profile"),
-        "topic picker modal is open"
-      );
-
-      const topicRadioBtn = query(
-        'input[name="choose_topic_id"]:nth-of-type(1)'
-      );
-      assert.ok(exists(topicRadioBtn), "Topic options are prefilled");
-      await click(topicRadioBtn);
-
-      await click(".save-featured-topic-on-profile");
-
-      assert.ok(
-        exists(".featured-topic-link"),
-        "link to featured topic is present"
-      );
-      assert.ok(
-        exists(".clear-feature-topic-on-profile-btn"),
-        "clear button is present"
-      );
-    });
-  }
-);
 
 acceptance("Custom User Fields", function (needs) {
   needs.user();
@@ -592,7 +540,7 @@ acceptance("Ignored users", function (needs) {
 
   test("when trust level < min level to ignore", async function (assert) {
     await visit(`/u/eviltrout/preferences/users`);
-    await updateCurrentUser({ trust_level: 0, moderator: false, admin: false });
+    updateCurrentUser({ trust_level: 0, moderator: false, admin: false });
 
     assert.ok(
       !exists(".user-ignore"),
@@ -602,13 +550,13 @@ acceptance("Ignored users", function (needs) {
 
   test("when trust level >= min level to ignore", async function (assert) {
     await visit(`/u/eviltrout/preferences/users`);
-    await updateCurrentUser({ trust_level: 1 });
+    updateCurrentUser({ trust_level: 1 });
     assert.ok(exists(".user-ignore"), "it shows the list of ignored users");
   });
 
   test("staff can always see ignored users", async function (assert) {
     await visit(`/u/eviltrout/preferences/users`);
-    await updateCurrentUser({ moderator: true });
+    updateCurrentUser({ moderator: true });
     assert.ok(exists(".user-ignore"), "it shows the list of ignored users");
   });
 });

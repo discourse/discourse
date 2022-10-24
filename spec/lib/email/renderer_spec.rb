@@ -2,7 +2,7 @@
 
 require 'email/renderer'
 
-describe Email::Renderer do
+RSpec.describe Email::Renderer do
 
   let(:message) do
     mail = Mail.new

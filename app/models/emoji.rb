@@ -10,7 +10,7 @@ class Emoji
 
   include ActiveModel::SerializerSupport
 
-  attr_accessor :name, :url, :tonable, :group
+  attr_accessor :name, :url, :tonable, :group, :search_aliases
 
   def self.global_emoji_cache
     @global_emoji_cache ||= DistributedCache.new("global_emoji_cache", namespace: false)
@@ -88,12 +88,15 @@ class Emoji
 
   def self.create_from_db_item(emoji)
     name = emoji["name"]
+    return unless group = groups[name]
     filename = emoji['filename'] || name
 
     Emoji.new.tap do |e|
       e.name = name
       e.tonable = Emoji.tonable_emojis.include?(name)
       e.url = Emoji.url_for(filename)
+      e.group = group
+      e.search_aliases = search_aliases[name] || []
     end
   end
 
@@ -122,6 +125,24 @@ class Emoji
     site_emoji_cache.clear
   end
 
+  def self.groups_file
+    @groups_file ||= "#{Rails.root}/lib/emoji/groups.json"
+  end
+
+  def self.groups
+    @groups ||= begin
+      groups = {}
+
+      File.open(groups_file, "r:UTF-8") { |f| JSON.parse(f.read) }.each do |group|
+        group["icons"].each do |icon|
+          groups[icon["name"]] = group["name"]
+        end
+      end
+
+      groups
+    end
+  end
+
   def self.db_file
     @db_file ||= "#{Rails.root}/lib/emoji/db.json"
   end
@@ -131,7 +152,7 @@ class Emoji
   end
 
   def self.load_standard
-    db['emojis'].map { |e| Emoji.create_from_db_item(e) }
+    db['emojis'].map { |e| Emoji.create_from_db_item(e) }.compact
   end
 
   def self.load_custom

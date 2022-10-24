@@ -5,7 +5,7 @@ export default {
   name: "register-media-optimization-upload-processor",
 
   initialize(container) {
-    let siteSettings = container.lookup("site-settings:main");
+    let siteSettings = container.lookup("service:site-settings");
     if (siteSettings.composer_media_optimization_image_enabled) {
       addComposerUploadPreProcessor(
         UppyMediaOptimization,

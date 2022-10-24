@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-describe "auto reject reviewable users" do
-  context "reviewable users" do
+RSpec.describe "auto reject reviewable users" do
+  describe "reviewable users" do
     fab!(:old_user) { Fabricate(:reviewable, created_at: 80.days.ago) }
 
     it "does not send email to rejected user" do

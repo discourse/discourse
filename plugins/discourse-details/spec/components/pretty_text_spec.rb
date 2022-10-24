@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'pretty_text'
 
-describe PrettyText do
+RSpec.describe PrettyText do
 
   let(:post) { Fabricate(:post) }
 

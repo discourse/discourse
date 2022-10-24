@@ -92,12 +92,14 @@ export function performEmojiUnescape(string, opts) {
       (isEmoticon || hasEndingColon || isUnicodeEmoticon) &&
       isReplacableInlineEmoji(string, index, opts.inlineEmoji);
 
+    const title = opts.title ?? emojiVal;
+    const tabIndex = opts.tabIndex ? ` tabindex='${opts.tabIndex}'` : "";
     return url && isReplacable
       ? `<img width="20" height="20" src='${url}' ${
-          opts.skipTitle ? "" : `title='${emojiVal}'`
+          opts.skipTitle ? "" : `title='${title}'`
         } ${
           opts.lazy ? "loading='lazy' " : ""
-        }alt='${emojiVal}' class='${classes}'>`
+        }alt='${title}' class='${classes}'${tabIndex}>`
       : m;
   };
 
@@ -209,7 +211,7 @@ export function emojiSearch(term, options) {
 
   // if term matches from beginning
   for (const item of toSearch) {
-    if (item.indexOf(term) === 0) {
+    if (item.startsWith(term)) {
       addResult(item);
     }
   }

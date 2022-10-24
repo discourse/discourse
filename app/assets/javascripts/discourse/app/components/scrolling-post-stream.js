@@ -251,7 +251,7 @@ export default MountWidget.extend({
 
       delete prev[postNumber];
 
-      if (onscreen.indexOf(idx) !== -1) {
+      if (onscreen.includes(idx)) {
         onscreenPostNumbers.push(postNumber);
         if (post.read) {
           readPostNumbers.push(postNumber);

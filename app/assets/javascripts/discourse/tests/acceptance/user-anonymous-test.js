@@ -5,7 +5,11 @@ import { test } from "qunit";
 acceptance("User Anonymous", function () {
   test("Root URL", async function (assert) {
     await visit("/u/eviltrout");
-    assert.ok($("body.user-summary-page").length, "has the body class");
+
+    assert.ok(
+      document.body.classList.contains("user-summary-page"),
+      "has the body class"
+    );
     assert.strictEqual(
       currentRouteName(),
       "user.summary",
@@ -15,7 +19,10 @@ acceptance("User Anonymous", function () {
 
   test("Filters", async function (assert) {
     await visit("/u/eviltrout/activity");
-    assert.ok($("body.user-activity-page").length, "has the body class");
+    assert.ok(
+      document.body.classList.contains("user-activity-page"),
+      "has the body class"
+    );
     assert.ok(exists(".user-main .about"), "it has the about section");
     assert.ok(exists(".user-stream .item"), "it has stream items");
 
@@ -32,7 +39,11 @@ acceptance("User Anonymous", function () {
 
   test("Badges", async function (assert) {
     await visit("/u/eviltrout/badges");
-    assert.ok($("body.user-badges-page").length, "has the body class");
+
+    assert.ok(
+      document.body.classList.contains("user-badges-page"),
+      "has the body class"
+    );
     assert.ok(exists(".badge-group-list .badge-card"), "shows a badge");
   });
 

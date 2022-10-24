@@ -1,4 +1,4 @@
-/* global Ember */
+import Ember from "ember";
 import { dasherize, decamelize } from "@ember/string";
 import deprecated from "discourse-common/lib/deprecated";
 import { findHelper } from "discourse-common/lib/helpers";
@@ -8,6 +8,101 @@ import { buildResolver as buildLegacyResolver } from "discourse-common/lib/legac
 
 let _options = {};
 let moduleSuffixTrie = null;
+
+const DEPRECATED_MODULES = new Map(
+  Object.entries({
+    "controller:discovery.categoryWithID": {
+      newName: "controller:discovery.category",
+      since: "2.6.0",
+    },
+    "controller:discovery.parentCategory": {
+      newName: "controller:discovery.category",
+      since: "2.6.0",
+    },
+    "controller:tags-show": { newName: "controller:tag-show", since: "2.6.0" },
+    "controller:tags.show": { newName: "controller:tag.show", since: "2.6.0" },
+    "controller:tagsShow": { newName: "controller:tagShow", since: "2.6.0" },
+    "route:discovery.categoryWithID": {
+      newName: "route:discovery.category",
+      since: "2.6.0",
+    },
+    "route:discovery.parentCategory": {
+      newName: "route:discovery.category",
+      since: "2.6.0",
+    },
+    "route:tags-show": { newName: "route:tag-show", since: "2.6.0" },
+    "route:tags.show": { newName: "route:tag.show", since: "2.6.0" },
+    "route:tagsShow": { newName: "route:tagShow", since: "2.6.0" },
+    "app-events:main": {
+      newName: "service:app-events",
+      since: "2.4.0",
+      dropFrom: "2.9.0.beta1",
+    },
+    // Deprecations below are silenced because they're in widespread use, and upgrading
+    // themes/plugins right now would break their compatibility with the stable branch.
+    // These should be unsilenced for the release of 2.9.0 stable.
+    "store:main": {
+      newName: "service:store",
+      since: "2.8.0.beta8",
+      dropFrom: "2.9.0.beta1",
+      silent: true,
+    },
+    "search-service:main": {
+      newName: "service:search",
+      since: "2.8.0.beta8",
+      dropFrom: "2.9.0.beta1",
+      silent: true,
+    },
+    "key-value-store:main": {
+      newName: "service:key-value-store",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+      silent: true,
+    },
+    "pm-topic-tracking-state:main": {
+      newName: "service:pm-topic-tracking-state",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+      silent: true,
+    },
+    "message-bus:main": {
+      newName: "service:message-bus",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+      silent: true,
+    },
+    "site-settings:main": {
+      newName: "service:site-settings",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+      silent: true,
+    },
+    "current-user:main": {
+      newName: "service:current-user",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+      silent: true,
+    },
+    "session:main": {
+      newName: "service:session",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+      silent: true,
+    },
+    "site:main": {
+      newName: "service:site",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+      silent: true,
+    },
+    "topic-tracking-state:main": {
+      newName: "service:topic-tracking-state",
+      since: "2.9.0.beta7",
+      dropFrom: "3.0.0",
+      silent: true,
+    },
+  })
+);
 
 export function setResolverOption(name, value) {
   _options[name] = value;
@@ -24,8 +119,19 @@ export function clearResolverOptions() {
 function lookupModuleBySuffix(suffix) {
   if (!moduleSuffixTrie) {
     moduleSuffixTrie = new SuffixTrie("/");
+    const searchPaths = [
+      "discourse/", // Includes themes/plugins
+      "discourse-common/",
+      "select-kit/",
+      "admin/",
+      "wizard/",
+      "truth-helpers/",
+    ];
     Object.keys(requirejs.entries).forEach((name) => {
-      if (!name.includes("/templates/")) {
+      if (
+        searchPaths.some((s) => name.startsWith(s)) &&
+        !name.includes("/templates/")
+      ) {
         moduleSuffixTrie.add(name);
       }
     });
@@ -54,30 +160,18 @@ export function buildResolver(baseName) {
 
     // We overwrite this instead of `normalize` so we still get the benefits of the cache.
     _normalize(fullName) {
-      if (fullName === "app-events:main") {
-        deprecated(
-          "`app-events:main` has been replaced with `service:app-events`",
-          { since: "2.4.0", dropFrom: "2.9.0.beta1" }
-        );
-        fullName = "service:app-events";
-      }
-
-      for (const [key, value] of Object.entries({
-        "controller:discovery.categoryWithID": "controller:discovery.category",
-        "controller:discovery.parentCategory": "controller:discovery.category",
-        "controller:tags-show": "controller:tag-show",
-        "controller:tags.show": "controller:tag.show",
-        "controller:tagsShow": "controller:tagShow",
-        "route:discovery.categoryWithID": "route:discovery.category",
-        "route:discovery.parentCategory": "route:discovery.category",
-        "route:tags-show": "route:tag-show",
-        "route:tags.show": "route:tag.show",
-        "route:tagsShow": "route:tagShow",
-      })) {
-        if (fullName === key) {
-          deprecated(`${key} was replaced with ${value}`, { since: "2.6.0" });
-          fullName = value;
+      const deprecationInfo = DEPRECATED_MODULES.get(fullName);
+      if (deprecationInfo) {
+        if (!deprecationInfo.silent) {
+          deprecated(
+            `"${fullName}" is deprecated, use "${deprecationInfo.newName}" instead`,
+            {
+              since: deprecationInfo.since,
+              dropFrom: deprecationInfo.dropFrom,
+            }
+          );
         }
+        fullName = deprecationInfo.newName;
       }
 
       const split = fullName.split(":");
@@ -274,7 +368,12 @@ export function buildResolver(baseName) {
       let namespaced, match;
 
       if (parsedName.fullNameWithoutType.startsWith("components/")) {
-        // Look up components as-is
+        return (
+          // Built-in
+          this.findTemplate(parsedName, "admin/templates/") ||
+          // Plugin
+          this.findTemplate(parsedName, "javascripts/admin/")
+        );
       } else if (/^admin[_\.-]/.test(parsedName.fullNameWithoutType)) {
         namespaced = parsedName.fullNameWithoutType.slice(6);
       } else if (
@@ -290,15 +389,10 @@ export function buildResolver(baseName) {
         resolved =
           // Built-in
           this.findTemplate(adminParsedName, "admin/templates/") ||
+          this.findTemplate(parsedName, "admin/templates/") ||
           // Plugin
           this.findTemplate(adminParsedName, "javascripts/admin/");
       }
-
-      resolved ??=
-        // Built-in
-        this.findTemplate(parsedName, "admin/templates/") ||
-        // Plugin
-        this.findTemplate(parsedName, "javascripts/admin/");
 
       return resolved;
     }

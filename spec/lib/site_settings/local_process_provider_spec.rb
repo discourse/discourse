@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SiteSettings::LocalProcessProvider do
+RSpec.describe SiteSettings::LocalProcessProvider do
 
   def expect_same_setting(actual, expected)
     expect(actual.name).to eq(expected.name)

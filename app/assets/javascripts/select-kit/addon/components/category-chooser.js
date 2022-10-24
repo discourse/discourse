@@ -44,7 +44,10 @@ export default ComboBoxComponent.extend({
     ) {
       return Category.findUncategorized();
     } else {
-      return this.defaultItem(null, htmlSafe(I18n.t("category.choose")));
+      const generalCategoryId = this.siteSettings.general_category_id;
+      if (!generalCategoryId || generalCategoryId < 0) {
+        return this.defaultItem(null, htmlSafe(I18n.t("category.choose")));
+      }
     }
   },
 
@@ -191,6 +194,6 @@ export default ComboBoxComponent.extend({
   },
 
   _matchCategory(filter, categoryName) {
-    return this._normalize(categoryName).indexOf(filter) > -1;
+    return this._normalize(categoryName).includes(filter);
   },
 });

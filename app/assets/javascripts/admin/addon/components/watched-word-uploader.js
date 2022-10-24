@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import I18n from "I18n";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import { alias } from "@ember/object/computed";
-import bootbox from "bootbox";
+import { dialog } from "discourse/lib/uploads";
 
 export default Component.extend(UppyUploadMixin, {
   type: "txt",
@@ -21,7 +21,7 @@ export default Component.extend(UppyUploadMixin, {
 
   uploadDone() {
     if (this) {
-      bootbox.alert(I18n.t("admin.watched_words.form.upload_successful"));
+      dialog.alert(I18n.t("admin.watched_words.form.upload_successful"));
       this.done();
     }
   },

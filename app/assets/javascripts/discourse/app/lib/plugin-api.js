@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import ComposerEditor, {
   addComposerUploadHandler,
   addComposerUploadMarkdownResolver,
@@ -78,7 +79,10 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 import { on } from "@ember/object/evented";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
-import { registerHighlightJSLanguage } from "discourse/lib/highlight-syntax";
+import {
+  registerHighlightJSLanguage,
+  registerHighlightJSPlugin,
+} from "discourse/lib/highlight-syntax";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
@@ -94,13 +98,19 @@ import {
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
-import { addSectionLink } from "discourse/lib/sidebar/custom-topics-section-links";
+import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
+import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
+import DiscourseURL from "discourse/lib/url";
+import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
+import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
+import { registerModelTransformer } from "discourse/lib/model-transformers";
+import { registerHashtagSearchParam } from "discourse/lib/hashtag-autocomplete";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-const PLUGIN_API_VERSION = "1.3.0";
+const PLUGIN_API_VERSION = "1.4.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -149,7 +159,7 @@ class PluginApi {
    * If the user is not logged in, it will be `null`.
    **/
   getCurrentUser() {
-    return this._lookupContainer("current-user:main");
+    return this._lookupContainer("service:current-user");
   }
 
   _lookupContainer(path) {
@@ -397,7 +407,7 @@ class PluginApi {
    * ```
    **/
   addPosterIcons(cb) {
-    const site = this._lookupContainer("site:main");
+    const site = this._lookupContainer("service:site");
     const loc = site && site.mobileView ? "before" : "after";
 
     decorateWidget(`poster-name:${loc}`, (dec) => {
@@ -477,7 +487,49 @@ class PluginApi {
    *
    **/
   decorateWidget(name, fn) {
+    this._deprecateDecoratingHamburgerWidgetLinks(name, fn);
     decorateWidget(name, fn);
+  }
+
+  _deprecateDecoratingHamburgerWidgetLinks(name, fn) {
+    if (
+      name === "hamburger-menu:generalLinks" ||
+      name === "hamburger-menu:footerLinks"
+    ) {
+      const siteSettings = this.container.lookup("service:site-settings");
+
+      if (siteSettings.enable_experimental_sidebar_hamburger) {
+        try {
+          const { href, route, label, rawLabel, className } = fn();
+          const textContent = rawLabel || I18n.t(label);
+
+          const args = {
+            name: className || textContent.replace(/\s+/g, "-").toLowerCase(),
+            title: textContent,
+            text: textContent,
+          };
+
+          if (href) {
+            if (DiscourseURL.isInternal(href)) {
+              args.href = href;
+            } else {
+              // Skip external links support for now
+              return;
+            }
+          } else {
+            args.route = route;
+          }
+
+          this.addCommunitySectionLink(args, name.match(/footerLinks/));
+        } catch {
+          deprecated(
+            `Usage of \`api.decorateWidget('hamburger-menu:generalLinks')\` is incompatible with the \`enable_experimental_sidebar_hamburger\` site setting. Please use \`api.addCommunitySectionLink\` instead.`
+          );
+        }
+
+        return;
+      }
+    }
   }
 
   /**
@@ -1325,6 +1377,26 @@ class PluginApi {
   }
 
   /**
+   * Registers custom HighlightJS plugins.
+   *
+   * See https://highlightjs.readthedocs.io/en/latest/plugin-api.html
+   * for instructions on how to define a new plugin for HighlightJS.
+   * This API exposes the Function Based Plugins interface
+   *
+   * Example:
+   *
+   * let aPlugin = {
+       'after:highlightElement': ({ el, result, text }) => {
+         console.log(el);
+       }
+     }
+   * api.registerHighlightJSPlugin(aPlugin);
+   **/
+  registerHighlightJSPlugin(plugin) {
+    registerHighlightJSPlugin(plugin);
+  }
+
+  /**
    * Adds global notices to display.
    *
    * Example:
@@ -1626,19 +1698,19 @@ class PluginApi {
 
   /**
    * EXPERIMENTAL. Do not use.
-   * Support for adding a link under Sidebar topics section by returning a class which extends from the BaseSectionLink
-   * class interface. See `lib/sidebar/topics-section/base-section-link.js` for documentation on the BaseSectionLink class
-   * interface.
+   * Support for adding a navigation link to Sidebar Community section under the "More..." links drawer by returning a
+   * class which extends from the BaseSectionLink class interface. See `lib/sidebar/user/community-section/base-section-link.js`
+   * for documentation on the BaseSectionLink class interface.
    *
    * ```
-   * api.addTopicsSectionLink((baseSectionLink) => {
+   * api.addCommunitySectionLink((baseSectionLink) => {
    *   return class CustomSectionLink extends baseSectionLink {
    *     get name() {
-   *       returns "bookmarked";
+   *       return "bookmarked";
    *     }
    *
    *     get route() {
-   *       returns "userActivity.bookmarks";
+   *       return "userActivity.bookmarks";
    *     }
    *
    *     get model() {
@@ -1659,7 +1731,7 @@ class PluginApi {
    * or
    *
    * ```
-   * api.addTopicsSectionLink({
+   * api.addCommunitySectionLink({
    *   name: "unread",
    *   route: "discovery.unread",
    *   title: I18n.t("some.unread.title"),
@@ -1667,18 +1739,277 @@ class PluginApi {
    * })
    * ```
    *
-   * @callback addTopicsSectionLinkCallback
+   * @callback addCommunitySectionLinkCallback
    * @param {BaseSectionLink} baseSectionLink - Factory class to inherit from.
    * @returns {BaseSectionLink} - A class that extends BaseSectionLink.
    *
-   * @param {(addTopicsSectionLinkCallback|Object)} arg - A callback function or an Object.
+   * @param {(addCommunitySectionLinkCallback|Object)} arg - A callback function or an Object.
    * @param {string} arg.name - The name of the link. Needs to be dasherized and lowercase.
-   * @param {string} arg.route - The Ember route of the link.
+   * @param {string=} arg.route - The Ember route name to generate the href attribute for the link.
+   * @param {string=} arg.href - The href attribute for the link.
    * @param {string} arg.title - The title attribute for the link.
    * @param {string} arg.text - The text to display for the link.
+   * @param {Boolean} [secondary] - Determines whether the section link should be added to the main or secondary section in the "More..." links drawer.
    */
-  addTopicsSectionLink(arg) {
-    addSectionLink(arg);
+  addCommunitySectionLink(arg, secondary) {
+    addCustomCommunitySectionLink(arg, secondary);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Support for adding a Sidebar section by returning a class which extends from the BaseCustomSidebarSection
+   * class interface. See `lib/sidebar/user/base-custom-sidebar-section.js` for documentation on the BaseCustomSidebarSection class
+   * interface.
+   *
+   * ```
+   * api.addSidebarSection((BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+   *   return class extends BaseCustomSidebarSection {
+   *     get name() {
+   *       return "chat-channels";
+   *     }
+   *
+   *     get route() {
+   *       return "chat";
+   *     }
+   *
+   *     get title() {
+   *       return I18n.t("sidebar.sections.chat.title");
+   *     }
+   *
+   *     get text() {
+   *       return I18n.t("sidebar.sections.chat.text");
+   *     }
+   *
+   *     get actionsIcon() {
+   *       return "cog";
+   *     }
+   *
+   *     get actions() {
+   *       return [
+   *         { id: "browseChannels", title: "Browse channel", action: () => {} },
+   *         { id: "settings", title: "Settings", action: () => {} },
+   *       ];
+   *     }
+   *
+   *     get links() {
+   *       return [
+   *         new (class extends BaseCustomSidebarSectionLink {
+   *           get name() {
+   *             "dev"
+   *           }
+   *           get route() {
+   *             return "chat.channel";
+   *           }
+   *           get model() {
+   *             return {
+   *               channelId: "1",
+   *               channelTitle: "dev channel"
+   *             };
+   *           }
+   *           get title() {
+   *             return "dev channel";
+   *           }
+   *           get text() {
+   *             return "dev channel";
+   *           }
+   *           get prefixValue() {
+   *             return "icon";
+   *           }
+   *           get prefixValue() {
+   *             return "hashtag";
+   *           }
+   *           get prefixColor() {
+   *             return "000000";
+   *           }
+   *           get prefixBadge() {
+   *             return "lock";
+   *           }
+   *           get suffixType() {
+   *             return "icon";
+   *           }
+   *           get suffixValue() {
+   *             return "circle";
+   *           }
+   *           get suffixCSSClass() {
+   *             return "unread";
+   *           }
+   *         })(),
+   *         new (class extends BaseCustomSidebarSectionLink {
+   *           get name() {
+   *             "random"
+   *           }
+   *           get route() {
+   *             return "chat.channel";
+   *           }
+   *           get model() {
+   *             return {
+   *               channelId: "2",
+   *               channelTitle: "random channel"
+   *             };
+   *           }
+   *           get currentWhen() {
+   *             return true;
+   *           }
+   *           get title() {
+   *             return "random channel";
+   *           }
+   *           get text() {
+   *             return "random channel";
+   *           }
+   *           get hoverType() {
+   *             return "icon";
+   *           }
+   *           get hoverValue() {
+   *             return "times";
+   *           }
+   *           get hoverAction() {
+   *             return () => {};
+   *           }
+   *           get hoverTitle() {
+   *             return "button title attribute"
+   *           }
+   *         })()
+   *       ];
+   *     }
+   *   }
+   * })
+   * ```
+   */
+  addSidebarSection(func) {
+    addSidebarSection(func);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Register a custom renderer for a notification type or override the
+   * renderer of an existing type. See lib/notification-types/base.js for
+   * documentation and the default renderer.
+   *
+   * ```
+   * api.registerNotificationTypeRenderer("your_notification_type", (NotificationTypeBase) => {
+   *   return class extends NotificationTypeBase {
+   *     get label() {
+   *       return "some label";
+   *     }
+   *
+   *     get description() {
+   *       return "fancy description";
+   *     }
+   *   };
+   * });
+   * ```
+   * @callback renderDirectorRegistererCallback
+   * @param {NotificationTypeBase} The base class from which the returned class should inherit.
+   * @returns {NotificationTypeBase} A class that inherits from NotificationTypeBase.
+   *
+   * @param {string} notificationType - ID of the notification type (i.e. the key value of your notification type in the `Notification.types` enum on the server side).
+   * @param {renderDirectorRegistererCallback} func - Callback function that returns a subclass from the class it receives as its argument.
+   */
+  registerNotificationTypeRenderer(notificationType, func) {
+    registerNotificationTypeRenderer(notificationType, func);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Registers a new tab in the user menu. This API method expects a callback
+   * that should return a class inheriting from the class (UserMenuTab) that's
+   * passed to the callback. See discourse/app/lib/user-menu/tab.js for
+   * documentation of UserMenuTab.
+   *
+   * ```
+   * api.registerUserMenuTab((UserMenuTab) => {
+   *   return class extends UserMenuTab {
+   *     get id() {
+   *       return "custom-tab-id";
+   *     }
+   *
+   *     get shouldDisplay() {
+   *       return this.siteSettings.enable_custom_tab && this.currentUser.admin;
+   *     }
+   *
+   *     get count() {
+   *       return this.currentUser.my_custom_notification_count;
+   *     }
+   *
+   *     get panelComponent() {
+   *       return "your-custom-glimmer-component";
+   *     }
+   *
+   *     get icon() {
+   *       return "some-fa5-icon";
+   *     }
+   *   }
+   * });
+   * ```
+   *
+   * @callback customTabRegistererCallback
+   * @param {UserMenuTab} The base class from which the returned class should inherit.
+   * @returns {UserMenuTab} A class that inherits from UserMenuTab.
+   *
+   * @param {customTabRegistererCallback} func - Callback function that returns a subclass from the class it receives as its argument.
+   */
+  registerUserMenuTab(func) {
+    registerUserMenuTab(func);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Apply transformation using a callback on a list of model instances of a
+   * specific type. Currently, this API only works on lists rendered in the
+   * user menu such as notifications, bookmarks and topics (i.e. messages), but
+   * it may be extended to other lists in other parts of the app.
+   *
+   * You can pass an `async` callback to this API and it'll be `await`ed and
+   * block rendering until the callback finishes executing.
+   *
+   * ```
+   * api.registerModelTransformer("topic", async (topics) => {
+   *   for (const topic of topics) {
+   *     const decryptedTitle = await decryptTitle(topic.encrypted_title);
+   *     if (decryptedTitle) {
+   *       topic.fancy_title = decryptedTitle;
+   *     }
+   *   }
+   * });
+   * ```
+   *
+   * @callback registerModelTransformerCallback
+   * @param {Object[]} A list of model instances
+   *
+   * @param {string} modelName - Model type on which transformation should be applied. Currently valid types are "topic", "notification" and "bookmark".
+   * @param {registerModelTransformerCallback} transformer - Callback function that receives a list of model objects of the specified type and applies transformation on them.
+   */
+  registerModelTransformer(modelName, transformer) {
+    registerModelTransformer(modelName, transformer);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   *
+   * When initiating a search inside the composer or other designated inputs
+   * with the `#` key, we search records based on params registered with
+   * this function, and order them by type using the priority here. Since
+   * there can be many different inputs that use `#` and some may need to
+   * weight different types higher in priority, we also require a context
+   * parameter.
+   *
+   * For example, the topic composer may wish to search for categories
+   * and tags, with categories appearing first in the results. The usage
+   * looks like this:
+   *
+   * api.registerHashtagSearchParam("category", "topic-composer", 100);
+   * api.registerHashtagSearchParam("tag", "topic-composer", 50);
+   *
+   * Additional types of records used for the hashtag search results
+   * can be registered via the #register_hashtag_data_source plugin API
+   * method.
+   *
+   * @param {string} param - The type of record to be fetched.
+   * @param {string} context - Where the hashtag search is being initiated using `#`
+   * @param {number} priority - Used for ordering types of records. Priority order is descending.
+   */
+  registerHashtagSearchParam(param, context, priority) {
+    registerHashtagSearchParam(param, context, priority);
   }
 }
 

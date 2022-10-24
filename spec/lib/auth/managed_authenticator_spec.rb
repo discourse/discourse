@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Auth::ManagedAuthenticator do
+RSpec.describe Auth::ManagedAuthenticator do
   let(:authenticator) {
     Class.new(described_class) do
       def name
@@ -182,7 +182,7 @@ describe Auth::ManagedAuthenticator do
       it "schedules the job upon update correctly" do
         # No image supplied, do not schedule
         expect { result = authenticator.after_authenticate(hash) }
-          .to change { Jobs::DownloadAvatarFromUrl.jobs.count }.by(0)
+          .not_to change { Jobs::DownloadAvatarFromUrl.jobs.count }
 
         # Image supplied, schedule
         expect { result = authenticator.after_authenticate(hash.deep_merge(info: { image: "https://some.domain/image.jpg" })) }
@@ -192,7 +192,7 @@ describe Auth::ManagedAuthenticator do
         user.user_avatar = Fabricate(:user_avatar, custom_upload: Fabricate(:upload))
         user.save!
         expect { result = authenticator.after_authenticate(hash.deep_merge(info: { image: "https://some.domain/image.jpg" })) }
-          .to change { Jobs::DownloadAvatarFromUrl.jobs.count }.by(0)
+          .not_to change { Jobs::DownloadAvatarFromUrl.jobs.count }
       end
     end
 
@@ -226,7 +226,7 @@ describe Auth::ManagedAuthenticator do
 
       it "doesn't schedule with no image" do
         expect { result = authenticator.after_create_account(user, create_auth_result(extra_data: create_hash)) }
-          .to change { Jobs::DownloadAvatarFromUrl.jobs.count }.by(0)
+          .not_to change { Jobs::DownloadAvatarFromUrl.jobs.count }
       end
 
       it "schedules with image" do
@@ -252,6 +252,78 @@ describe Auth::ManagedAuthenticator do
         authenticator.after_create_account(user, create_auth_result(extra_data: create_hash))
         expect(user.user_profile.bio_raw).to eq("Online forum expert")
         expect(user.user_profile.location).to eq("DiscourseVille")
+      end
+    end
+
+    describe 'match by username' do
+      let(:user_match_authenticator) {
+        Class.new(described_class) do
+          def name
+            "myauth"
+          end
+          def match_by_email
+            false
+          end
+          def match_by_username
+            true
+          end
+        end.new
+      }
+
+      it 'works normally' do
+        SiteSetting.username_change_period = 0
+        user = Fabricate(:user)
+        result = user_match_authenticator.after_authenticate(hash.deep_merge(info: { nickname: user.username }))
+        expect(result.user.id).to eq(user.id)
+        expect(UserAssociatedAccount.find_by(provider_name: 'myauth', provider_uid: "1234").user_id).to eq(user.id)
+      end
+
+      it 'works if there is already an association with the target account' do
+        SiteSetting.username_change_period = 0
+        user = Fabricate(:user, username: "IAmGroot")
+        result = user_match_authenticator.after_authenticate(hash)
+        expect(result.user.id).to eq(user.id)
+      end
+
+      it 'works if the username is different case' do
+        SiteSetting.username_change_period = 0
+        user = Fabricate(:user, username: "IAMGROOT")
+        result = user_match_authenticator.after_authenticate(hash)
+        expect(result.user.id).to eq(user.id)
+      end
+
+      it 'does not match if username_change_period isn\'t 0' do
+        SiteSetting.username_change_period = 3
+        user = Fabricate(:user, username: "IAmGroot")
+        result = user_match_authenticator.after_authenticate(hash)
+        expect(result.user).to eq(nil)
+      end
+
+      it 'does not match if default match_by_username not overriden' do
+        SiteSetting.username_change_period = 0
+        authenticator = Class.new(described_class) do
+          def name
+            "myauth"
+          end
+        end.new
+        user = Fabricate(:user, username: "IAmGroot")
+        result = authenticator.after_authenticate(hash)
+        expect(result.user).to eq(nil)
+      end
+
+      it 'does not match if match_by_username is false' do
+        SiteSetting.username_change_period = 0
+        authenticator = Class.new(described_class) do
+          def name
+            "myauth"
+          end
+          def match_by_username
+            false
+          end
+        end.new
+        user = Fabricate(:user, username: "IAmGroot")
+        result = authenticator.after_authenticate(hash)
+        expect(result.user).to eq(nil)
       end
     end
   end

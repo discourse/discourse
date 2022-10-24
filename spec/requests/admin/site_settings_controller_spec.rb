@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Admin::SiteSettingsController do
+RSpec.describe Admin::SiteSettingsController do
 
   it "is a subclass of AdminController" do
     expect(Admin::SiteSettingsController < Admin::AdminController).to eq(true)
@@ -52,6 +52,16 @@ describe Admin::SiteSettingsController do
         expect(SiteSetting.search_tokenize_chinese).to eq(true)
       end
 
+      it 'throws an error when trying to change a deprecated setting with override = false' do
+        SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
+        put "/admin/site_settings/enable_personal_messages.json", params: {
+          enable_personal_messages: false
+        }
+
+        expect(response.status).to eq(422)
+        expect(SiteSetting.personal_message_enabled_groups).to eq(Group::AUTO_GROUPS[:trust_level_4])
+      end
+
       it 'allows value to be a blank string' do
         put "/admin/site_settings/test_setting.json", params: {
           test_setting: ''
@@ -84,7 +94,7 @@ describe Admin::SiteSettingsController do
             put "/admin/site_settings/default_email_in_reply_to.json", params: {
               default_email_in_reply_to: false
             }
-          }.to change { UserOption.where(email_in_reply_to: false).count }.by(0)
+          }.not_to change { UserOption.where(email_in_reply_to: false).count }
         end
 
         it 'should update `email_digests` column in existing user options' do
@@ -153,7 +163,7 @@ describe Admin::SiteSettingsController do
             put "/admin/site_settings/default_categories_watching.json", params: {
               default_categories_watching: category_ids.last(2).join("|")
             }
-          }.to change { CategoryUser.where(category_id: category_ids.first, notification_level: watching).count }.by(0)
+          }.not_to change { CategoryUser.where(category_id: category_ids.first, notification_level: watching).count }
 
           expect(response.status).to eq(200)
           expect(CategoryUser.where(category_id: category_ids.last, notification_level: watching).count).to eq(0)
@@ -204,7 +214,7 @@ describe Admin::SiteSettingsController do
             put "/admin/site_settings/default_tags_watching.json", params: {
               default_tags_watching: tags.last(2).pluck(:name).join("|")
             }
-          }.to change { TagUser.where(tag_id: tags.first.id, notification_level: watching).count }.by(0)
+          }.not_to change { TagUser.where(tag_id: tags.first.id, notification_level: watching).count }
 
           expect(TagUser.where(tag_id: tags.last.id, notification_level: watching).count).to eq(0)
         end
@@ -255,7 +265,7 @@ describe Admin::SiteSettingsController do
           SiteSetting.setting(:default_tags_watching, "")
         end
 
-        context "user options" do
+        context "with user options" do
           def expect_user_count(site_setting_name:, user_setting_name:, current_site_setting_value:, new_site_setting_value:,
                                 current_user_setting_value: nil, new_user_setting_value: nil)
 

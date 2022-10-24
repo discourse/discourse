@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'message bus integration' do
+RSpec.describe 'message bus integration' do
 
   it "allows anonymous requests to the messagebus" do
     post "/message-bus/poll"

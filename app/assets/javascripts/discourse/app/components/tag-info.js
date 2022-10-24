@@ -2,13 +2,15 @@ import { and, reads } from "@ember/object/computed";
 import Component from "@ember/component";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
+import { htmlSafe } from "@ember/template";
 
 export default Component.extend({
+  dialog: service(),
   tagName: "",
   loading: false,
   tagInfo: null,
@@ -75,17 +77,46 @@ export default Component.extend({
       .catch(popupAjaxError);
   },
 
+  @action
+  edit(event) {
+    event?.preventDefault();
+    this.setProperties({
+      editing: true,
+      newTagName: this.tag.id,
+      newTagDescription: this.tagInfo.description,
+    });
+  },
+
+  @action
+  unlinkSynonym(tag, event) {
+    event?.preventDefault();
+    ajax(`/tag/${this.tagInfo.name}/synonyms/${tag.id}`, {
+      type: "DELETE",
+    })
+      .then(() => this.tagInfo.synonyms.removeObject(tag))
+      .catch(popupAjaxError);
+  },
+
+  @action
+  deleteSynonym(tag, event) {
+    event?.preventDefault();
+
+    this.dialog.yesNoConfirm({
+      message: I18n.t("tagging.delete_synonym_confirm", {
+        tag_name: tag.text,
+      }),
+      didConfirm: () => {
+        return tag
+          .destroyRecord()
+          .then(() => this.tagInfo.synonyms.removeObject(tag))
+          .catch(popupAjaxError);
+      },
+    });
+  },
+
   actions: {
     toggleEditControls() {
       this.toggleProperty("showEditControls");
-    },
-
-    edit() {
-      this.setProperties({
-        editing: true,
-        newTagName: this.tag.id,
-        newTagDescription: this.tagInfo.description,
-      });
     },
 
     cancelEditing() {
@@ -113,42 +144,16 @@ export default Component.extend({
       this.deleteAction(this.tagInfo);
     },
 
-    unlinkSynonym(tag) {
-      ajax(`/tag/${this.tagInfo.name}/synonyms/${tag.id}`, {
-        type: "DELETE",
-      })
-        .then(() => this.tagInfo.synonyms.removeObject(tag))
-        .catch(popupAjaxError);
-    },
-
-    deleteSynonym(tag) {
-      bootbox.confirm(
-        I18n.t("tagging.delete_synonym_confirm", { tag_name: tag.text }),
-        (result) => {
-          if (!result) {
-            return;
-          }
-
-          tag
-            .destroyRecord()
-            .then(() => this.tagInfo.synonyms.removeObject(tag))
-            .catch(popupAjaxError);
-        }
-      );
-    },
-
     addSynonyms() {
-      bootbox.confirm(
-        I18n.t("tagging.add_synonyms_explanation", {
-          count: this.newSynonyms.length,
-          tag_name: this.tagInfo.name,
-        }),
-        (result) => {
-          if (!result) {
-            return;
-          }
-
-          ajax(`/tag/${this.tagInfo.name}/synonyms`, {
+      this.dialog.confirm({
+        message: htmlSafe(
+          I18n.t("tagging.add_synonyms_explanation", {
+            count: this.newSynonyms.length,
+            tag_name: this.tagInfo.name,
+          })
+        ),
+        didConfirm: () => {
+          return ajax(`/tag/${this.tagInfo.name}/synonyms`, {
             type: "POST",
             data: {
               synonyms: this.newSynonyms,
@@ -159,18 +164,18 @@ export default Component.extend({
                 this.set("newSynonyms", null);
                 this.loadTagInfo();
               } else if (response.failed_tags) {
-                bootbox.alert(
+                this.dialog.alert(
                   I18n.t("tagging.add_synonyms_failed", {
                     tag_names: Object.keys(response.failed_tags).join(", "),
                   })
                 );
               } else {
-                bootbox.alert(I18n.t("generic_error"));
+                this.dialog.alert(I18n.t("generic_error"));
               }
             })
             .catch(popupAjaxError);
-        }
-      );
+        },
+      });
     },
   },
 });

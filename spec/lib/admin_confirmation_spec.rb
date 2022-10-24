@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'admin_confirmation'
-describe AdminConfirmation do
+RSpec.describe AdminConfirmation do
 
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }

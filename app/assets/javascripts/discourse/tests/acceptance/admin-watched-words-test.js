@@ -7,6 +7,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import I18n from "I18n";
 
 acceptance("Admin - Watched Words", function (needs) {
   needs.user();
@@ -57,9 +58,8 @@ acceptance("Admin - Watched Words", function (needs) {
   test("add words", async function (assert) {
     await visit("/admin/customize/watched_words/action/block");
 
-    click(".show-words-checkbox");
-    fillIn(".watched-word-form input", "poutine");
-
+    await click(".show-words-checkbox");
+    await fillIn(".watched-word-form input", "poutine");
     await click(".watched-word-form button");
 
     let found = [];
@@ -68,7 +68,30 @@ acceptance("Admin - Watched Words", function (needs) {
         found.push(true);
       }
     });
+
     assert.strictEqual(found.length, 1);
+    assert.strictEqual(count(".watched-words-list .case-sensitive"), 0);
+  });
+
+  test("add case-sensitive words", async function (assert) {
+    await visit("/admin/customize/watched_words/action/block");
+
+    await click(".show-words-checkbox");
+    await fillIn(".watched-word-form input", "Discourse");
+    await click(".case-sensitivity-checkbox");
+    await click(".watched-word-form button");
+
+    assert
+      .dom(".watched-words-list .watched-word")
+      .hasText(`Discourse ${I18n.t("admin.watched_words.case_sensitive")}`);
+
+    await fillIn(".watched-word-form input", "discourse");
+    await click(".case-sensitivity-checkbox");
+    await click(".watched-word-form button");
+
+    assert
+      .dom(".watched-words-list .watched-word")
+      .hasText(`discourse ${I18n.t("admin.watched_words.case_sensitive")}`);
   });
 
   test("remove words", async function (assert) {

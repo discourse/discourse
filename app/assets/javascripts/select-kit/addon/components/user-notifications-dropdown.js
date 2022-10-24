@@ -8,11 +8,11 @@ export default DropdownSelectBox.extend({
   classNames: ["user-notifications", "user-notifications-dropdown"],
 
   selectKitOptions: {
-    headerIcon: "userNotificationicon",
+    headerIcon: "userNotificationIcon",
     showCaret: true,
   },
 
-  userNotificationicon: computed("mainCollection.[]", "value", function () {
+  userNotificationIcon: computed("mainCollection.[]", "value", function () {
     return (
       this.mainCollection &&
       this.mainCollection.find((row) => row.id === this.value).icon

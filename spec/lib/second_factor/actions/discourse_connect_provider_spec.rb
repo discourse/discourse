@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SecondFactor::Actions::DiscourseConnectProvider do
+RSpec.describe SecondFactor::Actions::DiscourseConnectProvider do
   fab!(:user) { Fabricate(:user) }
   sso_secret = "mysecretmyprecious"
   let!(:sso) do

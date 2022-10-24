@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::PullHotlinkedImages do
+RSpec.describe Jobs::PullHotlinkedImages do
   let(:image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat1.png" }
   let(:broken_image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat2.png" }
   let(:large_image_url) { "http://wiki.mozilla.org/images/2/2e/Longcat3.png" }
@@ -43,7 +43,7 @@ describe Jobs::PullHotlinkedImages do
 
       expect do
         Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-      end.to change { Upload.count }.by(0)
+      end.not_to change { Upload.count }
     end
 
     it 'does nothing if there are no large images to pull' do
@@ -59,10 +59,9 @@ describe Jobs::PullHotlinkedImages do
       post = Fabricate(:post, raw: "<img src='#{image_url}'>")
       stub_image_size
 
-      expect do
-        Jobs::PullHotlinkedImages.new.execute(post_id: post.id)
-      end.to change { Upload.count }.by(1) &
-             change { UserHistory.count }.by(0) # Should not add to the staff log
+      expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
+        .to change { Upload.count }.by(1)
+        .and not_change { UserHistory.count } # Should not add to the staff log
 
       expect(post.reload.raw).to eq("<img src=\"#{Upload.last.short_url}\">")
     end
@@ -110,7 +109,7 @@ describe Jobs::PullHotlinkedImages do
 
       expect do
         post.rebake!
-      end.to change { Upload.count }.by(0) # We alread have the upload
+      end.not_to change { Upload.count } # We alread have the upload
 
       expect(post.reload.raw).to eq("<img src=\"#{Upload.last.short_url}\">")
     end
@@ -223,14 +222,14 @@ describe Jobs::PullHotlinkedImages do
       expect(post.raw).to eq(raw)
     end
 
-    context "when secure media enabled for an upload that has already been downloaded and exists" do
+    context "when secure uploads enabled for an upload that has already been downloaded and exists" do
       it "doesnt redownload the secure upload" do
         setup_s3
-        SiteSetting.secure_media = true
+        SiteSetting.secure_uploads = true
 
         upload = Fabricate(:secure_upload_s3, secure: true)
         stub_s3(upload)
-        url = Upload.secure_media_url_from_upload_url(upload.url)
+        url = Upload.secure_uploads_url_from_upload_url(upload.url)
         url = Discourse.base_url + url
         post = Fabricate(:post, raw: "<img src='#{url}'>")
         upload.update(access_control_post: post)
@@ -241,12 +240,12 @@ describe Jobs::PullHotlinkedImages do
       context "when the upload original_sha1 is missing" do
         it "redownloads the upload" do
           setup_s3
-          SiteSetting.secure_media = true
+          SiteSetting.secure_uploads = true
 
           upload = Fabricate(:upload_s3, secure: true)
           stub_s3(upload)
-          Upload.stubs(:signed_url_from_secure_media_url).returns(upload.url)
-          url = Upload.secure_media_url_from_upload_url(upload.url)
+          Upload.stubs(:signed_url_from_secure_uploads_url).returns(upload.url)
+          url = Upload.secure_uploads_url_from_upload_url(upload.url)
           url = Discourse.base_url + url
           post = Fabricate(:post, raw: "<img src='#{url}'>")
           upload.update(access_control_post: post)
@@ -262,12 +261,12 @@ describe Jobs::PullHotlinkedImages do
       context "when the upload access_control_post is different to the current post" do
         it "redownloads the upload" do
           setup_s3
-          SiteSetting.secure_media = true
+          SiteSetting.secure_uploads = true
 
           upload = Fabricate(:secure_upload_s3, secure: true)
           stub_s3(upload)
-          Upload.stubs(:signed_url_from_secure_media_url).returns(upload.url)
-          url = Upload.secure_media_url_from_upload_url(upload.url)
+          Upload.stubs(:signed_url_from_secure_uploads_url).returns(upload.url)
+          url = Upload.secure_uploads_url_from_upload_url(upload.url)
           url = Discourse.base_url + url
           post = Fabricate(:post, raw: "<img src='#{url}'>")
           upload.update(access_control_post: Fabricate(:post))
@@ -278,7 +277,7 @@ describe Jobs::PullHotlinkedImages do
             .to change { Upload.count }.by(1)
 
           expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
-            .to change { Upload.count }.by(0)
+            .not_to change { Upload.count }
         end
       end
     end
@@ -467,14 +466,14 @@ describe Jobs::PullHotlinkedImages do
         expect(subject.should_download_image?(Fabricate(:upload).url)).to eq(false)
       end
 
-      context "when secure media enabled" do
-        it 'should return false for secure-media-upload url' do
+      context "when secure uploads enabled" do
+        it 'should return false for secure-upload url' do
           setup_s3
-          SiteSetting.secure_media = true
+          SiteSetting.secure_uploads = true
 
           upload = Fabricate(:upload_s3, secure: true)
           stub_s3(upload)
-          url = Upload.secure_media_url_from_upload_url(upload.url)
+          url = Upload.secure_uploads_url_from_upload_url(upload.url)
           expect(subject.should_download_image?(url)).to eq(false)
         end
       end
@@ -593,7 +592,7 @@ describe Jobs::PullHotlinkedImages do
     end
   end
 
-  context "#disable_if_low_on_disk_space" do
+  describe "#disable_if_low_on_disk_space" do
     fab!(:post) { Fabricate(:post, created_at: 20.days.ago) }
     let(:job) { Jobs::PullHotlinkedImages.new }
 

@@ -18,7 +18,7 @@
   {{#if this.canTakeAction}}
     <ReviewableBundledAction @bundle={{this.flagActions}} @performAction={{action "takeAction"}} @reviewableUpdating={{this.submitDisabled}} />
 
-    <DButton @class="btn-danger" @action={{action "flagForReview"}} @disabled={{this.cantFlagForReview}} @icon="exclamation-triangle" @label="flagging.flag_for_review" />
+    <DButton @class="btn-danger" @action={{action "flagForReview"}} @disabled={{or this.submitDisabled this.cantFlagForReview}} @icon="exclamation-triangle" @label="flagging.flag_for_review" />
   {{/if}}
 
   {{#if this.showDeleteSpammer}}

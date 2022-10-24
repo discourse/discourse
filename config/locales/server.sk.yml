@@ -309,16 +309,11 @@ sk:
             word:
               too_many: "Príliš veľa slov k tej akcii"
       <<: *errors
-  vip_category_name: "Salón"
-  vip_category_description: "Kategória výhradne pre členov so stupňom dôvery 3 a vyšším"
+  general_category_name: "Všeobecné"
   meta_category_name: "Podnety pre tvorcov stránky"
   meta_category_description: "Diskusia o stránke, organizácii, ako funguje a ako ju môžme vylepšit"
   staff_category_name: "Zamestnanci"
   staff_category_description: "Súkromna kategória pre zamestnaneckú diskusiu. Témy su viditeľné len pre správcov a moderátorov diskusie"
-  discourse_welcome_topic:
-    title: "Vitajte v Discourse"
-  lounge_welcome:
-    title: "Vítajte v Salóne"
   category:
     topic_prefix: "O kategórii: %{category} "
     post_template: "%{replace_paragraph}\n\nDo tohoto odstavce dajte dlhší popis kategórie, alebo popíšte pokyny alebo pravidlá:\n\n- Prečo by ľudia mali použiť túto kategóriu? Na čo je určená?\n\n- V čom sa líši od ostatných existujúcich kategórií ktoré už máte?\n\n- Čo by vo všeobecnosti mala obsahovať téma v tejto kategórií?\n\n- Potrebujeme túto kategóriu? Môžeme ju spojiť s inóu kategóriou alebo pod-kategóriou?\n"
@@ -1170,7 +1165,6 @@ sk:
       subject_template: "Obnova zlyhala"
     bulk_invite_succeeded:
       subject_template: "Zpracovanie pozvania viacerých používateľov bolo úspešné"
-      text_body_template: "Váš súbor na hromadné pozvanie používateľov bol zpracovaný, emailom bolo poslaných %{sent} prihlášok."
     bulk_invite_failed:
       subject_template: "Zpracovanie pozvania viacerých používateľov dopadlo s chybami"
     csv_export_failed:
@@ -1388,25 +1382,12 @@ sk:
       title: "Znova poslať aktivačný email."
   wizard:
     step:
-      forum_title:
-        title: "Meno"
       privacy:
-        title: "Prístup"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Verejné"
-              restricted:
-                label: "Súkromné"
-      contact:
-        fields:
-          contact_email:
-            placeholder: "meno@príklad.com"
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-      corporate:
-        title: "Organizácia"
+          login_required:
+            placeholder: "Súkromné"
+          must_approve_users:
+            placeholder: "Potrebné povolenie"
       styling:
         fields:
           styling_preview:
@@ -1417,6 +1398,10 @@ sk:
                 label: "Iba kategórie"
               categories_and_latest_topics:
                 label: "Kategórie a najnovšie témy"
+      corporate:
+        fields:
+          contact_url:
+            placeholder: "https://www.example.com/contact-us"
       invites:
         title: "Pozvite členov"
   joined: "Vytvorený"

@@ -1,7 +1,7 @@
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 function exportEntityByType(type, entity, args) {
   return ajax("/export_csv/export_entity.json", {
@@ -11,9 +11,10 @@ function exportEntityByType(type, entity, args) {
 }
 
 export function exportUserArchive() {
+  const dialog = getOwner(this).lookup("service:dialog");
   return exportEntityByType("user", "user_archive")
     .then(function () {
-      bootbox.alert(I18n.t("user.download_archive.success"));
+      dialog.alert(I18n.t("user.download_archive.success"));
     })
     .catch(popupAjaxError);
 }

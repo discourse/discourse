@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe HostListSettingValidator do
+RSpec.describe HostListSettingValidator do
   subject(:validator) { described_class.new() }
 
   describe '#valid_value?' do

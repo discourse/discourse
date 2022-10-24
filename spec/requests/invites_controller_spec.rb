@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-describe InvitesController do
+RSpec.describe InvitesController do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite) }
 
-  context '#show' do
+  describe '#show' do
     fab!(:invite) { Fabricate(:invite) }
 
     it 'shows the accept invite page' do
@@ -124,7 +124,7 @@ describe InvitesController do
         user.update!(email: "someguy@discourse.com")
         invite.update!(email: nil, domain: 'discourse.org')
 
-        expect { get "/invites/#{invite.invite_key}" }.to change { InvitedUser.count }.by(0)
+        expect { get "/invites/#{invite.invite_key}" }.not_to change { InvitedUser.count }
 
         expect(response).to redirect_to("/")
       end
@@ -132,7 +132,7 @@ describe InvitesController do
       it "redirects to root if a tries to view an invite meant for a specific email that is not the user's" do
         invite.update_columns(email: "notuseremail@discourse.org")
 
-        expect { get "/invites/#{invite.invite_key}" }.to change { InvitedUser.count }.by(0)
+        expect { get "/invites/#{invite.invite_key}" }.not_to change { InvitedUser.count }
 
         expect(response).to redirect_to("/")
       end
@@ -178,7 +178,7 @@ describe InvitesController do
     end
   end
 
-  context '#create' do
+  describe '#create' do
     it 'requires to be logged in' do
       post '/invites.json', params: { email: 'test@example.com' }
       expect(response.status).to eq(403)
@@ -197,15 +197,15 @@ describe InvitesController do
       end
     end
 
-    context 'invite to topic' do
+    context 'with invite to topic' do
       fab!(:topic) { Fabricate(:topic) }
 
       it 'works' do
         sign_in(user)
 
-        post '/invites.json', params: { email: 'test@example.com', topic_id: topic.id }
+        post '/invites.json', params: { email: 'test@example.com', topic_id: topic.id, invite_to_topic: true }
         expect(response.status).to eq(200)
-        expect(Jobs::InviteEmail.jobs.first['args'].first['invite_to_topic']).to be_falsey
+        expect(Jobs::InviteEmail.jobs.first['args'].first['invite_to_topic']).to be_truthy
       end
 
       it 'fails when topic_id is invalid' do
@@ -215,7 +215,7 @@ describe InvitesController do
         expect(response.status).to eq(400)
       end
 
-      context 'topic is private' do
+      context 'when topic is private' do
         fab!(:group) { Fabricate(:group) }
 
         fab!(:secured_category) do |category|
@@ -245,7 +245,7 @@ describe InvitesController do
       end
     end
 
-    context 'invite to group' do
+    context 'with invite to group' do
       fab!(:group) { Fabricate(:group) }
 
       it 'works for admins' do
@@ -299,7 +299,7 @@ describe InvitesController do
       end
     end
 
-    context 'email invite' do
+    context 'with email invite' do
       subject(:create_invite) { post '/invites.json', params: params }
 
       let(:params) { { email: email } }
@@ -374,7 +374,7 @@ describe InvitesController do
       end
     end
 
-    context 'link invite' do
+    context 'with link invite' do
       it 'works' do
         sign_in(admin)
 
@@ -407,7 +407,7 @@ describe InvitesController do
     end
   end
 
-  context '#retrieve' do
+  describe '#retrieve' do
     it 'requires to be logged in' do
       get '/invites/retrieve.json', params: { email: 'test@example.com' }
       expect(response.status).to eq(403)
@@ -437,7 +437,7 @@ describe InvitesController do
     end
   end
 
-  context '#update' do
+  describe '#update' do
     fab!(:invite) { Fabricate(:invite, invited_by: admin, email: 'test@example.com') }
 
     it 'requires to be logged in' do
@@ -519,7 +519,7 @@ describe InvitesController do
     end
   end
 
-  context '#destroy' do
+  describe '#destroy' do
     it 'requires to be logged in' do
       delete '/invites.json', params: { email: 'test@example.com' }
       expect(response.status).to eq(403)
@@ -555,7 +555,7 @@ describe InvitesController do
     end
   end
 
-  context '#perform_accept_invitation' do
+  describe '#perform_accept_invitation' do
     context 'with an invalid invite' do
       it 'redirects to the root' do
         put '/invites/show/doesntexist.json'
@@ -721,7 +721,7 @@ describe InvitesController do
         end
       end
 
-      context '.post_process_invite' do
+      describe '.post_process_invite' do
         it 'sends a welcome message if set' do
           SiteSetting.send_welcome_message = true
           user.send_welcome_message = true
@@ -752,7 +752,7 @@ describe InvitesController do
         end
 
         context 'with password' do
-          context 'user was invited via email' do
+          context 'when user was invited via email' do
             before { invite.update_column(:emailed_status, Invite.emailed_status_types[:pending]) }
 
             it 'does not send an activation email and activates the user' do
@@ -773,7 +773,7 @@ describe InvitesController do
             it 'does not activate user if email token is missing' do
               expect do
                 put "/invites/show/#{invite.invite_key}.json", params: { password: 'verystrongpassword' }
-              end.to change { UserAuthToken.count }.by(0)
+              end.not_to change { UserAuthToken.count }
 
               expect(response.status).to eq(200)
 
@@ -786,7 +786,7 @@ describe InvitesController do
             end
           end
 
-          context 'user was invited via link' do
+          context 'when user was invited via link' do
             before { invite.update_column(:emailed_status, Invite.emailed_status_types[:not_required]) }
 
             it 'sends an activation email and does not activate the user' do
@@ -870,7 +870,7 @@ describe InvitesController do
       end
     end
 
-    context 'new registrations are disabled' do
+    context 'when new registrations are disabled' do
       fab!(:topic) { Fabricate(:topic) }
       fab!(:invite) { Invite.generate(topic.user, email: 'test@example.com', topic: topic) }
 
@@ -885,7 +885,7 @@ describe InvitesController do
       end
     end
 
-    context 'user is already logged in' do
+    context 'when user is already logged in' do
       fab!(:invite) { Fabricate(:invite, email: 'test@example.com') }
       fab!(:user) { sign_in(Fabricate(:user)) }
 
@@ -899,7 +899,7 @@ describe InvitesController do
       end
     end
 
-    context 'topic invites' do
+    context 'with topic invites' do
       fab!(:invite) { Fabricate(:invite, email: 'test@example.com') }
 
       fab!(:secured_category) do
@@ -937,7 +937,7 @@ describe InvitesController do
       end
     end
 
-    context 'staged user' do
+    context 'with staged user' do
       fab!(:invite) { Fabricate(:invite) }
       fab!(:staged_user) { Fabricate(:user, staged: true, email: invite.email) }
 
@@ -971,7 +971,7 @@ describe InvitesController do
     end
   end
 
-  context '#destroy_all_expired' do
+  describe '#destroy_all_expired' do
     it 'removes all expired invites sent by a user' do
       SiteSetting.invite_expiry_days = 1
 
@@ -991,7 +991,7 @@ describe InvitesController do
     end
   end
 
-  context '#resend_invite' do
+  describe '#resend_invite' do
     it 'requires to be logged in' do
       post '/invites/reinvite.json', params: { email: 'first_name@example.com' }
       expect(response.status).to eq(403)
@@ -1025,7 +1025,7 @@ describe InvitesController do
     end
   end
 
-  context '#resend_all_invites' do
+  describe '#resend_all_invites' do
     let(:admin) { Fabricate(:admin) }
 
     before do
@@ -1052,18 +1052,22 @@ describe InvitesController do
     end
 
     it 'errors if admins try to exceed limit of one bulk invite per day' do
-      RateLimiter.enable
       sign_in(admin)
+      RateLimiter.enable
+      RateLimiter.clear_all!
+      start = Time.now
 
+      freeze_time(start)
       post '/invites/reinvite-all'
-      expect(response.status).to eq(200)
+      expect(response.parsed_body['errors']).to_not be_present
 
+      freeze_time(start + 10.minutes)
       post '/invites/reinvite-all'
       expect(response.parsed_body['errors'][0]).to eq(I18n.t("rate_limiter.slow_down"))
     end
   end
 
-  context '#upload_csv' do
+  describe '#upload_csv' do
     it 'requires to be logged in' do
       post '/invites/upload_csv.json'
       expect(response.status).to eq(403)

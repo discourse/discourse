@@ -17,6 +17,11 @@ export function addTagsHtmlCallback(callback, options) {
   callbacks.splice(i, 0, callback);
 }
 
+export function clearTagsHtmlCallbacks() {
+  callbacks = null;
+  priorities = null;
+}
+
 export default function (topic, params) {
   let tags = topic.tags;
   let buffer = "";

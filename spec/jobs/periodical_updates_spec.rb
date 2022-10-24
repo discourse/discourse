@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::PeriodicalUpdates do
+RSpec.describe Jobs::PeriodicalUpdates do
 
   it "works" do
 

@@ -1,0 +1,12 @@
+{
+  "extends": "../../../../jsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "admin/*": ["./addon/*"],
+      "discourse/*": ["../discourse/app/*"],
+      "discourse-common/*": ["../discourse-common/addon/*"],
+      "pretty-text/*": ["../pretty-text/addon/*"],
+    }
+  },
+}

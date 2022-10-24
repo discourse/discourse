@@ -2,7 +2,7 @@
 
 require 'discourse_diff'
 
-describe DiscourseDiff do
+RSpec.describe DiscourseDiff do
 
   describe "inline_html" do
 

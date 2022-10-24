@@ -125,18 +125,7 @@ module ApplicationHelper
       path = path.gsub("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
     end
 
-    if Rails.env == "development"
-      if !path.include?("?")
-        # cache breaker for mobile iOS
-        path = path + "?#{Time.now.to_f}"
-      end
-    end
-
     path
-  end
-
-  def self.splash_screen_nonce
-    @splash_screen_nonce ||= SecureRandom.hex
   end
 
   def preload_script(script)
@@ -153,10 +142,21 @@ module ApplicationHelper
   end
 
   def preload_script_url(url)
-    <<~HTML.html_safe
-      <link rel="preload" href="#{url}" as="script">
-      <script defer src="#{url}"></script>
-    HTML
+    add_resource_preload_list(url, 'script')
+    if GlobalSetting.preload_link_header
+      <<~HTML.html_safe
+        <script defer src="#{url}"></script>
+      HTML
+    else
+      <<~HTML.html_safe
+        <link rel="preload" href="#{url}" as="script">
+        <script defer src="#{url}"></script>
+      HTML
+    end
+  end
+
+  def add_resource_preload_list(resource_url, type)
+    @links_to_preload << %Q(<#{resource_url}>; rel="preload"; as="#{type}") if !@links_to_preload.nil?
   end
 
   def discourse_csrf_tags
@@ -271,6 +271,13 @@ module ApplicationHelper
     opts ||= {}
     opts[:url] ||= "#{Discourse.base_url_no_prefix}#{request.fullpath}"
 
+    # if slug generation method is encoded, non encoded urls can sneak in
+    # via bots
+    url = opts[:url]
+    if url.encoding.name != "UTF-8" || !url.valid_encoding?
+      opts[:url] = url.dup.force_encoding("UTF-8").scrub!
+    end
+
     if opts[:image].blank?
       twitter_summary_large_image_url = SiteSetting.site_twitter_summary_large_image_url
 
@@ -286,12 +293,12 @@ module ApplicationHelper
     opts[:twitter_summary_large_image] =
       get_absolute_image_url(opts[:twitter_summary_large_image]) if opts[:twitter_summary_large_image].present?
 
-    # Add opengraph & twitter tags
     result = []
     result << tag(:meta, property: 'og:site_name', content: SiteSetting.title)
     result << tag(:meta, property: 'og:type', content: 'website')
 
-    result = generate_twitter_card_metadata(opts, result)
+    generate_twitter_card_metadata(result, opts)
+
     result << tag(:meta, property: "og:image", content: opts[:image]) if opts[:image].present?
 
     [:url, :title, :description].each do |property|
@@ -320,7 +327,7 @@ module ApplicationHelper
     result.join("\n")
   end
 
-  def generate_twitter_card_metadata(opts, result)
+  private def generate_twitter_card_metadata(result, opts)
     img_url = opts[:twitter_summary_large_image].present? ? \
       opts[:twitter_summary_large_image] :
       opts[:image]
@@ -339,22 +346,22 @@ module ApplicationHelper
     else
       result << tag(:meta, name: 'twitter:card', content: "summary")
     end
-
-    result
   end
 
   def render_sitelinks_search_tag
-    json = {
-      '@context' => 'http://schema.org',
-      '@type' => 'WebSite',
-      url: Discourse.base_url,
-      potentialAction: {
-        '@type' => 'SearchAction',
-        target: "#{Discourse.base_url}/search?q={search_term_string}",
-        'query-input' => 'required name=search_term_string',
+    if current_page?('/') || current_page?(Discourse.base_path)
+      json = {
+        '@context' => 'http://schema.org',
+        '@type' => 'WebSite',
+        url: Discourse.base_url,
+        potentialAction: {
+          '@type' => 'SearchAction',
+          target: "#{Discourse.base_url}/search?q={search_term_string}",
+          'query-input' => 'required name=search_term_string',
+        }
       }
-    }
-    content_tag(:script, MultiJson.dump(json).html_safe, type: 'application/ld+json')
+      content_tag(:script, MultiJson.dump(json).html_safe, type: 'application/ld+json')
+    end
   end
 
   def gsub_emoji_to_unicode(str)
@@ -420,7 +427,7 @@ module ApplicationHelper
   end
 
   def customization_disabled?
-    request.env[ApplicationController::NO_CUSTOM]
+    request.env[ApplicationController::NO_THEMES]
   end
 
   def include_ios_native_app_banner?
@@ -443,15 +450,15 @@ module ApplicationHelper
   end
 
   def allow_third_party_plugins?
-    allow_plugins? && !request.env[ApplicationController::ONLY_OFFICIAL]
+    allow_plugins? && !request.env[ApplicationController::NO_UNOFFICIAL_PLUGINS]
   end
 
   def normalized_safe_mode
     safe_mode = []
 
-    safe_mode << ApplicationController::NO_CUSTOM if customization_disabled?
+    safe_mode << ApplicationController::NO_THEMES if customization_disabled?
     safe_mode << ApplicationController::NO_PLUGINS if !allow_plugins?
-    safe_mode << ApplicationController::ONLY_OFFICIAL if !allow_third_party_plugins?
+    safe_mode << ApplicationController::NO_UNOFFICIAL_PLUGINS if !allow_third_party_plugins?
 
     safe_mode.join(",")
   end
@@ -593,7 +600,7 @@ module ApplicationHelper
         stylesheet_manager
       end
 
-    manager.stylesheet_link_tag(name, 'all')
+    manager.stylesheet_link_tag(name, 'all', self.method(:add_resource_preload_list))
   end
 
   def discourse_preload_color_scheme_stylesheets
@@ -609,10 +616,10 @@ module ApplicationHelper
 
   def discourse_color_scheme_stylesheets
     result = +""
-    result << stylesheet_manager.color_scheme_stylesheet_link_tag(scheme_id, 'all')
+    result << stylesheet_manager.color_scheme_stylesheet_link_tag(scheme_id, 'all', self.method(:add_resource_preload_list))
 
     if dark_scheme_id != -1
-      result << stylesheet_manager.color_scheme_stylesheet_link_tag(dark_scheme_id, '(prefers-color-scheme: dark)')
+      result << stylesheet_manager.color_scheme_stylesheet_link_tag(dark_scheme_id, '(prefers-color-scheme: dark)', self.method(:add_resource_preload_list))
     end
 
     result.html_safe

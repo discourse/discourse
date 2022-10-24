@@ -1,6 +1,9 @@
+$invite-bg: absolute-image-url("/branded-background.svg");
+$invite-mobile-bg: absolute-image-url("/branded-background-mobile.svg");
+
 .caps-lock-warning {
   color: var(--danger);
-  font-size: $font-down-1;
+  font-size: var(--font-down-1);
   font-weight: bold;
 }
 
@@ -31,10 +34,30 @@
   }
 }
 
+body.invite-page {
+  background-image: $invite-bg;
+  background-size: 110vw 110vh; // crops better than cover at various viewport sizes
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-color: var(--secondary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, Arial, sans-serif;
+  @include breakpoint("mobile-extra-large") {
+    background: $invite-mobile-bg;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: bottom;
+  }
+  .d-header {
+    display: none;
+  }
+}
+
 // Create Account + Login
 .d-modal.create-account,
 .d-modal.login-modal,
-.invites-show {
+.invites-show,
+.admin-invite-page {
   .modal-inner-container {
     position: relative;
   }
@@ -132,7 +155,8 @@
       &:last-child {
         margin-bottom: 2em;
       }
-      input {
+      input,
+      .select-kit-header {
         padding: 0.75em 0.77em;
         border-radius: 0.25em;
         min-width: 250px;
@@ -152,7 +176,8 @@
         color: var(--primary-medium);
         min-height: 1.4em; // prevents height increase due to tips
       }
-      label.alt-placeholder {
+      label.alt-placeholder,
+      .user-field.dropdown label.control-label {
         color: var(--primary-medium);
         font-size: 16px;
         font-weight: normal;
@@ -164,14 +189,24 @@
         border-radius: 0.25em;
         transition: 0.2s ease all;
       }
+      .user-field.dropdown label.control-label {
+        z-index: 999;
+        top: -8px;
+        left: calc(1em - 0.25em);
+        background-color: var(--secondary);
+        padding: 0 0.25em 0 0.25em;
+        font-size: $font-down-1;
+      }
+      .user-field.dropdown:focus-within {
+        z-index: 1000; // this ensures the active dropdown is always on top of sibling dropdown labels
+      }
       input:focus + label.alt-placeholder,
       input.value-entered + label.alt-placeholder {
         top: -8px;
         left: calc(1em - 0.25em);
         background-color: var(--secondary);
         padding: 0 0.25em 0 0.25em;
-        font-size: $font-down-1;
-        color: var(--primary-medium);
+        font-size: var(--font-down-1);
       }
       input.alt-placeholder:invalid {
         color: var(--primary);
@@ -188,7 +223,7 @@
 
       #forgot-password-link,
       #email-login-link {
-        font-size: $font-down-1;
+        font-size: var(--font-down-1);
       }
 
       .tip:not(:empty) + label.more-info {
@@ -238,8 +273,19 @@
             background-color: var(--secondary);
             padding: 0 0.25em 0 0.25em;
             font-size: 14px;
-            color: var(--primary-high);
+            color: var(--primary-medium);
           }
+        }
+        span.name {
+          color: var(--primary-medium);
+        }
+        .select-kit-row span.name {
+          color: var(--primary);
+        }
+        .select-kit.combo-box.is-expanded summary {
+          outline: none;
+          border: 1px solid var(--tertiary);
+          box-shadow: 0 0 0 2px rgba(var(--tertiary-rgb), 0.25);
         }
         .controls .checkbox-label {
           input[type="checkbox"].ember-checkbox {
@@ -282,7 +328,7 @@
       .instructions {
         margin-top: 0.15em;
         color: var(--primary-medium);
-        line-height: $line-height-medium;
+        line-height: var(--line-height-medium);
       }
     }
   }
@@ -309,16 +355,23 @@
   .invite-success {
     border-radius: 10px;
     margin-top: 25px;
+    border-top: 6px solid var(--tertiary);
+    background-color: var(--secondary);
   }
 
   .invite-form {
     margin-bottom: 50px;
-    max-width: 33em;
+    box-shadow: 0 4px 19px 6px rgba(0, 0, 0, 0.05);
+    padding: 1em 3em;
+    max-width: calc(33em - 6em);
     .tip {
       display: block;
     }
     .col-image {
       display: none;
+    }
+    .disclaimer {
+      margin: 1em 0 0;
     }
   }
 
@@ -350,9 +403,9 @@
     .instructions {
       color: var(--primary-medium);
       margin: 0;
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       font-weight: normal;
-      line-height: $line-height-medium;
+      line-height: var(--line-height-medium);
     }
     .tip {
       font-size: var(--font-down-1);
@@ -382,7 +435,7 @@ button#new-account-link {
   align-items: center;
   p {
     margin: 0;
-    font-size: $font-0;
+    font-size: var(--font-0);
   }
   a {
     display: inline-block;

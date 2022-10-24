@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-describe ::Jobs::NotifyTagChange do
-
+RSpec.describe ::Jobs::NotifyTagChange do
   fab!(:user) { Fabricate(:user) }
   fab!(:regular_user) { Fabricate(:trust_level_4) }
   fab!(:post) { Fabricate(:post, user: regular_user) }
@@ -25,6 +24,30 @@ describe ::Jobs::NotifyTagChange do
     expect(notification.notification_type).to eq(Notification.types[:posted])
   end
 
+  it "doesn't create notifications if tags edit notifications are disabled" do
+    SiteSetting.disable_tags_edit_notifications = true
+
+    TagUser.create!(
+      user_id: user.id,
+      tag_id: tag.id,
+      notification_level: NotificationLevels.topic_levels[:watching]
+    )
+    TopicTag.create!(
+      topic_id: post.topic.id,
+      tag_id: tag.id
+    )
+
+    expect { described_class.new.execute(post_id: post.id, notified_user_ids: [regular_user.id]) }.not_to change { Notification.count }
+  end
+
+  it "doesn't create notification for the editor who watches new tag" do
+    TagUser.change(user.id, tag.id, TagUser.notification_levels[:watching_first_post])
+    TopicTag.create!(topic: post.topic, tag: tag)
+    post.update!(last_editor_id: user.id)
+
+    expect { described_class.new.execute(post_id: post.id, notified_user_ids: []) }.not_to change { Notification.count }
+  end
+
   it 'doesnt create notification for user watching category' do
     CategoryUser.create!(
       user_id: user.id,
@@ -34,7 +57,7 @@ describe ::Jobs::NotifyTagChange do
     expect { described_class.new.execute(post_id: post.id, notified_user_ids: [regular_user.id]) }.not_to change { Notification.count }
   end
 
-  context 'hidden tag' do
+  describe 'hidden tag' do
     let!(:hidden_group) { Fabricate(:group, name: 'hidden_group') }
     let!(:hidden_tag_group) { Fabricate(:tag_group, name: 'hidden', permissions: [[hidden_group.id, :full]]) }
     let!(:topic_user) { Fabricate(:topic_user, user: user, topic: post.topic, notification_level: TopicUser.notification_levels[:watching]) }

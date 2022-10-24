@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ReviewablePost do
+RSpec.describe ReviewablePost do
   fab!(:admin) { Fabricate(:admin) }
 
   describe '#build_actions' do
@@ -9,8 +9,8 @@ describe ReviewablePost do
     let(:guardian) { Guardian.new }
 
     it 'Does not return available actions when the reviewable is no longer pending' do
-      available_actions = (Reviewable.statuses.keys - [:pending]).reduce([]) do |actions, status|
-        reviewable.status = Reviewable.statuses[status]
+      available_actions = (Reviewable.statuses.keys - ["pending"]).reduce([]) do |actions, status|
+        reviewable.status = status
 
         actions.concat reviewable_actions(guardian).to_a
       end

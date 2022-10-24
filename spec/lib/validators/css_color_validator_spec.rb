@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe CssColorValidator do
+RSpec.describe CssColorValidator do
   subject { described_class.new }
 
   it "validates hex colors" do

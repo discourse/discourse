@@ -1,4 +1,4 @@
-import { alias, and, reads } from "@ember/object/computed";
+import { alias, and } from "@ember/object/computed";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import LoadMore from "discourse/mixins/load-more";
@@ -33,8 +33,6 @@ export default Component.extend(LoadMore, {
   sortable() {
     return !!this.changeSort;
   },
-
-  skipHeader: reads("site.mobileView"),
 
   @discourseComputed("order")
   showLikes(order) {
@@ -78,7 +76,7 @@ export default Component.extend(LoadMore, {
     if (scrollTo >= 0) {
       schedule("afterRender", () => {
         if (this.element && !this.isDestroying && !this.isDestroyed) {
-          next(() => window.scrollTo(0, scrollTo + 1));
+          next(() => window.scrollTo(0, scrollTo));
         }
       });
     }
@@ -164,10 +162,10 @@ export default Component.extend(LoadMore, {
 
   click(e) {
     const onClick = (sel, callback) => {
-      let target = $(e.target).closest(sel);
+      let target = e.target.closest(sel);
 
-      if (target.length === 1) {
-        callback.apply(this, [target]);
+      if (target) {
+        callback.call(this, target);
       }
     };
 
@@ -178,16 +176,20 @@ export default Component.extend(LoadMore, {
 
     onClick("button.bulk-select-all", function () {
       this.updateAutoAddTopicsToBulkSelect(true);
-      $("input.bulk-select:not(:checked)").click();
+      document
+        .querySelectorAll("input.bulk-select:not(:checked)")
+        .forEach((el) => el.click());
     });
 
     onClick("button.bulk-clear-all", function () {
       this.updateAutoAddTopicsToBulkSelect(false);
-      $("input.bulk-select:checked").click();
+      document
+        .querySelectorAll("input.bulk-select:checked")
+        .forEach((el) => el.click());
     });
 
-    onClick("th.sortable", function (e2) {
-      this.changeSort(e2.data("sort-order"));
+    onClick("th.sortable", function (element) {
+      this.changeSort(element.dataset.sortOrder);
       this.rerender();
     });
 
@@ -210,15 +212,15 @@ export default Component.extend(LoadMore, {
   keyDown(e) {
     if (e.key === "Enter" || e.key === " ") {
       let onKeyDown = (sel, callback) => {
-        let target = $(e.target).closest(sel);
+        let target = e.target.closest(sel);
 
-        if (target.length === 1) {
-          callback.apply(this, [target]);
+        if (target) {
+          callback.call(this, target);
         }
       };
 
-      onKeyDown("th.sortable", (e2) => {
-        this.changeSort(e2.data("sort-order"));
+      onKeyDown("th.sortable", (element) => {
+        this.changeSort(element.dataset.sortOrder);
         this.rerender();
       });
     }

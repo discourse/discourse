@@ -58,13 +58,13 @@ const DEFAULT_QUICK_TIPS = [
 let QUICK_TIPS = [];
 
 export function addSearchSuggestion(value) {
-  if (suggestionShortcuts.indexOf(value) === -1) {
+  if (!suggestionShortcuts.includes(value)) {
     suggestionShortcuts.push(value);
   }
 }
 
 export function addQuickSearchRandomTip(tip) {
-  if (QUICK_TIPS.indexOf(tip) === -1) {
+  if (!QUICK_TIPS.includes(tip)) {
     QUICK_TIPS.push(tip);
   }
 }

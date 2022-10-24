@@ -1,8 +1,10 @@
 import Controller, { inject as controller } from "@ember/controller";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed, {
+  debounce,
+  observes,
+} from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { gt } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
@@ -23,14 +25,9 @@ export default Controller.extend({
   bulkSelection: null,
 
   @observes("filterInput")
+  @debounce(500)
   _setFilter() {
-    discourseDebounce(
-      this,
-      function () {
-        this.set("filter", this.filterInput);
-      },
-      500
-    );
+    this.set("filter", this.filterInput);
   },
 
   @observes("order", "asc", "filter")
@@ -219,7 +216,9 @@ export default Controller.extend({
     document
       .querySelectorAll("input.bulk-select:not(:checked)")
       .forEach((checkbox) => {
-        checkbox.checked = true;
+        if (!checkbox.checked) {
+          checkbox.click();
+        }
       });
   },
 
@@ -228,7 +227,9 @@ export default Controller.extend({
     document
       .querySelectorAll("input.bulk-select:checked")
       .forEach((checkbox) => {
-        checkbox.checked = false;
+        if (checkbox.checked) {
+          checkbox.click();
+        }
       });
   },
 

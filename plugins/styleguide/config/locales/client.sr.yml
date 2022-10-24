@@ -85,3 +85,6 @@ sr:
           title: "Ikonice zaglavlja"
         spinners:
           title: "Spineri"
+        rich_tooltip:
+          description: "Opis"
+          header: "Header"

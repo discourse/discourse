@@ -2,7 +2,7 @@
 
 require 'html_to_markdown'
 
-describe HtmlToMarkdown do
+RSpec.describe HtmlToMarkdown do
 
   def html_to_markdown(html, opts = {})
     HtmlToMarkdown.new(html, opts).to_markdown

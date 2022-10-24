@@ -1,29 +1,32 @@
 # frozen_string_literal: true
 
 RSpec.describe UserPostBookmarkSerializer do
-  let(:whisperers_group) { Fabricate(:group) }
   let(:user) { Fabricate(:user) }
-  let(:post) { Fabricate(:post, user: user, topic: topic) }
   let(:topic) { Fabricate(:topic) }
+  let(:post) { Fabricate(:post, user: user, topic: topic) }
   let!(:bookmark) { Fabricate(:bookmark, name: 'Test', user: user, bookmarkable: post) }
 
-  before do
-    SiteSetting.enable_whispers = true
-    SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
-  end
+  describe "#highest_post_number" do
+    let(:whisperers_group) { Fabricate(:group) }
 
-  it "uses the correct highest_post_number column based on whether the user is whisperer" do
-    Fabricate(:post, topic: topic)
-    Fabricate(:post, topic: topic)
-    Fabricate(:whisper, topic: topic)
-    topic.reload
-    bookmark.reload
-    serializer = UserPostBookmarkSerializer.new(bookmark, scope: Guardian.new(user))
+    before do
+      SiteSetting.enable_whispers = true
+      SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
+    end
 
-    expect(serializer.highest_post_number).to eq(3)
+    it "uses the correct highest_post_number column based on whether the user is whisperer" do
+      Fabricate(:post, topic: topic)
+      Fabricate(:post, topic: topic)
+      Fabricate(:whisper, topic: topic)
+      topic.reload
+      bookmark.reload
+      serializer = UserPostBookmarkSerializer.new(bookmark, scope: Guardian.new(user))
 
-    user.groups << whisperers_group
+      expect(serializer.highest_post_number).to eq(3)
 
-    expect(serializer.highest_post_number).to eq(4)
+      user.groups << whisperers_group
+
+      expect(serializer.highest_post_number).to eq(4)
+    end
   end
 end

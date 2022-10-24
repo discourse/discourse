@@ -81,3 +81,6 @@ ro:
           title: "Pictograme Antet"
         spinners:
           title: "Indicatori încărcare"
+        rich_tooltip:
+          description: "Descriere"
+          header: "Antet"

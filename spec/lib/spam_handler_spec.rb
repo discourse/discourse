@@ -2,7 +2,7 @@
 
 require "spam_handler"
 
-describe SpamHandler do
+RSpec.describe SpamHandler do
 
   describe "#should_prevent_registration_from_ip?" do
 

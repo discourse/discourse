@@ -24,6 +24,20 @@ const controllerOpts = {
   showTopicPostBadges: not("new"),
   redirectedReason: alias("currentUser.redirected_to_top.reason"),
 
+  @discourseComputed(
+    "model.filter",
+    "site.show_welcome_topic_banner",
+    "model.listParams.f"
+  )
+  showEditWelcomeTopicBanner(filter, showWelcomeTopicBanner, hasListParams) {
+    return (
+      this.currentUser?.staff &&
+      filter === "latest" &&
+      showWelcomeTopicBanner &&
+      !hasListParams
+    );
+  },
+
   expandGloballyPinned: false,
   expandAllPinned: false,
 
@@ -56,6 +70,17 @@ const controllerOpts = {
     return this._isFilterPage(filter, "new") && topicsLength > 0;
   },
 
+  // Show newly inserted topics
+  @action
+  showInserted(event) {
+    event?.preventDefault();
+    const tracker = this.topicTrackingState;
+
+    // Move inserted into topics
+    this.model.loadBefore(tracker.get("newIncoming"), true);
+    tracker.resetTracking();
+  },
+
   actions: {
     changeSort() {
       deprecated(
@@ -63,16 +88,6 @@ const controllerOpts = {
         { since: "2.6.0", dropFrom: "2.7.0" }
       );
       return routeAction("changeSort", this.router._router, ...arguments)();
-    },
-
-    // Show newly inserted topics
-    showInserted() {
-      const tracker = this.topicTrackingState;
-
-      // Move inserted into topics
-      this.model.loadBefore(tracker.get("newIncoming"), true);
-      tracker.resetTracking();
-      return false;
     },
 
     refresh(options = { skipResettingParams: [] }) {

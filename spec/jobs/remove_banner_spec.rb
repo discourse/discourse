@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
-describe Jobs::RemoveBanner do
+RSpec.describe Jobs::RemoveBanner do
   fab!(:topic) { Fabricate(:topic) }
   fab!(:user) { topic.user }
 
-  context 'topic is not bannered until' do
+  context 'when topic is not bannered until' do
     it 'doesn’t enqueue a future job to remove it' do
       expect do
         topic.make_banner!(user)
-      end.to change { Jobs::RemoveBanner.jobs.size }.by(0)
+      end.not_to change { Jobs::RemoveBanner.jobs.size }
     end
   end
 
-  context 'topic is bannered until' do
-    context 'bannered_until is a valid date' do
+  context 'when topic is bannered until' do
+    context 'when bannered_until is a valid date' do
       it 'enqueues a future job to remove it' do
         bannered_until = 5.days.from_now
 
@@ -36,13 +36,13 @@ describe Jobs::RemoveBanner do
       end
     end
 
-    context 'bannered_until is an invalid date' do
+    context 'when bannered_until is an invalid date' do
       it 'doesn’t enqueue a future job to remove it' do
         expect do
           expect do
             topic.make_banner!(user, 'xxx')
           end.to raise_error(Discourse::InvalidParameters)
-        end.to change { Jobs::RemoveBanner.jobs.size }.by(0)
+        end.not_to change { Jobs::RemoveBanner.jobs.size }
       end
     end
   end

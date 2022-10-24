@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe MethodProfiler do
+RSpec.describe MethodProfiler do
   class Sneetch
     def beach
     end

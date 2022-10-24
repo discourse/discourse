@@ -12,7 +12,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
     Fabricate.build(:upload, sha1: upload_sha1, id: 1, original_filename: original_filename)
   end
 
-  context 'uploading to s3' do
+  describe 'uploading to s3' do
     before(:each) do
       setup_s3
     end
@@ -92,7 +92,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
     end
   end
 
-  context 'removal from s3' do
+  describe 'removal from s3' do
     before do
       setup_s3
     end
@@ -172,7 +172,7 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
     end
   end
 
-  context 'secure uploads' do
+  describe 'secure uploadss' do
     let(:store) { FileStore::S3Store.new }
     let(:client) { Aws::S3::Client.new(stub_responses: true) }
     let(:resource) { Aws::S3::Resource.new(client: client) }
@@ -209,10 +209,10 @@ RSpec.describe 'Multisite s3 uploads', type: :multisite do
       end
     end
 
-    describe "when secure media are enabled" do
+    describe "when secure uploads are enabled" do
       before do
         SiteSetting.login_required = true
-        SiteSetting.secure_media = true
+        SiteSetting.secure_uploads = true
         s3_helper.stubs(:s3_client).returns(client)
         Discourse.stubs(:store).returns(store)
       end

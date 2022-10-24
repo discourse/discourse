@@ -50,6 +50,9 @@ $topic-progress-height: 42px;
       align-self: start;
       @include sticky;
       top: calc(var(--header-offset, 60px) + 2em);
+      .footer-nav-ipad & {
+        top: calc(var(--header-offset, 60px) + var(--footer-nav-height) + 2em);
+      }
       margin-left: 1em;
       z-index: z("timeline");
 
@@ -192,8 +195,8 @@ $topic-progress-height: 42px;
   }
   h4 {
     display: inline;
-    font-size: $font-up-2;
-    line-height: $line-height-small;
+    font-size: var(--font-up-2);
+    line-height: var(--line-height-small);
   }
   .d-icon {
     position: absolute;
@@ -219,7 +222,7 @@ $topic-progress-height: 42px;
     padding: 0;
   }
   span .d-icon {
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
   }
   .topic-timer-heading,
   .slow-mode-heading {
@@ -235,7 +238,7 @@ $topic-progress-height: 42px;
     align-self: flex-start;
   }
   button {
-    font-size: $font-down-2;
+    font-size: var(--font-down-2);
     background: transparent;
   }
 }
@@ -374,7 +377,7 @@ a.badge-category {
 .suggested-topics h3 .badge-wrapper.bullet span.badge-category {
   // Override vertical-align: text-top from `badges.css.scss`
   vertical-align: baseline;
-  line-height: $line-height-medium;
+  line-height: var(--line-height-medium);
 }
 
 .suggested-topics h3 .badge-wrapper.bullet,
@@ -428,7 +431,7 @@ a.badge-category {
         flex: 0 0 auto;
       }
       .d-icon {
-        font-size: $font-down-2;
+        font-size: var(--font-down-2);
         margin: 0 0.5em 0 0;
       }
     }
@@ -484,7 +487,7 @@ a.topic-featured-link {
 
   .is-public {
     padding: 0.25em 0.5em;
-    font-size: $font-down-2;
+    font-size: var(--font-down-2);
     background: var(--tertiary);
     color: var(--secondary);
     border-radius: 3px;

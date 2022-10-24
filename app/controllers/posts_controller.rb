@@ -79,6 +79,8 @@ class PostsController < ApplicationController
       rss_description = I18n.t("rss_description.private_posts")
     else
       posts = Post.public_posts
+        .visible
+        .where(post_type: Post.types[:regular])
         .order(created_at: :desc)
         .where('posts.id <= ?', last_post_id)
         .where('posts.id > ?', last_post_id - 50)
@@ -122,6 +124,7 @@ class PostsController < ApplicationController
     raise Discourse::NotFound unless guardian.can_see_profile?(user)
 
     posts = Post.public_posts
+      .visible
       .where(user_id: user.id)
       .where(post_type: Post.types[:regular])
       .order(created_at: :desc)
@@ -321,14 +324,12 @@ class PostsController < ApplicationController
 
   def destroy
     post = find_post_from_params
+    force_destroy = ActiveModel::Type::Boolean.new.cast(params[:force_destroy])
 
-    force_destroy = false
-    if params[:force_destroy].present?
+    if force_destroy
       if !guardian.can_permanently_delete?(post)
         return render_json_error post.cannot_permanently_delete_reason(current_user), status: 403
       end
-
-      force_destroy = true
     else
       guardian.ensure_can_delete!(post)
     end
@@ -338,8 +339,12 @@ class PostsController < ApplicationController
       RateLimiter.new(current_user, "delete_post_per_day", SiteSetting.max_post_deletions_per_day, 1.day).performed!
     end
 
-    destroyer = PostDestroyer.new(current_user, post, context: params[:context], force_destroy: force_destroy)
-    destroyer.destroy
+    PostDestroyer.new(
+      current_user,
+      post,
+      context: params[:context],
+      force_destroy: force_destroy
+    ).destroy
 
     render body: nil
   end

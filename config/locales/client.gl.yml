@@ -156,7 +156,6 @@ gl:
         disabled: "eliminou este báner %{when}. Xa non aparecerá máis na banda superior de todas as páxinas."
       forwarded: "reenviou a mensaxe de correo anterior"
     topic_admin_menu: "accións do tema"
-    wizard_required: "Este é o novo Discourse! Pode comezar co <a href='%{url}' data-auto-route='true'>asistente de configuración</a> ✨"
     emails_are_disabled: "Todos as mensaxes de correo saíntes foron desactivadas globalmente por un administrador. Non se enviará ningún tipo de notificación por correo electrónico."
     software_update_prompt:
       dismiss: "Desbotar"
@@ -164,6 +163,7 @@ gl:
       one: "Para facilitar o lanzamento do seu novo sitio, está en modo de arranque. Todos os novos usuarios recibirán o nivel de confianza 1 e terán activadas as mensaxes de correo de resumo diario. Isto desactivarase automaticamente cando se una %{count} usuario."
       other: "Para facilitar o lanzamento do seu novo sitio, está en modo de arranque. Todos os novos usuarios recibirán nivel de confianza 1 e terán activadas as mensaxes de correo de resumo diario. Isto desactivarase automaticamente cando se unan %{count} usuarios."
     bootstrap_mode_disabled: "O modo Bootstrap desactivarase nun prazo de 24 horas."
+    bootstrap_invite_button_title: "Enviar convites"
     themes:
       default_description: "Predeterminado"
     s3:
@@ -195,7 +195,10 @@ gl:
     not_implemented: "Sentímolo pero esta funcionalidade non se implementou aínda!"
     no_value: "Non"
     yes_value: "Si"
+    ok_value: "De acordo"
+    cancel_value: "Cancelar"
     submit: "Enviar"
+    delete: "Eliminar"
     generic_error: "Sentímolo pero produciuse un erro."
     generic_error_with_reason: "Produciuse un erro: %{error}"
     sign_up: "Crear unha conta"
@@ -551,6 +554,7 @@ gl:
       forever: "Sempre"
       relative: "Tempo relativo"
       none: "Non se necesita"
+      never: "Nunca"
       custom: "Personalizar data e hora"
       select_timeframe: "Seleccione un marco temporal"
     user_action:
@@ -987,6 +991,8 @@ gl:
       enable_defer: "Activar a opción de diferir para marcar os temas como non lidos"
       experimental_sidebar:
         options: "Opcións"
+        navigation_section: "Navegación"
+        list_destination_default: "Predeterminado"
       change: "cambiar"
       featured_topic: "Tema de actualidade"
       moderator: "%{user} é moderador"
@@ -1081,6 +1087,7 @@ gl:
         move_to_archive: "Arquivo"
         failed_to_move: "Produciuse un fallo ao mover as mensaxes seleccionadas (quizais a rede está caída)"
         tags: "Etiquetas"
+        all_tags: "Todas as etiquetas"
       preferences_nav:
         account: "Conta"
         security: "Seguranza"
@@ -1148,8 +1155,6 @@ gl:
         edit: "Editar"
         edit_title: "Editar autenticador"
         edit_description: "Nome do autenticador"
-        enable_security_key_description: |
-          Cando teña a súa <a href="https://www.google.com/search?q=hardware+security+key" target="_blank"> clave de equipo seguro</a> preparada, prema o botón Rexistrarse, a seguir.
         totp:
           title: "Autenticadores que usan códigos"
           add: "Engadir autenticador"
@@ -1157,14 +1162,12 @@ gl:
           name_and_code_required_error: "Debe escribir un nome e o código da app autenticadora."
         security_key:
           register: "Rexistrarse"
-          title: "Clave de seguranza"
-          add: "Engadir clave de seguranza"
           default_name: "Clave de seguranza principal"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "O proceso de rexistro da clave de seguranza esgotou o tempo ou foi anulado."
           already_added_error: "Xa rexistrou esta clave de seguranza. Non precisa volver rexistrala."
-          edit: "Editar clave de seguranza"
           save: "Gardar"
-          edit_description: "Nome da clave de seguranza"
           name_required_error: "Debe escribir un nome para a clave de seguranza."
       change_about:
         title: "Cambiar «Verbo de min»"
@@ -1566,10 +1569,8 @@ gl:
       other: respostas
     signup_cta:
       sign_up: "Rexistrarse"
-      hide_session: "Lémbremo mañá"
       hide_forever: "non grazas"
       intro: "Ola! Todo indica que goza coa discusión pero aínda non solicitou inscrición dunha conta."
-      value_prop: "Cando crea unha conta, lembramos exactamente o que ten lido, polo que sempre volve onde o deixou. Tamén recibe notificacións, desde aquí e por correo electrónico cando alguén lle responde. E pode amosarlle aprecio ás publicacións para compartir o amor. :heartpulse:"
     summary:
       enabled_description: "Está vendo un resumo deste tema: as publicacións máis interesantes determinadas pola comunidade."
       description:
@@ -1592,6 +1593,8 @@ gl:
       leave_message: "Confirma o abandono desta mensaxe?"
       remove_allowed_user: "Confirma que quere retirar a %{name} desta mensaxe?"
       remove_allowed_group: "Confirma que quere retirar a %{name} desta mensaxe?"
+      leave: "Abandonar"
+      remove_user: "Retirar usuario"
     email: "Correo electrónico"
     username: "Nome de usuario"
     last_seen: "Visto"
@@ -1643,7 +1646,6 @@ gl:
       second_factor_backup_title: "Copia de seguranza de dobre paso"
       second_factor_backup_description: "Escriba un dos códigos de copia de seguranza:"
       second_factor: "Iniciar sesión cunha app autenticadora"
-      security_key_description: "Cando teña a clave de seguranza preparada, prema no botón Autenticar con clave de seguranza que se amosa a continuación."
       security_key_alternative: "Tentalo doutro xeito"
       security_key_authenticate: "Autenticar con clave de seguranza"
       security_key_not_allowed_error: "O proceso de autenticación da clave de seguranza esgotou o tempo ou foi cancelado."
@@ -1751,9 +1753,6 @@ gl:
       min_content_not_reached:
         one: "Seleccione como mínimo %{count} elemento."
         other: "Seleccione como mínimo %{count} elementos."
-      invalid_selection_length:
-        one: "A selección debe ter cando menos %{count} carácter."
-        other: "A selección debe ter cando menos %{count} caracteres."
       components:
         categories_admin_dropdown:
           title: "Xestionar categorías"
@@ -1933,6 +1932,7 @@ gl:
       empty: "Non se atoparon notificacións."
       post_approved: "A súa publicación foi aprobada"
       reviewable_items: "elementos que requiren revisión"
+      watching_first_post_label: "Novo tema"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -1945,6 +1945,10 @@ gl:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} e %{count} outro</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} e %{count} outros</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} e %{count} máis"
+        other: "%{username}, %{username2} e %{count} máis"
       liked_consolidated_description:
         one: "gustoulles %{count} das súas publicacións"
         other: "gustáronlles %{count} das súas publicacións"
@@ -2107,6 +2111,13 @@ gl:
     not_logged_in_user: "páxina do usuario cun resumo das actividades e preferencias actuais"
     current_user: "ir á súa páxina do usuario"
     view_all: "ver todas %{tab}"
+    user_menu:
+      tabs:
+        replies: "Réplicas"
+        mentions: "Mencións"
+        likes: "Gústame"
+        bookmarks: "Marcadores"
+        profile: "Perfil"
     topics:
       new_messages_marker: "última visita"
       bulk:
@@ -2688,10 +2699,6 @@ gl:
         confirm:
           one: "Confirma a eliminación desta publicación?"
           other: "Confirma a eliminación destas %{count} publicacións?"
-      merge:
-        confirm:
-          one: "Confirma a combinación desas publicacións?"
-          other: "Confirma a combinación destas %{count} publicacións?"
       revisions:
         controls:
           first: "Primeira revisión"
@@ -3082,7 +3089,6 @@ gl:
         this_week: "Semana"
         today: "Hoxe"
         other_periods: "ver arriba:"
-    browser_update: 'Desafortunadamente, <a href="https://www.discourse.org/faq/#browser"> o seu navegador é demasiado vello para traballar neste sitio</a>. Por favor, <a href="https://browsehappy.com">actualice o seu navegador</a> para ver contido enriquecido, iniciar sesión e responder.'
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
@@ -3213,7 +3219,6 @@ gl:
     download_calendar:
       download: "Descargar"
     tagging:
-      all_tags: "Todas as etiquetas"
       other_tags: "Outras etiquetas"
       selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sen etiquetas"
@@ -3267,7 +3272,6 @@ gl:
       tag_list_joiner: ", "
       delete_unused: "Eliminar etiquetas sen usar"
       delete_unused_description: "Eliminar todas as etiquetas que non estean asociadas a ningún tema ou mensaxe privada"
-      cancel_delete_unused: "Cancelar"
       filters:
         without_category: "%{filter} %{tag} temas"
         with_category: "%{filter}%{tag} temas en %{category}"
@@ -3346,14 +3350,18 @@ gl:
         member: "membro"
         regular: "habitual"
         leader: "líder"
-    user_activity:
-      no_activity_others: "Sen actividade."
-      no_replies_others: "Sen respostas."
-      no_likes_others: "Ningún Gústame en publicacións."
     sidebar:
-      unread_count: "%{count} pendente de lectura"
-      new_count: "%{count} novo"
+      unread_count:
+        one: "%{count} pendente de lectura"
+        other: "%{count} pendentes de lectura"
+      new_count:
+        one: "%{count} novo"
+        other: "%{count} novos"
+      more: "Máis"
+      all_categories: "Todas as categorías"
       sections:
+        about:
+          header_link_text: "Verbo de"
         messages:
           header_link_text: "Mensaxes"
           links:
@@ -3365,19 +3373,32 @@ gl:
             unread_with_count: "(%{count}) pendente de ler"
             archive: "Arquivo"
         tags:
-          header_link_title: "todas as etiquetas"
           header_link_text: "Etiquetas"
         categories:
-          header_link_title: "todas as categorías"
           header_link_text: "Categorías"
-        topics:
-          header_link_title: "inicio"
-          header_link_text: "Temas"
+        community:
+          header_link_text: "Comunidade"
           links:
+            about:
+              content: "Verbo de"
+            admin:
+              content: "Administración"
+            badges:
+              content: "Insignias"
+            faq:
+              content: "PMF"
             tracked:
               content: "Seguido"
+            groups:
+              content: "Grupos"
+              title: "Todos os grupos"
+            users:
+              content: "Usuarios"
             my_posts:
               content: "As miñas publicacións"
+            review:
+              content: "Revisar"
+              title: "revisar"
   admin_js:
     type_to_filter: "escriba para filtrar..."
     admin:
@@ -4492,7 +4513,6 @@ gl:
         cant_delete_all_too_many_posts:
           one: "Non é posíbel eliminar todas as publicacións porque o usuario ten máis dunha publicación. (delete_all_posts_max)"
           other: "Non é posíbel eliminar todas as publicacións porque o usuario ten máis de %{count} publicacións. (delete_all_posts_max)"
-        delete_confirm: "Xeralmente é preferíbel anonimizar os usuarios mellor ca eliminalos, para evitar retirar contido das discusións existentes.<br><br>Está SEGURO de que quere eliminar este usuario? Isto é permanente!"
         delete_and_block: "Eliminar e <b>bloquear</b> este enderezo de correo e de IP"
         delete_dont_block: "Só eliminar"
         deleting_user: "Eliminando usuario..."
@@ -4617,7 +4637,6 @@ gl:
         recommended: "Recomendamos personalizar o seguinte texto para axeitalo ás súas necesidades:"
         show_overriden: "Amosar só os cambios"
         locale: "Idioma:"
-        fallback_locale_warning: "Está a editar un idioma baseado en %{fallback}. Os usuarios que escollan %{fallback} como idioma de interface non verán os cambios."
         more_than_50_results: "Hai máis de 50 resultados. Restrinxa a busca."
       settings:
         show_overriden: "Amosar só os cambios"
@@ -4827,15 +4846,13 @@ gl:
           replace: "Substituír"
   wizard_js:
     wizard:
-      done: "Feito"
-      finish: "Finalizar"
       back: "Volver"
       next: "Seguinte"
+      step-text: "Paso"
       step: "%{current} de %{total}"
       upload: "Cargar"
       uploading: "Cargando..."
       upload_error: "Sentímolo pero produciuse un erro ao cargar ese ficheiro. Ténteo de novo."
-      quit: "Pode que logo"
       staff_count:
         one: "A súa comunidade ten %{count} en equipo (vostede)."
         other: "A súa comunidade ten %{count} en equipo, incluído vostede."

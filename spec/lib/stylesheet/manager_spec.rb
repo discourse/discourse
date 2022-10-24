@@ -2,7 +2,7 @@
 
 require 'stylesheet/compiler'
 
-describe Stylesheet::Manager do
+RSpec.describe Stylesheet::Manager do
   def manager(theme_id = nil)
     Stylesheet::Manager.new(theme_id: theme_id)
   end
@@ -18,7 +18,7 @@ describe Stylesheet::Manager do
     expect(link).not_to eq("")
   end
 
-  context "themes with components" do
+  describe "themes with components" do
     let(:child_theme) { Fabricate(:theme, component: true, name: "a component").tap { |c|
       c.set_field(target: :common, name: "scss", value: ".child_common{.scss{color: red;}}")
       c.set_field(target: :desktop, name: "scss", value: ".child_desktop{.scss{color: red;}}")
@@ -148,7 +148,17 @@ describe Stylesheet::Manager do
       })
     end
 
-    context "stylesheet order" do
+    it "stylesheet_link_tag calls the preload callback when set" do
+      preload_list = []
+      preload_callback = ->(href, type) { preload_list << [href, type] }
+
+      manager = manager(theme.id)
+      expect {
+        manager.stylesheet_link_tag(:desktop_theme, 'all', preload_callback)
+      }.to change(preload_list, :size)
+    end
+
+    context "with stylesheet order" do
       let(:z_child_theme) do
         Fabricate(:theme, component: true, name: "ze component").tap do |z|
           z.set_field(target: :desktop, name: "scss", value: ".child_desktop{.scss{color: red;}}")
@@ -341,6 +351,47 @@ describe Stylesheet::Manager do
         upload_id: upload.id,
         type_id: ThemeField.types[:theme_upload_var]
       )
+
+      builder = Stylesheet::Manager::Builder.new(
+        target: :desktop_theme, theme: theme.reload, manager: manager
+      )
+
+      digest2 = builder.digest
+
+      expect(digest1).not_to eq(digest2)
+    end
+
+    it 'can generate digest with a missing upload record' do
+      theme = Fabricate(:theme)
+
+      upload = UploadCreator.new(image, "logo.png").create_for(-1)
+      field = ThemeField.create!(
+        theme_id: theme.id,
+        target_id: Theme.targets[:common],
+        name: "logo",
+        value: "",
+        upload_id: upload.id,
+        type_id: ThemeField.types[:theme_upload_var]
+      )
+
+      upload2 = UploadCreator.new(image2, "icon.png").create_for(-1)
+      field = ThemeField.create!(
+        theme_id: theme.id,
+        target_id: Theme.targets[:common],
+        name: "icon",
+        value: "",
+        upload_id: upload2.id,
+        type_id: ThemeField.types[:theme_upload_var]
+      )
+
+      manager = manager(theme.id)
+
+      builder = Stylesheet::Manager::Builder.new(
+        target: :desktop_theme, theme: theme, manager: manager
+      )
+
+      digest1 = builder.digest
+      upload.delete
 
       builder = Stylesheet::Manager::Builder.new(
         target: :desktop_theme, theme: theme.reload, manager: manager
@@ -607,7 +658,18 @@ describe Stylesheet::Manager do
       expect(details1[:new_href]).not_to eq(details2[:new_href])
     end
 
-    context "theme colors" do
+    it "calls the preload callback when set" do
+      preload_list = []
+      cs = Fabricate(:color_scheme, name: 'Funky')
+      theme = Fabricate(:theme, color_scheme_id: cs.id)
+      preload_callback = ->(href, type) { preload_list << [href, type] }
+
+      expect {
+        manager.color_scheme_stylesheet_link_tag(theme.id, 'all', preload_callback)
+      }.to change(preload_list, :size).by(1)
+    end
+
+    context "with theme colors" do
       let(:theme) { Fabricate(:theme).tap { |t|
         t.set_field(target: :common, name: "color_definitions", value: ':root {--special: rebeccapurple;}')
         t.save!
@@ -696,7 +758,7 @@ describe Stylesheet::Manager do
       end
     end
 
-    context 'encoded slugs' do
+    context 'with encoded slugs' do
       before { SiteSetting.slug_generation_method = 'encoded' }
       after { SiteSetting.slug_generation_method = 'ascii' }
 

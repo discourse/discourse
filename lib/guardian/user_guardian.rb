@@ -27,7 +27,7 @@ module UserGuardian
     return true if is_staff?
     return false if SiteSetting.username_change_period <= 0
     return false if is_anonymous?
-    is_me?(user) && ((user.post_count + user.topic_count) == 0 || user.created_at > SiteSetting.username_change_period.days.ago)
+    is_me?(user) && user.created_at > SiteSetting.username_change_period.days.ago
   end
 
   def can_edit_email?(user)

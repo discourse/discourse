@@ -57,8 +57,6 @@ id:
   themes:
     bad_color_scheme: "Tidak dapat memperbarui tema, palet warna tidak valid"
     other_error: "Terjadi masalah saat memperbarui tema"
-    compile_error:
-      unrecognized_extension: "Ekstensi file tidak dikenal: %{extension}"
     import_error:
       generic: Terjadi kesalahan saat mengimpor tema itu
       unpack_failed: "Gagal membongkar berkas"
@@ -254,10 +252,7 @@ id:
             hex:
               invalid: "bukan warna yang valid."
       <<: *errors
-  vip_category_name: "Lounge / Santai"
   staff_category_name: "Staf"
-  lounge_welcome:
-    title: "Selamat datang di Lounge"
   category:
     topic_prefix: "Tentang kategori %{category}"
     errors:
@@ -690,19 +685,10 @@ id:
       title: "Kirim Ulang Email Aktivasi"
   wizard:
     step:
-      forum_title:
-        title: "Nama"
       privacy:
-        title: "Mengakses"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Umum"
-              restricted:
-                label: "Pribadi"
-      corporate:
-        title: "Organisasi"
+          login_required:
+            placeholder: "Pribadi"
       styling:
         fields:
           homepage_style:

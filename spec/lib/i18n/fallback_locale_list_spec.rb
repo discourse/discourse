@@ -2,7 +2,7 @@
 
 require 'i18n/backend/fallback_locale_list'
 
-describe I18n::Backend::FallbackLocaleList do
+RSpec.describe I18n::Backend::FallbackLocaleList do
   let(:list) { I18n::Backend::FallbackLocaleList.new }
 
   it "works when default_locale is English" do

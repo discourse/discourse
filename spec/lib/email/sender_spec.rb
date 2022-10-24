@@ -2,9 +2,9 @@
 
 require 'email/sender'
 
-describe Email::Sender do
+RSpec.describe Email::Sender do
   before do
-    SiteSetting.secure_media_allow_embed_images_in_emails = false
+    SiteSetting.secure_uploads_allow_embed_images_in_emails = false
   end
   fab!(:post) { Fabricate(:post) }
   let(:mock_smtp_transaction_response) { "250 Ok: queued as 2l3Md07BObzB8kRyHZeoN0baSUAhzc7A-NviRioOr80=@mailhog.example" }
@@ -15,11 +15,11 @@ describe Email::Sender do
     )
   end
 
-  context "disable_emails is enabled" do
+  context "when disable_emails is enabled" do
     fab!(:user) { Fabricate(:user) }
     fab!(:moderator) { Fabricate(:moderator) }
 
-    context "disable_emails is enabled for everyone" do
+    context "when disable_emails is enabled for everyone" do
       before { SiteSetting.disable_emails = "yes" }
 
       it "doesn't deliver mail when mails are disabled" do
@@ -44,7 +44,7 @@ describe Email::Sender do
       end
     end
 
-    context "disable_emails is enabled for non-staff users" do
+    context "when disable_emails is enabled for non-staff users" do
       before { SiteSetting.disable_emails = "non-staff" }
 
       it "doesn't deliver mail to normal user" do
@@ -106,7 +106,7 @@ describe Email::Sender do
     Email::Sender.new(message, :hello).send
   end
 
-  context "host_for" do
+  describe ".host_for" do
     it "defaults to localhost" do
       expect(Email::Sender.host_for(nil)).to eq("localhost")
     end
@@ -126,7 +126,6 @@ describe Email::Sender do
   end
 
   context 'with a valid message' do
-
     let(:reply_key) { "abcd" * 8 }
 
     let(:message) do
@@ -145,7 +144,7 @@ describe Email::Sender do
       email_sender.send
     end
 
-    context "doesn't add return_path when no plus addressing" do
+    context "when no plus addressing" do
       before { SiteSetting.reply_by_email_address = '%{reply_key}@test.com' }
 
       it 'should not set the return_path' do
@@ -154,7 +153,7 @@ describe Email::Sender do
       end
     end
 
-    context "adds return_path with plus addressing" do
+    context "with plus addressing" do
       before { SiteSetting.reply_by_email_address = 'replies+%{reply_key}@test.com' }
 
       it 'should set the return_path' do
@@ -163,7 +162,7 @@ describe Email::Sender do
       end
     end
 
-    context "adds a List-ID header to identify the forum" do
+    context "when topic id is present" do
       fab!(:category) { Fabricate(:category, name: 'Name With Space') }
       fab!(:topic) { Fabricate(:topic, category: category) }
       fab!(:post) { Fabricate(:post, topic: topic) }
@@ -181,8 +180,7 @@ describe Email::Sender do
       end
     end
 
-    context "adds a Message-ID header even when topic id is not present" do
-
+    context "when topic id is not present" do
       it 'should add the right header' do
         email_sender.send
 
@@ -190,7 +188,7 @@ describe Email::Sender do
       end
     end
 
-    context "replaces reply_key in custom headers" do
+    context "when reply_key is present" do
       fab!(:user) { Fabricate(:user) }
       let(:email_sender) { Email::Sender.new(message, :valid_type, user) }
       let(:reply_key) { PostReplyKey.find_by!(post_id: post.id, user_id: user.id).reply_key }
@@ -227,7 +225,7 @@ describe Email::Sender do
       end
     end
 
-    context "adds Precedence header" do
+    describe "adds Precedence header" do
       fab!(:topic) { Fabricate(:topic) }
       fab!(:post) { Fabricate(:post, topic: topic) }
 
@@ -242,15 +240,7 @@ describe Email::Sender do
       end
     end
 
-    context "removes custom Discourse headers from topic notification mails" do
-      fab!(:topic) { Fabricate(:topic) }
-      fab!(:post) { Fabricate(:post, topic: topic) }
-
-      before do
-        message.header['X-Discourse-Post-Id']  = post.id
-        message.header['X-Discourse-Topic-Id'] = topic.id
-      end
-
+    describe "removes custom Discourse headers from digest/registration/other mails" do
       it 'should remove the right headers' do
         email_sender.send
         expect(message.header['X-Discourse-Topic-Id']).not_to be_present
@@ -259,44 +249,40 @@ describe Email::Sender do
       end
     end
 
-    context "removes custom Discourse headers from digest/registration/other mails" do
-      it 'should remove the right headers' do
-        email_sender.send
-        expect(message.header['X-Discourse-Topic-Id']).not_to be_present
-        expect(message.header['X-Discourse-Post-Id']).not_to be_present
-        expect(message.header['X-Discourse-Reply-Key']).not_to be_present
-      end
-    end
-
-    context "email threading" do
-      let(:random_message_id_suffix) { "5f1330cfd941f323d7f99b9e" }
+    describe "email threading" do
       fab!(:topic) { Fabricate(:topic) }
 
       fab!(:post_1) { Fabricate(:post, topic: topic, post_number: 1) }
       fab!(:post_2) { Fabricate(:post, topic: topic, post_number: 2) }
       fab!(:post_3) { Fabricate(:post, topic: topic, post_number: 3) }
       fab!(:post_4) { Fabricate(:post, topic: topic, post_number: 4) }
+      fab!(:post_5) { Fabricate(:post, topic: topic, post_number: 5) }
+      fab!(:post_6) { Fabricate(:post, topic: topic, post_number: 6) }
 
       let!(:post_reply_1_4) { PostReply.create(post: post_1, reply: post_4) }
       let!(:post_reply_2_4) { PostReply.create(post: post_2, reply: post_4) }
       let!(:post_reply_3_4) { PostReply.create(post: post_3, reply: post_4) }
+      let!(:post_reply_4_5) { PostReply.create(post: post_4, reply: post_5) }
+      let!(:post_reply_4_6) { PostReply.create(post: post_4, reply: post_6) }
+      let!(:post_reply_5_6) { PostReply.create(post: post_5, reply: post_6) }
 
       before do
         message.header['X-Discourse-Topic-Id'] = topic.id
-        Email::MessageIdService.stubs(:random_suffix).returns(random_message_id_suffix)
       end
 
-      it "doesn't set the 'In-Reply-To' header but does set the 'References' header on the first post" do
+      it "doesn't set References or In-Reply-To headers on the first post, only generates a Message-ID and saves it against the post" do
         message.header['X-Discourse-Post-Id'] = post_1.id
 
         email_sender.send
+        post_1.reload
 
-        expect(message.header['Message-Id'].to_s).to eq("<topic/#{topic.id}.#{random_message_id_suffix}@test.localhost>")
+        expect(message.header['Message-Id'].to_s).to eq("<discourse/post/#{post_1.id}@test.localhost>")
+        expect(post_1.outbound_message_id).to eq("discourse/post/#{post_1.id}@test.localhost")
         expect(message.header['In-Reply-To'].to_s).to be_blank
-        expect(message.header['References'].to_s).to eq("<topic/#{topic.id}@test.localhost>")
+        expect(message.header['References'].to_s).to be_blank
       end
 
-      it "sets the 'References' header with the incoming email Message-ID if it exists on the first post" do
+      it "uses the existing Message-ID header from the incoming email when sending the first post email" do
         incoming = Fabricate(
           :incoming_email,
           topic: topic,
@@ -304,72 +290,81 @@ describe Email::Sender do
           message_id: "blah1234@someemailprovider.com",
           created_via: IncomingEmail.created_via_types[:handle_mail]
         )
+        post_1.update!(outbound_message_id: incoming.message_id)
         message.header['X-Discourse-Post-Id'] = post_1.id
 
         email_sender.send
 
-        expect(message.header['Message-Id'].to_s).to eq("<topic/#{topic.id}.#{random_message_id_suffix}@test.localhost>")
+        expect(message.header['Message-Id'].to_s).to eq("<blah1234@someemailprovider.com>")
         expect(message.header['In-Reply-To'].to_s).to be_blank
-        expect(message.header['References'].to_s).to eq("<blah1234@someemailprovider.com>")
+        expect(message.header['References'].to_s).to be_blank
       end
 
-      it "sets the 'In-Reply-To' header to the topic canonical reference by default" do
+      it "if no post is directly replied to then the Message-ID of post 1 via outbound_message_id should be used" do
         message.header['X-Discourse-Post-Id'] = post_2.id
 
         email_sender.send
 
-        expect(message.header['Message-Id'].to_s).to eq("<topic/#{topic.id}/#{post_2.id}.#{random_message_id_suffix}@test.localhost>")
-        expect(message.header['In-Reply-To'].to_s).to eq("<topic/#{topic.id}@test.localhost>")
+        expect(message.header['Message-Id'].to_s).to eq("<discourse/post/#{post_2.id}@test.localhost>")
+        expect(message.header['In-Reply-To'].to_s).to eq("<discourse/post/#{post_1.id}@test.localhost>")
+        expect(message.header['References'].to_s).to eq("<discourse/post/#{post_1.id}@test.localhost>")
       end
 
-      it "sets the 'In-Reply-To' header to the newest replied post" do
+      it "sets the References header to the most recently created replied post, as well as the OP, if there are no other replies in the chain" do
         message.header['X-Discourse-Post-Id'] = post_4.id
 
         email_sender.send
 
-        expect(message.header['Message-Id'].to_s).to eq("<topic/#{topic.id}/#{post_4.id}.#{random_message_id_suffix}@test.localhost>")
-        expect(message.header['In-Reply-To'].to_s).to eq("<topic/#{topic.id}/#{post_3.id}.#{random_message_id_suffix}@test.localhost>")
+        expect(message.header['Message-ID'].to_s).to eq("<discourse/post/#{post_4.id}@test.localhost>")
+        expect(message.header['References'].to_s).to eq("<discourse/post/#{post_1.id}@test.localhost> <discourse/post/#{post_3.id}@test.localhost>")
       end
 
-      it "sets the 'References' header to the topic canonical reference and all replied posts" do
-        message.header['X-Discourse-Post-Id'] = post_4.id
+      it "sets the In-Reply-To header to all the posts that the post is connected to via PostReply" do
+        message.header['X-Discourse-Post-Id'] = post_6.id
 
         email_sender.send
+
+        expect(message.header['Message-ID'].to_s).to eq("<discourse/post/#{post_6.id}@test.localhost>")
+        expect(message.header['In-Reply-To'].to_s).to eq("<discourse/post/#{post_4.id}@test.localhost> <discourse/post/#{post_5.id}@test.localhost>")
+      end
+
+      it "sets the In-Reply-To and References header to the most recently created replied post and includes the parents of that post in References, as well as the OP" do
+        message.header['X-Discourse-Post-Id'] = post_4.id
+        PostReply.create(post: post_2, reply: post_3)
+
+        email_sender.send
+
+        expect(message.header['Message-ID'].to_s).to eq("<discourse/post/#{post_4.id}@test.localhost>")
+        expect(message.header['In-Reply-To'].to_s).to eq("<discourse/post/#{post_1.id}@test.localhost> <discourse/post/#{post_2.id}@test.localhost> <discourse/post/#{post_3.id}@test.localhost>")
 
         references = [
-          "<topic/#{topic.id}@test.localhost>",
-          "<topic/#{topic.id}/#{post_3.id}.#{random_message_id_suffix}@test.localhost>",
-          "<topic/#{topic.id}/#{post_2.id}.#{random_message_id_suffix}@test.localhost>",
+          "<discourse/post/#{post_1.id}@test.localhost>",
+          "<discourse/post/#{post_2.id}@test.localhost>",
+          "<discourse/post/#{post_3.id}@test.localhost>"
         ]
-
         expect(message.header['References'].to_s).to eq(references.join(" "))
       end
 
-      it "uses the incoming_email message_id when available, but always uses a random message-id" do
-        topic_incoming_email  = IncomingEmail.create(
-          topic: topic, post: post_1, message_id: "foo@bar", created_via: IncomingEmail.created_via_types[:handle_mail]
-        )
-        post_2_incoming_email = IncomingEmail.create(topic: topic, post: post_2, message_id: "bar@foo")
-        post_4_incoming_email = IncomingEmail.create(topic: topic, post: post_4, message_id: "wat@wat")
-
-        message.header['X-Discourse-Post-Id'] = post_4.id
+      it "handles a complex reply tree to the OP for References, only using one Message-ID if there are multiple parents for a post" do
+        message.header['X-Discourse-Post-Id'] = post_6.id
+        PostReply.create(post: post_2, reply: post_6)
 
         email_sender.send
 
-        expect(message.header['Message-Id'].to_s).to eq("<topic/#{topic.id}/#{post_4.id}.5f1330cfd941f323d7f99b9e@test.localhost>")
+        expect(message.header['Message-ID'].to_s).to eq("<discourse/post/#{post_6.id}@test.localhost>")
+        expect(message.header['In-Reply-To'].to_s).to eq("<discourse/post/#{post_2.id}@test.localhost> <discourse/post/#{post_4.id}@test.localhost> <discourse/post/#{post_5.id}@test.localhost>")
 
         references = [
-          "<#{topic_incoming_email.message_id}>",
-          "<topic/#{topic.id}/#{post_3.id}.#{random_message_id_suffix}@test.localhost>",
-          "<#{post_2_incoming_email.message_id}>",
+          "<discourse/post/#{post_1.id}@test.localhost>",
+          "<discourse/post/#{post_3.id}@test.localhost>",
+          "<discourse/post/#{post_4.id}@test.localhost>",
+          "<discourse/post/#{post_5.id}@test.localhost>"
         ]
-
         expect(message.header['References'].to_s).to eq(references.join(" "))
       end
-
     end
 
-    context "merges custom mandrill header" do
+    describe "merges custom mandrill header" do
       before do
         ActionMailer::Base.smtp_settings[:address] = "smtp.mandrillapp.com"
         message.header['X-MC-Metadata'] = { foo: "bar" }.to_json
@@ -381,7 +376,7 @@ describe Email::Sender do
       end
     end
 
-    context "merges custom sparkpost header" do
+    describe "merges custom sparkpost header" do
       before do
         ActionMailer::Base.smtp_settings[:address] = "smtp.sparkpostmail.com"
         message.header['X-MSYS-API'] = { foo: "bar" }.to_json
@@ -393,7 +388,7 @@ describe Email::Sender do
       end
     end
 
-    context 'email logs' do
+    context 'with email logs' do
       let(:email_log) { EmailLog.last }
 
       it 'should create the right log' do
@@ -457,7 +452,7 @@ describe Email::Sender do
       end
     end
 
-    context "email log with a post id and topic id" do
+    context "with email log with a post id and topic id" do
       let(:topic) { post.topic }
 
       before do
@@ -475,7 +470,7 @@ describe Email::Sender do
       end
     end
 
-    context 'email parts' do
+    context 'with email parts' do
       it 'should contain the right message' do
         email_sender.send
 
@@ -540,15 +535,15 @@ describe Email::Sender do
         .to contain_exactly(*[small_pdf, large_pdf, csv_file].map(&:original_filename))
     end
 
-    context "when secure media enabled" do
+    context "when secure uploads enabled" do
       before do
         setup_s3
         store = stub_s3_store
 
-        SiteSetting.secure_media = true
+        SiteSetting.secure_uploads = true
         SiteSetting.login_required = true
         SiteSetting.email_total_attachment_size_limit_kb = 14_000
-        SiteSetting.secure_media_max_email_embed_image_size_kb = 5_000
+        SiteSetting.secure_uploads_max_email_embed_image_size_kb = 5_000
 
         Jobs.run_immediately!
         Jobs::PullHotlinkedImages.any_instance.expects(:execute)
@@ -571,7 +566,7 @@ describe Email::Sender do
 
       context "when embedding secure images in email is allowed" do
         before do
-          SiteSetting.secure_media_allow_embed_images_in_emails = true
+          SiteSetting.secure_uploads_allow_embed_images_in_emails = true
         end
 
         it "can inline images with duplicate names" do
@@ -595,7 +590,7 @@ describe Email::Sender do
         end
 
         it "does not embed images that are too big" do
-          SiteSetting.secure_media_max_email_embed_image_size_kb = 1
+          SiteSetting.secure_uploads_max_email_embed_image_size_kb = 1
           Email::Sender.new(message, :valid_type).send
           expect(message.attachments.length).to eq(3)
         end
@@ -686,7 +681,6 @@ describe Email::Sender do
   end
 
   context 'with a deleted post' do
-
     it 'should skip sending the email' do
       post = Fabricate(:post, deleted_at: 1.day.ago)
 
@@ -705,7 +699,6 @@ describe Email::Sender do
   end
 
   context 'with a deleted topic' do
-
     it 'should skip sending the email' do
       post = Fabricate(:post, topic: Fabricate(:topic, deleted_at: 1.day.ago))
 
@@ -778,12 +771,12 @@ describe Email::Sender do
           expect(message.header[header]).to eq(nil)
           expect(post_reply_key.user_id).to eq(user.id)
           expect(post_reply_key.post_id).to eq(post.id)
-          expect { email_sender.send }.to change { PostReplyKey.count }.by(0)
+          expect { email_sender.send }.not_to change { PostReplyKey.count }
         end
 
         it 'should find existing key' do
           existing_post_reply_key = PostReplyKey.create(post_id: post.id, user_id: user.id)
-          expect { email_sender.send }.to change { PostReplyKey.count }.by(0)
+          expect { email_sender.send }.not_to change { PostReplyKey.count }
           post_reply_key = PostReplyKey.last
           expect(post_reply_key).to eq(existing_post_reply_key)
         end

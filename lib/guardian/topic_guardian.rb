@@ -158,7 +158,20 @@ module TopicGuardian
   def can_permanently_delete_topic?(topic)
     return false if !SiteSetting.can_permanently_delete
     return false if !topic
+
+    # Ensure that all posts (including small actions) are at least soft
+    # deleted.
     return false if topic.posts_count > 0
+
+    # All other posts that were deleted still must be permanently deleted
+    # before the topic can be deleted with the exception of small action
+    # posts that will be deleted right before the topic is.
+    all_posts_count = Post.with_deleted
+      .where(topic_id: topic.id)
+      .where(post_type: [Post.types[:regular], Post.types[:moderator_action], Post.types[:whisper]])
+      .count
+    return false if all_posts_count > 1
+
     return false if !is_admin? || !can_see_topic?(topic)
     return false if !topic.deleted_at
     return false if topic.deleted_by_id == @user.id && topic.deleted_at >= Post::PERMANENT_DELETE_TIMER.ago
@@ -170,7 +183,7 @@ module TopicGuardian
   end
 
   def can_convert_topic?(topic)
-    return false unless SiteSetting.enable_personal_messages?
+    return false unless @user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
     return false if topic.blank?
     return false if topic.trashed?
     return false if topic.is_category_topic?

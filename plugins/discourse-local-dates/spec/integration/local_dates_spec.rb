@@ -85,13 +85,14 @@ RSpec.describe "Local Dates" do
     expect(cooked).to include("data-countdown=")
   end
 
-  context 'ranges' do
+  describe 'ranges' do
     it 'generates ranges without time' do
       raw = "[date-range from=2022-01-06 to=2022-01-08]"
       cooked = Fabricate(:post, raw: raw).cooked
 
       expect(cooked).to include('data-date="2022-01-06')
-      expect(cooked).to include('data-range="true"')
+      expect(cooked).to include('data-range="from"')
+      expect(cooked).to include('data-range="to"')
       expect(cooked).not_to include('data-time=')
     end
 
@@ -100,7 +101,8 @@ RSpec.describe "Local Dates" do
       cooked = Fabricate(:post, raw: raw).cooked
 
       expect(cooked).to include('data-date="2022-01-06')
-      expect(cooked).to include('data-range="true"')
+      expect(cooked).to include('data-range="to"')
+      expect(cooked).to include('data-range="from"')
       expect(cooked).to include('data-time="13:00"')
       expect(cooked).to include('data-timezone="Australia/Sydney"')
     end
@@ -111,7 +113,7 @@ RSpec.describe "Local Dates" do
 
       expect(cooked).to include('data-date="2022-01-06')
       expect(cooked).to include('data-time="13:00"')
-      expect(cooked).not_to include('data-range=')
+      expect(cooked).not_to include('data-range="to"')
     end
   end
 end

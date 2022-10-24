@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::GithubBlobOnebox do
+RSpec.describe Onebox::Engine::GithubBlobOnebox do
   before do
     @link = "https://github.com/discourse/onebox/blob/master/lib/onebox/engine/github_blob_onebox.rb"
     @uri = URI.parse(@link)
@@ -8,7 +8,7 @@ describe Onebox::Engine::GithubBlobOnebox do
       .to_return(status: 200, body: onebox_response(described_class.onebox_name))
   end
 
-  include_context "engines"
+  include_context "with engines"
   it_behaves_like "an engine"
 
   describe "#to_html" do

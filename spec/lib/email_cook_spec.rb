@@ -3,7 +3,7 @@
 require 'email_cook'
 require 'pretty_text'
 
-describe EmailCook do
+RSpec.describe EmailCook do
   it "uses to PrettyText when there is no [plaintext] in raw" do
     raw = "**Hello world!**"
     expect(cook(raw)).to eq(PrettyText.cook(raw))

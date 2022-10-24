@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-describe SiteSettingExtension do
-
+RSpec.describe SiteSettingExtension do
   # We disable message bus here to avoid a large amount
   # of unneeded messaging, tests are careful to call refresh
   # when they need to.
@@ -21,7 +20,7 @@ describe SiteSettingExtension do
   end
 
   describe '#types' do
-    context "verify enum sequence" do
+    context "when verifying enum sequence" do
       before do
         @types = SiteSetting.types
       end
@@ -73,7 +72,6 @@ describe SiteSettingExtension do
   end
 
   describe "refresh!" do
-
     it "will reset to default if provider vanishes" do
       settings.setting(:hello, 1)
       settings.hello = 100
@@ -585,8 +583,7 @@ describe SiteSettingExtension do
   end
 
   describe "global override" do
-
-    context "default_locale" do
+    context "with default_locale" do
       it "supports adding a default locale via a global" do
         global_setting :default_locale, 'zh_CN'
         settings.default_locale = 'en'
@@ -836,4 +833,23 @@ describe SiteSettingExtension do
     end
   end
 
+  describe 'sidebar category site settings' do
+    describe '.all_settings' do
+      before do
+        settings.setting(:test_setting, 88, category: :sidebar)
+      end
+
+      it 'does not include the sidebar category setting when enable_experimental_sidebar_hamburger site setting is disabled' do
+        SiteSetting.enable_experimental_sidebar_hamburger = false
+
+        expect(settings.all_settings.detect { |s| s[:setting] == :test_setting }).to eq(nil)
+      end
+
+      it 'includes the sidebar category setting when enable_experimental_sidebar_hamburger site setting is enabled' do
+        SiteSetting.enable_experimental_sidebar_hamburger = true
+
+        expect(settings.all_settings.detect { |s| s[:setting] == :test_setting }[:setting]).to eq(:test_setting)
+      end
+    end
+  end
 end

@@ -49,10 +49,19 @@ cs:
   disable_remote_images_download_reason: "Stahování obrázků z cizích serverů bylo vypnuto protože na disku není dostatek místa."
   anonymous: "Anonymní"
   remove_posts_deleted_by_author: "Smazáno autorem"
+  redirect_warning: "Nepodařilo se nám ověřit, že vámi vybraný odkaz byl skutečně zveřejněn na fóru. Pokud přesto chcete pokračovat, vyberte odkaz níže."
+  on_another_topic: "V jiném tématu"
   inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
   themes:
+    bad_color_scheme: "Motiv nelze aktualizovat, neplatná paleta barev"
     other_error: "Něco se pokazilo při aktualizaci skinu (theme)"
+    ember_selector_error: "Omlouváme se – použití selektorů CSS #ember nebo .ember-view není povoleno, protože tyto názvy jsou dynamicky generovány za běhu a časem se budou měnit, což nakonec povede k nefunkčnímu CSS. Zkuste jiný selektor."
+    import_error:
+      generic: Při importu tohoto motivu došlo k chybě
+      upload: "Chyba při vytváření položky pro upload: %{name}. %{errors}"
+      about_json: "Chyba importu: about.json neexistuje nebo je neplatný. Jste si jisti, že se jedná o Discourse motiv?"
   emails:
     incoming:
       default_subject: "Toto téma potřebuje nadpis"
@@ -347,14 +356,12 @@ cs:
               too_many: "Příliš mnoho slov pro tuto akci"
       <<: *errors
   uncategorized_category_name: "Nezařazené"
-  vip_category_name: "VIP"
-  vip_category_description: "Kategorie je přístupná výhradně členům s důvěryhodností 3 a vyšší."
+  general_category_name: "Základní"
   meta_category_name: "Poznámky k webu"
   meta_category_description: "Diskutuje tento web, jeho organizaci, jak funguje a jak ho vylepšit."
   staff_category_name: "Redakce"
   staff_category_description: "Privátní kategorie pro diskuze redakce. Témata jsou viditelná pouze pro moderátory a správce."
   discourse_welcome_topic:
-    title: "Vítejte v Discourse"
     body: |2
 
       První odstavec tohoto připnutého tématu se zobrazí na domovské stránce jako uvítací zpráva pro všechny nové návštěvníky. Je to důležité!
@@ -369,8 +376,6 @@ cs:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Možná budete chtít toto téma v administraci (vpravo nahoře a dole) zavřít, aby se nehromadily odpovědi na oznámeních.
-  lounge_welcome:
-    title: "Vítejte ve VIP"
   category:
     topic_prefix: "O kategorii %{category}"
     post_template: "%{replace_paragraph}\n\nPoužijte následující odstavce pro delší popis, nebo pro vytvoření pokynů ke kategorii nebo pravidel:\n\n- Proč by lidé měli používat tuto kategorii? K čemu slouží?\n\n- Jak přesně je tato kategorie odlišná od ostatních, které již máme?\n\n- Co by měly témata v této kategorii obvykle obsahovat?\n\n- Potřebujeme tuto kategorii? Můžeme ji sloučit s jinou kategorií nebo subkategorií?\n"
@@ -1112,27 +1117,14 @@ cs:
       title: "Znovu odeslat aktivační email"
   wizard:
     step:
-      locale:
-        title: "Vítejte ve vašem Discourse!"
-      forum_title:
-        title: "Jméno"
       privacy:
-        title: "Přístup"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Veřejné"
-              restricted:
-                label: "Soukromé"
-      contact:
-        fields:
-          contact_email:
-            placeholder: "jmeno@priklad.cz"
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-      corporate:
-        title: "Organizace"
+          login_required:
+            placeholder: "Soukromé"
+          must_approve_users:
+            placeholder: "Vyžádat schválení"
+      ready:
+        title: "Váš Discourse je připraven!"
       styling:
         fields:
           styling_preview:
@@ -1149,16 +1141,16 @@ cs:
                 label: "Kategorie a nejnovější témata"
               categories_and_top_topics:
                 label: "Kategorie a populární témata"
-      logos:
-        title: "Loga"
+      branding:
         fields:
           logo:
             label: "Primární loga"
-      icons:
-        title: "Ikony"
-        fields:
           large_icon:
             label: "Velká ikona"
+      corporate:
+        fields:
+          contact_url:
+            placeholder: "https://www.example.com/contact-us"
       invites:
         title: "Pozvi redakci"
       finished:

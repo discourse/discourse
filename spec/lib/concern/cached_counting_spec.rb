@@ -14,14 +14,12 @@ class TestCachedCounting
   end
 end
 
-describe CachedCounting do
-
+RSpec.describe CachedCounting do
   it "should be default disabled in test" do
     expect(CachedCounting.enabled?).to eq(false)
   end
 
-  context "backing implementation" do
-
+  describe "backing implementation" do
     it "can correctly check for flush to db lock" do
       CachedCounting.clear_flush_to_db_lock!
 
@@ -55,7 +53,7 @@ describe CachedCounting do
     end
   end
 
-  context "active record" do
+  describe "active record" do
     class RailsCacheCounter < ActiveRecord::Base
       include CachedCounting
       self.table_name = "posts"

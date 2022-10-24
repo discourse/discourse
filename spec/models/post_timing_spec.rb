@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostTiming do
+RSpec.describe PostTiming do
   fab!(:post) { Fabricate(:post) }
 
   it { is_expected.to validate_presence_of :post_number }

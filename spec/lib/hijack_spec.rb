@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Hijack do
+RSpec.describe Hijack do
   class Hijack::Tester < ApplicationController
     attr_reader :io
 
@@ -30,7 +30,7 @@ describe Hijack do
     Hijack::Tester.new
   end
 
-  context "Request Tracker integration" do
+  describe "Request Tracker integration" do
     let :logger do
       lambda do |env, data|
         @calls += 1

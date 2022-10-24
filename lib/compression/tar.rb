@@ -26,10 +26,12 @@ module Compression
       yield(tar_extract)
     end
 
-    def build_entry_path(_compressed_file, dest_path, compressed_file_path, entry, _allow_non_root_folder)
-      File.join(dest_path, entry.full_name).tap do |entry_path|
-        FileUtils.mkdir_p(File.dirname(entry_path))
-      end
+    def build_entry_path(dest_path, entry, _)
+      File.join(dest_path, entry.full_name)
+    end
+
+    def decompression_results_path(dest_path, _)
+      dest_path
     end
   end
 end

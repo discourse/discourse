@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserAuthTokenSerializer do
+RSpec.describe UserAuthTokenSerializer do
 
   fab!(:user) { Fabricate(:moderator) }
   let(:token) { UserAuthToken.generate!(user_id: user.id, client_ip: '2a02:ea00::', staff: true) }

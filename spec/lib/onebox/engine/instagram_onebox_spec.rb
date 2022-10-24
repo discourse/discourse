@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Onebox::Engine::InstagramOnebox do
+RSpec.describe Onebox::Engine::InstagramOnebox do
   let(:access_token) { 'abc123' }
   let(:link) { "https://www.instagram.com/p/CARbvuYDm3Q" }
   let(:onebox_options) { { allowed_iframe_regexes: Onebox::Engine.origins_to_regexes(["https://www.instagram.com"]) } }

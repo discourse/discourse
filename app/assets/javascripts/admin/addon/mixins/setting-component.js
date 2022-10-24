@@ -86,7 +86,7 @@ export default Mixin.create({
 
   @discourseComputed("type")
   componentType(type) {
-    return CUSTOM_TYPES.indexOf(type) !== -1 ? type : "string";
+    return CUSTOM_TYPES.includes(type) ? type : "string";
   },
 
   @discourseComputed("setting")

@@ -144,12 +144,18 @@ module BackupRestore
   end
 
   def self.keep_it_running
+    db = RailsMultisite::ConnectionManagement.current_db
+
     # extend the expiry by 1 minute every 30 seconds
     Thread.new do
-      # this thread will be killed when the fork dies
-      while true
-        Discourse.redis.expire(running_key, 1.minute)
-        sleep 30.seconds
+      RailsMultisite::ConnectionManagement.with_connection(db) do
+        Thread.current.name = "keep_op_running"
+
+        # this thread will be killed when the fork dies
+        while true
+          Discourse.redis.expire(running_key, 1.minute)
+          sleep 30.seconds
+        end
       end
     end
   end

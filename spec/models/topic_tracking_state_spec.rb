@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicTrackingState do
-
+RSpec.describe TopicTrackingState do
   fab!(:user) { Fabricate(:user) }
   fab!(:whisperers_group) { Fabricate(:group) }
 
@@ -459,7 +458,7 @@ describe TopicTrackingState do
     expect(report.length).to eq(1)
   end
 
-  context 'muted tags' do
+  describe 'muted tags' do
     it "remove_muted_tags_from_latest is set to always" do
       SiteSetting.remove_muted_tags_from_latest = 'always'
       tag1 = Fabricate(:tag)
@@ -580,7 +579,7 @@ describe TopicTrackingState do
 
   end
 
-  context "tag support" do
+  describe "tag support" do
     before do
       SiteSetting.tagging_enabled = true
 
@@ -593,13 +592,13 @@ describe TopicTrackingState do
       )
     end
 
-    it "includes tags when SiteSetting.enable_experimental_sidebar is true" do
+    it "includes tags when SiteSetting.enable_experimental_sidebar_hamburger is true" do
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(1)
       row = report[0]
       expect(row.respond_to?(:tags)).to eq(false)
 
-      SiteSetting.enable_experimental_sidebar = true
+      SiteSetting.enable_experimental_sidebar_hamburger = true
 
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(1)

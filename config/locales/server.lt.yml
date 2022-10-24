@@ -59,8 +59,6 @@ lt:
     bad_color_scheme: "Negalima atnaujinti temos, netinkama spalvų paletė"
     other_error: "Įvyko klaida atnaujinant temą"
     ember_selector_error: "Atsiprašome, naudoti #ember arba .ember-view CSS parinkiklius neleidžiama, nes šie pavadinimai dinamiškai generuojami vykdymo metu ir laikui bėgant keisis, o tai galiausiai sugadins CSS. Išbandykite kitą parinkiklį."
-    compile_error:
-      unrecognized_extension: "Neatpažintas failo plėtinys: %{extension}"
     import_error:
       generic: Importuojant šią temą įvyko klaida
       about_json: "Importo klaida: about.json neegzistuoja arba yra neteisingas. Ar tikrai tai Discourse tema?"
@@ -171,7 +169,6 @@ lt:
       enable_s3_uploads_is_required: "Negalite įgalinti S3 inventoriaus naudojimo, nebent įjungėte S3 įkėlimus."
       page_publishing_requirements: "Puslapio publikavimo įjungti negalima, jei įjungta saugi laikmena."
       s3_backup_requires_s3_settings: "Negalite naudoti S3 kaip atsarginės vietos, nebent nurodėte „%{setting_name}“."
-      secure_media_requirements: "Prieš įjungiant saugią laikmeną, turi būti įjungtas S3 įkėlimas."
       share_quote_facebook_requirements: "Jei norite įgalinti „Facebook“ citatų bendrinimą, turite nustatyti „Facebook“ programos ID."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Negalite vykdyti 2FA, jei vietiniai prisijungimai išjungti."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Negalite vykdyti 2FA, jei DiscoureConnect yra įjungtas."
@@ -489,14 +486,12 @@ lt:
               invalid_url: "Pakeitimo URL neteisingas"
       <<: *errors
   uncategorized_category_name: "Nekategorizuota"
-  vip_category_name: "Šaukykla"
-  vip_category_description: "Kategorija skirta nariams turintiems 3 pasitikėjimo lygį arba aukštesnį."
+  general_category_name: "Bendrieji"
   meta_category_name: "Puslapio atsiliepimai"
   meta_category_description: "Diskusijos apie svetainę, jos organizavimą, kaip ji veikia ir kaip galima ja dar patobulinti."
   staff_category_name: "Personalas"
   staff_category_description: "Privati kategorija personalo diskusijoms. Temos matomos tik administratoriams ir moderatoriams."
   discourse_welcome_topic:
-    title: "Sveiki atvykę į Discourse"
     body: |2
 
       Pirmoji šios prisegtos temos pastraipa bus matoma kaip sveikinimo žinutė visiems naujiems pagrindinio puslapio lankytojams. Tai svarbu!
@@ -511,8 +506,6 @@ lt:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Galbūt norėsite uždaryti šią temą per administratorių :wrench: (viršuje dešinėje ir apačioje), kad atsakymai nesikauptų ant skelbimo.
-  lounge_welcome:
-    title: "Sveiki atvykę į Šaukyklą"
   admin_quick_start_title: "PERSKAITYKITE PIRMIAUSIA: administratoriaus greitas pradžios vadovas"
   category:
     topic_prefix: "Viskas apie %{category} kategoriją"
@@ -1280,7 +1273,6 @@ lt:
     force_https: "Priverskite savo svetainę naudoti tik HTTPS. ĮSPĖJIMAS: NEGALIMA to įjungti, kol nepatikrinate, kad HTTPS yra visiškai nustatytas ir veikia visiškai visur! Ar patikrinote savo CDN, visus socialinius prisijungimus ir visus išorinius logotipus / priklausomybes, kad įsitikintumėte, jog jie taip pat suderinami su HTTPS?"
     summary_score_threshold: "Minimalus balas, kurio reikia, kad įrašas būtų įtrauktas į „Apibendrinti šią temą“"
     summary_timeline_button: "Rodyti mygtuką “Apibendrinti” laiko juostoje"
-    enable_personal_messages: "Leisti 1 patikimumo lygio (konfigūruojamas naudojant minimalų patikimumą, kad būtų išsiųstas pranešimas) vartotojams kurti pranešimus ir atsakyti į pranešimus. Atminkite, kad darbuotojai visada gali siųsti žinutes."
     enable_system_message_replies: "Leidžia vartotojams atsakyti į sistemos pranešimus, net jei asmeniniai pranešimai yra išjungti"
     polling_interval: "Kai apklausa trunka neilgai, kaip dažnai reikia prisijungti prie klientų apklausos milisekundėmis"
     hide_post_sensitivity: "Tikimybė, kad pažymėtas įrašas bus paslėptas"
@@ -1395,7 +1387,6 @@ lt:
     min_trust_to_edit_wiki_post: "Minimalus patikimumo lygis, reikalingas norint redaguoti įrašą, pažymėtą kaip wiki."
     min_trust_to_edit_post: "Minimalus patikimumo lygis, reikalingas norint redaguoti įrašus."
     min_trust_to_allow_self_wiki: "Minimalus patikimumo lygis, kurio reikia norint sukurti vartotojo įrašą „wiki“."
-    min_trust_to_send_messages: "Minimalus patikimumo lygis, reikalingas naujoms asmeninėms žinutėms kurti."
     min_trust_to_send_email_messages: "Minimalus patikimumo lygis, reikalingas asmeniniams pranešimams siųsti el. paštu."
     min_trust_to_post_links: "Minimalus patikimumo lygis, reikalingas norint įtraukti nuorodas į pranešimus"
     min_trust_to_post_embedded_media: "Minimalus patikimumo lygis, reikalingas medijos elementams įterpti į įrašą"
@@ -1527,7 +1518,6 @@ lt:
       empty_selectable_avatars: "Prieš įgalindami šį nustatymą, pirmiausia turite įkelti bent du pasirinktus avatarus."
       allowed_unicode_usernames:
         leading_trailing_slash: "Reguliarioji išraiška neturi prasidėti ir baigtis pasviruoju brūkšniu."
-      google_oauth2_hd_groups: "Prieš įjungdami šį nustatymą, pirmiausia turite nustatyti „google oauth2 hd“."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2658,86 +2648,35 @@ lt:
     register:
       button: "Registruokis"
       title: "Užregistruokite administratoriaus paskyrą"
-      help: "Norėdami pradėti, užregistruokite naują paskyrą"
     confirm_email:
       title: "Patvirtink savo e-paštą"
     resend_email:
       title: "Persiųsti patvirtinimo laišką"
   safe_mode:
     title: "Įeikite į saugųjį režimą"
-    no_customizations: "Išjungti dabartinę temą"
-    only_official: "Išjungti neoficialius įskiepius"
+    no_unofficial_plugins: "Išjungti neoficialius įskiepius"
     no_plugins: "Išjungti visus įskiepius"
     enter: "Įeikite į saugųjį režimą"
     must_select: "Norėdami įjungti saugųjį režimą, turite pasirinkti bent vieną parinktį."
   wizard:
     title: "Discourse sąranka"
     step:
-      locale:
-        title: "Sveiki atvykę į Discourse!"
-        fields:
-          default_locale:
-            description: "Kokia numatytoji jūsų bendruomenės kalba?"
-      forum_title:
-        title: "Vardas"
-        fields:
-          title:
-            label: "Jūsų bendruomenės pavadinimas"
-          site_description:
-            label: "Apibūdinkite savo bendruomenę vienu trumpu sakiniu (naudojamu paieškos rezultatuose ir socialinėje žiniasklaidoje)"
-            placeholder: "Džeinei ir jos draugams skirta vieta aptarti įdomius dalykus"
-          short_site_description:
-            label: "Apibūdinkite savo bendruomenę keliais žodžiais (naudojamas pagrindinio puslapio pavadinime)"
-            placeholder: "Pati geriausia bendruomenė"
       introduction:
-        title: "Prisistatymas"
         fields:
-          welcome:
-            label: "Pirmoji tema"
+          site_description:
+            placeholder: "Džeinei ir jos draugams skirta vieta aptarti įdomius dalykus"
+          default_locale:
+            label: "Kalba"
       privacy:
-        title: "Prieiga"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Vieša"
-                description: "Kiekvienas gali pasiekti šią bendruomenę"
-              restricted:
-                label: "Privatu"
-                description: "Tik prisijungę vartotojai gali pasiekti šią bendruomenę"
-          privacy_options:
-            description: "Kaip nauji vartotojai prisiregistruoja prie paskyros?"
-            choices:
-              open:
-                label: "Vartotojai gali užsiregistruoti savarankiškai."
-              invite_only:
-                label: "Prieš prisiregistruodami naudotojai turi būti pakviesti patikimų naudotojų ar darbuotojų."
-              must_approve:
-                label: "Vartotojai gali užsiregistruoti patys, tačiau turi būti patvirtinti darbuotojų."
-      contact:
-        title: "Susisiekite"
-        fields:
-          contact_email:
-            label: "Paštas"
-            placeholder: "vardas@example.com"
-          contact_url:
-            label: "Interneto svetainė"
-            placeholder: "https://www.example.com/contact-us"
-          site_contact:
-            label: "Automatiniai pranešimai"
-      corporate:
-        title: "Organizacija"
-        fields:
-          company_name:
-            label: "Įmonės pavadinimas"
-            placeholder: "Organizacijos pavyzdys"
-          governing_law:
-            label: "Reglamentuojantys teisės aktai"
-            placeholder: "Kalifornijos įstatymas"
-          city_for_disputes:
-            placeholder: "San Franciskas, Kalifornija"
+          login_required:
+            placeholder: "Privatu"
+            extra_description: "Tik prisijungę vartotojai gali pasiekti šią bendruomenę"
+          must_approve_users:
+            placeholder: "Reikalauja patvirtinimo"
+      ready:
+        title: "Jūsų Discourse paruoštas!"
       styling:
-        title: "Stilingas"
         fields:
           color_scheme:
             label: "Spalvų schema"
@@ -2758,20 +2697,31 @@ lt:
                 label: "Kategorijos su paskutinėmis temomis"
               categories_and_top_topics:
                 label: "Kategorijos ir Top temos"
-      logos:
-        title: "Logotipas"
+      branding:
         fields:
           logo:
             label: "Pirminis logotipas"
           logo_small:
             label: "Kvadratinis logotipas"
-      icons:
-        title: "Piktogramos"
-        fields:
           favicon:
             label: "Naršyklės piktograma"
           large_icon:
             label: "Didelė piktograma"
+      corporate:
+        fields:
+          company_name:
+            label: "Įmonės pavadinimas"
+            placeholder: "Organizacijos pavyzdys"
+          governing_law:
+            label: "Reglamentuojantys teisės aktai"
+            placeholder: "Kalifornijos įstatymas"
+          contact_url:
+            label: "Interneto svetainė"
+            placeholder: "https://www.example.com/contact-us"
+          city_for_disputes:
+            placeholder: "San Franciskas, Kalifornija"
+          site_contact:
+            label: "Automatiniai pranešimai"
       invites:
         title: "Pakviesti valdytojus"
         description: "Beveik baigėte! Pakvieskime kelis žmones padėti <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>papildyti jūsų diskusijas</a> įdomiomis temomis ir atsakymais, kad jūsų bendruomenė pradėtų veikti."

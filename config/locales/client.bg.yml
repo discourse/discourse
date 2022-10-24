@@ -159,12 +159,12 @@ bg:
       forwarded: "препрати горния имейл"
     topic_admin_menu: "действия по темата"
     skip_to_main_content: "Прескачане към основното съдържание"
-    wizard_required: "Добре дошли във вашия нов Discourse! Нека започнем с <a href='%{url}' data-auto-route='true'>съветника за настройка</a> ✨"
     emails_are_disabled: "Всички изходящи имейли са изцяло забранени от администратора. Няма да бъдат изпращани никакви имейл известия."
     software_update_prompt:
       message: "Актуализирахме този сайт, <span>моля, презаредете</span>, или може да изпитате неочаквано поведение."
       dismiss: "Отмени"
     bootstrap_mode_disabled: "Режимът на стартиране ще бъде изключен в следващите 24 часа. "
+    bootstrap_invite_button_title: "Изпрати поканите"
     themes:
       default_description: "По подразбиране"
     s3:
@@ -197,7 +197,10 @@ bg:
     not_implemented: "Тази функционалност все още не е добавена."
     no_value: "Не"
     yes_value: "Да"
+    ok_value: "Ок"
+    cancel_value: "Прекрати"
     submit: "Изпрати"
+    delete: "Изтрий"
     generic_error: "Съжаляваме, възникна грешка."
     generic_error_with_reason: "Грешка: %{error}"
     sign_up: "Регистрация"
@@ -553,6 +556,7 @@ bg:
       forever: "Завинаги"
       relative: "Относително време"
       none: "Няма нужда"
+      never: "Никога"
       last_custom: "Последна персонализирана дата и час"
       custom: "Друга дата и час"
       select_timeframe: "Избери времева рамка"
@@ -1034,6 +1038,8 @@ bg:
       enable_defer: "Активирайте отлагане, за да маркирате темите като непрочетени"
       experimental_sidebar:
         options: "Опции"
+        navigation_section: "Навигация"
+        list_destination_default: "По подразбиране"
       change: "промени"
       featured_topic: "Представена тема"
       moderator: "%{user} е модератор"
@@ -1130,6 +1136,7 @@ bg:
         move_to_archive: "Архив"
         failed_to_move: "Грешка при преместването на съобщенията (може би интернета ви спря?)"
         tags: "Етикети"
+        all_tags: "Всички тагове"
         warnings: "Официални предупреждения"
         read_more_in_group: "Искате ли да прочетете повече? Разгледайте други съобщения в %{groupLink}."
         read_more: "Искате ли да прочетете повече? Разгледайте други съобщения в <a href='%{basePath}/u/%{username}/messages'>лични съобщения</a>."
@@ -1202,8 +1209,6 @@ bg:
         edit: "Редактирай"
         edit_title: "Редактиране на Authenticator"
         edit_description: "Име на Authenticator"
-        enable_security_key_description: |
-          Когато сте <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">хардуерен ключ за сигурност</a> , натиснете бутона Регистриране по-долу.
         totp:
           title: "Authenticator, базиран на токени"
           add: "Добавете Authenticator"
@@ -1211,14 +1216,10 @@ bg:
           name_and_code_required_error: "Трябва да предоставите име и кода от вашето приложение за удостоверяване."
         security_key:
           register: "Регистриране"
-          title: "Ключове за сигурност"
-          add: "Добавете ключ за сигурност"
           default_name: "Основен ключ за сигурност"
           not_allowed_error: "Процесът на регистрация на ключ за сигурност или е изтекъл, или е бил анулиран."
           already_added_error: "Вече сте регистрирали този ключ за сигурност. Не е нужно да го регистрирате отново."
-          edit: "Редактиране на ключа за сигурност"
           save: "Запази"
-          edit_description: "Име на ключа за сигурност"
           name_required_error: "Трябва да посочите име за вашия ключ за сигурност."
       change_about:
         title: "Смяна на За мен"
@@ -1578,11 +1579,9 @@ bg:
       other: отговори
     signup_cta:
       sign_up: "Регистрирай се"
-      hide_session: "Напомни ми утре"
       hide_forever: "не благодаря"
       hidden_for_session: "Добре, ще те попитаме утре. Винаги можете да използвате „Вход“ и за създаване на акаунт."
       intro: "Здравейте! Изглежда, че следите дискусията, но все още не сте създали собствен профил."
-      value_prop: "Когато създадете профил, ще отбелязваме това, което сте чели, така че да можете да продължите от там, откъдето сте спрели. Можете също така да получавате известия тук и по електронната поща, когато има нови мнения. Също така ще може да маркирате любимите си публикации."
     summary:
       enabled_description: "В момента гледате резюме на тази тема: най-интересните публикации определени от общността."
       description_time_MF: "Има{replyCount, plural, one {<b>#</b> reply} other { <b>#</b> отговора}} с очаквано време за четене <b>{readingTime, plural, one {# минута} other {# минути}}</b>."
@@ -1604,6 +1603,8 @@ bg:
       leave_message: "Сигурни ли сте, че искате да оставите това съобщение?"
       remove_allowed_user: "Сигурни ли сте, че искате да премахнете %{name} от това съобщение?"
       remove_allowed_group: "Сигурни ли сте, че искате да премахнете %{name} от това съобщение?"
+      leave: "Напусни"
+      remove_user: "Премахни потребител"
     email: "Имейл"
     username: "Потребителско име"
     last_seen: "Видяно"
@@ -1658,7 +1659,6 @@ bg:
       second_factor_backup_title: "Двуфакторно резервно копие"
       second_factor_backup_description: "Моля, въведете един от вашите резервни кодове:"
       second_factor: "Влезте с помощта на приложението Authenticator"
-      security_key_description: "Когато сте подготвили вашия физически ключ за сигурност, натиснете бутона Удостоверяване с ключ за сигурност по-долу."
       security_key_alternative: "Опитайте друг начин"
       security_key_authenticate: "Удостоверяване с ключ за сигурност"
       security_key_not_allowed_error: "Процесът на удостоверяване на ключа за сигурност или изтече, или беше анулиран."
@@ -1769,9 +1769,6 @@ bg:
       min_content_not_reached:
         one: "Изберете поне %{count} елемент."
         other: "Изберете поне %{count} елемента."
-      invalid_selection_length:
-        one: "Изборът трябва да съдържа поне %{count} знак."
-        other: "Изборът трябва да съдържа поне %{count} знака."
       components:
         tag_drop:
           filter_for_more: Филтрирайте за повече...
@@ -1924,6 +1921,7 @@ bg:
       none: "В момента не могат да бъдат заредени уведомленията."
       empty: "Няма намерени нотификации."
       reviewable_items: "точки, изискващи преглед"
+      watching_first_post_label: "Нова тема"
       dismiss_confirmation:
         dismiss: "Отмени"
         cancel: "Отмени"
@@ -2056,6 +2054,13 @@ bg:
     go_back: "Назад "
     not_logged_in_user: "Потребителска страница с история на текущата дейност и предпочитания"
     current_user: "Отиди към потребителската страница "
+    user_menu:
+      tabs:
+        replies: "Отговори"
+        mentions: "Споменавания"
+        likes: "Дадени харесвания"
+        bookmarks: "Отметки"
+        profile: "Профил"
     topics:
       new_messages_marker: "последно посещение"
       bulk:
@@ -2920,7 +2925,6 @@ bg:
     download_calendar:
       download: "Изтегли"
     tagging:
-      all_tags: "Всички тагове"
       other_tags: "Други тагове"
       selector_all_tags: "всички тагове"
       selector_no_tags: "няма тагове"
@@ -2934,7 +2938,6 @@ bg:
       sort_by_count: "брой"
       sort_by_name: "име"
       manage_groups_description: "Дефинирай групи за организране на етикетите"
-      cancel_delete_unused: "Отмени"
       filters:
         without_category: "%{filter} %{tag} теми"
       notifications:
@@ -2986,9 +2989,17 @@ bg:
         regular: "редовен"
         leader: "лидер"
     sidebar:
-      unread_count: "%{count} непрочетен"
-      new_count: "%{count} нов"
+      unread_count:
+        one: "%{count} непрочетен"
+        other: "%{count} непрочетени"
+      new_count:
+        one: "%{count} нов"
+        other: "%{count} нови"
+      more: "Повече"
+      all_categories: "Всички категории"
       sections:
+        about:
+          header_link_text: "Относно"
         messages:
           header_link_text: "Съобщения"
           links:
@@ -3000,19 +3011,32 @@ bg:
             unread_with_count: "Непрочетен (%{count})"
             archive: "Архив"
         tags:
-          header_link_title: "всички тагове"
           header_link_text: "Тагове"
         categories:
-          header_link_title: "всички категории"
           header_link_text: "Категории"
-        topics:
-          header_link_title: "начало"
-          header_link_text: "Теми"
+        community:
+          header_link_text: "Общност "
           links:
+            about:
+              content: "Относно"
+            admin:
+              content: "Администратор"
+            badges:
+              content: "Значки"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Следени"
+            groups:
+              content: "Групи"
+              title: "Всички групи"
+            users:
+              content: "Потребители"
             my_posts:
               content: "Моите публикации"
+            review:
+              content: "Преглед"
+              title: "преглед"
   admin_js:
     type_to_filter: "филтрирай..."
     admin:
@@ -3833,13 +3857,12 @@ bg:
           topics: "Теми"
   wizard_js:
     wizard:
-      done: "Готово"
       back: "Назад"
       next: "Напред"
+      step-text: "Стъпка"
       upload: "Качване"
       uploading: "Качва се..."
       upload_error: "Съжаляваме, възникна грешка при качването на този файл. Моля, опитайте отново."
-      quit: "Може би по-късно"
       invites:
         add_user: "добавяне"
         roles:

@@ -277,14 +277,12 @@ et:
             payload_url:
               invalid: "URL on vigane. URL peab sisaldama http:// või https://. Ning tühikud ei ole lubatud."
       <<: *errors
-  vip_category_name: "Lounge"
-  vip_category_description: "Liik, mis on eksklusiivne kasutajatele, kellel on usaldustase 3 või kõrgem."
+  general_category_name: "Üldine"
   meta_category_name: "Saidi tagasiside."
   meta_category_description: "Arutelu selle saidi, tema korralduse, töömeetodite ja arenguvõimaluste kohta."
   staff_category_name: "Meeskond"
   staff_category_description: "Privaatfoorum meeskonnasisesteks aruteludeks. Teemad on nähtavad vaid adminnidele ja moderaatoritele."
   discourse_welcome_topic:
-    title: "Tere tulemast Discourse'i"
     body: |2
 
       Selle märgistatud teema esimene lõik saab olema kõikidele uutele külastajatele nähtav kui tervitustekst sinu avalehel. See on oluline!
@@ -299,8 +297,6 @@ et:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Ilmselt peaksid sa selle teema administreerimise alt sulgema :wrench: (üleval paremal ja allääres), et teadandele vastuseid ei kuhjuks.
-  lounge_welcome:
-    title: "Tere tulemast Lounge'i"
   category:
     topic_prefix: "Liigist %{category}"
     post_template: "%{replace_paragraph}\n\nKasuta järgnevaid lõikusid pikema kirjelduse jaoks või foorumi juhendi või reeglite jaoks:\n\n- Miks peaksid inimesed seda foorumit kasutama? Mille jaoks see on?\n\n- Mille poolest erineb see meie teistest foorumitest?\n\n- Mis infot peaksid selle foorumi teemad sisaldama?\n\n- Kas meil on seda foorumit vaja? Kas me saame seda foorumit ühendada teise foorumiga või alamfoorumiga?\n"
@@ -1010,58 +1006,30 @@ et:
     register:
       button: "Registreeru"
       title: "Registreeri adminni konto"
-      help: "alustamiseks registreeri uus konto"
     resend_email:
       title: "Saada aktiveerimismeil uuesti"
   safe_mode:
     title: "Sisene turvalisse režiimi"
-    only_official: "Keela kõik mitteametlikud pluginad"
+    no_unofficial_plugins: "Keela kõik mitteametlikud pluginad"
     no_plugins: "Keela kõik pluginad"
     enter: "Sisene turvalisse režiimi"
   wizard:
     title: "Discourse sätted"
     step:
-      locale:
-        title: "Tere tulemast oma Discourse'i!"
-        fields:
-          default_locale:
-            description: "Mis on Sinu kogukonna vaikekeel?"
-      forum_title:
-        title: "Nimi"
+      introduction:
         fields:
           title:
-            label: "Sinu kogukonna nimi"
             placeholder: "Jane ajaviitenurgake"
           site_description:
             placeholder: "Koht Janele ja tema sõpradele lahedate arutelude jaoks"
-      introduction:
-        title: "Sissejuhatus"
-        fields:
-          welcome:
-            label: "Tervitusteema"
-            one_paragraph: "Palun koonda oma tervitustekst ühte lõiku."
       privacy:
-        title: "Juurdepääs"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Avalik"
-              restricted:
-                label: "Privaatne"
-      contact:
-        title: "Kontakt"
-        fields:
-          contact_email:
-            label: "Meil"
-            placeholder: "nimi@kuskil.ee"
-          contact_url:
-            label: "Veebileht"
-            placeholder: "https://www.example.com/contact-us"
-          site_contact:
-            label: "Automaatsed sõnumid"
-      corporate:
-        title: "Organisatsioon"
+          login_required:
+            placeholder: "Privaatne"
+          must_approve_users:
+            placeholder: "Nõua heakskiitu"
+      ready:
+        title: "Sinu Discourse on valmis!"
       styling:
         fields:
           styling_preview:
@@ -1076,16 +1044,19 @@ et:
                 label: "Foorumid esiletõstetud teemadega"
               categories_and_latest_topics:
                 label: "Foorumid ja viimased teemad"
-      logos:
-        title: "Logod"
+      branding:
         fields:
           logo:
             label: "Peamine logo"
-      icons:
-        title: "Ikoonid"
-        fields:
           large_icon:
             label: "Suur ikoon"
+      corporate:
+        fields:
+          contact_url:
+            label: "Veebileht"
+            placeholder: "https://www.example.com/contact-us"
+          site_contact:
+            label: "Automaatsed sõnumid"
       invites:
         title: "Kutsu meeskonda"
       finished:

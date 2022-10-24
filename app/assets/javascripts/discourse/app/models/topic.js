@@ -22,8 +22,9 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { resolveShareUrl } from "discourse/helpers/share-url";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import deprecated from "discourse-common/lib/deprecated";
+import { applyModelTransformations } from "discourse/lib/model-transformers";
 
-export function loadTopicView(topic, args) {
+export async function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
   const url = `${getURL("/t/")}${topic.id}`;
   const jsonUrl = (data.nearPost ? `${url}/${data.nearPost}` : url) + ".json";
@@ -32,12 +33,12 @@ export function loadTopicView(topic, args) {
   delete data.__type;
   delete data.store;
 
-  return PreloadStore.getAndRemove(`topic_${topic.id}`, () =>
+  const json = await PreloadStore.getAndRemove(`topic_${topic.id}`, () =>
     ajax(jsonUrl, { data })
-  ).then((json) => {
-    topic.updateFromJson(json);
-    return json;
-  });
+  );
+
+  topic.updateFromJson(json);
+  return json;
 }
 
 export const ID_CONSTRAINT = /^\d+$/;
@@ -61,9 +62,7 @@ const Topic = RestModel.extend({
   @discourseComputed("posters.[]")
   lastPoster(posters) {
     if (posters && posters.length > 0) {
-      const latest = posters.filter(
-        (p) => p.extras && p.extras.indexOf("latest") >= 0
-      )[0];
+      const latest = posters.filter((p) => p.extras?.includes("latest"))[0];
       return latest || posters.firstObject;
     }
   },
@@ -164,7 +163,7 @@ const Topic = RestModel.extend({
     const newTags = [];
 
     tags.forEach(function (tag) {
-      if (title.indexOf(tag.toLowerCase()) === -1) {
+      if (!title.includes(tag.toLowerCase())) {
         newTags.push(tag);
       }
     });
@@ -867,6 +866,10 @@ Topic.reopenClass({
     data.enabled_until = enabledUntil;
 
     return ajax(`/t/${topicId}/slow_mode`, { type: "PUT", data });
+  },
+
+  async applyTransformations(topics) {
+    await applyModelTransformations("topic", topics);
   },
 });
 

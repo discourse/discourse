@@ -1,15 +1,8 @@
 import Service from "@ember/service";
 import EmberObject, { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import {
-  cancel,
-  debounce,
-  later,
-  next,
-  once,
-  run,
-  throttle,
-} from "@ember/runloop";
+import { cancel, debounce, next, once, throttle } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import Session from "discourse/models/session";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
@@ -20,6 +13,7 @@ import userPresent, {
 import { bind } from "discourse-common/utils/decorators";
 import Evented from "@ember/object/evented";
 import { isTesting } from "discourse-common/config/environment";
+import getURL from "discourse-common/lib/get-url";
 
 const PRESENCE_INTERVAL_S = 30;
 const PRESENCE_DEBOUNCE_MS = isTesting() ? 0 : 500;
@@ -177,15 +171,13 @@ class PresenceChannelState extends EmberObject.extend(Evented) {
 
     this.lastSeenId = initialData.last_message_id;
 
-    let callback = (data, global_id, message_id) =>
-      run(() => this._processMessage(data, global_id, message_id));
     this.presenceService.messageBus.subscribe(
       `/presence${this.name}`,
-      callback,
+      this._processMessage,
       this.lastSeenId
     );
 
-    this.set("_subscribedCallback", callback);
+    this.set("_subscribedCallback", this._processMessage);
     this.trigger("change");
   }
 
@@ -205,12 +197,10 @@ class PresenceChannelState extends EmberObject.extend(Evented) {
 
   async _resubscribe() {
     this.unsubscribe();
-    // Stored at object level for tests to hook in
-    this._resubscribePromise = this.subscribe();
-    await this._resubscribePromise;
-    delete this._resubscribePromise;
+    await this.subscribe();
   }
 
+  @bind
   async _processMessage(data, global_id, message_id) {
     if (message_id !== this.lastSeenId + 1) {
       // eslint-disable-next-line no-console
@@ -224,9 +214,9 @@ class PresenceChannelState extends EmberObject.extend(Evented) {
 
       await this._resubscribe();
       return;
-    } else {
-      this.lastSeenId = message_id;
     }
+
+    this.lastSeenId = message_id;
 
     if (this.countOnly && data.count_delta !== undefined) {
       this.set("count", this.count + data.count_delta);
@@ -239,11 +229,13 @@ class PresenceChannelState extends EmberObject.extend(Evented) {
         const users = data.entering_users.map((u) => User.create(u));
         this.users.addObjects(users);
       }
+
       if (data.leaving_user_ids) {
         const leavingIds = new Set(data.leaving_user_ids);
         const toRemove = this.users.filter((u) => leavingIds.has(u.id));
         this.users.removeObjects(toRemove);
       }
+
       this.set("count", this.users.length);
       this.trigger("change");
     } else {
@@ -324,7 +316,7 @@ export default class PresenceService extends Service {
     try {
       result = await this._initialDataAjax;
     } catch (e) {
-      later(this, this._makeInitialDataRequest, PRESENCE_GET_RETRY_MS);
+      discourseLater(this, this._makeInitialDataRequest, PRESENCE_GET_RETRY_MS);
       throw e;
     } finally {
       this._initialDataAjax = null;
@@ -481,7 +473,7 @@ export default class PresenceService extends Service {
     channelsToLeave.forEach((ch) => data.append("leave_channels[]", ch));
 
     data.append("authenticity_token", Session.currentProp("csrfToken"));
-    navigator.sendBeacon("/presence/update", data);
+    navigator.sendBeacon(getURL("/presence/update"), data);
   }
 
   _dedupQueue() {
@@ -595,7 +587,7 @@ export default class PresenceService extends Service {
       this._presentChannels.length > 0 &&
       !isTesting()
     ) {
-      this._nextUpdateTimer = later(
+      this._nextUpdateTimer = discourseLater(
         this,
         this._throttledUpdateServer,
         PRESENCE_INTERVAL_S * 1000

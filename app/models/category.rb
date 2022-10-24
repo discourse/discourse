@@ -35,6 +35,7 @@ class Category < ActiveRecord::Base
   belongs_to :user
   belongs_to :latest_post, class_name: "Post"
   belongs_to :uploaded_logo, class_name: "Upload"
+  belongs_to :uploaded_logo_dark, class_name: "Upload"
   belongs_to :uploaded_background, class_name: "Upload"
 
   has_many :topics
@@ -69,6 +70,7 @@ class Category < ActiveRecord::Base
 
   after_create :create_category_definition
   after_destroy :trash_category_definition
+  after_destroy :clear_related_site_settings
 
   before_save :apply_permissions
   before_save :downcase_email
@@ -82,8 +84,8 @@ class Category < ActiveRecord::Base
   after_save :update_reviewables
 
   after_save do
-    if saved_change_to_uploaded_logo_id? || saved_change_to_uploaded_background_id?
-      upload_ids = [self.uploaded_logo_id, self.uploaded_background_id]
+    if saved_change_to_uploaded_logo_id? || saved_change_to_uploaded_logo_dark_id? || saved_change_to_uploaded_background_id?
+      upload_ids = [self.uploaded_logo_id, self.uploaded_logo_dark_id, self.uploaded_background_id]
       UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
     end
   end
@@ -309,6 +311,12 @@ class Category < ActiveRecord::Base
 
   def trash_category_definition
     self.topic&.trash!
+  end
+
+  def clear_related_site_settings
+    if self.id == SiteSetting.general_category_id
+      SiteSetting.general_category_id = -1
+    end
   end
 
   def topic_url
@@ -1064,6 +1072,7 @@ end
 #  default_list_filter                       :string(20)       default("all")
 #  allow_unlimited_owner_edits_on_first_post :boolean          default(FALSE), not null
 #  default_slow_mode_seconds                 :integer
+#  uploaded_logo_dark_id                     :integer
 #
 # Indexes
 #

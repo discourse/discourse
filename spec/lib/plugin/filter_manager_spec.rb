@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Plugin::FilterManager do
+RSpec.describe Plugin::FilterManager do
   let(:instance) { Plugin::FilterManager.new }
 
   it "calls registered filters correctly" do

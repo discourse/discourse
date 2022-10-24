@@ -85,3 +85,6 @@ gl:
           title: "Iconas de cabeceira"
         spinners:
           title: "Indicador de carga"
+        rich_tooltip:
+          description: "Descrición"
+          header: "Cabeceira"

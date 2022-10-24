@@ -15,7 +15,7 @@ acceptance("Shared Drafts", function () {
     assert.strictEqual(categoryChooser.header().value(), "3");
 
     await click(".publish-shared-draft");
-    await click(".bootbox .btn-primary");
+    await click(".dialog-footer .btn-primary");
 
     assert.ok(!exists(".shared-draft-controls"));
   });

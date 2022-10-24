@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Notifications::ConsolidateNotifications do
+RSpec.describe Notifications::ConsolidateNotifications do
   describe '#before_consolidation_callbacks' do
     fab!(:user) { Fabricate(:user) }
     let(:rule) do

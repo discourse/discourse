@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-describe Jobs::InviteEmail do
+RSpec.describe Jobs::InviteEmail do
 
-  context '.execute' do
+  describe '.execute' do
 
     it 'raises an error when the invite_id is missing' do
       expect { Jobs::InviteEmail.new.execute({}) }.to raise_error(Discourse::InvalidParameters)

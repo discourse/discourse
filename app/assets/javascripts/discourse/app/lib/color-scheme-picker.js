@@ -2,7 +2,7 @@ import cookie, { removeCookie } from "discourse/lib/cookie";
 import I18n from "I18n";
 import Session from "discourse/models/session";
 import { ajax } from "discourse/lib/ajax";
-import { later } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 
 export function listColorSchemes(site, options = {}) {
   let schemes = site.get("user_color_schemes");
@@ -73,7 +73,7 @@ export function loadColorSchemeStylesheet(
           document.body.appendChild(link);
         }
         if (!darkMode) {
-          later(() => {
+          discourseLater(() => {
             const schemeType = getComputedStyle(document.body).getPropertyValue(
               "--scheme-type"
             );

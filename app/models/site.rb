@@ -5,7 +5,11 @@ class Site
   include ActiveModel::Serialization
 
   cattr_accessor :preloaded_category_custom_fields
-  self.preloaded_category_custom_fields = Set.new
+
+  def self.reset_preloaded_category_custom_fields
+    self.preloaded_category_custom_fields = Set.new
+  end
+  reset_preloaded_category_custom_fields
 
   ##
   # Sometimes plugins need to have additional data or options available
@@ -65,7 +69,7 @@ class Site
     # corresponding ActiveRecord callback to clear the categories cache.
     Discourse.cache.fetch(categories_cache_key, expires_in: 30.minutes) do
       categories = Category
-        .includes(:uploaded_logo, :uploaded_background, :tags, :tag_groups, category_required_tag_groups: :tag_group)
+        .includes(:uploaded_logo, :uploaded_logo_dark, :uploaded_background, :tags, :tag_groups, category_required_tag_groups: :tag_group)
         .joins('LEFT JOIN topics t on t.id = categories.topic_id')
         .select('categories.*, t.slug topic_slug')
         .order(:position)
@@ -199,4 +203,33 @@ class Site
     MessageBus.publish(SITE_JSON_CHANNEL, '')
   end
 
+  def self.welcome_topic_banner_cache_key(user_id)
+    "show_welcome_topic_banner:#{user_id}"
+  end
+
+  def self.welcome_topic_exists_and_is_not_edited?
+    Post.joins(:topic)
+      .where(
+        "topics.id = :topic_id AND topics.deleted_at IS NULL AND posts.post_number = 1 AND posts.version = 1 AND posts.created_at > :created_at",
+        topic_id: SiteSetting.welcome_topic_id,
+        created_at: 1.month.ago
+      ).exists?
+  end
+
+  def self.show_welcome_topic_banner?(guardian)
+    return false if !guardian.is_admin?
+    user_id = guardian.user.id
+
+    show_welcome_topic_banner = Discourse.cache.read(welcome_topic_banner_cache_key(user_id))
+    return show_welcome_topic_banner unless show_welcome_topic_banner.nil?
+
+    show_welcome_topic_banner = if (user_id == User.first_login_admin_id)
+      welcome_topic_exists_and_is_not_edited?
+    else
+      false
+    end
+
+    Discourse.cache.write(welcome_topic_banner_cache_key(user_id), show_welcome_topic_banner)
+    show_welcome_topic_banner
+  end
 end

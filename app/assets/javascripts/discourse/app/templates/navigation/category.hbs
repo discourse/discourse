@@ -2,8 +2,7 @@
 
 <section class="category-heading">
   {{#if this.category.uploaded_logo.url}}
-    <CdnImg @src={{this.category.uploaded_logo.url}} @class="category-logo" @width={{this.category.uploaded_logo.width}} @height={{this.category.uploaded_logo.height}} @alt="" />
-
+    <CategoryLogo @category={{this.category}} />
     {{#if this.category.description}}
       <p>{{dir-span this.category.description htmlSafe="true"}}</p>
     {{/if}}

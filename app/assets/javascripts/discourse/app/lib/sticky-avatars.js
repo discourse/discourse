@@ -5,15 +5,15 @@ import { headerOffset } from "discourse/lib/offset-calculator";
 import { schedule } from "@ember/runloop";
 
 export default class StickyAvatars {
+  static init(container) {
+    return new this(container).init();
+  }
+
   stickyClass = "sticky-avatar";
   topicPostSelector = "#topic .post-stream .topic-post";
   intersectionObserver = null;
   direction = "⬇️";
   prevOffset = -1;
-
-  static init(container) {
-    return new this(container).init();
-  }
 
   constructor(container) {
     this.container = container;

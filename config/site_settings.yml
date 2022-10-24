@@ -123,6 +123,11 @@ basic:
     default: false
     client: true
     validator: "AllowUserLocaleEnabledValidator"
+  set_locale_from_cookie:
+    default: false
+    hidden: true
+    client: true
+    validator: "AllowUserLocaleEnabledValidator"
   support_mixed_text_direction:
     client: true
     default: false
@@ -168,7 +173,7 @@ basic:
     client: true
     refresh: true
     type: list
-    list_type: compact
+    list_type: simple
     default: "latest|new|unread|top|categories"
     regex: "latest"
     regex_error: "site_settings.errors.must_include_latest"
@@ -222,6 +227,9 @@ basic:
       - twitter
       - facebook
       - email
+  allow_username_in_share_links:
+    client: true
+    default: true
   share_quote_visibility:
     client: true
     type: enum
@@ -369,7 +377,9 @@ basic:
   sitemap_page_size:
     default: 10000
   enable_user_status:
-    hidden: true
+    client: true
+    default: false
+  enable_onboarding_popups:
     client: true
     default: false
 
@@ -419,6 +429,11 @@ login:
   google_oauth2_hd_groups:
     default: false
     validator: GoogleOauth2HdGroupsValidator
+  google_oauth2_hd_groups_service_account_admin_email:
+    default: ""
+  google_oauth2_hd_groups_service_account_json:
+    default: ""
+    textarea: true
   enable_twitter_logins:
     default: false
   twitter_consumer_key:
@@ -799,7 +814,7 @@ posting:
   max_emojis_in_title: 1
   allow_uncategorized_topics:
     client: true
-    default: true
+    default: false
     refresh: true
   allow_duplicate_topic_titles: false
   allow_duplicate_topic_titles_category: false
@@ -813,8 +828,16 @@ posting:
   enable_personal_messages:
     default: true
     client: true
+    hidden: true
   enable_system_message_replies:
     default: true
+  personal_message_enabled_groups:
+    default: "11" # auto group trust_level_1
+    type: group_list
+    client: true
+    allow_any: false
+    refresh: true
+    validator: "PersonalMessageEnabledGroupsValidator"
   editing_grace_period: 300
   editing_grace_period_max_diff: 100
   editing_grace_period_max_diff_high_trust: 400
@@ -952,7 +975,7 @@ posting:
     client: true
     default: false
   highlighted_languages:
-    default: "apache|bash|cs|cpp|css|coffeescript|diff|xml|http|ini|json|java|javascript|makefile|markdown|nginx|objectivec|ruby|perl|php|python|sql|handlebars"
+    default: "bash|c|cpp|csharp|css|diff|go|graphql|ini|java|javascript|json|kotlin|lua|makefile|markdown|objectivec|perl|php|php-template|plaintext|python|python-repl|r|ruby|rust|scss|shell|sql|swift|typescript|xml|yaml|wasm"
     choices: "HighlightJs.languages"
     type: list
     client: true
@@ -1202,6 +1225,9 @@ email:
   max_emails_per_day_per_user: 100
   enable_staged_users: true
   maximum_staged_users_per_email: 10
+  maximum_recipients_per_new_group_email:
+    default: 10
+    min: 1
   auto_generated_allowlist:
     default: ""
     type: list
@@ -1266,7 +1292,7 @@ email:
   raw_rejected_email_max_length: 4000
   delete_rejected_email_after_days:
     default: 90
-    max: 36500
+    validator: "DeleteRejectedEmailAfterDaysValidator"
   enable_secondary_emails:
     client: true
     default: true
@@ -1274,6 +1300,7 @@ email:
   max_participant_names:
     default: 10
     hidden: true
+  require_change_email_confirmation: false
 
 files:
   max_image_size_kb:
@@ -1348,9 +1375,21 @@ files:
   secure_media:
     default: false
     client: true
+    hidden: true
   secure_media_allow_embed_images_in_emails:
     default: true
+    hidden: true
   secure_media_max_email_embed_image_size_kb:
+    default: 1024
+    min: 1
+    max: 10240
+    hidden: true
+  secure_uploads:
+    default: false
+    client: true
+  secure_uploads_allow_embed_images_in_emails:
+    default: true
+  secure_uploads_max_email_embed_image_size_kb:
     default: 1024
     min: 1
     max: 10240
@@ -1528,6 +1567,7 @@ trust:
   min_trust_to_send_messages:
     default: 1
     enum: "TrustLevelSetting"
+    hidden: true
   min_trust_to_send_email_messages:
     default: "4"
     enum: "TrustLevelAndStaffSetting"
@@ -1863,6 +1903,7 @@ rate_limits:
   max_edits_per_day: 30
   max_invites_per_day: 10
   max_topic_invitations_per_day: 30
+  max_topic_invitations_per_minute: 5
   max_topics_in_first_day: 3
   max_replies_in_first_day: 10
   tl2_additional_likes_per_day_multiplier: 1.5
@@ -1985,10 +2026,43 @@ developer:
   enable_safe_mode:
     default: true
     client: true
-  enable_experimental_sidebar:
+  enable_experimental_sidebar_hamburger:
+    default: false
+    client: true
+  enable_experimental_hashtag_autocomplete:
     default: false
     client: true
     hidden: true
+  enable_new_user_profile_nav_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+  include_associated_account_ids:
+    default: false
+    hidden: true
+
+sidebar:
+  enable_sidebar:
+    default: true
+    client: true
+  default_sidebar_categories:
+    type: category_list
+    default: ""
+    client: true
+  default_sidebar_tags:
+    type: tag_list
+    default: ""
+    client: true
+  default_sidebar_list_destination:
+    hidden: true
+    default: "default"
+    type: "list"
+    choices:
+      - "default"
+      - "unread_new"
 
 embedding:
   embed_by_username:
@@ -2235,6 +2309,7 @@ uncategorized:
   get_a_room_threshold: 3
   dominating_topic_minimum_percent: 20
   disable_avatar_education_message: false
+  pm_warn_user_last_seen_months_ago: 24
 
   global_notice:
     default: ""
@@ -2250,9 +2325,10 @@ uncategorized:
     hidden: true
 
   # Category IDs
-  lounge_category_id:
+  general_category_id:
     default: -1
     hidden: true
+    client: true
   meta_category_id:
     default: -1
     hidden: true
@@ -2321,9 +2397,7 @@ uncategorized:
   welcome_topic_id:
     default: -1
     hidden: true
-  lounge_welcome_topic_id:
-    default: -1
-    hidden: true
+    client: true
   admin_quick_start_topic_id:
     default: -1
     hidden: true

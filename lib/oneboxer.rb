@@ -237,7 +237,7 @@ module Oneboxer
   end
 
   def self.onebox_raw(url, opts = {})
-    url = UrlHelper.escape_uri(url).to_s
+    url = UrlHelper.normalized_encode(url).to_s
     local_onebox(url, opts) || external_onebox(url)
   rescue => e
     # no point warning here, just cause we have an issue oneboxing a url
@@ -461,7 +461,7 @@ module Oneboxer
       preview_result = Onebox.preview(uri.to_s, onebox_options)
       result = {
         onebox: WordWatcher.censor(preview_result.to_s),
-        preview: WordWatcher.censor(preview_result&.placeholder_html.to_s)
+        preview: WordWatcher.censor(preview_result.placeholder_html.to_s)
       }
 
       # NOTE: Call preview_result.errors after calling placeholder_html

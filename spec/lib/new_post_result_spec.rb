@@ -2,7 +2,7 @@
 
 require 'new_post_result'
 
-describe NewPostResult do
+RSpec.describe NewPostResult do
 
   it "fails by default" do
     result = NewPostResult.new(:eviltrout)

@@ -7,7 +7,7 @@
     {{/if}}
 
     <div class="groups-header-filters">
-      <Input @value={{readonly this.filter}} placeholder={{i18n "groups.index.all"}} class="groups-header-filters-name no-blur" {{on "input" (action "onFilterChanged" value="target.value")}} />
+      <Input @value={{readonly this.filter}} placeholder={{i18n "groups.index.all"}} class="groups-header-filters-name no-blur" {{on "input" (action "onFilterChanged" value="target.value")}} @type="search" aria-description={{i18n "groups.index.search_results"}} />
 
       <ComboBox @value={{this.type}} @content={{this.types}} @class="groups-header-filters-type" @onChange={{action (mut this.type)}} @options={{hash
           clearable=true
@@ -77,7 +77,7 @@
 
       <ConditionalLoadingSpinner @condition={{this.groups.loadingMore}} />
     {{else}}
-      <p>{{i18n "groups.index.empty"}}</p>
+      <p role="status">{{i18n "groups.index.empty"}}</p>
     {{/if}}
   </ConditionalLoadingSpinner>
 

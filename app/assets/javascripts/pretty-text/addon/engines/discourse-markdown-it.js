@@ -253,7 +253,13 @@ function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
     }
   }
 
-  token.attrs[token.attrIndex("alt")][1] = altSplit.join("|");
+  const altValue = altSplit.join("|").trim();
+  if (altValue === "") {
+    token.attrSet("role", "presentation");
+  } else {
+    token.attrSet("alt", altValue);
+  }
+
   return slf.renderToken(tokens, idx, options);
 }
 
@@ -525,7 +531,7 @@ export function setup(opts, siteSettings, state) {
   getOptions.f = () => opts.discourse;
 
   opts.discourse.limitedSiteSettings = {
-    secureMedia: siteSettings.secure_media,
+    secureUploads: siteSettings.secure_uploads,
     enableDiffhtmlPreview: siteSettings.enable_diffhtml_preview,
     traditionalMarkdownLinebreaks: siteSettings.traditional_markdown_linebreaks,
     enableMarkdownLinkify: siteSettings.enable_markdown_linkify,

@@ -1,0 +1,240 @@
+.new-user-wrapper {
+  margin-top: -15px; // temp, can remove margin from sibling element after nav finalized
+  .user-navigation {
+    --user-navigation__border-width: 4px;
+    &.user-navigation-primary {
+      border-bottom: 1px solid var(--primary-low);
+    }
+    .nav-pills {
+      width: 100%;
+      margin: 0;
+      .d-icon {
+        font-size: var(--font-down-1);
+      }
+
+      &.main-nav {
+        @include breakpoint(medium) {
+          li {
+            .d-icon {
+              font-size: var(--font-up-1);
+              margin: 0;
+            }
+            span {
+              display: none;
+            }
+          }
+        }
+
+        .has-sidebar-page & {
+          @include breakpoint(large) {
+            span {
+              display: none;
+            }
+          }
+        }
+      }
+
+      li {
+        flex: 1 1 auto;
+        margin: 0;
+        overflow: hidden;
+        display: flex;
+
+        a {
+          box-sizing: border-box;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: relative;
+          border-bottom: var(--user-navigation__border-width) solid transparent;
+          padding: calc(0.75em + var(--user-navigation__border-width)) 0.5em
+            0.75em;
+          transition: color 0.25s;
+
+          @include breakpoint(extra-large) {
+            font-size: var(--font-0);
+          }
+
+          span {
+            line-height: normal;
+            @include ellipsis;
+          }
+
+          &:hover,
+          &:focus {
+            background: transparent;
+            color: var(--quaternary);
+            border-bottom: var(--user-navigation__border-width) solid
+              var(--quaternary-low);
+          }
+
+          &.active {
+            color: var(--quaternary);
+            background: transparent;
+            border-bottom: var(--user-navigation__border-width) solid
+              var(--quaternary);
+          }
+        }
+      }
+    }
+  }
+
+  .user-navigation-secondary {
+    --user-navigation__border-width: 2px;
+    position: relative;
+    display: flex;
+    min-width: 0;
+    margin: 0.5em 0;
+    gap: 0 0.5em;
+    border-bottom: 1px solid var(--primary-low);
+
+    .horizontal-overflow-nav {
+      position: relative;
+      min-width: 0;
+      width: 100%;
+    }
+
+    .select-kit .select-kit-header {
+      height: 100%;
+      padding: 0.5em 1em;
+    }
+
+    .category-breadcrumb {
+      @include breakpoint(large) {
+        font-size: var(--font-down-1);
+      }
+      > li {
+        margin: 0;
+      }
+    }
+
+    .navigation-controls {
+      flex-wrap: nowrap;
+      @include breakpoint(large) {
+        font-size: var(--font-down-1);
+      }
+    }
+
+    .nav-overflow__scroll-right,
+    .nav-overflow__scroll-left {
+      --fade-width: 20px;
+      opacity: 1;
+      position: absolute;
+      z-index: 2;
+      background-color: var(--secondary);
+      top: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      transition: opacity 0.25s;
+      .d-icon {
+        pointer-events: none;
+        margin-bottom: 0.2em;
+        color: var(--quaternary);
+      }
+      &.transparent {
+        // hiding with opacity so we can transition visibility
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+
+    .nav-overflow__scroll-right {
+      right: 0;
+      &:before {
+        content: "";
+        margin-left: -1.5em;
+        height: 100%;
+        width: 1.5em;
+        background: linear-gradient(
+          to left,
+          rgba(var(--secondary-rgb), 1),
+          rgba(var(--secondary-rgb), 0)
+        );
+      }
+    }
+
+    .nav-overflow__scroll-left {
+      left: 0;
+      &:after {
+        content: "";
+        margin-right: -1.5em;
+        height: 100%;
+        width: 1.5em;
+        background: linear-gradient(
+          to right,
+          rgba(var(--secondary-rgb), 1),
+          rgba(var(--secondary-rgb), 0)
+        );
+      }
+    }
+
+    .nav-pills {
+      flex: 1 1 auto;
+      font-size: var(--font-down-1);
+      justify-content: flex-start;
+      overflow: auto;
+      position: relative;
+      scroll-behavior: smooth;
+
+      // hides scrollbars, but allows mouse scrolling
+      scrollbar-width: none;
+      &::-webkit-scrollbar {
+        height: 0;
+      }
+
+      li {
+        flex: 1 0 auto;
+
+        a {
+          padding: 0.5em 0.5em
+            calc(0.5em + var(--user-navigation__border-width));
+
+          span {
+            text-overflow: unset;
+          }
+        }
+      }
+    }
+  }
+
+  .user-nav-dropdown-button {
+    background: transparent;
+  }
+
+  .user-nav-dropdown-submenu {
+    background: var(--secondary);
+    list-style-type: none;
+    margin: 0;
+
+    li a {
+      padding: 0.5em 1em;
+      color: var(--primary);
+
+      .discourse-no-touch & {
+        &:hover {
+          background: var(--highlight-medium);
+          color: currentColor;
+        }
+      }
+
+      &.active {
+        background: var(--tertiary-low);
+        color: currentColor;
+      }
+
+      &:first-of-type {
+        padding-top: 0.5em;
+      }
+      &:last-of-type {
+        padding-bottom: 0.5em;
+      }
+    }
+  }
+
+  .empty-state {
+    padding: 0;
+    margin: 1em 0;
+  }
+}

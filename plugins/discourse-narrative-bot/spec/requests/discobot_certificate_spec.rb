@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Discobot Certificate" do
+RSpec.describe "Discobot Certificate" do
   let(:user) { Fabricate(:user, name: 'Jeff Atwood') }
 
   let(:params) {

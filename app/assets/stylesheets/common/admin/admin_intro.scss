@@ -23,7 +23,7 @@
     width: 65%;
     h1 {
       display: inline-block;
-      line-height: $line-height-medium;
+      line-height: var(--line-height-medium);
     }
   }
   .external-link {

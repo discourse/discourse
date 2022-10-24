@@ -1,11 +1,20 @@
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import User from "discourse/models/user";
-import Site from "discourse/models/site";
 
-discourseModule("Unit | Controller | preferences/profile", function () {
+module("Unit | Controller | preferences/profile", function (hooks) {
+  setupTest(hooks);
+
   test("prepare custom field data", function (assert) {
-    const controller = this.getController("preferences/profile", {
+    const site = this.owner.lookup("service:site");
+    site.set("user_fields", [
+      { position: 1, id: 1, editable: true },
+      { position: 2, id: 2, editable: true },
+      { position: 3, id: 3, editable: true },
+    ]);
+
+    const controller = this.owner.lookup("controller:preferences/profile");
+    controller.setProperties({
       model: User.create({
         id: 70,
         second_factor_enabled: true,
@@ -20,15 +29,6 @@ discourseModule("Unit | Controller | preferences/profile", function () {
         id: 1234,
       },
     });
-
-    Site.currentProp("user_fields", [
-      { position: 1, id: 1, editable: true },
-      { position: 2, id: 2, editable: true },
-      { position: 3, id: 3, editable: true },
-    ]);
-
-    // Since there are no injections in unit tests
-    controller.set("site", Site.current());
 
     controller.send("_updateUserFields");
 

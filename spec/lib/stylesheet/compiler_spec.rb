@@ -2,7 +2,7 @@
 
 require 'stylesheet/compiler'
 
-describe Stylesheet::Compiler do
+RSpec.describe Stylesheet::Compiler do
   describe 'compilation' do
     Dir["#{Rails.root.join("app/assets/stylesheets")}/*.scss"].each do |path|
       next if path =~ /ember_cli/

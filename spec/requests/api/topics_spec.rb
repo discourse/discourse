@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'swagger_helper'
 
-describe 'topics' do
+RSpec.describe 'topics' do
 
   let(:'Api-Key') { Fabricate(:api_key).key }
   let(:'Api-Username') { 'system' }
@@ -229,7 +229,7 @@ describe 'topics' do
 
         let(:username) { Fabricate(:user).username }
         let(:request_body) { { user: username } }
-        let(:id) { Fabricate(:topic).id }
+        let(:id) { Fabricate(:private_message_topic).id }
 
         run_test! do |response|
           data = JSON.parse(response.body)

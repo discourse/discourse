@@ -7,7 +7,7 @@ class ReviewableSensitivitySetting < EnumSiteSetting
   end
 
   def self.values
-    Reviewable.sensitivity.map do |p|
+    Reviewable.sensitivities.map do |p|
       { name: I18n.t("reviewables.sensitivity.#{p[0]}"), value: p[1] }
     end
   end

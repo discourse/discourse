@@ -171,6 +171,13 @@ class RemoteTheme < ActiveRecord::Base
       end
     end
 
+    # Update all theme attributes if this is just a placeholder
+    if self.remote_url.present? && !self.local_version && !self.commits_behind
+      self.theme.name = theme_info["name"]
+      self.theme.component = [true, "true"].include?(theme_info["component"])
+      self.theme.child_components = theme_info["components"].presence || []
+    end
+
     METADATA_PROPERTIES.each do |property|
       self.public_send(:"#{property}=", theme_info[property.to_s])
     end

@@ -252,14 +252,11 @@ bg:
             hex:
               invalid: "този цвят не е валиден "
       <<: *errors
-  vip_category_name: "Салон"
-  vip_category_description: "Категоята е само за членове с ниво на доверие 3 и по-високо."
+  general_category_name: "Основни"
   meta_category_name: "Заявка към сайта"
   meta_category_description: "Дискусия за сайта, неговата организация, как той работи, и как можем да го подобрим."
   staff_category_name: "Персонал"
   staff_category_description: "Частна категория за дискусии на персонала. Темите са видими само за админи и модератори."
-  lounge_welcome:
-    title: "Добре дошли в Салона"
   category:
     topic_prefix: "За %{category} категория"
     errors:
@@ -1050,7 +1047,6 @@ bg:
       subject_template: "Възстановяването се провали"
     bulk_invite_succeeded:
       subject_template: "Груповата потребителска покана e обработена успешно"
-      text_body_template: "Вашата групова потребителска покана от файл е обработена, %{sent} имейл покани бяха изпратени."
     bulk_invite_failed:
       subject_template: "Груповата потребителска покана завърши с грешки"
     csv_export_failed:
@@ -1275,7 +1271,6 @@ bg:
     register:
       button: "Регистриране"
       title: "Регистриране на Админ акаунт"
-      help: "регистрирайте нов профил за да започнете"
     confirm_email:
       title: "Потвърдете имейл адреса си"
     resend_email:
@@ -1284,40 +1279,30 @@ bg:
     title: "Влизане в безопасен режим"
   wizard:
     step:
-      forum_title:
-        title: "Име"
       privacy:
-        title: "Достъп"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Публични"
-              restricted:
-                label: "Затворени"
-      contact:
-        fields:
-          contact_email:
-            placeholder: "name@example.com"
-          contact_url:
-            label: "Уеб страница"
-          site_contact:
-            label: "Автоматизирани съобщения"
-      corporate:
-        title: "Организация"
+          login_required:
+            placeholder: "Затворени"
+          must_approve_users:
+            placeholder: "Изисквай одобрение"
+      ready:
+        title: "Вашият Discourse е готов!"
       styling:
         fields:
           homepage_style:
             choices:
               latest:
                 label: "Последни теми"
-      logos:
-        title: "Логота"
+      branding:
         fields:
           logo:
             label: "Главно лого"
-      icons:
-        title: "Икони"
+      corporate:
+        fields:
+          contact_url:
+            label: "Уеб страница"
+          site_contact:
+            label: "Автоматизирани съобщения"
       invites:
         title: "Поканете персонал"
       finished:

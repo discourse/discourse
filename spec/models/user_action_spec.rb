@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserAction do
+RSpec.describe UserAction do
   fab!(:coding_horror) { Fabricate(:coding_horror) }
 
   before do
@@ -122,6 +122,7 @@ describe UserAction do
         log_test_action(action_type: UserAction::ASSIGNED)
         private_post.custom_fields ||= {}
         private_post.custom_fields["action_code_who"] = 'testing'
+        private_post.custom_fields["action_code_path"] = '/p/1234'
         private_post.custom_fields["random_field"] = 'random_value'
         private_post.save!
       end
@@ -133,6 +134,7 @@ describe UserAction do
 
         expect(user_action_row.action_type).to eq(UserAction::ASSIGNED)
         expect(user_action_row.action_code_who).to eq('testing')
+        expect(user_action_row.action_code_path).to eq('/p/1234')
       end
     end
 
@@ -162,7 +164,6 @@ describe UserAction do
   end
 
   describe 'when user likes' do
-
     fab!(:post) { Fabricate(:post) }
     let(:likee) { post.user }
     fab!(:liker) { coding_horror }
@@ -180,7 +181,7 @@ describe UserAction do
       expect(likee_stream.count).to eq(@old_count + 1)
     end
 
-    context "successful like" do
+    context "with successful like" do
       before do
         PostActionCreator.like(liker, post)
         @liker_action = liker.user_actions.find_by(action_type: UserAction::LIKE)
@@ -198,7 +199,7 @@ describe UserAction do
         expect(liker.user_stat.reload.likes_given).to eq(0)
       end
 
-      context 'private message' do
+      context 'with private message' do
         fab!(:post) { Fabricate(:private_message_post) }
         let(:likee) { post.topic.topic_allowed_users.first.user }
         let(:liker) { post.topic.topic_allowed_users.last.user }
@@ -217,8 +218,7 @@ describe UserAction do
 
     end
 
-    context "liking a private message" do
-
+    context "when liking a private message" do
       before do
         post.topic.update_columns(category_id: nil, archetype: Archetype::private_message)
       end

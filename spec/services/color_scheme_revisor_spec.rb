@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ColorSchemeRevisor do
+RSpec.describe ColorSchemeRevisor do
 
   let(:color)        { Fabricate.build(:color_scheme_color, hex: 'FFFFFF', color_scheme: nil) }
   let(:color_scheme) { Fabricate(:color_scheme, created_at: 1.day.ago, updated_at: 1.day.ago, color_scheme_colors: [color]) }

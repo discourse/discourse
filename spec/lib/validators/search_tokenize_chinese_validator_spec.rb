@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SearchTokenizeChineseValidator do
+RSpec.describe SearchTokenizeChineseValidator do
   it 'does not allow search_tokenize_chinese to be enabled when search_tokenize_japanese is enabled' do
     SiteSetting.search_tokenize_japanese = true
 

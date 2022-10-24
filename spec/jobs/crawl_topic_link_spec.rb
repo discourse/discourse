@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::CrawlTopicLink do
+RSpec.describe Jobs::CrawlTopicLink do
 
   let(:job) { Jobs::CrawlTopicLink.new }
 

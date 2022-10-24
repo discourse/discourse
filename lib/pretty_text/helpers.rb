@@ -70,11 +70,11 @@ module PrettyText
           sha1, url, extension, original_filename, secure = row
 
           if short_urls = reverse_map[sha1]
-            secure_media = SiteSetting.secure_media? && secure
+            secure_uploads = SiteSetting.secure_uploads? && secure
 
             short_urls.each do |short_url|
               result[short_url] = {
-                url: secure_media ? Upload.secure_media_url_from_upload_url(url) : Discourse.store.cdn_url(url),
+                url: secure_uploads ? Upload.secure_uploads_url_from_upload_url(url) : Discourse.store.cdn_url(url),
                 short_path: Upload.short_path(sha1: sha1, extension: extension),
                 base62_sha1: Upload.base62_sha1(sha1)
               }

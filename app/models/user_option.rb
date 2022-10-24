@@ -14,6 +14,7 @@ class UserOption < ActiveRecord::Base
   scope :human_users, -> { where('user_id > 0') }
 
   enum default_calendar: { none_selected: 0, ics: 1, google: 2 }, _scopes: false
+  enum sidebar_list_destination: { none_selected: 0, default: 0, unread_new: 1 }, _prefix: "sidebar_list"
 
   def self.ensure_consistency!
     sql = <<~SQL
@@ -200,6 +201,10 @@ class UserOption < ActiveRecord::Base
       email_messages_level == UserOption.email_level_types[:never]
   end
 
+  def likes_notifications_disabled?
+    like_notification_frequency == UserOption.like_notification_frequency_type[:never]
+  end
+
   def self.user_tzinfo(user_id)
     timezone = UserOption.where(user_id: user_id).pluck(:timezone).first || 'UTC'
 
@@ -264,6 +269,8 @@ end
 #  oldest_search_log_date           :datetime
 #  bookmark_auto_delete_preference  :integer          default(3), not null
 #  enable_experimental_sidebar      :boolean          default(FALSE)
+#  seen_popups                      :integer          is an Array
+#  sidebar_list_destination         :integer          default("none_selected"), not null
 #
 # Indexes
 #

@@ -2,7 +2,7 @@
 
 require 'unread'
 
-describe Unread do
+RSpec.describe Unread do
 
   let(:whisperers_group) { Fabricate(:group) }
   let(:user) { Fabricate(:user, id: 1, groups: [whisperers_group]) }

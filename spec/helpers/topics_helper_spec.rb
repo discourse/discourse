@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TopicsHelper do
+RSpec.describe TopicsHelper do
 
   describe "#categories_breadcrumb" do
     let(:user) { Fabricate(:user) }

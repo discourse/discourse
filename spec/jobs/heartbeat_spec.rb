@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ::Jobs::Heartbeat do
+RSpec.describe ::Jobs::Heartbeat do
   after do
     Discourse.disable_readonly_mode
   end

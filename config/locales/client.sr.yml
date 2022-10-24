@@ -188,7 +188,6 @@ sr:
         disabled: "je uklonio ovaj baner%{when}. Više se neće pojavljivati na vrhu svake stranice."
       forwarded: "je prosledio/la navedenu e-poštu"
     topic_admin_menu: "opcije teme"
-    wizard_required: "Dobrodošli na Vaš novi Discourse! Počnimo sa <a href='%{url}' data-auto-route='true'>instalacijom</a>"
     emails_are_disabled: "Sva odlazeća epošta je onemogućena globalno od strane administratora. Ni jedna notifikacija neće biti poslata."
     software_update_prompt:
       message: "Ažurirali smo ovaj sajt, <span>molimo vas rifrešujte</span>, u suprotnom može doći do nepredviđenih rezultata."
@@ -225,7 +224,10 @@ sr:
     not_implemented: "Ova stavka nije jos omogućena za sad, izvinjavamo se."
     no_value: "Ne"
     yes_value: "Da"
+    ok_value: "U redu"
+    cancel_value: "Odustani"
     submit: "Potvrdi"
+    delete: "Obriši"
     generic_error: "Izvinite, pojavila se greška."
     generic_error_with_reason: "Došlo je do greške: %{error}"
     sign_up: "Registrujte se"
@@ -482,6 +484,7 @@ sr:
       start_of_next_business_week_alt: "Naredni ponedeljak"
       next_week: "Sledeće sedmice"
       next_month: "Naredni mesec"
+      never: "Nikad"
       custom: "Prilagođen datum i vreme"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> je objavio <a href='%{topicUrl}'>temu</a>"
@@ -693,6 +696,8 @@ sr:
       enable_quoting: "Omogući citirani odgovor označenog teksta"
       experimental_sidebar:
         options: "Opcije"
+        navigation_section: "Navigacija"
+        list_destination_default: "zadato"
       change: "promeni"
       moderator: "%{user} je moderator"
       admin: "%{user} je administrator"
@@ -1016,6 +1021,7 @@ sr:
       disable: "Prikaži Obrisane Poruke"
     private_message_info:
       title: "Privatna poruka"
+      remove_user: "Ukloni člana"
     email: "E-mail"
     username: "Korisničko Ime"
     last_seen: "Viđen"
@@ -1139,6 +1145,7 @@ sr:
     notifications:
       none: "Nemoguće je učitati notifikacije ovog trenutka."
       empty: "Nisu pronađene notifikacije"
+      watching_first_post_label: "Nova Tema"
       dismiss_confirmation:
         dismiss: "Одбаци"
         cancel: "Odustani"
@@ -1180,6 +1187,13 @@ sr:
     go_back: "idi nazad"
     not_logged_in_user: "stranica korisnika sa sažetkom trenutnih aktivnosti i postavki"
     current_user: "idi na korisničku stranicu"
+    user_menu:
+      tabs:
+        replies: "Odgovori"
+        mentions: "Spominjanja"
+        likes: "Lajkova"
+        bookmarks: "Markiraj"
+        profile: "Profil"
     topics:
       new_messages_marker: "poslednja poseta"
       bulk:
@@ -1762,7 +1776,6 @@ sr:
       description: "Opis"
       sort_by_count: "broj"
       sort_by_name: "ime foruma"
-      cancel_delete_unused: "Odustani"
       filters:
         without_category: "%{filter} %{tag} teme"
       notifications:
@@ -1799,9 +1812,18 @@ sr:
         regular: "stalni član"
         leader: "vođa"
     sidebar:
-      unread_count: "%{count} nepročitana"
-      new_count: "%{count} nova"
+      unread_count:
+        one: "%{count} nepročitana"
+        few: "%{count} nepročitanih"
+        other: "%{count} nepročitana"
+      new_count:
+        one: "%{count} nova"
+        few: "%{count} novih"
+        other: "%{count} nova"
+      more: "Više"
       sections:
+        about:
+          header_link_text: "O nama"
         messages:
           header_link_text: "Poruke"
           links:
@@ -1813,14 +1835,24 @@ sr:
             unread_with_count: "Nepročitane (%{count})"
             archive: "Arhiviraj"
         categories:
-          header_link_title: "sve kategorije"
           header_link_text: "Kategorije"
-        topics:
-          header_link_title: "home"
-          header_link_text: "Teme"
+        community:
+          header_link_text: "Zajednica"
           links:
+            about:
+              content: "O nama"
+            admin:
+              content: "Admin"
+            badges:
+              content: "Značke"
+            faq:
+              content: "FAQ (često postavljana pitanja)"
             tracked:
               content: "Praćeno"
+            groups:
+              content: "Grupe"
+            users:
+              content: "Korisnici"
             my_posts:
               content: "Moje poruke"
   admin_js:
@@ -2487,14 +2519,13 @@ sr:
           topics: "Teme"
   wizard_js:
     wizard:
-      done: "Gotovo"
       back: "Nazad"
       next: "Dalje"
+      step-text: "Korak"
       step: "%{current} od %{total}"
       upload: "Upload"
       uploading: "Uploading..."
       upload_error: "Žao nam je, dogodila se greška pri učitavanju te datoteke. Molimo pokušajte ponovo."
-      quit: "Možda kasnije"
       staff_count:
         one: "Tvoja zajednica ima %{count} člana tima (tebe). "
         few: "Vaša zajednica ima %{count} članova tima, uključujući i vas."

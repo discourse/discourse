@@ -1,4 +1,5 @@
-import { cancel, later } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 import Category from "discourse/models/category";
 import Component from "@ember/component";
 import { DELETE_REPLIES_TYPE } from "discourse/controllers/edit-topic-timer";
@@ -112,7 +113,7 @@ export default Component.extend({
 
       // TODO Sam: concerned this can cause a heavy rerender loop
       if (!isTesting()) {
-        this._delayedRerender = later(() => {
+        this._delayedRerender = discourseLater(() => {
           this.renderTopicTimer();
         }, this.rerenderDelay(minutesLeft));
       }

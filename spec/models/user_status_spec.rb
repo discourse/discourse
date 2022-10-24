@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserStatus do
+RSpec.describe UserStatus do
   fab!(:user) { Fabricate(:user) }
 
   describe "validations" do

@@ -7,6 +7,7 @@
   </th>
 {{/if}}
 {{raw "topic-list-header-column" order='default' name=listTitle bulkSelectEnabled=bulkSelectEnabled showBulkToggle=toggleInTitle canBulkSelect=canBulkSelect canDoBulkActions=canDoBulkActions}}
+{{raw-plugin-outlet name="topic-list-header-after-main-link"}}
 {{#if showPosters}}
   {{raw "topic-list-header-column" order='posters' ariaLabel=(i18n "category.sort_options.posters")}}
 {{/if}}

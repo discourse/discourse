@@ -2,7 +2,7 @@
 
 require 'onebox/movie'
 
-describe Onebox::Movie do
+RSpec.describe Onebox::Movie do
   it 'returns a nil rating if there is no aggregateRating item in json_ld data' do
     json_ld_data = json_ld_data_from_doc(
       "<script type=\"application/ld+json\">{\"@type\":\"Movie\",\"someKey\":{}}</script>"

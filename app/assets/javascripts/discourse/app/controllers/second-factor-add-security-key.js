@@ -13,11 +13,23 @@ export default Controller.extend(ModalFunctionality, {
   errorMessage: null,
 
   onShow() {
+    let securityKeyName;
+    if (this.capabilities.isIOS && !this.capabilities.isIpadOS) {
+      securityKeyName = I18n.t(
+        "user.second_factor.security_key.iphone_default_name"
+      );
+    } else if (this.capabilities.isAndroid) {
+      securityKeyName = I18n.t(
+        "user.second_factor.security_key.android_default_name"
+      );
+    } else {
+      securityKeyName = I18n.t("user.second_factor.security_key.default_name");
+    }
     // clear properties every time because the controller is a singleton
     this.setProperties({
       errorMessage: null,
       loading: true,
-      securityKeyName: I18n.t("user.second_factor.security_key.default_name"),
+      securityKeyName,
       webauthnUnsupported: !isWebauthnSupported(),
     });
 

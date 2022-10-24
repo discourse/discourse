@@ -1,7 +1,6 @@
 import Pretender from "pretender";
 import User from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
-import { Promise } from "rsvp";
 
 export function parsePostData(query) {
   const result = {};
@@ -341,18 +340,8 @@ export function applyDefaultHandlers(pretender) {
     });
   });
 
-  // TODO: Remove this old path when no longer using old ember
-  pretender.get("/post_replies", () => {
-    return response({ post_replies: [{ id: 1234, cooked: "wat" }] });
-  });
-
   pretender.get("/posts/:id/replies", () => {
     return response([{ id: 1234, cooked: "wat", username: "somebody" }]);
-  });
-
-  // TODO: Remove this old path when no longer using old ember
-  pretender.get("/post_reply_histories", () => {
-    return response({ post_reply_histories: [{ id: 1234, cooked: "wat" }] });
   });
 
   pretender.get("/posts/:id/reply-history", () => {
@@ -516,14 +505,11 @@ export function applyDefaultHandlers(pretender) {
 
   pretender.put("/posts/:post_id", async (request) => {
     const data = parsePostData(request.requestBody);
+
     if (data.post.raw === "this will 409") {
       return response(409, { errors: ["edit conflict"] });
-    } else if (data.post.raw === "will return empty json") {
-      window.resolveLastPromise();
-      return new Promise((resolve) => {
-        window.resolveLastPromise = resolve;
-      }).then(() => response(200, {}));
     }
+
     data.post.id = request.params.post_id;
     data.post.version = 2;
     return response(200, data.post);
@@ -626,21 +612,6 @@ export function applyDefaultHandlers(pretender) {
   pretender.post("/posts", function (request) {
     const data = parsePostData(request.requestBody);
 
-    if (data.title === "this title triggers an error") {
-      return response(422, { errors: ["That title has already been taken"] });
-    }
-
-    if (data.raw === "enqueue this content please") {
-      return response(200, {
-        success: true,
-        action: "enqueued",
-        pending_post: {
-          id: 1234,
-          raw: data.raw,
-        },
-      });
-    }
-
     if (data.raw === "custom message") {
       return response(200, {
         success: true,
@@ -683,6 +654,12 @@ export function applyDefaultHandlers(pretender) {
         email: "<small>discobot_email</small>",
       },
     ];
+
+    if (request.queryParams.filter) {
+      store = store.filter((user) =>
+        user.username.includes(request.queryParams.filter)
+      );
+    }
 
     const showEmails = request.queryParams.show_emails;
 
@@ -833,6 +810,7 @@ export function applyDefaultHandlers(pretender) {
   pretender.post("/admin/customize/watched_words.json", (request) => {
     const result = parsePostData(request.requestBody);
     result.id = new Date().getTime();
+    result.case_sensitive = result.case_sensitive === "true";
     return response(200, result);
   });
 
@@ -912,7 +890,7 @@ export function applyDefaultHandlers(pretender) {
       ];
     }
 
-    if (request.queryParams.url.indexOf("/internal-page.html") > -1) {
+    if (request.queryParams.url.includes("/internal-page.html")) {
       return [
         200,
         { "Content-Type": "application/html" },
@@ -1153,4 +1131,5 @@ export function resetPretender() {
   instance.handledRequests = [];
   instance.unhandledRequests = [];
   instance.passthroughRequests = [];
+  instance.hosts.registries = {};
 }

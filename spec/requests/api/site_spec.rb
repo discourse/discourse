@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'swagger_helper'
 
-describe 'site' do
+RSpec.describe 'site' do
 
   fab!(:admin) { Fabricate(:admin) }
   fab!(:category) { Fabricate(:category) }
@@ -34,7 +34,7 @@ describe 'site' do
             let(:expected_request_schema) { expected_request_schema }
           end
         ensure
-          Site.preloaded_category_custom_fields = Set.new
+          Site.reset_preloaded_category_custom_fields
         end
       end
     end

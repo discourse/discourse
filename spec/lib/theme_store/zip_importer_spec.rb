@@ -4,7 +4,7 @@
 
 require 'theme_store/zip_importer'
 
-describe ThemeStore::ZipImporter do
+RSpec.describe ThemeStore::ZipImporter do
   before do
     @temp_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{SecureRandom.hex}"
 

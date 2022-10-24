@@ -29,7 +29,7 @@ export default Component.extend({
 
   @discourseComputed("choices.[]", "collection.[]")
   filteredChoices(choices, collection) {
-    return makeArray(choices).filter((i) => collection.indexOf(i) < 0);
+    return makeArray(choices).filter((i) => !collection.includes(i));
   },
 
   keyDown(event) {

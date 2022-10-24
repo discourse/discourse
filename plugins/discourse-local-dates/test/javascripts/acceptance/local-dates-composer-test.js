@@ -9,13 +9,16 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Local Dates - composer", function (needs) {
   needs.user();
-  needs.settings({ discourse_local_dates_enabled: true });
+  needs.settings({
+    discourse_local_dates_enabled: true,
+    discourse_local_dates_default_formats: "LLL|LTS|LL|LLLL",
+  });
 
   test("composer bbcode", async function (assert) {
     const getAttr = (attr) => {
-      return queryAll(
+      return query(
         ".d-editor-preview .discourse-local-date.cooked-date"
-      ).attr(`data-${attr}`);
+      ).getAttribute(`data-${attr}`);
     };
 
     await visit("/");
@@ -80,5 +83,52 @@ acceptance("Local Dates - composer", function (needs) {
       query(".preview .discourse-local-date").textContent.includes("Macau"),
       "it outputs a preview date in selected timezone"
     );
+  });
+
+  test("date modal - controls", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await click(".d-editor-button-bar .local-dates");
+
+    await click('.pika-table td[data-day="5"] > .pika-button');
+
+    assert.ok(
+      query("#from-date-time").textContent.includes("5,"),
+      "selected FROM date works"
+    );
+
+    await click(".date-time-control.to .date-time");
+
+    assert.strictEqual(
+      queryAll(".pika-table .is-disabled").length,
+      4,
+      "date just before selected FROM date is disabled"
+    );
+
+    await click('.pika-table td[data-day="10"] > .pika-button');
+
+    assert.ok(
+      query(".date-time-control.to button").textContent.includes("10,"),
+      "selected TO date works"
+    );
+
+    assert.strictEqual(
+      query(".pika-table .is-selected").textContent,
+      "10",
+      "selected date is the 10th"
+    );
+
+    await click(".delete-to-date");
+
+    assert.notOk(
+      query(".pika-table .is-selected"),
+      "deleting selected TO date works"
+    );
+
+    await click(".advanced-mode-btn");
+
+    assert.strictEqual(query("input.format-input").value, "");
+    await click("ul.formats a.moment-format");
+    assert.strictEqual(query("input.format-input").value, "LLL");
   });
 });

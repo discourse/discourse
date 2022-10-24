@@ -17,11 +17,15 @@ Discourse::Application.routes.draw do
     get "/404-body" => "exceptions#not_found_body"
 
     get "/bootstrap" => "bootstrap#index"
+    if Rails.env.test? || Rails.env.development?
+      get "/bootstrap/plugin-css-for-tests.css" => "bootstrap#plugin_css_for_tests"
+    end
 
     post "webhooks/aws" => "webhooks#aws"
     post "webhooks/mailgun"  => "webhooks#mailgun"
     post "webhooks/mailjet"  => "webhooks#mailjet"
     post "webhooks/mandrill" => "webhooks#mandrill"
+    get "webhooks/mandrill" => "webhooks#mandrill_head"
     post "webhooks/postmark" => "webhooks#postmark"
     post "webhooks/sendgrid" => "webhooks#sendgrid"
     post "webhooks/sparkpost" => "webhooks#sparkpost"
@@ -205,13 +209,17 @@ Discourse::Application.routes.draw do
       get "customize/embedding" => "embedding#show", constraints: AdminConstraint.new
       put "customize/embedding" => "embedding#update", constraints: AdminConstraint.new
 
-      resources :themes, constraints: AdminConstraint.new
-
-      post "themes/import" => "themes#import"
-      post "themes/upload_asset" => "themes#upload_asset"
-      post "themes/generate_key_pair" => "themes#generate_key_pair"
-      get "themes/:id/preview" => "themes#preview"
-      put "themes/:id/setting" => "themes#update_single_setting"
+      resources :themes, constraints: AdminConstraint.new do
+        member do
+          get "preview" => "themes#preview"
+          put "setting" => "themes#update_single_setting"
+        end
+        collection do
+          post "import" => "themes#import"
+          post "upload_asset" => "themes#upload_asset"
+          post "generate_key_pair" => "themes#generate_key_pair"
+        end
+      end
 
       scope "/customize", constraints: AdminConstraint.new do
         resources :user_fields, constraints: AdminConstraint.new
@@ -358,6 +366,7 @@ Discourse::Application.routes.draw do
     get "review/count" => "reviewables#count"
     get "review/topics" => "reviewables#topics"
     get "review/settings" => "reviewables#settings"
+    get "review/user-menu-list" => "reviewables#user_menu_list", format: :json
     put "review/settings" => "reviewables#settings"
     put "review/:reviewable_id/perform/:action_id" => "reviewables#perform", constraints: {
       reviewable_id: /\d+/,
@@ -385,6 +394,7 @@ Discourse::Application.routes.draw do
     end
     get "session/scopes" => "session#scopes"
     get "composer_messages" => "composer_messages#index"
+    get "composer_messages/user_not_seen_in_a_while" => "composer_messages#user_not_seen_in_a_while"
 
     resources :static
     post "login" => "static#enter"
@@ -468,7 +478,7 @@ Discourse::Application.routes.draw do
       get "#{root_path}/:username/messages/:filter" => "user_actions#private_messages", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/messages/group/:group_name" => "user_actions#private_messages", constraints: { username: RouteFormat.username, group_name: RouteFormat.username }
       get "#{root_path}/:username/messages/group/:group_name/:filter" => "user_actions#private_messages", constraints: { username: RouteFormat.username, group_name: RouteFormat.username }
-      get "#{root_path}/:username/messages/tags/:tag_id" => "user_actions#private_messages", constraints: StaffConstraint.new
+      get "#{root_path}/:username/messages/tags/:tag_id" => "list#private_messages_tag", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username.json" => "users#show", constraints: { username: RouteFormat.username }, defaults: { format: :json }
       get({ "#{root_path}/:username" => "users#show", constraints: { username: RouteFormat.username } }.merge(index == 1 ? { as: 'user' } : {}))
       put "#{root_path}/:username" => "users#update", constraints: { username: RouteFormat.username }, defaults: { format: :json }
@@ -517,6 +527,8 @@ Discourse::Application.routes.draw do
       get "#{root_path}/:username/activity/:filter" => "users#show", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/badges" => "users#badges", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/bookmarks" => "users#bookmarks", constraints: { username: RouteFormat.username, format: /(json|ics)/ }
+      get "#{root_path}/:username/user-menu-bookmarks" => "users#user_menu_bookmarks", constraints: { username: RouteFormat.username, format: :json }
+      get "#{root_path}/:username/user-menu-private-messages" => "users#user_menu_messages", constraints: { username: RouteFormat.username, format: :json }
       get "#{root_path}/:username/notifications" => "users#show", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/notifications/:filter" => "users#show", constraints: { username: RouteFormat.username }
       delete "#{root_path}/:username" => "users#destroy", constraints: { username: RouteFormat.username }
@@ -552,6 +564,7 @@ Discourse::Application.routes.draw do
     get "stylesheets/:name.css" => "stylesheets#show", constraints: { name: /[-a-z0-9_]+/ }
     get "color-scheme-stylesheet/:id(/:theme_id)" => "stylesheets#color_scheme", constraints: { format: :json }
     get "theme-javascripts/:digest.js" => "theme_javascripts#show", constraints: { digest: /\h{40}/ }
+    get "theme-javascripts/:digest.map" => "theme_javascripts#show_map", constraints: { digest: /\h{40}/ }
     get "theme-javascripts/tests/:theme_id-:digest.js" => "theme_javascripts#show_tests"
 
     post "uploads/lookup-metadata" => "uploads#metadata"
@@ -578,7 +591,12 @@ Discourse::Application.routes.draw do
     end
     # used to download attachments (old route)
     get "uploads/:site/:id/:sha" => "uploads#show", constraints: { site: /\w+/, id: /\d+/, sha: /\h{16}/, format: /.*/ }
-    get "secure-media-uploads/*path(.:extension)" => "uploads#show_secure", constraints: { extension: /[a-z0-9\._]+/i }
+
+    # NOTE: secure-media-uploads is the old form, all new URLs generated for
+    # secure uploads will be secure-uploads, this is left in for backwards
+    # compat without needing to rebake all posts for each site.
+    get "secure-media-uploads/*path(.:extension)" => "uploads#_show_secure_deprecated", constraints: { extension: /[a-z0-9\._]+/i }
+    get "secure-uploads/*path(.:extension)" => "uploads#show_secure", constraints: { extension: /[a-z0-9\._]+/i }
 
     get "posts" => "posts#latest", id: "latest_posts", constraints: { format: /(json|rss)/ }
     get "private-posts" => "posts#latest", id: "private_posts", constraints: { format: /(json|rss)/ }
@@ -756,6 +774,7 @@ Discourse::Application.routes.draw do
     end
 
     get "hashtags" => "hashtags#show"
+    get "hashtags/search" => "hashtags#search"
 
     TopTopic.periods.each do |period|
       get "top/#{period}.rss", to: redirect("top.rss?period=#{period}", status: 301)
@@ -824,7 +843,7 @@ Discourse::Application.routes.draw do
 
     # Topic routes
     get "t/id_for/:slug" => "topics#id_for_slug"
-    get "t/external_id/:external_id" => "topics#show_by_external_id", format: :json, constrains: { external_id: /\A[\w-]+\z/ }
+    get "t/external_id/:external_id" => "topics#show_by_external_id", format: :json, constraints: { external_id: /[\w-]+/ }
     get "t/:slug/:topic_id/print" => "topics#show", format: :html, print: 'true', constraints: { topic_id: /\d+/ }
     get "t/:slug/:topic_id/wordpress" => "topics#wordpress", constraints: { topic_id: /\d+/ }
     get "t/:topic_id/wordpress" => "topics#wordpress", constraints: { topic_id: /\d+/ }

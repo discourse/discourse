@@ -240,6 +240,11 @@ class Admin::EmailController < Admin::AdminController
     logs = logs.where("users.username ILIKE ?", "%#{params[:user]}%") if params[:user].present?
     logs = logs.where("#{table_name}.to_address ILIKE ?", "%#{params[:address]}%") if params[:address].present?
     logs = logs.where("#{table_name}.email_type ILIKE ?", "%#{params[:type]}%") if params[:type].present?
+
+    if table_name == "email_logs" && params[:smtp_transaction_response].present?
+      logs = logs.where("#{table_name}.smtp_transaction_response ILIKE ?", "%#{params[:smtp_transaction_response]}%")
+    end
+
     logs
   end
 

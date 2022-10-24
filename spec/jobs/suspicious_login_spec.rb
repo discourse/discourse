@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Jobs::SuspiciousLogin do
+RSpec.describe Jobs::SuspiciousLogin do
 
   fab!(:user) { Fabricate(:moderator) }
 

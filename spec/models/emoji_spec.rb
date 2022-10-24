@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Emoji do
+RSpec.describe Emoji do
 
   it "returns the correct codepoints" do
     expect(Emoji.replacement_code('1f47d').codepoints).to eq([128125])
@@ -134,6 +134,35 @@ describe Emoji do
       replaced_str = described_class.codes_to_img(str)
 
       expect(replaced_str).to eq("This is a good day <img src=\"/images/emoji/twitter/woman.png?v=#{Emoji::EMOJI_VERSION}\" title=\"woman\" class=\"emoji\" alt=\"woman\" loading=\"lazy\" width=\"20\" height=\"20\"> :foo: :bar:t4: :man:t8:")
+    end
+  end
+
+  describe ".groups" do
+    it "returns an optimized emoji name -> group name datastructure" do
+      expect(Emoji.groups["scotland"]).to eq("flags")
+    end
+  end
+
+  describe ".load_standard" do
+    it "removes nil emojis" do
+      expect(Emoji.load_standard.any? { |element| element.nil? }).to be false
+    end
+  end
+
+  describe "#create_from_db_item" do
+    it "sets the group of the emoji" do
+      emoji = Emoji.create_from_db_item("name" => "scotland")
+      expect(emoji.group).to eq("flags")
+    end
+
+    it "sets the group of the emoji" do
+      emoji = Emoji.create_from_db_item("name" => "scotland")
+      expect(emoji.group).to eq("flags")
+    end
+
+    it "doesn’t create emoji when group is unknown" do
+      emoji = Emoji.create_from_db_item("name" => "white_hair")
+      expect(emoji).to be_nil
     end
   end
 end

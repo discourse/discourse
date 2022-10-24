@@ -4,19 +4,23 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 
+const HIDE_SIDEBAR_KEY = "sidebar-hidden";
+
 export default Controller.extend({
+  queryParams: [{ sidebarQueryParamOverride: "enable_sidebar" }],
+
   showTop: true,
   showFooter: false,
   router: service(),
-  showSidebar: null,
-  hideSidebarKey: "sidebar-hidden",
+  showSidebar: false,
+  sidebarQueryParamOverride: null,
+  sidebarDisabledRouteOverride: false,
+  showSiteHeader: true,
 
   init() {
     this._super(...arguments);
-
-    this.showSidebar = this.site.mobileView
-      ? false
-      : this.currentUser && !this.keyValueStore.getItem(this.hideSidebarKey);
+    this.showSidebar =
+      this.canDisplaySidebar && !this.keyValueStore.getItem(HIDE_SIDEBAR_KEY);
   },
 
   @discourseComputed
@@ -29,8 +33,25 @@ export default Controller.extend({
   },
 
   @discourseComputed
+  canDisplaySidebar() {
+    return this.currentUser || !this.siteSettings.login_required;
+  },
+
+  @discourseComputed
   loginRequired() {
     return this.siteSettings.login_required && !this.currentUser;
+  },
+
+  @discourseComputed(
+    "siteSettings.bootstrap_mode_enabled",
+    "router.currentRouteName"
+  )
+  showBootstrapModeNotice(bootstrapModeEnabled, currentRouteName) {
+    return (
+      this.currentUser?.get("staff") &&
+      bootstrapModeEnabled &&
+      !currentRouteName.startsWith("wizard")
+    );
   },
 
   @discourseComputed
@@ -42,6 +63,42 @@ export default Controller.extend({
     document.querySelector("body").classList.remove("sidebar-animate");
   },
 
+  @discourseComputed(
+    "sidebarQueryParamOverride",
+    "siteSettings.enable_sidebar",
+    "canDisplaySidebar",
+    "sidebarDisabledRouteOverride"
+  )
+  sidebarEnabled(
+    sidebarQueryParamOverride,
+    enableSidebar,
+    canDisplaySidebar,
+    sidebarDisabledRouteOverride
+  ) {
+    if (!canDisplaySidebar) {
+      return false;
+    }
+
+    if (sidebarDisabledRouteOverride) {
+      return false;
+    }
+
+    if (sidebarQueryParamOverride === "1") {
+      return true;
+    }
+
+    if (sidebarQueryParamOverride === "0") {
+      return false;
+    }
+
+    // Always return dropdown on mobile
+    if (this.site.mobileView) {
+      return false;
+    }
+
+    return enableSidebar;
+  },
+
   @action
   toggleSidebar() {
     // enables CSS transitions, but not on did-insert
@@ -51,11 +108,11 @@ export default Controller.extend({
 
     this.toggleProperty("showSidebar");
 
-    if (!this.site.mobileView) {
+    if (this.site.desktopView) {
       if (this.showSidebar) {
-        this.keyValueStore.removeItem(this.hideSidebarKey);
+        this.keyValueStore.removeItem(HIDE_SIDEBAR_KEY);
       } else {
-        this.keyValueStore.setItem(this.hideSidebarKey);
+        this.keyValueStore.setItem(HIDE_SIDEBAR_KEY, "true");
       }
     }
   },

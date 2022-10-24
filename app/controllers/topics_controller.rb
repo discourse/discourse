@@ -621,20 +621,22 @@ class TopicsController < ApplicationController
 
   def destroy
     topic = Topic.with_deleted.find_by(id: params[:id])
+    force_destroy = ActiveModel::Type::Boolean.new.cast(params[:force_destroy])
 
-    force_destroy = false
-    if params[:force_destroy].present?
+    if force_destroy
       if !guardian.can_permanently_delete?(topic)
         return render_json_error topic.cannot_permanently_delete_reason(current_user), status: 403
       end
-
-      force_destroy = true
     else
       guardian.ensure_can_delete!(topic)
     end
 
-    first_post = topic.posts.with_deleted.order(:post_number).first
-    PostDestroyer.new(current_user, first_post, context: params[:context], force_destroy: force_destroy).destroy
+    PostDestroyer.new(
+      current_user,
+      topic.ordered_posts.with_deleted.first,
+      context: params[:context],
+      force_destroy: force_destroy
+    ).destroy
 
     render body: nil
   rescue Discourse::InvalidAccess
@@ -685,11 +687,12 @@ class TopicsController < ApplicationController
 
   def invite_group
     group = Group.find_by(name: params[:group])
-    raise Discourse::NotFound unless group
+    raise Discourse::NotFound if !group
 
     topic = Topic.find_by(id: params[:topic_id])
+    raise Discourse::NotFound if !topic
 
-    unless pm_has_slots?(topic)
+    if !pm_has_slots?(topic)
       return render_json_error(
         I18n.t("pm_reached_recipients_limit", recipients_limit: SiteSetting.max_allowed_message_recipients)
       )
@@ -706,29 +709,29 @@ class TopicsController < ApplicationController
 
   def invite
     topic = Topic.find_by(id: params[:topic_id])
-    raise Discourse::InvalidParameters.new unless topic
+    raise Discourse::NotFound if !topic
 
-    username_or_email = params[:user] ? fetch_username : fetch_email
+    if !topic.private_message?
+      return render_json_error(I18n.t("topic_invite.not_pm"))
+    end
 
-    groups = Group.lookup_groups(
-      group_ids: params[:group_ids],
-      group_names: params[:group_names]
-    )
-
-    unless pm_has_slots?(topic)
+    if !pm_has_slots?(topic)
       return render_json_error(
         I18n.t("pm_reached_recipients_limit", recipients_limit: SiteSetting.max_allowed_message_recipients)
       )
     end
 
     guardian.ensure_can_invite_to!(topic)
-    group_ids = groups.map(&:id)
+
+    username_or_email = params[:user] ? fetch_username : fetch_email
+    group_ids = Group.lookup_groups(
+      group_ids: params[:group_ids],
+      group_names: params[:group_names]
+    ).pluck(:id)
 
     begin
       if topic.invite(current_user, username_or_email, group_ids, params[:custom_message])
-        user = User.find_by_username_or_email(username_or_email)
-
-        if user
+        if user = User.find_by_username_or_email(username_or_email)
           render_json_dump BasicUserSerializer.new(user, scope: guardian, root: 'user')
         else
           render json: success_json

@@ -9,8 +9,6 @@ import {
 import { click, fillIn, visit } from "@ember/test-helpers";
 import Draft from "discourse/models/draft";
 import I18n from "I18n";
-import { Promise } from "rsvp";
-import { _clearSnapshots } from "select-kit/components/composer-actions";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import sinon from "sinon";
 import { test } from "qunit";
@@ -31,6 +29,7 @@ acceptance("Composer Actions", function (needs) {
   });
   needs.site({ can_tag_topics: true });
   needs.pretender((server, helper) => {
+    server.put("/u/kris.json", () => helper.response({ user: {} }));
     const cardResponse = cloneJSON(userFixtures["/u/shade/card.json"]);
     server.get("/u/shade/card.json", () => helper.response(cardResponse));
   });
@@ -118,9 +117,8 @@ acceptance("Composer Actions", function (needs) {
   });
 
   test("replying to post - reply_as_new_topic", async function (assert) {
-    sinon
-      .stub(Draft, "get")
-      .returns(Promise.resolve({ draft: "", draft_sequence: 0 }));
+    sinon.stub(Draft, "get").resolves({ draft: "", draft_sequence: 0 });
+
     const composerActions = selectKit(".composer-actions");
     const categoryChooser = selectKit(".title-wrapper .category-chooser");
     const categoryChooserReplyArea = selectKit(".reply-area .category-chooser");
@@ -145,7 +143,6 @@ acceptance("Composer Actions", function (needs) {
       I18n.t("topic.create_long")
     );
     assert.ok(query(".d-editor-input").value.includes(quote));
-    sinon.restore();
   });
 
   test("reply_as_new_topic without a new_topic draft", async function (assert) {
@@ -154,7 +151,7 @@ acceptance("Composer Actions", function (needs) {
     const composerActions = selectKit(".composer-actions");
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_new_topic");
-    assert.ok(!exists(".bootbox"));
+    assert.ok(!exists(".dialog-body"));
   });
 
   test("reply_as_new_group_message", async function (assert) {
@@ -407,13 +404,11 @@ acceptance("Composer Actions", function (needs) {
 });
 
 function stubDraftResponse() {
-  sinon.stub(Draft, "get").returns(
-    Promise.resolve({
-      draft:
-        '{"reply":"dum de dum da ba.","action":"createTopic","title":"dum da ba dum dum","categoryId":null,"archetypeId":"regular","metaData":null,"composerTime":540879,"typingTime":3400}',
-      draft_sequence: 0,
-    })
-  );
+  sinon.stub(Draft, "get").resolves({
+    draft:
+      '{"reply":"dum de dum da ba.","action":"createTopic","title":"dum da ba dum dum","categoryId":null,"archetypeId":"regular","metaData":null,"composerTime":540879,"typingTime":3400}',
+    draft_sequence: 0,
+  });
 }
 
 acceptance("Composer Actions With New Topic Draft", function (needs) {
@@ -424,69 +419,69 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
   needs.site({
     can_tag_topics: true,
   });
-  needs.hooks.beforeEach(() => _clearSnapshots());
-  needs.hooks.afterEach(() => _clearSnapshots());
+
+  needs.hooks.afterEach(() => toggleCheckDraftPopup(false));
 
   test("shared draft", async function (assert) {
+    updateCurrentUser({ has_topic_draft: true });
     stubDraftResponse();
-    try {
-      toggleCheckDraftPopup(true);
+    toggleCheckDraftPopup(true);
 
-      const composerActions = selectKit(".composer-actions");
-      const tags = selectKit(".mini-tag-chooser");
+    await visit("/");
+    await click("button.open-draft");
 
-      await visit("/");
-      await click("#create-topic");
+    await fillIn(
+      "#reply-title",
+      "This is the new text for the title using 'quotes'"
+    );
+    await fillIn(".d-editor-input", "This is the new text for the post");
 
-      await fillIn(
-        "#reply-title",
-        "This is the new text for the title using 'quotes'"
-      );
+    const tags = selectKit(".mini-tag-chooser");
+    await tags.expand();
+    await tags.selectRowByValue("monkey");
 
-      await fillIn(".d-editor-input", "This is the new text for the post");
-      await tags.expand();
-      await tags.selectRowByValue("monkey");
-      await composerActions.expand();
-      await composerActions.selectRowByValue("shared_draft");
+    const composerActions = selectKit(".composer-actions");
+    await composerActions.expand();
+    await composerActions.selectRowByValue("shared_draft");
 
-      assert.strictEqual(tags.header().value(), "monkey", "tags are not reset");
+    assert.strictEqual(tags.header().value(), "monkey", "tags are not reset");
+    assert.strictEqual(
+      query("#reply-title").value,
+      "This is the new text for the title using 'quotes'"
+    );
 
-      assert.strictEqual(
-        query("#reply-title").value,
-        "This is the new text for the title using 'quotes'"
-      );
-
-      assert.strictEqual(
-        query("#reply-control .btn-primary.create .d-button-label").innerText,
-        I18n.t("composer.create_shared_draft")
-      );
-      assert.strictEqual(
-        count(".composer-actions svg.d-icon-far-clipboard"),
-        1,
-        "shared draft icon is visible"
-      );
-
-      assert.strictEqual(count("#reply-control.composing-shared-draft"), 1);
-      await click(".modal-footer .btn.btn-default");
-    } finally {
-      toggleCheckDraftPopup(false);
-    }
-    sinon.restore();
+    assert.strictEqual(
+      query("#reply-control .btn-primary.create .d-button-label").innerText,
+      I18n.t("composer.create_shared_draft")
+    );
+    assert.strictEqual(
+      count(".composer-actions svg.d-icon-far-clipboard"),
+      1,
+      "shared draft icon is visible"
+    );
   });
 
   test("reply_as_new_topic with new_topic draft", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".create.reply");
+
+    stubDraftResponse();
+
     const composerActions = selectKit(".composer-actions");
     await composerActions.expand();
-    stubDraftResponse();
     await composerActions.selectRowByValue("reply_as_new_topic");
+
     assert.strictEqual(
-      query(".bootbox .modal-body").innerText,
+      query(".dialog-body").innerText.trim(),
       I18n.t("composer.composer_actions.reply_as_new_topic.confirm")
     );
-    await click(".modal-footer .btn.btn-default");
-    sinon.restore();
+    await click(".dialog-footer .btn-primary");
+
+    assert.ok(
+      query(".d-editor-input").value.startsWith(
+        "Continuing the discussion from"
+      )
+    );
   });
 });
 

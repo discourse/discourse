@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'swagger_helper'
 
-describe 'uploads' do
+RSpec.describe 'uploads' do
 
   let(:admin) { Fabricate(:admin) }
   let(:logo_file) { file_from_fixtures("logo.png") }

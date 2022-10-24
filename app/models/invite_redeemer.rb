@@ -82,6 +82,8 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
   private
 
   def can_redeem_invite?
+    return false unless invite.redeemable?
+
     # Invite has already been redeemed
     if !invite.is_invite_link? && InvitedUser.exists?(invite_id: invite.id)
       return false

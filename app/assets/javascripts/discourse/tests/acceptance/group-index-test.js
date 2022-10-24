@@ -2,6 +2,7 @@ import {
   acceptance,
   count,
   exists,
+  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -14,8 +15,9 @@ acceptance("Group Members - Anonymous", function () {
   test("Viewing Members as anon user", async function (assert) {
     await visit("/g/discourse");
 
-    assert.ok(
-      count(".avatar-flair .d-icon-adjust") === 1,
+    assert.strictEqual(
+      count(".avatar-flair .d-icon-adjust"),
+      1,
       "it displays the group's avatar flair"
     );
     assert.ok(exists(".group-members tr"), "it lists group members");
@@ -26,7 +28,7 @@ acceptance("Group Members - Anonymous", function () {
     );
 
     assert.strictEqual(
-      queryAll(".group-username-filter").attr("placeholder"),
+      query(".group-username-filter").getAttribute("placeholder"),
       I18n.t("groups.members.filter_placeholder"),
       "it should display the right filter placeholder"
     );
@@ -64,7 +66,7 @@ acceptance("Group Members", function (needs) {
     );
 
     assert.strictEqual(
-      queryAll(".group-username-filter").attr("placeholder"),
+      query(".group-username-filter").getAttribute("placeholder"),
       I18n.t("groups.members.filter_placeholder_admin"),
       "it should display the right filter placeholder"
     );
@@ -79,8 +81,25 @@ acceptance("Group Members", function (needs) {
     await click(queryAll("input.bulk-select")[0]);
     await click(queryAll("input.bulk-select")[1]);
 
-    const memberDropdown = selectKit(".group-member-dropdown");
+    const memberDropdown = selectKit(".bulk-group-member-dropdown");
     await memberDropdown.expand();
     await memberDropdown.selectRowByValue("makeOwners");
+  });
+
+  test("Bulk actions - Menu, Select all and Clear all buttons", async function (assert) {
+    await visit("/g/discourse");
+
+    assert.ok(
+      !exists(".bulk-select-buttons-wrap details"),
+      "it does not show menu button if nothing is selected"
+    );
+
+    await click("button.bulk-select");
+    await click(".bulk-select-buttons button:nth-child(1)");
+
+    assert.ok(
+      exists(".bulk-select-buttons-wrap details"),
+      "it shows menu button if something is selected"
+    );
   });
 });

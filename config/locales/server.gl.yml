@@ -58,8 +58,6 @@ gl:
     bad_color_scheme: "Non se pode actualizar o tema; paleta de cores non válida"
     other_error: "Xurdiu un problema ao actualizar o tema"
     ember_selector_error: "Desculpe: non se permite o uso de selectores CSS #ember ou .ember-view, porque estes nomes xéranse dinamicamente no tempo de execución e cambiarán co paso do tempo, resultando finalmente en CSS rotos. Probe cun selector diferente."
-    compile_error:
-      unrecognized_extension: "Extensión de ficheiro non recoñecida: %{extension}"
     import_error:
       generic: Produciuse un erro ao importar este tema
       about_json: "Erro de importación: about.json non existe ou non é válido. Confirma que este é un tema de Discourse?"
@@ -121,7 +119,6 @@ gl:
         unsubscribe_not_allowed: "Sucede cando a este usuario non se lle permite cancelar a subscrición vía correo electrónico."
         email_not_allowed: "Sucede cando o enderezo electrónico non está na listaxe de elementos permitidos ou está na de bloqueados."
       unrecognized_error: "Erro non recoñecido"
-    secure_media_placeholder: "Redactado: este sitio ten activados elementos multimedia seguros; visite o tema ou prema en Ver contido multimedia para ver o contido multimedia anexado."
     view_redacted_media: "Ver contido multimedia"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -191,7 +188,6 @@ gl:
       page_publishing_requirements: "A publicación de páxinas non se pode activar se está activados multimedia seguros."
       s3_backup_requires_s3_settings: "Non se pode utilizar S3 como localización da copia de seguranza a menos que proporcionara '%{setting_name}'."
       s3_bucket_reused: "Non pode utilizar o mesmo contedor (bucket) para 's3_upload_bucket' e 's3_backup_bucket'. Elixa un contedor diferente ou utilice un camiño distinto para cada un deles."
-      secure_media_requirements: "Débese activar a carga de S3 antes de habilitar multimedia seguros."
       share_quote_facebook_requirements: "Debe definir un ID de aplicación de Facebook para activar o reparto de cota para Facebook."
       second_factor_cannot_enforce_with_socials: "Non pode forzar 2FA tendo o activo o inicio de sesión con redes sociais. Primeiro debe desactivar o inicio de sesión con: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Non pode aplicar 2FA se os inicios de sesión locais están desactivados."
@@ -553,14 +549,12 @@ gl:
               too_many: "Demasiadas palabras para esa acción"
       <<: *errors
   uncategorized_category_name: "Sen categoría"
-  vip_category_name: "Sala VIP"
-  vip_category_description: "Unha categoría exclusiva para membros cun nivel de confianza 3 ou superior."
+  general_category_name: "Xeral"
   meta_category_name: "Opinións sobre o sitio"
   meta_category_description: "Discusións sobre este sitio, a súa organización, como funciona e como se pode mellorar."
   staff_category_name: "Equipo"
   staff_category_description: "Categoría privada para discusións do equipo. Os temas son visíbeis unicamente para administradores e moderadores."
   discourse_welcome_topic:
-    title: "Dámoslle a benvida a Discourse"
     body: |2
 
       O primeiro parágrafo deste tema pegado será visible como mensaxe de benvida para todos os novos visitantes na súa páxina de inicio. É, pois, importante!
@@ -575,29 +569,6 @@ gl:
       <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
 
       Quizais queira pechar este tema a través do administrador :wrench: (na parte superior dereita ou na parte inferior) para que as respostas non se acumulen no anuncio.
-  lounge_welcome:
-    title: "Dámoslle a benvida á Sala VIP"
-    body: |2
-
-      Parabéns! :confetti_ball:
-
-      Se pode ver este tema é porque hai pouco que foi promovido a usuario **habitual** (nivel de confianza 3).
-
-      Agora pode &hellip;
-
-      * Editar o título de calquera tema
-      * Cambiar a categoría de calquera tema
-      * As súas ligazóns serán fiábeis (retirarase [a etiqueta nofollow](https://en.wikipedia.org/wiki/Nofollow))
-      * Acceder á categoría privada Sala VIP só visíbel para usuarios cun nivel de confianza 3 ou superior
-      * Agochar o lixo cunha soa alerta
-
-      Consulte aquí a [listaxe actual de usuarios habituais](%{base_path}/badges/3/regular). Asegúrese de saudar.
-
-      Grazas por ser parte importante da comunidade!
-
-      (Para máis información sobre os niveis de confianza, [mire este tema][trust]. Repare en que só os membros que continúen cumprindo os requirimentos ao longo do tempo seguirán considerándose habituais.)
-
-      [trust]: https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/
   admin_quick_start_title: "LER PRIMEIRO: Guía de comezo rápido para administradores"
   category:
     topic_prefix: "Acerca da categoría %{category}"
@@ -1631,7 +1602,6 @@ gl:
     min_trust_to_edit_wiki_post: "O nivel de confianza mínimo requirido para editar unha publicación marcada como wiki."
     min_trust_to_edit_post: "O nivel de confianza mínimo requirido para editar publicacións."
     min_trust_to_allow_self_wiki: "O nivel de confianza mínimo requirido para facer que un usuario converta as súas publicacións a wiki."
-    min_trust_to_send_messages: "O nivel de confianza mínimo requirido para crear novas mensaxes persoais."
     min_trust_to_flag_posts: "O nivel de confianza mínimo requirido para denunciar publicacións"
     min_trust_to_post_links: "O nivel de confianza mínimo requirido para incluír ligazóns nas publicacións"
     min_trust_to_post_embedded_media: "O nivel de confianza mínimo requirido para incorporar elementos multimedia a unha publicación"
@@ -1864,9 +1834,6 @@ gl:
     delete_drafts_older_than_n_days: "Eliminar borradores con máis de (n) días de antigüidade."
     bootstrap_mode_min_users: "Número mínimo de usuarios necesarios para desactivar o modo de arranque (estabelecer en 0 para desactivar)"
     prevent_anons_from_downloading_files: "Evitar que usuarios anónimos descarguen anexos."
-    secure_media: 'Limita o acceso a TODO o que se cargase (imaxes, vídeo, son, texto, pdf, zip e outros). Se está activado o «requírese inicio de sesión», só os usuarios con sesión activa poden acceder ás cargas. En caso contrario, o acceso limitarase só para as cargas de multimedia en mensaxes privadas e categorías privadas. AVISO: este axuste é complexo e require unha comprensión administrativa profunda. Véxase <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">o tema de multimedia seguro en Meta</a> para saber máis.'
-    secure_media_allow_embed_images_in_emails: "Permite incorporar imaxes seguras que normalmente se engadirían nos correos electrónicos, se o seu tamaño é menor que o axuste de tamaño máx. de imaxe incorporada en correo en kb."
-    secure_media_max_email_embed_image_size_kb: "O tamaño de corte para imaxes seguras que se incorporarán nos correos se está activado o axuste «multimedia seguro que se permite incorporar nas mensaxes de correo». Se este axuste non está activado, non terá efecto."
     slug_generation_method: "Escolla un método de xeración de abreviacións. Con «codificado» xerarase unha cadea con codificación porcentual, con «ningún» desactivarase a abreviación amigábel."
     enable_emoji: "Activar emojis"
     enable_emoji_shortcuts: "As cariñas habituais en texto como :) :p :( converterase en emojis"
@@ -2502,18 +2469,9 @@ gl:
     bulk_invite_succeeded:
       title: "Convite en masa correcto"
       subject_template: "O convite en masa procesouse correctamente"
-      text_body_template: "O seu ficheiro de convites en masa foi procesado; enviáronse %{sent} convites por correo electrónico."
     bulk_invite_failed:
       title: "Erro no convite en masa"
       subject_template: "Convites en masa procesados con algúns erros"
-      text_body_template: |
-        O seu ficheiro de convites en masa foi procesado; enviáronse %{sent} convites por correo electrónico con %{failed} erros.
-
-        Velaquí está o rexistro:
-
-        ``` text
-        %{logs}
-        ```
     user_added_to_group_as_owner:
       title: "Engadido ao grupo como propietario"
       subject_template: "Vostede foi engadido como un propietario do grupo %{group_name}"
@@ -3981,7 +3939,6 @@ gl:
     register:
       button: "Rexistrarse"
       title: "Rexistrar conta de administrador"
-      help: "rexistrar unha nova conta para comezar"
       no_emails: "Por desgraza, non se determinaron enderezos de correo de administrador durante a definición inicial, polo que pode ser difícil finalizar a configuración. Engada, por favor, un correo de desenvolvedor no ficheiro de configuración ou <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>mire de crear unha conta de administrador desde a consola</a>."
     confirm_email:
       title: "Confirme o seu correo electrónico"
@@ -3991,88 +3948,30 @@ gl:
       message: "<p>Volvémoslle enviar o correo de activación a <b>%{email}</b>"
   safe_mode:
     title: "Entrar en modo seguro"
-    description: "O modo seguro permítelle probar o seu sitio sen cargar complementos nin outras personalizacións."
-    no_customizations: "Desactivar tema actual"
-    only_official: "Desactivar complementos non oficiais"
+    no_unofficial_plugins: "Desactivar complementos non oficiais"
     no_plugins: "Desactivar todos os complementos"
     enter: "Entrar en modo seguro"
     must_select: "Debe seleccionar polo menos unha opción para entrar no modo seguro."
   wizard:
     title: "Configuración de Discourse"
     step:
-      locale:
-        title: "Dámoslle a benvida ao seu Discourse!"
-        fields:
-          default_locale:
-            description: "Cal é o idioma predefinido da súa comunidade?"
-      forum_title:
-        title: "Nome"
-        description: "O nome é un sinal visible a distancia, o <i>primeiro</i> que os visitantes potenciais saberán sobre a súa comunidade. Que di o nome e o título da súa comunidade sobre ela?"
+      introduction:
         fields:
           title:
-            label: "O nome da súa comunidade"
             placeholder: "Reunión de Helena"
           site_description:
             placeholder: "Un lugar para que Helena e as súas amizades discutan sobre cousas interesantes"
-          short_site_description:
-            placeholder: "A mellor comunidade do mundo"
-      introduction:
-        title: "Introdución"
-        disabled: "<p>Non atopamos tema ningún co título “%{topic_title}”.</p> <ul> <li>Se cambiou o título, edite ese tema para cambiar tamén o texto introdutorio do seu foro. </li> <li>Se eliminou este tema, cree outro co título “%{topic_title}”. O contido da primeira publicación será o texto introdutorio do seu foro.</li> </ul>"
-        fields:
-          welcome:
-            label: "Tema de benvida"
-            description: "<p>Como lle describiría nun minuto a súa comunidade a alguén que non a coñece?</p> <ul> <li>A quen se dirixen os debates?</li> <li>Que podo atopar aquí?</li> <li>Por que debería visitala?</li> </ul> <p>O seu tema de benvida é o primeiro que os seus visitantes lerán. Pense nel como no seu argumento de vendas <b>nun minuto</b> ou a súa declaración de intencións. </p>"
-            one_paragraph: "Limite a súa mensaxe de benvida a un único parágrafo."
-            extra_description: "Se non está seguro, pode saltar este paso e editar o seu texto de benvida máis tarde."
+          default_locale:
+            label: "Idioma"
       privacy:
-        title: "Acceso"
-        description: "<p>A súa comunidade é aberta a todo o mundo ou está restrinxida só aos seus membros afiliados, con invitación ou aprobación? Se o prefire, pode facer que inicialmente sexa privada e despois convertela en aberta.</p>"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Pública"
-                description: "Calquera pode acceder á comunidade"
-              restricted:
-                label: "Privada"
-                description: "Só os usuarios rexistrados poden acceder á comunidade"
-          privacy_options:
-            description: "Como poden crear unha conta os novos usuarios?"
-            choices:
-              open:
-                label: "Os usuarios poden rexistrarse pola súa conta."
-              invite_only:
-                label: "Os usuarios deben ser convidados por usuarios de confianza ou do equipo para poder rexistrarse."
-              must_approve:
-                label: "Os usuarios poden rexistrarse pola súa conta, pero deben ser aprobados polo equipo."
-      contact:
-        title: "Contacto"
-        fields:
-          contact_email:
-            label: "Correo electrónico"
-            placeholder: "nome@exemplo.com"
-            description: "Enderezo electrónico da persoa ou grupo responsable desta comunidade. Utilízase para notificacións moi importantes como denuncias sen atender, actualizacións de seguridade e tamén aparecerá na súa <a href='%{base_path}/about' target='_blank'>páxina Acerca de</a> para comunicar cuestións urxentes."
-          contact_url:
-            label: "Páxina web"
-            placeholder: "https://www.exemplo.com/contactanos"
-            description: "Páxina de contacto xeral con vostede ou a súa organización. Amosarase na súa <a href='%{base_path}/about' target='_blank'>páxina Acerca de</a>."
-          site_contact:
-            label: "Mensaxes automáticas"
-            description: "Todas as mensaxes privadas automáticas de Discourse serán enviadas deste este usuario, sexan advertencias de denuncias sexan apoios recibidos."
-      corporate:
-        title: "Organización"
-        description: "Esta información inserirase nos seus <a href='%{base_path}/tos' target='blank'>Termos de servizo</a>, que poderá editar en calquera momento na sección Equipo. Se non ten unha empresa, pode omitir este paso por agora."
-        fields:
-          company_name:
-            label: "Nome da empresa"
-            placeholder: "Organización de exemplo"
-          governing_law:
-            label: "Lei que rexe"
-            placeholder: "Lei de California"
-          city_for_disputes:
-            label: "Cidade para disputas"
-            placeholder: "San Francisco, California"
+          login_required:
+            placeholder: "Privada"
+            extra_description: "Só os usuarios rexistrados poden acceder á comunidade"
+          must_approve_users:
+            placeholder: "Requirir aprobación"
+      ready:
+        title: "O seu Discourse está listo!"
       styling:
         fields:
           body_font:
@@ -4093,24 +3992,34 @@ gl:
                 label: "Categorías e últimos temas"
               categories_and_top_topics:
                 label: "Categorías e temas destacados"
-      logos:
-        title: "Logotipos"
+      branding:
         fields:
           logo:
             label: "Logotipo principal"
-            description: "A imaxe do logotipo na parte superior esquerda do sitio. Utilice unha imaxe larga e rectangular, cunha altura de 120 e unha proporción de aspecto maior de 3:1"
           logo_small:
             label: "Logotipo cadrado"
-            description: "Unha versión cadrada do seu logotipo. Móstrase na parte superior esquerda do seu sitio cando se despraza cara a abaixo no navegador e cando se comparte en plataformas sociais. Idealmente debe ser máis grande que 512x512."
-      icons:
-        title: "Iconas"
-        fields:
           favicon:
             label: "Icona do navegador"
-            description: "Imaxe de icona que se usa para representar o seu sitio en navegadores web que se ve ben a tamaños pequenos. As extensións recomendadas son PNG ou JPG. Utilizaremos o logotipo cadrado por defecto."
           large_icon:
             label: "Icona grande"
-            description: "Imaxe de icona utilizada para representar o seu sitio en dispositivos modernos que se ve ben en tamaños máis grandes. Idealmente debe ser maior que 512 × 512. Utilizaremos o logo cadrado por defecto."
+      corporate:
+        fields:
+          company_name:
+            label: "Nome da empresa"
+            placeholder: "Organización de exemplo"
+          governing_law:
+            label: "Lei que rexe"
+            placeholder: "Lei de California"
+          contact_url:
+            label: "Páxina web"
+            placeholder: "https://www.exemplo.com/contactanos"
+            description: "Páxina de contacto xeral con vostede ou a súa organización. Amosarase na súa <a href='%{base_path}/about' target='_blank'>páxina Acerca de</a>."
+          city_for_disputes:
+            label: "Cidade para disputas"
+            placeholder: "San Francisco, California"
+          site_contact:
+            label: "Mensaxes automáticas"
+            description: "Todas as mensaxes privadas automáticas de Discourse serán enviadas deste este usuario, sexan advertencias de denuncias sexan apoios recibidos."
       invites:
         title: "Convidar o equipo"
         description: "Xa case está! Imos convidar outras persoas para axudar a<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>iniciar discusións</a> con temas e respostas de interese para que comece a súa comunidade."

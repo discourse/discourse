@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ActiveSupport::SafeBuffer do
+RSpec.describe ActiveSupport::SafeBuffer do
   it "can cope with encoding weirdness" do
     buffer = ActiveSupport::SafeBuffer.new
     buffer << (+"\330").force_encoding("ASCII-8BIT")

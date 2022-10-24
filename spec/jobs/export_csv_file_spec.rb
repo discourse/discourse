@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-describe Jobs::ExportCsvFile do
+RSpec.describe Jobs::ExportCsvFile do
 
-  context '#execute' do
+  describe '#execute' do
     let(:other_user) { Fabricate(:user) }
     let(:admin) { Fabricate(:admin) }
     let(:action_log) { StaffActionLogger.new(admin).log_revoke_moderation(other_user) }
@@ -51,7 +51,7 @@ describe Jobs::ExportCsvFile do
     end
   end
 
-  context '.report_export' do
+  describe '.report_export' do
 
     let(:user) { Fabricate(:admin) }
 

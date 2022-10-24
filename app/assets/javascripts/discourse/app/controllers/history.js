@@ -1,3 +1,4 @@
+import { action } from "@ember/object";
 import { alias, equal, gt, not, or } from "@ember/object/computed";
 import discourseComputed, {
   observes,
@@ -9,10 +10,10 @@ import Controller from "@ember/controller";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import Post from "discourse/models/post";
-import bootbox from "bootbox";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { sanitizeAsync } from "discourse/lib/text";
+import { inject as service } from "@ember/service";
 
 function customTagArray(val) {
   if (!val) {
@@ -26,6 +27,7 @@ function customTagArray(val) {
 
 // This controller handles displaying of history
 export default Controller.extend(ModalFunctionality, {
+  dialog: service(),
   loading: true,
   viewMode: "side_by_side",
 
@@ -139,7 +141,7 @@ export default Controller.extend(ModalFunctionality, {
           e.jqXHR.responseJSON.errors &&
           e.jqXHR.responseJSON.errors[0]
         ) {
-          bootbox.alert(e.jqXHR.responseJSON.errors[0]);
+          this.dialog.alert(e.jqXHR.responseJSON.errors[0]);
         }
       });
   },
@@ -312,6 +314,24 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
+  @action
+  displayInline(event) {
+    event?.preventDefault();
+    this.set("viewMode", "inline");
+  },
+
+  @action
+  displaySideBySide(event) {
+    event?.preventDefault();
+    this.set("viewMode", "side_by_side");
+  },
+
+  @action
+  displaySideBySideMarkdown(event) {
+    event?.preventDefault();
+    this.set("viewMode", "side_by_side_markdown");
+  },
+
   actions: {
     loadFirstVersion() {
       this.refresh(this.get("model.post_id"), this.get("model.first_revision"));
@@ -343,16 +363,6 @@ export default Controller.extend(ModalFunctionality, {
 
     revertToVersion() {
       this.revert(this.post, this.get("model.current_revision"));
-    },
-
-    displayInline() {
-      this.set("viewMode", "inline");
-    },
-    displaySideBySide() {
-      this.set("viewMode", "side_by_side");
-    },
-    displaySideBySideMarkdown() {
-      this.set("viewMode", "side_by_side_markdown");
     },
   },
 });

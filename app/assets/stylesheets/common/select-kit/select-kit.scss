@@ -42,6 +42,7 @@
       border: 1px solid var(--primary-low);
       box-shadow: shadow("dropdown");
       background: var(--secondary);
+      max-width: 600px;
     }
 
     .select-kit-collection {
@@ -157,7 +158,7 @@
       align-items: center;
       white-space: nowrap;
       overflow: hidden;
-      line-height: $line-height-medium;
+      line-height: var(--line-height-medium);
 
       .d-icon {
         margin-left: 5px;
@@ -177,8 +178,10 @@
     }
 
     &[data-popper-reference-hidden] {
-      visibility: hidden;
-      pointer-events: none;
+      html:not(.ios-device) & {
+        visibility: hidden;
+        pointer-events: none;
+      }
     }
   }
 

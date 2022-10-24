@@ -1,5 +1,5 @@
 import { postRNWebviewMessage } from "discourse/lib/utilities";
-import { later } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
 
 // Send bg color to webview so iOS status bar matches site theme
 export default {
@@ -16,7 +16,7 @@ export default {
     }
   },
   updateAppBackground() {
-    later(() => {
+    discourseLater(() => {
       const header = document.querySelector(".d-header-wrap .d-header");
       if (header) {
         const styles = window.getComputedStyle(header);

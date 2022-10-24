@@ -2,7 +2,7 @@
 
 require "excerpt_parser"
 
-describe ExcerptParser do
+RSpec.describe ExcerptParser do
 
   it "handles nested <details> blocks" do
     html = <<~HTML.strip

@@ -4,27 +4,27 @@
 
 html {
   color: var(--primary);
-  font-family: $base-font-family;
-  font-size: $base-font-size;
-  line-height: $line-height-large;
+  font-family: var(--font-family);
+  font-size: var(--base-font-size);
+  line-height: var(--line-height-large);
   background-color: var(--secondary);
   overflow-y: scroll;
   direction: ltr;
 
   &.text-size-smallest {
-    font-size: $base-font-size-smallest;
+    font-size: var(--base-font-size-smallest);
   }
 
   &.text-size-smaller {
-    font-size: $base-font-size-smaller;
+    font-size: var(--base-font-size-smaller);
   }
 
   &.text-size-larger {
-    font-size: $base-font-size-larger;
+    font-size: var(--base-font-size-larger);
   }
 
   &.text-size-largest {
-    font-size: $base-font-size-largest;
+    font-size: var(--base-font-size-largest);
   }
 }
 

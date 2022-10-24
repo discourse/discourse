@@ -66,6 +66,12 @@ class WebhooksController < ActionController::Base
     success
   end
 
+  def mandrill_head
+    # Mandrill sends a HEAD request to validate the webhook before saving
+    # Rails interprets it as a GET request
+    success
+  end
+
   def postmark
     # see https://postmarkapp.com/developer/webhooks/bounce-webhook#bounce-webhook-data
     # and https://postmarkapp.com/developer/api/bounce-api#bounce-types

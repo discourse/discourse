@@ -3,6 +3,7 @@ import { ajax } from "discourse/lib/ajax";
 import { formatUsername } from "discourse/lib/utilities";
 import getURL from "discourse-common/lib/get-url";
 import { userPath } from "discourse/lib/url";
+import jQuery from "jquery";
 
 let maxGroupMention;
 
@@ -67,7 +68,6 @@ function updateFound(mentions, usernames) {
 }
 
 export function linkSeenMentions(elem, siteSettings) {
-  // eslint-disable-next-line no-undef
   if (elem instanceof jQuery) {
     elem = elem[0];
 

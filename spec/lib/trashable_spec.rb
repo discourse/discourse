@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Trashable do
+RSpec.describe Trashable do
   # post is trashable, just use it.
   it "works correctly" do
     p1 = Fabricate(:post)

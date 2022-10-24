@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe TagGroupSerializer do
+RSpec.describe TagGroupSerializer do
 
   it "doesn't translate automatic group names in permissions" do
     staff_group = Group.find(Group::AUTO_GROUPS[:staff])

@@ -2,7 +2,7 @@
 
 require 'presence_channel'
 
-describe PresenceChannel do
+RSpec.describe PresenceChannel do
   fab!(:user) { Fabricate(:user) }
   fab!(:group) { Fabricate(:group).tap { |g| g.add(user) } }
   fab!(:user2) { Fabricate(:user) }

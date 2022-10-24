@@ -13,7 +13,7 @@
 
       {{#if this.allowAdvanced}}
         <li>
-          <a {{action "toggleShowAdvanced"}}
+          <a {{on "click" this.toggleShowAdvanced}}
             href
             title={{i18n (concat "admin.customize.theme." (if this.showAdvanced "hide_advanced" "show_advanced"))}}
             class="no-text">
@@ -52,7 +52,7 @@
             <DButton @class="ok" @action={{action "addField" this.newFieldName}} @icon="check" />
             <DButton @class="cancel" @action={{action "cancelAddField"}} @icon="times" />
           {{else}}
-            <a href {{action "toggleAddField" this.currentTargetName}} class="no-text">
+            <a href {{on "click" this.toggleAddField}} class="no-text">
               {{d-icon "plus"}}
             </a>
           {{/if}}
@@ -61,7 +61,7 @@
 
       <li class="spacer"></li>
       <li>
-        <a href {{action "toggleMaximize"}} class="no-text">
+        <a href {{on "click" this.toggleMaximize}} class="no-text">
           {{d-icon this.maximizeIcon}}
         </a>
       </li>

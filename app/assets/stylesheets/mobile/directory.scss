@@ -1,6 +1,6 @@
 .directory {
   .period-chooser .period-chooser-header h2.selected-name {
-    font-size: $font-up-1;
+    font-size: var(--font-up-1);
   }
 
   &.users-directory {

@@ -1,10 +1,6 @@
-:root {
-  --reply-composer-height: 300px;
-  --new-topic-composer-height: 400px;
-}
 html.composer-open {
   #main-outlet {
-    padding-bottom: var(--reply-composer-height);
+    padding-bottom: var(--composer-height);
     transition: padding-bottom 250ms ease;
   }
 }
@@ -53,11 +49,7 @@ html.composer-open {
   }
 
   &.open {
-    height: var(--reply-composer-height);
-    &.edit-title {
-      // more room when editing the title
-      height: var(--new-topic-composer-height);
-    }
+    height: var(--composer-height);
   }
 
   &.closed {
@@ -97,9 +89,6 @@ html.composer-open {
     .grippie,
     .saving-text {
       display: none;
-    }
-    .toggle-minimize {
-      order: 2;
     }
   }
 
@@ -171,10 +160,6 @@ html.composer-open {
 
       .d-icon {
         color: var(--primary-medium);
-      }
-
-      .toggle-minimize {
-        order: 2;
       }
     }
   }
@@ -258,6 +243,10 @@ html.composer-open {
         color: var(--primary-high);
         white-space: nowrap;
         text-overflow: ellipsis;
+      }
+
+      .select-kit-body {
+        max-width: 450px;
       }
 
       // below needed for text-overflow: ellipsis;
@@ -404,38 +393,54 @@ html.composer-open {
   width: 240px;
   background-color: var(--secondary);
   border: 1px solid var(--primary-low);
+
   ul {
     list-style: none;
     padding: 0;
     margin: 0;
 
     li {
-      .d-icon-users {
-        color: var(--primary-medium);
-        padding: 0 2px;
+      &:not(:last-child) {
+        border-bottom: 1px solid var(--primary-low);
       }
 
-      border-bottom: 1px solid var(--primary-low);
-
       a {
-        padding: 5px;
-        display: block;
         @include ellipsis;
+        color: var(--primary-high);
+        display: flex;
+        padding: 5px;
 
-        span.username {
-          color: var(--primary);
-        }
-        span.name {
-          font-size: $font-down-1;
-          vertical-align: middle;
-        }
-        &.selected {
-          background-color: var(--tertiary-low);
-        }
         @include hover {
           background-color: var(--highlight-low);
           text-decoration: none;
         }
+
+        &.selected {
+          background-color: var(--tertiary-low);
+        }
+
+        span {
+          margin-left: 5px;
+
+          &.username {
+            color: var(--primary);
+          }
+
+          &.name {
+            font-size: var(--font-down-1);
+            vertical-align: middle;
+          }
+        }
+
+        .relative-date {
+          font-size: var(--font-down-3);
+          padding-top: 10em;
+        }
+      }
+
+      .d-icon-users {
+        color: var(--primary-medium);
+        padding: 0 2px;
       }
     }
   }
@@ -453,8 +458,8 @@ div.ac-wrap.disabled {
 div.ac-wrap div.item a.remove,
 .remove-link {
   margin-left: 4px;
-  font-size: $font-down-1;
-  line-height: $line-height-small;
+  font-size: var(--font-down-1);
+  line-height: var(--line-height-small);
   padding: 1px 3.5px;
   border-radius: 12px;
   box-sizing: border-box;
@@ -477,10 +482,10 @@ div.ac-wrap {
   div.item {
     float: left;
     padding: 4px 10px;
-    line-height: $line-height-large;
+    line-height: var(--line-height-large);
     span {
       display: inline-block;
-      line-height: $line-height-medium;
+      line-height: var(--line-height-medium);
     }
   }
 
@@ -510,14 +515,6 @@ div.ac-wrap {
   }
 }
 
-@-webkit-keyframes transformer {
-  90% {
-    -webkit-filter: opacity(1);
-  }
-  100% {
-    -webkit-filter: opacity(0);
-  }
-}
 @keyframes transformer {
   90% {
     opacity: 1;
@@ -553,14 +550,8 @@ body:not(.ios-safari-composer-hacks) {
       min-height: calc(var(--min-height) - 4em);
     }
     padding-bottom: var(--composer-ipad-padding);
-  }
-}
-
-.show-preview {
-  @media screen and (max-width: 850px) {
-    .d-editor-button-bar {
-      font-size: $font-down-1;
-    }
+    padding-bottom: calc(10px + env(keyboard-inset-height));
+    box-sizing: border-box;
   }
 }
 

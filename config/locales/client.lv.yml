@@ -166,12 +166,12 @@ lv:
         disabled: "noņēma šo baneri %{when}. Tas vairs neparādīsies katras lapas augšā."
       forwarded: "pārsūtīja iepriekš minēto e -pastu"
     topic_admin_menu: "tēmas darbības"
-    wizard_required: "Laipni lūgti jūsu jaunajā Discourse! Sāksim ar <a href='%{url}' data-auto-route='true'>uzstādīšanas palīgu</a> ✨"
     emails_are_disabled: "Administrators ir globāli izslēdzis visus izejošos e-pastus. Netiks nosūtīti nekāda veida paziņojumi."
     software_update_prompt:
       message: "Mēs esam atjauninājuši šo vietni, <span>lūdzu, atjaunojiet to</span>, pretējā gadījumā var rasties kļūdas."
       dismiss: "Nerādīt"
     bootstrap_mode_disabled: "Bootstrap režīms tiks atspējots 24 stundu laikā."
+    bootstrap_invite_button_title: "Nosūtīt ielūgumus"
     themes:
       default_description: "Noklusējums"
     s3:
@@ -203,7 +203,10 @@ lv:
     not_implemented: "Šī funkcionalitāte vēl nav ieviesta, atvainojiet!"
     no_value: "Nē"
     yes_value: "Jā"
+    ok_value: "Labi"
+    cancel_value: "Atcelt"
     submit: "Iesniegt"
+    delete: "Dzēst"
     generic_error: "Atvainojiet, ir notikusi kļūda."
     generic_error_with_reason: "Notikusi kļūda: %{error}"
     sign_up: "Reģistrēties"
@@ -519,6 +522,7 @@ lv:
       six_months: "Seši mēneši"
       relative: "Relatīvais laiks"
       none: "Neviens nav vajadzīgs"
+      never: "Nekad"
       last_custom: "Pēdējais pielāgotais datuma laiks"
       custom: "Pielāgots datums un laiks"
     user_action:
@@ -974,6 +978,8 @@ lv:
       enable_defer: "Iespējot atlikšanu, lai atzīmētu tēmas kā nelasītas"
       experimental_sidebar:
         options: "Iespējas"
+        navigation_section: "Pārvietošanās"
+        list_destination_default: "Noklusējums"
       change: "mainīt"
       featured_topic: "Piedāvātā tēma"
       moderator: "%{user} ir moderators"
@@ -1072,6 +1078,7 @@ lv:
         move_to_archive: "Arhivēt"
         failed_to_move: "Neizdevās pārvietot izvēlētas ziņas (varbūt pazudis pieslēgums internetam)"
         tags: "Birkas"
+        all_tags: "Visi tagi"
         warnings: "Oficiālie brīdinājumi"
       preferences_nav:
         account: "Konts"
@@ -1134,8 +1141,6 @@ lv:
         edit: "Labot"
         edit_title: "Rediģēt autentifikatoru"
         edit_description: "Autentifikatora nosaukums"
-        enable_security_key_description: |
-          Kad esat <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">aparatūras drošības atslēgu</a> , nospiediet zemāk esošo pogu Reģistrēties.
         totp:
           title: "Token balstīti autentifikatori"
           add: "Pievienot autentifikatoru"
@@ -1143,14 +1148,10 @@ lv:
           name_and_code_required_error: "Jums ir jānorāda vārds un kods no autentifikatora lietotnes."
         security_key:
           register: "Reģistrēties"
-          title: "Drošības atslēgas"
-          add: "Pievienojiet drošības atslēgu"
           default_name: "Galvenā drošības atslēga"
           not_allowed_error: "Drošības atslēgas reģistrācijas procesam iestājās noildze vai tas tika atcelts."
           already_added_error: "Jūs jau esat reģistrējis šo drošības atslēgu. Jums tā nav jāreģistrē vēlreiz."
-          edit: "Rediģēt drošības atslēgu"
           save: "Saglabāt"
-          edit_description: "Drošības atslēgas nosaukums"
           name_required_error: "Jums ir jānorāda drošības atslēgas nosaukums."
       change_about:
         title: "Mainīt aprakstu par mani"
@@ -1519,7 +1520,6 @@ lv:
       other: atbildes
     signup_cta:
       sign_up: "Pierakstīties"
-      hide_session: "Atgādināt man rīt"
       hide_forever: "nē, paldies"
       hidden_for_session: "Labi, mēs jums jautāsim rīt. Jūs vienmēr varat izmantot arī “Pieteikties”, lai izveidotu kontu."
     summary:
@@ -1540,6 +1540,8 @@ lv:
       leave_message: "Vai tiešām vēlaties atstāt šo ziņu?"
       remove_allowed_user: "Vai jūs tiešām gribat dzēst %{name} no šīs ziņas?"
       remove_allowed_group: "Vai jūs tiešām gribat dzēst %{name} no šīs ziņas?"
+      leave: "Iziet"
+      remove_user: "Noņemt lietotāju"
     email: "E-pasts"
     username: "Lietotājvārds"
     last_seen: "Redzēts"
@@ -1594,7 +1596,6 @@ lv:
       second_factor_backup_title: "Divu faktoru dublēšana"
       second_factor_backup_description: "Lūdzu, ievadiet vienu no saviem rezerves kodiem:"
       second_factor: "Piesakieties, izmantojot lietotni Autentifikators"
-      security_key_description: "Kad esat sagatavojis savu fiziskās drošības atslēgu, nospiediet tālāk esošo pogu Autentificēt ar drošības atslēgu."
       security_key_alternative: "Izmēģiniet citu veidu"
       security_key_authenticate: "Autentificēties, izmantojot drošības atslēgu"
       security_key_not_allowed_error: "Drošības atslēgas autentifikācijas procesam iestājās noildze vai tas tika atcelts."
@@ -1779,6 +1780,7 @@ lv:
       title: "paziņojumi par @vārda pieminēšanu, atbildēm uz jūsu ierakstiem un tēmām, ziņām, utt."
       none: "Pašlaik neizdodas ielādēt paziņojumus."
       empty: "Nav atrasti paziņojumi."
+      watching_first_post_label: "Jauna tēma"
       dismiss_confirmation:
         dismiss: "Nerādīt"
         cancel: "Atcelt"
@@ -1910,6 +1912,13 @@ lv:
     not_logged_in_user: "lietotāja lapa ar pēdējo aktivitāšu un iestatījumu vēsturi"
     current_user: "doties uz jūsu lietotāja lapu"
     view_all: "apskatīt visus %{tab}"
+    user_menu:
+      tabs:
+        replies: "Atbildes"
+        mentions: "Pieminēšanas"
+        likes: "Patīk"
+        bookmarks: "Grāmatzīmes"
+        profile: "Profils"
     topics:
       new_messages_marker: "pēdējais apmeklējums"
       bulk:
@@ -2328,11 +2337,6 @@ lv:
           inappropriate: "Jūs ziņojāt par šo kā nepiedienīgu"
           notify_moderators: "Jūs ziņojāt par šo moderācijai"
           notify_user: "Jūs nosūtījāt ziņu šim lietotājam"
-      merge:
-        confirm:
-          zero: "Vai jūs esat drošs, ka vēlaties apvienot šos %{count} ierakstus?"
-          one: "Vai jūs esat drošs, ka vēlaties apvienot šos ierakstus?"
-          other: "Vai jūs esat drošs, ka vēlaties apvienot šos %{count} ierakstus?"
       revisions:
         controls:
           first: "Pirmā versija"
@@ -2734,7 +2738,6 @@ lv:
     download_calendar:
       download: "Lejuplādēt"
     tagging:
-      all_tags: "Visi tagi"
       selector_all_tags: "visi tagi"
       selector_no_tags: "bez tagiem"
       changed: "mainītie tagi:"
@@ -2747,7 +2750,6 @@ lv:
       sort_by_name: "vārda"
       manage_groups: "Pārvaldīt tagu grupas"
       manage_groups_description: "Izveidot grupas, lai organizētu tagus"
-      cancel_delete_unused: "Atcelt"
       filters:
         without_category: "%{filter} %{tag} tēmas"
         with_category: "%{filter} %{tag} tēmas sadaļā %{category}"
@@ -2803,9 +2805,19 @@ lv:
         member: "biedrs"
         regular: "regulārs"
     sidebar:
-      unread_count: "%{count} nelasīta"
-      new_count: "%{count} jauna"
+      unread_count:
+        zero: "%{count} nelasītas"
+        one: "%{count} nelasīta"
+        other: "%{count} nelasīta"
+      new_count:
+        zero: "%{count} jaunas"
+        one: "%{count} jauna"
+        other: "%{count} jauna"
+      more: "Vairāk"
+      all_categories: "Visas sadaļas"
       sections:
+        about:
+          header_link_text: "Par"
         messages:
           header_link_text: "Ziņas"
           links:
@@ -2817,19 +2829,32 @@ lv:
             unread_with_count: "Nelasīts (%{count})"
             archive: "Arhīvs"
         tags:
-          header_link_title: "visi tagi"
           header_link_text: "Birkas"
         categories:
-          header_link_title: "visas sadaļas"
           header_link_text: "Sadaļas"
-        topics:
-          header_link_title: "mājas"
-          header_link_text: "Tēmas"
+        community:
+          header_link_text: "Kopiena"
           links:
+            about:
+              content: "Par"
+            admin:
+              content: "Administrators"
+            badges:
+              content: "Žetoni"
+            faq:
+              content: "BUJ"
             tracked:
               content: "Sekots"
+            groups:
+              content: "Grupas"
+              title: "Visas grupas"
+            users:
+              content: "Lietotāji"
             my_posts:
               content: "Mani ieraksti"
+            review:
+              content: "Pārskats"
+              title: "pārskats"
   admin_js:
     type_to_filter: "ievadiet, lai atlasītu..."
     admin:
@@ -3698,14 +3723,13 @@ lv:
           topics: "Tēmas"
   wizard_js:
     wizard:
-      done: "Pabeigt"
       back: "Atpakaļ"
       next: "Nākamais"
+      step-text: "Solis"
       step: "%{current} no %{total}"
       upload: "Augšupielādēt"
       uploading: "Notiek ielāde..."
       upload_error: "Atvainojiet, augšuplādējot šo failu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
-      quit: "Varbūt vēlāk"
       invites:
         add_user: "Pievienot"
         none_added: "Neesi nevienu uzaicinājis. Droši zini ka vēlies turpināt?"

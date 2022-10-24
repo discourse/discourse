@@ -158,7 +158,6 @@ nl:
         disabled: "heeft deze banner verwijderd op %{when}. De banner zal niet meer bovenaan elke pagina verschijnen."
       forwarded: "heeft de bovenstaande e-mail doorgestuurd"
     topic_admin_menu: "topicacties"
-    wizard_required: "Welkom bij uw nieuwe Discourse! Laten we beginnen met <a href='%{url}' data-auto-route='true'>de configuratiewizard</a> ✨"
     emails_are_disabled: "Alle uitgaande e-mail is uitgeschakeld door een beheerder. Er wordt geen enkele e-mailmelding verstuurd."
     software_update_prompt:
       message: "We hebben deze site bijgewerkt, <span>gelieve te vernieuwen</span>, anders kan er onverwacht gedrag optreden."
@@ -167,6 +166,7 @@ nl:
       one: "Om het opzetten van uw nieuwe website makkelijker te maken, bevindt u zich in bootstrapmodus. Aan alle nieuwe gebruikers wordt vertrouwensniveau 1 toegekend, en dagelijkse e-mailsamenvattingen zijn voor hen ingeschakeld. Dit wordt automatisch uitgeschakeld zodra %{count} gebruiker lid is geworden."
       other: "Om het opzetten van uw nieuwe website makkelijker te maken, bevindt u zich in bootstrapmodus. Aan alle nieuwe gebruikers wordt vertrouwensniveau 1 toegekend, en dagelijkse e-mailsamenvattingen zijn voor hen ingeschakeld. Dit wordt automatisch uitgeschakeld zodra %{count} gebruikers lid zijn geworden."
     bootstrap_mode_disabled: "De bootstrapmodus wordt binnen 24 uur uitgeschakeld."
+    bootstrap_invite_button_title: "Uitnodigingen versturen"
     themes:
       default_description: "Standaard"
     s3:
@@ -199,7 +199,10 @@ nl:
     not_implemented: "Deze functie is helaas nog niet beschikbaar, sorry!"
     no_value: "Nee"
     yes_value: "Ja"
+    ok_value: "OK"
+    cancel_value: "Annuleren"
     submit: "Versturen"
+    delete: "Verwijderen"
     generic_error: "Sorry, er is iets fout gegaan."
     generic_error_with_reason: "Er is iets fout gegaan: %{error}"
     sign_up: "Registreren"
@@ -565,6 +568,7 @@ nl:
       forever: "Voor altijd"
       relative: "Relatieve tijd"
       none: "Niet nodig"
+      never: "Nooit"
       last_custom: "Laatste aangepaste datumtijd"
       custom: "Aangepaste datum en tijd"
       select_timeframe: "Selecteer een tijdsbestek"
@@ -1029,6 +1033,8 @@ nl:
       enable_defer: "Negeren voor markeren van topics als ongelezen inschakelen"
       experimental_sidebar:
         options: "Opties"
+        navigation_section: "Navigatie"
+        list_destination_default: "Standaard"
       change: "wijzigen"
       featured_topic: "Aanbevolen topic"
       moderator: "%{user} is een moderator"
@@ -1125,6 +1131,7 @@ nl:
         move_to_archive: "Archiveren"
         failed_to_move: "Het verplaatsen van geselecteerde berichten is niet gelukt (misschien is uw netwerkverbinding verbroken)"
         tags: "Tags"
+        all_tags: "Alle tags"
         warnings: "Officiële waarschuwingen"
       preferences_nav:
         account: "Account"
@@ -1193,8 +1200,6 @@ nl:
         edit: "Bewerken"
         edit_title: "Authenticator bewerken"
         edit_description: "Naam van authenticator"
-        enable_security_key_description: |
-          Druk wanneer u uw <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardwarebeveiligingssleutel</a> gereed hebt op de onderstaande knop Registreren.
         totp:
           title: "Op tokens gebaseerde authenticators"
           add: "Authenticator toevoegen"
@@ -1202,14 +1207,12 @@ nl:
           name_and_code_required_error: "U moet een naam en de code van uw authenticator-app opgeven."
         security_key:
           register: "Registreren"
-          title: "Beveiligingssleutels"
-          add: "Beveiligingssleutel toevoegen"
           default_name: "Hoofdbeveiligingssleutel"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "Het registratieproces van de beveiligingssleutel had een time-out of is geannuleerd."
           already_added_error: "U hebt deze beveiligingssleutel al geregistreerd. U hoeft deze niet opnieuw te registreren."
-          edit: "Beveiligingssleutel bewerken"
           save: "Opslaan"
-          edit_description: "Naam van beveiligingssleutel"
           name_required_error: "U moet een naam voor uw beveiligingssleutel opgeven."
       change_about:
         title: "Over mij wijzigen"
@@ -1615,11 +1618,9 @@ nl:
       other: antwoorden
     signup_cta:
       sign_up: "Registreren"
-      hide_session: "Mij morgen herinneren"
       hide_forever: "nee, bedankt"
       hidden_for_session: "OK, we vragen het u morgen. U kunt ook altijd 'Inloggen' gebruiken om een account aan te maken."
       intro: "Hallo! Zo te zien beleeft u plezier aan de discussie, maar hebt u zich nog niet voor een account geregistreerd."
-      value_prop: "Als u een account aanmaakt, houden we precies bij wat u hebt gelezen, zodat u altijd kunt verdergaan waar u was gebleven. Ook ontvangt u meldingen bij nieuwe berichten zodra iemand antwoordt, hier en via e-mail, en kunt u berichten liken om uw passie te delen. :heartpulse:"
     summary:
       enabled_description: "U bekijkt een samenvatting van dit topic: de interessantste berichten volgens de gemeenschap."
       description:
@@ -1644,6 +1645,8 @@ nl:
       leave_message: "Weet u zeker dat u dit bericht wilt verlaten?"
       remove_allowed_user: "Wilt u %{name} echt uit dit bericht verwijderen?"
       remove_allowed_group: "Wilt u %{name} echt uit dit bericht verwijderen?"
+      leave: "Verlaten"
+      remove_user: "Gebruiker verwijderen"
     email: "E-mailadres"
     username: "Gebruikersnaam"
     last_seen: "Gezien"
@@ -1697,7 +1700,6 @@ nl:
       second_factor_backup_title: "Tweefactor-back-up"
       second_factor_backup_description: "Voer één van uw back-upcodes in:"
       second_factor: "Aanmelden met authenticator-app"
-      security_key_description: "Houd uw fysieke beveiligingssleutel gereed en klik op de onderstaande knop Authenticeren met beveiligingssleutel."
       security_key_alternative: "Andere manier proberen"
       security_key_authenticate: "Authenticeren met beveiligingssleutel"
       security_key_not_allowed_error: "Het authenticatieproces van de beveiligingssleutel had een time-out of is geannuleerd."
@@ -1808,9 +1810,6 @@ nl:
       min_content_not_reached:
         one: "Selecteer minstens %{count} item."
         other: "Selecteer minstens %{count} items."
-      invalid_selection_length:
-        one: "Selectie moet minstens %{count} teken bevatten."
-        other: "Selectie moet minstens %{count} tekens bevatten."
       components:
         tag_drop:
           filter_for_more: Filteren voor meer...
@@ -1999,6 +1998,7 @@ nl:
       empty: "Geen meldingen gevonden."
       post_approved: "Uw bericht is goedgekeurd"
       reviewable_items: "items die beoordeling nodig hebben"
+      watching_first_post_label: "Nieuw topic"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2011,6 +2011,10 @@ nl:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} en %{count} ander</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} en %{count} anderen</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} en %{count} anderen"
+        other: "%{username}, %{username2} en %{count} anderen"
       liked_consolidated_description:
         one: "heeft %{count} van uw berichten geliket"
         other: "heeft %{count} van uw berichten geliket"
@@ -2033,8 +2037,9 @@ nl:
       votes_released: "%{description} - voltooid"
       dismiss_confirmation:
         body:
-          one: "Weet u het zeker? U hebt %{count} belangrijke melding."
-          other: "Weet u het zeker? U hebt %{count} belangrijke meldingen."
+          default:
+            one: "Weet u het zeker? U hebt %{count} belangrijke melding."
+            other: "Weet u het zeker? U hebt %{count} belangrijke meldingen."
         dismiss: "Negeren"
         cancel: "Annuleren"
       group_message_summary:
@@ -2194,6 +2199,13 @@ nl:
     not_logged_in_user: "gebruikerspagina met samenvatting van huidige activiteit en voorkeuren"
     current_user: "naar uw gebruikerspagina"
     view_all: "Alle %{tab} bekijken"
+    user_menu:
+      tabs:
+        replies: "Antwoorden"
+        mentions: "Vermeldingen"
+        likes: "Gegeven likes"
+        bookmarks: "Bladwijzers"
+        profile: "Profiel"
     topics:
       new_messages_marker: "laatste bezoek"
       bulk:
@@ -2794,10 +2806,6 @@ nl:
         confirm:
           one: "Weet u zeker dat u dat bericht wilt verwijderen?"
           other: "Weet u zeker dat u die %{count} berichten wilt verwijderen?"
-      merge:
-        confirm:
-          one: "Weet u zeker dat u die berichten wilt samenvoegen?"
-          other: "Weet u zeker dat u die %{count} berichten wilt samenvoegen?"
       revisions:
         controls:
           first: "Eerste revisie"
@@ -3195,7 +3203,6 @@ nl:
         this_week: "Week"
         today: "Vandaag"
         other_periods: "eerste bekijken:"
-    browser_update: 'Helaas is <a href="https://www.discourse.org/faq/#browser">uw browser te oud om op deze website te kunnen werken</a>. <a href="https://browsehappy.com">Upgrade uw browser</a> om rijke inhoud te kunnen bekijken, u aan te melden en te antwoorden.'
     permission_types:
       full: "Maken / Antwoorden / Bekijken"
       create_post: "Antwoorden / Bekijken"
@@ -3329,7 +3336,6 @@ nl:
     download_calendar:
       download: "Downloaden"
     tagging:
-      all_tags: "Alle tags"
       other_tags: "Andere tags"
       selector_all_tags: "alle tags"
       selector_no_tags: "geen tags"
@@ -3390,7 +3396,6 @@ nl:
       tag_list_joiner: ", "
       delete_unused: "Ongebruikte tags verwijderen"
       delete_unused_description: "Alle tags verwijderen die niet aan topics of persoonlijke berichten zijn gekoppeld"
-      cancel_delete_unused: "Annuleren"
       filters:
         without_category: "%{filter} %{tag} topics"
         with_category: "%{filter} %{tag} topics in %{category}"
@@ -3483,14 +3488,19 @@ nl:
         leader: "leider"
     user_activity:
       no_activity_title: "Nog geen activiteit"
-      no_activity_others: "Geen activiteit."
-      no_replies_others: "Geen antwoorden."
-      no_likes_others: "Geen gelikete berichten."
       no_read_topics_body: "Zodra u discussies gaat lezen, ziet u hier een lijst. Om te beginnen met lezen, zoek naar interessante topics onder <a href='%{topUrl}'>Top</a> of <a href='%{categoriesUrl}'>Categorieën</a> of zoek op trefwoord %{searchIcon}"
     sidebar:
-      unread_count: "%{count} ongelezen"
-      new_count: "%{count} nieuw"
+      unread_count:
+        one: "%{count} ongelezen"
+        other: "%{count} ongelezen"
+      new_count:
+        one: "%{count} nieuw"
+        other: "%{count} nieuw"
+      more: "Meer"
+      all_categories: "Alle categorieën"
       sections:
+        about:
+          header_link_text: "Over"
         messages:
           header_link_text: "Berichten"
           links:
@@ -3502,19 +3512,32 @@ nl:
             unread_with_count: "Ongelezen (%{count})"
             archive: "Archief"
         tags:
-          header_link_title: "alle tags"
           header_link_text: "Tags"
         categories:
-          header_link_title: "alle categorieën"
           header_link_text: "Categorieën"
-        topics:
-          header_link_title: "hoofdpagina"
-          header_link_text: "Topics"
+        community:
+          header_link_text: "Gemeenschap"
           links:
+            about:
+              content: "Over"
+            admin:
+              content: "Beheer"
+            badges:
+              content: "Badges"
+            faq:
+              content: "FAQ"
             tracked:
               content: "Gevolgd"
+            groups:
+              content: "Groepen"
+              title: "Alle groepen"
+            users:
+              content: "Gebruikers"
             my_posts:
               content: "Mijn berichten"
+            review:
+              content: "Beoordelen"
+              title: "beoordelen"
   admin_js:
     type_to_filter: "typ om te filteren..."
     admin:
@@ -4643,7 +4666,6 @@ nl:
         cant_delete_all_too_many_posts:
           one: "Kan niet alle berichten verwijderen, omdat de gebruiker meer dan %{count} bericht heeft geplaatst. (delete_all_posts_max)"
           other: "Kan niet alle berichten verwijderen, omdat de gebruiker meer dan %{count} berichten heeft geplaatst. (delete_all_posts_max)"
-        delete_confirm: "Om te voorkomen dat inhoud uit bestaande discussies wordt verwijderd, is het doorgaans beter om gebruikers te anonimiseren dan ze te verwijderen.<br><br>Weet u ZEKER dat u deze gebruiker wilt verwijderen? Dit is blijvend!"
         delete_and_block: "Dit e-mail- en IP-adres verwijderen en <b>blokkeren</b>"
         delete_dont_block: "Alleen verwijderen"
         deleting_user: "Gebruiker verwijderen..."
@@ -4772,7 +4794,6 @@ nl:
         recommended: "We raden aan de volgende tekst naar wens aan te passen:"
         show_overriden: "Alleen aangepaste tonen"
         locale: "Taal:"
-        fallback_locale_warning: "U bent een taal gebaseerd op %{fallback} aan het bewerken. Gebruikers die %{fallback} als taal van hun interface kiezen zien uw wijzigingen niet."
         more_than_50_results: "Er zijn meer dan 50 resultaten. Verfijn uw zoekopdracht."
       settings:
         show_overriden: "Alleen aangepaste tonen"
@@ -4987,15 +5008,13 @@ nl:
           replace: "Vervangen"
   wizard_js:
     wizard:
-      done: "Gereed"
-      finish: "Voltooien"
       back: "Vorige"
       next: "Volgende"
+      step-text: "Stap"
       step: "%{current} van %{total}"
       upload: "Uploaden"
       uploading: "Uploaden..."
       upload_error: "Er is een fout opgetreden bij het uploaden van dat bestand. Probeer het opnieuw."
-      quit: "Misschien later"
       staff_count:
         one: "Uw gemeenschap heeft %{count} staflid (u)."
         other: "Uw gemeenschap heeft %{count} stafleden, waaronder u."

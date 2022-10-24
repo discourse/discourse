@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
-describe TopicQuery::PrivateMessageLists do
+RSpec.describe TopicQuery::PrivateMessageLists do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
   fab!(:user_2) { Fabricate(:user) }
   fab!(:user_3) { Fabricate(:user) }
   fab!(:user_4) { Fabricate(:user) }
+
+  before_all do
+    Group.refresh_automatic_groups!
+  end
 
   fab!(:group) do
     Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|
@@ -99,7 +103,7 @@ describe TopicQuery::PrivateMessageLists do
       expect(topics).to eq([])
     end
 
-    context "Calculating minimum unread count for a topic" do
+    context "when calculating minimum unread count for a topic" do
       before do
         group.update!(publish_read_state: true)
         group.add(user)
@@ -167,6 +171,10 @@ describe TopicQuery::PrivateMessageLists do
     fab!(:user) { Fabricate(:user) }
     fab!(:user_2) { Fabricate(:user) }
 
+    before_all do
+      Group.refresh_automatic_groups!
+    end
+
     fab!(:pm) do
       create_post(
         user: user,
@@ -209,6 +217,10 @@ describe TopicQuery::PrivateMessageLists do
   describe '#list_private_messages_new' do
     fab!(:user) { Fabricate(:user) }
     fab!(:user_2) { Fabricate(:user) }
+
+    before_all do
+      Group.refresh_automatic_groups!
+    end
 
     fab!(:pm) do
       create_post(

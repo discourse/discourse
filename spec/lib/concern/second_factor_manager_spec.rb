@@ -409,7 +409,7 @@ RSpec.describe SecondFactorManager do
     end
   end
 
-  context 'backup codes' do
+  describe 'backup codes' do
     describe '#generate_backup_codes' do
       it 'should generate and store 10 backup codes' do
         backup_codes = user.generate_backup_codes

@@ -31,7 +31,7 @@ RSpec.describe UploadCreator do
 
         expect do
           UploadCreator.new(file, "utf-8\n.txt").create_for(user2.id)
-        end.to change { Upload.count }.by(0)
+        end.not_to change { Upload.count }
 
         expect(user.user_uploads.count).to eq(1)
         expect(user2.user_uploads.count).to eq(1)
@@ -215,7 +215,7 @@ RSpec.describe UploadCreator do
         expect(upload.original_filename).to eq('large_and_unoptimized.png')
       end
 
-      context "jpeg image quality settings" do
+      context "with jpeg image quality settings" do
         before do
           SiteSetting.png_to_jpg_quality = 75
           SiteSetting.recompress_original_jpg_quality = 40
@@ -247,7 +247,7 @@ RSpec.describe UploadCreator do
           expect(upload.original_filename).to eq('animated.gif')
         end
 
-        context "png image quality settings" do
+        context "with png image quality settings" do
           before do
             SiteSetting.png_to_jpg_quality = 100
             SiteSetting.recompress_original_jpg_quality = 90
@@ -305,7 +305,7 @@ RSpec.describe UploadCreator do
         setup_s3
         stub_s3_store
 
-        SiteSetting.secure_media = true
+        SiteSetting.secure_uploads = true
         SiteSetting.authorized_extensions = 'pdf|svg|jpg'
       end
 
@@ -333,7 +333,7 @@ RSpec.describe UploadCreator do
       end
     end
 
-    context 'uploading to s3' do
+    context 'when uploading to s3' do
       let(:filename) { "should_be_jpeg.png" }
       let(:file) { file_from_fixtures(filename) }
       let(:pdf_filename) { "small.pdf" }
@@ -357,7 +357,7 @@ RSpec.describe UploadCreator do
 
       it 'should return signed URL for secure attachments in S3' do
         SiteSetting.authorized_extensions = 'pdf'
-        SiteSetting.secure_media = true
+        SiteSetting.secure_uploads = true
 
         upload = UploadCreator.new(pdf_file, pdf_filename, opts).create_for(user.id)
         stored_upload = Upload.last
@@ -399,12 +399,12 @@ RSpec.describe UploadCreator do
         end
       end
 
-      context "when SiteSetting.secure_media is enabled" do
+      context "when SiteSetting.secure_uploads is enabled" do
         before do
           setup_s3
           stub_s3_store
 
-          SiteSetting.secure_media = true
+          SiteSetting.secure_uploads = true
         end
 
         it "does not return the existing upload, as duplicate uploads are allowed" do
@@ -413,18 +413,18 @@ RSpec.describe UploadCreator do
       end
     end
 
-    context "secure media functionality" do
+    context "with secure uploads functionality" do
       let(:filename) { "logo.jpg" }
       let(:file) { file_from_fixtures(filename) }
       let(:opts) { {} }
       let(:result) { UploadCreator.new(file, filename, opts).create_for(user.id) }
 
-      context "when SiteSetting.secure_media enabled" do
+      context "when SiteSetting.secure_uploads enabled" do
         before do
           setup_s3
           stub_s3_store
 
-          SiteSetting.secure_media = true
+          SiteSetting.secure_uploads = true
         end
 
         it "sets an original_sha1 on the upload created because the sha1 column is securerandom in this case" do
@@ -513,7 +513,7 @@ RSpec.describe UploadCreator do
       end
     end
 
-    context 'custom emojis' do
+    context 'with custom emojis' do
       let(:animated_filename) { "animated.gif" }
       let(:animated_file) { file_from_fixtures(animated_filename) }
 
@@ -658,7 +658,7 @@ RSpec.describe UploadCreator do
   end
 
   describe '#should_downsize?' do
-    context "GIF image" do
+    context "with GIF image" do
       let(:gif_file) { file_from_fixtures("animated.gif") }
 
       before do

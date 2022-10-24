@@ -61,7 +61,7 @@ export default {
         {
           id: 3,
           name: "meta",
-          color: "aaa",
+          color: "aaaaaa",
           text_color: "FFFFFF",
           slug: "meta",
           topic_count: 122,
@@ -697,6 +697,7 @@ export default {
           can_revoke: true,
         },
       ],
+      displayed_about_plugin_stat_groups: ["chat_messages"]
     },
   },
 };

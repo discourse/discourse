@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe AssociatedGroup do
+RSpec.describe AssociatedGroup do
   let(:user) { Fabricate(:user) }
   let(:associated_group) { Fabricate(:associated_group) }
   let(:group) { Fabricate(:group) }
@@ -14,13 +14,15 @@ describe AssociatedGroup do
     SiteSetting.enable_google_oauth2_logins = true
     SiteSetting.google_oauth2_hd = 'domain.com'
     SiteSetting.google_oauth2_hd_groups = false
+    SiteSetting.google_oauth2_hd_groups_service_account_admin_email = "test@example.com"
+    SiteSetting.google_oauth2_hd_groups_service_account_json = "{}"
     expect(described_class.has_provider?).to eq(false)
 
     SiteSetting.google_oauth2_hd_groups = true
     expect(described_class.has_provider?).to eq(true)
   end
 
-  context "cleanup!" do
+  describe ".cleanup!" do
     before do
       associated_group.last_used = 8.days.ago
       associated_group.save

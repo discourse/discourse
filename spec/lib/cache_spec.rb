@@ -2,7 +2,7 @@
 
 require 'cache'
 
-describe Cache do
+RSpec.describe Cache do
 
   let :cache do
     Cache.new

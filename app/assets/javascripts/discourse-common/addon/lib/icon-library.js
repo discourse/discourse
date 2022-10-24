@@ -27,7 +27,7 @@ const REPLACEMENTS = {
   "notification.group_mentioned": "users",
   "notification.quoted": "quote-right",
   "notification.replied": "reply",
-  "notification.posted": "reply",
+  "notification.posted": "discourse-bell-exclamation",
   "notification.edited": "pencil-alt",
   "notification.bookmark_reminder": "discourse-bookmark-clock",
   "notification.liked": "heart",
@@ -103,7 +103,7 @@ export function registerIconRenderer(renderer) {
 function iconClasses(icon, params) {
   // "notification." is invalid syntax for classes, use replacement instead
   const dClass =
-    icon.replacementId && icon.id.indexOf("notification.") > -1
+    icon.replacementId && icon.id.includes("notification.")
       ? icon.replacementId
       : icon.id;
 
@@ -121,7 +121,7 @@ export function setIconList(iconList) {
 }
 
 export function isExistingIconId(id) {
-  return _iconList && _iconList.indexOf(id) >= 0;
+  return _iconList?.includes(id);
 }
 
 function warnIfMissing(id) {
@@ -150,6 +150,10 @@ registerIconRenderer({
 
     if (params.label) {
       html += " aria-hidden='true'";
+    } else if (params["aria-label"]) {
+      html += ` aria-hidden='false' aria-label='${escape(
+        params["aria-label"]
+      )}'`;
     }
     html += ` xmlns="${SVG_NAMESPACE}"><use href="#${id}" /></svg>`;
     if (params.label) {

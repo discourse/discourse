@@ -159,7 +159,6 @@ da:
         disabled: "fjernede banneret %{when}. Det vil ikke længere vises i toppen af alle sider."
       forwarded: "videresendte ovenstående e-mail"
     topic_admin_menu: "emnehandlinger"
-    wizard_required: "Velkommen til din nye Discourse! Lad os komme i gang med <a href='%{url}' data-auto-route='true'>konfigurationsguiden</a> ✨"
     emails_are_disabled: "Alle udgående emails er blevet globalt deaktiveret af en administrator. Ingen email notifikationer af nogen slags vil blive sendt."
     software_update_prompt:
       message: "Vi har opdateret dette websted, <span>genindlæs venligst siden</span>, ellers vil du kunne opleve uventet opførsel eller begrændset funktionalitet."
@@ -168,6 +167,7 @@ da:
       one: "For at gøre lanceringen af dit nye forum lettere er du i \"bootstrap-tilstand\". Alle nye brugere tildeles tillidsniveau 1 og har dagligt email resume aktiveret. Dette deaktiveres automatisk, når %{count} bruger er tilsluttet."
       other: "For at gøre lanceringen af dit nye forum lettere er du i bootstrap-tilstand. Alle nye brugere tildeles tillidsniveau 1 og har dagligt email resume aktiveret. Dette deaktiveres automatisk, når %{count} brugere er tilsluttet."
     bootstrap_mode_disabled: "Bootstrap-tilstand deaktiveres inden for 24 timer."
+    bootstrap_invite_button_title: "Send Invitationer"
     themes:
       default_description: "Standard"
       broken_theme_alert: "Dit websted fungerer muligvis ikke, fordi et tema/en komponent har fejl."
@@ -202,7 +202,10 @@ da:
     not_implemented: "Beklager! Denne funktion er ikke blevet implementeret endnu."
     no_value: "Nej"
     yes_value: "Ja"
+    ok_value: "OK"
+    cancel_value: "Annuller"
     submit: "Udfør"
+    delete: "Slet"
     generic_error: "Beklager, der opstod en fejl."
     generic_error_with_reason: "Der opstod en fejl: %{error}"
     sign_up: "Tilmeld"
@@ -578,6 +581,7 @@ da:
       forever: "Forevigt"
       relative: "Relativ tid"
       none: "Ikke nødvendig"
+      never: "Aldrig"
       last_custom: "Sidste brugerdefineret dato"
       custom: "Brugerdefineret dato og tid"
       select_timeframe: "Vælg en tidsramme"
@@ -1051,6 +1055,8 @@ da:
       enable_defer: "Aktivér 'udsæt' for at markere emner som ulæste"
       experimental_sidebar:
         options: "Indstillinger"
+        navigation_section: "Navigation"
+        list_destination_default: "Standard"
       change: "skift"
       featured_topic: "Fremhævet emne"
       moderator: "%{user} er en moderator"
@@ -1147,6 +1153,7 @@ da:
         move_to_archive: "Arkiv"
         failed_to_move: "Kunne ikke flytte valgte beskeder (måske er dit netværket nede)"
         tags: "Mærker"
+        all_tags: "Alle Mærker"
         warnings: "Officielle Advarsler"
       preferences_nav:
         account: "Konto"
@@ -1215,8 +1222,6 @@ da:
         edit: "Rediger"
         edit_title: "Rediger godkendelsesenhed"
         edit_description: "Navn på godkendelsesenhed"
-        enable_security_key_description: |
-          Når du har din <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardware-sikkerhedsnøgle</a> forberedt, tryk på Register knappen nedenfor.
         totp:
           title: "Token-baserede autentificatorer"
           add: "Tilføj godkendelsesenhed"
@@ -1224,14 +1229,12 @@ da:
           name_and_code_required_error: "Du skal angive et navn og koden fra din godkendelsesapp."
         security_key:
           register: "Registrer"
-          title: "Sikkerhedsnøgler"
-          add: "Tilføj Sikkerhedsnøgle"
           default_name: "Hoved sikkerhedsnøgle"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "Registreringsprocessen for sikkerhedsnøgle fik enten timeout eller blev annulleret."
           already_added_error: "Du har allerede registreret denne sikkerhedsnøgle. Du behøver ikke at registrere det igen."
-          edit: "Rediger Sikkerhedsnøgle"
           save: "Gem"
-          edit_description: "Navn på sikkerhedsnøgle"
           name_required_error: "Du skal angive et navn til din sikkerhedsnøgle."
       change_about:
         title: "Skift “Om mig”"
@@ -1648,10 +1651,8 @@ da:
       other: svar
     signup_cta:
       sign_up: "Tilmeld dig"
-      hide_session: "Mind mig om det i morgen"
       hide_forever: "nej tak"
       intro: "Hej! Det ser ud til, at du nyder diskussionen, men du har ikke tilmeldt dig en konto endnu."
-      value_prop: "Når du opretter en konto, husker vi præcis, hvad du har læst, så du altid kommer tilbage, hvor du slap. Du får også meddelelser, her og via e-mail, når nogen svarer til dig. Og du kan 'Synes godt om' indlæg for at dele kærligheden. :heartpulse:"
     summary:
       enabled_description: "Du ser et sammendrag af dette emne: kun de mest interessante indlæg som andre finder interresante."
       description:
@@ -1674,6 +1675,8 @@ da:
       leave_message: "Vil du virkelig forlade denne besked?"
       remove_allowed_user: "Ønsker du virkelig at fjerne %{name} fra denne besked?"
       remove_allowed_group: "Er du sikker på du vil fjerne %{name} fra denne besked?"
+      leave: "Forlad"
+      remove_user: "Fjern bruger"
     email: "E-mail"
     username: "Brugernavn"
     last_seen: "Sidst set"
@@ -1728,7 +1731,6 @@ da:
       second_factor_backup_title: "To-faktor backup"
       second_factor_backup_description: "Indtast venligst en af dine backup koder:"
       second_factor: "Log ind ved hjælp af Authenticator app"
-      security_key_description: "Når du har forberedt din fysiske sikkerhedsnøgle, skal du trykke på knappen Godkend med sikkerhedsnøgle nedenfor."
       security_key_alternative: "Prøv en anden måde"
       security_key_authenticate: "Godkend med sikkerhedsnøgle"
       security_key_not_allowed_error: "Godkendelsesprocessen for sikkerhedsnøgle fik enten timeout eller blev annulleret."
@@ -1848,9 +1850,6 @@ da:
       min_content_not_reached:
         one: "Vælg mindst %{count} punkt."
         other: "Vælg mindst %{count} punkter."
-      invalid_selection_length:
-        one: "Der skal mindst vælges %{count} karakter."
-        other: "Der skal mindst vælges %{count} karakterer."
       components:
         tag_drop:
           filter_for_more: Filtrer for mere...
@@ -2034,6 +2033,7 @@ da:
       empty: "Ingen notifikationer fundet."
       post_approved: "Dit indlæg blev godkendt"
       reviewable_items: "elementer, der kræver gennemgang"
+      watching_first_post_label: "Nyt Emne"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -2046,6 +2046,10 @@ da:
       liked_many:
         one: "<span class='multi-user'>%{username}, %{username2} og %{count} anden</span> %{description}"
         other: "<span class='multi-user'>%{username}, %{username2} og %{count} andre</span> %{description}"
+      liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username}, %{username2} og %{count} anden"
+        other: "%{username}, %{username2} og %{count} andre"
       liked_consolidated_description:
         one: "syntes godt om %{count} af dine indlæg"
         other: "syntes godt om %{count} af dine indlæg"
@@ -2229,6 +2233,13 @@ da:
     not_logged_in_user: "bruger side, med oversigt over aktivitet og indstillinger"
     current_user: "gå til din brugerside"
     view_all: "vis alle %{tab}"
+    user_menu:
+      tabs:
+        replies: "Svar"
+        mentions: "Omtaler"
+        likes: "Syntes godt om"
+        bookmarks: "Bogmærker"
+        profile: "Profil"
     topics:
       new_messages_marker: "sidste besøg"
       bulk:
@@ -2835,10 +2846,6 @@ da:
         confirm:
           one: "Er du sikker på, at du vil slette dette indlæg?"
           other: "Er du sikker på, at du vil slette disse %{count}indlæg?"
-      merge:
-        confirm:
-          one: "Er du sikker på, at du vil flette disse indlæg?"
-          other: "Er du sikker på, at du vil flette disse %{count}indlæg?"
       revisions:
         controls:
           first: "Første udgave"
@@ -3243,7 +3250,6 @@ da:
         this_week: "Uge"
         today: "I dag"
         other_periods: "se top:"
-    browser_update: 'Desværre, <a href="https://www.discourse.org/faq/#browser">din browser er for gammel til at virke korrekt på dette websted</a>. <a href="https://browsehappy.com">Opgradere venligst din browser</a> for at se vore gode indhold, log ind og svar.'
     permission_types:
       full: "Opret / Besvar / Se"
       create_post: "Besvar / Se"
@@ -3381,7 +3387,6 @@ da:
       google: "Google Kalender"
       ics: "ICS"
     tagging:
-      all_tags: "Alle Mærker"
       other_tags: "Andre Mærker"
       selector_all_tags: "alle mærker"
       selector_no_tags: "ingen mærker"
@@ -3440,7 +3445,6 @@ da:
       tag_list_joiner: ", "
       delete_unused: "Slet Ubrugte Mærker"
       delete_unused_description: "Slet alle mærker, der ikke er knyttet til nogen emner eller personlige beskeder"
-      cancel_delete_unused: "Annuller"
       filters:
         without_category: "%{filter} %{tag} emner"
         with_category: "%{filter} %{tag} emner i %{category}"
@@ -3536,14 +3540,11 @@ da:
     user_activity:
       no_activity_title: "Ingen aktivitet endnu"
       no_activity_body: "Velkommen til vores fællesskab! Du er helt ny her og har endnu ikke bidraget til diskussioner. Som et første skridt, besøg <a href='%{topUrl}'>Top</a> eller <a href='%{categoriesUrl}'>Kategorier</a> og begynde bare at læse! Vælg %{heartIcon} på indlæg, som du kan lide eller ønsker at lære mere om. Når du deltager, vil din aktivitet blive vist her."
-      no_activity_others: "Ingen aktivitet."
       no_replies_title: "Du har ikke svaret på nogen emner endnu"
-      no_replies_others: "Ingen svar."
       no_drafts_title: "Du har ikke påbegyndt nogen kladder"
       no_drafts_body: "Ikke helt klar til at skrive? Vi gemmer automatisk en ny kladde og viser den her, hver gang du begynder at skrive et emne, svar eller personlig besked. Vælg knappen Annuller for at kassere eller gemme din kladde for at fortsætte senere."
       no_likes_title: "Du har ikke 'syntes godt om' nogen emner endnu"
       no_likes_body: "En god måde at hoppe ind og begynde at bidrage på, er at begynde at læse samtaler, der allerede har fundet sted, og vælge %{heartIcon} på indlæg, som du kan lide!"
-      no_likes_others: "Ingen 'synes om'-beskeder."
       no_topics_title: "Du har ikke startet nogen emner endnu"
       no_topics_title_others: "%{username} har endnu ikke startet nogen emner"
       no_read_topics_title: "Du har ikke læst nogen emner endnu"
@@ -3554,9 +3555,17 @@ da:
     fullscreen_table:
       expand_btn: "Udvid Tabel"
     sidebar:
-      unread_count: "%{count} ulæst"
-      new_count: "%{count} ny"
+      unread_count:
+        one: "%{count} ulæst"
+        other: "%{count} ulæste"
+      new_count:
+        one: "%{count} ny"
+        other: "%{count} nye"
+      more: "Flere"
+      all_categories: "Alle kategorier"
       sections:
+        about:
+          header_link_text: "Om"
         messages:
           header_link_text: "Beskeder"
           links:
@@ -3568,19 +3577,32 @@ da:
             unread_with_count: "Ulæst (%{count})"
             archive: "Arkiv"
         tags:
-          header_link_title: "alle mærker"
           header_link_text: "Tags"
         categories:
-          header_link_title: "alle kategorier"
           header_link_text: "Kategorier"
-        topics:
-          header_link_title: "hjem"
-          header_link_text: "Emner"
+        community:
+          header_link_text: "Fællesskab"
           links:
+            about:
+              content: "Om"
+            admin:
+              content: "Admin"
+            badges:
+              content: "Emblemer"
+            faq:
+              content: "OSS"
             tracked:
               content: "Sporet"
+            groups:
+              content: "Grupper"
+              title: "Alle grupper"
+            users:
+              content: "Brugere"
             my_posts:
               content: "Mine indlæg"
+            review:
+              content: "Anmeldelse"
+              title: "anmeldelse"
   admin_js:
     type_to_filter: "skriv for at filtrere…"
     admin:
@@ -4740,7 +4762,6 @@ da:
         cant_delete_all_too_many_posts:
           one: "Kan ikke slette alle indlæg fordi denne bruger har flere end %{count} indlæg. (delete_all_posts_max indstillingen)"
           other: "Kan ikke slette alle indlæg fordi denne bruger har flere end %{count} indlæg. (delete_all_posts_max indstillingen)"
-        delete_confirm: "Det foretrækkes generelt at anonymisere brugere i stedet for at slette dem for at undgå at fjerne indhold fra eksisterende diskussioner. <br><br> Er du SIKKER på, at du vil slette denne bruger? Dette er permanent!"
         delete_and_block: "Slet og <b>bloker</b> denne email og IP-adresse"
         delete_dont_block: "Slet kun"
         deleting_user: "Sletter bruger ..."
@@ -4871,7 +4892,6 @@ da:
         recommended: "Vi anbefaler ændringer i følgende tekst:"
         show_overriden: "Vis kun tilsidesatte"
         locale: "Sprog:"
-        fallback_locale_warning: "Du redigerer et sprog baseret på %{fallback}. Brugere, der vælger %{fallback}, som deres grænsefladesprog vil ikke kunne se dine ændringer."
         more_than_50_results: "Der er mere end 50 resultater. Begræns din søgning."
       settings:
         show_overriden: "Vis kun tilsidesatte"
@@ -5090,15 +5110,13 @@ da:
           replace: "Erstat"
   wizard_js:
     wizard:
-      done: "Færdig"
-      finish: "Afslut"
       back: "Tilbage"
       next: "Næste"
+      step-text: "Trin"
       step: "%{current} af %{total}"
       upload: "Overfør"
       uploading: "Overfører…"
       upload_error: "Beklager, der opstod en fejl under overførsel af filen. Prøv venligst igen."
-      quit: "Måske senere"
       staff_count:
         one: "Dit fællesskab har %{count} personale medlem (dig)."
         other: "Dit fællesskab har %{count} personale medlem, inklusive dig."

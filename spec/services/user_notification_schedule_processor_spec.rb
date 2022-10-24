@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe UserNotificationScheduleProcessor do
+RSpec.describe UserNotificationScheduleProcessor do
   include ActiveSupport::Testing::TimeHelpers
 
   fab!(:user) { Fabricate(:user) }

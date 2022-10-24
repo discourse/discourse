@@ -59,8 +59,6 @@ hr:
     bad_color_scheme: "Tema se ne može ažurirati, nevažeća paleta boja"
     other_error: "Dogodila se greška pri ažuriranju teme"
     ember_selector_error: "Žao nam je – korištenje #ember ili .ember-view CSS selektora nije dopušteno, jer se ti nazivi dinamički generiraju tijekom izvođenja i mijenjat će se tijekom vremena, što će na kraju rezultirati neispravnim CSS-om. Pokušajte s drugim selektorom."
-    compile_error:
-      unrecognized_extension: "Nastavak datoteke %{extension} nije prepoznat"
     import_error:
       generic: Došlo je do greške prilikom uvoza te teme
       upload: "Greška pri snimanju materijala: %{name}. %{errors}"
@@ -129,7 +127,6 @@ hr:
         unsubscribe_not_allowed: "Događa se kada ovom korisniku nije dopuštena odjava putem e-pošte."
         email_not_allowed: "Događa se kada adresa e-pošte nije na popisu dopuštenih ili je na popisu blokiranih."
       unrecognized_error: "Neprepoznata pogreška"
-    secure_media_placeholder: "Redigirano: Ova stranica ima omogućen siguran medij. Posjetite temu ili kliknite Prikaži medije da biste vidjeli priloženi medij."
     view_redacted_media: "Pregledajte medije"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -374,16 +371,11 @@ hr:
               in_the_past: "mora biti u budućnosti."
       <<: *errors
   uncategorized_category_name: "Nekategorizirano"
-  vip_category_name: "Foaje"
-  vip_category_description: "Kategorija ekskluzivna članovima koji imaju razinu povjerenja 3 ili više."
+  general_category_name: "Općenito"
   meta_category_name: "Povratne informacije o stranici"
   meta_category_description: "Rasprave o ovoj stranici, njezinoj organizaciji, kako radi i kako je se može poboljšati."
   staff_category_name: "Osoblje"
   staff_category_description: "Privatna kategorija za rasprave osoblja. Teme su vidljive samo administratorima i moderatorima."
-  discourse_welcome_topic:
-    title: "Dobrodošli na Discourse"
-  lounge_welcome:
-    title: "Dobrodošli u Foaje"
   admin_quick_start_title: "PROČITATI PRVO: brzi vodič za administratore"
   category:
     topic_prefix: "O %{category} kategoriji"
@@ -998,32 +990,16 @@ hr:
       title: "Ponovno pošaljite e-poštu za aktivaciju"
   wizard:
     step:
-      forum_title:
-        title: "Ime i prezime"
       introduction:
         fields:
-          welcome:
-            label: "Rasprava dobrodošlice"
+          default_locale:
+            label: "Jezik"
       privacy:
-        title: "Pristup"
         fields:
-          privacy:
-            choices:
-              open:
-                label: "Javno"
-              restricted:
-                label: "Privatno"
-      contact:
-        fields:
-          contact_email:
-            placeholder: "ime@primjer.com"
-          contact_url:
-            placeholder: "https://www.example.com/contact-us"
-      corporate:
-        title: "Organizacija / Poduzeće"
-        fields:
-          company_name:
-            label: "Ime tvrtke"
+          login_required:
+            placeholder: "Privatno"
+          must_approve_users:
+            placeholder: "Zahtijevati odobrenje"
       styling:
         fields:
           homepage_style:
@@ -1038,6 +1014,12 @@ hr:
                 label: "Kategorije i glavne teme"
               subcategories_with_featured_topics:
                 label: "Potkategorije s istaknutim temama"
+      corporate:
+        fields:
+          company_name:
+            label: "Ime tvrtke"
+          contact_url:
+            placeholder: "https://www.example.com/contact-us"
   joined: "Prijavljen"
   discourse_push_notifications:
     popup:

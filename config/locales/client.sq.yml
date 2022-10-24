@@ -136,10 +136,10 @@ sq:
       visible:
         enabled: "listuar %{when}"
         disabled: "çlistuar %{when}"
-    wizard_required: "Mirseerdhët tek faqja juaj e re Discourse! Le t'ia nisim me <a href='%{url}' data-auto-route='true'>\"setup wizard\"</a> ✨"
     emails_are_disabled: "Emailat janë çaktivizuar globalisht nga administratori i faqes. Asnjë njoftim me email nuk do të dërgohet. "
     software_update_prompt:
       dismiss: "Hiqe"
+    bootstrap_invite_button_title: "Dërgo ftesa"
     themes:
       default_description: "Paracaktuar"
     s3:
@@ -161,6 +161,9 @@ sq:
     not_implemented: "Kjo veçori nuk është implementuar akoma, na vjen keq!"
     no_value: "Jo"
     yes_value: "Po"
+    ok_value: "OK"
+    cancel_value: "Anulo"
+    delete: "Fshij"
     generic_error: "Na vjen keq, por sapo ndodhi një gabim."
     generic_error_with_reason: "Pati një gabim: %{error}"
     sign_up: "Regjistrohu"
@@ -305,6 +308,8 @@ sq:
       days:
         one: "ditë"
         other: "ditë"
+    time_shortcut:
+      never: "Asnjëherë"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> postoi <a href='%{topicUrl}'>temën</a>"
       you_posted_topic: "<a href='%{userUrl}'>Ju</a> postuat <a href='%{topicUrl}'>temën</a>"
@@ -548,6 +553,8 @@ sq:
       enable_quoting: "Aktivizo citimin në përgjigje për tekstin e përzgjedhur"
       experimental_sidebar:
         options: "Opsione"
+        navigation_section: "Shfletimi"
+        list_destination_default: "Paracaktuar"
       change: "ndrysho"
       moderator: "%{user} është moderator"
       admin: "%{user} është admin"
@@ -616,6 +623,7 @@ sq:
         move_to_archive: "Arkivo"
         failed_to_move: "Nuk i transferuam dot mesazhet e zgjedhura (ka mundësi që të jeni shkëputur nga rrjeti)"
         tags: "Etiketat"
+        all_tags: "Të gjitha etiketat"
       preferences_nav:
         account: "Llogaria"
         security: "Siguria"
@@ -906,7 +914,6 @@ sq:
       other: përgjigje
     signup_cta:
       sign_up: "Regjistrohu"
-      hide_session: "Më rikujto nesër"
       hide_forever: "jo faleminderit"
     summary:
       enabled_description: "Po lexoni një përmbledhje të kësaj teme: postimet më interesante sipas vlerësimit të komunitetit."
@@ -921,6 +928,7 @@ sq:
       title: "Mesazh"
       remove_allowed_user: "A doni vërtet të hiqni %{name} nga ky mesazh?"
       remove_allowed_group: "Doni me të vërtetë të hiqni %{name} nga ky mesazh? "
+      remove_user: "Hiq anëtar"
     email: "Email"
     username: "Emri i përdoruesit"
     last_seen: "Shikuar"
@@ -1080,6 +1088,7 @@ sq:
       title: "njoftimet për përmendjet @emri, përgjigjet ndaj postime dhe temave, mesazhet, etj."
       none: "Nuk i hapëm dot njoftimet."
       empty: "Nuk u gjet asnjë njoftim. "
+      watching_first_post_label: "Temë e re"
       dismiss_confirmation:
         dismiss: "Hiqe"
         cancel: "Anulo"
@@ -1139,6 +1148,13 @@ sq:
     go_back: "kthehu mbrapa"
     not_logged_in_user: "faqja e përdoruesit me një përmbledhje të aktivitetit dhe preferencave"
     current_user: "shko tek profili yt"
+    user_menu:
+      tabs:
+        replies: "Përgjigjet"
+        mentions: "Përmendje"
+        likes: "Pëlqimet"
+        bookmarks: "Të preferuarat"
+        profile: "Profili"
     topics:
       new_messages_marker: "vizita e fundit"
       bulk:
@@ -1860,7 +1876,6 @@ sq:
     download_calendar:
       download: "Shkarko"
     tagging:
-      all_tags: "Të gjitha etiketat"
       selector_all_tags: "të gjitha etiketat"
       selector_no_tags: "asnjë etiketë"
       changed: "etiketat e ndryshuara:"
@@ -1871,7 +1886,6 @@ sq:
       sort_by: "Rendit sipas:"
       sort_by_count: "numri"
       sort_by_name: "emër"
-      cancel_delete_unused: "Anulo"
       filters:
         without_category: "%{filter} %{tag} temat"
         with_category: "%{filter} %{tag} temat në %{category}"
@@ -1929,9 +1943,17 @@ sq:
         regular: "i zakonshëm"
         leader: "udhëheqës"
     sidebar:
-      unread_count: "%{count} e palexuar"
-      new_count: "%{count} e re"
+      unread_count:
+        one: "%{count} e palexuar"
+        other: "%{count} të palexuara"
+      new_count:
+        one: "%{count} e re"
+        other: "%{count} të reja"
+      more: "Më shumë"
+      all_categories: "Të gjitha kategoritë"
       sections:
+        about:
+          header_link_text: "Rreth"
         messages:
           header_link_text: "Mesazhet"
           links:
@@ -1943,17 +1965,27 @@ sq:
             unread_with_count: "Të palexuara (%{count})"
             archive: "Arkivi"
         tags:
-          header_link_title: "të gjitha etiketat"
           header_link_text: "Etiketat"
         categories:
-          header_link_title: "kategoritë"
           header_link_text: "Categories"
-        topics:
-          header_link_title: "kryefaqja"
-          header_link_text: "Tema"
+        community:
+          header_link_text: "Komuniteti"
           links:
+            about:
+              content: "Rreth"
+            admin:
+              content: "Admin"
+            badges:
+              content: "Stemat"
+            faq:
+              content: "Pyetje të shpeshta"
             tracked:
               content: "Gjurmuar"
+            groups:
+              content: "Grupet"
+              title: "Të gjitha grupet"
+            users:
+              content: "Users"
             my_posts:
               content: "Postimet e mia"
   admin_js:
@@ -2740,14 +2772,13 @@ sq:
           topics: "Tema"
   wizard_js:
     wizard:
-      done: "Përfundo"
       back: "Kthehu mbrapa"
       next: "Vazhdo përpara"
+      step-text: "Hapi"
       step: "%{current} nga %{total}"
       upload: "Ngarko"
       uploading: "Duke ngarkuar..."
       upload_error: "Na vjen keq, pati një gabim gjatë ngarkimit të skedarit. Provo përsëri. "
-      quit: "Mbase më vonë"
       invites:
         add_user: "shto"
         none_added: "Nuk keni ftuar asnjë staf. Doni të vazhdoni?"

@@ -151,7 +151,7 @@ acceptance("Invites - Email Invites", function (needs) {
     assert.ok(exists(".save-invite"), "shows save without email button");
     await click(".save-invite");
     assert.ok(
-      lastRequest.requestBody.indexOf("skip_email=true") !== -1,
+      lastRequest.requestBody.includes("skip_email=true"),
       "sends skip_email to server"
     );
 
@@ -159,7 +159,7 @@ acceptance("Invites - Email Invites", function (needs) {
     assert.ok(exists(".send-invite"), "shows save and send email button");
     await click(".send-invite");
     assert.ok(
-      lastRequest.requestBody.indexOf("send_email=true") !== -1,
+      lastRequest.requestBody.includes("send_email=true"),
       "sends send_email to server"
     );
   });
@@ -226,6 +226,20 @@ acceptance(
       ];
 
       assert.deepEqual(options, expected, "options are correct");
+    });
+  }
+);
+
+acceptance(
+  "Invites - Create Invite on Site with must_approve_users Setting",
+  function (needs) {
+    needs.user();
+    needs.settings({ must_approve_users: true });
+
+    test("hides `Arrive at Topic` field on sites with `must_approve_users`", async function (assert) {
+      await visit("/u/eviltrout/invited/pending");
+      await click(".user-invite-buttons .btn:first-child");
+      assert.ok(!exists(".invite-to-topic"));
     });
   }
 );

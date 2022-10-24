@@ -5,6 +5,13 @@
 body.crawler,
 body > noscript {
   font-family: serif;
+
+  &:after,
+  &:before {
+    // common way to show fixed background images
+    display: none;
+  }
+
   a {
     // we want all links to look like links
     color: blue !important;
@@ -144,6 +151,8 @@ body > noscript {
   div#main-outlet {
     div.post {
       word-break: break-word;
+      overflow: auto;
+      max-width: 100%;
       img {
         max-width: 100%;
         height: auto;
@@ -192,6 +201,12 @@ body > noscript {
       padding: 0.5em 0;
       border-top: 1px solid #ddd;
       border-top: 1px solid var(--primary-low);
+    }
+  }
+
+  .tag-crawler {
+    .tag-box {
+      margin-bottom: 0.5em;
     }
   }
 

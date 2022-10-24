@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe PostLocker do
+RSpec.describe PostLocker do
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:post) { Fabricate(:post) }
 

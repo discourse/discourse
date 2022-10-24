@@ -40,6 +40,7 @@ class TopicQuery
   end
 
   def self.public_valid_options
+    # For these to work in Ember, add them to `controllers/discovery-sortable.js`
     @public_valid_options ||=
       %i(page
          before
@@ -171,7 +172,10 @@ class TopicQuery
   def list_related_for(topic, pm_params: nil)
     return if !topic.private_message?
     return if @user.blank?
-    return if !SiteSetting.enable_personal_messages?
+
+    if !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
+      return
+    end
 
     builder = SuggestedTopicsBuilder.new(topic)
     pm_params = pm_params || get_pm_params(topic)
@@ -198,8 +202,11 @@ class TopicQuery
 
     # Don't suggest messages unless we have a user, and private messages are
     # enabled.
-    return if topic.private_message? &&
-      (@user.blank? || !SiteSetting.enable_personal_messages?)
+    if topic.private_message? && (
+        @user.blank? || !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
+    )
+      return
+    end
 
     builder = SuggestedTopicsBuilder.new(topic)
 
@@ -679,7 +686,7 @@ class TopicQuery
         tags_query = tags_arg[0].is_a?(String) ? Tag.where_name(tags_arg) : Tag.where(id: tags_arg)
         tags = tags_query.select(:id, :target_tag_id).map { |t| t.target_tag_id || t.id }.uniq
 
-        if @options[:match_all_tags]
+        if ActiveModel::Type::Boolean.new.cast(@options[:match_all_tags])
           # ALL of the given tags:
           if tags_arg.length == tags.length
             tags.each_with_index do |tag, index|

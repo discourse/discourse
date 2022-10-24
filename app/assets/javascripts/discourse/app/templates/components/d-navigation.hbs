@@ -6,6 +6,9 @@
 {{/unless}}
 
 <div class="navigation-controls">
+  {{#if (and this.notCategoriesRoute this.site.mobileView this.canBulk)}}
+    <BulkSelectToggle @parentController={{"discovery/topics"}} @tagName=""/>
+  {{/if}}
 
   {{#if this.showCategoryAdmin}}
     <CategoriesAdminDropdown @onChange={{action "selectCategoryAdminDropdownAction"}} @options={{hash
@@ -13,13 +16,8 @@
       }} />
   {{/if}}
 
-  {{#if this.category}}
-    {{#unless this.tag}}
-      {{!-- don't show category edit button on tag pages --}}
-      {{#if this.showCategoryEdit}}
-        <DButton @class="btn-default edit-category" @action={{this.editCategory}} @icon="wrench" @ariaLabel="category.edit" />
-      {{/if}}
-    {{/unless}}
+  {{#if (and this.category this.showCategoryEdit)}}
+    <DButton @class="btn-default edit-category" @action={{this.editCategory}} @icon="wrench" @title="category.edit_title" />
   {{/if}}
 
   {{#if this.tag}}

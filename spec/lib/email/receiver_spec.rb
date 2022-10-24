@@ -2,8 +2,7 @@
 
 require "email/receiver"
 
-describe Email::Receiver do
-
+RSpec.describe Email::Receiver do
   before do
     SiteSetting.email_in = true
     SiteSetting.reply_by_email_address = "reply+%{reply_key}@bar.com"
@@ -108,7 +107,7 @@ describe Email::Receiver do
     )
   end
 
-  context "bounces" do
+  describe "bounces" do
     it "raises a BouncerEmailError" do
       expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
       expect(IncomingEmail.last.is_bounce).to eq(true)
@@ -194,8 +193,7 @@ describe Email::Receiver do
     end.to raise_error(Email::Receiver::BadDestinationAddress)
   end
 
-  context "bounces to VERP" do
-
+  describe "bounces to VERP" do
     let(:bounce_key) { "14b08c855160d67f2e0c2f8ef36e251e" }
     let(:bounce_key_2) { "b542fb5a9bacda6d28cc061d18e4eb83" }
     fab!(:user) { Fabricate(:user, email: "linux-admin@b-s-c.co.jp") }
@@ -244,8 +242,7 @@ describe Email::Receiver do
     end
   end
 
-  context "reply" do
-
+  describe "reply" do
     let(:reply_key) { "4f97315cc828096c9cb34c6f1a0d6fe8" }
     fab!(:category) { Fabricate(:category) }
     fab!(:user) { Fabricate(:user, email: "discourse@bar.com") }
@@ -306,8 +303,7 @@ describe Email::Receiver do
       expect { process(:reply_user_matching) }.to raise_error(Email::Receiver::TopicNotFoundError)
     end
 
-    context "a closed topic" do
-
+    context "with a closed topic" do
       before do
         topic.update_columns(closed: true)
       end
@@ -375,6 +371,12 @@ describe Email::Receiver do
       expect(IncomingEmail.last.created_via).to eq(IncomingEmail.created_via_types[:handle_mail])
       process(:text_and_html_reply, source: :imap)
       expect(IncomingEmail.last.created_via).to eq(IncomingEmail.created_via_types[:imap])
+    end
+
+    it "stores the message_id of the incoming email against the post as outbound_message_id" do
+      expect { process(:text_reply, source: :handle_mail) }.to change(Post, :count)
+      message_id = IncomingEmail.last.message_id
+      expect(Post.last.outbound_message_id).to eq(message_id)
     end
 
     it "automatically elides gmail quotes" do
@@ -827,8 +829,7 @@ describe Email::Receiver do
     end
   end
 
-  context "new message to a group" do
-
+  describe "new message to a group" do
     fab!(:group) { Fabricate(:group, incoming_email: "team@bar.com|meat@bar.com") }
 
     it "handles encoded display names" do
@@ -884,8 +885,29 @@ describe Email::Receiver do
 
     it "cap the number of staged users created per email" do
       SiteSetting.maximum_staged_users_per_email = 1
-      expect { process(:cc) }.to change(Topic, :count)
+      expect { process(:cc) }.to change(Topic, :count).by(1)
+        .and change(User, :count).by(1)
       expect(Topic.last.ordered_posts[-1].post_type).to eq(Post.types[:moderator_action])
+    end
+
+    it "cap the number of staged users existing per email" do
+      Fabricate(:user, email: "discourse@bar.com", staged: true) # from
+      Fabricate(:user, email: "someone@else.com", staged: true) # to
+
+      SiteSetting.maximum_staged_users_per_email = 1
+      expect { process(:cc) }.to change(Topic, :count).and not_change(User, :count)
+      expect(Topic.last.ordered_posts[-1].post_type).to eq(Post.types[:moderator_action])
+    end
+
+    it "rejects messages with too many recipients" do
+      SiteSetting.maximum_recipients_per_new_group_email = 3
+      expect { process(:cc) }.to raise_error(Email::Receiver::TooManyRecipientsError)
+    end
+
+    it "uses the incoming_email message-id as the new post's outbound_message_id" do
+      expect { process(:cc) }.to change(Topic, :count)
+      message_id = IncomingEmail.last.message_id
+      expect(Topic.last.first_post.outbound_message_id).to eq(message_id)
     end
 
     describe "reply-to header" do
@@ -967,7 +989,7 @@ describe Email::Receiver do
         expect { process(:email_reply_4) }.to change { topic.posts.count }.by(1)
       end
 
-      describe "replying with various message-id formats" do
+      describe "replying with various message-id formats using In-Reply-To header" do
         let!(:topic) do
           process(:email_reply_1)
           Topic.last
@@ -1009,6 +1031,11 @@ describe Email::Receiver do
 
         it "posts a reply using a message-id in the format topic/TOPIC_ID.RANDOM_SUFFIX@HOST" do
           expect { process_mail_with_message_id("topic/#{topic.id}/#{post.id}.x3487nxy877843x@test.localhost") }.to change { Post.count }.by(1)
+          expect(topic.reload.posts.last.raw).to include("This is email reply testing with Message-ID formats")
+        end
+
+        it "posts a reply using a message-id in the format discourse/post/POST_ID@HOST" do
+          expect { process_mail_with_message_id("discourse/post/#{post.id}@test.localhost") }.to change { Post.count }.by(1)
           expect(topic.reload.posts.last.raw).to include("This is email reply testing with Message-ID formats")
         end
       end
@@ -1112,7 +1139,7 @@ describe Email::Receiver do
       end
 
       it "creates the reply when the sender and referenced messsage id are known" do
-        expect { process(:email_reply_to_group_email_username) }.to change { topic.posts.count }.by(1).and change { Topic.count }.by(0)
+        expect { process(:email_reply_to_group_email_username) }.to change { topic.posts.count }.by(1).and not_change { Topic.count }
       end
     end
 
@@ -1203,7 +1230,7 @@ describe Email::Receiver do
       end
     end
 
-    context "emailing a group by email_username and following reply flow" do
+    context "when emailing a group by email_username and following reply flow" do
       let!(:original_inbound_email_topic) do
         group.update!(
           email_username: "team@somesmtpaddress.com",
@@ -1226,7 +1253,6 @@ describe Email::Receiver do
         NotificationEmailer.enable
         SiteSetting.disallow_reply_by_email_after_days = 10000
         Jobs.run_immediately!
-        Email::MessageIdService.stubs(:random_suffix).returns("blah123")
       end
 
       def reply_as_group_user
@@ -1251,7 +1277,7 @@ describe Email::Receiver do
 
       it "creates an EmailLog when someone from the group replies, and does not create an IncomingEmail record for the reply" do
         email_log, group_post = reply_as_group_user
-        expect(email_log.message_id).to eq("topic/#{original_inbound_email_topic.id}/#{group_post.id}.blah123@test.localhost")
+        expect(email_log.message_id).to eq("discourse/post/#{group_post.id}@test.localhost")
         expect(email_log.to_address).to eq("two@foo.com")
         expect(email_log.email_type).to eq("user_private_message")
         expect(email_log.post_id).to eq(group_post.id)
@@ -1266,7 +1292,7 @@ describe Email::Receiver do
         reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
         expect do
           Email::Receiver.new(reply_email).process!
-        end.to change { Topic.count }.by(0).and change { Post.count }.by(1)
+        end.to not_change { Topic.count }.and change { Post.count }.by(1)
 
         reply_post = Post.last
         expect(reply_post.reply_to_user).to eq(user_in_group)
@@ -1294,7 +1320,7 @@ describe Email::Receiver do
         reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
         expect do
           Email::Receiver.new(reply_email).process!
-        end.to change { Topic.count }.by(0).and change { Post.count }.by(1)
+        end.to not_change { Topic.count }.and change { Post.count }.by(1)
 
         reply_post = Post.last
         expect(reply_post.topic_id).to eq(original_inbound_email_topic.id)
@@ -1333,24 +1359,24 @@ describe Email::Receiver do
       end
 
       it "creates a reply when the sender and referenced message id are known" do
-        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1).and change { Topic.count }.by(0)
+        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1).and not_change { Topic.count }
       end
 
       it "creates a new topic when the sender is not known and the group does not allow unknown senders to reply to topics" do
         IncomingEmail.where(message_id: '34@foo.bar.mail').update(cc_addresses: 'three@foo.com')
         group.update(allow_unknown_sender_topic_replies: false)
-        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(0).and change { Topic.count }.by(1)
+        expect { process(:email_reply_2) }.to not_change { topic.posts.count }.and change { Topic.count }.by(1)
       end
 
       it "creates a new topic when the referenced message id is not known" do
         IncomingEmail.where(message_id: '34@foo.bar.mail').update(message_id: '99@foo.bar.mail')
-        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(0).and change { Topic.count }.by(1)
+        expect { process(:email_reply_2) }.to not_change { topic.posts.count }.and change { Topic.count }.by(1)
       end
 
       it "includes the sender on the topic when the message id is known, the sender is not known, and the group allows unknown senders to reply to topics" do
         IncomingEmail.where(message_id: '34@foo.bar.mail').update(cc_addresses: 'three@foo.com')
         group.update(allow_unknown_sender_topic_replies: true)
-        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1).and change { Topic.count }.by(0)
+        expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1).and not_change { Topic.count }
       end
 
       context "when the sender is not in the topic allowed users" do
@@ -1362,14 +1388,13 @@ describe Email::Receiver do
         it "adds them to the topic at the same time" do
           IncomingEmail.where(message_id: '34@foo.bar.mail').update(cc_addresses: 'three@foo.com')
           group.update(allow_unknown_sender_topic_replies: true)
-          expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1).and change { Topic.count }.by(0)
+          expect { process(:email_reply_2) }.to change { topic.posts.count }.by(1).and not_change { Topic.count }
         end
       end
     end
   end
 
-  context "new topic in a category" do
-
+  describe "new topic in a category" do
     fab!(:category) { Fabricate(:category, email_in: "category@bar.com|category@foo.com", email_in_allow_strangers: false) }
 
     it "raises a StrangersNotAllowedError when 'email_in_allow_strangers' is disabled" do
@@ -1508,8 +1533,7 @@ describe Email::Receiver do
     end
   end
 
-  context "new topic in a category that allows strangers" do
-
+  describe "new topic in a category that allows strangers" do
     fab!(:category) { Fabricate(:category, email_in: "category@bar.com|category@foo.com", email_in_allow_strangers: true) }
 
     it "lets an email in from a stranger" do
@@ -1529,8 +1553,7 @@ describe Email::Receiver do
 
   end
 
-  context "#reply_by_email_address_regex" do
-
+  describe "#reply_by_email_address_regex" do
     before do
       SiteSetting.reply_by_email_address = nil
       SiteSetting.alternative_reply_by_email_addresses = nil
@@ -1558,7 +1581,7 @@ describe Email::Receiver do
 
   end
 
-  context "check_address" do
+  describe "check_address" do
     before do
       SiteSetting.reply_by_email_address = "foo+%{reply_key}@bar.com"
     end
@@ -1581,7 +1604,7 @@ describe Email::Receiver do
     end
   end
 
-  context "staged users" do
+  describe "staged users" do
     before do
       SiteSetting.enable_staged_users = true
     end
@@ -1652,7 +1675,7 @@ describe Email::Receiver do
       include_examples "does not create staged users", :blocklist_allowlist_email, Email::Receiver::EmailNotAllowed
     end
 
-    context "blocklist and allowlist for To and Cc" do
+    context "with blocklist and allowlist for To and Cc" do
       before do
         Fabricate(:group, incoming_email: "some_group@bar.com")
       end
@@ -1714,7 +1737,7 @@ describe Email::Receiver do
       end
     end
 
-    context "email is a reply" do
+    context "when email is a reply" do
       let(:reply_key) { "4f97315cc828096c9cb34c6f1a0d6fe8" }
       fab!(:category) { Fabricate(:category) }
       fab!(:user) { Fabricate(:user, email: "discourse@bar.com") }
@@ -1739,7 +1762,7 @@ describe Email::Receiver do
           include_examples "does not create staged users", :reply_and_forwarded
         end
 
-        context "forwarded email to category that doesn't allow strangers" do
+        context "with forwarded email to category that doesn't allow strangers" do
           before do
             category.update!(email_in: "team@bar.com", email_in_allow_strangers: false)
           end
@@ -1749,7 +1772,7 @@ describe Email::Receiver do
       end
     end
 
-    context "replying without key is allowed" do
+    context "when replying without key is allowed" do
       fab!(:group) { Fabricate(:group, incoming_email: "team@bar.com") }
       let!(:topic) do
         SiteSetting.find_related_post_with_key = false
@@ -1789,7 +1812,7 @@ describe Email::Receiver do
     end
   end
 
-  context "mailing list mirror" do
+  describe "mailing list mirror" do
     fab!(:category) { Fabricate(:mailinglist_mirror_category) }
 
     before do
@@ -1818,7 +1841,7 @@ describe Email::Receiver do
       expect { process(:mailinglist_short_message) }.to change { Topic.count }
     end
 
-    context "read-only category" do
+    context "with read-only category" do
       before do
         category.set_permissions(everyone: :readonly)
         category.save!
@@ -1863,8 +1886,7 @@ describe Email::Receiver do
     expect(email.cc_addresses).to eq("bob@example.com;carol@example.com")
   end
 
-  context "#select_body" do
-
+  describe "#select_body" do
     let(:email) {
       <<~EMAIL
       MIME-Version: 1.0
@@ -2028,8 +2050,7 @@ describe Email::Receiver do
     end
   end
 
-  context "find_related_post" do
-
+  describe "find_related_post" do
     let(:user) { Fabricate(:user) }
     let(:group) { Fabricate(:group, users: [user]) }
 
@@ -2097,8 +2118,8 @@ describe Email::Receiver do
 
     it "makes all posts in same topic" do
       expect { receive(email_1) }.to change { Topic.count }.by(1).and change { Post.where(post_type: Post.types[:regular]).count }.by(1)
-      expect { post_2 }.to change { Topic.count }.by(0).and change { Post.where(post_type: Post.types[:regular]).count }.by(1)
-      expect { receive(email_3) }.to change { Topic.count }.by(0).and change { Post.where(post_type: Post.types[:regular]).count }.by(1)
+      expect { post_2 }.to not_change { Topic.count }.and change { Post.where(post_type: Post.types[:regular]).count }.by(1)
+      expect { receive(email_3) }.to not_change { Topic.count }.and change { Post.where(post_type: Post.types[:regular]).count }.by(1)
     end
   end
 

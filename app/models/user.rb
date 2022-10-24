@@ -109,7 +109,7 @@ class User < ActiveRecord::Base
 
   has_many :sidebar_section_links, dependent: :delete_all
   has_many :category_sidebar_section_links, -> { where(linkable_type: "Category") }, class_name: 'SidebarSectionLink'
-  has_many :sidebar_tags, through: :sidebar_section_links, source: :linkable, source_type: "Tag"
+  has_many :custom_sidebar_tags, through: :sidebar_section_links, source: :linkable, source_type: "Tag"
 
   delegate :last_sent_email_address, to: :email_logs
 
@@ -120,7 +120,7 @@ class User < ActiveRecord::Base
   validates :name, user_full_name: true, if: :will_save_change_to_name?, length: { maximum: 255 }
   validates :ip_address, allowed_ip_address: { on: :create, message: :signup_not_allowed }
   validates :primary_email, presence: true
-  validates :public_user_field_values, watched_words: true, unless: :custom_fields_clean?
+  validates :validatable_user_fields_values, watched_words: true, unless: :custom_fields_clean?
   validates_associated :primary_email, message: -> (_, user_email) { user_email[:value]&.errors[:email]&.first }
 
   after_initialize :add_trust_level
@@ -146,6 +146,7 @@ class User < ActiveRecord::Base
   before_save :ensure_password_is_hashed
   before_save :match_primary_group_changes
   before_save :check_if_title_is_badged_granted
+  before_save :apply_watched_words, unless: :custom_fields_clean?
 
   after_save :expire_tokens_if_password_changed
   after_save :clear_global_notice_if_needed
@@ -264,7 +265,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  scope :watching_topic_when_mute_categories_by_default, ->(topic) do
+  scope :watching_topic, ->(topic) do
     joins(DB.sql_fragment("LEFT JOIN category_users ON category_users.user_id = users.id AND category_users.category_id = :category_id", category_id: topic.category_id))
       .joins(DB.sql_fragment("LEFT JOIN topic_users ON topic_users.user_id = users.id AND topic_users.topic_id = :topic_id",  topic_id: topic.id))
       .joins("LEFT JOIN tag_users ON tag_users.user_id = users.id AND tag_users.tag_id IN (#{topic.tag_ids.join(",").presence || 'NULL'})")
@@ -411,6 +412,14 @@ class User < ActiveRecord::Base
     find_by(username_lower: normalize_username(username))
   end
 
+  def in_any_groups?(group_ids)
+    group_ids.include?(Group::AUTO_GROUPS[:everyone]) || (group_ids & belonging_to_group_ids).any?
+  end
+
+  def belonging_to_group_ids
+    @belonging_to_group_ids ||= group_users.pluck(:group_id)
+  end
+
   def group_granted_trust_level
     GroupUser
       .where(user_id: id)
@@ -486,6 +495,7 @@ class User < ActiveRecord::Base
 
   def reload
     @unread_notifications = nil
+    @all_unread_notifications_count = nil
     @unread_total_notifications = nil
     @unread_pms = nil
     @unread_bookmarks = nil
@@ -493,6 +503,7 @@ class User < ActiveRecord::Base
     @user_fields_cache = nil
     @ignored_user_ids = nil
     @muted_user_ids = nil
+    @belonging_to_group_ids = nil
     super
   end
 
@@ -534,6 +545,24 @@ class User < ActiveRecord::Base
 
     # to avoid coalesce we do to_i
     DB.query_single(sql, user_id: id, high_priority: high_priority)[0].to_i
+  end
+
+  MAX_UNREAD_BACKLOG = 400
+  def grouped_unread_notifications
+    results = DB.query(<<~SQL, user_id: self.id, limit: MAX_UNREAD_BACKLOG)
+      SELECT X.notification_type AS type, COUNT(*) FROM (
+        SELECT n.notification_type
+        FROM notifications n
+        LEFT JOIN topics t ON t.id = n.topic_id
+        WHERE t.deleted_at IS NULL
+          AND n.user_id = :user_id
+          AND NOT n.read
+        LIMIT :limit
+      ) AS X
+      GROUP BY X.notification_type
+    SQL
+    results.map! { |row| [row.type, row.count] }
+    results.to_h
   end
 
   ###
@@ -586,17 +615,82 @@ class User < ActiveRecord::Base
     end
   end
 
+  def all_unread_notifications_count
+    @all_unread_notifications_count ||= begin
+      sql = <<~SQL
+        SELECT COUNT(*) FROM (
+          SELECT 1 FROM
+          notifications n
+          LEFT JOIN topics t ON t.id = n.topic_id
+           WHERE t.deleted_at IS NULL AND
+            n.user_id = :user_id AND
+            n.id > :seen_notification_id AND
+            NOT read
+          LIMIT :limit
+        ) AS X
+      SQL
+
+      DB.query_single(sql,
+        user_id: id,
+        seen_notification_id: seen_notification_id,
+        limit: User.max_unread_notifications
+      )[0].to_i
+    end
+  end
+
   def total_unread_notifications
     @unread_total_notifications ||= notifications.where("read = false").count
   end
 
+  def reviewable_count
+    Reviewable.list_for(self).count
+  end
+
+  def unseen_reviewable_count
+    Reviewable.unseen_list_for(self).count
+  end
+
   def saw_notification_id(notification_id)
+    Discourse.deprecate(<<~TEXT, since: "2.9", drop_from: "3.0")
+      User#saw_notification_id is deprecated. Please use User#bump_last_seen_notification! instead.
+    TEXT
     if seen_notification_id.to_i < notification_id.to_i
       update_columns(seen_notification_id: notification_id.to_i)
       true
     else
       false
     end
+  end
+
+  def bump_last_seen_notification!
+    query = self.notifications.visible
+    if seen_notification_id
+      query = query.where("notifications.id > ?", seen_notification_id)
+    end
+    if max_notification_id = query.maximum(:id)
+      update!(seen_notification_id: max_notification_id)
+      true
+    else
+      false
+    end
+  end
+
+  def bump_last_seen_reviewable!
+    query = Reviewable.unseen_list_for(self, preload: false)
+
+    if last_seen_reviewable_id
+      query = query.where("id > ?", last_seen_reviewable_id)
+    end
+    max_reviewable_id = query.maximum(:id)
+
+    if max_reviewable_id
+      update!(last_seen_reviewable_id: max_reviewable_id)
+      publish_reviewable_counts(unseen_reviewable_count: self.unseen_reviewable_count)
+    end
+  end
+
+  def publish_reviewable_counts(data)
+    MessageBus.publish("/reviewable_counts/#{self.id}", data, user_ids: [self.id])
   end
 
   TRACK_FIRST_NOTIFICATION_READ_DURATION = 1.week.to_i
@@ -657,6 +751,11 @@ class User < ActiveRecord::Base
       recent: recent,
       seen_notification_id: seen_notification_id,
     }
+
+    if self.redesigned_user_menu_enabled?
+      payload[:all_unread_notifications_count] = all_unread_notifications_count
+      payload[:grouped_unread_notifications] = grouped_unread_notifications
+    end
 
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
   end
@@ -1272,13 +1371,25 @@ class User < ActiveRecord::Base
     end
   end
 
-  def public_user_field_values
-    @public_user_field_ids ||= UserField.public_fields.pluck(:id)
-    user_fields(@public_user_field_ids).values.join(" ")
+  def validatable_user_fields_values
+    validatable_user_fields.values.join(" ")
   end
 
   def set_user_field(field_id, value)
     custom_fields["#{USER_FIELD_PREFIX}#{field_id}"] = value
+  end
+
+  def apply_watched_words
+    validatable_user_fields.each do |id, value|
+      set_user_field(id, WordWatcher.apply_to_text(value))
+    end
+  end
+
+  def validatable_user_fields
+    # ignore multiselect fields since they are admin-set and thus not user generated content
+    @public_user_field_ids ||= UserField.public_fields.where.not(field_type: 'multiselect').pluck(:id)
+
+    user_fields(@public_user_field_ids)
   end
 
   def number_of_deleted_posts
@@ -1294,7 +1405,7 @@ class User < ActiveRecord::Base
 
   def number_of_rejected_posts
     ReviewableQueuedPost
-      .where(status: Reviewable.statuses[:rejected])
+      .rejected
       .where(created_by_id: self.id)
       .count
   end
@@ -1360,6 +1471,8 @@ class User < ActiveRecord::Base
         GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(self)
       end
     end
+
+    @belonging_to_group_ids = nil
   end
 
   def email
@@ -1532,7 +1645,7 @@ class User < ActiveRecord::Base
     publish_user_status(nil)
   end
 
-  def set_status!(description, emoji, ends_at)
+  def set_status!(description, emoji, ends_at = nil)
     status = {
       description: description,
       emoji: emoji,
@@ -1551,6 +1664,31 @@ class User < ActiveRecord::Base
 
   def has_status?
     user_status && !user_status.expired?
+  end
+
+  def redesigned_user_menu_enabled?
+    SiteSetting.enable_experimental_sidebar_hamburger
+  end
+
+  def sidebar_categories_ids
+    categories_ids = category_sidebar_section_links.pluck(:linkable_id)
+
+    if categories_ids.blank? && SiteSetting.default_sidebar_categories.present?
+      return SiteSetting.default_sidebar_categories.split("|").map(&:to_i) & guardian.allowed_category_ids
+    end
+
+    categories_ids
+  end
+
+  def sidebar_tags
+    return custom_sidebar_tags if custom_sidebar_tags.present?
+
+    if SiteSetting.default_sidebar_tags.present?
+      tag_names = SiteSetting.default_sidebar_tags.split("|") - DiscourseTagging.hidden_tag_names(guardian)
+      return Tag.where(name: tag_names)
+    end
+
+    Tag.none
   end
 
   protected
@@ -1769,6 +1907,14 @@ class User < ActiveRecord::Base
     if flair_group_id == primary_group_id_was
       self.flair_group_id = primary_group&.id
     end
+  end
+
+  def self.first_login_admin_id
+    User.where(admin: true)
+      .human_users
+      .joins(:user_auth_tokens)
+      .order('user_auth_tokens.created_at')
+      .pluck_first(:id)
   end
 
   private
