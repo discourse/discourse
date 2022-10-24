@@ -41,12 +41,25 @@ RSpec.describe HashtagAutocompleteService do
     end
 
     it "respects the limit param" do
-      expect(subject.search("book", %w[tag category], 1).map(&:text)).to eq(["great-books x 0"])
+      expect(subject.search("book", %w[tag category], limit: 1).map(&:text)).to eq(["great-books x 0"])
+    end
+
+    it "does not allow more than SEARCH_MAX_LIMIT results to be specified by the limit param" do
+      stub_const(HashtagAutocompleteService, "SEARCH_MAX_LIMIT", 1) do
+        expect(subject.search("book", %w[category tag], limit: 1000).map(&:text)).to eq(
+          ["Book Club"],
+        )
+      end
+    end
+
+    it "does not search other data sources if the limit is reached by earlier type data sources" do
+      Site.any_instance.expects(:categories).never
+      subject.search("book", %w[tag category], limit: 1)
     end
 
     it "includes the tag count" do
       tag1.update!(topic_count: 78)
-      expect(subject.search("book", %w[tag category], 1).map(&:text)).to eq(["great-books x 78"])
+      expect(subject.search("book", %w[tag category]).map(&:text)).to eq(["great-books x 78", "Book Club"])
     end
 
     it "does case-insensitive search" do
@@ -66,11 +79,6 @@ RSpec.describe HashtagAutocompleteService do
     it "does not include tags the user cannot access" do
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["great-books"])
       expect(subject.search("book", %w[tag]).map(&:text)).to be_empty
-    end
-
-    it "does not search other data sources if the limit is reached by earlier type data sources" do
-      Site.any_instance.expects(:categories).never
-      subject.search("book", %w[tag category], 1)
     end
 
     it "includes other data sources" do
@@ -109,7 +117,7 @@ RSpec.describe HashtagAutocompleteService do
     it "appends type suffixes for the ref on conflicting slugs on items that are not the top priority type" do
       Fabricate(:tag, name: "book-club")
       expect(subject.search("book", %w[category tag]).map(&:ref)).to eq(
-        %w[book-club great-books book-club::tag],
+        %w[book-club book-club::tag great-books],
       )
 
       Fabricate(:bookmark, user: user, name: "book club")
@@ -118,8 +126,21 @@ RSpec.describe HashtagAutocompleteService do
       register_bookmark_data_source
 
       expect(subject.search("book", %w[category tag bookmark]).map(&:ref)).to eq(
-        %w[book-club great-books book-club::tag book-club::bookmark],
+        %w[book-club book-club::tag great-books book-club::bookmark],
       )
+    end
+
+    context "when multiple tags and categories are returned" do
+      fab!(:category2) { Fabricate(:category, name: "Book Zone", slug: "book-zone") }
+      fab!(:category3) { Fabricate(:category, name: "Book Dome", slug: "book-dome") }
+      fab!(:tag2) { Fabricate(:tag, name: "mid-books") }
+      fab!(:tag3) { Fabricate(:tag, name: "terrible-books") }
+
+      it "orders them by name within their type order" do
+        expect(subject.search("book", %w[category tag], limit: 10).map(&:ref)).to eq(
+          %w[book-club book-dome book-zone great-books mid-books terrible-books],
+        )
+      end
     end
 
     context "when not tagging_enabled" do
