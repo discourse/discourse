@@ -107,7 +107,7 @@ describe PostSerializer do
   end
 
   context "with a hidden post with add_raw enabled" do
-    let(:user) { Fabricate(:user, id: -99999) }
+    let(:user) { Fabricate(:user) }
     let(:raw)  { "Raw contents of the post." }
 
     context "with a public post" do
