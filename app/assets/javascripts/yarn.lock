@@ -1546,15 +1546,15 @@
     "@uppy/companion-client" "^2.2.1"
     "@uppy/utils" "^4.1.0"
 
-"@uppy/aws-s3@^2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@uppy/aws-s3/-/aws-s3-2.2.1.tgz#b097103bb3cdc96f9b3fc97089f12254a7dce2fb"
-  integrity sha512-nGRdXWOFNpYU31bD1gcLK1i8ClY7tRvvsSR70bzYI5gFC2Vw07sHk6Tc3yKi9doQoWJ3OnE3IilvfK3iZ/NRmg==
+"@uppy/aws-s3@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@uppy/aws-s3/-/aws-s3-3.0.4.tgz#a2422a2091c57570ff99a77108296f09ba9e46a5"
+  integrity sha512-mcwRYUH1TgcCWAkmvx9SCu7A9ylgBX+b1qyVO7ZiHnSbdg1F0H9hd3KkiUHGHkuV+hHz+l4vM9tQJqhxVhpW8w==
   dependencies:
-    "@uppy/companion-client" "^2.2.1"
-    "@uppy/utils" "^4.1.0"
-    "@uppy/xhr-upload" "^2.1.2"
-    nanoid "^3.1.25"
+    "@uppy/companion-client" "^3.0.2"
+    "@uppy/utils" "^5.0.2"
+    "@uppy/xhr-upload" "^3.0.4"
+    nanoid "^4.0.0"
 
 "@uppy/companion-client@^2.2.1":
   version "2.2.1"
@@ -1562,6 +1562,14 @@
   integrity sha512-Y3E10NJLMfp/wjgthNhx3gJtT67fzFCPNPFwpNNRs5iJsW6PANhJ420eyMUFzfmEZ56ZzGYxr5pzJZx8YxHICQ==
   dependencies:
     "@uppy/utils" "^4.1.0"
+    namespace-emitter "^2.0.1"
+
+"@uppy/companion-client@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@uppy/companion-client/-/companion-client-3.0.2.tgz#47a609ab9291538fb4528558c0174c6436172b74"
+  integrity sha512-Dv4RQQpuJ+4e6kRp6+KF5q2tjrFuShqXzrTFjk4EgwdX72Yz9QOgWwxhAH4/83vRdGrL/46mCcmvT52ODUJgBQ==
+  dependencies:
+    "@uppy/utils" "^5.0.2"
     namespace-emitter "^2.0.1"
 
 "@uppy/core@^2.3.1":
@@ -1597,6 +1605,13 @@
   dependencies:
     lodash.throttle "^4.1.1"
 
+"@uppy/utils@^5.0.2":
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@uppy/utils/-/utils-5.0.2.tgz#9ebbcc1044544a84675b7c254e3c743f82276284"
+  integrity sha512-3LpqR6o60DgdNQSnKx0eXta5wupnHjzcQvTvWNGI/ZA/AYgmhnufybK0Q/t+c0D37MaDUL10RydmFxQ+G/dXvw==
+  dependencies:
+    lodash.throttle "^4.1.1"
+
 "@uppy/xhr-upload@^2.1.2":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@uppy/xhr-upload/-/xhr-upload-2.1.2.tgz#0f644e3371b611b10cd5ddbd7d799ab9f88a3786"
@@ -1605,6 +1620,15 @@
     "@uppy/companion-client" "^2.2.1"
     "@uppy/utils" "^4.1.0"
     nanoid "^3.1.25"
+
+"@uppy/xhr-upload@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@uppy/xhr-upload/-/xhr-upload-3.0.4.tgz#219a92c832bee1f089992958d27ec71dbe9d9d7d"
+  integrity sha512-uJ1oxcwEaSLnrexvi6Lp57hV3z3DsovgVmYIVwg+z/EnrRcL32wNRE7FcIr8Mk9e1jdMiFYlk6cQmiP2dZep8A==
+  dependencies:
+    "@uppy/companion-client" "^3.0.2"
+    "@uppy/utils" "^5.0.2"
+    nanoid "^4.0.0"
 
 "@webassemblyjs/ast@1.11.1":
   version "1.11.1"
@@ -8094,6 +8118,11 @@ nanoid@^3.1.25, nanoid@^3.1.30:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.2.0.tgz#62667522da6673971cca916a6d3eff3f415ff80c"
   integrity sha512-fmsZYa9lpn69Ad5eDn7FMcnnSR+8R34W9qJEijxYhTbfOWzr22n1QxCMzXLK+ODyW2973V3Fux959iQoUxzUIA==
+
+nanoid@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-4.0.0.tgz#6e144dee117609232c3f415c34b0e550e64999a5"
+  integrity sha512-IgBP8piMxe/gf73RTQx7hmnhwz0aaEXYakvqZyE302IXW3HyVNhdNGC+O2MwMAVhLEnvXlvKtGbtJf6wvHihCg==
 
 nanomatch@^1.2.9:
   version "1.2.13"
