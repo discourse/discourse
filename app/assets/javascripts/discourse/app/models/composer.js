@@ -1062,7 +1062,6 @@ const Composer = RestModel.extend({
     if (CREATE_TOPIC === this.action || PRIVATE_MESSAGE === this.action) {
       this.set("topic", null);
     }
-    console.log("opts", opts)
 
     const post = this.post;
     const topic = this.topic;
@@ -1124,24 +1123,25 @@ const Composer = RestModel.extend({
         }
       }
     }
-
+    
     this.setProperties({
       composeState: SAVING,
       stagedPost: state === "staged" && createdPost,
     });
     
+
     // Incorporate the custom contents to the post data
     createdPost.setProperties({
-      meta_tag: composer.meta_tag
+      meta_tag: this.meta_tag
     })
     createdPost.setProperties({
-      user_generated_tags: this.parseUserGeneratedTags(composer.tags)
+      user_generated_tags: this.parseUserGeneratedTags(this.tags)
     })
     createdPost.setProperties({
-      subtitle: composer.subtitle
+      subtitle: this.subtitle
     })
     createdPost.setProperties({
-      action_cost: composer.action_cost
+      action_cost: this.action_cost
     })
 
     try {
