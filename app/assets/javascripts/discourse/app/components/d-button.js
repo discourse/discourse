@@ -118,7 +118,8 @@ export default Component.extend({
   },
 
   click(event) {
-    return this._triggerAction(event);
+    this._triggerAction(event);
+    return false;
   },
 
   mouseDown(event) {
@@ -128,41 +129,37 @@ export default Component.extend({
   },
 
   _triggerAction(event) {
-    let { action, route, href } = this;
+    let { action } = this;
 
-    if (action || route || href?.length) {
-      if (action) {
-        if (typeof action === "string") {
-          // Note: This is deprecated in new Embers and needs to be removed in the future.
-          // There is already a warning in the console.
-          this.sendAction("action", this.actionParam);
-        } else if (typeof action === "object" && action.value) {
-          if (this.forwardEvent) {
-            action.value(this.actionParam, event);
-          } else {
-            action.value(this.actionParam);
-          }
-        } else if (typeof this.action === "function") {
-          if (this.forwardEvent) {
-            action(this.actionParam, event);
-          } else {
-            action(this.actionParam);
-          }
+    if (action) {
+      if (typeof action === "string") {
+        // Note: This is deprecated in new Embers and needs to be removed in the future.
+        // There is already a warning in the console.
+        this.sendAction("action", this.actionParam);
+      } else if (typeof action === "object" && action.value) {
+        if (this.forwardEvent) {
+          action.value(this.actionParam, event);
+        } else {
+          action.value(this.actionParam);
+        }
+      } else if (typeof this.action === "function") {
+        if (this.forwardEvent) {
+          action(this.actionParam, event);
+        } else {
+          action(this.actionParam);
         }
       }
-
-      if (route) {
-        this.router.transitionTo(route);
-      }
-
-      if (href?.length) {
-        DiscourseURL.routeTo(href);
-      }
-
-      event.preventDefault();
-      event.stopPropagation();
-
-      return false;
     }
+
+    if (this.route) {
+      this.router.transitionTo(this.route);
+    }
+
+    if (this.href && this.href.length) {
+      DiscourseURL.routeTo(this.href);
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
   },
 });

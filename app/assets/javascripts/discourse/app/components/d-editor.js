@@ -289,6 +289,10 @@ export default Component.extend(TextareaTextManipulation, {
         "indentSelection"
       );
     }
+
+    if (isTesting()) {
+      this.element.addEventListener("paste", this.paste);
+    }
   },
 
   @bind
