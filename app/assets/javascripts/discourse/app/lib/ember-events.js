@@ -2,6 +2,7 @@
 import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import { actionModifier } from "./ember-action-modifier";
+import Ember from "ember";
 
 /**
  * Classic Ember components (i.e. "@ember/component") rely upon "event
@@ -48,12 +49,17 @@ export function normalizeEmberEventHandling(app) {
   });
 }
 
+let eliminatedClassicEventDelegation = false;
 /**
  * Remove all events registered with Ember's EventDispatcher to reduce its
  * runtime overhead.
  */
 function eliminateClassicEventDelegation() {
-  // eslint-disable-next-line no-undef
+  if (eliminatedClassicEventDelegation) {
+    return;
+  }
+  eliminatedClassicEventDelegation = true;
+
   Ember.EventDispatcher.reopen({
     events: {},
   });
@@ -100,6 +106,7 @@ const COMPONENT_SETUP = new WeakMap();
 
 const INTERNAL = Symbol("INTERNAL");
 
+let rewireDone = false;
 /**
  * Rewires classic component event handling to use `addEventListener` directly
  * on inserted elements, instead of relying upon classic event delegation.
@@ -112,6 +119,11 @@ const INTERNAL = Symbol("INTERNAL");
  * @param {Application} app
  */
 function rewireClassicComponentEvents(app) {
+  if (rewireDone) {
+    return;
+  }
+  rewireDone = true;
+
   const allEvents = { ...EVENTS };
 
   if (app.customEvents) {
