@@ -1001,7 +1001,7 @@ RSpec.describe TopicView do
     subject(:topic_view) { described_class.new(topic, user) }
 
     let(:topic) { Fabricate(:topic) }
-    let(:user) { Fabricate(:user, id: 1) }
+    let(:user) { Fabricate(:user) }
     let(:category) { topic.category }
 
     before do
