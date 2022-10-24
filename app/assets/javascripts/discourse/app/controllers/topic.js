@@ -71,6 +71,7 @@ export default Controller.extend(bufferedProperty("model"), {
   currentPostId: null,
   userLastReadPostNumber: null,
   highestPostNumber: null,
+  controllerReady: false,
 
   init() {
     this._super(...arguments);

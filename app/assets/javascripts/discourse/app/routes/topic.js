@@ -16,16 +16,9 @@ const SCROLL_DELAY = 500;
 const TopicRoute = DiscourseRoute.extend({
   screenTrack: service(),
 
-  init() {
-    this._super(...arguments);
-
-    this.setProperties({
-      isTransitioning: false,
-      scheduledReplace: null,
-      lastScrollPos: null,
-      controllerReady: true,
-    });
-  },
+  scheduledReplace: null,
+  lastScrollPos: null,
+  isTransitioning: false,
 
   redirect() {
     return this.redirectIfLoginRequired();
@@ -359,6 +352,7 @@ const TopicRoute = DiscourseRoute.extend({
       model,
       editingTopic: false,
       firstPostExpanded: false,
+      controllerReady: false,
     });
 
     this.searchService.set("searchContext", model.get("searchContext"));
