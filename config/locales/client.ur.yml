@@ -1070,6 +1070,8 @@ ur:
       enable_defer: "ٹاپکس کو بغیر پڑھا نشان زد کرنے کیلئے ملتوی فعال کریں"
       experimental_sidebar:
         options: "اختیارات"
+        navigation_section: "نیویگیشن"
+        list_destination_default: "ڈِیفالٹ"
       change: "بدلیں"
       featured_topic: "نمایاں موضوع"
       moderator: "%{user} ایک ماڈریٹر ہے"
@@ -1237,8 +1239,6 @@ ur:
         edit: "ترمیم"
         edit_title: "تصدیق کنندہ میں ترمیم کریں"
         edit_description: "تصدیق کنندہ کا نام"
-        enable_security_key_description: |
-          جب آپ کے پاس اپنی <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">ہارڈ ویئر سیکیورٹی کی</a> تیار ہے تو نیچے رجسٹر بٹن دبائیں۔
         totp:
           title: "ٹوکن کی بنیاد پر تصديق کنندہ"
           add: "تصدیق کنندہ شامل کریں"
@@ -1246,14 +1246,12 @@ ur:
           name_and_code_required_error: "آپ کو اپنی تصدیق کنندہ ایپ سے ایک نام اور کوڈ فراہم کرنا ہوگا۔"
         security_key:
           register: "رجسٹر"
-          title: "سیکیورٹی کیز"
-          add: "سیکیورٹی کیز شامل کریں"
           default_name: "بنیادی سیکیورٹی کیز"
+          iphone_default_name: "آئی فون"
+          android_default_name: "اینڈرائیڈ"
           not_allowed_error: "سیکیورٹی کیز رجسٹریشن کا عمل یا تو ختم ہو گیا تھا یا منسوخ کردیا گیا تھا۔"
           already_added_error: "آپ نے پہلے ہی یہ سسیکیورٹی کیز رجسٹر کرلی ہے۔ آپ کو اسے دوبارہ رجسٹر کرنے کی ضرورت نہیں ہے۔"
-          edit: "سیکیورٹی کیز میں ترمیم کریں"
           save: "محفوظ کریں"
-          edit_description: "سیکیورٹی کی کا نام"
           name_required_error: "آپ کو اپنی سیکیورٹی کی کا نام دینا ضروری ہے۔"
       change_about:
         title: "\"میرے بارے میں\" تبدیل کریں"
@@ -1747,7 +1745,6 @@ ur:
       second_factor_backup_title: "دو عنصری بیک اپ"
       second_factor_backup_description: "براہ مہربانی اپنے بیک اپ کوڈز میں سے ایک درج کریں:"
       second_factor: "تصدیق کنندہ ایپ کا استعمال کرکے لاگ ان کریں"
-      security_key_description: "جب آپ کے پاس آپ کی سکیورٹی کی تیار ہوجائے تو نیچے سکیورٹی کی کے ساتھ تصدیق کریں کا بٹن دبائیں۔"
       security_key_alternative: "دوسرا راستہ آزمائیں"
       security_key_authenticate: "سیکیورٹی کی کے ساتھ تصدیق کریں"
       security_key_not_allowed_error: "سیکیورٹی کی, کی تصدیق کا عمل یا تو ختم ہو گیا تھا یا منسوخ کردیا گیا تھا۔"

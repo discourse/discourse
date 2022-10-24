@@ -59,8 +59,6 @@ tr_TR:
     bad_color_scheme: "Tema güncellenemiyor, geçersiz renk paleti"
     other_error: "Temanın güncellenmesi sırasında bir sorun oluştu"
     ember_selector_error: "Üzgünüz – #ember veya .ember-view CSS seçicilerinin kullanılması yasak, çünkü bu adlar çalışma zamanında dinamik olarak oluşturulur ve zamanla değişerek sonunda CSS'nin bozulmasına neden olur. Farklı bir seçici deneyin."
-    compile_error:
-      unrecognized_extension: "Tanınmayan dosya uzantısı: %{extension}"
     import_error:
       generic: Bu tema içe aktarılırken bir hata oluştu
       upload: "Yükleme öğesi oluşturulurken hata oluştu: %{name}. %{errors}"
@@ -592,7 +590,6 @@ tr_TR:
   staff_category_name: "Görevliler"
   staff_category_description: "Görevliler arası konuşmalar için özel kategori. Konular sadece yönetici ve moderatörlere gözükür."
   discourse_welcome_topic:
-    title: "Forumumuza Hoşgeldiniz"
     body: |2
 
       Bu sabitlenmiş konunun ilk paragrafı, ana sayfanızdaki tüm yeni ziyaretçilere hoş geldiniz iletisi olarak görünecektir. Bu önemli!
@@ -1598,7 +1595,6 @@ tr_TR:
     google_oauth2_client_secret: "Google uygulamanıza ait client secret değeri."
     google_oauth2_prompt: "Yetkilendirme sunucusunun kullanıcıdan yeniden kimlik doğrulaması ve onay isteyip istemediğini belirten, isteğe bağlı, boşlukla ayrılmış bir dize değerleri listesi. Olası değerler için <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt adresine</a> bakın."
     google_oauth2_hd: "Oturum açmanın sınırlı olacağı isteğe bağlı bir Google Apps Barındırılan alan adı. Daha fazla ayrıntı için <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param adresine</a> bakın."
-    google_oauth2_hd_groups: "(deneysel) Kimlik doğrulamada barındırılan alandaki kullanıcıların Google gruplarını alın. Alınan Google grupları, otomatik Söylem grubu üyeliği vermek için kullanılabilir (grup ayarlarına bakın)."
     enable_twitter_logins: "Twitter kimlik doğrulamasını etkinleştir, twitter_consumer_key ve twitter_consumer_secret gerektirir. <a href='https://meta.discourse.org/t/13395' target='_blank'>Discourse için Twitter girişini (ve zengin yerleştirmeleri) yapılandırma sayfasına göz atın</a> ."
     twitter_consumer_key: "<a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps adresinde</a> kayıtlı olan Twitter kimlik doğrulaması için 'consumer key'"
     twitter_consumer_secret: "<a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps adresinde</a> kayıtlı olan Twitter kimlik doğrulaması için 'consumer secret'"
@@ -2057,6 +2053,7 @@ tr_TR:
     enable_sitemap: "Siteniz için bir site haritası oluşturun ve bunu robots.txt dosyasına ekleyin."
     sitemap_page_size: "Her site haritası sayfasına dahil edilecek URL sayısı. Maksimum 50.000"
     enable_user_status: "(deneysel) Kullanıcıların özel durum mesajı (emoji + açıklama) ayarlamasına izin verin."
+    enable_onboarding_popups: "(deneysel) Kullanıcılara temel özellikleri açıklayan eğitim pop-up'larını etkinleştirin"
     short_title: "Kısa başlık kullanıcının ana ekranında, başlatıcısında veya alanın sınırlı olabileceği diğer yerlerde kullanılır. En fazla 12 karakter olmalıdır."
     dashboard_hidden_reports: "Gösterge tablosundan belirtilen raporların gizlenmesine izin verin."
     dashboard_visible_tabs: "Hangi pano sekmelerinin görünür olacağını seçin."
@@ -2122,7 +2119,6 @@ tr_TR:
       unicode_usernames_avatars: "Dahili sistem avatarları Unicode kullanıcı adlarını desteklemez."
       list_value_count: "Liste tam olarak %{count} değerleri içermelidir."
       markdown_linkify_tlds: "'*' değerini ekleyemezsiniz."
-      google_oauth2_hd_groups: "Bu ayarı etkinleştirmeden önce 'google oauth2 hd'yi ayarlamalısınız."
       search_tokenize_chinese_enabled: "Bu ayarı etkinleştirmeden önce 'search_tokenize_chinese' özelliğini devre dışı bırakmalısınız."
       search_tokenize_japanese_enabled: "Bu ayarı etkinleştirmeden önce 'search_tokenize_japanese' özelliğini devre dışı bırakmalısınız."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "2FA zorunlu kılınmışsa DiscourseConnect'i etkinleştiremezsiniz."
@@ -3877,7 +3873,6 @@ tr_TR:
               subcategories_with_featured_topics:
                 label: "Öne Çıkan Konular İçeren Alt Kategoriler"
       branding:
-        title: "Topluluk Tanıtımı"
         fields:
           logo:
             label: "Birincil Görsel"
@@ -3888,7 +3883,6 @@ tr_TR:
           large_icon:
             label: "Büyük Simge"
       corporate:
-        title: "İletişim & Organizasyon"
         fields:
           company_name:
             label: "Şirket Adı"

@@ -888,6 +888,7 @@ en:
         group_type: "Group type"
         is_group_user: "Member"
         is_group_owner: "Owner"
+        search_results: "Search results will appear below."
       title:
         one: "Group"
         other: "Groups"
@@ -922,6 +923,7 @@ en:
         no_filter_matches: "No members match that search."
       topics: "Topics"
       posts: "Posts"
+      aria_post_number: "%{title} - post #%{postNumber}"
       mentions: "Mentions"
       messages: "Messages"
       notification_level: "Default notification level for group messages"
@@ -1158,6 +1160,7 @@ en:
         not_first_time: "Not your first time?"
         skip_link: "Skip these tips"
         read_later: "I'll read it later."
+      reset_seen_popups: "Show onboarding tips again"
       theme_default_on_all_devices: "Make this the default theme on all my devices"
       color_scheme_default_on_all_devices: "Set default color scheme(s) on all my devices"
       color_scheme: "Color Scheme"
@@ -1183,6 +1186,10 @@ en:
         categories_section_instruction: "Selected categories will be displayed under Sidebar's categories section."
         tags_section: "Tags Section"
         tags_section_instruction: "Selected tags will be displayed under Sidebar's tags section."
+        navigation_section: "Navigation"
+        list_destination_instruction: "When I click a topic list link in the sidebar with new or unread topics, take me to"
+        list_destination_default: "Default"
+        list_destination_unread_new: "New/Unread"
       change: "change"
       featured_topic: "Featured Topic"
       moderator: "%{user} is a moderator"
@@ -1389,7 +1396,7 @@ en:
         edit_title: "Edit Authenticator"
         edit_description: "Authenticator Name"
         enable_security_key_description: |
-          When you have your <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardware security key</a> prepared, press the Register button below.
+          When you have your <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardware security key</a> or compatible mobile device prepared, press the Register button below.
         totp:
           title: "Token-Based Authenticators"
           add: "Add Authenticator"
@@ -1397,14 +1404,16 @@ en:
           name_and_code_required_error: "You must provide a name and the code from your authenticator app."
         security_key:
           register: "Register"
-          title: "Security Keys"
-          add: "Add Security Key"
+          title: "Physical Security Keys"
+          add: "Add Physical Security Key"
           default_name: "Main Security Key"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "The security key registration process either timed out or was cancelled."
           already_added_error: "You have already registered this security key. You don’t have to register it again."
-          edit: "Edit Security Key"
+          edit: "Edit Physical Security Key"
           save: "Save"
-          edit_description: "Security Key Name"
+          edit_description: "Physical Security Key Name"
           name_required_error: "You must provide a name for your security key."
 
       change_about:
@@ -2004,7 +2013,7 @@ en:
       second_factor_backup_title: "Two-Factor Backup"
       second_factor_backup_description: "Please enter one of your backup codes:"
       second_factor: "Log in using Authenticator app"
-      security_key_description: "When you have your physical security key prepared press the Authenticate with Security Key button below."
+      security_key_description: "When you have your physical security key or compatible mobile device prepared press the Authenticate with Security Key button below."
       security_key_alternative: "Try another way"
       security_key_authenticate: "Authenticate with Security Key"
       security_key_not_allowed_error: "The security key authentication process either timed out or was cancelled."
@@ -3451,6 +3460,7 @@ en:
       all: "All categories"
       choose: "category&hellip;"
       edit: "Edit"
+      edit_title: "Edit this category"
       edit_dialog_title: "Edit: %{categoryName}"
       view: "View Topics in Category"
       back: "Back to category"
@@ -5790,7 +5800,7 @@ en:
       embedding:
         get_started: "If you'd like to embed Discourse on another website, begin by adding its host."
         confirm_delete: "Are you sure you want to delete that host?"
-        sample: "Paste the following HTML code into your site to create and embed discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
+        sample: "Paste the following HTML code into your site to create and embed Discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
         title: "Embedding"
         host: "Allowed Hosts"
         class_name: "Class Name"

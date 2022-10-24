@@ -57,8 +57,6 @@ id:
   themes:
     bad_color_scheme: "Tidak dapat memperbarui tema, palet warna tidak valid"
     other_error: "Terjadi masalah saat memperbarui tema"
-    compile_error:
-      unrecognized_extension: "Ekstensi file tidak dikenal: %{extension}"
     import_error:
       generic: Terjadi kesalahan saat mengimpor tema itu
       unpack_failed: "Gagal membongkar berkas"

@@ -839,6 +839,8 @@ hy:
       enable_defer: "Սեղմել <<Հետաձգում>> կոճակը, նշելով որպես չընթերցված թեմաներ "
       experimental_sidebar:
         options: "Տարբերակներ"
+        navigation_section: "Նավիգացիա"
+        list_destination_default: "Լռելյայն"
       change: "փոխել"
       featured_topic: "Հանրահայտ թեմա"
       moderator: "%{user}-ը մոդերատոր է"
@@ -983,14 +985,12 @@ hy:
           name_and_code_required_error: "Դուք պետք է նշեք նույնականացման հավելվածի կոդը և անվանումը:"
         security_key:
           register: "Գրանցվել"
-          title: "Անվտանգության Բանալիներ"
-          add: "Ավելացնել Անվտանգության Բանալին"
           default_name: "Անվտանգության Գլխավոր Բանալին"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "Անվտանգության բանալու գրանցման ժամանակը վերջացել է կամ չեղյալ է հայտարարվել:"
           already_added_error: "Դուք արդեն գրանցել եք այս անվտանգության բանալին: Պետք չէ այն նորից գրանցել:"
-          edit: "Խմբագրել Անվտանգության Բանալին"
           save: "Պահպանել"
-          edit_description: "Անվտանգության Բանալիների անվանումը"
           name_required_error: "Դուք պետք է նշեք անվտանգության բանալու անվանումը "
       change_about:
         title: "Փոփոխել Իմ Մասին բաժինը"

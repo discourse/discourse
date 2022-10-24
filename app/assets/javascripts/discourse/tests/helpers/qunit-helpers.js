@@ -11,7 +11,7 @@ import {
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
-import { getApplication, getContext, settled } from "@ember/test-helpers";
+import { getApplication, settled } from "@ember/test-helpers";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { run } from "@ember/runloop";
 import { setupApplicationTest } from "ember-qunit";
@@ -127,14 +127,14 @@ export function withFrozenTime(timeString, timezone, callback) {
 
 let _pretenderCallbacks = {};
 
-export function resetSite(siteSettings, extras) {
-  let siteAttrs = Object.assign(
-    {},
-    siteFixtures["site.json"].site,
-    extras || {}
-  );
-  siteAttrs.siteSettings = siteSettings;
-  PreloadStore.store("site", siteAttrs);
+export function resetSite(siteSettings, extras = {}) {
+  const siteAttrs = {
+    ...siteFixtures["site.json"].site,
+    ...extras,
+    siteSettings,
+  };
+
+  PreloadStore.store("site", cloneJSON(siteAttrs));
   Site.resetCurrent();
 }
 
@@ -381,15 +381,6 @@ export function acceptance(name, optionsOrCallback) {
       callback(needs);
 
       setupApplicationTest(hooks);
-
-      hooks.beforeEach(function () {
-        // This hack seems necessary to allow `DiscourseURL` to use the testing router
-        let ctx = getContext();
-        this.container.registry.unregister("router:main");
-        this.container.registry.register("router:main", ctx.owner.router, {
-          instantiate: false,
-        });
-      });
     });
   } else {
     // Old way

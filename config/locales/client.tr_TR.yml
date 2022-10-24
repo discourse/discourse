@@ -642,6 +642,8 @@ tr_TR:
         reset_to_default: "Varsayılana sıfırla"
       group:
         all: "tüm gruplar"
+      sort:
+        label: "%{criteria} kriterine göre sırala"
     group_histories:
       actions:
         change_group_setting: "Grup ayarlarını değiştir"
@@ -1049,6 +1051,9 @@ tr_TR:
       no_notifications_title: "Henüz herhangi bir bildiriminiz yok"
       no_notifications_body: >
         Konu ve iletilerinize verilen yanıtlar da dahil olmak üzere, doğrudan sizle alâkalı etkinlik olduğunda, birisi <b>@adınızı</b> belirttiğinde veya sizi alıntıladığında bu panelde bildirilecektir. Bir süredir giriş yapmadığınızda da bildirimler e-posta olarak gönderilecektir. <br><br> Hangi konular, kategoriler ve etiketler hakkında bilgilendirilmek istediğinize karar vermek için %{icon} simgesine bakın. Daha fazlası için <a href='%{preferencesUrl}'>bildirim tercihlerinize bakın</a>.
+      no_other_notifications_title: "Henüz başka bildiriminiz yok"
+      no_other_notifications_body: >
+        Bu panelde, sizinle ilgili olabilecek diğer etkinlik türleri hakkında bilgilendirileceksiniz - örneğin, biri gönderilerinizden birine bağlantı verdiğinde veya bunları düzenlediğinde.
       no_notifications_page_title: "Henüz herhangi bir bildiriminiz yok"
       no_notifications_page_body: >
         Konu ve iletilerinize verilen yanıtlar da dahil olmak üzere, doğrudan sizle ilgili etkinlik olduğunda, biri size <b>@mention</b> attığında veya sizi alıntıladığında bu panelde bildirilecektir. Bir süredir giriş yapmadığınızda da bildirimler e-posta olarak gönderilecektir. <br><br> Hangi konular, kategoriler ve etiketler hakkında bilgilendirilmek istediğinize karar vermek için %{icon} ikonuna bakın. Daha fazlası için <a href='%{preferencesUrl}'>bildirim tercihlerinize bakın</a>.
@@ -1078,8 +1083,12 @@ tr_TR:
       enable_quoting: "Bahsedilen konu için yanıtlama özelliğini etkinleştir"
       enable_defer: "Okunmamış konuları işaretlemek için ertelemeyi aktif edin"
       experimental_sidebar:
-        enable: "Deneysel kenar çubuğunu etkinleştir"
+        enable: "Kenar çubuğunu etkinleştir"
         options: "Seçenekler"
+        navigation_section: "Navigasyon"
+        list_destination_instruction: "Kenar çubuğunda yeni veya okunmamış konuların bulunduğu bir konu listesi bağlantısını tıkladığımda beni şuraya götür:"
+        list_destination_default: "Varsayılan"
+        list_destination_unread_new: "Yeni/Okunmamış"
       change: "değiştir"
       featured_topic: "Öne Çıkan Konu"
       moderator: "%{user} moderatördür"
@@ -1248,8 +1257,6 @@ tr_TR:
         edit: "Düzenle"
         edit_title: "Kimlik Doğrulayıcıyı Düzenle"
         edit_description: "Kimlik Doğrulayıcı Adı"
-        enable_security_key_description: |
-          <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">donanım güvenlik anahtarınızı</a> hazırlattığınızda, aşağıdaki Kayıt düğmesine basın.
         totp:
           title: "Token Tabanlı Doğrulayıcılar"
           add: "Kimlik Doğrulayıcı Ekle"
@@ -1257,14 +1264,12 @@ tr_TR:
           name_and_code_required_error: "Kimlik doğrulayıcı uygulamanızdan bir ad ve kod girmeniz gerekir."
         security_key:
           register: "Kayıt Ol"
-          title: "Güvenlik Sözcükleri"
-          add: "Güvenlik Anahtarı Ekleyin"
           default_name: "Ana Güvenlik Anahtarı"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "Güvenlik anahtarı kayıt işlemi zaman aşımına uğradı veya iptal edildi."
           already_added_error: "Bu güvenlik anahtarını daha önce kaydettiğiniz için yeniden kaydetmeniz gerekmez."
-          edit: "Güvenlik Anahtarını Düzenle"
           save: "Kaydet"
-          edit_description: "Güvenlik Anahtarı Adı"
           name_required_error: "Güvenlik anahtarınız için bir ad girmeniz gerekir."
       change_about:
         title: "\"Hakkımda\"yı Değiştir"
@@ -1610,6 +1615,9 @@ tr_TR:
         title: "Yetenek"
         none: "(hiçbiri)"
         instructions: "profil resminizin yanında görüntülenen simge"
+      status:
+        title: "Özel Durum"
+        not_set: "Ayarlanmamış"
       primary_group:
         title: "Ana Grup"
         none: "(hiçbiri)"
@@ -1625,6 +1633,15 @@ tr_TR:
       set_custom_status: "Özel bir durum ayarla"
       what_are_you_doing: "Ne yapıyorsun?"
       remove_status: "Durumu kaldır"
+    popup:
+      primary: "Anladım!"
+      secondary: "bana bu ipuçlarını gösterme"
+      first_notification:
+        title: "İlk bildiriminiz!"
+        content: "Bildirimler, sizi toplulukta olup bitenlerden haberdar etmek için kullanılır."
+      topic_timeline:
+        title: "Konu zaman çizelgesi"
+        content: "Konu zaman çizelgesini kullanarak bir gönderide hızla gezinin."
     loading: "Yükleniyor..."
     errors:
       prev_page: "şu adresi yüklemeye çalışırken:"
@@ -1770,7 +1787,6 @@ tr_TR:
       second_factor_backup_title: "İki Faktörlü Yedekleme"
       second_factor_backup_description: "Lütfen yedek kodlarından birini gir:"
       second_factor: "Authenticator uygulamasını kullanarak giriş yapın"
-      security_key_description: "Fiziksel güvenlik anahtarınızı hazırladığınızda, aşağıdaki Güvenlik Anahtarıyla Kimlik Doğrula düğmesine basın."
       security_key_alternative: "Başka bir yol dene"
       security_key_authenticate: "Güvenlik Anahtarı ile Kimlik Doğrulama"
       security_key_not_allowed_error: "Güvenlik anahtarı kimlik doğrulama işlemi zaman aşımına uğradı veya iptal edildi."
@@ -2838,6 +2854,7 @@ tr_TR:
       gap:
         one: "gizlenen %{count} yorumu gör"
         other: "gizlenen %{count} yorumu gör"
+      sr_reply_to: "@%{username} tarafından oluşturualn #%{post_number} numaralı gönderiye yanıt verin"
       notice:
         new_user: "%{user} ilk kez gönderi oluşturdu - haydi ona topluluğumuza hoşgeldin diyelim"
         returning_user: "%{user} kullanıcısını son göreli bayağı oldu — son gönderisi %{time} önce yapılmış."
@@ -3736,8 +3753,10 @@ tr_TR:
             archive: "Arşiv"
         tags:
           header_link_text: "Etiketler"
+          configure_defaults: "Varsayılanları ayarla"
         categories:
           header_link_text: "Kategoriler"
+          configure_defaults: "Varsayılanları ayarla"
         community:
           header_link_text: "Topluluk"
           header_action_title: "yeni konu oluştur"
@@ -3773,7 +3792,7 @@ tr_TR:
               title: "gözden geçirmeler"
     welcome_topic_banner:
       title: "Hoş Geldiniz konulu gönderinizi oluşturun"
-      description: 'Hoş geldiniz konulu gönderiniz, yeni katılanların okuyacağı ilk şeydir. Bunu bir paragraf “kısa bir sunum” veya “misyon anlatımınız” olarak düşünün'
+      description: 'Hoş geldiniz başlığınız yeni üyelerin okuyacağı ilk şeydir. Bunu "asansör konuşmanız" veya "misyon beyanınız" olarak düşünün. Onlara bu topluluğun kimler için olduğunu, burada neler bulabileceklerini ve ilk olarak ne yapmalarını istediğinizi söyleyin.'
       button_title: "Düzenlemeye Başla"
     until: "Şuna kadar:"
   admin_js:
@@ -5147,6 +5166,7 @@ tr_TR:
           search: "Arama"
           groups: "Gruplar"
           dashboard: "Gösterge Paneli"
+          sidebar: "Kenar çubuğu"
         secret_list:
           invalid_input: "Giriş alanları boş olamaz veya özel karakter içeremez."
         default_categories:

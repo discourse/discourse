@@ -3,11 +3,11 @@
     <DSection @pageClass="user-invites" />
 
     <div class="user-navigation user-navigation-secondary">
-      <ul id="navigation-bar" class="nav-pills action-list">
+      <HorizontalOverflowNav>
         <NavItem @route="userInvited.show" @routeParam="pending" @i18nLabel={{this.pendingLabel}} />
         <NavItem @route="userInvited.show" @routeParam="expired" @i18nLabel={{this.expiredLabel}} />
         <NavItem @route="userInvited.show" @routeParam="redeemed" @i18nLabel={{this.redeemedLabel}} />
-      </ul>
+      </HorizontalOverflowNav>
     </div>
   {{else}}
     <DSection @class="user-secondary-navigation" @pageClass="user-invites">

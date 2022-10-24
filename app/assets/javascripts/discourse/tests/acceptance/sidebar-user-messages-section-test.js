@@ -13,14 +13,17 @@ import {
 import { NotificationLevels } from "discourse/lib/notification-levels";
 
 acceptance(
-  "Sidebar - Logged on user - Messages Section - user not in personal_message_enabled_groups",
+  "Sidebar - Logged on user - Messages Section - user does not have can_send_private_messages permission",
   function (needs) {
-    needs.user({ moderator: false, admin: false });
+    needs.user({
+      moderator: false,
+      admin: false,
+      can_send_private_messages: false,
+    });
 
     needs.settings({
       enable_experimental_sidebar_hamburger: true,
       enable_sidebar: true,
-      personal_message_enabled_groups: "13", // trust_level_3 auto group ID;
     });
 
     test("clicking on section header button", async function (assert) {
@@ -35,9 +38,9 @@ acceptance(
 );
 
 acceptance(
-  "Sidebar - Logged on user - Messages Section - user in personal_message_enabled_groups",
+  "Sidebar - Logged on user - Messages Section - user does have can_send_private_messages permission",
   function (needs) {
-    needs.user();
+    needs.user({ can_send_private_messages: true });
 
     needs.settings({
       enable_experimental_sidebar_hamburger: true,

@@ -59,8 +59,6 @@ pt_BR:
     bad_color_scheme: "Não é possível atualizar o tema, paleta de cores inválida"
     other_error: "Ocorreu um erro ao atualizar o tema"
     ember_selector_error: "Desculpe, usar #ember ou . seletores .ember-view CSS não é permitido, porque esses nomes são gerados dinamicamente durante a execução e mudarão ao longo do tempo, podendo resultar em um CSS quebrado. Tente um seletor diferente."
-    compile_error:
-      unrecognized_extension: "Extensão de arquivo não reconhecida: %{extension}"
     import_error:
       generic: Ocorreu um erro ao importar esse tema
       upload: "Erro ao enviar um arquivo: %{name}. %{errors}"
@@ -599,7 +597,6 @@ pt_BR:
   staff_category_name: "Equipe"
   staff_category_description: "Categoria particular para discussões da equipe. Tópicos só são visíveis para administradores(as) e moderadores(as)."
   discourse_welcome_topic:
-    title: "Boas-vindas ao Discourse"
     body: |2
 
       O primeiro parágrafo deste tópico fixado será visto como uma mensagem de boas-vindas a todos(as) os(as) novos(as) visitantes em sua página inicial. É muito importante!
@@ -1602,7 +1599,6 @@ pt_BR:
     google_oauth2_client_secret: "Segredo de cliente do seu app Google."
     google_oauth2_prompt: "Uma lista opcional delimitada por espaço de valores de linhas que especifica se o servidor de autorização solicita ao(à) usuário(a) reautenticação e consentimento. Acesse <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> para consultar os valores possíveis."
     google_oauth2_hd: "Um domínio opcional hospedado pelo Google Apps ao qual a entrada com conta será limitada. Acesse <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> para obter mais detalhes."
-    google_oauth2_hd_groups: "(experimental) Recupere os grupos do Google dos(as) usuários(as) no domínio ou autenticação hospedada. Grupos do Google recuperados podem ser usados para conceder associação automática ao grupo do Discourse"
     enable_twitter_logins: "Ative a autenticação do Twitter, requer twitter_consumer_key e twitter_consumer_secret. Acesse <a href='https://meta.discourse.org/t/13395' target='_blank'>Configurando a entrada com conta Twitter (e muitas inserções) para o Discourse</a>."
     twitter_consumer_key: "Chave do(a) consumidor(a) para autenticação do Twitter, registrada em <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Segredo do(a) consumidor(a) para autenticação do Twitter, registrado em <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
@@ -2123,7 +2119,6 @@ pt_BR:
         leading_trailing_slash: "A expressão regular não deve começar e terminar com uma barra."
       unicode_usernames_avatars: "Os avatares internos do sistema não são compatíveis com nomes de usuário(as) Unicode."
       list_value_count: "A lista deve conter exatamente %{count} valores."
-      google_oauth2_hd_groups: "Você deve definir \"google oauth2 hd\" antes de ativar esta configuração."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exemplo.com.br"
@@ -4399,7 +4394,6 @@ pt_BR:
               subcategories_with_featured_topics:
                 label: "Sub-Categorias com tópicos em destaque"
       branding:
-        title: "Marca da comunidade"
         fields:
           logo:
             label: "Logotipo primário"
@@ -4414,7 +4408,6 @@ pt_BR:
             label: "Ícone grande"
             description: "Ícone usado para representar seu site em dispositivos móveis e fique bem em tamanhos maiores. Idealmente maior que 512x512. O logo quadrado é usado por padrão."
       corporate:
-        title: "Contato & Organização"
         fields:
           company_name:
             label: "Nome da empresa"

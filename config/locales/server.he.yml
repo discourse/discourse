@@ -59,8 +59,6 @@ he:
     bad_color_scheme: "לא ניתן לעדכן ערכת עיצוב, מבחר הצבעים שגוי"
     other_error: "משהו השתבש בעת עדכון ערכת העיצוב"
     ember_selector_error: "עמך הסליחה – השימוש בבוררי ה־CSS‏ ‎#ember או ‎.ember-view אסור, כיוון שאלו שמות שנוצרים אוטומטית בזמן ההפעלה והם יישתנו עם הזמן, מה שיוביל לפגם ב־CSS. נא לנסות בורר אחר."
-    compile_error:
-      unrecognized_extension: "סיומת הקובץ אינה מוכרת: %{extension}"
     import_error:
       generic: אירעה שגיאה בעת ייבוא ערכת העיצוב הזו
       upload: "שגיאה ביצירת משאב להעלאה: %{name}. %{errors}"
@@ -658,7 +656,7 @@ he:
   staff_category_name: "סגל"
   staff_category_description: "קטגוריה פרטית לדיוני הסגל. הנושאים חשופים רק בפני מנהלים ומפקחים."
   discourse_welcome_topic:
-    title: "ברוך בואך ל־Discourse"
+    title: "ברוך בואך לקהילה שלנו!"
     body: |2
 
       הפסקה הראשונה של נושא נעוץ זה תראה כהודעת ״ברוכים הבאים״ לכל המבקרים החדשים באתר הבית שלכם. היא חשובה!
@@ -1729,7 +1727,9 @@ he:
     google_oauth2_client_secret: "קוד סודי של לקוח (client secret) של אפליקציית Google."
     google_oauth2_prompt: "רשימת רשות של ערכי מחרוזות מופרדים ברווחים שמציינת האם שרת האימות מבקש מהמשתמש אימות מחודש והסכמה. יש לעיין ב־<a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> לצפייה בערכים האפשריים."
     google_oauth2_hd: "שם מתחם שמתארח ב־Google Apps שאליו תוגבל הכניסה. יש לעיין ב־<a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> לפרטים נוספים."
-    google_oauth2_hd_groups: "(ניסיוני) למשוך את קבוצות ה־Google של משתמשים בשם התחום המתארח עם האימות. ניתן להשתמש בקבוצות Google שנמשכו כדי להעניק חברות אוטומטית בקבוצות של Discourse (ניתן להציץ בהגדרות הקבוצה)."
+    google_oauth2_hd_groups: "(ניסיוני) למשוך את קבוצות ה־Google של משתמשים בשם התחום המתארח עם האימות. ניתן להשתמש בקבוצות Google שנמשכו כדי להעניק חברות אוטומטית בקבוצות של Discourse (ניתן להציץ בהגדרות הקבוצה). למידע נוסף ניתן לעיין ב־https://meta.discourse.org/t/226850"
+    google_oauth2_hd_groups_service_account_admin_email: "כתובת דוא״ל ששייכת לחשבון ניהול ב־Google Workspace. יתבצע בה שימוש עם פרטי הגישה של חשבון השירות כדי למשוך פרטי קבוצות."
+    google_oauth2_hd_groups_service_account_json: "פרטי מפתח בתצורת JSON עבור חשבון השירות. ישמש כדי למשוך פרטי קבוצות."
     enable_twitter_logins: "הפעלת אימות עם טוויטר, דורש twitter_consumer_key ו־twitter_consumer_secret. יש לעיין ב<a href='https://meta.discourse.org/t/13395' target='_blank'>הגדרת כניסה עם טוויטר (לרבות הטמעות עשירות) ל־Discourse</a>."
     twitter_consumer_key: "מפתח צרכן לאימות עם טוויטר, ניתן להירשם תחת <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "סוד צרכן לאימות עם טוויטר, ניתן להירשם תחת <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
@@ -2209,6 +2209,7 @@ he:
     enable_sitemap: "ליצור מפת אתר עבור האתר שלך ולכלול אותה בקובץ robots.txt."
     sitemap_page_size: "מספר הכתובות שיתווספו בכל עמוד של מפת אתר. 50,000 לכל היותר"
     enable_user_status: "(ניסיוני) לאפשר למשתמשים להגדיר הודעת מצב מותאמת אישית (אמוג׳י + תיאור)."
+    enable_onboarding_popups: "(ניסיוני) לאפשר חלונות קופצים לימודיים המסבירים למשתמשים על תכונות מפתח"
     short_title: "בכותרת הקצרה ייעשה שימוש במסך הבית של המשתמש, במשגר או במקומות אחרים שבהם המקום מוגבל. אורכה לא יעלה על 12 תווים."
     dashboard_hidden_reports: "לאפשר להסתיר את הדוחות המסוימים בלוח הבקרה."
     dashboard_visible_tabs: "נא לבחור אילו לשוניות תופענה בלוח הבקרה."
@@ -2278,7 +2279,7 @@ he:
       unicode_usernames_avatars: "התמונות הייצוגיות הפנימיות של המערכת אינן תומכות בשמות משתמשים עם יוניקוד."
       list_value_count: "הרשימה חייבת להכיל בדיוק %{count} ערכים."
       markdown_linkify_tlds: "לא ניתן לכלול ערך של ‚*’."
-      google_oauth2_hd_groups: "עליך להגדיר את ‚google oauth2 hd’ בטרם הפעלת ההגדרה הזאת."
+      google_oauth2_hd_groups: "עליך להגדיר את כל הגדרות ‚google oauth2 hd’ בטרם הפעלת ההגדרה הזאת."
       search_tokenize_chinese_enabled: "עליך להשבית את ‚search_tokenize_chinese’ (חיפוש מפרק סינית) בטרם הפעלת הגדרה זו."
       search_tokenize_japanese_enabled: "עליך להשבית את ‚search_tokenize_japanese’ (חיפוש מפרק יפנית) בטרם הפעלת הגדרה זו."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "אי אפשר להפעיל את DiscourseConnect אם נאכף אימות דו־שלבי."
@@ -4676,7 +4677,7 @@ he:
               subcategories_with_featured_topics:
                 label: "תת־קטגוריות עם נושאים מובילים"
       branding:
-        title: "מיתוג הקהילה"
+        title: "לוגואים משלך"
         fields:
           logo:
             label: "לוגו ראשי"
@@ -4691,7 +4692,7 @@ he:
             label: "אייקון גדול"
             description: "סמל שמשמש לייצוג האתר שלך במכשירים ניידים שנראה טוב בגדלים גדולים. מומלץ שיהיה גדול מ־512×512. ברירת המחדל היא הלוגו הריבועי."
       corporate:
-        title: "יצירת קשר וארגון"
+        title: "הארגון שלך"
         fields:
           company_name:
             label: "שם החברה"

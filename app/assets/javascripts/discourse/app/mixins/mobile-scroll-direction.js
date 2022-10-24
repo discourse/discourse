@@ -48,16 +48,14 @@ export default Mixin.create({
     // If the user reaches the very bottom of the topic, we only want to reset
     // this scroll direction after a second scroll down. This is a nicer event
     // similar to what Safari and Chrome do.
-    discourseDebounce(
-      this,
-      function () {
-        this._bottomHit = 1;
-      },
-      1000
-    );
+    discourseDebounce(this, this._setBottomHit, 1000);
 
     if (this._bottomHit === 1) {
       this.set("mobileScrollDirection", null);
     }
+  },
+
+  _setBottomHit() {
+    this._bottomHit = 1;
   },
 });

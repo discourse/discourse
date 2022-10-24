@@ -58,8 +58,6 @@ fi:
     bad_color_scheme: "Teemaa ei voi päivittää, väripaletti ei kelpaa"
     other_error: "Jokin meni vikaan päivitettäessä teemaa"
     ember_selector_error: "Valitettavasti #ember- tai .ember-näkymän CSS-valitsimien käyttö ei ole sallittua, koska nämä nimet luodaan dynaamisesti ajon aikana ja ne muuttuvat ajan myötä, mikä johtaa lopulta rikkoutuneeseen CSS:ään. Kokeile toista valitsinta."
-    compile_error:
-      unrecognized_extension: "Tuntematon tiedostomuoto: %{extension}"
     import_error:
       generic: Teeman tuomisessa tapahtui virhe
       about_json: "Virhe tuotaessa: about.json ei ole olemassa tai ei kelpaa. Oletko varma, että tämä on Discourse-teema?"
@@ -574,7 +572,6 @@ fi:
   staff_category_name: "Henkilökunta"
   staff_category_description: "Yksityinen alue henkilökunnan keskusteluille. Ketjut näkyvät ainoastaan ylläpitäjille ja valvojille."
   discourse_welcome_topic:
-    title: "Tervetuloa käyttämään Discoursea"
     body: |2
 
       Tämän kiinnitetyn ketjun ensimmäinen kappale on sivustolla vierailevalle näkyvä tervetulotoivotus. Se on tärkeä!

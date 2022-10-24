@@ -1035,12 +1035,13 @@ vi:
       enable_quoting: "Bật chế độ làm nổi bật chữ trong đoạn trích dẫn trả lời"
       enable_defer: "Cho phép trì hoãn để đánh dấu các chủ đề chưa đọc"
       experimental_sidebar:
-        enable: "Bật thanh bên thử nghiệm"
         options: "Lựa chọn"
         categories_section: "Phần danh mục"
         categories_section_instruction: "Các danh mục đã chọn sẽ được hiển thị trong phần danh mục của Thanh bên."
         tags_section: "Phần thẻ"
         tags_section_instruction: "Các thẻ đã chọn sẽ được hiển thị trong phần thẻ của Thanh bên."
+        navigation_section: "Điều hướng"
+        list_destination_default: "Mặc định"
       change: "thay đổi"
       featured_topic: "Chủ đề nổi bật"
       moderator: "%{user} trong ban quản trị"
@@ -1207,8 +1208,6 @@ vi:
         edit: "Sửa"
         edit_title: "Chỉnh sửa Authenticator"
         edit_description: "Tên người xác thực"
-        enable_security_key_description: |
-          Khi bạn đã có bạn <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">phần cứng chủ chốt an ninh</a> chuẩn bị, nhấn nút Đăng ký dưới đây.
         totp:
           title: "Trình xác thực dựa trên mã thông báo"
           add: "Thêm Authenticator"
@@ -1216,14 +1215,10 @@ vi:
           name_and_code_required_error: "Bạn phải cung cấp tên và mã từ ứng dụng xác thực của mình."
         security_key:
           register: "Đăng ký"
-          title: "Khóa bảo mật"
-          add: "Thêm khóa bảo mật"
           default_name: "Khóa bảo mật chính"
           not_allowed_error: "Quá trình đăng ký khóa bảo mật đã hết thời gian chờ hoặc đã bị hủy."
           already_added_error: "Bạn đã đăng ký khóa bảo mật này. Bạn không cần phải đăng ký lại."
-          edit: "Chỉnh sửa khóa bảo mật"
           save: "Lưu"
-          edit_description: "Tên khóa bảo mật"
           name_required_error: "Bạn phải cung cấp tên cho khóa bảo mật của mình."
       change_about:
         title: "Thay đổi thông tin về tôi"
@@ -1721,7 +1716,6 @@ vi:
       second_factor_backup_title: "Sao lưu hai yếu tố"
       second_factor_backup_description: "Vui lòng nhập một trong các mã dự phòng của bạn:"
       second_factor: "Đăng nhập bằng ứng dụng Authenticator"
-      security_key_description: "Khi bạn đã chuẩn bị khóa bảo mật vật lý, hãy nhấn nút Xác thực bằng Khóa bảo mật bên dưới."
       security_key_alternative: "Thử lại cách khác"
       security_key_authenticate: "Xác thực bằng Khóa bảo mật"
       security_key_not_allowed_error: "Quá trình xác thực khóa bảo mật đã hết thời gian chờ hoặc đã bị hủy."
@@ -4977,6 +4971,7 @@ vi:
           search: "Tìm kiếm"
           groups: "Nhóm"
           dashboard: "Bảng điều khiển"
+          sidebar: "Thanh bên"
         secret_list:
           invalid_input: "Các trường nhập không được để trống hoặc chứa ký tự thanh dọc."
         default_categories:

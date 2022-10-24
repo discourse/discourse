@@ -80,6 +80,10 @@ ja:
           other: "%{count} ヶ月"
         about_x_years:
           other: "約%{count} 年"
+        over_x_years:
+          other: "%{count} 年以上"
+        almost_x_years:
+          other: "ほぼ %{count} 年"
         date_year: "'YY 年 MMM D 日"
       medium_with_ago:
         x_minutes:
@@ -106,6 +110,7 @@ ja:
       to_placeholder: "日付"
     share:
       topic_html: 'トピック: <span class="topic-title">%{topicTitle}</span>'
+      post: "%{username} の投稿 #%{postNumber}"
       close: "閉じる"
       twitter: "Twitter で共有"
       facebook: "Facebook で共有"
@@ -113,6 +118,7 @@ ja:
       url: "URL をコピーして共有"
     action_codes:
       public_topic: "トピックを公開しました: %{when}"
+      open_topic: "これをトピックに変換しました: %{when}"
       private_topic: "このトピックを個人メッセージにしました: %{when}"
       split_topic: "このトピックを分割しました: %{when}"
       invited_user: "%{who} を招待しました: %{when}"
@@ -146,6 +152,7 @@ ja:
     topic_admin_menu: "トピックの操作"
     skip_to_main_content: "メインコンテンツにスキップ"
     emails_are_disabled: "メールの送信は管理者によって無効化されています。メール通知は一切送信されません。"
+    emails_are_disabled_non_staff: "スタッフ以外のユーザーの送信メールは無効になっています。"
     software_update_prompt:
       message: "このサイトを更新したので、<span>再読み込みしてください</span>。再読み込みしない場合、予期しない動作が発生する可能性があります。"
       dismiss: "閉じる"
@@ -153,8 +160,13 @@ ja:
       other: "新しいサイトを簡単に立ち上げられるように、ブートストラップモードになっています。すべての新規ユーザーの信頼レベルは 1 となり、要約メールを毎日受け取るように設定されています。この設定は %{count} 名のユーザーが参加すると自動的に無効になります。"
     bootstrap_mode_disabled: "ブートストラップモードは 24 時間以内に無効になります。"
     bootstrap_invite_button_title: "招待を送信"
+    bootstrap_wizard_link_title: "セットアップウィザードを終了"
     themes:
       default_description: "デフォルト"
+      broken_theme_alert: "テーマ/コンポーネントにエラーがあるため、サイトが動作しない可能性があります。"
+      error_caused_by: "原因は '%{name}' です。<a target='blank' href='%{path}'>ここをクリック</a>して、更新、再構成、または無効にしてください。"
+      only_admins: "（このメッセージはサイト管理者にのみ表示されます）"
+    broken_decorator_alert: "サイトのいずれかの投稿コンテンツデコレータでエラーが発生したため、投稿が正しく表示されない可能性があります。"
     s3:
       regions:
         ap_northeast_1: "アジア・太平洋 (東京)"
@@ -265,11 +277,13 @@ ja:
         unbookmark_with_reminder: "クリックしてこのトピック内のすべてのブックマークとリマインダーを削除します。"
     bookmarks:
       created: "この投稿をブックマークしました。%{name}"
+      created_generic: "これをブックマークしました。%{name}"
       create: "ブックマークを作成"
       edit: "ブックマークを編集"
       not_bookmarked: "この投稿をブックマークする"
       remove_reminder_keep_bookmark: "リマインダーを削除してブックマークを保持"
       created_with_reminder: "%{date} のリマインダー付きでこの投稿をブックマークしました。%{name}"
+      created_with_reminder_generic: "%{date} のリマインダー付きでこれをブックマークしました。%{name}"
       remove: "ブックマークを削除"
       delete: "ブックマークを削除"
       confirm_delete: "このブックマークを削除してもよろしいですか？リマインダーも削除されます。"
@@ -280,7 +294,11 @@ ja:
       list_permission_denied: "このユーザーのブックマークを表示する権限がありません。"
       no_user_bookmarks: "ブックマークした投稿はありません。ブックマークを使用すると、特定の投稿を素早く参照できます。"
       auto_delete_preference:
+        label: "通知を受けた後"
+        never: "ブックマークを保持する"
         when_reminder_sent: "ブックマークを削除"
+        on_owner_reply: "返信したら、ブックマークを削除する"
+        clear_reminder: "ブックマークを保持してリマインダーをクリアする"
       search_placeholder: "名前、トピックタイトル、または投稿コンテンツでブックマークを検索する"
       search: "検索"
       reminders:
@@ -290,6 +308,8 @@ ja:
         existing_reminder: "このブックマークに %{at_date_time} に送信されるリマインダーが設定されています"
     copy_codeblock:
       copied: "コピーしました！"
+      copy: "コードをクリップボードにコピー"
+      fullscreen: "コードを全画面で表示"
     drafts:
       label: "下書き"
       label_with_count: "下書き（%{count}）"
@@ -321,6 +341,7 @@ ja:
     saved: "保存しました！"
     upload: "アップロード"
     uploading: "アップロード中..."
+    processing: "処理中..."
     uploading_filename: "アップロード中: %{filename}…"
     processing_filename: "処理中: %{filename}..."
     clipboard: "クリップボード"
@@ -335,6 +356,7 @@ ja:
     switch_to_anon: "匿名モードを開始"
     switch_from_anon: "匿名モードを終了"
     banner:
+      close: "このバナーを閉じる"
       edit: "編集"
     pwa:
       install_banner: "<a href>このデバイスに %{title} をインストール</a>しますか？"
@@ -518,7 +540,10 @@ ja:
       relative: "相対"
     time_shortcut:
       now: "今"
+      in_one_hour: "1 時間以内"
+      in_two_hours: "2 時間以内"
       later_today: "今日の後程"
+      two_days: "2 日"
       next_business_day: "翌営業日"
       tomorrow: "明日"
       post_local_date: "投稿の日付"
@@ -582,6 +607,8 @@ ja:
         reset_to_default: "デフォルトにリセット"
       group:
         all: "すべてのグループ"
+      sort:
+        label: "%{criteria} で並べ替え"
     group_histories:
       actions:
         change_group_setting: "グループの設定を変更"
@@ -659,6 +686,7 @@ ja:
             title: "設定"
             allow_unknown_sender_topic_replies: "不明な送信者によるトピックの返信を許可します。"
             allow_unknown_sender_topic_replies_hint: "不明な送信者がグループトピックに返信できるようにします。これが有効になっていない場合、トピックに招待されていないメールアドレスからの返信があった場合は、新しいトピックを作成します。"
+            from_alias: "送信者のエイリアス"
           mailboxes:
             synchronized: "同期メールボックス"
             none_found: "このメールアカウントにはメールボックスが見つかりませんでした。"
@@ -1175,8 +1203,6 @@ ja:
         edit: "編集"
         edit_title: "認証アプリの編集"
         edit_description: "認証アプリ名"
-        enable_security_key_description: |
-          <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">ハードウェアセキュリティキー</a>を準備したら、下の [登録] ボタンを押します。
         totp:
           title: "トークンベースの認証アプリ"
           add: "認証アプリを追加"
@@ -1184,14 +1210,10 @@ ja:
           name_and_code_required_error: "認証アプリから名前とコードを入力する必要があります。"
         security_key:
           register: "登録"
-          title: "セキュリティキー"
-          add: "セキュリティキーを追加"
           default_name: "メインセキュリティキー"
           not_allowed_error: "セキュリティキーの登録プロセスがタイムアウトしたかキャンセルされました。"
           already_added_error: "このセキュリティキーはすでに登録されています。再度登録する必要はありません。"
-          edit: "セキュリティキーを編集"
           save: "保存"
-          edit_description: "セキュリティキー名"
           name_required_error: "セキュリティキーの名前を入力する必要があります。"
       change_about:
         title: "自己紹介を変更"
@@ -1681,7 +1703,6 @@ ja:
       second_factor_backup_title: "二要素バックアップ"
       second_factor_backup_description: "バックアップコードの 1 つを入力してください。"
       second_factor: "認証アプリを使用してログインする"
-      security_key_description: "物理的なセキュリティキーの準備ができたら、[セキュリティキーで認証] ボタンを押します。"
       security_key_alternative: "別の方法を試してください"
       security_key_authenticate: "セキュリティキーで認証"
       security_key_not_allowed_error: "セキュリティキーの認証プロセスがタイムアウトしたかキャンセルされました。"

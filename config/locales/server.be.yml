@@ -343,8 +343,6 @@ be:
   meta_category_description: "Абмеркаванне гэтага сайта, яго арганізацыя, як яна працуе, і як мы можам палепшыць яго."
   staff_category_name: "персанал"
   staff_category_description: "Асобная катэгорыя для абмеркавання персаналу. Тэмы бачныя толькі адміністратарам і мадэратарам."
-  discourse_welcome_topic:
-    title: "Сардэчна запрашаем у дыскурсе"
   admin_quick_start_title: "READ ME FIRST: Адміністратар Quick Start Guide"
   category:
     topic_prefix: "Аб %{category} катэгорыі"

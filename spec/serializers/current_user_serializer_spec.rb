@@ -388,5 +388,14 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
+  describe "#sidebar_list_destination" do
+    it "returns choosen value or default" do
+      expect(serializer.as_json[:sidebar_list_destination]).to eq(SiteSetting.default_sidebar_list_destination)
+
+      user.user_option.update!(sidebar_list_destination: "unread_new")
+      expect(serializer.as_json[:sidebar_list_destination]).to eq("unread_new")
+    end
+  end
+
   include_examples "#display_sidebar_tags", described_class
 end

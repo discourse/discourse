@@ -104,6 +104,7 @@ import DiscourseURL from "discourse/lib/url";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
+import { registerHashtagSearchParam } from "discourse/lib/hashtag-autocomplete";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -1980,6 +1981,35 @@ class PluginApi {
    */
   registerModelTransformer(modelName, transformer) {
     registerModelTransformer(modelName, transformer);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   *
+   * When initiating a search inside the composer or other designated inputs
+   * with the `#` key, we search records based on params registered with
+   * this function, and order them by type using the priority here. Since
+   * there can be many different inputs that use `#` and some may need to
+   * weight different types higher in priority, we also require a context
+   * parameter.
+   *
+   * For example, the topic composer may wish to search for categories
+   * and tags, with categories appearing first in the results. The usage
+   * looks like this:
+   *
+   * api.registerHashtagSearchParam("category", "topic-composer", 100);
+   * api.registerHashtagSearchParam("tag", "topic-composer", 50);
+   *
+   * Additional types of records used for the hashtag search results
+   * can be registered via the #register_hashtag_data_source plugin API
+   * method.
+   *
+   * @param {string} param - The type of record to be fetched.
+   * @param {string} context - Where the hashtag search is being initiated using `#`
+   * @param {number} priority - Used for ordering types of records. Priority order is descending.
+   */
+  registerHashtagSearchParam(param, context, priority) {
+    registerHashtagSearchParam(param, context, priority);
   }
 }
 

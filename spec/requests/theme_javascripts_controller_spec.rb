@@ -2,6 +2,9 @@
 RSpec.describe ThemeJavascriptsController do
   include ActiveSupport::Testing::TimeHelpers
 
+  before { ThemeJavascriptCompiler.disable_terser! }
+  after { ThemeJavascriptCompiler.enable_terser! }
+
   def clear_disk_cache
     if Dir.exist?(ThemeJavascriptsController::DISK_CACHE_PATH)
       `rm -rf #{ThemeJavascriptsController::DISK_CACHE_PATH}`
@@ -55,6 +58,40 @@ RSpec.describe ThemeJavascriptsController do
       get "/theme-javascripts/#{javascript_cache.digest}.js"
       expect(response.status).to eq(404)
     end
+
+    it "adds sourceMappingUrl if there is a source map" do
+      digest = SecureRandom.hex(20)
+      javascript_cache.update(digest: digest)
+      get "/theme-javascripts/#{digest}.js"
+      expect(response.status).to eq(200)
+      expect(response.body).to eq('console.log("hello");')
+
+      digest = SecureRandom.hex(20)
+      javascript_cache.update(digest: digest, source_map: '{fakeSourceMap: true}')
+      get "/theme-javascripts/#{digest}.js"
+      expect(response.status).to eq(200)
+      expect(response.body).to eq <<~JS
+        console.log("hello");
+        //# sourceMappingURL=#{digest}.map?__ws=test.localhost
+      JS
+    end
+  end
+
+  describe "#show_map" do
+    it "returns a source map when present" do
+      get "/theme-javascripts/#{javascript_cache.digest}.map"
+      expect(response.status).to eq(404)
+
+      digest = SecureRandom.hex(20)
+      javascript_cache.update(digest: digest, source_map: '{fakeSourceMap: true}')
+      get "/theme-javascripts/#{digest}.map"
+      expect(response.status).to eq(200)
+      expect(response.body).to eq("{fakeSourceMap: true}")
+
+      javascript_cache.destroy
+      get "/theme-javascripts/#{digest}.map"
+      expect(response.status).to eq(404)
+    end
   end
 
   describe "#show_tests" do
@@ -87,6 +124,34 @@ RSpec.describe ThemeJavascriptsController do
       get "/theme-javascripts/tests/#{component.id}-#{digest}.js"
       expect(response.body).to include("require(\"discourse/lib/theme-settings-store\").registerSettings(#{component.id}, {\"num_setting\":5}, { force: true });")
       expect(response.body).to include("assert.ok(true);")
+    end
+
+    it "includes theme uploads URLs in the settings object" do
+      SiteSetting.authorized_extensions = "*"
+      js_file = Tempfile.new(["vendorlib", ".js"])
+      js_file.write("console.log(123);\n")
+      js_file.rewind
+      js_upload = UploadCreator.new(js_file, "vendorlib.js").create_for(Discourse::SYSTEM_USER_ID)
+      component.set_field(
+        type: :theme_upload_var,
+        target: :common,
+        name: "vendorlib",
+        upload_id: js_upload.id
+      )
+      component.save!
+      _, digest = component.baked_js_tests_with_digest
+
+      get "/theme-javascripts/tests/#{component.id}-#{digest}.js"
+      expect(response.body).to include(
+        "require(\"discourse/lib/theme-settings-store\").registerSettings(" +
+        "#{component.id}, {\"num_setting\":5,\"theme_uploads\":{\"vendorlib\":" +
+        "\"/uploads/default/test_#{ENV['TEST_ENV_NUMBER']}/original/1X/#{js_upload.sha1}.js\"},\"theme_uploads_local\":{\"vendorlib\":" +
+        "\"/theme-javascripts/#{js_upload.sha1}.js?__ws=test.localhost\"}}, { force: true });"
+      )
+      expect(response.body).to include("assert.ok(true);")
+    ensure
+      js_file&.close
+      js_file&.unlink
     end
 
     it "responds with 404 if digest is not a 40 chars hex" do
@@ -132,6 +197,14 @@ RSpec.describe ThemeJavascriptsController do
       get "/theme-javascripts/tests/#{component.id}-#{digest}.js"
       expect(response.status).to eq(200)
       expect(response.body).to include("assert.ok(343434);")
+    end
+
+    it "includes inline sourcemap" do
+      ThemeJavascriptCompiler.enable_terser!
+      content, digest = component.baked_js_tests_with_digest
+      get "/theme-javascripts/tests/#{component.id}-#{digest}.js"
+      expect(response.status).to eq(200)
+      expect(response.body).to include("//# sourceMappingURL=data:application/json;base64,")
     end
   end
 end

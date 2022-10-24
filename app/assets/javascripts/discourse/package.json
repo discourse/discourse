@@ -16,8 +16,8 @@
     "test": "ember test"
   },
   "dependencies": {
-    "@babel/core": "^7.19.3",
-    "@babel/standalone": "^7.19.3",
+    "@babel/core": "^7.19.6",
+    "@babel/standalone": "^7.19.6",
     "@discourse/itsatrap": "^2.0.10",
     "@discourse/backburner.js": "^2.7.1-0",
     "@ember/jquery": "^2.0.0",
@@ -80,7 +80,7 @@
     "node-fetch": "^2.6.6",
     "pretender": "^3.4.7",
     "pretty-text": "^1.0.0",
-    "qunit": "^2.19.1",
+    "qunit": "^2.19.2",
     "qunit-dom": "^2.0.0",
     "sass": "^1.55.0",
     "select-kit": "^1.0.0",

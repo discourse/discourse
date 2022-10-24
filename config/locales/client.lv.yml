@@ -978,6 +978,8 @@ lv:
       enable_defer: "Iespējot atlikšanu, lai atzīmētu tēmas kā nelasītas"
       experimental_sidebar:
         options: "Iespējas"
+        navigation_section: "Pārvietošanās"
+        list_destination_default: "Noklusējums"
       change: "mainīt"
       featured_topic: "Piedāvātā tēma"
       moderator: "%{user} ir moderators"
@@ -1139,8 +1141,6 @@ lv:
         edit: "Labot"
         edit_title: "Rediģēt autentifikatoru"
         edit_description: "Autentifikatora nosaukums"
-        enable_security_key_description: |
-          Kad esat <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">aparatūras drošības atslēgu</a> , nospiediet zemāk esošo pogu Reģistrēties.
         totp:
           title: "Token balstīti autentifikatori"
           add: "Pievienot autentifikatoru"
@@ -1148,14 +1148,10 @@ lv:
           name_and_code_required_error: "Jums ir jānorāda vārds un kods no autentifikatora lietotnes."
         security_key:
           register: "Reģistrēties"
-          title: "Drošības atslēgas"
-          add: "Pievienojiet drošības atslēgu"
           default_name: "Galvenā drošības atslēga"
           not_allowed_error: "Drošības atslēgas reģistrācijas procesam iestājās noildze vai tas tika atcelts."
           already_added_error: "Jūs jau esat reģistrējis šo drošības atslēgu. Jums tā nav jāreģistrē vēlreiz."
-          edit: "Rediģēt drošības atslēgu"
           save: "Saglabāt"
-          edit_description: "Drošības atslēgas nosaukums"
           name_required_error: "Jums ir jānorāda drošības atslēgas nosaukums."
       change_about:
         title: "Mainīt aprakstu par mani"
@@ -1600,7 +1596,6 @@ lv:
       second_factor_backup_title: "Divu faktoru dublēšana"
       second_factor_backup_description: "Lūdzu, ievadiet vienu no saviem rezerves kodiem:"
       second_factor: "Piesakieties, izmantojot lietotni Autentifikators"
-      security_key_description: "Kad esat sagatavojis savu fiziskās drošības atslēgu, nospiediet tālāk esošo pogu Autentificēt ar drošības atslēgu."
       security_key_alternative: "Izmēģiniet citu veidu"
       security_key_authenticate: "Autentificēties, izmantojot drošības atslēgu"
       security_key_not_allowed_error: "Drošības atslēgas autentifikācijas procesam iestājās noildze vai tas tika atcelts."

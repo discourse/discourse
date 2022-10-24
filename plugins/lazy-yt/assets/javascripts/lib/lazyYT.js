@@ -51,7 +51,7 @@ export default function initLazyYt($) {
     //
     // This HTML will be placed inside 'lazyYT' container
 
-    innerHtml.push('<div class="ytp-thumbnail">');
+    innerHtml.push('<div class="ytp-thumbnail" tabIndex="0">');
 
     // Play button from YouTube (exactly as it is in YouTube)
     innerHtml.push('<div class="ytp-large-play-button"');
@@ -135,7 +135,11 @@ export default function initLazyYt($) {
     $thumb = $el
       .find(".ytp-thumbnail")
       .addClass("lazyYT-image-loaded")
-      .on("click", function (e) {
+      .on("keypress click", function (e) {
+        // Only support Enter for keypress
+        if (e.type === "keypress" && e.keyCode !== 13) {
+          return;
+        }
         e.preventDefault();
 
         if (

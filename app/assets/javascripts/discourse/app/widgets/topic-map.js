@@ -5,6 +5,7 @@ import { createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
 import { replaceEmoji } from "discourse/widgets/emoji";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
+import { userPath } from "discourse/lib/url";
 
 const LINKS_SHOWN = 5;
 
@@ -87,12 +88,15 @@ createWidget("topic-participant", {
         linkContents.push(this.attach("avatar-flair", autoFlairAttrs));
       }
     }
-
     return h(
       "a.poster.trigger-user-card",
       {
         className: state.toggled ? "toggled" : null,
-        attributes: { title: attrs.username, "data-user-card": attrs.username },
+        attributes: {
+          title: attrs.username,
+          "data-user-card": attrs.username,
+          href: userPath(attrs.username),
+        },
       },
       linkContents
     );

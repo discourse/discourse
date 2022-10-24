@@ -59,8 +59,6 @@ fr:
     bad_color_scheme: "Impossible de mettre à jour le thème, la palette de couleurs est invalide"
     other_error: "Une erreur s'est produite lors de la mise à jour du thème"
     ember_selector_error: "Nous sommes désolés, utiliser un sélecteur CSS nommé #ember ou .ember-view n'est pas permis, car ces noms sont générés dynamiquement au moment de l'exécution et sont amenés à changer au cours du temps, ce qui entraînera potentiellement un dysfonctionnement des définitions CSS. Veuillez choisir un autre sélecteur."
-    compile_error:
-      unrecognized_extension: "Extension de fichier non reconnue : %{extension}"
     import_error:
       generic: Une erreur s'est produite lors de l'importation de ce thème
       upload: "Erreur lors de la création de l'élément de téléchargement : %{name}. %{errors}"
@@ -596,7 +594,6 @@ fr:
   staff_category_name: "Responsables"
   staff_category_description: "Catégorie privée pour les discussions entre responsables. Les sujets ne sont visibles que pour les administrateurs et les modérateurs."
   discourse_welcome_topic:
-    title: "Bienvenue sur Discourse"
     body: |2
 
       Le premier paragraphe de ce sujet épinglé sera visible comme message de bienvenue à tous les nouveaux visiteurs de votre page d'accueil. Il est important !
@@ -1602,7 +1599,6 @@ fr:
     google_oauth2_client_secret: "Clé secrète du client de votre application Google."
     google_oauth2_prompt: "Liste facultative de valeurs de chaînes de caractères délimitées par des espaces, qui spécifie si le serveur d'autorisation invite l'utilisateur à s'authentifier à nouveau et à donner son consentement. Voir <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> pour connaître les valeurs possibles."
     google_oauth2_hd: "Un domaine optionnel Google Apps Hosted auquel la connexion sera limitée. Voir <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> pour obtenir plus de détails."
-    google_oauth2_hd_groups: "(réglage expérimental) Pour chaque utilisateur, récupérer les groupes Google existant sur le domaine hébergé au moment de l'authentification. Les groupes Google ainsi récupérés peuvent être utilisés pour délencher automatiquement l'appartenance à un groupe Discourse. (Voir la rubrique 'Groupes' dans les paramètres.)"
     enable_twitter_logins: "Activer l'authentification Twitter, nécessite twitter_consumer_key et twitter_consumer_secret. Voir <a href='https://meta.discourse.org/t/13395' target='_blank'>Configurer la connexion Twitter (avec rich embeds) pour Discourse</a>."
     twitter_consumer_key: "Clé consommateur pour l'authentification Twitter, enregistrée sur <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Secret consommateur pour l'authentification Twitter, enregistrée sur <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
@@ -2134,7 +2130,6 @@ fr:
       unicode_usernames_avatars: "Les avatars du système n'acceptent pas les noms d'utilisateurs contenant des caractères Unicode."
       list_value_count: "La liste doit contenir exactement %{count} valeurs."
       markdown_linkify_tlds: "Vous ne pouvez pas inclure la valeur '*'."
-      google_oauth2_hd_groups: "Pour activer ce paramètre, vous devez d'abord configurer 'google oauth2 hd'."
       search_tokenize_chinese_enabled: "Pour activer ce paramètre, vous devez d'abord désactiver 'search_tokenize_chinese'."
       search_tokenize_japanese_enabled: "Pour activer ce paramètre, vous devez d'abord désactiver 'search_tokenize_japanese'."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Vous ne pouvez pas activer DiscourseConnect si le 2FA est obligatoire."

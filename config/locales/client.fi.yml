@@ -1200,8 +1200,6 @@ fi:
         edit: "Muokkaa"
         edit_title: "Muokkaa todentajaa"
         edit_description: "Todentajan nimi"
-        enable_security_key_description: |
-          Kun <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">tunnistautumislaite</a> on valmiina, paina alla olevaa Rekisteröi-painiketta.
         totp:
           title: "Tunnuksiin perustuvat todentajat"
           add: "Lisää todentaja"
@@ -1209,14 +1207,10 @@ fi:
           name_and_code_required_error: "Anna nimi sekä todentajasovelluksesta löytyvä koodi."
         security_key:
           register: "Rekisteröi"
-          title: "Tunnistautumislaite"
-          add: "Lisää tunnistautumislaite"
           default_name: "Päätunnistautumislaite"
           not_allowed_error: "Tunnistautumislaitteen rekisteröintiprosessi joko vanheni tai peruutettiin."
           already_added_error: "Olet jo rekisteröinyt tämän tunnistautumislaitteen. Sitä ei tarvitse rekisteröidä uudelleen."
-          edit: "Muokkaa tunnistautumislaitetta"
           save: "Tallenna"
-          edit_description: "Tunnistautumislaitteen nimi"
           name_required_error: "Tunnistautumislaite tarvitsee nimen."
       change_about:
         title: "Muokkaa kuvaustasi"
@@ -1707,7 +1701,6 @@ fi:
       second_factor_backup_title: "Kaksivaiheinen vara"
       second_factor_backup_description: "Syötä yksi varakoodeistasi:"
       second_factor: "Kirjaudu todentajasovelluksella"
-      security_key_description: "Kun fyysinen tunnistautumislaite on kätesi ulottuvilla, klikkaa alla olevaa \"Tunnistaudu tunnistautumislaitteella\" -painiketta."
       security_key_alternative: "Kokeile muuta tapaa"
       security_key_authenticate: "Tee todennus tunnistautumislaitteella"
       security_key_not_allowed_error: "Tunnistautumislaitteen todennusprosessi joko vanheni tai peruutettiin."

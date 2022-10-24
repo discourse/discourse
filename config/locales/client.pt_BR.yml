@@ -1094,7 +1094,6 @@ pt_BR:
       enable_quoting: "Ativar resposta citando o texto destacado"
       enable_defer: "Ativar adiamento para marcar tópicos como não lidos"
       experimental_sidebar:
-        enable: "Ativar barra lateral experimental"
         options: "Opções"
         categories_section: "Seção de Categorias"
         categories_section_instruction: "As categorias selecionadas serão exibidas na seção de categorias do painel lateral."
@@ -1270,8 +1269,6 @@ pt_BR:
         edit: "Editar"
         edit_title: "Editar autenticador"
         edit_description: "Nome do autenticador"
-        enable_security_key_description: |
-          Quando sua <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">chave de segurança física</a> estiver preparada, pressione o botão Registrar abaixo.
         totp:
           title: "Autenticadores baseados em token"
           add: "Adicionar autenticador"
@@ -1279,14 +1276,10 @@ pt_BR:
           name_and_code_required_error: "Você deve informar um nome e o código do seu aplicativo autenticador."
         security_key:
           register: "Registrar"
-          title: "Chaves de segurança"
-          add: "Adicionar chave de segurança"
           default_name: "Chave de segurança principal"
           not_allowed_error: "O processo de registro da chave de segurança atingiu o tempo limite ou foi cancelado."
           already_added_error: "Você já registrou esta chave de segurança.\nVocê não precisa registrá-la novamente."
-          edit: "Editar chave de segurança"
           save: "Salvar"
-          edit_description: "Nome da chave de segurança"
           name_required_error: "Você deve informar um nome para sua chave de segurança."
       change_about:
         title: "Alterar Sobre mim"
@@ -1797,7 +1790,6 @@ pt_BR:
       second_factor_backup_title: "Backup de dois fatores"
       second_factor_backup_description: "Insira um dos seus códigos de backup:"
       second_factor: "Fazer login usando um aplicativo de autenticação"
-      security_key_description: "Quando você tiver sua chave física de segurança preparada, pressione o botão Autenticar com chave de segurança abaixo."
       security_key_alternative: "Tentar de outra maneira"
       security_key_authenticate: "Autenticar com chave de segurança"
       security_key_not_allowed_error: "O processo de autenticação com chave de segurança atingiu o limite de tempo ou foi cancelado."

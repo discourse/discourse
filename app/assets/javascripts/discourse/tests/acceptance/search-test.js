@@ -450,6 +450,11 @@ acceptance("Search - Authenticated", function (needs) {
     );
 
     await triggerKeyEvent(".search-menu", "keydown", "Escape");
+    assert.strictEqual(
+      document.activeElement,
+      query("#search-button"),
+      "Escaping search returns focus to search button"
+    );
     assert.ok(!exists(".search-menu:visible"), "Esc removes search dropdown");
 
     await click("#search-button");

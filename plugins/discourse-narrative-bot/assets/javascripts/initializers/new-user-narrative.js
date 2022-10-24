@@ -1,5 +1,5 @@
+import { debounce } from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -74,28 +74,22 @@ function initialize(api) {
       // No need to unsubscribe, core unsubscribes /topic/* routes
     },
 
+    @debounce(500)
     _scrollToDiscobotPost(postNumber) {
-      discourseDebounce(
-        this,
-        function () {
-          const post = document.querySelector(
-            `.topic-post article#post_${postNumber}`
-          );
-
-          if (!post || isElementInViewport(post)) {
-            return;
-          }
-
-          const viewportOffset = post.getBoundingClientRect();
-
-          window.scrollTo({
-            top: window.scrollY + viewportOffset.top - headerOffset(),
-            behavior: "smooth",
-          });
-        },
-        postNumber,
-        500
+      const post = document.querySelector(
+        `.topic-post article#post_${postNumber}`
       );
+
+      if (!post || isElementInViewport(post)) {
+        return;
+      }
+
+      const viewportOffset = post.getBoundingClientRect();
+
+      window.scrollTo({
+        top: window.scrollY + viewportOffset.top - headerOffset(),
+        behavior: "smooth",
+      });
     },
   });
 

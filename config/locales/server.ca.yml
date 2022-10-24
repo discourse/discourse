@@ -56,8 +56,6 @@ ca:
   themes:
     bad_color_scheme: "No es pot actualitzar l'aparença, paleta de colors incorrecta"
     other_error: "S'ha produït un error mentre s'actualitzava l'aparença"
-    compile_error:
-      unrecognized_extension: "Extensió de fitxer no reconeguda: %{extension}"
     import_error:
       about_json_values: "about.json conté valors no vàlids: %{errors}"
       git: "S'ha produït un error clonant el dipòsit git, s'ha denegat l'accés o no s'ha trobat el dipòsit."
@@ -452,7 +450,6 @@ ca:
   staff_category_name: "Equip responsable"
   staff_category_description: "Categoria privada per a converses de l'equip responsable. Els temes només seran visibles per a discussions entre moderadors i administradors."
   discourse_welcome_topic:
-    title: "Benvingut a Discourse"
     body: |2
 
       El primer paràgraf d'aquest tema afixat serà visible com a missatge de benvinguda per a totes les noves visites a la vostra pàgina principal. És important!

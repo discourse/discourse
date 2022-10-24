@@ -129,11 +129,11 @@ RSpec.describe PostSerializer do
   end
 
   context "with a hidden post with add_raw enabled" do
-    let(:user) { Fabricate.build(:user, id: -99999) }
+    let(:user) { Fabricate(:user, id: -99999) }
     let(:raw)  { "Raw contents of the post." }
 
     context "with a public post" do
-      let(:post) { Fabricate.build(:post, raw: raw, user: user) }
+      let(:post) { Fabricate(:post, raw: raw, user: user) }
 
       it "includes the raw post for everyone" do
         [nil, user, Fabricate(:user), Fabricate(:moderator), Fabricate(:admin)].each do |user|
@@ -143,7 +143,7 @@ RSpec.describe PostSerializer do
     end
 
     context "with a hidden post" do
-      let(:post) { Fabricate.build(:post, raw: raw, user: user, hidden: true, hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached]) }
+      let(:post) { Fabricate(:post, raw: raw, user: user, hidden: true, hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached]) }
 
       it "shows the raw post only if authorized to see it" do
         expect(serialized_post_for_user(nil)[:raw]).to eq(nil)
@@ -186,7 +186,7 @@ RSpec.describe PostSerializer do
     end
 
     context "with a public wiki post" do
-      let(:post) { Fabricate.build(:post, raw: raw, user: user, wiki: true) }
+      let(:post) { Fabricate(:post, raw: raw, user: user, wiki: true) }
 
       it "can view edit history" do
         [nil, user, Fabricate(:user), Fabricate(:moderator), Fabricate(:admin)].each do |user|
@@ -197,7 +197,7 @@ RSpec.describe PostSerializer do
 
     context "with a hidden wiki post" do
       let(:post) {
-        Fabricate.build(
+        Fabricate(
           :post,
           raw: raw,
           user: user,

@@ -59,8 +59,6 @@ vi:
     bad_color_scheme: "Không thể cập nhật chủ đề, bảng màu không hợp lệ"
     other_error: "Đã xảy ra lỗi khi cập nhật chủ đề"
     ember_selector_error: "Xin lỗi - không cho phép sử dụng bộ chọn CSS #ember hoặc .ember-view vì những tên này được tạo động trong thời gian chạy và sẽ thay đổi theo thời gian, cuối cùng dẫn đến CSS bị hỏng. Hãy thử một bộ chọn khác."
-    compile_error:
-      unrecognized_extension: "Phần mở rộng tệp không được công nhận: %{extension}"
     import_error:
       generic: Đã xảy ra lỗi khi nhập chủ đề đó
       upload: "Lỗi khi tạo nội dung tải lên: %{name}. %{errors}"
@@ -493,7 +491,6 @@ vi:
   staff_category_name: "Nhân viên"
   staff_category_description: "Chuyên mục riêng dành cho nhân viên. Các chủ đề chỉ hiển thị với quản trị viên và điều hành viên."
   discourse_welcome_topic:
-    title: "Chào mừng đến với Discourse"
     body: |2
 
       Đoạn đầu tiên của chủ đề được ghim này sẽ hiển thị như một thông điệp chào mừng cho tất cả những khách truy cập mới trên trang chủ của bạn. Nó quan trọng!

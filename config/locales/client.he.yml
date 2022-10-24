@@ -760,6 +760,8 @@ he:
         reset_to_default: "איפוס לבררת מחדל"
       group:
         all: "כל הקבוצות"
+      sort:
+        label: "מיון לפי %{criteria}"
     group_histories:
       actions:
         change_group_setting: "שינוי הגדרות קבוצה"
@@ -1183,6 +1185,7 @@ he:
       no_notifications_title: "אין לך התראות עדיין"
       no_notifications_body: >
         בלוח הזה תופענה התראות על פעילות שקשורה ישירות אליך, כולל תגובות לנושאים ולפוסטים שלך, כש<b>@מאזכרים</b> או מצטטים אותך או מגיבים לנושאים ברשימת המעקב שלך. כמו כן, התראות תישלחנה לכתובת הדוא״ל שלך כשלא נכנסת למערכת למשך זמן מה. <br><br> יש לחפש אחר %{icon} כדי להחליט עבור אילו נושאים, קטגוריות ותגיות ברצונך לקבל התראות. למידע נוסף, ניתן לגשת אל <a href='%{preferencesUrl}'>העדפות ההתראות</a> שלך.
+      no_other_notifications_title: "אין לך התראות נוספות עדיין"
       no_notifications_page_title: "אין לך התראות עדיין"
       no_notifications_page_body: >
         תישלחנה אליך התראות על פעילות שקשורה ישירות אליך, כולל תגובות לנושאים ולפוסטים שלך, כש<b>@מאזכרים</b> או מצטטים אותך או מגיבים לנושאים ברשימת המעקב שלך. כמו כן, התראות תישלחנה לכתובת הדוא״ל שלך כשלא נכנסת למערכת למשך זמן מה. <br><br> יש לחפש אחר %{icon} כדי להחליט עבור אילו נושאים, קטגוריות ותגיות ברצונך לקבל התראות. למידע נוסף, ניתן לגשת אל <a href='%{preferencesUrl}'>העדפות ההתראות</a> שלך.
@@ -1212,12 +1215,16 @@ he:
       enable_quoting: "הפעלת תגובת ציטוט לטקסט מסומן"
       enable_defer: "הפעלת דחייה לאחר כך כדי לסמן נושאים כלא נקראו"
       experimental_sidebar:
-        enable: "הפעלת סרגל צד ניסיוני"
+        enable: "הפעלת סרגל צד"
         options: "אפשרויות"
         categories_section: "סעיף קטגוריות"
         categories_section_instruction: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של סרגל הצד."
         tags_section: "סעיף תגיות"
         tags_section_instruction: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של סרגל הצד."
+        navigation_section: "ניווט"
+        list_destination_instruction: "לחיצה על קישור רשימת נושאים עם נושאים חדשים או כאלו שלא נקראו בסרגל הצד, לקחת אותי אל"
+        list_destination_default: "ברירת מחדל"
+        list_destination_unread_new: "חדש/לא נקרא"
       change: "שנה"
       featured_topic: "נושא מומלץ"
       moderator: "ל־%{user} יש תפקיד פיקוח"
@@ -1395,7 +1402,7 @@ he:
         edit_title: "עריכת מאמת"
         edit_description: "שם המאמת"
         enable_security_key_description: |
-          כאשר <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">מפתח האבטחה החומרתי</a> שלך מוכן, יש ללחוץ על כפתור הרישום שלהלן.
+          כאשר <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">מפתח האבטחה החומרתי</a> או המכשיר הנייד התואם שלך מוכן, יש ללחוץ על כפתור הרישום שלהלן.
         totp:
           title: "מאמתים מבוססי אסימונים"
           add: "הוספת מאמת"
@@ -1403,14 +1410,16 @@ he:
           name_and_code_required_error: "עליך לספק שם וקוד מיישומון האימות שלך."
         security_key:
           register: "הרשמה"
-          title: "מפתחות אבטחה"
-          add: "הוספת מפתח אבטחה"
+          title: "מפתחות אבטחה פיזיים"
+          add: "הוספת מפתח אבטחה פיזי"
           default_name: "מפתח אבטחה עיקרי"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "זמן תהליך רישום מפתח האבטחה פג או שבוטל."
           already_added_error: "כבר רשמת את מפתח האבטחה הזה. אין צורך לרשום אותו שוב."
-          edit: "עריכת מפתח אבטחה"
+          edit: "עריכת מפתח אבטחה פיזי"
           save: "שמירה"
-          edit_description: "שם מפתח אבטחה"
+          edit_description: "שם מפתח אבטחה פיזי"
           name_required_error: "עליך לציין שם למפתח האבטחה שלך."
       change_about:
         title: "שינוי בנוגע אליי"
@@ -1784,6 +1793,9 @@ he:
         title: "סמלון"
         none: "(ללא)"
         instructions: "סמל המוצג לצד תמונת הפרופיל שלך"
+      status:
+        title: "מצב משלך"
+        not_set: "לא מוגדר"
       primary_group:
         title: "קבוצה ראשית"
         none: "(ללא)"
@@ -1799,6 +1811,15 @@ he:
       set_custom_status: "הגדרת מצב משלך"
       what_are_you_doing: "מה מעלליך?"
       remove_status: "הסרת מצב"
+    popup:
+      primary: "הבנתי!"
+      secondary: "לא להציג יותר את העצות האלה"
+      first_notification:
+        title: "ההתראה הראשונה שלך!"
+        content: "התראות משמשות לעדכן אותך במה שקורה בקהילה."
+      topic_timeline:
+        title: "ציר הזמן של הנושא"
+        content: "אפשר לגלול במהירות על פני הפוסט באמצעות ציר הזמן של הנושא."
     loading: "טוען..."
     errors:
       prev_page: "בזמן הניסיון לטעון"
@@ -1951,7 +1972,7 @@ he:
       second_factor_backup_title: "גיבוי אימות דו־שלבי"
       second_factor_backup_description: "נא להקליד אחד מהקודים לגיבוי שלך:"
       second_factor: "כניסה עם יישומון אימות"
-      security_key_description: "כשמפתח האבטחה הפיזי שלך מוכן יש ללחוץ על כפתור האימות עם מפתח האבטחה שלהלן."
+      security_key_description: "כשמפתח האבטחה הפיזי או המכשיר הנייד התואם שלך מוכן יש ללחוץ על כפתור האימות עם מפתח האבטחה שלהלן."
       security_key_alternative: "לנסות דרך אחרת"
       security_key_authenticate: "אימות עם מפתח אבטחה"
       security_key_not_allowed_error: "זמן תהליך אימות מפתח האבטחה פג או שבוטל."
@@ -4167,11 +4188,13 @@ he:
           click_to_get_started: "ללחוץ כאן כדי להתחיל."
           header_link_text: "תגיות"
           header_action_title: "לערוך את תגיות סרגל הצד שלך"
+          configure_defaults: "הגדרת ברירות מחדל"
         categories:
           none: "עדיין לא הוספת קטגוריות."
           click_to_get_started: "ללחוץ כאן כדי להתחיל."
           header_link_text: "קטגוריות"
           header_action_title: "לערוך את קטגוריות סרגל הצד שלך"
+          configure_defaults: "הגדרת ברירות מחדל"
         community:
           header_link_text: "קהילה"
           header_action_title: "יצירת נושא חדש"
@@ -4210,7 +4233,6 @@ he:
               pending_count: "%{count} ממתינים"
     welcome_topic_banner:
       title: "כאן ניתן ליצור את נושא קבלת הפנים שלך"
-      description: 'נושא קבלת הפנים שלך הוא הדבר הראשון שמצטרפים חדשים יקראו. אפשר לחשוב על זה כעל „נאום מעלית” או „הצהרת כוונות” במשפט אחד'
       button_title: "להתחיל לערוך"
     until: "עד:"
   admin_js:
@@ -4816,6 +4838,7 @@ he:
           has_overwritten_history: "גרסת ערכת העיצוב הנוכחית אינה קיימת עוד כיוון שהיסטוריית ה־Git שוכתבה על ידי דחיפה כפויה (force push)."
           add: "הוספה"
           theme_settings: "הגדרות ערכת עיצוב"
+          overriden_settings_explanation: "הגדרות שנדרסו מסומנות בנקודה ומודגשות. כדי לאפס את ההגדרות האלו לערך ברירת המחדל, יש ללחוץ על כפתור האיפוס שלצידן."
           no_settings: "לערכת עיצוב זו אין הגדרות."
           theme_translations: "תרגומים של ערכות עיצוב"
           empty: "אין פריטים"
@@ -5624,6 +5647,7 @@ he:
           search: "חיפוש"
           groups: "קבוצות"
           dashboard: "לוח בקרה"
+          sidebar: "סרגל צד"
         secret_list:
           invalid_input: "שדות הקלט לא יכולים להישאר ריקים או להכיל תווים של קווים אנכיים."
         default_categories:

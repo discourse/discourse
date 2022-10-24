@@ -217,9 +217,9 @@ export default Controller.extend(bufferedProperty("model"), {
     );
   },
 
-  @discourseComputed("currentUser.allowPersonalMessages")
+  @discourseComputed("currentUser.can_send_private_messages")
   canSendPms() {
-    return this.currentUser?.allowPersonalMessages;
+    return this.currentUser?.can_send_private_messages;
   },
 
   @discourseComputed("buffered.category_id")

@@ -58,6 +58,7 @@ export default Controller.extend({
       "text_size",
       "title_count_mode",
       "skip_new_user_tips",
+      "seen_popups",
       "color_scheme_id",
       "dark_scheme_id",
     ];
@@ -417,6 +418,14 @@ export default Controller.extend({
       if (lightStylesheet) {
         lightStylesheet.remove();
       }
+    },
+
+    resetSeenPopups() {
+      this.model.set("skip_new_user_tips", false);
+      this.model.set("seen_popups", null);
+      this.model.set("user_option.skip_new_user_tips", false);
+      this.model.set("user_option.seen_popups", null);
+      return this.model.save(["skip_new_user_tips", "seen_popups"]);
     },
   },
 });

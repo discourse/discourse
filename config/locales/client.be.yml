@@ -467,6 +467,7 @@ be:
         regular: "звычайны"
       experimental_sidebar:
         options: "Налады"
+        navigation_section: "рух"
       tag_settings: "Цэтлікі"
       watched_tags_instructions: "Вы будзеце аўтаматычна адсочваць усе новыя тэмы па гэтых цэтліках. Таксама вам будуць прыходзіць паведамленні пра новыя пасты і тэмы, а падлік непрачытаных і новых пастоў адлюструюцца побач з тэмамі."
       tracked_tags_instructions: "Вы будзеце аўтаматычна адсочваць усе тэмы па гэтых цэтліках. Падлік непрачытаных і новых пастоў побач адлюструюцца побач з тэмамі."
@@ -521,6 +522,8 @@ be:
         edit: "рэдагаваць"
         security_key:
           register: "рэгістрацыя"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           save: "Захаваць"
       change_about:
         title: "Змяніць інфу аба мяне"

@@ -1097,7 +1097,6 @@ fr:
       enable_quoting: "Proposer de citer le texte sélectionné"
       enable_defer: "Activer le bouton pour reporter des sujets à plus tard en les marquant comme non lus"
       experimental_sidebar:
-        enable: "Activer la barre latérale expérimentale"
         options: "Options"
         categories_section: "Section Catégories"
         categories_section_instruction: "Les catégories sélectionnées seront affichées dans la section Catégories de la barre latérale."
@@ -1273,8 +1272,6 @@ fr:
         edit: "Modifier"
         edit_title: "Gérer l'application d'authentification"
         edit_description: "Nom de l'application d'authentification"
-        enable_security_key_description: |
-          Dès que votre <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">clé de sécurité physique</a> est prête, appuyez sur le bouton « Enregistrer » ci-dessous.
         totp:
           title: "Applications d'authentification basées sur les jetons"
           add: "Ajouter une application d'authentification"
@@ -1282,14 +1279,10 @@ fr:
           name_and_code_required_error: "Vous devez donner le nom et le code de votre application d'authentification."
         security_key:
           register: "Enregistrer"
-          title: "Clés de sécurité"
-          add: "Ajouter une clé de sécurité"
           default_name: "Clé de sécurité principale"
           not_allowed_error: "La procédure d'enregistrement de la clé de sécurité a expiré ou a été annulée."
           already_added_error: "Vous avez déjà enregistré cette clé de sécurité. Vous n'avez pas besoin de le faire à nouveau."
-          edit: "Modifier la clé de sécurité"
           save: "Enregistrer"
-          edit_description: "Nom de la clé de sécurité"
           name_required_error: "Vous devez donner un nom à votre clé de sécurité."
       change_about:
         title: "Modifier la rubrique « À propos de moi »"
@@ -1800,7 +1793,6 @@ fr:
       second_factor_backup_title: "Authentification à deux facteurs (code de secours)"
       second_factor_backup_description: "Veuillez saisir un de vos codes de secours :"
       second_factor: "Se connecter avec une application"
-      security_key_description: "Dès que votre clé de sécurité physique est prête, appuyez sur le bouton « S'authentifier avec une clé de sécurité » ci-dessous."
       security_key_alternative: "Essayer une autre méthode"
       security_key_authenticate: "S'authentifier avec une clé de sécurité"
       security_key_not_allowed_error: "La procédure d'authentification de la clé de sécurité a expiré ou a été annulée."

@@ -177,19 +177,6 @@ const SiteHeaderComponent = MountWidget.extend(
         this.docAt = header.offsetTop;
       }
 
-      const headerRect = header.getBoundingClientRect();
-      let headerOffsetCalc = headerRect.top + headerRect.height;
-
-      if (window.scrollY < 0) {
-        headerOffsetCalc += window.scrollY;
-      }
-
-      const newValue = `${headerOffsetCalc}px`;
-      if (newValue !== this.currentHeaderOffsetValue) {
-        this.currentHeaderOffsetValue = newValue;
-        document.documentElement.style.setProperty("--header-offset", newValue);
-      }
-
       const main = document.querySelector(".ember-application");
       const offsetTop = main ? main.offsetTop : 0;
       const offset = window.pageYOffset - offsetTop;
@@ -520,9 +507,17 @@ export default SiteHeaderComponent.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    if ("ResizeObserver" in window) {
-      const header = document.querySelector(".d-header-wrap");
+    const header = document.querySelector(".d-header-wrap");
+    if (header) {
+      schedule("afterRender", () => {
+        document.documentElement.style.setProperty(
+          "--header-offset",
+          `${header.offsetHeight}px`
+        );
+      });
+    }
 
+    if ("ResizeObserver" in window) {
       this._resizeObserver = new ResizeObserver((entries) => {
         for (let entry of entries) {
           if (entry.contentRect) {

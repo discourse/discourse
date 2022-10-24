@@ -90,5 +90,5 @@ zh_CN:
         rich_tooltip:
           title: "富工具提示"
           description: "描述"
-          header: "页眉"
-          hover_to_see: "悬停查看工具提示"
+          header: "标头"
+          hover_to_see: "悬停以查看工具提示"
