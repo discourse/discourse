@@ -60,6 +60,7 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
 
     it "includes commit name" do
       expect(html).to include("Add audio onebox")
+      expect(html).not_to include("http://meta.discourse.org/t/audio-html5-tag/8168")
     end
   end
 
