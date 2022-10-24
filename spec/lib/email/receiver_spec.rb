@@ -87,14 +87,15 @@ RSpec.describe Email::Receiver do
     post  = Fabricate(:post, topic: topic)
     user  = Fabricate(:user, email: "discourse@bar.com")
 
-    expect { process(:old_destination) }.to raise_error(
+    mail = email(:old_destination).gsub("424242", topic.id.to_s)
+    expect { Email::Receiver.new(mail).process! }.to raise_error(
       Email::Receiver::BadDestinationAddress
     )
 
     IncomingEmail.destroy_all
     post.update!(created_at: 3.days.ago)
 
-    expect { process(:old_destination) }.to raise_error(
+    expect { Email::Receiver.new(mail).process! }.to raise_error(
       Email::Receiver::OldDestinationError
     )
     expect(IncomingEmail.last.error).to eq("Email::Receiver::OldDestinationError")
@@ -102,7 +103,7 @@ RSpec.describe Email::Receiver do
     SiteSetting.disallow_reply_by_email_after_days = 0
     IncomingEmail.destroy_all
 
-    expect { process(:old_destination) }.to raise_error(
+    expect { Email::Receiver.new(mail).process! }.to raise_error(
       Email::Receiver::BadDestinationAddress
     )
   end
@@ -434,7 +435,7 @@ RSpec.describe Email::Receiver do
       expect(topic.posts.last.raw).to eq("This will not include the previous discussion that is present in this email.")
     end
 
-    it "removes the trnaslated 'Previous Replies' marker" do
+    it "removes the translated 'Previous Replies' marker" do
       expect { process(:previous_replies_de) }.to change { topic.posts.count }
       expect(topic.posts.last.raw).to eq("This will not include the previous discussion that is present in this email.")
     end

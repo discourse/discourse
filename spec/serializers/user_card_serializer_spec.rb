@@ -2,7 +2,7 @@
 
 RSpec.describe UserCardSerializer do
   context "with a TL0 user seen as anonymous" do
-    let(:user) { Fabricate(:user, trust_level: 0, user_profile: Fabricate(:user_profile)) }
+    let(:user) { Fabricate(:user, trust_level: 0) }
     let(:serializer) { described_class.new(user, scope: Guardian.new, root: false) }
     let(:json) { serializer.as_json }
 
@@ -14,11 +14,8 @@ RSpec.describe UserCardSerializer do
 
   context "as current user" do
     it "serializes emails correctly" do
-      user = Fabricate(:user,
-        user_profile: Fabricate(:user_profile),
-        user_option: UserOption.new(dynamic_favicon: true),
-        user_stat: UserStat.new
-      )
+      user = Fabricate(:user)
+      user.user_option.update(dynamic_favicon: true)
 
       json = described_class.new(user, scope: Guardian.new(user), root: false).as_json
       expect(json[:secondary_emails]).to eq([])
@@ -29,6 +26,7 @@ RSpec.describe UserCardSerializer do
   context "as different user" do
     let(:user) { Fabricate(:user, trust_level: 0) }
     let(:user2) { Fabricate(:user, trust_level: 1) }
+
     it "does not serialize emails" do
       json = described_class.new(user, scope: Guardian.new(user2), root: false).as_json
       expect(json[:secondary_emails]).to be_nil

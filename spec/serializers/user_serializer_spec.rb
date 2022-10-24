@@ -38,12 +38,8 @@ RSpec.describe UserSerializer do
       SiteSetting.default_other_notification_level_when_replying = 3
       SiteSetting.default_other_new_topic_duration_minutes = 60 * 24
 
-      user = Fabricate(:user,
-        user_profile: Fabricate(:user_profile),
-        user_option: UserOption.new(dynamic_favicon: true, skip_new_user_tips: true),
-        user_stat: UserStat.new,
-        created_at: Time.zone.now
-      )
+      user = Fabricate(:user)
+      user.user_option.update(dynamic_favicon: true, skip_new_user_tips: true)
 
       json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
 
