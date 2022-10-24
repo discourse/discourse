@@ -406,6 +406,7 @@ html.composer-open {
 
       a {
         @include ellipsis;
+        align-items: center;
         color: var(--primary-high);
         display: flex;
         padding: 5px;
@@ -424,17 +425,16 @@ html.composer-open {
 
           &.username {
             color: var(--primary);
+            margin-right: 5px;
           }
 
           &.name {
             font-size: var(--font-down-1);
-            vertical-align: middle;
           }
         }
 
         .relative-date {
           font-size: var(--font-down-3);
-          padding-top: 10em;
         }
       }
 
