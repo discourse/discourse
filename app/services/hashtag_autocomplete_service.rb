@@ -2,6 +2,7 @@
 
 class HashtagAutocompleteService
   HASHTAGS_PER_REQUEST = 20
+  SEARCH_MAX_LIMIT = 20
 
   attr_reader :guardian
   cattr_reader :data_sources
@@ -137,8 +138,9 @@ class HashtagAutocompleteService
     { categories: categories_hashtags, tags: tag_hashtags }
   end
 
-  def search(term, types_in_priority_order, limit = 5)
+  def search(term, types_in_priority_order, limit: 5)
     raise Discourse::InvalidParameters.new(:order) if !types_in_priority_order.is_a?(Array)
+    limit = [limit, SEARCH_MAX_LIMIT].min
 
     results = []
     slugs_by_type = {}
@@ -159,6 +161,7 @@ class HashtagAutocompleteService
         item.type = type
         item.ref = item.ref || item.slug
       end
+      data.sort_by! { |item| item.text.downcase }
       slugs_by_type[type] = data.map(&:slug)
 
       results.concat(data)
