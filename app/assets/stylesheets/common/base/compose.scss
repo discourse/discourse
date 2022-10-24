@@ -393,43 +393,54 @@ html.composer-open {
   width: 240px;
   background-color: var(--secondary);
   border: 1px solid var(--primary-low);
+
   ul {
     list-style: none;
     padding: 0;
     margin: 0;
 
     li {
-      .d-icon-users {
-        color: var(--primary-medium);
-        padding: 0 2px;
+      &:not(:last-child) {
+        border-bottom: 1px solid var(--primary-low);
       }
 
-      border-bottom: 1px solid var(--primary-low);
-
       a {
-        padding: 5px;
-        display: block;
         @include ellipsis;
+        color: var(--primary-high);
+        display: flex;
+        padding: 5px;
 
-        span.username {
-          color: var(--primary);
-        }
-        span.name {
-          font-size: var(--font-down-1);
-          vertical-align: middle;
-        }
-        &.selected {
-          background-color: var(--tertiary-low);
-        }
         @include hover {
           background-color: var(--highlight-low);
           text-decoration: none;
+        }
+
+        &.selected {
+          background-color: var(--tertiary-low);
+        }
+
+        span {
+          margin-left: 5px;
+
+          &.username {
+            color: var(--primary);
+          }
+
+          &.name {
+            font-size: var(--font-down-1);
+            vertical-align: middle;
+          }
         }
 
         .relative-date {
           font-size: var(--font-down-3);
           padding-top: 10em;
         }
+      }
+
+      .d-icon-users {
+        color: var(--primary-medium);
+        padding: 0 2px;
       }
     }
   }
