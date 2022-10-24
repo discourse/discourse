@@ -83,8 +83,8 @@ RSpec.describe Email::Receiver do
   it "raises an OldDestinationError when notification is too old" do
     SiteSetting.disallow_reply_by_email_after_days = 2
 
-    topic = Fabricate(:topic, id: 424242)
-    post  = Fabricate(:post, topic: topic, id: 123456)
+    topic = Fabricate(:topic)
+    post  = Fabricate(:post, topic: topic)
     user  = Fabricate(:user, email: "discourse@bar.com")
 
     expect { process(:old_destination) }.to raise_error(

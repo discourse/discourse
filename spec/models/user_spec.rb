@@ -1992,7 +1992,7 @@ RSpec.describe User do
 
   describe '.human_users' do
     it 'should only return users with a positive primary key' do
-      Fabricate(:user, id: -1979)
+      Fabricate(:bot)
       user = Fabricate(:user)
 
       expect(User.human_users).to eq([user])

@@ -303,7 +303,7 @@ RSpec.describe Guardian do
       end
 
       it "returns true for bot user" do
-        expect(Guardian.new(Fabricate(:user, id: -19876)).can_send_private_message?(another_user)).to be_truthy
+        expect(Guardian.new(Fabricate(:bot)).can_send_private_message?(another_user)).to be_truthy
       end
 
       it "returns true for system user" do

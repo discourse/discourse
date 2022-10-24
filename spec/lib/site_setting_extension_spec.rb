@@ -771,7 +771,8 @@ RSpec.describe SiteSettingExtension do
   describe '.all_settings' do
     describe 'uploads settings' do
       it 'should return the right values' do
-        system_upload = Fabricate(:upload, id: -999)
+        negative_upload_id = [(Upload.minimum(:id) || 0) - 1, -10].min
+        system_upload = Fabricate(:upload, id: negative_upload_id)
         settings.setting(:logo, system_upload.id, type: :upload)
         settings.refresh!
         setting = settings.all_settings.last
