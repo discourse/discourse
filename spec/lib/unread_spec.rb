@@ -6,16 +6,15 @@ RSpec.describe Unread do
   let(:whisperers_group) { Fabricate(:group) }
   let(:user) { Fabricate(:user, groups: [whisperers_group]) }
   let(:topic) do
-    Fabricate.build(:topic,
+    Fabricate(:topic,
       posts_count: 13,
       highest_staff_post_number: 15,
       highest_post_number: 13,
-      id: 1
     )
   end
 
   let(:topic_user) do
-    Fabricate.build(:topic_user,
+    Fabricate(:topic_user,
       notification_level: TopicUser.notification_levels[:tracking],
       topic_id: topic.id,
       user_id: user.id
