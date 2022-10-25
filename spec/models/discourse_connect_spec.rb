@@ -263,6 +263,104 @@ RSpec.describe DiscourseConnect do
     expect(add_group4.usernames).to eq(user.username)
   end
 
+  it 'creates group logs when users are added to groups' do
+    user = Fabricate(:user)
+    group = Fabricate(:group, name: 'group1')
+
+    sso = new_discourse_sso
+    sso.username = "bobsky"
+    sso.name = "Bob"
+    sso.email = user.email
+    sso.external_id = "A"
+    sso.add_groups = "#{group.name},badname"
+
+    GroupHistory.destroy_all
+
+    sso.lookup_or_create_user(ip_address)
+
+    expect(group.reload.usernames).to eq(user.username)
+    expect(GroupHistory.exists?(
+      target_user_id: user.id,
+      acting_user: Discourse.system_user.id,
+      action: GroupHistory.actions[:add_user_to_group]
+    )).to eq(true)
+  end
+
+  it 'creates group logs when users are removed from groups' do
+    user = Fabricate(:user)
+    group = Fabricate(:group, name: 'group1')
+    group.add(user)
+
+    sso = new_discourse_sso
+    sso.username = "bobsky"
+    sso.name = "Bob"
+    sso.email = user.email
+    sso.external_id = "A"
+    sso.remove_groups = "#{group.name},badname"
+
+    GroupHistory.destroy_all
+
+    sso.lookup_or_create_user(ip_address)
+
+    expect(group.reload.usernames).to be_blank
+    expect(GroupHistory.exists?(
+      target_user_id: user.id,
+      acting_user: Discourse.system_user.id,
+      action: GroupHistory.actions[:remove_user_from_group]
+    )).to eq(true)
+  end
+
+  it 'creates group logs when users are added to groups when discourse_connect_overrides_groups setting is true' do
+    SiteSetting.discourse_connect_overrides_groups = true
+
+    user = Fabricate(:user)
+    group = Fabricate(:group, name: 'group1')
+
+    sso = new_discourse_sso
+    sso.username = "bobsky"
+    sso.name = "Bob"
+    sso.email = user.email
+    sso.external_id = "A"
+    sso.groups = "#{group.name},badname"
+
+    GroupHistory.destroy_all
+
+    sso.lookup_or_create_user(ip_address)
+
+    expect(group.reload.usernames).to eq(user.username)
+    expect(GroupHistory.exists?(
+      target_user_id: user.id,
+      acting_user: Discourse.system_user.id,
+      action: GroupHistory.actions[:add_user_to_group]
+    )).to eq(true)
+  end
+
+  it 'creates group logs when users are removed from groups when discourse_connect_overrides_groups setting is true' do
+    SiteSetting.discourse_connect_overrides_groups = true
+
+    user = Fabricate(:user)
+    group = Fabricate(:group, name: 'group1')
+    group.add(user)
+
+    sso = new_discourse_sso
+    sso.username = "bobsky"
+    sso.name = "Bob"
+    sso.email = user.email
+    sso.external_id = "A"
+    sso.groups = "badname"
+
+    GroupHistory.destroy_all
+
+    sso.lookup_or_create_user(ip_address)
+
+    expect(group.reload.usernames).to be_blank
+    expect(GroupHistory.exists?(
+      target_user_id: user.id,
+      acting_user: Discourse.system_user.id,
+      action: GroupHistory.actions[:remove_user_from_group]
+    )).to eq(true)
+  end
+
   it 'behaves properly when auth_overrides_username is set but username is missing or blank' do
     SiteSetting.auth_overrides_username = true
 
