@@ -436,6 +436,12 @@ span.highlighted {
   margin-bottom: 1rem;
 }
 
+// fix staff color margins
+.moderator .regular > .cooked {
+  padding-top: 1em;
+  padding-left: 1em;
+}
+
 .placeholder .topic-body {
   width: 100%;
 }
