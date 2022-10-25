@@ -51,7 +51,7 @@ RSpec.describe SidebarSiteSettingsBackfiller do
 
         expect do
           backfiller.backfill!
-        end.spec/services/sidebar_site_settings_backfiller_spec.rb:86 { SidebarSectionLink.count }.by(-3)
+        end.to change { SidebarSectionLink.count }.by(-3)
 
         expect(SidebarSectionLink.exists?(id: category_sidebar_section_link_ids)).to eq(false)
       end
