@@ -35,9 +35,9 @@ $quote-share-maxwidth: 150px;
 }
 
 .placeholder-text {
-  margin-left: 11px;
+  margin-left: var(--topic-body-width-padding);
   display: inline-block;
-  width: calc(100% - 11px);
+  width: calc(100% - var(--topic-body-width-padding));
   height: 1.5em;
   margin-bottom: 0.6em;
 }
@@ -1084,7 +1084,8 @@ blockquote > *:last-child {
 }
 
 .gap {
-  padding: 0.25em 0 0.5em 56px; // 45px (topic avatar) + 11px (margin) = 56px
+  padding: 0.25em 0 0.5em
+    calc(var(--topic-avatar-width) + var(--topic-body-width-padding));
   color: var(--primary-med-or-secondary-high);
   cursor: pointer;
   text-transform: uppercase;
@@ -1120,17 +1121,20 @@ blockquote > *:last-child {
 .small-action {
   display: flex;
   align-items: center;
-  max-width: 758px;
-  border-top: 1px solid var(--primary-low);
+
+  .topic-avatar,
+  .small-action-desc {
+    border-top: 1px solid var(--primary-low);
+  }
+
   .topic-avatar {
     align-self: flex-start;
     padding: 0.7em 0;
-    border-top: none;
-    margin-right: 11px;
     flex: 0 0 auto;
+    width: var(--topic-avatar-width);
     .d-icon {
       font-size: 2em;
-      width: 45px;
+      width: var(--topic-avatar-width);
       text-align: center;
       color: var(--primary-low-mid);
     }
@@ -1145,15 +1149,18 @@ blockquote > *:last-child {
   }
 
   .small-action-desc {
+    box-sizing: border-box;
     display: flex;
     flex-wrap: wrap;
-    flex: 1 1 100%;
     align-items: center;
-    padding: 1em 0;
+    padding: 1em 0 1em var(--topic-body-width-padding);
     text-transform: uppercase;
     font-weight: bold;
     font-size: var(--font-down-1);
     color: var(--primary-medium);
+    width: calc(
+      var(--topic-body-width) + (var(--topic-body-width-padding) * 2)
+    );
     min-width: 0; // Allows flex container to shrink
 
     button {
@@ -1408,8 +1415,9 @@ a.mention-group {
 
 .signup-cta {
   box-sizing: border-box;
-  max-width: calc(#{$topic-body-width} + 4.5em);
-  padding: 3em 5em 2em 56px; // 45px (topic avatar) + 11px (margin) = 56px
+  max-width: calc(var(--topic-body-width) + 4.5em);
+  padding: 3em 5em 2em
+    calc(var(--topic-avatar-width + var(--topic-body-width-padding)));
   @include breakpoint(mobile-extra-large) {
     padding: 1.5em 1.5em 0.25em;
   }
@@ -1453,11 +1461,11 @@ a.mention-group {
   display: flex;
   width: 100%;
   max-width: calc(
-    #{$topic-body-width} + (#{$topic-body-width-padding} * 2) + #{$topic-avatar-width} -
-      (0.8em * 2)
+    var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+      var(--topic-avatar-width)
   );
-  padding: 0.8em;
-
+  padding: var(--topic-body-width-padding);
+  padding-left: 0;
   &.old {
     background-color: unset;
     color: var(--primary-medium);
@@ -1473,8 +1481,9 @@ a.mention-group {
 
   .d-icon {
     font-size: 2em;
+    width: var(--topic-avatar-width);
     color: var(--primary-high);
-    margin-right: 0.65em;
+    margin-right: var(--topic-body-width-padding);
   }
 }
 
@@ -1558,8 +1567,8 @@ a.mention-group {
   justify-content: center;
   align-items: center;
   max-width: calc(
-    #{$topic-body-width} + (#{$topic-body-width-padding} * 2) + #{$topic-avatar-width} -
-      (0.8em * 2)
+    var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+      var(--topic-avatar-width)
   );
 
   .filtered-avatar {

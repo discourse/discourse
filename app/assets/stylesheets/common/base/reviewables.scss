@@ -350,7 +350,7 @@
 
 .reviewable-score-reason {
   margin: 0.5em 0;
-  max-width: $topic-body-width;
+  max-width: var(--topic-body-width);
   margin-bottom: 0.5em;
 }
 
@@ -358,7 +358,7 @@
   margin: 0.5em 0;
 
   .reviewable-conversation-post {
-    max-width: $topic-body-width;
+    max-width: var(--topic-body-width);
     margin-bottom: 0.5em;
 
     .username {
@@ -405,8 +405,7 @@
   .reviewable-post-header {
     display: flex;
     justify-content: space-between;
-    max-width: $topic-body-width;
-    width: $topic-body-width;
+    width: var(--topic-body-width);
     align-items: center;
 
     .reviewable-reply-to {
@@ -426,7 +425,7 @@
   }
 
   .post-body {
-    max-width: $topic-body-width;
+    max-width: var(--topic-body-width);
     max-height: 300px;
     margin-top: 0.5em;
     overflow-y: auto;
