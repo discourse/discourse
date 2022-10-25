@@ -387,7 +387,7 @@ GEM
     rspec-html-matchers (0.10.0)
       nokogiri (~> 1)
       rspec (>= 3.0.0.a)
-    rspec-mocks (3.11.1)
+    rspec-mocks (3.11.2)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.11.0)
     rspec-rails (6.0.1)
