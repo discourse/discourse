@@ -1223,6 +1223,7 @@ class PluginApi {
   /**
    * Registers a "beforeSave" function on the composer. This allows you to
    * implement custom logic that will happen before the user makes a post.
+   * The passed function is expected to return a promise.
    *
    * Example:
    *
