@@ -214,6 +214,7 @@ gem 'rack-mini-profiler', require: ['enable_rails_patches']
 
 gem 'unicorn', require: false, platform: :ruby
 gem 'puma', require: false
+gem 'sd_notify', require: false
 gem 'rbtrace', require: false, platform: :mri
 gem 'gc_tracer', require: false, platform: :mri
 
