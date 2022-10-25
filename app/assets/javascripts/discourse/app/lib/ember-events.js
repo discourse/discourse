@@ -96,7 +96,12 @@ const EVENTS = {
 /**
  * @type {WeakMap<object, { event: string; method: string }[]>}
  */
-const COMPONENT_SETUP = new WeakMap();
+const PROTO_EVENTS = new WeakMap();
+
+/**
+ * @type {WeakMap<object, { event: string; listener: () => {} }[]>}
+ */
+const EVENT_LISTENERS = new WeakMap();
 
 const INTERNAL = Symbol("INTERNAL");
 
@@ -143,47 +148,16 @@ function rewireClassicComponentEvents(app) {
       }
     },
 
-    initEventListeners() {
-      const proto = Object.getPrototypeOf(this);
-      let protoEvents = COMPONENT_SETUP.get(proto);
-      const ownProps = Reflect.ownKeys(this);
-
-      // Memoize prototype event handlers at the prototype and add listeners
-      // to every instance.
-      if (!protoEvents) {
-        protoEvents = [];
-        COMPONENT_SETUP.set(proto, protoEvents);
-
-        for (const method of Object.keys(allEventMethods)) {
-          if (this.has(method) && !ownProps.includes(method)) {
-            const event = allEventMethods[method];
-            protoEvents.push({ event, method });
-          }
-        }
-      }
-      addComponentEventListeners(this, protoEvents);
-
-      // Check every component instance for event handlers added via arguments
-      // specific to the instance.
-      //
-      // TODO: optimize perf since this will be run for every component instance
-      let ownEvents;
-      for (const method of Object.keys(allEventMethods)) {
-        if (ownProps.includes(method)) {
-          const event = allEventMethods[method];
-          ownEvents ??= [];
-          ownEvents.push({ event, method });
-        }
-      }
-      if (ownEvents) {
-        addComponentEventListeners(this, ownEvents);
-      }
-    },
-
     // eslint-disable-next-line ember/no-component-lifecycle-hooks
     didInsertElement() {
       this._super(...arguments);
-      this.initEventListeners();
+      setupComponentEventListeners(this, allEventMethods);
+    },
+
+    // eslint-disable-next-line ember/no-component-lifecycle-hooks
+    willDestroyElement() {
+      teardownComponentEventListeners(this);
+      this._super(...arguments);
     },
   });
 }
@@ -213,12 +187,69 @@ function rewireActionModifier(appInstance) {
   };
 }
 
+function setupComponentEventListeners(component, allEventMethods) {
+  const proto = Object.getPrototypeOf(component);
+  let protoEvents = PROTO_EVENTS.get(proto);
+  const ownProps = Reflect.ownKeys(component);
+
+  // Memoize prototype event handlers at the prototype and add listeners
+  // to every instance.
+  if (!protoEvents) {
+    protoEvents = [];
+    PROTO_EVENTS.set(proto, protoEvents);
+
+    for (const method of Object.keys(allEventMethods)) {
+      if (component.has(method) && !ownProps.includes(method)) {
+        const event = allEventMethods[method];
+        protoEvents.push({ event, method });
+      }
+    }
+  }
+  addComponentEventListeners(component, protoEvents);
+
+  // Check every component instance for event handlers added via arguments
+  // specific to the instance.
+  //
+  // TODO: optimize perf since this will be run for every component instance
+  let ownEvents;
+  for (const method of Object.keys(allEventMethods)) {
+    if (ownProps.includes(method)) {
+      const event = allEventMethods[method];
+      ownEvents ??= [];
+      ownEvents.push({ event, method });
+    }
+  }
+  if (ownEvents) {
+    addComponentEventListeners(component, ownEvents);
+  }
+}
+
+function teardownComponentEventListeners(component) {
+  const eventListeners = EVENT_LISTENERS.get(component);
+  if (eventListeners?.length > 0) {
+    const { element } = component;
+    if (element) {
+      for (const { event, listener } of eventListeners) {
+        element.removeEventListener(event, listener);
+      }
+    }
+    EVENT_LISTENERS.delete(component);
+  }
+}
+
 function addComponentEventListeners(component, events) {
   if (events?.length > 0) {
     const { element } = component;
     if (element) {
+      // Track any added event listeners to allow cleanup
+      let eventListeners = EVENT_LISTENERS.get(component);
+      if (eventListeners === undefined) {
+        eventListeners = [];
+        EVENT_LISTENERS.set(component, eventListeners);
+      }
+
       for (const { event, method } of events) {
-        element.addEventListener(event, (e) => {
+        const listener = (e) => {
           const ret = component.trigger.call(component, INTERNAL, method, e);
           // If an event handler returns `false`, assume the intent is to stop
           // propagation and default event handling, as per the behavior
@@ -230,7 +261,9 @@ function addComponentEventListeners(component, events) {
             e.stopPropagation();
           }
           return ret;
-        });
+        };
+        element.addEventListener(event, listener);
+        eventListeners.push({ event, listener });
       }
     } else {
       throw new Error(
