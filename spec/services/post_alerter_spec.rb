@@ -1333,9 +1333,9 @@ RSpec.describe PostAlerter do
 
       u1.notifications.destroy_all
 
-      expect {
+      expect do
         create_post(topic: topic, user: u2)
-      }.to change { u1.reload.notifications.count }.by(1)
+      end.to change { u1.reload.notifications.count }.by(1)
       expect(u1.notifications.exists?(
         topic_id: topic.id,
         notification_type: Notification.types[:replied],
