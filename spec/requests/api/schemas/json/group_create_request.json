@@ -17,15 +17,15 @@
         },
         "usernames": {
           "type": "string",
-          "description": "comma,seperated"
+          "description": "comma,separated"
         },
         "owner_usernames": {
           "type": "string",
-          "description": "comma,seperated"
+          "description": "comma,separated"
         },
         "automatic_membership_email_domains": {
           "type": "string",
-          "description": "pipe|seperated"
+          "description": "pipe|separated"
         },
         "visibility_level": {
           "type": "integer"
