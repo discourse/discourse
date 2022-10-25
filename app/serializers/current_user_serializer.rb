@@ -339,13 +339,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def sidebar_category_ids
-    categories_ids = object.category_sidebar_section_links.pluck(:linkable_id)
-
-    if categories_ids.present?
-      categories_ids = categories_ids & scope.allowed_category_ids
-    end
-
-    categories_ids
+    object.category_sidebar_section_links.pluck(:linkable_id) & scope.allowed_category_ids
   end
 
   def include_sidebar_category_ids?
