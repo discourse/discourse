@@ -146,8 +146,15 @@ class PostAlerter
     # replies
     reply_to_user = post.reply_notification_target
 
-    if new_record && reply_to_user && !notified.include?(reply_to_user) && notify_about_reply?(post)
-      notified += notify_non_pm_users(reply_to_user, :replied, post)
+    if new_record
+      if reply_to_user && !notified.include?(reply_to_user) && notify_about_reply?(post)
+        notified += notify_non_pm_users(reply_to_user, :replied, post)
+      end
+
+      topic_author = post.topic.user
+      if topic_author && !notified.include?(topic_author) && user_watching_topic?(topic_author, post.topic)
+        notified += notify_non_pm_users(topic_author, :replied, post)
+      end
     end
 
     DiscourseEvent.trigger(:post_alerter_before_quotes, post, new_record, notified)
@@ -884,5 +891,13 @@ class PostAlerter
 
   def is_replying?(user, reply_to_user, quoted_users)
     reply_to_user == user || quoted_users.include?(user)
+  end
+
+  def user_watching_topic?(user, topic)
+    TopicUser.exists?(
+      user_id: user.id,
+      topic_id: topic.id,
+      notification_level: TopicUser.notification_levels[:watching]
+    )
   end
 end
