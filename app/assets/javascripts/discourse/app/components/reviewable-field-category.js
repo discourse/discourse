@@ -8,6 +8,6 @@ export default class extends Component {
   @action
   onChange(category) {
     this.categoryId = category;
-    this.args.categoryChanged && this.args.categoryChanged(category);
+    this.args.categoryChanged?.(category);
   }
 }
