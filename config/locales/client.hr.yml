@@ -5444,7 +5444,6 @@ hr:
       embedding:
         get_started: "Ako želite ugraditi Discourse na drugu web-stranicu, počnite dodavanjem njegovog hosta."
         confirm_delete: "Jeste li sigurni da želite izbrisati tog hosta?"
-        sample: "Zalijepite sljedeći HTML kod na svoju web-lokaciju kako biste stvorili i ugradili teme diskursa. Zamijenite <b>ZAMJENI_ME</b> kanonskim URL-om stranice na koju ga ugrađujete."
         title: "Ugrađivanje"
         host: "Dopušteni hostovi"
         class_name: "Naziv klase"

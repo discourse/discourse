@@ -3643,7 +3643,7 @@ zh_CN:
     fullscreen_table:
       expand_btn: "展开表"
     second_factor_auth:
-      redirect_after_success: "第二重认证验证成功。正在重定向到之前的页面…"
+      redirect_after_success: "第二重身份验证成功。正在重定向到之前的页面…"
     sidebar:
       unread_count:
         other: "%{count} 未读"
@@ -5207,7 +5207,6 @@ zh_CN:
       embedding:
         get_started: "如果您想将 Discourse 嵌入另一个网站，请先添加其主机。"
         confirm_delete: "确定要删除该主机吗？"
-        sample: "将以下 HTML 代码粘贴到您的站点中以创建和嵌入 Discourse 话题。将 <b>REPLACE_ME</b> 替换为您要嵌入它的页面的规范 URL。"
         title: "嵌入"
         host: "允许的主机"
         class_name: "类名"

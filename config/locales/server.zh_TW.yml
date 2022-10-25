@@ -308,6 +308,16 @@ zh_TW:
   education:
     until_posts:
       other: "%{count} 篇貼文"
+    "new-reply": |
+      歡迎來到 %{site_name} &mdash; — **感謝你的參與！**
+
+      - 務必尊重所有社群成員。
+
+      - 您的回應是否改善了討論？
+
+      - 歡迎有建設性的評論，但論述時請針對*觀點*，而別針對個人。
+
+      [請查看我們的社群守則](%{base_path}/guidelines)以進一步了解。此訊息面板只會在您發表 %{education_posts_text} 時顯示。
     avatar: |
       ### 來個大頭貼吧！
 
@@ -420,6 +430,7 @@ zh_TW:
   staff_category_name: "管理員"
   staff_category_description: "讓工作人員進行討論的私人分類。此分類下的討論話題只有管理員與板主才看得到。"
   discourse_welcome_topic:
+    title: "歡迎來到我們的社群！"
     body: |2
 
       置頂主題的第一段是訪客在主頁看到的歡迎消息。這很重要！
@@ -685,7 +696,7 @@ zh_TW:
     authorize: "授權"
     read: "閲讀"
     read_write: "讀/寫"
-    description: '“%{application_name}”正在請求訪問你的賬戶中的以下權限：'
+    description: '“%{application_name}”要求存取您帳號中的以下權限：'
     instructions: '系統熱騰騰產生了新的使用者API鑰匙給您使用，請將以下API鑰匙貼到您的應用程式裡。'
     otp_description: '你要允許進入%{application_name}這個網站嗎？'
     otp_confirmation:
@@ -1090,7 +1101,7 @@ zh_TW:
     editing_grace_period_max_diff: "編輯寬限期允許的字元更改的最大數量，如果有更多的更改，將另儲存為另一個版本的修訂（信任等級0和1）"
     editing_grace_period_max_diff_high_trust: "編輯寬限期允許的最大字元更改數，如果更改將另存為另一個修訂版（信任級別2和更高）"
     staff_edit_locks_post: "如果版主編輯過貼文，貼文將被鎖定編輯"
-    edit_history_visible_to_public: "允許任何人查看編輯過的貼文的舊版本。當禁用時，只有職員才能查看。"
+    edit_history_visible_to_public: "允許任何人查看編輯過的貼文的舊版本。當禁用時，只有工作成員才能查看。"
     delete_removed_posts_after: "貼文被作者刪除，將在 (n) 小時後被自動刪除。如果設置為 0，貼文將被立即刪除。"
     max_image_width: "貼文中最大的縮圖寬度"
     max_image_height: "貼文中的允許圖片最大的縮圖高度"
@@ -1143,6 +1154,8 @@ zh_TW:
     markdown_linkify_tlds: "自動設為連結的最上層網域列表"
     post_undo_action_window_mins: "允許使用者還原貼文上近期動作（讚、標記等）的時間長度（分鐘數）。"
     must_approve_users: "新註冊用戶必須由管理員進行審核，才能進行相關操作"
+    invite_code: "使用者必須輸入此代碼才能被允許註冊帳號，留空時將忽略（不分大小寫）"
+    persistent_sessions: "關閉網頁瀏覽器時，使用者將保持登入狀態"
     maximum_session_age: "使用者自訪問後可維持登錄 n 小時"
     enable_escaped_fragments: "如未偵測到爬蟲，將會使用 Google Ajax-Crawling API。參閱<a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     cors_origins: "允許跨來源資源共享（CORS）。每個來源必須包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 環境選項必須設置為 true 才能啟用 CORS 。"
@@ -1160,7 +1173,7 @@ zh_TW:
     post_menu: "確定在貼文功能表條包含哪些條目，以及排列順序。例如：like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "貼文菜單中默認隱藏的按鈕，點擊省略號後顯示。"
     share_links: "決定在分享對話方塊裡顯示哪些項目、以什麼順序顯示。"
-    site_contact_username: "論壇給使用者自動發送消息時使用的使用者名；如果留空將使用預設的系統賬戶。"
+    site_contact_username: "以一個有效的工作成員帳號來發送所有自動化消息。如果保留空白，則會使用預設的系統帳號。"
     site_contact_group_name: "有效的群組名稱將自動被加入到所有自動發送的訊息。"
     send_welcome_message: "給所有使用者發送快速開始指導的消息"
     send_tl1_welcome_message: "向新使用者（信任級別1）發送歡迎消息。"
@@ -1178,9 +1191,9 @@ zh_TW:
     email_token_valid_hours: "\"忘記密碼\" / \"重啟帳號\" token 有效的小時數 (n)"
     enable_badges: "啟用勳章系統"
     enable_whispers: "允許工作人員在主題中私密交流。"
-    blocked_email_domains: "用管道符“|”分隔的郵箱域名黑名單列表，其中的域名將不能用來註冊賬戶，例如：mailinator.com|trashmail.net"
+    blocked_email_domains: "不允許以豎線“|”分隔的電子郵件網域清單內的使用者註冊帳號。範例：mailinator.com|trashmail.net"
     allowed_email_domains: "用管道符“|”分隔的電子郵箱域名的列表，使用者必須使用這些郵箱域名註冊。警告：使用者使用不包含在這個列表裡的郵箱域名，將無法成功註冊。"
-    log_out_strict: "登出時，登出使用者所有設備上的所有時段"
+    log_out_strict: "登出時，登出使用者所有設備上的所有連線階段"
     version_checks: "當 Discourse 有推新的版本需要更新時，顯示在 <a href='%{base_path}/admin' target='_blank'>/admin/</a>Dashboard 上以提示管理員"
     new_version_emails: "當新版本發佈時，將會發送一封新的 EMail 至 contact_email 設定的位址"
     invite_expiry_days: "多少天以內使用者的邀請碼是有效的"
@@ -1195,9 +1208,10 @@ zh_TW:
     password_unique_characters: "密碼必須包含英文字"
     block_common_passwords: "不允許使用 10,000 個最常用的密碼"
     discourse_connect_overrides_bio: "在使用者頁面中覆蓋使用者的個人信息並禁止使用者修改"
+    enable_local_logins: "啟用本機使用者名稱和密碼登入型帳戶。警告：如果停用，如果您先前尚未設定至少一種替代登入方法，則可能無法登入。"
     enable_local_logins_via_email: "允許使用者用電子郵件來快速登入，Email內會包含一鍵登入連結。"
     allow_new_registrations: "允許新使用者註冊，如果取消選取，則沒有人能夠註冊"
-    enable_signup_cta: "顯示推薦創建賬戶的提示給那些回訪的未註冊使用者。"
+    enable_signup_cta: "顯示推薦創建帳號的提示給那些回訪的未註冊使用者。"
     enable_google_oauth2_logins: "啟用Google Oauth2身份驗證。 這是Google目前支持的身份驗證方法，若啟用將可以讓使用者使用 Google帳號登入，需要額外設定key和鑰匙（secret）。 請參閱<a href='https://meta.discourse.org/t/15858' target='_blank'>設定Google Login for Discourse</a>。"
     google_oauth2_client_id: "你的 Google 應用程式的客戶端 ID"
     google_oauth2_client_secret: "你的 Google 應用程式的客戶端 secret"
@@ -1398,11 +1412,11 @@ zh_TW:
     pop3_polling_enabled: "輪詢 POP3 收取郵件回覆。"
     pop3_polling_ssl: "連接至 POP3 伺服器時使用 SSL。（推薦）"
     pop3_polling_openssl_verify: "驗證伺服器的 TLS 證書（預設：啟用）"
-    pop3_polling_period_mins: "查詢用於郵件的 POP3 賬戶的間隔（以分鐘計）。注意：需要重新啟動。"
-    pop3_polling_port: "POP3 輪詢賬戶連接埠。"
+    pop3_polling_period_mins: "查詢用於郵件的 POP3 帳號的間隔（以分鐘計）。注意：需要重新啟動。"
+    pop3_polling_port: "POP3 輪詢帳號連接埠。"
     pop3_polling_host: "需用 POP3 向該地址輪詢電子郵件的主機。"
-    pop3_polling_username: "輪詢 POP3 賬戶所用的使用者名。"
-    pop3_polling_password: "輪詢 POP3 賬戶所用的密碼。"
+    pop3_polling_username: "POP3 帳戶用來輪詢電子郵件的使用者名稱。"
+    pop3_polling_password: "POP3 帳戶用來輪詢電子郵件的密碼。"
     pop3_polling_delete_from_server: "從Server端刪除電子郵件。注意：如果禁用此功能，則需要手動清理收件匣。"
     log_mail_processing_failures: "將所有電子郵件處理失敗記錄到<a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: '允許使用者通過電子郵件建立討論話題（需要手動設定或定期從pop3向伺服器擷取訊息）。在每個類別的“設定”選項中設定地址。'
@@ -1440,7 +1454,7 @@ zh_TW:
     group_in_subject: "在電子郵件中設定%%{optional_pm} ，取決於私訊中第一個群組的名稱，請參閱：<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>客製化標準電子郵件的格式</a>"
     allow_anonymous_posting: "允許使用者切換至匿名模式"
     anonymous_posting_min_trust_level: "啟用匿名發帖所需的最小信任等級"
-    anonymous_account_duration_minutes: "為了匿名性，為每個使用者每 N 分鐘創建一個匿名賬戶。例如：如果設置為 600，只要發帖後 600 分鐘到了，並且使用者切換至了匿名模式，就會創建一個新的匿名賬戶。"
+    anonymous_account_duration_minutes: "為了匿名性，為每個使用者每 N 分鐘創建一個匿名帳號。例如：如果設置為 600，只要發帖後 600 分鐘到了，並且使用者切換至了匿名模式，就會創建一個新的匿名帳號。"
     hide_user_profiles_from_public: "不對來訪使用者顯示使用者信息卡、使用者資料和使用者目錄。"
     show_inactive_accounts: "允許登入使用者瀏覽未啟用帳戶的使用者個人檔案。"
     hide_suspension_reasons: "不要在使用者個人檔案上公開顯示暫停原因。"
@@ -1519,6 +1533,7 @@ zh_TW:
     default_other_external_links_in_new_tab: "預設在新的標籤頁打開外部連結"
     default_other_enable_quoting: "預設在高亮選擇文字時啟用引用回覆"
     default_other_dynamic_favicon: "預設在瀏覽器表徵圖上顯示新/更新的主題數量"
+    default_other_skip_new_user_tips: "跳過新使用者登入時的提示和徽章."
     default_other_like_notification_frequency: "預設通知使用者讚的消息"
     default_topics_automatic_unpin: "預設時當使用者到達底部時自動解除主題置頂。"
     default_categories_watching: "分類列表預設跟蹤。"
@@ -1575,7 +1590,7 @@ zh_TW:
       pop3_polling_host_is_empty: "在啟用 POP3 輪詢前，你必須設置 'pop3 polling host'。"
       pop3_polling_username_is_empty: "在啟用 POP3 輪詢前，你必須設置 'pop3 polling username'。"
       pop3_polling_password_is_empty: "在啟用 POP3 輪詢前，你必須設置 'pop3 polling password'。"
-      pop3_polling_authentication_failed: "POP3 驗證失敗。請驗證你的 pop3 賬戶信息。"
+      pop3_polling_authentication_failed: "POP3 驗證失敗。請驗證你的 pop3 帳號信息。"
       reply_by_email_address_is_empty: "在啟用郵件回覆之前，你必須設置“reply by email address”。"
       email_polling_disabled: "在啟用郵件回覆功能前，你必須啟用手動或者 POP3 輪詢。"
       user_locale_not_enabled: "你必須先設置 'allow user locale' 再啟用該設置。"
@@ -1605,9 +1620,9 @@ zh_TW:
     results_page: "「%{term}」的搜尋結果"
   discourse_connect:
     login_error: "登入錯誤"
-    not_found: "無法找到你的賬戶。請聯繫站點管理人員。"
+    not_found: "無法找到你的帳號。請聯絡網站管理人員。"
     account_not_approved: "你的帳號尚未被審核通過。一旦你的帳號獲得批准，你就會收到一封電子郵件提醒。"
-    unknown_error: "你的賬戶發生了問題。請聯繫站點管理人員。"
+    unknown_error: "你的帳號發生了問題。請聯繫網站管理人員。"
     timeout_expired: "賬戶登錄超時，請重新嘗試登錄。"
     no_email: "沒有 email 被提供，請聯繫網站的管理員。"
     email_error: "無法使用此郵件地址：<b>%{email}</b>註冊帳號，請聯絡此網站管理員"
@@ -1686,7 +1701,7 @@ zh_TW:
     not_available: "不可用，試試 %{suggestion}？"
     something_already_taken: "出了一些問題，可能此使用者名或電子郵箱已經被註冊。試試 忘記密碼 連結吧。"
     omniauth_confirm_button: "繼續"
-    authenticator_error_no_valid_email: "關聯%{account}的賬戶沒有優秀的郵件地址。你可能需要用不同的郵件地址配置你的賬戶。"
+    authenticator_error_no_valid_email: "不允許使用與 %{account} 相關聯的電子郵件地址。您可能需要使用不同的電子郵件地址設定您的帳號。"
     new_registrations_disabled: "現在不允許註冊新的帳戶"
     password_too_long: "密碼不能超過 200 個字符。"
     email_too_long: "你輸入的郵件太長了。郵箱名不得超過 254 字元，域名必須不超過 253 字元。"
@@ -2977,7 +2992,7 @@ zh_TW:
     congratulations: "祝賀，你已經安裝好了 Discourse！"
     register:
       button: "註冊"
-      title: "註冊管理員賬戶"
+      title: "註冊管理員帳號"
       no_emails: "遺憾的是，在嚮導過程中你沒有設定管理員的電子郵件，所以完善設定可能有點困難。請在設定檔案中加入開發人員的電子郵件，或<a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>從控制台（console）建立一個管理員帳號</a> 。"
     confirm_email:
       title: "配置你的郵件"
@@ -3005,8 +3020,11 @@ zh_TW:
           login_required:
             placeholder: "私密"
             extra_description: "使用者必須登入後才能訪問此社群"
+          invite_only:
+            placeholder: "僅限邀請"
           must_approve_users:
             placeholder: "需要審核"
+            extra_description: "使用者必須經過工作人員的批准"
       ready:
         title: "你的 Discourse 已經準備就緒！"
       styling:

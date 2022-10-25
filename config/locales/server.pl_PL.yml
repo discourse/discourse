@@ -635,6 +635,7 @@ pl_PL:
               too_many: "Za długi opis akcji"
             base:
               invalid_url: "Adres URL zamiany jest nieprawidłowy"
+              invalid_tag_list: "Zastępcza lista tagów jest nieprawidłowa"
         sidebar_section_link:
           attributes:
             linkable_type:
@@ -647,6 +648,7 @@ pl_PL:
   staff_category_name: "Zespół"
   staff_category_description: "Ukryta kategoria dla rozmów zespołu. Tematy są widoczne tylko dla adminów i moderatorów."
   discourse_welcome_topic:
+    title: "Witamy w naszej społeczności!"
     body: |2
 
       Pierwszy paragraf tego przypiętego tematu będzie widoczny jako wiadomość powitalna dla wszystkich odwiedzających stronę główną. Jest bardzo ważny!
@@ -4532,6 +4534,7 @@ pl_PL:
     register:
       button: "Zarejestruj"
       title: "Zarejestrowano konto administratora"
+      help: "Zarejestruj nowe konto, aby rozpocząć."
       no_emails: "Niestety, podczas instalacji nie zdefiniowano żadnych e-maili administratora, więc finalizacja konfiguracji może być trudna. Dodaj adres e-mail programisty w pliku konfiguracyjnym lub <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>utwórz konto administratora z konsoli</a>."
     confirm_email:
       title: "Potwierdzenie przez email"
@@ -4627,6 +4630,7 @@ pl_PL:
             label: "Duża ikona"
             description: "Ikona używana do reprezentowania Twojej witryny na urządzeniach mobilnych, która dobrze wygląda w większych rozmiarach. Najlepiej, jeśli jest większa niż 512x512. Domyślnie używane jest logo kwadratowe."
       corporate:
+        title: "Twoja organizacja"
         fields:
           company_name:
             label: "Nazwa firmy"

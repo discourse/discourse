@@ -9,4 +9,4 @@ ru:
     discourse_local_dates_enabled: "Включить поддержку локальных дат. Эта функция добавит поддержку дат в сообщениях, использующих элемент [date], с учётом локального часового пояса."
     discourse_local_dates_default_formats: "Часто используемые форматы даты и времени, см.: <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>форматирование строк с помощью moment.js</a>"
     discourse_local_dates_default_timezones: "Список часовых поясов должен содержать допустимые <a target='_blank' rel='noopener' href='https://ru.wikipedia.org/wiki/Часовой_пояс'>часовые пояса</a>"
-    discourse_local_dates_email_format: "Формат, используемый для отображения даты в Email-сообщениях."
+    discourse_local_dates_email_format: "Формат, используемый для отображения даты в эл. сообщениях."

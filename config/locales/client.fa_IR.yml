@@ -783,6 +783,7 @@ fa_IR:
         group_type: "نوع گروه"
         is_group_user: "عضو"
         is_group_owner: "مالک"
+        search_results: "نتایج جستجو در زیر ظاهر خواهد شد."
       title:
         one: "گروه ها"
         other: "گروه ها"
@@ -805,6 +806,7 @@ fa_IR:
         forbidden: "شما مجاز به دیدن کاربران نیستید."
       topics: "موضوعات"
       posts: "نوشته‌ها"
+      aria_post_number: "%{title} - نوشته #%{postNumber}"
       mentions: "اشاره‌ها"
       messages: "پیام‌ها"
       notification_level: "سطح آگاه‌سازی پیش‌فرض برای پیام‌های گروهی"

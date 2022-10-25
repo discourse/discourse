@@ -926,6 +926,7 @@ he:
         group_type: "סוג קבוצה"
         is_group_user: "חבר"
         is_group_owner: "בעלים"
+        search_results: "תוצאות החיפוש תופענה להלן."
       title:
         one: "קבוצה"
         two: "קבוצות"
@@ -962,6 +963,7 @@ he:
         no_filter_matches: "אין חברים שעונים לחיפוש הזה."
       topics: "נושאים"
       posts: "פוסטים"
+      aria_post_number: "%{title} - פוסט מס׳ %{postNumber}"
       mentions: "אזכורים"
       messages: "הודעות"
       notification_level: "ברירת מחדל של רמת התראות להודעות קבוצה"
@@ -1196,6 +1198,7 @@ he:
         not_first_time: "לא הפעם הראשונה שלך?"
         skip_link: "דילוג על העצות האלו"
         read_later: "אקרא את זה אחר כך."
+      reset_seen_popups: "להציג את עצות קבלת הפנים שוב"
       theme_default_on_all_devices: "הגדרת ערכת עיצוב זו כבררת המחדל לכל המכשירים שלי"
       color_scheme_default_on_all_devices: "הגדרת ערכות צבעים כבררת מחדל לכל המכשירים שלי"
       color_scheme: "ערכת צבעים"
@@ -3177,6 +3180,7 @@ he:
         two: "הצגת %{count} תגובות שהוסתרו"
         many: "הצגת %{count} תגובות שהוסתרו"
         other: "הצגת %{count} תגובות שהוסתרו"
+      sr_reply_to: "תגובה לפוסט מס׳ %{post_number} על ידי ‎@%{username}"
       notice:
         new_user: "זהו הפרסום הראשון מאת %{user} - הבה נקבל את פניו/ה לקהילה שלנו!"
         returning_user: "עבר זמן מה מאז שראינו במחוזותינו את %{user} - הפרסום האחרון שלו/ה היה %{time}."
@@ -3424,6 +3428,7 @@ he:
       all: "כל הקטגוריות"
       choose: "קטגוריה&hellip;"
       edit: "עריכה"
+      edit_title: "עריכת הקטגוריה הזאת"
       edit_dialog_title: "עריכה: %{categoryName}"
       view: "הצגת נושאים בקטגוריה"
       back: "חזרה לקטגוריה"
@@ -4233,6 +4238,7 @@ he:
               pending_count: "%{count} ממתינים"
     welcome_topic_banner:
       title: "כאן ניתן ליצור את נושא קבלת הפנים שלך"
+      description: 'נושא קבלת הפנים שלך הוא הדבר הראשון שחברים חדשים יקראו. אפשר לחשוב על זה כמו על „נאום מעלית” או „הצהרת כוונות”. כדאי לתאר למי מיועדת הקהילה הזאת, מה אפשר לצפות למצוא כאן ומה מומלץ לעשות בהתחלה.'
       button_title: "להתחיל לערוך"
     until: "עד:"
   admin_js:
@@ -5764,7 +5770,7 @@ he:
       embedding:
         get_started: "כדי להטמיע את Discourse באתר אחר, יש להתחיל בהוספת השרת שלו."
         confirm_delete: "האם ברצונכם להסיר את הhost הזה? "
-        sample: "יש להדביק את קוד ה־HTML הבא באתר שלך כדי ליצור ולהטמיע נושאים של Discourse. עליך להחליף את <b>REPLACE_ME</b> בכתובת היחסית של העמוד בו תתבצע ההטמעה."
+        sample: "יש להדביק את קוד ה־HTML הבא באתר שלך כדי ליצור ולהטמיע נושאים של Discourse. יש להחליף את <b>REPLACE_ME</b> בכתובת היחסית של העמוד בו תתבצע ההטמעה."
         title: "שילוב (embedding)"
         host: "שרתים מורשים"
         class_name: "שם מחלקה"

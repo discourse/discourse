@@ -38,6 +38,9 @@ ja:
       show-results:
         title: "投票結果を表示する"
         label: "結果を表示する"
+      remove-vote:
+        title: "投票の削除"
+        label: "投票を削除"
       hide-results:
         title: "自分の投票に戻る"
         label: "投票を表示する"
