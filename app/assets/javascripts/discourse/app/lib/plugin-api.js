@@ -1228,7 +1228,9 @@ class PluginApi {
    * Example:
    *
    * api.composerBeforeSave(() => {
-   *   console.log("Before saving, do something!");
+   *   return new Promise(() => {
+   *     console.log("Before saving, do something!")
+   *   })
    * })
    */
   composerBeforeSave(method) {
