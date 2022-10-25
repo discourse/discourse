@@ -297,7 +297,7 @@ RSpec.describe CurrentUserSerializer do
     let(:category_sidebar_section_link) { Fabricate(:category_sidebar_section_link, user: user) }
     let(:category_sidebar_section_link_2) { Fabricate(:category_sidebar_section_link, user: user) }
 
-    it "is not included when SiteSeting.enable_experimental_sidebar_hamburger is false" do
+    it "is not included when SiteSetting.enable_experimental_sidebar_hamburger is false" do
       category_sidebar_section_link
       SiteSetting.enable_experimental_sidebar_hamburger = false
 

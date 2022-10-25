@@ -172,14 +172,13 @@ RSpec.describe Email::Processor do
   end
 
   describe 'when replying to a post that is too old' do
-    let(:mail) { file_from_fixtures("old_destination.eml", "emails").read }
     fab!(:user) { Fabricate(:user, email: "discourse@bar.com") }
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:post) { Fabricate(:post, topic: topic, created_at: 3.days.ago) }
+    let(:mail) { file_from_fixtures("old_destination.eml", "emails").read.gsub("424242", topic.id.to_s).gsub("123456", post.id.to_s) }
+
     it 'rejects the email with the right response' do
       SiteSetting.disallow_reply_by_email_after_days = 2
-
-      topic = Fabricate(:topic, id: 424242)
-      post  = Fabricate(:post, topic: topic, id: 123456, created_at: 3.days.ago)
-
       processor = Email::Processor.new(mail)
       processor.process!
 
