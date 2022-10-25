@@ -505,7 +505,7 @@ blockquote {
 .topic-area > .loading-container {
   // loader needs to be same width as posts
   width: calc(
-    var(--topic-body-width) + var(--topic-avatar) +
+    var(--topic-body-width) + var(--topic-avatar-width) +
       (var(--topic-body-width-padding) * 2)
   );
   max-width: 100%;
