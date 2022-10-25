@@ -11,7 +11,7 @@ RSpec.describe 'groups' do
   end
 
   path '/admin/groups.json' do
-    post 'Creates a group' do
+    post 'Create a group' do
       tags 'Groups'
       operationId 'createGroup'
       consumes 'application/json'
