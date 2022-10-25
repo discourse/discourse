@@ -336,6 +336,7 @@ span.highlighted {
 }
 
 .topic-avatar {
+  float: left;
   margin-right: 10px;
   z-index: z("base") + 1;
   /* must render on top of topic-body + topic-meta-data, otherwise not tappable */
