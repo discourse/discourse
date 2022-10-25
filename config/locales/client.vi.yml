@@ -5085,7 +5085,6 @@ vi:
       embedding:
         get_started: "Nếu bạn muốn nhúng Discourse trên một website khác, bắt đầu bằng cách thêm host."
         confirm_delete: "Bạn muốn xóa host này?"
-        sample: "Dán mã HTML sau vào trang web của bạn để tạo và nhúng các chủ đề diễn ngôn. Thay thế <b>REPLACE_ME</b> bằng URL chuẩn của trang mà bạn đang nhúng nó vào."
         title: "Nhúng"
         host: "Cho phép Host"
         class_name: "Tên lớp"

@@ -61,7 +61,7 @@ zh_CN:
     ember_selector_error: "抱歉 - 不允许使用 #ember 或 .ember-view CSS 选择器，因为这些名称是在运行时动态生成的，并且会随着时间变化，最终会导致 CSS 损坏。尝试其他选择器。"
     import_error:
       generic: 导入该主题时发生错误
-      upload: "创建上传资产时出错：%{name}。%{errors}"
+      upload: "创建上传资源时出错：%{name}。%{errors}"
       about_json: "导入错误：about.json 不存在或无效。确定这是一个 Discourse 主题码？"
       about_json_values: "about.json 包含无效值：%{errors}"
       modifier_values: "about.json 修饰符包含无效值：%{errors}"
@@ -1299,7 +1299,7 @@ zh_CN:
         qtt_like: 获赞
       description: "从各种用户收到赞最多的前 10 名用户。"
   dashboard:
-    group_email_credentials_warning: '群组 <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a> 的电子邮件凭证有问题。在此问题解决之前，不会从群组收件箱发送电子邮件。%{error}'
+    group_email_credentials_warning: '群组 <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a> 的电子邮件凭据有问题。在此问题解决之前，不会从群组收件箱发送电子邮件。%{error}'
     rails_env_warning: "您的服务器正在以%{env}模式运行。"
     host_names_warning: "您的 config/database.yml 文件使用的是默认的 localhost 主机名。请更新为您的站点主机名。"
     sidekiq_warning: 'Sidekiq 未运行。许多任务，例如发送电子邮件，是通过 Sidekiq 异步执行的。请确保至少运行一个 Sidekiq进程。<a href="https://github.com/mperham/sidekiq" target="_blank">在此处了解 Sidekiq</a>。'
@@ -1571,7 +1571,7 @@ zh_CN:
     google_oauth2_client_secret: "您的 Google 应用的客户端密钥。"
     google_oauth2_prompt: "可选的以空格分隔的字符串值列表，指定授权服务器是否提示用户进行重新身份验证和同意。请参阅<a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'> https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> 了解可能的值。"
     google_oauth2_hd: "登录将受限的可选 Google Apps 托管网域。请参阅 <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> 以了解详情。"
-    google_oauth2_hd_groups: "（实验性）在进行身份验证时检索用户在托管网域上的 Google 群组。检索到的 Google 群组可用于自动授予 Discourse 群组成员资格。有关更多信息，请参阅 https://meta.discourse.org/t/226850"
+    google_oauth2_hd_groups: "（实验性）在进行身份验证时检索用户在托管网域上的 Google 群组。检索到的 Google 群组可用于自动授予 Discourse 群组成员资格（请参见群组设置）。有关更多信息，请参阅 https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "属于 Google Workspace 管理员帐号的电子邮件地址。将与服务帐户凭据一起使用以获取群组信息。"
     google_oauth2_hd_groups_service_account_json: "服务帐户的 JSON 格式密钥信息。将用于获取群组信息。"
     enable_twitter_logins: "启用 Twitter 身份验证，需要 twitter_consumer_key 和 twitter_consumer_secret。请参阅<a href='https://meta.discourse.org/t/13395' target='_blank'>为 Discourse 配置 Twitter 登录（和丰富的嵌入）</a>。"
@@ -2594,7 +2594,7 @@ zh_CN:
         %{flagged_post_raw_content}
         ```
 
-        请阅读我们的[社区准则](%{base_url}/guidelines)以了解详情。
+        请查阅我们的[社区准则](%{base_url}/guidelines)以了解详情。
     flags_agreed_and_post_deleted_for_responders:
       title: "管理人员从被举报的帖子中移除了回复"
       subject_template: "管理人员从被举报的帖子中移除了回复"
@@ -2617,7 +2617,7 @@ zh_CN:
         %{flagged_post_response_raw_content}
         ``
 
-        关于移除原因的详细信息，请查看我们的[社区准则](%{base_url}/guidelines)。
+        关于移除原因的详细信息，请查阅我们的[社区准则](%{base_url}/guidelines)。
     usage_tips:
       text_body_template: |
         有关作为新用户入门的一些快速提示，请[查看此博文](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。
@@ -3786,7 +3786,7 @@ zh_CN:
       * 不要在多个话题中回复同样的内容。
       * 不要发布没有内容的回复。
       * 不要在中途改变话题。
-      * 不要在您的帖子中签名 &mdash; 每一个帖子都附有您的个人信息。
+      * 不要在您的帖子中签名 &mdash; 每一个帖子都附有您的个人资料信息。
 
       比起发表“+1”或者“同意”，请使用“赞”按钮。比起将现有话题带向一个截然不同的方向，使用“作为链接话题回复”。
 

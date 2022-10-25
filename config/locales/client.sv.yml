@@ -824,6 +824,7 @@ sv:
         group_type: "Grupptyper"
         is_group_user: "Medlem"
         is_group_owner: "Ägare"
+        search_results: "Sökresultat kommer att visas nedan."
       title:
         one: "Grupp"
         other: "Grupper"
@@ -858,6 +859,7 @@ sv:
         no_filter_matches: "Inga medlemmar matchar den sökningen."
       topics: "Ämnen"
       posts: "Inlägg"
+      aria_post_number: "%{title} - inlägg #%{postNumber}"
       mentions: "Omnämnanden"
       messages: "Meddelanden"
       notification_level: "Standardaviseringsnivå för gruppmeddelanden"
@@ -1084,6 +1086,7 @@ sv:
         not_first_time: "Är det inte din första gång?"
         skip_link: "Hoppa över dessa tips"
         read_later: "Jag läser det senare."
+      reset_seen_popups: "Visa nybörjartips igen"
       theme_default_on_all_devices: "Gör detta till standardtema för alla mina enheter"
       color_scheme_default_on_all_devices: "Ange standardfärgschema(n) för alla mina enheter"
       color_scheme: "Färgschema"
@@ -1103,13 +1106,16 @@ sv:
       enable_quoting: "Aktivera citatsvar för markerad text"
       enable_defer: "Aktivera fördröjning för att markera ämnen som lästa"
       experimental_sidebar:
+        enable: "Aktivera sidofältet"
         options: "Alternativ"
         categories_section: "Sektion Kategorier"
         categories_section_instruction: "Valda kategorier kommer att visas under sidofältets kategorisektion."
         tags_section: "Sektion Taggar"
         tags_section_instruction: "Valda taggar kommer att visas under sidofältets tagg-sektion."
         navigation_section: "Navigering"
+        list_destination_instruction: "När jag klickar på en länk till en ämneslista i sidofältet med nya eller olästa ämnen kommer jag till"
         list_destination_default: "Standard"
+        list_destination_unread_new: "Nya/olästa"
       change: "ändra"
       featured_topic: "Utvalt ämne"
       moderator: "%{user} är en moderator"
@@ -1280,6 +1286,8 @@ sv:
         edit: "Redigera"
         edit_title: "Redigera autentisering"
         edit_description: "Autentiseringsnamn"
+        enable_security_key_description: |
+          När du har din <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">maskinvarusäkerhetsnyckel</a> eller kompatibel mobil enhet till hands, tryck på registrera-knappen nedan.
         totp:
           title: "Bevisbaserad autentisering"
           add: "Lägg till autentisering"
@@ -1287,12 +1295,16 @@ sv:
           name_and_code_required_error: "Du måste ange ett namn samt koden från din app för autentisering."
         security_key:
           register: "Registrera"
+          title: "Fysiska säkerhetsnycklar"
+          add: "Lägg till fysisk säkerhetsnyckel"
           default_name: "Huvudsäkerhetsnyckel"
           iphone_default_name: "iPhone"
           android_default_name: "Android"
           not_allowed_error: "Registreringsprocessen för säkerhetsnyckel dröjde antingen för länge eller avbröts."
           already_added_error: "Du har redan registrerat denna säkerhetsnyckel.\nDu behöver inte registrera den igen."
+          edit: "Redigera fysisk säkerhetsnyckel"
           save: "Spara"
+          edit_description: "Namn på fysisk säkerhetsnyckel"
           name_required_error: "Du måste ge din säkerhetsnyckel ett namn."
       change_about:
         title: "Ändra Om mig"
@@ -1819,6 +1831,7 @@ sv:
       second_factor_backup_title: "Tvåfaktorsreserv"
       second_factor_backup_description: "Ange en av dina reservkoder:"
       second_factor: "Logga in via autentiseringsappen"
+      security_key_description: "När du har din fysiska säkerhetsnyckel eller kompatibla mobil enhet beredd, tryck på knappen Autentisera med knappen Säkerhetsnyckel nedanför."
       security_key_alternative: "Prova ett annat sätt"
       security_key_authenticate: "Autentisera med säkerhetsnyckel"
       security_key_not_allowed_error: "Processen för autentiseringssäkerhetsnyckel dröjde antingen för länge eller avbröts."
@@ -2937,6 +2950,7 @@ sv:
       gap:
         one: "visa %{count} dolt svar"
         other: "visa %{count} dolda svar"
+      sr_reply_to: "Svara på inlägg #%{post_number} av @%{username}"
       notice:
         new_user: "Detta är första gången som användaren %{user} har skapat ett inlägg — låt oss välkomna hen till vår gemenskap!"
         returning_user: "Det var ett tag sedan vi såg %{user} — senaste inlägget gjordes %{time}."
@@ -3150,6 +3164,7 @@ sv:
       all: "Alla kategorier"
       choose: "kategori&hellip;"
       edit: "Redigera"
+      edit_title: "Redigera denna kategori"
       edit_dialog_title: "Ändra: %{categoryName}"
       view: "Visa ämnen i kategori"
       back: "Tillbaka till kategorin"
@@ -3856,11 +3871,13 @@ sv:
           click_to_get_started: "Klicka här för att komma igång."
           header_link_text: "Taggar"
           header_action_title: "redigera sidofältets taggar"
+          configure_defaults: "Konfigurera standardvärden"
         categories:
           none: "Du har inte lagt till några kategorier."
           click_to_get_started: "Klicka här för att komma igång."
           header_link_text: "Kategorier"
           header_action_title: "redigera sidofältets kategorier"
+          configure_defaults: "Konfigurera standardvärden"
         community:
           header_link_text: "Community"
           header_action_title: "skapa ett nytt ämne"
@@ -5405,7 +5422,7 @@ sv:
       embedding:
         get_started: "Börja genom att lägga till värden, om du vill bädda in Discourse på en annan hemsida. "
         confirm_delete: "Är du säker på att du vill ta bort värden?"
-        sample: "Klistra in följande HTML-kod på din webbplats för att skapa och bädda in discourse-ämnen. Byt ut <b>REPLACE_ME</b> mot den vägledande URL-en för sidan som du bäddar in den i."
+        sample: "Klistra in följande HTML-kod på din webbplats för att skapa och bädda in Discourse-ämnen. Byt ut <b>REPLACE_ME</b> mot den vägledande URL-en för sidan som du bäddar in den i."
         title: "Inbäddning"
         host: "Tillåtna värdar"
         class_name: "Klassnamn"

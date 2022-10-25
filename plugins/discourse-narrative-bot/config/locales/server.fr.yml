@@ -85,7 +85,7 @@ fr:
         quote: "Tout ce que l'esprit de l'homme peut concevoir et croire peut être atteint."
         author: "Napoleon Hill"
       "11":
-        quote: "Paix dans le pays, paix dans le monde."
+        quote: "La paix chez nous, la paix dans le monde."
         author: "Mustafa Kemal Atatürk"
       "12":
         quote: "L'éducation n'est pas un moyen d'échapper à la pauvreté. Elle est un\nmoyen de la combattre."
@@ -236,15 +236,15 @@ fr:
           >
           > L'avantage de se parler à soi-même, c'est que l'on est sûr que quelqu'un nous écoute.
           >
-          > Certaines personnes ont du talent avec des mots, et d'autres personnes... oh, euh, n'en ont pas.
+          > Certaines personnes ont du talent avec les mots, tandis que d'autres… eh bien, n'en ont pas.
 
-          Sélectionnez le texte de votre &uarr; citation préférée, et appuyez sur le bouton **Citer** qui apparaît sur votre sélection ou sur le bouton **Répondre** sous ce message.
+          Sélectionnez le texte de votre &uarr; citation préférée et appuyez sur le bouton **Citer** qui apparaît sur votre sélection ou sur le bouton **Répondre** sous ce message.
 
           Sous cette citation, ajoutez un ou deux mots pour expliquer votre choix, je suis curieux ! :thinking:
         reply: |-
           Bon travail, vous avez choisi ma citation préférée ! :left_speech_bubble:
         not_found: |-
-          Hum... je n'ai pas l'impression que vous m'ayez cité dans votre réponse ?
+          Hum… je n'ai pas l'impression que vous m'ayez cité dans votre réponse ?
 
           La sélection de n'importe quel texte dans mon message fera apparaître le bouton <kbd>**Citer**</kbd>. L'utilisation de la fonction « Répondre » avec le texte sélectionné fonctionnera également ! Pouvez-vous réessayer ?
       bookmark:
@@ -316,7 +316,7 @@ fr:
 
           - Si vous avez un clavier physique :keyboard:, appuyez sur <kbd>?</kbd> pour voir nos raccourcis clavier pratiques.
         not_found: |-
-          Hum... Il semble que vous rencontrez des difficultés. J'en suis désolé. Avez-vous cherché <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> le mot **capy&#8203;bara** ?
+          Hum… Il semble que vous rencontrez des difficultés. J'en suis désolé. Avez-vous cherché <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> le mot **capy&#8203;bara** ?
       end:
         message: |-
           Merci d'être resté(e) avec moi @%{username} ! J'ai fait ça pour vous, je pense que vous l'avez mérité :

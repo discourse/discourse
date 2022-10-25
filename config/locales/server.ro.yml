@@ -1250,6 +1250,9 @@ ro:
     email_too_long: "Adresa de email pe care ai introdus-o este prea lungă. Numele de căsuțe poștale nu trebuie să depășească 254 de caractere, și numele de domenii nu trebuie să depășească 253 de caractere."
     reserved_username: "Acest nume utilizator nu este permis."
     missing_user_field: "Nu ai completat toate câmpurile utilizatorului"
+    second_factor_title: "Autentificare în doi pași (2FA)"
+    second_factor_description: "Introdu codul de autentificare din aplicația 2FA"
+    invalid_second_factor_code: "Cod de autentificare invalid. Fiecare cod poate fi utilizat o singură dată."
   admin:
     email:
       sent_test: "trimis!"
@@ -1596,6 +1599,9 @@ ro:
       text_body_template: |2
 
         %{message}
+    account_second_factor_disabled:
+      title: "Autentificarea în doi pași (2FA) este dezactivată"
+      subject_template: "[%{email_prefix}] Autentificare în doi pași (2FA) dezactivată"
     digest:
       why: "Un rezumat scurt al %{site_link} de la ultima ta vizită din %{last_seen_at}."
       since_last_visit: "De la ultima ta vizită"

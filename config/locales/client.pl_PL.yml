@@ -758,6 +758,8 @@ pl_PL:
         reset_to_default: "Przywróć ustawienia domyślne"
       group:
         all: "wszystkie grupy"
+      sort:
+        label: "Sortuj według %{criteria}"
     group_histories:
       actions:
         change_group_setting: "Zmień ustawienia grupy"
@@ -922,6 +924,7 @@ pl_PL:
         group_type: "Rodzaj grupy"
         is_group_user: "Członek"
         is_group_owner: "Właściciel"
+        search_results: "Wyniki wyszukiwania pojawią się poniżej."
       title:
         one: "Grupa"
         few: "Grupy"
@@ -958,6 +961,7 @@ pl_PL:
         no_filter_matches: "Żaden użytkownik nie pasuje do wyszukiwania."
       topics: "Tematy"
       posts: "Postów"
+      aria_post_number: "%{title} - post #%{postNumber}"
       mentions: "Wzmianki"
       messages: "Wiadomości"
       notification_level: "Domyślny poziom powiadomień dla wiadomości grupy."
@@ -1207,6 +1211,7 @@ pl_PL:
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
       enable_defer: "Włącz odroczenie, aby oznaczyć tematy jako nieprzeczytane"
       experimental_sidebar:
+        enable: "Włącz pasek boczny"
         options: "Opcje"
         categories_section: "Sekcja kategorii"
         categories_section_instruction: "Wybrane kategorie będą wyświetlane w sekcji kategorii paska bocznego."
@@ -1214,6 +1219,7 @@ pl_PL:
         tags_section_instruction: "Wybrane tagi będą wyświetlane w sekcji tagów paska bocznego."
         navigation_section: "Nawigacja"
         list_destination_default: "Domyślny"
+        list_destination_unread_new: "Nowe/Nieprzeczytane"
       change: "zmień"
       featured_topic: "Wyróżniony temat"
       moderator: "%{user} jest moderatorem"
@@ -1398,12 +1404,16 @@ pl_PL:
           name_and_code_required_error: "Musisz podać nazwę i kod z aplikacji uwierzytelniającej."
         security_key:
           register: "Zarejestruj"
+          title: "Fizyczne klucze bezpieczeństwa"
+          add: "Dodaj fizyczny klucz bezpieczeństwa"
           default_name: "Główny klucz bezpieczeństwa"
           iphone_default_name: "iPhone"
           android_default_name: "Android"
           not_allowed_error: "Upłynął limit czasu procesu rejestracji klucza bezpieczeństwa lub został on anulowany."
           already_added_error: "Ten klucz bezpieczeństwa został już zarejestrowany. Nie musisz go ponownie rejestrować."
+          edit: "Edytuj fizyczny klucz bezpieczeństwa"
           save: "Zapisz"
+          edit_description: "Nazwa fizycznego klucza bezpieczeństwa"
           name_required_error: "Musisz podać nazwę swojego klucza bezpieczeństwa."
       change_about:
         title: "Zmień O mnie"
@@ -1775,6 +1785,9 @@ pl_PL:
         title: "Ikona"
         none: "(brak)"
         instructions: "ikona wyświetlana obok Twojego zdjęcia profilowego"
+      status:
+        title: "Własny status"
+        not_set: "Nie ustawiony"
       primary_group:
         title: "Główna grupa"
         none: "(brak)"
@@ -1790,6 +1803,10 @@ pl_PL:
       set_custom_status: "Ustaw własny status"
       what_are_you_doing: "Co robisz?"
       remove_status: "Usuń status"
+    popup:
+      primary: "Zrozumiano!"
+      first_notification:
+        title: "Twoje pierwsze powiadomienie!"
     loading: "Wczytuję…"
     errors:
       prev_page: "podczas próby wczytania"
@@ -1882,6 +1899,7 @@ pl_PL:
       remove_allowed_user: "Czy naprawdę chcesz usunąć %{name} z tej dyskusji?"
       remove_allowed_group: "Czy naprawdę chcesz usunąć %{name} z tej wiadomości?"
       leave: "Opuść"
+      remove_group: "Usuń grupę"
       remove_user: "Usuń użytkownika"
     email: "Email"
     username: "Nazwa konta"
@@ -2123,6 +2141,8 @@ pl_PL:
       similar_topics: "Twój temat jest podobny do…"
       drafts_offline: "szkice offline"
       edit_conflict: "edytuj konflikt"
+      esc: "esc"
+      ok_proceed: "Ok, kontynuuj."
       group_mentioned_limit:
         one: "<b>Ostrzeżenie!</b> Wspomniałeś/łaś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{count}. Nikt nie zostanie powiadomiony."
         few: "<b>Ostrzeżenie!</b> Wspomniałeś/łaś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{count}. Nikt nie zostanie powiadomiony."
@@ -2238,6 +2258,8 @@ pl_PL:
         body: "Aktualnie ta wiadomość będzie wysłana tylko do ciebie!"
       slow_mode:
         error: "Ten temat jest w trybie powolnym. Opublikowałeś już niedawno post; możesz napisać kolejny za %{timeLeft}."
+      user_not_seen_in_a_while:
+        multiple: "Następujące osoby, do których piszesz: <b>%{usernames}</b>, nie były tu widziane od bardzo dawna - %{time_ago}. Mogą one nie otrzymać Twojej wiadomości. Możesz poszukać innych metod kontaktu z nimi."
       admin_options_title: "Opcjonalne ustawienia zespołu dla tego tematu"
       composer_actions:
         reply: Odpowiedź
@@ -2536,16 +2558,27 @@ pl_PL:
       view_all_bookmarks: "zobacz wszystkie zakładki"
       view_all_messages: "wyświetl wszystkie wiadomości osobiste"
       tabs:
+        all_notifications: "Wszystkie powiadomienia"
         replies: "Odpowiedzi"
         mentions: "Wzmianki"
         likes: "Otrzymane polubienia"
+        watching: "Obserwowane tematy"
+        messages: "Wiadomości osobiste"
         bookmarks: "Zakładki"
+        other_notifications: "Inne powiadomienia"
+        other_notifications_with_unread:
+          one: "Inne powiadomienia - %{count} nieprzeczytane powiadomienie"
+          few: "Inne powiadomienia - %{count} nieprzeczytane powiadomienia"
+          many: "Inne powiadomienia - %{count} nieprzeczytanych powiadomień"
+          other: "Inne powiadomienia - %{count} nieprzeczytanych powiadomień"
         profile: "Profil"
       reviewable:
         queue: "Kolejka"
         deleted_user: "(usunięty użytkownik)"
+        deleted_post: "(usunięty post)"
         post_number_with_topic_title: "post #%{post_number} - %{title}"
         new_post_in_topic: "nowy post w %{title}"
+        user_requires_approval: "%{username} wymaga zatwierdzenia"
         default_item: "pozycja do sprawdzenia #%{reviewable_id}"
     topics:
       new_messages_marker: "ostatnia wizyta"
@@ -3279,6 +3312,12 @@ pl_PL:
           few: "Czy na pewno chcesz usunąć te %{count} posty?"
           many: "Czy na pewno chcesz usunąć te %{count} postów?"
           other: "Czy na pewno chcesz usunąć te %{count} postów?"
+      merge:
+        confirm:
+          one: "Czy na pewno chcesz połączyć te posty?"
+          few: "Czy na pewno chcesz połączyć te %{count} posty?"
+          many: "Czy na pewno chcesz połączyć te %{count} postów?"
+          other: "Czy na pewno chcesz połączyć te %{count} postów?"
       revisions:
         controls:
           first: "Pierwsza wersja"
@@ -3726,6 +3765,7 @@ pl_PL:
         today: "Dzisiaj"
         other_periods: "Zobacz najczęściej dyskutowane:"
     browser_update: 'Niestety, <a href="https://www.discourse.org/faq/#browser">twoja przeglądarka nie jest obsługiwana</a>. Proszę <a href="https://browsehappy.com">przełączyć się na obsługiwaną przeglądarkę</a>, aby móc oglądać bogatą zawartość, zalogować się i odpowiedzieć.'
+    safari_13_warning: Ta strona wkrótce przestanie obsługiwać systemy iOS i Safari w wersji 13 i niższej. Nadal będzie dostępna uproszczona wersja tylko do odczytu. (<a href="https://meta.discourse.org/t/224747">więcej informacji</a>)
     permission_types:
       full: "tworzyć / odpowiadać / przeglądać"
       create_post: "odpowiadać / przeglądać"
@@ -3883,6 +3923,7 @@ pl_PL:
       google: "Kalendarz Google"
       ics: "ICS"
     tagging:
+      all_tags: "Wszystkie tagi"
       other_tags: "Inne tagi"
       selector_all_tags: "wszystkie tagi"
       selector_no_tags: "brak tagów"
@@ -4062,6 +4103,7 @@ pl_PL:
       no_activity_title: "Brak aktywności"
       no_activity_body: "Witaj w naszej społeczności! Jesteś tu zupełnie nowy(-a) i nie uczestniczyłeś(-aś) jeszcze w żadnych dyskusjach. Jako pierwszy krok, odwiedź <a href='%{topUrl}'>Popularne</a> lub <a href='%{categoriesUrl}'>Kategorie</a> i po prostu zacznij czytać! Kliknij w %{heartIcon} przy postach, które lubisz lub chcesz dowiedzieć się więcej. Gdy bierzesz udział w dyskusji, Twoja aktywność zostanie wymieniona tutaj."
       no_replies_title: "Nie odpowiedziałeś jeszcze na żadne tematy"
+      no_replies_title_others: "%{username} nie odpowiedział jeszcze na żaden temat"
       no_drafts_title: "Nie rozpocząłeś żadnych szkiców"
       no_drafts_body: "Nie jesteś gotowy do opublikowania? Automatycznie zapiszemy nową wersję roboczą i wyświetlimy ją tutaj za każdym razem, gdy zaczniesz pisać temat, odpowiedź lub wiadomość osobistą. Wybierz przycisk anulowania, aby odrzucić lub zapisać wersję roboczą, aby kontynuować później."
       no_likes_title: "Nie polubiłeś jeszcze żadnych tematów"
@@ -4093,6 +4135,7 @@ pl_PL:
       toggle_section: "przełącz sekcję"
       more: "Więcej"
       all_categories: "Wszystkie kategorie"
+      all_tags: "Wszystkie tagi"
       sections:
         about:
           header_link_text: "O stronie"
@@ -4112,11 +4155,13 @@ pl_PL:
           click_to_get_started: "Kliknij tutaj, aby rozpocząć."
           header_link_text: "Etykiety"
           header_action_title: "edytuj tagi paska bocznego"
+          configure_defaults: "Skonfiguruj ustawienia domyślne"
         categories:
           none: "Nie dodałeś żadnych kategorii."
           click_to_get_started: "Kliknij tutaj, aby rozpocząć."
           header_link_text: "Kategorie"
           header_action_title: "edytuj kategorie paska bocznego"
+          configure_defaults: "Skonfiguruj ustawienia domyślne"
         community:
           header_link_text: "Społeczność"
           header_action_title: "utwórz nowy temat"
@@ -5269,6 +5314,7 @@ pl_PL:
         suspended: "Zawieszony?"
         staged: "Etapowy?"
         show_admin_profile: "Administrator"
+        manage_user: "Zarządzaj użytkownikiem"
         show_public_profile: "Pokaż profil publiczny"
         impersonate: "Podszywaj się"
         action_logs: "Logi akcji"
@@ -5676,7 +5722,6 @@ pl_PL:
       embedding:
         get_started: "Jeśli chcesz osadzić Discourse na innej stronie, rozpocznij podając jej host."
         confirm_delete: "Czy na pewno chcesz usunąć ten host?"
-        sample: "Wklej następujący kod HTML do swojej strony, aby utworzyć i osadzić tematy discourse. Zastąp <b>REPLACE_ME</b> kanonicznym adresem URL strony, na której go osadzasz."
         title: "Osadzanie"
         host: "Dozwolone hosty"
         class_name: "Nazwa klasy"

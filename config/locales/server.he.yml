@@ -2942,6 +2942,13 @@ he:
     bulk_invite_failed:
       title: "הזמנה קבוצתית נכשלה"
       subject_template: "ההזמנה המרוכזת עובדה עם שגיאות"
+      text_body_template: |
+        ההזמנה הקבוצתית שלך עברה עיבוד, %{sent} הזמנות נשלחו בדוא״ל, %{skipped} דולגו, %{warnings} אזהרות ו־%{failed} שגיאות.
+
+        הנה התיעוד:
+        ``` text
+        %{logs}
+        ```
     user_added_to_group_as_owner:
       title: "נוסף לקבוצה כבעלים"
       subject_template: "נוספת לקבוצה %{group_name} כבעלים"

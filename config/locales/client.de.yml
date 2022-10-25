@@ -3862,7 +3862,7 @@ de:
             about:
               content: "Über uns"
             admin:
-              content: "Administration"
+              content: "Admin-Panel"
             badges:
               content: "Abzeichen"
             everything:
@@ -5396,7 +5396,6 @@ de:
       embedding:
         get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem Hinzufügen des Hosts."
         confirm_delete: "Möchtest du wirklich diesen Host löschen?"
-        sample: "Verwende den folgenden HTML-Code auf deiner Website, um Discourse-Themen zu erstellen und einzubetten. Ersetze <b>REPLACE_ME</b> mit der URL der Seite, auf der du den Inhalt einbettest."
         title: "Einbettung"
         host: "Erlaubte Hosts"
         class_name: "Klassenname"
@@ -5447,7 +5446,7 @@ de:
           replace: "Ersetzen"
   wizard_js:
     wizard:
-      jump_in: "Leg los!"
+      jump_in: "Jetzt loslegen!"
       finish: "Installation verlassen"
       back: "Zurück"
       next: "Nächstes"

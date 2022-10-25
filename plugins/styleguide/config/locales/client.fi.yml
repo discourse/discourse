@@ -85,6 +85,10 @@ fi:
           title: "Yläpalkin kuvakkeet"
         spinners:
           title: "Latausnäkymät"
+        empty_state:
+          title: "Tyhjä tila"
         rich_tooltip:
+          title: "Monipuolinen työkaluvihje"
           description: "Kuvaus"
           header: "Yläpalkki"
+          hover_to_see: "Katso työkaluvihje osoittamalla"

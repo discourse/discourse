@@ -1137,10 +1137,16 @@ ro:
         copy_to_clipboard: "Copiază în clipboard"
         copy_to_clipboard_error: "Eroare la copierea datelor în clipboard"
         copied_to_clipboard: "Copiat în clipboard"
+        codes:
+          description: "Fiecare dintre aceste coduri de rezervă poate fi folosit o singură dată. Păstrează-le într-un loc sigur, dar accesibil."
       second_factor:
+        title: "Autentificare în doi pași (2FA)"
+        enable: "Gestionează autentificarea în doi pași (2FA)"
         name: "Nume"
+        disable_description: "Introdu codul de autentificare din aplicația 2FA"
         short_description: |
           Protejează-ți contul cu coduri de securitate de unică folosință.
+        oauth_enabled_warning: "Atenție! Autentificarea cu rețelele sociale va fi dezactivată atunci când activezi autentificarea în doi pași (2FA)."
         disable: "Dezactivează"
         save: "Salvează"
         edit: "Editează"
@@ -1562,6 +1568,8 @@ ro:
       title: "Autentificare"
       username: "Utilizator"
       password: "Parolă"
+      second_factor_title: "Autentificare în doi pași (2FA)"
+      second_factor_description: "Introdu codul de autentificare din aplicația 2FA"
       second_factor_backup: "Autentifică-te folosind un cod de rezervă"
       second_factor: "Autentifică-te folosind aplicația Autentificator"
       email_placeholder: "E-mail / Utilizator"
@@ -1582,7 +1590,7 @@ ro:
       not_allowed_from_ip_address: "Nu te poți conecta cu această adresă IP."
       admin_not_allowed_from_ip_address: "Nu te poți conecta ca administrator cu această adresă IP."
       resend_activation_email: "Click aici pentru a retrimite emailul de activare."
-      omniauth_disallow_totp: "Contul tău are autentificarea cu doi factori activată. Te rog să te autentifici cu parola."
+      omniauth_disallow_totp: "Contul tău are autentificarea în doi pași (2FA) activată. Te rog să te autentifici cu parola"
       resend_title: "Retrimite emailul de activare"
       change_email: "Schimbă adresa de email"
       provide_new_email: "Furnizează o nouă adresă de email și îți vom retrimite linkul de confirmare."
@@ -3509,6 +3517,7 @@ ro:
             post_locked: "postare blocată"
             post_unlocked: "postare deblocată"
             check_personal_message: "verifică mesaj personal"
+            disabled_second_factor: "Dezactivează autentificarea în doi pași (2FA)"
             topic_published: "discuția a fost publicată"
         screened_emails:
           title: "Email-uri filtrate"
@@ -3643,6 +3652,7 @@ ro:
         private_topics_count: Subiecte private
         posts_read_count: Postări citite
         post_count: Postări create
+        second_factor_enabled: Autentificare în doi pași (2FA) este activată
         topics_entered: Subiecte văzute
         flags_given_count: Marcaje de avertizare acordate
         flags_received_count: Marcaje de avertizare primite

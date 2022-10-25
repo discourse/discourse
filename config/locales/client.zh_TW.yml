@@ -160,6 +160,7 @@ zh_TW:
       other: "為了讓您更輕鬆地建設網站，您正處於初始模式。將會自動授予所有新註冊的使用者信任等級 1，並自動啟用每日摘要電子郵件。該功能將於 %{count} 個使用者註冊後自動關閉。"
     bootstrap_mode_disabled: "初始模式將會在 24 小時後自動禁用。"
     bootstrap_invite_button_title: "送出邀請"
+    bootstrap_wizard_link_title: "完成安裝精靈"
     themes:
       default_description: "預設"
       broken_theme_alert: "您的網站可能無法運行，因為主題/組件有錯誤。"
@@ -937,11 +938,13 @@ zh_TW:
       first_notification: "你的第一則通知！選擇以開始。"
       dynamic_favicon: "在瀏覽器小圖示上顯示計數\\bIcon"
       skip_new_user_tips:
+        description: "跳過新使用者登入時的提示和徽章"
         skip_link: "跳過這些提示"
       theme_default_on_all_devices: "在所有裝置上設為預設佈景主題"
       color_scheme: "色彩配置"
       color_schemes:
         default_description: "預設佈景主題"
+        dark_instructions: "您可以透過切換您設備的深色模式來預覽深色模式的配色方案。"
         undo: "重置"
         regular: "普通"
         dark: "夜間模式"
@@ -1014,6 +1017,7 @@ zh_TW:
       users: "使用者"
       muted_users: "靜音"
       allowed_pm_users: "允許的"
+      allow_private_messages_from_specific_users: "只允許指定的使用者寄送個人訊息給我"
       ignored_users: "忽略"
       tracked_topics_link: "顯示"
       automatically_unpin_topics: "當我完整閲讀了話題時自動解除置頂。"
@@ -1084,6 +1088,8 @@ zh_TW:
           title: "已產生備用碼"
           description: "每個備用碼僅可使用一次。請將它們保存在安全且可被找到的地方。"
       second_factor:
+        title: "兩步驟驗證"
+        enable: "管理兩步驟驗證"
         confirm_password_description: "請確認你的密碼以繼續"
         name: "名稱"
         label: "代碼"
@@ -1128,9 +1134,14 @@ zh_TW:
         uploaded_avatar_empty: "新增一張自訂圖片"
         upload_title: "上傳你的圖片"
         image_is_not_a_square: "警告：我們裁切了你的圖片，因為該圖片不是正方形的。"
+      change_profile_background:
+        title: "個人檔案標頭"
+        instructions: "個人檔案標頭將會置中以及預設1110px的寬度。"
       change_card_background:
         title: "使用者卡背景"
         instructions: "背景會被置中，且默認寬度為850px。"
+      change_featured_topic:
+        instructions: "此主題的連結將顯示您的使用者卡和個人檔案上。"
       email:
         title: "電子郵件"
         primary: "主要電子郵件"
@@ -1234,9 +1245,11 @@ zh_TW:
         every_month: "每個月"
         every_six_months: "每半年"
       email_level:
+        title: "當我被引用、回覆、提到我的 @username，或者我看過的類別、標籤或主題中有新的活動時，請寄電子郵件給我"
         always: "總是"
         only_when_away: "只在離開時"
         never: "永不"
+      email_messages_level: "當我收到個人訊息時，請寄電子郵件給我"
       include_tl0_in_digests: "摘要郵件中包含新使用者的內容"
       email_in_reply_to: "郵件中包含回覆你的內容節選"
       other_settings: "其它"
@@ -1265,6 +1278,7 @@ zh_TW:
         title: "邀請"
         pending_tab: "等待中"
         pending_tab_with_count: "等待中 (%{count})"
+        expired_tab: "已過期"
         redeemed_tab: "接受日期"
         redeemed_tab_with_count: "接受日期 (%{count})"
         invited_via: "邀請函"
@@ -1286,6 +1300,7 @@ zh_TW:
         topics_entered: "參與的話題"
         posts_read_count: "已讀的貼文"
         expired: "此邀請已過期"
+        remove_all: "刪除過期的邀請"
         removed_all: "已移除所有過期的邀請！"
         remove_all_confirm: "您是否確定要移除所有過期的邀請？"
         reinvite_all_confirm: "您確定要重新寄出所有邀請嗎?"
@@ -1297,6 +1312,7 @@ zh_TW:
         invite_link:
           success: "邀請連結生成成功！"
         bulk_invite:
+          none: "此頁面上沒有邀請函顯示。"
           error: "上傳的檔案必須是 csv 格式。"
       password:
         title: "密碼"
@@ -1357,6 +1373,9 @@ zh_TW:
         none: "(無)"
       flair:
         none: "(無)"
+      status:
+        title: "自訂狀態"
+        not_set: "未設定"
       primary_group:
         title: "主要群組"
         none: "(無)"
@@ -1443,6 +1462,7 @@ zh_TW:
     search_hint: "使用者名稱、電子郵件、或是IP位址"
     create_account:
       header_title: "歡迎!"
+      disclaimer: "註冊即表示您同意 <a href='%{privacy_link}' target='blank'>隱私政策</a> 和 <a href='%{tos_link}' target='blank'>服務條款</a>。"
       failed: "發生了某些錯誤，可能此電子郵件地址已經註冊過，請試試看忘記密碼連結"
     forgot_password:
       title: "寄出密碼"
@@ -1596,6 +1616,7 @@ zh_TW:
       similar_topics: "與你的話題類似的討論..."
       drafts_offline: "離線草稿"
       edit_conflict: "編輯衝突"
+      esc: "退出"
       group_mentioned_limit:
         other: "<b>提醒</b>你提及了<a href='%{group_link}'>%{group}</a>，但此群組的人數多於管理員配置的提及人數上限（%{count}位），因此不會有任何人收到通知。"
       group_mentioned:
@@ -1941,12 +1962,17 @@ zh_TW:
       read_more_in_category: "要閱讀更多貼文嗎? 瀏覽 %{catLink} 裡的話題或 %{latestLink}。"
       read_more: "要閱讀更多貼文嗎? 請按 %{catLink} 或 %{latestLink}。"
       browse_all_categories: 瀏覽所有分類
+      browse_all_tags: 瀏覽所有標籤
       view_latest_topics: 檢視最近的貼文
+      suggest_create_topic: 準備好 <a href>開始新的對話了嗎？</a>
       jump_reply_up: 跳到更早的回覆
       jump_reply_down: 跳到更晚的回覆
       deleted: "此話題已被刪除"
       slow_mode_update:
+        title: "慢速模式"
+        select: "使用者在本主題的發文頻率限制："
         enable: "啟用"
+        enabled_until: "啟用直到："
         remove: "停用"
       topic_status_update:
         title: "話題計時器"
@@ -2046,11 +2072,14 @@ zh_TW:
         open: "開放話題"
         close: "關閉話題"
         multi_select: "選擇貼文"
+        slow_mode: "設定慢速模式..."
         timed_update: "設定話題計時器"
         pin: "置頂話題"
         unpin: "取消置頂話題"
         unarchive: "復原已封存的話題"
         archive: "封存話題"
+        invisible: "隱藏主題"
+        visible: "顯示主題"
         reset_read: "重置讀取資料"
         make_private: "設置為私訊"
         reset_bump_date: "重設上浮日期"
@@ -2349,6 +2378,7 @@ zh_TW:
       edit: "編輯"
       edit_dialog_title: "編輯：%{categoryName}"
       view: "檢視分類裡的話題"
+      back: "回到類別"
       general: "一般"
       settings: "設定"
       topic_template: "話題範本"
@@ -2771,8 +2801,15 @@ zh_TW:
           title: "靜音"
           description: "你將不會收到這些分類中的新討論話題通知，它們也不會出現在你的未讀欄內。"
       groups:
+        back_btn: "返回所有標籤"
         title: "標籤組"
+        about_heading: "選取一個標籤群組或建立一個新標籤群組"
+        about_description: "標記組可協助您集中管理多個標籤的權限。"
         new: "新標籤組"
+        edit_title: "編輯標籤組"
+        tags_label: "此群組中的標籤"
+        parent_tag_label: "上級標籤："
+        parent_tag_description: "只有當上級標籤存在時，才能使用此群組的標籤。"
         one_per_topic_label: "只可給話題設置一個該組內的標籤"
         new_name: "新標籤組名"
         name_placeholder: "名稱"
@@ -2886,6 +2923,8 @@ zh_TW:
               content: "審核"
               title: "審核"
               pending_count: "剩餘 %{count}"
+    welcome_topic_banner:
+      title: "建立您的歡迎主題"
   admin_js:
     type_to_filter: "輸入要搜尋的文字..."
     admin:
@@ -3405,6 +3444,7 @@ zh_TW:
             name: "愛"
             description: "按讚按鈕的顏色"
         email_style:
+          heading: "自訂電子郵件風格"
           css: "CSS"
       email:
         title: "電子郵件"
@@ -3486,7 +3526,7 @@ zh_TW:
           delete_topic: "話題已被刪除"
           post_approved: "貼文已通過審核"
       logs:
-        title: "記錄"
+        title: "紀錄"
         action: "動作"
         created_at: "已建立"
         last_match_at: "最近出現時間"
@@ -3703,6 +3743,8 @@ zh_TW:
         suspend_reason_hidden_label: "您為何要將該使用者停權？使用者在登入時會看見這段文字，請簡短描述。"
         suspend_reason: "原因"
         suspend_reason_title: "停權原因"
+        suspend_reasons:
+          custom: "自訂..."
         suspend_message: "Email 訊息"
         suspend_message_placeholder: "提供更多停權使用者的原因，並且會以郵件發信給該使用者。（可選）"
         suspended_by: "將其停權者"
@@ -3999,6 +4041,7 @@ zh_TW:
         enabled: 啟用徽章
         icon: 圖示
         image: 圖片
+        read_only_setting_help: "自訂文字"
         query: 徽章查詢語法 (SQL)
         target_posts: 查詢貼文張貼目標
         auto_revoke: 每日執行撤銷用的 SQL 語法
