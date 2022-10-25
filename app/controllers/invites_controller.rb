@@ -12,7 +12,6 @@ class InvitesController < ApplicationController
 
   before_action :ensure_invites_allowed, only: [:show, :perform_accept_invitation]
   before_action :ensure_new_registrations_allowed, only: [:show, :perform_accept_invitation]
-  before_action :ensure_not_logged_in, only: :perform_accept_invitation
 
   def show
     expires_now
@@ -22,90 +21,9 @@ class InvitesController < ApplicationController
     invite = Invite.find_by(invite_key: params[:id])
 
     if invite.present? && invite.redeemable?
-      if current_user
-        redeemed = false
-
-        begin
-          invite.redeem(email: current_user.email)
-          redeemed = true
-        rescue ActiveRecord::RecordNotSaved, Invite::UserExists
-          # This is not ideal but `Invite#redeem` raises either `Invite::UserExists` or `ActiveRecord::RecordNotSaved`
-          # error when it fails to redeem the invite. If redemption fails for a logged in user, we will just ignore it.
-        end
-
-        if redeemed && (topic = invite.topics.first) && current_user.guardian.can_see?(topic)
-          create_topic_invite_notifications(invite, current_user)
-          return redirect_to(topic.url)
-        end
-
-        return redirect_to(path("/"))
-      end
-
-      email = Email.obfuscate(invite.email)
-
-      # Show email if the user already authenticated their email
-      different_external_email = false
-
-      if session[:authentication]
-        auth_result = Auth::Result.from_session_data(session[:authentication], user: nil)
-        if invite.email == auth_result.email
-          email = invite.email
-        else
-          different_external_email = true
-        end
-      end
-
-      email_verified_by_link = invite.email_token.present? && params[:t] == invite.email_token
-
-      if email_verified_by_link
-        email = invite.email
-      end
-
-      hidden_email = email != invite.email
-
-      if hidden_email || invite.email.nil?
-        username = ""
-      else
-        username = UserNameSuggester.suggest(invite.email)
-      end
-
-      info = {
-        invited_by: UserNameSerializer.new(invite.invited_by, scope: guardian, root: false),
-        email: email,
-        hidden_email: hidden_email,
-        username: username,
-        is_invite_link: invite.is_invite_link?,
-        email_verified_by_link: email_verified_by_link
-      }
-
-      if different_external_email
-        info[:different_external_email] = true
-      end
-
-      if staged_user = User.where(staged: true).with_email(invite.email).first
-        info[:username] = staged_user.username
-        info[:user_fields] = staged_user.user_fields
-      end
-
-      store_preloaded("invite_info", MultiJson.dump(info))
-
-      secure_session["invite-key"] = invite.invite_key
-
-      render layout: 'application'
+      show_invite(invite)
     else
-      flash.now[:error] = if invite.blank?
-        I18n.t('invite.not_found', base_url: Discourse.base_url)
-      elsif invite.redeemed?
-        if invite.is_invite_link?
-          I18n.t('invite.not_found_template_link', site_name: SiteSetting.title, base_url: Discourse.base_url)
-        else
-          I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url)
-        end
-      elsif invite.expired?
-        I18n.t('invite.expired', base_url: Discourse.base_url)
-      end
-
-      render layout: 'no_ember'
+      show_irredeemable_invite(invite)
     end
   rescue RateLimiter::LimitExceeded => e
     flash.now[:error] = e.description
@@ -277,24 +195,33 @@ class InvitesController < ApplicationController
     params.permit(:email, :username, :name, :password, :timezone, :email_token, user_custom_fields: {})
 
     invite = Invite.find_by(invite_key: params[:id])
+    redeeming_user = current_user
 
     if invite.present?
       begin
         attrs = {
-          username: params[:username],
-          name: params[:name],
-          password: params[:password],
-          user_custom_fields: params[:user_custom_fields],
           ip_address: request.remote_ip,
           session: session
         }
 
-        if invite.is_invite_link?
-          params.require(:email)
-          attrs[:email] = params[:email]
+        if redeeming_user
+          attrs[:redeeming_user] = redeeming_user
         else
-          attrs[:email] = invite.email
-          attrs[:email_token] = params[:email_token] if params[:email_token].present?
+          attrs[:username] = params[:username]
+          attrs[:name] = params[:name]
+          attrs[:password] = params[:password]
+          attrs[:user_custom_fields] = params[:user_custom_fields]
+
+          # If the invite is not scoped to an email then we allow the
+          # user to provide it themselves
+          if invite.is_invite_link?
+            params.require(:email)
+            attrs[:email] = params[:email]
+          else
+            # Otherwise we always use the email from the invitation.
+            attrs[:email] = invite.email
+            attrs[:email_token] = params[:email_token] if params[:email_token].present?
+          end
         end
 
         user = invite.redeem(**attrs)
@@ -306,7 +233,10 @@ class InvitesController < ApplicationController
         return render json: failed_json.merge(message: I18n.t('invite.not_found_json')), status: 404
       end
 
-      log_on_user(user) if user.active? && user.guardian.can_access_forum?
+      if !redeeming_user && user.active? && user.guardian.can_access_forum?
+        log_on_user(user)
+      end
+
       user.update_timezone_if_missing(params[:timezone])
       post_process_invite(user)
       create_topic_invite_notifications(invite, user)
@@ -316,6 +246,10 @@ class InvitesController < ApplicationController
 
       if user.present?
         if user.active? && user.guardian.can_access_forum?
+          if redeeming_user
+            response[:message] = I18n.t("invite.existing_user_success")
+          end
+
           if user.guardian.can_see?(topic)
             response[:redirect_to] = path(topic.relative_url)
           else
@@ -424,6 +358,84 @@ class InvitesController < ApplicationController
 
   private
 
+  def show_invite(invite)
+    email = Email.obfuscate(invite.email)
+
+    # Show email if the user already authenticated their email
+    different_external_email = false
+
+    if session[:authentication]
+      auth_result = Auth::Result.from_session_data(session[:authentication], user: nil)
+      if invite.email == auth_result.email
+        email = invite.email
+      else
+        different_external_email = true
+      end
+    end
+
+    email_verified_by_link = invite.email_token.present? && params[:t] == invite.email_token
+
+    if email_verified_by_link
+      email = invite.email
+    end
+
+    hidden_email = email != invite.email
+
+    if hidden_email || invite.email.nil?
+      username = ""
+    else
+      username = UserNameSuggester.suggest(invite.email)
+    end
+
+    info = {
+      invited_by: UserNameSerializer.new(invite.invited_by, scope: guardian, root: false),
+      email: email,
+      hidden_email: hidden_email,
+      username: username,
+      is_invite_link: invite.is_invite_link?,
+      email_verified_by_link: email_verified_by_link
+    }
+
+    if different_external_email
+      info[:different_external_email] = true
+    end
+
+    if staged_user = User.where(staged: true).with_email(invite.email).first
+      info[:username] = staged_user.username
+      info[:user_fields] = staged_user.user_fields
+    end
+
+    if current_user
+      info[:existing_user_id] = current_user.id
+      info[:existing_user_can_redeem] = invite.can_be_redeemed_by?(current_user)
+      info[:email] = current_user.email
+      info[:username] = current_user.username
+    end
+
+    store_preloaded("invite_info", MultiJson.dump(info))
+
+    secure_session["invite-key"] = invite.invite_key
+
+    render layout: 'application'
+  end
+
+  def show_irredeemable_invite(invite)
+    flash.now[:error] = \
+      if invite.blank?
+        I18n.t('invite.not_found', base_url: Discourse.base_url)
+      elsif invite.redeemed?
+        if invite.is_invite_link?
+          I18n.t('invite.not_found_template_link', site_name: SiteSetting.title, base_url: Discourse.base_url)
+        else
+          I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url)
+        end
+      elsif invite.expired?
+        I18n.t('invite.expired', base_url: Discourse.base_url)
+      end
+
+    render layout: 'no_ember'
+  end
+
   def ensure_invites_allowed
     if (!SiteSetting.enable_local_logins && Discourse.enabled_auth_providers.count == 0 && !SiteSetting.enable_discourse_connect)
       raise Discourse::NotFound
@@ -433,14 +445,6 @@ class InvitesController < ApplicationController
   def ensure_new_registrations_allowed
     unless SiteSetting.allow_new_registrations
       flash[:error] = I18n.t('login.new_registrations_disabled')
-      render layout: 'no_ember'
-      false
-    end
-  end
-
-  def ensure_not_logged_in
-    if current_user
-      flash[:error] = I18n.t("login.already_logged_in")
       render layout: 'no_ember'
       false
     end

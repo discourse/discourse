@@ -159,7 +159,7 @@ class SessionController < ApplicationController
 
         if SiteSetting.must_approve_users? && !user.approved?
           if invite.present? && user.invited_user.blank?
-            redeem_invitation(invite, sso)
+            redeem_invitation(invite, sso, user)
           end
 
           if SiteSetting.discourse_connect_not_approved_url.present?
@@ -173,7 +173,7 @@ class SessionController < ApplicationController
         # the user has not already redeemed an invite
         # (covers the same SSO user visiting an invite link)
         elsif invite.present? && user.invited_user.blank?
-          redeem_invitation(invite, sso)
+          redeem_invitation(invite, sso, user)
 
           # we directly call user.activate here instead of going
           # through the UserActivator path because we assume the account
@@ -772,14 +772,15 @@ class SessionController < ApplicationController
     invite
   end
 
-  def redeem_invitation(invite, sso)
+  def redeem_invitation(invite, sso, redeeming_user)
     InviteRedeemer.new(
       invite: invite,
       username: sso.username,
       name: sso.name,
       ip_address: request.remote_ip,
       session: session,
-      email: sso.email
+      email: sso.email,
+      redeeming_user: redeeming_user
     ).redeem
     secure_session["invite-key"] = nil
 
