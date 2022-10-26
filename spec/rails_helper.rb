@@ -319,10 +319,6 @@ RSpec.configure do |config|
     if SpecSecureRandom.value
       FileUtils.remove_dir(file_from_fixtures_tmp_folder, true)
     end
-
-    if Guardian.can_see_consistency_check_was_enabled? && !Guardian.enable_can_see_consistency_check_called?
-      raise 'TopicGuardianCanSeeConsistencyCheck was enabled but no checks were ran.'
-    end
   end
 
   config.before :each, &TestSetup.method(:test_setup)

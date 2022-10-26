@@ -8,6 +8,7 @@ RSpec.describe TopicGuardian do
   fab!(:category) { Fabricate(:category) }
   fab!(:topic) { Fabricate(:topic, category: category) }
   fab!(:private_message_topic) { Fabricate(:private_message_topic) }
+  fab!(:group) { Fabricate(:group) }
 
   before do
     Guardian.enable_topic_can_see_consistency_check
@@ -149,6 +150,27 @@ RSpec.describe TopicGuardian do
       expect(Guardian.new(admin).can_see_topic_ids(topic_ids: [topic.id, private_message_topic.id])).to contain_exactly(
         topic.id,
         private_message_topic.id
+      )
+    end
+
+    it 'returns the topic ids for topics which are deleted but user is a category moderator of' do
+      SiteSetting.enable_category_group_moderation = true
+
+      category.update!(reviewable_by_group_id: group.id)
+      group.add(user)
+      topic.update!(category: category)
+      topic.trash!(admin)
+
+      topic2 = Fabricate(:topic)
+      user2 = Fabricate(:user)
+
+      expect(Guardian.new(user).can_see_topic_ids(topic_ids: [topic.id, topic2.id])).to contain_exactly(
+        topic.id,
+        topic2.id
+      )
+
+      expect(Guardian.new(user2).can_see_topic_ids(topic_ids: [topic.id, topic2.id])).to contain_exactly(
+        topic2.id,
       )
     end
   end

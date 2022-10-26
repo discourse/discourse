@@ -117,19 +117,17 @@ class Guardian
 
   def is_category_group_moderator?(category)
     return false if !category
-    return false if !category_group_moderation_enabled?
+    return false if !category_group_moderation_allowed?
 
     reviewable_by_group_id = category.reviewable_by_group_id
     return false if reviewable_by_group_id.blank?
 
-    scope = category_group_moderator_scope.where("categories.id = ?", category.id)
+    @category_group_moderator_groups ||= {}
 
-    @is_group_member ||= {}
-
-    if @is_group_member.key?(reviewable_by_group_id)
-      @is_group_member[reviewable_by_group_id]
+    if @category_group_moderator_groups.key?(reviewable_by_group_id)
+      @category_group_moderator_groups[reviewable_by_group_id]
     else
-      @is_group_member[reviewable_by_group_id] = scope.exists?
+      @category_group_moderator_groups[reviewable_by_group_id] = category_group_moderator_scope.exists?("categories.id": category.id)
     end
   end
 
@@ -623,10 +621,8 @@ class Guardian
 
   protected
 
-  def category_group_moderation_enabled?
-    return false if !authenticated?
-    return false if !SiteSetting.enable_category_group_moderation
-    true
+  def category_group_moderation_allowed?
+    authenticated? && SiteSetting.enable_category_group_moderation
   end
 
   def category_group_moderator_scope

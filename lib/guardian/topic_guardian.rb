@@ -207,12 +207,18 @@ module TopicGuardian
 
     # When `hide_deleted` is `true`, hide deleted topics if user is not staff or category moderator
     if hide_deleted && !is_staff?
-      default_scope = default_scope.where("deleted_at IS NULL")
-
-      if category_group_moderation_enabled?
-        default_scope = default_scope.or(
-          Topic.unscoped.where("deleted_at IS NOT NULL AND topics.category_id IN (#{category_group_moderator_scope.select(:id).to_sql})")
-        )
+      if category_group_moderation_allowed?
+        default_scope = default_scope.where(<<~SQL)
+          (
+            deleted_at IS NULL OR
+            (
+              deleted_at IS NOT NULL
+              AND topics.category_id IN (#{category_group_moderator_scope.select(:id).to_sql})
+            )
+          )
+        SQL
+      else
+        default_scope = default_scope.where("deleted_at IS NULL")
       end
     end
 
@@ -221,45 +227,16 @@ module TopicGuardian
       default_scope = default_scope.left_outer_joins(:shared_draft).where("shared_drafts.id IS NULL")
     end
 
-    # Staged users are allowed to see their own topics in read restricted categories when Category#email_in and
-    # Category#email_in_allow_strangers has been configured.
-    staged_conditional_filter =
-      if is_staged?
-        <<~SQL
-        OR topics.id IN (
-          SELECT
-            topics.id
-          FROM topics
-          INNER JOIN categories ON categories.id = topics.category_id
-          WHERE categories.read_restricted
-          AND categories.email_in IS NOT NULL
-          AND categories.email_in_allow_strangers
-          AND topics.user_id = #{user.id.to_i}
-          AND topics.id IN (#{topic_ids.join(",")})
+    all_topics_scope =
+      if authenticated?
+        Topic.unscoped.merge(
+          secured_regular_topic_scope(default_scope, topic_ids: topic_ids).or(private_message_topic_scope(default_scope))
         )
-        SQL
       else
-        nil
+        Topic.unscoped.merge(secured_regular_topic_scope(default_scope, topic_ids: topic_ids))
       end
 
-    regular_topic_scope = default_scope.listable_topics.secured(self, custom_sql_condition: staged_conditional_filter)
-    scope = regular_topic_scope
-
-    if authenticated?
-      custom_sql_condition = nil
-
-      if is_moderator?
-        custom_sql_condition = <<~SQL
-        OR topics.subtype = '#{TopicSubtype.moderator_warning}'
-        OR topics.id IN (#{Topic.has_flag_scope.select(:topic_id).to_sql})
-        SQL
-      end
-
-      private_message_scope = default_scope.private_messages_for_user(user, custom_sql_condition: custom_sql_condition)
-      scope = scope.or(private_message_scope)
-    end
-
-    Topic.unscoped.merge(scope).pluck(:id)
+    all_topics_scope.pluck(:id)
   end
 
   def can_see_topic?(topic, hide_deleted = true)
@@ -339,5 +316,46 @@ module TopicGuardian
 
   def affected_by_slow_mode?(topic)
     topic&.slow_mode_seconds.to_i > 0 && @user.human? && !is_staff?
+  end
+
+  private
+
+  def private_message_topic_scope(scope)
+    new_scope = scope.private_messages_for_user(user)
+
+    if is_moderator?
+      new_scope = new_scope.or(scope.where(<<~SQL))
+        topics.subtype = '#{TopicSubtype.moderator_warning}'
+        OR topics.id IN (#{Topic.has_flag_scope.select(:topic_id).to_sql})
+      SQL
+    end
+
+    new_scope
+  end
+
+  def secured_regular_topic_scope(scope, topic_ids:)
+    secured_scope = Topic.unscoped.secured(self)
+
+    # Staged users are allowed to see their own topics in read restricted categories when Category#email_in and
+    # Category#email_in_allow_strangers has been configured.
+    if is_staged?
+      sql = <<~SQL
+      topics.id IN (
+        SELECT
+          topics.id
+        FROM topics
+        INNER JOIN categories ON categories.id = topics.category_id
+        WHERE categories.read_restricted
+        AND categories.email_in IS NOT NULL
+        AND categories.email_in_allow_strangers
+        AND topics.user_id = :user_id
+        AND topics.id IN (:topic_ids)
+      )
+      SQL
+
+      secured_scope = secured_scope.or(Topic.unscoped.where(sql, user_id: user.id, topic_ids: topic_ids))
+    end
+
+    scope.listable_topics.merge(secured_scope)
   end
 end
