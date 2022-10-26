@@ -38,7 +38,9 @@ export function extractError(error, defaultMessage) {
         errors: parsedJSON.errors.map((e, i) => `${i + 1}) ${e}`).join(" "),
       });
     } else if (parsedJSON.errors?.length > 0) {
-      parsedError = parsedJSON.errors[0];
+      parsedError = I18n.t("generic_error_with_reason", {
+        error: parsedJSON.errors[0],
+      });
     } else if (parsedJSON.error) {
       parsedError = parsedJSON.error;
     } else if (parsedJSON.message) {
