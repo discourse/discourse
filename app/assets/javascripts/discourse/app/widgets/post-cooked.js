@@ -211,7 +211,7 @@ export default class PostCooked {
       try {
         const result = await ajax(`/posts/by_number/${topicId}/${postId}`);
 
-        const post = this.decoratorHelper.getModel();
+        const post = this._post();
         const quotedPosts = post.quoted || {};
         quotedPosts[result.id] = result;
         post.set("quoted", quotedPosts);
@@ -381,7 +381,7 @@ export default class PostCooked {
   }
 
   _rerenderUserStatusOnMentions() {
-    const post = this.decoratorHelper.getModel();
+    const post = this._post();
     if (post && post.mentioned_users) {
       post.mentioned_users.forEach((user) =>
         this._rerenderUserStatusOnMention(this.cookedDiv, user)
@@ -434,7 +434,7 @@ export default class PostCooked {
   }
 
   _trackMentionedUsersStatus() {
-    const post = this.decoratorHelper.getModel();
+    const post = this._post();
     if (post && post.mentioned_users) {
       post.mentioned_users.forEach((user) => {
         user.trackStatus();
@@ -444,13 +444,21 @@ export default class PostCooked {
   }
 
   _stopTrackingMentionedUsersStatus() {
-    const post = this.decoratorHelper.getModel();
+    const post = this._post();
     if (post && post.mentioned_users) {
       post.mentioned_users.forEach((user) => {
         user.stopTrackingStatus();
         user.off("status-changed", this, "_rerenderUserStatusOnMentions");
       });
     }
+  }
+
+  _post() {
+    if (!this.decoratorHelper || !this.decoratorHelper.getModel) {
+      return null;
+    }
+
+    return this.decoratorHelper.getModel();
   }
 }
 
