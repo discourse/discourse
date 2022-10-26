@@ -200,8 +200,10 @@ module TopicGuardian
 
   # Accepts an array of `Topic#id` and returns an array of `Topic#id` which the user can see.
   def can_see_topic_ids(topic_ids: [], hide_deleted: true)
+    topic_ids = topic_ids.compact
+
     return topic_ids if is_admin?
-    return [] if topic_ids.compact.blank?
+    return [] if topic_ids.blank?
 
     default_scope = Topic.unscoped.where(id: topic_ids)
 
@@ -321,16 +323,16 @@ module TopicGuardian
   private
 
   def private_message_topic_scope(scope)
-    new_scope = scope.private_messages_for_user(user)
+    pm_scope = scope.private_messages_for_user(user)
 
     if is_moderator?
-      new_scope = new_scope.or(scope.where(<<~SQL))
+      pm_scope = pm_scope.or(scope.where(<<~SQL))
         topics.subtype = '#{TopicSubtype.moderator_warning}'
         OR topics.id IN (#{Topic.has_flag_scope.select(:topic_id).to_sql})
       SQL
     end
 
-    new_scope
+    pm_scope
   end
 
   def secured_regular_topic_scope(scope, topic_ids:)
