@@ -27,6 +27,11 @@ RSpec.describe Guardian do
 
   before do
     Group.refresh_automatic_groups!
+    Guardian.enable_topic_can_see_consistency_check
+  end
+
+  after do
+    Guardian.disable_topic_can_see_consistency_check
   end
 
   it 'can be created without a user (not logged in)' do
@@ -853,6 +858,7 @@ RSpec.describe Guardian do
         expect(Guardian.new(user_gm).can_see?(topic)).to be_falsey
 
         topic.category.update!(reviewable_by_group_id: group.id, topic_id: post.topic.id)
+
         expect(Guardian.new(user_gm).can_see?(topic)).to be_truthy
       end
 
@@ -1118,7 +1124,7 @@ RSpec.describe Guardian do
 
       context "with trashed topic" do
         before do
-          topic.deleted_at = Time.now
+          topic.trash!(admin)
         end
 
         it "doesn't allow new posts from regular users" do
@@ -1729,14 +1735,14 @@ RSpec.describe Guardian do
       end
 
       context 'with private message' do
+        fab!(:private_message) { Fabricate(:private_message_topic) }
+
         it 'returns false at trust level 3' do
-          topic.archetype = 'private_message'
-          expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(false)
+          expect(Guardian.new(trust_level_3).can_edit?(private_message)).to eq(false)
         end
 
         it 'returns false at trust level 4' do
-          topic.archetype = 'private_message'
-          expect(Guardian.new(trust_level_4).can_edit?(topic)).to eq(false)
+          expect(Guardian.new(trust_level_4).can_edit?(private_message)).to eq(false)
         end
       end
 
@@ -3965,7 +3971,7 @@ RSpec.describe Guardian do
 
     it "should correctly detect category moderation" do
       group.add(user)
-      category.reviewable_by_group_id = group.id
+      category.update!(reviewable_by_group_id: group.id)
       guardian = Guardian.new(user)
 
       # implementation detail, ensure memoization is good (hence testing twice)
