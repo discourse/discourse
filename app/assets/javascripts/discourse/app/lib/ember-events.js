@@ -94,11 +94,6 @@ const EVENTS = {
 };
 
 /**
- * @type {WeakMap<object, { event: string; method: string }[]>}
- */
-const PROTO_EVENTS = new WeakMap();
-
-/**
  * @type {WeakMap<object, { event: string; listener: () => {} }[]>}
  */
 const EVENT_LISTENERS = new WeakMap();
@@ -188,39 +183,38 @@ function rewireActionModifier(appInstance) {
 }
 
 function setupComponentEventListeners(component, allEventMethods) {
-  const proto = Object.getPrototypeOf(component);
-  let protoEvents = PROTO_EVENTS.get(proto);
-  const ownProps = Reflect.ownKeys(component);
+  let eventListeners;
+  const { element } = component;
 
-  // Memoize prototype event handlers at the prototype and add listeners
-  // to every instance.
-  if (!protoEvents) {
-    protoEvents = [];
-    PROTO_EVENTS.set(proto, protoEvents);
-
-    for (const method of Object.keys(allEventMethods)) {
-      if (component.has(method) && !ownProps.includes(method)) {
-        const event = allEventMethods[method];
-        protoEvents.push({ event, method });
-      }
-    }
-  }
-  addComponentEventListeners(component, protoEvents);
-
-  // Check every component instance for event handlers added via arguments
-  // specific to the instance.
-  //
-  // TODO: optimize perf since this will be run for every component instance
-  let ownEvents;
   for (const method of Object.keys(allEventMethods)) {
-    if (ownProps.includes(method)) {
+    if (component.has(method)) {
       const event = allEventMethods[method];
-      ownEvents ??= [];
-      ownEvents.push({ event, method });
+
+      if (eventListeners === undefined) {
+        eventListeners = EVENT_LISTENERS.get(component);
+        if (eventListeners === undefined) {
+          eventListeners = [];
+          EVENT_LISTENERS.set(component, eventListeners);
+        }
+      }
+
+      const listener = (e) => {
+        const ret = component.trigger.call(component, INTERNAL, method, e);
+        // If an event handler returns `false`, assume the intent is to stop
+        // propagation and default event handling, as per the behavior
+        // encoded in Ember's `EventDispatcher`.
+        //
+        // See: https://github.com/emberjs/ember.js/blob/7d9095f38911d30aebb0e67ceec13e4a9818088b/packages/%40ember/-internals/views/lib/system/event_dispatcher.ts#L331-L337
+        if (ret === false) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        return ret;
+      };
+
+      element.addEventListener(event, listener);
+      eventListeners.push({ event, listener });
     }
-  }
-  if (ownEvents) {
-    addComponentEventListeners(component, ownEvents);
   }
 }
 
@@ -234,41 +228,5 @@ function teardownComponentEventListeners(component) {
       }
     }
     EVENT_LISTENERS.delete(component);
-  }
-}
-
-function addComponentEventListeners(component, events) {
-  if (events?.length > 0) {
-    const { element } = component;
-    if (element) {
-      // Track any added event listeners to allow cleanup
-      let eventListeners = EVENT_LISTENERS.get(component);
-      if (eventListeners === undefined) {
-        eventListeners = [];
-        EVENT_LISTENERS.set(component, eventListeners);
-      }
-
-      for (const { event, method } of events) {
-        const listener = (e) => {
-          const ret = component.trigger.call(component, INTERNAL, method, e);
-          // If an event handler returns `false`, assume the intent is to stop
-          // propagation and default event handling, as per the behavior
-          // encoded in Ember's `EventDispatcher`.
-          //
-          // See: https://github.com/emberjs/ember.js/blob/7d9095f38911d30aebb0e67ceec13e4a9818088b/packages/%40ember/-internals/views/lib/system/event_dispatcher.ts#L331-L337
-          if (ret === false) {
-            e.preventDefault();
-            e.stopPropagation();
-          }
-          return ret;
-        };
-        element.addEventListener(event, listener);
-        eventListeners.push({ event, listener });
-      }
-    } else {
-      throw new Error(
-        `Could not configure classic component event listeners on '${component.toString()}' without 'element'`
-      );
-    }
   }
 }

@@ -68,6 +68,52 @@ module("Unit | Lib | ember-events", function (hooks) {
     );
   });
 
+  module("classic component event configuration", function () {
+    test("it adds listeners for standard event handlers on the component prototype or the component itself", async function (assert) {
+      let i = 0;
+
+      this.setProperties({
+        onOneClick: () => this.set("oneClicked", i++),
+        onTwoClick: () => this.set("twoClicked", i++),
+        oneClicked: undefined,
+        twoClicked: undefined,
+      });
+
+      await render(hbs`
+        <ExampleClassicButton id="buttonOne" @onClick={{this.onOneClick}} />
+        <ExampleClassicButton id="buttonTwo" @click={{this.onTwoClick}} />
+      `);
+
+      await click("#buttonOne");
+      await click("#buttonTwo");
+
+      assert.strictEqual(this.oneClicked, 0);
+      assert.strictEqual(this.twoClicked, 1);
+    });
+
+    test("it adds listeners for standard event handlers on the component itself or the component prototype (order reversed)", async function (assert) {
+      let i = 0;
+
+      this.setProperties({
+        onOneClick: () => this.set("oneClicked", i++),
+        onTwoClick: () => this.set("twoClicked", i++),
+        oneClicked: undefined,
+        twoClicked: undefined,
+      });
+
+      await render(hbs`
+        <ExampleClassicButton id="buttonOne" @click={{this.onOneClick}} />
+        <ExampleClassicButton id="buttonTwo" @onClick={{this.onTwoClick}} />
+      `);
+
+      await click("#buttonOne");
+      await click("#buttonTwo");
+
+      assert.strictEqual(this.oneClicked, 0);
+      assert.strictEqual(this.twoClicked, 1);
+    });
+  });
+
   module("nested glimmer inside classic", function () {
     test("it handles click events and allows propagation by default", async function (assert) {
       let i = 0;
