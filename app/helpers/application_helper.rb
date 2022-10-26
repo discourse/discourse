@@ -625,6 +625,18 @@ module ApplicationHelper
     result.html_safe
   end
 
+  def discourse_theme_color_meta_tags
+    result = +<<~HTML
+      <meta name="theme-color" media="all" content="##{ColorScheme.hex_for_name('header_background', scheme_id)}">
+    HTML
+    if dark_scheme_id != -1
+      result << <<~HTML
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="##{ColorScheme.hex_for_name('header_background', dark_scheme_id)}">
+      HTML
+    end
+    result.html_safe
+  end
+
   def dark_color_scheme?
     return false if scheme_id.blank?
     ColorScheme.find_by_id(scheme_id)&.is_dark?
