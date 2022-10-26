@@ -284,6 +284,11 @@ class User < ActiveRecord::Base
 
   MAX_STAFF_DELETE_POST_COUNT ||= 5
 
+  def visible_sidebar_tags(user_guardian = nil)
+    user_guardian ||= guardian
+    DiscourseTagging.filter_visible(custom_sidebar_tags, user_guardian)
+  end
+
   def self.max_password_length
     200
   end

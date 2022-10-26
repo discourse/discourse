@@ -27,6 +27,8 @@ class SidebarSiteSettingsBackfiller
           klass.where(name: previous_value.split("|")).pluck(:id),
           klass.where(name: new_value.split("|")).pluck(:id)
         ]
+      else
+        raise 'Invalid setting_name'
       end
 
     @added_ids = new_ids - previous_ids
@@ -78,7 +80,7 @@ class SidebarSiteSettingsBackfiller
         FROM sidebar_section_links
         WHERE sidebar_section_links.linkable_type = '#{@linkable_klass.to_s}'
         AND sidebar_section_links.linkable_id IN (#{@added_ids.join(",")})
-      ) AND users.id > 0
+      ) AND users.id > 0 AND NOT users.staged
       SQL
     end
 

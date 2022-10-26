@@ -7,8 +7,7 @@ module UserSidebarTagsMixin
   end
 
   def sidebar_tags
-    DiscourseTagging
-      .filter_visible(object.custom_sidebar_tags, scope)
+    object.visible_sidebar_tags(scope)
       .pluck(:name, :topic_count, :pm_topic_count)
       .reduce([]) do |tags, sidebar_tag|
         tags.push(

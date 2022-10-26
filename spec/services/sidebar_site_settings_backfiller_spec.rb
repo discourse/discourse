@@ -40,6 +40,12 @@ RSpec.describe SidebarSiteSettingsBackfiller do
     User.real.where("id NOT IN (?)", [user.id, user2.id, user3.id, staged_user.id]).delete_all
   end
 
+  it 'raises an error when class is initialized with invalid setting name' do
+    expect do
+      described_class.new('some_random_setting_name', previous_value: '', new_value: '')
+    end.to raise_error(RuntimeError, "Invalid setting_name")
+  end
+
   describe '#backfill!' do
     context 'for default_sidebar_categories setting' do
       it 'deletes the right sidebar section link records when categories are removed' do
@@ -154,14 +160,14 @@ RSpec.describe SidebarSiteSettingsBackfiller do
 
   describe '#number_of_users_to_backfill' do
     context 'for default_sidebar_categories setting' do
-      it "returns 4 for the user count when a new category for all users is added" do
+      it "returns 3 for the user count when a new category for all users is added" do
         backfiller = described_class.new(
           "default_sidebar_categories",
           previous_value: "",
           new_value: "#{category3.id}"
         )
 
-        expect(backfiller.number_of_users_to_backfill).to eq(4)
+        expect(backfiller.number_of_users_to_backfill).to eq(3)
       end
 
       it "returns 2 for the user count when category which 2 users have configured in sidebar is removed" do
@@ -182,19 +188,19 @@ RSpec.describe SidebarSiteSettingsBackfiller do
           new_value: "#{category2.id}|#{category3.id}"
         )
 
-        expect(backfiller.number_of_users_to_backfill).to eq(4)
+        expect(backfiller.number_of_users_to_backfill).to eq(3)
       end
     end
 
     context 'for default_sidebar_tags setting' do
-      it "returns 4 for the user count when a new tag for all users is added" do
+      it "returns 3 for the user count when a new tag for all users is added" do
         backfiller = described_class.new(
           "default_sidebar_tags",
           previous_value: "",
           new_value: "#{tag3.name}"
         )
 
-        expect(backfiller.number_of_users_to_backfill).to eq(4)
+        expect(backfiller.number_of_users_to_backfill).to eq(3)
       end
 
       # tag, tag2 => tag2
@@ -216,7 +222,7 @@ RSpec.describe SidebarSiteSettingsBackfiller do
           new_value: "#{tag2.name}|#{tag3.name}"
         )
 
-        expect(backfiller.number_of_users_to_backfill).to eq(4)
+        expect(backfiller.number_of_users_to_backfill).to eq(3)
       end
     end
   end

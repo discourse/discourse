@@ -3068,4 +3068,21 @@ RSpec.describe User do
       expect(user.reload.seen_notification_id).to eq(last_notification.id)
     end
   end
+
+  describe '#visible_sidebar_tags' do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:tag) { Fabricate(:tag) }
+    fab!(:hidden_tag) { Fabricate(:tag, name: "secret") }
+    fab!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["secret"]) }
+    fab!(:tag_sidebar_section_link) { Fabricate(:tag_sidebar_section_link, user: user, linkable: tag) }
+    fab!(:tag_sidebar_section_link_2) { Fabricate(:tag_sidebar_section_link, user: user, linkable: hidden_tag) }
+
+    it 'should only return tag sidebar section link records of tags that the user is allowed to see' do
+      expect(user.visible_sidebar_tags).to contain_exactly(tag)
+
+      user.update!(admin: true)
+
+      expect(user.visible_sidebar_tags).to contain_exactly(tag, hidden_tag)
+    end
+  end
 end
