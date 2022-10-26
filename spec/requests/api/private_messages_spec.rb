@@ -34,8 +34,7 @@ RSpec.describe 'private messages' do
           },
           primary_groups: {
             type: :array,
-            items: {
-            },
+            items: {},
           },
           topic_list: {
             type: :object,
@@ -144,8 +143,7 @@ RSpec.describe 'private messages' do
           },
           primary_groups: {
             type: :array,
-            items: {
-            },
+            items: {},
           },
           topic_list: {
             type: :object,
@@ -206,8 +204,7 @@ RSpec.describe 'private messages' do
                     },
                     participants: {
                       type: :array,
-                      items: {
-                      },
+                      items: {},
                     },
                   }
                 },

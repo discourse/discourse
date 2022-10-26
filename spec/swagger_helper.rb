@@ -124,8 +124,7 @@ RSpec.configure do |config|
         }
       ],
       components: {
-        schemas: {
-        }
+        schemas: {}
       }
     }
   }

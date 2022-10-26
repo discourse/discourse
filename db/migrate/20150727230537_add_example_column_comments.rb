@@ -21,8 +21,7 @@ class AddExampleColumnComments < CommentMigration
   end
 
   def comments_down
-    {
-    }
+    {}
   end
 
 end
