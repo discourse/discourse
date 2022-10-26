@@ -352,7 +352,6 @@ const TopicRoute = DiscourseRoute.extend({
       model,
       editingTopic: false,
       firstPostExpanded: false,
-      controllerReady: false,
     });
 
     this.searchService.set("searchContext", model.get("searchContext"));
