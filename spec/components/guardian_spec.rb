@@ -30,6 +30,15 @@ describe Guardian do
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
 
+  before do
+    Group.refresh_automatic_groups!
+    Guardian.enable_topic_can_see_consistency_check
+  end
+
+  after do
+    Guardian.disable_topic_can_see_consistency_check
+  end
+
   it 'can be created without a user (not logged in)' do
     expect { Guardian.new }.not_to raise_error
   end
@@ -843,6 +852,7 @@ describe Guardian do
         expect(Guardian.new(user_gm).can_see?(topic)).to be_falsey
 
         topic.category.update!(reviewable_by_group_id: group.id, topic_id: post.topic.id)
+
         expect(Guardian.new(user_gm).can_see?(topic)).to be_truthy
       end
     end
@@ -1091,7 +1101,7 @@ describe Guardian do
 
       context "trashed topic" do
         before do
-          topic.deleted_at = Time.now
+          topic.trash!(admin)
         end
 
         it "doesn't allow new posts from regular users" do
@@ -1698,15 +1708,15 @@ describe Guardian do
         end
       end
 
-      context 'private message' do
+      context 'with private message' do
+        fab!(:private_message) { Fabricate(:private_message_topic) }
+
         it 'returns false at trust level 3' do
-          topic.archetype = 'private_message'
-          expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(false)
+          expect(Guardian.new(trust_level_3).can_edit?(private_message)).to eq(false)
         end
 
         it 'returns false at trust level 4' do
-          topic.archetype = 'private_message'
-          expect(Guardian.new(trust_level_4).can_edit?(topic)).to eq(false)
+          expect(Guardian.new(trust_level_4).can_edit?(private_message)).to eq(false)
         end
       end
 
@@ -3939,6 +3949,30 @@ describe Guardian do
       expect(trust_level_4.guardian.can_mention_here?).to eq(false)
       expect(moderator.guardian.can_mention_here?).to eq(false)
       expect(admin.guardian.can_mention_here?).to eq(true)
+    end
+  end
+
+  describe "#is_category_group_moderator" do
+    before do
+      SiteSetting.enable_category_group_moderation = true
+    end
+
+    fab!(:category) { Fabricate(:category) }
+
+    it "should correctly detect category moderation" do
+      group.add(user)
+      category.update!(reviewable_by_group_id: group.id)
+      guardian = Guardian.new(user)
+
+      # implementation detail, ensure memoization is good (hence testing twice)
+      expect(guardian.is_category_group_moderator?(category)).to eq(true)
+      expect(guardian.is_category_group_moderator?(category)).to eq(true)
+      expect(guardian.is_category_group_moderator?(plain_category)).to eq(false)
+      expect(guardian.is_category_group_moderator?(plain_category)).to eq(false)
+
+      # edge case ... site setting disabled while guardian instansiated (can help with test cases)
+      SiteSetting.enable_category_group_moderation = false
+      expect(guardian.is_category_group_moderator?(category)).to eq(false)
     end
   end
 end
