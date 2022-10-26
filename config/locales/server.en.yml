@@ -4133,7 +4133,7 @@ en:
     png_to_jpg_conversion_failure_message: "An error happened when converting from PNG to JPG."
     optimize_failure_message: "An error occurred while optimizing the uploaded image."
     download_failure: "Downloading the file from the external provider failed."
-    size_mismatch_failure: "The size of the file uploaded to S3 did not match the external upload stub's intended size. %{additional_detail}"
+    size_mismatch_failure: "The size of the file uploaded to S3 did not match the external upload's intended size. %{additional_detail}"
     create_multipart_failure: "Failed to create multipart upload in the external store."
     abort_multipart_failure: "Failed to abort multipart upload in the external store."
     complete_multipart_failure: "Failed to complete multipart upload in the external store."
