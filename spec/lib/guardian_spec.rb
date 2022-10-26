@@ -866,7 +866,7 @@ RSpec.describe Guardian do
         secure_category = Fabricate(:category, read_restricted: true, email_in: "foo2@bar.com", email_in_allow_strangers: true)
         topic_in_secure_category = Fabricate(:topic, category: secure_category, user: user)
 
-        # expect(Guardian.new(user).can_see?(topic_in_secure_category)).to eq(false)
+        expect(Guardian.new(user).can_see?(topic_in_secure_category)).to eq(false)
 
         user.update!(staged: true)
 
