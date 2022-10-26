@@ -20,6 +20,90 @@ RSpec.describe User do
     end
   end
 
+  describe 'Callbacks' do
+    describe 'default sidebar section links' do
+      fab!(:category) { Fabricate(:category) }
+
+      fab!(:secured_category) do |category|
+        category = Fabricate(:category)
+        category.permissions = { "staff" => :full }
+        category.save!
+        category
+      end
+
+      fab!(:tag) { Fabricate(:tag) }
+      fab!(:hidden_tag) { Fabricate(:tag) }
+      fab!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
+
+      before do
+        SiteSetting.enable_experimental_sidebar_hamburger = true
+        SiteSetting.tagging_enabled = true
+        SiteSetting.default_sidebar_categories = "#{category.id}|#{secured_category.id}"
+        SiteSetting.default_sidebar_tags = "#{tag.name}|#{hidden_tag.name}"
+      end
+
+      it 'creates the right sidebar section link records for categories and tags that a user can see' do
+        user = Fabricate(:user)
+
+        expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
+          category.id
+        )
+
+        expect(SidebarSectionLink.where(linkable_type: 'Tag', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
+          tag.id
+        )
+
+        user = Fabricate(:admin)
+
+        expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
+          category.id,
+          secured_category.id
+        )
+
+        expect(SidebarSectionLink.where(linkable_type: 'Tag', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
+          tag.id,
+          hidden_tag.id
+        )
+      end
+
+      it 'should not create any sidebar section link records when experimental sidebar is disabled' do
+        SiteSetting.enable_experimental_sidebar_hamburger = false
+
+        user = Fabricate(:user)
+
+        expect(SidebarSectionLink.exists?(user_id: user.id)).to eq(false)
+      end
+
+      it 'should not create any sidebar section link records for staged users' do
+        user = Fabricate(:user, staged: true)
+
+        expect(SidebarSectionLink.exists?).to eq(false)
+      end
+
+      it 'should create sidebar section link records when user has been unstaged' do
+        user = Fabricate(:user, staged: true)
+        user.unstage!
+
+        expect(SidebarSectionLink.exists?(user: user)).to eq(true)
+      end
+
+      it 'should not create any sidebar section link records for non human users' do
+        user = Fabricate(:user, id: -Time.now.to_i)
+
+        expect(SidebarSectionLink.exists?).to eq(false)
+      end
+
+      it 'should not create any tag sidebar section link records when tagging is disabled' do
+        SiteSetting.tagging_enabled = false
+
+        user = Fabricate(:user)
+
+        expect(SidebarSectionLink.exists?(linkable_type: 'Category', user_id: user.id)).to eq(true)
+        expect(SidebarSectionLink.exists?(linkable_type: 'Tag', user_id: user.id)).to eq(false)
+      end
+    end
+  end
+
   describe 'Validations' do
     describe '#username' do
       it { is_expected.to validate_presence_of :username }
@@ -2982,6 +3066,23 @@ RSpec.describe User do
 
       expect(user.bump_last_seen_notification!).to eq(true)
       expect(user.reload.seen_notification_id).to eq(last_notification.id)
+    end
+  end
+
+  describe '#visible_sidebar_tags' do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:tag) { Fabricate(:tag) }
+    fab!(:hidden_tag) { Fabricate(:tag, name: "secret") }
+    fab!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["secret"]) }
+    fab!(:tag_sidebar_section_link) { Fabricate(:tag_sidebar_section_link, user: user, linkable: tag) }
+    fab!(:tag_sidebar_section_link_2) { Fabricate(:tag_sidebar_section_link, user: user, linkable: hidden_tag) }
+
+    it 'should only return tag sidebar section link records of tags that the user is allowed to see' do
+      expect(user.visible_sidebar_tags).to contain_exactly(tag)
+
+      user.update!(admin: true)
+
+      expect(user.visible_sidebar_tags).to contain_exactly(tag, hidden_tag)
     end
   end
 end
