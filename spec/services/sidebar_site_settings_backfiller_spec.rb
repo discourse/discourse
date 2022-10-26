@@ -87,12 +87,15 @@ RSpec.describe SidebarSiteSettingsBackfiller do
           new_value: "#{category3.id}"
         )
 
+        original_count = SidebarSectionLink.count
+
         expect do
           backfiller.backfill!
-        end.to change { SidebarSectionLink.count }.by(0) # Net change of 0
-          .and change { SidebarSectionLink.where(linkable_type: 'Category', linkable_id: category.id).count }.by(-2)
+        end.to change { SidebarSectionLink.where(linkable_type: 'Category', linkable_id: category.id).count }.by(-2)
           .and change { SidebarSectionLink.where(linkable_type: 'Category', linkable_id: category2.id).count }.by(-1)
           .and change { SidebarSectionLink.where(linkable_type: 'Category', linkable_id: category3.id).count }.by(3)
+
+        expect(SidebarSectionLink.count).to eq(original_count) # Net change of 0
 
         expect(SidebarSectionLink.where(linkable_type: 'Category', linkable_id: category3.id).pluck(:user_id)).to contain_exactly(
           user.id,
@@ -142,12 +145,15 @@ RSpec.describe SidebarSiteSettingsBackfiller do
           new_value: "#{tag3.name}"
         )
 
+        original_count = SidebarSectionLink.count
+
         expect do
           backfiller.backfill!
-        end.to change { SidebarSectionLink.count }.by(0) # Net change of 0
-          .and change { SidebarSectionLink.where(linkable_type: 'Tag', linkable_id: tag.id).count }.by(-2)
+        end.to change { SidebarSectionLink.where(linkable_type: 'Tag', linkable_id: tag.id).count }.by(-2)
           .and change { SidebarSectionLink.where(linkable_type: 'Tag', linkable_id: tag2.id).count }.by(-1)
           .and change { SidebarSectionLink.where(linkable_type: 'Tag', linkable_id: tag3.id).count }.by(3)
+
+        expect(SidebarSectionLink.count).to eq(original_count) # net change of 0
 
         expect(SidebarSectionLink.where(linkable_type: 'Tag', linkable_id: tag3.id).pluck(:user_id)).to contain_exactly(
           user.id,

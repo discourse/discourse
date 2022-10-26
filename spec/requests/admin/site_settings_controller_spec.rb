@@ -312,7 +312,7 @@ RSpec.describe Admin::SiteSettingsController do
             }
 
             expect(response.status).to eq(200)
-            expect(response.parsed_body["user_count"]).to eq(User.real.count)
+            expect(response.parsed_body["user_count"]).to eq(User.real.not_staged.count)
           end
 
           it 'returns the right count for the default_sidebar_tags site setting' do
@@ -323,7 +323,7 @@ RSpec.describe Admin::SiteSettingsController do
             }
 
             expect(response.status).to eq(200)
-            expect(response.parsed_body["user_count"]).to eq(User.real.count)
+            expect(response.parsed_body["user_count"]).to eq(User.real.not_staged.count)
           end
         end
 
