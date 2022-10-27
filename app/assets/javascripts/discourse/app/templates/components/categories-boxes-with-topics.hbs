@@ -2,7 +2,7 @@
   <div data-notification-level={{c.notificationLevelString}} style={{unless this.noCategoryStyle (html-safe (concat (border-color c.color) (category-color-variable c.color)))}} class="category category-box category-box-{{c.slug}} {{if c.isMuted "muted"}} {{if this.noCategoryStyle "no-category-boxes-style"}}">
     <div class="category-box-inner">
       <div class="category-box-heading">
-        <a href={{c.url}}>
+        <a class="parent-box-link" href={{c.url}}>
           {{#unless c.isMuted}}
             {{#if c.uploaded_logo.url}}
               <CategoryLogo @category={{c}} />
