@@ -75,14 +75,26 @@ module("Unit | Lib | ember-action-modifer", function (hooks) {
     assert.strictEqual(this.dblClicked, 0);
   });
 
-  module("used on a classic component with an actions hash", function () {
+  module("used on a classic component", function () {
     const ExampleClassicButton = ClassicComponent.extend({
       tagName: "",
       onDoSomething: null,
 
+      doSomething() {
+        this.onDoSomething?.("doSomething");
+      },
+    });
+    const ExampleClassicButtonWithActions = ClassicComponent.extend({
+      tagName: "",
+      onDoSomething: null,
+
+      doSomething() {
+        this.onDoSomething?.("doSomething");
+      },
+
       actions: {
-        doSomething(event) {
-          this.onDoSomething?.(event);
+        doSomething() {
+          this.onDoSomething?.("actions.doSomething");
         },
       },
     });
@@ -106,18 +118,59 @@ module("Unit | Lib | ember-action-modifer", function (hooks) {
         "template:components/example-classic-button",
         exampleClassicButtonTemplate
       );
+      this.owner.register(
+        "component:example-classic-button-with-actions",
+        ExampleClassicButtonWithActions
+      );
+      this.owner.register(
+        "template:components/example-classic-button-with-actions",
+        exampleClassicButtonTemplate
+      );
     });
 
-    test("it can target listeners on the actions hash", async function (assert) {
+    test("it can target a listener on the context", async function (assert) {
       let i = 0;
 
       this.setProperties({
-        onOneClick: () => this.set("oneClicked", i++),
+        onOneClick: (source) => {
+          assert.strictEqual(
+            source,
+            "doSomething",
+            "handler on context is invoked"
+          );
+          this.set("oneClicked", i++);
+        },
         oneClicked: undefined,
       });
 
       await render(hbs`
         <ExampleClassicButton @onDoSomething={{this.onOneClick}} />
+      `);
+
+      assert.strictEqual(this.oneClicked, undefined);
+
+      await click("a.btn");
+
+      assert.strictEqual(this.oneClicked, 0);
+    });
+
+    test("it can target a listener on the actions hash", async function (assert) {
+      let i = 0;
+
+      this.setProperties({
+        onOneClick: (source) => {
+          assert.strictEqual(
+            source,
+            "actions.doSomething",
+            "handler on actions hash is given precedence"
+          );
+          this.set("oneClicked", i++);
+        },
+        oneClicked: undefined,
+      });
+
+      await render(hbs`
+        <ExampleClassicButtonWithActions @onDoSomething={{this.onOneClick}} />
       `);
 
       assert.strictEqual(this.oneClicked, undefined);

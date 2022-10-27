@@ -18,7 +18,7 @@ export const actionModifier = modifier(
     const handler = (event) => {
       let fn;
       if (typeof callback === "string") {
-        fn = context[callback] ?? context.actions?.[callback];
+        fn = context.actions?.[callback] ?? context[callback];
       } else if (typeof callback === "function") {
         fn = callback;
       }
