@@ -826,7 +826,7 @@ en:
         other: "almost %{count} years ago"
 
   password_reset:
-    no_token: "Sorry, that password change link is too old. Select the Log In button and use 'I forgot my password' to get a new link."
+    no_token: 'Oops! The link you used no longer works. You can <a href="%{base_url}/login">Log In</a> now. If you forgot your password, you can <a href="%{base_url}/password-reset">request a link</a> to reset it.'
     choose_new: "Choose a new password"
     choose: "Choose a password"
     update: "Update Password"
