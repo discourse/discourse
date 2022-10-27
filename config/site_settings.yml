@@ -498,7 +498,7 @@ login:
     default: false
   max_suspicious_distance_km:
     hidden: true
-    default: 500
+    default: 100
   discourse_connect_url:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
