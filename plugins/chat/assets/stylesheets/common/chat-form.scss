@@ -1,0 +1,43 @@
+.chat-form__section {
+  padding: 1.5rem 1rem;
+  border-bottom: 1px solid var(--primary-low);
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+    border-bottom: none;
+  }
+}
+
+.chat-form__field {
+  margin-bottom: 1rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.chat-form__btn {
+  border: 0;
+  background: none;
+  padding: 0.25rem 0;
+  margin: 0;
+}
+
+.chat-form__label {
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+}
+
+.chat-form__label-actions {
+  margin-left: auto;
+
+  .btn-text {
+    color: var(--tertiary);
+    font-size: var(--font-down-1);
+  }
+}

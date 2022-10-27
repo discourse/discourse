@@ -1,0 +1,96 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hr:
+  js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Status chat kanala je promijenjen"
+            chat_channel_delete: "Chat kanal je izbrisan"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "Izradite chat poruku na određenom kanalu."
+    chat:
+      dates:
+        time_tiny: "h:mm"
+      all_loaded: "Prikaz svih poruka"
+      already_enabled: "Chat je već omogućen na ovu temu. Molimo osvježite."
+      disabled_for_topic: "Chat je onemogućen na ovu temu."
+      bot: "bot"
+      create: "Stvorite"
+      cancel: "Otkazati"
+      cancel_reply: "Otkaži odgovor"
+      chat_channels: "Kanali"
+      move_to_channel:
+        title: "Premještanje poruka na kanal"
+        confirm_move: "Premjesti poruke"
+      channel_settings:
+        title: "Postavke kanala"
+        leave_channel: "Napusti kanal"
+        join: "Pridružite se"
+      channel_archive:
+        title: "Arhiviraj kanal"
+        instructions: "<p>Arhiviranje kanala stavlja ga u način rada samo za čitanje i premješta sve poruke s kanala u novu ili postojeću temu. Ne mogu se slati nove poruke, niti se postojeće poruke ne mogu uređivati ili brisati.</p><p>Jeste li sigurni da želite arhivirati <strong>%{channelTitle}</strong> kanal?</p>"
+        process_started: "Počeo je proces arhiviranja. Ovaj način će se uskoro zatvoriti, a vi ćete dobiti osobnu poruku kada je proces arhive završen."
+        retry: "Pokušaj ponovo"
+      channel_open:
+        title: "Otvori kanal"
+        instructions: "Ponovno otvara kanal, svi korisnici će moći slati poruke i uređivati svoje postojeće poruke."
+      channel_close:
+        title: "Zatvori kanal"
+        instructions: "Zatvaranje kanala onemogućuje korisnicima koji nisu zaposlenici da šalju nove poruke ili uređuju postojeće poruke. Jeste li sigurni da želite zatvoriti ovaj kanal?"
+      channel_delete:
+        title: "Izbriši kanal"
+        instructions: "<p>Briše <strong>%{name}</strong> kanal i povijest razgovora. Sve poruke i srodni podaci, kao što su reakcije i prijenosi, trajno će biti izbrisani. Ako želite sačuvati povijest kanala i raspada ga, možda želite arhivirati kanal umjesto.</p> <p>Jeste li sigurni da želite <strong>trajno izbrisati</strong> kanal? Da biste potvrdili, upišite naziv kanala u okvir ispod.</p>"
+        confirm: "Razumijem posljedice, obriši kanal"
+        confirm_channel_name: "Unesite naziv kanala"
+        process_started: "Započeo je proces brisanja kanala. Ovaj modal će se uskoro zatvoriti, više nigdje nećete vidjeti izbrisani kanal."
+      channels_list_popup:
+        browse: "Pretražujte kanale"
+      click_to_join: "Kliknite ovdje da biste vidjeli dostupne kanale."
+      close: "Zatvoriti"
+      collapse: "Sažmi ladicu za chat"
+      confirm_flag: "Jeste li sigurni da želite označiti poruku korisnika %{username}?"
+      deleted: "Poruka je izbrisana. [pogledaj]"
+      delete: "Izbriši"
+      edited: "uredio"
+      empty_state:
+        direct_message: "Također možete započeti osobni razgovor s jednim ili više korisnika."
+      enable: "Omogući chat"
+      flag: "Prijavi"
+      flagged: "Ova poruka je označena za pregled"
+      invalid_access: "Nemate pristup za pregled ovog kanala za chat"
+      invitation_notification: "<span>%{username}</span> <span>vas je pozvao da se pridružite chat kanalu</span>"
+      in_reply_to: "U odgovoru na"
+      heading: "Čet"
+      join: "Pridružite se"
+      new_messages: "nove poruke"
+      mention_warning:
+        cannot_see:
+          one: "%{usernames} ne može pristupiti ovom kanalu i nije obaviješten."
+          few: "%{usernames} ne mogu pristupiti ovom kanalu i nisu obaviješteni."
+          other: "%{usernames} ne mogu pristupiti ovom kanalu i nisu obaviješteni."
+        dismiss: "odbaciti"
+        invitations_sent:
+          one: "Poziv poslan"
+          few: "Pozivnice poslane"
+          other: "Pozivnice poslane"
+        invite: "Pozovite na kanal"
+        without_membership:
+          one: "%{usernames} se nije pridružio ovom kanalu."
+          few: "%{usernames} se nisu pridružili ovom kanalu."
+          other: "%{usernames} se nisu pridružili ovom kanalu."
+      aria_roles:
+        header: "Zaglavlje chata"
+        composer: "Skladatelj chata"
+      browse:
+        title: Kanali
+    notifications:
+      chat_invitation_html: "<span>%{username}</span> <span>vas je pozvao da se pridružite chat kanalu</span>"

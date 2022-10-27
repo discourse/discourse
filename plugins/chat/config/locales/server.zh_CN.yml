@@ -1,0 +1,157 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  site_settings:
+    chat_enabled: "启用discourse-chat插件。"
+    chat_channel_retention_days: "常规频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
+    chat_dm_retention_days: "个人聊天频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
+    chat_auto_silence_duration: "用户超过聊天消息创建速率限制时将被静音的分钟数。设置为“0”以禁用自动静音。"
+    chat_allowed_messages_for_trust_level_0: "信任级别 0 用户在 30 秒内允许发送的消息数。设置为“0”以禁用限制。"
+    chat_allowed_messages_for_other_trust_levels: "信任级别 1-4 的用户在 30 秒内允许发送的消息数。设置为“0”以禁用限制。"
+    chat_silence_user_sensitivity: "聊天中被标记的用户被自动静音的可能性。"
+    chat_auto_silence_from_flags_duration: "用户因聊天消息被标记而自动静音时将被静音的分钟数。"
+    chat_default_channel_id: "当用户在其他频道没有未读消息或提及时，将默认打开的聊天频道。"
+    chat_duplicate_message_sensitivity: "同一发件人的重复信息在短时间内被阻止的可能性。十进制数字，介于0和1.0之间，1.0为最高设置（在较短的时间内更频繁地阻止信息）。设置为 \"0 \"表示允许重复的信息。"
+    chat_minimum_message_length: "聊天消息允许的最少字符数。"
+    chat_archive_destination_topic_status: "频道归档完成后目标主题应处于的状态。这仅适用于目标主题是新主题而不是现有主题的情况。"
+    default_emoji_reactions: "聊天信息的默认表情符号反应。最多可添加5个表情符号进行快速反应。"
+    errors:
+      chat_default_channel: "默认聊天频道必须是公共频道。"
+  system_messages:
+    chat_channel_archive_complete:
+      title: "聊天频道归档完成"
+      subject_template: "聊天频道归档成功完成"
+      text_body_template: |
+        存档聊天频道**\#%{channel_name}** 已成功完成。消息已被复制到主题 [%{topic_title}](%{topic_url}) 中。
+    chat_channel_archive_failed:
+      title: "聊天频道归档失败"
+      subject_template: "聊天频道归档失败"
+      text_body_template: |
+        聊天频道**#%{channel_name}**归档失败。 %{messages_archived} 信息已被归档。部分归档的消息被复制到主题[%{topic_title}](%{topic_url})。请访问 %{channel_url} 频道以重新尝试。
+  chat:
+    deleted_chat_username: 已删除
+    errors:
+      channel_exists_for_category: "此类别和名称的频道已经存在"
+      channel_new_message_disallowed: "频道 %{status}，不能发送新消息"
+      channel_modify_message_disallowed: "频道 %{status}，无法编辑或删除消息"
+      user_cannot_send_message: "您目前无法发送消息。"
+      rate_limit_exceeded: "超过了30秒内可发送的聊天信息的上限"
+      auto_silence_from_flags: "聊天消息标记得分高到足以将用户静音。"
+      channel_cannot_be_archived: "该频道此时不能被归档，它必须被关闭或启用以归档。"
+      duplicate_message: "您在短时间内发布了一条相同的消息。"
+      delete_channel_failed: "删除频道失败，请重试。"
+      minimum_length_not_met: "消息太短，必须至少有 %{minimum} 个字符。"
+      max_reactions_limit_reached: "在这个信息上不允许有新的反应。"
+      message_move_invalid_channel: "源频道和目标频道必须是公共频道。"
+      message_move_no_messages_found: "没有找到带有提供消息ID的消息。"
+      cant_update_direct_message_channel: "DM频道的名称和描述等属性无法被更新。"
+      not_accepting_dms: "抱歉， %{username} 目前不接受聊天消息。"
+      actor_ignoring_target_user: "你忽略了 %{username}，所以你不能向他们发送消息。"
+      actor_muting_target_user: "您正在静音 %{username}，因此您无法向他们发送消息。"
+      actor_disallowed_dms: "您已选择阻止用户向您发送私人和聊天消息，因此您无法创建新的私聊。"
+      actor_preventing_target_user_from_dm: "您已选择阻止 %{username} 向您发送私人和聊天消息，因此您无法向他们创建新的私聊。"
+    reviewables:
+      actions:
+        agree:
+          title: "同意…"
+        agree_and_keep_message:
+          title: "保留消息"
+          description: "同意举报并保持消息不变。"
+        agree_and_keep_deleted:
+          title: "保持消息删除状态"
+          description: "同意举报并保持消息删除状态。"
+        agree_and_suspend:
+          title: "封禁用户"
+          description: "同意举报并封禁用户。"
+        agree_and_silence:
+          title: "将用户禁言"
+          description: "同意举报并将用户禁言。"
+        agree_and_restore:
+          title: "恢复消息"
+          description: "恢复消息，以便用户可以看到。"
+        agree_and_delete:
+          title: "删除消息"
+          description: "删除消息，使用户看不到。"
+        delete_and_agree:
+          title: "删除消息"
+        disagree_and_restore:
+          title: "不同意并恢复消息"
+          description: "恢复消息，以便所有用户都可以看到。"
+        disagree:
+          title: "不同意"
+        ignore:
+          title: "忽略"
+    channel:
+      statuses:
+        read_only: "只读"
+        archived: "已归档"
+        closed: "已关闭"
+        open: "启用"
+      archive:
+        first_post_raw: "本主题是 [%{channel_name}](%{channel_url}) 聊天频道的存档。"
+      messages_moved:
+        other: "@%{acting_username} 将 %{count} 条消息移至 [%{channel_name}](%{first_moved_message_url}) 频道。"
+      dm_title:
+        single_user: "%{user}"
+        multi_user: "%{users}"
+        multi_user_truncated: "%{users} 和 其他%{leftover} 人"
+    bookmarkable:
+      notification_title: "%{channel_name}频道中的信息"
+    personal_chat: "个人聊天"
+    onebox:
+      inline_to_message: "消息 #%{message_id} by %{username} – #%{chat_channel}"
+      inline_to_channel: "聊天#%{chat_channel}"
+      inline_to_topic_channel: "话题 %{topic_title}的聊天"
+      x_members:
+        other: "%{count} 个成员"
+      and_x_others:
+        other: "其他 %{count} 人"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} 在“%{channel}”中提到了你'
+        other: '%{username} 在 “%{channel}”中提到 %{identifier}'
+      direct_message_chat_mention:
+        direct: "%{username} 在私聊中提到了你"
+        other: "%{username} 私聊中提到 %{identifier}"
+      new_chat_message: '%{username} 在“%{channel}”中发送了一条消息'
+      new_direct_chat_message: "%{username} 在私聊中发送了一条消息"
+  discourse_automation:
+    scriptables:
+      send_chat_message:
+        title: 发送聊天消息
+  reviewable_score_types:
+    needs_review:
+      title: "需要审核"
+  user_notifications:
+    chat_summary:
+      deleted_user: "已被删除的用户"
+      description:
+        other: "您有新的聊天消息"
+      from: "%{site_name}"
+      subject:
+        direct_message:
+          other: "[%{email_prefix}] 来自 %{message_title} 和 %{others}的新消息"
+        chat_channel:
+          other: "[%{email_prefix}] 来自 %{message_title} 和 %{others}的新消息"
+        other_direct_message: "来自 %{message_title}"
+        others: "其他 %{count} 人"
+      unsubscribe: "当您不在时，此聊天摘要会从 %{site_link} 发送。更改您的 %{email_preferences_link}或 %{unsubscribe_link} 以取消订阅。"
+      unsubscribe_no_link: "此聊天摘要在您离开时从 %{site_link} 发送。更改你的 %{email_preferences_link}."
+      view_messages:
+        other: "查看 %{count} 条消息"
+      view_more:
+        other: "查看 %{count} 条消息"
+      your_chat_settings: "聊天电子邮件频率偏好"
+  unsubscribe:
+    chat_summary:
+      select_title: "将聊天摘要电子邮件频率设置为："
+      never: 永不
+      when_away: 仅在离开时
+  category:
+    cannot_delete:
+      has_chat_channels: "无法删除此类别，因为它有关联的聊天频道。"

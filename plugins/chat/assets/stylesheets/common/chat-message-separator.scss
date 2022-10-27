@@ -1,0 +1,42 @@
+.chat-message-separator {
+  @include unselectable;
+  margin: 0.25rem 0 0.25rem 1rem;
+  display: flex;
+  font-size: var(--font-down-1);
+  position: relative;
+  transform: translateZ(0);
+  position: relative;
+
+  &.new-message {
+    color: var(--danger-medium);
+
+    .divider {
+      background-color: var(--danger-medium);
+    }
+  }
+
+  &.first-daily-message {
+    .text {
+      color: var(--secondary-low);
+      font-weight: 600;
+    }
+
+    .divider {
+      background-color: var(--secondary-high);
+    }
+  }
+
+  .text {
+    margin: 0 auto;
+    padding: 0 0.75rem;
+    z-index: 1;
+    background: var(--secondary);
+  }
+
+  .divider {
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    top: 50%;
+  }
+}

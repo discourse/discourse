@@ -1,0 +1,29 @@
+<div id="chat-progress-bar-container"></div>
+
+<ChatVh />
+
+{{#if this.chat.sidebarActive}}
+  <div class="full-page-chat teams-sidebar-on">
+    {{outlet}}
+  </div>
+{{else}}
+  <div
+    class={{concat-class
+      "full-page-chat"
+      (if
+        this.site.siteSettings.enable_sidebar
+        "full-page-chat-sidebar-enabled"
+      )
+    }}
+  >
+    {{#if
+      (and (not this.site.siteSettings.enable_sidebar) (not this.site.mobileView))
+    }}
+      <ChannelsList @onSelect={{action "switchChannel"}} />
+    {{/if}}
+
+    <div id="main-chat-outlet">
+      {{outlet}}
+    </div>
+  </div>
+{{/if}}

@@ -1,0 +1,395 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "聊天频道状态已更改"
+            chat_channel_delete: "聊天频道已删除"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "在指定频道创建聊天消息。"
+    about:
+      chat_messages_count: "聊天消息"
+      chat_channels_count: "聊天频道"
+      chat_users_count: "聊天用户"
+    chat:
+      dates:
+        time_tiny: "h:mm"
+      all_loaded: "显示所有消息"
+      already_enabled: "此话题已启用聊天。请刷新。"
+      disabled_for_topic: "此话题已禁用聊天。"
+      bot: "机器人"
+      create: "创建"
+      cancel: "取消"
+      cancel_reply: "取消回复"
+      chat_channels: "频道"
+      browse_all_channels: "浏览所有频道"
+      move_to_channel:
+        title: "将消息移至频道"
+        instructions:
+          other: "您正在移动 <strong>%{count}</strong> 消息。请选择一个目标频道。 将在 <strong>%{channelTitle}</strong> 频道中创建占位符消息，以表明这些消息已被移动。"
+        confirm_move: "移动消息"
+      channel_settings:
+        title: "频道设置"
+        edit: "编辑"
+        add: "编辑"
+        close_channel: "关闭频道"
+        open_channel: "启用频道"
+        archive_channel: "归档频道"
+        delete_channel: "删除频道"
+        join_channel: "加入频道"
+        leave_channel: "离开频道"
+        join: "加入"
+        leave: "离开"
+      channel_archive:
+        title: "归档频道"
+        instructions: "<p>归档一个频道会使它进入只读模式，并将该频道的所有信息移到一个新的或现有的主题中。将无法发送新消息，也不能编辑或删除现有的信息。</p><p>你确定要对 <strong>%{channelTitle}</strong> 频道进行存档吗？</p>"
+        process_started: "归档过程已经开始。这个弹窗很快就会关闭，当归档过程完成后，你会收到一条私信。"
+        retry: "重试"
+      channel_open:
+        title: "启用频道"
+        instructions: "重新启用频道，所有用户将能够发送消息并编辑他们现有的消息。"
+      channel_close:
+        title: "关闭频道"
+        instructions: "关闭该频道可以防止非工作人员用户发送新信息或编辑现有信息。你确定要关闭这个频道吗？"
+      channel_delete:
+        title: "删除频道"
+        instructions: "<p>删除 <strong>%{name}</strong> 频道和聊天历史。所有信息和相关数据，如回应和上传，将被永久删除。如果你想保留频道历史，并将其停用，你可能想将该频道归档，而不是删除。</p> <p>你确定你要 <strong>，永久删除</strong> 该频道？为了确认，请在下面的方框中输入该频道的名称。</p>"
+        confirm: "我明白后果，删除频道"
+        confirm_channel_name: "输入频道名称"
+        process_started: "删除该频道的过程已经开始。这个对话框将很快关闭，你将无法看到被删除的频道。"
+      channels_list_popup:
+        browse: "浏览频道"
+      click_to_join: "点击此处查看可用频道。"
+      close: "关闭"
+      collapse: "折叠聊天抽屉"
+      confirm_flag: "确定要举报 %{username} 的消息吗？"
+      deleted: "一条消息已被删除。[查看]"
+      hidden: "一条消息已被删除。[查看]"
+      delete: "删除"
+      edited: "已编辑"
+      muted: "已静音"
+      joined: "已加入"
+      empty_state:
+        direct_message_cta: "开始个人聊天"
+        direct_message: "您还可以与一位或多位用户开始个人聊天。"
+        title: "未找到频道"
+      email_frequency:
+        description: "我们只有在过去15分钟内没有看到你时才会给你发电子邮件。"
+        never: "永不"
+        title: "电子邮件通知"
+        when_away: "仅在离开时"
+      enable: "启用聊天"
+      flag: "举报"
+      flagged: "此消息已被举报，等待审核"
+      invalid_access: "您无权查看此聊天频道"
+      invitation_notification: "<span>%{username}</span> <span>邀请你加入一个聊天频道</span>"
+      in_reply_to: "回复"
+      heading: "聊天"
+      join: "加入"
+      new_messages: "新消息"
+      mention_warning:
+        cannot_see:
+          other: "%{usernames} 无法访问此频道且未收到通知。"
+        dismiss: "关闭"
+        invitations_sent:
+          other: "已发送邀请"
+        invite: "邀请加入频道"
+        without_membership:
+          other: "%{usernames} 尚未加入此频道。"
+      aria_roles:
+        header: "聊天标题"
+        composer: "聊天输入框"
+        channels_list: "聊天频道列表"
+      no_public_channels: "您还没有加入任何频道。"
+      only_chat_push_notifications:
+        title: "只发送聊天推送通知"
+        description: "阻止发送所有非聊天推送通知"
+      ignore_channel_wide_mention:
+        title: "忽略频道范围内的提及"
+        description: "不要发送频道范围内提及的通知（@here 和 @all）"
+      open: "打开聊天"
+      open_full_page: "打开全屏聊天"
+      close_full_page: "关闭全屏聊天"
+      open_message: "在聊天中打开消息"
+      placeholder_self: "做些记录"
+      placeholder_others: "与 %{messageRecipient} 聊天"
+      placeholder_new_message_disallowed: "频道 %{status}，您现在无法发送新消息。"
+      placeholder_silenced: "您目前无法发送消息。"
+      placeholder_start_conversation: 与 %{usernames}开始对话
+      remove_upload: "移除文件"
+      react: "使用表情符号回复"
+      reply: "回复"
+      edit: "编辑"
+      copy_link: "复制链接"
+      rebake_message: "重建 HTML"
+      retry_staged_message:
+        title: "网络错误"
+        action: "重新发送？"
+      unreliable_network: "网络不稳定，发送消息和保存草稿可能无法正常工作"
+      bookmark_message: "书签"
+      bookmark_message_edit: "编辑书签"
+      restore: "恢复已删除的消息"
+      save: "保存"
+      select: "选择"
+      silence: "静音用户"
+      return_to_list: "返回频道列表"
+      scroll_to_bottom: "滚动到底部"
+      scroll_to_new_messages: "查看新消息"
+      sound:
+        title: "桌面聊天通知声音"
+      sounds:
+        none: "无"
+        bell: "钟声"
+        ding: "叮叮"
+      title: "聊天"
+      title_capitalized: "聊天"
+      upload: "附加文件"
+      uploaded_files:
+        other: "%{count} 个文件"
+      you_flagged: "您已举报此消息"
+      exit: "返回"
+      channel_status:
+        read_only_header: "频道只读"
+        read_only: "只读"
+        archived_header: "频道已归档"
+        archived: "已归档"
+        archive_failed: "频道归档失败。 %{completed}/%{total} 信息已被归档到 <a target=\"_blank\" href=\"%{topic_url}\">目标主题</a>。请按重试，尝试完成存档。"
+        archive_completed: "见 <a target=\"_blank\" href=\"%{topic_url}\">归档主题</a>"
+        closed_header: "频道已关闭"
+        closed: "已关闭"
+        open_header: "频道已开启"
+        open: "开启"
+      browse:
+        title: 频道
+        filter_all: 全部
+        filter_open: 已开启
+        filter_closed: 已关闭
+        filter_archived: 已归档
+        filter_input_placeholder: 按名称搜索频道
+      chat_message_separator:
+        today: 今天
+        yesterday: 昨天
+      members_view:
+        filter_placeholder: 查找成员
+      about_view:
+        associated_topic: 已关联的主题
+        associated_category: 链接的类别
+        title: 标题
+        description: 描述
+      channel_info:
+        back_to_all_channels: "所有频道"
+        back_to_channel: "返回"
+        tabs:
+          about: 关于
+          members: 成员
+          settings: 设置
+      channel_edit_title_modal:
+        title: 编辑标题
+        input_placeholder: 添加标题
+        description: 为您的频道提供简短的描述性标题
+      channel_edit_description_modal:
+        title: 编辑描述
+        input_placeholder: 添加描述
+        description: 告诉人们这个频道是关于什么
+      direct_message_creator:
+        title: 新消息
+        prefix: "至："
+        no_results: 没有结果
+        selected_user_title: "取消选择 %{username}"
+      channel_selector:
+        title: "跳转到频道"
+        no_channels: "没有频道符合您的搜索"
+      channel:
+        no_memberships: 此频道没有成员
+        no_memberships_found: 未找到成员
+        memberships_count:
+          other: "%{count} 个成员"
+      create_channel:
+        auto_join_users:
+          warning_groups:
+            other: 自动添加 %{members_count} 位来自 %{group_1} 和 %{group_2} 的用户？
+          warning_multiple_groups: 自动添加 %{members_count} 位来自 %{group_1} 和其他 %{count} 位用户？
+        choose_category:
+          label: "选择一个类别"
+          none: "选择一个…"
+          default_hint: 访问<a href=%{link} target="_blank">%{category}安全设置</a>管理访问
+          hint_groups:
+            other: 根据 <a href=%{link} target="_blank">安全设置 %{hint_1} 和 %{hint_2}</a>的用户将有权访问此频道
+          hint_multiple_groups: 根据 <a href=%{link} target="_blank">安全设置</a>， %{hint_1} 组和其他 %{count} 个组中的用户将有权访问此频道
+        create: "创建频道"
+        description: "描述（可选）"
+        name: "频道名称"
+        type: "类型"
+        types:
+          category: "类别"
+          topic: "话题"
+      reviewable:
+        type: "聊天消息"
+      reactions:
+        only_you: "您回应了 :%{emoji}:"
+        and_others: "您，%{usernames} 回应了 :%{emoji}:"
+        only_others: "%{usernames} 回应了 :%{emoji}:"
+        others_and_more: "%{usernames} 和其他 %{more} 人回应了 :%{emoji}:"
+        you_others_and_more: "您，%{usernames} 和其他 %{more} 人回应了 :%{emoji}:"
+      composer:
+        toggle_toolbar: "切换工具栏"
+        italic_text: "斜体"
+        bold_text: "粗体"
+        code_text: "代码文本"
+      quote:
+        original_channel: '最初发送于 <a href="%{channelLink}">%{channel}</a>'
+        copy_success: "引用的聊天已复制到剪贴板"
+      notification_levels:
+        never: "永不"
+        mention: "仅限提及"
+        always: "所有活动"
+      settings:
+        auto_join_users_warning: "每个不是该频道成员且有权访问 %{category} 类别的用户都将加入。你确定吗？"
+        desktop_notification_level: "桌面通知"
+        follow: "加入"
+        followed: "已加入"
+        mobile_notification_level: "移动推送通知"
+        mute: "将频道设为免打扰"
+        muted_on: "开"
+        muted_off: "关"
+        notifications: "通知"
+        preview: "预览"
+        save: "保存"
+        saved: "已保存"
+        unfollow: "离开"
+      admin:
+        title: "聊天"
+      direct_messages:
+        title: "个人聊天"
+        new: "新的个人聊天"
+        create: "开始"
+        leave: "离开此个人聊天"
+      incoming_webhooks:
+        back: "返回"
+        channel_placeholder: "选择一个频道"
+        confirm_destroy: "确定要删除此传入网络钩子吗？此操作无法撤消。"
+        current_emoji: "当前表情符号"
+        description: "描述"
+        delete: "删除"
+        emoji: "表情符号"
+        emoji_instructions: "如果表情符号留空，将使用系统头像。"
+        name: "名称"
+        name_placeholder: "名称…"
+        new: "新的传入网络钩子"
+        none: "未创建现有的传入网络钩子。"
+        no_emoji: "未选择表情符号"
+        post_to: "发布到"
+        reset_emoji: "重置表情符号"
+        save: "保存"
+        edit: "编辑"
+        select_emoji: "选择表情符号"
+        system: "系统"
+        title: "传入网络钩子"
+        url: "URL"
+        username: "用户名"
+        username_instructions: "发布到频道的机器人的用户名。留空时默认为“系统”。"
+      selection:
+        cancel: "取消"
+        quote_selection: "在主题中引用"
+        copy: "复制"
+        move_selection_to_channel: "移至频道"
+        error: "移动聊天消息时出错"
+        title: "将聊天移动到话题"
+        new_topic:
+          title: "移动到新话题"
+          instructions:
+            other: "您将创建一个新话题并使用您选择的 <b>%{count}</b> 条聊天消息进行填充。"
+          instructions_channel_archive: "您将要创建一个新主题并将频道消息归档到该主题。"
+        existing_topic:
+          title: "移动到现有话题"
+          instructions:
+            other: "请选择您要将这 <b>%{count}</b> 条聊天消息移动到的话题。"
+          instructions_channel_archive: "请选择您要将频道消息归档到的主题。"
+        new_message:
+          title: "移动到新消息"
+          instructions:
+            other: "您将创建一条新消息并使用您选择的 <b>%{count}</b> 条聊天消息进行填充。"
+      replying_indicator:
+        single_user: "%{username} 正在输入"
+        multiple_users: "%{commaSeparatedUsernames} 和 %{lastUsername} 正在输入"
+        many_users:
+          other: "%{commaSeparatedUsernames} 和其他 %{count} 人正在输入"
+      retention_reminders:
+        public: "频道历史记录保留 %{days} 天。"
+        dm: "个人聊天记录保留 %{days} 天。"
+      topic_button_title: "聊天"
+      emoji_picker:
+        no_results: "没有结果"
+    notifications:
+      chat_invitation: "邀请您加入聊天频道"
+      chat_invitation_html: "<span>%{username}</span> <span>邀请您加入聊天频道</span>"
+      chat_quoted: "<span>%{username}</span> %{description}"
+      popup:
+        chat_mention:
+          direct: '在“%{channel}”中提到了你'
+          direct_html: '<span>%{username}</span> <span>在“%{channel}”中提到了你</span>'
+          other: '在 "%{channel}" 中提到 %{identifier}'
+          other_html: '<span>%{username}</span> <span>在 “%{channel}”</span>中提到 %{identifier}'
+        direct_message_chat_mention:
+          direct: "在个人聊天中提到了你"
+          direct_html: "<span>%{username}</span> <span>在个人聊天中提到了你</span>"
+          other: "在个人聊天中提到 %{identifier}"
+          other_html: "<span>%{username}</span> <span>个人聊天中提到 %{identifier}</span>"
+        chat_message: "新的聊天消息"
+        chat_quoted: "%{username} 引用了你的聊天消息"
+      titles:
+        chat_mention: "聊天提及"
+        chat_invitation: "聊天邀请"
+        chat_quoted: "已引用聊天"
+    action_codes:
+      chat:
+        enabled: '%{who} 于 %{when} 启用了<button class="btn-link open-chat">聊天</button>'
+        disabled: "%{who} 于 %{when} 关闭了聊天"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          title: 发送聊天消息
+          fields:
+            chat_channel_id:
+              label: 聊天频道 ID
+            message:
+              label: 消息
+            sender:
+              label: 发送人
+              description: 默认为“系统”
+    review:
+      types:
+        reviewable_chat_message:
+          title: "举报的聊天消息"
+          flagged_by: "举报者"
+    keyboard_shortcuts_help:
+      chat:
+        title: "聊天"
+        keyboard_shortcuts:
+          switch_channel_arrows: "%{shortcut} 切换频道"
+          open_quick_channel_selector: "%{shortcut} 打开快速频道选择器"
+          open_insert_link_modal: "%{shortcut} 插入超链接（仅输入框）"
+          composer_bold: "%{shortcut} 粗体（仅输入框中）"
+          composer_italic: "%{shortcut} 斜体（仅输入框中）"
+          composer_code: "%{shortcut} 代码（仅输入框中）"
+          drawer_open: "%{shortcut} 打开聊天面板"
+          drawer_close: "%{shortcut} 关闭聊天面板"
+    topic_statuses:
+      chat:
+        help: "已为此主题启用聊天"
+    user:
+      allow_private_messages: "允许其他用户向我发送私信和发起聊天"
+      muted_users_instructions: "禁止来自这些用户的所有通知、个人消息和聊天消息。"
+      allowed_pm_users_instructions: "仅允许来自这些用户的个人消息或聊天消息。"
+      allow_private_messages_from_specific_users: "只允许特定用户向我发送个人消息或聊天消息"
+      ignored_users_instructions: "禁止来自这些用户的所有帖子、消息、通知、个人消息和聊天消息。"

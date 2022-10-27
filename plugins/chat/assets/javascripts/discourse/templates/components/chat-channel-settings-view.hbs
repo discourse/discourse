@@ -1,0 +1,79 @@
+<div class="chat-form__section">
+  <div class="chat-form__field">
+    <label class="chat-form__label">
+      <span>{{i18n "chat.settings.mute"}}</span>
+    </label>
+    <div class="chat-form__control">
+      <ComboBox @content={{this.mutedOptions}} @value={{this.channel.current_user_membership.muted}} @valueProperty="value" @class="channel-settings-view__muted-selector" @onChange={{action (fn this.saveNotificationSettings "muted")}} />
+      {{#if this.savedMuted}}
+        <span class="channel-settings-view__saved">✓ Saved</span>
+      {{/if}}
+    </div>
+  </div>
+
+  {{#unless this.channel.current_user_membership.muted}}
+    <div class="chat-form__field">
+      <label class="chat-form__label">
+        <span>{{i18n "chat.settings.desktop_notification_level"}}</span>
+      </label>
+      <div class="chat-form__control">
+        <ComboBox @content={{this.notificationLevels}} @value={{this.channel.current_user_membership.desktop_notification_level}} @valueProperty="value" @class="channel-settings-view__desktop-notification-level-selector" @onChange={{action (fn this.saveNotificationSettings "desktop_notification_level")}} />
+        {{#if this.savedDesktopNotificationLevel}}
+          <span class="channel-settings-view__saved">✓ Saved</span>
+        {{/if}}
+      </div>
+    </div>
+
+    <div class="chat-form__field">
+      <label class="chat-form__label">
+        <span>{{i18n "chat.settings.mobile_notification_level"}}</span>
+      </label>
+      <div class="chat-form__control">
+        <ComboBox @content={{this.notificationLevels}} @value={{this.channel.current_user_membership.mobile_notification_level}} @valueProperty="value" @class="channel-settings-view__mobile-notification-level-selector" @onChange={{action (fn this.saveNotificationSettings "mobile_notification_level")}} />
+        {{#if this.savedMobileNotificationLevel}}
+          <span class="channel-settings-view__saved">✓ Saved</span>
+        {{/if}}
+      </div>
+    </div>
+  {{/unless}}
+</div>
+
+{{#if (chat-guardian "can-edit-chat-channel")}}
+  {{#if this.autoJoinAvailable}}
+    <div class="chat-form__section">
+      <div class="chat-form__field">
+        {{#if this.channel.auto_join_users}}
+          <DButton @action={{action "onDisableAutoJoinUsers"}} @label="chat.settings.disable_auto_join_users" @class="archive-btn chat-form__btn btn-flat" @icon="minus-circle" />
+        {{else}}
+          <DButton @action={{action "onEnableAutoJoinUsers"}} @label="chat.settings.enable_auto_join_users" @class="archive-btn chat-form__btn btn-flat" @icon="user-plus" />
+        {{/if}}
+      </div>
+    </div>
+  {{/if}}
+{{/if}}
+
+{{#unless this.channel.isDirectMessageChannel}}
+  <div class="chat-form__section">
+    {{#if (chat-guardian "can-edit-chat-channel")}}
+      {{#if (chat-guardian "can-archive-channel" this.channel)}}
+        <div class="chat-form__field">
+          <DButton @action={{action "onArchiveChannel"}} @label="chat.channel_settings.archive_channel" @class="archive-btn chat-form__btn btn-flat" @icon="archive" />
+        </div>
+      {{/if}}
+
+      {{#if this.channel.isClosed}}
+        <div class="chat-form__field">
+          <DButton @action={{action "onToggleChannelState"}} @label="chat.channel_settings.open_channel" @class="open-btn chat-form__btn btn-flat" @icon="unlock" />
+        </div>
+      {{else}}
+        <div class="chat-form__field">
+          <DButton @action={{action "onToggleChannelState"}} @label="chat.channel_settings.close_channel" @class="close-btn chat-form__btn btn-flat" @icon="lock" />
+        </div>
+      {{/if}}
+
+      <div class="chat-form__field">
+        <DButton @action={{action "onDeleteChannel"}} @label="chat.channel_settings.delete_channel" @class="delete-btn chat-form__btn btn-flat" @icon="trash-alt" />
+      </div>
+    {{/if}}
+  </div>
+{{/unless}}
