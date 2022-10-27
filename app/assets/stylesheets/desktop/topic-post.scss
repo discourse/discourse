@@ -509,10 +509,6 @@ blockquote {
       (var(--topic-body-width-padding) * 2)
   );
   max-width: 100%;
-  @media all and (max-width: 790px) {
-    // 32px is (left + right padding * 2) from .wrap in common/base/discourse.scss
-    max-width: calc(100vw - 32px);
-  }
 }
 
 /* hide the reply border above the time gap notices */

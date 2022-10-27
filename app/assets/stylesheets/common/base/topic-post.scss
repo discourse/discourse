@@ -1221,8 +1221,10 @@ blockquote > *:last-child {
       border-bottom: 1px solid var(--danger-medium);
       line-height: 0.1em;
       margin: 1rem 0px;
-      width: 100%;
-
+      width: calc(
+        var(--topic-body-width) + var(--topic-avatar-width) +
+          (var(--topic-body-width-padding) * 2)
+      );
       .topic-post-visited-message {
         background-color: var(--secondary);
         color: var(--danger-medium);
