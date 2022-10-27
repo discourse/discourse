@@ -406,8 +406,12 @@ class DiscourseConnect < DiscourseConnectBase
 
   def add_user_to_groups(user, groups)
     groups.each do |group|
-      GroupUser.create!(user_id: user.id, group_id: group.id)
-      GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
+      begin
+        GroupUser.create!(user_id: user.id, group_id: group.id)
+        GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
+      rescue Exception => e
+        Discourse.warn_exception(e, message: "User already in group")
+      end
     end
   end
 
