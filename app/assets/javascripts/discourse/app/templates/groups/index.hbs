@@ -22,7 +22,7 @@
         <div class="container">
           <div class="groups-boxes">
             {{#each this.groups as |group|}}
-              <LinkTo @route="group.members" @model={{group.name}} class={{concat "group-box " group.name}}>
+              <LinkTo @route="group.members" @model={{group.name}} class="group-box" data-group-name={{group.name}}>
                 <div class="group-box-inner">
                   <div class="group-info-wrapper">
                     {{#if group.flair_url}}
