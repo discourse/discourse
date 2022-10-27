@@ -16,7 +16,12 @@ export const actionModifier = modifier(
     { on, bubbles, preventDefault, allowedKeys }
   ) => {
     const handler = (event) => {
-      const fn = typeof callback === "string" ? context[callback] : callback;
+      let fn;
+      if (typeof callback === "string") {
+        fn = context.actions?.[callback] ?? context[callback];
+      } else if (typeof callback === "function") {
+        fn = callback;
+      }
       if (fn === undefined) {
         throw new Error(
           "Unexpected callback for `action` modifier. Please provide either a function or the name of a method on the current context."
