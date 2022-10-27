@@ -2726,7 +2726,7 @@ fr:
         unarchive: "Désarchiver le sujet"
         archive: "Archiver le sujet"
         invisible: "Rendre le sujet invisible"
-        visible: "Lister le sujet"
+        visible: "Rendre le sujet visible"
         reset_read: "Réinitialiser les données de lecture"
         make_public: "Rendre le sujet public…"
         make_private: "Transformer en message direct"
