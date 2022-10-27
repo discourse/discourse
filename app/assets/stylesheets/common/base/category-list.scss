@@ -275,6 +275,9 @@
 
   .featured-topics {
     margin-bottom: 1em;
+    // we absolutely position the parent category's link so the whole box is clickable
+    // to prevent this covering topic links, we need to raise the z-index
+    z-index: 1;
     ul {
       color: var(--primary-medium);
       list-style: none;
