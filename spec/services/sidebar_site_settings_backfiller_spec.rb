@@ -80,6 +80,36 @@ RSpec.describe SidebarSiteSettingsBackfiller do
         )
       end
 
+      it 'creates the right sidebar section link records when categories are added' do
+        backfiller = described_class.new(
+          "default_sidebar_categories",
+          previous_value: "",
+          new_value: "#{category.id}|#{category2.id}|#{category3.id}"
+        )
+
+        expect do
+          backfiller.backfill!
+        end.to change { SidebarSectionLink.count }.by(6)
+
+        expect(SidebarSectionLink.where(linkable_type: 'Category', linkable_id: category.id).pluck(:user_id)).to contain_exactly(
+          user.id,
+          user2.id,
+          user3.id
+        )
+
+        expect(SidebarSectionLink.where(linkable_type: 'Category', linkable_id: category2.id).pluck(:user_id)).to contain_exactly(
+          user.id,
+          user2.id,
+          user3.id
+        )
+
+        expect(SidebarSectionLink.where(linkable_type: 'Category', linkable_id: category3.id).pluck(:user_id)).to contain_exactly(
+          user.id,
+          user2.id,
+          user3.id
+        )
+      end
+
       it 'deletes and creates the right sidebar section link records when categories are added and removed' do
         backfiller = described_class.new(
           "default_sidebar_categories",

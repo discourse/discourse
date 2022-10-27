@@ -48,7 +48,7 @@ class SidebarSiteSettingsBackfiller
           end
         end
 
-        SidebarSectionLink.insert_all!(rows) if rows.present?
+        SidebarSectionLink.insert_all(rows) if rows.present?
       end
     end
   end
