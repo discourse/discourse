@@ -159,11 +159,15 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
 
     assert.ok(
-      exists(".sidebar-section-message"),
-      "the no categories message is displayed"
+      exists(
+        ".sidebar-section-categories .sidebar-section-link-configure-categories"
+      ),
+      "section link to add categories to sidebar is displayed"
     );
 
-    await click(".sidebar-section-message a");
+    await click(
+      ".sidebar-section-categories .sidebar-section-link-configure-categories"
+    );
 
     assert.strictEqual(
       currentURL(),

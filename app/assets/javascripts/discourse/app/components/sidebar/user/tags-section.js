@@ -1,5 +1,3 @@
-import I18n from "I18n";
-
 import { cached } from "@glimmer/tracking";
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
@@ -55,14 +53,6 @@ export default class SidebarUserTagsSection extends Component {
     }
 
     return links;
-  }
-
-  get noTagsText() {
-    const url = `/u/${this.currentUser.username}/preferences/sidebar`;
-
-    return `${I18n.t("sidebar.sections.tags.none")} <a href="${url}">${I18n.t(
-      "sidebar.sections.tags.click_to_get_started"
-    )}</a>`;
   }
 
   /**

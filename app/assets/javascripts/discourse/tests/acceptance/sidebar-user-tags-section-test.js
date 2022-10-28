@@ -139,14 +139,17 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.ok(exists(".sidebar-section-tags"), "tags section is shown");
 
+    assert.ok(
+      exists(".sidebar-section-tags .sidebar-section-link-configure-tags"),
+      "section link to add tags to sidebar is displayed"
+    );
+
+    await click(".sidebar-section-tags .sidebar-section-link-configure-tags");
+
     assert.strictEqual(
-      query(
-        ".sidebar-section-tags .sidebar-section-message"
-      ).textContent.trim(),
-      `${I18n.t("sidebar.sections.tags.none")} ${I18n.t(
-        "sidebar.sections.tags.click_to_get_started"
-      )}`,
-      "the no tags message is displayed"
+      currentURL(),
+      "/u/eviltrout/preferences/sidebar",
+      "it should transition to user preferences sidebar page"
     );
   });
 

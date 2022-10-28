@@ -1,5 +1,3 @@
-import I18n from "I18n";
-
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 
@@ -30,16 +28,6 @@ export default class SidebarUserCategoriesSection extends SidebarCommonCategorie
     return this.currentUser.sidebarCategories.filter((category) => {
       return canDisplayCategory(category, this.siteSettings);
     });
-  }
-
-  get noCategoriesText() {
-    const url = `/u/${this.currentUser.username}/preferences/sidebar`;
-
-    return `${I18n.t(
-      "sidebar.sections.categories.none"
-    )} <a href="${url}">${I18n.t(
-      "sidebar.sections.categories.click_to_get_started"
-    )}</a>`;
   }
 
   /**

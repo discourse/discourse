@@ -21,9 +21,14 @@
         </Sidebar::SectionLink>
       {{/each}}
     {{else}}
-      <Sidebar::SectionMessage>
-        {{html-safe this.noTagsText}}
-      </Sidebar::SectionMessage>
+      <Sidebar::SectionLink
+        @linkName="configure-tags"
+        @route="preferences.sidebar"
+        @prefixType="icon"
+        @prefixValue="pencil-alt"
+        @model={{this.currentUser}}
+        @content={{i18n "sidebar.sections.tags.links.add_tags.content"}}
+        @title={{i18n "sidebar.sections.tags.links.add_tags.title"}} />
     {{/if}}
 
     <Sidebar::Common::AllTagsSectionLink />
