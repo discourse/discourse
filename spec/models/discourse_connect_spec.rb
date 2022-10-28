@@ -206,7 +206,7 @@ RSpec.describe DiscourseConnect do
     expect(group2.usernames).to eq("")
 
     group1.add(user)
-    group1.save
+    group1.save!
 
     sso.lookup_or_create_user(ip_address)
     expect(group1.usernames).to eq("")
@@ -215,6 +215,16 @@ RSpec.describe DiscourseConnect do
     sso.groups = "badname,trust_level_4"
     sso.lookup_or_create_user(ip_address)
     expect(group1.usernames).to eq("")
+    expect(group2.usernames).to eq("")
+
+    group1.add(user)
+    group1.save!
+    group2.add(user)
+    group2.save!
+    sso.groups = "#{group1.name},badname,trust_level_4"
+
+    sso.lookup_or_create_user(ip_address)
+    expect(group1.usernames).to eq(user.username)
     expect(group2.usernames).to eq("")
   end
 
