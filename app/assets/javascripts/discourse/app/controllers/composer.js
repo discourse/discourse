@@ -812,6 +812,18 @@ export default Controller.extend({
       });
     },
 
+    cannotSeeGroupMention(mentions) {
+      mentions.forEach((mention) => {
+        this.appEvents.trigger("composer-messages:create", {
+          extraClass: "custom-body",
+          templateName: "education",
+          body: I18n.t(`composer.cannot_see_group_mention.${mention.reason}`, {
+            group: mention.name,
+          }),
+        });
+      });
+    },
+
     hereMention(count) {
       this.appEvents.trigger("composer-messages:create", {
         extraClass: "custom-body",

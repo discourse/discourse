@@ -75,6 +75,7 @@ import { resetSidebarSection } from "discourse/lib/sidebar/custom-sections";
 import { resetNotificationTypeRenderers } from "discourse/lib/notification-types-manager";
 import { resetUserMenuTabs } from "discourse/lib/user-menu/tab";
 import { reset as resetLinkLookup } from "discourse/lib/link-lookup";
+import { resetMentions } from "discourse/lib/link-mentions";
 import { resetModelTransformers } from "discourse/lib/model-transformers";
 
 export function currentUser() {
@@ -207,6 +208,7 @@ export function testCleanup(container, app) {
   resetUserMenuTabs();
   resetLinkLookup();
   resetModelTransformers();
+  resetMentions();
 }
 
 export function discourseModule(name, options) {

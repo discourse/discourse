@@ -3688,6 +3688,31 @@ RSpec.describe UsersController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["cannot_see"][user1.username]).to eq("muted_topic")
     end
+
+    it "returns group which was not invited to topic" do
+      sign_in(Fabricate(:admin))
+
+      get "/u/is_local_username.json", params: {
+        usernames: [group.name], topic_id: private_topic.id
+      }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["valid_groups"]).to include(group.name)
+      expect(response.parsed_body["cannot_see_groups"][group.name]).to eq("not_allowed")
+    end
+
+    it "does not return group which was was invited to topic" do
+      sign_in(Fabricate(:admin))
+      TopicAllowedGroup.create!(group: group, topic: private_topic)
+
+      get "/u/is_local_username.json", params: {
+        usernames: [group.name], topic_id: private_topic.id
+      }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["valid_groups"]).to include(group.name)
+      expect(response.parsed_body["cannot_see_groups"][group.name]).to eq(nil)
+    end
   end
 
   describe '#topic_tracking_state' do

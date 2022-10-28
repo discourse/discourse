@@ -19,6 +19,7 @@ import {
 } from "discourse/lib/link-hashtags";
 import {
   cannotSee,
+  cannotSeeGroups,
   fetchUnseenMentions,
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
@@ -512,10 +513,10 @@ export default Component.extend(ComposerUploadUppy, {
     }
 
     schedule("afterRender", () => {
-      let found = this.warnedCannotSeeMentions || [];
+      const found = this.warnedCannotSeeMentions || [];
 
       preview?.querySelectorAll(".mention.cannot-see")?.forEach((mention) => {
-        let name = mention.dataset.name;
+        const name = mention.dataset.name;
 
         if (!found.includes(name)) {
           // add a delay to allow for typing, so you don't open the warning right away
@@ -536,6 +537,31 @@ export default Component.extend(ComposerUploadUppy, {
           );
         }
       });
+
+      preview
+        ?.querySelectorAll(".mention-group.cannot-see-group")
+        ?.forEach((mention) => {
+          const name = mention.dataset.name;
+
+          if (!found.includes(name)) {
+            discourseLater(
+              this,
+              () => {
+                if (
+                  preview?.querySelectorAll(
+                    `.mention-group.cannot-see-group[data-name="${name}"]`
+                  )?.length > 0
+                ) {
+                  this.cannotSeeGroupMention([
+                    { name, reason: cannotSeeGroups[name] },
+                  ]);
+                  found.push(name);
+                }
+              },
+              2000
+            );
+          }
+        });
 
       this.set("warnedCannotSeeMentions", found);
     });

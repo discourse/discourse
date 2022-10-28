@@ -495,28 +495,12 @@ class UsersController < ApplicationController
 
     raise Discourse::InvalidParameters.new(:usernames) if !usernames.kind_of?(Array) || usernames.size > 20
 
-    groups = Group.where(name: usernames).pluck(:name)
-    mentionable_groups =
-      if current_user
-        Group.mentionable(current_user, include_public: false)
-          .where(name: usernames)
-          .pluck(:name, :user_count)
-          .map do |name, user_count|
-          {
-            name: name,
-            user_count: user_count
-          }
-        end
-      end
-
-    usernames -= groups
-    usernames.each(&:downcase!)
-
-    users = User
-      .where(staged: false, username_lower: usernames)
-      .index_by(&:username_lower)
+    users = User.where(staged: false, username_lower: usernames.map(&:downcase)).index_by(&:username_lower)
+    groups = Group.where(name: usernames).index_by(&:name)
+    mentionable_groups = current_user ? Group.mentionable(current_user, include_public: false).where(name: usernames).index_by(&:name) : {}
 
     cannot_see = {}
+    cannot_see_groups = {}
     here_count = nil
 
     topic_id = params[:topic_id]
@@ -561,6 +545,19 @@ class UsersController < ApplicationController
         cannot_see[username] = cannot_see_reason if cannot_see_reason.present?
       end
 
+      usernames.each do |username|
+        group = groups[username]
+        next if group.blank?
+
+        if !guardian.can_see?(group)
+          cannot_see_reason = nil # do not leak private information
+        elsif topic.private_message? && !topic_allowed_group_ids.include?(group.id)
+          cannot_see_reason = :not_allowed
+        end
+
+        cannot_see_groups[username] = cannot_see_reason if cannot_see_reason.present?
+      end
+
       if usernames.include?(SiteSetting.here_mention) && guardian.can_mention_here?
         here_count = PostAlerter.new.expand_here_mention(topic.first_post, exclude_ids: [current_user.id]).size
       end
@@ -568,9 +565,10 @@ class UsersController < ApplicationController
 
     render json: {
       valid: users.keys,
-      valid_groups: groups,
-      mentionable_groups: mentionable_groups,
+      valid_groups: groups.keys,
+      mentionable_groups: mentionable_groups.values.map { |group| { name: group.name, user_count: group.user_count } },
       cannot_see: cannot_see,
+      cannot_see_groups: cannot_see_groups,
       here_count: here_count,
       max_users_notified_per_group_mention: SiteSetting.max_users_notified_per_group_mention
     }

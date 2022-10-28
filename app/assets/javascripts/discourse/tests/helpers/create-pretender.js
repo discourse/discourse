@@ -177,6 +177,7 @@ export function applyDefaultHandlers(pretender) {
       valid_groups: [],
       mentionable_groups: [],
       cannot_see: [],
+      cannot_see_groups: [],
     })
   );
 

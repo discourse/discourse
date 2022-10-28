@@ -13,7 +13,10 @@ function replaceSpan(element, username, opts) {
   const a = document.createElement("a");
 
   if (opts && opts.group) {
-    if (opts.mentionable) {
+    if (opts.cannot_see) {
+      extra = { name: username };
+      extraClass.push("cannot-see-group");
+    } else if (opts.mentionable) {
       extra = {
         name: username,
         mentionableUserCount: opts.mentionable.user_count,
@@ -43,24 +46,33 @@ function replaceSpan(element, username, opts) {
   element.replaceWith(a);
 }
 
-const found = {};
-const foundGroups = {};
-const mentionableGroups = {};
-const checked = {};
-export const cannotSee = {};
+let found = {};
+let foundGroups = {};
+let mentionableGroups = {};
+let checked = {};
+export let cannotSee = {};
+export let cannotSeeGroups = {};
+
+export function resetMentions() {
+  found = {};
+  foundGroups = {};
+  mentionableGroups = {};
+  checked = {};
+  cannotSee = {};
+  cannotSeeGroups = {};
+}
 
 function updateFound(mentions, usernames) {
   mentions.forEach((mention, index) => {
     const username = usernames[index];
     if (found[username.toLowerCase()]) {
       replaceSpan(mention, username, { cannot_see: cannotSee[username] });
-    } else if (mentionableGroups[username]) {
+    } else if (foundGroups[username]) {
       replaceSpan(mention, username, {
         group: true,
         mentionable: mentionableGroups[username],
+        cannot_see: cannotSeeGroups[username],
       });
-    } else if (foundGroups[username]) {
-      replaceSpan(mention, username, { group: true });
     } else if (checked[username]) {
       mention.classList.add("mention-tested");
     }
@@ -103,6 +115,9 @@ export function fetchUnseenMentions(usernames, topic_id) {
     r.mentionable_groups.forEach((mg) => (mentionableGroups[mg.name] = mg));
     Object.entries(r.cannot_see).forEach(
       ([username, reason]) => (cannotSee[username] = reason)
+    );
+    Object.entries(r.cannot_see_groups).forEach(
+      ([username, reason]) => (cannotSeeGroups[username] = reason)
     );
     maxGroupMention = r.max_users_notified_per_group_mention;
     usernames.forEach((u) => (checked[u] = true));

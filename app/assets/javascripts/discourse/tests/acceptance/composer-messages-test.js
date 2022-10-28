@@ -3,7 +3,7 @@ import {
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
 
@@ -33,6 +33,41 @@ acceptance("Composer - Messages", function (needs) {
         I18n.t("composer.user_not_seen_in_a_while.single", {
           usernames: ['<a class="mention" href="/u/charlie">@charlie</a>'],
           time_ago: "1 year ago",
+        })
+      ),
+      "warning message has correct body"
+    );
+  });
+});
+
+acceptance("Composer - Messages - Cannot see group", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    server.get("/u/is_local_username", () => {
+      return helper.response({
+        valid: [],
+        valid_groups: ["staff"],
+        mentionable_groups: [],
+        cannot_see: [],
+        cannot_see_groups: { staff: "not_allowed" },
+        max_users_notified_per_group_mention: 100,
+      });
+    });
+  });
+
+  test("Shows warning in composer if group hasn't been invited", async function (assert) {
+    await visit("/t/130");
+    await click("button.create");
+    assert.ok(
+      !exists(".composer-popup"),
+      "composer warning is not shown by default"
+    );
+    await fillIn(".d-editor-input", "Mention @staff");
+    assert.ok(exists(".composer-popup"), "shows composer warning message");
+    assert.ok(
+      query(".composer-popup").innerHTML.includes(
+        I18n.t("composer.cannot_see_group_mention.not_allowed", {
+          group: "staff",
         })
       ),
       "warning message has correct body"

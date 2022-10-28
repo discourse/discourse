@@ -11,7 +11,7 @@ module("Unit | Utility | link-mentions", function () {
     pretender.get("/u/is_local_username", () =>
       response({
         valid: ["valid_user"],
-        valid_groups: ["valid_group"],
+        valid_groups: ["valid_group", "mentionable_group"],
         mentionable_groups: [
           {
             name: "mentionable_group",
@@ -19,6 +19,7 @@ module("Unit | Utility | link-mentions", function () {
           },
         ],
         cannot_see: [],
+        cannot_see_groups: [],
         max_users_notified_per_group_mention: 100,
       })
     );

@@ -26,6 +26,7 @@ acceptance("Composer - Image Preview", function (needs) {
         valid_groups: ["staff"],
         mentionable_groups: [{ name: "staff", user_count: 30 }],
         cannot_see: [],
+        cannot_see_groups: [],
         max_users_notified_per_group_mention: 100,
       });
     });
