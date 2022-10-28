@@ -178,7 +178,7 @@ RSpec.describe UsersController do
         SiteSetting.login_required = true
         get "/u/password-reset/#{token}"
         expect(response.status).to eq(200)
-        expect(CGI.unescapeHTML(response.body)).to include(I18n.t('password_reset.no_token'))
+        expect(CGI.unescapeHTML(response.body)).to include(I18n.t('password_reset.no_token', base_url: Discourse.base_url))
       end
     end
 
@@ -189,7 +189,7 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
 
         expect(CGI.unescapeHTML(response.body))
-          .to include(I18n.t('password_reset.no_token'))
+          .to include(I18n.t('password_reset.no_token', base_url: Discourse.base_url))
 
         expect(response.body).to_not have_tag(:script, with: {
           src: '/assets/application.js'
@@ -202,7 +202,7 @@ RSpec.describe UsersController do
         get "/u/password-reset/#{token}.json"
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["message"]).to eq(I18n.t('password_reset.no_token'))
+        expect(response.parsed_body["message"]).to eq(I18n.t('password_reset.no_token', base_url: Discourse.base_url))
         expect(session[:current_user_id]).to be_blank
       end
     end
@@ -214,7 +214,7 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
 
         expect(CGI.unescapeHTML(response.body))
-          .to include(I18n.t('password_reset.no_token'))
+          .to include(I18n.t('password_reset.no_token', base_url: Discourse.base_url))
 
         expect(response.body).to_not have_tag(:script, with: {
           src: '/assets/application.js'
@@ -227,7 +227,7 @@ RSpec.describe UsersController do
         put "/u/password-reset/evil_trout!.json", params: { password: "awesomeSecretPassword" }
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["message"]).to eq(I18n.t('password_reset.no_token'))
+        expect(response.parsed_body["message"]).to eq(I18n.t('password_reset.no_token', base_url: Discourse.base_url))
         expect(session[:current_user_id]).to be_blank
       end
     end
