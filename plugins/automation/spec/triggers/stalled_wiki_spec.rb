@@ -46,15 +46,36 @@ describe 'StalledWiki' do
       end
 
       context 'when trigger has a category' do
+        fab!(:category) { Fabricate(:category) }
+
         before do
           automation.upsert_field!('stalled_after', 'choices', { value: 'PT10H' }, target: 'trigger')
           automation.upsert_field!('retriggered_after', 'choices', { value: 'PT1H' }, target: 'trigger')
-          automation.upsert_field!('restricted_category', 'category', { value: Category.last.id }, target: 'trigger')
+          automation.upsert_field!('restricted_category', 'category', { value: category.id }, target: 'trigger')
+        end
+
+        context 'when the post is in a sub category' do
+          before do
+            subcategory = Fabricate(:category, parent_category: category)
+            subcategory.save!
+
+            post.topic.update(category: subcategory)
+          end
+
+          it 'doesn’t trigger' do
+            post.revise(post_creator_1, { wiki: true }, { force_new_version: true, revised_at: 40.minutes.ago })
+
+            list = capture_contexts do
+              Jobs::StalledWikiTracker.new.execute(nil)
+            end
+
+            expect(list).to be_empty
+          end
         end
 
         context 'when the post is in this category' do
           before do
-            post.topic.update(category: Category.last)
+            post.topic.update(category: category)
           end
 
           it 'triggers' do
