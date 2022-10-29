@@ -27,6 +27,7 @@ export default class extends Controller {
   @action
   save() {
     const initialSidebarCategoryIds = this.model.sidebarCategoryIds;
+    const initialSidebarListDestination = this.model.sidebar_list_destination;
 
     this.model.set(
       "sidebarCategoryIds",
@@ -59,6 +60,9 @@ export default class extends Controller {
       })
       .finally(() => {
         this.model.set("sidebar_tag_names", []);
+        if (initialSidebarListDestination !== this.newSidebarListDestination) {
+          window.location.reload();
+        }
       });
   }
 }
