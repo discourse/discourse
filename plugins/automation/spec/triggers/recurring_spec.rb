@@ -19,6 +19,11 @@ describe 'Recurring' do
     automation.upsert_field!('recurrence', 'period', metadata, target: 'trigger')
   end
 
+  it "allows manual trigger" do
+    triggerable = DiscourseAutomation::Triggerable.new(automation.trigger)
+    expect(triggerable.settings[DiscourseAutomation::Triggerable::MANUAL_TRIGGER_KEY]).to eq(true)
+  end
+
   describe 'updating trigger' do
     context 'when date is in future' do
       before do

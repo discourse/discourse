@@ -19,4 +19,6 @@ DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggerable::STALLED_W
   field :retriggered_after, component: :choices, extra: { content: DURATION_CHOICES }
 
   placeholder :wiki_url
+
+  enable_manual_trigger
 end

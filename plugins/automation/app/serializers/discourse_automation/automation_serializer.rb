@@ -58,7 +58,8 @@ module DiscourseAutomation
         doc: I18n.exists?(doc_key, :en) ? I18n.t(doc_key) : nil,
         not_found: triggerable.not_found,
         templates: process_templates(triggerable.fields),
-        fields: process_fields(object.fields.where(target: 'trigger'))
+        fields: process_fields(object.fields.where(target: 'trigger')),
+        settings: triggerable.settings
       }
     end
 

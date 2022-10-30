@@ -81,4 +81,6 @@ DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggerable::RECURRING
 
   on_update { |automation, fields| setup_pending_automation(automation, fields) }
   on_call { |automation, fields| setup_pending_automation(automation, fields) }
+
+  enable_manual_trigger
 end

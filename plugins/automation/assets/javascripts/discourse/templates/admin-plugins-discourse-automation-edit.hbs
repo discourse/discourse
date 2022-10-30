@@ -92,19 +92,20 @@
           </div>
         {{/if}}
 
-        {{#if model.automation.enabled}}
-          {{#if model.automation.next_pending_automation_at}}
-            <div class="alert alert-info next-trigger">
-              <p>{{i18n "discourse_automation.edit_automation.trigger_section.next_pending_automation" date=nextPendingAutomationAtFormatted}}</p>
+        {{#if (and model.automation.enabled  model.automation.trigger.settings.manual_trigger)}}
+          <div class="alert alert-info next-trigger">
 
-              {{d-button
-                label="discourse_automation.edit_automation.trigger_section.trigger_now"
-                class="btn-primary trigger-now-btn"
-                isLoading=isTriggeringAutomation
-                action=(action "onManualAutomationTrigger" model.automation.id)
-              }}
-            </div>
-          {{/if}}
+            {{#if nextPendingAutomationAtFormatted}}
+              <p>{{i18n "discourse_automation.edit_automation.trigger_section.next_pending_automation" date=nextPendingAutomationAtFormatted}}</p>
+            {{/if}}
+
+            {{d-button
+              label="discourse_automation.edit_automation.trigger_section.trigger_now"
+              class="btn-primary trigger-now-btn"
+              isLoading=isTriggeringAutomation
+              action=(action "onManualAutomationTrigger" model.automation.id)
+            }}
+          </div>
         {{/if}}
 
         {{#each triggerFields as |field|}}

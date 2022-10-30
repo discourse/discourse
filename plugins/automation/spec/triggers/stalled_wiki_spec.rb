@@ -15,10 +15,22 @@ describe 'StalledWiki' do
     post_creator.create
   }
 
+  it "allows manual trigger" do
+    triggerable = DiscourseAutomation::Triggerable.new(automation.trigger)
+    expect(triggerable.settings[DiscourseAutomation::Triggerable::MANUAL_TRIGGER_KEY]).to eq(true)
+  end
+
   describe 'default' do
     before do
       automation.upsert_field!('stalled_after', 'choices', { value: 'PT10H' }, target: 'trigger')
       automation.upsert_field!('retriggered_after', 'choices', { value: 'PT1H' }, target: 'trigger')
+    end
+
+    it "supports manual triggering" do
+      DiscourseAutomation::AutomationSerializer.new(
+        automation,
+        root: 'automation'
+      ).as_json
     end
 
     context 'when the post has been revised recently' do
