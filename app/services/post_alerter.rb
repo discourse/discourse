@@ -146,8 +146,8 @@ class PostAlerter
     # replies
     reply_to_user = post.reply_notification_target
 
-    if new_record
-      if reply_to_user && !notified.include?(reply_to_user) && notify_about_reply?(post)
+    if new_record && notify_about_reply?(post)
+      if reply_to_user && !notified.include?(reply_to_user)
         notified += notify_non_pm_users(reply_to_user, :replied, post)
       end
 

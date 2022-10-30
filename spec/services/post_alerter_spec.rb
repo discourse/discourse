@@ -1343,6 +1343,21 @@ RSpec.describe PostAlerter do
         read: false
       )).to eq(true)
     end
+
+    it "it doesn't notify about small action posts when the topic author is watching the topic " do
+      Jobs.run_immediately!
+
+      u1 = Fabricate(:admin)
+      u2 = Fabricate(:admin)
+
+      topic = create_topic(user: u1)
+
+      u1.notifications.destroy_all
+
+      expect do
+        topic.update_status("closed", true, u2, message: "hello world")
+      end.not_to change { u1.reload.notifications.count }
+    end
   end
 
   context "with category" do
