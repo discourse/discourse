@@ -25,9 +25,14 @@
         </Sidebar::SectionLink>
       {{/each}}
     {{else}}
-      <Sidebar::SectionMessage>
-        {{html-safe this.noCategoriesText}}
-      </Sidebar::SectionMessage>
+      <Sidebar::SectionLink
+        @linkName="configure-categories"
+        @route="preferences.sidebar"
+        @prefixType="icon"
+        @prefixValue="pencil-alt"
+        @model={{this.currentUser}}
+        @content={{i18n "sidebar.sections.categories.links.add_categories.content"}}
+        @title={{i18n "sidebar.sections.categories.links.add_categories.title"}} />
     {{/if}}
 
     <Sidebar::Common::AllCategoriesSectionLink />

@@ -4196,12 +4196,20 @@ en:
             unread_with_count: "Unread (%{count})"
             archive: "Archive"
         tags:
+          links:
+            add_tags:
+              content: "Add tags"
+              title: "You have not added any tags. Click to get started."
           none: "You have not added any tags."
           click_to_get_started: "Click here to get started."
           header_link_text: "Tags"
           header_action_title: "edit your sidebar tags"
           configure_defaults: "Configure defaults"
         categories:
+          links:
+            add_categories:
+              content: "Add categories"
+              title: "You have not added any categories. Click to get started."
           none: "You have not added any categories."
           click_to_get_started: "Click here to get started."
           header_link_text: "Categories"
