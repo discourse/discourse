@@ -398,22 +398,28 @@ const User = RestModel.extend({
     let updatedState = {};
 
     ["muted", "regular", "watched", "tracked", "watched_first_post"].forEach(
-      (s) => {
-        if (fields === undefined || fields.includes(s + "_category_ids")) {
+      (categoryNotificationLevel) => {
+        if (
+          fields === undefined ||
+          fields.includes(`${categoryNotificationLevel}_category_ids`)
+        ) {
           let prop =
-            s === "watched_first_post"
+            categoryNotificationLevel === "watched_first_post"
               ? "watchedFirstPostCategories"
-              : s + "Categories";
+              : `${categoryNotificationLevel}Categories`;
+
           let cats = this.get(prop);
+
           if (cats) {
             let cat_ids = cats.map((c) => c.get("id"));
-            updatedState[s + "_category_ids"] = cat_ids;
+            updatedState[`${categoryNotificationLevel}_category_ids`] = cat_ids;
 
             // HACK: denote lack of categories
             if (cats.length === 0) {
               cat_ids = [-1];
             }
-            data[s + "_category_ids"] = cat_ids;
+
+            data[`${categoryNotificationLevel}_category_ids`] = cat_ids;
           }
         }
       }
