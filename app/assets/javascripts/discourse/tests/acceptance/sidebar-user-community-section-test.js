@@ -750,6 +750,10 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
   });
 
   test("new and unread count for everything link", async function (assert) {
+    updateCurrentUser({
+      sidebar_list_destination: "unread_new",
+    });
+
     this.container.lookup("service:topic-tracking-state").loadStates([
       {
         topic_id: 1,
@@ -1001,6 +1005,10 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     // Category id 1001 has two subcategories
     const category = categories.find((c) => c.id === 1001);
     category.set("notification_level", NotificationLevels.TRACKING);
+
+    updateCurrentUser({
+      sidebar_list_destination: "unread_new",
+    });
 
     this.container.lookup("service:topic-tracking-state").loadStates([
       {

@@ -526,6 +526,10 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
   test("new and unread count for categories link", async function (assert) {
     const { category1, category2 } = setupUserSidebarCategories();
 
+    updateCurrentUser({
+      sidebar_list_destination: "unread_new",
+    });
+
     this.container.lookup("service:topic-tracking-state").loadStates([
       {
         topic_id: 1,

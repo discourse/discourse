@@ -411,6 +411,10 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
   });
 
   test("new and unread count for tag section links", async function (assert) {
+    updateCurrentUser({
+      sidebar_list_destination: "unread_new",
+    });
+
     this.container.lookup("service:topic-tracking-state").loadStates([
       {
         topic_id: 1,
