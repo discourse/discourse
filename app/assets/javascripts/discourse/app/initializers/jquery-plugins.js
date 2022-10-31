@@ -19,7 +19,7 @@ export default {
           deprecated(
             "`bootbox.alert` is deprecated, please use the dialog service instead.",
             {
-              dropFrom: "3.0.0.beta1",
+              dropFrom: "3.1.0.beta5",
             }
           );
           return dialog.alert(arguments[0]);
@@ -34,7 +34,7 @@ export default {
       deprecated(
         "`bootbox` is now deprecated, please use the dialog service instead.",
         {
-          dropFrom: "3.0.0.beta1",
+          dropFrom: "3.1.0.beta5",
         }
       );
       return originalDialog(...arguments);
