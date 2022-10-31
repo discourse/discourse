@@ -263,15 +263,12 @@
 .welcome-cta {
   background-color: var(--secondary);
   border: 1px solid var(--primary-low);
-  box-shadow: shadow("menu-panel");
+  box-shadow: shadow("header");
   border-radius: 4px;
   padding: 12px 20px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  position: absolute;
-  top: 48px;
-  width: calc(100% - 40px);
   z-index: z("usercard");
   &__content {
     width: 70%;

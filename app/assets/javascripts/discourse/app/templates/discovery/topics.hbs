@@ -2,9 +2,9 @@
   <div class="alert alert-info">{{this.redirectedReason}}</div>
 {{/if}}
 
-{{#if this.showEditWelcomeTopicBanner}}
-  <WelcomeTopicBanner />
-{{/if}}
+{{!-- {{#if this.showEditWelcomeTopicBanner}} --}}
+  {{!-- <WelcomeTopicBanner /> --}}
+{{!-- {{/if}} --}}
 
 <TopicDismissButtons @position="top" @selectedTopics={{this.selected}} @model={{this.model}} @showResetNew={{this.showResetNew}} @showDismissRead={{this.showDismissRead}} @resetNew={{action "resetNew"}} />
 
