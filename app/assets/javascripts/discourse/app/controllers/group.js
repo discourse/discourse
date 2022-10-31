@@ -91,10 +91,10 @@ export default Controller.extend({
   @discourseComputed(
     "model.has_messages",
     "model.is_group_user",
-    "currentUser.allowPersonalMessages"
+    "currentUser.can_send_private_messages"
   )
   showMessages(hasMessages, isGroupUser) {
-    if (!this.currentUser?.allowPersonalMessages) {
+    if (!this.currentUser?.can_send_private_messages) {
       return false;
     }
 

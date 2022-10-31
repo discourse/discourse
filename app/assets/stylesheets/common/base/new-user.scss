@@ -2,10 +2,11 @@
   margin-top: -15px; // temp, can remove margin from sibling element after nav finalized
   .user-navigation {
     --user-navigation__border-width: 4px;
+    border-bottom: 1px solid var(--primary-low);
+
     .nav-pills {
       width: 100%;
       margin: 0;
-      border-bottom: 1px solid var(--primary-low);
       .d-icon {
         font-size: var(--font-down-1);
       }
@@ -35,7 +36,6 @@
       li {
         flex: 1 1 auto;
         margin: 0;
-        overflow: hidden;
         display: flex;
 
         a {
@@ -78,22 +78,36 @@
     }
   }
 
+  .user-navigation-primary {
+    [class*="horizontal-overflow-nav__scroll"] {
+      font-size: var(--font-up-1);
+      .d-icon {
+        margin-top: 0.15em; // minor alignment
+      }
+    }
+  }
+
   .user-navigation-secondary {
     --user-navigation__border-width: 2px;
+    position: relative;
+    display: flex;
     min-width: 0;
     margin: 0.5em 0;
     gap: 0 0.5em;
+    border-bottom: 1px solid var(--primary-low);
 
     .select-kit .select-kit-header {
       height: 100%;
       padding: 0.5em 1em;
+    }
+
+    .category-breadcrumb {
       @include breakpoint(large) {
         font-size: var(--font-down-1);
       }
-    }
-
-    .category-breadcrumb > li {
-      margin: 0;
+      > li {
+        margin: 0;
+      }
     }
 
     .navigation-controls {
@@ -106,15 +120,18 @@
     .nav-pills {
       flex: 1 1 auto;
       font-size: var(--font-down-1);
-      flex-wrap: wrap;
       justify-content: flex-start;
 
       li {
-        flex: 1 1 auto;
+        flex: 1 0 auto;
 
         a {
           padding: 0.5em 0.5em
             calc(0.5em + var(--user-navigation__border-width));
+
+          span {
+            text-overflow: unset;
+          }
         }
       }
     }

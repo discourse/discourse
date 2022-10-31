@@ -10,6 +10,7 @@ import { test } from "qunit";
 import I18n from "I18n";
 import { hbs } from "ember-cli-htmlbars";
 import showModal from "discourse/lib/show-modal";
+import Ember from "ember";
 
 acceptance("Modal", function (needs) {
   let _translations;
@@ -53,7 +54,6 @@ acceptance("Modal", function (needs) {
     await triggerKeyEvent("#main-outlet", "keydown", "Escape");
     assert.ok(!exists(".d-modal:visible"), "ESC should close the modal");
 
-    // eslint-disable-next-line no-undef
     Ember.TEMPLATES[
       "modal/not-dismissable"
     ] = hbs`{{#d-modal-body title="" class="" dismissable=false}}test{{/d-modal-body}}`;
@@ -78,7 +78,6 @@ acceptance("Modal", function (needs) {
   });
 
   test("rawTitle in modal panels", async function (assert) {
-    // eslint-disable-next-line no-undef
     Ember.TEMPLATES["modal/test-raw-title-panels"] = hbs``;
     const panels = [
       { id: "test1", rawTitle: "Test 1" },
@@ -97,9 +96,7 @@ acceptance("Modal", function (needs) {
   });
 
   test("modal title", async function (assert) {
-    // eslint-disable-next-line no-undef
     Ember.TEMPLATES["modal/test-title"] = hbs``;
-    // eslint-disable-next-line no-undef
     Ember.TEMPLATES[
       "modal/test-title-with-body"
     ] = hbs`{{#d-modal-body}}test{{/d-modal-body}}`;

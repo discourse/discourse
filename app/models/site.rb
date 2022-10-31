@@ -207,6 +207,15 @@ class Site
     "show_welcome_topic_banner:#{user_id}"
   end
 
+  def self.welcome_topic_exists_and_is_not_edited?
+    Post.joins(:topic)
+      .where(
+        "topics.id = :topic_id AND topics.deleted_at IS NULL AND posts.post_number = 1 AND posts.version = 1 AND posts.created_at > :created_at",
+        topic_id: SiteSetting.welcome_topic_id,
+        created_at: 1.month.ago
+      ).exists?
+  end
+
   def self.show_welcome_topic_banner?(guardian)
     return false if !guardian.is_admin?
     user_id = guardian.user.id
@@ -215,12 +224,7 @@ class Site
     return show_welcome_topic_banner unless show_welcome_topic_banner.nil?
 
     show_welcome_topic_banner = if (user_id == User.first_login_admin_id)
-      Post.joins(:topic)
-        .find_by(
-          "topics.id = :topic_id AND topics.deleted_at IS NULL AND posts.post_number = 1 AND posts.version = 1 AND posts.created_at > :created_at",
-          topic_id: SiteSetting.welcome_topic_id,
-          created_at: 1.month.ago
-        ).present?
+      welcome_topic_exists_and_is_not_edited?
     else
       false
     end

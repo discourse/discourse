@@ -2,56 +2,17 @@
   <DSection @pageClass="user-activity" />
 
   <div class="user-navigation user-navigation-secondary">
-    <ul class="nav-pills action-list">
-      <DNavigationItem @route="userActivity.index">
-        {{d-icon "stream"}}
-        <span>{{i18n "user.filters.all"}}</span>
-      </DNavigationItem>
-      <DNavigationItem @route="userActivity.topics">
-        {{d-icon "list-ul"}}
-        <span>{{i18n "user_action_groups.4"}}</span>
-      </DNavigationItem>
-      <DNavigationItem @route="userActivity.replies">
-        {{d-icon "reply"}}
-        <span>{{i18n "user_action_groups.5"}}</span>
-      </DNavigationItem>
-
-      {{#if this.user.showRead}}
-        <DNavigationItem @route="userActivity.read" @title={{i18n "user.read_help"}}>
-          {{d-icon "history"}}
-          <span>{{i18n "user.read"}}</span>
-        </DNavigationItem>
-      {{/if}}
-
-      {{#if this.user.showDrafts}}
-        <DNavigationItem @route="userActivity.drafts">
-          {{d-icon "pencil-alt"}}
-          <span>{{this.draftLabel}}</span>
-        </DNavigationItem>
-      {{/if}}
-
-      {{#if (gt this.model.pending_posts_count 0)}}
-        <DNavigationItem @route="userActivity.pending">
-          {{d-icon "clock"}}
-          <span>{{this.pendingLabel}}</span>
-        </DNavigationItem>
-      {{/if}}
-
-      <DNavigationItem @route="userActivity.likesGiven">
-        {{d-icon "heart"}}
-        <span>{{i18n "user_action_groups.1"}}</span>
-      </DNavigationItem>
-
-      {{#if this.user.showBookmarks}}
-        <DNavigationItem @route="userActivity.bookmarks">
-          {{d-icon "bookmark"}}
-          <span>{{i18n "user_action_groups.3"}}</span>
-        </DNavigationItem>
-      {{/if}}
-
-      <PluginOutlet @name="user-activity-bottom" @connectorTagName="li" @args={{hash model=this.model}} />
-    </ul>
+    <HorizontalOverflowNav>
+      <UserNav::ActivityNav
+        @user={{this.user}}
+        @viewingSelf={{this.viewingSelf}}
+        @model={{this.model}}
+        @siteSettings={{this.siteSettings}}
+        @draftLabel={{this.draftLabel}}
+        @pendingLabel={{this.pendingLabel}}/>
+    </HorizontalOverflowNav>
   </div>
+
 {{else}}
   <DSection @pageClass="user-activity" @class="user-secondary-navigation" @scrollTop={{false}}>
     <nav role="navigation">

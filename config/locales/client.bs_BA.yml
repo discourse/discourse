@@ -949,6 +949,8 @@ bs_BA:
       enable_defer: "Uključi odgodu označavanja nepročitanih tema"
       experimental_sidebar:
         options: "Opcije"
+        navigation_section: "Navigacija"
+        list_destination_default: "Uobičajen"
       change: "promjeni"
       featured_topic: "Istaknuta tema"
       moderator: "%{user} je moderator"
@@ -1094,8 +1096,6 @@ bs_BA:
         disable: "Onemogući"
         save: "Sačuvaj"
         edit: "Izmijeni"
-        enable_security_key_description: |
-          Kada pripremite <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardverski sigurnosni ključ</a> , pritisnite tipku Registracija u nastavku.
         totp:
           title: "Autentikatori zasnovani na tokenu"
           add: "Dodaj provjeru autentičnosti"
@@ -1103,14 +1103,10 @@ bs_BA:
           name_and_code_required_error: "Morate navesti ime i kôd iz aplikacije za provjeru autentičnosti."
         security_key:
           register: "Registriraj"
-          title: "Sigurnosni ključevi"
-          add: "Dodaj sigurnosni ključ"
           default_name: "Glavni sigurnosni ključ"
           not_allowed_error: "Proces registracije sigurnosnog ključa je ili vremenski istekao ili je odkazan."
           already_added_error: "Već ste registrirali ovaj sigurnosni ključ. Ne morate ga ponovno registrirati."
-          edit: "Izmijeni sigurnosni ključ"
           save: "Sačuvaj"
-          edit_description: "Ime sigurnosnog ključa"
           name_required_error: "Morate navesti ime za svoj sigurnosni ključ."
       change_about:
         title: "Promjeni O meni"
@@ -1539,7 +1535,6 @@ bs_BA:
       second_factor_backup: "Loguj se koristeći backup kod"
       second_factor_backup_description: "Molim ukucajte jedan od vaši rezevni kodova"
       second_factor: "Loguj se koristeći Authenticator app"
-      security_key_description: "Kada ste pripremili vaš fizički sigurnosni ključ, pritisnite ispod dugme Autentifikacija pomoću sigurnosnog ključa."
       security_key_alternative: "Pokušaj na drugi način"
       security_key_authenticate: "Autentifikacija sa sigurnosnim ključem"
       security_key_not_allowed_error: "Ovaj proces prijave pomoću sigurnosnog ključa je ili vremenski istekao ili je odkazan."

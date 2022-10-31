@@ -1048,6 +1048,8 @@ pt:
       enable_defer: "Ativar adiamento para marcar tópicos não lidos"
       experimental_sidebar:
         options: "Opções"
+        navigation_section: "Navegação"
+        list_destination_default: "Predefinição"
       change: "alterar"
       featured_topic: "Tópico em Destaque"
       moderator: "%{user} é um moderador"
@@ -1215,8 +1217,6 @@ pt:
         edit: "Editar"
         edit_title: "Editar Autenticador"
         edit_description: "Nome do Autenticador"
-        enable_security_key_description: |
-          Quando tiver a sua <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">chave de segurança de hardware</a> preparada, pressione o botão abaixo de Registar.
         totp:
           title: "Autenticadores Baseados em Tokens"
           add: "Adicionar Autenticador"
@@ -1224,14 +1224,10 @@ pt:
           name_and_code_required_error: "Tem de fornecer um nome e o código da sua aplicação de autenticação."
         security_key:
           register: "Registar"
-          title: "Chaves de Segurança"
-          add: "Adicionar Chave de Segurança"
           default_name: "Chave de Segurança Principal"
           not_allowed_error: "O processo de registo da chave de segurança atingiu o tempo limite ou foi cancelado."
           already_added_error: "Já registou esta chave de segurança. Não precisa de a registar novamente."
-          edit: "Editar Chave de Segurança"
           save: "Guardar"
-          edit_description: "Nome da Chave de Segurança"
           name_required_error: "Tem de fornecer um nome para a sua chave de segurança."
       change_about:
         title: "Modificar Sobre Mim"
@@ -1707,7 +1703,6 @@ pt:
       second_factor_backup_title: "Backup de Dois Fatores"
       second_factor_backup_description: "Por favor introduza um dos seus códigos de reserva:"
       second_factor: "Efetue login usando o aplicativo Authenticator"
-      security_key_description: "Quando você tiver sua chave de segurança física preparada, pressione o botão Autenticar com Chave de Segurança abaixo."
       security_key_alternative: "Tente de outra forma"
       security_key_authenticate: "Autenticar com Chave de Segurança"
       security_key_not_allowed_error: "O processo de autenticação da chave de segurança atingiu o tempo limite ou foi cancelado."

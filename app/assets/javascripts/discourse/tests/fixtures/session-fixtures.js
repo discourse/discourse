@@ -24,6 +24,7 @@ export default {
       trust_level: 4,
       can_edit: true,
       can_invite_to_forum: true,
+      can_send_private_messages: true,
       should_be_redirected_to_top: false,
       custom_fields: {},
       muted_category_ids: [],

@@ -120,7 +120,7 @@ const CORE_TOP_TABS = [
     }
 
     get shouldDisplay() {
-      return this.currentUser?.allowPersonalMessages;
+      return this.currentUser?.can_send_private_messages;
     }
 
     get notificationTypes() {

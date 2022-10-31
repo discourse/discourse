@@ -400,4 +400,12 @@ export default createWidget("hamburger-menu", {
       this.sendWidgetAction("toggleHamburger");
     }
   },
+
+  keyDown(e) {
+    if (e.key === "Escape") {
+      this.sendWidgetAction("toggleHamburger");
+      e.preventDefault();
+      return false;
+    }
+  },
 });

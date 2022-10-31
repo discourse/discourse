@@ -1322,6 +1322,42 @@ RSpec.describe PostAlerter do
       NotificationEmailer.expects(:process_notification).once
       expect { PostAlerter.post_created(reply) }.to change(user.notifications, :count).by(1)
     end
+
+    it "creates a notification of type `replied` instead of `posted` for the topic author if they're watching the topic" do
+      Jobs.run_immediately!
+
+      u1 = Fabricate(:admin)
+      u2 = Fabricate(:admin)
+
+      topic = create_topic(user: u1)
+
+      u1.notifications.destroy_all
+
+      expect do
+        create_post(topic: topic, user: u2)
+      end.to change { u1.reload.notifications.count }.by(1)
+      expect(u1.notifications.exists?(
+        topic_id: topic.id,
+        notification_type: Notification.types[:replied],
+        post_number: 1,
+        read: false
+      )).to eq(true)
+    end
+
+    it "it doesn't notify about small action posts when the topic author is watching the topic " do
+      Jobs.run_immediately!
+
+      u1 = Fabricate(:admin)
+      u2 = Fabricate(:admin)
+
+      topic = create_topic(user: u1)
+
+      u1.notifications.destroy_all
+
+      expect do
+        topic.update_status("closed", true, u2, message: "hello world")
+      end.not_to change { u1.reload.notifications.count }
+    end
   end
 
   context "with category" do

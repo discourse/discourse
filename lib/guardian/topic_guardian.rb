@@ -2,7 +2,6 @@
 
 #mixin for all guardian methods dealing with topic permissions
 module TopicGuardian
-
   def can_remove_allowed_users?(topic, target_user = nil)
     is_staff? ||
     (topic.user == @user && @user.has_trust_level?(TrustLevel[2])) ||
@@ -199,6 +198,49 @@ module TopicGuardian
     is_staff? || is_category_group_moderator?(category)
   end
 
+  # Accepts an array of `Topic#id` and returns an array of `Topic#id` which the user can see.
+  def can_see_topic_ids(topic_ids: [], hide_deleted: true)
+    topic_ids = topic_ids.compact
+
+    return topic_ids if is_admin?
+    return [] if topic_ids.blank?
+
+    default_scope = Topic.unscoped.where(id: topic_ids)
+
+    # When `hide_deleted` is `true`, hide deleted topics if user is not staff or category moderator
+    if hide_deleted && !is_staff?
+      if category_group_moderation_allowed?
+        default_scope = default_scope.where(<<~SQL)
+          (
+            deleted_at IS NULL OR
+            (
+              deleted_at IS NOT NULL
+              AND topics.category_id IN (#{category_group_moderator_scope.select(:id).to_sql})
+            )
+          )
+        SQL
+      else
+        default_scope = default_scope.where("deleted_at IS NULL")
+      end
+    end
+
+    # Filter out topics with shared drafts if user cannot see shared drafts
+    if !can_see_shared_draft?
+      default_scope = default_scope.left_outer_joins(:shared_draft).where("shared_drafts.id IS NULL")
+    end
+
+    all_topics_scope =
+      if authenticated?
+        Topic.unscoped.merge(
+          secured_regular_topic_scope(default_scope, topic_ids: topic_ids).or(private_message_topic_scope(default_scope))
+        )
+      else
+        Topic.unscoped.merge(secured_regular_topic_scope(default_scope, topic_ids: topic_ids))
+      end
+
+    all_topics_scope.pluck(:id)
+  end
+
   def can_see_topic?(topic, hide_deleted = true)
     return false unless topic
     return true if is_admin?
@@ -276,5 +318,46 @@ module TopicGuardian
 
   def affected_by_slow_mode?(topic)
     topic&.slow_mode_seconds.to_i > 0 && @user.human? && !is_staff?
+  end
+
+  private
+
+  def private_message_topic_scope(scope)
+    pm_scope = scope.private_messages_for_user(user)
+
+    if is_moderator?
+      pm_scope = pm_scope.or(scope.where(<<~SQL))
+        topics.subtype = '#{TopicSubtype.moderator_warning}'
+        OR topics.id IN (#{Topic.has_flag_scope.select(:topic_id).to_sql})
+      SQL
+    end
+
+    pm_scope
+  end
+
+  def secured_regular_topic_scope(scope, topic_ids:)
+    secured_scope = Topic.unscoped.secured(self)
+
+    # Staged users are allowed to see their own topics in read restricted categories when Category#email_in and
+    # Category#email_in_allow_strangers has been configured.
+    if is_staged?
+      sql = <<~SQL
+      topics.id IN (
+        SELECT
+          topics.id
+        FROM topics
+        INNER JOIN categories ON categories.id = topics.category_id
+        WHERE categories.read_restricted
+        AND categories.email_in IS NOT NULL
+        AND categories.email_in_allow_strangers
+        AND topics.user_id = :user_id
+        AND topics.id IN (:topic_ids)
+      )
+      SQL
+
+      secured_scope = secured_scope.or(Topic.unscoped.where(sql, user_id: user.id, topic_ids: topic_ids))
+    end
+
+    scope.listable_topics.merge(secured_scope)
   end
 end

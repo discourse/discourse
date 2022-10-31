@@ -28,7 +28,18 @@ RSpec.describe UserBadgesController do
   end
 
   describe '#index' do
-    let!(:user_badge) { UserBadge.create(badge: badge, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
+    fab!(:post) { Fabricate(:post) }
+    fab!(:private_message_post) { Fabricate(:private_message_post) }
+    let(:topic) { post.topic }
+    let(:private_message_topic) { private_message_post.topic }
+    fab!(:group) { Fabricate(:group) }
+    fab!(:private_category) { Fabricate(:private_category, group: group) }
+    fab!(:restricted_topic) { Fabricate(:topic, category: private_category) }
+    fab!(:restricted_post) { Fabricate(:post, topic: restricted_topic) }
+    fab!(:badge) { Fabricate(:badge, show_posts: true) }
+    fab!(:user_badge) { Fabricate(:user_badge, user: user, badge: badge, post: post) }
+    fab!(:user_badge_2) { Fabricate(:user_badge, badge: badge, post: private_message_post) }
+    fab!(:user_badge_3) { Fabricate(:user_badge, badge: badge, post: restricted_post) }
 
     it 'requires username or badge_id to be specified' do
       get "/user_badges.json"
@@ -57,7 +68,7 @@ RSpec.describe UserBadgesController do
 
       expect(response.status).to eq(200)
       parsed = response.parsed_body
-      expect(parsed["user_badge_info"]["user_badges"].length).to eq(1)
+      expect(parsed["user_badge_info"]["user_badges"].length).to eq(3)
     end
 
     it 'includes counts when passed the aggregate argument' do
@@ -68,6 +79,71 @@ RSpec.describe UserBadgesController do
       expect(response.status).to eq(200)
       parsed = response.parsed_body
       expect(parsed["user_badges"].first.has_key?('count')).to eq(true)
+    end
+
+    context 'for post and topic attributes associated with user badge' do
+      it 'does not include the attributes for the private topic when user is anon' do
+        get "/user_badges.json", params: { badge_id: badge.id }
+
+        expect(response.status).to eq(200)
+
+        parsed = response.parsed_body
+
+        expect(parsed["topics"].map { |t| t["id"] }).to contain_exactly(post.topic_id)
+
+        parsed_user_badges = parsed["user_badge_info"]["user_badges"]
+
+        expect(parsed_user_badges.map { |ub| ub["post_id"] }.compact).to contain_exactly(post.id)
+        expect(parsed_user_badges.map { |ub| ub["post_number"] }.compact).to contain_exactly(post.post_number)
+      end
+
+      it 'does not include the attributes for topics which the current user cannot see' do
+        get "/user_badges.json", params: { badge_id: badge.id }
+
+        expect(response.status).to eq(200)
+
+        parsed = response.parsed_body
+
+        expect(parsed["topics"].map { |t| t["id"] }).to contain_exactly(post.topic_id)
+
+        parsed_user_badges = parsed["user_badge_info"]["user_badges"]
+
+        expect(parsed_user_badges.map { |ub| ub["post_id"] }.compact).to contain_exactly(post.id)
+        expect(parsed_user_badges.map { |ub| ub["post_number"] }.compact).to contain_exactly(post.post_number)
+      end
+
+      it 'includes the attributes for regular topic, private messages and restricted topics which the current user can see' do
+        group.add(user)
+        private_message_topic.allowed_users << user
+
+        sign_in(user)
+
+        get "/user_badges.json", params: { badge_id: badge.id }
+
+        expect(response.status).to eq(200)
+
+        parsed = response.parsed_body
+
+        expect(parsed["topics"].map { |t| t["id"] }).to contain_exactly(
+          post.topic_id,
+          private_message_post.topic_id,
+          restricted_post.topic_id
+        )
+
+        parsed_user_badges = parsed["user_badge_info"]["user_badges"]
+
+        expect(parsed_user_badges.map { |ub| ub["post_id"] }.compact).to contain_exactly(
+          post.id,
+          private_message_post.id,
+          restricted_post.id
+        )
+
+        expect(parsed_user_badges.map { |ub| ub["post_number"] }.compact).to contain_exactly(
+          post.post_number,
+          private_message_post.post_number,
+          restricted_post.post_number
+        )
+      end
     end
 
     context 'with hidden profiles' do

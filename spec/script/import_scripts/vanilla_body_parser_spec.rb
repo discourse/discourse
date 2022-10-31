@@ -8,8 +8,8 @@ RSpec.describe VanillaBodyParser do
   let(:lookup) { ImportScripts::LookupContainer.new }
   let(:uploader) { ImportScripts::Uploader.new }
   let(:uploads_path) { 'spec/fixtures/images/vanilla_import' }
-  let(:user) { Fabricate(:user, id: '34567', email: 'saruman@maiar.org', name: 'Saruman, Multicolor', username: 'saruman_multicolor') }
-  let(:user_id) { lookup.add_user('34567', user) }
+  let(:user) { Fabricate(:user, email: 'saruman@maiar.org', name: 'Saruman, Multicolor', username: 'saruman_multicolor') }
+  let(:user_id) { lookup.add_user(user.id.to_s, user) }
 
   before do
     STDOUT.stubs(:write)
@@ -68,10 +68,11 @@ this starts with spaces but IS NOT a quote'''
     end
 
     it 'supports mentions imported users' do
-      mentioned = Fabricate(:user, id: '666', email: 'gandalf@maiar.com', name: 'Gandalf The Grey', username: 'gandalf_the_grey')
-      lookup.add_user('666', mentioned)
+      mentioned = Fabricate(:user, email: 'gandalf@maiar.com', name: 'Gandalf The Grey', username: 'gandalf_the_grey')
+      lookup.add_user(mentioned.id.to_s, mentioned)
 
-      parsed = VanillaBodyParser.new({ 'Format' => 'Rich', 'Body' => rich_bodies[:mention].to_json }, user_id).parse
+      body = rich_bodies[:mention].to_json.gsub("666", mentioned.id.to_s)
+      parsed = VanillaBodyParser.new({ 'Format' => 'Rich', 'Body' => body }, user_id).parse
       expect(parsed).to eq "@gandalf_the_grey, what do you think?"
     end
 
@@ -91,7 +92,8 @@ this starts with spaces but IS NOT a quote'''
       topic_id = lookup.add_topic(post)
       lookup.add_post('discussion#12345', post)
 
-      parsed = VanillaBodyParser.new({ 'Format' => 'Rich', 'Body' => rich_bodies[:quote].to_json }, user_id).parse
+      body = rich_bodies[:quote].to_json.gsub("34567", user.id.to_s)
+      parsed = VanillaBodyParser.new({ 'Format' => 'Rich', 'Body' => body }, user_id).parse
       expect(parsed).to eq "[quote=\"#{user.username}, post: #{post.post_number}, topic: #{post.topic.id}\"]\n\nThis is the full<br \/>body<br \/>of the quoted discussion.<br \/>\n\n[/quote]\n\nWhen did this happen?"
     end
 

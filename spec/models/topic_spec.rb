@@ -2801,7 +2801,7 @@ RSpec.describe Topic do
   end
 
   describe '#pm_with_non_human_user?' do
-    fab!(:robot) { Fabricate(:user, id: -3) }
+    fab!(:robot) { Fabricate(:bot) }
 
     fab!(:topic) do
       topic = Fabricate(:private_message_topic,

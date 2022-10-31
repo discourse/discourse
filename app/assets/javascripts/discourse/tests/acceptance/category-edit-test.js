@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import {
   acceptance,
   count,
@@ -166,7 +167,9 @@ acceptance("Category Edit", function (needs) {
 
     assert.strictEqual(
       query(".dialog-body").textContent.trim(),
-      "duplicate email"
+      I18n.t("generic_error_with_reason", {
+        error: "duplicate email",
+      })
     );
 
     await click(".dialog-footer .btn-primary");

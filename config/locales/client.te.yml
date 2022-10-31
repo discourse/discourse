@@ -414,6 +414,8 @@ te:
       enable_quoting: "హైలైట్ అయిన పాఠ్యానికి కోట్ జవాబు చేతనం చేయి"
       experimental_sidebar:
         options: "ఎంపికలు"
+        navigation_section: "నావిగేషను"
+        list_destination_default: "అప్రమేయ"
       change: "మార్చు"
       moderator: "%{user} ఒక నిర్వాహకుడు"
       admin: "%{user} ఒక అధికారి"

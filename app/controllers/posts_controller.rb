@@ -79,6 +79,8 @@ class PostsController < ApplicationController
       rss_description = I18n.t("rss_description.private_posts")
     else
       posts = Post.public_posts
+        .visible
+        .where(post_type: Post.types[:regular])
         .order(created_at: :desc)
         .where('posts.id <= ?', last_post_id)
         .where('posts.id > ?', last_post_id - 50)
@@ -122,6 +124,7 @@ class PostsController < ApplicationController
     raise Discourse::NotFound unless guardian.can_see_profile?(user)
 
     posts = Post.public_posts
+      .visible
       .where(user_id: user.id)
       .where(post_type: Post.types[:regular])
       .order(created_at: :desc)

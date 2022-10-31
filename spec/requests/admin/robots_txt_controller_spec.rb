@@ -6,27 +6,40 @@ RSpec.describe Admin::RobotsTxtController do
   end
 
   fab!(:admin) { Fabricate(:admin) }
+  fab!(:moderator) { Fabricate(:moderator) }
   fab!(:user) { Fabricate(:user) }
 
-  describe "non-admin users" do
-    before { sign_in(user) }
+  context "when logged in as a non-admin user" do
+    shared_examples "access_forbidden" do
+      it "can't see #show" do
+        get "/admin/customize/robots.json"
+        expect(response.status).to eq(404)
+      end
 
-    it "can't see #show" do
-      get "/admin/customize/robots.json"
-      expect(response.status).to eq(404)
+      it "can't perform #update" do
+        put "/admin/customize/robots.json", params: { robots_txt: "adasdasd" }
+        expect(response.status).to eq(404)
+        expect(SiteSetting.overridden_robots_txt).to eq("")
+      end
+
+      it "can't perform #reset" do
+        SiteSetting.overridden_robots_txt = "overridden_content"
+        delete "/admin/customize/robots.json"
+        expect(response.status).to eq(404)
+        expect(SiteSetting.overridden_robots_txt).to eq("overridden_content")
+      end
     end
 
-    it "can't perform #update" do
-      put "/admin/customize/robots.json", params: { robots_txt: "adasdasd" }
-      expect(response.status).to eq(404)
-      expect(SiteSetting.overridden_robots_txt).to eq("")
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      include_examples "access_forbidden"
     end
 
-    it "can't perform #reset" do
-      SiteSetting.overridden_robots_txt = "overridden_content"
-      delete "/admin/customize/robots.json"
-      expect(response.status).to eq(404)
-      expect(SiteSetting.overridden_robots_txt).to eq("overridden_content")
+    context "when logged in as non-staff user" do
+      before { sign_in(user) }
+
+      include_examples "access_forbidden"
     end
   end
 

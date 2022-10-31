@@ -9,8 +9,8 @@ RSpec.describe Admin::VersionsController do
     DiscourseUpdates.stubs(:critical_updates_available?).returns(false)
   end
 
-  it "is a subclass of AdminController" do
-    expect(Admin::VersionsController < Admin::AdminController).to eq(true)
+  it "is a subclass of StaffController" do
+    expect(Admin::VersionsController < Admin::StaffController).to eq(true)
   end
 
   context 'while logged in as an admin' do

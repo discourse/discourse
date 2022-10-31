@@ -243,6 +243,7 @@
       height: 100%;
       float: left;
       z-index: z("base") + 1;
+      outline: 1px solid transparent;
     }
 
     .timeline-scroller-content {
@@ -262,7 +263,7 @@
 
     .timeline-scroller {
       @include unselectable;
-      margin-left: -0.19em;
+      margin-left: -0.22em;
       cursor: ns-resize;
       display: flex;
       align-items: center;

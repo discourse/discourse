@@ -112,10 +112,12 @@ export default Controller.extend(CanCheckEmails, {
   @discourseComputed(
     "viewingSelf",
     "currentUser.admin",
-    "currentUser.allowPersonalMessages"
+    "currentUser.can_send_private_messages"
   )
   showPrivateMessages(viewingSelf, isAdmin) {
-    return this.currentUser?.allowPersonalMessages && (viewingSelf || isAdmin);
+    return (
+      this.currentUser?.can_send_private_messages && (viewingSelf || isAdmin)
+    );
   },
 
   @discourseComputed("viewingSelf", "currentUser.admin")

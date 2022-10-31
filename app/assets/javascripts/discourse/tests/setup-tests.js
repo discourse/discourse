@@ -39,6 +39,7 @@ import { disableCloaking } from "discourse/widgets/post-stream";
 import { clearState as clearPresenceState } from "discourse/tests/helpers/presence-pretender";
 import { addModuleExcludeMatcher } from "ember-cli-test-loader/test-support/index";
 import SiteSettingService from "discourse/services/site-settings";
+import jQuery from "jquery";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
@@ -389,7 +390,6 @@ export default function setupTests(config) {
   addModuleExcludeMatcher((name) => !shouldLoadModule(name));
 
   // forces 0 as duration for all jquery animations
-  // eslint-disable-next-line no-undef
   jQuery.fx.off = true;
 
   setupToolbar();

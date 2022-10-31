@@ -191,7 +191,7 @@ header .discourse-tag {
   }
 }
 
-.autocomplete {
+.autocomplete.ac-category-or-tag {
   a {
     color: var(--primary-medium);
   }
@@ -200,6 +200,24 @@ header .discourse-tag {
     padding-right: 5px;
     vertical-align: middle;
     height: 0.9em;
+  }
+}
+
+.hashtag-autocomplete {
+  .hashtag-autocomplete__option {
+    .hashtag-autocomplete__link {
+      align-items: center;
+      color: var(--primary-medium);
+      display: flex;
+
+      .d-icon {
+        padding-right: 0.5em;
+      }
+
+      .hashtag-autocomplete__text {
+        flex: 1;
+      }
+    }
   }
 }
 

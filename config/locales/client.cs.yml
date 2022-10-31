@@ -929,6 +929,8 @@ cs:
       enable_quoting: "Povolit odpověď s citací z označeného textu"
       experimental_sidebar:
         options: "Možnosti"
+        navigation_section: "Navigace"
+        list_destination_default: "Výchozí"
       change: "změnit"
       featured_topic: "Doporučené téma"
       moderator: "%{user} je moderátor"
@@ -1076,8 +1078,6 @@ cs:
         edit: "Upravit"
         edit_title: "Upravit autentifikátor"
         edit_description: "Jméno autentifikátoru"
-        enable_security_key_description: |
-          Když máte připravený <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardwarový bezpečnostní klíč</a> , stiskněte tlačítko Registrace níže.
         totp:
           title: "Ověření založené na tokenech"
           add: "Přidat autentifikátor"
@@ -1085,14 +1085,10 @@ cs:
           name_and_code_required_error: "Musíte zadat jméno a kód z vaší ověřovací aplikace."
         security_key:
           register: "Registrovat"
-          title: "Bezpečnostní klíče"
-          add: "Přidat bezpečnostní klíč"
           default_name: "Hlavní bezpečnostní klíč"
           not_allowed_error: "Proces registrace bezpečnostního klíče buď vypršel, nebo byl zrušen."
           already_added_error: "Tento bezpečnostní klíč jste již zaregistrovali. Není nutné jej znovu zaregistrovat."
-          edit: "Upravit bezpečnostní klíč"
           save: "Uložit"
-          edit_description: "Název bezpečnostního klíče"
           name_required_error: "Musíte zadat název bezpečnostního klíče."
       change_about:
         title: "Změna o mně"

@@ -6,7 +6,7 @@ require 'json_schemer'
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 63
+  BASE_COMPILER_VERSION = 66
 
   attr_accessor :child_components
 
@@ -118,16 +118,16 @@ class Theme < ActiveRecord::Base
     all_extra_js = theme_fields
       .where(target_id: Theme.targets[:extra_js])
       .order(:name, :id)
-      .pluck(:value_baked)
-      .join("\n")
+      .pluck(:name, :value)
+      .to_h
 
     if all_extra_js.present?
       js_compiler = ThemeJavascriptCompiler.new(id, name)
-      js_compiler.append_raw_script(all_extra_js)
+      js_compiler.append_tree(all_extra_js)
       settings_hash = build_settings_hash
       js_compiler.prepend_settings(settings_hash) if settings_hash.present?
       javascript_cache || build_javascript_cache
-      javascript_cache.update!(content: js_compiler.content)
+      javascript_cache.update!(content: js_compiler.content, source_map: js_compiler.source_map)
     else
       javascript_cache&.destroy!
     end
@@ -530,6 +530,13 @@ class Theme < ActiveRecord::Base
       self.settings.each do |setting|
         settings_hash[setting.name] = setting.default
       end
+
+      theme_uploads = build_theme_uploads_hash
+      settings_hash['theme_uploads'] = theme_uploads if theme_uploads.present?
+
+      theme_uploads_local = build_local_theme_uploads_hash
+      settings_hash['theme_uploads_local'] = theme_uploads_local if theme_uploads_local.present?
+
       settings_hash
     end
   end
@@ -540,21 +547,32 @@ class Theme < ActiveRecord::Base
       hash[setting.name] = setting.value
     end
 
-    theme_uploads = {}
-    theme_uploads_local = {}
-
-    upload_fields.each do |field|
-      if field.upload&.url
-        theme_uploads[field.name] = Discourse.store.cdn_url(field.upload.url)
-      end
-      if field.javascript_cache
-        theme_uploads_local[field.name] = field.javascript_cache.local_url
-      end
-    end
-
+    theme_uploads = build_theme_uploads_hash
     hash['theme_uploads'] = theme_uploads if theme_uploads.present?
+
+    theme_uploads_local = build_local_theme_uploads_hash
     hash['theme_uploads_local'] = theme_uploads_local if theme_uploads_local.present?
 
+    hash
+  end
+
+  def build_theme_uploads_hash
+    hash = {}
+    upload_fields.each do |field|
+      if field.upload&.url
+        hash[field.name] = Discourse.store.cdn_url(field.upload.url)
+      end
+    end
+    hash
+  end
+
+  def build_local_theme_uploads_hash
+    hash = {}
+    upload_fields.each do |field|
+      if field.javascript_cache
+        hash[field.name] = field.javascript_cache.local_url
+      end
+    end
     hash
   end
 
@@ -707,20 +725,27 @@ class Theme < ActiveRecord::Base
   end
 
   def baked_js_tests_with_digest
-    content = theme_fields
+    tests_tree = theme_fields
       .where(target_id: Theme.targets[:tests_js])
       .order(name: :asc)
-      .each(&:ensure_baked!)
-      .map(&:value_baked)
-      .join("\n")
+      .pluck(:name, :value)
+      .to_h
 
-    return [nil, nil] if content.blank?
+    return [nil, nil] if tests_tree.blank?
 
-    content = <<~JS + content
+    compiler = ThemeJavascriptCompiler.new(id, name)
+    compiler.append_tree(tests_tree, for_tests: true)
+    compiler.append_raw_script "test_setup.js", <<~JS
       (function() {
         require("discourse/lib/theme-settings-store").registerSettings(#{self.id}, #{cached_default_settings.to_json}, { force: true });
       })();
     JS
+    content = compiler.content
+
+    if compiler.source_map
+      content += "\n//# sourceMappingURL=data:application/json;base64,#{Base64.strict_encode64(compiler.source_map)}\n"
+    end
+
     [content, Digest::SHA1.hexdigest(content)]
   end
 

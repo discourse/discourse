@@ -10,9 +10,9 @@ import { selectedText } from "discourse/lib/utilities";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import deprecated from "discourse-common/lib/deprecated";
 import { getOwner } from "discourse-common/lib/get-owner";
+import jQuery from "jquery";
 
 export function isValidLink(link) {
-  // eslint-disable-next-line no-undef
   if (link instanceof jQuery) {
     link = link[0];
 

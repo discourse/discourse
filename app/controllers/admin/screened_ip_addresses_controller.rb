@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Admin::ScreenedIpAddressesController < Admin::AdminController
+class Admin::ScreenedIpAddressesController < Admin::StaffController
 
   before_action :fetch_screened_ip_address, only: [:update, :destroy]
 

@@ -731,6 +731,8 @@ sk:
       enable_quoting: "Umožniť odpoveď s citáciou z označeného textu"
       experimental_sidebar:
         options: "Možnosti"
+        navigation_section: "Navigácia"
+        list_destination_default: "Predvolené"
       change: "zmeniť"
       moderator: "%{user} je moderátor"
       admin: "%{user} je administrátor"

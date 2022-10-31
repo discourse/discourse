@@ -38,13 +38,8 @@ RSpec.describe UserSerializer do
       SiteSetting.default_other_notification_level_when_replying = 3
       SiteSetting.default_other_new_topic_duration_minutes = 60 * 24
 
-      user = Fabricate.build(:user,
-                             id: 1,
-                             user_profile: Fabricate.build(:user_profile),
-                             user_option: UserOption.new(dynamic_favicon: true, skip_new_user_tips: true),
-                             user_stat: UserStat.new,
-                             created_at: Time.zone.now
-                            )
+      user = Fabricate(:user)
+      user.user_option.update(dynamic_favicon: true, skip_new_user_tips: true)
 
       json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
 
@@ -384,14 +379,14 @@ RSpec.describe UserSerializer do
     context 'when viewing self' do
       subject(:json) { UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json }
 
-      it "is not included when SiteSeting.enable_experimental_sidebar_hamburger is false" do
+      it "is not included when SiteSetting.enable_experimental_sidebar_hamburger is false" do
         SiteSetting.enable_experimental_sidebar_hamburger = false
         SiteSetting.tagging_enabled = true
 
         expect(json[:sidebar_tags]).to eq(nil)
       end
 
-      it "is not included when SiteSeting.tagging_enabled is false" do
+      it "is not included when SiteSetting.tagging_enabled is false" do
         SiteSetting.enable_experimental_sidebar_hamburger = true
         SiteSetting.tagging_enabled = false
 

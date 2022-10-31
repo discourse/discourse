@@ -2,8 +2,8 @@
 
 RSpec.describe Admin::ScreenedIpAddressesController do
 
-  it "is a subclass of AdminController" do
-    expect(Admin::ScreenedIpAddressesController < Admin::AdminController).to eq(true)
+  it "is a subclass of StaffController" do
+    expect(Admin::ScreenedIpAddressesController < Admin::StaffController).to eq(true)
   end
 
   fab!(:admin) { Fabricate(:admin) }

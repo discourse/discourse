@@ -1013,6 +1013,8 @@ ko:
       enable_defer: "주제를 읽지 않은 상태로 표시하도록 연기 활성화"
       experimental_sidebar:
         options: "옵션"
+        navigation_section: "내비게이션"
+        list_destination_default: "기본"
       change: "변경"
       featured_topic: "추천 주제"
       moderator: "%{user} 님은 운영자입니다"
@@ -1175,8 +1177,6 @@ ko:
         edit: "편집"
         edit_title: "인증 편집"
         edit_description: "인증 이름"
-        enable_security_key_description: |
-          <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">하드웨어 보안 키</a>가 준비되었다면 아래의 등록 버튼을 누르세요.
         totp:
           title: "토큰 기반 인증"
           add: "인증 추가"
@@ -1184,14 +1184,12 @@ ko:
           name_and_code_required_error: "인증 앱의 이름과 코드를 제공해야 합니다."
         security_key:
           register: "등록"
-          title: "보안 키"
-          add: "보안 키 추가"
           default_name: "기본 보안 키"
+          iphone_default_name: "아이폰"
+          android_default_name: "안드로이드"
           not_allowed_error: "보안 키 등록 프로세스가 시간 초과되었거나 취소되었습니다."
           already_added_error: "이 보안 키는 이미 등록되어 있으므로 다시 등록하지 않아도 됩니다."
-          edit: "보안 키 편집"
           save: "저장"
-          edit_description: "보안 키 이름"
           name_required_error: "보안 키의 이름을 제공해야 합니다."
       change_about:
         title: "내 정보 변경"
@@ -1680,7 +1678,6 @@ ko:
       second_factor_backup_title: "2단계 백업"
       second_factor_backup_description: "백업 코드 중 하나를 입력하세요."
       second_factor: "인증 앱으로 로그인"
-      security_key_description: "실제 보안 키가 준비되면 보안 키와 함께 아래의 인증 버튼을 누르세요."
       security_key_alternative: "다른 방법으로 시도"
       security_key_authenticate: "보안 키로 인증"
       security_key_not_allowed_error: "보안 키 인증 프로세스가 시간 초과되었거나 취소되었습니다."

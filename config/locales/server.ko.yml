@@ -59,8 +59,6 @@ ko:
     bad_color_scheme: "테마, 유효하지 않은 색상 팔레트를 업데이트할 수 없습니다"
     other_error: "테마를 업데이트하는 중에 문제가 발생했습니다"
     ember_selector_error: "#ember 또는 .ember-view CSS 선택기 사용은 허용되지 않습니다. 이러한 이름은 런타임에서 동적으로 생성되고 시간이 지남에 따라 변경되어 결국 CSS가 깨지기 때문입니다. 다른 선택기를 사용하세요."
-    compile_error:
-      unrecognized_extension: "인식할 수 없는 파일 확장자 : %{extension}"
     import_error:
       generic: 테마를 임포트하는 중에 오류가 발생했습니다.
       about_json: "임포트 오류: about.json이 없거나 유효하지 않습니다. Discourse용 테마가 맞는지 확인하세요."
@@ -555,7 +553,6 @@ ko:
   staff_category_name: "운영진"
   staff_category_description: "운영진 토론을 위한 비공개 카테고리입니다. 관리자 및 운영자에게만 보입니다."
   discourse_welcome_topic:
-    title: "Discourse에 오신 것을 환영합니다"
     body: |2
 
       고정된 주제의 첫 문단은 홈페이지 방문자에게 환영 메시지로 표시되므로 매우 중요합니다!
@@ -2024,7 +2021,6 @@ ko:
         leading_trailing_slash: "정규식은 슬래시로 시작하거나 끝나서는 안 됩니다."
       unicode_usernames_avatars: "내부 시스템 아바타는 유니코드 아이디를 지원하지 않습니다."
       list_value_count: "목록에 정확히 %{count} 값을 포함해야 합니다."
-      google_oauth2_hd_groups: "이 설정을 활성화하기 전에 먼저 'google oauth2 hd'를 설정해야 합니다."
       search_tokenize_chinese_enabled: "이 설정을 활성화하기 전에 'search_tokenize_chinese'를 비활성화해야 합니다."
       search_tokenize_japanese_enabled: "이 설정을 활성화하기 전에 'search_tokenize_japanese'를 비활성화해야 합니다."
     placeholder:
@@ -4053,7 +4049,6 @@ ko:
           large_icon:
             label: "큰 아이콘"
       corporate:
-        title: "조직"
         fields:
           company_name:
             label: "회사 이름"

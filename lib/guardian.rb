@@ -116,21 +116,18 @@ class Guardian
   end
 
   def is_category_group_moderator?(category)
-    return false if !SiteSetting.enable_category_group_moderation?
     return false if !category
-    return false if !authenticated?
+    return false if !category_group_moderation_allowed?
 
     reviewable_by_group_id = category.reviewable_by_group_id
     return false if reviewable_by_group_id.blank?
 
-    @is_group_member ||= {}
+    @category_group_moderator_groups ||= {}
 
-    if @is_group_member.key?(reviewable_by_group_id)
-      @is_group_member[reviewable_by_group_id]
+    if @category_group_moderator_groups.key?(reviewable_by_group_id)
+      @category_group_moderator_groups[reviewable_by_group_id]
     else
-      @is_group_member[reviewable_by_group_id] = begin
-        GroupUser.where(group_id: reviewable_by_group_id, user_id: @user.id).exists?
-      end
+      @category_group_moderator_groups[reviewable_by_group_id] = category_group_moderator_scope.exists?("categories.id": category.id)
     end
   end
 
@@ -620,6 +617,18 @@ class Guardian
     else
       false
     end
+  end
+
+  protected
+
+  def category_group_moderation_allowed?
+    authenticated? && SiteSetting.enable_category_group_moderation
+  end
+
+  def category_group_moderator_scope
+    Category
+      .joins("INNER JOIN group_users ON group_users.group_id = categories.reviewable_by_group_id")
+      .where("group_users.user_id = ?", user.id)
   end
 
 end

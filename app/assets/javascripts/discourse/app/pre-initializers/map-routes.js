@@ -1,16 +1,15 @@
-import { registerRouter, teardownRouter } from "discourse/mapping-router";
+import { mapRoutes } from "discourse/mapping-router";
 
 export default {
   name: "map-routes",
   after: "inject-discourse-objects",
 
-  initialize(container, app) {
-    let routerClass = registerRouter(app);
-    container.registry.register("router:main", routerClass);
-    this.routerClass = routerClass;
+  initialize(_, app) {
+    this.routerClass = mapRoutes();
+    app.register("router:main", this.routerClass);
   },
 
   teardown() {
-    teardownRouter(this.routerClass);
+    this.routerClass.dslCallbacks.length = 0;
   },
 };

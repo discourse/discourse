@@ -2,6 +2,7 @@ import { click, fillIn, triggerEvent } from "@ember/test-helpers";
 import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { isEmpty } from "@ember/utils";
 import { moduleForComponent } from "ember-qunit";
+import jQuery from "jquery";
 
 function checkSelectKitIsNotExpanded(selector) {
   if (query(selector).classList.contains("is-expanded")) {
@@ -65,7 +66,6 @@ async function keyboardHelper(value, target, selector) {
 
   if (value === "selectAll") {
     // special casing the only one not working with triggerEvent
-    // eslint-disable-next-line no-undef
     const event = jQuery.Event("keydown");
     event.key = "A";
     event.keyCode = 65;

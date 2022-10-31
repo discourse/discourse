@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Admin::StaffActionLogsController < Admin::AdminController
+class Admin::StaffActionLogsController < Admin::StaffController
 
   def index
     filters = params.slice(*UserHistory.staff_filters + [:page, :limit])

@@ -1,6 +1,7 @@
 import Application from "@ember/application";
 import { buildResolver } from "discourse-common/resolver";
 import { isTesting } from "discourse-common/config/environment";
+import { normalizeEmberEventHandling } from "./lib/ember-events";
 
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
@@ -53,6 +54,10 @@ const Discourse = Application.extend({
   // Start up the Discourse application by running all the initializers we've defined.
   start() {
     document.querySelector("noscript")?.remove();
+
+    // Rewire event handling to eliminate event delegation for better compat
+    // between Glimmer and Classic components.
+    normalizeEmberEventHandling(this);
 
     if (Error.stackTraceLimit) {
       // We need Errors to have full stack traces for `lib/source-identifier`

@@ -429,6 +429,11 @@ login:
   google_oauth2_hd_groups:
     default: false
     validator: GoogleOauth2HdGroupsValidator
+  google_oauth2_hd_groups_service_account_admin_email:
+    default: ""
+  google_oauth2_hd_groups_service_account_json:
+    default: ""
+    textarea: true
   enable_twitter_logins:
     default: false
   twitter_consumer_key:
@@ -493,7 +498,7 @@ login:
     default: false
   max_suspicious_distance_km:
     hidden: true
-    default: 500
+    default: 100
   discourse_connect_url:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
@@ -2028,6 +2033,18 @@ developer:
     default: false
     client: true
     hidden: true
+  enable_new_user_profile_nav_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+  include_associated_account_ids:
+    default: false
+    hidden: true
+
+sidebar:
   enable_sidebar:
     default: true
     client: true
@@ -2039,16 +2056,13 @@ developer:
     type: tag_list
     default: ""
     client: true
-  enable_new_user_profile_nav_groups:
-    client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
-  include_associated_account_ids:
-    default: false
+  default_sidebar_list_destination:
     hidden: true
+    default: "default"
+    type: "list"
+    choices:
+      - "default"
+      - "unread_new"
 
 embedding:
   embed_by_username:

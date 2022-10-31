@@ -767,6 +767,12 @@
             },
             "oldest_search_log_date": {
               "type": ["string", "null"]
+            },
+            "sidebar_list_destination": {
+              "type": "string"
+            },
+            "seen_popups": {
+              "type": ["array", "null"]
             }
           },
           "required": [

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::ScreenedUrlsController do
-  it "is a subclass of AdminController" do
-    expect(Admin::ScreenedUrlsController < Admin::AdminController).to eq(true)
+  it "is a subclass of StaffController" do
+    expect(Admin::ScreenedUrlsController < Admin::StaffController).to eq(true)
   end
 
   describe '#index' do

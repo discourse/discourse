@@ -332,8 +332,6 @@ sw:
   meta_category_description: "Majadiliano kuhusu tovuti, shirika, jinsi inavyofanya kazi, na jinsi tunaweza kuiboresha."
   staff_category_name: "Wasaidizi"
   staff_category_description: "Kategoria binafsi kwa ajili ya majadiliano ya wasaidizi. Mada zitaonwa na wasimamizi na viongozi tu."
-  discourse_welcome_topic:
-    title: "Karibu kwenye Discourse"
   category:
     topic_prefix: "Kuhusu kategoria %{category}"
     errors:
