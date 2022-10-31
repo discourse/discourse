@@ -1189,7 +1189,7 @@ en:
         navigation_section: "Navigation"
         list_destination_instruction: "When there's new content in the sidebar..."
         list_destination_default: "show a badge for new items, and use the default link"
-        list_destination_unread_new: "show a count of new items, and link to new/unread"
+        list_destination_unread_new: "link to new/unread and show a count of new items"
       change: "change"
       featured_topic: "Featured Topic"
       moderator: "%{user} is a moderator"
