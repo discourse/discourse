@@ -5,6 +5,10 @@ RSpec.describe Admin::GroupsController do
   fab!(:user) { Fabricate(:user) }
   fab!(:group) { Fabricate(:group) }
 
+  it 'is a subclass of StaffController' do
+    expect(Admin::UsersController < Admin::StaffController).to eq(true)
+  end
+
   before do
     sign_in(admin)
   end

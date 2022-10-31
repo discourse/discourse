@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Admin::DashboardController < Admin::AdminController
+class Admin::DashboardController < Admin::StaffController
   def index
     data = AdminDashboardIndexData.fetch_cached_stats
 

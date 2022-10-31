@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Admin::UsersController < Admin::AdminController
+class Admin::UsersController < Admin::StaffController
 
   before_action :fetch_user, only: [:suspend,
                                     :unsuspend,
