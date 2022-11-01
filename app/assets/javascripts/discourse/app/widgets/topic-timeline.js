@@ -601,7 +601,7 @@ export default createWidget("topic-timeline", {
   },
 
   didRenderWidget() {
-    if (!this.currentUser || !this.siteSettings.enable_onboarding_popups) {
+    if (!this.currentUser || !this.siteSettings.enable_user_tips) {
       return;
     }
 

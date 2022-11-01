@@ -109,7 +109,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def include_onboarding_popup_types?
-    SiteSetting.enable_onboarding_popups
+    SiteSetting.enable_user_tips
   end
 
   def filters

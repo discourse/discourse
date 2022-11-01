@@ -9,14 +9,14 @@ RSpec.describe SiteSerializer do
   end
 
   describe '#onboarding_popup_types' do
-    it 'is included if enable_onboarding_popups' do
-      SiteSetting.enable_onboarding_popups = true
+    it 'is included if enable_user_tips' do
+      SiteSetting.enable_user_tips = true
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
       expect(serialized[:onboarding_popup_types]).to eq(OnboardingPopup.types)
     end
 
-    it 'is not included if enable_onboarding_popups is disabled' do
+    it 'is not included if enable_user_tips is disabled' do
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
       expect(serialized[:onboarding_popup_types]).to eq(nil)
     end

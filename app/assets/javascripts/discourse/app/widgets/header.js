@@ -88,7 +88,7 @@ createWidget("header-notifications", {
         const count = unread + reviewables;
         if (count > 0) {
           if (this._shouldHighlightAvatar()) {
-            if (this.siteSettings.enable_onboarding_popups) {
+            if (this.siteSettings.enable_user_tips) {
               contents.push(h("span.ring"));
             } else {
               this._addAvatarHighlight(contents);
@@ -124,7 +124,7 @@ createWidget("header-notifications", {
         const unreadHighPriority = user.unread_high_priority_notifications;
         if (!!unreadHighPriority) {
           if (this._shouldHighlightAvatar()) {
-            if (this.siteSettings.enable_onboarding_popups) {
+            if (this.siteSettings.enable_user_tips) {
               contents.push(h("span.ring"));
             } else {
               this._addAvatarHighlight(contents);
@@ -198,7 +198,7 @@ createWidget("header-notifications", {
   didRenderWidget() {
     if (
       !this.currentUser ||
-      !this.siteSettings.enable_onboarding_popups ||
+      !this.siteSettings.enable_user_tips ||
       !this._shouldHighlightAvatar()
     ) {
       return;
