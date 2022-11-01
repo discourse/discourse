@@ -644,6 +644,8 @@ sw:
       enable_quoting: "Ruhusu jibu nukulu kwenye neno lenye angaza"
       experimental_sidebar:
         options: "Chaguo"
+        navigation_section: "Abiri"
+        list_destination_default: "Halisi"
       change: "badilisha"
       moderator: "%{mtumiaji} ni msimamizi"
       admin: "%{mtumiaji} ni kiongozi"

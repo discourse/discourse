@@ -109,8 +109,21 @@
     }
   }
   .setting.overridden {
+    input {
+      background-color: var(--highlight-medium);
+    }
     h3 {
-      color: var(--highlight-high);
+      position: relative;
+      &:before {
+        content: "";
+        position: absolute;
+        top: 0.5rem;
+        left: -1rem;
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 100%;
+        background-color: var(--highlight-high);
+      }
     }
   }
   .setting.overridden.string {

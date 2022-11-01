@@ -631,7 +631,9 @@ RSpec.describe InvitesController do
 
       it 'does not log in the user if there are validation errors' do
         put "/invites/show/#{invite.invite_key}.json", params: { password: 'password' }
+
         expect(response.status).to eq(412)
+        expect(session[:current_user_id]).to eq(nil)
       end
 
       it 'does not log in the user if they were not approved' do

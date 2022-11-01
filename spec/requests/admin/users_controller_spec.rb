@@ -8,8 +8,8 @@ RSpec.describe Admin::UsersController do
   fab!(:user) { Fabricate(:user) }
   fab!(:coding_horror) { Fabricate(:coding_horror) }
 
-  it 'is a subclass of AdminController' do
-    expect(Admin::UsersController < Admin::AdminController).to eq(true)
+  it 'is a subclass of StaffController' do
+    expect(Admin::UsersController < Admin::StaffController).to eq(true)
   end
 
   before do

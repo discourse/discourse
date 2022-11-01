@@ -59,8 +59,6 @@ sv:
     bad_color_scheme: "Kan inte uppdatera tema, ogiltig färgpalett"
     other_error: "Något blev fel när temat uppdaterades"
     ember_selector_error: "Tyvärr — det är inte tillåtet att använda CSS-selektorerna #ember eller .ember-view, eftersom dessa namn genereras dynamiskt under körning och kommer att ändras över tid, vilket resulterar i trasig CSS. Prova en annan selektor."
-    compile_error:
-      unrecognized_extension: "Okänt filnamnstillägg: %{extension}"
     import_error:
       generic: Det uppstod ett fel vid import av det temat
       upload: "Det uppstod ett fel under skapandet av uppladdningstillgång: %{name}. %{errors}"
@@ -608,7 +606,7 @@ sv:
   staff_category_name: "Personal"
   staff_category_description: "Privat kategori för personaldiskussioner. Ämnen är bara synliga för administratörer och moderatorer."
   discourse_welcome_topic:
-    title: "Välkommen till diskussionen"
+    title: "Välkommen till vårt forum!"
     body: |2
 
       Det första stycket i detta fästa ämne kommer att visas som ett välkomstmeddelande för alla nya besökare på din hemsida. Det är viktigt!
@@ -1625,7 +1623,9 @@ sv:
     google_oauth2_client_secret: "Klienthemlighet för din Google-applikation."
     google_oauth2_prompt: "En valfri mellanrumsavgränsad lista över strängvärden som anger huruvida auktoriseringsservern ber användaren om omautentisering och samtycke. Se möjliga värden i <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a>."
     google_oauth2_hd: "En valfri Google Apps Hosted-domän som inloggningen kommer att begränsas till. Se mer information på <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a>."
-    google_oauth2_hd_groups: "(experimentell) Hämta användarnas Google-grupper på värddomänen vid autentisering. Hämtade Google-grupper kan användas för att bevilja automatiskt medlemskap i grupper inom Discourse (se gruppinställningar)."
+    google_oauth2_hd_groups: "(experimentell) Hämta användarnas Google-grupper på värddomänen vid autentisering. Hämtade Google-grupper kan användas för att bevilja automatiskt medlemskap i grupper inom Discourse (se gruppinställningar). Mer information finns på https://meta.discourse.org/t/226850"
+    google_oauth2_hd_groups_service_account_admin_email: "En e-postadress som tillhör ett Google Workspace-administratörskonto. Kommer att användas med tjänstkontouppgifterna för att hämta gruppinformation."
+    google_oauth2_hd_groups_service_account_json: "JSON-formaterad nyckelinformation för tjänstkontot. Kommer att användas för att hämta gruppinformation."
     enable_twitter_logins: "Aktivera Twitter-autentisering, kräver twitter_consumer_key och twitter_consumer_secret. Se <a href='https://meta.discourse.org/t/13395' target='_blank'>Konfigurera Twitter-inloggning (och formaterade inbäddningar) för Discourse</a>."
     twitter_consumer_key: "Konsumentnyckel för Twitter-autentisering, registrerad på <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Konsumenthemlighet för Twitter-autentisering, registrerad på <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
@@ -2106,6 +2106,7 @@ sv:
     enable_sitemap: "Skapa en webbplatskarta för din webbplats och inkludera den i filen robots.txt."
     sitemap_page_size: "Antal webbadresser som ska inkluderas på varje webbplatskartsida. Max 50.000"
     enable_user_status: "(experimentell) Tillåt användare att ställa in anpassat statusmeddelande (emoji + beskrivning)."
+    enable_onboarding_popups: "(experimentell) Aktivera pedagogiska popup-fönster som beskriver nyckelfunktioner för användare"
     short_title: "Den korta titeln kommer att användas på användarens startskärm, startapparat eller andra platser där utrymmet kan vara begränsat. Den bör begränsas till 12 tecken."
     dashboard_hidden_reports: "Tillåt att de specificerade rapporterna döljs från översiktspanelen."
     dashboard_visible_tabs: "Välj vilka flikar på översiktspanelen som ska vara synliga."
@@ -2175,7 +2176,7 @@ sv:
       unicode_usernames_avatars: "De interna systemavatarerna stöder inte Unicode-användarnamn."
       list_value_count: "Listan måste innehålla exakt %{count} värden."
       markdown_linkify_tlds: "Du kan inte inkludera ett värde av '*'."
-      google_oauth2_hd_groups: "Du måste först ange 'google oauth2 hd' innan du aktiverar denna inställning."
+      google_oauth2_hd_groups: "Du måste konfigurera alla 'google oauth2 hd'-inställningar innan du aktiverar den här inställningen."
       search_tokenize_chinese_enabled: "Du måste inaktivera 'search_tokenize_chinese' innan du aktiverar den här inställningen."
       search_tokenize_japanese_enabled: "Du måste inaktivera 'search_tokenize_japanese' innan du aktiverar den här inställningen."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kan inte aktivera DiscourseConnect om 2FA är obligatoriskt."
@@ -4166,7 +4167,7 @@ sv:
               subcategories_with_featured_topics:
                 label: "Underkategorier med utvalda ämnen"
       branding:
-        title: "Forumets logotyp"
+        title: "Anpassa logotyper"
         fields:
           logo:
             label: "Primär logo"
@@ -4181,7 +4182,7 @@ sv:
             label: "Stor ikon"
             description: "Ikon som används för att representera din webbplats på mobila enheter och som ser bra ut i större storlekar. Helst större än 512x512. Som standard används en fyrkantig logotyp."
       corporate:
-        title: "Kontakt och organisation"
+        title: "Din organisation"
         fields:
           company_name:
             label: "Företagsnamn"

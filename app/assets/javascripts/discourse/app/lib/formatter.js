@@ -1,6 +1,7 @@
 import { helperContext, makeArray } from "discourse-common/lib/helpers";
 import deprecated from "discourse-common/lib/deprecated";
 import I18n from "I18n";
+import jQuery from "jquery";
 
 export function shortDate(date) {
   return moment(date).format(I18n.t("dates.medium.date_year"));
@@ -50,7 +51,6 @@ export function longDateNoYear(dt) {
 }
 
 export function updateRelativeAge(elems) {
-  // eslint-disable-next-line no-undef
   if (elems instanceof jQuery) {
     elems = elems.toArray();
     deprecated("updateRelativeAge now expects a DOM NodeList", {

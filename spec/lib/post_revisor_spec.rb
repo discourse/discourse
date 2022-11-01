@@ -1303,6 +1303,20 @@ RSpec.describe PostRevisor do
           .and change { DraftSequence.where(user_id: user.id, draft_key: draft_key).first.sequence }.by(1)
       end
     end
+
+    context 'when skipping validations' do
+      fab!(:post) { Fabricate(:post, raw: 'aaa', skip_validation: true) }
+
+      it 'can revise multiple times and remove unnecessary revisions' do
+        subject.revise!(admin, { raw: 'bbb' }, skip_validations: true)
+        expect(post.errors).to be_empty
+
+        # Revert to old version which was invalid to destroy previously created
+        # post revision and trigger another post save.
+        subject.revise!(admin, { raw: 'aaa' }, skip_validations: true)
+        expect(post.errors).to be_empty
+      end
+    end
   end
 
   context 'when the review_every_post setting is enabled' do

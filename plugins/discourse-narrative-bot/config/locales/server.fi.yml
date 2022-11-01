@@ -84,6 +84,15 @@ fi:
       "10":
         quote: "Joskus pitää laittaa viatonkin vankilaan. Joskus täytyy poliisin laittaa viaton lusimaan. Arvovalta säilyy. Pelote säilyy. Aina siellä muutama viaton istuu, viaton pulmunen istuu siellä."
         author: "Rauno Repomies televisiosarjassa Pasila"
+      "11":
+        quote: "Rauha kotona, rauha maailmassa."
+        author: "Mustafa Kemal Atatürk"
+      "12":
+        quote: "Koulutus ei ole keino paeta köyhyyttä, se on keino taistella sitä vastaan."
+        author: "Julius Nyerere"
+      "13":
+        quote: "Tuhannen mailin matka alkaa yhdestä askeleesta."
+        author: "Laozi"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:

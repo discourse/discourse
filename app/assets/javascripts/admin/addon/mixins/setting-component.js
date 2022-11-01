@@ -157,7 +157,10 @@ export default Mixin.create({
       "default_tags_watching_first_post",
       "default_text_size",
       "default_title_count_mode",
+      "default_sidebar_categories",
+      "default_sidebar_tags",
     ];
+
     const key = this.buffered.get("setting");
 
     if (defaultUserPreferences.includes(key)) {

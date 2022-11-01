@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Admin::ReportsController < Admin::AdminController
+class Admin::ReportsController < Admin::StaffController
   def index
     reports_methods = ['page_view_total_reqs'] +
       ApplicationRequest.req_types.keys

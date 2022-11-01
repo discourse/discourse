@@ -1,27 +1,30 @@
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import createStore from "discourse/tests/helpers/create-store";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
 
-discourseModule("Unit | Controller | reorder-categories", function () {
+module("Unit | Controller | reorder-categories", function (hooks) {
+  setupTest(hooks);
+
   test("reorder set unique position number", function (assert) {
+    const controller = this.owner.lookup("controller:reorder-categories");
     const store = createStore();
 
-    const categories = [];
-    for (let i = 0; i < 3; ++i) {
-      categories.push(store.createRecord("category", { id: i, position: 0 }));
-    }
+    const site = this.owner.lookup("service:site");
+    site.set("categories", [
+      store.createRecord("category", { id: 1, position: 0 }),
+      store.createRecord("category", { id: 2, position: 0 }),
+      store.createRecord("category", { id: 3, position: 0 }),
+    ]);
 
-    const controller = this.getController("reorder-categories", {
-      site: { categories },
-    });
     controller.reorder();
 
-    controller.get("categoriesOrdered").forEach((category, index) => {
+    controller.categoriesOrdered.forEach((category, index) => {
       assert.strictEqual(category.get("position"), index);
     });
   });
 
   test("reorder places subcategories after their parent categories, while maintaining the relative order", function (assert) {
+    const controller = this.owner.lookup("controller:reorder-categories");
     const store = createStore();
 
     const parent = store.createRecord("category", {
@@ -48,18 +51,19 @@ discourseModule("Unit | Controller | reorder-categories", function () {
     });
 
     const expectedOrderSlugs = ["parent", "child2", "child1", "other"];
-    const controller = this.getController("reorder-categories", {
-      site: { categories: [child2, parent, other, child1] },
-    });
+    const site = this.owner.lookup("service:site");
+    site.set("categories", [child2, parent, other, child1]);
+
     controller.reorder();
 
     assert.deepEqual(
-      controller.get("categoriesOrdered").mapBy("slug"),
+      controller.categoriesOrdered.mapBy("slug"),
       expectedOrderSlugs
     );
   });
 
   test("changing the position number of a category should place it at given position", function (assert) {
+    const controller = this.owner.lookup("controller:reorder-categories");
     const store = createStore();
 
     const elem1 = store.createRecord("category", {
@@ -80,14 +84,13 @@ discourseModule("Unit | Controller | reorder-categories", function () {
       slug: "test",
     });
 
-    const controller = this.getController("reorder-categories", {
-      site: { categories: [elem1, elem2, elem3] },
-    });
+    const site = this.owner.lookup("service:site");
+    site.set("categories", [elem1, elem2, elem3]);
 
     // Move category 'foo' from position 0 to position 2
     controller.send("change", elem1, { target: { value: "2" } });
 
-    assert.deepEqual(controller.get("categoriesOrdered").mapBy("slug"), [
+    assert.deepEqual(controller.categoriesOrdered.mapBy("slug"), [
       "bar",
       "test",
       "foo",
@@ -95,6 +98,7 @@ discourseModule("Unit | Controller | reorder-categories", function () {
   });
 
   test("changing the position number of a category should place it at given position and respect children", function (assert) {
+    const controller = this.owner.lookup("controller:reorder-categories");
     const store = createStore();
 
     const elem1 = store.createRecord("category", {
@@ -106,7 +110,7 @@ discourseModule("Unit | Controller | reorder-categories", function () {
     const child1 = store.createRecord("category", {
       id: 4,
       position: 1,
-      slug: "foochild",
+      slug: "foo-child",
       parent_category_id: 1,
     });
 
@@ -122,34 +126,34 @@ discourseModule("Unit | Controller | reorder-categories", function () {
       slug: "test",
     });
 
-    const controller = this.getController("reorder-categories", {
-      site: { categories: [elem1, child1, elem2, elem3] },
-    });
+    const site = this.owner.lookup("service:site");
+    site.set("categories", [elem1, child1, elem2, elem3]);
 
     controller.send("change", elem1, { target: { value: 3 } });
 
-    assert.deepEqual(controller.get("categoriesOrdered").mapBy("slug"), [
+    assert.deepEqual(controller.categoriesOrdered.mapBy("slug"), [
       "bar",
       "test",
       "foo",
-      "foochild",
+      "foo-child",
     ]);
   });
 
   test("changing the position through click on arrow of a category should place it at given position and respect children", function (assert) {
+    const controller = this.owner.lookup("controller:reorder-categories");
     const store = createStore();
 
     const child2 = store.createRecord("category", {
       id: 105,
       position: 2,
-      slug: "foochildchild",
+      slug: "foo-child-child",
       parent_category_id: 104,
     });
 
     const child1 = store.createRecord("category", {
       id: 104,
       position: 1,
-      slug: "foochild",
+      slug: "foo-child",
       parent_category_id: 101,
       subcategories: [child2],
     });
@@ -173,19 +177,18 @@ discourseModule("Unit | Controller | reorder-categories", function () {
       slug: "test",
     });
 
-    const controller = this.getController("reorder-categories", {
-      site: { categories: [elem1, child1, child2, elem2, elem3] },
-    });
+    const site = this.owner.lookup("service:site");
+    site.set("categories", [elem1, child1, child2, elem2, elem3]);
 
     controller.reorder();
 
     controller.send("moveDown", elem1);
 
-    assert.deepEqual(controller.get("categoriesOrdered").mapBy("slug"), [
+    assert.deepEqual(controller.categoriesOrdered.mapBy("slug"), [
       "bar",
       "foo",
-      "foochild",
-      "foochildchild",
+      "foo-child",
+      "foo-child-child",
       "test",
     ]);
   });

@@ -16,6 +16,14 @@ import userFixtures from "discourse/tests/fixtures/user-fixtures";
 acceptance("User Preferences - Interface", function (needs) {
   needs.user();
 
+  let lastUserData;
+  needs.pretender((server, helper) => {
+    server.put("/u/eviltrout.json", (request) => {
+      lastUserData = helper.parsePostData(request.requestBody);
+      return helper.response({ user: {} });
+    });
+  });
+
   test("font size change", async function (assert) {
     removeCookie("text_size");
 
@@ -134,6 +142,25 @@ acceptance("User Preferences - Interface", function (needs) {
     );
 
     document.querySelector("meta[name='discourse_theme_id']").remove();
+  });
+
+  test("shows reset seen onboarding popups button", async function (assert) {
+    let site = Site.current();
+    site.set("onboarding_popup_types", { first_notification: 1 });
+
+    await visit("/u/eviltrout/preferences/interface");
+
+    assert.ok(
+      exists(".pref-reset-seen-popups"),
+      "has reset seen popups button"
+    );
+
+    await click(".pref-reset-seen-popups");
+
+    assert.deepEqual(lastUserData, {
+      seen_popups: "",
+      skip_new_user_tips: "false",
+    });
   });
 });
 

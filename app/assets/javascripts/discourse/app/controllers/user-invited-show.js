@@ -2,8 +2,10 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { equal, reads } from "@ember/object/computed";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed, {
+  debounce,
+  observes,
+} from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 import Invite from "discourse/models/invite";
@@ -28,15 +30,10 @@ export default Controller.extend({
   },
 
   @observes("searchTerm")
+  @debounce(INPUT_DELAY)
   _searchTermChanged() {
-    discourseDebounce(
-      this,
-      function () {
-        Invite.findInvitedBy(this.user, this.filter, this.searchTerm).then(
-          (invites) => this.set("model", invites)
-        );
-      },
-      INPUT_DELAY
+    Invite.findInvitedBy(this.user, this.filter, this.searchTerm).then(
+      (invites) => this.set("model", invites)
     );
   },
 

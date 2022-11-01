@@ -2,13 +2,13 @@ import deprecated from "discourse-common/lib/deprecated";
 import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
 import { ajax } from "discourse/lib/ajax";
 import { replaceSpan } from "discourse/lib/category-hashtags";
+import jQuery from "jquery";
 
 const categoryHashtags = {};
 const tagHashtags = {};
 const checkedHashtags = new Set();
 
 export function linkSeenHashtags(elem) {
-  // eslint-disable-next-line no-undef
   if (elem instanceof jQuery) {
     elem = elem[0];
 

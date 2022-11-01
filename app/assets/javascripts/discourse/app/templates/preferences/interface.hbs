@@ -117,6 +117,9 @@
     <ComboBox @valueProperty="value" @content={{this.titleCountModes}} @value={{this.model.user_option.title_count_mode}} @id="user-title-count-mode" @onChange={{action (mut this.model.user_option.title_count_mode)}} />
   </div>
   <PreferenceCheckbox @labelKey="user.skip_new_user_tips.description" @checked={{this.model.user_option.skip_new_user_tips}} @class="pref-new-user-tips" />
+  {{#if this.site.onboarding_popup_types}}
+    <DButton @class="pref-reset-seen-popups" @action={{action "resetSeenPopups"}}>{{i18n "user.reset_seen_popups"}}</DButton>
+  {{/if}}
 </fieldset>
 
 <PluginOutlet @name="user-preferences-interface" @tagName="span" @connectorTagName="div" @args={{hash model=this.model save=(action "save")}} />

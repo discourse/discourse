@@ -1136,8 +1136,7 @@ RSpec.describe GroupsController do
       )
     end
 
-    fab!(:bot) { Fabricate(:user, id: -999) }
-
+    fab!(:bot) { Fabricate(:bot) }
     let(:group) { Fabricate(:group, users: [user1, user2, user3, bot]) }
 
     it "should allow members to be sorted by" do

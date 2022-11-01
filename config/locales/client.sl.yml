@@ -1021,6 +1021,8 @@ sl:
       enable_defer: "Omogoči preloži za označiti teme kot neprebrane"
       experimental_sidebar:
         options: "Možnosti"
+        navigation_section: "Navigacija"
+        list_destination_default: "Privzeto"
       change: "spremeni"
       featured_topic: "Izpostavljena tema"
       moderator: "%{user} je moderator"
@@ -1185,14 +1187,12 @@ sl:
           name_and_code_required_error: "Navesti morate ime in kodo iz aplikacije za preverjanje pristnosti."
         security_key:
           register: "Registracija"
-          title: "Varnostni ključi"
-          add: "Dodajte varnostni ključ"
           default_name: "Glavni varnostni ključ"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "Postopek registracije varnostnega ključa je potekel ali pa je bil preklican."
           already_added_error: "Ta varnostni ključ ste že registrirali. Ni ga treba ponovno registrirati."
-          edit: "Uredi varnostni ključ"
           save: "Shrani"
-          edit_description: "Ime varnostnega ključa"
           name_required_error: "Navesti morate ime varnostnega ključa."
       change_about:
         title: "Spremeni O meni"
@@ -1660,7 +1660,6 @@ sl:
       second_factor_backup_title: "Rezervna potrditvena koda"
       second_factor_backup_description: "Vnesite eno od rezervnih potrditvenih kod:"
       second_factor: "Prijavite se z aplikacijo Authenticator"
-      security_key_description: "Ko imate pripravljen fizični varnostni ključ, pritisnite spodnji gumb Preveri pristnost z varnostnim ključem."
       security_key_alternative: "Poskusite na drug način"
       security_key_authenticate: "Preverite z varnostnim ključem"
       security_key_not_allowed_error: "Postopek preverjanja z varnostnim ključem je potekel ali pa je bil preklican."

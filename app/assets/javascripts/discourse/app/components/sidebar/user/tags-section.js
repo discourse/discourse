@@ -1,5 +1,3 @@
-import I18n from "I18n";
-
 import { cached } from "@glimmer/tracking";
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
@@ -48,20 +46,13 @@ export default class SidebarUserTagsSection extends Component {
           new TagSectionLink({
             tagName: tag.name,
             topicTrackingState: this.topicTrackingState,
+            currentUser: this.currentUser,
           })
         );
       }
     }
 
     return links;
-  }
-
-  get noTagsText() {
-    const url = `/u/${this.currentUser.username}/preferences/sidebar`;
-
-    return `${I18n.t("sidebar.sections.tags.none")} <a href="${url}">${I18n.t(
-      "sidebar.sections.tags.click_to_get_started"
-    )}</a>`;
   }
 
   /**
@@ -71,11 +62,15 @@ export default class SidebarUserTagsSection extends Component {
    * If a site has default sidebar tags configured, always display the tags section.
    */
   get shouldDisplay() {
-    if (this.siteSettings.default_sidebar_tags.length > 0) {
+    if (this.hasDefaultSidebarTags) {
       return true;
     } else {
       return this.currentUser.sidebarTags.length > 0;
     }
+  }
+
+  get hasDefaultSidebarTags() {
+    return this.siteSettings.default_sidebar_tags.length > 0;
   }
 
   @action

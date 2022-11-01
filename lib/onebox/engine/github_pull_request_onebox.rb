@@ -40,7 +40,7 @@ module Onebox
         result['body'], result['excerpt'] = compute_body(result['body'])
 
         if result['commit'] = load_commit(link)
-          result['body'], result['excerpt'] = compute_body(result['commit']['body'])
+          result['body'], result['excerpt'] = compute_body(result['commit']['commit']['message'].lines[1..].join)
         elsif result['comment'] = load_comment(link)
           result['body'], result['excerpt'] = compute_body(result['comment']['body'])
         elsif result['discussion'] = load_review(link)

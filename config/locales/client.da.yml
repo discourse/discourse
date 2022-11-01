@@ -1055,6 +1055,8 @@ da:
       enable_defer: "Aktivér 'udsæt' for at markere emner som ulæste"
       experimental_sidebar:
         options: "Indstillinger"
+        navigation_section: "Navigation"
+        list_destination_default: "Standard"
       change: "skift"
       featured_topic: "Fremhævet emne"
       moderator: "%{user} er en moderator"
@@ -1220,8 +1222,6 @@ da:
         edit: "Rediger"
         edit_title: "Rediger godkendelsesenhed"
         edit_description: "Navn på godkendelsesenhed"
-        enable_security_key_description: |
-          Når du har din <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardware-sikkerhedsnøgle</a> forberedt, tryk på Register knappen nedenfor.
         totp:
           title: "Token-baserede autentificatorer"
           add: "Tilføj godkendelsesenhed"
@@ -1229,14 +1229,12 @@ da:
           name_and_code_required_error: "Du skal angive et navn og koden fra din godkendelsesapp."
         security_key:
           register: "Registrer"
-          title: "Sikkerhedsnøgler"
-          add: "Tilføj Sikkerhedsnøgle"
           default_name: "Hoved sikkerhedsnøgle"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "Registreringsprocessen for sikkerhedsnøgle fik enten timeout eller blev annulleret."
           already_added_error: "Du har allerede registreret denne sikkerhedsnøgle. Du behøver ikke at registrere det igen."
-          edit: "Rediger Sikkerhedsnøgle"
           save: "Gem"
-          edit_description: "Navn på sikkerhedsnøgle"
           name_required_error: "Du skal angive et navn til din sikkerhedsnøgle."
       change_about:
         title: "Skift “Om mig”"
@@ -1733,7 +1731,6 @@ da:
       second_factor_backup_title: "To-faktor backup"
       second_factor_backup_description: "Indtast venligst en af dine backup koder:"
       second_factor: "Log ind ved hjælp af Authenticator app"
-      security_key_description: "Når du har forberedt din fysiske sikkerhedsnøgle, skal du trykke på knappen Godkend med sikkerhedsnøgle nedenfor."
       security_key_alternative: "Prøv en anden måde"
       security_key_authenticate: "Godkend med sikkerhedsnøgle"
       security_key_not_allowed_error: "Godkendelsesprocessen for sikkerhedsnøgle fik enten timeout eller blev annulleret."

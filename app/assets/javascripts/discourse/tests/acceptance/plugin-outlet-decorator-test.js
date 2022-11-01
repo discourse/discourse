@@ -7,6 +7,7 @@ import { hbs } from "ember-cli-htmlbars";
 import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import Ember from "ember";
 
 const PREFIX = "javascripts/single-test/connectors";
 
@@ -14,9 +15,7 @@ acceptance("Plugin Outlet - Decorator", function (needs) {
   needs.user();
 
   needs.hooks.beforeEach(() => {
-    // eslint-disable-next-line no-undef
     Ember.TEMPLATES[`${PREFIX}/discovery-list-container-top/foo`] = hbs`FOO`;
-    // eslint-disable-next-line no-undef
     Ember.TEMPLATES[`${PREFIX}/discovery-list-container-top/bar`] = hbs`BAR`;
 
     withPluginApi("0.8.38", (api) => {
@@ -39,9 +38,7 @@ acceptance("Plugin Outlet - Decorator", function (needs) {
   });
 
   needs.hooks.afterEach(() => {
-    // eslint-disable-next-line no-undef
     delete Ember.TEMPLATES[`${PREFIX}/discovery-list-container-top/foo`];
-    // eslint-disable-next-line no-undef
     delete Ember.TEMPLATES[`${PREFIX}/discovery-list-container-top/bar`];
   });
 

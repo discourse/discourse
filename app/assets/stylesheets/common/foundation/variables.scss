@@ -14,6 +14,12 @@ $topic-body-width-padding: 11px;
 $topic-avatar-width: 45px;
 $reply-area-max-width: 1475px !default;
 
+:root {
+  --topic-body-width: #{$topic-body-width};
+  --topic-body-width-padding: #{$topic-body-width-padding};
+  --topic-avatar-width: #{$topic-avatar-width};
+}
+
 $d-sidebar-width: 16em !default;
 
 // Brand color variables

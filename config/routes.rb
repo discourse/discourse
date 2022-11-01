@@ -17,6 +17,9 @@ Discourse::Application.routes.draw do
     get "/404-body" => "exceptions#not_found_body"
 
     get "/bootstrap" => "bootstrap#index"
+    if Rails.env.test? || Rails.env.development?
+      get "/bootstrap/plugin-css-for-tests.css" => "bootstrap#plugin_css_for_tests"
+    end
 
     post "webhooks/aws" => "webhooks#aws"
     post "webhooks/mailgun"  => "webhooks#mailgun"
@@ -475,7 +478,7 @@ Discourse::Application.routes.draw do
       get "#{root_path}/:username/messages/:filter" => "user_actions#private_messages", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/messages/group/:group_name" => "user_actions#private_messages", constraints: { username: RouteFormat.username, group_name: RouteFormat.username }
       get "#{root_path}/:username/messages/group/:group_name/:filter" => "user_actions#private_messages", constraints: { username: RouteFormat.username, group_name: RouteFormat.username }
-      get "#{root_path}/:username/messages/tags/:tag_id" => "user_actions#private_messages", constraints: StaffConstraint.new
+      get "#{root_path}/:username/messages/tags/:tag_id" => "list#private_messages_tag", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username.json" => "users#show", constraints: { username: RouteFormat.username }, defaults: { format: :json }
       get({ "#{root_path}/:username" => "users#show", constraints: { username: RouteFormat.username } }.merge(index == 1 ? { as: 'user' } : {}))
       put "#{root_path}/:username" => "users#update", constraints: { username: RouteFormat.username }, defaults: { format: :json }
@@ -561,6 +564,7 @@ Discourse::Application.routes.draw do
     get "stylesheets/:name.css" => "stylesheets#show", constraints: { name: /[-a-z0-9_]+/ }
     get "color-scheme-stylesheet/:id(/:theme_id)" => "stylesheets#color_scheme", constraints: { format: :json }
     get "theme-javascripts/:digest.js" => "theme_javascripts#show", constraints: { digest: /\h{40}/ }
+    get "theme-javascripts/:digest.map" => "theme_javascripts#show_map", constraints: { digest: /\h{40}/ }
     get "theme-javascripts/tests/:theme_id-:digest.js" => "theme_javascripts#show_tests"
 
     post "uploads/lookup-metadata" => "uploads#metadata"
@@ -770,6 +774,7 @@ Discourse::Application.routes.draw do
     end
 
     get "hashtags" => "hashtags#show"
+    get "hashtags/search" => "hashtags#search"
 
     TopTopic.periods.each do |period|
       get "top/#{period}.rss", to: redirect("top.rss?period=#{period}", status: 301)

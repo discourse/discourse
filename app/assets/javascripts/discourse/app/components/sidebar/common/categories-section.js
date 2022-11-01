@@ -20,6 +20,7 @@ export default class SidebarCommonCategoriesSection extends Component {
           new CategorySectionLink({
             category,
             topicTrackingState: this.topicTrackingState,
+            currentUser: this.currentUser,
           })
         );
 

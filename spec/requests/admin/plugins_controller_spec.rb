@@ -2,8 +2,8 @@
 
 RSpec.describe Admin::PluginsController do
 
-  it "is a subclass of AdminController" do
-    expect(Admin::PluginsController < Admin::AdminController).to eq(true)
+  it "is a subclass of StaffController" do
+    expect(Admin::PluginsController < Admin::StaffController).to eq(true)
   end
 
   context "while logged in as an admin" do

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class UserBadgeSerializer < ApplicationSerializer
+  include UserBadgePostAndTopicAttributesMixin
 
   class UserSerializer < BasicUserSerializer
     include UserPrimaryGroupMixin
@@ -22,10 +23,9 @@ class UserBadgeSerializer < ApplicationSerializer
   end
 
   def include_post_id?
-    object.badge.show_posts && object.post_id && object.post
+    include_post_attributes?
   end
 
-  alias :include_topic? :include_post_id?
   alias :include_post_number? :include_post_id?
 
   def post_number
@@ -34,5 +34,9 @@ class UserBadgeSerializer < ApplicationSerializer
 
   def topic
     object.post.topic
+  end
+
+  def include_topic?
+    include_topic_attributes?
   end
 end

@@ -328,8 +328,6 @@ ro:
   meta_category_description: "Discuții despre acest forum, organizare, funcționare și cum îl putem îmbunătăți."
   staff_category_name: "Echipa"
   staff_category_description: "Categorie privată pentru discuțiile personalului. Subiectele sunt vizibile numai pentru admini și moderatori."
-  discourse_welcome_topic:
-    title: "Bine ai venit la Discourse"
   category:
     topic_prefix: "Despre categoria %{category}"
     post_template: "%{replace_paragraph}\n\nFolosește următoarele paragrafe pentru a scrie o descriere mai lungă sau pentru a seta regulile ori îndreptarul categoriei:\n\n- De ce să folosească lumea această categorie? Care e destinația ei?\n\n- Prin ce anume se deosebește de alte categorii pe care le avem deja?\n\n- Ce ar trebui să conțină, în general, subiectele din această categorie?\n\n- Chiar avem nevoie de aceasta categorie? N-am putea-o combina cu o altă categorie sau subcategorie deja existentă?\n"
@@ -1252,6 +1250,9 @@ ro:
     email_too_long: "Adresa de email pe care ai introdus-o este prea lungă. Numele de căsuțe poștale nu trebuie să depășească 254 de caractere, și numele de domenii nu trebuie să depășească 253 de caractere."
     reserved_username: "Acest nume utilizator nu este permis."
     missing_user_field: "Nu ai completat toate câmpurile utilizatorului"
+    second_factor_title: "Autentificare în doi pași (2FA)"
+    second_factor_description: "Introdu codul de autentificare din aplicația 2FA"
+    invalid_second_factor_code: "Cod de autentificare invalid. Fiecare cod poate fi utilizat o singură dată."
   admin:
     email:
       sent_test: "trimis!"
@@ -1598,6 +1599,9 @@ ro:
       text_body_template: |2
 
         %{message}
+    account_second_factor_disabled:
+      title: "Autentificarea în doi pași (2FA) este dezactivată"
+      subject_template: "[%{email_prefix}] Autentificare în doi pași (2FA) dezactivată"
     digest:
       why: "Un rezumat scurt al %{site_link} de la ultima ta vizită din %{last_seen_at}."
       since_last_visit: "De la ultima ta vizită"

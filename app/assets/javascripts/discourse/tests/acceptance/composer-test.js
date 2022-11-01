@@ -4,6 +4,7 @@ import {
   fillIn,
   settled,
   triggerEvent,
+  triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
 import { toggleCheckDraftPopup } from "discourse/controllers/composer";
@@ -176,16 +177,29 @@ acceptance("Composer", function (needs) {
 
     await click("#reply-control button.create");
     assert.ok(
-      !exists(".title-input .popup-tip.bad.hide"),
+      exists(".title-input .popup-tip.bad"),
       "it shows the empty title error"
     );
     assert.ok(
-      !exists(".d-editor-wrapper .popup-tip.bad.hide"),
+      exists(".d-editor-textarea-wrapper .popup-tip.bad"),
       "it shows the empty body error"
     );
 
     await fillIn("#reply-title", "this is my new topic title");
-    assert.ok(exists(".title-input .popup-tip.good"), "the title is now good");
+    assert.ok(
+      exists(".title-input .popup-tip.good.hide"),
+      "the title is now good"
+    );
+
+    await triggerKeyEvent(
+      ".d-editor-textarea-wrapper .popup-tip.bad",
+      "keydown",
+      "Enter"
+    );
+    assert.ok(
+      exists(".d-editor-textarea-wrapper .popup-tip.bad.hide"),
+      "body error is dismissed via keyboard"
+    );
 
     await fillIn(".d-editor-input", "this is the *content* of a post");
     assert.strictEqual(

@@ -209,13 +209,11 @@ RSpec.describe "tasks/uploads" do
       expect(post2.reload.baked_at).not_to eq_time(1.week.ago)
     end
 
-    it "updates the affected ACLs" do
-      expect_enqueued_with(
-        job: :sync_acls_for_uploads,
-        args: { upload_ids: [upload1.id, upload2.id, upload3.id, upload4.id] },
-      ) do
-        invoke_task
-      end
+    it "updates the affected ACLs via the SyncAclsForUploads job" do
+      invoke_task
+      expect(Jobs::SyncAclsForUploads.jobs.last["args"][0]["upload_ids"]).to match_array(
+        [upload1.id, upload2.id, upload3.id, upload4.id]
+      )
     end
   end
 end

@@ -58,8 +58,6 @@ gl:
     bad_color_scheme: "Non se pode actualizar o tema; paleta de cores non válida"
     other_error: "Xurdiu un problema ao actualizar o tema"
     ember_selector_error: "Desculpe: non se permite o uso de selectores CSS #ember ou .ember-view, porque estes nomes xéranse dinamicamente no tempo de execución e cambiarán co paso do tempo, resultando finalmente en CSS rotos. Probe cun selector diferente."
-    compile_error:
-      unrecognized_extension: "Extensión de ficheiro non recoñecida: %{extension}"
     import_error:
       generic: Produciuse un erro ao importar este tema
       about_json: "Erro de importación: about.json non existe ou non é válido. Confirma que este é un tema de Discourse?"
@@ -557,7 +555,6 @@ gl:
   staff_category_name: "Equipo"
   staff_category_description: "Categoría privada para discusións do equipo. Os temas son visíbeis unicamente para administradores e moderadores."
   discourse_welcome_topic:
-    title: "Dámoslle a benvida a Discourse"
     body: |2
 
       O primeiro parágrafo deste tema pegado será visible como mensaxe de benvida para todos os novos visitantes na súa páxina de inicio. É, pois, importante!

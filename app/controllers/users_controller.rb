@@ -1895,7 +1895,7 @@ class UsersController < ApplicationController
       @user = User.find(user_id) if user_id > 0
     end
 
-    @error = I18n.t('password_reset.no_token') if !@user
+    @error = I18n.t('password_reset.no_token', base_url: Discourse.base_url) if !@user
   end
 
   def respond_to_suspicious_request

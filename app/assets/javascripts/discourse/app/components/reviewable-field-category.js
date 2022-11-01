@@ -1,10 +1,13 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { action } from "@ember/object";
+import { tracked } from "@glimmer/tracking";
 
-export default Component.extend({
-  actions: {
-    onChange(category) {
-      this.set("value", category);
-      this.categoryChanged && this.categoryChanged(category);
-    },
-  },
-});
+export default class extends Component {
+  @tracked categoryId = this.args.value;
+
+  @action
+  onChange(category) {
+    this.categoryId = category;
+    this.args.categoryChanged?.(category);
+  }
+}

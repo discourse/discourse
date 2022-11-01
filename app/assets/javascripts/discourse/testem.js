@@ -18,7 +18,7 @@ class Reporter {
 
   report(prefix, data) {
     if (data.failed) {
-      this.failReports.push([prefix, data]);
+      this.failReports.push([prefix, data, this._tapReporter.id]);
     }
     this._tapReporter.report(prefix, data);
   }
@@ -28,11 +28,14 @@ class Reporter {
 
     if (this.failReports.length > 0) {
       process.stdout.write("\nFailures:\n\n");
-      this.failReports.forEach(([prefix, data]) => {
+
+      this.failReports.forEach(([prefix, data, id]) => {
         if (process.env.GITHUB_ACTIONS) {
           process.stdout.write(`::error ::QUnit Test Failure: ${data.name}\n`);
         }
-        this.report(prefix, data);
+
+        this._tapReporter.id = id;
+        this._tapReporter.report(prefix, data);
       });
     }
   }
@@ -100,6 +103,12 @@ if (process.argv.includes("-t")) {
       target,
     },
     "/plugins/": {
+      target,
+    },
+    "/bootstrap/plugin-css-for-tests.css": {
+      target,
+    },
+    "/stylesheets/": {
       target,
     },
   };

@@ -289,10 +289,6 @@ export default Component.extend(TextareaTextManipulation, {
         "indentSelection"
       );
     }
-
-    if (isTesting()) {
-      this.element.addEventListener("paste", this.paste);
-    }
   },
 
   @bind
@@ -462,10 +458,15 @@ export default Component.extend(TextareaTextManipulation, {
   },
 
   _applyCategoryHashtagAutocomplete() {
-    setupHashtagAutocomplete(this._$textarea, this.siteSettings, (value) => {
-      this.set("value", value);
-      schedule("afterRender", this, this.focusTextArea);
-    });
+    setupHashtagAutocomplete(
+      "topic-composer",
+      this._$textarea,
+      this.siteSettings,
+      (value) => {
+        this.set("value", value);
+        schedule("afterRender", this, this.focusTextArea);
+      }
+    );
   },
 
   _applyEmojiAutocomplete($textarea) {

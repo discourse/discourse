@@ -79,19 +79,6 @@ RSpec.describe ListController do
       expect(parsed["topic_list"]["topics"].length).to eq(1)
     end
 
-    it 'filters out privacy policy and tos topics' do
-      tos_topic = create_topic
-      SiteSetting.tos_topic_id = tos_topic.id
-
-      pp_topic = create_topic
-      SiteSetting.privacy_topic_id = pp_topic.id
-
-      get "/latest.json"
-      expect(response.status).to eq(200)
-      parsed = response.parsed_body
-      expect(parsed["topic_list"]["topics"].length).to eq(1)
-    end
-
     it "shows correct title if topic list is set for homepage" do
       get "/latest"
 
@@ -198,6 +185,16 @@ RSpec.describe ListController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["topic_list"]["topics"].first["id"])
         .to eq(private_message.id)
+    end
+
+    it 'should work for users who are allowed and direct links' do
+      SiteSetting.pm_tags_allowed_for_groups = group.name
+      group.add(user)
+      sign_in(user)
+
+      get "/u/#{user.username}/messages/tags/#{tag.name}"
+
+      expect(response.status).to eq(200)
     end
   end
 
@@ -972,6 +969,58 @@ RSpec.describe ListController do
       get "/c/#{c.slug}/#{sub_c.slug}/#{sub_c.id}"
 
       expect(response.body).to have_tag "body", with: { class: "category-myparentslug-mychildslug" }
+    end
+  end
+
+  describe "welcome topic" do
+    fab!(:welcome_topic) { Fabricate(:topic) }
+    fab!(:post) { Fabricate(:post, topic: welcome_topic) }
+
+    before do
+      SiteSetting.welcome_topic_id = welcome_topic.id
+      SiteSetting.editing_grace_period = 1.minute.to_i
+      SiteSetting.bootstrap_mode_enabled = true
+    end
+
+    it "is hidden for non-admins" do
+
+      get "/latest.json"
+      expect(response.status).to eq(200)
+      parsed = response.parsed_body
+      expect(parsed["topic_list"]["topics"].length).to eq(1)
+      expect(parsed["topic_list"]["topics"].first["id"]).not_to eq(welcome_topic.id)
+    end
+
+    it "is shown to non-admins when there is an edit" do
+      post.revise(post.user, { raw: "#{post.raw}2" }, revised_at: post.updated_at + 2.minutes)
+      post.reload
+      expect(post.version).to eq(2)
+
+      get "/latest.json"
+      expect(response.status).to eq(200)
+      parsed = response.parsed_body
+      expect(parsed["topic_list"]["topics"].length).to eq(2)
+      expect(parsed["topic_list"]["topics"].first["id"]).to eq(welcome_topic.id)
+    end
+
+    it "is shown to admins" do
+      sign_in(admin)
+
+      get "/latest.json"
+      expect(response.status).to eq(200)
+      parsed = response.parsed_body
+      expect(parsed["topic_list"]["topics"].length).to eq(2)
+      expect(parsed["topic_list"]["topics"].first["id"]).to eq(welcome_topic.id)
+    end
+
+    it "is shown to users when bootstrap mode is disabled" do
+      SiteSetting.bootstrap_mode_enabled = false
+
+      get "/latest.json"
+      expect(response.status).to eq(200)
+      parsed = response.parsed_body
+      expect(parsed["topic_list"]["topics"].length).to eq(2)
+      expect(parsed["topic_list"]["topics"].first["id"]).to eq(welcome_topic.id)
     end
   end
 end
