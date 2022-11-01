@@ -78,6 +78,29 @@ module("Unit | Controller | topic", function (hooks) {
     assert.ok(destroyed, "destroy not popular topic");
   });
 
+  test("deleteTopic permanentDelete", function (assert) {
+    const model = Topic.create();
+    let destroyed = false;
+    model.destroy = async () => (destroyed = true);
+
+    const siteSettings = this.owner.lookup("service:site-settings");
+    siteSettings.min_topic_views_for_delete_confirm = 5;
+
+    const controller = this.owner.lookup("controller:topic");
+    controller.setProperties({
+      model,
+    });
+
+    model.set("views", 100);
+    controller.send("deleteTopic", { force_destroy: true });
+
+    assert.ok(
+      destroyed,
+      "do not show delete confirm when permanently deleting topic"
+      // permanent delete happens after first delete, no need to show modal again
+    );
+  });
+
   test("toggleMultiSelect", async function (assert) {
     const model = this.store.createRecord("topic");
     const controller = getOwner(this).lookup("controller:topic");
