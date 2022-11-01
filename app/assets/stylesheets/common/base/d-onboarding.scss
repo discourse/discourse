@@ -1,18 +1,18 @@
-.onboarding-popup-container {
+.user-tip-container {
   min-width: 300px;
   padding: 0.5em;
   text-align: left;
 
-  .onboarding-popup-title {
+  .user-tip-title {
     font-size: $font-up-2;
     font-weight: bold;
   }
 
-  .onboarding-popup-content {
+  .user-tip-content {
     margin-top: 0.25em;
   }
 
-  .onboarding-popup-buttons {
+  .user-tip-buttons {
     margin-top: 1em;
   }
 }

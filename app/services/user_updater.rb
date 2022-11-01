@@ -182,7 +182,7 @@ class UserUpdater
 
     if attributes.key?(:skip_new_user_tips)
       user.user_option.seen_popups = if user.user_option.skip_new_user_tips
-        OnboardingPopup.types.values
+        User.user_tips.values
       else
         nil
       end

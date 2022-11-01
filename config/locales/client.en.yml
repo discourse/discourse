@@ -1161,7 +1161,7 @@ en:
         not_first_time: "Not your first time?"
         skip_link: "Skip these tips"
         read_later: "I'll read it later."
-      reset_seen_popups: "Show onboarding tips again"
+      reset_seen_user_tips: "Show user tips again"
       theme_default_on_all_devices: "Make this the default theme on all my devices"
       color_scheme_default_on_all_devices: "Set default color scheme(s) on all my devices"
       color_scheme: "Color Scheme"
@@ -1827,7 +1827,7 @@ en:
       what_are_you_doing: "What are you doing?"
       remove_status: "Remove status"
 
-    popup:
+    user_tips:
       primary: "Got it!"
       secondary: "don't show me these tips"
 
