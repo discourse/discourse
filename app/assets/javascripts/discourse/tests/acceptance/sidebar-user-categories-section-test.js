@@ -575,7 +575,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       exists(
         `.sidebar-section-link-${category1.slug} .sidebar-section-link-suffix`
       ),
-      "shows suffix indicator for unread posts on categories link"
+      "shows suffix indicator for new posts on categories link"
     );
 
     await publishToMessageBus("/unread", {
