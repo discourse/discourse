@@ -10,6 +10,25 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { create } from "virtual-dom";
 import showModal from "discourse/lib/show-modal";
 
+export function createTableWrapperButton(label, icon, classes, event) {
+  const openPopupBtn = document.createElement("button");
+  const defaultClasses = [
+    "open-popup-link",
+    "btn-default",
+    "btn",
+    "btn-icon-text",
+  ];
+  openPopupBtn.classList.add(...defaultClasses);
+  openPopupBtn.classList.add(...classes);
+  const expandIcon = create(iconNode(icon));
+  const openPopupText = document.createTextNode(I18n.t(label));
+  openPopupBtn.append(expandIcon, openPopupText);
+  openPopupBtn.addEventListener("click", event, false);
+  return openPopupBtn;
+}
+
+export const apiExtraTableWrapperButtons = [];
+
 export default {
   name: "post-decorations",
   initialize(container) {
@@ -135,25 +154,6 @@ export default {
         { id: "discourse-video-codecs" }
       );
 
-      function _createButton() {
-        const openPopupBtn = document.createElement("button");
-        openPopupBtn.classList.add(
-          "open-popup-link",
-          "btn-default",
-          "btn",
-          "btn-icon-text",
-          "btn-expand-table"
-        );
-        const expandIcon = create(
-          iconNode("discourse-expand", { class: "expand-table-icon" })
-        );
-        const openPopupText = document.createTextNode(
-          I18n.t("fullscreen_table.expand_btn")
-        );
-        openPopupBtn.append(expandIcon, openPopupText);
-        return openPopupBtn;
-      }
-
       function isOverflown({ clientWidth, scrollWidth }) {
         return scrollWidth > clientWidth;
       }
@@ -167,23 +167,34 @@ export default {
 
       function generatePopups(tables) {
         tables.forEach((table) => {
-          if (!isOverflown(table.parentNode)) {
+          const tableButtons = generateButtons(table);
+          if (tableButtons.length === 0) {
             return;
           }
 
-          if (site.isMobileDevice) {
-            return;
-          }
-
-          const popupBtn = _createButton();
           table.parentNode.classList.add("fullscreen-table-wrapper");
-          // Create a button wrapper for case of multiple buttons (i.e. table builder extension)
           const buttonWrapper = document.createElement("div");
           buttonWrapper.classList.add("fullscreen-table-wrapper-buttons");
-          buttonWrapper.append(popupBtn);
-          popupBtn.addEventListener("click", generateModal, false);
+          buttonWrapper.append(...tableButtons);
           table.parentNode.insertBefore(buttonWrapper, table);
         });
+      }
+
+      function generateButtons(table) {
+        const buttons = [];
+
+        if (isOverflown(table.parentNode) && !site.isMobileDevice) {
+          const expandButton = createTableWrapperButton(
+            "fullscreen_table.expand_btn",
+            "discourse-expand",
+            ["btn-expand-table"],
+            generateModal
+          );
+          buttons.push(expandButton);
+        }
+
+        buttons.push(...apiExtraTableWrapperButtons);
+        return buttons;
       }
 
       api.decorateCookedElement(

@@ -105,12 +105,13 @@ import { registerNotificationTypeRenderer } from "discourse/lib/notification-typ
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerHashtagSearchParam } from "discourse/lib/hashtag-autocomplete";
+import { createTableWrapperButton } from "discourse/initializers/post-decorations";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-const PLUGIN_API_VERSION = "1.4.0";
+const PLUGIN_API_VERSION = "1.5.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -2013,6 +2014,29 @@ class PluginApi {
    */
   registerHashtagSearchParam(param, context, priority) {
     registerHashtagSearchParam(param, context, priority);
+  }
+
+  /**
+   * Add a new button to be overlaid ontop of a table appearing in a post.
+   * On wider tables the button will be appending along with the Expand table button.
+   *
+   * Example usage:
+   *
+   *  api.addTableWrapperButton(
+   *    themePrefix("discourse_table_builder.edit.btn_edit"),
+   *    "pencil-alt",
+   *    ["btn-edit-table"],
+   *    generateModalEvent
+   * );
+   *
+   * @param {string} label - An i18n key for the button label
+   * @param {icon} icon - An icon name from fontawesome
+   * @param {array} classes - An array of strings to be added as classes to the button
+   * @param {function} event - A function that returns an event to be dispatched when the button is clicked
+   *
+   */
+  addTableWrapperButton(label, icon, classes, event) {
+    createTableWrapperButton(label, icon, classes, event);
   }
 }
 
