@@ -338,38 +338,38 @@ RSpec.describe Invite do
     end
   end
 
-  describe '#redeem_from_email' do
+  describe '#redeem_for_existing_user' do
     fab!(:invite) { Fabricate(:invite, email: 'test@example.com') }
     fab!(:user) { Fabricate(:user, email: invite.email) }
 
     it 'redeems the invite from email' do
-      Invite.redeem_from_email(user.email)
+      Invite.redeem_for_existing_user(user)
       expect(invite.reload).to be_redeemed
     end
 
     it 'does not redeem the invite if email does not match' do
-      Invite.redeem_from_email('test2@example.com')
+      user.update!(email: 'test2@example.com')
+      Invite.redeem_for_existing_user(user)
       expect(invite.reload).not_to be_redeemed
     end
 
     it 'does not work with expired invites' do
       invite.update!(expires_at: 1.day.ago)
-      Invite.redeem_from_email(user.email)
+      Invite.redeem_for_existing_user(user)
       expect(invite).not_to be_redeemed
     end
 
     it 'does not work with deleted invites' do
       invite.trash!
-      Invite.redeem_from_email(user.email)
+      Invite.redeem_for_existing_user(user)
       expect(invite).not_to be_redeemed
     end
 
     it 'does not work with invalidated invites' do
       invite.update!(invalidated_at: 1.day.ago)
-      Invite.redeem_from_email(user.email)
+      Invite.redeem_for_existing_user(user)
       expect(invite).not_to be_redeemed
     end
-
   end
 
   describe 'scopes' do

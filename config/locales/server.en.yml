@@ -266,6 +266,7 @@ en:
     max_redemptions_allowed_one: "for email invites should be 1."
     redemption_count_less_than_max: "should be less than %{max_redemptions_allowed}."
     email_xor_domain: "Email and domain fields are not allowed at the same time"
+    existing_user_success: "Invite redeemed successfully"
 
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv format."

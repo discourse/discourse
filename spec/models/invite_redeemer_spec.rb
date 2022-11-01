@@ -242,6 +242,40 @@ RSpec.describe InviteRedeemer do
       expect(invite.invited_users.first).to be_present
     end
 
+    it "raises an error if the email does not match the invite email" do
+      redeemer = InviteRedeemer.new(invite: invite, email: "blah@test.com", username: username, name: name)
+      expect { redeemer.redeem }.to raise_error(ActiveRecord::RecordNotSaved, I18n.t("invite.not_matching_email"))
+    end
+
+    context "when a redeeming user is passed in" do
+      fab!(:redeeming_user) { Fabricate(:user, email: "foobar@example.com") }
+
+      it "raises an error if the email does not match the invite email" do
+        redeeming_user.update!(email: "foo@bar.com")
+        redeemer = InviteRedeemer.new(invite: invite, redeeming_user: redeeming_user)
+        expect { redeemer.redeem }.to raise_error(ActiveRecord::RecordNotSaved, I18n.t("invite.not_matching_email"))
+      end
+    end
+
+    context 'with domain' do
+      fab!(:invite) { Fabricate(:invite, email: nil, domain: "test.com") }
+
+      it "raises an error if the email domain does not match the invite domain" do
+        redeemer = InviteRedeemer.new(invite: invite, email: "blah@somesite.com", username: username, name: name)
+        expect { redeemer.redeem }.to raise_error(ActiveRecord::RecordNotSaved, I18n.t("invite.domain_not_allowed"))
+      end
+
+      context "when a redeeming user is passed in" do
+        fab!(:redeeming_user) { Fabricate(:user, email: "foo@test.com") }
+
+        it "raises an error if the user's email domain does not match the invite domain" do
+          redeeming_user.update!(email: "foo@bar.com")
+          redeemer = InviteRedeemer.new(invite: invite, redeeming_user: redeeming_user)
+          expect { redeemer.redeem }.to raise_error(ActiveRecord::RecordNotSaved, I18n.t("invite.domain_not_allowed"))
+        end
+      end
+    end
+
     context 'with invite_link' do
       fab!(:invite_link) { Fabricate(:invite, email: nil, max_redemptions_allowed: 5, expires_at: 1.month.from_now, emailed_status: Invite.emailed_status_types[:not_required]) }
       let(:invite_redeemer) { InviteRedeemer.new(invite: invite_link, email: 'foo@example.com') }
@@ -257,7 +291,7 @@ RSpec.describe InviteRedeemer do
       end
 
       it "should not redeem the invite if InvitedUser record already exists for email" do
-        user = invite_redeemer.redeem
+        invite_redeemer.redeem
         invite_link.reload
 
         another_invite_redeemer = InviteRedeemer.new(invite: invite_link, email: 'foo@example.com')
@@ -266,14 +300,28 @@ RSpec.describe InviteRedeemer do
       end
 
       it "should redeem the invite if InvitedUser record does not exists for email" do
-        user = invite_redeemer.redeem
+        invite_redeemer.redeem
         invite_link.reload
 
         another_invite_redeemer = InviteRedeemer.new(invite: invite_link, email: 'bar@example.com')
         another_user = another_invite_redeemer.redeem
         expect(another_user.is_a?(User)).to eq(true)
       end
-    end
 
+      it "raises an error if the email is already being used by an existing user" do
+        Fabricate(:user, email: 'foo@example.com')
+        expect { invite_redeemer.redeem }.to raise_error(ActiveRecord::RecordInvalid, /Primary email has already been taken/)
+      end
+
+      context "when a redeeming user is passed in" do
+        fab!(:redeeming_user) { Fabricate(:user, email: 'foo@example.com') }
+
+        it "does not create a new user" do
+          expect do
+            InviteRedeemer.new(invite: invite_link, redeeming_user: redeeming_user).redeem
+          end.not_to change { User.count }
+        end
+      end
+    end
   end
 end
