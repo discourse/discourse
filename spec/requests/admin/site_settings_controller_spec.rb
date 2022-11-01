@@ -1,21 +1,17 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::SiteSettingsController do
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:user) { Fabricate(:user) }
 
-  it "is a subclass of AdminController" do
-    expect(Admin::SiteSettingsController < Admin::AdminController).to eq(true)
-  end
+  describe "#index" do
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
 
-  context 'while logged in as an admin' do
-    fab!(:admin) { Fabricate(:admin) }
-
-    before do
-      sign_in(admin)
-    end
-
-    describe '#index' do
-      it 'returns valid info' do
+      it "returns valid info" do
         get "/admin/site_settings.json"
+
         expect(response.status).to eq(200)
         json = response.parsed_body
         expect(json["site_settings"].length).to be > 100
@@ -28,12 +24,205 @@ RSpec.describe Admin::SiteSettingsController do
       end
     end
 
-    describe '#update' do
-      before do
-        SiteSetting.setting(:test_setting, "default")
-        SiteSetting.setting(:test_upload, "", type: :upload)
-        SiteSetting.refresh!
+    shared_examples "site settings inaccessible" do
+      it "denies access with a 404 response" do
+        get "/admin/site_settings.json"
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
       end
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      include_examples "site settings inaccessible"
+    end
+
+    context "when logged in as a non-staff user" do
+      before  { sign_in(user) }
+
+      include_examples "site settings inaccessible"
+    end
+  end
+
+  describe "#user_count" do
+    fab!(:staged_user) { Fabricate(:staged) }
+    let(:tracking) { NotificationLevels.all[:tracking] }
+
+    before do
+      SiteSetting.setting(:test_setting, "default")
+      SiteSetting.setting(:test_upload, "", type: :upload)
+      SiteSetting.refresh!
+    end
+
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+
+      it 'should return correct user count for default categories change' do
+        category_id = Fabricate(:category).id
+
+        put "/admin/site_settings/default_categories_watching/user_count.json", params: {
+          default_categories_watching: category_id
+        }
+
+        expect(response.parsed_body["user_count"]).to eq(User.real.where(staged: false).count)
+
+        CategoryUser.create!(category_id: category_id, notification_level: tracking, user: user)
+
+        put "/admin/site_settings/default_categories_watching/user_count.json", params: {
+          default_categories_watching: category_id
+        }
+
+        expect(response.parsed_body["user_count"]).to eq(User.real.where(staged: false).count - 1)
+
+        SiteSetting.setting(:default_categories_watching, "")
+      end
+
+      it 'should return correct user count for default tags change' do
+        tag = Fabricate(:tag)
+
+        put "/admin/site_settings/default_tags_watching/user_count.json", params: {
+          default_tags_watching: tag.name
+        }
+
+        expect(response.parsed_body["user_count"]).to eq(User.real.where(staged: false).count)
+
+        TagUser.create!(tag_id: tag.id, notification_level: tracking, user: user)
+
+        put "/admin/site_settings/default_tags_watching/user_count.json", params: {
+          default_tags_watching: tag.name
+        }
+
+        expect(response.parsed_body["user_count"]).to eq(User.real.where(staged: false).count - 1)
+
+        SiteSetting.setting(:default_tags_watching, "")
+      end
+
+      context "for sidebar defaults" do
+        it 'returns the right count for the default_sidebar_categories site setting' do
+          category = Fabricate(:category)
+
+          put "/admin/site_settings/default_sidebar_categories/user_count.json", params: {
+            default_sidebar_categories: "#{category.id}"
+          }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["user_count"]).to eq(User.real.not_staged.count)
+        end
+
+        it 'returns the right count for the default_sidebar_tags site setting' do
+          tag = Fabricate(:tag)
+
+          put "/admin/site_settings/default_sidebar_tags/user_count.json", params: {
+            default_sidebar_tags: "#{tag.name}"
+          }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["user_count"]).to eq(User.real.not_staged.count)
+        end
+      end
+
+      context "with user options" do
+        def expect_user_count(site_setting_name:, user_setting_name:, current_site_setting_value:, new_site_setting_value:,
+                              current_user_setting_value: nil, new_user_setting_value: nil)
+
+          current_user_setting_value ||= current_site_setting_value
+          new_user_setting_value ||= new_site_setting_value
+
+          SiteSetting.public_send("#{site_setting_name}=", current_site_setting_value)
+          UserOption.human_users.update_all(user_setting_name => current_user_setting_value)
+          user_count = User.human_users.count
+
+          # Correctly counts users when all of them have default value
+          put "/admin/site_settings/#{site_setting_name}/user_count.json", params: {
+            site_setting_name => new_site_setting_value
+          }
+          expect(response.parsed_body["user_count"]).to eq(user_count)
+
+          # Correctly counts users when one of them already has new value
+          user.user_option.update!(user_setting_name => new_user_setting_value)
+          put "/admin/site_settings/#{site_setting_name}/user_count.json", params: {
+            site_setting_name => new_site_setting_value
+          }
+          expect(response.parsed_body["user_count"]).to eq(user_count - 1)
+
+          # Correctly counts users when site setting value has been changed
+          SiteSetting.public_send("#{site_setting_name}=", new_site_setting_value)
+          put "/admin/site_settings/#{site_setting_name}/user_count.json", params: {
+            site_setting_name => current_site_setting_value
+          }
+          expect(response.parsed_body["user_count"]).to eq(1)
+        end
+
+        it "should return correct user count for boolean setting" do
+          expect_user_count(
+            site_setting_name: "default_other_external_links_in_new_tab",
+            user_setting_name: "external_links_in_new_tab",
+            current_site_setting_value: false,
+            new_site_setting_value: true
+          )
+        end
+
+        it "should return correct user count for 'text_size_key'" do
+          expect_user_count(
+            site_setting_name: "default_text_size",
+            user_setting_name: "text_size_key",
+            current_site_setting_value: "normal",
+            new_site_setting_value: "larger",
+            current_user_setting_value: UserOption.text_sizes[:normal],
+            new_user_setting_value: UserOption.text_sizes[:larger]
+          )
+        end
+
+        it "should return correct user count for 'title_count_mode_key'" do
+          expect_user_count(
+            site_setting_name: "default_title_count_mode",
+            user_setting_name: "title_count_mode_key",
+            current_site_setting_value: "notifications",
+            new_site_setting_value: "contextual",
+            current_user_setting_value: UserOption.title_count_modes[:notifications],
+            new_user_setting_value: UserOption.title_count_modes[:contextual]
+          )
+        end
+      end
+    end
+
+    shared_examples "user counts inaccessible" do
+      it "denies access with a 404 response" do
+        category_id = Fabricate(:category).id
+
+        put "/admin/site_settings/default_categories_watching/user_count.json", params: {
+          default_categories_watching: category_id
+        }
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      include_examples "user counts inaccessible"
+    end
+
+    context "when logged in as a non-staff user" do
+      before  { sign_in(user) }
+
+      include_examples "user counts inaccessible"
+    end
+  end
+
+  describe '#update' do
+    before do
+      SiteSetting.setting(:test_setting, "default")
+      SiteSetting.setting(:test_upload, "", type: :upload)
+      SiteSetting.refresh!
+    end
+
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
 
       it 'sets the value when the param is present' do
         put "/admin/site_settings/test_setting.json", params: {
@@ -70,7 +259,7 @@ RSpec.describe Admin::SiteSettingsController do
         expect(SiteSetting.test_setting).to eq('')
       end
 
-      describe 'default user options' do
+      context "with default user options" do
         let!(:user1) { Fabricate(:user) }
         let!(:user2) { Fabricate(:user) }
 
@@ -154,7 +343,7 @@ RSpec.describe Admin::SiteSettingsController do
         end
       end
 
-      describe 'default categories' do
+      context "with default categories" do
         fab!(:user1) { Fabricate(:user) }
         fab!(:user2) { Fabricate(:user) }
         fab!(:staged_user) { Fabricate(:staged) }
@@ -219,7 +408,7 @@ RSpec.describe Admin::SiteSettingsController do
         end
       end
 
-      describe 'default tags' do
+      context "with default tags" do
         fab!(:user1) { Fabricate(:user) }
         fab!(:user2) { Fabricate(:user) }
         fab!(:staged_user) { Fabricate(:staged) }
@@ -258,141 +447,7 @@ RSpec.describe Admin::SiteSettingsController do
         end
       end
 
-      describe '#user_count' do
-        fab!(:user) { Fabricate(:user) }
-        fab!(:staged_user) { Fabricate(:staged) }
-        let(:tracking) { NotificationLevels.all[:tracking] }
-
-        it 'should return correct user count for default categories change' do
-          category_id = Fabricate(:category).id
-
-          put "/admin/site_settings/default_categories_watching/user_count.json", params: {
-            default_categories_watching: category_id
-          }
-
-          expect(response.parsed_body["user_count"]).to eq(User.real.where(staged: false).count)
-
-          CategoryUser.create!(category_id: category_id, notification_level: tracking, user: user)
-
-          put "/admin/site_settings/default_categories_watching/user_count.json", params: {
-            default_categories_watching: category_id
-          }
-
-          expect(response.parsed_body["user_count"]).to eq(User.real.where(staged: false).count - 1)
-
-          SiteSetting.setting(:default_categories_watching, "")
-        end
-
-        it 'should return correct user count for default tags change' do
-          tag = Fabricate(:tag)
-
-          put "/admin/site_settings/default_tags_watching/user_count.json", params: {
-            default_tags_watching: tag.name
-          }
-
-          expect(response.parsed_body["user_count"]).to eq(User.real.where(staged: false).count)
-
-          TagUser.create!(tag_id: tag.id, notification_level: tracking, user: user)
-
-          put "/admin/site_settings/default_tags_watching/user_count.json", params: {
-            default_tags_watching: tag.name
-          }
-
-          expect(response.parsed_body["user_count"]).to eq(User.real.where(staged: false).count - 1)
-
-          SiteSetting.setting(:default_tags_watching, "")
-        end
-
-        context "for sidebar defaults" do
-          it 'returns the right count for the default_sidebar_categories site setting' do
-            category = Fabricate(:category)
-
-            put "/admin/site_settings/default_sidebar_categories/user_count.json", params: {
-              default_sidebar_categories: "#{category.id}"
-            }
-
-            expect(response.status).to eq(200)
-            expect(response.parsed_body["user_count"]).to eq(User.real.not_staged.count)
-          end
-
-          it 'returns the right count for the default_sidebar_tags site setting' do
-            tag = Fabricate(:tag)
-
-            put "/admin/site_settings/default_sidebar_tags/user_count.json", params: {
-              default_sidebar_tags: "#{tag.name}"
-            }
-
-            expect(response.status).to eq(200)
-            expect(response.parsed_body["user_count"]).to eq(User.real.not_staged.count)
-          end
-        end
-
-        context "with user options" do
-          def expect_user_count(site_setting_name:, user_setting_name:, current_site_setting_value:, new_site_setting_value:,
-                                current_user_setting_value: nil, new_user_setting_value: nil)
-
-            current_user_setting_value ||= current_site_setting_value
-            new_user_setting_value ||= new_site_setting_value
-
-            SiteSetting.public_send("#{site_setting_name}=", current_site_setting_value)
-            UserOption.human_users.update_all(user_setting_name => current_user_setting_value)
-            user_count = User.human_users.count
-
-            # Correctly counts users when all of them have default value
-            put "/admin/site_settings/#{site_setting_name}/user_count.json", params: {
-              site_setting_name => new_site_setting_value
-            }
-            expect(response.parsed_body["user_count"]).to eq(user_count)
-
-            # Correctly counts users when one of them already has new value
-            user.user_option.update!(user_setting_name => new_user_setting_value)
-            put "/admin/site_settings/#{site_setting_name}/user_count.json", params: {
-              site_setting_name => new_site_setting_value
-            }
-            expect(response.parsed_body["user_count"]).to eq(user_count - 1)
-
-            # Correctly counts users when site setting value has been changed
-            SiteSetting.public_send("#{site_setting_name}=", new_site_setting_value)
-            put "/admin/site_settings/#{site_setting_name}/user_count.json", params: {
-              site_setting_name => current_site_setting_value
-            }
-            expect(response.parsed_body["user_count"]).to eq(1)
-          end
-
-          it "should return correct user count for boolean setting" do
-            expect_user_count(
-              site_setting_name: "default_other_external_links_in_new_tab",
-              user_setting_name: "external_links_in_new_tab",
-              current_site_setting_value: false,
-              new_site_setting_value: true
-            )
-          end
-
-          it "should return correct user count for 'text_size_key'" do
-            expect_user_count(
-              site_setting_name: "default_text_size",
-              user_setting_name: "text_size_key",
-              current_site_setting_value: "normal",
-              new_site_setting_value: "larger",
-              current_user_setting_value: UserOption.text_sizes[:normal],
-              new_user_setting_value: UserOption.text_sizes[:larger]
-            )
-          end
-
-          it "should return correct user count for 'title_count_mode_key'" do
-            expect_user_count(
-              site_setting_name: "default_title_count_mode",
-              user_setting_name: "title_count_mode_key",
-              current_site_setting_value: "notifications",
-              new_site_setting_value: "contextual",
-              current_user_setting_value: UserOption.title_count_modes[:notifications],
-              new_user_setting_value: UserOption.title_count_modes[:contextual]
-            )
-          end
-        end
-      end
-
-      describe 'upload site settings' do
+      context "with upload site settings" do
         it 'can remove the site setting' do
           SiteSetting.test_upload = Fabricate(:upload)
 
@@ -466,6 +521,29 @@ RSpec.describe Admin::SiteSettingsController do
         put "/admin/site_settings/provider.json", params: { provider: 'gotcha' }
         expect(response.status).to eq(422)
       end
+    end
+
+    shared_examples "site setting update not allowed" do
+      it "prevents updates with a 404 response" do
+        put "/admin/site_settings/test_setting.json", params: {
+          test_setting: 'hello'
+        }
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      include_examples "site setting update not allowed"
+    end
+
+    context "when logged in as a non-staff user" do
+      before  { sign_in(user) }
+
+      include_examples "site setting update not allowed"
     end
   end
 end
