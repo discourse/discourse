@@ -523,7 +523,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
   });
 
-  test("show suffix indicator for new content on categories link", async function (assert) {
+  test("show suffix indicator for unread and new content on categories link", async function (assert) {
     const { category1 } = setupUserSidebarCategories();
 
     updateCurrentUser({
