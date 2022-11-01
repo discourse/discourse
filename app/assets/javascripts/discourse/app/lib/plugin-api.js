@@ -105,10 +105,7 @@ import { registerNotificationTypeRenderer } from "discourse/lib/notification-typ
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerHashtagSearchParam } from "discourse/lib/hashtag-autocomplete";
-import {
-  apiExtraTableWrapperButtons,
-  createTableWrapperButton,
-} from "discourse/initializers/post-decorations";
+import { createTableWrapperButton } from "discourse/initializers/post-decorations";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -2039,9 +2036,7 @@ class PluginApi {
    *
    */
   addTableWrapperButton(label, icon, classes, event) {
-    apiExtraTableWrapperButtons.push(
-      createTableWrapperButton(label, icon, classes, event)
-    );
+    createTableWrapperButton(label, icon, classes, event);
   }
 }
 
