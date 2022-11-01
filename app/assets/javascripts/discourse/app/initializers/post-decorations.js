@@ -35,7 +35,7 @@ export default {
     withPluginApi("0.1", (api) => {
       const siteSettings = container.lookup("service:site-settings");
       const session = container.lookup("service:session");
-      const site = container.lookup("service:site");
+      // const site = container.lookup("service:site");
       api.decorateCookedElement(
         (elem) => {
           return highlightSyntax(elem, siteSettings, session);
@@ -154,6 +154,7 @@ export default {
         { id: "discourse-video-codecs" }
       );
 
+      // eslint-disable-next-line no-unused-vars
       function isOverflown({ clientWidth, scrollWidth }) {
         return scrollWidth > clientWidth;
       }
@@ -177,23 +178,26 @@ export default {
           table.parentNode.classList.add("fullscreen-table-wrapper");
           const buttonWrapper = document.createElement("div");
           buttonWrapper.classList.add("fullscreen-table-wrapper-buttons");
+          // eslint-disable-next-line no-console
+          console.log(index, buttonWrapper, table, tableButtons);
           buttonWrapper.append(...tableButtons);
           table.parentNode.insertBefore(buttonWrapper, table);
         });
       }
 
+      // eslint-disable-next-line no-unused-vars
       function generateButtons(table) {
         const buttons = [];
 
-        if (isOverflown(table.parentNode) && !site.isMobileDevice) {
-          const expandButton = createTableWrapperButton(
-            "fullscreen_table.expand_btn",
-            "discourse-expand",
-            ["btn-expand-table"],
-            generateModal
-          );
-          buttons.push(expandButton);
-        }
+        // if (isOverflown(table.parentNode) && !site.isMobileDevice) { // temporarily disabled
+        const expandButton = createTableWrapperButton(
+          "fullscreen_table.expand_btn",
+          "discourse-expand",
+          ["btn-expand-table"],
+          generateModal
+        );
+        buttons.push(expandButton);
+        // }
 
         buttons.push(...apiExtraTableWrapperButtons);
         return buttons;
@@ -210,6 +214,16 @@ export default {
           onlyStream: true,
           id: "fullscreen-table",
         }
+      );
+
+      // * TEMP for testing
+      api.addTableWrapperButton(
+        "drafts.label",
+        "pencil-alt",
+        ["btn-test-table"],
+        () =>
+          // eslint-disable-next-line no-console
+          console.log("clicked edit table")
       );
     });
   },
