@@ -62,7 +62,7 @@ RSpec.describe ::Jobs::Base do
   end
 
   it 'delegates the process call to execute' do
-    ::Jobs::Base.any_instance.expects(:execute).with('hello' => 'world')
+    ::Jobs::Base.any_instance.expects(:execute).with({ 'hello' => 'world' })
     ::Jobs::Base.new.perform('hello' => 'world', 'sync_exec' => true)
   end
 

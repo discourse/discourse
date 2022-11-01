@@ -138,7 +138,7 @@ RSpec.describe ReviewableUser, type: :model do
 
       it "optionally sends email with reject reason" do
         SiteSetting.must_approve_users = true
-        Jobs::CriticalUserEmail.any_instance.expects(:execute).with(type: :signup_after_reject, user_id: reviewable.target_id, reject_reason: "reject reason").once
+        Jobs::CriticalUserEmail.any_instance.expects(:execute).with({ type: :signup_after_reject, user_id: reviewable.target_id, reject_reason: "reject reason" }).once
         reviewable.perform(moderator, :delete_user_block, reject_reason: "reject reason", send_email: true)
       end
 
