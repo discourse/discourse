@@ -506,7 +506,7 @@ def recover_uploads_from_index(path)
 
   db = RailsMultisite::ConnectionManagement.current_db
   cdn_path = SiteSetting.cdn_path("/uploads/#{db}").sub(/https?:/, "")
-  Post.where("cooked LIKE '%#{cdn_path}%'").each do |post|
+  Post.where("cooked LIKE ?", "%#{cdn_path}%").each do |post|
     regex = Regexp.new("((https?:)?#{Regexp.escape(cdn_path)}[^,;\\]\\>\\t\\n\\s)\"\']+)")
     uploads = []
     post.raw.scan(regex).each do |match|
@@ -663,9 +663,10 @@ def correct_inline_uploads
   verbose = ENV["VERBOSE"]
 
   scope = Post.joins(:upload_references).distinct("posts.id")
-    .where(<<~SQL)
-    raw LIKE '%/uploads/#{RailsMultisite::ConnectionManagement.current_db}/original/%'
-    SQL
+    .where(
+      "raw LIKE ?",
+      "%/uploads/#{RailsMultisite::ConnectionManagement.current_db}/original/%",
+    )
 
   affected_posts_count = scope.count
   fixed_count = 0
