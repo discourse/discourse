@@ -82,6 +82,22 @@ class Invite < ActiveRecord::Base
     end
   end
 
+  def email_matches?(email)
+    email.downcase == self.email.downcase
+  end
+
+  def domain_matches?(email)
+    _, domain = email.split('@')
+    self.domain == domain
+  end
+
+  def can_be_redeemed_by?(user)
+    return false if !self.redeemable?
+    return true if self.email.blank? && self.domain.blank?
+    return true if self.email.present? && email_matches?(user.email)
+    self.domain.present? && domain_matches?(user.email)
+  end
+
   def expired?
     expires_at < Time.zone.now
   end
@@ -166,7 +182,7 @@ class Invite < ActiveRecord::Base
     invite.reload
   end
 
-  def redeem(email: nil, username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil, session: nil, email_token: nil)
+  def redeem(email: nil, username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil, session: nil, email_token: nil, redeeming_user: nil)
     return if !redeemable?
 
     email = self.email if email.blank? && !is_invite_link?
@@ -180,10 +196,20 @@ class Invite < ActiveRecord::Base
       user_custom_fields: user_custom_fields,
       ip_address: ip_address,
       session: session,
-      email_token: email_token
+      email_token: email_token,
+      redeeming_user: redeeming_user
     ).redeem
   end
 
+  def self.redeem_for_existing_user(user)
+    invite = Invite.find_by(email: Email.downcase(user.email))
+    if invite.present? && invite.redeemable?
+      InviteRedeemer.new(invite: invite, redeeming_user: user).redeem
+    end
+    invite
+  end
+
+  # Deprecated: Replaced by redeem_for_existing_user in tests-passed
   def self.redeem_from_email(email)
     invite = Invite.find_by(email: Email.downcase(email))
     InviteRedeemer.new(invite: invite, email: invite.email).redeem if invite

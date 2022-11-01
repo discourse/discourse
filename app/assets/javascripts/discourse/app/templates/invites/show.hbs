@@ -4,7 +4,7 @@
       <h1 class="login-title">{{welcomeTitle}}</h1>
       <img src={{wavingHandURL}} alt="" class="waving-hand">
       {{#unless successMessage}}
-        <p class="login-subheader">{{i18n "create_account.subheader_title"}}</p>
+        <p class="login-subheader">{{loginSubheader}}</p>
       {{/unless}}
     </div>
 
@@ -131,6 +131,13 @@
                   <div class="alert alert-error">{{errorMessage}}</div>
                 {{/if}}
               </form>
+            {{/if}}
+            {{#if this.existingUserRedeeming}}
+              {{#if this.existingUserCanRedeem}}
+                <DButton @class="btn-primary" @action={{action "submit"}} @type="submit" @disabled={{this.submitDisabled}} @label="invites.accept_invite" />
+              {{else}}
+                <div class="alert alert-error">{{i18n "invites.existing_user_cannot_redeem"}}</div>
+              {{/if}}
             {{/if}}
           {{/if}}
         </div>
