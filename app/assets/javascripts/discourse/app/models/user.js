@@ -1107,7 +1107,10 @@ const User = RestModel.extend({
     }
 
     const seenUserTips = this.seen_popups || [];
-    if (seenUserTips.includes(userTips[options.id])) {
+    if (
+      seenUserTips.includes(-1) ||
+      seenUserTips.includes(userTips[options.id])
+    ) {
       return;
     }
 
@@ -1136,7 +1139,7 @@ const User = RestModel.extend({
       }
     } else {
       Object.keys(userTips).forEach(hideUserTip);
-      seenUserTips = Object.values(userTips);
+      seenUserTips = [-1];
     }
 
     // Show next user tip in queue.
