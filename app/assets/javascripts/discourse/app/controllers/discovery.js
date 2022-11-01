@@ -24,13 +24,19 @@ export default Controller.extend({
 
   @discourseComputed(
     "router.currentRouteName",
+    "router.currentRoute.queryParams.f",
     "site.show_welcome_topic_banner"
   )
-  showEditWelcomeTopicBanner(currentRouteName, showWelcomeTopicBanner) {
+  showEditWelcomeTopicBanner(
+    currentRouteName,
+    hasParams,
+    showWelcomeTopicBanner
+  ) {
     return (
       this.currentUser?.staff &&
       currentRouteName === "discovery.latest" &&
-      showWelcomeTopicBanner
+      showWelcomeTopicBanner &&
+      !hasParams
     );
   },
 
