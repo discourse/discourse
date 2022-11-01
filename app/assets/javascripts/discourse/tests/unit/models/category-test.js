@@ -401,4 +401,30 @@ module("Unit | Model | category", function () {
       "ignores case of category slug and search term"
     );
   });
+
+  test("sortCategories returns categories with child categories sorted after parent categories", function (assert) {
+    const categories = [
+      { id: 1003, name: "Test Sub Sub", parent_category_id: 1002 },
+      { id: 1001, name: "Test" },
+      { id: 1004, name: "Test Sub Sub Sub", parent_category_id: 1003 },
+      { id: 1002, name: "Test Sub", parent_category_id: 1001 },
+      { id: 1005, name: "Test Sub Sub Sub2", parent_category_id: 1003 },
+      { id: 1006, name: "Test2" },
+      { id: 1000, name: "Test2 Sub", parent_category_id: 1006 },
+      { id: 997, name: "Test2 Sub Sub2", parent_category_id: 1000 },
+      { id: 999, name: "Test2 Sub Sub", parent_category_id: 1000 },
+    ];
+
+    assert.deepEqual(Category.sortCategories(categories).mapBy("name"), [
+      "Test",
+      "Test Sub",
+      "Test Sub Sub",
+      "Test Sub Sub Sub",
+      "Test Sub Sub Sub2",
+      "Test2",
+      "Test2 Sub",
+      "Test2 Sub Sub2",
+      "Test2 Sub Sub",
+    ]);
+  });
 });
