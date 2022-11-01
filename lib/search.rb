@@ -446,10 +446,10 @@ class Search
   def post_action_type_filter(posts, post_action_type)
     posts.where("posts.id IN (
       SELECT pa.post_id FROM post_actions pa
-      WHERE pa.user_id = #{@guardian.user.id} AND
-            pa.post_action_type_id = #{post_action_type} AND
+      WHERE pa.user_id = ? AND
+            pa.post_action_type_id = ? AND
             deleted_at IS NULL
-    )")
+    )", @guardian.user.id, post_action_type)
   end
 
   advanced_filter(/^in:(likes)$/i) do |posts, match|
@@ -464,17 +464,17 @@ class Search
   # search based on a RegisteredBookmarkable's #search_query method.
   advanced_filter(/^in:(bookmarks)$/i) do |posts, match|
     if @guardian.user
-      posts.where(<<~SQL)
+      posts.where(<<~SQL, @guardian.user.id)
         posts.id IN (
           SELECT bookmarkable_id FROM bookmarks
-          WHERE bookmarks.user_id = #{@guardian.user.id} AND bookmarks.bookmarkable_type = 'Post'
+          WHERE bookmarks.user_id = ? AND bookmarks.bookmarkable_type = 'Post'
         )
       SQL
     end
   end
 
   advanced_filter(/^in:posted$/i) do |posts|
-    posts.where("posts.user_id = #{@guardian.user.id}") if @guardian.user
+    posts.where("posts.user_id = ?", @guardian.user.id) if @guardian.user
   end
 
   advanced_filter(/^in:(created|mine)$/i) do |posts|
@@ -640,7 +640,7 @@ class Search
   advanced_filter(/^user:(.+)$/i) do |posts, match|
     user_id = User.where(staged: false).where('username_lower = ? OR id = ?', match.downcase, match.to_i).pluck_first(:id)
     if user_id
-      posts.where("posts.user_id = #{user_id}")
+      posts.where("posts.user_id = ?", user_id)
     else
       posts.where("1 = 0")
     end
@@ -656,7 +656,7 @@ class Search
     end
 
     if user_id
-      posts.where("posts.user_id = #{user_id}")
+      posts.where("posts.user_id = ?", user_id)
     else
       posts.where("1 = 0")
     end
@@ -1043,13 +1043,13 @@ class Search
 
           posts.where("topics.category_id in (?)", category_ids)
         elsif is_topic_search
-          posts.where("topics.id = #{@search_context.id}")
+          posts.where("topics.id = ?", @search_context.id)
             .order("posts.post_number #{@order == :latest ? "DESC" : ""}")
         elsif @search_context.is_a?(Tag)
           posts = posts
             .joins("LEFT JOIN topic_tags ON topic_tags.topic_id = topics.id")
             .joins("LEFT JOIN tags ON tags.id = topic_tags.tag_id")
-          posts.where("tags.id = #{@search_context.id}")
+          posts.where("tags.id = ?", @search_context.id)
         end
       else
         posts = categories_ignored(posts) unless @category_filter_matched
@@ -1243,8 +1243,8 @@ class Search
       end
 
     if min_id > 0
-      low_set = query.dup.where("post_search_data.post_id < #{min_id}")
-      high_set = query.where("post_search_data.post_id >= #{min_id}")
+      low_set = query.dup.where("post_search_data.post_id < ?", min_id)
+      high_set = query.where("post_search_data.post_id >= ?", min_id)
 
       return { default: wrap_rows(high_set), remaining: wrap_rows(low_set) }
     end

@@ -31,7 +31,7 @@ def gather_uploads
   puts "", "Gathering uploads for '#{current_db}'...", ""
 
   Upload.where("url ~ '^\/uploads\/'")
-    .where("url !~ '^\/uploads\/#{current_db}'")
+    .where("url !~ ?", "^\/uploads\/#{current_db}")
     .find_each do |upload|
     begin
       old_db = upload.url[/^\/uploads\/([^\/]+)\//, 1]
