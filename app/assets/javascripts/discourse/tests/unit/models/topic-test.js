@@ -5,17 +5,22 @@ import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import createStore from "discourse/tests/helpers/create-store";
+import { getOwner } from "discourse-common/lib/get-owner";
 
-discourseModule("Unit | Model | topic", function () {
+discourseModule("Unit | Model | topic", function (hooks) {
+  hooks.beforeEach(function () {
+    this.store = getOwner(this).lookup("service:store");
+  });
+
   test("defaults", function (assert) {
-    const topic = Topic.create({ id: 1234 });
+    const topic = this.store.createRecord("topic", { id: 1234 });
 
     assert.blank(topic.get("deleted_at"), "deleted_at defaults to blank");
     assert.blank(topic.get("deleted_by"), "deleted_by defaults to blank");
   });
 
   test("visited", function (assert) {
-    const topic = Topic.create({
+    const topic = this.store.createRecord("topic", {
       highest_post_number: 2,
       last_read_post_number: 1,
     });
@@ -35,14 +40,47 @@ discourseModule("Unit | Model | topic", function () {
     );
   });
 
-  test("lastUnreadUrl", function (assert) {
+  test("lastUnreadUrl when user read the whole topic", function (assert) {
+    const topic = this.store.createRecord("topic", {
+      id: 101,
+      highest_post_number: 10,
+      last_read_post_number: 10,
+      slug: "hello",
+    });
+
+    assert.strictEqual(topic.lastUnreadUrl, "/t/hello/101/10");
+  });
+
+  test("lastUnreadUrl when there are unread posts", function (assert) {
+    const topic = this.store.createRecord("topic", {
+      id: 101,
+      highest_post_number: 10,
+      last_read_post_number: 5,
+      slug: "hello",
+    });
+
+    assert.strictEqual(topic.lastUnreadUrl, "/t/hello/101/6");
+  });
+
+  test("lastUnreadUrl when last_read_post_number is incorrect", function (assert) {
+    const topic = this.store.createRecord("topic", {
+      id: 101,
+      highest_post_number: 10,
+      last_read_post_number: 15,
+      slug: "hello",
+    });
+
+    assert.strictEqual(topic.lastUnreadUrl, "/t/hello/101/10");
+  });
+
+  test("lastUnreadUrl with navigate_to_first_post_after_read setting", function (assert) {
     const store = createStore();
     const category = store.createRecord("category", {
       id: 22,
       navigate_to_first_post_after_read: true,
     });
 
-    const topic = Topic.create({
+    const topic = this.store.createRecord("topic", {
       id: 101,
       highest_post_number: 10,
       last_read_post_number: 10,
@@ -50,11 +88,29 @@ discourseModule("Unit | Model | topic", function () {
       category_id: category.id,
     });
 
-    assert.strictEqual(topic.get("lastUnreadUrl"), "/t/hello/101/1");
+    assert.strictEqual(topic.lastUnreadUrl, "/t/hello/101/1");
+  });
+
+  test("lastUnreadUrl with navigate_to_first_post_after_read setting and unread posts", function (assert) {
+    const store = createStore();
+    const category = store.createRecord("category", {
+      id: 22,
+      navigate_to_first_post_after_read: true,
+    });
+
+    const topic = this.store.createRecord("topic", {
+      id: 101,
+      highest_post_number: 10,
+      last_read_post_number: 5,
+      slug: "hello",
+      category_id: category.id,
+    });
+
+    assert.strictEqual(topic.lastUnreadUrl, "/t/hello/101/6");
   });
 
   test("has details", function (assert) {
-    const topic = Topic.create({ id: 1234 });
+    const topic = this.store.createRecord("topic", { id: 1234 });
     const topicDetails = topic.get("details");
 
     assert.present(topicDetails, "a topic has topicDetails after we create it");
@@ -66,7 +122,7 @@ discourseModule("Unit | Model | topic", function () {
   });
 
   test("has a postStream", function (assert) {
-    const topic = Topic.create({ id: 1234 });
+    const topic = this.store.createRecord("topic", { id: 1234 });
     const postStream = topic.get("postStream");
 
     assert.present(postStream, "a topic has a postStream after we create it");
@@ -78,7 +134,9 @@ discourseModule("Unit | Model | topic", function () {
   });
 
   test("has suggestedTopics", function (assert) {
-    const topic = Topic.create({ suggested_topics: [{ id: 1 }, { id: 2 }] });
+    const topic = this.store.createRecord("topic", {
+      suggested_topics: [{ id: 1 }, { id: 2 }],
+    });
     const suggestedTopics = topic.get("suggestedTopics");
 
     assert.strictEqual(
@@ -92,13 +150,16 @@ discourseModule("Unit | Model | topic", function () {
   test("category relationship", function (assert) {
     // It finds the category by id
     const category = Category.list()[0];
-    const topic = Topic.create({ id: 1111, category_id: category.get("id") });
+    const topic = this.store.createRecord("topic", {
+      id: 1111,
+      category_id: category.get("id"),
+    });
 
     assert.strictEqual(topic.get("category"), category);
   });
 
   test("updateFromJson", function (assert) {
-    const topic = Topic.create({ id: 1234 });
+    const topic = this.store.createRecord("topic", { id: 1234 });
     const category = Category.list()[0];
 
     topic.updateFromJson({
@@ -124,7 +185,7 @@ discourseModule("Unit | Model | topic", function () {
 
   test("recover", async function (assert) {
     const user = User.create({ username: "eviltrout" });
-    const topic = Topic.create({
+    const topic = this.store.createRecord("topic", {
       id: 1234,
       deleted_at: new Date(),
       deleted_by: user,
@@ -137,7 +198,7 @@ discourseModule("Unit | Model | topic", function () {
   });
 
   test("fancyTitle", function (assert) {
-    const topic = Topic.create({
+    const topic = this.store.createRecord("topic", {
       fancy_title: ":smile: with all :) the emojis :pear::peach:",
     });
 
@@ -149,8 +210,12 @@ discourseModule("Unit | Model | topic", function () {
   });
 
   test("fancyTitle direction", function (assert) {
-    const rtlTopic = Topic.create({ fancy_title: "هذا اختبار" });
-    const ltrTopic = Topic.create({ fancy_title: "This is a test" });
+    const rtlTopic = this.store.createRecord("topic", {
+      fancy_title: "هذا اختبار",
+    });
+    const ltrTopic = this.store.createRecord("topic", {
+      fancy_title: "This is a test",
+    });
 
     this.siteSettings.support_mixed_text_direction = true;
     assert.strictEqual(
@@ -166,7 +231,7 @@ discourseModule("Unit | Model | topic", function () {
   });
 
   test("excerpt", function (assert) {
-    const topic = Topic.create({
+    const topic = this.store.createRecord("topic", {
       excerpt: "This is a test topic :smile:",
       pinned: true,
     });
@@ -179,15 +244,15 @@ discourseModule("Unit | Model | topic", function () {
   });
 
   test("visible & invisible", function (assert) {
-    const topic = Topic.create();
+    const topic = this.store.createRecord("topic");
     assert.strictEqual(topic.visible, undefined);
     assert.strictEqual(topic.invisible, undefined);
 
-    const visibleTopic = Topic.create({ visible: true });
+    const visibleTopic = this.store.createRecord("topic", { visible: true });
     assert.strictEqual(visibleTopic.visible, true);
     assert.strictEqual(visibleTopic.invisible, false);
 
-    const invisibleTopic = Topic.create({ visible: false });
+    const invisibleTopic = this.store.createRecord("topic", { visible: false });
     assert.strictEqual(invisibleTopic.visible, false);
     assert.strictEqual(invisibleTopic.invisible, true);
   });
