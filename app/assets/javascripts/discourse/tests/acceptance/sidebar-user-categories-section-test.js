@@ -563,22 +563,6 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
 
     await publishToMessageBus("/unread", {
-      topic_id: 1,
-      message_type: "read",
-      payload: {
-        last_read_post_number: 1,
-        highest_post_number: 1,
-      },
-    });
-
-    assert.ok(
-      exists(
-        `.sidebar-section-link-${category1.slug} .sidebar-section-link-suffix`
-      ),
-      "shows suffix indicator for new posts on categories link"
-    );
-
-    await publishToMessageBus("/unread", {
       topic_id: 2,
       message_type: "read",
       payload: {
@@ -588,10 +572,26 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     });
 
     assert.ok(
+      exists(
+        `.sidebar-section-link-${category1.slug} .sidebar-section-link-suffix`
+      ),
+      "shows suffix indicator for new topics on categories link"
+    );
+
+    await publishToMessageBus("/unread", {
+      topic_id: 1,
+      message_type: "read",
+      payload: {
+        last_read_post_number: 1,
+        highest_post_number: 1,
+      },
+    });
+
+    assert.ok(
       !exists(
         `.sidebar-section-link-${category1.slug} .sidebar-section-link-suffix`
       ),
-      "hides suffix indicator when there's no unread content on category link"
+      "hides suffix indicator when there's no new/unread content on category link"
     );
   });
 

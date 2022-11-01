@@ -781,23 +781,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(".sidebar-section-link-everything .sidebar-section-link-suffix"),
-      "shows suffix indicator for new content on everything link"
-    );
-
-    // simulate reading topic 1
-    await publishToMessageBus("/unread", {
-      topic_id: 1,
-      message_type: "read",
-      payload: {
-        last_read_post_number: 1,
-        highest_post_number: 1,
-        notification_level: 2,
-      },
-    });
-
-    assert.ok(
-      exists(".sidebar-section-link-everything .sidebar-section-link-suffix"),
-      "shows suffix indicator for unread posts on categories link"
+      "shows suffix indicator for unread posts on everything link"
     );
 
     // simulate reading topic 2
@@ -812,8 +796,24 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     });
 
     assert.ok(
+      exists(".sidebar-section-link-everything .sidebar-section-link-suffix"),
+      "shows suffix indicator for new topics on categories link"
+    );
+
+    // simulate reading topic 1
+    await publishToMessageBus("/unread", {
+      topic_id: 1,
+      message_type: "read",
+      payload: {
+        last_read_post_number: 1,
+        highest_post_number: 1,
+        notification_level: 2,
+      },
+    });
+
+    assert.ok(
       !exists(".sidebar-section-link-everything .sidebar-section-link-suffix"),
-      "it removes the suffix when all topics are read"
+      "it removes the suffix indicator when all topics are read"
     );
   });
 
