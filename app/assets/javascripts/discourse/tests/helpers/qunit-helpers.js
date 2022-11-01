@@ -127,11 +127,10 @@ export function withFrozenTime(timeString, timezone, callback) {
 
 let _pretenderCallbacks = {};
 
-export function resetSite(siteSettings, extras = {}) {
+export function resetSite(extras = {}) {
   const siteAttrs = {
     ...siteFixtures["site.json"].site,
     ...extras,
-    siteSettings,
   };
 
   PreloadStore.store("site", cloneJSON(siteAttrs));
@@ -311,9 +310,10 @@ export function acceptance(name, optionsOrCallback) {
       if (settingChanges) {
         mergeSettings(settingChanges);
       }
+
       this.siteSettings = currentSettings();
 
-      resetSite(currentSettings(), siteChanges);
+      resetSite(siteChanges);
 
       this.container = getOwner(this);
 
