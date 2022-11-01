@@ -166,12 +166,14 @@ export default {
       }
 
       function generatePopups(tables) {
-        tables.forEach((table) => {
+        tables.forEach((table, index) => {
           const tableButtons = generateButtons(table);
+
           if (tableButtons.length === 0) {
             return;
           }
 
+          table.parentNode.setAttribute("data-table-id", index);
           table.parentNode.classList.add("fullscreen-table-wrapper");
           const buttonWrapper = document.createElement("div");
           buttonWrapper.classList.add("fullscreen-table-wrapper-buttons");
