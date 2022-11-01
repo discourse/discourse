@@ -40,7 +40,9 @@ Rails.autoloaders.each do |autoloader|
     'omniauth_strategies' => 'OmniAuthStrategies',
     'csrf_token_verifier' => 'CSRFTokenVerifier',
     'html' => 'HTML',
-    'json' => 'JSON'
+    'json' => 'JSON',
+    'ssrf_detector' => 'SSRFDetector',
+    'http' => 'HTTP',
   )
 end
 Rails.autoloaders.main.ignore("lib/tasks",

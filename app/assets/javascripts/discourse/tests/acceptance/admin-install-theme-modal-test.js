@@ -8,7 +8,6 @@ acceptance("Admin - Themes - Install modal", function (needs) {
   test("closing the modal resets the modal inputs", async function (assert) {
     const urlInput = ".install-theme-content .repo input";
     const branchInput = ".install-theme-content .branch input";
-    const privateRepoCheckbox = ".install-theme-content .check-private input";
     const publicKey = ".install-theme-content .public-key textarea";
 
     const themeUrl = "git@github.com:discourse/discourse.git";
@@ -19,16 +18,11 @@ acceptance("Admin - Themes - Install modal", function (needs) {
     await fillIn(urlInput, themeUrl);
     await click(".install-theme-content .inputs .advanced-repo");
     await fillIn(branchInput, "tests-passed");
-    await click(privateRepoCheckbox);
     assert.strictEqual(query(urlInput).value, themeUrl, "url input is filled");
     assert.strictEqual(
       query(branchInput).value,
       "tests-passed",
       "branch input is filled"
-    );
-    assert.ok(
-      query(privateRepoCheckbox).checked,
-      "private repo checkbox is checked"
     );
     assert.ok(query(publicKey), "shows public key");
 
@@ -38,16 +32,11 @@ acceptance("Admin - Themes - Install modal", function (needs) {
     await click("#remote");
     assert.strictEqual(query(urlInput).value, "", "url input is reset");
     assert.strictEqual(query(branchInput).value, "", "branch input is reset");
-    assert.ok(
-      !query(privateRepoCheckbox).checked,
-      "private repo checkbox unchecked"
-    );
     assert.notOk(query(publicKey), "hide public key");
   });
 
   test("show public key for valid ssh theme urls", async function (assert) {
     const urlInput = ".install-theme-content .repo input";
-    const privateRepoCheckbox = ".install-theme-content .check-private input";
     const publicKey = ".install-theme-content .public-key textarea";
 
     // Supports backlog repo ssh url format
@@ -59,12 +48,7 @@ acceptance("Admin - Themes - Install modal", function (needs) {
     await click("#remote");
     await fillIn(urlInput, themeUrl);
     await click(".install-theme-content .inputs .advanced-repo");
-    await click(privateRepoCheckbox);
     assert.strictEqual(query(urlInput).value, themeUrl, "url input is filled");
-    assert.ok(
-      query(privateRepoCheckbox).checked,
-      "private repo checkbox is checked"
-    );
     assert.ok(query(publicKey), "shows public key");
 
     // Supports AWS CodeCommit style repo URLs

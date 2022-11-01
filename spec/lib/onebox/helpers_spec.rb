@@ -41,6 +41,14 @@ RSpec.describe Onebox::Helpers do
         described_class.fetch_response('http://example.com/large-file')
       }.to raise_error(Onebox::Helpers::DownloadTooLarge)
     end
+
+    it "raises an exception when private url requested" do
+      FinalDestination::TestHelper.stub_to_fail do
+        expect {
+          described_class.fetch_response('http://example.com/large-file')
+        }.to raise_error(FinalDestination::SSRFDetector::DisallowedIpError)
+      end
+    end
   end
 
   describe "fetch_html_doc" do
@@ -63,9 +71,21 @@ RSpec.describe Onebox::Helpers do
 
       it "does not follow canonical link pointing at localhost" do
         uri = 'https://www.example.com'
-        stub_request(:get, uri).to_return(status: 200, body: "<!DOCTYPE html><link rel='canonical' href='http://localhost:3000/'/><p>success</p>")
+        FinalDestination::SSRFDetector.stubs(:lookup_ips).with { |h| h == "localhost" }.returns(["127.0.0.1"])
+        stub_request(:get, uri).to_return(status: 200, body: "<!DOCTYPE html><link rel='canonical' href='http://localhost/test'/><p>success</p>")
 
         expect(described_class.fetch_html_doc(uri).to_s).to match("success")
+      end
+    end
+  end
+
+  describe ".fetch_content_length" do
+    it "does not connect to private IP" do
+      uri = 'https://www.example.com'
+      FinalDestination::TestHelper.stub_to_fail do
+        expect {
+          described_class.fetch_content_length(uri)
+        }.to raise_error(FinalDestination::SSRFDetector::DisallowedIpError)
       end
     end
   end

@@ -658,4 +658,33 @@ RSpec.describe WebHook do
       end
     end
   end
+
+  describe '#payload_url_safety' do
+    fab!(:post_hook) { Fabricate(:web_hook, payload_url: "https://example.com") }
+
+    it 'errors if payload_url resolves to a blocked IP' do
+      SiteSetting.blocked_ip_blocks = "92.110.0.0/16"
+      FinalDestination::SSRFDetector.stubs(:lookup_ips).with { |h| h == "badhostname.com" }.returns(["92.110.44.17"])
+      post_hook.payload_url = "https://badhostname.com"
+      post_hook.save
+      expect(post_hook.errors.full_messages).to contain_exactly(
+        I18n.t("webhooks.payload_url.blocked_or_internal")
+      )
+    end
+
+    it 'errors if payload_url resolves to an internal IP' do
+      FinalDestination::SSRFDetector.stubs(:lookup_ips).with { |h| h == "badhostname.com" }.returns(["172.18.11.39"])
+      post_hook.payload_url = "https://badhostname.com"
+      post_hook.save
+      expect(post_hook.errors.full_messages).to contain_exactly(
+        I18n.t("webhooks.payload_url.blocked_or_internal")
+      )
+    end
+
+    it "doesn't error if payload_url resolves to an allowed IP" do
+      FinalDestination::SSRFDetector.stubs(:lookup_ips).with { |h| h == "goodhostname.com" }.returns(["172.32.11.39"])
+      post_hook.payload_url = "https://goodhostname.com"
+      post_hook.save!
+    end
+  end
 end
