@@ -2,15 +2,16 @@ import Controller from "@ember/controller";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import { cookAsync } from "discourse/lib/text";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { readOnly } from "@ember/object/computed";
 import showModal from "discourse/lib/show-modal";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend({
+  dialog: service(),
   init() {
     this._super(...arguments);
     this.saveAttrNames = [
@@ -79,20 +80,18 @@ export default Controller.extend({
     },
 
     clearFeaturedTopicFromProfile() {
-      bootbox.confirm(
-        I18n.t("user.feature_topic_on_profile.clear.warning"),
-        (result) => {
-          if (result) {
-            ajax(`/u/${this.model.username}/clear-featured-topic`, {
-              type: "PUT",
+      this.dialog.yesNoConfirm({
+        message: I18n.t("user.feature_topic_on_profile.clear.warning"),
+        didConfirm: () => {
+          return ajax(`/u/${this.model.username}/clear-featured-topic`, {
+            type: "PUT",
+          })
+            .then(() => {
+              this.model.set("featured_topic", null);
             })
-              .then(() => {
-                this.model.set("featured_topic", null);
-              })
-              .catch(popupAjaxError);
-          }
-        }
-      );
+            .catch(popupAjaxError);
+        },
+      });
     },
 
     useCurrentTimezone() {

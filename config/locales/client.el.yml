@@ -193,6 +193,7 @@ el:
     ok_value: "OK"
     cancel_value: "Ακύρωση"
     submit: "Υποβολή"
+    delete: "Σβήσιμο"
     generic_error: "Λυπάμαι, προέκυψε κάποιο σφάλμα."
     generic_error_with_reason: "Προέκυψε ένα σφάλμα: %{error}"
     sign_up: "Εγγραφή"
@@ -915,6 +916,8 @@ el:
       enable_defer: "Ενεργοποίηση αναβολής για επισήμανση θεμάτων ως μη αναγνωσμένων"
       experimental_sidebar:
         options: "Επιλογές"
+        navigation_section: "Πλοήγηση"
+        list_destination_default: "Προεπιλογή"
       change: "αλλαγή"
       featured_topic: "Επιλεγμένο θέμα"
       moderator: "Ο/Η %{user} είναι συντονιστής"
@@ -1011,6 +1014,7 @@ el:
         move_to_archive: "Αρχειοθέτηση"
         failed_to_move: "Αποτυχία μετακίνησης των επιλεγμένων μηνυμάτων (πιθανόν δεν υπάρχει σύνδεση στο δίκτυο)"
         tags: "Ετικέτες"
+        all_tags: "Όλες οι Ετικέτες"
       preferences_nav:
         account: "Λογαριασμός"
         security: "Ασφάλεια"
@@ -1061,8 +1065,6 @@ el:
         disable: "Απενεργοποίηση"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
-        enable_security_key_description: |
-          Όταν έχετε προετοιμάσει το <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">κλειδί ασφαλείας υλικού</a> , πατήστε το κουμπί Εγγραφή παρακάτω.
         totp:
           title: "Επαληθευτές βάσει τεκμηρίων"
           add: "Προσθήκη επαληθευτή"
@@ -1070,14 +1072,10 @@ el:
           name_and_code_required_error: "Πρέπει να δώσετε ένα όνομα και τον κωδικό από την εφαρμογή ελέγχου ταυτότητας."
         security_key:
           register: "Εγγραφή"
-          title: "Κλειδιά ασφαλείας"
-          add: "Προσθήκη κλειδιού ασφαλείας"
           default_name: "Κύριο κλειδί ασφαλείας"
           not_allowed_error: "Η διαδικασία καταχώρισης κλειδιού ασφαλείας είτε έληξε είτε ακυρώθηκε."
           already_added_error: "Έχετε ήδη καταχωρίσει αυτό το κλειδί ασφαλείας. Δε χρειάζεται να το καταχωρίσετε ξανά."
-          edit: "Επεξεργασία κλειδιού ασφαλείας"
           save: "Αποθήκευση"
-          edit_description: "Όνομα κλειδιού ασφαλείας"
           name_required_error: "Πρέπει να δώσετε ένα όνομα για το κλειδί ασφαλείας σας."
       change_about:
         title: "Άλλαξε τα «σχετικά με εμένα»"
@@ -1444,6 +1442,8 @@ el:
       leave_message: "Σίγουρα θελετε να αφήσετε αυτό το μήνυμα;"
       remove_allowed_user: "Θέλεις σίγουρα να αφαιρέσεις τον/την %{name} από αυτή τη συζήτηση;"
       remove_allowed_group: "Θέλεις σίγουρα να αφαιρέσεις τον/την %{name} από αυτό το μήνυμα;"
+      leave: "Αποχώρηση"
+      remove_user: "Αφαίρεση χρήστη"
     email: "Email"
     username: "Όνομα Χρήστη"
     last_seen: "Εθεάθη"
@@ -1490,7 +1490,6 @@ el:
       second_factor_backup: "Συνδεθείτε χρησιμοποιώντας έναν εφεδρικό κωδικό"
       second_factor_backup_description: "Παρακαλώ εισαγάγετε έναν από τους εφεδρικούς κωδικούς σας:"
       second_factor: "Συνδεθείτε χρησιμοποιώντας την εφαρμογή Authenticator"
-      security_key_description: "Όταν έχετε προετοιμάσει το φυσικό κλειδί ασφαλείας σας, πατήστε το κουμπί «Έλεγχος ταυτότητας με κλειδί ασφαλείας» παρακάτω."
       security_key_alternative: "Δοκιμάστε με έναν άλλο τρόπο"
       security_key_authenticate: "Έλεγχος ταυτότητας με κλειδί ασφαλείας"
       security_key_not_allowed_error: "Η διαδικασία ελέγχου ταυτότητας κλειδιού ασφαλείας είτε έληξε είτε ακυρώθηκε."
@@ -2988,7 +2987,6 @@ el:
       delete_no_unused_tags: "Δεν υπάρχουν αχρησιμοποίητες ετικέτες."
       delete_unused: "Διαγραφή αχρησιμοποίητων ετικετών"
       delete_unused_description: "Διαγράψτε όλες τις ετικέτες που δεν επισυνάπτονται σε θέματα ή προσωπικά μηνύματα"
-      cancel_delete_unused: "Άκυρο"
       filters:
         without_category: "%{filter} %{tag} νήματα"
         with_category: "%{filter} %{tag} νήματα στην %{category}"
@@ -3069,7 +3067,7 @@ el:
       new_count:
         one: "%{count} νέο"
         other: "%{count} νέα"
-      more: "Περισσότερα..."
+      more: "Περισσότερα"
       all_categories: "Όλες οι κατηγορίες"
       sections:
         about:
@@ -3108,6 +3106,9 @@ el:
               content: "Χρήστες"
             my_posts:
               content: "Οι αναρτήσεις μου"
+            review:
+              content: "Ανασκόπηση"
+              title: "ανασκόπηση"
   admin_js:
     type_to_filter: "γράψε εδώ για φιλτράρισμα..."
     admin:

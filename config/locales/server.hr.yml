@@ -59,8 +59,6 @@ hr:
     bad_color_scheme: "Tema se ne može ažurirati, nevažeća paleta boja"
     other_error: "Dogodila se greška pri ažuriranju teme"
     ember_selector_error: "Žao nam je – korištenje #ember ili .ember-view CSS selektora nije dopušteno, jer se ti nazivi dinamički generiraju tijekom izvođenja i mijenjat će se tijekom vremena, što će na kraju rezultirati neispravnim CSS-om. Pokušajte s drugim selektorom."
-    compile_error:
-      unrecognized_extension: "Nastavak datoteke %{extension} nije prepoznat"
     import_error:
       generic: Došlo je do greške prilikom uvoza te teme
       upload: "Greška pri snimanju materijala: %{name}. %{errors}"
@@ -129,7 +127,6 @@ hr:
         unsubscribe_not_allowed: "Događa se kada ovom korisniku nije dopuštena odjava putem e-pošte."
         email_not_allowed: "Događa se kada adresa e-pošte nije na popisu dopuštenih ili je na popisu blokiranih."
       unrecognized_error: "Neprepoznata pogreška"
-    secure_media_placeholder: "Redigirano: Ova stranica ima omogućen siguran medij. Posjetite temu ili kliknite Prikaži medije da biste vidjeli priloženi medij."
     view_redacted_media: "Pregledajte medije"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -379,8 +376,6 @@ hr:
   meta_category_description: "Rasprave o ovoj stranici, njezinoj organizaciji, kako radi i kako je se može poboljšati."
   staff_category_name: "Osoblje"
   staff_category_description: "Privatna kategorija za rasprave osoblja. Teme su vidljive samo administratorima i moderatorima."
-  discourse_welcome_topic:
-    title: "Dobrodošli na Discourse"
   admin_quick_start_title: "PROČITATI PRVO: brzi vodič za administratore"
   category:
     topic_prefix: "O %{category} kategoriji"

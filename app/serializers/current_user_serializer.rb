@@ -68,6 +68,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :timezone,
              :featured_topic,
              :skip_new_user_tips,
+             :seen_popups,
              :do_not_disturb_until,
              :has_topic_draft,
              :can_review,
@@ -80,7 +81,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :likes_notifications_disabled,
              :grouped_unread_notifications,
              :redesigned_user_menu_enabled,
-             :redesigned_user_page_nav_enabled
+             :redesigned_user_page_nav_enabled,
+             :sidebar_list_destination
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -157,6 +159,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def bookmark_auto_delete_preference
     object.user_option.bookmark_auto_delete_preference
+  end
+
+  def sidebar_list_destination
+    object.user_option.sidebar_list_none_selected? ? SiteSetting.default_sidebar_list_destination : object.user_option.sidebar_list_destination
   end
 
   def can_send_private_email_messages
@@ -282,6 +288,14 @@ class CurrentUserSerializer < BasicUserSerializer
     object.user_option.skip_new_user_tips
   end
 
+  def seen_popups
+    object.user_option.seen_popups
+  end
+
+  def include_seen_popups?
+    SiteSetting.enable_onboarding_popups
+  end
+
   def include_primary_group_id?
     object.primary_group_id.present?
   end
@@ -325,7 +339,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def sidebar_category_ids
-    object.sidebar_categories_ids
+    object.category_sidebar_section_links.pluck(:linkable_id) & scope.allowed_category_ids
   end
 
   def include_sidebar_category_ids?

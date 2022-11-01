@@ -62,15 +62,15 @@ acceptance("User menu", function (needs) {
     );
   });
 
-  test("mentions notifications panel has a11y attributes", async function (assert) {
+  test("replies notifications panel has a11y attributes", async function (assert) {
     await visit("/");
     await click(".d-header-icons .current-user");
-    await click("#user-menu-button-mentions");
-    const panel = query("#quick-access-mentions");
+    await click("#user-menu-button-replies");
+    const panel = query("#quick-access-replies");
     assert.strictEqual(panel.getAttribute("tabindex"), "-1");
     assert.strictEqual(
       panel.querySelector("ul").getAttribute("aria-labelledby"),
-      "user-menu-button-mentions"
+      "user-menu-button-replies"
     );
   });
 
@@ -119,6 +119,7 @@ acceptance("User menu", function (needs) {
   });
 
   test("clicking on user menu items", async function (assert) {
+    updateCurrentUser({ reviewable_count: 1 });
     await visit("/");
     await click(".d-header-icons .current-user");
     await click("#user-menu-button-review-queue");
@@ -147,28 +148,10 @@ acceptance("User menu", function (needs) {
       exists(".user-menu"),
       "clicking on the same item again closes the menu"
     );
-
-    await click(".d-header-icons .current-user");
-    await click("#user-menu-button-review-queue");
-    // this may not be ideal because it actually attempts to open a new tab
-    // which gets blocked by the browser, but otherwise it seems harmless and
-    // doesn't cause the test to fail. if it causes problems for you, feel free
-    // to remove the ctrl+click tests.
-    await click("#quick-access-review-queue li.reviewable.reviewed a", {
-      ctrlKey: true,
-    });
-    assert.strictEqual(
-      currentURL(),
-      "/review/17",
-      "ctrl-clicking on an item doesn't navigate to a new page"
-    );
-    assert.ok(
-      exists(".user-menu"),
-      "ctrl-clicking on an item doesn't close the menu"
-    );
   });
 
   test("tabs have title attributes", async function (assert) {
+    updateCurrentUser({ reviewable_count: 1 });
     withPluginApi("0.1", (api) => {
       api.registerUserMenuTab((UserMenuTab) => {
         return class extends UserMenuTab {
@@ -202,13 +185,14 @@ acceptance("User menu", function (needs) {
       "user-menu-button-replies": I18n.t("user_menu.tabs.replies_with_unread", {
         count: 2,
       }),
-      "user-menu-button-mentions": I18n.t("user_menu.tabs.mentions"),
       "user-menu-button-likes": I18n.t("user_menu.tabs.likes"),
-      "user-menu-button-watching": I18n.t("user_menu.tabs.watching"),
       "user-menu-button-messages": I18n.t("user_menu.tabs.messages"),
       "user-menu-button-bookmarks": I18n.t("user_menu.tabs.bookmarks"),
       "user-menu-button-tiny-tab-1": "Custom title: 73",
-      "user-menu-button-review-queue": I18n.t("user_menu.tabs.review_queue"),
+      "user-menu-button-review-queue": I18n.t(
+        "user_menu.tabs.review_queue_with_unread",
+        { count: 1 }
+      ),
       "user-menu-button-other-notifications": I18n.t(
         "user_menu.tabs.other_notifications"
       ),
@@ -235,6 +219,7 @@ acceptance("User menu", function (needs) {
   });
 
   test("tabs added via the plugin API", async function (assert) {
+    updateCurrentUser({ reviewable_count: 1 });
     withPluginApi("0.1", (api) => {
       api.registerUserMenuTab((UserMenuTab) => {
         return class extends UserMenuTab {
@@ -279,15 +264,13 @@ acceptance("User menu", function (needs) {
     const expectedTabOrder = {
       "user-menu-button-all-notifications": "0",
       "user-menu-button-replies": "1",
-      "user-menu-button-mentions": "2",
-      "user-menu-button-likes": "3",
-      "user-menu-button-watching": "4",
-      "user-menu-button-messages": "5",
-      "user-menu-button-bookmarks": "6",
-      "user-menu-button-custom-tab-1": "7",
-      "user-menu-button-custom-tab-2": "8",
-      "user-menu-button-review-queue": "9",
-      "user-menu-button-other-notifications": "10",
+      "user-menu-button-likes": "2",
+      "user-menu-button-messages": "3",
+      "user-menu-button-bookmarks": "4",
+      "user-menu-button-custom-tab-1": "5",
+      "user-menu-button-custom-tab-2": "6",
+      "user-menu-button-review-queue": "7",
+      "user-menu-button-other-notifications": "8",
     };
 
     await visit("/");
@@ -314,7 +297,7 @@ acceptance("User menu", function (needs) {
     );
     assert.strictEqual(
       query(".tabs-list.bottom-tabs .btn").dataset.tabNumber,
-      "11",
+      "9",
       "bottom tab has the correct data-tab-number"
     );
 
@@ -674,6 +657,7 @@ acceptance("User menu", function (needs) {
   });
 
   test("the active tab can be clicked again to navigate to a page", async function (assert) {
+    updateCurrentUser({ reviewable_count: 1 });
     withPluginApi("0.1", (api) => {
       api.registerUserMenuTab((UserMenuTab) => {
         return class extends UserMenuTab {
@@ -725,7 +709,6 @@ acceptance("User menu", function (needs) {
       ["#user-menu-button-custom-tab-1", "/u/eviltrout/preferences/account"],
       ["#user-menu-button-replies", "/u/eviltrout/notifications/responses"],
       ["#user-menu-button-messages", "/u/eviltrout/messages"],
-      ["#user-menu-button-mentions", "/u/eviltrout/notifications/mentions"],
       ["#user-menu-button-bookmarks", "/u/eviltrout/activity/bookmarks"],
       ["#user-menu-button-likes", "/u/eviltrout/notifications/likes-received"],
       ["#user-menu-button-custom-tab-2", null],
@@ -798,7 +781,7 @@ acceptance("User menu - Dismiss button", function (needs) {
         const copy = cloneJSON(
           UserMenuFixtures["/u/:username/user-menu-private-messages"]
         );
-        copy.notifications = [];
+        copy.unread_notifications = [];
         return helper.response(copy);
       } else {
         return helper.response(
@@ -934,7 +917,7 @@ acceptance("User menu - Dismiss button", function (needs) {
     assert.ok(markRead, "mark-read request is sent");
     assert.strictEqual(
       markReadRequestBody,
-      "dismiss_types=private_message",
+      "dismiss_types=private_message%2Cgroup_message_summary",
       "mark-read request specifies private_message types"
     );
     assert.notOk(exists(".user-menu .notifications-dismiss"));

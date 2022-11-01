@@ -206,6 +206,7 @@ pt:
     ok_value: "CONFIRMAR"
     cancel_value: "Cancelar"
     submit: "Submeter"
+    delete: "Eliminar"
     generic_error: "Pedimos desculpa, ocorreu um erro."
     generic_error_with_reason: "Ocorreu um erro: %{error}"
     sign_up: "Inscrever-se"
@@ -1047,6 +1048,8 @@ pt:
       enable_defer: "Ativar adiamento para marcar tópicos não lidos"
       experimental_sidebar:
         options: "Opções"
+        navigation_section: "Navegação"
+        list_destination_default: "Predefinição"
       change: "alterar"
       featured_topic: "Tópico em Destaque"
       moderator: "%{user} é um moderador"
@@ -1145,6 +1148,7 @@ pt:
         move_to_archive: "Arquivo"
         failed_to_move: "Falha ao mover as mensagens selecionadas (talvez a sua rede esteja em baixo)"
         tags: "Etiquetas"
+        all_tags: "Todas as Etiquetas"
         warnings: "Avisos Oficiais"
       preferences_nav:
         account: "Conta"
@@ -1213,8 +1217,6 @@ pt:
         edit: "Editar"
         edit_title: "Editar Autenticador"
         edit_description: "Nome do Autenticador"
-        enable_security_key_description: |
-          Quando tiver a sua <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">chave de segurança de hardware</a> preparada, pressione o botão abaixo de Registar.
         totp:
           title: "Autenticadores Baseados em Tokens"
           add: "Adicionar Autenticador"
@@ -1222,14 +1224,10 @@ pt:
           name_and_code_required_error: "Tem de fornecer um nome e o código da sua aplicação de autenticação."
         security_key:
           register: "Registar"
-          title: "Chaves de Segurança"
-          add: "Adicionar Chave de Segurança"
           default_name: "Chave de Segurança Principal"
           not_allowed_error: "O processo de registo da chave de segurança atingiu o tempo limite ou foi cancelado."
           already_added_error: "Já registou esta chave de segurança. Não precisa de a registar novamente."
-          edit: "Editar Chave de Segurança"
           save: "Guardar"
-          edit_description: "Nome da Chave de Segurança"
           name_required_error: "Tem de fornecer um nome para a sua chave de segurança."
       change_about:
         title: "Modificar Sobre Mim"
@@ -1650,6 +1648,8 @@ pt:
       leave_message: "Quer mesmo deixar esta mensagem?"
       remove_allowed_user: "Deseja mesmo remover %{name} desta mensagem?"
       remove_allowed_group: "Deseja mesmo remover %{name} desta mensagem?"
+      leave: "Sair"
+      remove_user: "Remover utilizador"
     email: "E-mail"
     username: "Nome de utilizador"
     last_seen: "Visto"
@@ -1703,7 +1703,6 @@ pt:
       second_factor_backup_title: "Backup de Dois Fatores"
       second_factor_backup_description: "Por favor introduza um dos seus códigos de reserva:"
       second_factor: "Efetue login usando o aplicativo Authenticator"
-      security_key_description: "Quando você tiver sua chave de segurança física preparada, pressione o botão Autenticar com Chave de Segurança abaixo."
       security_key_alternative: "Tente de outra forma"
       security_key_authenticate: "Autenticar com Chave de Segurança"
       security_key_not_allowed_error: "O processo de autenticação da chave de segurança atingiu o tempo limite ou foi cancelado."
@@ -3338,7 +3337,6 @@ pt:
       tag_list_joiner: ", "
       delete_unused: "Excluir tags não utilizadas"
       delete_unused_description: "Exclua todas as tags que não estão anexadas a algum tópico ou mensagem pessoal"
-      cancel_delete_unused: "Cancelar"
       filters:
         without_category: "%{filter} %{tag} tópicos"
         with_category: "%{filter} %{tag} tópicos em %{category}"
@@ -3433,7 +3431,7 @@ pt:
       new_count:
         one: "%{count} novo"
         other: "%{count} novos"
-      more: "Mais..."
+      more: "Mais"
       all_categories: "Todas as categorias"
       sections:
         about:
@@ -3472,6 +3470,9 @@ pt:
               content: "Utilizadores"
             my_posts:
               content: "As Minhas publicações"
+            review:
+              content: "Revisão"
+              title: "revisão"
   admin_js:
     type_to_filter: "digite para filtrar..."
     admin:

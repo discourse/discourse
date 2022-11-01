@@ -5,13 +5,14 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import { htmlSafe } from "@ember/template";
 
 export default Component.extend({
+  tagName: "a",
   classNameBindings: [":popup-tip", "good", "bad", "lastShownAt::hide"],
-  attributeBindings: ["role", "ariaLabel"],
-  rerenderTriggers: ["validation.reason"],
+  attributeBindings: ["role", "ariaLabel", "tabindex"],
   tipReason: null,
   lastShownAt: or("shownAt", "validation.lastShownAt"),
   bad: reads("validation.failed"),
   good: not("bad"),
+  tabindex: "0",
 
   @discourseComputed("bad")
   role(bad) {
@@ -25,10 +26,21 @@ export default Component.extend({
     return reason?.replace(/(<([^>]+)>)/gi, "");
   },
 
-  click() {
+  dismiss() {
     this.set("shownAt", null);
     const composer = getOwner(this).lookup("controller:composer");
     composer.clearLastValidatedAt();
+    this.element.previousElementSibling?.focus();
+  },
+
+  click() {
+    this.dismiss();
+  },
+
+  keyDown(event) {
+    if (event.key === "Enter") {
+      this.dismiss();
+    }
   },
 
   didReceiveAttrs() {

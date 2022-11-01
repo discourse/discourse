@@ -186,6 +186,16 @@ RSpec.describe ListController do
       expect(response.parsed_body["topic_list"]["topics"].first["id"])
         .to eq(private_message.id)
     end
+
+    it 'should work for users who are allowed and direct links' do
+      SiteSetting.pm_tags_allowed_for_groups = group.name
+      group.add(user)
+      sign_in(user)
+
+      get "/u/#{user.username}/messages/tags/#{tag.name}"
+
+      expect(response.status).to eq(200)
+    end
   end
 
   describe '#private_messages_group' do
@@ -197,7 +207,6 @@ RSpec.describe ListController do
       before do
         group.add(user)
         SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
-        SiteSetting.enable_personal_messages = false
         Group.refresh_automatic_groups!
       end
 
@@ -239,6 +248,7 @@ RSpec.describe ListController do
         group.add(user)
         sign_in(user)
         SiteSetting.unicode_usernames = false
+        Group.refresh_automatic_groups!
       end
 
       it 'should return the right response when user does not belong to group' do
@@ -266,6 +276,7 @@ RSpec.describe ListController do
       before do
         sign_in(user)
         SiteSetting.unicode_usernames = true
+        Group.refresh_automatic_groups!
       end
 
       it 'Returns a 200 with unicode group name' do
@@ -958,6 +969,58 @@ RSpec.describe ListController do
       get "/c/#{c.slug}/#{sub_c.slug}/#{sub_c.id}"
 
       expect(response.body).to have_tag "body", with: { class: "category-myparentslug-mychildslug" }
+    end
+  end
+
+  describe "welcome topic" do
+    fab!(:welcome_topic) { Fabricate(:topic) }
+    fab!(:post) { Fabricate(:post, topic: welcome_topic) }
+
+    before do
+      SiteSetting.welcome_topic_id = welcome_topic.id
+      SiteSetting.editing_grace_period = 1.minute.to_i
+      SiteSetting.bootstrap_mode_enabled = true
+    end
+
+    it "is hidden for non-admins" do
+
+      get "/latest.json"
+      expect(response.status).to eq(200)
+      parsed = response.parsed_body
+      expect(parsed["topic_list"]["topics"].length).to eq(1)
+      expect(parsed["topic_list"]["topics"].first["id"]).not_to eq(welcome_topic.id)
+    end
+
+    it "is shown to non-admins when there is an edit" do
+      post.revise(post.user, { raw: "#{post.raw}2" }, revised_at: post.updated_at + 2.minutes)
+      post.reload
+      expect(post.version).to eq(2)
+
+      get "/latest.json"
+      expect(response.status).to eq(200)
+      parsed = response.parsed_body
+      expect(parsed["topic_list"]["topics"].length).to eq(2)
+      expect(parsed["topic_list"]["topics"].first["id"]).to eq(welcome_topic.id)
+    end
+
+    it "is shown to admins" do
+      sign_in(admin)
+
+      get "/latest.json"
+      expect(response.status).to eq(200)
+      parsed = response.parsed_body
+      expect(parsed["topic_list"]["topics"].length).to eq(2)
+      expect(parsed["topic_list"]["topics"].first["id"]).to eq(welcome_topic.id)
+    end
+
+    it "is shown to users when bootstrap mode is disabled" do
+      SiteSetting.bootstrap_mode_enabled = false
+
+      get "/latest.json"
+      expect(response.status).to eq(200)
+      parsed = response.parsed_body
+      expect(parsed["topic_list"]["topics"].length).to eq(2)
+      expect(parsed["topic_list"]["topics"].first["id"]).to eq(welcome_topic.id)
     end
   end
 end

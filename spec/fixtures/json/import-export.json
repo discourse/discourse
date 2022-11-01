@@ -27,5 +27,8 @@
         {"id":7,"user_id":-1,"post_number":2,"raw":"Edit the first post in this topic to change the contents of the FAQ/Guidelines page.","created_at":"2017-10-26T17:15:03.822Z","reply_to_post_number":null,"hidden":false,"hidden_reason_id":null,"wiki":false}
       ]
     }
+  ],
+  "translation_overrides":[
+    {"locale":"en","translation_key":"login_required.welcome_message","value":"## [Dude, Welcome to %{title}](#welcome)\nAn account is required. Please create an account or log in to continue again!\n"}
   ]
 }

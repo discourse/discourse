@@ -1,11 +1,18 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
 
 export default class SectionLink extends Component {
   willDestroy() {
     if (this.args.willDestroy) {
       this.args.willDestroy();
     }
+  }
+
+  get shouldDisplay() {
+    if (this.args.shouldDisplay === undefined) {
+      return true;
+    }
+
+    return this.args.shouldDisplay;
   }
 
   get classNames() {
@@ -34,13 +41,29 @@ export default class SectionLink extends Component {
     return [];
   }
 
-  get prefixCSS() {
+  get prefixColor() {
     const color = this.args.prefixColor;
 
     if (!color || !color.match(/^\w{6}$/)) {
-      return htmlSafe("");
+      return "";
     }
 
-    return htmlSafe("color: #" + color);
+    return "#" + color;
+  }
+
+  get prefixElementColors() {
+    if (!this.args.prefixElementColors) {
+      return;
+    }
+
+    const prefixElementColors = this.args.prefixElementColors.filter((color) =>
+      color?.slice(0, 6)
+    );
+
+    if (prefixElementColors.length === 1) {
+      prefixElementColors.push(prefixElementColors[0]);
+    }
+
+    return prefixElementColors.map((color) => `#${color} 50%`).join(", ");
   }
 }

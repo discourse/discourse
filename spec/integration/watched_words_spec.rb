@@ -117,6 +117,7 @@ RSpec.describe WatchedWord do
     end
 
     it "doesn't need approval in a private message" do
+      Group.refresh_automatic_groups!
       manager = NewPostManager.new(
         tl2_user,
         raw: "Want some #{require_approval_word.word} for cheap?",

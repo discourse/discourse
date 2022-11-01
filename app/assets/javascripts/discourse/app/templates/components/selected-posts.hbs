@@ -4,7 +4,7 @@
 
 {{#if this.canSelectAll}}
   <p>
-    <a class="select-all" href {{action this.selectAll}}>
+    <a class="select-all" href {{on "click" this.selectAll}}>
       {{i18n "topic.multi_select.select_all"}}
     </a>
   </p>
@@ -12,7 +12,7 @@
 
 {{#if this.canDeselectAll}}
   <p>
-    <a href {{action this.deselectAll}}>
+    <a href {{on "click" this.deselectAll}}>
       {{i18n "topic.multi_select.deselect_all"}}
     </a>
   </p>
@@ -35,7 +35,7 @@
 {{/if}}
 
 <p class="cancel">
-  <a href {{action this.toggleMultiSelect}}>
+  <a href {{on "click" this.toggleMultiSelect}}>
     {{i18n "topic.multi_select.cancel"}}
   </a>
 </p>

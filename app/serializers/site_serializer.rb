@@ -6,6 +6,7 @@ class SiteSerializer < ApplicationSerializer
     :default_archetype,
     :notification_types,
     :post_types,
+    :onboarding_popup_types,
     :trust_levels,
     :groups,
     :filters,
@@ -101,6 +102,14 @@ class SiteSerializer < ApplicationSerializer
 
   def post_types
     Post.types
+  end
+
+  def onboarding_popup_types
+    OnboardingPopup.types
+  end
+
+  def include_onboarding_popup_types?
+    SiteSetting.enable_onboarding_popups
   end
 
   def filters
@@ -220,11 +229,11 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def anonymous_default_sidebar_tags
-    User.new.sidebar_tags.pluck(:name)
+    SiteSetting.default_sidebar_tags.split("|") - DiscourseTagging.hidden_tag_names(scope)
   end
 
   def include_anonymous_default_sidebar_tags?
-    SiteSetting.default_sidebar_tags.present?
+    scope.anonymous? && SiteSetting.enable_experimental_sidebar_hamburger && SiteSetting.tagging_enabled && SiteSetting.default_sidebar_tags.present?
   end
 
   private

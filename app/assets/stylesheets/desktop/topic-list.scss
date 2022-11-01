@@ -36,7 +36,7 @@
 
   button.bulk-select {
     padding: 0;
-    line-height: $line-height-large;
+    line-height: var(--line-height-large);
   }
 
   .topic-list-data.bulk-select {
@@ -80,7 +80,7 @@
         cursor: default;
         color: var(--primary-med-or-secondary-med);
         line-height: $td-posters-more-lh;
-        font-size: $font-down-1;
+        font-size: var(--font-down-1);
       }
     }
   }
@@ -110,7 +110,7 @@
     width: auto;
     color: var(--primary-med-or-secondary-med);
     text-align: left;
-    font-size: $font-down-1;
+    font-size: var(--font-down-1);
     margin-top: 5px;
     .fa {
       margin-right: 2px;
@@ -118,7 +118,7 @@
     a {
       color: var(--primary-med-or-secondary-med);
       margin-right: 3px;
-      line-height: $line-height-large;
+      line-height: var(--line-height-large);
     }
   }
   .activity {
@@ -137,6 +137,12 @@
 
 .topic-list-bottom {
   margin: 20px 0;
+  .footer-message {
+    padding-top: 4px;
+  }
+  .dismiss-container-bottom {
+    float: right;
+  }
 }
 
 // Misc. stuff
@@ -232,7 +238,7 @@
   // slightly smaller font, tighten spacing on nav pills
   .nav-pills {
     > li > a {
-      font-size: $font-0;
+      font-size: var(--font-0);
       padding: 7px 10px;
     }
   }
@@ -245,7 +251,7 @@
     // smaller table cell spacing
     .topic-list-data {
       padding: 10px;
-      font-size: $font-0;
+      font-size: var(--font-0);
     }
   }
 }
@@ -256,14 +262,15 @@
 
 .welcome-cta {
   background-color: var(--secondary);
-  border: 1px solid var(--primary-low-mid);
-  box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--primary-low);
+  box-shadow: shadow("menu-panel");
+  border-radius: 4px;
   padding: 12px 20px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   position: absolute;
-  top: 44px;
+  top: 48px;
   width: calc(100% - 40px);
   z-index: z("usercard");
   &__content {

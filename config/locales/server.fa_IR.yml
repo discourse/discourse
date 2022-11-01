@@ -58,8 +58,6 @@ fa_IR:
     bad_color_scheme: "نمی‌توان پوسته را بروزرسانی کرد، جعبه رنگ نامعتبر"
     other_error: "در بروزرسانی قالب مشکلی پیش آمده"
     ember_selector_error: "متأسفیم - استفاده از انتخابگرهای #ember یا .ember-view در CSS مجاز نیست ، زیرا این نام‌ها در زمان اجرا به صورت پویا تولید شده و با گذشت زمان تغییر می‌کنند که در نهایت منجر به تولید CSS غیر معتبر خواهد شد. انتخابگر دیگری را امتحان کنید."
-    compile_error:
-      unrecognized_extension: "پرونده افزونه شناسایی نشد:%{extension}"
     import_error:
       generic: خطایی در هنگام وارد کردن پوسته اتفاق افتاده است
       about_json_values: "about.json حاوی مقادیر نامعتبر است: %{errors}"
@@ -85,6 +83,7 @@ fa_IR:
         bounced_email_error: "ایمیل یک گزارش برگشتی است."
         screened_email_error: "وقتی که ارسال کننده ایمیل پیش از این در حال نمایش باشد، اتفاق می‌افتد."
       unrecognized_error: "خطای نامشخص"
+    secure_uploads_placeholder: "ویرایش شده: این سایت بارگذاری ایمن را فعال کرده است، از موضوع دیدن کنید یا برای مشاهده بارگذاری‌های پیوست روی مشاهده رسانه کلیک کنید."
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
@@ -136,6 +135,7 @@ fa_IR:
     site_settings:
       default_categories_already_selected: "شما نمیتوانید دسته‌بندی‌ای را که در یک فهرست دیگر استفاده شده را انتخاب کنید."
       s3_upload_bucket_is_required: "شما نمیتوانید بارگذاری به S3 را فعال کنید مگر اینکه 's3_upload_bucket' را ارائه دهید."
+      secure_uploads_requirements: "قبل از فعال کردن بارگذاری‌های ایمن، بارگذاری‌های S3 باید فعال شوند."
   word_connector:
     comma: "، "
   invite:
@@ -146,6 +146,9 @@ fa_IR:
     invalid_email: "آدرس ایمیل %{email} معتبر نیست."
     disabled_errors:
       invalid_access: "شما اجازه مشاهده منبع درخواست شده را ندارید."
+    max_redemptions_allowed_one: "برای دعوت‌نامه‌های ایمیل باید 1 باشد."
+    redemption_count_less_than_max: "باید کمتر از %{max_redemptions_allowed} باشد."
+    email_xor_domain: "فیلدهای ایمیل و دامنه به طور همزمان مجاز نیستند"
   bulk_invite:
     file_should_be_csv: "فرمت فایل بارگذاری شده می بایست csv باشد."
     error: "خطایی هنگام آپلود فایل مربوطه رخ داده است. لطفا بعدا امتحان کنید."
@@ -370,7 +373,7 @@ fa_IR:
   staff_category_name: "همکاران"
   staff_category_description: "بخش خصوصی برای گفتگوی مدیران. موضوعات فقط برای مدیران ارشد و مدیران قابل رویت است."
   discourse_welcome_topic:
-    title: "به دیسکورس خوش آمدید"
+    title: "به انجمن ما خوش آمدید!"
     body: |2
 
       اولین پاراگراف این موضوع سنجاق شده و به عنوان پیام خوش‌آمد گویی به تمام بازدید‌کنندگان نمایش داده می‌شود. که مهم است!
@@ -1239,6 +1242,7 @@ fa_IR:
     enable_sitemap: "یک نقشه سایت برای سایت خود ایجاد کنید و آن را در پرونده robots.txt قرار دهید."
     sitemap_page_size: "تعداد آدرس‌های اینترنتی که باید در هر صفحه نقشه سایت گنجانده شود. حداکثر ۵۰٫۰۰۰"
     enable_user_status: "(آزمایشی) به کاربران اجازه می‌دهد، که پیام وضعیت را تغییر دهند (شکلک + توضیحات)."
+    enable_onboarding_popups: "(آزمایشی) پنجره‌های بازشونده آموزشی را فعال کنید که ویژگی‌های کلیدی را برای کاربران توضیح دهد"
     use_name_for_username_suggestions: "هنگام پیشنهاد نام‌کاربری از نام کامل، کاربر استفاده کنید."
     errors:
       invalid_email: "آدرس ایمیل نامعتبر"
@@ -1531,7 +1535,6 @@ fa_IR:
     bulk_invite_succeeded:
       title: "دعوت عمومی موفق"
       subject_template: "دعوت گروهی کاربران با موفقیت انجام شد"
-      text_body_template: "فایل دعوت گروهی کاربر شما پردازش شد، %{sent} دعوتنامه ارسال شد. "
     bulk_invite_failed:
       title: "دعوت گروهی ناموفق"
       subject_template: "دعوت انبوه کاربر با مشکل پردازش شد"
@@ -2299,12 +2302,14 @@ fa_IR:
               categories_and_top_topics:
                 label: "دسته بندی ها و مباحث داغ"
       branding:
+        title: "سفارشی کردن لوگوها"
         fields:
           logo:
             label: "لوگو اصلی"
           large_icon:
             label: "آیکن بزرگ"
       corporate:
+        title: "سازمان شما"
         fields:
           contact_url:
             label: "صفحه وب"

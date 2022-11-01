@@ -18,9 +18,16 @@ class Admin::SiteSettingsController < Admin::AdminController
     value = params[id]
     value.strip! if value.is_a?(String)
 
-    new_setting_name = SiteSettings::DeprecatedSettings::SETTINGS.find do |old_name, new_name, _, _|
-      break new_name if old_name == id
+    new_setting_name = SiteSettings::DeprecatedSettings::SETTINGS.find do |old_name, new_name, override, _|
+      if old_name == id
+        if !override
+          raise Discourse::InvalidParameters, "You cannot change this site setting because it is deprecated, use #{new_name} instead."
+        end
+
+        break new_name
+      end
     end
+
     id = new_setting_name if new_setting_name
 
     raise_access_hidden_setting(id)
@@ -96,6 +103,8 @@ class Admin::SiteSettingsController < Admin::AdminController
             TagUser.insert_all!(tag_users)
           end
         end
+      elsif is_sidebar_default_setting?(id)
+        Jobs.enqueue(:backfill_sidebar_site_settings, setting_name: id, previous_value: previous_value, new_value: new_value)
       end
     end
 
@@ -154,12 +163,18 @@ class Admin::SiteSettingsController < Admin::AdminController
         .pluck("users.id")
 
       json[:user_count] = user_ids.uniq.count
+    elsif is_sidebar_default_setting?(id)
+      json[:user_count] = SidebarSiteSettingsBackfiller.new(id, previous_value: previous_value, new_value: new_value).number_of_users_to_backfill
     end
 
     render json: json
   end
 
   private
+
+  def is_sidebar_default_setting?(setting_name)
+    %w{default_sidebar_categories default_sidebar_tags}.include?(setting_name.to_s)
+  end
 
   def user_options
     {

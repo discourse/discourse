@@ -5,7 +5,6 @@ import { or } from "@ember/object/computed";
 export default Component.extend({
   tagName: "span",
   classNameBindings: [":topic-post-badges"],
-  rerenderTriggers: ["url", "unread", "newPosts", "unreadPosts", "unseen"],
   newDotText: null,
 
   init() {

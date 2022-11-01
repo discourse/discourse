@@ -26,9 +26,22 @@ export default DiscourseRoute.extend({
     }
   },
 
+  activate() {
+    this.controllerFor("application").setProperties({
+      sidebarDisabledRouteOverride: true,
+    });
+  },
+
+  deactivate() {
+    this.controllerFor("application").setProperties({
+      sidebarDisabledRouteOverride: false,
+    });
+  },
+
   setupController(controller, model) {
     this._super(...arguments);
     controller.resetState();
+
     if (model.error) {
       controller.displayError(model.error);
       controller.set("loadError", true);

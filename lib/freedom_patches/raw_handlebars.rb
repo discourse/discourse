@@ -10,7 +10,7 @@ class Barber::Precompiler
 
   def precompiler
     if !@precompiler
-      loader = File.read("#{Rails.root}/app/assets/javascripts/mini-loader.js")
+      loader = File.read("#{Rails.root}/app/assets/javascripts/node_modules/loader.js/dist/loader/loader.js")
       source = File.read("#{Rails.root}/app/assets/javascripts/discourse-common/addon/lib/raw-handlebars.js")
 
       transpiled = DiscourseJsProcessor.transpile(source, "#{Rails.root}/app/assets/javascripts/", "discourse-common/lib/raw-handlebars")

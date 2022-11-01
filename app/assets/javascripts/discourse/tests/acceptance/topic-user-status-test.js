@@ -19,6 +19,10 @@ acceptance("Topic - User Status", function (needs) {
       const response = cloneJSON(TopicFixtures["/t/299/1.json"]);
       response.post_stream.posts.forEach((post) => {
         post.user_status = status;
+
+        // we need the poster's name to be different from username
+        // so when display_name_on_posts = true, both name and username will be shown:
+        post.name = "Evil T";
       });
 
       return helper.response(200, response);
@@ -27,6 +31,19 @@ acceptance("Topic - User Status", function (needs) {
 
   test("shows user status next to avatar on posts", async function (assert) {
     this.siteSettings.enable_user_status = true;
+    await visit("/t/-/299/1");
+
+    assert.equal(
+      queryAll(".topic-post .user-status-message").length,
+      3,
+      "all posts has user status"
+    );
+  });
+
+  test("shows user status next to avatar on posts when displaying names on posts is enabled", async function (assert) {
+    this.siteSettings.enable_user_status = true;
+    this.siteSettings.display_name_on_posts = true;
+
     await visit("/t/-/299/1");
 
     assert.equal(

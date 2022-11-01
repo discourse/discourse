@@ -7,6 +7,9 @@ RSpec.describe Reviewable, type: :model do
 
     let(:reviewable) { Fabricate.build(:reviewable, created_by: admin) }
 
+    it { is_expected.to have_many(:reviewable_scores).dependent(:destroy) }
+    it { is_expected.to have_many(:reviewable_histories).dependent(:destroy) }
+
     it "can create a reviewable object" do
       expect(reviewable).to be_present
       expect(reviewable.pending?).to eq(true)
@@ -297,87 +300,6 @@ RSpec.describe Reviewable, type: :model do
         list = Reviewable.unseen_list_for(user, preload: false)
         expect(list).to be_empty
       end
-    end
-  end
-
-  describe ".recent_list_with_pending_first" do
-    fab!(:pending_reviewable1) do
-      Fabricate(
-        :reviewable,
-        score: 150,
-        created_at: 7.minutes.ago,
-        status: Reviewable.statuses[:pending]
-      )
-    end
-    fab!(:pending_reviewable2) do
-      Fabricate(
-        :reviewable,
-        score: 100,
-        status: Reviewable.statuses[:pending]
-      )
-    end
-    fab!(:approved_reviewable1) do
-      Fabricate(
-        :reviewable,
-        created_at: 1.minutes.ago,
-        score: 300,
-        status: Reviewable.statuses[:approved]
-      )
-    end
-    fab!(:approved_reviewable2) do
-      Fabricate(
-        :reviewable,
-        created_at: 5.minutes.ago,
-        score: 200,
-        status: Reviewable.statuses[:approved]
-      )
-    end
-
-    fab!(:admin) { Fabricate(:admin) }
-
-    it "returns a list of reviewables with pending items first" do
-      list = Reviewable.recent_list_with_pending_first(admin)
-      expect(list.map(&:id)).to eq([
-        pending_reviewable1.id,
-        pending_reviewable2.id,
-        approved_reviewable1.id,
-        approved_reviewable2.id
-      ])
-
-      pending_reviewable1.update!(status: Reviewable.statuses[:rejected])
-      rejected_reviewable = pending_reviewable1
-
-      list = Reviewable.recent_list_with_pending_first(admin)
-      expect(list.map(&:id)).to eq([
-        pending_reviewable2.id,
-        approved_reviewable1.id,
-        approved_reviewable2.id,
-        rejected_reviewable.id,
-      ])
-    end
-
-    it "only includes reviewables whose score is above the minimum or are forced for review" do
-      SiteSetting.reviewable_default_visibility = 'high'
-      Reviewable.set_priorities({ high: 200 })
-
-      list = Reviewable.recent_list_with_pending_first(admin)
-      expect(list.map(&:id)).to eq([
-        approved_reviewable1.id,
-        approved_reviewable2.id,
-      ])
-
-      pending_reviewable1.update!(force_review: true)
-
-      list = Reviewable.recent_list_with_pending_first(admin)
-      expect(list.map(&:id)).to eq([
-        pending_reviewable1.id,
-        approved_reviewable1.id,
-        approved_reviewable2.id,
-      ])
-    end
-
-    it "accepts a limit argument to limit the number of returned records" do
-      expect(Reviewable.recent_list_with_pending_first(admin, limit: 2).size).to eq(2)
     end
   end
 

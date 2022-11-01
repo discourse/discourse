@@ -866,7 +866,8 @@ const TopicTrackingState = EmberObject.extend({
 
       if (
         mutedCategoryIds &&
-        mutedCategoryIds.includes(data.payload.category_id)
+        mutedCategoryIds.includes(data.payload.category_id) &&
+        !this.isUnmutedTopic(data.topic_id)
       ) {
         return;
       }

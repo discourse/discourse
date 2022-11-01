@@ -4,31 +4,65 @@ require 'csv'
 
 RSpec.describe Admin::WatchedWordsController do
   fab!(:admin) { Fabricate(:admin) }
+  fab!(:user) { Fabricate(:user) }
+
+  it "is a subclass of StaffController" do
+    expect(Admin::WatchedWordsController < Admin::StaffController).to eq(true)
+  end
 
   describe '#destroy' do
     fab!(:watched_word) { Fabricate(:watched_word) }
 
-    before do
-      sign_in(admin)
+    context "when logged in as a non-staff user" do
+      before do
+        sign_in(user)
+      end
+
+      it "can't delete a watched word" do
+        delete "/admin/customize/watched_words/#{watched_word.id}.json"
+
+        expect(response.status).to eq(404)
+      end
     end
 
-    it 'should return the right response when given an invalid id param' do
-      delete '/admin/customize/watched_words/9999.json'
+    context "when logged in as staff user" do
+      before do
+        sign_in(admin)
+      end
 
-      expect(response.status).to eq(400)
-    end
+      it 'should return the right response when given an invalid id param' do
+        delete "/admin/customize/watched_words/9999.json"
 
-    it 'should be able to delete a watched word' do
-      delete "/admin/customize/watched_words/#{watched_word.id}.json"
+        expect(response.status).to eq(400)
+      end
 
-      expect(response.status).to eq(200)
-      expect(WatchedWord.find_by(id: watched_word.id)).to eq(nil)
-      expect(UserHistory.where(action: UserHistory.actions[:watched_word_destroy]).count).to eq(1)
+      it "should be able to delete a watched word" do
+        delete "/admin/customize/watched_words/#{watched_word.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(WatchedWord.find_by(id: watched_word.id)).to eq(nil)
+        expect(UserHistory.where(action: UserHistory.actions[:watched_word_destroy]).count).to eq(1)
+      end
     end
   end
 
   describe '#create' do
-    context 'when logged in as admin' do
+    context "when logged in as a non-staff user" do
+      before do
+        sign_in(user)
+      end
+
+      it "can't create a watched word" do
+        post "/admin/customize/watched_words.json", params: {
+          action_key: 'flag',
+          word: 'Fr33'
+        }
+
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when logged in as a staff user" do
       before do
         sign_in(admin)
       end
@@ -54,11 +88,25 @@ RSpec.describe Admin::WatchedWordsController do
         expect(WatchedWord.take.case_sensitive?).to eq(true)
         expect(WatchedWord.take.word).to eq('PNG')
       end
-
     end
   end
 
   describe '#upload' do
+    context "when logged in as a non-staff user" do
+      before do
+        sign_in(user)
+      end
+
+      it "can't create watched words via file upload" do
+        post "/admin/customize/watched_words/upload.json", params: {
+          action_key: 'flag',
+          file: Rack::Test::UploadedFile.new(file_from_fixtures("words.csv", "csv"))
+        }
+
+        expect(response.status).to eq(404)
+      end
+    end
+
     context 'when logged in as admin' do
       before do
         sign_in(admin)

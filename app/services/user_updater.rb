@@ -47,7 +47,9 @@ class UserUpdater
     :title_count_mode,
     :timezone,
     :skip_new_user_tips,
-    :default_calendar
+    :seen_popups,
+    :default_calendar,
+    :sidebar_list_destination
   ]
 
   NOTIFICATION_SCHEDULE_ATTRS = -> {
@@ -178,6 +180,14 @@ class UserUpdater
       end
     end
 
+    if attributes.key?(:skip_new_user_tips)
+      user.user_option.seen_popups = if user.user_option.skip_new_user_tips
+        OnboardingPopup.types.values
+      else
+        nil
+      end
+    end
+
     # automatically disable digests when mailing_list_mode is enabled
     user.user_option.email_digests = false if user.user_option.mailing_list_mode
 
@@ -209,9 +219,17 @@ class UserUpdater
         update_sidebar_tag_section_links(attributes[:sidebar_tag_names])
       end
 
+      if SiteSetting.enable_user_status?
+        update_user_status(attributes[:status])
+      end
+
       name_changed = user.name_changed?
-      if (saved = (!save_options || user.user_option.save) && (user_notification_schedule.nil? || user_notification_schedule.save) && user_profile.save && user.save) &&
-         (name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0)
+      saved = (!save_options || user.user_option.save) &&
+        (user_notification_schedule.nil? || user_notification_schedule.save) &&
+        user_profile.save &&
+        user.save
+
+      if saved && (name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0)
 
         StaffActionLogger.new(@actor).log_name_change(
           user.id,
@@ -329,6 +347,14 @@ class UserUpdater
       delete_all_sidebar_section_links('Category')
     else
       update_sidebar_section_links('Category', Category.secured(guardian).where(id: category_ids).pluck(:id))
+    end
+  end
+
+  def update_user_status(status)
+    if status.blank?
+      @user.clear_status!
+    else
+      @user.set_status!(status[:description], status[:emoji], status[:ends_at])
     end
   end
 

@@ -392,6 +392,7 @@ RSpec.describe TopicUser do
         new_user.user_option.update!(auto_track_topics_after_msecs: 0)
 
         another_user = Fabricate(:user)
+        Group.refresh_automatic_groups!
         pm = Fabricate(:private_message_topic, user: another_user)
         pm.invite(another_user, new_user.username)
 

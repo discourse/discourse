@@ -189,6 +189,7 @@ hy:
     ok_value: "ՕԿ"
     cancel_value: "Չեղարկել"
     submit: "Հաստատել"
+    delete: "Ջնջել"
     generic_error: "Տեղի է ունեցել սխալ, ներողություն:"
     generic_error_with_reason: "Տեղի է ունեցել սխալ՝ %{error}"
     sign_up: "Գրանցվել"
@@ -838,6 +839,8 @@ hy:
       enable_defer: "Սեղմել <<Հետաձգում>> կոճակը, նշելով որպես չընթերցված թեմաներ "
       experimental_sidebar:
         options: "Տարբերակներ"
+        navigation_section: "Նավիգացիա"
+        list_destination_default: "Լռելյայն"
       change: "փոխել"
       featured_topic: "Հանրահայտ թեմա"
       moderator: "%{user}-ը մոդերատոր է"
@@ -925,6 +928,7 @@ hy:
         move_to_archive: "Արխիվացնել"
         failed_to_move: "Չհաջողվեց տեղափոխել ընտրված հաղորդագրությունները (հնարավոր է՝ համացանցի հետ կապված խնդիր կա)"
         tags: "Թեգեր"
+        all_tags: "Բոլոր Թեգերը"
       preferences_nav:
         account: "Հաշիվ"
         security: "Անվտանգություն"
@@ -981,14 +985,12 @@ hy:
           name_and_code_required_error: "Դուք պետք է նշեք նույնականացման հավելվածի կոդը և անվանումը:"
         security_key:
           register: "Գրանցվել"
-          title: "Անվտանգության Բանալիներ"
-          add: "Ավելացնել Անվտանգության Բանալին"
           default_name: "Անվտանգության Գլխավոր Բանալին"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "Անվտանգության բանալու գրանցման ժամանակը վերջացել է կամ չեղյալ է հայտարարվել:"
           already_added_error: "Դուք արդեն գրանցել եք այս անվտանգության բանալին: Պետք չէ այն նորից գրանցել:"
-          edit: "Խմբագրել Անվտանգության Բանալին"
           save: "Պահպանել"
-          edit_description: "Անվտանգության Բանալիների անվանումը"
           name_required_error: "Դուք պետք է նշեք անվտանգության բանալու անվանումը "
       change_about:
         title: "Փոփոխել Իմ Մասին բաժինը"
@@ -1337,6 +1339,8 @@ hy:
       leave_message: "Դուք իսկապե՞ս ցանկանում եք թողնել այս հաղորդագրությունը:"
       remove_allowed_user: "Դուք իսկապե՞ս ցանկանում եք հեռացնել %{name}-ը այս հաղորդագրությունից:"
       remove_allowed_group: "Դուք իսկապե՞ս ցանկանում եք հեռացնել %{name}-ը այս հաղորդագրությունից:"
+      leave: "Լքել"
+      remove_user: "Հեռացնել օգտատիրոջը"
     email: "Էլ. հասցե"
     username: "Օգտանուն"
     last_seen: "Ակտիվ էր"
@@ -2808,7 +2812,6 @@ hy:
         other: "%{tags} և ևս %{count}"
       delete_unused: "Ջնջել Չօգտագործված Թեգերը"
       delete_unused_description: "Ջնջել բոլոր թեգերը, որոնք կցված չեն որևէ թեմայի կամ անձնական հաղորդագրության"
-      cancel_delete_unused: "Չեղարկել"
       filters:
         without_category: "%{filter} %{tag} թեմա"
         with_category: "%{filter} %{tag} թեմա %{category}-ում"
@@ -2880,7 +2883,7 @@ hy:
       new_count:
         one: "%{count} նոր"
         other: "%{count} նոր"
-      more: "Ավելին..."
+      more: "Ավելին"
       all_categories: "Բոլոր կատեգորիաները"
       sections:
         about:
@@ -2919,6 +2922,9 @@ hy:
               content: "Օգտատերեր"
             my_posts:
               content: "Իմ Գրառումները"
+            review:
+              content: "Վերանայում"
+              title: "վերանայում"
   admin_js:
     type_to_filter: "գրեք ֆիլտրելու համար..."
     admin:

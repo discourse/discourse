@@ -15,6 +15,7 @@ import Site from "discourse/models/site";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import categoryFixture from "discourse/tests/fixtures/category-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 
 acceptance(
   "Sidebar - Logged on user - Categories Section - allow_uncategorized_topics disabled",
@@ -25,7 +26,7 @@ acceptance(
       enable_sidebar: true,
     });
 
-    needs.user();
+    needs.user({ admin: false });
 
     test("uncategorized category is not shown", async function (assert) {
       const categories = Site.current().categories;
@@ -61,6 +62,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
   needs.user({
     sidebar_category_ids: [],
     sidebar_tags: [],
+    admin: false,
   });
 
   needs.settings({
@@ -78,6 +80,12 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       });
     });
 
+    server.get(`/c/:categorySlug/:categoryId/none/l/latest.json`, () => {
+      return helper.response(
+        cloneJSON(discoveryFixture["/c/bug/1/l/latest.json"])
+      );
+    });
+
     server.get("/c/:categorySlug/:categoryId/find_by_slug.json", () => {
       return helper.response(cloneJSON(categoryFixture["/c/1/show.json"]));
     });
@@ -88,15 +96,23 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     const category1 = categories[0];
     const category2 = categories[1];
     const category3 = categories[5];
+    const category4 = categories[24];
 
     updateCurrentUser({
-      sidebar_category_ids: [category1.id, category2.id, category3.id],
+      sidebar_category_ids: [
+        category1.id,
+        category2.id,
+        category3.id,
+        category4.id,
+      ],
     });
 
-    return { category1, category2, category3 };
+    return { category1, category2, category3, category4 };
   };
 
   test("clicking on section header link", async function (assert) {
+    setupUserSidebarCategories();
+
     await visit("/t/280");
     await click(".sidebar-section-categories .sidebar-section-header");
 
@@ -107,6 +123,8 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
   });
 
   test("clicking on section header button", async function (assert) {
+    setupUserSidebarCategories();
+
     await visit("/");
     await click(".sidebar-section-categories .sidebar-section-header-button");
 
@@ -117,15 +135,39 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
   });
 
-  test("category section links when user has not added any categories", async function (assert) {
+  test("categories section is hidden when user has not added any categories and there are no default categories configured", async function (assert) {
+    updateCurrentUser({ sidebar_category_ids: [] });
+
+    await visit("/");
+
+    assert.notOk(
+      exists(".sidebar-section-categories"),
+      "categories section is not shown"
+    );
+  });
+
+  test("categories section is shown when user has not added any categories but default categories have been configured", async function (assert) {
+    updateCurrentUser({ sidebar_category_ids: [] });
+    const categories = Site.current().categories;
+    this.siteSettings.default_sidebar_categories = `${categories[0].id}|${categories[1].id}`;
+
     await visit("/");
 
     assert.ok(
-      exists(".sidebar-section-message"),
-      "the no categories message is displayed"
+      exists(".sidebar-section-categories"),
+      "categories section is shown"
     );
 
-    await click(".sidebar-section-message a");
+    assert.ok(
+      exists(
+        ".sidebar-section-categories .sidebar-section-link-configure-categories"
+      ),
+      "section link to add categories to sidebar is displayed"
+    );
+
+    await click(
+      ".sidebar-section-categories .sidebar-section-link-configure-categories"
+    );
 
     assert.strictEqual(
       currentURL(),
@@ -170,13 +212,14 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.deepEqual(
       categoryNames,
-      ["abc", "aBC", "efg"],
+      ["abc", "aBC", "efg", "Sub Category"],
       "category section links are displayed in the right order"
     );
   });
 
   test("category section links", async function (assert) {
-    const { category1, category2, category3 } = setupUserSidebarCategories();
+    const { category1, category2, category3, category4 } =
+      setupUserSidebarCategories();
 
     await visit("/");
 
@@ -184,22 +227,15 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       count(
         ".sidebar-section-categories .sidebar-section-link:not(.sidebar-section-link-all-categories)"
       ),
-      3,
-      "there should only be 3 section link under the section"
+      4,
+      "there should only be 4 section link under the section"
     );
 
     assert.ok(
       exists(
-        `.sidebar-section-link-${category1.slug} .prefix-icon.d-icon-square-full`
+        `.sidebar-section-link-${category1.slug} .sidebar-section-link-prefix .prefix-span[style="background: linear-gradient(90deg, #${category1.color} 50%, #${category1.color} 50%)"]`
       ),
-      "category1 section link is rendered with right prefix icon"
-    );
-
-    assert.ok(
-      exists(
-        `.sidebar-section-link-${category1.slug} .sidebar-section-link-prefix[style="color: #${category1.color}"]`
-      ),
-      "category1 section link is rendered with right prefix icon color"
+      "category1 section link is rendered with solid prefix icon color"
     );
 
     assert.strictEqual(
@@ -212,8 +248,8 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.strictEqual(
       currentURL(),
-      `/c/${category1.slug}/${category1.id}/l/latest`,
-      "it should transition to the category1's discovery page"
+      `/c/${category1.slug}/${category1.id}`,
+      "it should transition to the category1 page"
     );
 
     assert.strictEqual(
@@ -231,8 +267,8 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.strictEqual(
       currentURL(),
-      `/c/${category2.slug}/${category2.id}/l/latest`,
-      "it should transition to the category2's discovery page"
+      `/c/${category2.slug}/${category2.id}`,
+      "it should transition to the category2's page"
     );
 
     assert.strictEqual(
@@ -251,6 +287,139 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
         `.sidebar-section-link-${category3.slug} .sidebar-section-link-prefix .prefix-badge.d-icon-lock`
       ),
       "category3 section link is rendered with lock prefix badge icon as it is read restricted"
+    );
+
+    assert.ok(
+      exists(
+        `.sidebar-section-link-${category4.slug} .sidebar-section-link-prefix .prefix-span[style="background: linear-gradient(90deg, #${category4.parentCategory.color} 50%, #${category4.color} 50%)"]`
+      ),
+      "sub category section link is rendered with double prefix color"
+    );
+  });
+
+  test("clicking section links - sidebar_list_destination set to unread/new and no unread or new topics", async function (assert) {
+    updateCurrentUser({
+      sidebar_list_destination: "unread_new",
+    });
+    const { category1 } = setupUserSidebarCategories();
+
+    await visit("/");
+
+    await click(`.sidebar-section-link-${category1.slug}`);
+
+    assert.strictEqual(
+      currentURL(),
+      `/c/${category1.slug}/${category1.id}`,
+      "it should transition to the category1 default view page"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-categories .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(`.sidebar-section-link-${category1.slug}.active`),
+      "the category1 section link is marked as active"
+    );
+  });
+
+  test("clicking section links - sidebar_list_destination set to unread/new with new topics", async function (assert) {
+    const { category1 } = setupUserSidebarCategories();
+    const topicTrackingState = this.container.lookup(
+      "service:topic-tracking-state"
+    );
+    topicTrackingState.states.set("t112", {
+      last_read_post_number: null,
+      id: 112,
+      notification_level: NotificationLevels.TRACKING,
+      category_id: category1.id,
+      created_in_new_period: true,
+    });
+    updateCurrentUser({
+      sidebar_list_destination: "unread_new",
+    });
+
+    await visit("/");
+
+    await click(`.sidebar-section-link-${category1.slug}`);
+
+    assert.strictEqual(
+      currentURL(),
+      `/c/${category1.slug}/${category1.id}/l/new`,
+      "it should transition to the category1 new page"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-categories .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(`.sidebar-section-link-${category1.slug}.active`),
+      "the category1 section link is marked as active"
+    );
+  });
+
+  test("clicking section links - sidebar_list_destination set to unread/new with new and unread topics", async function (assert) {
+    const { category1 } = setupUserSidebarCategories();
+    const topicTrackingState = this.container.lookup(
+      "service:topic-tracking-state"
+    );
+    topicTrackingState.states.set("t112", {
+      last_read_post_number: null,
+      id: 112,
+      notification_level: NotificationLevels.TRACKING,
+      category_id: category1.id,
+      created_in_new_period: true,
+    });
+    topicTrackingState.states.set("t113", {
+      last_read_post_number: 1,
+      highest_post_number: 2,
+      id: 113,
+      notification_level: NotificationLevels.TRACKING,
+      category_id: category1.id,
+      created_in_new_period: true,
+    });
+    updateCurrentUser({
+      sidebar_list_destination: "unread_new",
+    });
+
+    await visit("/");
+
+    await click(`.sidebar-section-link-${category1.slug}`);
+
+    assert.strictEqual(
+      currentURL(),
+      `/c/${category1.slug}/${category1.id}/l/unread`,
+      "it should transition to the category1 unread page"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-categories .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(`.sidebar-section-link-${category1.slug}.active`),
+      "the category1 section link is marked as active"
+    );
+  });
+
+  test("category section link for category with 3-digit hex code for color", async function (assert) {
+    const { category1 } = setupUserSidebarCategories();
+    category1.set("color", "888");
+
+    await visit("/");
+
+    assert.ok(
+      exists(
+        `.sidebar-section-link-${category1.slug} .sidebar-section-link-prefix .prefix-span[style="background: linear-gradient(90deg, #888 50%, #888 50%)"]`
+      ),
+      "category1 section link is rendered with the right solid prefix icon color"
     );
   });
 
@@ -321,6 +490,40 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     assert.ok(
       exists(`.sidebar-section-link-${category1.slug}.active`),
       "the category1 section link is marked as active for the top route"
+    );
+  });
+
+  test("visiting category discovery no subcategoriees route", async function (assert) {
+    const { category1 } = setupUserSidebarCategories();
+
+    await visit(`/c/${category1.slug}/${category1.id}/none`);
+
+    assert.strictEqual(
+      count(".sidebar-section-categories .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(`.sidebar-section-link-${category1.slug}.active`),
+      "the category1 section link is marked as active for the none route"
+    );
+  });
+
+  test("visiting category discovery includes all subcategories route", async function (assert) {
+    const { category1 } = setupUserSidebarCategories();
+
+    await visit(`/c/${category1.slug}/${category1.id}/all`);
+
+    assert.strictEqual(
+      count(".sidebar-section-categories .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(`.sidebar-section-link-${category1.slug}.active`),
+      "the category1 section link is marked as active for the all route"
     );
   });
 
@@ -457,6 +660,26 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     assert.ok(
       Object.keys(topicTrackingState.stateChangeCallbacks).length <
         initialCallbackCount
+    );
+  });
+
+  test("section link to admin site settings page when default sidebar categories have not been configured", async function (assert) {
+    setupUserSidebarCategories();
+    updateCurrentUser({ admin: true });
+
+    await visit("/");
+
+    assert.ok(
+      exists(".sidebar-section-link-configure-default-sidebar-categories"),
+      "section link to configure default sidebar categories is shown"
+    );
+
+    await click(".sidebar-section-link-configure-default-sidebar-categories");
+
+    assert.strictEqual(
+      currentURL(),
+      "/admin/site_settings/category/all_results?filter=default_sidebar_categories",
+      "it links to the admin site settings page correctly"
     );
   });
 });

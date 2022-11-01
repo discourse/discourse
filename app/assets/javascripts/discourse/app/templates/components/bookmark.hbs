@@ -9,7 +9,7 @@
 
   <div class="control-group bookmark-name-wrap">
     <Input id="bookmark-name" @value={{this.model.name}} name="bookmark-name" class="bookmark-name" @enter={{action "saveAndClose"}} placeholder={{i18n "post.bookmarks.name_placeholder"}} maxlength="100" />
-    <DButton @icon="cog" @action={{action "toggleShowOptions"}} @class="bookmark-options-button" @ariaLabel="post.bookmarks.options" />
+    <DButton @icon="cog" @action={{action "toggleShowOptions"}} @class="bookmark-options-button" @ariaLabel="post.bookmarks.options" @title="post.bookmarks.options" />
   </div>
 
   {{#if this.showOptions}}
@@ -42,7 +42,7 @@
     <DButton @id="save-bookmark" @label="bookmarks.save" @class="btn-primary" @action={{action "saveAndClose"}} />
     <DModalCancel @close={{action "closeWithoutSavingBookmark"}} />
     {{#if this.showDelete}}
-      <DButton @id="delete-bookmark" @icon="trash-alt" @class="delete-bookmark btn-danger" @action={{action "delete"}} />
+      <DButton @id="delete-bookmark" @icon="trash-alt" @class="delete-bookmark btn-danger" @action={{action "delete"}} @ariaLabel="post.bookmarks.actions.delete_bookmark.name" @title="post.bookmarks.actions.delete_bookmark.name" />
     {{/if}}
   </div>
 </ConditionalLoadingSpinner>

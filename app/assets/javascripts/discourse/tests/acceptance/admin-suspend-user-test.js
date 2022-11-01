@@ -54,9 +54,9 @@ acceptance("Admin - Suspend User", function (needs) {
 
     await click(".d-modal-cancel");
 
-    assert.strictEqual(count(".bootbox.modal:visible"), 1);
+    assert.strictEqual(count(".dialog-body:visible"), 1);
 
-    await click(".modal-footer .btn-default");
+    await click(".dialog-footer .btn-default");
     assert.strictEqual(count(".suspend-user-modal:visible"), 1);
     assert.strictEqual(
       query(".suspend-message").value,
@@ -64,11 +64,11 @@ acceptance("Admin - Suspend User", function (needs) {
     );
 
     await click(".d-modal-cancel");
-    assert.strictEqual(count(".bootbox.modal:visible"), 1);
+    assert.strictEqual(count(".dialog-body:visible"), 1);
     assert.ok(!exists(".suspend-user-modal:visible"));
 
-    await click(".modal-footer .btn-primary");
-    assert.ok(!exists(".bootbox.modal:visible"));
+    await click(".dialog-footer .btn-primary");
+    assert.ok(!exists(".dialog-body:visible"));
   });
 
   test("suspend, then unsuspend a user", async function (assert) {

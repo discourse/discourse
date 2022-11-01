@@ -87,60 +87,6 @@ RSpec.describe NotificationsController do
           Discourse.clear_redis_readonly!
         end
 
-        it "should not bump last seen reviewable in readonly mode" do
-          user.update!(admin: true)
-          Fabricate(:reviewable)
-          Discourse.received_redis_readonly!
-          expect {
-            get "/notifications.json", params: { recent: true }
-            expect(response.status).to eq(200)
-          }.not_to change { user.reload.last_seen_reviewable_id }
-        ensure
-          Discourse.clear_redis_readonly!
-        end
-
-        it "should not bump last seen reviewable if the user can't seen reviewables" do
-          Fabricate(:reviewable)
-          expect {
-            get "/notifications.json", params: { recent: true, bump_last_seen_reviewable: true }
-            expect(response.status).to eq(200)
-          }.not_to change { user.reload.last_seen_reviewable_id }
-        end
-
-        it "should not bump last seen reviewable if the silent param is present" do
-          user.update!(admin: true)
-          Fabricate(:reviewable)
-          expect {
-            get "/notifications.json", params: {
-              recent: true,
-              silent: true,
-              bump_last_seen_reviewable: true
-            }
-            expect(response.status).to eq(200)
-          }.not_to change { user.reload.last_seen_reviewable_id }
-        end
-
-        it "should not bump last seen reviewable if the bump_last_seen_reviewable param is not present" do
-          user.update!(admin: true)
-          Fabricate(:reviewable)
-          expect {
-            get "/notifications.json", params: { recent: true, silent: true }
-            expect(response.status).to eq(200)
-          }.not_to change { user.reload.last_seen_reviewable_id }
-        end
-
-        it "bumps last_seen_reviewable_id" do
-          user.update!(admin: true)
-          expect(user.last_seen_reviewable_id).to eq(nil)
-          reviewable = Fabricate(:reviewable)
-          get "/notifications.json", params: { recent: true, bump_last_seen_reviewable: true }
-          expect(user.reload.last_seen_reviewable_id).to eq(reviewable.id)
-
-          reviewable2 = Fabricate(:reviewable)
-          get "/notifications.json", params: { recent: true, bump_last_seen_reviewable: true }
-          expect(user.reload.last_seen_reviewable_id).to eq(reviewable2.id)
-        end
-
         it "get notifications with all filters" do
           notification = Fabricate(:notification, user: user)
           notification2 = Fabricate(:notification, user: user)
@@ -202,6 +148,7 @@ RSpec.describe NotificationsController do
               created_at: 4.minutes.ago
             )
           end
+          fab!(:pending_reviewable) { Fabricate(:reviewable) }
 
           it "gets notifications list with unread ones at the top when the setting is enabled" do
             SiteSetting.enable_experimental_sidebar_hamburger = true
@@ -227,6 +174,93 @@ RSpec.describe NotificationsController do
               unread_regular.id,
               read_high_priority.id
             ])
+          end
+
+          it "should not bump last seen reviewable in readonly mode" do
+            SiteSetting.enable_experimental_sidebar_hamburger = true
+            user.update!(admin: true)
+            Discourse.received_redis_readonly!
+            expect {
+              get "/notifications.json", params: { recent: true, bump_last_seen_reviewable: true }
+              expect(response.status).to eq(200)
+            }.not_to change { user.reload.last_seen_reviewable_id }
+          ensure
+            Discourse.clear_redis_readonly!
+          end
+
+          it "should not bump last seen reviewable if the user can't see reviewables" do
+            SiteSetting.enable_experimental_sidebar_hamburger = true
+            expect {
+              get "/notifications.json", params: { recent: true, bump_last_seen_reviewable: true }
+              expect(response.status).to eq(200)
+            }.not_to change { user.reload.last_seen_reviewable_id }
+          end
+
+          it "should not bump last seen reviewable if the silent param is present" do
+            SiteSetting.enable_experimental_sidebar_hamburger = true
+            user.update!(admin: true)
+            expect {
+              get "/notifications.json", params: {
+                recent: true,
+                silent: true,
+                bump_last_seen_reviewable: true
+              }
+              expect(response.status).to eq(200)
+            }.not_to change { user.reload.last_seen_reviewable_id }
+          end
+
+          it "should not bump last seen reviewable if the bump_last_seen_reviewable param is not present" do
+            SiteSetting.enable_experimental_sidebar_hamburger = true
+            user.update!(admin: true)
+            expect {
+              get "/notifications.json", params: { recent: true }
+              expect(response.status).to eq(200)
+            }.not_to change { user.reload.last_seen_reviewable_id }
+          end
+
+          it "bumps last_seen_reviewable_id" do
+            SiteSetting.enable_experimental_sidebar_hamburger = true
+            user.update!(admin: true)
+            expect(user.last_seen_reviewable_id).to eq(nil)
+            get "/notifications.json", params: { recent: true, bump_last_seen_reviewable: true }
+            expect(user.reload.last_seen_reviewable_id).to eq(pending_reviewable.id)
+
+            reviewable2 = Fabricate(:reviewable)
+            get "/notifications.json", params: { recent: true, bump_last_seen_reviewable: true }
+            expect(user.reload.last_seen_reviewable_id).to eq(reviewable2.id)
+          end
+
+          it "includes pending reviewables when the setting is enabled" do
+            SiteSetting.enable_experimental_sidebar_hamburger = true
+            user.update!(admin: true)
+            pending_reviewable2 = Fabricate(:reviewable, created_at: 4.minutes.ago)
+            Fabricate(:reviewable, status: Reviewable.statuses[:approved])
+            Fabricate(:reviewable, status: Reviewable.statuses[:rejected])
+
+            get "/notifications.json", params: { recent: true }
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["pending_reviewables"].map { |r| r["id"] }).to eq([
+              pending_reviewable.id,
+              pending_reviewable2.id
+            ])
+          end
+
+          it "doesn't include reviewables when the setting is disabled" do
+            SiteSetting.enable_experimental_sidebar_hamburger = false
+            user.update!(admin: true)
+
+            get "/notifications.json", params: { recent: true }
+            expect(response.status).to eq(200)
+            expect(response.parsed_body.key?("pending_reviewables")).to eq(false)
+          end
+
+          it "doesn't include reviewables if the user can't see the review queue" do
+            SiteSetting.enable_experimental_sidebar_hamburger = true
+            user.update!(admin: false)
+
+            get "/notifications.json", params: { recent: true }
+            expect(response.status).to eq(200)
+            expect(response.parsed_body.key?("pending_reviewables")).to eq(false)
           end
         end
 

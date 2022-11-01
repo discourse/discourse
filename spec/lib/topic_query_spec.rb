@@ -1261,9 +1261,9 @@ RSpec.describe TopicQuery do
             expect(suggested_topics).to match_array([private_group_topic.id, private_message.id])
           end
 
-          context "when enable_personal_messages is false" do
+          context "when user is not in personal_message_enabled_groups" do
             before do
-              SiteSetting.enable_personal_messages = false
+              SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
             end
 
             it 'should not return topics by the group user' do

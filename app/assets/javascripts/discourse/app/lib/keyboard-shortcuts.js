@@ -140,7 +140,7 @@ export default {
     this.site = this.container.lookup("service:site");
 
     // Disable the shortcut if private messages are disabled
-    if (!this.currentUser?.allowPersonalMessages) {
+    if (!this.currentUser?.can_send_private_messages) {
       delete DEFAULT_BINDINGS["g m"];
     }
   },

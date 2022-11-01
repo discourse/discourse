@@ -202,6 +202,7 @@ nl:
     ok_value: "OK"
     cancel_value: "Annuleren"
     submit: "Versturen"
+    delete: "Verwijderen"
     generic_error: "Sorry, er is iets fout gegaan."
     generic_error_with_reason: "Er is iets fout gegaan: %{error}"
     sign_up: "Registreren"
@@ -1032,6 +1033,8 @@ nl:
       enable_defer: "Negeren voor markeren van topics als ongelezen inschakelen"
       experimental_sidebar:
         options: "Opties"
+        navigation_section: "Navigatie"
+        list_destination_default: "Standaard"
       change: "wijzigen"
       featured_topic: "Aanbevolen topic"
       moderator: "%{user} is een moderator"
@@ -1128,6 +1131,7 @@ nl:
         move_to_archive: "Archiveren"
         failed_to_move: "Het verplaatsen van geselecteerde berichten is niet gelukt (misschien is uw netwerkverbinding verbroken)"
         tags: "Tags"
+        all_tags: "Alle tags"
         warnings: "Officiële waarschuwingen"
       preferences_nav:
         account: "Account"
@@ -1196,8 +1200,6 @@ nl:
         edit: "Bewerken"
         edit_title: "Authenticator bewerken"
         edit_description: "Naam van authenticator"
-        enable_security_key_description: |
-          Druk wanneer u uw <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardwarebeveiligingssleutel</a> gereed hebt op de onderstaande knop Registreren.
         totp:
           title: "Op tokens gebaseerde authenticators"
           add: "Authenticator toevoegen"
@@ -1205,14 +1207,12 @@ nl:
           name_and_code_required_error: "U moet een naam en de code van uw authenticator-app opgeven."
         security_key:
           register: "Registreren"
-          title: "Beveiligingssleutels"
-          add: "Beveiligingssleutel toevoegen"
           default_name: "Hoofdbeveiligingssleutel"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "Het registratieproces van de beveiligingssleutel had een time-out of is geannuleerd."
           already_added_error: "U hebt deze beveiligingssleutel al geregistreerd. U hoeft deze niet opnieuw te registreren."
-          edit: "Beveiligingssleutel bewerken"
           save: "Opslaan"
-          edit_description: "Naam van beveiligingssleutel"
           name_required_error: "U moet een naam voor uw beveiligingssleutel opgeven."
       change_about:
         title: "Over mij wijzigen"
@@ -1645,6 +1645,8 @@ nl:
       leave_message: "Weet u zeker dat u dit bericht wilt verlaten?"
       remove_allowed_user: "Wilt u %{name} echt uit dit bericht verwijderen?"
       remove_allowed_group: "Wilt u %{name} echt uit dit bericht verwijderen?"
+      leave: "Verlaten"
+      remove_user: "Gebruiker verwijderen"
     email: "E-mailadres"
     username: "Gebruikersnaam"
     last_seen: "Gezien"
@@ -1698,7 +1700,6 @@ nl:
       second_factor_backup_title: "Tweefactor-back-up"
       second_factor_backup_description: "Voer één van uw back-upcodes in:"
       second_factor: "Aanmelden met authenticator-app"
-      security_key_description: "Houd uw fysieke beveiligingssleutel gereed en klik op de onderstaande knop Authenticeren met beveiligingssleutel."
       security_key_alternative: "Andere manier proberen"
       security_key_authenticate: "Authenticeren met beveiligingssleutel"
       security_key_not_allowed_error: "Het authenticatieproces van de beveiligingssleutel had een time-out of is geannuleerd."
@@ -3395,7 +3396,6 @@ nl:
       tag_list_joiner: ", "
       delete_unused: "Ongebruikte tags verwijderen"
       delete_unused_description: "Alle tags verwijderen die niet aan topics of persoonlijke berichten zijn gekoppeld"
-      cancel_delete_unused: "Annuleren"
       filters:
         without_category: "%{filter} %{tag} topics"
         with_category: "%{filter} %{tag} topics in %{category}"
@@ -3496,7 +3496,7 @@ nl:
       new_count:
         one: "%{count} nieuw"
         other: "%{count} nieuw"
-      more: "Meer..."
+      more: "Meer"
       all_categories: "Alle categorieën"
       sections:
         about:
@@ -3535,6 +3535,9 @@ nl:
               content: "Gebruikers"
             my_posts:
               content: "Mijn berichten"
+            review:
+              content: "Beoordelen"
+              title: "beoordelen"
   admin_js:
     type_to_filter: "typ om te filteren..."
     admin:

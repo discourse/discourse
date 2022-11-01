@@ -12,6 +12,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 
 acceptance(
   "Sidebar - Logged on user - Tags section - tagging disabled",
@@ -58,6 +59,8 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
         pm_only: false,
       },
     ],
+    display_sidebar_tags: true,
+    admin: false,
   });
 
   needs.pretender((server, helper) => {
@@ -90,6 +93,17 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     });
   });
 
+  test("section is not displayed when display_sidebar_tags property is false", async function (assert) {
+    updateCurrentUser({ display_sidebar_tags: false });
+
+    await visit("/");
+
+    assert.notOk(
+      exists(".sidebar-section-tags"),
+      "tags section is not displayed"
+    );
+  });
+
   test("clicking on section header button", async function (assert) {
     await visit("/");
     await click(".sidebar-section-tags .sidebar-section-header-button");
@@ -101,21 +115,41 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
   });
 
-  test("section content when user has not added any tags", async function (assert) {
+  test("tags section is hidden when user has not added any tags and there are no default tags configured", async function (assert) {
     updateCurrentUser({
       sidebar_tags: [],
     });
 
     await visit("/");
 
+    assert.notOk(
+      exists(".sidebar-section-tags"),
+      "tags section is not displayed"
+    );
+  });
+
+  test("tags section is shown when user has not added any tags but default tags have been configured", async function (assert) {
+    updateCurrentUser({
+      sidebar_tags: [],
+    });
+
+    this.siteSettings.default_sidebar_tags = "tag1|tag2";
+
+    await visit("/");
+
+    assert.ok(exists(".sidebar-section-tags"), "tags section is shown");
+
+    assert.ok(
+      exists(".sidebar-section-tags .sidebar-section-link-configure-tags"),
+      "section link to add tags to sidebar is displayed"
+    );
+
+    await click(".sidebar-section-tags .sidebar-section-link-configure-tags");
+
     assert.strictEqual(
-      query(
-        ".sidebar-section-tags .sidebar-section-message"
-      ).textContent.trim(),
-      `${I18n.t("sidebar.sections.tags.none")} ${I18n.t(
-        "sidebar.sections.tags.click_to_get_started"
-      )}`,
-      "the no tags message is displayed"
+      currentURL(),
+      "/u/eviltrout/preferences/sidebar",
+      "it should transition to user preferences sidebar page"
     );
   });
 
@@ -202,6 +236,112 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     assert.ok(
       exists(`.sidebar-section-link-tag2.active`),
       "the tag2 section link is marked as active"
+    );
+  });
+
+  test("clicking tag section links - sidebar_list_destination set to unread/new and no unread or new topics", async function (assert) {
+    updateCurrentUser({
+      sidebar_list_destination: "unread_new",
+    });
+
+    await visit("/");
+    await click(".sidebar-section-link-tag1");
+
+    assert.strictEqual(
+      currentURL(),
+      "/tag/tag1",
+      "it should transition to tag1's topics discovery page"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-tags .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(`.sidebar-section-link-tag1.active`),
+      "the tag1 section link is marked as active"
+    );
+  });
+
+  test("clicking tag section links - sidebar_list_destination set to unread/new with new topics", async function (assert) {
+    updateCurrentUser({
+      sidebar_list_destination: "unread_new",
+    });
+
+    this.container.lookup("service:topic-tracking-state").loadStates([
+      {
+        topic_id: 1,
+        highest_post_number: 1,
+        last_read_post_number: null,
+        created_at: "2022-05-11T03:09:31.959Z",
+        category_id: 1,
+        notification_level: null,
+        created_in_new_period: true,
+        treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        tags: ["tag1"],
+      },
+    ]);
+
+    await visit("/");
+    await click(".sidebar-section-link-tag1");
+
+    assert.strictEqual(
+      currentURL(),
+      "/tag/tag1/l/new",
+      "it should transition to tag1's topics new page"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-tags .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(`.sidebar-section-link-tag1.active`),
+      "the tag1 section link is marked as active"
+    );
+  });
+
+  test("clicking tag section links - sidebar_list_destination set to unread/new with unread topics", async function (assert) {
+    updateCurrentUser({
+      sidebar_list_destination: "unread_new",
+    });
+
+    this.container.lookup("service:topic-tracking-state").loadStates([
+      {
+        topic_id: 1,
+        highest_post_number: 2,
+        last_read_post_number: 1,
+        created_at: "2022-05-11T03:09:31.959Z",
+        category_id: 1,
+        notification_level: NotificationLevels.TRACKING,
+        created_in_new_period: true,
+        treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        tags: ["tag1"],
+      },
+    ]);
+
+    await visit("/");
+    await click(".sidebar-section-link-tag1");
+
+    assert.strictEqual(
+      currentURL(),
+      "/tag/tag1/l/unread",
+      "it should transition to tag1's topics unread page"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-tags .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(`.sidebar-section-link-tag1.active`),
+      "the tag1 section link is marked as active"
     );
   });
 
@@ -392,6 +532,25 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     assert.ok(
       Object.keys(topicTrackingState.stateChangeCallbacks).length <
         initialCallbackCount
+    );
+  });
+
+  test("section link to admin site settings page when default sidebar tags have not been configured", async function (assert) {
+    updateCurrentUser({ admin: true });
+
+    await visit("/");
+
+    assert.ok(
+      exists(".sidebar-section-link-configure-default-sidebar-tags"),
+      "section link to configure default sidebar tags is shown"
+    );
+
+    await click(".sidebar-section-link-configure-default-sidebar-tags");
+
+    assert.strictEqual(
+      currentURL(),
+      "/admin/site_settings/category/all_results?filter=default_sidebar_tags",
+      "it links to the admin site settings page correctly"
     );
   });
 });

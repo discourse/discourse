@@ -8,6 +8,20 @@ RSpec.describe SiteSerializer do
     Site.clear_cache
   end
 
+  describe '#onboarding_popup_types' do
+    it 'is included if enable_onboarding_popups' do
+      SiteSetting.enable_onboarding_popups = true
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized[:onboarding_popup_types]).to eq(OnboardingPopup.types)
+    end
+
+    it 'is not included if enable_onboarding_popups is disabled' do
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized[:onboarding_popup_types]).to eq(nil)
+    end
+  end
+
   it "includes category custom fields only if its preloaded" do
     category.custom_fields["enable_marketplace"] = true
     category.save_custom_fields
@@ -125,14 +139,99 @@ RSpec.describe SiteSerializer do
     expect(serialized[:show_welcome_topic_banner]).to eq(true)
   end
 
-  it 'includes anonymous_default_sidebar_tags' do
-    Fabricate(:tag, name: "dev")
-    Fabricate(:tag, name: "random")
-    serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-    expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
+  describe '#anonymous_default_sidebar_tags' do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:tag) { Fabricate(:tag, name: 'dev') }
+    fab!(:tag2) { Fabricate(:tag, name: 'random') }
+    fab!(:hidden_tag) { Fabricate(:tag, name: "secret") }
+    fab!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
 
-    SiteSetting.default_sidebar_tags = "dev|random"
-    serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-    expect(serialized[:anonymous_default_sidebar_tags]).to eq(["dev", "random"])
+    before do
+      SiteSetting.enable_experimental_sidebar_hamburger = true
+      SiteSetting.tagging_enabled = true
+      SiteSetting.default_sidebar_tags = "#{tag.name}|#{tag2.name}|#{hidden_tag.name}"
+    end
+
+    it 'is not included in the serialised object when tagging is not enabled' do
+      SiteSetting.tagging_enabled = false
+      guardian = Guardian.new(user)
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
+    end
+
+    it 'is not included in the serialised object when experimental sidebar has not been enabled' do
+      SiteSetting.enable_experimental_sidebar_hamburger = false
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
+    end
+
+    it 'is not included in the serialised object when user is not anonymous' do
+      guardian = Guardian.new(user)
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
+    end
+
+    it 'is not included in the serialisd object when default sidebar tags have not been configured' do
+      SiteSetting.default_sidebar_tags = ""
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
+    end
+
+    it 'includes only tags user can see in the serialised object when user is anonymous' do
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized[:anonymous_default_sidebar_tags]).to eq(["dev", "random"])
+    end
+  end
+
+  describe '#top_tags' do
+    fab!(:tag) { Fabricate(:tag) }
+
+    describe 'when tagging is not enabled' do
+      before do
+        SiteSetting.tagging_enabled = false
+      end
+
+      it 'is not included in the serialised object' do
+        serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+        expect(serialized[:top_tags]).to eq(nil)
+      end
+    end
+
+    describe 'when tagging is enabled' do
+      fab!(:tag2) { Fabricate(:tag) }
+      fab!(:tag3) { Fabricate(:tag) }
+
+      before do
+        SiteSetting.tagging_enabled = true
+      end
+
+      it 'is not included in the serialised object when there are no tags' do
+        tag.destroy!
+
+        serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+        expect(serialized[:top_tags]).to eq([])
+      end
+
+      it 'is included in the serialised object containing the top tags' do
+        tag2 = Fabricate(:tag)
+        tag2 = Fabricate(:tag)
+
+        SiteSetting.max_tags_in_filter_list = 1
+
+        CategoryTagStat.create!(category_id: SiteSetting.uncategorized_category_id, tag_id: tag2.id, topic_count: 2)
+        CategoryTagStat.create!(category_id: SiteSetting.uncategorized_category_id, tag_id: tag.id, topic_count: 1)
+        CategoryTagStat.create!(category_id: SiteSetting.uncategorized_category_id, tag_id: tag3.id, topic_count: 5)
+
+        serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+        expect(serialized[:top_tags]).to eq([tag3.name, tag2.name])
+      end
+    end
   end
 end

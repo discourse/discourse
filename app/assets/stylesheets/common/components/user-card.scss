@@ -39,6 +39,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   background-size: cover;
   transition: opacity 0.2s, transform 0.2s;
   opacity: 0;
+  outline: 2px solid transparent;
   @include transform(scale(0.9));
   &.show {
     opacity: 1;
@@ -71,7 +72,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
         display: flex;
         align-items: center;
 
-        &:focus {
+        &:focus-visible {
           border: 1px solid;
           @include default-focus;
         }
@@ -101,7 +102,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
     margin-bottom: 5px;
   }
   h1 {
-    line-height: $line-height-medium;
+    line-height: var(--line-height-medium);
     .d-icon {
       color: var(--primary);
     }
@@ -179,7 +180,7 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       }
     }
     .profile-hidden {
-      font-size: $font-up-1;
+      font-size: var(--font-up-1);
       margin-top: 0.5em;
     }
   }

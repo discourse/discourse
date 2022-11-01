@@ -48,13 +48,13 @@ span.mention-group {
   }
 
   .group-info-name {
-    font-size: $font-up-3;
+    font-size: var(--font-up-3);
     font-weight: bold;
     color: var(--primary);
   }
 
   .group-info-full-name {
-    font-size: $font-up-2;
+    font-size: var(--font-up-2);
     color: var(--primary-high-or-secondary-low);
   }
 

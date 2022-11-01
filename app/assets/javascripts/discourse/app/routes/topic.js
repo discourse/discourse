@@ -16,15 +16,9 @@ const SCROLL_DELAY = 500;
 const TopicRoute = DiscourseRoute.extend({
   screenTrack: service(),
 
-  init() {
-    this._super(...arguments);
-
-    this.setProperties({
-      isTransitioning: false,
-      scheduledReplace: null,
-      lastScrollPos: null,
-    });
-  },
+  scheduledReplace: null,
+  lastScrollPos: null,
+  isTransitioning: false,
 
   redirect() {
     return this.redirectIfLoginRequired();

@@ -2,7 +2,7 @@
 
 require 'csv'
 
-class Admin::WatchedWordsController < Admin::AdminController
+class Admin::WatchedWordsController < Admin::StaffController
   skip_before_action :check_xhr, only: [:download]
 
   def index

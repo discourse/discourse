@@ -113,6 +113,7 @@
 }
 
 .lazyYT-image-loaded:hover .ytp-large-play-button-svg,
+.lazyYT-image-loaded:focus .ytp-large-play-button-svg,
 .ytp-large-play-button:focus .ytp-large-play-button-svg {
   opacity: 1;
   fill: #cc181e;

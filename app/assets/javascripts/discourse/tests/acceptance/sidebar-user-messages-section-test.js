@@ -7,19 +7,23 @@ import {
   exists,
   publishToMessageBus,
   query,
+  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 
 acceptance(
-  "Sidebar - Logged on user - Messages Section - user not in personal_message_enabled_groups",
+  "Sidebar - Logged on user - Messages Section - user does not have can_send_private_messages permission",
   function (needs) {
-    needs.user({ moderator: false, admin: false });
+    needs.user({
+      moderator: false,
+      admin: false,
+      can_send_private_messages: false,
+    });
 
     needs.settings({
       enable_experimental_sidebar_hamburger: true,
       enable_sidebar: true,
-      personal_message_enabled_groups: "13", // trust_level_3 auto group ID;
     });
 
     test("clicking on section header button", async function (assert) {
@@ -34,9 +38,9 @@ acceptance(
 );
 
 acceptance(
-  "Sidebar - Logged on user - Messages Section - user in personal_message_enabled_groups",
+  "Sidebar - Logged on user - Messages Section - user does have can_send_private_messages permission",
   function (needs) {
-    needs.user();
+    needs.user({ can_send_private_messages: true });
 
     needs.settings({
       enable_experimental_sidebar_hamburger: true,
@@ -161,6 +165,13 @@ acceptance(
           ),
           `personal message ${type} link is marked as active`
         );
+
+        assert.notOk(
+          exists(
+            `.sidebar-section-messages .sidebar-section-link-personal-messages-${type} .sidebar-section-link-prefix`
+          ),
+          `prefix is not displayed for ${type} personal message section link`
+        );
       });
     });
 
@@ -168,7 +179,7 @@ acceptance(
       updateCurrentUser({
         groups: [
           {
-            name: "group1",
+            name: "group3",
             has_messages: true,
           },
           {
@@ -176,7 +187,7 @@ acceptance(
             has_messages: false,
           },
           {
-            name: "group3",
+            name: "group1",
             has_messages: true,
           },
         ],
@@ -184,18 +195,16 @@ acceptance(
 
       await visit("/");
 
-      assert.ok(
-        exists(
-          ".sidebar-section-messages .sidebar-section-link-group-messages-inbox.group1"
-        ),
-        "displays group1 inbox link"
+      const groupSectionLinks = queryAll(
+        ".sidebar-section-messages .sidebar-section-link"
       );
 
-      assert.ok(
-        exists(
-          ".sidebar-section-messages .sidebar-section-link-group-messages-inbox.group3"
-        ),
-        "displays group3 inbox link"
+      assert.deepEqual(
+        groupSectionLinks
+          .toArray()
+          .map((sectionLink) => sectionLink.textContent.trim()),
+        ["Inbox", "group1", "group3"],
+        "displays group section links sorted by name"
       );
 
       await visit("/u/eviltrout/messages/group/GrOuP1");

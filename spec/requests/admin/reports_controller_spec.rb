@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::ReportsController do
-  it "is a subclass of AdminController" do
-    expect(Admin::ReportsController < Admin::AdminController).to eq(true)
+  it "is a subclass of StaffController" do
+    expect(Admin::ReportsController < Admin::StaffController).to eq(true)
   end
 
   context 'while logged in as an admin' do

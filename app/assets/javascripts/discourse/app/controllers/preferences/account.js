@@ -2,7 +2,7 @@ import { gt, not, or } from "@ember/object/computed";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import Controller from "@ember/controller";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { findAll } from "discourse/models/login-method";
@@ -11,6 +11,7 @@ import getURL from "discourse-common/lib/get-url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 import { next } from "@ember/runloop";
+import showModal from "discourse/lib/show-modal";
 
 export default Controller.extend(CanCheckEmails, {
   dialog: service(),
@@ -22,16 +23,19 @@ export default Controller.extend(CanCheckEmails, {
       "title",
       "primary_group_id",
       "flair_group_id",
+      "status",
     ];
     this.set("revoking", {});
   },
 
   canEditName: setting("enable_names"),
+  canSelectUserStatus: setting("enable_user_status"),
   canSaveUser: true,
 
   newNameInput: null,
   newTitleInput: null,
   newPrimaryGroupInput: null,
+  newStatus: null,
 
   revoking: null,
 
@@ -132,6 +136,33 @@ export default Controller.extend(CanCheckEmails, {
     return findAll().length > 0;
   },
 
+  @action
+  resendConfirmationEmail(email, event) {
+    event?.preventDefault();
+    email.set("resending", true);
+    this.model
+      .addEmail(email.email)
+      .then(() => {
+        email.set("resent", true);
+      })
+      .finally(() => {
+        email.set("resending", false);
+      });
+  },
+
+  @action
+  showUserStatusModal(status) {
+    showModal("user-status", {
+      title: "user_status.set_custom_status",
+      modalClass: "user-status",
+      model: {
+        status,
+        saveAction: (s) => this.set("newStatus", s),
+        deleteAction: () => this.set("newStatus", null),
+      },
+    });
+  },
+
   actions: {
     save() {
       this.set("saved", false);
@@ -141,6 +172,7 @@ export default Controller.extend(CanCheckEmails, {
         title: this.newTitleInput,
         primary_group_id: this.newPrimaryGroupInput,
         flair_group_id: this.newFlairGroupId,
+        status: this.newStatus,
       });
 
       return this.model
@@ -155,18 +187,6 @@ export default Controller.extend(CanCheckEmails, {
 
     destroyEmail(email) {
       this.model.destroyEmail(email);
-    },
-
-    resendConfirmationEmail(email) {
-      email.set("resending", true);
-      this.model
-        .addEmail(email.email)
-        .then(() => {
-          email.set("resent", true);
-        })
-        .finally(() => {
-          email.set("resending", false);
-        });
     },
 
     delete() {

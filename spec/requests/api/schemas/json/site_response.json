@@ -629,6 +629,12 @@
                 "null"
               ]
             },
+            "uploaded_logo_dark": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "uploaded_background": {
               "type": [
                 "string",
@@ -680,6 +686,7 @@
             "required_tag_groups",
             "read_only_banner",
             "uploaded_logo",
+            "uploaded_logo_dark",
             "uploaded_background",
             "can_edit"
           ]

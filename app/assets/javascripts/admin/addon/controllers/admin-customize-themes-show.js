@@ -10,7 +10,6 @@ import Controller from "@ember/controller";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
 import ThemeSettings from "admin/models/theme-settings";
-import bootbox from "bootbox";
 import discourseComputed from "discourse-common/utils/decorators";
 import { makeArray } from "discourse-common/lib/helpers";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -306,14 +305,10 @@ export default Controller.extend({
 
     editTheme() {
       if (this.get("model.remote_theme.is_git")) {
-        bootbox.confirm(
-          I18n.t("admin.customize.theme.edit_confirm"),
-          (result) => {
-            if (result) {
-              this.transitionToEditRoute();
-            }
-          }
-        );
+        this.dialog.confirm({
+          message: I18n.t("admin.customize.theme.edit_confirm"),
+          didConfirm: () => this.transitionToEditRoute(),
+        });
       } else {
         this.transitionToEditRoute();
       }

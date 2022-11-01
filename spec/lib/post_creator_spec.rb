@@ -965,6 +965,7 @@ RSpec.describe PostCreator do
     fab!(:target_user2) { Fabricate(:moderator) }
     fab!(:unrelated_user) { Fabricate(:user) }
     let(:post) do
+      Group.refresh_automatic_groups!
       PostCreator.create!(user,
         title: 'hi there welcome to my topic',
         raw: "this is my awesome message @#{unrelated_user.username_lower}",
@@ -1063,6 +1064,7 @@ RSpec.describe PostCreator do
 
       1.upto(3) do |i|
         user = Fabricate(:user)
+        Group.refresh_automatic_groups!
         topic.invite(topic.user, user.username)
         topic.reload
         expect(topic.posts_count).to eq(1)
@@ -1091,6 +1093,7 @@ RSpec.describe PostCreator do
     end
 
     it "works as expected" do
+      Group.refresh_automatic_groups!
       # Invalid archetype
       creator = PostCreator.new(user, base_args)
       creator.create
@@ -1159,9 +1162,9 @@ RSpec.describe PostCreator do
   end
 
   describe 'private message to group' do
-    let(:target_user1) { coding_horror }
+    fab!(:target_user1) { coding_horror }
     fab!(:target_user2) { Fabricate(:moderator) }
-    let(:group) do
+    let!(:group) do
       g = Fabricate.build(:group, messageable_level: Group::ALIAS_LEVELS[:everyone])
       g.add(target_user1)
       g.add(target_user2)
@@ -1170,6 +1173,7 @@ RSpec.describe PostCreator do
     end
     fab!(:unrelated) { Fabricate(:user) }
     let(:post) do
+      Group.refresh_automatic_groups!
       PostCreator.create!(user,
         title: 'hi there welcome to my topic',
         raw: "this is my awesome message @#{unrelated.username_lower}",

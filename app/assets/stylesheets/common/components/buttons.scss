@@ -27,6 +27,10 @@
     color: $icon-color;
     margin-right: 0.45em;
     transition: color 0.25s;
+    // For Windows High Contrast (see whcm.scss for more)
+    @media (forced-colors: active) {
+      color: ButtonText;
+    }
   }
   .d-button-label + .d-icon {
     margin-left: 0.45em;
@@ -42,6 +46,10 @@
     color: $hover-text-color;
     .d-icon {
       color: $hover-icon-color;
+      // For Windows High Contrast (see whcm.scss for more)
+      @media (forced-colors: active) {
+        color: Highlight;
+      }
     }
   }
   &:focus {
@@ -50,6 +58,9 @@
     color: $hover-text-color;
     .d-icon {
       color: $hover-icon-color;
+      @media (forced-colors: active) {
+        color: Highlight;
+      }
     }
   }
   &[href] {
@@ -83,12 +94,12 @@
   &.is-loading {
     &.btn-text {
       .d-button-label {
-        font-size: $font-down-2;
+        font-size: var(--font-down-2);
       }
 
       &.btn-small {
         .loading-icon {
-          font-size: $font-down-1;
+          font-size: var(--font-down-1);
           margin-right: 0.2em;
         }
       }
@@ -177,7 +188,7 @@
   }
   &:before {
     margin-right: 9px;
-    font-size: $font-0;
+    font-size: var(--font-0);
   }
   .d-icon,
   &.btn:hover .d-icon {
@@ -260,7 +271,7 @@
 .btn-flat {
   background: transparent;
   border: 0;
-  line-height: $line-height-small;
+  line-height: var(--line-height-small);
   transition: color 0.25s, background 0.25s;
   .d-icon {
     color: var(--primary-low-mid);

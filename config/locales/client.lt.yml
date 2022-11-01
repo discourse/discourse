@@ -247,6 +247,7 @@ lt:
     ok_value: "OK"
     cancel_value: "Atšaukti"
     submit: "Pateikti"
+    delete: "Pašalinti"
     generic_error: "Atsiprašome, įvyko klaida."
     generic_error_with_reason: "Įvyko klaida: %{error}"
     sign_up: "Registruotis"
@@ -1055,6 +1056,8 @@ lt:
       enable_defer: "Įgalinti atidėjimą, kad pažymėtumėte temas kaip neskaitytas"
       experimental_sidebar:
         options: "Nustatymai"
+        navigation_section: "Navigacija"
+        list_destination_default: "Numatytasis"
       change: "pakeisti"
       featured_topic: "Įpatinga tema"
       moderator: "%{user} yra moderatorius"
@@ -1153,6 +1156,7 @@ lt:
         move_to_archive: "Archyvuoti"
         failed_to_move: "Įvyko klaida! (patikrinkite interneto ryšį)"
         tags: "Gairės"
+        all_tags: "Visos žymos"
         warnings: "Oficialūs įspėjimai"
         read_more_in_group: "Norite skaityti daugiau? Naršykite kitus pranešimus %{groupLink}."
       preferences_nav:
@@ -1217,14 +1221,12 @@ lt:
           name_and_code_required_error: "Turite nurodyti vardą ir kodą iš savo autentifikavimo programos."
         security_key:
           register: "Registruokis"
-          title: "Saugos raktai"
-          add: "Pridėti saugos raktą"
           default_name: "Pagrindinis saugos raktas"
+          iphone_default_name: "iPhone"
+          android_default_name: "„Android“"
           not_allowed_error: "Saugos rakto registravimo procesas baigėsi arba buvo atšauktas."
           already_added_error: "Jūs jau užregistravote šį saugos raktą. Jums nereikia jo užregistruoti dar kartą."
-          edit: "Redaguoti saugos raktą"
           save: "Saugoti"
-          edit_description: "Saugos rakto pavadinimas"
           name_required_error: "Turite nurodyti saugos rakto pavadinimą."
       change_about:
         title: "Keisti Apie Mane"
@@ -1640,6 +1642,8 @@ lt:
       leave_message: "Ar tikrai norite palikti šį pranešimą?"
       remove_allowed_user: "Ar tikrai nori pašalinti %{name} iš šios žinutės?"
       remove_allowed_group: "Ar tikrai norite pašalinti %{name} iš šios žinutės?"
+      leave: "Palikti"
+      remove_user: "Pašalinti narį"
     email: "El. paštas"
     username: "Vartotojo vardas"
     last_seen: "Matytas"
@@ -1691,7 +1695,6 @@ lt:
       second_factor_backup_title: "Dviejų veiksnių atsarginė kopija"
       second_factor_backup_description: "Įveskite vieną iš atsarginių kodų:"
       second_factor: "Prisijunkite naudodami autentifikavimo programą"
-      security_key_description: "Kai paruošite fizinį saugos raktą, paspauskite žemiau esantį mygtuką Autentifikuoti naudojant saugos raktą."
       security_key_alternative: "Išbandykite kitą būdą"
       security_key_authenticate: "Autentifikuoti su saugos raktu"
       security_key_not_allowed_error: "Saugos rakto registravimo procesas baigėsi arba buvo atšauktas."
@@ -3388,7 +3391,6 @@ lt:
       tag_list_joiner: ", "
       delete_unused: "Ištrinkite nepanaudotas žymas"
       delete_unused_description: "Ištrinkite visas žymas, nepriskirtas prie jokių temų ar asmeninių pranešimų"
-      cancel_delete_unused: "Atšaukti"
       filters:
         without_category: "%{filter}%{tag} temos"
         with_category: "%{filter}%{tag}temos, %{category}kategorijoje"
@@ -3509,7 +3511,7 @@ lt:
         few: "%{count} nauji"
         many: "%{count} nauja"
         other: "%{count} nauja"
-      more: "Daugiau..."
+      more: "Daugiau"
       all_categories: "Visos kategorijos"
       sections:
         about:
@@ -3553,6 +3555,9 @@ lt:
               content: "Vartotojai"
             my_posts:
               content: "Mano Įrašai"
+            review:
+              content: "Peržiūra"
+              title: "peržiūra"
   admin_js:
     type_to_filter: "įrašyk kažką dėl filtro..."
     admin:

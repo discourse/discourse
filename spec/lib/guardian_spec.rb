@@ -185,7 +185,6 @@ RSpec.describe Guardian do
 
     it "returns false for notify_user if user is not in any group that can send personal messages" do
       user = Fabricate(:user)
-      SiteSetting.enable_personal_messages = false
       SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
       user.change_trust_level!(1)
       expect(Guardian.new(user).post_can_act?(post, :notify_user)).to be_falsey
@@ -273,7 +272,6 @@ RSpec.describe Guardian do
     end
 
     it "returns false when you are untrusted" do
-      SiteSetting.enable_personal_messages = false
       SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_2]
       user.update!(trust_level: TrustLevel[0])
       Group.user_trust_level_change!(user.id, TrustLevel[0])
@@ -285,7 +283,6 @@ RSpec.describe Guardian do
     end
 
     it "disallows pms to other users if trust level is not met" do
-      SiteSetting.enable_personal_messages = false
       SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_2]
       user.update!(trust_level: TrustLevel[1])
       Group.user_trust_level_change!(user.id, TrustLevel[1])
@@ -296,7 +293,6 @@ RSpec.describe Guardian do
       let(:group) { Fabricate(:group) }
       before do
         SiteSetting.personal_message_enabled_groups = group.id
-        SiteSetting.enable_personal_messages = false
       end
 
       it "returns false if user is not staff member" do
@@ -309,6 +305,14 @@ RSpec.describe Guardian do
       it "returns true for staff member" do
         expect(Guardian.new(moderator).can_send_private_message?(another_user)).to be_truthy
         expect(Guardian.new(admin).can_send_private_message?(another_user)).to be_truthy
+      end
+
+      it "returns true for bot user" do
+        expect(Guardian.new(Fabricate(:bot)).can_send_private_message?(another_user)).to be_truthy
+      end
+
+      it "returns true for system user" do
+        expect(Guardian.new(Discourse.system_user).can_send_private_message?(another_user)).to be_truthy
       end
     end
 
@@ -362,7 +366,6 @@ RSpec.describe Guardian do
 
     it "allows TL0 to message group with messageable_level = everyone" do
       group.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
-      SiteSetting.enable_personal_messages = false
       SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
       expect(Guardian.new(trust_level_0).can_send_private_message?(group)).to eq(true)
       expect(Guardian.new(user).can_send_private_message?(group)).to eq(true)
@@ -375,11 +378,11 @@ RSpec.describe Guardian do
       group.add(user)
       expect(Guardian.new(user).can_send_private_message?(group)).to eq(true)
 
-      SiteSetting.enable_personal_messages = false
       SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
       expect(Guardian.new(trust_level_0).can_send_private_message?(group)).to eq(false)
 
-      #  group membership trumps min_trust_to_send_messages setting
+      # user must have both a group from personal_message_enabled_groups to send messages in general,
+      # and be a member of this group to send the message to this group for this messageable_level
       group.add(trust_level_0)
       expect(Guardian.new(trust_level_0).can_send_private_message?(group)).to eq(true)
     end
@@ -650,7 +653,6 @@ RSpec.describe Guardian do
 
       context "when user does not belong to personal_message_enabled_groups" do
         before do
-          SiteSetting.enable_personal_messages = false
           SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
         end
 
@@ -858,6 +860,17 @@ RSpec.describe Guardian do
         topic.category.update!(reviewable_by_group_id: group.id, topic_id: post.topic.id)
 
         expect(Guardian.new(user_gm).can_see?(topic)).to be_truthy
+      end
+
+      it 'allows staged user to view own topic in restricted category when Category#email_in and Category#email_in_allow_strangers is set' do
+        secure_category = Fabricate(:category, read_restricted: true, email_in: "foo2@bar.com", email_in_allow_strangers: true)
+        topic_in_secure_category = Fabricate(:topic, category: secure_category, user: user)
+
+        expect(Guardian.new(user).can_see?(topic_in_secure_category)).to eq(false)
+
+        user.update!(staged: true)
+
+        expect(Guardian.new(user).can_see?(topic_in_secure_category)).to eq(true)
       end
     end
 
@@ -1328,7 +1341,6 @@ RSpec.describe Guardian do
     end
 
     it 'returns false when user is not in personal_message_enabled_groups' do
-      SiteSetting.enable_personal_messages = false
       SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect(Guardian.new(user).can_convert_topic?(topic)).to be_falsey
     end

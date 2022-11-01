@@ -35,6 +35,13 @@ export default class BaseCustomSidebarSection {
    */
   get links() {}
 
+  /**
+   * @returns {Boolean} Whether or not to show the entire section including heading.
+   */
+  get displaySection() {
+    return true;
+  }
+
   _notImplemented() {
     throw "not implemented";
   }

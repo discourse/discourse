@@ -332,8 +332,6 @@ sw:
   meta_category_description: "Majadiliano kuhusu tovuti, shirika, jinsi inavyofanya kazi, na jinsi tunaweza kuiboresha."
   staff_category_name: "Wasaidizi"
   staff_category_description: "Kategoria binafsi kwa ajili ya majadiliano ya wasaidizi. Mada zitaonwa na wasimamizi na viongozi tu."
-  discourse_welcome_topic:
-    title: "Karibu kwenye Discourse"
   category:
     topic_prefix: "Kuhusu kategoria %{category}"
     errors:
@@ -1207,7 +1205,6 @@ sw:
     bulk_invite_succeeded:
       title: "Mualiko wa Watumiaji Wengi Umefanikiwa"
       subject_template: "Mualiko wa Watumiaji Wengi umefanikiwa"
-      text_body_template: "Mualiko wa Watumiaji Wengi wa faili umefanyiwa uchakataji, mialiko %{sent} imetumwa."
     bulk_invite_failed:
       title: "Mualiko wa Watumiaji Wengi Umeshindikana"
       subject_template: "Mualiko wa Watumiaji Wengi umepata hitilafu"

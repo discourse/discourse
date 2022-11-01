@@ -232,6 +232,18 @@ RSpec.describe Site do
       expect(Site.show_welcome_topic_banner?(Guardian.new(admin))).to eq(false)
       expect(Discourse.cache.read(Site.welcome_topic_banner_cache_key(admin.id))).to eq(false)
     end
+
+    it "returns false when welcome topic has been deleted" do
+      admin = Fabricate(:admin)
+      UserAuthToken.generate!(user_id: admin.id)
+
+      topic = Fabricate(:topic, deleted_at: 1.minute.ago)
+      first_post = Fabricate(:post, topic: topic, created_at: 25.days.ago)
+      SiteSetting.welcome_topic_id = topic.id
+
+      expect(Site.show_welcome_topic_banner?(Guardian.new(admin))).to eq(false)
+      expect(Discourse.cache.read(Site.welcome_topic_banner_cache_key(admin.id))).to eq(false)
+    end
   end
 
 end

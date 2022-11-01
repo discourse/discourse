@@ -11,6 +11,7 @@ class SessionController < ApplicationController
   requires_login only: [:second_factor_auth_show, :second_factor_auth_perform]
 
   allow_in_staff_writes_only_mode :create
+  allow_in_staff_writes_only_mode :email_login
 
   ACTIVATE_USER_KEY = "activate_user"
 
@@ -158,7 +159,7 @@ class SessionController < ApplicationController
 
         if SiteSetting.must_approve_users? && !user.approved?
           if invite.present? && user.invited_user.blank?
-            redeem_invitation(invite, sso)
+            redeem_invitation(invite, sso, user)
           end
 
           if SiteSetting.discourse_connect_not_approved_url.present?
@@ -172,7 +173,7 @@ class SessionController < ApplicationController
         # the user has not already redeemed an invite
         # (covers the same SSO user visiting an invite link)
         elsif invite.present? && user.invited_user.blank?
-          redeem_invitation(invite, sso)
+          redeem_invitation(invite, sso, user)
 
           # we directly call user.activate here instead of going
           # through the UserActivator path because we assume the account
@@ -375,6 +376,7 @@ class SessionController < ApplicationController
       elsif payload = login_error_check(user)
         return render json: payload
       else
+        raise Discourse::ReadOnly if staff_writes_only_mode? && !user&.staff?
         user.update_timezone_if_missing(params[:timezone])
         log_on_user(user)
         return render json: success_json
@@ -770,14 +772,15 @@ class SessionController < ApplicationController
     invite
   end
 
-  def redeem_invitation(invite, sso)
+  def redeem_invitation(invite, sso, redeeming_user)
     InviteRedeemer.new(
       invite: invite,
       username: sso.username,
       name: sso.name,
       ip_address: request.remote_ip,
       session: session,
-      email: sso.email
+      email: sso.email,
+      redeeming_user: redeeming_user
     ).redeem
     secure_session["invite-key"] = nil
 

@@ -68,8 +68,6 @@ en:
     bad_color_scheme: "Can not update theme, invalid color palette"
     other_error: "Something went wrong updating theme"
     ember_selector_error: "Sorry – using #ember or .ember-view CSS selectors is not permitted, because these names are dynamically generated at runtime and will change over time, eventually resulting in broken CSS. Try a different selector."
-    compile_error:
-      unrecognized_extension: "Unrecognized file extension: %{extension}"
     import_error:
       generic: An error occurred while importing that theme
       upload: "Error creating upload asset: %{name}. %{errors}"
@@ -78,6 +76,7 @@ en:
       modifier_values: "about.json modifiers contain invalid values: %{errors}"
       git: "Error cloning git repository, access is denied or repository is not found"
       git_ref_not_found: "Unable to checkout git reference: %{ref}"
+      git_unsupported_scheme: "Unable to clone git repo: scheme unsupported"
       unpack_failed: "Failed to unpack file"
       file_too_big: "The uncompressed file is too big."
       unknown_file_type: "The file you uploaded does not appear to be a valid Discourse theme."
@@ -264,6 +263,10 @@ en:
       invalid_access: "You are not permitted to view the requested resource."
     requires_groups: "Invite was not saved because the specified topic is inaccessible. Add one of the following groups: %{groups}."
     domain_not_allowed: "Your email cannot be used to redeem this invite."
+    max_redemptions_allowed_one: "for email invites should be 1."
+    redemption_count_less_than_max: "should be less than %{max_redemptions_allowed}."
+    email_xor_domain: "Email and domain fields are not allowed at the same time"
+    existing_user_success: "Invite redeemed successfully"
 
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv format."
@@ -276,6 +279,7 @@ en:
 
   topic_invite:
     failed_to_invite: "The user cannot be invited into this topic without a group membership in either one of the following groups: %{group_names}."
+    not_pm: "You can only invite to private messages."
     user_exists: "Sorry, that user has already been invited. You may only invite a user to a topic once."
     muted_topic: "Sorry, that user muted this topic."
     receiver_does_not_allow_pm: "Sorry, that user does not allow you to send them private messages."
@@ -536,7 +540,7 @@ en:
 
       It’s easier for everyone to read topics that have fewer in-depth replies versus lots of small, individual replies.
 
-    dominating_topic: You’ve posted more than %{percent}% of the replies here, is there anyone else you would like to hear from?
+    dominating_topic: You’ve posted more than %{percent}% of the replies here; may we suggest you give other people an opportunity to chime in?
 
     get_a_room: You’ve replied to @%{reply_username} %{count} times, did you know you could send them a personal message instead?
 
@@ -658,7 +662,7 @@ en:
   staff_category_description: "Private category for staff discussions. Topics are only visible to admins and moderators."
 
   discourse_welcome_topic:
-    title: "Welcome to Discourse"
+    title: "Welcome to our community!"
     body: |
 
       The first paragraph of this pinned topic will be visible as a welcome message to all new visitors on your homepage. It's important!
@@ -824,7 +828,7 @@ en:
         other: "almost %{count} years ago"
 
   password_reset:
-    no_token: "Sorry, that password change link is too old. Select the Log In button and use 'I forgot my password' to get a new link."
+    no_token: 'Oops! The link you used no longer works. You can <a href="%{base_url}/login">Log In</a> now. If you forgot your password, you can <a href="%{base_url}/password-reset">request a link</a> to reset it.'
     choose_new: "Choose a new password"
     choose: "Choose a password"
     update: "Update Password"
@@ -1728,7 +1732,9 @@ en:
     google_oauth2_client_secret: "Client secret of your Google application."
     google_oauth2_prompt: "An optional space-delimited list of string values that specifies whether the authorization server prompts the user for reauthentication and consent. See <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> for the possible values."
     google_oauth2_hd: "An optional Google Apps Hosted domain that the sign-in will be limited to. See <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> for more details."
-    google_oauth2_hd_groups: "(experimental) Retrieve users' Google groups on the hosted domain on authentication. Retrieved Google groups can be used to grant automatic Discourse group membership (see group settings)."
+    google_oauth2_hd_groups: "(experimental) Retrieve users' Google groups on the hosted domain on authentication. Retrieved Google groups can be used to grant automatic Discourse group membership (see group settings). For more information see https://meta.discourse.org/t/226850"
+    google_oauth2_hd_groups_service_account_admin_email: "An email address belonging to a Google Workspace administrator account. Will be used with the service account credentials to fetch group information."
+    google_oauth2_hd_groups_service_account_json: "JSON formatted key information for the Service Account. Will be used to fetch group information."
 
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret. See <a href='https://meta.discourse.org/t/13395' target='_blank'>Configuring Twitter login (and rich embeds) for Discourse</a>."
     twitter_consumer_key: "Consumer key for Twitter authentication, registered at <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
@@ -1788,6 +1794,7 @@ en:
     max_personal_messages_per_day: "Maximum number of new personal message topics a user can create per day."
     max_invites_per_day: "Maximum number of invites a user can send per day."
     max_topic_invitations_per_day: "Maximum number of topic invitations a user can send per day."
+    max_topic_invitations_per_minute: "Maximum number of topic invitations a user can send per minute."
 
     max_logins_per_ip_per_hour: "Maximum number of logins allowed per IP address per hour"
     max_logins_per_ip_per_minute: "Maximum number of logins allowed per IP address per minute"
@@ -2044,6 +2051,7 @@ en:
     raw_email_max_length: "How many characters should be stored for incoming email."
     raw_rejected_email_max_length: "How many characters should be stored for rejected incoming email."
     delete_rejected_email_after_days: "Delete rejected emails older than (n) days."
+    require_change_email_confirmation: "Require non-staff users to confirm their old email address before changing it. Does not apply to staff users, they always need to confirm their old email address."
 
     manual_polling_enabled: "Push emails using the API for email replies."
     pop3_polling_enabled: "Poll via POP3 for email replies."
@@ -2343,6 +2351,7 @@ en:
     sitemap_page_size: "Number of URLs to include in each sitemap page. Max 50.000"
 
     enable_user_status: "(experimental) Allow users to set custom status message (emoji + description)."
+    enable_onboarding_popups: "(experimental) Enable educational popups that describe key features to users"
 
     short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be limited to 12 characters."
 
@@ -2420,7 +2429,7 @@ en:
       unicode_usernames_avatars: "The internal system avatars do not support Unicode usernames."
       list_value_count: "The list must contain exactly %{count} values."
       markdown_linkify_tlds: "You cannot include a value of '*'."
-      google_oauth2_hd_groups: "You must first set 'google oauth2 hd' before enabling this setting."
+      google_oauth2_hd_groups: "You must configure all 'google oauth2 hd' settings before enabling this setting."
       search_tokenize_chinese_enabled: "You must disable 'search_tokenize_chinese' before enabling this setting."
       search_tokenize_japanese_enabled: "You must disable 'search_tokenize_japanese' before enabling this setting."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."
@@ -3087,13 +3096,18 @@ en:
     bulk_invite_succeeded:
       title: "Bulk Invite Succeeded"
       subject_template: "Bulk user invite processed successfully"
-      text_body_template: "Your bulk user invite file was processed, %{sent} invites mailed."
+      text_body_template: |
+        Your bulk user invite file was processed, %{sent} invites mailed, %{skipped} skipped and %{warnings} warning(s).
+
+        ``` text
+        %{logs}
+        ```
 
     bulk_invite_failed:
       title: "Bulk Invite Failed"
       subject_template: "Bulk user invite processed with errors"
       text_body_template: |
-        Your bulk user invite file was processed, %{sent} invites mailed with %{failed} error(s).
+        Your bulk user invite file was processed, %{sent} invites mailed, %{skipped} skipped, %{warnings} warning(s) and %{failed} error(s).
 
         Here's the log:
 
@@ -4121,7 +4135,7 @@ en:
     png_to_jpg_conversion_failure_message: "An error happened when converting from PNG to JPG."
     optimize_failure_message: "An error occurred while optimizing the uploaded image."
     download_failure: "Downloading the file from the external provider failed."
-    size_mismatch_failure: "The size of the file uploaded to S3 did not match the external upload stub's intended size. %{additional_detail}"
+    size_mismatch_failure: "The size of the file uploaded to S3 did not match the external upload's intended size. %{additional_detail}"
     create_multipart_failure: "Failed to create multipart upload in the external store."
     abort_multipart_failure: "Failed to abort multipart upload in the external store."
     complete_multipart_failure: "Failed to complete multipart upload in the external store."
@@ -4964,7 +4978,7 @@ en:
                 label: "Subcategories with Featured Topics"
 
       branding:
-        title: "Community Branding"
+        title: "Customize Logos"
         fields:
           logo:
             label: "Primary Logo"
@@ -4980,7 +4994,7 @@ en:
             description: "Icon used to represent your site on mobile devices that looks good at larger sizes. Ideally greater than 512x512. Square logo used by default."
 
       corporate:
-        title: "Contact & Org"
+        title: "Your Organization"
 
         fields:
           company_name:
@@ -5197,3 +5211,7 @@ en:
   user_status:
     errors:
       ends_at_should_be_greater_than_set_at: "ends_at should be greater than set_at"
+  webhooks:
+    payload_url:
+      blocked_or_internal: "Payload URL cannot be used because it resolves to a blocked or internal IP"
+      unsafe: "Payload URL cannot be used because it's unsafe"

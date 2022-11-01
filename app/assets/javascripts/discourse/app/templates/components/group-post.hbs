@@ -6,7 +6,9 @@
   <div class="user-stream-item__details">
     <div class="stream-topic-title">
       <span class="title">
-        <a href={{this.postUrl}}>{{html-safe this.post.topic.fancyTitle}}</a>
+        <a href={{this.postUrl}} aria-label={{this.titleAriaLabel}}>
+          {{html-safe this.post.topic.fancyTitle}}
+        </a>
       </span>
     </div>
     <div class="group-post-category">{{category-link this.post.category}}</div>

@@ -1295,7 +1295,6 @@ RSpec.describe CookedPostProcessor do
 
       stub_request(:head, url)
       stub_request(:get , url).to_return(body: body)
-      FinalDestination.stubs(:lookup_ip).returns('1.2.3.4')
 
       # not an ideal stub but shipping the whole image to fast image can add
       # a lot of cost to this test

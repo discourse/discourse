@@ -132,3 +132,10 @@ end
 Fabricator(:unicode_user, from: :user) do
   username { sequence(:username) { |i| "Löwe#{i}" } }
 end
+
+Fabricator(:bot, from: :user) do
+  id do
+    min_id = User.minimum(:id)
+    [(min_id || 0) - 1, -10].min
+  end
+end

@@ -59,8 +59,6 @@ uk:
     bad_color_scheme: "Неможливо оновити тему, недійсна палітра кольорів"
     other_error: "Щось пішло не так з оновленням теми"
     ember_selector_error: "На жаль, використання селекторів CSS #ember або .ember-view заборонено, оскільки ці імена генеруються динамічно під час виконання та змінюватимуться з часом, що в кінцевому підсумку призведе до пошкодження CSS. Спробуйте інший селектор."
-    compile_error:
-      unrecognized_extension: "Нерозпізнане розширення файлу: %{extension}"
     import_error:
       generic: Під час імпорту цієї теми сталася помилка
       upload: "Помилка створення об’єкта завантаження: %{name}. %{errors}"
@@ -131,7 +129,6 @@ uk:
         unsubscribe_not_allowed: "Буває, коли відписка через електронну пошту не дозволена для цього користувача."
         email_not_allowed: "Буває, коли адреса електронної пошти відсутня в білому або чорному списку."
       unrecognized_error: "Невідома помилка"
-    secure_media_placeholder: "На цьому сайті увімкнено захищений доступ до мультимедійного контенту. Щоб переглянути файли, авторизуйтесь на сайті та увійшовши в цю тему натисніть \"Переглянути вкладення\"."
     view_redacted_media: "Перегляд вкладень"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -213,7 +210,6 @@ uk:
       page_publishing_requirements: "Публікація сторінки не може бути ввімкнена якщо обмежено доступ до медіа контенту."
       s3_backup_requires_s3_settings: "Ви не можете використовувати S3 як резервне розташування, якщо ви не вказали '%{setting_name}'."
       s3_bucket_reused: "Не можна використовувати одне й те саме bucket для 's3_upload_bucket' та 's3_backup_bucket'. Виберіть інше bucket або використовуйте інший шлях для кожного bucket."
-      secure_media_requirements: "Спочатку потрібно увімкнути захист файлів для завантаження S3."
       share_quote_facebook_requirements: "Ви повинні встановити ідентифікатор додатка Facebook, щоб увімкнути обмін цитатами для Facebook."
       second_factor_cannot_enforce_with_socials: "Ви не можете примусово активувати двофакторну автентифікацію через вхід у соціальні мережі. Спочатку потрібно вимкнути вхід через: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Ви не можете застосувати 2FA, якщо локальні входи відключені."
@@ -648,7 +644,6 @@ uk:
   staff_category_name: "Персонал"
   staff_category_description: "Приватна категорія для обговорень між персоналом. Теми бачать тільки адміністратори та модератори."
   discourse_welcome_topic:
-    title: "Ласкаво просимо в Discourse"
     body: |2
 
       Перший абзац цієї закріпленої теми буде відображатися як вітальне повідомлення для всіх нових відвідувачів на домашній сторінці. Це важливо!
@@ -1717,7 +1712,6 @@ uk:
     google_oauth2_client_secret: "Client secret для вашого Google додатка"
     google_oauth2_prompt: "Необов’язковий розділений пробілом список значень, який вказує, чи запитує сервер авторизацію користувача для повторної автентифікації та згоди. Див. <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> щодо можливих значень."
     google_oauth2_hd: "Необов’язковий домен, розміщений у Google Apps Hosted, до якого вхід буде обмежений. Див <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> для більш докладної інформації."
-    google_oauth2_hd_groups: "(експериментально) Отримати групи Google користувачів у розміщеному домені під час автентифікації. Отримані групи Google можна використовувати для надання автоматичного членства в групі Discourse (див. налаштування групи)."
     enable_twitter_logins: "Увімкніть автентифікацію Twitter, потрібні twitter_consumer_key та twitter_consumer_secret. Див. <a href='https://meta.discourse.org/t/13395' target='_blank'>Configuring Twitter login (and rich embeds) for Discourse</a>."
     twitter_consumer_key: "Ключ користувача для аутентифікації в Twitter, зареєстрований за адресою <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Секретний номер для перевірки справжності Twitter, зареєстрований в <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
@@ -2092,9 +2086,6 @@ uk:
     delete_merged_stub_topics_after_days: "Кількість днів очікування до автоматичного видалення тем, з яких переміщено всі повідомлення. Встановіть 0, щоб ніколи не видаляти теми-заглушки."
     bootstrap_mode_min_users: "Мінімальна кількість користувачів, необхідних для відключення режиму початкового налаштування (встановлено 0 для відключення)"
     prevent_anons_from_downloading_files: "Заборонити анонімним користувачам завантажувати вкладення."
-    secure_media: 'Обмежити доступ до УСІХ завантажень (зображень, відео, аудіо, тексту, PDF-файлів, архівів та інших). Якщо ввімкнено параметр «Потрібний вхід», доступ до завантажень мають лише користувачі, які ввійшли в систему. В іншому випадку доступ буде обмежено лише для медіа-завантажень у приватних повідомленнях та приватних категоріях. ПОПЕРЕДЖЕННЯ. Цей параметр є складним і вимагає глибокого адміністративного розуміння. Дивіться тему <a target="_blank" href="https://meta.discourse.org/t/secure-media-uploads/140017">Secure Media Uploads</a> для отримання детальної інформації.'
-    secure_media_allow_embed_images_in_emails: "Дозволяти вбудовувати зображення з обмеженим доступом до листів, якщо їх розмір не перевищує значення, вказаного у параметрі 'secure_media_max_email_embed_image_size_kb'."
-    secure_media_max_email_embed_image_size_kb: "Кількість кілобайт, до якого буде зменшено розмір вбудованих у листи зображень з обмеженим доступом, якщо увімкнено параметр 'secure_media_allow_embed_images_in_emails'."
     slug_generation_method: "Виберіть спосіб генерації slug (рядок ідентифікатор). 'закодований' буде генерувати рядок закодований з %. 'none' зовсім вимкне slug."
     enable_emoji: "Увімкнути іконки emoji"
     enable_emoji_shortcuts: "Поширений смайлик, наприклад :): p :( буде перетворений на emoji"
@@ -2254,7 +2245,6 @@ uk:
       unicode_usernames_avatars: "Внутрішні аватари системи не підтримують імен користувачів Unicode."
       list_value_count: "Список повинен містити точно %{count} значення."
       markdown_linkify_tlds: "Не можна включати значення \"*\"."
-      google_oauth2_hd_groups: "Для увімкнення цього параметра ви повинні встановити 'google oauth2 hd'."
       search_tokenize_chinese_enabled: "Для увімкнення цього налаштування необхідно вимкнути 'search_tokenize_chinese'."
       search_tokenize_japanese_enabled: "Ви повинні відключити 'search_tokenize_japanese' перед увімкненням цього налаштування."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Ви не можете ввімкнути DiscourseConnect, якщо застосовано 2FA."
@@ -2717,7 +2707,6 @@ uk:
     bulk_invite_succeeded:
       title: "Запрошення вдалося успішно"
       subject_template: "Масове запрошення користувачів оброблено успішно"
-      text_body_template: "Ваш файл для масового запршення користувачів було успішно оброблено, віправлено запрошень - %{sent}."
     bulk_invite_failed:
       title: "Помилка масового запрошення"
       subject_template: "Масове запрошення користувачів оброблено з помилками"

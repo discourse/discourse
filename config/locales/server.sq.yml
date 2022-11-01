@@ -941,7 +941,6 @@ sq:
       subject_template: "Restore failed"
     bulk_invite_succeeded:
       subject_template: "Bulk user invite processed successfully"
-      text_body_template: "Your bulk user invite file was processed, %{sent} invites mailed."
     bulk_invite_failed:
       subject_template: "Bulk user invite processed with errors"
     csv_export_failed:

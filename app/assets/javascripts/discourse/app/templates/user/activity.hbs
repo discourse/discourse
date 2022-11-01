@@ -1,4 +1,19 @@
-{{#unless this.currentUser.redesigned_user_page_nav_enabled}}
+{{#if this.currentUser.redesigned_user_page_nav_enabled}}
+  <DSection @pageClass="user-activity" />
+
+  <div class="user-navigation user-navigation-secondary">
+    <HorizontalOverflowNav>
+      <UserNav::ActivityNav
+        @user={{this.user}}
+        @viewingSelf={{this.viewingSelf}}
+        @model={{this.model}}
+        @siteSettings={{this.siteSettings}}
+        @draftLabel={{this.draftLabel}}
+        @pendingLabel={{this.pendingLabel}}/>
+    </HorizontalOverflowNav>
+  </div>
+
+{{else}}
   <DSection @pageClass="user-activity" @class="user-secondary-navigation" @scrollTop={{false}}>
     <nav role="navigation">
       <MobileNav @class="activity-nav" @desktopClass="action-list activity-list nav-stacked">
@@ -40,7 +55,7 @@
       <DButton @action={{action "exportUserArchive"}} @class="btn-default" @label="user.download_archive.button_text" @icon="download" />
     </section>
   {{/if}}
-{{/unless}}
+{{/if}}
 
 <section class="user-content">
   {{outlet}}

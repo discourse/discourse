@@ -28,8 +28,8 @@ class Reviewable < ActiveRecord::Base
   belongs_to :topic
   belongs_to :category
 
-  has_many :reviewable_histories
-  has_many :reviewable_scores, -> { order(created_at: :desc) }
+  has_many :reviewable_histories, dependent: :destroy
+  has_many :reviewable_scores, -> { order(created_at: :desc) }, dependent: :destroy
 
   enum :status, {
     pending: 0,
@@ -534,26 +534,12 @@ class Reviewable < ActiveRecord::Base
     results
   end
 
-  def self.recent_list_with_pending_first(user, limit: 30)
-    min_score = Reviewable.min_score_for_priority
+  def self.user_menu_list_for(user, limit: 30)
+    list_for(user, limit: limit, status: :pending).to_a
+  end
 
-    query = Reviewable
-      .includes(:created_by, :topic, :target)
-      .viewable_by(user, preload: false)
-      .except(:order)
-      .order(score: :desc, created_at: :desc)
-      .limit(limit)
-
-    if min_score > 0
-      query = query.where(<<~SQL, min_score: min_score)
-        reviewables.score >= :min_score OR reviewables.force_review
-      SQL
-    end
-    records = query.where(status: Reviewable.statuses[:pending]).to_a
-    if records.size < limit
-      records += query.where.not(status: Reviewable.statuses[:pending]).to_a
-    end
-    records
+  def self.basic_serializers_for_list(reviewables, user)
+    reviewables.map { |r| r.basic_serializer.new(r, scope: user.guardian, root: nil) }
   end
 
   def serializer

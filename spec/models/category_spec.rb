@@ -1286,4 +1286,16 @@ RSpec.describe Category do
       end
     end
   end
+
+  describe '#deleting the general category' do
+    fab!(:category) { Fabricate(:category) }
+
+    it 'should empty out the general_category_id site_setting' do
+      SiteSetting.general_category_id = category.id
+      category.destroy
+
+      expect(SiteSetting.general_category_id).to_not eq(category.id)
+      expect(SiteSetting.general_category_id).to be < 1
+    end
+  end
 end

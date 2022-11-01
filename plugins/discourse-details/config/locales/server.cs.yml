@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 cs:
+  site_settings:
+    details_enabled: 'Zahrnout možnost přidat k příspěvku rozšiřitelné detaily. Tuto funkci najdete ve vyskakovací nabídce panelu nástrojů kompozitoru. Pokud toto nastavení změníte, musíte všechny příspěvky znovu vytvořit pomocí příkazu "rake posts:rebake".'
+  details:
+    excerpt_details: "(klikněte pro více podrobností)"

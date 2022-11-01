@@ -257,6 +257,7 @@ hr:
     ok_value: "U redu"
     cancel_value: "Odustani"
     submit: "Pošalji"
+    delete: "Pobriši"
     generic_error: "Dogodila se greška, ispričavamo se."
     generic_error_with_reason: "Dogodila se greška: %{error}"
     sign_up: "Učlani se"
@@ -1148,8 +1149,9 @@ hr:
       enable_quoting: "Omogući citirani odgovor označenoj teksta"
       enable_defer: "Uključi odgodu označavanja nepročitanih tema"
       experimental_sidebar:
-        enable: "Omogući eksperimentalnu bočnu traku"
         options: "Mogućnosti"
+        navigation_section: "Navigacija"
+        list_destination_default: "Zadano"
       change: "promijeni"
       featured_topic: "Istaknuta tema"
       moderator: "%{user} je moderator"
@@ -1248,6 +1250,7 @@ hr:
         move_to_archive: "Arhiva"
         failed_to_move: "Neuspješno premještanje odabranih poruka (možda vam je mreža nedostupna)"
         tags: "Oznake"
+        all_tags: "Sve oznake"
         warnings: "Službena upozorenja"
         read_more_in_group: "Želite li pročitati više? Pregledajte ostale poruke u %{groupLink}."
         read_more: "Želite li pročitati više? Pregledajte ostale poruke u <a href='%{basePath}/u/%{username}/messages'>osobnim porukama</a>."
@@ -1322,8 +1325,6 @@ hr:
         edit: "Izmijeni"
         edit_title: "Uredi autentifikator"
         edit_description: "Ime autentifikatora"
-        enable_security_key_description: |
-          Kada pripremite <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardverski sigurnosni ključ</a> , pritisnite tipku Registracija u nastavku.
         totp:
           title: "Autentifikatori temeljeni na Tokenu"
           add: "Dodaj provjeru autentičnosti"
@@ -1331,14 +1332,12 @@ hr:
           name_and_code_required_error: "Morate navesti ime i kôd iz aplikacije za provjeru autentičnosti."
         security_key:
           register: "Registracija"
-          title: "Sigurnosni ključevi"
-          add: "Dodaj sigurnosni ključ"
           default_name: "Glavni sigurnosni ključ"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "Postupak registracije sigurnosnog ključa ili je vremenski ograničen ili je otkazan."
           already_added_error: "Već ste registrirali ovaj sigurnosni ključ. Ne morate ga ponovno registrirati."
-          edit: "Uredi sigurnosni ključ"
           save: "Spremi"
-          edit_description: "Naziv sigurnosnog ključa"
           name_required_error: "Morate navesti ime za svoj sigurnosni ključ."
       change_about:
         title: "Promijeni O meni"
@@ -1802,6 +1801,8 @@ hr:
       leave_message: "Želite li zaista ostaviti ovu poruku?"
       remove_allowed_user: "Želite li zaista ukloniti %{name} iz ove poruke?"
       remove_allowed_group: "Želite li zaista ukloniti %{name} iz ove poruke?"
+      leave: "Napustiti"
+      remove_user: "Ukloni korisnika"
     email: "E-mail"
     username: "Korisničko ime"
     last_seen: "Viđeno"
@@ -1857,7 +1858,6 @@ hr:
       second_factor_backup_title: "Sigurnosna kopija od dva faktora"
       second_factor_backup_description: "Unesite jedan od vaših rezervnih kodova:"
       second_factor: "Prijavite se pomoću aplikacije Authenticator"
-      security_key_description: "Kada pripremite svoj fizički sigurnosni ključ, pritisnite gumb Autentifikacija sa sigurnosnim ključem u nastavku."
       security_key_alternative: "Pokušaj na drugi način"
       security_key_authenticate: "Autentifikacija sa sigurnosnim ključem"
       security_key_not_allowed_error: "Proces provjere autentičnosti sigurnosnog ključa je istekao ili je otkazan."
@@ -3771,7 +3771,6 @@ hr:
       tag_list_joiner: ", "
       delete_unused: "Izbriši neiskorištene oznake"
       delete_unused_description: "Izbrišite sve tagove koji nisu dodijeljeni niti jednoj temi ili privatnoj poruci."
-      cancel_delete_unused: "Odustani"
       filters:
         without_category: "%{filter} %{tag} teme"
         with_category: "%{filter} %{tag} tema u %{category}"
@@ -3895,7 +3894,7 @@ hr:
         one: "%{count} novi"
         few: "%{count} novih"
         other: "%{count} novi"
-      more: "Više..."
+      more: "Više"
       all_categories: "Sve kategorije"
       sections:
         about:
@@ -3939,6 +3938,9 @@ hr:
               content: "Korisnika"
             my_posts:
               content: "Moje objave"
+            review:
+              content: "Osvrt"
+              title: "osvrt"
   admin_js:
     type_to_filter: "upiši za filtriranje"
     admin:
@@ -5442,7 +5444,6 @@ hr:
       embedding:
         get_started: "Ako želite ugraditi Discourse na drugu web-stranicu, počnite dodavanjem njegovog hosta."
         confirm_delete: "Jeste li sigurni da želite izbrisati tog hosta?"
-        sample: "Zalijepite sljedeći HTML kod na svoju web-lokaciju kako biste stvorili i ugradili teme diskursa. Zamijenite <b>ZAMJENI_ME</b> kanonskim URL-om stranice na koju ga ugrađujete."
         title: "Ugrađivanje"
         host: "Dopušteni hostovi"
         class_name: "Naziv klase"

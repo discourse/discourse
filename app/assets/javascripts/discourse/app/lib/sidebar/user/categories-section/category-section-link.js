@@ -4,14 +4,16 @@ import { tracked } from "@glimmer/tracking";
 
 import { bind } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
+import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sidebar";
 
 export default class CategorySectionLink {
   @tracked totalUnread = 0;
   @tracked totalNew = 0;
 
-  constructor({ category, topicTrackingState }) {
+  constructor({ category, topicTrackingState, currentUser }) {
     this.category = category;
     this.topicTrackingState = topicTrackingState;
+    this.currentUser = currentUser;
     this.refreshCounts();
   }
 
@@ -37,7 +39,7 @@ export default class CategorySectionLink {
   }
 
   get currentWhen() {
-    return "discovery.unreadCategory discovery.topCategory discovery.newCategory discovery.latestCategory";
+    return "discovery.unreadCategory discovery.topCategory discovery.newCategory discovery.latestCategory discovery.category discovery.categoryNone discovery.categoryAll";
   }
 
   get title() {
@@ -49,11 +51,11 @@ export default class CategorySectionLink {
   }
 
   get prefixType() {
-    return "icon";
+    return "span";
   }
 
-  get prefixValue() {
-    return "square-full";
+  get prefixElementColors() {
+    return [this.category.parentCategory?.color, this.category.color];
   }
 
   get prefixColor() {
@@ -79,12 +81,14 @@ export default class CategorySectionLink {
   }
 
   get route() {
-    if (this.totalUnread > 0) {
-      return "discovery.unreadCategory";
-    } else if (this.totalNew > 0) {
-      return "discovery.newCategory";
-    } else {
-      return "discovery.latestCategory";
+    if (this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION) {
+      if (this.totalUnread > 0) {
+        return "discovery.unreadCategory";
+      }
+      if (this.totalNew > 0) {
+        return "discovery.newCategory";
+      }
     }
+    return "discovery.category";
   }
 }

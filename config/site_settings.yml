@@ -379,6 +379,9 @@ basic:
   enable_user_status:
     client: true
     default: false
+  enable_onboarding_popups:
+    client: true
+    default: false
 
 login:
   invite_only:
@@ -426,6 +429,11 @@ login:
   google_oauth2_hd_groups:
     default: false
     validator: GoogleOauth2HdGroupsValidator
+  google_oauth2_hd_groups_service_account_admin_email:
+    default: ""
+  google_oauth2_hd_groups_service_account_json:
+    default: ""
+    textarea: true
   enable_twitter_logins:
     default: false
   twitter_consumer_key:
@@ -490,7 +498,7 @@ login:
     default: false
   max_suspicious_distance_km:
     hidden: true
-    default: 500
+    default: 100
   discourse_connect_url:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
@@ -806,7 +814,7 @@ posting:
   max_emojis_in_title: 1
   allow_uncategorized_topics:
     client: true
-    default: true
+    default: false
     refresh: true
   allow_duplicate_topic_titles: false
   allow_duplicate_topic_titles_category: false
@@ -820,6 +828,7 @@ posting:
   enable_personal_messages:
     default: true
     client: true
+    hidden: true
   enable_system_message_replies:
     default: true
   personal_message_enabled_groups:
@@ -1291,6 +1300,7 @@ email:
   max_participant_names:
     default: 10
     hidden: true
+  require_change_email_confirmation: false
 
 files:
   max_image_size_kb:
@@ -1557,6 +1567,7 @@ trust:
   min_trust_to_send_messages:
     default: 1
     enum: "TrustLevelSetting"
+    hidden: true
   min_trust_to_send_email_messages:
     default: "4"
     enum: "TrustLevelAndStaffSetting"
@@ -1892,6 +1903,7 @@ rate_limits:
   max_edits_per_day: 30
   max_invites_per_day: 10
   max_topic_invitations_per_day: 30
+  max_topic_invitations_per_minute: 5
   max_topics_in_first_day: 3
   max_replies_in_first_day: 10
   tl2_additional_likes_per_day_multiplier: 1.5
@@ -2017,6 +2029,22 @@ developer:
   enable_experimental_sidebar_hamburger:
     default: false
     client: true
+  enable_experimental_hashtag_autocomplete:
+    default: false
+    client: true
+    hidden: true
+  enable_new_user_profile_nav_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+  include_associated_account_ids:
+    default: false
+    hidden: true
+
+sidebar:
   enable_sidebar:
     default: true
     client: true
@@ -2028,16 +2056,13 @@ developer:
     type: tag_list
     default: ""
     client: true
-  enable_new_user_profile_nav_groups:
-    client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
-  include_associated_account_ids:
-    default: false
+  default_sidebar_list_destination:
     hidden: true
+    default: "default"
+    type: "list"
+    choices:
+      - "default"
+      - "unread_new"
 
 embedding:
   embed_by_username:
@@ -2303,6 +2328,7 @@ uncategorized:
   general_category_id:
     default: -1
     hidden: true
+    client: true
   meta_category_id:
     default: -1
     hidden: true

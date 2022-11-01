@@ -41,11 +41,32 @@ RSpec.describe Invite do
     end
 
     it 'allows only valid domains' do
-      invite = Fabricate.build(:invite, domain: 'example', invited_by: user)
+      invite = Fabricate.build(:invite, email: nil, domain: 'example', invited_by: user)
       expect(invite).not_to be_valid
 
-      invite = Fabricate.build(:invite, domain: 'example.com', invited_by: user)
+      invite = Fabricate.build(:invite, email: nil, domain: 'example.com', invited_by: user)
       expect(invite).to be_valid
+    end
+
+    it 'allows only email or only domain to be present' do
+      invite = Fabricate.build(:invite, email: nil, invited_by: user)
+      expect(invite).to be_valid
+
+      invite = Fabricate.build(:invite, email: nil, domain: 'example.com', invited_by: user)
+      expect(invite).to be_valid
+
+      invite = Fabricate.build(:invite, email: 'test@example.com', invited_by: user)
+      expect(invite).to be_valid
+
+      invite = Fabricate.build(:invite, email: 'test@example.com', domain: 'example.com', invited_by: user)
+      expect(invite).not_to be_valid
+      expect(invite.errors.full_messages).to include(I18n.t('invite.email_xor_domain'))
+    end
+
+    it 'checks if redemption_count is less or equal than max_redemptions_allowed' do
+      invite = Fabricate.build(:invite, redemption_count: 2, max_redemptions_allowed: 1, invited_by: user)
+      expect(invite).not_to be_valid
+      expect(invite.errors.full_messages.first).to include(I18n.t('invite.redemption_count_less_than_max', max_redemptions_allowed: 1))
     end
   end
 
@@ -317,45 +338,45 @@ RSpec.describe Invite do
     end
   end
 
-  describe '#redeem_from_email' do
+  describe '#redeem_for_existing_user' do
     fab!(:invite) { Fabricate(:invite, email: 'test@example.com') }
     fab!(:user) { Fabricate(:user, email: invite.email) }
 
     it 'redeems the invite from email' do
-      Invite.redeem_from_email(user.email)
+      Invite.redeem_for_existing_user(user)
       expect(invite.reload).to be_redeemed
     end
 
     it 'does not redeem the invite if email does not match' do
-      Invite.redeem_from_email('test2@example.com')
+      user.update!(email: 'test2@example.com')
+      Invite.redeem_for_existing_user(user)
       expect(invite.reload).not_to be_redeemed
     end
 
     it 'does not work with expired invites' do
       invite.update!(expires_at: 1.day.ago)
-      Invite.redeem_from_email(user.email)
+      Invite.redeem_for_existing_user(user)
       expect(invite).not_to be_redeemed
     end
 
     it 'does not work with deleted invites' do
       invite.trash!
-      Invite.redeem_from_email(user.email)
+      Invite.redeem_for_existing_user(user)
       expect(invite).not_to be_redeemed
     end
 
     it 'does not work with invalidated invites' do
       invite.update!(invalidated_at: 1.day.ago)
-      Invite.redeem_from_email(user.email)
+      Invite.redeem_for_existing_user(user)
       expect(invite).not_to be_redeemed
     end
-
   end
 
   describe 'scopes' do
     fab!(:inviter) { Fabricate(:user) }
 
     fab!(:pending_invite) { Fabricate(:invite, invited_by: inviter, email: 'pending@example.com') }
-    fab!(:pending_link_invite) { Fabricate(:invite, invited_by: inviter, max_redemptions_allowed: 5) }
+    fab!(:pending_link_invite) { Fabricate(:invite, invited_by: inviter, email: nil, max_redemptions_allowed: 5) }
     fab!(:pending_invite_from_another_user) { Fabricate(:invite) }
 
     fab!(:expired_invite) { Fabricate(:invite, invited_by: inviter, email: 'expired@example.com', expires_at: 1.day.ago) }

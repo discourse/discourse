@@ -340,7 +340,13 @@ class Upload < ActiveRecord::Base
         if local?
           Discourse.store.path_for(self)
         else
-          Discourse.store.download(self)&.path
+          begin
+            Discourse.store.download(self)&.path
+          rescue OpenURI::HTTPError => e
+            # Some issue with downloading the image from a remote store.
+            # Assume the upload is broken and save an empty string to prevent re-evaluation
+            nil
+          end
         end
 
       if local_path.nil?

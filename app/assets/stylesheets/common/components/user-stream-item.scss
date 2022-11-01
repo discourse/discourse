@@ -45,7 +45,7 @@
   .draft-type {
     line-height: var(--line-height-small);
     color: var(--primary-medium);
-    font-size: $font-down-2;
+    font-size: var(--font-down-2);
     padding-top: 5px;
   }
 
@@ -55,7 +55,7 @@
   }
 
   .delete-info .d-icon {
-    font-size: $font-0;
+    font-size: var(--font-0);
   }
 
   .expand-item,
@@ -72,7 +72,7 @@
   }
 
   .name {
-    font-size: $font-0;
+    font-size: var(--font-0);
     max-width: 400px;
     @include ellipsis;
   }
@@ -103,13 +103,13 @@
     .fa,
     .icon {
       color: var(--primary-med-or-secondary-med);
-      font-size: $font-up-4;
+      font-size: var(--font-up-4);
     }
   }
 
   .excerpt {
     margin: 1em 0 0 0;
-    font-size: $font-0;
+    font-size: var(--font-0);
     word-wrap: break-word;
     color: var(--primary);
     &:empty {

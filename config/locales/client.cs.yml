@@ -250,6 +250,7 @@ cs:
     ok_value: "OK"
     cancel_value: "Zrušit"
     submit: "Odeslat"
+    delete: "Smazat"
     generic_error: "Bohužel nastala chyba."
     generic_error_with_reason: "Nastala chyba: %{error}"
     sign_up: "Registrace"
@@ -928,6 +929,8 @@ cs:
       enable_quoting: "Povolit odpověď s citací z označeného textu"
       experimental_sidebar:
         options: "Možnosti"
+        navigation_section: "Navigace"
+        list_destination_default: "Výchozí"
       change: "změnit"
       featured_topic: "Doporučené téma"
       moderator: "%{user} je moderátor"
@@ -1013,6 +1016,7 @@ cs:
         move_to_archive: "Archivovat"
         failed_to_move: "Nepodařilo se přesunout vybrané zprávy (možná vám spadlo připojení)"
         tags: "Štítek"
+        all_tags: "Všechny štítky"
       preferences_nav:
         account: "Účet"
         security: "Zabezpečení"
@@ -1074,8 +1078,6 @@ cs:
         edit: "Upravit"
         edit_title: "Upravit autentifikátor"
         edit_description: "Jméno autentifikátoru"
-        enable_security_key_description: |
-          Když máte připravený <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardwarový bezpečnostní klíč</a> , stiskněte tlačítko Registrace níže.
         totp:
           title: "Ověření založené na tokenech"
           add: "Přidat autentifikátor"
@@ -1083,14 +1085,10 @@ cs:
           name_and_code_required_error: "Musíte zadat jméno a kód z vaší ověřovací aplikace."
         security_key:
           register: "Registrovat"
-          title: "Bezpečnostní klíče"
-          add: "Přidat bezpečnostní klíč"
           default_name: "Hlavní bezpečnostní klíč"
           not_allowed_error: "Proces registrace bezpečnostního klíče buď vypršel, nebo byl zrušen."
           already_added_error: "Tento bezpečnostní klíč jste již zaregistrovali. Není nutné jej znovu zaregistrovat."
-          edit: "Upravit bezpečnostní klíč"
           save: "Uložit"
-          edit_description: "Název bezpečnostního klíče"
           name_required_error: "Musíte zadat název bezpečnostního klíče."
       change_about:
         title: "Změna o mně"
@@ -1440,6 +1438,8 @@ cs:
       leave_message: "Opravdu chcete opustit tuto zprávu?"
       remove_allowed_user: "Určitě chcete odstranit %{name} z této zprávy?"
       remove_allowed_group: "Opravdu chcete odstranit %{name} z této zprávy?"
+      leave: "Opustit skupinu"
+      remove_user: "Odebrat uživatele"
     email: "Email"
     username: "Uživatelské jméno"
     last_seen: "Naposledy viděn"
@@ -2810,7 +2810,6 @@ cs:
       upload: "Nahrát tagy"
       upload_instructions: "Jeden na řádek, případně se skupinou tagů ve formátu 'jméno_tagu,skupina_tagu'."
       upload_successful: "Tagy úspěšně nahrány"
-      cancel_delete_unused: "Zrušit"
       filters:
         without_category: "%{filter} %{tag} témata"
         with_category: "%{filter} %{tag} témata v %{category}"
@@ -2886,7 +2885,7 @@ cs:
         few: "%{count} nová"
         many: "%{count} nových"
         other: "%{count} nové"
-      more: "Více..."
+      more: "Více"
       all_categories: "Všechny kategorie"
       sections:
         about:

@@ -200,6 +200,7 @@ vi:
     ok_value: "OK"
     cancel_value: "Huỷ"
     submit: "Gửi đi"
+    delete: "Xóa"
     generic_error: "Rất tiếc, đã có lỗi xảy ra."
     generic_error_with_reason: "Đã xảy ra lỗi: %{error}"
     sign_up: "Đăng ký"
@@ -1034,12 +1035,13 @@ vi:
       enable_quoting: "Bật chế độ làm nổi bật chữ trong đoạn trích dẫn trả lời"
       enable_defer: "Cho phép trì hoãn để đánh dấu các chủ đề chưa đọc"
       experimental_sidebar:
-        enable: "Bật thanh bên thử nghiệm"
         options: "Lựa chọn"
         categories_section: "Phần danh mục"
         categories_section_instruction: "Các danh mục đã chọn sẽ được hiển thị trong phần danh mục của Thanh bên."
         tags_section: "Phần thẻ"
         tags_section_instruction: "Các thẻ đã chọn sẽ được hiển thị trong phần thẻ của Thanh bên."
+        navigation_section: "Điều hướng"
+        list_destination_default: "Mặc định"
       change: "thay đổi"
       featured_topic: "Chủ đề nổi bật"
       moderator: "%{user} trong ban quản trị"
@@ -1136,6 +1138,7 @@ vi:
         move_to_archive: "Lưu trữ"
         failed_to_move: "Lỗi khi chuyển các tin nhắn đã chọn (có thể do lỗi mạng)"
         tags: "Thẻ"
+        all_tags: "Tất cả thẻ"
         warnings: "Cảnh báo chính thức"
         read_more_in_group: "Muốn đọc thêm? Duyệt các tin nhắn khác bằng %{groupLink}."
         read_more: "Muốn đọc thêm? Duyệt các tin nhắn khác trong <a href='%{basePath}/u/%{username}/messages'>tin nhắn cá nhân</a>."
@@ -1205,8 +1208,6 @@ vi:
         edit: "Sửa"
         edit_title: "Chỉnh sửa Authenticator"
         edit_description: "Tên người xác thực"
-        enable_security_key_description: |
-          Khi bạn đã có bạn <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">phần cứng chủ chốt an ninh</a> chuẩn bị, nhấn nút Đăng ký dưới đây.
         totp:
           title: "Trình xác thực dựa trên mã thông báo"
           add: "Thêm Authenticator"
@@ -1214,14 +1215,10 @@ vi:
           name_and_code_required_error: "Bạn phải cung cấp tên và mã từ ứng dụng xác thực của mình."
         security_key:
           register: "Đăng ký"
-          title: "Khóa bảo mật"
-          add: "Thêm khóa bảo mật"
           default_name: "Khóa bảo mật chính"
           not_allowed_error: "Quá trình đăng ký khóa bảo mật đã hết thời gian chờ hoặc đã bị hủy."
           already_added_error: "Bạn đã đăng ký khóa bảo mật này. Bạn không cần phải đăng ký lại."
-          edit: "Chỉnh sửa khóa bảo mật"
           save: "Lưu"
-          edit_description: "Tên khóa bảo mật"
           name_required_error: "Bạn phải cung cấp tên cho khóa bảo mật của mình."
       change_about:
         title: "Thay đổi thông tin về tôi"
@@ -1662,6 +1659,8 @@ vi:
       leave_message: "Bạn có thực sự muốn để lại tin nhắn này không?"
       remove_allowed_user: "Bạn thực sự muốn xóa %{name} từ tin nhắn này?"
       remove_allowed_group: "Bạn thực sự muốn xóa %{name} từ tin nhắn này?"
+      leave: "Rời nhóm"
+      remove_user: "Xoá người dùng"
     email: "Email"
     username: "Username"
     last_seen: "Đã xem"
@@ -1717,7 +1716,6 @@ vi:
       second_factor_backup_title: "Sao lưu hai yếu tố"
       second_factor_backup_description: "Vui lòng nhập một trong các mã dự phòng của bạn:"
       second_factor: "Đăng nhập bằng ứng dụng Authenticator"
-      security_key_description: "Khi bạn đã chuẩn bị khóa bảo mật vật lý, hãy nhấn nút Xác thực bằng Khóa bảo mật bên dưới."
       security_key_alternative: "Thử lại cách khác"
       security_key_authenticate: "Xác thực bằng Khóa bảo mật"
       security_key_not_allowed_error: "Quá trình xác thực khóa bảo mật đã hết thời gian chờ hoặc đã bị hủy."
@@ -3474,7 +3472,6 @@ vi:
       tag_list_joiner: ", "
       delete_unused: "Xóa thẻ không sử dụng"
       delete_unused_description: "Xóa tất cả các thẻ không được đính kèm với bất kỳ chủ đề hoặc tin nhắn cá nhân nào"
-      cancel_delete_unused: "Hủy"
       filters:
         without_category: "%{filter} %{tag} chủ đề"
         with_category: "%{filter} %{tag} chủ đề trong %{category}"
@@ -3597,7 +3594,7 @@ vi:
       new_count:
         other: "%{count} mới"
       toggle_section: "phần chuyển đổi"
-      more: "Thêm..."
+      more: "Thêm"
       all_categories: "Tất cả danh mục"
       sections:
         about:
@@ -3652,6 +3649,9 @@ vi:
               title: "Bài viết của tôi"
               draft_count:
                 other: "%{count} bản nháp"
+            review:
+              content: "Review"
+              title: "review"
     until: "Cho đến khi:"
   admin_js:
     type_to_filter: "gõ để lọc..."
@@ -4971,6 +4971,7 @@ vi:
           search: "Tìm kiếm"
           groups: "Nhóm"
           dashboard: "Bảng điều khiển"
+          sidebar: "Thanh bên"
         secret_list:
           invalid_input: "Các trường nhập không được để trống hoặc chứa ký tự thanh dọc."
         default_categories:
@@ -5084,7 +5085,6 @@ vi:
       embedding:
         get_started: "Nếu bạn muốn nhúng Discourse trên một website khác, bắt đầu bằng cách thêm host."
         confirm_delete: "Bạn muốn xóa host này?"
-        sample: "Dán mã HTML sau vào trang web của bạn để tạo và nhúng các chủ đề diễn ngôn. Thay thế <b>REPLACE_ME</b> bằng URL chuẩn của trang mà bạn đang nhúng nó vào."
         title: "Nhúng"
         host: "Cho phép Host"
         class_name: "Tên lớp"

@@ -73,7 +73,7 @@ To make (or remove) a pin or a banner, use the admin wrench at the top right or 
 
 ### New User Sandbox and the Trust System
 
-If your discussion area is be open to the public, new visitors will arrive that are initially strangers to the community. Discourse has a [trust system](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) where users can, over time, earn the trust of the community and gain abilities to assist in governing their community.
+If your discussion area is open to the public, new visitors will arrive that are initially strangers to the community. Discourse has a [trust system](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) where users can, over time, earn the trust of the community and gain abilities to assist in governing their community.
 
 Discourse is designed to offer safe defaults for public communities, even with no active moderation.
 

@@ -52,6 +52,16 @@ RSpec.describe Admin::SiteSettingsController do
         expect(SiteSetting.search_tokenize_chinese).to eq(true)
       end
 
+      it 'throws an error when trying to change a deprecated setting with override = false' do
+        SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
+        put "/admin/site_settings/enable_personal_messages.json", params: {
+          enable_personal_messages: false
+        }
+
+        expect(response.status).to eq(422)
+        expect(SiteSetting.personal_message_enabled_groups).to eq(Group::AUTO_GROUPS[:trust_level_4])
+      end
+
       it 'allows value to be a blank string' do
         put "/admin/site_settings/test_setting.json", params: {
           test_setting: ''
@@ -103,6 +113,44 @@ RSpec.describe Admin::SiteSettingsController do
               update_existing_user: true
             }
           }.to change { UserOption.where(email_digests: false).count }.by(User.human_users.count)
+        end
+      end
+
+      context 'when updating default sidebar categories and tags' do
+        it 'does not enqueue the backfilling job if update_existing_user param is not present' do
+          expect_not_enqueued_with(job: :backfill_sidebar_site_settings) do
+            put "/admin/site_settings/default_sidebar_categories.json", params: {
+              default_sidebar_categories: "1|2",
+            }
+
+            expect(response.status).to eq(200)
+          end
+        end
+
+        it 'enqueus the backfilling job if update_existing_user param is present when updating default sidebar tags' do
+          SiteSetting.default_sidebar_tags = "tag3"
+
+          expect_enqueued_with(job: :backfill_sidebar_site_settings, args: { setting_name: 'default_sidebar_tags', new_value: 'tag1|tag2', previous_value: 'tag3' }) do
+            put "/admin/site_settings/default_sidebar_tags.json", params: {
+              default_sidebar_tags: "tag1|tag2",
+              update_existing_user: true
+            }
+
+            expect(response.status).to eq(200)
+          end
+        end
+
+        it 'enqueus the backfilling job if update_existing_user param is present when updating default sidebar categories' do
+          SiteSetting.default_sidebar_categories = "3|4"
+
+          expect_enqueued_with(job: :backfill_sidebar_site_settings, args: { setting_name: 'default_sidebar_categories', new_value: '1|2', previous_value: '3|4' }) do
+            put "/admin/site_settings/default_sidebar_categories.json", params: {
+              default_sidebar_categories: "1|2",
+              update_existing_user: true
+            }
+
+            expect(response.status).to eq(200)
+          end
         end
       end
 
@@ -253,6 +301,30 @@ RSpec.describe Admin::SiteSettingsController do
           expect(response.parsed_body["user_count"]).to eq(User.real.where(staged: false).count - 1)
 
           SiteSetting.setting(:default_tags_watching, "")
+        end
+
+        context "for sidebar defaults" do
+          it 'returns the right count for the default_sidebar_categories site setting' do
+            category = Fabricate(:category)
+
+            put "/admin/site_settings/default_sidebar_categories/user_count.json", params: {
+              default_sidebar_categories: "#{category.id}"
+            }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["user_count"]).to eq(User.real.not_staged.count)
+          end
+
+          it 'returns the right count for the default_sidebar_tags site setting' do
+            tag = Fabricate(:tag)
+
+            put "/admin/site_settings/default_sidebar_tags/user_count.json", params: {
+              default_sidebar_tags: "#{tag.name}"
+            }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["user_count"]).to eq(User.real.not_staged.count)
+          end
         end
 
         context "with user options" do

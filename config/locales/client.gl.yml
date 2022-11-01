@@ -198,6 +198,7 @@ gl:
     ok_value: "De acordo"
     cancel_value: "Cancelar"
     submit: "Enviar"
+    delete: "Eliminar"
     generic_error: "Sentímolo pero produciuse un erro."
     generic_error_with_reason: "Produciuse un erro: %{error}"
     sign_up: "Crear unha conta"
@@ -990,6 +991,8 @@ gl:
       enable_defer: "Activar a opción de diferir para marcar os temas como non lidos"
       experimental_sidebar:
         options: "Opcións"
+        navigation_section: "Navegación"
+        list_destination_default: "Predeterminado"
       change: "cambiar"
       featured_topic: "Tema de actualidade"
       moderator: "%{user} é moderador"
@@ -1084,6 +1087,7 @@ gl:
         move_to_archive: "Arquivo"
         failed_to_move: "Produciuse un fallo ao mover as mensaxes seleccionadas (quizais a rede está caída)"
         tags: "Etiquetas"
+        all_tags: "Todas as etiquetas"
       preferences_nav:
         account: "Conta"
         security: "Seguranza"
@@ -1151,8 +1155,6 @@ gl:
         edit: "Editar"
         edit_title: "Editar autenticador"
         edit_description: "Nome do autenticador"
-        enable_security_key_description: |
-          Cando teña a súa <a href="https://www.google.com/search?q=hardware+security+key" target="_blank"> clave de equipo seguro</a> preparada, prema o botón Rexistrarse, a seguir.
         totp:
           title: "Autenticadores que usan códigos"
           add: "Engadir autenticador"
@@ -1160,14 +1162,12 @@ gl:
           name_and_code_required_error: "Debe escribir un nome e o código da app autenticadora."
         security_key:
           register: "Rexistrarse"
-          title: "Clave de seguranza"
-          add: "Engadir clave de seguranza"
           default_name: "Clave de seguranza principal"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "O proceso de rexistro da clave de seguranza esgotou o tempo ou foi anulado."
           already_added_error: "Xa rexistrou esta clave de seguranza. Non precisa volver rexistrala."
-          edit: "Editar clave de seguranza"
           save: "Gardar"
-          edit_description: "Nome da clave de seguranza"
           name_required_error: "Debe escribir un nome para a clave de seguranza."
       change_about:
         title: "Cambiar «Verbo de min»"
@@ -1593,6 +1593,8 @@ gl:
       leave_message: "Confirma o abandono desta mensaxe?"
       remove_allowed_user: "Confirma que quere retirar a %{name} desta mensaxe?"
       remove_allowed_group: "Confirma que quere retirar a %{name} desta mensaxe?"
+      leave: "Abandonar"
+      remove_user: "Retirar usuario"
     email: "Correo electrónico"
     username: "Nome de usuario"
     last_seen: "Visto"
@@ -1644,7 +1646,6 @@ gl:
       second_factor_backup_title: "Copia de seguranza de dobre paso"
       second_factor_backup_description: "Escriba un dos códigos de copia de seguranza:"
       second_factor: "Iniciar sesión cunha app autenticadora"
-      security_key_description: "Cando teña a clave de seguranza preparada, prema no botón Autenticar con clave de seguranza que se amosa a continuación."
       security_key_alternative: "Tentalo doutro xeito"
       security_key_authenticate: "Autenticar con clave de seguranza"
       security_key_not_allowed_error: "O proceso de autenticación da clave de seguranza esgotou o tempo ou foi cancelado."
@@ -3271,7 +3272,6 @@ gl:
       tag_list_joiner: ", "
       delete_unused: "Eliminar etiquetas sen usar"
       delete_unused_description: "Eliminar todas as etiquetas que non estean asociadas a ningún tema ou mensaxe privada"
-      cancel_delete_unused: "Cancelar"
       filters:
         without_category: "%{filter} %{tag} temas"
         with_category: "%{filter}%{tag} temas en %{category}"
@@ -3357,7 +3357,7 @@ gl:
       new_count:
         one: "%{count} novo"
         other: "%{count} novos"
-      more: "Máis..."
+      more: "Máis"
       all_categories: "Todas as categorías"
       sections:
         about:
@@ -3396,6 +3396,9 @@ gl:
               content: "Usuarios"
             my_posts:
               content: "As miñas publicacións"
+            review:
+              content: "Revisar"
+              title: "revisar"
   admin_js:
     type_to_filter: "escriba para filtrar..."
     admin:

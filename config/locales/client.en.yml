@@ -254,8 +254,10 @@ en:
     ok_value: "OK"
     cancel_value: "Cancel"
     submit: "Submit"
+    delete: "Delete"
     generic_error: "Sorry, an error has occurred."
     generic_error_with_reason: "An error occurred: %{error}"
+    multiple_errors: "Multiple errors occurred: %{errors}"
     sign_up: "Sign Up"
     log_in: "Log In"
     age: "Age"
@@ -719,6 +721,8 @@ en:
         reset_to_default: "Reset to default"
       group:
         all: "all groups"
+      sort:
+        label: "Sort by %{criteria}"
 
     group_histories:
       actions:
@@ -885,6 +889,7 @@ en:
         group_type: "Group type"
         is_group_user: "Member"
         is_group_owner: "Owner"
+        search_results: "Search results will appear below."
       title:
         one: "Group"
         other: "Groups"
@@ -919,6 +924,7 @@ en:
         no_filter_matches: "No members match that search."
       topics: "Topics"
       posts: "Posts"
+      aria_post_number: "%{title} - post #%{postNumber}"
       mentions: "Mentions"
       messages: "Messages"
       notification_level: "Default notification level for group messages"
@@ -1037,6 +1043,7 @@ en:
     user_fields:
       none: "(select an option)"
       required: 'Please enter a value for "%{name}"'
+      same_as_password: 'Your password should not be repeated in other fields.'
 
     user:
       said: "%{username}:"
@@ -1139,6 +1146,9 @@ en:
         You will be notified in this panel about activity directly relevant to you, including replies to your topics and posts, when someone <b>@mentions</b> you or quotes you, and replies to topics you are watching. Notifications will also be sent to your email when you haven’t logged in for a while.
         <br><br>
         Look for the %{icon} to decide which specific topics, categories and tags you want to be notified about. For more, see your <a href='%{preferencesUrl}'>notification preferences</a>.
+      no_other_notifications_title: "You don’t have any other notifications yet"
+      no_other_notifications_body: >
+        You will be notified in this panel about other kinds of activity that may be relevant to you - for example, when someone links to or edits one of your posts.
       no_notifications_page_title: "You don’t have any notifications yet"
       no_notifications_page_body: >
         You will be notified about activity directly relevant to you, including replies to your topics and posts, when someone <b>@mentions</b> you or quotes you, and replies to topics you are watching. Notifications will also be sent to your email when you haven’t logged in for a while.
@@ -1151,6 +1161,7 @@ en:
         not_first_time: "Not your first time?"
         skip_link: "Skip these tips"
         read_later: "I'll read it later."
+      reset_seen_popups: "Show onboarding tips again"
       theme_default_on_all_devices: "Make this the default theme on all my devices"
       color_scheme_default_on_all_devices: "Set default color scheme(s) on all my devices"
       color_scheme: "Color Scheme"
@@ -1170,12 +1181,16 @@ en:
       enable_quoting: "Enable quote reply for highlighted text"
       enable_defer: "Enable defer to mark topics unread"
       experimental_sidebar:
-        enable: "Enable experimental sidebar"
+        enable: "Enable sidebar"
         options: "Options"
         categories_section: "Categories Section"
         categories_section_instruction: "Selected categories will be displayed under Sidebar's categories section."
         tags_section: "Tags Section"
         tags_section_instruction: "Selected tags will be displayed under Sidebar's tags section."
+        navigation_section: "Navigation"
+        list_destination_instruction: "When I click a topic list link in the sidebar with new or unread topics, take me to"
+        list_destination_default: "Default"
+        list_destination_unread_new: "New/Unread"
       change: "change"
       featured_topic: "Featured Topic"
       moderator: "%{user} is a moderator"
@@ -1275,6 +1290,7 @@ en:
         move_to_archive: "Archive"
         failed_to_move: "Failed to move selected messages (perhaps your network is down)"
         tags: "Tags"
+        all_tags: "All Tags"
         warnings: "Official Warnings"
         read_more_in_group: "Want to read more? Browse other messages in %{groupLink}."
         read_more: "Want to read more? Browse other messages in <a href='%{basePath}/u/%{username}/messages'>personal messages</a>."
@@ -1381,7 +1397,7 @@ en:
         edit_title: "Edit Authenticator"
         edit_description: "Authenticator Name"
         enable_security_key_description: |
-          When you have your <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardware security key</a> prepared, press the Register button below.
+          When you have your <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardware security key</a> or compatible mobile device prepared, press the Register button below.
         totp:
           title: "Token-Based Authenticators"
           add: "Add Authenticator"
@@ -1389,14 +1405,16 @@ en:
           name_and_code_required_error: "You must provide a name and the code from your authenticator app."
         security_key:
           register: "Register"
-          title: "Security Keys"
-          add: "Add Security Key"
+          title: "Physical Security Keys"
+          add: "Add Physical Security Key"
           default_name: "Main Security Key"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "The security key registration process either timed out or was cancelled."
           already_added_error: "You have already registered this security key. You don’t have to register it again."
-          edit: "Edit Security Key"
+          edit: "Edit Physical Security Key"
           save: "Save"
-          edit_description: "Security Key Name"
+          edit_description: "Physical Security Key Name"
           name_required_error: "You must provide a name for your security key."
 
       change_about:
@@ -1787,6 +1805,9 @@ en:
         title: "Flair"
         none: "(none)"
         instructions: "icon displayed next to your profile picture"
+      status:
+        title: "Custom Status"
+        not_set: "Not set"
       primary_group:
         title: "Primary Group"
         none: "(none)"
@@ -1805,6 +1826,18 @@ en:
       set_custom_status: "Set custom status"
       what_are_you_doing: "What are you doing?"
       remove_status: "Remove status"
+
+    popup:
+      primary: "Got it!"
+      secondary: "don't show me these tips"
+
+      first_notification:
+        title: "Your first notification!"
+        content: "Notifications are used to keep you up to date with what is happening in the community."
+
+      topic_timeline:
+        title: "Topic timeline"
+        content: "Scroll quickly through a post using the topic timeline."
 
     loading: "Loading..."
     errors:
@@ -1917,6 +1950,9 @@ en:
       leave_message: "Do you really want to leave this message?"
       remove_allowed_user: "Do you really want to remove %{name} from this message?"
       remove_allowed_group: "Do you really want to remove %{name} from this message?"
+      leave: "Leave"
+      remove_group: "Remove group"
+      remove_user: "Remove user"
 
     email: "Email"
     username: "Username"
@@ -1978,7 +2014,7 @@ en:
       second_factor_backup_title: "Two-Factor Backup"
       second_factor_backup_description: "Please enter one of your backup codes:"
       second_factor: "Log in using Authenticator app"
-      security_key_description: "When you have your physical security key prepared press the Authenticate with Security Key button below."
+      security_key_description: "When you have your physical security key or compatible mobile device prepared press the Authenticate with Security Key button below."
       security_key_alternative: "Try another way"
       security_key_authenticate: "Authenticate with Security Key"
       security_key_not_allowed_error: "The security key authentication process either timed out or was cancelled."
@@ -2053,6 +2089,8 @@ en:
       success: "Your account has been created and you're now logged in."
       name_label: "Name"
       password_label: "Password"
+      existing_user_can_redeem: "Redeem your invitation to a topic or group."
+      existing_user_cannot_redeem: "This invitation cannot be redeemed. Please ask the person who invited you to send you a new invitation."
 
     password_reset:
       continue: "Continue to %{site_name}"
@@ -2168,6 +2206,7 @@ en:
       edit_conflict: "edit conflict"
       esc: "esc"
       esc_label: "Click or press Esc to dismiss"
+      ok_proceed: "Ok, proceed"
 
       group_mentioned_limit:
         one: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} user. Nobody will be notified."
@@ -2668,7 +2707,7 @@ en:
         remove_tags: "Remove All Tags"
         confirm_remove_tags:
           one: "All tags will be removed from this topic. Are you sure?"
-          other: "All tags will be removed from <b>%{count}</b> topics. Are you sure?"
+          other: "All tags will be removed from %{count} topics. Are you sure?"
         progress:
           one: "Progress: <strong>%{count}</strong> topic"
           other: "Progress: <strong>%{count}</strong> topics"
@@ -3183,6 +3222,7 @@ en:
       gap:
         one: "view %{count} hidden reply"
         other: "view %{count} hidden replies"
+      sr_reply_to: "Reply to post #%{post_number} by @%{username}"
 
       notice:
         new_user: "This is the first time %{user} has posted — let’s welcome them to our community!"
@@ -3418,6 +3458,7 @@ en:
       all: "All categories"
       choose: "category&hellip;"
       edit: "Edit"
+      edit_title: "Edit this category"
       edit_dialog_title: "Edit: %{categoryName}"
       view: "View Topics in Category"
       back: "Back to category"
@@ -3449,6 +3490,7 @@ en:
       name: "Category Name"
       description: "Description"
       logo: "Category Logo Image"
+      logo_dark: "Dark Mode Category Logo Image"
       background_image: "Category Background Image"
       badge_colors: "Badge colors"
       background_color: "Background color"
@@ -3996,7 +4038,6 @@ en:
       tag_list_joiner: ", "
       delete_unused: "Delete Unused Tags"
       delete_unused_description: "Delete all tags which are not attached to any topics or personal messages"
-      cancel_delete_unused: "Cancel"
       filters:
         without_category: "%{filter} %{tag} topics"
         with_category: "%{filter} %{tag} topics in %{category}"
@@ -4139,7 +4180,7 @@ en:
         one: "%{count} new"
         other: "%{count} new"
       toggle_section: "toggle section"
-      more: "More..."
+      more: "More"
       all_categories: "All categories"
       all_tags: "All tags"
       sections:
@@ -4157,15 +4198,25 @@ en:
             unread_with_count: "Unread (%{count})"
             archive: "Archive"
         tags:
+          links:
+            add_tags:
+              content: "Add tags"
+              title: "You have not added any tags. Click to get started."
           none: "You have not added any tags."
           click_to_get_started: "Click here to get started."
           header_link_text: "Tags"
           header_action_title: "edit your sidebar tags"
+          configure_defaults: "Configure defaults"
         categories:
+          links:
+            add_categories:
+              content: "Add categories"
+              title: "You have not added any categories. Click to get started."
           none: "You have not added any categories."
           click_to_get_started: "Click here to get started."
           header_link_text: "Categories"
           header_action_title: "edit your sidebar categories"
+          configure_defaults: "Configure defaults"
         community:
           header_link_text: "Community"
           header_action_title: "create a new topic"
@@ -4203,7 +4254,7 @@ en:
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
-      description: 'Your welcome topic is the first thing new arrivals will read. Think of it as your one paragraph "elevator pitch" or "mission statement"'
+      description: 'Your welcome topic is the first thing new members will read. Think of it as your “elevator pitch” or “mission statement.” Let everyone know who this community is for, what they can expect to find here, and what you’d like them to do first.'
       button_title: "Start Editing"
 
     until: "Until:"
@@ -4490,7 +4541,6 @@ en:
         go_back: "Back to list"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "It seems you are trying to set up the webhook to a local url. Event delivered to a local address may cause side-effect or unexpected behaviors. Continue?"
         secret_invalid: "Secret must not have any blank characters."
         secret_too_short: "Secret should be at least 12 characters."
         secret_placeholder: "An optional string, used for generating signature"
@@ -4784,7 +4834,6 @@ en:
           last_attempt: "Installation process did not finish, last attempted:"
           remote_branch: "Branch name (optional)"
           public_key: "Grant the following public key access to the repo:"
-          public_key_note: "After entering a valid private repository URL above, an SSH key will be generated and displayed here."
           install: "Install"
           installed: "Installed"
           install_popular: "Popular"
@@ -4816,6 +4865,7 @@ en:
           has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
           add: "Add"
           theme_settings: "Theme Settings"
+          overriden_settings_explanation: "Overridden settings are marked with a dot and have a highlighted color. To reset these settings to the default value, press the reset button next to them."
           no_settings: "This theme has no settings."
           theme_translations: "Theme Translations"
           empty: "No items"
@@ -5482,7 +5532,7 @@ en:
         trust_level_2_users: "Trust Level 2 Users"
         trust_level_3_requirements: "Trust Level 3 Requirements"
         trust_level_locked_tip: "trust level is locked, system will not promote or demote user"
-        trust_level_unlocked_tip: "trust level is unlocked, system will may promote or demote user"
+        trust_level_unlocked_tip: "trust level is unlocked, system may promote or demote user"
         lock_trust_level: "Lock Trust Level"
         unlock_trust_level: "Unlock Trust Level"
         silenced_count: "Silenced"
@@ -5636,6 +5686,7 @@ en:
           search: "Search"
           groups: "Groups"
           dashboard: "Dashboard"
+          sidebar: "Sidebar"
         secret_list:
           invalid_input: "Input fields cannot be empty or contain vertical bar character."
         default_categories:
@@ -5753,7 +5804,7 @@ en:
       embedding:
         get_started: "If you'd like to embed Discourse on another website, begin by adding its host."
         confirm_delete: "Are you sure you want to delete that host?"
-        sample: "Paste the following HTML code into your site to create and embed discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
+        sample: "Paste the following HTML code into your site to create and embed Discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
         title: "Embedding"
         host: "Allowed Hosts"
         class_name: "Class Name"

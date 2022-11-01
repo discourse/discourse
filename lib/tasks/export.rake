@@ -24,3 +24,11 @@ task 'export:groups', [:include_group_users, :file_name] => [:environment] do |_
   ImportExport.export_groups(args[:include_group_users], args[:file_name])
   puts "", "Done", ""
 end
+
+desc 'Export all translation overrides'
+task 'export:translation_overrides' => [:environment] do |_, args|
+  require "import_export"
+
+  ImportExport.export_translation_overrides
+  puts "", "Done", ""
+end

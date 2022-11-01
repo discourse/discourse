@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe FileStore::BaseStore do
-  fab!(:upload) { Fabricate(:upload, id: 9999, sha1: Digest::SHA1.hexdigest('9999')) }
+  fab!(:upload) do
+    Upload.delete(9999) # In case of any collisions
+    Fabricate(:upload, id: 9999, sha1: Digest::SHA1.hexdigest('9999'))
+  end
 
   describe '#get_path_for_upload' do
     def expect_correct_path(expected_path)

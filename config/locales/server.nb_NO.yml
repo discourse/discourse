@@ -398,7 +398,6 @@ nb_NO:
   staff_category_name: "Stab"
   staff_category_description: "Privat kategori for diskusjoner blant staben. Emner er kun synlige for administratorer og moderatorer."
   discourse_welcome_topic:
-    title: "Velkommen til Discourse"
     body: |2
 
       Det første avsnittet av dette festede emnet vil være synlig som en velkomstmelding til alle nye besøkende på hjemmesiden. Det er viktig!

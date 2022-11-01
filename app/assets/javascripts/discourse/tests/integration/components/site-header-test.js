@@ -144,6 +144,7 @@ module("Integration | Component | site-header", function (hooks) {
 
   test("arrow up/down keys move focus between the tabs", async function (assert) {
     this.currentUser.set("redesigned_user_menu_enabled", true);
+    this.currentUser.set("can_send_private_messages", true);
     await render(hbs`<SiteHeader />`);
     await click(".header-dropdown-toggle.current-user");
     let activeTab = query(".menu-tabs-container .btn.active");
@@ -157,8 +158,6 @@ module("Integration | Component | site-header", function (hooks) {
       "pressing the down arrow key moves focus to the next tab towards the bottom"
     );
 
-    await triggerKeyEvent(document, "keydown", "ArrowDown");
-    await triggerKeyEvent(document, "keydown", "ArrowDown");
     await triggerKeyEvent(document, "keydown", "ArrowDown");
     await triggerKeyEvent(document, "keydown", "ArrowDown");
     await triggerKeyEvent(document, "keydown", "ArrowDown");

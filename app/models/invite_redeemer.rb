@@ -1,6 +1,41 @@
 # frozen_string_literal: true
 
-InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_custom_fields, :ip_address, :session, :email_token, keyword_init: true) do
+class InviteRedeemer
+  attr_reader :invite,
+    :email,
+    :username,
+    :name,
+    :password,
+    :user_custom_fields,
+    :ip_address,
+    :session,
+    :email_token,
+    :redeeming_user
+
+  def initialize(
+    invite: nil,
+    email: nil,
+    username: nil,
+    name: nil,
+    password: nil,
+    user_custom_fields: nil,
+    ip_address: nil,
+    session: nil,
+    email_token: nil,
+    redeeming_user: nil)
+
+    @invite = invite
+    @email = email
+    @username = username
+    @name = name
+    @password = password
+    @user_custom_fields = user_custom_fields
+    @ip_address = ip_address
+    @session = session
+    @email_token = email_token
+    @redeeming_user = redeeming_user
+  end
+
   def redeem
     Invite.transaction do
       if can_redeem_invite? && mark_invite_redeemed
@@ -82,42 +117,64 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
   private
 
   def can_redeem_invite?
-    return false unless invite.redeemable?
+    return false if !invite.redeemable?
 
-    # Invite has already been redeemed
+    # Invite has already been redeemed by anyone.
     if !invite.is_invite_link? && InvitedUser.exists?(invite_id: invite.id)
       return false
     end
 
-    validate_invite_email!
+    # Email will not be present if we are claiming an invite link, which
+    # does not have an email or domain scope on the invitation.
+    if email.present? || redeeming_user.present?
+      email_to_check = redeeming_user&.email || email
 
-    existing_user = get_existing_user
+      if invite.email.present? && !invite.email_matches?(email_to_check)
+        raise ActiveRecord::RecordNotSaved.new(I18n.t('invite.not_matching_email'))
+      end
 
-    if existing_user.present? && InvitedUser.exists?(user_id: existing_user.id, invite_id: invite.id)
+      if invite.domain.present? && !invite.domain_matches?(email_to_check)
+        raise ActiveRecord::RecordNotSaved.new(I18n.t('invite.domain_not_allowed'))
+      end
+    end
+
+    # Anon user is trying to redeem an invitation, if an existing user already
+    # redeemed it then we cannot redeem now.
+    redeeming_user ||= User.where(admin: false, staged: false).find_by_email(email)
+    if redeeming_user.present? && InvitedUser.exists?(user_id: redeeming_user.id, invite_id: invite.id)
       return false
     end
 
     true
   end
 
-  def validate_invite_email!
-    return if email.blank?
-
-    if invite.email.present? && email.downcase != invite.email.downcase
-      raise ActiveRecord::RecordNotSaved.new(I18n.t('invite.not_matching_email'))
-    end
-
-    if invite.domain.present?
-      username, domain = email.split('@')
-
-      if domain.present? && invite.domain != domain
-        raise ActiveRecord::RecordNotSaved.new(I18n.t('invite.domain_not_allowed'))
-      end
-    end
-  end
-
   def invited_user
-    @invited_user ||= get_invited_user
+    return @invited_user if defined?(@invited_user)
+
+    # The redeeming user is an already logged in user or a user who is
+    # activating their account who is redeeming the invite,
+    # which is valid for existing users to be invited to topics or groups.
+    if redeeming_user.present?
+      @invited_user = redeeming_user
+      return @invited_user
+    end
+
+    # If there was no logged in user then we must attempt to create
+    # one based on the provided params.
+    invited_user ||= InviteRedeemer.create_user_from_invite(
+      email: email,
+      invite: invite,
+      username: username,
+      name: name,
+      password: password,
+      user_custom_fields: user_custom_fields,
+      ip_address: ip_address,
+      session: session,
+      email_token: email_token
+    )
+    invited_user.send_welcome_message = false
+    @invited_user = invited_user
+    @invited_user
   end
 
   def process_invitation
@@ -136,28 +193,6 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
     end
 
     @invited_user_record.present?
-  end
-
-  def get_invited_user
-    result = get_existing_user
-
-    result ||= InviteRedeemer.create_user_from_invite(
-      email: email,
-      invite: invite,
-      username: username,
-      name: name,
-      password: password,
-      user_custom_fields: user_custom_fields,
-      ip_address: ip_address,
-      session: session,
-      email_token: email_token
-    )
-    result.send_welcome_message = false
-    result
-  end
-
-  def get_existing_user
-    User.where(admin: false, staged: false).find_by_email(email)
   end
 
   def add_to_private_topics_if_invited

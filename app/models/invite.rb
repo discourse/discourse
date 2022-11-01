@@ -31,8 +31,10 @@ class Invite < ActiveRecord::Base
   validates_presence_of :invited_by_id
   validates :email, email: true, allow_blank: true
   validate :ensure_max_redemptions_allowed
+  validate :valid_redemption_count
   validate :valid_domain, if: :will_save_change_to_domain?
   validate :user_doesnt_already_exist, if: :will_save_change_to_email?
+  validate :email_xor_domain
 
   before_create do
     self.invite_key ||= SecureRandom.base58(10)
@@ -66,6 +68,12 @@ class Invite < ActiveRecord::Base
     end
   end
 
+  def email_xor_domain
+    if email.present? && domain.present?
+      errors.add(:base, I18n.t('invite.email_xor_domain'))
+    end
+  end
+
   def is_invite_link?
     email.blank?
   end
@@ -80,6 +88,22 @@ class Invite < ActiveRecord::Base
     else
       self.invited_users.count > 0
     end
+  end
+
+  def email_matches?(email)
+    email.downcase == self.email.downcase
+  end
+
+  def domain_matches?(email)
+    _, domain = email.split('@')
+    self.domain == domain
+  end
+
+  def can_be_redeemed_by?(user)
+    return false if !self.redeemable?
+    return true if self.email.blank? && self.domain.blank?
+    return true if self.email.present? && email_matches?(user.email)
+    self.domain.present? && domain_matches?(user.email)
   end
 
   def expired?
@@ -164,7 +188,17 @@ class Invite < ActiveRecord::Base
     invite.reload
   end
 
-  def redeem(email: nil, username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil, session: nil, email_token: nil)
+  def redeem(
+    email: nil,
+    username: nil,
+    name: nil,
+    password: nil,
+    user_custom_fields: nil,
+    ip_address: nil,
+    session: nil,
+    email_token: nil,
+    redeeming_user: nil
+  )
     return if !redeemable?
 
     email = self.email if email.blank? && !is_invite_link?
@@ -178,14 +212,15 @@ class Invite < ActiveRecord::Base
       user_custom_fields: user_custom_fields,
       ip_address: ip_address,
       session: session,
-      email_token: email_token
+      email_token: email_token,
+      redeeming_user: redeeming_user
     ).redeem
   end
 
-  def self.redeem_from_email(email)
-    invite = Invite.find_by(email: Email.downcase(email))
+  def self.redeem_for_existing_user(user)
+    invite = Invite.find_by(email: Email.downcase(user.email))
     if invite.present? && invite.redeemable?
-      InviteRedeemer.new(invite: invite, email: invite.email).redeem
+      InviteRedeemer.new(invite: invite, redeeming_user: user).redeem
     end
     invite
   end
@@ -253,9 +288,17 @@ class Invite < ActiveRecord::Base
       limit = invited_by&.staff? ? SiteSetting.invite_link_max_redemptions_limit
                                  : SiteSetting.invite_link_max_redemptions_limit_users
 
-      if !self.max_redemptions_allowed.between?(1, limit)
+      if self.email.present? && self.max_redemptions_allowed != 1
+        errors.add(:max_redemptions_allowed, I18n.t("invite.max_redemptions_allowed_one"))
+      elsif !self.max_redemptions_allowed.between?(1, limit)
         errors.add(:max_redemptions_allowed, I18n.t("invite_link.max_redemptions_limit", max_limit: limit))
       end
+    end
+  end
+
+  def valid_redemption_count
+    if self.redemption_count > self.max_redemptions_allowed
+      errors.add(:redemption_count, I18n.t("invite.redemption_count_less_than_max", max_redemptions_allowed: self.max_redemptions_allowed))
     end
   end
 

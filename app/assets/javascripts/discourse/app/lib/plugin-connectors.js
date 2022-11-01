@@ -1,5 +1,6 @@
 import { buildRawConnectorCache } from "discourse-common/lib/raw-templates";
 import deprecated from "discourse-common/lib/deprecated";
+import Ember from "ember";
 
 let _connectorCache;
 let _rawConnectorCache;
@@ -65,14 +66,12 @@ function findClass(outletName, uniqueName) {
 function buildConnectorCache() {
   _connectorCache = {};
 
-  // eslint-disable-next-line no-undef
   findOutlets(Ember.TEMPLATES, (outletName, resource, uniqueName) => {
     _connectorCache[outletName] = _connectorCache[outletName] || [];
 
     _connectorCache[outletName].push({
       outletName,
       templateName: resource.replace("javascripts/", ""),
-      // eslint-disable-next-line no-undef
       template: Ember.TEMPLATES[resource],
       classNames: `${outletName}-outlet ${uniqueName}`,
       connectorClass: findClass(outletName, uniqueName),

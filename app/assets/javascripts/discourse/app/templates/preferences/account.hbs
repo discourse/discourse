@@ -53,7 +53,7 @@
                   {{else if email.resent}}
                     <span>{{i18n "user.email.resent_label"}}</span>
                   {{else}}
-                    <a {{action "resendConfirmationEmail" email}} href>{{i18n "user.email.resend_label"}}</a>
+                    <a {{on "click" (fn this.resendConfirmationEmail email)}} href>{{i18n "user.email.resend_label"}}</a>
                   {{/if}}
                 {{/unless}}
               </div>
@@ -169,6 +169,24 @@
     </div>
     <div class="instructions">
       {{i18n "user.flair.instructions"}}
+    </div>
+  </div>
+{{/if}}
+
+{{#if this.canSelectUserStatus}}
+  <div class="control-group pref-user-status">
+    <label class="control-label">{{i18n "user.status.title"}}</label>
+    <div class="controls">
+      {{#if this.newStatus}}
+        <UserStatusMessage @status={{this.newStatus}} @showDescription={{true}} />
+      {{else}}
+        <span class="static">{{i18n "user.status.not_set"}}</span>
+      {{/if}}
+      <DButton
+        @action={{action "showUserStatusModal"}}
+        @actionParam={{this.newStatus}}
+        @class="btn-default btn-small pad-left"
+        @icon="pencil-alt"/>
     </div>
   </div>
 {{/if}}

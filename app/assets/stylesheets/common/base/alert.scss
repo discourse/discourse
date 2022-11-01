@@ -6,7 +6,7 @@
   margin-bottom: 1em;
 
   .close {
-    font-size: $font-up-3;
+    font-size: var(--font-up-3);
     position: absolute;
     top: 0.265em;
     right: 0.66em;

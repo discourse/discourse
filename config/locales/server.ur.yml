@@ -59,8 +59,6 @@ ur:
     bad_color_scheme: "تِھیم اَپ ڈَیٹ نہیں ہو سکتی، غلط رنگ پیلیٹ"
     other_error: "تِھیم اَپ ڈَیٹ کرتے ہوے کچھ غلط ہو گیا"
     ember_selector_error: "معذرت – #ember یا .ember-view CSS سلیکٹرز استعمال کرنے کی اجازت نہیں ہے، کیونکہ یہ نام متحرک طور پر رن ٹائم پر بنائے جاتے ہیں اور وقت کے ساتھ ساتھ تبدیل ہوتے جائیں گے، جس کے نتیجے میں CSS ٹوٹ جاتا ہے۔ کوئی مختلف سلیکٹر آزمائیں۔"
-    compile_error:
-      unrecognized_extension: "نامعلوم فائل ایکسٹینشن: %{extension}"
     import_error:
       generic: اس تھیم کو درآمد کرتے وقت ایک خرابی پیش آگئی
       about_json: "درآمد کی خرابی: about.json موجود نہیں ہے، یا غلط ہے۔ کیا آپ کو یقین ہے کہ یہ ایک ڈسکورس تھیم ہے؟"
@@ -128,7 +126,6 @@ ur:
         unsubscribe_not_allowed: "ہو جاتا ہے جب اِس صارف کیلئے ای میل کے ذریعے سبسکرِپشن ختم کرنے کی اجازت نہ ہو۔"
         email_not_allowed: "ایسا ہوتا ہے جب ای میل ایڈریس اجازت یافتہ فہرست میں نہ ہو یا بلاک لسٹ میں ہو۔"
       unrecognized_error: "نامعلوم خرابی"
-    secure_media_placeholder: "ریڈیکٹڈ: اس سائٹ پر محفوظ میڈیا فعال ہے، موضوع ملاحظہ کریں یا منسلک میڈیا کو دیکھنے کے لیے میڈیا دیکھیں پر کلک کریں۔"
     view_redacted_media: "میڈیا دیکھیں"
   errors: &errors
     format: ! "%{attribute} %{message}"
@@ -198,7 +195,6 @@ ur:
       page_publishing_requirements: "اگر محفوظ میڈیا فعال ہو تو صفحہ کی اشاعت کو فعال نہیں کیا جا سکتا۔"
       s3_backup_requires_s3_settings: "آپ S3 کو بیک اپ کے طور پر استعمال نہیں کرسکتے جب تک کہ آپ نے '%{setting_name}' فراہم نہیں کیا ہو۔"
       s3_bucket_reused: "آپ 's3_upload_bucket' اور 's3_backup_bucket' کیلئے ایک ہی بَکِّٹ کا استعمال نہیں کرسکتے۔ ایک مختلف بَکِّٹ کا انتخاب کریں یا ہر بَکِّٹ کیلئے ایک مختلف راستہ استعمال کریں۔"
-      secure_media_requirements: "محفوظ میڈیا کو فعال کرنے سے پہلے S3 اپ لوڈز کا فعال ہونا ضروری ہے۔"
       share_quote_facebook_requirements: "فیس بک کے لیے اِقْتِباس شیئرنگ کو فعال کرنے کے لیے آپ کو فیس بک ایپ آئی ڈی سیٹ کرنی ہوگی۔"
       second_factor_cannot_enforce_with_socials: "آپ سوشل لاگ ان کے فعال ہونے کے ساتھ 2FA نافذ نہیں کر سکتے۔ آپ کو پہلے لاگ ان کو غیر فعال کرنا ہوگا بذریعہ: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "اگر مقامی لاگ ان غیر فعال ہیں تو آپ 2FA نافذ نہیں کر سکتے۔"
@@ -589,7 +585,6 @@ ur:
   staff_category_name: "سٹاف"
   staff_category_description: "اسٹاف کی گفتگو کیلئے ذاتی زُمرہ۔ ٹاپک صرف ایڈمن اور ماڈریٹرز کو نظر آتے ہیں۔"
   discourse_welcome_topic:
-    title: "ڈسکورس میں خوش آمدید"
     body: |2
 
       اس پِن کیے گئے ٹاپک کا پہلا پیراگراف آپ کے ہَوم پیج پر تمام نئے زائرین کو ایک خوش آمدید پیغام کے طور پر نظر آئے گا۔ یہ اہم ہے!
@@ -1563,7 +1558,6 @@ ur:
     google_oauth2_client_secret: "آپ کی گُوگل ایپلی کیشن کا کلائنٹ سیکرٹ."
     google_oauth2_prompt: "خالی جگہ سے علیحدہ کردہ سٹرنگ وَیلِیوز کی ایک اختیاری فہرست جو اِس بات کی وضاحت کرتی ہے کہ اَوتھرائزیشن سرور صارف کو دوبارہ تصدیق اور رضامندی کیلئے پوچھتا ہے کہ نہیں۔ ممکنہ اقدار کیلئے <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> دیکھیے۔"
     google_oauth2_hd: "ایک اختیاری گُوگل اَیپس ہوسٹِڈ ڈومَین جس تک کہ سائن اِن محدود ہو گا۔ مزید تفصیلات کیلئے <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> ملاحظہ کریں۔"
-    google_oauth2_hd_groups: "(تجرباتی) توثیق پر میزبان ڈومین پر صارفین کے گوگل گروپس کو بازیافت کریں۔ بازیافت شدہ گوگل گروپس کو خودکار ڈسکورس گروپ ممبرشپ دینے کے لیے استعمال کیا جا سکتا ہے (گروپ سیٹنگز دیکھیں)۔"
     enable_twitter_logins: "ٹویٹر توثیق فعال کریں۔ twitter_consumer_key اور twitter_consumer_secret ضروری ہیں۔ دیکھیے <a href='https://meta.discourse.org/t/13395' target='_blank'>ڈسکورس کیلئے ٹویٹر لاگ اِن ترتیب دیں (اور رِچ اَیمبَیڈ)</a>۔"
     twitter_consumer_key: "ٹویٹر توثیق کیلئے کنزِیُومر کِی، <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/app</a> پر رجسٹر کردہ"
     twitter_consumer_secret: "ٹویٹر توثیق کیلئے کنزِیُومر سیکرٹ، <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/app</a> پر رجسٹر کردہ"
@@ -2397,18 +2391,9 @@ ur:
     bulk_invite_succeeded:
       title: "بَلک مدعو کامیاب"
       subject_template: "بَلک صارف دعوت ناموں پر کامیابی سے عملدرآمد ہو گیا"
-      text_body_template: "آپ کے بَلک صارف دعوت نامے فائل پر عملدرآمد کر دیا گیا، %{sent} دعوتیں میل کر دی گئیں۔"
     bulk_invite_failed:
       title: "بَلک مدعو ناکام"
       subject_template: "بَلک صارف دعوت ناموں پر خرابں کے ساتھ عملدرآمد ہو گیا"
-      text_body_template: |
-        آپ کے بَلک صارف دعوت نامے فائل پر عملدرآمد کر دیا گیا، %{sent} دعوتیں میل کر دی گئیں اور %{failed} خرابی(وں) کا سامنا کرنا پڑا۔
-
-        یہ لاگ ہے:
-
-        ``` text
-        %{logs}
-        ```
     csv_export_succeeded:
       title: "CSV ایکسپورٹ کامیاب"
       subject_template: "[%{export_title}] ڈَیٹا ایکسپورٹ مکمل"

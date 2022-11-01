@@ -148,6 +148,16 @@ RSpec.describe Stylesheet::Manager do
       })
     end
 
+    it "stylesheet_link_tag calls the preload callback when set" do
+      preload_list = []
+      preload_callback = ->(href, type) { preload_list << [href, type] }
+
+      manager = manager(theme.id)
+      expect {
+        manager.stylesheet_link_tag(:desktop_theme, 'all', preload_callback)
+      }.to change(preload_list, :size)
+    end
+
     context "with stylesheet order" do
       let(:z_child_theme) do
         Fabricate(:theme, component: true, name: "ze component").tap do |z|
@@ -341,6 +351,47 @@ RSpec.describe Stylesheet::Manager do
         upload_id: upload.id,
         type_id: ThemeField.types[:theme_upload_var]
       )
+
+      builder = Stylesheet::Manager::Builder.new(
+        target: :desktop_theme, theme: theme.reload, manager: manager
+      )
+
+      digest2 = builder.digest
+
+      expect(digest1).not_to eq(digest2)
+    end
+
+    it 'can generate digest with a missing upload record' do
+      theme = Fabricate(:theme)
+
+      upload = UploadCreator.new(image, "logo.png").create_for(-1)
+      field = ThemeField.create!(
+        theme_id: theme.id,
+        target_id: Theme.targets[:common],
+        name: "logo",
+        value: "",
+        upload_id: upload.id,
+        type_id: ThemeField.types[:theme_upload_var]
+      )
+
+      upload2 = UploadCreator.new(image2, "icon.png").create_for(-1)
+      field = ThemeField.create!(
+        theme_id: theme.id,
+        target_id: Theme.targets[:common],
+        name: "icon",
+        value: "",
+        upload_id: upload2.id,
+        type_id: ThemeField.types[:theme_upload_var]
+      )
+
+      manager = manager(theme.id)
+
+      builder = Stylesheet::Manager::Builder.new(
+        target: :desktop_theme, theme: theme, manager: manager
+      )
+
+      digest1 = builder.digest
+      upload.delete
 
       builder = Stylesheet::Manager::Builder.new(
         target: :desktop_theme, theme: theme.reload, manager: manager
@@ -605,6 +656,17 @@ RSpec.describe Stylesheet::Manager do
 
       details2 = manager.color_scheme_stylesheet_details(nil, "all")
       expect(details1[:new_href]).not_to eq(details2[:new_href])
+    end
+
+    it "calls the preload callback when set" do
+      preload_list = []
+      cs = Fabricate(:color_scheme, name: 'Funky')
+      theme = Fabricate(:theme, color_scheme_id: cs.id)
+      preload_callback = ->(href, type) { preload_list << [href, type] }
+
+      expect {
+        manager.color_scheme_stylesheet_link_tag(theme.id, 'all', preload_callback)
+      }.to change(preload_list, :size).by(1)
     end
 
     context "with theme colors" do

@@ -155,6 +155,9 @@ module TestSetup
     # Make sure the default Post and Topic bookmarkables are registered
     Bookmark.reset_bookmarkables
 
+    # Make sure only the default category and tag hashtag data sources are registered.
+    HashtagAutocompleteService.clear_data_sources
+
     OmniAuth.config.test_mode = false
   end
 end

@@ -29,6 +29,7 @@ acceptance("Composer Actions", function (needs) {
   });
   needs.site({ can_tag_topics: true });
   needs.pretender((server, helper) => {
+    server.put("/u/kris.json", () => helper.response({ user: {} }));
     const cardResponse = cloneJSON(userFixtures["/u/shade/card.json"]);
     server.get("/u/shade/card.json", () => helper.response(cardResponse));
   });
@@ -150,7 +151,7 @@ acceptance("Composer Actions", function (needs) {
     const composerActions = selectKit(".composer-actions");
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_new_topic");
-    assert.ok(!exists(".bootbox"));
+    assert.ok(!exists(".dialog-body"));
   });
 
   test("reply_as_new_group_message", async function (assert) {
@@ -471,10 +472,10 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
     await composerActions.selectRowByValue("reply_as_new_topic");
 
     assert.strictEqual(
-      query(".bootbox .modal-body").innerText,
+      query(".dialog-body").innerText.trim(),
       I18n.t("composer.composer_actions.reply_as_new_topic.confirm")
     );
-    await click(".modal-footer .btn.btn-primary");
+    await click(".dialog-footer .btn-primary");
 
     assert.ok(
       query(".d-editor-input").value.startsWith(

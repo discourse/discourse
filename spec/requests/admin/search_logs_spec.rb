@@ -2,6 +2,7 @@
 
 RSpec.describe Admin::SearchLogsController do
   fab!(:admin) { Fabricate(:admin) }
+  fab!(:moderator) { Fabricate(:moderator) }
   fab!(:user) { Fabricate(:user) }
 
   before do
@@ -10,6 +11,10 @@ RSpec.describe Admin::SearchLogsController do
 
   after do
     SearchLog.clear_debounce_cache!
+  end
+
+  it "is a subclass of StaffController" do
+    expect(Admin::SearchLogsController < Admin::StaffController).to eq(true)
   end
 
   describe "#index" do
@@ -34,6 +39,18 @@ RSpec.describe Admin::SearchLogsController do
       expect(json[0]['term']).to eq('ruby')
       expect(json[0]['searches']).to eq(1)
       expect(json[0]['ctr']).to eq(0)
+    end
+
+    it "should work if you are a moderator" do
+      sign_in(moderator)
+      get "/admin/logs/search_logs.json"
+
+      expect(response.status).to eq(200)
+
+      json = response.parsed_body
+      expect(json[0]["term"]).to eq("ruby")
+      expect(json[0]["searches"]).to eq(1)
+      expect(json[0]["ctr"]).to eq(0)
     end
   end
 
@@ -68,6 +85,20 @@ RSpec.describe Admin::SearchLogsController do
       json = response.parsed_body
       expect(json['term']['type']).to eq('search_log_term')
       expect(json['term']['search_result']).to be_present
+    end
+
+    it "should work if you are a moderator" do
+      sign_in(moderator)
+
+      get "/admin/logs/search_logs/term.json", params: {
+        term: "ruby"
+      }
+
+      expect(response.status).to eq(200)
+
+      json = response.parsed_body
+      expect(json["term"]["type"]).to eq("search_log_term")
+      expect(json["term"]["search_result"]).to be_present
     end
   end
 end

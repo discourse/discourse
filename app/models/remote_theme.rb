@@ -15,7 +15,7 @@ class RemoteTheme < ActiveRecord::Base
   ALLOWED_FIELDS = %w{scss embedded_scss head_tag header after_header body_tag footer}
 
   GITHUB_REGEXP = /^https?:\/\/github\.com\//
-  GITHUB_SSH_REGEXP = /^git@github\.com:/
+  GITHUB_SSH_REGEXP = /^ssh:\/\/git@github\.com:/
 
   has_one :theme, autosave: false
   scope :joined_remotes, -> {
@@ -25,8 +25,10 @@ class RemoteTheme < ActiveRecord::Base
   validates_format_of :minimum_discourse_version, :maximum_discourse_version, with: Discourse::VERSION_REGEXP, allow_nil: true
 
   def self.extract_theme_info(importer)
-    JSON.parse(importer["about.json"])
-  rescue TypeError, JSON::ParserError
+    json = JSON.parse(importer["about.json"])
+    json.fetch("name")
+    json
+  rescue TypeError, JSON::ParserError, KeyError
     raise ImportError.new I18n.t("themes.import_error.about_json")
   end
 
@@ -80,6 +82,7 @@ class RemoteTheme < ActiveRecord::Base
     importer.import!
 
     theme_info = RemoteTheme.extract_theme_info(importer)
+
     component = [true, "true"].include?(theme_info["component"])
     theme = Theme.new(user_id: user&.id || -1, name: theme_info["name"], component: component)
     theme.child_components = theme_info["components"].presence || []

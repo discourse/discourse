@@ -69,7 +69,7 @@ class Site
     # corresponding ActiveRecord callback to clear the categories cache.
     Discourse.cache.fetch(categories_cache_key, expires_in: 30.minutes) do
       categories = Category
-        .includes(:uploaded_logo, :uploaded_background, :tags, :tag_groups, category_required_tag_groups: :tag_group)
+        .includes(:uploaded_logo, :uploaded_logo_dark, :uploaded_background, :tags, :tag_groups, category_required_tag_groups: :tag_group)
         .joins('LEFT JOIN topics t on t.id = categories.topic_id')
         .select('categories.*, t.slug topic_slug')
         .order(:position)
@@ -207,6 +207,15 @@ class Site
     "show_welcome_topic_banner:#{user_id}"
   end
 
+  def self.welcome_topic_exists_and_is_not_edited?
+    Post.joins(:topic)
+      .where(
+        "topics.id = :topic_id AND topics.deleted_at IS NULL AND posts.post_number = 1 AND posts.version = 1 AND posts.created_at > :created_at",
+        topic_id: SiteSetting.welcome_topic_id,
+        created_at: 1.month.ago
+      ).exists?
+  end
+
   def self.show_welcome_topic_banner?(guardian)
     return false if !guardian.is_admin?
     user_id = guardian.user.id
@@ -215,7 +224,7 @@ class Site
     return show_welcome_topic_banner unless show_welcome_topic_banner.nil?
 
     show_welcome_topic_banner = if (user_id == User.first_login_admin_id)
-      Post.find_by("topic_id = :topic_id AND post_number = 1 AND version = 1 AND created_at > :created_at", topic_id: SiteSetting.welcome_topic_id, created_at: 1.month.ago).present?
+      welcome_topic_exists_and_is_not_edited?
     else
       false
     end

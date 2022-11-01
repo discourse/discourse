@@ -1,16 +1,19 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { equal, reads } from "@ember/object/computed";
-import bootbox from "bootbox";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed, {
+  debounce,
+  observes,
+} from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 import Invite from "discourse/models/invite";
 import I18n from "I18n";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend({
+  dialog: service(),
   user: null,
   model: null,
   filter: null,
@@ -27,15 +30,10 @@ export default Controller.extend({
   },
 
   @observes("searchTerm")
+  @debounce(INPUT_DELAY)
   _searchTermChanged() {
-    discourseDebounce(
-      this,
-      function () {
-        Invite.findInvitedBy(this.user, this.filter, this.searchTerm).then(
-          (invites) => this.set("model", invites)
-        );
-      },
-      INPUT_DELAY
+    Invite.findInvitedBy(this.user, this.filter, this.searchTerm).then(
+      (invites) => this.set("model", invites)
     );
   },
 
@@ -93,15 +91,16 @@ export default Controller.extend({
 
   @action
   destroyAllExpired() {
-    bootbox.confirm(I18n.t("user.invited.remove_all_confirm"), (confirm) => {
-      if (confirm) {
-        Invite.destroyAllExpired()
+    this.dialog.deleteConfirm({
+      message: I18n.t("user.invited.remove_all_confirm"),
+      didConfirm: () => {
+        return Invite.destroyAllExpired()
           .then(() => {
             this.set("removedAll", true);
             this.send("triggerRefresh");
           })
           .catch(popupAjaxError);
-      }
+      },
     });
   },
 
@@ -113,12 +112,13 @@ export default Controller.extend({
 
   @action
   reinviteAll() {
-    bootbox.confirm(I18n.t("user.invited.reinvite_all_confirm"), (confirm) => {
-      if (confirm) {
-        Invite.reinviteAll()
+    this.dialog.yesNoConfirm({
+      message: I18n.t("user.invited.reinvite_all_confirm"),
+      didConfirm: () => {
+        return Invite.reinviteAll()
           .then(() => this.set("reinvitedAll", true))
           .catch(popupAjaxError);
-      }
+      },
     });
   },
 

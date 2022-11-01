@@ -203,6 +203,7 @@ ca:
     ok_value: "D'acord"
     cancel_value: "Cancel·la"
     submit: "Envia"
+    delete: "Suprimeix"
     generic_error: "Ho sentim, s'ha produït un error."
     generic_error_with_reason: "Hi ha hagut un error: %{error}"
     sign_up: "Registre"
@@ -922,6 +923,8 @@ ca:
       enable_defer: "Habilita l'ajornament per a marcar temes no llegits"
       experimental_sidebar:
         options: "Opcions"
+        navigation_section: "Navegació"
+        list_destination_default: "Per defecte"
       change: "canvia"
       featured_topic: "Tema destacat"
       moderator: "%{user} és un moderador"
@@ -1009,6 +1012,7 @@ ca:
         move_to_archive: "Arxiva"
         failed_to_move: "Error en moure els missatges seleccionats (potser ha caigut la xarxa)."
         tags: "Etiquetes"
+        all_tags: "Totes les etiquetes"
       preferences_nav:
         account: "Compte"
         security: "Seguretat"
@@ -1061,13 +1065,12 @@ ca:
           default_name: "El meu autenticador"
         security_key:
           register: "Registre"
-          title: "Claus de seguretat"
           default_name: "Clau de seguretat principal"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "El procés de registre de claus de seguretat ha arribat al límit de temps o s'ha cancel·lat. "
           already_added_error: "Ja heu registrat aquesta clau de seguretat. No cal que la registreu de nou."
-          edit: "Edita la clau de seguretat"
           save: "Desa"
-          edit_description: "Nom de la clau de seguretat"
       change_about:
         title: "Canvia Quant a mi"
         error: "Hi ha hagut un error en canviar aquest valor"
@@ -1418,6 +1421,8 @@ ca:
       leave_message: "Realment voleu deixar aquest missatge?"
       remove_allowed_user: "De debò voleu eliminar %{name} d'aquest missatge?"
       remove_allowed_group: "De debò voleu eliminar %{name} d'aquest missatge?"
+      leave: "Abandona"
+      remove_user: "Elimina usuari"
     email: "Correu electrònic"
     username: "Nom d'usuari"
     last_seen: "Vist"
@@ -1462,7 +1467,6 @@ ca:
       second_factor_backup: "Inici de sessió amb codi de còpia de seguretat "
       second_factor_backup_description: "Introduïu un dels vostres codis de còpia de seguretat:"
       second_factor: "Inici de sessió amb l’aplicació Authenticator"
-      security_key_description: "Quan tingueu preparada la vostra clau de seguretat física, premeu el botó Autentica amb clau de seguretat."
       security_key_alternative: "Proveu d’una altra manera"
       security_key_authenticate: "Autenticació amb clau de seguretat"
       security_key_not_allowed_error: "El procés d'autenticació de claus de seguretat ha arribat al límit de temps o s'ha cancel·lat. "
@@ -2824,7 +2828,6 @@ ca:
         other: "%{tags} i %{count} més"
       delete_unused: "Suprimeix etiquetes no utilitzades"
       delete_unused_description: "Suprimeix totes les etiquetes que no estiguin lligades a cap tema o missatge personal"
-      cancel_delete_unused: "Cancel·la"
       filters:
         without_category: "%{filter} %{tag} temes"
         with_category: "%{filter} %{tag} temes en %{category}"
@@ -2897,7 +2900,7 @@ ca:
       new_count:
         one: "%{count} nou"
         other: "%{count} nous"
-      more: "Més..."
+      more: "Més"
       all_categories: "Totes les categories"
       sections:
         about:
@@ -2936,6 +2939,9 @@ ca:
               content: "Usuaris"
             my_posts:
               content: "Les meves publicacions"
+            review:
+              content: "Revisa"
+              title: "revisa"
   admin_js:
     type_to_filter: "escriu per a filtrar..."
     admin:

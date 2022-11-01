@@ -34,8 +34,6 @@ en_GB:
     <<: *datetime_formats
   themes:
     bad_color_scheme: "Can not update theme, invalid colour palette"
-    compile_error:
-      unrecognized_extension: "Unrecognised file extension: %{extension}"
     import_error:
       generic: An error occurred whilst importing that theme
     errors:

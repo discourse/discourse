@@ -160,6 +160,115 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
   });
 
+  test("clicking on everything link - sidebar_list_destination set to unread/new and no unread or new topics", async function (assert) {
+    updateCurrentUser({
+      sidebar_list_destination: "unread_new",
+    });
+
+    await visit("/t/280");
+    await click(".sidebar-section-community .sidebar-section-link-everything");
+    assert.strictEqual(
+      currentURL(),
+      "/latest",
+      "it should transition to the latest page"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-community .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(
+        ".sidebar-section-community .sidebar-section-link-everything.active"
+      ),
+      "the everything link is marked as active"
+    );
+  });
+
+  test("clicking on everything link - sidebar_list_destination set to unread/new with new topics", async function (assert) {
+    const topicTrackingState = this.container.lookup(
+      "service:topic-tracking-state"
+    );
+    topicTrackingState.states.set("t112", {
+      last_read_post_number: null,
+      id: 112,
+      notification_level: NotificationLevels.TRACKING,
+      category_id: 2,
+      created_in_new_period: true,
+    });
+    updateCurrentUser({
+      sidebar_list_destination: "unread_new",
+    });
+    await visit("/t/280");
+    await click(".sidebar-section-community .sidebar-section-link-everything");
+
+    assert.strictEqual(
+      currentURL(),
+      "/new",
+      "it should transition to the new page"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-community .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(
+        ".sidebar-section-community .sidebar-section-link-everything.active"
+      ),
+      "the everything link is marked as active"
+    );
+  });
+
+  test("clicking on everything link - sidebar_list_destination set to unread/new with new and unread topics", async function (assert) {
+    const topicTrackingState = this.container.lookup(
+      "service:topic-tracking-state"
+    );
+    topicTrackingState.states.set("t112", {
+      last_read_post_number: null,
+      id: 112,
+      notification_level: NotificationLevels.TRACKING,
+      category_id: 2,
+      created_in_new_period: true,
+    });
+    topicTrackingState.states.set("t113", {
+      last_read_post_number: 1,
+      highest_post_number: 2,
+      id: 113,
+      notification_level: NotificationLevels.TRACKING,
+      category_id: 2,
+      created_in_new_period: true,
+    });
+    updateCurrentUser({
+      sidebar_list_destination: "unread_new",
+    });
+    await visit("/t/280");
+    await click(".sidebar-section-community .sidebar-section-link-everything");
+
+    assert.strictEqual(
+      currentURL(),
+      "/unread",
+      "it should transition to the unread page"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-community .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+
+    assert.ok(
+      exists(
+        ".sidebar-section-community .sidebar-section-link-everything.active"
+      ),
+      "the everything link is marked as active"
+    );
+  });
+
   test("clicking on tracked link", async function (assert) {
     await visit("/t/280");
     await click(".sidebar-section-community .sidebar-section-link-tracked");
@@ -179,6 +288,117 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     assert.ok(
       exists(".sidebar-section-community .sidebar-section-link-tracked.active"),
       "the tracked link is marked as active"
+    );
+  });
+
+  test("clicking on tracked link - sidebar_list_destination set to unread/new and no unread or new topics", async function (assert) {
+    updateCurrentUser({
+      sidebar_list_destination: "unread_new",
+    });
+
+    await visit("/t/280");
+    await click(".sidebar-section-community .sidebar-section-link-tracked");
+    assert.strictEqual(
+      currentURL(),
+      "/latest?f=tracked",
+      "it should transition to the latest tracked url"
+    );
+
+    assert.ok(
+      exists(".sidebar-section-community .sidebar-section-link-tracked.active"),
+      "the tracked link is marked as active"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-community .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+  });
+
+  test("clicking on tracked link - sidebar_list_destination set to unread/new with new topics", async function (assert) {
+    const categories = Site.current().categories;
+    const category = categories.find((c) => c.id === 1001);
+    category.set("notification_level", NotificationLevels.TRACKING);
+
+    const topicTrackingState = this.container.lookup(
+      "service:topic-tracking-state"
+    );
+    topicTrackingState.states.set("t112", {
+      last_read_post_number: null,
+      id: 112,
+      notification_level: NotificationLevels.TRACKING,
+      category_id: 1001,
+      created_in_new_period: true,
+    });
+    updateCurrentUser({
+      sidebar_list_destination: "unread_new",
+    });
+    await visit("/t/280");
+    await click(".sidebar-section-community .sidebar-section-link-tracked");
+
+    assert.strictEqual(
+      currentURL(),
+      "/new?f=tracked",
+      "it should transition to the tracked new page"
+    );
+
+    assert.ok(
+      exists(".sidebar-section-community .sidebar-section-link-tracked.active"),
+      "the tracked link is marked as active"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-community .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
+    );
+  });
+
+  test("clicking on tracked link - sidebar_list_destination set to unread/new with new and unread topics", async function (assert) {
+    const categories = Site.current().categories;
+    const category = categories.find((c) => c.id === 1001);
+    category.set("notification_level", NotificationLevels.TRACKING);
+
+    const topicTrackingState = this.container.lookup(
+      "service:topic-tracking-state"
+    );
+    topicTrackingState.states.set("t112", {
+      last_read_post_number: null,
+      id: 112,
+      notification_level: NotificationLevels.TRACKING,
+      category_id: 1001,
+      created_in_new_period: true,
+    });
+    topicTrackingState.states.set("t113", {
+      last_read_post_number: 1,
+      highest_post_number: 2,
+      id: 113,
+      notification_level: NotificationLevels.TRACKING,
+      category_id: 1001,
+      created_in_new_period: true,
+    });
+    updateCurrentUser({
+      sidebar_list_destination: "unread_new",
+    });
+    await visit("/t/280");
+    await click(".sidebar-section-community .sidebar-section-link-tracked");
+
+    assert.strictEqual(
+      currentURL(),
+      "/unread?f=tracked",
+      "it should transition to the tracked unread page"
+    );
+
+    assert.ok(
+      exists(".sidebar-section-community .sidebar-section-link-tracked.active"),
+      "the tracked link is marked as active"
+    );
+
+    assert.strictEqual(
+      count(".sidebar-section-community .sidebar-section-link.active"),
+      1,
+      "only one link is marked as active"
     );
   });
 
@@ -583,11 +803,6 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "it displays the right unread count"
     );
 
-    assert.ok(
-      query(".sidebar-section-link-everything").href.endsWith("/unread"),
-      "it links to unread filter"
-    );
-
     // simulate reading topic 2
     await publishToMessageBus("/unread", {
       topic_id: 2,
@@ -637,11 +852,6 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "it displays the new count once there are no unread topics"
     );
 
-    assert.ok(
-      query(".sidebar-section-link-everything").href.endsWith("/new"),
-      "it links to new filter"
-    );
-
     await publishToMessageBus("/unread", {
       topic_id: 1,
       message_type: "read",
@@ -657,11 +867,6 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
         ".sidebar-section-link-everything .sidebar-section-link-content-badge"
       ),
       "it removes new count once there are no new topics"
-    );
-
-    assert.ok(
-      query(".sidebar-section-link-everything").href.endsWith("/latest"),
-      "it links to latest filter"
     );
   });
 
@@ -711,7 +916,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
   });
 
   test("review link is not shown when user cannot review", async function (assert) {
-    updateCurrentUser({ can_review: false });
+    updateCurrentUser({ can_review: false, reviewable_count: 0 });
 
     await visit("/");
 
@@ -871,11 +1076,6 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "it displays the right unread count"
     );
 
-    assert.ok(
-      query(".sidebar-section-link-tracked").href.endsWith("/unread?f=tracked"),
-      "it links to unread url with tracked filter"
-    );
-
     // simulate reading topic id 2
     await publishToMessageBus("/unread", {
       topic_id: 2,
@@ -922,11 +1122,6 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "it displays the new count once there are no tracked unread topics"
     );
 
-    assert.ok(
-      query(".sidebar-section-link-tracked").href.endsWith("/new?f=tracked"),
-      "it links to new url with tracked filter"
-    );
-
     // simulate reading topic id 1
     await publishToMessageBus("/unread", {
       topic_id: 1,
@@ -942,11 +1137,6 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
         ".sidebar-section-link-tracked .sidebar-section-link-content-badge"
       ),
       "it removes new count once there are no tracked new topics"
-    );
-
-    assert.ok(
-      query(".sidebar-section-link-tracked").href.endsWith("/latest?f=tracked"),
-      "it links to latest url with tracked filter"
     );
   });
 
@@ -984,6 +1174,8 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
   });
 
   test("adding section link via plugin API with callback function", async function (assert) {
+    let teardownCalled = false;
+
     withPluginApi("1.2.0", (api) => {
       api.addCommunitySectionLink((baseSectionLink) => {
         return class CustomSectionLink extends baseSectionLink {
@@ -1005,6 +1197,10 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
           get text() {
             return "my summary";
+          }
+
+          get teardown() {
+            teardownCalled = true;
           }
         };
       });
@@ -1035,24 +1231,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "eviltrout summary",
       "displays the right title for the link"
     );
-  });
-
-  test("clean up topic tracking state state changed callbacks when section is destroyed", async function (assert) {
-    await visit("/");
-
-    const topicTrackingState = this.container.lookup(
-      "service:topic-tracking-state"
-    );
-
-    const initialCallbackCount = Object.keys(
-      topicTrackingState.stateChangeCallbacks
-    ).length;
 
     await click(".btn-sidebar-toggle");
 
-    assert.ok(
-      Object.keys(topicTrackingState.stateChangeCallbacks).length <
-        initialCallbackCount
-    );
+    assert.ok(teardownCalled, "section link teardown callback was called");
   });
 });

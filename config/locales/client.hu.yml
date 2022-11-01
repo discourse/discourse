@@ -229,6 +229,7 @@ hu:
     ok_value: "Rendben"
     cancel_value: "Mégse"
     submit: "Beküldés"
+    delete: "Törlés"
     generic_error: "Sajnos hiba történt."
     generic_error_with_reason: "Hiba történt: %{error}"
     sign_up: "Regisztráció"
@@ -1095,6 +1096,8 @@ hu:
       enable_defer: "A témák olvasatlannak jelölésének engedélyezése"
       experimental_sidebar:
         options: "Beállítások"
+        navigation_section: "Navigáció"
+        list_destination_default: "Alapértelmezett"
       change: "módosítás"
       featured_topic: "Kiemelt téma"
       moderator: "%{user} egy moderátor"
@@ -1192,6 +1195,7 @@ hu:
         move_to_archive: "Archiválás"
         failed_to_move: "A kijelölt üzenetek áthelyezése nem sikerült (lehet, hogy nincs hálózat)"
         tags: "Címkék"
+        all_tags: "Összes címke"
         warnings: "Hivatalos figyelmeztetések"
         read_more_in_group: "Szeretne többet olvasni? Nézzen meg más témákat itt: %{groupLink}."
         read_more: "Szeretne többet olvasni? Böngésszen a többi üzenet között a <a href='%{basePath}/u/%{username}/messages'>személyes üzenetekben</a>."
@@ -1263,8 +1267,6 @@ hu:
         edit: "Szerkesztés"
         edit_title: "Hitelesítő szerkesztése"
         edit_description: "Hitelesítő neve"
-        enable_security_key_description: |
-          Ha előkészítette a <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardveres biztonsági kulcsát</a>, nyomja meg a lenti Regisztráció gombot.
         totp:
           title: "Token alapú hitelesítők"
           add: "Hitelesítő hozzáadása"
@@ -1272,14 +1274,10 @@ hu:
           name_and_code_required_error: "Meg kell adnia egy nevet, és egy kódot a hitelesítő alkalmazásból."
         security_key:
           register: "Regisztráció"
-          title: "Biztonsági kulcsok"
-          add: "Biztonsági kulcs hozzáadása"
           default_name: "Elsődleges biztonsági kulcs"
           not_allowed_error: "A biztonsági hardverkulcs regisztrációs folyamata során időtúllépés történt, vagy megszakították."
           already_added_error: "Már regisztrálta ezt a biztonsági kulcsot. Nem kell újraregisztrálnia."
-          edit: "Biztonsági kulcs szerkesztése"
           save: "Mentés"
-          edit_description: "Biztonsági kulcs neve"
           name_required_error: "Meg kell adnia a biztonsági kulcs nevét."
       change_about:
         title: "Névjegy módosítása"
@@ -1730,6 +1728,8 @@ hu:
       leave_message: "Biztos, hogy elhagyja a beszélgetést?"
       remove_allowed_user: "Biztos, hogy eltávolítja a következőt ebből az üzenetből: %{name}?"
       remove_allowed_group: "Biztos, hogy eltávolítja a következőt ebből az üzenetből: %{name}?"
+      leave: "Elhagyás"
+      remove_user: "Felhasználó eltávolítása"
     email: "E-mail"
     username: "Felhasználónév"
     last_seen: "Látva"
@@ -1785,7 +1785,6 @@ hu:
       second_factor_backup_title: "Kétfaktoros biztonsági kód"
       second_factor_backup_description: "Írja be valamelyik biztonsági kódját:"
       second_factor: "Bejelentkezés hitelesítő alkalmazással"
-      security_key_description: "Ha előkészítette a fizikai biztonsági kulcsot, nyomja meg a lenti „Hitelesítés biztonsági kulccsal” gombot."
       security_key_alternative: "Próbálkozás más módon"
       security_key_authenticate: "Hitelesítés biztonsági kulccsal"
       security_key_not_allowed_error: "A biztonsági hardverkulcsos hitelesítési folyamata során időtúllépés történt, vagy megszakították."
@@ -3330,7 +3329,6 @@ hu:
       sort_by_count: "besorol"
       sort_by_name: "név"
       manage_groups: "Címke csoport kezelése"
-      cancel_delete_unused: "Visszavon"
       filters:
         without_category: "%{filter} %{tag} Témák"
         with_category: "%{filter} %{tag} Témák a %{category}"
@@ -3403,7 +3401,7 @@ hu:
       new_count:
         one: "%{count} új"
         other: "%{count} új"
-      more: "Továbbiak..."
+      more: "Több"
       all_categories: "Minden kategória"
       sections:
         about:
@@ -3442,9 +3440,11 @@ hu:
               content: "Felhasználók"
             my_posts:
               content: "Saját bejegyzéseim"
+            review:
+              content: "Áttekintés"
+              title: "áttekintés"
     welcome_topic_banner:
       title: "Hozzon létre üdvözlő témát"
-      description: 'Az üdvözlő téma az első, amit az újonnan érkezők olvasnak. Gondoljon rá úgy mint egy bekezdésnyi bemutatkozóra vagy „küldetésnyilatkozatra”.'
       button_title: "Szerkesztés megkezdése"
     until: "Eddig:"
   admin_js:

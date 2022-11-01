@@ -52,6 +52,7 @@
     <script src="{{rootURL}}assets/wizard.js"></script>
 
     <template id="dynamic-test-js">
+      {{content-for "test-plugin-css"}}
       {{content-for "test-plugin-js"}}
       <script defer src="{{rootURL}}assets/test-helpers.js"></script>
       <script defer src="{{rootURL}}assets/core-tests.js"></script>

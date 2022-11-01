@@ -229,6 +229,7 @@ sv:
     ok_value: "OK"
     cancel_value: "Avbryt"
     submit: "Skicka"
+    delete: "Radera"
     generic_error: "Tyvärr, ett fel har inträffat."
     generic_error_with_reason: "Ett fel inträffade: %{error}"
     sign_up: "Registrera"
@@ -657,6 +658,8 @@ sv:
         reset_to_default: "Återställ till standard"
       group:
         all: "alla grupper"
+      sort:
+        label: "Sortera efter %{criteria}"
     group_histories:
       actions:
         change_group_setting: "Ändra gruppinställningar"
@@ -821,6 +824,7 @@ sv:
         group_type: "Grupptyper"
         is_group_user: "Medlem"
         is_group_owner: "Ägare"
+        search_results: "Sökresultat kommer att visas nedan."
       title:
         one: "Grupp"
         other: "Grupper"
@@ -855,6 +859,7 @@ sv:
         no_filter_matches: "Inga medlemmar matchar den sökningen."
       topics: "Ämnen"
       posts: "Inlägg"
+      aria_post_number: "%{title} - inlägg #%{postNumber}"
       mentions: "Omnämnanden"
       messages: "Meddelanden"
       notification_level: "Standardaviseringsnivå för gruppmeddelanden"
@@ -969,6 +974,7 @@ sv:
     user_fields:
       none: "(välj ett alternativ)"
       required: 'Ange ett värde för "%{name}"'
+      same_as_password: 'Upprepa inte ditt lösenord i andra fält.'
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -1067,6 +1073,9 @@ sv:
       no_notifications_title: "Du har inga aviseringar än"
       no_notifications_body: >
         Du kommer att aviseras i denna panel om aktivitet som är direkt relevant för dig, bland annat svar på dina ämnen och inlägg, när någon <b>@nämner</b> dig eller citerar dig och svarar på ämnen som du bevakar. Aviseringar kommer också att skickas till din e-postadress när du inte har loggat in på ett tag. <br><br> Leta efter %{icon} för att bestämma vilka specifika ämnen, kategorier och taggar som du vill aviseras om. Se mer i dina <a href='%{preferencesUrl}'>aviseringsinställningar</a>.
+      no_other_notifications_title: "Du har inga andra aviseringar än"
+      no_other_notifications_body: >
+        Du får aviseringar i den här panelen om andra typer av aktiviteter som kan vara relevanta för dig – till exempel när någon länkar till eller redigerar ett av dina inlägg.
       no_notifications_page_title: "Du har inga aviseringar än"
       no_notifications_page_body: >
         Du kommer att aviseras om aktivitet som är direkt relevant för dig, bland annat svar på dina ämnen och inlägg, när någon <b>@nämner</b> dig eller citerar dig och svarar på ämnen du tittar på. Aviseringar kommer också att skickas som e-post när du inte har loggat in på ett tag. <br><br> Leta efter %{icon} för att bestämma vilka specifika ämnen, kategorier och taggar du vill aviseras om. Se mer i dina <a href='%{preferencesUrl}'>aviseringsinställningar</a>.
@@ -1077,6 +1086,7 @@ sv:
         not_first_time: "Är det inte din första gång?"
         skip_link: "Hoppa över dessa tips"
         read_later: "Jag läser det senare."
+      reset_seen_popups: "Visa nybörjartips igen"
       theme_default_on_all_devices: "Gör detta till standardtema för alla mina enheter"
       color_scheme_default_on_all_devices: "Ange standardfärgschema(n) för alla mina enheter"
       color_scheme: "Färgschema"
@@ -1096,12 +1106,16 @@ sv:
       enable_quoting: "Aktivera citatsvar för markerad text"
       enable_defer: "Aktivera fördröjning för att markera ämnen som lästa"
       experimental_sidebar:
-        enable: "Aktivera experimentellt sidofält"
+        enable: "Aktivera sidofältet"
         options: "Alternativ"
         categories_section: "Sektion Kategorier"
         categories_section_instruction: "Valda kategorier kommer att visas under sidofältets kategorisektion."
         tags_section: "Sektion Taggar"
         tags_section_instruction: "Valda taggar kommer att visas under sidofältets tagg-sektion."
+        navigation_section: "Navigering"
+        list_destination_instruction: "När jag klickar på en länk till en ämneslista i sidofältet med nya eller olästa ämnen kommer jag till"
+        list_destination_default: "Standard"
+        list_destination_unread_new: "Nya/olästa"
       change: "ändra"
       featured_topic: "Utvalt ämne"
       moderator: "%{user} är en moderator"
@@ -1197,6 +1211,7 @@ sv:
         move_to_archive: "Arkiv"
         failed_to_move: "Misslyckades med att flytta de markerade meddelandena (kanske ligger ditt nätverk nere)"
         tags: "Taggar"
+        all_tags: "Alla taggar"
         warnings: "Officiella varningar"
         read_more_in_group: "Vill du läsa mer? Bläddra bland andra meddelanden i %{groupLink}."
         read_more: "Vill du läsa mer? Bläddra bland andra meddelanden i <a href='%{basePath}/u/%{username}/messages'>personliga meddelanden</a>."
@@ -1272,7 +1287,7 @@ sv:
         edit_title: "Redigera autentisering"
         edit_description: "Autentiseringsnamn"
         enable_security_key_description: |
-          När du har din <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">säkerhetsnyckel för hårdvara</a> till hands, tryck på registrera-knappen nedan.
+          När du har din <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">maskinvarusäkerhetsnyckel</a> eller kompatibel mobil enhet till hands, tryck på registrera-knappen nedan.
         totp:
           title: "Bevisbaserad autentisering"
           add: "Lägg till autentisering"
@@ -1280,14 +1295,16 @@ sv:
           name_and_code_required_error: "Du måste ange ett namn samt koden från din app för autentisering."
         security_key:
           register: "Registrera"
-          title: "Säkerhetsnycklar"
-          add: "Lägg till säkerhetsnyckel"
+          title: "Fysiska säkerhetsnycklar"
+          add: "Lägg till fysisk säkerhetsnyckel"
           default_name: "Huvudsäkerhetsnyckel"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "Registreringsprocessen för säkerhetsnyckel dröjde antingen för länge eller avbröts."
           already_added_error: "Du har redan registrerat denna säkerhetsnyckel.\nDu behöver inte registrera den igen."
-          edit: "Ändra säkerhetsnyckel"
+          edit: "Redigera fysisk säkerhetsnyckel"
           save: "Spara"
-          edit_description: "Namn på säkerhetsnyckel"
+          edit_description: "Namn på fysisk säkerhetsnyckel"
           name_required_error: "Du måste ge din säkerhetsnyckel ett namn."
       change_about:
         title: "Ändra Om mig"
@@ -1639,6 +1656,9 @@ sv:
         title: "Stil"
         none: "(ingen)"
         instructions: "ikon som visas bredvid din profilbild"
+      status:
+        title: "Anpassad status"
+        not_set: "Inte inställd"
       primary_group:
         title: "Primär grupp"
         none: "(ingen)"
@@ -1654,6 +1674,15 @@ sv:
       set_custom_status: "Ställ in anpassad status"
       what_are_you_doing: "Vad gör du?"
       remove_status: "Ta bort status"
+    popup:
+      primary: "Jag förstår!"
+      secondary: "visa mig inte dessa tips"
+      first_notification:
+        title: "Din första avisering!"
+        content: "Aviseringar används för att hålla dig uppdaterad med vad som händer i samhället."
+      topic_timeline:
+        title: "Ämnestidslinje"
+        content: "Bläddra snabbt genom ett inlägg med hjälp av ämnestidslinjen."
     loading: "Laddar..."
     errors:
       prev_page: "medan vi försökte ladda"
@@ -1686,6 +1715,8 @@ sv:
       enabled: "Webbplatsen är i skrivskyddat läge. Du kan fortsätta bläddra på sidan, men att skriva inlägg, gilla och andra interaktioner är inaktiverat för tillfället."
       login_disabled: "Det går inte att logga in medan webbplatsen är i skrivskyddat läge."
       logout_disabled: "Det går inte att logga ut medan webbplatsen är i skrivskyddat läge."
+    staff_writes_only_mode:
+      enabled: "Webbplatsen är i läget endast för personal. Du kan fortsätta bläddra på sidan, men att skriva inlägg, gilla och andra åtgärder är begränsat till personal."
     too_few_topics_and_posts_notice_MF: >-
       Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">inleda diskussionen!</a> Det {currentTopics, plural, one {finns <strong>#</strong> ämne} other {finns <strong>#</strong> ämnen}} och {currentPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Besökare behöver mer att läsa och svara på – vi rekommenderar åtminstone {requiredTopics, plural, one {<strong>#</strong> ämne} other {<strong>#</strong> ämnen}} och {requiredPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Enbart personal kan se detta meddelande.
     too_few_topics_notice_MF: >-
@@ -1717,6 +1748,7 @@ sv:
       hide_forever: "nej tack"
       hidden_for_session: "Ok, vi frågar dig imorgon. Du kan alltid använda 'Logga in' för att skapa ett konto, också."
       intro: "Hejsan! Det verkar som du gillar diskussionen, men du har ännu inte registrerat dig för ett konto."
+      value_prop: "Trött på att bläddra igenom samma inlägg? När du skapar ett konto kommer du alltid tillbaka där du slutade. Med ett konto kan du också bli aviserad om nya svar, spara bokmärken och använda gillningar för att tacka andra. Vi kan alla arbeta tillsammans för att göra denna gemenskap fantastisk. :heart:"
     summary:
       enabled_description: "Sammanfattning över de inlägg som användarna tycker är mest intressanta."
       description:
@@ -1741,6 +1773,9 @@ sv:
       leave_message: "Vill du verkligen lämna detta meddelande?"
       remove_allowed_user: "Vill du verkligen ta bort %{name} från det här meddelandet?"
       remove_allowed_group: "Vill du verkligen ta bort %{name} från det här meddelandet?"
+      leave: "Lämna"
+      remove_group: "Ta bort grupp"
+      remove_user: "Ta bort användare"
     email: "E-post"
     username: "Användarnamn"
     last_seen: "Sedd"
@@ -1796,7 +1831,7 @@ sv:
       second_factor_backup_title: "Tvåfaktorsreserv"
       second_factor_backup_description: "Ange en av dina reservkoder:"
       second_factor: "Logga in via autentiseringsappen"
-      security_key_description: "När du har din fysiska säkerhetsnyckel till hands, tryck på knappen Autentisera med säkerhetsnyckel här nedtill."
+      security_key_description: "När du har din fysiska säkerhetsnyckel eller kompatibla mobil enhet beredd, tryck på knappen Autentisera med knappen Säkerhetsnyckel nedanför."
       security_key_alternative: "Prova ett annat sätt"
       security_key_authenticate: "Autentisera med säkerhetsnyckel"
       security_key_not_allowed_error: "Processen för autentiseringssäkerhetsnyckel dröjde antingen för länge eller avbröts."
@@ -1970,6 +2005,9 @@ sv:
       similar_topics: "Ditt ämne liknar..."
       drafts_offline: "utkast offline"
       edit_conflict: "redigera konflikt"
+      esc: "esc"
+      esc_label: "Klicka eller tryck på Esc för att avfärda"
+      ok_proceed: "Ok, fortsätt"
       group_mentioned_limit:
         one: "<b>Varning!</b> Du nämnde <a href='%{group_link}'>%{group}</a> och denna grupp har fler medlemmar än vad administratorn tillåter för omnämningar. Begränsningsregeln för omnämnanden är satt till %{count} användare. Ingen kommer därför att aviseras."
         other: "<b>Varning!</b> Du nämnde <a href='%{group_link}'>%{group}</a> och denna grupp har fler medlemmar än vad administratorn tillåter för omnämningar. Begränsningsregeln för omnämnanden är satt till %{count} användare. Ingen kommer därför att aviseras."
@@ -2072,6 +2110,9 @@ sv:
         body: "Just nu skickas det här meddelandet bara till dig själv!"
       slow_mode:
         error: "Detta ämne är i långsamt läge. Du publicerade nyligen, och kan publicera igen om %{timeLeft}."
+      user_not_seen_in_a_while:
+        single: "Personen du skickar meddelanden till, <b>%{usernames}</b>, har inte setts här på väldigt länge – %{time_ago}. De kanske inte får ditt meddelande. Kanske vill du söka efter alternativa metoder för att kontakta %{usernames}?"
+        multiple: "Följande personer du skickar meddelanden till, <b>%{usernames}</b>, har inte setts här på väldigt länge – %{time_ago}. De kanske inte får ditt meddelande. Kanske vill du söka efter alternativa metoder för att kontakta dem?"
       admin_options_title: "Valfria personalinställningar för detta ämne"
       composer_actions:
         reply: Svara
@@ -2909,6 +2950,7 @@ sv:
       gap:
         one: "visa %{count} dolt svar"
         other: "visa %{count} dolda svar"
+      sr_reply_to: "Svara på inlägg #%{post_number} av @%{username}"
       notice:
         new_user: "Detta är första gången som användaren %{user} har skapat ett inlägg — låt oss välkomna hen till vår gemenskap!"
         returning_user: "Det var ett tag sedan vi såg %{user} — senaste inlägget gjordes %{time}."
@@ -3122,6 +3164,7 @@ sv:
       all: "Alla kategorier"
       choose: "kategori&hellip;"
       edit: "Redigera"
+      edit_title: "Redigera denna kategori"
       edit_dialog_title: "Ändra: %{categoryName}"
       view: "Visa ämnen i kategori"
       back: "Tillbaka till kategorin"
@@ -3153,6 +3196,7 @@ sv:
       name: "Kategorinamn"
       description: "Beskrivning"
       logo: "Kategori logotypbild"
+      logo_dark: "Kategorilogotypbild för mörkt läge"
       background_image: "Kategori bakgrundsbild"
       badge_colors: "Utmärkelsefärg"
       background_color: "Bakgrundsfärg"
@@ -3465,7 +3509,7 @@ sv:
         today: "Idag"
         other_periods: "se toppen för:"
     browser_update: 'Tyvärr stöds inte <a href="https://www.discourse.org/faq/#browser">din webbläsare</a>. Vänligen <a href="https://browsehappy.com">byt till en webbläsare som stöds</a> för att se innehåll, logga in och svara.'
-    safari_13_warning: Den här webbplatsens stöd för iOS och Safari i version 13 och äldre avlägsnas inom kort. En förenklad skrivskyddad version kommer att förbli tillgänglig. (<a href="https://meta.discourse.org/t/224747">mer information</a>)
+    safari_13_warning: Webbplatsen har fullt stöd för redigering av innehåll med webbläsare på iOS 12.5 och 13 till januari 2023. Därefter krävs iOS 14 eller senare. Äldre versioner av iOS kan då endast läsa förenklat innehåll. (<a href="https://meta.discourse.org/t/224747">mer information</a>)
     permission_types:
       full: "Skapa / svara / se"
       create_post: "Svara / se"
@@ -3679,7 +3723,6 @@ sv:
       tag_list_joiner: ", "
       delete_unused: "Radera oanvända taggar"
       delete_unused_description: "Radera alla taggar som inte är kopplade till något ämne eller personliga meddelanden"
-      cancel_delete_unused: "Avbryt"
       filters:
         without_category: "%{filter} %{tag} ämnen"
         with_category: "%{filter} %{tag} ämnen i %{category}"
@@ -3806,7 +3849,7 @@ sv:
         one: "%{count} ny"
         other: "%{count} nya"
       toggle_section: "växla avsnitt"
-      more: "Mer..."
+      more: "Mer"
       all_categories: "Alla kategorier"
       all_tags: "Alla taggar"
       sections:
@@ -3828,11 +3871,13 @@ sv:
           click_to_get_started: "Klicka här för att komma igång."
           header_link_text: "Taggar"
           header_action_title: "redigera sidofältets taggar"
+          configure_defaults: "Konfigurera standardvärden"
         categories:
           none: "Du har inte lagt till några kategorier."
           click_to_get_started: "Klicka här för att komma igång."
           header_link_text: "Kategorier"
           header_action_title: "redigera sidofältets kategorier"
+          configure_defaults: "Konfigurera standardvärden"
         community:
           header_link_text: "Community"
           header_action_title: "skapa ett nytt ämne"
@@ -3863,9 +3908,13 @@ sv:
               draft_count:
                 one: "%{count} utkast"
                 other: "%{count} utkast"
+            review:
+              content: "Granska"
+              title: "granska"
+              pending_count: "%{count} väntande"
     welcome_topic_banner:
       title: "Skapa ditt välkomstämne"
-      description: 'Ditt välkomstämne är det första som nykomlingar läser. Tänk på det som din "snabbpresentation" eller "målbeskrivning" i ett enda stycke.'
+      description: 'Ditt välkomstämne är det första som nya medlemmar kommer att läsa. Tänk på det som din "snabbpresentation" eller "målbeskrivning". Låt alla veta vem den här gruppen är till för, vad de kan förvänta sig att hitta här och vad du vill att de ska göra först.'
       button_title: "Börja redigera"
     until: "T.o.m.:"
   admin_js:
@@ -4461,6 +4510,7 @@ sv:
           has_overwritten_history: "Nuvarande temaversion finns inte längre eftersom Git-historiken har skrivits över av en tvingad push."
           add: "Lägg till"
           theme_settings: "Inställningar för tema"
+          overriden_settings_explanation: "Ersatta inställningar markeras med en färgad punkt. Tryck på återställningsknappen för att återställa till standardvärden."
           no_settings: "Detta tema har inga inställningar."
           theme_translations: "Översättningar för tema"
           empty: "Inga objekt"
@@ -5257,6 +5307,7 @@ sv:
           search: "Sök"
           groups: "Grupper"
           dashboard: "Översiktspanel"
+          sidebar: "Sidofält"
         secret_list:
           invalid_input: "Inmatningsfältet kan inte vara tomt eller innehålla vertikalstreck."
         default_categories:
@@ -5371,7 +5422,7 @@ sv:
       embedding:
         get_started: "Börja genom att lägga till värden, om du vill bädda in Discourse på en annan hemsida. "
         confirm_delete: "Är du säker på att du vill ta bort värden?"
-        sample: "Klistra in följande HTML-kod på din webbplats för att skapa och bädda in discourse-ämnen. Byt ut <b>REPLACE_ME</b> mot den vägledande URL-en för sidan som du bäddar in den i."
+        sample: "Klistra in följande HTML-kod på din webbplats för att skapa och bädda in Discourse-ämnen. Byt ut <b>REPLACE_ME</b> mot den vägledande URL-en för sidan som du bäddar in den i."
         title: "Inbäddning"
         host: "Tillåtna värdar"
         class_name: "Klassnamn"

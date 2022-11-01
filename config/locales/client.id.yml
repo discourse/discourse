@@ -198,6 +198,7 @@ id:
     ok_value: "OK"
     cancel_value: "Batal"
     submit: "Kirimkan"
+    delete: "Hapus"
     generic_error: "Maaf, terjadi kesalahan."
     generic_error_with_reason: "Terjadi kesalahan: %{error}"
     sign_up: "Daftar"
@@ -934,6 +935,8 @@ id:
       enable_quoting: "Aktifkan balasan kutipan untuk teks yang disorot"
       experimental_sidebar:
         options: "Pilihan"
+        navigation_section: "Navigasi"
+        list_destination_default: "Asal"
       change: "ubah"
       featured_topic: "Topik Unggulan"
       moderator: "%{user} adalah moderator"
@@ -1303,6 +1306,8 @@ id:
       leave_message: "Apakah Anda yakin ingin meninggalkan pesan ini?"
       remove_allowed_user: "Apakah Anda yakin ingin menghapus %{name} dari pesan ini?"
       remove_allowed_group: "Apakah Anda yakin ingin menghapus %{name} dari pesan ini?"
+      leave: "Keluar"
+      remove_user: "Hapus pengguna"
     email: "Surel"
     username: "Nama Pengguna"
     last_seen: "Terlihat"
@@ -1763,7 +1768,6 @@ id:
       add_synonyms: "Menambahkan"
       sort_by_count: "menghitung"
       sort_by_name: "nama"
-      cancel_delete_unused: "Batal"
       filters:
         without_category: "%{filter} %{tag} topik"
         with_category: "%{filter} %{tag} topik dalam %{category}"
@@ -1799,6 +1803,7 @@ id:
     sidebar:
       new_count:
         other: "%{count} baru"
+      more: "Selengkapnya"
       sections:
         about:
           header_link_text: "Tentang"
@@ -1829,6 +1834,9 @@ id:
               content: "Grup"
             users:
               content: "Pengguna"
+            review:
+              content: "Ulasan"
+              title: "ulasan"
   admin_js:
     type_to_filter: "ketik untuk memfilter..."
     admin:

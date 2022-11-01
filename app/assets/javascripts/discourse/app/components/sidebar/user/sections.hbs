@@ -2,7 +2,7 @@
   <Sidebar::User::CommunitySection @collapsable={{@collapsableSections}}/>
   <Sidebar::User::CategoriesSection @collapsable={{@collapsableSections}}/>
 
-  {{#if this.siteSettings.tagging_enabled}}
+  {{#if this.currentUser.display_sidebar_tags}}
     <Sidebar::User::TagsSection @collapsable={{@collapsableSections}}/>
   {{/if}}
 
@@ -18,7 +18,8 @@
       @headerActionsIcon={{customSection.actionsIcon}}
       @headerActions={{customSection.actions}}
       @willDestroy={{customSection.willDestroy}}
-      @collapsable={{@collapsableSections}}>
+      @collapsable={{@collapsableSections}}
+      @displaySection={{customSection.displaySection}}>
 
       {{#each customSection.links as |link|}}
         <Sidebar::SectionLink
@@ -27,6 +28,7 @@
           @model={{link.model}}
           @models={{link.models}}
           @title={{link.title}}
+          @contentCSSClass={{link.contentCSSClass}}
           @prefixColor={{link.prefixColor}}
           @prefixBadge={{link.prefixBadge}}
           @prefixType={{link.prefixType}}

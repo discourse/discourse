@@ -11,7 +11,6 @@ import {
 } from "discourse/lib/time-shortcut";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import bootbox from "bootbox";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { and, notEmpty } from "@ember/object/computed";
@@ -261,7 +260,11 @@ export default Component.extend({
     KeyboardShortcuts.unpause();
   },
 
-  showExistingReminderAt: notEmpty("model.reminderAt"),
+  @discourseComputed("model.reminderAt")
+  showExistingReminderAt(reminderAt) {
+    return reminderAt && Date.parse(reminderAt) > new Date().getTime();
+  },
+
   showDelete: notEmpty("model.id"),
   userHasTimezoneSet: notEmpty("userTimezone"),
   editingExistingBookmark: and("model", "model.id"),
@@ -373,10 +376,9 @@ export default Component.extend({
     };
 
     if (this.existingBookmarkHasReminder) {
-      bootbox.confirm(I18n.t("bookmarks.confirm_delete"), (result) => {
-        if (result) {
-          deleteAction();
-        }
+      this.dialog.deleteConfirm({
+        message: I18n.t("bookmarks.confirm_delete"),
+        didConfirm: () => deleteAction(),
       });
     } else {
       deleteAction();

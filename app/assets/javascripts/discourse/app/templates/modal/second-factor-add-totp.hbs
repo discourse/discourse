@@ -23,7 +23,7 @@
           {{#if this.showSecondFactorKey}}
             {{this.secondFactorKey}}
           {{else}}
-            <a href {{action "showSecondFactorKey"}}>{{i18n "user.second_factor.show_key_description"}}</a>
+            <a href {{on "click" this.enableShowSecondFactorKey}}>{{i18n "user.second_factor.show_key_description"}}</a>
           {{/if}}
         </p>
       </div>

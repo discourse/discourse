@@ -229,7 +229,7 @@ RSpec.describe 'topics' do
 
         let(:username) { Fabricate(:user).username }
         let(:request_body) { { user: username } }
-        let(:id) { Fabricate(:topic).id }
+        let(:id) { Fabricate(:private_message_topic).id }
 
         run_test! do |response|
           data = JSON.parse(response.body)
@@ -337,8 +337,7 @@ RSpec.describe 'topics' do
           },
           primary_groups: {
             type: :array,
-            items: {
-            },
+            items: {},
           },
           topic_list: {
             type: :object,
@@ -442,8 +441,7 @@ RSpec.describe 'topics' do
           },
           primary_groups: {
             type: :array,
-            items: {
-            },
+            items: {},
           },
           topic_list: {
             type: :object,

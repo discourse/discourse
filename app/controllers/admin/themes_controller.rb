@@ -102,8 +102,10 @@ class Admin::ThemesController < Admin::AdminController
         private_key = params[:public_key] ? Discourse.redis.get("ssh_key_#{params[:public_key]}") : nil
         return render_json_error I18n.t("themes.import_error.ssh_key_gone") if params[:public_key].present? && private_key.blank?
 
-        @theme = RemoteTheme.import_theme(remote, theme_user, private_key: private_key, branch: branch)
-        render json: @theme, status: :created
+        hijack do
+          @theme = RemoteTheme.import_theme(remote, theme_user, private_key: private_key, branch: branch)
+          render json: @theme, status: :created
+        end
       rescue RemoteTheme::ImportError => e
         if params[:force]
           theme_name = params[:remote].gsub(/.git$/, "").split("/").last

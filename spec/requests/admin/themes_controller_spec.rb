@@ -4,11 +4,27 @@ RSpec.describe Admin::ThemesController do
   fab!(:admin) { Fabricate(:admin) }
 
   it "is a subclass of AdminController" do
-    expect(Admin::UsersController < Admin::AdminController).to eq(true)
+    expect(Admin::ThemesController < Admin::AdminController).to eq(true)
   end
 
   before do
     sign_in(admin)
+  end
+
+  let! :repo do
+    setup_git_repo(
+      "about.json" => { name: "discourse-branch-header" }.to_json,
+    )
+  end
+
+  let! :repo_url do
+    MockGitImporter.register('https://github.com/discourse/discourse-brand-header.git', repo)
+  end
+
+  around(:each) do |group|
+    MockGitImporter.with_mock do
+      group.run
+    end
   end
 
   describe '#generate_key_pair' do
@@ -111,8 +127,8 @@ RSpec.describe Admin::ThemesController do
           remote: '    https://github.com/discourse/discourse-brand-header.git       '
         }
 
-        expect(Theme.allowed_remote_theme_ids.length).to eq(1)
         expect(response.status).to eq(201)
+        expect(Theme.allowed_remote_theme_ids.length).to eq(1)
       end
 
       it "prevents adding disallowed themes" do

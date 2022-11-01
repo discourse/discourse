@@ -102,6 +102,7 @@ RSpec.describe ImportExport::Importer do
         .and change { Group.count }.by(2)
         .and change { Topic.count }.by(8)
         .and change { User.count }.by(2)
+        .and change { TranslationOverride.count }.by(1)
     end
   end
 end

@@ -17,13 +17,6 @@ export default Controller.extend(CanCheckEmails, {
   dialog: service(),
   userNotifications: controller("user-notifications"),
   adminTools: optionalService(),
-  displayUserNav: false,
-
-  init() {
-    this._super(...arguments);
-
-    this.displayUserNav = this.site.desktopView;
-  },
 
   @discourseComputed("model.username")
   viewingSelf(username) {
@@ -119,10 +112,12 @@ export default Controller.extend(CanCheckEmails, {
   @discourseComputed(
     "viewingSelf",
     "currentUser.admin",
-    "currentUser.allowPersonalMessages"
+    "currentUser.can_send_private_messages"
   )
   showPrivateMessages(viewingSelf, isAdmin) {
-    return this.currentUser?.allowPersonalMessages && (viewingSelf || isAdmin);
+    return (
+      this.currentUser?.can_send_private_messages && (viewingSelf || isAdmin)
+    );
   },
 
   @discourseComputed("viewingSelf", "currentUser.admin")
@@ -195,11 +190,6 @@ export default Controller.extend(CanCheckEmails, {
     }
   ),
 
-  @action
-  toggleUserNav() {
-    this.toggleProperty("displayUserNav");
-  },
-
   get displayTopLevelAdminButton() {
     if (!this.currentUser?.staff) {
       return false;
@@ -211,6 +201,15 @@ export default Controller.extend(CanCheckEmails, {
     }
   },
 
+  @action
+  showSuspensions(event) {
+    event?.preventDefault();
+    this.adminTools.showActionLogs(this, {
+      target_user: this.get("model.username"),
+      action_name: "suspend_user",
+    });
+  },
+
   actions: {
     collapseProfile() {
       this.set("forceExpand", false);
@@ -218,13 +217,6 @@ export default Controller.extend(CanCheckEmails, {
 
     expandProfile() {
       this.set("forceExpand", true);
-    },
-
-    showSuspensions() {
-      this.adminTools.showActionLogs(this, {
-        target_user: this.get("model.username"),
-        action_name: "suspend_user",
-      });
     },
 
     adminDelete() {

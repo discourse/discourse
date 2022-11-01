@@ -1,4 +1,4 @@
-/* global Ember */
+import Ember from "ember";
 import { dasherize, decamelize } from "@ember/string";
 import deprecated from "discourse-common/lib/deprecated";
 import { findHelper } from "discourse-common/lib/helpers";
@@ -119,8 +119,19 @@ export function clearResolverOptions() {
 function lookupModuleBySuffix(suffix) {
   if (!moduleSuffixTrie) {
     moduleSuffixTrie = new SuffixTrie("/");
+    const searchPaths = [
+      "discourse/", // Includes themes/plugins
+      "discourse-common/",
+      "select-kit/",
+      "admin/",
+      "wizard/",
+      "truth-helpers/",
+    ];
     Object.keys(requirejs.entries).forEach((name) => {
-      if (!name.includes("/templates/")) {
+      if (
+        searchPaths.some((s) => name.startsWith(s)) &&
+        !name.includes("/templates/")
+      ) {
         moduleSuffixTrie.add(name);
       }
     });

@@ -101,7 +101,7 @@
             <ComposerSaveButton @action={{action "save"}} @icon={{this.saveIcon}} @label={{this.saveLabel}} @forwardEvent={{true}} @disableSubmit={{this.disableSubmit}} />
 
             {{#if this.site.mobileView}}
-              <a href {{action "cancel"}} title={{i18n "cancel"}} class="cancel">
+              <a href {{on "click" this.cancel}} title={{i18n "cancel"}} class="cancel">
                 {{#if this.canEdit}}
                   {{d-icon "times"}}
                 {{else}}
@@ -109,7 +109,7 @@
                 {{/if}}
               </a>
             {{else}}
-              <a href {{action "cancel"}} class="cancel" >{{i18n "close"}}</a>
+              <a href {{on "click" this.cancel}} class="cancel" >{{i18n "close"}}</a>
             {{/if}}
 
             {{#if this.site.mobileView}}
@@ -133,7 +133,7 @@
                 {{/if}}
 
                 {{#if this.isCancellable}}
-                  <a href id="cancel-file-upload" {{action "cancelUpload"}}>{{d-icon "times"}}</a>
+                  <a href id="cancel-file-upload" {{on "click" this.cancelUpload}}>{{d-icon "times"}}</a>
                 {{/if}}
               </div>
             {{/if}}
@@ -165,7 +165,7 @@
               </a>
             {{/if}}
 
-            <a href class="btn btn-default no-text mobile-preview" title={{i18n "composer.show_preview"}} {{action "togglePreview"}} aria-label={{i18n "preview"}}>
+            <a href class="btn btn-default no-text mobile-preview" title={{i18n "composer.show_preview"}} {{on "click" this.togglePreview}} aria-label={{i18n "preview"}}>
               {{d-icon "desktop"}}
             </a>
 
@@ -180,7 +180,7 @@
     {{else}}
       <div class="saving-text">
         {{#if this.model.createdPost}}
-          {{i18n "composer.saved"}} <a href={{this.createdPost.url}} {{action "viewNewReply"}} class="permalink">{{i18n "composer.view_new_post"}}</a>
+          {{i18n "composer.saved"}} <a href={{this.createdPost.url}} {{on "click" this.viewNewReply}} class="permalink">{{i18n "composer.view_new_post"}}</a>
         {{else}}
           {{i18n "composer.saving"}} {{loading-spinner size="small"}}
         {{/if}}

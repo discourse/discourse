@@ -7,6 +7,10 @@ RSpec.describe TopicQuery::PrivateMessageLists do
   fab!(:user_3) { Fabricate(:user) }
   fab!(:user_4) { Fabricate(:user) }
 
+  before_all do
+    Group.refresh_automatic_groups!
+  end
+
   fab!(:group) do
     Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|
       g.add(user_2)
@@ -167,6 +171,10 @@ RSpec.describe TopicQuery::PrivateMessageLists do
     fab!(:user) { Fabricate(:user) }
     fab!(:user_2) { Fabricate(:user) }
 
+    before_all do
+      Group.refresh_automatic_groups!
+    end
+
     fab!(:pm) do
       create_post(
         user: user,
@@ -209,6 +217,10 @@ RSpec.describe TopicQuery::PrivateMessageLists do
   describe '#list_private_messages_new' do
     fab!(:user) { Fabricate(:user) }
     fab!(:user_2) { Fabricate(:user) }
+
+    before_all do
+      Group.refresh_automatic_groups!
+    end
 
     fab!(:pm) do
       create_post(

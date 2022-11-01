@@ -209,6 +209,7 @@ ur:
     ok_value: "ٹھیک ہے"
     cancel_value: "منسوخ"
     submit: "شائع"
+    delete: "مٹائیں"
     generic_error: "معذرت، ایک تکنیکی خرابی کا سامنا کرنا پڑا ہے۔"
     generic_error_with_reason: "ایک تکنیکی خرابی پیش آئی: %{error}"
     sign_up: "سائن اپ"
@@ -1069,6 +1070,8 @@ ur:
       enable_defer: "ٹاپکس کو بغیر پڑھا نشان زد کرنے کیلئے ملتوی فعال کریں"
       experimental_sidebar:
         options: "اختیارات"
+        navigation_section: "نیویگیشن"
+        list_destination_default: "ڈِیفالٹ"
       change: "بدلیں"
       featured_topic: "نمایاں موضوع"
       moderator: "%{user} ایک ماڈریٹر ہے"
@@ -1165,6 +1168,7 @@ ur:
         move_to_archive: "آر کائیو"
         failed_to_move: "منتخب شدہ پیغامات کو منتقل کرنے میں ناکامی (شاید آپ کے نیٹ ورک بند ہے)"
         tags: "ٹیگز"
+        all_tags: "تمام ٹیگز"
         warnings: "آفیشل انتباہات"
         read_more_in_group: "مزید پڑھنا چاہتے ہیں؟ دوسرے پیغامات کو %{groupLink}میں براؤز کریں۔"
         read_more: "مزید پڑھنا چاہتے ہیں؟ دوسرے پیغامات کو <a href='%{basePath}/u/%{username}/messages'>ذاتی پیغامات</a>میں براؤز کریں۔"
@@ -1235,8 +1239,6 @@ ur:
         edit: "ترمیم"
         edit_title: "تصدیق کنندہ میں ترمیم کریں"
         edit_description: "تصدیق کنندہ کا نام"
-        enable_security_key_description: |
-          جب آپ کے پاس اپنی <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">ہارڈ ویئر سیکیورٹی کی</a> تیار ہے تو نیچے رجسٹر بٹن دبائیں۔
         totp:
           title: "ٹوکن کی بنیاد پر تصديق کنندہ"
           add: "تصدیق کنندہ شامل کریں"
@@ -1244,14 +1246,12 @@ ur:
           name_and_code_required_error: "آپ کو اپنی تصدیق کنندہ ایپ سے ایک نام اور کوڈ فراہم کرنا ہوگا۔"
         security_key:
           register: "رجسٹر"
-          title: "سیکیورٹی کیز"
-          add: "سیکیورٹی کیز شامل کریں"
           default_name: "بنیادی سیکیورٹی کیز"
+          iphone_default_name: "آئی فون"
+          android_default_name: "اینڈرائیڈ"
           not_allowed_error: "سیکیورٹی کیز رجسٹریشن کا عمل یا تو ختم ہو گیا تھا یا منسوخ کردیا گیا تھا۔"
           already_added_error: "آپ نے پہلے ہی یہ سسیکیورٹی کیز رجسٹر کرلی ہے۔ آپ کو اسے دوبارہ رجسٹر کرنے کی ضرورت نہیں ہے۔"
-          edit: "سیکیورٹی کیز میں ترمیم کریں"
           save: "محفوظ کریں"
-          edit_description: "سیکیورٹی کی کا نام"
           name_required_error: "آپ کو اپنی سیکیورٹی کی کا نام دینا ضروری ہے۔"
       change_about:
         title: "\"میرے بارے میں\" تبدیل کریں"
@@ -1688,6 +1688,8 @@ ur:
       leave_message: "کیا آپ واقعی یہ پیغام بھیجنا چاہتے ہیں؟"
       remove_allowed_user: "کیا آپ واقعی اِس پیغام سے %{name} ہٹانا چاہتے ہیں؟"
       remove_allowed_group: "کیا آپ واقعی اِس پیغام سے %{name} ہٹانا چاہتے ہیں؟"
+      leave: "چھوڑ دیں"
+      remove_user: "صارف خارج کریں"
     email: "اِی میل"
     username: "صارف نام"
     last_seen: "دیکھا گیا"
@@ -1743,7 +1745,6 @@ ur:
       second_factor_backup_title: "دو عنصری بیک اپ"
       second_factor_backup_description: "براہ مہربانی اپنے بیک اپ کوڈز میں سے ایک درج کریں:"
       second_factor: "تصدیق کنندہ ایپ کا استعمال کرکے لاگ ان کریں"
-      security_key_description: "جب آپ کے پاس آپ کی سکیورٹی کی تیار ہوجائے تو نیچے سکیورٹی کی کے ساتھ تصدیق کریں کا بٹن دبائیں۔"
       security_key_alternative: "دوسرا راستہ آزمائیں"
       security_key_authenticate: "سیکیورٹی کی کے ساتھ تصدیق کریں"
       security_key_not_allowed_error: "سیکیورٹی کی, کی تصدیق کا عمل یا تو ختم ہو گیا تھا یا منسوخ کردیا گیا تھا۔"
@@ -3522,7 +3523,6 @@ ur:
       tag_list_joiner: "، "
       delete_unused: "غیر استعمال شدہ ٹیگز مٹائیں"
       delete_unused_description: "تمام اُن ٹیگز کو مٹائیں جو کسی بھی ٹاپک یا ذاتی پیغام سے منسلک نہیں ہیں"
-      cancel_delete_unused: "منسوخ"
       filters:
         without_category: "%{filter} %{tag} ٹاپکس"
         with_category: "%{filter} %{tag} ٹاپکس %{category} میں"
@@ -3642,7 +3642,7 @@ ur:
       new_count:
         one: "%{count} نیا"
         other: "%{count} نئے"
-      more: "مزید..."
+      more: "مزید"
       all_categories: "تمام زُمرَہ جات"
       sections:
         about:
@@ -3681,6 +3681,9 @@ ur:
               content: "صارفین"
             my_posts:
               content: "میری پوسٹ"
+            review:
+              content: "جائزہ لیں"
+              title: "جائزہ لیں"
   admin_js:
     type_to_filter: "فِلٹر کرنے کے لئے ٹائپ کریں..."
     admin:
@@ -5166,7 +5169,6 @@ ur:
       embedding:
         get_started: "اگر آپ ڈِسکورس کو ایک اور ویب سائٹ پر اَیمبَیڈ کرنا چاہتے ہیں، تو ہوسٹ شامل کر کے شروع کریں۔"
         confirm_delete: "کیا آپ واقعی اس ہَوسٹ کو حذف کرنا چاہتے ہیں؟"
-        sample: "گفتگو کے عنوانات کو تخلیق اور شامل کرنے کے لیے درج ذیل HTML کوڈ کو اپنی سائٹ میں چسپاں کریں۔ <b>REPLACE_ME</b> کو اس صفحہ کے کینونیکل URL سے بدل دیں جس پر آپ اسے شامل کر رہے ہیں۔"
         title: "اَیمبَیڈ کرنا"
         host: "اجازت یافتہ ہَوسٹ"
         class_name: "کلاس کا نام"

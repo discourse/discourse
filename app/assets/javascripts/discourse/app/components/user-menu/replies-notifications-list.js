@@ -8,4 +8,8 @@ export default class UserMenuRepliesNotificationsList extends UserMenuNotificati
   dismissWarningModal() {
     return null;
   }
+
+  get emptyStateComponent() {
+    return "user-menu/notifications-list-empty-state";
+  }
 }

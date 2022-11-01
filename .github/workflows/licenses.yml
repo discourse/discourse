@@ -48,10 +48,7 @@ jobs:
 
       - name: Setup licensed
         run: |
-          # gem install licensed
-          # Workaround for https://github.com/github/licensed/issues/521
-          gem install specific_install
-          gem specific_install https://github.com/CvX/licensed.git -b bundler-compat
+          gem install licensed
 
       - name: Get yarn cache directory
         id: yarn-cache-dir

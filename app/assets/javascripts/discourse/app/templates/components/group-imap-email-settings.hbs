@@ -34,7 +34,7 @@
 
   <div class="control-group">
     <div class="group-imap-prefill-options">
-      {{i18n "groups.manage.email.prefill.title"}} <a id="prefill_imap_gmail" href {{action "prefillSettings" "gmail"}}>{{i18n "groups.manage.email.prefill.gmail"}}</a>
+      {{i18n "groups.manage.email.prefill.title"}} <a id="prefill_imap_gmail" href {{on "click" (fn this.prefillSettings "gmail")}}>{{i18n "groups.manage.email.prefill.gmail"}}</a>
     </div>
   </div>
 

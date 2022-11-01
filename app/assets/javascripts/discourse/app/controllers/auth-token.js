@@ -1,6 +1,7 @@
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { ajax } from "discourse/lib/ajax";
+import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { userPath } from "discourse/lib/url";
 
@@ -13,15 +14,19 @@ export default Controller.extend(ModalFunctionality, {
     ).then((posts) => {
       if (posts.length > 0) {
         this.set("latest_post", posts[0]);
+        // slightly hacky, but default d-modal focus gets reset
+        document.querySelector(".d-modal .modal-close")?.focus();
       }
     });
   },
 
-  actions: {
-    toggleExpanded() {
-      this.set("expanded", !this.expanded);
-    },
+  @action
+  toggleExpanded(event) {
+    event?.preventDefault();
+    this.set("expanded", !this.expanded);
+  },
 
+  actions: {
     highlightSecure() {
       this.send("closeModal");
 

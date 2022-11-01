@@ -109,6 +109,22 @@ RSpec.describe SeedData::Categories do
       expect(Category.last.name).to eq("General")
     end
 
+    it "adds default categories SiteSetting.default_sidebar_categories" do
+      create_category("staff_category_id")
+      staff_category = Category.last
+      create_category("meta_category_id")
+      site_feedback_category = Category.last
+      create_category("general_category_id")
+      general_category = Category.last
+      site_setting_ids = SiteSetting.default_sidebar_categories.split('|')
+      create_category("uncategorized_category_id")
+
+      expect(site_setting_ids[0].to_i).to eq(staff_category.id)
+      expect(site_setting_ids[1].to_i).to eq(site_feedback_category.id)
+      expect(site_setting_ids[2].to_i).to eq(general_category.id)
+      expect(site_setting_ids.count).to eq(3)
+    end
+
     it "does not override permissions of existing category when not forced" do
       create_category("lounge_category_id")
 
