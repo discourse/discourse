@@ -25,12 +25,14 @@ export default Controller.extend(ModalFunctionality, {
   importUrl: "/admin/themes/import",
   recordType: "theme",
   checkPrivate: match("uploadUrl", /^ssh\:\/\/.*\@.*\.git$|.*\@.*\:.*\.git$/),
+  privateKey: null,
   localFile: null,
   uploadUrl: null,
   uploadName: null,
   advancedVisible: false,
   selectedType: alias("themesController.currentTab"),
   component: equal("selectedType", COMPONENTS),
+  urlPlaceholder: "https://github.com/discourse/sample_theme",
 
   init() {
     this._super(...arguments);
@@ -79,17 +81,24 @@ export default Controller.extend(ModalFunctionality, {
     );
   },
 
-  @discourseComputed("privateChecked")
-  urlPlaceholder(privateChecked) {
-    return privateChecked
-      ? "git@github.com:discourse/sample_theme.git"
-      : "https://github.com/discourse/sample_theme";
+  @discourseComputed("name")
+  nameTooShort(name) {
+    return !name || name.length < MIN_NAME_LENGTH;
   },
 
-  @observes("privateChecked")
+  @discourseComputed("component")
+  placeholder(component) {
+    if (component) {
+      return I18n.t("admin.customize.theme.component_name");
+    } else {
+      return I18n.t("admin.customize.theme.theme_name");
+    }
+  },
+
+  @observes("checkPrivate")
   privateWasChecked() {
-    const checked = this.privateChecked;
-    if (checked && !this._keyLoading) {
+    const checked = this.checkPrivate;
+    if (checked && !this._keyLoading && !this.publicKey) {
       this._keyLoading = true;
       ajax(this.keyGenUrl, { type: "POST" })
         .then((pair) => {
@@ -105,40 +114,29 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
-  @discourseComputed("name")
-  nameTooShort(name) {
-    return !name || name.length < MIN_NAME_LENGTH;
-  },
-
-  @discourseComputed("component")
-  placeholder(component) {
-    if (component) {
-      return I18n.t("admin.customize.theme.component_name");
-    } else {
-      return I18n.t("admin.customize.theme.theme_name");
+  @discourseComputed("selection", "themeCannotBeInstalled")
+  submitLabel(selection, themeCannotBeInstalled) {
+    if (themeCannotBeInstalled) {
+      return "admin.customize.theme.create_placeholder";
     }
-  },
 
-  @discourseComputed("selection")
-  submitLabel(selection) {
     return `admin.customize.theme.${
       selection === "create" ? "create" : "install"
     }`;
   },
 
-  @discourseComputed("privateChecked", "checkPrivate", "publicKey")
-  showPublicKey(privateChecked, checkPrivate, publicKey) {
-    return privateChecked && checkPrivate && publicKey;
+  @discourseComputed("checkPrivate", "publicKey")
+  showPublicKey(checkPrivate, publicKey) {
+    return checkPrivate && publicKey;
   },
 
   onClose() {
     this.setProperties({
       duplicateRemoteThemeWarning: null,
-      privateChecked: false,
-      privateKey: null,
       localFile: null,
       uploadUrl: null,
       publicKey: null,
+      privateKey: null,
       branch: null,
       selection: "popular",
     });
@@ -209,11 +207,9 @@ export default Controller.extend(ModalFunctionality, {
         options.data = {
           remote: this.uploadUrl,
           branch: this.branch,
+          public_key: this.publicKey,
+          private_key: this.privateKey,
         };
-
-        if (this.privateChecked) {
-          options.data.private_key = this.privateKey;
-        }
       }
 
       if (this.get("model.user_id")) {

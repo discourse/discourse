@@ -102,8 +102,11 @@ class Admin::ThemesController < Admin::AdminController
 
       begin
         branch = params[:branch] ? params[:branch] : nil
-        @theme = RemoteTheme.import_theme(remote, theme_user, private_key: params[:private_key], branch: branch)
-        render json: @theme, status: :created
+
+        hijack do
+          @theme = RemoteTheme.import_theme(remote, theme_user, private_key: params[:private_key], branch: branch)
+          render json: @theme, status: :created
+        end
       rescue RemoteTheme::ImportError => e
         render_json_error e.message
       end

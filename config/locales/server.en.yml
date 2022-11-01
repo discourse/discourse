@@ -77,6 +77,7 @@ en:
       modifier_values: "about.json modifiers contain invalid values: %{errors}"
       git: "Error cloning git repository, access is denied or repository is not found"
       git_ref_not_found: "Unable to checkout git reference: %{ref}"
+      git_unsupported_scheme: "Unable to clone git repo: scheme unsupported"
       unpack_failed: "Failed to unpack file"
       file_too_big: "The uncompressed file is too big."
       unknown_file_type: "The file you uploaded does not appear to be a valid Discourse theme."
@@ -5158,3 +5159,8 @@ en:
     small_action_post_raw: "Continue discussion at %{new_title}."
 
   fallback_username: "user"
+
+  webhooks:
+    payload_url:
+      blocked_or_internal: "Payload URL cannot be used because it resolves to a blocked or internal IP"
+      unsafe: "Payload URL cannot be used because it's unsafe"
