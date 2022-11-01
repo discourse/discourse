@@ -749,7 +749,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
   });
 
-  test("show suffix indicator for new content on everything link", async function (assert) {
+  test("show suffix indicator for unread and new content on everything link", async function (assert) {
     updateCurrentUser({
       sidebar_list_destination: "default",
     });
