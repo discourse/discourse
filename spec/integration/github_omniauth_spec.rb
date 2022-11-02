@@ -138,7 +138,7 @@ describe 'GitHub Oauth2' do
     }
     expect(response.status).to eq(302)
     expect(response.location).to eq("http://test.localhost/")
-    expect(cookies[:_t]).to be_blank
+    expect(session[:current_user_id]).to be_blank
   end
 
   it "matches a non-primary email if it's verified and the primary email isn't" do
@@ -169,9 +169,7 @@ describe 'GitHub Oauth2' do
     }
     expect(response.status).to eq(302)
     expect(response.location).to eq("http://test.localhost/")
-    expect(
-      UserAuthToken.lookup(request.cookie_jar.encrypted[:_t]["token"]).user.id
-    ).to eq(user2.id)
+    expect(session[:current_user_id]).to eq(user2.id)
   end
 
   it "doesn't match a non-primary email if it's not verified" do
@@ -202,7 +200,7 @@ describe 'GitHub Oauth2' do
     }
     expect(response.status).to eq(302)
     expect(response.location).to eq("http://test.localhost/")
-    expect(cookies[:_t]).to be_blank
+    expect(session[:current_user_id]).to be_blank
   end
 
   it "favors the primary email over secondary emails when they're all verified" do
@@ -233,8 +231,6 @@ describe 'GitHub Oauth2' do
     }
     expect(response.status).to eq(302)
     expect(response.location).to eq("http://test.localhost/")
-    expect(
-      UserAuthToken.lookup(request.cookie_jar.encrypted[:_t]["token"]).user.id
-    ).to eq(user1.id)
+    expect(session[:current_user_id]).to eq(user1.id)
   end
 end
