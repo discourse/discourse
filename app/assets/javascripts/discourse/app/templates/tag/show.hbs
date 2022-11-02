@@ -9,7 +9,7 @@
     <PluginOutlet @name="discovery-navigation-bar-above" @connectorTagName="div" />
     <div class="container">
       <section class="navigation-container tag-navigation">
-        <DNavigation @filterMode={{this.filterMode}} @canCreateTopic={{this.canCreateTopic}} @hasDraft={{this.currentUser.has_topic_draft}} @createTopic={{route-action "createTopic"}} @category={{this.category}} @editCategory={{route-action "editCategory" this.category}} @tag={{this.tag}} @noSubcategories={{this.noSubcategories}} @tagNotification={{this.tagNotification}} @additionalTags={{this.additionalTags}} @showInfo={{this.showInfo}} @canCreateTopicOnTag={{this.canCreateTopicOnTag}} @changeTagNotificationLevel={{action "changeTagNotificationLevel"}} @toggleInfo={{action "toggleInfo"}} />
+        <DNavigation @filterMode={{this.filterMode}} @canCreateTopic={{this.canCreateTopic}} @hasDraft={{this.currentUser.has_topic_draft}} @createTopic={{route-action "createTopic"}} @category={{this.category}} @editCategory={{route-action "editCategory" this.category}} @tag={{this.tag}} @noSubcategories={{this.noSubcategories}} @tagNotification={{this.tagNotification}} @additionalTags={{this.additionalTags}} @showInfo={{this.showInfo}} @canCreateTopicOnTag={{this.canCreateTopicOnTag}} @createTopicDisabled={{this.createTopicDisabled}} @changeTagNotificationLevel={{action "changeTagNotificationLevel"}} @toggleInfo={{action "toggleInfo"}} />
 
         <PluginOutlet @name="tag-navigation" @connectorTagName="div" @args={{hash category=this.category tag=this.tag}} />
       </section>
