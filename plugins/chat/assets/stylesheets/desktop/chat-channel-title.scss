@@ -1,0 +1,8 @@
+.chat-channel-title {
+  max-width: 96%;
+
+  .direct-message-channels .chat-channel-row:hover & {
+    overflow: hidden;
+    max-width: unset;
+  }
+}

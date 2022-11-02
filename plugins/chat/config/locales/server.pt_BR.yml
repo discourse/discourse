@@ -1,0 +1,83 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  site_settings:
+    chat_default_channel_id: "O canal de chat que será aberto por padrão quando um usuário não tiver mensagens não lidas ou menções em outros canais."
+  chat:
+    errors:
+      channel_exists_for_category: "Já existe um canal para este nome e categoria"
+      channel_cannot_be_archived: "O canal não pode ser arquivado no momento, ele deve estar fechado ou aberto para arquivar."
+      duplicate_message: "Você postou uma mensagem idêntica muito recentemente."
+      minimum_length_not_met: "A mensagem é muito curta, deve ter no mínimo %{minimum} caracteres."
+      not_accepting_dms: "Desculpe, %{username} não está aceitando mensagens no momento."
+      actor_ignoring_target_user: "Você está ignorando %{username}, então você não pode enviar mensagens para ele(a)."
+      actor_muting_target_user: "Você está silenciando %{username}, então você não pode enviar mensagens para ele(a)."
+      actor_disallowed_dms: "Você optou por impedir que os usuários lhe enviem mensagens privadas e diretas, portanto, você não pode criar novas mensagens diretas."
+      actor_preventing_target_user_from_dm: "Você optou por impedir que %{username} lhe envie mensagens privadas e diretas, portanto, você não pode criar novas mensagens diretas para ele(a)."
+    reviewables:
+      actions:
+        agree:
+          title: "Concordo..."
+        agree_and_keep_message:
+          title: "Manter mensagem"
+          description: "Concorde com a sinalização e mantenha a mensagem inalterada."
+        agree_and_keep_deleted:
+          title: "Manter mensagem excluída"
+          description: "Concorde com a sinalização e mantenha a mensagem excluída."
+        agree_and_suspend:
+          title: "Suspender usuário(s)"
+          description: "Concorde com a sinalização e suspenda o usuário(a)."
+        agree_and_silence:
+          title: "Silenciar usuário(a)"
+          description: "Concorde com a sinalização e silencie o usuário(a)."
+        agree_and_restore:
+          title: "Restaurar mensagem"
+          description: "Restaure a mensagem para que os(as) usuários(as) possam vê-las."
+        agree_and_delete:
+          title: "Excluir mensagem"
+          description: "Exclua a mensagem para que os(as) usuários(as) não possam vê-las."
+        delete_and_agree:
+          title: "Excluir mensagem"
+        disagree_and_restore:
+          title: "Não concordar e restaurar mensagem"
+          description: "Restaure a mensagem para que todos(as) os(as) usuários(as) possam vê-las."
+        disagree:
+          title: "Discordar"
+        ignore:
+          title: "Ignorar"
+    channel:
+      statuses:
+        archived: "Arquivado"
+        closed: "Fechado"
+        open: "Aberto"
+    bookmarkable:
+      notification_title: "mensagem em %{channel_name}"
+    personal_chat: "chat pessoal"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} mencionou você em "%{channel}"'
+        other: '%{username} mencionou %{identifier} em "%{channel}"'
+      new_chat_message: '%{username} enviou uma mensagem em "%{channel}"'
+  discourse_automation:
+    scriptables:
+      send_chat_message:
+        title: Enviar mensagem de chat
+  reviewable_score_types:
+    needs_review:
+      title: "Precisa de revisão"
+  user_notifications:
+    chat_summary:
+      deleted_user: "Usuário excluído"
+      from: "%{site_name}"
+      subject:
+        other_direct_message: "de %{message_title}"
+        others: "outros %{count}"
+  unsubscribe:
+    chat_summary:
+      never: Nunca
+      when_away: Só quando estiver ausente

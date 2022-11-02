@@ -1,0 +1,54 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  chat:
+    errors:
+      channel_exists_for_category: "Istnieje już kanał dla tej kategorii i nazwy"
+      user_cannot_send_message: "W tej chwili nie możesz wysyłać wiadomości."
+      rate_limit_exceeded: "Przekroczono limit wiadomości na czacie, które można wysłać w ciągu 30 sekund"
+      max_reactions_limit_reached: "Nowe reakcje nie są dozwolone w tej wiadomości."
+    reviewables:
+      actions:
+        agree_and_keep_message:
+          title: "Zachowaj wiadomość"
+        agree_and_keep_deleted:
+          title: "Zachowaj wiadomość usuniętą"
+        agree_and_suspend:
+          title: "Zawieś użytkownika"
+        agree_and_silence:
+          title: "Wycisz użytkownika"
+          description: "Zgódź się z flagą i wycisz użytkownika."
+        agree_and_restore:
+          title: "Przywróć wiadomość"
+        agree_and_delete:
+          title: "Usuń wiadomość"
+        delete_and_agree:
+          title: "Usuń wiadomość"
+        disagree:
+          title: "Nie zgadzam się"
+        ignore:
+          title: "Ignoruj"
+    channel:
+      statuses:
+        read_only: "Tylko do odczytu"
+        archived: "Zarchiwizowany"
+        closed: "Zamknięty"
+        open: "Otwarty"
+    personal_chat: "czat osobisty"
+  discourse_automation:
+    scriptables:
+      send_chat_message:
+        title: Wyślij wiadomość na czacie
+  reviewable_score_types:
+    needs_review:
+      title: "Wymaga przeglądu"
+  unsubscribe:
+    chat_summary:
+      never: Nigdy
+  category:
+    cannot_delete:
+      has_chat_channels: "Nie można usunąć tej kategorii, ponieważ zawiera ona kanały czatu."

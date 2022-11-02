@@ -39,6 +39,7 @@
 !/plugins/discourse-narrative-bot
 !/plugins/discourse-presence
 !/plugins/lazy-yt/
+!/plugins/chat/
 !/plugins/poll/
 !/plugins/styleguide
 /plugins/*/auto_generated/

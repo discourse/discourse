@@ -1,0 +1,106 @@
+{{#if this.showMobileDirectMessageButton}}
+  <DButton
+    @class="btn-flat new-dm keep-mobile-sidebar-open btn-floating"
+    @icon="plus"
+    @action={{action "startCreatingDmChannel"}}
+    @title={{this.createDirectMessageChannelLabel}}
+    @disabled={{not this.canCreateDirectMessageChannel}}
+  />
+{{/if}}
+
+<div
+  role="region"
+  aria-label={{i18n "chat.aria_roles.channels_list"}}
+  class="channels-list"
+  {{on "scroll" (action "storeScrollPosition")}}
+>
+  {{#if this.displayPublicChannels}}
+    <div class="chat-channel-divider public-channels-section">
+      {{#if this.inSidebar}}
+        <span
+          class="title-caret"
+          id="public-channels-caret"
+          role="button"
+          title="toggle nav list"
+          {{on "click" (action "toggleChannelSection" "public-channels")}}
+          data-toggleable="public-channels"
+        >
+          {{d-icon "angle-up"}}
+        </span>
+      {{/if}}
+      <span class="channel-title">{{i18n "chat.chat_channels"}}</span>
+
+      <DButton
+        @action={{action "browseChannels"}}
+        @icon="pencil-alt"
+        @class="btn-flat edit-channel-membership-btn title-action"
+      />
+    </div>
+
+    <div id="public-channels" class={{this.publicChannelClasses}}>
+      {{#if this.publicChannelsEmpty}}
+        <div class="public-channel-empty-message">
+          <span class="channel-title">{{i18n "chat.no_public_channels"}}</span>
+          <LinkTo @route="chat.browse">
+            {{i18n "chat.click_to_join"}}
+          </LinkTo>
+        </div>
+      {{else}}
+        {{#each this.publicChannels as |channel|}}
+          <ChatChannelRow
+            @channel={{channel}}
+            @switchChannel={{this.onSelect}}
+            @options={{hash settingsButton=true}}
+          />
+        {{/each}}
+      {{/if}}
+    </div>
+  {{/if}}
+
+  <PluginOutlet
+    @name="below-public-chat-channels"
+    @tagName=""
+    @args={{hash inSidebar=this.inSidebar}}
+  />
+
+  {{#if this.showDirectMessageChannels}}
+    <div class="chat-channel-divider direct-message-channels-section">
+      {{#if this.inSidebar}}
+        <span
+          class="title-caret"
+          id="direct-message-channels-caret"
+          role="button"
+          title="toggle nav list"
+          {{on
+            "click"
+            (action "toggleChannelSection" "direct-message-channels")
+          }}
+          data-toggleable="direct-message-channels"
+        >
+          {{d-icon "angle-up"}}
+        </span>
+      {{/if}}
+      <span class="channel-title">{{i18n "chat.direct_messages.title"}}</span>
+
+      {{#if this.site.desktopView}}
+        <DButton
+          @class="btn-flat new-dm keep-mobile-sidebar-open"
+          @icon="plus"
+          @action={{action "startCreatingDmChannel"}}
+          @title={{this.createDirectMessageChannelLabel}}
+          @disabled={{not this.canCreateDirectMessageChannel}}
+        />
+      {{/if}}
+    </div>
+  {{/if}}
+
+  <div id="direct-message-channels" class={{this.directMessageChannelClasses}}>
+    {{#each this.sortedDirectMessageChannels as |channel|}}
+      <ChatChannelRow
+        @channel={{channel}}
+        @switchChannel={{this.onSelect}}
+        @options={{hash leaveButton=true}}
+      />
+    {{/each}}
+  </div>
+</div>
