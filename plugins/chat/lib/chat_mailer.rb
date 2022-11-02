@@ -50,7 +50,7 @@ class Chat::ChatMailer
         (uccm.last_unread_mention_when_emailed_id IS NULL OR c_msg.id > uccm.last_unread_mention_when_emailed_id) AND
         (
           (uccm.user_id = c_mentions.user_id AND uccm.following IS true AND cc.chatable_type = 'Category') OR
-          (cc.chatable_type = 'DirectMessageChannel')
+          (cc.chatable_type = 'DirectMessage')
         )
       SQL
       .group("users.id, uccm.user_id")

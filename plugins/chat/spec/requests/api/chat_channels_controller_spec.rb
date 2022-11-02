@@ -234,8 +234,7 @@ describe Chat::Api::ChatChannelsController do
 
     context "when channel is a direct message channel" do
       fab!(:user) { Fabricate(:admin) }
-      fab!(:chatable) { Fabricate(:direct_message_channel) }
-      fab!(:chat_channel) { Fabricate(:dm_channel, chatable: chatable) }
+      fab!(:chat_channel) { Fabricate(:direct_message_channel) }
 
       before { sign_in(user) }
 

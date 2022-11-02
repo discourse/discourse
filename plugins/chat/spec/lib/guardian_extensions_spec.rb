@@ -7,7 +7,7 @@ RSpec.describe Chat::GuardianExtensions do
   fab!(:staff) { Fabricate(:user, admin: true) }
   fab!(:chat_group) { Fabricate(:group) }
   fab!(:channel) { Fabricate(:category_channel) }
-  fab!(:dm_channel) { Fabricate(:direct_message_chat_channel) }
+  fab!(:dm_channel) { Fabricate(:direct_message_channel) }
   let(:guardian) { Guardian.new(user) }
   let(:staff_guardian) { Guardian.new(staff) }
 
@@ -63,15 +63,15 @@ RSpec.describe Chat::GuardianExtensions do
 
     describe "#can_see_chat_channel?" do
       context "for direct message channels" do
-        fab!(:chatable) { Fabricate(:direct_message_channel) }
-        fab!(:channel) { Fabricate(:dm_channel, chatable: chatable) }
+        fab!(:chatable) { Fabricate(:direct_message) }
+        fab!(:channel) { Fabricate(:direct_message_channel, chatable: chatable) }
 
         it "returns false if the user is not part of the direct message" do
           expect(guardian.can_see_chat_channel?(channel)).to eq(false)
         end
 
         it "returns true if the user is part of the direct message" do
-          DirectMessageUser.create!(user: user, direct_message_channel_id: chatable.id)
+          DirectMessageUser.create!(user: user, direct_message: chatable)
           expect(guardian.can_see_chat_channel?(channel)).to eq(true)
         end
       end
@@ -98,7 +98,7 @@ RSpec.describe Chat::GuardianExtensions do
       alias_matcher :be_able_to_flag_in_chat_channel, :be_can_flag_in_chat_channel
 
       context "when channel is a direct message channel" do
-        let(:channel) { Fabricate(:dm_channel) }
+        let(:channel) { Fabricate(:direct_message_channel) }
 
         it "returns false" do
           expect(guardian).not_to be_able_to_flag_in_chat_channel(channel)
@@ -158,7 +158,7 @@ RSpec.describe Chat::GuardianExtensions do
       end
 
       context "for DM channel" do
-        fab!(:dm_channel) { DirectMessageChannel.create! }
+        fab!(:dm_channel) { DirectMessage.create! }
 
         before { channel.update(chatable_type: "DirectMessageType", chatable: dm_channel) }
 
@@ -186,7 +186,7 @@ RSpec.describe Chat::GuardianExtensions do
       end
 
       context "when chatable is a direct message" do
-        fab!(:chatable) { DirectMessageChannel.create! }
+        fab!(:chatable) { DirectMessage.create! }
 
         it "allows owner to restore" do
           expect(guardian.can_restore_chat?(message, chatable)).to eq(true)
@@ -236,7 +236,7 @@ RSpec.describe Chat::GuardianExtensions do
           end
 
           context "when chatable is a direct message" do
-            fab!(:chatable) { DirectMessageChannel.create! }
+            fab!(:chatable) { DirectMessage.create! }
 
             it "allows staff to restore" do
               expect(staff_guardian.can_restore_chat?(message, chatable)).to eq(true)
@@ -269,7 +269,7 @@ RSpec.describe Chat::GuardianExtensions do
         end
 
         context "when chatable is a direct message" do
-          fab!(:chatable) { DirectMessageChannel.create! }
+          fab!(:chatable) { DirectMessage.create! }
 
           it "allows staff to restore" do
             expect(staff_guardian.can_restore_chat?(message, chatable)).to eq(true)

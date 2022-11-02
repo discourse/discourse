@@ -129,7 +129,7 @@ class Chat::ChatChannelsController < Chat::ChatBaseController
         if users.count > 0
           ChatChannel
             .includes(chatable: :users)
-            .joins(direct_message_channel: :direct_message_users)
+            .joins(direct_message: :direct_message_users)
             .group(1)
             .having(
               "ARRAY[?] <@ ARRAY_AGG(user_id) AND ARRAY[?] && ARRAY_AGG(user_id)",

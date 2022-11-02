@@ -59,7 +59,7 @@ module(
       async beforeEach() {
         this.set(
           "chatChannel",
-          ChatChannel.create({ chatable_type: "DirectMessageChannel" })
+          ChatChannel.create({ chatable_type: "DirectMessage" })
         );
         set(this.currentUser, "needs_dm_retention_reminder", true);
         this.siteSettings.chat_dm_retention_days = 100;
@@ -79,7 +79,7 @@ module(
       async beforeEach() {
         this.set(
           "chatChannel",
-          ChatChannel.create({ chatable_type: "DirectMessageChannel" })
+          ChatChannel.create({ chatable_type: "DirectMessage" })
         );
         set(this.currentUser, "needs_dm_retention_reminder", false);
         this.siteSettings.chat_dm_retention_days = 100;

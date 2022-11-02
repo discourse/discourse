@@ -5,7 +5,7 @@ require "rails_helper"
 describe Jobs::AutoManageChannelMemberships do
   let(:user) { Fabricate(:user, last_seen_at: 15.minutes.ago) }
   let(:category) { Fabricate(:category, user: user) }
-  let(:channel) { Fabricate(:chat_channel, auto_join_users: true, chatable: category) }
+  let(:channel) { Fabricate(:category_channel, auto_join_users: true, chatable: category) }
 
   describe "queues batches to automatically add users to a channel" do
     it "queues a batch for users with channel access" do
@@ -17,8 +17,8 @@ describe Jobs::AutoManageChannelMemberships do
     end
 
     it "does nothing when the chatable is not a category" do
-      dm_channel = Fabricate(:direct_message_channel)
-      channel.update!(chatable: dm_channel)
+      direct_message = Fabricate(:direct_message)
+      channel.update!(chatable: direct_message)
 
       assert_batches_enqueued(channel, 0)
     end

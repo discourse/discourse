@@ -129,8 +129,8 @@ after_initialize do
   load File.expand_path("../app/models/chat_mention.rb", __FILE__)
   load File.expand_path("../app/models/chat_upload.rb", __FILE__)
   load File.expand_path("../app/models/chat_webhook_event.rb", __FILE__)
-  load File.expand_path("../app/models/d_m_channel.rb", __FILE__)
   load File.expand_path("../app/models/direct_message_channel.rb", __FILE__)
+  load File.expand_path("../app/models/direct_message.rb", __FILE__)
   load File.expand_path("../app/models/direct_message_user.rb", __FILE__)
   load File.expand_path("../app/models/incoming_chat_webhook.rb", __FILE__)
   load File.expand_path("../app/models/reviewable_chat_message.rb", __FILE__)
@@ -149,7 +149,7 @@ after_initialize do
          "../app/serializers/user_with_custom_fields_and_status_serializer.rb",
          __FILE__,
        )
-  load File.expand_path("../app/serializers/direct_message_channel_serializer.rb", __FILE__)
+  load File.expand_path("../app/serializers/direct_message_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/incoming_chat_webhook_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/admin_chat_index_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/user_chat_message_bookmark_serializer.rb", __FILE__)

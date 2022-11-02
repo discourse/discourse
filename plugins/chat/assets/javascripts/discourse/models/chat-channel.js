@@ -7,7 +7,7 @@ import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
 
 export const CHATABLE_TYPES = {
-  directMessageChannel: "DirectMessageChannel",
+  directMessageChannel: "DirectMessage",
   categoryChannel: "Category",
 };
 export const CHANNEL_STATUSES = {

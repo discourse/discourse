@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DirectMessageUser < ActiveRecord::Base
-  belongs_to :direct_message_channel
+  belongs_to :direct_message, foreign_key: :direct_message_channel_id
   belongs_to :user
 end
 

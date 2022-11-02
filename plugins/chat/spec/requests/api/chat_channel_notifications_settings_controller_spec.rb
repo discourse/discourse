@@ -79,8 +79,7 @@ RSpec.describe Chat::Api::ChatChannelNotificationsSettingsController do
 
     context "when direct message channel has invalid params" do
       fab!(:user) { Fabricate(:user) }
-      fab!(:chatable) { Fabricate(:direct_message_channel, users: [user, Fabricate(:user)]) }
-      fab!(:chat_channel) { Fabricate(:dm_channel, chatable: chatable) }
+      fab!(:chat_channel) { Fabricate(:direct_message_channel, users: [user, Fabricate(:user)]) }
       fab!(:membership) do
         Fabricate(:user_chat_channel_membership, user: user, chat_channel: chat_channel)
       end
@@ -102,8 +101,7 @@ RSpec.describe Chat::Api::ChatChannelNotificationsSettingsController do
 
     context "when direct message channel has valid params" do
       fab!(:user) { Fabricate(:user) }
-      fab!(:chatable) { Fabricate(:direct_message_channel, users: [user, Fabricate(:user)]) }
-      fab!(:chat_channel) { Fabricate(:dm_channel, chatable: chatable) }
+      fab!(:chat_channel) { Fabricate(:direct_message_channel, users: [user, Fabricate(:user)]) }
       fab!(:membership) do
         Fabricate(
           :user_chat_channel_membership,

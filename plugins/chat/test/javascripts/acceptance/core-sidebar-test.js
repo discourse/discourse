@@ -51,7 +51,7 @@ acceptance("Discourse Chat - Core Sidebar", function (needs) {
         ],
       },
       chatable_id: 59,
-      chatable_type: "DirectMessageChannel",
+      chatable_type: "DirectMessage",
       chatable_url: null,
       id: 76,
       title: "@sam",
@@ -79,7 +79,7 @@ acceptance("Discourse Chat - Core Sidebar", function (needs) {
           },
         ],
       },
-      chatable_type: "DirectMessageChannel",
+      chatable_type: "DirectMessage",
       chatable_url: null,
       id: 77,
       title: "@<script>sam</script>",
@@ -177,7 +177,7 @@ acceptance("Discourse Chat - Core Sidebar", function (needs) {
         chat_channel: {
           id: 75,
           title: "hawk",
-          chatable_type: "DirectMessageChannel",
+          chatable_type: "DirectMessage",
           last_message_sent_at: "2021-07-20T08:14:16.950Z",
           chatable: {
             users: [{ username: "hawk" }],

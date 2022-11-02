@@ -347,19 +347,11 @@ describe Chat do
 
     context "when followed public channels exist" do
       fab!(:user_2) { Fabricate(:user) }
-      fab!(:channel) do
-        Fabricate(
-          :chat_channel,
-          chatable: Fabricate(:direct_message_channel, users: [user, user_2]),
-        )
-      end
+      fab!(:channel) { Fabricate(:direct_message_channel, users: [user, user_2]) }
 
       before do
         Fabricate(:user_chat_channel_membership, user: user, chat_channel: channel, following: true)
-        Fabricate(
-          :chat_channel,
-          chatable: Fabricate(:direct_message_channel, users: [user, user_2]),
-        )
+        Fabricate(:direct_message_channel, users: [user, user_2])
       end
 
       it "returns them" do

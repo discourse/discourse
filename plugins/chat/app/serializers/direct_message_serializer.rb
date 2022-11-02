@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DirectMessageChannelSerializer < ApplicationSerializer
+class DirectMessageSerializer < ApplicationSerializer
   has_many :users, serializer: UserWithCustomFieldsAndStatusSerializer, embed: :objects
 
   def users

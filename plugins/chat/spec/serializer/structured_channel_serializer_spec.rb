@@ -5,14 +5,10 @@ RSpec.describe StructuredChannelSerializer do
   fab!(:guardian) { Guardian.new(user1) }
   fab!(:user2) { Fabricate(:user) }
   fab!(:user3) { Fabricate(:user) }
-  fab!(:channel1) { Fabricate(:chat_channel) }
-  fab!(:channel2) { Fabricate(:chat_channel) }
-  fab!(:channel3) do
-    Fabricate(:chat_channel, chatable: Fabricate(:direct_message_channel, users: [user1, user2]))
-  end
-  fab!(:channel4) do
-    Fabricate(:chat_channel, chatable: Fabricate(:direct_message_channel, users: [user1, user3]))
-  end
+  fab!(:channel1) { Fabricate(:category_channel) }
+  fab!(:channel2) { Fabricate(:category_channel) }
+  fab!(:channel3) { Fabricate(:direct_message_channel, users: [user1, user2]) }
+  fab!(:channel4) { Fabricate(:direct_message_channel, users: [user1, user3]) }
   fab!(:membership1) do
     Fabricate(:user_chat_channel_membership, user: user1, chat_channel: channel1)
   end

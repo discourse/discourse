@@ -4,8 +4,8 @@ class ChatChannel < ActiveRecord::Base
   include Trashable
 
   belongs_to :chatable, polymorphic: true
-  belongs_to :direct_message_channel,
-             -> { where(chat_channels: { chatable_type: "DirectMessageChannel" }) },
+  belongs_to :direct_message,
+             -> { where(chat_channels: { chatable_type: "DirectMessage" }) },
              foreign_key: "chatable_id"
 
   has_many :chat_messages
@@ -37,7 +37,7 @@ class ChatChannel < ActiveRecord::Base
     end
 
     def chatable_types
-      public_channel_chatable_types << "DirectMessageChannel"
+      public_channel_chatable_types << "DirectMessage"
     end
   end
 

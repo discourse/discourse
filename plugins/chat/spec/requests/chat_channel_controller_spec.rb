@@ -8,9 +8,7 @@ RSpec.describe Chat::ChatChannelsController do
   fab!(:admin) { Fabricate(:admin, username: "andyjones", name: "Andy Jones") }
   fab!(:category) { Fabricate(:category) }
   fab!(:chat_channel) { Fabricate(:category_channel, chatable: category) }
-  fab!(:dm_chat_channel) do
-    Fabricate(:dm_channel, chatable: Fabricate(:direct_message_channel, users: [user, admin]))
-  end
+  fab!(:dm_chat_channel) { Fabricate(:direct_message_channel, users: [user, admin]) }
 
   before do
     SiteSetting.chat_enabled = true
@@ -514,11 +512,7 @@ RSpec.describe Chat::ChatChannelsController do
         group = Fabricate(:group, name: "chatpeeps")
         SiteSetting.chat_allowed_groups = group.id
         GroupUser.create(user: user, group: group)
-        dm_chat_channel_2 =
-          Fabricate(
-            :dm_channel,
-            chatable: Fabricate(:direct_message_channel, users: [user, other_user]),
-          )
+        dm_chat_channel_2 = Fabricate(:direct_message_channel, users: [user, other_user])
 
         get "/chat/chat_channels/search.json", params: { filter: "janemay" }
         expect(response.status).to eq(200)

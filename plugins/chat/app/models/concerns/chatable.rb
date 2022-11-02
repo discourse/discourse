@@ -14,13 +14,6 @@ module Chatable
   private
 
   def channel_class
-    case self
-    when Category
-      CategoryChannel
-    when DirectMessageChannel
-      DMChannel
-    else
-      raise "Unknown chatable #{self}"
-    end
+    "#{self.class}Channel".safe_constantize || raise("Unknown chatable #{self}")
   end
 end

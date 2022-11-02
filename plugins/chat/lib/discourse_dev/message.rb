@@ -11,7 +11,7 @@ module DiscourseDev
 
     def data
       if Faker::Boolean.boolean(true_ratio: 0.5)
-        channel = ::ChatChannel.where(chatable_type: "DirectMessageChannel").order("RANDOM()").first
+        channel = ::ChatChannel.where(chatable_type: "DirectMessage").order("RANDOM()").first
         channel.user_chat_channel_memberships.update_all(following: true)
         user = channel.chatable.users.order("RANDOM()").first
       else
