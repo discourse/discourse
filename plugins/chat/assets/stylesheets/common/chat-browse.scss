@@ -10,13 +10,14 @@
 
   &__header {
     display: flex;
-    justify-content: space-between;
+    gap: 1rem;
     align-items: center;
     margin: 1rem 0 1rem 1rem;
   }
 
   &__title {
     box-sizing: border-box;
+    margin-bottom: 0;
   }
 
   &__content_wrapper {
@@ -26,6 +27,10 @@
     @include breakpoint(tablet) {
       margin-top: 1rem;
     }
+  }
+
+  .new-channel-btn {
+    margin-left: auto;
   }
 
   &__cards {
