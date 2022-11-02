@@ -310,9 +310,9 @@ acceptance("Discourse Chat - Core Sidebar", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section-chat-dms .sidebar-section-link-sam .sidebar-section-link-content-muted"
+        ".sidebar-section-chat-dms .sidebar-section-link-sam.sidebar-section-link--muted"
       ),
-      "muted direct chat channel has right CSS class configured"
+      "muted direct chat channel section link has right classname configured"
     );
   });
 
@@ -321,9 +321,9 @@ acceptance("Discourse Chat - Core Sidebar", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section-chat-channels .sidebar-section-link-random .sidebar-section-link-content-muted"
+        ".sidebar-section-chat-channels .sidebar-section-link-random.sidebar-section-link--muted"
       ),
-      "muted random chat channel has right CSS class configured"
+      "muted random chat channel section link has right classname configured"
     );
   });
 
