@@ -5,3 +5,295 @@
 # https://translate.discourse.org/
 
 fi:
+  js:
+    discourse_automation:
+      title: Automaatio
+      create: Luo
+      update: Päivitä
+      select_script: Valitse skripti
+      select_trigger: Valitse triggeri
+      confirm_automation_reset: Tämä toiminto nollaa skripti- ja triggeriasetukset, uusi tila tallennetaan. Haluatko jatkaa?
+      confirm_automation_trigger: Tämä toiminto käynnistää automaation, haluatko jatkaa?
+      no_automation_yet: Et ole vielä luonut automaatioita.
+      edit_automation:
+        trigger_section:
+          forced: Tämä triggeri on skriptin pakottama.
+          next_pending_automation: "Seuraava automaatio käynnistyy: %{date}"
+          trigger_now: "Käynnistä nyt"
+          title: Milloin/mitä...
+        fields_section:
+          title: Skriptiasetukset
+      destroy_automation:
+        confirm: "Haluatko varmasti poistaa kohteen \"%{name}\"?"
+      fields:
+        key_value:
+          label: Määritä
+        user:
+          label: Käyttäjä
+        pm:
+          title:
+            label: Otsikko
+          raw:
+            label: Teksti
+        pms:
+          confirm_remove_pm: "Haluatko varmasti poistaa tämän yksityisviestin?"
+          placeholder_title: Yksityisviestin otsikko
+          add_pm: Lisää yksityisviesti
+          no_pm_created: Et ole vielä luonut yksityisviestejä. Yksityisviestit lähetetään, kun automaatio käynnistyy.
+          title:
+            label: Otsikko
+          raw:
+            label: Teksti
+          delay:
+            label: Viive (minuutteina)
+          encrypt:
+            label: Salaa yksityisviestin, jos käytettävissä
+        group:
+          label: Ryhmä
+        text:
+          label: Teksti
+      triggerables:
+        not_found: Triggeriä %{trigger} automaatiolle %{automation} ei löytynyt. Varmista, että siihen liittyvä lisäosa on asennettuna.
+        user_badge_granted:
+          fields:
+            badge:
+              label: Kunniamerkki
+            only_first_grant:
+              label: Vain ensimmäisellä myöntämiskerralla
+        stalled_topic:
+          durations:
+            PT1H: "Yksi tunti"
+            P1D: "Yksi päivä"
+            P1W: "Yksi viikko"
+            P2W: "Kaksi viikkoa"
+            P1M: "Yksi kuukausi"
+            P3M: "Kolme kuukautta"
+            P6M: "Kuusi kuukautta"
+            P1Y: "Yksi vuosi"
+          fields:
+            categories:
+              label: Rajoitettu alueisiin
+            tags:
+              label: Rajoitettu tunnisteisiin
+            stalled_after:
+              label: Pysähtyi jälkeen
+        recurring:
+          every: Joka
+          frequencies:
+            minute: minuutti
+            hour: tunti
+            day: päivä
+            weekday: arkipäivä
+            week: viikko
+            month: kuukausi
+            year: vuosi
+          fields:
+            recurrence:
+              label: Toistuminen
+            start_date:
+              label: Alkamispäivä
+        stalled_wiki:
+          durations:
+            PT1H: "Yksi tunti"
+            P1D: "Yksi päivä"
+            P1W: "Yksi viikko"
+            P2W: "Kaksi viikkoa"
+            P1M: "Yksi kuukausi"
+            P3M: "Kolme kuukautta"
+            P6M: "Kuusi kuukautta"
+            P1Y: "Yksi vuosi"
+          fields:
+            restricted_category:
+              label: Rajoitettu alueeseen
+            stalled_after:
+              label: Triggerin viive
+              description: Määrittää viiveen viimeisimmän wiki-muokkauksen ja automaation triggerin välillä
+            retriggered_after:
+              label: Käynnistä viive uudelleen
+              description: Määrittää viiveen ensimmäisen ja seuraavan triggerin välillä, jos wikiä ei ole vieläkään muokattu ensimmäisen triggerin jälkeen
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: Seurattu ryhmä
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: Seurattu ryhmä
+        user_promoted:
+          fields:
+            restricted_group:
+              label: Rajoita ryhmään
+            trust_level_transition:
+              label: Luottamustasosiirtymä
+          trust_levels:
+            ALL: "Kaikki luottamustasot"
+            TL01: "LT0 → LT1"
+            TL12: "LT1 → LT2"
+            TL23: "LT2 → LT3"
+            TL34: "LT3 → LT4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: Suorita
+        topic:
+          fields:
+            restricted_topic:
+              label: Ketjun tunnus
+        post_created_edited:
+          fields:
+            valid_trust_levels:
+              label: Kelvolliset luottamustasot
+              description: Käynnistyy vain, jos viestin on luonut käyttäjä, jonka luottamustaso on jokin näistä, oletusarvo on mikä tahansa luottamustaso
+            restricted_category:
+              label: Alue
+              description: Valinnainen, mahdollistaa triggerin suorittamisen rajoittamisen tähän alueeseen
+        pm_created:
+          fields:
+            restricted_user:
+              label: Käyttäjä
+              description: Mahdollistaa triggerin suorittamisen rajoittamisen tähän käyttäjään
+            ignore_staff:
+              label: Ohita henkilökunta
+              description: Ohita triggeri, jos lähettäjä on henkilökunnan käyttäjä
+            valid_trust_levels:
+              label: Kelvolliset luottamustasot
+              description: Käynnistyy vain, jos viestin on luonut käyttäjä, jonka luottamustaso on jokin näistä; oletusarvo on mikä tahansa luottamustaso
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: Kelvolliset luottamustasot
+              description: Käynnistyy vain, jos viestin on luonut käyttäjä, jonka luottamustaso on jokin näistä; oletusarvo on mikä tahansa luottamustaso
+            restricted_category:
+              label: Alue
+              description: Valinnainen, mahdollistaa triggerin suorittamisen rajoittamisen tähän alueeseen
+            restricted_tags:
+              label: Tunnisteet
+              description: Valinnainen, mahdollistaa triggerin suorittamisen rajoittamisen mihin tahansa näistä tunnisteista
+      scriptables:
+        not_found: Skriptiä %{script} automaatiolle %{automation} ei löytynyt. Varmista, että siihen liittyvä lisäosa on asennettuna.
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: Webhookin URL-osoite
+              description: "Odottaa kelvollista Zapierin webhook-URL-osoitetta, esim. https://hooks.zapier.com/hooks/catch/xxx/yyy/"
+        auto_responder:
+          fields:
+            once:
+              label: Kerran
+              description: Vastaa vain kerran ketjua kohden
+            word_answer_list:
+              label: Sana ja vastaus -parien luettelo
+              description: "Määrittää avain/arvoryhmien luettelon, jossa avain on haettu ehto ja arvo on vastauksen teksti. Huomioi, että arvo hyväksyy tekstin \"%%KEY%%\" paikkamerkkinä, joka korvataan avaimen arvolla vastauksessa. Avain arvioidaan säännöllisenä lausekkeena, ja erikoismerkkien, kuten \".\", yhteydessä tulisi käyttää koodinvaihtomerkkiä, jos todella tarkoitat pistettä, esim. \"\\.\"."
+            answering_user:
+              label: Vastaava käyttäjä
+              description: Oletuksena järjestelmäkäyttäjä
+        post:
+          fields:
+            creator:
+              label: Luoja
+            topic:
+              label: Ketjun tunnus
+            post:
+              label: Viestin sisältö
+        user_global_notice:
+          fields:
+            level:
+              label: Taso
+            notice:
+              label: Ilmoitus
+              description: Hyväksyy HTML:n, älä täytä tätä epäluotettavalla syötteellä!
+          levels:
+            warning: Varoitus
+            info: Info
+            success: Onnistuminen
+            error: Virhe
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: Keskeytä asti (oletus)
+            reason:
+              label: Syy (oletus)
+            actor:
+              label: Käyttäjä
+              description: "Keskeytyksestä vastaava käyttäjä (oletus: järjestelmä)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: Ketjun tunnus
+            pinned_globally:
+              label: Kiinnitetty yleisesti
+            pinned_until:
+              label: Kiinnitetty asti
+        banner_topic:
+          fields:
+            topic_id:
+              label: Ketjun tunnus
+            banner_until:
+              label: Tee banneriksi asti
+            user:
+              label: Käyttäjä
+              description: "Bannerin luova käyttäjä (oletus: järjestelmä)"
+        flag_post_on_words:
+          fields:
+            words:
+              label: Tarkistetut sanat
+        topic_required_words:
+          fields:
+            words:
+              label: Pakollisten sanojen luettelo
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: Osallistujien ryhmän nimi
+            giftee_assignment_messages:
+              label: Viestit lähetetty lahjanantajalle
+        send_pms:
+          add_a_pm_btn:
+            label: Lisää yksityisviesti
+          fields:
+            receiver:
+              label: Yksityisviestin vastaanottaja
+            sendable_pms:
+              label: Yksityisviestit
+            sender:
+              label: Yksityisviestien lähettäjä
+        close_topic:
+          fields:
+            topic:
+              label: Ketjun tunnus
+            message:
+              label: Sulkemisviesti
+              description: "Valinnainen viesti, joka näytetään ketju suljettu -tietueessa"
+            user:
+              label: Käyttäjä
+              description: "Ketjun sulkeva käyttäjä (oletus: järjestelmä)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "Käyttäjän mukautetun kentän nimi"
+      models:
+        script:
+          name:
+            label: Skripti
+        trigger:
+          name:
+            label: Triggeri
+        automation:
+          name:
+            label: Nimi
+          trigger:
+            label: Triggeri
+          script:
+            label: Skripti
+          version:
+            label: Versio
+          enabled:
+            label: Käytössä
+          disabled:
+            label: Ei käytössä
+          placeholders:
+            label: Paikkamerkit
+          last_updated_at:
+            label: Viimeisin päivitys
+          last_updated_by:
+            label: Päivittänyt

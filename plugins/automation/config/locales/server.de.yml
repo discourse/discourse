@@ -5,3 +5,114 @@
 # https://translate.discourse.org/
 
 de:
+  site_settings:
+    discourse_automation_enabled: "discourse-automation-Plug-in aktivieren"
+  discourse_automation:
+    models:
+      fields:
+        required_field: Feld `%{name}` muss bei `%{target}:%{target_name}` ausgefüllt sein.
+        invalid_field: Die Komponente `%{component}` des Feldes kann nicht bei `%{target}:%{target_name}` verwendet werden.
+        invalid_metadata: Daten für `%{field}` sind ungültig oder Komponente `%{component}` ist unbekannt.
+    triggerables:
+      user_badge_granted:
+        title: Benutzer-Abzeichen gewährt
+        doc: Löst eine Automatisierung aus, wenn einem Benutzer ein Abzeichen gewährt wird.
+      stalled_topic:
+        title: Festgefahrenes Thema
+        doc: Löst eine Automatisierung aus, wenn das Thema für einen bestimmten Zeitraum keine neue Antwort vom Themeninhaber erhalten hat. Es wird empfohlen, diesen Auslöser auf ein Tag/eine Kategorie zu beschränken, da die Anzahl der betroffenen Themen sehr hoch sein kann. Als Sicherheitsmaßnahme ist die Anzahl der betroffenen Themen auf 250 begrenzt.
+      api_call:
+        title: API-Aufruf
+        description: Erstellen einer POST-Anfrage, um eine Automatisierung auszulösen
+        doc: Die POST-Anfrage muss an `/automations/:id/trigger.json` mit einem globalen API-Schlüssel gestellt werden.
+      recurring:
+        title: Wiederkehrend
+      point_in_time:
+        title: Zeitpunkt
+        description: Wenn das Datum erreicht ist, wird die Automatisierung ausgelöst
+      user_added_to_group:
+        title: Benutzer zu Gruppe hinzugefügt
+        description: Wenn ein Benutzer zur angegebenen Gruppe hinzugefügt wird, wird die Automatisierung ausgelöst
+      user_removed_from_group:
+        title: Benutzer aus Gruppe entfernt
+        description: Wenn ein Benutzer aus der angegebenen Gruppe entfernt wird, wird die Automatisierung ausgelöst
+      user_promoted:
+        title: Benutzer befördert
+        description: Wenn ein Benutzer von einer Vertrauensstufe zu einer anderen befördert wird
+        transition_placeholder: "von %{from_level_name} auf %{to_level_name}"
+      stalled_wiki:
+        title: Festgefahrenes Wiki
+        description: Wenn ein Wiki für einen längeren als den definierten Zeitraum nicht bearbeitet wurde, wird die Automatisierung ausgelöst
+      post_created_edited:
+        title: Beitrag erstellt/bearbeitet
+        description: Wenn ein gültiger Beitrag bearbeitet oder erstellt wird, wird die Automatisierung ausgelöst
+      pm_created:
+        title: Persönliche Nachricht erstellt
+        description: Wenn eine gültige PN erstellt wird, wird die Automatisierung ausgelöst
+      topic:
+        title: Thema
+        description: Das zugehörige Skript wird nur für das angegebene Thema verwendet. Dies ist beispielsweise für Skripts nützlich, die eine Validierung durchführen
+      after_post_cook:
+        title: Nach Beitragsfinalisierung
+        description: Wenn ein Beitragsinhalt finalisiert wird, wird die Automatisierung ausgelöst
+    scriptables:
+      post:
+        title: Beitrag erstellen
+        description: Einen Beitrag zu einem bestimmten Thema erstellen
+      flag_post_on_words:
+        title: Beitrag wegen Wörtern markieren
+        description: Markiert einen Beitrag, falls er bestimmte Wörter enthält
+        flag_message: "Beitrag enthält unzulässige Wörter: %{words}"
+        doc: Ein Beitrag, der alle angegebenen Wörter auf einmal enthält, wird markiert und ausgeblendet. Beachte, dass die Angabe mehrerer Wörter, die durch ein Komma getrennt sind, als Verbindung behandelt wird (jedes Wort muss vorhanden sein).
+      zapier_webhook:
+        title: Zapier-Webhook
+        description: Ruft einen Zap mit dem Kontext eines Auslösers als Body auf
+      auto_responder:
+        title: Auto-Responder
+        description: Antwortet auf einen Beitrag, der bestimmte Schlüsselwörter enthält
+      pin_topic:
+        title: Thema anheften
+        description: Heftet ein bestimmtes Thema zu einem bestimmten Datum an
+      banner_topic:
+        title: Bannerthema erstellen
+        description: Ein Thema in ein Banner verwandeln
+      gift_exchange:
+        title: Austausch von Geschenken
+        description: Ermöglicht das anonyme Paaren von Benutzern einer Gruppe, um sich gegenseitig ein Geschenk zu senden.
+        doc: Der Austausch von Geschenken erfordert eine bestehende Gruppe mit mindestens 3 Benutzern. Zum gewählten Datum wird jeder Benutzer der Gruppe mit einem Schenkenden und einem Beschenkten gepaart.
+      send_pms:
+        title: PN senden
+        description: Ermöglicht das Senden von PN (möglicherweise verzögert).
+        doc: Ermöglicht es, mehrere PN an einen Benutzer zu senden. Jede PN akzeptiert eine Verzögerung.
+      suspend_user_by_email:
+        title: Benutzer nach E-Mail-Adresse sperren
+      user_global_notice:
+        title: Globaler Hinweis für Benutzer
+        description: Ermöglicht die Anzeige eines globalen Hinweises für einen Benutzer
+      suspend_user_by_email_with_api_call:
+        doc: Beim Auslösen von `suspend_user_by_email` mit einem API-Aufruf erwartet der Endpunkt, dass eine gültige `email` in den gesendeten Parametern vorhanden ist. `reasons` und `suspend_until (ISO 8601 format)` können auch verwendet werden, um Standardfeldwerte zu überschreiben.
+      user_global_notice_with_stalled_topic:
+        doc: Wenn dies durch ein festgefahrenes Thema ausgelöst wird, erhält der Themeninhaber den globalen Hinweis.
+      send_pms_with_api_call:
+        doc: Bei Verwendung des Skripts `send pms` mit dem Auslöser `api call` wird der Parameter `usernames` aus deiner Anfrage verwendet, um die Empfängerliste auszufüllen.
+      topic_required_words:
+        title: Für das Thema erforderliche Wörter
+        description: Ermöglicht es, eine Liste von Wörtern zu definieren, die für ein Thema erforderlich sind, von denen mindestens eines in jedem Beitrag verwendet werden muss.
+        doc: '„Für das Thema erforderliche Wörter“ erfordert ein Thema. Wenn ein Beitrag bearbeitet/erstellt wird, wird der Beitrag anhand der Wortliste validiert. Mindestens ein Wort muss vorhanden sein.'
+        errors:
+          must_include_word: "Beitrag muss mindestens eines dieser Wörter enthalten: %{words}"
+      close_topic:
+        title: Thema schließen
+        description: Schließt ein Thema mit einer optionalen Schließungsnachricht
+      append_last_edited_by:
+        title: '„Zuletzt bearbeitet von“ anhängen'
+        description: Fügt die „Zuletzt bearbeitet von“-Details des Beitrags am Ende des finalisierten Inhalts hinzu.
+        text: "Zuletzt bearbeitet von @%{username} %{date_time}"
+      append_last_checked_by:
+        title: '„Zuletzt überprüft von“ anhängen'
+        description: Fügt die „Zuletzt überprüft von“-Details des Beitrags am Ende des finalisierten Inhalts hinzu.
+        text: "Zuletzt überprüft von @%{username} %{date_time}"
+        summary: Dokument überprüfen
+        details: "Überprüfung des Dokuments durchführen: "
+        button_text: Fertig
+      add_user_to_group_through_custom_field:
+        title: "Benutzer über benutzerdefiniertes Benutzerfeld zur Gruppe hinzufügen"

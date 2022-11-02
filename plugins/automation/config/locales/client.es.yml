@@ -24,7 +24,7 @@ es:
         fields_section:
           title: Opciones del script
       destroy_automation:
-        confirm: "¿Estás seguro de que quieres eliminar `%{name}`?"
+        confirm: "¿Seguro que quieres eliminar «%{name}»?"
       fields:
         key_value:
           label: Configurar
@@ -36,7 +36,7 @@ es:
           raw:
             label: Cuerpo
         pms:
-          confirm_remove_pm: "¿Estás seguro de que quieres eliminar este MP?"
+          confirm_remove_pm: "¿Seguro que quieres eliminar este MP?"
           placeholder_title: Título del mensaje
           add_pm: Añadir mensaje
           no_pm_created: Todavía no has creado ningún MP. Los MP se enviarán una vez que se active tu automatización.
@@ -53,7 +53,13 @@ es:
         text:
           label: Texto
       triggerables:
-        not_found: No se ha podido encontrar el activador `%{trigger}` para la automatización `%{automation}`, asegúrate de que el plugin asociado está instalado
+        not_found: No se ha podido encontrar el activador «%{trigger}» para la automatización «%{automation}», asegúrate de que el plugin asociado está instalado
+        user_badge_granted:
+          fields:
+            badge:
+              label: Insignia
+            only_first_grant:
+              label: Solo en la primera concesión
         stalled_topic:
           durations:
             PT1H: "Una hora"
@@ -101,9 +107,18 @@ es:
               label: Restringido a la categoría
             stalled_after:
               label: Retardo de activación
+              description: Define el retraso entre la última edición del wiki y la activación de la automatización
             retriggered_after:
               label: Retardo antes de volver a activar
               description: Define el retraso entre la primera activación y la siguiente, si la wiki todavía no ha sido editada desde la primera activación
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: Grupo rastreado
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: Grupo rastreado
         user_promoted:
           fields:
             restricted_group:
@@ -116,6 +131,10 @@ es:
             TL12: "nivel 1 a nivel 2"
             TL23: "nivel 2 a nivel 3"
             TL34: "nivel 3 a nivel 4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: Ejecutar en
         topic:
           fields:
             restricted_topic:
@@ -132,6 +151,10 @@ es:
           fields:
             restricted_user:
               label: Usuario
+              description: Permite limitar la ejecución del activador a este usuario
+            ignore_staff:
+              label: Ignorar personal
+              description: Omitir la activación si el remitente es un usuario del personal
             valid_trust_levels:
               label: Niveles de confianza válidos
               description: Se activará solo si la publicación es creada por un usuario en estos niveles de confianza. Por defecto, cualquier nivel de confianza
@@ -143,20 +166,35 @@ es:
             restricted_category:
               label: Categoría
               description: Opcional, permite limitar la ejecución del activador a esta categoría
+            restricted_tags:
+              label: Etiquetas
+              description: Opcional, permite limitar la ejecución del activador a cualquiera de estas etiquetas
       scriptables:
+        not_found: No se ha podido encontrar el script «%{script}» para la automatización «%{automation}», asegúrate de que el plugin asociado está instalado
         zapier_webhook:
           fields:
             webhook_url:
               label: URL del webhook
+              description: "Espera una URL válida del webhook de Zapier, por ejemplo: https://hooks.zapier.com/hooks/catch/xxx/yyy/"
         auto_responder:
           fields:
+            once:
+              label: Una vez
+              description: Solo responde una vez por tema
+            word_answer_list:
+              label: Lista de pares de palabras/respuestas
+              description: "Define una lista de grupos clave/valor, donde la «clave» es el término buscado, y el «valor» el texto de la respuesta. Ten en cuenta que «valor» acepta «%%KEY%%» como marcador de posición que será sustituido por el valor de «clave» en la respuesta. Ten en cuenta que «clave» se evaluará como una expresión regular, y los caracteres especiales como «.» deben escaparse si en realidad se trata de un punto, por ejemplo: «\\.»"
             answering_user:
               label: Usuario que responde
               description: Por defecto, usuario del sistema
         post:
           fields:
+            creator:
+              label: Creador
             topic:
               label: ID del tema
+            post:
+              label: Contenido de la publicación
         user_global_notice:
           fields:
             level:
@@ -191,7 +229,7 @@ es:
             topic_id:
               label: ID del tema
             banner_until:
-              label: Hacer encabezado hasta
+              label: Hacer banner hasta
             user:
               label: Usuario
               description: "Usuario que crea el banner (por defecto: system)"
@@ -229,18 +267,22 @@ es:
             user:
               label: Usuario
               description: "Usuario que cierra el tema (por defecto: system)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "Nombre del campo personalizado del usuario"
       models:
         script:
           name:
             label: Script
         trigger:
           name:
-            label: Activar
+            label: Activador
         automation:
           name:
             label: Nombre
           trigger:
-            label: Activar
+            label: Activador
           script:
             label: Script
           version:
@@ -249,6 +291,8 @@ es:
             label: Activado
           disabled:
             label: Desactivado
+          placeholders:
+            label: Marcadores de posición
           last_updated_at:
             label: Última actualización
           last_updated_by:

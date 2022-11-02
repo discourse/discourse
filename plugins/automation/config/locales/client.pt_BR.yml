@@ -5,3 +5,295 @@
 # https://translate.discourse.org/
 
 pt_BR:
+  js:
+    discourse_automation:
+      title: Automação
+      create: Criar
+      update: Atualizar
+      select_script: Selecione um script
+      select_trigger: Selecione um acionador
+      confirm_automation_reset: Esta ação redefinirá as opções de script e de acionamento, o novo estado será salvo, deseja continuar?
+      confirm_automation_trigger: Esta ação acionará a automação, deseja continuar?
+      no_automation_yet: Você ainda não criou nenhuma automação.
+      edit_automation:
+        trigger_section:
+          forced: Este acionador é forçado por script.
+          next_pending_automation: "A próxima automação será acionada em: %{date}"
+          trigger_now: "Acionar agora"
+          title: Quando/O quê...
+        fields_section:
+          title: Opções de script
+      destroy_automation:
+        confirm: "Tem certeza de que deseja excluir `%{name}`?"
+      fields:
+        key_value:
+          label: Configurar
+        user:
+          label: Usuário
+        pm:
+          title:
+            label: Título
+          raw:
+            label: Corpo
+        pms:
+          confirm_remove_pm: "Tem certeza de que deseja excluir esta PM?"
+          placeholder_title: Título da PM
+          add_pm: Adicionar PM
+          no_pm_created: Você ainda não criou nenhuma MP. PMs serão enviadas assim que sua automação for acionada.
+          title:
+            label: Título
+          raw:
+            label: Corpo
+          delay:
+            label: Atraso (minutos)
+          encrypt:
+            label: Criptografa PM, se disponível
+        group:
+          label: Grupo
+        text:
+          label: Texto
+      triggerables:
+        not_found: Não foi possível encontrar o acionador `%{trigger}` para automação `%{automation}`, verifique se o plugin associado está instalado
+        user_badge_granted:
+          fields:
+            badge:
+              label: Emblema
+            only_first_grant:
+              label: Somente na primeira concessão
+        stalled_topic:
+          durations:
+            PT1H: "Uma hora"
+            P1D: "Um dia"
+            P1W: "Uma semana"
+            P2W: "Duas semanas"
+            P1M: "Um mês"
+            P3M: "Três meses"
+            P6M: "Seis meses"
+            P1Y: "Um ano"
+          fields:
+            categories:
+              label: Limitado a categorias
+            tags:
+              label: Limitado a tags
+            stalled_after:
+              label: Parado depois
+        recurring:
+          every: Cada
+          frequencies:
+            minute: minuto
+            hour: hora
+            day: dia
+            weekday: dia da semana
+            week: semana
+            month: mês
+            year: ano
+          fields:
+            recurrence:
+              label: Recorrência
+            start_date:
+              label: Data de início
+        stalled_wiki:
+          durations:
+            PT1H: "Uma hora"
+            P1D: "Um dia"
+            P1W: "Uma semana"
+            P2W: "Duas semanas"
+            P1M: "Um mês"
+            P3M: "Três meses"
+            P6M: "Seis meses"
+            P1Y: "Um ano"
+          fields:
+            restricted_category:
+              label: Restrito à categoria
+            stalled_after:
+              label: Atraso do acionador
+              description: Define o atraso entre a última edição do wiki e o acionador da automação
+            retriggered_after:
+              label: Atraso do reacionador
+              description: Define o atraso entre o primeiro acionador e o próximo acionador, se o wiki ainda não foi editado após o primeiro acionador
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: Grupo rastreado
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: Grupo rastreado
+        user_promoted:
+          fields:
+            restricted_group:
+              label: Restringir ao grupo
+            trust_level_transition:
+              label: Transição do nível de confiança
+          trust_levels:
+            ALL: "Todos os níveis de confiança"
+            TL01: "TL0 a TL1"
+            TL12: "TL1 a TL2"
+            TL23: "TL2 a TL3"
+            TL34: "TL3 a TL4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: Executar em
+        topic:
+          fields:
+            restricted_topic:
+              label: ID do tópico
+        post_created_edited:
+          fields:
+            valid_trust_levels:
+              label: Níveis de confiança válidos
+              description: Será acionado apenas se a postagem for criada pelo usuário nesses níveis de confiança, o padrão é qualquer nível de confiança
+            restricted_category:
+              label: Categoria
+              description: Opcional, permite limitar a execução do acionador a esta categoria
+        pm_created:
+          fields:
+            restricted_user:
+              label: Usuário
+              description: Permite limitar a execução do acionador para este usuário
+            ignore_staff:
+              label: Ignorar equipe
+              description: Ignore o acionador se o remetente for um usuário da equipe
+            valid_trust_levels:
+              label: Níveis de confiança válidos
+              description: Será acionado apenas se a postagem for criada pelo usuário nesses níveis de confiança, o padrão é qualquer nível de confiança
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: Níveis de confiança válidos
+              description: Será acionado apenas se a postagem for criada pelo usuário nesses níveis de confiança, o padrão é qualquer nível de confiança
+            restricted_category:
+              label: Categoria
+              description: Opcional, permite limitar a execução do acionador a esta categoria
+            restricted_tags:
+              label: Tags
+              description: Opcional, permite limitar a execução do acionador a qualquer uma dessas tags
+      scriptables:
+        not_found: Não foi possível encontrar o script `%{script}` para automação `%{automation}`, verifique se o plugin associado está instalado
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: URL do webhook
+              description: "Espera uma URL de webhook válido do Zapier, por exemplo: https://hooks.zapier.com/hooks/catch/xxx/yyy/"
+        auto_responder:
+          fields:
+            once:
+              label: Uma vez
+              description: Responde apenas uma vez por tópico
+            word_answer_list:
+              label: Lista de pares palavra/resposta
+              description: "Define uma lista de grupos de chave/valor, em que `key` é o termo pesquisado e `value` é o texto da resposta. Observe que `value` aceita `%%KEY%%` como um espaço reservado para ser substituído pelo valor de `key` na resposta. Observe que `key` será avaliado como um regex, e caracteres especiais como `.` devem ser evitados se você realmente se referir a um ponto, por exemplo: `\\.`"
+            answering_user:
+              label: Respondendo ao usuário
+              description: Padrões para o usuário do Sistema
+        post:
+          fields:
+            creator:
+              label: Criador
+            topic:
+              label: ID do tópico
+            post:
+              label: Publicar conteúdo
+        user_global_notice:
+          fields:
+            level:
+              label: Nível
+            notice:
+              label: Aviso
+              description: Aceita HTML, não preencha isso com entrada não confiável!
+          levels:
+            warning: Atenção
+            info: Informações
+            success: Sucesso
+            error: Erro
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: Suspender até (padrão)
+            reason:
+              label: Motivo (padrão)
+            actor:
+              label: Usuário
+              description: "O usuário responsável pela suspensão (padrão: sistema)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: ID do tópico
+            pinned_globally:
+              label: Fixado globalmente
+            pinned_until:
+              label: Fixado até
+        banner_topic:
+          fields:
+            topic_id:
+              label: ID do tópico
+            banner_until:
+              label: Criar banner até
+            user:
+              label: Usuário
+              description: "O usuário que cria o banner (padrão: sistema)"
+        flag_post_on_words:
+          fields:
+            words:
+              label: Palavras verificadas
+        topic_required_words:
+          fields:
+            words:
+              label: Lista de palavras obrigatórias
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: Nome do grupo de participantes
+            giftee_assignment_messages:
+              label: Mensagens enviadas ao presenteador
+        send_pms:
+          add_a_pm_btn:
+            label: Adicionar uma PM
+          fields:
+            receiver:
+              label: Receptor da PM
+            sendable_pms:
+              label: PMs
+            sender:
+              label: Remetente de PMs
+        close_topic:
+          fields:
+            topic:
+              label: ID do tópico
+            message:
+              label: Mensagem de encerramento
+              description: "Mensagem opcional para ser exibida no registro Tópico Fechado"
+            user:
+              label: Usuário
+              description: "O usuário que fecha o tópico (padrão: sistema)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "Nome do campo personalizado do usuário"
+      models:
+        script:
+          name:
+            label: Script
+        trigger:
+          name:
+            label: Acionador
+        automation:
+          name:
+            label: Nome
+          trigger:
+            label: Acionador
+          script:
+            label: Script
+          version:
+            label: Versão
+          enabled:
+            label: Habilitado
+          disabled:
+            label: Desabilitado
+          placeholders:
+            label: Espaços reservados
+          last_updated_at:
+            label: Última atualização
+          last_updated_by:
+            label: Atualizado por

@@ -5,3 +5,11 @@
 # https://translate.discourse.org/
 
 ar:
+  js:
+    discourse_automation:
+      title: التشغيل الآلي
+      create: إنشاء
+      update: تحديث
+      select_script: حدِّد برنامجًا نصيًا
+      select_trigger: حدِّد مشغلًا
+      confirm_automation_reset: سيؤدي هذا الإجراء إلى إعادة تعيين البرنامج النصي وتشغيل الخيارات، وسيتم حفظ الحالة الجديدة، هل تريد المتابعة؟

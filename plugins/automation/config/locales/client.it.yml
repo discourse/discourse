@@ -5,3 +5,295 @@
 # https://translate.discourse.org/
 
 it:
+  js:
+    discourse_automation:
+      title: Automazione
+      create: Crea
+      update: Aggiorna
+      select_script: Seleziona uno script
+      select_trigger: Seleziona evento di attivazione
+      confirm_automation_reset: Questa azione ripristinerà script e le opzioni di attivazione, il nuovo stato verrà salvato, vuoi procedere?
+      confirm_automation_trigger: Questa azione attiverà l'automazione, vuoi procedere?
+      no_automation_yet: Non hai ancora creato alcuna automazione.
+      edit_automation:
+        trigger_section:
+          forced: Questa azione di attivazione è forzata dallo script.
+          next_pending_automation: "La prossima automazione si attiverà il: %{date}"
+          trigger_now: "Attiva ora"
+          title: Quando/Cosa...
+        fields_section:
+          title: Opzioni dello script
+      destroy_automation:
+        confirm: "Vuoi davvero eliminare `%{name}`?"
+      fields:
+        key_value:
+          label: Configura
+        user:
+          label: Utente
+        pm:
+          title:
+            label: Titolo
+          raw:
+            label: Corpo
+        pms:
+          confirm_remove_pm: "Vuoi davvero rimuovere questo MP?"
+          placeholder_title: Titolo MP
+          add_pm: Aggiungi MP
+          no_pm_created: Non hai ancora creato alcun MP. I messaggi personali saranno inviati una volta attivata l'automazione.
+          title:
+            label: Titolo
+          raw:
+            label: Corpo
+          delay:
+            label: Ritardo (minuti)
+          encrypt:
+            label: Applica crittografia ai MP se disponibile
+        group:
+          label: Gruppo
+        text:
+          label: Testo
+      triggerables:
+        not_found: Impossibile trovare azione di attivazione `%{trigger}` per l'automazione `%{automation}`, verifica che il plugin associato sia installato
+        user_badge_granted:
+          fields:
+            badge:
+              label: Distintivo
+            only_first_grant:
+              label: Solo alla prima concessione
+        stalled_topic:
+          durations:
+            PT1H: "Un'ora"
+            P1D: "Un giorno"
+            P1W: "Una settimana"
+            P2W: "Due settimane"
+            P1M: "Un mese"
+            P3M: "Tre mesi"
+            P6M: "Sei mesi"
+            P1Y: "Un anno"
+          fields:
+            categories:
+              label: Limitato alle categorie
+            tags:
+              label: Limitato ai tag
+            stalled_after:
+              label: Bloccato dopo
+        recurring:
+          every: Sempre
+          frequencies:
+            minute: minuto
+            hour: ora
+            day: giorno
+            weekday: giorno feriale
+            week: settimana
+            month: mese
+            year: anno
+          fields:
+            recurrence:
+              label: Ricorrenza
+            start_date:
+              label: Data iniziale
+        stalled_wiki:
+          durations:
+            PT1H: "Un'ora"
+            P1D: "Un giorno"
+            P1W: "Una settimana"
+            P2W: "Due settimane"
+            P1M: "Un mese"
+            P3M: "Tre mesi"
+            P6M: "Sei mesi"
+            P1Y: "Un anno"
+          fields:
+            restricted_category:
+              label: Limitato alla categoria
+            stalled_after:
+              label: Ritardo di attivazione
+              description: Definisce il ritardo tra l'ultima modifica wiki e l'attivazione dell'automazione
+            retriggered_after:
+              label: Ritardo di riattivazione
+              description: Definisce il ritardo tra la prima attivazione e la successiva, se wiki non è stato ancora modificato dopo la prima attivazione
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: Gruppo tracciato
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: Gruppo tracciato
+        user_promoted:
+          fields:
+            restricted_group:
+              label: Limita al gruppo
+            trust_level_transition:
+              label: Transizione del livello di attendibilità (TL)
+          trust_levels:
+            ALL: "Tutti i livelli di attendibilità"
+            TL01: "Da TL0 a TL1"
+            TL12: "Da TL1 a TL2"
+            TL23: "Da TL2 a TL3"
+            TL34: "Da TL3 a TL4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: Esegui alle
+        topic:
+          fields:
+            restricted_topic:
+              label: ID argomento
+        post_created_edited:
+          fields:
+            valid_trust_levels:
+              label: Livelli di attendibilità validi
+              description: L'attivazione avverrà solo se il messaggio viene creato da utenti in questi livelli di attendibilità, il valore predefinito è qualsiasi livello di attendibilità
+            restricted_category:
+              label: Categoria
+              description: Facoltativo, consente di limitare l'attivazione a questa categoria
+        pm_created:
+          fields:
+            restricted_user:
+              label: Utente
+              description: Consente di limitare l'attivazione a questo utente
+            ignore_staff:
+              label: Ignora staff
+              description: Salta l'attivazione se il mittente è un utente dello staff
+            valid_trust_levels:
+              label: Livelli di attendibilità validi
+              description: L'attivazione avverrà solo se il messaggio viene creato da utenti in questi livelli di attendibilità, il valore predefinito è qualsiasi livello di attendibilità
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: Livelli di attendibilità validi
+              description: L'attivazione avverrà solo se il messaggio viene creato da utenti in questi livelli di attendibilità, il valore predefinito è qualsiasi livello di attendibilità
+            restricted_category:
+              label: Categoria
+              description: Facoltativo, consente di limitare l'attivazione a questa categoria
+            restricted_tags:
+              label: Tag
+              description: Facoltativo, consente di limitare l'attivazione a uno qualunque di questi tag
+      scriptables:
+        not_found: Impossibile trovare lo script `%{script}` per l'automazione `%{automation}`, verifica che il plugin associato sia installato
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: URL webhook
+              description: "Richiede un URL webhook Zapier valido, ad esempio: https://hooks.zapier.com/hooks/catch/xxx/yyy/"
+        auto_responder:
+          fields:
+            once:
+              label: Una volta
+              description: Risponde solo una volta per argomento
+            word_answer_list:
+              label: Elenco di coppie parole/risposte
+              description: "Definisce un elenco di gruppi chiave/valore, dove \"chiave\" è il termine cercato e \"valore\" il testo della risposta. Il parametro `value` accetta `%%KEY%%` come segnaposto che sarà sostituito con il valore di `key` nella risposta. Il parametro `key` sarà valutato come regex e i caratteri speciali come `.` devono essere preceduti da escape se si intende effettivamente indicare un punto, ad esempio: `\\.`"
+            answering_user:
+              label: Utente che risponde
+              description: Ripristina impostazione predefinita Utente di sistema
+        post:
+          fields:
+            creator:
+              label: Autore
+            topic:
+              label: ID argomento
+            post:
+              label: Contenuto messaggio
+        user_global_notice:
+          fields:
+            level:
+              label: Livello
+            notice:
+              label: Avviso
+              description: Accetta HTML, non riempire questo campo con contenuti non attendibili!
+          levels:
+            warning: Avvertenza
+            info: Informazioni
+            success: Riuscito
+            error: Errore
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: Sospendi fino a (predefinito)
+            reason:
+              label: Motivo (predefinito)
+            actor:
+              label: Utente
+              description: "Utente responsabile della sospensione (valore predefinito: sistema)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: ID argomento
+            pinned_globally:
+              label: Fissato a livello globale
+            pinned_until:
+              label: Fissato fino a
+        banner_topic:
+          fields:
+            topic_id:
+              label: ID argomento
+            banner_until:
+              label: Crea banner fino a
+            user:
+              label: Utente
+              description: "Utente che crea il banner (valore predefinito: sistema)"
+        flag_post_on_words:
+          fields:
+            words:
+              label: Parole controllate
+        topic_required_words:
+          fields:
+            words:
+              label: Elenco delle parole richieste
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: Nome del gruppo di partecipanti
+            giftee_assignment_messages:
+              label: Messaggi inviati al donatore
+        send_pms:
+          add_a_pm_btn:
+            label: Aggiungi un MP
+          fields:
+            receiver:
+              label: Destinatario MP
+            sendable_pms:
+              label: MP
+            sender:
+              label: Mittente MP
+        close_topic:
+          fields:
+            topic:
+              label: ID argomento
+            message:
+              label: Messaggio di chiusura
+              description: "Messaggio opzionale da mostrare nel registro Argomento chiuso"
+            user:
+              label: Utente
+              description: "Utente che chiude l'argomento (valore predefinito: sistema)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "Nome campo personalizzato utente"
+      models:
+        script:
+          name:
+            label: Script
+        trigger:
+          name:
+            label: Azione di attivazione
+        automation:
+          name:
+            label: Nome
+          trigger:
+            label: Azione di attivazione
+          script:
+            label: Script
+          version:
+            label: Versione
+          enabled:
+            label: Abilitato
+          disabled:
+            label: Disabilitato
+          placeholders:
+            label: Segnaposto
+          last_updated_at:
+            label: Ultimo aggiornamento
+          last_updated_by:
+            label: Aggiornato da

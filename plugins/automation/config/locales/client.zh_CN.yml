@@ -8,22 +8,23 @@ zh_CN:
   js:
     discourse_automation:
       title: 自动化
-      create: "新建\n、"
+      create: 创建
       update: 更新
-      select_script: 选择一个脚本
-      select_trigger: 选择一个触发器
-      confirm_automation_reset: 此操作将重置脚本和触发器选项，新状态将被保存，您要继续吗？
-      confirm_automation_trigger: 此操作将触发自动化，您要继续吗？
-      no_automation_yet: 您尚未创建任何自动化流程。
+      select_script: 选择脚本
+      select_trigger: 选择触发器
+      confirm_automation_reset: 此操作将重置脚本和触发器选项，新状态将被保存，要继续吗？
+      confirm_automation_trigger: 此操作将触发自动化，要继续吗？
+      no_automation_yet: 您尚未创建任何自动化。
       edit_automation:
         trigger_section:
           forced: 此触发器由脚本强制执行。
-          next_pending_automation: "下一次自动化将在以下时间运行： %{date}"
-          trigger_now: "立即运行"
+          next_pending_automation: "下一次自动化将在 %{date} 触发"
+          trigger_now: "立即触发"
+          title: 何时/什么…
         fields_section:
           title: 脚本选项
       destroy_automation:
-        confirm: "您确定要删除`%{name}吗？"
+        confirm: "确定要删除 `%{name}` 吗？"
       fields:
         key_value:
           label: 配置
@@ -32,20 +33,267 @@ zh_CN:
         pm:
           title:
             label: 标题
+          raw:
+            label: 正文
         pms:
-          confirm_remove_pm: "您确定要删除此 PM 吗？"
+          confirm_remove_pm: "确定要移除此 PM 吗？"
           placeholder_title: PM 标题
-          add_pm: 添加PM
+          add_pm: 添加 PM
+          no_pm_created: 您尚未创建任何 PM。触发自动化后，即会发送 PM。
           title:
             label: 标题
           raw:
-            label: 正文内容
+            label: 正文
           delay:
             label: 延迟（分钟）
+          encrypt:
+            label: 加密 PM（如果可用）
         group:
           label: 群组
+        text:
+          label: 文本
       triggerables:
+        not_found: 找不到用于自动化 `%{automation}` 的触发器 `%{trigger}`，请确保相关插件已安装
+        user_badge_granted:
+          fields:
+            badge:
+              label: 徽章
+            only_first_grant:
+              label: 仅在第一次授予时
+        stalled_topic:
+          durations:
+            PT1H: "一小时"
+            P1D: "一天"
+            P1W: "一周"
+            P2W: "两周"
+            P1M: "一个月"
+            P3M: "三个月"
+            P6M: "六个月"
+            P1Y: "一年"
+          fields:
+            categories:
+              label: 限制为类别
+            tags:
+              label: 限制为标签
+            stalled_after:
+              label: 此时长后停止
+        recurring:
+          every: 每
+          frequencies:
+            minute: 分钟
+            hour: 小时
+            day: 天
+            weekday: 工作日
+            week: 周
+            month: 月
+            year: 年
+          fields:
+            recurrence:
+              label: 重复
+            start_date:
+              label: 开始日期
+        stalled_wiki:
+          durations:
+            PT1H: "一小时"
+            P1D: "一天"
+            P1W: "一周"
+            P2W: "两周"
+            P1M: "一个月"
+            P3M: "三个月"
+            P6M: "六个月"
+            P1Y: "一年"
+          fields:
+            restricted_category:
+              label: 限制为类别
+            stalled_after:
+              label: 触发延迟
+              description: 定义上次 Wiki 编辑和自动化触发器之间的延迟
+            retriggered_after:
+              label: 重新触发延迟
+              description: 定义第一个触发器和下一个触发器之间的延迟（如果在第一个触发器后 Wiki 仍未被编辑）
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: 跟踪的群组
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: 跟踪的群组
+        user_promoted:
+          fields:
+            restricted_group:
+              label: 限制为群组
+            trust_level_transition:
+              label: 信任级别转换
+          trust_levels:
+            ALL: "所有信任级别"
+            TL01: "TL0 到 TL1"
+            TL12: "TL1 到 TL2"
+            TL23: "TL2 到 TL3"
+            TL34: "TL3 到 TL4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: 执行时间
+        topic:
+          fields:
+            restricted_topic:
+              label: 话题 ID
+        post_created_edited:
+          fields:
+            valid_trust_levels:
+              label: 有效信任级别
+              description: 仅当这些信任级别的用户创建帖子时才会触发，默认为任意信任级别
+            restricted_category:
+              label: 类别
+              description: 可选，允许将触发器执行限制为此类别
         pm_created:
           fields:
             restricted_user:
               label: 用户
+              description: 允许将触发器执行限制为此用户
+            ignore_staff:
+              label: 忽略管理人员
+              description: 如果发送者是管理人员用户，则跳过触发器
+            valid_trust_levels:
+              label: 有效信任级别
+              description: 仅当这些信任级别的用户创建帖子时才会触发，默认为任意信任级别
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: 有效信任级别
+              description: 仅当这些信任级别的用户创建帖子时才会触发，默认为任意信任级别
+            restricted_category:
+              label: 类别
+              description: 可选，允许将触发器执行限制为此类别
+            restricted_tags:
+              label: 标签
+              description: 可选，允许将触发器执行限制为这些标签中的任意一个
+      scriptables:
+        not_found: 找不到用于自动化 `%{automation}` 的脚本 `%{script}`，请确保相关插件已安装
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: 网络钩子 URL
+              description: "需要一个有效的 Zapier 网络钩子 URL，例如：https://hooks.zapier.com/hooks/catch/xxx/yyy/"
+        auto_responder:
+          fields:
+            once:
+              label: 一次
+              description: 仅按话题回复一次
+            word_answer_list:
+              label: 字词/答案对列表
+              description: "定义键/值组列表，其中 `key` 是搜索词，`value` 是回复的文本。请注意，`value` 接受 `%%KEY%%` 作为占位符，在回复中会替换为 `key` 的值。请注意，`key` 将被评估为正则表达式，如果您实际上指的是点，则应转义 `.` 等特殊字符，例如：`\\.`"
+            answering_user:
+              label: 回答用户
+              description: 默认为系统用户
+        post:
+          fields:
+            creator:
+              label: 创建者
+            topic:
+              label: 话题 ID
+            post:
+              label: 帖子内容
+        user_global_notice:
+          fields:
+            level:
+              label: 级别
+            notice:
+              label: 通知
+              description: 接受 HTML，不要使用不可信的输入进行填充！
+          levels:
+            warning: 警告
+            info: 信息
+            success: 成功
+            error: 错误
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: 暂停至（默认）
+            reason:
+              label: 原因（默认）
+            actor:
+              label: 用户
+              description: "负责暂停的用户（默认设置：系统）"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: 话题 ID
+            pinned_globally:
+              label: 全局置顶
+            pinned_until:
+              label: 置顶至
+        banner_topic:
+          fields:
+            topic_id:
+              label: 话题 ID
+            banner_until:
+              label: 设置为横幅至
+            user:
+              label: 用户
+              description: "创建横幅的用户（默认设置：系统）"
+        flag_post_on_words:
+          fields:
+            words:
+              label: 选中的字词
+        topic_required_words:
+          fields:
+            words:
+              label: 必选字词列表
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: 参加者的群组名称
+            giftee_assignment_messages:
+              label: 发送给赠送者的消息
+        send_pms:
+          add_a_pm_btn:
+            label: 添加 PM
+          fields:
+            receiver:
+              label: PM 接收者
+            sendable_pms:
+              label: PM
+            sender:
+              label: PM 发送者
+        close_topic:
+          fields:
+            topic:
+              label: 话题 ID
+            message:
+              label: 关闭消息
+              description: "要在“话题已关闭”记录上显示的可选消息"
+            user:
+              label: 用户
+              description: "关闭话题的用户（默认设置：系统）"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "用户自定义字段名称"
+      models:
+        script:
+          name:
+            label: 脚本
+        trigger:
+          name:
+            label: 触发器
+        automation:
+          name:
+            label: 名称
+          trigger:
+            label: 触发器
+          script:
+            label: 脚本
+          version:
+            label: 版本
+          enabled:
+            label: 已启用
+          disabled:
+            label: 已禁用
+          placeholders:
+            label: 占位符
+          last_updated_at:
+            label: 最后更新
+          last_updated_by:
+            label: 更新者
