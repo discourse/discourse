@@ -8,7 +8,7 @@
 # transpile_js: true
 
 enabled_site_setting :chat_enabled
-
+  
 register_asset "stylesheets/mixins/chat-scrollbar.scss"
 register_asset "stylesheets/common/core-extensions.scss"
 register_asset "stylesheets/common/chat-emoji-picker.scss"
