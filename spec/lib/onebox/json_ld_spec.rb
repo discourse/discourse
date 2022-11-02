@@ -7,7 +7,7 @@ RSpec.describe Onebox::JsonLd do
     invalid_json = "{\"@type\":invalid-json}"
     doc = Nokogiri::HTML("<script type=\"application/ld+json\">#{invalid_json}</script>")
     Discourse.expects(:warn_exception).with(
-      instance_of(JSON::ParserError), { message: "Error parsing JSON-LD: #{invalid_json}" }
+      instance_of(JSON::ParserError), message: "Error parsing JSON-LD: #{invalid_json}"
     )
 
     json_ld = described_class.new(doc)

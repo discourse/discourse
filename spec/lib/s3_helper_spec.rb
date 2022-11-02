@@ -70,7 +70,7 @@ RSpec.describe "S3Helper" do
         'some' => 'testing'
       }.each do |bucket_name, prefix|
         s3_helper = S3Helper.new(bucket_name, "", client: client)
-        Aws::S3::Bucket.any_instance.expects(:objects).with(prefix: prefix)
+        Aws::S3::Bucket.any_instance.expects(:objects).with({ prefix: prefix })
         s3_helper.list('testing')
       end
     end

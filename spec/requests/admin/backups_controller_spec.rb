@@ -83,7 +83,7 @@ RSpec.describe Admin::BackupsController do
 
   describe '#create' do
     it "starts a backup" do
-      BackupRestore.expects(:backup!).with(admin.id, publish_to_message_bus: true, with_uploads: false, client_id: "foo")
+      BackupRestore.expects(:backup!).with(admin.id, { publish_to_message_bus: true, with_uploads: false, client_id: "foo" })
 
       post "/admin/backups.json", params: {
         with_uploads: false, client_id: "foo"
@@ -162,7 +162,7 @@ RSpec.describe Admin::BackupsController do
 
   describe '#restore' do
     it "starts a restore" do
-      BackupRestore.expects(:restore!).with(admin.id, filename: backup_filename, publish_to_message_bus: true, client_id: "foo")
+      BackupRestore.expects(:restore!).with(admin.id, { filename: backup_filename, publish_to_message_bus: true, client_id: "foo" })
 
       post "/admin/backups/#{backup_filename}/restore.json", params: { client_id: "foo" }
 
