@@ -652,7 +652,6 @@ nl:
         one: "bijna %{count} jaar geleden"
         other: "bijna %{count} jaar geleden"
   password_reset:
-    no_token: "Sorry, die koppeling voor het wijzigen van uw wachtwoord is te oud. Selecteer de knop Aanmelden en gebruik 'Ik ben mijn wachtwoord vergeten' om een nieuwe koppeling te ontvangen."
     choose_new: "Een nieuw wachtwoord kiezen"
     choose: "Een wachtwoord kiezen"
     update: "Wachtwoord bijwerken"

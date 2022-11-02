@@ -5,249 +5,8 @@
 # https://translate.discourse.org/
 
 sv:
-  dates:
-    short_date_no_year: "D MMM"
-    short_date: "D MMM, YYYY"
-    long_date: "D MMMM YYYY LT"
-  datetime_formats: &datetime_formats
-    formats:
-      short: "%d-%m-%Y"
-      short_no_year: "%-d %B"
-      date_only: "%-d %B %Y"
-      long: "%-d %B %Y %H:%M"
-      no_day: "%B %Y"
-      calendar_ics: "%Y%m%dT%H%M%SZ"
-  date:
-    month_names:
-    - null
-    - Januari
-    - Februari
-    - Mars
-    - April
-    - Maj
-    - Juni
-    - Juli
-    - Augusti
-    - September
-    - Oktober
-    - November
-    - December
-    <<: *datetime_formats
-  time:
-    am: "förmiddag"
-    pm: "eftermiddag"
-    <<: *datetime_formats
-  title: "Discourse"
-  topics: "Ämnen"
-  posts: "inlägg"
-  views: "visningar"
-  loading: "Laddar"
-  powered_by_html: 'Drivs av <a href="https://www.discourse.org">Discourse</a>, visas bäst med JavaScript aktiverat'
-  sign_up: "Registrera dig"
-  log_in: "Logga in"
-  submit: "Skicka"
-  purge_reason: "Automatiskt borttaget som övergivet, inaktiverat konto"
-  disable_remote_images_download_reason: "Nedladdning av externa bilder har inaktiverats eftersom det inte fanns tillräckligt mycket lagringsutrymme tillgängligt."
-  anonymous: "Anonym"
-  remove_posts_deleted_by_author: "Borttaget av författaren"
-  redirect_warning: "Vi kunde inte verifiera att länken som du valt faktiskt har lagts upp i forumet. Välj länken nedan om du vill fortsätta ändå."
-  on_another_topic: "I ett annat ämne"
-  inline_oneboxer:
-    topic_page_title_post_number: "Nr %{post_number}"
-    topic_page_title_post_number_by_user: "Nr %{post_number} av %{username}"
-  themes:
-    bad_color_scheme: "Kan inte uppdatera tema, ogiltig färgpalett"
-    other_error: "Något blev fel när temat uppdaterades"
-    ember_selector_error: "Tyvärr — det är inte tillåtet att använda CSS-selektorerna #ember eller .ember-view, eftersom dessa namn genereras dynamiskt under körning och kommer att ändras över tid, vilket resulterar i trasig CSS. Prova en annan selektor."
-    import_error:
-      generic: Det uppstod ett fel vid import av det temat
-      upload: "Det uppstod ett fel under skapandet av uppladdningstillgång: %{name}. %{errors}"
-      about_json: "Importfel: about.json finns inte eller är ogiltig. Är du säker på att detta är ett Discourse-tema?"
-      about_json_values: "about.json innehåller ogiltiga värden: %{errors}"
-      modifier_values: "about.json-modifierare innehåller ogiltiga värden: %{errors}"
-      git: "Fel vid kloning av git-lagringsplats, åtkomst nekas eller lagringsplatsen finns inte"
-      git_ref_not_found: "Det gick inte att ta ut git-referens: %{ref}"
-      unpack_failed: "Det gick inte att packa upp filen"
-      file_too_big: "Den okomprimerade filen är för stor."
-      unknown_file_type: "Filen som du laddade upp verkar inte vara ett giltigt Discourse-tema."
-      not_allowed_theme: "`%{repo}` finns inte i listan över tillåtna teman (bocka för den globala inställningen `allowed_theme_repos`)."
-      ssh_key_gone: "Du väntade för länge med att installera temat så SSH-nyckeln har löpt ut. Vi ber dig försöka igen."
-    errors:
-      component_no_user_selectable: "Temakomponenter kan inte väljas av användaren"
-      component_no_default: "Temakomponenter kan inte vara standardtema"
-      component_no_color_scheme: "Temakomponenter kan inte ha färgpaletter"
-      no_multilevels_components: "Teman med underordnade teman kan inte själva vara underordnade teman"
-      optimized_link: Optimerade bildlänkar är flyktiga och bör inte inkluderas i temakällkoden.
-    settings_errors:
-      invalid_yaml: "Angivet YAML är ogiltigt."
-      data_type_not_a_number: "Det går inte att ställa in typen `%{name}`. Typer som stöds är `integer`, `bool`, `list` , `enum` och `upload`"
-      name_too_long: "En inställning har ett namn som är för långt. Maximal längd är 255"
-      default_value_missing: "Inställningen `%{name}` har inget standardvärde"
-      default_not_match_type: "Standardvärdestypen i inställningen `%{name}` överensstämmer inte med inställningstypen."
-      default_out_range: "Standardvärdet för inställningen `%{name}` ligger inte inom angivet intervall."
-      enum_value_not_valid: "Valt värde är inte ett av enum-valen."
-      number_value_not_valid: "Nytt värde ligger inte inom tillåtet intervall."
-      number_value_not_valid_min_max: "Det måste vara mellan %{min} och %{max}."
-      number_value_not_valid_min: "Det måste vara större än eller lika med %{min}."
-      number_value_not_valid_max: "Det måste vara mindre än eller lika med %{max}."
-      string_value_not_valid: "Den nya värdelängden ligger inte inom tillåtet intervall."
-      string_value_not_valid_min_max: "Den måste vara mellan %{min} och %{max} tecken lång."
-      string_value_not_valid_min: "Den måste vara minst %{min} tecken lång."
-      string_value_not_valid_max: "Den måste vara högst %{max} tecken lång."
-    locale_errors:
-      top_level_locale: "Den övre nivån i en språkfil måste matcha språkets namn"
-      invalid_yaml: "Översättning av YAML är ogiltig"
-  emails:
-    incoming:
-      default_subject: "Detta ämne behöver en titel"
-      show_trimmed_content: "Visa trimmat innehåll"
-      maximum_staged_user_per_email_reached: "Uppnått maximalt antal arrangerade användare skapade per e-post."
-      no_subject: "(inget ämne)"
-      no_body: "(ingen meddelandetext)"
-      missing_attachment: "(Bilagan %{filename} saknas)"
-      continuing_old_discussion:
-        one: "Fortsätter diskussionen från [%{title}](%{url}), eftersom den skapades för mer än %{count} dag sedan."
-        other: "Fortsätter diskussionen från [%{title}](%{url}), eftersom den skapades för mer än %{count} dagar sedan."
-      errors:
-        empty_email_error: "Händer när rådata vi mottagit är tom."
-        no_message_id_error: "Händer när e-post saknar 'Message-Id'-rubrik."
-        auto_generated_email_error: "Händer när 'precedence'-rubriken är satt till: lista, skräp, mass eller auto-svar (list, junk, bulk eller auto_reply), eller när någon annan rubrik innehåller: auto-skickad, auto-svarad eller auto-genererad (auto-submitted, auto-replied eller auto-generated)."
-        no_body_detected_error: "Händer när vi inte kunde extrahera någon huvuddel och det inte fanns några bilagor."
-        no_sender_detected_error: "Det händer när vi inte kunde hitta en giltig e-postadress i Från-rubriken."
-        from_reply_by_address_error: "Det händer när Från-rubriken matchar Svara via e-post-adressen."
-        inactive_user_error: "Händer när sändaren inte är aktiv."
-        silenced_user_error: "Det händer när avsändaren har tystats."
-        bad_destination_address: "Det händer när ingen av e-postadresserna i Till/Kopia-fälten matchade en konfigurerad inkommande e-postadress."
-        strangers_not_allowed_error: "Händer när en användare försöker skapa ett nytt ämne i en kategori som användare inte är en medlem av."
-        insufficient_trust_level_error: "Händer när en användare försöker skapa ett nytt ämne i en kategori som användare saknar förtroendenivå för."
-        reply_user_not_matching_error: "Händer när ett svar kommer in från en annan e-postadress än den aviseringen skickades till."
-        topic_not_found_error: "Händer när ett svar kommer in, men ämnet har raderats."
-        topic_closed_error: "Händer när ett svar kommer in, men ämnet har stängts."
-        bounced_email_error: "E-post är en rapport om studsad e-post."
-        screened_email_error: "Händer när sändarens e-postadress redan har kontrollerats."
-        unsubscribe_not_allowed: "Det händer när avprenumeration via e-post inte tillåts för den här användaren."
-        email_not_allowed: "Händer när e-postadressen inte står på vitlistan eller om den står på svartlistan."
-      unrecognized_error: "Okänt fel"
-    secure_uploads_placeholder: "Redigerad: Denna webbplats har säkerhet för uppladdningar aktiverad, gå till ämnet eller klicka på \"Visa media\" för att se bifogade uppladdningar."
-    view_redacted_media: "Visa media"
-  errors: &errors
-    format: ! "%{attribute} %{message}"
-    format_with_full_message: "<b>%{attribute}</b>: %{message}"
-    messages:
-      too_long_validation: "är begränsad till %{max} tecken; du skrev in %{length}. "
-      invalid_boolean: "Ogiltig booleansk."
-      taken: "används redan"
-      accepted: måste godkännas
-      blank: kan inte vara tomt
-      present: måste vara tomt
-      confirmation: ! "matchar inte %{attribute}"
-      empty: kan inte vara tomt
-      equal_to: måste vara lika med %{count}
-      even: måste vara jämnt
-      exclusion: är reserverad
-      greater_than: måste vara större än %{count}
-      greater_than_or_equal_to: måste vara större eller lika med %{count}
-      has_already_been_used: "har redan använts"
-      inclusion: ingår inte i listan
-      invalid: är ogiltig
-      is_invalid: "Verkar oklart, är det en fullständig mening?"
-      is_invalid_meaningful: "verkar oklart, de flesta orden innehåller samma bokstäver om och om igen?"
-      is_invalid_unpretentious: "verkar oklart, ett eller flera ord är mycket långa?"
-      is_invalid_quiet: "verkar oklart, var det din avsikt att skriva med STORA BOKSTÄVER?"
-      invalid_timezone: "'%{tz}' är inte en giltig tidszon"
-      contains_censored_words: "innehåller följande censurerade ord: %{censored_words}"
-      less_than: måste vara mindre än %{count}
-      less_than_or_equal_to: måste vara mindre eller lika med %{count}
-      not_a_number: är inte ett nummer
-      not_an_integer: måste vara ett tal
-      odd: måste vara udda
-      record_invalid: ! "Validering misslyckades: %{errors}"
-      max_emojis: "kan inte ha mer än %{max_emojis_count} emojier"
-      emojis_disabled: "kan inte ha emoji(er)"
-      ip_address_already_screened: "ingår redan i en befintlig regel"
-      restrict_dependent_destroy:
-        one: "Kan inte radera post på grund av att det finns en beroende %{record}"
-        other: "Kan inte radera post på grund av att det finns beroende %{record}"
-      too_long:
-        one: är för långt (högsta tillåtna är %{count} tecken)
-        other: är för långt (högsta tillåtna är %{count} tecken)
-      too_short:
-        one: är för kort (minsta tillåtna är %{count} tecken)
-        other: är för kort (minsta tillåtna är %{count} tecken)
-      wrong_length:
-        one: har fel längd (borde vara %{count} tecken)
-        other: har fel längd (borde vara %{count} tecken)
-      other_than: "måste vara skilt från %{count}"
-      auth_overrides_username: "Användarnamnet måste uppdateras hos autentiseringsleverantören, eftersom inställningen `auth_overrides_username` är aktiverad."
-    template:
-      body: ! "Det uppstod problem med följande fält:"
-      header:
-        one: "%{count} fel hindrade %{model} från att sparas"
-        other: ! "%{count} fel hindrade %{model} från att sparas"
-    embed:
-      load_from_remote: "Det uppstod ett fel vid laddning av inlägget."
-    site_settings:
-      invalid_category_id: "Du angav en kategori som inte finns"
-      invalid_choice:
-        one: "Du angav det ogiltiga valet %{name}"
-        other: "Du angav de ogiltiga valen %{name}"
-      default_categories_already_selected: "Du kan inte välja en kategori som används i en annan lista."
-      default_tags_already_selected: "Du kan inte välja en etikett som används i en annan lista."
-      s3_upload_bucket_is_required: "Du kan inte aktivera uppladdning till S3 innan du har angivit 's3_upload_bucket'."
-      enable_s3_uploads_is_required: "Du kan inte aktivera lagret till S3 innan du har aktiverat s3-uppladdningarna."
-      page_publishing_requirements: "Sidpublicering kan inte aktiveras om säkra medier är aktiverade."
-      s3_backup_requires_s3_settings: "Du kan inte använda S3 som säkerhetskopieringsplats innan du har angivit '%{setting_name}'."
-      s3_bucket_reused: "Du kan inte använda samma behållare för 's3_upload_bucket' och 's3_backup_bucket'. Välj en annan behållare eller använd en annan sökväg för varje behållare."
-      secure_uploads_requirements: "S3-uppladdningar måste ha aktiverats innan du aktiverar säkra uppladdningar."
-      share_quote_facebook_requirements: "Du måste ange ett Facebook-app-id för att möjliggöra delning av citat på Facebook."
-      second_factor_cannot_enforce_with_socials: "Du kan inte tvinga 2FA med sociala inloggningar aktiverade. Du måste först inaktivera inloggning via: %{auth_provider_names}"
-      second_factor_cannot_be_enforced_with_disabled_local_login: "Du kan inte genomdriva 2FA om lokala inloggningar är inaktiverade."
-      second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Du kan inte genomdriva 2FA om DiscourseConnect har aktiverats."
-      local_login_cannot_be_disabled_if_second_factor_enforced: "Du kan inte inaktivera lokal inloggning om 2FA har genomdrivits. Inaktivera genomdriven 2FA innan du inaktiverar lokala inloggningar."
-      cannot_enable_s3_uploads_when_s3_enabled_globally: "Du kan inte aktivera S3-uppladdningar eftersom S3-uppladdningar redan är aktiverade globalt, och aktivering av denna webbplatsnivå kan orsaka kritiska problem med uppladdningar"
-      cors_origins_should_not_have_trailing_slash: "Du bör inte lägga till det avslutande snedstrecket (/) till CORS-ursprung."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Användaragenter måste vara minst 3 tecken långt för att undvika felaktiga hastighetsbegränsning för mänskliga användare."
-      slow_down_crawler_user_agent_cannot_be_popular_browsers: "Du kan inte lägga till något av följande värden till inställningen: %{values}."
-      strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Du kan inte inaktivera Radera metadata för bild om 'composer media optimization image enabled' är aktiverat. Inaktivera 'composer media optimization image enabled' innan du inaktiverar Radera metadata för bild."
-      twitter_summary_large_image_no_svg: "Twitter, sammanfattningsbilder som används för twitter: bildens metadata kan inte vara .svg"
-    conflicting_google_user_id: 'Google-konto-ID:et för det här kontot har ändrats och av säkerhetsskäl krävs personalens ingripande. Kontakta personalen och hänvisa dem till <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
-    onebox:
-      invalid_address: "Tyvärr kunde vi inte generera en förhandsvisning av den här webbsidan eftersom servern '%{hostname}' inte kunde hittas. I stället för en förhandsvisning visas enbart en länk i ditt inlägg. :cry:"
-      error_response: "Tyvärr kunde vi inte generera en förhandsvisning för den här webbsidan eftersom webbservern returnerade felkoden %{status_code}. I stället för en förhandsvisning visas enbart en länk i ditt inlägg. :cry:"
-      missing_data:
-        one: "Tyvärr kunde vi inte skapa en förhandsvisning för den här webbsidan eftersom följande oEmbed / OpenGraph-tagg inte kunde hittas: %{missing_attributes}"
-        other: "Tyvärr kunde vi inte skapa en förhandsvisning för den här webbsidan eftersom följande oEmbed / OpenGraph-taggar inte kunde hittas: %{missing_attributes}"
-  word_connector:
-    comma: ", "
   invite:
-    expired: "Din inbjudningskod har löpt ut. <a href='%{base_url}/about'>Kontakta personalen</a>."
-    not_found: "Din inbjudningskod är ogiltig. <a href='%{base_url}/about'>Kontakta personalen</a>."
-    not_found_json: "Din inbjudningskod är ogiltig. Kontakta personalen."
-    not_matching_email: "Din e-postadress och den e-postadress som är kopplad till inbjudningskoden stämmer inte överens. Kontakta personalen."
-    not_found_template: |
-      <p>Din inbjudan till <a href="%{base_url}">%{site_name}</a> har redan lösts in.</p>
-
-      <p>Om du kommer ihåg ditt lösenord kan du <a href="%{base_url}/login">logga in</a>.</p>
-
-      <p>Annars ber vi dig att <a href="%{base_url}/password-reset">återställa lösenordet</a>.</p>
-    not_found_template_link: |
-      <p>Denna inbjudan till <a href="%{base_url}">%{site_name}</a> kan inte längre lösas in. Be personen som bjöd in dig att skicka en ny inbjudan till dig.</p>
-    user_exists: "Det finns ingen anledning att bjuda in <b>%{email}</b>, de har redan ett konto!"
-    invite_exists: "Du har redan bjudit in <b>%{email}</b>."
-    invalid_email: "%{email} är inte en giltig e-postadress."
-    rate_limit:
-      one: "Du har redan skickat %{count} inbjudan den senaste dagen, vänta %{time_left} innan du försöker igen."
-      other: "Du har redan skickat %{count} inbjudningar den senaste dagen, vänta %{time_left} innan du försöker igen."
-    confirm_email: "<p>Du är nästan klar! Vi skickade ett aktiveringsmeddelande till din e-postadress. Följ instruktionerna i e-postmeddelandet för att aktivera ditt konto.</p><p>Om du inte ser det kan du kolla i din skräppostmapp.</p>"
-    cant_invite_to_group: "Du är inte behörig att bjuda in användare till specificerade grupper. Kontrollera att du är ägare för de grupper som du försöker bjuda in till."
-    disabled_errors:
-      discourse_connect_enabled: "Inbjudningar är inaktiverade eftersom DiscourseConnect har aktiverats."
-      invalid_access: "Du har inte behörighet att visa den efterfrågade resursen."
-    requires_groups: "Inbjudan sparades inte eftersom det angivna ämnet är otillgängligt. Lägg till en av följande grupper: %{groups}."
-    domain_not_allowed: "Din e-post kan inte användas för att lösa in denna inbjudan."
-    max_redemptions_allowed_one: "för e-postinbjudningar ska vara 1."
-    redemption_count_less_than_max: "bör vara mindre än %{max_redemptions_allowed}."
-    email_xor_domain: "E-post- och domänfält är inte tillåtna samtidigt"
+    existing_user_success: "Inbjudan har lösts in"
   bulk_invite:
     file_should_be_csv: "De uppladdade filerna skall vara i csv-format."
     max_rows: "De första %{max_bulk_invites} inbjudningarna har skickats ut. Prova att dela upp filen i mindre delar."
@@ -495,7 +254,7 @@ sv:
       Du kan redigera ditt tidigare svar och lägga till ett citat genom att markera text och välja knappen <b>citera</b> som dyker upp.
 
       Det blir lättare för alla att läsa ämnen som har färre in-på-djupet-svar istället för flera små, individuella svar.
-    dominating_topic: Du har publicerat mer än %{percent} % av svaren här. Finns det någon annan du vill höra från?
+    dominating_topic: Du har skrivit mer än %{percent} % av svaren här. Får vi föreslå att du ger andra en möjlighet att komma till tals?
     get_a_room: Du har svarat @%{reply_username} %{count} gånger. Visste du att du istället kunde skicka ett personligt meddelande till henne/honom?
     too_many_replies: |
       ### Du har nått svarsgränsen för detta ämne
@@ -597,7 +356,6 @@ sv:
           attributes:
             linkable_type:
               invalid: "är inte giltig"
-      <<: *errors
   uncategorized_category_name: "Ej kategoriserad"
   general_category_name: "Allmänt"
   general_category_description: "Skapa ämnen här som inte passar in i någon annan befintlig kategori."
@@ -764,7 +522,7 @@ sv:
         one: "nästan %{count} år sedan"
         other: "nästan %{count} år sedan"
   password_reset:
-    no_token: "Tyvärr har din lösenordslänk löpt ut. Klicka på inloggningsknappen och välj \"jag har glömt mitt lösenord\" för att få en ny länk."
+    no_token: 'Hoppsan! Länken du använde fungerar inte längre. Du kan <a href="%{base_url}/login">logga in</a> nu. Om du har glömt ditt lösenord kan du <a href="%{base_url}/password-reset">begära en länk</a> för att återställa det.'
     choose_new: "Välj ett nytt lösenord"
     choose: "Välj ett lösenord"
     update: "Uppdatera lösenord"
@@ -3517,7 +3275,7 @@ sv:
     png_to_jpg_conversion_failure_message: "Ett fel uppstod vid konvertering från PNG till JPG."
     optimize_failure_message: "Det uppstod ett fel vid optimering av den uppladdade bilden."
     download_failure: "Det gick inte att hämta filen från den externa leverantören."
-    size_mismatch_failure: "Storleken på filen som uppladdats till S3 matchade inte avsedd storlek på extern uppladdnings-stub. %{additional_detail}"
+    size_mismatch_failure: "Storleken på filen som uppladdats till S3 matchade inte avsedd storlek på den externa uppladdningen. %{additional_detail}"
     create_multipart_failure: "Det gick inte att skapa flerdelad uppladdning i den externa butiken."
     abort_multipart_failure: "Det gick inte att avbryta flerdelad uppladdning i den externa butiken."
     complete_multipart_failure: "Det gick inte att slutföra flerdelad uppladdning i den externa butiken."
@@ -4376,6 +4134,7 @@ sv:
   user_status:
     errors:
       ends_at_should_be_greater_than_set_at: "ends_at bör vara större än set_at."
-  activemodel:
-    errors:
-      <<: *errors
+  webhooks:
+    payload_url:
+      blocked_or_internal: "Försändelse-URL:en kan inte användas eftersom den leder till en blockerad eller intern IP-adress."
+      unsafe: "Försändelse-URL:en kan inte användas eftersom den är osäker"

@@ -538,7 +538,6 @@ pl_PL:
       Możesz edytować swoje wcześniejsze odpowiedzi, aby dodać cytat, poprzez podświetlenie tekstu i wybranie przycisku <b>cytuj odpowiedź</b> który się pojawi.
 
       Każdemu łatwiej będzie przeczytać temat, który ma kilka pogłębionych odpowiedzi, zamiast wielu niewielkich, indywidualnych.
-    dominating_topic: Zamieściłeś tutaj ponad %{percent}% odpowiedzi, czy jest ktoś jeszcze, z kim chciałbyś się skontaktować?
     get_a_room: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
     too_many_replies: |
       ### Osiągnąłeś/łaś limit odpowiedzi w tym temacie
@@ -858,7 +857,6 @@ pl_PL:
         many: "prawie %{count} lat temu"
         other: "prawie %{count} lat temu"
   password_reset:
-    no_token: "Przepraszamy, ten link do zmiany hasła jest zbyt stary. Wybierz przycisk \"Zaloguj\", a następnie \"Zapomniałem hasła\", by uzyskać nowy link."
     choose_new: "Wprowadź nowe hasło"
     choose: "Wprowadź hasło"
     update: "Aktualizuj hasło"
@@ -3794,7 +3792,6 @@ pl_PL:
     png_to_jpg_conversion_failure_message: "Wystąpił błąd podczas konwersji z PNG na JPG."
     optimize_failure_message: "Wystąpił błąd podczas optymalizacji przesłanego obrazu."
     download_failure: "Pobieranie pliku od zewnętrznego dostawcy nie powiodło się."
-    size_mismatch_failure: "Rozmiar pliku przesłanego do S3 nie był zgodny z rozmiarem przewidzianym przez zewnętrzny serwer przesyłania. %{additional_detail}"
     create_multipart_failure: "Nie udało się utworzyć wieloczęściowego przesyłania w zewnętrznym sklepie."
     checksum_mismatch_failure: "Suma kontrolna przesłanego pliku nie zgadza się. Zawartość pliku mogła ulec zmianie podczas przesyłania. Proszę spróbuj ponownie."
     cannot_promote_failure: "Przesyłanie nie może zostać zakończone, być może zostało już zakończone lub wcześniej zakończone niepowodzeniem."

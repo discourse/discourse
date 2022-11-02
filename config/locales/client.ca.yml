@@ -3944,7 +3944,6 @@ ca:
         trust_level_2_users: "Usuaris de nivell de confiança 2"
         trust_level_3_requirements: "Requisits del nivell de confiança 3"
         trust_level_locked_tip: "el nivell de confiança està blocat, el sistema no promourà o degradarà l'usuari"
-        trust_level_unlocked_tip: "el nivell de confiança està desblocat, el sistema pot promoure o degradar l'usuari"
         lock_trust_level: "Bloca el nivell de confiança"
         unlock_trust_level: "Desbloca el nivell de confiança"
         silenced_count: "Silenciat"

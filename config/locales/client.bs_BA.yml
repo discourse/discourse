@@ -4110,7 +4110,6 @@ bs_BA:
         trust_level_2_users: "Trust Level 2 Users"
         trust_level_3_requirements: "Trust Level 3 Requirements"
         trust_level_locked_tip: "trust level is locked, system will not promote or demote user"
-        trust_level_unlocked_tip: "trust level is unlocked, system will may promote or demote user"
         lock_trust_level: "Lock Trust Level"
         unlock_trust_level: "Unlock Trust Level"
         silenced_count: "Stišano"

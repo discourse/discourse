@@ -202,6 +202,7 @@ zh_TW:
     delete: "刪除"
     generic_error: "抱歉，發生錯誤。"
     generic_error_with_reason: "發生錯誤: %{error}"
+    multiple_errors: "發生多個錯誤： %{errors}"
     sign_up: "註冊"
     log_in: "登入"
     age: "已建立"
@@ -2575,6 +2576,7 @@ zh_TW:
     views_lowercase:
       other: "觀看"
     replies: "回覆"
+    sr_replies: "依回覆排序"
     views_long:
       other: "這個話題已經被檢視過 %{number} 次"
     activity: "活動"
@@ -3869,7 +3871,6 @@ zh_TW:
         trust_level_2_users: "信任等級 2 使用者"
         trust_level_3_requirements: "信任等級 3 之條件"
         trust_level_locked_tip: "信任等級鎖定，系統將不會升級或降級使用者。"
-        trust_level_unlocked_tip: "信任等級解除鎖定，系統將會升級或降級使用者。"
         lock_trust_level: "鎖住信任等級"
         unlock_trust_level: "解鎖信任等級"
         silenced_count: "被靜音"

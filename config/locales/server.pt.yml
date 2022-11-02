@@ -591,7 +591,6 @@ pt:
         one: "há quase %{count} ano atrás"
         other: "há quase %{count} anos atrás"
   password_reset:
-    no_token: "Desculpe, essa hiperligação para alterar a palavra-passe é muito antiga. Selecione o botão Iniciar Sessão e utilize 'Esqueci a minha palavra-passe' para obter uma nova hiperligação."
     choose_new: "Escolha uma nova palavra-passe"
     choose: "Escolha uma palavra-passe"
     update: "Atualizar Palavra-passe"

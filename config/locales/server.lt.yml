@@ -681,7 +681,6 @@ lt:
         many: "beveik prieš %{count} metų"
         other: "beveik prieš %{count} metų"
   password_reset:
-    no_token: "Atsiprašome, slaptažodžio keitimo nuoroda yra per sena. Pasirinkite mygtuką \"Prisijungti\" ir naudokite „Pamiršau slaptažodį“, kad gautumėte naują nuorodą."
     choose_new: "Pasirinkite naują slaptažodį"
     choose: "Pasirinkite slaptažodį"
     update: "Atnaujinti slaptažodį"

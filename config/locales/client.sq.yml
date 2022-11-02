@@ -2549,7 +2549,6 @@ sq:
         trust_level_2_users: "Përdorues me Nivel Besimi 2"
         trust_level_3_requirements: "Kërkesat për përdorues me Nivel Besimi 3"
         trust_level_locked_tip: "trust level is locked, system will not promote or demote user"
-        trust_level_unlocked_tip: "trust level is unlocked, system will may promote or demote user"
         lock_trust_level: "Kyç nivelin e besimit"
         unlock_trust_level: "Çkyç nivelin e besimit"
         suspended_count: "Të pezulluar"

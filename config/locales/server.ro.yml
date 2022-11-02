@@ -452,7 +452,6 @@ ro:
         few: "cu aproape %{count} ani în urmă"
         other: "cu aproape %{count} de ani în urmă"
   password_reset:
-    no_token: "Ne pare rău, dar link-ul de schimbare a parolei este prea vechi. Selectează butonul Înregistrare și folosește 'Mi-am uitat parola' pentru a obține un nou link."
     choose_new: "Alege o parolă nouă"
     choose: "Alege o parolă"
     update: "Actualizează parola"

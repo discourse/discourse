@@ -4548,7 +4548,6 @@ gl:
         trust_level_2_users: "Usuarios con nivel 2 de confianza"
         trust_level_3_requirements: "Requirimentos para o nivel de confianza 3"
         trust_level_locked_tip: "o nivel de confianza está bloqueado, o sistema non promocionará nin rebaixará o usuario"
-        trust_level_unlocked_tip: "o nivel de confianza está desbloqueado, o sistema pode promocionar ou rebaixar un usuario"
         lock_trust_level: "Bloquear o nivel de confianza"
         unlock_trust_level: "Desbloquear o nivel de confianza"
         silenced_count: "Silenciado"

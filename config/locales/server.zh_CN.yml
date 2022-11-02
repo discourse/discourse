@@ -470,7 +470,6 @@ zh_CN:
       您可以突出显示文本并选择出现的<b>引用回复</b>按钮，对您之前的回复进行编辑以添加引用。
 
       这样，每个人都可以更轻松地阅读具有少量嵌套回复的话题，而不是查看大量的个别回复。
-    dominating_topic: 您在这里发布了超过 %{percent}% 的回复，想听听其他人的发言吗？
     get_a_room: 您已回复 @%{reply_username} %{count} 次，您知道您可以向他们发送个人消息吗？
     too_many_replies: |
       ### 您已达到此话题的回复上限
@@ -713,7 +712,6 @@ zh_CN:
       almost_x_years:
         other: "将近 %{count} 年前"
   password_reset:
-    no_token: "抱歉，该密码更改链接太旧。选择“登录”按钮并使用“我忘记密码了”获得新链接。"
     choose_new: "选择一个新密码"
     choose: "选择一个密码"
     update: "更新密码"
@@ -3620,7 +3618,6 @@ zh_CN:
     png_to_jpg_conversion_failure_message: "从 PNG 转换为 JPG 时出错。"
     optimize_failure_message: "优化上传的图片时出错。"
     download_failure: "从外部提供商下载文件失败。"
-    size_mismatch_failure: "上传到 S3 的文件大小与外部上传存根的预期大小不匹配。%{additional_detail}"
     create_multipart_failure: "无法在外部存储中创建分段上传。"
     abort_multipart_failure: "无法中止外部存储中的分段上传。"
     complete_multipart_failure: "无法在外部存储中完成分段上传。"

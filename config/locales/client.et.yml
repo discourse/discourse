@@ -3316,7 +3316,6 @@ et:
         trust_level_2_users: "Kasutajad usaldustasemel 2"
         trust_level_3_requirements: "Usaldustaseme 3 nõuded"
         trust_level_locked_tip: "usaldustase on lukustatud, süsteem ei eduta ega alanda kasutajat."
-        trust_level_unlocked_tip: "usaldustase on lukustamata, süsteem saab kasutajat edutada või alandada."
         lock_trust_level: "Lukusta usaldustase"
         unlock_trust_level: "Eemalda usaldustaseme lukustus"
         silenced_count: "Vaigistatud"

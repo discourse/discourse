@@ -300,7 +300,6 @@ sq:
         one: "pothuajse %{count} vit më parë"
         other: "pothuajse %{count} vite më parë"
   password_reset:
-    no_token: "Ndjesë, kjo lidhje për ndryshimin e fjalëkalimit është shumë e vjetër. Kliko butonin 'Identifikohu' dhe përdorni 'Kam harruar fjalëkalimin' për të marrë një lidhje të re."
     choose_new: "Zgjidhni një fjalëkalim të ri"
     choose: "Zgjidhni një fjalëkalim të ri"
     update: "Rifresko Fjalëkalimin"

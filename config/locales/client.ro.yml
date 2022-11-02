@@ -3721,7 +3721,6 @@ ro:
         trust_level_2_users: "utilizatori de nivel de încredere 2 "
         trust_level_3_requirements: "Cerințe pentru nivelul 3 de încredere"
         trust_level_locked_tip: "Nivelul de încredere este blocat, sistemul nu va promova sau retrograda utilizatorii"
-        trust_level_unlocked_tip: "Nivelul de încredere este deblocat, sistemul poate promova sau retrograda utilizatorii"
         lock_trust_level: "Blochează nivelul de încredere"
         unlock_trust_level: "Deblochează nivelul de încredere"
         suspended_count: "Suspendați"

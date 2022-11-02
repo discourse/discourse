@@ -466,7 +466,6 @@ da:
       Du kan redigere dit forrige svar for at tilføje et citat ved at markere teksten og vælge <b>citér svar</b>-knappen som dukker op.
 
       Det er nemmere for alle at læse emner som har færre detaljerede svar i stedet for mange mindre, individuelle svar.
-    dominating_topic: Du har skrevet mere end %{percent}% af svarene her, er der andre, som du gerne vil høre fra?
     get_a_room: Du har svaret @%{reply_username} %{count} gange, vidste du, at du kunne sende dem en personlig besked i stedet?
     too_many_replies: |
       ### Du kan ikke skrive flere indlæg i dette emne
@@ -699,7 +698,6 @@ da:
         one: "næsten %{count} år siden"
         other: "næsten %{count} år siden"
   password_reset:
-    no_token: "Beklager, dit skift-kodeords link er udløbet. Vælg 'Log ind' knappen og brug 'Jeg har glemt min adgangskode' for at få et nyt link."
     choose_new: "Vælg en ny adgangskode"
     choose: "Vælg en adgangskode"
     update: "Opdatér Adgangskode"
