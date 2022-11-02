@@ -1043,7 +1043,7 @@ en:
     user_fields:
       none: "(select an option)"
       required: 'Please enter a value for "%{name}"'
-      same_as_password: 'Your password should not be repeated in other fields.'
+      same_as_password: "Your password should not be repeated in other fields."
 
     user:
       said: "%{username}:"
@@ -1188,9 +1188,9 @@ en:
         tags_section: "Tags Section"
         tags_section_instruction: "Selected tags will be displayed under Sidebar's tags section."
         navigation_section: "Navigation"
-        list_destination_instruction: "When I click a topic list link in the sidebar with new or unread topics, take me to"
-        list_destination_default: "Default"
-        list_destination_unread_new: "New/Unread"
+        list_destination_instruction: "When there's new content in the sidebar..."
+        list_destination_default: "use the default link and show a badge for new items"
+        list_destination_unread_new: "link to unread/new and show a count of new items"
       change: "change"
       featured_topic: "Featured Topic"
       moderator: "%{user} is a moderator"
@@ -4254,7 +4254,7 @@ en:
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
-      description: 'Your welcome topic is the first thing new members will read. Think of it as your “elevator pitch” or “mission statement.” Let everyone know who this community is for, what they can expect to find here, and what you’d like them to do first.'
+      description: "Your welcome topic is the first thing new members will read. Think of it as your “elevator pitch” or “mission statement.” Let everyone know who this community is for, what they can expect to find here, and what you’d like them to do first."
       button_title: "Start Editing"
 
     until: "Until:"

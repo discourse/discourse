@@ -527,8 +527,84 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
   });
 
+  test("show suffix indicator for unread and new content on categories link", async function (assert) {
+    const { category1 } = setupUserSidebarCategories();
+
+    updateCurrentUser({
+      sidebar_list_destination: "default",
+    });
+
+    this.container.lookup("service:topic-tracking-state").loadStates([
+      {
+        topic_id: 1,
+        highest_post_number: 1,
+        last_read_post_number: null,
+        created_at: "2022-05-11T03:09:31.959Z",
+        category_id: category1.id,
+        notification_level: null,
+        created_in_new_period: true,
+        treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+      },
+      {
+        topic_id: 2,
+        highest_post_number: 12,
+        last_read_post_number: 11,
+        created_at: "2020-02-09T09:40:02.672Z",
+        category_id: category1.id,
+        notification_level: 2,
+        created_in_new_period: false,
+        treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+      },
+    ]);
+
+    await visit("/");
+
+    assert.ok(
+      exists(
+        `.sidebar-section-link-${category1.slug} .sidebar-section-link-suffix`
+      ),
+      "shows suffix indicator for unread content on categories link"
+    );
+
+    await publishToMessageBus("/unread", {
+      topic_id: 2,
+      message_type: "read",
+      payload: {
+        last_read_post_number: 12,
+        highest_post_number: 12,
+      },
+    });
+
+    assert.ok(
+      exists(
+        `.sidebar-section-link-${category1.slug} .sidebar-section-link-suffix`
+      ),
+      "shows suffix indicator for new topics on categories link"
+    );
+
+    await publishToMessageBus("/unread", {
+      topic_id: 1,
+      message_type: "read",
+      payload: {
+        last_read_post_number: 1,
+        highest_post_number: 1,
+      },
+    });
+
+    assert.ok(
+      !exists(
+        `.sidebar-section-link-${category1.slug} .sidebar-section-link-suffix`
+      ),
+      "hides suffix indicator when there's no new/unread content on category link"
+    );
+  });
+
   test("new and unread count for categories link", async function (assert) {
     const { category1, category2 } = setupUserSidebarCategories();
+
+    updateCurrentUser({
+      sidebar_list_destination: "unread_new",
+    });
 
     this.container.lookup("service:topic-tracking-state").loadStates([
       {
