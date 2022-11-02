@@ -1270,7 +1270,7 @@ a.mention-group {
   font-size: 0.93em;
   color: var(--primary);
 
-  &.notify,
+  &[data-mentionable-user-count],
   .small-action-desc & {
     color: var(--primary-high-or-secondary-low);
     padding: 2px 4px;

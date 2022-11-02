@@ -18,8 +18,6 @@ import {
   linkSeenHashtags,
 } from "discourse/lib/link-hashtags";
 import {
-  cannotSee,
-  cannotSeeGroups,
   fetchUnseenMentions,
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
@@ -461,13 +459,15 @@ export default Component.extend(ComposerUploadUppy, {
   },
 
   _renderUnseenMentions(preview, unseen) {
-    // 'Create a New Topic' scenario is not supported (per conversation with codinghorror)
-    // https://meta.discourse.org/t/taking-another-1-7-release-task/51986/7
-    fetchUnseenMentions(unseen, this.get("composer.topic.id")).then((r) => {
+    fetchUnseenMentions({
+      names: unseen,
+      topicId: this.get("composer.topic.id"),
+      allowedNames: this.get("composer.targetRecipients"),
+    }).then((response) => {
       linkSeenMentions(preview, this.siteSettings);
       this._warnMentionedGroups(preview);
       this._warnCannotSeeMention(preview);
-      this._warnHereMention(r.here_count);
+      this._warnHereMention(response.here_count);
     });
   },
 
@@ -482,24 +482,27 @@ export default Component.extend(ComposerUploadUppy, {
 
   _warnMentionedGroups(preview) {
     schedule("afterRender", () => {
-      let found = this.warnedGroupMentions || [];
-      preview?.querySelectorAll(".mention-group.notify")?.forEach((mention) => {
-        if (this._isInQuote(mention)) {
-          return;
-        }
+      const found = this.warnedGroupMentions || [];
 
-        let name = mention.dataset.name;
-        if (!found.includes(name)) {
-          this.groupsMentioned([
-            {
-              name,
-              user_count: mention.dataset.mentionableUserCount,
-              max_mentions: mention.dataset.maxMentions,
-            },
-          ]);
+      preview
+        ?.querySelectorAll(".mention-group[data-mentionable-user-count]")
+        ?.forEach((mention) => {
+          if (this._isInQuote(mention)) {
+            return;
+          }
+
+          const name = mention.dataset.name;
+          if (found.includes(name)) {
+            return;
+          }
           found.push(name);
-        }
-      });
+
+          this.groupsMentioned({
+            name,
+            userCount: mention.dataset.mentionableUserCount,
+            maxMentions: mention.dataset.maxMentions,
+          });
+        });
 
       this.set("warnedGroupMentions", found);
     });
@@ -507,7 +510,6 @@ export default Component.extend(ComposerUploadUppy, {
 
   _warnCannotSeeMention(preview) {
     const composerDraftKey = this.get("composer.draftKey");
-
     if (composerDraftKey === Composer.NEW_PRIVATE_MESSAGE_KEY) {
       return;
     }
@@ -515,52 +517,59 @@ export default Component.extend(ComposerUploadUppy, {
     schedule("afterRender", () => {
       const found = this.warnedCannotSeeMentions || [];
 
-      preview?.querySelectorAll(".mention.cannot-see")?.forEach((mention) => {
+      preview?.querySelectorAll(".mention[data-reason]")?.forEach((mention) => {
         const name = mention.dataset.name;
+        if (found.includes(name)) {
+          return;
+        }
+        found.push(name);
 
-        if (!found.includes(name)) {
-          // add a delay to allow for typing, so you don't open the warning right away
-          // previously we would warn after @bob even if you were about to mention @bob2
+        // add a delay to allow for typing, so you don't open the warning right away
+        // previously we would warn after @bob even if you were about to mention @bob2
+        discourseLater(
+          this,
+          () => {
+            if (
+              preview?.querySelectorAll(
+                `.mention[data-reason][data-name="${name}"]`
+              )?.length > 0
+            ) {
+              this.cannotSeeMention({
+                name,
+                reason: mention.dataset.reason,
+              });
+            }
+          },
+          2000
+        );
+      });
+
+      preview
+        ?.querySelectorAll(".mention-group[data-reason]")
+        ?.forEach((mention) => {
+          const name = mention.dataset.name;
+          if (found.includes(name)) {
+            return;
+          }
+          found.push(name);
+
           discourseLater(
             this,
             () => {
               if (
                 preview?.querySelectorAll(
-                  `.mention.cannot-see[data-name="${name}"]`
+                  `.mention-group[data-reason][data-name="${name}"]`
                 )?.length > 0
               ) {
-                this.cannotSeeMention([{ name, reason: cannotSee[name] }]);
-                found.push(name);
+                this.cannotSeeMention({
+                  name,
+                  reason: mention.dataset.reason,
+                  isGroup: true,
+                });
               }
             },
             2000
           );
-        }
-      });
-
-      preview
-        ?.querySelectorAll(".mention-group.cannot-see-group")
-        ?.forEach((mention) => {
-          const name = mention.dataset.name;
-
-          if (!found.includes(name)) {
-            discourseLater(
-              this,
-              () => {
-                if (
-                  preview?.querySelectorAll(
-                    `.mention-group.cannot-see-group[data-name="${name}"]`
-                  )?.length > 0
-                ) {
-                  this.cannotSeeGroupMention([
-                    { name, reason: cannotSeeGroups[name] },
-                  ]);
-                  found.push(name);
-                }
-              },
-              2000
-            );
-          }
         });
 
       this.set("warnedCannotSeeMentions", found);
@@ -572,13 +581,7 @@ export default Component.extend(ComposerUploadUppy, {
       return;
     }
 
-    discourseLater(
-      this,
-      () => {
-        this.hereMention(hereCount);
-      },
-      2000
-    );
+    this.hereMention(hereCount);
   },
 
   @bind

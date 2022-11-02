@@ -43,13 +43,12 @@ acceptance("Composer - Messages", function (needs) {
 acceptance("Composer - Messages - Cannot see group", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
-    server.get("/u/is_local_username", () => {
+    server.get("/composer/mentions", () => {
       return helper.response({
-        valid: [],
-        valid_groups: ["staff"],
-        mentionable_groups: [],
-        cannot_see: [],
-        cannot_see_groups: { staff: "not_allowed" },
+        users: [],
+        user_reasons: {},
+        groups: { staff: { user_count: 30 } },
+        group_reasons: { staff: "not_allowed" },
         max_users_notified_per_group_mention: 100,
       });
     });
