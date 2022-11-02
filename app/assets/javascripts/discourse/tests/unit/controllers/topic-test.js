@@ -83,12 +83,10 @@ module("Unit | Controller | topic", function (hooks) {
     const opts = { force_destroy: true };
     const model = Topic.create();
     const siteSettings = this.owner.lookup("service:site-settings");
-
     siteSettings.min_topic_views_for_delete_confirm = 5;
 
     const controller = this.owner.lookup("controller:topic");
     controller.setProperties({ model });
-
     model.set("views", 100);
 
     const stub = sinon.stub(model, "destroy");
