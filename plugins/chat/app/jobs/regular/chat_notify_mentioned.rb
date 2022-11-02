@@ -51,6 +51,7 @@ module Jobs
       when :global_mentions
         data[:identifier] = "all"
       else
+        data[:identifier] = identifier_type if identifier_type
         data[:is_group_mention] = true
       end
 
