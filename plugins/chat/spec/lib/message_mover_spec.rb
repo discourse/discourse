@@ -53,7 +53,7 @@ describe Chat::MessageMover do
       expect {
         described_class.new(
           acting_user: acting_user,
-          source_channel: Fabricate(:dm_channel),
+          source_channel: Fabricate(:direct_message_channel),
           message_ids: move_message_ids,
         ).move_to_channel(destination_channel)
       }.to raise_error(Chat::MessageMover::InvalidChannel)
@@ -62,7 +62,7 @@ describe Chat::MessageMover do
           acting_user: acting_user,
           source_channel: source_channel,
           message_ids: move_message_ids,
-        ).move_to_channel(Fabricate(:dm_channel))
+        ).move_to_channel(Fabricate(:direct_message_channel))
       }.to raise_error(Chat::MessageMover::InvalidChannel)
     end
 

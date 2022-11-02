@@ -7,13 +7,13 @@ module Chat::DirectMessageChannelCreator
   def self.create!(acting_user:, target_users:)
     Guardian.new(acting_user).ensure_can_create_direct_message!
     target_users.uniq!
-    direct_messages_channel = DirectMessageChannel.for_user_ids(target_users.map(&:id))
-    if direct_messages_channel
-      chat_channel = ChatChannel.find_by!(chatable: direct_messages_channel)
+    direct_message = DirectMessage.for_user_ids(target_users.map(&:id))
+    if direct_message
+      chat_channel = ChatChannel.find_by!(chatable: direct_message)
     else
       ensure_actor_can_communicate!(acting_user, target_users)
-      direct_messages_channel = DirectMessageChannel.create!(user_ids: target_users.map(&:id))
-      chat_channel = direct_messages_channel.create_chat_channel!
+      direct_message = DirectMessage.create!(user_ids: target_users.map(&:id))
+      chat_channel = direct_message.create_chat_channel!
     end
 
     update_memberships(acting_user, target_users, chat_channel.id)

@@ -42,12 +42,7 @@ describe Jobs::DeleteOldChatMessages do
     )
   end
 
-  fab!(:dm_channel) do
-    Fabricate(
-      :chat_channel,
-      chatable: Fabricate(:direct_message_channel, users: [Fabricate(:user)]),
-    )
-  end
+  fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [Fabricate(:user)]) }
   fab!(:dm_days_old_0) do
     Fabricate(:chat_message, chat_channel: dm_channel, message: "hi", created_at: base_date)
   end

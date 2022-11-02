@@ -7,12 +7,10 @@ RSpec.shared_examples "a chat channel model" do
   fab!(:group) { Fabricate(:group) }
   fab!(:private_category) { Fabricate(:private_category, group: group) }
   fab!(:private_category_channel) { Fabricate(:category_channel, chatable: private_category) }
-  fab!(:direct_message_channel) do
-    Fabricate(:dm_channel, chatable: Fabricate(:direct_message_channel, users: [user1, user2]))
-  end
+  fab!(:direct_message_channel) { Fabricate(:direct_message_channel, users: [user1, user2]) }
 
   it { is_expected.to belong_to(:chatable) }
-  it { is_expected.to belong_to(:direct_message_channel).with_foreign_key(:chatable_id) }
+  it { is_expected.to belong_to(:direct_message).with_foreign_key(:chatable_id) }
   it { is_expected.to have_many(:chat_messages) }
   it { is_expected.to have_many(:user_chat_channel_memberships) }
   it { is_expected.to have_one(:chat_channel_archive) }

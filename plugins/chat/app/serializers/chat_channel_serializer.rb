@@ -44,8 +44,8 @@ class ChatChannelSerializer < ApplicationSerializer
     case object.chatable_type
     when "Category"
       BasicCategorySerializer.new(object.chatable, root: false).as_json
-    when "DirectMessageChannel"
-      DirectMessageChannelSerializer.new(object.chatable, scope: scope, root: false).as_json
+    when "DirectMessage"
+      DirectMessageSerializer.new(object.chatable, scope: scope, root: false).as_json
     when "Site"
       nil
     end

@@ -20,7 +20,7 @@ module(
         this.set(
           "chatChannel",
           ChatChannel.create({
-            chatable_type: "DirectMessageChannel",
+            chatable_type: "DirectMessage",
             chatable: {
               users: [{ id: 1 }],
             },
@@ -43,7 +43,7 @@ module(
         this.set(
           "chatChannel",
           ChatChannel.create({
-            chatable_type: "DirectMessageChannel",
+            chatable_type: "DirectMessage",
             chatable: {
               users: [
                 { name: "Tomtom" },

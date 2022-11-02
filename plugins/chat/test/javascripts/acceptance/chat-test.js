@@ -95,7 +95,7 @@ acceptance("Discourse Chat - without unread", function (needs) {
           chat_channels: [],
           chatable: { users: [hawkAsJson] },
           chatable_id: 16,
-          chatable_type: "DirectMessageChannel",
+          chatable_type: "DirectMessage",
           chatable_url: null,
           id: 75,
           title: "@hawk",
@@ -116,7 +116,7 @@ acceptance("Discourse Chat - without unread", function (needs) {
         chat_channel: {
           id: 75,
           title: "hawk",
-          chatable_type: "DirectMessageChannel",
+          chatable_type: "DirectMessage",
           last_message_sent_at: "2021-07-20T08:14:16.950Z",
           chatable: {
             users: [{ username: "hawk" }],

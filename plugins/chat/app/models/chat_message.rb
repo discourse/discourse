@@ -28,7 +28,7 @@ class ChatMessage < ActiveRecord::Base
         }
 
   scope :in_dm_channel,
-        -> { joins(:chat_channel).where(chat_channel: { chatable_type: "DirectMessageChannel" }) }
+        -> { joins(:chat_channel).where(chat_channel: { chatable_type: "DirectMessage" }) }
 
   scope :created_before, ->(date) { where("chat_messages.created_at < ?", date) }
 

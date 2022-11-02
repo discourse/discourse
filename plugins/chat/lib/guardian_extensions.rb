@@ -153,10 +153,10 @@ module Chat::GuardianExtensions
     return false if !can_modify_channel_message?(message.chat_channel)
 
     if message.user_id == current_user.id
-      case chatable.class.name
-      when "Category"
+      case chatable
+      when Category
         return can_see_category?(chatable)
-      when "DirectMessageChannel"
+      when DirectMessage
         return true
       end
     end

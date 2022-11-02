@@ -10,15 +10,8 @@ describe Chat::DirectMessageChannelCreator do
   before { Group.refresh_automatic_groups! }
 
   context "with an existing direct message channel" do
-    fab!(:dm_chat_channel) do
-      Fabricate(
-        :chat_channel,
-        chatable: Fabricate(:direct_message_channel, users: [user_1, user_2, user_3]),
-      )
-    end
-    fab!(:own_chat_channel) do
-      Fabricate(:chat_channel, chatable: Fabricate(:direct_message_channel, users: [user_1]))
-    end
+    fab!(:dm_chat_channel) { Fabricate(:direct_message_channel, users: [user_1, user_2, user_3]) }
+    fab!(:own_chat_channel) { Fabricate(:direct_message_channel, users: [user_1]) }
 
     it "doesn't create a new chat channel" do
       existing_channel = nil

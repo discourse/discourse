@@ -108,8 +108,7 @@ describe ChatChannelMembershipsQuery do
     end
 
     context "when chatable is direct channel" do
-      fab!(:chatable_1) { Fabricate(:direct_message_channel, users: [user_1, user_2]) }
-      fab!(:channel_1) { Fabricate(:dm_channel, chatable: chatable_1) }
+      fab!(:channel_1) { Fabricate(:direct_message_channel, users: [user_1, user_2]) }
 
       context "when no memberships exists" do
         it "returns an empty array" do

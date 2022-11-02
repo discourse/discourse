@@ -19,7 +19,7 @@ module("Discourse Chat | Component | chat-channel-leave-btn", function (hooks) {
       this.set("onLeaveChannel", () => this.set("foo", 2));
       this.set("channel", {
         id: 1,
-        chatable_type: "DirectMessageChannel",
+        chatable_type: "DirectMessage",
         chatable: {
           users: [{ id: 1 }],
         },
@@ -42,7 +42,7 @@ module("Discourse Chat | Component | chat-channel-leave-btn", function (hooks) {
     template: hbs`{{chat-channel-leave-btn channel=channel}}`,
 
     beforeEach() {
-      this.set("channel", { chatable_type: "DirectMessageChannel" });
+      this.set("channel", { chatable_type: "DirectMessage" });
     },
 
     async test(assert) {

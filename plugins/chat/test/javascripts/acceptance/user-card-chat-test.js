@@ -51,7 +51,7 @@ acceptance("Discourse Chat - User card test", function (needs) {
             ],
           },
           chatable_id: 16,
-          chatable_type: "DirectMessageChannel",
+          chatable_type: "DirectMessage",
           chatable_url: null,
           id: 75,
           title: "@hawk",

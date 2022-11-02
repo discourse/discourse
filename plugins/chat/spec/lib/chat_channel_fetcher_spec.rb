@@ -4,10 +4,10 @@ describe Chat::ChatChannelFetcher do
   fab!(:category) { Fabricate(:category, name: "support") }
   fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
   fab!(:category_channel) { Fabricate(:category_channel, chatable: category) }
-  fab!(:dm_channel1) { Fabricate(:direct_message_channel) }
-  fab!(:dm_channel2) { Fabricate(:direct_message_channel) }
-  fab!(:direct_message_channel1) { Fabricate(:dm_channel, chatable: dm_channel1) }
-  fab!(:direct_message_channel2) { Fabricate(:dm_channel, chatable: dm_channel2) }
+  fab!(:dm_channel1) { Fabricate(:direct_message) }
+  fab!(:dm_channel2) { Fabricate(:direct_message) }
+  fab!(:direct_message_channel1) { Fabricate(:direct_message_channel, chatable: dm_channel1) }
+  fab!(:direct_message_channel2) { Fabricate(:direct_message_channel, chatable: dm_channel2) }
   fab!(:user1) { Fabricate(:user) }
   fab!(:user2) { Fabricate(:user) }
 
@@ -124,7 +124,7 @@ describe Chat::ChatChannelFetcher do
       end
 
       it "returns all the channels if the user is a member of the DM channel also" do
-        DirectMessageUser.create!(user: user1, direct_message_channel: dm_channel1)
+        DirectMessageUser.create!(user: user1, direct_message: dm_channel1)
         expect(subject.all_secured_channel_ids(guardian)).to match_array(
           [category_channel.id, direct_message_channel1.id],
         )
@@ -285,16 +285,16 @@ describe Chat::ChatChannelFetcher do
         user: user1,
         following: true,
       )
-      DirectMessageUser.create!(direct_message_channel: dm_channel1, user: user1)
-      DirectMessageUser.create!(direct_message_channel: dm_channel1, user: user2)
+      DirectMessageUser.create!(direct_message: dm_channel1, user: user1)
+      DirectMessageUser.create!(direct_message: dm_channel1, user: user2)
       Fabricate(
         :user_chat_channel_membership_for_dm,
         chat_channel: direct_message_channel2,
         user: user1,
         following: true,
       )
-      DirectMessageUser.create!(direct_message_channel: dm_channel2, user: user1)
-      DirectMessageUser.create!(direct_message_channel: dm_channel2, user: user2)
+      DirectMessageUser.create!(direct_message: dm_channel2, user: user1)
+      DirectMessageUser.create!(direct_message: dm_channel2, user: user2)
 
       direct_message_channel1.update!(last_message_sent_at: 1.day.ago)
       direct_message_channel2.update!(last_message_sent_at: 1.hour.ago)
@@ -311,7 +311,7 @@ describe Chat::ChatChannelFetcher do
         user: user1,
         following: true,
       )
-      DirectMessageUser.create!(direct_message_channel: dm_channel1, user: user2)
+      DirectMessageUser.create!(direct_message: dm_channel1, user: user2)
 
       expect(
         subject.secured_direct_message_channels(user1.id, memberships, guardian).map(&:id),
@@ -326,8 +326,8 @@ describe Chat::ChatChannelFetcher do
           user: user1,
           following: true,
         )
-      DirectMessageUser.create!(direct_message_channel: dm_channel1, user: user1)
-      DirectMessageUser.create!(direct_message_channel: dm_channel1, user: user2)
+      DirectMessageUser.create!(direct_message: dm_channel1, user: user1)
+      DirectMessageUser.create!(direct_message: dm_channel1, user: user2)
 
       Fabricate(:chat_message, user: user2, chat_channel: direct_message_channel1)
       Fabricate(:chat_message, user: user2, chat_channel: direct_message_channel1)
