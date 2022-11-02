@@ -216,6 +216,30 @@ RSpec.describe InviteRedeemer do
       expect(user.trust_level).to eq(2)
     end
 
+    it "adds an entry to the group logs when the invited user is added to a group" do
+      group = Fabricate(:group)
+      InvitedGroup.create(group_id: group.id, invite_id: invite.id)
+      group.add_owner(invite.invited_by)
+
+      GroupHistory.destroy_all
+
+      user = InviteRedeemer.new(
+        invite: invite,
+        email: invite.email,
+        username: username,
+        name: name,
+        password: password
+      ).redeem
+
+      expect(group.reload.usernames.split(",")).to include(user.username)
+      expect(GroupHistory.exists?(
+        target_user_id: user.id,
+        acting_user: invite.invited_by.id,
+        group_id: group.id,
+        action: GroupHistory.actions[:add_user_to_group]
+      )).to eq(true)
+    end
+
     it "only allows one user to be created per invite" do
       user = invite_redeemer.redeem
       invite.reload
