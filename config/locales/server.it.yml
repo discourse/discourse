@@ -495,7 +495,6 @@ it:
       Puoi modificare la risposta precedente per aggiungere una citazione evidenziando il testo e selezionando il pulsante <b>Cita</b> che comparirà.
 
       E' più facile per chiunque leggere argomenti che hanno poche risposte ma più dettagliate, rispetto a molte brevi risposte singole.
-    dominating_topic: Hai pubblicato più del %{percent}% delle risposte qui; lascia esprimere anche qualcun altro.
     get_a_room: Abbiamo notato che hai già risposto %{count} volte a @%{reply_username}. Sapevi che puoi anche scambiare messaggi personali con questa persona?
     too_many_replies: |
       ### Hai raggiungo il limite di risposte per questo argomento
@@ -764,7 +763,6 @@ it:
         one: "quasi %{count} anno fa"
         other: "quasi %{count} anni fa"
   password_reset:
-    no_token: "Spiacenti, il collegamento per il cambio password è scaduto. Clicca su Accedi e poi su 'Ho dimenticato la password' per ricevere un nuovo collegamento."
     choose_new: "Scegli una nuova password"
     choose: "Scegli una password"
     update: "Aggiorna Password"
@@ -3554,7 +3552,6 @@ it:
     png_to_jpg_conversion_failure_message: "Si è verificato un errore durante la conversione da PNG a JPG."
     optimize_failure_message: "Si è verificato un errore nell'ottimizzare l'immagine caricata."
     download_failure: "Il download del file dal provider esterno non è riuscito."
-    size_mismatch_failure: "La dimensione del file caricato su S3 non corrispondeva alla dimensione prevista per lo stub di caricamento esterno. %{additional_detail}"
     create_multipart_failure: "Errore nella creazione del caricamento multipart nell'archivio esterno."
     abort_multipart_failure: "Errore nell’annullamento del caricamento multipart nell'archivio esterno."
     complete_multipart_failure: "Impossibile completare il caricamento multipart nell'archivio esterno."

@@ -585,7 +585,6 @@ ca:
         one: "fa gairebé %{count} any"
         other: "fa gairebé %{count} any"
   password_reset:
-    no_token: "Aquest enllaç de canvi de contrasenya és massa antic. Trieu el botó d'inici de sessió i feu servir \"He oblidat la contrasenya\" per a obtenir un enllaç nou."
     choose_new: "Trieu una contrasenya nova"
     choose: "Trieu una contrasenya"
     update: "Actualitza la contrasenya"

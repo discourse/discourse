@@ -193,7 +193,7 @@ fi:
     themes:
       default_description: "Oletus"
       broken_theme_alert: "Sivustosi ei välttämättä toimi, koska teemassa tai komponentissa on virheitä."
-      error_caused_by: "Aiheuttaja: '%{name}'. Päivitä, määritä uudelleen tai poista se käytöstä <a target='blank' href='%{path}'>napsauttamalla tätä</a>."
+      error_caused_by: "Aiheuttaja: '%{name}'. Päivitä, määritä uudelleen tai poista se käytöstä <a target='blank' href='%{path}'>klikkaamalla tätä</a>."
       only_admins: "(tämä viesti näytetään vain sivuston ylläpitäjille)"
     broken_decorator_alert: "Viestit eivät välttämättä näy oikein, koska yksi sivustosi viestien sisällön somistajista ilmoitti virheestä."
     s3:
@@ -1065,7 +1065,7 @@ fi:
       dismiss_messages_tooltip: "Merkitse kaikki lukemattomien yksityisviestien ilmoitukset luetuiksi"
       no_messages_title: "Sinulla ei ole viestejä"
       no_messages_body: >
-        Haluatko suoraa henkilökohtaista keskustelua jonkun kanssa normaalin keskusteluvirran ulkopuolella? Lähetä hänelle viesti napsauttamalla hänen profiilikuvaansa ja käyttämällä viestipainiketta %{icon}.<br><br> Jos tarvitset apua, voit <a href='%{aboutUrl}'>lähettää viestin henkilökunnan jäsenelle</a>.
+        Haluatko suoraa henkilökohtaista keskustelua jonkun kanssa normaalin keskusteluvirran ulkopuolella? Lähetä hänelle viesti klikkaamalla hänen profiilikuvaansa ja käyttämällä viestipainiketta %{icon}.<br><br> Jos tarvitset apua, voit <a href='%{aboutUrl}'>lähettää viestin henkilökunnan jäsenelle</a>.
       no_bookmarks_title: "Et ole vielä lisännyt mitään kirjanmerkkeihin"
       no_bookmarks_body: >
         Aloita kirjanmerkkien lisääminen painikkeella %{icon} ja ne listataan tähän helposti löydettäväksi. Voit ajastaa myös muistutuksen!
@@ -1078,7 +1078,7 @@ fi:
         Saat tässä paneelissa ilmoituksen muunlaisesta toiminnasta, joka voi olla sinulle merkityksellistä – esimerkiksi kun joku linkittää johonkin viesteistäsi tai muokkaa jotakin niistä.
       no_notifications_page_title: "Sinulla ei ole vielä ilmoituksia"
       no_notifications_page_body: >
-        Saat ilmoituksia sinulle relevantista toiminnasta, kuten omien ketjujesi viesteistä ja vastauksista, kun joku <b>@mainitsee</b> nimesi tai lainaa sinua tai vastaa tarkkailemiisi ketjuihin. Ilmoitukset lähetetään sinulle sähköpostitse silloin, kun et ole kirjautunut hetkeen. <br><br> Napsauta painiketta %{icon}, kun haluat ilmoituksia tietystä ketjusta, alueista tai tunnisteista. Lisää valintoja löydät <a href='%{preferencesUrl}'>ilmoitusasetuksista</a>.
+        Saat ilmoituksia sinulle relevantista toiminnasta, kuten omien ketjujesi viesteistä ja vastauksista, kun joku <b>@mainitsee</b> nimesi tai lainaa sinua tai vastaa tarkkailemiisi ketjuihin. Ilmoitukset lähetetään sinulle sähköpostitse silloin, kun et ole kirjautunut hetkeen. <br><br> Klikkaa painiketta %{icon}, kun haluat ilmoituksia tietystä ketjusta, alueista tai tunnisteista. Lisää valintoja löydät <a href='%{preferencesUrl}'>ilmoitusasetuksista</a>.
       first_notification: "Ensimmäinen ilmoitus sinulle! Valitse se aloittaaksesi."
       dynamic_favicon: "Näytä määrät selaimen kuvakkeessa"
       skip_new_user_tips:
@@ -1113,7 +1113,7 @@ fi:
         tags_section: "Tunnisteet-osio"
         tags_section_instruction: "Valitut tunnisteet näkyvät sivupalkin tunnisteet-osiossa."
         navigation_section: "Navigointi"
-        list_destination_instruction: "Kun napsautan sivupalkin ketjuluettelon linkkiä, jossa on uusia tai lukemattomia ketjuja, siirry kohtaan"
+        list_destination_instruction: "Kun klikkaan sivupalkin ketjuluettelon linkkiä, jossa on uusia tai lukemattomia ketjuja, siirry kohtaan"
         list_destination_default: "Oletus"
         list_destination_unread_new: "Uudet/lukemattomat"
       change: "vaihda"
@@ -2006,7 +2006,7 @@ fi:
       drafts_offline: "offline-luonnokset"
       edit_conflict: "muokkauskonflikti"
       esc: "esc"
-      esc_label: "Kuittaa napsauttamalla tai painamalla Esc-näppäintä"
+      esc_label: "Kuittaa klikkaamalla tai painamalla Esc-näppäintä"
       ok_proceed: "Ok, jatka"
       group_mentioned_limit:
         one: "<b>Varoitus!</b> Olet maininnut ryhmän <a href='%{group_link}'>%{group}</a>, mutta ryhmässä on yli %{count} käyttäjä, mikä on ylläpitäjän asettama rajoitus maininnoille. Kukaan ei saa ilmoitusta."
@@ -2425,8 +2425,8 @@ fi:
           other: "Kirjanmerkit – %{count} lukematonta kirjanmerkkiä"
         review_queue: "Tarkastusjono"
         review_queue_with_unread:
-          one: "Tarkistusjono – %{count} kohde vaatii tarkistuksen"
-          other: "Tarkistusjono – %{count} kohdetta vaatii tarkistuksen"
+          one: "Tarkastusjono – %{count} kohde vaatii tarkistuksen"
+          other: "Tarkastusjono – %{count} kohdetta vaatii tarkistuksen"
         other_notifications: "Muut ilmoitukset"
         other_notifications_with_unread:
           one: "Muut ilmoitukset – %{count} lukematon ilmoitus"
@@ -2941,8 +2941,8 @@ fi:
       sr_collapse_replies: "Kutista upotetut vastaukset"
       sr_date: "Viestin päivämäärä"
       sr_expand_replies:
-        one: "Tällä viestillä on %{count} vastaus. Laajenna napsauttamalla."
-        other: "Tällä viestillä on %{count} vastausta. Laajenna napsauttamalla."
+        one: "Tällä viestillä on %{count} vastaus. Laajenna klikkaamalla."
+        other: "Tällä viestillä on %{count} vastausta. Laajenna klikkaamalla."
       expand_collapse: "laajenna/kutista"
       sr_below_embedded_posts_description: "viestin %{post_number} vastaukset"
       sr_embedded_reply_description: "käyttäjän %{username} vastaus viestiin %{post_number}"
@@ -3600,7 +3600,7 @@ fi:
         edit: "%{shortcut} Muokkaa viestiä"
         delete: "%{shortcut} Poista viesti"
         mark_muted: "%{shortcut} Vaimenna ketju"
-        mark_regular: "%{shortcut} Normaali ketju (oletus)"
+        mark_regular: "%{shortcut} Tavallinen ketju (oletus)"
         mark_tracking: "%{shortcut} Seuraa ketjua"
         mark_watching: "%{shortcut} Tarkkaile ketjua"
         print: "%{shortcut} Tulosta ketju"
@@ -3868,13 +3868,13 @@ fi:
             archive: "Arkisto"
         tags:
           none: "Et ole lisännyt tunnisteita."
-          click_to_get_started: "Aloita napsauttamalla tätä."
+          click_to_get_started: "Aloita klikkaamalla tätä."
           header_link_text: "Tunnisteet"
           header_action_title: "muokkaa sivupalkin tunnisteitasi"
           configure_defaults: "Määritä oletukset"
         categories:
           none: "Et ole lisännyt alueita."
-          click_to_get_started: "Aloita napsauttamalla tätä."
+          click_to_get_started: "Aloita klikkaamalla tätä."
           header_link_text: "Alueet"
           header_action_title: "muokkaa sivupalkin alueitasi"
           configure_defaults: "Määritä oletukset"
@@ -3913,8 +3913,8 @@ fi:
               title: "käsittele"
               pending_count: "%{count} odottaa"
     welcome_topic_banner:
-      title: "Luo tervetuloaiheesi"
-      description: 'Tervetuloaiheesi on ensimmäinen asia, jonka uudet jäsenet lukevat. Ajattele sitä "hissipuheenasi" tai "tavoitelausumanasi". Kerro kaikille, kenelle tämä yhteisö on tarkoitettu, mitä he voivat odottaa löytävänsä täältä ja mitä haluat heidän tekevän ensin.'
+      title: "Luo tervetuloketjusi"
+      description: 'Tervetuloketjusi on ensimmäinen asia, jonka uudet jäsenet lukevat. Ajattele sitä "hissipuheenasi" tai "tavoitelausumanasi". Kerro kaikille, kenelle tämä yhteisö on tarkoitettu, mitä he voivat odottaa löytävänsä täältä ja mitä haluat heidän tekevän ensin.'
       button_title: "Aloita muokkaaminen"
     until: "Asti:"
   admin_js:
@@ -4188,7 +4188,6 @@ fi:
         go_back: "Takaisin luetteloon"
         payload_url: "Tietosisällön URL"
         payload_url_placeholder: "https://esimerkki.fi/saapuva"
-        warn_local_payload_url: "Näyttäisi siltä, että yrität asettaa webhookin paikalliseen URL-osoitteeseen. Paikalliseen osoitteeseen toimitetulla tapahtumalla voi olla sivuvaikutuksia tai se voi käyttäytyä odottamattomasti. Jatketaanko?"
         secret_invalid: "Salausavaimessa ei voi olla tyhjiä merkkejä."
         secret_too_short: "Salausavaimessa täytyy olla ainakin 12 merkkiä."
         secret_placeholder: "Valinnainen merkkijono, käytetään luotaessa salausallekirjoitusta"
@@ -4477,7 +4476,6 @@ fi:
           last_attempt: "Asennusprosessi ei päättynyt, viimeisin yritys:"
           remote_branch: "Haaran nimi (valinnainen)"
           public_key: "Anna tietovaraston käyttöoikeus seuraavalle julkiselle avaimelle:"
-          public_key_note: "Kun olet syöttänyt kelvollisen yksityisen tietovaraston URL-osoitteen yllä, SSH-avain luodaan ja näytetään tässä."
           install: "Asenna"
           installed: "Asennettu"
           install_popular: "Suosittuja"
@@ -5021,7 +5019,7 @@ fi:
         suspended: "Hyllytetty?"
         staged: "Esikäyttäjä?"
         show_admin_profile: "Ylläpito"
-        manage_user: "Hallinnoi käyttäjää"
+        manage_user: "Hallitse käyttäjää"
         show_public_profile: "Näytä julkinen profiili"
         impersonate: "Esiinny käyttäjänä"
         action_logs: "Toimintaloki"
@@ -5156,7 +5154,6 @@ fi:
         trust_level_2_users: "Käyttäjät luottamustasolla 2"
         trust_level_3_requirements: "Luottamustason 3 vaatimukset"
         trust_level_locked_tip: "luottamustaso on lukittu, järjestelmä ei ylennä tai alenna käyttäjää"
-        trust_level_unlocked_tip: "luottamustason lukitus on poistettu, järjestelmä voi ylentää tai alentaa käyttäjän"
         lock_trust_level: "Lukitse luottamustaso"
         unlock_trust_level: "Poista luottamustason lukitus"
         silenced_count: "Hiljennetty"
@@ -5403,13 +5400,13 @@ fi:
           upload_csv: Lataa CSV, jossa on joko käyttäjien sähköpostiosoitteita tai käyttäjätunnuksia
           aborted: Lataa CSV, joka sisältää joko käyttäjien sähköpostiosoitteita tai käyttäjätunnuksia
           success: CSV tuli perille ja %{count} käyttäjää saavat kunniamerkkinsä pian.
-          csv_has_unmatched_users: "Seuraavat merkinnät ovat CSV-tiedostossa, mutta niitä ei voitu yhdistää olemassa oleviin käyttäjiin, joten he eivät saa merkkiä:"
-          csv_has_unmatched_users_truncated_list: "CSV-tiedostossa oli %{count} merkintää, joita ei voitu yhdistää olemassa oleviin käyttäjiin, joten he eivät saa merkkiä. Koska yhdistämättömiä merkintöjä on paljon, vain 100 ensimmäistä näytetään:"
+          csv_has_unmatched_users: "Seuraavat merkinnät ovat CSV-tiedostossa, mutta niitä ei voitu yhdistää olemassa oleviin käyttäjiin, joten he eivät saa kunniamerkkiä:"
+          csv_has_unmatched_users_truncated_list: "CSV-tiedostossa oli %{count} merkintää, joita ei voitu yhdistää olemassa oleviin käyttäjiin, joten he eivät saa kunniamerkkiä. Koska yhdistämättömiä merkintöjä on paljon, vain 100 ensimmäistä näytetään:"
           replace_owners: Poista kunniamerkki aiemmilta omistajilta
           grant_existing_holders: Myönnä lisämerkkejä nykyisille kunniamerkkien haltijoille
       emoji:
         title: "Emoji"
-        help: "Lisää uusi emoji, joka on kaikkien käytettävissä. Vedä ja pudota useita tiedostoja kerralla antamatta nimeä luodaksesi emojeja niiden tiedostonimillä. Valittua ryhmää käytetään kaikille tiedostoille, jotka lisätään samaan aikaan. Voit myös avata tiedostovalitsimen napsauttamalla Lisää uusi hymiö."
+        help: "Lisää uusi emoji, joka on kaikkien käytettävissä. Vedä ja pudota useita tiedostoja kerralla antamatta nimeä luodaksesi emojeja niiden tiedostonimillä. Valittua ryhmää käytetään kaikille tiedostoille, jotka lisätään samaan aikaan. Voit myös avata tiedostovalitsimen klikkaamalla Lisää uusi hymiö."
         add: "Lisää uusi emoji"
         choose_files: "Valitse tiedostot"
         uploading: "Ladataan..."

@@ -487,7 +487,6 @@ hu:
         one: "majdnem %{count} éve"
         other: "majdnem %{count} éve"
   password_reset:
-    no_token: "Ez a jelszómódosítási hivatkozás túl régi. Ahhoz, hogy új hivatkozást kapjon, válassza a Bejelentkezés gombot, és használja az „Elfelejtettem a jelszót” lehetőséget."
     choose_new: "Válasszon új jelszót"
     choose: "Válasszon jelszót"
     update: "Jelszó frissítése"

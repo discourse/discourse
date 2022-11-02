@@ -495,7 +495,6 @@ de:
       Du kannst deine letzte Antwort bearbeiten, um ein Zitat hinzuzufügen, indem du den Text auswählst und auf die erscheinende Schaltfläche <b>Zitat</b> klickst.
 
       Es ist für alle einfacher, Themen zu lesen, die wenige umfassende Antworten statt viele kleine und einzelne Antworten haben.
-    dominating_topic: Du hast mehr als %{percent} % der Antworten hier gepostet. Gib anderen doch auch die Möglichkeit, etwas beizutragen.
     get_a_room: Du hast @%{reply_username} %{count} Mal geantwortet. Wusstest du, dass du der Person stattdessen eine persönliche Nachricht schicken kannst?
     too_many_replies: |
       ### Du hast das Antwort-Limit für dieses Thema erreicht
@@ -764,7 +763,6 @@ de:
         one: "vor fast %{count} Jahr"
         other: "vor fast %{count} Jahren"
   password_reset:
-    no_token: "Entschuldige, aber der Link zum Ändern des Passworts ist zu alt. Wähle die Anmelden-Schaltfläche und nutze „Ich habe mein Passwort vergessen“, um einen neuen Link zu erhalten."
     choose_new: "Wähle ein neues Passwort"
     choose: "Wähle ein Passwort"
     update: "Passwort aktualisieren"
@@ -3698,7 +3696,6 @@ de:
     png_to_jpg_conversion_failure_message: "Beim Konvertieren von PNG in JPG ist ein Fehler aufgetreten."
     optimize_failure_message: "Beim Optimieren des hochgeladenen Bildes ist ein Fehler aufgetreten."
     download_failure: "Herunterladen der Datei vom externen Anbieter fehlgeschlagen."
-    size_mismatch_failure: "Die Größe der auf S3 hochgeladenen Datei stimmte nicht mit der beabsichtigten Größe des externen Upload-Stubs überein. %{additional_detail}"
     create_multipart_failure: "Fehler beim Erstellen eines mehrteiligen Uploads im externen Speicher."
     abort_multipart_failure: "Fehler beim Abbrechen des mehrteiligen Uploads im externen Speicher."
     complete_multipart_failure: "Der mehrteilige Upload im externen Speicher konnte nicht abgeschlossen werden."

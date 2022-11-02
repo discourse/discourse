@@ -458,7 +458,6 @@ sl:
         few: "skoraj %{count} leta nazaj"
         other: "skoraj %{count} let nazaj"
   password_reset:
-    no_token: "Povezava za zamenjavo gesla je potekla. Izberite gumb Prijava in uporabite 'Pozabil sem geslo' da dobite novo povezavo.."
     choose_new: "Vnesite novo geslo"
     choose: "Vnesite geslo"
     update: "Spremenite geslo"

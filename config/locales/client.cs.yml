@@ -3721,7 +3721,6 @@ cs:
         trust_level_2_users: "Uživatelé důvěryhodnosti 2"
         trust_level_3_requirements: "Požadavky pro důvěryhodnost 3"
         trust_level_locked_tip: "úroveň důvěryhodnosti uzamčena. Systém nebude povyšovat ani degradovat uživatele"
-        trust_level_unlocked_tip: "úroveň důvěryhodnosti odemčena. Systém může povyšovat nebo degradovat uživatele"
         lock_trust_level: "Zamknout úroveň důvěryhodnosti"
         unlock_trust_level: "Odemknout úroveň důvěryhodnosti"
         silenced_count: "Ztišení"

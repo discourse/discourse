@@ -690,7 +690,6 @@ gl:
         one: "hai case %{count} ano"
         other: "hai case %{count} anos"
   password_reset:
-    no_token: "Sentímolo, esa ligazón de cambio de contrasinal é antiga de máis. Prema no botón Iniciar sesión e déalle a «Esquecín o meu contrasinal» para obter unha nova ligazón."
     choose_new: "Elixir un novo contrasinal"
     choose: "Elixir un contrasinal"
     update: "Actualizar o contrasinal"
