@@ -112,6 +112,8 @@ describe 'GitHub Oauth2' do
 
   it "doesn't sign in anyone if none of the emails from github are verified" do
     post "/auth/github"
+    expect(response.status).to eq(302)
+    expect(response.location).to start_with("https://github.com/login/oauth/authorize?")
 
     setup_github_emails_stub(
       [
@@ -141,6 +143,8 @@ describe 'GitHub Oauth2' do
 
   it "matches a non-primary email if it's verified and the primary email isn't" do
     post "/auth/github"
+    expect(response.status).to eq(302)
+    expect(response.location).to start_with("https://github.com/login/oauth/authorize?")
 
     setup_github_emails_stub(
       [
@@ -172,6 +176,8 @@ describe 'GitHub Oauth2' do
 
   it "doesn't match a non-primary email if it's not verified" do
     post "/auth/github"
+    expect(response.status).to eq(302)
+    expect(response.location).to start_with("https://github.com/login/oauth/authorize?")
 
     setup_github_emails_stub(
       [
@@ -201,6 +207,8 @@ describe 'GitHub Oauth2' do
 
   it "favors the primary email over secondary emails when they're all verified" do
     post "/auth/github"
+    expect(response.status).to eq(302)
+    expect(response.location).to start_with("https://github.com/login/oauth/authorize?")
 
     setup_github_emails_stub(
       [
