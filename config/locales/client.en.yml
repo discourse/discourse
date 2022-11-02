@@ -5593,23 +5593,23 @@ en:
         delete_confirm: "Are you sure you want to delete that user field?"
         options: "Options"
         required:
-          title: "Required at signup?"
+          title: "Required at signup"
           enabled: "required"
           disabled: "not required"
         editable:
-          title: "Editable after signup?"
+          title: "Editable after signup"
           enabled: "editable"
           disabled: "not editable"
         show_on_profile:
-          title: "Show on public profile?"
+          title: "Show on public profile"
           enabled: "shown on profile"
           disabled: "not shown on profile"
         show_on_user_card:
-          title: "Show on user card?"
+          title: "Show on user card"
           enabled: "shown on user card"
           disabled: "not shown on user card"
         searchable:
-          title: "Searchable?"
+          title: "Searchable"
           enabled: "searchable"
           disabled: "not searchable"
 
