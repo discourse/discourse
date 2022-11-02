@@ -7,6 +7,7 @@ import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import User from "discourse/models/user";
 import { next } from "@ember/runloop";
 import { getOwner } from "discourse-common/lib/get-owner";
+import sinon from "sinon";
 
 function topicWithStream(streamDetails) {
   const topic = this.store.createRecord("topic");
@@ -79,24 +80,24 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("deleteTopic permanentDelete", function (assert) {
+    const opts = { force_destroy: true };
     const model = Topic.create();
-    let destroyed = false;
-    model.destroy = async () => (destroyed = true);
-
     const siteSettings = this.owner.lookup("service:site-settings");
+
     siteSettings.min_topic_views_for_delete_confirm = 5;
 
     const controller = this.owner.lookup("controller:topic");
-    controller.setProperties({
-      model,
-    });
+    controller.setProperties({ model });
 
     model.set("views", 100);
+
+    const stub = sinon.stub(model, "destroy");
     controller.send("deleteTopic", { force_destroy: true });
 
-    assert.ok(
-      destroyed,
-      "do not show delete confirm when permanently deleting topic"
+    assert.deepEqual(
+      stub.getCall(0).args[1],
+      opts,
+      "does not show delete confirm permanently deleting, passes opts to model action"
       // permanent delete happens after first delete, no need to show modal again
     );
   });
