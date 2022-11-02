@@ -1,0 +1,2 @@
+chat:
+- any: plugins/chat/**/*
