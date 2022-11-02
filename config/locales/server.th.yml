@@ -5,68 +5,6 @@
 # https://translate.discourse.org/
 
 th:
-  dates:
-    short_date_no_year: "D MMM"
-    short_date: "D MMM, YYYY"
-    long_date: "MMMM D, YYYY h:mma"
-  datetime_formats: &datetime_formats
-    formats:
-      short: "%m-%d-%Y"
-      short_no_year: "%B %-d"
-      date_only: "%B %-d, %Y"
-      long: "%B %-d, %Y, %l:%M%P"
-      no_day: "%Y %B"
-  date:
-    month_names:
-    - null
-    - มกราคม
-    - กุมภาพันธ์
-    - มีนาคม
-    - เมษายน
-    - พฤษภาคม
-    - มิถุนายน
-    - กรกฎาคม
-    - สิงหาคม
-    - กันยายน
-    - ตุลาคม
-    - พฤศจิกายน
-    - ธันวาคม
-    <<: *datetime_formats
-  time:
-    am: "am"
-    pm: "pm"
-    <<: *datetime_formats
-  title: "ดิสคอส"
-  topics: "หัวข้อ"
-  posts: "โพสต์"
-  views: "ดู"
-  loading: "กำลังโหลด"
-  powered_by_html: 'บอร์ดนี้ใช้<a href="https://www.discourse.org">Discourse</a> จะแสดงได้สมบูรณ์เมื่อเปิดการใช้งาน JavaScript'
-  sign_up: "สมัคร"
-  log_in: "เข้าสู่ระบบ"
-  submit: "ตกลง"
-  disable_remote_images_download_reason: "ไม่สามารถดาวน์โหลดรูปได้เนื่องจากพื้นที่ไม่เพียงพอ"
-  anonymous: "ไม่ระบุชื่อ"
-  remove_posts_deleted_by_author: "ถูกลบโดยผู้โพส"
-  on_another_topic: "ในหัวข้ออื่น"
-  inline_oneboxer:
-    topic_page_title_post_number_by_user: "#%{post_number} โดย %{username}"
-  themes:
-    import_error:
-      unpack_failed: "แตกไฟล์ไม่สำเร็จ"
-      file_too_big: "ไฟล์ที่ไม่ถูกบีบอัดมีขนาดใหญ่เกินไป"
-    settings_errors:
-      invalid_yaml: "YAML ที่ให้มาไม่ถูกต้อง"
-  emails:
-    incoming:
-      default_subject: "หัวข้อนี้ต้องมีชื่อเรื่อง"
-      errors:
-        inactive_user_error: "เกิดขึ้นเมื่อผู้ส่งยังไม่มีการใช้งาน"
-  errors: &errors
-    messages:
-      exclusion: ถูกจองแล้ว
-      has_already_been_used: "ได้ถูกใช้แล้ว"
-      invalid: ไม่ถูกต้อง
   not_in_group:
     join_group: "เข้าร่วมกลุ่ม"
   likes: "ถูกใจ"
@@ -112,8 +50,6 @@ th:
       topic:
         title: "ชื่อเรื่อง"
         category_id: "หมวดหมู่"
-    errors:
-      <<: *errors
   general_category_name: "ทั่วไป"
   staff_category_name: "ทีมงาน"
   category:
@@ -538,6 +474,3 @@ th:
       reject:
         title: "ละทิ้ง"
   fallback_username: "ผู้ใช้"
-  activemodel:
-    errors:
-      <<: *errors

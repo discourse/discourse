@@ -5,149 +5,6 @@
 # https://translate.discourse.org/
 
 be:
-  dates:
-    short_date_no_year: "D MMM"
-    short_date: "D МММ, YYYY"
-    long_date: "MMMM D, YYYY ч: мін"
-  datetime_formats: &datetime_formats
-    formats:
-      short: "% M-% d-% Y"
-      short_no_year: "% B% -d"
-      date_only: "% B% -d,% Y"
-      long: "% B% -d,% Y,% л:% M% Р"
-      no_day: "% B% Y"
-  date:
-    month_names:
-    - null
-    - Студзень
-    - Люты
-    - Сакавік
-    - Красавік
-    - Травень
-    - Чэрвень
-    - Ліпень
-    - Жнівень
-    - Верасень
-    - Кастрычнік
-    - Лістапад
-    - Снежань
-    <<: *datetime_formats
-  time:
-    am: "раніцы"
-    pm: "вечара"
-    <<: *datetime_formats
-  title: "гаворка"
-  topics: "тэмы"
-  posts: "паведамленняў"
-  views: "прагляды"
-  loading: "загрузка"
-  powered_by_html: 'Працуе на <a href="https://www.discourse.org">Discourse</a>. Не выключай JavaScript, боўдзіла.'
-  sign_up: "рэгістрацыя"
-  log_in: "Увайсці"
-  submit: "Адправіць"
-  purge_reason: "Аўтаматычна выдаленае пакінута, уліковы запіс адключаны"
-  disable_remote_images_download_reason: "Загрузка знешніх малюнкаў была адключаная з-за недахопу вольнага месцы на дыску."
-  anonymous: "Ананімны"
-  remove_posts_deleted_by_author: "Выдалена аўтарам"
-  redirect_warning: "Мы не змаглі пацвердзіць, што сувязь абраная была фактычна размешчана на форум. Калі вы хочаце, каб перайсці ў любым выпадку, абярыце спасылку ніжэй."
-  on_another_topic: "У іншай тэме"
-  themes:
-    bad_color_scheme: "Немагчыма абнавіць тэму, несапраўдныя каляровую палітру"
-    other_error: "Нешта пайшло не так тэму абнаўлення"
-    import_error:
-      about_json_values: "about.json ўтрымлівае недапушчальныя значэння: %{errors}"
-      git: "Памылка кланавання рэпазітара Git, доступ забаронены або сховішча не знойдзены"
-      unpack_failed: "Не атрымалася распакаваць файл"
-      unknown_file_type: "Загружаны файл не з'яўляюцца тэмай Discourse."
-    errors:
-      component_no_user_selectable: "Тэма кампаненты не могуць быць выбіраеш карыстальнікам"
-    settings_errors:
-      number_value_not_valid: "Новае значэнне не знаходзіцца ў межах дапушчальнага дыяпазону."
-      number_value_not_valid_min_max: "Гэта павінна быць паміж %{min}і %{max}."
-      number_value_not_valid_min: "Гэта павінна быць больш або роўна %{min}."
-      number_value_not_valid_max: "Яно павінна быць менш або роўна {% макс}."
-      string_value_not_valid: "Новая даўжыня значэння не знаходзіцца ў межах дапушчальнага дыяпазону."
-      string_value_not_valid_min_max: "Яно павінна быць паміж% {мін} і {% макс} знакаў."
-      string_value_not_valid_min: "Яна павінна быць не менш% {мін} знакаў."
-      string_value_not_valid_max: "Яно павінна быць не больш% {макс} знакаў."
-    locale_errors:
-      top_level_locale: "Ключ верхняга ўзроўню ў файле лякаль павінен адпавядаць лакалі імя"
-      invalid_yaml: "Пераклад YAML несапраўдны"
-  emails:
-    incoming:
-      default_subject: "Гэтая тэма мае патрэбу ў назве"
-      show_trimmed_content: "Паказаць змест"
-      maximum_staged_user_per_email_reached: "Дасягнута максімальная колькасць пастановачных карыстальнікаў, створаных па электроннай пошце."
-      no_subject: "(без тэмы)"
-      no_body: "(без зместу)"
-      errors:
-        empty_email_error: "Здараецца, калі сыравіну пошты мы атрымалі была пустой."
-        no_message_id_error: "Здараецца, калі пошта мае загаловак няма 'Message-ID."
-        auto_generated_email_error: "Здараецца, калі загаловак «старшынствы» усталяваны ў: спіс, смецце, насып або auto_reply, або калі які-небудзь іншы загаловак змяшчае: аўтаматычны прадстаўлены, аўтаматычны адказ або аўтаматычна генеруюцца."
-        no_body_detected_error: "Здараецца, калі мы не маглі атрымаць цела і не было ніякіх укладанняў."
-        no_sender_detected_error: "Здараецца, калі мы не змаглі знайсці правільны адрас электроннай пошты ў поле From загалоўка."
-        from_reply_by_address_error: "Здараецца, калі з загалоўка адпавядае адказ па адрасе электроннай пошты."
-        inactive_user_error: "Здараецца, калі адпраўнік не з'яўляецца актыўным."
-        silenced_user_error: "Здараецца, калі адпраўнік быў падаўлены."
-        strangers_not_allowed_error: "Здараецца, калі карыстальнік спрабаваў стварыць новую тэму ў катэгорыі яны не член."
-        insufficient_trust_level_error: "Здараецца, калі карыстальнік спрабаваў стварыць новую тэму ў катэгорыі яны не маюць неабходны ўзровень даверу для."
-        reply_user_not_matching_error: "Здараецца, калі адказ прыйшоў з іншага адрасу электроннай пошты апавяшчэнне было накіравана."
-        topic_not_found_error: "Здараецца, калі адказ прыйшоў, але звязаная з гэтым тэма была выдаленая."
-        topic_closed_error: "Здараецца, калі адказ прыйшоў, але звязаная з гэтым тэма была зачыненая."
-        bounced_email_error: "Электронная пошта з'яўляецца падскочыў справаздачу па электроннай пошце."
-        screened_email_error: "Здараецца, калі адрас электроннай пошты адпраўніка ўжо прасейваюць."
-        unsubscribe_not_allowed: "Здараецца, калі адпіскі па электроннай пошце не дапускаюцца для гэтага карыстальніка."
-      unrecognized_error: "Невызначаная Памылка"
-  errors: &errors
-    format: ! "%{attribute} %{message}"
-    format_with_full_message: "<b>%{attribute}</b>: %{message}"
-    messages:
-      too_long_validation: "абмяжоўваецца %{max} знакаў; Уведзеныя %{length}"
-      invalid_boolean: "Invalid лагічнае."
-      taken: "ўжо прынята"
-      accepted: павінен быць прыняты
-      blank: не можа быць пустым
-      present: павінен быць пустым
-      confirmation: ! "не адпавядае %{attribute}"
-      empty: не можа быць пустым
-      equal_to: павінна быць роўная %{count}
-      even: павінна быць нават
-      exclusion: зарэзерваваны
-      has_already_been_used: "ўжо выкарыстоўваецца"
-      inclusion: не ўваходзіць у спіс
-      invalid: ня дзейнічае
-      is_invalid: "здаецца незразумелым, ці сапраўды гэта закончаны прапанову?"
-      contains_censored_words: "змяшчае наступныя словы: %{censored_words}"
-      less_than: павінна быць менш, чым %{count}
-      less_than_or_equal_to: павінен быць менш або роўны %{count}
-      not_a_number: не з'яўляецца лікам
-      not_an_integer: павінна быць цэлым лікам
-      odd: павінна быць няцотнай
-      record_invalid: ! "Не атрымалася выканаць праверку: %{errors}"
-      max_emojis: "не можа быць больш, чым %{max_emojis_count}смайлікаў"
-      emojis_disabled: "не можа быць смайлік"
-      ip_address_already_screened: "ужо ўключаны ў існуючым правіле"
-      restrict_dependent_destroy:
-        one: "Немагчыма выдаліць запіс, так як залежны %{record}існуе"
-        few: "Немагчыма выдаліць запіс, таму што залежыць ад %{record} існуе"
-        many: "Немагчыма выдаліць запіс, таму што залежыць ад %{record} існуе"
-        other: "Немагчыма выдаліць запіс, таму што залежыць ад %{record} існуе"
-      other_than: "павінен быць іншым, чым %{count}"
-    template:
-      body: ! "Былі праблемы з наступнымі палямі:"
-    embed:
-      load_from_remote: "Была памылка загрузкі гэтага запісу."
-    site_settings:
-      default_categories_already_selected: "Вы не можаце выбраць катэгорыю, якую выкарыстоўвае ў іншым спісе."
-      s3_upload_bucket_is_required: "Вы не можаце ўключыць загрузку ў S3, калі вы не забяспечылі «s3_upload_bucket»."
-      enable_s3_uploads_is_required: "Вы не можаце ўключыць інвентарызацыю S3, калі вы не ўключылі запампоўкі S3."
-      s3_backup_requires_s3_settings: "Вы не можаце выкарыстоўваць S3 ў якасці сховішча рэзервовых копій, калі вы не забяспечылі %{setting_name}'."
-      s3_bucket_reused: "Вы не можаце выкарыстоўваць той жа вядро для «s3_upload_bucket» і «s3_backup_bucket». Трэба выбраць іншае вядро або выкарыстаць іншы шлях для кожнага сегмента."
-    conflicting_google_user_id: 'Google Account ID для гэтага ўліковага запісу змяніўся; ўмяшанне персаналу патрабуецца па меркаваннях бяспекі. <br>Калі ласка, звяжыцеся з супрацоўнікамі і накіруйце іх да <a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
-  invite:
-    confirm_email: "<p> Вы амаль скончылі! Мы даслалі ліст з кодам актывацыі на ваш адрас электроннай пошты. </p><p>Калі ласка, прытрымлівайцеся дасланым інструкцыям для актывацыі акаўнта. </p>"
-    disabled_errors:
-      invalid_access: "Вы не дазваляецца праглядаць запытаны рэсурс."
   bulk_invite:
     file_should_be_csv: "Загружаны файл павінен мець фармат CSV."
     error: "Была памылка загрузкі гэтага файла. Калі ласка паспрабуйце зноў пазней."
@@ -336,7 +193,6 @@ be:
           attributes:
             word:
               too_many: "Занадта шмат слоў для гэтага дзеяння"
-      <<: *errors
   uncategorized_category_name: "без"
   general_category_name: "Агульныя"
   meta_category_name: "зваротная сувязь"
@@ -2515,6 +2371,3 @@ be:
       delete_user:
         reason: "Выдаляецца з дапамогай чарзе на разгляд"
   fallback_username: "карыстальнік"
-  activemodel:
-    errors:
-      <<: *errors

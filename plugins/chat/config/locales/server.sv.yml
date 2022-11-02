@@ -6,7 +6,6 @@
 
 sv:
   site_settings:
-    chat_enabled: "Aktivera tillägget discourse-chatt."
     chat_channel_retention_days: "Chattmeddelanden i ordinarie kanaler kommer att behållas i så här många dagar. Sätt till '0' för att behålla meddelanden för alltid."
     chat_dm_retention_days: "Chattmeddelanden i personliga chattkanaler kommer att behållas i så här många dagar. Sätt till '0' för att behålla meddelanden för alltid."
     chat_auto_silence_duration: "Antal minuter som användare kommer att tystas när de överskrider antalsgränsen för skapande av chattmeddelanden. Ställ in på '0' för att inaktivera automatisk tystning."
@@ -49,7 +48,7 @@ sv:
       message_move_invalid_channel: "Käll- och destinationskanalen måste vara offentliga kanaler."
       message_move_no_messages_found: "Inga meddelanden hittades med de angivna meddelande-ID:n."
       cant_update_direct_message_channel: "Egenskaper för direktmeddelandekanal såsom namn och beskrivning kan inte uppdateras."
-      not_accepting_dms: "Tyvärr, %{username} accepterar inte meddelanden för tillfället."
+      not_accepting_dms: "Tyvärr tar %{username} inte emot meddelanden för tillfället."
       actor_ignoring_target_user: "Du ignorerar %{username}, så du kan inte skicka meddelanden till dem."
       actor_muting_target_user: "Du har tystat %{username}, så du kan inte skicka meddelanden till dem."
       actor_disallowed_dms: "Du har valt att hindra användare från att skicka dig privata och direkta meddelanden, så du kan inte skapa nya direkta meddelanden."
@@ -57,7 +56,7 @@ sv:
     reviewables:
       actions:
         agree:
-          title: "Håller med..."
+          title: "Godkänn..."
         agree_and_keep_message:
           title: "Behåll meddelande"
           description: "Håll med flaggning men behåll meddelandet oförändrat."
@@ -65,11 +64,11 @@ sv:
           title: "Behåll meddelandet raderat"
           description: "Håll med flaggning och behåll meddelandet raderat."
         agree_and_suspend:
-          title: "Stäng av användare"
-          description: "Håll med flaggning och stäng av användaren."
+          title: "Stäng av användaren"
+          description: "Godkänn flaggning och stäng av användaren."
         agree_and_silence:
-          title: "Tysta användare"
-          description: "Håll med flaggning och tysta användaren."
+          title: "Tysta användaren"
+          description: "Godkänn flaggning och tysta användaren."
         agree_and_restore:
           title: "Återställ meddelande"
           description: "Återställ meddelandet så att användarna kan se det."
@@ -82,7 +81,7 @@ sv:
           title: "Håll inte med och återställ meddelande"
           description: "Återställ meddelandet så att alla användare kan se det."
         disagree:
-          title: "Oöverens"
+          title: "Håll inte med"
         ignore:
           title: "Ignorera"
     channel:
@@ -90,7 +89,7 @@ sv:
         read_only: "Endast läsning"
         archived: "Arkiverad"
         closed: "Stängd"
-        open: "Öppen"
+        open: "Öppna"
       archive:
         first_post_raw: "Detta ämne är ett arkiv av chatt kanalen [%{channel_name}](%{channel_url})."
       messages_moved:
@@ -117,10 +116,10 @@ sv:
     popup:
       chat_mention:
         direct: '%{username} nämnde dig i "%{channel}"'
-        other: '%{username} nämnde %{identifier} i "%{channel}"'
+        other_type: '%{username} nämnde %{identifier} i "%{channel}"'
       direct_message_chat_mention:
         direct: "%{username} nämnde dig i en personlig chatt"
-        other: "%{username} nämnde %{identifier} i personlig chatt"
+        other_type: "%{username} nämnde %{identifier} i personlig chatt"
       new_chat_message: '%{username} skickade ett meddelande i "%{channel}"'
       new_direct_chat_message: "%{username} skickade ett meddelande i personlig chatt"
   discourse_automation:
@@ -130,6 +129,10 @@ sv:
   reviewable_score_types:
     needs_review:
       title: "Behöver granskning"
+    notify_user:
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_body: "%{link}\n\n%{message}"
   user_notifications:
     chat_summary:
       deleted_user: "Raderad användare"

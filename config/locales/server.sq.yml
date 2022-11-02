@@ -5,99 +5,6 @@
 # https://translate.discourse.org/
 
 sq:
-  dates:
-    short_date_no_year: "D MMM"
-    short_date: "D MMM, YYYY"
-    long_date: "MMMM D, YYYY h:mma"
-  datetime_formats: &datetime_formats
-    formats:
-      short: "%m-%d-%Y"
-      short_no_year: "%B %-d"
-      date_only: "%B %-d, %Y"
-      long: "%B %-d, %Y, %l:%M%P"
-      no_day: "%Y %B"
-  date:
-    month_names:
-    - null
-    - Janar
-    - Shkurt
-    - Mars
-    - Prill
-    - Maj
-    - Qershor
-    - Korrik
-    - Gusht
-    - Shtator
-    - Tetor
-    - Nëntor
-    - Dhjetor
-    <<: *datetime_formats
-  time:
-    am: "pd"
-    pm: "md"
-    <<: *datetime_formats
-  title: "Discourse"
-  topics: "Tema"
-  posts: "postime"
-  views: "shikime"
-  loading: "Loading"
-  sign_up: "Regjistrohu"
-  log_in: "Identifikohu"
-  purge_reason: "Automatically deleted as abandoned, deactivated account"
-  disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
-  anonymous: "Anonim"
-  remove_posts_deleted_by_author: "Fshirë nga autori"
-  inline_oneboxer:
-    topic_page_title_post_number_by_user: "#%{post_number} nga %{username}"
-  emails:
-    incoming:
-      default_subject: "Duhet të shkruani titullin"
-      show_trimmed_content: "Show trimmed content"
-      maximum_staged_user_per_email_reached: "Reached maximum number of staged users created per email."
-      errors:
-        empty_email_error: "Happens when the raw mail we received was blank."
-        no_message_id_error: "Happens when the mail has no 'Message-Id' header."
-        auto_generated_email_error: "Happens when the 'precedence' header is set to: list, junk, bulk or auto_reply, or when any other header contains: auto-submitted, auto-replied or auto-generated."
-        no_body_detected_error: "Happens when we couldn't extract a body and there were no attachments."
-        inactive_user_error: "Happens when the sender is not active."
-  errors: &errors
-    format: ! "%{attribute} %{message}"
-    messages:
-      too_long_validation: "ka limit maksimumi %{max} shkronja; ju vendosët %{length}."
-      invalid_boolean: "Boolean jo i vlefshëm."
-      taken: "është i marrë"
-      accepted: duhet të pranohet
-      blank: nuk mund të lihet bosh
-      present: mund të lihet bosh
-      confirmation: ! "nuk përputhet %{attribute}"
-      empty: nuk mund të lihet bosh
-      equal_to: duhet të jetë baraz me %{count}
-      even: must be even
-      exclusion: është i rezervuar
-      greater_than: must be greater than %{count}
-      greater_than_or_equal_to: must be greater than or equal to %{count}
-      has_already_been_used: "është përdorur më parë"
-      inclusion: is not included in the list
-      invalid: është i pavlefshëm
-      less_than: must be less than %{count}
-      less_than_or_equal_to: must be less than or equal to %{count}
-      not_a_number: nuk është një numër
-      not_an_integer: must be an integer
-      odd: must be odd
-      record_invalid: ! "Verifikimi dështoj: %{errors}"
-      restrict_dependent_destroy:
-        one: "Cannot delete record because a dependent %{record} exists"
-        other: "Cannot delete record because dependent %{record} exist"
-      other_than: "must be other than %{count}"
-    template:
-      body: ! "There were problems with the following fields:"
-    embed:
-      load_from_remote: "Postimi nuk mundi të ngarkohet. Riprovoheni!"
-    site_settings:
-      default_categories_already_selected: "Nuk mund të zgjidhni një kategori të përdorur në një tjetër listë."
-  invite:
-    disabled_errors:
-      invalid_access: "Ju nuk jeni të drejta për të parë burimin e kërkuar."
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
@@ -200,7 +107,6 @@ sq:
           attributes:
             hex:
               invalid: "nuk është një ngjyrë e vlefshme"
-      <<: *errors
   general_category_name: "Karakteristika të përgjithshme"
   meta_category_name: "Reagimet e Faqes"
   meta_category_description: "Discussion about this site, its organization, how it works, and how we can improve it."
@@ -1423,6 +1329,3 @@ sq:
       reject:
         title: "Refuzo"
   fallback_username: "përdorues"
-  activemodel:
-    errors:
-      <<: *errors

@@ -5,134 +5,6 @@
 # https://translate.discourse.org/
 
 sw:
-  dates:
-    short_date_no_year: "S MMM"
-    short_date: "S MMM, MMMM"
-    long_date: "MMMM S, MMM s:mma"
-  datetime_formats: &datetime_formats
-    formats:
-      short: "%m-%d-%M"
-      short_no_year: "%B %-d"
-      date_only: "%B %-d, %Y"
-      long: "%B %-d, %Y, %l:%M%P"
-      no_day: "%Y %B"
-  date:
-    month_names:
-    - null
-    - Mwezi wa kwanza
-    - Mwezi wa pili
-    - Mwezi wa tatu
-    - Mwezi wa nne
-    - Mwezi wa tano
-    - Mwezi wa sita
-    - Mwezi wa saba
-    - Mwezi wa nane
-    - Mwezi wa tisa
-    - Mwezi wa kumi
-    - Mwezi wa kumi na moja
-    - Mwezi wa kumi na mbili
-    <<: *datetime_formats
-  time:
-    am: "Asubuhi"
-    pm: "jioni "
-    <<: *datetime_formats
-  title: "Discourse"
-  topics: "Mada"
-  posts: "machapisho"
-  views: "Imeonwa"
-  loading: "Inapakuliwa"
-  powered_by_html: 'Imetengenezwa na <a href="https://www.discourse.org">Discourse</a>, inaonekana vizuri ukiruhusu JavaScript'
-  sign_up: "Jiunge"
-  log_in: "Ingia"
-  submit: "Wasilisha"
-  purge_reason: "Roboti ameifuta kwa sababu haishughulikiwi, akaunti mkondoni haiko hewani"
-  disable_remote_images_download_reason: "Upakiaji wa picha kutoka sehemu nyingine umesitishwa kwa sababu hakuna nafasi ya kutosha"
-  anonymous: "Mtumiaji Asiyejulikana"
-  remove_posts_deleted_by_author: "Imefutwa na Mwandishi"
-  redirect_warning: "Tumeshindwa kuthibitisha kua kiungo ulichokichagua kipo kwenye hii jamii. Kama ungependa kuendelea, chagua kiungo hapo chini."
-  inline_oneboxer:
-    topic_page_title_post_number_by_user: "#%{post_number} za %{username}"
-  themes:
-    other_error: "Tatizo limetokea kwenye kusasisha mandhari"
-    import_error:
-      git: "Tatizo limetokea wakati wa kunakili weko la git, hauna ruhusa au weko haijapatikana"
-    settings_errors:
-      invalid_yaml: "YAML iliyowekwa ni batili."
-      name_too_long: "Kuna mpangilio wenye jina lefu sana. Kiwango cha juu cha urefu ni 255"
-      default_value_missing: "Mpangilio wa `%{name}` hauna thamani"
-      default_out_range: "Mpangilio `%{name}` chaguo-msingi haupo kwenye namba zilizotajwa."
-      number_value_not_valid: "Namba uliyoiandika haipo kwenye eneo linaloruhusiwa."
-      number_value_not_valid_min_max: "Lazima iwe kati ya %{min} na %{max}."
-      number_value_not_valid_min: "Lazima iwe na ukubwa wa au zaidi ya %{min}."
-      number_value_not_valid_max: "Lazima iwe ndogo au sawa na %{max}"
-      string_value_not_valid_min: "Lazima iwe au izidi %{min} maneno."
-      string_value_not_valid_max: "Isizidi maneno %{max}."
-  emails:
-    incoming:
-      default_subject: "Hii mada inaitaji kichwa cha maneno"
-      show_trimmed_content: "Onyesha taarifa zilizopunguzwa"
-      maximum_staged_user_per_email_reached: "Umefika kiwango cha juu cha watumiaji waliotengenezwa kwa kila barua pepe."
-      no_subject: "(hakuna somo)"
-      no_body: "(hakuna kiwiliwili cha ujumbe)"
-      errors:
-        empty_email_error: "Inatokea kama ujumbe uliotumwa ulikuwa hauna taarifa."
-        no_message_id_error: "Inatokea kama ujumbe hauna 'Utambulisho wa Ujumbe'."
-        no_body_detected_error: "Inatokea kama hatuwezi kusoma taarifa na hakuna vitu vilivyo ambatananishwa."
-        no_sender_detected_error: "Inatokea tukishindwa kupata barua pepe halali kutoka kwenye sehemu uliyoandika barua pepe."
-        inactive_user_error: "Inatokea kama mtumiaji hayuko hewani."
-        silenced_user_error: "Inatokea mtumaji akiwa amenyamazishwa."
-        strangers_not_allowed_error: "Inatokea wakati mtumiaji akijaribu kutengeneza mada mpya ndani ya kategoria ambayo sio mwanyamachama."
-        insufficient_trust_level_error: "Inatokea wakati mtumiaji akijaribu kutengeneza mada mpya ndani ya kategoria ambacho hana kiwango cha uaminifu."
-        reply_user_not_matching_error: "Inatokea kama jibu limetoka kwenye barua pepe tofauti na barua pepe iliyopokea taarifa."
-        topic_not_found_error: "Inatokea jibu likiandikwa lakina mada inayoongelewa ikiwa imefutwa."
-        topic_closed_error: "Inatokea kama jibu limekuja lakini mada inayoongelewa imefungwa."
-        bounced_email_error: "Barua pepe ni ripoti ya barua pepe iliyoshindwa kufika."
-        screened_email_error: "Inatokea kama barua pepe ya mtumaji imezuiwa."
-        unsubscribe_not_allowed: "Inatokea kama kujiengua kupitia barua pepe hakuruhusiwi kwa mtumiaji huyu."
-      unrecognized_error: "Tatizo lilisoeleweka"
-  errors: &errors
-    format: ! "%{attribute}%{message}"
-    format_with_full_message: "<b>%{attribute} </b>: %{message}"
-    messages:
-      too_long_validation: "Unaruhusiwa kuandika herufi%{max}; umeandika %{length}"
-      taken: "imekwisha chukuliwa"
-      accepted: lazima ikubaliwe
-      blank: haiwezi kubaki wazi
-      present: lazima iwe wazi
-      confirmation: ! "haiendani na %{attribute}"
-      empty: haiwezi kuachwa wazi
-      equal_to: lazima iwe sawa na %{count}
-      even: lazima ziwe sawa
-      exclusion: imehifadhiwa
-      greater_than: izidi %{count}
-      greater_than_or_equal_to: izidi au iwe sawa na %{count}
-      has_already_been_used: "imeshatumika"
-      inclusion: haijaorodheshwa
-      invalid: ni batili
-      is_invalid: "haieleweki vizuri, je hii sentensi iko kamili?"
-      contains_censored_words: "ina maneno yafuatayo ambayo hayaruhusiwi: %{censored_words}"
-      less_than: lazima iwe chini ya %{count}
-      less_than_or_equal_to: lazima iwe chini ya au sawa na %{count}
-      not_a_number: sio namba
-      not_an_integer: lazima iwe namba
-      odd: lazima igawanyike kwa mbili
-      record_invalid: ! "Uthibitisho umeshindikana: %{errors}"
-      max_emojis: "hauwezi ukawa na emoji, vikatuni vya kuonyesha hisia zaidi ya %{max_emojis_count}"
-      ip_address_already_screened: "tayari ipo ndani ya kanuni iliyopo"
-      restrict_dependent_destroy:
-        one: "Hauwezi kufuta kumbukumbu kwa sababu %{record}inayoitegemea ipo"
-        other: "Hauwezi kufuta kumbukumbu kwa sababu %{record} inayoitegemea ipo"
-      other_than: "lazima iwe nyingine zaidi ya %{count}"
-    template:
-      body: ! "Matatizo yametokea kwenye sehemu zifuatazo:"
-    embed:
-      load_from_remote: "Hitilafu imetokea wakati wa kupakua taarifa."
-    site_settings:
-      default_categories_already_selected: "Hauwezi kuchagua kikundi kinachotumika kwenye orodha nyingine."
-    conflicting_google_user_id: 'Utambulisho wa Akaunti ya Google imebadilishwa; msaidizi ataipitia kwa ajili ya sababu za ulinzi. Tafadhali wasiliana na msaidizi na waonyeshe <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
-  invite:
-    disabled_errors:
-      invalid_access: "Hauna ruhusa kuona rasilimali uliyoomba kuona."
   bulk_invite:
     file_should_be_csv: "Faili unalopakia inabidi liwe na csv umbizo "
     error: "Tatizo limetokea wakati wa kupakia faili. Tafadhali jaribu tena."
@@ -326,7 +198,6 @@ sw:
           attributes:
             word:
               too_many: "Maneno mengi sana kwa ajili ya shughuli hiyo"
-      <<: *errors
   general_category_name: "Jumla"
   meta_category_name: "Majibu ya Mtandao"
   meta_category_description: "Majadiliano kuhusu tovuti, shirika, jinsi inavyofanya kazi, na jinsi tunaweza kuiboresha."
@@ -2105,6 +1976,3 @@ sw:
       reject:
         title: "Kataa"
   fallback_username: "Mtumiaji"
-  activemodel:
-    errors:
-      <<: *errors

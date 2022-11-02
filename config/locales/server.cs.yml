@@ -5,142 +5,6 @@
 # https://translate.discourse.org/
 
 cs:
-  dates:
-    short_date_no_year: "D MMM"
-    short_date: "D MMM, YYYY"
-    long_date: "D. MMMM, YYYY h:mm"
-  datetime_formats: &datetime_formats
-    formats:
-      short: "%-d. %-m. %Y"
-      short_no_year: "%-d. %B"
-      date_only: "%-d %B %Y"
-      long: "%B %-d, %Y, %l:%M%P"
-      no_day: "%B %Y"
-  date:
-    month_names:
-    - null
-    - ledna
-    - února
-    - března
-    - dubna
-    - května
-    - června
-    - července
-    - srpna
-    - září
-    - října
-    - listopadu
-    - prosince
-    <<: *datetime_formats
-  time:
-    am: "am"
-    pm: "pm"
-    <<: *datetime_formats
-  title: "Discourse"
-  topics: "Témata"
-  posts: "příspěvky"
-  views: "zobrazení"
-  loading: "Nahrávám"
-  powered_by_html: 'Systém běží na <a href="https://www.discourse.org">Discourse</a>, nejlépe funguje se zapnutým JavaScriptem'
-  sign_up: "Registrovat se"
-  log_in: "Přihlásit se"
-  submit: "Odeslat"
-  purge_reason: "Tento účet byl automaticky smazán a deaktivován jako opuštěný"
-  disable_remote_images_download_reason: "Stahování obrázků z cizích serverů bylo vypnuto protože na disku není dostatek místa."
-  anonymous: "Anonymní"
-  remove_posts_deleted_by_author: "Smazáno autorem"
-  redirect_warning: "Nepodařilo se nám ověřit, že vámi vybraný odkaz byl skutečně zveřejněn na fóru. Pokud přesto chcete pokračovat, vyberte odkaz níže."
-  on_another_topic: "V jiném tématu"
-  inline_oneboxer:
-    topic_page_title_post_number: "#%{post_number}"
-    topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
-  themes:
-    bad_color_scheme: "Motiv nelze aktualizovat, neplatná paleta barev"
-    other_error: "Něco se pokazilo při aktualizaci skinu (theme)"
-    ember_selector_error: "Omlouváme se – použití selektorů CSS #ember nebo .ember-view není povoleno, protože tyto názvy jsou dynamicky generovány za běhu a časem se budou měnit, což nakonec povede k nefunkčnímu CSS. Zkuste jiný selektor."
-    import_error:
-      generic: Při importu tohoto motivu došlo k chybě
-      upload: "Chyba při vytváření položky pro upload: %{name}. %{errors}"
-      about_json: "Chyba importu: about.json neexistuje nebo je neplatný. Jste si jisti, že se jedná o Discourse motiv?"
-  emails:
-    incoming:
-      default_subject: "Toto téma potřebuje nadpis"
-      show_trimmed_content: "Ukázat upravený obsah"
-      maximum_staged_user_per_email_reached: "Dosáhli jste maximálního počtu uživatelů na jeden e-mail."
-      no_subject: "(bez předmětu)"
-      no_body: "(bez textu)"
-      errors:
-        empty_email_error: "Toto se stává, když e-mail, který obdržíme, je prázdný."
-        no_message_id_error: "Toto se stává, když e-mail nemá žádnou hlavičku s \"ID zprávy\"."
-        inactive_user_error: "Toto se stává, když odesílatel není aktivní."
-        silenced_user_error: "Toto se stává, když odesílatel byl umlčen."
-        topic_not_found_error: "Toto se stává, když přijde odpověď k smazanému tématu."
-        topic_closed_error: "Toto se stává, když přijde odpověď k uzavřenému tématu."
-      unrecognized_error: "Neznámá chyba"
-  errors: &errors
-    format: ! "%{attribute} %{message}"
-    format_with_full_message: "<b>%{attribute}</b>: %{message}"
-    messages:
-      too_long_validation: "je limitováno na %{max} znaků; zadali jste %{length}."
-      invalid_boolean: "Nevalidní boolean."
-      taken: "už je zabráno"
-      accepted: musí být odsouhlasen
-      blank: nemůže zůstat prázdné
-      present: musí zůstat prázdné
-      confirmation: ! "neodpovídá %{attribute}"
-      empty: nemůže být prázdný
-      equal_to: musí být roven %{count}
-      even: musí být sudý
-      exclusion: je rezervováno
-      greater_than: musí být větší než %{count}
-      greater_than_or_equal_to: musí být větší nebo rovno %{count}
-      has_already_been_used: "již byl použit"
-      inclusion: není zahrnutý v seznamu
-      invalid: je neplatný
-      is_invalid: "zdá se to být nejasné, je to kompletní věta?"
-      contains_censored_words: "obsahuje tato cenzurovaná slova: %{censored_words}"
-      less_than: musí být menší než %{count}
-      less_than_or_equal_to: musí být menší nebo roven %{count}
-      not_a_number: není číslo
-      not_an_integer: musí být celé číslo
-      odd: musí být lichý
-      record_invalid: ! "Ověření selhalo: %{errors}"
-      restrict_dependent_destroy:
-        one: "Nelze odstranit záznam, protože závisející %{record} existuje"
-        few: "Nelze smazat záznam protože na něm závisí %{record}."
-        many: "Nelze smazat záznam protože na něm závisí %{record}."
-        other: "Nelze smazat záznam protože na něm závisí %{record}."
-      too_long:
-        one: je příliš dlouhý ( maximálně %{count} znak)
-        few: je to příliš dlouhé (maximálně %{count} znaků)
-        many: je to příliš dlouhé (maximálně %{count} znaků)
-        other: je to příliš dlouhé (maximálně %{count} znaků)
-      too_short:
-        one: je to příliš krátké (minimum je %{count} znak)
-        few: je to příliš krátké (minimum je %{count} znaků)
-        many: je to příliš krátké (minimum je %{count} znaků)
-        other: je to příliš krátké (minimum je %{count} znaků)
-      wrong_length:
-        one: špatná délka (má být %{count} znak)
-        few: špatná délka (má být %{count} znaků)
-        many: špatná délka (má být %{count} znaků)
-        other: špatná délka (má být %{count} znaků)
-      other_than: "musí být jiný než %{count}"
-    template:
-      body: ! "Nastaly problémy s následujícími poli: "
-      header:
-        one: "%{count} chyba zamezila uložení modelu %{model}"
-        few: ! "%{count} chyb zamezilo uložení modelu %{model}"
-        many: ! "%{count} chyb zamezilo uložení modelu %{model}"
-        other: ! "%{count} chyb zamezilo uložení modelu %{model}"
-    embed:
-      load_from_remote: "Při načítání příspěvku nastala chyba."
-    site_settings:
-      default_categories_already_selected: "Nemůžete vybrat kategorii používanou v jiném seznamu."
-      s3_upload_bucket_is_required: "Nemůžete nahrávat na S3 dokud nezadáte 's3_upload_bucket'."
-  invite:
-    disabled_errors:
-      invalid_access: "Nemáte oprávnění na zobrazení požadovaného zdroje."
   bulk_invite:
     file_should_be_csv: "Nahraný soubor by měl být ve formátu csv."
     error: "Nastala chyba při nahrávání souboru. Prosím opakujte akci později."
@@ -354,7 +218,6 @@ cs:
           attributes:
             word:
               too_many: "Příliš mnoho slov pro tuto akci"
-      <<: *errors
   uncategorized_category_name: "Nezařazené"
   general_category_name: "Základní"
   meta_category_name: "Poznámky k webu"
@@ -1204,6 +1067,3 @@ cs:
       reject:
         title: "Odmítnout"
   fallback_username: "uživatel"
-  activemodel:
-    errors:
-      <<: *errors

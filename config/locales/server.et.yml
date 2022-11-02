@@ -5,122 +5,6 @@
 # https://translate.discourse.org/
 
 et:
-  dates:
-    short_date_no_year: "D. MMMM"
-    short_date: "D. MMMM, YYYY"
-    long_date: "D. MMMM, YYYY hh:mm"
-  datetime_formats: &datetime_formats
-    formats:
-      short: "%d.%m.%Y"
-      short_no_year: "%-d. %B"
-      date_only: "%-d. %B %Y"
-      long: "%B %-d, %Y, %l:%M%P"
-      no_day: "%B. %Y"
-  date:
-    month_names:
-    - null
-    - jaanuar
-    - veebruar
-    - märts
-    - aprill
-    - mai
-    - juuni
-    - juuli
-    - august
-    - september
-    - oktoober
-    - november
-    - detsember
-    <<: *datetime_formats
-  time:
-    am: "am"
-    pm: "pm"
-    <<: *datetime_formats
-  title: "Discourse"
-  topics: "Teemad"
-  posts: "postitused"
-  views: "vaatamisi"
-  loading: "Laetakse"
-  sign_up: "Liitu"
-  log_in: "Logi sisse"
-  submit: "Saada"
-  purge_reason: "Kustutatud automaatselt kui mahajäetud, deaktiveeritud konto"
-  disable_remote_images_download_reason: "Väliste piltide allalaadimine keelati, kuna polnud polnud piisavalt vaba ruumi."
-  anonymous: "Anonüümne"
-  remove_posts_deleted_by_author: "Autori poolt kustutatud"
-  inline_oneboxer:
-    topic_page_title_post_number_by_user: "postituse nr%{post_number} tegi %{username}"
-  emails:
-    incoming:
-      default_subject: "See teema vajab pealkirja"
-      show_trimmed_content: "Näita lühendatud sisu"
-      maximum_staged_user_per_email_reached: "Meili teel loodud ettevalmistamisel olevate kasutajate maksimaalne arv on täis."
-      errors:
-        empty_email_error: "Juhtub, kui meieni jõudnud toormeil on tühi."
-        no_message_id_error: "Juhtub, kui meilil puudub 'Message-Id' päis."
-        auto_generated_email_error: "Juhtub, kui 'precedence' päis on seatud väärtusele: list, junk, bulk või auto_reply või kui mingi muu päis sisaldab väärtusi: auto-submitted, auto-replied või auto-generated."
-        no_body_detected_error: "Juhtub, kui meil ei õnnestunud keha eraldada ja manused puudusid."
-        inactive_user_error: "Juhtub, kui saatja ei ole aktiveeritud."
-        strangers_not_allowed_error: "Juhtub, kui kasutaja proovib teha teemat liiki, millesse ta ise ei kuulu."
-        insufficient_trust_level_error: "Juhtub, kui kasutaja proovib teha teemat liiki, millele tal puudub vajalik usaldustase."
-        reply_user_not_matching_error: "Juhtub, kui vastus tuleb teistsuguselt meiliaadressilt kui see, millele märguanne saadeti."
-        topic_not_found_error: "Juhtub, kui vastus tuli aga teema on juba kustutatud."
-        topic_closed_error: "Juhtub, kui vastus tuli aga teema on juba suletud."
-        bounced_email_error: "Meil on tagasipõrgatatud meili vearaport."
-        screened_email_error: "Juhtub, kui saatja on varjestatud."
-  errors: &errors
-    format: ! "%{attribute} %{message}"
-    messages:
-      too_long_validation: "piirang on %{max} tähemärki; sina sisestasid %{length}."
-      invalid_boolean: "Vigane tõeväärtus."
-      taken: "on juba võetud"
-      accepted: vajab aktsepteerimist
-      blank: ei saa olla tühi
-      present: peab olema tühi
-      confirmation: ! "%{attribute} ei ühti"
-      empty: ei tohi olla tühi
-      equal_to: peab olema %{count}
-      even: peab olema paaris
-      exclusion: on reserveeritud
-      greater_than: peab olema suurem kui %{count}
-      greater_than_or_equal_to: peab olema suurem või võrdne kui %{count}
-      has_already_been_used: "on juba kasutusel"
-      inclusion: puudub nimekirjas
-      invalid: pole korrektne
-      is_invalid: "tundub segane. kas see on terve lause?"
-      contains_censored_words: "sisaldab järgmisi tsenseeritud sõnu: %{censored_words}"
-      less_than: peab olema väiksem kui %{count}
-      less_than_or_equal_to: peab olema väiksem või võrdne kui %{count}
-      not_a_number: ei ole number
-      not_an_integer: peab olema täisarv
-      odd: peab olema paaritu
-      record_invalid: ! "Valideerimine ebaõnnestus: %{errors}"
-      restrict_dependent_destroy:
-        one: "Kirjet ei saa kustutada, kuna leiti seotud kirje %{record}"
-        other: "Kirjet ei saa kustutada, kuna leiti seotud kirje %{record}"
-      too_long:
-        one: on liiga pikk (maksimum on %{count} tähemärk)
-        other: on liiga pikk (maksimum on %{count} tähemärki)
-      too_short:
-        one: on liiga lühike (miinimum on %{count} tähemärk)
-        other: on liiga lühike (miinimum on %{count} tähemärki)
-      wrong_length:
-        one: on vale pikkus (peaks olema %{count} tähemärk)
-        other: on vale pikkus (peaks olema %{count} tähemärki)
-      other_than: "peab olema midagi muud, kui %{count}"
-    template:
-      body: ! "Järgmiste väljadega oli probleeme:"
-      header:
-        one: "%{count} viga takistas mudeli %{model} salvestamist"
-        other: ! "%{count} viga takistasid mudeli %{model} salvestamist"
-    embed:
-      load_from_remote: "Selle postituse laadimisel ilmnes üks viga"
-    site_settings:
-      default_categories_already_selected: "Sa ei saa valida teises nimekirjas valitud liiki."
-      s3_upload_bucket_is_required: "Ei saa aktiveerida S3 üleslaadimist, kui 's3_upload_bucket' ei ole määratud."
-  invite:
-    disabled_errors:
-      invalid_access: "Päritud ressursi vaatamiseks puuduvad õigused."
   bulk_invite:
     file_should_be_csv: "Üles laetav fail peab olema CSV vormingus."
     error: "Selle faili üleslaadimisel tekkis viga. Palun proovi hiljem uuesti."
@@ -276,7 +160,6 @@ et:
           attributes:
             payload_url:
               invalid: "URL on vigane. URL peab sisaldama http:// või https://. Ning tühikud ei ole lubatud."
-      <<: *errors
   general_category_name: "Üldine"
   meta_category_name: "Saidi tagasiside."
   meta_category_description: "Arutelu selle saidi, tema korralduse, töömeetodite ja arenguvõimaluste kohta."
@@ -1103,6 +986,3 @@ et:
       reject:
         title: "Lükka tagasi"
   fallback_username: "kasutaja"
-  activemodel:
-    errors:
-      <<: *errors

@@ -5,84 +5,6 @@
 # https://translate.discourse.org/
 
 te:
-  dates:
-    short_date_no_year: "D MMM"
-    short_date: "D MMM, YYYY"
-    long_date: "MMMM D, YYYY h:mma"
-  date:
-    month_names:
-    - null
-    - January
-    - February
-    - March
-    - April
-    - May
-    - June
-    - July
-    - August
-    - September
-    - October
-    - November
-    - December
-  title: "డిస్కోర్స్"
-  topics: "విషయాలు"
-  posts: "టపాలు"
-  views: "చూపులు"
-  loading: "లోడవుతోంది"
-  sign_up: "సైన్ అప్"
-  log_in: "లాగిన్"
-  disable_remote_images_download_reason: "సుదూర బొమ్మల దిగుమతి అచేతనమైంది ఎందుకంటే డిస్క్ జాగా తక్కువగా ఉంది."
-  anonymous: "అనామక"
-  inline_oneboxer:
-    topic_page_title_post_number_by_user: "%{username} నుండి #%{post_number}"
-  errors: &errors
-    format: ! "%{attribute} %{message}"
-    messages:
-      too_long_validation: "%{max} అక్షరాలకే పరిమితము. మీరు %{length} అక్షరాలు రాసారు."
-      invalid_boolean: "చెల్లని బూలియన్"
-      taken: "ఇప్పటికే తీసుకొన్నారు"
-      accepted: తప్పనిసరి ఒప్పుకోవాలి
-      blank: ఖాళీగా ఉండకూడదు
-      present: తప్పనిసరిగా ఖాళీగా ఉండాలి
-      confirmation: ! "%{attribute} కు జత అవ్వలేదు "
-      empty: ఖాళీ ఉండకూడదు
-      equal_to: తప్పనిసరిగా %{count} కు సమానంగా ఉండాలి
-      even: జతగా ఉండాలి
-      exclusion: రక్షితము
-      greater_than: ' %{count} కన్నా ఎక్కువ ఉండాలి'
-      greater_than_or_equal_to: '%{count} కన్నా సమానం లేదా ఎక్కువ ఉండాలి'
-      has_already_been_used: "ఇప్పటికే వాడుకలో ఉంది"
-      inclusion: జాబితాలో జతపర్చబడలేదు
-      invalid: చెల్లనిది
-      less_than: '%{count} కన్నా తక్కువ ఉండాలి'
-      less_than_or_equal_to: '%{count} కన్నా సమానం లేదా తక్కువగా ఉండాలి'
-      not_a_number: సంఖ్య కాదు
-      not_an_integer: తప్పనిసరిగా పూర్ణ సంఖ్య అయి ఉండాలి
-      odd: తప్పనిసరి బేసి సంఖ్య కావాలి
-      record_invalid: ! "సరిజూత విఫలమైంది: %{errors}"
-      restrict_dependent_destroy:
-        one: "రికార్డు తొలగించలేము. ఎందుకంటే ఆధారిత %{record} ఉంది"
-        other: "రికార్డు తొలగించలేము. ఎందుకంటే ఆధారిత %{record} ఉంది"
-      too_long:
-        one: ఇది చాలా పొడుగు (గరిష్ట పరిమితి ఒక అక్షరం)
-        other: ఇది చాలా పొడుగు. (గరిష్ట పరిమితి %{count} అక్షరాలు)
-      too_short:
-        one: ఇది చాలా పొట్టి (కనీస పరిమితి ఒక అక్షరం)
-        other: ఇది చాపా పొట్టి (కనీస పరిమితి %{count} అక్షరాలు)
-      wrong_length:
-        one: ఇది సరైన పొడుగు కాదు (ఒక అక్షరం మాత్రమే ఉండాలి)
-        other: సరైన పొడుగు కాదు. (తప్పనిసరి %{count} అక్షరాలు ఉండాలి)
-      other_than: "%{count} కాకుండా వేరే అవ్వాలి"
-    template:
-      body: ! "ఈ దిగువ క్షేత్రాలతో సమస్య ఉంది"
-      header:
-        one: "ఒక దోషం వల్ల ఈ %[model] భద్రపరుచుట వీలవలేదు"
-        other: ! "%{count} దోషాల వల్ల %{model} భద్రపరుచుట వీలవలేదు"
-    embed:
-      load_from_remote: "ఈ టపా లోడింగులో దోషం"
-  invite:
-    disabled_errors:
-      invalid_access: "అభ్యర్థించిన వనరు వీక్షించడానికి మీకు అనుమతి లేదు."
   backup:
     operation_already_running: "ఒక పరిక్రియ ప్రస్తుతం జరుగుతోంది. కొత్త పని ఇప్పుడు మొదలుపెట్టవీలవదు."
     backup_file_should_be_tar_gz: "బ్యాకప్ దస్త్రం తప్పనిసరి .tar.gz కట్ట అయి ఉండాలి."
@@ -178,7 +100,6 @@ te:
           attributes:
             hex:
               invalid: "ఇది చెల్లని రంగు"
-      <<: *errors
   general_category_name: "సాధారణ"
   meta_category_description: "ఈ సైటు గురించి చర్చ. ఎలా మొదలైంది. ఎలా పని చేస్తుంది. ఇంకా ఎలా మెరుగు పరచవచ్చు."
   staff_category_name: "సిబ్బంది"
@@ -755,6 +676,3 @@ te:
       reject:
         title: "తిరస్కరించు"
   fallback_username: "సభ్యుడు"
-  activemodel:
-    errors:
-      <<: *errors

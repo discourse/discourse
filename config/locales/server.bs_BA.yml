@@ -5,119 +5,6 @@
 # https://translate.discourse.org/
 
 bs_BA:
-  dates:
-    short_date_no_year: "D MMM"
-    short_date: "D MMM, YYYY"
-    long_date: "MMMM D, YYYY h:mma"
-  datetime_formats: &datetime_formats
-    formats:
-      short: "%d.%m.%Y."
-      short_no_year: "%B %-d"
-      date_only: "%B %-d, %Y"
-      long: "%B %-d, %Y, %l:%M%P"
-      no_day: "% B% Y"
-  date:
-    month_names:
-    - null
-    - Januar
-    - Februar
-    - Mart
-    - April
-    - Maj
-    - Juni
-    - Juli
-    - August
-    - Septembar
-    - Oktobar
-    - Novembar
-    - Decembar
-    <<: *datetime_formats
-  time:
-    am: "am"
-    pm: "pm"
-    <<: *datetime_formats
-  title: "Discourse"
-  topics: "Teme"
-  posts: "objave"
-  views: "pregleda"
-  loading: "Učitava"
-  powered_by_html: 'Pokretano sa <a href="https://www.discourse.org">Discourse</a>, za najbolje sučelje uključiti JavaScript'
-  sign_up: "Registruj se"
-  log_in: "Uloguj se"
-  submit: "Potvrdi"
-  purge_reason: "Automatski obrisan kao napušten, deaktiviran račun"
-  disable_remote_images_download_reason: "Remote images skidanje je obustavljeno zbog nedostatka disk prostora na vašem uređaju."
-  anonymous: "Anoniman"
-  remove_posts_deleted_by_author: "Izbrisan od strane autora"
-  redirect_warning: "Nismo bili u stanju da verifikujemo da je link koji ste označili zapravo bio objavljen na forumu. Ukoliko u svakom slučaju želite da nastavite dalje, označite link ispod."
-  on_another_topic: "Na drugu temu"
-  inline_oneboxer:
-    topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
-  themes:
-    bad_color_scheme: "Ne može se ažurirati tema, nevažeća paleta boja"
-    other_error: "Nešto je krenulo loše pri ažuriranju izgleda teme."
-    import_error:
-      about_json_values: "o .json sadrži nevažeće vrijednosti: %{errors}"
-      git: "Greška prilikom kloniranja git repository-a, pristup je odbijen ili repositroy nije pronađen."
-      unpack_failed: "Otpakivanje datoteke nije uspelo"
-      unknown_file_type: "Datoteka koju ste učitali ne izgleda kao valjana tema diskursa."
-    errors:
-      component_no_user_selectable: "Komponente teme se ne mogu izabrati od korisnika"
-      component_no_default: "Komponente teme ne mogu biti podrazumevana tema"
-      component_no_color_scheme: "Komponente teme ne mogu imati palete boja"
-      no_multilevels_components: "Teme s dječjim temama ne mogu biti same teme djeteta"
-    settings_errors:
-      invalid_yaml: "Korišteni YAML fajl nije validan."
-      name_too_long: "Postoji postavka sa predugim imenom. Maksimalna dužina je 255"
-      default_value_missing: "Postavka `%{name}` nema uobičajenu (default) vrijednost"
-      default_not_match_type: "Postavka `%{name}` default uobičajena vrijednosti se ne podudara sa tipom postavke."
-      default_out_range: "Postavka `%{name}` default uobičajena vrijednost nije u specificiranim granicama (range)."
-      enum_value_not_valid: "Označena vrijednost nije jedna od enum izbora"
-      number_value_not_valid: "Nova vrijednost nije unutar dozvoljenih granica (range)."
-      number_value_not_valid_min_max: "Mora biti izmeđi %{min} i %{max}."
-      number_value_not_valid_min: "Mora biti veće ili jednako %{min}."
-      number_value_not_valid_max: "Mora biti manje ili jednako %{max}."
-      string_value_not_valid: "Nova vrijednost za dužinu nije u okviru dozvoljenih granica (range)."
-      string_value_not_valid_min_max: "Mora biti između %{min} i %{max} znakova."
-      string_value_not_valid_min: "Mora biti najmanje %{min} Karaktera dugo."
-      string_value_not_valid_max: "Mora biti najviše %{max} karaktera dugo."
-    locale_errors:
-      top_level_locale: "Ključ gornjeg nivoa u datoteci locale mora odgovarati nazivu jezika"
-      invalid_yaml: "Prevod YAML invalid"
-  emails:
-    incoming:
-      default_subject: "Ova tema treba naslov"
-      show_trimmed_content: "Prikaži skraćeni sadržaj"
-      maximum_staged_user_per_email_reached: "Dosegnut je maksimalni broj stupnjevanih korisnika kreiranih po e-pošti."
-      no_subject: "(nema naslova)"
-      no_body: "(nema teksta)"
-      errors:
-        empty_email_error: "Dešava se kada je sirova pošta koju smo primili bila prazna."
-        no_message_id_error: "Dešava se kada pošta nema zaglavlje 'Message-Id'."
-        auto_generated_email_error: "Dešava se kada je zaglavlje 'prvenstva' postavljeno na: listu, bezvrijedno, skupno ili auto_reply, ili kada bilo koje drugo zaglavlje sadrži: automatsko slanje, automatsko odgovaranje ili automatsko generiranje."
-        no_body_detected_error: "Dešava se kada nismo mogli da izvučemo telo i nije bilo nikakvih vezanosti."
-        no_sender_detected_error: "Dešava se kada nismo mogli pronaći važeću adresu e-pošte u zaglavlju From."
-        from_reply_by_address_error: "Događa se kada se zaglavlje From poklapa s odgovorom na adresu e-pošte."
-        inactive_user_error: "Dešava se kada pošiljalac nije aktivan."
-        silenced_user_error: "Dešava se kada je pošiljalac utišan."
-        strangers_not_allowed_error: "Dešava se kada je korisnik pokušao da kreira novu temu u kategoriji u kojoj nije član."
-        insufficient_trust_level_error: "Dešava se kada korisnik pokuša da kreira novu temu u kategoriji za koju nema potreban nivo pouzdanosti."
-        reply_user_not_matching_error: "Događa se kada je stigao odgovor s druge adrese e-pošte na koju je obavijest poslana."
-        topic_not_found_error: "Dešava se kada je stigao odgovor, ali je srodna tema izbrisana."
-        topic_closed_error: "Dešava se kada je stigao odgovor, ali je srodna tema zatvorena."
-        bounced_email_error: "E-mail je izvještaj o odbijenoj e-pošti."
-        screened_email_error: "Dešava se kada je adresa e-pošte pošiljaoca već prikazana."
-  errors: &errors
-    messages:
-      too_long_validation: "is limited to %{max} characters; you entered %{length}."
-      invalid_boolean: "Invalid boolean."
-      taken: "has already been taken"
-      exclusion: je rezvisan
-      has_already_been_used: "već se koristi"
-    embed:
-      load_from_remote: "There was an error loading that post."
-  invite:
-    confirm_email: "<p>Skoro ste gotovi! Na vašu e-adresu poslali smo aktivacijski mail. Slijedite upute u pošti da biste aktivirali svoj račun.</p><p>Ako ne stigne, provjerite svoju mapu neželjene pošte.</p>"
   topic_invite:
     muted_topic: "Žao nam je, navedeni korisnik je utišao ovu temu."
     receiver_does_not_allow_pm: "Žao nam je, navedeni korisnik vam ne dozvoljava da mu šaljete privatne poruke."
@@ -224,7 +111,6 @@ bs_BA:
           attributes:
             hex:
               invalid: "is not a valid color"
-      <<: *errors
   general_category_name: "General"
   meta_category_description: "Discussion about this site, its organization, how it works, and how we can improve it."
   staff_category_name: "Staff"
@@ -1113,6 +999,3 @@ bs_BA:
       reject:
         title: "Odbij"
   fallback_username: "user"
-  activemodel:
-    errors:
-      <<: *errors

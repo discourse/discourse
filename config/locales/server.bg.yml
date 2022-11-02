@@ -5,110 +5,6 @@
 # https://translate.discourse.org/
 
 bg:
-  dates:
-    short_date_no_year: "D MMM"
-    short_date: "D MMM, YYYY"
-    long_date: "MMMM D, YYYY h:mma"
-  datetime_formats: &datetime_formats
-    formats:
-      short: "%m-%d-%Y"
-      short_no_year: "%B %-d"
-      date_only: "%B %-d, %Y"
-      no_day: "%Y %B"
-  date:
-    month_names:
-    - null
-    - January
-    - February
-    - March
-    - April
-    - May
-    - June
-    - July
-    - August
-    - September
-    - October
-    - November
-    - December
-    <<: *datetime_formats
-  title: "Discourse"
-  topics: "Теми"
-  posts: "публикации"
-  views: "преглеждания"
-  loading: "Зареждане"
-  sign_up: "Регистрирай се"
-  log_in: "Вход"
-  submit: "Изпрати"
-  purge_reason: "Автоматично изтрит като изоставен, неактивен акаунт"
-  disable_remote_images_download_reason: "Изтеглянето на отдалечени изображения беше изключено, защото няма достатъчно място на хард диска."
-  anonymous: "Анонимен"
-  remove_posts_deleted_by_author: "Изтрит от автора"
-  inline_oneboxer:
-    topic_page_title_post_number: "#%{post_number}"
-    topic_page_title_post_number_by_user: "#%{post_number} от %{username} "
-  themes:
-    other_error: "Нещо се обърка при актуализирането на стила"
-    import_error:
-      unpack_failed: "Неуспешно разопаковане на файла"
-  emails:
-    incoming:
-      default_subject: "Тази тема има нужда от заглавие"
-      show_trimmed_content: "Показване на съкратеното съдържание"
-      no_subject: "(без тема)"
-      no_body: "(без съдържание)"
-      missing_attachment: "(Прикаченият файл %{filename} липсва)"
-      errors:
-        empty_email_error: "Се случва, когато raw имейла който получихме беше празен."
-        no_message_id_error: "Се случва, когато имейла няма 'Message-Id' хедър."
-        inactive_user_error: "Се случва, когато изпращача не е активен."
-  errors: &errors
-    format: ! "%{attribute} %{message}"
-    messages:
-      too_long_validation: "е ограничен на %{max} символа ; вие въведохте %{length}."
-      invalid_boolean: "Невалиден булев."
-      taken: "е вече заето"
-      accepted: трябва да се приеме
-      blank: не може да бъде празно
-      present: трябва да се попълни
-      confirmation: ! "не съвпада %{attribute}"
-      empty: не може да бъде празно
-      equal_to: трябва да бъде равно на %{count}
-      even: трябва да бъде равен
-      exclusion: е запазено
-      greater_than: трябва да бъде по-голямо от %{count}
-      greater_than_or_equal_to: трябва да бъде по-голямо или равно на %{count}
-      has_already_been_used: "вече е бил използван"
-      inclusion: не е включено в списъка
-      invalid: не невалидно
-      less_than: трябва да бъде по-малко от %{count}
-      less_than_or_equal_to: трябва да бъде по-малко или равно на %{count}
-      not_a_number: не е число
-      not_an_integer: трябва да бъде число
-      odd: трябва да е нечетно
-      record_invalid: ! "Валидирането е неуспешно %{errors}"
-      restrict_dependent_destroy:
-        one: "Записът не може да бъде изтрит, защото е зависим от съществуващите %{record}"
-        other: "Записът не може да бъде изтрит, защото е зависим от съществуващите %{record}"
-      too_long:
-        one: прекалено дълго (трябва да бъде само %{count} символ)
-        other: е прекалено дълго (максималния брой символи е %{count})
-      too_short:
-        one: прекалено кратко (минимума е %{count} символ)
-        other: е прекалено кратко (миниума е %{count} символи)
-      wrong_length:
-        one: е с грешна дължина (трябва да бъде поне %{count} символ)
-        other: е с грешна дължина (трябва да бъде %{count} символа)
-      other_than: "трябва да бъде различно от %{count}"
-    template:
-      body: ! "Имаше проблеми със следните полета:"
-      header:
-        one: "%{count} грешка възпрепятства запазването на този %{model}"
-        other: ! "%{count} грешки възпрепятстват запазването на този %{model} "
-    embed:
-      load_from_remote: "Получи се грешка при зареждането на тази публикация."
-  invite:
-    disabled_errors:
-      invalid_access: "Вие нямате права да разглеждате този ресурс."
   topic_invite:
     user_exists: "Съжеляваме, но този потребител е вече поканен. Вие можете да каните потребител за дадена тема само веднъж."
   backup:
@@ -251,7 +147,6 @@ bg:
           attributes:
             hex:
               invalid: "този цвят не е валиден "
-      <<: *errors
   general_category_name: "Основни"
   meta_category_name: "Заявка към сайта"
   meta_category_description: "Дискусия за сайта, неговата организация, как той работи, и как можем да го подобрим."
@@ -1349,8 +1244,3 @@ bg:
       reject:
         title: "Отхвърли"
   fallback_username: "потребител"
-  time:
-    <<: *datetime_formats
-  activemodel:
-    errors:
-      <<: *errors

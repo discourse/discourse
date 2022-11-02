@@ -35,9 +35,6 @@ sv:
       browse_all_channels: "Bläddra bland alla kanaler"
       move_to_channel:
         title: "Flytta meddelanden till kanal"
-        instructions:
-          one: "Du flyttar <strong>1</strong> -meddelande. Välj en destinationskanal. Ett platshållarmeddelande kommer att skapas i kanalen <strong>%{channelTitle}</strong> för att indikera att detta meddelande har flyttats."
-          other: "Du flyttar <strong>%{count}</strong> meddelanden. Välj en destinationskanal. Ett platshållarmeddelande kommer att skapas i kanalen <strong>%{channelTitle}</strong> för att indikera att dessa meddelanden har flyttats."
         confirm_move: "Flytta meddelanden"
       channel_settings:
         title: "Kanalinställningar"
@@ -78,8 +75,8 @@ sv:
       hidden: "Ett meddelande doldes. [view]"
       delete: "Radera"
       edited: "redigerad"
-      muted: "tystad"
-      joined: "anslöt sig"
+      muted: "tystat"
+      joined: "gick med"
       empty_state:
         direct_message_cta: "Starta en personlig chatt"
         direct_message: "Du kan också starta en personlig chatt med en eller flera användare."
@@ -135,8 +132,8 @@ sv:
       reply: "Svara"
       edit: "Redigera"
       copy_link: "Kopiera länk"
-      rebake_message: "Omskapa HTML"
-      bookmark_message: "Bokmärke"
+      rebake_message: "Generera HTML"
+      bookmark_message: "Bokmärk"
       bookmark_message_edit: "Redigera bokmärke"
       restore: "Återställ raderat meddelande"
       save: "Spara"
@@ -169,7 +166,7 @@ sv:
         closed_header: "Kanalen är stängd"
         closed: "Stängd"
         open_header: "Kanalen är öppen"
-        open: "Öppen"
+        open: "Öppna"
       browse:
         title: Kanaler
         filter_all: Alla
@@ -185,7 +182,7 @@ sv:
       about_view:
         associated_topic: Länkat ämne
         associated_category: Länkad kategori
-        title: Titel
+        title: Rubrik
         description: Beskrivning
       channel_info:
         back_to_all_channels: "Alla kanaler"
@@ -214,21 +211,21 @@ sv:
         no_memberships: Denna kanal har inga medlemmar
         no_memberships_found: Inga medlemmar hittades
         memberships_count:
-          one: 1 medlem
+          one: "%{count} medlem"
           other: "%{count} medlemmar"
       create_channel:
         auto_join_users:
           warning_groups:
-            one: Lägg automatiskt till %{members_count} användare från %{group_1}?
-            other: Lägg automatiskt till %{members_count} användare från %{group_1} och %{group_2}?
+            one: Lägg automatiskt till %{members_count} användare från %{group}?
+            other: Lägg automatiskt till %{members_count} användare från %{group} och %{group_2}?
           warning_multiple_groups: Lägg automatiskt till %{members_count} användare från %{group_1} och %{count} andra?
         choose_category:
           label: "Välj en kategori"
           none: "Välj en..."
           default_hint: Hantera åtkomst genom att besöka <a href=%{link} target="_blank">%{category} säkerhetsinställningar</a>
           hint_groups:
-            one: Användare i %{hint_1} kommer att ha åtkomst till denna kanal enligt <a href=%{link} target="_blank">säkerhetsinställningar</a>
-            other: Användare i %{hint_1} och %{hint_2} kommer att ha åtkomst till denna kanal enligt <a href=%{link} target="_blank">säkerhetsinställningarna</a>
+            one: Användare i %{hint} kommer att ha åtkomst till denna kanal enligt <a href=%{link} target="_blank">säkerhetsinställningar</a>
+            other: Användare i %{hint} och %{hint_2} kommer att ha åtkomst till denna kanal enligt <a href=%{link} target="_blank">säkerhetsinställningarna</a>
           hint_multiple_groups: Användare i %{hint_1} och %{count} andra grupper kommer att ha åtkomst till denna kanal enligt <a href=%{link} target="_blank">säkerhetsinställningarna</a>
         create: "Skapa kanal"
         description: "Beskrivning (valfritt)"
@@ -247,8 +244,8 @@ sv:
         you_others_and_more: "Du, %{usernames} och %{more} andra reagerade med :%{emoji}:"
       composer:
         toggle_toolbar: "Växla verktygsfält"
-        italic_text: "betonad text"
-        bold_text: "stark text"
+        italic_text: "kursiv text"
+        bold_text: "fet text"
         code_text: "kod text"
       quote:
         original_channel: 'Ursprungligen skickad i <a href="%{channelLink}">%{channel}</a>'
@@ -261,7 +258,7 @@ sv:
         auto_join_users_warning: "Varje användare som inte är medlem i den här kanalen och har tillgång till kategorin %{category} kommer att gå med. Är du säker?"
         desktop_notification_level: "Skrivbordsaviseringar"
         follow: "Gå med"
-        followed: "Anslöt sig"
+        followed: "Gick med"
         mobile_notification_level: "Mobila push-meddelanden"
         mute: "Tysta kanal"
         muted_on: "På"
@@ -284,7 +281,7 @@ sv:
         confirm_destroy: "Är du säker på att du vill ta bort denna inkommande webhook? Detta kan inte ångras."
         current_emoji: "Nuvarande emoji"
         description: "Beskrivning"
-        delete: "Radera"
+        delete: "Ta bort"
         emoji: "Emoji"
         emoji_instructions: "Systemavatar kommer att användas om emoji lämnas tom."
         name: "Namn"
@@ -337,7 +334,14 @@ sv:
         dm: "Personlig chatthistorik behålls i %{days} dagar."
       topic_button_title: "Chatt"
       emoji_picker:
+        objects: "Objekt"
+        activities: "Aktiviteter"
+        flags: "Flaggor"
+        symbols: "Symboler"
         no_results: "Inga resultat"
+      draft_channel_screen:
+        header: "Nytt meddelande"
+        cancel: "Avbryt"
     notifications:
       chat_invitation: "bjöd in dig att gå med i en chattkanal"
       chat_invitation_html: "<span>%{username}</span> <span>bjöd in dig att gå med i en chattkanal</span>"
@@ -346,12 +350,12 @@ sv:
         chat_mention:
           direct: 'nämnde dig i "%{channel}"'
           direct_html: '<span>%{username}</span> <span>nämnde dig i "%{channel}"</span>'
-          other: 'nämnde %{identifier} i "%{channel}"'
+          other_plain: 'nämnde %{identifier} i "%{channel}"'
           other_html: '<span>%{username}</span> <span>nämnde %{identifier} i "%{channel}"</span>'
         direct_message_chat_mention:
           direct: "nämnde dig i personlig chatt"
           direct_html: "<span>%{username}</span> <span>nämnde dig i en personlig chatt</span>"
-          other: "nämnde %{identifier} i personlig chatt"
+          other_plain: "nämnde %{identifier} i personlig chatt"
           other_html: "<span>%{username}</span> <span>nämnde %{identifier} i personlig chatt</span>"
         chat_message: "Nytt chattmeddelande"
         chat_quoted: "%{username} citerade ditt chattmeddelande"

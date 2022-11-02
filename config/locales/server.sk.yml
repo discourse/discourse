@@ -5,137 +5,6 @@
 # https://translate.discourse.org/
 
 sk:
-  dates:
-    short_date_no_year: "MMM D"
-    short_date: "YYYY MMM D"
-    long_date: "YYYY MMM D h:mma"
-  datetime_formats: &datetime_formats
-    formats:
-      short: "%Y-%m-%d"
-      short_no_year: "%B %-d"
-      date_only: "%Y, %B %-d"
-      no_day: "%Y %B"
-  date:
-    month_names:
-    - null
-    - Január
-    - Február
-    - Marec
-    - Apríl
-    - Máj
-    - Jún
-    - Júl
-    - August
-    - September
-    - Október
-    - November
-    - December
-    <<: *datetime_formats
-  time:
-    am: "am"
-    pm: "pm"
-    <<: *datetime_formats
-  title: "DIscourse"
-  topics: "Témy"
-  posts: "príspevky"
-  views: "zobrazení"
-  loading: "Načítava sa"
-  powered_by_html: 'Beží na <a href="https://www.discourse.org">Discourse</a>, najlepšie so zapnutým JavaScriptom'
-  sign_up: "Registrovať sa"
-  log_in: "Prihlásenie"
-  submit: "odošli"
-  purge_reason: "Automaticky zmazaný ako opustený, dezaktivovaný účet"
-  disable_remote_images_download_reason: "Sťahovanie vzdialených obrázkov je vypnuté kvôli nedostatku diskového priestoru."
-  anonymous: "Anonymný"
-  remove_posts_deleted_by_author: "Zmazané autorom"
-  redirect_warning: "Neboli sme schopní overiť, či vami vybraný link bol pridaný na fórum. Ak chcete aj tak pokračovať, vyberte link nižšie."
-  inline_oneboxer:
-    topic_page_title_post_number_by_user: "#%{post_number} podľa %{username}"
-  themes:
-    other_error: "počas aktualizácie tému sa niečo nepodarilo"
-    import_error:
-      git: "Nastala chyba pri klonovaní git repozitára. Prístup bol odmietnuty, alebo repozitár nebol nájdený."
-    settings_errors:
-      invalid_yaml: "Tento YAML nie je validný."
-  emails:
-    incoming:
-      default_subject: "Táto téma musí mať názov"
-      show_trimmed_content: "Ukázať orezaný obsah"
-      maximum_staged_user_per_email_reached: "Dosiahnutý maximálny počet dočasných používateľov vytvorených emailom."
-      no_subject: "(bez predmetu)"
-      no_body: "(bez tela)"
-      errors:
-        empty_email_error: "Nastane, keď prijmeme úplne prázdny mail."
-        no_message_id_error: "Nastane, keď v maili chýba hlavička 'Message-Id'."
-        inactive_user_error: "Nastane, keď odosielateľ nie je aktívny."
-        silenced_user_error: "Nastane, keď odosielateľ bol stíšený."
-        insufficient_trust_level_error: "Nastane, keď sa používateľ pokúsi vytvoriť novú tému v kategórii, na ktorú nemajú dostatočný stupeň dôvery."
-        topic_closed_error: "Nastane, keď príde odpoveď na uzavretú tému."
-        bounced_email_error: "Email report bol odoslaný emailom"
-      unrecognized_error: "Chyba nebola rozpoznaná."
-  errors: &errors
-    format: ! "%{attribute} %{message}"
-    messages:
-      too_long_validation: "je obmedzený na %{max} znakov, zadali ste %{length}."
-      invalid_boolean: "Neplatná logická hodnota."
-      taken: "je už použité"
-      accepted: sa musí akceptovať
-      blank: nesmie byť prázdne
-      present: musí byť prázdne
-      confirmation: ! "sa nerovná %{attribute}"
-      empty: nesmie byť prázdne
-      equal_to: sa musí rovnať %{count}
-      even: musí byť párne
-      exclusion: je rezervované
-      greater_than: musí byť viac ako %{count}
-      greater_than_or_equal_to: musí byť väčšie alebo rovné %{count}
-      has_already_been_used: "je už použité"
-      inclusion: nie je v zozname
-      invalid: je nesprávne
-      is_invalid: "je to nejasné, je to kompletná veta?"
-      contains_censored_words: "obsahuje nasledujúce cenzúrované slová %{censored_words}"
-      less_than: musí byť menej ako %{count}
-      less_than_or_equal_to: musí byť menej alebo rovné %{count}
-      not_a_number: nie je číslo
-      not_an_integer: musí byť číslo
-      odd: musí byť nepárne
-      record_invalid: ! "Validácia zlyhala s chybami: %{errors}"
-      restrict_dependent_destroy:
-        one: "Nedá sa zmazať záznam pretože existuje %{record} závislých záznamov"
-        few: "Záznam nemôže byť zmazaný z dôvodu zavislosti na zázname: %{record} "
-        many: "Záznam nemôže byť zmazaný z dôvodu zavislosti na zázname: %{record} "
-        other: "Záznam nemôže byť zmazaný z dôvodu zavislosti na zázname: %{record} "
-      too_long:
-        one: príliš dlhé (maximálne %{count} znak)
-        few: príliiš dlhé (maximum je %{count} znaky)
-        many: príliiš dlhé (maximum je %{count} znakov)
-        other: príliiš dlhé (maximum je %{count} znakov)
-      too_short:
-        one: príliiš krátke (minimum je %{count} znak)
-        few: príliiš krátke (minimum je %{count} znaky)
-        many: príliiš krátke (minimum je %{count} znakov)
-        other: príliiš krátke (minimum je %{count} znakov)
-      wrong_length:
-        one: nesprávna dĺžka (musí byť %{count} znak)
-        few: nesprávna dĺžka (musí byť %{count} znaky)
-        many: nesprávna dĺžka (musí byť %{count} znakov)
-        other: nesprávna dĺžka (musí byť %{count} znakov)
-      other_than: "musí byť iný než %{count}"
-    template:
-      body: ! "Nastal problém s nasledujúcimi položkami:"
-      header:
-        one: "Uloženie %{model} zlyhalo kôli chybe"
-        few: ! "Uloženie %{model} zlyhalo kôli %{count} chybám"
-        many: ! "Uloženie %{model} zlyhalo kôli %{count} chybám "
-        other: ! "Uloženie %{model} zlyhalo kôli %{count} chybám "
-    embed:
-      load_from_remote: "Nastala chyba pri načítaní príspevku"
-    site_settings:
-      default_categories_already_selected: "Nemôžete vybrať kategóriu použitú v inom zozname."
-      s3_upload_bucket_is_required: "Nemôžete nahrávať na S3 pokiaľ ste nezadali 's3_upload_bucket'."
-  invite:
-    disabled_errors:
-      invalid_access: "Nemáte oprávnenie na zobrazenie požadovaných údajov!"
   bulk_invite:
     file_should_be_csv: "Nahrávaný súbor by mal byť typu CSV."
     error: "Počas nahrávanie súboru sa vyskytla chyba. Prosím, vyskúšajte ho nahraď znovu neskôr."
@@ -308,7 +177,6 @@ sk:
           attributes:
             word:
               too_many: "Príliš veľa slov k tej akcii"
-      <<: *errors
   general_category_name: "Všeobecné"
   meta_category_name: "Podnety pre tvorcov stránky"
   meta_category_description: "Diskusia o stránke, organizácii, ako funguje a ako ju môžme vylepšit"
@@ -1434,6 +1302,3 @@ sk:
       reject:
         title: "Zamietnuť"
   fallback_username: "používateľ"
-  activemodel:
-    errors:
-      <<: *errors

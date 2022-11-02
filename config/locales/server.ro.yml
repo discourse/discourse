@@ -5,129 +5,6 @@
 # https://translate.discourse.org/
 
 ro:
-  dates:
-    short_date_no_year: "D MMM"
-    short_date: "D MMM, YYYY"
-    long_date: "MMMM D, YYYY h:mma"
-  datetime_formats: &datetime_formats
-    formats:
-      short: "%d-%m-%Y"
-      short_no_year: "%B %-d"
-      date_only: "%B %-d, %Y"
-      long: "%B %-d, %Y, %l:%M%P"
-      no_day: "%B %Y"
-  date:
-    month_names:
-    - null
-    - ianuarie
-    - februarie
-    - martie
-    - aprilie
-    - mai
-    - iunie
-    - iulie
-    - august
-    - septembrie
-    - octombrie
-    - noiembrie
-    - decembrie
-    <<: *datetime_formats
-  time:
-    am: "AM"
-    pm: "PM"
-    <<: *datetime_formats
-  title: "Discourse"
-  topics: "Subiecte"
-  posts: "Postări"
-  views: "vizualizări"
-  loading: "Se încarcă"
-  sign_up: "Înregistrare"
-  log_in: "Autentificare"
-  submit: "Trimite"
-  purge_reason: "Cont șters automat, ca fiind abandonat, dezactivat."
-  disable_remote_images_download_reason: "Descărcarea de imagini la distanță a fost dezactivată deoarece nu mai era spațiu suficient pe disc."
-  anonymous: "Anonime"
-  remove_posts_deleted_by_author: "Șters de către autor"
-  inline_oneboxer:
-    topic_page_title_post_number_by_user: "#%{post_number} de %{username}"
-  emails:
-    incoming:
-      default_subject: "Acest subiect are nevoie de un titlu"
-      show_trimmed_content: "Arată conținut restrâns."
-      maximum_staged_user_per_email_reached: "Număr maxim de utilizatori în așteptare, pe email."
-      errors:
-        empty_email_error: "Apare când mailul brut pe care l-am primit este gol."
-        no_message_id_error: "Apare când mailul nu are header 'Message-Id'."
-        auto_generated_email_error: "Apare când header-ul de 'precedență' este setat pe: list, junk, bulk sau auto_reply, sau atunci când orice alt header conține: auto-submitted, auto-replied sau auto-generated."
-        no_body_detected_error: "Apare când nu am putut extrage corpul mesajului și nu existau fișiere atașate."
-        inactive_user_error: "Apare când expeditorul nu este activ."
-        strangers_not_allowed_error: "Apare când un utilizator a încercat să creeze un nou subiect într-o categorie în care nu este membru. "
-        insufficient_trust_level_error: "Apare atunci când un utilizator a încercat să creeze un subiect nou într-o categorie pentru care nu are nivelul de încredere necesar."
-        reply_user_not_matching_error: "Apare atunci când un răspuns a venit de la o adresă de email diferită de cea la care a fost trimisă notificarea."
-        topic_not_found_error: "Apare atunci când un răspuns a venit, dar subiectul aferent a fost șters."
-        topic_closed_error: "Apare atunci când un răspuns a venit, dar subiectul aferent a fost închis."
-        bounced_email_error: "Emailul este un raport de email ricoșat."
-        screened_email_error: "Apare atunci când adresa de email a expeditorului a fost deja verificată."
-  errors: &errors
-    format: ! "%{attribute} %{message}"
-    messages:
-      too_long_validation: "este limitat la %{max} de caractere; ai introdus %{length}."
-      invalid_boolean: "Valoare logică invalidă."
-      taken: "nu este disponibil"
-      accepted: trebuie acceptat
-      blank: nu poate fi gol
-      present: trebuie să fie gol
-      confirmation: ! "nu se potrivește cu %{attribute}"
-      empty: nu poate fi gol
-      equal_to: trebuie sa fie egal cu %{count}
-      even: trebuie să fie par
-      exclusion: este rezervat
-      greater_than: trebuie să fie mai mare decât %{count}
-      greater_than_or_equal_to: trebuie să fie mai mare sau egal cu %{count}
-      has_already_been_used: "a fost deja folosit"
-      inclusion: nu este inclus in listă
-      invalid: nu este valid
-      is_invalid: "pare neclar, e completă propoziția?"
-      is_invalid_meaningful: "pare neclar, majoritatea cuvintelor conţin aceleaşi litere de mai multe ori?"
-      less_than: trebuie să fie mai mic decât %{count}
-      less_than_or_equal_to: trebuie să fie mai mic sau egal cu %{count}
-      not_a_number: nu este un număr
-      not_an_integer: trebuie sa fie un număr întreg
-      odd: trebuie sa fie impar
-      record_invalid: ! "Validarea a eşuat: %{errors}"
-      restrict_dependent_destroy:
-        one: "Înregistrarea nu poate fi ştearsă pentru că există %{record} (de) înregistrări dependente"
-        few: "Înregistrarea nu poate fi ştearsă pentru că există %{record} (de) înregistrări dependente"
-        other: "Înregistrarea nu poate fi ştearsă pentru că există %{record} (de) înregistrări dependente"
-      too_long:
-        one: este prea lung (maximum un caracter)
-        few: este prea lung (maximum %{count} caractere)
-        other: este prea lung (maximum %{count} de caractere)
-      too_short:
-        one: este prea scurt (minimum un caracter)
-        few: este prea scurt (minimum %{count} caractere)
-        other: este prea scurt (minimum %{count} de caractere)
-      wrong_length:
-        one: are lungimea greşită (trebuie sa fie un caracter)
-        few: are lungimea greşită (trebuie sa fie %{count} caractere)
-        other: are lungimea greşită (trebuie sa fie %{count} de caractere)
-      other_than: "trebuie sa fie diferit de %{count}"
-    template:
-      body: ! "Au apărut probleme cu următoarele câmpuri:"
-      header:
-        one: "O eroare a împiedicat acest %{model} să fie salvat"
-        few: ! "%{count} erori au împiedicat acest %{model} să fie salvat"
-        other: ! "%{count} de erori au împiedicat acest %{model} să fie salvat"
-    embed:
-      load_from_remote: "A apărut o eroare la încărcarea postării."
-    site_settings:
-      default_categories_already_selected: "Nu poți selecta o categorie folosită într-o altă listă."
-      s3_upload_bucket_is_required: "Nu poți activa încărcările pe S3 dacă nu ai introdus 's3_upload_bucket'."
-  invite:
-    expired: "Codul tău de invitație a expirat. Te rugăm <a href='%{base_url}/about'>contactezi personalul</a> forumului."
-    confirm_email: "<p>Ești aproape gata! Am trimis un e-mail de activare la adresa ta de e-mail. Te rugăm să urmezi instrucţiunile din mail pentru a-ţi activa contul.</p><p>Dacă nu ajunge, verifică folderul spam.</p>"
-    disabled_errors:
-      invalid_access: "Nu ai permisiunea să vezi această resursă."
   bulk_invite:
     file_should_be_csv: "Fișierul de încărcat trebuie să fie în format csv."
     error: "A apărut o eroare la încărcarea acestui fișier. Te rugăm să încerci din nou, mai târziu."
@@ -321,7 +198,6 @@ ro:
           attributes:
             execute_at:
               in_the_past: "trebuie să fie în viitor."
-      <<: *errors
   uncategorized_category_name: "Necategorisite"
   general_category_name: "General"
   meta_category_name: "Feedback la site"
@@ -2200,6 +2076,3 @@ ro:
       reject:
         title: "Respingere"
   fallback_username: "utilizatori"
-  activemodel:
-    errors:
-      <<: *errors

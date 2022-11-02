@@ -5,60 +5,6 @@
 # https://translate.discourse.org/
 
 lv:
-  dates:
-    short_date_no_year: "D MMM"
-    short_date: "D MMM, YYYY"
-    long_date: "MMMM D, YYYY hh:mm"
-  datetime_formats: &datetime_formats
-    formats:
-      short: "%d-%m-%Y"
-      short_no_year: "%B %-d"
-      date_only: "%B %-d, %Y"
-      long: "%B %-d, %Y, %l:%M%P"
-      no_day: "%Y %B"
-  date:
-    month_names:
-    - null
-    - Janvāris
-    - Februāris
-    - Marts
-    - Aprīlis
-    - Maijs
-    - jūnijs
-    - Jūlijs
-    - augusts
-    - Septembris
-    - Oktobris
-    - Novembris
-    - Decembris
-    <<: *datetime_formats
-  time:
-    am: "am"
-    pm: "pm"
-    <<: *datetime_formats
-  title: "Discourse"
-  topics: "Tēmas"
-  posts: "raksti"
-  views: "skatījumi"
-  loading: "Ielāde"
-  powered_by_html: 'Powered by <a href="https://www.discourse.org">Discourse</a>, vislabāk skatāms ar iespējotu JavaScript'
-  sign_up: "Reģistrēties"
-  log_in: "Ienākt"
-  submit: "Iesniegt"
-  purge_reason: "Automātiski izdzēsts kā pamests, deaktivizēts konts"
-  disable_remote_images_download_reason: "Attālu lejupielāde tika atspējota, jo nebija pietiekami daudz vietas diskā."
-  anonymous: "Anonīmi"
-  remove_posts_deleted_by_author: "Izdzēsis autors"
-  redirect_warning: "Mēs nevarējām pārbaudīt, vai jūsu izvēlētā saite tiešām tika ievietota forumā. Ja tomēr vēlaties turpināt, atlasiet zemāk esošo saiti."
-  on_another_topic: "Par citu tēmu"
-  inline_oneboxer:
-    topic_page_title_post_number_by_user: "#%{post_number} - %{username}"
-  emails:
-    incoming:
-      default_subject: "Šim ierakstam ir nepieciešams nosaukums"
-  errors: &errors
-    messages:
-      exclusion: ir rezervēts
   not_in_group:
     join_group: "Pievienoties grupai"
   likes: "Patīk"
@@ -120,8 +66,6 @@ lv:
         raw: "Saturs"
       user_profile:
         bio_raw: "Par Mani"
-    errors:
-      <<: *errors
   general_category_name: "Vispārīgi"
   staff_category_name: "Personāls"
   trust_levels:
@@ -485,6 +429,3 @@ lv:
       reject:
         title: "Noraidīt"
   fallback_username: "lietotājs"
-  activemodel:
-    errors:
-      <<: *errors

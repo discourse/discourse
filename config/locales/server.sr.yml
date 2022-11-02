@@ -5,65 +5,6 @@
 # https://translate.discourse.org/
 
 sr:
-  dates:
-    short_date_no_year: "D MMM"
-    short_date: "D MMM, YYYY"
-    long_date: "MMMM D, YYYY h:mma"
-  datetime_formats: &datetime_formats
-    formats:
-      short: "%m-%d-%Y"
-      short_no_year: "%B %-d"
-      date_only: "%B %-d, %Y"
-      no_day: "%Y %B"
-  date:
-    month_names:
-    - null
-    - januar
-    - februar
-    - mart
-    - april
-    - maj
-    - jun
-    - jul
-    - avgust
-    - septembar
-    - oktobar
-    - novembar
-    - decembar
-    <<: *datetime_formats
-  title: "Discourse"
-  topics: "Teme"
-  posts: "poruke"
-  views: "pregledi"
-  loading: "Učitavanje"
-  sign_up: "Registrujte se"
-  log_in: "Prijava"
-  submit: "Potvrdi"
-  disable_remote_images_download_reason: "Daljinske slike za download je onemogućeno zato što nije bilo dovoljno slobodnog prostora na disku."
-  anonymous: "Anonimno"
-  remove_posts_deleted_by_author: "Izbrisano od strane autora"
-  inline_oneboxer:
-    topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
-  emails:
-    incoming:
-      default_subject: "Ovoj temi je potreban naslov"
-  errors: &errors
-    messages:
-      too_long_validation: "je limitirano na %{max} karaktera; koje ste vi uneli %{length}."
-      invalid_boolean: "Nepravilan boolean."
-      even: mora biti parno
-      exclusion: je rezervisano
-      greater_than: mora biti veće od %{count}
-      is_invalid: "deluje nejasno, da li je rečenica kompletna?"
-      contains_censored_words: "sadrži sledeće cenzurisane reči: 1%{censored_words}"
-      less_than: mora biti manje od 1%{count}
-      not_a_number: nije broj
-      not_an_integer: mora biti ceo broj
-      record_invalid: ! "Verifikacija neuspešna: 1%{errors}"
-    embed:
-      load_from_remote: "Došlo je do greške prilikom učitavanja poruke."
-    site_settings:
-      default_categories_already_selected: "Ne možete izabrati kategoriju koja se koristi u drugoj listi."
   bulk_invite:
     file_should_be_csv: "Izabrani fajl bi trebalo biti u csv formatu."
   topic_invite:
@@ -141,7 +82,6 @@ sr:
             password:
               common: "je jedna od 10000 najčešće korišćenih lozinki. Molimo Vas izaberite sigurniju lozinku."
               same_as_username: "je ista kao vaše korisničko ime. Molimo Vas izaberite sigurniju šifru."
-      <<: *errors
   general_category_name: "Opšti"
   staff_category_name: "Osoblje"
   trust_levels:
@@ -514,8 +454,3 @@ sr:
       reject:
         title: "Odbij"
   fallback_username: "korisnik"
-  time:
-    <<: *datetime_formats
-  activemodel:
-    errors:
-      <<: *errors

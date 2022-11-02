@@ -5,106 +5,6 @@
 # https://translate.discourse.org/
 
 sl:
-  dates:
-    short_date_no_year: "D MMM"
-    short_date: "D MMM, YYYY"
-    long_date: "D MMMM, YYYY h:mma"
-  datetime_formats: &datetime_formats
-    formats:
-      short: "%d-%m-%Y"
-      short_no_year: "%B %-d"
-      date_only: "%B %-d, %Y"
-      long: "%B %-d, %Y, %l:%M%P"
-      no_day: "%B %Y"
-  date:
-    month_names:
-    - null
-    - Januar
-    - Februar
-    - Marec
-    - April
-    - Maj
-    - Junij
-    - Julij
-    - Avgust
-    - September
-    - Oktober
-    - November
-    - December
-    <<: *datetime_formats
-  time:
-    am: "am"
-    pm: "pm"
-    <<: *datetime_formats
-  title: "Discourse"
-  topics: "Teme"
-  posts: "prispevkov"
-  views: "ogleda"
-  loading: "Nalagam"
-  powered_by_html: 'Uporablja tehnologijo <a href="https://www.discourse.org">Discourse</a>, za ogled te strani se priporoča omogočen JavaScript.'
-  sign_up: "Registracija"
-  log_in: "Vpis"
-  submit: "Pošlji"
-  anonymous: "Anonimni"
-  on_another_topic: "Na drugi temi"
-  inline_oneboxer:
-    topic_page_title_post_number: "#%{post_number}"
-    topic_page_title_post_number_by_user: "#%{post_number} uporabnika %{username}"
-  emails:
-    incoming:
-      default_subject: "Tema potrebuje naslov"
-      show_trimmed_content: "Prikaži obrezano vsebino"
-      maximum_staged_user_per_email_reached: "Dosegli največje število prirejenih uporabnikov na e-sporočilo."
-      no_subject: "(ni naslova)"
-      no_body: "(ni vsebine)"
-  errors: &errors
-    format: ! "%{attribute} %{message}"
-    format_with_full_message: "<b>%{attribute}</b>: %{message}"
-    messages:
-      too_long_validation: "je omejeno na %{max} znakov; vnesli ste %{length}."
-      taken: "je že uporabljeno"
-      exclusion: je rezervirano
-      has_already_been_used: "je že v uporabi"
-      inclusion: ni vključeno na seznam
-      invalid: je neveljavno
-      is_invalid_meaningful: "zdi se nejasno, večina besed vsebuje iste črke znova in znova?"
-      is_invalid_unpretentious: "zdi se nejasno, ena ali več besed je zelo dolga?"
-      is_invalid_quiet: "zdi se nejasno, ali ste ga mislili vnesti z VELIKIMI ZAČETNICAMI?"
-      less_than: mora biti manj kot %{count}
-      less_than_or_equal_to: mora biti manj ali enako kot %{count}
-      not_a_number: ni številka
-      not_an_integer: mora biti celo število
-      odd: mora biti liho število
-      emojis_disabled: "ne more imeti emoji"
-      too_long:
-        one: je predolgo (največ %{count} znak)
-        two: je predolgo (največ %{count} znaka)
-        few: je predolgo (največ %{count} znaki)
-        other: je predolgo (največ %{count} znakov)
-      too_short:
-        one: je prekratko (najmanj %{count} znak)
-        two: je prekratko (najmanj %{count} znaka)
-        few: je prekratko (najmanj %{count} znaki)
-        other: je prekratko (najmanj %{count} znakov)
-      wrong_length:
-        one: je napačne dolžine (mora biti najmanj %{count} znak)
-        two: je napačne dolžine (mora biti najmanj %{count} znaka)
-        few: je napačne dolžine (mora biti najmanj %{count} znake)
-        other: je napačne dolžine (mora biti najmanj %{count} znakov)
-      auth_overrides_username: "Uporabniško ime je treba posodobiti na strani ponudnika overjanja, saj je omogočena nastavitev `auth_overrides_username`."
-    template:
-      header:
-        one: "%{count} napaka preprečuje tej %{model} da se shrani"
-        two: ! "%{count} napaki preprečujeta tej %{model} da se shrani"
-        few: ! "%{count} napake preprečujejo tej %{model} da se shrani"
-        other: ! "%{count} napak preprečuje tej %{model} da se shrani"
-    site_settings:
-      second_factor_cannot_be_enforced_with_discourse_connect_enabled: "2FA ne morete nastaviti kot zahtevano, če je omogočena možnost DiscourseConnect."
-      twitter_summary_large_image_no_svg: "Slike povzetka Twitterja, ki se uporabljajo za metapodatke twitter:image, ne morejo biti slike tipa .svg."
-  invite:
-    confirm_email: "<p>Ste skoraj na koncu! Poslali smo vam aktivacijsko e-sporočilo na vaš e-naslov. Sledite navodilom v e-sporočilu za aktivacijo računa.</p><p>Če e-sporočila ne prejmete, preverite predal z vsiljeno pošto.</p>"
-    disabled_errors:
-      discourse_connect_enabled: "Povabila so onemogočena, ker je omogočena možnost DiscourseConnect."
   topic_invite:
     failed_to_invite: "Uporabnika ne moremo povabiti v to temo ker ni član ene od naslednjih skupin uporabnikov: %{group_names}."
     user_exists: "Uporabnik je bil že povabljen. Uporabnika lahko povabite na vsako temo samo enkrat."
@@ -277,7 +177,6 @@ sl:
             duration_minutes:
               cannot_be_zero: "mora biti večje od 0."
               exceeds_maximum: "ne sme biti daljše od 20 let."
-      <<: *errors
   uncategorized_category_name: "Nerazvrščeno"
   general_category_name: "Splošno"
   staff_category_name: "Osebje"
@@ -2097,6 +1996,3 @@ sl:
       delete_user:
         reason: "Izbriši preko vrste za pregled"
   fallback_username: "uporabnik"
-  activemodel:
-    errors:
-      <<: *errors

@@ -5,160 +5,6 @@
 # https://translate.discourse.org/
 
 nb_NO:
-  dates:
-    short_date_no_year: "D. MMM"
-    short_date: "D. MMM, YYYY"
-    long_date: "D. MMMM, YYYY k:mm"
-  datetime_formats: &datetime_formats
-    formats:
-      short: "%d-%m-%Y"
-      short_no_year: "%B %-d"
-      date_only: "%B %-d, %Y"
-      long: "%B %-d, %Y, %l:%M%P"
-      no_day: "%Y %B"
-  date:
-    month_names:
-    - null
-    - januar
-    - februar
-    - mars
-    - april
-    - mai
-    - juni
-    - juli
-    - august
-    - september
-    - oktober
-    - november
-    - desember
-    <<: *datetime_formats
-  time:
-    am: "am"
-    pm: "pm"
-    <<: *datetime_formats
-  title: "Discourse"
-  topics: "Emner"
-  posts: "innlegg"
-  views: "visninger"
-  loading: "Laster"
-  powered_by_html: 'Drives av <a href="https://www.discourse.org">Discourse</a>, og ser best ut med JavaScript aktivert'
-  sign_up: "Registrer deg"
-  log_in: "Logg inn"
-  submit: "Send"
-  purge_reason: "Automatisk slettet som som forlatt, uaktivert konto"
-  disable_remote_images_download_reason: "Nedlasting av bilder ble deaktivert grunnet mangel på tilgjengelig diskplass."
-  anonymous: "Anonym"
-  remove_posts_deleted_by_author: "Slettet av forfatter"
-  redirect_warning: "Vi kunne ikke verifisere at lenken du valgte faktisk var publisert på forumet. Hvis du likevel ønsker å fortsette, velg lenken under."
-  inline_oneboxer:
-    topic_page_title_post_number_by_user: "#%{post_number} av %{username}"
-  themes:
-    other_error: "Noe gikk galt under oppdateringen av drakten"
-    import_error:
-      git: "En feil oppstod under kloning av git repository, tilgang ble nektet eller repository ikke funnet."
-    errors:
-      component_no_user_selectable: "Draktkomponenter kan ikke gjøres valgbare for brukere"
-      component_no_default: "Draktkomponenter kan ikke være standard drakt"
-      no_multilevels_components: "Drakter som inneholder underdrakter kan ikke selv være en underdrakt"
-    settings_errors:
-      invalid_yaml: "YAML koden er ikke gyldig."
-      name_too_long: "En eller flere innstillinger har for langt navn. Maksimal lengde er 255 tegn"
-      default_value_missing: "Innstilling `%{name}` har ingen standardverdi"
-      default_not_match_type: "Innstilling `%{name}` har en type standardverdi som ikke stemmer med den definerte typen for innstillingen."
-      default_out_range: "Innstilling `%{name}` sin standardverdi er utenfor de tillatte grenseverdiene."
-      enum_value_not_valid: "Den valgte verdien er ikke en av de oppførte valgmulighetene."
-      number_value_not_valid: "Ny verdi er utenfor de tillatte grenseverdiene."
-      number_value_not_valid_min_max: "Den må være mellom %{min} og %{max}."
-      number_value_not_valid_min: "Den må være større enn eller lik %{min}."
-      number_value_not_valid_max: "Den må være mindre enn eller lik %{max}."
-      string_value_not_valid: "Lengden på ny verdi er ikke innenfor grensen."
-      string_value_not_valid_min: "Den må være minst %{min} tegn lang."
-      string_value_not_valid_max: "Den må være maksimalt %{max} tegn lang."
-  emails:
-    incoming:
-      default_subject: "Emnet trenger en tittel"
-      show_trimmed_content: "Vis beskåret innhold"
-      maximum_staged_user_per_email_reached: "Grensen er nådd for antall arrangerte brukere per e-post."
-      no_subject: "(mangler emne)"
-      no_body: "(mangler tekst)"
-      errors:
-        empty_email_error: "Skjer når den rå e-posten vi mottok var blank."
-        no_message_id_error: "Skjer når en e-post ikke har noen «Message-ID»-hode."
-        auto_generated_email_error: "Skjer når «Presedens»-hodet er satt til list, junk, bulk eller auto_reply eller når en annen header inneholder auto-submitted, auto-replied eller auto-generated."
-        no_body_detected_error: "Skjer når vi ikke kunne trekke ut meldingskroppen eller det ikke var noen vedlegg."
-        no_sender_detected_error: "Skjer når vi ikke kunne finne en gyldig adresse i Fra-hodet."
-        from_reply_by_address_error: "Skjer når avsender i meldingshodet er identisk med den konfigurerte adressen for svar via e-post."
-        inactive_user_error: "Skjer når senderen ikke er aktiv."
-        silenced_user_error: "Skjer når senderen er dempet."
-        strangers_not_allowed_error: "Skjer når en bruker har forsøkt å opprette et nytt emne i en kategori som vedkommende ikke er medlem av."
-        insufficient_trust_level_error: "Skjer når en bruker har forsøkt å opprette et nytt emne i en kategori som vedkommende ikke har påkrevet tillitsnivå for."
-        reply_user_not_matching_error: "Skjer når et innkommende svar kommer fra en annen e-postadresse enn varselet var sendt til."
-        topic_not_found_error: "Skjer når et svar blir mottatt, men det tilhørende emnet er slettet."
-        topic_closed_error: "Skjer når et svar blir mottatt, men det tilhørende emnet er stengt."
-        bounced_email_error: "E-posten er en returnert e-postrapport."
-        screened_email_error: "Skjer når avsenderens e-postadresse allerede var filtrert."
-        unsubscribe_not_allowed: "Skjer når avmelding via e-post ikke er tillatt for denne brukeren."
-      unrecognized_error: "Ukjent feil"
-  errors: &errors
-    format: ! "%{attribute} %{message}"
-    format_with_full_message: "<b>%{attribute}</b>: %{message}"
-    messages:
-      too_long_validation: "er begrenset til %{max} tegn; du brukte %{length}."
-      invalid_boolean: "Ugyldig boolsk verdi."
-      taken: "er allerede tatt"
-      accepted: må bli godkjent
-      blank: kan ikke være tom
-      present: må være tom
-      confirmation: ! "er ikke like %{attribute}"
-      empty: kan ikke være tom
-      equal_to: må være lik %{count}
-      even: må være jevnt antall
-      exclusion: er reservert
-      greater_than: må være større enn %{count}
-      greater_than_or_equal_to: må være lik eller større enn %{count}
-      has_already_been_used: "har allerede blitt brukt"
-      inclusion: er ikke inkludert i listen
-      invalid: er ugyldig
-      is_invalid: "virker uklart, er det en komplett setning?"
-      contains_censored_words: "inneholder følgende sensurerte ord: %{censored_words}"
-      less_than: må være mindre enn %{count}
-      less_than_or_equal_to: må være lik eller mindre enn %{count}
-      not_a_number: er ikke et nummer
-      not_an_integer: må være ett heltall
-      odd: må være oddetall
-      record_invalid: ! "Validering feilet: %{errors}"
-      max_emojis: "kan ikke ha over %{max_emojis_count} emoji"
-      ip_address_already_screened: "er allerede inkludert i en eksisterende regel"
-      restrict_dependent_destroy:
-        one: "Kunne ikke slette oppføringen, oppføringen %{record} er avhengig av denne"
-        other: "Kunne ikke slette oppføringen, oppføringen %{record} er avhengig av denne"
-      too_long:
-        one: for lang tekst (maks %{count} tegn)
-        other: for lang tekst(maks %{count} tegn)
-      too_short:
-        one: for kort tekst (minimum %{count} tegn)
-        other: for kort tekst (minimum %{count} tegn)
-      wrong_length:
-        one: feil lengde på tekst (skal være %{count} tegn)
-        other: feil lengde på tekst (skal være %{count} tegn)
-      other_than: "må være annet enn %{count}"
-    template:
-      body: ! "Dette er problemene med de følgene feltene:"
-      header:
-        one: "%{count} feil forhindret lagring av %{model}"
-        other: ! "%{count} feil forhindret lagring av %{model}"
-    embed:
-      load_from_remote: "Det oppstod et problem med innlastingen av innlegget."
-    site_settings:
-      invalid_choice:
-        one: "Du spesifiserte det ugyldige valget %{name}"
-        other: "Du spesifiserte de ugyldige valgene %{name}"
-      default_categories_already_selected: "Du kan ikke velge en annen kategori brukt i en annen liste."
-      s3_upload_bucket_is_required: "Du kan ikke aktivere opplasting til S3 hvis ikke du har satt innstillingen 's3_upload_bucket'."
-    conflicting_google_user_id: 'Google Account ID for denne kontoen har endret seg; staben må manuelt godkjenne endringen av sikkerhetshensyn. Vennligst kontakt staben og pek dem til <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
-  invite:
-    disabled_errors:
-      invalid_access: "Du har ingen tilgang til denne resurssen."
   bulk_invite:
     file_should_be_csv: "Filen som lastes opp burde være i csv format."
     error: "Det skjedde en feil når filen ble lastet opp. Prøv igjen senere. "
@@ -390,7 +236,6 @@ nb_NO:
           attributes:
             word:
               too_many: "For mange ord for den handlingen"
-      <<: *errors
   uncategorized_category_name: "Ukategorisert"
   general_category_name: "Generelt"
   meta_category_name: "Tilbakemeldinger"
@@ -1479,6 +1324,3 @@ nb_NO:
       reject:
         title: "Avvis"
   fallback_username: "bruker"
-  activemodel:
-    errors:
-      <<: *errors

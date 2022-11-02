@@ -5,150 +5,6 @@
 # https://translate.discourse.org/
 
 fa_IR:
-  dates:
-    short_date_no_year: "D MMM"
-    short_date: "D MMM, YYYY"
-    long_date: "MMMM D, YYYY h:mma"
-  datetime_formats: &datetime_formats
-    formats:
-      short: "%m-%d-%Y"
-      short_no_year: "%B %-d"
-      date_only: "%B %-d, %Y"
-      long: "%B %-d, %Y, %l:%M%P"
-      no_day: "%B %Y"
-  date:
-    month_names:
-    - null
-    - ژانویه
-    - فوریه
-    - مارس
-    - آپریل
-    - می
-    - جون
-    - جولای
-    - آگوست
-    - سپتامبر
-    - اکتبر
-    - نوامبر
-    - دسامبر
-    <<: *datetime_formats
-  time:
-    am: "ق.ظ"
-    pm: "ب.ظ"
-    <<: *datetime_formats
-  title: "Discourse"
-  topics: "موضوعات"
-  posts: "فرسته‌ها"
-  views: "بازدیدها"
-  loading: "بارگیری..."
-  powered_by_html: 'قدرت گرفته از <a href="https://www.discourse.org">دیسکورس</a>، بهترین نمایش با جاوا اسکریپت فعال.'
-  sign_up: "ثبت نام"
-  log_in: "ورود"
-  submit: "ثبت"
-  purge_reason: "حساب کاربری به دلیل غیر‌فعال یا استفاده نشدن، به صورت خودکار حذف شده."
-  disable_remote_images_download_reason: "دانلود عکس‌های خارجی به دلیل کمبود فضا غیر‌فعال شد."
-  anonymous: "ناشناس"
-  remove_posts_deleted_by_author: "پاک شده توسط نویسنده"
-  redirect_warning: "ما قادر به تایید این پیوند نمی‌باشیم. پیوند انتخابی شما قبلا به انجمن پست شده است. اگر در هر‌صورت مایل به انجام این کار هستید بر روی پیوند زیر کلیک کنید."
-  on_another_topic: "در یک مبحث دیگر"
-  inline_oneboxer:
-    topic_page_title_post_number: "#%{post_number}"
-    topic_page_title_post_number_by_user: "#%{post_number} توسط %{username}"
-  themes:
-    bad_color_scheme: "نمی‌توان پوسته را بروزرسانی کرد، جعبه رنگ نامعتبر"
-    other_error: "در بروزرسانی قالب مشکلی پیش آمده"
-    ember_selector_error: "متأسفیم - استفاده از انتخابگرهای #ember یا .ember-view در CSS مجاز نیست ، زیرا این نام‌ها در زمان اجرا به صورت پویا تولید شده و با گذشت زمان تغییر می‌کنند که در نهایت منجر به تولید CSS غیر معتبر خواهد شد. انتخابگر دیگری را امتحان کنید."
-    import_error:
-      generic: خطایی در هنگام وارد کردن پوسته اتفاق افتاده است
-      about_json_values: "about.json حاوی مقادیر نامعتبر است: %{errors}"
-      git: "خطا در  کلون کردن مخزن گیت، دسترسی محدود شده یا مخزن یافت نشد"
-      ssh_key_gone: "شما برای نصب پوسته بیش از حد طولانی صبر کردید و کلید SSH منقضی شده است. لطفا دوباره امتحان کنید."
-  emails:
-    incoming:
-      default_subject: "این موضوع نیاز به عنوان دارد"
-      show_trimmed_content: "نمایش محتوای پنهان شده."
-      maximum_staged_user_per_email_reached: "به حداکثر ظرفیت تعداد حساب های کاربری با هر ایمیل رسیده."
-      no_subject: "(بدون موضوع)"
-      errors:
-        empty_email_error: "در هنگام دریافت ایمیل خالی رخ می‌دهد."
-        no_message_id_error: "این اتفاق زمانی رخ می‌دهد که شناسه پیام در سربرگ ایمیل وجود ندارد."
-        auto_generated_email_error: "زمانی که 'اولویت' سربرگ به: فهرست، شکسته، انبوه یا پاسخ خودکار اتفاق می‌افتد. یا وقتی سربرگ دیگری شامل: ثبت خودکار، پاسخ خودکار یا ایجاد خودکار باشد."
-        no_body_detected_error: "وقتی که نمی‌توانیم متن را استخراج کنیم و ضمیمه‌ای وجود ندارد اتفاق می‌افتد."
-        inactive_user_error: "هنگامی که ارسال کننده فعال نباشد."
-        strangers_not_allowed_error: "هنگامی که که کاربر سعی در ایجاد موضوع در دسته‌بندی می کند که در آن عضو نیست، رخ می‌دهد."
-        insufficient_trust_level_error: "وقتی اتفاق می‌افتد که کاربر قصد ایجاد موضوع در دسته‌بندی را دارد که سطح اعتمادش با آن دسته‌بندی هماهنگ نیست."
-        reply_user_not_matching_error: "وقتی رخ می‌دهد که پاسخ از ایمیل متفاوتی از آنچه که ما اطلاع‌سانی را به آن ارسال کرده ایم، دریافت شده باشد."
-        topic_not_found_error: "در هنگامی که پاسخ دریافت شده باشد، اما موضوع مربوطه حذف شده باشد، رخ می‌دهد."
-        topic_closed_error: "این اتفاق زمانی رخ می‌دهد که موضوع مربوطه از سمت مدیران بسته شده باشد."
-        bounced_email_error: "ایمیل یک گزارش برگشتی است."
-        screened_email_error: "وقتی که ارسال کننده ایمیل پیش از این در حال نمایش باشد، اتفاق می‌افتد."
-      unrecognized_error: "خطای نامشخص"
-    secure_uploads_placeholder: "ویرایش شده: این سایت بارگذاری ایمن را فعال کرده است، از موضوع دیدن کنید یا برای مشاهده بارگذاری‌های پیوست روی مشاهده رسانه کلیک کنید."
-  errors: &errors
-    format: ! "%{attribute} %{message}"
-    format_with_full_message: "<b>%{attribute}</b>: %{message}"
-    messages:
-      too_long_validation: "محدود به %{max} نویسه؛ شما %{length} نویسه وارد کردیدکردید "
-      invalid_boolean: "عملگر دودویی نامعتبر است."
-      taken: "قبلا انتخاب شده است"
-      accepted: باید تایید شود
-      blank: نمی‌تواند خالی باشد
-      present: باید خالی باشد
-      confirmation: ! "با %{attribute} مطابق نیست"
-      empty: نمی‌تواند خالی باشد
-      equal_to: باید برابر %{count} باشد
-      even: باید زوج باشد
-      exclusion: رزرو شده است
-      greater_than: باید بزرگ‌تر از %{count} باشد
-      greater_than_or_equal_to: باید بزرگتر یا مساوی %{count} باشد
-      has_already_been_used: "قبلا استفاده شده"
-      inclusion: در فهرست وجود ندارد
-      invalid: نامعتبر است
-      is_invalid: "به نظر واضح نیست، آیا این جمله کامل است؟"
-      contains_censored_words: "شامل کلمات سانسور شده زیر است: %{censored_words}"
-      less_than: باید کمتر از %{count} باشد
-      less_than_or_equal_to: باید کمتر و یا مساوی %{count} باشد
-      not_a_number: عدد نیست
-      not_an_integer: باید یک عدد صحیح باشد
-      odd: باید یک عدد فرد باشد
-      record_invalid: ! "اعتبار‌سنجی با خطا مواجه شد: %{errors}"
-      restrict_dependent_destroy:
-        one: "رکورد را نمی‌توان پاک کرد زیرا یک %{record} وابسته وجود دارد."
-        other: "رکورد را نمی‌توان پاک کرد زیرا یک %{record} وابسته وجود دارد."
-      too_long:
-        one: خیلی طولانی است ( حداکثر مقدار قابل قبول %{count} نویسه است)
-        other: خیلی طولانی است ( حداکثر مقدار قابل قبول %{count} نویسه است)
-      too_short:
-        one: خیلی کوتاه است (حداقل مقدار قابل قبول %{count} نویسه است)
-        other: خیلی کوتاه است (حداقل مقدار قابل قبول %{count} نویسه است)
-      wrong_length:
-        one: مقدار طول اشتباه است (باید %{count} نویسه باشد)
-        other: مقدار طول اشتباه است (باید %{count} نویسه باشد)
-      other_than: "باید غیر از {count}% باشد"
-    template:
-      body: ! "مشکلاتی با زمینه‌های دنبال شده وجود دارد:"
-      header:
-        one: "%{count} خطا از ذخیره شدن %{model} جلوگیری می‌کنند."
-        other: ! "%{count} خطا از ذخیره شدن %{model} جلوگیری می‌کنند."
-    embed:
-      load_from_remote: "خطایی در بارگیری آن فرسته رخ داد."
-    site_settings:
-      default_categories_already_selected: "شما نمیتوانید دسته‌بندی‌ای را که در یک فهرست دیگر استفاده شده را انتخاب کنید."
-      s3_upload_bucket_is_required: "شما نمیتوانید بارگذاری به S3 را فعال کنید مگر اینکه 's3_upload_bucket' را ارائه دهید."
-      secure_uploads_requirements: "قبل از فعال کردن بارگذاری‌های ایمن، بارگذاری‌های S3 باید فعال شوند."
-  word_connector:
-    comma: "، "
-  invite:
-    expired: "توکن دعوت‌نامه شما منقضی شده است. لطفا با <a href='%{base_url}/about'>مدیران تماس</a> بگیرید."
-    not_found_template_link: |
-      <p>این دعوت‌نامه برای <a href="%{base_url}">%{site_name}</a> دیگر قابل استفاده نیست. لطفا از فردی که شما را دعوت کرده است، بخواهید یکبار دیگر دعوت‌نامه جدیدی ارسال کند.</p>
-    invite_exists: "شما قبلا <b>%{email}</b> را دعوت کرده‌اید."
-    invalid_email: "آدرس ایمیل %{email} معتبر نیست."
-    disabled_errors:
-      invalid_access: "شما اجازه مشاهده منبع درخواست شده را ندارید."
-    max_redemptions_allowed_one: "برای دعوت‌نامه‌های ایمیل باید 1 باشد."
-    redemption_count_less_than_max: "باید کمتر از %{max_redemptions_allowed} باشد."
-    email_xor_domain: "فیلدهای ایمیل و دامنه به طور همزمان مجاز نیستند"
   bulk_invite:
     file_should_be_csv: "فرمت فایل بارگذاری شده می بایست csv باشد."
     error: "خطایی هنگام آپلود فایل مربوطه رخ داده است. لطفا بعدا امتحان کنید."
@@ -365,7 +221,6 @@ fa_IR:
           attributes:
             linkable_type:
               invalid: "معتبر نیست"
-      <<: *errors
   uncategorized_category_name: "دسته‌بندی‌نشده"
   general_category_name: "عمومی"
   meta_category_name: "بازخورد از سایت"
@@ -2366,6 +2221,3 @@ fa_IR:
   user_status:
     errors:
       ends_at_should_be_greater_than_set_at: "ends_at باید بیشتر از set_at باشد"
-  activemodel:
-    errors:
-      <<: *errors

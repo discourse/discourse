@@ -56,13 +56,15 @@ pl_PL:
       confirm_flag: "Czy na pewno chcesz oflagować wiadomość od %{username}?"
       deleted: "Wiadomość została usunięta. [view]"
       delete: "Usuń"
-      edited: "edytowano"
+      edited: "edytowane"
+      muted: "wyciszono"
       joined: "dołączył"
       empty_state:
         direct_message: "Możesz także rozpocząć osobisty czat z jednym lub kilkoma użytkownikami."
       email_frequency:
         never: "Nigdy"
       enable: "Włącz czat"
+      flag: "Oflaguj"
       flagged: "Ta wiadomość została oznaczona do sprawdzenia"
       invalid_access: "Nie masz dostępu do tego kanału czatu"
       in_reply_to: "W odpowiedzi na"
@@ -95,9 +97,11 @@ pl_PL:
       reply: "Odpowiedz"
       edit: "Edytuj"
       copy_link: "Skopiuj link"
-      rebake_message: "Przebuduj HTML"
+      rebake_message: "Odśwież HTML"
       retry_staged_message:
         action: "Wyślij ponownie?"
+      bookmark_message: "Zakładka"
+      bookmark_message_edit: "Edytuj zakładkę"
       restore: "Przywróć usuniętą wiadomość"
       save: "Zapisz"
       select: "Wybierz"
@@ -119,19 +123,20 @@ pl_PL:
         many: "%{count} plików"
         other: "%{count} plików"
       you_flagged: "Oflagowałeś tę wiadomość"
-      exit: "powrót"
+      exit: "poprzednia"
       channel_status:
         read_only_header: "Kanał jest tylko do odczytu"
         read_only: "Tylko do odczytu"
         archived_header: "Kanał został zarchiwizowany"
         archived: "Zarchiwizowany"
         closed_header: "Kanał jest zamknięty"
-        closed: "Zamknięty"
+        closed: "Zamknięta"
         open_header: "Kanał jest otwarty"
-        open: "Otwarty"
+        open: "Otwórz"
       browse:
         title: Kanały
-        filter_closed: Zamknięty
+        filter_all: Wszystkie
+        filter_closed: Zamknięta
         filter_archived: Zarchiwizowany
       chat_message_separator:
         today: Dzisiaj
@@ -141,8 +146,9 @@ pl_PL:
         description: Opis
       channel_info:
         back_to_all_channels: "Wszystkie kanały"
-        back_to_channel: "Powrót"
+        back_to_channel: "Poprzednia"
         tabs:
+          about: O stronie
           members: Członkowie
           settings: Ustawienia
       channel_edit_title_modal:
@@ -160,11 +166,6 @@ pl_PL:
         no_channels: "Żadne kanały nie pasują do Twojego wyszukiwania"
       channel:
         no_memberships_found: Nie znaleziono członków
-        memberships_count:
-          one: 1 członek
-          few: "%{count} członków"
-          many: "%{count} członków"
-          other: "%{count} członków"
       create_channel:
         choose_category:
           label: "Wybierz kategorię"
@@ -187,7 +188,7 @@ pl_PL:
         you_others_and_more: "Ty, %{usernames} i %{more} inni zareagowaliście z :%{emoji}:"
       composer:
         toggle_toolbar: "Przełącz pasek narzędzi"
-        italic_text: "podkreślony tekst"
+        italic_text: "wyróżniony tekst"
         bold_text: "pogrubiony tekst"
         code_text: "kod"
       quote:
@@ -199,6 +200,7 @@ pl_PL:
       settings:
         desktop_notification_level: "Powiadomienia na pulpicie"
         follow: "Dołącz"
+        followed: "Dołączył"
         mobile_notification_level: "Mobilne powiadomienia push"
         mute: "Wycisz kanał"
         notifications: "Powiadomienia"
@@ -213,7 +215,7 @@ pl_PL:
         new: "Nowy osobisty czat"
         leave: "Opuść ten osobisty czat"
       incoming_webhooks:
-        back: "Powrót"
+        back: "Poprzednia"
         channel_placeholder: "Wybierz kanał"
         confirm_destroy: "Czy na pewno chcesz usunąć tego przychodzącego webhooka? Tego nie można cofnąć."
         current_emoji: "Aktualne emoji"
@@ -250,9 +252,9 @@ pl_PL:
             many: "Zamierzasz utworzyć nowy temat i wypełnić go <b>%{count}</b> wybranymi wiadomościami czatu."
             other: "Zamierzasz utworzyć nowy temat i wypełnić go <b>%{count}</b> wybranymi wiadomościami czatu."
         existing_topic:
-          title: "Przenieś się do istniejącego tematu"
+          title: "Przenieś do Istniejącego Tematu"
         new_message:
-          title: "Przenieś do nowej wiadomości"
+          title: "Przejdź do nowej wiadomości"
       replying_indicator:
         single_user: "%{username} pisze"
         multiple_users: "%{commaSeparatedUsernames} i %{lastUsername} piszą"
@@ -261,7 +263,14 @@ pl_PL:
         dm: "Historia osobistego czatu jest przechowywana przez %{days} dni."
       topic_button_title: "Czat"
       emoji_picker:
+        objects: "Obiekty"
+        activities: "Aktywności"
+        flags: "Flagi"
+        symbols: "Symbolika"
         no_results: "Brak wyników"
+      draft_channel_screen:
+        header: "Nowa wiadomość"
+        cancel: "Anuluj"
     notifications:
       chat_quoted: "<span>%{username}</span> %{description}"
       popup:
@@ -283,7 +292,7 @@ pl_PL:
     review:
       types:
         reviewable_chat_message:
-          flagged_by: "Oflagowane przez"
+          flagged_by: "Oflagowany przez"
     keyboard_shortcuts_help:
       chat:
         title: "Czat"
