@@ -1,8 +1,12 @@
-.chat-channel-title {
-  max-width: 96%;
+.channels-list .direct-message-channels {
+  .chat-channel-title {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
 
-  .direct-message-channels .chat-channel-row:hover & {
-    overflow: hidden;
-    max-width: unset;
+  .chat-channel-row:hover {
+    .chat-channel-title {
+      overflow: hidden;
+    }
   }
 }
