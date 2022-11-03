@@ -2279,6 +2279,8 @@ en:
 
     default_email_in_reply_to: "Include excerpt of replied to post in emails by default."
 
+    default_hide_profile_and_presence: "Hide user public profile and presence features by default."
+
     default_other_new_topic_duration_minutes: "Global default condition for which a topic is considered new."
     default_other_auto_track_topics_after_msecs: "Global default time before a topic is automatically tracked."
     default_other_notification_level_when_replying: "Global default notification level when the user replies to a topic."
