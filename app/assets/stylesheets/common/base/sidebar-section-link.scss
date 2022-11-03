@@ -25,6 +25,10 @@
       color: var(--primary);
       background: var(--d-sidebar-highlight-color);
 
+      .sidebar-section-link-content-badge {
+        color: var(--primary-high);
+      }
+
       .sidebar-section-link-prefix {
         &.icon {
           color: var(--primary-high);
@@ -36,7 +40,7 @@
       @include ellipsis;
       padding-left: 0.5em;
       text-align: right;
-      color: var(--tertiary);
+      color: var(--primary-medium);
       font-size: var(--font-down-1);
       font-weight: normal;
       margin-left: auto;
