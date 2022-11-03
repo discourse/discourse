@@ -39,6 +39,7 @@
     "babel-import-util": "^1.2.2",
     "babel-plugin-ember-template-compilation": "^1.0.2",
     "bootstrap": "3.4.1",
+    "bootstrap-json": "workspace:*",
     "broccoli-asset-rev": "^3.0.0",
     "deepmerge": "^4.2.2",
     "discourse-common": "workspace:*",
@@ -103,8 +104,7 @@
   },
   "ember-addon": {
     "paths": [
-      "lib/dialog-holder",
-      "lib/bootstrap-json"
+      "lib/dialog-holder"
     ]
   },
   "devDependencies": {

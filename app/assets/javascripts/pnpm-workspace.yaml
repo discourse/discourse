@@ -1,5 +1,6 @@
 packages:
   - "admin"
+  - "bootstrap-json"
   - "discourse"
   - "discourse-common"
   - "discourse-ensure-deprecation-order"

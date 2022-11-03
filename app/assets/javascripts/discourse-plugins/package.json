@@ -9,18 +9,18 @@
   ],
   "repository": "",
   "dependencies": {
+    "discourse-hbr": "workspace:*",
     "discourse-widget-hbs": "workspace:*",
     "ember-auto-import": "^2.4.3",
+    "ember-cli": "~3.28.5",
     "ember-cli-babel": "^7.26.10",
-    "ember-cli-htmlbars": "^6.1.1"
+    "ember-cli-htmlbars": "^6.1.1",
+    "webpack": "^5.74.0"
   },
   "engines": {
     "node": "16.* || >= 18"
   },
   "ember": {
     "edition": "default"
-  },
-  "devDependencies": {
-    "webpack": "^5.74.0"
   }
 }

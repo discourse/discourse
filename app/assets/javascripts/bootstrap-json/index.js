@@ -8,7 +8,7 @@ const path = require("path");
 const fs = require("fs");
 const fsPromises = fs.promises;
 const { JSDOM } = require("jsdom");
-const { shouldLoadPluginTestJs } = require("discourse/lib/plugin-js");
+const { shouldLoadPluginTestJs } = require("discourse-plugins");
 const { Buffer } = require("node:buffer");
 const { cwd, env } = require("node:process");
 
