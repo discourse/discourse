@@ -193,12 +193,45 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
   });
 
-  test("category section links are sorted by category name alphabetically", async function (assert) {
-    const { category1, category2, category3 } = setupUserSidebarCategories();
+  test("category section links are ordered by category name with child category sorted after parent when site setting to fix category's position is disabled", async function (assert) {
+    this.siteSettings.fixed_category_positions = false;
 
-    category3.set("name", "aBC");
-    category2.set("name", "abc");
-    category1.set("name", "efg");
+    const site = Site.current();
+    const siteCategories = site.categories;
+
+    siteCategories[0].parent_category_id = -1001;
+    siteCategories[0].id = -1000;
+    siteCategories[0].name = "Parent B Child A";
+
+    siteCategories[1].parent_category_id = null;
+    siteCategories[1].id = -1001;
+    siteCategories[1].name = "Parent B";
+
+    siteCategories[2].parent_category_id = null;
+    siteCategories[2].id = -1002;
+    siteCategories[2].name = "Parent A";
+
+    siteCategories[3].parent_category_id = -1001;
+    siteCategories[3].id = -1003;
+    siteCategories[3].name = "Parent B Child B";
+
+    siteCategories[4].parent_category_id = -1002;
+    siteCategories[4].id = -1004;
+    siteCategories[4].name = "Parent A Child A";
+
+    siteCategories[5].parent_category_id = -1000;
+    siteCategories[5].id = -1005;
+    siteCategories[5].name = "Parent B Child A Child A";
+
+    site.categoriesById.clear();
+
+    siteCategories.forEach((category) => {
+      site.categoriesById[category.id] = category;
+    });
+
+    updateCurrentUser({
+      sidebar_category_ids: [-1005, -1004, -1003, -1002, -1000],
+    });
 
     await visit("/");
 
@@ -212,7 +245,139 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.deepEqual(
       categoryNames,
-      ["abc", "aBC", "efg", "Sub Category"],
+      [
+        "Parent A",
+        "Parent A Child A",
+        "Parent B Child A",
+        "Parent B Child A Child A",
+        "Parent B Child B",
+      ],
+      "category section links are displayed in the right order"
+    );
+  });
+
+  test("category section links are ordered by default order of site categories with child category sorted after parent category when site setting to fix category's position is enabled", async function (assert) {
+    this.siteSettings.fixed_category_positions = true;
+
+    const site = Site.current();
+    const siteCategories = site.categories;
+
+    siteCategories[0].parent_category_id = -1001;
+    siteCategories[0].id = -1000;
+    siteCategories[0].name = "Parent A Child A";
+
+    siteCategories[1].parent_category_id = null;
+    siteCategories[1].id = -1001;
+    siteCategories[1].name = "Parent A";
+
+    siteCategories[2].parent_category_id = null;
+    siteCategories[2].id = -1002;
+    siteCategories[2].name = "Parent B";
+
+    siteCategories[3].parent_category_id = -1001;
+    siteCategories[3].id = -1003;
+    siteCategories[3].name = "Parent A Child B";
+
+    siteCategories[4].parent_category_id = -1002;
+    siteCategories[4].id = -1004;
+    siteCategories[4].name = "Parent B Child A";
+
+    siteCategories[5].parent_category_id = -1000;
+    siteCategories[5].id = -1005;
+    siteCategories[5].name = "Parent A Child A Child A";
+
+    site.categoriesById.clear();
+
+    siteCategories.forEach((category) => {
+      site.categoriesById[category.id] = category;
+    });
+
+    updateCurrentUser({
+      sidebar_category_ids: [-1005, -1004, -1003, -1002, -1000],
+    });
+
+    await visit("/");
+
+    const categorySectionLinks = queryAll(
+      ".sidebar-section-categories .sidebar-section-link:not(.sidebar-section-link-all-categories)"
+    );
+
+    const categoryNames = [...categorySectionLinks].map((categorySectionLink) =>
+      categorySectionLink.textContent.trim()
+    );
+
+    assert.deepEqual(
+      categoryNames,
+      [
+        "Parent A Child A",
+        "Parent A Child A Child A",
+        "Parent A Child B",
+        "Parent B",
+        "Parent B Child A",
+      ],
+      "category section links are displayed in the right order"
+    );
+  });
+
+  test("category section links are ordered by position when site setting to fix category's position is enabled", async function (assert) {
+    this.siteSettings.fixed_category_positions = true;
+
+    const site = Site.current();
+    const siteCategories = site.categories;
+
+    siteCategories[0].parent_category_id = -1001;
+    siteCategories[0].id = -1000;
+    siteCategories[0].name = "Parent A Child A";
+
+    siteCategories[1].parent_category_id = null;
+    siteCategories[1].id = -1001;
+    siteCategories[1].name = "Parent A";
+
+    siteCategories[2].parent_category_id = null;
+    siteCategories[2].id = -1002;
+    siteCategories[2].name = "Parent B";
+
+    siteCategories[3].parent_category_id = -1001;
+    siteCategories[3].id = -1003;
+    siteCategories[3].name = "Parent A Child B";
+
+    siteCategories[4].parent_category_id = -1002;
+    siteCategories[4].id = -1004;
+    siteCategories[4].name = "Parent B Child A";
+
+    siteCategories[5].parent_category_id = -1000;
+    siteCategories[5].id = -1005;
+    siteCategories[5].name = "Parent A Child A Child A";
+
+    site.categoriesById.clear();
+
+    siteCategories.forEach((category) => {
+      site.categoriesById[category.id] = category;
+    });
+
+    updateCurrentUser({
+      sidebar_category_ids: [-1005, -1004, -1003, -1002, -1000],
+    });
+
+    await visit("/");
+
+    const categorySectionLinks = queryAll(
+      ".sidebar-section-categories .sidebar-section-link:not(.sidebar-section-link-all-categories)"
+    );
+
+    const categoryNames = [...categorySectionLinks].map((categorySectionLink) =>
+      categorySectionLink.textContent.trim()
+    );
+
+    assert.deepEqual(
+      categoryNames,
+      [
+        "Parent A Child A",
+        "Parent A Child A Child A",
+        "Parent A Child B",
+        "Parent B",
+        "Parent B Child A",
+      ],
       "category section links are displayed in the right order"
     );
   });

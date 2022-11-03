@@ -338,18 +338,6 @@ const User = RestModel.extend({
   },
 
   sidebarTagNames: mapBy("sidebarTags", "name"),
-
-  @discourseComputed("sidebar_category_ids.[]")
-  sidebarCategories(sidebarCategoryIds) {
-    if (!sidebarCategoryIds || sidebarCategoryIds.length === 0) {
-      return [];
-    }
-
-    return Site.current().categoriesList.filter((category) =>
-      sidebarCategoryIds.includes(category.id)
-    );
-  },
-
   sidebarListDestination: readOnly("sidebar_list_destination"),
 
   changeUsername(new_username) {

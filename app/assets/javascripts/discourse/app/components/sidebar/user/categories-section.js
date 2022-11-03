@@ -1,7 +1,8 @@
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
+import Category from "discourse/models/category";
+import { cached } from "@glimmer/tracking";
 
-import { canDisplayCategory } from "discourse/lib/sidebar/helpers";
 import SidebarCommonCategoriesSection from "discourse/components/sidebar/common/categories-section";
 
 export default class SidebarUserCategoriesSection extends SidebarCommonCategoriesSection {
@@ -24,10 +25,9 @@ export default class SidebarUserCategoriesSection extends SidebarCommonCategorie
     this.topicTrackingState.offStateChange(this.callbackId);
   }
 
+  @cached
   get categories() {
-    return this.currentUser.sidebarCategories.filter((category) => {
-      return canDisplayCategory(category, this.siteSettings);
-    });
+    return Category.findByIds(this.currentUser.sidebarCategoryIds);
   }
 
   /**
