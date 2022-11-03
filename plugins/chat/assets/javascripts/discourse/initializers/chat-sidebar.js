@@ -61,6 +61,12 @@ export default {
               return dasherize(slugifyChannel(this.title));
             }
 
+            get classNames() {
+              return this.channel.current_user_membership.muted
+                ? "sidebar-section-link--muted"
+                : "";
+            }
+
             get route() {
               return "chat.channel";
             }
@@ -107,12 +113,6 @@ export default {
               return this.chatChannelTrackingState?.unread_mentions > 0
                 ? "urgent"
                 : "unread";
-            }
-
-            get contentCSSClass() {
-              return this.channel.current_user_membership.muted
-                ? "sidebar-section-link-content-muted"
-                : "";
             }
           };
 
@@ -243,6 +243,12 @@ export default {
               return slugifyChannel(this.title);
             }
 
+            get classNames() {
+              return this.channel.current_user_membership.muted
+                ? "sidebar-section-link--muted"
+                : "";
+            }
+
             get route() {
               return "chat.channel";
             }
@@ -305,12 +311,6 @@ export default {
                 return "active";
               }
               return "";
-            }
-
-            get contentCSSClass() {
-              return this.channel.current_user_membership.muted
-                ? "sidebar-section-link-content-muted"
-                : "";
             }
 
             get suffixType() {

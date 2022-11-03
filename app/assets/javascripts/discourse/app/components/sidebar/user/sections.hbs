@@ -24,6 +24,7 @@
       {{#each customSection.links as |link|}}
         <Sidebar::SectionLink
           @linkName={{link.name}}
+          @class={{link.classNames}}
           @route={{link.route}}
           @model={{link.model}}
           @models={{link.models}}

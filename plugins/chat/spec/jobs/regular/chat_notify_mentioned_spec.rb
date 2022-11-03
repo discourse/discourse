@@ -445,7 +445,7 @@ describe Jobs::ChatNotifyMentioned do
           track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
         data_hash = created_notification.data_hash
 
-        expect(data_hash[:identifier]).to be_nil
+        expect(data_hash[:identifier]).to eq(@chat_group.name)
         expect(data_hash[:is_group_mention]).to eq(true)
       end
 

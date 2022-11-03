@@ -176,6 +176,7 @@ en:
         open: "Open"
 
       browse:
+        back: "Back"
         title: Channels
         filter_all: All
         filter_open: Opened

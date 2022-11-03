@@ -23,6 +23,11 @@ acceptance("Discourse Chat - Mobile test", function (needs) {
     server.get("/u/search/users", () => {
       return helper.response([]);
     });
+
+    server.get("/chat/api/chat_channels.json", () => {
+      const channels = [];
+      return helper.response(channels);
+    });
   });
 
   needs.settings({
@@ -52,6 +57,16 @@ acceptance("Discourse Chat - Mobile test", function (needs) {
       currentURL(),
       "/chat",
       "Clicking the left arrow button returns to the channels list"
+    );
+  });
+
+  test("Chat browse screen back button", async function (assert) {
+    await visit("/chat/browse");
+    await click(".chat-browse-view__back");
+    assert.strictEqual(
+      currentURL(),
+      "/chat",
+      "Clicking the back button returns to the channels list"
     );
   });
 });

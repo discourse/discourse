@@ -1,18 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::UserFieldsController do
-  it "is a subclass of AdminController" do
-    expect(Admin::UserFieldsController < Admin::AdminController).to eq(true)
-  end
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:user) { Fabricate(:user) }
 
-  context "when logged in" do
-    fab!(:admin) { Fabricate(:admin) }
+  describe '#create' do
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
 
-    before do
-      sign_in(admin)
-    end
-
-    describe '#create' do
       it "creates a user field" do
         expect {
           post "/admin/customize/user_fields.json", params: {
@@ -41,8 +37,37 @@ RSpec.describe Admin::UserFieldsController do
       end
     end
 
-    describe '#index' do
-      fab!(:user_field) { Fabricate(:user_field) }
+    shared_examples "user field creation not allowed" do
+      it "prevents creation with a 404 response" do
+        expect do
+          post "/admin/customize/user_fields.json", params: {
+            user_field: { name: 'hello', description: 'hello desc', field_type: 'text' }
+          }
+        end.not_to change { UserField.count }
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      include_examples "user field creation not allowed"
+    end
+
+    context "when logged in as a non-staff user" do
+      before  { sign_in(user) }
+
+      include_examples "user field creation not allowed"
+    end
+  end
+
+  describe '#index' do
+    fab!(:user_field) { Fabricate(:user_field) }
+
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
 
       it "returns a list of user fields" do
         get "/admin/customize/user_fields.json"
@@ -52,8 +77,34 @@ RSpec.describe Admin::UserFieldsController do
       end
     end
 
-    describe '#destroy' do
-      fab!(:user_field) { Fabricate(:user_field) }
+    shared_examples "user fields inaccessible" do
+      it "denies access with a 404 response" do
+        get "/admin/customize/user_fields.json"
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+        expect(response.parsed_body['user_fields']).to be_nil
+      end
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      include_examples "user fields inaccessible"
+    end
+
+    context "when logged in as a non-staff user" do
+      before  { sign_in(user) }
+
+      include_examples "user fields inaccessible"
+    end
+  end
+
+  describe '#destroy' do
+    fab!(:user_field) { Fabricate(:user_field) }
+
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
 
       it "deletes the user field" do
         expect {
@@ -63,8 +114,35 @@ RSpec.describe Admin::UserFieldsController do
       end
     end
 
-    describe '#update' do
-      fab!(:user_field) { Fabricate(:user_field) }
+    shared_examples "user field deletion not allowed" do
+      it "prevents deletion with a 404 response" do
+        expect do
+          delete "/admin/customize/user_fields/#{user_field.id}.json"
+        end.not_to change { UserField.count }
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      include_examples "user field deletion not allowed"
+    end
+
+    context "when logged in as a non-staff user" do
+      before  { sign_in(user) }
+
+      include_examples "user field deletion not allowed"
+    end
+  end
+
+  describe '#update' do
+    fab!(:user_field) { Fabricate(:user_field) }
+
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
 
       it "updates the user field" do
         put "/admin/customize/user_fields/#{user_field.id}.json", params: {
@@ -137,6 +215,35 @@ RSpec.describe Admin::UserFieldsController do
           }
         }.to change { DirectoryColumn.count }.by(-1)
       end
+    end
+
+    shared_examples "user field update not allowed" do
+      it "prevents updates with a 404 response" do
+        user_field.reload
+        original_name = user_field.name
+
+        put "/admin/customize/user_fields/#{user_field.id}.json", params: {
+          user_field: { name: 'fraggle', field_type: 'confirm', description: 'muppet' }
+        }
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+
+        user_field.reload
+        expect(user_field.name).to eq(original_name)
+      end
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      include_examples "user field update not allowed"
+    end
+
+    context "when logged in as a non-staff user" do
+      before  { sign_in(user) }
+
+      include_examples "user field update not allowed"
     end
   end
 end

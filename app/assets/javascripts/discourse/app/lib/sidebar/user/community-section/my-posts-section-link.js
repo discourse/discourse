@@ -79,7 +79,7 @@ export default class MyPostsSectionLink extends BaseSectionLink {
   }
 
   get suffixValue() {
-    if (this.hideCount) {
+    if (this._hasDraft && this.hideCount) {
       return "circle";
     }
   }
