@@ -165,12 +165,14 @@
   .sidebar-section-link--muted {
     opacity: 0.5;
 
-    &.active {
-      opacity: 0.7;
-    }
-
     .sidebar-section-link-prefix.icon {
       color: var(--primary-medium) !important;
+    }
+
+    &.active {
+      .sidebar-section-link-prefix.icon {
+        color: var(--primary-high) !important;
+      }
     }
   }
 }
