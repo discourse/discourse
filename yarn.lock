@@ -2217,7 +2217,7 @@ squoosh@discourse/squoosh#dc9649d:
   version "2.0.0"
   resolved "https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d0a4d396d1251c22291b17d99f1716da44"
   dependencies:
-    wasm-feature-detect "^1.2.11"
+    wasm-feature-detect "^1.2.9"
 
 stream-shift@^1.0.0:
   version "1.0.1"
