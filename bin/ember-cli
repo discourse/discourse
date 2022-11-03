@@ -49,7 +49,7 @@ if ARGV.include?("-h") || ARGV.include?("--help")
   exec "pnpm --silent --dir #{FRONTEND_DIR} ember #{command} --help"
 end
 
-args = ["--silent", "--dir", FRONTEND_DIR, "ember", command] + (ARGV - CUSTOM_ARGS)
+args = ["--silent", "--dir", FRONTEND_DIR, "exec", "ember", command] + (ARGV - CUSTOM_ARGS)
 
 if !args.include?("test") && !args.include?("build") && !args.include?("--proxy")
   args << "--proxy"

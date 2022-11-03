@@ -9,7 +9,7 @@ task 'assets:precompile:before' do
   end
 
   if ENV["EMBER_CLI_COMPILE_DONE"] != "1"
-    compile_command = "NODE_OPTIONS='--max-old-space-size=2048' pnpm --dir app/assets/javascripts/discourse ember build -prod"
+    compile_command = "NODE_OPTIONS='--max-old-space-size=2048' pnpm --dir app/assets/javascripts/discourse exec ember build -prod"
     only_assets_precompile_remaining = (ARGV.last == "assets:precompile")
 
     if only_assets_precompile_remaining
