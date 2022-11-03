@@ -117,36 +117,44 @@ class ThemeStore::GitImporter
   end
 
   def clone_http!
+    uris = [@uri]
+
     begin
-      @uri = FinalDestination.resolve(@uri.to_s)
+      resolved_uri = FinalDestination.resolve(@uri.to_s)
+      if resolved_uri && resolved_uri != @uri
+        uris.unshift(resolved_uri)
+      end
     rescue
-      raise_import_error!
+      # If this fails, we can stil attempt to clone using the original URI
     end
 
-    @url = @uri.to_s
+    uris.each do |uri|
+      @uri = uri
+      @url = @uri.to_s
 
-    unless ["http", "https"].include?(@uri.scheme)
-      raise_import_error!
+      unless ["http", "https"].include?(@uri.scheme)
+        raise_import_error!
+      end
+
+      addresses = FinalDestination::SSRFDetector.lookup_and_filter_ips(@uri.host)
+
+      unless addresses.empty?
+        env = { "GIT_TERMINAL_PROMPT" => "0" }
+
+        args = clone_args(
+          "http.followRedirects" => "false",
+          "http.curloptResolve" => "#{@uri.host}:#{@uri.port}:#{addresses.join(',')}",
+        )
+
+        begin
+          Discourse::Utils.execute_command(env, *args, timeout: COMMAND_TIMEOUT_SECONDS)
+          return
+        rescue RuntimeError
+        end
+      end
     end
 
-    addresses = FinalDestination::SSRFDetector.lookup_and_filter_ips(@uri.host)
-
-    if addresses.empty?
-      raise_import_error!
-    end
-
-    env = { "GIT_TERMINAL_PROMPT" => "0" }
-
-    args = clone_args(
-      "http.followRedirects" => "false",
-      "http.curloptResolve" => "#{@uri.host}:#{@uri.port}:#{addresses.join(',')}",
-    )
-
-    begin
-      Discourse::Utils.execute_command(env, *args, timeout: COMMAND_TIMEOUT_SECONDS)
-    rescue RuntimeError
-      raise_import_error!
-    end
+    raise_import_error!
   end
 
   def clone_ssh!
