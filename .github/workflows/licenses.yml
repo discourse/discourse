@@ -50,18 +50,18 @@ jobs:
         run: |
           gem install licensed
 
-      - name: Get yarn cache directory
-        id: yarn-cache-dir
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Get pnpm cache directory
+        id: node-cache-dir
+        run: echo "::set-output name=dir::$(pnpm store path --silent)"
 
-      - name: Yarn cache
+      - name: Node cache
         uses: actions/cache@v3
-        id: yarn-cache
+        id: node-cache
         with:
-          path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          path: ${{ steps.node-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.os }}-node-
 
       - name: Check RubyGems Licenses
         if: ${{ !cancelled() }}
@@ -69,18 +69,16 @@ jobs:
           licensed cache
           licensed status
 
-      - name: Yarn install
-        run: yarn install
+      - name: pnpm install
+        run: pnpm install
 
-      - name: Check Yarn Licenses
+      - name: Check Node Licenses
         if: ${{ !cancelled() }}
         run: |
-          yarn global add licensee
-          yarn global upgrade licensee
-          licensee --errors-only
+          pnpm dlx licensee --errors-only
 
       - name: Check Ember CLI Workspace Licenses
         if: ${{ !cancelled() }}
         working-directory: ./app/assets/javascripts
         run: |
-          licensee --errors-only
+          pnpm dlx licensee --errors-only

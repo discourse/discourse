@@ -81,21 +81,21 @@ jobs:
           bundle install --jobs 4
           bundle clean
 
-      - name: Get yarn cache directory
-        id: yarn-cache-dir
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Get pnpm cache directory
+        id: node-cache-dir
+        run: echo "::set-output name=dir::$(pnpm store path --silent)"
 
-      - name: Yarn cache
+      - name: Node cache
         uses: actions/cache@v3
-        id: yarn-cache
+        id: node-cache
         with:
-          path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          path: ${{ steps.node-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.os }}-node-
 
-      - name: Yarn install
-        run: yarn install
+      - name: pnpm install
+        run: pnpm install
 
       - name: Checkout official plugins
         if: matrix.target == 'plugins'
@@ -232,32 +232,32 @@ jobs:
           git config --global user.email "ci@ci.invalid"
           git config --global user.name "Discourse CI"
 
-      - name: Get yarn cache directory
-        id: yarn-cache-dir
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Get pnpm cache directory
+        id: node-cache-dir
+        run: echo "::set-output name=dir::$(pnpm store path --silent)"
 
-      - name: Yarn cache
+      - name: Node cache
         uses: actions/cache@v3
-        id: yarn-cache
+        id: node-cache
         with:
-          path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          path: ${{ steps.node-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.os }}-node-
 
-      - name: Yarn install
+      - name: pnpm install
         working-directory: ./app/assets/javascripts/discourse
-        run: yarn install
+        run: pnpm install
 
       - name: Ember Build
         working-directory: ./app/assets/javascripts/discourse
         run: |
           mkdir /tmp/emberbuild
-          yarn ember build --environment=test  -o /tmp/emberbuild
+          pnpm ember build --environment=test  -o /tmp/emberbuild
 
       - name: Core QUnit
         working-directory: ./app/assets/javascripts/discourse
-        run: yarn ember exam --path /tmp/emberbuild --load-balance --parallel=5  --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
+        run: pnpm ember exam --path /tmp/emberbuild --load-balance --parallel=5  --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
         timeout-minutes: 15
 
       - uses: actions/upload-artifact@v3

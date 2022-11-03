@@ -35,16 +35,16 @@
     "@uppy/utils": "^4.1.0",
     "@uppy/xhr-upload": "^2.1.2",
     "a11y-dialog": "7.5.2",
-    "admin": "^1.0.0",
-    "discourse-plugins": "^1.0.0",
+    "admin": "workspace:*",
+    "discourse-plugins": "workspace:*",
     "babel-plugin-ember-template-compilation": "^1.0.2",
     "bootstrap": "3.4.1",
     "broccoli-asset-rev": "^3.0.0",
     "deepmerge": "^4.2.2",
-    "discourse-common": "^1.0.0",
-    "discourse-ensure-deprecation-order": "^1.0.0",
-    "discourse-hbr": "^1.0.0",
-    "discourse-widget-hbs": "^1.0.0",
+    "discourse-common": "workspace:*",
+    "discourse-ensure-deprecation-order": "workspace:*",
+    "discourse-hbr": "workspace:*",
+    "discourse-widget-hbs": "workspace:*",
     "ember-auto-import": "^2.4.3",
     "ember-auto-import-chunks-json-generator": "^1.0.0",
     "ember-buffered-proxy": "^2.1.1",
@@ -79,21 +79,19 @@
     "messageformat": "0.1.5",
     "node-fetch": "^2.6.6",
     "pretender": "^3.4.7",
-    "pretty-text": "^1.0.0",
+    "pretty-text": "workspace:*",
     "qunit": "^2.19.3",
     "qunit-dom": "^2.0.0",
     "sass": "^1.55.0",
-    "select-kit": "^1.0.0",
+    "select-kit": "workspace:*",
     "sinon": "^14.0.1",
     "tippy.js": "^6.3.7",
     "virtual-dom": "^2.1.1",
     "webpack": "^5.74.0",
-    "wizard": "^1.0.0"
+    "wizard": "workspace:*"
   },
   "engines": {
-    "node": "16.* || >= 18",
-    "npm": "please-use-yarn",
-    "yarn": ">= 1.21.1"
+    "node": "16.* || >= 18"
   },
   "ember": {
     "edition": "default"

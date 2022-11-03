@@ -44,7 +44,7 @@ end
 def run_or_fail_prettier(*patterns)
   if patterns.any? { |p| Dir[p].any? }
     patterns = patterns.map { |p| "'#{p}'" }.join(' ')
-    run_or_fail("yarn pprettier --list-different #{patterns}")
+    run_or_fail("pnpm pprettier --list-different #{patterns}")
   else
     puts "Skipping prettier. Pattern not found."
     true
@@ -59,37 +59,37 @@ desc 'Run all tests (JS and code in a standalone environment)'
 task 'docker:test' do
   begin
     @good = true
-    @good &&= run_or_fail("yarn install")
+    @good &&= run_or_fail("pnpm install")
 
     unless ENV['SKIP_LINT']
       puts "Running linters/prettyfiers"
-      puts "eslint #{`yarn eslint -v`}"
-      puts "prettier #{`yarn prettier -v`}"
+      puts "eslint #{`pnpm eslint -v`}"
+      puts "prettier #{`pnpm prettier -v`}"
 
       if ENV["SINGLE_PLUGIN"]
         @good &&= run_or_fail("bundle exec rubocop --parallel plugins/#{ENV["SINGLE_PLUGIN"]}")
         @good &&= run_or_fail("bundle exec ruby script/i18n_lint.rb plugins/#{ENV["SINGLE_PLUGIN"]}/config/locales/{client,server}.en.yml")
-        @good &&= run_or_fail("yarn eslint --ext .js,.js.es6 --no-error-on-unmatched-pattern plugins/#{ENV['SINGLE_PLUGIN']}")
+        @good &&= run_or_fail("pnpm eslint --ext .js,.js.es6 --no-error-on-unmatched-pattern plugins/#{ENV['SINGLE_PLUGIN']}")
 
         puts "Listing prettier offenses in #{ENV['SINGLE_PLUGIN']}:"
         @good &&= run_or_fail_prettier("plugins/#{ENV['SINGLE_PLUGIN']}/**/*.scss", "plugins/#{ENV['SINGLE_PLUGIN']}/**/*.{js,es6}")
       else
         @good &&= run_or_fail("bundle exec rake plugin:update_all") unless ENV["SKIP_PLUGINS"]
         @good &&= run_or_fail("bundle exec rubocop --parallel") unless ENV["SKIP_CORE"]
-        @good &&= run_or_fail("yarn eslint app/assets/javascripts") unless ENV["SKIP_CORE"]
-        @good &&= run_or_fail("yarn eslint --ext .js,.js.es6 --no-error-on-unmatched-pattern plugins") unless ENV["SKIP_PLUGINS"]
+        @good &&= run_or_fail("pnpm eslint app/assets/javascripts") unless ENV["SKIP_CORE"]
+        @good &&= run_or_fail("pnpm eslint --ext .js,.js.es6 --no-error-on-unmatched-pattern plugins") unless ENV["SKIP_PLUGINS"]
 
         @good &&= run_or_fail('bundle exec ruby script/i18n_lint.rb "config/locales/{client,server}.en.yml"') unless ENV["SKIP_CORE"]
         @good &&= run_or_fail('bundle exec ruby script/i18n_lint.rb "plugins/**/locales/{client,server}.en.yml"') unless ENV["SKIP_PLUGINS"]
 
         unless ENV["SKIP_CORE"]
           puts "Listing prettier offenses in core:"
-          @good &&= run_or_fail('yarn pprettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.js"')
+          @good &&= run_or_fail('pnpm pprettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.js"')
         end
 
         unless ENV["SKIP_PLUGINS"]
           puts "Listing prettier offenses in plugins:"
-          @good &&= run_or_fail('yarn pprettier --list-different "plugins/**/assets/stylesheets/**/*.scss" "plugins/**/assets/javascripts/**/*.{js,es6}"')
+          @good &&= run_or_fail('pnpm pprettier --list-different "plugins/**/assets/stylesheets/**/*.scss" "plugins/**/assets/javascripts/**/*.{js,es6}"')
         end
       end
     end
@@ -208,7 +208,7 @@ task 'docker:test' do
         js_timeout = ENV["JS_TIMEOUT"].presence || 900_000 # 15 minutes
 
         unless ENV["SKIP_CORE"]
-          @good &&= run_or_fail("cd app/assets/javascripts/discourse && CI=1 yarn ember exam --load-balance --parallel=3 --random")
+          @good &&= run_or_fail("cd app/assets/javascripts/discourse && CI=1 pnpm ember exam --load-balance --parallel=3 --random")
         end
 
         unless ENV["SKIP_PLUGINS"]

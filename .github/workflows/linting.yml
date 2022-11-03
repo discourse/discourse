@@ -47,21 +47,21 @@ jobs:
           bundle install --jobs 4
           bundle clean
 
-      - name: Get yarn cache directory
-        id: yarn-cache-dir
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Get pnpm cache directory
+        id: node-cache-dir
+        run: echo "::set-output name=dir::$(pnpm store path --silent)"
 
-      - name: Yarn cache
+      - name: Node cache
         uses: actions/cache@v3
-        id: yarn-cache
+        id: node-cache
         with:
-          path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          path: ${{ steps.node-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.os }}-node-
 
-      - name: Yarn install
-        run: yarn install
+      - name: pnpm install
+        run: pnpm install
 
       - name: Rubocop
         if: ${{ !cancelled() }}
@@ -69,17 +69,17 @@ jobs:
 
       - name: ESLint (core)
         if: ${{ !cancelled() }}
-        run: yarn eslint app/assets/javascripts
+        run: pnpm eslint app/assets/javascripts
 
       - name: ESLint (core plugins)
         if: ${{ !cancelled() }}
-        run: yarn eslint plugins
+        run: pnpm eslint plugins
 
       - name: Prettier
         if: ${{ !cancelled() }}
         run: |
-          yarn prettier -v
-          yarn pprettier --list-different \
+          pnpm prettier -v
+          pnpm pprettier --list-different \
             "app/assets/stylesheets/**/*.scss" \
             "app/assets/javascripts/**/*.js" \
             "plugins/**/assets/stylesheets/**/*.scss" \
@@ -88,7 +88,7 @@ jobs:
       - name: Ember template lint
         if: ${{ !cancelled() }}
         run: |
-          yarn ember-template-lint \
+          pnpm ember-template-lint \
             --no-error-on-unmatched-pattern \
             "app/assets/javascripts/**/*.hbs" \
             "plugins/**/assets/javascripts/**/*.hbs"

@@ -6,7 +6,7 @@ require 'pathname'
 RAILS_ROOT = File.expand_path("../../", Pathname.new(__FILE__).realpath)
 PORT = ENV["UNICORN_PORT"] ||= "3000"
 HOSTNAME = ENV["DISCOURSE_HOSTNAME"] ||= "127.0.0.1"
-YARN_DIR = File.join(RAILS_ROOT, "app/assets/javascripts/discourse")
+FRONTEND_DIR = File.join(RAILS_ROOT, "app/assets/javascripts/discourse")
 CUSTOM_ARGS = ["--try", "--test", "--build", "--unicorn", "-u", "--forward-host"]
 PROXY =
   if ARGV.include?("--try")
@@ -46,21 +46,21 @@ if ARGV.include?("-h") || ARGV.include?("--help")
   puts "#{"--test".cyan} To run the test suite"
   puts "#{"--unicorn, -u".cyan} To run a unicorn server as well"
   puts "The rest of the arguments are passed to ember server per:", ""
-  exec "yarn -s --cwd #{YARN_DIR} run ember #{command} --help"
+  exec "pnpm --silent --dir #{FRONTEND_DIR} ember #{command} --help"
 end
 
-args = ["-s", "--cwd", YARN_DIR, "run", "ember", command] + (ARGV - CUSTOM_ARGS)
+args = ["--silent", "--dir", FRONTEND_DIR, "ember", command] + (ARGV - CUSTOM_ARGS)
 
 if !args.include?("test") && !args.include?("build") && !args.include?("--proxy")
   args << "--proxy"
   args << PROXY
 end
 
-exit 1 if !system "yarn -s install --cwd #{YARN_DIR}"
+exit 1 if !system "pnpm --silent --dir #{FRONTEND_DIR} install"
 
-yarn_env = {}
+pnpm_env = {}
 if ARGV.include?("--forward-host")
-  yarn_env["FORWARD_HOST"] = "true"
+  pnpm_env["FORWARD_HOST"] = "true"
 end
 
 if ARGV.include?("-u") || ARGV.include?("--unicorn")
@@ -70,7 +70,7 @@ if ARGV.include?("-u") || ARGV.include?("--unicorn")
 
   Thread.new do
     require 'open3'
-    Open3.popen2e(yarn_env, "yarn", *args.to_a.flatten) do |i, oe, t|
+    Open3.popen2e(pnpm_env, "pnpm", *args.to_a.flatten) do |i, oe, t|
       ember_cli_pid = t.pid
       puts "Ember CLI running on PID: #{ember_cli_pid}"
       oe.each do |line|
@@ -99,5 +99,5 @@ if ARGV.include?("-u") || ARGV.include?("--unicorn")
     Process.kill("TERM", ember_cli_pid)
   end
 else
-  exec(yarn_env, "yarn", *args.to_a.flatten)
+  exec(pnpm_env, "pnpm", *args.to_a.flatten)
 end

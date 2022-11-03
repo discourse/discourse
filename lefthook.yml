@@ -11,19 +11,19 @@ pre-commit:
     prettier:
       glob: "*.js"
       include: "app/assets/javascripts|plugins/.+?/assets/javascripts"
-      run: yarn pprettier --list-different {staged_files}
+      run: pnpm pprettier --list-different {staged_files}
     prettier-scss:
       glob: "*.scss"
       include: "app/assets/stylesheets|plugins/.+?/assets/stylesheets"
-      run: yarn pprettier --list-different {staged_files}
+      run: pnpm pprettier --list-different {staged_files}
     eslint:
       glob: "*.js"
       include: "app/assets/javascripts|plugins/.+?/assets/javascripts"
-      run: yarn eslint -f compact --quiet {staged_files}
+      run: pnpm eslint -f compact --quiet {staged_files}
     ember-template-lint:
       glob: "*.hbs"
       include: "app/assets/javascripts|plugins/.+?/assets/javascripts"
-      run: yarn run ember-template-lint {staged_files}
+      run: pnpm ember-template-lint {staged_files}
     yaml-syntax:
       glob: "*.{yaml,yml}"
       # database.yml is an erb file not a yaml file
@@ -40,13 +40,13 @@ lints:
       glob: "*.rb"
       run: bundle exec rubocop --parallel
     prettier:
-      run: yarn pprettier --list-different **/*.js
+      run: pnpm pprettier --list-different **/*.js
     prettier-scss:
-      run: yarn pprettier --list-different **/*.scss
+      run: pnpm pprettier --list-different **/*.scss
     eslint:
-      run: yarn eslint -f compact --quiet --ext .js .
+      run: pnpm eslint -f compact --quiet --ext .js .
     ember-template-lint:
-      run: yarn run ember-template-lint .
+      run: pnpm ember-template-lint .
     yaml-syntax:
       glob: "*.{yaml,yml}"
       # database.yml is an erb file not a yaml file

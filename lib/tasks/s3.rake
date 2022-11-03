@@ -58,7 +58,7 @@ def assets
   manifest.assets.each do |_, path|
     fullpath = (Rails.root + "public/assets/#{path}").to_s
 
-    # Ignore files we can't find the mime type of, like yarn.lock
+    # Ignore files we can't find the mime type of
     content_type = MiniMime.lookup_by_filename(fullpath)&.content_type
     content_type ||= "application/json" if fullpath.end_with?(".map")
     if content_type

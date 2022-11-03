@@ -45,7 +45,7 @@ def write_template(path, task_name, template)
 
   File.write(output_path, "#{header}\n\n#{template}")
   puts "#{basename} created"
-  %x{yarn run prettier --write #{output_path}}
+  %x{pnpm prettier --write #{output_path}}
   puts "#{basename} prettified"
 end
 
@@ -227,8 +227,8 @@ end
 task 'javascript:update' => 'clean_up' do
   require 'uglifier'
 
-  yarn = system("yarn install")
-  abort('Unable to run "yarn install"') unless yarn
+  pnpm = system("pnpm install")
+  abort('Unable to run "pnpm install"') unless pnpm
 
   versions = {}
   start = Time.now

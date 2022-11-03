@@ -9,9 +9,8 @@ def library_src
 end
 
 task 'svgicons:update' do
-
-  yarn = system("yarn install")
-  abort('Unable to run "yarn install"') unless yarn
+  pnpm = system("pnpm install")
+  abort('Unable to run "pnpm install"') unless pnpm
 
   dependencies = [
     {
@@ -24,13 +23,7 @@ task 'svgicons:update' do
 
   dependencies.each do |f|
     src = "#{library_src}/#{f[:source]}/."
-
-    unless f[:destination]
-      filename = f[:source].split("/").last
-    else
-      filename = f[:destination]
-    end
-
+    filename = f[:destination] || f[:source].split("/").last
     dest = "#{vendor_svgs}/#{filename}"
 
     FileUtils.cp_r(src, dest)

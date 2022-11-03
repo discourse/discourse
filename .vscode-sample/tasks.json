@@ -6,7 +6,7 @@
         {
             "label": "Prepare discourse",
             "type": "shell",
-            "command": "cd /home/discourse/workspace/discourse && bundle install && yarn && bin/rake db:migrate"
+            "command": "cd /home/discourse/workspace/discourse && bundle install && pnpm install && bin/rake db:migrate"
         }, 
     ], 
 }
