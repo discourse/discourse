@@ -82,7 +82,7 @@ jobs:
           bundle clean
 
       - name: Install pnpm
-        run: npm install -g pnpm
+        run: sudo npm install -g pnpm
 
       - name: Get pnpm cache directory
         id: node-cache-dir
@@ -236,7 +236,7 @@ jobs:
           git config --global user.name "Discourse CI"
 
       - name: Install pnpm
-        run: npm install -g pnpm
+        run: sudo npm install -g pnpm
 
       - name: Get pnpm cache directory
         id: node-cache-dir
