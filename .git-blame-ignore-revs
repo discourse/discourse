@@ -58,3 +58,6 @@ bbe5d8d5cf1220165842985c0e2cd4c454d501cd
 
 # DEV: Template colocation for sidebar files
 95c7cdab941a56686ac5831d2a5c5eca38d780c5
+
+# DEV: Move discourse-chat to the core repo
+0a5f548635245c46d7682b318db691bd060b34c5
