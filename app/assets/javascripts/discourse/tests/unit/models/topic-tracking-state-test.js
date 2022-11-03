@@ -11,13 +11,14 @@ import {
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import User from "discourse/models/user";
-import Topic from "discourse/models/topic";
 import createStore from "discourse/tests/helpers/create-store";
 import sinon from "sinon";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
   hooks.beforeEach(function () {
     this.clock = fakeTime("2012-12-31 12:00");
+    this.store = getOwner(this).lookup("service:store");
   });
 
   hooks.afterEach(function () {
@@ -295,7 +296,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
     trackingState.updateSeen(111, 7);
     const list = {
       topics: [
-        Topic.create({
+        this.store.createRecord("topic", {
           highest_post_number: null,
           id: 111,
           unread_posts: 10,
@@ -325,7 +326,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
 
     const list = {
       topics: [
-        Topic.create({
+        this.store.createRecord("topic", {
           id: 111,
           unseen: false,
           seen: true,
@@ -366,12 +367,12 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
 
     const list = {
       topics: [
-        Topic.create({
+        this.store.createRecord("topic", {
           id: 111,
           last_read_post_number: null,
           unseen: true,
         }),
-        Topic.create({
+        this.store.createRecord("topic", {
           id: 222,
           last_read_post_number: null,
           unseen: true,
@@ -400,7 +401,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
 
     const list = {
       topics: [
-        Topic.create({
+        this.store.createRecord("topic", {
           id: 111,
           unseen: true,
           seen: false,
@@ -409,7 +410,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
           category_id: 1,
           tags: ["pending"],
         }),
-        Topic.create({
+        this.store.createRecord("topic", {
           id: 222,
           unseen: false,
           seen: true,
@@ -588,12 +589,12 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
         assert.strictEqual(trackingState.filterTag, "test");
         assert.strictEqual(trackingState.filter, "latest");
 
-        trackingState.trackIncoming("c/cat/subcat/6/l/latest");
+        trackingState.trackIncoming("c/cat/sub-cat/6/l/latest");
         assert.strictEqual(trackingState.filterCategory.id, 6);
         assert.strictEqual(trackingState.filterTag, undefined);
         assert.strictEqual(trackingState.filter, "latest");
 
-        trackingState.trackIncoming("tags/c/cat/subcat/6/test/l/latest");
+        trackingState.trackIncoming("tags/c/cat/sub-cat/6/test/l/latest");
         assert.strictEqual(trackingState.filterCategory.id, 6);
         assert.strictEqual(trackingState.filterTag, "test");
         assert.strictEqual(trackingState.filter, "latest");

@@ -1,15 +1,19 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, render } from "@ember/test-helpers";
-import Topic from "discourse/models/topic";
 import { hbs } from "ember-cli-htmlbars";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 module("Integration | Component | topic-list", function (hooks) {
   setupRenderingTest(hooks);
 
   test("bulk select", async function (assert) {
+    const store = getOwner(this).lookup("service:store");
     this.setProperties({
-      topics: [Topic.create({ id: 24234 }), Topic.create({ id: 24235 })],
+      topics: [
+        store.createRecord("topic", { id: 24234 }),
+        store.createRecord("topic", { id: 24235 }),
+      ],
       selected: [],
       bulkSelectEnabled: false,
       autoAddTopicsToBulkSelect: false,
