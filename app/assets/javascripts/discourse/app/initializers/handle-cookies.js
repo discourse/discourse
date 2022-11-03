@@ -1,6 +1,9 @@
 import { extendThemeCookie } from "discourse/lib/theme-selector";
 import { extendColorSchemeCookies } from "discourse/lib/color-scheme-picker";
 import { later } from "@ember/runloop";
+import { isTesting } from "discourse-common/config/environment";
+
+const DELAY = isTesting() ? 0 : 5000;
 
 export default {
   name: "handle-cookies",
@@ -10,6 +13,6 @@ export default {
     later(() => {
       extendThemeCookie();
       extendColorSchemeCookies();
-    }, 5000);
+    }, DELAY);
   },
 };
