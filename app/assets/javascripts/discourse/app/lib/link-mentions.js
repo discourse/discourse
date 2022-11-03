@@ -40,6 +40,10 @@ function replaceSpan(element, name, opts) {
   a.dataset.name = name;
   if (opts.reason) {
     a.dataset.reason = opts.reason;
+
+    if (opts.details) {
+      a.dataset.notifiedUserCount = opts.details.notified_count;
+    }
   }
 
   element.replaceWith(a);

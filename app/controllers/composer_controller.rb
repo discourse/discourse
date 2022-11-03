@@ -38,6 +38,12 @@ class ComposerController < ApplicationController
       .pluck(:id)
       .to_set
 
+    members_visible_group_ids = Group
+      .members_visible_groups(current_user)
+      .where(name: names)
+      .pluck(:id)
+      .to_set
+
     topic_muted_by = if topic.present?
       TopicUser
         .where(topic: topic)
@@ -57,7 +63,6 @@ class ComposerController < ApplicationController
     elsif topic&.private_message?
       TopicAllowedUser
         .where(topic: topic)
-        .where(user_id: users.values.map(&:id))
         .pluck(:user_id)
         .to_set
     end
@@ -112,10 +117,40 @@ class ComposerController < ApplicationController
       here_count = PostAlerter.new.expand_here_mention(topic.first_post, exclude_ids: [current_user.id]).size
     end
 
+    serialized_groups = groups.values.map do |group|
+      serialized_group = { user_count: group.user_count }
+
+      if group_reasons[group.name] == :not_allowed &&
+          members_visible_group_ids.include?(group.id) &&
+          (topic&.private_message? || allowed_names.present?)
+
+        # Find users that are notified already because they have been invited
+        # directly or via a group
+        notified_count = GroupUser
+          # invited directly
+          .where(user_id: topic_allowed_user_ids)
+          .or(
+            # invited via a group
+            GroupUser.where(
+              user_id: GroupUser.where(group_id: topic_allowed_group_ids).select(:user_id)
+            )
+          )
+          .where(group_id: group.id)
+          .select(:user_id).distinct.count
+
+        if notified_count > 0
+          group_reasons[group.name] = :some_not_allowed
+          serialized_group[:notified_count] = notified_count
+        end
+      end
+
+      [group.name, serialized_group]
+    end
+
     render json: {
       users: users.keys,
       user_reasons: user_reasons.compact,
-      groups: groups.values.map { |g| [g.name, { user_count: g.user_count }] }.to_h,
+      groups: serialized_groups.to_h,
       group_reasons: group_reasons.compact,
       here_count: here_count,
       max_users_notified_per_group_mention: SiteSetting.max_users_notified_per_group_mention,

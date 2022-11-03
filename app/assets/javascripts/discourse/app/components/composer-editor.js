@@ -564,6 +564,7 @@ export default Component.extend(ComposerUploadUppy, {
                 this.cannotSeeMention({
                   name,
                   reason: mention.dataset.reason,
+                  notifiedCount: mention.dataset.notifiedUserCount,
                   isGroup: true,
                 });
               }

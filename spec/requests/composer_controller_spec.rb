@@ -32,12 +32,12 @@ RSpec.describe ComposerController do
         expect(response.parsed_body['user_reasons']).to contain_exactly()
 
         expect(response.parsed_body['groups']).to contain_exactly(
-          [group.name, { "user_count" => group.user_count }],
-          [unmessageable_group.name, { "user_count" => unmessageable_group.user_count }],
-          [unmentionable_group.name, { "user_count" => unmentionable_group.user_count }],
+          [group.name, { 'user_count' => group.user_count }],
+          [unmessageable_group.name, { 'user_count' => unmessageable_group.user_count }],
+          [unmentionable_group.name, { 'user_count' => unmentionable_group.user_count }],
         )
         expect(response.parsed_body['group_reasons']).to contain_exactly(
-          [unmentionable_group.name, "not_mentionable"],
+          [unmentionable_group.name, 'not_mentionable'],
         )
 
         expect(response.parsed_body['max_users_notified_per_group_mention'])
@@ -78,26 +78,51 @@ RSpec.describe ComposerController do
           user.username, allowed_user.username
         )
         expect(response.parsed_body['user_reasons']).to contain_exactly(
-          [user.username, "private"]
+          [user.username, 'private']
         )
 
         expect(response.parsed_body['groups']).to contain_exactly(
-          [group.name, { "user_count" => group.user_count }],
-          [unmessageable_group.name, { "user_count" => unmessageable_group.user_count }],
-          [unmentionable_group.name, { "user_count" => unmentionable_group.user_count }],
+          [group.name, { 'user_count' => group.user_count }],
+          [unmessageable_group.name, { 'user_count' => unmessageable_group.user_count }],
+          [unmentionable_group.name, { 'user_count' => unmentionable_group.user_count }],
         )
         expect(response.parsed_body['group_reasons']).to contain_exactly(
-          [group.name, "not_allowed"],
-          [unmessageable_group.name, "not_allowed"],
-          [unmentionable_group.name, "not_mentionable"],
+          [group.name, 'not_allowed'],
+          [unmessageable_group.name, 'not_allowed'],
+          [unmentionable_group.name, 'not_mentionable'],
         )
 
         expect(response.parsed_body['max_users_notified_per_group_mention'])
           .to eq(SiteSetting.max_users_notified_per_group_mention)
       end
+
+      it 'returns notified_count' do
+        sign_in(allowed_user)
+        group.add(user)
+        topic.invite_group(Discourse.system_user, group)
+
+        other_group = Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone])
+        other_group.add(allowed_user)
+        other_group.add(user)
+        other_group.add(Fabricate(:user))
+
+        # Trying to mention other_group which has not been invited, but two of
+        # its members have been (allowed_user directly and user via group).
+        get '/composer/mentions.json', params: {
+          names: [other_group.name],
+          topic_id: topic.id,
+        }
+
+        expect(response.parsed_body['groups']).to contain_exactly(
+          [other_group.name, { 'user_count' => 3, 'notified_count' => 2 }]
+        )
+        expect(response.parsed_body['group_reasons']).to contain_exactly(
+          [other_group.name, 'some_not_allowed']
+        )
+      end
     end
 
-    context 'with a new topic' do
+    context 'with a new private message' do
       fab!(:allowed_user) { Fabricate(:user) }
 
       it 'finds mentions' do
@@ -118,22 +143,46 @@ RSpec.describe ComposerController do
           user.username, allowed_user.username
         )
         expect(response.parsed_body['user_reasons']).to contain_exactly(
-          [user.username, "private"]
+          [user.username, 'private']
         )
 
         expect(response.parsed_body['groups']).to contain_exactly(
-          [group.name, { "user_count" => group.user_count }],
-          [unmessageable_group.name, { "user_count" => unmessageable_group.user_count }],
-          [unmentionable_group.name, { "user_count" => unmentionable_group.user_count }],
+          [group.name, { 'user_count' => group.user_count }],
+          [unmessageable_group.name, { 'user_count' => unmessageable_group.user_count }],
+          [unmentionable_group.name, { 'user_count' => unmentionable_group.user_count }],
         )
         expect(response.parsed_body['group_reasons']).to contain_exactly(
-          [group.name, "not_allowed"],
-          [unmessageable_group.name, "not_allowed"],
-          [unmentionable_group.name, "not_mentionable"],
+          [group.name, 'not_allowed'],
+          [unmessageable_group.name, 'not_allowed'],
+          [unmentionable_group.name, 'not_mentionable'],
         )
 
         expect(response.parsed_body['max_users_notified_per_group_mention'])
           .to eq(SiteSetting.max_users_notified_per_group_mention)
+      end
+
+      it 'returns notified_count' do
+        sign_in(allowed_user)
+        group.add(user)
+
+        other_group = Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone])
+        other_group.add(allowed_user)
+        other_group.add(user)
+        other_group.add(Fabricate(:user))
+
+        # Trying to mention other_group which has not been invited, but two of
+        # its members have been (allowed_user directly and user via group).
+        get '/composer/mentions.json', params: {
+          names: [other_group.name],
+          allowed_names: "#{allowed_user.username},#{group.name}",
+        }
+
+        expect(response.parsed_body['groups']).to contain_exactly(
+          [other_group.name, { 'user_count' => 3, 'notified_count' => 2 }]
+        )
+        expect(response.parsed_body['group_reasons']).to contain_exactly(
+          [other_group.name, 'some_not_allowed']
+        )
       end
     end
   end

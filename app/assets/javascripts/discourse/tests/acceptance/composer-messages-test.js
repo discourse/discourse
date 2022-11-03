@@ -47,8 +47,11 @@ acceptance("Composer - Messages - Cannot see group", function (needs) {
       return helper.response({
         users: [],
         user_reasons: {},
-        groups: { staff: { user_count: 30 } },
-        group_reasons: { staff: "not_allowed" },
+        groups: {
+          staff: { user_count: 30 },
+          staff2: { user_count: 30, notified_count: 10 },
+        },
+        group_reasons: { staff: "not_allowed", staff2: "some_not_allowed" },
         max_users_notified_per_group_mention: 100,
       });
     });
@@ -67,6 +70,26 @@ acceptance("Composer - Messages - Cannot see group", function (needs) {
       query(".composer-popup").innerHTML.includes(
         I18n.t("composer.cannot_see_group_mention.not_allowed", {
           group: "staff",
+        })
+      ),
+      "warning message has correct body"
+    );
+  });
+
+  test("Shows warning in composer if group hasn't been invited, but some members have access already", async function (assert) {
+    await visit("/t/130");
+    await click("button.create");
+    assert.ok(
+      !exists(".composer-popup"),
+      "composer warning is not shown by default"
+    );
+    await fillIn(".d-editor-input", "Mention @staff2");
+    assert.ok(exists(".composer-popup"), "shows composer warning message");
+    assert.ok(
+      query(".composer-popup").innerHTML.includes(
+        I18n.t("composer.cannot_see_group_mention.some_not_allowed", {
+          group: "staff2",
+          count: 10,
         })
       ),
       "warning message has correct body"
