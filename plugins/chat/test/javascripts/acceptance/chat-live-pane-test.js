@@ -252,10 +252,21 @@ acceptance(
       server.get("/chat/chat_channels/:chatChannelId", () =>
         helper.response({ id: 1, title: "something" })
       );
+
+      server.get("/chat/lookup/:messageId.json", () => {
+        return helper.response(404);
+      });
     });
 
     test("Handles 404 errors by displaying an alert", async function (assert) {
       await visit("/chat/channel/1/cat");
+
+      assert.ok(exists(".dialog-content"), "it displays a 404 error");
+      await click(".dialog-footer .btn-primary");
+    });
+
+    test("Handles 404 errors with unexisting messageId", async function (assert) {
+      await visit("/chat/channel/1/cat?messageId=2");
 
       assert.ok(exists(".dialog-content"), "it displays a 404 error");
       await click(".dialog-footer .btn-primary");

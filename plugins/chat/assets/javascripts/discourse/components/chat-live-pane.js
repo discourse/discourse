@@ -243,6 +243,12 @@ export default Component.extend({
             return;
           }
           this.setMessageProps(messages, fetchingFromLastRead);
+
+          if (this.targetMessageId) {
+            this.highlightOrFetchMessage(this.targetMessageId);
+          }
+
+          this.focusComposer();
         })
         .catch(this._handleErrors)
         .finally(() => {
@@ -252,12 +258,6 @@ export default Component.extend({
 
           this.chat.set("messageId", null);
           this.set("loading", false);
-
-          if (this.targetMessageId) {
-            this.highlightOrFetchMessage(this.targetMessageId);
-          }
-
-          this.focusComposer();
         });
     });
   },
