@@ -87,6 +87,11 @@ export default class ChatBrowseView extends Component {
     showModal("create-channel");
   }
 
+  @action
+  returnToChannelsList() {
+    return this.router.transitionTo("chat.index");
+  }
+
   @bind
   filterChannels(filter) {
     this.canLoadMore = true;
