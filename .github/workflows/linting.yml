@@ -47,6 +47,9 @@ jobs:
           bundle install --jobs 4
           bundle clean
 
+      - name: Install pnpm
+        run: npm install -g pnpm
+
       - name: Get pnpm cache directory
         id: node-cache-dir
         run: echo "::set-output name=dir::$(pnpm store path --silent)"
