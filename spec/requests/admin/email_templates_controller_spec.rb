@@ -18,90 +18,70 @@ RSpec.describe Admin::EmailTemplatesController do
     I18n.reload!
   end
 
-  it "is a subclass of AdminController" do
-    expect(Admin::EmailTemplatesController < Admin::AdminController).to eq(true)
-  end
-
   describe "#index" do
-    it "raises an error if you aren't logged in" do
-      get '/admin/customize/email_templates.json'
-      expect(response.status).to eq(404)
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+
+      it "should work if you are an admin" do
+        get '/admin/customize/email_templates.json'
+
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        expect(json['email_templates']).to be_present
+      end
+
+      it 'returns overridden = true if subject or body has translation_overrides record' do
+        put '/admin/customize/email_templates/user_notifications.admin_login', params: {
+          email_template: { subject: original_subject, body: original_body }
+        }, headers: headers
+        expect(response.status).to eq(200)
+
+        get '/admin/customize/email_templates.json'
+        expect(response.status).to eq(200)
+        templates = response.parsed_body['email_templates']
+        template = templates.find { |t| t['id'] == 'user_notifications.admin_login' }
+        expect(template['can_revert']).to eq(true)
+
+        TranslationOverride.destroy_all
+
+        get '/admin/customize/email_templates.json'
+        expect(response.status).to eq(200)
+        templates = response.parsed_body['email_templates']
+        template = templates.find { |t| t['id'] == 'user_notifications.admin_login' }
+        expect(template['can_revert']).to eq(false)
+      end
     end
 
-    it "raises an error if you aren't an admin" do
-      sign_in(user)
-      get '/admin/customize/email_templates.json'
-      expect(response.status).to eq(404)
+    shared_examples "email templates inaccessible" do
+      it "denies access with a 404 response" do
+        get "/admin/customize/email_templates.json"
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
     end
 
-    it "raises an error if you are a moderator" do
-      sign_in(moderator)
-      get "/admin/customize/email_templates.json"
-      expect(response.status).to eq(404)
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      include_examples "email templates inaccessible"
     end
 
-    it "should work if you are an admin" do
-      sign_in(admin)
-      get '/admin/customize/email_templates.json'
+    context "when logged in as a non-staff user" do
+      before  { sign_in(user) }
 
-      expect(response.status).to eq(200)
-
-      json = response.parsed_body
-      expect(json['email_templates']).to be_present
+      include_examples "email templates inaccessible"
     end
 
-    it 'returns overridden = true if subject or body has translation_overrides record' do
-      sign_in(admin)
-
-      put '/admin/customize/email_templates/user_notifications.admin_login', params: {
-        email_template: { subject: original_subject, body: original_body }
-      }, headers: headers
-      expect(response.status).to eq(200)
-
-      get '/admin/customize/email_templates.json'
-      expect(response.status).to eq(200)
-      templates = response.parsed_body['email_templates']
-      template = templates.find { |t| t['id'] == 'user_notifications.admin_login' }
-      expect(template['can_revert']).to eq(true)
-
-      TranslationOverride.destroy_all
-
-      get '/admin/customize/email_templates.json'
-      expect(response.status).to eq(200)
-      templates = response.parsed_body['email_templates']
-      template = templates.find { |t| t['id'] == 'user_notifications.admin_login' }
-      expect(template['can_revert']).to eq(false)
+    context "when not logged in" do
+      include_examples "email templates inaccessible"
     end
   end
 
   describe "#update" do
-    it "raises an error if you aren't logged in" do
-      put '/admin/customize/email_templates/some_id', params: {
-        email_template: { subject: 'Subject', body: 'Body' }
-      }, headers: headers
-      expect(response.status).to eq(404)
-    end
-
-    it "raises an error if you aren't an admin" do
-      sign_in(user)
-      put '/admin/customize/email_templates/some_id', params: {
-        email_template: { subject: 'Subject', body: 'Body' }
-      }, headers: headers
-      expect(response.status).to eq(404)
-    end
-
-    it "raises an error if you are a moderator" do
-      sign_in(moderator)
-      put "/admin/customize/email_templates/some_id", params: {
-        email_template: { subject: "Subject", body: "Body" }
-      }, headers: headers
-      expect(response.status).to eq(404)
-    end
-
-    context "when logged in as admin" do
-      before do
-        sign_in(admin)
-      end
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
 
       it "returns 'not found' when an unknown email template id is used" do
         put '/admin/customize/email_templates/non_existent_template', params: {
@@ -273,30 +253,37 @@ RSpec.describe Admin::EmailTemplatesController do
       end
     end
 
+    shared_examples "email template update not allowed" do
+      it "prevents updates with a 404 response" do
+        put "/admin/customize/email_templates/some_id", params: {
+          email_template: { subject: 'Subject', body: 'Body' }
+        }, headers: headers
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      include_examples "email template update not allowed"
+    end
+
+    context "when logged in as a non-staff user" do
+      before { sign_in(user) }
+
+      include_examples "email template update not allowed"
+    end
+
+    context "when not logged in" do
+      include_examples "email template update not allowed"
+    end
   end
 
   describe "#revert" do
-    it "raises an error if you aren't logged in" do
-      delete '/admin/customize/email_templates/some_id', headers: headers
-      expect(response.status).to eq(404)
-    end
-
-    it "raises an error if you aren't an admin" do
-      sign_in(user)
-      delete '/admin/customize/email_templates/some_id', headers: headers
-      expect(response.status).to eq(404)
-    end
-
-    it "raises an error if you are a moderator" do
-      sign_in(moderator)
-      delete "/admin/customize/email_templates/some_id", headers: headers
-      expect(response.status).to eq(404)
-    end
-
-    context "when logged in as admin" do
-      before do
-        sign_in(admin)
-      end
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
 
       it "returns 'not found' when an unknown email template id is used" do
         delete '/admin/customize/email_templates/non_existent_template', headers: headers
@@ -364,6 +351,30 @@ RSpec.describe Admin::EmailTemplatesController do
       end
     end
 
+    shared_examples "email template reversal not allowed" do
+      it "prevents reversals with a 404 response" do
+        delete "/admin/customize/email_templates/some_id", headers: headers
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      include_examples "email template reversal not allowed"
+    end
+
+    context "when logged in as a non-staff user" do
+      before { sign_in(user) }
+
+      include_examples "email template reversal not allowed"
+    end
+
+    context "when not logged in" do
+      include_examples "email template reversal not allowed"
+    end
   end
 
   it "uses only existing email templates" do

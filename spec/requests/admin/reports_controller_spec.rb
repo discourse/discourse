@@ -1,19 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::ReportsController do
-  it "is a subclass of StaffController" do
-    expect(Admin::ReportsController < Admin::StaffController).to eq(true)
-  end
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:user) { Fabricate(:user) }
 
-  context 'while logged in as an admin' do
-    fab!(:admin) { Fabricate(:admin) }
-    fab!(:user) { Fabricate(:user) }
+  describe '#bulk' do
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
 
-    before do
-      sign_in(admin)
-    end
-
-    describe '#bulk' do
       context "with valid params" do
         it "renders the reports as JSON" do
           Fabricate(:topic)
@@ -66,7 +61,45 @@ RSpec.describe Admin::ReportsController do
       end
     end
 
-    describe '#show' do
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      it "returns report" do
+        Fabricate(:topic)
+
+        get "/admin/reports/bulk.json", params: {
+          reports: {
+            topics: { limit: 10 },
+            likes: { limit: 10 }
+          }
+        }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["reports"].count).to eq(2)
+      end
+    end
+
+    context "when logged in as a non-staff user" do
+      before  { sign_in(user) }
+
+      it "denies access with a 404 response" do
+        get "/admin/reports/bulk.json", params: {
+          reports: {
+            topics: { limit: 10 },
+            not_found: { limit: 10 }
+          }
+        }
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
+    end
+  end
+
+  describe '#show' do
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+
       context "with invalid id form" do
         let(:invalid_id) { "!!&asdfasdf" }
 
@@ -129,6 +162,30 @@ RSpec.describe Admin::ReportsController do
           expect(report["type"]).to eq('signups')
           expect(report["data"].count).to eq(1)
         end
+      end
+    end
+
+    context "when logged in as a moderator" do
+      before  { sign_in(moderator) }
+
+      it "returns report" do
+        Fabricate(:topic)
+
+        get "/admin/reports/topics.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["report"]["total"]).to eq(1)
+      end
+    end
+
+    context "when logged in as a non-staff user" do
+      before  { sign_in(user) }
+
+      it "denies access with a 404 response" do
+        get "/admin/reports/topics.json"
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
       end
     end
   end
