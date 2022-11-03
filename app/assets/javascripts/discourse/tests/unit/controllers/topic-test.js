@@ -4,12 +4,12 @@ import { settled } from "@ember/test-helpers";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import EmberObject from "@ember/object";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
-import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import { next } from "@ember/runloop";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 function topicWithStream(streamDetails) {
-  let topic = Topic.create();
+  const topic = this.store.createRecord("topic");
   topic.postStream.setProperties(streamDetails);
   return topic;
 }
@@ -17,9 +17,13 @@ function topicWithStream(streamDetails) {
 module("Unit | Controller | topic", function (hooks) {
   setupTest(hooks);
 
+  hooks.beforeEach(function () {
+    this.store = getOwner(this).lookup("service:store");
+  });
+
   test("editTopic", function (assert) {
-    const controller = this.owner.lookup("controller:topic");
-    const model = Topic.create();
+    const controller = getOwner(this).lookup("controller:topic");
+    const model = this.store.createRecord("topic");
     controller.setProperties({ model });
     assert.notOk(controller.editingTopic, "we are not editing by default");
 
@@ -50,15 +54,15 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("deleteTopic", function (assert) {
-    const model = Topic.create();
+    const model = this.store.createRecord("topic");
     let destroyed = false;
     let modalDisplayed = false;
     model.destroy = async () => (destroyed = true);
 
-    const siteSettings = this.owner.lookup("service:site-settings");
+    const siteSettings = getOwner(this).lookup("service:site-settings");
     siteSettings.min_topic_views_for_delete_confirm = 5;
 
-    const controller = this.owner.lookup("controller:topic");
+    const controller = getOwner(this).lookup("controller:topic");
     controller.setProperties({
       model,
       deleteTopicModal: () => (modalDisplayed = true),
@@ -75,8 +79,8 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("toggleMultiSelect", async function (assert) {
-    const model = Topic.create();
-    const controller = this.owner.lookup("controller:topic");
+    const model = this.store.createRecord("topic");
+    const controller = getOwner(this).lookup("controller:topic");
     controller.setProperties({ model });
 
     assert.notOk(
@@ -118,8 +122,10 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("selectedPosts", function (assert) {
-    const model = topicWithStream({ posts: [{ id: 1 }, { id: 2 }, { id: 3 }] });
-    const controller = this.owner.lookup("controller:topic");
+    const model = topicWithStream.call(this, {
+      posts: [{ id: 1 }, { id: 2 }, { id: 3 }],
+    });
+    const controller = getOwner(this).lookup("controller:topic");
     controller.setProperties({ model });
 
     controller.set("selectedPostIds", [1, 2, 42]);
@@ -136,8 +142,8 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("selectedAllPosts", function (assert) {
-    const model = topicWithStream({ stream: [1, 2, 3] });
-    const controller = this.owner.lookup("controller:topic");
+    const model = topicWithStream.call(this, { stream: [1, 2, 3] });
+    const controller = getOwner(this).lookup("controller:topic");
     controller.setProperties({ model });
 
     controller.set("selectedPostIds", [1, 2]);
@@ -163,7 +169,7 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("selectedPostsUsername", function (assert) {
-    const model = topicWithStream({
+    const model = topicWithStream.call(this, {
       posts: [
         { id: 1, username: "gary" },
         { id: 2, username: "gary" },
@@ -171,7 +177,7 @@ module("Unit | Controller | topic", function (hooks) {
       ],
       stream: [1, 2, 3],
     });
-    const controller = this.owner.lookup("controller:topic");
+    const controller = getOwner(this).lookup("controller:topic");
     controller.setProperties({ model });
 
     assert.strictEqual(
@@ -210,13 +216,13 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("showSelectedPostsAtBottom", function (assert) {
-    const model = Topic.create({ posts_count: 3 });
-    const controller = this.owner.lookup("controller:topic");
+    const model = this.store.createRecord("topic", { posts_count: 3 });
+    const controller = getOwner(this).lookup("controller:topic");
     controller.setProperties({ model });
 
     assert.notOk(controller.showSelectedPostsAtBottom, "false on desktop");
 
-    const site = this.owner.lookup("service:site");
+    const site = getOwner(this).lookup("service:site");
     site.set("mobileView", true);
 
     assert.notOk(
@@ -233,7 +239,7 @@ module("Unit | Controller | topic", function (hooks) {
 
   test("canDeleteSelected", function (assert) {
     const currentUser = User.create({ admin: false });
-    const model = topicWithStream({
+    const model = topicWithStream.call(this, {
       posts: [
         { id: 1, can_delete: false },
         { id: 2, can_delete: true },
@@ -242,7 +248,7 @@ module("Unit | Controller | topic", function (hooks) {
       stream: [1, 2, 3],
     });
 
-    const controller = this.owner.lookup("controller:topic");
+    const controller = getOwner(this).lookup("controller:topic");
     controller.setProperties({
       model,
       currentUser,
@@ -279,7 +285,7 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("Can split/merge topic", function (assert) {
-    const model = topicWithStream({
+    const model = topicWithStream.call(this, {
       posts: [
         { id: 1, post_number: 1, post_type: 1 },
         { id: 2, post_number: 2, post_type: 4 },
@@ -289,7 +295,7 @@ module("Unit | Controller | topic", function (hooks) {
     });
     model.set("details.can_move_posts", false);
 
-    const controller = this.owner.lookup("controller:topic");
+    const controller = getOwner(this).lookup("controller:topic");
     controller.setProperties({ model });
 
     assert.notOk(
@@ -326,7 +332,7 @@ module("Unit | Controller | topic", function (hooks) {
 
   test("canChangeOwner", function (assert) {
     const currentUser = User.create({ admin: false });
-    const model = topicWithStream({
+    const model = topicWithStream.call(this, {
       posts: [
         { id: 1, username: "gary" },
         { id: 2, username: "lili" },
@@ -335,7 +341,7 @@ module("Unit | Controller | topic", function (hooks) {
     });
     model.set("currentUser", currentUser);
 
-    const controller = this.owner.lookup("controller:topic");
+    const controller = getOwner(this).lookup("controller:topic");
     controller.setProperties({ model, currentUser });
 
     assert.notOk(controller.canChangeOwner, "false when no posts are selected");
@@ -358,7 +364,7 @@ module("Unit | Controller | topic", function (hooks) {
 
   test("modCanChangeOwner", function (assert) {
     const currentUser = User.create({ moderator: false });
-    const model = topicWithStream({
+    const model = topicWithStream.call(this, {
       posts: [
         { id: 1, username: "gary" },
         { id: 2, username: "lili" },
@@ -367,10 +373,10 @@ module("Unit | Controller | topic", function (hooks) {
     });
     model.set("currentUser", currentUser);
 
-    const siteSettings = this.owner.lookup("service:site-settings");
+    const siteSettings = getOwner(this).lookup("service:site-settings");
     siteSettings.moderators_change_post_ownership = true;
 
-    const controller = this.owner.lookup("controller:topic");
+    const controller = getOwner(this).lookup("controller:topic");
     controller.setProperties({ model, currentUser });
 
     assert.notOk(controller.canChangeOwner, "false when no posts are selected");
@@ -392,7 +398,7 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("canMergePosts", function (assert) {
-    const model = topicWithStream({
+    const model = topicWithStream.call(this, {
       posts: [
         { id: 1, username: "gary", can_delete: true },
         { id: 2, username: "lili", can_delete: true },
@@ -402,7 +408,7 @@ module("Unit | Controller | topic", function (hooks) {
       stream: [1, 2, 3],
     });
 
-    const controller = this.owner.lookup("controller:topic");
+    const controller = getOwner(this).lookup("controller:topic");
     controller.setProperties({ model });
 
     assert.notOk(controller.canMergePosts, "false when no posts are selected");
@@ -433,8 +439,8 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("Select/deselect all", function (assert) {
-    const controller = this.owner.lookup("controller:topic");
-    const model = topicWithStream({ stream: [1, 2, 3] });
+    const controller = getOwner(this).lookup("controller:topic");
+    const model = topicWithStream.call(this, { stream: [1, 2, 3] });
     controller.setProperties({ model });
 
     assert.strictEqual(
@@ -459,7 +465,7 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("togglePostSelection", function (assert) {
-    const controller = this.owner.lookup("controller:topic");
+    const controller = getOwner(this).lookup("controller:topic");
 
     assert.strictEqual(
       controller.selectedPostIds[0],
@@ -483,10 +489,10 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("selectBelow", function (assert) {
-    const site = this.owner.lookup("service:site");
+    const site = getOwner(this).lookup("service:site");
     site.set("post_types", { small_action: 3, whisper: 4 });
 
-    const model = topicWithStream({
+    const model = topicWithStream.call(this, {
       stream: [1, 2, 3, 4, 5, 6, 7, 8],
       posts: [
         { id: 5, cooked: "whisper post", post_type: 4 },
@@ -495,7 +501,7 @@ module("Unit | Controller | topic", function (hooks) {
       ],
     });
 
-    const controller = this.owner.lookup("controller:topic");
+    const controller = getOwner(this).lookup("controller:topic");
     controller.setProperties({ model });
 
     assert.deepEqual(
@@ -513,11 +519,11 @@ module("Unit | Controller | topic", function (hooks) {
       response([{ id: 2, level: 1 }])
     );
 
-    const model = topicWithStream({
+    const model = topicWithStream.call(this, {
       posts: [{ id: 1 }, { id: 2 }],
     });
 
-    const controller = this.owner.lookup("controller:topic");
+    const controller = getOwner(this).lookup("controller:topic");
     controller.setProperties({ model });
 
     controller.send("selectReplies", { id: 1 });
@@ -552,10 +558,10 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("topVisibleChanged", function (assert) {
-    const model = topicWithStream({
+    const model = topicWithStream.call(this, {
       posts: [{ id: 1 }],
     });
-    const controller = this.owner.lookup("controller:topic");
+    const controller = getOwner(this).lookup("controller:topic");
     controller.setProperties({ model });
     const placeholder = new Placeholder("post-placeholder");
 
@@ -581,12 +587,12 @@ module("Unit | Controller | topic", function (hooks) {
     });
 
     const currentUser = EmberObject.create({ moderator: true });
-    const model = topicWithStream({
+    const model = topicWithStream.call(this, {
       stream: [2, 3, 4],
       posts: [post, { id: 3 }, { id: 4 }],
     });
 
-    const controller = this.owner.lookup("controller:topic");
+    const controller = getOwner(this).lookup("controller:topic");
     controller.setProperties({ model, currentUser });
 
     const done = assert.async();

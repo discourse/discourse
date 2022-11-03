@@ -1,21 +1,21 @@
 import { module, test } from "qunit";
-import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
-
-function buildDetails(id, topicParams = {}) {
-  const topic = Topic.create(Object.assign({ id }, topicParams));
-  return topic.get("details");
-}
+import { getOwner } from "discourse-common/lib/get-owner";
 
 module("Unit | Model | topic-details", function () {
   test("defaults", function (assert) {
-    let details = buildDetails(1234);
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", { id: 1234 });
+    const details = topic.details;
+
     assert.present(details, "the details are present by default");
     assert.ok(!details.get("loaded"), "details are not loaded by default");
   });
 
   test("updateFromJson", function (assert) {
-    let details = buildDetails(1234);
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", { id: 1234 });
+    const details = topic.details;
 
     details.updateFromJson({
       allowed_users: [{ username: "eviltrout" }],

@@ -4,7 +4,7 @@ import { render } from "@ember/test-helpers";
 import { count } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import Post from "discourse/models/post";
-import Topic from "discourse/models/topic";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 function postStreamTest(name, attrs) {
   test(name, async function (assert) {
@@ -27,8 +27,10 @@ module("Integration | Component | Widget | post-stream", function (hooks) {
   postStreamTest("basics", {
     posts() {
       const site = this.container.lookup("service:site");
-      const topic = Topic.create();
+      const store = getOwner(this).lookup("service:store");
+      const topic = store.createRecord("topic");
       topic.set("details.created_by", { id: 123 });
+
       return [
         Post.create({
           topic,
@@ -126,8 +128,10 @@ module("Integration | Component | Widget | post-stream", function (hooks) {
 
   postStreamTest("deleted posts", {
     posts() {
-      const topic = Topic.create();
+      const store = getOwner(this).lookup("service:store");
+      const topic = store.createRecord("topic");
       topic.set("details.created_by", { id: 123 });
+
       return [
         Post.create({
           topic,
