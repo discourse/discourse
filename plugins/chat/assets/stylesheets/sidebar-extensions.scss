@@ -163,6 +163,16 @@
   }
 
   .sidebar-section-link--muted {
-    opacity: 0.3;
+    opacity: 0.5;
+
+    .sidebar-section-link-prefix.icon .d-icon {
+      color: var(--primary-medium);
+    }
+
+    &.active {
+      .sidebar-section-link-prefix.icon .d-icon {
+        color: var(--primary-high);
+      }
+    }
   }
 }
