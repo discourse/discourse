@@ -7,12 +7,6 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.5.0] - 2022-11-01
-
-### Added
-
-- Adds `addTableWrapperButton`, which allows users to register a button that appears on top of posts with markdown tables. The button will appear on hover over a table that appears in a post. If the post's table is a very wide table, the button will be appended next to the Expand Table button.
-
 ## [1.4.0] - 2022-09-27
 
 ### Added
