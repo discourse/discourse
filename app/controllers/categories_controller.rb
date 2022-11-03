@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class CategoriesController < ApplicationController
+  include TopicQueryParams
 
   requires_login except: [:index, :categories_and_latest, :categories_and_top, :show, :redirect, :find_by_slug, :visible_groups]
 
@@ -291,6 +292,9 @@ class CategoriesController < ApplicationController
       per_page: CategoriesController.topics_per_page,
       no_definitions: true,
     }
+
+    list_opts = build_topic_list_options
+    topic_options.merge!(list_opts)
     style = SiteSetting.desktop_category_page_style
     topic_options[:order] = 'created' if style == "categories_and_latest_topics_created_date"
 
