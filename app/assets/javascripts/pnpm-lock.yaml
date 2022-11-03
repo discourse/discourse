@@ -71,6 +71,7 @@ importers:
       '@uppy/xhr-upload': ^2.1.2
       a11y-dialog: 7.5.2
       admin: workspace:*
+      babel-import-util: ^1.2.2
       babel-plugin-ember-template-compilation: ^1.0.2
       bootstrap: 3.4.1
       broccoli-asset-rev: ^3.0.0
@@ -105,6 +106,7 @@ importers:
       ember-test-selectors: ^6.0.0
       eslint: ^8.26.0
       eslint-plugin-qunit: ^6.2.0
+      handlebars: ^4.7.7
       html-entities: ^2.3.3
       js-yaml: ^4.1.0
       jsdom: ^20.0.2
@@ -120,10 +122,13 @@ importers:
       sass: ^1.55.0
       select-kit: workspace:*
       sinon: ^14.0.1
+      source-map: ^0.7.4
+      terser: ^5.15.1
       tippy.js: ^6.3.7
       virtual-dom: ^2.1.1
       webpack: ^5.74.0
       wizard: workspace:*
+      xss: ^1.0.14
     dependencies:
       '@babel/core': 7.19.6
       '@babel/standalone': 7.20.1
@@ -145,6 +150,7 @@ importers:
       '@uppy/xhr-upload': 2.1.3_@uppy+core@2.3.4
       a11y-dialog: 7.5.2
       admin: link:../admin
+      babel-import-util: 1.2.2
       babel-plugin-ember-template-compilation: 1.0.2
       bootstrap: 3.4.1
       broccoli-asset-rev: 3.0.0
@@ -158,7 +164,7 @@ importers:
       ember-auto-import-chunks-json-generator: 1.0.0_ember-auto-import@2.4.3
       ember-buffered-proxy: 2.1.1_@babel+core@7.19.6
       ember-cached-decorator-polyfill: 1.0.1_6w4ezvrlg7cuuzjx6jciook2c4
-      ember-cli: 3.28.6
+      ember-cli: 3.28.6_handlebars@4.7.7
       ember-cli-app-version: 5.0.0
       ember-cli-babel: 7.26.11
       ember-cli-dependency-checker: 3.3.1_ember-cli@3.28.6
@@ -179,6 +185,7 @@ importers:
       ember-test-selectors: 6.0.0
       eslint: 8.26.0
       eslint-plugin-qunit: 6.2.0_eslint@8.26.0
+      handlebars: 4.7.7
       html-entities: 2.3.3
       js-yaml: 4.1.0
       jsdom: 20.0.2
@@ -194,10 +201,13 @@ importers:
       sass: 1.55.0
       select-kit: link:../select-kit
       sinon: 14.0.1
+      source-map: 0.7.4
+      terser: 5.15.1
       tippy.js: 6.3.7
       virtual-dom: 2.1.1
       webpack: 5.74.0
       wizard: link:../wizard
+      xss: 1.0.14
 
   discourse-common:
     specifiers:
@@ -4389,7 +4399,6 @@ packages:
       bluebird: 3.7.2
       handlebars: 4.7.7
       mustache: 4.2.0
-    dev: true
 
   /consolidate/0.16.0_mustache@4.2.0:
     resolution: {integrity: sha512-Nhl1wzCslqXYTJVDyJCu3ODohy9OfBMB5uD2BiBTzd7w+QY0lBzafkR8y8755yMYHAaMD4NuzbAw03/xzfw+eQ==}
@@ -4558,6 +4567,7 @@ packages:
     dependencies:
       bluebird: 3.7.2
       mustache: 4.2.0
+    dev: true
 
   /constants-browserify/1.0.0:
     resolution: {integrity: sha512-xFxOwqIzR/e1k1gLiWEophSCMqXcwVHIH7akf7b/vxcUeGunlj3hvZaaqxwHsTgn+IndtkQJgSztIDWeumWJDQ==}
@@ -5165,7 +5175,7 @@ packages:
       ember-cli: ^3.2.0 || ^4.0.0
     dependencies:
       chalk: 2.4.2
-      ember-cli: 3.28.6
+      ember-cli: 3.28.6_handlebars@4.7.7
       find-yarn-workspace-root: 1.2.1
       is-git-url: 1.0.0
       resolve: 1.22.1
@@ -5542,6 +5552,7 @@ packages:
       - velocityjs
       - walrus
       - whiskers
+    dev: true
 
   /ember-cli/3.28.6_handlebars@4.7.7:
     resolution: {integrity: sha512-aGHIDXM5KujhU+tHyfp1X5bUp3yj47sIWI0zgybyIw6vv6ErAu/eKWWMSib5PF8cQDdXG9vttBcXnvQ4QBNIPQ==}
@@ -5697,7 +5708,6 @@ packages:
       - velocityjs
       - walrus
       - whiskers
-    dev: true
 
   /ember-compatibility-helpers/1.2.6_@babel+core@7.19.6:
     resolution: {integrity: sha512-2UBUa5SAuPg8/kRVaiOfTwlXdeVweal1zdNPibwItrhR0IvPrXpaqwJDlEZnWKEoB+h33V0JIfiWleSG6hGkkA==}
@@ -10149,6 +10159,11 @@ packages:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
     engines: {node: '>=0.10.0'}
 
+  /source-map/0.7.4:
+    resolution: {integrity: sha512-l3BikUxvPOcn5E74dZiq5BGsTb5yEwhaTSzccU6t4sDOH8NWJCstKO5QT2CvtFoK6F0saL7p9xHAqHOlCPJygA==}
+    engines: {node: '>= 8'}
+    dev: false
+
   /sourcemap-codec/1.4.8:
     resolution: {integrity: sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==}
     dev: false
@@ -10594,6 +10609,7 @@ packages:
       - velocityjs
       - walrus
       - whiskers
+    dev: true
 
   /testem/3.9.0_handlebars@4.7.7:
     resolution: {integrity: sha512-YTxCYKj0cc8uUSKEziJtSC5T/pw4fQnY0ZXNOyvAFgrijfsN9NxmncJZOHLhPgFOuhbRd5i+DBQxw0Cpe0SEFg==}
@@ -10686,7 +10702,6 @@ packages:
       - velocityjs
       - walrus
       - whiskers
-    dev: true
 
   /text-table/0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}

@@ -6,7 +6,7 @@
 module BarberEmberPrecompilerFreedomPatch
   # Use the template compiler JS from node_modules
   def ember_template_precompiler
-    @ember ||= File.new("app/assets/javascripts/node_modules/ember-source/dist/ember-template-compiler.js")
+    @ember ||= File.new("app/assets/javascripts/discourse/node_modules/ember-source/dist/ember-template-compiler.js")
   end
 
   # Apply a couple of extra shims for more recent ember-template-compilers

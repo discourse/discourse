@@ -94,13 +94,13 @@ module PrettyText
     end
 
     root_path = "#{Rails.root}/app/assets/javascripts/"
-    ctx_load(ctx, "#{root_path}/node_modules/loader.js/dist/loader/loader.js")
+    ctx_load(ctx, "#{root_path}/discourse/node_modules/loader.js/dist/loader/loader.js")
     ctx_load(ctx, "#{root_path}/handlebars-shim.js")
-    ctx_load(ctx, "#{root_path}/node_modules/xss/dist/xss.js")
+    ctx_load(ctx, "#{root_path}/discourse/node_modules/xss/dist/xss.js")
     ctx.load("#{Rails.root}/lib/pretty_text/vendor-shims.js")
     ctx_load_directory(ctx, "pretty-text/addon")
     ctx_load_directory(ctx, "pretty-text/engines/discourse-markdown")
-    ctx_load(ctx, "#{root_path}/node_modules/markdown-it/dist/markdown-it.js")
+    ctx_load(ctx, "#{root_path}/discourse/node_modules/markdown-it/dist/markdown-it.js")
 
     apply_es6_file(ctx, root_path, "discourse-common/addon/lib/get-url")
     apply_es6_file(ctx, root_path, "discourse-common/addon/lib/object")

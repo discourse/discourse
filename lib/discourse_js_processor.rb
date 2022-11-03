@@ -142,10 +142,10 @@ class DiscourseJsProcessor
       JS
 
       # define/require support
-      load_file_in_context(ctx, "node_modules/loader.js/dist/loader/loader.js")
+      load_file_in_context(ctx, "discourse/node_modules/loader.js/dist/loader/loader.js")
 
       # Babel
-      load_file_in_context(ctx, "node_modules/@babel/standalone/babel.js")
+      load_file_in_context(ctx, "discourse/node_modules/@babel/standalone/babel.js")
       ctx.eval <<~JS
         globalThis.rawBabelTransform = function(){
           return Babel.transform(...arguments).code;
@@ -153,15 +153,15 @@ class DiscourseJsProcessor
       JS
 
       # Terser
-      load_file_in_context(ctx, "node_modules/source-map/dist/source-map.js")
-      load_file_in_context(ctx, "node_modules/terser/dist/bundle.min.js")
+      load_file_in_context(ctx, "discourse/node_modules/source-map/dist/source-map.js")
+      load_file_in_context(ctx, "discourse/node_modules/terser/dist/bundle.min.js")
 
       # Template Compiler
-      load_file_in_context(ctx, "node_modules/ember-source/dist/ember-template-compiler.js")
-      load_file_in_context(ctx, "node_modules/babel-plugin-ember-template-compilation/src/plugin.js", wrap_in_module: "babel-plugin-ember-template-compilation/index")
-      load_file_in_context(ctx, "node_modules/babel-plugin-ember-template-compilation/src/expression-parser.js", wrap_in_module: "babel-plugin-ember-template-compilation/expression-parser")
-      load_file_in_context(ctx, "node_modules/babel-import-util/src/index.js", wrap_in_module: "babel-import-util")
-      load_file_in_context(ctx, "node_modules/ember-cli-htmlbars/lib/colocated-babel-plugin.js", wrap_in_module: "colocated-babel-plugin")
+      load_file_in_context(ctx, "discourse/node_modules/ember-source/dist/ember-template-compiler.js")
+      load_file_in_context(ctx, "discourse/node_modules/babel-plugin-ember-template-compilation/src/plugin.js", wrap_in_module: "babel-plugin-ember-template-compilation/index")
+      load_file_in_context(ctx, "discourse/node_modules/babel-plugin-ember-template-compilation/src/expression-parser.js", wrap_in_module: "babel-plugin-ember-template-compilation/expression-parser")
+      load_file_in_context(ctx, "discourse/node_modules/babel-import-util/src/index.js", wrap_in_module: "babel-import-util")
+      load_file_in_context(ctx, "discourse/node_modules/ember-cli-htmlbars/lib/colocated-babel-plugin.js", wrap_in_module: "colocated-babel-plugin")
 
       # Widget HBS compiler
       widget_hbs_compiler_source = File.read("#{Rails.root}/lib/javascripts/widget-hbs-compiler.js")
@@ -178,7 +178,7 @@ class DiscourseJsProcessor
       ctx.eval(widget_hbs_compiler_transpiled, filename: "widget-hbs-compiler.js")
 
       # Raw HBS compiler
-      load_file_in_context(ctx, "node_modules/handlebars/dist/handlebars.js", wrap_in_module: "handlebars")
+      load_file_in_context(ctx, "discourse/node_modules/handlebars/dist/handlebars.js", wrap_in_module: "handlebars")
 
       raw_hbs_transpiled = ctx.call(
         "rawBabelTransform",

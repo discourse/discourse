@@ -102,7 +102,7 @@ RSpec.describe DiscourseJsProcessor do
 
     let(:mini_racer) {
       ctx = MiniRacer::Context.new
-      ctx.eval(File.open("#{Rails.root}/app/assets/javascripts/node_modules/handlebars/dist/handlebars.js").read)
+      ctx.eval(File.open("#{Rails.root}/app/assets/javascripts/discourse/node_modules/handlebars/dist/handlebars.js").read)
       ctx.eval(helpers)
       ctx
     }
