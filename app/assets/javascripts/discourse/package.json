@@ -88,7 +88,7 @@
     "sass": "^1.55.0",
     "select-kit": "workspace:*",
     "sinon": "^14.0.1",
-    "source-map": "^0.7.4",
+    "source-map": "^0.6.1",
     "terser": "^5.15.1",
     "tippy.js": "^6.3.7",
     "virtual-dom": "^2.1.1",
