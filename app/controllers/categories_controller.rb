@@ -293,8 +293,7 @@ class CategoriesController < ApplicationController
       no_definitions: true,
     }
 
-    list_opts = build_topic_list_options
-    topic_options.merge!(list_opts)
+    topic_options.merge!(build_topic_list_options)
     style = SiteSetting.desktop_category_page_style
     topic_options[:order] = 'created' if style == "categories_and_latest_topics_created_date"
 
