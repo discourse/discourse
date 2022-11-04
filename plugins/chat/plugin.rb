@@ -619,7 +619,7 @@ after_initialize do
     get "/browse/archived" => "chat#respond"
     get "/draft-channel" => "chat#respond"
     get "/channel/:channel_id" => "chat#respond"
-    get "/channel/:channel_id/:channel_title" => "chat#respond"
+    get "/channel/:channel_id/:channel_title" => "chat#respond", :as => "channel"
     get "/channel/:channel_id/:channel_title/info" => "chat#respond"
     get "/channel/:channel_id/:channel_title/info/about" => "chat#respond"
     get "/channel/:channel_id/:channel_title/info/members" => "chat#respond"
@@ -697,12 +697,7 @@ after_initialize do
 
   add_api_key_scope(
     :chat,
-    {
-      create_message: {
-        actions: %w[chat/chat#create_message],
-        params: %i[chat_channel_id],
-      },
-    },
+    { create_message: { actions: %w[chat/chat#create_message], params: %i[chat_channel_id] } },
   )
 
   # Dark mode email styles

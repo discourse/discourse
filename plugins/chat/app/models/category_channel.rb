@@ -17,7 +17,11 @@ class CategoryChannel < ChatChannel
     category.secure_group_ids.to_a.concat(staff_groups)
   end
 
-  def title(_)
+  def title(_ = nil)
     name.presence || category.name
+  end
+
+  def slug
+    title.truncate(100).parameterize
   end
 end
