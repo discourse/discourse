@@ -2033,7 +2033,7 @@ class PluginApi {
    * );
    *
    * @param {string} label - An i18n key for the button label
-   * @param {icon} icon - An icon name from fontawesome
+   * @param {string} icon - An icon name from fontawesome
    * @param {array} classes - An array of strings to be added as classes to the button
    * @param {function} event - A function that returns an event to be dispatched when the button is clicked
    *
