@@ -17,7 +17,8 @@ class ChatChannelSerializer < ApplicationSerializer
              :total_messages,
              :archive_topic_id,
              :memberships_count,
-             :current_user_membership
+             :current_user_membership,
+             :last_message
 
   def initialize(object, opts)
     super(object, opts)
@@ -91,6 +92,10 @@ class ChatChannelSerializer < ApplicationSerializer
       scope: scope,
       root: false,
     ).as_json
+  end
+
+  def last_message
+    ChatMessage.where('chat_channel_id': object.id).last
   end
 
   alias_method :include_archive_topic_id?, :include_archive_status?

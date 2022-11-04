@@ -307,7 +307,8 @@ en:
         create: "Go"
         leave: "Leave this personal chat"
         cannot_create: "Sorry, you cannot send direct messages."
-
+        you_last_messaged: "You:"
+        
       incoming_webhooks:
         back: "Back"
         channel_placeholder: "Select a channel"

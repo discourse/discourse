@@ -427,6 +427,11 @@ $float-height: 530px;
       display: block;
       font-size: var(--font-down-1);
       @include ellipsis;
+
+      &-prefix {
+        font-weight: bold;
+        color: var(--primary-very-high);
+      }
     }
 
     &__usernames {

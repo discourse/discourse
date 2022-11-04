@@ -34,7 +34,12 @@
           {{/if}}
         </div>
         <div class="chat-channel-title__last-message">
-          <span>YOU: </span>This is an example last message todo.
+          {{#if (eq this.channel.last_message.user_id this.currentUser.id)}}
+            <span class="chat-channel-title__last-message-prefix">
+              {{i18n "chat.direct_messages.you_last_messaged"}}
+            </span>
+          {{/if}}
+          {{this.channel.last_message.message}}
         </div>
       </div>
 
