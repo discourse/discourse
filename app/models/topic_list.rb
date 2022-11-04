@@ -38,6 +38,10 @@ class TopicList
     user_ids
   end
 
+  def self.topic_preloader_associations
+    @topic_preloader_associations ||= [:image_upload, { topic_thumbnails: :optimized_image }]
+  end
+
   attr_accessor(
     :more_topics_url,
     :prev_topics_url,
@@ -137,7 +141,7 @@ class TopicList
     end
 
     ActiveRecord::Associations::Preloader
-      .new(records: @topics, associations: [:image_upload, topic_thumbnails: :optimized_image])
+      .new(records: @topics, associations: self.class.topic_preloader_associations)
       .call
 
     if preloaded_custom_fields.present?
