@@ -427,18 +427,30 @@ RSpec.describe Guardian do
       expect(Guardian.new(nil).can_send_private_messages?).to be_falsey
     end
 
-    it "returns false when you are untrusted" do
-      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_2]
-      user.update!(trust_level: TrustLevel[0])
-      Group.user_trust_level_change!(user.id, TrustLevel[0])
-      expect(Guardian.new(user).can_send_private_messages?).to be_falsey
-    end
-
-    it "disallows pms to other users if trust level is not met" do
+    it "disallows pms to other users if the user is not in the automated trust level used for personal_message_enabled_groups" do
       SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_2]
       user.update!(trust_level: TrustLevel[1])
       Group.user_trust_level_change!(user.id, TrustLevel[1])
+      user.reload
       expect(Guardian.new(user).can_send_private_messages?).to be_falsey
+      user.update!(trust_level: TrustLevel[2])
+      Group.user_trust_level_change!(user.id, TrustLevel[2])
+      user.reload
+      expect(Guardian.new(user).can_send_private_messages?).to be_truthy
+    end
+
+    context "when personal_message_enabled_groups does contain the user" do
+      let(:group) { Fabricate(:group) }
+      before do
+        SiteSetting.personal_message_enabled_groups = group.id
+      end
+
+      it "returns true" do
+        expect(Guardian.new(user).can_send_private_messages?).to be_falsey
+        GroupUser.create(user: user, group: group)
+        user.reload
+        expect(Guardian.new(user).can_send_private_messages?).to be_truthy
+      end
     end
 
     context "when personal_message_enabled_groups does not contain the user" do

@@ -449,6 +449,9 @@ class Guardian
   # This should be used as a general, but not definitive, check for whether
   # the user can send private messages _generally_, which is mostly useful
   # for changing the UI.
+  #
+  # Please otherwise use can_send_private_message?(target, notify_moderators)
+  # to check if a single target can be messaged.
   def can_send_private_messages?(notify_moderators: false)
     from_system = @user.is_system_user?
     from_bot = @user.bot?
