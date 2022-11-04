@@ -52,6 +52,12 @@ task "themes:install" => :environment do |task, args|
   end
 end
 
+desc "Install themes & theme components from an archive"
+task "themes:install:archive" => :environment do |task, args|
+  filename = ENV["THEME_ARCHIVE"]
+  RemoteTheme.update_zipped_theme(filename, File.basename(filename))
+end
+
 def update_themes
   Theme.includes(:remote_theme).where(enabled: true, auto_update: true).find_each do |theme|
     begin
