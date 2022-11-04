@@ -359,8 +359,8 @@ class Guardian
     flair_icon.present? || flair_upload_id.present?
   end
 
-  def can_change_primary_group?(user)
-    user && is_staff?
+  def can_change_primary_group?(user, group)
+    user && can_edit_group?(group)
   end
 
   def can_change_trust_level?(user)

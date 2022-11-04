@@ -111,7 +111,7 @@ class Admin::GroupsController < Admin::StaffController
     raise Discourse::NotFound unless group
 
     users = User.where(username: group_params[:usernames].split(","))
-    users.each { |user| guardian.ensure_can_change_primary_group!(user) }
+    users.each { |user| guardian.ensure_can_change_primary_group!(user, group) }
     users.update_all(primary_group_id: params[:primary] == "true" ? group.id : nil)
 
     render json: success_json
