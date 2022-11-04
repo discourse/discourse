@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
-describe "Navigation", type: :system, js: true do
+RSpec.describe "Navigation", type: :system, js: true do
   fab!(:user) { Fabricate(:user) }
   fab!(:category_channel) { Fabricate(:category_channel) }
   fab!(:message) { Fabricate(:chat_message, chat_channel: category_channel) }

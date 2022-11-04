@@ -176,7 +176,7 @@ jobs:
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
-        run: bin/system_rspec plugins/*/spec/system
+        run: LOAD_PLUGINS=1 bin/system_rspec plugins/*/spec/system
 
       - name: Upload failed system test screenshots
         uses: actions/upload-artifact@v3
