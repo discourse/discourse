@@ -21,6 +21,7 @@ class ChatChannel < ActiveRecord::Base
             },
             presence: true,
             allow_nil: true
+  validate :ensure_slug
 
   scope :public_channels,
         -> {
@@ -106,6 +107,10 @@ class ChatChannel < ActiveRecord::Base
     )
 
     ChatPublisher.publish_channel_status(self)
+  end
+
+  def duplicate_slug?
+    ChatChannel.where(slug: self.slug).where.not(id: self.id).any?
   end
 end
 

@@ -107,6 +107,10 @@ en:
         multi_user: "%{users}"
         multi_user_truncated: "%{users} and %{leftover} others"
 
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "contains non-ascii characters"
+
     bookmarkable:
       notification_title: "message in %{channel_name}"
 
