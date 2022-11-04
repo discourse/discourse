@@ -9,6 +9,7 @@ class ChatMessage < ActiveRecord::Base
   belongs_to :chat_channel
   belongs_to :user
   belongs_to :in_reply_to, class_name: "ChatMessage"
+  belongs_to :last_editor, class_name: "User"
   has_many :replies, class_name: "ChatMessage", foreign_key: "in_reply_to_id", dependent: :nullify
   has_many :revisions, class_name: "ChatMessageRevision", dependent: :destroy
   has_many :reactions, class_name: "ChatMessageReaction", dependent: :destroy
@@ -31,6 +32,8 @@ class ChatMessage < ActiveRecord::Base
         -> { joins(:chat_channel).where(chat_channel: { chatable_type: "DirectMessage" }) }
 
   scope :created_before, ->(date) { where("chat_messages.created_at < ?", date) }
+
+  before_save { self.last_editor_id ||= self.user_id }
 
   def validate_message(has_uploads:)
     WatchedWordsValidator.new(attributes: [:message]).validate(self)
@@ -207,9 +210,11 @@ end
 #  message         :text
 #  cooked          :text
 #  cooked_version  :integer
+#  last_editor_id  :integer
 #
 # Indexes
 #
 #  idx_chat_messages_by_created_at_not_deleted            (created_at) WHERE (deleted_at IS NULL)
 #  index_chat_messages_on_chat_channel_id_and_created_at  (chat_channel_id,created_at)
+#  index_chat_messages_on_last_editor_id                  (last_editor_id)
 #
