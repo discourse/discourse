@@ -23,7 +23,7 @@ export function showUserTip(options) {
     showOnCreate: true,
     hideOnClick: false,
     trigger: "manual",
-    theme: "d-onboarding",
+    theme: "user-tips",
 
     // It must be interactive to make buttons work.
     interactive: true,

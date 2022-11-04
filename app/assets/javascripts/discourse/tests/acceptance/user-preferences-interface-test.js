@@ -144,7 +144,7 @@ acceptance("User Preferences - Interface", function (needs) {
     document.querySelector("meta[name='discourse_theme_id']").remove();
   });
 
-  test("shows reset seen onboarding popups button", async function (assert) {
+  test("shows reset seen user tips popups button", async function (assert) {
     let site = Site.current();
     site.set("user_tips", { first_notification: 1 });
 

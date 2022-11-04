@@ -1096,13 +1096,13 @@ const User = RestModel.extend({
 
   showUserTip(options) {
     const userTips = Site.currentProp("user_tips");
-    if (!userTips) {
+    if (!userTips || this.skip_new_user_tips) {
       return;
     }
 
     if (!userTips[options.id]) {
       // eslint-disable-next-line no-console
-      console.warn("Cannot display user tip with type =", options.id);
+      console.warn("Cannot show user tip with type =", options.id);
       return;
     }
 
@@ -1122,8 +1122,12 @@ const User = RestModel.extend({
   },
 
   hideUserTipForever(userTipId) {
-    // Empty userTipId means all user tips.
     const userTips = Site.currentProp("user_tips");
+    if (!userTips || this.skip_new_user_tips) {
+      return;
+    }
+
+    // Empty userTipId means all user tips.
     if (userTipId && !userTips[userTipId]) {
       // eslint-disable-next-line no-console
       console.warn("Cannot hide user tip with type =", userTipId);

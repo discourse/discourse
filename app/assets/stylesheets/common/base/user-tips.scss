@@ -17,21 +17,21 @@
   }
 }
 
-.tippy-box[data-theme~="d-onboarding"][data-placement^="left"]
+.tippy-box[data-theme~="user-tips"][data-placement^="left"]
   > .tippy-svg-arrow
   > svg {
   left: 11px;
 }
 
-.tippy-box[data-theme~="d-onboarding"][data-placement^="bottom"]
+.tippy-box[data-theme~="user-tips"][data-placement^="bottom"]
   > .tippy-svg-arrow
   > svg {
   top: -13px;
   left: -1px;
 }
 
-.tippy-box[data-theme~="d-onboarding"] > .tippy-svg-arrow:after,
-.tippy-box[data-theme~="d-onboarding"] > .tippy-svg-arrow > svg {
+.tippy-box[data-theme~="user-tips"] > .tippy-svg-arrow:after,
+.tippy-box[data-theme~="user-tips"] > .tippy-svg-arrow > svg {
   width: 18px;
   height: 18px;
 }
