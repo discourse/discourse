@@ -79,7 +79,9 @@ $float-height: 530px;
   border: 2px solid var(--secondary);
   -webkit-touch-callout: none;
   background: var(--tertiary-med-or-tertiary);
+  color: var(--secondary);
   font-size: var(--font-down-2);
+  text-align: center;
 
   &.urgent {
     background: var(--success);
@@ -136,17 +138,7 @@ $float-height: 530px;
   }
 
   .chat-channel-unread-indicator {
-    flex-shrink: 0;
-    width: 10px;
-    height: 10px;
-    border-radius: 10px;
-    border: 0;
-    right: 7px;
-    top: calc(50% - 5px);
-
-    &.urgent .number-wrap {
-      display: none;
-    }
+    font-size: var(--font-down-1);
   }
 
   .edit-channel-membership-btn,
@@ -408,18 +400,58 @@ $float-height: 530px;
   }
 }
 
+.public-channels .chat-channel-row {
+  .chat-channel-metadata {
+    flex-direction: row-reverse;
+    gap: 0.25rem;
+  }
+}
+
 .chat-channel-row {
   align-items: center;
   box-sizing: border-box;
   display: flex;
+  justify-content: space-between;
   position: relative;
   cursor: pointer;
   color: var(--primary-high);
   transition: opacity 50ms ease-in;
   opacity: 1;
 
-  .chat-channel-unread-indicator {
-    margin-left: 0.5rem;
+  .chat-channel-title {
+    &__user-info {
+      @include ellipsis;
+    }
+
+    &__last-message {
+      display: block;
+      font-size: var(--font-down-1);
+      @include ellipsis;
+    }
+
+    &__usernames {
+      display: block;
+    }
+
+    .user-status-message {
+      display: inline-block;
+      color: var(--primary-medium);
+      font-size: var(--font-down-2);
+    }
+  }
+
+  .chat-channel-metadata {
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    .chat-channel-unread-indicator {
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
 
   &.unfollowing {
@@ -427,17 +459,22 @@ $float-height: 530px;
   }
 
   .toggle-channel-membership-button.-leave {
-    visibility: hidden;
+    display: none;
     margin-left: auto;
+    margin-right: 1rem;
   }
 
-  &:hover {
+  &.can-leave:hover {
     .toggle-channel-membership-button.-leave {
-      visibility: visible;
+      display: block;
 
       > * {
         pointer-events: auto;
       }
+    }
+
+    .chat-channel-metadata {
+      display: none;
     }
   }
 

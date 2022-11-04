@@ -59,20 +59,10 @@ export default Component.extend({
     if (channel.current_user_membership.muted) {
       classes.push("muted");
     }
+    if (this.options.leaveButton) {
+      classes.push("can-leave");
+    }
     return classes.join(" ");
-  },
-
-  @discourseComputed(
-    "isDirectMessageRow",
-    "channel.chatable.users.[]",
-    "channel.chatable.users.@each.status"
-  )
-  showUserStatus(isDirectMessageRow) {
-    return !!(
-      isDirectMessageRow &&
-      this.channel.chatable.users.length === 1 &&
-      this.channel.chatable.users[0].status
-    );
   },
 
   @action

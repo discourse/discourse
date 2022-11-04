@@ -70,10 +70,8 @@ body.has-full-page-chat {
   }
 
   .chat-channel-unread-indicator {
-    width: 6px;
-    height: 6px;
-    left: 5px;
-    top: calc(50% - 3px);
+    padding: 5px;
+    font-size: var(--font-0);
   }
 }
 

@@ -1,6 +1,7 @@
 .chat-channel-title {
   display: flex;
   align-items: center;
+  @include ellipsis;
 
   .category-chat-private .d-icon {
     background-color: var(--secondary);
@@ -12,6 +13,14 @@
     width: 0.5em;
     left: calc(0.6125em + 3px);
     top: -4px;
+  }
+
+  &__avatar {
+    margin-right: 1rem;
+  }
+
+  .user-status-message {
+    display: none; // we only show when in channels list
   }
 
   .chat-name,
@@ -29,6 +38,10 @@
       vertical-align: text-bottom;
       width: 1.2em;
     }
+  }
+
+  &__last-message {
+    display: none; // we only show when in channels list
   }
 
   .d-icon-lock {

@@ -44,11 +44,11 @@ body.composer-open .topic-chat-float-container {
     }
 
     .chat-channel-unread-indicator {
+      padding: 5px;
       left: 3px;
       min-width: 8px;
       width: 8px;
       height: 8px;
-      border-radius: 7px;
       top: calc(50% - 5px);
     }
 
