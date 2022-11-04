@@ -82,14 +82,14 @@
     {{/each}}
 
     {{#if this.displayTags}}
-      <li class="tags">
-        <LinkTo @route="userPrivateMessages.tags" @model={{@user}}>
-          {{d-icon "tag"}}
-          <span>{{i18n "user.messages.all_tags"}}</span>
-        </LinkTo>
-      </li>
-
       {{#if @tagId}}
+        <li class="tags">
+          <LinkTo @route="userPrivateMessages.tags" @model={{@user}}>
+            {{d-icon "tag"}}
+            <span>{{i18n "user.messages.all_tags"}}</span>
+          </LinkTo>
+        </li>
+
         <li class="archive">
           <LinkTo @route="userPrivateMessages.tagsShow" @model={{@tagId}}>
             {{@tagId}}
@@ -98,7 +98,6 @@
       {{/if}}
     {{/if}}
 
-    <PluginOutlet @name="user-messages-nav" @connectorTagName="li" @args={{hash model=@user}} />
   </HorizontalOverflowNav>
 
   {{#if this.site.desktopView}}

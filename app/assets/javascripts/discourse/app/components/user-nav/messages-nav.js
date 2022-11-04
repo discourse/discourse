@@ -12,6 +12,8 @@ export default class UserNavMessagesNav extends Component {
       default:
         if (this.args.groupFilter) {
           return this.args.groupFilter;
+        } else if (this.args.customFilter) {
+          return this.args.customFilter;
         } else {
           return "inbox";
         }

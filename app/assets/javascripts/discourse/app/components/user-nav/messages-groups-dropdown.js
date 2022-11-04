@@ -25,27 +25,26 @@ export default ComboBoxComponent.extend({
     ];
 
     this.user.groupsWithMessages.forEach((group) => {
-      groups.push({ name: group.name, icon: "inbox" });
+      groups.push({
+        name: group.name,
+        icon: "inbox",
+        url: `/u/${this.user.username}/messages/group/${group.name}`,
+      });
     });
 
     if (this.pmTaggingEnabled) {
-      groups.push({ name: I18n.t("user.messages.tags") });
+      groups.push({
+        name: I18n.t("user.messages.tags"),
+        url: `/u/${this.user.username}/messages/tags`,
+      });
     }
 
     return groups;
   }),
 
   actions: {
-    onChange(item) {
-      let url;
-
-      if (this.user.groups.some((g) => g.name === item)) {
-        url = `/u/${this.user.username}/messages/group/${item}`;
-      } else if (item === I18n.t("user.messages.tags")) {
-        url = `/u/${this.user.username}/messages/tags`;
-      } else {
-        url = `/u/${this.user.username}/messages`;
-      }
+    onChange(name, object) {
+      let url = object.url ? object.url : `/u/${this.user.username}/messages`;
 
       DiscourseURL.routeToUrl(url);
     },
