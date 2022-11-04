@@ -270,15 +270,19 @@ const Topic = RestModel.extend({
       return customUrl;
     }
 
-    if (highestPostNumber <= lastReadPostNumber) {
-      if (this.get("category.navigate_to_first_post_after_read")) {
-        return this.urlForPostNumber(1);
-      } else {
-        return this.urlForPostNumber(lastReadPostNumber + 1);
-      }
-    } else {
-      return this.urlForPostNumber(lastReadPostNumber + 1);
+    if (
+      lastReadPostNumber >= highestPostNumber &&
+      this.get("category.navigate_to_first_post_after_read")
+    ) {
+      return this.urlForPostNumber(1);
     }
+
+    let postNumber = lastReadPostNumber + 1;
+    if (postNumber > highestPostNumber) {
+      postNumber = highestPostNumber;
+    }
+
+    return this.urlForPostNumber(postNumber);
   },
 
   @discourseComputed("highest_post_number", "url")

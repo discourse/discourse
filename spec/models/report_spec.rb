@@ -1289,12 +1289,12 @@ RSpec.describe Report do
     end
 
     it "caches exception reports for 1 minute" do
-      Discourse.cache.expects(:write).with(Report.cache_key(exception_report), exception_report.as_json, { expires_in: 1.minute })
+      Discourse.cache.expects(:write).with(Report.cache_key(exception_report), exception_report.as_json, expires_in: 1.minute)
       Report.cache(exception_report)
     end
 
     it "caches valid reports for 35 minutes" do
-      Discourse.cache.expects(:write).with(Report.cache_key(valid_report), valid_report.as_json, { expires_in: 35.minutes })
+      Discourse.cache.expects(:write).with(Report.cache_key(valid_report), valid_report.as_json, expires_in: 35.minutes)
       Report.cache(valid_report)
     end
   end

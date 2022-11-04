@@ -679,7 +679,6 @@ ko:
       almost_x_years:
         other: "약 %{count}년 전"
   password_reset:
-    no_token: "이 비밀번호 변경 링크는 너무 오래됐습니다. 로그인 버튼을 눌러서 '비밀번호가 기억나지 않습니다'를 사용하여 새 링크를 받으세요."
     choose_new: "새 비밀번호를 입력하세요"
     choose: "비밀번호를 입력하세요"
     update: "비밀번호 업데이트"
@@ -1752,14 +1751,14 @@ ko:
     raw_rejected_email_max_length: "거부된 수신 이메일에 저장해야 하는 문자 수입니다."
     delete_rejected_email_after_days: "(n)일 지난 거부된 이메일을 삭제합니다."
     manual_polling_enabled: "이메일 답장을 위해 API를 사용하여 이메일을 푸시합니다."
-    pop3_polling_enabled: "이메일 답장을 위해 POP3로 폴링합니다."
+    pop3_polling_enabled: "POP3로 이메일 응답 가져오기"
     pop3_polling_ssl: "POP3 서버 연결 중 SSL을 사용합니다. (추천)"
     pop3_polling_openssl_verify: "TLS 서버 인증서 검증(디폴트: 활성화됨)"
     pop3_polling_period_mins: "POP3 계정에서 이메일을 확인하는 간격(분)입니다. 참고: 재시작해야 합니다."
-    pop3_polling_port: "POP3 계정을 폴링할 포트입니다. "
-    pop3_polling_host: "POP3를 통해 이메일을 폴링할 호스트입니다."
-    pop3_polling_username: "이메일을 폴링할 POP3 계정의 아이디입니다."
-    pop3_polling_password: "이메일을 폴링할 POP3 계정의 비밀번호입니다."
+    pop3_polling_port: "POP3 계정을 연결할 포트 번호"
+    pop3_polling_host: "POP3 계정을 연결할 서버명"
+    pop3_polling_username: "이메일을 가져올 POP3 계정의 사용자 이름"
+    pop3_polling_password: "이메일을 가져올 POP3 계정의 비밀번호"
     pop3_polling_delete_from_server: "서버에서 이메일을 삭제하세요. 참고: 이 기능을 비활성화하면 받은 편지함을 수동으로 정리해야 합니다."
     log_mail_processing_failures: "모든 이메일 처리 실패를 <a href='%{base_path}/logs' target='_blank'>/logs</a>에 기록"
     email_in: '사용자가 이메일을 통해 새 주제를 게시할 수 있도록 허용합니다(수동 또는 pop3 폴링 필요). 각 카테고리의 ''설정'' 탭에서 주소를 환경설정합니다.'

@@ -1,0 +1,289 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Zmieniono status kanału czatu"
+            chat_channel_delete: "Kanał czatu usunięty"
+    about:
+      chat_messages_count: "Wiadomości czatu"
+      chat_channels_count: "Kanały czatu"
+      chat_users_count: "Użytkownicy czatu"
+    chat:
+      dates:
+        time_tiny: "h:mm"
+      all_loaded: "Pokazuje wszystkie wiadomości"
+      already_enabled: "Czat jest już włączony w tym temacie. Spróbuj odświeżyć strone."
+      disabled_for_topic: "Czat jest wyłączony w tym temacie."
+      bot: "bot"
+      create: "Utwórz"
+      cancel: "Anuluj"
+      cancel_reply: "Anuluj odpowiedź"
+      chat_channels: "Kanały"
+      browse_all_channels: "Przeglądaj wszystkie kanały"
+      move_to_channel:
+        confirm_move: "Przenieś wiadomości"
+      channel_settings:
+        title: "Ustawienia kanału"
+        edit: "Edytuj"
+        add: "Dodaj"
+        close_channel: "Zamknij kanał"
+        open_channel: "Otwórz kanał"
+        delete_channel: "Usuń kanał"
+        join_channel: "Dołącz do kanału"
+        leave_channel: "Opuść kanał"
+        join: "Dołącz"
+        leave: "Opuść"
+      channel_open:
+        title: "Otwórz kanał"
+      channel_close:
+        title: "Zamknij kanał"
+      channel_delete:
+        title: "Usuń kanał"
+        confirm_channel_name: "Wpisz nazwę kanału"
+      channels_list_popup:
+        browse: "Przeglądaj kanały"
+      click_to_join: "Kliknij tutaj, aby wyświetlić dostępne kanały."
+      close: "Zamknij"
+      collapse: "Zwiń szufladę czatu"
+      confirm_flag: "Czy na pewno chcesz oflagować wiadomość od %{username}?"
+      deleted: "Wiadomość została usunięta. [view]"
+      delete: "Usuń"
+      edited: "edytowano"
+      joined: "dołączył"
+      empty_state:
+        direct_message: "Możesz także rozpocząć osobisty czat z jednym lub kilkoma użytkownikami."
+      email_frequency:
+        never: "Nigdy"
+      enable: "Włącz czat"
+      flagged: "Ta wiadomość została oznaczona do sprawdzenia"
+      invalid_access: "Nie masz dostępu do tego kanału czatu"
+      in_reply_to: "W odpowiedzi na"
+      heading: "Czat"
+      join: "Dołącz"
+      new_messages: "nowe wiadomości"
+      mention_warning:
+        dismiss: "odrzuć"
+        invitations_sent:
+          one: "Zaproszenie wysłane"
+          few: "Zaproszenia wysłane"
+          many: "Zaproszenia wysłane"
+          other: "Zaproszenia wysłane"
+        invite: "Zaproś do kanału"
+        without_membership:
+          one: "%{usernames} nie dołączył do tego kanału."
+          few: "%{usernames} nie dołączyli do tego kanału."
+          many: "%{usernames} nie dołączyli do tego kanału."
+          other: "%{usernames} nie dołączyli do tego kanału."
+      no_public_channels: "Nie dołączyłeś do żadnego kanału."
+      open: "Otwórz czat"
+      open_full_page: "Otwórz czat na pełnym ekranie"
+      open_message: "Otwórz wiadomość na czacie"
+      placeholder_self: "Zanotuj coś"
+      placeholder_others: "Czat z %{messageRecipient}"
+      placeholder_new_message_disallowed: "Kanał ma %{status}, nie możesz teraz wysyłać nowych wiadomości."
+      placeholder_silenced: "W tej chwili nie możesz wysyłać wiadomości."
+      remove_upload: "Usuń plik"
+      react: "Zareaguj z emoji"
+      reply: "Odpowiedz"
+      edit: "Edytuj"
+      copy_link: "Skopiuj link"
+      rebake_message: "Przebuduj HTML"
+      retry_staged_message:
+        action: "Wyślij ponownie?"
+      restore: "Przywróć usuniętą wiadomość"
+      save: "Zapisz"
+      select: "Wybierz"
+      silence: "Wycisz użytkownika"
+      scroll_to_bottom: "Przewiń na dół"
+      scroll_to_new_messages: "Zobacz nowe wiadomości"
+      sound:
+        title: "Dźwięk powiadomienia czatu na pulpicie"
+      sounds:
+        none: "Brak"
+        bell: "Dzwonek"
+        ding: "Ding"
+      title: "czat"
+      title_capitalized: "Czat"
+      upload: "Dołącz plik"
+      uploaded_files:
+        one: "%{count} plik"
+        few: "%{count} pliki"
+        many: "%{count} plików"
+        other: "%{count} plików"
+      you_flagged: "Oflagowałeś tę wiadomość"
+      exit: "powrót"
+      channel_status:
+        read_only_header: "Kanał jest tylko do odczytu"
+        read_only: "Tylko do odczytu"
+        archived_header: "Kanał został zarchiwizowany"
+        archived: "Zarchiwizowany"
+        closed_header: "Kanał jest zamknięty"
+        closed: "Zamknięty"
+        open_header: "Kanał jest otwarty"
+        open: "Otwarty"
+      browse:
+        title: Kanały
+        filter_closed: Zamknięty
+        filter_archived: Zarchiwizowany
+      chat_message_separator:
+        today: Dzisiaj
+        yesterday: Wczoraj
+      about_view:
+        title: Tytuł
+        description: Opis
+      channel_info:
+        back_to_all_channels: "Wszystkie kanały"
+        back_to_channel: "Powrót"
+        tabs:
+          members: Członkowie
+          settings: Ustawienia
+      channel_edit_title_modal:
+        title: Edytuj tytuł
+        input_placeholder: Dodaj tytuł
+      channel_edit_description_modal:
+        title: Edytuj opis
+        input_placeholder: Dodaj opis
+      direct_message_creator:
+        title: Nowa wiadomość
+        prefix: "Do:"
+        no_results: Brak wyników
+      channel_selector:
+        title: "Przejdź do kanału"
+        no_channels: "Żadne kanały nie pasują do Twojego wyszukiwania"
+      channel:
+        no_memberships_found: Nie znaleziono członków
+        memberships_count:
+          one: 1 członek
+          few: "%{count} członków"
+          many: "%{count} członków"
+          other: "%{count} członków"
+      create_channel:
+        choose_category:
+          label: "Wybierz kategorię"
+          none: "wybierz jeden..."
+          default_hint: Zarządzaj dostępem, odwiedzając <a href=%{link} target="_blank">ustawienia bezpieczeństwa %{category} </a>
+        create: "Utwórz kanał"
+        description: "Opis (opcjonalnie)"
+        name: "Nazwa kanału"
+        type: "Typ"
+        types:
+          category: "Kategoria"
+          topic: "Temat"
+      reviewable:
+        type: "Wiadomość na czacie"
+      reactions:
+        only_you: "Zareagowałeś z :%{emoji}:"
+        and_others: "Ty, %{usernames} zareagowaliście z :%{emoji}:"
+        only_others: "%{usernames} zareagowali z :%{emoji}:"
+        others_and_more: "%{usernames} i %{more} inni reagowali z :%{emoji}:"
+        you_others_and_more: "Ty, %{usernames} i %{more} inni zareagowaliście z :%{emoji}:"
+      composer:
+        toggle_toolbar: "Przełącz pasek narzędzi"
+        italic_text: "podkreślony tekst"
+        bold_text: "pogrubiony tekst"
+        code_text: "kod"
+      quote:
+        copy_success: "Cytat z czatu skopiowany do schowka"
+      notification_levels:
+        never: "Nigdy"
+        mention: "Tylko dla wzmianek"
+        always: "Dla całej aktywności"
+      settings:
+        desktop_notification_level: "Powiadomienia na pulpicie"
+        follow: "Dołącz"
+        mobile_notification_level: "Mobilne powiadomienia push"
+        mute: "Wycisz kanał"
+        notifications: "Powiadomienia"
+        preview: "Podgląd"
+        save: "Zapisz"
+        saved: "Zapisano"
+        unfollow: "Opuść"
+      admin:
+        title: "Czat"
+      direct_messages:
+        title: "Czat osobisty"
+        new: "Nowy osobisty czat"
+        leave: "Opuść ten osobisty czat"
+      incoming_webhooks:
+        back: "Powrót"
+        channel_placeholder: "Wybierz kanał"
+        confirm_destroy: "Czy na pewno chcesz usunąć tego przychodzącego webhooka? Tego nie można cofnąć."
+        current_emoji: "Aktualne emoji"
+        description: "Opis"
+        delete: "Usuń"
+        emoji: "Emoji"
+        emoji_instructions: "Awatar systemowy zostanie użyty, jeśli emotikon pozostanie pusty."
+        name: "Nazwa"
+        name_placeholder: "nazwa..."
+        new: "Nowy przychodzący webhook"
+        none: "Nie utworzono żadnych istniejących przychodzących webhooków."
+        no_emoji: "Nie wybrano emotikonów"
+        post_to: "Opublikuj w"
+        reset_emoji: "Zresetuj emotikony"
+        save: "Zapisz"
+        edit: "Edytuj"
+        select_emoji: "Wybierz emoji"
+        system: "system"
+        title: "Przychodzące webhooki"
+        url: "URL"
+        username: "Nazwa użytkownika"
+        username_instructions: "Nazwa użytkownika bota, który publikuje na kanale. Domyślnie \"system\" gdy pozostanie puste."
+      selection:
+        cancel: "Anuluj"
+        copy: "Kopiuj"
+        move_selection_to_channel: "Przejdź do kanału"
+        error: "Wystąpił błąd podczas przenoszenia wiadomości czatu"
+        title: "Przenieś czat do tematu"
+        new_topic:
+          title: "Przenieś do nowego tematu"
+          instructions:
+            one: "Zamierzasz utworzyć nowy temat i wypełnić go wybraną wiadomością czatu."
+            few: "Zamierzasz utworzyć nowy temat i wypełnić go <b>%{count}</b> wybranymi wiadomościami czatu."
+            many: "Zamierzasz utworzyć nowy temat i wypełnić go <b>%{count}</b> wybranymi wiadomościami czatu."
+            other: "Zamierzasz utworzyć nowy temat i wypełnić go <b>%{count}</b> wybranymi wiadomościami czatu."
+        existing_topic:
+          title: "Przenieś się do istniejącego tematu"
+        new_message:
+          title: "Przenieś do nowej wiadomości"
+      replying_indicator:
+        single_user: "%{username} pisze"
+        multiple_users: "%{commaSeparatedUsernames} i %{lastUsername} piszą"
+      retention_reminders:
+        public: "Historia kanału jest przechowywana przez %{days} dni."
+        dm: "Historia osobistego czatu jest przechowywana przez %{days} dni."
+      topic_button_title: "Czat"
+      emoji_picker:
+        no_results: "Brak wyników"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+      popup:
+        chat_mention:
+          direct: 'wspomniał o Tobie w "%{channel}"'
+        chat_message: "Nowa wiadomość na czacie"
+        chat_quoted: "%{username} zacytował Twoją wiadomość na czacie"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          title: Wyślij wiadomość na czacie
+          fields:
+            chat_channel_id:
+              label: ID kanału czatu
+            message:
+              label: Wiadomość
+            sender:
+              label: Nadawca
+    review:
+      types:
+        reviewable_chat_message:
+          flagged_by: "Oflagowane przez"
+    keyboard_shortcuts_help:
+      chat:
+        title: "Czat"

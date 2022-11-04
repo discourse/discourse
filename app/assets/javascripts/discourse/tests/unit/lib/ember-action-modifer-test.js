@@ -75,7 +75,7 @@ module("Unit | Lib | ember-action-modifer", function (hooks) {
     assert.strictEqual(this.dblClicked, 0);
   });
 
-  module("used on a classic component", function () {
+  module("used on a classic component", function (innerHooks) {
     const ExampleClassicButton = ClassicComponent.extend({
       tagName: "",
       onDoSomething: null,
@@ -84,6 +84,7 @@ module("Unit | Lib | ember-action-modifer", function (hooks) {
         this.onDoSomething?.("doSomething");
       },
     });
+
     const ExampleClassicButtonWithActions = ClassicComponent.extend({
       tagName: "",
       onDoSomething: null,
@@ -98,6 +99,7 @@ module("Unit | Lib | ember-action-modifer", function (hooks) {
         },
       },
     });
+
     const exampleClassicButtonTemplate = hbs`
       <a
         href
@@ -109,7 +111,7 @@ module("Unit | Lib | ember-action-modifer", function (hooks) {
       </a>
     `;
 
-    hooks.beforeEach(function () {
+    innerHooks.beforeEach(function () {
       this.owner.register(
         "component:example-classic-button",
         ExampleClassicButton

@@ -29,7 +29,7 @@ module Jobs
 
       Emoji.clear_cache
 
-      Post.where("cooked LIKE '%#{Emoji.base_url}%'").find_each do |post|
+      Post.where("cooked LIKE ?", "%#{Emoji.base_url}%").find_each do |post|
         post.rebake!
       end
     end

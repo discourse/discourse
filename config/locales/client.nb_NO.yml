@@ -4439,7 +4439,6 @@ nb_NO:
         trust_level_2_users: "Brukere på tillitsnivå 2"
         trust_level_3_requirements: "Krav til tillitsnivå 3"
         trust_level_locked_tip: "tillitsnivå er låst, systemet vil ikke forfremme eller degradere bruker"
-        trust_level_unlocked_tip: "tillitsnivå er ulåst, systemet kan forfremme eller degradere bruker"
         lock_trust_level: "Lås tillitsnivå"
         unlock_trust_level: "Lås opp tillitsnivå"
         silenced_count: "Dempet"

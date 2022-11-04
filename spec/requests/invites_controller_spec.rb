@@ -78,63 +78,68 @@ RSpec.describe InvitesController do
         sign_in(user)
       end
 
-      it "redeems the invite when user's email matches invite's email before redirecting to secured topic url" do
+      it "shows the accept invite page when user's email matches the invite email" do
         invite.update_columns(email: user.email)
-        group.add_owner(invite.invited_by)
 
-        secured_category = Fabricate(:category)
-        secured_category.permissions = { group.name => :full }
-        secured_category.save!
+        get "/invites/#{invite.invite_key}"
+        expect(response.status).to eq(200)
+        expect(response.body).to have_tag(:script, with: { src: "/assets/discourse.js" })
+        expect(response.body).not_to include(I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url))
 
-        topic = Fabricate(:topic, category: secured_category)
-        TopicInvite.create!(invite: invite, topic: topic)
-        InvitedGroup.create!(invite: invite, group: group)
-
-        expect do
-          get "/invites/#{invite.invite_key}"
-        end.to change { InvitedUser.exists?(invite: invite, user: user) }.to(true)
-
-        expect(response).to redirect_to(topic.url)
-        expect(user.reload.groups).to include(group)
-
-        expect(Notification.exists?(user: user, notification_type: Notification.types[:invited_to_topic], topic: topic))
-          .to eq(true)
-
-        expect(Notification.exists?(user: invite.invited_by, notification_type: Notification.types[:invitee_accepted]))
-          .to eq(true)
+        expect(response.body).to have_tag('div#data-preloaded') do |element|
+          json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+          invite_info = JSON.parse(json['invite_info'])
+          expect(invite_info['username']).to eq(user.username)
+          expect(invite_info['email']).to eq(user.email)
+          expect(invite_info['existing_user_id']).to eq(user.id)
+          expect(invite_info['existing_user_can_redeem']).to eq(true)
+        end
       end
 
-      it "redeems the invite when user's email domain matches the domain an invite link is restricted to" do
+      it "shows the accept invite page when user's email domain matches the domain an invite link is restricted to" do
         invite.update!(email: nil, domain: 'discourse.org')
         user.update!(email: "someguy@discourse.org")
-        topic = Fabricate(:topic)
-        TopicInvite.create!(invite: invite, topic: topic)
-        group.add_owner(invite.invited_by)
-        InvitedGroup.create!(invite: invite, group: group)
 
-        expect do
-          get "/invites/#{invite.invite_key}"
-        end.to change { InvitedUser.exists?(invite: invite, user: user) }.to(true)
+        get "/invites/#{invite.invite_key}"
+        expect(response.status).to eq(200)
+        expect(response.body).to have_tag(:script, with: { src: "/assets/discourse.js" })
+        expect(response.body).not_to include(I18n.t('invite.not_found_template', site_name: SiteSetting.title, base_url: Discourse.base_url))
 
-        expect(response).to redirect_to(topic.url)
-        expect(user.reload.groups).to include(group)
+        expect(response.body).to have_tag('div#data-preloaded') do |element|
+          json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+          invite_info = JSON.parse(json['invite_info'])
+          expect(invite_info['username']).to eq(user.username)
+          expect(invite_info['email']).to eq(user.email)
+          expect(invite_info['existing_user_id']).to eq(user.id)
+          expect(invite_info['existing_user_can_redeem']).to eq(true)
+        end
       end
 
-      it "redirects to root if a logged in user tries to view an invite link restricted to a certain domain but user's email domain does not match" do
+      it "does not allow the user to accept the invite when their email domain does not match the domain of the invite" do
         user.update!(email: "someguy@discourse.com")
         invite.update!(email: nil, domain: 'discourse.org')
 
-        expect { get "/invites/#{invite.invite_key}" }.not_to change { InvitedUser.count }
+        get "/invites/#{invite.invite_key}"
+        expect(response.status).to eq(200)
 
-        expect(response).to redirect_to("/")
+        expect(response.body).to have_tag('div#data-preloaded') do |element|
+          json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+          invite_info = JSON.parse(json['invite_info'])
+          expect(invite_info['existing_user_can_redeem']).to eq(false)
+        end
       end
 
-      it "redirects to root if a tries to view an invite meant for a specific email that is not the user's" do
+      it "does not allow the user to accept the invite when their email does not match the invite" do
         invite.update_columns(email: "notuseremail@discourse.org")
 
-        expect { get "/invites/#{invite.invite_key}" }.not_to change { InvitedUser.count }
+        get "/invites/#{invite.invite_key}"
+        expect(response.status).to eq(200)
 
-        expect(response).to redirect_to("/")
+        expect(response.body).to have_tag('div#data-preloaded') do |element|
+          json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+          invite_info = JSON.parse(json['invite_info'])
+          expect(invite_info['existing_user_can_redeem']).to eq(false)
+        end
       end
     end
 
@@ -848,8 +853,9 @@ RSpec.describe InvitesController do
       fab!(:invite) { Fabricate(:invite, email: nil, emailed_status: Invite.emailed_status_types[:not_required]) }
 
       it 'sends an activation email and does not activate the user' do
-        expect { put "/invites/show/#{invite.invite_key}.json", params: { email: 'test@example.com', password: 'verystrongpassword' } }
-          .not_to change { UserAuthToken.count }
+        expect {
+          put "/invites/show/#{invite.invite_key}.json", params: { email: 'test@example.com', password: 'verystrongpassword' }
+        }.not_to change { UserAuthToken.count }
 
         expect(response.status).to eq(200)
         expect(response.parsed_body['message']).to eq(I18n.t('invite.confirm_email'))
@@ -870,6 +876,24 @@ RSpec.describe InvitesController do
         expect(job_args['user_id']).to eq(invited_user.id)
         expect(EmailToken.hash_token(job_args['email_token'])).to eq(tokens.first.token_hash)
       end
+
+      it "does not automatically log in the user if their email matches an existing user's and shows an error" do
+        Fabricate(:user, email: 'test@example.com')
+        put "/invites/show/#{invite.invite_key}.json", params: { email: 'test@example.com', password: 'verystrongpassword' }
+        expect(session[:current_user_id]).to be_blank
+        expect(response.status).to eq(412)
+        expect(response.parsed_body['message']).to include("Primary email has already been taken")
+        expect(invite.reload.redemption_count).to eq(0)
+      end
+
+      it "does not automatically log in the user if their email matches an existing admin's and shows an error" do
+        Fabricate(:admin, email: 'test@example.com')
+        put "/invites/show/#{invite.invite_key}.json", params: { email: 'test@example.com', password: 'verystrongpassword' }
+        expect(session[:current_user_id]).to be_blank
+        expect(response.status).to eq(412)
+        expect(response.parsed_body['message']).to include("Primary email has already been taken")
+        expect(invite.reload.redemption_count).to eq(0)
+      end
     end
 
     context 'when new registrations are disabled' do
@@ -889,15 +913,75 @@ RSpec.describe InvitesController do
 
     context 'when user is already logged in' do
       fab!(:invite) { Fabricate(:invite, email: 'test@example.com') }
-      fab!(:user) { sign_in(Fabricate(:user)) }
+      fab!(:user) { Fabricate(:user, email: 'test@example.com') }
+      fab!(:group) { Fabricate(:group) }
 
-      it 'does not redeem the invite' do
+      before { sign_in(user) }
+
+      it 'redeems the invitation and creates the invite accepted notification' do
         put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
         expect(response.status).to eq(200)
+        expect(response.parsed_body["message"]).to eq(I18n.t("invite.existing_user_success"))
         invite.reload
-        expect(invite.invited_users).to be_blank
-        expect(invite.redeemed?).to be_falsey
-        expect(response.body).to include(I18n.t('login.already_logged_in', current_user: user.username))
+        expect(invite.invited_users.first.user).to eq(user)
+        expect(invite.redeemed?).to be_truthy
+        expect(
+          Notification.exists?(
+            user: invite.invited_by, notification_type: Notification.types[:invitee_accepted]
+          )
+        ).to eq(true)
+      end
+
+      it 'redirects to the first topic the user was invited to and creates the topic notification' do
+        topic = Fabricate(:topic)
+        TopicInvite.create!(invite: invite, topic: topic)
+        put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body['redirect_to']).to eq(topic.relative_url)
+        expect(Notification.where(notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(1)
+      end
+
+      it "adds the user to the groups specified on the invite and allows them to access the secure topic" do
+        group.add_owner(invite.invited_by)
+        secured_category = Fabricate(:category)
+        secured_category.permissions = { group.name => :full }
+        secured_category.save!
+
+        topic = Fabricate(:topic, category: secured_category)
+        TopicInvite.create!(invite: invite, topic: topic)
+        InvitedGroup.create!(invite: invite, group: group)
+
+        put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["message"]).to eq(I18n.t("invite.existing_user_success"))
+        expect(response.parsed_body['redirect_to']).to eq(topic.relative_url)
+        invite.reload
+        expect(invite.redeemed?).to be_truthy
+        expect(user.reload.groups).to include(group)
+        expect(Notification.where(notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(1)
+      end
+
+      it "does not try to log in the user automatically" do
+        expect do
+          put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+        end.not_to change { UserAuthToken.count }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["message"]).to eq(I18n.t("invite.existing_user_success"))
+      end
+
+      it "errors if the user's email doesn't match the invite email" do
+        user.update!(email: "blah@test.com")
+        put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+        expect(response.status).to eq(412)
+        expect(response.parsed_body["message"]).to eq(I18n.t("invite.not_matching_email"))
+      end
+
+      it "errors if the user's email domain doesn't match the invite domain" do
+        user.update!(email: "blah@test.com")
+        invite.update!(email: nil, domain: "example.com")
+        put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+        expect(response.status).to eq(412)
+        expect(response.parsed_body["message"]).to eq(I18n.t("invite.domain_not_allowed"))
       end
     end
 

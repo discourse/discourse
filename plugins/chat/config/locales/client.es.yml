@@ -1,0 +1,228 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  js:
+    chat:
+      dates:
+        time_tiny: "h:mm"
+      all_loaded: "Mostrando todos los mensajes"
+      already_enabled: "El chat ya está activado en este tema. Actualiza."
+      disabled_for_topic: "El chat está deshabilitado en este tema."
+      bot: "bot"
+      create: "Crear"
+      cancel: "Cancelar"
+      cancel_reply: "Cancelar respuesta"
+      chat_channels: "Canales"
+      channel_settings:
+        edit: "Editar"
+        join_channel: "Unirse al canal"
+        leave_channel: "Abandonar canal"
+        join: "Unirse"
+        leave: "Abandonar"
+      channels_list_popup:
+        browse: "Examinar canales"
+      click_to_join: "Haz clic aquí para ver los canales disponibles."
+      close: "Cerrar"
+      collapse: "Contraer contenedor del chat"
+      confirm_flag: "¿Seguro que quieres denunciar el mensaje de %{username}?"
+      deleted: "Se eliminó un mensaje. [view]"
+      delete: "Eliminar"
+      edited: "editado"
+      empty_state:
+        direct_message: "También puedes iniciar un chat personal con uno o más usuarios."
+      email_frequency:
+        never: "Nunca"
+      enable: "Habilitar chat"
+      flag: "Denunciar"
+      flagged: "Este mensaje ha sido denunciado y se someterá a revisión"
+      invalid_access: "No tienes acceso para ver este canal de chat"
+      in_reply_to: "En respuesta a"
+      heading: "Chat"
+      join: "Unirse"
+      new_messages: "nuevos mensajes"
+      mention_warning:
+        cannot_see:
+          one: "%{usernames} no puede acceder a este canal y no fue notificado."
+          other: "%{usernames} no pueden acceder a este canal y no fueron notificados."
+        dismiss: "descartar"
+        invitations_sent:
+          one: "Invitación enviada"
+          other: "Invitaciones enviadas"
+        invite: "Invitar al canal"
+        without_membership:
+          one: "%{usernames} no se ha unido a este canal."
+          other: "%{usernames} no se han unido a este canal."
+      no_public_channels: "No te has unido a ningún canal."
+      only_chat_push_notifications:
+        title: "Enviar solo notificaciones de chat"
+        description: "Bloquear el envío de todas las notificaciones que no sean de chat"
+      open: "Abrir chat"
+      open_full_page: "Abrir chat en pantalla completa"
+      open_message: "Abrir mensaje en el chat"
+      placeholder_self: "Anota algo"
+      placeholder_others: "Chatear con %{messageRecipient}"
+      remove_upload: "Eliminar archivo"
+      react: "Reaccionar con emojis"
+      reply: "Responder"
+      edit: "Editar"
+      copy_link: "Copiar enlace"
+      rebake_message: "Reconstruir HTML"
+      restore: "Restaurar mensaje eliminado"
+      save: "Guardar"
+      select: "Seleccionar"
+      scroll_to_bottom: "Desplazar hacia abajo"
+      sound:
+        title: "Sonido de notificación de chat de escritorio"
+      sounds:
+        none: "Ninguno"
+        bell: "Campana"
+        ding: "Timbre"
+      title: "chat"
+      title_capitalized: "Chat"
+      upload: "Adjuntar un archivo"
+      uploaded_files:
+        one: "%{count} archivo"
+        other: "%{count} archivos"
+      you_flagged: "Has denunciado este mensaje"
+      exit: "atrás"
+      browse:
+        title: Canales
+      about_view:
+        description: Descripción
+      channel_info:
+        back_to_channel: "Atrás"
+      channel_selector:
+        title: "Ir al canal"
+        no_channels: "Ningún canal coincide con tu búsqueda"
+      create_channel:
+        choose_category:
+          label: "Elige una categoría"
+          none: "selecciona una..."
+          default_hint: Administra el acceso visitando la <a href=%{link} target="_blank">%{category} configuración de seguridad</a>
+        create: "Crear canal"
+        description: "Descripción (opcional)"
+        name: "Nombre del canal"
+        type: "Tipo"
+        types:
+          category: "Categoría"
+          topic: "Tema"
+      reviewable:
+        type: "Mensaje de chat"
+      reactions:
+        only_you: "Has reaccionado con :%{emoji}:"
+        and_others: "Tú, %{usernames} reaccionaste con :%{emoji}:"
+        only_others: "%{usernames} reaccionó con :%{emoji}:"
+        others_and_more: "%{usernames} y %{more} personas más reaccionaron con :%{emoji}:"
+        you_others_and_more: "Tú, %{usernames} y %{more} personas más reaccionasteis con :%{emoji}:"
+      composer:
+        toggle_toolbar: "Alternar barra de herramientas"
+      notification_levels:
+        never: "Nunca"
+        mention: "Solo para menciones"
+        always: "Para toda actividad"
+      settings:
+        desktop_notification_level: "Notificaciones de escritorio"
+        follow: "Unirse"
+        mobile_notification_level: "Notificaciones móviles"
+        mute: "Silenciar canal"
+        muted_on: "Activado"
+        muted_off: "Desactivado"
+        notifications: "Notificaciones"
+        preview: "Vista previa"
+        save: "Guardar"
+        saved: "Guardado"
+        unfollow: "Abandonar"
+      admin:
+        title: "Chat"
+      direct_messages:
+        title: "Chat personal"
+        new: "Nuevo chat personal"
+        create: "Ir"
+        leave: "Abandonar este chat personal"
+      incoming_webhooks:
+        back: "Atrás"
+        channel_placeholder: "Selecciona un canal"
+        confirm_destroy: "¿Seguro que quieres eliminar este webhook entrante? Esto no se puede deshacer."
+        current_emoji: "Emoji actual"
+        description: "Descripción"
+        delete: "Eliminar"
+        emoji: "Emoji"
+        emoji_instructions: "Se usará el avatar del sistema si el emoji se deja en blanco."
+        name: "Nombre"
+        name_placeholder: "nombre..."
+        new: "Nuevo webhook entrante"
+        none: "No se crearon webhooks entrantes existentes."
+        no_emoji: "No hay ningún emoji seleccionado"
+        post_to: "Publicar en"
+        reset_emoji: "Restablecer emoji"
+        save: "Guardar"
+        edit: "Editar"
+        select_emoji: "Elegir emoji"
+        system: "sistema"
+        title: "Webhooks entrantes"
+        url: "URL"
+        username: "Nombre de usuario"
+        username_instructions: "Nombre de usuario del bot que publica en el canal. El valor predeterminado es «sistema» cuando se deja en blanco."
+      selection:
+        cancel: "Cancelar"
+        error: "Se ha producido un error al mover los mensajes de chat"
+        title: "Mover chat a tema"
+        new_topic:
+          title: "Mover a nuevo tema"
+          instructions:
+            one: "Estás a punto de crear un nuevo tema y rellenarlo con el mensaje de chat que has seleccionado."
+            other: "Estás a punto de crear un nuevo tema y rellenarlo con los <b>%{count}</b> mensajes de chat que has seleccionado."
+        existing_topic:
+          title: "Mover a un tema existente"
+          instructions:
+            one: "Elige el tema al que quieres mover ese mensaje de chat."
+            other: "Elige el tema al que quieres mover esos <b>%{count}</b> mensajes de chat."
+        new_message:
+          title: "Mover a mensaje nuevo"
+          instructions:
+            one: "Estás a punto de crear un nuevo mensaje y rellenarlo con el mensaje de chat que has seleccionado."
+            other: "Estás a punto de crear un nuevo mensaje y rellenarlo con los <b>%{count}</b> mensajes de chat que has seleccionado."
+      replying_indicator:
+        single_user: "%{username} está escribiendo"
+        multiple_users: "%{commaSeparatedUsernames} y %{lastUsername} están escribiendo"
+        many_users:
+          one: "%{commaSeparatedUsernames} y %{count} más está escribiendo"
+          other: "%{commaSeparatedUsernames} y %{count} más están escribiendo"
+      retention_reminders:
+        public: "El historial del canal se conserva durante %{days} días."
+        dm: "El historial de chat personal se conserva durante %{days} días."
+      topic_button_title: "Chat"
+    notifications:
+      popup:
+        chat_message: "Nuevo mensaje de chat"
+      titles:
+        chat_mention: "Mención de chat"
+        chat_invitation: "Invitación de chat"
+    action_codes:
+      chat:
+        enabled: '%{who} habilitó el <button class="btn-link open-chat">chat</button> %{when}'
+        disabled: "%{who} cerró el chat %{when}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          title: Enviar mensaje de chat
+          fields:
+            chat_channel_id:
+              label: ID del canal de chat
+            message:
+              label: Mensaje
+            sender:
+              label: Remitente
+              description: Valores predeterminados del sistema
+    review:
+      types:
+        reviewable_chat_message:
+          title: "Mensaje de chat denunciado"
+          flagged_by: "Denunciado por"
+    keyboard_shortcuts_help:
+      chat:
+        title: "Chat"

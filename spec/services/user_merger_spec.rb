@@ -1049,10 +1049,12 @@ RSpec.describe UserMerger do
   it "updates the username" do
     Jobs::UpdateUsername.any_instance
       .expects(:execute)
-      .with(user_id: source_user.id,
-            old_username: 'alice1',
-            new_username: 'alice',
-            avatar_template: target_user.avatar_template)
+      .with({
+        user_id: source_user.id,
+        old_username: 'alice1',
+        new_username: 'alice',
+        avatar_template: target_user.avatar_template
+      })
       .once
 
     merge_users!

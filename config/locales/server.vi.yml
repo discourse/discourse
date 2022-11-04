@@ -602,7 +602,6 @@ vi:
       almost_x_years:
         other: "gần %{count} năm trước"
   password_reset:
-    no_token: "Xin lỗi, liên kết đổi mật khẩu đã cũ. Chọn \"Đăng nhập\" và sử dụng chức năng \"Quên mật khẩu\" để lấy liên kết mới."
     choose_new: "Chọn một mật khẩu mới"
     choose: "Chọn một mật khẩu"
     update: "Cập nhật mật khẩu"

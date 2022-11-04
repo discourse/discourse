@@ -118,20 +118,20 @@ class TopicQuery
           result = result.joins("INNER JOIN group_users gu ON gu.group_id = tag.group_id AND gu.user_id = #{user.id.to_i}")
         end
       elsif type == :user
-        result = result.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user.id.to_i})")
+        result = result.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = ?)", user.id.to_i)
       elsif type == :all
         group_ids = group_with_messages_ids(user)
 
         result =
         if group_ids.present?
-          result.where(<<~SQL)
+          result.where(<<~SQL, user.id.to_i, group_ids)
             topics.id IN (
               SELECT topic_id
               FROM topic_allowed_users
-              WHERE user_id = #{user.id.to_i}
+              WHERE user_id = ?
               UNION ALL
               SELECT topic_id FROM topic_allowed_groups
-              WHERE group_id IN (#{group_ids.join(",")})
+              WHERE group_id IN (?)
             )
           SQL
         else
@@ -259,10 +259,10 @@ class TopicQuery
     end
 
     def have_posts_from_others(list, user)
-      list.where(<<~SQL)
+      list.where(<<~SQL, user.id.to_i)
         NOT (
           topics.participant_count = 1
-          AND topics.user_id = #{user.id.to_i}
+          AND topics.user_id = ?
           AND topics.moderator_posts_count = 0
         )
       SQL

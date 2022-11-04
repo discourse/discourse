@@ -25,7 +25,10 @@
       @model={{sectionLink.model}}
       @models={{sectionLink.models}}
       @prefixType={{sectionLink.prefixType}}
-      @prefixValue={{sectionLink.prefixValue}} />
+      @prefixValue={{sectionLink.prefixValue}}
+      @suffixCSSClass={{sectionLink.suffixCSSClass}}
+      @suffixValue={{sectionLink.suffixValue}}
+      @suffixType={{sectionLink.suffixType}}/>
   {{/each}}
 
   <Sidebar::MoreSectionLinks @sectionLinks={{this.moreSectionLinks}} @secondarySectionLinks={{this.moreSecondarySectionLinks}} />

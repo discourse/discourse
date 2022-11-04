@@ -88,5 +88,7 @@ ar:
         empty_state:
           title: "حالة فارغة"
         rich_tooltip:
+          title: "تلميح مفصَّل"
           description: "الوصف"
           header: "الرأس"
+          hover_to_see: "مرِّر فوق الأقسام لرؤية تلميح"

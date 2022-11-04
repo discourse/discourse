@@ -3,8 +3,6 @@ import EmberObject from "@ember/object";
 import I18n from "I18n";
 import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
-import { extractDomainFromUrl } from "discourse/lib/utilities";
-import { isAbsoluteURL } from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
@@ -89,38 +87,20 @@ export default Controller.extend({
   actions: {
     save() {
       this.set("saved", false);
-      const url = this.get("model.payload_url");
-      const domain = extractDomainFromUrl(url);
       const model = this.model;
       const isNew = model.get("isNew");
 
-      const saveWebHook = () => {
-        return model
-          .save()
-          .then(() => {
-            this.set("saved", true);
-            this.adminWebHooks.get("model").addObject(model);
+      return model
+        .save()
+        .then(() => {
+          this.set("saved", true);
+          this.adminWebHooks.get("model").addObject(model);
 
-            if (isNew) {
-              this.transitionToRoute("adminWebHooks.show", model.get("id"));
-            }
-          })
-          .catch(popupAjaxError);
-      };
-
-      if (
-        domain === "localhost" ||
-        domain.match(/192\.168\.\d+\.\d+/) ||
-        domain.match(/127\.\d+\.\d+\.\d+/) ||
-        isAbsoluteURL(url)
-      ) {
-        return this.dialog.yesNoConfirm({
-          message: I18n.t("admin.web_hooks.warn_local_payload_url"),
-          didConfirm: () => saveWebHook(),
-        });
-      }
-
-      return saveWebHook();
+          if (isNew) {
+            this.transitionToRoute("adminWebHooks.show", model.get("id"));
+          }
+        })
+        .catch(popupAjaxError);
     },
 
     destroy() {

@@ -52,6 +52,7 @@ class ThemeJavascriptCompiler
       compress: {
         negate_iife: false,
         sequences: 30,
+        drop_debugger: false,
       },
       output: {
         semicolons: false,

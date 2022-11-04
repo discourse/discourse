@@ -31,11 +31,12 @@ RSpec.describe FileStore::S3Store do
       it "returns an absolute schemaless url" do
         s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
         s3_bucket.expects(:object).with(regexp_matches(%r{original/\d+X.*/#{upload.sha1}\.png})).returns(s3_object)
-        s3_object.expects(:put).with(
+        s3_object.expects(:put).with({
           acl: "public-read",
           cache_control: "max-age=31556952, public, immutable",
           content_type: "image/png",
-          body: uploaded_file).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
+          body: uploaded_file
+        }).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
 
         expect(store.store_upload(uploaded_file, upload)).to match(
           %r{//s3-upload-bucket\.s3\.dualstack\.us-west-1\.amazonaws\.com/original/\d+X.*/#{upload.sha1}\.png}
@@ -69,12 +70,13 @@ RSpec.describe FileStore::S3Store do
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket)
           s3_bucket.expects(:object).with(regexp_matches(%r{original/\d+X.*/#{upload.sha1}\.pdf})).returns(s3_object)
-          s3_object.expects(:put).with(
+          s3_object.expects(:put).with({
             acl: "private",
             cache_control: "max-age=31556952, public, immutable",
             content_type: "application/pdf",
             content_disposition: "attachment; filename=\"#{upload.original_filename}\"; filename*=UTF-8''#{upload.original_filename}",
-            body: uploaded_file).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
+            body: uploaded_file
+          }).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
 
           expect(store.store_upload(uploaded_file, upload)).to match(
             %r{//s3-upload-bucket\.s3\.dualstack\.us-west-1\.amazonaws\.com/original/\d+X.*/#{upload.sha1}\.pdf}
@@ -86,11 +88,12 @@ RSpec.describe FileStore::S3Store do
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket).at_least_once
           s3_bucket.expects(:object).with(regexp_matches(%r{original/\d+X.*/#{upload.sha1}\.png})).returns(s3_object).at_least_once
-          s3_object.expects(:put).with(
+          s3_object.expects(:put).with({
             acl: "public-read",
             cache_control: "max-age=31556952, public, immutable",
             content_type: "image/png",
-            body: uploaded_file).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
+            body: uploaded_file
+          }).returns(Aws::S3::Types::PutObjectOutput.new(etag: "\"#{etag}\""))
 
           expect(store.store_upload(uploaded_file, upload)).to match(
             %r{//s3-upload-bucket\.s3\.dualstack\.us-west-1\.amazonaws\.com/original/\d+X.*/#{upload.sha1}\.png}

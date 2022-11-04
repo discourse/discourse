@@ -480,7 +480,7 @@ class Upload < ActiveRecord::Base
         db = RailsMultisite::ConnectionManagement.current_db
 
         scope = Upload.by_users
-          .where("url NOT LIKE '%/original/_X/%' AND url LIKE '%/uploads/#{db}%'")
+          .where("url NOT LIKE '%/original/_X/%' AND url LIKE ?", "%/uploads/#{db}%")
           .order(id: :desc)
 
         scope = scope.limit(limit) if limit

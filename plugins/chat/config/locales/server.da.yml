@@ -1,0 +1,52 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+da:
+  chat:
+    deleted_chat_username: slettet
+    reviewables:
+      actions:
+        agree_and_suspend:
+          title: "Suspendér Bruger"
+        agree_and_restore:
+          title: "Gendan Besked"
+          description: "Gendan meddelelsen, så brugerne kan se den."
+        agree_and_delete:
+          title: "Slet Besked"
+          description: "Slet meddelelsen, så brugerne ikke kan se den."
+        delete_and_agree:
+          title: "Slet Besked"
+        disagree:
+          title: "Uenig"
+        ignore:
+          title: "Ignorer"
+    channel:
+      statuses:
+        archived: "Arkiveret"
+        closed: "Lukket"
+        open: "Åben"
+      archive:
+        first_post_raw: "Dette emne er et arkiv af chatkanalen [%{channel_name}] (%{channel_url})."
+    bookmarkable:
+      notification_title: "besked i %{channel_name}"
+    personal_chat: "personlig chat"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} nævnte dig i "%{channel}"'
+        other: '%{username} nævnte %{identifier} i "%{channel}"'
+      direct_message_chat_mention:
+        direct: "%{username} nævnte dig i personlig chat"
+        other: "%{username} nævnte %{identifier} i personlig chat"
+      new_chat_message: '%{username} sendte en besked i "%{channel}"'
+      new_direct_chat_message: "%{username} sendte en besked i personlig chat"
+  discourse_automation:
+    scriptables:
+      send_chat_message:
+        title: Send chatbesked
+  reviewable_score_types:
+    needs_review:
+      title: "Behøver Gennemgang"

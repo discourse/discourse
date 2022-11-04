@@ -4393,7 +4393,6 @@ pt:
         trust_level_2_users: "Utilizadores no Nível de Confiança 2"
         trust_level_3_requirements: "Requisitos do Nível de Confiança 3"
         trust_level_locked_tip: "o Nível de Confiança está bloqueado, o sistema não irá promover ou despromover o utilizador"
-        trust_level_unlocked_tip: "o Nível de Confiança está desbloqueado, o sistema poderá promover ou despromover o utilizador"
         lock_trust_level: "Bloquear Nível de Confiança"
         unlock_trust_level: "Desbloquear Nível de Confiança"
         silenced_count: "Silenciado"

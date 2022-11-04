@@ -927,7 +927,7 @@ zh_CN:
         success: "下载已开始，完成后将通过消息通知您。"
         rate_limit_error: "帖子每天只能下载一次，请明天再试。"
       new_private_message: "新消息"
-      private_message: "消息"
+      private_message: "私信"
       private_messages: "消息"
       user_notifications:
         filters:
@@ -3984,7 +3984,6 @@ zh_CN:
         go_back: "返回列表"
         payload_url: "有效负载 URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "您似乎正在尝试将网络钩子设置为本地 URL。传递到本地地址的事件可能会导致副作用或意外行为。继续吗？"
         secret_invalid: "密钥不得包含任何空白字符。"
         secret_too_short: "密钥应至少为 12 个字符。"
         secret_placeholder: "可选字符串，用于生成签名"
@@ -4271,7 +4270,6 @@ zh_CN:
           last_attempt: "安装过程未完成，最后一次尝试："
           remote_branch: "分支名称（可选）"
           public_key: "授予以下公钥访问仓库的权限："
-          public_key_note: "在上面输入有效的私有仓库 URL 后，将生成 SSH 密钥并在此处显示。"
           install: "安装"
           installed: "已安装"
           install_popular: "热门"
@@ -4945,7 +4943,6 @@ zh_CN:
         trust_level_2_users: "信任级别 2 用户"
         trust_level_3_requirements: "信任级别 3 要求"
         trust_level_locked_tip: "信任级别已被锁定，系统将不会升降用户的信任级别"
-        trust_level_unlocked_tip: "信任级别已被解锁，系统可能会升降用户的信任级别"
         lock_trust_level: "锁定信任级别"
         unlock_trust_level: "解锁信任级别"
         silenced_count: "被禁言"

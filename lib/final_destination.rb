@@ -44,7 +44,6 @@ class FinalDestination
     @force_custom_user_agent_hosts = @opts[:force_custom_user_agent_hosts] || []
     @default_user_agent = @opts[:default_user_agent] || DEFAULT_USER_AGENT
     @opts[:max_redirects] ||= 5
-    @opts[:lookup_ip] ||= lambda { |host| FinalDestination.lookup_ip(host) }
     @https_redirect_ignore_limit = @opts[:initial_https_redirect_ignore_limit]
 
     @max_redirects = @opts[:max_redirects]
@@ -83,6 +82,10 @@ class FinalDestination
     20
   end
 
+  def self.resolve(url)
+    new(url).resolve
+  end
+
   def http_verb(force_get_hosts, follow_canonical)
     if follow_canonical || force_get_hosts.any? { |host| hostname_matches?(host) }
       :get
@@ -116,7 +119,7 @@ class FinalDestination
     status_code, response_headers = nil
 
     catch(:done) do
-      Net::HTTP.start(@uri.host, @uri.port, use_ssl: @uri.is_a?(URI::HTTPS), open_timeout: timeout) do |http|
+      FinalDestination::HTTP.start(@uri.host, @uri.port, use_ssl: @uri.is_a?(URI::HTTPS), open_timeout: timeout) do |http|
         http.read_timeout = timeout
         http.request_get(@uri.request_uri, request_headers) do |resp|
           status_code = resp.code.to_i
@@ -226,13 +229,25 @@ class FinalDestination
       raise Excon::Errors::ExpectationFailed.new("connect timeout reached: #{@uri.to_s}") if Time.now - request_start_time > MAX_REQUEST_TIME_SECONDS
     end
 
+    # This technique will only use the first resolved IP
+    # TODO: Can we standardise this by using FinalDestination::HTTP?
+    begin
+      resolved_ip = SSRFDetector.lookup_and_filter_ips(@uri.hostname).first
+    rescue SSRFDetector::DisallowedIpError, SocketError, Timeout::Error
+      @status = :invalid_address
+      return
+    end
+    request_uri = @uri.dup
+    request_uri.hostname = resolved_ip unless Rails.env.test? # WebMock doesn't understand the IP-based requests
+
     response = Excon.public_send(@http_verb,
-      @uri.to_s,
+      request_uri.to_s,
       read_timeout: timeout,
       connect_timeout: timeout,
-      headers: headers,
+      headers: { "Host" => @uri.hostname }.merge(headers),
       middlewares: middlewares,
-      response_block: request_validator
+      response_block: request_validator,
+      ssl_verify_peer_host: @uri.hostname
     )
 
     if @stop_at_blocked_pages
@@ -351,12 +366,16 @@ class FinalDestination
     nil
   end
 
+  def skip_validations?
+    !@validate_uri
+  end
+
   def validate_uri
-    !@validate_uri || (validate_uri_format && is_dest_valid?)
+    skip_validations? || validate_uri_format
   end
 
   def validate_uri_format
-    return false unless @uri
+    return false unless @uri && @uri.host
     return false unless ['https', 'http'].include?(@uri.scheme)
     return false if @uri.scheme == 'http' && @uri.port != 80
     return false if @uri.scheme == 'https' && @uri.port != 443
@@ -384,46 +403,8 @@ class FinalDestination
     end
   end
 
-  def is_dest_valid?
-    return false unless @uri && @uri.host
-
-    # Allowlisted hosts
-    return true if hostname_matches?(SiteSetting.Upload.s3_cdn_url) ||
-      hostname_matches?(GlobalSetting.try(:cdn_url)) ||
-      hostname_matches?(Discourse.base_url_no_prefix)
-
-    if SiteSetting.allowed_internal_hosts.present?
-      return true if SiteSetting.allowed_internal_hosts.split("|").any? { |h| h.downcase == @uri.hostname.downcase }
-    end
-
-    address_s = @opts[:lookup_ip].call(@uri.hostname)
-    return false unless address_s
-
-    address = IPAddr.new(address_s)
-
-    if private_ranges.any? { |r| r === address }
-      @status = :invalid_address
-      return false
-    end
-
-    # Rate limit how often this IP can be crawled
-    if !@opts[:skip_rate_limit] && !@limited_ips.include?(address)
-      @limited_ips << address
-      RateLimiter.new(nil, "crawl-destination-ip:#{address_s}", 1000, 1.hour).performed!
-    end
-
-    true
-  rescue RateLimiter::LimitExceeded
-    false
-  end
-
   def normalized_url
     UrlHelper.normalized_encode(@url)
-  end
-
-  def private_ranges
-    FinalDestination.standard_private_ranges +
-      SiteSetting.blocked_ip_blocks.split('|').map { |r| IPAddr.new(r) rescue nil }.compact
   end
 
   def log(log_level, message)
@@ -434,27 +415,6 @@ class FinalDestination
       log_level,
       "#{RailsMultisite::ConnectionManagement.current_db}: #{message}"
     )
-  end
-
-  def self.standard_private_ranges
-    @private_ranges ||= [
-      IPAddr.new('0.0.0.0/8'),
-      IPAddr.new('127.0.0.1'),
-      IPAddr.new('172.16.0.0/12'),
-      IPAddr.new('192.168.0.0/16'),
-      IPAddr.new('10.0.0.0/8'),
-      IPAddr.new('fc00::/7')
-    ]
-  end
-
-  def self.lookup_ip(host)
-    if Rails.env.test?
-      "1.1.1.1"
-    else
-      IPSocket::getaddress(host)
-    end
-  rescue SocketError
-    nil
   end
 
   protected
@@ -470,7 +430,7 @@ class FinalDestination
         'Host' => uri.host
       )
 
-      req = Net::HTTP::Get.new(uri.request_uri, headers)
+      req = FinalDestination::HTTP::Get.new(uri.request_uri, headers)
 
       http.request(req) do |resp|
         headers_subset.set_cookie = resp['Set-Cookie']
@@ -530,7 +490,7 @@ class FinalDestination
   end
 
   def safe_session(uri)
-    Net::HTTP.start(uri.host, uri.port, use_ssl: (uri.scheme == "https"), open_timeout: timeout) do |http|
+    FinalDestination::HTTP.start(uri.host, uri.port, use_ssl: (uri.scheme == "https"), open_timeout: timeout) do |http|
       http.read_timeout = timeout
       yield http
     end

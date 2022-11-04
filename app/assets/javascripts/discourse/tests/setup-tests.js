@@ -313,7 +313,7 @@ export default function setupTests(config) {
     });
 
     PreloadStore.reset();
-    resetSite(settings);
+    resetSite();
 
     sinon.stub(ScrollingDOMMethods, "screenNotFull");
     sinon.stub(ScrollingDOMMethods, "bindOnScroll");

@@ -326,8 +326,8 @@ pt_BR:
       list_permission_denied: "Você não tem permissão para visualizar os favoritos deste usuário(a)."
       no_user_bookmarks: "Você não tem postagens favoritas. Os favoritos permitem que você consulte rapidamente postagens específicas."
       auto_delete_preference:
-        label: "Após ser notificado"
-        never: "Manter Marcador"
+        label: "Após receber notificação"
+        never: "Manter marcador"
         when_reminder_sent: "Excluir favorito"
         on_owner_reply: "Excluir marcador, após responder"
         clear_reminder: "Manter marcador e limpar lembretes"
@@ -1336,7 +1336,7 @@ pt_BR:
         upload_title: "Enviar sua imagem"
         image_is_not_a_square: "Aviso: cortamos a sua imagem. A largura e a altura não eram iguais."
         logo_small: "Logotipo pequeno do site. Usado por padrão."
-        use_custom: "Ou envie um avatar customizado:"
+        use_custom: "Ou envie um avatar personalizado:"
       change_profile_background:
         title: "Cabeçalho do perfil"
         instructions: "Os cabeçalhos do perfil serão centralizados e terão largura padrão de 1110px."
@@ -1671,7 +1671,7 @@ pt_BR:
         the_topic: "o tópico"
     user_status:
       save: "Salvar"
-      set_custom_status: "Definir status customizados"
+      set_custom_status: "Definir status personalizados"
       what_are_you_doing: "O que você está fazendo?"
       remove_status: "Remover status"
     popup:
@@ -2111,7 +2111,7 @@ pt_BR:
       slow_mode:
         error: "Este tópico está no modo lento. Você já postou recentemente. É possível postar outra vez em %{timeLeft}."
       user_not_seen_in_a_while:
-        single: "A pessoa para quem você está enviando mensagens, <b>%{usernames}</b>, não é vista aqui há muito tempo – %{time_ago}. Eles podem não receber sua mensagem. Você pode procurar métodos alternativos de contato %{usernames}."
+        single: "A pessoa para quem você está enviando mensagens, <b>%{usernames}</b>, não é vista aqui há muito tempo – %{time_ago}. Elas podem não receber sua mensagem. Você pode procurar métodos alternativos de contato %{usernames}."
         multiple: "As seguintes pessoas para quem você está enviando mensagens: <b>%{usernames}</b>, não são vistas aqui há muito tempo – %{time_ago}. Elas podem não receber sua mensagem. Você pode procurar métodos alternativos de contatá-las."
       admin_options_title: "Configurações opcionais da equipe para este tópico"
       composer_actions:
@@ -2411,10 +2411,10 @@ pt_BR:
         likes_with_unread:
           one: "Curtidas - %{count} curtida não lida"
           other: "Curtidas - %{count} curtidas não lidas"
-        watching: "Tópicos assistidos"
+        watching: "Tópicos acompanhados"
         watching_with_unread:
-          one: "Tópicos assistidos - %{count} tópico assistido não lido"
-          other: "Tópicos assistidos - %{count} tópicos assistidos não lidos"
+          one: "Tópicos acompanhados - %{count} tópico acompanhado não lido"
+          other: "Tópicos acompanhados - %{count} tópicos assistidos não lidos"
         messages: "Mensagens pessoais"
         messages_with_unread:
           one: "Mensagens pessoais - %{count} mensagem não lida"
@@ -3183,7 +3183,7 @@ pt_BR:
         description: "Exigir que novos tópicos tenham etiquetas de grupos de etiquetas:"
         delete: "Excluir"
         add: "Adicionar grupo de tags necessário"
-        placeholder: "selecionar grupo de tags..."
+        placeholder: "selecionar grupo de etiquetas..."
       topic_featured_link_allowed: "Permitir links em destaque nesta categoria"
       delete: "Excluir categoria"
       create: "Nova categoria"
@@ -3862,9 +3862,9 @@ pt_BR:
             inbox: "Caixa de entrada"
             sent: "Enviadas"
             new: "Novo"
-            new_with_count: "Novo (%{count})"
+            new_with_count: "Novos(s) (%{count})"
             unread: "Não lidos(as)"
-            unread_with_count: "Não lido (%{count})"
+            unread_with_count: "Não lido(s) (%{count})"
             archive: "Arquivo"
         tags:
           none: "Você não adicionou nenhuma etiqueta."
@@ -3895,7 +3895,7 @@ pt_BR:
               content: "FAQ"
             tracked:
               content: "Monitorados(as)"
-              title: "Todos os Tópicos Rastreados"
+              title: "Todos os tópicos monitorados"
             groups:
               content: "Grupos"
               title: "Todos os grupos"
@@ -3904,7 +3904,7 @@ pt_BR:
               title: "Todos(as) os(as) usuários(as)"
             my_posts:
               content: "Minhas postagens"
-              title: "Minhas publicações"
+              title: "Minhas postagens"
               draft_count:
                 one: "%{count} rascunho"
                 other: "%{count} rascunhos"
@@ -3913,7 +3913,7 @@ pt_BR:
               title: "revisar"
               pending_count: "%{count} pendente"
     welcome_topic_banner:
-      title: "Crie seu tópico de Boas-Vindas"
+      title: "Crie seu Tópico de Boas-Vindas"
       description: 'Seu tópico de boas-vindas é a primeira coisa que os novos membros vão ler. Pense nisso como seu “argumento de elevador” ou “declaração de missão”. Informe a todos sobre quem é o público desta comunidade, o que eles podem esperar encontrar aqui e o que você gostaria que eles fizessem primeiro.'
       button_title: "Começar a Editar"
     until: "Até:"
@@ -4189,7 +4189,6 @@ pt_BR:
         go_back: "Voltar para a lista"
         payload_url: "URL do conteúdo"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "Parece que você está tentando configurar um webhook para uma URL local. Eventos entregues a endereços locais podem causar efeitos colaterais ou comportamentos inesperados. Continuar?"
         secret_invalid: "O segredo não deve conter caracteres em branco."
         secret_too_short: "O segredo deve ter pelo menos 12 caracteres."
         secret_placeholder: "Uma linha opcional, usado para gerar a assinatura"
@@ -4478,7 +4477,6 @@ pt_BR:
           last_attempt: "O processo de instalação não foi concluído, última tentativa:"
           remote_branch: "Nome da unidade (opcional)"
           public_key: "Conceder o seguinte acesso da chave pública ao repo:"
-          public_key_note: "Após digitar uma URL do repositório privada válida, uma chave SSH será gerada e exibida aqui."
           install: "Instalar"
           installed: "Instalado(a)"
           install_popular: "Mais acessados(as)"
@@ -5157,7 +5155,6 @@ pt_BR:
         trust_level_2_users: "Usuários(as) de nível de confiança 2"
         trust_level_3_requirements: "Requisitos de nível de confiança 3"
         trust_level_locked_tip: "o nível de confiança está bloqueado, o sistema não irá promover ou rebaixará o(a) usuário(a)"
-        trust_level_unlocked_tip: "o nível de confiança está desbloqueado, o sistema poderá promover ou rebaixar o(a) usuário(a)"
         lock_trust_level: "Bloquear nível de confiança"
         unlock_trust_level: "Desbloquear nível de confiança"
         silenced_count: "Silenciado(a)"

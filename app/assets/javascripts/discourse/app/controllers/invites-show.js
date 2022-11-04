@@ -1,4 +1,4 @@
-import { alias, not, or, readOnly } from "@ember/object/computed";
+import { alias, bool, not, readOnly } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
 import EmberObject from "@ember/object";
@@ -29,6 +29,9 @@ export default Controller.extend(
     invitedBy: readOnly("model.invited_by"),
     email: alias("model.email"),
     accountEmail: alias("email"),
+    existingUserId: readOnly("model.existing_user_id"),
+    existingUserCanRedeem: readOnly("model.existing_user_can_redeem"),
+    existingUserRedeeming: bool("existingUserId"),
     hiddenEmail: alias("model.hidden_email"),
     emailVerifiedByLink: alias("model.email_verified_by_link"),
     differentExternalEmail: alias("model.different_external_email"),
@@ -40,13 +43,6 @@ export default Controller.extend(
     authOptions: null,
     inviteImageUrl: getUrl("/images/envelope.svg"),
     isInviteLink: readOnly("model.is_invite_link"),
-    submitDisabled: or(
-      "emailValidation.failed",
-      "usernameValidation.failed",
-      "passwordValidation.failed",
-      "nameValidation.failed",
-      "userFieldsValidation.failed"
-    ),
     rejectedEmails: null,
 
     init() {
@@ -81,6 +77,15 @@ export default Controller.extend(
       });
     },
 
+    @discourseComputed("existingUserId")
+    subheaderMessage(existingUserId) {
+      if (existingUserId) {
+        return I18n.t("invites.existing_user_can_redeem");
+      } else {
+        return I18n.t("create_account.subheader_title");
+      }
+    },
+
     @discourseComputed("email")
     yourEmailMessage(email) {
       return I18n.t("invites.your_email", { email });
@@ -97,6 +102,37 @@ export default Controller.extend(
         !this.siteSettings.enable_local_logins &&
         this.externalAuthsEnabled &&
         !this.siteSettings.enable_discourse_connect
+      );
+    },
+
+    @discourseComputed(
+      "emailValidation.failed",
+      "usernameValidation.failed",
+      "passwordValidation.failed",
+      "nameValidation.failed",
+      "userFieldsValidation.failed",
+      "existingUserRedeeming",
+      "existingUserCanRedeem"
+    )
+    submitDisabled(
+      emailValidationFailed,
+      usernameValidationFailed,
+      passwordValidationFailed,
+      nameValidationFailed,
+      userFieldsValidationFailed,
+      existingUserRedeeming,
+      existingUserCanRedeem
+    ) {
+      if (existingUserRedeeming) {
+        return !existingUserCanRedeem;
+      }
+
+      return (
+        emailValidationFailed ||
+        usernameValidationFailed ||
+        passwordValidationFailed ||
+        nameValidationFailed ||
+        userFieldsValidationFailed
       );
     },
 
@@ -118,13 +154,20 @@ export default Controller.extend(
     @discourseComputed(
       "externalAuthsOnly",
       "authOptions",
-      "emailValidation.failed"
+      "emailValidation.failed",
+      "existingUserRedeeming"
     )
-    shouldDisplayForm(externalAuthsOnly, authOptions, emailValidationFailed) {
+    shouldDisplayForm(
+      externalAuthsOnly,
+      authOptions,
+      emailValidationFailed,
+      existingUserRedeeming
+    ) {
       return (
         (this.siteSettings.enable_local_logins ||
           (externalAuthsOnly && authOptions && !emailValidationFailed)) &&
-        !this.siteSettings.enable_discourse_connect
+        !this.siteSettings.enable_discourse_connect &&
+        !existingUserRedeeming
       );
     },
 

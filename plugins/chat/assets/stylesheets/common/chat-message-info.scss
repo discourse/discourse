@@ -1,0 +1,74 @@
+.chat-message-info {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.chat-message-info__username {
+  display: inline-flex;
+  align-items: center;
+
+  & + .chat-message-info__bot-indicator,
+  & + .chat-message-info__date {
+    margin-left: 0.25em;
+  }
+}
+
+.chat-message-info__username__name {
+  color: var(--secondary-low);
+  font-weight: 700;
+  @include ellipsis;
+  max-width: 180px;
+}
+
+.chat-message-info__bot-indicator {
+  text-transform: uppercase;
+  padding: 0.25em;
+  background: var(--primary-low);
+  border-radius: 3px;
+  font-size: var(--font-down-2);
+
+  & + .chat-message-info__date {
+    margin-left: 0.25em;
+  }
+}
+
+.chat-message-info__date {
+  color: var(--primary-high);
+  font-size: var(--font-down-1);
+
+  &:hover,
+  &:focus {
+    .chat-time {
+      color: var(--primary);
+    }
+  }
+
+  & + .chat-message-info__flag {
+    margin-left: 0.25em;
+  }
+}
+
+.chat-message-info__flag {
+  color: var(--secondary-medium);
+}
+
+.chat-message-info__bookmark {
+  .d-icon-discourse-bookmark-clock,
+  .d-icon-bookmark {
+    color: var(--primary-low-mid);
+    font-size: var(--font-down-2);
+    margin-left: 0.5em;
+  }
+}
+
+.chat-message-info__status {
+  display: flex;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
+
+  .emoji {
+    width: 16px;
+    height: 16px;
+  }
+}

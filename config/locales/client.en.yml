@@ -1043,7 +1043,7 @@ en:
     user_fields:
       none: "(select an option)"
       required: 'Please enter a value for "%{name}"'
-      same_as_password: 'Your password should not be repeated in other fields.'
+      same_as_password: "Your password should not be repeated in other fields."
 
     user:
       said: "%{username}:"
@@ -1188,9 +1188,9 @@ en:
         tags_section: "Tags Section"
         tags_section_instruction: "Selected tags will be displayed under Sidebar's tags section."
         navigation_section: "Navigation"
-        list_destination_instruction: "When I click a topic list link in the sidebar with new or unread topics, take me to"
-        list_destination_default: "Default"
-        list_destination_unread_new: "New/Unread"
+        list_destination_instruction: "When there's new content in the sidebar..."
+        list_destination_default: "use the default link and show a badge for new items"
+        list_destination_unread_new: "link to unread/new and show a count of new items"
       change: "change"
       featured_topic: "Featured Topic"
       moderator: "%{user} is a moderator"
@@ -2089,6 +2089,8 @@ en:
       success: "Your account has been created and you're now logged in."
       name_label: "Name"
       password_label: "Password"
+      existing_user_can_redeem: "Redeem your invitation to a topic or group."
+      existing_user_cannot_redeem: "This invitation cannot be redeemed. Please ask the person who invited you to send you a new invitation."
 
     password_reset:
       continue: "Continue to %{site_name}"
@@ -4252,7 +4254,7 @@ en:
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
-      description: 'Your welcome topic is the first thing new members will read. Think of it as your “elevator pitch” or “mission statement.” Let everyone know who this community is for, what they can expect to find here, and what you’d like them to do first.'
+      description: "Your welcome topic is the first thing new members will read. Think of it as your “elevator pitch” or “mission statement.” Let everyone know who this community is for, what they can expect to find here, and what you’d like them to do first."
       button_title: "Start Editing"
 
     until: "Until:"
@@ -4539,7 +4541,6 @@ en:
         go_back: "Back to list"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "It seems you are trying to set up the webhook to a local url. Event delivered to a local address may cause side-effect or unexpected behaviors. Continue?"
         secret_invalid: "Secret must not have any blank characters."
         secret_too_short: "Secret should be at least 12 characters."
         secret_placeholder: "An optional string, used for generating signature"
@@ -4833,7 +4834,6 @@ en:
           last_attempt: "Installation process did not finish, last attempted:"
           remote_branch: "Branch name (optional)"
           public_key: "Grant the following public key access to the repo:"
-          public_key_note: "After entering a valid private repository URL above, an SSH key will be generated and displayed here."
           install: "Install"
           installed: "Installed"
           install_popular: "Popular"
@@ -5593,23 +5593,23 @@ en:
         delete_confirm: "Are you sure you want to delete that user field?"
         options: "Options"
         required:
-          title: "Required at signup?"
+          title: "Required at signup"
           enabled: "required"
           disabled: "not required"
         editable:
-          title: "Editable after signup?"
+          title: "Editable after signup"
           enabled: "editable"
           disabled: "not editable"
         show_on_profile:
-          title: "Show on public profile?"
+          title: "Show on public profile"
           enabled: "shown on profile"
           disabled: "not shown on profile"
         show_on_user_card:
-          title: "Show on user card?"
+          title: "Show on user card"
           enabled: "shown on user card"
           disabled: "not shown on user card"
         searchable:
-          title: "Searchable?"
+          title: "Searchable"
           enabled: "searchable"
           disabled: "not searchable"
 

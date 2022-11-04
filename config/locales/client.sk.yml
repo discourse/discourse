@@ -2942,7 +2942,6 @@ sk:
         trust_level_2_users: "Používatelia na stupni dôvery 2"
         trust_level_3_requirements: "Požiadavky pre 3 stupeň dôvery"
         trust_level_locked_tip: "stupeň dôvery je zamknutý, systém používateľovi stupeň nezvýši ani nezníži "
-        trust_level_unlocked_tip: "stupeň dôvery je odomknutý, systém môže používateľovi stupeň zvýšiť alebo znížiť"
         lock_trust_level: "Zamknúť stupeň dôvery"
         unlock_trust_level: "Odomknúť stupeň dôvery"
         suspended_count: "Odobrate práva"

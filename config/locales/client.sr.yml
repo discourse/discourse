@@ -2329,7 +2329,6 @@ sr:
         trust_level_2_users: "Korisnici Na Nivou Poverenja 2"
         trust_level_3_requirements: "Predispozicije Za Nivo Poverenja 3"
         trust_level_locked_tip: "Nivo poverenja zaključan, sistem neće unapređivati ili skidati korisnika"
-        trust_level_unlocked_tip: "Nivo poverenja zaključan, sistem neće unapređivati ili skidati korisnika"
         lock_trust_level: "Zaključaj Nivo Poverenja"
         unlock_trust_level: "Odključaj Nivo Poverenja"
         suspended_count: "Suspendovani"
