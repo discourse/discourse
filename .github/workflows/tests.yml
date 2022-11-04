@@ -41,8 +41,6 @@ jobs:
             target: plugins
           - build_type: frontend
             target: core # Handled by core_frontend_tests job (below)
-          - build_type: system
-            target: plugins # Enable once at least 1 plugin has system tests
 
     steps:
       - uses: actions/checkout@v3
@@ -178,7 +176,7 @@ jobs:
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
-        run: bin/system_rspec plugins/*/spec/system
+        run: LOAD_PLUGINS=1 bin/system_rspec plugins/*/spec/system
 
       - name: Upload failed system test screenshots
         uses: actions/upload-artifact@v3
