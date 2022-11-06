@@ -20,7 +20,6 @@ import discourseLater from "discourse-common/lib/later";
 import { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
 import { resetIdle } from "discourse/lib/desktop-notifications";
-import { defaultHomepage } from "discourse/lib/utilities";
 import { capitalize } from "@ember/string";
 import {
   onPresenceChange,
@@ -1266,14 +1265,15 @@ export default Component.extend({
   @action
   onCloseFullScreen(channel) {
     this.fullPageChat.isPreferred = false;
-    this.appEvents.trigger("chat:open-channel", channel);
 
-    const previousRouteInfo = this.fullPageChat.exit();
-    if (previousRouteInfo) {
-      this._transitionToRoute(previousRouteInfo);
-    } else {
-      this.router.transitionTo(`discovery.${defaultHomepage()}`);
+    let previousURL = this.fullPageChat.exit();
+    if (!previousURL || previousURL === "/") {
+      previousURL = `discovery`;
     }
+
+    this.router.replaceWith(previousURL).then(() => {
+      this.appEvents.trigger("chat:open-channel", channel);
+    });
   },
 
   @action
@@ -1430,18 +1430,6 @@ export default Component.extend({
         this.set("hasNewMessages", true);
       }
     });
-  },
-
-  _transitionToRoute(routeInfo) {
-    const routeName = routeInfo.name;
-    let params = [];
-
-    do {
-      params = Object.values(routeInfo.params).concat(params);
-      routeInfo = routeInfo.parent;
-    } while (routeInfo);
-
-    this.router.transitionTo(routeName, ...params);
   },
 
   @bind
