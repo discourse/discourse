@@ -36,7 +36,8 @@ describe Jobs::ChatChannelDelete do
     )
 
     revision_message = messages.sample
-    ChatMessageRevision.create(
+    Fabricate(
+      :chat_message_revision,
       chat_message: revision_message,
       old_message: "some old message",
       new_message: revision_message.message,

@@ -47,6 +47,7 @@ Fabricator(:chat_message_revision) do
   chat_message { Fabricate(:chat_message) }
   old_message { "something old" }
   new_message { "something new" }
+  user { |attrs| attrs[:chat_message].user }
 end
 
 Fabricator(:reviewable_chat_message) do
