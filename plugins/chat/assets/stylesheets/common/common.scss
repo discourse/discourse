@@ -316,6 +316,7 @@ $float-height: 530px;
   flex-direction: column;
   width: 100%;
   min-height: 1px;
+  position: relative;
 
   .chat-messages-scroll {
     flex-grow: 1;
