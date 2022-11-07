@@ -65,11 +65,22 @@ module.exports = function siteSettingsPlugin(...params) {
   return new SiteSettingsPlugin(...params);
 };
 
-module.exports.parsePluginClientSettings = function (discourseRoot) {
+module.exports.parsePluginClientSettings = function (
+  discourseRoot,
+  vendorJs,
+  app
+) {
   let settings = [discourseRoot + "/config"];
 
   if (shouldLoadPluginTestJs()) {
-    settings = settings.concat(glob.sync(discourseRoot + "/plugins/*/config"));
+    const pluginInfos = app.project
+      .findAddonByName("discourse-plugins")
+      .pluginInfos();
+    pluginInfos.forEach(({ hasConfig, configDirectory }) => {
+      if (hasConfig) {
+        settings = settings.concat(glob.sync(configDirectory));
+      }
+    });
   }
 
   const loadedSettings = new SiteSettingsPlugin(settings, "site_settings.yml");

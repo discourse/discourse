@@ -113,18 +113,22 @@ module.exports = {
         directoryName,
         "test/javascripts"
       );
+      const configDirectory = path.resolve(root, directoryName, "config");
       const hasJs = fs.existsSync(jsDirectory);
       const hasAdminJs = fs.existsSync(adminJsDirectory);
       const hasTests = fs.existsSync(testDirectory);
+      const hasConfig = fs.existsSync(configDirectory);
       return {
         pluginName,
         directoryName,
         jsDirectory,
         adminJsDirectory,
         testDirectory,
+        configDirectory,
         hasJs,
         hasAdminJs,
         hasTests,
+        hasConfig,
       };
     });
   },

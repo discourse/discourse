@@ -162,7 +162,7 @@ module.exports = function (defaults) {
 
   return mergeTrees([
     createI18nTree(discourseRoot, vendorJs),
-    parsePluginClientSettings(discourseRoot, vendorJs),
+    parsePluginClientSettings(discourseRoot, vendorJs, app),
     app.toTree(),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
     funnel(`${vendorJs}/highlightjs`, {
