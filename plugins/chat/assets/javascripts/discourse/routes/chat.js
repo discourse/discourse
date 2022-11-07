@@ -14,12 +14,12 @@ export default class ChatRoute extends DiscourseRoute {
     return I18n.t("chat.title_capitalized");
   }
 
-  beforeModel(transition) {
+  beforeModel() {
     if (!this.chat.userCanChat) {
       return this.transitionTo(`discovery.${defaultHomepage()}`);
     }
 
-    this.fullPageChat.enter(transition?.from);
+    this.fullPageChat.enter(this.router.currentURL);
   }
 
   activate() {

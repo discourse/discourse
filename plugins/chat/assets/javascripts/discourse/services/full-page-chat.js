@@ -1,17 +1,17 @@
 import Service from "@ember/service";
 
 export default class FullPageChat extends Service {
-  _previousRouteInfo = null;
+  _previousURL = null;
   _isActive = false;
 
-  enter(previousRouteInfo) {
-    this._previousRouteInfo = previousRouteInfo;
+  enter(previousURL) {
+    this._previousURL = previousURL;
     this._isActive = true;
   }
 
   exit() {
     this._isActive = false;
-    return this._previousRouteInfo;
+    return this._previousURL;
   }
 
   get isActive() {
