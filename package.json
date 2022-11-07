@@ -29,10 +29,10 @@
     "workbox-sw": "^4.3.1"
   },
   "devDependencies": {
-    "@arkweid/lefthook": "^0.7.7",
     "@mixer/parallel-prettier": "^2.0.1",
     "chrome-launcher": "^0.15.0",
     "chrome-remote-interface": "^0.31.2",
+    "lefthook": "^1.2.0",
     "puppeteer-core": "^13.7.0"
   },
   "scripts": {
