@@ -4,6 +4,7 @@ $float-height: 530px;
   --message-left-width: 42px;
   --full-page-border-radius: 12px;
   --full-page-sidebar-width: 275px;
+  --channel-list-avatar-size: 30px;
 }
 
 .chat-message-move-to-channel-modal-modal {
@@ -996,4 +997,23 @@ html.has-full-page-chat {
 
 [data-popper-reference-hidden] {
   visibility: hidden;
+}
+
+.channels-list {
+  .chat-user-avatar {
+    img {
+      width: calc(var(--channel-list-avatar-size) - 2px);
+      height: calc(var(--channel-list-avatar-size) - 2px);
+    }
+  }
+
+  .chat-channel-title {
+    &__users-count {
+      width: var(--channel-list-avatar-size);
+      height: var(--channel-list-avatar-size);
+      padding: 0;
+      font-size: var(--font-up-2);
+      justify-content: center;
+    }
+  }
 }
