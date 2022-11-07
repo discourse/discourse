@@ -88,6 +88,10 @@ RSpec.describe CategoryChannel do
     subject(:channel) { Fabricate(:category_channel) }
 
     context "when slug is not provided" do
+      before do
+        channel.slug = nil
+      end
+
       it "uses channel name when present" do
         channel.name = "Some Cool Stuff"
         channel.validate!
