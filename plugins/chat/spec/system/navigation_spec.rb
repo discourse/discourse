@@ -79,7 +79,7 @@ RSpec.describe "Navigation", type: :system, js: true do
       chat_page.open_full_page
       chat_page.minimize_full_page
 
-      expect(page).to have_current_path("/")
+      expect(page).to have_current_path(latest_path)
     end
   end
 
