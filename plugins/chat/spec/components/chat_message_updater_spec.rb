@@ -83,6 +83,18 @@ describe Chat::ChatMessageUpdater do
     expect(chat_message.reload.message).to eq(new_message)
   end
 
+  it "publishes a DiscourseEvent for updated messages" do
+    chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
+    events = DiscourseEvent.track_events {
+      Chat::ChatMessageUpdater.update(
+        guardian: guardian,
+        chat_message: chat_message,
+        new_content: "Change to this!",
+      )
+    }
+    expect(events.map { _1[:event_name] }).to include(:chat_message_edited)
+  end
+
   it "creates mention notifications for unmentioned users" do
     chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
     expect {

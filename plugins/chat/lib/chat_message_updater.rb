@@ -36,6 +36,7 @@ class Chat::ChatMessageUpdater
       ChatPublisher.publish_edit!(@chat_channel, @chat_message)
       Jobs.enqueue(:process_chat_message, { chat_message_id: @chat_message.id })
       Chat::ChatNotifier.notify_edit(chat_message: @chat_message, timestamp: revision.created_at)
+      DiscourseEvent.trigger(:chat_message_edited, @chat_message, @chat_channel, @user)
     rescue => error
       @error = error
     end
