@@ -8,6 +8,7 @@ class BackfillChannelSlugs < ActiveRecord::Migration[7.0]
       INNER JOIN categories ON categories.id = chat_channels.chatable_id
       WHERE chat_channels.chatable_type = 'Category'
     SQL
+    return if channels.count.zero?
 
     DB.exec("CREATE TEMPORARY TABLE tmp_chat_channel_slugs(id int, slug text)")
 
@@ -15,33 +16,34 @@ class BackfillChannelSlugs < ActiveRecord::Migration[7.0]
     channels.each do |channel|
       # Simplified version of Slug.for generation that doesn't take into
       # account different encodings to make things a little easier.
-      channel.slug =
-        channel
-          .title
-          .downcase
-          .chomp
-          .tr("'", "")
-          .parameterize
-          .tr("_", "-")
-          .truncate(255, omission: "")
-          .squeeze("-")
-          .gsub(/\A-+|-+\z/, "")
+      title = channel.title
+      if title.blank?
+        channel.slug = "channel-#{channel.id}"
+      else
+        channel.slug =
+          title
+            .downcase
+            .chomp
+            .tr("'", "")
+            .parameterize
+            .tr("_", "-")
+            .truncate(255, omission: "")
+            .squeeze("-")
+            .gsub(/\A-+|-+\z/, "")
+      end
 
       # Deduplicate slugs with the channel IDs, we can always improve
       # slugs later on.
-      if taken_slugs.key?(channel.slug)
-        channel.slug = "#{channel.slug}-#{channel.id}"
-      end
+      channel.slug = "#{channel.slug}-#{channel.id}" if taken_slugs.key?(channel.slug)
       taken_slugs[channel.slug] = true
     end
 
-    values_to_insert = channels.map do |channel|
-      "(#{channel.id}, '#{PG::Connection.escape_string(channel.slug)}')"
-    end
+    values_to_insert =
+      channels.map { |channel| "(#{channel.id}, '#{PG::Connection.escape_string(channel.slug)}')" }
 
     DB.exec(
       "INSERT INTO tmp_chat_channel_slugs
-      VALUES #{values_to_insert.join(",\n")}"
+      VALUES #{values_to_insert.join(",\n")}",
     )
 
     DB.exec(<<~SQL)
@@ -53,6 +55,6 @@ class BackfillChannelSlugs < ActiveRecord::Migration[7.0]
   end
 
   def down
-    # raise ActiveRecord::IrreversibleMigration
+    raise ActiveRecord::IrreversibleMigration
   end
 end
