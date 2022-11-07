@@ -93,9 +93,12 @@ class Chat::MessageMover
       destination_channel_id: destination_channel.id,
     }
     moved_message_ids = DB.query_single(<<~SQL, query_args)
-      INSERT INTO chat_messages(chat_channel_id, user_id, message, cooked, cooked_version, created_at, updated_at)
+      INSERT INTO chat_messages(
+        chat_channel_id, user_id, last_editor_id, message, cooked, cooked_version, created_at, updated_at
+      )
       SELECT :destination_channel_id,
              user_id,
+             last_editor_id,
              message,
              cooked,
              cooked_version,
