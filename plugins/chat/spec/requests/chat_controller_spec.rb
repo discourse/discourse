@@ -532,7 +532,7 @@ RSpec.describe Chat::ChatController do
 
       it "raises an invalid request" do
         put "/chat/#{chat_channel.id}/edit/#{chat_message.id}.json", params: { new_message: "Hi" }
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(422)
       end
     end
 
@@ -540,7 +540,7 @@ RSpec.describe Chat::ChatController do
       sign_in(Fabricate(:user))
 
       put "/chat/#{chat_channel.id}/edit/#{chat_message.id}.json", params: { new_message: "edit!" }
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(422)
     end
 
     it "errors when staff tries to edit another user's message" do
@@ -551,7 +551,7 @@ RSpec.describe Chat::ChatController do
           params: {
             new_message: new_message,
           }
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(422)
     end
 
     it "allows a user to edit their own messages" do
