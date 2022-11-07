@@ -104,6 +104,15 @@ class S3Helper
   rescue Aws::S3::Errors::NoSuchKey
   end
 
+  def delete_objects(keys)
+    s3_bucket.delete_objects({
+      delete: {
+        objects: keys.map { |k| { key: k } },
+        quiet: true,
+      },
+    })
+  end
+
   def copy(source, destination, options: {})
     if options[:apply_metadata_to_destination]
       options = options.except(:apply_metadata_to_destination).merge(metadata_directive: "REPLACE")
