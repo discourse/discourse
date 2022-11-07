@@ -58,16 +58,10 @@ module.exports = function (defaults) {
       forbidEval: true,
       insertScriptsAt: "ember-auto-import-scripts",
       webpack: {
-        output: {
-          // Workaround for https://github.com/ef4/ember-auto-import/issues/519
-          // Upstreamed in https://github.com/ef4/ember-auto-import/pull/548
-          filename: `chunk.[id].[contenthash].js`,
-          chunkFilename: `chunk.[id].[contenthash].js`,
-        },
+        // Workarounds for https://github.com/ef4/ember-auto-import/issues/519 and https://github.com/ef4/ember-auto-import/issues/478
+        devtool: isProduction ? false : "source-map", // Sourcemaps contain reference to the ephemeral broccoli cache dir, which changes on every deploy
         optimization: {
-          // Workaround to provide deterministic chunk output
-          // See https://github.com/ef4/ember-auto-import/issues/478#issuecomment-1000526638
-          moduleIds: "size",
+          moduleIds: "size", // Consistent module references https://github.com/ef4/ember-auto-import/issues/478#issuecomment-1000526638
         },
       },
     },
