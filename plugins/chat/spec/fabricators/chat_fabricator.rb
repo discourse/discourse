@@ -14,8 +14,10 @@ Fabricator(:chat_channel) do
       "#{random_name} #{n}"
     end
   end
-  type "CategoryChannel"
   chatable { Fabricate(:category) }
+  type do |attrs|
+    attrs[:chatable_type] == "Category" || attrs[:chatable]&.is_a?(Category) ? "CategoryChannel" : "DirectMessageChannel"
+  end
   status { :open }
 end
 
