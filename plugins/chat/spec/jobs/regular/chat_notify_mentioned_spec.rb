@@ -58,7 +58,7 @@ describe Jobs::ChatNotifyMentioned do
 
     it "does nothing if there is a newer version of the message" do
       message = create_chat_message
-      ChatMessageRevision.create!(chat_message: message, old_message: "a", new_message: "b")
+      Fabricate(:chat_message_revision, chat_message: message, old_message: "a", new_message: "b")
 
       PostAlerter.expects(:push_notification).never
 
