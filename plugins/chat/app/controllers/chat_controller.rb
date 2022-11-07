@@ -144,7 +144,6 @@ class Chat::ChatController < Chat::ChatBaseController
   end
 
   def edit_message
-    guardian.ensure_can_edit_chat!(@message)
     chat_message_updater =
       Chat::ChatMessageUpdater.update(
         guardian: guardian,
