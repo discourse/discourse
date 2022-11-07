@@ -83,6 +83,8 @@ RSpec.describe "ImportScripts::FluxBB" do
           let(:example_post_content) {
             "[b]Bold text[/b]\n" +
             "[i]Italic text[/i]\n" +
+            "[h]Heading[/h]\n" +
+            "[h]Heading[/h]Text on the same line\n" +
             "[url=https://www.discourse.org/]Link with link text[/url]\n" +
             "[url]https://www.discourse.org/[/url] - Link without link text\n" +
             "[url=/about]Relative link[/url]\n" +
@@ -94,6 +96,8 @@ RSpec.describe "ImportScripts::FluxBB" do
             expect(Post.last.raw).to eq(
               "**Bold text**\n" +
               "*Italic text*\n" +
+              "\n## Heading\n\n" +
+              "\n## Heading\nText on the same line\n" +
               "[Link with link text](https://www.discourse.org/)\n" +
               "[https://www.discourse.org/](https://www.discourse.org/) - Link without link text\n" +
               "[Relative link](/about)\n" +
@@ -150,11 +154,11 @@ RSpec.describe "ImportScripts::FluxBB" do
 
         context "with fluxbb bbcode syntax examples which are not yet working!" do
           let(:example_post_content) {
+            "[h]Heading\non two lines[/h]\n" +
             "[s]Strike-through text[/s]\n"
             "[del]Deleted text[/del]\n" +
             "[ins]Inserted text[/ins]\n" +
             "[em]Emphasised text[/em]\n" +
-            "[h]Heading[/h]\n" +
             "[list][*]Example list item 1.[/*][*]Example list item 2.[/*][*]Example list item 3.[/*][/list]\n" +
             "[list=1][*]Example list item 1.[/*][*]Example list item 2.[/*][*]Example list item 3.[/*][/list]\n" +
             "[email]myname@example.com[/email] - email link without link text\n" +
@@ -163,11 +167,11 @@ RSpec.describe "ImportScripts::FluxBB" do
 
           xit "converts bbcode to markdown in the resulting Post" do
             expect(Post.last.raw).to eq(
+              "## Heading<br>on two lines\n" +
               "~~Strike-through text~~\n" +
               "<del>Deleted text</del>\n" +
               "<ins>Inserted text<ins>\n" +
               "*Emphasised text*\n" +
-              "## Heading\n" +
               "<ul><li>Example list item 1.</li><li>Example list item 2.</li><li>Example list item 3.</li></ul>\n" +
               "<ol><li>Example list item 1.</li><li>Example list item 2.</li><li>Example list item 3.</li></ol>\n" +
               "[mailto:myname@example.com](mailto:myname@example.com) - email link without link text\n" +

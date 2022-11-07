@@ -271,6 +271,15 @@ class ImportScripts::FluxBB < ImportScripts::Base
     s
   end
 
+  def bbcode_tag_additions_and_overrides
+    {
+      h: {
+        html_open: "\n## ", html_close: "\n",
+        description: 'Make a heading',
+        example: '[h]My Heading[/h]' }
+    }
+  end
+
   def mysql_query(sql)
     @client.query(sql, cache_rows: false)
   end
