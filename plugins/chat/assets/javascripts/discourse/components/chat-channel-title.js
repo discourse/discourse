@@ -21,7 +21,10 @@ export default class ChatChannelTitle extends Component {
     return htmlSafe(`color: #${this.channel.chatable.color}`);
   }
 
-  @computed("channel.chatable.users.[]", "channel.chatable.users.@each.status")
+  @computed(
+    "channel.chatable.users.length",
+    "channel.chatable.users.@each.status"
+  )
   get showUserStatus() {
     return !!(
       this.channel.chatable.users.length === 1 &&
