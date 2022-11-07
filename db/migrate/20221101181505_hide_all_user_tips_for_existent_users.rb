@@ -2,7 +2,7 @@
 
 class HideAllUserTipsForExistentUsers < ActiveRecord::Migration[7.0]
   def up
-    execute "UPDATE user_options SET seen_popups = '{-1}'"
+    execute "UPDATE user_options SET seen_popups = '{1, 2}'"
   end
 
   def down
