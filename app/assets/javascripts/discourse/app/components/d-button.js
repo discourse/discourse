@@ -2,8 +2,12 @@ import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import { empty, equal, notEmpty } from "@ember/object/computed";
 import Component from "@glimmer/component";
+import deprecated from "discourse-common/lib/deprecated";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
+
+const ACTION_AS_STRING_DEPRECATION =
+  "DButton no longer supports @action as a string. Please refactor to use an closure action instead.";
 
 export default class DButton extends Component {
   @service router;
@@ -16,6 +20,13 @@ export default class DButton extends Component {
 
   @empty("computedLabel")
   noText;
+
+  constructor() {
+    super(...arguments);
+    if (typeof this.args.action === "string") {
+      deprecated(ACTION_AS_STRING_DEPRECATION);
+    }
+  }
 
   get forceDisabled() {
     return !!this.args.isLoading;
@@ -95,9 +106,7 @@ export default class DButton extends Component {
         const { actionParam, forwardEvent } = this.args;
 
         if (typeof actionVal === "string") {
-          // Note: This is deprecated in new Embers and needs to be removed in the future.
-          // There is already a warning in the console.
-          this.sendAction("action", actionParam);
+          throw new Error(ACTION_AS_STRING_DEPRECATION);
         } else if (typeof actionVal === "object" && actionVal.value) {
           if (forwardEvent) {
             actionVal.value(actionParam, event);
