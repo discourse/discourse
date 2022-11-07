@@ -809,6 +809,7 @@ RSpec.describe Chat::ChatController do
               chat_message_id: msg.id,
               chat_channel_id: msg.chat_channel_id,
               chat_channel_title: msg.chat_channel.title(user),
+              chat_channel_slug: msg.chat_channel.slug,
               mentioned_by_username: sender.username,
             }.to_json,
           )
@@ -1029,6 +1030,10 @@ RSpec.describe Chat::ChatController do
       }.to change {
         user.notifications.where(notification_type: Notification.types[:chat_invitation]).count
       }.by(1)
+      notification = user.notifications.where(notification_type: Notification.types[:chat_invitation]).last
+      parsed_data = JSON.parse(notification[:data])
+      expect(parsed_data["chat_channel_title"]).to eq(chat_channel.title(user))
+      expect(parsed_data["chat_channel_slug"]).to eq(chat_channel.slug)
     end
 
     it "creates multiple invitations" do

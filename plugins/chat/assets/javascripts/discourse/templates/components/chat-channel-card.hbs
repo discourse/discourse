@@ -10,7 +10,7 @@
     <div class="chat-channel-card__header">
       <LinkTo
         @route="chat.channel"
-        @models={{array this.channel.id (slugify-channel this.channel.title)}}
+        @models={{array this.channel.id (slugify-channel this.channel)}}
         class="chat-channel-card__name-container"
       >
         <span class="chat-channel-card__name">
@@ -27,7 +27,7 @@
             @route="chat.channel.info.settings"
             @models={{array
               this.channel.id
-              (slugify-channel this.channel.title)
+              (slugify-channel this.channel)
             }}
             class="chat-channel-card__tag -muted"
             tabindex="-1"
@@ -38,7 +38,7 @@
 
         <LinkTo
           @route="chat.channel.info.settings"
-          @models={{array this.channel.id (slugify-channel this.channel.title)}}
+          @models={{array this.channel.id (slugify-channel this.channel)}}
           class="chat-channel-card__setting"
           tabindex="-1"
         >
@@ -83,7 +83,7 @@
       {{#if (gt this.channel.membershipsCount 0)}}
         <LinkTo
           @route="chat.channel.info.members"
-          @models={{array this.channel.id (slugify-channel this.channel.title)}}
+          @models={{array this.channel.id (slugify-channel this.channel)}}
           class="chat-channel-card__members"
           tabindex="-1"
         >

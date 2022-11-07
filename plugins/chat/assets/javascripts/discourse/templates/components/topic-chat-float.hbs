@@ -29,7 +29,7 @@
 
         {{#if this.chat.activeChannel}}
           {{#if this.expanded}}
-            <LinkTo @route={{this.infoTabRoute}} @models={{array this.chat.activeChannel.id (slugify-channel this.chat.activeChannel.title)}} class="topic-chat-drawer-header__title">
+            <LinkTo @route={{this.infoTabRoute}} @models={{array this.chat.activeChannel.id (slugify-channel this.chat.activeChannel)}} class="topic-chat-drawer-header__title">
               <div class="topic-chat-drawer-header__top-line">
                 <ChatChannelTitle @channel={{this.chat.activeChannel}} />
               </div>

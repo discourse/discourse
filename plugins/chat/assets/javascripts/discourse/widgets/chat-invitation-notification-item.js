@@ -34,9 +34,12 @@ createWidgetFrom(DefaultNotificationItem, "chat-invitation-notification-item", {
   },
 
   url(data) {
-    const title = data.chat_channel_title
-      ? slugifyChannel(data.chat_channel_title)
-      : "-";
-    return `/chat/channel/${data.chat_channel_id}/${title}?messageId=${data.chat_message_id}`;
+    const slug = slugifyChannel({
+      title: data.chat_channel_title,
+      slug: data.chat_channel_slug,
+    });
+    return `/chat/channel/${data.chat_channel_id}/${slug || "-"}?messageId=${
+      data.chat_message_id
+    }`;
   },
 });
