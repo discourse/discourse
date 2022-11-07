@@ -606,7 +606,7 @@ class ImportScripts::Base
     opts[:guardian] = STAFF_GUARDIAN
     if @bbcode_to_md
       opts[:raw] = begin
-        opts[:raw].bbcode_to_md(false, {}, :disable, :quote)
+        opts[:raw].bbcode_to_md(false, {}, :disable, :quote, :u)
       rescue StandardError
         opts[:raw]
       end

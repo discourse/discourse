@@ -105,6 +105,7 @@ RSpec.describe "ImportScripts::FluxBB" do
 
         context "with bbcode examples which are best left in bbcode format" do
           let(:example_post_content) {
+            "[u]Underlined text[/u]\n" +
             "[code]Code[/code]\n" +
             "[quote=James]This is the text I want to quote.[/quote]\n" +
             "[quote]This is the text I want to quote.[/quote] \n" +
@@ -149,7 +150,6 @@ RSpec.describe "ImportScripts::FluxBB" do
 
         context "with fluxbb bbcode syntax examples which are not yet working!" do
           let(:example_post_content) {
-            "[u]Underlined text[/u]\n" +
             "[s]Strike-through text[/s]\n"
             "[del]Deleted text[/del]\n" +
             "[ins]Inserted text[/ins]\n" +
@@ -163,7 +163,6 @@ RSpec.describe "ImportScripts::FluxBB" do
 
           xit "converts bbcode to markdown in the resulting Post" do
             expect(Post.last.raw).to eq(
-              "[u]Underlined text[/u]\n" + #should be unaltered!
               "~~Strike-through text~~\n" +
               "<del>Deleted text</del>\n" +
               "<ins>Inserted text<ins>\n" +
