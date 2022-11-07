@@ -58,7 +58,7 @@ acceptance("User Drafts", function (needs) {
         query(".user-stream-item:nth-child(3) .excerpt").innerHTML.trim()
       ),
       normalizeHtml(
-        `here goes a reply to a PM <img src="/images/emoji/google_classic/slight_smile.png?v=${IMAGE_VERSION}" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;">`
+        `here goes a reply to a PM <img src="/images/emoji/twitter/slight_smile.png?v=${IMAGE_VERSION}" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;">`
       ),
       "shows the excerpt"
     );

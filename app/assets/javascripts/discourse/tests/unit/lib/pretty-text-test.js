@@ -16,7 +16,7 @@ const rawOpts = {
     enable_emoji: true,
     enable_emoji_shortcuts: true,
     enable_mentions: true,
-    emoji_set: "google_classic",
+    emoji_set: "twitter",
     external_emoji_url: "",
     highlighted_languages: "json|ruby|javascript",
     default_code_lang: "auto",
@@ -1524,7 +1524,7 @@ var bar = 'bar';
     assert.cookedOptions(
       ":grin: @sam",
       { featuresOverride: ["emoji"] },
-      `<p><img src="/images/emoji/google_classic/grin.png?v=${v}" title=":grin:" class="emoji" alt=":grin:" loading="lazy" width="20" height="20"> @sam</p>`,
+      `<p><img src="/images/emoji/twitter/grin.png?v=${v}" title=":grin:" class="emoji" alt=":grin:" loading="lazy" width="20" height="20"> @sam</p>`,
       "cooks emojis when only the emoji markdown engine is enabled"
     );
 
@@ -1539,15 +1539,15 @@ var bar = 'bar';
   test("emoji", function (assert) {
     assert.cooked(
       ":smile:",
-      `<p><img src="/images/emoji/google_classic/smile.png?v=${v}" title=":smile:" class="emoji only-emoji" alt=":smile:" loading="lazy" width="20" height="20"></p>`
+      `<p><img src="/images/emoji/twitter/smile.png?v=${v}" title=":smile:" class="emoji only-emoji" alt=":smile:" loading="lazy" width="20" height="20"></p>`
     );
     assert.cooked(
       ":(",
-      `<p><img src="/images/emoji/google_classic/frowning.png?v=${v}" title=":frowning:" class="emoji only-emoji" alt=":frowning:" loading="lazy" width="20" height="20"></p>`
+      `<p><img src="/images/emoji/twitter/frowning.png?v=${v}" title=":frowning:" class="emoji only-emoji" alt=":frowning:" loading="lazy" width="20" height="20"></p>`
     );
     assert.cooked(
       "8-)",
-      `<p><img src="/images/emoji/google_classic/sunglasses.png?v=${v}" title=":sunglasses:" class="emoji only-emoji" alt=":sunglasses:" loading="lazy" width="20" height="20"></p>`
+      `<p><img src="/images/emoji/twitter/sunglasses.png?v=${v}" title=":sunglasses:" class="emoji only-emoji" alt=":sunglasses:" loading="lazy" width="20" height="20"></p>`
     );
   });
 
@@ -1561,7 +1561,7 @@ var bar = 'bar';
     assert.cookedOptions(
       "test:smile:test",
       { siteSettings: { enable_inline_emoji_translation: true } },
-      `<p>test<img src="/images/emoji/google_classic/smile.png?v=${v}" title=":smile:" class="emoji" alt=":smile:" loading="lazy" width="20" height="20">test</p>`
+      `<p>test<img src="/images/emoji/twitter/smile.png?v=${v}" title=":smile:" class="emoji" alt=":smile:" loading="lazy" width="20" height="20">test</p>`
     );
   });
 

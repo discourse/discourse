@@ -85,7 +85,10 @@ module("Discourse Chat | Unit | chat-emoji-reaction-store", function (hooks) {
     this.chatEmojiReactionStore.storedFavorites = [];
     this.chatEmojiReactionStore.track("yum");
 
-    assert.deepEqual(this.chatEmojiReactionStore.storedFavorites, ["yum"]);
+    assert.deepEqual(
+      this.chatEmojiReactionStore.storedFavorites,
+      ["yum"].concat(this.siteSettings.default_emoji_reactions.split("|"))
+    );
   });
 
   test("#storedFavorites when tracking different emojis", function (assert) {
@@ -97,7 +100,9 @@ module("Discourse Chat | Unit | chat-emoji-reaction-store", function (hooks) {
 
     assert.deepEqual(
       this.chatEmojiReactionStore.storedFavorites,
-      ["grinning", "yum", "not_yum", "yum"],
+      ["grinning", "yum", "not_yum", "yum"].concat(
+        this.siteSettings.default_emoji_reactions.split("|")
+      ),
       "it ensures last in is first"
     );
   });
