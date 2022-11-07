@@ -27,6 +27,7 @@ import {
 } from "discourse/lib/user-presence";
 import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
 import { isTesting } from "discourse-common/config/environment";
+import { defaultHomepage } from "discourse/lib/utilities";
 
 const MAX_RECENT_MSGS = 100;
 const STICKY_SCROLL_LENIENCE = 50;
@@ -1266,11 +1267,10 @@ export default Component.extend({
   @action
   onCloseFullScreen(channel) {
     this.chatPreferredMode.setDrawer();
-    this.appEvents.trigger("chat:open-channel", channel);
 
     let previousURL = this.fullPageChat.exit();
     if (!previousURL || previousURL === "/") {
-      previousURL = "discovery";
+      previousURL = this.router.urlFor(`discovery.${defaultHomepage()}`);
     }
 
     this.router.replaceWith(previousURL).then(() => {
