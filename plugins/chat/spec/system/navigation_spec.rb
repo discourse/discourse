@@ -7,6 +7,7 @@ RSpec.describe "Navigation", type: :system, js: true do
   fab!(:user) { Fabricate(:admin) }
   fab!(:category_channel) { Fabricate(:category_channel) }
   fab!(:message) { Fabricate(:chat_message, chat_channel: category_channel) }
+  let(:chat_page) { PageObjects::Pages::Chat.new }
 
   before do
     # ensures we have one valid registered admin
@@ -21,7 +22,7 @@ RSpec.describe "Navigation", type: :system, js: true do
 
   context "when visiting /chat" do
     it "opens full page" do
-      visit("/chat")
+      chat_page.open_full_page
 
       expect(page).to have_current_path(
         chat.channel_path(category_channel.id, category_channel.slug),
@@ -34,7 +35,7 @@ RSpec.describe "Navigation", type: :system, js: true do
   context "when opening chat" do
     it "opens the drawer by default" do
       visit("/")
-      find(".open-chat").click
+      chat_page.open_from_header
 
       expect(page).to have_css(".topic-chat-container.expanded.visible")
     end
@@ -43,15 +44,15 @@ RSpec.describe "Navigation", type: :system, js: true do
   context "when opening chat with full page as preferred mode" do
     it "opens the full page" do
       visit("/")
-      find(".open-chat").click
-      find(".topic-chat-drawer-header__full-screen-btn").click
+      chat_page.open_from_header
+      chat_page.maximize_drawer
 
       expect(page).to have_current_path(
         chat.channel_path(category_channel.id, category_channel.slug),
       )
 
       visit("/")
-      find(".open-chat").click
+      chat_page.open_from_header
 
       expect(page).to have_current_path(
         chat.channel_path(category_channel.id, category_channel.slug),
@@ -61,15 +62,36 @@ RSpec.describe "Navigation", type: :system, js: true do
 
   context "when opening chat with drawer as preferred mode" do
     it "opens the full page" do
-      visit("/chat")
-      find(".chat-full-screen-button").click
+      chat_page.open_full_page
+      chat_page.minimize_full_page
 
       expect(page).to have_css(".topic-chat-container.expanded.visible")
 
       visit("/")
-      find(".open-chat").click
+      chat_page.open_from_header
 
       expect(page).to have_css(".topic-chat-container.expanded.visible")
+    end
+  end
+
+  context "when collapsing full page with no previous state" do
+    it "redirects to home page" do
+      chat_page.open_full_page
+      chat_page.minimize_full_page
+
+      expect(page).to have_current_path("/")
+    end
+  end
+
+  context "when collapsing full page with previous state" do
+    it "redirects to previous state" do
+      visit("/t/-/#{topic.id}")
+      chat_page.open_from_header
+      chat_page.maximize_drawer
+      chat_page.minimize_full_page
+
+      expect(page).to have_current_path("/t/#{topic.slug}/#{topic.id}")
+      expect(page).to have_css(".chat-message-container[data-id='#{message.id}']")
     end
   end
 end
