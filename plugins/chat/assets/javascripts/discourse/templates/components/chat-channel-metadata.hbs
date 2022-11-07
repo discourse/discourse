@@ -1,9 +1,11 @@
-<div class="chat-channel-metadata__date">
-  {{format-date this.channel.last_message_sent_at format="tiny"}}
-</div>
-
-{{#if this.unreadIndicator}}
-  <div class="chat-channel-metadata__unread-count">
-    <ChatChannelUnreadIndicator @channel={{this.channel}} />
+<div class="chat-channel-metadata">
+  <div class="chat-channel-metadata__date">
+    {{format-date @channel.last_message_sent_at format="tiny"}}
   </div>
-{{/if}}
+
+  {{#if @unreadIndicator}}
+    <div class="chat-channel-metadata__unread-count">
+      <ChatChannelUnreadIndicator @channel={{@channel}} />
+    </div>
+  {{/if}}
+</div>
