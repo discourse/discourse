@@ -32,6 +32,10 @@ module CurrentUser
     current_user_provider.is_user_api?
   end
 
+  def has_auth_cookie?
+    current_user_provider.has_auth_cookie?
+  end
+
   def current_user
     current_user_provider.current_user
   end

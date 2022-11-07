@@ -31,6 +31,7 @@ class ApplicationController < ActionController::Base
 
   before_action :rate_limit_crawlers
   before_action :check_readonly_mode
+  before_action :logout_if_should_block_ip
   before_action :handle_theme
   before_action :set_current_user_for_logs
   before_action :set_mp_snapshot_fields
@@ -459,6 +460,12 @@ class ApplicationController < ActionController::Base
       request.env[NO_THEMES] = safe_mode.include?(NO_THEMES) || safe_mode.include?(LEGACY_NO_THEMES)
       request.env[NO_PLUGINS] = safe_mode.include?(NO_PLUGINS)
       request.env[NO_UNOFFICIAL_PLUGINS] = safe_mode.include?(NO_UNOFFICIAL_PLUGINS) || safe_mode.include?(LEGACY_NO_UNOFFICIAL_PLUGINS)
+    end
+  end
+
+  def logout_if_should_block_ip
+    if has_auth_cookie? && ScreenedIpAddress.should_block?(request.remote_ip)
+      log_off_user
     end
   end
 

@@ -1,6 +1,34 @@
 # frozen_string_literal: true
 
 RSpec.describe ApplicationController do
+  describe '#logout_if_should_block_ip' do
+    it 'works as anonymous' do
+      get '/', headers: { 'REMOTE_ADDR' => '123.123.123.123' }
+
+      expect(response.status).to eq(200)
+      expect(UserAuthToken.count).to eq(0)
+    end
+
+    it 'does not log out if ip is allowed' do
+      sign_in(Fabricate(:user))
+
+      get '/', headers: { 'REMOTE_ADDR' => '123.123.123.123' }
+
+      expect(response.status).to eq(200)
+      expect(UserAuthToken.count).to eq(1)
+    end
+
+    it 'logs out if ip is blocked' do
+      sign_in(Fabricate(:user))
+      ScreenedIpAddress.create!(ip_address: '123.123.123.123', action_type: ScreenedIpAddress.actions[:block])
+
+      get '/', headers: { 'REMOTE_ADDR' => '123.123.123.123' }
+
+      expect(response.status).to eq(200)
+      expect(UserAuthToken.count).to eq(0)
+    end
+  end
+
   describe '#redirect_to_login_if_required' do
     let(:admin) { Fabricate(:admin) }
 

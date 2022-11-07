@@ -349,6 +349,7 @@ class Auth::DefaultCurrentUserProvider
 
     cookie_jar.delete('authentication_data')
     cookie_jar.delete(TOKEN_COOKIE)
+    @env[CURRENT_USER_KEY] = nil
   end
 
   # api has special rights return true if api was detected
