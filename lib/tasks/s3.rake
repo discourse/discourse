@@ -13,6 +13,7 @@ end
 def should_skip?(path)
   return false if ENV['FORCE_S3_UPLOADS']
   @existing_assets ||= Set.new(helper.list("assets/").map(&:key))
+  path = File.join(helper.s3_bucket_folder_path, path) if helper.s3_bucket_folder_path
   @existing_assets.include?(path)
 end
 

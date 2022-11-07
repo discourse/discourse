@@ -445,23 +445,42 @@ class Guardian
     can_send_private_message?(group)
   end
 
-  def can_send_private_message?(target, notify_moderators: false)
-    is_user = target.is_a?(User)
-    is_group = target.is_a?(Group)
+  ##
+  # This should be used as a general, but not definitive, check for whether
+  # the user can send private messages _generally_, which is mostly useful
+  # for changing the UI.
+  #
+  # Please otherwise use can_send_private_message?(target, notify_moderators)
+  # to check if a single target can be messaged.
+  def can_send_private_messages?(notify_moderators: false)
     from_system = @user.is_system_user?
     from_bot = @user.bot?
 
-    (is_group || is_user) &&
     # User is authenticated
     authenticated? &&
+      # User can send PMs, this can be covered by trust levels as well via AUTO_GROUPS
+      (is_staff? || from_bot || from_system || \
+       (@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)) || notify_moderators)
+  end
+
+  ##
+  # This should be used as a final check for when a user is sending a message
+  # to a target user or group.
+  def can_send_private_message?(target, notify_moderators: false)
+    target_is_user = target.is_a?(User)
+    target_is_group = target.is_a?(Group)
+    from_system = @user.is_system_user?
+
+    # Must be a valid target
+    (target_is_group || target_is_user) &&
+    # User is authenticated and can send PMs, this can be covered by trust levels as well via AUTO_GROUPS
+    can_send_private_messages?(notify_moderators: notify_moderators) &&
     # User disabled private message
-    (is_staff? || is_group || target.user_option.allow_private_messages) &&
-    # User can send PMs, this can be covered by trust levels as well via AUTO_GROUPS
-    (is_staff? || from_bot || from_system || (@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)) || notify_moderators) &&
+    (is_staff? || target_is_group || target.user_option.allow_private_messages) &&
     # Can't send PMs to suspended users
-    (is_staff? || is_group || !target.suspended?) &&
+    (is_staff? || target_is_group || !target.suspended?) &&
     # Check group messageable level
-    (from_system || is_user || Group.messageable(@user).where(id: target.id).exists? || notify_moderators) &&
+    (from_system || target_is_user || Group.messageable(@user).where(id: target.id).exists? || notify_moderators) &&
     # Silenced users can only send PM to staff
     (!is_silenced? || target.staff?)
   end

@@ -88,6 +88,8 @@ class UserOption < ActiveRecord::Base
 
     self.title_count_mode = SiteSetting.default_title_count_mode
 
+    self.hide_profile_and_presence = SiteSetting.default_hide_profile_and_presence
+
     true
   end
 
