@@ -63,8 +63,6 @@ body.has-full-page-chat {
 }
 
 .channels-list .chat-channel-row {
-  padding: 0 0.5em 0 0.25em;
-
   .category-chat-private .d-icon {
     background-color: var(--secondary);
   }
@@ -79,11 +77,6 @@ body.has-full-page-chat {
 
 .sidebar-container .channels-list .chat-channel-divider {
   padding-left: 1em;
-}
-
-.channels-list .chat-channel-divider {
-  padding: 0.25em 0.5em 0.25em;
-  margin-top: 1em;
 }
 
 .sidebar-container .channels-list .chat-channel-row {
