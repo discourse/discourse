@@ -230,7 +230,7 @@ describe Jobs::ChatNotifyMentioned do
           tag: Chat::ChatNotifier.push_notification_tag(:mention, public_channel.id),
           excerpt: message.push_notification_excerpt,
           post_url:
-            "/chat/channel/#{public_channel.id}/#{expected_channel_title}?messageId=#{message.id}",
+            "/chat/channel/#{public_channel.id}/#{public_channel.slug}?messageId=#{message.id}",
           translated_title: payload_translated_title,
         },
       )
