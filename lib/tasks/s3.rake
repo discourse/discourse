@@ -10,11 +10,18 @@ def gzip_s3_path(path)
   "#{path[0..-ext.length]}gz#{ext}"
 end
 
+def existing_assets
+  @existing_assets ||= Set.new(helper.list("assets/").map(&:key))
+end
+
+def prefix_s3_path(path)
+  path = File.join(helper.s3_bucket_folder_path, path) if helper.s3_bucket_folder_path
+  path
+end
+
 def should_skip?(path)
   return false if ENV['FORCE_S3_UPLOADS']
-  @existing_assets ||= Set.new(helper.list("assets/").map(&:key))
-  path = File.join(helper.s3_bucket_folder_path, path) if helper.s3_bucket_folder_path
-  @existing_assets.include?(path)
+  existing_assets.include?(prefix_s3_path(path))
 end
 
 def upload(path, remote_path, content_type, content_encoding = nil)
@@ -197,26 +204,28 @@ end
 task 's3:expire_missing_assets' => :environment do
   ensure_s3_configured!
 
-  count = 0
-  keep = 0
+  assets_to_delete = existing_assets.dup
 
-  in_manifest = asset_paths
-
-  puts "Ensuring AWS assets are tagged correctly for removal"
-  helper.list('assets/').each do |f|
-    if !in_manifest.include?(f.key)
-      helper.tag_file(f.key, old: true)
-      count += 1
-    else
-      # ensure we do not delete this by mistake
-      helper.tag_file(f.key, {})
-      keep += 1
+  # Check that all current assets are uploaded, and remove them from the to_delete list
+  asset_paths.each do |current_asset_path|
+    uploaded = assets_to_delete.delete?(prefix_s3_path(current_asset_path))
+    if !uploaded
+      puts "A current asset does not exist on S3 (#{current_asset_path}). Aborting cleanup task."
+      exit 1
     end
   end
 
-  puts "#{count} assets were flagged for removal in 10 days (#{keep} assets will be retained)"
-
-  puts "Ensuring AWS rule exists for purging old assets"
-  helper.update_lifecycle("delete_old_assets", 10, tag: { key: 'old', value: 'true' })
-
+  if assets_to_delete.size > 0
+    puts "Found #{assets_to_delete.size} assets to delete..."
+    assets_to_delete.each do |to_delete|
+      if !to_delete.start_with?(prefix_s3_path("assets/"))
+        # Sanity check, this should never happen
+        raise "Attempted to delete a non-/asset S3 path (#{to_delete}). Aborting"
+      end
+      puts "Deleting #{to_delete}..."
+      helper.delete_object(to_delete)
+    end
+  else
+    puts "No stale assets found"
+  end
 end
