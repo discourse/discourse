@@ -16,13 +16,13 @@ module("Unit | Utility | text", function () {
     let cooked = await cookAsync("Hello! :wave:");
     assert.strictEqual(
       await excerpt(cooked, 300),
-      'Hello! <img src="/images/emoji/google_classic/wave.png?v=12" title=":wave:" class="emoji" alt=":wave:" loading="lazy" width="20" height="20">'
+      'Hello! <img src="/images/emoji/twitter/wave.png?v=12" title=":wave:" class="emoji" alt=":wave:" loading="lazy" width="20" height="20">'
     );
 
     cooked = await cookAsync("[:wave:](https://example.com)");
     assert.strictEqual(
       await excerpt(cooked, 300),
-      '<a href="https://example.com"><img src="/images/emoji/google_classic/wave.png?v=12" title=":wave:" class="emoji only-emoji" alt=":wave:" loading="lazy" width="20" height="20"></a>'
+      '<a href="https://example.com"><img src="/images/emoji/twitter/wave.png?v=12" title=":wave:" class="emoji only-emoji" alt=":wave:" loading="lazy" width="20" height="20"></a>'
     );
 
     cooked = await cookAsync('<script>alert("hi")</script>');
