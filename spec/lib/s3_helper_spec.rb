@@ -212,4 +212,14 @@ RSpec.describe "S3Helper" do
       expect(s3_helper.ensure_cors!([S3CorsRulesets::BACKUP_DIRECT_UPLOAD])).to eq(false)
     end
   end
+
+  describe "#delete_objects" do
+    let(:s3_helper) { S3Helper.new("test-bucket", "", client: client) }
+
+    it "works" do
+      # The S3::Client with `stub_responses: true` includes validation of requests.
+      # If the request were invalid, this spec would raise an error
+      s3_helper.delete_objects(["object/one.txt", "object/two.txt"])
+    end
+  end
 end

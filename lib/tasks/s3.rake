@@ -204,6 +204,8 @@ end
 task 's3:expire_missing_assets' => :environment do
   ensure_s3_configured!
 
+  puts "Checking for stale S3 assets..."
+
   assets_to_delete = existing_assets.dup
 
   # Check that all current assets are uploaded, and remove them from the to_delete list
@@ -217,13 +219,20 @@ task 's3:expire_missing_assets' => :environment do
 
   if assets_to_delete.size > 0
     puts "Found #{assets_to_delete.size} assets to delete..."
+
     assets_to_delete.each do |to_delete|
       if !to_delete.start_with?(prefix_s3_path("assets/"))
         # Sanity check, this should never happen
         raise "Attempted to delete a non-/asset S3 path (#{to_delete}). Aborting"
       end
-      puts "Deleting #{to_delete}..."
-      helper.delete_object(to_delete)
+    end
+
+    assets_to_delete.each_slice(500) do |slice|
+      message = "Deleting #{slice.size} assets...\n"
+      message += slice.join("\n").indent(2)
+      puts message
+      helper.delete_objects(slice)
+      puts "... done"
     end
   else
     puts "No stale assets found"
