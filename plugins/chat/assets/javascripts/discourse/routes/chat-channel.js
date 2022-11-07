@@ -8,6 +8,16 @@ import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel
 
 export default class ChatChannelRoute extends DiscourseRoute {
   @service chat;
+  @service chatPreferredMode;
+  @service fullPageChat;
+
+  redirect(model, transition) {
+    if (transition.from && this.chatPreferredMode.isDrawer) {
+      this.replaceWith(this.fullPageChat.exit()).then(() => {
+        this.appEvents.trigger("chat:open-channel", model.chatChannel);
+      });
+    }
+  }
 
   async model(params) {
     let [chatChannel, channels] = await Promise.all([
