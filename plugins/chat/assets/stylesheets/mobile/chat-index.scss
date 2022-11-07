@@ -31,6 +31,10 @@
       &:not(:last-child) {
         border-bottom: 1px solid var(--primary-low);
       }
+
+      .chat-channel-metadata {
+        margin-right: 0;
+      }
     }
 
     .chat-channel-divider {
