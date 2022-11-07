@@ -67,7 +67,10 @@ acceptance("Discourse Chat - Composer", function (needs) {
       "service:chat-emoji-reaction-store"
     );
 
-    assert.deepEqual(emojiReactionStore.favorites, []);
+    assert.deepEqual(
+      emojiReactionStore.favorites,
+      this.siteSettings.default_emoji_reactions.split("|")
+    );
 
     await visit("/chat/channel/11/-");
     await click(".chat-composer-dropdown__trigger-btn");
@@ -76,7 +79,7 @@ acceptance("Discourse Chat - Composer", function (needs) {
 
     assert.deepEqual(
       emojiReactionStore.favorites,
-      ["grinning"],
+      ["grinning"].concat(this.siteSettings.default_emoji_reactions.split("|")),
       "it tracks the emoji"
     );
   });
@@ -86,7 +89,10 @@ acceptance("Discourse Chat - Composer", function (needs) {
       "service:chat-emoji-reaction-store"
     );
 
-    assert.deepEqual(emojiReactionStore.favorites, []);
+    assert.deepEqual(
+      emojiReactionStore.favorites,
+      this.siteSettings.default_emoji_reactions.split("|")
+    );
 
     await visit("/chat/channel/11/-");
     await fillIn(".chat-composer-input", "test :grinni");
@@ -95,7 +101,7 @@ acceptance("Discourse Chat - Composer", function (needs) {
 
     assert.deepEqual(
       emojiReactionStore.favorites,
-      ["grinning"],
+      ["grinning"].concat(this.siteSettings.default_emoji_reactions.split("|")),
       "it tracks the emoji"
     );
   });
