@@ -236,6 +236,16 @@ class ImportScripts::FluxBB < ImportScripts::Base
   def process_fluxbb_post(raw, import_id)
     s = raw.dup
 
+    # FluxBB supports slightly different smiley character combos vs discourse
+    s.gsub!(/(\s)=\)/, "\\1:)")
+    s.gsub!(/(\s)=\|/, "\\1:|")
+    s.gsub!(/(\s)=\(/, "\\1:(")
+    s.gsub!(/(\s)=D/, "\\1:D")
+    s.gsub!(/(\s):o/, "\\1:O")
+    s.gsub!(/(\s):lol:/, '\\1:laughing:')
+    s.gsub!(/(\s):mad:/, '\\1:rage:')
+    s.gsub!(/(\s):rolleyes:/, '\\1:roll_eyes:')
+
     # :) is encoded as <!-- s:) --><img src="{SMILIES_PATH}/icon_e_smile.gif" alt=":)" title="Smile" /><!-- s:) -->
     s.gsub!(/<!-- s(\S+) -->(?:.*)<!-- s(?:\S+) -->/, '\1')
 

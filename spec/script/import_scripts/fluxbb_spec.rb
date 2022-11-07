@@ -85,7 +85,9 @@ RSpec.describe "ImportScripts::FluxBB" do
             "[i]Italic text[/i]\n" +
             "[url=https://www.discourse.org/]Link with link text[/url]\n" +
             "[url]https://www.discourse.org/[/url] - Link without link text\n" +
-            "[url=/about]Relative link[/url]"
+            "[url=/about]Relative link[/url]\n" +
+            "=) =| =( =D :o :lol: :mad: :rolleyes:\n" +
+            "=)=) Smiley whitespace=) https://awkward.com?x=D :mad::mad::mad:"
           }
 
           it "converts bbcode to markdown in the resulting Post" do
@@ -94,7 +96,9 @@ RSpec.describe "ImportScripts::FluxBB" do
               "*Italic text*\n" +
               "[Link with link text](https://www.discourse.org/)\n" +
               "[https://www.discourse.org/](https://www.discourse.org/) - Link without link text\n" +
-              "[Relative link](/about)"
+              "[Relative link](/about)\n" +
+              ":) :| :( :D :O :laughing: :rage: :roll_eyes:\n" +
+              ":)=) Smiley whitespace=) https://awkward.com?x=D :rage::mad::mad:"
             )
           end
         end
@@ -104,7 +108,7 @@ RSpec.describe "ImportScripts::FluxBB" do
             "[code]Code[/code]\n" +
             "[quote=James]This is the text I want to quote.[/quote]\n" +
             "[quote]This is the text I want to quote.[/quote] \n" +
-            ":) :| :( :D :O ;) :/ :P :p :lol: :cool:"
+            ":) :| :( :D :O ;) :/ :P :p :cool:"
           }
 
           it "does no conversion leaving discourse to handle the bbcode" do
@@ -154,9 +158,7 @@ RSpec.describe "ImportScripts::FluxBB" do
             "[list][*]Example list item 1.[/*][*]Example list item 2.[/*][*]Example list item 3.[/*][/list]\n" +
             "[list=1][*]Example list item 1.[/*][*]Example list item 2.[/*][*]Example list item 3.[/*][/list]\n" +
             "[email]myname@example.com[/email] - email link without link text\n" +
-            "[email=myname@example.com]Email link with link text[/email]\n"
-            "=) =| =( =D :o\n"
-            ":mad: :rolleyes:"
+            "[email=myname@example.com]Email link with link text[/email]"
           }
 
           xit "converts bbcode to markdown in the resulting Post" do
@@ -170,9 +172,7 @@ RSpec.describe "ImportScripts::FluxBB" do
               "<ul><li>Example list item 1.</li><li>Example list item 2.</li><li>Example list item 3.</li></ul>\n" +
               "<ol><li>Example list item 1.</li><li>Example list item 2.</li><li>Example list item 3.</li></ol>\n" +
               "[mailto:myname@example.com](mailto:myname@example.com) - email link without link text\n" +
-              "[Email link with link text](mailto:myname@example.com)\n" +
-              ":) :| :( :D :O\n" +
-              ":rage: :roll_eyes:"
+              "[Email link with link text](mailto:myname@example.com)"
             )
           end
         end
