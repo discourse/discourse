@@ -31,6 +31,7 @@ fi:
           format_title: Päivämäärän muoto
           timezone: Aikavyöhyke
           until: Asti...
+          current_timezone: "Nykyinen aikavyöhyke:"
           recurring:
             every_day: "Joka päivä"
             every_week: "Joka viikko"
@@ -40,3 +41,4 @@ fi:
             every_three_months: "Joka kolmas kuukausi"
             every_six_months: "Kuuden kuukauden välein"
             every_year: "Kerran vuodessa"
+      default_title: "%{site_name}-tapahtuma"

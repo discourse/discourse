@@ -423,8 +423,12 @@ class Topic < ActiveRecord::Base
     posts.where(post_type: Post.types[:regular], user_deleted: false).order('score desc nulls last').limit(1).first
   end
 
+  def self.has_flag_scope
+    ReviewableFlaggedPost.pending_and_default_visible
+  end
+
   def has_flags?
-    ReviewableFlaggedPost.pending.default_visible.where(topic_id: id).exists?
+    self.class.has_flag_scope.exists?(topic_id: self.id)
   end
 
   def is_official_warning?

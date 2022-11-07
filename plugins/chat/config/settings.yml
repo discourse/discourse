@@ -1,0 +1,95 @@
+plugins:
+  chat_enabled:
+    default: false
+    client: true
+  chat_allowed_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: "3" # 3 is staff group id
+    allow_any: false
+    refresh: true
+  needs_chat_seeded:
+    default: true
+    hidden: true
+  chat_debug_webhook_payloads:
+    default: false
+    hidden: true
+  chat_channel_retention_days:
+    default: 90
+    client: true
+    max: 3652 # 10 years
+    min: 0
+  chat_dm_retention_days:
+    default: 0
+    client: true
+    max: 3652 # 10 years
+    min: 0
+  chat_auto_silence_duration:
+    default: 30
+    min: 0
+  chat_allowed_messages_for_trust_level_0:
+    default: 20
+    min: 0
+  chat_allowed_messages_for_other_trust_levels:
+    default: 40
+    min: 0
+  chat_silence_user_sensitivity:
+    type: enum
+    enum: "ReviewableSensitivitySetting"
+    default: 6
+  chat_auto_silence_from_flags_duration:
+    default: 60
+    min: 0
+  chat_allow_archiving_channels:
+    default: false
+    hidden: true
+    client: true
+  chat_archive_destination_topic_status:
+    type: enum
+    default: archived
+    choices:
+      - archived
+      - open
+      - closed
+  chat_default_channel_id:
+    default: ""
+    client: true
+    validator: "ChatDefaultChannelValidator"
+  chat_duplicate_message_sensitivity:
+    type: float
+    default: 0.5
+    min: 0
+    max: 1
+  default_emoji_reactions:
+    type: emoji_list
+    default: +1|heart|tada
+    client: true
+  chat_minimum_message_length:
+    type: integer
+    default: 1
+    min: 1
+    max: 50
+    client: true
+  chat_allow_uploads:
+    default: true
+    client: true
+    validator: "ChatAllowUploadsValidator"
+  max_chat_auto_joined_users:
+    min: 0
+    default: 10000
+    hidden: true
+    client: true
+  direct_message_enabled_groups:
+    default: "11" # auto group trust_level_1
+    type: group_list
+    client: true
+    allow_any: false
+    refresh: true
+    validator: "DirectMessageEnabledGroupsValidator"
+  chat_message_flag_allowed_groups:
+    default: "11" # auto group trust_level_1
+    type: group_list
+    client: true
+    allow_any: false
+    refresh: true

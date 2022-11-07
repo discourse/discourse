@@ -7,49 +7,49 @@
 cs:
   site_settings:
     discourse_narrative_bot_enabled: "Povolit Discourse Narrative Bot (discobot)"
-    disable_discourse_narrative_bot_welcome_post: "Vypnout uvítací příspěvek od Discourse robota průvodce"
-    discourse_narrative_bot_ignored_usernames: "Uživatelská jména, která by měl Discourse robot průvodce ignorovat"
-    discourse_narrative_bot_disable_public_replies: "Vypnout veřejné odpovědi Discourse robota průvodce"
-    discourse_narrative_bot_welcome_post_type: "Typ uvítacího příspěvku, který by měl Discourse robot průvodce poslat"
-    discourse_narrative_bot_welcome_post_delay: "Počkat (n) vteřin, než Discourse robot průvodce odešle uvítací příspěvek."
-    discourse_narrative_bot_skip_tutorials: "Discourse Narrative Bot tutoriály pro přeskočení"
+    disable_discourse_narrative_bot_welcome_post: "Zakázat uvítací příspěvek od Discourse Narrative Bot"
+    discourse_narrative_bot_ignored_usernames: "Uživatelská jména, která by měl Discourse Narrative Bot ignorovat"
+    discourse_narrative_bot_disable_public_replies: "Zakázat veřejné odpovědi od Discourse Narrative Bot"
+    discourse_narrative_bot_welcome_post_type: "Typ uvítacího příspěvku, který by měl Discourse Narrative Bot odesílat"
+    discourse_narrative_bot_welcome_post_delay: "Před odesláním uvítacího příspěvku Discourse Narrative Bot počkat (n) sekund."
+    discourse_narrative_bot_skip_tutorials: "Discourse Narrative Bot kurzy k přeskočení"
   badges:
     certified:
       name: Certifikován(a)
-      description: "Dokončil náš tutorial pro nové uživatele"
+      description: "Dokončil(a) výukový program pro nové uživatele"
       long_description: |
-        Tento odznak je udělen za úspěšné dokončení interaktivního tutoriálu pro nové uživatele. Udělali jste krok, abyste se naučili základní nástroje diskuse a nyní jste certifikováni!
+        Tento odznak je udělen po úspěšném dokončení interaktivního kurzu pro nové uživatele. Převzali jste iniciativu naučit se základní nástroje diskuse a nyní jste certifikováni!
     licensed:
       name: Licencován(a)
-      description: "Dokončen náš pokročilý uživatelský tutoriál"
+      description: "Dokončil(a) náš výukový kurz pro pokročilé uživatele"
       long_description: |
-        Tento odznak je udělen za úspěšné dokončení pokročilého interaktivního tutoriálu pro uživatele. Zvládli jste pokročilé nástroje diskuse — a nyní jste plně licencováni!
+        Tento odznak se uděluje po úspěšném absolvování interaktivního kurzu pro pokročilé uživatele. Zvládli jste pokročilé diskusní nástroje - a nyní máte plnou licenci!
   discourse_narrative_bot:
-    bio: "Ahoj, já nejsem člověk. Jsem robot, který Vás může naučit něco o tomto webu. Pro chcete-li se mnou komunikovat, pošlete mi zprávu nebo kdekoliv zmiňte ****."
+    bio: "Ahoj, nejsem skutečná osoba. Jsem bot, který vás může naučit něco o tomto webu. Chcete-li se mnou komunikovat, pošlete mi zprávu nebo mě zmiňte jménem."
     tl2_promotion_message:
-      subject_template: "Teď, když jste byli povýšeni, je čas se dozvědět o některých pokročilých funkcích!"
+      subject_template: "Teď, když jste povýšili, je čas seznámit se s některými pokročilými funkcemi!"
       text_body_template: |
         Odpovězte na tuto zprávu pomocí `@%{discobot_username} %{reset_trigger}`, abyste se dozvěděli více o tom, co můžete udělat.
     timeout:
       message: |-
-        Ahoj @%{username}, jen se ozývám, protože jsem od Vás nějakou dobu nic neslyšel.
+        Ahoj @%{username}, jen se hlásím, protože jsem o tobě už dlouho neslyšel.
 
-        - Pro pokračování mi kdykoliv odpovězte.
+        - Chceš-li pokračovat, odpověz mi kdykoli.
 
-        - Pokud byste chtěli tento krok přeskočit, řekněte "%{skip_trigger}".
+        - Pokud chceš tento krok přeskočit, řekni `%{skip_trigger}`.
 
-        - Pro opětovný začátek řekněte "%{reset_trigger}".
+        - Chceš-li začít znovu, řekni `%{reset_trigger}`.
 
-        Pokud raději nechcete, je to taky OK. Jsem robot. Neraníte mé pocity. :sob:
+        Pokud nechceš, je to také v pořádku. Jsem robot. Mým citům neublížíš. :sob:
     dice:
       trigger: "hodit"
       invalid: |-
         Omlouvám se, ale je matematicky nemožné hodit tuto kombinaci kostek. :confounded:
       not_enough_dice:
-        one: "Mám jen %{count} kostky. Naprosto [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), já vím!"
+        one: "Mám jen %{count} kostku. Naprosto [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), já vím!"
         few: "Mám jen %{count} kostek. Naprosto [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), já vím!"
         many: "Mám jen %{count} kostek. Naprosto [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), já vím!"
-        other: "Mám jen %{count} kostek. Naprosto [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), já vím!"
+        other: "Mám jen %{count} kostky. Naprosto [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), já vím!"
       out_of_range: |-
         Víš, že [maximální počet stěn](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) pro matematicky férovou kostku je 120?
       results: |-
@@ -57,16 +57,16 @@ cs:
     quote:
       trigger: "citace"
       "1":
-        quote: "Uprostřed každé těžkosti leží příležitost"
+        quote: "Uprostřed každého problému se nachází příležitost."
         author: "Albert Einstein"
       "2":
-        quote: "Nemá cenu mít svobodu, pokud nemáte svobodu dělat chyby."
+        quote: "Svoboda nemá cenu, pokud s ní není spojena svoboda chybovat."
         author: "Mahatma Gandhi"
       "3":
-        quote: "Neplačte proto, že je po všem, radujte se, protože se to stalo."
+        quote: "Neplač, protože to skončilo. Usměj se, protože se to stalo."
         author: "Dr Seuss"
       "4":
-        quote: "Pokud chcete udělat nějakou správnou věc, tak ji udělejte sami."
+        quote: "Pokud chceš něco udělat správně, udělej to sám."
         author: "Charles-Guillaume Étienne"
       "5":
         quote: "Věř tomu, že na to máš, a budeš na půli cesty k úspěchu."
@@ -75,16 +75,16 @@ cs:
         quote: "Život je jako bonboniéra, nikdy nevíš, co ochutnáš."
         author: "Máma Forresta Gumpa"
       "7":
-        quote: "Je to malý krůček pro člověka, ale velký skok pro lidstvo."
+        quote: "Malý krok pro člověka, vleký skok pro lidstvo."
         author: "Neil Armstrong"
       "8":
-        quote: "Udělejte každý den jednu věc, která vás děsí."
+        quote: "Každý den udělejte jednu věc, která vás děsí."
         author: "Eleanor Roosevelt"
       "9":
-        quote: "Chyby jsou vždy odpustitelné, pokud má člověk odvahu je přiznat."
+        quote: "Chyby jsou vždy odpustitelné, když má daná osoba odvahu je přiznat."
         author: "Bruce Lee"
       "10":
-        quote: "Cokoli si mysl člověka dokáže představit a věřit, toho může dosáhnout."
+        quote: "Cokoli si dokáže lidská mysl představit a čemu uvěří, toho může člověk dosáhnout."
         author: "Napoleon Hill"
       "11":
         quote: "Mír doma, mír ve světě."
@@ -100,18 +100,18 @@ cs:
     magic_8_ball:
       trigger: "štěstí"
       answers:
-        "1": "To je jisté"
-        "2": "Naprostá pravda"
-        "3": "Bez zaváhání"
-        "4": "Rozhodně ano"
+        "1": "Je to jisté"
+        "2": "Je to rozhodně tak"
+        "3": "Bezpochyby"
+        "4": "Určitě ano"
         "5": "Na to se můžeš spolehnout"
-        "6": "Podle mě ano"
-        "7": "Asi jo"
+        "6": "Jak to vidím já, ano"
+        "7": "S největší pravděpodobností"
         "8": "Vypadá to dobře"
         "9": "Ano"
         "10": "Dle znamení ano"
         "11": "Odpověď je nejasná, zkuste to znovu"
-        "12": "Zeptej se později"
+        "12": "Zeptej se znovu později"
         "13": "To ti teď raději neřeknu"
         "14": "To nyní nedokážu předpovědět"
         "15": "Soustřeď se a zeptej se znovu"
@@ -130,10 +130,10 @@ cs:
         reply: |-
           Ahoj! Pokud chceš zjistit, co umím, napiš `@%{discobot_username} %{help_trigger}`.
         tracks: |-
-          V současné době vím, jak dělat následující věci:
+          V současné době umím dělat následující věci:
 
           `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
-          > Zahajuje interaktivní výukový kurz právě pro vás, v osobní zprávě. `{name-of-tutorial}` může být jeden z: `%{tracks}`.
+          > Spustí interaktivní výukový kurz speciálně pro vás, v osobní zprávě. `{name-of-tutorial}` může být jeden z: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -143,32 +143,33 @@ cs:
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: Můžete se na ni spolehnout
+        discobot_disabled: Ve svých předvolbách jste mě zakázali. Musíte povolit tipy pro nové uživatele aby jste se mnou mohli komunikovat.
       do_not_understand:
         first_response: |-
           Dík za odpověď!
 
-          Bohužel nejsem naprogramován nijak skvěle, takže jsem tomuhle neporozumněl. :frowning:
-        track_response: Můžete to zkusit znovu, nebo pokud chcete tento krok přeskočit, řekněte „%{skip_trigger}“. Jinak začněte znovu a řekněte „%{reset_trigger}“.
+          Bohužel nejsem naprogramován nijak skvěle, takže jsem tomuhle moc nerozuměl. :frowning:
+        track_response: Můžeš to zkusit znovu, nebo pokud chceš tento krok přeskočit, řekni „%{skip_trigger}“. Jinak pro začnutí znovu řekni „%{reset_trigger}“.
         second_response: |-
-          Promiň. Stále to nechápu. :anguished:
+          Promiň, pořád to nechápu. :anguished:
 
-          Jsem jen robot, ale pokud chcete oslovit skutečnou osobu, podívejte se na [naši kontaktní stránku] (%{base_path}/ o).
+          Jsem jen bot, ale pokud chceš oslovit skutečnou osobu, podívej se na [naši kontaktní stránku] (%{base_path}/ o).
 
-          Mezitím ti nebudu stát v cestě.
+          Mezitím se ti budu klidit z cesty.
     new_user_narrative:
-      reset_trigger: "tutoriál"
-      title: "Nový certifikát dokončení uživatelského kurzu"
-      cert_title: "Jako uznání úspěšného dokončení nového uživatelského tutoriálu"
+      reset_trigger: "kurz"
+      title: "Certifikát o absolvování výukového kurzu pro nové uživatele"
+      cert_title: "Za úspěšné absolvování výukového kurzu pro nové uživatele"
       hello:
         title: "Zdravím!"
         message: |-
-          Děkujeme za připojení k %{title}a vítáme vás!
+          Děkujeme, že jste se připojili k %{title}, a vítáme vás!
 
-          - Jsem jen robot, ale [náš přátelský personál] (%{base_uri}/ o) je zde také, aby vám pomohl, pokud byste potřebovali kontaktovat skutečnou osobu.
+          - Jsem jen robot, ale [náš přátelský personál](%{base_uri}/about) je tu také, pokud se potřebujete na někoho obrátit.
 
-          - Z bezpečnostních důvodů dočasně omezujeme, co mohou noví uživatelé dělat. Jak vás budeme lépe poznávat, získáte [nové schopnosti] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (a [badges](%{base_uri}/ odznaky)).
+          - Z bezpečnostních důvodů dočasně omezujeme možnosti nových uživatelů. Jakmile vás poznáme, získáte [nové schopnosti](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (a [badges](%{base_uri}/badges)).
 
-          - Vždy věříme v [chování civilizované komunity] (%{base_uri}/ pokyny).
+          - Za všech okolností věříme v [civilizované chování komunity](%{base_uri}/guidelines).
       onebox:
         instructions: |-
           Dále, můžete se mnou sdílet jeden z těchto odkazů? Odpovězte ** samotným odkazem na řádku ** a automaticky se rozbalí o šikovný souhrn.
@@ -288,6 +289,12 @@ cs:
 
           (A ano, moje uživatelské jméno je napsáno _disco_, stejně jako v 70. letech taneční šílenství. Mám [rád noční život!] (https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
+        instructions: |-
+          Máme rádi přátelské diskuse a potřebujeme vaši pomoc, abychom [udrželi civilizovanou atmosféru](%{guidelines_url}). Pokud uvidíte nějaký problém, označte ho prosím aby jste o něm dali soukromě jeho autorovi nebo [našemu ochotnému personálu](%{about_url}) vědět. Existuje mnoho důvodů, proč byste mohli chtít příspěvek označit, od neškodného návrhu na rozdělení tématu až po jasné porušení komunitních standardů. Pokud vyberete možnost **Něco jiného**, zahájíte diskusi v soukromé zprávě s moderátory, kde můžete položit další otázky.
+
+          > :imp: Napsal jsem tu něco nepěkného
+
+          Klidně tento příspěvek **označte** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> a jako důvod vyberte **Je to nevhodné**!
         reply: "[Naši personál (%{base_uri}/ skupiny / zaměstnanci) bude soukromě informováni o vaší vlajce. Pokud příspěvek označí dostatek členů komunity, bude také preventivně automaticky skryt. (Vzhledem k tomu, že jsem ve skutečnosti nenapsal ošklivý příspěvek :angel:, šel jsem napřed \na prozatím vlaječku odstranil)"
         not_found: |-
           Ach ne, můj ošklivý příspěvek ještě nebyl označen jako nevhodný. :worried: Můžete jej označit jako nevhodný pomocí ** vlaječky ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Nezapomeňte použít tlačítko Zobrazit více <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> k odhalení dalších akcí pro každý příspěvek.

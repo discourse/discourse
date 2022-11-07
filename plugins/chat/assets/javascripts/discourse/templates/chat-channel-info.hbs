@@ -1,0 +1,68 @@
+<div class="channel-info">
+  <div class="chat-full-page-header">
+    {{#if this.chatChannelInfoRouteOriginManager.isBrowse}}
+      <LinkTo @route="chat.browse" class="channel-info__back-btn">
+        {{d-icon "chevron-left"}}
+        <span>
+          {{i18n "chat.channel_info.back_to_all_channels"}}
+        </span>
+      </LinkTo>
+    {{else}}
+      <LinkTo
+        @route="chat.channel"
+        @models={{array
+          this.model.chatChannel.id
+          (slugify-channel this.model.chatChannel.title)
+        }}
+        class="channel-info__back-btn"
+      >
+        {{d-icon "chevron-left"}}
+        <span>
+          {{i18n "chat.channel_info.back_to_channel"}}
+        </span>
+      </LinkTo>
+    {{/if}}
+
+    <div class="chat-channel-header-details">
+      <ChatChannelTitle @channel={{this.model.chatChannel}} />
+    </div>
+  </div>
+
+  <div class="chat-tabs chat-info-tabs">
+    <ul class="chat-tabs-list nav-pills" role="tablist">
+      {{#each this.tabs as |tab|}}
+        <li
+          class="chat-tabs-list__item"
+          role="tab"
+          aria-controls={{concat tab "-tab"}}
+        >
+          <LinkTo
+            @route={{concat "chat.channel.info." tab}}
+            @models={{array
+              this.model.chatChannel.id
+              (slugify-channel this.model.chatChannel.title)
+            }}
+            class="chat-tabs-list__link"
+          >
+            <span>{{i18n (concat "chat.channel_info.tabs." tab)}}</span>
+            {{#if (eq tab "members")}}
+              <span class="chat-tabs__memberships-count">
+                ({{this.model.chatChannel.membershipsCount}})
+              </span>
+            {{/if}}
+          </LinkTo>
+        </li>
+      {{/each}}
+    </ul>
+
+    <div
+      id={{this.tab}}
+      class="chat-tabs__tabpanel"
+      aria-hidden={{notEq this.tab this.activeTab}}
+      role="tabpanel"
+      aria-labelledby={{concat this.tab "-tab"}}
+    >
+      {{outlet}}
+    </div>
+  </div>
+</div>

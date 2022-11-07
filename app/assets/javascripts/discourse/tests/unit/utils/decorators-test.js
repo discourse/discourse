@@ -1,12 +1,15 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import Component from "@ember/component";
-import { clearRender, render } from "@ember/test-helpers";
+import { clearRender, render, settled } from "@ember/test-helpers";
 import discourseComputed, {
   afterRender,
+  debounce,
+  observes,
 } from "discourse-common/utils/decorators";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import EmberObject from "@ember/object";
 
 const fooComponent = Component.extend({
   classNames: ["foo-component"],
@@ -51,6 +54,24 @@ class NativeComponent extends Component {
   }
 }
 
+const TestStub = EmberObject.extend({
+  counter: 0,
+  otherCounter: 0,
+
+  @debounce(50)
+  increment(value) {
+    this.counter += value;
+  },
+
+  // Note: it only works in this particular order:
+  // `@observes()` first, then `@debounce()`
+  @observes("prop")
+  @debounce(50)
+  react() {
+    this.otherCounter++;
+  },
+});
+
 module("Unit | Utils | decorators", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -58,7 +79,7 @@ module("Unit | Utils | decorators", function (hooks) {
     this.registry.register("component:foo-component", fooComponent);
     this.set("baz", 0);
 
-    await render(hbs`{{foo-component baz=baz}}`);
+    await render(hbs`<FooComponent @baz={{this.baz}} />`);
 
     assert.ok(exists(document.querySelector(".foo-component")));
     assert.strictEqual(this.baz, 1);
@@ -108,5 +129,34 @@ module("Unit | Utils | decorators", function (hooks) {
       "hello, Joffrey",
       "rerenders the component when arguments change"
     );
+  });
+
+  test("debounce", async function (assert) {
+    const stub = TestStub.create();
+
+    stub.increment(1);
+    stub.increment(1);
+    stub.increment(1);
+    await settled();
+
+    assert.strictEqual(stub.counter, 1);
+
+    stub.increment(500);
+    stub.increment(1000);
+    stub.increment(5);
+    await settled();
+
+    assert.strictEqual(stub.counter, 6);
+  });
+
+  test("debounce works with @observe", async function (assert) {
+    const stub = TestStub.create();
+
+    stub.set("prop", 1);
+    stub.set("prop", 2);
+    stub.set("prop", 3);
+    await settled();
+
+    assert.strictEqual(stub.otherCounter, 1);
   });
 });

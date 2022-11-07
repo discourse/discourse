@@ -60,7 +60,7 @@ module EmailHelper
         p,
         span,
         td {
-          color: #dddddd !important;
+          color: inherit !important;
         }
 
         [data-stripped-secure-media] {

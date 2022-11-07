@@ -4,6 +4,7 @@ import getURL from "discourse-common/lib/get-url";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { propertyEqual } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
+import I18n from "I18n";
 
 export default Component.extend({
   classNameBindings: [
@@ -40,5 +41,10 @@ export default Component.extend({
   @discourseComputed("post.user.username")
   userUrl(username) {
     return userPath(username.toLowerCase());
+  },
+
+  @discourseComputed("post.topic.title", "post.post_number")
+  titleAriaLabel(title, postNumber) {
+    return I18n.t("groups.aria_post_number", { postNumber, title });
   },
 });

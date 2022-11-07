@@ -358,6 +358,15 @@ export default RestModel.extend({
           loaded: true,
         });
         this._checkIfShouldShowRevisions();
+
+        // Reset all error props
+        topic.setProperties({
+          errorLoading: false,
+          errorTitle: null,
+          errorHtml: null,
+          errorMessage: null,
+          noRetry: false,
+        });
       })
       .catch((result) => {
         this.errorLoading(result);

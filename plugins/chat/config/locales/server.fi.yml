@@ -1,0 +1,52 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  chat:
+    errors:
+      channel_exists_for_category: "Tällä alueella ja nimellä on jo olemassa kanava"
+    reviewables:
+      actions:
+        agree:
+          title: "Hyväksy..."
+        agree_and_keep_message:
+          title: "Säilytä viesti"
+          description: "Hyväksy liputus ja pidä viesti ennallaan."
+        agree_and_keep_deleted:
+          title: "Pidä viesti poistettuna"
+          description: "Hyväksy liputus ja pidä viesti poistettuna."
+        agree_and_suspend:
+          title: "Aseta käyttäjä käyttökieltoon"
+          description: "Hyväksy liputus ja aseta käyttäjä käyttökieltoon."
+        agree_and_silence:
+          title: "Hiljennä käyttäjä"
+          description: "Hyväksy liputus ja hiljennä käyttäjä."
+        agree_and_restore:
+          title: "Palauta viesti"
+          description: "Palauta viesti, jotta käyttäjät näkevät sen."
+        agree_and_delete:
+          title: "Poista viesti"
+          description: "Poista viesti, jotta käyttäjät eivät näe sitä."
+        delete_and_agree:
+          title: "Poista viesti"
+        disagree_and_restore:
+          title: "Hylkää ja palauta viesti"
+          description: "Palauta viesti, jotta kaikki käyttäjät näkevät sen."
+        disagree:
+          title: "Hylkää"
+        ignore:
+          title: "Ohita"
+    personal_chat: "henkilökohtainen chat"
+  discourse_automation:
+    scriptables:
+      send_chat_message:
+        title: Lähetä chat-viesti
+  reviewable_score_types:
+    needs_review:
+      title: "Vaatii käsittelyä"
+  unsubscribe:
+    chat_summary:
+      never: Ei koskaan

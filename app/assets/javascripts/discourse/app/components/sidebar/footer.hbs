@@ -1,6 +1,8 @@
 <div class="sidebar-footer-wrapper">
   <div class="sidebar-footer-container">
     <div class="sidebar-footer-actions">
+      <PluginOutlet @name="sidebar-footer-actions" />
+
       {{#if (or this.site.mobileView (and this.siteSettings.enable_mobile_theme this.capabilities.touch))}}
         <DButton
           @action={{route-action "toggleMobileView"}}

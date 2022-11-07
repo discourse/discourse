@@ -1,0 +1,52 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  chat:
+    errors:
+      channel_exists_for_category: "Un canal existe déjà pour cette catégorie et ce nom"
+    reviewables:
+      actions:
+        agree:
+          title: "D'accord…"
+        agree_and_keep_message:
+          title: "Conserver le message"
+          description: "Accepter le signalement et garder le message inchangé."
+        agree_and_keep_deleted:
+          title: "Garder le message supprimé"
+          description: "Accepter le signalement et laisser le message supprimé."
+        agree_and_suspend:
+          title: "Suspendre l'utilisateur"
+          description: "Accepter le signalement et suspendre l'utilisateur."
+        agree_and_silence:
+          title: "Désactiver l'utilisateur"
+          description: "Accepter le signalement et désactiver l'utilisateur."
+        agree_and_restore:
+          title: "Restaurer le message"
+          description: "Restaurer le message pour que les utilisateurs puissent le voir."
+        agree_and_delete:
+          title: "Supprimer le message"
+          description: "Supprimer le message pour que les utilisateurs ne puissent pas le voir."
+        delete_and_agree:
+          title: "Supprimer le message"
+        disagree_and_restore:
+          title: "Refuser et restaurer le message"
+          description: "Restaurer le message pour que tous les utilisateurs puissent le voir."
+        disagree:
+          title: "Refuser"
+        ignore:
+          title: "Ignorer"
+    personal_chat: "discussion privée"
+  discourse_automation:
+    scriptables:
+      send_chat_message:
+        title: Envoyer un message de chat
+  reviewable_score_types:
+    needs_review:
+      title: "Nécessite un examen"
+  unsubscribe:
+    chat_summary:
+      never: Jamais

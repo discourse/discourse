@@ -498,7 +498,7 @@ login:
     default: false
   max_suspicious_distance_km:
     hidden: true
-    default: 500
+    default: 100
   discourse_connect_url:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
@@ -2531,6 +2531,8 @@ user_preferences:
     enum: "PreviousRepliesSiteSetting"
     default: 2
   default_email_in_reply_to:
+    default: false
+  default_hide_profile_and_presence:
     default: false
 
   default_other_new_topic_duration_minutes:

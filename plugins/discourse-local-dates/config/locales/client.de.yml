@@ -41,4 +41,4 @@ de:
             every_three_months: "Alle 3 Monate"
             every_six_months: "Alle 6 Monate"
             every_year: "Jedes Jahr"
-      default_title: "%{site_name} Termin"
+      default_title: "%{site_name}-Ereignis"

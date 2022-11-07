@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Admin::ScreenedEmailsController < Admin::AdminController
+class Admin::ScreenedEmailsController < Admin::StaffController
 
   def index
     screened_emails = ScreenedEmail.limit(200).order('last_match_at desc').to_a

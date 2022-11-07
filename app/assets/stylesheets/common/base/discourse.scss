@@ -287,7 +287,6 @@ table {
 
 .sortable {
   white-space: nowrap;
-  cursor: pointer;
   .discourse-no-touch & {
     &:hover,
     &:focus {
@@ -298,6 +297,7 @@ table {
     margin-left: 0.25em;
   }
   @include unselectable;
+  cursor: pointer;
 }
 
 .radio,

@@ -283,7 +283,6 @@ et:
   staff_category_name: "Meeskond"
   staff_category_description: "Privaatfoorum meeskonnasisesteks aruteludeks. Teemad on nähtavad vaid adminnidele ja moderaatoritele."
   discourse_welcome_topic:
-    title: "Tere tulemast Discourse'i"
     body: |2
 
       Selle märgistatud teema esimene lõik saab olema kõikidele uutele külastajatele nähtav kui tervitustekst sinu avalehel. See on oluline!
@@ -400,7 +399,6 @@ et:
         one: "peaaegu %{count} aasta tagasi"
         other: "peaaegu %{count} aastat tagasi"
   password_reset:
-    no_token: "Vabandust, see parooli uuendamise link on liiga vana. Vajuta sisselogimise nuppu ja kasuta värske lingi saamiseks 'Unustasin parooli'."
     choose_new: "Vali uus parool"
     choose: "Vali parool"
     update: "Uuenda parooli"

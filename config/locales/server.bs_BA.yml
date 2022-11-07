@@ -56,8 +56,6 @@ bs_BA:
   themes:
     bad_color_scheme: "Ne može se ažurirati tema, nevažeća paleta boja"
     other_error: "Nešto je krenulo loše pri ažuriranju izgleda teme."
-    compile_error:
-      unrecognized_extension: "Neprepoznata ekstenzija datoteke: %{extension}"
     import_error:
       about_json_values: "o .json sadrži nevažeće vrijednosti: %{errors}"
       git: "Greška prilikom kloniranja git repository-a, pristup je odbijen ili repositroy nije pronađen."

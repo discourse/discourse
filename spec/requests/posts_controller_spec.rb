@@ -2063,6 +2063,29 @@ RSpec.describe PostsController do
       expect(body).to include(public_post.url)
     end
 
+    it "doesn't include posts from hidden topics" do
+      public_post.topic.update!(visible: false)
+
+      get "/u/#{user.username}/activity.rss"
+
+      expect(response.status).to eq(200)
+
+      body = response.body
+      expect(body).not_to include(public_post.url)
+    end
+
+    it "excludes small actions" do
+      small_action = Fabricate(:small_action, user: user)
+
+      get "/u/#{user.username}/activity.rss"
+
+      expect(response.status).to eq(200)
+
+      body = response.body
+
+      expect(body).not_to include(small_action.canonical_url)
+    end
+
     it 'returns public posts as JSON' do
       public_post
       private_post
@@ -2162,6 +2185,33 @@ RSpec.describe PostsController do
 
         expect(body).to include(public_post.canonical_url)
         expect(body).to_not include(private_post.url)
+      end
+
+      it "doesn't include posts from hidden topics" do
+        public_post.topic.update!(visible: false)
+
+        get "/posts.rss"
+
+        expect(response.status).to eq(200)
+
+        body = response.body
+
+        # we cache in redis, in rare cases this can cause a flaky test
+        PostsHelper.clear_canonical_cache!(public_post)
+
+        expect(body).not_to include(public_post.canonical_url)
+      end
+
+      it "excludes small actions" do
+        small_action = Fabricate(:small_action)
+
+        get "/posts.rss"
+
+        expect(response.status).to eq(200)
+
+        body = response.body
+
+        expect(body).not_to include(small_action.canonical_url)
       end
 
       it 'returns public posts with topic for json' do

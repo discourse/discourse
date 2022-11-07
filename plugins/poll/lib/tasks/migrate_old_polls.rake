@@ -58,7 +58,7 @@ task "poll:migrate_old_polls" => :environment do
         options = post.custom_fields["polls"]["poll"]["options"]
         # iterate over all votes
         PluginStoreRow.where(plugin_name: "poll")
-          .where("key LIKE 'poll_vote_#{post_id}_%'")
+          .where("key LIKE ?", "poll_vote_#{post_id}_%")
           .pluck(:key, :value)
           .each do |poll_vote_key, vote|
           # extract the user_id

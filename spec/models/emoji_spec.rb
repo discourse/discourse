@@ -143,15 +143,26 @@ RSpec.describe Emoji do
     end
   end
 
+  describe ".load_standard" do
+    it "removes nil emojis" do
+      expect(Emoji.load_standard.any? { |element| element.nil? }).to be false
+    end
+  end
+
   describe "#create_from_db_item" do
     it "sets the group of the emoji" do
       emoji = Emoji.create_from_db_item("name" => "scotland")
       expect(emoji.group).to eq("flags")
     end
 
-    it "sets the search aliases of the emoji" do
-      emoji = Emoji.create_from_db_item("name" => "sad")
-      expect(emoji.search_aliases).to contain_exactly("frowning_face", "slightly_frowning_face", "sob", "crying_cat_face", "cry", "face_holding_back_tears")
+    it "sets the group of the emoji" do
+      emoji = Emoji.create_from_db_item("name" => "scotland")
+      expect(emoji.group).to eq("flags")
+    end
+
+    it "doesn’t create emoji when group is unknown" do
+      emoji = Emoji.create_from_db_item("name" => "white_hair")
+      expect(emoji).to be_nil
     end
   end
 end

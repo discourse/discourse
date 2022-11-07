@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Admin::GroupsController < Admin::AdminController
+class Admin::GroupsController < Admin::StaffController
   def create
     guardian.ensure_can_create_group!
 

@@ -56,6 +56,10 @@ RSpec.describe ThemesInstallTask do
       )
     end
 
+    let :theme_repo_url do
+      MockGitImporter.register("https://example.com/theme_repo.git", theme_repo)
+    end
+
     let :component_repo do
       setup_git_repo(
         "about.json" => about_json(component: true),
@@ -73,6 +77,10 @@ RSpec.describe ThemesInstallTask do
       )
     end
 
+    let :component_repo_url do
+      MockGitImporter.register("https://example.com/component_repo.git", component_repo)
+    end
+
     after do
       `rm -fr #{theme_repo}`
       `rm -fr #{component_repo}`
@@ -83,39 +91,50 @@ RSpec.describe ThemesInstallTask do
       expect(Theme.where(name: "fail!").exists?).to eq(false)
     end
 
+    before do
+      FinalDestination.stubs(:resolve).with(theme_repo_url).returns(URI.parse(theme_repo_url))
+      FinalDestination.stubs(:resolve).with(component_repo_url).returns(URI.parse(component_repo_url))
+    end
+
+    around(:each) do |group|
+      MockGitImporter.with_mock do
+        group.run
+      end
+    end
+
     describe "no options" do
       it 'installs a theme' do
-        ThemesInstallTask.install("some_theme": theme_repo)
+        ThemesInstallTask.install("some_theme": theme_repo_url)
         expect(Theme.where(name: THEME_NAME).exists?).to eq(true)
       end
     end
 
     describe "with options" do
       it 'installs a theme from only a url' do
-        ThemesInstallTask.install({ "some_theme": { "url": theme_repo } })
+        ThemesInstallTask.install({ "some_theme": { "url": theme_repo_url } })
         expect(Theme.where(name: THEME_NAME).exists?).to eq(true)
       end
 
       it 'does not set the theme to default if the key/value is not present' do
-        ThemesInstallTask.install({ "some_theme": { "url": theme_repo } })
+        ThemesInstallTask.install({ "some_theme": { "url": theme_repo_url } })
         theme = Theme.find_by(name: THEME_NAME)
         expect(theme.default?).to eq(false)
       end
 
       it 'sets the theme to default if the key/value is true' do
-        ThemesInstallTask.install({ "some_theme": { "url": theme_repo, default: true } })
+        ThemesInstallTask.install({ "some_theme": { "url": theme_repo_url, default: true } })
         theme = Theme.find_by(name: THEME_NAME)
         expect(theme.default?).to eq(true)
       end
 
       it 'installs theme components, but does not add them to themes' do
-        ThemesInstallTask.install({ "some_theme": { "url": component_repo } })
+        ThemesInstallTask.install({ "some_theme": { "url": component_repo_url } })
         theme = Theme.find_by(name: THEME_NAME)
         expect(theme.component).to eq(true)
       end
 
       it 'adds component to all themes if "add_to_all_themes" is true' do
-        ThemesInstallTask.install({ "some_theme": { "url": component_repo, add_to_all_themes: true } })
+        ThemesInstallTask.install({ "some_theme": { "url": component_repo_url, add_to_all_themes: true } })
         theme = Theme.find_by(name: THEME_NAME)
         Theme.where(component: false).each do |parent_theme|
           expect(ChildTheme.find_by(parent_theme_id: parent_theme.id, child_theme_id: theme.id).nil?).to eq(false)
@@ -123,7 +142,7 @@ RSpec.describe ThemesInstallTask do
       end
 
       it 'updates theme fields' do
-        ThemesInstallTask.install({ "some_theme": component_repo })
+        ThemesInstallTask.install({ "some_theme": component_repo_url })
         theme = Theme.find_by(name: THEME_NAME)
         remote = theme.remote_theme
 
@@ -140,7 +159,7 @@ RSpec.describe ThemesInstallTask do
         expect(remote.commits_behind).to eq(1)
         expect(remote.remote_version).to eq(`cd #{component_repo} && git rev-parse HEAD`.strip)
 
-        ThemesInstallTask.install({ "some_theme": component_repo })
+        ThemesInstallTask.install({ "some_theme": component_repo_url })
 
         expect(theme.theme_fields.find_by(name: 'scss', value: scss)).not_to be_nil
         expect(remote.reload.commits_behind).to eq(0)

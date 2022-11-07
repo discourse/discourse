@@ -24,7 +24,7 @@ import DiscourseURL, { userPath } from "discourse/lib/url";
 import deprecated from "discourse-common/lib/deprecated";
 import { applyModelTransformations } from "discourse/lib/model-transformers";
 
-export async function loadTopicView(topic, args) {
+export function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
   const url = `${getURL("/t/")}${topic.id}`;
   const jsonUrl = (data.nearPost ? `${url}/${data.nearPost}` : url) + ".json";
@@ -33,12 +33,12 @@ export async function loadTopicView(topic, args) {
   delete data.__type;
   delete data.store;
 
-  const json = await PreloadStore.getAndRemove(`topic_${topic.id}`, () =>
+  return PreloadStore.getAndRemove(`topic_${topic.id}`, () =>
     ajax(jsonUrl, { data })
-  );
-
-  topic.updateFromJson(json);
-  return json;
+  ).then((json) => {
+    topic.updateFromJson(json);
+    return json;
+  });
 }
 
 export const ID_CONSTRAINT = /^\d+$/;
@@ -270,15 +270,19 @@ const Topic = RestModel.extend({
       return customUrl;
     }
 
-    if (highestPostNumber <= lastReadPostNumber) {
-      if (this.get("category.navigate_to_first_post_after_read")) {
-        return this.urlForPostNumber(1);
-      } else {
-        return this.urlForPostNumber(lastReadPostNumber + 1);
-      }
-    } else {
-      return this.urlForPostNumber(lastReadPostNumber + 1);
+    if (
+      lastReadPostNumber >= highestPostNumber &&
+      this.get("category.navigate_to_first_post_after_read")
+    ) {
+      return this.urlForPostNumber(1);
     }
+
+    let postNumber = lastReadPostNumber + 1;
+    if (postNumber > highestPostNumber) {
+      postNumber = highestPostNumber;
+    }
+
+    return this.urlForPostNumber(postNumber);
   },
 
   @discourseComputed("highest_post_number", "url")

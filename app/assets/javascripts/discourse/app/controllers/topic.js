@@ -212,9 +212,9 @@ export default Controller.extend(bufferedProperty("model"), {
     );
   },
 
-  @discourseComputed("currentUser.allowPersonalMessages")
+  @discourseComputed("currentUser.can_send_private_messages")
   canSendPms() {
-    return this.currentUser?.allowPersonalMessages;
+    return this.currentUser?.can_send_private_messages;
   },
 
   @discourseComputed("buffered.category_id")
@@ -564,8 +564,8 @@ export default Controller.extend(bufferedProperty("model"), {
       return this.get("model.details").removeAllowedGroup(group);
     },
 
-    deleteTopic() {
-      this.deleteTopic();
+    deleteTopic(opts = {}) {
+      this.deleteTopic(opts);
     },
 
     // Archive a PM (as opposed to archiving a topic)
@@ -1522,7 +1522,11 @@ export default Controller.extend(bufferedProperty("model"), {
     this.model.recover();
   },
 
-  deleteTopic(opts) {
+  deleteTopic(opts = {}) {
+    if (opts.force_destroy) {
+      return this.model.destroy(this.currentUser, opts);
+    }
+
     if (
       this.model.views > this.siteSettings.min_topic_views_for_delete_confirm
     ) {

@@ -1096,6 +1096,8 @@ hu:
       enable_defer: "A témák olvasatlannak jelölésének engedélyezése"
       experimental_sidebar:
         options: "Beállítások"
+        navigation_section: "Navigáció"
+        list_destination_default: "Alapértelmezett"
       change: "módosítás"
       featured_topic: "Kiemelt téma"
       moderator: "%{user} egy moderátor"
@@ -1265,8 +1267,6 @@ hu:
         edit: "Szerkesztés"
         edit_title: "Hitelesítő szerkesztése"
         edit_description: "Hitelesítő neve"
-        enable_security_key_description: |
-          Ha előkészítette a <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">hardveres biztonsági kulcsát</a>, nyomja meg a lenti Regisztráció gombot.
         totp:
           title: "Token alapú hitelesítők"
           add: "Hitelesítő hozzáadása"
@@ -1274,14 +1274,10 @@ hu:
           name_and_code_required_error: "Meg kell adnia egy nevet, és egy kódot a hitelesítő alkalmazásból."
         security_key:
           register: "Regisztráció"
-          title: "Biztonsági kulcsok"
-          add: "Biztonsági kulcs hozzáadása"
           default_name: "Elsődleges biztonsági kulcs"
           not_allowed_error: "A biztonsági hardverkulcs regisztrációs folyamata során időtúllépés történt, vagy megszakították."
           already_added_error: "Már regisztrálta ezt a biztonsági kulcsot. Nem kell újraregisztrálnia."
-          edit: "Biztonsági kulcs szerkesztése"
           save: "Mentés"
-          edit_description: "Biztonsági kulcs neve"
           name_required_error: "Meg kell adnia a biztonsági kulcs nevét."
       change_about:
         title: "Névjegy módosítása"
@@ -1789,7 +1785,6 @@ hu:
       second_factor_backup_title: "Kétfaktoros biztonsági kód"
       second_factor_backup_description: "Írja be valamelyik biztonsági kódját:"
       second_factor: "Bejelentkezés hitelesítő alkalmazással"
-      security_key_description: "Ha előkészítette a fizikai biztonsági kulcsot, nyomja meg a lenti „Hitelesítés biztonsági kulccsal” gombot."
       security_key_alternative: "Próbálkozás más módon"
       security_key_authenticate: "Hitelesítés biztonsági kulccsal"
       security_key_not_allowed_error: "A biztonsági hardverkulcsos hitelesítési folyamata során időtúllépés történt, vagy megszakították."
@@ -3450,7 +3445,6 @@ hu:
               title: "áttekintés"
     welcome_topic_banner:
       title: "Hozzon létre üdvözlő témát"
-      description: 'Az üdvözlő téma az első, amit az újonnan érkezők olvasnak. Gondoljon rá úgy mint egy bekezdésnyi bemutatkozóra vagy „küldetésnyilatkozatra”.'
       button_title: "Szerkesztés megkezdése"
     until: "Eddig:"
   admin_js:

@@ -1,0 +1,210 @@
+body.composer-open .topic-chat-float-container {
+  bottom: 11px; // prevent height of grippie from obscuring ...is typing indicator
+}
+
+.topic-chat-float-container {
+  font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  // higher than timeline, lower than composer, lower than user card (bump up below)
+  z-index: z("usercard");
+  position: fixed;
+  right: var(--composer-right, 20px);
+  left: 0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none !important;
+  bottom: 0;
+
+  > * {
+    pointer-events: auto;
+  }
+
+  .no-channel-title {
+    font-weight: bold;
+    margin-left: 0.5rem;
+  }
+
+  &.composer-draft-collapsed {
+    bottom: 40px;
+  }
+
+  box-sizing: border-box;
+  max-height: 90vh;
+  padding-bottom: var(--composer-height, 0);
+  transition: all 100ms ease-in;
+  transition-property: bottom, padding-bottom;
+
+  .channels-list {
+    .chat-channel-row {
+      padding: 0 0 0 0.5rem;
+      margin: 0 0.5rem 0.125rem 0.5rem;
+      border-radius: 0.25em;
+    }
+
+    .chat-channel-unread-indicator {
+      left: 3px;
+      min-width: 8px;
+      width: 8px;
+      height: 8px;
+      border-radius: 7px;
+      top: calc(50% - 5px);
+    }
+
+    .chat-channel-title {
+      padding: 0.5rem;
+    }
+  }
+}
+
+.chat-drawer {
+  align-self: flex-end;
+}
+
+.topic-chat-container {
+  background: var(--secondary);
+  border: 1px solid var(--primary-low);
+  border-bottom: 0;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.125);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+
+  &.expanded {
+    max-height: $float-height;
+    height: calc(85vh - var(--composer-height, 0px));
+  }
+
+  .chat-live-pane {
+    height: 100%;
+  }
+}
+
+.topic-chat-drawer-header__left-actions {
+  display: flex;
+  height: 100%;
+}
+
+.topic-chat-drawer-header__right-actions {
+  display: flex;
+  height: 100%;
+}
+
+.topic-chat-drawer-header__top-line {
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.topic-chat-drawer-header__bottom-line {
+  height: 1.5rem;
+  display: flex;
+  align-items: start;
+}
+
+.topic-chat-drawer-header__title {
+  @include ellipsis;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  font-weight: 700;
+  padding: 0 0.5rem;
+  cursor: pointer;
+
+  .chat-channel-title {
+    padding: 0;
+  }
+}
+
+.topic-chat-drawer-header {
+  box-sizing: border-box;
+  border-bottom: solid 1px var(--primary-low);
+  border-radius: 8px 8px 0 0;
+  background: var(--primary-very-low);
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+
+  .btn {
+    height: 100%;
+  }
+
+  .chat-channel-title {
+    font-weight: 700;
+    width: 100%;
+
+    .chat-name,
+    .topic-chat-name,
+    .category-chat-name,
+    .dm-usernames {
+      color: var(--primary);
+    }
+    .category-chat-badge,
+    .topic-chat-badge {
+      display: flex;
+      justify-content: center;
+      align-content: center;
+      .d-icon:not(.d-icon-lock) {
+        width: 1.25em;
+        height: 1.25em;
+      }
+    }
+    .category-chat-private .d-icon {
+      background-color: var(--primary-very-low);
+    }
+    .badge-wrapper.bullet {
+      margin-right: 0px;
+    }
+    .dm-usernames {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .d-icon:not(.d-icon-hashtag) {
+      color: var(--primary-high);
+    }
+    .category-hashtag {
+      padding: 2px 4px;
+    }
+  }
+
+  &__return-to-channels-btn,
+  &__close-btn,
+  &__full-screen-btn,
+  &__expand-btn {
+    height: 100%;
+    max-height: 2.5rem;
+    width: 2.5rem;
+
+    &:focus {
+      outline: none;
+      background: none;
+
+      .d-icon {
+        background: none;
+        color: var(--primary-low-mid);
+      }
+    }
+
+    &:hover {
+      .d-icon {
+        color: var(--primary-high);
+      }
+    }
+  }
+}
+
+.topic-chat-drawer-content {
+  box-sizing: border-box;
+  height: 100%;
+  min-height: 1px;
+  padding-bottom: 0.25em;
+
+  .channels-list .chat-channel-divider {
+    padding: 0.25rem 0.5rem 0.25rem 1rem;
+  }
+}

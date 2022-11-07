@@ -208,7 +208,7 @@ task 'docker:test' do
         js_timeout = ENV["JS_TIMEOUT"].presence || 900_000 # 15 minutes
 
         unless ENV["SKIP_CORE"]
-          @good &&= run_or_fail("cd app/assets/javascripts/discourse && CI=1 yarn ember exam --random")
+          @good &&= run_or_fail("cd app/assets/javascripts/discourse && CI=1 yarn ember exam --load-balance --parallel=3 --random")
         end
 
         unless ENV["SKIP_PLUGINS"]

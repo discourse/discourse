@@ -1013,6 +1013,8 @@ ko:
       enable_defer: "주제를 읽지 않은 상태로 표시하도록 연기 활성화"
       experimental_sidebar:
         options: "옵션"
+        navigation_section: "내비게이션"
+        list_destination_default: "기본"
       change: "변경"
       featured_topic: "추천 주제"
       moderator: "%{user} 님은 운영자입니다"
@@ -1175,8 +1177,6 @@ ko:
         edit: "편집"
         edit_title: "인증 편집"
         edit_description: "인증 이름"
-        enable_security_key_description: |
-          <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">하드웨어 보안 키</a>가 준비되었다면 아래의 등록 버튼을 누르세요.
         totp:
           title: "토큰 기반 인증"
           add: "인증 추가"
@@ -1184,14 +1184,12 @@ ko:
           name_and_code_required_error: "인증 앱의 이름과 코드를 제공해야 합니다."
         security_key:
           register: "등록"
-          title: "보안 키"
-          add: "보안 키 추가"
           default_name: "기본 보안 키"
+          iphone_default_name: "아이폰"
+          android_default_name: "안드로이드"
           not_allowed_error: "보안 키 등록 프로세스가 시간 초과되었거나 취소되었습니다."
           already_added_error: "이 보안 키는 이미 등록되어 있으므로 다시 등록하지 않아도 됩니다."
-          edit: "보안 키 편집"
           save: "저장"
-          edit_description: "보안 키 이름"
           name_required_error: "보안 키의 이름을 제공해야 합니다."
       change_about:
         title: "내 정보 변경"
@@ -1680,7 +1678,6 @@ ko:
       second_factor_backup_title: "2단계 백업"
       second_factor_backup_description: "백업 코드 중 하나를 입력하세요."
       second_factor: "인증 앱으로 로그인"
-      security_key_description: "실제 보안 키가 준비되면 보안 키와 함께 아래의 인증 버튼을 누르세요."
       security_key_alternative: "다른 방법으로 시도"
       security_key_authenticate: "보안 키로 인증"
       security_key_not_allowed_error: "보안 키 인증 프로세스가 시간 초과되었거나 취소되었습니다."
@@ -3772,7 +3769,6 @@ ko:
         go_back: "목록으로 돌아가기"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "Webhook를 로컬 URL에 구성하려는 것 같습니다. 로컬 주소로 이벤트가 전달되면 부작용이나 예기치 않은 행동이 발생할 수 있습니다. 계속할까요?"
         secret_invalid: "Secret에는 공백이 있을 수 없습니다."
         secret_too_short: "Secret은 12자 이상이어야 합니다."
         secret_placeholder: "시그니처를 생성하기 위한 문자열(선택사항)"
@@ -4053,7 +4049,6 @@ ko:
           is_private: "테마는 비공개 Git 저장소에 있습니다"
           remote_branch: "브랜치 이름(선택사항)"
           public_key: "다음 공개 키 액세스를 저장소에 부여하세요."
-          public_key_note: "위의 유효한 비공개 저장소 URL을 입력하면 SSH 키가 생성되어 여기에 표시됩니다."
           install: "설치"
           installed: "설치됨"
           install_popular: "인기"
@@ -4721,7 +4716,6 @@ ko:
         trust_level_2_users: "신뢰 레벨 2 사용자"
         trust_level_3_requirements: "신뢰 레벨 3 요구사항"
         trust_level_locked_tip: "신뢰 레벨이 잠겼습니다. 시스템에서 사용자의 등급을 변경하지 않습니다"
-        trust_level_unlocked_tip: "신뢰 레벨이 잠금 해제되었습니다. 시스템에서 사용자의 등급을 변경할 수 있습니다"
         lock_trust_level: "신뢰 레벨 잠금"
         unlock_trust_level: "신뢰 레벨 잠금 해제"
         silenced_count: "차단됨"

@@ -3,10 +3,13 @@ import I18n from "I18n";
 import { tracked } from "@glimmer/tracking";
 import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
 import { isTrackedTopic } from "discourse/lib/topic-list-tracked-filter";
+import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sidebar";
 
 export default class TrackedSectionLink extends BaseSectionLink {
   @tracked totalUnread = 0;
   @tracked totalNew = 0;
+  @tracked hideCount =
+    this.currentUser?.sidebarListDestination !== UNREAD_LIST_DESTINATION;
 
   constructor() {
     super(...arguments);
@@ -50,6 +53,9 @@ export default class TrackedSectionLink extends BaseSectionLink {
   }
 
   get badgeText() {
+    if (this.hideCount) {
+      return;
+    }
     if (this.totalUnread > 0) {
       return I18n.t("sidebar.unread_count", {
         count: this.totalUnread,
@@ -64,10 +70,32 @@ export default class TrackedSectionLink extends BaseSectionLink {
   }
 
   get route() {
+    if (this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION) {
+      if (this.totalUnread > 0) {
+        return "discovery.unread";
+      }
+      if (this.totalNew > 0) {
+        return "discovery.new";
+      }
+    }
     return "discovery.latest";
   }
 
   get prefixValue() {
     return "bell";
+  }
+
+  get suffixCSSClass() {
+    return "unread";
+  }
+
+  get suffixType() {
+    return "icon";
+  }
+
+  get suffixValue() {
+    if (this.hideCount && (this.totalUnread || this.totalNew)) {
+      return "circle";
+    }
   }
 }

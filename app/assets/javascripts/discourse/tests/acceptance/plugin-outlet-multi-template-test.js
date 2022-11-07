@@ -6,6 +6,7 @@ import {
 import { hbs } from "ember-cli-htmlbars";
 import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
+import Ember from "ember";
 
 const HELLO = "javascripts/multi-test/connectors/user-profile-primary/hello";
 const GOODBYE =
@@ -13,16 +14,12 @@ const GOODBYE =
 
 acceptance("Plugin Outlet - Multi Template", function (needs) {
   needs.hooks.beforeEach(() => {
-    // eslint-disable-next-line no-undef
     Ember.TEMPLATES[HELLO] = hbs`<span class='hello-span'>Hello</span>`;
-    // eslint-disable-next-line no-undef
     Ember.TEMPLATES[GOODBYE] = hbs`<span class='bye-span'>Goodbye</span>`;
   });
 
   needs.hooks.afterEach(() => {
-    // eslint-disable-next-line no-undef
     delete Ember.TEMPLATES[HELLO];
-    // eslint-disable-next-line no-undef
     delete Ember.TEMPLATES[GOODBYE];
   });
 

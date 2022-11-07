@@ -9,6 +9,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { action, set } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
+import Ember from "ember";
 
 let _components = {};
 
@@ -108,9 +109,7 @@ export default Component.extend({
     let dasherized = dasherize(type);
     let templatePath = `components/${dasherized}`;
     let template =
-      // eslint-disable-next-line no-undef
       Ember.TEMPLATES[`${templatePath}`] ||
-      // eslint-disable-next-line no-undef
       Ember.TEMPLATES[`javascripts/${templatePath}`];
     _components[type] = template ? dasherized : null;
     return _components[type];

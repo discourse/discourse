@@ -64,7 +64,7 @@ ar:
         title: "عرض نتائج استطلاع الرأي"
         label: "عرض النتائج"
       remove-vote:
-        title: "إزالة تصويتك"
+        title: "إزالة صوتك"
         label: "إزالة التصويت"
       hide-results:
         title: "العودة إلى تصويتاتك"

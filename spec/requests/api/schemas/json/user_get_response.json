@@ -770,6 +770,9 @@
             },
             "sidebar_list_destination": {
               "type": "string"
+            },
+            "seen_popups": {
+              "type": ["array", "null"]
             }
           },
           "required": [

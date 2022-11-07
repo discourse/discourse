@@ -332,8 +332,6 @@ sw:
   meta_category_description: "Majadiliano kuhusu tovuti, shirika, jinsi inavyofanya kazi, na jinsi tunaweza kuiboresha."
   staff_category_name: "Wasaidizi"
   staff_category_description: "Kategoria binafsi kwa ajili ya majadiliano ya wasaidizi. Mada zitaonwa na wasimamizi na viongozi tu."
-  discourse_welcome_topic:
-    title: "Karibu kwenye Discourse"
   category:
     topic_prefix: "Kuhusu kategoria %{category}"
     errors:
@@ -408,7 +406,6 @@ sw:
         one: "siku %{count} iliyopita"
         other: "siku %{count} zilizopita"
   password_reset:
-    no_token: "Samahani, kiungo hicho cha kuingia kupitia barua pepe ni cha mda sana. Bonyeza kitufe cha Kuingia na tumia 'Nimesahau nywila' ili upate kiungo kipya."
     choose_new: "Chagua nywila"
     choose: "Chagua nywila"
     update: "Sasisha Nywila"

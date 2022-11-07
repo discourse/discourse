@@ -338,19 +338,7 @@ const User = RestModel.extend({
   },
 
   sidebarTagNames: mapBy("sidebarTags", "name"),
-
-  @discourseComputed("sidebar_category_ids.[]")
-  sidebarCategories(sidebarCategoryIds) {
-    if (!sidebarCategoryIds || sidebarCategoryIds.length === 0) {
-      return [];
-    }
-
-    return Site.current().categoriesList.filter((category) =>
-      sidebarCategoryIds.includes(category.id)
-    );
-  },
-
-  sidebarListDestination: readOnly("user_option.sidebar_list_destination"),
+  sidebarListDestination: readOnly("sidebar_list_destination"),
 
   changeUsername(new_username) {
     return ajax(userPath(`${this.username_lower}/preferences/username`), {
@@ -398,22 +386,28 @@ const User = RestModel.extend({
     let updatedState = {};
 
     ["muted", "regular", "watched", "tracked", "watched_first_post"].forEach(
-      (s) => {
-        if (fields === undefined || fields.includes(s + "_category_ids")) {
+      (categoryNotificationLevel) => {
+        if (
+          fields === undefined ||
+          fields.includes(`${categoryNotificationLevel}_category_ids`)
+        ) {
           let prop =
-            s === "watched_first_post"
+            categoryNotificationLevel === "watched_first_post"
               ? "watchedFirstPostCategories"
-              : s + "Categories";
+              : `${categoryNotificationLevel}Categories`;
+
           let cats = this.get(prop);
+
           if (cats) {
             let cat_ids = cats.map((c) => c.get("id"));
-            updatedState[s + "_category_ids"] = cat_ids;
+            updatedState[`${categoryNotificationLevel}_category_ids`] = cat_ids;
 
             // HACK: denote lack of categories
             if (cats.length === 0) {
               cat_ids = [-1];
             }
-            data[s + "_category_ids"] = cat_ids;
+
+            data[`${categoryNotificationLevel}_category_ids`] = cat_ids;
           }
         }
       }
@@ -640,6 +634,8 @@ const User = RestModel.extend({
     return filteredGroups.length > numGroupsToDisplay;
   },
 
+  // NOTE: This only includes groups *visible* to the user via the serializer,
+  // so be wary when using this.
   isInAnyGroups(groupIds) {
     if (!this.groups) {
       return;
@@ -1092,18 +1088,6 @@ const User = RestModel.extend({
   )
   trackedTags(trackedTags, watchedTags, watchingFirstPostTags) {
     return [...trackedTags, ...watchedTags, ...watchingFirstPostTags];
-  },
-
-  @discourseComputed("staff", "groups.[]")
-  allowPersonalMessages() {
-    return (
-      this.staff ||
-      this.isInAnyGroups(
-        this.siteSettings.personal_message_enabled_groups
-          .split("|")
-          .map((groupId) => parseInt(groupId, 10))
-      )
-    );
   },
 
   showPopup(options) {

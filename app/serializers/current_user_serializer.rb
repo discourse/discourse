@@ -81,7 +81,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :likes_notifications_disabled,
              :grouped_unread_notifications,
              :redesigned_user_menu_enabled,
-             :redesigned_user_page_nav_enabled
+             :redesigned_user_page_nav_enabled,
+             :sidebar_list_destination
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -160,12 +161,16 @@ class CurrentUserSerializer < BasicUserSerializer
     object.user_option.bookmark_auto_delete_preference
   end
 
+  def sidebar_list_destination
+    object.user_option.sidebar_list_none_selected? ? SiteSetting.default_sidebar_list_destination : object.user_option.sidebar_list_destination
+  end
+
   def can_send_private_email_messages
     scope.can_send_private_messages_to_email?
   end
 
   def can_send_private_messages
-    scope.can_send_private_message?(Discourse.system_user)
+    scope.can_send_private_messages?
   end
 
   def can_edit
@@ -334,7 +339,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def sidebar_category_ids
-    object.sidebar_categories_ids
+    object.category_sidebar_section_links.pluck(:linkable_id) & scope.allowed_category_ids
   end
 
   def include_sidebar_category_ids?

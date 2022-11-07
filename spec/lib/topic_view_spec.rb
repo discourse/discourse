@@ -895,9 +895,9 @@ RSpec.describe TopicView do
         post1.update_column(:image_upload_id, op_upload.id)
       end
 
-      it "uses the topic image as a fallback when posts have no image" do
+      it "uses the topic image for op and posts image when they have one" do
         expect(topic_view_for_post(1).image_url).to end_with(op_upload.url)
-        expect(topic_view_for_post(2).image_url).to end_with(op_upload.url)
+        expect(topic_view_for_post(2).image_url).to eq(nil)
         expect(topic_view_for_post(3).image_url).to end_with(post3_upload.url)
       end
     end
@@ -1000,8 +1000,8 @@ RSpec.describe TopicView do
   describe "#queued_posts_enabled?" do
     subject(:topic_view) { described_class.new(topic, user) }
 
-    let(:topic) { Fabricate.build(:topic) }
-    let(:user) { Fabricate.build(:user, id: 1) }
+    let(:topic) { Fabricate(:topic) }
+    let(:user) { Fabricate(:user) }
     let(:category) { topic.category }
 
     before do

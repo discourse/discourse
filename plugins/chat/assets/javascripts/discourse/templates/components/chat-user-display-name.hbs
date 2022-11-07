@@ -1,0 +1,15 @@
+<span class="chat-user-display-name">
+  {{#if this.shouldShowNameFirst}}
+    <span class="chat-user-display-name__name">{{this.user.name}}</span>
+    <span class="separator">—</span>
+  {{/if}}
+
+  <span class="chat-user-display-name__username">
+    {{this.formattedUsername}}
+  </span>
+
+  {{#if this.shouldShowNameLast}}
+    <span class="separator">—</span>
+    <span class="chat-user-display-name__name">{{this.user.name}}</span>
+  {{/if}}
+</span>

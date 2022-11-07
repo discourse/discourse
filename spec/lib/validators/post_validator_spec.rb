@@ -23,7 +23,7 @@ RSpec.describe PostValidator do
     end
 
     context "when post's topic is a PM between a human and a non human user" do
-      fab!(:robot) { Fabricate(:user, id: -3) }
+      fab!(:robot) { Fabricate(:bot) }
       fab!(:user) { Fabricate(:user) }
 
       let(:topic) do

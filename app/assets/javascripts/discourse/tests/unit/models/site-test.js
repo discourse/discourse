@@ -77,26 +77,47 @@ module("Unit | Model | site", function () {
     );
   });
 
-  test("deeply nested categories", function (assert) {
+  test("sortedCategories returns categories sorted by topic counts and sorts child categories after parent", function (assert) {
     const store = createStore();
     const site = store.createRecord("site", {
       categories: [
-        { id: 1003, name: "Test Sub Sub", parent_category_id: 1002 },
-        { id: 1001, name: "Test" },
+        {
+          id: 1003,
+          name: "Test Sub Sub",
+          parent_category_id: 1002,
+          topic_count: 0,
+        },
+        { id: 1001, name: "Test", topic_count: 1 },
         { id: 1004, name: "Test Sub Sub Sub", parent_category_id: 1003 },
-        { id: 1002, name: "Test Sub", parent_category_id: 1001 },
-        { id: 1005, name: "Test Sub Sub Sub2", parent_category_id: 1003 },
-        { id: 1006, name: "Test2" },
+        {
+          id: 1002,
+          name: "Test Sub",
+          parent_category_id: 1001,
+          topic_count: 0,
+        },
+        {
+          id: 1005,
+          name: "Test Sub Sub Sub2",
+          parent_category_id: 1003,
+          topic_count: 1,
+        },
+        { id: 1006, name: "Test2", topic_count: 2 },
+        { id: 1000, name: "Test2 Sub", parent_category_id: 1006 },
+        { id: 997, name: "Test2 Sub Sub2", parent_category_id: 1000 },
+        { id: 999, name: "Test2 Sub Sub", parent_category_id: 1000 },
       ],
     });
 
     assert.deepEqual(site.sortedCategories.mapBy("name"), [
+      "Test2",
+      "Test2 Sub",
+      "Test2 Sub Sub2",
+      "Test2 Sub Sub",
       "Test",
       "Test Sub",
       "Test Sub Sub",
-      "Test Sub Sub Sub",
       "Test Sub Sub Sub2",
-      "Test2",
+      "Test Sub Sub Sub",
     ]);
   });
 });

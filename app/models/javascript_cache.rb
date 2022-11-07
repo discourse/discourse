@@ -41,6 +41,7 @@ end
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  theme_id       :bigint
+#  source_map     :text
 #
 # Indexes
 #

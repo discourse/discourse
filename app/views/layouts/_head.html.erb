@@ -6,7 +6,7 @@
 <%- if site_apple_touch_icon_url.present? %>
 <link rel="apple-touch-icon" type="image/png" href="<%= ::UrlHelper.absolute(site_apple_touch_icon_url) %>">
 <%- end %>
-<meta name="theme-color" content="#<%= ColorScheme.hex_for_name('header_background', scheme_id) %>">
+<%= discourse_theme_color_meta_tags %>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=yes, viewport-fit=cover">
 <%- if Discourse.base_path.present? %>
 <meta name="discourse-base-uri" content="<%= Discourse.base_path %>">
