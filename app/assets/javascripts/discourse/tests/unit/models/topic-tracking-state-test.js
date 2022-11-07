@@ -104,6 +104,16 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       0,
       "pending tag new counts"
     );
+
+    // Ensure it is not throwing an error when filterTag is set and message payload is missing tags
+    trackingState.trackIncoming("tag/test/l/latest");
+    trackingState.notifyIncoming({
+      message_type: "new_topic",
+      topic_id: 4,
+      payload: { category_id: 2 },
+    });
+    const testTagCount = trackingState.countTags(["test"]);
+    assert.strictEqual(testTagCount["test"].unreadCount, 0);
   });
 
   test("tag counts - with total", function (assert) {
