@@ -136,6 +136,7 @@ export default Mixin.create({
       "default_email_mailing_list_mode_frequency",
       "default_email_previous_replies",
       "default_email_in_reply_to",
+      "default_hide_profile_and_presence",
       "default_other_new_topic_duration_minutes",
       "default_other_auto_track_topics_after_msecs",
       "default_other_notification_level_when_replying",

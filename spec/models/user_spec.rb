@@ -1917,6 +1917,7 @@ RSpec.describe User do
       SiteSetting.default_other_dynamic_favicon = true
       SiteSetting.default_other_skip_new_user_tips = true
 
+      SiteSetting.default_hide_profile_and_presence = true
       SiteSetting.default_topics_automatic_unpin = false
 
       SiteSetting.default_categories_watching = category0.id.to_s
@@ -1937,6 +1938,7 @@ RSpec.describe User do
       expect(options.enable_quoting).to eq(false)
       expect(options.dynamic_favicon).to eq(true)
       expect(options.skip_new_user_tips).to eq(true)
+      expect(options.hide_profile_and_presence).to eq(true)
       expect(options.automatically_unpin_topics).to eq(false)
       expect(options.new_topic_duration_minutes).to eq(-1)
       expect(options.auto_track_topics_after_msecs).to eq(0)

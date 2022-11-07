@@ -420,6 +420,78 @@ RSpec.describe Guardian do
     end
   end
 
+  describe 'can_send_private_messages' do
+    fab!(:suspended_user) { Fabricate(:user, suspended_till: 1.week.from_now, suspended_at: 1.day.ago) }
+
+    it "returns false when the user is nil" do
+      expect(Guardian.new(nil).can_send_private_messages?).to be_falsey
+    end
+
+    it "disallows pms to other users if the user is not in the automated trust level used for personal_message_enabled_groups" do
+      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_2]
+      user.update!(trust_level: TrustLevel[1])
+      Group.user_trust_level_change!(user.id, TrustLevel[1])
+      user.reload
+      expect(Guardian.new(user).can_send_private_messages?).to be_falsey
+      user.update!(trust_level: TrustLevel[2])
+      Group.user_trust_level_change!(user.id, TrustLevel[2])
+      user.reload
+      expect(Guardian.new(user).can_send_private_messages?).to be_truthy
+    end
+
+    context "when personal_message_enabled_groups does contain the user" do
+      let(:group) { Fabricate(:group) }
+      before do
+        SiteSetting.personal_message_enabled_groups = group.id
+      end
+
+      it "returns true" do
+        expect(Guardian.new(user).can_send_private_messages?).to be_falsey
+        GroupUser.create(user: user, group: group)
+        user.reload
+        expect(Guardian.new(user).can_send_private_messages?).to be_truthy
+      end
+    end
+
+    context "when personal_message_enabled_groups does not contain the user" do
+      let(:group) { Fabricate(:group) }
+      before do
+        SiteSetting.personal_message_enabled_groups = group.id
+      end
+
+      it "returns false if user is not staff member" do
+        expect(Guardian.new(trust_level_4).can_send_private_messages?).to be_falsey
+        GroupUser.create(user: trust_level_4, group: group)
+        trust_level_4.reload
+        expect(Guardian.new(trust_level_4).can_send_private_messages?).to be_truthy
+      end
+
+      it "returns true for staff member" do
+        expect(Guardian.new(moderator).can_send_private_messages?).to be_truthy
+        expect(Guardian.new(admin).can_send_private_messages?).to be_truthy
+      end
+
+      it "returns true for bot user" do
+        expect(Guardian.new(Fabricate(:bot)).can_send_private_messages?).to be_truthy
+      end
+
+      it "returns true for system user" do
+        expect(Guardian.new(Discourse.system_user).can_send_private_messages?).to be_truthy
+      end
+    end
+
+    context "when author is silenced" do
+      before do
+        user.silenced_till = 1.year.from_now
+        user.save
+      end
+
+      it "returns true, since there is no target user, we do that check separately" do
+        expect(Guardian.new(user).can_send_private_messages?).to be_truthy
+      end
+    end
+  end
+
   describe 'can_reply_as_new_topic' do
     fab!(:topic) { Fabricate(:topic) }
     fab!(:private_message) { Fabricate(:private_message_topic) }

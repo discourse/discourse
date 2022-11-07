@@ -2,6 +2,7 @@
 
 class ChatMessageRevision < ActiveRecord::Base
   belongs_to :chat_message
+  belongs_to :user
 end
 
 # == Schema Information
@@ -14,8 +15,10 @@ end
 #  new_message     :text             not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  user_id         :integer
 #
 # Indexes
 #
 #  index_chat_message_revisions_on_chat_message_id  (chat_message_id)
+#  index_chat_message_revisions_on_user_id          (user_id)
 #

@@ -73,6 +73,7 @@ export default Component.extend({
   router: service(),
   chatEmojiPickerManager: service(),
   chatComposerPresenceManager: service(),
+  chatPreferredMode: service(),
   fullPageChat: service(),
 
   getCachedChannelDetails: null,
@@ -1264,7 +1265,8 @@ export default Component.extend({
 
   @action
   onCloseFullScreen(channel) {
-    this.fullPageChat.isPreferred = false;
+    this.chatPreferredMode.setDrawer();
+    this.appEvents.trigger("chat:open-channel", channel);
 
     let previousURL = this.fullPageChat.exit();
     if (!previousURL || previousURL === "/") {
