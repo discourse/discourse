@@ -435,13 +435,16 @@ $float-height: 530px;
     }
 
     &__usernames {
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: start;
     }
 
     .user-status-message {
       display: inline-block;
       color: var(--primary-medium);
       font-size: var(--font-down-2);
+      margin-right: 0.5rem;
     }
   }
 
