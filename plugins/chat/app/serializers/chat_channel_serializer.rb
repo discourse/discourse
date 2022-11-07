@@ -95,7 +95,7 @@ class ChatChannelSerializer < ApplicationSerializer
   end
 
   def last_message
-    ChatMessage.where('chat_channel_id': object.id).last
+    ChatMessage.where("chat_channel_id": object.id).last
   end
 
   alias_method :include_archive_topic_id?, :include_archive_status?
