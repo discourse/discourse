@@ -20,7 +20,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: yarn
 
       - name: Yarn install
@@ -33,15 +33,15 @@ jobs:
           bundler-cache: true
 
       - name: ESLint
-        if: ${{ always() }}
-        run: yarn eslint --ext .js,.js.es6 --no-error-on-unmatched-pattern {test,assets}/javascripts
+        if: ${{ !cancelled() }}
+        run: yarn eslint --ext .js,.js.es6 --no-error-on-unmatched-pattern {test,assets,admin/assets}/javascripts
 
       - name: Prettier
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         shell: bash
         run: |
           yarn prettier -v
-          if [ 0 -lt $(find assets -type f \( -name "*.scss" -or -name "*.js" -or -name "*.es6" \) 2> /dev/null | wc -l) ]; then
+          if [ 0 -lt $(find assets admin/assets -type f \( -name "*.scss" -or -name "*.js" -or -name "*.es6" \) 2> /dev/null | wc -l) ]; then
             yarn prettier --list-different "assets/**/*.{scss,js,es6}"
           fi
           if [ 0 -lt $(find test -type f \( -name "*.js" -or -name "*.es6" \) 2> /dev/null | wc -l) ]; then
@@ -49,9 +49,9 @@ jobs:
           fi
 
       - name: Ember template lint
-        if: ${{ always() }}
-        run: yarn ember-template-lint --no-error-on-unmatched-pattern assets/javascripts
+        if: ${{ !cancelled() }}
+        run: yarn ember-template-lint --no-error-on-unmatched-pattern assets/javascripts admin/assets/javascripts
 
       - name: Rubocop
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         run: bundle exec rubocop .
