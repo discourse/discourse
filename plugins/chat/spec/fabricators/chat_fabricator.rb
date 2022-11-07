@@ -14,6 +14,7 @@ Fabricator(:chat_channel) do
       "#{random_name} #{n}"
     end
   end
+  type "CategoryChannel"
   chatable { Fabricate(:category) }
   status { :open }
 end

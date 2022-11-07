@@ -135,6 +135,7 @@ end
 #  auto_join_users         :boolean          default(FALSE), not null
 #  user_count_stale        :boolean          default(FALSE), not null
 #  slug                    :string
+#  type                    :string
 #
 # Indexes
 #
