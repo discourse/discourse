@@ -50,6 +50,9 @@ export default Component.extend({
   @discourseComputed("active", "channel.{id,muted}", "channel.focused")
   rowClassNames(active, channel, focused) {
     const classes = ["chat-channel-row", `chat-channel-${channel.id}`];
+    const channelUnreadCount =
+      this.currentUser.chat_channel_tracking_state[channel.id].unread_count;
+
     if (active) {
       classes.push("active");
     }
@@ -61,6 +64,9 @@ export default Component.extend({
     }
     if (this.options.leaveButton) {
       classes.push("can-leave");
+    }
+    if (channelUnreadCount > 0) {
+      classes.push("has-unread");
     }
     return classes.join(" ");
   },
