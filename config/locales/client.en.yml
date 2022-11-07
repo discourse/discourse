@@ -4639,6 +4639,7 @@ en:
         change_settings_short: "Settings"
         howto: "How do I install plugins?"
         official: "Official Plugin"
+        broken_route: "Unable to configure link to '%{name}'. Ensure ad-blockers are disabled and try reloading the page."
 
       backups:
         title: "Backups"

@@ -64,6 +64,7 @@ task 'assets:precompile:css' => 'environment' do
         STDERR.puts "-------------"
         STDERR.puts "Compiling CSS for #{db} #{Time.zone.now}"
         begin
+          Stylesheet::Manager.recalculate_fs_asset_cachebuster!
           Stylesheet::Manager.precompile_css if db == "default"
           Stylesheet::Manager.precompile_theme_css
         rescue PG::UndefinedColumn, ActiveModel::MissingAttributeError, NoMethodError => e

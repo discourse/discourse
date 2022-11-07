@@ -7,6 +7,7 @@ import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import User from "discourse/models/user";
 import { next } from "@ember/runloop";
 import { getOwner } from "discourse-common/lib/get-owner";
+import sinon from "sinon";
 
 function topicWithStream(streamDetails) {
   const topic = this.store.createRecord("topic");
@@ -76,6 +77,27 @@ module("Unit | Controller | topic", function (hooks) {
     model.set("views", 3);
     controller.send("deleteTopic");
     assert.ok(destroyed, "destroy not popular topic");
+  });
+
+  test("deleteTopic permanentDelete", function (assert) {
+    const opts = { force_destroy: true };
+    const model = this.store.createRecord("topic");
+    const siteSettings = this.owner.lookup("service:site-settings");
+    siteSettings.min_topic_views_for_delete_confirm = 5;
+
+    const controller = this.owner.lookup("controller:topic");
+    controller.setProperties({ model });
+    model.set("views", 100);
+
+    const stub = sinon.stub(model, "destroy");
+    controller.send("deleteTopic", { force_destroy: true });
+
+    assert.deepEqual(
+      stub.getCall(0).args[1],
+      opts,
+      "does not show delete confirm permanently deleting, passes opts to model action"
+      // permanent delete happens after first delete, no need to show modal again
+    );
   });
 
   test("toggleMultiSelect", async function (assert) {

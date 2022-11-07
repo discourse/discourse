@@ -57,6 +57,13 @@ module.exports = function (defaults) {
     autoImport: {
       forbidEval: true,
       insertScriptsAt: "ember-auto-import-scripts",
+      webpack: {
+        // Workarounds for https://github.com/ef4/ember-auto-import/issues/519 and https://github.com/ef4/ember-auto-import/issues/478
+        devtool: isProduction ? false : "source-map", // Sourcemaps contain reference to the ephemeral broccoli cache dir, which changes on every deploy
+        optimization: {
+          moduleIds: "size", // Consistent module references https://github.com/ef4/ember-auto-import/issues/478#issuecomment-1000526638
+        },
+      },
     },
     fingerprint: {
       // Handled by Rails asset pipeline

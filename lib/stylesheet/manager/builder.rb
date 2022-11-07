@@ -13,7 +13,7 @@ class Stylesheet::Manager::Builder
   def compile(opts = {})
     if !opts[:force]
       if File.exist?(stylesheet_fullpath)
-        unless StylesheetCache.where(target: qualified_target, digest: digest).exists?
+        if !StylesheetCache.where(target: qualified_target, digest: digest).exists?
           begin
             source_map = begin
               File.read(source_map_fullpath)
@@ -229,7 +229,7 @@ class Stylesheet::Manager::Builder
   end
 
   def default_digest
-    Digest::SHA1.hexdigest "default-#{Stylesheet::Manager.last_file_updated}-#{plugins_digest}-#{current_hostname}"
+    Digest::SHA1.hexdigest "default-#{Stylesheet::Manager.fs_asset_cachebuster}-#{plugins_digest}-#{current_hostname}"
   end
 
   def color_scheme_digest
@@ -248,9 +248,9 @@ class Stylesheet::Manager::Builder
     digest_string = "#{current_hostname}-"
     if cs || categories_updated > 0
       theme_color_defs = resolve_baked_field(:common, :color_definitions)
-      digest_string += "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.last_file_updated}-#{categories_updated}-#{fonts}"
+      digest_string += "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.fs_asset_cachebuster}-#{categories_updated}-#{fonts}"
     else
-      digest_string += "defaults-#{Stylesheet::Manager.last_file_updated}-#{fonts}"
+      digest_string += "defaults-#{Stylesheet::Manager.fs_asset_cachebuster}-#{fonts}"
 
       if cdn_url = GlobalSetting.cdn_url
         digest_string += "-#{cdn_url}"

@@ -20,7 +20,6 @@ import discourseLater from "discourse-common/lib/later";
 import { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
 import { resetIdle } from "discourse/lib/desktop-notifications";
-import { defaultHomepage } from "discourse/lib/utilities";
 import { capitalize } from "@ember/string";
 import {
   onPresenceChange,
@@ -28,6 +27,7 @@ import {
 } from "discourse/lib/user-presence";
 import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
 import { isTesting } from "discourse-common/config/environment";
+import { defaultHomepage } from "discourse/lib/utilities";
 
 const MAX_RECENT_MSGS = 100;
 const STICKY_SCROLL_LENIENCE = 50;
@@ -74,6 +74,7 @@ export default Component.extend({
   router: service(),
   chatEmojiPickerManager: service(),
   chatComposerPresenceManager: service(),
+  chatPreferredMode: service(),
   fullPageChat: service(),
 
   getCachedChannelDetails: null,
@@ -1265,15 +1266,16 @@ export default Component.extend({
 
   @action
   onCloseFullScreen(channel) {
-    this.fullPageChat.isPreferred = false;
-    this.appEvents.trigger("chat:open-channel", channel);
+    this.chatPreferredMode.setDrawer();
 
-    const previousRouteInfo = this.fullPageChat.exit();
-    if (previousRouteInfo) {
-      this._transitionToRoute(previousRouteInfo);
-    } else {
-      this.router.transitionTo(`discovery.${defaultHomepage()}`);
+    let previousURL = this.fullPageChat.exit();
+    if (!previousURL || previousURL === "/") {
+      previousURL = this.router.urlFor(`discovery.${defaultHomepage()}`);
     }
+
+    this.router.replaceWith(previousURL).then(() => {
+      this.appEvents.trigger("chat:open-channel", channel);
+    });
   },
 
   @action
@@ -1430,18 +1432,6 @@ export default Component.extend({
         this.set("hasNewMessages", true);
       }
     });
-  },
-
-  _transitionToRoute(routeInfo) {
-    const routeName = routeInfo.name;
-    let params = [];
-
-    do {
-      params = Object.values(routeInfo.params).concat(params);
-      routeInfo = routeInfo.parent;
-    } while (routeInfo);
-
-    this.router.transitionTo(routeName, ...params);
   },
 
   @bind
