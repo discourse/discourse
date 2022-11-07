@@ -57,6 +57,19 @@ module.exports = function (defaults) {
     autoImport: {
       forbidEval: true,
       insertScriptsAt: "ember-auto-import-scripts",
+      webpack: {
+        output: {
+          // Workaround for https://github.com/ef4/ember-auto-import/issues/519
+          // Upstreamed in https://github.com/ef4/ember-auto-import/pull/548
+          filename: `chunk.[id].[contenthash].js`,
+          chunkFilename: `chunk.[id].[contenthash].js`,
+        },
+        optimization: {
+          // Workaround to provide deterministic chunk output
+          // See https://github.com/ef4/ember-auto-import/issues/478#issuecomment-1000526638
+          moduleIds: "size",
+        },
+      },
     },
     fingerprint: {
       // Handled by Rails asset pipeline
