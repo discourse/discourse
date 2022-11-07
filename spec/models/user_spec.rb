@@ -53,7 +53,20 @@ RSpec.describe User do
           tag.id
         )
 
-        user = Fabricate(:admin)
+        admin = Fabricate(:admin)
+
+        expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: admin.id).pluck(:linkable_id)).to contain_exactly(
+          category.id,
+          secured_category.id
+        )
+
+        expect(SidebarSectionLink.where(linkable_type: 'Tag', user_id: admin.id).pluck(:linkable_id)).to contain_exactly(
+          tag.id,
+          hidden_tag.id
+        )
+
+        # A user promoted to admin should get secured sidebar records
+        user.update(admin: true)
 
         expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
           category.id,
