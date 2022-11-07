@@ -1270,7 +1270,7 @@ export default Component.extend({
 
     let previousURL = this.fullPageChat.exit();
     if (!previousURL || previousURL === "/") {
-      previousURL = `discovery`;
+      previousURL = "discovery";
     }
 
     this.router.replaceWith(previousURL).then(() => {
