@@ -10,9 +10,9 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import AppEvents from "discourse/services/app-events";
 import EmberObject from "@ember/object";
-import Post from "discourse/models/post";
 import createStore from "discourse/tests/helpers/create-store";
 import { test } from "qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 function createComposer(opts) {
   opts = opts || {};
@@ -276,7 +276,8 @@ discourseModule("Unit | Model | composer", function () {
     const composer = createComposer();
     assert.ok(!composer.get("editingFirstPost"), "it's false by default");
 
-    const post = Post.create({ id: 123, post_number: 2 });
+    const store = getOwner(this).lookup("service:store");
+    const post = store.createRecord("post", { id: 123, post_number: 2 });
     composer.setProperties({ post, action: EDIT });
     assert.ok(
       !composer.get("editingFirstPost"),
@@ -291,10 +292,11 @@ discourseModule("Unit | Model | composer", function () {
   });
 
   test("clearState", function (assert) {
+    const store = getOwner(this).lookup("service:store");
     const composer = createComposer({
       originalText: "asdf",
       reply: "asdf2",
-      post: Post.create({ id: 1 }),
+      post: store.createRecord("post", { id: 1 }),
       title: "wat",
     });
 
@@ -358,7 +360,8 @@ discourseModule("Unit | Model | composer", function () {
     this.siteSettings.max_topic_title_length = 10;
     const composer = createComposer();
 
-    const post = Post.create({
+    const store = getOwner(this).lookup("service:store");
+    const post = store.createRecord("post", {
       id: 123,
       post_number: 2,
       static_doc: true,
