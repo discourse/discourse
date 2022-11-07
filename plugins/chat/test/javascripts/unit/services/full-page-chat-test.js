@@ -26,12 +26,6 @@ module("Discourse Chat | Unit | Service | full-page-chat", function (hooks) {
     assert.strictEqual(this.fullPageChat.isActive, false);
   });
 
-  test("isPreferred", function (assert) {
-    assert.strictEqual(this.fullPageChat.isPreferred, false);
-    this.fullPageChat.isPreferred = true;
-    assert.strictEqual(this.fullPageChat.isPreferred, true);
-  });
-
   test("previous route", function (assert) {
     const name = "foo";
     const params = { id: 1, slug: "bar" };

@@ -8,7 +8,7 @@ export default createWidget("header-chat-link", {
   chat: null,
   tagName: "li.header-dropdown-toggle.open-chat",
   title: "chat.title",
-  services: ["chat", "router", "fullPageChat"],
+  services: ["chat", "router", "chatPreferredMode", "fullPageChat"],
 
   html() {
     if (!this.chat.userCanChat) {
@@ -68,9 +68,9 @@ export default createWidget("header-chat-link", {
     if (
       this.chat.sidebarActive ||
       this.site.mobileView ||
-      this.fullPageChat.isPreferred
+      this.chatPreferredMode.isFullPage
     ) {
-      this.fullPageChat.isPreferred = true;
+      this.chatPreferredMode.setFullPage();
       return this.router.transitionTo("chat");
     } else {
       this.appEvents.trigger("chat:toggle-open");
