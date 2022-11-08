@@ -7,9 +7,293 @@
 ar:
   js:
     discourse_automation:
-      title: التشغيل الآلي
+      title: الأتمتة
       create: إنشاء
       update: تحديث
       select_script: حدِّد برنامجًا نصيًا
       select_trigger: حدِّد مشغلًا
       confirm_automation_reset: سيؤدي هذا الإجراء إلى إعادة تعيين البرنامج النصي وتشغيل الخيارات، وسيتم حفظ الحالة الجديدة، هل تريد المتابعة؟
+      confirm_automation_trigger: سيؤدي هذا الإجراء إلى تشغيل الأتمتة، هل تريد المتابعة؟
+      no_automation_yet: لم تُنشئ أي أتمتة حتى الآن.
+      edit_automation:
+        trigger_section:
+          forced: يتم فرض هذا المشغِّل بواسطة البرنامج النصي.
+          next_pending_automation: "سيتم تشغيل الأتمتة التالية في: %{date}"
+          trigger_now: "التشغيل الآن"
+          title: متى/ماذا...
+        fields_section:
+          title: خيارات البرنامج النصي
+      destroy_automation:
+        confirm: "هل تريد بالتأكيد حذف `%{name}`؟"
+      fields:
+        key_value:
+          label: التهيئة
+        user:
+          label: المستخدم
+        pm:
+          title:
+            label: العنوان
+          raw:
+            label: النص
+        pms:
+          confirm_remove_pm: "هل تريد بالتأكيد إزالة هذه الرسالة الشخصية؟"
+          placeholder_title: عنوان الرسالة الشخصية
+          add_pm: إضافة رسالة شخصية
+          no_pm_created: لم تُنشئ أي رسالة شخصية بعد. سيتم إرسال الرسائل الشخصية بعد تشغيل الأتمتة.
+          title:
+            label: العنوان
+          raw:
+            label: النص
+          delay:
+            label: التأخير (بالدقائق)
+          encrypt:
+            label: يشفِّر الرسائل الشخصية إذا كانت متاحة
+        group:
+          label: المجموعة
+        text:
+          label: النص
+      triggerables:
+        not_found: تعذَّر العثور على المشغِّل `%{trigger}` للأتمتة `%{automation}`، تأكَّد من تثبيت المكوِّن الإضافي ذي الصلة
+        user_badge_granted:
+          fields:
+            badge:
+              label: شارة
+            only_first_grant:
+              label: على المنحة الأولى فقط
+        stalled_topic:
+          durations:
+            PT1H: "ساعة واحدة"
+            P1D: "يوم واحد"
+            P1W: "أسبوع واحد"
+            P2W: "أسبوعان"
+            P1M: "شهر واحد"
+            P3M: "ثلاثة أشهر"
+            P6M: "ستة أشهر"
+            P1Y: "عام واحد"
+          fields:
+            categories:
+              label: يقتصر على الفئات
+            tags:
+              label: يقتصر على الوسوم
+            stalled_after:
+              label: توقفت بعد
+        recurring:
+          every: كل
+          frequencies:
+            minute: دقيقة
+            hour: ساعة
+            day: يوم
+            weekday: يوم من أيام الأسبوع
+            week: أسبوع
+            month: شهر
+            year: عام
+          fields:
+            recurrence:
+              label: التكرار
+            start_date:
+              label: تاريخ البدء
+        stalled_wiki:
+          durations:
+            PT1H: "ساعة واحدة"
+            P1D: "يوم واحد"
+            P1W: "أسبوع واحد"
+            P2W: "أسبوعان"
+            P1M: "شهر واحد"
+            P3M: "ثلاثة أشهر"
+            P6M: "ستة أشهر"
+            P1Y: "عام واحد"
+          fields:
+            restricted_category:
+              label: مقتصر على الفئة
+            stalled_after:
+              label: تأخير المشغِّل
+              description: يحدِّد التأخير بين تعديل Wiki الأخير ومشغِّل الأتمتة
+            retriggered_after:
+              label: التأخير في إعادة التشغيل
+              description: يحدِّد التأخير بين المشغِّل الأول والمشغِّل التالي، إذا لم يتم تعديل Wiki بعد أول مشغِّل
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: مجموعة متتبَّعة
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: مجموعة متتبَّعة
+        user_promoted:
+          fields:
+            restricted_group:
+              label: التقييد إلى المجموعة
+            trust_level_transition:
+              label: نقل مستوى الثقة
+          trust_levels:
+            ALL: "كل مستويات الثقة"
+            TL01: "مستوى الثقة 0 إلى المستوى الثقة 1"
+            TL12: "مستوى الثقة 1 إلى المستوى الثقة 2"
+            TL23: "مستوى الثقة 2 إلى المستوى الثقة 3"
+            TL34: "مستوى الثقة 3 إلى المستوى الثقة 4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: التنفيذ في
+        topic:
+          fields:
+            restricted_topic:
+              label: معرِّف الموضوع
+        post_created_edited:
+          fields:
+            valid_trust_levels:
+              label: مستويات الثقة الصالحة
+              description: سيتم التشغيل فقط إذا تم إنشاء المنشور بواسطة مستخدم في مستويات الثقة هذه، ويتم تعيينه افتراضيًا على أي مستوى ثقة
+            restricted_category:
+              label: الفئة
+              description: اختياري، يسمح بتقييد تنفيذ المشغِّل لهذه الفئة
+        pm_created:
+          fields:
+            restricted_user:
+              label: المستخدم
+              description: يسمح بالحد من تنفيذ المشغِّل لهذا المستخدم
+            ignore_staff:
+              label: تجاهل فريق العمل
+              description: تخطي المشغِّل إذا كان المُرسل مستخدمًا من فريق العمل
+            valid_trust_levels:
+              label: مستويات الثقة الصالحة
+              description: سيتم التشغيل فقط إذا تم إنشاء المنشور بواسطة مستخدم في مستويات الثقة هذه، ويتم تعيينه افتراضيًا على أي مستوى ثقة
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: مستويات الثقة الصالحة
+              description: سيتم التشغيل فقط إذا تم إنشاء المنشور بواسطة مستخدم في مستويات الثقة هذه، ويتم تعيينه افتراضيًا على أي مستوى ثقة
+            restricted_category:
+              label: الفئة
+              description: اختياري، يسمح بتقييد تنفيذ المشغِّل لهذه الفئة
+            restricted_tags:
+              label: الوسوم
+              description: اختياري، يسمح بتقييد تنفيذ المشغِّل لأي وسم من هذه الوسوم
+      scriptables:
+        not_found: تعذَّر العثور على البرنامج النصي `%{script}` للأتمتة `%{automation}`، تأكَّد من تثبيت المكوِّن الإضافي ذي الصلة
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: عنوان URL لخطاف الويب
+              description: "يتوقع عنوان URL صالحًا لخطاف ويب Zapier؛ على سبيل المثال: https://hooks.zapier.com/hooks/catch/xxx/yyy/"
+        auto_responder:
+          fields:
+            once:
+              label: مرة واحدة
+              description: يستجيب مرة واحدة فقط لكل موضوع
+            word_answer_list:
+              label: قائمة أزواج الكلمات/الإجابات
+              description: "يحدِّد قائمة من مجموعات المفاتيح/القيم، حيث يكون `key` هو المصطلح الذي يتم البحث عنه، و`value` هي نص الرد. لاحظ أن `value` تقبل \"%%KEY%%\" كعنصر نائب ليتم استبداله بقيمة `key` في الرد. لاحظ أنه سيتم تقييم `key` باعتباره تعبيرًا عاديًا، ويجب تخطي الأحرف الخاصة مثل `.` إذا كنت تقصد بالفعل نقطة؛ على سبيل المثال: `\\.`"
+            answering_user:
+              label: المستخدم المجيب
+              description: يتم تعيينه افتراضيًا إلى مستخدم النظام
+        post:
+          fields:
+            creator:
+              label: المُنشئ
+            topic:
+              label: معرِّف الموضوع
+            post:
+              label: محتوى المنشور
+        user_global_notice:
+          fields:
+            level:
+              label: المستوى
+            notice:
+              label: الإخطار
+              description: يقبل HTML، لا تملأ هذا بإدخال غير موثوق فيه!
+          levels:
+            warning: تحذير
+            info: المعلومات
+            success: تم بنجاح
+            error: خطأ
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: التعليق حتى (الإعداد الافتراضي)
+            reason:
+              label: السبب (الإعداد الافتراضي)
+            actor:
+              label: المستخدم
+              description: "المستخدم المسؤول عن التعليق (الإعداد الافتراضي: النظام)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: معرِّف الموضوع
+            pinned_globally:
+              label: مثبَّت بشكلٍ عام
+            pinned_until:
+              label: مثبَّت حتى
+        banner_topic:
+          fields:
+            topic_id:
+              label: معرِّف الموضوع
+            banner_until:
+              label: التحويل إلى لافتة حتى
+            user:
+              label: المستخدم
+              description: "المستخدم الذي يُنشئ البانر (الإعداد الافتراضي: النظام)"
+        flag_post_on_words:
+          fields:
+            words:
+              label: الكلمات المتحقَّق منها
+        topic_required_words:
+          fields:
+            words:
+              label: قائمة الكلمات المطلوبة
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: اسم مجموعة المشاركين
+            giftee_assignment_messages:
+              label: الرسائل إلى مُرسل الهدية
+        send_pms:
+          add_a_pm_btn:
+            label: إضافة رسالة شخصية
+          fields:
+            receiver:
+              label: مستقبل الرسالة الشخصية
+            sendable_pms:
+              label: الرسائل الشخصية
+            sender:
+              label: مُرسل الرسائل الشخصية
+        close_topic:
+          fields:
+            topic:
+              label: معرِّف الموضوع
+            message:
+              label: الرسالة الختامية
+              description: "رسالة اختيارية لإظهارها في سجل \"تم إغلاق الموضوع\""
+            user:
+              label: المستخدم
+              description: "المستخدم الذي يغلق الموضوع (الافتراضي: النظام)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "اسم الحقل المخصَّص للمستخدم"
+      models:
+        script:
+          name:
+            label: البرنامج النصي
+        trigger:
+          name:
+            label: المشغِّل
+        automation:
+          name:
+            label: الاسم
+          trigger:
+            label: المشغِّل
+          script:
+            label: البرنامج النصي
+          version:
+            label: الإصدار
+          enabled:
+            label: مفعَّل
+          disabled:
+            label: متوقف
+          placeholders:
+            label: العناصر النائبة
+          last_updated_at:
+            label: آخر تحديث
+          last_updated_by:
+            label: تم التحديث بواسطة
