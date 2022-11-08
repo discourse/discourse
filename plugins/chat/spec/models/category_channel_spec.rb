@@ -134,7 +134,7 @@ RSpec.describe CategoryChannel do
         it "adds a validation error" do
           channel.slug = "awesome-channel"
           channel.validate
-          expect(channel.errors.full_messages).to include("Slug is already in use")
+          expect(channel.errors.full_messages.first).to include(I18n.t("chat.category_channel.errors.is_already_in_use"))
         end
       end
 
@@ -144,7 +144,7 @@ RSpec.describe CategoryChannel do
         it "fails if slug contains non-ascii characters" do
           channel.slug = "sem-acentuação"
           channel.validate
-          expect(channel.errors.full_messages.first).to match(/#{I18n.t("category_channel.errors.slug_contains_non_ascii_chars")}/)
+          expect(channel.errors.full_messages.first).to match(/#{I18n.t("chat.category_channel.errors.slug_contains_non_ascii_chars")}/)
         end
       end
     end
