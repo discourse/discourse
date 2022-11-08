@@ -83,11 +83,14 @@ RSpec.describe "ImportScripts::FluxBB" do
           let(:example_post_content) {
             "[b]Bold text[/b]\n" +
             "[i]Italic text[/i]\n" +
+            "Paragraph test.\n\nPara2.\n\n[b][i]Para 3.\n\nPara 4.[/i][/b]\n\nPara 5.\n" +
+            "[s]Strike-through text[/s]\n" +
             "[del]Deleted text[/del]\n" +
             "[ins]Inserted text[/ins]\n" +
             "[em]Emphasised text[/em]\n" +
             "[h]Heading[/h]\n" +
             "[h]Heading[/h]Text on the same line\n" +
+            "[h]Heading\nOn two lines[/h]\n" +
             "[url=https://www.discourse.org/]Link with link text[/url]\n" +
             "[url]https://www.discourse.org/[/url] - Link without link text\n" +
             "[url=/about]Relative link[/url]\n" +
@@ -105,11 +108,14 @@ RSpec.describe "ImportScripts::FluxBB" do
             expect(Post.last.raw).to eq(
               "**Bold text**\n" +
               "*Italic text*\n" +
+              "Paragraph test.\n\nPara2.\n\n***Para 3.\n<br>Para 4.***\n\nPara 5.\n" +
+              "~~Strike-through text~~\n" +
               "<del>Deleted text</del>\n" +
               "<ins>Inserted text</ins>\n" +
               "**Emphasised text**\n" +
               "\n## Heading\n\n" +
               "\n## Heading\nText on the same line\n" +
+              "\n## Heading<br>On two lines\n\n" +
               "[Link with link text](https://www.discourse.org/)\n" +
               "[https://www.discourse.org/](https://www.discourse.org/) - Link without link text\n" +
               "[Relative link](/about)\n" +
@@ -123,66 +129,52 @@ RSpec.describe "ImportScripts::FluxBB" do
               ":)=) Smiley whitespace=) https://awkward.com?x=D :rage::mad::mad:"
             )
           end
-        end
 
-        context "with bbcode examples which are best left in bbcode format" do
-          let(:example_post_content) {
-            "[u]Underlined text[/u]\n" +
-            "[email]myname@example.com[/email] - email link without link text\n" +
-            "[email=myname@example.com]Email link with link text[/email]" +
-            "[code]Code[/code]\n" +
-            "[quote=James]This is the text I want to quote.[/quote]\n" +
-            "[quote]This is the text I want to quote.[/quote] \n" +
-            ":) :| :( :D :O ;) :/ :P :p :cool:"
-          }
+          context "with bbcode examples which are best left in bbcode format" do
+            let(:example_post_content) {
+              "[u]Underlined text[/u]\n" +
+              "[email]myname@example.com[/email] - email link without link text\n" +
+              "[email=myname@example.com]Email link with link text[/email]" +
+              "[code]Code[/code]\n" +
+              "[quote=James]This is the text I want to quote.[/quote]\n" +
+              "[quote]This is the text I want to quote.[/quote] \n" +
+              ":) :| :( :D :O ;) :/ :P :p :cool:"
+            }
 
-          it "does no conversion leaving discourse to handle the bbcode" do
-            expect(Post.last.raw).to eq(example_post_content)
+            it "does no conversion leaving discourse to handle the bbcode" do
+              expect(Post.last.raw).to eq(example_post_content)
+            end
           end
-        end
 
-        context "with color bbcode examples which have no support in discourse" do
-          let(:example_post_content) {
-            "[color=#FF0000]Red text[/color]\n" +
-            "[color=blue]Blue text[/color]"
-          }
+          context "with color bbcode examples which have no support in discourse" do
+            let(:example_post_content) {
+              "[color=#FF0000]Red text[/color]\n" +
+              "[color=blue]Blue text[/color]"
+            }
 
-          it "drops the unsupported bbcode leaving plain unformatted text" do
-            expect(Post.last.raw).to eq(
-              "Red text\n" +
-              "Blue text"
-            )
+            it "drops the unsupported bbcode leaving plain unformatted text" do
+              expect(Post.last.raw).to eq(
+                "Red text\n" +
+                "Blue text"
+              )
+            end
           end
-        end
 
-        context "with FluxBB internal linking syntax which will be hard to convert" do
-          let(:example_post_content) {
-            "[topic=1]Internal link to fluxbb topic with link text[/topic]\n" +
-            "[topic]1[/topic] - Internal link to fluxbb topic without link text\n" +
-            "[post=1]Internal link to fluxbb post with link text[/post]\n" +
-            "[post]1[/post] - Internal link to fluxbb post without link text\n" +
-            "[forum=1]Internal link to fluxbb forum with link text[/forum]\n" +
-            "[forum]1[/forum] - Internal link to fluxbb forum without link text\n" +
-            "[user=2]Internal link to fluxbb user profile with link text[/user]\n" +
-            "[user]2[/user] - Internal link to fluxbb user without link text"
-          }
+          context "with FluxBB internal linking syntax which will be hard to convert" do
+            let(:example_post_content) {
+              "[topic=1]Internal link to fluxbb topic with link text[/topic]\n" +
+              "[topic]1[/topic] - Internal link to fluxbb topic without link text\n" +
+              "[post=1]Internal link to fluxbb post with link text[/post]\n" +
+              "[post]1[/post] - Internal link to fluxbb post without link text\n" +
+              "[forum=1]Internal link to fluxbb forum with link text[/forum]\n" +
+              "[forum]1[/forum] - Internal link to fluxbb forum without link text\n" +
+              "[user=2]Internal link to fluxbb user profile with link text[/user]\n" +
+              "[user]2[/user] - Internal link to fluxbb user without link text"
+            }
 
-          it "does no conversion leaving bbcode in place for manual conversion" do
-            expect(Post.last.raw).to eq(example_post_content)
-          end
-        end
-
-        context "with fluxbb bbcode syntax examples which are not yet working!" do
-          let(:example_post_content) {
-            "[h]Heading\non two lines[/h]\n" +
-            "[s]Strike-through text[/s]\n"
-          }
-
-          xit "converts bbcode to markdown in the resulting Post" do
-            expect(Post.last.raw).to eq(
-              "## Heading<br>on two lines\n" +
-              "~~Strike-through text~~\n"
-            )
+            it "does no conversion leaving bbcode in place for manual conversion" do
+              expect(Post.last.raw).to eq(example_post_content)
+            end
           end
         end
       end

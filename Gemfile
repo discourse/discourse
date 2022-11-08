@@ -253,7 +253,7 @@ if ENV["IMPORT"] == "1"
 
   # NOTE: in import mode the version of sqlite can matter a lot, so we stick it to a specific one
   gem "sqlite3", "~> 1.3", ">= 1.3.13"
-  gem "ruby-bbcode-to-md", git: "https://github.com/nlalonde/ruby-bbcode-to-md"
+  gem 'ruby-bbcode-to-md', git: 'https://github.com/harry-wood/ruby-bbcode-to-md', branch: 'fluxbb-tests-and-fixes'
   gem "reverse_markdown"
   gem "tiny_tds"
   gem "csv"

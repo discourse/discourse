@@ -286,6 +286,7 @@ class ImportScripts::FluxBB < ImportScripts::Base
     {
       h: {
         html_open: "\n## ", html_close: "\n",
+        newlines: :to_br,
         description: 'Make a heading',
         example: '[h]My Heading[/h]' },
       del: {
