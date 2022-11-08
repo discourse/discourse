@@ -276,7 +276,19 @@ class ImportScripts::FluxBB < ImportScripts::Base
       h: {
         html_open: "\n## ", html_close: "\n",
         description: 'Make a heading',
-        example: '[h]My Heading[/h]' }
+        example: '[h]My Heading[/h]' },
+      del: {
+        html_open: '<del>', html_close: '</del>',
+        description: 'Deleted text',
+        example: 'This is [del]deleted[/del].' },
+      ins: {
+        html_open: '<ins>', html_close: '</ins>',
+        description: 'Inserted text',
+        example: 'This is [ins]inserted[/ins].' },
+      em: {
+        html_open: '**', html_close: '**',
+        description: 'Make text emphasised (same as bold in markdown)',
+        example: 'This is [em]emphasised[/em].' }
     }
   end
 
