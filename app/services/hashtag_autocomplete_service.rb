@@ -60,6 +60,10 @@ class HashtagAutocompleteService
     # and must be unique so it can be used for lookups via the #lookup
     # method above.
     attr_accessor :ref
+
+    # The URL for the resource that is represented by the autocomplete
+    # item, used for the cooked hashtags, e.g. /c/2/staff
+    attr_accessor :url
   end
 
   def initialize(guardian)
@@ -72,7 +76,7 @@ class HashtagAutocompleteService
 
     types_in_priority_order =
       types_in_priority_order.select { |type| @@data_sources.keys.include?(type) }
-    lookup_results = Hash[types_in_priority_order.collect { |type| [type.to_sym, {}] }]
+    lookup_results = Hash[types_in_priority_order.collect { |type| [type.to_sym, []] }]
     limited_slugs = slugs[0..HashtagAutocompleteService::HASHTAGS_PER_REQUEST]
 
     slugs_without_suffixes = limited_slugs.reject do |slug|
@@ -87,8 +91,8 @@ class HashtagAutocompleteService
     # composer we want a slug without a suffix to be a category first, tag second
     types_in_priority_order.each do |type|
       result = @@data_sources[type].lookup(guardian, slugs_without_suffixes)
-      lookup_results[type.to_sym] = lookup_results[type.to_sym].merge(result)
-      slugs_without_suffixes = slugs_without_suffixes - result.keys
+      lookup_results[type.to_sym] = lookup_results[type.to_sym].concat(result)
+      slugs_without_suffixes = slugs_without_suffixes - result.map(&:slug)
       break if slugs_without_suffixes.empty?
     end
 
@@ -103,7 +107,7 @@ class HashtagAutocompleteService
       end
       next if typed_slugs.empty?
       result = @@data_sources[type].lookup(guardian, typed_slugs)
-      lookup_results[type.to_sym] = lookup_results[type.to_sym].merge(result)
+      lookup_results[type.to_sym] = lookup_results[type.to_sym].concat(result)
     end
 
     lookup_results

@@ -5,13 +5,18 @@
 # tags via the # autocomplete character.
 class TagHashtagDataSource
   def self.lookup(guardian, slugs)
-    tag_hashtags = {}
-    return tag_hashtags if !SiteSetting.tagging_enabled
+    return if !SiteSetting.tagging_enabled
 
     DiscourseTagging
       .filter_visible(Tag.where_name(slugs), guardian)
-      .each { |tag| tag_hashtags[tag.name] = tag.full_url }
-    tag_hashtags
+      .map do |tag|
+        HashtagAutocompleteService::HashtagItem.new.tap do |item|
+          item.text = tag.name
+          item.slug = tag.name
+          item.url = tag.url
+          item.icon = "tag"
+        end
+      end
   end
 
   def self.search(guardian, term, limit)

@@ -7,21 +7,28 @@ class CategoryHashtagDataSource
   def self.lookup(guardian, slugs)
     category_slugs_and_ids =
       slugs.map { |slug| [slug, Category.query_from_hashtag_slug(slug)&.id] }.to_h
-    category_ids_and_urls =
-      Category
-        .secured(guardian)
-        .select(:id, :slug, :parent_category_id) # fields required for generating category URL
-        .where(id: category_slugs_and_ids.values)
-        .map { |c| [c.id, c.url] }
-        .to_h
-    categories_hashtags = {}
-    category_slugs_and_ids.each do |slug, id|
-      if category_url = category_ids_and_urls[id]
-        categories_hashtags[slug] = category_url
+    Category
+      .secured(guardian)
+      .select(:id, :slug, :name, :parent_category_id) # fields required for generating category URL
+      .where(id: category_slugs_and_ids.values)
+      .map do |c|
+        HashtagAutocompleteService::HashtagItem.new.tap do |item|
+          item.text = c.name
+          item.slug = c.slug
+          item.icon = "folder"
+          item.url = c.url
+        end
       end
-    end
+    # .map { |c| [c.id, c.url] }
+    # .to_h
+    # categories_hashtags = {}
+    # category_slugs_and_ids.each do |slug, id|
+    #   if category_url = category_ids_and_urls[id]
+    #     categories_hashtags[slug] = category_url
+    #   end
+    # end
 
-    categories_hashtags
+    # categories_hashtags
   end
 
   def self.search(guardian, term, limit)

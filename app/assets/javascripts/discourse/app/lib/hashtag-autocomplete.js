@@ -1,5 +1,4 @@
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import { replaceSpan } from "discourse/lib/category-hashtags";
 import discourseLater from "discourse-common/lib/later";
 import { INPUT_DELAY, isTesting } from "discourse-common/config/environment";
 import { cancel } from "@ember/runloop";
@@ -14,13 +13,18 @@ import {
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 
 export function setupHashtagAutocomplete(
-  context,
+  orderedContextTypes,
   $textArea,
   siteSettings,
   afterComplete
 ) {
   if (siteSettings.enable_experimental_hashtag_autocomplete) {
-    _setupExperimental(context, $textArea, siteSettings, afterComplete);
+    _setupExperimental(
+      orderedContextTypes,
+      $textArea,
+      siteSettings,
+      afterComplete
+    );
   } else {
     _setup($textArea, siteSettings, afterComplete);
   }
@@ -56,34 +60,40 @@ export function hashtagTriggerRule(textarea, opts) {
 
 const checkedHashtags = new Set();
 let seenHashtags = {};
-export function fetchUnseenHashtagsInContext(context, slugs) {
+export function fetchUnseenHashtagsInContext(orderedContextTypes, slugs) {
   return ajax("/hashtags", {
-    data: { slugs, order: _sortedContextParams(context) },
+    data: { slugs, order: orderedContextTypes },
   }).then((response) => {
     seenHashtags = Object.assign(seenHashtags, response);
     slugs.forEach(checkedHashtags.add, checkedHashtags);
   });
 }
 
-export function linkSeenHashtagsInContext(context, elem) {
-  const contextTypes = _sortedContextParams(context);
-  const hashtags = [...(elem?.querySelectorAll("span.hashtag") || [])];
-  if (hashtags.length === 0) {
+export function linkSeenHashtagsInContext(orderedContextTypes, elem) {
+  const hashtagSpans = [...(elem?.querySelectorAll("span.hashtag") || [])];
+  if (hashtagSpans.length === 0) {
     return [];
   }
-  const slugs = [...hashtags.map((hashtag) => hashtag.innerText.slice(1))];
+  const slugs = [...hashtagSpans.map((hashtag) => hashtag.innerText.slice(1))];
 
-  hashtags.forEach((hashtag, index) => {
+  hashtagSpans.forEach((hashtagSpan, index) => {
     let slug = slugs[index];
 
     // remove type suffixes
-    contextTypes.forEach((type) => {
+    orderedContextTypes.forEach((type) => {
       const typePostfix = `::${type}`;
       if (slug.endsWith(typePostfix)) {
         slug = slug.slice(0, slug.length - typePostfix.length);
       }
-      if (seenHashtags[type][slug]) {
-        replaceSpan($(hashtag), slug, seenHashtags[type][slug]);
+
+      const matchingSeenHashtag = seenHashtags[type].find(
+        (ht) => ht.slug === slug
+      );
+      if (matchingSeenHashtag) {
+        // TODO (martin) Replace jquery usage here
+        $(hashtagSpan).replaceWith(
+          `<a href="${matchingSeenHashtag.url}" class="hashtag" data-type="${type}">#<span>${matchingSeenHashtag.text}</span></a>`
+        );
       }
     });
   });
@@ -94,7 +104,12 @@ export function linkSeenHashtagsInContext(context, elem) {
     .filter((slug) => !checkedHashtags.has(slug));
 }
 
-function _setupExperimental(context, $textArea, siteSettings, afterComplete) {
+function _setupExperimental(
+  orderedContextTypes,
+  $textArea,
+  siteSettings,
+  afterComplete
+) {
   $textArea.autocomplete({
     template: findRawTemplate("hashtag-autocomplete"),
     key: "#",
@@ -105,7 +120,7 @@ function _setupExperimental(context, $textArea, siteSettings, afterComplete) {
       if (term.match(/\s/)) {
         return null;
       }
-      return _searchGeneric(term, siteSettings, context);
+      return _searchGeneric(term, siteSettings, orderedContextTypes);
     },
     triggerRule: (textarea, opts) => hashtagTriggerRule(textarea, opts),
   });
@@ -137,7 +152,7 @@ function _updateSearchCache(term, results) {
   return results;
 }
 
-function _searchGeneric(term, siteSettings, context) {
+function _searchGeneric(term, siteSettings, orderedContextTypes) {
   if (currentSearch) {
     currentSearch.abort();
     currentSearch = null;
@@ -165,16 +180,16 @@ function _searchGeneric(term, siteSettings, context) {
       discourseDebounce(this, _searchRequest, q, ctx, resultFunc, INPUT_DELAY);
     };
 
-    debouncedSearch(term, context, (result) => {
+    debouncedSearch(term, orderedContextTypes, (result) => {
       cancel(timeoutPromise);
       resolve(_updateSearchCache(term, result));
     });
   });
 }
 
-function _searchRequest(term, context, resultFunc) {
+function _searchRequest(term, orderedContextTypes, resultFunc) {
   currentSearch = ajax("/hashtags/search.json", {
-    data: { term, order: _sortedContextParams(context) },
+    data: { term, order: orderedContextTypes },
   });
   currentSearch
     .then((r) => {
@@ -184,10 +199,4 @@ function _searchRequest(term, context, resultFunc) {
       currentSearch = null;
     });
   return currentSearch;
-}
-
-function _sortedContextParams(context) {
-  return Object.entries(context)
-    .sort((a, b) => b[1] - a[1])
-    .map((item) => item[0]);
 }

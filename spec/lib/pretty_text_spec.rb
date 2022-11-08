@@ -1455,11 +1455,12 @@ RSpec.describe PrettyText do
   it "produces hashtag links when enable_experimental_hashtag_autocomplete is enabled" do
     SiteSetting.enable_experimental_hashtag_autocomplete = true
 
+    user = Fabricate(:user)
     category = Fabricate(:category, name: 'testing')
     category2 = Fabricate(:category, name: 'known')
     Fabricate(:topic, tags: [Fabricate(:tag, name: 'known')])
 
-    cooked = PrettyText.cook(" #unknown::tag #known #known::tag #testing")
+    cooked = PrettyText.cook(" #unknown::tag #known #known::tag #testing", user_id: user.id)
 
     [
       "<span class=\"hashtag\">#unknown::tag</span>",
@@ -1471,7 +1472,7 @@ RSpec.describe PrettyText do
       expect(cooked).to include(element)
     end
 
-    cooked = PrettyText.cook("[`a` #known::tag here](http://example.com)")
+    cooked = PrettyText.cook("[`a` #known::tag here](http://example.com)", user_id: user.id)
 
     html = <<~HTML
       <p><a href="http://example.com" rel="noopener nofollow ugc"><code>a</code> #known::tag here</a></p>
@@ -1479,11 +1480,11 @@ RSpec.describe PrettyText do
 
     expect(cooked).to eq(html.strip)
 
-    cooked = PrettyText.cook("<a href='http://example.com'>`a` #known::tag here</a>")
+    cooked = PrettyText.cook("<a href='http://example.com'>`a` #known::tag here</a>", user_id: user.id)
 
     expect(cooked).to eq(html.strip)
 
-    cooked = PrettyText.cook("<A href='/a'>test</A> #known::tag")
+    cooked = PrettyText.cook("<A href='/a'>test</A> #known::tag", user_id: user.id)
     html = <<~HTML
       <p><a href="/a">test</a> <a class="hashtag" href="/tag/known">#<span>known</span></a></p>
     HTML

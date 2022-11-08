@@ -11,15 +11,11 @@ function addHashtag(buffer, matches, state) {
     );
 
   let token;
-
-  // TODO (martin) Add new cooked styles/structure here for results.
-  //
-  // Actually need icon, name, url here, not just the name and url.
   if (result) {
     token = new state.Token("link_open", "a", 1);
     token.attrs = [
       ["class", "hashtag"],
-      ["href", result[0]],
+      ["href", result.url],
     ];
     token.block = false;
     buffer.push(token);
@@ -32,8 +28,23 @@ function addHashtag(buffer, matches, state) {
     token.block = false;
     buffer.push(token);
 
+    token = new state.Token("svg_open", "svg", 1);
+    token.attrs = [
+      "class",
+      `fa d-icon d-icon-${result.icon} svg-icon svg-node`,
+    ];
+    buffer.push(token);
+
+    token = new state.Token("use_open", "use", 1);
+    token.attrs = ["href", `#${result.icon}`];
+    buffer.push(token);
+
+    buffer.push(new state.Token("use_close", "use", -1));
+
+    buffer.push(new state.Token("svg_close", "svg", -1));
+
     token = new state.Token("text", "", 0);
-    token.content = result[1];
+    token.content = result.text;
     buffer.push(token);
 
     buffer.push(new state.Token("span_close", "span", -1));
@@ -54,6 +65,15 @@ function addHashtag(buffer, matches, state) {
 }
 
 export function setup(helper) {
+  helper.allowList([
+    "svg[class=fa d-icon d-icon-folder svg-icon svg-node]",
+    "use[href=#folder]",
+    "svg[class=fa d-icon d-icon-tag svg-icon svg-node]",
+    "use[href=#tag]",
+    "svg[class=fa d-icon d-icon-hash svg-icon svg-node]",
+    "use[href=#hash]",
+  ]);
+
   helper.registerPlugin((md) => {
     if (
       md.options.discourse.limitedSiteSettings

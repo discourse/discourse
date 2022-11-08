@@ -61,18 +61,18 @@ RSpec.describe PrettyText::Helpers do
           user,
           ["category", "tag"]
         ),
-      ).to eq([tag.full_url, "somecooltag"])
+      ).to eq({ url: tag.url, text: "somecooltag", icon: "tag" })
     end
 
     it "handles categories based on slug" do
       expect(PrettyText::Helpers.hashtag_lookup("someawesomecategory", user, ["category", "tag"])).to eq(
-        [category.url, "someawesomecategory"],
+        { url: category.url, text: "Some Awesome Category", icon: "folder" },
       )
     end
 
     it "handles tags based on slug without TAG_HASHTAG_POSTFIX" do
       expect(PrettyText::Helpers.hashtag_lookup(+"somecooltag", user, ["category", "tag"])).to eq(
-        [tag.full_url, "somecooltag"],
+        { url: tag.url, text: "somecooltag", icon: "tag" },
       )
     end
 

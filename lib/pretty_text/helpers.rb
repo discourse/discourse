@@ -111,16 +111,12 @@ module PrettyText
     end
 
     def hashtag_lookup(slug, cooking_user, types_in_priority_order)
-      result = HashtagAutocompleteService.new(Guardian.new(cooking_user)).lookup([slug], types_in_priority_order)
+      result = HashtagAutocompleteService.new(Guardian.new(Discourse.system_user)).lookup([slug], types_in_priority_order)
       found_hashtag = nil
       types_in_priority_order.each do |type|
         if result[type.to_sym].any?
-          first_matching_hashtag = result[type.to_sym].first
-
-          # TODO (martin) Change this to include the icon as well for the new style.
-          # second is the text of the hashtag, first is the url of the hashtag,
-          # so the format is [url, text]
-          found_hashtag = [first_matching_hashtag.second, first_matching_hashtag.first]
+          first_result = result[type.to_sym].first
+          found_hashtag = { url: first_result.url, text: first_result.text, icon: first_result.icon }
           break
         end
       end
