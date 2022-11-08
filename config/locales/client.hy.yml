@@ -840,7 +840,6 @@ hy:
       experimental_sidebar:
         options: "Տարբերակներ"
         navigation_section: "Նավիգացիա"
-        list_destination_default: "Լռելյայն"
       change: "փոխել"
       featured_topic: "Հանրահայտ թեմա"
       moderator: "%{user}-ը մոդերատոր է"
@@ -4025,19 +4024,15 @@ hy:
         delete_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել օգտատիրոջ այդ դաշտը:"
         options: "Տարբերակներ"
         required:
-          title: "Պարտադի՞ր է գրանցվելիս:"
           enabled: "պարտադիր է"
           disabled: "պարտադիր չէ"
         editable:
-          title: "Խմբագրելի՞ է գրանցումից հետո:"
           enabled: "խմբագրելի է"
           disabled: "խմբագրելի չէ"
         show_on_profile:
-          title: "Ցու՞յց տալ հրապարակային պրոֆիլում"
           enabled: "ցուցադրել պրոֆիլում"
           disabled: "չցուցադրել պրոֆիլում"
         show_on_user_card:
-          title: "Ցուցադրե՞լ օգտատիրոջ քարտի վրա:"
           enabled: "ցուցադրել օգտատիրոջ քարտի վրա"
           disabled: "չցուցադրել օգտատիրոջ քարտի վրա"
         field_types:

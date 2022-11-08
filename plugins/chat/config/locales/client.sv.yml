@@ -36,7 +36,7 @@ sv:
       move_to_channel:
         title: "Flytta meddelanden till kanal"
         instructions:
-          one: "Du flyttar <strong>1</strong> -meddelande. Välj en destinationskanal. Ett platshållarmeddelande kommer att skapas i kanalen <strong>%{channelTitle}</strong> för att indikera att detta meddelande har flyttats."
+          one: "Du flyttar <strong>%{count}</strong> meddelande. Välj en destinationskanal. Ett platshållarmeddelande kommer att skapas i kanalen <strong>%{channelTitle}</strong> för att indikera att detta meddelande har flyttats."
           other: "Du flyttar <strong>%{count}</strong> meddelanden. Välj en destinationskanal. Ett platshållarmeddelande kommer att skapas i kanalen <strong>%{channelTitle}</strong> för att indikera att dessa meddelanden har flyttats."
         confirm_move: "Flytta meddelanden"
       channel_settings:
@@ -70,6 +70,7 @@ sv:
         process_started: "Processen för att radera kanalen har påbörjats. Denna modal kommer att stängas inom kort och du kommer inte längre att se den raderade kanalen någonstans."
       channels_list_popup:
         browse: "Bläddra bland kanaler"
+        create: "Ny kanal"
       click_to_join: "Klicka här för att se tillgängliga kanaler."
       close: "Stäng"
       collapse: "Komprimera chattruta"
@@ -78,8 +79,8 @@ sv:
       hidden: "Ett meddelande doldes. [view]"
       delete: "Radera"
       edited: "redigerad"
-      muted: "tystad"
-      joined: "anslöt sig"
+      muted: "tystat"
+      joined: "gick med"
       empty_state:
         direct_message_cta: "Starta en personlig chatt"
         direct_message: "Du kan också starta en personlig chatt med en eller flera användare."
@@ -91,6 +92,7 @@ sv:
         when_away: "Endast när du är borta"
       enable: "Aktivera chatt"
       flag: "Flagga"
+      emoji: "Infoga emoji"
       flagged: "Detta meddelande har flaggats för granskning"
       invalid_access: "Du har inte tillgång till den här chattkanalen"
       invitation_notification: "<span>%{username}</span> <span>bjöd in dig att gå med i en chattkanal</span>"
@@ -135,8 +137,12 @@ sv:
       reply: "Svara"
       edit: "Redigera"
       copy_link: "Kopiera länk"
-      rebake_message: "Omskapa HTML"
-      bookmark_message: "Bokmärke"
+      rebake_message: "Generera HTML"
+      retry_staged_message:
+        title: "Nätverksfel"
+        action: "Skicka igen?"
+      unreliable_network: "Nätverket är opålitligt, det fungerar kanske inte att skicka meddelanden och spara utkast"
+      bookmark_message: "Bokmärk"
       bookmark_message_edit: "Redigera bokmärke"
       restore: "Återställ raderat meddelande"
       save: "Spara"
@@ -169,8 +175,9 @@ sv:
         closed_header: "Kanalen är stängd"
         closed: "Stängd"
         open_header: "Kanalen är öppen"
-        open: "Öppen"
+        open: "Öppna"
       browse:
+        back: "Tillbaka"
         title: Kanaler
         filter_all: Alla
         filter_open: Öppnad
@@ -185,7 +192,7 @@ sv:
       about_view:
         associated_topic: Länkat ämne
         associated_category: Länkad kategori
-        title: Titel
+        title: Rubrik
         description: Beskrivning
       channel_info:
         back_to_all_channels: "Alla kanaler"
@@ -214,25 +221,27 @@ sv:
         no_memberships: Denna kanal har inga medlemmar
         no_memberships_found: Inga medlemmar hittades
         memberships_count:
-          one: 1 medlem
+          one: "%{count} medlem"
           other: "%{count} medlemmar"
       create_channel:
         auto_join_users:
+          public_category_warning: "%{category} är en offentlig kategori. Vill du automatiskt lägga till alla nyligen aktiva användare till den här kanalen?"
           warning_groups:
-            one: Lägg automatiskt till %{members_count} användare från %{group_1}?
-            other: Lägg automatiskt till %{members_count} användare från %{group_1} och %{group_2}?
+            one: Lägg automatiskt till %{members_count} användare från %{group}?
+            other: Lägg automatiskt till %{members_count} användare från %{group} och %{group_2}?
           warning_multiple_groups: Lägg automatiskt till %{members_count} användare från %{group_1} och %{count} andra?
         choose_category:
           label: "Välj en kategori"
           none: "Välj en..."
           default_hint: Hantera åtkomst genom att besöka <a href=%{link} target="_blank">%{category} säkerhetsinställningar</a>
           hint_groups:
-            one: Användare i %{hint_1} kommer att ha åtkomst till denna kanal enligt <a href=%{link} target="_blank">säkerhetsinställningar</a>
-            other: Användare i %{hint_1} och %{hint_2} kommer att ha åtkomst till denna kanal enligt <a href=%{link} target="_blank">säkerhetsinställningarna</a>
+            one: Användare i %{hint} kommer att ha åtkomst till denna kanal enligt <a href=%{link} target="_blank">säkerhetsinställningar</a>
+            other: Användare i %{hint} och %{hint_2} kommer att ha åtkomst till denna kanal enligt <a href=%{link} target="_blank">säkerhetsinställningarna</a>
           hint_multiple_groups: Användare i %{hint_1} och %{count} andra grupper kommer att ha åtkomst till denna kanal enligt <a href=%{link} target="_blank">säkerhetsinställningarna</a>
         create: "Skapa kanal"
         description: "Beskrivning (valfritt)"
         name: "Kanalnamn"
+        title: "Ny kanal"
         type: "Typ"
         types:
           category: "Kategori"
@@ -247,8 +256,8 @@ sv:
         you_others_and_more: "Du, %{usernames} och %{more} andra reagerade med :%{emoji}:"
       composer:
         toggle_toolbar: "Växla verktygsfält"
-        italic_text: "betonad text"
-        bold_text: "stark text"
+        italic_text: "kursiv text"
+        bold_text: "fet text"
         code_text: "kod text"
       quote:
         original_channel: 'Ursprungligen skickad i <a href="%{channelLink}">%{channel}</a>'
@@ -258,10 +267,12 @@ sv:
         mention: "Endast för omnämnanden"
         always: "För all aktivitet"
       settings:
+        enable_auto_join_users: "Lägg automatiskt till alla nyligen aktiva användare"
+        disable_auto_join_users: "Sluta lägga till användare automatiskt"
         auto_join_users_warning: "Varje användare som inte är medlem i den här kanalen och har tillgång till kategorin %{category} kommer att gå med. Är du säker?"
         desktop_notification_level: "Skrivbordsaviseringar"
         follow: "Gå med"
-        followed: "Anslöt sig"
+        followed: "Gick med"
         mobile_notification_level: "Mobila push-meddelanden"
         mute: "Tysta kanal"
         muted_on: "På"
@@ -278,13 +289,14 @@ sv:
         new: "Ny personlig chatt"
         create: "Kör"
         leave: "Lämna den här personliga chatten"
+        cannot_create: "Tyvärr kan du inte skicka direktmeddelanden."
       incoming_webhooks:
         back: "Tillbaka"
         channel_placeholder: "Välj en kanal"
         confirm_destroy: "Är du säker på att du vill ta bort denna inkommande webhook? Detta kan inte ångras."
         current_emoji: "Nuvarande emoji"
         description: "Beskrivning"
-        delete: "Radera"
+        delete: "Ta bort"
         emoji: "Emoji"
         emoji_instructions: "Systemavatar kommer att användas om emoji lämnas tom."
         name: "Namn"
@@ -300,8 +312,10 @@ sv:
         system: "system"
         title: "Inkommande webhooks"
         url: "URL"
+        url_instructions: "Den här webbadressen innehåller ett hemligt värde - håll det säkert."
         username: "Användarnamn"
         username_instructions: "Användarnamn på bot som gör inlägg på kanalen. Standardinställning är 'system' när det lämnas tomt."
+        instructions: "Inkommande webhooks kan användas av externa system för att skicka meddelanden till en utsedd chattkanal som botanvändare via <code>/hooks/:key</code> -slutpunkten. Försändelsen består av en enda <code>text</code>-parameter, som är begränsad till 2000 tecken.<br><br>Vi stöder också begränsade Slack-formaterade <code>text</code>-parametrar, extraherar länkar och omnämnanden baserat på formatet på <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a>, men <code>/hooks/:key/ slack</code>-slutpunkten måste användas för detta."
       selection:
         cancel: "Avbryt"
         quote_selection: "Citat i ämne"
@@ -336,8 +350,30 @@ sv:
         public: "Kanalhistoriken behålls i %{days} dagar."
         dm: "Personlig chatthistorik behålls i %{days} dagar."
       topic_button_title: "Chatt"
+      flags:
+        off_topic: "Det här meddelandet är inte relevant för den aktuella diskussionen enligt kanaltiteln och bör förmodligen flyttas någon annanstans."
+        inappropriate: "Detta meddelande innehåller saker som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href=\"%{basePath}/guidelines\">vårt forums riktlinjer</a>."
+        spam: "Det här meddelandet är en annons eller vandalism. Det är inte lämpligt eller relevant med avseende på den aktuella kanalen."
+        notify_user: "Jag vill prata med den här personen direkt och privat om meddelandet."
+        notify_moderators: "Detta meddelande kräver personalens uppmärksamhet av en annan anledning som inte anges ovan."
+      flagging:
+        action: "Flagga meddelande"
       emoji_picker:
+        favorites: "Används ofta"
+        smileys_&_emotion: "Smileys och emojis"
+        objects: "Objekt"
+        people_&_body: "Människor och kropp"
+        travel_&_places: "Resor och platser"
+        animals_&_nature: "Djur och natur"
+        food_&_drink: "Mat och dryck"
+        activities: "Aktiviteter"
+        flags: "Flaggor"
+        symbols: "Symboler"
+        search_placeholder: "Sök efter emojinamn och alias..."
         no_results: "Inga resultat"
+      draft_channel_screen:
+        header: "Nytt meddelande"
+        cancel: "Avbryt"
     notifications:
       chat_invitation: "bjöd in dig att gå med i en chattkanal"
       chat_invitation_html: "<span>%{username}</span> <span>bjöd in dig att gå med i en chattkanal</span>"
@@ -346,12 +382,12 @@ sv:
         chat_mention:
           direct: 'nämnde dig i "%{channel}"'
           direct_html: '<span>%{username}</span> <span>nämnde dig i "%{channel}"</span>'
-          other: 'nämnde %{identifier} i "%{channel}"'
+          other_plain: 'nämnde %{identifier} i "%{channel}"'
           other_html: '<span>%{username}</span> <span>nämnde %{identifier} i "%{channel}"</span>'
         direct_message_chat_mention:
           direct: "nämnde dig i personlig chatt"
           direct_html: "<span>%{username}</span> <span>nämnde dig i en personlig chatt</span>"
-          other: "nämnde %{identifier} i personlig chatt"
+          other_plain: "nämnde %{identifier} i personlig chatt"
           other_html: "<span>%{username}</span> <span>nämnde %{identifier} i personlig chatt</span>"
         chat_message: "Nytt chattmeddelande"
         chat_quoted: "%{username} citerade ditt chattmeddelande"
@@ -376,6 +412,8 @@ sv:
               label: Avsändare
               description: Standard är system
     review:
+      transcript:
+        view: "Visa tidigare meddelandens avskrift"
       types:
         reviewable_chat_message:
           title: "Flaggat chattmeddelande"
@@ -401,3 +439,12 @@ sv:
       allowed_pm_users_instructions: "Tillåt endast personliga meddelanden eller chattmeddelanden från dessa användare."
       allow_private_messages_from_specific_users: "Tillåt endast specifika användare att skicka personliga meddelanden eller chattmeddelanden"
       ignored_users_instructions: "Neka alla inlägg, meddelanden, notifikationer, personliga meddelanden eller direkta chattmeddelanden från dessa användare."
+    user_menu:
+      no_chat_notifications_title: "Du har inga chattaviseringar än"
+      no_chat_notifications_body: >
+        Du kommer att aviseras i den här panelen när någon skickar direktmeddelanden till dig eller <b>@nämner</b> dig i chatten. Aviseringar kommer också att skickas till din e-postadress när du inte har loggat in på ett tag. <br><br> Klicka på titeln överst på valfri chattkanal för att konfigurera vilka aviseringar du får i den kanalen. För mer, se dina <a href='%{preferencesUrl}'>aviseringsinställningar</a>.
+      tabs:
+        chat_notifications: "Chattaviseringar"
+        chat_notifications_with_unread:
+          one: "Chattaviseringar - %{count} oläst avisering"
+          other: "Chattaviseringar - %{count} olästa aviseringar"

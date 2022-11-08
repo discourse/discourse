@@ -975,7 +975,7 @@ sv:
     user_fields:
       none: "(välj ett alternativ)"
       required: 'Ange ett värde för "%{name}"'
-      same_as_password: 'Upprepa inte ditt lösenord i andra fält.'
+      same_as_password: "Upprepa inte ditt lösenord i andra fält."
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -1114,9 +1114,9 @@ sv:
         tags_section: "Sektion Taggar"
         tags_section_instruction: "Valda taggar kommer att visas under sidofältets tagg-sektion."
         navigation_section: "Navigering"
-        list_destination_instruction: "När jag klickar på en länk till en ämneslista i sidofältet med nya eller olästa ämnen kommer jag till"
-        list_destination_default: "Standard"
-        list_destination_unread_new: "Nya/olästa"
+        list_destination_instruction: "När det finns nytt innehåll i sidofältet..."
+        list_destination_default: "använd standardlänken och visa en utmärkelse för nya objekt"
+        list_destination_unread_new: "länka till oläst/nytt och visa ett antal nya objekt"
       change: "ändra"
       featured_topic: "Utvalt ämne"
       moderator: "%{user} är en moderator"
@@ -3925,7 +3925,7 @@ sv:
               pending_count: "%{count} väntande"
     welcome_topic_banner:
       title: "Skapa ditt välkomstämne"
-      description: 'Ditt välkomstämne är det första som nya medlemmar kommer att läsa. Tänk på det som din "snabbpresentation" eller "målbeskrivning". Låt alla veta vem den här gruppen är till för, vad de kan förvänta sig att hitta här och vad du vill att de ska göra först.'
+      description: "Ditt välkomstämne är det första som nya medlemmar kommer att läsa. Tänk på det som din \"snabbpresentation\" eller \"målbeskrivning\". Låt alla veta vem den här gruppen är till för, vad de kan förvänta sig att hitta här och vad du vill att de ska göra först."
       button_title: "Börja redigera"
     until: "T.o.m.:"
   admin_js:
@@ -4298,6 +4298,7 @@ sv:
         change_settings_short: "Inställningar"
         howto: "Hur installerar jag tillägg?"
         official: "Officiellt tillägg"
+        broken_route: "Det går inte att konfigurera länken till '%{name}'. Se till att annonsblockerare är inaktiverade och försök ladda om sidan."
       backups:
         title: "Säkerhetskopior"
         menu:
@@ -5226,23 +5227,23 @@ sv:
         delete_confirm: "Är du säker på att du vill ta bort det här användarfältet?"
         options: "Alternativ"
         required:
-          title: "Krävs vid registrering?"
+          title: "Krävs vid registrering"
           enabled: "krävs"
           disabled: "krävs ej"
         editable:
-          title: "Redigerbar efter registrering?"
+          title: "Redigerbar efter registrering"
           enabled: "redigerbar"
           disabled: "ej redigerbar"
         show_on_profile:
-          title: "Visa på offentlig profil?"
+          title: "Visa på offentlig profil"
           enabled: "visas på profil"
           disabled: "visas ej på profil"
         show_on_user_card:
-          title: "Ska visas på användarkort?"
+          title: "Ska visas på användarkort"
           enabled: "visas på användarkort"
           disabled: "visas inte på användarkort"
         searchable:
-          title: "Sökbart?"
+          title: "Sökbart"
           enabled: "sökbart"
           disabled: "inte sökbart"
         field_types:

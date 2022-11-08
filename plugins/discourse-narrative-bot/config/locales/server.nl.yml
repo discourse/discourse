@@ -88,22 +88,22 @@ nl:
       help_trigger: "help weergeven"
       random_mention:
         reply: |-
-          Hallo! Zeg `@%{discobot_username} %{help_trigger}` om te ontdekken wat ik kan.
+          Hallo! Zeg '@%{discobot_username} %{help_trigger}' om te ontdekken wat ik kan.
         bot_actions: |-
-          `@%{discobot_username} %{dice_trigger} 2d6`
+          '@%{discobot_username} %{dice_trigger} 2d6'
           > :game_die: 3, 6
 
-          `@%{discobot_username} %{quote_trigger}`
+          '@%{discobot_username} %{quote_trigger}'
           %{quote_sample}
 
-          `@%{discobot_username} %{magic_8_ball_trigger}`
+          '@%{discobot_username} %{magic_8_ball_trigger}'
           > :crystal_ball: U kunt erop vertrouwen
       do_not_understand:
         first_response: |-
           Hallo, bedankt voor het antwoord!
 
           Helaas kan ik dat, als slecht geprogrammeerde bot, niet helemaal begrijpen. :frowning:
-        track_response: U kunt het opnieuw proberen, of als u deze stap wilt overslaan, `%{skip_trigger}` zeggen. Zeg anders `%{reset_trigger}` om opnieuw te beginnen.
+        track_response: U kunt het opnieuw proberen, of als u deze stap wilt overslaan, '%{skip_trigger}' zeggen. Zeg anders '%{reset_trigger}' om opnieuw te beginnen.
     new_user_narrative:
       reset_trigger: "handleiding"
       title: "Certificaat voor het voltooien van de handleiding voor nieuwe gebruikers"
@@ -122,14 +122,14 @@ nl:
           Kan u het opnieuw proberen? Gebruik de <kbd><b>B</b></kbd> vet of <kbd><i>I</i></kbd> cursief knoppen in de editor als u vast komt te zitten.
       search:
         reply: |-
-          Joepie! U hebt het gevonden :tada:
+          Je hebt het gevonden :tada:
 
-          - Voor meer gedetailleerde zoekopdrachten gaat u naar de [geavanceerde zoekpagina](%{search_url}).
+          - Ga voor gedetailleerdere zoekopdrachten naar de [geavanceerde zoekpagina](%{search_url}).
 
-          - Om ergens in een lange discussie te springen, probeer de tijdslijnbediening aan de rechterzijde (en onderaan, op mobiele apparaten).
+          - Probeer de tijdlijnbediening rechts (en onderaan op mobiel) om ergens in een lange discussie te springen.
 
-          - Indien u een fysiek toetsenbord hebt :keyboard:, druk op <kbd>?</kbd> om onze handige snelkoppelingen te bekijken.
+          - Als je een fysiek toetsenbord :keyboard: hebt, druk dan op <kbd>?</kbd> om onze handige snelkoppelingen te bekijken.
     advanced_user_narrative:
       reset_trigger: "geavanceerde handleiding"
-      cert_title: "Als erkenning voor de succesvolle voltooiing van de geavanceerde gebruikershandleiding"
+      cert_title: "Als erkenning voor de succesvolle voltooiing van de tutorial voor gevorderde gebruikers"
       title: ":arrow_up: Geavanceerde gebruikersfuncties"

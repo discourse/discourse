@@ -732,7 +732,6 @@ sk:
       experimental_sidebar:
         options: "Možnosti"
         navigation_section: "Navigácia"
-        list_destination_default: "Predvolené"
       change: "zmeniť"
       moderator: "%{user} je moderátor"
       admin: "%{user} je administrátor"
@@ -2990,15 +2989,15 @@ sk:
         delete_confirm: "Ste si istý, že chcete zmazať toto používateľské pole?"
         options: "Možnosti"
         required:
-          title: "Požadované pri registrácii?"
+          title: "Požadované pri registrácii"
           enabled: "povinné"
           disabled: "nepovinné"
         editable:
-          title: "Upravovateľné po registrácii?"
+          title: "Upravovateľné po registrácii"
           enabled: "upravovateľné "
           disabled: "neupravovateľné "
         show_on_profile:
-          title: "Ukázať na verejnom profile?"
+          title: "Ukázať na verejnom profile"
           enabled: "zobrazené na profile"
           disabled: "nezobrazené na profile"
         field_types:

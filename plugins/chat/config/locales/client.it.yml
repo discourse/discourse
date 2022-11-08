@@ -6,6 +6,21 @@
 
 it:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Lo stato del canale di chat è cambiato"
+            chat_channel_delete: "Canale di chat eliminato"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "Crea un messaggio di chat in un canale specifico."
+    about:
+      chat_messages_count: "Messaggi di chat"
+      chat_channels_count: "Canali di chat"
+      chat_users_count: "Utenti della chat"
     chat:
       dates:
         time_tiny: "h:mm"
@@ -17,29 +32,70 @@ it:
       cancel: "Annulla"
       cancel_reply: "Annulla risposta"
       chat_channels: "Canali"
+      browse_all_channels: "Sfoglia tutti i canali"
+      move_to_channel:
+        title: "Sposta i messaggi sul canale"
+        instructions:
+          one: "Stai spostando <strong>%{count}</strong> messaggio. Seleziona un canale di destinazione. Verrà creato un messaggio segnaposto nel canale <strong>%{channelTitle}</strong> per indicare che questo messaggio è stato spostato."
+          other: "Stai spostando <strong>%{count}</strong> messaggi. Seleziona un canale di destinazione. Verrà creato un messaggio segnaposto nel canale <strong>%{channelTitle}</strong> per indicare che questi messaggi sono stati spostati."
+        confirm_move: "Sposta messaggi"
       channel_settings:
+        title: "Impostazioni del canale"
         edit: "Modifica"
+        add: "Aggiungi"
+        close_channel: "Chiudi canale"
+        open_channel: "Apri canale"
+        archive_channel: "Archivia canale"
+        delete_channel: "Elimina canale"
         join_channel: "Partecipa al canale"
         leave_channel: "Lascia il canale"
         join: "Partecipa"
         leave: "Esci"
+      channel_archive:
+        title: "Archivia canale"
+        instructions: "<p>L'archiviazione di un canale lo mette in modalità di sola lettura e sposta tutti i messaggi dal canale a un argomento nuovo o esistente. Non è possibile inviare nuovi messaggi e non è possibile modificare o eliminare messaggi esistenti.</p><p>Sei sicuro di voler archiviare il canale <strong>%{channelTitle}</strong>?</p>"
+        process_started: "Il processo di archiviazione è iniziato. Questo avviso si chiuderà a breve e riceverai un messaggio personale al termine del processo di archiviazione."
+        retry: "Riprova"
+      channel_open:
+        title: "Apri canale"
+        instructions: "Riapre il canale, tutti gli utenti potranno inviare messaggi e modificare i propri messaggi esistenti."
+      channel_close:
+        title: "Chiudi canale"
+        instructions: "La chiusura del canale impedisce agli utenti non appartenenti allo staff di inviare nuovi messaggi o modificare quelli esistenti. Sei sicuro di voler chiudere questo canale?"
+      channel_delete:
+        title: "Elimina canale"
+        instructions: "<p>Elimina il canale <strong>%{name}</strong> e la cronologia delle chat. Tutti i messaggi e i dati correlati, come reazioni e caricamenti, verranno eliminati in modo permanente. Se vuoi conservare la cronologia del canale e rimuoverla, puoi invece archiviare il canale.</p> <p>Sei sicuro di voler <strong>eliminare definitivamente</strong> il canale? Per confermare, digita il nome del canale nella casella sottostante.</p>"
+        confirm: "Ho capito le conseguenze, procedi all'eliminazione del canale"
+        confirm_channel_name: "Inserisci il nome del canale"
+        process_started: "Il processo di eliminazione del canale è iniziato. Questo avviso si chiuderà a breve, non vedrai più il canale eliminato da nessuna parte."
       channels_list_popup:
         browse: "Sfoglia i canali"
+        create: "Nuovo canale"
       click_to_join: "Fai clic qui per visualizzare i canali disponibili."
       close: "Chiudi"
       collapse: "Comprimi il cassetto della chat"
       confirm_flag: "Vuoi segnalare il messaggio di %{username}?"
       deleted: "Un messaggio è stato eliminato. [visualizza]"
+      hidden: "Un messaggio è stato nascosto. [view]"
       delete: "Elimina"
       edited: "modificato"
+      muted: "silenziato"
+      joined: "partecipante"
       empty_state:
+        direct_message_cta: "Avvia una chat personale"
         direct_message: "Puoi anche avviare una chat personale con uno o più utenti."
+        title: "Nessun canale trovato"
       email_frequency:
+        description: "Ti invieremo un'e-mail solo se non ti sei fatto vedere negli ultimi 15 minuti."
         never: "Mai"
+        title: "Notifiche via e-mail"
+        when_away: "Solo quando non sono collegato"
       enable: "Abilita chat"
       flag: "Segnala"
+      emoji: "Inserisci emoji"
       flagged: "Questo messaggio è stato segnalato per la revisione"
       invalid_access: "Non hai accesso alla visualizzazione di questo canale chat"
+      invitation_notification: "<span>%{username}</span> <span>ti ha inviato un invito a partecipare a un canale di chat</span>"
       in_reply_to: "In risposta a"
       heading: "Chat"
       join: "Partecipa"
@@ -56,25 +112,45 @@ it:
         without_membership:
           one: "%{usernames} non ha partecipato a questo canale."
           other: "%{usernames} non hanno partecipato a questo canale."
+      aria_roles:
+        header: "Intestazione della chat"
+        composer: "Compositore di chat"
+        channels_list: "Elenco dei canali di chat"
       no_public_channels: "Non hai partecipato a nessun canale."
       only_chat_push_notifications:
         title: "Invia solo le notifiche push della chat"
         description: "Blocca l'invio di tutte le notifiche push non relative alla chat"
+      ignore_channel_wide_mention:
+        title: "Ignora le menzioni a livello di canale"
+        description: "Non inviare notifiche per menzioni a livello di canale (@here e @all)"
       open: "Apri chat"
       open_full_page: "Apri chat a schermo intero"
+      close_full_page: "Chiudi la chat a schermo intero"
       open_message: "Apri messaggio in chat"
       placeholder_self: "Scrivi qualche annotazione"
       placeholder_others: "Chatta con %{messageRecipient}"
+      placeholder_new_message_disallowed: "Il canale è %{status}, non puoi inviare nuovi messaggi in questo momento."
+      placeholder_silenced: "In questo momento non puoi inviare messaggi."
+      placeholder_start_conversation: Inizia una conversazione con %{usernames}
       remove_upload: "Rimuovi file"
       react: "Reagisci con delle emoji"
       reply: "Rispondi"
       edit: "Modifica"
       copy_link: "Copia link"
       rebake_message: "Ricompila HTML"
+      retry_staged_message:
+        title: "Errore di rete"
+        action: "Inviare di nuovo?"
+      unreliable_network: "La rete non è affidabile, l'invio di messaggi e il salvataggio della bozza potrebbero non funzionare"
+      bookmark_message: "Aggiungi ai segnalibri"
+      bookmark_message_edit: "Modifica segnalibri"
       restore: "Ripristina messaggio eliminato"
       save: "Salva"
       select: "Seleziona"
+      silence: "Silenzia utente"
+      return_to_list: "Torna all'elenco dei canali"
       scroll_to_bottom: "Scorri fino in fondo"
+      scroll_to_new_messages: "Vedi nuovi messaggi"
       sound:
         title: "Suono di notifica della chat desktop"
       sounds:
@@ -89,23 +165,82 @@ it:
         other: "%{count} file"
       you_flagged: "Hai segnalato questo messaggio"
       exit: "indietro"
+      channel_status:
+        read_only_header: "Il canale è di sola lettura"
+        read_only: "Sola lettura"
+        archived_header: "Il canale è archiviato"
+        archived: "Archiviati"
+        archive_failed: "Archiviazione del canale non riuscita. %{completed}/%{total} messaggi sono stati archiviati <a target=\"_blank\" href=\"%{topic_url}\">nell'argomento di destinazione</a>. Premi Riprova per tentare di completare l'archiviazione."
+        archive_completed: "Vedi <a target=\"_blank\" href=\"%{topic_url}\">l'argomento di archiviazione</a>"
+        closed_header: "Il canale è chiuso"
+        closed: "Chiusi"
+        open_header: "Il canale è aperto"
+        open: "Aperto"
       browse:
         title: Canali
+        filter_all: Tutti
+        filter_open: Aperti
+        filter_closed: Chiusi
+        filter_archived: Archiviati
+        filter_input_placeholder: Cerca canale per nome
+      chat_message_separator:
+        today: Oggi
+        yesterday: Ieri
+      members_view:
+        filter_placeholder: Trova membri
       about_view:
+        associated_topic: Argomento collegato
+        associated_category: Categoria collegata
+        title: Titolo
         description: Descrizione
       channel_info:
+        back_to_all_channels: "Tutti i canali"
         back_to_channel: "Indietro"
+        tabs:
+          about: Informazioni
+          members: Membri
+          settings: Impostazioni
+      channel_edit_title_modal:
+        title: Modifica titolo
+        input_placeholder: Aggiungi un titolo
+        description: Assegna un breve titolo descrittivo al tuo canale
+      channel_edit_description_modal:
+        title: Modifica descrizione
+        input_placeholder: Aggiungi una descrizione
+        description: Spiega agli altri di cosa si occupa questo canale
+      direct_message_creator:
+        title: Nuovo messaggio
+        prefix: "A:"
+        no_results: Nessun risultato
+        selected_user_title: "Deseleziona %{username}"
       channel_selector:
         title: "Vai al canale"
         no_channels: "Nessun canale corrisponde alla tua ricerca"
+      channel:
+        no_memberships: Questo canale non ha membri
+        no_memberships_found: Nessun membro trovato
+        memberships_count:
+          one: "%{count} membro"
+          other: "%{count} membri"
       create_channel:
+        auto_join_users:
+          public_category_warning: "%{category} è una categoria pubblica. Aggiungere automaticamente tutti gli utenti attivi di recente a questo canale?"
+          warning_groups:
+            one: Aggiungere automaticamente %{members_count} utenti da %{group}?
+            other: Aggiungere automaticamente %{members_count} utenti da %{group} e %{group_2}?
+          warning_multiple_groups: Aggiungere automaticamente %{members_count} utenti da %{group_1} e altri %{count}?
         choose_category:
           label: "Scegli una categoria"
           none: "selezionane una..."
           default_hint: Gestisci l'accesso visitando le <a href=%{link} target="_blank">impostazioni di sicurezza di %{category}</a>
+          hint_groups:
+            one: Gli utenti in %{hint} avranno accesso a questo canale in base alle <a href=%{link} target="_blank">impostazioni di sicurezza</a>
+            other: Gli utenti in %{hint} e %{hint_2} avranno accesso a questo canale in base alle <a href=%{link} target="_blank">impostazioni di sicurezza</a>
+          hint_multiple_groups: Gli utenti in %{hint_1} e altri %{count} gruppi avranno accesso a questo canale in base alle <a href=%{link} target="_blank">impostazioni di sicurezza</a>
         create: "Crea canale"
         description: "Descrizione (facoltativa)"
         name: "Nome del canale"
+        title: "Nuovo canale"
         type: "Tipo"
         types:
           category: "Categoria"
@@ -120,13 +255,23 @@ it:
         you_others_and_more: "Tu, %{usernames} e altri %{more} avete reagito con :%{emoji}:"
       composer:
         toggle_toolbar: "Attiva barra degli strumenti"
+        italic_text: "testo in evidenza"
+        bold_text: "testo in grassetto"
+        code_text: "testo di codice"
+      quote:
+        original_channel: 'Inviato in origine in <a href="%{channelLink}">#%{channel}</a>'
+        copy_success: "Citazione della chat copiata negli appunti"
       notification_levels:
         never: "Mai"
         mention: "Solo per le menzioni"
         always: "Per tutte le attività"
       settings:
+        enable_auto_join_users: "Aggiungi automaticamente tutti gli utenti attivi di recente"
+        disable_auto_join_users: "Smetti di aggiungere automaticamente gli utenti"
+        auto_join_users_warning: "Tutti gli utenti che non sono membri di questo canale e hanno accesso alla categoria %{category} parteciperanno. Vuoi procedere?"
         desktop_notification_level: "Notifiche sul desktop"
         follow: "Partecipa"
+        followed: "Partecipante"
         mobile_notification_level: "Notifiche push su dispositivi mobili"
         mute: "Silenzia canale"
         muted_on: "On"
@@ -143,6 +288,7 @@ it:
         new: "Nuova chat personale"
         create: "Vai"
         leave: "Lascia questa chat personale"
+        cannot_create: "Spiacenti, non puoi inviare messaggi diretti."
       incoming_webhooks:
         back: "Indietro"
         channel_placeholder: "Seleziona un canale"
@@ -165,10 +311,15 @@ it:
         system: "sistema"
         title: "Webhook in ingresso"
         url: "URL"
+        url_instructions: "Questo URL contiene un valore segreto: tienilo al sicuro."
         username: "Nome utente"
         username_instructions: "Nome utente del bot che pubblica sul canale. Il valore predefinito è 'system' se l'impostazione è lasciata vuota."
+        instructions: "I webhook in entrata possono essere utilizzati da sistemi esterni per pubblicare messaggi in un canale di chat designato come utente bot tramite l'endpoint <code>/hooks/:key</code>. Il carico utile è costituito da un solo parametro di <code>testo</code>, che è limitato a 2000 caratteri.<br><br>Supportiamo anche i parametri di <code>testo</code> con formattazione Slack limitata, l'estrazione di link e menzioni in base al formato su <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api. lack.com/reference/surfaces/formatting</a>, ma l'endpoint <code>/hooks/:key/slack</code> deve essere utilizzato per questo."
       selection:
         cancel: "Annulla"
+        quote_selection: "Cita in argomento"
+        copy: "Copia"
+        move_selection_to_channel: "Sposta nel canale"
         error: "Si è verificato un errore durante lo spostamento dei messaggi di chat"
         title: "Sposta la chat nell'argomento"
         new_topic:
@@ -176,11 +327,13 @@ it:
           instructions:
             one: "Stai per creare un nuovo argomento, inserendovi il messaggio di chat che hai selezionato."
             other: "Stai per creare un nuovo argomento, inserendovi i <b>%{count}</b> messaggi di chat che hai selezionato."
+          instructions_channel_archive: "Stai per creare un nuovo argomento e archiviare in esso i messaggi del canale."
         existing_topic:
           title: "Sposta in argomento esistente"
           instructions:
             one: "Scegli l'argomento in cui intendi spostare il messaggio di chat."
             other: "Scegli l'argomento in cui intendi spostare questi <b>%{count}</b> messaggi di chat."
+          instructions_channel_archive: "Scegli l'argomento in cui intendi archiviare i messaggi del canale."
         new_message:
           title: "Sposta in un nuovo messaggio"
           instructions:
@@ -196,12 +349,51 @@ it:
         public: "La cronologia del canale è conservata per %{days} giorni."
         dm: "La cronologia della chat personale è conservata per %{days} giorni."
       topic_button_title: "Chat"
+      flags:
+        off_topic: "Questo messaggio non è rilevante per la discussione in corso in base alla definizione del titolo del canale e probabilmente dovrebbe essere spostato altrove."
+        inappropriate: "Questo messaggio ha contenuti che chiunque considererebbe offensivi o ingiuriosi, oppure contiene violazioni delle <a href=\"%{basePath}/guidelines\">nostre linee guida della community</a>."
+        spam: "Questo messaggio è un annuncio pubblicitario o un atto vandalico. Non è utile o rilevante per il canale corrente."
+        notify_user: "Voglio parlare con questa persona direttamente e personalmente del suo messaggio."
+        notify_moderators: "Questo messaggio richiede l'attenzione dello staff per motivi diversi da quelli sopra indicati"
+      flagging:
+        action: "Segnala messaggio"
+      emoji_picker:
+        favorites: "Utilizzati di frequente"
+        smileys_&_emotion: "Faccine ed emoticon"
+        objects: "Oggetti"
+        people_&_body: "Persone e corpo"
+        travel_&_places: "Viaggi e luoghi"
+        animals_&_nature: "Animali e natura"
+        food_&_drink: "Cibo e bevande"
+        activities: "Attività"
+        flags: "Segnalazioni"
+        symbols: "Simboli"
+        search_placeholder: "Cerca per nome emoji e alias..."
+        no_results: "Nessun risultato"
+      draft_channel_screen:
+        header: "Nuovo messaggio"
+        cancel: "Annulla"
     notifications:
+      chat_invitation: "ti ha inviato un invito a partecipare a un canale di chat"
+      chat_invitation_html: "<span>%{username}</span> <span>ti ha inviato un invito a partecipare a un canale di chat</span>"
+      chat_quoted: "<span>%{username}</span> %{description}"
       popup:
+        chat_mention:
+          direct: 'ti ha menzionato in "%{channel}"'
+          direct_html: '<span>%{username}</span> <span>ti ha menzionato in "%{channel}"</span>'
+          other_plain: 'ha menzionato %{identifier} in "%{channel}"'
+          other_html: '<span>%{username}</span> <span>ha menzionato %{identifier} in "%{channel}"</span>'
+        direct_message_chat_mention:
+          direct: "ti ha menzionato nella chat personale"
+          direct_html: "<span>%{username}</span> <span>ti ha menzionato nella chat personale</span>"
+          other_plain: "ha menzionato %{identifier} nella chat personale"
+          other_html: "<span>%{username}</span> <span>ha menzionato %{identifier} nella chat personale</span>"
         chat_message: "Nuovo messaggio di chat"
+        chat_quoted: "%{username} ha citato il tuo messaggio di chat"
       titles:
         chat_mention: "Menzione in chat"
         chat_invitation: "Invito alla chat"
+        chat_quoted: "Chat citata"
     action_codes:
       chat:
         enabled: '%{who} ha abilitato la <button class="btn-link open-chat">chat</button> %{when}'
@@ -219,6 +411,8 @@ it:
               label: Mittente
               description: Torna ai valori predefiniti di sistema
     review:
+      transcript:
+        view: "Visualizza la trascrizione dei messaggi precedenti"
       types:
         reviewable_chat_message:
           title: "Messaggio di chat segnalato"
@@ -226,3 +420,30 @@ it:
     keyboard_shortcuts_help:
       chat:
         title: "Chat"
+        keyboard_shortcuts:
+          switch_channel_arrows: "%{shortcut} Cambia canale"
+          open_quick_channel_selector: "%{shortcut} Apri il selettore rapido dei canali"
+          open_insert_link_modal: "%{shortcut} Inserisci collegamento ipertestuale (solo compositore)"
+          composer_bold: "%{shortcut} Grassetto (solo compositore)"
+          composer_italic: "%{shortcut} Corsivo (solo compositore)"
+          composer_code: "%{shortcut} Codice (solo compositore)"
+          drawer_open: "%{shortcut} Apri il cassetto della chat"
+          drawer_close: "%{shortcut} Chiudi il cassetto della chat"
+    topic_statuses:
+      chat:
+        help: "La chat è abilitata per questo argomento"
+    user:
+      allow_private_messages: "Consenti ad altri utenti di inviarmi messaggi personali e messaggi diretti in chat"
+      muted_users_instructions: "Elimina tutte le notifiche, i messaggi personali e i messaggi diretti della chat da questi utenti."
+      allowed_pm_users_instructions: "Consenti solo messaggi personali o messaggi diretti in chat da questi utenti."
+      allow_private_messages_from_specific_users: "Consenti solo a utenti specifici di inviarmi messaggi personali o messaggi diretti in chat"
+      ignored_users_instructions: "Elimina tutti i post, i messaggi, le notifiche, i messaggi personali e i messaggi diretti in chat di questi utenti."
+    user_menu:
+      no_chat_notifications_title: "Non hai ancora nessuna notifica di chat"
+      no_chat_notifications_body: >
+        Riceverai una notifica in questo pannello quando qualcuno ti invia un messaggio diretto o ti <b>@menziona</b> nella chat. Le notifiche verranno inviate anche alla tua e-mail quando non effettui l'accesso da un po' di tempo. <br><br> Fai clic sul titolo nella parte superiore di qualsiasi canale di chat per configurare quali notifiche ricevere in quel canale. Per ulteriori informazioni, consulta le tue <a href='%{preferencesUrl}'>preferenze di notifica</a>.
+      tabs:
+        chat_notifications: "Notifiche chat"
+        chat_notifications_with_unread:
+          one: "Notifiche chat - %{count} notifica non letta"
+          other: "Notifiche chat - %{count} notifiche non lette"

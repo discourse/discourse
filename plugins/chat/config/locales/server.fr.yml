@@ -5,10 +5,63 @@
 # https://translate.discourse.org/
 
 fr:
+  site_settings:
+    chat_allowed_groups: "Les utilisateurs de ces groupes peuvent discuter. Notez que les responsables peuvent toujours accéder à la discussion."
+    chat_channel_retention_days: "Les messages de discussion dans les canaux ordinaires seront conservés pendant ce nombre de jours. Fixez cette valeur sur « 0 » pour conserver les messages indéfiniment."
+    chat_dm_retention_days: "Les messages de discussion dans les discussions privées seront conservés pendant ce nombre de jours. Fixez cette valeur sur « 0 » pour conserver les messages indéfiniment."
+    chat_auto_silence_duration: "Nombre de minutes pendant lesquelles les utilisateurs seront mis en sourdine lorsqu'ils dépasseront la limite de création de messages de discussion. Réglez cette valeur sur « 0 » pour désactiver la mise en sourdine automatique."
+    chat_allowed_messages_for_trust_level_0: "Nombre de messages que les utilisateurs de niveau 0 sont autorisés à envoyer en 30 secondes. Réglez cette valeur sur « 0 » pour désactiver la limite."
+    chat_allowed_messages_for_other_trust_levels: "Nombre de messages que les utilisateurs avec des niveaux de confiance de 1 à 4 sont autorisés à envoyer en 30 secondes. Réglez cette valeur sur « 0 » pour désactiver la limite."
+    chat_silence_user_sensitivity: "La probabilité qu'un utilisateur signalé dans la discussion soit automatiquement mis en sourdine."
+    chat_auto_silence_from_flags_duration: "Nombre de minutes pendant lesquelles les utilisateurs sont mis en sourdine lorsqu'ils sont automatiquement mis en sourdine en raison de signalements de messages de discussion."
+    chat_default_channel_id: "Le canal de discussion qui est ouvert par défaut lorsqu'un utilisateur n'a aucun message ou mention non lue dans d'autres canaux."
+    chat_duplicate_message_sensitivity: "Probabilité qu'un message dupliqué du même expéditeur soit bloqué dans un court laps de temps. Nombre décimal compris entre 0 et 1,0, 1,0 étant le paramètre le plus élevé (bloque les messages plus fréquemment dans un laps de temps plus court). Réglez cette valeur sur « 0 » pour autoriser les messages dupliqués."
+    chat_minimum_message_length: "Nombre minimal de caractères pour un message de discussion."
+    chat_allow_uploads: "Autoriser les téléversements dans les canaux de discussion publics et les canaux de messagerie directe."
+    chat_archive_destination_topic_status: "Le statut que doit avoir le sujet de destination une fois l'archivage du canal terminé. Cela s'applique uniquement lorsque le sujet de destination est un nouveau sujet, et non un sujet existant."
+    default_emoji_reactions: "Réactions émoji par défaut pour les messages de discussion. Ajoutez jusqu'à 5 émojis pour une réaction rapide."
+    direct_message_enabled_groups: "Permettre aux utilisateurs de ces groupes de créer des discussions privées entre utilisateurs. Remarque : les responsables peuvent toujours créer des conversations privées et les utilisateurs pourront répondre aux conversations privées initiées par les utilisateurs qui sont autorisés à les créer."
+    chat_message_flag_allowed_groups: "Les utilisateurs de ces groupes sont autorisés à signaler les messages de discussion."
+    errors:
+      chat_default_channel: "Le canal de discussion par défaut doit être un canal public."
+      direct_message_enabled_groups_invalid: "Vous devez spécifier au moins un groupe pour ce paramètre. Si vous ne souhaitez pas que quiconque, à l'exception des responsables, envoie des messages privés, choisissez le groupe des responsables."
+      chat_upload_not_allowed_secure_uploads: "Les téléversements de discussion ne sont pas autorisés lorsque le paramètre du site de téléversement sécurisé est activé."
+  system_messages:
+    chat_channel_archive_complete:
+      title: "Archivage du canal de discussion terminé"
+      subject_template: "L'archivage du canal de discussion est terminé"
+      text_body_template: |
+        L'archivage du canal de discussion **\#%{channel_name}** a bien été effectué. Les messages ont été copiés dans le sujet [%{topic_title}](%{topic_url}).
+    chat_channel_archive_failed:
+      title: "Échec de l'archivage du canal de discussion"
+      subject_template: "Échec de l'archivage du canal de discussion"
+      text_body_template: |
+        L'archivage du canal de discussion **\#%{channel_name}** a échoué. Les messages de %{messages_archived} ont été archivés. Les messages partiellement archivés ont été copiés dans le sujet [%{topic_title}](%{topic_url}). Visitez le canal à l'adresse %{channel_url} pour réessayer.
   chat:
+    deleted_chat_username: supprimé
     errors:
       channel_exists_for_category: "Un canal existe déjà pour cette catégorie et ce nom"
+      channel_new_message_disallowed: "Le canal a le statut %{status}, aucun nouveau message ne peut être envoyé"
+      channel_modify_message_disallowed: "Le canal a le statut %{status}, aucun message ne peut être modifié ou supprimé"
+      user_cannot_send_message: "Vous ne pouvez pas envoyer de messages pour le moment."
+      rate_limit_exceeded: "Dépassement de la limite de messages de discussion pouvant être envoyés dans les 30 secondes"
+      auto_silence_from_flags: "Message de discussion marqué avec un score suffisamment élevé pour mettre l'utilisateur en sourdine."
+      channel_cannot_be_archived: "Le canal ne peut pas être archivé pour le moment, il doit être soit fermé, soit ouvert à l'archivage."
+      duplicate_message: "Vous avez publié un message identique trop récemment."
+      delete_channel_failed: "Échec de la suppression du canal, veuillez réessayer."
+      minimum_length_not_met: "Le message est trop court. Il doit comporter au moins %{minimum} caractères."
+      max_reactions_limit_reached: "Les nouvelles réactions ne sont pas autorisées sur ce message."
+      message_move_invalid_channel: "Le canal source et le canal de destination doivent être des canaux publics."
+      message_move_no_messages_found: "Aucun message n'a été trouvé avec les ID de message fournis."
+      cant_update_direct_message_channel: "Les propriétés du canal de discussion privée telles que le nom et la description ne peuvent pas être mises à jour."
+      not_accepting_dms: "Nous sommes désolés, %{username} n'accepte pas les messages pour le moment."
+      actor_ignoring_target_user: "Vous ignorez %{username}, vous ne pouvez donc pas lui envoyer de messages."
+      actor_muting_target_user: "Vous mettez %{username} en sourdine, vous ne pouvez donc pas lui envoyer de messages."
+      actor_disallowed_dms: "Vous avez choisi d'empêcher les utilisateurs de vous envoyer des messages privés et directs, vous ne pouvez donc pas créer de nouveaux messages directs."
+      actor_preventing_target_user_from_dm: "Vous avez choisi d'empêcher %{username} de vous envoyer des messages privés et directs, vous ne pouvez donc pas lui envoyer de nouveaux messages privés."
+      user_cannot_send_direct_messages: "Nous sommes désolés, vous ne pouvez pas envoyer de messages privés."
     reviewables:
+      message_already_handled: "Merci, mais nous avons déjà examiné ce message et déterminé qu'il n'a pas besoin d'être signalé à nouveau."
       actions:
         agree:
           title: "D'accord…"
@@ -39,7 +92,47 @@ fr:
           title: "Refuser"
         ignore:
           title: "Ignorer"
+      direct_messages:
+        transcript_title: "Transcription des messages précédents dans le canal %{channel_name}"
+        transcript_body: "Pour vous donner plus de contexte, nous avons inclus une transcription des messages précédents de cette conversation (jusqu'à dix) :\n\n%{transcript}"
+    channel:
+      statuses:
+        read_only: "Lecture seule"
+        archived: "Archivé"
+        closed: "Fermé"
+        open: "Ouvert"
+      archive:
+        first_post_raw: "Ce sujet est une archive du canal de discussion [%{channel_name}](%{channel_url})."
+      messages_moved:
+        one: "@%{acting_username} a déplacé un message vers le canal [%{channel_name}](%{first_moved_message_url})."
+        other: "@%{acting_username} a déplacé %{count} messages vers le canal [%{channel_name}](%{first_moved_message_url})."
+      dm_title:
+        single_user: "%{user}"
+        multi_user: "%{users}"
+        multi_user_truncated: "%{users} et %{leftover} autres utilisateurs"
+    bookmarkable:
+      notification_title: "message dans %{channel_name}"
     personal_chat: "discussion privée"
+    onebox:
+      inline_to_message: "Message #%{message_id} par %{username} - #%{chat_channel}"
+      inline_to_channel: "Discussion #%{chat_channel}"
+      inline_to_topic_channel: "Discussion pour le sujet %{topic_title}"
+      x_members:
+        one: "%{count} membre"
+        other: "%{count} membres"
+      and_x_others:
+        one: "et %{count} autre utilisateur"
+        other: "et %{count} autres utilisateurs"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} vous a mentionné(e) dans « %{channel} »'
+        other_type: '%{username} a mentionné %{identifier} dans « %{channel} »'
+      direct_message_chat_mention:
+        direct: "%{username} vous a mentionné(e) dans la discussion privée"
+        other_type: "%{username} a mentionné %{identifier} dans la discussion privée"
+      new_chat_message: '%{username} a envoyé un message dans « %{channel} »'
+      new_direct_chat_message: "%{username} a envoyé un message dans la discussion privée"
   discourse_automation:
     scriptables:
       send_chat_message:
@@ -47,6 +140,45 @@ fr:
   reviewable_score_types:
     needs_review:
       title: "Nécessite un examen"
+    notify_user:
+      chat_pm_title: 'Votre message de discussion dans « %{channel_name} »'
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_title: 'Un message de discussion dans « %{channel_name} » nécessite l''attention des responsables'
+      chat_pm_body: "%{link}\n\n%{message}"
+  reviewables:
+    reasons:
+      chat_message_queued_by_staff: "Un responsable pense que ce message de discussion doit être examiné."
+  user_notifications:
+    chat_summary:
+      deleted_user: "Utilisateur supprimé"
+      description:
+        one: "Vous avez un nouveau message de discussion"
+        other: "Vous avez de nouveaux messages de discussions"
+      from: "%{site_name}"
+      subject:
+        direct_message:
+          one: "[%{email_prefix}] Nouveau message de %{message_title}"
+          other: "[%{email_prefix}] Nouveaux messages de %{message_title} et de %{others}"
+        chat_channel:
+          one: "[%{email_prefix}] Nouveau message dans %{message_title}"
+          other: "[%{email_prefix}] Nouveaux messages dans %{message_title} et %{others}"
+        other_direct_message: "de %{message_title}"
+        others: "%{count} autres"
+      unsubscribe: "Ce résumé de discussion est envoyé à partir de %{site_link} lorsque vous vous absentez. Changez vos %{email_preferences_link} ou %{unsubscribe_link} pour vous désabonner."
+      unsubscribe_no_link: "Ce résumé de discussion est envoyé à partir de %{site_link} lorsque vous vous absentez. Changez vos %{email_preferences_link}."
+      view_messages:
+        one: "Voir le message"
+        other: "Voir %{count} messages"
+      view_more:
+        one: "Voir %{count} message supplémentaire"
+        other: "Voir %{count} messages supplémentaires"
+      your_chat_settings: "préférence de fréquence des e-mails de discussion"
   unsubscribe:
     chat_summary:
+      select_title: "Définissez la fréquence des e-mails de résumé de discussion sur :"
       never: Jamais
+      when_away: Seulement en cas d'absence
+  category:
+    cannot_delete:
+      has_chat_channels: "Impossible de supprimer cette catégorie, car elle contient des canaux de discussion."

@@ -31,7 +31,7 @@ hu:
       text_body_template: |
         A(z) **\#%{channel_name}** csevegőcsatorna archiválása nem sikerült. %{messages_archived} üzenet archiválásra került. A részben archivált üzeneteket a(z) [%{topic_title}](%{topic_url}) témába lettek másolva. Keresse fel a(z) %{channel_url} csatornát az újbóli próbálkozáshoz.
   chat:
-    deleted_chat_username: törölve
+    deleted_chat_username: törölt
     errors:
       channel_exists_for_category: "Már létezik csatorna ehhez a kategóriával, és ezzel a névvel"
       channel_new_message_disallowed: "A csatorna „%{status}”, új üzenet nem küldhető"
@@ -58,10 +58,10 @@ hu:
           description: "Egyetért a jelentéssel, és törölve hagyja az üzenetet."
         agree_and_suspend:
           title: "Felhasználó felfüggesztése"
-          description: "Egyetért a jelentéssel, és felfüggeszti a felhasználót."
+          description: "Egyetértés a megjelöléssel, és a felhasználó felfüggesztése"
         agree_and_silence:
           title: "Felhasználó némítása"
-          description: "Egyetért a jelentéssel, és némítja a felhasználót."
+          description: "Egyetértés a megjelöléssel, és a felhasználó némítása"
         agree_and_restore:
           title: "Üzenet helyreállítása"
           description: "Üzenet helyreállítása, hogy láthassák a felhasználók."
@@ -74,15 +74,15 @@ hu:
           title: "Nem ért egyet, és az üzenet helyreállítása"
           description: "Üzenet helyreállítása, hogy az összes felhasználó láthassa."
         disagree:
-          title: "Nem ért egyet"
+          title: "Elutasítás"
         ignore:
-          title: "Figyelmen kívül hagyás"
+          title: "Letiltás"
     channel:
       statuses:
         read_only: "Csak olvasható"
         archived: "Archivált"
-        closed: "Zárolt"
-        open: "Nyitott"
+        closed: "Zárt"
+        open: "Megnyitás"
       archive:
         first_post_raw: "Ez a téma a(z) [%{channel_name}](%{channel_url}) csevegőcsatorna archívuma."
       messages_moved:
@@ -104,10 +104,10 @@ hu:
     popup:
       chat_mention:
         direct: '%{username} megemlítette Önt a következő csatornán: „%{channel}”'
-        other: '%{username} megemlítette %{identifier} felhasználót a következő csatornán: „%{channel}”'
+        other_type: '%{username} megemlítette %{identifier} felhasználót a következő csatornán: „%{channel}”'
       direct_message_chat_mention:
         direct: "%{username} megemlítette Önt egy személyes csevegésben"
-        other: "%{username} megemlítette %{identifier} felhasználót egy személyes csevegésben"
+        other_type: "%{username} megemlítette %{identifier} felhasználót egy személyes csevegésben"
       new_chat_message: '%{username} üzenet küldött a következő csatornán: „%{channel}”'
       new_direct_chat_message: "%{username} üzenetet küldött egy személyes csevegésben"
   discourse_automation:
@@ -117,6 +117,10 @@ hu:
   reviewable_score_types:
     needs_review:
       title: "Felülvizsgálatra szorul"
+    notify_user:
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_body: "%{link}\n\n%{message}"
   user_notifications:
     chat_summary:
       deleted_user: "Törölt felhasználó"

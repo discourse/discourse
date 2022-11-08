@@ -1017,7 +1017,6 @@ ro:
       experimental_sidebar:
         options: "Opțiuni"
         navigation_section: "Navigare"
-        list_destination_default: "Implicit"
       change: "Schimbă"
       featured_topic: "Subiect recomandat"
       moderator: "%{user} este moderator"
@@ -3773,19 +3772,19 @@ ro:
         delete_confirm: "Ești sigur că vrei să ștergi acest câmp utilizator?"
         options: "Opțiuni"
         required:
-          title: "Necesar la înscriere?"
+          title: "Necesar la înscriere"
           enabled: "necesar"
           disabled: "opţional"
         editable:
-          title: "Editabil după înregistrare?"
+          title: "Editabil după înregistrare"
           enabled: "editabil"
           disabled: "nu este editabil"
         show_on_profile:
-          title: "Arată în profilul public?"
+          title: "Arată în profilul public"
           enabled: "se afișează în profil"
           disabled: "nu se afișează în profil"
         show_on_user_card:
-          title: "Afișează pe pagina cu date personale utilizatorului?"
+          title: "Afișează pe pagina cu date personale utilizatorului"
           enabled: "se afișează"
           disabled: "nu se afișează"
         field_types:
