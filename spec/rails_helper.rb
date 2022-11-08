@@ -117,6 +117,7 @@ module TestSetup
     UserActionManager.disable
     NotificationEmailer.disable
     SiteIconManager.disable
+    ScreenedIpAddress.clear_cache
     WordWatcher.disable_cache
 
     SiteSetting.provider.all.each do |setting|

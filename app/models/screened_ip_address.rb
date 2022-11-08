@@ -13,6 +13,9 @@ class ScreenedIpAddress < ActiveRecord::Base
   validates :ip_address, ip_address_format: true, presence: true
   after_validation :check_for_match
 
+  after_save :clear_cache, if: :updated_ips?
+  after_destroy :clear_cache
+
   ROLLED_UP_BLOCKS = [
     # IPv4
     [4, 32, 24],
@@ -35,6 +38,24 @@ class ScreenedIpAddress < ActiveRecord::Base
         self.errors.add(:ip_address, :ip_address_already_screened)
       end
     end
+  end
+
+  def updated_ips?
+    saved_change_to_ip_address? || saved_change_to_action_type?
+  end
+
+  @cache = DistributedCache.new('screened_ip_address')
+
+  def self.clear_cache
+    @cache.clear
+  end
+
+  def clear_cache
+    self.class.clear_cache
+  end
+
+  def self.screened_ips
+    @cache['screened_ips'] ||= ScreenedIpAddress.order('masklen(ip_address) DESC').pluck(:ip_address, :action_type) || []
   end
 
   # In Rails 4.0.0, validators are run to handle invalid assignments to inet columns (as they should).
@@ -83,7 +104,10 @@ class ScreenedIpAddress < ActiveRecord::Base
   end
 
   def self.should_block?(ip_address)
-    exists_for_ip_address_and_action?(ip_address, actions[:block])
+    ip_address = IPAddr === ip_address ? ip_address.to_cidr_s : ip_address.to_s
+    screened_ips.any? do |blocked_ip, action_type|
+      return action_type == ScreenedIpAddress.actions[:block] if blocked_ip.include?(ip_address)
+    end
   end
 
   def self.is_allowed?(ip_address)

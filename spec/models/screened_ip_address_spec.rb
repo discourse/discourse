@@ -4,6 +4,14 @@ RSpec.describe ScreenedIpAddress do
   let(:ip_address) { '99.232.23.124' }
   let(:valid_params) { { ip_address: ip_address } }
 
+  before do
+    ScreenedIpAddress.clear_cache
+  end
+
+  after do
+    ScreenedIpAddress.clear_cache
+  end
+
   describe 'new record' do
     it 'sets a default action_type' do
       expect(described_class.create(valid_params).action_type).to eq(described_class.actions[:block])
