@@ -6,55 +6,62 @@
 
 zh_CN:
   site_settings:
-    chat_enabled: "启用discourse-chat插件。"
+    chat_allowed_groups: "这些群组中的用户可以聊天。请注意，管理人员始终可以访问聊天。"
     chat_channel_retention_days: "常规频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
     chat_dm_retention_days: "个人聊天频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
-    chat_auto_silence_duration: "用户超过聊天消息创建速率限制时将被静音的分钟数。设置为“0”以禁用自动静音。"
-    chat_allowed_messages_for_trust_level_0: "信任级别 0 用户在 30 秒内允许发送的消息数。设置为“0”以禁用限制。"
-    chat_allowed_messages_for_other_trust_levels: "信任级别 1-4 的用户在 30 秒内允许发送的消息数。设置为“0”以禁用限制。"
-    chat_silence_user_sensitivity: "聊天中被标记的用户被自动静音的可能性。"
-    chat_auto_silence_from_flags_duration: "用户因聊天消息被标记而自动静音时将被静音的分钟数。"
-    chat_default_channel_id: "当用户在其他频道没有未读消息或提及时，将默认打开的聊天频道。"
-    chat_duplicate_message_sensitivity: "同一发件人的重复信息在短时间内被阻止的可能性。十进制数字，介于0和1.0之间，1.0为最高设置（在较短的时间内更频繁地阻止信息）。设置为 \"0 \"表示允许重复的信息。"
-    chat_minimum_message_length: "聊天消息允许的最少字符数。"
-    chat_archive_destination_topic_status: "频道归档完成后目标主题应处于的状态。这仅适用于目标主题是新主题而不是现有主题的情况。"
-    default_emoji_reactions: "聊天信息的默认表情符号反应。最多可添加5个表情符号进行快速反应。"
+    chat_auto_silence_duration: "用户超过聊天消息创建速率限制时将被禁言的分钟数。设置为 0 将禁用自动禁言。"
+    chat_allowed_messages_for_trust_level_0: "信任级别 0 用户在 30 秒内可以发送的消息数。设置为 0 将禁用限制。"
+    chat_allowed_messages_for_other_trust_levels: "信任级别 1-4 的用户在 30 秒内可以发送的消息数。设置为 0 将禁用限制。"
+    chat_silence_user_sensitivity: "聊天中被举报的用户被自动禁言的可能性。"
+    chat_auto_silence_from_flags_duration: "用户由于被举报的聊天消息而被自动禁言时将被禁言的分钟数。"
+    chat_default_channel_id: "当用户在其他频道中没有未读消息或提及时，将默认打开的聊天频道。"
+    chat_duplicate_message_sensitivity: "同一发件人的重复邮件在短时间内被屏蔽的可能性。0 到 1.0 之间的十进制数，1.0 是最高设置（在更短的时间内更频繁地屏蔽消息）。设置为 0 将允许重复消息。"
+    chat_minimum_message_length: "聊天消息的最少字符数。"
+    chat_allow_uploads: "允许在公共聊天频道和直接消息频道中上传文件。"
+    chat_archive_destination_topic_status: "频道归档完成后目标话题应处于的状态。这仅适用于目标话题是新话题而不是现有话题的情况。"
+    default_emoji_reactions: "聊天消息的默认表情符号反应。最多可添加 5 个表情符号进行快速反应。"
+    direct_message_enabled_groups: "允许这些群组中的用户创建用户间的个人聊天。请注意：管理人员始终可以创建个人聊天，用户将能够回复有权创建个人聊天的用户发起的个人聊天。"
+    chat_message_flag_allowed_groups: "这些群组中的用户可以举报聊天消息。"
     errors:
       chat_default_channel: "默认聊天频道必须是公共频道。"
+      direct_message_enabled_groups_invalid: "您必须为此设置至少指定一个群组。如果您不希望管理人员以外的任何人发送直接消息，请选择管理人员群组。"
+      chat_upload_not_allowed_secure_uploads: "当启用安全上传站点设置时，不允许在聊天中上传文件。"
   system_messages:
     chat_channel_archive_complete:
       title: "聊天频道归档完成"
       subject_template: "聊天频道归档成功完成"
       text_body_template: |
-        存档聊天频道**\#%{channel_name}** 已成功完成。消息已被复制到主题 [%{topic_title}](%{topic_url}) 中。
+        聊天频道**\#%{channel_name}**归档已成功完成。消息已被复制到话题[%{topic_title}](%{topic_url})中。
     chat_channel_archive_failed:
       title: "聊天频道归档失败"
       subject_template: "聊天频道归档失败"
       text_body_template: |
-        聊天频道**#%{channel_name}**归档失败。 %{messages_archived} 信息已被归档。部分归档的消息被复制到主题[%{topic_title}](%{topic_url})。请访问 %{channel_url} 频道以重新尝试。
+        聊天频道**#%{channel_name}**归档失败。%{messages_archived} 条消息已被归档。部分归档的消息已被复制到话题[%{topic_title}](%{topic_url})。请访问 %{channel_url} 下的频道以重试。
   chat:
     deleted_chat_username: 已删除
     errors:
       channel_exists_for_category: "此类别和名称的频道已经存在"
-      channel_new_message_disallowed: "频道 %{status}，不能发送新消息"
-      channel_modify_message_disallowed: "频道 %{status}，无法编辑或删除消息"
+      channel_new_message_disallowed: "频道的状态为%{status}，无法发送新消息"
+      channel_modify_message_disallowed: "频道的状态为%{status}，无法编辑或删除消息"
       user_cannot_send_message: "您目前无法发送消息。"
-      rate_limit_exceeded: "超过了30秒内可发送的聊天信息的上限"
-      auto_silence_from_flags: "聊天消息标记得分高到足以将用户静音。"
-      channel_cannot_be_archived: "该频道此时不能被归档，它必须被关闭或启用以归档。"
+      rate_limit_exceeded: "超过了 30 秒内可发送的聊天消息的上限"
+      auto_silence_from_flags: "聊天消息被举报的分数高到足以将用户禁言。"
+      channel_cannot_be_archived: "目前无法归档该频道，必须将其关闭或打开才能归档。"
       duplicate_message: "您在短时间内发布了一条相同的消息。"
       delete_channel_failed: "删除频道失败，请重试。"
       minimum_length_not_met: "消息太短，必须至少有 %{minimum} 个字符。"
-      max_reactions_limit_reached: "在这个信息上不允许有新的反应。"
+      max_reactions_limit_reached: "此消息不允许有新的回应。"
       message_move_invalid_channel: "源频道和目标频道必须是公共频道。"
-      message_move_no_messages_found: "没有找到带有提供消息ID的消息。"
-      cant_update_direct_message_channel: "DM频道的名称和描述等属性无法被更新。"
-      not_accepting_dms: "抱歉， %{username} 目前不接受聊天消息。"
-      actor_ignoring_target_user: "你忽略了 %{username}，所以你不能向他们发送消息。"
-      actor_muting_target_user: "您正在静音 %{username}，因此您无法向他们发送消息。"
-      actor_disallowed_dms: "您已选择阻止用户向您发送私人和聊天消息，因此您无法创建新的私聊。"
-      actor_preventing_target_user_from_dm: "您已选择阻止 %{username} 向您发送私人和聊天消息，因此您无法向他们创建新的私聊。"
+      message_move_no_messages_found: "找不到带有提供的消息 ID 的消息。"
+      cant_update_direct_message_channel: "无法更新名称和描述等直接消息频道属性。"
+      not_accepting_dms: "抱歉，%{username} 目前不接受消息。"
+      actor_ignoring_target_user: "您正在忽略 %{username}，因此您无法向他们发送消息。"
+      actor_muting_target_user: "您正在将 %{username} 设为免打扰，因此您无法向他们发送消息。"
+      actor_disallowed_dms: "您已选择阻止用户向您发送私人和直接消息，因此您无法创建新的直接消息。"
+      actor_preventing_target_user_from_dm: "您已选择阻止 %{username} 向您发送私人和直接消息，因此您无法创建给他们的新直接消息。"
+      user_cannot_send_direct_messages: "抱歉，您无法发送直接消息。"
     reviewables:
+      message_already_handled: "谢谢，但我们已经审核此消息，并确定它不需要被再次举报。"
       actions:
         agree:
           title: "同意…"
@@ -85,41 +92,44 @@ zh_CN:
           title: "不同意"
         ignore:
           title: "忽略"
+      direct_messages:
+        transcript_title: "%{channel_name}中以前消息的副本"
+        transcript_body: "为了向您提供更多上下文，我们在此对话中包含了以前消息的副本（最多十条）：\n\n%{transcript}"
     channel:
       statuses:
         read_only: "只读"
         archived: "已归档"
         closed: "已关闭"
-        open: "启用"
+        open: "开放"
       archive:
-        first_post_raw: "本主题是 [%{channel_name}](%{channel_url}) 聊天频道的存档。"
+        first_post_raw: "此话题是[%{channel_name}](%{channel_url})聊天频道的归档。"
       messages_moved:
-        other: "@%{acting_username} 将 %{count} 条消息移至 [%{channel_name}](%{first_moved_message_url}) 频道。"
+        other: "@%{acting_username}将 %{count} 条消息移至[%{channel_name}](%{first_moved_message_url})频道。"
       dm_title:
         single_user: "%{user}"
         multi_user: "%{users}"
-        multi_user_truncated: "%{users} 和 其他%{leftover} 人"
+        multi_user_truncated: "%{users} 和其他 %{leftover} 人"
     bookmarkable:
-      notification_title: "%{channel_name}频道中的信息"
+      notification_title: "%{channel_name}中的消息"
     personal_chat: "个人聊天"
     onebox:
-      inline_to_message: "消息 #%{message_id} by %{username} – #%{chat_channel}"
-      inline_to_channel: "聊天#%{chat_channel}"
-      inline_to_topic_channel: "话题 %{topic_title}的聊天"
+      inline_to_message: "消息 #%{message_id}，来自%{username} – #%{chat_channel}"
+      inline_to_channel: "聊天 #%{chat_channel}"
+      inline_to_topic_channel: "话题%{topic_title}的聊天"
       x_members:
         other: "%{count} 个成员"
       and_x_others:
-        other: "其他 %{count} 人"
+        other: "和其他 %{count} 人"
   discourse_push_notifications:
     popup:
       chat_mention:
-        direct: '%{username} 在“%{channel}”中提到了你'
-        other: '%{username} 在 “%{channel}”中提到 %{identifier}'
+        direct: '%{username} 在“%{channel}”中提及您'
+        other_type: '%{username} 在“%{channel}”中提及“%{identifier}”'
       direct_message_chat_mention:
-        direct: "%{username} 在私聊中提到了你"
-        other: "%{username} 私聊中提到 %{identifier}"
+        direct: "%{username} 在个人聊天中提及您"
+        other_type: "%{username} 在个人聊天中提及“%{identifier}”"
       new_chat_message: '%{username} 在“%{channel}”中发送了一条消息'
-      new_direct_chat_message: "%{username} 在私聊中发送了一条消息"
+      new_direct_chat_message: "%{username} 在个人聊天中发送了一条消息"
   discourse_automation:
     scriptables:
       send_chat_message:
@@ -127,6 +137,15 @@ zh_CN:
   reviewable_score_types:
     needs_review:
       title: "需要审核"
+    notify_user:
+      chat_pm_title: '您在“%{channel_name}”中的聊天消息'
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_title: '“%{channel_name}”中的一条聊天消息需要管理人员注意'
+      chat_pm_body: "%{link}\n\n%{message}"
+  reviewables:
+    reasons:
+      chat_message_queued_by_staff: "一位管理人员认为此聊天消息需要审核。"
   user_notifications:
     chat_summary:
       deleted_user: "已被删除的用户"
@@ -135,18 +154,18 @@ zh_CN:
       from: "%{site_name}"
       subject:
         direct_message:
-          other: "[%{email_prefix}] 来自 %{message_title} 和 %{others}的新消息"
+          other: "[%{email_prefix}] 来自%{message_title}和%{others}的新消息"
         chat_channel:
-          other: "[%{email_prefix}] 来自 %{message_title} 和 %{others}的新消息"
-        other_direct_message: "来自 %{message_title}"
+          other: "[%{email_prefix}] %{message_title}和%{others}中的新消息"
+        other_direct_message: "来自%{message_title}"
         others: "其他 %{count} 人"
-      unsubscribe: "当您不在时，此聊天摘要会从 %{site_link} 发送。更改您的 %{email_preferences_link}或 %{unsubscribe_link} 以取消订阅。"
-      unsubscribe_no_link: "此聊天摘要在您离开时从 %{site_link} 发送。更改你的 %{email_preferences_link}."
+      unsubscribe: "此聊天摘要在您离开时从%{site_link}发送。更改您的%{email_preferences_link}，或者%{unsubscribe_link}以退订。"
+      unsubscribe_no_link: "此聊天摘要在您离开时从%{site_link}发送。更改您的%{email_preferences_link}。"
       view_messages:
         other: "查看 %{count} 条消息"
       view_more:
-        other: "查看 %{count} 条消息"
-      your_chat_settings: "聊天电子邮件频率偏好"
+        other: "查看其他 %{count} 条消息"
+      your_chat_settings: "聊天电子邮件频率偏好设置"
   unsubscribe:
     chat_summary:
       select_title: "将聊天摘要电子邮件频率设置为："

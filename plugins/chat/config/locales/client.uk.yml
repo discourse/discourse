@@ -5,3 +5,112 @@
 # https://translate.discourse.org/
 
 uk:
+  js:
+    chat:
+      create: "Створити"
+      cancel: "Скасувати"
+      channel_settings:
+        edit: "Редагувати"
+        add: "Додати"
+        join: "Приєднатися"
+        leave: "Покинути"
+      close: "Закрити"
+      delete: "Видалити"
+      edited: "відредагований"
+      muted: "ігноровані"
+      joined: "приєднався(лась)"
+      email_frequency:
+        never: "Ніколи"
+      flag: "Поскаржитися"
+      join: "Приєднатися"
+      mention_warning:
+        dismiss: "відкласти"
+      reply: "Відповідь"
+      edit: "Редагувати"
+      rebake_message: "Перебудувати HTML"
+      bookmark_message: "Додати закладку"
+      bookmark_message_edit: "Редагувати закладку"
+      save: "Зберегти"
+      sounds:
+        none: "Немає"
+      exit: "назад"
+      channel_status:
+        closed: "Закриті"
+        open: "Відкрити"
+      browse:
+        back: "Назад"
+        filter_all: Все
+        filter_closed: Закриті
+      chat_message_separator:
+        today: Сьогодні
+        yesterday: Вчора
+      about_view:
+        title: Назва
+        description: Опис
+      channel_info:
+        back_to_channel: "Назад"
+        tabs:
+          about: Про
+          members: Учасники
+          settings: Налаштування
+      direct_message_creator:
+        title: Нове повідомлення
+        prefix: "До:"
+      create_channel:
+        type: "Тип"
+        types:
+          category: "Розділ"
+          topic: "Тема"
+      composer:
+        italic_text: "виділення тексту курсивом"
+        bold_text: "Сильне виділення тексту"
+      notification_levels:
+        never: "Ніколи"
+      settings:
+        follow: "Приєднатися"
+        followed: "Приєднався(лась)"
+        notifications: "Сповіщення"
+        preview: "Попередній перегляд"
+        save: "Зберегти"
+        saved: "Збережено"
+        unfollow: "Покинути"
+      incoming_webhooks:
+        back: "Назад"
+        description: "Опис"
+        delete: "Видалити"
+        emoji: "Смайли"
+        name: "Назва"
+        save: "Зберегти"
+        edit: "Редагувати"
+        system: "системні"
+        url: "Посилання"
+        username: "Ім’я користувача"
+      selection:
+        cancel: "Скасувати"
+        copy: "Копіювати"
+        new_topic:
+          title: "Перенесення до нової теми"
+        existing_topic:
+          title: "Перенесення до наявної теми"
+        new_message:
+          title: "Перейти до нового повідомленням"
+      emoji_picker:
+        objects: "Objects"
+        activities: "Діяльність"
+        flags: "Скарги"
+        symbols: "Атрибутика"
+      draft_channel_screen:
+        header: "Нове повідомлення"
+        cancel: "Скасувати"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Повідомлення
+    review:
+      types:
+        reviewable_chat_message:
+          flagged_by: "Позначено"

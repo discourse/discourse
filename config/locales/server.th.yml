@@ -7,14 +7,9 @@
 th:
   dates:
     short_date_no_year: "D MMM"
-    short_date: "D MMM, YYYY"
-    long_date: "MMMM D, YYYY h:mma"
   datetime_formats: &datetime_formats
     formats:
-      short: "%m-%d-%Y"
-      short_no_year: "%B %-d"
-      date_only: "%B %-d, %Y"
-      long: "%B %-d, %Y, %l:%M%P"
+      short_no_year: "%-d %B"
       no_day: "%Y %B"
   date:
     month_names:
@@ -50,7 +45,7 @@ th:
   remove_posts_deleted_by_author: "ถูกลบโดยผู้โพส"
   on_another_topic: "ในหัวข้ออื่น"
   inline_oneboxer:
-    topic_page_title_post_number_by_user: "#%{post_number} โดย %{username}"
+    topic_page_title_post_number_by_user: "#%{post_number} ด้วย %{username}"
   themes:
     import_error:
       unpack_failed: "แตกไฟล์ไม่สำเร็จ"
@@ -67,233 +62,6 @@ th:
       exclusion: ถูกจองแล้ว
       has_already_been_used: "ได้ถูกใช้แล้ว"
       invalid: ไม่ถูกต้อง
-  not_in_group:
-    join_group: "เข้าร่วมกลุ่ม"
-  likes: "ถูกใจ"
-  embed:
-    start_discussion: "เริ่มการสนทนา"
-    continue: "ดำเนินการสนทนาต่อ"
-    loading: "กำลังโหลดการสนทนา"
-    in_reply_to: "▶ %{username}"
-    replies:
-      other: "%{count} ตอบ"
-    created: "สร้างเมื่อ"
-  user_is_suspended: "ผู้ใช้ที่ถูกระงับการใช้งานไม่สามารถโพสได้"
-  just_posted_that: "คล้ายกับสิ่งคุณเพิ่งโพสมากเกินไป"
-  invalid_characters: "มีตัวอักษรที่ไม่สามารถใช้งานได้"
-  next_page: "หน้าถัดไป →"
-  prev_page: "← หน้าก่อนหน้า"
-  page_num: "หน้า %{num}"
-  home_title: "หน้าแรก"
-  rss_num_posts:
-    other: "%{count} โพสต์"
-  excerpt_image: "รูปภาพ"
-  bookmarks:
-    reminders:
-      later_today: "ภายหลังในวันนี้"
-      next_business_day: "ในวันทำการถัดไป"
-      tomorrow: "พรุ่งนี้"
-      next_week: "สัปดาห์หน้า"
-      next_month: "เดือนหน้า"
-      custom: "วันและเวลาที่กำหนดเอง"
-  groups:
-    default_names:
-      everyone: "ทุกคน"
-      admins: "ผู้ดูแลระบบ"
-      moderators: "ผู้ดูแล"
-      staff: "ทีมงาน"
-  education:
-    until_posts:
-      other: "%{count} โพส"
-  activerecord:
-    attributes:
-      category:
-        name: "ชื่อหมวดหมู่"
-      topic:
-        title: "ชื่อเรื่อง"
-        category_id: "หมวดหมู่"
-    errors:
-      <<: *errors
-  general_category_name: "ทั่วไป"
-  staff_category_name: "ทีมงาน"
-  category:
-    topic_prefix: "เกี่ยวกับหมวด %{category}"
-  trust_levels:
-    admin: "ผู้ดูแลระบบ"
-    staff: "ทีมงาน"
-  rate_limiter:
-    hours:
-      other: "%{count} ชั่วโมง"
-  datetime:
-    distance_in_words:
-      half_a_minute: "< 1 นาที"
-      less_than_x_seconds:
-        other: "< %{count} วินาที"
-      x_seconds:
-        other: "%{count} วินาที"
-      less_than_x_minutes:
-        other: "%{count}นาที"
-      x_minutes:
-        other: "%{count} นาที"
-      about_x_hours:
-        other: "%{count} ชั่วโมง"
-      x_days:
-        other: "%{count} วัน"
-      about_x_months:
-        other: "%{count}เดือน"
-      x_months:
-        other: "%{count}เดือน"
-      about_x_years:
-        other: "%{count} ปี"
-      over_x_years:
-        other: "> %{count} ปี"
-      almost_x_years:
-        other: "%{count} ปี"
-    distance_in_words_verbose:
-      half_a_minute: "เมื่อสักครู่นี้"
-      less_than_x_seconds: "เมื่อสักครู่นี้"
-      about_x_hours:
-        other: "%{count} ชั่วโมงที่แล้ว"
-      x_days:
-        other: "%{count} วันที่แล้ว"
-      x_months:
-        other: "%{count}เดือนที่แล้ว"
-  password_reset:
-    choose_new: "เลือกรหัสผู้ใช้ใหม่"
-    choose: "เลือกรหัสผู้ใช้"
-    save: "ตั้งรหัสผ่าน"
-    title: "รีเซ็ทรหัสผ่าน"
-  change_email:
-    please_continue: "ดำเนินการต่อไปยัง %{site_name}"
-  activation:
-    continue_button: "ดำเนินการต่อไปยัง %{site_name}"
-    welcome_to: "ยินดีต้อนรับสู่ %{site_name}!"
-  reviewable_score_types:
-    needs_approval:
-      title: "ต้องการอนุมัติ"
-  post_action_types:
-    spam:
-      title: "ขยะ"
-    bookmark:
-      title: "บุ๊คมาร์ค"
-  topic_flag_types:
-    spam:
-      title: "ขยะ"
-      long_form: "ปักธงไว้ว่าเป็นสแปม"
-    inappropriate:
-      long_form: "ปักธงไว้ว่าไม่เหมาะสม"
-  archetypes:
-    banner:
-      title: "ป้ายหัวข้อ"
-  unsubscribe:
-    log_out: "ออกจากระบบ"
-    digest_frequency:
-      never: "ไม่เลย"
-      every_30_minutes: "ทุก 30 นาที"
-      every_hour: "ทุกชั่วโมง"
-      daily: "ทุกวัน"
-      weekly: "รายสัปดาห์"
-      every_month: "ทุกเดือน"
-      every_six_months: "ทุกหกเดือน"
-  user_api_key:
-    read: "อ่าน"
-    otp_confirmation:
-      confirm_title: ดำเนินการต่อไปยัง %{site_name}
-      logging_in_as: กำลังเข้าสู่ระบบด้วย %{username}
-      confirm_button: เสร็จสิ้นการเข้าสู่ระบบ
-  reports:
-    post_edits:
-      labels:
-        edited_at: วันที่
-        post: โพส
-        edit_reason: เหตุผล
-    user_flagging_ratio:
-      labels:
-        user: ผู้ใช้
-        score: คะแนน
-    moderators_activity:
-      labels:
-        moderator: ผู้ดูแล
-    flags_status:
-      labels:
-        flag: ชนิด
-    consolidated_page_views:
-      labels:
-        post: โพส
-        edit_reason: เหตุผล
-    topics:
-      title: "หัวข้อ"
-    posts:
-      title: "โพส"
-    likes:
-      title: "ถูกใจ"
-    flags:
-      title: "ธง"
-    bookmarks:
-      title: "บุ๊คมาร์ค"
-    users_by_trust_level:
-      xaxis: "ระดับความไว้ใจ"
-    users_by_type:
-      xaxis: "ชนิด"
-      labels:
-        type: ชนิด
-      xaxis_labels:
-        admin: ผู้ดูแลระบบ
-        moderator: ผู้ดูแล
-        suspended: ระงับการใช้งาน
-    trending_search:
-      labels:
-        searches: ค้นหา
-    system_private_messages:
-      title: "ระบบ"
-    top_referrers:
-      xaxis: "ผู้ใช้"
-      num_topics: "หัวข้อ"
-      labels:
-        user: "ผู้ใช้"
-        num_topics: "หัวข้อ"
-    top_traffic_sources:
-      xaxis: "โดเมน"
-      num_topics: "หัวข้อ"
-      num_users: "ผู้ใช้"
-      labels:
-        domain: โดเมน
-        num_topics: หัวข้อ
-    top_referred_topics:
-      labels:
-        topic: "หัวข้อ"
-    page_view_anon_reqs:
-      title: "ไม่ระบุชื่อ"
-    http_total_reqs:
-      title: "ทั้งหมด"
-    topics_with_no_response:
-      yaxis: "ทั้งหมด"
-    suspicious_logins:
-      labels:
-        user: ผู้ใช้
-        location: ที่อยู่
-    staff_logins:
-      labels:
-        user: ผู้ใช้
-        location: ที่อยู่
-    top_uploads:
-      labels:
-        filename: ชื่อไฟล์
-    top_users_by_likes_received:
-      labels:
-        user: ผู้ใช้
-        qtt_like: ได้รับการชอบ
-    top_users_by_likes_received_from_inferior_trust_level:
-      labels:
-        user: ผู้ใช้
-        qtt_like: ได้รับการชอบ
-    top_users_by_likes_received_from_a_variety_of_people:
-      labels:
-        user: ผู้ใช้
-        qtt_like: ได้รับการชอบ
-  site_settings:
-    disabled: "ปิดใช้งานแล้ว"
-    dark_mode_none: "ไม่มี"
   search:
     within_post: "#%{post_number} ด้วย %{username}"
     types:
@@ -539,5 +307,8 @@ th:
         title: "ละทิ้ง"
   fallback_username: "ผู้ใช้"
   activemodel:
+    errors:
+      <<: *errors
+  activerecord:
     errors:
       <<: *errors

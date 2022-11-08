@@ -5,3 +5,33 @@
 # https://translate.discourse.org/
 
 pt:
+  chat:
+    deleted_chat_username: eliminado
+    errors:
+      not_accepting_dms: "Desculpe, de momento, %{username} não está a aceitar mensagens."
+    reviewables:
+      actions:
+        agree_and_suspend:
+          title: "Utilizador Suspenso"
+        agree_and_silence:
+          title: "Silenciar Usuário"
+        disagree:
+          title: "Discordar"
+        ignore:
+          title: "Ignorar"
+    channel:
+      statuses:
+        closed: "Fechado"
+        open: "Abrir"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} mencionou-o em "%{channel}"'
+  reviewable_score_types:
+    notify_user:
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_body: "%{link}\n\n%{message}"
+  unsubscribe:
+    chat_summary:
+      never: Nunca

@@ -6,7 +6,6 @@
 
 ru:
   site_settings:
-    chat_enabled: "Включить плагин discourse-chat ."
     chat_allowed_groups: "Пользователи в этих группах могут общаться в чате. Обратите внимание, что сотрудники всегда могут получить доступ к чату."
     chat_channel_retention_days: "Сообщения чата в обычных каналах будут храниться указанное здесь количество дней. Установите значение в '0', чтобы сохранять сообщения навсегда."
     chat_dm_retention_days: "Сообщения чата в личных каналах чата будут храниться указанное здесь количество дней. Установите значение в '0', чтобы сохранять сообщения навсегда."
@@ -99,8 +98,8 @@ ru:
     channel:
       statuses:
         read_only: "Только для чтения"
-        archived: "В архиве"
-        closed: "Закрыт"
+        archived: "Архивные"
+        closed: "Закрытые"
         open: "Открыт"
       archive:
         first_post_raw: "Эта тема является архивом канала [%{channel_name}](%{channel_url})."
@@ -134,16 +133,16 @@ ru:
     popup:
       chat_mention:
         direct: 'Пользователь %{username} упомянул вас на канале "%{channel}"'
-        other: 'Пользователь %{username} упомянул %{identifier} на канале "%{channel}"'
+        other_type: 'Пользователь %{username} упомянул %{identifier} в канале "%{channel}"'
       direct_message_chat_mention:
         direct: "Пользователь %{username} упомянул вас в личном чате"
-        other: "Пользователь %{username} упомянул %{identifier} в личном чате"
+        other_type: "Пользователь %{username} упомянул %{identifier} в личном чате"
       new_chat_message: 'Пользователь %{username} отправил сообщение на канале "%{channel}"'
       new_direct_chat_message: "Пользователь %{username} отправил сообщение в личный чат"
   discourse_automation:
     scriptables:
       send_chat_message:
-        title: Отправить сообщение
+        title: Отправить сообщение в чат
   reviewable_score_types:
     needs_review:
       title: "Требуется проверка"

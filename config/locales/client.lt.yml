@@ -1057,7 +1057,6 @@ lt:
       experimental_sidebar:
         options: "Nustatymai"
         navigation_section: "Navigacija"
-        list_destination_default: "Numatytasis"
       change: "pakeisti"
       featured_topic: "Įpatinga tema"
       moderator: "%{user} yra moderatorius"
@@ -4694,23 +4693,22 @@ lt:
         delete_confirm: "Ar tikrai nori ištrinti vartotojo lauką?"
         options: "Nustatymai"
         required:
-          title: "Privaloma per prisijungimą?"
+          title: "Privaloma per prisijungimą"
           enabled: "privalomi"
           disabled: "neprivaloma"
         editable:
-          title: "Gali keisti po registracijos?"
+          title: "Gali keisti po registracijos"
           enabled: "redaguojama"
           disabled: "neredaguojama"
         show_on_profile:
-          title: "Rodyti paskyroje viešai"
           enabled: "Rodyti paskyroje"
           disabled: "Nerodyti paskyroje"
         show_on_user_card:
-          title: "Rodyti vartotojo kortelėje?"
+          title: "Rodyti vartotojo kortelėje"
           enabled: "rodoma vartotojo kortelėje"
           disabled: "nerodomas vartotojo kortelėje"
         searchable:
-          title: "Ieškoma?"
+          title: "Ieškoma"
           enabled: "ieškoma"
           disabled: "negalima ieškoti"
         field_types:

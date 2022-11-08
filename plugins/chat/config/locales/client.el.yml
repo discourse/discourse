@@ -5,3 +5,111 @@
 # https://translate.discourse.org/
 
 el:
+  js:
+    chat:
+      create: "Δημιουργία"
+      cancel: "Ακύρωση"
+      channel_settings:
+        edit: "Επεξεργασία"
+        add: "Προσθήκη"
+        join: "Γίνετε μέλος"
+        leave: "Αποχώρηση"
+      close: "Κλείσιμο"
+      delete: "Σβήσιμο"
+      edited: "επεξεργάστηκε"
+      muted: "σε σίγαση"
+      joined: "έγινε μέλος"
+      email_frequency:
+        never: "Ποτέ"
+      flag: "Επισήμανση"
+      join: "Γίνετε μέλος"
+      mention_warning:
+        dismiss: "απόρριψη"
+      reply: "Απάντηση"
+      edit: "Επεξεργασία"
+      rebake_message: "Ανανέωση HTML"
+      bookmark_message: "Σελιδοδείκτης"
+      save: "Αποθήκευση"
+      sounds:
+        none: "Κανένα"
+      exit: "πίσω"
+      channel_status:
+        closed: "Κλειστό"
+        open: "Ξεκίνημα"
+      browse:
+        back: "Πίσω"
+        filter_all: Όλα
+        filter_closed: Κλειστό
+      chat_message_separator:
+        today: Σήμερα
+        yesterday: Χτες
+      about_view:
+        title: Τίτλος
+        description: Περιγραφή
+      channel_info:
+        back_to_channel: "Πίσω"
+        tabs:
+          about: Σχετικά
+          members: Μέλη
+          settings: Ρυθμίσεις
+      direct_message_creator:
+        title: Νέο Μήνυμα
+        prefix: "Προς:"
+      create_channel:
+        type: "Τύπος"
+        types:
+          category: "Κατηγορία"
+          topic: "Νήμα"
+      composer:
+        italic_text: "κείμενο σε έμφαση"
+        bold_text: "έντονη γραφή"
+      notification_levels:
+        never: "Ποτέ"
+      settings:
+        follow: "Γίνετε μέλος"
+        followed: "Έγινε μέλος"
+        notifications: "Ειδοποιήσεις"
+        preview: "Προεπισκόπηση"
+        save: "Αποθήκευση"
+        saved: "Αποθηκεύτηκε! "
+        unfollow: "Αποχώρηση"
+      incoming_webhooks:
+        back: "Πίσω"
+        description: "Περιγραφή"
+        delete: "Σβήσιμο"
+        emoji: "Emoji"
+        name: "Όνομα"
+        save: "Αποθήκευση"
+        edit: "Επεξεργασία"
+        system: "σύστημα"
+        url: "URL"
+        username: "Όνομα Χρήστη"
+      selection:
+        cancel: "Ακύρωση"
+        copy: "Αντιγραφή"
+        new_topic:
+          title: "Μεταφορά σε Νέο Νήμα "
+        existing_topic:
+          title: "Μεταφορά σε Υφιστάμενο Νήμα"
+        new_message:
+          title: "Μετακίνηση σε νέο μήνυμα"
+      emoji_picker:
+        objects: "Αντικείμενα"
+        activities: "Δραστηριότητες"
+        flags: "Σημάνσεις"
+        symbols: "Σύμβολα"
+      draft_channel_screen:
+        header: "Νέο Μήνυμα"
+        cancel: "Ακύρωση"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Μήνυμα
+    review:
+      types:
+        reviewable_chat_message:
+          flagged_by: "Επισήμανση από"

@@ -915,7 +915,7 @@ zh_CN:
     user_fields:
       none: "（选择一个选项）"
       required: '请为“%{name}”输入一个值。'
-      same_as_password: '您的密码不应重复出现在其他字段中。'
+      same_as_password: "您的密码不应重复出现在其他字段中。"
     user:
       said: "%{username}："
       profile: "个人资料"
@@ -3712,7 +3712,7 @@ zh_CN:
               pending_count: "%{count} 待处理"
     welcome_topic_banner:
       title: "创建您的欢迎话题"
-      description: '您的欢迎话题是新成员首先会阅读的内容。把它想象成您的“电梯推销”或“使命宣言”。让每个人都知道这个社区是为谁服务的，他们可以在这里找到什么，以及您希望他们首先做什么。'
+      description: "您的欢迎话题是新成员首先会阅读的内容。把它想象成您的“电梯推销”或“使命宣言”。让每个人都知道这个社区是为谁服务的，他们可以在这里找到什么，以及您希望他们首先做什么。"
       button_title: "开始编辑"
     until: "直到："
   admin_js:
@@ -5001,23 +5001,18 @@ zh_CN:
         delete_confirm: "确定要删除该用户字段吗？"
         options: "选项"
         required:
-          title: "注册时需要？"
           enabled: "必选"
           disabled: "非必选"
         editable:
-          title: "注册后可以编辑？"
           enabled: "可编辑"
           disabled: "不可编辑"
         show_on_profile:
-          title: "在公开个人资料中显示？"
           enabled: "在个人资料中显示"
           disabled: "不在个人资料中显示"
         show_on_user_card:
-          title: "在用户卡片上显示？"
           enabled: "在用户卡片上显示"
           disabled: "不在用户卡片上显示"
         searchable:
-          title: "可搜索？"
           enabled: "可搜索"
           disabled: "不可搜索"
         field_types:

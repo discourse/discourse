@@ -44,6 +44,6 @@ nl:
     only_staff_or_op_can_toggle_status: "Alleen een staflid of de oorspronkelijke plaatser van een bericht kan de status van een poll omschakelen."
     insufficient_rights_to_create: "U mag geen polls maken."
     email:
-      link_to_poll: "Klik om de poll te bekijken."
+      link_to_poll: "Klik om de poll weer te geven."
     user_field:
       no_data: "Geen gegevens"

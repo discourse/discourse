@@ -6,7 +6,6 @@
 
 fa_IR:
   site_settings:
-    chat_enabled: "فعال کردن افزونه discourse-chat"
     chat_allowed_groups: "کاربران در این گروه‌ها می‌توانند گفتگو کنند. توجه داشته باشید که کارکنان همیشه می‌توانند به گفتگو دسترسی داشته باشند."
     chat_allow_uploads: "بارگذاری در کانال‌های گفتگو عمومی و کانال‌های پیام مستقیم مجاز است."
     default_emoji_reactions: "واکنش‌های شکلک پیش‌فرض برای پیام‌های گفتگو. برای واکنش سریع تا ۵ شکلک اضافه کنید."
@@ -14,20 +13,23 @@ fa_IR:
     errors:
       chat_upload_not_allowed_secure_uploads: "وقتی که در تنظیمات سایت آپلودهای ایمن فعال باشد، آپلود گفتگو مجاز نیست."
   chat:
-    deleted_chat_username: حذف شده
+    deleted_chat_username: حذف شد
     errors:
       channel_exists_for_category: "یک کانال دیگر از قبل برای این دسته‌بندی و نام وجود دارد"
       cant_update_direct_message_channel: "ویژگی پیام مستقیم کانال مانند نام و توضیحات را نمی‌توان به‌روز کرد."
-      not_accepting_dms: "متاسفیم، %{username} در حال حاضر پیامی را نمی‌پذیرد."
+      not_accepting_dms: "با عرض پوزش، کاربر %{username} در حال حاضر پیام نمی‌پذیرد."
       actor_ignoring_target_user: "شما در حال نادیده گرفتن %{username} هستید، بنابراین نمی‌توانید پیامی را برای او ارسال کنید."
       actor_muting_target_user: "شما در حال بی‌صدا کردن %{username} هستید، بنابراین نمی‌توانید پیامی را برای آنها ارسال کنید."
       actor_disallowed_dms: "شما انتخاب کرده‌اید که از ارسال پیام‌های خصوصی و پیام‌های مستقیم در گفتگو توسط کاربران دیگر به شما جلوگیری کنیم، بنابراین نمی‌توانید پیام‌های مستقیم جدید در گفتگو ارسال کنید."
       actor_preventing_target_user_from_dm: "شما انتخاب کرده‌اید که %{username}، از ارسال پیام‌های خصوصی و پیام‌های مستقیم در گفتگو برای شما جلوگیری کنیم، بنابراین نمی‌توانید پیام مستقیم جدیدی در گفتگو برای او ارسال کنید."
+      user_cannot_send_direct_messages: "با عرض پوزش، شما نمی‌توانید پیام مستقیم ارسال کنید."
     reviewables:
       message_already_handled: "با تشکر از شما، اما ما در حال حاضر این پیام را بررسی کرده‌ایم و تشخیص داده‌ایم که نیازی به گزارش دوباره ندارد."
       actions:
         agree:
           title: "موافقم..."
+        agree_and_suspend:
+          title: "کاربر تعلیق شده"
         agree_and_delete:
           title: "حذف پیام"
           description: "پیام را حذف کنید تا کاربران نتوانند آن را ببینند."
@@ -37,18 +39,18 @@ fa_IR:
           title: "مخالفت و بازگرداندن پیام"
           description: "پیام را بازیابی کنید تا همه کاربران بتوانند آن را ببینند."
         disagree:
-          title: "مخالفم"
+          title: "مخالف"
         ignore:
-          title: "نادیده گرفتن"
+          title: "چشم پوشی"
       direct_messages:
         transcript_title: "رونوشت پیام‌های قبلی در %{channel_name}"
         transcript_body: "برای ارائه متن بیشتر به شما، رونوشتی از پیام‌های قبلی را در این گفتگو (حداکثر ده مورد) قرار دادیم:\n\n%{transcript}"
     channel:
       statuses:
         read_only: "فقط خواندنی"
-        archived: "بایگانی شده"
-        closed: "بسته شد"
-        open: "باز کردن"
+        archived: "بایگانی شد"
+        closed: "بسته"
+        open: "باز"
       dm_title:
         single_user: "%{user}"
         multi_user: "%{users}"

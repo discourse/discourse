@@ -1071,7 +1071,6 @@ ur:
       experimental_sidebar:
         options: "اختیارات"
         navigation_section: "نیویگیشن"
-        list_destination_default: "ڈِیفالٹ"
       change: "بدلیں"
       featured_topic: "نمایاں موضوع"
       moderator: "%{user} ایک ماڈریٹر ہے"
@@ -4962,23 +4961,18 @@ ur:
         delete_confirm: "کیا آپ واقعی یہ صارف سے بھرے جانے والا خانا حذف کرنا چاہتے ہیں؟"
         options: "اختیارات"
         required:
-          title: "سائن اَپ کے وقت درکار ہے؟"
           enabled: "درکار ہے"
           disabled: "درکار نہیں ہے"
         editable:
-          title: "سائن اَپ کے بعد قابل ترمیم؟"
           enabled: "قابلِ ترمیم"
           disabled: "ناقابلِ ترمیم"
         show_on_profile:
-          title: "پبلک پروفائل پر دکھائیں؟"
           enabled: "پروفائل پر دکھائیں؟"
           disabled: "پروفائل پر نہیں دکھایا؟"
         show_on_user_card:
-          title: "صارف کارڈ پر دکھائیں؟"
           enabled: "صارف کارڈ پر دکھایا گیا"
           disabled: "صارف کارڈ پر نہیں دکھایا گیا"
         searchable:
-          title: "قابل تلاش؟"
           enabled: "قابل تلاش؟"
           disabled: "قابل تلاش نہیں"
         field_types:

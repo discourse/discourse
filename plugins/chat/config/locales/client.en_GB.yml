@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 en_GB:
+  js:
+    chat:
+      composer:
+        italic_text: "emphasised text"

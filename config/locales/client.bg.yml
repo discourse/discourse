@@ -1039,7 +1039,6 @@ bg:
       experimental_sidebar:
         options: "Опции"
         navigation_section: "Навигация"
-        list_destination_default: "По подразбиране"
       change: "промени"
       featured_topic: "Представена тема"
       moderator: "%{user} е модератор"
@@ -3668,19 +3667,19 @@ bg:
         delete_confirm: "Сигурни ли сте, че искате да изтриете това потребителско поле?"
         options: "Опции"
         required:
-          title: "Да се изисква при регистрация?"
+          title: "Да се изисква при регистрация"
           enabled: "задължително"
           disabled: "по желание"
         editable:
-          title: "Да се редактира след регистрация?"
+          title: "Да се редактира след регистрация"
           enabled: "може да се редактира"
           disabled: "Текстово поле"
         show_on_profile:
-          title: "Покажи на публичния профил?"
+          title: "Покажи на публичния профил"
           enabled: "показано на профила"
           disabled: "не се показва на профила"
         show_on_user_card:
-          title: "Показване в потребителската карта?"
+          title: "Показване в потребителската карта"
           enabled: "показано в потребителската карта"
           disabled: "не е показано в потребителската карта"
         field_types:
