@@ -75,7 +75,7 @@ acceptance("Admin - Watched Words", function (needs) {
 
   test("add case-sensitive words", async function (assert) {
     await visit("/admin/customize/watched_words/action/block");
-    const submitButton = document.querySelector(".watched-word-form button");
+    const submitButton = query(".watched-word-form button");
     assert.strictEqual(
       submitButton.disabled,
       true,
