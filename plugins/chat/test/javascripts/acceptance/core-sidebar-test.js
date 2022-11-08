@@ -5,14 +5,7 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
-import {
-  click,
-  currentURL,
-  fillIn,
-  settled,
-  triggerKeyEvent,
-  visit,
-} from "@ember/test-helpers";
+import { click, currentURL, settled, visit } from "@ember/test-helpers";
 import { directMessageChannels } from "discourse/plugins/chat/chat-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "I18n";
