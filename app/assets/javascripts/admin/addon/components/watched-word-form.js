@@ -56,6 +56,11 @@ export default Component.extend({
     });
   },
 
+  @discourseComputed("word")
+  submitDisabled(word) {
+    return !word;
+  },
+
   focusInput() {
     schedule("afterRender", () => this.element.querySelector("input").focus());
   },
