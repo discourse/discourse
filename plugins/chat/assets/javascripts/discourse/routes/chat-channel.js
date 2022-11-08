@@ -11,17 +11,11 @@ export default class ChatChannelRoute extends DiscourseRoute {
   @service fullPageChat;
   @service chatPreferredMode;
 
-  async model(params, transition) {
+  async model(params) {
     let [chatChannel, channels] = await Promise.all([
       this.getChannel(params.channelId),
       this.chat.getChannels(),
     ]);
-
-    if (transition.from && this.chatPreferredMode.isDrawer) {
-      transition.abort();
-      this.appEvents.trigger("chat:open-channel", chatChannel);
-      return;
-    }
 
     return EmberObject.create({
       chatChannel,
