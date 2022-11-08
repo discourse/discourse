@@ -8,6 +8,8 @@ import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel
 
 export default class ChatChannelRoute extends DiscourseRoute {
   @service chat;
+  @service fullPageChat;
+  @service chatPreferredMode;
 
   async model(params) {
     let [chatChannel, channels] = await Promise.all([

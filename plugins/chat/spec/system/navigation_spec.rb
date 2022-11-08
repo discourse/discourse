@@ -94,4 +94,36 @@ RSpec.describe "Navigation", type: :system, js: true do
       expect(page).to have_css(".chat-message-container[data-id='#{message.id}']")
     end
   end
+
+  context "when sidebar is enabled" do
+    before do
+      SiteSetting.enable_experimental_sidebar_hamburger = true
+      SiteSetting.enable_sidebar = true
+    end
+
+    context "when opening channel from sidebar with drawer preferred" do
+      it "opens channel in drawer" do
+        visit("/t/-/#{topic.id}")
+        chat_page.open_from_header
+        chat_page.close_drawer
+        find("a[title='#{category_channel.title}']").click
+
+        expect(page).to have_css(".chat-message-container[data-id='#{message.id}']")
+      end
+    end
+
+    context "when opening channel from sidebar with full page preferred" do
+      it "opens channel in full page" do
+        visit("/")
+        chat_page.open_from_header
+        chat_page.maximize_drawer
+        visit("/")
+        find("a[title='#{category_channel.title}']").click
+
+        expect(page).to have_current_path(
+          chat.channel_path(category_channel.id, category_channel.slug),
+        )
+      end
+    end
+  end
 end
