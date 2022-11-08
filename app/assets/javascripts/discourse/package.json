@@ -82,7 +82,7 @@
     "pretty-text": "^1.0.0",
     "qunit": "^2.19.3",
     "qunit-dom": "^2.0.0",
-    "sass": "^1.55.0",
+    "sass": "^1.56.0",
     "select-kit": "^1.0.0",
     "sinon": "^14.0.2",
     "tippy.js": "^6.3.7",
