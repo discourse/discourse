@@ -5,3 +5,31 @@
 # https://translate.discourse.org/
 
 sw:
+  chat:
+    deleted_chat_username: imefutwa
+    errors:
+      not_accepting_dms: "Samahani, %{username}haikubali jumbe kwa sasa"
+    reviewables:
+      actions:
+        agree_and_suspend:
+          title: "Simamisha Mtumiaji"
+          description: "Kubaliana na bendera na simamisha mtumiaji."
+        agree_and_silence:
+          title: "Nyamazisha Mtumiaji"
+          description: "Kubaliana na bendera na nyamazisha mtumiaji."
+        disagree:
+          title: "Kataa"
+        ignore:
+          title: "Puuzia"
+    channel:
+      statuses:
+        closed: "Imefungwa"
+        open: "Fungua"
+  reviewable_score_types:
+    notify_user:
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_body: "%{link}\n\n%{message}"
+  unsubscribe:
+    chat_summary:
+      never: Kamwe

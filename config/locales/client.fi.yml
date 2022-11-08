@@ -974,7 +974,7 @@ fi:
     user_fields:
       none: "(valitse vaihtoehto)"
       required: '"%{name}" on pakollinen'
-      same_as_password: 'Salasanaasi ei tulisi toistaa muissa kentissä.'
+      same_as_password: "Salasanaasi ei tulisi toistaa muissa kentissä."
     user:
       said: "%{username}:"
       profile: "Profiili"
@@ -1113,9 +1113,6 @@ fi:
         tags_section: "Tunnisteet-osio"
         tags_section_instruction: "Valitut tunnisteet näkyvät sivupalkin tunnisteet-osiossa."
         navigation_section: "Navigointi"
-        list_destination_instruction: "Kun klikkaan sivupalkin ketjuluettelon linkkiä, jossa on uusia tai lukemattomia ketjuja, siirry kohtaan"
-        list_destination_default: "Oletus"
-        list_destination_unread_new: "Uudet/lukemattomat"
       change: "vaihda"
       featured_topic: "Valikoitu ketju"
       moderator: "%{user} on valvoja"
@@ -3914,7 +3911,7 @@ fi:
               pending_count: "%{count} odottaa"
     welcome_topic_banner:
       title: "Luo tervetuloketjusi"
-      description: 'Tervetuloketjusi on ensimmäinen asia, jonka uudet jäsenet lukevat. Ajattele sitä "hissipuheenasi" tai "tavoitelausumanasi". Kerro kaikille, kenelle tämä yhteisö on tarkoitettu, mitä he voivat odottaa löytävänsä täältä ja mitä haluat heidän tekevän ensin.'
+      description: "Tervetuloketjusi on ensimmäinen asia, jonka uudet jäsenet lukevat. Ajattele sitä \"hissipuheenasi\" tai \"tavoitelausumanasi\". Kerro kaikille, kenelle tämä yhteisö on tarkoitettu, mitä he voivat odottaa löytävänsä täältä ja mitä haluat heidän tekevän ensin."
       button_title: "Aloita muokkaaminen"
     until: "Asti:"
   admin_js:
@@ -5213,23 +5210,18 @@ fi:
         delete_confirm: "Oletko varma, että haluat poistaa tämän käyttäjäkentän?"
         options: "Vaihtoehdot"
         required:
-          title: "Pakollinen rekisteröidyttäessä?"
           enabled: "pakollinen"
           disabled: "ei pakollinen"
         editable:
-          title: "Muokattavissa rekisteröitymisen jälkeen?"
           enabled: "muokattavissa"
           disabled: "ei muokattavissa"
         show_on_profile:
-          title: "Näytetään julkisessa profiilissa?"
           enabled: "näytetään profiilissa"
           disabled: "ei näytetä profiilissa"
         show_on_user_card:
-          title: "Näytetään käyttäjäkortilla?"
           enabled: "näytetään käyttäjäkortilla"
           disabled: "ei näytetä käyttäjäkortilla"
         searchable:
-          title: "Haettavissa?"
           enabled: "haettavissa"
           disabled: "ei haettavissa"
         field_types:

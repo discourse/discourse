@@ -1056,7 +1056,6 @@ da:
       experimental_sidebar:
         options: "Indstillinger"
         navigation_section: "Navigation"
-        list_destination_default: "Standard"
       change: "skift"
       featured_topic: "Fremhævet emne"
       moderator: "%{user} er en moderator"
@@ -4854,23 +4853,23 @@ da:
         delete_confirm: "Er du sikker på at du vil slette det brugerfelt?"
         options: "Indstillinger"
         required:
-          title: "Krævet ved registrering?"
+          title: "Krævet ved registrering"
           enabled: "krævet"
           disabled: "ikke krævet"
         editable:
-          title: "Kan rettes efter registrering?"
+          title: "Kan rettes efter registrering"
           enabled: "redigerbar"
           disabled: "ikke redigerbar"
         show_on_profile:
-          title: "Vis i offentlig profil?"
+          title: "Vis i offentlig profil"
           enabled: "vist i profil"
           disabled: "ikke vist i profil"
         show_on_user_card:
-          title: "Vis på brugers profilkort?"
+          title: "Vis på brugers profilkort"
           enabled: "vist på brugerens profilkort"
           disabled: "ikke vist på brugerens profilkort"
         searchable:
-          title: "Søgbar?"
+          title: "Søgbar"
           enabled: "søgbar"
           disabled: "ikke søgbar"
         field_types:

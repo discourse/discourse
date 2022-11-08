@@ -5,3 +5,112 @@
 # https://translate.discourse.org/
 
 pt:
+  js:
+    chat:
+      create: "Criar"
+      cancel: "Cancelar"
+      channel_settings:
+        edit: "Editar"
+        add: "Adicionar"
+        join: "Entrar"
+        leave: "Sair"
+      close: "Fechar"
+      delete: "Eliminar"
+      edited: "editado"
+      muted: "silenciado"
+      joined: "juntou-se"
+      email_frequency:
+        never: "Nunca"
+      flag: "Denunciar"
+      join: "Entrar"
+      mention_warning:
+        dismiss: "marcar Visto"
+      reply: "Responder"
+      edit: "Editar"
+      rebake_message: "Reconstruir HTML"
+      bookmark_message: "Adicionar Marcador"
+      bookmark_message_edit: "Editar Favorito"
+      save: "Guardar"
+      sounds:
+        none: "Nenhuma"
+      exit: "retroceder"
+      channel_status:
+        closed: "Fechado"
+        open: "Abrir"
+      browse:
+        back: "Retroceder"
+        filter_all: Tudo
+        filter_closed: Fechado
+      chat_message_separator:
+        today: Hoje
+        yesterday: Ontem
+      about_view:
+        title: Título
+        description: Descrição
+      channel_info:
+        back_to_channel: "Retroceder"
+        tabs:
+          about: Sobre
+          members: Membros
+          settings: Configurações
+      direct_message_creator:
+        title: Nova Mensagem
+        prefix: "Para:"
+      create_channel:
+        type: "Tipo"
+        types:
+          category: "Categoria"
+          topic: "Tópico"
+      composer:
+        italic_text: "texto em itálico"
+        bold_text: "texto em negrito"
+      notification_levels:
+        never: "Nunca"
+      settings:
+        follow: "Entrar"
+        followed: "Juntou-se"
+        notifications: "Notificações"
+        preview: "Pré-visualização"
+        save: "Guardar"
+        saved: "Guardado"
+        unfollow: "Sair"
+      incoming_webhooks:
+        back: "Retroceder"
+        description: "Descrição"
+        delete: "Eliminar"
+        emoji: "Emoji"
+        name: "Nome"
+        save: "Guardar"
+        edit: "Editar"
+        system: "sistema"
+        url: "URL"
+        username: "Nome de Utilizador"
+      selection:
+        cancel: "Cancelar"
+        copy: "Copiar"
+        new_topic:
+          title: "Mover para um Novo Tópico"
+        existing_topic:
+          title: "Mover para Tópico Existente"
+        new_message:
+          title: "Mover para Nova Mensagem"
+      emoji_picker:
+        objects: "Objetos"
+        activities: "Atividades"
+        flags: "Sinalizações"
+        symbols: "Símbolos"
+      draft_channel_screen:
+        header: "Nova Mensagem"
+        cancel: "Cancelar"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Mensagem
+    review:
+      types:
+        reviewable_chat_message:
+          flagged_by: "Sinalizado por"

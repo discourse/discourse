@@ -970,7 +970,7 @@ it:
     user_fields:
       none: "(scegli un'opzione)"
       required: 'Inserisci un valore per "%{name}"'
-      same_as_password: 'La tua password non deve essere ripetuta in altri campi.'
+      same_as_password: "La tua password non deve essere ripetuta in altri campi."
     user:
       said: "%{username}:"
       profile: "Profilo"
@@ -5177,23 +5177,18 @@ it:
         delete_confirm: "Sicuro di voler cancellare il campo utente?"
         options: "Opzioni"
         required:
-          title: "Obbligatorio durante l'iscrizione?"
           enabled: "obbligatorio"
           disabled: "non obbligatorio"
         editable:
-          title: "Modificabile dopo l'iscrizione?"
           enabled: "modificabile"
           disabled: "non modificabile"
         show_on_profile:
-          title: "Mostrare nel profilo pubblico?"
           enabled: "mostrato nel profilo"
           disabled: "non mostrato nel profilo"
         show_on_user_card:
-          title: "Mostrare sulla scheda utente?"
           enabled: "mostrato sulla scheda utente"
           disabled: "non mostrato sulla scheda utente"
         searchable:
-          title: "Ricercabile?"
           enabled: "ricercabile"
           disabled: "non ricercabile"
         field_types:

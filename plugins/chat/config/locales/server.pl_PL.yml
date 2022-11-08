@@ -5,20 +5,27 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  site_settings:
+    chat_enabled: "Włącz wtyczkę czatu."
   chat:
+    deleted_chat_username: usunięte
     errors:
       channel_exists_for_category: "Istnieje już kanał dla tej kategorii i nazwy"
       user_cannot_send_message: "W tej chwili nie możesz wysyłać wiadomości."
       rate_limit_exceeded: "Przekroczono limit wiadomości na czacie, które można wysłać w ciągu 30 sekund"
       max_reactions_limit_reached: "Nowe reakcje nie są dozwolone w tej wiadomości."
+      not_accepting_dms: "Przepraszamy, ale użytkownik %{username} nie akceptuje w tej chwili wiadomości "
     reviewables:
       actions:
+        agree:
+          title: "Zgadzam się..."
         agree_and_keep_message:
           title: "Zachowaj wiadomość"
         agree_and_keep_deleted:
           title: "Zachowaj wiadomość usuniętą"
         agree_and_suspend:
           title: "Zawieś użytkownika"
+          description: "Zgódź się z flagą i zawieś konto użytkownika."
         agree_and_silence:
           title: "Wycisz użytkownika"
           description: "Zgódź się z flagą i wycisz użytkownika."
@@ -29,16 +36,35 @@ pl_PL:
         delete_and_agree:
           title: "Usuń wiadomość"
         disagree:
-          title: "Nie zgadzam się"
+          title: "Wycofaj"
         ignore:
           title: "Ignoruj"
     channel:
       statuses:
         read_only: "Tylko do odczytu"
         archived: "Zarchiwizowany"
-        closed: "Zamknięty"
-        open: "Otwarty"
+        closed: "Zamknięta"
+        open: "Otwórz"
+      dm_title:
+        multi_user_truncated: "%{users} i %{leftover} innych"
+    bookmarkable:
+      notification_title: "wiadomość w %{channel_name}"
     personal_chat: "czat osobisty"
+    onebox:
+      x_members:
+        one: "%{count} członek"
+        few: "%{count} członków"
+        many: "%{count} członków"
+        other: "%{count} członków"
+      and_x_others:
+        one: "i %{count} inny"
+        few: "i %{count} inne"
+        many: "i %{count} innych"
+        other: "i %{count} innych"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} wspomniał(a) o Tobie w "%{channel}"'
   discourse_automation:
     scriptables:
       send_chat_message:
@@ -46,6 +72,32 @@ pl_PL:
   reviewable_score_types:
     needs_review:
       title: "Wymaga przeglądu"
+    notify_user:
+      chat_pm_title: 'Twoja wiadomość w kanale "%{channel_name}"'
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_title: 'Wiadomość w kanale "%{channel_name}" wymaga uwagi personelu'
+      chat_pm_body: "%{link}\n\n%{message}"
+  reviewables:
+    reasons:
+      chat_message_queued_by_staff: "Członek personelu uważa, że ta wiadomość wymaga weryfikacji."
+  user_notifications:
+    chat_summary:
+      deleted_user: "Usunięty użytkownik"
+      description:
+        one: "Masz nową wiadomość na czacie"
+        few: "Masz nowe wiadomości na czacie"
+        many: "Masz nowe wiadomości na czacie"
+        other: "Masz nowe wiadomości na czacie"
+      from: "%{site_name}"
+      subject:
+        other_direct_message: "od %{message_title}"
+        others: "%{count} inni"
+      view_messages:
+        one: "Zobacz wiadomość"
+        few: "Zobacz %{count} wiadomości"
+        many: "Zobacz %{count} wiadomości"
+        other: "Zobacz %{count} wiadomości"
   unsubscribe:
     chat_summary:
       never: Nigdy

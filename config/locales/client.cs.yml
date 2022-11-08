@@ -930,7 +930,6 @@ cs:
       experimental_sidebar:
         options: "Možnosti"
         navigation_section: "Navigace"
-        list_destination_default: "Výchozí"
       change: "změnit"
       featured_topic: "Doporučené téma"
       moderator: "%{user} je moderátor"
@@ -3775,19 +3774,19 @@ cs:
         delete_confirm: "Určitě chcete smazat toto rozšíření?"
         options: "Možnosti"
         required:
-          title: "Povinné pro registraci?"
+          title: "Povinné pro registraci"
           enabled: "povinné"
           disabled: "není povinné"
         editable:
-          title: "Editovatelné po registraci?"
+          title: "Editovatelné po registraci"
           enabled: "editovatelné"
           disabled: "není editovatelné"
         show_on_profile:
-          title: "Zveřejnit na uživatelském profilu?"
+          title: "Zveřejnit na uživatelském profilu"
           enabled: "zveřejněno na profilu"
           disabled: "nezveřejněno na profilu"
         show_on_user_card:
-          title: "Zobrazit na kartě uživatele?"
+          title: "Zobrazit na kartě uživatele"
           enabled: "zobrazeno na kartě uživatele"
           disabled: "Nezobrazeno na kartě uživatele"
         field_types:

@@ -290,6 +290,7 @@ pl_PL:
     delete: "Usuń"
     generic_error: "Przepraszamy, wystąpił błąd."
     generic_error_with_reason: "Wystąpił błąd: %{error}"
+    multiple_errors: "Wystąpiło wiele błędów: %{errors}"
     sign_up: "Rejestracja"
     log_in: "Logowanie"
     age: "Wiek"
@@ -1086,6 +1087,7 @@ pl_PL:
     user_fields:
       none: "(wybierz opcję)"
       required: 'Wprowadź wartość dla "%{name}”'
+      same_as_password: "Twoje hasło nie powinno się powtarzać w innych polach."
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -1182,6 +1184,8 @@ pl_PL:
       no_notifications_title: "Nie masz jeszcze żadnych powiadomień"
       no_notifications_body: >
         W tym panelu zostaniesz powiadomiony o aktywności bezpośrednio związanej z Tobą, w tym o odpowiedziach na Twoje tematy i posty, gdy ktoś <b>@oznaczy</b> lub zacytuje Cię i odpowie na obserwowane przez Ciebie tematy. Powiadomienia będą również wysyłane na Twój adres e-mail, gdy nie jesteś zalogowany przez jakiś czas. <br><br> Poszukaj %{icon} aby zdecydować, o których konkretnych tematach, kategoriach i tagach chcesz otrzymywać powiadomienia. Więcej informacji znajdziesz w <a href='%{preferencesUrl}'>preferencjach powiadomień</a>.
+      no_other_notifications_body: >
+        W tym panelu będziesz otrzymywać powiadomienia o innych rodzajach aktywności, które mogą być dla Ciebie istotne - na przykład gdy ktoś zamieści link do jednego z Twoich postów lub go edytuje.
       no_notifications_page_title: "Nie masz jeszcze żadnych powiadomień"
       no_notifications_page_body: >
         Zostaniesz powiadomiony o działaniach bezpośrednio związanych z Tobą, w tym o odpowiedziach na Twoje tematy i posty, gdy ktoś <b>@oznaczy</b> Ciebie lub cytuje Ciebie, i odpowiada na tematy, które oglądasz. Powiadomienia będą również wysyłane na Twój adres e-mail, gdy nie zalogujesz się przez jakiś czas. <br><br> Poszukaj %{icon} , aby zdecydować, o których konkretnych tematach, kategoriach i tagach chcesz być powiadamiany. Aby dowiedzieć się więcej, zobacz swoje <a href='%{preferencesUrl}'>preferencje powiadomień</a>.
@@ -1192,6 +1196,7 @@ pl_PL:
         not_first_time: "To nie twój pierwszy raz?"
         skip_link: "Pomiń te wskazówki"
         read_later: "Przeczytam to później."
+      reset_seen_popups: "Pokaż ponownie wskazówki wprowadzające"
       theme_default_on_all_devices: "Ustaw to jako domyślny motyw na wszystkich urządzeniach"
       color_scheme_default_on_all_devices: "Ustaw domyślne schematy kolorów na wszystkich moich urządzeniach"
       color_scheme: "Schemat kolorów"
@@ -1218,8 +1223,6 @@ pl_PL:
         tags_section: "Sekcja tagów"
         tags_section_instruction: "Wybrane tagi będą wyświetlane w sekcji tagów paska bocznego."
         navigation_section: "Nawigacja"
-        list_destination_default: "Domyślny"
-        list_destination_unread_new: "Nowe/Nieprzeczytane"
       change: "zmień"
       featured_topic: "Wyróżniony temat"
       moderator: "%{user} jest moderatorem"
@@ -1805,8 +1808,13 @@ pl_PL:
       remove_status: "Usuń status"
     popup:
       primary: "Zrozumiano!"
+      secondary: "nie pokazuj mi tych wskazówek"
       first_notification:
         title: "Twoje pierwsze powiadomienie!"
+        content: "Powiadomienia służą do informowania na bieżąco o tym, co dzieje się w społeczności."
+      topic_timeline:
+        title: "Oś czasu tematu"
+        content: "Przewiń szybko post, korzystając z osi czasu tematu."
     loading: "Wczytuję…"
     errors:
       prev_page: "podczas próby wczytania"
@@ -1839,6 +1847,8 @@ pl_PL:
       enabled: "Strona jest w trybie tylko-do-odczytu. Możesz ją nadal przeglądać, ale operacje takie jak publikowanie postów, polubianie i inne są wyłączone."
       login_disabled: "Logowanie jest zablokowane, gdy strona jest w trybie tylko do odczytu."
       logout_disabled: "Wylogowanie jest zablokowane gdy strona jest w trybie tylko do odczytu."
+    staff_writes_only_mode:
+      enabled: "Ta strona jest w trybie tylko dla personelu. Kontynuuj przeglądanie, ale odpowiadanie, polubienia i inne działania są ograniczone tylko do członków personelu."
     too_few_topics_and_posts_notice_MF: >-
       Zacznijmy <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">dyskutować!</a> Mamy {currentTopics, plural, one {<strong>#</strong> temat}  few {<strong>#</strong> tematy} other {<strong>#</strong> tematów}} i {currentPosts, plural, one {<strong>#</strong> wpis} few {<strong>#</strong> wpisy} other {<strong>#</strong> wpisów}}. Odwiedzający potrzebują więcej do dyskusji – zalecamy przynajmniej {requiredTopics, plural, one {<strong>#</strong> temat} few {<strong>#</strong> tematy} other {<strong>#</strong> tematów}} i {requiredPosts, plural, one {<strong>#</strong> wpis} few {<strong>#</strong> wpisy} other {<strong>#</strong> wpisów}}. Tylko członkowie zespołu widzą tę wiadomość.
     too_few_topics_notice_MF: >-
@@ -1872,6 +1882,7 @@ pl_PL:
       hide_forever: "nie, dziękuję"
       hidden_for_session: "OK, zapytamy Cię jutro. Zawsze możesz też użyć opcji „Zaloguj się”, aby utworzyć konto."
       intro: "Hej! Wygląda na to, że zainteresowała Cię ta dyskusja, ale nie posiadasz jeszcze konta."
+      value_prop: "Masz dość przewijania tych samych postów? Kiedy stworzysz konto, zawsze wrócisz do miejsca, w którym przerwałeś. Z kontem możesz również otrzymywać powiadomienia o nowych odpowiedziach, zapisywać zakładki i używać polubień, aby podziękować innym. Wszyscy możemy współpracować, aby ta społeczność była świetna. :heart:"
     summary:
       enabled_description: "Przeglądasz podsumowanie tego tematu: widoczne są jedynie najbardziej wartościowe wpisy zdaniem uczestników. "
       description:
@@ -2554,17 +2565,54 @@ pl_PL:
     view_all: "zobacz wszystkie %{tab}"
     user_menu:
       generic_no_items: "Na tej liście nie ma żadnych pozycji."
+      sr_menu_tabs: "Zakładki menu użytkownika"
       view_all_notifications: "zobacz wszystkie powiadomienia"
       view_all_bookmarks: "zobacz wszystkie zakładki"
       view_all_messages: "wyświetl wszystkie wiadomości osobiste"
       tabs:
         all_notifications: "Wszystkie powiadomienia"
         replies: "Odpowiedzi"
+        replies_with_unread:
+          one: "Odpowiedzi - %{count} nieprzeczytana odpowiedź"
+          few: "Odpowiedzi - %{count} nieprzeczytane odpowiedzi"
+          many: "Odpowiedzi - %{count} nieprzeczytanych odpowiedzi"
+          other: "Odpowiedzi - %{count} nieprzeczytanych odpowiedzi"
         mentions: "Wzmianki"
+        mentions_with_unread:
+          one: "Wzmianki - %{count} nieprzeczytana wzmianka"
+          few: "Wzmianki - %{count} nieprzeczytane wzmianki"
+          many: "Wzmianki - %{count} nieprzeczytanych wzmianek"
+          other: "Wzmianki - %{count} nieprzeczytanych wzmianek"
         likes: "Otrzymane polubienia"
+        likes_with_unread:
+          one: "Polubienia - %{count} nieprzeczytane polubienie"
+          few: "Polubienia - %{count} nieprzeczytane polubienia"
+          many: "Polubienia - %{count} nieprzeczytanych polubień"
+          other: "Polubienia - %{count} nieprzeczytanych polubień"
         watching: "Obserwowane tematy"
+        watching_with_unread:
+          one: "Obserwowane tematy - %{count} nieprzeczytany obserwowany temat"
+          few: "Obserwowane tematy - %{count} nieprzeczytane obserwowane tematy"
+          many: "Obserwowane tematy - %{count} nieprzeczytanych obserwowanych tematów"
+          other: "Obserwowane tematy - %{count} nieprzeczytanych obserwowanych tematów"
         messages: "Wiadomości osobiste"
+        messages_with_unread:
+          one: "Wiadomości osobiste - %{count} nieprzeczytana wiadomość"
+          few: "Wiadomości osobiste - %{count} nieprzeczytane wiadomości"
+          many: "Wiadomości osobiste - %{count} nieprzeczytanych wiadomości"
+          other: "Wiadomości osobiste - %{count} nieprzeczytanych wiadomości"
         bookmarks: "Zakładki"
+        bookmarks_with_unread:
+          one: "Zakładki - %{count} nieprzeczytana zakładka"
+          few: "Zakładki - %{count} nieprzeczytane zakładki"
+          many: "Zakładki - %{count} nieprzeczytanych zakładek"
+          other: "Zakładki - %{count} nieprzeczytanych zakładek"
+        review_queue: "Kolejka do przeglądu"
+        review_queue_with_unread:
+          one: "Kolejka do przeglądu - %{count} pozycja wymaga przeglądu"
+          few: "Kolejka do przeglądu - %{count} pozycje wymagają przeglądu"
+          many: "Kolejka recenzji - %{count} pozycji wymaga przeglądu"
+          other: "Kolejka recenzji - %{count} pozycji wymaga przeglądu"
         other_notifications: "Inne powiadomienia"
         other_notifications_with_unread:
           one: "Inne powiadomienia - %{count} nieprzeczytane powiadomienie"
@@ -2573,6 +2621,7 @@ pl_PL:
           other: "Inne powiadomienia - %{count} nieprzeczytanych powiadomień"
         profile: "Profil"
       reviewable:
+        view_all: "zobacz wszystkie elementy do przeglądu"
         queue: "Kolejka"
         deleted_user: "(usunięty użytkownik)"
         deleted_post: "(usunięty post)"
@@ -3145,6 +3194,7 @@ pl_PL:
         few: "pokaż %{count} ukryte odpowiedzi"
         many: "pokaż %{count} ukrytych odpowiedzi"
         other: "pokaż %{count} ukrytych odpowiedzi"
+      sr_reply_to: "Odpowiedz na post #%{post_number} od @%{username}"
       notice:
         new_user: "%{user} opublikował(a) coś po raz pierwszy - powitajmy tę osobę w naszej społeczności!"
         returning_user: "Minęło trochę czasu, odkąd widzieliśmy %{user} - ostatni wpis tego użytkownika był %{time}."
@@ -3392,6 +3442,7 @@ pl_PL:
       all: "Wszystkie kategorie"
       choose: "kategoria&hellip;"
       edit: "Edytuj"
+      edit_title: "Edytuj tę kategorię"
       edit_dialog_title: "Edytuj: %{categoryName}"
       view: "Pokaż Tematy w Kategorii"
       back: "Powrót do kategorii"
@@ -4151,12 +4202,20 @@ pl_PL:
             unread_with_count: "Nieprzeczytane (%{count})"
             archive: "Archiwum"
         tags:
+          links:
+            add_tags:
+              content: "Dodaj tagi"
+              title: "Nie dodałeś żadnych tagów. Kliknij, aby rozpocząć."
           none: "Nie dodałeś żadnych tagów."
           click_to_get_started: "Kliknij tutaj, aby rozpocząć."
           header_link_text: "Etykiety"
           header_action_title: "edytuj tagi paska bocznego"
           configure_defaults: "Skonfiguruj ustawienia domyślne"
         categories:
+          links:
+            add_categories:
+              content: "Dodaj kategorie"
+              title: "Nie dodano żadnych kategorii. Kliknij, aby rozpocząć."
           none: "Nie dodałeś żadnych kategorii."
           click_to_get_started: "Kliknij tutaj, aby rozpocząć."
           header_link_text: "Kategorie"
@@ -4197,8 +4256,10 @@ pl_PL:
             review:
               content: "Sprawdź"
               title: "sprawdź"
+              pending_count: "%{count} oczekujących"
     welcome_topic_banner:
       title: "Stwórz swój temat powitalny"
+      description: "Twój temat powitalny to pierwsza rzecz, którą przeczytają nowi członkowie. Pomyśl o tym jako o swoim „przemówieniu” lub „deklaracji misji”. Poinformuj wszystkich, dla kogo jest ta społeczność, czego mogą się tu spodziewać, i co chcesz, aby zrobili najpierw."
       button_title: "Rozpocznij edycję"
     until: "Aż do:"
   admin_js:
@@ -4523,6 +4584,7 @@ pl_PL:
           name: "Zdarzenie powiadomienia"
           details: "Kiedy użytkownik otrzymuje powiadomienie."
         user_promoted_event:
+          name: "Wydarzenie promowania użytkownika"
           details: "Gdy użytkownik awansuje z jednego poziomu zaufania na inny."
         user_badge_event:
           name: "Wydarzenie przyznania odznak"
@@ -4801,6 +4863,7 @@ pl_PL:
           has_overwritten_history: "Bieżąca wersja motywu już nie istnieje, ponieważ historia Git została nadpisana przez wymuszony push."
           add: "Dodaj"
           theme_settings: "Ustawienia motywu"
+          overriden_settings_explanation: "Zastąpione ustawienia są oznaczone kropką i mają podświetlony kolor. Aby zresetować te ustawienia do wartości domyślnych, naciśnij przycisk resetowania obok nich."
           no_settings: "Ten temat nie ma żanych ustawień"
           theme_translations: "Tłumaczenia tematu"
           empty: "Brak elementu"
@@ -5512,23 +5575,23 @@ pl_PL:
         delete_confirm: "Czy na pewno chcesz usunąć to pole użytkownika?"
         options: "Opcje"
         required:
-          title: "Wymagane przy rejestracji?"
+          title: "Wymagane przy rejestracji"
           enabled: "wymagane"
           disabled: "niewymagane"
         editable:
-          title: "Edytowalne po rejestracji?"
+          title: "Edytowalne po rejestracji"
           enabled: "edytowalne"
           disabled: "nieedytowalne"
         show_on_profile:
-          title: "Widoczne w publicznym profilu?"
+          title: "Widoczne w publicznym profilu"
           enabled: "widoczne w profilu"
           disabled: "niewidoczne w profilu"
         show_on_user_card:
-          title: "Pokaż na karcie użytkownika?"
+          title: "Pokaż na karcie użytkownika"
           enabled: "wyświetlane na karcie użytkownika"
           disabled: "nie pokazany na karcie użytkownika"
         searchable:
-          title: "Możliwe do wyszukania?"
+          title: "Możliwe do wyszukania"
           enabled: "możliwe do wyszukania"
           disabled: "nie można wyszukiwać"
         field_types:

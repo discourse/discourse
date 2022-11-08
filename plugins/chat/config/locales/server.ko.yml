@@ -5,3 +5,36 @@
 # https://translate.discourse.org/
 
 ko:
+  chat:
+    deleted_chat_username: 삭제되었습니다
+    errors:
+      not_accepting_dms: "죄송합니다. %{username} 님이 당분간 메시지를 받지 않습니다."
+    reviewables:
+      actions:
+        agree:
+          title: "동의..."
+        agree_and_suspend:
+          title: "사용자 차단"
+          description: "플래그에 동의하고 사용자를 일시 중지하십시오."
+        agree_and_silence:
+          title: "글 작성 중지 사용자"
+          description: "신고에 동의하고 사용자를 쓰기 금지로 설정합니다."
+        disagree:
+          title: "동의하지 않음"
+        ignore:
+          title: "무시"
+    channel:
+      statuses:
+        closed: "닫힘"
+        open: "열기"
+  reviewable_score_types:
+    notify_user:
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_body: "%{link}\n\n%{message}"
+  user_notifications:
+    chat_summary:
+      from: "%{site_name}"
+  unsubscribe:
+    chat_summary:
+      never: 알림 받지 않기

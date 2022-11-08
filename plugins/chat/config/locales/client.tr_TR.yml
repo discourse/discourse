@@ -5,3 +5,111 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  js:
+    chat:
+      create: "Oluştur"
+      cancel: "İptal et"
+      channel_settings:
+        edit: "Düzenle"
+        add: "Ekle"
+        join: "Katıl"
+        leave: "Ayrıl"
+      close: "Bitir"
+      delete: "Sil"
+      edited: "düzenlendi"
+      muted: "sessiz"
+      joined: "katılma Tarihi"
+      email_frequency:
+        never: "Asla"
+      flag: "Bayrak Koy"
+      join: "Katıl"
+      mention_warning:
+        dismiss: "kapat"
+      reply: "Yanıtla"
+      edit: "Düzenle"
+      rebake_message: "HTML'i Yeniden Yapılandır"
+      bookmark_message: "Yer İmi"
+      bookmark_message_edit: "Yer İmini Düzenle"
+      save: "Kaydet"
+      sounds:
+        none: "Yok"
+      exit: "geri"
+      channel_status:
+        closed: "Kapanmış"
+        open: "Başlat"
+      browse:
+        filter_all: Hepsi
+        filter_closed: Kapanmış
+      chat_message_separator:
+        today: Bugün
+        yesterday: Dün
+      about_view:
+        title: Başlık
+        description: Açıklama
+      channel_info:
+        back_to_channel: "Geri"
+        tabs:
+          about: Hakkında
+          members: Üyeler
+          settings: Ayarlar
+      direct_message_creator:
+        title: Yeni İleti
+        prefix: "Kime:"
+      create_channel:
+        type: "Tür"
+        types:
+          category: "Kategori"
+          topic: "Konu"
+      composer:
+        italic_text: "vurgulanan yazı"
+        bold_text: "güçlü metin"
+      notification_levels:
+        never: "Asla"
+      settings:
+        follow: "Katıl"
+        followed: "Katılma Tarihi"
+        notifications: "Bildirimler"
+        preview: "Önizleme"
+        save: "Kaydet"
+        saved: "Kaydedildi"
+        unfollow: "Ayrıl"
+      incoming_webhooks:
+        back: "Geri"
+        description: "Açıklama"
+        delete: "Sil"
+        emoji: "Emoji"
+        name: "Ad"
+        save: "Kaydet"
+        edit: "Düzenle"
+        system: "sistem"
+        url: "URL"
+        username: "Kullanıcı Adı"
+      selection:
+        cancel: "İptal et"
+        copy: "Kopyala"
+        new_topic:
+          title: "Yeni Konuya Geç"
+        existing_topic:
+          title: "Var Olan Bir Konuya Taşı"
+        new_message:
+          title: "Yeni Mesajlara Taşı"
+      emoji_picker:
+        objects: "Nesneler"
+        activities: "Faaliyetler"
+        flags: "Bildirilenler"
+        symbols: "Semboller"
+      draft_channel_screen:
+        header: "Yeni İleti"
+        cancel: "İptal et"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: İleti
+    review:
+      types:
+        reviewable_chat_message:
+          flagged_by: "Bildiren"

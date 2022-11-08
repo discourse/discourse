@@ -1151,7 +1151,6 @@ hr:
       experimental_sidebar:
         options: "Mogućnosti"
         navigation_section: "Navigacija"
-        list_destination_default: "Zadano"
       change: "promijeni"
       featured_topic: "Istaknuta tema"
       moderator: "%{user} je moderator"
@@ -5236,23 +5235,23 @@ hr:
         delete_confirm: "Jeste li sigurni da želite obrisati to korisničko polje?"
         options: "Mogućnosti"
         required:
-          title: "Potrebno pri registraciji?"
+          title: "Potrebno pri registraciji"
           enabled: "potrebno"
           disabled: "nije potrebno"
         editable:
-          title: "Izmijenjivo nakon registracije?"
+          title: "Izmijenjivo nakon registracije"
           enabled: "izmijenjivo"
           disabled: "nije izmijenjivo"
         show_on_profile:
-          title: "Prikaži na javnom profilu?"
+          title: "Prikaži na javnom profilu"
           enabled: "prikazano na profilu"
           disabled: "nije prikazano na profilu"
         show_on_user_card:
-          title: "Prikaži na korisničkoj kartici?"
+          title: "Prikaži na korisničkoj kartici"
           enabled: "prikaži na korisničkoj kartici"
           disabled: "nije prikazano na korisničkoj kartici"
         searchable:
-          title: "Može se pretraživati?"
+          title: "Može se pretraživati"
           enabled: "može se pretraživati"
           disabled: "nije moguće pretraživati"
         field_types:
