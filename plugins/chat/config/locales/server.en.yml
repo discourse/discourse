@@ -110,6 +110,7 @@ en:
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "contains non-ascii characters"
+        is_already_in_use: "is already in use"
 
     bookmarkable:
       notification_title: "message in %{channel_name}"

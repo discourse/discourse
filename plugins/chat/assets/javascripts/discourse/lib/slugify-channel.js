@@ -5,9 +5,15 @@ export default function slugifyChannel(channel) {
     return channel.slug;
   }
   const slug = slugify(channel.escapedTitle || channel.title);
-  return (
+  const resolvedSlug = (
     slug.length
       ? slug
       : channel.title.trim().toLowerCase().replace(/\s|_+/g, "-")
   ).slice(0, 100);
+
+  if (!resolvedSlug) {
+    return "-";
+  }
+
+  return resolvedSlug;
 }
