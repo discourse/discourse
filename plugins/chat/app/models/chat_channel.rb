@@ -21,7 +21,8 @@ class ChatChannel < ActiveRecord::Base
             },
             presence: true,
             allow_nil: true
-  validate :ensure_slug
+  validate :ensure_slug_ok
+  before_validation :generate_auto_slug
 
   scope :public_channels,
         -> {
