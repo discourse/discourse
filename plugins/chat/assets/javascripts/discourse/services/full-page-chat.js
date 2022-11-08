@@ -13,6 +13,10 @@ export default class FullPageChat extends Service {
   }
 
   exit() {
+    if (this.isDestroyed || this.isDestroying) {
+      return;
+    }
+
     this._isActive = false;
 
     let previousURL = this._previousURL;
