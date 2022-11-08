@@ -32,6 +32,8 @@ class ChatChannel < ActiveRecord::Base
           )
         }
 
+  delegate :empty?, to: :chat_messages, prefix: true
+
   class << self
     def public_channel_chatable_types
       ["Category"]

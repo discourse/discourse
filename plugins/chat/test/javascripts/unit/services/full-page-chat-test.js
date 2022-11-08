@@ -1,9 +1,11 @@
 import { module, test } from "qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { setupTest } from "ember-qunit";
 
 module("Discourse Chat | Unit | Service | full-page-chat", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
-    this.fullPageChat = getOwner(this).lookup("service:full-page-chat");
+    this.fullPageChat = this.owner.lookup("service:full-page-chat");
   });
 
   hooks.afterEach(function () {

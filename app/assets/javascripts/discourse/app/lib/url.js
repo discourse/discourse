@@ -117,15 +117,6 @@ const DiscourseURL = EmberObject.extend({
 
       if (!holder) {
         selector = holderId;
-
-        if (
-          document.getElementsByClassName(
-            `topic-post-visited-line post-${postNumber - 1}`
-          )?.length === 1
-        ) {
-          selector = ".small-action.topic-post-visited";
-        }
-
         holder = document.querySelector(selector);
       }
 

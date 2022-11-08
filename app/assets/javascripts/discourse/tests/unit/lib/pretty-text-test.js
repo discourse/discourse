@@ -4,12 +4,12 @@ import {
   deleteCachedInlineOnebox,
 } from "pretty-text/inline-oneboxer";
 import QUnit, { module, test } from "qunit";
-import Post from "discourse/models/post";
 import { buildQuote } from "discourse/lib/quote";
 import { deepMerge } from "discourse-common/lib/object";
 import { extractDataAttribute } from "pretty-text/engines/discourse-markdown-it";
 import { registerEmoji } from "pretty-text/emoji";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 const rawOpts = {
   siteSettings: {
@@ -1274,7 +1274,8 @@ eviltrout</p>
   });
 
   test("quotes", function (assert) {
-    const post = Post.create({
+    const store = getOwner(this).lookup("service:store");
+    const post = store.createRecord("post", {
       cooked: "<p><b>lorem</b> ipsum</p>",
       username: "eviltrout",
       post_number: 1,
@@ -1334,7 +1335,8 @@ eviltrout</p>
   });
 
   test("quoting a quote", function (assert) {
-    const post = Post.create({
+    const store = getOwner(this).lookup("service:store");
+    const post = store.createRecord("post", {
       cooked: new PrettyText(defaultOpts).cook(
         '[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]\n*Test*'
       ),

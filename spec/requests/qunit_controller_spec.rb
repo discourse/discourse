@@ -98,6 +98,7 @@ RSpec.describe QunitController do
         expect(response.body).to include("/assets/locales/en.js")
         expect(response.body).to include("/test-support")
         expect(response.body).to include("/test-helpers")
+        expect(response.body).to include("/test-site-settings")
         expect(response.body).to include("/assets/markdown-it-bundle.js")
         expect(response.body).to include("/assets/discourse.js")
         expect(response.body).to include("/assets/admin.js")
