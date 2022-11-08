@@ -117,6 +117,7 @@ module PrettyText
         if result[type.to_sym].any?
           first_matching_hashtag = result[type.to_sym].first
 
+          # TODO (martin) Change this to include the icon as well for the new style.
           # second is the text of the hashtag, first is the url of the hashtag,
           # so the format is [url, text]
           found_hashtag = [first_matching_hashtag.second, first_matching_hashtag.first]

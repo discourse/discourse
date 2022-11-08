@@ -12,6 +12,9 @@ function addHashtag(buffer, matches, state) {
 
   let token;
 
+  // TODO (martin) Add new cooked styles/structure here for results.
+  //
+  // Actually need icon, name, url here, not just the name and url.
   if (result) {
     token = new state.Token("link_open", "a", 1);
     token.attrs = [

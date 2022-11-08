@@ -1,3 +1,7 @@
+// TODO (martin) Remove this once enable_experimental_hashtag_autocomplete
+// (and by extension enableExperimentalHashtagAutocomplete) is not required
+// anymore, the new hashtag-autocomplete rule replaces it.
+
 function addHashtag(buffer, matches, state) {
   const options = state.md.options.discourse;
   const slug = matches[1];

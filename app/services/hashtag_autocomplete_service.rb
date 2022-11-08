@@ -18,11 +18,11 @@ class HashtagAutocompleteService
     register_data_source("category", CategoryHashtagDataSource)
     register_data_source("tag", TagHashtagDataSource)
 
-    register_search_param("category", "topic-composer", 100)
-    register_search_param("tag", "topic-composer", 50)
+    register_type_in_context("category", "topic-composer", 100)
+    register_type_in_context("tag", "topic-composer", 50)
   end
 
-  def self.register_search_param(param, context, priority)
+  def self.register_type_in_context(param, context, priority)
     @@contexts[context] = @@contexts[context] || {}
     @@contexts[context][param] = priority
   end

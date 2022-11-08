@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Used as a data source via HashtagAutocompleteService to provide tag
+# results when looking up a tag slug via markdown or searching for
+# tags via the # autocomplete character.
 class TagHashtagDataSource
   def self.lookup(guardian, slugs)
     tag_hashtags = {}

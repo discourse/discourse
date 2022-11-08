@@ -744,10 +744,10 @@ after_initialize do
   # end
 
   # register_hashtag_data_source("channel", ChatChannelHashtagDataSource)
-  # register_hashtag_search_param("channel", "chat-composer", 200)
-  # register_hashtag_search_param("category", "chat-composer", 100)
-  # register_hashtag_search_param("tag", "chat-composer", 50)
-  # register_hashtag_search_param("channel", "topic-composer", 10)
+  # register_type_in_context("channel", "chat-composer", 200)
+  # register_type_in_context("category", "chat-composer", 100)
+  # register_type_in_context("tag", "chat-composer", 50)
+  # register_type_in_context("channel", "topic-composer", 10)
 end
 
 if Rails.env == "test"

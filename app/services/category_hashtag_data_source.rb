@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Used as a data source via HashtagAutocompleteService to provide category
+# results when looking up a category slug via markdown or searching for
+# categories via the # autocomplete character.
 class CategoryHashtagDataSource
   def self.lookup(guardian, slugs)
     category_slugs_and_ids =
