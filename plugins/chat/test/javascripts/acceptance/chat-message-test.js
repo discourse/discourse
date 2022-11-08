@@ -30,7 +30,10 @@ acceptance("Discourse Chat - Chat Message", function (needs) {
       "service:chat-emoji-reaction-store"
     );
 
-    assert.deepEqual(emojiReactionStore.favorites, []);
+    assert.deepEqual(
+      emojiReactionStore.favorites,
+      this.siteSettings.default_emoji_reactions.split("|")
+    );
 
     await visit("/chat/channel/4/public-category");
     await click(
@@ -39,7 +42,11 @@ acceptance("Discourse Chat - Chat Message", function (needs) {
 
     assert.deepEqual(
       emojiReactionStore.favorites,
-      ["heart"],
+      ["heart"].concat(
+        this.siteSettings.default_emoji_reactions
+          .split("|")
+          .filter((r) => r !== "heart")
+      ),
       "it tracks the emoji"
     );
 
@@ -49,7 +56,11 @@ acceptance("Discourse Chat - Chat Message", function (needs) {
 
     assert.deepEqual(
       emojiReactionStore.favorites,
-      ["heart"],
+      ["heart"].concat(
+        this.siteSettings.default_emoji_reactions
+          .split("|")
+          .filter((r) => r !== "heart")
+      ),
       "it doesn’t untrack when removing the reaction"
     );
   });
@@ -59,7 +70,10 @@ acceptance("Discourse Chat - Chat Message", function (needs) {
       "service:chat-emoji-reaction-store"
     );
 
-    assert.deepEqual(emojiReactionStore.favorites, []);
+    assert.deepEqual(
+      emojiReactionStore.favorites,
+      this.siteSettings.default_emoji_reactions.split("|")
+    );
 
     await visit("/chat/channel/4/public-category");
     await triggerEvent(".chat-message-container[data-id='176']", "mouseenter");
@@ -68,7 +82,7 @@ acceptance("Discourse Chat - Chat Message", function (needs) {
 
     assert.deepEqual(
       emojiReactionStore.favorites,
-      ["grinning"],
+      ["grinning"].concat(this.siteSettings.default_emoji_reactions.split("|")),
       "it tracks the emoji"
     );
 
@@ -78,7 +92,7 @@ acceptance("Discourse Chat - Chat Message", function (needs) {
 
     assert.deepEqual(
       emojiReactionStore.favorites,
-      ["grinning"],
+      ["grinning"].concat(this.siteSettings.default_emoji_reactions.split("|")),
       "it doesn’t untrack when removing the reaction"
     );
   });

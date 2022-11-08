@@ -35,6 +35,7 @@ const READ_INTERVAL = 1000;
 export default class Chat extends Service {
   @service appEvents;
   @service chatNotificationManager;
+  @service chatPreferredMode;
   @service fullPageChat;
   @service presence;
   @service router;
@@ -527,7 +528,7 @@ export default class Chat extends Service {
     if (
       this.fullPageChat.isActive ||
       this.site.mobileView ||
-      this.fullPageChat.isPreferred
+      this.chatPreferredMode.isFullPage
     ) {
       const queryParams = messageId ? { messageId } : {};
 

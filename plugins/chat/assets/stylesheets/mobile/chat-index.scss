@@ -5,7 +5,6 @@
     overflow-y: overlay;
     padding-bottom: 6rem;
     box-sizing: border-box;
-    background-color: var(--primary-very-low);
 
     .direct-message-channels {
       .chat-channel-title {
@@ -27,21 +26,17 @@
       margin: 0 1.5rem;
       padding: 0;
       border-radius: 0;
-
-      &:not(:last-child) {
-        border-bottom: 1px solid var(--primary-low);
-      }
+      border-bottom: 1px solid var(--primary-low);
     }
 
     .chat-channel-divider {
       background-color: var(--secondary);
-      margin-top: 4rem;
-      padding: 1rem 1.5rem;
+      padding: 2.5rem 1.5rem 0.5rem 1.5rem;
       font-size: var(--font-up-1);
 
       &:first-of-type {
-        margin-top: 0;
-        padding-bottom: 0.5rem; //visual compensation
+        padding-top: 1rem;
+        padding-bottom: 0; //visual compensation
       }
 
       .channel-title {
@@ -52,6 +47,10 @@
 
     .channels-list-container {
       background: var(--secondary);
+    }
+
+    .chat-user-avatar-container {
+      padding-left: 1px; //for is-online boxshadow effect
     }
 
     .chat-user-avatar {
@@ -75,6 +74,7 @@
         height: var(--chat-mobile-avatar-size);
         padding: 0;
         font-size: var(--font-up-2);
+        font-weight: normal;
         justify-content: center;
 
         & + .chat-channel-title__name {

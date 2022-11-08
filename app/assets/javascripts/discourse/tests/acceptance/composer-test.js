@@ -302,7 +302,7 @@ acceptance("Composer", function (needs) {
     await visit("/");
     await click("#create-topic");
     await fillIn("#reply-title", "This title doesn't matter");
-    await fillIn(".d-editor-input", "custom message");
+    await fillIn(".d-editor-input", "custom message that is a good length");
     await click("#reply-control button.create");
 
     assert.strictEqual(
@@ -1107,6 +1107,7 @@ acceptance("Composer - Customizations", function (needs) {
 
 acceptance("Composer - Focus Open and Closed", function (needs) {
   needs.user();
+  needs.settings({ allow_uncategorized_topics: true });
 
   test("Focusing a composer which is not open with create topic", async function (assert) {
     await visit("/t/internationalization-localization/280");

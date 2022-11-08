@@ -31,10 +31,7 @@ describe Chat::ChatMessageUpdater do
     end
     Group.refresh_automatic_groups!
     @direct_message_channel =
-      Chat::DirectMessageChannelCreator.create!(
-        acting_user: user1,
-        target_users: [user1, user2],
-      )
+      Chat::DirectMessageChannelCreator.create!(acting_user: user1, target_users: [user1, user2])
   end
 
   def create_chat_message(user, message, channel, upload_ids: nil)
@@ -71,6 +68,19 @@ describe Chat::ChatMessageUpdater do
     expect(chat_message.reload.message).to eq(og_message)
   end
 
+  it "errors if a user other than the message user is trying to edit the message" do
+    og_message = "This won't be changed!"
+    chat_message = create_chat_message(user1, og_message, public_chat_channel)
+    new_message = "2 short"
+    updater = Chat::ChatMessageUpdater.update(
+      guardian: Guardian.new(Fabricate(:user)),
+      chat_message: chat_message,
+      new_content: new_message,
+    )
+    expect(updater.failed?).to eq(true)
+    expect(updater.error).to match(Discourse::InvalidAccess)
+  end
+
   it "it updates a messages content" do
     chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
     new_message = "Change to this!"
@@ -81,6 +91,18 @@ describe Chat::ChatMessageUpdater do
       new_content: new_message,
     )
     expect(chat_message.reload.message).to eq(new_message)
+  end
+
+  it "publishes a DiscourseEvent for updated messages" do
+    chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
+    events = DiscourseEvent.track_events {
+      Chat::ChatMessageUpdater.update(
+        guardian: guardian,
+        chat_message: chat_message,
+        new_content: "Change to this!",
+      )
+    }
+    expect(events.map { _1[:event_name] }).to include(:chat_message_edited)
   end
 
   it "creates mention notifications for unmentioned users" do

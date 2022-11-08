@@ -382,6 +382,7 @@ discourseModule("Unit | Model | composer", function () {
   });
 
   test("title placeholder depends on what you're doing", function (assert) {
+    this.siteSettings.topic_featured_link_enabled = false;
     let composer = createComposer({ action: CREATE_TOPIC });
     assert.strictEqual(
       composer.get("titlePlaceholder"),

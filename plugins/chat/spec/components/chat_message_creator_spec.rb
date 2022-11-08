@@ -105,6 +105,17 @@ describe Chat::ChatMessageCreator do
       expect(message.last_editor_id).to eq(user1.id)
     end
 
+    it "publishes a DiscourseEvent for new messages" do
+      events = DiscourseEvent.track_events {
+        Chat::ChatMessageCreator.create(
+          chat_channel: public_chat_channel,
+          user: user1,
+          content: "this is a message",
+        )
+      }
+      expect(events.map { _1[:event_name] }).to include(:chat_message_created)
+    end
+
     it "creates mention notifications for public chat" do
       expect {
         Chat::ChatMessageCreator.create(

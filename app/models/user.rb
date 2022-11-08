@@ -138,7 +138,7 @@ class User < ActiveRecord::Base
   after_create :set_default_sidebar_section_links
 
   after_update :set_default_sidebar_section_links, if: Proc.new  {
-    self.saved_change_to_staged?
+    self.saved_change_to_staged? || self.saved_change_to_admin?
   }
 
   after_update :trigger_user_updated_event, if: Proc.new {
@@ -1944,7 +1944,7 @@ class User < ActiveRecord::Base
       end
     end
 
-    SidebarSectionLink.insert_all!(records) if records.present?
+    SidebarSectionLink.insert_all(records) if records.present?
   end
 
   def stat

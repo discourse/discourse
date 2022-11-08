@@ -23,7 +23,6 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
     assert.ok(exists("span.username"));
     assert.ok(exists('a[data-user-card="eviltrout"]'));
     assert.strictEqual(query(".username a").innerText, "eviltrout");
-    assert.strictEqual(query(".full-name a").innerText, "Robin Ward");
     assert.strictEqual(query(".user-title").innerText, "Trout Master");
   });
 

@@ -58,8 +58,11 @@
 
 .chat-channel-title__users-count {
   display: flex;
-  border-radius: 3px;
+  border-radius: 50%;
   background: rgba(var(--primary-rgb), 0.1);
+  width: 22px;
+  height: 22px;
+  box-sizing: border-box;
   text-align: center;
   font-weight: 700;
   font-size: var(--font-down-1);

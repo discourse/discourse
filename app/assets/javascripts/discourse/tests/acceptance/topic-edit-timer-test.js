@@ -134,7 +134,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await timerType.expand();
     await timerType.selectRowByValue("publish_to_category");
 
-    assert.strictEqual(categoryChooser.header().label(), "uncategorized");
+    assert.strictEqual(categoryChooser.header().label(), "category…");
     assert.strictEqual(categoryChooser.header().value(), null);
 
     await categoryChooser.expand();
@@ -174,7 +174,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await timerType.expand();
     await timerType.selectRowByValue("publish_to_category");
 
-    assert.strictEqual(categoryChooser.header().label(), "uncategorized");
+    assert.strictEqual(categoryChooser.header().label(), "category…");
     assert.strictEqual(categoryChooser.header().value(), null);
 
     await categoryChooser.expand();
@@ -218,7 +218,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await timerType.expand();
     await timerType.selectRowByValue("publish_to_category");
 
-    assert.strictEqual(categoryChooser.header().label(), "uncategorized");
+    assert.strictEqual(categoryChooser.header().label(), "category…");
     assert.strictEqual(categoryChooser.header().value(), null);
 
     await categoryChooser.expand();
