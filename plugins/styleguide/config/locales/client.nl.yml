@@ -8,7 +8,7 @@ nl:
   js:
     styleguide:
       title: "Stijlgids"
-      welcome: "Kies een sectie in het menu aan de linkerkant om te beginnen."
+      welcome: "Kies een sectie in het menu links om te beginnen."
       categories:
         atoms: Atomen
         molecules: Moleculen
@@ -26,7 +26,7 @@ nl:
           title: "Kleuren"
         icons:
           title: "Pictogrammen"
-          full_list: "Volledige lijst met Font Awesome-pictogrammen bekijken"
+          full_list: "Zie de volledige lijst van Font Awesome-pictogrammen"
         input_fields:
           title: "Invoervelden"
         buttons:
@@ -46,7 +46,7 @@ nl:
         categories_list:
           title: "Categorielijst"
         topic_link:
-          title: "Topickoppeling"
+          title: "Topiclink"
         topic_list_item:
           title: "Topiclijstitem"
         topic_statuses:

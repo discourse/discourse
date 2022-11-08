@@ -924,7 +924,6 @@ ca:
       experimental_sidebar:
         options: "Opcions"
         navigation_section: "Navegació"
-        list_destination_default: "Per defecte"
       change: "canvia"
       featured_topic: "Tema destacat"
       moderator: "%{user} és un moderador"
@@ -3998,19 +3997,18 @@ ca:
         delete_confirm: "Esteu segur que voleu suprimir aquest camp d'usuari?"
         options: "Opcions"
         required:
-          title: "Necessari en identificar-se?"
+          title: "Necessari en identificar-se"
           enabled: "necessari"
           disabled: "no necessari"
         editable:
-          title: "¿És editable després del registre?"
           enabled: "editable"
           disabled: "no editable"
         show_on_profile:
-          title: "Voleu mostrar-ho en el perfil públic?"
+          title: "Voleu mostrar-ho en el perfil públic"
           enabled: "mostrat en el perfil"
           disabled: "no mostrat en el perfil"
         show_on_user_card:
-          title: "Mostra en la targeta d'usuari?"
+          title: "Mostra en la targeta d'usuari"
           enabled: "mostrat en la targeta d'usuari"
           disabled: "no mostrat en la targeta de l'usuari"
         field_types:

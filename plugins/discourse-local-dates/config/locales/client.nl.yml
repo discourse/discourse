@@ -23,7 +23,7 @@ nl:
           timezones_title: Tijdzones om weer te geven
           timezones_description: Tijdzones worden gebruikt voor het weergeven van datums in voorbeeld en terugval.
           recurring_title: Herhaling
-          recurring_description: "De herhaling van een gebeurtenis definiëren. U kunt de door het formulier gegenereerde herhalingsoptie ook handmatig bewerken en een van de volgende sleutels gebruiken: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
+          recurring_description: "Definieer de herhaling van een gebeurtenis. Je kunt de door het formulier gegenereerde herhalingsoptie ook handmatig bewerken en een van de volgende sleutels gebruiken: jaren, kwartalen, maanden, weken, dagen, uren, minuten, seconden, milliseconden."
           recurring_none: Geen herhaling
           invalid_date: Ongeldige datum; zorg ervoor dat de datum en tijd juist zijn
           date_title: Datum

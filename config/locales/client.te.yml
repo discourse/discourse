@@ -415,7 +415,6 @@ te:
       experimental_sidebar:
         options: "ఎంపికలు"
         navigation_section: "నావిగేషను"
-        list_destination_default: "అప్రమేయ"
       change: "మార్చు"
       moderator: "%{user} ఒక నిర్వాహకుడు"
       admin: "%{user} ఒక అధికారి"
@@ -1920,15 +1919,12 @@ te:
         delete_confirm: "మీరు నిజంగా ఈ సభ్య క్షేత్రం తొలగించాలనుకుంటున్నారా?"
         options: "ఎంపికలు"
         required:
-          title: "సైన్అప్ అవసరమా?"
           enabled: "కావాలి"
           disabled: "అవసరంలేదు"
         editable:
-          title: "సైన్అప్ తరువాత సవరించగలమా?"
           enabled: "సవరించదగిన"
           disabled: "సవరించలేని"
         show_on_profile:
-          title: "ప్రజా ప్రవరపై చూపు?"
           enabled: "ప్రవరపై చూపు"
           disabled: "ప్రవరపై చూపబడలేదు"
         field_types:

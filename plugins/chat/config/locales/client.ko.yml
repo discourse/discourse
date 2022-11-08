@@ -5,3 +5,112 @@
 # https://translate.discourse.org/
 
 ko:
+  js:
+    chat:
+      create: "글"
+      cancel: "취소"
+      channel_settings:
+        edit: "편집"
+        add: "추가"
+        join: "가입"
+        leave: "나가기"
+      close: "닫기"
+      delete: "삭제하기"
+      edited: "편집됨"
+      muted: "알림끔"
+      joined: "가입"
+      email_frequency:
+        never: "알림 받지 않기"
+      flag: "신고"
+      join: "가입"
+      mention_warning:
+        dismiss: "무시"
+      reply: "댓글쓰기"
+      edit: "편집"
+      rebake_message: "HTML 다시 빌드하기"
+      bookmark_message: "북마크"
+      bookmark_message_edit: "북마크 수정"
+      save: "저장"
+      sounds:
+        none: "없음"
+      exit: "뒤로"
+      channel_status:
+        closed: "닫힘"
+        open: "열기"
+      browse:
+        back: "뒤로"
+        filter_all: 전체
+        filter_closed: 닫힘
+      chat_message_separator:
+        today: 오늘
+        yesterday: 어제
+      about_view:
+        title: 제목
+        description: 내용
+      channel_info:
+        back_to_channel: "뒤로"
+        tabs:
+          about: 소개
+          members: 회원
+          settings: 설정
+      direct_message_creator:
+        title: 새로운 메시지
+        prefix: "받는사람:"
+      create_channel:
+        type: "유형"
+        types:
+          category: "카테고리"
+          topic: "글"
+      composer:
+        italic_text: "강조하기"
+        bold_text: "굵게하기"
+      notification_levels:
+        never: "알림 받지 않기"
+      settings:
+        follow: "가입"
+        followed: "가입"
+        notifications: "알림"
+        preview: "미리 보기"
+        save: "저장"
+        saved: "저장되었습니다"
+        unfollow: "나가기"
+      incoming_webhooks:
+        back: "뒤로"
+        description: "내용"
+        delete: "삭제하기"
+        emoji: "이모티콘"
+        name: "그룹명"
+        save: "저장"
+        edit: "수정"
+        system: "시스템"
+        url: "URL"
+        username: "아이디"
+      selection:
+        cancel: "취소"
+        copy: "복사"
+        new_topic:
+          title: "새로운 주제로 이동"
+        existing_topic:
+          title: "이미 있는 주제로 옮기기"
+        new_message:
+          title: "새 메시지로 이동"
+      emoji_picker:
+        objects: "사물"
+        activities: "활동"
+        flags: "신고"
+        symbols: "기호"
+      draft_channel_screen:
+        header: "새로운 메시지"
+        cancel: "취소"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description} "
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: 메시지 보내기
+    review:
+      types:
+        reviewable_chat_message:
+          flagged_by: "신고자"
