@@ -717,6 +717,37 @@ after_initialize do
   register_about_stat_group("chat_channels") { Chat::Statistics.about_channels }
 
   register_about_stat_group("chat_users") { Chat::Statistics.about_users }
+
+  # class ChatChannelHashtagDataSource
+  #   def self.lookup(guardian, slugs)
+  #     # TODO (martin) needs security based on guardian
+  #     res = ChatChannel.where(slug: slugs).map { |channel| [channel.slug, channel.url] }
+  #     Hash[res]
+  #   end
+
+  #   def self.search(guardian, term, limit)
+  #     if SiteSetting.enable_experimental_hashtag_autocomplete
+  #       DiscourseChat::ChatChannelFetcher
+  #         .secured_public_channel_search(guardian, filter: term, limit: limit)
+  #         .map do |channel|
+  #           HashtagAutocompleteService::HashtagItem.new.tap do |item|
+  #             title = channel.title(guardian.user)
+  #             item.text = title
+  #             item.slug = channel.slug
+  #             item.icon = "hashtag"
+  #           end
+  #         end
+  #     else
+  #       []
+  #     end
+  #   end
+  # end
+
+  # register_hashtag_data_source("channel", ChatChannelHashtagDataSource)
+  # register_hashtag_search_param("channel", "chat-composer", 200)
+  # register_hashtag_search_param("category", "chat-composer", 100)
+  # register_hashtag_search_param("tag", "chat-composer", 50)
+  # register_hashtag_search_param("channel", "topic-composer", 10)
 end
 
 if Rails.env == "test"

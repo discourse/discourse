@@ -1,8 +1,14 @@
 function addHashtag(buffer, matches, state) {
   const options = state.md.options.discourse;
   const slug = matches[1];
-  const categoryHashtagLookup = options.categoryHashtagLookup;
-  const result = categoryHashtagLookup && categoryHashtagLookup(slug);
+  const hashtagLookup = options.hashtagLookup;
+  const result =
+    hashtagLookup &&
+    hashtagLookup(
+      slug,
+      options.currentUser,
+      options.hashtagTypesInPriorityOrder
+    );
 
   let token;
 
@@ -47,7 +53,7 @@ function addHashtag(buffer, matches, state) {
 export function setup(helper) {
   helper.registerPlugin((md) => {
     if (
-      !md.options.discourse.limitedSiteSettings
+      md.options.discourse.limitedSiteSettings
         .enableExperimentalHashtagAutocomplete
     ) {
       const rule = {
@@ -55,7 +61,7 @@ export function setup(helper) {
         onMatch: addHashtag,
       };
 
-      md.core.textPostProcess.ruler.push("category-hashtag", rule);
+      md.core.textPostProcess.ruler.push("hashtag-autocomplete", rule);
     }
   });
 }

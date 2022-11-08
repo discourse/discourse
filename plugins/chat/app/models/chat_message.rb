@@ -158,6 +158,8 @@ class ChatMessage < ActiveRecord::Base
   ]
 
   def self.cook(message, opts = {})
+    # TODO (martin) Add user_id opt which is the chat_message.last_editor_id
+    # here and also pass in hashtag_context of chat-composer
     cooked =
       PrettyText.cook(
         message,

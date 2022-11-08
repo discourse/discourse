@@ -1452,6 +1452,50 @@ RSpec.describe PrettyText do
 
   end
 
+  it "produces hashtag links when enable_experimental_hashtag_autocomplete is enabled" do
+    SiteSetting.enable_experimental_hashtag_autocomplete = true
+
+    category = Fabricate(:category, name: 'testing')
+    category2 = Fabricate(:category, name: 'known')
+    Fabricate(:topic, tags: [Fabricate(:tag, name: 'known')])
+
+    cooked = PrettyText.cook(" #unknown::tag #known #known::tag #testing")
+
+    [
+      "<span class=\"hashtag\">#unknown::tag</span>",
+      "<a class=\"hashtag\" href=\"#{category2.url}\">#<span>known</span></a>",
+      "<a class=\"hashtag\" href=\"/tag/known\">#<span>known</span></a>",
+      "<a class=\"hashtag\" href=\"#{category.url}\">#<span>testing</span></a>"
+    ].each do |element|
+
+      expect(cooked).to include(element)
+    end
+
+    cooked = PrettyText.cook("[`a` #known::tag here](http://example.com)")
+
+    html = <<~HTML
+      <p><a href="http://example.com" rel="noopener nofollow ugc"><code>a</code> #known::tag here</a></p>
+    HTML
+
+    expect(cooked).to eq(html.strip)
+
+    cooked = PrettyText.cook("<a href='http://example.com'>`a` #known::tag here</a>")
+
+    expect(cooked).to eq(html.strip)
+
+    cooked = PrettyText.cook("<A href='/a'>test</A> #known::tag")
+    html = <<~HTML
+      <p><a href="/a">test</a> <a class="hashtag" href="/tag/known">#<span>known</span></a></p>
+    HTML
+
+    expect(cooked).to eq(html.strip)
+
+    # ensure it does not fight with the autolinker
+    expect(PrettyText.cook(' http://somewhere.com/#known')).not_to include('hashtag')
+    expect(PrettyText.cook(' http://somewhere.com/?#known')).not_to include('hashtag')
+    expect(PrettyText.cook(' http://somewhere.com/?abc#known')).not_to include('hashtag')
+  end
+
   it "can handle mixed lists" do
     # known bug in old md engine
     cooked = PrettyText.cook("* a\n\n1. b")

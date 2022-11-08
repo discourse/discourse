@@ -1,4 +1,5 @@
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
+import { replaceSpan } from "discourse/lib/category-hashtags";
 import discourseLater from "discourse-common/lib/later";
 import { INPUT_DELAY, isTesting } from "discourse-common/config/environment";
 import { cancel } from "@ember/runloop";
@@ -23,15 +24,6 @@ export function setupHashtagAutocomplete(
   } else {
     _setup($textArea, siteSettings, afterComplete);
   }
-}
-
-const contextBasedParams = {};
-
-export function registerHashtagSearchParam(param, context, priority) {
-  if (!contextBasedParams[context]) {
-    contextBasedParams[context] = {};
-  }
-  contextBasedParams[context][param] = priority;
 }
 
 export function hashtagTriggerRule(textarea, opts) {
@@ -60,6 +52,46 @@ export function hashtagTriggerRule(textarea, opts) {
   }
 
   return true;
+}
+
+const checkedHashtags = new Set();
+let seenHashtags = {};
+export function fetchUnseenHashtagsInContext(context, slugs) {
+  return ajax("/hashtags", {
+    data: { slugs, order: _sortedContextParams(context) },
+  }).then((response) => {
+    seenHashtags = Object.assign(seenHashtags, response);
+    slugs.forEach(checkedHashtags.add, checkedHashtags);
+  });
+}
+
+export function linkSeenHashtagsInContext(context, elem) {
+  const contextTypes = _sortedContextParams(context);
+  const hashtags = [...(elem?.querySelectorAll("span.hashtag") || [])];
+  if (hashtags.length === 0) {
+    return [];
+  }
+  const slugs = [...hashtags.map((hashtag) => hashtag.innerText.slice(1))];
+
+  hashtags.forEach((hashtag, index) => {
+    let slug = slugs[index];
+
+    // remove type suffixes
+    contextTypes.forEach((type) => {
+      const typePostfix = `::${type}`;
+      if (slug.endsWith(typePostfix)) {
+        slug = slug.slice(0, slug.length - typePostfix.length);
+      }
+      if (seenHashtags[type][slug]) {
+        replaceSpan($(hashtag), slug, seenHashtags[type][slug]);
+      }
+    });
+  });
+
+  return slugs
+    .map((slug) => slug.toLowerCase())
+    .uniq()
+    .filter((slug) => !checkedHashtags.has(slug));
 }
 
 function _setupExperimental(context, $textArea, siteSettings, afterComplete) {
@@ -155,7 +187,7 @@ function _searchRequest(term, context, resultFunc) {
 }
 
 function _sortedContextParams(context) {
-  return Object.entries(contextBasedParams[context])
+  return Object.entries(context)
     .sort((a, b) => b[1] - a[1])
     .map((item) => item[0]);
 }

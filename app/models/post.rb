@@ -306,6 +306,8 @@ class Post < ActiveRecord::Base
     options[:cook_method] = cook_method
 
     post_user = self.user
+
+    # TODO (martin) Change this to the post.last_editor_id
     options[:user_id] = post_user.id if post_user
     options[:omit_nofollow] = true if omit_nofollow?
 

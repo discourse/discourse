@@ -18,6 +18,10 @@ import {
   linkSeenHashtags,
 } from "discourse/lib/link-hashtags";
 import {
+  fetchUnseenHashtagsInContext,
+  linkSeenHashtagsInContext,
+} from "discourse/lib/hashtag-autocomplete";
+import {
   cannotSee,
   fetchUnseenMentions,
   linkSeenMentions,
@@ -181,6 +185,9 @@ export default Component.extend(ComposerUploadUppy, {
           }
         }
       },
+
+      hashtagTypesInPriorityOrder:
+        this.site.hashtag_context_configurations["topic-composer"],
     };
   },
 
@@ -472,10 +479,19 @@ export default Component.extend(ComposerUploadUppy, {
 
   _renderUnseenHashtags(preview) {
     const unseen = linkSeenHashtags(preview);
+
+    const hashtagContext =
+      this.site.hashtag_context_configurations["topic-composer"];
     if (unseen.length > 0) {
-      fetchUnseenHashtags(unseen).then(() => {
-        linkSeenHashtags(preview);
-      });
+      if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
+        fetchUnseenHashtagsInContext(hashtagContext, unseen).then(() => {
+          linkSeenHashtagsInContext(hashtagContext, preview);
+        });
+      } else {
+        fetchUnseenHashtags(unseen).then(() => {
+          linkSeenHashtags(preview);
+        });
+      }
     }
   },
 

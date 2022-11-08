@@ -256,7 +256,7 @@ export default Component.extend(TextareaTextManipulation, {
     this._textarea = this.element.querySelector("textarea.d-editor-input");
     this._$textarea = $(this._textarea);
     this._applyEmojiAutocomplete(this._$textarea);
-    this._applyCategoryHashtagAutocomplete(this._$textarea);
+    this._applyHashtagAutocomplete(this._$textarea);
 
     scheduleOnce("afterRender", this, this._readyNow);
 
@@ -457,9 +457,9 @@ export default Component.extend(TextareaTextManipulation, {
     }
   },
 
-  _applyCategoryHashtagAutocomplete() {
+  _applyHashtagAutocomplete() {
     setupHashtagAutocomplete(
-      "topic-composer",
+      this.site.hashtag_context_configurations["topic-composer"],
       this._$textarea,
       this.siteSettings,
       (value) => {

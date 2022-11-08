@@ -5,71 +5,42 @@ class HashtagAutocompleteService
   SEARCH_MAX_LIMIT = 20
 
   attr_reader :guardian
-  cattr_reader :data_sources
+  cattr_reader :data_sources, :contexts
 
-  def self.register_data_source(type, &block)
-    @@data_sources[type] = block
+  def self.register_data_source(type, klass)
+    @@data_sources[type] = klass
   end
 
-  def self.clear_data_sources
+  def self.clear_registered
     @@data_sources = {}
+    @@contexts = {}
 
-    register_data_source("category") do |guardian, term, limit|
-      guardian_categories = Site.new(guardian).categories
+    register_data_source("category", CategoryHashtagDataSource)
+    register_data_source("tag", TagHashtagDataSource)
 
-      guardian_categories
-        .select { |category| category[:name].downcase.include?(term) }
-        .take(limit)
-        .map do |category|
-          HashtagItem.new.tap do |item|
-            item.text = category[:name]
-            item.slug = category[:slug]
-
-            # Single-level category heirarchy should be enough to distinguish between
-            # categories here.
-            item.ref =
-              if category[:parent_category_id]
-                parent_category =
-                  guardian_categories.find { |c| c[:id] === category[:parent_category_id] }
-                category[:slug] if !parent_category
-
-                parent_slug = parent_category[:slug]
-                "#{parent_slug}:#{category[:slug]}"
-              else
-                category[:slug]
-              end
-            item.icon = "folder"
-          end
-        end
-    end
-
-    register_data_source("tag") do |guardian, term, limit|
-      if SiteSetting.tagging_enabled
-        tags_with_counts, _ =
-          DiscourseTagging.filter_allowed_tags(
-            guardian,
-            term: term,
-            with_context: true,
-            limit: limit,
-            for_input: true,
-          )
-        TagsController
-          .tag_counts_json(tags_with_counts)
-          .take(limit)
-          .map do |tag|
-            HashtagItem.new.tap do |item|
-              item.text = "#{tag[:name]} x #{tag[:count]}"
-              item.slug = tag[:name]
-              item.icon = "tag"
-            end
-          end
-      else
-        []
-      end
-    end
+    register_search_param("category", "topic-composer", 100)
+    register_search_param("tag", "topic-composer", 50)
   end
 
-  clear_data_sources
+  def self.register_search_param(param, context, priority)
+    @@contexts[context] = @@contexts[context] || {}
+    @@contexts[context][param] = priority
+  end
+
+  def self.ordered_types_for_context(context)
+    return [] if @@contexts[context].blank?
+    @@contexts[context].sort_by { |param, priority| priority }.reverse.map(&:first)
+  end
+
+  def self.contexts_with_ordered_types
+    final = {}
+    @@contexts.keys.each do |context|
+      final[context] = ordered_types_for_context(context)
+    end
+    final
+  end
+
+  clear_registered
 
   class HashtagItem
     # The text to display in the UI autocomplete menu for the item.
@@ -95,47 +66,47 @@ class HashtagAutocompleteService
     @guardian = guardian
   end
 
-  def lookup(slugs)
+  def lookup(slugs, types_in_priority_order)
     raise Discourse::InvalidParameters.new(:slugs) if !slugs.is_a?(Array)
+    raise Discourse::InvalidParameters.new(:order) if !types_in_priority_order.is_a?(Array)
 
-    all_slugs = []
-    tag_slugs = []
+    types_in_priority_order =
+      types_in_priority_order.select { |type| @@data_sources.keys.include?(type) }
+    lookup_results = Hash[types_in_priority_order.collect { |type| [type.to_sym, {}] }]
+    limited_slugs = slugs[0..HashtagAutocompleteService::HASHTAGS_PER_REQUEST]
 
-    slugs[0..HashtagAutocompleteService::HASHTAGS_PER_REQUEST].each do |slug|
-      if slug.end_with?(PrettyText::Helpers::TAG_HASHTAG_POSTFIX)
-        tag_slugs << slug.chomp(PrettyText::Helpers::TAG_HASHTAG_POSTFIX)
-      else
-        all_slugs << slug
+    slugs_without_suffixes = limited_slugs.reject do |slug|
+      @@data_sources.keys.any? do |type|
+        slug.ends_with?("::#{type}")
       end
     end
 
-    # Try to resolve hashtags as categories first
-    category_slugs_and_ids =
-      all_slugs.map { |slug| [slug, Category.query_from_hashtag_slug(slug)&.id] }.to_h
-    category_ids_and_urls =
-      Category
-        .secured(guardian)
-        .select(:id, :slug, :parent_category_id) # fields required for generating category URL
-        .where(id: category_slugs_and_ids.values)
-        .map { |c| [c.id, c.url] }
-        .to_h
-    categories_hashtags = {}
-    category_slugs_and_ids.each do |slug, id|
-      if category_url = category_ids_and_urls[id]
-        categories_hashtags[slug] = category_url
+    # for all the slugs without a suffix, we need to lookup in order, falling
+    # back to the next type if no results are returned for a slug for the current
+    # type. this way slugs without suffix make sense in context, e.g. in the topic
+    # composer we want a slug without a suffix to be a category first, tag second
+    types_in_priority_order.each do |type|
+      result = @@data_sources[type].lookup(guardian, slugs_without_suffixes)
+      lookup_results[type.to_sym] = lookup_results[type.to_sym].merge(result)
+      slugs_without_suffixes = slugs_without_suffixes - result.keys
+      break if slugs_without_suffixes.empty?
+    end
+
+    # we then look up the remaining slugs based on their type, stripping out
+    # the type suffix first since it will not match the actual slug
+    slugs_with_suffixes = (limited_slugs - slugs_without_suffixes)
+    types_in_priority_order.each do |type|
+      typed_slugs = slugs_with_suffixes.select do |slug|
+        slug.ends_with?("::#{type}")
+      end.map do |slug|
+        slug.gsub("::#{type}", "")
       end
+      next if typed_slugs.empty?
+      result = @@data_sources[type].lookup(guardian, typed_slugs)
+      lookup_results[type.to_sym] = lookup_results[type.to_sym].merge(result)
     end
 
-    # Resolve remaining hashtags as tags
-    tag_hashtags = {}
-    if SiteSetting.tagging_enabled
-      tag_slugs += (all_slugs - categories_hashtags.keys)
-      DiscourseTagging
-        .filter_visible(Tag.where_name(tag_slugs), guardian)
-        .each { |tag| tag_hashtags[tag.name] = tag.full_url }
-    end
-
-    { categories: categories_hashtags, tags: tag_hashtags }
+    lookup_results
   end
 
   def search(term, types_in_priority_order, limit: 5)
@@ -149,7 +120,7 @@ class HashtagAutocompleteService
       types_in_priority_order.select { |type| @@data_sources.keys.include?(type) }
 
     types_in_priority_order.each do |type|
-      data = @@data_sources[type].call(guardian, term, limit - results.length)
+      data = @@data_sources[type].search(guardian, term, limit - results.length)
       next if data.empty?
 
       all_data_items_valid = data.all? do |item|
@@ -191,5 +162,50 @@ class HashtagAutocompleteService
     end
 
     results.take(limit)
+  end
+
+  # TODO (martin) Remove this once plugins are not relying on the old lookup
+  # behavior via HashtagsController
+  def lookup_old(slugs)
+    raise Discourse::InvalidParameters.new(:slugs) if !slugs.is_a?(Array)
+
+    all_slugs = []
+    tag_slugs = []
+
+    slugs[0..HashtagAutocompleteService::HASHTAGS_PER_REQUEST].each do |slug|
+      if slug.end_with?(PrettyText::Helpers::TAG_HASHTAG_POSTFIX)
+        tag_slugs << slug.chomp(PrettyText::Helpers::TAG_HASHTAG_POSTFIX)
+      else
+        all_slugs << slug
+      end
+    end
+
+    # Try to resolve hashtags as categories first
+    category_slugs_and_ids =
+      all_slugs.map { |slug| [slug, Category.query_from_hashtag_slug(slug)&.id] }.to_h
+    category_ids_and_urls =
+      Category
+        .secured(guardian)
+        .select(:id, :slug, :parent_category_id) # fields required for generating category URL
+        .where(id: category_slugs_and_ids.values)
+        .map { |c| [c.id, c.url] }
+        .to_h
+    categories_hashtags = {}
+    category_slugs_and_ids.each do |slug, id|
+      if category_url = category_ids_and_urls[id]
+        categories_hashtags[slug] = category_url
+      end
+    end
+
+    # Resolve remaining hashtags as tags
+    tag_hashtags = {}
+    if SiteSetting.tagging_enabled
+      tag_slugs += (all_slugs - categories_hashtags.keys)
+      DiscourseTagging
+        .filter_visible(Tag.where_name(tag_slugs), guardian)
+        .each { |tag| tag_hashtags[tag.name] = tag.full_url }
+    end
+
+    { categories: categories_hashtags, tags: tag_hashtags }
   end
 end

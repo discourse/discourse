@@ -45,6 +45,7 @@ export function buildOptions(state) {
     featuresOverride,
     markdownItRules,
     additionalOptions,
+    hashtagTypesInPriorityOrder,
   } = state;
 
   let features = {};
@@ -87,6 +88,7 @@ export function buildOptions(state) {
     featuresOverride,
     markdownItRules,
     additionalOptions,
+    hashtagTypesInPriorityOrder,
   };
 
   // note, this will mutate options due to the way the API is designed
