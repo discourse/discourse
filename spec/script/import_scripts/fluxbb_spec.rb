@@ -93,6 +93,10 @@ RSpec.describe "ImportScripts::FluxBB" do
             "[url=/about]Relative link[/url]\n" +
             "[img]http://www.ruby-lang.org/images/header-ruby-logo.png[/img]\n" +
             "[img=FluxBB allows alt text]http://www.ruby-lang.org/images/header-ruby-logo.png[/img]\n" +
+            "[list][*]Example list item 1.[/*][*]Example list item 2.[/*][*]Example list item 3.[/*][/list]\n" +
+            "[list=1][*]Example list item 1.[/*][*]Example list item 2.[/*][*]Example list item 3.[/*][/list]\n" +
+            "[list=a][*]Example list item 1.[/*][*]Example list item 2.[/*][*]Example list item 3.[/*][/list]\n" +
+            "[list][*]Example list items[*]with unclosed[*]list item tags[/list]\n" +
             "=) =| =( =D :o :lol: :mad: :rolleyes:\n" +
             "=)=) Smiley whitespace=) https://awkward.com?x=D :mad::mad::mad:"
           }
@@ -111,6 +115,10 @@ RSpec.describe "ImportScripts::FluxBB" do
               "[Relative link](/about)\n" +
               "<img src=\"http://www.ruby-lang.org/images/header-ruby-logo.png\"/>\n" +
               "<img src=\"http://www.ruby-lang.org/images/header-ruby-logo.png\" alt=\"FluxBB allows alt text\"/>\n" +
+              "<ul><li>Example list item 1.</li><li>Example list item 2.</li><li>Example list item 3.</li></ul>\n" +
+              "<ol><li>Example list item 1.</li><li>Example list item 2.</li><li>Example list item 3.</li></ol>\n" +
+              "<ol class=\"alpha\"><li>Example list item 1.</li><li>Example list item 2.</li><li>Example list item 3.</li></ol>\n" +
+              "<ul><li>Example list items<li>with unclosed<li>list item tags</ul>\n" +
               ":) :| :( :D :O :laughing: :rage: :roll_eyes:\n" +
               ":)=) Smiley whitespace=) https://awkward.com?x=D :rage::mad::mad:"
             )
@@ -165,8 +173,6 @@ RSpec.describe "ImportScripts::FluxBB" do
             let(:example_post_content) {
               "[h]Heading\non two lines[/h]\n" +
               "[s]Strike-through text[/s]\n" +
-              "[list][*]Example list item 1.[/*][*]Example list item 2.[/*][*]Example list item 3.[/*][/list]\n" +
-              "[list=1][*]Example list item 1.[/*][*]Example list item 2.[/*][*]Example list item 3.[/*][/list]\n" +
               "[email]myname@example.com[/email] - email link without link text\n" +
               "[email=myname@example.com]Email link with link text[/email]"
             }
@@ -175,8 +181,6 @@ RSpec.describe "ImportScripts::FluxBB" do
               expect(Post.last.raw).to eq(
                 "## Heading<br>on two lines\n" +
                 "~~Strike-through text~~\n" +
-                "<ul><li>Example list item 1.</li><li>Example list item 2.</li><li>Example list item 3.</li></ul>\n" +
-                "<ol><li>Example list item 1.</li><li>Example list item 2.</li><li>Example list item 3.</li></ol>\n" +
                 "[mailto:myname@example.com](mailto:myname@example.com) - email link without link text\n" +
                 "[Email link with link text](mailto:myname@example.com)"
               )
