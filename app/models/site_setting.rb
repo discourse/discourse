@@ -193,8 +193,7 @@ class SiteSetting < ActiveRecord::Base
 
   def self.whispers_allowed_group_ids
     if SiteSetting.enable_whispers && SiteSetting.whispers_allowed_groups.present?
-      # TODO (martin) Change to whispers_allowed_groups_map
-      SiteSetting.whispers_allowed_groups.split("|").map(&:to_i)
+      SiteSetting.whispers_allowed_groups_map
     else
       []
     end
