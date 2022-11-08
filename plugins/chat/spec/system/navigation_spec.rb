@@ -8,6 +8,7 @@ RSpec.describe "Navigation", type: :system, js: true do
   fab!(:category_channel) { Fabricate(:category_channel) }
   fab!(:message) { Fabricate(:chat_message, chat_channel: category_channel) }
   let(:chat_page) { PageObjects::Pages::Chat.new }
+  let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
 
   before do
     # ensures we have one valid registered admin
@@ -123,6 +124,29 @@ RSpec.describe "Navigation", type: :system, js: true do
         expect(page).to have_current_path(
           chat.channel_path(category_channel.id, category_channel.slug),
         )
+      end
+    end
+
+    context "when starting draft from sidebar with drawer preferred" do
+      it "opens draft in drawer" do
+        visit("/")
+        sidebar_page.start_draft_dm
+
+        expect(page).to have_current_path("/")
+        expect(page).to have_css(".topic-chat-container.expanded.visible")
+      end
+    end
+
+    context "when starting draft from sidebar with full page preferred" do
+      it "opens draft in full page" do
+        visit("/")
+        chat_page.open_from_header
+        chat_page.maximize_drawer
+        visit("/")
+        sidebar_page.start_draft_dm
+
+        expect(page).to have_current_path("/chat/draft-channel")
+        expect(page).not_to have_css(".topic-chat-container.expanded.visible")
       end
     end
   end

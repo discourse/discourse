@@ -4,6 +4,7 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import { inject as service } from "@ember/service";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { schedule } from "@ember/runloop";
+import { DRAFT_CHANNEL_VIEW } from "discourse/plugins/chat/discourse/services/chat";
 
 export default class ChatRoute extends DiscourseRoute {
   @service chat;
@@ -18,14 +19,21 @@ export default class ChatRoute extends DiscourseRoute {
   beforeModel(transition) {
     if (
       transition.from && // don't intercept when directly loading chat
-      this.chatPreferredMode.isDrawer &&
-      transition.intent?.name === "chat.channel" // sidebar can only load a channel
+      this.chatPreferredMode.isDrawer
     ) {
-      transition.abort();
-      const id = transition.intent.contexts[0];
-      return this.chat.getChannelBy("id", id).then((channel) => {
-        this.appEvents.trigger("chat:open-channel", channel);
-      });
+      if (transition.intent?.name === "chat.channel") {
+        transition.abort();
+        const id = transition.intent.contexts[0];
+        return this.chat.getChannelBy("id", id).then((channel) => {
+          this.appEvents.trigger("chat:open-channel", channel);
+        });
+      }
+
+      if (transition.intent?.name === "chat.draft-channel") {
+        transition.abort();
+        this.appEvents.trigger("chat:open-view", DRAFT_CHANNEL_VIEW);
+        return;
+      }
     }
 
     if (!this.chat.userCanChat) {

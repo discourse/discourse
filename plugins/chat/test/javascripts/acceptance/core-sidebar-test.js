@@ -5,14 +5,7 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
-import {
-  click,
-  currentURL,
-  fillIn,
-  settled,
-  triggerKeyEvent,
-  visit,
-} from "@ember/test-helpers";
+import { click, currentURL, settled, visit } from "@ember/test-helpers";
 import { directMessageChannels } from "discourse/plugins/chat/chat-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "I18n";
@@ -421,13 +414,11 @@ acceptance("Discourse Chat - Core Sidebar", function (needs) {
 
   test("Open a new direct conversation", async function (assert) {
     await visit("/");
-
     await click(".sidebar-section-chat-dms .sidebar-section-header-button");
-    assert.ok(exists(".direct-message-creator"));
 
-    await fillIn(".filter-usernames", "hawk");
-    await triggerKeyEvent(".filter-usernames", "keydown", "Enter");
-    assert.strictEqual(currentURL(), "/chat/draft-channel");
+    assert.ok(exists(".direct-message-creator"));
+    assert.ok(exists(".topic-chat-container.expanded.visible"));
+    assert.strictEqual(currentURL(), "/");
   });
 
   test("Escapes public channel titles", async function (assert) {
