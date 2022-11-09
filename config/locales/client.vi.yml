@@ -1041,7 +1041,6 @@ vi:
         tags_section: "Phần thẻ"
         tags_section_instruction: "Các thẻ đã chọn sẽ được hiển thị trong phần thẻ của Thanh bên."
         navigation_section: "Điều hướng"
-        list_destination_default: "Mặc định"
       change: "thay đổi"
       featured_topic: "Chủ đề nổi bật"
       moderator: "%{user} trong ban quản trị"
@@ -4880,19 +4879,18 @@ vi:
         delete_confirm: "Bạn muốn xóa trường thành viên?"
         options: "Lựa chọn"
         required:
-          title: "Bắt buộc lúc đăng ký?"
+          title: "Bắt buộc lúc đăng ký"
           enabled: "bắt buộc"
           disabled: "không bắt buộc"
         editable:
-          title: "Có thể chỉnh sửa sau khi đăng ký?"
+          title: "Có thể chỉnh sửa sau khi đăng ký"
           enabled: "có thể chỉnh sửa"
           disabled: "không thể chỉnh sửa"
         show_on_profile:
-          title: "Hiển thị trong hồ sơ công khai"
           enabled: "hiển thị trong hồ sơ"
           disabled: "không hiển thị trong hồ sơ"
         show_on_user_card:
-          title: "Hiện trên thẻ người dùng?"
+          title: "Hiện trên thẻ người dùng"
           enabled: "hiển trên thẻ người dùng"
           disabled: "không hiện trên thẻ người dùng"
         searchable:

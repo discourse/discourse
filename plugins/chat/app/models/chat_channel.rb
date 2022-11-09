@@ -21,7 +21,8 @@ class ChatChannel < ActiveRecord::Base
             },
             presence: true,
             allow_nil: true
-  validate :ensure_slug
+  validate :ensure_slug_ok
+  before_validation :generate_auto_slug
 
   scope :public_channels,
         -> {
@@ -31,6 +32,8 @@ class ChatChannel < ActiveRecord::Base
             "LEFT JOIN categories ON categories.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'Category'",
           )
         }
+
+  delegate :empty?, to: :chat_messages, prefix: true
 
   class << self
     def public_channel_chatable_types

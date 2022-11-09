@@ -789,7 +789,6 @@ et:
       experimental_sidebar:
         options: "Võimalused"
         navigation_section: "Navigatsioon"
-        list_destination_default: "Vaikimisi"
       change: "muuda"
       featured_topic: "Esile tõstetud teema"
       moderator: "%{user} on moderaator"
@@ -3368,19 +3367,19 @@ et:
         delete_confirm: "Oled Sa kindel, et soovid kustutada selle kasutajavälja?"
         options: "Suvandid"
         required:
-          title: "Nõutud registreerumisel?"
+          title: "Nõutud registreerumisel"
           enabled: "nõutud"
           disabled: "ei ole nõutud"
         editable:
-          title: "Muudetav pärast registreerumist?"
+          title: "Muudetav pärast registreerumist"
           enabled: "muudetav"
           disabled: "ei ole muudetav"
         show_on_profile:
-          title: "Näidata avalikul profiilil?"
+          title: "Näidata avalikul profiilil"
           enabled: "näidatav profiilil"
           disabled: "ei ole näidatav profiilil"
         show_on_user_card:
-          title: "Kuva kasutaja profiilil?"
+          title: "Kuva kasutaja profiilil"
           enabled: "kuvatud kasutaja profiilil"
           disabled: "ei kuvata kasutaja profiilil"
         field_types:

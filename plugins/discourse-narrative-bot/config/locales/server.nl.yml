@@ -10,7 +10,7 @@ nl:
     disable_discourse_narrative_bot_welcome_post: "Het Discourse Narrative Bot-welkomstbericht uitschakelen"
     discourse_narrative_bot_ignored_usernames: "Gebruikersnamen die de Discourse Narrative Bot moet negeren"
     discourse_narrative_bot_disable_public_replies: "Antwoorden door de Discourse Narrative Bot uitschakelen"
-    discourse_narrative_bot_welcome_post_type: "Type welkomstbericht dat de Discourse Narrative Bot zou moeten uitsturen"
+    discourse_narrative_bot_welcome_post_type: "Type welkomstbericht dat de Discourse Narrative Bot moet sturen"
     discourse_narrative_bot_welcome_post_delay: "(n) seconden wachten voordat de Discourse Narrative Bot het welkomstbericht uitstuurt."
     discourse_narrative_bot_skip_tutorials: "Discourse Narrative Bot-handleidingen die worden overgeslagen"
   badges:
@@ -18,12 +18,12 @@ nl:
       name: Gecertificeerd
       description: "Heeft onze handleiding voor nieuwe gebruikers afgerond"
       long_description: |
-        Deze badge wordt toegekend wanneer de interactieve handleiding voor nieuwe gebruikers met succes is doorlopen. U hebt het initiatief genomen om de basishulpmiddelen voor discussie te leren, en u bent nu gecertificeerd!
+        Deze badge wordt toegekend wanneer de interactieve tutorial voor nieuwe gebruikers is voltooid. Je hebt het initiatief genomen om de basisgereedschappen voor discussie te leren en je bent nu gecertificeerd!
     licensed:
       name: Gelicentieerd
       description: "Heeft onze handleiding voor gevorderde gebruikers afgerond"
       long_description: |
-        Deze badge wordt toegekend wanneer de interactieve handleiding voor gevorderde gebruikers met succes is doorlopen. U hebt de geavanceerde hulpmiddelen voor discussie onder de knie – en u bent nu volledig gecertificeerd!
+        Deze badge wordt toegekend wanneer de interactieve tutorial voor gevorderde gebruikers is voltooid. Je hebt de geavanceerde gereedschappen voor discussie onder de knie en je bent nu volledig gecertificeerd!
   discourse_narrative_bot:
     dice:
       trigger: "gooien"
@@ -64,7 +64,7 @@ nl:
         "2": "Het is zo besloten"
         "3": "Zonder twijfel"
         "4": "Ja zeker"
-        "5": "Daar kunt u van uitgaan"
+        "5": "Daar kun je van uitgaan"
         "6": "Zoals ik het zie, ja"
         "7": "Zeer waarschijnlijk"
         "8": "De vooruitzichten zijn goed"
@@ -72,9 +72,9 @@ nl:
         "10": "Alle signalen wijzen naar ja"
         "11": "Onduidelijk, probeer het nog eens"
         "12": "Vraag later nogmaals"
-        "13": "Beter om u dat nu niet te vertellen"
+        "13": "Beter om je dat nu niet te vertellen"
         "14": "Kan nu niet voorspellen"
-        "15": "Concentreer u en vraag het opnieuw"
+        "15": "Concentreer je en vraag het opnieuw"
         "16": "Reken er niet op"
         "17": "Mijn antwoord is nee"
         "18": "Mijn bronnen zeggen nee"
@@ -88,22 +88,22 @@ nl:
       help_trigger: "help weergeven"
       random_mention:
         reply: |-
-          Hallo! Zeg `@%{discobot_username} %{help_trigger}` om te ontdekken wat ik kan.
+          Hallo! Zeg '@%{discobot_username} %{help_trigger}' om te ontdekken wat ik kan.
         bot_actions: |-
-          `@%{discobot_username} %{dice_trigger} 2d6`
+          '@%{discobot_username} %{dice_trigger} 2d6'
           > :game_die: 3, 6
 
-          `@%{discobot_username} %{quote_trigger}`
+          '@%{discobot_username} %{quote_trigger}'
           %{quote_sample}
 
-          `@%{discobot_username} %{magic_8_ball_trigger}`
-          > :crystal_ball: U kunt erop vertrouwen
+          '@%{discobot_username} %{magic_8_ball_trigger}'
+          > :crystal_ball: Je kunt erop vertrouwen
       do_not_understand:
         first_response: |-
           Hallo, bedankt voor het antwoord!
 
           Helaas kan ik dat, als slecht geprogrammeerde bot, niet helemaal begrijpen. :frowning:
-        track_response: U kunt het opnieuw proberen, of als u deze stap wilt overslaan, `%{skip_trigger}` zeggen. Zeg anders `%{reset_trigger}` om opnieuw te beginnen.
+        track_response: Je kunt het opnieuw proberen, of '%{skip_trigger}' zeggen als je deze stap wilt overslaan. Zeg anders '%{reset_trigger}' om opnieuw te beginnen.
     new_user_narrative:
       reset_trigger: "handleiding"
       title: "Certificaat voor het voltooien van de handleiding voor nieuwe gebruikers"
@@ -117,19 +117,19 @@ nl:
         reply: |-
           Uitstekend werk! HTML en BBCode werken ook voor de opmaak – om meer te leren, [probeer deze handleiding](https://commonmark.org/help) :nerd:
         not_found: |-
-          Oh, ik vond geen opmaak in uw antwoord. :pencil2:
+          Ik heb geen opmaak gevonden in je antwoord. :pencil2:
 
-          Kan u het opnieuw proberen? Gebruik de <kbd><b>B</b></kbd> vet of <kbd><i>I</i></kbd> cursief knoppen in de editor als u vast komt te zitten.
+          Kun je het opnieuw proberen? Gebruik de knoppen <kbd><b>B</b></kbd> (vet) of <kbd><i>I</i></kbd> (cursief) in de editor als je vast komt te zitten.
       search:
         reply: |-
-          Joepie! U hebt het gevonden :tada:
+          Je hebt het gevonden :tada:
 
-          - Voor meer gedetailleerde zoekopdrachten gaat u naar de [geavanceerde zoekpagina](%{search_url}).
+          - Ga voor gedetailleerdere zoekopdrachten naar de [geavanceerde zoekpagina](%{search_url}).
 
-          - Om ergens in een lange discussie te springen, probeer de tijdslijnbediening aan de rechterzijde (en onderaan, op mobiele apparaten).
+          - Probeer de tijdlijnbediening rechts (en onderaan op mobiel) om ergens in een lange discussie te springen.
 
-          - Indien u een fysiek toetsenbord hebt :keyboard:, druk op <kbd>?</kbd> om onze handige snelkoppelingen te bekijken.
+          - Als je een fysiek toetsenbord :keyboard: hebt, druk dan op <kbd>?</kbd> om onze handige snelkoppelingen te bekijken.
     advanced_user_narrative:
       reset_trigger: "geavanceerde handleiding"
-      cert_title: "Als erkenning voor de succesvolle voltooiing van de geavanceerde gebruikershandleiding"
+      cert_title: "Als erkenning voor de succesvolle voltooiing van de tutorial voor gevorderde gebruikers"
       title: ":arrow_up: Geavanceerde gebruikersfuncties"

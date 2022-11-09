@@ -5,3 +5,33 @@
 # https://translate.discourse.org/
 
 ur:
+  chat:
+    deleted_chat_username: حذف کردہ
+    errors:
+      not_accepting_dms: "معذرت، %{username} اِس وقت پیغامات قبول نہیں کر رہا ہے۔"
+    reviewables:
+      actions:
+        agree:
+          title: "اتفاق کریں..."
+        agree_and_suspend:
+          title: "صارف معطل کریں"
+          description: "فلَیگ کے ساتھ اتفاق کریں اور صارف معطل کریں۔"
+        agree_and_silence:
+          title: "صارف خاموش کریں"
+          description: "فلَیگ کے ساتھ اتفاق کریں اور صارف خاموش کریں۔"
+        disagree:
+          title: "اختلاف کریں"
+        ignore:
+          title: "نظر انداز کریں"
+    channel:
+      statuses:
+        closed: "بند"
+        open: "کھولیں"
+  reviewable_score_types:
+    notify_user:
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_body: "%{link}\n\n%{message}"
+  unsubscribe:
+    chat_summary:
+      never: کبھی نہیں

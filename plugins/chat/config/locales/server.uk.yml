@@ -5,3 +5,37 @@
 # https://translate.discourse.org/
 
 uk:
+  chat:
+    deleted_chat_username: видалено
+    errors:
+      not_accepting_dms: "На жаль, %{username} в даний момент не приймає повідомлення."
+    reviewables:
+      actions:
+        agree:
+          title: "Погодитися…"
+        agree_and_suspend:
+          title: "Призупинити користувача"
+          description: "Погодитися з прапором та заморозити користувача."
+        agree_and_silence:
+          title: "Заблокувати користувача"
+          description: "Погодитися з прапором та відключити користувача."
+        disagree:
+          title: "Відмовити"
+        ignore:
+          title: "Ігнорувати"
+    channel:
+      statuses:
+        closed: "Закриті"
+        open: "Відкрити"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} згадав вас у "%{channel}"'
+  reviewable_score_types:
+    notify_user:
+      chat_pm_body: "%{link}\n\n%{message}\n"
+    notify_moderators:
+      chat_pm_body: "%{link}\n\n%{message}\n"
+  unsubscribe:
+    chat_summary:
+      never: Ніколи

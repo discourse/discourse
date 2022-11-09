@@ -18,7 +18,7 @@ nl:
         title: "Stemmen zijn <strong>openbaar</strong>."
       results:
         groups:
-          title: "U dient lid van %{groups} te zijn om in deze poll te stemmen."
+          title: "Je moet lid van %{groups} zijn om te stemmen in deze poll."
         vote:
           title: "Resultaten worden getoond bij <strong>stemmen</strong>."
         closed:
@@ -39,7 +39,7 @@ nl:
           between_min_and_max_options: "Kies <strong>%{min}</strong> tot <strong>%{max}</strong> opties."
       cast-votes:
         title: "Uw stemmen uitbrengen"
-        label: "Nu stemmen!"
+        label: "Stem nu!"
       show-results:
         title: "De pollresultaten weergeven"
         label: "Resultaten tonen"
@@ -55,11 +55,11 @@ nl:
       open:
         title: "De poll openen"
         label: "Openen"
-        confirm: "Weet u zeker dat u deze poll wilt openen?"
+        confirm: "Weet je zeker dat je deze poll wilt openen?"
       close:
         title: "De poll sluiten"
         label: "Sluiten"
-        confirm: "Weet u zeker dat u deze poll wilt sluiten?"
+        confirm: "Weet je zeker dat je deze poll wilt sluiten?"
       automatic_close:
         closes_in: "Sluit over <strong>%{timeLeft}</strong>."
         age: "Gesloten: <strong>%{age}</strong>"

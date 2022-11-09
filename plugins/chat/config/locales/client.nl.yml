@@ -5,3 +5,111 @@
 # https://translate.discourse.org/
 
 nl:
+  js:
+    chat:
+      create: "Aanmaken"
+      cancel: "Annuleren"
+      channel_settings:
+        edit: "Bewerken"
+        add: "Toevoegen"
+        join: "Toetreden"
+        leave: "Verlaten"
+      close: "Sluiten"
+      delete: "Verwijderen"
+      edited: "bewerkt"
+      muted: "gedempt"
+      joined: "lid sinds"
+      email_frequency:
+        never: "Nooit"
+      flag: "Markeren"
+      join: "Toetreden"
+      mention_warning:
+        dismiss: "negeren"
+      reply: "Antwoorden"
+      edit: "Bewerken"
+      rebake_message: "HTML opnieuw opbouwen"
+      bookmark_message: "Bladwijzer maken"
+      bookmark_message_edit: "Bladwijzer bewerken"
+      save: "Opslaan"
+      sounds:
+        none: "Geen"
+      exit: "vorige"
+      channel_status:
+        closed: "Gesloten"
+        open: "Openen"
+      browse:
+        filter_all: Alle
+        filter_closed: Gesloten
+      chat_message_separator:
+        today: Vandaag
+        yesterday: Gisteren
+      about_view:
+        title: Titel
+        description: Omschrijving
+      channel_info:
+        back_to_channel: "Vorige"
+        tabs:
+          about: Over
+          members: Leden
+          settings: Instellingen
+      direct_message_creator:
+        title: Nieuw bericht
+        prefix: "Aan:"
+      create_channel:
+        type: "Type"
+        types:
+          category: "Categorie"
+          topic: "Topic"
+      composer:
+        italic_text: "Cursieve tekst"
+        bold_text: "Vetgedrukte tekst"
+      notification_levels:
+        never: "Nooit"
+      settings:
+        follow: "Toetreden"
+        followed: "Lid sinds"
+        notifications: "Meldingen"
+        preview: "Voorbeeld"
+        save: "Opslaan"
+        saved: "Opgeslagen"
+        unfollow: "Verlaten"
+      incoming_webhooks:
+        back: "Vorige"
+        description: "Omschrijving"
+        delete: "Verwijderen"
+        emoji: "Emoji"
+        name: "Naam"
+        save: "Opslaan"
+        edit: "Bewerken"
+        system: "systeem"
+        url: "URL"
+        username: "Gebruikersnaam"
+      selection:
+        cancel: "Annuleren"
+        copy: "Kopiëren"
+        new_topic:
+          title: "Verplaatsen naar nieuw topic"
+        existing_topic:
+          title: "Verplaatsen naar bestaand topic"
+        new_message:
+          title: "Verplaatsen naar nieuw bericht"
+      emoji_picker:
+        objects: "Objecten"
+        activities: "Activiteiten"
+        flags: "Markeringen"
+        symbols: "Symbolen"
+      draft_channel_screen:
+        header: "Nieuw bericht"
+        cancel: "Annuleren"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: Bericht
+    review:
+      types:
+        reviewable_chat_message:
+          flagged_by: "Gemarkeerd door"

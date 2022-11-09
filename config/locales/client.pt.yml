@@ -1049,7 +1049,6 @@ pt:
       experimental_sidebar:
         options: "Opções"
         navigation_section: "Navegação"
-        list_destination_default: "Predefinição"
       change: "alterar"
       featured_topic: "Tópico em Destaque"
       moderator: "%{user} é um moderador"
@@ -4445,19 +4444,19 @@ pt:
         delete_confirm: "Tem a certeza que quer eliminar esse campo de utilizador?"
         options: "Opções"
         required:
-          title: "Obrigatório na inscrição?"
+          title: "Obrigatório na inscrição"
           enabled: "obrigatório"
           disabled: "não obrigatório"
         editable:
-          title: "Editável depois da inscrição?"
+          title: "Editável depois da inscrição"
           enabled: "editável"
           disabled: "não editável"
         show_on_profile:
-          title: "Exibir no perfil público?"
+          title: "Exibir no perfil público"
           enabled: "exibido no perfil"
           disabled: "não exibido no perfil"
         show_on_user_card:
-          title: "Mostrar no cartão de utilizador?"
+          title: "Mostrar no cartão de utilizador"
           enabled: "mostrar no cartão de utilizador"
           disabled: "não apresentado no cartão de utilizador"
         field_types:

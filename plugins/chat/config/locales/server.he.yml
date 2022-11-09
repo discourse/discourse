@@ -6,7 +6,7 @@
 
 he:
   site_settings:
-    chat_enabled: "הפעלת תוסף discourse-chat."
+    chat_enabled: "הפעלת תוסף הצ׳אט."
     chat_allowed_groups: "משתמשים בקבוצות אלה יכולים לשוחח בצ׳אט. נא לשים לב שהסגל תמיד יכול לגשת לצ׳אט."
     chat_channel_retention_days: "הודעות הצ׳אט בערוצים הרגילים ישמרו למשך כמות כזאת של ימים. הגדרה לאפס תשמור את ההודעות לעד."
     chat_dm_retention_days: "הודעות הצ׳אט בערוצי הצ׳אט האישיים ישמרו למשך כמות כזאת של ימים. הגדרה לאפס תשמור את ההודעות לעד."
@@ -55,7 +55,7 @@ he:
       message_move_invalid_channel: "ערוצי המקור והיעד חייבים להיות ערוצים ציבוריים."
       message_move_no_messages_found: "לא נמצאו הודעות עם מזהי ההודעות שסופקו."
       cant_update_direct_message_channel: "מאפייני ערוץ הודעות ישירות כמו שם ותיאור נעולים מפני עדכון."
-      not_accepting_dms: "לא מתקבלות הודעות אצל %{username} כרגע, עמך הסליחה."
+      not_accepting_dms: "מצטעים, %{username} לא מקבל הודעות כרגע."
       actor_ignoring_target_user: "בחרת להתעלם מ־%{username}, כך שאין לך אפשרות לשלוח אליהם הודעות."
       actor_muting_target_user: "בחרת להשתיק את %{username}, כך שאין לך אפשרות לשלוח אליהם הודעות."
       actor_disallowed_dms: "בחרת למנוע ממשתמשים לשלוח אליך הודעות פרטיות וישירות כך שאין לך אפשרות ליצור הודעות ישירות חדשות."
@@ -74,10 +74,10 @@ he:
           description: "להסכים עם הסימון ולהשאיר את ההודעה מחוקה."
         agree_and_suspend:
           title: "השעיית משתמש"
-          description: "להסכים עם הסימון ולהשעות את המשתמש."
+          description: "הבעת הסכמה עם הדגל והשעיית המשתמש."
         agree_and_silence:
           title: "השתקת משתמש"
-          description: "להסכים עם הסימון ולהשתיק את המשתמש."
+          description: "הבעת הסכמה עם הדגל והשתקת המשתמש."
         agree_and_restore:
           title: "שחזור הודעה"
           description: "לשחזר את ההודעה כדי שמשתמשים יוכלו לראות אותה."
@@ -90,7 +90,7 @@ he:
           title: "חוסר הסכמה ושחזור ההודעה"
           description: "לשחזר את ההודעה כדי שכל המשתמשים יוכלו לראות אותה."
         disagree:
-          title: "אי־הסכמה"
+          title: "אי קבלה"
         ignore:
           title: "התעלמות"
       direct_messages:
@@ -100,8 +100,8 @@ he:
       statuses:
         read_only: "לקריאה בלבד"
         archived: "בארכיון"
-        closed: "סגור"
-        open: "פתוח"
+        closed: "סגורה"
+        open: "פתיחה"
       archive:
         first_post_raw: "הנושא הזה הוא הארכיון של ערוץ הצ׳אט [%{channel_name}](%{channel_url})."
       messages_moved:
@@ -112,7 +112,7 @@ he:
       dm_title:
         single_user: "%{user}"
         multi_user: "%{users}"
-        multi_user_truncated: "%{users} ו־%{leftover} נוספים"
+        multi_user_truncated: "%{users} ועוד %{leftover}"
     bookmarkable:
       notification_title: "הודעה ב־%{channel_name}"
     personal_chat: "צ׳אט אישי"
@@ -134,10 +134,10 @@ he:
     popup:
       chat_mention:
         direct: 'אוזכרת בערוץ „%{channel}” על ידי %{username}'
-        other: 'נוסף אזכור של %{identifier} בערוץ „%{channel}” על ידי %{username}'
+        other_type: 'נוסף אזכור של %{identifier} בערוץ „%{channel}” על ידי %{username}'
       direct_message_chat_mention:
         direct: "אוזכרת בצ׳אט אישי על ידי %{username}"
-        other: "נוסף אזכור של ‎%{identifier} בצ׳אט אישי על ידי %{username}"
+        other_type: "נוסף אזכור של ‎%{identifier} בצ׳אט אישי על ידי %{username}"
       new_chat_message: 'נשלחה הודעה על ידי %{username} ב־„%{channel}”'
       new_direct_chat_message: "נשלחה הודעה על ידי %{username} בצ׳אט אישי"
   discourse_automation:

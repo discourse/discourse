@@ -3,8 +3,9 @@ import { inject as service } from "@ember/service";
 
 export default class ChatIndexRoute extends DiscourseRoute {
   @service chat;
+  @service router;
 
-  beforeModel() {
+  redirect() {
     if (this.site.mobileView) {
       return; // Always want the channel index on mobile.
     }
@@ -14,11 +15,10 @@ export default class ChatIndexRoute extends DiscourseRoute {
     return this.chat.getIdealFirstChannelIdAndTitle().then((channelInfo) => {
       if (channelInfo) {
         return this.chat.getChannelBy("id", channelInfo.id).then((c) => {
-          this.chat.openChannel(c);
-          return;
+          return this.chat.openChannel(c);
         });
       } else {
-        return this.transitionTo("chat.browse");
+        return this.router.transitionTo("chat.browse");
       }
     });
   }
