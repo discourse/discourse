@@ -318,17 +318,11 @@
     }
 
     .d-icon {
-      color: var(--primary-low-mid);
+      color: var(--primary-medium);
 
       &.bookmark-icon__bookmarked {
         color: var(--tertiary);
       }
-    }
-  }
-
-  .reply-btn {
-    .d-icon {
-      color: var(--tertiary);
     }
   }
 
@@ -356,7 +350,7 @@
         justify-content: center;
 
         .d-icon {
-          color: var(--primary-low-mid);
+          color: var(--primary-medium);
           margin: 0;
         }
       }
