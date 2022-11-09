@@ -53,7 +53,7 @@ class BackfillChannelSlugs < ActiveRecord::Migration[7.0]
       WHERE cc.id = tmp.id AND cc.slug IS NULL
     SQL
 
-    DB.exec("DROP TABLE tmp_chat_channel_slugs(id int, slug text)")
+    DB.exec("DROP TABLE tmp_chat_channel_slugs")
   end
 
   def down
