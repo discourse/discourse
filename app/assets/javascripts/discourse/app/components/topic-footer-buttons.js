@@ -1,4 +1,4 @@
-import { alias, and, or } from "@ember/object/computed";
+import { alias, or } from "@ember/object/computed";
 import { computed } from "@ember/object";
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -53,8 +53,6 @@ export default Component.extend({
   canDefer: alias("currentUser.enable_defer"),
 
   inviteDisabled: or("topic.archived", "topic.closed", "topic.deleted"),
-
-  showEditOnFooter: and("topic.isPrivateMessage", "site.can_tag_pms"),
 
   @discourseComputed("topic.message_archived")
   archiveIcon: (archived) => (archived ? "envelope" : "folder"),
