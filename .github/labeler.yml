@@ -1,2 +1,7 @@
 chat:
-- plugins/chat/**/*
+  - "plugins/chat/**/*"
+
+i18n:
+  - "config/locales/*en.yml"
+  - "plugins/**/config/locales/*en.yml"
+  - "**/*i18n*"
