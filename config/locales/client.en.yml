@@ -2751,9 +2751,6 @@ en:
       move_to_inbox:
         title: "Move to Inbox"
         help: "Move message back to Inbox"
-      edit_message:
-        help: "Edit first post of the message"
-        title: "Edit"
       defer:
         help: "Mark as unread"
         title: "Defer"
