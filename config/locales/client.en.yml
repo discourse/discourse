@@ -1838,6 +1838,10 @@ en:
         title: "Topic timeline"
         content: "Scroll quickly through a post using the topic timeline."
 
+      post_menu:
+        title: "Post menu"
+        content: "See how else you can interact with the post by clicking the three dots!"
+
     loading: "Loading..."
     errors:
       prev_page: "while trying to load"

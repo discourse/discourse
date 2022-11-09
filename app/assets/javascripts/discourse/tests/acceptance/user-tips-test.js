@@ -39,3 +39,21 @@ acceptance("User Tips - topic_timeline", function (needs) {
     );
   });
 });
+
+acceptance("User Tips - post_menu", function (needs) {
+  needs.user();
+  needs.site({ user_tips: { post_menu: 3 } });
+
+  needs.hooks.beforeEach(() => hideAllUserTips());
+  needs.hooks.afterEach(() => hideAllUserTips());
+
+  test("Shows post menu user tip", async function (assert) {
+    this.siteSettings.enable_user_tips = true;
+
+    await visit("/t/internationalization-localization/280");
+    assert.equal(
+      query(".user-tip-title").textContent.trim(),
+      I18n.t("user_tips.post_menu.title")
+    );
+  });
+});

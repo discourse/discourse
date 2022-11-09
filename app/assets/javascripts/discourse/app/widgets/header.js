@@ -211,7 +211,7 @@ createWidget("header-notifications", {
       contentText: I18n.t("user_tips.first_notification.content"),
 
       reference: document
-        .querySelector(".badge-notification")
+        .querySelector(".d-header .badge-notification")
         ?.parentElement?.querySelector(".avatar"),
 
       placement: "bottom-end",

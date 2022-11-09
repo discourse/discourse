@@ -30,6 +30,7 @@ export function showUserTip(options) {
 
     arrow: iconHTML("tippy-rounded-arrow"),
     placement: options.placement,
+    appendTo: options.appendTo,
 
     // It often happens for the reference element to be rerendered. In this
     // case, tippy must be rerendered too. Having an animation means that the
