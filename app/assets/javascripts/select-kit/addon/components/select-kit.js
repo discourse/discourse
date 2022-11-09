@@ -283,6 +283,7 @@ export default Component.extend(
       closeOnChange: true,
       limitMatches: null,
       placement: isDocumentRTL() ? "bottom-end" : "bottom-start",
+      verticalOffset: 3,
       filterComponent: "select-kit/select-kit-filter",
       selectedNameComponent: "selected-name",
       selectedChoiceComponent: "selected-choice",
@@ -898,7 +899,7 @@ export default Component.extend(
             {
               name: "offset",
               options: {
-                offset: [0, 3],
+                offset: [0, this.selectKit.options.verticalOffset],
               },
             },
             {
