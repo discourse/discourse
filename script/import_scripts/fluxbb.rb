@@ -288,7 +288,17 @@ class ImportScripts::FluxBB < ImportScripts::Base
       em: {
         html_open: '**', html_close: '**',
         description: 'Make text emphasised (same as bold in markdown)',
-        example: 'This is [em]emphasised[/em].' }
+        example: 'This is [em]emphasised[/em].' },
+      img: {
+        html_open: '<img src="%between%"%alt_text%/>', html_close: '',
+        description: 'Image',
+        example: '[img=my alt text]http://www.google.com/intl/en_ALL/images/logo.gif[/img].',
+        only_allow: [],
+        require_between: true,
+        allow_tag_param: true, allow_tag_param_between: false,
+        tag_param: /(.*)/,
+        tag_param_tokens: [{ token: :alt_text, prefix: ' alt="', postfix: '"' }],
+        tag_param_description: 'The img bbcode takes alt text as a parameter' }
     }
   end
 

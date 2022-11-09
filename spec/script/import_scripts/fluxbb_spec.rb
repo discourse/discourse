@@ -91,6 +91,8 @@ RSpec.describe "ImportScripts::FluxBB" do
             "[url=https://www.discourse.org/]Link with link text[/url]\n" +
             "[url]https://www.discourse.org/[/url] - Link without link text\n" +
             "[url=/about]Relative link[/url]\n" +
+            "[img]http://www.ruby-lang.org/images/header-ruby-logo.png[/img]\n" +
+            "[img=FluxBB allows alt text]http://www.ruby-lang.org/images/header-ruby-logo.png[/img]\n" +
             "=) =| =( =D :o :lol: :mad: :rolleyes:\n" +
             "=)=) Smiley whitespace=) https://awkward.com?x=D :mad::mad::mad:"
           }
@@ -107,6 +109,8 @@ RSpec.describe "ImportScripts::FluxBB" do
               "[Link with link text](https://www.discourse.org/)\n" +
               "[https://www.discourse.org/](https://www.discourse.org/) - Link without link text\n" +
               "[Relative link](/about)\n" +
+              "<img src=\"http://www.ruby-lang.org/images/header-ruby-logo.png\"/>\n" +
+              "<img src=\"http://www.ruby-lang.org/images/header-ruby-logo.png\" alt=\"FluxBB allows alt text\"/>\n" +
               ":) :| :( :D :O :laughing: :rage: :roll_eyes:\n" +
               ":)=) Smiley whitespace=) https://awkward.com?x=D :rage::mad::mad:"
             )
