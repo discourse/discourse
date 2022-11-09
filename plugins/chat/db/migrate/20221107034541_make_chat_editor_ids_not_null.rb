@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class BackfillEditingUserIdsForChatMessagesAndRevisions < ActiveRecord::Migration[7.0]
-  def up
+class MakeChatEditorIdsNotNull < ActiveRecord::Migration[7.0]
+  def change
     DB.exec("UPDATE chat_messages SET last_editor_id = user_id")
     DB.exec(<<~SQL)
       UPDATE chat_message_revisions cmr
@@ -9,9 +9,8 @@ class BackfillEditingUserIdsForChatMessagesAndRevisions < ActiveRecord::Migratio
       FROM chat_messages AS cm
       WHERE cmr.chat_message_id = cm.id
     SQL
-  end
 
-  def down
-    raise ActiveRecord::IrreversibleMigration
+    change_column_null :chat_messages, :last_editor_id, false
+    change_column_null :chat_message_revisions, :user_id, false
   end
 end

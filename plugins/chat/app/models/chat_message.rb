@@ -210,7 +210,7 @@ end
 #  message         :text
 #  cooked          :text
 #  cooked_version  :integer
-#  last_editor_id  :integer
+#  last_editor_id  :integer          not null
 #
 # Indexes
 #

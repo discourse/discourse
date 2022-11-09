@@ -24,7 +24,7 @@ fa_IR:
       disabled_for_topic: "گفتگو در این موضوع غیرفعال است."
       bot: "ربات"
       create: "ایجاد"
-      cancel: "لغو"
+      cancel: "انصراف"
       cancel_reply: "لغو پاسخ"
       chat_channels: "کانال‌ها"
       browse_all_channels: "مرور همه کانال‌ها"
@@ -41,7 +41,7 @@ fa_IR:
         delete_channel: "حذف کانال"
         join_channel: "پیوستن به کانال"
         leave_channel: "ترک کانال"
-        join: "پیوستن"
+        join: "عضو شدن"
         leave: "ترک کردن"
       channel_archive:
         title: "بایگانی کانال"
@@ -65,8 +65,8 @@ fa_IR:
       hidden: "یک پیام پنهان شده است. [view]"
       delete: "حذف"
       edited: "ویرایش شده"
-      muted: "بی‌صدا شد"
-      joined: "پیوستن"
+      muted: "خاموش"
+      joined: "ملحق شده"
       empty_state:
         direct_message_cta: "شروع گفتگوی شخصی"
         direct_message: "شما همچنین می‌توانید یک گفتگو شخصی را با یک یا چند کاربر شروع کنید."
@@ -80,9 +80,10 @@ fa_IR:
       invalid_access: "شما برای مشاهده گفتگوی این کانال دسترسی ندارید"
       in_reply_to: "در پاسخ به"
       heading: "گفتگو"
-      join: "پیوستن"
+      join: "عضو شدن"
       new_messages: "پیام‌های جدید"
       mention_warning:
+        dismiss: "رد کردن"
         invitations_sent:
           one: "دعوت‌نامه ارسال شد"
           other: "دعوت‌نامه‌ها ارسال شد"
@@ -102,6 +103,7 @@ fa_IR:
       reply: "پاسخ"
       edit: "ویرایش"
       copy_link: "کپی پیوند"
+      rebake_message: "ساخت مجدد HTML"
       retry_staged_message:
         title: "خطای شبکه"
         action: "دوباره بفرستم؟"
@@ -117,7 +119,7 @@ fa_IR:
       sound:
         title: "صدای آگاه‌سازی گفتگوی دسکتاپ"
       sounds:
-        none: "هیچکدام"
+        none: "هیچ کدام"
         bell: "زنگ"
         ding: "دینگ"
       title: "گفتگو"
@@ -130,16 +132,17 @@ fa_IR:
       exit: "بازگشت"
       channel_status:
         read_only: "فقط خواندنی"
-        archived: "بایگانی شده"
+        archived: "بایگانی شد"
         closed_header: "کانال بسته است"
-        closed: "بسته شد"
+        closed: "بسته"
         open_header: "کانال باز است"
-        open: "باز کن"
+        open: "باز"
       browse:
+        back: "بازگشت"
         title: کانال‌ها
         filter_all: همه
         filter_open: باز شد
-        filter_closed: بسته شد
+        filter_closed: بسته
         filter_archived: بایگانی شد
         filter_input_placeholder: کانال را با نام جستجو کنید
       chat_message_separator:
@@ -151,14 +154,14 @@ fa_IR:
         associated_topic: موضوع مرتبط
         associated_category: دسته‌بندی مرتبط
         title: عنوان
-        description: توضیحات
+        description: توضیح
       channel_info:
         back_to_all_channels: "همه کانال‌ها"
         back_to_channel: "بازگشت"
         tabs:
           about: درباره
-          members: اعضا
-          settings: تنظيمات
+          members: اعضاء
+          settings: تنظیمات
       channel_edit_title_modal:
         title: ویرایش عنوان
         input_placeholder: افزودن عنوان
@@ -177,13 +180,13 @@ fa_IR:
         no_memberships: این کانال هنوز هیچ عضوی ندارد
         no_memberships_found: هیچ عضوی یافت نشد
         memberships_count:
-          one: ۱ عضو
+          one: "%{count} عضو"
           other: "%{count} عضو"
       create_channel:
         auto_join_users:
           warning_groups:
-            one: به طور خودکار %{members_count} کاربر از گروه %{group_1} اضافه شود؟
-            other: به طور خودکار %{members_count} کاربر از گروه %{group_1} و %{group_2} اضافه شود؟
+            one: به طور خودکار %{members_count} کاربر از گروه %{group} اضافه شود؟
+            other: به طور خودکار %{members_count} کاربر از گروه %{group} و %{group_2} اضافه شود؟
           warning_multiple_groups: به طور خودکار %{members_count} کاربر از گروه %{group_1} و %{count} نفر دیگر اضافه شود؟
         choose_category:
           label: "انتخاب دسته‌بندی"
@@ -194,12 +197,15 @@ fa_IR:
         title: "کانال جدید"
         type: "نوع"
         types:
-          category: "دسته‌بندی"
-          topic: "موضوع"
+          category: "دسته"
+          topic: "موضوعات"
       reviewable:
         type: "پیام گفتگو"
       reactions:
         only_you: "شما با :%{emoji}: واکنش نشان دادید"
+      composer:
+        italic_text: "متن تاکید شده"
+        bold_text: "نوشته‌ی ضخیم "
       quote:
         copy_success: "نقل قول گفتگو در کلیپ‌بورد کپی شد"
       notification_levels:
@@ -208,14 +214,16 @@ fa_IR:
         always: "برای تمام فعالیت‌ها"
       settings:
         desktop_notification_level: "آگاه‌سازی‌های دسکتاپ"
-        follow: "پیوستن"
+        follow: "عضو شدن"
+        followed: "عضو شده"
         mute: "بی‌صدا کردن کانال"
         muted_on: "روشن"
         muted_off: "خاموش"
-        notifications: "آگاه‌سازی"
+        notifications: "اعلان‌ها"
         preview: "پیش‌نمایش"
-        save: "ذخیره"
+        save: "ذخیره کردن"
         saved: "ذخیره شد"
+        unfollow: "ترک کردن"
       admin:
         title: "گفتگو"
       direct_messages:
@@ -227,17 +235,18 @@ fa_IR:
         back: "بازگشت"
         channel_placeholder: "یک کانال را انتخاب کنید"
         current_emoji: "شکلک کنونی"
-        description: "توضیحات"
-        delete: "حذف"
+        description: "توضیح"
+        delete: "پاک کردن"
         emoji: "شکلک"
         name: "نام"
         name_placeholder: "نام..."
         no_emoji: "هیچ شکلکی انتخاب نشده"
         reset_emoji: "تنظیم مجدد شکلک"
-        save: "ذخیره"
-        edit: "ویرایش"
+        save: "ذخیره کردن"
+        edit: "ویرایش‌"
         select_emoji: "انتخاب شکلک"
         system: "سیستم"
+        url: "آدرس"
         username: "نام‌کاربری"
       selection:
         cancel: "انصراف"
@@ -248,20 +257,27 @@ fa_IR:
         title: "انتقال گفتگو به موضوع"
         new_topic:
           title: "انتقال به موضوع جدید"
+        existing_topic:
+          title: "انتقال به موضوع موجود"
+        new_message:
+          title: "انتقال به پیام جدید"
       replying_indicator:
         single_user: "%{username} در حال نوشتن"
         multiple_users: "%{commaSeparatedUsernames} و %{lastUsername} در حال نوشتن"
       topic_button_title: "گفتگو"
       emoji_picker:
         favorites: "اغلب استفاده می‌شه"
-        objects: "اشیاء"
+        objects: "اشیا"
         people_&_body: "مردم و بدن"
         travel_&_places: "سفر و مکان‌ها"
         animals_&_nature: "حیوانات و طبیعت"
-        food_&_drink: "غذا و خوراکی"
-        activities: "فعالیت‌ها"
+        activities: "فعالیت ها"
         flags: "پرچم‌ها"
+        symbols: "نشانه ها"
         no_results: "هیج نتیجه‌ای نداشت"
+      draft_channel_screen:
+        header: "پیام جدید"
+        cancel: "انصراف"
     notifications:
       chat_quoted: "<span>%{username}</span> %{description}"
       popup:
@@ -292,7 +308,7 @@ fa_IR:
       types:
         reviewable_chat_message:
           title: "پیام گفتگوی پرچم گذاری شده"
-          flagged_by: "پرچم گذاری شده توسط"
+          flagged_by: "پرچم شده توسط"
     keyboard_shortcuts_help:
       chat:
         title: "گفتگو"

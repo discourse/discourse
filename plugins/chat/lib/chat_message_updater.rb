@@ -15,8 +15,6 @@ class Chat::ChatMessageUpdater
     @chat_message = chat_message
     @old_message_content = chat_message.message
     @chat_channel = @chat_message.chat_channel
-    @user = @chat_message.user
-    @guardian = Guardian.new(@user)
     @new_content = new_content
     @upload_ids = upload_ids
     @error = nil
@@ -25,6 +23,7 @@ class Chat::ChatMessageUpdater
   def update
     begin
       validate_channel_status!
+      @guardian.ensure_can_edit_chat!(@chat_message)
       @chat_message.message = @new_content
       @chat_message.last_editor_id = @user.id
       upload_info = get_upload_info
@@ -47,10 +46,6 @@ class Chat::ChatMessageUpdater
   end
 
   private
-
-  # TODO (martin) Since we have guardian here now we should move
-  # guardian.ensure_can_edit_chat!(@message) from the controller into
-  # this class.
 
   def validate_channel_status!
     return if @guardian.can_modify_channel_message?(@chat_channel)

@@ -917,7 +917,7 @@ ja:
     user_fields:
       none: "(オプションを選択)"
       required: '"%{name}" の値を入力してください'
-      same_as_password: '他のフィールドでパスワードを繰り返し入力してはいけません。'
+      same_as_password: "他のフィールドでパスワードを繰り返し入力してはいけません。"
     user:
       said: "%{username}:"
       profile: "プロファイル"
@@ -1056,9 +1056,6 @@ ja:
         tags_section: "タグセクション"
         tags_section_instruction: "選択されたタグは、サイドバーのタグセクションに表示されます。"
         navigation_section: "ナビゲーション"
-        list_destination_instruction: "新規トピックまたは未読のトピックが含まれるサイドバーのトピックリストリンクをクリックすると、次に移動します:"
-        list_destination_default: "デフォルト"
-        list_destination_unread_new: "新規/未読"
       change: "変更"
       featured_topic: "注目のトピック"
       moderator: "%{user} はモデレーターです"
@@ -3732,7 +3729,7 @@ ja:
               pending_count: "保留中 %{count}"
     welcome_topic_banner:
       title: "ウェルカムトピックを作成しましょう"
-      description: 'ウェルカムトピックは、新しいメンバーが最初に読むものです。「エレベーターピッチ」や「ミッションステートメント」と考えると良いでしょう。このコミュニティーの対象者、ここで期待できること、最初にしてほしいことを伝えましょう。'
+      description: "ウェルカムトピックは、新しいメンバーが最初に読むものです。「エレベーターピッチ」や「ミッションステートメント」と考えると良いでしょう。このコミュニティーの対象者、ここで期待できること、最初にしてほしいことを伝えましょう。"
       button_title: "編集を開始"
     until: "終了日:"
   admin_js:
@@ -5021,23 +5018,18 @@ ja:
         delete_confirm: "このユーザーフィールドを削除してもよろしいですか？"
         options: "オプション"
         required:
-          title: "登録時の必須にしますか？"
           enabled: "必須"
           disabled: "オプション"
         editable:
-          title: "登録後に編集可能にしますか？"
           enabled: "編集可能"
           disabled: "編集不可"
         show_on_profile:
-          title: "公開プロファイルに表示しますか？"
           enabled: "プロファイルに表示"
           disabled: "プロファイル非表示"
         show_on_user_card:
-          title: "ユーザーカードに表示しますか？"
           enabled: "ユーザーカードに表示する"
           disabled: "ユーザーカードに表示しない"
         searchable:
-          title: "検索可能？"
           enabled: "検索できる"
           disabled: "検索できない"
         field_types:

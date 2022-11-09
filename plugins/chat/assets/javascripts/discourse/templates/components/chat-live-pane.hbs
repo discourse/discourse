@@ -10,7 +10,7 @@
         </div>
       {{/if}}
 
-      <LinkTo @route={{this.infoTabRoute}} @models={{array this.chatChannel.id (slugify-channel this.chatChannel.title)}} class="chat-full-page-header__title">
+      <LinkTo @route={{this.infoTabRoute}} @models={{array this.chatChannel.id (slugify-channel this.chatChannel)}} class="chat-full-page-header__title">
         <ChatChannelTitle @channel={{this.chatChannel}} />
       </LinkTo>
 

@@ -106,14 +106,6 @@ class SiteSetting < ActiveRecord::Base
     SiteSetting.manual_polling_enabled? || SiteSetting.pop3_polling_enabled?
   end
 
-  WATCHED_SETTINGS ||= [
-    :default_locale,
-    :blocked_attachment_content_types,
-    :blocked_attachment_filenames,
-    :allowed_unicode_username_characters,
-    :markdown_typographer_quotation_marks
-  ]
-
   def self.blocked_attachment_content_types_regex
     current_db = RailsMultisite::ConnectionManagement.current_db
 
@@ -193,8 +185,7 @@ class SiteSetting < ActiveRecord::Base
 
   def self.whispers_allowed_group_ids
     if SiteSetting.enable_whispers && SiteSetting.whispers_allowed_groups.present?
-      # TODO (martin) Change to whispers_allowed_groups_map
-      SiteSetting.whispers_allowed_groups.split("|").map(&:to_i)
+      SiteSetting.whispers_allowed_groups_map
     else
       []
     end

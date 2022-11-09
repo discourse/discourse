@@ -1089,9 +1089,6 @@ tr_TR:
         enable: "Kenar çubuğunu etkinleştir"
         options: "Seçenekler"
         navigation_section: "Navigasyon"
-        list_destination_instruction: "Kenar çubuğunda yeni veya okunmamış konuların bulunduğu bir konu listesi bağlantısını tıkladığımda beni şuraya götür:"
-        list_destination_default: "Varsayılan"
-        list_destination_unread_new: "Yeni/Okunmamış"
       change: "değiştir"
       featured_topic: "Öne Çıkan Konu"
       moderator: "%{user} moderatördür"
@@ -3796,7 +3793,7 @@ tr_TR:
               title: "gözden geçirmeler"
     welcome_topic_banner:
       title: "Hoş Geldiniz konulu gönderinizi oluşturun"
-      description: 'Hoş geldiniz başlığınız yeni üyelerin okuyacağı ilk şeydir. Bunu "asansör konuşmanız" veya "misyon beyanınız" olarak düşünün. Onlara bu topluluğun kimler için olduğunu, burada neler bulabileceklerini ve ilk olarak ne yapmalarını istediğinizi söyleyin.'
+      description: "Hoş geldiniz başlığınız yeni üyelerin okuyacağı ilk şeydir. Bunu \"asansör konuşmanız\" veya \"misyon beyanınız\" olarak düşünün. Onlara bu topluluğun kimler için olduğunu, burada neler bulabileceklerini ve ilk olarak ne yapmalarını istediğinizi söyleyin."
       button_title: "Düzenlemeye Başla"
     until: "Şuna kadar:"
   admin_js:
@@ -5077,23 +5074,18 @@ tr_TR:
         delete_confirm: "Bu kullanıcı alanını silmek istediğine emin misin?"
         options: "Seçenekler"
         required:
-          title: "Kayıt olurken zorunlu mu?"
           enabled: "zorunlu"
           disabled: "zorunlu değil"
         editable:
-          title: "Kayıt sonrası düzenlenebilir mi?"
           enabled: "düzenlenebilir"
           disabled: "düzenlenemez"
         show_on_profile:
-          title: "Herkese açık profilde gösterilsin mi?"
           enabled: "profilde gösteriliyor"
           disabled: "profilde gösterilmiyor"
         show_on_user_card:
-          title: "Kullanıcı profilinde gösterilsin mi?"
           enabled: "kullanıcı profilinde gösterildi"
           disabled: "kullanıcı profilinde gösterilmiyor"
         searchable:
-          title: "Aranabilir mi?"
           enabled: "aranabilir"
           disabled: "aranamaz"
         field_types:

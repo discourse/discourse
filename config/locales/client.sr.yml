@@ -697,7 +697,6 @@ sr:
       experimental_sidebar:
         options: "Opcije"
         navigation_section: "Navigacija"
-        list_destination_default: "zadato"
       change: "promeni"
       moderator: "%{user} je moderator"
       admin: "%{user} je administrator"
@@ -2377,15 +2376,15 @@ sr:
         delete_confirm: "Jeste li sigurni da želite obrisati to korisničko polje?"
         options: "Opcije"
         required:
-          title: "Potrebno pri registraciji?"
+          title: "Potrebno pri registraciji"
           enabled: "potrebno"
           disabled: "nepotrebno"
         editable:
-          title: "Izmenljivo nakon registracije?"
+          title: "Izmenljivo nakon registracije"
           enabled: "izmenljivo"
           disabled: "nije izmenljivo"
         show_on_profile:
-          title: "Pokaži na javnom profilu?"
+          title: "Pokaži na javnom profilu"
           enabled: "pokaži na profilu"
           disabled: "nije prikazano na profilu"
         field_types:

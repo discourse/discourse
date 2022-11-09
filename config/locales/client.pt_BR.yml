@@ -974,7 +974,7 @@ pt_BR:
     user_fields:
       none: "(selecione uma opção)"
       required: 'Digite um valor para "%{name}"'
-      same_as_password: 'Sua senha não deve ser repetida em outros campos.'
+      same_as_password: "Sua senha não deve ser repetida em outros campos."
     user:
       said: "%{username}:"
       profile: "Perfil"
@@ -1113,9 +1113,6 @@ pt_BR:
         tags_section: "Seção de Etiquetas"
         tags_section_instruction: "As etiquetas selecionadas serão exibidas na seção de etiquetas da barra lateral."
         navigation_section: "Navegação"
-        list_destination_instruction: "Quando eu clicar em um link de lista de tópicos na barra lateral com tópicos novos ou não lidos, leve-me para"
-        list_destination_default: "Padrão"
-        list_destination_unread_new: "Novo/Não lido"
       change: "alterar"
       featured_topic: "Tópico em destaque"
       moderator: "%{user} é moderador(a)"
@@ -3914,7 +3911,7 @@ pt_BR:
               pending_count: "%{count} pendente"
     welcome_topic_banner:
       title: "Crie seu Tópico de Boas-Vindas"
-      description: 'Seu tópico de boas-vindas é a primeira coisa que os novos membros vão ler. Pense nisso como seu “argumento de elevador” ou “declaração de missão”. Informe a todos sobre quem é o público desta comunidade, o que eles podem esperar encontrar aqui e o que você gostaria que eles fizessem primeiro.'
+      description: "Seu tópico de boas-vindas é a primeira coisa que os novos membros vão ler. Pense nisso como seu “argumento de elevador” ou “declaração de missão”. Informe a todos sobre quem é o público desta comunidade, o que eles podem esperar encontrar aqui e o que você gostaria que eles fizessem primeiro."
       button_title: "Começar a Editar"
     until: "Até:"
   admin_js:
@@ -5214,23 +5211,18 @@ pt_BR:
         delete_confirm: "Tem certeza que quer excluir este campo de usuário(a)?"
         options: "Opções"
         required:
-          title: "Necessário para cadastro?"
           enabled: "necessário(a)"
           disabled: "não necessário(a)"
         editable:
-          title: "Editável após criar conta?"
           enabled: "editável"
           disabled: "não editável"
         show_on_profile:
-          title: "Exibir no perfil público?"
           enabled: "exibido(a) no perfil"
           disabled: "não exibido(a) no perfil"
         show_on_user_card:
-          title: "Exibir no cartão de usuário(a)?"
           enabled: "exibir no cartão de usuário(a)"
           disabled: "não exibido no cartão de usuário(a)"
         searchable:
-          title: "Pesquisável?"
           enabled: "pesquisável"
           disabled: "não pesquisável"
         field_types:

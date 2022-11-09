@@ -238,7 +238,7 @@ const SiteHeaderComponent = MountWidget.extend(
         this.currentUser.on("status-changed", this, "queueRerender");
       }
 
-      if (!this.siteSettings.enable_onboarding_popups) {
+      if (!this.siteSettings.enable_user_tips) {
         if (
           this.currentUser &&
           !this.get("currentUser.read_first_notification")

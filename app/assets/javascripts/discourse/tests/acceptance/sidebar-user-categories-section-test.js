@@ -69,6 +69,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     enable_experimental_sidebar_hamburger: true,
     enable_sidebar: true,
     suppress_uncategorized_badge: false,
+    allow_uncategorized_topics: true,
   });
 
   needs.pretender((server, helper) => {

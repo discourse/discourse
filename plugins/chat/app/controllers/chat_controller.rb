@@ -144,7 +144,6 @@ class Chat::ChatController < Chat::ChatBaseController
   end
 
   def edit_message
-    guardian.ensure_can_edit_chat!(@message)
     chat_message_updater =
       Chat::ChatMessageUpdater.update(
         guardian: guardian,
@@ -353,6 +352,7 @@ class Chat::ChatController < Chat::ChatBaseController
           message: "chat.invitation_notification",
           chat_channel_id: @chat_channel.id,
           chat_channel_title: @chat_channel.title(user),
+          chat_channel_slug: @chat_channel.slug,
           invited_by_username: current_user.username,
         }
         data[:chat_message_id] = params[:chat_message_id] if params[:chat_message_id]

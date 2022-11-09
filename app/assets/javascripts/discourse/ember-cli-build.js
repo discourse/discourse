@@ -6,6 +6,7 @@ const mergeTrees = require("broccoli-merge-trees");
 const concat = require("broccoli-concat");
 const prettyTextEngine = require("./lib/pretty-text-engine");
 const { createI18nTree } = require("./lib/translation-plugin");
+const { parsePluginClientSettings } = require("./lib/site-settings-plugin");
 const discourseScss = require("./lib/discourse-scss");
 const generateScriptsTree = require("./lib/scripts");
 const funnel = require("broccoli-funnel");
@@ -168,6 +169,7 @@ module.exports = function (defaults) {
 
   return mergeTrees([
     createI18nTree(discourseRoot, vendorJs),
+    parsePluginClientSettings(discourseRoot, vendorJs, app),
     app.toTree(),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
     funnel(`${vendorJs}/highlightjs`, {

@@ -914,7 +914,7 @@ fa_IR:
       copied: "کپی شده"
     user_fields:
       none: "(یک گزینه انتخاب کنید)"
-      same_as_password: 'رمز عبور شما نباید در قسمت‌های دیگر تکرار شود.'
+      same_as_password: "رمز عبور شما نباید در قسمت‌های دیگر تکرار شود."
     user:
       said: "%{username}:"
       profile: "نمایه"
@@ -1038,8 +1038,9 @@ fa_IR:
         tags_section: "بخش برچسب‌ها"
         tags_section_instruction: "برچسب‌های انتخاب شده در بخش برچسب‌ها نوار کناری نمایش داده می‌شود."
         navigation_section: "ناوبری"
-        list_destination_default: "پیش‌فرض"
-        list_destination_unread_new: "جدید/خوانده نشده"
+        list_destination_instruction: "وقتی محتوای جدیدی در نوار کناری وجود دارد..."
+        list_destination_default: "از پیوند پیش‌فرض استفاده کنید و یک نشان برای موارد جدید نشان دهید"
+        list_destination_unread_new: "پیوند به خوانده نشده/جدید و نمایش تعداد موارد جدید"
       change: "تغییر"
       featured_topic: "مبحث برجسته"
       moderator: "%{user} یک مدیر است"
@@ -4294,23 +4295,18 @@ fa_IR:
         delete_confirm: "آیا از حذف این زمینه کاربری مطمئن هستید؟"
         options: "گزینه‌ها"
         required:
-          title: "مورد نیاز هنگام ثبت نام؟"
           enabled: "مورد نیاز "
           disabled: "مورد نیاز نیست "
         editable:
-          title: "قابل ویرایش بعد از ثبت نام؟"
           enabled: "قابل ویرایش"
           disabled: "غیر قابل ویرایش"
         show_on_profile:
-          title: "در نمایه عمومی نمایش داده شود؟"
           enabled: "نمایش در نمایه"
           disabled: "در نمایه نشان ندهد"
         show_on_user_card:
-          title: "در کارت کاربر نمایش داده شود؟"
           enabled: "در کارت کاربر نمایش داده شده"
           disabled: "در کارت کاربر نمایش داده نشده"
         searchable:
-          title: "قابل جستجو؟"
           enabled: "قابل جستجو"
           disabled: "قابل جستجو نیست"
         field_types:

@@ -1030,7 +1030,6 @@ nb_NO:
       experimental_sidebar:
         options: "Alternativer"
         navigation_section: "Navigasjon"
-        list_destination_default: "Forvalg"
       change: "Endre"
       featured_topic: "Utvalgte emne"
       moderator: "%{user} er en moderator"
@@ -4491,19 +4490,19 @@ nb_NO:
         delete_confirm: "Er du sikker på at du vil fjerne brukerfeltet?"
         options: "Alternativer"
         required:
-          title: "Nødvendig ved registrering?"
+          title: "Nødvendig ved registrering"
           enabled: "nødvendig"
           disabled: "ikke obligatorisk"
         editable:
-          title: "Kan det endres etter registrering?"
+          title: "Kan det endres etter registrering"
           enabled: "kan endres"
           disabled: "kan ikke endres"
         show_on_profile:
-          title: "Vis på offentlig profil?"
+          title: "Vis på offentlig profil"
           enabled: "vises på profil"
           disabled: "vises ikke på profil"
         show_on_user_card:
-          title: "Vis på brukerkort?"
+          title: "Vis på brukerkort"
           enabled: "vist på brukerkort"
           disabled: "ikke vist på brukerkort"
         field_types:

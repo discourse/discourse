@@ -21,7 +21,23 @@ class CategoryChannel < ChatChannel
     name.presence || category.name
   end
 
-  def slug
-    title.truncate(100).parameterize
+  def generate_auto_slug
+    return if self.slug.present?
+    self.slug = Slug.for(self.title.strip, "")
+    self.slug = "" if duplicate_slug?
+  end
+
+  def ensure_slug_ok
+    # if we don't unescape it first we strip the % from the encoded version
+    slug = SiteSetting.slug_generation_method == "encoded" ? CGI.unescape(self.slug) : self.slug
+    self.slug = Slug.for(slug, "", method: :encoded)
+
+    if self.slug.blank?
+      errors.add(:slug, :invalid)
+    elsif SiteSetting.slug_generation_method == "ascii" && !CGI.unescape(self.slug).ascii_only?
+      errors.add(:slug, I18n.t("chat.category_channel.errors.slug_contains_non_ascii_chars"))
+    elsif duplicate_slug?
+      errors.add(:slug, I18n.t("chat.category_channel.errors.is_already_in_use"))
+    end
   end
 end

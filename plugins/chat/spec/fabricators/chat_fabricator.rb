@@ -2,9 +2,22 @@
 
 Fabricator(:chat_channel) do
   name do
-    ["Gaming Lounge", "Music Lodge", "Random", "Politics", "Sports Center", "Kino Buffs"].sample
+    sequence(:name) do |n|
+      random_name = [
+        "Gaming Lounge",
+        "Music Lodge",
+        "Random",
+        "Politics",
+        "Sports Center",
+        "Kino Buffs",
+      ].sample
+      "#{random_name} #{n}"
+    end
   end
   chatable { Fabricate(:category) }
+  type do |attrs|
+    attrs[:chatable_type] == "Category" || attrs[:chatable]&.is_a?(Category) ? "CategoryChannel" : "DirectMessageChannel"
+  end
   status { :open }
 end
 
@@ -47,6 +60,7 @@ Fabricator(:chat_message_revision) do
   chat_message { Fabricate(:chat_message) }
   old_message { "something old" }
   new_message { "something new" }
+  user { |attrs| attrs[:chat_message].user }
 end
 
 Fabricator(:reviewable_chat_message) do

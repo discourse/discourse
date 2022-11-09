@@ -503,7 +503,7 @@ export default class Chat extends Service {
       return this.router.transitionTo(
         "chat.channel",
         response.id,
-        slugifyChannel(response.title),
+        slugifyChannel(response),
         { queryParams }
       );
     });
@@ -535,7 +535,7 @@ export default class Chat extends Service {
       return this.router.transitionTo(
         "chat.channel",
         channel.id,
-        slugifyChannel(channel.title),
+        slugifyChannel(channel),
         { queryParams }
       );
     } else {

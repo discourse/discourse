@@ -974,7 +974,7 @@ fr:
     user_fields:
       none: "(choisir une option)"
       required: 'Veuillez saisir une valeur pour « %{name} »'
-      same_as_password: 'Votre mot de passe ne doit pas être répété dans d''autres champs.'
+      same_as_password: "Votre mot de passe ne doit pas être répété dans d'autres champs."
     user:
       said: "%{username} :"
       profile: "Profil"
@@ -1113,9 +1113,6 @@ fr:
         tags_section: "Section Étiquettes"
         tags_section_instruction: "Les étiquettes sélectionnées seront affichées dans la section Étiquettes de la barre latérale."
         navigation_section: "Navigation"
-        list_destination_instruction: "Lorsque je clique sur le lien d'une liste de sujets dans la barre latérale contenant des sujets nouveaux ou non lus, j'accède à"
-        list_destination_default: "Par défaut"
-        list_destination_unread_new: "Nouveau/Non lu"
       change: "modifier"
       featured_topic: "Sujet vedette"
       moderator: "%{user} a le rôle de modérateur(rice)"
@@ -3914,7 +3911,7 @@ fr:
               pending_count: "%{count} en attente"
     welcome_topic_banner:
       title: "Créez votre sujet de bienvenue"
-      description: 'Votre sujet de bienvenue est la première chose que les nouveaux membres liront. Considérez-le comme votre « argumentaire » ou votre « énoncé de mission ». Faites savoir à tout le monde à qui est destinée cette communauté, ce qu''ils peuvent s''attendre à y trouver et ce que vous aimeriez qu''ils fassent en premier.'
+      description: "Votre sujet de bienvenue est la première chose que les nouveaux membres liront. Considérez-le comme votre « argumentaire » ou votre « énoncé de mission ». Faites savoir à tout le monde à qui est destinée cette communauté, ce qu'ils peuvent s'attendre à y trouver et ce que vous aimeriez qu'ils fassent en premier."
       button_title: "Commencer l'édition"
     until: "Jusqu'à :"
   admin_js:
@@ -5214,23 +5211,18 @@ fr:
         delete_confirm: "Voulez-vous vraiment supprimer ce champ utilisateur ?"
         options: "Options"
         required:
-          title: "Obligatoire à l'inscription ?"
           enabled: "obligatoire"
           disabled: "facultatif"
         editable:
-          title: "Modifiable après l'inscription ?"
           enabled: "modifiable"
           disabled: "non modifiable"
         show_on_profile:
-          title: "Afficher sur le profil public ?"
           enabled: "affiché dans le profil"
           disabled: "non affiché dans le profil"
         show_on_user_card:
-          title: "Afficher sur la carte de l'utilisateur ?"
           enabled: "affiché sur la carte de l'utilisateur"
           disabled: "non affiché sur la carte de l'utilisateur"
         searchable:
-          title: "Indexable ?"
           enabled: "indexable"
           disabled: "non indexable"
         field_types:

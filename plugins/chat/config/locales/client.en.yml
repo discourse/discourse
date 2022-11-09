@@ -46,6 +46,10 @@ en:
         leave_channel: "Leave channel"
         join: "Join"
         leave: "Leave"
+        save_label: 
+          mute_channel: "Mute channel preference saved"
+          desktop_notification: "Desktop notification preference saved"
+          mobile_notification: "Mobile push notification preference saved"
       channel_archive:
         title: "Archive Channel"
         instructions: "<p>Archiving a channel puts it into read-only mode and moves all messages from the channel into a new or existing topic. No new messages can be sent, and no existing messages can be edited or deleted.</p><p>Are you sure you want to archive the <strong>%{channelTitle}</strong> channel?</p>"

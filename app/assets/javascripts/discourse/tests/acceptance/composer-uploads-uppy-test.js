@@ -81,6 +81,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
   needs.settings({
     simultaneous_uploads: 2,
     enable_rich_text_paste: true,
+    allow_uncategorized_topics: true,
   });
   needs.hooks.afterEach(() => {
     uploadNumber = 1;
@@ -487,6 +488,7 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
   });
   needs.settings({
     simultaneous_uploads: 2,
+    allow_uncategorized_topics: true,
   });
 
   test("should show an error message for the failed upload", async function (assert) {
@@ -527,6 +529,7 @@ acceptance("Uppy Composer Attachment - Upload Handler", function (needs) {
   needs.pretender(pretender);
   needs.settings({
     simultaneous_uploads: 2,
+    allow_uncategorized_topics: true,
   });
   needs.hooks.beforeEach(() => {
     withPluginApi("0.8.14", (api) => {

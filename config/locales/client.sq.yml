@@ -554,7 +554,6 @@ sq:
       experimental_sidebar:
         options: "Opsione"
         navigation_section: "Shfletimi"
-        list_destination_default: "Paracaktuar"
       change: "ndrysho"
       moderator: "%{user} është moderator"
       admin: "%{user} është admin"
@@ -2600,19 +2599,18 @@ sq:
         delete_confirm: "Are you sure you want to delete that user field?"
         options: "Opsione"
         required:
-          title: "Required at signup?"
+          title: "Required at signup"
           enabled: "i nevojshëm"
           disabled: "fakultativ"
         editable:
-          title: "Editable after signup?"
+          title: "Editable after signup"
           enabled: "e modifikueshme"
           disabled: "jo e modifikueshme"
         show_on_profile:
-          title: "Trego në profilin publik"
           enabled: "e treguar në profilin publik"
           disabled: "nuk tregohet në profilin publik"
         show_on_user_card:
-          title: "Trego në kartën e anëtarit?"
+          title: "Trego në kartën e anëtarit"
           enabled: "e treguar në kartën e anëtarit"
           disabled: "nuk tregohet në kartën e anëtarit"
         field_types:

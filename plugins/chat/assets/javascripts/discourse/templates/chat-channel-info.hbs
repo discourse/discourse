@@ -12,7 +12,7 @@
         @route="chat.channel"
         @models={{array
           this.model.chatChannel.id
-          (slugify-channel this.model.chatChannel.title)
+          (slugify-channel this.model.chatChannel)
         }}
         class="channel-info__back-btn"
       >
@@ -40,7 +40,7 @@
             @route={{concat "chat.channel.info." tab}}
             @models={{array
               this.model.chatChannel.id
-              (slugify-channel this.model.chatChannel.title)
+              (slugify-channel this.model.chatChannel)
             }}
             class="chat-tabs-list__link"
           >

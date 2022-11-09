@@ -782,7 +782,6 @@ th:
       experimental_sidebar:
         options: "ตัวเลือก"
         navigation_section: "การนำทาง"
-        list_destination_default: "ค่าเริ่มต้น"
       change: "เปลี่ยนแปลง"
       featured_topic: "กระทู้เด่น"
       moderator: "%{user} เป็นผู้ดูแลระบบ"
@@ -3037,19 +3036,17 @@ th:
         delete_confirm: "คุณแน่ใจหรือว่าจะลบฟิวส์ของผู้ใช้นี้?"
         options: "ตัวเลือก"
         required:
-          title: "ต้องการเมื่อลงทะเบียน?"
+          title: "ต้องการเมื่อลงทะเบียน"
           enabled: "ต้องการ"
           disabled: "ไม่ต้องการ"
         editable:
-          title: "แก้ไขหลังลงทะเบียนได้ใช่ไหม"
           enabled: "แก้ไขได้"
           disabled: "แก้ไขไม่ได้"
         show_on_profile:
-          title: "แสดงในข้อมูลสาธารณะ?"
+          title: "แสดงในข้อมูลสาธารณะ"
           enabled: "แสดงแสดงในข้อมูลส่วนตัว"
           disabled: "ไม่แสดงในข้อมูลส่วนตัว"
         show_on_user_card:
-          title: "แสดงบนการ์ดผู้ใช้?"
           enabled: "แสดงบนการ์ดผู้ใช้"
           disabled: "ไม่แสดงบนการ์ดผู้ใช้"
         field_types:

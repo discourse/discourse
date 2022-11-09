@@ -31,10 +31,7 @@ describe Chat::ChatMessageUpdater do
     end
     Group.refresh_automatic_groups!
     @direct_message_channel =
-      Chat::DirectMessageChannelCreator.create!(
-        acting_user: user1,
-        target_users: [user1, user2],
-      )
+      Chat::DirectMessageChannelCreator.create!(acting_user: user1, target_users: [user1, user2])
   end
 
   def create_chat_message(user, message, channel, upload_ids: nil)
@@ -69,6 +66,19 @@ describe Chat::ChatMessageUpdater do
       ),
     )
     expect(chat_message.reload.message).to eq(og_message)
+  end
+
+  it "errors if a user other than the message user is trying to edit the message" do
+    og_message = "This won't be changed!"
+    chat_message = create_chat_message(user1, og_message, public_chat_channel)
+    new_message = "2 short"
+    updater = Chat::ChatMessageUpdater.update(
+      guardian: Guardian.new(Fabricate(:user)),
+      chat_message: chat_message,
+      new_content: new_message,
+    )
+    expect(updater.failed?).to eq(true)
+    expect(updater.error).to match(Discourse::InvalidAccess)
   end
 
   it "it updates a messages content" do

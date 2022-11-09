@@ -75,11 +75,21 @@ acceptance("Admin - Watched Words", function (needs) {
 
   test("add case-sensitive words", async function (assert) {
     await visit("/admin/customize/watched_words/action/block");
-
+    const submitButton = query(".watched-word-form button");
+    assert.strictEqual(
+      submitButton.disabled,
+      true,
+      "Add button is disabled by default"
+    );
     await click(".show-words-checkbox");
     await fillIn(".watched-word-form input", "Discourse");
     await click(".case-sensitivity-checkbox");
-    await click(".watched-word-form button");
+    assert.strictEqual(
+      submitButton.disabled,
+      false,
+      "Add button should no longer be disabled after input is filled"
+    );
+    await click(submitButton);
 
     assert
       .dom(".watched-words-list .watched-word")
@@ -87,7 +97,7 @@ acceptance("Admin - Watched Words", function (needs) {
 
     await fillIn(".watched-word-form input", "discourse");
     await click(".case-sensitivity-checkbox");
-    await click(".watched-word-form button");
+    await click(submitButton);
 
     assert
       .dom(".watched-words-list .watched-word")

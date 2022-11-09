@@ -39,9 +39,10 @@ module Jobs
         is_direct_message_channel: @chat_channel.direct_message_channel?,
       }
 
-      data[:chat_channel_title] = @chat_channel.title(
-        membership.user,
-      ) unless @is_direct_message_channel
+      if !@is_direct_message_channel
+        data[:chat_channel_title] = @chat_channel.title(membership.user)
+        data[:chat_channel_slug] = @chat_channel.slug
+      end
 
       return data if identifier_type == :direct_mentions
 
@@ -64,8 +65,7 @@ module Jobs
         username: @creator.username,
         tag: Chat::ChatNotifier.push_notification_tag(:mention, @chat_channel.id),
         excerpt: @chat_message.push_notification_excerpt,
-        post_url:
-          "/chat/channel/#{@chat_channel.id}/#{@chat_channel.title(membership.user)}?messageId=#{@chat_message.id}",
+        post_url: "#{@chat_channel.relative_url}?messageId=#{@chat_message.id}",
       }
 
       translation_prefix =

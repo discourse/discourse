@@ -697,6 +697,7 @@ en:
       disallowed_topic_tags: "This topic has tags not allowed by this category: '%{tags}'"
       disallowed_tags_generic: "This topic has disallowed tags."
       slug_contains_non_ascii_chars: "contains non-ascii characters"
+      is_already_in_use: "is already in use"
     cannot_delete:
       uncategorized: "This category is special. It is intended as a holding area for topics that have no category; it cannot be deleted."
       has_subcategories: "Can't delete this category because it has sub-categories."
@@ -2353,7 +2354,7 @@ en:
     sitemap_page_size: "Number of URLs to include in each sitemap page. Max 50.000"
 
     enable_user_status: "(experimental) Allow users to set custom status message (emoji + description)."
-    enable_onboarding_popups: "(experimental) Enable educational popups that describe key features to users"
+    enable_user_tips: "(experimental) Enable new user tips that describe key features to users"
 
     short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be limited to 12 characters."
 

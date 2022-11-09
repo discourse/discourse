@@ -177,6 +177,6 @@ module Chat::GuardianExtensions
   end
 
   def can_delete_category?(category)
-    super && !category.category_channel
+    super && category.deletable_for_chat?
   end
 end
