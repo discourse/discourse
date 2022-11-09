@@ -92,7 +92,7 @@ export function linkSeenHashtagsInContext(orderedContextTypes, elem) {
       if (matchingSeenHashtag) {
         // TODO (martin) Replace jquery usage here
         $(hashtagSpan).replaceWith(
-          `<a href="${matchingSeenHashtag.url}" class="hashtag" data-type="${type}">#<span>${matchingSeenHashtag.text}</span></a>`
+          `<a href="${matchingSeenHashtag.url}" class="hashtag-cooked" data-type="${type}"><span><svg class="fa d-icon d-icon-${matchingSeenHashtag.icon} svg-icon sgv-node"><use href="#${matchingSeenHashtag.icon}"></use></svg>${matchingSeenHashtag.text}</span></a>`
         );
       }
     });

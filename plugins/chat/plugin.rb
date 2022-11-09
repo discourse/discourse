@@ -718,36 +718,45 @@ after_initialize do
 
   register_about_stat_group("chat_users") { Chat::Statistics.about_users }
 
-  # class ChatChannelHashtagDataSource
-  #   def self.lookup(guardian, slugs)
-  #     # TODO (martin) needs security based on guardian
-  #     res = ChatChannel.where(slug: slugs).map { |channel| [channel.slug, channel.url] }
-  #     Hash[res]
-  #   end
+  class ChatChannelHashtagDataSource
+    def self.lookup(guardian, slugs)
+      # TODO (martin) needs security based on guardian
+      # res = ChatChannel.where(slug: slugs).map { |channel| [channel.slug, channel.url] }
+      # Hash[res]
+      Chat::ChatChannelFetcher
+        .secured_public_channel_search(guardian, slugs: slugs)
+        .map do |channel|
+          HashtagAutocompleteService::HashtagItem.new.tap do |item|
+            item.text = channel.title(guardian.user)
+            item.slug = channel.slug
+            item.icon = "comment"
+            item.url = channel.url
+          end
+        end
+    end
 
-  #   def self.search(guardian, term, limit)
-  #     if SiteSetting.enable_experimental_hashtag_autocomplete
-  #       DiscourseChat::ChatChannelFetcher
-  #         .secured_public_channel_search(guardian, filter: term, limit: limit)
-  #         .map do |channel|
-  #           HashtagAutocompleteService::HashtagItem.new.tap do |item|
-  #             title = channel.title(guardian.user)
-  #             item.text = title
-  #             item.slug = channel.slug
-  #             item.icon = "hashtag"
-  #           end
-  #         end
-  #     else
-  #       []
-  #     end
-  #   end
-  # end
+    def self.search(guardian, term, limit)
+      if SiteSetting.enable_experimental_hashtag_autocomplete
+        Chat::ChatChannelFetcher
+          .secured_public_channel_search(guardian, filter: term, limit: limit)
+          .map do |channel|
+            HashtagAutocompleteService::HashtagItem.new.tap do |item|
+              item.text = channel.title(guardian.user)
+              item.slug = channel.slug
+              item.icon = "comment"
+            end
+          end
+      else
+        []
+      end
+    end
+  end
 
-  # register_hashtag_data_source("channel", ChatChannelHashtagDataSource)
-  # register_type_in_context("channel", "chat-composer", 200)
-  # register_type_in_context("category", "chat-composer", 100)
-  # register_type_in_context("tag", "chat-composer", 50)
-  # register_type_in_context("channel", "topic-composer", 10)
+  register_hashtag_data_source("channel", ChatChannelHashtagDataSource)
+  register_hashtag_type_in_context("channel", "chat-composer", 200)
+  register_hashtag_type_in_context("category", "chat-composer", 100)
+  register_hashtag_type_in_context("tag", "chat-composer", 50)
+  register_hashtag_type_in_context("channel", "topic-composer", 10)
 end
 
 if Rails.env == "test"

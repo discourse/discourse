@@ -220,6 +220,22 @@ header .discourse-tag {
     }
   }
 }
+.hashtag-cooked {
+  display: inline-block;
+  color: var(--primary);
+
+  &:visited,
+  &:hover {
+    color: var(--primary);
+  }
+  background-color: var(--primary-low);
+  border-radius: 10px;
+  padding: 2px 6px;
+
+  .d-icon {
+    margin-right: 3px;
+  }
+}
 
 .tags-admin-menu {
   margin-top: 20px;
