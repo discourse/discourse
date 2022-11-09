@@ -106,14 +106,6 @@ class SiteSetting < ActiveRecord::Base
     SiteSetting.manual_polling_enabled? || SiteSetting.pop3_polling_enabled?
   end
 
-  WATCHED_SETTINGS ||= [
-    :default_locale,
-    :blocked_attachment_content_types,
-    :blocked_attachment_filenames,
-    :allowed_unicode_username_characters,
-    :markdown_typographer_quotation_marks
-  ]
-
   def self.blocked_attachment_content_types_regex
     current_db = RailsMultisite::ConnectionManagement.current_db
 
