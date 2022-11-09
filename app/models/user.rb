@@ -284,6 +284,13 @@ class User < ActiveRecord::Base
 
   MAX_STAFF_DELETE_POST_COUNT ||= 5
 
+  def self.user_tips
+    @user_tips ||= Enum.new(
+      first_notification: 1,
+      topic_timeline: 2,
+    )
+  end
+
   def visible_sidebar_tags(user_guardian = nil)
     user_guardian ||= guardian
     DiscourseTagging.filter_visible(custom_sidebar_tags, user_guardian)

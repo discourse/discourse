@@ -293,7 +293,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def include_seen_popups?
-    SiteSetting.enable_onboarding_popups
+    SiteSetting.enable_user_tips
   end
 
   def include_primary_group_id?
