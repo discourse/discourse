@@ -112,3 +112,21 @@ acceptance("User Tips - topic_menu", function (needs) {
     );
   });
 });
+
+acceptance("User Tips - suggested_topics", function (needs) {
+  needs.user();
+  needs.site({ user_tips: { suggested_topics: 7 } });
+
+  needs.hooks.beforeEach(() => hideAllUserTips());
+  needs.hooks.afterEach(() => hideAllUserTips());
+
+  test("Shows post menu user tip", async function (assert) {
+    this.siteSettings.enable_user_tips = true;
+
+    await visit("/t/internationalization-localization/280");
+    assert.equal(
+      query(".user-tip-title").textContent.trim(),
+      I18n.t("user_tips.suggested_topics.title")
+    );
+  });
+});

@@ -1854,6 +1854,10 @@ en:
         title: "Topic menu"
         content: "Reply, share or add topics to your bookmarks. Flag topics for moderator attention."
 
+      suggested_topics:
+        title: "Keep reading!"
+        content: "Here are some topics we think you might like to read next."
+
     loading: "Loading..."
     errors:
       prev_page: "while trying to load"
