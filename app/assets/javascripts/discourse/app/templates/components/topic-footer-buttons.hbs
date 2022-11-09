@@ -1,4 +1,6 @@
 <div class="topic-footer-main-buttons">
+  <UserTip @id="topic_menu" />
+
   <TopicAdminMenuButton @topic={{this.topic}} @openUpwards="true" @toggleMultiSelect={{this.toggleMultiSelect}} @showTopicSlowModeUpdate={{this.showTopicSlowModeUpdate}} @deleteTopic={{this.deleteTopic}} @recoverTopic={{this.recoverTopic}} @toggleFeaturedOnProfile={{this.toggleFeaturedOnProfile}} @toggleClosed={{this.toggleClosed}} @toggleArchived={{this.toggleArchived}} @toggleVisibility={{this.toggleVisibility}} @showTopicTimerModal={{this.showTopicTimerModal}} @showFeatureTopic={{this.showFeatureTopic}} @showChangeTimestamp={{this.showChangeTimestamp}} @resetBumpDate={{this.resetBumpDate}} @convertToPublicTopic={{this.convertToPublicTopic}} @convertToPrivateMessage={{this.convertToPrivateMessage}} />
 
   {{#if this.site.mobileView}}

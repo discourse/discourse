@@ -291,6 +291,7 @@ class User < ActiveRecord::Base
       post_menu: 3,
       user_card: 4,
       topic_notification_levels: 5,
+      topic_menu: 6,
     )
   end
 

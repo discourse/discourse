@@ -1850,6 +1850,10 @@ en:
         title: "You are now following this topic"
         content: "Look for this bell to adjust your notification preferences for specific topics or whole categories."
 
+      topic_menu:
+        title: "Topic menu"
+        content: "Reply, share or add topics to your bookmarks. Flag topics for moderator attention."
+
     loading: "Loading..."
     errors:
       prev_page: "while trying to load"
