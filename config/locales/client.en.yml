@@ -383,7 +383,6 @@ en:
       remove_confirmation: "Are you sure you want to delete this draft?"
       new_topic: "New topic draft"
       new_private_message: "New personal message draft"
-      topic_reply: "Draft reply"
       abandon:
         confirm: "You have a draft in progress for this topic. What would you like to do with it?"
         yes_value: "Discard"
