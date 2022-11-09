@@ -197,6 +197,14 @@ describe Chat::ChatMailer do
       assert_summary_skipped
     end
 
+    it "queues a job when the chat_allowed_groups is set to everyone" do
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+
+      described_class.send_unread_mentions_summary
+
+      assert_only_queued_once
+    end
+
     describe "update the user membership after we send the email" do
       before { Jobs.run_immediately! }
 
