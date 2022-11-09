@@ -1842,6 +1842,10 @@ en:
         title: "Post menu"
         content: "See how else you can interact with the post by clicking the three dots!"
 
+      user_card:
+        title: "User cards"
+        content: "Quickly view more user details by clicking on their avatar."
+
     loading: "Loading..."
     errors:
       prev_page: "while trying to load"
