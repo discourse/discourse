@@ -58,7 +58,7 @@ export default {
             }
 
             get name() {
-              return dasherize(slugifyChannel(this.title));
+              return dasherize(slugifyChannel(this.channel));
             }
 
             get classNames() {
@@ -72,7 +72,7 @@ export default {
             }
 
             get models() {
-              return [this.channel.id, slugifyChannel(this.title)];
+              return [this.channel.id, slugifyChannel(this.channel)];
             }
 
             get text() {
@@ -240,7 +240,7 @@ export default {
             }
 
             get name() {
-              return slugifyChannel(this.title);
+              return slugifyChannel(this.channel);
             }
 
             get classNames() {
@@ -254,7 +254,7 @@ export default {
             }
 
             get models() {
-              return [this.channel.id, slugifyChannel(this.title)];
+              return [this.channel.id, slugifyChannel(this.channel)];
             }
 
             get title() {

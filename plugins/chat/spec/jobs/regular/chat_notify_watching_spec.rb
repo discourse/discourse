@@ -50,7 +50,13 @@ RSpec.describe Jobs::ChatNotifyWatching do
         {
           username: user1.username,
           notification_type: Notification.types[:chat_message],
-          post_url: "/chat/channel/#{channel.id}/#{channel.title(user2)}",
+          post_url: channel.relative_url,
+          translated_title:
+            I18n.t(
+              "discourse_push_notifications.popup.new_chat_message",
+              { username: user1.username, channel: channel.title(user2) },
+            ),
+          tag: Chat::ChatNotifier.push_notification_tag(:message, channel.id),
           excerpt: message.message,
         },
       )
@@ -81,7 +87,13 @@ RSpec.describe Jobs::ChatNotifyWatching do
             {
               username: user1.username,
               notification_type: Notification.types[:chat_message],
-              post_url: "/chat/channel/#{channel.id}/#{channel.title(user2)}",
+              post_url: channel.relative_url,
+              translated_title:
+                I18n.t(
+                  "discourse_push_notifications.popup.new_chat_message",
+                  { username: user1.username, channel: channel.title(user2) },
+                ),
+              tag: Chat::ChatNotifier.push_notification_tag(:message, channel.id),
               excerpt: message.message,
             },
           ),
@@ -176,7 +188,13 @@ RSpec.describe Jobs::ChatNotifyWatching do
         {
           username: user1.username,
           notification_type: Notification.types[:chat_message],
-          post_url: "/chat/channel/#{channel.id}/#{channel.title(user2)}",
+          post_url: channel.relative_url,
+          translated_title:
+            I18n.t(
+              "discourse_push_notifications.popup.new_direct_chat_message",
+              { username: user1.username, channel: channel.title(user2) },
+            ),
+          tag: Chat::ChatNotifier.push_notification_tag(:message, channel.id),
           excerpt: message.message,
         },
       )
@@ -207,7 +225,13 @@ RSpec.describe Jobs::ChatNotifyWatching do
             {
               username: user1.username,
               notification_type: Notification.types[:chat_message],
-              post_url: "/chat/channel/#{channel.id}/#{channel.title(user2)}",
+              post_url: channel.relative_url,
+              translated_title:
+                I18n.t(
+                  "discourse_push_notifications.popup.new_direct_chat_message",
+                  { username: user1.username, channel: channel.title(user2) },
+                ),
+              tag: Chat::ChatNotifier.push_notification_tag(:message, channel.id),
               excerpt: message.message,
             },
           ),

@@ -60,4 +60,14 @@ RSpec.describe DirectMessageChannel do
       expect(title).to eq("something")
     end
   end
+
+  describe "slug generation" do
+    subject(:channel) { Fabricate(:direct_message_channel) }
+
+    it "always sets the slug to nil for direct message channels" do
+      channel.name = "Cool Channel"
+      channel.validate!
+      expect(channel.slug).to eq(nil)
+    end
+  end
 end

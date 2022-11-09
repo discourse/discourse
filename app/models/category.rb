@@ -374,7 +374,7 @@ class Category < ActiveRecord::Base
       elsif SiteSetting.slug_generation_method == 'ascii' && !CGI.unescape(self.slug).ascii_only?
         errors.add(:slug, I18n.t("category.errors.slug_contains_non_ascii_chars"))
       elsif duplicate_slug?
-        errors.add(:slug, 'is already in use')
+        errors.add(:slug, I18n.t("category.errors.is_already_in_use"))
       end
     else
       # auto slug

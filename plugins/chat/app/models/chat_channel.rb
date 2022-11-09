@@ -21,6 +21,8 @@ class ChatChannel < ActiveRecord::Base
             },
             presence: true,
             allow_nil: true
+  validate :ensure_slug_ok
+  before_validation :generate_auto_slug
 
   scope :public_channels,
         -> {
@@ -74,7 +76,11 @@ class ChatChannel < ActiveRecord::Base
   end
 
   def url
-    "#{Discourse.base_url}/chat/channel/#{self.id}/-"
+    "#{Discourse.base_url}#{relative_url}"
+  end
+
+  def relative_url
+    "/chat/channel/#{self.id}/#{self.slug || "-"}"
   end
 
   def public_channel_title
@@ -109,6 +115,10 @@ class ChatChannel < ActiveRecord::Base
 
     ChatPublisher.publish_channel_status(self)
   end
+
+  def duplicate_slug?
+    ChatChannel.where(slug: self.slug).where.not(id: self.id).any?
+  end
 end
 
 # == Schema Information
@@ -132,6 +142,7 @@ end
 #  auto_join_users         :boolean          default(FALSE), not null
 #  user_count_stale        :boolean          default(FALSE), not null
 #  slug                    :string
+#  type                    :string
 #
 # Indexes
 #

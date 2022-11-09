@@ -42,7 +42,7 @@ export default class ChatChannelRoute extends DiscourseRoute {
     this.chat.setActiveChannel(model?.chatChannel);
 
     const queryParams = this.paramsFor(this.routeName);
-    const slug = slugifyChannel(model.chatChannel.title);
+    const slug = slugifyChannel(model.chatChannel);
     if (queryParams?.channelTitle !== slug) {
       this.replaceWith("chat.channel.index", model.chatChannel.id, slug);
     }

@@ -215,7 +215,7 @@ describe Jobs::ChatNotifyMentioned do
       )
       expect(desktop_notification.data[:excerpt]).to eq(message.push_notification_excerpt)
       expect(desktop_notification.data[:post_url]).to eq(
-        "/chat/channel/#{public_channel.id}/#{expected_channel_title}?messageId=#{message.id}",
+        "/chat/channel/#{public_channel.id}/#{public_channel.slug}?messageId=#{message.id}",
       )
     end
 
@@ -230,7 +230,7 @@ describe Jobs::ChatNotifyMentioned do
           tag: Chat::ChatNotifier.push_notification_tag(:mention, public_channel.id),
           excerpt: message.push_notification_excerpt,
           post_url:
-            "/chat/channel/#{public_channel.id}/#{expected_channel_title}?messageId=#{message.id}",
+            "/chat/channel/#{public_channel.id}/#{public_channel.slug}?messageId=#{message.id}",
           translated_title: payload_translated_title,
         },
       )
@@ -259,6 +259,7 @@ describe Jobs::ChatNotifyMentioned do
       expect(data_hash[:mentioned_by_username]).to eq(user_1.username)
       expect(data_hash[:is_direct_message_channel]).to eq(false)
       expect(data_hash[:chat_channel_title]).to eq(expected_channel_title)
+      expect(data_hash[:chat_channel_slug]).to eq(public_channel.slug)
 
       chat_mention =
         ChatMention.where(notification: created_notification, user: user_2, chat_message: message)
