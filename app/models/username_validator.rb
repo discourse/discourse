@@ -138,6 +138,6 @@ class UsernameValidator
   end
 
   def self.allowed_char?(c)
-    c.match?(/[\w.-]/) || c.match?(SiteSetting.allowed_unicode_username_characters)
+    c.match?(/[\w.-]/) || c.match?(SiteSetting.allowed_unicode_username_characters_regex)
   end
 end
