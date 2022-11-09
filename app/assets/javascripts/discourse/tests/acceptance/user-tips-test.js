@@ -75,3 +75,22 @@ acceptance("User Tips - user_card", function (needs) {
     );
   });
 });
+
+acceptance("User Tips - topic_notification_levels", function (needs) {
+  needs.user();
+  needs.site({ user_tips: { topic_notification_levels: 5 } });
+
+  needs.hooks.beforeEach(() => hideAllUserTips());
+  needs.hooks.afterEach(() => hideAllUserTips());
+
+  test("Shows post menu user tip", async function (assert) {
+    this.siteSettings.enable_user_tips = true;
+
+    await visit("/t/internationalization-localization/280");
+
+    assert.equal(
+      query(".user-tip-title").textContent.trim(),
+      I18n.t("user_tips.topic_notification_levels.title")
+    );
+  });
+});

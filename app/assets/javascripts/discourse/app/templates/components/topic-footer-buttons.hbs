@@ -30,6 +30,9 @@
 
 {{#if this.showNotificationsButton}}
   <TopicNotificationsButton @notificationLevel={{this.topic.details.notification_level}} @topic={{this.topic}} />
+  {{#if this.showNotificationUserTip}}
+    <UserTip @id="topic_notification_levels" @selector=".notifications-button" />
+  {{/if}}
 {{/if}}
 
 <PluginOutlet @name="after-topic-footer-buttons" @args={{hash topic=this.topic}} @connectorTagName="span" />

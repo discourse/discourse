@@ -290,6 +290,7 @@ class User < ActiveRecord::Base
       topic_timeline: 2,
       post_menu: 3,
       user_card: 4,
+      topic_notification_levels: 5,
     )
   end
 

@@ -2,6 +2,7 @@ import { alias, or } from "@ember/object/computed";
 import { computed } from "@ember/object";
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 import { getTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
 
@@ -44,6 +45,11 @@ export default Component.extend({
   @discourseComputed("topic.isPrivateMessage")
   showNotificationsButton(isPM) {
     return !isPM || this.canSendPms;
+  },
+
+  @discourseComputed("topic.details.notification_level")
+  showNotificationUserTip(notificationLevel) {
+    return notificationLevel >= NotificationLevels.TRACKING;
   },
 
   canSendPms: alias("currentUser.can_send_private_messages"),
