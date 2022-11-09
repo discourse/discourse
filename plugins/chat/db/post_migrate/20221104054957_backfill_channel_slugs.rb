@@ -6,11 +6,7 @@ class BackfillChannelSlugs < ActiveRecord::Migration[7.0]
       SELECT chat_channels.id, COALESCE(chat_channels.name, categories.name) AS title, NULL as slug
       FROM chat_channels
       INNER JOIN categories ON categories.id = chat_channels.chatable_id
-<<<<<<< HEAD
-      WHERE chat_channels.chatable_type = 'Category'
-=======
       WHERE chat_channels.chatable_type = 'Category' AND chat_channels.slug IS NULL
->>>>>>> main
     SQL
     return if channels.count.zero?
 
@@ -54,15 +50,10 @@ class BackfillChannelSlugs < ActiveRecord::Migration[7.0]
       UPDATE chat_channels cc
       SET slug = tmp.slug
       FROM tmp_chat_channel_slugs tmp
-<<<<<<< HEAD
-      WHERE cc.id = tmp.id
-    SQL
-=======
       WHERE cc.id = tmp.id AND cc.slug IS NULL
     SQL
 
-    DB.exec("DROP TABLE tmp_chat_channel_slugs(id int, slug text)")
->>>>>>> main
+    DB.exec("DROP TABLE tmp_chat_channel_slugs")
   end
 
   def down
