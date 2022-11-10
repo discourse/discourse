@@ -100,39 +100,6 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
     }
 
     this.calculatePosition();
-    if (this.percentage === null) {
-      return;
-    }
-
-    if (this.hasBackPosition) {
-      this.lastReadTop = Math.round(
-        this.lastReadPercentage * scrollareaHeight()
-      );
-      this.showButton =
-        this.before + SCROLLER_HEIGHT - 5 < this.lastReadTop ||
-        this.before > this.lastReadTop + 25;
-    }
-
-    if (this.hasBackPosition) {
-      this.lastReadTop = Math.round(
-        this.lastReadPercentage * scrollareaHeight()
-      );
-    }
-  }
-
-  @action
-  goBack() {
-    this.args.jumpToIndex(this.lastRead);
-  }
-
-  @action
-  updatePercentage(e) {
-    const y = e.pageY;
-    const $area = $(".timeline-scrollarea");
-    const areaTop = $area.offset().top;
-
-    this.percentage = this.clamp(parseFloat(y - areaTop) / $area.height());
-    this.commit();
   }
 
   calculatePosition() {
@@ -180,6 +147,25 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
 
     this.before = this.scrollareaRemaining() * this.percentage;
     this.after = scrollareaHeight() - this.before - SCROLLER_HEIGHT;
+
+    if (this.percentage === null) {
+      return;
+    }
+
+    if (this.hasBackPosition) {
+      this.lastReadTop = Math.round(
+        this.lastReadPercentage * scrollareaHeight()
+      );
+      this.showButton =
+        this.before + SCROLLER_HEIGHT - 5 < this.lastReadTop ||
+        this.before > this.lastReadTop + 25;
+    }
+
+    if (this.hasBackPosition) {
+      this.lastReadTop = Math.round(
+        this.lastReadPercentage * scrollareaHeight()
+      );
+    }
   }
 
   updateScrollPosition(scrollPosition) {
@@ -235,7 +221,7 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
 
   _percentFor(topic, postIndex) {
     const total = topic.get("postStream.filteredPostsCount");
-    return this.clamp(parseFloat(postIndex - 1) / total);
+    return this.clamp(parseFloat(postIndex - 1.0) / total);
   }
 
   clamp(p, min = 0.0, max = 1.0) {
@@ -244,6 +230,33 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
 
   scrollareaRemaining() {
     return scrollareaHeight() - SCROLLER_HEIGHT;
+  }
+
+  @action
+  goBack() {
+    this.args.jumpToIndex(this.lastRead);
+  }
+
+  @action
+  updatePercentage(e) {
+    const y = e.pageY;
+    const $area = $(".timeline-scrollarea");
+    const areaTop = $area.offset().top;
+
+    this.percentage = this.clamp(parseFloat(y - areaTop) / $area.height());
+    this.commit();
+  }
+
+  @action
+  jumpBottomAndScroll(y) {
+    this.args.jumpBottom;
+    this.updatePercentage(y);
+  }
+
+  @action
+  jumpTopAndScroll(y) {
+    this.args.jumpTop;
+    this.updatePercentage(y);
   }
 }
 

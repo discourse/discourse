@@ -1,7 +1,7 @@
 {{#if this.displayTimeLineScrollArea}}
   <div class="timeline-scrollarea-wrapper">
     <div class="timeline-date-wrapper">
-      <a class="start-date" onClick={{@jumpTop}} title={{this.startDate}}>
+      <a class="start-date" onClick={{this.jumpTopAndScroll}} title={{this.startDate}}>
         <span>
           {{this.startDate}}
         </span>
@@ -30,7 +30,7 @@
     </div>
 
     <div class="timeline-date-wrapper">
-      <a class="now-date" onClick={{@jumpBottom}} title={{this.nowDate}}>
+      <a class="now-date" onClick={{this.jumpBottomAndScroll}} title={{this.nowDate}}>
         <span>
           {{this.nowDate}}
         </span>
