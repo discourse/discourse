@@ -708,7 +708,7 @@ Widget.triangulate(arg: "test")
 
   test("creating a new direct message channel works", async function (assert) {
     await visit("/chat/channel/11/another-category");
-    await click(".new-dm");
+    await click(".open-draft-channel-page-btn");
     await fillIn(".filter-usernames", "hawk");
     await click("li.user[data-username='hawk']");
 
@@ -726,7 +726,7 @@ Widget.triangulate(arg: "test")
 
   test("creating a new direct message channel from popup chat works", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(".new-dm");
+    await click(".open-draft-channel-page-btn");
     await fillIn(".filter-usernames", "hawk");
     await click('.chat-user-avatar-container[data-user-card="hawk"]');
     assert.ok(query(".selected-user").innerText, "hawk");
@@ -1047,7 +1047,7 @@ acceptance(
 
     test("Close fullscreen chat button present", async function (assert) {
       await visit("/chat/channel/11/another-category");
-      assert.ok(exists(".chat-full-screen-button"));
+      assert.ok(exists(".open-drawer-btn"));
     });
   }
 );
@@ -1818,10 +1818,10 @@ acceptance("Discourse Chat - Direct Message Creator", function (needs) {
     await click(".header-dropdown-toggle.open-chat");
     await click(".topic-chat-drawer-header__return-to-channels-btn");
     assert.ok(
-      !exists(".new-dm.btn-floating"),
+      !exists(".open-draft-channel-page-btn.btn-floating"),
       "mobile floating button should not exist on desktop"
     );
-    await click(".btn.new-dm");
+    await click(".btn.open-draft-channel-page-btn");
     assert.ok(exists(".chat-draft"), "view changes to draft channel screen");
   });
 });

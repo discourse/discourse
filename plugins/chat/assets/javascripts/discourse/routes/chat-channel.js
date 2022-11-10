@@ -8,8 +8,7 @@ import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel
 
 export default class ChatChannelRoute extends DiscourseRoute {
   @service chat;
-  @service fullPageChat;
-  @service chatPreferredMode;
+  @service router;
 
   async model(params) {
     let [chatChannel, channels] = await Promise.all([
@@ -38,13 +37,12 @@ export default class ChatChannelRoute extends DiscourseRoute {
   }
 
   afterModel(model) {
-    this.appEvents.trigger("chat:navigated-to-full-page");
     this.chat.setActiveChannel(model?.chatChannel);
 
     const queryParams = this.paramsFor(this.routeName);
     const slug = slugifyChannel(model.chatChannel);
     if (queryParams?.channelTitle !== slug) {
-      this.replaceWith("chat.channel.index", model.chatChannel.id, slug);
+      this.router.replaceWith("chat.channel.index", model.chatChannel.id, slug);
     }
   }
 

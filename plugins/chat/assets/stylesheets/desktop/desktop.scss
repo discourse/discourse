@@ -18,7 +18,9 @@
   }
 
   .chat-full-page-header {
-    padding: 1rem;
+    padding: 0 1rem;
+    height: 65px;
+    min-height: 65px;
     flex-shrink: 0;
   }
 

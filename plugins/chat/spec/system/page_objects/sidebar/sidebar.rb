@@ -3,8 +3,16 @@
 module PageObjects
   module Pages
     class Sidebar < PageObjects::Pages::Base
-      def start_draft_dm
+      def open_draft_channel
         find(".sidebar-section-chat-dms .sidebar-section-header-button", visible: false).click
+      end
+
+      def open_browse
+        find(".sidebar-section-chat-channels .sidebar-section-header-button", visible: false).click
+      end
+
+      def open_channel(channel)
+        find(".sidebar-section-link[href='/chat/channel/#{channel.id}/#{channel.slug}']").click
       end
     end
   end

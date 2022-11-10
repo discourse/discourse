@@ -1,6 +1,5 @@
 import Component from "@ember/component";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import getURL from "discourse-common/lib/get-url";
 import { action } from "@ember/object";
 import {
   CHAT_VIEW,
@@ -18,7 +17,7 @@ export default Component.extend({
   classNameBindings: [":topic-chat-float-container", "hidden"],
   chat: service(),
   router: service(),
-  chatPreferredMode: service(),
+  chatStateManager: service(),
   hidden: true,
   loading: false,
   expanded: true, // TODO - false when not first-load topic
@@ -35,8 +34,7 @@ export default Component.extend({
     }
 
     this._checkSize();
-    this.appEvents.on("chat:navigated-to-full-page", this, "close");
-    this.appEvents.on("chat:open-view", this, "openView");
+    this.appEvents.on("chat:open-url", this, "openURL");
     this.appEvents.on("chat:toggle-open", this, "toggleChat");
     this.appEvents.on("chat:toggle-close", this, "close");
     this.appEvents.on(
@@ -70,8 +68,7 @@ export default Component.extend({
     }
 
     if (this.appEvents) {
-      this.appEvents.off("chat:open-view", this, "openView");
-      this.appEvents.off("chat:navigated-to-full-page", this, "close");
+      this.appEvents.off("chat:open-url", this, "openURL");
       this.appEvents.off("chat:toggle-open", this, "toggleChat");
       this.appEvents.off("chat:toggle-close", this, "close");
       this.appEvents.off(
@@ -225,38 +222,45 @@ export default Component.extend({
   },
 
   @action
-  openView(view) {
-    this.setProperties({
-      hidden: false,
-      expanded: true,
-      view,
-    });
+  openURL(URL = null) {
+    this.set("hidden", false);
+    this.set("expanded", true);
 
-    this.appEvents.trigger("chat:float-toggled", false);
+    this.chatStateManager.storeChatURL(URL);
+
+    const route = this._buildRouteFromURL(
+      URL || this.chatStateManager.lastKnownChatURL
+    );
+
+    switch (route.name) {
+      case "chat":
+        this.chat.setActiveChannel(null);
+        this.set("view", LIST_VIEW);
+        this.appEvents.trigger("chat:float-toggled", false);
+        return;
+      case "chat.draft-channel":
+        this.chat.setActiveChannel(null);
+        this.set("view", DRAFT_CHANNEL_VIEW);
+        this.appEvents.trigger("chat:float-toggled", false);
+        return;
+      case "chat.channel":
+        return this.chat
+          .getChannelBy("id", route.params.channelId)
+          .then((channel) => {
+            this.chat.setActiveChannel(channel);
+            this.set("view", CHAT_VIEW);
+            this.appEvents.trigger("chat:float-toggled", false);
+          });
+    }
   },
 
   @action
-  openInFullPage(e) {
-    this.chatPreferredMode.setFullPage();
-
-    const channel = this.chat.activeChannel;
-    this.set("expanded", false);
-    this.set("hidden", true);
+  openInFullPage() {
+    this.chatStateManager.storeAppURL();
+    this.chatStateManager.prefersFullPage();
     this.chat.setActiveChannel(null);
 
-    if (!channel) {
-      return this.router.transitionTo("chat");
-    }
-
-    if (e.which === 2) {
-      // Middle mouse click
-      window
-        .open(getURL(`/chat/channel/${channel.id}/${channel.title}`), "_blank")
-        .focus();
-      return false;
-    }
-
-    this.chat.openChannel(channel);
+    return this.router.transitionTo(this.chatStateManager.lastKnownChatURL);
   },
 
   @action
@@ -267,11 +271,8 @@ export default Component.extend({
 
   @action
   close() {
-    this.setProperties({
-      hidden: true,
-      expanded: false,
-    });
-    this.chat.setActiveChannel(null);
+    this.set("hidden", true);
+    this.set("expanded", false);
     this.appEvents.trigger("chat:float-toggled", this.hidden);
   },
 
@@ -341,11 +342,41 @@ export default Component.extend({
       this.chat.setActiveChannel(channel);
 
       if (!channel) {
-        this.openView(LIST_VIEW);
+        const URL = this._buildURLFromState(LIST_VIEW);
+        this.openURL(URL);
         return;
       }
 
-      this.openView(CHAT_VIEW);
+      const URL = this._buildURLFromState(CHAT_VIEW, channel);
+      this.openURL(URL);
     });
+  },
+
+  _buildRouteFromURL(URL) {
+    let route = this.router.recognize(URL || "/");
+
+    // ember might recognize the index subroute
+    if (route.localName === "index") {
+      route = route.parent;
+    }
+
+    return route;
+  },
+
+  _buildURLFromState(view, channel = null) {
+    switch (view) {
+      case LIST_VIEW:
+        return "/chat";
+      case DRAFT_CHANNEL_VIEW:
+        return "/chat/draft-channel";
+      case CHAT_VIEW:
+        if (channel) {
+          return `/chat/channel/${channel.id}/-`;
+        } else {
+          return "/chat";
+        }
+      default:
+        return "/chat";
+    }
   },
 });

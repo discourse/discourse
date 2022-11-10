@@ -4,15 +4,14 @@ import { action, computed } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { and, empty, reads } from "@ember/object/computed";
-import { DRAFT_CHANNEL_VIEW } from "discourse/plugins/chat/discourse/services/chat";
 
 export default class ChannelsList extends Component {
   @service chat;
   @service router;
+  @service chatStateManager;
   tagName = "";
   inSidebar = false;
   toggleSection = null;
-  onSelect = null;
   @reads("chat.publicChannels.[]") publicChannels;
   @reads("chat.directMessageChannels.[]") directMessageChannels;
   @empty("publicChannels") publicChannelsEmpty;
@@ -78,24 +77,6 @@ export default class ChannelsList extends Component {
     return `channels-list-container direct-message-channels ${
       this.inSidebar ? "collapsible-sidebar-section" : ""
     }`;
-  }
-
-  @action
-  browseChannels() {
-    this.router.transitionTo("chat.browse");
-    return false;
-  }
-
-  @action
-  startCreatingDmChannel() {
-    if (
-      this.site.mobileView ||
-      this.router.currentRouteName.startsWith("chat.")
-    ) {
-      this.router.transitionTo("chat.draft-channel");
-    } else {
-      this.appEvents.trigger("chat:open-view", DRAFT_CHANNEL_VIEW);
-    }
   }
 
   @action

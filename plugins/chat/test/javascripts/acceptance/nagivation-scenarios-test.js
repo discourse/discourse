@@ -29,7 +29,7 @@ acceptance("Discourse Chat - Navigation scenarios", function (needs) {
 
     assert.equal(currentURL(), "/chat/channel/1/my-category-title");
 
-    await click(".chat-full-screen-button");
+    await click(".open-drawer-btn");
 
     assert.ok(
       currentURL().startsWith("/t/internationalization-localization/280"),

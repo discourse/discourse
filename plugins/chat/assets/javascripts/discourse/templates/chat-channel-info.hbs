@@ -1,29 +1,26 @@
 <div class="channel-info">
   <div class="chat-full-page-header">
-    {{#if this.chatChannelInfoRouteOriginManager.isBrowse}}
-      <LinkTo @route="chat.browse" class="channel-info__back-btn">
-        {{d-icon "chevron-left"}}
-        <span>
-          {{i18n "chat.channel_info.back_to_all_channels"}}
-        </span>
-      </LinkTo>
-    {{else}}
-      <LinkTo
-        @route="chat.channel"
-        @models={{array
-          this.model.chatChannel.id
-          (slugify-channel this.model.chatChannel)
-        }}
-        class="channel-info__back-btn"
-      >
-        {{d-icon "chevron-left"}}
-        <span>
-          {{i18n "chat.channel_info.back_to_channel"}}
-        </span>
-      </LinkTo>
-    {{/if}}
-
     <div class="chat-channel-header-details">
+      <div class="chat-full-page-header__left-actions">
+        {{#if this.chatChannelInfoRouteOriginManager.isBrowse}}
+          <LinkTo @route="chat.browse" class="chat-full-page-header__back-btn no-text btn-flat btn" title={{i18n "chat.channel_info.back_to_all_channel"}}>
+            {{d-icon "chevron-left"}}
+          </LinkTo>
+        {{else}}
+          <LinkTo
+            @route="chat.channel"
+            @models={{array
+              this.model.chatChannel.id
+              (slugify-channel this.model.chatChannel)
+            }}
+            class="chat-full-page-header__back-btn no-text btn-flat btn"
+            title={{i18n "chat.channel_info.back_to_channel"}}
+          >
+            {{d-icon "chevron-left"}}
+          </LinkTo>
+        {{/if}}
+      </div>
+
       <ChatChannelTitle @channel={{this.model.chatChannel}} />
     </div>
   </div>

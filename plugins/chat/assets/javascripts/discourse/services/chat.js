@@ -35,8 +35,7 @@ const READ_INTERVAL = 1000;
 export default class Chat extends Service {
   @service appEvents;
   @service chatNotificationManager;
-  @service chatPreferredMode;
-  @service fullPageChat;
+  @service chatStateManager;
   @service presence;
   @service router;
   @service site;
@@ -177,7 +176,7 @@ export default class Chat extends Service {
 
   updatePresence() {
     next(() => {
-      if (this.fullPageChat.isActive || this.chatOpen) {
+      if (this.chatStateManager.isFullPage || this.chatOpen) {
         this.presenceChannel.enter({ activeOptions: CHAT_ONLINE_OPTIONS });
       } else {
         this.presenceChannel.leave();
@@ -526,9 +525,9 @@ export default class Chat extends Service {
     this.setActiveChannel(channel);
 
     if (
-      this.fullPageChat.isActive ||
+      this.chatStateManager.isFullPage ||
       this.site.mobileView ||
-      this.chatPreferredMode.isFullPage
+      this.chatStateManager.isFullPagePreferred
     ) {
       const queryParams = messageId ? { messageId } : {};
 
@@ -748,7 +747,7 @@ export default class Chat extends Service {
       this._unsubscribeFromChatChannel(channel);
       this.stopTrackingChannel(channel);
 
-      if (channel.isDirectMessageChannel) {
+      if (channel === this.activeChannel && channel.isDirectMessageChannel) {
         this.router.transitionTo("chat");
       }
     });

@@ -1,13 +1,4 @@
-<div
-  id="chat-channel-row-{{this.channel.id}}"
-  class={{this.rowClassNames}}
-  {{on "click" this.handleClick}}
-  {{on "keyup" this.handleKeyUp}}
-  {{on "mouseup" this.handleNewWindow}}
-  role="button"
-  tabindex="0"
-  data-chat-channel-id={{this.channel.id}}
->
+<LinkTo @route="chat.channel" @models={{array this.channel.id (or this.channel.slug "-")}} class={{this.rowClassNames}} id={{concat "chat-channel-row-" this.channel.id}} tabindex="0" data-chat-channel-id={{this.channel.id}}>
   <ChatChannelTitle @channel={{this.channel}} @unreadIndicator={{true}} />
 
   {{#if this.showUserStatus}}
@@ -25,4 +16,4 @@
       }}
     />
   {{/if}}
-</div>
+</LinkTo>

@@ -54,7 +54,9 @@ body.has-full-page-chat {
 
   .chat-full-page-header {
     background-color: var(--secondary);
-    padding: 0.5em 10px;
+    padding: 0 10px;
+    height: 50px;
+    min-height: 50px;
   }
 
   .chat-messages-scroll {

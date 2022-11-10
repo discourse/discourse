@@ -40,12 +40,12 @@ acceptance("Discourse Chat - Mobile test", function (needs) {
     assert.equal(currentURL(), "/chat");
     assert.ok(exists(".channels-list"));
     await click(".chat-channel-row.chat-channel-7");
-    assert.notOk(exists(".chat-full-screen-button"));
+    assert.notOk(exists(".open-drawer-btn"));
   });
 
   test("Chat new personal chat buttons", async function (assert) {
     await visit("/chat");
-    await click(".new-dm.btn-floating");
+    await click(".open-draft-channel-page-btn.btn-floating");
     assert.strictEqual(
       currentURL(),
       "/chat/draft-channel",
