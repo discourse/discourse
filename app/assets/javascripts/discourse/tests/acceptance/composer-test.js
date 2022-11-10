@@ -41,6 +41,7 @@ acceptance("Composer", function (needs) {
   needs.settings({
     enable_whispers: true,
     general_category_id: 1,
+    default_composer_category: 1,
   });
   needs.site({
     can_tag_topics: true,
@@ -90,7 +91,7 @@ acceptance("Composer", function (needs) {
   test("Composer is opened", async function (assert) {
     await visit("/");
     await click("#create-topic");
-    // Check that General category is selected
+    // Check that the default category is selected
     assert.strictEqual(selectKit(".category-chooser").header().value(), "1");
 
     assert.strictEqual(
@@ -1243,6 +1244,7 @@ acceptance("Composer - Uncategorized category", function (needs) {
   needs.user();
   needs.settings({
     general_category_id: -1, // For sites that never had this seeded
+    default_composer_category: -1, // For sites that never had this seeded
     allow_uncategorized_topics: true,
   });
   needs.site({
