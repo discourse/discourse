@@ -47,7 +47,7 @@ export default class ChatStateManager extends Service {
   }
 
   get isFullPage() {
-    return this.router.currentRouteName.startsWith("chat");
+    return this.router.currentRouteName?.startsWith("chat");
   }
 
   storeAppURL(URL = null) {
