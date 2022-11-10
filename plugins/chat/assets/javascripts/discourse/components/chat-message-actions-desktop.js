@@ -25,7 +25,7 @@ export default Component.extend({
           `.chat-message-container[data-id="${this.message.id}"]`
         ),
         document.querySelector(
-          `.chat-msgactions-hover[data-id="${this.message.id}"] .chat-msgactions`
+          `.chat-message-actions-container[data-id="${this.message.id}"] .chat-message-actions`
         ),
         {
           placement: "right-start",
