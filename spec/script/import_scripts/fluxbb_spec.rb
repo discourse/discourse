@@ -94,6 +94,14 @@ RSpec.describe "ImportScripts::FluxBB" do
             "[url=https://www.discourse.org/]Link with link text[/url]\n" +
             "[url]https://www.discourse.org/[/url] - Link without link text\n" +
             "[url=/about]Relative link[/url]\n" +
+            "[post=234]Internal link to fluxbb post with link text[/post]\n" +
+            "[post]234[/post] - Internal link to fluxbb post without link text\n" +
+            "[topic=345]Internal link to fluxbb topic with link text[/topic]\n" +
+            "[topic]345[/topic] - Internal link to fluxbb topic without link text\n" +
+            "[forum=456]Internal link to fluxbb forum with link text[/forum]\n" +
+            "[forum]456[/forum] - Internal link to fluxbb forum without link text\n" +
+            "[user=567]Internal link to fluxbb user profile with link text[/user]\n" +
+            "[user]567[/user] - Internal link to fluxbb user without link text\n" +
             "[img]http://www.ruby-lang.org/images/header-ruby-logo.png[/img]\n" +
             "[img=FluxBB allows alt text]http://www.ruby-lang.org/images/header-ruby-logo.png[/img]\n" +
             "[list][*]Example list item 1.[/*][*]Example list item 2.[/*][*]Example list item 3.[/*][/list]\n" +
@@ -119,6 +127,14 @@ RSpec.describe "ImportScripts::FluxBB" do
               "[Link with link text](https://www.discourse.org/)\n" +
               "[https://www.discourse.org/](https://www.discourse.org/) - Link without link text\n" +
               "[Relative link](/about)\n" +
+              "[Internal link to fluxbb post with link text](/viewtopic.php?pid=234#p234)\n" +
+              "[234](/viewtopic.php?pid=234#p234) - Internal link to fluxbb post without link text\n" +
+              "[Internal link to fluxbb topic with link text](/viewtopic.php?id=345)\n" +
+              "[345](/viewtopic.php?id=345) - Internal link to fluxbb topic without link text\n" +
+              "[Internal link to fluxbb forum with link text](/viewforum.php?id=456)\n" +
+              "[456](/viewforum.php?id=456) - Internal link to fluxbb forum without link text\n" +
+              "[Internal link to fluxbb user profile with link text](/profile.php?id=567)\n" +
+              "[567](/profile.php?id=567) - Internal link to fluxbb user without link text\n" +
               "<img src=\"http://www.ruby-lang.org/images/header-ruby-logo.png\"/>\n" +
               "<img src=\"http://www.ruby-lang.org/images/header-ruby-logo.png\" alt=\"FluxBB allows alt text\"/>\n" +
               "<ul><li>Example list item 1.</li><li>Example list item 2.</li><li>Example list item 3.</li></ul>\n" +
@@ -157,23 +173,6 @@ RSpec.describe "ImportScripts::FluxBB" do
                 "Red text\n" +
                 "Blue text"
               )
-            end
-          end
-
-          context "with FluxBB internal linking syntax which will be hard to convert" do
-            let(:example_post_content) {
-              "[topic=1]Internal link to fluxbb topic with link text[/topic]\n" +
-              "[topic]1[/topic] - Internal link to fluxbb topic without link text\n" +
-              "[post=1]Internal link to fluxbb post with link text[/post]\n" +
-              "[post]1[/post] - Internal link to fluxbb post without link text\n" +
-              "[forum=1]Internal link to fluxbb forum with link text[/forum]\n" +
-              "[forum]1[/forum] - Internal link to fluxbb forum without link text\n" +
-              "[user=2]Internal link to fluxbb user profile with link text[/user]\n" +
-              "[user]2[/user] - Internal link to fluxbb user without link text"
-            }
-
-            it "does no conversion leaving bbcode in place for manual conversion" do
-              expect(Post.last.raw).to eq(example_post_content)
             end
           end
         end
