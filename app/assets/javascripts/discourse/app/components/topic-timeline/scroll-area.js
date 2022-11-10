@@ -1,5 +1,4 @@
 import GlimmerComponent from "discourse/components/glimmer";
-import { bind } from "discourse-common/utils/decorators";
 import { tracked } from "@glimmer/tracking";
 import discourseLater from "discourse-common/lib/later";
 import { action } from "@ember/object";
@@ -14,20 +13,28 @@ const LAST_READ_HEIGHT = 20;
 
 export default class TopicTimelineScrollArea extends GlimmerComponent {
   @tracked showButton = false;
-  @tracked scrollPosition;
   @tracked current;
-  @tracked percentage = this.scrollPercentage;
+  @tracked percentage = this._percentFor(
+    this.args.topic,
+    this.args.enteredIndex + 1
+  );
   @tracked total;
   @tracked date;
   @tracked lastReadPercentage = null;
-  @tracked position;
   @tracked displayTimeLineScrollArea = true;
+  @tracked before;
+  @tracked after;
 
   get style() {
     return htmlSafe(`height: ${scrollareaHeight()}px`);
   }
-  get after() {
-    return scrollareaHeight() - this.before - SCROLLER_HEIGHT;
+
+  get beforePadding() {
+    return htmlSafe(`height: ${this.before}px`);
+  }
+
+  get afterPadding() {
+    return htmlSafe(`height: ${this.after}px`);
   }
 
   get showDockedButton() {
@@ -43,14 +50,6 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
       Math.abs(this.lastRead - this.total) > 1 &&
       this.lastRead !== this.total
     );
-  }
-
-  get beforePadding() {
-    return htmlSafe(`height: ${this.before}px`);
-  }
-
-  get afterPadding() {
-    return htmlSafe(`height: ${this.after}px`);
   }
 
   get lastReadStyle() {
@@ -82,10 +81,6 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
     return this.bottomAge;
   }
 
-  get scrollPercentage() {
-    return this._percentFor(this.args.topic, this.args.enteredIndex + 1);
-  }
-
   get lastReadHeight() {
     return Math.round(this.lastReadPercentage * scrollareaHeight());
   }
@@ -108,8 +103,6 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
     if (this.percentage === null) {
       return;
     }
-
-    this.before = this.scrollareaRemaining() * this.percentage;
 
     if (this.hasBackPosition) {
       this.lastReadTop = Math.round(
@@ -138,8 +131,7 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
     const $area = $(".timeline-scrollarea");
     const areaTop = $area.offset().top;
 
-    const percentage = this.clamp(parseFloat(y - areaTop) / $area.height());
-    this.percentage = percentage;
+    this.percentage = this.clamp(parseFloat(y - areaTop) / $area.height());
     this.commit();
   }
 
@@ -148,11 +140,9 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
     const postStream = topic.get("postStream");
     this.total = postStream.get("filteredPostsCount");
 
-    this.scrollPosition = this.clamp(
-      Math.floor(this.total * this.percentage),
-      0,
-      this.total
-    );
+    this.scrollPosition =
+      this.clamp(Math.floor(this.total * this.percentage), 0, this.total) + 1;
+
     this.current = this.clamp(this.scrollPosition, 1, this.total);
     const daysAgo = postStream.closestDaysAgoFor(this.current);
 
@@ -178,16 +168,18 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
     const lastReadNumber = topic.last_read_post_number;
 
     if (lastReadId && lastReadNumber) {
-      const idx = postStream.get("stream").indexOf(lastReadId) + 1;
+      const idx = postStream.get("stream").indexOf(lastReadId);
       this.lastRead = idx;
       this.lastReadPercentage = this._percentFor(topic, idx);
     }
 
     if (this.position !== this.scrollPosition) {
       this.position = this.scrollPosition;
-      console.log(this.position);
       this.updateScrollPosition(this.current);
     }
+
+    this.before = this.scrollareaRemaining() * this.percentage;
+    this.after = scrollareaHeight() - this.before - SCROLLER_HEIGHT;
   }
 
   updateScrollPosition(scrollPosition) {
@@ -198,8 +190,7 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
 
     this.position = scrollPosition;
     this.excerpt = "";
-
-    //const stream = this.args.topic.get("postStream");
+    const stream = this.args.topic.get("postStream");
 
     // a little debounce to avoid flashing
     discourseLater(() => {
@@ -208,42 +199,31 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
       }
 
       // we have an off by one, stream is zero based,
-      // OLD WIDGET CODE
-      //stream.excerpt(scrollPosition - 1).then((info) => {
-      //if (info && this.position === scrollPosition) {
-      //let excerpt = "";
+      stream.excerpt(scrollPosition - 1).then((info) => {
+        if (info && this.position === scrollPosition) {
+          let excerpt = "";
 
-      //if (info.username) {
-      //excerpt = "<span class='username'>" + info.username + ":</span> ";
-      //}
+          if (info.username) {
+            excerpt = "<span class='username'>" + info.username + ":</span> ";
+          }
 
-      //if (info.excerpt) {
-      //this.excerpt = excerpt + info.excerpt;
-      //} else if (info.action_code) {
-      //this.state.excerpt = `${excerpt} ${actionDescriptionHtml(
-      //info.action_code,
-      //info.created_at,
-      //info.username
-      //)}`;
-      //}
+          if (info.excerpt) {
+            this.excerpt = excerpt + info.excerpt;
+          } else if (info.action_code) {
+            this.state.excerpt = `${excerpt} ${actionDescriptionHtml(
+              info.action_code,
+              info.created_at,
+              info.username
+            )}`;
+          }
 
-      //this.queueRerender();
-      //}
-      //});
+          this.queueRerender();
+        }
+      });
     }, 50);
   }
 
-  @bind
   commit() {
-    const position = this.position();
-    this.state.scrolledPost = position.current;
-
-    if (position.current === position.scrollPosition) {
-      this.sendWidgetAction("jumpToIndex", position.current);
-    } else {
-      this.sendWidgetAction("jumpEnd");
-    }
-
     this.calculatePosition();
 
     if (this.current === this.scrollPosition) {
@@ -253,18 +233,15 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
     }
   }
 
-  @bind
   _percentFor(topic, postIndex) {
     const total = topic.get("postStream.filteredPostsCount");
-    return this.clamp(parseFloat(postIndex - 1.0) / total);
+    return this.clamp(parseFloat(postIndex - 1) / total);
   }
 
-  @bind
   clamp(p, min = 0.0, max = 1.0) {
     return Math.max(Math.min(p, max), min);
   }
 
-  @bind
   scrollareaRemaining() {
     return scrollareaHeight() - SCROLLER_HEIGHT;
   }

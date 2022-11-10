@@ -49,9 +49,9 @@ export default class GlimmerTopicTimeline extends GlimmerComponent {
 
     //old code from widget
 
-    //if (this.args.prevEvent) {
-    //this.enteredIndex = this.args.prevEvent.postIndex - 1;
-    //}
+    if (this.args.prevEvent) {
+      this.enteredIndex = this.args.prevEvent.postIndex - 1;
+    }
 
     //const topic = this.args.topic;
     //let result = [];
