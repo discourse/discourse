@@ -23,6 +23,7 @@
   {{chat/track-message-visibility}}
   class={{concat-class
     "chat-message-container"
+    (if this.isHovered "is-hovered")
     (if this.selectingMessages "selecting-messages")
   }}
   data-id={{or this.message.id this.message.stagedId}}

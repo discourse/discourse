@@ -2,11 +2,15 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { createPopper } from "@popperjs/core";
 import { schedule } from "@ember/runloop";
+import { inject as service } from "@ember/service";
 
-const MSG_ACTIONS_PADDING = 2;
+const MSG_ACTIONS_HORIZONTAL_PADDING = 2;
+const MSG_ACTIONS_VERTICAL_PADDING = -15;
 
 export default Component.extend({
   tagName: "",
+
+  chatPreferredMode: service(),
 
   messageActions: null,
 
@@ -32,9 +36,9 @@ export default Component.extend({
               options: {
                 offset: ({ popper, placement }) => {
                   return [
-                    MSG_ACTIONS_PADDING,
+                    MSG_ACTIONS_VERTICAL_PADDING,
                     -(placement.includes("left") || placement.includes("right")
-                      ? popper.width + MSG_ACTIONS_PADDING
+                      ? popper.width + MSG_ACTIONS_HORIZONTAL_PADDING
                       : popper.height),
                   ];
                 },
