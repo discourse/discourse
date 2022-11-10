@@ -20,7 +20,7 @@ module PageObjects
         self
       end
 
-      def save_category_settings
+      def save_settings
         find('#save-category').click
         self
       end
