@@ -1,6 +1,6 @@
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import Component from "@ember/component";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 import ChatApi from "discourse/plugins/chat/discourse/lib/chat-api";
@@ -17,7 +17,6 @@ export default class ChatBrowseView extends Component {
   @tracked channels = [];
   tagName = "";
 
-  tabs = TABS;
   offset = 0;
   canLoadMore = true;
 
@@ -56,6 +55,15 @@ export default class ChatBrowseView extends Component {
     } finally {
       this.offset = this.offset + PER_PAGE;
       this.isLoading = false;
+    }
+  }
+
+  @computed("siteSettings.chat_allow_archiving_channels")
+  get tabs() {
+    if (this.siteSettings.chat_allow_archiving_channels) {
+      return TABS;
+    } else {
+      return [...TABS].removeObject("archived");
     }
   }
 
