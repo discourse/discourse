@@ -224,6 +224,10 @@ RSpec.describe "tasks/uploads" do
       end
     end
 
+    before do
+      STDIN.stubs(:beep)
+    end
+
     fab!(:upload) { Fabricate(:image_upload, width: 200, height: 200) }
 
     it "corrects upload attributes" do
