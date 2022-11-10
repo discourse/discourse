@@ -217,7 +217,7 @@ acceptance("Discourse Chat - without unread", function (needs) {
     await triggerEvent(".chat-message-container[data-id='174']", "mouseenter");
 
     const currentUserDropdown = selectKit(
-      ".chat-msgactions-hover[data-id='174'] .more-buttons"
+      ".chat-message-actions-container[data-id='174'] .more-buttons"
     );
     await currentUserDropdown.expand();
 
@@ -243,7 +243,7 @@ acceptance("Discourse Chat - without unread", function (needs) {
     );
 
     const notCurrentUserDropdown = selectKit(
-      ".chat-msgactions-hover[data-id='175'] .more-buttons"
+      ".chat-message-actions-container[data-id='175'] .more-buttons"
     );
     await triggerEvent(".chat-message-container[data-id='175']", "mouseenter");
     await notCurrentUserDropdown.expand();
@@ -259,12 +259,12 @@ acceptance("Discourse Chat - without unread", function (needs) {
 
     // User created this message
     assert.ok(
-      ".chat-msgactions-hover[data-id='174'] .reply-btn",
+      ".chat-message-actions-container[data-id='174'] .reply-btn",
       "it shows the reply button"
     );
 
     const currentUserDropdown = selectKit(
-      ".chat-msgactions-hover[data-id='174'] .more-buttons"
+      ".chat-message-actions-container[data-id='174'] .more-buttons"
     );
     await currentUserDropdown.expand();
 
@@ -301,11 +301,11 @@ acceptance("Discourse Chat - without unread", function (needs) {
     // User _didn't_ create this message
     await triggerEvent(".chat-message-container[data-id='175']", "mouseenter");
     assert.ok(
-      ".chat-msgactions-hover[data-id='175'] .reply-btn",
+      ".chat-message-actions-container[data-id='175'] .reply-btn",
       "it shows the reply button"
     );
     const notCurrentUserDropdown = selectKit(
-      ".chat-msgactions-hover[data-id='175'] .more-buttons"
+      ".chat-message-actions-container[data-id='175'] .more-buttons"
     );
     await notCurrentUserDropdown.expand();
 
@@ -376,7 +376,7 @@ acceptance("Discourse Chat - without unread", function (needs) {
     await click(".topic-chat-drawer-header__return-to-channels-btn");
     await click(".chat-channel-row.chat-channel-9");
     await triggerEvent(".chat-message-container[data-id='174']", "mouseenter");
-    await click(".chat-msgactions-hover[data-id='174'] .reply-btn");
+    await click(".chat-message-actions-container[data-id='174'] .reply-btn");
     // Reply-to line is present
     assert.ok(exists(".chat-composer-message-details .chat-reply"));
     await click(".topic-chat-drawer-header__return-to-channels-btn");
@@ -386,7 +386,7 @@ acceptance("Discourse Chat - without unread", function (needs) {
     // Now click on reply btn and cancel it on channel 7
 
     await triggerEvent(".chat-message-container[data-id='174']", "mouseenter");
-    await click(".chat-msgactions-hover[data-id='174'] .reply-btn");
+    await click(".chat-message-actions-container[data-id='174'] .reply-btn");
     await click(".cancel-message-action");
 
     // Go back to channel 9 and check that reply-to is present
@@ -687,7 +687,7 @@ Widget.triangulate(arg: "test")
     const firstMessage = query(".chat-message-container");
     await triggerEvent(firstMessage, "mouseenter");
     const dropdown = selectKit(
-      `.chat-msgactions-hover[data-id="${firstMessage.dataset.id}"] .more-buttons`
+      `.chat-message-actions-container[data-id="${firstMessage.dataset.id}"] .more-buttons`
     );
     await dropdown.expand();
     await dropdown.selectRowByValue("selectMessage");
@@ -700,7 +700,9 @@ Widget.triangulate(arg: "test")
     updateCurrentUser({ admin: false, moderator: false });
     await visit("/chat/channel/11/another-category");
     assert.notOk(
-      exists(".chat-message-container .chat-msgactions-hover .select-btn")
+      exists(
+        ".chat-message-container .chat-message-actions-container .select-btn"
+      )
     );
   });
 
@@ -735,7 +737,7 @@ Widget.triangulate(arg: "test")
     const message = query(".chat-message-container");
     await triggerEvent(message, "mouseenter");
     assert.notOk(message.querySelector(".chat-message-reaction-list"));
-    await click(".chat-msgactions .react-btn");
+    await click(".chat-message-actions .react-btn");
     await click(`.chat-emoji-picker .emoji[alt="grinning"]`);
 
     assert.ok(message.querySelector(".chat-message-reaction-list"));
@@ -831,7 +833,7 @@ Widget.triangulate(arg: "test")
     assert.deepEqual(lastMessage.dataset.id, "202");
     await triggerEvent(lastMessage, "mouseenter");
     await click(
-      `.chat-msgactions-hover[data-id="${lastMessage.dataset.id}"] .react-btn`
+      `.chat-message-actions-container[data-id="${lastMessage.dataset.id}"] .react-btn`
     );
     await click(`.emoji[alt="grinning"]`);
 
@@ -937,7 +939,7 @@ Widget.triangulate(arg: "test")
   test("changing channel resets message selection", async function (assert) {
     await visit("/chat/channel/11/another-category");
     await triggerEvent(".chat-message-container", "mouseenter");
-    const dropdown = selectKit(".chat-msgactions .more-buttons");
+    const dropdown = selectKit(".chat-message-actions .more-buttons");
     await dropdown.expand();
     await dropdown.selectRowByValue("selectMessage");
     await click("#chat-copy-btn");
@@ -1631,7 +1633,7 @@ acceptance(
     test("read only channels do not show the reply, react, delete, edit, restore, or rebuild options for messages", async function (assert) {
       await visit("/chat/channel/5/public-category");
       await triggerEvent(".chat-message-container", "mouseenter");
-      const dropdown = selectKit(".chat-msgactions .more-buttons");
+      const dropdown = selectKit(".chat-message-actions .more-buttons");
       await dropdown.expand();
       assert.notOk(exists(".select-kit-row[data-value='edit']"));
       assert.notOk(exists(".select-kit-row[data-value='deleteMessage']"));
@@ -1684,7 +1686,7 @@ acceptance(
       await visit("/chat/channel/4/public-category");
 
       await triggerEvent(".chat-message-container", "mouseenter");
-      const dropdown = selectKit(".chat-msgactions .more-buttons");
+      const dropdown = selectKit(".chat-message-actions .more-buttons");
       await dropdown.expand();
 
       assert.notOk(exists(".select-kit-row[data-value='edit']"));
@@ -1729,7 +1731,7 @@ acceptance(
     test("closed channels show the reply, react, delete, edit, restore, or rebuild options for messages", async function (assert) {
       await visit("/chat/channel/4/public-category");
       await triggerEvent(".chat-message-container", "mouseenter");
-      const dropdown = selectKit(".chat-msgactions .more-buttons");
+      const dropdown = selectKit(".chat-message-actions .more-buttons");
       await dropdown.expand();
       assert.ok(
         exists(".select-kit-row[data-value='edit']"),

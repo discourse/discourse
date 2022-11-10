@@ -32,13 +32,17 @@ class Chat::ChatMailer
     when_away_frequency = UserOption.chat_email_frequencies[:when_away]
     allowed_group_ids = Chat.allowed_group_ids
 
-    User
-      .select("users.id", "ARRAY_AGG(ARRAY[uccm.id, c_msg.id]) AS memberships_with_unread_messages")
+    users = User
       .joins(:user_option)
       .where(user_options: { chat_enabled: true, chat_email_frequency: when_away_frequency })
       .where("users.last_seen_at < ?", 15.minutes.ago)
-      .joins(:groups)
-      .where(groups: { id: allowed_group_ids })
+
+    if !allowed_group_ids.include?(Group::AUTO_GROUPS[:everyone])
+      users = users.joins(:groups).where(groups: { id: allowed_group_ids })
+    end
+
+    users
+      .select("users.id", "ARRAY_AGG(ARRAY[uccm.id, c_msg.id]) AS memberships_with_unread_messages")
       .joins("INNER JOIN user_chat_channel_memberships uccm ON uccm.user_id = users.id")
       .joins("INNER JOIN chat_channels cc ON cc.id = uccm.chat_channel_id")
       .joins("INNER JOIN chat_messages c_msg ON c_msg.chat_channel_id = uccm.chat_channel_id")

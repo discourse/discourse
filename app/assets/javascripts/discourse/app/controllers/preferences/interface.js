@@ -420,7 +420,7 @@ export default Controller.extend({
       }
     },
 
-    resetSeenPopups() {
+    resetSeenUserTips() {
       this.model.set("skip_new_user_tips", false);
       this.model.set("seen_popups", null);
       this.model.set("user_option.skip_new_user_tips", false);

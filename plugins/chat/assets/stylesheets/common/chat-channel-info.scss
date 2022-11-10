@@ -46,6 +46,10 @@
 .channel-settings-view__saved {
   color: var(--success);
   padding-left: 0.5rem;
+
+  .d-icon-check {
+    margin-right: 0.25rem;
+  }
 }
 
 .channel-settings-view__desktop-notification-level-selector,

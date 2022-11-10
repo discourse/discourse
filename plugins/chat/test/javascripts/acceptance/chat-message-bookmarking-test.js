@@ -46,7 +46,7 @@ acceptance("Discourse Chat | bookmarking | desktop", function (needs) {
     const message = query(".chat-message-container");
 
     await triggerEvent(message, "mouseenter");
-    await click(".chat-msgactions .bookmark-btn");
+    await click(".chat-message-actions .bookmark-btn");
     assert.ok(
       exists("#bookmark-reminder-modal"),
       "it shows the bookmark modal"
@@ -60,7 +60,7 @@ acceptance("Discourse Chat | bookmarking | desktop", function (needs) {
       "the message should be bookmarked and show the icon on the message info"
     );
     assert.ok(
-      ".chat-msgactions .bookmark-btn .d-icon-discourse-bookmark-clock",
+      ".chat-message-actions .bookmark-btn .d-icon-discourse-bookmark-clock",
       "the message actions icon shows the reminder icon"
     );
   });
@@ -71,7 +71,7 @@ acceptance("Discourse Chat | bookmarking | desktop", function (needs) {
     const message = query(".chat-message-container");
 
     await triggerEvent(message, "mouseenter");
-    await click(".chat-msgactions .bookmark-btn");
+    await click(".chat-message-actions .bookmark-btn");
     assert.ok(
       exists("#bookmark-reminder-modal"),
       "it shows the bookmark modal"
@@ -83,7 +83,7 @@ acceptance("Discourse Chat | bookmarking | desktop", function (needs) {
       "the message should be bookmarked and show the icon on the message info"
     );
     assert.ok(
-      exists(".chat-msgactions .bookmark-btn .d-icon-bookmark"),
+      exists(".chat-message-actions .bookmark-btn .d-icon-bookmark"),
       "the message actions icon shows the bookmark icon"
     );
   });
