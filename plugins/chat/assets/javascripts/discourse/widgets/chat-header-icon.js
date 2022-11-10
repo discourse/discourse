@@ -65,7 +65,9 @@ export default createWidget("header-chat-link", {
       return;
     }
 
-    return this.router.transitionTo(this.chatStateManager.lastKnownChatURL);
+    return this.router.transitionTo(
+      this.chatStateManager.lastKnownChatURL || "chat"
+    );
   },
 
   chatRerenderHeader() {

@@ -81,7 +81,7 @@ export default {
       event.stopPropagation();
 
       chatStateManager.prefersDrawer();
-      router.transitionTo("chat");
+      router.transitionTo(chatStateManager.lastKnownChatURL || "chat");
     };
 
     const closeChatDrawer = (event) => {
