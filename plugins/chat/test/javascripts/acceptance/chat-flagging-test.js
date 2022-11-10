@@ -53,7 +53,7 @@ acceptance("Discourse Chat - Flagging test", function (needs) {
     assert.notOk(exists(".chat-live-pane .chat-message .chat-message-flagged"));
     await triggerEvent(".chat-message-container", "mouseenter");
 
-    let moreButtons = selectKit(
+    const moreButtons = selectKit(
       ".chat-message-actions-container .more-buttons"
     );
     await moreButtons.expand();
