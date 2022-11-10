@@ -37,11 +37,6 @@ export default Component.extend({
     this.appEvents.on("chat:open-url", this, "openURL");
     this.appEvents.on("chat:toggle-open", this, "toggleChat");
     this.appEvents.on("chat:toggle-close", this, "close");
-    this.appEvents.on(
-      "chat:open-channel-for-chatable",
-      this,
-      "openChannelForChatable"
-    );
     this.appEvents.on("chat:open-channel", this, "switchChannel");
     this.appEvents.on(
       "chat:open-channel-at-message",
@@ -71,11 +66,6 @@ export default Component.extend({
       this.appEvents.off("chat:open-url", this, "openURL");
       this.appEvents.off("chat:toggle-open", this, "toggleChat");
       this.appEvents.off("chat:toggle-close", this, "close");
-      this.appEvents.off(
-        "chat:open-channel-for-chatable",
-        this,
-        "openChannelForChatable"
-      );
       this.appEvents.off("chat:open-channel", this, "switchChannel");
       this.appEvents.off(
         "chat:open-channel-at-message",
@@ -111,14 +101,6 @@ export default Component.extend({
   _fireHiddenAppEvents() {
     this.chat.set("chatOpen", !this.hidden);
     this.appEvents.trigger("chat:rerender-header");
-  },
-
-  async openChannelForChatable(channel) {
-    if (!channel) {
-      return;
-    }
-
-    this.switchChannel(channel);
   },
 
   @discourseComputed("expanded")
