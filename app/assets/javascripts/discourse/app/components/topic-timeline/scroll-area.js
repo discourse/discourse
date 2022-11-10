@@ -16,7 +16,7 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
   @tracked current;
   @tracked percentage = this._percentFor(
     this.args.topic,
-    this.args.enteredIndex + 1
+    this.args.enteredIndex
   );
   @tracked total;
   @tracked date;
@@ -24,6 +24,7 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
   @tracked displayTimeLineScrollArea = true;
   @tracked before;
   @tracked after;
+  timelineScrollareaStyle = `height: ${scrollareaHeight()}px`;
 
   get style() {
     return htmlSafe(`height: ${scrollareaHeight()}px`);
@@ -99,7 +100,7 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
       }
     }
 
-    this.calculatePosition();
+    this.commit();
   }
 
   calculatePosition() {
@@ -135,7 +136,7 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
     const lastReadNumber = topic.last_read_post_number;
 
     if (lastReadId && lastReadNumber) {
-      const idx = postStream.get("stream").indexOf(lastReadId);
+      const idx = postStream.get("stream").indexOf(lastReadId) + 1;
       this.lastRead = idx;
       this.lastReadPercentage = this._percentFor(topic, idx);
     }
@@ -215,13 +216,23 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
     if (this.current === this.scrollPosition) {
       this.args.jumpToIndex(this.current);
     } else {
-      this.args.jumpEnd();
+      this.args.jumpEnd;
     }
   }
 
   _percentFor(topic, postIndex) {
     const total = topic.get("postStream.filteredPostsCount");
-    return this.clamp(parseFloat(postIndex - 1.0) / total);
+    switch (postIndex) {
+      // if first post, no top padding
+      case 0:
+        return 0;
+      // if last, no bottom padding
+      case total - 1:
+        return 1;
+      // otherwise, calculate
+      default:
+        return this.clamp(parseFloat(postIndex) / total);
+    }
   }
 
   clamp(p, min = 0.0, max = 1.0) {

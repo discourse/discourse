@@ -7,7 +7,7 @@
         </span>
       </a>
     </div>
-    <div class="timeline-scrollarea">
+    <div class="timeline-scrollarea" style={{this.timelineScrollareaStyle}}>
       <div class="timeline-padding" style={{this.beforePadding}} onClick={{this.updatePercentage}}></div>
       <TopicTimeline::Scroller
         @current={{this.current}}
