@@ -52,6 +52,8 @@
       </div>
     {{/if}}
 
+    <PluginOutlet @name="below-user-summary-stats" @args={{hash model=this.model user=this.user}} />
+
     <div class="top-section">
       <UserSummarySection @title="top_replies" @class="replies-section pull-left">
         <UserSummaryTopicsList @type="replies" @items={{this.model.replies}} @user={{this.user}} as |reply|>
