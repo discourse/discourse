@@ -9,6 +9,7 @@ workbox.setConfig({
 
 var authUrls = ["auth", "session/sso_login", "session/sso"].map(path => `<%= Discourse.base_path %>/${path}`);
 var chatRegex = /\/chat\/channel\/(\d+)\//;
+var chatReplyIcon = "<%= ActionController::Base.helpers.image_url("push-notifications/chat_reply.png") %>";
 
 var cacheVersion = "1";
 var discourseCacheName = "discourse-" + cacheVersion;
@@ -139,7 +140,8 @@ function showNotification(title, body, icon, badge, tag, baseUrl, url) {
     notificationOptions['actions'] = [{
       title: "Reply",
       placeholder: "reply",
-      type: "text"
+      type: "text",
+      icon: chatReplyIcon
     }];
   }
 
