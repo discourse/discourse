@@ -1270,7 +1270,6 @@ acceptance("Composer - Uncategorized category", function (needs) {
     await visit("/");
     await click("#create-topic");
     assert.strictEqual(selectKit(".category-chooser").header().value(), null);
-    assert.strictEqual(selectKit(".category-chooser").header().name(), "");
   });
 });
 
