@@ -261,7 +261,7 @@ export default Component.extend({
       restore: this.restore,
       rebakeMessage: this.rebakeMessage,
       toggleBookmark: this.toggleBookmark,
-      startReactionFormessageActions: this.startReactionFormessageActions,
+      startReactionForMessageActions: this.startReactionForMessageActions,
     };
   },
 
