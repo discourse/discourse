@@ -77,6 +77,15 @@ export function hideUserTip(userTipId) {
     instance.destroy();
   }
   delete instances[userTipId];
+
+  const index = queue.findIndex((userTip) => userTip.id === userTipId);
+  if (index > -1) {
+    queue.splice(index, 1);
+  }
+}
+
+export function hideAllUserTips() {
+  Object.keys(instances).forEach(hideUserTip);
 }
 
 function addToQueue(options) {
