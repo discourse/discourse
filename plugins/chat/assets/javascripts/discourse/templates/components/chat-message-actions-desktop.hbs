@@ -1,5 +1,5 @@
-<div class="chat-msgactions-hover" data-id={{this.message.id}}>
-  <div class="chat-msgactions">
+<div class="chat-message-actions-container" data-id={{this.message.id}}>
+  <div class="chat-message-actions">
     {{#if this.chatPreferredMode.isFullPage}}
       {{#each this.emojiReactions as |reaction|}}
         <ChatMessageReaction @reaction={{reaction}} @react={{this.messageActions.react}} @class="show" />
@@ -7,7 +7,7 @@
     {{/if}}
 
     {{#if this.messageCapabilities.canReact}}
-      <DButton @class="btn-flat react-btn" @action={{this.messageActions.startReactionForMsgActions}} @icon="discourse-emojis" @title="chat.react" />
+      <DButton @class="btn-flat react-btn" @action={{this.messageActions.startReactionForMessageActions}} @icon="discourse-emojis" @title="chat.react" />
     {{/if}}
 
     {{#if this.messageCapabilities.canBookmark}}

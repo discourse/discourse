@@ -54,13 +54,13 @@ export default Component.extend({
 
   _addFadeIn() {
     document
-      .querySelector(".chat-msgactions-backdrop")
+      .querySelector(".chat-message-actions-backdrop")
       ?.classList.add("fade-in");
   },
 
   _removeFadeIn() {
     document
-      .querySelector(".chat-msgactions-backdrop")
+      .querySelector(".chat-message-actions-backdrop")
       ?.classList?.remove("fade-in");
   },
 });

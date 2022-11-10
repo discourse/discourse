@@ -1,4 +1,4 @@
-<div class="chat-msgactions-backdrop">
+<div class="chat-message-actions-backdrop">
   <div
     role="button"
     class="collapse-area"
@@ -6,7 +6,7 @@
   >
   </div>
 
-  <div class="chat-msgactions">
+  <div class="chat-message-actions">
     <div class="selected-message-container">
       <div class="selected-message">
         <ChatUserAvatar @user={{this.message.user}} />
@@ -57,7 +57,7 @@
             @class="btn-flat react-btn"
             @action={{action
               "actAndCloseMenu"
-              this.messageActions.startReactionForMsgActions
+              this.messageActions.startReactionForMessageActions
             }}
             @icon="discourse-emojis"
             @title="chat.react"

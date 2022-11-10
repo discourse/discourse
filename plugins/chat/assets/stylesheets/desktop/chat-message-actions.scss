@@ -1,0 +1,15 @@
+.chat-message-actions {
+  .chat-message-reaction:not(.reacted) {
+    filter: grayscale(100%);
+
+    &:hover {
+      filter: grayscale(0);
+    }
+  }
+}
+
+.chat-message-actions[data-popper-reference-hidden],
+.chat-message-actions[data-popper-escaped] {
+  visibility: hidden;
+  pointer-events: none;
+}

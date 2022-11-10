@@ -77,7 +77,7 @@ export default class ChatEmojiPickerManager extends Service {
 
   startFromMessageActions(message, isDesktop, callback) {
     const trigger = document.querySelector(
-      `.chat-msgactions-hover[data-id="${message.id}"] .chat-msgactions`
+      `.chat-message-actions-container[data-id="${message.id}"] .chat-message-actions`
     );
     this.startFromMessage(callback, isDesktop, trigger);
   }

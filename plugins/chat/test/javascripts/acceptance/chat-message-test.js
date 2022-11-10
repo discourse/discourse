@@ -77,7 +77,7 @@ acceptance("Discourse Chat - Chat Message", function (needs) {
 
     await visit("/chat/channel/4/public-category");
     await triggerEvent(".chat-message-container[data-id='176']", "mouseenter");
-    await click(".chat-msgactions-hover .react-btn");
+    await click(".chat-message-actions-container .react-btn");
     await click(`[data-emoji="grinning"]`);
 
     assert.deepEqual(

@@ -56,16 +56,6 @@
 
 .chat-message.user-info-hidden {
   padding: 0.15em 1em;
-
-  .chat-msgactions-hover {
-    top: -2em;
-  }
-}
-
-.chat-msgactions[data-popper-reference-hidden],
-.chat-msgactions[data-popper-escaped] {
-  visibility: hidden;
-  pointer-events: none;
 }
 
 // Full Page Styling in Core

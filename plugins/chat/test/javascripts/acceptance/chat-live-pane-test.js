@@ -305,11 +305,11 @@ acceptance(
       const message = query(".chat-message-container");
       await tap(message);
 
-      assert.ok(exists(".chat-msgactions-backdrop"));
+      assert.ok(exists(".chat-message-actions-backdrop"));
 
       await tap(".collapse-area");
 
-      assert.notOk(exists(".chat-msgactions-backdrop"));
+      assert.notOk(exists(".chat-message-actions-backdrop"));
     });
   }
 );
