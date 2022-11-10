@@ -21,14 +21,10 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
   @tracked date;
   @tracked lastReadPercentage = null;
   @tracked position;
-  @tracked lastReadTop = this.lastReadHeight;
   @tracked displayTimeLineScrollArea = true;
 
   get style() {
     return htmlSafe(`height: ${scrollareaHeight()}px`);
-  }
-  get before() {
-    return this.scrollareaRemaining() * this.percentage;
   }
   get after() {
     return scrollareaHeight() - this.before - SCROLLER_HEIGHT;
@@ -131,17 +127,20 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
     }
   }
 
-  @action goBack() {
+  @action
+  goBack() {
     this.args.jumpToIndex(this.lastRead);
   }
 
   @action
-  updatePercentage(y) {
+  updatePercentage(e) {
+    const y = e.pageY;
     const $area = $(".timeline-scrollarea");
     const areaTop = $area.offset().top;
 
     const percentage = this.clamp(parseFloat(y - areaTop) / $area.height());
     this.percentage = percentage;
+    this.commit();
   }
 
   calculatePosition() {
@@ -149,8 +148,11 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
     const postStream = topic.get("postStream");
     this.total = postStream.get("filteredPostsCount");
 
-    this.scrollPosition =
-      this.clamp(Math.floor(this.total * this.percentage), 0, this.total) + 1;
+    this.scrollPosition = this.clamp(
+      Math.floor(this.total * this.percentage),
+      0,
+      this.total
+    );
     this.current = this.clamp(this.scrollPosition, 1, this.total);
     const daysAgo = postStream.closestDaysAgoFor(this.current);
 
@@ -182,12 +184,14 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
     }
 
     if (this.position !== this.scrollPosition) {
+      this.position = this.scrollPosition;
+      console.log(this.position);
       this.updateScrollPosition(this.current);
     }
   }
 
-  @bind
   updateScrollPosition(scrollPosition) {
+    // only ran on mobile
     if (!this.args.fullscreen) {
       return;
     }
@@ -231,14 +235,22 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
 
   @bind
   commit() {
+    const position = this.position();
+    this.state.scrolledPost = position.current;
+
+    if (position.current === position.scrollPosition) {
+      this.sendWidgetAction("jumpToIndex", position.current);
+    } else {
+      this.sendWidgetAction("jumpEnd");
+    }
+
     this.calculatePosition();
 
-    // old code from widget
-    //if (this.current === this.scrollPosition) {
-    //this.sendWidgetAction("jumpToIndex", this.current);
-    //} else {
-    //this.sendWidgetAction("jumpEnd");
-    //}
+    if (this.current === this.scrollPosition) {
+      this.args.jumpToIndex(this.current);
+    } else {
+      this.args.jumpEnd();
+    }
   }
 
   @bind

@@ -8,7 +8,7 @@
       </a>
     </div>
     <div class="timeline-scrollarea">
-      <div class="timeline-padding" style={{this.beforePadding}}></div>
+      <div class="timeline-padding" style={{this.beforePadding}} onClick={{this.updatePercentage}}></div>
       <TopicTimeline::Scroller
         @current={{this.current}}
         @total={{this.total}}
@@ -17,7 +17,7 @@
         @showDockedButton={{this.showDockedButton}}
         @date={{this.date}}
       />
-      <div class="timeline-padding" style={{this.afterPadding}}></div>
+      <div class="timeline-padding" style={{this.afterPadding}} onClick={{this.updatePercentage}}></div>
 
       {{#if this.hasBackPosition}}
         <div class="timeline-last-read" style={{this.lastReadStyle}}>
