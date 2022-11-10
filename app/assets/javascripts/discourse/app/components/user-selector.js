@@ -110,6 +110,7 @@ export default TextField.extend({
             includeMessageableGroups,
             groupMembersOf: userSelectorComponent.groupMembersOf,
             allowEmails,
+            splitMetadataMatches: true,
           });
         },
 

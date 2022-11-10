@@ -188,6 +188,15 @@ function organizeResults(r, options) {
   results.users = users;
   results.emails = emails;
   results.groups = groups;
+
+  if (options.splitMetadataMatches) {
+    results.users.forEach((user) => {
+      user.isMetadataMatch =
+        !user.username.includes(options.term) &&
+        !user.name?.includes(options.term);
+    });
+  }
+
   return results;
 }
 
