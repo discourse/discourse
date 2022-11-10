@@ -6,12 +6,12 @@ module PageObjects
       # keeping the various category related features combined for now
 
       def visit(category)
-        Capybara.current_session.visit("/c/#{category.id}")
+        page.visit("/c/#{category.id}")
         self
       end
 
       def visit_settings(category)
-        Capybara.current_session.visit("/c/#{category.slug}/edit/settings")
+        page.visit("/c/#{category.slug}/edit/settings")
         self
       end
 
