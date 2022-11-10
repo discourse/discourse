@@ -270,6 +270,7 @@
   border-radius: 0.25em;
   background-color: var(--secondary);
   display: flex;
+  box-shadow: 0 0.75px 0px rgba(0, 0, 0, 0.15);
 
   .emoji-picker-anchor {
     position: absolute;
@@ -393,10 +394,9 @@
     margin-right: -1px;
     padding: 0.5em 0;
     width: 2.5em;
-    filter: grayscale(50%);
+    filter: grayscale(100%);
 
     &:hover {
-      z-index: 2;
       filter: grayscale(0);
     }
 
