@@ -257,34 +257,6 @@ export default Component.extend({
   },
 
   @action
-  toggleChat() {
-    this.set("hidden", !this.hidden);
-    this.appEvents.trigger("chat:float-toggled", this.hidden);
-    if (this.hidden) {
-      return this.chat.setActiveChannel(null);
-    } else {
-      this.set("expanded", true);
-      this.appEvents.trigger("chat:toggle-expand", this.expanded);
-      if (this.chat.activeChannel) {
-        // Channel was previously open, so after expand we are done.
-        return this.chat.setActiveChannel(null);
-      }
-    }
-
-    // Look for DM channel with unread, and fallback to public channel with unread
-    this.chat.getIdealFirstChannelId().then((channelId) => {
-      if (channelId) {
-        this.chat.getChannelBy("id", channelId).then((channel) => {
-          this.switchChannel(channel);
-        });
-      } else {
-        // No channels with unread messages. Fetch channel index.
-        this.fetchChannels();
-      }
-    });
-  },
-
-  @action
   refreshChannels() {
     if (this.view === LIST_VIEW) {
       this.fetchChannels();
