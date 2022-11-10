@@ -43,6 +43,15 @@ body.has-full-page-chat {
   overflow-x: hidden;
   width: 100%;
 
+  .btn:active,
+  .btn:hover {
+    background: var(--secondary-very-high);
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+  }
+
   .chat-live-pane {
     border-radius: 0;
     padding: 0;

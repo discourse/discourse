@@ -46,6 +46,7 @@ acceptance("Discourse Chat - Mobile test", function (needs) {
   test("Chat new personal chat buttons", async function (assert) {
     await visit("/chat");
     await click(".open-draft-channel-page-btn.btn-floating");
+
     assert.strictEqual(
       currentURL(),
       "/chat/draft-channel",
@@ -53,6 +54,7 @@ acceptance("Discourse Chat - Mobile test", function (needs) {
     );
 
     await click(".chat-draft-header__btn");
+
     assert.strictEqual(
       currentURL(),
       "/chat",
@@ -62,7 +64,8 @@ acceptance("Discourse Chat - Mobile test", function (needs) {
 
   test("Chat browse screen back button", async function (assert) {
     await visit("/chat/browse");
-    await click(".chat-browse-view__back");
+    await click(".chat-full-page-header__back-btn");
+
     assert.strictEqual(
       currentURL(),
       "/chat",

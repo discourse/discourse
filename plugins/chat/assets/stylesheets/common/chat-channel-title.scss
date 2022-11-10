@@ -1,12 +1,6 @@
 .chat-channel-title-wrapper {
   display: flex;
   align-items: center;
-  padding: 0.25rem;
-
-  &:hover {
-    background: var(--primary-very-low);
-    border-radius: 5px;
-  }
 }
 
 .chat-channel-title {

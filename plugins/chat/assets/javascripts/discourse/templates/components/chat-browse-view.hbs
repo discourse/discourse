@@ -17,7 +17,7 @@
     <DButton
       @action={{action "createChannel"}}
       @icon="plus"
-      @class="new-channel-btn"
+      @class={{concat-class "new-channel-btn" (if this.site.mobileView "btn-flat")}}
       @label={{if this.site.desktopView "chat.create_channel.title"}}
     />
   {{/if}}

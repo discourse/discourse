@@ -167,6 +167,8 @@ acceptance("Discourse Chat - Keyboard shortcuts", function (needs) {
     this.chatService.set("sidebarActive", false);
 
     await click(".header-dropdown-toggle.open-chat");
+    await click("#chat-channel-row-4");
+
     assert.ok(visible(".topic-chat-float-container"), "chat float is open");
     assert.ok(query(".topic-chat-container").classList.contains("channel-4"));
 
@@ -183,9 +185,10 @@ acceptance("Discourse Chat - Keyboard shortcuts", function (needs) {
   });
 
   test("simple composer formatting shortcuts", async function (assert) {
-    await visit("/latest");
     this.chatService.set("sidebarActive", false);
+    await visit("/latest");
     await click(".header-dropdown-toggle.open-chat");
+    await click(".chat-channel-row");
 
     const composerInput = query(".chat-composer-input");
     await fillIn(composerInput, "test text");
@@ -229,6 +232,7 @@ acceptance("Discourse Chat - Keyboard shortcuts", function (needs) {
 
     this.chatService.set("sidebarActive", false);
     await click(".header-dropdown-toggle.open-chat");
+    await click(".chat-channel-row");
     await fillIn(".chat-composer-input", stagedMessageText);
     await click(".chat-composer-inline-button");
     await triggerKeyEvent(".chat-composer-input", "keydown", "ArrowUp");
@@ -244,6 +248,7 @@ acceptance("Discourse Chat - Keyboard shortcuts", function (needs) {
 
     this.chatService.set("sidebarActive", false);
     await click(".header-dropdown-toggle.open-chat");
+    await click(".chat-channel-row");
 
     await focus(".chat-composer-input");
     await fillIn(".chat-composer-input", "This is a link to ");
@@ -280,9 +285,10 @@ acceptance("Discourse Chat - Keyboard shortcuts", function (needs) {
   });
 
   test("Pressing Escape when drawer is opened", async function (assert) {
-    await visit("/latest");
     this.chatService.set("sidebarActive", false);
+    await visit("/latest");
     await click(".header-dropdown-toggle.open-chat");
+    await click(".chat-channel-row");
 
     const composerInput = query(".chat-composer-input");
     await focus(composerInput);

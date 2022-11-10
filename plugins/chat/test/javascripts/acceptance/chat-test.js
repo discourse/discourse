@@ -225,9 +225,9 @@ acceptance("Discourse Chat - without unread", function (needs) {
       "it doesn’t show the rebake button for non staff"
     );
 
-    await visit("/");
     updateCurrentUser({ admin: true, moderator: true });
-    await visit("/chat/channel/11/another-category");
+    await visit("/chat");
+
     await triggerEvent(".chat-message-container[data-id='174']", "mouseenter");
     await currentUserDropdown.expand();
 
@@ -370,6 +370,7 @@ acceptance("Discourse Chat - without unread", function (needs) {
 
     await visit("/latest");
     await click(".header-dropdown-toggle.open-chat");
+    await click(".chat-channel-row");
     await settled();
 
     await click(".topic-chat-drawer-header__return-to-channels-btn");
@@ -984,26 +985,6 @@ acceptance(
       assert.equal(currentURL(), `/chat/channel/11/another-category`);
     });
 
-    test("Chat opens to full-page channel with unread messages when sidebar is installed", async function (assert) {
-      await visit("/t/internationalization-localization/280");
-      this.chatService.set("sidebarActive", true);
-      await click(".header-dropdown-toggle.open-chat");
-
-      assert.equal(currentURL(), `/chat/channel/11/another-category`);
-      assert.notOk(
-        visible(".topic-chat-float-container"),
-        "chat float is not open"
-      );
-    });
-
-    test("Chat float opens on header icon click when sidebar is not installed", async function (assert) {
-      await visit("/t/internationalization-localization/280");
-      this.chatService.set("sidebarActive", false);
-
-      await click(".header-dropdown-toggle.open-chat");
-      assert.ok(visible(".topic-chat-float-container"), "chat float is open");
-    });
-
     test("Unread header indicator is present", async function (assert) {
       await visit("/t/internationalization-localization/280");
 
@@ -1108,6 +1089,7 @@ acceptance(
         visible(".topic-chat-drawer-header__top-line--expanded"),
         "chat float is expanded"
       );
+      await click("#chat-channel-row-9");
       await click(".topic-chat-drawer-header__title");
       assert.equal(currentURL(), `/chat/channel/9/site/info/members`);
     });
@@ -1116,16 +1098,22 @@ acceptance(
       await visit("/t/internationalization-localization/280");
       this.chatService.set("sidebarActive", false);
       await click(".header-dropdown-toggle.open-chat");
+      await click(".chat-channel-row");
+
       assert.ok(
         visible(".topic-chat-drawer-header__top-line--expanded"),
         "chat float is expanded"
       );
+
       await click(".topic-chat-drawer-header__expand-btn");
+
       assert.ok(
         visible(".topic-chat-drawer-header__top-line--collapsed"),
         "chat float is collapsed"
       );
+
       await click(".topic-chat-drawer-header__title");
+
       assert.ok(
         visible(".topic-chat-drawer-header__top-line--expanded"),
         "chat float is expanded"
@@ -1181,12 +1169,14 @@ acceptance(
       this.chatService.set("sidebarActive", false);
 
       await click(".header-dropdown-toggle.open-chat");
+      await click("#chat-channel-row-75");
       const chatContainer = query(".topic-chat-container");
       assert.ok(chatContainer.classList.contains("channel-75"));
     });
 
     test("Chat full page open to DM channel with unread messages with sidebar on", async function (assert) {
       this.chatService.set("sidebarActive", true);
+      this.owner.lookup("service:chat-state-manager").prefersFullPage();
       await visit("/t/internationalization-localization/280");
       await click(".header-dropdown-toggle.open-chat");
 
@@ -1471,6 +1461,7 @@ acceptance("Discourse Chat - image uploads", function (needs) {
 
     this.container.lookup("service:chat").set("sidebarActive", false);
     await click(".header-dropdown-toggle.open-chat");
+    await click(".chat-channel-row");
     assert.ok(visible(".topic-chat-float-container"), "chat float is open");
 
     const appEvents = loggedInUser().appEvents;
@@ -1810,7 +1801,7 @@ acceptance("Discourse Chat - Direct Message Creator", function (needs) {
   test("Create a direct message", async function (assert) {
     await visit("/latest");
     await click(".header-dropdown-toggle.open-chat");
-    await click(".topic-chat-drawer-header__return-to-channels-btn");
+
     assert.ok(
       !exists(".open-draft-channel-page-btn.btn-floating"),
       "mobile floating button should not exist on desktop"

@@ -6,7 +6,7 @@
     <div class="chat-channel-header-details">
       {{#if this.site.mobileView}}
         <div class="chat-full-page-header__left-actions">
-          <DButton @class="chat-full-page-header__back-btn btn-flat" @icon="chevron-left" @action={{this.onBackClick}} />
+          <DButton @class="chat-full-page-header__back-btn no-text btn-flat" @icon="chevron-left" @action={{this.onBackClick}} />
         </div>
       {{/if}}
 
@@ -16,7 +16,7 @@
 
       {{#if this.showCloseFullScreenBtn}}
         <div class="chat-full-page-header__right-actions">
-          <DButton @icon="discourse-compress" @title="chat.close_full_page" class="open-drawer-btn btn-flat icon-only" @action={{action "onCloseFullScreen"}} />
+          <DButton @icon="discourse-compress" @title="chat.close_full_page" class="open-drawer-btn btn-flat no-text" @action={{action "onCloseFullScreen"}} />
         </div>
       {{/if}}
     </div>
