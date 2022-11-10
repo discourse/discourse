@@ -136,7 +136,6 @@ acceptance("Discourse Chat - Composer - unreliable network", function (needs) {
   });
 
   test("Sending a message with unreliable network", async function (assert) {
-    this.chatService.set("chatWindowFullPage", false);
     await visit("/chat/channel/11/-");
     await fillIn(".chat-composer-input", "network-error-message");
     await click(".send-btn");
@@ -174,7 +173,6 @@ acceptance("Discourse Chat - Composer - unreliable network", function (needs) {
   });
 
   test("Draft with unreliable network", async function (assert) {
-    this.chatService.set("chatWindowFullPage", false);
     await visit("/chat/channel/11/-");
     this.chatService.set("isNetworkUnreliable", true);
     await settled();

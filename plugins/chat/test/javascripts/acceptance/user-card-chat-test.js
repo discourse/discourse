@@ -83,9 +83,8 @@ acceptance("Discourse Chat - User card test", function (needs) {
 
   test("user card has chat button that opens the correct channel", async function (assert) {
     this.chatService.set("sidebarActive", false);
-    this.chatService.set("chatWindowFullPage", false);
-    await visit("/latest");
-    this.appEvents.trigger("chat:toggle-open");
+    await visit("/");
+    await click(".header-dropdown-toggle.open-chat");
     await settled();
 
     await click(".topic-chat-drawer-header__return-to-channels-btn");

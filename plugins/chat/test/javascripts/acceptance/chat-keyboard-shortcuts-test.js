@@ -165,7 +165,6 @@ acceptance("Discourse Chat - Keyboard shortcuts", function (needs) {
   test("switching channel with alt+arrow keys in float", async function (assert) {
     await visit("/latest");
     this.chatService.set("sidebarActive", false);
-    this.chatService.set("chatWindowFullPage", false);
 
     await click(".header-dropdown-toggle.open-chat");
     assert.ok(visible(".topic-chat-float-container"), "chat float is open");
@@ -275,7 +274,6 @@ acceptance("Discourse Chat - Keyboard shortcuts", function (needs) {
   test("Dash key (-) opens chat float", async function (assert) {
     await visit("/latest");
     this.chatService.set("sidebarActive", false);
-    this.chatService.set("chatWindowFullPage", false);
 
     await triggerKeyEvent(document.body, "keydown", "-");
     assert.ok(exists(".topic-chat-drawer-content"), "chat float is open");
@@ -284,7 +282,6 @@ acceptance("Discourse Chat - Keyboard shortcuts", function (needs) {
   test("Pressing Escape when drawer is opened", async function (assert) {
     await visit("/latest");
     this.chatService.set("sidebarActive", false);
-    this.chatService.set("chatWindowFullPage", false);
     await click(".header-dropdown-toggle.open-chat");
 
     const composerInput = query(".chat-composer-input");
@@ -299,7 +296,6 @@ acceptance("Discourse Chat - Keyboard shortcuts", function (needs) {
 
   test("Pressing Escape when full page is opened", async function (assert) {
     this.chatService.set("sidebarActive", false);
-    this.chatService.set("chatWindowFullPage", true);
     await visit("/chat/channel/75/@hawk");
     const composerInput = query(".chat-composer-input");
     await focus(composerInput);

@@ -141,7 +141,6 @@ acceptance("Discourse Chat - without unread", function (needs) {
 
   // TODO: needs a future change to how we handle URLS to be possible
   skip("Clicking mention notification from outside chat opens the float", async function (assert) {
-    this.chatService.set("chatWindowFullPage", false);
     await visit("/t/internationalization-localization/280");
     await click(".header-dropdown-toggle.current-user");
     await click("#quick-access-notifications .chat-mention");
@@ -368,9 +367,9 @@ acceptance("Discourse Chat - without unread", function (needs) {
 
   test("Reply-to is stored in draft", async function (assert) {
     this.chatService.set("sidebarActive", false);
-    this.chatService.set("chatWindowFullPage", false);
+
     await visit("/latest");
-    this.appEvents.trigger("chat:toggle-open");
+    await click(".header-dropdown-toggle.open-chat");
     await settled();
 
     await click(".topic-chat-drawer-header__return-to-channels-btn");
@@ -979,7 +978,7 @@ acceptance(
     test("Expand button takes you to full page chat on the correct channel", async function (assert) {
       await visit("/t/internationalization-localization/280");
       this.chatService.set("sidebarActive", false);
-      await visit(".header-dropdown-toggle.open-chat");
+      await click(".header-dropdown-toggle.open-chat");
       await click(".topic-chat-drawer-header__full-screen-btn");
 
       assert.equal(currentURL(), `/chat/channel/11/another-category`);
@@ -988,7 +987,6 @@ acceptance(
     test("Chat opens to full-page channel with unread messages when sidebar is installed", async function (assert) {
       await visit("/t/internationalization-localization/280");
       this.chatService.set("sidebarActive", true);
-
       await click(".header-dropdown-toggle.open-chat");
 
       assert.equal(currentURL(), `/chat/channel/11/another-category`);
@@ -1001,7 +999,7 @@ acceptance(
     test("Chat float opens on header icon click when sidebar is not installed", async function (assert) {
       await visit("/t/internationalization-localization/280");
       this.chatService.set("sidebarActive", false);
-      this.chatService.set("chatWindowFullPage", false);
+
       await click(".header-dropdown-toggle.open-chat");
       assert.ok(visible(".topic-chat-float-container"), "chat float is open");
     });
@@ -1181,7 +1179,7 @@ acceptance(
     test("Chat float open to DM channel with unread messages with sidebar off", async function (assert) {
       await visit("/t/internationalization-localization/280");
       this.chatService.set("sidebarActive", false);
-      this.chatService.set("chatWindowFullPage", false);
+
       await click(".header-dropdown-toggle.open-chat");
       const chatContainer = query(".topic-chat-container");
       assert.ok(chatContainer.classList.contains("channel-75"));
@@ -1248,8 +1246,6 @@ acceptance(
     });
 
     test("Create channel modal", async function (assert) {
-      this.container.lookup("service:chat").set("chatWindowFullPage", true);
-
       await visit("/chat/browse");
       await click(".new-channel-btn");
 
@@ -1415,7 +1411,6 @@ acceptance("Discourse Chat - image uploads", function (needs) {
   test("uploading files in chat works", async function (assert) {
     await visit("/t/internationalization-localization/280");
     this.container.lookup("service:chat").set("sidebarActive", false);
-    this.container.lookup("service:chat").set("chatWindowFullPage", false);
     await click(".header-dropdown-toggle.open-chat");
 
     assert.ok(visible(".topic-chat-float-container"), "chat float is open");
@@ -1475,7 +1470,6 @@ acceptance("Discourse Chat - image uploads", function (needs) {
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
 
     this.container.lookup("service:chat").set("sidebarActive", false);
-    this.container.lookup("service:chat").set("chatWindowFullPage", false);
     await click(".header-dropdown-toggle.open-chat");
     assert.ok(visible(".topic-chat-float-container"), "chat float is open");
 
@@ -1841,8 +1835,6 @@ acceptance("Discourse Chat - Drawer", function (needs) {
   });
 
   test("Position after closing reduced composer", async function (assert) {
-    this.chatService.set("chatWindowFullPage", false);
-
     await visit("/t/internationalization-localization/280");
     await click(".btn.create");
     await click(".toggle-preview");

@@ -35,7 +35,6 @@ export default Component.extend({
 
     this._checkSize();
     this.appEvents.on("chat:open-url", this, "openURL");
-    this.appEvents.on("chat:toggle-open", this, "toggleChat");
     this.appEvents.on("chat:toggle-close", this, "close");
     this.appEvents.on("chat:open-channel", this, "switchChannel");
     this.appEvents.on(
@@ -64,7 +63,6 @@ export default Component.extend({
 
     if (this.appEvents) {
       this.appEvents.off("chat:open-url", this, "openURL");
-      this.appEvents.off("chat:toggle-open", this, "toggleChat");
       this.appEvents.off("chat:toggle-close", this, "close");
       this.appEvents.off("chat:open-channel", this, "switchChannel");
       this.appEvents.off(
