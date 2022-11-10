@@ -353,7 +353,7 @@ export default Component.extend({
         return "/chat/draft-channel";
       case CHAT_VIEW:
         if (channel) {
-          return `/chat/channel/${channel.id}/-`;
+          return `/chat/channel/${channel.id}/${channel.slug || "-"}`;
         } else {
           return "/chat";
         }
