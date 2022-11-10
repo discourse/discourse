@@ -216,7 +216,7 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
     if (this.current === this.scrollPosition) {
       this.args.jumpToIndex(this.current);
     } else {
-      this.args.jumpEnd;
+      this.args.jumpEnd();
     }
   }
 
@@ -256,18 +256,6 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
 
     this.percentage = this.clamp(parseFloat(y - areaTop) / $area.height());
     this.commit();
-  }
-
-  @action
-  jumpBottomAndScroll(y) {
-    this.args.jumpBottom;
-    this.updatePercentage(y);
-  }
-
-  @action
-  jumpTopAndScroll(y) {
-    this.args.jumpTop;
-    this.updatePercentage(y);
   }
 }
 
