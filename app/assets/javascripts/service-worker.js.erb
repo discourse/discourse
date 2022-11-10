@@ -138,6 +138,7 @@ function showNotification(title, body, icon, badge, tag, baseUrl, url) {
 
   if (chatRegex.test(url)) {
     notificationOptions['actions'] = [{
+      action: "reply",
       title: "Reply",
       placeholder: "reply",
       type: "text",
