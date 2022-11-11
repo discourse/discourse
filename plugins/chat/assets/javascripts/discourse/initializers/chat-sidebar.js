@@ -69,7 +69,7 @@ export default {
                 classes.push("sidebar-section-link--muted");
               }
 
-              if (this.channel?.id === this.chatService.activeChannel?.id) {
+              if (this.channel.id === this.chatService.activeChannel?.id) {
                 classes.push("sidebar-section-link--active");
               }
 
@@ -257,7 +257,7 @@ export default {
                 classes.push("sidebar-section-link--muted");
               }
 
-              if (this.channel?.id === this.chatService.activeChannel?.id) {
+              if (this.channel.id === this.chatService.activeChannel?.id) {
                 classes.push("sidebar-section-link--active");
               }
 
