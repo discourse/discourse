@@ -611,11 +611,6 @@ bl@^4.0.3, bl@^4.1.0:
     inherits "^2.0.4"
     readable-stream "^3.4.0"
 
-bootbox@3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/bootbox/-/bootbox-3.2.0.tgz#00bf643fc9edefd9ae1e7c648c6b022db4be0aee"
-  integrity sha1-AL9kP8nt79muHnxkjGsCLbS+Cu4=
-
 brace-expansion@^1.1.7:
   version "1.1.11"
   resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-1.1.11.tgz#3c7fcbf529d87226f3d2f52b966ff5271eb441dd"
