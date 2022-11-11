@@ -24,6 +24,10 @@ class ImportScripts::FluxBB < ImportScripts::Base
   FLUXBB_PW ||= ENV["FLUXBB_PW"] || ""
   FLUXBB_PREFIX ||= ENV["FLUXBB_PREFIX"] || ""
 
+  # Set this if you want to rewrite relative links to be absolute.
+  # e.g. "https://mysite.com/old-forum-redirector/"
+  FLUXBB_RELATIVE_LINKS_BASE ||= ENV['FLUXBB_RELATIVE_LINKS_BASE'] || ""
+
   def initialize
     super
 
@@ -236,6 +240,11 @@ class ImportScripts::FluxBB < ImportScripts::Base
   def process_fluxbb_post(raw, import_id)
     s = raw.dup
 
+    unless FLUXBB_RELATIVE_LINKS_BASE.blank?
+      s.gsub!(/\[url\]\s*\//i, "[url]#{FLUXBB_RELATIVE_LINKS_BASE}")
+      s.gsub!(/\[url=\s*\/(.*)\s*\]/i, "[url=#{FLUXBB_RELATIVE_LINKS_BASE}\\1]")
+    end
+
     # FluxBB supports slightly different smiley character combos vs discourse
     s.gsub!(/(\s)=\)/, "\\1:)")
     s.gsub!(/(\s)=\|/, "\\1:|")
@@ -283,6 +292,8 @@ class ImportScripts::FluxBB < ImportScripts::Base
   end
 
   def bbcode_tag_additions_and_overrides
+    link_base = FLUXBB_RELATIVE_LINKS_BASE.blank? ? "/" : FLUXBB_RELATIVE_LINKS_BASE
+
     {
       h: {
         html_open: "\n## ", html_close: "\n",
@@ -321,7 +332,7 @@ class ImportScripts::FluxBB < ImportScripts::Base
         allow_tag_param_between: true,
         tag_param: /((\d*))/,
         tag_param_tokens: [ { token: :post_id },
-                            { token: :post_url, prefix: '/viewtopic.php?pid=' }] },
+                            { token: :post_url, prefix: "#{link_base}viewtopic.php?pid=" }] },
       topic: {
         html_open: '[%between%](%topic_url%)', html_close: '',
         description: 'Link to forum topic by id',
@@ -331,7 +342,7 @@ class ImportScripts::FluxBB < ImportScripts::Base
         allow_tag_param: true,
         allow_tag_param_between: true,
         tag_param: /(\d*)/,
-        tag_param_tokens: [ { token: :topic_url, prefix: '/viewtopic.php?id=' }] },
+        tag_param_tokens: [ { token: :topic_url, prefix: "#{link_base}viewtopic.php?id=" }] },
       forum: {
         html_open: '[%between%](%forum_url%)', html_close: '',
         description: 'Link to forum by id',
@@ -341,7 +352,7 @@ class ImportScripts::FluxBB < ImportScripts::Base
         allow_tag_param: true,
         allow_tag_param_between: true,
         tag_param: /(\d*)/,
-        tag_param_tokens: [ { token: :forum_url, prefix: '/viewforum.php?id=' }] },
+        tag_param_tokens: [ { token: :forum_url, prefix: "#{link_base}viewforum.php?id=" }] },
       user: {
         html_open: '[%between%](%user_url%)', html_close: '',
         description: 'Link to user profile by id',
@@ -351,7 +362,7 @@ class ImportScripts::FluxBB < ImportScripts::Base
         allow_tag_param: true,
         allow_tag_param_between: true,
         tag_param: /(\d*)/,
-        tag_param_tokens: [{ token: :user_url, prefix: '/profile.php?id=' }] },
+        tag_param_tokens: [{ token: :user_url, prefix: "#{link_base}profile.php?id=" }] },
     }
   end
 

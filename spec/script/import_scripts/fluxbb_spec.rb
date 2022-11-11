@@ -177,6 +177,54 @@ RSpec.describe "ImportScripts::FluxBB" do
           end
         end
       end
+
+      context "with FLUXBB_RELATIVE_LINKS_BASE set" do
+        before do
+          stub_const(ImportScripts::FluxBB, "FLUXBB_RELATIVE_LINKS_BASE", "http://oldforum.com/") do
+            importer = ImportScripts::FluxBB.new
+            importer.instance_variable_set(:@bbcode_to_md, true)
+            importer.import_posts
+          end
+        end
+
+        context "with basic url tag relative links" do
+          let(:example_post_content) {
+            "[url=/about]Relative link[/url]\n" +
+            "[url]/about[/url]"
+          }
+          it "rewrites relative links to absolute with the specified base" do
+            expect(Post.last.raw).to eq(
+              "[Relative link](http://oldforum.com/about)\n" +
+              "[http://oldforum.com/about](http://oldforum.com/about)"
+            )
+          end
+        end
+
+        context "with FluxBB internal linking tags" do
+          let(:example_post_content) {
+            "[post=234]Internal link to fluxbb post with link text[/post]\n" +
+            "[post]234[/post] - Internal link to fluxbb post without link text\n" +
+            "[topic=345]Internal link to fluxbb topic with link text[/topic]\n" +
+            "[topic]345[/topic] - Internal link to fluxbb topic without link text\n" +
+            "[forum=456]Internal link to fluxbb forum with link text[/forum]\n" +
+            "[forum]456[/forum] - Internal link to fluxbb forum without link text\n" +
+            "[user=567]Internal link to fluxbb user profile with link text[/user]\n" +
+            "[user]567[/user] - Internal link to fluxbb user without link text"
+          }
+          it "generates absolute links with the specified base" do
+            expect(Post.last.raw).to eq(
+              "[Internal link to fluxbb post with link text](http://oldforum.com/viewtopic.php?pid=234#p234)\n" +
+              "[234](http://oldforum.com/viewtopic.php?pid=234#p234) - Internal link to fluxbb post without link text\n" +
+              "[Internal link to fluxbb topic with link text](http://oldforum.com/viewtopic.php?id=345)\n" +
+              "[345](http://oldforum.com/viewtopic.php?id=345) - Internal link to fluxbb topic without link text\n" +
+              "[Internal link to fluxbb forum with link text](http://oldforum.com/viewforum.php?id=456)\n" +
+              "[456](http://oldforum.com/viewforum.php?id=456) - Internal link to fluxbb forum without link text\n" +
+              "[Internal link to fluxbb user profile with link text](http://oldforum.com/profile.php?id=567)\n" +
+              "[567](http://oldforum.com/profile.php?id=567) - Internal link to fluxbb user without link text"
+            )
+          end
+        end
+      end
     end
   end
 end
