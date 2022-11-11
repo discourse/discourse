@@ -216,5 +216,50 @@ RSpec.describe "Navigation", type: :system, js: true do
         expect(page).to have_content(category_channel_2.title)
       end
     end
+
+    context "when opening a channel in full page" do
+      it "activates the channel in the sidebar" do
+        visit("/chat/channel/#{category_channel.id}/#{category_channel.slug}")
+        expect(page).to have_css(
+          ".sidebar-section-link-#{category_channel.slug}.sidebar-section-link--active",
+        )
+      end
+    end
+
+    context "when clicking logo from a channel in full page" do
+      it "deactivates the channel in the sidebar" do
+        visit("/chat/channel/#{category_channel.id}/#{category_channel.slug}")
+        find("#site-logo").click
+
+        expect(page).not_to have_css(
+          ".sidebar-section-link-#{category_channel.slug}.sidebar-section-link--active",
+        )
+      end
+    end
+
+    context "when opening a channel in drawer" do
+      it "activates the channel in the sidebar" do
+        visit("/")
+        chat_page.open_from_header
+        find("a[title='#{category_channel.title}']").click
+
+        expect(page).to have_css(
+          ".sidebar-section-link-#{category_channel.slug}.sidebar-section-link--active",
+        )
+      end
+    end
+
+    context "when closing drawer in a channel" do
+      it "deactivates the channel in the sidebar" do
+        visit("/")
+        chat_page.open_from_header
+        find("a[title='#{category_channel.title}']").click
+        chat_drawer_page.close
+
+        expect(page).not_to have_css(
+          ".sidebar-section-link-#{category_channel.slug}.sidebar-section-link--active",
+        )
+      end
+    end
   end
 end
