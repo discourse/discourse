@@ -1,3 +1,5 @@
+const handlers = [];
+
 export default function deprecated(msg, opts = {}) {
   msg = ["Deprecation notice:", msg];
   if (opts.since) {
@@ -20,4 +22,10 @@ export default function deprecated(msg, opts = {}) {
   }
 
   console.warn(consolePrefix, msg); //eslint-disable-line no-console
+
+  handlers.forEach((h) => h(msg, opts));
+}
+
+export function registerDeprecationHandler(callback) {
+  handlers.push(callback);
 }

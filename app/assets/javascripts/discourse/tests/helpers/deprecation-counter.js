@@ -1,5 +1,6 @@
 import { registerDeprecationHandler } from "@ember/debug";
 import { bind } from "discourse-common/utils/decorators";
+import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse-common/lib/deprecated";
 
 export default class DeprecationCounter {
   counts = new Map();
@@ -12,20 +13,34 @@ export default class DeprecationCounter {
   }
 
   start() {
-    registerDeprecationHandler(this.handleDeprecation);
+    registerDeprecationHandler(this.handleEmberDeprecation);
+    registerDiscourseDeprecationHandler(this.handleDiscourseDeprecation);
   }
 
   @bind
-  handleDeprecation(message, options, next) {
+  handleEmberDeprecation(message, options, next) {
     const { id } = options;
     const matchingConfig = this.#configById.get(id);
 
     if (matchingConfig !== "silence") {
-      const existingCount = this.counts.get(id) || 0;
-      this.counts.set(id, existingCount + 1);
+      this.incrementDeprecation(id);
     }
 
     next(message, options);
+  }
+
+  @bind
+  handleDiscourseDeprecation(message, options) {
+    let { id } = options;
+    id ||= "(unknown)";
+    id = `discourse.${id}`;
+
+    this.incrementDeprecation(id);
+  }
+
+  incrementDeprecation(id) {
+    const existingCount = this.counts.get(id) || 0;
+    this.counts.set(id, existingCount + 1);
   }
 
   get hasDeprecations() {
