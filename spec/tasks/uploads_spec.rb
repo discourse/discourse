@@ -240,7 +240,7 @@ RSpec.describe "tasks/uploads" do
       upload.update!(thumbnail_height: 0)
       SiteSetting.max_image_size_kb = 0.001 # 1 byte
 
-      invoke_task
+      expect { invoke_task }.to change { upload.reload.thumbnail_height }.to(200)
     end
   end
 end
