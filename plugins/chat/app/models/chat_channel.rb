@@ -83,10 +83,6 @@ class ChatChannel < ActiveRecord::Base
     "/chat/channel/#{self.id}/#{self.slug || "-"}"
   end
 
-  def public_channel_title
-    chatable.name
-  end
-
   private
 
   def change_status(acting_user, target_status)

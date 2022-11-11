@@ -675,13 +675,13 @@ after_initialize do
 
       placeholder :channel_name
 
+      triggerables [:recurring]
+
       script do |context, fields, automation|
         sender = User.find_by(username: fields.dig("sender", "value")) || Discourse.system_user
         channel = ChatChannel.find_by(id: fields.dig("chat_channel_id", "value"))
 
-        placeholders = { channel_name: channel.public_channel_title }.merge(
-          context["placeholders"] || {},
-        )
+        placeholders = { channel_name: channel.title(sender) }.merge(context["placeholders"] || {})
 
         creator =
           Chat::ChatMessageCreator.create(
