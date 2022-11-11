@@ -8,7 +8,7 @@ module PageObjects
         self
       end
 
-      def toggle_setting(setting_name, text)
+      def toggle_setting(setting_name, text = '')
         setting = find(".admin-detail .row.setting[data-setting='#{setting_name}']")
         setting.find('.setting-value span', text: text).click
         setting.find('.setting-controls button.ok').click
