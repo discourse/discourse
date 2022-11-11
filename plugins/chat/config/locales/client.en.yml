@@ -1,6 +1,9 @@
 en:
   js:
     admin:
+      site_settings:
+        categories:
+          chat: Chat
       logs:
         staff_actions:
           actions:
