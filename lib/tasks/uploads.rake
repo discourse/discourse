@@ -1088,7 +1088,10 @@ end
 # WORKER_ID/WORKER_COUNT
 # When running the script on a single forum in multiple terminals.
 # For example, if you want 4 concurrent scripts use WORKER_COUNT=4
-# and WORKER_ID from 0 to 3
+# and WORKER_ID from 0 to 3.
+#
+# START_ID
+# Skip uploads with id lower than START_ID.
 task "uploads:downsize" => :environment do
   min_image_pixels = 500_000 # 0.5 megapixels
   default_image_pixels = 1_000_000 # 1 megapixel
@@ -1124,6 +1127,10 @@ task "uploads:downsize" => :environment do
 
   if ENV["WORKER_ID"] && ENV["WORKER_COUNT"]
     scope = scope.where("uploads.id % ? = ?", ENV["WORKER_COUNT"], ENV["WORKER_ID"])
+  end
+
+  if ENV["START_ID"]
+    scope = scope.where("uploads.id >= ?", ENV["START_ID"])
   end
 
   skipped = 0
