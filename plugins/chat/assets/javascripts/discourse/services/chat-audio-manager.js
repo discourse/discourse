@@ -8,6 +8,8 @@ export const CHAT_SOUNDS = {
   ding: [{ src: "/plugins/chat/audio/ding.mp3", type: "audio/mpeg" }],
 };
 
+const DEFAULT_SOUND_NAME = "bell";
+
 const createAudioCache = (sources) => {
   const audio = new Audio();
   sources.forEach(({ type, src }) => {
@@ -44,15 +46,8 @@ export default class ChatAudioManager extends Service {
   }
 
   _play(soundName) {
-    const audio = this._audioCache[soundName];
-
-    if (!audio) {
-      // eslint-disable-next-line no-console
-      console.warn(
-        `[chat] Couldn’t find audio for sound name: ${soundName}. Skipping.`
-      );
-      return;
-    }
+    const audio =
+      this._audioCache[soundName] || this._audioCache[DEFAULT_SOUND_NAME];
 
     if (!audio.paused) {
       audio.pause();
