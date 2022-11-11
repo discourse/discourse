@@ -4,7 +4,8 @@ import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import { action } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { CHAT_SOUNDS } from "discourse/plugins/chat/discourse/initializers/chat-notification-sounds";
+import { CHAT_SOUNDS } from "discourse/plugins/chat/discourse/services/chat-audio-manager";
+import { inject as service } from "@ember/service";
 
 const CHAT_ATTRS = [
   "chat_enabled",
@@ -20,6 +21,8 @@ const EMAIL_FREQUENCY_OPTIONS = [
 ];
 
 export default class PreferencesChatController extends Controller {
+  @service chatAudioManager;
+
   emailFrequencyOptions = EMAIL_FREQUENCY_OPTIONS;
 
   @discourseComputed
@@ -32,8 +35,7 @@ export default class PreferencesChatController extends Controller {
   @action
   onChangeChatSound(sound) {
     if (sound && !isTesting()) {
-      const audio = new Audio(CHAT_SOUNDS[sound]);
-      audio.play();
+      this.chatAudioManager.playImmediately(sound);
     }
     this.model.set("user_option.chat_sound", sound);
   }
