@@ -10,7 +10,7 @@ const MSG_ACTIONS_VERTICAL_PADDING = -15;
 export default Component.extend({
   tagName: "",
 
-  chatPreferredMode: service(),
+  chatStateManager: service(),
 
   messageActions: null,
 

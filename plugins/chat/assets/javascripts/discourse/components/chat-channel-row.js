@@ -1,8 +1,6 @@
 import Component from "@ember/component";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import getURL from "discourse-common/lib/get-url";
-import { action } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { CHATABLE_TYPES } from "discourse/plugins/chat/discourse/models/chat-channel";
@@ -12,7 +10,6 @@ export default Component.extend({
   router: service(),
   chat: service(),
   channel: null,
-  switchChannel: null,
   isDirectMessageRow: equal(
     "channel.chatable_type",
     CHATABLE_TYPES.directMessageChannel
@@ -73,52 +70,6 @@ export default Component.extend({
       this.channel.chatable.users.length === 1 &&
       this.channel.chatable.users[0].status
     );
-  },
-
-  @action
-  handleNewWindow(event) {
-    // Middle mouse click
-    if (event.which === 2) {
-      window
-        .open(
-          getURL(`/chat/channel/${this.channel.id}/${this.channel.title}`),
-          "_blank"
-        )
-        .focus();
-    }
-  },
-
-  @action
-  handleSwitchChannel(event) {
-    if (this.switchChannel) {
-      this.switchChannel(this.channel);
-      event.preventDefault();
-    }
-  },
-
-  @action
-  handleClick(event) {
-    if (event.target.classList.contains("chat-channel-leave-btn")) {
-      return true;
-    }
-
-    if (
-      event.target.classList.contains("chat-channel-settings-btn") ||
-      event.target.parentElement.classList.contains("select-kit-header-wrapper")
-    ) {
-      return;
-    }
-
-    this.handleSwitchChannel(event);
-  },
-
-  @action
-  handleKeyUp(event) {
-    if (event.key !== "Enter") {
-      return;
-    }
-
-    this.handleSwitchChannel(event);
   },
 
   @discourseComputed("channel.chatable_type")

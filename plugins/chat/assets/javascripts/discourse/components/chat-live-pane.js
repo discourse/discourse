@@ -41,7 +41,6 @@ const FUTURE = "future";
 export default Component.extend({
   classNameBindings: [":chat-live-pane", "sendingLoading", "loading"],
   chatChannel: null,
-  fullPage: false,
   registeredChatChannelId: null, // ?Number
   loading: false,
   loadingMorePast: false,
@@ -73,8 +72,7 @@ export default Component.extend({
   router: service(),
   chatEmojiPickerManager: service(),
   chatComposerPresenceManager: service(),
-  chatPreferredMode: service(),
-  fullPageChat: service(),
+  chatStateManager: service(),
 
   getCachedChannelDetails: null,
   clearCachedChannelDetails: null,
@@ -1264,11 +1262,14 @@ export default Component.extend({
   },
 
   @action
-  onCloseFullScreen(channel) {
-    this.chatPreferredMode.setDrawer();
+  onCloseFullScreen() {
+    this.chatStateManager.prefersDrawer();
 
-    this.router.replaceWith(this.fullPageChat.exit()).then(() => {
-      this.appEvents.trigger("chat:open-channel", channel);
+    this.router.transitionTo(this.chatStateManager.lastKnownAppURL).then(() => {
+      this.appEvents.trigger(
+        "chat:open-url",
+        this.chatStateManager.lastKnownChatURL
+      );
     });
   },
 

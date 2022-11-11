@@ -55,7 +55,6 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
       onStartSelectingMessages: () => {},
       onSelectMessage: () => {},
       bulkSelectMessages: () => {},
-      fullPage: false,
       afterReactionAdded: () => {},
       onHoverMessage: () => {},
     };
@@ -73,7 +72,6 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
       onStartSelectingMessages=onStartSelectingMessages
       onSelectMessage=onSelectMessage
       bulkSelectMessages=bulkSelectMessages
-      fullPage=fullPage
       onHoverMessage=onHoverMessage
       afterReactionAdded=reStickScrollIfNeeded
     }}`;
