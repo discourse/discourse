@@ -2,10 +2,7 @@
 
 require "file_helper"
 
-module Validators; end
-
 class UploadValidator < ActiveModel::Validator
-
   def validate(upload)
     # staff can upload any file in PM
     if (upload.for_private_message && SiteSetting.allow_staff_to_upload_any_file_in_pm)
@@ -141,6 +138,8 @@ class UploadValidator < ActiveModel::Validator
   end
 
   def maximum_file_size(upload, type)
+    return if !upload.validate_file_size
+
     max_size_kb = if upload.for_export
       SiteSetting.max_export_file_size_kb
     else
@@ -157,5 +156,4 @@ class UploadValidator < ActiveModel::Validator
       upload.errors.add(:filesize, message)
     end
   end
-
 end

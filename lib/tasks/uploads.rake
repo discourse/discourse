@@ -1189,6 +1189,10 @@ task "uploads:downsize" => :environment do
       log "After:  #{w}x#{h} #{ww}x#{hh} (#{upload.filesize})"
 
       dimensions_count += 1
+
+      # Don't validate the size - max image size setting might have
+      # changed since the file was uploaded, so this could fail
+      upload.validate_file_size = false
       upload.save!
     end
 
