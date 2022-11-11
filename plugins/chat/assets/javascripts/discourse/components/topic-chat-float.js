@@ -203,6 +203,7 @@ export default Component.extend({
 
   @action
   openURL(URL = null) {
+    this.chat.setActiveChannel(null);
     this.set("hidden", false);
     this.set("expanded", true);
 
@@ -214,12 +215,10 @@ export default Component.extend({
 
     switch (route.name) {
       case "chat":
-        this.chat.setActiveChannel(null);
         this.set("view", LIST_VIEW);
         this.appEvents.trigger("chat:float-toggled", false);
         return;
       case "chat.draft-channel":
-        this.chat.setActiveChannel(null);
         this.set("view", DRAFT_CHANNEL_VIEW);
         this.appEvents.trigger("chat:float-toggled", false);
         return;
@@ -227,6 +226,7 @@ export default Component.extend({
         return this.chat
           .getChannelBy("id", route.params.channelId)
           .then((channel) => {
+            this.chat.set("messageId", route.queryParams.messageId);
             this.chat.setActiveChannel(channel);
             this.set("view", CHAT_VIEW);
             this.appEvents.trigger("chat:float-toggled", false);
