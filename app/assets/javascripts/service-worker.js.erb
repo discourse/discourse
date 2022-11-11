@@ -193,7 +193,7 @@ self.addEventListener('notificationclick', function(event) {
         csrf = data.csrf;
       });
 
-    let chatTest = url.matches(chatRegex);
+    let chatTest = url.match(chatRegex);
     if (chatTest.length > 0) {
       let chatChannel = chatTest[1];
 
