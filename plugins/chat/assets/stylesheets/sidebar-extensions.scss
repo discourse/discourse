@@ -162,6 +162,10 @@
     }
   }
 
+  .sidebar-section-link--active {
+    background: var(--primary-low);
+  }
+
   .sidebar-section-link--muted {
     opacity: 0.5;
 

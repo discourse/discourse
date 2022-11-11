@@ -253,6 +253,7 @@ export default Component.extend({
   close() {
     this.set("hidden", true);
     this.set("expanded", false);
+    this.chat.setActiveChannel(null);
     this.appEvents.trigger("chat:float-toggled", this.hidden);
   },
 

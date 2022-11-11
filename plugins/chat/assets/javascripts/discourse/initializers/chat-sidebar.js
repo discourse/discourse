@@ -10,6 +10,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import { decorateUsername } from "discourse/helpers/decorate-username-selector";
 import { until } from "discourse/lib/formatter";
 import { inject as service } from "@ember/service";
+import { computed } from "@ember/object";
 
 export default {
   name: "chat-sidebar",
@@ -60,10 +61,19 @@ export default {
               return dasherize(slugifyChannel(this.channel));
             }
 
+            @computed("chatService.activeChannel")
             get classNames() {
-              return this.channel.current_user_membership.muted
-                ? "sidebar-section-link--muted"
-                : "";
+              const classes = [];
+
+              if (this.channel.current_user_membership.muted) {
+                classes.push("sidebar-section-link--muted");
+              }
+
+              if (this.channel.id === this.chatService.activeChannel?.id) {
+                classes.push("sidebar-section-link--active");
+              }
+
+              return classes.join(" ");
             }
 
             get route() {
@@ -239,10 +249,19 @@ export default {
               return slugifyChannel(this.channel);
             }
 
+            @computed("chatService.activeChannel")
             get classNames() {
-              return this.channel.current_user_membership.muted
-                ? "sidebar-section-link--muted"
-                : "";
+              const classes = [];
+
+              if (this.channel.current_user_membership.muted) {
+                classes.push("sidebar-section-link--muted");
+              }
+
+              if (this.channel.id === this.chatService.activeChannel?.id) {
+                classes.push("sidebar-section-link--active");
+              }
+
+              return classes.join(" ");
             }
 
             get route() {
