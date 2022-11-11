@@ -81,7 +81,7 @@ jobs:
 
       - name: Get yarn cache directory
         id: yarn-cache-dir
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - name: Yarn cache
         uses: actions/cache@v3
@@ -232,7 +232,7 @@ jobs:
 
       - name: Get yarn cache directory
         id: yarn-cache-dir
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - name: Yarn cache
         uses: actions/cache@v3
