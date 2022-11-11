@@ -191,23 +191,23 @@ self.addEventListener('notificationclick', function(event) {
       })
       .then((data) => {
         csrf = data.csrf;
-      });
 
-    let chatTest = url.match(chatRegex);
-    if (chatTest.length > 0) {
-      let chatChannel = chatTest[1];
+        let chatTest = url.match(chatRegex);
+        if (chatTest.length > 0) {
+          let chatChannel = chatTest[1];
 
-      fetch(`${baseUrl}/chat/${chatChannel}.json`, {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-          "X-CSRF-Token": csrf,
-        },
-        body: `message=${event.reply}`,
-        method: "POST",
-        mode: "cors",
+          fetch(`${baseUrl}/chat/${chatChannel}.json`, {
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "X-CSRF-Token": csrf,
+            },
+            body: `message=${event.reply}`,
+            method: "POST",
+            mode: "cors",
+          });
+        }
       });
-    }
   } else {
     // This looks to see if the current window is already open and
     // focuses if it is
