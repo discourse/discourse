@@ -36,7 +36,7 @@ export default class ChatAudioManager extends Service {
     this._audioCache = {};
   }
 
-  test(soundName) {
+  playImmediately(soundName) {
     return this._play(soundName);
   }
 
