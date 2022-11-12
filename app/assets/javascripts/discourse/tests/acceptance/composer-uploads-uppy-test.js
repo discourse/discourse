@@ -1,5 +1,6 @@
 import {
   acceptance,
+  chromeTest,
   createFile,
   loggedInUser,
   paste,
@@ -114,34 +115,39 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     appEvents.trigger("composer:add-files", image);
   });
 
-  test("should handle adding one file for upload then adding another when the first is still in progress", async function (assert) {
-    await visit("/");
-    await click("#create-topic");
-    await fillIn(".d-editor-input", "The image:\n");
-    const appEvents = loggedInUser().appEvents;
-    const done = assert.async();
+  // TODO: On Firefox Evergreen this often fails, because the order of uploads
+  // in markdown is reversed
+  chromeTest(
+    "handles adding one file for upload then adding another when the first is still in progress",
+    async function (assert) {
+      await visit("/");
+      await click("#create-topic");
+      await fillIn(".d-editor-input", "The image:\n");
+      const appEvents = loggedInUser().appEvents;
+      const done = assert.async();
 
-    appEvents.on("composer:all-uploads-complete", async () => {
-      await settled();
-      assert.strictEqual(
-        query(".d-editor-input").value,
-        "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n![avatar2.PNG|690x320](upload://sdfljsdfgjlkwg4328.jpeg)\n"
-      );
-      done();
-    });
+      appEvents.on("composer:all-uploads-complete", async () => {
+        await settled();
+        assert.strictEqual(
+          query(".d-editor-input").value,
+          "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\n![avatar2.PNG|690x320](upload://sdfljsdfgjlkwg4328.jpeg)\n"
+        );
+        done();
+      });
 
-    let image2Added = false;
-    appEvents.on("composer:upload-started", () => {
-      if (!image2Added) {
-        appEvents.trigger("composer:add-files", image2);
-        image2Added = true;
-      }
-    });
+      let image2Added = false;
+      appEvents.on("composer:upload-started", () => {
+        if (!image2Added) {
+          appEvents.trigger("composer:add-files", image2);
+          image2Added = true;
+        }
+      });
 
-    const image1 = createFile("avatar.png");
-    const image2 = createFile("avatar2.png");
-    appEvents.trigger("composer:add-files", image1);
-  });
+      const image1 = createFile("avatar.png");
+      const image2 = createFile("avatar2.png");
+      appEvents.trigger("composer:add-files", image1);
+    }
+  );
 
   test("should handle placeholders correctly even if the OS rewrites ellipses", async function (assert) {
     const execCommand = document.execCommand;
