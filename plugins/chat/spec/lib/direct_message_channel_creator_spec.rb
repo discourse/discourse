@@ -178,6 +178,62 @@ describe Chat::DirectMessageChannelCreator do
       }.by(1).and change { UserChatChannelMembership.count }.by(1)
     end
 
+    context "when number of users is over the limit" do
+      before { SiteSetting.chat_max_direct_message_users = 1 }
+
+      it "raises an error" do
+        expect {
+          subject.create!(acting_user: user_1, target_users: [user_1, user_2, user_3])
+        }.to raise_error(
+          Chat::DirectMessageChannelCreator::NotAllowed,
+          I18n.t("chat.errors.over_chat_max_direct_message_users", count: 2),
+        )
+      end
+
+      context "when acting user is staff" do
+        fab!(:admin) { Fabricate(:admin) }
+
+        it "creates a new chat channel" do
+          expect {
+            subject.create!(acting_user: admin, target_users: [admin, user_1, user_2])
+          }.to change { ChatChannel.count }.by(1)
+        end
+      end
+
+      context "when limit is zero" do
+        before { SiteSetting.chat_max_direct_message_users = 0 }
+
+        it "raises an error" do
+          expect {
+            subject.create!(acting_user: user_1, target_users: [user_1, user_2])
+          }.to raise_error(
+            Chat::DirectMessageChannelCreator::NotAllowed,
+            I18n.t("chat.errors.over_chat_max_direct_message_users", count: 1),
+          )
+        end
+      end
+    end
+
+    context "when number of users is at the limit" do
+      before { SiteSetting.chat_max_direct_message_users = 0 }
+
+      it "creates a new chat channel" do
+        expect { subject.create!(acting_user: user_1, target_users: [user_1]) }.to change {
+          ChatChannel.count
+        }.by(1)
+      end
+    end
+
+    context "when number of users is under the limit" do
+      before { SiteSetting.chat_max_direct_message_users = 1 }
+
+      it "creates a new chat channel" do
+        expect { subject.create!(acting_user: user_1, target_users: [user_1]) }.to change {
+          ChatChannel.count
+        }.by(1)
+      end
+    end
+
     context "when the user is not a member of direct_message_enabled_groups" do
       before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4] }
 
