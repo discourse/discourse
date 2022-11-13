@@ -86,9 +86,13 @@ export default class ChatEmojiPicker extends Component {
   }
 
   @action
-  didPressEscape(event) {
+  trapKeyUpEvents(event) {
     if (event.key === "Escape") {
       this.chatEmojiPickerManager.close();
+    }
+
+    if (event.key === "ArrowUp") {
+      event.stopPropagation();
     }
   }
 
