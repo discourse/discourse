@@ -28,6 +28,8 @@ class ImportScripts::FluxBB < ImportScripts::Base
   # e.g. "https://mysite.com/old-forum-redirector/"
   FLUXBB_RELATIVE_LINKS_BASE ||= ENV['FLUXBB_RELATIVE_LINKS_BASE'] || ""
 
+  CREATE_PERMALINKS = true
+
   def initialize
     super
 
@@ -46,6 +48,7 @@ class ImportScripts::FluxBB < ImportScripts::Base
     import_categories
     import_posts
     suspend_users
+    create_permalinks if CREATE_PERMALINKS
   end
 
   def import_groups
@@ -364,6 +367,45 @@ class ImportScripts::FluxBB < ImportScripts::Base
         tag_param: /(\d*)/,
         tag_param_tokens: [{ token: :user_url, prefix: "#{link_base}profile.php?id=" }] },
     }
+  end
+
+  def create_permalinks
+    puts '', 'Creating redirects...', ''
+
+    User.find_each do |user|
+      ucf = user.custom_fields
+      if ucf && ucf["import_id"]
+        old_user_profile_url = "profile.php?id=#{ucf['import_id']}"
+        new_discourse_user_profile_url = "/u/#{user.username}"
+        Permalink.create(url: old_user_profile_url, external_url: new_discourse_user_profile_url)
+      end
+    end
+
+    Post.find_each do |post|
+      pcf = post.custom_fields
+      if pcf && pcf["import_id"]
+        old_post_url = "viewtopic.php?pid=#{pcf["import_id"]}"
+        Permalink.create(url: old_post_url, post_id: post.id)
+      end
+
+      if post.post_number == 1
+        topic = post.topic
+        tcf = topic.custom_fields
+        if tcf && tcf["import_id"]
+          old_topic_url = "viewtopic.php?id=#{tcf['import_id']}"
+          Permalink.create(url: old_topic_url, topic_id: topic.id)
+        end
+      end
+    end
+
+    Category.find_each do |cat|
+      ccf = cat.custom_fields
+      if ccf && ccf["import_id"]
+        old_forum_id = ccf["import_id"].sub("child#", "")
+        old_forum_url = "viewforum.php?id=#{old_forum_id}"
+        Permalink.create(url: old_forum_url, category_id: cat.id)
+      end
+    end
   end
 
   def mysql_query(sql)

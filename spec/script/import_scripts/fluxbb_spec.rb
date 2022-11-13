@@ -226,5 +226,56 @@ RSpec.describe "ImportScripts::FluxBB" do
         end
       end
     end
+
+    describe "#create_permalinks" do
+      context "when we have imported a user" do
+        fab!(:user) { Fabricate(:user) }
+        before do
+          user.custom_fields["import_id"] = 123
+          user.save
+
+          ImportScripts::FluxBB.new.create_permalinks
+        end
+
+        it "creates Permalink to redirect FluxBB-style forum URL" do
+          expect(Permalink.find_by(url: "profile.php?id=123").external_url).to eq "/u/#{user.username}"
+        end
+      end
+
+      context "when we have imported a post and parent topic" do
+        fab!(:post) { Fabricate(:post) }
+        let(:topic) { post.topic }
+        before do
+          post.custom_fields["import_id"] = 234
+          post.save
+          topic.custom_fields["import_id"] = 345
+          topic.save
+
+          ImportScripts::FluxBB.new.create_permalinks
+        end
+
+        it "creates Permalink to redirect FluxBB-style post URL" do
+          expect(Permalink.find_by(url: "viewtopic.php?pid=234").post_id).to eq post.id
+        end
+
+        it "creates Permalink to redirect FluxBB-style topic URL" do
+          expect(Permalink.find_by(url: "viewtopic.php?id=345").topic_id).to eq topic.id
+        end
+      end
+
+      context "when we have imported a category (forum from fluxbb)" do
+        fab!(:cat) { Fabricate(:category) }
+        before do
+          cat.custom_fields["import_id"] = 456
+          cat.save
+
+          ImportScripts::FluxBB.new.create_permalinks
+        end
+
+        it "creates Permalink to redirect FluxBB-style forum URL" do
+          expect(Permalink.find_by(url: "viewforum.php?id=456").category_id).to eq cat.id
+        end
+      end
+    end
   end
 end
