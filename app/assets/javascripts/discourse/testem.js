@@ -11,11 +11,10 @@ class Reporter {
   }
 
   reportMetadata(tag, metadata) {
-    if (tag === "deprecation-counts") {
-      for (const [id, count] of metadata.counts) {
-        const currentCount = this.deprecationCounts.get(id) || 0;
-        this.deprecationCounts.set(id, currentCount + count);
-      }
+    if (tag === "increment-deprecation") {
+      const id = metadata.id;
+      const currentCount = this.deprecationCounts.get(id) || 0;
+      this.deprecationCounts.set(id, currentCount + 1);
     } else if (tag === "summary-line") {
       process.stdout.write(`\n${metadata.message}\n`);
     } else {

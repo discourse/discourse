@@ -40,6 +40,9 @@ export default class DeprecationCounter {
   incrementDeprecation(id) {
     const existingCount = this.counts.get(id) || 0;
     this.counts.set(id, existingCount + 1);
+    if (window.Testem) {
+      reportToTestem(id);
+    }
   }
 
   get hasDeprecations() {
@@ -63,10 +66,10 @@ export default class DeprecationCounter {
   }
 }
 
-function reportToTestem(counts) {
+function reportToTestem(id) {
   window.Testem.useCustomAdapter(function (socket) {
-    socket.emit("test-metadata", "deprecation-counts", {
-      counts: Array.from(counts.entries()),
+    socket.emit("test-metadata", "increment-deprecation", {
+      id,
     });
   });
 }
@@ -79,7 +82,7 @@ export function setupDeprecationCounter(qunit) {
 
   qunit.done(() => {
     if (window.Testem) {
-      reportToTestem(deprecationCounter.counts);
+      return;
     } else if (deprecationCounter.hasDeprecations) {
       // eslint-disable-next-line no-console
       console.warn(
