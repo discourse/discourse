@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
 
 export default class SectionLink extends Component {
   willDestroy() {
@@ -65,5 +66,12 @@ export default class SectionLink extends Component {
     }
 
     return prefixElementColors.map((color) => `#${color} 50%`).join(", ");
+  }
+
+  @action
+  didInsert() {
+    if (this.args.didInsert) {
+      this.args.didInsert();
+    }
   }
 }
