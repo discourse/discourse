@@ -8,6 +8,7 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:category) { Fabricate(:category, name: "Cool Category", slug: "cool-cat") }
   fab!(:tag) { Fabricate(:tag, name: "cooltag") }
+  fab!(:topic_page) { PageObjects::Pages::Topic.new }
 
   before do
     SiteSetting.enable_experimental_hashtag_autocomplete = true
@@ -15,7 +16,8 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
   end
 
   def visit_topic_and_initiate_autocomplete
-    topic_page = visit_topic_and_open_composer(topic)
+    topic_page.visit_topic_and_open_composer(topic)
+    expect(topic_page).to have_expanded_composer
     topic_page.type_in_composer("something #co")
     expect(page).to have_css(
       ".hashtag-autocomplete .hashtag-autocomplete__option .hashtag-autocomplete__link",
@@ -51,7 +53,8 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
   end
 
   it "cooks the hashtags for tag and category correctly serverside when the post is saved to the database" do
-    topic_page = visit_topic_and_open_composer(topic)
+    topic_page.visit_topic_and_open_composer(topic)
+    expect(topic_page).to have_expanded_composer
     topic_page.type_in_composer("this is a #cool-cat category and a #cooltag tag")
     topic_page.send_reply
     expect(topic_page).to have_post_number(2)
