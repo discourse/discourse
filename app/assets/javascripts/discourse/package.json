@@ -87,7 +87,7 @@
     "sinon": "^14.0.2",
     "tippy.js": "^6.3.7",
     "virtual-dom": "^2.1.1",
-    "webpack": "^5.74.0",
+    "webpack": "^5.75.0",
     "wizard": "^1.0.0"
   },
   "engines": {
