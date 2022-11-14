@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta property="og:title" content="Discourse Tests" />
     <meta property="og:url" content="{{rootURL}}" />
+    <meta name="color-scheme" content="light dark">
 
     {{content-for "head"}} {{content-for "test-head"}}
 
@@ -23,9 +24,6 @@
         -moz-transition: none !important;
         -o-transition: none !important;
         transition: none !important;
-      }
-      #ember-testing {
-        background-color: white;
       }
       #qunit-fixture {
         position: absolute;
