@@ -322,7 +322,7 @@ en:
       like_count: "Likes"
       topic_count: "Topics"
       post_count: "Posts"
-      user_count: "Users"
+      user_count: "Sign-Ups"
       active_user_count: "Active Users"
       contact: "Contact Us"
       contact_info: "In the event of a critical issue or urgent matter affecting this site, please contact us at %{contact_info}."
