@@ -2800,6 +2800,40 @@ RSpec.describe Guardian do
     end
   end
 
+  describe "#can_change_primary_group?" do
+    it "returns false without a logged in user" do
+      expect(Guardian.new(nil).can_change_primary_group?(user, group)).to eq(false)
+    end
+
+    it "returns false for regular users" do
+      expect(Guardian.new(user).can_change_primary_group?(user, group)).to eq(false)
+    end
+
+    it "returns true for admins" do
+      expect(Guardian.new(admin).can_change_primary_group?(user, group)).to eq(true)
+    end
+
+    context "when moderators_manage_categories_and_groups site setting is enabled" do
+      before do
+        SiteSetting.moderators_manage_categories_and_groups = true
+      end
+
+      it "returns true for moderators" do
+        expect(Guardian.new(moderator).can_change_primary_group?(user, group)).to eq(true)
+      end
+    end
+
+    context "when moderators_manage_categories_and_groups site setting is disabled" do
+      before do
+        SiteSetting.moderators_manage_categories_and_groups = false
+      end
+
+      it "returns false for moderators" do
+        expect(Guardian.new(moderator).can_change_primary_group?(user, group)).to eq(false)
+      end
+    end
+  end
+
   describe 'can_change_trust_level?' do
 
     it 'is false without a logged in user' do

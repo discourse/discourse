@@ -26,7 +26,7 @@ module Jobs
     )
 
     HEADER_ATTRS_FOR ||= HashWithIndifferentAccess.new(
-      user_archive: ['topic_title', 'categories', 'is_pm', 'post', 'like_count', 'reply_count', 'url', 'created_at'],
+      user_archive: ['topic_title', 'categories', 'is_pm', 'post_raw', 'post_cooked', 'like_count', 'reply_count', 'url', 'created_at'],
       user_archive_profile: ['location', 'website', 'bio', 'views'],
       auth_tokens: ['id', 'auth_token_hash', 'prev_auth_token_hash', 'auth_token_seen', 'client_ip', 'user_agent', 'seen_at', 'rotated_at', 'created_at', 'updated_at'],
       auth_token_logs: ['id', 'action', 'user_auth_token_id', 'client_ip', 'auth_token_hash', 'created_at', 'path', 'user_agent'],
@@ -134,7 +134,7 @@ module Jobs
 
       Post.includes(topic: :category)
         .where(user_id: @current_user.id)
-        .select(:topic_id, :post_number, :raw, :like_count, :reply_count, :created_at)
+        .select(:topic_id, :post_number, :raw, :cooked, :like_count, :reply_count, :created_at)
         .order(:created_at)
         .with_deleted
         .each do |user_archive|
@@ -441,7 +441,15 @@ module Jobs
       is_pm = topic_data.archetype == "private_message" ? I18n.t("csv_export.boolean_yes") : I18n.t("csv_export.boolean_no")
       url = "#{Discourse.base_url}/t/#{topic_data.slug}/#{topic_data.id}/#{user_archive['post_number']}"
 
-      topic_hash = { "post" => user_archive['raw'], "topic_title" => topic_data.title, "categories" => categories, "is_pm" => is_pm, "url" => url }
+      topic_hash = {
+        "post_raw" => user_archive['raw'],
+        "post_cooked" => user_archive["cooked"],
+        "topic_title" => topic_data.title,
+        "categories" => categories,
+        "is_pm" => is_pm,
+        "url" => url
+      }
+
       user_archive.merge!(topic_hash)
 
       HEADER_ATTRS_FOR['user_archive'].each do |attr|

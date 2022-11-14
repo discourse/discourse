@@ -91,6 +91,7 @@ body.composer-open .topic-chat-float-container {
 .topic-chat-drawer-header__right-actions {
   display: flex;
   height: 100%;
+  margin-left: auto;
 }
 
 .topic-chat-drawer-header__top-line {
@@ -172,13 +173,27 @@ body.composer-open .topic-chat-float-container {
     }
   }
 
-  &__return-to-channels-btn,
   &__close-btn,
+  &__return-to-channels-btn,
   &__full-screen-btn,
   &__expand-btn {
-    height: 100%;
     max-height: 2.5rem;
-    width: 2.5rem;
+    height: 100%;
+    min-width: 40px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .d-icon {
+      color: var(--primary-low-mid);
+    }
+
+    &:visited {
+      .d-icon {
+        color: var(--primary-low-mid);
+      }
+    }
 
     &:focus {
       outline: none;

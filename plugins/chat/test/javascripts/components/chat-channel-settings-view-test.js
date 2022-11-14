@@ -1,13 +1,11 @@
 import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 import fabricators from "../helpers/fabricators";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { CHATABLE_TYPES } from "discourse/plugins/chat/discourse/models/chat-channel";
-import { set } from "@ember/object";
 import { module } from "qunit";
 
 function membershipFixture(id, options = {}) {
@@ -217,53 +215,6 @@ module(
         await sk.selectRowByName("Off");
 
         assert.equal(sk.header().value(), "false");
-      },
-    });
-  }
-);
-
-module(
-  "Discourse Chat | Component | chat-channel-settings-view | Public channel - admin user",
-  function (hooks) {
-    setupRenderingTest(hooks);
-
-    componentTest("admin actions", {
-      template: hbs`{{chat-channel-settings-view channel=channel}}`,
-
-      beforeEach() {
-        set(this.currentUser, "admin", true);
-        set(this.currentUser, "has_chat_enabled", true);
-        this.siteSettings.chat_enabled = true;
-
-        this.set("channel", fabricators.chatChannel());
-      },
-
-      async test(assert) {
-        assert.ok(exists(".close-btn"));
-        assert.ok(exists(".delete-btn"));
-      },
-    });
-  }
-);
-
-module(
-  "Discourse Chat | Component | chat-channel-settings-view | Archived Public channel - admin user",
-  function (hooks) {
-    setupRenderingTest(hooks);
-
-    componentTest("archive action", {
-      template: hbs`{{chat-channel-settings-view channel=channel}}`,
-
-      beforeEach() {
-        set(this.currentUser, "admin", true);
-        set(this.currentUser, "has_chat_enabled", true);
-        this.siteSettings.chat_enabled = true;
-        this.siteSettings.chat_allow_archiving_channels = true;
-        this.set("channel", fabricators.chatChannel());
-      },
-
-      async test(assert) {
-        assert.ok(exists(".archive-btn"));
       },
     });
   }

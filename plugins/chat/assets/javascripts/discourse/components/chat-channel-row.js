@@ -1,8 +1,6 @@
 import Component from "@ember/component";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import getURL from "discourse-common/lib/get-url";
-import { action } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { CHATABLE_TYPES } from "discourse/plugins/chat/discourse/models/chat-channel";
@@ -12,7 +10,6 @@ export default Component.extend({
   router: service(),
   chat: service(),
   channel: null,
-  switchChannel: null,
   isDirectMessageRow: equal(
     "channel.chatable_type",
     CHATABLE_TYPES.directMessageChannel
@@ -116,6 +113,18 @@ export default Component.extend({
 
     this.handleSwitchChannel(event);
   },
+  
+    @discourseComputed(
+    "isDirectMessageRow",
+    "channel.chatable.users.[]",
+    "channel.chatable.users.@each.status"
+  )
+  showUserStatus(isDirectMessageRow) {
+  return !!(
+    isDirectMessageRow &&
+    this.channel.chatable.users.length === 1 &&
+    this.channel.chatable.users[0].status
+  );
 
   @discourseComputed("channel.chatable_type")
   leaveChatTitle() {

@@ -989,10 +989,6 @@ class Post < ActiveRecord::Base
     end
   end
 
-  def downloaded_images
-    self.custom_fields[Post::DOWNLOADED_IMAGES] || {}
-  end
-
   def each_upload_url(fragments: nil, include_local_upload: true)
     current_db = RailsMultisite::ConnectionManagement.current_db
     upload_patterns = [

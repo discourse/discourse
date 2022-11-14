@@ -29,11 +29,11 @@ class Emoji
   end
 
   def self.aliases
-    Discourse.cache.fetch(cache_key("aliases_emojis")) { db['aliases'] }
+    db['aliases']
   end
 
   def self.search_aliases
-    Discourse.cache.fetch(cache_key("search_aliases_emojis")) { db['searchAliases'] }
+    db['searchAliases']
   end
 
   def self.translations
@@ -45,7 +45,7 @@ class Emoji
   end
 
   def self.tonable_emojis
-    Discourse.cache.fetch(cache_key("tonable_emojis")) { db['tonableEmojis'] }
+    db['tonableEmojis']
   end
 
   def self.custom?(name)
@@ -118,7 +118,7 @@ class Emoji
   end
 
   def self.clear_cache
-    %w{custom standard aliases search_aliases translations all tonable}.each do |key|
+    %w{custom standard translations all}.each do |key|
       Discourse.cache.delete(cache_key("#{key}_emojis"))
     end
     global_emoji_cache.clear

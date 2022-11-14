@@ -86,9 +86,13 @@ export default class ChatEmojiPicker extends Component {
   }
 
   @action
-  didPressEscape(event) {
+  trapKeyUpEvents(event) {
     if (event.key === "Escape") {
       this.chatEmojiPickerManager.close();
+    }
+
+    if (event.key === "ArrowUp") {
+      event.stopPropagation();
     }
   }
 
@@ -220,10 +224,6 @@ export default class ChatEmojiPicker extends Component {
 
   @action
   didNavigateSection(event) {
-    if (event.type !== "keyup") {
-      return;
-    }
-
     const sectionEmojis = [
       ...event.target
         .closest(".chat-emoji-picker__section")
@@ -252,6 +252,7 @@ export default class ChatEmojiPicker extends Component {
 
     if (event.key === "ArrowDown") {
       event.preventDefault();
+      event.stopPropagation();
 
       sectionEmojis
         .filter((c) => c.offsetTop > event.target.offsetTop)
@@ -261,6 +262,7 @@ export default class ChatEmojiPicker extends Component {
 
     if (event.key === "ArrowUp") {
       event.preventDefault();
+      event.stopPropagation();
 
       sectionEmojis
         .reverse()

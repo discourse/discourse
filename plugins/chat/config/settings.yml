@@ -1,4 +1,4 @@
-plugins:
+chat:
   chat_enabled:
     default: false
     client: true

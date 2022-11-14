@@ -912,76 +912,144 @@ RSpec.describe InvitesController do
     end
 
     context 'when user is already logged in' do
-      fab!(:invite) { Fabricate(:invite, email: 'test@example.com') }
-      fab!(:user) { Fabricate(:user, email: 'test@example.com') }
-      fab!(:group) { Fabricate(:group) }
-
       before { sign_in(user) }
 
-      it 'redeems the invitation and creates the invite accepted notification' do
-        put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["message"]).to eq(I18n.t("invite.existing_user_success"))
-        invite.reload
-        expect(invite.invited_users.first.user).to eq(user)
-        expect(invite.redeemed?).to be_truthy
-        expect(
-          Notification.exists?(
-            user: invite.invited_by, notification_type: Notification.types[:invitee_accepted]
-          )
-        ).to eq(true)
-      end
+      context "for an email invite" do
+        fab!(:invite) { Fabricate(:invite, email: 'test@example.com') }
+        fab!(:user) { Fabricate(:user, email: 'test@example.com') }
+        fab!(:group) { Fabricate(:group) }
 
-      it 'redirects to the first topic the user was invited to and creates the topic notification' do
-        topic = Fabricate(:topic)
-        TopicInvite.create!(invite: invite, topic: topic)
-        put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
-        expect(response.status).to eq(200)
-        expect(response.parsed_body['redirect_to']).to eq(topic.relative_url)
-        expect(Notification.where(notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(1)
-      end
-
-      it "adds the user to the groups specified on the invite and allows them to access the secure topic" do
-        group.add_owner(invite.invited_by)
-        secured_category = Fabricate(:category)
-        secured_category.permissions = { group.name => :full }
-        secured_category.save!
-
-        topic = Fabricate(:topic, category: secured_category)
-        TopicInvite.create!(invite: invite, topic: topic)
-        InvitedGroup.create!(invite: invite, group: group)
-
-        put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["message"]).to eq(I18n.t("invite.existing_user_success"))
-        expect(response.parsed_body['redirect_to']).to eq(topic.relative_url)
-        invite.reload
-        expect(invite.redeemed?).to be_truthy
-        expect(user.reload.groups).to include(group)
-        expect(Notification.where(notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(1)
-      end
-
-      it "does not try to log in the user automatically" do
-        expect do
+        it 'redeems the invitation and creates the invite accepted notification' do
           put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
-        end.not_to change { UserAuthToken.count }
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["message"]).to eq(I18n.t("invite.existing_user_success"))
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["message"]).to eq(I18n.t("invite.existing_user_success"))
+          invite.reload
+          expect(invite.invited_users.first.user).to eq(user)
+          expect(invite.redeemed?).to be_truthy
+          expect(
+            Notification.exists?(
+              user: invite.invited_by, notification_type: Notification.types[:invitee_accepted]
+            )
+          ).to eq(true)
+        end
+
+        it 'redirects to the first topic the user was invited to and creates the topic notification' do
+          topic = Fabricate(:topic)
+          TopicInvite.create!(invite: invite, topic: topic)
+          put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body['redirect_to']).to eq(topic.relative_url)
+          expect(Notification.where(notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(1)
+        end
+
+        it "adds the user to the private topic" do
+          topic = Fabricate(:private_message_topic)
+          TopicInvite.create!(invite: invite, topic: topic)
+          put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body['redirect_to']).to eq(topic.relative_url)
+          expect(TopicAllowedUser.exists?(user: user, topic: topic)).to eq(true)
+        end
+
+        it "adds the user to the groups specified on the invite and allows them to access the secure topic" do
+          group.add_owner(invite.invited_by)
+          secured_category = Fabricate(:category)
+          secured_category.permissions = { group.name => :full }
+          secured_category.save!
+
+          topic = Fabricate(:topic, category: secured_category)
+          TopicInvite.create!(invite: invite, topic: topic)
+          InvitedGroup.create!(invite: invite, group: group)
+
+          put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["message"]).to eq(I18n.t("invite.existing_user_success"))
+          expect(response.parsed_body['redirect_to']).to eq(topic.relative_url)
+          invite.reload
+          expect(invite.redeemed?).to be_truthy
+          expect(user.reload.groups).to include(group)
+          expect(Notification.where(notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(1)
+        end
+
+        it "does not try to log in the user automatically" do
+          expect do
+            put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+          end.not_to change { UserAuthToken.count }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["message"]).to eq(I18n.t("invite.existing_user_success"))
+        end
+
+        it "errors if the user's email doesn't match the invite email" do
+          user.update!(email: "blah@test.com")
+          put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+          expect(response.status).to eq(412)
+          expect(response.parsed_body["message"]).to eq(I18n.t("invite.not_matching_email"))
+        end
+
+        it "errors if the user's email domain doesn't match the invite domain" do
+          user.update!(email: "blah@test.com")
+          invite.update!(email: nil, domain: "example.com")
+          put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+          expect(response.status).to eq(412)
+          expect(response.parsed_body["message"]).to eq(I18n.t("invite.domain_not_allowed"))
+        end
       end
 
-      it "errors if the user's email doesn't match the invite email" do
-        user.update!(email: "blah@test.com")
-        put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
-        expect(response.status).to eq(412)
-        expect(response.parsed_body["message"]).to eq(I18n.t("invite.not_matching_email"))
-      end
+      context "for an invite link" do
+        fab!(:invite) { Fabricate(:invite, email: nil) }
+        fab!(:user) { Fabricate(:user, email: 'test@example.com') }
+        fab!(:group) { Fabricate(:group) }
 
-      it "errors if the user's email domain doesn't match the invite domain" do
-        user.update!(email: "blah@test.com")
-        invite.update!(email: nil, domain: "example.com")
-        put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
-        expect(response.status).to eq(412)
-        expect(response.parsed_body["message"]).to eq(I18n.t("invite.domain_not_allowed"))
+        it 'redeems the invitation and creates the invite accepted notification' do
+          put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["message"]).to eq(I18n.t("invite.existing_user_success"))
+          invite.reload
+          expect(invite.invited_users.first.user).to eq(user)
+          expect(invite.redeemed?).to be_truthy
+          expect(
+            Notification.exists?(
+              user: invite.invited_by, notification_type: Notification.types[:invitee_accepted]
+            )
+          ).to eq(true)
+        end
+
+        it 'redirects to the first topic the user was invited to and creates the topic notification' do
+          topic = Fabricate(:topic)
+          TopicInvite.create!(invite: invite, topic: topic)
+          put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body['redirect_to']).to eq(topic.relative_url)
+          expect(Notification.where(notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(1)
+        end
+
+        it "adds the user to the groups specified on the invite and allows them to access the secure topic" do
+          group.add_owner(invite.invited_by)
+          secured_category = Fabricate(:category)
+          secured_category.permissions = { group.name => :full }
+          secured_category.save!
+
+          topic = Fabricate(:topic, category: secured_category)
+          TopicInvite.create!(invite: invite, topic: topic)
+          InvitedGroup.create!(invite: invite, group: group)
+
+          put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["message"]).to eq(I18n.t("invite.existing_user_success"))
+          expect(response.parsed_body['redirect_to']).to eq(topic.relative_url)
+          invite.reload
+          expect(invite.redeemed?).to be_truthy
+          expect(user.reload.groups).to include(group)
+          expect(Notification.where(notification_type: Notification.types[:invited_to_topic], topic: topic).count).to eq(1)
+        end
+
+        it "does not try to log in the user automatically" do
+          expect do
+            put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
+          end.not_to change { UserAuthToken.count }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["message"]).to eq(I18n.t("invite.existing_user_success"))
+        end
       end
     end
 

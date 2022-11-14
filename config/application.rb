@@ -58,6 +58,7 @@ if !GlobalSetting.skip_redis?
 end
 
 require 'pry-rails' if Rails.env.development?
+require 'pry-byebug' if Rails.env.development?
 
 require 'discourse_fonts'
 

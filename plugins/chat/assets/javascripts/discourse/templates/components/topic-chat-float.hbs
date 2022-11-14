@@ -11,7 +11,9 @@
       {{#if (and this.draftChannelView this.expanded)}}
         <div class="topic-chat-drawer-header__left-actions">
           <div class="topic-chat-drawer-header__top-line">
-            <FlatButton @class="topic-chat-drawer-header__return-to-channels-btn" @icon="chevron-left" @action={{action "fetchChannels"}} @title="chat.return_to_list" />
+            <LinkTo title={{i18n "chat.return_to_list"}} class="topic-chat-drawer-header__return-to-channels-btn" @route="chat">
+              {{d-icon "chevron-left"}}
+            </LinkTo>
           </div>
         </div>
 
@@ -22,9 +24,9 @@
         </span>
       {{else if this.chatView}}
         {{#if this.expanded}}
-          <div class="topic-chat-drawer-header__left-actions">
-            <FlatButton @class="topic-chat-drawer-header__return-to-channels-btn" @icon="chevron-left" @action={{action "fetchChannels"}} @title="chat.return_to_list" />
-          </div>
+          <LinkTo title={{i18n "chat.return_to_list"}} class="topic-chat-drawer-header__return-to-channels-btn" @route="chat">
+            {{d-icon "chevron-left"}}
+          </LinkTo>
         {{/if}}
 
         {{#if this.chat.activeChannel}}
@@ -57,15 +59,7 @@
       <div class="topic-chat-drawer-header__right-actions">
         <div class="topic-chat-drawer-header__top-line {{this.topLineClass}}">
           {{#if this.expanded}}
-            <button
-              class="btn-flat topic-chat-drawer-header__full-screen-btn"
-              onmouseup={{action "openInFullPage"}}
-              icon="discourse-expand"
-              title={{i18n "chat.open_full_page"}}
-              type="button"
-            >
-              {{d-icon "discourse-expand"}}
-            </button>
+            <DButton @icon="discourse-expand" class="btn-flat btn-link topic-chat-drawer-header__full-screen-btn" @title={{"chat.open_full_page"}} @action={{this.openInFullPage}} />
           {{/if}}
 
           <FlatButton @icon={{this.expandIcon}} @class="topic-chat-drawer-header__expand-btn" @action={{action "toggleExpand"}} @title="chat.collapse" />
@@ -80,11 +74,11 @@
     {{#if this.expanded}}
       <div class="topic-chat-drawer-content">
         {{#if (and this.chatView this.chat.activeChannel)}}
-          <ChatLivePane @chatChannel={{this.chat.activeChannel}} @expanded={{this.expanded}} @floatHidden={{this.hidden}} @fullPage={{false}} @onSwitchChannel={{action "switchChannel"}} />
+          <ChatLivePane @chatChannel={{this.chat.activeChannel}} @expanded={{this.expanded}} @floatHidden={{this.hidden}} @onSwitchChannel={{action "switchChannel"}} />
         {{else if this.draftChannelView}}
           <ChatDraftChannelScreen @onSwitchChannel={{action "switchChannel"}} />
         {{else}}
-          <ChannelsList @floatHidden={{this.hidden}} @onOpenView={{action "openView"}} @onSelect={{action "switchChannel"}} />
+          <ChannelsList @floatHidden={{this.hidden}} @onOpenView={{action "openURL"}} @onSelect={{action "switchChannel"}} />
         {{/if}}
       </div>
     {{/if}}

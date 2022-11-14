@@ -7,20 +7,12 @@ module PageObjects
         find(".open-chat").click
       end
 
-      def open_full_page
+      def open
         visit("/chat")
       end
 
-      def maximize_drawer
-        find(".topic-chat-drawer-header__full-screen-btn").click
-      end
-
-      def close_drawer
-        find(".topic-chat-drawer-header__close-btn").click
-      end
-
       def minimize_full_page
-        find(".chat-full-screen-button").click
+        find(".open-drawer-btn").click
       end
     end
   end
