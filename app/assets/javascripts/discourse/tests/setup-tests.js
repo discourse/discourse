@@ -40,7 +40,6 @@ import { clearState as clearPresenceState } from "discourse/tests/helpers/presen
 import { addModuleExcludeMatcher } from "ember-cli-test-loader/test-support/index";
 import SiteSettingService from "discourse/services/site-settings";
 import jQuery from "jquery";
-import { setupDeprecationCounter } from "discourse/tests/helpers/deprecation-counter";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
@@ -199,8 +198,6 @@ function writeSummaryLine(message) {
 
 export default function setupTests(config) {
   disableCloaking();
-
-  setupDeprecationCounter(QUnit);
 
   QUnit.config.hidepassed = true;
 
