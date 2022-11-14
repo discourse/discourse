@@ -51,7 +51,7 @@ export default Component.extend({
     this.set("actions", connectorClass.actions);
 
     for (const [name, action] of Object.entries(this.actions)) {
-      this.set(name, action);
+      this.set(name, action.bind(this));
     }
 
     const merged = buildArgsWithDeprecations(args, deprecatedArgs);

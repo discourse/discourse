@@ -45,7 +45,7 @@
 </div>
 
 {{#if this.canAttachUploads}}
-  <ChatComposerUploads @fullPage={{this.fullPage}} @fileUploadElementId={{this.fileUploadElementId}} @onUploadChanged={{action "uploadsChanged"}} />
+  <ChatComposerUploads @fileUploadElementId={{this.fileUploadElementId}} @onUploadChanged={{action "uploadsChanged"}} />
 {{/if}}
 
 {{#unless this.chatChannel.isDraft}}

@@ -20,7 +20,6 @@ register_asset "stylesheets/common/chat-drawer.scss"
 register_asset "stylesheets/mobile/chat-index.scss", :mobile
 register_asset "stylesheets/common/chat-channel-preview-card.scss"
 register_asset "stylesheets/common/chat-channel-info.scss"
-register_asset "stylesheets/mobile/chat-channel-info.scss", :mobile
 register_asset "stylesheets/common/chat-draft-channel.scss"
 register_asset "stylesheets/common/chat-tabs.scss"
 register_asset "stylesheets/common/chat-form.scss"
@@ -676,13 +675,13 @@ after_initialize do
 
       placeholder :channel_name
 
+      triggerables [:recurring]
+
       script do |context, fields, automation|
         sender = User.find_by(username: fields.dig("sender", "value")) || Discourse.system_user
         channel = ChatChannel.find_by(id: fields.dig("chat_channel_id", "value"))
 
-        placeholders = { channel_name: channel.public_channel_title }.merge(
-          context["placeholders"] || {},
-        )
+        placeholders = { channel_name: channel.title(sender) }.merge(context["placeholders"] || {})
 
         creator =
           Chat::ChatMessageCreator.create(

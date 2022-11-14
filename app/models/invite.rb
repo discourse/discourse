@@ -74,8 +74,16 @@ class Invite < ActiveRecord::Base
     end
   end
 
+  # Even if a domain is specified on the invite, it still counts as
+  # an invite link.
   def is_invite_link?
-    email.blank?
+    self.email.blank?
+  end
+
+  # Email invites have specific behaviour and it's easier to visually
+  # parse is_email_invite? than !is_invite_link?
+  def is_email_invite?
+    self.email.present?
   end
 
   def redeemable?
@@ -200,8 +208,6 @@ class Invite < ActiveRecord::Base
     redeeming_user: nil
   )
     return if !redeemable?
-
-    email = self.email if email.blank? && !is_invite_link?
 
     InviteRedeemer.new(
       invite: self,

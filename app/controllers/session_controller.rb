@@ -760,7 +760,7 @@ class SessionController < ApplicationController
     end
 
     if invite.redeemable?
-      if !invite.is_invite_link? && sso.email != invite.email
+      if invite.is_email_invite? && sso.email != invite.email
         raise Invite::ValidationFailed.new(I18n.t("invite.not_matching_email"))
       end
     elsif invite.expired?

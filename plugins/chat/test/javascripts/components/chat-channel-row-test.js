@@ -3,7 +3,6 @@ import componentTest, {
 } from "discourse/tests/helpers/component-test";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
-import { click, triggerKeyEvent } from "@ember/test-helpers";
 import fabricators from "../helpers/fabricators";
 import { module } from "qunit";
 
@@ -36,42 +35,6 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
 
     async test(assert) {
       assert.notOk(exists(".chat-channel-leave-btn"));
-    },
-  });
-
-  componentTest("receives click", {
-    template: hbs`{{chat-channel-row switchChannel=switchChannel channel=channel}}`,
-
-    beforeEach() {
-      this.set("switchedChannel", null);
-      this.set("channel", fabricators.chatChannel());
-      this.set("switchChannel", (channel) =>
-        this.set("switchedChannel", channel.id)
-      );
-    },
-
-    async test(assert) {
-      await click(".chat-channel-row");
-
-      assert.strictEqual(this.switchedChannel, this.channel.id);
-    },
-  });
-
-  componentTest("receives Enter keyup", {
-    template: hbs`{{chat-channel-row switchChannel=switchChannel channel=channel}}`,
-
-    beforeEach() {
-      this.set("switchedChannel", null);
-      this.set("channel", fabricators.chatChannel());
-      this.set("switchChannel", (channel) =>
-        this.set("switchedChannel", channel.id)
-      );
-    },
-
-    async test(assert) {
-      await triggerKeyEvent(".chat-channel-row", "keyup", "Enter");
-
-      assert.strictEqual(this.switchedChannel, this.channel.id);
     },
   });
 

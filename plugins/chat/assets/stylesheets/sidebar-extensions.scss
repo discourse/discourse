@@ -77,8 +77,8 @@
         }
       }
 
-      .new-dm,
-      .edit-channel-membership-btn,
+      .open-draft-channel-page-btn,
+      .open-browse-page-btn,
       .edit-channels-dropdown .select-kit-header,
       .chat-channel-leave-btn {
         display: flex;
@@ -160,6 +160,10 @@
     .user-status {
       margin-left: 0.3em;
     }
+  }
+
+  .sidebar-section-link--active {
+    background: var(--primary-low);
   }
 
   .sidebar-section-link--muted {

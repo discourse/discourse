@@ -4,46 +4,59 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import { inject as service } from "@ember/service";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { schedule } from "@ember/runloop";
-import { DRAFT_CHANNEL_VIEW } from "discourse/plugins/chat/discourse/services/chat";
+import { action } from "@ember/object";
 
 export default class ChatRoute extends DiscourseRoute {
   @service chat;
   @service router;
-  @service fullPageChat;
-  @service chatPreferredMode;
+  @service chatStateManager;
 
   titleToken() {
     return I18n.t("chat.title_capitalized");
   }
 
   beforeModel(transition) {
-    if (
-      transition.from && // don't intercept when directly loading chat
-      this.chatPreferredMode.isDrawer
-    ) {
-      if (transition.intent?.name === "chat.channel") {
-        transition.abort();
-        const id = transition.intent.contexts[0];
-        return this.chat.getChannelBy("id", id).then((channel) => {
-          this.appEvents.trigger("chat:open-channel", channel);
-        });
-      }
-
-      if (transition.intent?.name === "chat.draft-channel") {
-        transition.abort();
-        this.appEvents.trigger("chat:open-view", DRAFT_CHANNEL_VIEW);
-        return;
-      }
-    }
-
     if (!this.chat.userCanChat) {
       return this.router.transitionTo(`discovery.${defaultHomepage()}`);
     }
 
-    this.fullPageChat.enter(this.router.currentURL);
+    const INTERCEPTABLE_ROUTES = [
+      "chat.channel.index",
+      "chat.channel",
+      "chat",
+      "chat.index",
+      "chat.draft-channel",
+    ];
+
+    if (
+      transition.from && // don't intercept when directly loading chat
+      this.chatStateManager.isDrawerPreferred &&
+      INTERCEPTABLE_ROUTES.includes(transition.targetName)
+    ) {
+      transition.abort();
+
+      let URL = transition.intent.url;
+      if (
+        transition.targetName === "chat.channel.index" ||
+        transition.targetName === "chat.channel"
+      ) {
+        URL ??= this.router.urlFor(
+          transition.targetName,
+          ...transition.intent.contexts
+        );
+      } else {
+        URL ??= this.router.urlFor(transition.targetName);
+      }
+
+      this.appEvents.trigger("chat:open-url", URL);
+      return;
+    }
+
+    this.appEvents.trigger("chat:toggle-close");
   }
 
   activate() {
+    this.chatStateManager.storeAppURL();
     this.chat.updatePresence();
 
     schedule("afterRender", () => {
@@ -53,7 +66,6 @@ export default class ChatRoute extends DiscourseRoute {
   }
 
   deactivate() {
-    this.fullPageChat.exit();
     this.chat.setActiveChannel(null);
 
     schedule("afterRender", () => {
@@ -61,5 +73,12 @@ export default class ChatRoute extends DiscourseRoute {
       document.documentElement.classList.remove("has-full-page-chat");
       scrollTop();
     });
+  }
+
+  @action
+  willTransition(transition) {
+    if (!transition?.to?.name?.startsWith("chat.")) {
+      this.chatStateManager.storeChatURL();
+    }
   }
 }

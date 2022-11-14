@@ -43,6 +43,7 @@ export default Mixin.create({
   validationMessage: null,
   isSecret: oneWay("setting.secret"),
   setting: null,
+  attributeBindings: ["setting.setting:data-setting"],
 
   @discourseComputed("buffered.value", "setting.value")
   dirty(bufferVal, settingVal) {

@@ -37,8 +37,8 @@ export default Component.extend(TextareaTextManipulation, {
   userSilenced: readOnly("details.user_silenced"),
   chatEmojiReactionStore: service("chat-emoji-reaction-store"),
   chatEmojiPickerManager: service("chat-emoji-picker-manager"),
+  chatStateManager: service("chat-state-manager"),
   editingMessage: null,
-  fullPage: false,
   onValueChange: null,
   timer: null,
   value: "",
@@ -63,7 +63,7 @@ export default Component.extend(TextareaTextManipulation, {
     return picker.opened && picker.context === "chat-composer";
   },
 
-  @discourseComputed("fullPage")
+  @discourseComputed("chatStateManager.isFullPage")
   fileUploadElementId(fullPage) {
     return fullPage ? "chat-full-page-uploader" : "chat-widget-uploader";
   },

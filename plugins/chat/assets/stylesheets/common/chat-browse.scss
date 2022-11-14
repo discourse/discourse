@@ -10,9 +10,13 @@
 
   &__header {
     display: flex;
-    gap: 1rem;
     align-items: center;
-    margin: 1rem 0 1rem 1rem;
+    justify-content: flex-start;
+    margin-bottom: 1em;
+
+    .new-channel-btn {
+      margin-left: auto;
+    }
   }
 
   &__title {
@@ -27,10 +31,6 @@
     @include breakpoint(tablet) {
       margin-top: 1rem;
     }
-  }
-
-  .new-channel-btn {
-    margin-left: auto;
   }
 
   &__cards {

@@ -88,7 +88,7 @@ export function readOnly(target, name, desc) {
   };
 }
 
-export function debounce(delay) {
+export function debounce(delay, immediate = false) {
   return function (target, name, descriptor) {
     return {
       enumerable: descriptor.enumerable,
@@ -97,7 +97,13 @@ export function debounce(delay) {
       initializer() {
         const originalFunction = descriptor.value;
         const debounced = function (...args) {
-          return discourseDebounce(this, originalFunction, ...args, delay);
+          return discourseDebounce(
+            this,
+            originalFunction,
+            ...args,
+            delay,
+            immediate
+          );
         };
 
         return debounced;

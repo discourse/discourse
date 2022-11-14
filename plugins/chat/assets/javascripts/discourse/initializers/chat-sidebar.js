@@ -4,13 +4,13 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import I18n from "I18n";
 import { bind } from "discourse-common/utils/decorators";
 import { tracked } from "@glimmer/tracking";
-import { DRAFT_CHANNEL_VIEW } from "discourse/plugins/chat/discourse/services/chat";
 import { avatarUrl, escapeExpression } from "discourse/lib/utilities";
 import { dasherize } from "@ember/string";
 import { emojiUnescape } from "discourse/lib/text";
 import { decorateUsername } from "discourse/helpers/decorate-username-selector";
 import { until } from "discourse/lib/formatter";
 import { inject as service } from "@ember/service";
+import { computed } from "@ember/object";
 
 export default {
   name: "chat-sidebar",
@@ -61,10 +61,19 @@ export default {
               return dasherize(slugifyChannel(this.channel));
             }
 
+            @computed("chatService.activeChannel")
             get classNames() {
-              return this.channel.current_user_membership.muted
-                ? "sidebar-section-link--muted"
-                : "";
+              const classes = [];
+
+              if (this.channel.current_user_membership.muted) {
+                classes.push("sidebar-section-link--muted");
+              }
+
+              if (this.channel.id === this.chatService.activeChannel?.id) {
+                classes.push("sidebar-section-link--active");
+              }
+
+              return classes.join(" ");
             }
 
             get route() {
@@ -136,19 +145,18 @@ export default {
                 return;
               }
               this.chatService = container.lookup("service:chat");
-              this.chatService.appEvents.on(
-                "chat:refresh-channels",
-                this._refreshChannels
-              );
+              this.router = container.lookup("service:router");
+              this.appEvents = container.lookup("service:app-events");
+              this.appEvents.on("chat:refresh-channels", this._refreshChannels);
               this._refreshChannels();
             }
 
             @bind
             willDestroy() {
-              if (!this.chatService) {
+              if (!this.appEvents) {
                 return;
               }
-              this.chatService.appEvents.off(
+              this.appEvents.off(
                 "chat:refresh-channels",
                 this._refreshChannels
               );
@@ -187,9 +195,7 @@ export default {
                 {
                   id: "browseChannels",
                   title: I18n.t("chat.channels_list_popup.browse"),
-                  action: () => {
-                    this.chatService.router.transitionTo("chat.browse");
-                  },
+                  action: () => this.router.transitionTo("chat.browse.open"),
                 },
               ];
             }
@@ -243,10 +249,19 @@ export default {
               return slugifyChannel(this.channel);
             }
 
+            @computed("chatService.activeChannel")
             get classNames() {
-              return this.channel.current_user_membership.muted
-                ? "sidebar-section-link--muted"
-                : "";
+              const classes = [];
+
+              if (this.channel.current_user_membership.muted) {
+                classes.push("sidebar-section-link--muted");
+              }
+
+              if (this.channel.id === this.chatService.activeChannel?.id) {
+                classes.push("sidebar-section-link--active");
+              }
+
+              return classes.join(" ");
             }
 
             get route() {
@@ -336,7 +351,9 @@ export default {
             }
 
             get hoverAction() {
-              return () => {
+              return (event) => {
+                event.stopPropagation();
+                event.preventDefault();
                 this.chatService.unfollowChannel(this.channel);
               };
             }
@@ -371,6 +388,7 @@ export default {
 
           const SidebarChatDirectMessagesSection = class extends BaseCustomSidebarSection {
             @service site;
+            @service router;
             @tracked sectionLinks = [];
             @tracked userCanDirectMessage =
               this.chatService.userCanDirectMessage;
@@ -440,19 +458,7 @@ export default {
                   id: "startDm",
                   title: I18n.t("chat.direct_messages.new"),
                   action: () => {
-                    if (
-                      this.site.mobileView ||
-                      this.chatService.router.currentRouteName.startsWith("")
-                    ) {
-                      this.chatService.router.transitionTo(
-                        "chat.draft-channel"
-                      );
-                    } else {
-                      this.appEvents.trigger(
-                        "chat:open-view",
-                        DRAFT_CHANNEL_VIEW
-                      );
-                    }
+                    this.router.transitionTo("chat.draft-channel");
                   },
                 },
               ];

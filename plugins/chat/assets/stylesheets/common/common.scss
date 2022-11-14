@@ -149,8 +149,8 @@ $float-height: 530px;
     }
   }
 
-  .edit-channel-membership-btn,
-  .new-dm,
+  .open-browse-page-btn,
+  .open-draft-channel-page-btn,
   .chat-channel-leave-btn {
     background: transparent;
     color: var(--primary-medium);
@@ -202,7 +202,7 @@ $float-height: 530px;
       }
     }
   }
-  .edit-channel-membership-btn {
+  .open-browse-page-btn {
     &:hover {
       background: none;
     }
@@ -318,6 +318,22 @@ $float-height: 530px;
   min-height: 1px;
   position: relative;
 
+  .open-drawer-btn {
+    color: var(--primary-low-mid);
+
+    &:visited {
+      color: var(--primary-low-mid);
+    }
+
+    &:hover {
+      color: var(--primary);
+    }
+
+    > * {
+      pointer-events: none;
+    }
+  }
+
   .chat-messages-scroll {
     flex-grow: 1;
     overflow-y: scroll;
@@ -418,6 +434,10 @@ $float-height: 530px;
   color: var(--primary-high);
   transition: opacity 50ms ease-in;
   opacity: 1;
+
+  .chat-user-avatar {
+    pointer-events: none;
+  }
 
   .chat-channel-unread-indicator {
     margin-left: 0.5rem;
@@ -629,6 +649,16 @@ body.has-full-page-chat {
     border-bottom: 1px solid var(--primary-low);
     background: var(--secondary);
     z-index: 3;
+    display: flex;
+    align-items: center;
+
+    &__back-btn {
+      width: 40px;
+      min-width: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
     .chat-channel-title {
       .category-chat-name,
@@ -680,9 +710,12 @@ body.has-full-page-chat {
 }
 
 .chat-full-page-header {
+  box-sizing: border-box;
+
   .chat-channel-header-details {
     display: flex;
     align-items: stretch;
+    flex: 1;
 
     .chat-channel-archive-status {
       text-align: right;

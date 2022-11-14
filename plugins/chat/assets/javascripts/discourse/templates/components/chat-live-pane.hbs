@@ -1,4 +1,4 @@
-{{#if (and this.fullPage this.includeHeader)}}
+{{#if (and this.chatStateManager.isFullPage this.includeHeader)}}
   <div
     class="chat-full-page-header
       {{unless this.chatChannel.isFollowing "-not-following"}}"
@@ -6,17 +6,17 @@
     <div class="chat-channel-header-details">
       {{#if this.site.mobileView}}
         <div class="chat-full-page-header__left-actions">
-          <DButton @class="btn-flat" @icon="chevron-left" @action={{this.onBackClick}} />
+          <DButton @class="chat-full-page-header__back-btn no-text btn-flat" @icon="chevron-left" @action={{this.onBackClick}} />
         </div>
       {{/if}}
 
-      <LinkTo @route={{this.infoTabRoute}} @models={{array this.chatChannel.id (slugify-channel this.chatChannel)}} class="chat-full-page-header__title">
+      <LinkTo @route={{this.infoTabRoute}} @models={{array this.chatChannel.id (slugify-channel this.chatChannel)}} class="chat-channel-title-wrapper">
         <ChatChannelTitle @channel={{this.chatChannel}} />
       </LinkTo>
 
       {{#if this.showCloseFullScreenBtn}}
         <div class="chat-full-page-header__right-actions">
-          <FlatButton @class="chat-full-screen-button" @icon="discourse-compress" @action={{action "onCloseFullScreen" this.chatChannel}} @title="chat.close_full_page" />
+          <DButton @icon="discourse-compress" @title="chat.close_full_page" class="open-drawer-btn btn-flat no-text" @action={{action "onCloseFullScreen"}} />
         </div>
       {{/if}}
     </div>
