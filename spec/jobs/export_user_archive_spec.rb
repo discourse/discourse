@@ -146,9 +146,13 @@ RSpec.describe Jobs::ExportUserArchive do
       expect(post2["is_pm"]).to eq(I18n.t("csv_export.boolean_no"))
       expect(post3["is_pm"]).to eq(I18n.t("csv_export.boolean_yes"))
 
-      expect(post1["post"]).to eq(normal_post.raw)
-      expect(post2["post"]).to eq(subsubpost.raw)
-      expect(post3["post"]).to eq(message_post.raw)
+      expect(post1["post_raw"]).to eq(normal_post.raw)
+      expect(post2["post_raw"]).to eq(subsubpost.raw)
+      expect(post3["post_raw"]).to eq(message_post.raw)
+
+      expect(post1["post_cooked"]).to eq(normal_post.cooked)
+      expect(post2["post_cooked"]).to eq(subsubpost.cooked)
+      expect(post3["post_cooked"]).to eq(message_post.cooked)
 
       expect(post1['like_count']).to eq(1)
       expect(post2['like_count']).to eq(0)

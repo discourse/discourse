@@ -71,7 +71,7 @@ pt_BR:
       file_too_big: "O arquivo não compactado é muito grande."
       unknown_file_type: "O arquivo que você enviou não parece ser um tema válido do Discourse."
       not_allowed_theme: "\"%{repo}\" não está na lista de temas permitidos (confira a configuração global \"allowed_theme_repos\")."
-      ssh_key_gone: "Você esperou muito tempo para instalar o tema e a chave SSH expirou. Por favor, tente novamente."
+      ssh_key_gone: "Você esperou muito tempo para instalar o tema e a chave SSH expirou. Tente novamente."
     errors:
       component_no_user_selectable: "Componentes do tema não podem ser selecionados pelo(a) usuário(a)"
       component_no_default: "Componentes do tema não podem ser o tema padrão"
@@ -495,7 +495,6 @@ pt_BR:
       Você pode editar sua resposta anterior para adicionar uma citação selecionando um texto e clicando no botão <b>responder citação</b> que aparecerá.
 
       Fica mais fácil para todos(as) lerem tópicos com poucas respostas e muitas informações em vez de muitas respostas individuais e curtas.
-    dominating_topic: Você postou mais do que %{percent} das respostas aqui, deseja saber a opinião de outra pessoa?
     get_a_room: Você respondeu a %{reply_username} %{count} vezes, sabia que poderia ter enviado uma mensagem pessoal em vez de fazer isso?
     too_many_replies: |
       ### Você atingiu o limite de respostas para este tópico
@@ -678,7 +677,7 @@ pt_BR:
       public_group_membership: "Você está entrando/saindo de grupos com frequência. Aguarde %{time_left} antes de tentar novamente."
       topics_per_day: "Você alcançou a quantidade máxima de novos tópicos permitidos por dia. Crie mais tópicos novos em %{time_left}."
       pms_per_day: "Você alcançou a quantidade máxima de mensagens novas permitidas por dia. Crie mais mensagens novas em %{time_left}."
-      create_like: "Uau! Você tem compartilhado muito amor! Você atingiu o número máximo de curtidas em um período de 24 horas, mas à medida que ganha níveis de confiança, você ganha mais curtidas diárias. Você poderá curtir as postagens novamente em %{time_left}."
+      create_like: "Uau! Você tem compartilhado muito amor! Você atingiu o número máximo de curtidas em um período de 24 horas. Mas, à medida que ganha níveis de confiança, você ganha mais curtidas diárias. Você poderá curtir as postagens novamente em %{time_left}."
       create_bookmark: "Você alcançou a quantidade máxima de favoritos por dia. Crie mais favoritos em %{time_left}."
       edit_post: "Você alcançou a quantidade máxima de edições por dia. Envie mais edições em %{time_left}."
       live_post_counts: "Você está pedindo contagens de postagens em tempo real muito rápido. Espere %{time_left} antes de tentar novamente."
@@ -764,7 +763,6 @@ pt_BR:
         one: "há quase %{count} ano"
         other: "há quase %{count} anos"
   password_reset:
-    no_token: "Desculpe, este link de alteração de senha é muito antigo. Selecione o botão Entrar e use \"Esqueci minha senha\" para obter um novo link."
     choose_new: "Escolha uma nova senha"
     choose: "Escolha uma senha"
     update: "Atualizar senha"
@@ -1335,7 +1333,7 @@ pt_BR:
       labels:
         user: Usuário(a)
         qtt_like: Curtidas recebidas
-      description: "Melhores 10 usuários(as) que receberram curtidas."
+      description: "Melhores dez usuários(as) que receberram curtidas."
     top_users_by_likes_received_from_inferior_trust_level:
       title: "Melhores usuários(as) por curtidas recebidas de usuário(a) com nível de confiança mais baixo"
       labels:
@@ -1348,7 +1346,7 @@ pt_BR:
       labels:
         user: Usuário(a)
         qtt_like: Curtidas recebidas
-      description: "Melhores 10 usuários(as) que receberam curtidas de uma ampla variedade de pessoas."
+      description: "Melhores dez usuários(as) que receberam curtidas de uma ampla variedade de pessoas."
   dashboard:
     group_email_credentials_warning: 'Houve um problema nas credenciais do e-mail do grupo <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Nenhum e-mail será enviado a partir da caixa de entrada do grupo até este problema ser resolvido. %{error}'
     rails_env_warning: "Seu servidor está rodando no modo %{env}."
@@ -1424,7 +1422,7 @@ pt_BR:
     download_remote_images_threshold: "Espaço mínimo necessário em disco para baixar em modo local imagens remotas (em %)"
     disabled_image_download_domains: "Imagens remotas hospedadas nestes domínios nunca serão baixadas. Lista delimitada por barras verticais."
     block_hotlinked_media: "Impedir que os usuários introduzam mídia remota (hotlinked) em suas publicações. A mídia remota que não for baixada via 'download_remote_images_to_local' será substituída por um link de espaço reservado."
-    block_hotlinked_media_exceptions: "Uma lista de URLs base, isentos da configuração block_hotlinked_media. Inclua o protocolo (por exemplo, https://example.com)."
+    block_hotlinked_media_exceptions: "Uma lista de URLs de base, isentos da configuração block_hotlinked_media. Inclua o protocolo (por exemplo, https://example.com)."
     editing_grace_period: "Durante (n) segundos após a publicação, as edições não criarão uma nova versão no histórico da postagem."
     editing_grace_period_max_diff: "Quantidade máxima de alterações de caracteres permitidas no período de carência de edição. Se houver mais alterações, armazene outra revisão de postagem (nível de confiança 0 e 1)"
     editing_grace_period_max_diff_high_trust: "Quantidade máxima de alterações de caracteres permitidas no período de carência de edição. Se houver mais alterações, armazene outra revisão de postagem (nível de confiança 2 e maior)"
@@ -1447,7 +1445,7 @@ pt_BR:
     show_pinned_excerpt_desktop: "Mostrar trecho de tópicos fixados na visualização para desktop."
     post_onebox_maxlength: "Tamanho máximo para uma postagem do Discourse no Onebox."
     blocked_onebox_domains: "Uma lista de domínios que nunca serão \"oneboxed\", por exemplo, wikipedia.org\n(símbolos coringas como \"*\" e \"?\" não são suportados)"
-    block_onebox_on_redirect: "Bloqueie o onebox para URLs que redirecionam."
+    block_onebox_on_redirect: "Bloqueie o Onebox para URLs que redirecionam."
     allowed_inline_onebox_domains: "Uma lista de domínios que serão colocados em miniatura no Onebox se forem vinculados sem um título"
     enable_inline_onebox_on_all_domains: "Ignore a configuração do site inline_onebox_domain_whitelist e permita inclusões de Onebox em todos os domínios."
     force_custom_user_agent_hosts: "Hosts para os quais usar um agente do(a) usuário(a) do Onebox em todos os pedidos. (Especialmente útil para hosts que limitam acesso do agente do(a) usuário(a).)"
@@ -3687,7 +3685,6 @@ pt_BR:
     png_to_jpg_conversion_failure_message: "Ocorreu um erro ao converter PNG em JPG."
     optimize_failure_message: "Ocorreu um erro ao otimizar a imagem enviada."
     download_failure: "Falha ao baixar o arquivo do provedor externo."
-    size_mismatch_failure: "O tamanho do arquivo enviado para S3 não corresponde ao tamanho pretendido do stub do envio externo. %{additional_detail}"
     create_multipart_failure: "Falha ao criar envio com partes múltiplas no armazenamento externo."
     abort_multipart_failure: "Falha ao anular envio com partes múltiplas no armazenamento externo."
     complete_multipart_failure: "Falha ao concluir envio com partes múltiplas no armazenamento externo."
@@ -3750,12 +3747,12 @@ pt_BR:
     dark_rose: "Rosa-escuro"
     wcag: "WCAG claro"
     wcag_theme_name: "WCAG claro"
-    dracula: "Dracula"
-    dracula_theme_name: "Dracula"
-    solarized_light: "Solarized Light"
-    solarized_light_theme_name: "Solarized Light"
-    solarized_dark: "Solarized Dark"
-    solarized_dark_theme_name: "Solarized Dark"
+    dracula: "Drácula"
+    dracula_theme_name: "Drácula"
+    solarized_light: "Cor clara solarizada"
+    solarized_light_theme_name: "Cor clara solarizada"
+    solarized_dark: "Cor escura solarizada"
+    solarized_dark_theme_name: "Cor escura solarizada"
     wcag_dark: "WCAG escuro"
     wcag_dark_theme_name: "WCAG escuro"
     default_theme_name: "Padrão"
@@ -4410,11 +4407,11 @@ pt_BR:
       synonym: 'Sinônimos não são permitidos. Use "%{tag_name}".'
       has_synonyms: '"%{tag_name}" não pode ser usado porque tem sinônimos.'
       restricted_tags_cannot_be_used_in_category:
-        one: 'A etiqueta "%{tags}" não pode ser usada na categoria "%{category}". Por favor, remova-a.'
-        other: 'As seguintes etiquetas não podem ser usadas na categoria "%{category}": %{tags}. Por favor, remova-as.'
+        one: 'A etiqueta "%{tags}" não pode ser usada na categoria "%{category}". Remova.'
+        other: 'As seguintes etiquetas não podem ser usadas na categoria "%{category}": %{tags}. Remova.'
       category_does_not_allow_tags:
-        one: 'A categoria "%{category}" não permite o uso da etiqueta "%{tags}". Por favor, remova-a.'
-        other: 'A categoria "%{category}" não permite o uso das etiquetas "%{tags}". Por favor, remova-as.'
+        one: 'A categoria "%{category}" não permite o uso da etiqueta "%{tags}". Remova.'
+        other: 'A categoria "%{category}" não permite o uso das etiquetas "%{tags}". Remova.'
     required_tags_from_group:
       one: "Você deve incluir pelo menos %{count} etiqueta %{tag_group_name}. As etiquetas deste grupo são: %{tags}."
       other: "Você deve incluir pelo menos %{count} etiquetas %{tag_group_name}. As etiquetas deste grupo são: %{tags}."
@@ -4468,7 +4465,7 @@ pt_BR:
             extra_description: "Somente usuários(as) que entraram com a conta podem acessar esta comunidade"
           invite_only:
             placeholder: "Apenas Convidados"
-            extra_description: "Usuários(as) devem ser convidados(as) por usuários(as) confiáveis ou pela equipe, caso contrário, poderão se cadastrar por conta própria"
+            extra_description: "Usuários(as) devem ser convidados(as) por usuários(as) confiáveis ou pela equipe. Caso contrário, poderão se cadastrar por conta própria"
           must_approve_users:
             placeholder: "Requerer aprovação"
             extra_description: "Os usuários devem ser aprovados pela equipe"
@@ -4476,7 +4473,7 @@ pt_BR:
         title: "Seu Discourse está pronto!"
         description: "É isso! Você fez o básico para configurar sua comunidade. Agora você pode entrar, dar uma olhada, escrever um tópico de boas-vindas e enviar convites!<br><br>Divirta-se!"
       styling:
-        title: "Aparência & Comportamento"
+        title: "Aparência e Comportamento"
         fields:
           color_scheme:
             label: "Esquema de cores"
@@ -4506,7 +4503,7 @@ pt_BR:
               categories_boxes_with_topics:
                 label: "Caixas de Categorias com Tópicos"
               subcategories_with_featured_topics:
-                label: "Sub-Categorias com tópicos em destaque"
+                label: "Subcategorias com tópicos em destaque"
       branding:
         title: "Personalizar logos"
         fields:

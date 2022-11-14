@@ -232,6 +232,7 @@ sv:
     delete: "Radera"
     generic_error: "Tyvärr, ett fel har inträffat."
     generic_error_with_reason: "Ett fel inträffade: %{error}"
+    multiple_errors: "Flera fel inträffade: %{errors}"
     sign_up: "Registrera"
     log_in: "Logga in"
     age: "Ålder"
@@ -974,7 +975,7 @@ sv:
     user_fields:
       none: "(välj ett alternativ)"
       required: 'Ange ett värde för "%{name}"'
-      same_as_password: 'Upprepa inte ditt lösenord i andra fält.'
+      same_as_password: "Upprepa inte ditt lösenord i andra fält."
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -1113,9 +1114,9 @@ sv:
         tags_section: "Sektion Taggar"
         tags_section_instruction: "Valda taggar kommer att visas under sidofältets tagg-sektion."
         navigation_section: "Navigering"
-        list_destination_instruction: "När jag klickar på en länk till en ämneslista i sidofältet med nya eller olästa ämnen kommer jag till"
-        list_destination_default: "Standard"
-        list_destination_unread_new: "Nya/olästa"
+        list_destination_instruction: "När det finns nytt innehåll i sidofältet..."
+        list_destination_default: "använd standardlänken och visa en utmärkelse för nya objekt"
+        list_destination_unread_new: "länka till oläst/nytt och visa ett antal nya objekt"
       change: "ändra"
       featured_topic: "Utvalt ämne"
       moderator: "%{user} är en moderator"
@@ -1904,6 +1905,8 @@ sv:
       success: "Ditt konto har skapats och du är nu inloggad."
       name_label: "Namn"
       password_label: "Lösenord"
+      existing_user_can_redeem: "Lös in din inbjudan till ett ämne eller en grupp."
+      existing_user_cannot_redeem: "Denna inbjudan kan inte lösas in. Be personen som bjöd in dig att skicka en ny inbjudan till dig."
     password_reset:
       continue: "Fortsätt till %{site_name}"
     emoji_set:
@@ -3867,12 +3870,20 @@ sv:
             unread_with_count: "Oläst (%{count})"
             archive: "Arkiv"
         tags:
+          links:
+            add_tags:
+              content: "Lägg till taggar"
+              title: "Du har inte lagt till några taggar. Klicka för att komma igång."
           none: "Du har inte lagt till några taggar."
           click_to_get_started: "Klicka här för att komma igång."
           header_link_text: "Taggar"
           header_action_title: "redigera sidofältets taggar"
           configure_defaults: "Konfigurera standardvärden"
         categories:
+          links:
+            add_categories:
+              content: "Lägg till kategorier"
+              title: "Du har inte lagt till några kategorier. Klicka för att komma igång."
           none: "Du har inte lagt till några kategorier."
           click_to_get_started: "Klicka här för att komma igång."
           header_link_text: "Kategorier"
@@ -3914,7 +3925,7 @@ sv:
               pending_count: "%{count} väntande"
     welcome_topic_banner:
       title: "Skapa ditt välkomstämne"
-      description: 'Ditt välkomstämne är det första som nya medlemmar kommer att läsa. Tänk på det som din "snabbpresentation" eller "målbeskrivning". Låt alla veta vem den här gruppen är till för, vad de kan förvänta sig att hitta här och vad du vill att de ska göra först.'
+      description: "Ditt välkomstämne är det första som nya medlemmar kommer att läsa. Tänk på det som din \"snabbpresentation\" eller \"målbeskrivning\". Låt alla veta vem den här gruppen är till för, vad de kan förvänta sig att hitta här och vad du vill att de ska göra först."
       button_title: "Börja redigera"
     until: "T.o.m.:"
   admin_js:
@@ -4189,7 +4200,6 @@ sv:
         go_back: "Tillbaka till listan"
         payload_url: "Försändelse-URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "Det verkar som du försöker upprätta en webhook till en lokal URL. Händelser levererade till en lokal adress kan orsaka bieffekter eller oväntad funktion. Vill du fortsätta?"
         secret_invalid: "Hemligheten får inte ha några blanka tecken."
         secret_too_short: "Hemligheten bör vara minst 12 tecken."
         secret_placeholder: "En alternativ sträng som används för att generera signatur"
@@ -4288,6 +4298,7 @@ sv:
         change_settings_short: "Inställningar"
         howto: "Hur installerar jag tillägg?"
         official: "Officiellt tillägg"
+        broken_route: "Det går inte att konfigurera länken till '%{name}'. Se till att annonsblockerare är inaktiverade och försök ladda om sidan."
       backups:
         title: "Säkerhetskopior"
         menu:
@@ -4478,7 +4489,6 @@ sv:
           last_attempt: "Installationsprocessen slutfördes inte, det senaste försöket:"
           remote_branch: "Filialnamn (valfritt)"
           public_key: "Ge följande offentliga nyckel tillträde till lagringsplatsen:"
-          public_key_note: "När du har angett en giltig privat lagringsplats URL ovan genereras det en SSH-nyckel som visas här."
           install: "Installera"
           installed: "Installerad"
           install_popular: "Populära"
@@ -5157,7 +5167,7 @@ sv:
         trust_level_2_users: "Användare med förtroendenivå 2"
         trust_level_3_requirements: "Krav för förtroendenivå 3"
         trust_level_locked_tip: "förtroendenivå är låst, systemet kommer ej att befordra eller degradera användare"
-        trust_level_unlocked_tip: "förtroendenivå är olåst, systemet kan komma att befordra eller degradera användare"
+        trust_level_unlocked_tip: "förtroendenivån är olåst, systemet kan befordra eller degradera användare"
         lock_trust_level: "Lås förtroendenivå"
         unlock_trust_level: "Lås upp förtroendenivå"
         silenced_count: "Tystad"
@@ -5217,23 +5227,23 @@ sv:
         delete_confirm: "Är du säker på att du vill ta bort det här användarfältet?"
         options: "Alternativ"
         required:
-          title: "Krävs vid registrering?"
+          title: "Krävs vid registrering"
           enabled: "krävs"
           disabled: "krävs ej"
         editable:
-          title: "Redigerbar efter registrering?"
+          title: "Redigerbar efter registrering"
           enabled: "redigerbar"
           disabled: "ej redigerbar"
         show_on_profile:
-          title: "Visa på offentlig profil?"
+          title: "Visa på offentlig profil"
           enabled: "visas på profil"
           disabled: "visas ej på profil"
         show_on_user_card:
-          title: "Ska visas på användarkort?"
+          title: "Ska visas på användarkort"
           enabled: "visas på användarkort"
           disabled: "visas inte på användarkort"
         searchable:
-          title: "Sökbart?"
+          title: "Sökbart"
           enabled: "sökbart"
           disabled: "inte sökbart"
         field_types:

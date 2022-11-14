@@ -26,7 +26,7 @@
               <div class="caps-lock-warning {{unless this.capsLockOn "hidden"}}">{{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}</div>
             </div>
           </div>
-          <SecondFactorForm @secondFactorMethod={{this.secondFactorMethod}} @secondFactorToken={{this.secondFactorToken}} @class={{this.secondFactorClass}} @backupEnabled={{this.backupEnabled}} @isLogin={{true}}>
+          <SecondFactorForm @secondFactorMethod={{this.secondFactorMethod}} @secondFactorToken={{this.secondFactorToken}} @class={{this.secondFactorClass}} @backupEnabled={{this.backupEnabled}} @totpEnabled={{this.totpEnabled}} @isLogin={{true}}>
             {{#if this.showSecurityKey}}
               <SecurityKeyForm @allowedCredentialIds={{this.securityKeyAllowedCredentialIds}} @challenge={{this.securityKeyChallenge}} @showSecurityKey={{this.showSecurityKey}} @showSecondFactor={{this.showSecondFactor}} @secondFactorMethod={{this.secondFactorMethod}} @otherMethodAllowed={{this.otherMethodAllowed}} @action={{action "authenticateSecurityKey"}}>
               </SecurityKeyForm>

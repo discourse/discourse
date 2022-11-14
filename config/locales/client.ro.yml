@@ -1017,7 +1017,6 @@ ro:
       experimental_sidebar:
         options: "Opțiuni"
         navigation_section: "Navigare"
-        list_destination_default: "Implicit"
       change: "Schimbă"
       featured_topic: "Subiect recomandat"
       moderator: "%{user} este moderator"
@@ -3721,7 +3720,6 @@ ro:
         trust_level_2_users: "utilizatori de nivel de încredere 2 "
         trust_level_3_requirements: "Cerințe pentru nivelul 3 de încredere"
         trust_level_locked_tip: "Nivelul de încredere este blocat, sistemul nu va promova sau retrograda utilizatorii"
-        trust_level_unlocked_tip: "Nivelul de încredere este deblocat, sistemul poate promova sau retrograda utilizatorii"
         lock_trust_level: "Blochează nivelul de încredere"
         unlock_trust_level: "Deblochează nivelul de încredere"
         suspended_count: "Suspendați"
@@ -3774,19 +3772,19 @@ ro:
         delete_confirm: "Ești sigur că vrei să ștergi acest câmp utilizator?"
         options: "Opțiuni"
         required:
-          title: "Necesar la înscriere?"
+          title: "Necesar la înscriere"
           enabled: "necesar"
           disabled: "opţional"
         editable:
-          title: "Editabil după înregistrare?"
+          title: "Editabil după înregistrare"
           enabled: "editabil"
           disabled: "nu este editabil"
         show_on_profile:
-          title: "Arată în profilul public?"
+          title: "Arată în profilul public"
           enabled: "se afișează în profil"
           disabled: "nu se afișează în profil"
         show_on_user_card:
-          title: "Afișează pe pagina cu date personale utilizatorului?"
+          title: "Afișează pe pagina cu date personale utilizatorului"
           enabled: "se afișează"
           disabled: "nu se afișează"
         field_types:

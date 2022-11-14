@@ -269,9 +269,6 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  position: absolute;
-  top: 48px;
-  width: calc(100% - 40px);
   z-index: z("usercard");
   &__content {
     width: 70%;

@@ -1022,7 +1022,6 @@ sl:
       experimental_sidebar:
         options: "Možnosti"
         navigation_section: "Navigacija"
-        list_destination_default: "Privzeto"
       change: "spremeni"
       featured_topic: "Izpostavljena tema"
       moderator: "%{user} je moderator"
@@ -4099,7 +4098,6 @@ sl:
         trust_level_2_users: "Uporabniki na nivoju zaupanja 2"
         trust_level_3_requirements: "Zahteve za nivo zaupanja 3"
         trust_level_locked_tip: "nivo zaupanja je zaklenjen, sistem ne bo spreminjal nivo zaupanja uporabnika"
-        trust_level_unlocked_tip: "nivo zaupanja je odklenjen, sistem bo lahko spreminjal nivo zaupanja uporabnika"
         lock_trust_level: "Zakleni nivo zaupanja"
         unlock_trust_level: "Odkleni nivo zaupanja"
         silenced_count: "Utišani"
@@ -4155,19 +4153,19 @@ sl:
         delete_confirm: "Ali ste prepričani, da želite izbrisati to polje?"
         options: "Možnosti"
         required:
-          title: "Zahtevano ob prijavi?"
+          title: "Zahtevano ob prijavi"
           enabled: "zahtevano"
           disabled: "ni zahtevano"
         editable:
-          title: "Uredljivo po prijavi?"
+          title: "Uredljivo po prijavi"
           enabled: "uredljivo"
           disabled: "ni uredljivo"
         show_on_profile:
-          title: "Prikaži na javnem profilu?"
+          title: "Prikaži na javnem profilu"
           enabled: "prikazano na profilu"
           disabled: "ni prikazano na profilu"
         show_on_user_card:
-          title: "Prikaži na uporabnikovi izkaznici?"
+          title: "Prikaži na uporabnikovi izkaznici"
           enabled: "prikazano na uporabnikovi izkaznici"
           disabled: "ni prikazano na uporabnikovi izkaznici"
         field_types:

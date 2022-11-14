@@ -171,14 +171,17 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
       copy.unread_notifications = [];
       copy.topics = [
         getMessage({
+          id: 8090,
           bumped_at: "2014-07-26T01:29:24.177Z",
           fancy_title: "Test Topic 0003",
         }),
         getMessage({
+          id: 8091,
           bumped_at: "2012-07-26T01:29:24.177Z",
           fancy_title: "Test Topic 0002",
         }),
         getMessage({
+          id: 8092,
           bumped_at: "2010-07-26T01:29:24.177Z",
           fancy_title: "Test Topic 0001",
         }),

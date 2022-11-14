@@ -70,7 +70,7 @@ RSpec.describe "S3Helper" do
         'some' => 'testing'
       }.each do |bucket_name, prefix|
         s3_helper = S3Helper.new(bucket_name, "", client: client)
-        Aws::S3::Bucket.any_instance.expects(:objects).with(prefix: prefix)
+        Aws::S3::Bucket.any_instance.expects(:objects).with({ prefix: prefix })
         s3_helper.list('testing')
       end
     end
@@ -210,6 +210,16 @@ RSpec.describe "S3Helper" do
         }
       ).raises(Aws::S3::Errors::AccessDenied.new("test", "test", {}))
       expect(s3_helper.ensure_cors!([S3CorsRulesets::BACKUP_DIRECT_UPLOAD])).to eq(false)
+    end
+  end
+
+  describe "#delete_objects" do
+    let(:s3_helper) { S3Helper.new("test-bucket", "", client: client) }
+
+    it "works" do
+      # The S3::Client with `stub_responses: true` includes validation of requests.
+      # If the request were invalid, this spec would raise an error
+      s3_helper.delete_objects(["object/one.txt", "object/two.txt"])
     end
   end
 end

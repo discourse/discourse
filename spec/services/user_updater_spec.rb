@@ -530,7 +530,7 @@ RSpec.describe UserUpdater do
         UserUpdater.new(Discourse.system_user, user).update(skip_new_user_tips: true)
 
         expect(user.user_option.skip_new_user_tips).to eq(true)
-        expect(user.user_option.seen_popups).to eq(OnboardingPopup.types.values)
+        expect(user.user_option.seen_popups).to eq([-1])
 
         UserUpdater.new(Discourse.system_user, user).update(skip_new_user_tips: false)
 

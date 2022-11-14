@@ -138,7 +138,7 @@ class User < ActiveRecord::Base
   after_create :set_default_sidebar_section_links
 
   after_update :set_default_sidebar_section_links, if: Proc.new  {
-    self.saved_change_to_staged?
+    self.saved_change_to_staged? || self.saved_change_to_admin?
   }
 
   after_update :trigger_user_updated_event, if: Proc.new {
@@ -283,6 +283,13 @@ class User < ActiveRecord::Base
   end
 
   MAX_STAFF_DELETE_POST_COUNT ||= 5
+
+  def self.user_tips
+    @user_tips ||= Enum.new(
+      first_notification: 1,
+      topic_timeline: 2,
+    )
+  end
 
   def visible_sidebar_tags(user_guardian = nil)
     user_guardian ||= guardian
@@ -1944,7 +1951,7 @@ class User < ActiveRecord::Base
       end
     end
 
-    SidebarSectionLink.insert_all!(records) if records.present?
+    SidebarSectionLink.insert_all(records) if records.present?
   end
 
   def stat

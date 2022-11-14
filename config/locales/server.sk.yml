@@ -463,7 +463,6 @@ sk:
         many: "pred takmer %{count} rokmi"
         other: "pred takmer %{count} rokmi"
   password_reset:
-    no_token: "Ľutujeme, tento odkaz na zmenu hesla je už príliš starý. Stlačte tlačidlo Prihlásiť a použite \"Zabudol som heslo\" pre vytvorenie nového odkazu."
     choose_new: "Napíš nové heslo"
     choose: "Napíš heslo"
     update: "Aktualizujte heslo"

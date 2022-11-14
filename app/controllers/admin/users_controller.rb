@@ -241,11 +241,11 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def primary_group
-    guardian.ensure_can_change_primary_group!(@user)
-
     if params[:primary_group_id].present?
       primary_group_id = params[:primary_group_id].to_i
       if group = Group.find(primary_group_id)
+        guardian.ensure_can_change_primary_group!(@user, group)
+
         if group.user_ids.include?(@user.id)
           @user.primary_group_id = primary_group_id
         end

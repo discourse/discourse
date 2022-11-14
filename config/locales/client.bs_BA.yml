@@ -950,7 +950,6 @@ bs_BA:
       experimental_sidebar:
         options: "Opcije"
         navigation_section: "Navigacija"
-        list_destination_default: "Uobičajen"
       change: "promjeni"
       featured_topic: "Istaknuta tema"
       moderator: "%{user} je moderator"
@@ -4110,7 +4109,6 @@ bs_BA:
         trust_level_2_users: "Trust Level 2 Users"
         trust_level_3_requirements: "Trust Level 3 Requirements"
         trust_level_locked_tip: "trust level is locked, system will not promote or demote user"
-        trust_level_unlocked_tip: "trust level is unlocked, system will may promote or demote user"
         lock_trust_level: "Lock Trust Level"
         unlock_trust_level: "Unlock Trust Level"
         silenced_count: "Stišano"
@@ -4166,19 +4164,19 @@ bs_BA:
         delete_confirm: "Are you sure you want to delete that user field?"
         options: "Opcije"
         required:
-          title: "Required at signup?"
+          title: "Required at signup"
           enabled: "required"
           disabled: "not required"
         editable:
-          title: "Editable after signup?"
+          title: "Editable after signup"
           enabled: "editable"
           disabled: "not editable"
         show_on_profile:
-          title: "Prikaži na javnom profilu?"
+          title: "Prikaži na javnom profilu"
           enabled: "prikazano na profilu"
           disabled: "nije prikazano na profilu"
         show_on_user_card:
-          title: "Prikaži na korisničkoj kartici?"
+          title: "Prikaži na korisničkoj kartici"
           enabled: "prikazano na korisničkoj kartici"
           disabled: "nije prikazano na korisničkoj kartici"
         field_types:

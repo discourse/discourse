@@ -6,11 +6,13 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import { observes } from "discourse-common/utils/decorators";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { inject as service } from "@ember/service";
+import { or } from "@ember/object/computed";
 
 export default Controller.extend({
   dialog: service(),
   loading: false,
   filter: null,
+  showSearch: or("model.length", "filter"),
 
   _debouncedShow() {
     Permalink.findAll(this.filter).then((result) => {

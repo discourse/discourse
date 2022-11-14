@@ -69,6 +69,10 @@ acceptance("Sidebar - Plugin API", function (needs) {
                     return "random-channel";
                   }
 
+                  get classNames() {
+                    return "my-class-name";
+                  }
+
                   get route() {
                     return "topic";
                   }
@@ -241,6 +245,11 @@ acceptance("Sidebar - Plugin API", function (needs) {
       links[0].textContent.trim(),
       "random channel text",
       "displays first link with correct text"
+    );
+
+    assert.ok(
+      exists(".sidebar-section-link.my-class-name"),
+      "sets the custom class name for the section link"
     );
 
     assert.strictEqual(

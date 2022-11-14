@@ -1,0 +1,46 @@
+.full-page-chat-header {
+  display: flex;
+  padding: 0.25rem;
+  border-bottom: 1px solid var(--primary-low);
+  justify-content: space-between;
+  @include ellipsis;
+  flex-direction: column;
+
+  .chat-channel-info-link {
+    justify-self: flex-end;
+  }
+}
+
+.full-page-chat-header__about-link {
+  @include ellipsis;
+  padding-right: 0.25rem;
+
+  .chat-channel-title__name {
+    font-weight: 700;
+  }
+  .chat-channel-title {
+    padding: 0.5rem 0.5rem 0.25rem 0.5rem;
+  }
+}
+
+.full-page-chat-header__members-link {
+  padding: 0 0.5rem 0.5rem 0.5rem;
+  font-size: var(--font-down-1);
+  color: var(--primary-medium);
+
+  &:visited {
+    color: var(--primary-medium);
+  }
+}
+
+.full-page-chat-header__first-row {
+  display: flex;
+  height: 45px;
+  align-items: center;
+}
+
+.full-page-chat-header__second-row {
+  display: flex;
+  height: 32px;
+  align-items: center;
+}

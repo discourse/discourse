@@ -6,10 +6,6 @@ RSpec.describe Admin::WatchedWordsController do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
 
-  it "is a subclass of StaffController" do
-    expect(Admin::WatchedWordsController < Admin::StaffController).to eq(true)
-  end
-
   describe '#destroy' do
     fab!(:watched_word) { Fabricate(:watched_word) }
 

@@ -24,7 +24,7 @@ acceptance("Composer Actions", function (needs) {
   });
   needs.settings({
     prioritize_username_in_ux: true,
-    display_name_on_post: false,
+    display_name_on_posts: false,
     enable_whispers: true,
   });
   needs.site({ can_tag_topics: true });
@@ -489,7 +489,7 @@ acceptance("Prioritize Username", function (needs) {
   needs.user();
   needs.settings({
     prioritize_username_in_ux: true,
-    display_name_on_post: false,
+    display_name_on_posts: false,
   });
 
   test("Reply to post use username", async function (assert) {
@@ -517,7 +517,7 @@ acceptance("Prioritize Full Name", function (needs) {
   needs.user();
   needs.settings({
     prioritize_username_in_ux: false,
-    display_name_on_post: true,
+    display_name_on_posts: true,
   });
 
   test("Reply to post use full name", async function (assert) {
@@ -555,7 +555,7 @@ acceptance("Prioritizing Name fall back", function (needs) {
   needs.user();
   needs.settings({
     prioritize_username_in_ux: false,
-    display_name_on_post: true,
+    display_name_on_posts: true,
   });
 
   test("Quotes fall back to username if name is not present", async function (assert) {

@@ -749,7 +749,79 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
   });
 
+  test("show suffix indicator for unread and new content on everything link", async function (assert) {
+    updateCurrentUser({
+      sidebar_list_destination: "default",
+    });
+
+    this.container.lookup("service:topic-tracking-state").loadStates([
+      {
+        topic_id: 1,
+        highest_post_number: 1,
+        last_read_post_number: null,
+        created_at: "2022-05-11T03:09:31.959Z",
+        category_id: 1,
+        notification_level: null,
+        created_in_new_period: true,
+        treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+      },
+      {
+        topic_id: 2,
+        highest_post_number: 12,
+        last_read_post_number: 11,
+        created_at: "2020-02-09T09:40:02.672Z",
+        category_id: 2,
+        notification_level: 2,
+        created_in_new_period: false,
+        treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+      },
+    ]);
+
+    await visit("/");
+
+    assert.ok(
+      exists(".sidebar-section-link-everything .sidebar-section-link-suffix"),
+      "shows suffix indicator for unread posts on everything link"
+    );
+
+    // simulate reading topic 2
+    await publishToMessageBus("/unread", {
+      topic_id: 2,
+      message_type: "read",
+      payload: {
+        last_read_post_number: 12,
+        highest_post_number: 12,
+        notification_level: 2,
+      },
+    });
+
+    assert.ok(
+      exists(".sidebar-section-link-everything .sidebar-section-link-suffix"),
+      "shows suffix indicator for new topics on categories link"
+    );
+
+    // simulate reading topic 1
+    await publishToMessageBus("/unread", {
+      topic_id: 1,
+      message_type: "read",
+      payload: {
+        last_read_post_number: 1,
+        highest_post_number: 1,
+        notification_level: 2,
+      },
+    });
+
+    assert.ok(
+      !exists(".sidebar-section-link-everything .sidebar-section-link-suffix"),
+      "it removes the suffix indicator when all topics are read"
+    );
+  });
+
   test("new and unread count for everything link", async function (assert) {
+    updateCurrentUser({
+      sidebar_list_destination: "unread_new",
+    });
+
     this.container.lookup("service:topic-tracking-state").loadStates([
       {
         topic_id: 1,
@@ -1002,6 +1074,10 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     const category = categories.find((c) => c.id === 1001);
     category.set("notification_level", NotificationLevels.TRACKING);
 
+    updateCurrentUser({
+      sidebar_list_destination: "unread_new",
+    });
+
     this.container.lookup("service:topic-tracking-state").loadStates([
       {
         topic_id: 1,
@@ -1137,6 +1213,76 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
         ".sidebar-section-link-tracked .sidebar-section-link-content-badge"
       ),
       "it removes new count once there are no tracked new topics"
+    );
+  });
+
+  test("show suffix indicator for new content on tracked link", async function (assert) {
+    const categories = Site.current().categories;
+
+    // Category id 1001 has two subcategories
+    const category = categories.find((c) => c.id === 1001);
+    category.set("notification_level", NotificationLevels.TRACKING);
+
+    updateCurrentUser({
+      sidebar_list_destination: "default",
+    });
+
+    this.container.lookup("service:topic-tracking-state").loadStates([
+      {
+        topic_id: 1,
+        highest_post_number: 1,
+        last_read_post_number: null,
+        created_at: "2022-05-11T03:09:31.959Z",
+        category_id: category.id,
+        notification_level: NotificationLevels.TRACKING,
+        created_in_new_period: true,
+        treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+      },
+      {
+        topic_id: 2,
+        highest_post_number: 12,
+        last_read_post_number: 11,
+        created_at: "2020-02-09T09:40:02.672Z",
+        category_id: category.subcategories[0].id,
+        notification_level: NotificationLevels.TRACKING,
+        created_in_new_period: false,
+        treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+      },
+    ]);
+
+    await visit("/");
+
+    assert.ok(
+      exists(".sidebar-section-link-tracked .sidebar-section-link-suffix")
+    );
+
+    // simulate reading topic id 2
+    await publishToMessageBus("/unread", {
+      topic_id: 2,
+      message_type: "read",
+      payload: {
+        last_read_post_number: 12,
+        highest_post_number: 12,
+      },
+    });
+
+    assert.ok(
+      exists(".sidebar-section-link-tracked .sidebar-section-link-suffix")
+    );
+
+    // simulate reading topic id 1
+    await publishToMessageBus("/unread", {
+      topic_id: 1,
+      message_type: "read",
+      payload: {
+        last_read_post_number: 1,
+        highest_post_number: 1,
+      },
+    });
+
+    assert.ok(
+      !exists(".sidebar-section-link-tracked .sidebar-section-link-suffix"),
+      "it removes the suffix indicator if there are no tracked new topics"
     );
   });
 

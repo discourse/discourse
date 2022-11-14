@@ -915,7 +915,7 @@ zh_CN:
     user_fields:
       none: "（选择一个选项）"
       required: '请为“%{name}”输入一个值。'
-      same_as_password: '您的密码不应重复出现在其他字段中。'
+      same_as_password: "您的密码不应重复出现在其他字段中。"
     user:
       said: "%{username}："
       profile: "个人资料"
@@ -927,7 +927,7 @@ zh_CN:
         success: "下载已开始，完成后将通过消息通知您。"
         rate_limit_error: "帖子每天只能下载一次，请明天再试。"
       new_private_message: "新消息"
-      private_message: "消息"
+      private_message: "私信"
       private_messages: "消息"
       user_notifications:
         filters:
@@ -3712,7 +3712,7 @@ zh_CN:
               pending_count: "%{count} 待处理"
     welcome_topic_banner:
       title: "创建您的欢迎话题"
-      description: '您的欢迎话题是新成员首先会阅读的内容。把它想象成您的“电梯推销”或“使命宣言”。让每个人都知道这个社区是为谁服务的，他们可以在这里找到什么，以及您希望他们首先做什么。'
+      description: "您的欢迎话题是新成员首先会阅读的内容。把它想象成您的“电梯推销”或“使命宣言”。让每个人都知道这个社区是为谁服务的，他们可以在这里找到什么，以及您希望他们首先做什么。"
       button_title: "开始编辑"
     until: "直到："
   admin_js:
@@ -3984,7 +3984,6 @@ zh_CN:
         go_back: "返回列表"
         payload_url: "有效负载 URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "您似乎正在尝试将网络钩子设置为本地 URL。传递到本地地址的事件可能会导致副作用或意外行为。继续吗？"
         secret_invalid: "密钥不得包含任何空白字符。"
         secret_too_short: "密钥应至少为 12 个字符。"
         secret_placeholder: "可选字符串，用于生成签名"
@@ -4271,7 +4270,6 @@ zh_CN:
           last_attempt: "安装过程未完成，最后一次尝试："
           remote_branch: "分支名称（可选）"
           public_key: "授予以下公钥访问仓库的权限："
-          public_key_note: "在上面输入有效的私有仓库 URL 后，将生成 SSH 密钥并在此处显示。"
           install: "安装"
           installed: "已安装"
           install_popular: "热门"
@@ -4945,7 +4943,6 @@ zh_CN:
         trust_level_2_users: "信任级别 2 用户"
         trust_level_3_requirements: "信任级别 3 要求"
         trust_level_locked_tip: "信任级别已被锁定，系统将不会升降用户的信任级别"
-        trust_level_unlocked_tip: "信任级别已被解锁，系统可能会升降用户的信任级别"
         lock_trust_level: "锁定信任级别"
         unlock_trust_level: "解锁信任级别"
         silenced_count: "被禁言"
@@ -5004,23 +5001,18 @@ zh_CN:
         delete_confirm: "确定要删除该用户字段吗？"
         options: "选项"
         required:
-          title: "注册时需要？"
           enabled: "必选"
           disabled: "非必选"
         editable:
-          title: "注册后可以编辑？"
           enabled: "可编辑"
           disabled: "不可编辑"
         show_on_profile:
-          title: "在公开个人资料中显示？"
           enabled: "在个人资料中显示"
           disabled: "不在个人资料中显示"
         show_on_user_card:
-          title: "在用户卡片上显示？"
           enabled: "在用户卡片上显示"
           disabled: "不在用户卡片上显示"
         searchable:
-          title: "可搜索？"
           enabled: "可搜索"
           disabled: "不可搜索"
         field_types:

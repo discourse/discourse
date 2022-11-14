@@ -406,7 +406,6 @@ sw:
         one: "siku %{count} iliyopita"
         other: "siku %{count} zilizopita"
   password_reset:
-    no_token: "Samahani, kiungo hicho cha kuingia kupitia barua pepe ni cha mda sana. Bonyeza kitufe cha Kuingia na tumia 'Nimesahau nywila' ili upate kiungo kipya."
     choose_new: "Chagua nywila"
     choose: "Chagua nywila"
     update: "Sasisha Nywila"

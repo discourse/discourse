@@ -18,7 +18,7 @@ acceptance("Plugin Outlet - Connector Class", function (needs) {
     extraConnectorClass("user-profile-primary/hello", {
       actions: {
         sayHello() {
-          this.set("hello", "hello!");
+          this.set("hello", `${this.hello || ""}hello!`);
         },
       },
     });
@@ -53,6 +53,7 @@ acceptance("Plugin Outlet - Connector Class", function (needs) {
       `${PREFIX}/user-profile-primary/hello`
     ] = hbs`<span class='hello-username'>{{model.username}}</span>
         <button class='say-hello' {{on "click" (action "sayHello")}}></button>
+        <button class='say-hello-using-this' {{on "click" this.sayHello}}></button>
         <span class='hello-result'>{{hello}}</span>`;
     Ember.TEMPLATES[
       `${PREFIX}/user-profile-primary/hi`
@@ -86,6 +87,12 @@ acceptance("Plugin Outlet - Connector Class", function (needs) {
       query(".hello-result").innerText,
       "hello!",
       "actions delegate properly"
+    );
+    await click(".say-hello-using-this");
+    assert.strictEqual(
+      query(".hello-result").innerText,
+      "hello!hello!",
+      "actions are made available on `this` and are bound correctly"
     );
 
     await click(".say-hi");

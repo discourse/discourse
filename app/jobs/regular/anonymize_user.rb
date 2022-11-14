@@ -46,8 +46,9 @@ module Jobs
       # UserHistory for delete_user logs the user's IP. Note this is quite ugly but we don't
       # have a better way of querying on details right now.
       UserHistory.where(
-        "action = :action AND details LIKE 'id: #{@user_id}\n%'",
-        action: UserHistory.actions[:delete_user]
+        "action = :action AND details LIKE :details",
+        action: UserHistory.actions[:delete_user],
+        details: "id: #{@user_id}\n%",
       ).update_all(ip_address: new_ip)
     end
 

@@ -1,18 +1,22 @@
 import { module, test } from "qunit";
-import PendingPost from "discourse/models/pending-post";
-import createStore from "discourse/tests/helpers/create-store";
+import { setupTest } from "ember-qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
 import { settled } from "@ember/test-helpers";
 
-module("Unit | Model | pending-post", function () {
+module("Unit | Model | pending-post", function (hooks) {
+  setupTest(hooks);
+
   test("Properties", async function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     const category = store.createRecord("category", { id: 2 });
-    const post = PendingPost.create({
+    const post = store.createRecord("pending-post", {
       id: 1,
       topic_url: "topic-url",
       username: "USERNAME",
       category_id: 2,
     });
+
+    // pending-post initializer performs async operations
     await settled();
 
     assert.equal(post.postUrl, "topic-url", "topic_url is aliased to postUrl");
@@ -30,7 +34,12 @@ module("Unit | Model | pending-post", function () {
   });
 
   test("it cooks raw_text", async function (assert) {
-    const post = PendingPost.create({ raw_text: "**bold text**" });
+    const store = getOwner(this).lookup("service:store");
+    const post = store.createRecord("pending-post", {
+      raw_text: "**bold text**",
+    });
+
+    // pending-post initializer performs async operations
     await settled();
 
     assert.equal(

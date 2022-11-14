@@ -979,7 +979,6 @@ lv:
       experimental_sidebar:
         options: "Iespējas"
         navigation_section: "Pārvietošanās"
-        list_destination_default: "Noklusējums"
       change: "mainīt"
       featured_topic: "Piedāvātā tēma"
       moderator: "%{user} ir moderators"
@@ -3483,7 +3482,6 @@ lv:
         trust_level_2_users: "Uzticības 2. līmeņa lietotāji"
         trust_level_3_requirements: "Uzticības 3. līmeņa prasības:"
         trust_level_locked_tip: "Uzticības līmenis ir slēgts, sistēma nepaaugstinās vai nepazeminās lietotāju"
-        trust_level_unlocked_tip: "Uzticības līmenis ir atslēgts, sistēma paaugstinās vai pazeminās lietotāju"
         lock_trust_level: "Slēgt Uzticības līmeni"
         unlock_trust_level: "Atslēgt Uzticības līmeni"
         suspended_count: "Apturēts"
@@ -3536,19 +3534,19 @@ lv:
         delete_confirm: "Vai tiešām vēlaties dzēst šo lietotāju laukā?"
         options: "Opcijas"
         required:
-          title: "Nepieciešams pierakstoties?"
+          title: "Nepieciešams pierakstoties"
           enabled: "obligāts"
           disabled: "nav obligāts"
         editable:
-          title: "Labot pēc pierakstīšanās?"
+          title: "Labot pēc pierakstīšanās"
           enabled: "labojams"
           disabled: "nav labojams"
         show_on_profile:
-          title: "Rādīt publiskajā profilā?"
+          title: "Rādīt publiskajā profilā"
           enabled: "redzams profilā"
           disabled: "nav redzams profilā"
         show_on_user_card:
-          title: "Parādīt leitotāja kartē?"
+          title: "Parādīt leitotāja kartē"
           enabled: "redzams lietotāja kartē"
           disabled: "nav redzams lietotāja kartē"
         field_types:

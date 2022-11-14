@@ -385,6 +385,12 @@ function setupMarkdownEngine(opts, featureConfig) {
 
   opts.pluginCallbacks.forEach(([feature, callback]) => {
     if (featureConfig[feature]) {
+      if (callback === null || callback === undefined) {
+        // eslint-disable-next-line no-console
+        console.log("BAD MARKDOWN CALLBACK FOUND");
+        // eslint-disable-next-line no-console
+        console.log(`FEATURE IS: ${feature}`);
+      }
       opts.engine.use(callback);
     }
   });

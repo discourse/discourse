@@ -28,6 +28,7 @@ Rails.application.config.assets.precompile += %w{
   wizard.js
   test-support.js
   test-helpers.js
+  test-site-settings.js
   browser-detect.js
   browser-update.js
   break_string.js

@@ -970,7 +970,7 @@ it:
     user_fields:
       none: "(scegli un'opzione)"
       required: 'Inserisci un valore per "%{name}"'
-      same_as_password: 'La tua password non deve essere ripetuta in altri campi.'
+      same_as_password: "La tua password non deve essere ripetuta in altri campi."
     user:
       said: "%{username}:"
       profile: "Profilo"
@@ -4153,7 +4153,6 @@ it:
         go_back: "Torna all'elenco"
         payload_url: "URL di Payload"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "Stai impostando un webhook che punta ad un indirizzo locale. Eventi inviati ad un indirizzo locale possono causare effetti collaterali o risultati inaspettati. Vuoi continuare?"
         secret_invalid: "La chiave segreta non può contenere spazi vuoti."
         secret_too_short: "La chiave segreta deve contenere almeno 12 caratteri."
         secret_placeholder: "Una stringa facoltativa, usata per generare una firma"
@@ -4442,7 +4441,6 @@ it:
           last_attempt: "Il processo di installazione non si è concluso, ultimo tentativo:"
           remote_branch: "Nome del branch (opzionale)"
           public_key: "Concedi l'accesso all'archivio con la seguente chiave pubblica:"
-          public_key_note: "Dopo l’inserimento di un URL valido di archivio riservato, verrà generata e qui visualizzata una corrispondente chiave SSH."
           install: "Installa"
           installed: "Installato"
           install_popular: "Popolare"
@@ -5120,7 +5118,6 @@ it:
         trust_level_2_users: "Utenti con livello di attendibilità 2"
         trust_level_3_requirements: "Requisiti per livello di attendibilità 3"
         trust_level_locked_tip: "il livello di attendibilità è bloccato, il sistema non promuoverà né degraderà l'utente"
-        trust_level_unlocked_tip: "il livello di attendibilità è sbloccato, il sistema può promuovere o degradare l'utente"
         lock_trust_level: "Blocca livello di attendibilità"
         unlock_trust_level: "Sblocca livello di attendibilità"
         silenced_count: "Silenziati"
@@ -5180,23 +5177,18 @@ it:
         delete_confirm: "Sicuro di voler cancellare il campo utente?"
         options: "Opzioni"
         required:
-          title: "Obbligatorio durante l'iscrizione?"
           enabled: "obbligatorio"
           disabled: "non obbligatorio"
         editable:
-          title: "Modificabile dopo l'iscrizione?"
           enabled: "modificabile"
           disabled: "non modificabile"
         show_on_profile:
-          title: "Mostrare nel profilo pubblico?"
           enabled: "mostrato nel profilo"
           disabled: "non mostrato nel profilo"
         show_on_user_card:
-          title: "Mostrare sulla scheda utente?"
           enabled: "mostrato sulla scheda utente"
           disabled: "non mostrato sulla scheda utente"
         searchable:
-          title: "Ricercabile?"
           enabled: "ricercabile"
           disabled: "non ricercabile"
         field_types:

@@ -840,7 +840,6 @@ hy:
       experimental_sidebar:
         options: "Տարբերակներ"
         navigation_section: "Նավիգացիա"
-        list_destination_default: "Լռելյայն"
       change: "փոխել"
       featured_topic: "Հանրահայտ թեմա"
       moderator: "%{user}-ը մոդերատոր է"
@@ -3971,7 +3970,6 @@ hy:
         trust_level_2_users: "Վստահության 2-րդ Մակարդակի Օգտատերեր"
         trust_level_3_requirements: "Վստահության 3 Մակարդակի Պահանջներ"
         trust_level_locked_tip: "վստահության մակարդակը արգելափակված է, համակարգը չի խթանի կամ խանգարի օգտատիրոջը"
-        trust_level_unlocked_tip: "վստահության մակարդակը արգելաբացված է, համակարգը կարող է խթանել կամ խանգարել օգտատիրոջը"
         lock_trust_level: "Արգելափակել Վստահության Մակարդակը"
         unlock_trust_level: "Արգելաբացել Վստահության Մակարդակը"
         silenced_count: "Լռեցված"
@@ -4026,19 +4024,15 @@ hy:
         delete_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել օգտատիրոջ այդ դաշտը:"
         options: "Տարբերակներ"
         required:
-          title: "Պարտադի՞ր է գրանցվելիս:"
           enabled: "պարտադիր է"
           disabled: "պարտադիր չէ"
         editable:
-          title: "Խմբագրելի՞ է գրանցումից հետո:"
           enabled: "խմբագրելի է"
           disabled: "խմբագրելի չէ"
         show_on_profile:
-          title: "Ցու՞յց տալ հրապարակային պրոֆիլում"
           enabled: "ցուցադրել պրոֆիլում"
           disabled: "չցուցադրել պրոֆիլում"
         show_on_user_card:
-          title: "Ցուցադրե՞լ օգտատիրոջ քարտի վրա:"
           enabled: "ցուցադրել օգտատիրոջ քարտի վրա"
           disabled: "չցուցադրել օգտատիրոջ քարտի վրա"
         field_types:

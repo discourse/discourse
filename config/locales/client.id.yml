@@ -936,7 +936,6 @@ id:
       experimental_sidebar:
         options: "Pilihan"
         navigation_section: "Navigasi"
-        list_destination_default: "Asal"
       change: "ubah"
       featured_topic: "Topik Unggulan"
       moderator: "%{user} adalah moderator"

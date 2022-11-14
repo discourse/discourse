@@ -128,6 +128,9 @@ acceptance("User Preferences", function (needs) {
     await categorySelector.fillInFilter("faq");
     await savePreferences();
 
+    this.siteSettings.tagging_enabled = false;
+    await visit("/");
+    await visit("/u/eviltrout/preferences");
     assert.ok(
       !exists(".preferences-nav .nav-tags a"),
       "tags tab isn't there when tags are disabled"

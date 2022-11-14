@@ -753,9 +753,9 @@ RSpec.describe ApplicationHelper do
       helper.request.cookies["dark_scheme_id"] = dark.id
     end
 
-    it "renders theme-color meta for the light scheme with media=all and another one for the dark scheme with media=(prefers-color-scheme: dark)" do
+    it "renders theme-color meta for the light scheme with media=(prefers-color-scheme: light) and another one for the dark scheme with media=(prefers-color-scheme: dark)" do
       expect(helper.discourse_theme_color_meta_tags).to eq(<<~HTML)
-        <meta name="theme-color" media="all" content="#abcdef">
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#abcdef">
         <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#defabc">
       HTML
     end

@@ -67,6 +67,7 @@ sv:
       modifier_values: "about.json-modifierare innehåller ogiltiga värden: %{errors}"
       git: "Fel vid kloning av git-lagringsplats, åtkomst nekas eller lagringsplatsen finns inte"
       git_ref_not_found: "Det gick inte att ta ut git-referens: %{ref}"
+      git_unsupported_scheme: "Det går inte att klona git repo: schemat stöds inte"
       unpack_failed: "Det gick inte att packa upp filen"
       file_too_big: "Den okomprimerade filen är för stor."
       unknown_file_type: "Filen som du laddade upp verkar inte vara ett giltigt Discourse-tema."
@@ -248,6 +249,7 @@ sv:
     max_redemptions_allowed_one: "för e-postinbjudningar ska vara 1."
     redemption_count_less_than_max: "bör vara mindre än %{max_redemptions_allowed}."
     email_xor_domain: "E-post- och domänfält är inte tillåtna samtidigt"
+    existing_user_success: "Inbjudan har lösts in"
   bulk_invite:
     file_should_be_csv: "De uppladdade filerna skall vara i csv-format."
     max_rows: "De första %{max_bulk_invites} inbjudningarna har skickats ut. Prova att dela upp filen i mindre delar."
@@ -495,7 +497,7 @@ sv:
       Du kan redigera ditt tidigare svar och lägga till ett citat genom att markera text och välja knappen <b>citera</b> som dyker upp.
 
       Det blir lättare för alla att läsa ämnen som har färre in-på-djupet-svar istället för flera små, individuella svar.
-    dominating_topic: Du har publicerat mer än %{percent} % av svaren här. Finns det någon annan du vill höra från?
+    dominating_topic: Du har skrivit mer än %{percent} % av svaren här. Får vi föreslå att du ger andra en möjlighet att komma till tals?
     get_a_room: Du har svarat @%{reply_username} %{count} gånger. Visste du att du istället kunde skicka ett personligt meddelande till henne/honom?
     too_many_replies: |
       ### Du har nått svarsgränsen för detta ämne
@@ -764,7 +766,7 @@ sv:
         one: "nästan %{count} år sedan"
         other: "nästan %{count} år sedan"
   password_reset:
-    no_token: "Tyvärr har din lösenordslänk löpt ut. Klicka på inloggningsknappen och välj \"jag har glömt mitt lösenord\" för att få en ny länk."
+    no_token: 'Hoppsan! Länken du använde fungerar inte längre. Du kan <a href="%{base_url}/login">logga in</a> nu. Om du har glömt ditt lösenord kan du <a href="%{base_url}/password-reset">begära en länk</a> för att återställa det.'
     choose_new: "Välj ett nytt lösenord"
     choose: "Välj ett lösenord"
     update: "Uppdatera lösenord"
@@ -2049,6 +2051,7 @@ sv:
     disable_mailing_list_mode: "Tillåt inte att användare aktiverar utskicksläget för e-postlistor (förhindrar att meddelanden till e-postlistan skickas.)"
     default_email_previous_replies: "Som standard omfattas tidigare svar i e-postmeddelanden."
     default_email_in_reply_to: "Omfatta ett utdrag av svar på inlägg i e-post som standard."
+    default_hide_profile_and_presence: "Dölj användarens offentliga profil och närvarofunktioner som standard."
     default_other_new_topic_duration_minutes: "Generellt standardvillkor för när ett ämne anses nytt."
     default_other_auto_track_topics_after_msecs: "Generell standardtid innan ett ämne följs automatiskt."
     default_other_notification_level_when_replying: "Generell standardiserad bevakningssnivå när en användare svarar i ett ämne."
@@ -3517,7 +3520,7 @@ sv:
     png_to_jpg_conversion_failure_message: "Ett fel uppstod vid konvertering från PNG till JPG."
     optimize_failure_message: "Det uppstod ett fel vid optimering av den uppladdade bilden."
     download_failure: "Det gick inte att hämta filen från den externa leverantören."
-    size_mismatch_failure: "Storleken på filen som uppladdats till S3 matchade inte avsedd storlek på extern uppladdnings-stub. %{additional_detail}"
+    size_mismatch_failure: "Storleken på filen som uppladdats till S3 matchade inte avsedd storlek på den externa uppladdningen. %{additional_detail}"
     create_multipart_failure: "Det gick inte att skapa flerdelad uppladdning i den externa butiken."
     abort_multipart_failure: "Det gick inte att avbryta flerdelad uppladdning i den externa butiken."
     complete_multipart_failure: "Det gick inte att slutföra flerdelad uppladdning i den externa butiken."
@@ -4376,6 +4379,10 @@ sv:
   user_status:
     errors:
       ends_at_should_be_greater_than_set_at: "ends_at bör vara större än set_at."
+  webhooks:
+    payload_url:
+      blocked_or_internal: "Försändelse-URL:en kan inte användas eftersom den leder till en blockerad eller intern IP-adress."
+      unsafe: "Försändelse-URL:en kan inte användas eftersom den är osäker"
   activemodel:
     errors:
       <<: *errors

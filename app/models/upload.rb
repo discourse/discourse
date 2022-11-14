@@ -34,6 +34,7 @@ class Upload < ActiveRecord::Base
   attr_accessor :for_export
   attr_accessor :for_site_setting
   attr_accessor :for_gravatar
+  attr_accessor :validate_file_size
 
   validates_presence_of :filesize
   validates_presence_of :original_filename
@@ -90,6 +91,11 @@ class Upload < ActiveRecord::Base
     self
       .joins("LEFT JOIN upload_references ur ON ur.upload_id = uploads.id AND ur.target_type != 'Post'")
       .where("ur.upload_id IS NULL")
+  end
+
+  def initialize(*args)
+    super
+    self.validate_file_size = true
   end
 
   def to_s
@@ -480,7 +486,7 @@ class Upload < ActiveRecord::Base
         db = RailsMultisite::ConnectionManagement.current_db
 
         scope = Upload.by_users
-          .where("url NOT LIKE '%/original/_X/%' AND url LIKE '%/uploads/#{db}%'")
+          .where("url NOT LIKE '%/original/_X/%' AND url LIKE ?", "%/uploads/#{db}%")
           .order(id: :desc)
 
         scope = scope.limit(limit) if limit

@@ -13,7 +13,7 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { hbs } from "ember-cli-htmlbars";
-import { hidePopup } from "discourse/lib/popup";
+import { hideUserTip } from "discourse/lib/user-tips";
 
 let _extraHeaderIcons = [];
 
@@ -88,7 +88,7 @@ createWidget("header-notifications", {
         const count = unread + reviewables;
         if (count > 0) {
           if (this._shouldHighlightAvatar()) {
-            if (this.siteSettings.enable_onboarding_popups) {
+            if (this.siteSettings.enable_user_tips) {
               contents.push(h("span.ring"));
             } else {
               this._addAvatarHighlight(contents);
@@ -124,7 +124,7 @@ createWidget("header-notifications", {
         const unreadHighPriority = user.unread_high_priority_notifications;
         if (!!unreadHighPriority) {
           if (this._shouldHighlightAvatar()) {
-            if (this.siteSettings.enable_onboarding_popups) {
+            if (this.siteSettings.enable_user_tips) {
               contents.push(h("span.ring"));
             } else {
               this._addAvatarHighlight(contents);
@@ -198,17 +198,17 @@ createWidget("header-notifications", {
   didRenderWidget() {
     if (
       !this.currentUser ||
-      !this.siteSettings.enable_onboarding_popups ||
+      !this.siteSettings.enable_user_tips ||
       !this._shouldHighlightAvatar()
     ) {
       return;
     }
 
-    this.currentUser.showPopup({
+    this.currentUser.showUserTip({
       id: "first_notification",
 
-      titleText: I18n.t("popup.first_notification.title"),
-      contentText: I18n.t("popup.first_notification.content"),
+      titleText: I18n.t("user_tips.first_notification.title"),
+      contentText: I18n.t("user_tips.first_notification.content"),
 
       reference: document
         .querySelector(".badge-notification")
@@ -219,11 +219,11 @@ createWidget("header-notifications", {
   },
 
   destroy() {
-    hidePopup("first_notification");
+    hideUserTip("first_notification");
   },
 
   willRerenderWidget() {
-    hidePopup("first_notification");
+    hideUserTip("first_notification");
   },
 });
 

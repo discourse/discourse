@@ -1014,7 +1014,6 @@ ko:
       experimental_sidebar:
         options: "옵션"
         navigation_section: "내비게이션"
-        list_destination_default: "기본"
       change: "변경"
       featured_topic: "추천 주제"
       moderator: "%{user} 님은 운영자입니다"
@@ -3769,7 +3768,6 @@ ko:
         go_back: "목록으로 돌아가기"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "Webhook를 로컬 URL에 구성하려는 것 같습니다. 로컬 주소로 이벤트가 전달되면 부작용이나 예기치 않은 행동이 발생할 수 있습니다. 계속할까요?"
         secret_invalid: "Secret에는 공백이 있을 수 없습니다."
         secret_too_short: "Secret은 12자 이상이어야 합니다."
         secret_placeholder: "시그니처를 생성하기 위한 문자열(선택사항)"
@@ -4050,7 +4048,6 @@ ko:
           is_private: "테마는 비공개 Git 저장소에 있습니다"
           remote_branch: "브랜치 이름(선택사항)"
           public_key: "다음 공개 키 액세스를 저장소에 부여하세요."
-          public_key_note: "위의 유효한 비공개 저장소 URL을 입력하면 SSH 키가 생성되어 여기에 표시됩니다."
           install: "설치"
           installed: "설치됨"
           install_popular: "인기"
@@ -4718,7 +4715,6 @@ ko:
         trust_level_2_users: "신뢰 레벨 2 사용자"
         trust_level_3_requirements: "신뢰 레벨 3 요구사항"
         trust_level_locked_tip: "신뢰 레벨이 잠겼습니다. 시스템에서 사용자의 등급을 변경하지 않습니다"
-        trust_level_unlocked_tip: "신뢰 레벨이 잠금 해제되었습니다. 시스템에서 사용자의 등급을 변경할 수 있습니다"
         lock_trust_level: "신뢰 레벨 잠금"
         unlock_trust_level: "신뢰 레벨 잠금 해제"
         silenced_count: "차단됨"
@@ -4777,23 +4773,23 @@ ko:
         delete_confirm: "이 사용자 필드를 삭제할까요?"
         options: "옵션"
         required:
-          title: "가입 시 필수 항목인가요?"
+          title: "회원가입시 필수항목"
           enabled: "필수"
           disabled: "필수 아님"
         editable:
-          title: "가입 후 편집 가능한가요?"
+          title: "가입 후 편집 가능"
           enabled: "편집 가능"
           disabled: "편집 불가"
         show_on_profile:
-          title: "공개 프로필에 표시할까요?"
+          title: "다른 사람이 프로필을 볼수 있게할까요"
           enabled: "프로필에 표시"
           disabled: "프로필에 표시하지 않기"
         show_on_user_card:
-          title: "사용자 카드에 표시할까요?"
+          title: "사용자 카드에 표시할까요"
           enabled: "사용자 카드에 표시"
           disabled: "사용자 카드에 표시하지 않기"
         searchable:
-          title: "검색 가능한가요?"
+          title: "검색 가능한가요"
           enabled: "검색 가능"
           disabled: "검색 불가"
         field_types:

@@ -150,6 +150,7 @@ discourseModule("Unit | Utility | formatter", function (hooks) {
 
   test("formatting tiny dates", function (assert) {
     let shortDateYear = shortDateTester("MMM 'YY");
+    this.siteSettings.relative_date_duration = 14;
 
     assert.strictEqual(formatMins(0), "1m");
     assert.strictEqual(formatMins(1), "1m");

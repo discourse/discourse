@@ -524,7 +524,6 @@ nb_NO:
         one: "nesten %{count} år siden"
         other: "nesten %{count} år siden"
   password_reset:
-    no_token: "Beklager, den lenken for å endre passord er for gammel. Velg logg inn-knappen bruk 'Jeg glemte passordet mitt' for å motta en ny lenke."
     choose_new: "Velg et nytt passord"
     choose: "Velg et passord"
     update: "Oppdater passord"
