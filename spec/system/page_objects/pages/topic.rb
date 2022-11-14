@@ -6,12 +6,24 @@ module PageObjects
       def initialize
         setup_component_classes!(
           post_show_more_actions: ".show-more-actions",
-          post_action_button_bookmark: ".bookmark.with-reminder"
+          post_action_button_bookmark: ".bookmark.with-reminder",
+          reply_button: ".topic-footer-main-buttons > .create",
+          composer: "#reply-control",
+          composer_textarea: "#reply-control .d-editor .d-editor-input"
         )
       end
 
       def has_post_content?(post)
         post_by_number(post).has_content? post.raw
+      end
+
+      def has_post_number?(number)
+        has_css?("#post_#{number}")
+      end
+
+      def post_by_number(post_or_number)
+        post_or_number = post_or_number.is_a?(Post) ? post_or_number.post_number : post_or_number
+        find("#post_#{post_or_number}")
       end
 
       def has_post_more_actions?(post)
@@ -46,14 +58,32 @@ module PageObjects
         find(topic_footer_button_id(button))
       end
 
+      def click_reply_button
+        find(@component_classes[:reply_button]).click
+      end
+
+      def has_expanded_composer?
+        has_css?(@component_classes[:composer] + ".open")
+      end
+
+      def type_in_composer(input)
+        find(@component_classes[:composer_textarea]).send_keys(input)
+      end
+
+      def clear_composer
+        find(@component_classes[:composer_textarea]).set("")
+      end
+
+      def send_reply
+        within(@component_classes[:composer]) do
+          find(".save-or-cancel .create").click
+        end
+      end
+
       private
 
       def topic_footer_button_id(button)
         "#topic-footer-button-#{button}"
-      end
-
-      def post_by_number(post)
-        find("#post_#{post.post_number}")
       end
     end
   end

@@ -232,7 +232,9 @@ module PrettyText
       hashtag_types_as_js = HashtagAutocompleteService.ordered_types_for_context(
         opts[:hashtag_context]
       ).map { |t| "'#{t}'" }.join(",")
+      hashtag_icons_as_js = HashtagAutocompleteService.data_source_icons.map { |i| "'#{i}'" }.join(",")
       buffer << "__optInput.hashtagTypesInPriorityOrder = [#{hashtag_types_as_js}];\n"
+      buffer << "__optInput.hashtagIcons = [#{hashtag_icons_as_js}];\n"
 
       buffer << "__textOptions = __buildOptions(__optInput);\n"
       buffer << ("__pt = new __PrettyText(__textOptions);")

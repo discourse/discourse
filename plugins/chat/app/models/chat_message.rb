@@ -98,7 +98,7 @@ class ChatMessage < ActiveRecord::Base
   end
 
   def cook
-    self.cooked = self.class.cook(self.message)
+    self.cooked = self.class.cook(self.message, user_id: self.last_editor_id)
     self.cooked_version = BAKED_VERSION
   end
 
@@ -130,6 +130,7 @@ class ChatMessage < ActiveRecord::Base
     emojiShortcuts
     inlineEmoji
     html-img
+    hashtag-autocomplete
     mentions
     unicodeUsernames
     onebox
@@ -166,6 +167,8 @@ class ChatMessage < ActiveRecord::Base
         features_override: MARKDOWN_FEATURES + DiscoursePluginRegistry.chat_markdown_features.to_a,
         markdown_it_rules: MARKDOWN_IT_RULES,
         force_quote_link: true,
+        user_id: opts[:user_id],
+        hashtag_context: "chat-composer"
       )
 
     result =

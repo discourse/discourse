@@ -13,3 +13,35 @@ a.hashtag {
     }
   }
 }
+
+.hashtag-autocomplete {
+  .hashtag-autocomplete__option {
+    .hashtag-autocomplete__link {
+      align-items: center;
+      color: var(--primary-medium);
+      display: flex;
+
+      .d-icon {
+        padding-right: 0.5em;
+      }
+
+      .hashtag-autocomplete__text {
+        flex: 1;
+      }
+    }
+  }
+}
+
+.hashtag-raw,
+.hashtag-cooked {
+  @include mention;
+
+  &:visited,
+  &:hover {
+    color: var(--primary-high-or-secondary-low);
+  }
+
+  .d-icon {
+    margin-right: 3px;
+  }
+}

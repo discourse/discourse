@@ -1,7 +1,17 @@
+// NOTE: For future maintainers, the hashtag lookup here does not take
+// into account mixed contexts -- for instance, a chat quote inside a post
+// or a post quote inside a chat message, so hashtagTypesInPriorityOrder may
+// not provide an accurate lookup for hashtags without a ::type suffix in those
+// cases.
+
 function addHashtag(buffer, matches, state) {
   const options = state.md.options.discourse;
   const slug = matches[1];
   const hashtagLookup = options.hashtagLookup;
+
+  // NOTE: The lookup function is only run when cooking
+  // server-side, and will only return a single result based on the
+  // slug lookup.
   const result =
     hashtagLookup &&
     hashtagLookup(
@@ -16,6 +26,7 @@ function addHashtag(buffer, matches, state) {
     token.attrs = [
       ["class", "hashtag-cooked"],
       ["href", result.url],
+      ["data-type", result.type],
     ];
     token.block = false;
     buffer.push(token);
@@ -49,11 +60,25 @@ function addHashtag(buffer, matches, state) {
     buffer.push(new state.Token("link_close", "a", -1));
   } else {
     token = new state.Token("span_open", "span", 1);
-    token.attrs = [["class", "hashtag"]];
+    token.attrs = [["class", "hashtag-raw"]];
     buffer.push(token);
 
+    token = new state.Token("svg_open", "svg", 1);
+    token.block = false;
+    token.attrs = [["class", `fa d-icon d-icon-hashtag svg-icon svg-node`]];
+    buffer.push(token);
+
+    token = new state.Token("use_open", "use", 1);
+    token.block = false;
+    token.attrs = [["href", `#hashtag`]];
+    buffer.push(token);
+
+    buffer.push(new state.Token("use_close", "use", -1));
+
+    buffer.push(new state.Token("svg_close", "svg", -1));
+
     token = new state.Token("text", "", 0);
-    token.content = matches[0];
+    token.content = matches[0].replace("#", "");
     buffer.push(token);
 
     token = new state.Token("span_close", "span", -1);
@@ -62,15 +87,22 @@ function addHashtag(buffer, matches, state) {
 }
 
 export function setup(helper) {
-  helper.allowList([
-    "a.hashtag-cooked",
-    "svg[class=fa d-icon d-icon-folder svg-icon svg-node]",
-    "use[href=#folder]",
-    "svg[class=fa d-icon d-icon-tag svg-icon svg-node]",
-    "use[href=#tag]",
-    "svg[class=fa d-icon d-icon-comment svg-icon svg-node]",
-    "use[href=#comment]",
-  ]);
+  const opts = helper.getOptions();
+
+  // we do this because plugins can register their own hashtag data
+  // sources which specify an icon, and each icon must be allowlisted
+  // or it will not render in the markdown pipeline
+  const hashtagIconAllowList = opts.hashtagIcons
+    ? opts.hashtagIcons
+        .concat(["hashtag"])
+        .map((icon) => {
+          return [
+            `svg[class=fa d-icon d-icon-${icon} svg-icon svg-node]`,
+            `use[href=#${icon}]`,
+          ];
+        })
+        .flat()
+    : [];
 
   helper.registerPlugin((md) => {
     if (
@@ -85,4 +117,12 @@ export function setup(helper) {
       md.core.textPostProcess.ruler.push("hashtag-autocomplete", rule);
     }
   });
+
+  helper.allowList(
+    hashtagIconAllowList.concat([
+      "a.hashtag-cooked",
+      "span.hashtag-raw",
+      "a[data-type]",
+    ])
+  );
 }

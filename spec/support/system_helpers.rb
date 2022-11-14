@@ -17,11 +17,21 @@ module SystemHelpers
     backoff ||= frequency
     yield
   rescue RSpec::Expectations::ExpectationNotMetError
-    if Time.zone.now >= start + timeout.seconds
-      raise
-    end
+    raise if Time.zone.now >= start + timeout.seconds
     sleep backoff
     backoff += frequency
     retry
+  end
+
+  def visit_topic(topic)
+    visit "/t/#{topic.id}"
+    PageObjects::Pages::Topic.new
+  end
+
+  def visit_topic_and_open_composer(topic)
+    topic_page = visit_topic(topic)
+    topic_page.click_reply_button
+    expect(topic_page).to have_expanded_composer
+    topic_page
   end
 end

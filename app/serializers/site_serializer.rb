@@ -36,6 +36,7 @@ class SiteSerializer < ApplicationSerializer
     :categories,
     :markdown_additional_options,
     :hashtag_context_configurations,
+    :hashtag_icons,
     :displayed_about_plugin_stat_groups,
     :show_welcome_topic_banner,
     :anonymous_default_sidebar_tags
@@ -223,6 +224,10 @@ class SiteSerializer < ApplicationSerializer
 
   def hashtag_context_configurations
     HashtagAutocompleteService.contexts_with_ordered_types
+  end
+
+  def hashtag_icons
+    HashtagAutocompleteService.data_source_icons
   end
 
   def displayed_about_plugin_stat_groups

@@ -46,6 +46,7 @@ export function buildOptions(state) {
     markdownItRules,
     additionalOptions,
     hashtagTypesInPriorityOrder,
+    hashtagIcons,
     hashtagLookup,
   } = state;
 
@@ -90,6 +91,7 @@ export function buildOptions(state) {
     markdownItRules,
     additionalOptions,
     hashtagTypesInPriorityOrder,
+    hashtagIcons,
     hashtagLookup,
   };
 

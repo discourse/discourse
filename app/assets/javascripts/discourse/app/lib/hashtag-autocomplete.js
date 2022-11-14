@@ -60,40 +60,47 @@ export function hashtagTriggerRule(textarea, opts) {
 
 const checkedHashtags = new Set();
 let seenHashtags = {};
+
+// NOTE: For future maintainers, the hashtag lookup here does not take
+// into account mixed contexts -- for instance, a chat quote inside a post
+// or a post quote inside a chat message, so this may
+// not provide an accurate priority lookup for hashtags without a ::type suffix in those
+// cases.
 export function fetchUnseenHashtagsInContext(orderedContextTypes, slugs) {
   return ajax("/hashtags", {
     data: { slugs, order: orderedContextTypes },
   }).then((response) => {
-    seenHashtags = Object.assign(seenHashtags, response);
+    Object.keys(response).forEach((type) => {
+      seenHashtags[type] = seenHashtags[type] || {};
+      response[type].forEach((item) => {
+        seenHashtags[type][item.ref] = seenHashtags[type][item.ref] || item;
+      });
+    });
     slugs.forEach(checkedHashtags.add, checkedHashtags);
   });
 }
 
 export function linkSeenHashtagsInContext(orderedContextTypes, elem) {
-  const hashtagSpans = [...(elem?.querySelectorAll("span.hashtag") || [])];
+  const hashtagSpans = [...(elem?.querySelectorAll("span.hashtag-raw") || [])];
   if (hashtagSpans.length === 0) {
     return [];
   }
-  const slugs = [...hashtagSpans.map((hashtag) => hashtag.innerText.slice(1))];
+  const slugs = [...hashtagSpans.map((hashtag) => hashtag.innerText)];
 
   hashtagSpans.forEach((hashtagSpan, index) => {
     let slug = slugs[index];
 
-    // remove type suffixes
     orderedContextTypes.forEach((type) => {
+      // remove type suffixes
       const typePostfix = `::${type}`;
       if (slug.endsWith(typePostfix)) {
         slug = slug.slice(0, slug.length - typePostfix.length);
       }
 
-      const matchingSeenHashtag = seenHashtags[type].find(
-        (ht) => ht.slug === slug
-      );
+      // replace raw span for the hashtag with a cooked one
+      const matchingSeenHashtag = seenHashtags[type]?.[slug];
       if (matchingSeenHashtag) {
-        // TODO (martin) Replace jquery usage here
-        $(hashtagSpan).replaceWith(
-          `<a href="${matchingSeenHashtag.url}" class="hashtag-cooked" data-type="${type}"><span><svg class="fa d-icon d-icon-${matchingSeenHashtag.icon} svg-icon sgv-node"><use href="#${matchingSeenHashtag.icon}"></use></svg>${matchingSeenHashtag.text}</span></a>`
-        );
+        _replaceSeenHashtagPlaceholder(type, hashtagSpan, matchingSeenHashtag);
       }
     });
   });
@@ -199,4 +206,24 @@ function _searchRequest(term, orderedContextTypes, resultFunc) {
       currentSearch = null;
     });
   return currentSearch;
+}
+
+function _replaceSeenHashtagPlaceholder(
+  type,
+  hashtagSpan,
+  matchingSeenHashtag
+) {
+  // NOTE: When changing the HTML structure here, you must also change
+  // it in the hashtag-autoocomplete markdown rule.
+  const link = document.createElement("a");
+  link.href = matchingSeenHashtag.url;
+  link.classList.add("hashtag-cooked");
+  link.dataset.type = type;
+  link.innerHTML = `<span>
+    <svg class="fa d-icon d-icon-${matchingSeenHashtag.icon} svg-icon sgv-node">
+      <use href="#${matchingSeenHashtag.icon}"></use>
+    </svg>
+    ${matchingSeenHashtag.text}
+  </span>`;
+  hashtagSpan.replaceWith(link);
 }
