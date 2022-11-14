@@ -143,10 +143,15 @@ const Composer = RestModel.extend({
       const oldCategoryId = this._categoryId;
 
       if (isEmpty(categoryId)) {
-        // Set General as the default category
-        const generalCategoryId = this.siteSettings.general_category_id;
+        // Check if there is a default composer category to set
+        const defaultComposerCategoryId = parseInt(
+          this.siteSettings.default_composer_category,
+          10
+        );
         categoryId =
-          generalCategoryId && generalCategoryId > 0 ? generalCategoryId : null;
+          defaultComposerCategoryId && defaultComposerCategoryId > 0
+            ? defaultComposerCategoryId
+            : null;
       }
       this._categoryId = categoryId;
 

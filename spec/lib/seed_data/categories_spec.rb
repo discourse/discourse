@@ -107,6 +107,7 @@ RSpec.describe SeedData::Categories do
         .and change { Topic.count }
 
       expect(Category.last.name).to eq("General")
+      expect(SiteSetting.default_composer_category).to eq(Category.last.id)
     end
 
     it "adds default categories SiteSetting.default_sidebar_categories" do
