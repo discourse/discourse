@@ -1,6 +1,4 @@
 <div class="topic-footer-main-buttons">
-  <UserTip @id="topic_menu" />
-
   <TopicAdminMenuButton @topic={{this.topic}} @openUpwards="true" @toggleMultiSelect={{this.toggleMultiSelect}} @showTopicSlowModeUpdate={{this.showTopicSlowModeUpdate}} @deleteTopic={{this.deleteTopic}} @recoverTopic={{this.recoverTopic}} @toggleFeaturedOnProfile={{this.toggleFeaturedOnProfile}} @toggleClosed={{this.toggleClosed}} @toggleArchived={{this.toggleArchived}} @toggleVisibility={{this.toggleVisibility}} @showTopicTimerModal={{this.showTopicTimerModal}} @showFeatureTopic={{this.showFeatureTopic}} @showChangeTimestamp={{this.showChangeTimestamp}} @resetBumpDate={{this.resetBumpDate}} @convertToPublicTopic={{this.convertToPublicTopic}} @convertToPrivateMessage={{this.convertToPrivateMessage}} />
 
   {{#if this.site.mobileView}}
@@ -19,6 +17,8 @@
     {{/if}}
   {{/each}}
 
+  <UserTip @id="topic_menu" @selector=".topic-footer-button" />
+
   <PluginOutlet @name="topic-footer-main-buttons-before-create" @args={{hash topic=this.topic}} @connectorTagName="span" />
 
   {{#if this.topic.details.can_create_post}}
@@ -31,10 +31,11 @@
 <PinnedButton @pinned={{this.topic.pinned}} @topic={{this.topic}} />
 
 {{#if this.showNotificationsButton}}
-  <TopicNotificationsButton @notificationLevel={{this.topic.details.notification_level}} @topic={{this.topic}} />
   {{#if this.showNotificationUserTip}}
     <UserTip @id="topic_notification_levels" @selector=".notifications-button" />
   {{/if}}
+
+  <TopicNotificationsButton @notificationLevel={{this.topic.details.notification_level}} @topic={{this.topic}} />
 {{/if}}
 
 <PluginOutlet @name="after-topic-footer-buttons" @args={{hash topic=this.topic}} @connectorTagName="span" />

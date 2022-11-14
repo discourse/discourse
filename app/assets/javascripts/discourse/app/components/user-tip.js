@@ -1,43 +1,35 @@
-import Component from "@ember/component";
-import { schedule } from "@ember/runloop";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import Component from "@glimmer/component";
 import { hideUserTip } from "discourse/lib/user-tips";
-import Ember from "ember";
 import I18n from "I18n";
 
 export default class UserTip extends Component {
-  tagName = "";
+  @service currentUser;
 
-  id = null;
-  placement = null;
-  selector = null;
-
-  didInsertElement() {
-    this._super(...arguments);
-
+  @action
+  showUserTip(element) {
     if (!this.currentUser) {
       return;
     }
 
-    schedule("afterRender", () => {
-      const parentElement = Ember.ViewUtils.getViewBounds(this).parentElement;
-      this.currentUser.showUserTip({
-        id: this.id,
+    const { id, selector, content, placement } = this.args;
+    this.currentUser.showUserTip({
+      id,
 
-        titleText: I18n.t(`user_tips.${this.id}.title`),
-        contentText: this.content || I18n.t(`user_tips.${this.id}.content`),
+      titleText: I18n.t(`user_tips.${id}.title`),
+      contentText: content || I18n.t(`user_tips.${id}.content`),
 
-        reference: this.selector
-          ? parentElement.querySelector(this.selector)
-          : parentElement,
+      reference: selector
+        ? element.parentElement.querySelector(selector) || element.parentElement
+        : element,
+      appendTo: element.parentElement,
 
-        placement: this.placement || "top",
-      });
+      placement: placement || "top",
     });
   }
 
-  willDestroyElement() {
-    this._super(...arguments);
-
-    hideUserTip(this.id);
+  willDestroy() {
+    hideUserTip(this.args.id);
   }
 }
