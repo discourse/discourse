@@ -1,12 +1,15 @@
 import { module, test } from "qunit";
 import RestAdapter from "discourse/adapters/rest";
 import RestModel from "discourse/models/rest";
-import createStore from "discourse/tests/helpers/create-store";
 import sinon from "sinon";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { setupTest } from "ember-qunit";
 
-module("Unit | Model | rest-model", function () {
+module("Unit | Model | rest-model", function (hooks) {
+  setupTest(hooks);
+
   test("munging", function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     const Grape = RestModel.extend();
     Grape.reopenClass({
       munge: function (json) {
@@ -20,7 +23,7 @@ module("Unit | Model | rest-model", function () {
   });
 
   test("update", async function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     const widget = await store.find("widget", 123);
     assert.strictEqual(widget.get("name"), "Trout Lure");
     assert.ok(!widget.get("isSaving"), "it is not saving");
@@ -43,7 +46,7 @@ module("Unit | Model | rest-model", function () {
   test("updating simultaneously", async function (assert) {
     assert.expect(2);
 
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     const widget = await store.find("widget", 123);
 
     const firstPromise = widget.update({ name: "new name" });
@@ -59,7 +62,7 @@ module("Unit | Model | rest-model", function () {
   });
 
   test("save new", async function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     const widget = store.createRecord("widget");
 
     assert.ok(widget.get("isNew"), "it is a new record");
@@ -87,7 +90,7 @@ module("Unit | Model | rest-model", function () {
   test("creating simultaneously", function (assert) {
     assert.expect(2);
 
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     const widget = store.createRecord("widget");
 
     const firstPromise = widget.save({ name: "Evil Widget" });
@@ -102,24 +105,24 @@ module("Unit | Model | rest-model", function () {
   });
 
   test("destroyRecord", async function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     const widget = await store.find("widget", 123);
 
     assert.ok(await widget.destroyRecord());
   });
 
   test("custom api name", async function (assert) {
-    const store = createStore((type) => {
-      if (type === "adapter:my-widget") {
-        return RestAdapter.extend({
-          // An adapter like this is used when the server-side key/url
-          // do not match the name of the es6 class
-          apiNameFor() {
-            return "widget";
-          },
-        }).create();
+    const store = getOwner(this).lookup("service:store");
+    getOwner(this).register(
+      "adapter:my-widget",
+      class extends RestAdapter {
+        // An adapter like this is used when the server-side key/url
+        // do not match the name of the es6 class
+        apiNameFor() {
+          return "widget";
+        }
       }
-    });
+    );
 
     // The pretenders only respond to requests for `widget`
     // If these basic tests pass, the name override worked correctly

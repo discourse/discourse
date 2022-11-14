@@ -1,13 +1,13 @@
+import { module, test } from "qunit";
 import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
-import User from "discourse/models/user";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
-import createStore from "discourse/tests/helpers/create-store";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { setupTest } from "ember-qunit";
 
-discourseModule("Unit | Model | topic", function (hooks) {
+module("Unit | Model | topic", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     this.store = getOwner(this).lookup("service:store");
   });
@@ -74,8 +74,7 @@ discourseModule("Unit | Model | topic", function (hooks) {
   });
 
   test("lastUnreadUrl with navigate_to_first_post_after_read setting", function (assert) {
-    const store = createStore();
-    const category = store.createRecord("category", {
+    const category = this.store.createRecord("category", {
       id: 22,
       navigate_to_first_post_after_read: true,
     });
@@ -92,8 +91,7 @@ discourseModule("Unit | Model | topic", function (hooks) {
   });
 
   test("lastUnreadUrl with navigate_to_first_post_after_read setting and unread posts", function (assert) {
-    const store = createStore();
-    const category = store.createRecord("category", {
+    const category = this.store.createRecord("category", {
       id: 22,
       navigate_to_first_post_after_read: true,
     });
@@ -184,7 +182,7 @@ discourseModule("Unit | Model | topic", function (hooks) {
   });
 
   test("recover", async function (assert) {
-    const user = User.create({ username: "eviltrout" });
+    const user = this.store.createRecord("user", { username: "eviltrout" });
     const topic = this.store.createRecord("topic", {
       id: 1234,
       deleted_at: new Date(),
@@ -217,7 +215,9 @@ discourseModule("Unit | Model | topic", function (hooks) {
       fancy_title: "This is a test",
     });
 
-    this.siteSettings.support_mixed_text_direction = true;
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+    siteSettings.support_mixed_text_direction = true;
+
     assert.strictEqual(
       rtlTopic.get("fancyTitle"),
       `<span dir="rtl">هذا اختبار</span>`,
