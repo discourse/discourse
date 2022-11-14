@@ -8,8 +8,7 @@ class ThemeStore::GitImporter
   attr_reader :url
 
   def initialize(url, private_key: nil, branch: nil)
-    @url = url
-    @clone_url = GitUrl.normalize(url)
+    @url = GitUrl.normalize(url)
     @temp_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{SecureRandom.hex}"
     @private_key = private_key
     @branch = branch
@@ -84,12 +83,12 @@ class ThemeStore::GitImporter
 
   def clone!
     begin
-      @clone_uri = URI.parse(@clone_url)
+      @uri = URI.parse(@url)
     rescue URI::Error
       raise_import_error!
     end
 
-    case @clone_uri&.scheme
+    case @uri&.scheme
     when "http", "https"
       clone_http!
     when "ssh"
@@ -109,49 +108,53 @@ class ThemeStore::GitImporter
     args << "clone"
 
     if @branch.present?
-      args.concat(["--single-branch", "-b", @branch])
+      args.concat(["-b", @branch])
     end
 
-    args.concat([@clone_url, @temp_folder])
+    args.concat([@url, @temp_folder])
 
     args
   end
 
   def clone_http!
+    uris = [@uri]
+
     begin
-      @clone_uri = FinalDestination.resolve(@clone_uri.to_s)
+      resolved_uri = FinalDestination.resolve(@uri.to_s)
+      if resolved_uri && resolved_uri != @uri
+        uris.unshift(resolved_uri)
+      end
     rescue
-      raise_import_error!
+      # If this fails, we can stil attempt to clone using the original URI
     end
 
-    @clone_url = @clone_uri.to_s
+    uris.each do |uri|
+      @uri = uri
+      @url = @uri.to_s
 
-    unless ["http", "https"].include?(@clone_uri.scheme)
-      raise_import_error!
+      unless ["http", "https"].include?(@uri.scheme)
+        raise_import_error!
+      end
+
+      addresses = FinalDestination::SSRFDetector.lookup_and_filter_ips(@uri.host)
+
+      unless addresses.empty?
+        env = { "GIT_TERMINAL_PROMPT" => "0" }
+
+        args = clone_args(
+          "http.followRedirects" => "false",
+          "http.curloptResolve" => "#{@uri.host}:#{@uri.port}:#{addresses.join(',')}",
+        )
+
+        begin
+          Discourse::Utils.execute_command(env, *args, timeout: COMMAND_TIMEOUT_SECONDS)
+          return
+        rescue RuntimeError
+        end
+      end
     end
 
-    begin
-      addresses = FinalDestination::SSRFDetector.lookup_and_filter_ips(@clone_uri.host)
-    rescue FinalDestination::SSRFDetector::DisallowedIpError
-      raise_import_error!
-    end
-
-    if addresses.empty?
-      raise_import_error!
-    end
-
-    env = { "GIT_TERMINAL_PROMPT" => "0" }
-
-    args = clone_args(
-      "http.followRedirects" => "false",
-      "http.curloptResolve" => "#{@clone_uri.host}:#{@clone_uri.port}:#{addresses.join(',')}",
-    )
-
-    begin
-      Discourse::Utils.execute_command(env, *args, timeout: COMMAND_TIMEOUT_SECONDS)
-    rescue RuntimeError
-      raise_import_error!
-    end
+    raise_import_error!
   end
 
   def clone_ssh!
@@ -162,31 +165,13 @@ class ThemeStore::GitImporter
     with_ssh_private_key do |ssh_folder|
       # Use only the specified SSH key
       env = { 'GIT_SSH_COMMAND' => "ssh -i #{ssh_folder}/id_rsa -o IdentitiesOnly=yes -o IdentityFile=#{ssh_folder}/id_rsa -o StrictHostKeyChecking=no" }
+      args = clone_args
 
       begin
-        addresses = FinalDestination::SSRFDetector.lookup_and_filter_ips(@clone_uri.host)
-      rescue FinalDestination::SSRFDetector::DisallowedIpError
+        Discourse::Utils.execute_command(env, *args, timeout: COMMAND_TIMEOUT_SECONDS)
+      rescue RuntimeError
         raise_import_error!
       end
-
-      timeout_at = Time.zone.now + COMMAND_TIMEOUT_SECONDS
-
-      addresses.each do |address|
-        remaining_timeout = timeout_at - Time.zone.now
-        raise_import_error! if remaining_timeout < 0
-
-        @clone_uri.host = address
-        @clone_url = @clone_uri.to_s
-
-        args = clone_args
-
-        begin
-          return Discourse::Utils.execute_command(env, *args, timeout: remaining_timeout)
-        rescue RuntimeError
-        end
-      end
-
-      raise_import_error!
     end
   end
 
