@@ -32,8 +32,7 @@ export default class DeprecationCounter {
   @bind
   handleDiscourseDeprecation(message, options) {
     let { id } = options;
-    id ||= "(unknown)";
-    id = `discourse.${id}`;
+    id ||= "discourse.(unknown)";
 
     this.incrementDeprecation(id);
   }

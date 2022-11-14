@@ -1,6 +1,11 @@
 const handlers = [];
+const disabledDeprecations = new Set();
 
 export default function deprecated(msg, opts = {}) {
+  if (opts.id && disabledDeprecations.has(opts.id)) {
+    return;
+  }
+
   msg = ["Deprecation notice:", msg];
   if (opts.since) {
     msg.push(`(deprecated since Discourse ${opts.since})`);
@@ -28,4 +33,13 @@ export default function deprecated(msg, opts = {}) {
 
 export function registerDeprecationHandler(callback) {
   handlers.push(callback);
+}
+
+export async function withSilencedDeprecations(deprecationIds, callback) {
+  try {
+    Array(deprecationIds).forEach((id) => disabledDeprecations.add(id));
+    return await callback();
+  } finally {
+    Array(deprecationIds).forEach((id) => disabledDeprecations.delete(id));
+  }
 }
