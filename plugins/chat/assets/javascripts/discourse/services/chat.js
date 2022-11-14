@@ -583,6 +583,7 @@ export default class Chat extends Service {
     existingChannels.pushObject(newChannel);
     this.currentUser.chat_channel_tracking_state[channel.id] =
       EmberObject.create({
+        last_message: channel.last_message,
         unread_count: 1,
         unread_mentions: 0,
         chatable_type: channel.chatable_type,
@@ -647,6 +648,7 @@ export default class Chat extends Service {
         // just completely reset the unreads
         if (busData.status === CHANNEL_STATUSES.archived) {
           this.currentUser.chat_channel_tracking_state[channel.id] = {
+            last_message: channel.last_message,
             unread_count: 0,
             unread_mentions: 0,
             chatable_type: channel.chatable_type,
@@ -788,6 +790,7 @@ export default class Chat extends Service {
         const trackingState =
           this.currentUser.chat_channel_tracking_state[busData.chat_channel_id];
         if (trackingState) {
+          trackingState.set("last_message", busData.last_message);
           trackingState.set("chat_message_id", busData.chat_message_id);
           trackingState.set("unread_count", 0);
           trackingState.set("unread_mentions", 0);
@@ -866,6 +869,7 @@ export default class Chat extends Service {
   _updateUserTrackingState(channel) {
     this.currentUser.chat_channel_tracking_state[channel.id] =
       EmberObject.create({
+        last_message: channel.last_message,
         chatable_type: channel.chatable_type,
         muted: channel.current_user_membership.muted,
         unread_count: channel.current_user_membership.unread_count,

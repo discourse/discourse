@@ -2,6 +2,7 @@ import Component from "@ember/component";
 import { htmlSafe } from "@ember/template";
 import { computed } from "@ember/object";
 import { gt, reads } from "@ember/object/computed";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default class ChatChannelTitle extends Component {
   tagName = "";
@@ -30,5 +31,21 @@ export default class ChatChannelTitle extends Component {
       this.channel.chatable.users.length === 1 &&
       this.channel.chatable.users[0].status
     );
+  }
+
+  @discourseComputed(
+    "currentUser.chat_channel_tracking_state.@each.{last_message}",
+    "channel.id"
+  )
+  channelTrackingState(state, channelId) {
+    return state?.[channelId];
+  }
+
+  @discourseComputed("channelTrackingState.last_message", "channel")
+  lastMessage(lastMessage, channel) {
+    if (!channel) {
+      return;
+    }
+    return lastMessage?.message;
   }
 }
