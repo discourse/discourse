@@ -246,7 +246,7 @@ export default Component.extend({
             this.highlightOrFetchMessage(this.targetMessageId);
           }
 
-          this.focusComposer();
+          this._focusComposer();
         })
         .catch(this._handleErrors)
         .finally(() => {
@@ -1165,6 +1165,7 @@ export default Component.extend({
     }
     if (lastUserMessage) {
       this.set("editingMessage", lastUserMessage);
+      this._focusComposer();
     }
   },
 
@@ -1395,21 +1396,6 @@ export default Component.extend({
     return this._fetchAndScrollToLatest();
   },
 
-  focusComposer() {
-    if (
-      this._selfDeleted ||
-      this.site.mobileView ||
-      this.chatChannel?.isDraft
-    ) {
-      return;
-    }
-
-    schedule("afterRender", () => {
-      document.querySelector(".chat-composer-input")?.focus();
-    });
-  },
-
-  @afterRender
   _focusComposer() {
     this.appEvents.trigger("chat:focus-composer");
   },
