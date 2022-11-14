@@ -1,13 +1,48 @@
 # frozen_string_literal: true
 
+# NOTE: There are a _lot_ of complicated rules and conditions for our
+# invite system, and the code is spread out through a lot of places.
+# Tread lightly and read carefully when modifying this code. You may
+# also want to look at:
+#
+# * InvitesController
+# * SessionController
+# * Invite model
+# * User model
+#
+# Invites that are scoped to a specific email (email IS NOT NULL on the Invite
+# model) have different rules to invites that are considered an "invite link",
+# (email IS NULL) on the Invite model.
 InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_custom_fields, :ip_address, :session, :email_token, :redeeming_user, keyword_init: true) do
   def redeem
+    ensure_email_is_present!(email)
     Invite.transaction do
       if can_redeem_invite? && mark_invite_redeemed
         process_invitation
         invited_user
       end
     end
+  end
+
+  # The email must be present in some form since many of the methods
+  # for processing + redemption rely on it. If it's still nil after
+  # these checks then we have hit an edge case and should not proceed!
+  def ensure_email_is_present!(email)
+    if email.blank?
+      Rails.logger.warn(
+        "email param was blank in InviteRedeemer for invite ID #{invite.id}. The `redeeming_user` was #{self.redeeming_user.present? ? "(ID: #{self.redeeming_user.id})" : "not"} present.",
+      )
+    end
+
+    if email.blank? && self.invite.is_email_invite?
+      self.email = self.invite.email
+    elsif self.redeeming_user.present?
+      self.email = self.redeeming_user.email
+    else
+      self.email = email
+    end
+
+    raise Discourse::InvalidParameters if self.email.blank?
   end
 
   # extracted from User cause it is very specific to invites
@@ -72,7 +107,10 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
     user.save!
     authenticator.finish
 
-    if invite.emailed_status != Invite.emailed_status_types[:not_required] && email == invite.email && invite.email_token.present? && email_token == invite.email_token
+    if invite.emailed_status != Invite.emailed_status_types[:not_required] &&
+        email == invite.email &&
+        invite.email_token.present? &&
+        email_token == invite.email_token
       user.activate
     end
 
@@ -83,24 +121,26 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
 
   def can_redeem_invite?
     return false if !invite.redeemable?
+    return false if email.blank?
 
-    # Invite has already been redeemed by anyone.
-    if !invite.is_invite_link? && InvitedUser.exists?(invite_id: invite.id)
+    # Invite scoped to email has already been redeemed by anyone.
+    if invite.is_email_invite? && InvitedUser.exists?(invite_id: invite.id)
       return false
     end
 
-    # Email will not be present if we are claiming an invite link, which
-    # does not have an email or domain scope on the invitation.
-    if email.present? || redeeming_user.present?
-      email_to_check = redeeming_user&.email || email
+    # The email will be present for either an invite link (where the user provides
+    # us the email manually) or for an invite scoped to an email, where we
+    # prefill the email and do not let the user modify it.
+    #
+    # Note that an invite link can also have a domain scope which must be checked.
+    email_to_check = redeeming_user&.email || email
 
-      if invite.email.present? && !invite.email_matches?(email_to_check)
-        raise ActiveRecord::RecordNotSaved.new(I18n.t('invite.not_matching_email'))
-      end
+    if invite.email.present? && !invite.email_matches?(email_to_check)
+      raise ActiveRecord::RecordNotSaved.new(I18n.t('invite.not_matching_email'))
+    end
 
-      if invite.domain.present? && !invite.domain_matches?(email_to_check)
-        raise ActiveRecord::RecordNotSaved.new(I18n.t('invite.domain_not_allowed'))
-      end
+    if invite.domain.present? && !invite.domain_matches?(email_to_check)
+      raise ActiveRecord::RecordNotSaved.new(I18n.t('invite.domain_not_allowed'))
     end
 
     # Anon user is trying to redeem an invitation, if an existing user already
@@ -161,9 +201,18 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
   end
 
   def add_to_private_topics_if_invited
-    topic_ids = Topic.where(archetype: Archetype::private_message).includes(:invites).where(invites: { email: email }).pluck(:id)
+    # Should not happen because of ensure_email_is_present!, but better to cover bases.
+    return if email.blank?
+
+    topic_ids = TopicInvite.joins(:invite)
+      .joins(:topic)
+      .where("topics.archetype = ?", Archetype::private_message)
+      .where("invites.email = ?", email)
+      .pluck(:topic_id)
     topic_ids.each do |id|
-      TopicAllowedUser.create!(user_id: invited_user.id, topic_id: id) unless TopicAllowedUser.exists?(user_id: invited_user.id, topic_id: id)
+      if !TopicAllowedUser.exists?(user_id: invited_user.id, topic_id: id)
+        TopicAllowedUser.create!(user_id: invited_user.id, topic_id: id)
+      end
     end
   end
 
@@ -185,15 +234,17 @@ InviteRedeemer = Struct.new(:invite, :email, :username, :name, :password, :user_
   end
 
   def notify_invitee
-    if inviter = invite.invited_by
-      inviter.notifications.create!(
-        notification_type: Notification.types[:invitee_accepted],
-        data: { display_username: invited_user.username }.to_json
-      )
-    end
+    return if invite.invited_by.blank?
+    invite.invited_by.notifications.create!(
+      notification_type: Notification.types[:invitee_accepted],
+      data: { display_username: invited_user.username }.to_json
+    )
   end
 
   def delete_duplicate_invites
+    # Should not happen because of ensure_email_is_present!, but better to cover bases.
+    return if email.blank?
+
     Invite
       .where('invites.max_redemptions_allowed = 1')
       .joins("LEFT JOIN invited_users ON invites.id = invited_users.invite_id")
