@@ -221,7 +221,6 @@ export default Component.extend(ComposerUploadUppy, {
             topicId: this.topic?.id,
             categoryId: this.topic?.category_id || this.composer?.categoryId,
             includeGroups: true,
-            splitMetadataMatches: true,
           }),
         key: "@",
         transformComplete: (v) => v.username || v.name,

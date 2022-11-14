@@ -228,12 +228,7 @@ export function applySearchAutocomplete($input, siteSettings) {
         treatAsTextarea: true,
         autoSelectFirstSuggestion: false,
         transformComplete: (v) => v.username || v.name,
-        dataSource: (term) =>
-          userSearch({
-            term,
-            includeGroups: true,
-            splitMetadataMatches: true,
-          }),
+        dataSource: (term) => userSearch({ term, includeGroups: true }),
       })
     );
   }

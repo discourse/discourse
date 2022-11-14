@@ -414,7 +414,6 @@ export default Component.extend(TextareaTextManipulation, {
           this._focusTextArea();
           this._debouncedCaptureMentions();
         },
-        splitMetadataMatches: true,
       });
     }
   },
