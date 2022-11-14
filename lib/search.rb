@@ -646,7 +646,7 @@ class Search
     end
   end
 
-  advanced_filter(/^\@([a-zA-Z0-9_\-.]+)$/i) do |posts, match|
+  advanced_filter(/^\@(\S+)$/i) do |posts, match|
     username = match.downcase
 
     user_id = User.where(staged: false).where(username_lower: username).pluck_first(:id)
