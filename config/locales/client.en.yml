@@ -1842,17 +1842,9 @@ en:
         title: "Post menu"
         content: "See how else you can interact with the post by clicking the three dots!"
 
-      user_card:
-        title: "User cards"
-        content: "Quickly view more user details by clicking on their avatar."
-
       topic_notification_levels:
         title: "You are now following this topic"
         content: "Look for this bell to adjust your notification preferences for specific topics or whole categories."
-
-      topic_menu:
-        title: "Topic menu"
-        content: "Reply, share or add topics to your bookmarks. Flag topics for moderator attention."
 
       suggested_topics:
         title: "Keep reading!"

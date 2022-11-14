@@ -289,10 +289,8 @@ class User < ActiveRecord::Base
       first_notification: 1,
       topic_timeline: 2,
       post_menu: 3,
-      user_card: 4,
-      topic_notification_levels: 5,
-      topic_menu: 6,
-      suggested_topics: 7,
+      topic_notification_levels: 4,
+      suggested_topics: 5,
     )
   end
 

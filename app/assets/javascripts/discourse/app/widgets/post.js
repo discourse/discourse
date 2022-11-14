@@ -954,19 +954,6 @@ export default createWidget("post", {
 
       placement: "top",
     });
-
-    this.currentUser.showUserTip({
-      id: "user_card",
-
-      titleText: I18n.t("user_tips.user_card.title"),
-      contentText: I18n.t("user_tips.user_card.content"),
-
-      reference: document
-        .querySelector(".onscreen-post")
-        ?.querySelector(".post-avatar .trigger-user-card"),
-
-      placement: "right",
-    });
   },
 
   destroy() {

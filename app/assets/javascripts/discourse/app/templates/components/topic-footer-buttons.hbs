@@ -17,8 +17,6 @@
     {{/if}}
   {{/each}}
 
-  <UserTip @id="topic_menu" @selector=".topic-footer-button" />
-
   <PluginOutlet @name="topic-footer-main-buttons-before-create" @args={{hash topic=this.topic}} @connectorTagName="span" />
 
   {{#if this.topic.details.can_create_post}}

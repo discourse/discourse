@@ -179,10 +179,6 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   },
 
   _showCallback(username, $target) {
-    if (this.currentUser) {
-      this.currentUser.hideUserTipForever("user_card");
-    }
-
     this._positionCard($target);
     this.setProperties({ visible: true, loading: true });
 

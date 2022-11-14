@@ -58,27 +58,9 @@ acceptance("User Tips - post_menu", function (needs) {
   });
 });
 
-acceptance("User Tips - user_card", function (needs) {
-  needs.user();
-  needs.site({ user_tips: { user_card: 4 } });
-
-  needs.hooks.beforeEach(() => hideAllUserTips());
-  needs.hooks.afterEach(() => hideAllUserTips());
-
-  test("Shows post menu user tip", async function (assert) {
-    this.siteSettings.enable_user_tips = true;
-
-    await visit("/t/internationalization-localization/280");
-    assert.equal(
-      query(".user-tip-title").textContent.trim(),
-      I18n.t("user_tips.user_card.title")
-    );
-  });
-});
-
 acceptance("User Tips - topic_notification_levels", function (needs) {
   needs.user();
-  needs.site({ user_tips: { topic_notification_levels: 5 } });
+  needs.site({ user_tips: { topic_notification_levels: 4 } });
 
   needs.hooks.beforeEach(() => hideAllUserTips());
   needs.hooks.afterEach(() => hideAllUserTips());
@@ -95,27 +77,9 @@ acceptance("User Tips - topic_notification_levels", function (needs) {
   });
 });
 
-acceptance("User Tips - topic_menu", function (needs) {
-  needs.user();
-  needs.site({ user_tips: { topic_menu: 6 } });
-
-  needs.hooks.beforeEach(() => hideAllUserTips());
-  needs.hooks.afterEach(() => hideAllUserTips());
-
-  test("Shows post menu user tip", async function (assert) {
-    this.siteSettings.enable_user_tips = true;
-
-    await visit("/t/internationalization-localization/280");
-    assert.equal(
-      query(".user-tip-title").textContent.trim(),
-      I18n.t("user_tips.topic_menu.title")
-    );
-  });
-});
-
 acceptance("User Tips - suggested_topics", function (needs) {
   needs.user();
-  needs.site({ user_tips: { suggested_topics: 7 } });
+  needs.site({ user_tips: { suggested_topics: 5 } });
 
   needs.hooks.beforeEach(() => hideAllUserTips());
   needs.hooks.afterEach(() => hideAllUserTips());
