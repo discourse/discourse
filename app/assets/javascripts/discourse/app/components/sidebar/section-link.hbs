@@ -1,5 +1,5 @@
 {{#if this.shouldDisplay}}
-  <div class="sidebar-section-link-wrapper">
+  <div class="sidebar-section-link-wrapper" {{did-insert this.didInsert this.args}}>
     {{#if @href}}
       <a href={{@href}} rel="noopener noreferrer" target="_blank" class={{this.classNames}} title={{@title}}>
         <Sidebar::SectionLinkPrefix
