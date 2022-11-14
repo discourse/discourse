@@ -47,7 +47,7 @@ export default function deprecated(msg, options) {
 
   console.warn(consolePrefix, msg); //eslint-disable-line no-console
 
-  handlers.forEach((h) => h(msg, { id, since, dropFrom, raiseError }));
+  handlers.forEach((h) => h(msg, options));
 }
 
 /**
