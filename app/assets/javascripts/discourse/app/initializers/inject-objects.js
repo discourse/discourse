@@ -17,6 +17,7 @@ export default {
           {
             since: "2.8",
             dropFrom: "2.9",
+            id: "discourse.global.site-settings",
           }
         );
         return container.lookup("service:site-settings");
@@ -29,6 +30,7 @@ export default {
           {
             since: "2.8",
             dropFrom: "2.9",
+            id: "discourse.global.user",
           }
         );
         return User;
@@ -41,6 +43,7 @@ export default {
           {
             since: "2.8",
             dropFrom: "2.9",
+            id: "discourse.global.site",
           }
         );
         return Site;

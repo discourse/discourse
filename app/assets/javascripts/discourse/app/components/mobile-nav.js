@@ -19,6 +19,7 @@ export default Component.extend({
       deprecated("{{mobile-nav}} no longer requires the currentPath property", {
         since: "2.7.0.beta4",
         dropFrom: "2.9.0.beta1",
+        id: "discourse.mobile-nav.currentPath",
       });
     }
   },

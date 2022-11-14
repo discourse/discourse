@@ -18,6 +18,7 @@ export function isValidLink(link) {
 
     deprecated("isValidLink now expects an Element, not a jQuery object", {
       since: "2.9.0.beta7",
+      id: "discourse.click-track.is-valid-link-jquery",
     });
   }
 
