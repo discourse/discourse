@@ -1,3 +1,5 @@
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
+
 const CLIENT_SETTING_TEST_OVERRIDES = {
   title: "QUnit Discourse Tests",
   site_logo_url: "/assets/logo.png",
@@ -56,5 +58,6 @@ export function resetSettings() {
       typeof v !== "undefined" ? setValue(p, v) : delete siteSettings[p];
     }
   }
-  return siteSettings;
+
+  return new TrackedObject(siteSettings);
 }
