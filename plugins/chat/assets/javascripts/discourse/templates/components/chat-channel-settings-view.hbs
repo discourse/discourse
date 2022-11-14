@@ -41,11 +41,11 @@
       </div>
     </div>
   {{/unless}}
-  <div class="chat-retention-info">{{d-icon "info-circle"}}Chat history will be stored for 90 days.</div>
+  <div class="chat-retention-info">{{d-icon "info-circle"}}{{i18n "chat.settings.retention_info"}}</div>
 </div>
 
 {{#if (chat-guardian "can-edit-chat-channel")}}
-  <h3 class="chat-form__section-admin-title">Admin</h3>
+  <h3 class="chat-form__section-admin-title">{{i18n "chat.settings.admin_title"}}</h3>
   {{#if this.autoJoinAvailable}}
     <div class="chat-form__section">
       <div class="chat-form__field">

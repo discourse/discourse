@@ -306,6 +306,8 @@ en:
         save: "Save"
         saved: "Saved"
         unfollow: "Leave"
+        admin_title: "Admin"
+        retention_info: "Chat history will be saved for 90 days."
 
       admin:
         title: "Chat"
