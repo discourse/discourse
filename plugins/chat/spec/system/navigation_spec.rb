@@ -99,6 +99,33 @@ RSpec.describe "Navigation", type: :system, js: true do
     end
   end
 
+  context "when opening full page with a link containing a message id" do
+    it "highlights correct message" do
+      visit("/chat/channel/#{category_channel.id}/#{category_channel.slug}?messageId=#{message.id}")
+
+      expect(page).to have_css(
+        ".full-page-chat .chat-message-container.highlighted[data-id='#{message.id}']",
+      )
+    end
+  end
+
+  context "when opening drawer with a link containing a message id" do
+    it "highlights correct message" do
+      Fabricate(
+        :post,
+        topic: topic,
+        raw:
+          "<a href=\"/chat/channel/#{category_channel.id}/#{category_channel.slug}?messageId=#{message.id}\">foo</a>",
+      )
+      visit("/t/-/#{topic.id}")
+      find("a", text: "foo").click
+
+      expect(page).to have_css(
+        ".topic-chat-container.expanded.visible .chat-message-container.highlighted[data-id='#{message.id}']",
+      )
+    end
+  end
+
   context "when sidebar is enabled" do
     before do
       SiteSetting.enable_experimental_sidebar_hamburger = true
