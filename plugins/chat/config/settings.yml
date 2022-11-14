@@ -104,3 +104,8 @@ chat:
     client: true
     allow_any: false
     refresh: true
+  max_mentions_per_chat_message:
+    client: true
+    type: integer
+    default: 5
+    min: 0

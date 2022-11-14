@@ -106,16 +106,23 @@ class Chat::ChatNotifier
   private
 
   def list_users_to_notify
+    direct_mentions_count = direct_mentions_from_cooked.length
+    group_mentions_count = group_name_mentions.length
+
+    skip_notifications =
+      (direct_mentions_count + group_mentions_count) >
+        SiteSetting.max_mentions_per_chat_message
+
     {}.tap do |to_notify|
       # The order of these methods is the precedence
       # between different mention types.
 
       already_covered_ids = []
 
-      expand_direct_mentions(to_notify, already_covered_ids)
-      expand_group_mentions(to_notify, already_covered_ids)
-      expand_here_mention(to_notify, already_covered_ids)
-      expand_global_mention(to_notify, already_covered_ids)
+      expand_direct_mentions(to_notify, already_covered_ids, skip_notifications)
+      expand_group_mentions(to_notify, already_covered_ids, skip_notifications)
+      expand_here_mention(to_notify, already_covered_ids, skip_notifications)
+      expand_global_mention(to_notify, already_covered_ids, skip_notifications)
 
       filter_users_ignoring_or_muting_creator(to_notify, already_covered_ids)
 
@@ -161,10 +168,10 @@ class Chat::ChatNotifier
     end
   end
 
-  def expand_global_mention(to_notify, already_covered_ids)
+  def expand_global_mention(to_notify, already_covered_ids, skip)
     typed_global_mention = direct_mentions_from_cooked.include?("@all")
 
-    if typed_global_mention
+    if typed_global_mention && !skip
       to_notify[:global_mentions] = members_accepting_channel_wide_notifications
         .where.not(username_lower: normalized_mentions(direct_mentions_from_cooked))
         .where.not(id: already_covered_ids)
@@ -176,10 +183,10 @@ class Chat::ChatNotifier
     end
   end
 
-  def expand_here_mention(to_notify, already_covered_ids)
+  def expand_here_mention(to_notify, already_covered_ids, skip)
     typed_here_mention = direct_mentions_from_cooked.include?("@here")
 
-    if typed_here_mention
+    if typed_here_mention && !skip
       to_notify[:here_mentions] = members_accepting_channel_wide_notifications
         .where("last_seen_at > ?", 5.minutes.ago)
         .where.not(username_lower: normalized_mentions(direct_mentions_from_cooked))
@@ -215,11 +222,15 @@ class Chat::ChatNotifier
     }
   end
 
-  def expand_direct_mentions(to_notify, already_covered_ids)
-    direct_mentions =
-      chat_users
-        .where(username_lower: normalized_mentions(direct_mentions_from_cooked))
-        .where.not(id: already_covered_ids)
+  def expand_direct_mentions(to_notify, already_covered_ids, skip)
+    if skip
+      direct_mentions = []
+    else
+      direct_mentions =
+        chat_users
+          .where(username_lower: normalized_mentions(direct_mentions_from_cooked))
+          .where.not(id: already_covered_ids)
+    end
 
     grouped = group_users_to_notify(direct_mentions)
 
@@ -241,11 +252,11 @@ class Chat::ChatNotifier
       Group.mentionable(@user, include_public: false).where(
         "LOWER(name) IN (?)",
         group_name_mentions,
-      )
+      ).where("user_count <= ?", SiteSetting.max_users_notified_per_group_mention)
   end
 
-  def expand_group_mentions(to_notify, already_covered_ids)
-    return [] if mentionable_groups.empty?
+  def expand_group_mentions(to_notify, already_covered_ids, skip)
+    return [] if skip || mentionable_groups.empty?
 
     mentionable_groups.each { |g| to_notify[g.name.downcase] = [] }
 

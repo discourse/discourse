@@ -17,6 +17,8 @@ import {
   chatChannelPretender,
 } from "../helpers/chat-pretenders";
 
+const GROUP_NAME = "group1";
+
 acceptance("Discourse Chat - Composer", function (needs) {
   needs.user({ has_chat_enabled: true });
   needs.settings({ chat_enabled: true, enable_rich_text_paste: true });
@@ -27,10 +29,14 @@ acceptance("Discourse Chat - Composer", function (needs) {
       helper.response({ chat_messages: [], meta: {} })
     );
     server.get("/chat/emojis.json", () =>
-      helper.response({ favorites: [{ name: "grinning" }] })
+      helper.response({ favorites: [{ name: "grting" }] })
     );
     server.post("/chat/drafts", () => {
       return helper.response([]);
+    });
+
+    server.get("/chat/api/mentions/groups.json", () => {
+      return helper.response({ unreachable: [GROUP_NAME] });
     });
   });
 
@@ -103,6 +109,17 @@ acceptance("Discourse Chat - Composer", function (needs) {
       emojiReactionStore.favorites,
       ["grinning"].concat(this.siteSettings.default_emoji_reactions.split("|")),
       "it tracks the emoji"
+    );
+  });
+
+  test("JIT warnings for group mentions", async function (assert) {
+    await visit("/chat/channel/11/-");
+    await fillIn(".chat-composer-input", `@${GROUP_NAME}`);
+
+    assert.equal(
+      query(".chat-mention-warnings .chat-mention-warnings-list li").innerText,
+      `@${GROUP_NAME} doesn't allow mentions`,
+      "displays a warning when the group is unreachable"
     );
   });
 });

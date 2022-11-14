@@ -288,6 +288,38 @@ describe Chat::ChatNotifier do
         expect(to_notify_2[@chat_group.name]).to be_empty
       end
 
+      it "skips groups with too many members" do
+        SiteSetting.max_users_notified_per_group_mention = (group.user_count - 1)
+
+        msg = build_cooked_msg("Hello @#{group.name}", user_1)
+
+        to_notify = described_class.new(msg, msg.created_at).notify_new
+
+        expect(to_notify[group.name]).to be_nil
+      end
+
+      it "respects the 'max_mentions_per_chat_message' setting and skips notifications" do
+        SiteSetting.max_mentions_per_chat_message = 1
+
+        msg = build_cooked_msg("Hello @#{user_2.username} and @#{user_3.username}", user_1)
+
+        to_notify = described_class.new(msg, msg.created_at).notify_new
+
+        expect(to_notify[:direct_mentions]).to be_empty
+        expect(to_notify[group.name]).to be_nil
+      end
+
+      it "respects the max mentions setting and skips notifications when mixing users and groups" do
+        SiteSetting.max_mentions_per_chat_message = 1
+
+        msg = build_cooked_msg("Hello @#{user_2.username} and @#{group.name}", user_1)
+
+        to_notify = described_class.new(msg, msg.created_at).notify_new
+
+        expect(to_notify[:direct_mentions]).to be_empty
+        expect(to_notify[group.name]).to be_nil
+      end
+
       describe "users ignoring or muting the user creating the message" do
         it "does not send notifications to the user inside the group who is muting the acting user" do
           group.add(user_3)

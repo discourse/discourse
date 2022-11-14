@@ -67,6 +67,7 @@ export default Component.extend({
   _lastSelectedMessage: null,
   targetMessageId: null,
   hasNewMessages: null,
+  mentions: null, // Array
 
   chat: service(),
   router: service(),
@@ -1309,6 +1310,11 @@ export default Component.extend({
     if (!this.chatChannel.directMessageChannelDraft) {
       this._reportReplyingPresence(value);
     }
+  },
+
+  @action
+  updateMentions(mentions) {
+    this.set("mentions", mentions);
   },
 
   @action
