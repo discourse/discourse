@@ -3,6 +3,83 @@
 RSpec.describe InviteRedeemer do
   fab!(:admin) { Fabricate(:admin) }
 
+  describe "#initialize" do
+    fab!(:redeeming_user) { Fabricate(:user, email: "redeemer@test.com") }
+
+    context "for invite link" do
+      fab!(:invite) { Fabricate(:invite, email: nil) }
+
+      context "when an email is passed in without a redeeming user" do
+        it "uses that email for invite redemption" do
+          redeemer = described_class.new(invite: invite, email: "blah@test.com")
+          expect(redeemer.email).to eq("blah@test.com")
+          expect { redeemer.redeem }.to change { User.count }
+          expect(User.find_by_email(redeemer.email)).to be_present
+        end
+      end
+
+      context "when an email is passed in with a redeeming user" do
+        it "uses the redeeming user's email for invite redemption" do
+          redeemer = described_class.new(invite: invite, email: "blah@test.com", redeeming_user: redeeming_user)
+          expect(redeemer.email).to eq(redeeming_user.email)
+          expect { redeemer.redeem }.not_to change { User.count }
+        end
+      end
+
+      context "when an email is not passed in with a redeeming user" do
+        it "uses the redeeming user's email for invite redemption" do
+          redeemer = described_class.new(invite: invite, email: nil, redeeming_user: redeeming_user)
+          expect(redeemer.email).to eq(redeeming_user.email)
+          expect { redeemer.redeem }.not_to change { User.count }
+        end
+      end
+
+      context "when no email and no redeeming user is passed in" do
+        it "raises an error" do
+          expect { described_class.new(invite: invite, email: nil, redeeming_user: nil) }.to raise_error(Discourse::InvalidParameters)
+        end
+      end
+    end
+
+    context "for invite with email" do
+      fab!(:invite) { Fabricate(:invite, email: "foobar@example.com") }
+
+      context "when an email is passed in without a redeeming user" do
+        it "uses that email for invite redemption" do
+          redeemer = described_class.new(invite: invite, email: "foobar@example.com")
+          expect(redeemer.email).to eq("foobar@example.com")
+          expect { redeemer.redeem }.to change { User.count }
+          expect(User.find_by_email(redeemer.email)).to be_present
+        end
+      end
+
+      context "when an email is passed in with a redeeming user" do
+        it "uses the redeeming user's email for invite redemption" do
+          redeemer = described_class.new(invite: invite, email: "blah@test.com", redeeming_user: redeeming_user)
+          expect(redeemer.email).to eq(redeeming_user.email)
+          expect { redeemer.redeem }.to raise_error(ActiveRecord::RecordNotSaved, I18n.t("invite.not_matching_email"))
+        end
+      end
+
+      context "when an email is not passed in with a redeeming user" do
+        it "uses the invite email for invite redemption" do
+          redeemer = described_class.new(invite: invite, email: nil, redeeming_user: redeeming_user)
+          expect(redeemer.email).to eq("foobar@example.com")
+          expect { redeemer.redeem }.to raise_error(ActiveRecord::RecordNotSaved, I18n.t("invite.not_matching_email"))
+        end
+      end
+
+      context "when no email and no redeeming user is passed in" do
+        it "uses the invite email for invite redemption" do
+          redeemer = described_class.new(invite: invite, email: nil, redeeming_user: nil)
+          expect(redeemer.email).to eq("foobar@example.com")
+          expect { redeemer.redeem }.to change { User.count }
+          expect(User.find_by_email(redeemer.email)).to be_present
+        end
+      end
+    end
+  end
+
   describe '.create_user_from_invite' do
     it "should be created correctly" do
       invite = Fabricate(:invite, email: 'walter.white@email.com')
@@ -113,171 +190,198 @@ RSpec.describe InviteRedeemer do
   end
 
   describe "#redeem" do
-    fab!(:invite) { Fabricate(:invite, email: "foobar@example.com") }
     let(:name) { 'john snow' }
     let(:username) { 'kingofthenorth' }
     let(:password) { 'know5nOthiNG' }
     let(:invite_redeemer) { InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name) }
 
-    context "when must_approve_users setting is enabled" do
-      before do
-        SiteSetting.must_approve_users = true
+    context "with email" do
+      fab!(:invite) { Fabricate(:invite, email: "foobar@example.com") }
+      context "when must_approve_users setting is enabled" do
+        before do
+          SiteSetting.must_approve_users = true
+        end
+
+        it "should redeem an invite but not approve the user when invite is created by a staff user" do
+          inviter = invite.invited_by
+          inviter.update!(admin: true)
+          user = invite_redeemer.redeem
+
+          expect(user.name).to eq(name)
+          expect(user.username).to eq(username)
+          expect(user.invited_by).to eq(inviter)
+          expect(user.approved).to eq(false)
+
+          expect(inviter.notifications.count).to eq(1)
+        end
+
+        it "should redeem the invite but not approve the user when invite is created by a regular user" do
+          inviter = invite.invited_by
+          user = invite_redeemer.redeem
+
+          expect(user.name).to eq(name)
+          expect(user.username).to eq(username)
+          expect(user.invited_by).to eq(inviter)
+          expect(user.approved).to eq(false)
+
+          expect(inviter.notifications.count).to eq(1)
+        end
+
+        it "should redeem the invite and approve the user when user email is in auto_approve_email_domains setting" do
+          SiteSetting.auto_approve_email_domains = "example.com"
+          user = invite_redeemer.redeem
+
+          expect(user.name).to eq(name)
+          expect(user.username).to eq(username)
+          expect(user.approved).to eq(true)
+          expect(user.approved_by).to eq(Discourse.system_user)
+        end
       end
 
-      it "should redeem an invite but not approve the user when invite is created by a staff user" do
+      it "should redeem the invite if invited by non staff and approve if staff not required to approve" do
         inviter = invite.invited_by
-        inviter.update!(admin: true)
         user = invite_redeemer.redeem
 
         expect(user.name).to eq(name)
         expect(user.username).to eq(username)
         expect(user.invited_by).to eq(inviter)
-        expect(user.approved).to eq(false)
-
         expect(inviter.notifications.count).to eq(1)
+        expect(user.approved).to eq(false)
       end
 
-      it "should redeem the invite but not approve the user when invite is created by a regular user" do
+      it "should delete invite if invited_by user has been removed" do
+        invite.invited_by.destroy!
+        expect { invite.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it "can set password" do
+        user = InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name, password: password).redeem
+        expect(user).to have_password
+        expect(user.confirm_password?(password)).to eq(true)
+        expect(user.approved).to eq(false)
+      end
+
+      it "can set custom fields" do
+        required_field = Fabricate(:user_field)
+        optional_field = Fabricate(:user_field, required: false)
+        user_fields = {
+          required_field.id.to_s => 'value1',
+          optional_field.id.to_s => 'value2'
+        }
+        user = InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name, password: password, user_custom_fields: user_fields).redeem
+
+        expect(user).to be_present
+        expect(user.custom_fields["user_field_#{required_field.id}"]).to eq('value1')
+        expect(user.custom_fields["user_field_#{optional_field.id}"]).to eq('value2')
+      end
+
+      it "does not add user to group if inviter does not have permissions" do
+        group = Fabricate(:group, grant_trust_level: 2)
+        InvitedGroup.create(group_id: group.id, invite_id: invite.id)
+        user = InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name, password: password).redeem
+
+        expect(user.group_users.count).to eq(0)
+      end
+
+      it "adds user to group" do
+        group = Fabricate(:group, grant_trust_level: 2)
+        InvitedGroup.create(group_id: group.id, invite_id: invite.id)
+        group.add_owner(invite.invited_by)
+
+        user = InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name, password: password).redeem
+
+        expect(user.group_users.count).to eq(4)
+        expect(user.trust_level).to eq(2)
+      end
+
+      it "adds an entry to the group logs when the invited user is added to a group" do
+        group = Fabricate(:group)
+        InvitedGroup.create(group_id: group.id, invite_id: invite.id)
+        group.add_owner(invite.invited_by)
+
+        GroupHistory.destroy_all
+
+        user = InviteRedeemer.new(
+          invite: invite,
+          email: invite.email,
+          username: username,
+          name: name,
+          password: password
+        ).redeem
+
+        expect(group.reload.usernames.split(",")).to include(user.username)
+        expect(GroupHistory.exists?(
+          target_user_id: user.id,
+          acting_user: invite.invited_by.id,
+          group_id: group.id,
+          action: GroupHistory.actions[:add_user_to_group]
+        )).to eq(true)
+      end
+
+      it "only allows one user to be created per invite" do
+        user = invite_redeemer.redeem
+        invite.reload
+
+        user.email = "john@example.com"
+        user.save!
+
+        another_invite_redeemer = InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name)
+        another_user = another_invite_redeemer.redeem
+        expect(another_user).to eq(nil)
+      end
+
+      it "should correctly update the invite redeemed_at date" do
+        SiteSetting.invite_expiry_days = 2
+        invite.update!(created_at: 10.days.ago)
+
         inviter = invite.invited_by
+        inviter.admin = true
         user = invite_redeemer.redeem
+        invite.reload
 
-        expect(user.name).to eq(name)
-        expect(user.username).to eq(username)
         expect(user.invited_by).to eq(inviter)
-        expect(user.approved).to eq(false)
-
         expect(inviter.notifications.count).to eq(1)
+        expect(invite.invited_users.first).to be_present
       end
-
-      it "should redeem the invite and approve the user when user email is in auto_approve_email_domains setting" do
-        SiteSetting.auto_approve_email_domains = "example.com"
-        user = invite_redeemer.redeem
-
-        expect(user.name).to eq(name)
-        expect(user.username).to eq(username)
-        expect(user.approved).to eq(true)
-        expect(user.approved_by).to eq(Discourse.system_user)
-      end
-    end
-
-    it "should redeem the invite if invited by non staff and approve if staff not required to approve" do
-      inviter = invite.invited_by
-      user = invite_redeemer.redeem
-
-      expect(user.name).to eq(name)
-      expect(user.username).to eq(username)
-      expect(user.invited_by).to eq(inviter)
-      expect(inviter.notifications.count).to eq(1)
-      expect(user.approved).to eq(false)
-    end
-
-    it "should delete invite if invited_by user has been removed" do
-      invite.invited_by.destroy!
-      expect { invite.reload }.to raise_error(ActiveRecord::RecordNotFound)
-    end
-
-    it "can set password" do
-      user = InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name, password: password).redeem
-      expect(user).to have_password
-      expect(user.confirm_password?(password)).to eq(true)
-      expect(user.approved).to eq(false)
-    end
-
-    it "can set custom fields" do
-      required_field = Fabricate(:user_field)
-      optional_field = Fabricate(:user_field, required: false)
-      user_fields = {
-        required_field.id.to_s => 'value1',
-        optional_field.id.to_s => 'value2'
-      }
-      user = InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name, password: password, user_custom_fields: user_fields).redeem
-
-      expect(user).to be_present
-      expect(user.custom_fields["user_field_#{required_field.id}"]).to eq('value1')
-      expect(user.custom_fields["user_field_#{optional_field.id}"]).to eq('value2')
-    end
-
-    it "does not add user to group if inviter does not have permissions" do
-      group = Fabricate(:group, grant_trust_level: 2)
-      InvitedGroup.create(group_id: group.id, invite_id: invite.id)
-      user = InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name, password: password).redeem
-
-      expect(user.group_users.count).to eq(0)
-    end
-
-    it "adds user to group" do
-      group = Fabricate(:group, grant_trust_level: 2)
-      InvitedGroup.create(group_id: group.id, invite_id: invite.id)
-      group.add_owner(invite.invited_by)
-
-      user = InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name, password: password).redeem
-
-      expect(user.group_users.count).to eq(4)
-      expect(user.trust_level).to eq(2)
-    end
-
-    it "adds an entry to the group logs when the invited user is added to a group" do
-      group = Fabricate(:group)
-      InvitedGroup.create(group_id: group.id, invite_id: invite.id)
-      group.add_owner(invite.invited_by)
-
-      GroupHistory.destroy_all
-
-      user = InviteRedeemer.new(
-        invite: invite,
-        email: invite.email,
-        username: username,
-        name: name,
-        password: password
-      ).redeem
-
-      expect(group.reload.usernames.split(",")).to include(user.username)
-      expect(GroupHistory.exists?(
-        target_user_id: user.id,
-        acting_user: invite.invited_by.id,
-        group_id: group.id,
-        action: GroupHistory.actions[:add_user_to_group]
-      )).to eq(true)
-    end
-
-    it "only allows one user to be created per invite" do
-      user = invite_redeemer.redeem
-      invite.reload
-
-      user.email = "john@example.com"
-      user.save!
-
-      another_invite_redeemer = InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name)
-      another_user = another_invite_redeemer.redeem
-      expect(another_user).to eq(nil)
-    end
-
-    it "should correctly update the invite redeemed_at date" do
-      SiteSetting.invite_expiry_days = 2
-      invite.update!(created_at: 10.days.ago)
-
-      inviter = invite.invited_by
-      inviter.admin = true
-      user = invite_redeemer.redeem
-      invite.reload
-
-      expect(user.invited_by).to eq(inviter)
-      expect(inviter.notifications.count).to eq(1)
-      expect(invite.invited_users.first).to be_present
-    end
-
-    it "raises an error if the email does not match the invite email" do
-      redeemer = InviteRedeemer.new(invite: invite, email: "blah@test.com", username: username, name: name)
-      expect { redeemer.redeem }.to raise_error(ActiveRecord::RecordNotSaved, I18n.t("invite.not_matching_email"))
-    end
-
-    context "when a redeeming user is passed in" do
-      fab!(:redeeming_user) { Fabricate(:user, email: "foobar@example.com") }
 
       it "raises an error if the email does not match the invite email" do
-        redeeming_user.update!(email: "foo@bar.com")
-        redeemer = InviteRedeemer.new(invite: invite, redeeming_user: redeeming_user)
+        redeemer = InviteRedeemer.new(invite: invite, email: "blah@test.com", username: username, name: name)
         expect { redeemer.redeem }.to raise_error(ActiveRecord::RecordNotSaved, I18n.t("invite.not_matching_email"))
+      end
+
+      it "adds the user to the appropriate private topic and no others" do
+        topic1 = Fabricate(:private_message_topic)
+        topic2 = Fabricate(:private_message_topic)
+        TopicInvite.create(invite: invite, topic: topic1)
+        user = InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name, password: password).redeem
+        expect(TopicAllowedUser.exists?(topic: topic1, user: user)).to eq(true)
+        expect(TopicAllowedUser.exists?(topic: topic2, user: user)).to eq(false)
+      end
+
+      context "when a redeeming user is passed in" do
+        fab!(:redeeming_user) { Fabricate(:user, email: "foobar@example.com") }
+
+        it "raises an error if the email does not match the invite email" do
+          redeeming_user.update!(email: "foo@bar.com")
+          redeemer = InviteRedeemer.new(invite: invite, redeeming_user: redeeming_user)
+          expect { redeemer.redeem }.to raise_error(ActiveRecord::RecordNotSaved, I18n.t("invite.not_matching_email"))
+        end
+
+        it "adds the user to the appropriate private topic and no others" do
+          topic1 = Fabricate(:private_message_topic)
+          topic2 = Fabricate(:private_message_topic)
+          TopicInvite.create(invite: invite, topic: topic1)
+          InviteRedeemer.new(invite: invite, redeeming_user: redeeming_user).redeem
+          expect(TopicAllowedUser.exists?(topic: topic1, user: redeeming_user)).to eq(true)
+          expect(TopicAllowedUser.exists?(topic: topic2, user: redeeming_user)).to eq(false)
+        end
+
+        it "does not create a topic allowed user record if the invited user is already in the topic" do
+          topic1 = Fabricate(:private_message_topic)
+          TopicInvite.create(invite: invite, topic: topic1)
+          TopicAllowedUser.create(topic: topic1, user: redeeming_user)
+          expect { InviteRedeemer.new(invite: invite, redeeming_user: redeeming_user).redeem }.not_to change { TopicAllowedUser.count }
+        end
       end
     end
 
