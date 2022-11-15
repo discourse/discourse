@@ -329,10 +329,7 @@ export default class ChatEmojiPicker extends Component {
       return;
     }
 
-    if (
-      event.type === "click" ||
-      (event.type === "keyup" && event.key === "Enter")
-    ) {
+    if (event.type === "click" || event.key === "Enter") {
       event.preventDefault();
       event.stopPropagation();
       const originalTarget = event.target;

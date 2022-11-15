@@ -109,7 +109,7 @@
       <div
         class="chat-emoji-picker__sections"
         {{on "click" this.didSelectEmoji}}
-        {{on "keyup" this.didSelectEmoji}}
+        {{on "keydown" this.didSelectEmoji}}
         role="button"
       >
         {{#if (gte this.filteredEmojis.length 0)}}
