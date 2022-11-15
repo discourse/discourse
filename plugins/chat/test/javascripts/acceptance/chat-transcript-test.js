@@ -164,6 +164,9 @@ function buildAdditionalOptions() {
         "blockquote",
         "emphasis",
       ],
+      hashtag_context_configurations: {
+        "chat-composer": ["channel", "category", "tag"],
+      },
     },
   };
 }
