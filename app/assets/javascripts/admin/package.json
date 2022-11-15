@@ -22,6 +22,7 @@
     "xss": "^1.0.14"
   },
   "devDependencies": {
+    "@babel/core": "^7.20.2",
     "@ember/optional-features": "^2.0.0",
     "@embroider/test-setup": "^1.8.3",
     "@glimmer/component": "^1.1.2",

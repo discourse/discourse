@@ -9,10 +9,13 @@
   ],
   "repository": "",
   "dependencies": {
+    "discourse-widget-hbs": "1.0.0",
     "ember-auto-import": "^2.4.3",
     "ember-cli-babel": "^7.26.10",
-    "ember-cli-htmlbars": "^6.1.1",
-    "discourse-widget-hbs": "1.0"
+    "ember-cli-htmlbars": "^6.1.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.2"
   },
   "engines": {
     "node": "16.* || >= 18",
