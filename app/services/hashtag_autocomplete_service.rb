@@ -84,10 +84,13 @@ class HashtagAutocompleteService
   ##
   # Finds resources of the provided types by their exact slugs, unlike
   # search which can search partial names, slugs, etc. Used for cooking
-  # fully formed #hashtags in the markdown pipeline.
+  # fully formed #hashtags in the markdown pipeline. The @guardian handles
+  # permissions around which results should be returned here.
   #
   # @param {Array} slugs The fully formed slugs to look up, which can have
-  #                      ::type suffixes attached as well (e.g. ::category)
+  #                      ::type suffixes attached as well (e.g. ::category),
+  #                      and in the case of categories can have parent:child
+  #                      relationships.
   # @param {Array} types_in_priority_order The resource types we are looking up
   #                                        and the priority order in which we should
   #                                        match them if they do not have type suffixes.
@@ -110,7 +113,7 @@ class HashtagAutocompleteService
 
     # For all the slugs without a type suffix, we need to lookup in order, falling
     # back to the next type if no results are returned for a slug for the current
-    # type. this way slugs without suffix make sense in context, e.g. in the topic
+    # type. This way slugs without suffix make sense in context, e.g. in the topic
     # composer we want a slug without a suffix to be a category first, tag second.
     types_in_priority_order.each do |type|
       found_from_slugs = set_refs(@@data_sources[type].lookup(guardian, slugs_without_suffixes))
@@ -141,7 +144,8 @@ class HashtagAutocompleteService
   # sources determine what is actually searched) and prioritises the results
   # based on types_in_priority_order and the limit. For example, if 5 categories
   # were returned for the term and the limit was 5, we would not even bother
-  # searching tags.
+  # searching tags. The @guardian handles permissions around which results should
+  # be returned here.
   #
   # @param {String} term Search term, from the UI generally where the user is typing #has...
   # @param {Array} types_in_priority_order The resource types we are searching for
@@ -252,6 +256,10 @@ class HashtagAutocompleteService
 
   private
 
+  # Somtimes a specific ref is required, e.g. for categories that have
+  # a parent their ref will be parent_slug:child_slug, though most of the
+  # time it will be the same as the slug. The ref can then be used for
+  # lookup in the UI.
   def set_refs(hashtag_items)
     return hashtag_items if hashtag_items.blank? || hashtag_items.empty?
     hashtag_items.each { |item| item.ref ||= item.slug }

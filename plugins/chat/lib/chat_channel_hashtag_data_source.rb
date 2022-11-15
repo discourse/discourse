@@ -16,9 +16,13 @@ class Chat::ChatChannelHashtagDataSource
   end
 
   def self.lookup(guardian, slugs)
-    Chat::ChatChannelFetcher
-      .secured_public_channel_search(guardian, slugs: slugs)
-      .map { |channel| channel_to_hashtag_item(guardian, channel) }
+    if SiteSetting.enable_experimental_hashtag_autocomplete
+      Chat::ChatChannelFetcher
+        .secured_public_channel_search(guardian, slugs: slugs)
+        .map { |channel| channel_to_hashtag_item(guardian, channel) }
+    else
+      []
+    end
   end
 
   def self.search(guardian, term, limit)

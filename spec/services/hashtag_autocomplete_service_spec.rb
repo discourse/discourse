@@ -249,6 +249,16 @@ RSpec.describe HashtagAutocompleteService do
       expect(result[:tag].map(&:url)).to eq(%w[/tag/fiction-books /tag/great-books])
     end
 
+    it "handles parent:child category lookups" do
+      parent_category = Fabricate(:category, name: "Media", slug: "media")
+      category1.update!(parent_category: parent_category)
+      result =
+        subject.lookup(%w[media:book-club], %w[category tag])
+      expect(result[:category].map(&:slug)).to eq(["book-club"])
+      expect(result[:category].map(&:ref)).to eq(["media:book-club"])
+      expect(result[:category].map(&:url)).to eq(["/c/media/book-club/#{category1.id}"])
+    end
+
     it "for slugs without a type suffix it falls back in type order until a result is found or types are exhausted" do
       result = subject.lookup(%w[book-club great-books fiction-books], %w[category tag])
       expect(result[:category].map(&:slug)).to eq(["book-club"])
