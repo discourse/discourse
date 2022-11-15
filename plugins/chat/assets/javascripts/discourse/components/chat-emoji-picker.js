@@ -315,7 +315,11 @@ export default class ChatEmojiPicker extends Component {
         .filter((c) => c.offsetTop < event.target.offsetTop)
         .findBy("offsetLeft", event.target.offsetLeft);
 
-      prevEmoji?.focus() || focusFilter();
+      if (prevEmoji) {
+        prevEmoji.focus();
+      } else {
+        focusFilter();
+      }
     }
   }
 
