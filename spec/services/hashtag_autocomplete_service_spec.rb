@@ -129,6 +129,7 @@ RSpec.describe HashtagAutocompleteService do
       expect(subject.search("book", %w[category tag]).map(&:ref)).to eq(
         %w[hobbies:book-club great-books],
       )
+      category1.update!(parent_category: nil)
     end
 
     it "appends type suffixes for the ref on conflicting slugs on items that are not the top priority type" do
