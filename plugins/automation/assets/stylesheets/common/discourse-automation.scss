@@ -53,7 +53,8 @@
     }
 
     &.alert-warning {
-      border-left-color: var(--highlight-low);
+      border-left-color: var(--highlight);
+      background: var(--highlight-low);
     }
 
     &.alert-error {
@@ -170,6 +171,16 @@
     }
 
     &.automation-enabled {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 1em;
+
+      .ember-checkbox {
+        margin: 0 0 0 1em;
+        padding: 0;
+      }
+
       .control-label.disabled {
         color: var(--danger);
       }

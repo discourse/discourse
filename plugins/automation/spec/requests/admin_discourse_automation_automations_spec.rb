@@ -72,6 +72,54 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
         end
       end
 
+      context 'when changing trigger and script of an enabled automation' do
+        it 'forces the automation to be disabled' do
+          expect(automation.enabled).to eq(true)
+
+          put "/admin/plugins/discourse-automation/automations/#{automation.id}.json", params: {
+            automation: {
+              script: "bar",
+              trigger: "foo",
+              enabled: true
+            }
+          }
+
+          expect(automation.reload.enabled).to eq(false)
+        end
+      end
+
+      context 'when changing trigger of an enabled automation' do
+        it 'forces the automation to be disabled' do
+          expect(automation.enabled).to eq(true)
+
+          put "/admin/plugins/discourse-automation/automations/#{automation.id}.json", params: {
+            automation: {
+              script: automation.script,
+              trigger: "foo",
+              enabled: true
+            }
+          }
+
+          expect(automation.reload.enabled).to eq(false)
+        end
+      end
+
+      context 'when changing script of an enabled automation' do
+        it 'disables the automation' do
+          expect(automation.enabled).to eq(true)
+
+          put "/admin/plugins/discourse-automation/automations/#{automation.id}.json", params: {
+            automation: {
+              trigger: automation.trigger,
+              script: "foo",
+              enabled: true
+            }
+          }
+
+          expect(automation.reload.enabled).to eq(false)
+        end
+      end
+
       context 'with invalid field’s metadata' do
         it 'errors' do
           put "/admin/plugins/discourse-automation/automations/#{automation.id}.json", params: {
