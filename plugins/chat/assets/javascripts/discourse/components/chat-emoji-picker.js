@@ -344,10 +344,7 @@ export default class ChatEmojiPicker extends Component {
       }
 
       this.chatEmojiPickerManager.didSelectEmoji(emoji);
-
-      schedule("afterRender", () => {
-        originalTarget.focus();
-      });
+      this.appEvents.trigger("chat:focus-composer");
     }
   }
 
