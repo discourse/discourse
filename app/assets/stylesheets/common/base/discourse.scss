@@ -505,56 +505,6 @@ table {
   }
 }
 
-.ring-backdrop-spotlight {
-  position: absolute;
-  width: 80px;
-  height: 80px;
-  top: -18px;
-  right: -18px;
-  background-image: radial-gradient(
-    40px at 50% 50%,
-    rgba(255, 255, 255, 0.15) 95%,
-    rgba(var(--always-black-rgb), 0.65) 100%
-  );
-}
-
-.ring-backdrop {
-  position: absolute;
-  width: 80px;
-  height: 80px;
-  top: -18px !important;
-  right: -18px !important;
-  box-shadow: 0 0 0 9999px rgba(var(--always-black-rgb), 0.65);
-  z-index: z("modal", "overlay");
-}
-
-.ring-first-notification {
-  position: absolute;
-  text-align: left;
-  right: 70px;
-  top: 60px;
-  width: 230px;
-  line-height: var(--line-height-medium);
-
-  .first-notification,
-  .read-later {
-    display: block;
-    margin-bottom: 36px;
-  }
-
-  .skip-new-user-tips,
-  .read-later-link {
-    font-size: var(--font-down-1);
-    text-decoration: underline;
-  }
-
-  &,
-  .skip-new-user-tips,
-  .read-later-link {
-    color: #eee;
-  }
-}
-
 .ring {
   $gradient-start: transparent;
   $gradient-end: #090;
