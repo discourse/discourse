@@ -92,19 +92,16 @@ export default class ChannelsList extends Component {
 
   @action
   storeScrollPosition() {
-    const scroller = document.querySelector(".channels-list");
-    if (scroller) {
-      const scrollTop = scroller.scrollTop || 0;
-      this.session.set("channels-list-position", scrollTop);
-    }
+    const scrollTop = document.querySelector(".channels-list")?.scrollTop || 0;
+    this.session.channelsListPosition = scrollTop;
   }
 
   @bind
   _applyScrollPosition() {
-    const data = this.session.get("channels-list-position");
-    if (data) {
-      const scroller = document.querySelector(".channels-list");
-      scroller.scrollTo(0, data);
-    }
+    const position = this.chatStateManager.isFullPage
+      ? this.session.channelsListPosition || 0
+      : 0;
+    const scroller = document.querySelector(".channels-list");
+    scroller.scrollTo(0, position);
   }
 }

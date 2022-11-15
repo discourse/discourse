@@ -2339,6 +2339,11 @@ uncategorized:
   uncategorized_category_id:
     default: -1
     hidden: true
+  default_composer_category:
+    client: true
+    type: category
+    default: ""
+    validator: "DefaultComposerCategoryValidator"
 
   notify_about_flags_after:
     type: float

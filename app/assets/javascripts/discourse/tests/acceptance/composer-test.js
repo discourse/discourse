@@ -41,6 +41,7 @@ acceptance("Composer", function (needs) {
   needs.settings({
     enable_whispers: true,
     general_category_id: 1,
+    default_composer_category: 1,
   });
   needs.site({
     can_tag_topics: true,
@@ -90,7 +91,7 @@ acceptance("Composer", function (needs) {
   test("Composer is opened", async function (assert) {
     await visit("/");
     await click("#create-topic");
-    // Check that General category is selected
+    // Check that the default category is selected
     assert.strictEqual(selectKit(".category-chooser").header().value(), "1");
 
     assert.strictEqual(
@@ -1201,3 +1202,109 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
     );
   });
 });
+
+// Default Composer Category tests
+acceptance("Composer - Default category", function (needs) {
+  needs.user();
+  needs.settings({
+    general_category_id: 1,
+    default_composer_category: 2,
+  });
+  needs.site({
+    categories: [
+      {
+        id: 1,
+        name: "General",
+        slug: "general",
+        permission: 1,
+        ltopic_template: null,
+      },
+      {
+        id: 2,
+        name: "test too",
+        slug: "test-too",
+        permission: 1,
+        topic_template: null,
+      },
+    ],
+  });
+
+  test("Default category is selected over general category", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    assert.strictEqual(selectKit(".category-chooser").header().value(), "2");
+    assert.strictEqual(
+      selectKit(".category-chooser").header().name(),
+      "test too"
+    );
+  });
+});
+
+acceptance("Composer - Uncategorized category", function (needs) {
+  needs.user();
+  needs.settings({
+    general_category_id: -1, // For sites that never had this seeded
+    default_composer_category: -1, // For sites that never had this seeded
+    allow_uncategorized_topics: true,
+  });
+  needs.site({
+    categories: [
+      {
+        id: 1,
+        name: "General",
+        slug: "general",
+        permission: 1,
+        ltopic_template: null,
+      },
+      {
+        id: 2,
+        name: "test too",
+        slug: "test-too",
+        permission: 1,
+        topic_template: null,
+      },
+    ],
+  });
+
+  test("Uncategorized category is selected", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    assert.strictEqual(selectKit(".category-chooser").header().value(), null);
+  });
+});
+
+acceptance("Composer - default category not set", function (needs) {
+  needs.user();
+  needs.settings({
+    default_composer_category: "",
+  });
+  needs.site({
+    categories: [
+      {
+        id: 1,
+        name: "General",
+        slug: "general",
+        permission: 1,
+        ltopic_template: null,
+      },
+      {
+        id: 2,
+        name: "test too",
+        slug: "test-too",
+        permission: 1,
+        topic_template: null,
+      },
+    ],
+  });
+
+  test("Nothing is selected", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    assert.strictEqual(selectKit(".category-chooser").header().value(), null);
+    assert.strictEqual(
+      selectKit(".category-chooser").header().name(),
+      "category&hellip;"
+    );
+  });
+});
+// END: Default Composer Category tests

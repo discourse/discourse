@@ -82,12 +82,12 @@
     "pretty-text": "^1.0.0",
     "qunit": "^2.19.3",
     "qunit-dom": "^2.0.0",
-    "sass": "^1.56.0",
+    "sass": "^1.56.1",
     "select-kit": "^1.0.0",
     "sinon": "^14.0.2",
     "tippy.js": "^6.3.7",
     "virtual-dom": "^2.1.1",
-    "webpack": "^5.74.0",
+    "webpack": "^5.75.0",
     "wizard": "^1.0.0"
   },
   "engines": {

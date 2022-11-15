@@ -34,16 +34,19 @@ export default {
               super(...arguments);
               this.channel = channel;
               this.chatService = chatService;
+            }
 
-              this.chatService.appEvents.on(
+            @bind
+            willDestroy() {
+              this.chatService.appEvents.off(
                 "chat:user-tracking-state-changed",
                 this._refreshTrackingState
               );
             }
 
             @bind
-            willDestroy() {
-              this.chatService.appEvents.off(
+            didInsert() {
+              this.chatService.appEvents.on(
                 "chat:user-tracking-state-changed",
                 this._refreshTrackingState
               );
