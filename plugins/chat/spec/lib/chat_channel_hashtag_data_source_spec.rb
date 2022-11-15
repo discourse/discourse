@@ -45,6 +45,11 @@ RSpec.describe Chat::ChatChannelHashtagDataSource do
         },
       )
     end
+
+    it "returns nothing if the slugs array is empty" do
+      result = described_class.lookup(guardian, []).first
+      expect(result).to eq(nil)
+    end
   end
 
   describe "#search" do

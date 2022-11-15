@@ -15,7 +15,18 @@ RSpec.describe HashtagAutocompleteService do
       "bookmark"
     end
 
-    def self.lookup(guardian, slugs)
+    def self.lookup(guardian_scoped, slugs)
+      guardian_scoped
+        .user
+        .bookmarks
+        .where("LOWER(name) IN (:slugs)", slugs: slugs)
+        .map do |bm|
+          HashtagAutocompleteService::HashtagItem.new.tap do |item|
+            item.text = bm.name
+            item.slug = bm.name.gsub(" ", "-")
+            item.icon = icon
+          end
+        end
     end
 
     def self.search(guardian_scoped, term, limit)
@@ -49,7 +60,7 @@ RSpec.describe HashtagAutocompleteService do
 
   describe ".data_source_icons" do
     it "gets an array for all icons defined by data sources so they can be used for markdown allowlisting" do
-      expect(HashtagAutocompleteService.data_source_icons).to eq(["folder", "tag"])
+      expect(HashtagAutocompleteService.data_source_icons).to eq(%w[folder tag])
     end
   end
 
@@ -253,8 +264,7 @@ RSpec.describe HashtagAutocompleteService do
     it "handles parent:child category lookups" do
       parent_category = Fabricate(:category, name: "Media", slug: "media")
       category1.update!(parent_category: parent_category)
-      result =
-        subject.lookup(%w[media:book-club], %w[category tag])
+      result = subject.lookup(%w[media:book-club], %w[category tag])
       expect(result[:category].map(&:slug)).to eq(["book-club"])
       expect(result[:category].map(&:ref)).to eq(["media:book-club"])
       expect(result[:category].map(&:url)).to eq(["/c/media/book-club/#{category1.id}"])
@@ -288,6 +298,17 @@ RSpec.describe HashtagAutocompleteService do
       expect(result[:category]).to eq([])
       expect(result[:tag].map(&:slug)).to eq(%w[book-club fiction-books great-books])
       expect(result[:tag].map(&:url)).to eq(%w[/tag/book-club /tag/fiction-books /tag/great-books])
+    end
+
+    it "includes other data sources" do
+      Fabricate(:bookmark, user: user, name: "read review of this fantasy book")
+      Fabricate(:bookmark, user: user, name: "coolrock")
+      guardian.user.reload
+
+      HashtagAutocompleteService.register_data_source("bookmark", BookmarkDataSource)
+
+      result = subject.lookup(["coolrock"], %w[category tag bookmark])
+      expect(result[:bookmark].map(&:slug)).to eq(["coolrock"])
     end
 
     context "when not tagging_enabled" do

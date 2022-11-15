@@ -115,25 +115,29 @@ class HashtagAutocompleteService
     # back to the next type if no results are returned for a slug for the current
     # type. This way slugs without suffix make sense in context, e.g. in the topic
     # composer we want a slug without a suffix to be a category first, tag second.
-    types_in_priority_order.each do |type|
-      found_from_slugs = set_refs(@@data_sources[type].lookup(guardian, slugs_without_suffixes))
-      found_from_slugs.each { |item| item.type = type }.sort_by! { |item| item.text.downcase }
-      lookup_results[type.to_sym] = lookup_results[type.to_sym].concat(found_from_slugs)
-      slugs_without_suffixes = slugs_without_suffixes - found_from_slugs.map(&:ref)
-      break if slugs_without_suffixes.empty?
+    if slugs_without_suffixes.any?
+      types_in_priority_order.each do |type|
+        found_from_slugs = set_refs(@@data_sources[type].lookup(guardian, slugs_without_suffixes))
+        found_from_slugs.each { |item| item.type = type }.sort_by! { |item| item.text.downcase }
+        lookup_results[type.to_sym] = lookup_results[type.to_sym].concat(found_from_slugs)
+        slugs_without_suffixes = slugs_without_suffixes - found_from_slugs.map(&:ref)
+        break if slugs_without_suffixes.empty?
+      end
     end
 
     # We then look up the remaining slugs based on their type suffix, stripping out
     # the type suffix first since it will not match the actual slug.
-    types_in_priority_order.each do |type|
-      slugs_for_type =
-        slugs_with_suffixes
-          .select { |slug| slug.ends_with?("::#{type}") }
-          .map { |slug| slug.gsub("::#{type}", "") }
-      next if slugs_for_type.empty?
-      found_from_slugs = set_refs(@@data_sources[type].lookup(guardian, slugs_for_type))
-      found_from_slugs.each { |item| item.type = type }.sort_by! { |item| item.text.downcase }
-      lookup_results[type.to_sym] = lookup_results[type.to_sym].concat(found_from_slugs)
+    if slugs_with_suffixes.any?
+      types_in_priority_order.each do |type|
+        slugs_for_type =
+          slugs_with_suffixes
+            .select { |slug| slug.ends_with?("::#{type}") }
+            .map { |slug| slug.gsub("::#{type}", "") }
+        next if slugs_for_type.empty?
+        found_from_slugs = set_refs(@@data_sources[type].lookup(guardian, slugs_for_type))
+        found_from_slugs.each { |item| item.type = type }.sort_by! { |item| item.text.downcase }
+        lookup_results[type.to_sym] = lookup_results[type.to_sym].concat(found_from_slugs)
+      end
     end
 
     lookup_results

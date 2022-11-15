@@ -33,7 +33,7 @@ class ChatMessage < ActiveRecord::Base
 
   scope :created_before, ->(date) { where("chat_messages.created_at < ?", date) }
 
-  before_save { self.last_editor_id ||= self.user_id }
+  before_save { ensure_last_editor_id }
 
   def validate_message(has_uploads:)
     WatchedWordsValidator.new(attributes: [:message]).validate(self)
@@ -98,6 +98,7 @@ class ChatMessage < ActiveRecord::Base
   end
 
   def cook
+    ensure_last_editor_id
     self.cooked = self.class.cook(self.message, user_id: self.last_editor_id)
     self.cooked_version = BAKED_VERSION
   end
@@ -159,8 +160,6 @@ class ChatMessage < ActiveRecord::Base
   ]
 
   def self.cook(message, opts = {})
-    # TODO (martin) Add user_id opt which is the chat_message.last_editor_id
-    # here and also pass in hashtag_context of chat-composer
     cooked =
       PrettyText.cook(
         message,
@@ -197,6 +196,10 @@ class ChatMessage < ActiveRecord::Base
 
   def message_too_short?
     message.length < SiteSetting.chat_minimum_message_length
+  end
+
+  def ensure_last_editor_id
+    self.last_editor_id ||= self.user_id
   end
 end
 

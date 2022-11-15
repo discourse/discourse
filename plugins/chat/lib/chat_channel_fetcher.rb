@@ -83,7 +83,7 @@ module Chat::ChatChannelFetcher
         )
     end
 
-    if options[:slugs].present?
+    if options.key?(:slugs)
       channels = channels.where("chat_channels.slug IN (:slugs)", slugs: options[:slugs])
     end
 
