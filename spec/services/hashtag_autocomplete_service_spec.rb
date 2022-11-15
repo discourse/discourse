@@ -268,6 +268,7 @@ RSpec.describe HashtagAutocompleteService do
       expect(result[:category].map(&:slug)).to eq(["book-club"])
       expect(result[:category].map(&:ref)).to eq(["media:book-club"])
       expect(result[:category].map(&:url)).to eq(["/c/media/book-club/#{category1.id}"])
+      category1.update!(parent_category: nil)
     end
 
     it "for slugs without a type suffix it falls back in type order until a result is found or types are exhausted" do
