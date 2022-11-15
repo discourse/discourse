@@ -37,19 +37,19 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
     hashtag_results[0].click
     expect(page).to have_css(".hashtag-cooked")
     cooked_hashtag = page.find(".hashtag-cooked")
-    expect(cooked_hashtag[:href]).to eq("#{Discourse.base_url}#{category.url}")
-    within cooked_hashtag do
-      has_css?("svg.d-icon-folder")
-    end
+    expected = <<~HTML.chomp
+      <a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"cool-cat\" tabindex=\"-1\"><span><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg>Cool Category</span></a>
+    HTML
+    expect(cooked_hashtag["outerHTML"].squish).to eq(expected)
+
     visit_topic_and_initiate_autocomplete
     hashtag_results = page.all(".hashtag-autocomplete__link", count: 2)
     hashtag_results[1].click
     expect(page).to have_css(".hashtag-cooked")
     cooked_hashtag = page.find(".hashtag-cooked")
-    expect(cooked_hashtag[:href]).to eq("#{Discourse.base_url}#{tag.url}")
-    within cooked_hashtag do
-      has_css?("svg.d-icon-tag")
-    end
+    expect(cooked_hashtag["outerHTML"].squish).to eq(<<~HTML.chomp)
+      <a class=\"hashtag-cooked\" href=\"#{tag.url}\" data-type=\"tag\" data-slug=\"cooltag\" tabindex=\"-1\"><span><svg class=\"fa d-icon d-icon-tag svg-icon svg-node\"><use href=\"#tag\"></use></svg>cooltag</span></a>
+      HTML
   end
 
   it "cooks the hashtags for tag and category correctly serverside when the post is saved to the database" do
@@ -62,15 +62,12 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
     within topic_page.post_by_number(2) do
       cooked_hashtags = page.all(".hashtag-cooked", count: 2)
 
-      expect(cooked_hashtags[0][:href]).to eq("#{Discourse.base_url}#{category.url}")
-      expect(cooked_hashtags[1][:href]).to eq("#{Discourse.base_url}#{tag.url}")
-
-      within cooked_hashtags[0] do
-        has_css?("svg.d-icon-folder")
-      end
-      within cooked_hashtags[1] do
-        has_css?("svg.d-icon-tag")
-      end
+      expect(cooked_hashtags[0]["outerHTML"]).to eq(<<~HTML.chomp)
+      <a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"cool-cat\"><span><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg>Cool Category</span></a>
+      HTML
+      expect(cooked_hashtags[1]["outerHTML"]).to eq(<<~HTML.chomp)
+      <a class=\"hashtag-cooked\" href=\"#{tag.url}\" data-type=\"tag\" data-slug=\"cooltag\"><span><svg class=\"fa d-icon d-icon-tag svg-icon svg-node\"><use href=\"#tag\"></use></svg>cooltag</span></a>
+      HTML
     end
   end
 end

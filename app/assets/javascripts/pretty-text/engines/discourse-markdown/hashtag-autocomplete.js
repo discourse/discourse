@@ -2,7 +2,7 @@
 // into account mixed contexts -- for instance, a chat quote inside a post
 // or a post quote inside a chat message, so hashtagTypesInPriorityOrder may
 // not provide an accurate lookup for hashtags without a ::type suffix in those
-// cases.
+// cases if there are conflcting types of resources with the same slug.
 
 function addHashtag(buffer, matches, state) {
   const options = state.md.options.discourse;
@@ -20,6 +20,8 @@ function addHashtag(buffer, matches, state) {
       options.hashtagTypesInPriorityOrder
     );
 
+  // NOTE: When changing the HTML structure here, you must also change
+  // it in the placeholder HTML code inside lib/hashtag-autocomplete, and vice-versa.
   let token;
   if (result) {
     token = new state.Token("link_open", "a", 1);

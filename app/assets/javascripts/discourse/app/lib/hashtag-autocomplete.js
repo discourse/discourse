@@ -214,16 +214,12 @@ function _replaceSeenHashtagPlaceholder(
   matchingSeenHashtag
 ) {
   // NOTE: When changing the HTML structure here, you must also change
-  // it in the hashtag-autoocomplete markdown rule.
+  // it in the hashtag-autocomplete markdown rule, and vice-versa.
   const link = document.createElement("a");
-  link.href = matchingSeenHashtag.url;
   link.classList.add("hashtag-cooked");
+  link.href = matchingSeenHashtag.url;
   link.dataset.type = type;
-  link.innerHTML = `<span>
-    <svg class="fa d-icon d-icon-${matchingSeenHashtag.icon} svg-icon sgv-node">
-      <use href="#${matchingSeenHashtag.icon}"></use>
-    </svg>
-    ${matchingSeenHashtag.text}
-  </span>`;
+  link.dataset.slug = matchingSeenHashtag.slug;
+  link.innerHTML = `<span><svg class="fa d-icon d-icon-${matchingSeenHashtag.icon} svg-icon svg-node"><use href="#${matchingSeenHashtag.icon}"></use></svg>${matchingSeenHashtag.text}</span>`;
   hashtagSpan.replaceWith(link);
 }
