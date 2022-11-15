@@ -23,6 +23,10 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     return this.args.filterByTypes;
   }
 
+  get allNotifications() {
+    return !this.filterByTypes;
+  }
+
   get dismissTypes() {
     return null;
   }
@@ -84,9 +88,23 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     const content = [];
     const data = await ajax("/notifications", { data: params });
 
-    const notifications = await Notification.initializeNotifications(
+    let notifications = await Notification.initializeNotifications(
       data.notifications
     );
+    // mark likes as read on all notifications list
+    if (this.allNotifications) {
+      notifications = notifications.map((notification) => {
+        if (
+          [
+            this.site.notification_types["liked"],
+            this.site.notification_types["liked_consolidated"],
+          ].includes(notification.notification_type)
+        ) {
+          notification.read = true;
+        }
+        return notification;
+      });
+    }
 
     const reviewables = data.pending_reviewables?.map((r) =>
       UserMenuReviewable.create(r)
