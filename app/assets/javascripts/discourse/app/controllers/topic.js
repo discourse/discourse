@@ -611,6 +611,10 @@ export default Controller.extend(bufferedProperty("model"), {
 
     // Post related methods
     replyToPost(post) {
+      if (this.currentUser) {
+        this.currentUser.hideUserTipForever("post_menu");
+      }
+
       const composerController = this.composer;
       const topic = post ? post.get("topic") : this.model;
       const quoteState = this.quoteState;

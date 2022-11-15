@@ -612,6 +612,7 @@ export default createWidget("topic-timeline", {
       contentText: I18n.t("user_tips.topic_timeline.content"),
 
       reference: document.querySelector("div.timeline-scrollarea-wrapper"),
+      appendTo: document.querySelector("div.topic-timeline"),
 
       placement: "left",
     });

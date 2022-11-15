@@ -44,6 +44,7 @@ import { cancel } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { isTesting } from "discourse-common/config/environment";
 import {
+  hideAllUserTips,
   hideUserTip,
   showNextUserTip,
   showUserTip,
@@ -1101,8 +1102,10 @@ const User = RestModel.extend({
     }
 
     if (!userTips[options.id]) {
-      // eslint-disable-next-line no-console
-      console.warn("Cannot show user tip with type =", options.id);
+      if (!isTesting()) {
+        // eslint-disable-next-line no-console
+        console.warn("Cannot show user tip with type =", options.id);
+      }
       return;
     }
 
@@ -1142,7 +1145,7 @@ const User = RestModel.extend({
         seenUserTips.push(userTips[userTipId]);
       }
     } else {
-      Object.keys(userTips).forEach(hideUserTip);
+      hideAllUserTips();
       seenUserTips = [-1];
     }
 

@@ -1838,6 +1838,18 @@ en:
         title: "Topic timeline"
         content: "Scroll quickly through a post using the topic timeline."
 
+      post_menu:
+        title: "Post menu"
+        content: "See how else you can interact with the post by clicking the three dots!"
+
+      topic_notification_levels:
+        title: "You are now following this topic"
+        content: "Look for this bell to adjust your notification preferences for specific topics or whole categories."
+
+      suggested_topics:
+        title: "Keep reading!"
+        content: "Here are some topics we think you might like to read next."
+
     loading: "Loading..."
     errors:
       prev_page: "while trying to load"
