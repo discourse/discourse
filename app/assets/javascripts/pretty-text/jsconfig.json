@@ -5,6 +5,7 @@
     "paths": {
       "pretty-text/*": ["./addon/*"],
       "discourse/*": ["../discourse/app/*"],
+      "discourse/tests/*": ["../discourse/tests/*"],
       "discourse-common/*": ["../discourse-common/addon/*"]
     }
   },

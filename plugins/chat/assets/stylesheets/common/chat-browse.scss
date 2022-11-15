@@ -1,6 +1,9 @@
 .chat-browse-view {
   position: relative;
-  height: calc(100vh - var(--header-offset));
+  height: calc(100vh - var(--header-offset) - var(--chat-header-offset));
+  padding-top: 1em;
+  padding-bottom: 41px;
+  box-sizing: border-box;
   overflow-y: scroll;
   @include chat-scrollbar(var(--secondary));
 
@@ -12,7 +15,6 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    margin-bottom: 1em;
 
     .new-channel-btn {
       margin-left: auto;
@@ -25,7 +27,7 @@
   }
 
   &__content_wrapper {
-    margin: 2rem 0 1rem 1rem;
+    margin: 2rem 0 0 1rem;
     box-sizing: border-box;
 
     @include breakpoint(tablet) {

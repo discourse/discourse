@@ -30,6 +30,7 @@ export function showUserTip(options) {
 
     arrow: iconHTML("tippy-rounded-arrow"),
     placement: options.placement,
+    appendTo: options.appendTo,
 
     // It often happens for the reference element to be rerendered. In this
     // case, tippy must be rerendered too. Having an animation means that the
@@ -77,6 +78,15 @@ export function hideUserTip(userTipId) {
     instance.destroy();
   }
   delete instances[userTipId];
+
+  const index = queue.findIndex((userTip) => userTip.id === userTipId);
+  if (index > -1) {
+    queue.splice(index, 1);
+  }
+}
+
+export function hideAllUserTips() {
+  Object.keys(instances).forEach(hideUserTip);
 }
 
 function addToQueue(options) {
