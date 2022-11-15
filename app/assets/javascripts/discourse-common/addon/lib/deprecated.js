@@ -5,14 +5,14 @@ const disabledDeprecations = new Set();
  * Display a deprecation warning with the provided message. The warning will be prefixed with the theme/plugin name
  * if it can be automatically determined based on the current stack.
  * @param {String} msg The deprecation message
- * @param {Object} options
+ * @param {Object} [options] Deprecation options
  * @param {String} [options.id] A unique identifier for this deprecation. This should be namespaced by dots (e.g. discourse.my_deprecation)
  * @param {String} [options.since] The Discourse version this deprecation was introduced in
  * @param {String} [options.dropFrom] The Discourse version this deprecation will be dropped in. Typically one major version after `since`
  * @param {String} [options.url] A URL which provides more detail about the deprecation
  * @param {boolean} [options.raiseError] Raise an error when this deprecation is triggered. Defaults to `false`
  */
-export default function deprecated(msg, options) {
+export default function deprecated(msg, options = {}) {
   const { id, since, dropFrom, url, raiseError } = options;
 
   if (id && disabledDeprecations.has(id)) {
@@ -34,10 +34,6 @@ export default function deprecated(msg, options) {
   }
   msg = msg.join(" ");
 
-  if (raiseError) {
-    throw msg;
-  }
-
   let consolePrefix = "";
   if (window.Discourse) {
     // This module doesn't exist in pretty-text/wizard/etc.
@@ -45,9 +41,13 @@ export default function deprecated(msg, options) {
       require("discourse/lib/source-identifier").consolePrefix() || "";
   }
 
-  console.warn(consolePrefix, msg); //eslint-disable-line no-console
-
   handlers.forEach((h) => h(msg, options));
+
+  if (raiseError) {
+    throw msg;
+  }
+
+  console.warn(...[consolePrefix, msg].filter(Boolean)); //eslint-disable-line no-console
 }
 
 /**
@@ -65,10 +65,13 @@ export function registerDeprecationHandler(callback) {
  * @param {function} callback The function to call while deprecations are silenced. Can be asynchronous.
  */
 export async function withSilencedDeprecations(deprecationIds, callback) {
+  const idArray = [].concat(deprecationIds);
+  let result;
   try {
-    Array(deprecationIds).forEach((id) => disabledDeprecations.add(id));
-    return await callback();
+    idArray.forEach((id) => disabledDeprecations.add(id));
+    result = callback();
   } finally {
-    Array(deprecationIds).forEach((id) => disabledDeprecations.delete(id));
+    idArray.forEach((id) => disabledDeprecations.delete(id));
+    return result;
   }
 }
