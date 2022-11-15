@@ -241,7 +241,6 @@ et:
       like_count: "Meeldimisi"
       topic_count: "Teemad"
       post_count: "Postitused"
-      user_count: "Kasutajaid"
       active_user_count: "Aktiivsed kasutajad"
       contact: "Võta meiega ühendust"
       contact_info: "Kriitilise vea või edasilükkamatu probleemi korral võta palun meiega ühendust aadressil %{contact_info}."
@@ -278,7 +277,6 @@ et:
       remove: "Eemalda"
       remove_confirmation: "Oled kindel, et soovid selle mustandi kustutada?"
       new_topic: "Uus teema mustand"
-      topic_reply: "Mustandi vastus"
     topic_count_categories:
       one: "Vaata %{count} uut või uuendatud teemat"
       other: "Vaata %{count} uut või uuendatud teemat"
@@ -1632,9 +1630,6 @@ et:
       move_to_inbox:
         title: "Liiguta Postkasti"
         help: "Liiguta sõnum tagasi Postkasti"
-      edit_message:
-        help: "Muuda sõnumi esimest postitust"
-        title: "Muuda"
       defer:
         help: "Märgi mitteloetuks"
         title: "Lükka edasi"
@@ -2163,8 +2158,6 @@ et:
       this_year: "sel aastal"
       position: "Asukoht kategooriate lehel:"
       default_position: "Vaikepositsioon"
-      position_disabled: "Foorumid kuvatakse aktiivsuse järjekorras. Foorumite järjestuse seadistamiseks loeteludes,"
-      position_disabled_click: 'aktiveeri säte "foorumite positsioonid fikseeritud".'
       minimum_required_tags: "Minimaalne nõutud siltide arv teemas:"
       parent: "Emafoorum"
       num_auto_bump_daily: "Avatud teemade arv, mida iga päev automaatselt tõsta:"

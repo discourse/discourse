@@ -348,7 +348,6 @@ fr:
       retention_reminders:
         public: "L'historique du canal est conservé pendant %{days} jours."
         dm: "L'historique des discussions privées est conservé pendant %{days} jours."
-      topic_button_title: "Discussion"
       flags:
         off_topic: "Ce message n'est pas pertinent pour la discussion en cours telle que définie par le titre du canal et devrait probablement être déplacé ailleurs."
         inappropriate: "Ce message contient du contenu qu'une personne raisonnable considérerait comme offensant, abusif ou contraire à nos <a href=\"%{basePath}/guidelines\">consignes communautaires</a>."

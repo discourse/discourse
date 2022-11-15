@@ -257,7 +257,6 @@ gl:
       like_count: "Gústames"
       topic_count: "Temas"
       post_count: "Publicacións"
-      user_count: "Usuarios"
       active_user_count: "Usuarios activos"
       contact: "Contacte connosco"
       contact_info: "No caso dunha incidencia crítica ou asunto urxente que afecte este sitio, contacte connosco en %{contact_info}."
@@ -299,7 +298,6 @@ gl:
       remove: "Retirar"
       remove_confirmation: "Confirma que quere retirar este borrador?"
       new_topic: "Borrador de novo tema"
-      topic_reply: "Borrador de resposta"
       abandon:
         confirm: "Ten un borrador en curso neste tema. Que lle gustaría facer con iso?"
         yes_value: "Desbotar"
@@ -2190,9 +2188,6 @@ gl:
       move_to_inbox:
         title: "Mover á caixa de entrada"
         help: "Mover mensaxes á caixa de entrada"
-      edit_message:
-        help: "Editar a primeira publicación da mensaxe"
-        title: "Editar"
       defer:
         help: "Marcar como non lido"
         title: "Adiar"
@@ -2844,8 +2839,6 @@ gl:
       this_year: "este ano"
       position: "Posición na páxina de categorías:"
       default_position: "Posición predeterminada"
-      position_disabled: "As categorías presentaranse en orde de actividade. Para controlar a orde das categorías nas listaxes, "
-      position_disabled_click: 'activar o axuste «posición das categorías fixadas».'
       minimum_required_tags: "Número mínimo de etiquetas requiridas nun tema:"
       parent: "Categoría primaria"
       num_auto_bump_daily: "Número de temas abertos que se promoven automaticamente cada día:"

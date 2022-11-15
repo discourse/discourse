@@ -47,6 +47,9 @@ pl_PL:
         open: "Otwórz"
       dm_title:
         multi_user_truncated: "%{users} i %{leftover} innych"
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "zawiera znaki inne niż ascii"
     bookmarkable:
       notification_title: "wiadomość w %{channel_name}"
     personal_chat: "czat osobisty"

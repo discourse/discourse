@@ -2001,7 +2001,7 @@ it:
     delete_merged_stub_topics_after_days: "Numero di giorni di attesa prima di eliminare automaticamente gli argomenti stub completamente uniti. Impostare a 0 per non eliminare mai gli argomenti stub."
     bootstrap_mode_min_users: "Numero minimo di utenti richiesto per disabilitare la modalità bootstrap (imposta a 0 per disattivare)"
     prevent_anons_from_downloading_files: "Impedisci agli utenti anonimi di scaricare allegati."
-    secure_media: 'Opzione DEPRECATA: utilizzare al suo posto l''impostazione secure_uploads, verrà rimossa in Discourse 3.0.'
+    secure_media: "Opzione DEPRECATA: utilizzare al suo posto l'impostazione secure_uploads, verrà rimossa in Discourse 3.0."
     secure_uploads: 'Limita l''accesso a TUTTI i caricamenti (immagini, video, audio, testo, pdf, zip, ecc.). Se l''opzione “accesso richiesto” è attivata, solo gli utenti registrati possono accedere ai caricamenti. In caso contrario, l''accesso sarà limitato solo per i media caricati in messaggi privati e categorie private. ATTENZIONE: Questa impostazione è complessa e richiede una profonda competenza amministrativa. Per maggiori dettagli visita <a target="_blank" href="https://meta.discourse.org/t/-/140017">l''argomento sui caricamenti sicuri su Meta</a>.'
     secure_media_allow_embed_images_in_emails: "Opzione DEPRECATA: utilizzare al suo posto l'impostazione secure_uploads_allow_embed_images_in_emails, sarà rimossa in Discourse 3.0."
     secure_uploads_allow_embed_images_in_emails: "Consente l'integrazione di immagini sicure che normalmente verrebbero oscurate nelle e-mail, se la loro dimensione è inferiore al valore dell'i'impostazione 'dimensione max in kb immagini da integrare nelle email per caricamenti protetti'."

@@ -102,7 +102,7 @@ zh_CN:
       mention_warning:
         cannot_see:
           other: "%{usernames} 无法访问此频道且未收到通知。"
-        dismiss: "关闭"
+        dismiss: "忽略"
         invitations_sent:
           other: "已发送邀请"
         invite: "邀请加入频道"
@@ -336,7 +336,6 @@ zh_CN:
       retention_reminders:
         public: "频道历史记录保留 %{days} 天。"
         dm: "个人聊天记录保留 %{days} 天。"
-      topic_button_title: "聊天"
       flags:
         off_topic: "此消息与频道标题定义的当前讨论无关，可能应当移至其他地方。"
         inappropriate: "此消息包含理性的人会认为具有攻击性、辱骂性或违反<a href=\"%{basePath}/guidelines\">我们的社区准则</a>的内容。"

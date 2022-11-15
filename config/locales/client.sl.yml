@@ -306,7 +306,6 @@ sl:
       like_count: "Všečki"
       topic_count: "Teme"
       post_count: "Prispevki"
-      user_count: "Uporabniki"
       active_user_count: "Aktivni uporabniki"
       contact: "Pišite nam"
       contact_info: "V primeru kritične napake na strani ali nujne zadeve nam pišite na %{contact_info}."
@@ -344,7 +343,6 @@ sl:
       remove: "Odstrani"
       remove_confirmation: "Ali ste prepričani da hočete izbrisati ta osnutek?"
       new_topic: "Nov osnutek teme"
-      topic_reply: "Osnutek odgovora"
       abandon:
         yes_value: "Zavrzi"
     topic_count_categories:
@@ -2194,9 +2192,6 @@ sl:
       move_to_inbox:
         title: "Prestavi v Prejeto"
         help: "Prestavi sporočilo nazaj v Prejeto"
-      edit_message:
-        help: "Uredi prvi prispevek sporočila"
-        title: "Uredi"
       defer:
         help: "Označi kot neprebrano"
         title: "Preloži"
@@ -2842,8 +2837,6 @@ sl:
       this_year: "to leto"
       position: "Položaj na strani kategorij:"
       default_position: "Privzeta pozicija"
-      position_disabled: "Kategorije bodo razvrščene glede na aktivnost. Za kontrolo razvrščanja kategorij na seznamih, "
-      position_disabled_click: 'omogoči nastavitev "fiksnih položajev kategorij"'
       minimum_required_tags: "Najmanjše število oznak zahtevanih na temi:"
       parent: "Nadrejena kategorija"
       num_auto_bump_daily: "Število odprtih tem, ki se samodejno izpostavijo vsak dan:"

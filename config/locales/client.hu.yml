@@ -293,7 +293,6 @@ hu:
       like_count: "Kedvelés"
       topic_count: "Téma"
       post_count: "Bejegyzés"
-      user_count: "Felhasználó"
       active_user_count: "Aktív felhasználó"
       contact: "Kapcsolat"
       contact_info: "A webhellyel kapcsolatos sürgős vagy kritikus probléma esetén lépjen velünk kapcsolatba a következő elérhetőségen: %{contact_info}."
@@ -350,7 +349,6 @@ hu:
       remove_confirmation: "Biztos, hogy törli ezt a vázlatot?"
       new_topic: "Új témavázlat"
       new_private_message: "Új személyesüzenet-vázlat"
-      topic_reply: "Választervezet"
       abandon:
         confirm: "Van egy folyamatban lévő vázlata ehhez a témához. Mit szeretne vele tenni?"
         yes_value: "Elvetés"
@@ -2475,9 +2473,6 @@ hu:
       move_to_inbox:
         title: "Áthelyezés a bejövő üzenetek közé"
         help: "Üzenet áthelyezése a Beérkezett üzenetek közé"
-      edit_message:
-        help: "Az üzenet első bejegyzésének szerkesztése"
-        title: "Szerkesztés"
       defer:
         help: "Megjelölés olvasatlanként"
         title: "Elhalasztás"
@@ -2999,7 +2994,6 @@ hu:
       this_year: "ez az év"
       position: "Kategóriák oldalon elfoglalt pozíció:"
       default_position: "Alapértelmezett pozíció"
-      position_disabled: "A kategóriák aktivitási sorrendben jelennek meg. A kategóriák sorrendjének listákban való szabályzásához,"
       parent: "Szülő kategória"
       num_auto_bump_daily: "A naponta automatikusan előrehozandó nyitott témák száma:"
       navigate_to_first_post_after_read: "A témák elolvasása után navigáljon az első hozzászóláshoz"

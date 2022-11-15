@@ -8,200 +8,200 @@ sr:
   js:
     number:
       format:
-        separator: "."
-        delimiter: ","
+        separator: ","
+        delimiter: "."
       human:
         storage_units:
           format: "%n %u"
           units:
             byte:
-              one: Bajt
-              few: Bajta
-              other: Bajta
+              one: Бајт
+              few: Бајта
+              other: Бајтова
             gb: GB
             kb: KB
             mb: MB
             tb: TB
       short:
-        thousands: "%{number}k"
-        millions: "%{number}M"
+        thousands: "%{number} хиљ."
+        millions: "%{number} мил."
     dates:
-      time: "HH:mm"
-      time_with_zone: "Hh:mm (z)"
-      time_short_day: "dd, Hh:mm"
+      time: "H.mm"
+      time_with_zone: "HH.mm (z)"
+      time_short_day: "ddd, H.mm"
       timeline_date: "MMM YYYY"
-      long_no_year: "D MMM, HH:Mm"
-      long_no_year_no_time: "D MMM"
-      full_no_year_no_time: "MMMM Do"
-      long_with_year: "D MMM YYYY HH:mm"
-      long_with_year_no_time: "D MMM YYYY"
-      full_with_year_no_time: "MMMM Do, YYYY"
-      long_date_with_year: "MMM D, 'YY LT"
-      long_date_without_year: "MMM D, LT"
-      long_date_with_year_without_time: "MMM D, 'YY"
-      long_date_without_year_with_linebreak: "MMM D <br/>LT"
-      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
-      wrap_ago: "%{date} ranije"
+      long_no_year: "D. MMM, H.mm"
+      long_no_year_no_time: "D. MMM"
+      full_no_year_no_time: "D. MMMM"
+      long_with_year: "D. MMM YYYY H.mm"
+      long_with_year_no_time: "D. MMM YYYY"
+      full_with_year_no_time: "D. MMMM YYYY"
+      long_date_with_year: "D. MMM ’YY LT"
+      long_date_without_year: "D. MMM LT"
+      long_date_with_year_without_time: "D. MMM ’YY"
+      long_date_without_year_with_linebreak: "D. MMM <br/>LT"
+      long_date_with_year_with_linebreak: "D. MMM ’YY <br/>LT"
+      wrap_ago: "пре %{date}"
       wrap_on: "дана %{date}"
       tiny:
-        half_a_minute: "< 1m"
+        half_a_minute: "< 1 мин."
         less_than_x_seconds:
-          one: "< %{count} s"
-          few: "< %{count} s"
-          other: "< %{count} s"
+          one: "< %{count} сек."
+          few: "< %{count} сек."
+          other: "< %{count} сек."
         x_seconds:
-          one: "%{count} sek."
-          few: "%{count} sek."
-          other: "%{count} sek."
+          one: "%{count} сек."
+          few: "%{count} сек."
+          other: "%{count} сек."
         less_than_x_minutes:
-          one: "< %{count}m"
-          few: "< %{count}m"
-          other: "< %{count}m"
+          one: "< %{count} мин."
+          few: "< %{count} мин."
+          other: "< %{count} мин."
         x_minutes:
-          one: "%{count} min"
-          few: "%{count} min"
-          other: "%{count} min"
+          one: "%{count} мин."
+          few: "%{count} мин."
+          other: "%{count} мин."
         about_x_hours:
-          one: "%{count} sat"
-          few: "%{count} sata"
-          other: "%{count} sati"
+          one: "%{count} ч."
+          few: "%{count} ч."
+          other: "%{count} ч."
         x_days:
-          one: "%{count} dan"
-          few: "%{count} dana"
-          other: "%{count} dana"
+          one: "%{count} д."
+          few: "%{count} д."
+          other: "%{count} д."
         x_months:
-          one: "%{count} mes"
-          few: "%{count}mes"
-          other: "%{count}mes"
+          one: "%{count} мес."
+          few: "%{count} мес."
+          other: "%{count} мес."
         about_x_years:
-          one: "%{count} godina"
-          few: "%{count} godine"
-          other: "%{count} godina"
+          one: "%{count} год."
+          few: "%{count} год."
+          other: "%{count} год."
         over_x_years:
-          one: "> %{count} godina"
-          few: "> %{count} godine"
-          other: "> %{count} godina"
+          one: "> %{count} год."
+          few: "> %{count} год."
+          other: "> %{count} год."
         almost_x_years:
-          one: "%{count} godina"
-          few: "%{count} godine"
-          other: "%{count} godina"
-        date_month: "D MMM"
-        date_year: "MMM 'YY"
+          one: "%{count} год."
+          few: "%{count} год."
+          other: "%{count} год."
+        date_month: "D. MMM"
+        date_year: "MMM ’YY"
       medium:
         less_than_x_minutes:
-          one: "manje od %{count} min"
-          few: "manje od %{count} min"
-          other: "manje od %{count} min"
+          one: "мање од %{count} мин."
+          few: "мање од %{count} мин."
+          other: "мање од %{count} мин."
         x_minutes:
-          one: "%{count} min"
-          few: "%{count} min"
-          other: "%{count} min"
+          one: "%{count} мин."
+          few: "%{count} мин."
+          other: "%{count} мин."
         x_hours:
-          one: "%{count} sat"
-          few: "%{count} sata"
-          other: "%{count} sati"
+          one: "%{count} сат"
+          few: "%{count} сата"
+          other: "%{count} сати"
         about_x_hours:
-          one: "oko %{count} sat"
-          few: "oko %{count} sati"
-          other: "oko %{count} sati"
+          one: "око %{count} сат"
+          few: "око %{count} сата"
+          other: "око %{count} сати"
         x_days:
-          one: "%{count} dan"
-          few: "%{count} dana"
-          other: "%{count} dana"
+          one: "%{count} дан"
+          few: "%{count} дана"
+          other: "%{count} дана"
         x_months:
-          one: "%{count} mesec"
-          few: "%{count} meseca"
-          other: "%{count} meseci"
+          one: "%{count} месец"
+          few: "%{count} месеца"
+          other: "%{count} месеци"
         about_x_years:
-          one: "približno %{count} godinu"
-          few: "oko %{count} godine"
-          other: "oko %{count} godina"
-        date_year: "D MMM 'YY"
+          one: "око %{count} године"
+          few: "око %{count} године"
+          other: "око %{count} година"
+        date_year: "D. MMM ’YY"
       medium_with_ago:
         x_minutes:
-          one: "pre %{count} minut"
-          few: "pre %{count} minuta"
-          other: "pre %{count} minuta"
+          one: "%{count} мин. раније"
+          few: "%{count} мин. раније"
+          other: "%{count} мин. раније"
         x_hours:
-          one: "pre %{count} sat"
-          few: "pre %{count} sata"
-          other: "pre %{count} sati"
+          one: "%{count} сат раније"
+          few: "%{count} сата раније"
+          other: "%{count} сати раније"
         x_days:
-          one: "pre %{count} dan"
-          few: "pre %{count} dana"
-          other: "pre %{count} dana"
+          one: "%{count} дан раније"
+          few: "%{count} дана раније"
+          other: "%{count} дана раније"
       later:
         x_days:
-          one: "%{count} dan kasnije"
-          few: "%{count} dana kasnije"
-          other: "%{count} dana kasnije"
+          one: "%{count} дан касније"
+          few: "%{count} дана касније"
+          other: "%{count} дана касније"
         x_months:
-          one: "%{count} mesec kasnije"
-          few: "%{count} meseca kasnije"
-          other: "%{count} meseci kasnije"
+          one: "%{count} месец касније"
+          few: "%{count} месеца касније"
+          other: "%{count} месеци касније"
         x_years:
-          one: "%{count} godina kasnije"
-          few: "%{count} godine kasnije"
-          other: "%{count} godina kasnije"
-      previous_month: "Prethodni mesec"
-      next_month: "Sledeći mesec"
-      placeholder: datum
+          one: "%{count} година касније"
+          few: "%{count} године касније"
+          other: "%{count} година касније"
+      previous_month: "Претходни месец"
+      next_month: "Следећи месец"
+      placeholder: датум
       from_placeholder: "од датума"
       to_placeholder: "до датума"
     share:
-      topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
-      close: "zatvori"
-      twitter: "Podeli na Twitteru"
-      facebook: "Podeli na Facebooku"
-      email: "Pošalji putem e-pošte"
-      url: "Kopiraj i podeli link"
+      topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
+      close: "затвори"
+      twitter: "Подели на Твитеру"
+      facebook: "Подели на Фејсбуку"
+      email: "Пошаљи е-поштом"
+      url: "Копирај и подели линк"
     action_codes:
-      public_topic: "objavi ovu temu javno %{when}"
-      private_topic: "je napravio/la ovu temu kao privatnu poruku %{when}"
-      split_topic: "podeli ovu temu %{when}"
-      invited_user: "pozvan %{who} %{when}"
-      invited_group: "pozvan%{who}%{when}"
-      user_left: "%{who} je sam sebe obrisao iz ove poruke %{when}"
-      removed_user: "uklonjen %{who} %{when}"
-      removed_group: "uklonjen%{who}%{when}"
-      autobumped: "automatski bumpovano %{when}"
+      public_topic: "објављује ову тему %{when}"
+      private_topic: "претвара ову тему у приватну поруку %{when}"
+      split_topic: "раздваја ову тему %{when}"
+      invited_user: "позива корисника %{who} %{when}"
+      invited_group: "позива групу %{who} %{when}"
+      user_left: "%{who} напушта овај разговор %{when}"
+      removed_user: "уклања корисника %{who} %{when}"
+      removed_group: "уклања групу %{who} %{when}"
+      autobumped: "аутоматски ставља на врх %{when}"
       autoclosed:
-        enabled: "zatvoreno %{when}"
-        disabled: "otvoreno %{when}"
+        enabled: "затвара %{when}"
+        disabled: "отвара %{when}"
       closed:
-        enabled: "zatvoreno %{when}"
-        disabled: "otvoreno %{when}"
+        enabled: "затвара %{when}"
+        disabled: "отвара %{when}"
       archived:
-        enabled: "zapakovano %{when}"
-        disabled: "raspakovano %{when}"
+        enabled: "архивира %{when}"
+        disabled: "деархивира %{when}"
       pinned:
-        enabled: "prikačen%{when}"
-        disabled: "otkačen%{when}"
+        enabled: "закачи %{when}"
+        disabled: "откачи %{when}"
       pinned_globally:
-        enabled: "Globalno prikačeno%{when}"
-        disabled: "otkačen%{when}"
+        enabled: "глобално закачи %{when}"
+        disabled: "откачи %{when}"
       visible:
-        enabled: "ulistano %{when}"
-        disabled: "izlistano %{when}"
+        enabled: "укључује %{when}"
+        disabled: "искључује %{when}"
       banner:
-        enabled: "je ovo načinio banerom%{when}. Pojavljivaće se na vrhu svake stranice dok ga korisnik ne ukloni."
-        disabled: "je uklonio ovaj baner%{when}. Više se neće pojavljivati na vrhu svake stranice."
-      forwarded: "je prosledio/la navedenu e-poštu"
-    topic_admin_menu: "opcije teme"
-    emails_are_disabled: "Sva odlazeća epošta je onemogućena globalno od strane administratora. Ni jedna notifikacija neće biti poslata."
+        enabled: "прави транспарент %{when}. Транспарент ће бити приказан на врху сваке странице док га корисник не одбаци."
+        disabled: "уклања овај транспарент %{when}. Транспарент више неће бити приказан на врху сваке странице."
+      forwarded: "прослеђује наведену е-поруку"
+    topic_admin_menu: "радње око теме"
+    emails_are_disabled: "Администратор је глобално онемогућио одлазну е-пошту. Ниједно обавештење неће бити послато."
     software_update_prompt:
-      message: "Ažurirali smo ovaj sajt, <span>molimo vas rifrešujte</span>, u suprotnom može doći do nepredviđenih rezultata."
+      message: "Ажурирали смо сајт. <span>Освежите страницу</span> да бисте избегли непријатности."
       dismiss: "Одбаци"
-    bootstrap_mode_disabled: "Bootstrap mod će biti onemogućen u roku od 24 časa."
+    bootstrap_mode_disabled: "Режим покретања ће бити искључен у року од 24 сата."
     themes:
-      default_description: "zadato"
+      default_description: "Подразумевано"
     s3:
       regions:
-        ap_northeast_1: "Azija Pacifik (Tokio)"
-        ap_northeast_2: "Azija Pacifik (Seul)"
-        ap_east_1: "Azijsko-pacifički region (Hong Kong)"
-        ap_south_1: "Azija Pacifik (Mumbai)"
-        ap_southeast_1: "Azija Pacifik (Singapur)"
+        ap_northeast_1: "Азија-Пацифик (Токио)"
+        ap_northeast_2: "Азија-Пацифик (Сеул)"
+        ap_east_1: "Азија-Пацифик (Хонгконг)"
+        ap_south_1: "Азија-Пацифик (Мумбај)"
+        ap_southeast_1: "Азија-Пацифик (Сингапур)"
         ap_southeast_2: "Azija Pacifik (Sidnej)"
         ca_central_1: "Kanada (centralna)"
         cn_north_1: "Kina (Peking)"
@@ -292,7 +292,6 @@ sr:
       like_count: "Sviđanja"
       topic_count: "Teme"
       post_count: "Poruka"
-      user_count: "Korisnici"
       active_user_count: "Aktivni korisnici"
       contact: "Kontaktirajte nas"
       contact_info: "U trenutku kritičnog problema ili hitnog slučaja koji utiče na sajt, molimo vas kontaktirajte nas na %{contact_info}."
@@ -337,7 +336,6 @@ sr:
       remove_confirmation: "Da li ste sigurni da želite da uklonite ovaj nacrt?"
       new_topic: "Novi nacrt teme"
       new_private_message: "Nacrt nove privatne poruke"
-      topic_reply: "Nacrt odgovora"
       abandon:
         confirm: "Imate nacrt za ovu temu. Sta želite da učinite sa njim?"
         yes_value: "Odbaci"
@@ -1232,8 +1230,6 @@ sr:
       create_long: "Otvori novu Temu"
       archive_message:
         title: "Arhiviraj"
-      edit_message:
-        title: "Izmeni"
       defer:
         title: "Odloži"
       list: "Teme"
@@ -1528,8 +1524,6 @@ sr:
       review_group_name: "ime grupe"
       this_year: "ove godine"
       default_position: "Zadana pozicija"
-      position_disabled: "Kategorije će u nizu biti prikazivane po nivou aktivnosti. Za kontrolu redosleda kategorija u listi,"
-      position_disabled_click: 'omogućite postavku "fiksiranje pozicija kategorija" u podešavanjima.'
       parent: "Nadkategorija"
       notifications:
         watching:

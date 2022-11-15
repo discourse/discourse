@@ -215,7 +215,6 @@ sq:
       like_count: "Pëlqime"
       topic_count: "Tema"
       post_count: "Postime"
-      user_count: "Anëtarët"
       active_user_count: "Përdorues Aktivë"
       contact: "Na kontaktoni"
       contact_info: "Në rast të një problemi madhor ose të një çështjeje urgjente që prek faqen, ju lutemi të kontaktoni %{contact_info}."
@@ -1210,8 +1209,6 @@ sq:
       move_to_inbox:
         title: "Lëviz në Inbox"
         help: "Riktheje mesazhin në inbox"
-      edit_message:
-        title: "Redakto"
       defer:
         title: "Shty"
       list: "Temat"
@@ -1589,8 +1586,6 @@ sq:
       review_group_name: "emri i grupit"
       this_year: "këtë vit"
       default_position: "Default Position"
-      position_disabled: "Kategoritue do të renditen sipas aktivitetit. Për të kontrolluar renditjen e kategorive nëpër lista, "
-      position_disabled_click: 'aktivizoni rregullimin "pozicione fikse për kategoritë".'
       parent: "Kategoria prind"
       notifications:
         watching:

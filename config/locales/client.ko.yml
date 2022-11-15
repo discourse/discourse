@@ -245,7 +245,6 @@ ko:
       like_count: "좋아요"
       topic_count: "글"
       post_count: "게시물"
-      user_count: "사용자"
       active_user_count: "활성 사용자"
       contact: "문의하기"
       contact_info: "이 사이트에 영향을 미치는 중대하거나 긴급한 문제가 발생한 경우 %{contact_info}으로 문의하세요."
@@ -299,7 +298,6 @@ ko:
       remove_confirmation: "이 초안을 삭제할까요?"
       new_topic: "새 주제 초안"
       new_private_message: "새 개인 메시지 초안"
-      topic_reply: "초안 댓글"
       abandon:
         confirm: "이 주제에 대한 초안이 있습니다. 어떻게 진행할까요?"
         yes_value: "버리기"
@@ -2269,9 +2267,6 @@ ko:
       move_to_inbox:
         title: "받은 편지함으로 이동"
         help: "메시지를 받은 편지함으로 다시 이동"
-      edit_message:
-        help: "메시지의 첫 게시물 편집"
-        title: "편집"
       defer:
         help: "읽지 않음으로 표시"
         title: "연기"
@@ -2927,8 +2922,6 @@ ko:
       this_year: "올해"
       position: "카테고리 페이지에서의 위치:"
       default_position: "디폴트 위치"
-      position_disabled: "카테고리는 활동에 따라서 표시됩니다. 목록 내 카테고리 순서를 제어하려면"
-      position_disabled_click: '''고정 카테고리 위치'' 설정을 활성화하세요.'
       minimum_required_tags: "주제에 필요한 최소 태그 수:"
       default_slow_mode: '이 카테고리의 새 주제에 ''느린 모드''를 활성화합니다.'
       parent: "상위 카테고리"

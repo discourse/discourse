@@ -894,7 +894,7 @@ zh_CN:
     banner:
       title: "横幅话题"
       message:
-        make: "此话题现在是一个横幅。它会出现在每个页面的顶部，直到被用户关闭。"
+        make: "此话题现在是一个横幅。它会出现在每个页面的顶部，直到被用户忽略。"
         remove: "此话题不再是横幅。它将不再显示在每个页面的顶部。"
   unsubscribed:
     title: "已更新电子邮件偏好设置！"
@@ -1908,7 +1908,7 @@ zh_CN:
     suppress_uncategorized_badge: "不在话题列表中显示未分类话题的徽章。"
     header_dropdown_category_count: "标题下拉菜单中可以显示的类别数量。"
     permalink_normalizations: "在匹配永久链接之前应用以下正则表达式，例如：/(topic.*)\\?.*/\\1 将从话题路由中去除查询字符串。格式为正则表达式+字符串。使用 \\1 等访问捕获"
-    global_notice: "向所有访客显示紧急、突发、不可关闭的全局横幅通知，更改为空将隐藏（允许使用 HTML）。"
+    global_notice: "向所有访客显示紧急、突发、不可忽略的全局横幅通知，更改为空将隐藏（允许使用 HTML）。"
     disable_system_edit_notifications: "当 'download_remote_images_to_local' 启用时禁用系统用户的编辑通知。"
     disable_category_edit_notifications: "禁用话题类别编辑通知。"
     disable_tags_edit_notifications: "禁用话题标签编辑通知。"
@@ -1952,7 +1952,7 @@ zh_CN:
     delete_merged_stub_topics_after_days: "在自动删除完全合并的存根话题之前等待的天数。设置为 0 将从不删除存根话题。"
     bootstrap_mode_min_users: "禁用引导模式所需的最小用户数（设置为 0 将禁用）"
     prevent_anons_from_downloading_files: "阻止匿名用户下载附件。"
-    secure_media: '已弃用：改用 secure_uploads 设置，将在 Discourse 3.0 中移除。'
+    secure_media: "已弃用：改用 secure_uploads 设置，将在 Discourse 3.0 中移除。"
     secure_uploads: '限制对所有上传（图片、视频、音频、文本、pdf、zip 等）的访问。如果启用“需要登录”，则只有登录用户才能访问上传。否则，访问将仅限于私信和不公开类别中的媒体上传。警告：此设置比较复杂，需要深入理解管理操作。请参阅 <a target="_blank" href="https://meta.discourse.org/t/-/140017">Meta 安全上传话题</a>以了解详情。'
     secure_media_allow_embed_images_in_emails: "已弃用：使用 secure_uploads_allow_embed_images_in_emails，将在 Discourse 3.0 中移除。"
     secure_uploads_allow_embed_images_in_emails: "如果小于 'secure uploads max email embed image size kb' 设置，则允许嵌入通常会在电子邮件中编辑的安全图片。"
@@ -2052,7 +2052,6 @@ zh_CN:
     enable_sitemap: "为您的站点生成站点地图并将其包含在 robots.txt 文件中。"
     sitemap_page_size: "每个站点地图页面中包含的 URL 数量。最大 50.000"
     enable_user_status: "（实验性）允许用户设置自定义状态消息（表情符号 + 描述）。"
-    enable_onboarding_popups: "（实验性）启用向用户描述关键功能的教育弹出窗口"
     short_title: "短标题将用于用户的主屏幕、启动器或其他空间可能有限的地方。应被限制为 12 个字符。"
     dashboard_hidden_reports: "允许从信息中心隐藏指定报告。"
     dashboard_visible_tabs: "选择可见的信息中心标签页。"
@@ -3108,7 +3107,7 @@ zh_CN:
 
     要退订这些电子邮件，请[点击此处](%{unsubscribe_url})。
   subject_re: "回复："
-  subject_pm: "[PM]"
+  subject_pm: "[私信]"
   email_from: "%{user_name} 通过 %{site_name}"
   email_from_without_site: "%{group_name}"
   user_notifications:

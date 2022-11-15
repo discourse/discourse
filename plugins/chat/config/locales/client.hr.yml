@@ -7,6 +7,9 @@
 hr:
   js:
     admin:
+      site_settings:
+        categories:
+          chat: Čet
       logs:
         staff_actions:
           actions:
@@ -171,7 +174,6 @@ hr:
           title: "Prebaci u postojeću temu"
         new_message:
           title: "Premjestite u novu poruku"
-      topic_button_title: "Čet"
       emoji_picker:
         objects: "Objekti"
         activities: "Aktivnosti"

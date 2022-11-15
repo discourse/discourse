@@ -336,7 +336,6 @@ ja:
       retention_reminders:
         public: "チャンネル履歴は %{days} 日間保持されます。"
         dm: "パーソナルチャット履歴は %{days} 日間保持されます。"
-      topic_button_title: "チャット"
       flags:
         off_topic: "このメッセージは、チャンネルのタイトルで定義された現在のディスカッションとは関係がないため、おそらく別の場所に移動する必要があります。"
         inappropriate: "このメッセージには、合理的な人が攻撃的、虐待的、または<a href=\"%{basePath}/guidelines\">コミュニティーガイドライン</a>に違反すると見なすコンテンツが含まれます。"

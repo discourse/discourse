@@ -278,7 +278,6 @@ sk:
       like_count: "Páči sa mi"
       topic_count: "Témy"
       post_count: "Príspevky"
-      user_count: "Používatelia"
       active_user_count: "Aktívni používatelia"
       contact: "Kontaktujte nás"
       contact_info: "V prípade kritickej chyby alebo naliehavej záležitosti nás prosím konaktujte na %{contact_info}."
@@ -1485,8 +1484,6 @@ sk:
       move_to_inbox:
         title: "Presunúť do schránky"
         help: "Presunúť správu späť do schránky"
-      edit_message:
-        title: "Upraviť"
       defer:
         title: "Odložiť"
       list: "Témy"
@@ -1907,8 +1904,6 @@ sk:
       review_group_name: "názov skupiny"
       this_year: "tento rok"
       default_position: "Predvolená pozícia"
-      position_disabled: "Kategórie budú zobrazené podľa aktivity. Pre možnosť ovládania poradia kategórií v zozname,"
-      position_disabled_click: 'povoľte možnosť "pevné poradie kategórií"'
       parent: "Nadradená kategória"
       notifications:
         watching:

@@ -348,7 +348,6 @@ it:
       retention_reminders:
         public: "La cronologia del canale è conservata per %{days} giorni."
         dm: "La cronologia della chat personale è conservata per %{days} giorni."
-      topic_button_title: "Chat"
       flags:
         off_topic: "Questo messaggio non è rilevante per la discussione in corso in base alla definizione del titolo del canale e probabilmente dovrebbe essere spostato altrove."
         inappropriate: "Questo messaggio ha contenuti che chiunque considererebbe offensivi o ingiuriosi, oppure contiene violazioni delle <a href=\"%{basePath}/guidelines\">nostre linee guida della community</a>."
