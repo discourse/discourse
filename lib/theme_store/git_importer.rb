@@ -108,7 +108,7 @@ class ThemeStore::GitImporter
     args << "clone"
 
     if @branch.present?
-      args.concat(["-b", @branch])
+      args.concat(['--single-branch', "-b", @branch])
     end
 
     args.concat([@url, @temp_folder])
