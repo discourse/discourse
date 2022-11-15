@@ -247,7 +247,9 @@ export default class ChatEmojiPicker extends Component {
       sectionsEmojis(section)[0].focus();
     };
     const currentSection = event.target.closest(".chat-emoji-picker__section");
-    const focusFilter = document.querySelector(".dc-filter-input")?.focus();
+    const focusFilter = () => {
+      document.querySelector(".dc-filter-input")?.focus();
+    };
     const allEmojis = () => [
       ...document.querySelectorAll(
         ".chat-emoji-picker__scrollable-content .emoji"
