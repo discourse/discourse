@@ -2,10 +2,6 @@
   <ChatChannelTitle @channel={{this.channel}} @unreadIndicator={{true}} />
   <ChatChannelMetadata @channel={{this.channel}} @unreadIndicator={{true}} />
 
-  {{#if this.showUserStatus}}
-    <UserStatusMessage @status={{this.channel.chatable.users.firstObject.status}} />
-  {{/if}}
-
   {{#if (and this.options.leaveButton this.channel.isFollowing (not this.site.mobileView))}}
     <ToggleChannelMembershipButton
       @channel={{this.channel}}
