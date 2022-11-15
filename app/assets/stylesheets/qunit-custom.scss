@@ -1,27 +1,14 @@
-// styles for Ember CLI testem environment
-
-:root {
-  --font-family: "Arial";
-}
-
-$primary: #222222 !default;
-$secondary: #ffffff !default;
-$tertiary: #0088cc !default;
-$quaternary: #e45735 !default;
-$header_background: #ffffff !default;
-$header_primary: #333333 !default;
-$highlight: #ffff4d !default;
-$danger: #e45735 !default;
-$success: #009900 !default;
-$love: #fa6c8d !default;
-
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
-@import "desktop";
-@import "color_definitions";
-@import "admin";
-
 #ember-testing-container {
+  position: fixed;
+  background: #fff;
+  bottom: 0;
+  right: 0;
+  width: 640px;
+  height: 384px;
+  overflow: auto;
+  z-index: 9999;
+  border: 1px solid #ccc;
+  transform: translateZ(0);
   box-sizing: border-box;
   max-height: 100vh;
 }
@@ -32,6 +19,13 @@ $love: #fa6c8d !default;
 
 .discourse-root {
   background: var(--secondary);
+}
+
+#ember-testing {
+  width: 200%;
+  height: 200%;
+  transform: scale(0.5);
+  transform-origin: top left;
 }
 
 @media (prefers-color-scheme: dark) {
