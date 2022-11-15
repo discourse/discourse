@@ -64,6 +64,17 @@ class HashtagAutocompleteService
     # The URL for the resource that is represented by the autocomplete
     # item, used for the cooked hashtags, e.g. /c/2/staff
     attr_accessor :url
+
+    def to_h
+      {
+        url: self.url,
+        text: self.text,
+        icon: self.icon,
+        type: self.type,
+        ref: self.ref,
+        slug: self.slug
+      }
+    end
   end
 
   def initialize(guardian)

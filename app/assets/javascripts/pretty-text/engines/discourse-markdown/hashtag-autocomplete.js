@@ -27,6 +27,7 @@ function addHashtag(buffer, matches, state) {
       ["class", "hashtag-cooked"],
       ["href", result.url],
       ["data-type", result.type],
+      ["data-slug", result.slug],
     ];
     token.block = false;
     buffer.push(token);
@@ -123,6 +124,7 @@ export function setup(helper) {
       "a.hashtag-cooked",
       "span.hashtag-raw",
       "a[data-type]",
+      "a[data-slug]",
     ])
   );
 }
