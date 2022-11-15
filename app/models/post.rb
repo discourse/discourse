@@ -305,10 +305,11 @@ class Post < ActiveRecord::Base
     options = opts.dup
     options[:cook_method] = cook_method
 
-    post_user = self.user
-
-    # TODO (martin) Change this to the post.last_editor_id
-    options[:user_id] = post_user.id if post_user
+    # This user_id is used to fetch a user which is populated into the
+    # currentUser option in our markdown pipeline. The last editor is used
+    # to ensure that any markdown rules using the currentUser for a guardian
+    # can have the correct permission controls.
+    options[:user_id] = self.last_editor_id
     options[:omit_nofollow] = true if omit_nofollow?
 
     if self.with_secure_uploads?

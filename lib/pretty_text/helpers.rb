@@ -111,6 +111,7 @@ module PrettyText
     end
 
     def hashtag_lookup(slug, cooking_user, types_in_priority_order)
+      cooking_user = User.new(cooking_user) if cooking_user.is_a?(Hash)
       result = HashtagAutocompleteService.new(
         Guardian.new(cooking_user)
       ).lookup([slug], types_in_priority_order)

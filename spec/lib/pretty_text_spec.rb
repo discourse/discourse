@@ -1463,12 +1463,11 @@ RSpec.describe PrettyText do
     cooked = PrettyText.cook(" #unknown::tag #known #known::tag #testing", user_id: user.id)
 
     [
-      "<span class=\"hashtag\">#unknown::tag</span>",
-      "<a class=\"hashtag\" href=\"#{category2.url}\">#<span>known</span></a>",
-      "<a class=\"hashtag\" href=\"/tag/known\">#<span>known</span></a>",
-      "<a class=\"hashtag\" href=\"#{category.url}\">#<span>testing</span></a>"
+      "<span class=\"hashtag-raw\"><svg class=\"fa d-icon d-icon-hashtag svg-icon svg-node\"><use href=\"#hashtag\"></use></svg>unknown::tag</span>",
+      "<a class=\"hashtag-cooked\" href=\"#{category2.url}\" data-type=\"category\" data-slug=\"known\"><span><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg>known</span></a>",
+      "<a class=\"hashtag-cooked\" href=\"/tag/known\" data-type=\"tag\" data-slug=\"known\"><span><svg class=\"fa d-icon d-icon-tag svg-icon svg-node\"><use href=\"#tag\"></use></svg>known</span></a>",
+      "<a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"testing\"><span><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg>testing</span></a>"
     ].each do |element|
-
       expect(cooked).to include(element)
     end
 
@@ -1486,9 +1485,8 @@ RSpec.describe PrettyText do
 
     cooked = PrettyText.cook("<A href='/a'>test</A> #known::tag", user_id: user.id)
     html = <<~HTML
-      <p><a href="/a">test</a> <a class="hashtag" href="/tag/known">#<span>known</span></a></p>
+      <p><a href="/a">test</a> <a class="hashtag-cooked" href="/tag/known" data-type="tag" data-slug="known"><span><svg class="fa d-icon d-icon-tag svg-icon svg-node"><use href="#tag"></use></svg>known</span></a></p>
     HTML
-
     expect(cooked).to eq(html.strip)
 
     # ensure it does not fight with the autolinker
