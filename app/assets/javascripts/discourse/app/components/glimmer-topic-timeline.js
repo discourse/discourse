@@ -1,6 +1,8 @@
 import GlimmerComponent from "discourse/components/glimmer";
 import { tracked } from "@glimmer/tracking";
 import optionalService from "discourse/lib/optional-service";
+import { bind } from "@ember/runloop";
+import { headerOffset } from "discourse/lib/offset-calculator";
 
 export default class GlimmerTopicTimeline extends GlimmerComponent {
   @tracked dockAt = null;
@@ -48,7 +50,32 @@ export default class GlimmerTopicTimeline extends GlimmerComponent {
     super(...arguments);
 
     if (this.args.prevEvent) {
-      this.enteredIndex = this.args.prevEvent.postIndex- 1;
+      this.enteredIndex = this.args.prevEvent.postIndex - 1;
+    }
+
+    if (!this.site.mobileView) {
+      if ("IntersectionObserver" in window) {
+        this.intersectionObserver = new IntersectionObserver((entries) => {
+          for (const entry of entries) {
+            const bounds = entry.boundingClientRect;
+
+            if (entry.target.id === "topic-bottom") {
+              this.topicBottom = bounds.y + window.scrollY;
+            } else {
+              this.topicTop = bounds.y + window.scrollY;
+            }
+          }
+        });
+
+        const elements = [
+          document.querySelector(".container.posts"),
+          document.querySelector("#topic-bottom"),
+        ];
+
+        for (let i = 0; i < elements.length; i++) {
+          this.intersectionObserver.observe(elements[i]);
+        }
+      }
     }
 
     // Old widget code
@@ -134,10 +161,9 @@ export default class GlimmerTopicTimeline extends GlimmerComponent {
 
   //@bind
   //dockCheck() {
-  //const timeline = this.element.querySelector(".timeline-container");
+  //const timeline = document.querySelector(".timeline-container");
   //const timelineHeight = (timeline && timeline.offsetHeight) || 400;
 
-  //const prev = this.dockAt;
   //const posTop = headerOffset() + window.pageYOffset;
   //const pos = posTop + timelineHeight;
 
@@ -152,58 +178,15 @@ export default class GlimmerTopicTimeline extends GlimmerComponent {
   //}
   //} else {
   //this.dockAt = null;
-  //this.fastDockAt = parseInt(this.topicBottom - timelineHeight, 10);
-  //}
-
-  //if (this.dockAt !== prev) {
-  //this.queueRerender();
   //}
   //}
 
-  //didInsert() {
-  //this.dispatch(
-  //"topic:current-post-scrolled",
-  //() => `timeline-scrollarea-${this.args.topic.id}`
-  //);
-  //this.dispatch("topic:toggle-actions", "topic-admin-menu-button");
-  //if (!this.site.mobileView) {
-  //this.appEvents.on("composer:opened", this, this.queueRerender);
-  //this.appEvents.on("composer:resized", this, this.queueRerender);
-  //this.appEvents.on("composer:closed", this, this.queueRerender);
-  //if ("IntersectionObserver" in window) {
-  //this.intersectionObserver = new IntersectionObserver((entries) => {
-  //for (const entry of entries) {
-  //const bounds = entry.boundingClientRect;
-
-  //if (entry.target.id === "topic-bottom") {
-  //this.set("topicBottom", bounds.y + window.scrollY);
-  //} else {
-  //this.set("topicTop", bounds.y + window.scrollY);
-  //}
-  //}
-  //});
-
-  //const elements = [
-  //document.querySelector(".container.posts"),
-  //document.querySelector("#topic-bottom"),
-  //];
-
-  //for (let i = 0; i < elements.length; i++) {
-  //this.intersectionObserver.observe(elements[i]);
-  //}
-  //}
-  //}
-  //}
-
-  //willDestroy() {
-  //if (!this.site.mobileView) {
-  //this.appEvents.off("composer:opened", this, this.queueRerender);
-  //this.appEvents.off("composer:resized", this, this.queueRerender);
-  //this.appEvents.off("composer:closed", this, this.queueRerender);
-  //if ("IntersectionObserver" in window) {
-  //this.intersectionObserver?.disconnect();
-  //this.intersectionObserver = null;
-  //}
-  //}
-  //}
+  willDestroy() {
+    if (!this.site.mobileView) {
+      if ("IntersectionObserver" in window) {
+        this.intersectionObserver?.disconnect();
+        this.intersectionObserver = null;
+      }
+    }
+  }
 }

@@ -24,7 +24,7 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
   @tracked displayTimeLineScrollArea = true;
   @tracked before;
   @tracked after;
-  timelineScrollareaStyle = `height: ${scrollareaHeight()}px`;
+  @tracked timelineScrollareaStyle;
 
   get style() {
     return htmlSafe(`height: ${scrollareaHeight()}px`);
@@ -98,12 +98,34 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
           this.displayTimeLineScrollArea = false;
         }
       }
+
+      this.appEvents.on("composer:opened", this, () =>
+        this.calculatePosition()
+      );
+      this.appEvents.on("composer:resized", this, () =>
+        this.calculatePosition()
+      );
+      this.appEvents.on("composer:closed", this, () =>
+        this.calculatePosition()
+      );
     }
 
     this.commit();
   }
 
+  commit() {
+    this.calculatePosition();
+
+    if (this.current === this.scrollPosition) {
+      this.args.jumpToIndex(this.current);
+    } else {
+      this.args.jumpEnd();
+    }
+  }
+
   calculatePosition() {
+    this.timelineScrollareaStyle = `height: ${scrollareaHeight()}px`;
+
     const topic = this.args.topic;
     const postStream = topic.get("postStream");
     this.total = postStream.get("filteredPostsCount");
@@ -210,16 +232,6 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
     }, 50);
   }
 
-  commit() {
-    this.calculatePosition();
-
-    if (this.current === this.scrollPosition) {
-      this.args.jumpToIndex(this.current);
-    } else {
-      this.args.jumpEnd();
-    }
-  }
-
   _percentFor(topic, postIndex) {
     const total = topic.get("postStream.filteredPostsCount");
     switch (postIndex) {
@@ -241,6 +253,20 @@ export default class TopicTimelineScrollArea extends GlimmerComponent {
 
   scrollareaRemaining() {
     return scrollareaHeight() - SCROLLER_HEIGHT;
+  }
+
+  willDestroy() {
+    if (!this.site.mobileView) {
+      this.appEvents.of("composer:opened", this, () =>
+        this.calculatePosition()
+      );
+      this.appEvents.of("composer:resized", this, () =>
+        this.calculatePosition()
+      );
+      this.appEvents.of("composer:closed", this, () =>
+        this.calculatePosition()
+      );
+    }
   }
 
   @action
