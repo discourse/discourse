@@ -86,7 +86,7 @@ export default class ChatEmojiPicker extends Component {
   }
 
   @action
-  trapKeyUpEvents(event) {
+  trapKeyDownEvents(event) {
     if (event.key === "Escape") {
       this.chatEmojiPickerManager.close();
     }
