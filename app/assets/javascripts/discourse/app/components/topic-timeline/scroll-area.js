@@ -1,17 +1,21 @@
-import GlimmerComponent from "discourse/components/glimmer";
+import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import discourseLater from "discourse-common/lib/later";
 import { action } from "@ember/object";
 import { relativeAge } from "discourse/lib/formatter";
 import I18n from "I18n";
 import { htmlSafe } from "@ember/template";
+import { inject as service } from "@ember/service";
 
 export const SCROLLER_HEIGHT = 50;
 const MIN_SCROLLAREA_HEIGHT = 170;
 const MAX_SCROLLAREA_HEIGHT = 300;
 const LAST_READ_HEIGHT = 20;
 
-export default class TopicTimelineScrollArea extends GlimmerComponent {
+export default class TopicTimelineScrollArea extends Component {
+  @service site;
+  @service appEvents;
+
   @tracked showButton = false;
   @tracked current;
   @tracked percentage = this._percentFor(

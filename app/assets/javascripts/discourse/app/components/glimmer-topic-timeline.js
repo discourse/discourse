@@ -1,15 +1,18 @@
-import GlimmerComponent from "discourse/components/glimmer";
+import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import optionalService from "discourse/lib/optional-service";
 import { bind } from "@ember/runloop";
 import { headerOffset } from "discourse/lib/offset-calculator";
+import { inject as service } from "@ember/service";
 
-export default class GlimmerTopicTimeline extends GlimmerComponent {
+export default class GlimmerTopicTimeline extends Component {
+  @service site;
+  @service currentUser;
+
   @tracked dockAt = null;
   @tracked dockBottom = null;
   @tracked enteredIndex = this.args.enteredIndex;
 
-  mobileView = this.site.mobileView;
   adminTools = optionalService();
   excerpt = null;
   intersectionObserver = null;
