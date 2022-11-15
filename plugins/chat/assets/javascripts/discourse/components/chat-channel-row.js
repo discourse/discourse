@@ -4,6 +4,8 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { equal } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { CHATABLE_TYPES } from "discourse/plugins/chat/discourse/models/chat-channel";
+import { action } from "@ember/object";
+import getURL from "discourse-common/lib/get-url";
 
 export default Component.extend({
   tagName: "",
@@ -113,18 +115,19 @@ export default Component.extend({
 
     this.handleSwitchChannel(event);
   },
-  
-    @discourseComputed(
+
+  @discourseComputed(
     "isDirectMessageRow",
     "channel.chatable.users.[]",
     "channel.chatable.users.@each.status"
   )
   showUserStatus(isDirectMessageRow) {
-  return !!(
-    isDirectMessageRow &&
-    this.channel.chatable.users.length === 1 &&
-    this.channel.chatable.users[0].status
-  );
+    return !!(
+      isDirectMessageRow &&
+      this.channel.chatable.users.length === 1 &&
+      this.channel.chatable.users[0].status
+    );
+  },
 
   @discourseComputed("channel.chatable_type")
   leaveChatTitle() {
