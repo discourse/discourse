@@ -332,7 +332,6 @@ export default class ChatEmojiPicker extends Component {
     if (event.type === "click" || event.key === "Enter") {
       event.preventDefault();
       event.stopPropagation();
-      const originalTarget = event.target;
       let emoji = event.target.dataset.emoji;
       const tonable = event.target.dataset.tonable;
       const diversity = this.chatEmojiReactionStore.diversity;
