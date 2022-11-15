@@ -1,6 +1,6 @@
 .chat-browse-view {
   position: relative;
-  height: calc(100vh - var(--header-offset));
+  height: calc(100vh - var(--header-offset) - 65px);
   overflow-y: scroll;
   @include chat-scrollbar(var(--secondary));
 
