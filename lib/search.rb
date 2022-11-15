@@ -647,9 +647,9 @@ class Search
   end
 
   advanced_filter(/^\@(\S+)$/i) do |posts, match|
-    username = match.downcase
+    username = User.normalize_username(match)
 
-    user_id = User.where(staged: false).where(username_lower: username).pluck_first(:id)
+    user_id = User.not_staged.where(username_lower: username).pluck_first(:id)
 
     if !user_id && username == "me"
       user_id = @guardian.user&.id
