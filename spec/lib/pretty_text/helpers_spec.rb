@@ -136,5 +136,11 @@ RSpec.describe PrettyText::Helpers do
     it "returns nil when no tag or category that matches exists" do
       expect(PrettyText::Helpers.hashtag_lookup("blah", user, %w[category tag])).to eq(nil)
     end
+
+    it "uses the system user if the cooking_user is nil" do
+      guardian_system = Guardian.new(Discourse.system_user)
+      Guardian.expects(:new).with(Discourse.system_user).returns(guardian_system)
+      PrettyText::Helpers.hashtag_lookup("somecooltag", nil, %w[category tag])
+    end
   end
 end

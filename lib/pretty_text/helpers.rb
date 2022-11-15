@@ -111,7 +111,16 @@ module PrettyText
     end
 
     def hashtag_lookup(slug, cooking_user, types_in_priority_order)
+      # This is _somewhat_ expected since we need to be able to cook posts
+      # etc. without a user sometimes, but it is still an edge case, and
+      # we need to track down these edge cases to be sure of them.
+      if cooking_user.blank?
+        Rails.logger.warn("Missing cooking user when calling hashtag lookup for slug #{slug} with context #{types_in_priority_order.join(",")}.")
+        cooking_user = Discourse.system_user
+      end
+
       cooking_user = User.new(cooking_user) if cooking_user.is_a?(Hash)
+
       result = HashtagAutocompleteService.new(
         Guardian.new(cooking_user)
       ).lookup([slug], types_in_priority_order)
