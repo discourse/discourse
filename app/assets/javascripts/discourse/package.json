@@ -42,6 +42,7 @@
     "bootstrap-json": "1.0.0",
     "broccoli-asset-rev": "^3.0.0",
     "deepmerge": "^4.2.2",
+    "dialog-holder": "1.0.0",
     "discourse-common": "1.0.0",
     "discourse-ensure-deprecation-order": "1.0.0",
     "discourse-hbr": "1.0.0",
@@ -103,11 +104,6 @@
   },
   "ember": {
     "edition": "default"
-  },
-  "ember-addon": {
-    "paths": [
-      "lib/dialog-holder"
-    ]
   },
   "devDependencies": {
     "ember-cached-decorator-polyfill": "^1.0.1",
