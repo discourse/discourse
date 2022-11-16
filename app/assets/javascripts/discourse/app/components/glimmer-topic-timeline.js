@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import optionalService from "discourse/lib/optional-service";
-import { headerOffset } from "discourse/lib/offset-calculator";
 import { inject as service } from "@ember/service";
 
 export default class GlimmerTopicTimeline extends Component {
@@ -14,38 +13,6 @@ export default class GlimmerTopicTimeline extends Component {
 
   adminTools = optionalService();
   intersectionObserver = null;
-
-  get class() {
-    let classes = [];
-    if (this.args.fullscreen) {
-      if (this.addShowClass) {
-        classes.push("timeline-fullscreen show");
-      } else {
-        classes.push("timeline-fullscreen");
-      }
-    }
-
-    if (this.dockAt) {
-      classes.push("timeline-docked");
-      if (this.dockBottom) {
-        classes.push("timeline-docked-bottom");
-      }
-    }
-
-    return classes.join(" ");
-  }
-
-  get addShowClass() {
-    return this.args.fullscreen && !this.args.addShowClass ? true : false;
-  }
-
-  get canCreatePost() {
-    return this.args.model.details?.can_create_post;
-  }
-
-  get createdAt() {
-    return new Date(this.args.model.created_at);
-  }
 
   constructor() {
     super(...arguments);
@@ -78,37 +45,38 @@ export default class GlimmerTopicTimeline extends Component {
         }
       }
     }
+  }
 
-    //@observes("topic.highest_post_number", "loading")
-    //newPostAdded() {
-    //Docking.queueDockCheck();
-    //}
+  get class() {
+    let classes = [];
+    if (this.args.fullscreen) {
+      if (this.addShowClass) {
+        classes.push("timeline-fullscreen show");
+      } else {
+        classes.push("timeline-fullscreen");
+      }
+    }
 
-    //@observes("topic.details.notification_level")
-    //_queueRerender() {
-    //this.queueRerender();
-    //}
+    if (this.dockAt) {
+      classes.push("timeline-docked");
+      if (this.dockBottom) {
+        classes.push("timeline-docked-bottom");
+      }
+    }
 
-    //@bind
-    //dockCheck() {
-    //const timeline = document.querySelector(".timeline-container");
-    //const timelineHeight = (timeline && timeline.offsetHeight) || 400;
+    return classes.join(" ");
+  }
 
-    //const posTop = headerOffset() + window.pageYOffset;
-    //const pos = posTop + timelineHeight;
+  get addShowClass() {
+    return this.args.fullscreen && !this.args.addShowClass ? true : false;
+  }
 
-    //this.dockBottom = false;
-    //if (posTop < this.topicTop) {
-    //this.dockAt = parseInt(this.topicTop, 10);
-    //} else if (pos > this.topicBottom) {
-    //this.dockAt = parseInt(this.topicBottom - timelineHeight, 10);
-    //this.dockBottom = true;
-    //if (this.dockAt < 0) {
-    //this.dockAt = 0;
-    //}
-    //} else {
-    //this.dockAt = null;
-    //}
+  get canCreatePost() {
+    return this.args.model.details?.can_create_post;
+  }
+
+  get createdAt() {
+    return new Date(this.args.model.created_at);
   }
 
   willDestroy() {

@@ -33,7 +33,7 @@
 {{#if (and (not @fullscreen) @currentUser)}}
   <div class="timeline-controls">
     <TopicAdminMenuButton
-      @model={{@model}}
+      @topic={{@model}}
       @addKeyboardTargetClass={{true}}
       @toggleMultiSelect={{@toggleMultiSelect}}
       @showTopicSlowModeUpdate={{@showTopicSlowModeUpdate}}

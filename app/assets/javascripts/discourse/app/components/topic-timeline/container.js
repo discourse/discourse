@@ -39,6 +39,27 @@ export default class TopicTimelineScrollArea extends Component {
     this.args.model.tags &&
     this.args.model.tags.length > 0;
 
+  constructor() {
+    super(...arguments);
+
+    if (!this.args.mobileView) {
+      const streamLength = this.args.model.postStream?.stream?.length;
+
+      if (streamLength === 1) {
+        const postsWrapper = document.querySelector(".posts-wrapper");
+        if (postsWrapper && postsWrapper.offsetHeight < 1000) {
+          this.displayTimeLineScrollArea = false;
+        }
+      }
+
+      this.appEvents.on("composer:opened", this.calculatePosition);
+      this.appEvents.on("composer:resized", this.calculatePosition);
+      this.appEvents.on("composer:closed", this.calculatePosition);
+    }
+
+    this.calculatePosition();
+  }
+
   get style() {
     return htmlSafe(`height: ${scrollareaHeight()}px`);
   }
@@ -97,27 +118,6 @@ export default class TopicTimelineScrollArea extends Component {
 
   get lastReadHeight() {
     return Math.round(this.lastReadPercentage * scrollareaHeight());
-  }
-
-  constructor() {
-    super(...arguments);
-
-    if (!this.args.mobileView) {
-      const streamLength = this.args.model.postStream?.stream?.length;
-
-      if (streamLength === 1) {
-        const postsWrapper = document.querySelector(".posts-wrapper");
-        if (postsWrapper && postsWrapper.offsetHeight < 1000) {
-          this.displayTimeLineScrollArea = false;
-        }
-      }
-
-      this.appEvents.on("composer:opened", this.calculatePosition);
-      this.appEvents.on("composer:resized", this.calculatePosition);
-      this.appEvents.on("composer:closed", this.calculatePosition);
-    }
-
-    this.calculatePosition();
   }
 
   commit() {
