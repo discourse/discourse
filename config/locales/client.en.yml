@@ -2548,6 +2548,7 @@ en:
         status: "filters by topic status"
         full_search: "launches full page search"
         full_search_key: "%{modifier} + Enter"
+        me: "shows only your posts"
 
       advanced:
         title: Advanced filters
