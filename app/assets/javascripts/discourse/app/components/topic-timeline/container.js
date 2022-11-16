@@ -6,6 +6,8 @@ import { relativeAge } from "discourse/lib/formatter";
 import I18n from "I18n";
 import { htmlSafe } from "@ember/template";
 import { inject as service } from "@ember/service";
+import { bind } from "discourse-common/utils/decorators";
+import { actionDescriptionHtml } from "discourse/widgets/post-small-action";
 
 export const SCROLLER_HEIGHT = 50;
 const MIN_SCROLLAREA_HEIGHT = 170;
@@ -13,13 +15,13 @@ const MAX_SCROLLAREA_HEIGHT = 300;
 const LAST_READ_HEIGHT = 20;
 
 export default class TopicTimelineScrollArea extends Component {
-  @service site;
   @service appEvents;
+  @service siteSettings;
 
   @tracked showButton = false;
   @tracked current;
   @tracked percentage = this._percentFor(
-    this.args.topic,
+    this.args.model,
     this.args.enteredIndex
   );
   @tracked total;
@@ -29,6 +31,13 @@ export default class TopicTimelineScrollArea extends Component {
   @tracked before;
   @tracked after;
   @tracked timelineScrollareaStyle;
+  @tracked dragging = false;
+  @tracked excerpt = "";
+
+  showTags =
+    this.siteSettings.tagging_enabled &&
+    this.args.model.tags &&
+    this.args.model.tags.length > 0;
 
   get style() {
     return htmlSafe(`height: ${scrollareaHeight()}px`);
@@ -43,7 +52,7 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   get showDockedButton() {
-    return !this.site.mobileView && this.hasBackPosition && !this.showButton;
+    return !this.args.mobileView && this.hasBackPosition && !this.showButton;
   }
 
   get hasBackPosition() {
@@ -70,7 +79,7 @@ export default class TopicTimelineScrollArea extends Component {
 
   get bottomAge() {
     return relativeAge(
-      new Date(this.args.topic.last_posted_at || this.args.topic.created_at),
+      new Date(this.args.model.last_posted_at || this.args.model.created_at),
       {
         addAgo: true,
         defaultFormat: timelineDate,
@@ -79,7 +88,7 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   get startDate() {
-    return timelineDate(this.args.topic.createdAt);
+    return timelineDate(this.args.model.createdAt);
   }
 
   get nowDate() {
@@ -93,8 +102,8 @@ export default class TopicTimelineScrollArea extends Component {
   constructor() {
     super(...arguments);
 
-    if (!this.site.mobileView) {
-      const streamLength = this.args.topic.get("postStream.stream.length");
+    if (!this.args.mobileView) {
+      const streamLength = this.args.model.postStream?.stream?.length;
 
       if (streamLength === 1) {
         const postsWrapper = document.querySelector(".posts-wrapper");
@@ -103,18 +112,12 @@ export default class TopicTimelineScrollArea extends Component {
         }
       }
 
-      this.appEvents.on("composer:opened", this, () =>
-        this.calculatePosition()
-      );
-      this.appEvents.on("composer:resized", this, () =>
-        this.calculatePosition()
-      );
-      this.appEvents.on("composer:closed", this, () =>
-        this.calculatePosition()
-      );
+      this.appEvents.on("composer:opened", this.calculatePosition);
+      this.appEvents.on("composer:resized", this.calculatePosition);
+      this.appEvents.on("composer:closed", this.calculatePosition);
     }
 
-    this.commit();
+    this.calculatePosition();
   }
 
   commit() {
@@ -127,12 +130,13 @@ export default class TopicTimelineScrollArea extends Component {
     }
   }
 
+  @bind
   calculatePosition() {
-    this.timelineScrollareaStyle = `height: ${scrollareaHeight()}px`;
+    this.timelineScrollareaStyle = htmlSafe(`height: ${scrollareaHeight()}px`);
 
-    const topic = this.args.topic;
-    const postStream = topic.get("postStream");
-    this.total = postStream.get("filteredPostsCount");
+    const topic = this.args.model;
+    const postStream = topic.postStream;
+    this.total = postStream.filteredPostsCount;
 
     this.scrollPosition =
       this.clamp(Math.floor(this.total * this.percentage), 0, this.total) + 1;
@@ -142,12 +146,13 @@ export default class TopicTimelineScrollArea extends Component {
 
     let date;
     if (daysAgo === undefined) {
-      const post = postStream
-        .get("posts")
-        .findBy("id", postStream.get("stream")[this.current]);
+      const post = postStream.posts.findBy(
+        "id",
+        postStream.stream[this.current]
+      );
 
       if (post) {
-        date = new Date(post.get("created_at"));
+        date = new Date(post.created_at);
       }
     } else if (daysAgo !== null) {
       date = new Date();
@@ -162,7 +167,7 @@ export default class TopicTimelineScrollArea extends Component {
     const lastReadNumber = topic.last_read_post_number;
 
     if (lastReadId && lastReadNumber) {
-      const idx = postStream.get("stream").indexOf(lastReadId) + 1;
+      const idx = postStream.stream.indexOf(lastReadId) + 1;
       this.lastRead = idx;
       this.lastReadPercentage = this._percentFor(topic, idx);
     }
@@ -195,15 +200,14 @@ export default class TopicTimelineScrollArea extends Component {
     }
   }
 
+  @bind
   updateScrollPosition(scrollPosition) {
     // only ran on mobile
     if (!this.args.fullscreen) {
       return;
     }
 
-    this.position = scrollPosition;
-    this.excerpt = "";
-    const stream = this.args.topic.get("postStream");
+    const stream = this.args.model.postStream;
 
     // a little debounce to avoid flashing
     discourseLater(() => {
@@ -215,29 +219,25 @@ export default class TopicTimelineScrollArea extends Component {
       stream.excerpt(scrollPosition - 1).then((info) => {
         if (info && this.position === scrollPosition) {
           let excerpt = "";
-
           if (info.username) {
             excerpt = "<span class='username'>" + info.username + ":</span> ";
           }
-
           if (info.excerpt) {
             this.excerpt = excerpt + info.excerpt;
           } else if (info.action_code) {
-            this.state.excerpt = `${excerpt} ${actionDescriptionHtml(
+            this.excerpt = `${excerpt} ${actionDescriptionHtml(
               info.action_code,
               info.created_at,
               info.username
             )}`;
           }
-
-          this.queueRerender();
         }
       });
     }, 50);
   }
 
   _percentFor(topic, postIndex) {
-    const total = topic.get("postStream.filteredPostsCount");
+    const total = topic.postStream.filteredPostsCount;
     switch (postIndex) {
       // if first post, no top padding
       case 0:
@@ -260,16 +260,24 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   willDestroy() {
-    if (!this.site.mobileView) {
-      this.appEvents.of("composer:opened", this, () =>
-        this.calculatePosition()
-      );
-      this.appEvents.of("composer:resized", this, () =>
-        this.calculatePosition()
-      );
-      this.appEvents.of("composer:closed", this, () =>
-        this.calculatePosition()
-      );
+    if (!this.args.mobileView) {
+      this.appEvents.off("composer:opened", this.calculatePosition);
+      this.appEvents.off("composer:resized", this.calculatePosition);
+      this.appEvents.off("composer:closed", this.calculatePosition);
+    }
+  }
+
+  drag(e) {
+    this.dragging = true;
+    this.updatePercentage(e.pageY);
+  }
+
+  dragEnd(e) {
+    this.dragging = false;
+    if ($(e.target).is("button")) {
+      this.goBack();
+    } else {
+      this.commit();
     }
   }
 

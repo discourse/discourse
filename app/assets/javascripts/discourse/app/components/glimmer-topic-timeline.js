@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import optionalService from "discourse/lib/optional-service";
-import { bind } from "@ember/runloop";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { inject as service } from "@ember/service";
 
@@ -14,7 +13,6 @@ export default class GlimmerTopicTimeline extends Component {
   @tracked enteredIndex = this.args.enteredIndex;
 
   adminTools = optionalService();
-  excerpt = null;
   intersectionObserver = null;
 
   get class() {
@@ -81,108 +79,37 @@ export default class GlimmerTopicTimeline extends Component {
       }
     }
 
-    // Old widget code
-    //const topic = this.args.topic;
-    //let result = [];
-
-    //if (this.args.fullScreen) {
-    //let titleHTML = "";
-    //if (this.site.mobileView) {
-    //titleHTML = new RawHtml({
-    //html: `<span>${topic.get("fancyTitle")}</span>`,
-    //});
+    //@observes("topic.highest_post_number", "loading")
+    //newPostAdded() {
+    //Docking.queueDockCheck();
     //}
 
-    //let elems = [
-    //h(
-    //"h2",
-    //this.attach("link", {
-    //contents: () => titleHTML,
-    //className: "fancy-title",
-    //action: "jumpTop",
-    //})
-    //),
-    //];
-
-    // //duplicate of the {{topic-category}} component
-    //let category = [];
-
-    //if (!topic.get("isPrivateMessage")) {
-    //if (topic.category.parentCategory) {
-    //category.push(
-    //this.attach("category-link", {
-    //category: topic.category.parentCategory,
-    //})
-    //);
-    //}
-    //category.push(
-    //this.attach("category-link", { category: topic.category })
-    //);
+    //@observes("topic.details.notification_level")
+    //_queueRerender() {
+    //this.queueRerender();
     //}
 
-    //const showTags = tagging_enabled && topic.tags && topic.tags.length > 0;
+    //@bind
+    //dockCheck() {
+    //const timeline = document.querySelector(".timeline-container");
+    //const timelineHeight = (timeline && timeline.offsetHeight) || 400;
 
-    //if (showTags || topic_featured_link_enabled) {
-    //let extras = [];
-    //if (showTags) {
-    //const tagsHtml = new RawHtml({
-    //html: renderTags(topic, { mode: "list" }),
-    //});
-    //extras.push(h("div.list-tags", tagsHtml));
-    //}
-    //if (topic_featured_link_enabled) {
-    //extras.push(new RawHtml({ html: renderTopicFeaturedLink(topic) }));
-    //}
-    //category.push(h("div.topic-header-extra", extras));
-    //}
+    //const posTop = headerOffset() + window.pageYOffset;
+    //const pos = posTop + timelineHeight;
 
-    //if (category.length > 0) {
-    //elems.push(h("div.topic-category", category));
+    //this.dockBottom = false;
+    //if (posTop < this.topicTop) {
+    //this.dockAt = parseInt(this.topicTop, 10);
+    //} else if (pos > this.topicBottom) {
+    //this.dockAt = parseInt(this.topicBottom - timelineHeight, 10);
+    //this.dockBottom = true;
+    //if (this.dockAt < 0) {
+    //this.dockAt = 0;
     //}
-
-    //if (this.state.excerpt) {
-    //elems.push(
-    //new RawHtml({
-    //html: `<div class='post-excerpt'>${this.state.excerpt}</div>`,
-    //})
-    //);
-    //}
-
-    //result.push(h("div.title", elems));
+    //} else {
+    //this.dockAt = null;
     //}
   }
-
-  //@observes("topic.highest_post_number", "loading")
-  //newPostAdded() {
-  //Docking.queueDockCheck();
-  //}
-
-  //@observes("topic.details.notification_level")
-  //_queueRerender() {
-  //this.queueRerender();
-  //}
-
-  //@bind
-  //dockCheck() {
-  //const timeline = document.querySelector(".timeline-container");
-  //const timelineHeight = (timeline && timeline.offsetHeight) || 400;
-
-  //const posTop = headerOffset() + window.pageYOffset;
-  //const pos = posTop + timelineHeight;
-
-  //this.dockBottom = false;
-  //if (posTop < this.topicTop) {
-  //this.dockAt = parseInt(this.topicTop, 10);
-  //} else if (pos > this.topicBottom) {
-  //this.dockAt = parseInt(this.topicBottom - timelineHeight, 10);
-  //this.dockBottom = true;
-  //if (this.dockAt < 0) {
-  //this.dockAt = 0;
-  //}
-  //} else {
-  //this.dockAt = null;
-  //}
-  //}
 
   willDestroy() {
     if (!this.site.mobileView) {

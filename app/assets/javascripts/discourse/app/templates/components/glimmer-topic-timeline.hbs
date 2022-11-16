@@ -1,45 +1,19 @@
-<div class="timeline-container">
-  <DSection
-    @class={{concat "topic-timeline " this.class}}
-    @loading={{@model.postStream.loading}}
-    @dockAt={{@dockAt}}
-    @dockBottom={{@dockBottom}}
-  >
-
-    <div class="timeline-controls">
-      {{#if (and (not @info.topicProgressExpanded) this.currentUser)}}
-        <TopicAdminMenuButton
-          @topic={{@model}}
-          @addKeyboardTargetClass={{true}}
-          @toggleMultiSelect={{@toggleMultiSelect}}
-          @showTopicSlowModeUpdate={{@showTopicSlowModeUpdate}}
-          @deleteTopic={{@deleteTopic}}
-          @recoverTopic={{@recoverTopic}}
-          @toggleClosed={{@toggleClosed}}
-          @toggleArchived={{@toggleArchived}}
-          @toggleVisibility={{@toggleVisibility}}
-          @showTopicTimerModal={{@showTopicTimerModal}}
-          @showFeatureTopic={{@showFeatureTopic}}
-          @showChangeTimestamp={{@showChangeTimestamp}}
-          @resetBumpDate={{@resetBumpDate}}
-          @convertToPublicTopic={{@convertToPublicTopic}}
-          @convertToPrivateMessage={{@convertToPrivateMessage}}
-        />
-      {{/if}}
-    </div>
-
-    <TopicTimeline::ScrollArea
-      @topic={{@model}}
+<div class={{concat "timeline-container " this.class}}>
+  <div class="topic-timeline">
+    <TopicTimeline::Container
+      @model={{@model}}
       @enteredIndex={{this.enteredIndex}}
       @jumpTop={{@jumpTop}}
       @jumpBottom={{@jumpBottom}}
       @jumpEnd={{@jumpEnd}}
       @jumpToIndex={{@jumpToIndex}}
       @fullscreen={{@fullscreen}}
+      @mobileView={{@mobileView}}
+      @currentUser={{this.currentUser}}
     />
 
     <div class="timeline-footer-controls">
-      {{#if (and this.siteSettings.summary_timeline_button @topic.has_summary (not (and @fullscreen @topic.postStream.summary)))}}
+      {{#if (and this.siteSettings.summary_timeline_button @model.has_summary (not (and @fullscreen @model.postStream.summary)))}}
         <button type="button" class="show-summary btn-small" label={{i18n "summary.short_label"}} title={{i18n "summary.short_title"}} {{on "click" @showSummary}}>
           {{d-icon "layer-group"}}
         </button>
@@ -56,11 +30,15 @@
       {{#if @fullscreen}}
         <button
           type="button"
-          class="jump-to-post"
+          {{!-- we need to keep this a widget-button to not close the modal when opening form --}}
+          class="widget-button btn btn-text jump-to-post"
           title={{i18n "topic.progress.jump_prompt_long"}}
-          label={{i18n "topic.progress.jump_prompt"}}
           {{on "click" @jumpToPostPrompt}}
-        />
+         >
+          <span class="d-button-label">
+            {{i18n "topic.progress.jump_prompt"}}
+          </span>
+        </button>
       {{/if}}
 
       {{#if this.currentUser}}
@@ -73,10 +51,10 @@
           @mountedAsWidget={{true}}
           @showCaret={{false}}
         />
-        {{#if this.site.mobileView}}
-          <TopicAdminMenuButton @topic={{@topic}} @addKeyboardTargetClass={{true}} @openUpwards={{true}} />
+        {{#if @mobileView}}
+          <TopicAdminMenuButton @topic={{@model}} @addKeyboardTargetClass={{true}} @openUpwards={{true}} />
         {{/if}}
       {{/if}}
     </div>
-  </DSection>
+  </div>
 </div>
