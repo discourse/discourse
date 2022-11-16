@@ -2,6 +2,7 @@
   "licenses": {
     "blueOak": "bronze",
     "spdx": [
+      "Public Domain",
       "CC0-1.0",
       "CC-BY-3.0",
       "CC-BY-4.0",
@@ -10,6 +11,7 @@
     ]
   },
   "packages": {
+    "cli-table": "0.3.11",
     "component-bind": "1.0.0",
     "component-inherit": "0.0.3",
     "duplex": "1.0.0",
