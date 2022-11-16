@@ -50,9 +50,6 @@ jobs:
         run: |
           gem install licensed
 
-      - name: Install pnpm
-        run: npm install -g pnpm
-
       - name: Get pnpm cache directory
         id: node-cache-dir
         run: echo "::set-output name=dir::$(pnpm store path --silent)"

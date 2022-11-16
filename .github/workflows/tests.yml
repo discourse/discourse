@@ -81,9 +81,6 @@ jobs:
           bundle install --jobs 4
           bundle clean
 
-      - name: Install pnpm
-        run: npm install -g pnpm
-
       - name: Get pnpm cache directory
         id: node-cache-dir
         run: echo "::set-output name=dir::$(pnpm store path --silent)"
@@ -234,9 +231,6 @@ jobs:
         run: |
           git config --global user.email "ci@ci.invalid"
           git config --global user.name "Discourse CI"
-
-      - name: Install pnpm
-        run: npm install -g pnpm
 
       - name: Get pnpm cache directory
         id: node-cache-dir
