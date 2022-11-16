@@ -89,6 +89,7 @@
     "select-kit": "workspace:*",
     "sinon": "^14.0.2",
     "source-map": "^0.6.1",
+    "terser": "5.10.0",
     "tippy.js": "^6.3.7",
     "virtual-dom": "^2.1.1",
     "webpack": "^5.75.0",
