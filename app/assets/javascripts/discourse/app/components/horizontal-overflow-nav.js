@@ -3,7 +3,8 @@ import { action } from "@ember/object";
 import { bind } from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
-
+import discourseLater from "discourse-common/lib/later";
+import { cancel } from "@ember/runloop";
 export default class HorizontalOverflowNav extends Component {
   @service site;
   @tracked hasScroll;
@@ -34,7 +35,7 @@ export default class HorizontalOverflowNav extends Component {
 
   @bind
   stopScroll() {
-    clearInterval(this.scrollInterval);
+    cancel(this.scrollInterval);
   }
 
   @bind
@@ -48,14 +49,14 @@ export default class HorizontalOverflowNav extends Component {
       event.target.scrollWidth
     ) {
       this.hideRightScroll = true;
-      clearInterval(this.scrollInterval);
+      cancel(this.scrollInterval);
     } else {
       this.hideRightScroll = false;
     }
 
     if (event.target.scrollLeft === 0) {
       this.hideLeftScroll = true;
-      clearInterval(this.scrollInterval);
+      cancel(this.scrollInterval);
     } else {
       this.hideLeftScroll = false;
     }
@@ -107,11 +108,9 @@ export default class HorizontalOverflowNav extends Component {
       siblingTarget = event.target.nextElementSibling;
     }
 
-    this.scrollInterval = setInterval(function () {
+    this.scrollInterval = discourseLater(() => {
       siblingTarget.scrollLeft += scrollSpeed;
+      this.stopScroll();
     }, 50);
-
-    event.target.addEventListener("mouseup", this.stopScroll);
-    event.target.addEventListener("mouseleave", this.stopScroll);
   }
 }
