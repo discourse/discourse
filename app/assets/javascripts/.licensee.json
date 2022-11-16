@@ -2,7 +2,6 @@
   "licenses": {
     "blueOak": "bronze",
     "spdx": [
-      "Public Domain",
       "CC0-1.0",
       "CC-BY-3.0",
       "CC-BY-4.0",
@@ -18,7 +17,7 @@
     "glob": "3.1.21",
     "indexof": "0.0.1",
     "inherits": "1.0.2",
-    "jsonify": "0.0.0",
+    "jsonify": "0.0.1",
     "messageformat": "0.1.5",
     "line-stream": "0.0.0",
     "regenerator-transform": "0.10.1",
