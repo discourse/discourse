@@ -5,7 +5,7 @@ const concat = require("broccoli-concat");
 const mergeTrees = require("broccoli-merge-trees");
 const deepmerge = require("deepmerge");
 const glob = require("glob");
-const { shouldLoadPluginTestJs } = require("discourse/lib/plugin-js");
+const { shouldLoadPluginTestJs } = require("discourse-plugins");
 
 let built = false;
 

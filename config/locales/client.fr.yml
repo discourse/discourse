@@ -293,7 +293,6 @@ fr:
       like_count: "J'aime"
       topic_count: "Sujets"
       post_count: "Nombre de messages"
-      user_count: "Utilisateurs"
       active_user_count: "Utilisateurs actifs"
       contact: "Nous contacter"
       contact_info: "En cas de problème critique ou de sujet urgent concernant ce site, veuillez nous contacter à : %{contact_info}."
@@ -350,7 +349,6 @@ fr:
       remove_confirmation: "Voulez-vous vraiment supprimer ce brouillon ?"
       new_topic: "Nouveau brouillon de sujet"
       new_private_message: "Nouveau brouillon de message direct"
-      topic_reply: "Créer un brouillon de réponse"
       abandon:
         confirm: "Vous avez un brouillon en cours pour ce sujet. Que voulez-vous en faire ?"
         yes_value: "Abandonner"
@@ -1086,7 +1084,6 @@ fr:
         not_first_time: "Vous connaissez déjà ?"
         skip_link: "Ignorer ces conseils"
         read_later: "J'y jetterai un œil plus tard."
-      reset_seen_popups: "Afficher à nouveau les conseils d'intégration"
       theme_default_on_all_devices: "En faire mon thème par défaut sur tous mes périphériques"
       color_scheme_default_on_all_devices: "Définir comme jeu(x) de couleurs par défaut sur tous mes appareils"
       color_scheme: "Jeu de couleurs"
@@ -1671,15 +1668,6 @@ fr:
       set_custom_status: "Définir un statut personnalisé"
       what_are_you_doing: "Que faites-vous ?"
       remove_status: "Supprimer le statut"
-    popup:
-      primary: "J'ai compris !"
-      secondary: "ne me montrez pas ces conseils"
-      first_notification:
-        title: "Votre première notification !"
-        content: "Les notifications sont utilisées pour vous tenir au courant de ce qui se passe dans la communauté."
-      topic_timeline:
-        title: "Chronologie du sujet"
-        content: "Parcourez rapidement un article à l'aide de la chronologie des sujets."
     loading: "Chargement…"
     errors:
       prev_page: "lors du chargement de"
@@ -2525,9 +2513,6 @@ fr:
       move_to_inbox:
         title: "Déplacer dans la boîte de réception"
         help: "Déplacer le message dans la boîte de réception"
-      edit_message:
-        help: "Modifier le premier message du message direct"
-        title: "Modifier"
       defer:
         help: "Marquer comme non lu"
         title: "Reporter à plus tard"
@@ -3248,8 +3233,6 @@ fr:
       this_year: "cette année"
       position: "Position sur la page des catégories :"
       default_position: "Position par défaut"
-      position_disabled: "Les catégories seront affichées dans l'ordre d'activité. Pour contrôler l'ordre des catégories dans la liste, "
-      position_disabled_click: 'activez le paramètre « positions de catégorie fixes ».'
       minimum_required_tags: "Nombre minimal d'étiquettes requises dans un sujet :"
       default_slow_mode: 'Activer le mode ralenti pour tous les nouveaux sujets dans cette catégorie'
       parent: "Catégorie parente"

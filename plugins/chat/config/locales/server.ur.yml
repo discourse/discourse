@@ -27,6 +27,9 @@ ur:
       statuses:
         closed: "بند"
         open: "کھولیں"
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "غیر ascii حروف پر مشتمل ہے"
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

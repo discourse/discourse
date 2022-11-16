@@ -293,7 +293,6 @@ de:
       like_count: "„Gefällt mir“"
       topic_count: "Themen"
       post_count: "Beiträge"
-      user_count: "Benutzer"
       active_user_count: "Aktive Benutzer"
       contact: "Kontaktiere uns"
       contact_info: "Im Falle eines kritischen Problems oder einer dringenden Angelegenheit, die diese Website betrifft, kontaktiere uns bitte unter %{contact_info}."
@@ -350,7 +349,6 @@ de:
       remove_confirmation: "Bist du sicher, dass du diesen Entwurf löschen möchtest?"
       new_topic: "Neuer Entwurf für Thema"
       new_private_message: "Neuer Entwurf für persönliche Nachricht"
-      topic_reply: "Entwurf für Antwort"
       abandon:
         confirm: "Du hast einen Entwurf für dieses Thema in Arbeit. Was würdest du gerne damit machen?"
         yes_value: "Verwerfen"
@@ -1656,15 +1654,6 @@ de:
       set_custom_status: "Benutzerdefinierten Status festlegen"
       what_are_you_doing: "Was machst du gerade?"
       remove_status: "Status entfernen"
-    popup:
-      primary: "Verstanden!"
-      secondary: "diese Tipps nicht anzeigen"
-      first_notification:
-        title: "Deine erste Benachrichtigung!"
-        content: "Benachrichtigungen dienen dazu, dich auf dem Laufenden zu halten, was in der Community passiert."
-      topic_timeline:
-        title: "Themenzeitleiste"
-        content: "Mit der Themenzeitleiste kannst du schnell durch einen Beitrag scrollen."
     loading: "Wird geladen …"
     errors:
       prev_page: "während des Ladens"
@@ -2509,9 +2498,6 @@ de:
       move_to_inbox:
         title: "In Posteingang verschieben"
         help: "Nachricht in den Posteingang zurück verschieben"
-      edit_message:
-        help: "Ersten Beitrag dieser Unterhaltung bearbeiten"
-        title: "Bearbeiten"
       defer:
         help: "Als ungelesen markieren"
         title: "Aufschieben"
@@ -3230,8 +3216,6 @@ de:
       this_year: "dieses Jahr"
       position: "Position auf der Kategorien-Seite:"
       default_position: "Standardposition"
-      position_disabled: "Kategorien werden in der Reihenfolge der Aktivität angezeigt. Um die Reihenfolge von Kategorien in Listen zu steuern, "
-      position_disabled_click: 'aktiviere die Einstellung „fixed category positions“.'
       minimum_required_tags: "Mindestanzahl an Schlagwörtern, die ein Thema erfordert"
       default_slow_mode: '„Langsamer Modus“ für neue Themen in dieser Kategorie aktivieren.'
       parent: "Übergeordnete Kategorie"

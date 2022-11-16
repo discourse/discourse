@@ -324,7 +324,6 @@ hr:
       like_count: "Likeovi"
       topic_count: "Teme"
       post_count: "Objave"
-      user_count: "Korisnici"
       active_user_count: "Aktivni korisnici"
       contact: "Kontaktirajte nas"
       contact_info: "U slučaju kritičnog problema ili hitnosti koje utječu na rad stranice, kontaktirajte nas na %{contact_info}."
@@ -381,7 +380,6 @@ hr:
       remove_confirmation: "Jeste li sigurni da želite izbrisati ovaj nacrt?"
       new_topic: "Nova skica teme"
       new_private_message: "Nova skica osobne poruke"
-      topic_reply: "Skica odgovora"
       abandon:
         confirm: "Imate nacrt u tijeku za ovu temu. Što biste željeli učiniti s njom?"
         yes_value: "Odbaci"
@@ -2522,9 +2520,6 @@ hr:
       move_to_inbox:
         title: "Premjesti u ulaznu poštu"
         help: "Premjestite poruku nazad u dolazni pretinac"
-      edit_message:
-        help: "Uredite prvu objavu u poruci"
-        title: "Izmijeni"
       defer:
         help: "Označi kao nepročitano"
         title: "Odloži"
@@ -3275,8 +3270,6 @@ hr:
       this_year: "ove godine"
       position: "Položaj na stranici kategorija:"
       default_position: "Zadana pozicija"
-      position_disabled: "Kategorije će u nizu biti prikazivane po razini aktivnosti. Za kontrolu redosljeda kategorija u popisu,"
-      position_disabled_click: 'omogućite postavku "fiksa pozicija kategorija".'
       minimum_required_tags: "Minimalan broj oznaka potrebnih u temi:"
       default_slow_mode: 'Omogućite "Spori način rada" za nove teme u ovoj kategoriji.'
       parent: "Nadkategorija"

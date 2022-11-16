@@ -7,6 +7,9 @@
 fa_IR:
   js:
     admin:
+      site_settings:
+        categories:
+          chat: گفتگو
       logs:
         staff_actions:
           actions:
@@ -264,7 +267,6 @@ fa_IR:
       replying_indicator:
         single_user: "%{username} در حال نوشتن"
         multiple_users: "%{commaSeparatedUsernames} و %{lastUsername} در حال نوشتن"
-      topic_button_title: "گفتگو"
       emoji_picker:
         favorites: "اغلب استفاده می‌شه"
         objects: "اشیا"

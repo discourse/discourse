@@ -158,7 +158,6 @@ body.invite-page {
       input,
       .select-kit-header {
         padding: 0.75em 0.77em;
-        border-radius: 0.25em;
         min-width: 250px;
         box-shadow: none;
         margin-bottom: 0.25em;
@@ -186,7 +185,6 @@ body.invite-page {
         left: 1em;
         top: 10px;
         box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb), 0);
-        border-radius: 0.25em;
         transition: 0.2s ease all;
       }
       .user-field.dropdown label.control-label {
@@ -235,7 +233,6 @@ body.invite-page {
       input {
         width: 100%;
         padding: 0.75em 0.5em;
-        border-radius: 0.25em;
         min-width: 250px;
         box-shadow: none;
         margin-bottom: 2em;

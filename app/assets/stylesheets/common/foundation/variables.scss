@@ -18,6 +18,10 @@ $reply-area-max-width: 1475px !default;
   --topic-body-width: #{$topic-body-width};
   --topic-body-width-padding: #{$topic-body-width-padding};
   --topic-avatar-width: #{$topic-avatar-width};
+  --d-border-radius: initial;
+  --d-nav-pill-border-radius: var(--d-border-radius);
+  --d-button-border-radius: var(--d-border-radius);
+  --d-input-border-radius: var(--d-border-radius);
 }
 
 $d-sidebar-width: 16em !default;

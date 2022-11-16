@@ -156,7 +156,6 @@ te:
       like_count: "ఇష్టాలు"
       topic_count: "విషయాలు"
       post_count: "టపాలు"
-      user_count: "వాడుకరులు"
       active_user_count: "క్రియాశీల సభ్యులు"
       contact: "మమ్ము సంప్రదించండి"
       contact_info: "ఈ సంధర్భంలో క్లిష్టమైన సమస్య లేదా అత్యవసర విషయం సైట్ ను ప్రభావితం చేస్తుంది, దయచేసి మమ్మల్ని సంప్రదించండి %{contact_info}."
@@ -849,8 +848,6 @@ te:
     topic:
       create: "కొత్త విషయం"
       create_long: "కొత్త విషయం సృష్టించు"
-      edit_message:
-        title: "సవరించు"
       defer:
         title: "వాయిదావేయి"
       list: "విషయాలు"
@@ -1123,8 +1120,6 @@ te:
       review_group_name: "గుంపు పేరు"
       this_year: "ఈ సంవత్సరం"
       default_position: "అప్రమేయ స్థానం"
-      position_disabled: "వర్గాలు కలాపం వరుసలో చూపబడతాయి. జాబితాల్లో వర్గాల వరుసను నియంత్రించడానికి,"
-      position_disabled_click: '"స్థిర వర్గ స్థాయిలు" అమరికను చేతనం చేయండి'
       parent: "తండ్రి వర్గం"
       notifications:
         watching:

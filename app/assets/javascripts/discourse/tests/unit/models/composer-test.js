@@ -4,33 +4,36 @@ import {
   PRIVATE_MESSAGE,
   REPLY,
 } from "discourse/models/composer";
-import {
-  currentUser,
-  discourseModule,
-} from "discourse/tests/helpers/qunit-helpers";
+import { currentUser } from "discourse/tests/helpers/qunit-helpers";
 import AppEvents from "discourse/services/app-events";
 import EmberObject from "@ember/object";
-import createStore from "discourse/tests/helpers/create-store";
-import { test } from "qunit";
+import { module, test } from "qunit";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { setupTest } from "ember-qunit";
 
-function createComposer(opts) {
-  opts = opts || {};
-  opts.user = opts.user || currentUser();
+function createComposer(opts = {}) {
+  opts.user ??= currentUser();
   opts.appEvents = AppEvents.create();
-  return createStore().createRecord("composer", opts);
+  const store = getOwner(this).lookup("service:store");
+  return store.createRecord("composer", opts);
 }
 
 function openComposer(opts) {
-  const composer = createComposer(opts);
+  const composer = createComposer.call(this, opts);
   composer.open(opts);
   return composer;
 }
 
-discourseModule("Unit | Model | composer", function () {
+module("Unit | Model | composer", function (hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function () {
+    this.siteSettings = getOwner(this).lookup("service:site-settings");
+  });
+
   test("replyLength", function (assert) {
     const replyLength = function (val, expectedLength) {
-      const composer = createComposer({ reply: val });
+      const composer = createComposer.call(this, { reply: val });
       assert.strictEqual(composer.get("replyLength"), expectedLength);
     };
 
@@ -78,7 +81,7 @@ discourseModule("Unit | Model | composer", function () {
       if (isFirstPost) {
         action = CREATE_TOPIC;
       }
-      const composer = createComposer({ reply: val, action });
+      const composer = createComposer.call(this, { reply: val, action });
       assert.strictEqual(
         composer.get("missingReplyCharacters"),
         expected,
@@ -111,7 +114,7 @@ discourseModule("Unit | Model | composer", function () {
     const link = "http://imgur.com/gallery/grxX8";
     this.siteSettings.topic_featured_link_enabled = true;
     this.siteSettings.topic_featured_link_allowed_category_ids = 12345;
-    const composer = createComposer({
+    const composer = createComposer.call(this, {
       title: link,
       categoryId: 12345,
       featuredLink: link,
@@ -128,7 +131,7 @@ discourseModule("Unit | Model | composer", function () {
 
   test("missingTitleCharacters", function (assert) {
     const missingTitleCharacters = function (val, isPM, expected, message) {
-      const composer = createComposer({
+      const composer = createComposer.call(this, {
         title: val,
         action: isPM ? PRIVATE_MESSAGE : REPLY,
       });
@@ -252,7 +255,7 @@ discourseModule("Unit | Model | composer", function () {
   test("Title length for private messages", function (assert) {
     this.siteSettings.min_personal_message_title_length = 5;
     this.siteSettings.max_topic_title_length = 10;
-    const composer = createComposer({ action: PRIVATE_MESSAGE });
+    const composer = createComposer.call(this, { action: PRIVATE_MESSAGE });
 
     composer.set("title", "asdf");
     assert.ok(!composer.get("titleLengthValid"), "short titles are not valid");
@@ -265,7 +268,7 @@ discourseModule("Unit | Model | composer", function () {
   });
 
   test("Post length for private messages with non human users", function (assert) {
-    const composer = createComposer({
+    const composer = createComposer.call(this, {
       topic: EmberObject.create({ pm_with_non_human_user: true }),
     });
 
@@ -293,7 +296,7 @@ discourseModule("Unit | Model | composer", function () {
 
   test("clearState", function (assert) {
     const store = getOwner(this).lookup("service:store");
-    const composer = createComposer({
+    const composer = createComposer.call(this, {
       originalText: "asdf",
       reply: "asdf2",
       post: store.createRecord("post", { id: 1 }),
@@ -310,7 +313,7 @@ discourseModule("Unit | Model | composer", function () {
 
   test("initial category when uncategorized is allowed", function (assert) {
     this.siteSettings.allow_uncategorized_topics = true;
-    const composer = openComposer({
+    const composer = openComposer.call(this, {
       action: CREATE_TOPIC,
       draftKey: "asfd",
       draftSequence: 1,
@@ -320,7 +323,7 @@ discourseModule("Unit | Model | composer", function () {
 
   test("initial category when uncategorized is not allowed", function (assert) {
     this.siteSettings.allow_uncategorized_topics = false;
-    const composer = openComposer({
+    const composer = openComposer.call(this, {
       action: CREATE_TOPIC,
       draftKey: "asfd",
       draftSequence: 1,
@@ -335,7 +338,7 @@ discourseModule("Unit | Model | composer", function () {
     const quote =
       '[quote="neil, post:5, topic:413"]\nSimmer down you two.\n[/quote]';
     const newComposer = function () {
-      return openComposer({
+      return openComposer.call(this, {
         action: REPLY,
         draftKey: "asfd",
         draftSequence: 1,
@@ -386,14 +389,14 @@ discourseModule("Unit | Model | composer", function () {
 
   test("title placeholder depends on what you're doing", function (assert) {
     this.siteSettings.topic_featured_link_enabled = false;
-    let composer = createComposer({ action: CREATE_TOPIC });
+    let composer = createComposer.call(this, { action: CREATE_TOPIC });
     assert.strictEqual(
       composer.get("titlePlaceholder"),
       "composer.title_placeholder",
       "placeholder for normal topic"
     );
 
-    composer = createComposer({ action: PRIVATE_MESSAGE });
+    composer = createComposer.call(this, { action: PRIVATE_MESSAGE });
     assert.strictEqual(
       composer.get("titlePlaceholder"),
       "composer.title_placeholder",
@@ -402,14 +405,14 @@ discourseModule("Unit | Model | composer", function () {
 
     this.siteSettings.topic_featured_link_enabled = true;
 
-    composer = createComposer({ action: CREATE_TOPIC });
+    composer = createComposer.call(this, { action: CREATE_TOPIC });
     assert.strictEqual(
       composer.get("titlePlaceholder"),
       "composer.title_or_link_placeholder",
       "placeholder invites you to paste a link"
     );
 
-    composer = createComposer({ action: PRIVATE_MESSAGE });
+    composer = createComposer.call(this, { action: PRIVATE_MESSAGE });
     assert.strictEqual(
       composer.get("titlePlaceholder"),
       "composer.title_placeholder",
@@ -420,7 +423,7 @@ discourseModule("Unit | Model | composer", function () {
   test("allows featured link before choosing a category", function (assert) {
     this.siteSettings.topic_featured_link_enabled = true;
     this.siteSettings.allow_uncategorized_topics = false;
-    let composer = createComposer({ action: CREATE_TOPIC });
+    let composer = createComposer.call(this, { action: CREATE_TOPIC });
     assert.strictEqual(
       composer.get("titlePlaceholder"),
       "composer.title_or_link_placeholder",
@@ -430,7 +433,7 @@ discourseModule("Unit | Model | composer", function () {
   });
 
   test("targetRecipientsArray contains types", function (assert) {
-    let composer = createComposer({
+    let composer = createComposer.call(this, {
       targetRecipients: "test,codinghorror,staff,foo@bar.com",
     });
     assert.ok(composer.targetRecipientsArray, [

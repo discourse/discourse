@@ -262,7 +262,6 @@ nb_NO:
       like_count: "Likes"
       topic_count: "Emner"
       post_count: "Innlegg"
-      user_count: "Brukere"
       active_user_count: "Aktive brukere"
       contact: "Kontakt oss"
       contact_info: "I tilfelle en kritisk hendelse skulle inntreffe eller det er en hastesak som påvirker siden, ta kontakt på %{contact_info}."
@@ -309,7 +308,6 @@ nb_NO:
       remove_confirmation: "Er du sikker på at du vil slette dette utkastet?"
       new_topic: "Nytt emneutkast"
       new_private_message: "Nytt personlig meldingsutkast"
-      topic_reply: "Svarutkast"
       abandon:
         confirm: "Du har et pågående utkast for dette emnet. Hva vil du gjøre med det?"
         yes_value: "Forkast"
@@ -2223,9 +2221,6 @@ nb_NO:
       move_to_inbox:
         title: "Flytt til innboks"
         help: "Flytt melding tilbake til innboks"
-      edit_message:
-        help: "Rediger første innlegg i meldingen"
-        title: "Rediger"
       defer:
         help: "Merk som ulest"
         title: "Utsett"
@@ -2887,8 +2882,6 @@ nb_NO:
       this_year: "dette året"
       position: "Posisjon på kategorisiden:"
       default_position: "Forvalgt posisjon"
-      position_disabled: "Kategorier vil bli vist i henhold til aktivitet. For å styre rekkefølgen av kategorier i listen"
-      position_disabled_click: 'aktiver innstillingen "faste kategoriposisjoner".'
       minimum_required_tags: "Minste antall stikkord som kreves for et emne:"
       default_slow_mode: 'Aktiver "Sakte modus" for nye emner i denne kategorien.'
       parent: "Foreldrekategori"

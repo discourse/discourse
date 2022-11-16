@@ -9,14 +9,20 @@ task 'assets:precompile:before' do
   end
 
   if ENV["EMBER_CLI_COMPILE_DONE"] != "1"
-    compile_command = "NODE_OPTIONS='--max-old-space-size=2048' yarn --cwd app/assets/javascripts/discourse run ember build -prod"
+    compile_command = "yarn --cwd app/assets/javascripts/discourse run ember build -prod"
+
+    if check_node_heap_size_limit < 1024
+      STDERR.puts "Detected low Node.js heap_size_limit. Using --max-old-space-size=1024."
+      compile_command = "NODE_OPTIONS='--max-old-space-size=1024' #{compile_command}"
+    end
+
     only_assets_precompile_remaining = (ARGV.last == "assets:precompile")
 
     if only_assets_precompile_remaining
       # Using exec to free up Rails app memory during ember build
       exec "#{compile_command} && EMBER_CLI_COMPILE_DONE=1 bin/rake assets:precompile"
     else
-      system compile_command
+      system compile_command, exception: true
     end
   end
 
@@ -89,6 +95,12 @@ task 'assets:flush_sw' => 'environment' do
   rescue
     STDERR.puts "Warning: unable to flush service worker script"
   end
+end
+
+def check_node_heap_size_limit
+  output, status = Open3.capture2("node", "-e", "console.log(v8.getHeapStatistics().heap_size_limit/1024/1024)")
+  raise "Failed to fetch node memory limit" if status != 0
+  output.to_f
 end
 
 def assets_path

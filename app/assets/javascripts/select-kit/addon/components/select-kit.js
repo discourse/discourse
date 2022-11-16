@@ -1073,7 +1073,11 @@ export default Component.extend(
         discourseSetup &&
         discourseSetup.getAttribute("data-environment") === "development"
       ) {
-        deprecated(text, { since: "v2.4.0", dropFrom: "2.9.0.beta1" });
+        deprecated(text, {
+          since: "v2.4.0",
+          dropFrom: "2.9.0.beta1",
+          id: "discourse.select-kit",
+        });
       }
     },
 

@@ -11,7 +11,6 @@ import {
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import User from "discourse/models/user";
-import createStore from "discourse/tests/helpers/create-store";
 import sinon from "sinon";
 import { getOwner } from "discourse-common/lib/get-owner";
 
@@ -1019,7 +1018,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
   });
 
   test("getSubCategoryIds", function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     const foo = store.createRecord("category", { id: 1, slug: "foo" });
     const bar = store.createRecord("category", {
       id: 2,
@@ -1040,7 +1039,7 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
   });
 
   test("countNew", function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     const foo = store.createRecord("category", {
       id: 1,
       slug: "foo",

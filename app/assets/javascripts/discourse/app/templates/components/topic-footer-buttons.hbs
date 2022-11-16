@@ -29,6 +29,10 @@
 <PinnedButton @pinned={{this.topic.pinned}} @topic={{this.topic}} />
 
 {{#if this.showNotificationsButton}}
+  {{#if this.showNotificationUserTip}}
+    <UserTip @id="topic_notification_levels" @selector=".notifications-button" />
+  {{/if}}
+
   <TopicNotificationsButton @notificationLevel={{this.topic.details.notification_level}} @topic={{this.topic}} />
 {{/if}}
 

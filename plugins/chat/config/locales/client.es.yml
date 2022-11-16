@@ -348,7 +348,6 @@ es:
       retention_reminders:
         public: "El historial del canal se conserva durante %{days} días."
         dm: "El historial de chat personal se conserva durante %{days} días."
-      topic_button_title: "Chat"
       flags:
         off_topic: "Este mensaje no es relevante para la discusión actual, tal y como se define en el título del canal, y probablemente debería moverse a otro lugar."
         inappropriate: "Este mensaje tiene un contenido que una persona razonable consideraría ofensivo, abusivo o que viola las <a href=\"%{basePath}/guidelines\">directrices de nuestra comunidad</a>."

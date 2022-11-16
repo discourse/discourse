@@ -422,7 +422,6 @@ ar:
       like_count: "تسجيلات الإعجاب"
       topic_count: "الموضوعات"
       post_count: "المنشورات"
-      user_count: "المستخدمون"
       active_user_count: "المستخدمون النشطون"
       contact: "تواصل معنا"
       contact_info: "في حال حدوث مشكلة خطيرة أو أمر عاجل يؤثر على الموقع، يُرجى مراسلتنا على %{contact_info}."
@@ -479,7 +478,6 @@ ar:
       remove_confirmation: "هل تريد بالتأكيد حذف هذه المسودة؟"
       new_topic: "مسودة موضوع جديد"
       new_private_message: "مسودة رسالة خاصة جديدة"
-      topic_reply: "مسودة الرد"
       abandon:
         confirm: "لديك مسودة محفوظة لهذا الموضوع. ماذا تريد أن تفعل بها؟"
         yes_value: "تجاهل"
@@ -1315,7 +1313,6 @@ ar:
         not_first_time: "ليست المرة الأولى لك؟"
         skip_link: "تخطي هذه النصائح"
         read_later: "سأقرأها لاحقًا."
-      reset_seen_popups: "عرض نصائح إعداد المستخدم مرة أخرى"
       theme_default_on_all_devices: "جعل هذه السمة الافتراضية على كل أجهزتي"
       color_scheme_default_on_all_devices: "ضبط نظام (أنظمة) الألوان الافتراضي على جميع أجهزتي"
       color_scheme: "نظام الألوان"
@@ -1956,15 +1953,6 @@ ar:
       set_custom_status: "تعيين حالة مخصَّصة"
       what_are_you_doing: "ماذا تفعل؟"
       remove_status: "إزالة الحالة"
-    popup:
-      primary: "فهمت!"
-      secondary: "عدم عرض هذه النصائح لي"
-      first_notification:
-        title: "أول إشعار لك!"
-        content: "تُستخدَم الإشعارات لإبقائك على اطِّلاع بما يحدث في المجتمع."
-      topic_timeline:
-        title: "الجدول الزمني للموضوع"
-        content: "مرِّر عبر المنشور بسرعة باستخدام الجدول الزمني للموضوع."
     loading: "جارٍ التحميل..."
     errors:
       prev_page: "في أثناء محاولة التحميل"
@@ -2978,9 +2966,6 @@ ar:
       move_to_inbox:
         title: "النقل إلى صندوق الوارد"
         help: "نقل الرسالة مرة أخرى إلى صندوق الوارد"
-      edit_message:
-        help: "تعديل أول منشور في الرسالة"
-        title: "تعديل"
       defer:
         help: "وضع علامة كغير مقروءة"
         title: "تأجيل"
@@ -3853,8 +3838,6 @@ ar:
       this_year: "هذا العام"
       position: "الترتيب في صفحة الفئات:"
       default_position: "الترتيب الافتراضي"
-      position_disabled: "سيتم عرض الفئات بترتيب نشاطها. للتحكُّم في ترتيب الفئات في القائمة، "
-      position_disabled_click: 'عليك تفعيل إعداد "تثبيت ترتيب الفئات".'
       minimum_required_tags: "الحد الأدنى من عدد الوسوم المطلوبة في الموضوع:"
       default_slow_mode: 'تفعيل "الوضع البطيء" للموضوعات الجديدة في هذه الفئة.'
       parent: "الفئة الرئيسية"

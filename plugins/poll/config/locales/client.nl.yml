@@ -20,11 +20,11 @@ nl:
         groups:
           title: "Je moet lid van %{groups} zijn om te stemmen in deze poll."
         vote:
-          title: "Resultaten worden getoond bij <strong>stemmen</strong>."
+          title: "Resultaten worden weergegeven bij <strong>stemmen</strong>."
         closed:
-          title: "Resultaten worden getoond zodra <strong>gesloten</strong>."
+          title: "Resultaten worden weergegeven zodra <strong>gesloten</strong>."
         staff:
-          title: "Resultaten worden alleen aan <strong>stafleden</strong> getoond."
+          title: "Resultaten worden alleen aan <strong>medewerkers</strong> weergegeven."
       multiple:
         help:
           at_least_min_options:
@@ -38,17 +38,20 @@ nl:
             other: "Kies <strong>%{count}</strong> opties."
           between_min_and_max_options: "Kies <strong>%{min}</strong> tot <strong>%{max}</strong> opties."
       cast-votes:
-        title: "Uw stemmen uitbrengen"
+        title: "Je stemmen uitbrengen"
         label: "Stem nu!"
       show-results:
         title: "De pollresultaten weergeven"
-        label: "Resultaten tonen"
+        label: "Resultaten weergeven"
+      remove-vote:
+        title: "Verwijder je stem"
+        label: "Stem verwijderen"
       hide-results:
-        title: "Terug naar uw stemmen"
-        label: "Stem tonen"
+        title: "Terug naar je stemmen"
+        label: "Stem weergeven"
       group-results:
         title: "Stemmen groeperen op gebruikersveld"
-        label: "Verdeling tonen"
+        label: "Verdeling weergeven"
       export-results:
         title: "De pollresultaten exporteren"
         label: "Exporteren"
@@ -70,7 +73,7 @@ nl:
         percentage: "Percentage"
         count: "Aantal"
       error_while_toggling_status: "Sorry, er is een fout opgetreden bij het omschakelen van de status van deze poll."
-      error_while_casting_votes: "Sorry, er is een fout opgetreden bij het uitbrengen van uw stemmen."
+      error_while_casting_votes: "Sorry, er is een fout opgetreden bij het uitbrengen van je stemmen."
       error_while_fetching_voters: "Sorry, er is een fout opgetreden bij het weergeven van de stemmers."
       error_while_exporting_results: "Sorry, er is een fout opgetreden bij het exporteren van pollresultaten."
       ui_builder:
@@ -89,11 +92,11 @@ nl:
           multiple: Meerkeuze
           number: Numerieke beoordeling
         poll_result:
-          label: Resultaten tonen...
+          label: Resultaten weergeven...
           always: Altijd zichtbaar
           vote: Pas na stemming
           closed: Wanneer de poll is gesloten
-          staff: Alleen stafleden
+          staff: Alleen medewerkers
         poll_groups:
           label: Beperk het stemmen tot deze groepen
         poll_chart_type:
@@ -105,7 +108,7 @@ nl:
           min: Min. keuzes
           step: Stap
         poll_public:
-          label: Tonen wie er heeft gestemd
+          label: Weergeven wie er heeft gestemd
         poll_title:
           label: Titel (optioneel)
         poll_options:
@@ -113,5 +116,5 @@ nl:
           add: Optie toevoegen
         automatic_close:
           label: Poll automatisch sluiten
-        show_advanced: "Geavanceerde opties tonen"
+        show_advanced: "Geavanceerde opties weergeven"
         hide_advanced: "Geavanceerde opties verbergen"

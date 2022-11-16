@@ -259,7 +259,6 @@ id:
       like_count: "Suka"
       topic_count: "Topik"
       post_count: "Pos"
-      user_count: "Pengguna"
       active_user_count: "Pengguna Aktif"
       contact: "Kontak kami"
       contact_info: "Pada kegiatan dari sebuah isu kritikal atau penting terjadi pada situs ini, silahkan kontak kami di %{contact_info}."
@@ -316,7 +315,6 @@ id:
       remove_confirmation: "Anda yakin ingin menghapus rancangan ini?"
       new_topic: "Konsep topik baru"
       new_private_message: "Rancangan pesan pribadi baru"
-      topic_reply: "Balasan konsep"
       abandon:
         confirm: "Anda memiliki rancangan yang sedang diproses untuk topik ini. Apa yang ingin Anda lakukan dengannya?"
         yes_value: "Batalkan"
@@ -1548,8 +1546,6 @@ id:
         title: "Arsip"
       move_to_inbox:
         title: "Pindah ke Kotak Masuk"
-      edit_message:
-        title: "Ubah"
       list: "Topik"
       new: "topik baru"
       unread: "belum dibaca"
