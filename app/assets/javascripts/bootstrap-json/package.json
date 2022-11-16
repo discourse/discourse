@@ -25,6 +25,6 @@
     "express": "^4.18.2",
     "html-entities": "^2.3.3",
     "jsdom": "^20.0.2",
-    "node-fetch": "^2.6.6"
+    "node-fetch": "^3.3.0"
   }
 }
