@@ -10,6 +10,7 @@ import { escape } from "pretty-text/sanitizer";
 import domFromString from "discourse-common/lib/dom-from-string";
 import getURL from "discourse-common/lib/get-url";
 import { emojiUnescape } from "discourse/lib/text";
+import { escapeExpression } from "discourse/lib/utilities";
 
 let _beforeAdoptDecorators = [];
 let _afterAdoptDecorators = [];
@@ -403,7 +404,8 @@ export default class PostCooked {
   }
 
   _insertUserStatus(mention, status) {
-    const statusHtml = emojiUnescape(`:${status.emoji}:`, {
+    const emoji = escapeExpression(`:${status.emoji}:`);
+    const statusHtml = emojiUnescape(emoji, {
       class: "user-status",
       title: this._userStatusTitle(status),
     });
@@ -424,7 +426,7 @@ export default class PostCooked {
       this.currentUser.timezone,
       this.currentUser.locale
     );
-    return `${status.description} ${_until}`;
+    return escapeExpression(`${status.description} ${_until}`);
   }
 
   _trackMentionedUsersStatus() {
