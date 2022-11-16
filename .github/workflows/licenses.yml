@@ -75,10 +75,10 @@ jobs:
       - name: Check Node Licenses
         if: ${{ !cancelled() }}
         run: |
-          pnpm dlx licensee --errors-only
+          pnpm --package=CvX/licensee.js#pnpm dlx licensee --errors-only
 
       - name: Check Ember CLI Workspace Licenses
         if: ${{ !cancelled() }}
         working-directory: ./app/assets/javascripts
         run: |
-          pnpm dlx licensee --errors-only
+          pnpm --package=CvX/licensee.js#pnpm dlx licensee --errors-only
