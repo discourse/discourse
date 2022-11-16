@@ -81,7 +81,6 @@
     "markdown-it": "^13.0.1",
     "message-bus-client": "^4.2.0",
     "messageformat": "0.1.5",
-    "node-fetch": "^2.6.7",
     "pretender": "^3.4.7",
     "pretty-text": "1.0.0",
     "qunit": "^2.19.3",
