@@ -23,10 +23,6 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     return this.args.filterByTypes;
   }
 
-  get allNotifications() {
-    return !this.filterByTypes;
-  }
-
   get dismissTypes() {
     return null;
   }
