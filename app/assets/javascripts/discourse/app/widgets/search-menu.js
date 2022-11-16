@@ -193,6 +193,12 @@ export default createWidget("search-menu", {
   services: ["search"],
   searchData,
 
+  buildAttributes() {
+    return {
+      "aria-live": "polite",
+    };
+  },
+
   buildKey: () => "search-menu",
 
   defaultState(attrs) {
