@@ -1171,11 +1171,17 @@ const User = RestModel.extend({
     // Hide any shown user tips.
     let seenUserTips = this.seen_popups || [];
     if (userTipId) {
-      hideUserTip(userTipId);
-      if (!seenUserTips.includes(userTips[userTipId])) {
-        seenUserTips.push(userTips[userTipId]);
+      if (seenUserTips.includes(userTips[userTipId])) {
+        return;
       }
+
+      hideUserTip(userTipId);
+      seenUserTips.push(userTips[userTipId]);
     } else {
+      if (seenUserTips.includes(-1)) {
+        return;
+      }
+
       hideAllUserTips();
       seenUserTips = [-1];
     }
