@@ -289,8 +289,10 @@ en:
         always: "For all activity"
 
       settings:
-        enable_auto_join_users: "Automatically add all recently active users"
-        disable_auto_join_users: "Stop automatically adding users"
+        auto_join_users_label: "Automatically add users"
+        auto_join_users_info: "Check hourly which users have been active in the last 3 months and, if they have access to the %{category} category, add them to this channel."
+        enable_auto_join_users: "Yes"
+        disable_auto_join_users: "No"
         auto_join_users_warning: "Every user who isn't a member of this channel and has access to the %{category} category will join. Are you sure?"
         desktop_notification_level: "Desktop notifications"
         follow: "Join"
@@ -304,6 +306,8 @@ en:
         save: "Save"
         saved: "Saved"
         unfollow: "Leave"
+        admin_title: "Admin"
+        retention_info: "Chat history will be saved for %{days} days."
 
       admin:
         title: "Chat"
