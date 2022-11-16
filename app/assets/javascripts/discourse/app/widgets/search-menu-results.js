@@ -53,6 +53,10 @@ const DEFAULT_QUICK_TIPS = [
     label: I18n.t("search.tips.full_search_key", { modifier: "Ctrl" }),
     description: I18n.t("search.tips.full_search"),
   },
+  {
+    label: "@me",
+    description: I18n.t("search.tips.me"),
+  },
 ];
 
 let QUICK_TIPS = [];
