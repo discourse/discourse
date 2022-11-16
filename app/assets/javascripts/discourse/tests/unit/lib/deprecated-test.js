@@ -1,6 +1,7 @@
 import {
   default as deprecated,
   withSilencedDeprecations,
+  withSilencedDeprecationsAsync,
 } from "discourse-common/lib/deprecated";
 import DeprecationCounter from "discourse/tests/helpers/deprecation-counter";
 import { module, test } from "qunit";
@@ -177,9 +178,10 @@ module("Unit | Utility | deprecated", function (hooks) {
   });
 
   test("can silence deprecations with async callback in tests", async function (assert) {
-    await withSilencedDeprecations("discourse.one", async () =>
-      deprecated("message", { id: "discourse.one" })
-    );
+    await withSilencedDeprecationsAsync("discourse.one", async () => {
+      await Promise.resolve();
+      deprecated("message", { id: "discourse.one" });
+    });
     assert.strictEqual(
       this.warnStub.callCount,
       0,
