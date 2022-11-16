@@ -804,17 +804,22 @@ export default Controller.extend({
     cannotSeeMention({ name, reason, notifiedCount, isGroup }) {
       notifiedCount = parseInt(notifiedCount, 10);
 
+      let body;
+      if (isGroup) {
+        body = I18n.t(`composer.cannot_see_group_mention.${reason}`, {
+          group: name,
+          count: notifiedCount,
+        });
+      } else {
+        body = I18n.t(`composer.cannot_see_mention.${reason}`, {
+          username: name,
+        });
+      }
+
       this.appEvents.trigger("composer-messages:create", {
         extraClass: "custom-body",
         templateName: "education",
-        body: isGroup
-          ? I18n.t(`composer.cannot_see_group_mention.${reason}`, {
-              group: name,
-              count: notifiedCount,
-            })
-          : I18n.t(`composer.cannot_see_mention.${reason}`, {
-              username: name,
-            }),
+        body,
       });
     },
 
