@@ -1,8 +1,11 @@
 import { module, test } from "qunit";
 import ResultSet from "discourse/models/result-set";
-import createStore from "discourse/tests/helpers/create-store";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { setupTest } from "ember-qunit";
 
-module("Unit | Model | result-set", function () {
+module("Unit | Model | result-set", function (hooks) {
+  setupTest(hooks);
+
   test("defaults", function (assert) {
     const resultSet = ResultSet.create({ content: [] });
     assert.strictEqual(resultSet.get("length"), 0);
@@ -14,7 +17,7 @@ module("Unit | Model | result-set", function () {
   });
 
   test("pagination support", async function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     const resultSet = await store.findAll("widget");
     assert.strictEqual(resultSet.get("length"), 2);
     assert.strictEqual(resultSet.get("totalRows"), 4);
@@ -33,7 +36,7 @@ module("Unit | Model | result-set", function () {
   });
 
   test("refresh support", async function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     const resultSet = await store.findAll("widget");
     assert.strictEqual(
       resultSet.get("refreshUrl"),

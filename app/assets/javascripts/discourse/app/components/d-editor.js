@@ -209,7 +209,9 @@ export function clearToolbarCallbacks() {
 }
 
 export function onToolbarCreate(func) {
-  deprecated("`onToolbarCreate` is deprecated, use the plugin api instead.");
+  deprecated("`onToolbarCreate` is deprecated, use the plugin api instead.", {
+    id: "discourse.d-editor.on-toolbar-create",
+  });
   addToolbarCallback(func);
 }
 

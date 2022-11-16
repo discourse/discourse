@@ -1,22 +1,17 @@
-import {
-  currentUser,
-  discourseModule,
-} from "discourse/tests/helpers/qunit-helpers";
-import DocumentTitle from "discourse/services/document-title";
-import AppEvents from "discourse/services/app-events";
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { currentUser } from "discourse/tests/helpers/qunit-helpers";
 import Session from "discourse/models/session";
-import { test } from "qunit";
 
-discourseModule("Unit | Service | document-title", function (hooks) {
+module("Unit | Service | document-title", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     const session = Session.current();
     session.hasFocus = true;
 
-    this.documentTitle = DocumentTitle.create({
-      session,
-      appEvents: AppEvents.create(),
-    });
-    this.documentTitle.currentUser = null;
+    this.documentTitle = getOwner(this).lookup("service:document-title");
   });
 
   hooks.afterEach(function () {

@@ -296,7 +296,8 @@ export function getUploadMarkdown(upload) {
 export function displayErrorForUpload(data, siteSettings, fileName) {
   if (!fileName) {
     deprecated(
-      "Calling displayErrorForUpload without a fileName is deprecated and will be removed in a future version."
+      "Calling displayErrorForUpload without a fileName is deprecated and will be removed in a future version.",
+      { id: "discourse.uploads.display-error-for-upload" }
     );
     fileName = data.files[0].name;
   }

@@ -531,7 +531,8 @@ class PluginApi {
           this.addCommunitySectionLink(args, name.match(/footerLinks/));
         } catch {
           deprecated(
-            `Usage of \`api.decorateWidget('hamburger-menu:generalLinks')\` is incompatible with the \`enable_experimental_sidebar_hamburger\` site setting. Please use \`api.addCommunitySectionLink\` instead.`
+            `Usage of \`api.decorateWidget('hamburger-menu:generalLinks')\` is incompatible with the \`enable_experimental_sidebar_hamburger\` site setting. Please use \`api.addCommunitySectionLink\` instead.`,
+            { id: "discourse.decorate-widget.hamburger-widget-links" }
           );
         }
 
@@ -798,7 +799,8 @@ class PluginApi {
 
   addFlagProperty() {
     deprecated(
-      "addFlagProperty has been removed. Use the reviewable API instead."
+      "addFlagProperty has been removed. Use the reviewable API instead.",
+      { id: "discourse.add-flag-property" }
     );
   }
 
