@@ -39,6 +39,7 @@ module Reports::TrustLevelGrowth
         OR action = #{UserHistory.actions[:auto_trust_level_change]}
       )
       GROUP BY date(created_at)
+      ORDER BY date(created_at)
       SQL
 
       data = Hash[ filters.collect { |x| [x, []] } ]
