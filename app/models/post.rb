@@ -307,7 +307,7 @@ class Post < ActiveRecord::Base
 
     # This user_id is used to fetch a user which is populated into the
     # currentUser option in our markdown pipeline. The last editor is used
-    # to ensure that any markdown rules using the currentUser for a guardian
+    # to ensure that any markdown rules using the current_user for a guardian
     # can have the correct permission controls.
     options[:user_id] = self.last_editor_id
     options[:omit_nofollow] = true if omit_nofollow?

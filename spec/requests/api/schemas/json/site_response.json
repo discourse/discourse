@@ -470,7 +470,7 @@
     "markdown_additional_options" : {
       "type": "object"
     },
-    "hashtag_context_configurations" : {
+    "hashtag_configurations" : {
       "type": "object"
     },
     "hashtag_icons" : {

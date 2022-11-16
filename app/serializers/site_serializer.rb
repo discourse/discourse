@@ -35,7 +35,7 @@ class SiteSerializer < ApplicationSerializer
     :watched_words_link,
     :categories,
     :markdown_additional_options,
-    :hashtag_context_configurations,
+    :hashtag_configurations,
     :hashtag_icons,
     :displayed_about_plugin_stat_groups,
     :show_welcome_topic_banner,
@@ -222,7 +222,7 @@ class SiteSerializer < ApplicationSerializer
     Site.markdown_additional_options
   end
 
-  def hashtag_context_configurations
+  def hashtag_configurations
     HashtagAutocompleteService.contexts_with_ordered_types
   end
 

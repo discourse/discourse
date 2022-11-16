@@ -154,7 +154,7 @@ export default class Chat extends Service {
         "markdown_additional_options.chat.limited_pretty_text_markdown_rules"
       ),
       hashtagTypesInPriorityOrder:
-        this.site.hashtag_context_configurations["chat-composer"],
+        this.site.hashtag_configurations["chat-composer"],
       hashtagIcons: this.site.hashtag_icons,
     };
 

@@ -249,7 +249,7 @@ export function setup(helper) {
         markdownItRules,
         hashtagLookup: opts.discourse.hashtagLookup,
         hashtagTypesInPriorityOrder:
-          chatAdditionalOpts.hashtag_context_configurations["chat-composer"],
+          chatAdditionalOpts.hashtag_configurations["chat-composer"],
         hashtagIcons: opts.discourse.hashtagIcons,
       },
       (customCookFn) => {

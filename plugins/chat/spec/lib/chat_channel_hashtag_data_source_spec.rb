@@ -18,7 +18,7 @@ RSpec.describe Chat::ChatChannelHashtagDataSource do
       result = described_class.lookup(guardian, ["random"]).first
       expect(result.to_h).to eq(
         {
-          url: channel1.url,
+          relative_url: channel1.relative_url,
           text: "Zany Things",
           icon: "comment",
           type: "channel",
@@ -36,7 +36,7 @@ RSpec.describe Chat::ChatChannelHashtagDataSource do
       result = described_class.lookup(Guardian.new(user), ["secret"]).first
       expect(result.to_h).to eq(
         {
-          url: channel2.url,
+          relative_url: channel2.relative_url,
           text: "Secret Stuff",
           icon: "comment",
           type: "channel",
@@ -58,7 +58,7 @@ RSpec.describe Chat::ChatChannelHashtagDataSource do
       result = described_class.search(guardian, "randomiz", 10).first
       expect(result.to_h).to eq(
         {
-          url: channel1.url,
+          relative_url: channel1.relative_url,
           text: "Zany Things",
           icon: "comment",
           type: "channel",
@@ -72,7 +72,7 @@ RSpec.describe Chat::ChatChannelHashtagDataSource do
       result = described_class.search(guardian, "rand", 10).first
       expect(result.to_h).to eq(
         {
-          url: channel1.url,
+          relative_url: channel1.relative_url,
           text: "Zany Things",
           icon: "comment",
           type: "channel",
@@ -86,7 +86,7 @@ RSpec.describe Chat::ChatChannelHashtagDataSource do
       result = described_class.search(guardian, "aNY t", 10).first
       expect(result.to_h).to eq(
         {
-          url: channel1.url,
+          relative_url: channel1.relative_url,
           text: "Zany Things",
           icon: "comment",
           type: "channel",
@@ -103,7 +103,7 @@ RSpec.describe Chat::ChatChannelHashtagDataSource do
       result = described_class.search(Guardian.new(user), "Sec", 10).first
       expect(result.to_h).to eq(
         {
-          url: channel2.url,
+          relative_url: channel2.relative_url,
           text: "Secret Stuff",
           icon: "comment",
           type: "channel",

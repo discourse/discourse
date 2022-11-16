@@ -459,7 +459,7 @@ export default Component.extend(TextareaTextManipulation, {
 
   _applyHashtagAutocomplete() {
     setupHashtagAutocomplete(
-      this.site.hashtag_context_configurations["topic-composer"],
+      this.site.hashtag_configurations["topic-composer"],
       this._$textarea,
       this.siteSettings,
       (value) => {

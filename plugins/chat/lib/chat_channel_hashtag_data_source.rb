@@ -10,7 +10,7 @@ class Chat::ChatChannelHashtagDataSource
       item.text = channel.title(guardian.user)
       item.slug = channel.slug
       item.icon = icon
-      item.url = channel.url
+      item.relative_url = channel.relative_url
       item.type = "channel"
     end
   end

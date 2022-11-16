@@ -187,7 +187,7 @@ export default Component.extend(ComposerUploadUppy, {
       },
 
       hashtagTypesInPriorityOrder:
-        this.site.hashtag_context_configurations["topic-composer"],
+        this.site.hashtag_configurations["topic-composer"],
       hashtagIcons: this.site.hashtag_icons,
     };
   },
@@ -480,8 +480,7 @@ export default Component.extend(ComposerUploadUppy, {
 
   _renderUnseenHashtags(preview) {
     let unseen;
-    const hashtagContext =
-      this.site.hashtag_context_configurations["topic-composer"];
+    const hashtagContext = this.site.hashtag_configurations["topic-composer"];
     if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
       unseen = linkSeenHashtagsInContext(hashtagContext, preview);
     } else {
@@ -887,8 +886,7 @@ export default Component.extend(ComposerUploadUppy, {
 
       // Paint category, tag, and other data source hashtags
       let unseenHashtags;
-      const hashtagContext =
-        this.site.hashtag_context_configurations["topic-composer"];
+      const hashtagContext = this.site.hashtag_configurations["topic-composer"];
       if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
         unseenHashtags = linkSeenHashtagsInContext(hashtagContext, preview);
       } else {

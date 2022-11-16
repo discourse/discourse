@@ -18,7 +18,7 @@ class TagHashtagDataSource
         item.text = tag.name
       end
       item.slug = tag.name
-      item.url = tag.url
+      item.relative_url = tag.url
       item.icon = icon
     end
   end

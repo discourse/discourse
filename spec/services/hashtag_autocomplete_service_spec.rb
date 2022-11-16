@@ -234,9 +234,9 @@ RSpec.describe HashtagAutocompleteService do
     it "returns category and tag in a hash format with the slug and url" do
       result = subject.lookup(%w[book-club great-books fiction-books], %w[category tag])
       expect(result[:category].map(&:slug)).to eq(["book-club"])
-      expect(result[:category].map(&:url)).to eq(["/c/book-club/#{category1.id}"])
+      expect(result[:category].map(&:relative_url)).to eq(["/c/book-club/#{category1.id}"])
       expect(result[:tag].map(&:slug)).to eq(%w[fiction-books great-books])
-      expect(result[:tag].map(&:url)).to eq(%w[/tag/fiction-books /tag/great-books])
+      expect(result[:tag].map(&:relative_url)).to eq(%w[/tag/fiction-books /tag/great-books])
     end
 
     it "does not include category the user cannot access" do
@@ -249,16 +249,16 @@ RSpec.describe HashtagAutocompleteService do
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["great-books"])
       result = subject.lookup(%w[book-club great-books fiction-books], %w[category tag])
       expect(result[:tag].map(&:slug)).to eq(%w[fiction-books])
-      expect(result[:tag].map(&:url)).to eq(["/tag/fiction-books"])
+      expect(result[:tag].map(&:relative_url)).to eq(["/tag/fiction-books"])
     end
 
     it "handles type suffixes for slugs" do
       result =
         subject.lookup(%w[book-club::category great-books::tag fiction-books], %w[category tag])
       expect(result[:category].map(&:slug)).to eq(["book-club"])
-      expect(result[:category].map(&:url)).to eq(["/c/book-club/#{category1.id}"])
+      expect(result[:category].map(&:relative_url)).to eq(["/c/book-club/#{category1.id}"])
       expect(result[:tag].map(&:slug)).to eq(%w[fiction-books great-books])
-      expect(result[:tag].map(&:url)).to eq(%w[/tag/fiction-books /tag/great-books])
+      expect(result[:tag].map(&:relative_url)).to eq(%w[/tag/fiction-books /tag/great-books])
     end
 
     it "handles parent:child category lookups" do
@@ -267,38 +267,38 @@ RSpec.describe HashtagAutocompleteService do
       result = subject.lookup(%w[media:book-club], %w[category tag])
       expect(result[:category].map(&:slug)).to eq(["book-club"])
       expect(result[:category].map(&:ref)).to eq(["media:book-club"])
-      expect(result[:category].map(&:url)).to eq(["/c/media/book-club/#{category1.id}"])
+      expect(result[:category].map(&:relative_url)).to eq(["/c/media/book-club/#{category1.id}"])
       category1.update!(parent_category: nil)
     end
 
     it "for slugs without a type suffix it falls back in type order until a result is found or types are exhausted" do
       result = subject.lookup(%w[book-club great-books fiction-books], %w[category tag])
       expect(result[:category].map(&:slug)).to eq(["book-club"])
-      expect(result[:category].map(&:url)).to eq(["/c/book-club/#{category1.id}"])
+      expect(result[:category].map(&:relative_url)).to eq(["/c/book-club/#{category1.id}"])
       expect(result[:tag].map(&:slug)).to eq(%w[fiction-books great-books])
-      expect(result[:tag].map(&:url)).to eq(%w[/tag/fiction-books /tag/great-books])
+      expect(result[:tag].map(&:relative_url)).to eq(%w[/tag/fiction-books /tag/great-books])
 
       category2 = Fabricate(:category, name: "Great Books", slug: "great-books")
       result = subject.lookup(%w[book-club great-books fiction-books], %w[category tag])
       expect(result[:category].map(&:slug)).to eq(%w[book-club great-books])
-      expect(result[:category].map(&:url)).to eq(
+      expect(result[:category].map(&:relative_url)).to eq(
         ["/c/book-club/#{category1.id}", "/c/great-books/#{category2.id}"],
       )
       expect(result[:tag].map(&:slug)).to eq(%w[fiction-books])
-      expect(result[:tag].map(&:url)).to eq(%w[/tag/fiction-books])
+      expect(result[:tag].map(&:relative_url)).to eq(%w[/tag/fiction-books])
 
       category1.destroy!
       Fabricate(:tag, name: "book-club")
       result = subject.lookup(%w[book-club great-books fiction-books], %w[category tag])
       expect(result[:category].map(&:slug)).to eq(["great-books"])
-      expect(result[:category].map(&:url)).to eq(["/c/great-books/#{category2.id}"])
+      expect(result[:category].map(&:relative_url)).to eq(["/c/great-books/#{category2.id}"])
       expect(result[:tag].map(&:slug)).to eq(%w[book-club fiction-books])
-      expect(result[:tag].map(&:url)).to eq(%w[/tag/book-club /tag/fiction-books])
+      expect(result[:tag].map(&:relative_url)).to eq(%w[/tag/book-club /tag/fiction-books])
 
       result = subject.lookup(%w[book-club great-books fiction-books], %w[tag category])
       expect(result[:category]).to eq([])
       expect(result[:tag].map(&:slug)).to eq(%w[book-club fiction-books great-books])
-      expect(result[:tag].map(&:url)).to eq(%w[/tag/book-club /tag/fiction-books /tag/great-books])
+      expect(result[:tag].map(&:relative_url)).to eq(%w[/tag/book-club /tag/fiction-books /tag/great-books])
     end
 
     it "includes other data sources" do
@@ -318,7 +318,7 @@ RSpec.describe HashtagAutocompleteService do
       it "does not return tag" do
         result = subject.lookup(%w[book-club great-books fiction-books], %w[category tag])
         expect(result[:category].map(&:slug)).to eq(["book-club"])
-        expect(result[:category].map(&:url)).to eq(["/c/book-club/#{category1.id}"])
+        expect(result[:category].map(&:relative_url)).to eq(["/c/book-club/#{category1.id}"])
         expect(result[:tag]).to eq([])
       end
     end

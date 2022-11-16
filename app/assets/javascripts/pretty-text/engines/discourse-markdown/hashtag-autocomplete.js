@@ -27,7 +27,7 @@ function addHashtag(buffer, matches, state) {
     token = new state.Token("link_open", "a", 1);
     token.attrs = [
       ["class", "hashtag-cooked"],
-      ["href", result.url],
+      ["href", result.relative_url],
       ["data-type", result.type],
       ["data-slug", result.slug],
     ];

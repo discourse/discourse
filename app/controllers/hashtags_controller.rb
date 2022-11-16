@@ -3,7 +3,7 @@
 class HashtagsController < ApplicationController
   requires_login
 
-  def show
+  def lookup
     if SiteSetting.enable_experimental_hashtag_autocomplete
       render json: HashtagAutocompleteService.new(guardian).lookup(params[:slugs], params[:order])
     else

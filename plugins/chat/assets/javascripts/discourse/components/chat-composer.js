@@ -357,7 +357,7 @@ export default Component.extend(TextareaTextManipulation, {
 
   _applyCategoryHashtagAutocomplete($textarea) {
     setupHashtagAutocomplete(
-      this.site.hashtag_context_configurations["chat-composer"],
+      this.site.hashtag_configurations["chat-composer"],
       $textarea,
       this.siteSettings,
       (value) => {

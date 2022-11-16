@@ -57,7 +57,7 @@ RSpec.describe PrettyText::Helpers do
     it "handles tags and categories based on slug with type suffix" do
       expect(PrettyText::Helpers.hashtag_lookup("somecooltag::tag", user, %w[category tag])).to eq(
         {
-          url: tag.url,
+          relative_url: tag.url,
           text: "somecooltag",
           icon: "tag",
           slug: "somecooltag",
@@ -67,7 +67,7 @@ RSpec.describe PrettyText::Helpers do
       )
       expect(PrettyText::Helpers.hashtag_lookup("someawesomecategory::category", user, %w[category tag])).to eq(
         {
-          url: category.url,
+          relative_url: category.url,
           text: "Some Awesome Category",
           icon: "folder",
           slug: "someawesomecategory",
@@ -82,7 +82,7 @@ RSpec.describe PrettyText::Helpers do
         PrettyText::Helpers.hashtag_lookup("someawesomecategory", user, %w[category tag]),
       ).to eq(
         {
-          url: category.url,
+          relative_url: category.url,
           text: "Some Awesome Category",
           icon: "folder",
           slug: "someawesomecategory",
@@ -95,7 +95,7 @@ RSpec.describe PrettyText::Helpers do
     it "handles tags and categories based on slug without type suffix" do
       expect(PrettyText::Helpers.hashtag_lookup("somecooltag", user, %w[category tag])).to eq(
         {
-          url: tag.url,
+          relative_url: tag.url,
           text: "somecooltag",
           icon: "tag",
           slug: "somecooltag",
@@ -105,7 +105,7 @@ RSpec.describe PrettyText::Helpers do
       )
       expect(PrettyText::Helpers.hashtag_lookup("someawesomecategory", user, %w[category tag])).to eq(
         {
-          url: category.url,
+          relative_url: category.url,
           text: "Some Awesome Category",
           icon: "folder",
           slug: "someawesomecategory",
@@ -123,7 +123,7 @@ RSpec.describe PrettyText::Helpers do
       GroupUser.create(group: group, user: user)
       expect(PrettyText::Helpers.hashtag_lookup("secretcategory", user, %w[category tag])).to eq(
         {
-          url: private_category.url,
+          relative_url: private_category.url,
           text: "Manager Hideout",
           icon: "folder",
           slug: "secretcategory",

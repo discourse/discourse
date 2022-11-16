@@ -61,13 +61,13 @@ class HashtagAutocompleteService
     # method above.
     attr_accessor :ref
 
-    # The URL for the resource that is represented by the autocomplete
+    # The relative URL for the resource that is represented by the autocomplete
     # item, used for the cooked hashtags, e.g. /c/2/staff
-    attr_accessor :url
+    attr_accessor :relative_url
 
     def to_h
       {
-        url: self.url,
+        relative_url: self.relative_url,
         text: self.text,
         icon: self.icon,
         type: self.type,
