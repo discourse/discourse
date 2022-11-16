@@ -328,8 +328,6 @@ const SiteHeaderComponent = MountWidget.extend(
 
       this._itsatrap?.destroy();
       this._itsatrap = null;
-
-      document.removeEventListener("click", this._dismissFirstNotification);
     },
 
     buildArgs() {

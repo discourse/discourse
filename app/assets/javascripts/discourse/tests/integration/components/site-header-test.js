@@ -8,7 +8,6 @@ import {
   waitUntil,
 } from "@ember/test-helpers";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { hbs } from "ember-cli-htmlbars";
 
 module("Integration | Component | site-header", function (hooks) {
@@ -17,20 +16,6 @@ module("Integration | Component | site-header", function (hooks) {
   hooks.beforeEach(function () {
     this.currentUser.set("unread_high_priority_notifications", 1);
     this.currentUser.set("read_first_notification", false);
-  });
-
-  test("do not call authenticated endpoints as anonymous", async function (assert) {
-    this.owner.unregister("service:current-user");
-
-    await render(hbs`<SiteHeader />`);
-
-    pretender.get("/notifications", () => {
-      assert.ok(false, "it should not try to refresh notifications");
-      return response(403, {});
-    });
-
-    assert.expect(0);
-    await click("header.d-header");
   });
 
   test("displaying unread and reviewable notifications count when user's notifications and reviewables count are updated", async function (assert) {
