@@ -66,7 +66,11 @@ export function buildResolver(baseName) {
       if (fullName === "app-events:main") {
         deprecated(
           "`app-events:main` has been replaced with `service:app-events`",
-          { since: "2.4.0", dropFrom: "2.9.0.beta1" }
+          {
+            since: "2.4.0",
+            dropFrom: "2.9.0.beta1",
+            id: "discourse.app-events-main",
+          }
         );
         return "service:app-events";
       }
@@ -84,7 +88,10 @@ export function buildResolver(baseName) {
         "route:tagsShow": "route:tagShow",
       })) {
         if (fullName === key) {
-          deprecated(`${key} was replaced with ${value}`, { since: "2.6.0" });
+          deprecated(`${key} was replaced with ${value}`, {
+            since: "2.6.0",
+            id: "discourse.legacy-resolver-resolutions",
+          });
           return value;
         }
       }

@@ -18,9 +18,10 @@
     "ember-auto-import": "^2.4.3",
     "ember-cli-babel": "^7.26.10",
     "ember-cli-htmlbars": "^6.1.1",
-    "webpack": "^5.74.0"
+    "webpack": "^5.75.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.20.2",
     "@ember/optional-features": "^2.0.0",
     "@embroider/test-setup": "^1.8.3",
     "@glimmer/component": "^1.1.2",

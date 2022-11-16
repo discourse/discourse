@@ -1,6 +1,7 @@
 import EmberObject, { get } from "@ember/object";
 import { alias, sort } from "@ember/object/computed";
 import Archetype from "discourse/models/archetype";
+import Category from "discourse/models/category";
 import PostActionType from "discourse/models/post-action-type";
 import PreloadStore from "discourse/lib/preload-store";
 import RestModel from "discourse/models/rest";
@@ -59,27 +60,14 @@ const Site = RestModel.extend({
   // Sort subcategories under parents
   @discourseComputed("categoriesByCount", "categories.[]")
   sortedCategories(categories) {
-    const children = new Map();
-
-    categories.forEach((category) => {
-      const parentId = parseInt(category.parent_category_id, 10) || -1;
-      const group = children.get(parentId) || [];
-      group.pushObject(category);
-
-      children.set(parentId, group);
-    });
-
-    const reduce = (values) =>
-      values.flatMap((c) => [c, reduce(children.get(c.id) || [])]).flat();
-
-    return reduce(children.get(-1));
+    return Category.sortCategories(categories);
   },
 
   // Returns it in the correct order, by setting
   @discourseComputed("categories.[]")
-  categoriesList() {
+  categoriesList(categories) {
     return this.siteSettings.fixed_category_positions
-      ? this.categories
+      ? categories
       : this.sortedCategories;
   },
 
@@ -158,7 +146,7 @@ Site.reopenClass(Singleton, {
     if (result.categories) {
       let subcatMap = {};
 
-      result.categoriesById = {};
+      result.categoriesById = new Map();
       result.categories = result.categories.map((c) => {
         if (c.parent_category_id) {
           subcatMap[c.parent_category_id] =
@@ -241,6 +229,7 @@ if (typeof Discourse !== "undefined") {
       if (!warned) {
         deprecated("Import the Site class instead of using Discourse.Site", {
           since: "2.4.0",
+          id: "discourse.globals.site",
         });
         warned = true;
       }

@@ -1,7 +1,9 @@
-export function canDisplayCategory(category, siteSettings) {
+import Category from "discourse/models/category";
+
+export function canDisplayCategory(categoryId, siteSettings) {
   if (siteSettings.allow_uncategorized_topics) {
     return true;
   }
 
-  return !category.isUncategorizedCategory;
+  return !Category.isUncategorized(categoryId);
 }

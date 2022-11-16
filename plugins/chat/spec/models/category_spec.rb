@@ -22,4 +22,33 @@ RSpec.describe Category do
       end
     end
   end
+
+  describe "#deletable_for_chat?" do
+    subject(:category) { Fabricate.build(:category) }
+
+    context "when no category channel is present" do
+      it "returns true" do
+        expect(category).to be_deletable_for_chat
+      end
+    end
+
+    context "when a category channel is present" do
+      let(:channel) { Fabricate(:category_channel) }
+      let(:category) { channel.chatable }
+
+      context "when it has chat messages" do
+        before { Fabricate(:chat_message, chat_channel: channel) }
+
+        it "returns false" do
+          expect(category).not_to be_deletable_for_chat
+        end
+      end
+
+      context "when it has no chat messages" do
+        it "returns true" do
+          expect(category).to be_deletable_for_chat
+        end
+      end
+    end
+  end
 end

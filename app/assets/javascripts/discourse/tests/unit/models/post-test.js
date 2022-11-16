@@ -1,30 +1,20 @@
 import { module, test } from "qunit";
-import Post from "discourse/models/post";
 import User from "discourse/models/user";
-import { deepMerge } from "discourse-common/lib/object";
+import { getOwner } from "discourse-common/lib/get-owner";
 
-function buildPost(args) {
-  return Post.create(
-    deepMerge(
-      {
-        id: 1,
-        can_delete: true,
-        version: 1,
-      },
-      args || {}
-    )
-  );
-}
+module("Unit | Model | post", function (hooks) {
+  hooks.beforeEach(function () {
+    this.store = getOwner(this).lookup("service:store");
+  });
 
-module("Unit | Model | post", function () {
   test("defaults", function (assert) {
-    let post = Post.create({ id: 1 });
+    const post = this.store.createRecord("post", { id: 1 });
     assert.blank(post.get("deleted_at"), "it has no deleted_at by default");
     assert.blank(post.get("deleted_by"), "there is no deleted_by by default");
   });
 
   test("new_user", function (assert) {
-    let post = Post.create({ trust_level: 0 });
+    const post = this.store.createRecord("post", { trust_level: 0 });
     assert.ok(post.get("new_user"), "post is from a new user");
 
     post.set("trust_level", 1);
@@ -32,7 +22,7 @@ module("Unit | Model | post", function () {
   });
 
   test("firstPost", function (assert) {
-    let post = Post.create({ post_number: 1 });
+    const post = this.store.createRecord("post", { post_number: 1 });
     assert.ok(post.get("firstPost"), "it's the first post");
 
     post.set("post_number", 10);
@@ -40,17 +30,14 @@ module("Unit | Model | post", function () {
   });
 
   test("updateFromPost", function (assert) {
-    let post = Post.create({
+    const post = this.store.createRecord("post", {
       post_number: 1,
       raw: "hello world",
     });
 
     post.updateFromPost(
-      Post.create({
+      this.store.createRecord("post", {
         raw: "different raw",
-        wat: function () {
-          return 123;
-        },
       })
     );
 
@@ -58,8 +45,13 @@ module("Unit | Model | post", function () {
   });
 
   test("destroy by staff", async function (assert) {
-    let user = User.create({ username: "staff", moderator: true });
-    let post = buildPost({ user });
+    const user = User.create({ username: "staff", moderator: true });
+    const post = this.store.createRecord("post", {
+      id: 1,
+      can_delete: true,
+      version: 1,
+      user,
+    });
 
     await post.destroy(user);
 
@@ -85,7 +77,13 @@ module("Unit | Model | post", function () {
   test("destroy by non-staff", async function (assert) {
     const originalCooked = "this is the original cooked value";
     const user = User.create({ username: "evil trout" });
-    const post = buildPost({ user, cooked: originalCooked });
+    const post = this.store.createRecord("post", {
+      id: 1,
+      can_delete: true,
+      version: 1,
+      user,
+      cooked: originalCooked,
+    });
 
     await post.destroy(user);
 

@@ -261,7 +261,7 @@ export default Component.extend({
       restore: this.restore,
       rebakeMessage: this.rebakeMessage,
       toggleBookmark: this.toggleBookmark,
-      startReactionForMsgActions: this.startReactionForMsgActions,
+      startReactionForMessageActions: this.startReactionForMessageActions,
     };
   },
 
@@ -502,7 +502,7 @@ export default Component.extend({
   },
 
   @action
-  startReactionForMsgActions() {
+  startReactionForMessageActions() {
     this.chatEmojiPickerManager.startFromMessageActions(
       this.message,
       this.site.desktopView,

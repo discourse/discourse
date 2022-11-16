@@ -293,7 +293,6 @@ fi:
       like_count: "Tykkäyksiä"
       topic_count: "Ketjuja"
       post_count: "Viestejä"
-      user_count: "Käyttäjiä"
       active_user_count: "Aktiivisia käyttäjiä"
       contact: "Ota yhteyttä"
       contact_info: "Sivustoon liittyvissä kiireellisissä asioissa, ota yhteyttä osoitteeseen %{contact_info}."
@@ -350,7 +349,6 @@ fi:
       remove_confirmation: "Haluatko varmasti poistaa luonnoksen?"
       new_topic: "Uusi ketjuluonnos"
       new_private_message: "Uusi yksityisviestin luonnos"
-      topic_reply: "Vastausluonnos"
       abandon:
         confirm: "Sinulla on meneillään luonnos tätä ketjua varten. Mitä haluaisit tehdä sen kanssa?"
         yes_value: "Hylkää"
@@ -974,7 +972,7 @@ fi:
     user_fields:
       none: "(valitse vaihtoehto)"
       required: '"%{name}" on pakollinen'
-      same_as_password: 'Salasanaasi ei tulisi toistaa muissa kentissä.'
+      same_as_password: "Salasanaasi ei tulisi toistaa muissa kentissä."
     user:
       said: "%{username}:"
       profile: "Profiili"
@@ -1086,7 +1084,6 @@ fi:
         not_first_time: "Eikö tämä ole ensikertasi?"
         skip_link: "Ohita nämä vinkit"
         read_later: "Luen sen myöhemmin."
-      reset_seen_popups: "Näytä aloitusvinkit uudelleen"
       theme_default_on_all_devices: "Tee tästä oletusteema kaikille laitteilleni"
       color_scheme_default_on_all_devices: "Aseta oletusvärimalli(t) kaikille laitteilleni"
       color_scheme: "Värimalli"
@@ -1113,9 +1110,6 @@ fi:
         tags_section: "Tunnisteet-osio"
         tags_section_instruction: "Valitut tunnisteet näkyvät sivupalkin tunnisteet-osiossa."
         navigation_section: "Navigointi"
-        list_destination_instruction: "Kun klikkaan sivupalkin ketjuluettelon linkkiä, jossa on uusia tai lukemattomia ketjuja, siirry kohtaan"
-        list_destination_default: "Oletus"
-        list_destination_unread_new: "Uudet/lukemattomat"
       change: "vaihda"
       featured_topic: "Valikoitu ketju"
       moderator: "%{user} on valvoja"
@@ -1674,15 +1668,6 @@ fi:
       set_custom_status: "Aseta mukautettu tila"
       what_are_you_doing: "Mitä teet?"
       remove_status: "Poista tila"
-    popup:
-      primary: "Selvä!"
-      secondary: "älä näytä minulle näitä vinkkejä"
-      first_notification:
-        title: "Ensimmäinen ilmoituksesi!"
-        content: "Ilmoitusten avulla pysyt ajan tasalla siitä, mitä yhteisössä tapahtuu."
-      topic_timeline:
-        title: "Ketjun aikajana"
-        content: "Selaa viestiä nopeasti käyttämällä ketjun aikajanaa."
     loading: "Ladataan..."
     errors:
       prev_page: "yrittäessä ladata"
@@ -2528,9 +2513,6 @@ fi:
       move_to_inbox:
         title: "Siirrä saapuneisiin"
         help: "Siirrä takaisin saapuneisiin."
-      edit_message:
-        help: "Muokkaa keskustelun ensimmäistä viestiä"
-        title: "Muokkaa"
       defer:
         help: "Merkitse lukemattomaksi"
         title: "Lykkää"
@@ -3251,8 +3233,6 @@ fi:
       this_year: "tänä vuonna"
       position: "Sijoitus aluesivulla:"
       default_position: "Oletussijoitus"
-      position_disabled: "Alueet näytetään aktiivisuusjärjestyksessä. Muokataksesi järjestystä, "
-      position_disabled_click: 'ota käyttöön pysyvien aluesijoitusten asetus.'
       minimum_required_tags: "Ketjussa vaadittavien tunnisteiden vähimmäismäärä:"
       default_slow_mode: 'Ota "Hidas tila" käyttöön tämän alueen uusille ketjuille.'
       parent: "Ylätason alue"
@@ -3914,7 +3894,7 @@ fi:
               pending_count: "%{count} odottaa"
     welcome_topic_banner:
       title: "Luo tervetuloketjusi"
-      description: 'Tervetuloketjusi on ensimmäinen asia, jonka uudet jäsenet lukevat. Ajattele sitä "hissipuheenasi" tai "tavoitelausumanasi". Kerro kaikille, kenelle tämä yhteisö on tarkoitettu, mitä he voivat odottaa löytävänsä täältä ja mitä haluat heidän tekevän ensin.'
+      description: "Tervetuloketjusi on ensimmäinen asia, jonka uudet jäsenet lukevat. Ajattele sitä \"hissipuheenasi\" tai \"tavoitelausumanasi\". Kerro kaikille, kenelle tämä yhteisö on tarkoitettu, mitä he voivat odottaa löytävänsä täältä ja mitä haluat heidän tekevän ensin."
       button_title: "Aloita muokkaaminen"
     until: "Asti:"
   admin_js:
@@ -5213,23 +5193,18 @@ fi:
         delete_confirm: "Oletko varma, että haluat poistaa tämän käyttäjäkentän?"
         options: "Vaihtoehdot"
         required:
-          title: "Pakollinen rekisteröidyttäessä?"
           enabled: "pakollinen"
           disabled: "ei pakollinen"
         editable:
-          title: "Muokattavissa rekisteröitymisen jälkeen?"
           enabled: "muokattavissa"
           disabled: "ei muokattavissa"
         show_on_profile:
-          title: "Näytetään julkisessa profiilissa?"
           enabled: "näytetään profiilissa"
           disabled: "ei näytetä profiilissa"
         show_on_user_card:
-          title: "Näytetään käyttäjäkortilla?"
           enabled: "näytetään käyttäjäkortilla"
           disabled: "ei näytetä käyttäjäkortilla"
         searchable:
-          title: "Haettavissa?"
           enabled: "haettavissa"
           disabled: "ei haettavissa"
         field_types:

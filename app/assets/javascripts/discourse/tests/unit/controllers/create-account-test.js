@@ -47,8 +47,8 @@ module("Unit | Controller | create-account", function (hooks) {
 
     controller.set("authProvider", "");
     controller.set("accountEmail", "pork@chops.com");
-    controller.set("accountUsername", "porkchops");
-    controller.set("prefilledUsername", "porkchops");
+    controller.set("accountUsername", "porkchops123");
+    controller.set("prefilledUsername", "porkchops123");
     controller.set("accountPassword", "b4fcdae11f9167");
 
     assert.strictEqual(
@@ -79,7 +79,10 @@ module("Unit | Controller | create-account", function (hooks) {
 
     testInvalidPassword("", null);
     testInvalidPassword("x", I18n.t("user.password.too_short"));
-    testInvalidPassword("porkchops", I18n.t("user.password.same_as_username"));
+    testInvalidPassword(
+      "porkchops123",
+      I18n.t("user.password.same_as_username")
+    );
     testInvalidPassword(
       "pork@chops.com",
       I18n.t("user.password.same_as_email")

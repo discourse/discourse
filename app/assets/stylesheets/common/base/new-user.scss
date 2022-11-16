@@ -89,10 +89,11 @@
 
   .user-navigation-secondary {
     --user-navigation__border-width: 2px;
+    --navigation-secondary-padding-top: 0.5em;
     position: relative;
     display: flex;
     min-width: 0;
-    margin: 0.5em 0;
+    margin: 0;
     gap: 0 0.5em;
     border-bottom: 1px solid var(--primary-low);
 
@@ -121,6 +122,7 @@
       flex: 1 1 auto;
       font-size: var(--font-down-1);
       justify-content: flex-start;
+      padding-top: var(--navigation-secondary-padding-top);
 
       li {
         flex: 1 0 auto;
@@ -134,6 +136,10 @@
           }
         }
       }
+    }
+
+    [class*="horizontal-overflow-nav__scroll"] {
+      padding-top: var(--navigation-secondary-padding-top);
     }
   }
 

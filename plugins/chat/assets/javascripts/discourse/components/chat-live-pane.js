@@ -20,7 +20,6 @@ import discourseLater from "discourse-common/lib/later";
 import { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
 import { resetIdle } from "discourse/lib/desktop-notifications";
-import { defaultHomepage } from "discourse/lib/utilities";
 import { capitalize } from "@ember/string";
 import {
   onPresenceChange,
@@ -42,7 +41,6 @@ const FUTURE = "future";
 export default Component.extend({
   classNameBindings: [":chat-live-pane", "sendingLoading", "loading"],
   chatChannel: null,
-  fullPage: false,
   registeredChatChannelId: null, // ?Number
   loading: false,
   loadingMorePast: false,
@@ -74,7 +72,7 @@ export default Component.extend({
   router: service(),
   chatEmojiPickerManager: service(),
   chatComposerPresenceManager: service(),
-  fullPageChat: service(),
+  chatStateManager: service(),
 
   getCachedChannelDetails: null,
   clearCachedChannelDetails: null,
@@ -243,6 +241,12 @@ export default Component.extend({
             return;
           }
           this.setMessageProps(messages, fetchingFromLastRead);
+
+          if (this.targetMessageId) {
+            this.highlightOrFetchMessage(this.targetMessageId);
+          }
+
+          this._focusComposer();
         })
         .catch(this._handleErrors)
         .finally(() => {
@@ -252,12 +256,6 @@ export default Component.extend({
 
           this.chat.set("messageId", null);
           this.set("loading", false);
-
-          if (this.targetMessageId) {
-            this.highlightOrFetchMessage(this.targetMessageId);
-          }
-
-          this.focusComposer();
         });
     });
   },
@@ -1167,6 +1165,7 @@ export default Component.extend({
     }
     if (lastUserMessage) {
       this.set("editingMessage", lastUserMessage);
+      this._focusComposer();
     }
   },
 
@@ -1264,16 +1263,15 @@ export default Component.extend({
   },
 
   @action
-  onCloseFullScreen(channel) {
-    this.fullPageChat.isPreferred = false;
-    this.appEvents.trigger("chat:open-channel", channel);
+  onCloseFullScreen() {
+    this.chatStateManager.prefersDrawer();
 
-    const previousRouteInfo = this.fullPageChat.exit();
-    if (previousRouteInfo) {
-      this._transitionToRoute(previousRouteInfo);
-    } else {
-      this.router.transitionTo(`discovery.${defaultHomepage()}`);
-    }
+    this.router.transitionTo(this.chatStateManager.lastKnownAppURL).then(() => {
+      this.appEvents.trigger(
+        "chat:open-url",
+        this.chatStateManager.lastKnownChatURL
+      );
+    });
   },
 
   @action
@@ -1398,21 +1396,6 @@ export default Component.extend({
     return this._fetchAndScrollToLatest();
   },
 
-  focusComposer() {
-    if (
-      this._selfDeleted ||
-      this.site.mobileView ||
-      this.chatChannel?.isDraft
-    ) {
-      return;
-    }
-
-    schedule("afterRender", () => {
-      document.querySelector(".chat-composer-input")?.focus();
-    });
-  },
-
-  @afterRender
   _focusComposer() {
     this.appEvents.trigger("chat:focus-composer");
   },
@@ -1430,18 +1413,6 @@ export default Component.extend({
         this.set("hasNewMessages", true);
       }
     });
-  },
-
-  _transitionToRoute(routeInfo) {
-    const routeName = routeInfo.name;
-    let params = [];
-
-    do {
-      params = Object.values(routeInfo.params).concat(params);
-      routeInfo = routeInfo.parent;
-    } while (routeInfo);
-
-    this.router.transitionTo(routeName, ...params);
   },
 
   @bind

@@ -45,10 +45,10 @@ describe ChatMessageBookmarkable do
     end
 
     it "does not return bookmarks for messages inside direct message chat channels the user cannot access" do
-      dm_channel = Fabricate(:direct_message_channel)
-      channel.update(chatable: dm_channel)
+      direct_message = Fabricate(:direct_message)
+      channel.update(chatable: direct_message)
       expect(subject.perform_list_query(user, guardian)).to eq(nil)
-      DirectMessageUser.create(user: user, direct_message_channel: dm_channel)
+      DirectMessageUser.create(user: user, direct_message: direct_message)
       bookmark1.reload
       user.reload
       guardian = Guardian.new(user)

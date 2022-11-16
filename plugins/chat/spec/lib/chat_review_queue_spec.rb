@@ -117,6 +117,7 @@ describe Chat::ChatReviewQueue do
 
       it "ignores the cooldown window when the message is edited" do
         Chat::ChatMessageUpdater.update(
+          guardian: Guardian.new(message.user),
           chat_message: message,
           new_content: "I'm editing this message. Please flag it.",
         )
@@ -369,9 +370,7 @@ describe Chat::ChatReviewQueue do
     end
 
     context "when flagging a DM" do
-      fab!(:dm_channel) do
-        Fabricate(:direct_message_chat_channel, users: [message_poster, flagger])
-      end
+      fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [message_poster, flagger]) }
 
       12.times do |i|
         fab!("dm_message_#{i + 1}") do

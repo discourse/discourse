@@ -170,7 +170,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def can_send_private_messages
-    scope.can_send_private_message?(Discourse.system_user)
+    scope.can_send_private_messages?
   end
 
   def can_edit
@@ -293,7 +293,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def include_seen_popups?
-    SiteSetting.enable_onboarding_popups
+    SiteSetting.enable_user_tips
   end
 
   def include_primary_group_id?
@@ -323,7 +323,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def second_factor_enabled
-    object.totp_enabled? || object.security_keys_enabled?
+    object.totp_enabled? || object.security_keys_enabled? || object.backup_codes_enabled?
   end
 
   def featured_topic

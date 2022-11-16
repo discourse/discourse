@@ -22,7 +22,7 @@ export const directMessageChannels = [
         ],
       },
       chatable_id: 58,
-      chatable_type: "DirectMessageChannel",
+      chatable_type: "DirectMessage",
       chatable_url: null,
       id: 75,
       title: "@hawk",
@@ -53,7 +53,7 @@ export const directMessageChannels = [
         ],
       },
       chatable_id: 59,
-      chatable_type: "DirectMessageChannel",
+      chatable_type: "DirectMessage",
       chatable_url: null,
       id: 76,
       title: "@eviltrout, @markvanlan",
@@ -78,7 +78,7 @@ const chatables = {
   8: {
     id: 8,
     name: "Public category",
-    slug: "public_category",
+    slug: "public-category",
     posts_count: 1,
   },
   12: {

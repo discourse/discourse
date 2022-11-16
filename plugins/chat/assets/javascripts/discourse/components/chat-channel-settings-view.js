@@ -18,6 +18,11 @@ const MUTED_OPTIONS = [
   { name: I18n.t("chat.settings.muted_off"), value: false },
 ];
 
+const AUTO_ADD_USERS_OPTIONS = [
+  { name: I18n.t("chat.settings.enable_auto_join_users"), value: true },
+  { name: I18n.t("chat.settings.disable_auto_join_users"), value: false },
+];
+
 export default class ChatChannelSettingsView extends Component {
   @service chat;
   @service router;
@@ -27,6 +32,7 @@ export default class ChatChannelSettingsView extends Component {
 
   notificationLevels = NOTIFICATION_LEVELS;
   mutedOptions = MUTED_OPTIONS;
+  autoAddUsersOptions = AUTO_ADD_USERS_OPTIONS;
   isSavingNotificationSetting = false;
   savedDesktopNotificationLevel = false;
   savedMobileNotificationLevel = false;
@@ -119,11 +125,18 @@ export default class ChatChannelSettingsView extends Component {
   }
 
   @action
+  onToggleAutoJoinUsers() {
+    if (!this.channel.auto_join_users) {
+      this.onEnableAutoJoinUsers();
+    } else {
+      this.onDisableAutoJoinUsers();
+    }
+  }
+
   onDisableAutoJoinUsers() {
     this._updateAutoJoinUsers(false);
   }
 
-  @action
   onEnableAutoJoinUsers() {
     this.dialog.confirm({
       message: I18n.t("chat.settings.auto_join_users_warning", {

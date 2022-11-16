@@ -123,7 +123,7 @@ acceptance("Invite accept", function (needs) {
       "submit is disabled because password is not filled"
     );
 
-    await fillIn("#new-account-password", "top$ecret");
+    await fillIn("#new-account-password", "top$ecretzz");
     assert.notOk(
       exists(".invites-show .btn-primary:disabled"),
       "submit is enabled"

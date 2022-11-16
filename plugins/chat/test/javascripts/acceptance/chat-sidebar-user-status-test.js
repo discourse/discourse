@@ -32,7 +32,7 @@ acceptance("Discourse Chat - Sidebar - User Status", function (needs) {
           },
         ],
       },
-      chatable_type: "DirectMessageChannel",
+      chatable_type: "DirectMessage",
       title: "@user1",
     };
 

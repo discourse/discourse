@@ -215,7 +215,6 @@ sq:
       like_count: "Pëlqime"
       topic_count: "Tema"
       post_count: "Postime"
-      user_count: "Anëtarët"
       active_user_count: "Përdorues Aktivë"
       contact: "Na kontaktoni"
       contact_info: "Në rast të një problemi madhor ose të një çështjeje urgjente që prek faqen, ju lutemi të kontaktoni %{contact_info}."
@@ -554,7 +553,6 @@ sq:
       experimental_sidebar:
         options: "Opsione"
         navigation_section: "Shfletimi"
-        list_destination_default: "Paracaktuar"
       change: "ndrysho"
       moderator: "%{user} është moderator"
       admin: "%{user} është admin"
@@ -1211,8 +1209,6 @@ sq:
       move_to_inbox:
         title: "Lëviz në Inbox"
         help: "Riktheje mesazhin në inbox"
-      edit_message:
-        title: "Redakto"
       defer:
         title: "Shty"
       list: "Temat"
@@ -1590,8 +1586,6 @@ sq:
       review_group_name: "emri i grupit"
       this_year: "këtë vit"
       default_position: "Default Position"
-      position_disabled: "Kategoritue do të renditen sipas aktivitetit. Për të kontrolluar renditjen e kategorive nëpër lista, "
-      position_disabled_click: 'aktivizoni rregullimin "pozicione fikse për kategoritë".'
       parent: "Kategoria prind"
       notifications:
         watching:
@@ -2600,19 +2594,18 @@ sq:
         delete_confirm: "Are you sure you want to delete that user field?"
         options: "Opsione"
         required:
-          title: "Required at signup?"
+          title: "Required at signup"
           enabled: "i nevojshëm"
           disabled: "fakultativ"
         editable:
-          title: "Editable after signup?"
+          title: "Editable after signup"
           enabled: "e modifikueshme"
           disabled: "jo e modifikueshme"
         show_on_profile:
-          title: "Trego në profilin publik"
           enabled: "e treguar në profilin publik"
           disabled: "nuk tregohet në profilin publik"
         show_on_user_card:
-          title: "Trego në kartën e anëtarit?"
+          title: "Trego në kartën e anëtarit"
           enabled: "e treguar në kartën e anëtarit"
           disabled: "nuk tregohet në kartën e anëtarit"
         field_types:

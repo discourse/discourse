@@ -48,10 +48,7 @@ describe UserNotifications do
             user: another_participant,
             chat_channel: channel,
           )
-          DirectMessageUser.create!(
-            direct_message_channel: channel.chatable,
-            user: another_participant,
-          )
+          DirectMessageUser.create!(direct_message: channel.chatable, user: another_participant)
           expected_subject =
             I18n.t(
               "user_notifications.chat_summary.subject.direct_message",

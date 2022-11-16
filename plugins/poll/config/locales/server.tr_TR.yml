@@ -41,6 +41,12 @@ tr_TR:
     topic_must_be_open_to_vote: "Konu oylanabilmesi için açık olmalı."
     poll_must_be_open_to_vote: "Anket oylanabilmesi için açık olmalı."
     one_vote_per_user: "Bu anket için sadece 1 oy hakkı vardır."
+    max_vote_per_user:
+      one: Bu anket için sadece %{count} oya izin veriliyor.
+      other: Bu anket için en fazla %{count} oya izin veriliyor.
+    min_vote_per_user:
+      one: Bu anket için en az %{count} oy gerekli.
+      other: Bu anket için en az %{count} oy gerekli.
     topic_must_be_open_to_toggle_status: "Durumun değiştirilebilmesi için konu açık olmalı."
     only_staff_or_op_can_toggle_status: "Bir anketin durumunu sadece o anketin asıl sahibi ya da bir görevli değiştirebilir."
     insufficient_rights_to_create: "Anket oluşturma izniniz yok"

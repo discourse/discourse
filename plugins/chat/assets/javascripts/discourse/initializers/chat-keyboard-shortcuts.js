@@ -14,7 +14,9 @@ export default {
       return;
     }
 
+    const router = container.lookup("service:router");
     const appEvents = container.lookup("service:app-events");
+    const chatStateManager = container.lookup("service:chat-state-manager");
     const openChannelSelector = (e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -77,7 +79,9 @@ export default {
       }
       event.preventDefault();
       event.stopPropagation();
-      appEvents.trigger("chat:toggle-open", event);
+
+      chatStateManager.prefersDrawer();
+      router.transitionTo(chatStateManager.lastKnownChatURL || "chat");
     };
 
     const closeChatDrawer = (event) => {

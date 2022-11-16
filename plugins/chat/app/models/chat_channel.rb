@@ -4,8 +4,8 @@ class ChatChannel < ActiveRecord::Base
   include Trashable
 
   belongs_to :chatable, polymorphic: true
-  belongs_to :direct_message_channel,
-             -> { where(chat_channels: { chatable_type: "DirectMessageChannel" }) },
+  belongs_to :direct_message,
+             -> { where(chat_channels: { chatable_type: "DirectMessage" }) },
              foreign_key: "chatable_id"
 
   has_many :chat_messages
@@ -21,6 +21,8 @@ class ChatChannel < ActiveRecord::Base
             },
             presence: true,
             allow_nil: true
+  validate :ensure_slug_ok
+  before_validation :generate_auto_slug
 
   scope :public_channels,
         -> {
@@ -31,13 +33,15 @@ class ChatChannel < ActiveRecord::Base
           )
         }
 
+  delegate :empty?, to: :chat_messages, prefix: true
+
   class << self
     def public_channel_chatable_types
       ["Category"]
     end
 
     def chatable_types
-      public_channel_chatable_types << "DirectMessageChannel"
+      public_channel_chatable_types << "DirectMessage"
     end
   end
 
@@ -72,11 +76,11 @@ class ChatChannel < ActiveRecord::Base
   end
 
   def url
-    "#{Discourse.base_url}/chat/channel/#{self.id}/-"
+    "#{Discourse.base_url}#{relative_url}"
   end
 
-  def public_channel_title
-    chatable.name
+  def relative_url
+    "/chat/channel/#{self.id}/#{self.slug || "-"}"
   end
 
   private
@@ -107,6 +111,10 @@ class ChatChannel < ActiveRecord::Base
 
     ChatPublisher.publish_channel_status(self)
   end
+
+  def duplicate_slug?
+    ChatChannel.where(slug: self.slug).where.not(id: self.id).any?
+  end
 end
 
 # == Schema Information
@@ -130,6 +138,7 @@ end
 #  auto_join_users         :boolean          default(FALSE), not null
 #  user_count_stale        :boolean          default(FALSE), not null
 #  slug                    :string
+#  type                    :string
 #
 # Indexes
 #

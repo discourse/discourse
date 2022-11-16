@@ -141,7 +141,7 @@ class UserCardSerializer < BasicUserSerializer
   # Needed because 'send_private_message_to_user' will always return false
   # when the current user is being serialized
   def can_send_private_messages
-    scope.can_send_private_message?(Discourse.system_user)
+    scope.can_send_private_messages?
   end
 
   def can_send_private_message_to_user

@@ -2,22 +2,31 @@
 
 Fabricator(:chat_channel) do
   name do
-    ["Gaming Lounge", "Music Lodge", "Random", "Politics", "Sports Center", "Kino Buffs"].sample
+    sequence(:name) do |n|
+      random_name = [
+        "Gaming Lounge",
+        "Music Lodge",
+        "Random",
+        "Politics",
+        "Sports Center",
+        "Kino Buffs",
+      ].sample
+      "#{random_name} #{n}"
+    end
   end
   chatable { Fabricate(:category) }
+  type do |attrs|
+    attrs[:chatable_type] == "Category" || attrs[:chatable]&.is_a?(Category) ? "CategoryChannel" : "DirectMessageChannel"
+  end
   status { :open }
 end
 
 Fabricator(:category_channel, from: :chat_channel, class_name: :category_channel) {}
 
-Fabricator(:dm_channel, from: :chat_channel, class_name: :d_m_channel) do
-  chatable { Fabricate(:direct_message_channel) }
-end
-
-Fabricator(:direct_message_chat_channel, from: :chat_channel, class_name: :d_m_channel) do
+Fabricator(:direct_message_channel, from: :chat_channel, class_name: :direct_message_channel) do
   transient :users
   chatable do |attrs|
-    Fabricate(:direct_message_channel, users: attrs[:users] || [Fabricate(:user), Fabricate(:user)])
+    Fabricate(:direct_message, users: attrs[:users] || [Fabricate(:user), Fabricate(:user)])
   end
   status { :open }
 end
@@ -51,6 +60,7 @@ Fabricator(:chat_message_revision) do
   chat_message { Fabricate(:chat_message) }
   old_message { "something old" }
   new_message { "something new" }
+  user { |attrs| attrs[:chat_message].user }
 end
 
 Fabricator(:reviewable_chat_message) do
@@ -62,7 +72,7 @@ Fabricator(:reviewable_chat_message) do
   reviewable_scores { |p| [Fabricate.build(:reviewable_score, reviewable_id: p[:id])] }
 end
 
-Fabricator(:direct_message_channel) { users { [Fabricate(:user), Fabricate(:user)] } }
+Fabricator(:direct_message) { users { [Fabricate(:user), Fabricate(:user)] } }
 
 Fabricator(:chat_webhook_event) do
   chat_message { Fabricate(:chat_message) }

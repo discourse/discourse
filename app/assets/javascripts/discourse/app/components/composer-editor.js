@@ -10,6 +10,7 @@ import {
 } from "discourse/lib/utilities";
 import discourseComputed, {
   bind,
+  debounce,
   observes,
   on,
 } from "discourse-common/utils/decorators";
@@ -117,6 +118,11 @@ export default Component.extend(ComposerUploadUppy, {
   uploadMarkdownResolvers,
   uploadPreProcessors,
   uploadHandlers,
+
+  init() {
+    this._super(...arguments);
+    this.warnedCannotSeeMentions = [];
+  },
 
   @discourseComputed("composer.requiredCategoryMissing")
   replyPlaceholder(requiredCategoryMissing) {
@@ -504,41 +510,30 @@ export default Component.extend(ComposerUploadUppy, {
     });
   },
 
+  // add a delay to allow for typing, so you don't open the warning right away
+  // previously we would warn after @bob even if you were about to mention @bob2
+  @debounce(2000)
   _warnCannotSeeMention(preview) {
-    const composerDraftKey = this.get("composer.draftKey");
-
-    if (composerDraftKey === Composer.NEW_PRIVATE_MESSAGE_KEY) {
+    if (this.composer.draftKey === Composer.NEW_PRIVATE_MESSAGE_KEY) {
       return;
     }
 
-    schedule("afterRender", () => {
-      let found = this.warnedCannotSeeMentions || [];
+    const warnings = [];
 
-      preview?.querySelectorAll(".mention.cannot-see")?.forEach((mention) => {
-        let name = mention.dataset.name;
+    preview.querySelectorAll(".mention.cannot-see").forEach((mention) => {
+      const { name } = mention.dataset;
 
-        if (!found.includes(name)) {
-          // add a delay to allow for typing, so you don't open the warning right away
-          // previously we would warn after @bob even if you were about to mention @bob2
-          discourseLater(
-            this,
-            () => {
-              if (
-                preview?.querySelectorAll(
-                  `.mention.cannot-see[data-name="${name}"]`
-                )?.length > 0
-              ) {
-                this.cannotSeeMention([{ name, reason: cannotSee[name] }]);
-                found.push(name);
-              }
-            },
-            2000
-          );
-        }
-      });
+      if (this.warnedCannotSeeMentions.includes(name)) {
+        return;
+      }
 
-      this.set("warnedCannotSeeMentions", found);
+      this.warnedCannotSeeMentions.push(name);
+      warnings.push({ name, reason: cannotSee[name] });
     });
+
+    if (warnings.length > 0) {
+      this.cannotSeeMention(warnings);
+    }
   },
 
   _warnHereMention(hereCount) {

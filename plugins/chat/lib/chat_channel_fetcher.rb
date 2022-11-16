@@ -53,7 +53,7 @@ module Chat::ChatChannelFetcher
         .select(:id)
         .joins(
           "INNER JOIN direct_message_channels ON direct_message_channels.id = chat_channels.chatable_id
-            AND chat_channels.chatable_type = 'DirectMessageChannel'
+            AND chat_channels.chatable_type = 'DirectMessage'
         INNER JOIN direct_message_users ON direct_message_users.direct_message_channel_id = direct_message_channels.id",
         )
         .where("direct_message_users.user_id = :user_id", user_id: guardian.user.id)
@@ -134,7 +134,7 @@ module Chat::ChatChannelFetcher
       query
         .joins(:user_chat_channel_memberships)
         .where(user_chat_channel_memberships: { user_id: user_id, following: true })
-        .where(chatable_type: "DirectMessageChannel")
+        .where(chatable_type: "DirectMessage")
         .where("chat_channels.id IN (#{generate_allowed_channel_ids_sql(guardian)})")
         .order(last_message_sent_at: :desc)
         .to_a

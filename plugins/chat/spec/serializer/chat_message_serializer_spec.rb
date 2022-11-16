@@ -175,7 +175,7 @@ describe ChatMessageSerializer do
 
     context "when flagging DMs" do
       fab!(:dm_channel) do
-        Fabricate(:direct_message_chat_channel, users: [guardian_user, message_poster])
+        Fabricate(:direct_message_channel, users: [guardian_user, message_poster])
       end
       fab!(:dm_message) { Fabricate(:chat_message, user: message_poster, chat_channel: dm_channel) }
 

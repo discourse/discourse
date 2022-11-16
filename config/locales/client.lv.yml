@@ -271,7 +271,6 @@ lv:
       like_count: "Atzinības"
       topic_count: "Tēmas"
       post_count: "Ieraksti"
-      user_count: "Lietotāji"
       active_user_count: "Aktīvi lietotāji"
       contact: "Sazinies ar mums"
       contact_info: "Ar šo vietni saistītu kritisku problēmu gadījumā lūdzu sazinieties ar mums %{contact_info}."
@@ -314,7 +313,6 @@ lv:
       remove_confirmation: "Vai tiešām vēlaties dzēst šo melnrakstu?"
       new_topic: "Jaunas tēmas melnraksts"
       new_private_message: "Jauns personīgā ziņojuma melnraksts"
-      topic_reply: "Atbildes projekts"
       abandon:
         confirm: "Šim tematam tiek izstrādāts melnraksts. Ko jūs vēlētos ar to darīt?"
         yes_value: "Izmest"
@@ -979,7 +977,6 @@ lv:
       experimental_sidebar:
         options: "Iespējas"
         navigation_section: "Pārvietošanās"
-        list_destination_default: "Noklusējums"
       change: "mainīt"
       featured_topic: "Piedāvātā tēma"
       moderator: "%{user} ir moderators"
@@ -1981,8 +1978,6 @@ lv:
       move_to_inbox:
         title: "Pārvietot uz iesūtni"
         help: "Atgriezt ziņu uz iesūtni "
-      edit_message:
-        title: "Labot"
       defer:
         title: "Nepiekrist"
       list: "Tēmas"
@@ -2422,8 +2417,6 @@ lv:
       review_group_name: "grupas nosaukums"
       this_year: "šogad"
       default_position: "Noklusētā pozīcija"
-      position_disabled: "Sadaļas tiks sakārtotas pēc aktivitātes. Lai kontrolētu sadaļu secību sarakstos,"
-      position_disabled_click: 'ieslēgt iestatījumu "fiksētas sadaļu pozīcijas".'
       parent: "Vecāksadaļa"
       notifications:
         watching:
@@ -3535,19 +3528,19 @@ lv:
         delete_confirm: "Vai tiešām vēlaties dzēst šo lietotāju laukā?"
         options: "Opcijas"
         required:
-          title: "Nepieciešams pierakstoties?"
+          title: "Nepieciešams pierakstoties"
           enabled: "obligāts"
           disabled: "nav obligāts"
         editable:
-          title: "Labot pēc pierakstīšanās?"
+          title: "Labot pēc pierakstīšanās"
           enabled: "labojams"
           disabled: "nav labojams"
         show_on_profile:
-          title: "Rādīt publiskajā profilā?"
+          title: "Rādīt publiskajā profilā"
           enabled: "redzams profilā"
           disabled: "nav redzams profilā"
         show_on_user_card:
-          title: "Parādīt leitotāja kartē?"
+          title: "Parādīt leitotāja kartē"
           enabled: "redzams lietotāja kartē"
           disabled: "nav redzams lietotāja kartē"
         field_types:

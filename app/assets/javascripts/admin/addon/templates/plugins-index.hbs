@@ -13,7 +13,7 @@
     </thead>
     <tbody>
       {{#each this.model as |plugin|}}
-        <tr>
+        <tr data-plugin-name={{plugin.name}}>
           <td>
             {{#if plugin.is_official}}
               {{d-icon "check-circle"

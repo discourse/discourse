@@ -8,9 +8,7 @@ RSpec.describe Chat::ChatChannelsController do
   fab!(:admin) { Fabricate(:admin, username: "andyjones", name: "Andy Jones") }
   fab!(:category) { Fabricate(:category) }
   fab!(:chat_channel) { Fabricate(:category_channel, chatable: category) }
-  fab!(:dm_chat_channel) do
-    Fabricate(:dm_channel, chatable: Fabricate(:direct_message_channel, users: [user, admin]))
-  end
+  fab!(:dm_chat_channel) { Fabricate(:direct_message_channel, users: [user, admin]) }
 
   before do
     SiteSetting.chat_enabled = true
@@ -307,7 +305,7 @@ RSpec.describe Chat::ChatChannelsController do
     it "errors when channel for category and same name already exists" do
       sign_in(admin)
       name = "beep boop hi"
-      ChatChannel.create!(chatable: category2, name: name)
+      category2.create_chat_channel!(name: name)
 
       put "/chat/chat_channels.json", params: { id: category2.id, name: name }
       expect(response.status).to eq(400)
@@ -315,7 +313,7 @@ RSpec.describe Chat::ChatChannelsController do
 
     it "creates a channel for category and if name is unique" do
       sign_in(admin)
-      ChatChannel.create!(chatable: category2, name: "this is a name")
+      category2.create_chat_channel!(name: "this is a name")
 
       expect {
         put "/chat/chat_channels.json", params: { id: category2.id, name: "Different name!" }
@@ -514,11 +512,7 @@ RSpec.describe Chat::ChatChannelsController do
         group = Fabricate(:group, name: "chatpeeps")
         SiteSetting.chat_allowed_groups = group.id
         GroupUser.create(user: user, group: group)
-        dm_chat_channel_2 =
-          Fabricate(
-            :dm_channel,
-            chatable: Fabricate(:direct_message_channel, users: [user, other_user]),
-          )
+        dm_chat_channel_2 = Fabricate(:direct_message_channel, users: [user, other_user])
 
         get "/chat/chat_channels/search.json", params: { filter: "janemay" }
         expect(response.status).to eq(200)

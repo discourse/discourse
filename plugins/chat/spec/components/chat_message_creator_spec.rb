@@ -27,8 +27,14 @@ describe Chat::ChatMessageCreator do
   fab!(:public_chat_channel) { Fabricate(:category_channel) }
   fab!(:dm_chat_channel) do
     Fabricate(
-      :dm_channel,
-      chatable: Fabricate(:direct_message_channel, users: [user1, user2, user3]),
+      :direct_message_channel,
+      chatable: Fabricate(:direct_message, users: [user1, user2, user3]),
+    )
+  end
+  let(:direct_message_channel) do
+    Chat::DirectMessageChannelCreator.create!(
+      acting_user: user1,
+      target_users: [user1, user2],
     )
   end
 
@@ -43,8 +49,7 @@ describe Chat::ChatMessageCreator do
     end
 
     Group.refresh_automatic_groups!
-    @direct_message_channel =
-      Chat::DirectMessageChannelCreator.create!(acting_user: user1, target_users: [user1, user2])
+    direct_message_channel
   end
 
   describe "Integration tests with jobs running immediately" do
@@ -88,6 +93,27 @@ describe Chat::ChatMessageCreator do
           content: "this is a message",
         )
       }.to change { ChatMessage.count }.by(1)
+    end
+
+    it "sets the last_editor_id to the user who created the message" do
+      message =
+        Chat::ChatMessageCreator.create(
+          chat_channel: public_chat_channel,
+          user: user1,
+          content: "this is a message",
+        ).chat_message
+      expect(message.last_editor_id).to eq(user1.id)
+    end
+
+    it "publishes a DiscourseEvent for new messages" do
+      events = DiscourseEvent.track_events {
+        Chat::ChatMessageCreator.create(
+          chat_channel: public_chat_channel,
+          user: user1,
+          content: "this is a message",
+        )
+      }
+      expect(events.map { _1[:event_name] }).to include(:chat_message_created)
     end
 
     it "creates mention notifications for public chat" do
@@ -210,7 +236,7 @@ describe Chat::ChatMessageCreator do
     it "creates only mention notifications for users with access in private chat" do
       expect {
         Chat::ChatMessageCreator.create(
-          chat_channel: @direct_message_channel,
+          chat_channel: direct_message_channel,
           user: user1,
           content: "hello there @#{user2.username} and @#{user3.username}",
         )
@@ -221,7 +247,7 @@ describe Chat::ChatMessageCreator do
     it "creates a mention notifications for group users that are participating in private chat" do
       expect {
         Chat::ChatMessageCreator.create(
-          chat_channel: @direct_message_channel,
+          chat_channel: direct_message_channel,
           user: user1,
           content: "hello there @#{user_group.name}",
         )
@@ -261,7 +287,7 @@ describe Chat::ChatMessageCreator do
       user2.update(suspended_till: Time.now + 10.years)
       expect {
         Chat::ChatMessageCreator.create(
-          chat_channel: @direct_message_channel,
+          chat_channel: direct_message_channel,
           user: user1,
           content: "hello @#{user2.username}",
         )

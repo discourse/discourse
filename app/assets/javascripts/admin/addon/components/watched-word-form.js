@@ -2,7 +2,7 @@ import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import I18n from "I18n";
 import WatchedWord from "admin/models/watched-word";
-import { equal } from "@ember/object/computed";
+import { equal, not } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
@@ -16,7 +16,7 @@ export default Component.extend({
   showMessage: false,
   selectedTags: null,
   isCaseSensitive: false,
-
+  submitDisabled: not("word"),
   canReplace: equal("actionKey", "replace"),
   canTag: equal("actionKey", "tag"),
   canLink: equal("actionKey", "link"),

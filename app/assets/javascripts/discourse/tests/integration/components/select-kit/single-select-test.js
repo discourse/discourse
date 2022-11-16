@@ -4,6 +4,7 @@ import { render } from "@ember/test-helpers";
 import I18n from "I18n";
 import { hbs } from "ember-cli-htmlbars";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 
 const DEFAULT_CONTENT = [
   { id: 1, name: "foo" },
@@ -390,5 +391,24 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
         name: this.content.firstObject.name,
       })
     );
+  });
+
+  test("options.verticalOffset", async function (assert) {
+    setDefaultState(this, { verticalOffset: -50 });
+    await render(hbs`
+      <SingleSelect
+        @value={{this.value}}
+        @content={{this.content}}
+        @nameProperty={{this.nameProperty}}
+        @valueProperty={{this.valueProperty}}
+        @onChange={{this.onChange}}
+        @options={{hash verticalOffset=this.verticalOffset}}
+      />
+    `);
+    await this.subject.expand();
+    const header = query(".select-kit-header").getBoundingClientRect();
+    const body = query(".select-kit-body").getBoundingClientRect();
+
+    assert.ok(header.bottom > body.top, "it correctly offsets the body");
   });
 });

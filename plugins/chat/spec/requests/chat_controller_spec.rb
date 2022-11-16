@@ -8,12 +8,7 @@ RSpec.describe Chat::ChatController do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:category) { Fabricate(:category) }
   fab!(:chat_channel) { Fabricate(:category_channel, chatable: category) }
-  fab!(:dm_chat_channel) do
-    Fabricate(
-      :dm_channel,
-      chatable: Fabricate(:direct_message_channel, users: [user, other_user, admin]),
-    )
-  end
+  fab!(:dm_chat_channel) { Fabricate(:direct_message_channel, users: [user, other_user, admin]) }
   fab!(:tag) { Fabricate(:tag) }
 
   MESSAGE_COUNT = 70
@@ -355,8 +350,8 @@ RSpec.describe Chat::ChatController do
     describe "for direct message" do
       fab!(:user1) { Fabricate(:user) }
       fab!(:user2) { Fabricate(:user) }
-      fab!(:chatable) { Fabricate(:direct_message_channel, users: [user1, user2]) }
-      fab!(:direct_message_channel) { Fabricate(:dm_channel, chatable: chatable) }
+      fab!(:chatable) { Fabricate(:direct_message, users: [user1, user2]) }
+      fab!(:direct_message_channel) { Fabricate(:direct_message_channel, chatable: chatable) }
 
       def create_memberships
         UserChatChannelMembership.create!(
@@ -392,7 +387,7 @@ RSpec.describe Chat::ChatController do
       it "errors when the user is not part of the direct message channel" do
         create_memberships
 
-        DirectMessageUser.find_by(user: user1, direct_message_channel: chatable).destroy!
+        DirectMessageUser.find_by(user: user1, direct_message: chatable).destroy!
         sign_in(user1)
         post "/chat/#{direct_message_channel.id}.json", params: { message: message }
         expect(response.status).to eq(403)
@@ -537,7 +532,7 @@ RSpec.describe Chat::ChatController do
 
       it "raises an invalid request" do
         put "/chat/#{chat_channel.id}/edit/#{chat_message.id}.json", params: { new_message: "Hi" }
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(422)
       end
     end
 
@@ -545,7 +540,7 @@ RSpec.describe Chat::ChatController do
       sign_in(Fabricate(:user))
 
       put "/chat/#{chat_channel.id}/edit/#{chat_message.id}.json", params: { new_message: "edit!" }
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(422)
     end
 
     it "errors when staff tries to edit another user's message" do
@@ -556,7 +551,7 @@ RSpec.describe Chat::ChatController do
           params: {
             new_message: new_message,
           }
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(422)
     end
 
     it "allows a user to edit their own messages" do
@@ -814,6 +809,7 @@ RSpec.describe Chat::ChatController do
               chat_message_id: msg.id,
               chat_channel_id: msg.chat_channel_id,
               chat_channel_title: msg.chat_channel.title(user),
+              chat_channel_slug: msg.chat_channel.slug,
               mentioned_by_username: sender.username,
             }.to_json,
           )
@@ -1034,6 +1030,10 @@ RSpec.describe Chat::ChatController do
       }.to change {
         user.notifications.where(notification_type: Notification.types[:chat_invitation]).count
       }.by(1)
+      notification = user.notifications.where(notification_type: Notification.types[:chat_invitation]).last
+      parsed_data = JSON.parse(notification[:data])
+      expect(parsed_data["chat_channel_title"]).to eq(chat_channel.title(user))
+      expect(parsed_data["chat_channel_slug"]).to eq(chat_channel.slug)
     end
 
     it "creates multiple invitations" do
@@ -1085,10 +1085,7 @@ RSpec.describe Chat::ChatController do
     it "sets `dismissed_dm_retention_reminder` to true" do
       sign_in(user)
       expect {
-        post "/chat/dismiss-retention-reminder.json",
-             params: {
-               chatable_type: "DirectMessageChannel",
-             }
+        post "/chat/dismiss-retention-reminder.json", params: { chatable_type: "DirectMessage" }
       }.to change { user.user_option.reload.dismissed_dm_retention_reminder }.to (true)
     end
 
@@ -1101,10 +1098,7 @@ RSpec.describe Chat::ChatController do
       post "/chat/dismiss-retention-reminder.json", params: { chatable_type: "Category" }
       expect(response.status).to eq(200)
 
-      post "/chat/dismiss-retention-reminder.json",
-           params: {
-             chatable_type: "DirectMessageChannel",
-           }
+      post "/chat/dismiss-retention-reminder.json", params: { chatable_type: "DirectMessage" }
       expect(response.status).to eq(200)
     end
   end
@@ -1266,7 +1260,7 @@ RSpec.describe Chat::ChatController do
 
   describe "#set_draft" do
     fab!(:chat_channel) { Fabricate(:category_channel) }
-    let(:dm_channel) { Fabricate(:dm_channel) }
+    let(:dm_channel) { Fabricate(:direct_message_channel) }
 
     before { sign_in(user) }
 
@@ -1298,7 +1292,7 @@ RSpec.describe Chat::ChatController do
       post "/chat/drafts.json", params: { chat_channel_id: dm_channel.id, data: "{}" }
       expect(response.status).to eq(403)
 
-      DirectMessageUser.create(user: user, direct_message_channel: dm_channel.chatable)
+      DirectMessageUser.create(user: user, direct_message: dm_channel.chatable)
       expect {
         post "/chat/drafts.json", params: { chat_channel_id: dm_channel.id, data: "{}" }
       }.to change { ChatDraft.count }.by(1)
@@ -1319,7 +1313,7 @@ RSpec.describe Chat::ChatController do
 
   describe "#lookup_message" do
     let!(:message) { Fabricate(:chat_message, chat_channel: channel) }
-    let(:channel) { Fabricate(:dm_channel) }
+    let(:channel) { Fabricate(:direct_message_channel) }
     let(:chatable) { channel.chatable }
     fab!(:user) { Fabricate(:user) }
 
@@ -1362,13 +1356,13 @@ RSpec.describe Chat::ChatController do
     end
 
     context "when the chat channel is for a direct message channel" do
-      let(:channel) { Fabricate(:dm_channel) }
+      let(:channel) { Fabricate(:direct_message_channel) }
 
       it "ensures the user can access that direct message channel" do
         get "/chat/lookup/#{message.id}.json", { params: { chat_channel_id: channel.id } }
         expect(response.status).to eq(403)
 
-        DirectMessageUser.create!(user: user, direct_message_channel: chatable)
+        DirectMessageUser.create!(user: user, direct_message: chatable)
         get "/chat/lookup/#{message.id}.json", { params: { chat_channel_id: channel.id } }
         expect(response.status).to eq(200)
         expect(response.parsed_body["chat_messages"][0]["id"]).to eq(message.id)
@@ -1396,10 +1390,7 @@ RSpec.describe Chat::ChatController do
     fab!(:destination_channel) { Fabricate(:category_channel) }
     let(:message_ids) { [message_to_move1.id, message_to_move2.id] }
     let(:invalid_destination_channel) do
-      Fabricate(
-        :dm_channel,
-        chatable: Fabricate(:direct_message_channel, users: [admin, Fabricate(:user)]),
-      )
+      Fabricate(:direct_message_channel, users: [admin, Fabricate(:user)])
     end
 
     context "when the user is not admin" do

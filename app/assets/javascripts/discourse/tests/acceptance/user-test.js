@@ -120,14 +120,16 @@ acceptance(
       await visit("/u/eviltrout");
       assert.strictEqual(
         query(".user-profile-names .username").textContent.trim(),
-        "eviltrout",
+        `eviltrout
+                Robin Ward is an admin`,
         "eviltrout profile is shown"
       );
 
       await visit("/u/e.il.rout");
       assert.strictEqual(
         query(".user-profile-names .username").textContent.trim(),
-        "e.il.rout",
+        `e.il.rout
+                Robin Ward is an admin`,
         "e.il.rout profile is shown"
       );
     });

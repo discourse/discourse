@@ -10,8 +10,7 @@
 
   {{#unless this.showPositionInput}}
     <section class="field position-disabled">
-      {{i18n "category.position_disabled"}}
-      <a href={{get-url "/admin/site_settings/category/basic"}}>{{i18n "category.position_disabled_click"}}</a>
+      {{html-safe (i18n "category.position_disabled" url=(get-url "/admin/site_settings/category/all_results?filter=fixed_category_positions"))}}
     </section>
   {{/unless}}
 

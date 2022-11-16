@@ -873,4 +873,44 @@ RSpec.describe Stylesheet::Manager do
       expect(content).to match(/# sourceMappingURL=[^\/]+\.css\.map\?__ws=test\.localhost/)
     end
   end
+
+  describe ".fs_asset_cachebuster" do
+    it "returns a number in test/development mode" do
+      expect(Stylesheet::Manager.fs_asset_cachebuster).to match(/\A[0-9]+:[0-9]+\z/)
+    end
+
+    context "with production mode enabled" do
+      before do
+        Stylesheet::Manager.stubs(:use_file_hash_for_cachebuster?).returns(true)
+      end
+
+      after do
+        path = Stylesheet::Manager.send(:manifest_full_path)
+        File.delete(path) if File.exists?(path)
+      end
+
+      it "returns a hash" do
+        cachebuster = Stylesheet::Manager.fs_asset_cachebuster
+        expect(cachebuster).to match(/\A[0-9]+:[0-9a-f]{40}\z/)
+      end
+
+      it "caches the value on the filesystem" do
+        initial_cachebuster = Stylesheet::Manager.recalculate_fs_asset_cachebuster!
+        Stylesheet::Manager.stubs(:list_files).never
+        expect(Stylesheet::Manager.fs_asset_cachebuster).to eq(initial_cachebuster)
+        expect(File.read(Stylesheet::Manager.send(:manifest_full_path))).to eq(initial_cachebuster)
+      end
+
+      it "updates the hash when a file changes" do
+        original_files = Stylesheet::Manager.send(:list_files)
+        initial_cachebuster = Stylesheet::Manager.recalculate_fs_asset_cachebuster!
+
+        additional_file_path = "#{Rails.root}/spec/fixtures/plugins/scss_plugin/assets/stylesheets/colors.scss"
+        Stylesheet::Manager.stubs(:list_files).returns(original_files + [additional_file_path])
+
+        new_cachebuster = Stylesheet::Manager.recalculate_fs_asset_cachebuster!
+        expect(new_cachebuster).not_to eq(initial_cachebuster)
+      end
+    end
+  end
 end

@@ -6,10 +6,10 @@ require 'stylesheet/compiler'
 module Stylesheet; end
 
 class Stylesheet::Manager
+  BASE_COMPILER_VERSION = 1
 
   CACHE_PATH ||= 'tmp/stylesheet-cache'
   MANIFEST_DIR ||= "#{Rails.root}/tmp/cache/assets/#{Rails.env}"
-  MANIFEST_FULL_PATH ||= "#{MANIFEST_DIR}/stylesheet-manifest"
   THEME_REGEX ||= /_theme$/
   COLOR_SCHEME_STYLESHEET ||= "color_definitions"
 
@@ -105,34 +105,65 @@ class Stylesheet::Manager
     nil
   end
 
-  def self.last_file_updated
-    if Rails.env.production?
-      @last_file_updated ||= if File.exist?(MANIFEST_FULL_PATH)
-        File.readlines(MANIFEST_FULL_PATH, 'r')[0]
+  def self.fs_asset_cachebuster
+    if use_file_hash_for_cachebuster?
+      @cachebuster ||= if File.exist?(manifest_full_path)
+        File.readlines(manifest_full_path, 'r')[0]
       else
-        mtime = max_file_mtime
+        cachebuster = "#{BASE_COMPILER_VERSION}:#{fs_assets_hash}"
         FileUtils.mkdir_p(MANIFEST_DIR)
-        File.open(MANIFEST_FULL_PATH, "w") { |f| f.print(mtime) }
-        mtime
+        File.open(manifest_full_path, "w") { |f| f.print(cachebuster) }
+        cachebuster
       end
     else
-      max_file_mtime
+      "#{BASE_COMPILER_VERSION}:#{max_file_mtime}"
     end
   end
 
-  def self.max_file_mtime
-    globs = ["#{Rails.root}/app/assets/stylesheets/**/*.*css",
-             "#{Rails.root}/app/assets/images/**/*.*"]
+  def self.recalculate_fs_asset_cachebuster!
+    File.delete(manifest_full_path) if File.exist?(manifest_full_path)
+    @cachebuster = nil
+    fs_asset_cachebuster
+  end
 
-    Discourse.plugins.map { |plugin| File.dirname(plugin.path) }.each do |path|
+  def self.manifest_full_path
+    path = "#{MANIFEST_DIR}/stylesheet-manifest"
+    return path if !Rails.env.test?
+    "#{path}-test_#{ENV['TEST_ENV_NUMBER'].presence || '0'}"
+  end
+  private_class_method :manifest_full_path
+
+  def self.use_file_hash_for_cachebuster?
+    Rails.env.production?
+  end
+  private_class_method :use_file_hash_for_cachebuster?
+
+  def self.list_files
+    globs = [
+      "#{Rails.root}/app/assets/stylesheets/**/*.*css",
+      "#{Rails.root}/app/assets/images/**/*.*"
+    ]
+
+    Discourse.plugins.each do |plugin|
+      path = File.dirname(plugin.path)
       globs << "#{path}/plugin.rb"
       globs << "#{path}/assets/stylesheets/**/*.*css"
     end
 
-    globs.map do |pattern|
-      Dir.glob(pattern).map { |x| File.mtime(x) }.max
-    end.compact.max.to_i
+    globs.flat_map { |g| Dir.glob(g) }.compact
   end
+  private_class_method :list_files
+
+  def self.max_file_mtime
+    list_files.map { |x| File.mtime(x) }.compact.max.to_i
+  end
+  private_class_method :max_file_mtime
+
+  def self.fs_assets_hash
+    hashes = list_files.sort.map { |x| Digest::SHA1.hexdigest("#{x}: #{File.read(x)}") }
+    Digest::SHA1.hexdigest(hashes.join("|"))
+  end
+  private_class_method :fs_assets_hash
 
   def self.cache_fullpath
     path = "#{Rails.root}/#{CACHE_PATH}"

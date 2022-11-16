@@ -1,12 +1,13 @@
 {
   "private": true,
   "workspaces": [
-    "discourse",
     "admin",
-    "discourse-plugins",
+    "bootstrap-json",
+    "discourse",
     "discourse-common",
     "discourse-ensure-deprecation-order",
     "discourse-hbr",
+    "discourse-plugins",
     "discourse-widget-hbs",
     "ember-cli-progress-ci",
     "pretty-text",
