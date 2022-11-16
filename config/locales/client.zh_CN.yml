@@ -146,7 +146,7 @@ zh_CN:
         enabled: "%{when}公开"
         disabled: "%{when}取消公开"
       banner:
-        enabled: "%{when}将此设置为横幅。在用户关闭前，它将显示在每个页面的顶部。"
+        enabled: "%{when}将此设置为横幅。在用户忽略前，它将显示在每个页面的顶部。"
         disabled: "%{when}移除了此横幅。它将不再显示在每个页面的顶部。"
       forwarded: "转发了上述电子邮件"
     topic_admin_menu: "话题操作"
@@ -155,7 +155,7 @@ zh_CN:
     emails_are_disabled_non_staff: "非管理员用户无法向外发送电子邮件。"
     software_update_prompt:
       message: "我们已经更新此站点，请 <span>刷新页面</span>，否则可能会遇到意外行为。"
-      dismiss: "关闭"
+      dismiss: "忽略"
     bootstrap_mode_enabled:
       other: "为了更轻松地启动您的新站点，您现在处于引导模式。所有新用户都将被授予信任级别 1，并且已启用每日摘要电子邮件。引导模式会在达到 %{count} 个用户时自动关闭。"
     bootstrap_mode_disabled: "引导模式将在 24 小时内禁用。"
@@ -261,7 +261,6 @@ zh_CN:
       like_count: "赞"
       topic_count: "话题"
       post_count: "帖子"
-      user_count: "用户"
       active_user_count: "活跃用户"
       contact: "联系我们"
       contact_info: "如果出现影响此站点的关键问题或紧急事项，请联系我们：%{contact_info}。"
@@ -318,7 +317,6 @@ zh_CN:
       remove_confirmation: "确定要删除此草稿吗？"
       new_topic: "新话题草稿"
       new_private_message: "新个人消息草稿"
-      topic_reply: "草稿回复"
       abandon:
         confirm: "您在此话题下有一个进行中的草稿。您想对它做什么？"
         yes_value: "舍弃"
@@ -356,7 +354,7 @@ zh_CN:
     switch_to_anon: "进入匿名模式"
     switch_from_anon: "退出匿名模式"
     banner:
-      close: "关闭此横幅"
+      close: "忽略此横幅"
       edit: "编辑"
     pwa:
       install_banner: "要<a href>在此设备上安装%{title}</a> 吗？"
@@ -832,7 +830,7 @@ zh_CN:
           title: "常规"
           description: "您会在别人 @ 您或回复您时收到通知。"
         muted:
-          title: "已设为免打扰"
+          title: "免打扰"
           description: "您不会收到有关此组中消息的任何通知。"
       flair_url: "头像图片"
       flair_upload_description: "使用边长不小于 20px 的正方形图片。"
@@ -999,8 +997,8 @@ zh_CN:
         enable: "启用通知"
         each_browser_note: '注意：您必须在您使用的每个浏览器上更改此设置。在“勿扰”模式下，所有通知都将被禁用，无论此设置如何。'
         consent_prompt: "当其他人回复您的帖子时是否接收实时通知？"
-      dismiss: "关闭"
-      dismiss_notifications: "全部关闭"
+      dismiss: "忽略"
+      dismiss_notifications: "全部忽略"
       dismiss_notifications_tooltip: "将所有未读通知标记为已读"
       dismiss_bookmarks_tooltip: "将所有未读书签提醒标记为已读"
       dismiss_messages_tooltip: "将所有未读个人信息通知标记为已读"
@@ -1587,15 +1585,6 @@ zh_CN:
       set_custom_status: "设置自定义状态"
       what_are_you_doing: "您在做什么？"
       remove_status: "移除状态"
-    popup:
-      primary: "知道了！"
-      secondary: "不要为我显示这些提示"
-      first_notification:
-        title: "您的第一个通知！"
-        content: "通知用于让您了解社区中发生的最新情况。"
-      topic_timeline:
-        title: "话题时间线"
-        content: "使用话题时间线快速滚动浏览帖子。"
     loading: "正在加载…"
     errors:
       prev_page: "无法加载"
@@ -1910,7 +1899,7 @@ zh_CN:
       drafts_offline: "离线草稿"
       edit_conflict: "编辑冲突"
       esc: "esc"
-      esc_label: "点击或按 Esc 关闭"
+      esc_label: "点击或按 Esc 忽略"
       ok_proceed: "好的，继续"
       group_mentioned_limit:
         other: "<b>警告</b>！您提及了 <a href='%{group_link}'> %{group} </a>，但是此群组的成员数量超过了管理员配置的 %{count} 个用户的最大可提及数量限制。没有人会收到通知。"
@@ -1946,7 +1935,7 @@ zh_CN:
       reply: "回复"
       cancel: "取消"
       create_topic: "创建话题"
-      create_pm: "消息"
+      create_pm: "发送私信"
       create_whisper: "密语"
       create_shared_draft: "创建共享草稿"
       edit_shared_draft: "编辑共享草稿"
@@ -2100,7 +2089,7 @@ zh_CN:
             other: "确定吗？您有 %{count} 个未读书签提醒。"
           messages:
             other: "确定吗？您有 %{count} 条未读个人信息。"
-        dismiss: "关闭"
+        dismiss: "忽略"
         cancel: "取消"
       group_message_summary:
         other: "您的 %{group_name} 收件箱中有 %{count} 条消息"
@@ -2328,18 +2317,18 @@ zh_CN:
         reset_bump_dates: "重置提升日期"
         defer: "推迟"
         delete: "删除话题"
-        dismiss: "关闭"
-        dismiss_read: "关闭所有未读话题"
+        dismiss: "忽略"
+        dismiss_read: "忽略所有未读话题"
         dismiss_read_with_selected:
-          other: "关闭 %{count} 个未读"
-        dismiss_button: "关闭…"
+          other: "忽略 %{count} 个未读"
+        dismiss_button: "忽略…"
         dismiss_button_with_selected:
-          other: "关闭（%{count} 个）…"
-        dismiss_tooltip: "仅关闭新帖子或停止跟踪话题"
+          other: "忽略（%{count} 个）…"
+        dismiss_tooltip: "仅忽略新帖子或停止跟踪话题"
         also_dismiss_topics: "停止跟踪这些话题，以便它们不再显示为我的未读话题"
-        dismiss_new: "关闭新话题"
+        dismiss_new: "忽略新话题"
         dismiss_new_with_selected:
-          other: "关闭新话题（%{count} 个）…"
+          other: "忽略新话题（%{count} 个）…"
         toggle: "切换话题批量选择"
         actions: "批量操作"
         change_category: "设置类别…"
@@ -2398,9 +2387,6 @@ zh_CN:
       move_to_inbox:
         title: "移至收件箱"
         help: "将消息移回收件箱"
-      edit_message:
-        help: "编辑消息的第一个帖子"
-        title: "编辑"
       defer:
         help: "标记为未读"
         title: "推迟"
@@ -2643,7 +2629,7 @@ zh_CN:
           other: "当前全站置顶的话题数：<strong class='badge badge-notification unread'>%{count}</strong>"
         make_banner: "将此话题设为在所有页面顶部显示的横幅。"
         remove_banner: "移除在所有页面顶部显示的横幅。"
-        banner_note: "用户可以通过关闭话题来关闭横幅。任何时候都只能将一个话题设为横幅。"
+        banner_note: "用户可以通过关闭话题来忽略横幅。任何时候都只能将一个话题设为横幅。"
         no_banner_exists: "没有横幅话题。"
         banner_exists: "当前设置了<strong class='badge badge-notification unread'>一个</strong>横幅话题。"
       inviting: "正在邀请…"
@@ -2802,7 +2788,7 @@ zh_CN:
       sr_reply_to: "回复 @%{username} 发布的帖子 #%{post_number}"
       notice:
         new_user: "这是 %{user} 首次发帖 - 让我们欢迎他/她加入社区吧！"
-        returning_user: "我们已经有一段时间没有看到 %{user} 了 — 他/他上次发帖是 %{time}。"
+        returning_user: "我们已经有一段时间没有看到 %{user} 了 — 他/她上次发帖是 %{time}。"
       unread: "帖子未读"
       has_replies:
         other: "%{count} 个回复"
@@ -3082,8 +3068,6 @@ zh_CN:
       this_year: "今年"
       position: "类别页面上的位置："
       default_position: "默认位置"
-      position_disabled: "类别将按照活动顺序显示。要控制类别在列表中的顺序，"
-      position_disabled_click: '请启用“fixed category positions”设置。'
       minimum_required_tags: "话题中所需的最少标签数："
       default_slow_mode: '为此类别中的新话题启用“慢速模式”。'
       parent: "父类别"
@@ -3380,8 +3364,8 @@ zh_CN:
         show_incoming_updated_topics: "%{shortcut} 显示更新的话题"
         search: "%{shortcut} 搜索"
         help: "%{shortcut} 打开键盘帮助"
-        dismiss_new: "%{shortcut} 关闭新话题"
-        dismiss_topics: "%{shortcut} 关闭话题"
+        dismiss_new: "%{shortcut} 忽略新话题"
+        dismiss_topics: "%{shortcut} 忽略话题"
         log_out: "%{shortcut} 退出"
       composing:
         title: "撰写"
@@ -3595,7 +3579,7 @@ zh_CN:
       back: "返回"
       forward: "前进"
       share: "分享"
-      dismiss: "关闭"
+      dismiss: "忽略"
     safe_mode:
       enabled: "安全模式已启用，要退出安全模式，请关闭此浏览器窗口"
     image_removed: "（图片被移除）"
@@ -3744,7 +3728,7 @@ zh_CN:
         problems_found: "基于您当前站点设置的一些建议"
         new_features:
           title: "\U0001F381 新功能"
-          dismiss: "关闭"
+          dismiss: "忽略"
           learn_more: "了解详情"
         last_checked: "上次检查"
         refresh_problems: "刷新"
@@ -4773,7 +4757,7 @@ zh_CN:
           not_listening_to_staff: "不听从管理人员反馈"
           consuming_staff_time: "消耗了过多的管理人员时间"
           combative: "好斗"
-          in_wrong_place: "位置不对"
+          in_wrong_place: "在错误的地方"
           no_constructive_purpose: "除了在社区内引起异议外，他们的行动没有任何建设性的目的"
           custom: "自定义…"
         suspend_message: "电子邮件消息"

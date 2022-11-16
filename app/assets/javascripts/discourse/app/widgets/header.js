@@ -1,7 +1,6 @@
-import DiscourseURL, { userPath } from "discourse/lib/url";
+import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import { addExtraUserClasses } from "discourse/helpers/user-avatar";
-import { ajax } from "discourse/lib/ajax";
 import { avatarImg } from "discourse/widgets/post";
 import { createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
@@ -88,11 +87,7 @@ createWidget("header-notifications", {
         const count = unread + reviewables;
         if (count > 0) {
           if (this._shouldHighlightAvatar()) {
-            if (this.siteSettings.enable_user_tips) {
-              contents.push(h("span.ring"));
-            } else {
-              this._addAvatarHighlight(contents);
-            }
+            contents.push(h("span.ring"));
           }
 
           contents.push(
@@ -124,11 +119,7 @@ createWidget("header-notifications", {
         const unreadHighPriority = user.unread_high_priority_notifications;
         if (!!unreadHighPriority) {
           if (this._shouldHighlightAvatar()) {
-            if (this.siteSettings.enable_user_tips) {
-              contents.push(h("span.ring"));
-            } else {
-              this._addAvatarHighlight(contents);
-            }
+            contents.push(h("span.ring"));
           }
 
           // add the counter for the unread high priority
@@ -155,52 +146,12 @@ createWidget("header-notifications", {
     return (
       !user.read_first_notification &&
       !user.enforcedSecondFactor &&
-      !attrs.active &&
-      attrs.ringBackdrop
-    );
-  },
-
-  _addAvatarHighlight(contents) {
-    contents.push(h("span.ring"));
-    contents.push(h("span.ring-backdrop-spotlight"));
-    contents.push(
-      h(
-        "span.ring-backdrop",
-        {},
-        h("h1.ring-first-notification", {}, [
-          h(
-            "span",
-            { className: "first-notification" },
-            I18n.t("user.first_notification")
-          ),
-          h("span", { className: "read-later" }, [
-            this.attach("link", {
-              action: "readLater",
-              className: "read-later-link",
-              label: "user.skip_new_user_tips.read_later",
-            }),
-          ]),
-          h("span", {}, [
-            I18n.t("user.skip_new_user_tips.not_first_time"),
-            " ",
-            this.attach("link", {
-              action: "skipNewUserTips",
-              className: "skip-new-user-tips",
-              label: "user.skip_new_user_tips.skip_link",
-              title: "user.skip_new_user_tips.description",
-            }),
-          ]),
-        ])
-      )
+      !attrs.active
     );
   },
 
   didRenderWidget() {
-    if (
-      !this.currentUser ||
-      !this.siteSettings.enable_user_tips ||
-      !this._shouldHighlightAvatar()
-    ) {
+    if (!this.currentUser || !this._shouldHighlightAvatar()) {
       return;
     }
 
@@ -363,7 +314,6 @@ createWidget("header-icons", {
         this.attach("user-dropdown", {
           active: attrs.userVisible,
           action: "toggleUserMenu",
-          ringBackdrop: attrs.ringBackdrop,
           user: attrs.user,
         })
       );
@@ -485,7 +435,6 @@ export default createWidget("header", {
       searchVisible: false,
       hamburgerVisible: false,
       userVisible: false,
-      ringBackdrop: true,
       inTopicContext: false,
     };
 
@@ -508,7 +457,6 @@ export default createWidget("header", {
         hamburgerVisible: state.hamburgerVisible,
         userVisible: state.userVisible,
         searchVisible: state.searchVisible,
-        ringBackdrop: state.ringBackdrop,
         flagCount: attrs.flagCount,
         user: this.currentUser,
         sidebarEnabled: attrs.sidebarEnabled,
@@ -631,10 +579,6 @@ export default createWidget("header", {
   },
 
   toggleUserMenu() {
-    if (this.currentUser.get("read_first_notification")) {
-      this.state.ringBackdrop = false;
-    }
-
     this.state.userVisible = !this.state.userVisible;
     this.toggleBodyScrolling(this.state.userVisible);
 
@@ -729,43 +673,6 @@ export default createWidget("header", {
     if (state.searchVisible || state.hamburgerVisible || state.userVisible) {
       this.closeAll();
     }
-  },
-
-  headerDismissFirstNotificationMask() {
-    // Dismiss notifications
-    if (document.body.classList.contains("unread-first-notification")) {
-      document.body.classList.remove("unread-first-notification");
-    }
-    this.store
-      .findStale(
-        "notification",
-        {
-          recent: true,
-          silent: this.get("currentUser.enforcedSecondFactor"),
-          limit: 5,
-        },
-        { cacheKey: "recent-notifications" }
-      )
-      .refresh();
-    // Update UI
-    this.state.ringBackdrop = false;
-    this.scheduleRerender();
-  },
-
-  readLater() {
-    this.headerDismissFirstNotificationMask();
-  },
-
-  skipNewUserTips() {
-    this.headerDismissFirstNotificationMask();
-    ajax(userPath(this.currentUser.username_lower), {
-      type: "PUT",
-      data: {
-        skip_new_user_tips: true,
-      },
-    }).then(() => {
-      this.currentUser.set("skip_new_user_tips", true);
-    });
   },
 
   headerKeyboardTrigger(msg) {

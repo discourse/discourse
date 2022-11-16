@@ -56,7 +56,19 @@ nl:
       "9":
         author: "Bruce Lee"
       "10":
+        quote: "Wat de geest van de mens ook kan bedenken en geloven, hij kan het bereiken."
         author: "Napoleon Hill"
+      "11":
+        quote: "Vrede thuis, vrede in de wereld."
+        author: "Mustafa Kemal Atatürk"
+      "12":
+        quote: "Onderwijs is geen manier om aan armoede te ontsnappen, het is een manier om armoede te bestrijden."
+        author: "Julius Nyerere"
+      "13":
+        quote: "Een reis van duizend mijl moet beginnen met een enkele stap."
+        author: "Lao Tzu"
+      results: |-
+        > :left_speech_bubble: _%{quote}_ &mdash; %{author}
     magic_8_ball:
       trigger: "lot"
       answers:
@@ -89,6 +101,11 @@ nl:
       random_mention:
         reply: |-
           Hallo! Zeg '@%{discobot_username} %{help_trigger}' om te ontdekken wat ik kan.
+        tracks: |-
+          Ik weet momenteel hoe ik de volgende dingen moet doen:
+
+          `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
+          > Start een interactieve tutorial speciaal voor jou, in een persoonlijk bericht. '{name-of-tutorial}' kan er een zijn van: '%{tracks}'.
         bot_actions: |-
           '@%{discobot_username} %{dice_trigger} 2d6'
           > :game_die: 3, 6
@@ -98,18 +115,50 @@ nl:
 
           '@%{discobot_username} %{magic_8_ball_trigger}'
           > :crystal_ball: Je kunt erop vertrouwen
+        discobot_disabled: Je hebt me uitgeschakeld in je voorkeuren. Je moet onboardingtips voor nieuwe gebruikers toestaan om met mij te communiceren.
       do_not_understand:
         first_response: |-
           Hallo, bedankt voor het antwoord!
 
           Helaas kan ik dat, als slecht geprogrammeerde bot, niet helemaal begrijpen. :frowning:
         track_response: Je kunt het opnieuw proberen, of '%{skip_trigger}' zeggen als je deze stap wilt overslaan. Zeg anders '%{reset_trigger}' om opnieuw te beginnen.
+        second_response: |-
+          Sorry, ik snap het nog steeds niet. :anguished:
+
+          Ik ben maar een bot, maar als je een echt persoon wilt spreken, ga dan naar [onze contactpagina](%{base_path}/about).
+
+          Ondertussen zal ik uit je buurt blijven.
     new_user_narrative:
       reset_trigger: "handleiding"
       title: "Certificaat voor het voltooien van de handleiding voor nieuwe gebruikers"
       cert_title: "Als erkenning voor de succesvolle voltooiing van de handleiding voor nieuwe gebruikers"
       hello:
         title: "Gegroet!"
+        message: |-
+          Bedankt dat je je hebt geregistreerd op %{title}, welkom!
+
+          - Ik ben maar een robot, maar [onze vriendelijke medewerkers](%{base_uri}/about) zijn er ook om te helpen als je een persoon nodig hebt.
+
+          - Om veiligheidsredenen beperken we tijdelijk wat nieuwe gebruikers kunnen doen. Je krijgt [nieuwe mogelijkheden](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (en [badges](%{base_uri}/badges)) naarmate we je leren kennen.
+
+          - Wij geloven te allen tijde in [beschaafd communitygedrag](%{base_uri}/guidelines).
+      onebox:
+        instructions: |-
+          Kun je nu een van deze links met mij delen? Reageer met **een link op een afzonderlijke regel**, dan wordt deze automatisch uitgebreid met een handige samenvatting.
+
+          Om een link te kopiëren, tik je op de link op je mobiel en houd je deze ingedrukt, of rechtsklik met je aanwijsapparaat:
+
+          <https://en.wikipedia.org/wiki/Inherently_funny_word>
+          <https://en.wikipedia.org/wiki/Death_by_coconut>
+          <https://en.wikipedia.org/wiki/Calculator_spelling>
+        reply: |-
+          Cool! Dit werkt voor de meeste <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> links. Vergeet niet dat de link op een _afzonderlijke regel_ moet staan, met niets anders ervoor of erachter.
+        not_found: |-
+          Sorry, ik kon de link niet vinden in je antwoord! :cry:
+
+          Kun je proberen de volgende link toe te voegen, op een afzonderlijke regel, in je volgende antwoord?
+
+          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       likes:
         reply: |-
           Bedankt voor het liken van mijn bericht!
@@ -120,6 +169,9 @@ nl:
           Ik heb geen opmaak gevonden in je antwoord. :pencil2:
 
           Kun je het opnieuw proberen? Gebruik de knoppen <kbd><b>B</b></kbd> (vet) of <kbd><i>I</i></kbd> (cursief) in de editor als je vast komt te zitten.
+      emoji:
+        reply: |-
+          Dat is :sparkles: _emojitastistisch!_ :sparkles:
       search:
         reply: |-
           Je hebt het gevonden :tada:
@@ -133,3 +185,6 @@ nl:
       reset_trigger: "geavanceerde handleiding"
       cert_title: "Als erkenning voor de succesvolle voltooiing van de tutorial voor gevorderde gebruikers"
       title: ":arrow_up: Geavanceerde gebruikersfuncties"
+      details:
+        reply: |-
+          Goed werk, je aandacht voor _detail_ is bewonderenswaardig!

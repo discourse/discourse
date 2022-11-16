@@ -293,7 +293,6 @@ fi:
       like_count: "Tykkäyksiä"
       topic_count: "Ketjuja"
       post_count: "Viestejä"
-      user_count: "Käyttäjiä"
       active_user_count: "Aktiivisia käyttäjiä"
       contact: "Ota yhteyttä"
       contact_info: "Sivustoon liittyvissä kiireellisissä asioissa, ota yhteyttä osoitteeseen %{contact_info}."
@@ -350,7 +349,6 @@ fi:
       remove_confirmation: "Haluatko varmasti poistaa luonnoksen?"
       new_topic: "Uusi ketjuluonnos"
       new_private_message: "Uusi yksityisviestin luonnos"
-      topic_reply: "Vastausluonnos"
       abandon:
         confirm: "Sinulla on meneillään luonnos tätä ketjua varten. Mitä haluaisit tehdä sen kanssa?"
         yes_value: "Hylkää"
@@ -1086,7 +1084,6 @@ fi:
         not_first_time: "Eikö tämä ole ensikertasi?"
         skip_link: "Ohita nämä vinkit"
         read_later: "Luen sen myöhemmin."
-      reset_seen_popups: "Näytä aloitusvinkit uudelleen"
       theme_default_on_all_devices: "Tee tästä oletusteema kaikille laitteilleni"
       color_scheme_default_on_all_devices: "Aseta oletusvärimalli(t) kaikille laitteilleni"
       color_scheme: "Värimalli"
@@ -1671,15 +1668,6 @@ fi:
       set_custom_status: "Aseta mukautettu tila"
       what_are_you_doing: "Mitä teet?"
       remove_status: "Poista tila"
-    popup:
-      primary: "Selvä!"
-      secondary: "älä näytä minulle näitä vinkkejä"
-      first_notification:
-        title: "Ensimmäinen ilmoituksesi!"
-        content: "Ilmoitusten avulla pysyt ajan tasalla siitä, mitä yhteisössä tapahtuu."
-      topic_timeline:
-        title: "Ketjun aikajana"
-        content: "Selaa viestiä nopeasti käyttämällä ketjun aikajanaa."
     loading: "Ladataan..."
     errors:
       prev_page: "yrittäessä ladata"
@@ -2525,9 +2513,6 @@ fi:
       move_to_inbox:
         title: "Siirrä saapuneisiin"
         help: "Siirrä takaisin saapuneisiin."
-      edit_message:
-        help: "Muokkaa keskustelun ensimmäistä viestiä"
-        title: "Muokkaa"
       defer:
         help: "Merkitse lukemattomaksi"
         title: "Lykkää"
@@ -3248,8 +3233,6 @@ fi:
       this_year: "tänä vuonna"
       position: "Sijoitus aluesivulla:"
       default_position: "Oletussijoitus"
-      position_disabled: "Alueet näytetään aktiivisuusjärjestyksessä. Muokataksesi järjestystä, "
-      position_disabled_click: 'ota käyttöön pysyvien aluesijoitusten asetus.'
       minimum_required_tags: "Ketjussa vaadittavien tunnisteiden vähimmäismäärä:"
       default_slow_mode: 'Ota "Hidas tila" käyttöön tämän alueen uusille ketjuille.'
       parent: "Ylätason alue"

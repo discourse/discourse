@@ -261,7 +261,6 @@ zh_TW:
       like_count: "讚"
       topic_count: "話題"
       post_count: "貼文"
-      user_count: "使用者"
       active_user_count: "活躍使用者"
       contact: "聯絡我們"
       contact_info: "若有重大問題或關係到網站的緊急時間，請透過 %{contact_info} 聯絡我們"
@@ -316,7 +315,6 @@ zh_TW:
       remove_confirmation: "您確定要刪除此草稿嗎？"
       new_topic: "新話題草稿"
       new_private_message: "新個人訊息草稿"
-      topic_reply: "回覆草稿"
       abandon:
         confirm: "您有針對此主題的草稿。您想用它做什麼？"
         yes_value: "捨棄"
@@ -1932,9 +1930,6 @@ zh_TW:
       move_to_inbox:
         title: "移動到收件匣"
         help: "把訊息移動到收件匣"
-      edit_message:
-        help: "編輯這個訊息的第一篇貼文"
-        title: "編輯"
       defer:
         title: "延遲"
       list: "話題"
@@ -2448,8 +2443,7 @@ zh_TW:
       this_year: "今年"
       position: "在分類頁面上的位置："
       default_position: "預設的位置"
-      position_disabled: "分類的顯示將會以活躍度為排序依據。若要控制分類排序方法，"
-      position_disabled_click: '請啟用"固定分類位置"設定'
+      position_disabled: "類別將按活動順序顯示。若要控制清單中類別的順序，請啟用 <a href='%{url}'>「固定類別位置」</a> 設定。"
       minimum_required_tags: "話題標籤的最低要求數量："
       parent: "父分類"
       num_auto_bump_daily: "每日自動上浮的主題數："

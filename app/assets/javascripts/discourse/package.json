@@ -42,6 +42,7 @@
     "bootstrap-json": "workspace:*",
     "broccoli-asset-rev": "^3.0.0",
     "deepmerge": "^4.2.2",
+    "dialog-holder": "workspace:*",
     "discourse-common": "workspace:*",
     "discourse-ensure-deprecation-order": "workspace:*",
     "discourse-hbr": "workspace:*",
@@ -70,7 +71,7 @@
     "ember-rfc176-data": "^0.3.17",
     "ember-source": "~3.28.10",
     "ember-test-selectors": "^6.0.0",
-    "eslint": "^8.26.0",
+    "eslint": "^8.27.0",
     "eslint-plugin-qunit": "^7.3.2",
     "handlebars": "^4.7.7",
     "html-entities": "^2.3.3",
@@ -80,7 +81,6 @@
     "markdown-it": "^13.0.1",
     "message-bus-client": "^4.2.0",
     "messageformat": "0.1.5",
-    "node-fetch": "^2.6.7",
     "pretender": "^3.4.7",
     "pretty-text": "workspace:*",
     "qunit": "^2.19.3",
@@ -101,11 +101,6 @@
   },
   "ember": {
     "edition": "default"
-  },
-  "ember-addon": {
-    "paths": [
-      "lib/dialog-holder"
-    ]
   },
   "devDependencies": {
     "ember-cached-decorator-polyfill": "^1.0.1",

@@ -320,7 +320,6 @@ cs:
       like_count: "Líbí se"
       topic_count: "Témata"
       post_count: "Příspěvky"
-      user_count: "Uživatelé"
       active_user_count: "Aktivní uživatelé"
       contact: "Kontaktujte nás"
       contact_info: "V případě kritické chyby nebo urgentní záležitosti ovlivňující tuto stránku nás prosím kontaktujte na %{contact_info}."
@@ -377,7 +376,6 @@ cs:
       remove_confirmation: "Opravdu chcete tento koncept smazat?"
       new_topic: "Nový koncept tématu"
       new_private_message: "Nový koncept soukromé zprávy"
-      topic_reply: "Koncept odpovědi"
       abandon:
         confirm: "Máte rozpracovaný koncept tohoto tématu. Co byste s ním chtěli udělat?"
         yes_value: "Zahodit"
@@ -1913,9 +1911,6 @@ cs:
       move_to_inbox:
         title: "Přesunout do Přijaté"
         help: "Přesunout zprávu zpět do Přijaté"
-      edit_message:
-        help: "Upravit první příspěvek zprávy"
-        title: "Upravit"
       defer:
         title: "Odložit"
       list: "Témata"
@@ -2435,8 +2430,6 @@ cs:
       require_reply_approval: "Požadovat schválení moderátorů pro všechny nové odpovědi"
       this_year: "letos"
       default_position: "Výchozí umístění"
-      position_disabled: "Kategorie jsou zobrazovány podle pořadí aktivity. Pro kontrolu pořadí kategorií v seznamech,"
-      position_disabled_click: 'povolte nastavení "neměnné pozice kategorií" (fixed category positions).'
       minimum_required_tags: "Nejmenší počet tagů požadovaných pro téma:"
       parent: "Nadřazená kategorie"
       num_auto_bump_daily: "Počet otevřených témat, která mají být denně automaticky zvýrazněna:"

@@ -7,6 +7,9 @@
 pl_PL:
   js:
     admin:
+      site_settings:
+        categories:
+          chat: Czat
       logs:
         staff_actions:
           actions:
@@ -283,7 +286,6 @@ pl_PL:
       retention_reminders:
         public: "Historia kanału jest przechowywana przez %{days} dni."
         dm: "Historia osobistego czatu jest przechowywana przez %{days} dni."
-      topic_button_title: "Czat"
       emoji_picker:
         smileys_&_emotion: "Buźki i emocje"
         objects: "Obiekty"

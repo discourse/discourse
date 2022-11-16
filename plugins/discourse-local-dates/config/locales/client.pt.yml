@@ -23,7 +23,7 @@ pt:
           timezones_title: Fuso horário a exibir
           timezones_description: O fuso horário será utilizado para exibir as datas na pré-visualização e "fallback".
           recurring_title: Recorrência
-          recurring_description: "Defina a recorrência de um evento. Também pode editar manualmente a opção recorrente gerada pelo formulário e utilizar uma das seguintes chaves: anos, trimestres, meses, semanas, dias, horas, minutos, segundos, milissegundos."
+          recurring_description: "Defina a recorrência de um evento. Também pode editar manualmente a opção recorrente gerada pelo formulário e utilizar uma das seguintes chaves: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
           recurring_none: Nenhuma recorrência
           invalid_date: Data inválida. Certifique-se que a data e a hora estão corretos.
           date_title: Data
@@ -41,4 +41,4 @@ pt:
             every_three_months: "Trimestral"
             every_six_months: "Semestral"
             every_year: "Anualmente"
-      default_title: "%{site_name} Evento"
+      default_title: "Evento de %{site_name}"
