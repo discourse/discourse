@@ -88,23 +88,9 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     const content = [];
     const data = await ajax("/notifications", { data: params });
 
-    let notifications = await Notification.initializeNotifications(
+    const notifications = await Notification.initializeNotifications(
       data.notifications
     );
-    // mark likes as read on all notifications list
-    if (this.allNotifications) {
-      notifications = notifications.map((notification) => {
-        if (
-          [
-            this.site.notification_types["liked"],
-            this.site.notification_types["liked_consolidated"],
-          ].includes(notification.notification_type)
-        ) {
-          notification.read = true;
-        }
-        return notification;
-      });
-    }
 
     const reviewables = data.pending_reviewables?.map((r) =>
       UserMenuReviewable.create(r)
