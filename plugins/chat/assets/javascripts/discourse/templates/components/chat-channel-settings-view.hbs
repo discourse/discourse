@@ -12,7 +12,6 @@
       {{/if}}
     </div>
   </div>
-
   {{#unless this.channel.current_user_membership.muted}}
     <div class="chat-form__field">
       <label class="chat-form__label">
@@ -42,17 +41,19 @@
       </div>
     </div>
   {{/unless}}
+  <div class="chat-retention-info">{{d-icon "info-circle"}}{{i18n "chat.settings.retention_info" days=this.siteSettings.chat_channel_retention_days}}</div>
 </div>
 
 {{#if (chat-guardian "can-edit-chat-channel")}}
+  <h3 class="chat-form__section-admin-title">{{i18n "chat.settings.admin_title"}}</h3>
   {{#if this.autoJoinAvailable}}
     <div class="chat-form__section">
       <div class="chat-form__field">
-        {{#if this.channel.auto_join_users}}
-          <DButton @action={{action "onDisableAutoJoinUsers"}} @label="chat.settings.disable_auto_join_users" @class="archive-btn chat-form__btn btn-flat" @icon="minus-circle" />
-        {{else}}
-          <DButton @action={{action "onEnableAutoJoinUsers"}} @label="chat.settings.enable_auto_join_users" @class="archive-btn chat-form__btn btn-flat" @icon="user-plus" />
-        {{/if}}
+        <label class="chat-form__label">
+          <span>{{i18n "chat.settings.auto_join_users_label"}}</span>
+        </label>
+        <ComboBox @content={{this.autoAddUsersOptions}} @value={{this.channel.auto_join_users}} @valueProperty="value" @class="channel-settings-view__auto-join-selector" @onChange={{action (fn this.onToggleAutoJoinUsers this.channel.auto_join_users)}} />
+        <div class="chat-form__description -autojoin">{{i18n "chat.settings.auto_join_users_info" category=this.channel.chatable.name}}</div>
       </div>
     </div>
   {{/if}}
