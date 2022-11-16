@@ -98,6 +98,27 @@ describe Chat::ChatChannelFetcher do
     end
   end
 
+  describe ".last_message" do
+    context "when user is member of the direct message channel" do
+      before do
+        Fabricate(
+          :user_chat_channel_membership_for_dm,
+          chat_channel: direct_message_channel1,
+          user: user1,
+          following: true,
+        )
+        DirectMessageUser.create!(direct_message: dm_channel1, user: user1)
+        DirectMessageUser.create!(direct_message: dm_channel1, user: user2)
+        Fabricate(:chat_message, chat_channel: category_channel, message: "welcome", user: user2)
+        Fabricate(:chat_message, chat_channel: category_channel, message: "hello sir", user: user2)
+      end
+
+      it "returns the last message" do
+        expect(subject.last_message).to eq("hello sir")
+      end
+    end
+  end
+
   describe ".all_secured_channel_ids" do
     it "returns nothing by default if the user has no memberships" do
       expect(subject.all_secured_channel_ids(guardian)).to eq([])
