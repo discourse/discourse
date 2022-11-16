@@ -778,7 +778,7 @@ export default Controller.extend({
       let body;
       const groupLink = getURL(`/g/${name}/members`);
 
-      if (maxMentions < userCount) {
+      if (userCount > maxMentions) {
         body = I18n.t("composer.group_mentioned_limit", {
           group: `@${name}`,
           count: maxMentions,
