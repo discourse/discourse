@@ -4,6 +4,7 @@ import { click, render, triggerKeyEvent } from "@ember/test-helpers";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import { hbs } from "ember-cli-htmlbars";
+import ClassicComponent from "@ember/component";
 
 module("Integration | Component | d-button", function (hooks) {
   setupRenderingTest(hooks);
@@ -249,6 +250,30 @@ module("Integration | Component | d-button", function (hooks) {
     });
 
     await render(hbs`<DButton @action={{this.action}} />`);
+
+    await click(".btn");
+
+    assert.strictEqual(this.foo, "bar");
+  });
+
+  test("@action can sendAction when passed a string", async function (assert) {
+    this.set("foo", null);
+    this.set("legacyActionTriggered", () => this.set("foo", "bar"));
+
+    this.classicComponent = ClassicComponent.extend({
+      actions: {
+        myLegacyAction() {
+          this.legacyActionTriggered();
+        },
+      },
+    });
+
+    await render(
+      hbs`<this.classicComponent @legacyActionTriggered={{this.legacyActionTriggered}}>
+          <DButton @action="myLegacyAction" />
+        </this.classicComponent>
+        `
+    );
 
     await click(".btn");
 

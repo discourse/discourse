@@ -1,15 +1,17 @@
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import { empty, equal, notEmpty } from "@ember/object/computed";
-import Component from "@glimmer/component";
+import GlimmerComponentWithDeprecatedParentView from "discourse/components/glimmer-component-with-deprecated-parent-view";
 import deprecated from "discourse-common/lib/deprecated";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 
-const ACTION_AS_STRING_DEPRECATION =
-  "DButton no longer supports @action as a string. Please refactor to use an closure action instead.";
+const ACTION_AS_STRING_DEPRECATION_ARGS = [
+  "DButton no longer supports @action as a string. Please refactor to use an closure action instead.",
+  { id: "discourse.d-button-action-string" },
+];
 
-export default class DButton extends Component {
+export default class DButton extends GlimmerComponentWithDeprecatedParentView {
   @service router;
 
   @notEmpty("args.icon")
@@ -24,7 +26,7 @@ export default class DButton extends Component {
   constructor() {
     super(...arguments);
     if (typeof this.args.action === "string") {
-      deprecated(ACTION_AS_STRING_DEPRECATION);
+      deprecated(...ACTION_AS_STRING_DEPRECATION_ARGS);
     }
   }
 
@@ -106,7 +108,14 @@ export default class DButton extends Component {
         const { actionParam, forwardEvent } = this.args;
 
         if (typeof actionVal === "string") {
-          throw new Error(ACTION_AS_STRING_DEPRECATION);
+          deprecated(...ACTION_AS_STRING_DEPRECATION_ARGS);
+          if (this.parentView?.send) {
+            this.parentView.send(actionVal, actionParam);
+          } else {
+            throw new Error(
+              "DButton could not find a target for the action. Use a closure action instead"
+            );
+          }
         } else if (typeof actionVal === "object" && actionVal.value) {
           if (forwardEvent) {
             actionVal.value(actionParam, event);
