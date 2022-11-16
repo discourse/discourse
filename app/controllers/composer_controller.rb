@@ -24,7 +24,8 @@ class ComposerController < ApplicationController
     here_count = nil
 
     users = User
-      .where(username_lower: names.map(&:downcase), staged: false)
+      .not_staged
+      .where(username_lower: names.map(&:downcase))
       .index_by(&:username_lower)
 
     groups = Group
