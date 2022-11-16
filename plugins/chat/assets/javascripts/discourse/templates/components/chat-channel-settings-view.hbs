@@ -41,7 +41,7 @@
       </div>
     </div>
   {{/unless}}
-  <div class="chat-retention-info">{{d-icon "info-circle"}}{{i18n "chat.settings.retention_info"}}</div>
+  <div class="chat-retention-info">{{d-icon "info-circle"}}{{i18n "chat.settings.retention_info" days=this.lengthOfRetention}}</div>
 </div>
 
 {{#if (chat-guardian "can-edit-chat-channel")}}
