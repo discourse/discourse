@@ -239,7 +239,8 @@ class Notification < ActiveRecord::Base
   def self.like_types
     [
       Notification.types[:liked],
-      Notification.types[:liked_consolidated]
+      Notification.types[:liked_consolidated],
+      Notification.types[:reaction]
     ]
   end
 
