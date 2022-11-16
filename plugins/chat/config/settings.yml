@@ -1,4 +1,4 @@
-plugins:
+chat:
   chat_enabled:
     default: false
     client: true
@@ -20,6 +20,11 @@ plugins:
     client: true
     max: 3652 # 10 years
     min: 0
+  chat_max_direct_message_users:
+    default: 20
+    min: 0
+    max: 100
+    client: true
   chat_dm_retention_days:
     default: 0
     client: true

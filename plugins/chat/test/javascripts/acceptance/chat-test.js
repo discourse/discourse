@@ -141,7 +141,6 @@ acceptance("Discourse Chat - without unread", function (needs) {
 
   // TODO: needs a future change to how we handle URLS to be possible
   skip("Clicking mention notification from outside chat opens the float", async function (assert) {
-    this.chatService.set("chatWindowFullPage", false);
     await visit("/t/internationalization-localization/280");
     await click(".header-dropdown-toggle.current-user");
     await click("#quick-access-notifications .chat-mention");
@@ -217,7 +216,7 @@ acceptance("Discourse Chat - without unread", function (needs) {
     await triggerEvent(".chat-message-container[data-id='174']", "mouseenter");
 
     const currentUserDropdown = selectKit(
-      ".chat-msgactions-hover[data-id='174'] .more-buttons"
+      ".chat-message-actions-container[data-id='174'] .more-buttons"
     );
     await currentUserDropdown.expand();
 
@@ -226,9 +225,9 @@ acceptance("Discourse Chat - without unread", function (needs) {
       "it doesn’t show the rebake button for non staff"
     );
 
-    await visit("/");
     updateCurrentUser({ admin: true, moderator: true });
-    await visit("/chat/channel/11/another-category");
+    await visit("/chat");
+
     await triggerEvent(".chat-message-container[data-id='174']", "mouseenter");
     await currentUserDropdown.expand();
 
@@ -243,7 +242,7 @@ acceptance("Discourse Chat - without unread", function (needs) {
     );
 
     const notCurrentUserDropdown = selectKit(
-      ".chat-msgactions-hover[data-id='175'] .more-buttons"
+      ".chat-message-actions-container[data-id='175'] .more-buttons"
     );
     await triggerEvent(".chat-message-container[data-id='175']", "mouseenter");
     await notCurrentUserDropdown.expand();
@@ -259,12 +258,12 @@ acceptance("Discourse Chat - without unread", function (needs) {
 
     // User created this message
     assert.ok(
-      ".chat-msgactions-hover[data-id='174'] .reply-btn",
+      ".chat-message-actions-container[data-id='174'] .reply-btn",
       "it shows the reply button"
     );
 
     const currentUserDropdown = selectKit(
-      ".chat-msgactions-hover[data-id='174'] .more-buttons"
+      ".chat-message-actions-container[data-id='174'] .more-buttons"
     );
     await currentUserDropdown.expand();
 
@@ -301,11 +300,11 @@ acceptance("Discourse Chat - without unread", function (needs) {
     // User _didn't_ create this message
     await triggerEvent(".chat-message-container[data-id='175']", "mouseenter");
     assert.ok(
-      ".chat-msgactions-hover[data-id='175'] .reply-btn",
+      ".chat-message-actions-container[data-id='175'] .reply-btn",
       "it shows the reply button"
     );
     const notCurrentUserDropdown = selectKit(
-      ".chat-msgactions-hover[data-id='175'] .more-buttons"
+      ".chat-message-actions-container[data-id='175'] .more-buttons"
     );
     await notCurrentUserDropdown.expand();
 
@@ -368,15 +367,16 @@ acceptance("Discourse Chat - without unread", function (needs) {
 
   test("Reply-to is stored in draft", async function (assert) {
     this.chatService.set("sidebarActive", false);
-    this.chatService.set("chatWindowFullPage", false);
+
     await visit("/latest");
-    this.appEvents.trigger("chat:toggle-open");
+    await click(".header-dropdown-toggle.open-chat");
+    await click(".chat-channel-row");
     await settled();
 
     await click(".topic-chat-drawer-header__return-to-channels-btn");
     await click(".chat-channel-row.chat-channel-9");
     await triggerEvent(".chat-message-container[data-id='174']", "mouseenter");
-    await click(".chat-msgactions-hover[data-id='174'] .reply-btn");
+    await click(".chat-message-actions-container[data-id='174'] .reply-btn");
     // Reply-to line is present
     assert.ok(exists(".chat-composer-message-details .chat-reply"));
     await click(".topic-chat-drawer-header__return-to-channels-btn");
@@ -386,7 +386,7 @@ acceptance("Discourse Chat - without unread", function (needs) {
     // Now click on reply btn and cancel it on channel 7
 
     await triggerEvent(".chat-message-container[data-id='174']", "mouseenter");
-    await click(".chat-msgactions-hover[data-id='174'] .reply-btn");
+    await click(".chat-message-actions-container[data-id='174'] .reply-btn");
     await click(".cancel-message-action");
 
     // Go back to channel 9 and check that reply-to is present
@@ -687,7 +687,7 @@ Widget.triangulate(arg: "test")
     const firstMessage = query(".chat-message-container");
     await triggerEvent(firstMessage, "mouseenter");
     const dropdown = selectKit(
-      `.chat-msgactions-hover[data-id="${firstMessage.dataset.id}"] .more-buttons`
+      `.chat-message-actions-container[data-id="${firstMessage.dataset.id}"] .more-buttons`
     );
     await dropdown.expand();
     await dropdown.selectRowByValue("selectMessage");
@@ -700,13 +700,15 @@ Widget.triangulate(arg: "test")
     updateCurrentUser({ admin: false, moderator: false });
     await visit("/chat/channel/11/another-category");
     assert.notOk(
-      exists(".chat-message-container .chat-msgactions-hover .select-btn")
+      exists(
+        ".chat-message-container .chat-message-actions-container .select-btn"
+      )
     );
   });
 
   test("creating a new direct message channel works", async function (assert) {
     await visit("/chat/channel/11/another-category");
-    await click(".new-dm");
+    await click(".open-draft-channel-page-btn");
     await fillIn(".filter-usernames", "hawk");
     await click("li.user[data-username='hawk']");
 
@@ -724,7 +726,7 @@ Widget.triangulate(arg: "test")
 
   test("creating a new direct message channel from popup chat works", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(".new-dm");
+    await click(".open-draft-channel-page-btn");
     await fillIn(".filter-usernames", "hawk");
     await click('.chat-user-avatar-container[data-user-card="hawk"]');
     assert.ok(query(".selected-user").innerText, "hawk");
@@ -735,7 +737,7 @@ Widget.triangulate(arg: "test")
     const message = query(".chat-message-container");
     await triggerEvent(message, "mouseenter");
     assert.notOk(message.querySelector(".chat-message-reaction-list"));
-    await click(".chat-msgactions .react-btn");
+    await click(".chat-message-actions .react-btn");
     await click(`.chat-emoji-picker .emoji[alt="grinning"]`);
 
     assert.ok(message.querySelector(".chat-message-reaction-list"));
@@ -831,7 +833,7 @@ Widget.triangulate(arg: "test")
     assert.deepEqual(lastMessage.dataset.id, "202");
     await triggerEvent(lastMessage, "mouseenter");
     await click(
-      `.chat-msgactions-hover[data-id="${lastMessage.dataset.id}"] .react-btn`
+      `.chat-message-actions-container[data-id="${lastMessage.dataset.id}"] .react-btn`
     );
     await click(`.emoji[alt="grinning"]`);
 
@@ -937,7 +939,7 @@ Widget.triangulate(arg: "test")
   test("changing channel resets message selection", async function (assert) {
     await visit("/chat/channel/11/another-category");
     await triggerEvent(".chat-message-container", "mouseenter");
-    const dropdown = selectKit(".chat-msgactions .more-buttons");
+    const dropdown = selectKit(".chat-message-actions .more-buttons");
     await dropdown.expand();
     await dropdown.selectRowByValue("selectMessage");
     await click("#chat-copy-btn");
@@ -977,31 +979,10 @@ acceptance(
     test("Expand button takes you to full page chat on the correct channel", async function (assert) {
       await visit("/t/internationalization-localization/280");
       this.chatService.set("sidebarActive", false);
-      await visit(".header-dropdown-toggle.open-chat");
+      await click(".header-dropdown-toggle.open-chat");
       await click(".topic-chat-drawer-header__full-screen-btn");
 
       assert.equal(currentURL(), `/chat/channel/11/another-category`);
-    });
-
-    test("Chat opens to full-page channel with unread messages when sidebar is installed", async function (assert) {
-      await visit("/t/internationalization-localization/280");
-      this.chatService.set("sidebarActive", true);
-
-      await click(".header-dropdown-toggle.open-chat");
-
-      assert.equal(currentURL(), `/chat/channel/11/another-category`);
-      assert.notOk(
-        visible(".topic-chat-float-container"),
-        "chat float is not open"
-      );
-    });
-
-    test("Chat float opens on header icon click when sidebar is not installed", async function (assert) {
-      await visit("/t/internationalization-localization/280");
-      this.chatService.set("sidebarActive", false);
-      this.chatService.set("chatWindowFullPage", false);
-      await click(".header-dropdown-toggle.open-chat");
-      assert.ok(visible(".topic-chat-float-container"), "chat float is open");
     });
 
     test("Unread header indicator is present", async function (assert) {
@@ -1045,7 +1026,7 @@ acceptance(
 
     test("Close fullscreen chat button present", async function (assert) {
       await visit("/chat/channel/11/another-category");
-      assert.ok(exists(".chat-full-screen-button"));
+      assert.ok(exists(".open-drawer-btn"));
     });
   }
 );
@@ -1108,6 +1089,7 @@ acceptance(
         visible(".topic-chat-drawer-header__top-line--expanded"),
         "chat float is expanded"
       );
+      await click("#chat-channel-row-9");
       await click(".topic-chat-drawer-header__title");
       assert.equal(currentURL(), `/chat/channel/9/site/info/members`);
     });
@@ -1116,16 +1098,22 @@ acceptance(
       await visit("/t/internationalization-localization/280");
       this.chatService.set("sidebarActive", false);
       await click(".header-dropdown-toggle.open-chat");
+      await click(".chat-channel-row");
+
       assert.ok(
         visible(".topic-chat-drawer-header__top-line--expanded"),
         "chat float is expanded"
       );
+
       await click(".topic-chat-drawer-header__expand-btn");
+
       assert.ok(
         visible(".topic-chat-drawer-header__top-line--collapsed"),
         "chat float is collapsed"
       );
+
       await click(".topic-chat-drawer-header__title");
+
       assert.ok(
         visible(".topic-chat-drawer-header__top-line--expanded"),
         "chat float is expanded"
@@ -1179,14 +1167,16 @@ acceptance(
     test("Chat float open to DM channel with unread messages with sidebar off", async function (assert) {
       await visit("/t/internationalization-localization/280");
       this.chatService.set("sidebarActive", false);
-      this.chatService.set("chatWindowFullPage", false);
+
       await click(".header-dropdown-toggle.open-chat");
+      await click("#chat-channel-row-75");
       const chatContainer = query(".topic-chat-container");
       assert.ok(chatContainer.classList.contains("channel-75"));
     });
 
     test("Chat full page open to DM channel with unread messages with sidebar on", async function (assert) {
       this.chatService.set("sidebarActive", true);
+      this.owner.lookup("service:chat-state-manager").prefersFullPage();
       await visit("/t/internationalization-localization/280");
       await click(".header-dropdown-toggle.open-chat");
 
@@ -1246,8 +1236,6 @@ acceptance(
     });
 
     test("Create channel modal", async function (assert) {
-      this.container.lookup("service:chat").set("chatWindowFullPage", true);
-
       await visit("/chat/browse");
       await click(".new-channel-btn");
 
@@ -1413,7 +1401,6 @@ acceptance("Discourse Chat - image uploads", function (needs) {
   test("uploading files in chat works", async function (assert) {
     await visit("/t/internationalization-localization/280");
     this.container.lookup("service:chat").set("sidebarActive", false);
-    this.container.lookup("service:chat").set("chatWindowFullPage", false);
     await click(".header-dropdown-toggle.open-chat");
 
     assert.ok(visible(".topic-chat-float-container"), "chat float is open");
@@ -1473,8 +1460,8 @@ acceptance("Discourse Chat - image uploads", function (needs) {
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
 
     this.container.lookup("service:chat").set("sidebarActive", false);
-    this.container.lookup("service:chat").set("chatWindowFullPage", false);
     await click(".header-dropdown-toggle.open-chat");
+    await click(".chat-channel-row");
     assert.ok(visible(".topic-chat-float-container"), "chat float is open");
 
     const appEvents = loggedInUser().appEvents;
@@ -1631,7 +1618,7 @@ acceptance(
     test("read only channels do not show the reply, react, delete, edit, restore, or rebuild options for messages", async function (assert) {
       await visit("/chat/channel/5/public-category");
       await triggerEvent(".chat-message-container", "mouseenter");
-      const dropdown = selectKit(".chat-msgactions .more-buttons");
+      const dropdown = selectKit(".chat-message-actions .more-buttons");
       await dropdown.expand();
       assert.notOk(exists(".select-kit-row[data-value='edit']"));
       assert.notOk(exists(".select-kit-row[data-value='deleteMessage']"));
@@ -1684,7 +1671,7 @@ acceptance(
       await visit("/chat/channel/4/public-category");
 
       await triggerEvent(".chat-message-container", "mouseenter");
-      const dropdown = selectKit(".chat-msgactions .more-buttons");
+      const dropdown = selectKit(".chat-message-actions .more-buttons");
       await dropdown.expand();
 
       assert.notOk(exists(".select-kit-row[data-value='edit']"));
@@ -1729,7 +1716,7 @@ acceptance(
     test("closed channels show the reply, react, delete, edit, restore, or rebuild options for messages", async function (assert) {
       await visit("/chat/channel/4/public-category");
       await triggerEvent(".chat-message-container", "mouseenter");
-      const dropdown = selectKit(".chat-msgactions .more-buttons");
+      const dropdown = selectKit(".chat-message-actions .more-buttons");
       await dropdown.expand();
       assert.ok(
         exists(".select-kit-row[data-value='edit']"),
@@ -1814,12 +1801,12 @@ acceptance("Discourse Chat - Direct Message Creator", function (needs) {
   test("Create a direct message", async function (assert) {
     await visit("/latest");
     await click(".header-dropdown-toggle.open-chat");
-    await click(".topic-chat-drawer-header__return-to-channels-btn");
+
     assert.ok(
-      !exists(".new-dm.btn-floating"),
+      !exists(".open-draft-channel-page-btn.btn-floating"),
       "mobile floating button should not exist on desktop"
     );
-    await click(".btn.new-dm");
+    await click(".btn.open-draft-channel-page-btn");
     assert.ok(exists(".chat-draft"), "view changes to draft channel screen");
   });
 });
@@ -1839,8 +1826,6 @@ acceptance("Discourse Chat - Drawer", function (needs) {
   });
 
   test("Position after closing reduced composer", async function (assert) {
-    this.chatService.set("chatWindowFullPage", false);
-
     await visit("/t/internationalization-localization/280");
     await click(".btn.create");
     await click(".toggle-preview");

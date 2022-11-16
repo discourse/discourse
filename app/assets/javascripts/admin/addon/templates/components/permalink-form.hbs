@@ -6,8 +6,8 @@
 
     <ComboBox @content={{this.permalinkTypes}} @value={{this.permalinkType}} @onChange={{action (mut this.permalinkType)}} @class="permalink-type" />
 
-    <TextField @value={{this.permalinkTypeValue}} @disabled={{this.formSubmitted}} @placeholderKey={{this.permalinkTypePlaceholder}} @autocorrect="off" @autocapitalize="off" @keyDown={{action "submitFormOnEnter"}} />
+    <TextField @value={{this.permalinkTypeValue}} @disabled={{this.formSubmitted}} @class="permalink-destination" @placeholderKey={{this.permalinkTypePlaceholder}} @autocorrect="off" @autocapitalize="off" @keyDown={{action "submitFormOnEnter"}} />
 
-    <DButton @action={{action "onSubmit"}} @disabled={{this.formSubmitted}} @label="admin.permalink.form.add" />
+    <DButton @action={{action "onSubmit"}} @disabled={{this.formSubmitted}} @class="permalink-add" @label="admin.permalink.form.add" />
   </div>
 </div>

@@ -20,11 +20,15 @@ export default {
           (NotificationItemBase) => {
             return class extends NotificationItemBase {
               get linkHref() {
-                const title = this.notification.data.chat_channel_title
-                  ? slugifyChannel(this.notification.data.chat_channel_title)
-                  : "-";
-
-                return `/chat/channel/${this.notification.data.chat_channel_id}/${title}?messageId=${this.notification.data.chat_message_id}`;
+                const slug = slugifyChannel({
+                  title: this.notification.data.chat_channel_title,
+                  slug: this.notification.data.chat_channel_slug,
+                });
+                return `/chat/channel/${
+                  this.notification.data.chat_channel_id
+                }/${slug || "-"}?messageId=${
+                  this.notification.data.chat_message_id
+                }`;
               }
 
               get linkTitle() {
@@ -53,11 +57,15 @@ export default {
           (NotificationItemBase) => {
             return class extends NotificationItemBase {
               get linkHref() {
-                const title = this.notification.data.chat_channel_title
-                  ? slugifyChannel(this.notification.data.chat_channel_title)
-                  : "-";
-
-                return `/chat/channel/${this.notification.data.chat_channel_id}/${title}?messageId=${this.notification.data.chat_message_id}`;
+                const slug = slugifyChannel({
+                  title: this.notification.data.chat_channel_title,
+                  slug: this.notification.data.chat_channel_slug,
+                });
+                return `/chat/channel/${
+                  this.notification.data.chat_channel_id
+                }/${slug || "-"}?messageId=${
+                  this.notification.data.chat_message_id
+                }`;
               }
 
               get linkTitle() {

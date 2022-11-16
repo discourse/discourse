@@ -83,4 +83,70 @@ RSpec.describe CategoryChannel do
       end
     end
   end
+
+  describe "slug generation" do
+    subject(:channel) { Fabricate(:category_channel) }
+
+    context "when slug is not provided" do
+      before do
+        channel.slug = nil
+      end
+
+      it "uses channel name when present" do
+        channel.name = "Some Cool Stuff"
+        channel.validate!
+        expect(channel.slug).to eq("some-cool-stuff")
+      end
+
+      it "uses category name when present" do
+        channel.name = nil
+        channel.category.name = "some category stuff"
+        channel.validate!
+        expect(channel.slug).to eq("some-category-stuff")
+      end
+    end
+
+    context "when slug is provided" do
+      context "when using encoded slug generator" do
+        before do
+          SiteSetting.slug_generation_method = "encoded"
+          channel.slug = "测试"
+        end
+        after { SiteSetting.slug_generation_method = "ascii" }
+
+        it "creates a slug with the correct escaping" do
+          channel.validate!
+          expect(channel.slug).to eq("%E6%B5%8B%E8%AF%95")
+        end
+      end
+
+      context "when slug ends up blank" do
+        it "adds a validation error" do
+          channel.slug = "-"
+          channel.validate
+          expect(channel.errors.full_messages).to include("Slug is invalid")
+        end
+      end
+
+      context "when there is a duplicate slug" do
+        before { Fabricate(:category_channel, slug: "awesome-channel") }
+
+        it "adds a validation error" do
+          channel.slug = "awesome-channel"
+          channel.validate
+          expect(channel.errors.full_messages.first).to include(I18n.t("chat.category_channel.errors.is_already_in_use"))
+        end
+      end
+
+      context "if SiteSettings.slug_generation_method = ascii" do
+        before { SiteSetting.slug_generation_method = "ascii" }
+
+        it "fails if slug contains non-ascii characters" do
+          channel.slug = "sem-acentuação"
+          channel.validate
+          expect(channel.errors.full_messages.first).to match(/#{I18n.t("chat.category_channel.errors.slug_contains_non_ascii_chars")}/)
+        end
+      end
+    end
+  end
 end

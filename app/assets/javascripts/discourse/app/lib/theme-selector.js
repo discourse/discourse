@@ -11,7 +11,8 @@ export function currentThemeKey() {
   if (console && console.warn && console.trace) {
     // TODO: Remove this code Jan 2019
     deprecated(
-      "'currentThemeKey' is is deprecated use 'currentThemeId' instead. A theme component may require updating."
+      "'currentThemeKey' is is deprecated use 'currentThemeId' instead. A theme component may require updating.",
+      { id: "discourse.current-theme-key" }
     );
   }
 }

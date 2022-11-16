@@ -5,3 +5,24 @@
 # https://translate.discourse.org/
 
 lv:
+  chat:
+    deleted_chat_username: dzēsts
+    reviewables:
+      actions:
+        agree_and_suspend:
+          title: "Apturētie lietotāji"
+        disagree:
+          title: "Nepiekrist"
+        ignore:
+          title: "Ignorēt"
+    channel:
+      statuses:
+        closed: "Slēgts"
+        open: "Atvērt"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} pieminēja jūs "%{channel}"'
+  unsubscribe:
+    chat_summary:
+      never: Nekad

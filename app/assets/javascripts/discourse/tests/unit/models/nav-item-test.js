@@ -2,13 +2,17 @@ import { module, test } from "qunit";
 import Category from "discourse/models/category";
 import NavItem from "discourse/models/nav-item";
 import Site from "discourse/models/site";
-import createStore from "discourse/tests/helpers/create-store";
 import { run } from "@ember/runloop";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { setupTest } from "ember-qunit";
 
 module("Unit | Model | nav-item", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     run(function () {
-      const fooCategory = Category.create({
+      const store = getOwner(this).lookup("service:store");
+      const fooCategory = store.createRecord("category", {
         slug: "foo",
         id: 123,
       });
@@ -39,7 +43,8 @@ module("Unit | Model | nav-item", function (hooks) {
   });
 
   test("count", function (assert) {
-    const navItem = createStore().createRecord("nav-item", { name: "new" });
+    const store = getOwner(this).lookup("service:store");
+    const navItem = store.createRecord("nav-item", { name: "new" });
 
     assert.strictEqual(navItem.get("count"), 0, "it has no count by default");
 
@@ -59,7 +64,8 @@ module("Unit | Model | nav-item", function (hooks) {
   });
 
   test("displayName", function (assert) {
-    const navItem = createStore().createRecord("nav-item", {
+    const store = getOwner(this).lookup("service:store");
+    const navItem = store.createRecord("nav-item", {
       name: "something",
     });
 
@@ -73,7 +79,8 @@ module("Unit | Model | nav-item", function (hooks) {
   });
 
   test("title", function (assert) {
-    const navItem = createStore().createRecord("nav-item", {
+    const store = getOwner(this).lookup("service:store");
+    const navItem = store.createRecord("nav-item", {
       name: "something",
     });
 

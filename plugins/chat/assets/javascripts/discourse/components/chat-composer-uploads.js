@@ -9,11 +9,11 @@ import UppyUploadMixin from "discourse/mixins/uppy-upload";
 export default Component.extend(UppyUploadMixin, {
   classNames: ["chat-composer-uploads"],
   mediaOptimizationWorker: service(),
+  chatStateManager: service(),
   id: "chat-composer-uploader",
   type: "chat-composer",
   uploads: null,
   useMultipartUploadsIfAvailable: true,
-  fullPage: false,
 
   init() {
     this._super(...arguments);
@@ -66,7 +66,7 @@ export default Component.extend(UppyUploadMixin, {
 
   _uploadDropTargetOptions() {
     let targetEl;
-    if (this.fullPage) {
+    if (this.chatStateManager.isFullPage) {
       targetEl = document.querySelector(".full-page-chat");
     } else {
       targetEl = document.querySelector(

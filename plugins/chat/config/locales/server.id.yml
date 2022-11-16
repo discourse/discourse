@@ -5,3 +5,21 @@
 # https://translate.discourse.org/
 
 id:
+  chat:
+    deleted_chat_username: dihapus
+    reviewables:
+      actions:
+        ignore:
+          title: "Abaikan"
+    channel:
+      statuses:
+        closed: "Tertutup"
+        open: "Buka"
+  reviewable_score_types:
+    notify_user:
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_body: "%{link}\n\n%{message}"
+  unsubscribe:
+    chat_summary:
+      never: Tidak pernah

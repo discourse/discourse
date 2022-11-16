@@ -1052,7 +1052,31 @@ RSpec.describe Admin::UsersController do
     context "when logged in as a moderator" do
       before { sign_in(moderator) }
 
-      include_examples "primary group updates possible"
+      context "when moderators_manage_categories_and_groups site setting is enabled" do
+        before do
+          SiteSetting.moderators_manage_categories_and_groups = true
+        end
+
+        include_examples "primary group updates possible"
+      end
+
+      context "when moderators_manage_categories_and_groups site setting is disabled" do
+        before do
+          SiteSetting.moderators_manage_categories_and_groups = false
+        end
+
+        it "prevents setting primary group with a 403 response" do
+          group.add(another_user)
+          put "/admin/users/#{another_user.id}/primary_group.json", params: {
+            primary_group_id: group.id
+          }
+
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+          another_user.reload
+          expect(another_user.primary_group_id).to eq(nil)
+        end
+      end
     end
 
     context "when logged in as a non-staff user" do

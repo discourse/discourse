@@ -53,7 +53,9 @@ acceptance("Discourse Chat - Flagging test", function (needs) {
     assert.notOk(exists(".chat-live-pane .chat-message .chat-message-flagged"));
     await triggerEvent(".chat-message-container", "mouseenter");
 
-    let moreButtons = selectKit(".chat-msgactions-hover .more-buttons");
+    const moreButtons = selectKit(
+      ".chat-message-actions-container .more-buttons"
+    );
     await moreButtons.expand();
 
     const content = moreButtons.displayedContent();
@@ -85,7 +87,7 @@ acceptance("Discourse Chat - Flagging test", function (needs) {
     await visit("/chat/channel/9/@hawk");
     await triggerEvent(".chat-message-container", "mouseenter");
 
-    let moreButtons = selectKit(".chat-msgactions .more-buttons");
+    const moreButtons = selectKit(".chat-message-actions .more-buttons");
     await moreButtons.expand();
 
     const content = moreButtons.displayedContent();

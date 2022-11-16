@@ -379,7 +379,7 @@ basic:
   enable_user_status:
     client: true
     default: false
-  enable_onboarding_popups:
+  enable_user_tips:
     client: true
     default: false
 
@@ -2136,6 +2136,7 @@ backups:
   include_s3_uploads_in_backups:
     default: false
     hidden: true
+    client: true
 
 search:
   use_pg_headlines_for_excerpt:
@@ -2338,6 +2339,11 @@ uncategorized:
   uncategorized_category_id:
     default: -1
     hidden: true
+  default_composer_category:
+    client: true
+    type: category
+    default: ""
+    validator: "DefaultComposerCategoryValidator"
 
   notify_about_flags_after:
     type: float
@@ -2531,6 +2537,8 @@ user_preferences:
     enum: "PreviousRepliesSiteSetting"
     default: 2
   default_email_in_reply_to:
+    default: false
+  default_hide_profile_and_presence:
     default: false
 
   default_other_new_topic_duration_minutes:

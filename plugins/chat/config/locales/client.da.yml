@@ -7,6 +7,9 @@
 da:
   js:
     admin:
+      site_settings:
+        categories:
+          chat: Chat
       logs:
         staff_actions:
           actions:
@@ -17,6 +20,10 @@ da:
           descriptions:
             chat:
               create_message: "Opret en chatbesked i en angivet kanal."
+    about:
+      chat_messages_count: "Chatbeskeder"
+      chat_channels_count: "Chatkanaler"
+      chat_users_count: "Chatbrugere"
     chat:
       dates:
         time_tiny: "tt:mm"
@@ -28,9 +35,21 @@ da:
       cancel: "Annuller"
       cancel_reply: "Annuller svar"
       chat_channels: "Kanaler"
+      browse_all_channels: "Gennemse alle kanaler"
+      move_to_channel:
+        title: "Flyt beskeder til kanal"
+        confirm_move: "Flyt beskeder"
       channel_settings:
         title: "Kanal indstillinger"
+        edit: "Rediger"
+        add: "Tilføj"
+        close_channel: "Luk kanal"
+        open_channel: "Åbn kanal"
+        archive_channel: "Arkivér kanal"
+        delete_channel: "Slet kanal"
         leave_channel: "Forlad kanal"
+        join: "Tilslut"
+        leave: "Forlad"
       channel_archive:
         title: "Arkivér Kanal"
         retry: "Forsøg igen"
@@ -40,6 +59,7 @@ da:
         title: "Luk Kanal"
       channel_delete:
         title: "Slet Kanal"
+        instructions: "<p>Sletter <strong>%{name}</strong>-kanalen og chathistorikken. Alle beskeder og relaterede data, såsom reaktioner og uploads, slettes permanent. Hvis du vil bevare kanalhistorikken og nedlægge den, kan du i stedet for arkivere kanalen.</p> <p>Er du sikker på, at du vil slette <strong>kanalen</strong>? Skriv navnet på kanalen i boksen nedenfor for at bekræfte.</p>"
         confirm_channel_name: "Indtast kanalnavn"
       channels_list_popup:
         browse: "Gennemse kanaler"
@@ -47,12 +67,24 @@ da:
       close: "Luk"
       delete: "Slet"
       edited: "redigeret"
+      muted: "stille!"
+      joined: "tilmeldt"
+      email_frequency:
+        never: "Aldrig"
       enable: "Aktiver chat"
+      flag: "Rapportér"
       invalid_access: "Du har ikke adgang til at se denne chatkanal"
       invitation_notification: "<span>%{username}</span> <span>inviterede dig til at deltage i en chatkanal</span>"
       in_reply_to: "Som svar til"
+      heading: "Chat"
+      join: "Tilslut"
       new_messages: "nye beskeder"
-      bookmark_message: "Bogmærke"
+      mention_warning:
+        dismiss: "afvis"
+      reply: "Svar"
+      edit: "Rediger"
+      rebake_message: "Gendan HTML"
+      bookmark_message: "Bogmærk"
       bookmark_message_edit: "Rediger Bogmærke"
       save: "Gem"
       select: "Vælg"
@@ -76,9 +108,26 @@ da:
         open_header: "Kanalen er åben"
         open: "Åbn"
       browse:
+        back: "Tilbage"
         title: Kanaler
+        filter_all: Alle
         filter_closed: Lukket
         filter_archived: Arkiveret
+      chat_message_separator:
+        today: I dag
+        yesterday: I går
+      about_view:
+        title: Titel
+        description: Beskrivelse
+      channel_info:
+        back_to_channel: "Tilbage"
+        tabs:
+          about: Om
+          members: Brugere
+          settings: Indstillinger
+      direct_message_creator:
+        title: Ny Besked
+        prefix: "Til:"
       channel_selector:
         title: "Hop til kanal"
         no_channels: "Ingen kanaler matcher din søgning"
@@ -94,7 +143,7 @@ da:
           category: "Kategori"
           topic: "Emne"
       reviewable:
-        type: "Chat besked"
+        type: "Chatbesked"
       reactions:
         only_you: "Du reagerede med :%{emoji}:"
         and_others: "Du, %{usernames} reagerede med :%{emoji}:"
@@ -102,16 +151,38 @@ da:
         others_and_more: "%{usernames} og %{more} andre reagerede med :%{emoji}:"
         you_others_and_more: "Du, %{usernames} og %{more} andre reagerede med :%{emoji}:"
       composer:
+        italic_text: "kursiv skrift"
+        bold_text: "fed skrift"
         code_text: "kode tekst"
       quote:
         copy_success: "Chat-citat kopieret til udklipsholderen"
+      notification_levels:
+        never: "Aldrig"
+      settings:
+        follow: "Tilslut"
+        followed: "Tilmeldt"
+        notifications: "Notifikationer"
+        preview: "Forhåndsvisning"
+        save: "Gem"
+        saved: "Gemt"
+        unfollow: "Forlad"
+      admin:
+        title: "Chat"
       incoming_webhooks:
+        back: "Tilbage"
+        description: "Beskrivelse"
+        delete: "Slet"
+        emoji: "Humørikon"
+        name: "Navn"
+        save: "Gem"
+        edit: "Redigér"
         system: "system"
         url: "URL"
         username: "Brugernavn"
       selection:
         cancel: "Annuller"
         quote_selection: "Citat i emne"
+        copy: "Kopier"
         error: "Der opstod en fejl under flytning af chatbeskeder"
         title: "Flyt chat til emne"
         new_topic:
@@ -119,13 +190,20 @@ da:
         existing_topic:
           title: "Flyt til eksisterende emne"
         new_message:
-          title: "Flyt til Ny Besked"
+          title: "Flyt til ny besked"
       replying_indicator:
         single_user: "%{username} skriver"
       retention_reminders:
         public: "Kanalhistorikken gemmes i %{days} dage."
         dm: "Personlig chathistorik gemmes i %{days} dage."
-      topic_button_title: "Chat"
+      emoji_picker:
+        objects: "Objekter"
+        activities: "Aktiviteter"
+        flags: "Flag"
+        symbols: "Symboler"
+      draft_channel_screen:
+        header: "Ny Besked"
+        cancel: "Annuller"
     notifications:
       chat_invitation_html: "<span>%{username}</span> <span>inviterede dig til at deltage i en chatkanal</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
@@ -139,8 +217,8 @@ da:
         chat_message: "Ny chatbesked"
         chat_quoted: "%{username} citerede din chatbesked"
       titles:
-        chat_mention: "Chat omtale"
-        chat_invitation: "Chat invitation"
+        chat_mention: "Chatomtale"
+        chat_invitation: "Chatinvitation"
         chat_quoted: "Chat citeret"
     action_codes:
       chat:
@@ -154,10 +232,14 @@ da:
             chat_channel_id:
               label: Chat kanal ID
             message:
-              label: Besked
+              label: Meddelelse
             sender:
               label: Afsender
               description: Standard er system
+    review:
+      types:
+        reviewable_chat_message:
+          flagged_by: "Markeret af"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"

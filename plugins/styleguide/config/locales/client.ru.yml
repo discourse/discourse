@@ -26,7 +26,7 @@ ru:
           title: "Цвета"
         icons:
           title: "Иконки"
-          full_list: "См. полный список иконок Font Awesome"
+          full_list: "См. полный список значков Font Awesome"
         input_fields:
           title: "Поля ввода"
         buttons:
@@ -66,7 +66,7 @@ ru:
         topic_notifications:
           title: "Уведомления темы"
         post:
-          title: "Сообщение"
+          title: "Запись"
         topic_map:
           title: "Карта темы"
         site_header:
@@ -80,7 +80,7 @@ ru:
           header: "Модальный заголовок"
           footer: "Модальный нижний колонтитул"
         user_about:
-          title: "Окно \"О пользователе\""
+          title: "Окно «О пользователе»"
         header_icons:
           title: "Значки заголовков"
         spinners:

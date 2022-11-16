@@ -153,7 +153,6 @@ be:
       like_count: "перавагі"
       topic_count: "Тэмы"
       post_count: "Паведамленні"
-      user_count: "Карыстальнікі"
       active_user_count: "дзеючыя карыстальнікі"
       contact: "Кантакты"
       contact_info: "У выпадку сур'ёзных праблем з гэтым сайтам, калі ласка, звяжыцеся з намі праз %{contact_info}."
@@ -957,8 +956,6 @@ be:
         title: "архіў"
       move_to_inbox:
         title: "Перамясціць у тэчцы Уваходныя"
-      edit_message:
-        title: "рэдагаваць"
       list: "тэмы"
       new: "новая тэма"
       unread: "непрачытаныя"

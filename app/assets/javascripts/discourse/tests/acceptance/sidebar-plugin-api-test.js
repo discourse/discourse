@@ -19,11 +19,12 @@ acceptance("Sidebar - Plugin API", function (needs) {
   });
 
   needs.hooks.afterEach(() => {
+    linkDidInsert = undefined;
     linkDestroy = undefined;
     sectionDestroy = undefined;
   });
 
-  let linkDestroy, sectionDestroy;
+  let linkDidInsert, linkDestroy, sectionDestroy;
 
   test("Multiple header actions and links", async function (assert) {
     withPluginApi("1.3.0", (api) => {
@@ -118,6 +119,11 @@ acceptance("Sidebar - Plugin API", function (needs) {
                   }
 
                   @bind
+                  didInsert() {
+                    linkDidInsert = "link test";
+                  }
+
+                  @bind
                   willDestroy() {
                     linkDestroy = "link test";
                   }
@@ -200,6 +206,12 @@ acceptance("Sidebar - Plugin API", function (needs) {
     });
 
     await visit("/");
+
+    assert.strictEqual(
+      linkDidInsert,
+      "link test",
+      "calls link didInsert function"
+    );
 
     assert.strictEqual(
       query(

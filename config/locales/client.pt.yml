@@ -270,7 +270,6 @@ pt:
       like_count: "Gostos"
       topic_count: "Tópicos"
       post_count: "Publicações"
-      user_count: "Utilizadores"
       active_user_count: "Utilizadores Activos"
       contact: "Contacte-nos"
       contact_info: "No caso de um problema crítico ou de algum assunto urgente que afecte este sítio, por favor contacte-nos em %{contact_info}."
@@ -317,7 +316,6 @@ pt:
       remove: "Remover"
       remove_confirmation: "Tem a certeza que pretende eliminar este rascunho?"
       new_topic: "Novo rascunho de tópico"
-      topic_reply: "Rascunho da resposta"
       abandon:
         confirm: "Tem um rascunho em andamento neste tópico. O que gostaria de fazer com ele?"
         yes_value: "Descartar"
@@ -1049,7 +1047,6 @@ pt:
       experimental_sidebar:
         options: "Opções"
         navigation_section: "Navegação"
-        list_destination_default: "Predefinição"
       change: "alterar"
       featured_topic: "Tópico em Destaque"
       moderator: "%{user} é um moderador"
@@ -2280,9 +2277,6 @@ pt:
       move_to_inbox:
         title: "Mover para Caixa de Entrada"
         help: "Mover mensagem de volta para a Caixa de Entrada"
-      edit_message:
-        help: "Editar primeira publicação da mensagem"
-        title: "Editar"
       defer:
         help: "Marcar como não lida"
         title: "Diferir"
@@ -2931,8 +2925,6 @@ pt:
       review_group_name: "nome do grupo"
       this_year: "este ano"
       default_position: "Posição Padrão"
-      position_disabled: "As categorias serão exibidas por ordem de actividade. Para controlar a ordenação das categorias nas listas,"
-      position_disabled_click: 'ative a definição "categoria em posição fixa".'
       parent: "Categoria Principal"
       notifications:
         title: "alterar o nível de notificação desta categoria"
@@ -4445,19 +4437,19 @@ pt:
         delete_confirm: "Tem a certeza que quer eliminar esse campo de utilizador?"
         options: "Opções"
         required:
-          title: "Obrigatório na inscrição?"
+          title: "Obrigatório na inscrição"
           enabled: "obrigatório"
           disabled: "não obrigatório"
         editable:
-          title: "Editável depois da inscrição?"
+          title: "Editável depois da inscrição"
           enabled: "editável"
           disabled: "não editável"
         show_on_profile:
-          title: "Exibir no perfil público?"
+          title: "Exibir no perfil público"
           enabled: "exibido no perfil"
           disabled: "não exibido no perfil"
         show_on_user_card:
-          title: "Mostrar no cartão de utilizador?"
+          title: "Mostrar no cartão de utilizador"
           enabled: "mostrar no cartão de utilizador"
           disabled: "não apresentado no cartão de utilizador"
         field_types:

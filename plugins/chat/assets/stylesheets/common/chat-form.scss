@@ -1,15 +1,19 @@
 .chat-form__section {
-  padding: 1.5rem 1rem;
-  border-bottom: 1px solid var(--primary-low);
+  margin: 1.5rem 1rem;
 
   &:first-child {
-    padding-top: 0;
+    margin-top: 0;
   }
 
   &:last-child {
     margin-bottom: 0;
     border-bottom: none;
   }
+}
+.chat-form__section-admin-title {
+  margin-inline: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--primary-low);
 }
 
 .chat-form__field {
@@ -18,6 +22,12 @@
   &:last-child {
     margin-bottom: 0;
   }
+}
+
+.chat-form__description {
+  margin-top: 3px;
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
 }
 
 .chat-form__btn {
@@ -39,5 +49,14 @@
   .btn-text {
     color: var(--tertiary);
     font-size: var(--font-down-1);
+  }
+}
+
+.chat-retention-info {
+  margin-top: 2rem;
+  color: var(--primary-high);
+
+  .d-icon {
+    margin-right: 0.5em;
   }
 }

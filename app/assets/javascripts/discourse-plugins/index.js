@@ -8,6 +8,7 @@ const fs = require("fs");
 const concat = require("broccoli-concat");
 const RawHandlebarsCompiler = require("discourse-hbr/raw-handlebars-compiler");
 const DiscoursePluginColocatedTemplateProcessor = require("./colocated-template-compiler");
+const EmberApp = require("ember-cli/lib/broccoli/ember-app");
 
 function fixLegacyExtensions(tree) {
   return new Funnel(tree, {
@@ -113,18 +114,22 @@ module.exports = {
         directoryName,
         "test/javascripts"
       );
+      const configDirectory = path.resolve(root, directoryName, "config");
       const hasJs = fs.existsSync(jsDirectory);
       const hasAdminJs = fs.existsSync(adminJsDirectory);
       const hasTests = fs.existsSync(testDirectory);
+      const hasConfig = fs.existsSync(configDirectory);
       return {
         pluginName,
         directoryName,
         jsDirectory,
         adminJsDirectory,
         testDirectory,
+        configDirectory,
         hasJs,
         hasAdminJs,
         hasTests,
+        hasConfig,
       };
     });
   },
@@ -212,5 +217,9 @@ module.exports = {
   treeFor() {
     // This addon doesn't contribute any 'real' trees to the app
     return;
+  },
+
+  shouldLoadPluginTestJs() {
+    return EmberApp.env() === "development" || process.env.LOAD_PLUGINS === "1";
   },
 };

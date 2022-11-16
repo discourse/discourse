@@ -4,6 +4,9 @@ skip_output:
 
 pre-commit:
   parallel: true
+  skip:
+    - merge
+    - rebase
   commands:
     rubocop:
       glob: "*.rb"

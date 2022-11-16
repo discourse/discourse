@@ -64,9 +64,7 @@ module HasCustomFields
     has_many :_custom_fields, dependent: :destroy, class_name: "#{name}CustomField"
     after_save :save_custom_fields
 
-    # TODO (martin) Post 2.8 release, change to attr_reader because this is
-    # set by set_preloaded_custom_fields
-    attr_accessor :preloaded_custom_fields
+    attr_reader :preloaded_custom_fields
 
     def custom_fields_fk
       @custom_fields_fk ||= "#{_custom_fields.reflect_on_all_associations(:belongs_to)[0].name}_id"

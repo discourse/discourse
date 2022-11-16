@@ -18,7 +18,7 @@ acceptance("Composer - editor mentions", function (needs) {
   };
 
   needs.user();
-  needs.settings({ enable_mentions: true });
+  needs.settings({ enable_mentions: true, allow_uncategorized_topics: true });
 
   needs.hooks.afterEach(() => {
     if (clock) {

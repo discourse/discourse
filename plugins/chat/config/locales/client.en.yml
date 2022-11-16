@@ -1,6 +1,9 @@
 en:
   js:
     admin:
+      site_settings:
+        categories:
+          chat: Chat
       logs:
         staff_actions:
           actions:
@@ -46,6 +49,10 @@ en:
         leave_channel: "Leave channel"
         join: "Join"
         leave: "Leave"
+        save_label: 
+          mute_channel: "Mute channel preference saved"
+          desktop_notification: "Desktop notification preference saved"
+          mobile_notification: "Mobile push notification preference saved"
       channel_archive:
         title: "Archive Channel"
         instructions: "<p>Archiving a channel puts it into read-only mode and moves all messages from the channel into a new or existing topic. No new messages can be sent, and no existing messages can be edited or deleted.</p><p>Are you sure you want to archive the <strong>%{channelTitle}</strong> channel?</p>"
@@ -282,8 +289,10 @@ en:
         always: "For all activity"
 
       settings:
-        enable_auto_join_users: "Automatically add all recently active users"
-        disable_auto_join_users: "Stop automatically adding users"
+        auto_join_users_label: "Automatically add users"
+        auto_join_users_info: "Check hourly which users have been active in the last 3 months and, if they have access to the %{category} category, add them to this channel."
+        enable_auto_join_users: "Yes"
+        disable_auto_join_users: "No"
         auto_join_users_warning: "Every user who isn't a member of this channel and has access to the %{category} category will join. Are you sure?"
         desktop_notification_level: "Desktop notifications"
         follow: "Join"
@@ -297,6 +306,8 @@ en:
         save: "Save"
         saved: "Saved"
         unfollow: "Leave"
+        admin_title: "Admin"
+        retention_info: "Chat history will be saved for %{days} days."
 
       admin:
         title: "Chat"
@@ -370,8 +381,6 @@ en:
       retention_reminders:
         public: "Channel history is retained for %{days} days."
         dm: "Personal chat history is retained for %{days} days."
-
-      topic_button_title: "Chat"
 
       flags:
         off_topic: "This message is not relevant to the current discussion as defined by the channel title, and should probably be moved elsewhere."

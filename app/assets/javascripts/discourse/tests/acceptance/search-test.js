@@ -4,7 +4,13 @@ import {
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  settled,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import I18n from "I18n";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -333,7 +339,10 @@ acceptance("Search - Anonymous", function (needs) {
 
 acceptance("Search - Authenticated", function (needs) {
   needs.user();
-  needs.settings({ log_search_queries: true });
+  needs.settings({
+    log_search_queries: true,
+    allow_uncategorized_topics: true,
+  });
 
   needs.pretender((server, helper) => {
     server.get("/search/query", (request) => {
@@ -476,6 +485,7 @@ acceptance("Search - Authenticated", function (needs) {
       "href"
     );
     await triggerKeyEvent(".search-menu", "keydown", "A");
+    await settled();
 
     assert.strictEqual(
       query("#reply-control textarea").value,

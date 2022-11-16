@@ -1597,6 +1597,12 @@ RSpec.describe Search do
       expect(Search.execute("user:#{post_1.user_id}").posts).to contain_exactly(post_1)
 
       expect(Search.execute("@#{post_1.user.username}").posts).to contain_exactly(post_1)
+
+      SiteSetting.unicode_usernames = true
+      unicode_user = Fabricate(:unicode_user)
+      post_3 = Fabricate(:post, user: unicode_user, raw: 'post by a unicode user', topic: topic)
+
+      expect(Search.execute("@#{post_3.user.username}").posts).to contain_exactly(post_3)
     end
 
     context "when searching for posts made by users of a group" do
