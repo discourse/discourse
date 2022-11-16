@@ -449,11 +449,13 @@ const User = RestModel.extend({
       .then((result) => {
         this.set("bio_excerpt", result.user.bio_excerpt);
         const userProps = getProperties(
-          this.user_option,
+          result.user.user_option || this.user_option,
           "enable_quoting",
           "enable_defer",
           "external_links_in_new_tab",
-          "dynamic_favicon"
+          "dynamic_favicon",
+          "seen_popups",
+          "skip_new_user_tips"
         );
         User.current()?.setProperties(userProps);
         this.setProperties(updatedState);
