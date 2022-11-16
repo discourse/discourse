@@ -19,7 +19,7 @@ class Wizard
 
         languages = step.add_field(id: 'default_locale',
                                    type: 'dropdown',
-                                   required: true,
+                                   required: false,
                                    value: SiteSetting.default_locale)
 
         LocaleSiteSetting.values.each do |locale|
@@ -129,7 +129,7 @@ class Wizard
         end
 
         current = SiteSetting.top_menu.starts_with?("categories") ? SiteSetting.desktop_category_page_style : "latest"
-        style = step.add_field(id: 'homepage_style', type: 'dropdown', required: true, value: current, show_in_sidebar: true)
+        style = step.add_field(id: 'homepage_style', type: 'dropdown', required: false, value: current, show_in_sidebar: true)
         style.add_choice('latest')
         CategoryPageStyle.values.each do |page|
           style.add_choice(page[:value])
