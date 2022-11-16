@@ -1,8 +1,11 @@
 import { module, test } from "qunit";
 import Site from "discourse/models/site";
-import createStore from "discourse/tests/helpers/create-store";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { setupTest } from "ember-qunit";
 
-module("Unit | Model | site", function () {
+module("Unit | Model | site", function (hooks) {
+  setupTest(hooks);
+
   test("create", function (assert) {
     assert.ok(Site.create(), "it can create with no parameters");
   });
@@ -26,7 +29,7 @@ module("Unit | Model | site", function () {
   });
 
   test("create categories", function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     const site = store.createRecord("site", {
       categories: [
         { id: 3456, name: "Test Subcategory", parent_category_id: 1234 },
@@ -78,7 +81,7 @@ module("Unit | Model | site", function () {
   });
 
   test("sortedCategories returns categories sorted by topic counts and sorts child categories after parent", function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     const site = store.createRecord("site", {
       categories: [
         {

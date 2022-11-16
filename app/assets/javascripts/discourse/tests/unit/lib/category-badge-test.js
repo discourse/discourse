@@ -1,17 +1,19 @@
+import { module, test } from "qunit";
 import Site from "discourse/models/site";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import createStore from "discourse/tests/helpers/create-store";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import sinon from "sinon";
-import { test } from "qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { setupTest } from "ember-qunit";
 
-discourseModule("Unit | Utility | category-badge", function () {
+module("Unit | Utility | category-badge", function (hooks) {
+  setupTest(hooks);
+
   test("categoryBadge without a category", function (assert) {
     assert.blank(categoryBadgeHTML(), "it returns no HTML");
   });
 
   test("Regular categoryBadge", function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     const category = store.createRecord("category", {
       name: "hello",
       id: 123,
@@ -42,7 +44,7 @@ discourseModule("Unit | Utility | category-badge", function () {
   });
 
   test("undefined color", function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     const noColor = store.createRecord("category", { name: "hello", id: 123 });
     const tag = $.parseHTML(categoryBadgeHTML(noColor))[0];
 
@@ -53,7 +55,7 @@ discourseModule("Unit | Utility | category-badge", function () {
   });
 
   test("topic count", function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     const category = store.createRecord("category", { name: "hello", id: 123 });
 
     assert.ok(
@@ -68,7 +70,7 @@ discourseModule("Unit | Utility | category-badge", function () {
   });
 
   test("allowUncategorized", function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     const uncategorized = store.createRecord("category", {
       name: "uncategorized",
       id: 345,
@@ -90,8 +92,10 @@ discourseModule("Unit | Utility | category-badge", function () {
   });
 
   test("category names are wrapped in dir-spans", function (assert) {
-    this.siteSettings.support_mixed_text_direction = true;
-    const store = createStore();
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+    siteSettings.support_mixed_text_direction = true;
+
+    const store = getOwner(this).lookup("service:store");
     const rtlCategory = store.createRecord("category", {
       name: "תכנות עם Ruby",
       id: 123,
@@ -115,7 +119,8 @@ discourseModule("Unit | Utility | category-badge", function () {
   });
 
   test("recursive", function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
+    const siteSettings = getOwner(this).lookup("service:site-settings");
 
     const foo = store.createRecord("category", {
       name: "foo",
@@ -134,20 +139,20 @@ discourseModule("Unit | Utility | category-badge", function () {
       parent_category_id: bar.id,
     });
 
-    this.siteSettings.max_category_nesting = 0;
+    siteSettings.max_category_nesting = 0;
     assert.ok(categoryBadgeHTML(baz, { recursive: true }).includes("baz"));
     assert.ok(!categoryBadgeHTML(baz, { recursive: true }).includes("bar"));
 
-    this.siteSettings.max_category_nesting = 1;
+    siteSettings.max_category_nesting = 1;
     assert.ok(categoryBadgeHTML(baz, { recursive: true }).includes("baz"));
     assert.ok(!categoryBadgeHTML(baz, { recursive: true }).includes("bar"));
 
-    this.siteSettings.max_category_nesting = 2;
+    siteSettings.max_category_nesting = 2;
     assert.ok(categoryBadgeHTML(baz, { recursive: true }).includes("baz"));
     assert.ok(categoryBadgeHTML(baz, { recursive: true }).includes("bar"));
     assert.ok(!categoryBadgeHTML(baz, { recursive: true }).includes("foo"));
 
-    this.siteSettings.max_category_nesting = 3;
+    siteSettings.max_category_nesting = 3;
     assert.ok(categoryBadgeHTML(baz, { recursive: true }).includes("baz"));
     assert.ok(categoryBadgeHTML(baz, { recursive: true }).includes("bar"));
     assert.ok(categoryBadgeHTML(baz, { recursive: true }).includes("foo"));
