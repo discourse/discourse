@@ -1012,10 +1012,10 @@
   resolved "https://registry.yarnpkg.com/@discourse/itsatrap/-/itsatrap-2.0.10.tgz#c7e750eeb32b54e769e952c4ecc472213eb1385a"
   integrity sha512-Jn1gdiyHMGUsmUfLFf4Q7VnTAv0l7NePbegU6pKhKHEmbzV3FosGxq30fTOYgVyTS1bxqGjlA6LvQttJpv3ROw==
 
-"@ember-compat/tracked-built-ins@^0.9.0":
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/@ember-compat/tracked-built-ins/-/tracked-built-ins-0.9.0.tgz#5cea0a1a5e038b32459dd932ff04396c4a7e95d0"
-  integrity sha512-5Oc4GfggSJ+BS+uPHEWOeR164FeycbuzSa8Fo1MJvG6KVkDb9rYGOfCsStUwQysAGXdq4Wf3niVRImVHrzKCfA==
+"@ember-compat/tracked-built-ins@^0.9.1":
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@ember-compat/tracked-built-ins/-/tracked-built-ins-0.9.1.tgz#4cc97c1841425fbf812ef3c63c00ab4790fc32a0"
+  integrity sha512-A1uYo6EZY6CaKeZoXogxtyJCjz2V0+TXxOZCMJFQHHVuMA1DxYqZoZ25juRWIQpR8r77gTnITtYW2uxBg8vGRw==
   dependencies:
     "@embroider/addon-shim" "^1.8.3"
     ember-tracked-storage-polyfill "^1.0.0"
