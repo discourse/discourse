@@ -49,6 +49,7 @@ import {
   showNextUserTip,
   showUserTip,
 } from "discourse/lib/user-tips";
+import { dependentKeyCompat } from "@ember/object/compat";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -803,29 +804,59 @@ const User = RestModel.extend({
     });
   },
 
-  @discourseComputed("muted_category_ids")
-  mutedCategories(mutedCategoryIds) {
-    return Category.findByIds(mutedCategoryIds);
+  @dependentKeyCompat
+  get mutedCategories() {
+    return Category.findByIds(this.get("muted_category_ids"));
+  },
+  set mutedCategories(categories) {
+    this.set(
+      "muted_category_ids",
+      categories.map((c) => c.id)
+    );
   },
 
-  @discourseComputed("regular_category_ids")
-  regularCategories(regularCategoryIds) {
-    return Category.findByIds(regularCategoryIds);
+  @dependentKeyCompat
+  get regularCategories() {
+    return Category.findByIds(this.get("regular_category_ids"));
+  },
+  set regularCategories(categories) {
+    this.set(
+      "regular_category_ids",
+      categories.map((c) => c.id)
+    );
   },
 
-  @discourseComputed("tracked_category_ids")
-  trackedCategories(trackedCategoryIds) {
-    return Category.findByIds(trackedCategoryIds);
+  @dependentKeyCompat
+  get trackedCategories() {
+    return Category.findByIds(this.get("tracked_category_ids"));
+  },
+  set trackedCategories(categories) {
+    this.set(
+      "tracked_category_ids",
+      categories.map((c) => c.id)
+    );
   },
 
-  @discourseComputed("watched_category_ids")
-  watchedCategories(watchedCategoryIds) {
-    return Category.findByIds(watchedCategoryIds);
+  @dependentKeyCompat
+  get watchedCategories() {
+    return Category.findByIds(this.get("watched_category_ids"));
+  },
+  set watchedCategories(categories) {
+    this.set(
+      "watched_category_ids",
+      categories.map((c) => c.id)
+    );
   },
 
-  @discourseComputed("watched_first_post_category_ids")
-  watchedFirstPostCategories(watchedFirstPostCategoryIds) {
-    return Category.findByIds(watchedFirstPostCategoryIds);
+  @dependentKeyCompat
+  get watchedFirstPostCategories() {
+    return Category.findByIds(this.get("watched_first_post_category_ids"));
+  },
+  set watchedFirstPostCategories(categories) {
+    this.set(
+      "watched_first_post_category_ids",
+      categories.map((c) => c.id)
+    );
   },
 
   @discourseComputed("can_delete_account")
