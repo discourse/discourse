@@ -1123,6 +1123,10 @@ class Post < ActiveRecord::Base
     end
   end
 
+  def mentions
+    PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked))
+  end
+
   private
 
   def parse_quote_into_arguments(quote)

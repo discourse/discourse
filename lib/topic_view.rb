@@ -677,9 +677,8 @@ class TopicView
 
   def parse_mentions
     @mentions = @posts
-      .pluck(:id, :raw)
-      .to_h { |p| [p[0], PostAnalyzer.new(p[1], nil).raw_mentions] }
-      .filter { |_, v| !v.empty? }
+      .to_h { |p| [p.id, p.mentions] }
+      .reject { |_, v| v.empty? }
   end
 
   def load_mentioned_users
