@@ -1,11 +1,14 @@
 import { module, test } from "qunit";
 import Category from "discourse/models/category";
-import createStore from "discourse/tests/helpers/create-store";
 import sinon from "sinon";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { setupTest } from "ember-qunit";
 
-module("Unit | Model | category", function () {
+module("Unit | Model | category", function (hooks) {
+  setupTest(hooks);
+
   test("slugFor", function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
 
     const slugFor = function (cat, val, text) {
       assert.strictEqual(Category.slugFor(cat), val, text);
@@ -68,7 +71,7 @@ module("Unit | Model | category", function () {
   test("findBySlug", function (assert) {
     assert.expect(6);
 
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     const darth = store.createRecord("category", { id: 1, slug: "darth" }),
       luke = store.createRecord("category", {
         id: 2,
@@ -133,7 +136,7 @@ module("Unit | Model | category", function () {
   test("findSingleBySlug", function (assert) {
     assert.expect(6);
 
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     const darth = store.createRecord("category", { id: 1, slug: "darth" }),
       luke = store.createRecord("category", {
         id: 2,
@@ -196,7 +199,7 @@ module("Unit | Model | category", function () {
   });
 
   test("findBySlugPathWithID", function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
 
     const foo = store.createRecord("category", { id: 1, slug: "foo" });
     const bar = store.createRecord("category", {
@@ -220,7 +223,7 @@ module("Unit | Model | category", function () {
   });
 
   test("minimumRequiredTags", function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
 
     let foo = store.createRecord("category", {
       id: 1,
@@ -263,23 +266,23 @@ module("Unit | Model | category", function () {
   });
 
   test("search with category name", function (assert) {
-    const store = createStore(),
-      category1 = store.createRecord("category", {
-        id: 1,
-        name: "middle term",
-        slug: "different-slug",
-      }),
-      category2 = store.createRecord("category", {
-        id: 2,
-        name: "middle term",
-        slug: "another-different-slug",
-      }),
-      subcategory = store.createRecord("category", {
-        id: 3,
-        name: "middle term",
-        slug: "another-different-slug2",
-        parent_category_id: 2,
-      });
+    const store = getOwner(this).lookup("service:store");
+    const category1 = store.createRecord("category", {
+      id: 1,
+      name: "middle term",
+      slug: "different-slug",
+    });
+    const category2 = store.createRecord("category", {
+      id: 2,
+      name: "middle term",
+      slug: "another-different-slug",
+    });
+    const subcategory = store.createRecord("category", {
+      id: 3,
+      name: "middle term",
+      slug: "another-different-slug2",
+      parent_category_id: 2,
+    });
 
     sinon
       .stub(Category, "listByActivity")
@@ -369,17 +372,17 @@ module("Unit | Model | category", function () {
   });
 
   test("search with category slug", function (assert) {
-    const store = createStore(),
-      category1 = store.createRecord("category", {
-        id: 1,
-        name: "middle term",
-        slug: "different-slug",
-      }),
-      category2 = store.createRecord("category", {
-        id: 2,
-        name: "middle term",
-        slug: "another-different-slug",
-      });
+    const store = getOwner(this).lookup("service:store");
+    const category1 = store.createRecord("category", {
+      id: 1,
+      name: "middle term",
+      slug: "different-slug",
+    });
+    const category2 = store.createRecord("category", {
+      id: 2,
+      name: "middle term",
+      slug: "another-different-slug",
+    });
 
     sinon.stub(Category, "listByActivity").returns([category1, category2]);
 

@@ -777,7 +777,9 @@ const Composer = RestModel.extend({
     }
 
     if (opts.usernames) {
-      deprecated("`usernames` is deprecated, use `recipients` instead.");
+      deprecated("`usernames` is deprecated, use `recipients` instead.", {
+        id: "discourse.composer.usernames",
+      });
     }
 
     this.setProperties({
