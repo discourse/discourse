@@ -21,6 +21,9 @@ acceptance("Discourse Presence Plugin", function (needs) {
   test("Doesn't break topic creation", async function (assert) {
     await visit("/");
     await click("#create-topic");
+    const categoryChooser = selectKit(".category-chooser");
+    await categoryChooser.expand();
+    await categoryChooser.selectRowByValue(2);
     await fillIn("#reply-title", "Internationalization Localization");
     await fillIn(
       ".d-editor-input",

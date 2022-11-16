@@ -21,6 +21,7 @@ export default Component.extend({
   focusedUser: null,
   chat: service(),
   router: service(),
+  chatStateManager: service(),
   isLoading: false,
   onSwitchChannel: null,
 

@@ -1,10 +1,9 @@
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 import { click, currentURL, settled, visit } from "@ember/test-helpers";
-import { set } from "@ember/object";
 
 acceptance("Bootstrap Mode Notice", function (needs) {
-  needs.user();
+  needs.user({ admin: true });
   needs.site({ wizard_required: true });
   needs.settings({
     bootstrap_mode_enabled: true,
@@ -36,8 +35,8 @@ acceptance("Bootstrap Mode Notice", function (needs) {
       "it transitions to the wizard page"
     );
 
+    this.siteSettings.bootstrap_mode_enabled = false;
     await visit("/");
-    set(this.siteSettings, "bootstrap_mode_enabled", false);
     await settled();
     assert.ok(
       !exists(".bootstrap-mode-notice"),

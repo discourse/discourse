@@ -970,7 +970,7 @@ de:
     user_fields:
       none: "(wähle eine Option aus)"
       required: 'Bitte gib einen Wert für „%{name}“ ein'
-      same_as_password: 'Dein Passwort sollte nicht in anderen Feldern wiederholt werden.'
+      same_as_password: "Dein Passwort sollte nicht in anderen Feldern wiederholt werden."
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -5189,23 +5189,18 @@ de:
         delete_confirm: "Bist du dir sicher, dass du dieses Benutzerfeld löschen möchtest?"
         options: "Optionen"
         required:
-          title: "Bei Registrierung erforderlich?"
           enabled: "erforderlich"
           disabled: "nicht erforderlich"
         editable:
-          title: "Nach der Registrierung editierbar?"
           enabled: "editierbar"
           disabled: "nicht editierbar"
         show_on_profile:
-          title: "Im öffentlichen Profil anzeigen?"
           enabled: "wird im Profil angezeigt"
           disabled: "wird im Profil nicht angezeigt"
         show_on_user_card:
-          title: "Auf Benutzerkarte anzeigen?"
           enabled: "wird auf Benutzerkarte angezeigt"
           disabled: "wird nicht auf Benutzerkarte angezeigt"
         searchable:
-          title: "In Suche einschließen?"
           enabled: "in Suche einschließen"
           disabled: "nicht in Suche einschließen"
         field_types:

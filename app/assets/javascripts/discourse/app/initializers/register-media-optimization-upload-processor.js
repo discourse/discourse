@@ -1,5 +1,6 @@
 import { addComposerUploadPreProcessor } from "discourse/components/composer-editor";
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
+import { Promise } from "rsvp";
 
 export default {
   name: "register-media-optimization-upload-processor",
@@ -11,10 +12,15 @@ export default {
         UppyMediaOptimization,
         ({ isMobileDevice }) => {
           return {
-            optimizeFn: (data, opts) =>
-              container
+            optimizeFn: (data, opts) => {
+              if (container.isDestroyed || container.isDestroying) {
+                return Promise.resolve();
+              }
+
+              return container
                 .lookup("service:media-optimization-worker")
-                .optimizeImage(data, opts),
+                .optimizeImage(data, opts);
+            },
             runParallel: !isMobileDevice,
           };
         }

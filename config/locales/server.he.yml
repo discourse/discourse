@@ -266,6 +266,7 @@ he:
     max_redemptions_allowed_one: "להזמנות דוא״ל זה אמור להיות 1."
     redemption_count_less_than_max: "אמור להיות קטן מ־%{max_redemptions_allowed}."
     email_xor_domain: "שדות הדוא״ל ושם התחום אסורים לשימוש בו־זמנית"
+    existing_user_success: "ההזמנה נוצלה בהצלחה"
   bulk_invite:
     file_should_be_csv: "הקובץ שנשלח אמור להיות בתסדיר csv."
     max_rows: "%{max_bulk_invites} ההזמנות הראשונות נשלחו. כדאי לנסות לפצל את הקובץ לחלקים קטנים יותר."
@@ -4910,6 +4911,10 @@ he:
   user_status:
     errors:
       ends_at_should_be_greater_than_set_at: "ends_at אמור להיות גדול מאשר set_at"
+  webhooks:
+    payload_url:
+      blocked_or_internal: "לא ניתן להשתמש בכתובת המטען כי היא תואמת ל־IP חסום או פנימי"
+      unsafe: "לא ניתן להשתמש בכתובת המטען כיוון שהיא לא מאובטחת"
   activemodel:
     errors:
       <<: *errors

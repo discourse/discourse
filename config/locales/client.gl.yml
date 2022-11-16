@@ -992,7 +992,6 @@ gl:
       experimental_sidebar:
         options: "Opcións"
         navigation_section: "Navegación"
-        list_destination_default: "Predeterminado"
       change: "cambiar"
       featured_topic: "Tema de actualidade"
       moderator: "%{user} é moderador"
@@ -4606,19 +4605,19 @@ gl:
         delete_confirm: "Confirma a eliminación deste campo do usuario?"
         options: "Opcións"
         required:
-          title: "Requirido para rexistrarse?"
+          title: "Requirido para rexistrarse"
           enabled: "obrigatorio"
           disabled: "non obrigatorio"
         editable:
-          title: "Editábel despois do rexistro?"
+          title: "Editábel despois do rexistro"
           enabled: "editábel"
           disabled: "non editábel"
         show_on_profile:
-          title: "Amosar no perfil público?"
+          title: "Amosar no perfil público"
           enabled: "amosado no perfil"
           disabled: "non amosado no perfil"
         show_on_user_card:
-          title: "Amosar na tarxeta de usuario?"
+          title: "Amosar na tarxeta de usuario"
           enabled: "amosado na tarxeta de usuario"
           disabled: "non amosado na tarxeta de usuario"
         field_types:

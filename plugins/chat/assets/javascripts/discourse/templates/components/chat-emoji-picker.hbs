@@ -1,5 +1,6 @@
 {{!-- template-lint-disable no-invalid-interactive --}}
 {{!-- template-lint-disable no-nested-interactive --}}
+{{!-- template-lint-disable no-down-event-binding --}}
 <div
   class={{concat-class
     "chat-emoji-picker"
@@ -7,7 +8,7 @@
   }}
   {{did-insert this.addClickOutsideEventListener}}
   {{will-destroy this.removeClickOutsideEventListener}}
-  {{on "keyup" this.didPressEscape}}
+  {{on "keydown" this.trapKeyUpEvents}}
 >
   <div class="chat-emoji-picker__filter-container">
     <DcFilterInput
@@ -150,7 +151,7 @@
               (concat "chat.emoji_picker." section)
               translatedFallback=section
             }}
-            {{on "keyup" this.didNavigateSection}}
+            {{on "keydown" this.didNavigateSection}}
           >
             <h2 class="chat-emoji-picker__section-title">
               {{i18n

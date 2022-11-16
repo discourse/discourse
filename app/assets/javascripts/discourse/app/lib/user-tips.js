@@ -6,8 +6,8 @@ import tippy from "tippy.js";
 const instances = {};
 const queue = [];
 
-export function showPopup(options) {
-  hidePopup(options.id);
+export function showUserTip(options) {
+  hideUserTip(options.id);
 
   if (!options.reference) {
     return;
@@ -23,13 +23,14 @@ export function showPopup(options) {
     showOnCreate: true,
     hideOnClick: false,
     trigger: "manual",
-    theme: "d-onboarding",
+    theme: "user-tips",
 
     // It must be interactive to make buttons work.
     interactive: true,
 
     arrow: iconHTML("tippy-rounded-arrow"),
     placement: options.placement,
+    appendTo: options.appendTo,
 
     // It often happens for the reference element to be rerendered. In this
     // case, tippy must be rerendered too. Having an animation means that the
@@ -40,17 +41,15 @@ export function showPopup(options) {
     allowHTML: true,
 
     content: `
-      <div class='onboarding-popup-container'>
-        <div class='onboarding-popup-title'>${escape(options.titleText)}</div>
-        <div class='onboarding-popup-content'>${escape(
-          options.contentText
-        )}</div>
-        <div class='onboarding-popup-buttons'>
+      <div class='user-tip-container'>
+        <div class='user-tip-title'>${escape(options.titleText)}</div>
+        <div class='user-tip-content'>${escape(options.contentText)}</div>
+        <div class='user-tip-buttons'>
           <button class="btn btn-primary btn-dismiss">${escape(
-            options.primaryBtnText || I18n.t("popup.primary")
+            options.primaryBtnText || I18n.t("user_tips.primary")
           )}</button>
           <button class="btn btn-flat btn-text btn-dismiss-all">${escape(
-            options.secondaryBtnText || I18n.t("popup.secondary")
+            options.secondaryBtnText || I18n.t("user_tips.secondary")
           )}</button>
         </div>
       </div>`,
@@ -73,12 +72,21 @@ export function showPopup(options) {
   });
 }
 
-export function hidePopup(popupId) {
-  const instance = instances[popupId];
+export function hideUserTip(userTipId) {
+  const instance = instances[userTipId];
   if (instance && !instance.state.isDestroyed) {
     instance.destroy();
   }
-  delete instances[popupId];
+  delete instances[userTipId];
+
+  const index = queue.findIndex((userTip) => userTip.id === userTipId);
+  if (index > -1) {
+    queue.splice(index, 1);
+  }
+}
+
+export function hideAllUserTips() {
+  Object.keys(instances).forEach(hideUserTip);
 }
 
 function addToQueue(options) {
@@ -92,9 +100,9 @@ function addToQueue(options) {
   queue.push(options);
 }
 
-export function showNextPopup() {
+export function showNextUserTip() {
   const options = queue.shift();
   if (options) {
-    showPopup(options);
+    showUserTip(options);
   }
 }

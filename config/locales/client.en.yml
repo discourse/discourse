@@ -322,7 +322,7 @@ en:
       like_count: "Likes"
       topic_count: "Topics"
       post_count: "Posts"
-      user_count: "Users"
+      user_count: "Sign-Ups"
       active_user_count: "Active Users"
       contact: "Contact Us"
       contact_info: "In the event of a critical issue or urgent matter affecting this site, please contact us at %{contact_info}."
@@ -383,7 +383,6 @@ en:
       remove_confirmation: "Are you sure you want to delete this draft?"
       new_topic: "New topic draft"
       new_private_message: "New personal message draft"
-      topic_reply: "Draft reply"
       abandon:
         confirm: "You have a draft in progress for this topic. What would you like to do with it?"
         yes_value: "Discard"
@@ -1161,7 +1160,7 @@ en:
         not_first_time: "Not your first time?"
         skip_link: "Skip these tips"
         read_later: "I'll read it later."
-      reset_seen_popups: "Show onboarding tips again"
+      reset_seen_user_tips: "Show user tips again"
       theme_default_on_all_devices: "Make this the default theme on all my devices"
       color_scheme_default_on_all_devices: "Set default color scheme(s) on all my devices"
       color_scheme: "Color Scheme"
@@ -1827,7 +1826,7 @@ en:
       what_are_you_doing: "What are you doing?"
       remove_status: "Remove status"
 
-    popup:
+    user_tips:
       primary: "Got it!"
       secondary: "don't show me these tips"
 
@@ -1838,6 +1837,18 @@ en:
       topic_timeline:
         title: "Topic timeline"
         content: "Scroll quickly through a post using the topic timeline."
+
+      post_menu:
+        title: "Post menu"
+        content: "See how else you can interact with the post by clicking the three dots!"
+
+      topic_notification_levels:
+        title: "You are now following this topic"
+        content: "Look for this bell to adjust your notification preferences for specific topics or whole categories."
+
+      suggested_topics:
+        title: "Keep reading!"
+        content: "Here are some topics we think you might like to read next."
 
     loading: "Loading..."
     errors:
@@ -2751,9 +2762,6 @@ en:
       move_to_inbox:
         title: "Move to Inbox"
         help: "Move message back to Inbox"
-      edit_message:
-        help: "Edit first post of the message"
-        title: "Edit"
       defer:
         help: "Mark as unread"
         title: "Defer"
@@ -3545,8 +3553,7 @@ en:
       this_year: "this year"
       position: "Position on the categories page:"
       default_position: "Default Position"
-      position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, "
-      position_disabled_click: 'enable the "fixed category positions" setting.'
+      position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, enable the <a href='%{url}'>'fixed category positions'</a> setting."
       minimum_required_tags: "Minimum number of tags required in a topic:"
       default_slow_mode: 'Enable "Slow Mode" for new topics in this category.'
       parent: "Parent Category"
@@ -4285,8 +4292,8 @@ en:
         critical_available: "A critical update is available."
         updates_available: "Updates are available."
         please_upgrade: "Please upgrade!"
-        no_check_performed: "A check for updates has not been performed. Ensure sidekiq is running."
-        stale_data: "A check for updates has not been performed lately. Ensure sidekiq is running."
+        no_check_performed: "A check for updates has not been performed. Ensure Sidekiq is running."
+        stale_data: "A check for updates has not been performed lately. Ensure Sidekiq is running."
         version_check_pending: "Looks like you upgraded recently. Fantastic!"
         installed_version: "Installed"
         latest_version: "Latest"
@@ -4639,6 +4646,7 @@ en:
         change_settings_short: "Settings"
         howto: "How do I install plugins?"
         official: "Official Plugin"
+        broken_route: "Unable to configure link to '%{name}'. Ensure ad-blockers are disabled and try reloading the page."
 
       backups:
         title: "Backups"
@@ -5841,6 +5849,7 @@ en:
         destination: "Destination"
         copy_to_clipboard: "Copy Permalink to Clipboard"
         delete_confirm: Are you sure you want to delete this permalink?
+        no_permalinks: "You don't have any permalinks yet. Create a new permalink above to begin seeing a list of your permalinks here."
         form:
           label: "New:"
           add: "Add"

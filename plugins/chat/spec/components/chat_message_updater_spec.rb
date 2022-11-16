@@ -3,6 +3,7 @@
 require "rails_helper"
 
 describe Chat::ChatMessageUpdater do
+  let(:guardian) { Guardian.new(user1) }
   fab!(:admin1) { Fabricate(:admin) }
   fab!(:admin2) { Fabricate(:admin) }
   fab!(:user1) { Fabricate(:user) }
@@ -51,7 +52,12 @@ describe Chat::ChatMessageUpdater do
     chat_message = create_chat_message(user1, og_message, public_chat_channel)
     new_message = "2 short"
 
-    updater = Chat::ChatMessageUpdater.update(chat_message: chat_message, new_content: new_message)
+    updater =
+      Chat::ChatMessageUpdater.update(
+        guardian: guardian,
+        chat_message: chat_message,
+        new_content: new_message,
+      )
     expect(updater.failed?).to eq(true)
     expect(updater.error.message).to match(
       I18n.t(
@@ -62,18 +68,48 @@ describe Chat::ChatMessageUpdater do
     expect(chat_message.reload.message).to eq(og_message)
   end
 
+  it "errors if a user other than the message user is trying to edit the message" do
+    og_message = "This won't be changed!"
+    chat_message = create_chat_message(user1, og_message, public_chat_channel)
+    new_message = "2 short"
+    updater = Chat::ChatMessageUpdater.update(
+      guardian: Guardian.new(Fabricate(:user)),
+      chat_message: chat_message,
+      new_content: new_message,
+    )
+    expect(updater.failed?).to eq(true)
+    expect(updater.error).to match(Discourse::InvalidAccess)
+  end
+
   it "it updates a messages content" do
     chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
     new_message = "Change to this!"
 
-    Chat::ChatMessageUpdater.update(chat_message: chat_message, new_content: new_message)
+    Chat::ChatMessageUpdater.update(
+      guardian: guardian,
+      chat_message: chat_message,
+      new_content: new_message,
+    )
     expect(chat_message.reload.message).to eq(new_message)
+  end
+
+  it "publishes a DiscourseEvent for updated messages" do
+    chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
+    events = DiscourseEvent.track_events {
+      Chat::ChatMessageUpdater.update(
+        guardian: guardian,
+        chat_message: chat_message,
+        new_content: "Change to this!",
+      )
+    }
+    expect(events.map { _1[:event_name] }).to include(:chat_message_edited)
   end
 
   it "creates mention notifications for unmentioned users" do
     chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
     expect {
       Chat::ChatMessageUpdater.update(
+        guardian: guardian,
         chat_message: chat_message,
         new_content:
           "this is a message with @system @mentions @#{user2.username} and @#{user3.username}",
@@ -86,6 +122,7 @@ describe Chat::ChatMessageUpdater do
     chat_message = create_chat_message(user1, message, public_chat_channel)
     expect {
       Chat::ChatMessageUpdater.update(
+        guardian: guardian,
         chat_message: chat_message,
         new_content: message + " editedddd",
       )
@@ -98,6 +135,7 @@ describe Chat::ChatMessageUpdater do
 
     expect {
       Chat::ChatMessageUpdater.update(
+        guardian: guardian,
         chat_message: chat_message,
         new_content: message + " @#{user_without_memberships.username}",
       )
@@ -109,6 +147,7 @@ describe Chat::ChatMessageUpdater do
       create_chat_message(user1, "ping @#{user2.username} @#{user3.username}", public_chat_channel)
     expect {
       Chat::ChatMessageUpdater.update(
+        guardian: guardian,
         chat_message: chat_message,
         new_content: "ping @#{user3.username}",
       )
@@ -119,6 +158,7 @@ describe Chat::ChatMessageUpdater do
     chat_message =
       create_chat_message(user1, "ping @#{user2.username} @#{user3.username}", public_chat_channel)
     Chat::ChatMessageUpdater.update(
+      guardian: guardian,
       chat_message: chat_message,
       new_content: "ping @#{user3.username} @#{user4.username}",
     )
@@ -132,6 +172,7 @@ describe Chat::ChatMessageUpdater do
     chat_message = create_chat_message(user1, "ping nobody", @direct_message_channel)
     expect {
       Chat::ChatMessageUpdater.update(
+        guardian: guardian,
         chat_message: chat_message,
         new_content: "ping @#{admin1.username}",
       )
@@ -143,6 +184,7 @@ describe Chat::ChatMessageUpdater do
       chat_message = create_chat_message(user1, "ping nobody", public_chat_channel)
       expect {
         Chat::ChatMessageUpdater.update(
+          guardian: guardian,
           chat_message: chat_message,
           new_content: "ping @#{admin_group.name}",
         )
@@ -156,6 +198,7 @@ describe Chat::ChatMessageUpdater do
       chat_message = create_chat_message(user1, "ping @#{admin2.username}", public_chat_channel)
       expect {
         Chat::ChatMessageUpdater.update(
+          guardian: guardian,
           chat_message: chat_message,
           new_content: "ping @#{admin_group.name} @#{admin2.username}",
         )
@@ -166,6 +209,7 @@ describe Chat::ChatMessageUpdater do
       chat_message = create_chat_message(user1, "ping @#{admin_group.name}", public_chat_channel)
       expect {
         Chat::ChatMessageUpdater.update(
+          guardian: guardian,
           chat_message: chat_message,
           new_content: "ping nobody anymore!",
         )
@@ -176,14 +220,20 @@ describe Chat::ChatMessageUpdater do
     end
   end
 
-  it "creates a chat_message_revision record" do
+  it "creates a chat_message_revision record and sets last_editor_id for the message" do
     old_message = "It's a thrsday!"
     new_message = "It's a thursday!"
     chat_message = create_chat_message(user1, old_message, public_chat_channel)
-    Chat::ChatMessageUpdater.update(chat_message: chat_message, new_content: new_message)
+    Chat::ChatMessageUpdater.update(
+      guardian: guardian,
+      chat_message: chat_message,
+      new_content: new_message,
+    )
     revision = chat_message.revisions.last
     expect(revision.old_message).to eq(old_message)
     expect(revision.new_message).to eq(new_message)
+    expect(revision.user_id).to eq(guardian.user.id)
+    expect(chat_message.reload.last_editor_id).to eq(guardian.user.id)
   end
 
   describe "uploads" do
@@ -200,6 +250,7 @@ describe Chat::ChatMessageUpdater do
         )
       expect {
         Chat::ChatMessageUpdater.update(
+          guardian: guardian,
           chat_message: chat_message,
           new_content: "I guess this is different",
           upload_ids: [upload2.id, upload1.id],
@@ -217,6 +268,7 @@ describe Chat::ChatMessageUpdater do
         )
       expect {
         Chat::ChatMessageUpdater.update(
+          guardian: guardian,
           chat_message: chat_message,
           new_content: "I guess this is different",
           upload_ids: [upload1.id],
@@ -234,6 +286,7 @@ describe Chat::ChatMessageUpdater do
         )
       expect {
         Chat::ChatMessageUpdater.update(
+          guardian: guardian,
           chat_message: chat_message,
           new_content: "I guess this is different",
           upload_ids: [],
@@ -245,6 +298,7 @@ describe Chat::ChatMessageUpdater do
       chat_message = create_chat_message(user1, "something", public_chat_channel)
       expect {
         Chat::ChatMessageUpdater.update(
+          guardian: guardian,
           chat_message: chat_message,
           new_content: "I guess this is different",
           upload_ids: [upload1.id],
@@ -256,6 +310,7 @@ describe Chat::ChatMessageUpdater do
       chat_message = create_chat_message(user1, "something", public_chat_channel)
       expect {
         Chat::ChatMessageUpdater.update(
+          guardian: guardian,
           chat_message: chat_message,
           new_content: "I guess this is different",
           upload_ids: [upload1.id, upload2.id],
@@ -263,11 +318,12 @@ describe Chat::ChatMessageUpdater do
       }.to change { ChatUpload.where(chat_message: chat_message).count }.by(2)
     end
 
-    it "doesn't remove existing uploads when BS upload ids are passed in" do
+    it "doesn't remove existing uploads when upload ids that do not exist are passed in" do
       chat_message =
         create_chat_message(user1, "something", public_chat_channel, upload_ids: [upload1.id])
       expect {
         Chat::ChatMessageUpdater.update(
+          guardian: guardian,
           chat_message: chat_message,
           new_content: "I guess this is different",
           upload_ids: [0],
@@ -280,6 +336,7 @@ describe Chat::ChatMessageUpdater do
       chat_message = create_chat_message(user1, "something", public_chat_channel)
       expect {
         Chat::ChatMessageUpdater.update(
+          guardian: guardian,
           chat_message: chat_message,
           new_content: "I guess this is different",
           upload_ids: [upload1.id, upload2.id],
@@ -298,6 +355,7 @@ describe Chat::ChatMessageUpdater do
         )
       expect {
         Chat::ChatMessageUpdater.update(
+          guardian: guardian,
           chat_message: chat_message,
           new_content: "I guess this is different",
           upload_ids: [],
@@ -316,6 +374,7 @@ describe Chat::ChatMessageUpdater do
       SiteSetting.chat_minimum_message_length = 10
       new_message = "hi :)"
       Chat::ChatMessageUpdater.update(
+        guardian: guardian,
         chat_message: chat_message,
         new_content: new_message,
         upload_ids: [upload1.id],
@@ -348,6 +407,7 @@ describe Chat::ChatMessageUpdater do
     def update_message(user)
       message.update(user: user)
       Chat::ChatMessageUpdater.update(
+        guardian: Guardian.new(user),
         chat_message: message,
         new_content: "I guess this is different",
       )

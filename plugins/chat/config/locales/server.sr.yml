@@ -5,3 +5,18 @@
 # https://translate.discourse.org/
 
 sr:
+  chat:
+    errors:
+      not_accepting_dms: "Žao nam je, %{username} trenutno ne prihvata privatne poruke."
+    reviewables:
+      actions:
+        agree_and_suspend:
+          title: "Suspenduj Korisnika"
+        disagree:
+          title: "Odbaci"
+    channel:
+      statuses:
+        open: "Otvori"
+  unsubscribe:
+    chat_summary:
+      never: Nikad

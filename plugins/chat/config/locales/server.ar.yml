@@ -5,10 +5,63 @@
 # https://translate.discourse.org/
 
 ar:
+  site_settings:
+    chat_allowed_groups: "يمكن للمستخدمين في هذه المجموعات الدردشة. لاحظ أن أعضاء فريق العمل يمكنهم دائمًا الوصول إلى الدردشة."
+    chat_channel_retention_days: "سيتم الاحتفاظ برسائل الدردشة في القنوات العادية لهذا العدد من الأيام. اضبط القيمة على '0' للاحتفاظ بالرسائل إلى الأبد."
+    chat_dm_retention_days: "سيتم الاحتفاظ برسائل الدردشة في قنوات الدردشة الشخصية لهذا العدد من الأيام. اضبط القيمة على '0' للاحتفاظ بالرسائل إلى الأبد."
+    chat_auto_silence_duration: "عدد الدقائق التي سيتم فيها كتم المستخدمين عندما يتجاوزون حد معدل إنشاء رسائل الدردشة. اضبط القيمة على '0' لإيقاف الكتم التلقائي."
+    chat_allowed_messages_for_trust_level_0: "عدد الرسائل المسموح للمستخدمين من مستوى الثقة 0 بإرسالها خلال 30 ثانية. اضبط القيمة على '0' لإيقاف الحد."
+    chat_allowed_messages_for_other_trust_levels: "عدد الرسائل المسموح للمستخدمين من مستوى الثقة 1-4 بإرسالها خلال 30 ثانية. اضبط القيمة على '0' لإيقاف الحد."
+    chat_silence_user_sensitivity: "احتمالية أن يتم كتم المستخدم الذي تم الإبلاغ عنه في الدردشة تلقائيًا."
+    chat_auto_silence_from_flags_duration: "عدد الدقائق التي سيتم كتم المستخدمين تلقائيًا خلالها بسبب رسائل الدردشة التي تم الإبلاغ عنها."
+    chat_default_channel_id: "قناة الدردشة التي سيتم فتحها بشكلٍ افتراضي عندما لا يكون لدى المستخدم رسائل أو إشارات غير مقروءة في قنوات أخرى."
+    chat_duplicate_message_sensitivity: "احتمالية حظر الرسائل المكررة خلال فترة قصيرة من المُرسل نفسه. رقم عشري بين 0 و1.0، مع كون 1.0 هو أعلى إعداد (يحظر الرسائل بشكلٍ أكثر تكرارًا في فترة زمنية أقصر). اضبط القيمة على `0` للسماح بالرسائل المكررة."
+    chat_minimum_message_length: "الحد الأدنى لعدد الأحرف لرسالة دردشة."
+    chat_allow_uploads: "السماح بالتحميلات في قنوات الدردشة العامة وقنوات الرسائل المباشرة."
+    chat_archive_destination_topic_status: "الحالة التي يجب أن يكون عليها الموضوع المستهدف بعد اكتمال أرشيف القناة. ينطبق ذلك فقط عندما يكون الموضوع المستهدف موضوعًا جديدًا وليس موضوعًا موجودًا."
+    default_emoji_reactions: "تفاعلات الرموز التعبيرية الافتراضية لرسائل الدردشة. أضِف ما يصل إلى 5 رموز تعبيرية للتفاعل السريع."
+    direct_message_enabled_groups: "السماح للمستخدمين في تلك المجموعات بإنشاء دردشات شخصية بين مستخدم وآخر. ملاحظة: يمكن للموظفين دائمًا إنشاء دردشات شخصية، وسيتمكن المستخدمون من الرد على الدردشات الشخصية التي بدأها مستخدمون لديهم إذن بإنشائها."
+    chat_message_flag_allowed_groups: "السماح للمستخدمين في تلك المجموعات بالإبلاغ عن رسائل الدردشة."
+    errors:
+      chat_default_channel: "يجب أن تكون قناة الدردشة الافتراضية قناةً عامة."
+      direct_message_enabled_groups_invalid: "يجب عليك تحديد مجموعة واحدة على الأقل لهذا الإعداد. إذا كنت لا تريد أن يقوم أي شخص باستثناء فريق العمل بإرسال رسائل مباشرة، فاختر مجموعة فريق العمل."
+      chat_upload_not_allowed_secure_uploads: "غير مسموح بتحميلات الدردشة عندما يكون إعداد الموقع المسؤول عن التحميلات الآمنة مفعَّلًا."
+  system_messages:
+    chat_channel_archive_complete:
+      title: "اكتمل أرشيف قناة الدردشة"
+      subject_template: "اكتمل أرشيف قناة الدردشة بنجاح"
+      text_body_template: |
+        اكتملت أرشفة قناة الدردشة **\#%{channel_name}** بنجاح. وتم نسخ الرسائل إلى الموضوع [%{topic_title}](%{topic_url}).
+    chat_channel_archive_failed:
+      title: "فشلت أرشفة قناة الدردشة"
+      subject_template: "فشلت أرشفة قناة الدردشة"
+      text_body_template: |
+        فشلت أرشفة قناة الدردشة **\#%{channel_name}**. تم وضع الرسائل %{messages_archived} في الأرشيف. تم نسخ الرسائل المؤرشفة جزئيًا في الموضوع [%{topic_title}](%{topic_url}). انتقل إلى القناة في %{channel_url} لإعادة المحاولة.
   chat:
+    deleted_chat_username: تم الحذف
     errors:
       channel_exists_for_category: "توجد قناة بالفعل في هذه الفئة وبهذا الاسم"
+      channel_new_message_disallowed: "القناة %{status}، لا يمكن إرسال رسائل جديدة"
+      channel_modify_message_disallowed: "القناة %{status}، لا يمكن تعديل أو حذف أي رسائل"
+      user_cannot_send_message: "لا يمكنك إرسال رسائل في الوقت الحالي."
+      rate_limit_exceeded: "تم تجاوز حد رسائل الدردشة التي يمكن إرسالها خلال 30 ثانية"
+      auto_silence_from_flags: "تم الإبلاغ عن الرسالة عددًا كافيًا من المرات لكتم المستخدم."
+      channel_cannot_be_archived: "لا يمكن أرشفة القناة في الوقت الحالي، يجب أن تكون إما مغلقة أو مفتوحة للأرشفة."
+      duplicate_message: "لقد نشرت رسالة مماثلة مؤخرًا."
+      delete_channel_failed: "فشل حذف القناة، يُرجى إعادة المحاولة."
+      minimum_length_not_met: "الرسالة قصيرة جدًا، ويجب ألا تقل عن %{minimum} من الأحرف."
+      max_reactions_limit_reached: "غير مسموح بتفاعلات جديدة على هذه الرسالة."
+      message_move_invalid_channel: "يجب أن تكون القناة المصدر والمستهدفة قناتين عامتين."
+      message_move_no_messages_found: "لم يتم العثور على رسائل بمعرِّفات الرسائل المقدَّمة."
+      cant_update_direct_message_channel: "لا يمكن تحديث خصائص قناة الرسائل المباشرة مثل الاسم والوصف."
+      not_accepting_dms: "عذرًا، لا يقبل %{username} الرسائل في الوقت الحالي."
+      actor_ignoring_target_user: "أنت تتجاهل %{username}؛ لذا لا يمكنك إرسال رسائل إليه."
+      actor_muting_target_user: "أنت تكتم %{username}؛ لذا لا يمكنك إرسال رسائل إليه."
+      actor_disallowed_dms: "لقد اخترت منع المستخدمين من إرسال رسائل خاصة ومباشرة إليك؛ لذا لا يمكنك إنشاء رسائل مباشرة جديدة."
+      actor_preventing_target_user_from_dm: "لقد اخترت منع %{username} من إرسال رسائل خاصة ومباشرة إليك؛ لذا لا يمكنك إنشاء رسائل مباشرة جديدة إليه."
+      user_cannot_send_direct_messages: "عذرًا، لا يمكنك إرسال الرسائل المباشرة."
     reviewables:
+      message_already_handled: "شكرًا، لكننا راجعنا هذه الرسالة بالفعل وقرَّرنا أنك لست بحاجة إلى الإبلاغ عنها مرة أخرى."
       actions:
         agree:
           title: "موافقة..."
@@ -39,7 +92,59 @@ ar:
           title: "عدم الموافقة"
         ignore:
           title: "تجاهل"
+      direct_messages:
+        transcript_title: "نص الرسائل السابقة في %{channel_name}"
+        transcript_body: "لمنحك مزيدًا من السياق، فقد ضمَّنا نسخة من الرسائل السابقة في هذه المحادثة (حتى عشر رسائل):\n\n%{transcript}"
+    channel:
+      statuses:
+        read_only: "للقراءة فقط"
+        archived: "مؤرشفة"
+        closed: "مغلقة"
+        open: "مفتوحة"
+      archive:
+        first_post_raw: "هذا الموضوع عبارة عن أرشيف لقناة الدردشة [%{channel_name}] (%{channel_url})."
+      messages_moved:
+        zero: "نقل @%{acting_username} %{count} رسائل إلى القناة [%{channel_name}](%{first_moved_message_url})."
+        one: "نقل @%{acting_username} رسالة واحدة إلى القناة [%{channel_name}](%{first_moved_message_url})."
+        two: "نقل @%{acting_username} رسالتين (%{count}) إلى القناة [%{channel_name}](%{first_moved_message_url})."
+        few: "نقل @%{acting_username} %{count} رسائل إلى القناة [%{channel_name}](%{first_moved_message_url})."
+        many: "نقل @%{acting_username} %{count} رسائل إلى القناة [%{channel_name}](%{first_moved_message_url})."
+        other: "نقل @%{acting_username} %{count} رسائل إلى القناة [%{channel_name}](%{first_moved_message_url})."
+      dm_title:
+        single_user: "%{user}"
+        multi_user: "%{users}"
+        multi_user_truncated: "%{users} و%{leftover} آخرين"
+    bookmarkable:
+      notification_title: "رسالة في %{channel_name}"
     personal_chat: "الدردشة الشخصية"
+    onebox:
+      inline_to_message: "الرسالة #%{message_id} بواسطة %{username} - #%{chat_channel}"
+      inline_to_channel: "الدردشة #%{chat_channel}"
+      inline_to_topic_channel: "دردشة للموضوع %{topic_title}"
+      x_members:
+        zero: "%{count} عضوًا"
+        one: "عضو واحد (%{count})"
+        two: "عضوان (%{count})"
+        few: "%{count} أعضاء"
+        many: "%{count} عضوًا"
+        other: "%{count} عضوًا"
+      and_x_others:
+        zero: "و%{count} آخرين"
+        one: "و%{count} آخر"
+        two: "و%{count} آخران"
+        few: "و%{count} آخرين"
+        many: "و%{count} آخرين"
+        other: "و%{count} آخرين"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: 'أشار %{username} إليك في "%{channel}"'
+        other_type: 'أشار %{username} إلى %{identifier} في "%{channel}"'
+      direct_message_chat_mention:
+        direct: "أشار %{username} إليك في الدردشة الشخصية"
+        other_type: "أشار %{username} إلى %{identifier} في الدردشة الشخصية"
+      new_chat_message: 'أرسل %{username} رسالة في "%{channel}"'
+      new_direct_chat_message: "أرسل %{username} رسالة في الدردشة الشخصية"
   discourse_automation:
     scriptables:
       send_chat_message:
@@ -47,6 +152,65 @@ ar:
   reviewable_score_types:
     needs_review:
       title: "بحاجة إلى المراجعة"
+    notify_user:
+      chat_pm_title: 'رسالة الدردشة الخاصة بك في "%{channel_name}"'
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_title: 'هناك رسالة دردشة في "%{channel_name}" تتطلب انتباه فريق العمل'
+      chat_pm_body: "%{link}\n\n%{message}"
+  reviewables:
+    reasons:
+      chat_message_queued_by_staff: "يعتقد أحد أعضاء فريق العمل أن رسالة الدردشة هذه تحتاج إلى المراجعة."
+  user_notifications:
+    chat_summary:
+      deleted_user: "تم حذف المستخدم"
+      description:
+        zero: "لديك رسائل دردشة جديدة"
+        one: "لديك رسالة دردشة جديدة"
+        two: "لديك رسالتا دردشة جديدتان"
+        few: "لديك رسائل دردشة جديدة"
+        many: "لديك رسائل دردشة جديدة"
+        other: "لديك رسائل دردشة جديدة"
+      from: "%{site_name}"
+      subject:
+        direct_message:
+          zero: "[%{email_prefix}] رسالتان جديدتان من %{message_title} و%{others}"
+          one: "[%{email_prefix}] رسالة جديدة من %{message_title}"
+          two: "[%{email_prefix}] رسالتان جديدتان من %{message_title} و%{others}"
+          few: "[%{email_prefix}] رسالتان جديدتان من %{message_title} و%{others}"
+          many: "[%{email_prefix}] رسالتان جديدتان من %{message_title} و%{others}"
+          other: "[%{email_prefix}] رسالتان جديدتان من %{message_title} و%{others}"
+        chat_channel:
+          zero: "[%{email_prefix}] رسالتان جديدتان في %{message_title} و%{others}"
+          one: "[%{email_prefix}] رسالة جديدة في %{message_title}"
+          two: "[%{email_prefix}] رسالتان جديدتان في %{message_title} و%{others}"
+          few: "[%{email_prefix}] رسائل جديدة في %{message_title} و%{others}"
+          many: "[%{email_prefix}] رسالتان جديدتان في %{message_title} و%{others}"
+          other: "[%{email_prefix}] رسالتان جديدتان في %{message_title} و%{others}"
+        other_direct_message: "من %{message_title}"
+        others: "%{count} آخرين"
+      unsubscribe: "يتم إرسال ملخص الدردشة هذا من %{site_link} عندما تكون غائبًا. غيِّر %{email_preferences_link} أو %{unsubscribe_link} لإلغاء الاشتراك."
+      unsubscribe_no_link: "يتم إرسال ملخص الدردشة هذا من %{site_link} عندما تكون غائبًا. غيِّر %{email_preferences_link} لديك."
+      view_messages:
+        zero: "عرض %{count} رسائل"
+        one: "عرض رسالة واحدة (%{count})"
+        two: "عرض رسالتين (%{count})"
+        few: "عرض %{count} رسائل"
+        many: "عرض %{count} رسائل"
+        other: "عرض %{count} رسائل"
+      view_more:
+        zero: "عرض %{count} رسائل إضافية"
+        one: "عرض رسالة واحدة (%{count}) إضافية"
+        two: "عرض رسالتين (%{count}) إضافيتين"
+        few: "عرض %{count} رسائل إضافية"
+        many: "عرض %{count} رسائل إضافية"
+        other: "عرض %{count} رسائل إضافية"
+      your_chat_settings: "تفضيل مدى تكرار رسائل البريد الإلكتروني للدردشة"
   unsubscribe:
     chat_summary:
+      select_title: "حدِّد مدى تكرار الرسائل الإلكترونية لملخص الدردشة:"
       never: أبدًا
+      when_away: عندما أكون غائبًا فقط
+  category:
+    cannot_delete:
+      has_chat_channels: "لا يمكن حذف هذه الفئة لأنها تحتوي قنوات دردشة."

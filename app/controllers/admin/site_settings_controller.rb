@@ -197,7 +197,8 @@ class Admin::SiteSettingsController < Admin::AdminController
       default_email_digest_frequency: "digest_after_minutes",
       default_include_tl0_in_digests: "include_tl0_in_digests",
       default_text_size: "text_size_key",
-      default_title_count_mode: "title_count_mode_key"
+      default_title_count_mode: "title_count_mode_key",
+      default_hide_profile_and_presence: "hide_profile_and_presence"
     }
   end
 

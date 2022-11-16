@@ -60,7 +60,7 @@ RSpec.describe ThemeStore::GitImporter do
         .expects(:execute_command)
         .with(
           { "GIT_TERMINAL_PROMPT" => "0" },
-          "git", "-c", "http.followRedirects=false", "-c", "http.curloptResolve=github.com:443:192.0.2.100", "clone", "-b", branch, "https://github.com/example/example.git", @temp_folder, timeout: 20
+          "git", "-c", "http.followRedirects=false", "-c", "http.curloptResolve=github.com:443:192.0.2.100", "clone", "--single-branch", "-b", branch, "https://github.com/example/example.git", @temp_folder, timeout: 20
         )
 
       importer = ThemeStore::GitImporter.new(url, branch: branch)
@@ -72,7 +72,7 @@ RSpec.describe ThemeStore::GitImporter do
         .expects(:execute_command)
         .with(
           { "GIT_SSH_COMMAND" => "ssh -i #{@ssh_folder}/id_rsa -o IdentitiesOnly=yes -o IdentityFile=#{@ssh_folder}/id_rsa -o StrictHostKeyChecking=no" },
-          "git", "clone", "-b", branch, "ssh://git@github.com/example/example.git", @temp_folder, timeout: 20
+          "git", "clone", "--single-branch", "-b", branch, "ssh://git@github.com/example/example.git", @temp_folder, timeout: 20
         )
 
       importer = ThemeStore::GitImporter.new(ssh_url, private_key: "private_key", branch: branch)

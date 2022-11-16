@@ -57,10 +57,16 @@ class NativeComponent extends Component {
 const TestStub = EmberObject.extend({
   counter: 0,
   otherCounter: 0,
+  state: null,
 
   @debounce(50)
   increment(value) {
     this.counter += value;
+  },
+
+  @debounce(50, true)
+  setState(state) {
+    this.state = state;
   },
 
   // Note: it only works in this particular order:
@@ -147,6 +153,16 @@ module("Unit | Utils | decorators", function (hooks) {
     await settled();
 
     assert.strictEqual(stub.counter, 6);
+  });
+
+  test("immediate debounce", async function (assert) {
+    const stub = TestStub.create();
+
+    stub.setState("foo");
+    stub.setState("bar");
+    await settled();
+
+    assert.strictEqual(stub.state, "foo");
   });
 
   test("debounce works with @observe", async function (assert) {

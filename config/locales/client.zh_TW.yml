@@ -964,9 +964,9 @@ zh_TW:
         tags_section: "選擇標籤"
         tags_section_instruction: "選定的標籤將顯示在側選單的標籤段落中。"
         navigation_section: "導覽"
-        list_destination_instruction: "當我點擊側選單中包含新主題或未讀主題的列表連結時，帶我前往"
-        list_destination_default: "預設"
-        list_destination_unread_new: "新文章/未讀"
+        list_destination_instruction: "當側邊欄中有新內容時..."
+        list_destination_default: "使用預設連結並顯示新項目的徽章"
+        list_destination_unread_new: "連結至未讀/新的並顯示新項目的數量"
       change: "修改"
       featured_topic: "特色主題"
       moderator: "%{user} 是板主"
@@ -1539,6 +1539,8 @@ zh_TW:
       success: "你的帳號已被建立，且您已經登入了。"
       name_label: "姓名"
       password_label: "密碼"
+      existing_user_can_redeem: "兌換您對某個主題或群組的邀請。"
+      existing_user_cannot_redeem: "此邀請無法兌換。請找當初邀請您的人來重發一個新的邀請。"
     password_reset:
       continue: "繼續連接至 %{site_name}"
     emoji_set:
@@ -3922,21 +3924,23 @@ zh_TW:
         delete_confirm: "你確定要刪除此使用者欄位 ?"
         options: "選項"
         required:
-          title: "在註冊時必填？"
+          title: "在註冊時必填"
           enabled: "必填"
           disabled: "非必填"
         editable:
-          title: "在註冊後可以修改？"
+          title: "註冊後可以修改"
           enabled: "可編輯"
           disabled: "不可編輯"
         show_on_profile:
-          title: "顯示在公開的基本資料裡?"
+          title: "顯示在公開的基本資料裡"
           enabled: "在基本資料裡顯示"
           disabled: "不在基本資料裡顯示"
         show_on_user_card:
-          title: "在使用者卡片上顯示？"
+          title: "在使用者卡片上顯示"
           enabled: "在使用者卡片上顯示"
           disabled: "在使用者卡片上隱藏"
+        searchable:
+          title: "可搜索"
         field_types:
           text: "文字區域"
           confirm: "確認"

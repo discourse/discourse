@@ -917,7 +917,6 @@ el:
       experimental_sidebar:
         options: "Επιλογές"
         navigation_section: "Πλοήγηση"
-        list_destination_default: "Προεπιλογή"
       change: "αλλαγή"
       featured_topic: "Επιλεγμένο θέμα"
       moderator: "Ο/Η %{user} είναι συντονιστής"
@@ -4243,19 +4242,15 @@ el:
         delete_confirm: "Είσαι σίγουρος πως θέλεις να διαγράψεις αυτό το πεδίο χρήστη;"
         options: "Επιλογές"
         required:
-          title: "Απαιτείται κατά την εγγραφή;"
           enabled: "απαραίτητο"
           disabled: "δεν είναι απαραίτητο"
         editable:
-          title: "Μπορεί να αλλάξει μετά την εγγραφή;"
           enabled: "επεξεργάσιμο"
           disabled: "μη επεξεργάσιμο"
         show_on_profile:
-          title: "Εμφάνιση στο δημόσιο προφίλ;"
           enabled: "εμφάνιση στο προφίλ"
           disabled: "να μην εμφανίζεται στο προφίλ"
         show_on_user_card:
-          title: "Εμφάνιση στην κάρτα του χρήστη;"
           enabled: "να εμφανίζεται στην κάρτα του χρήστη"
           disabled: "να μην εμφανίζεται στην κάρτα του χρήστη"
         field_types:

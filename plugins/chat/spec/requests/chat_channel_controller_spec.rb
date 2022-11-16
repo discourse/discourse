@@ -305,7 +305,7 @@ RSpec.describe Chat::ChatChannelsController do
     it "errors when channel for category and same name already exists" do
       sign_in(admin)
       name = "beep boop hi"
-      ChatChannel.create!(chatable: category2, name: name)
+      category2.create_chat_channel!(name: name)
 
       put "/chat/chat_channels.json", params: { id: category2.id, name: name }
       expect(response.status).to eq(400)
@@ -313,7 +313,7 @@ RSpec.describe Chat::ChatChannelsController do
 
     it "creates a channel for category and if name is unique" do
       sign_in(admin)
-      ChatChannel.create!(chatable: category2, name: "this is a name")
+      category2.create_chat_channel!(name: "this is a name")
 
       expect {
         put "/chat/chat_channels.json", params: { id: category2.id, name: "Different name!" }

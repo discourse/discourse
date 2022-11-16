@@ -4,3 +4,9 @@
     display: none;
   }
 }
+
+.admin-plugins {
+  [data-plugin-name="chat"] {
+    display: none;
+  }
+}

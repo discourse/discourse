@@ -52,7 +52,7 @@ jobs:
 
       - name: Get pnpm cache directory
         id: node-cache-dir
-        run: echo "::set-output name=dir::$(pnpm store path --silent)"
+        run: echo "dir=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
       - name: Node cache
         uses: actions/cache@v3

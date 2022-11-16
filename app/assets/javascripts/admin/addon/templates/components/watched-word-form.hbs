@@ -35,7 +35,7 @@
   </label>
 </div>
 
-<DButton @type="submit" @class="btn btn-primary" @action={{action "submit"}} @disabled={{this.formSubmitted}} @label="admin.watched_words.form.add" />
+<DButton @type="submit" @class="btn btn-primary" @action={{action "submit"}} @disabled={{this.submitDisabled}} @label="admin.watched_words.form.add" />
 
 {{#if this.showMessage}}
   <span class="success-message">{{this.message}}</span>

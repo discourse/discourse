@@ -4,27 +4,26 @@
   {{/in-element}}
 {{/if}}
 
-<div class="chat-browse-view">
-  <div class="chat-browse-view__header">
-    {{#if this.site.mobileView}}
-      <DButton
-        @action={{action "returnToChannelsList"}}
-        @icon="chevron-left"
-        @class="chat-browse-view__back"
-        @title="chat.browse.back"
-      />
-    {{/if}}
-    <h1 class="chat-browse-view__title">{{i18n "chat.browse.title"}}</h1>
-    {{#if this.currentUser.staff}}
-      <DButton
-        @action={{action "createChannel"}}
-        @icon="plus"
-        @class="new-channel-btn"
-        @label={{if this.site.desktopView "chat.create_channel.title"}}
-      />
-    {{/if}}
-  </div>
+<div class="chat-browse-view__header chat-full-page-header">
+  {{#if this.site.mobileView}}
+    <LinkTo @route="chat.index" class="chat-full-page-header__back-btn no-text btn-flat btn" title={{i18n "chat.browse.back"}}>
+      {{d-icon "chevron-left"}}
+    </LinkTo>
+  {{/if}}
 
+  <span class="chat-browse-view__title">{{i18n "chat.browse.title"}}</span>
+
+  {{#if this.currentUser.staff}}
+    <DButton
+      @action={{action "createChannel"}}
+      @icon="plus"
+      @class={{concat-class "new-channel-btn" (if this.site.mobileView "btn-flat")}}
+      @label={{if this.site.desktopView "chat.create_channel.title"}}
+    />
+  {{/if}}
+</div>
+
+<div class="chat-browse-view">
   <div class="chat-browse-view__actions">
     <nav>
       <ul class="nav-pills chat-browse-view__filters">

@@ -19,5 +19,11 @@
 </div>
 
 <div class="admin-detail pull-left mobile-closed">
+  {{#each this.brokenAdminRoutes as |route|}}
+    <div class="alert alert-error">
+      {{i18n "admin.plugins.broken_route" name=(i18n route.label)}}
+    </div>
+  {{/each}}
+
   {{outlet}}
 </div>

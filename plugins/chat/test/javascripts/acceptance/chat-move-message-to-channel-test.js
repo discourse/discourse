@@ -57,7 +57,7 @@ acceptance(
       assert.ok(exists(".chat-message-container"));
       const firstMessage = query(".chat-message-container");
       await triggerEvent(firstMessage, "mouseenter");
-      const dropdown = selectKit(".chat-msgactions .more-buttons");
+      const dropdown = selectKit(".chat-message-actions .more-buttons");
       await dropdown.expand();
       await dropdown.selectRowByValue("selectMessage");
 
@@ -109,7 +109,7 @@ acceptance(
       assert.ok(exists(".chat-message-container"));
       const firstMessage = query(".chat-message-container");
       await triggerEvent(firstMessage, "mouseenter");
-      const dropdown = selectKit(".chat-msgactions .more-buttons");
+      const dropdown = selectKit(".chat-message-actions .more-buttons");
       await dropdown.expand();
       await dropdown.selectRowByValue("selectMessage");
       assert.ok(firstMessage.classList.contains("selecting-messages"));
@@ -151,7 +151,7 @@ acceptance(
       assert.ok(exists(".chat-message-container"));
       const firstMessage = query(".chat-message-container");
       await triggerEvent(firstMessage, "mouseenter");
-      const dropdown = selectKit(".chat-msgactions .more-buttons");
+      const dropdown = selectKit(".chat-message-actions .more-buttons");
       await dropdown.expand();
       await dropdown.selectRowByValue("selectMessage");
 
@@ -168,7 +168,7 @@ acceptance(
       const firstMessage = query(".chat-message-container");
       await triggerEvent(firstMessage, "mouseenter");
       const dropdown = selectKit(
-        `.chat-msgactions-hover[data-id="${firstMessage.dataset.id}"] .more-buttons`
+        `.chat-message-actions-container[data-id="${firstMessage.dataset.id}"] .more-buttons`
       );
       await dropdown.expand();
       await dropdown.selectRowByValue("selectMessage");

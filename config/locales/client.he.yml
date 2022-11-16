@@ -1089,7 +1089,7 @@ he:
     user_fields:
       none: "(יש לבחור אפשרות)"
       required: 'נא למלא ערך עבור „%{name}”'
-      same_as_password: 'אין לחזור על הסיסמה שלך בשדות אחרים.'
+      same_as_password: "אין לחזור על הסיסמה שלך בשדות אחרים."
     user:
       said: "%{username}:"
       profile: "פרופיל"
@@ -1228,9 +1228,9 @@ he:
         tags_section: "סעיף תגיות"
         tags_section_instruction: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של סרגל הצד."
         navigation_section: "ניווט"
-        list_destination_instruction: "לחיצה על קישור רשימת נושאים עם נושאים חדשים או כאלו שלא נקראו בסרגל הצד, לקחת אותי אל"
-        list_destination_default: "ברירת מחדל"
-        list_destination_unread_new: "חדש/לא נקרא"
+        list_destination_instruction: "כשיש תוכן חדש בסרגל הצד…"
+        list_destination_default: "להשתמש בקישור ברירת המחדל ולהציג עיטור לפריטים חדשים"
+        list_destination_unread_new: "קישור לכאלו שלא נקראו/חדשים ולהציג את מניין הפריטים החדשים"
       change: "שנה"
       featured_topic: "נושא מומלץ"
       moderator: "ל־%{user} יש תפקיד פיקוח"
@@ -4243,7 +4243,7 @@ he:
               pending_count: "%{count} ממתינים"
     welcome_topic_banner:
       title: "כאן ניתן ליצור את נושא קבלת הפנים שלך"
-      description: 'נושא קבלת הפנים שלך הוא הדבר הראשון שחברים חדשים יקראו. אפשר לחשוב על זה כמו על „נאום מעלית” או „הצהרת כוונות”. כדאי לתאר למי מיועדת הקהילה הזאת, מה אפשר לצפות למצוא כאן ומה מומלץ לעשות בהתחלה.'
+      description: "נושא קבלת הפנים שלך הוא הדבר הראשון שחברים חדשים יקראו. אפשר לחשוב על זה כמו על „נאום מעלית” או „הצהרת כוונות”. כדאי לתאר למי מיועדת הקהילה הזאת, מה אפשר לצפות למצוא כאן ומה מומלץ לעשות בהתחלה."
       button_title: "להתחיל לערוך"
     until: "עד:"
   admin_js:
@@ -5566,23 +5566,23 @@ he:
         delete_confirm: "האם ברצונכם להסיר את שדה המשתמש הזה?"
         options: "אפשרויות"
         required:
-          title: "נדרש בעת הרשמה?"
+          title: "נדרש בעת הרשמה"
           enabled: "נדרש"
           disabled: "לא נדרש"
         editable:
-          title: "ניתן לערוך לאחר הרשמה?"
+          title: "ניתן לערוך לאחר הרשמה"
           enabled: "ניתן לערוך"
           disabled: "לא ניתן לערוך"
         show_on_profile:
-          title: "להצגה בפרופיל הפומבי?"
+          title: "להצגה בפרופיל הפומבי"
           enabled: "הצגה בפרופיל"
           disabled: "לא מוצג בפרופיל"
         show_on_user_card:
-          title: "הצגה על כרטיס משתמש?"
+          title: "הצגה על כרטיס משתמש"
           enabled: "מוצג על כרטיס משתמש"
           disabled: "לא מוצג על כרטיס משתמש"
         searchable:
-          title: "זמין לחיפוש?"
+          title: "זמין לחיפוש"
           enabled: "זמין לחיפוש"
           disabled: "לא זמין לחיפוש"
         field_types:
