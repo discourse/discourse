@@ -14,9 +14,9 @@ ru:
     poll_export_data_explorer_query_id: "ID Data Explorer Query, который будет использоваться для экспорта результатов опроса (0 для отключения)."
   poll:
     poll: "опрос"
-    invalid_argument: "Неверное значение '%{value}' для аргумента '%{argument}'."
-    multiple_polls_without_name: "Обнаружено несколько опросов в одном сообщении. Чтобы система могла их различать между собой, используйте атрибут <code>name</code>' для каждого опроса. Например: <code>[poll name=A1]</code>"
-    multiple_polls_with_same_name: "Обнаружено несколько опросов с одним и тем же названием: <strong>%{name}</strong>. Чтобы система могла различать опросы между собой, придумайте разные значения для атрибута <code>name</code>'."
+    invalid_argument: "Неверное значение «%{value}» для аргумента «%{argument}»."
+    multiple_polls_without_name: "Обнаружено несколько опросов без названия. Чтобы система могла различать опросы между собой, придумайте разные значения для атрибута <code>name</code>."
+    multiple_polls_with_same_name: "Обнаружено несколько опросов с одним и тем же названием: <strong>%{name}</strong>. Чтобы система могла различать опросы между собой, придумайте разные значения для атрибута <code>name</code>."
     default_poll_must_have_at_least_1_option: "Опрос должен содержать хотя бы 1 вариант ответа."
     named_poll_must_have_at_least_1_option: "Опрос с названием <strong>%{name}</strong> должен содержать хотя бы 1 вариант ответа."
     default_poll_must_have_less_options:
@@ -25,10 +25,10 @@ ru:
       many: "В опросе может быть не более %{count} вариантов ответов."
       other: "В опросе может быть не более %{count} вариантов ответов."
     named_poll_must_have_less_options:
-      one: "В опросе под названием \"<strong>%{name}</strong>\" должно быть не более %{count} варианта ответа."
-      few: "В опросе под названием \"<strong>%{name}</strong>\" должно быть не более %{count} вариантов ответов."
-      many: "В опросе под названием \"<strong>%{name}</strong>\" должно быть не более %{count} вариантов ответов."
-      other: "В опросе под названием \"<strong>%{name}</strong>\" должно быть не более %{count} вариантов ответов."
+      one: "В опросе под названием «<strong>%{name}</strong>» должно быть не более %{count} варианта ответа."
+      few: "В опросе под названием «<strong>%{name}</strong>» должно быть не более %{count} вариантов ответов."
+      many: "В опросе под названием «<strong>%{name}</strong>» должно быть не более %{count} вариантов ответов."
+      other: "В опросе под названием «<strong>%{name}</strong>» должно быть не более %{count} вариантов ответов."
     default_poll_must_have_different_options: "В опросе не должно быть одинаковых вариантов ответа."
     named_poll_must_have_different_options: "В опросе <strong>%{name}</strong> не должно быть одинаковых вариантов ответа."
     default_poll_must_not_have_any_empty_options: "Настройки опроса не могут быть пустыми."

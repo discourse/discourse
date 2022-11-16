@@ -7,6 +7,9 @@
 hu:
   js:
     admin:
+      site_settings:
+        categories:
+          chat: Csevegés
       logs:
         staff_actions:
           actions:
@@ -334,7 +337,6 @@ hu:
       retention_reminders:
         public: "A csatorna előzményei %{days} napig maradnak meg."
         dm: "A személyes csevegési előzményei %{days} napig maradnak meg."
-      topic_button_title: "Csevegés"
       emoji_picker:
         objects: "Tárgyak"
         activities: "Tevékenységek"

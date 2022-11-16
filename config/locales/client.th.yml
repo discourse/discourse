@@ -252,7 +252,6 @@ th:
       like_count: "ถูกใจ"
       topic_count: "กระทู้"
       post_count: "โพสต์"
-      user_count: "ผู้ใช้"
       active_user_count: "ผู้ใช้ที่ใช้งานอยู่"
       contact: "ติดต่อเรา"
       contact_info: "ในกรณีที่เกิดเหตุฉุกเฉินหรือประเด็นสำคัญที่ส่งผลต่อเว็บไซต์นี้ กรุณาติดต่อเราที่ %{contact_info}"
@@ -291,7 +290,6 @@ th:
       resume: "ดำเนินการต่อ"
       remove: "ลบ"
       new_topic: "แบบร่างกระทู้ใหม่"
-      topic_reply: "ตอบแบบร่าง"
     topic_count_categories:
       other: "ดู %{count} กระทู้ใหม่หรือที่อัปเดต"
     topic_count_latest:
@@ -1669,9 +1667,6 @@ th:
       move_to_inbox:
         title: "ย้ายไปกล่องขาเข้า"
         help: "ย้ายข้อความกลับไปกล่องขาเข้า"
-      edit_message:
-        help: "แก้ไขโพสต์แรกของข้อความ"
-        title: "แก้ไข"
       defer:
         help: "ทำเครื่องหมายว่ายังไม่ได้อ่าน"
       list: "กระทู้"

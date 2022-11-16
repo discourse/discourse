@@ -277,7 +277,6 @@ bs_BA:
       like_count: "Sviđanja"
       topic_count: "Tema"
       post_count: "Objave"
-      user_count: "Korisnici"
       active_user_count: "Aktivnih korisnika"
       contact: "Kontaktirajte nas"
       contact_info: "U slučaju da forum ne radi, molimo kontaktirajte nas na %{contact_info}."
@@ -316,7 +315,6 @@ bs_BA:
       resume: "Nastavi"
       remove: "Ukloni"
       new_topic: "Nacrt nove teme"
-      topic_reply: "skica odgovora"
       abandon:
         yes_value: "Odbaci"
     topic_count_categories:
@@ -2012,9 +2010,6 @@ bs_BA:
       move_to_inbox:
         title: "Premjesti u Sanduče"
         help: "Premjesti poruke nazad u Sanduče"
-      edit_message:
-        help: "Izmijeni prvu objavu ove poruke"
-        title: "Izmijeni"
       defer:
         help: "Označi kao nepročitano"
         title: "Defer"
@@ -2569,8 +2564,6 @@ bs_BA:
       this_year: "this year"
       position: "Pozicija na stranici kategorije:"
       default_position: "Default Position"
-      position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, "
-      position_disabled_click: 'enable the "fixed category positions" setting.'
       minimum_required_tags: "Minimalni broj oznaka potrebnih za temu:"
       parent: "Parent Category"
       num_auto_bump_daily: "Broj otvorenih tema koje se svakodnevno automatski izbijaju:"

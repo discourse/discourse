@@ -641,6 +641,7 @@ sv:
       disallowed_topic_tags: "Detta ämne har taggar som inte tillåts för kategorin: '%{tags}'"
       disallowed_tags_generic: "Detta ämne har otillåtna taggar."
       slug_contains_non_ascii_chars: "innehåller icke-ascii tecken"
+      is_already_in_use: "används redan"
     cannot_delete:
       uncategorized: "Denna kategori är speciell. Den är avsedd för att innehålla ämnen som inte har en kategori; den kan inte raderas."
       has_subcategories: "Du kan inte ta bort den här kategorin eftersom den har underkategorier."
@@ -1411,6 +1412,7 @@ sv:
     search_ignore_accents: "Ignorera accenttecken när du söker efter text."
     category_search_priority_low_weight: "Vikt tillämpad på rangordning vid låg sökprioritet för kategori"
     category_search_priority_high_weight: "Vikt tillämpad på rangordning vid hög sökprioritet för kategori"
+    default_composer_category: "Kategorin som används för att fylla i rullgardinsmenyn för kategori när du skapar ett nytt ämne."
     allow_uncategorized_topics: "Tillåt att ämnen skapas utan en kategori. VARNING: Om det finns några okategoriserade ämnen så måste dessa omkategoriseras innan den här inställningen stängs av."
     allow_duplicate_topic_titles: "Tillåt ämnen med identiska rubriker."
     allow_duplicate_topic_titles_category: "Tillåt ämnen med identiska dubblettitlar om kategorin skiljer sig åt. allow_duplicate_topic_titles måste inaktiveras."
@@ -2008,7 +2010,7 @@ sv:
     delete_merged_stub_topics_after_days: "Antal dagar att vänta innan helt sammanslagna stub-ämnen raderas automatiskt. Ställ in till 0 för att aldrig radera stub-ämnen."
     bootstrap_mode_min_users: "Minsta antal användare som krävs för att inaktivera bootstrap-läget (ange 0 för att inaktivera)"
     prevent_anons_from_downloading_files: "Förhindra att anonyma användare hämtar bilagor."
-    secure_media: 'UTFASAT: Använd inställningen secure_uploads istället, kommer att tas bort i Discourse 3.0.'
+    secure_media: "UTFASAT: Använd inställningen secure_uploads istället, kommer att tas bort i Discourse 3.0."
     secure_uploads: 'Begränsar åtkomst för ALLA uppladdningar (bilder, video, ljud, text, pdf, zip med flera). Om "login required" har aktiverats kan endast inloggade användare komma åt uppladdningar. Annars begränsas åtkomst endast till uppladdning av media i privata meddelanden samt privata kategorier. VARNING: Den här inställningen är komplex och kräver djupa administrativa kunskaper. Se detaljer i <a target="_blank" href="https://meta.discourse.org/t/-/140017">ämnet för säkra uppladdningar i Meta</a>.'
     secure_media_allow_embed_images_in_emails: "UTFASAT: Använd secure_uploads_allow_embed_images_in_emails, kommer att tas bort i Discourse 3.0."
     secure_uploads_allow_embed_images_in_emails: "Gör det möjligt att bädda in säkra bilder som normalt skulle begränsas i e-postmeddelanden, under förutsättning att deras storlek är mindre än inställningen för säkra medias maxstorlek för inbäddning av bild, 'secure uploads max email embed image size kb'."
@@ -2109,7 +2111,7 @@ sv:
     enable_sitemap: "Skapa en webbplatskarta för din webbplats och inkludera den i filen robots.txt."
     sitemap_page_size: "Antal webbadresser som ska inkluderas på varje webbplatskartsida. Max 50.000"
     enable_user_status: "(experimentell) Tillåt användare att ställa in anpassat statusmeddelande (emoji + beskrivning)."
-    enable_onboarding_popups: "(experimentell) Aktivera pedagogiska popup-fönster som beskriver nyckelfunktioner för användare"
+    enable_user_tips: "(experimentell) Aktivera nya användartips som beskriver nyckelfunktioner för användare"
     short_title: "Den korta titeln kommer att användas på användarens startskärm, startapparat eller andra platser där utrymmet kan vara begränsat. Den bör begränsas till 12 tecken."
     dashboard_hidden_reports: "Tillåt att de specificerade rapporterna döljs från översiktspanelen."
     dashboard_visible_tabs: "Välj vilka flikar på översiktspanelen som ska vara synliga."
@@ -2184,6 +2186,7 @@ sv:
       search_tokenize_japanese_enabled: "Du måste inaktivera 'search_tokenize_japanese' innan du aktiverar den här inställningen."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kan inte aktivera DiscourseConnect om 2FA är obligatoriskt."
       delete_rejected_email_after_days: "Den här inställningen kan inte vara lägre än inställningen delete_email_logs_after_days eller större än %{max}"
+      invalid_uncategorized_category_setting: "Kategorin Okategoriserade kan inte väljas om tillåt okategoriserade ämnen inte är tillåtet"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exempel.se"

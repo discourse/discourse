@@ -23,7 +23,7 @@ es:
           timezones_title: Zonas horarias que se muestran
           timezones_description: Las zonas horarias se usarán para mostrar las fechas en vista previa y retrospectiva.
           recurring_title: Recurrencia
-          recurring_description: "Definir la recurrencia de un evento. También puedes editar manualmente la opción recurrente generada por el formulario y usar una de las siguientes claves: años, trimestre, meses, semanas, días, horas, minutos, segundos, milisegundos."
+          recurring_description: "Definir la recurrencia de un evento. También puedes editar manualmente la opción recurrente generada por el formulario y usar una de las siguientes claves: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds"
           recurring_none: Sin recurrencia
           invalid_date: Fecha no válida, asegúrate de que la fecha y hora sean correctas
           date_title: Fecha

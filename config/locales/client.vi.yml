@@ -261,7 +261,6 @@ vi:
       like_count: "Lượt thích"
       topic_count: "Các chủ đề"
       post_count: "Các bài viết"
-      user_count: "Người dùng"
       active_user_count: "Thành viên tích cực"
       contact: "Liên hệ chúng tôi"
       contact_info: "Trong trường hợp có bất kỳ sự cố nào ảnh hưởng tới trang này, xin vui lòng liên hệ với chúng tôi theo địa chỉ %{contact_info}."
@@ -318,7 +317,6 @@ vi:
       remove_confirmation: "Bạn có chắc chắn muốn xóa bản nháp này không?"
       new_topic: "Chủ đề nháp mới"
       new_private_message: "Bản nháp tin nhắn cá nhân mới"
-      topic_reply: "Trả lời nháp"
       abandon:
         confirm: "Bạn đang có một bản nháp cho chủ đề này. Bạn muốn làm gì với nó?"
         yes_value: "Hủy bỏ"
@@ -2356,9 +2354,6 @@ vi:
       move_to_inbox:
         title: "Chuyển sang hộp thư"
         help: "Chuyển tin nhắn trở lại hộp thư"
-      edit_message:
-        help: "Chỉnh sửa bài đăng đầu tiên của tin nhắn"
-        title: "Sửa"
       defer:
         help: "đánh dấu là chưa đọc"
         title: "Hoãn"
@@ -3031,8 +3026,6 @@ vi:
       this_year: "năm nay"
       position: "Vị trí trên trang danh mục:"
       default_position: "vị trí mặc định"
-      position_disabled: "Chuyên mục sẽ được hiển thị theo thứ tự hoạt động. Để kiểm soát thứ tự chuyên mục trong danh sách, "
-      position_disabled_click: 'bật thiết lập "cố định vị trí chuyên mục".'
       minimum_required_tags: "Số lượng thẻ tối thiểu được yêu cầu trong một chủ đề:"
       default_slow_mode: 'Bật "Chế độ chậm" cho các chủ đề mới trong danh mục này.'
       parent: "Danh mục cha"
