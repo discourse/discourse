@@ -77,10 +77,12 @@ body.has-full-page-chat {
   .category-chat-private .d-icon {
     background-color: var(--secondary);
   }
+  .chat-channel-metadata {
+    align-items: flex-end;
 
-  .chat-channel-unread-indicator {
-    padding: 2px;
-    font-size: var(--font-down-1);
+    .chat-channel-unread-indicator {
+      font-size: var(--font-down-1);
+    }
   }
 }
 

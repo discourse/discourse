@@ -473,20 +473,29 @@ $float-height: 530px;
     align-items: center;
     flex-direction: column;
 
+    .direct-message-channels-section & {
+      align-items: flex-end;
+    }
+
     .chat-channel-unread-indicator {
-      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-left: 0.5rem;
+      width: auto;
+      min-width: 14px;
+      padding: 2px;
+      font-size: var(--font-down-2);
+      border-radius: 1em;
+
+      .number {
+        line-height: 1rem;
+      }
     }
   }
 
   .chat-user-avatar {
     pointer-events: none;
-  }
-
-  .chat-channel-unread-indicator {
-    margin-left: 0.5rem;
   }
 
   &.unfollowing {
