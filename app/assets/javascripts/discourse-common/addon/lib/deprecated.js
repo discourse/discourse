@@ -70,6 +70,9 @@ export async function withSilencedDeprecations(deprecationIds, callback) {
   try {
     idArray.forEach((id) => disabledDeprecations.add(id));
     result = callback();
+    if (result instanceof Promise) {
+      result = await result;
+    }
   } finally {
     idArray.forEach((id) => disabledDeprecations.delete(id));
     return result;

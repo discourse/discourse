@@ -175,4 +175,32 @@ module("Unit | Utility | deprecated", function (hooks) {
       "counter is not incremented"
     );
   });
+
+  test("can silence deprecations with async callback in tests", async function (assert) {
+    await withSilencedDeprecations("discourse.one", async () =>
+      deprecated("message", { id: "discourse.one" })
+    );
+    assert.strictEqual(
+      this.warnStub.callCount,
+      0,
+      "console.warn is not called"
+    );
+    assert.strictEqual(
+      this.counterStub.callCount,
+      0,
+      "counter is not incremented"
+    );
+
+    deprecated("message", { id: "discourse.one" });
+    assert.strictEqual(
+      this.warnStub.callCount,
+      1,
+      "console.warn is called outside the silenced function"
+    );
+    assert.strictEqual(
+      this.counterStub.callCount,
+      1,
+      "counter is incremented outside the silenced function"
+    );
+  });
 });
