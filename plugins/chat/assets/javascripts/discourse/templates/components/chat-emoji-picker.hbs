@@ -8,7 +8,7 @@
   }}
   {{did-insert this.addClickOutsideEventListener}}
   {{will-destroy this.removeClickOutsideEventListener}}
-  {{on "keydown" this.trapKeyUpEvents}}
+  {{on "keydown" this.trapKeyDownEvents}}
 >
   <div class="chat-emoji-picker__filter-container">
     <DcFilterInput
@@ -109,7 +109,7 @@
       <div
         class="chat-emoji-picker__sections"
         {{on "click" this.didSelectEmoji}}
-        {{on "keyup" this.didSelectEmoji}}
+        {{on "keydown" this.didSelectEmoji}}
         role="button"
       >
         {{#if (gte this.filteredEmojis.length 0)}}

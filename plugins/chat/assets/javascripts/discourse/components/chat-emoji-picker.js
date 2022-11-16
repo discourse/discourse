@@ -86,13 +86,27 @@ export default class ChatEmojiPicker extends Component {
   }
 
   @action
-  trapKeyUpEvents(event) {
+  trapKeyDownEvents(event) {
     if (event.key === "Escape") {
       this.chatEmojiPickerManager.close();
     }
 
     if (event.key === "ArrowUp") {
       event.stopPropagation();
+    }
+
+    if (
+      event.key === "ArrowDown" &&
+      event.target.classList.contains("dc-filter-input")
+    ) {
+      event.stopPropagation();
+      event.preventDefault();
+
+      document
+        .querySelector(
+          `.chat-emoji-picker__scrollable-content .emoji[tabindex="0"]`
+        )
+        ?.focus();
     }
   }
 
@@ -224,29 +238,51 @@ export default class ChatEmojiPicker extends Component {
 
   @action
   didNavigateSection(event) {
-    const sectionEmojis = [
-      ...event.target
-        .closest(".chat-emoji-picker__section")
-        .querySelectorAll(".emoji"),
+    const sectionsEmojis = (section) => [...section.querySelectorAll(".emoji")];
+    const focusSectionsLastEmoji = (section) => {
+      const emojis = sectionsEmojis(section);
+      return emojis[emojis.length - 1].focus();
+    };
+    const focusSectionsFirstEmoji = (section) => {
+      sectionsEmojis(section)[0].focus();
+    };
+    const currentSection = event.target.closest(".chat-emoji-picker__section");
+    const focusFilter = () => {
+      document.querySelector(".dc-filter-input")?.focus();
+    };
+    const allEmojis = () => [
+      ...document.querySelectorAll(
+        ".chat-emoji-picker__scrollable-content .emoji"
+      ),
     ];
 
     if (event.key === "ArrowRight") {
       event.preventDefault();
+      const nextEmoji = event.target.nextElementSibling;
 
-      if (event.target === sectionEmojis[sectionEmojis.length - 1]) {
-        sectionEmojis[0].focus();
+      if (nextEmoji) {
+        nextEmoji.focus();
       } else {
-        event.target.nextElementSibling?.focus();
+        const nextSection = currentSection.nextElementSibling;
+        if (nextSection) {
+          focusSectionsFirstEmoji(nextSection);
+        }
       }
     }
 
     if (event.key === "ArrowLeft") {
       event.preventDefault();
+      const prevEmoji = event.target.previousElementSibling;
 
-      if (event.target === sectionEmojis[0]) {
-        sectionEmojis[sectionEmojis.length - 1].focus();
+      if (prevEmoji) {
+        prevEmoji.focus();
       } else {
-        event.target.previousElementSibling?.focus();
+        const prevSection = currentSection.previousElementSibling;
+        if (prevSection) {
+          focusSectionsLastEmoji(prevSection);
+        } else {
+          focusFilter();
+        }
       }
     }
 
@@ -254,21 +290,36 @@ export default class ChatEmojiPicker extends Component {
       event.preventDefault();
       event.stopPropagation();
 
-      sectionEmojis
+      const nextEmoji = allEmojis()
         .filter((c) => c.offsetTop > event.target.offsetTop)
-        .find((c) => c.offsetLeft === event.target.offsetLeft)
-        ?.focus();
+        .findBy("offsetLeft", event.target.offsetLeft);
+
+      if (nextEmoji) {
+        nextEmoji.focus();
+      } else {
+        // for perf reason all emojis might not be loaded at this point
+        // but the first one will always be
+        const nextSection = currentSection.nextElementSibling;
+        if (nextSection) {
+          focusSectionsFirstEmoji(nextSection);
+        }
+      }
     }
 
     if (event.key === "ArrowUp") {
       event.preventDefault();
       event.stopPropagation();
 
-      sectionEmojis
+      const prevEmoji = allEmojis()
         .reverse()
         .filter((c) => c.offsetTop < event.target.offsetTop)
-        .find((c) => c.offsetLeft === event.target.offsetLeft)
-        ?.focus();
+        .findBy("offsetLeft", event.target.offsetLeft);
+
+      if (prevEmoji) {
+        prevEmoji.focus();
+      } else {
+        focusFilter();
+      }
     }
   }
 
@@ -278,13 +329,9 @@ export default class ChatEmojiPicker extends Component {
       return;
     }
 
-    if (
-      event.type === "click" ||
-      (event.type === "keyup" && event.key === "Enter")
-    ) {
+    if (event.type === "click" || event.key === "Enter") {
       event.preventDefault();
       event.stopPropagation();
-      const originalTarget = event.target;
       let emoji = event.target.dataset.emoji;
       const tonable = event.target.dataset.tonable;
       const diversity = this.chatEmojiReactionStore.diversity;
@@ -293,10 +340,7 @@ export default class ChatEmojiPicker extends Component {
       }
 
       this.chatEmojiPickerManager.didSelectEmoji(emoji);
-
-      schedule("afterRender", () => {
-        originalTarget.focus();
-      });
+      this.appEvents.trigger("chat:focus-composer");
     }
   }
 
