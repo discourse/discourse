@@ -1,5 +1,5 @@
 const TapReporter = require("testem/lib/reporters/tap_reporter");
-const { shouldLoadPluginTestJs } = require("discourse/lib/plugin-js");
+const { shouldLoadPluginTestJs } = require("discourse-plugins");
 const fs = require("fs");
 
 class Reporter {
