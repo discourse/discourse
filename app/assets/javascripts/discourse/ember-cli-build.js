@@ -64,10 +64,6 @@ module.exports = function (defaults) {
         optimization: {
           moduleIds: "size", // Consistent module references https://github.com/ef4/ember-auto-import/issues/478#issuecomment-1000526638
         },
-        externals: {
-          // Webpack should exclude @glimmer/validator from the output bundle instead relying upon the version bundled with Ember. Required for tracked-built-ins on Ember 3.28
-          "@glimmer/validator": "commonjs @glimmer/validator",
-        },
       },
     },
     fingerprint: {
