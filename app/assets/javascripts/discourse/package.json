@@ -70,7 +70,7 @@
     "ember-source": "~3.28.10",
     "ember-test-selectors": "^6.0.0",
     "eslint": "^8.26.0",
-    "eslint-plugin-qunit": "^6.2.0",
+    "eslint-plugin-qunit": "^7.3.2",
     "handlebars": "^4.7.7",
     "html-entities": "^2.3.3",
     "js-yaml": "^4.1.0",
