@@ -444,7 +444,7 @@ export default class PostCooked {
   }
 
   _post() {
-    return this.decoratorHelper?.getModel();
+    return this.decoratorHelper?.getModel?.();
   }
 }
 
