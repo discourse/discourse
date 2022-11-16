@@ -69,17 +69,17 @@ jobs:
 
       - name: ESLint (core)
         if: ${{ !cancelled() }}
-        run: pnpm eslint app/assets/javascripts
+        run: pnpm exec eslint app/assets/javascripts
 
       - name: ESLint (core plugins)
         if: ${{ !cancelled() }}
-        run: pnpm eslint plugins
+        run: pnpm exec eslint plugins
 
       - name: Prettier
         if: ${{ !cancelled() }}
         run: |
-          pnpm prettier -v
-          pnpm pprettier --list-different \
+          pnpm exec prettier -v
+          pnpm exec pprettier --list-different \
             "app/assets/stylesheets/**/*.scss" \
             "app/assets/javascripts/**/*.js" \
             "plugins/**/assets/stylesheets/**/*.scss" \
@@ -88,7 +88,7 @@ jobs:
       - name: Ember template lint
         if: ${{ !cancelled() }}
         run: |
-          pnpm ember-template-lint \
+          pnpm exec ember-template-lint \
             --no-error-on-unmatched-pattern \
             "app/assets/javascripts/**/*.hbs" \
             "plugins/**/assets/javascripts/**/*.hbs"
