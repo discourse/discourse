@@ -9,6 +9,7 @@ class ChatChannelSerializer < ApplicationSerializer
              :chatable_url,
              :description,
              :title,
+             :slug,
              :last_message_sent_at,
              :status,
              :archive_failed,

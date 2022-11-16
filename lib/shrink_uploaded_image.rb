@@ -83,7 +83,7 @@ class ShrinkUploadedImage
 
       if post.raw_changed?
         log "Updating post"
-      elsif post.downloaded_images.has_value?(original_upload.id)
+      elsif post.post_hotlinked_media.exists?(upload_id: original_upload.id)
         log "A hotlinked, unreferenced image"
       elsif post.raw.include?(upload.short_url)
         log "Already processed"
@@ -161,13 +161,10 @@ class ShrinkUploadedImage
           )
         end
 
-        if existing_upload && post.downloaded_images.present?
-          downloaded_images = post.downloaded_images.transform_values do |upload_id|
-            upload_id == original_upload.id ? upload.id : upload_id
-          end
-
-          post.custom_fields[Post::DOWNLOADED_IMAGES] = downloaded_images
-          post.save_custom_fields
+        if existing_upload
+          post.post_hotlinked_media
+            .where(upload_id: original_upload.id)
+            .update_all(upload_id: upload.id)
         end
 
         post.rebake!

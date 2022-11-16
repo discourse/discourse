@@ -10,6 +10,7 @@ import {
 } from "discourse/lib/utilities";
 import discourseComputed, {
   bind,
+  debounce,
   observes,
   on,
 } from "discourse-common/utils/decorators";
@@ -116,6 +117,11 @@ export default Component.extend(ComposerUploadUppy, {
   uploadMarkdownResolvers,
   uploadPreProcessors,
   uploadHandlers,
+
+  init() {
+    this._super(...arguments);
+    this.warnedCannotSeeMentions = [];
+  },
 
   @discourseComputed("composer.requiredCategoryMissing")
   replyPlaceholder(requiredCategoryMissing) {
@@ -508,73 +514,43 @@ export default Component.extend(ComposerUploadUppy, {
     });
   },
 
+  // add a delay to allow for typing, so you don't open the warning right away
+  // previously we would warn after @bob even if you were about to mention @bob2
+  @debounce(2000)
   _warnCannotSeeMention(preview) {
-    const composerDraftKey = this.get("composer.draftKey");
-    if (composerDraftKey === Composer.NEW_PRIVATE_MESSAGE_KEY) {
+    if (this.composer.draftKey === Composer.NEW_PRIVATE_MESSAGE_KEY) {
       return;
     }
 
-    schedule("afterRender", () => {
-      const found = this.warnedCannotSeeMentions || [];
+    preview.querySelectorAll(".mention[data-reason]").forEach((mention) => {
+      const { name } = mention.dataset;
+      if (this.warnedCannotSeeMentions.includes(name)) {
+        return;
+      }
 
-      preview?.querySelectorAll(".mention[data-reason]")?.forEach((mention) => {
-        const name = mention.dataset.name;
-        if (found.includes(name)) {
+      this.warnedCannotSeeMentions.push(name);
+      this.cannotSeeMention({
+        name,
+        reason: mention.dataset.reason,
+      });
+    });
+
+    preview
+      .querySelectorAll(".mention-group[data-reason]")
+      .forEach((mention) => {
+        const { name } = mention.dataset;
+        if (this.warnedCannotSeeMentions.includes(name)) {
           return;
         }
-        found.push(name);
 
-        // add a delay to allow for typing, so you don't open the warning right away
-        // previously we would warn after @bob even if you were about to mention @bob2
-        discourseLater(
-          this,
-          () => {
-            if (
-              preview?.querySelectorAll(
-                `.mention[data-reason][data-name="${name}"]`
-              )?.length > 0
-            ) {
-              this.cannotSeeMention({
-                name,
-                reason: mention.dataset.reason,
-              });
-            }
-          },
-          2000
-        );
-      });
-
-      preview
-        ?.querySelectorAll(".mention-group[data-reason]")
-        ?.forEach((mention) => {
-          const name = mention.dataset.name;
-          if (found.includes(name)) {
-            return;
-          }
-          found.push(name);
-
-          discourseLater(
-            this,
-            () => {
-              if (
-                preview?.querySelectorAll(
-                  `.mention-group[data-reason][data-name="${name}"]`
-                )?.length > 0
-              ) {
-                this.cannotSeeMention({
-                  name,
-                  reason: mention.dataset.reason,
-                  notifiedCount: mention.dataset.notifiedUserCount,
-                  isGroup: true,
-                });
-              }
-            },
-            2000
-          );
+        this.warnedCannotSeeMentions.push(name);
+        this.cannotSeeMention({
+          name,
+          reason: mention.dataset.reason,
+          notifiedCount: mention.dataset.notifiedUserCount,
+          isGroup: true,
         });
-
-      this.set("warnedCannotSeeMentions", found);
-    });
+      });
   },
 
   _warnHereMention(hereCount) {

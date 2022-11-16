@@ -378,6 +378,7 @@ RSpec.describe Notification do
     fab!(:read_high_priority_1) { create(high_priority: true, read: true, created_at: 7.minutes.ago) }
     fab!(:unread_regular_1) { create(high_priority: false, read: false, created_at: 6.minutes.ago) }
     fab!(:read_regular_1) { create(high_priority: false, read: true, created_at: 5.minutes.ago) }
+    fab!(:unread_like) { create(high_priority: false, read: false, created_at: 130.seconds.ago, notification_type: Notification.types[:liked]) }
 
     fab!(:unread_high_priority_2) { create(high_priority: true, read: false, created_at: 1.minutes.ago) }
     fab!(:read_high_priority_2) { create(high_priority: true, read: true, created_at: 2.minutes.ago) }
@@ -391,6 +392,7 @@ RSpec.describe Notification do
         unread_regular_2,
         unread_regular_1,
         read_high_priority_2,
+        unread_like,
         read_regular_2,
         read_regular_1,
         read_high_priority_1,
@@ -405,6 +407,7 @@ RSpec.describe Notification do
         unread_regular_2,
         unread_regular_1,
         read_high_priority_2,
+        unread_like,
         read_regular_2,
         read_regular_1,
         read_high_priority_1,
@@ -422,6 +425,7 @@ RSpec.describe Notification do
         unread_high_priority_2,
         unread_regular_1,
         read_high_priority_2,
+        unread_like,
         read_regular_2,
         read_high_priority_1,
       ].map(&:id))
@@ -461,7 +465,7 @@ RSpec.describe Notification do
       expect(Notification.prioritized_list(
         user,
         types: [Notification.types[:liked], Notification.types[:liked_consolidated]]
-      ).map(&:id)).to eq([unread_regular_1, read_regular_2].map(&:id))
+      ).map(&:id)).to eq([unread_like, unread_regular_1, read_regular_2].map(&:id))
     end
 
     it "includes like notifications when filtering by like types even if the user doesn't want like notifications" do
@@ -474,11 +478,11 @@ RSpec.describe Notification do
       expect(Notification.prioritized_list(
         user,
         types: [Notification.types[:liked], Notification.types[:liked_consolidated]]
-      ).map(&:id)).to eq([unread_regular_1, read_regular_2].map(&:id))
+      ).map(&:id)).to eq([unread_like, unread_regular_1, read_regular_2].map(&:id))
       expect(Notification.prioritized_list(
         user,
         types: [Notification.types[:liked]]
-      ).map(&:id)).to contain_exactly(unread_regular_1.id)
+      ).map(&:id)).to contain_exactly(unread_like.id, unread_regular_1.id)
     end
   end
 

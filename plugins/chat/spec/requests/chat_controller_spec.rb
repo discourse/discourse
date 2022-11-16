@@ -532,7 +532,7 @@ RSpec.describe Chat::ChatController do
 
       it "raises an invalid request" do
         put "/chat/#{chat_channel.id}/edit/#{chat_message.id}.json", params: { new_message: "Hi" }
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(422)
       end
     end
 
@@ -540,7 +540,7 @@ RSpec.describe Chat::ChatController do
       sign_in(Fabricate(:user))
 
       put "/chat/#{chat_channel.id}/edit/#{chat_message.id}.json", params: { new_message: "edit!" }
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(422)
     end
 
     it "errors when staff tries to edit another user's message" do
@@ -551,7 +551,7 @@ RSpec.describe Chat::ChatController do
           params: {
             new_message: new_message,
           }
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(422)
     end
 
     it "allows a user to edit their own messages" do
@@ -809,6 +809,7 @@ RSpec.describe Chat::ChatController do
               chat_message_id: msg.id,
               chat_channel_id: msg.chat_channel_id,
               chat_channel_title: msg.chat_channel.title(user),
+              chat_channel_slug: msg.chat_channel.slug,
               mentioned_by_username: sender.username,
             }.to_json,
           )
@@ -1029,6 +1030,10 @@ RSpec.describe Chat::ChatController do
       }.to change {
         user.notifications.where(notification_type: Notification.types[:chat_invitation]).count
       }.by(1)
+      notification = user.notifications.where(notification_type: Notification.types[:chat_invitation]).last
+      parsed_data = JSON.parse(notification[:data])
+      expect(parsed_data["chat_channel_title"]).to eq(chat_channel.title(user))
+      expect(parsed_data["chat_channel_slug"]).to eq(chat_channel.slug)
     end
 
     it "creates multiple invitations" do

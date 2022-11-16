@@ -1,3 +1,4 @@
+# NOTE: When changing auto-join logic, make sure to update the `settings.auto_join_users_info` translation as well.
 # frozen_string_literal: true
 
 module Jobs

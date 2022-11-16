@@ -269,7 +269,7 @@ fa_IR:
       like_count: "پسند‌ها "
       topic_count: "موضوعات"
       post_count: "نوشته‌ها"
-      user_count: "کاربران"
+      user_count: "ثبت‌نام‌ها"
       active_user_count: "کاربران فعال"
       contact: "ارتباط با ما"
       contact_info: "در شرایط حساس و مسائل اضطراری مربوط به سایت٬‌ لطفا از طریق %{contact_info} با تماس بگیرید."
@@ -322,7 +322,6 @@ fa_IR:
       remove_confirmation: "آیا مطمئن هستید که می‌خواهید این پیش‌نویس را حذف کنید؟"
       new_topic: "پیش‌نویس‌ موضوع جدید"
       new_private_message: "پیش‌نویس پیام شخصی جدید"
-      topic_reply: "پاسخ پیش‌نویس‌"
       abandon:
         confirm: "شما یک پیش‌نویس در این موضوع دارید. دوست داری باهاش چیکار کنی؟"
         yes_value: "حذف"
@@ -914,7 +913,7 @@ fa_IR:
       copied: "کپی شده"
     user_fields:
       none: "(یک گزینه انتخاب کنید)"
-      same_as_password: 'رمز عبور شما نباید در قسمت‌های دیگر تکرار شود.'
+      same_as_password: "رمز عبور شما نباید در قسمت‌های دیگر تکرار شود."
     user:
       said: "%{username}:"
       profile: "نمایه"
@@ -1038,8 +1037,9 @@ fa_IR:
         tags_section: "بخش برچسب‌ها"
         tags_section_instruction: "برچسب‌های انتخاب شده در بخش برچسب‌ها نوار کناری نمایش داده می‌شود."
         navigation_section: "ناوبری"
-        list_destination_default: "پیش‌فرض"
-        list_destination_unread_new: "جدید/خوانده نشده"
+        list_destination_instruction: "وقتی محتوای جدیدی در نوار کناری وجود دارد..."
+        list_destination_default: "از پیوند پیش‌فرض استفاده کنید و یک نشان برای موارد جدید نشان دهید"
+        list_destination_unread_new: "پیوند به خوانده نشده/جدید و نمایش تعداد موارد جدید"
       change: "تغییر"
       featured_topic: "مبحث برجسته"
       moderator: "%{user} یک مدیر است"
@@ -1553,7 +1553,7 @@ fa_IR:
       set_custom_status: "تنظیم وضعیت سفارشی"
       what_are_you_doing: "داری چیکار می‌کنی؟"
       remove_status: "حذف وضعیت"
-    popup:
+    user_tips:
       primary: "فهمیدم!"
       secondary: "این نکات را به من نشان نده"
       first_notification:
@@ -2283,9 +2283,6 @@ fa_IR:
       move_to_inbox:
         title: "انتقال به صندوق دریافت"
         help: "بازگرداندن پیام به صندوق دریافتی"
-      edit_message:
-        help: "ویرایش اولین نوشته از پیام"
-        title: "ویرایش"
       defer:
         help: "علامت به عنوان خوانده نشده"
         title: " واگذار کردن"
@@ -2853,8 +2850,6 @@ fa_IR:
       this_year: "امسال"
       position: "موقعیت در صفحه دسته‌بندی:"
       default_position: "موقعیت پیش‌فرض"
-      position_disabled: "دسته‌‌بندی‌ها به‌ترتیب فعالیت نمایش داده می‌شوند. برای کنترل ترتیب دسته‌بندی‌ها"
-      position_disabled_click: 'در تنظیمات "مکان دسته‌بندی ثابت" را فعال کنید.'
       minimum_required_tags: "حداقل تعداد برچسب‌های مورد نیاز در یک تاپیک:"
       parent: "دسته‌بندی مادر"
       notifications:
@@ -4294,23 +4289,18 @@ fa_IR:
         delete_confirm: "آیا از حذف این زمینه کاربری مطمئن هستید؟"
         options: "گزینه‌ها"
         required:
-          title: "مورد نیاز هنگام ثبت نام؟"
           enabled: "مورد نیاز "
           disabled: "مورد نیاز نیست "
         editable:
-          title: "قابل ویرایش بعد از ثبت نام؟"
           enabled: "قابل ویرایش"
           disabled: "غیر قابل ویرایش"
         show_on_profile:
-          title: "در نمایه عمومی نمایش داده شود؟"
           enabled: "نمایش در نمایه"
           disabled: "در نمایه نشان ندهد"
         show_on_user_card:
-          title: "در کارت کاربر نمایش داده شود؟"
           enabled: "در کارت کاربر نمایش داده شده"
           disabled: "در کارت کاربر نمایش داده نشده"
         searchable:
-          title: "قابل جستجو؟"
           enabled: "قابل جستجو"
           disabled: "قابل جستجو نیست"
         field_types:

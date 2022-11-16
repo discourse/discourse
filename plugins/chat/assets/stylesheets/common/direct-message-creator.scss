@@ -178,11 +178,11 @@
   .no-results {
     text-align: center;
     padding: 1rem;
-    position: absolute;
     width: 100%;
     box-shadow: shadow("card");
     background: var(--secondary);
     margin: 0;
+    box-sizing: border-box;
   }
 
   .fetching-preview-message {

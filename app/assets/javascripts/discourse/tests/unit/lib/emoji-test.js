@@ -32,12 +32,12 @@ discourseModule("Unit | Utility | emoji", function () {
     );
     testUnescape(
       "emoticons :)",
-      `emoticons <img width=\"20\" height=\"20\" src='/images/emoji/google_classic/slight_smile.png?v=${v}' title='slight_smile' alt='slight_smile' class='emoji'>`,
+      `emoticons <img width=\"20\" height=\"20\" src='/images/emoji/twitter/slight_smile.png?v=${v}' title='slight_smile' alt='slight_smile' class='emoji'>`,
       "emoticons are still supported"
     );
     testUnescape(
       "With emoji :O: :frog: :smile:",
-      `With emoji <img width=\"20\" height=\"20\" src='/images/emoji/google_classic/o.png?v=${v}' title='O' alt='O' class='emoji'> <img width=\"20\" height=\"20\" src='/images/emoji/google_classic/frog.png?v=${v}' title='frog' alt='frog' class='emoji'> <img width=\"20\" height=\"20\" src='/images/emoji/google_classic/smile.png?v=${v}' title='smile' alt='smile' class='emoji'>`,
+      `With emoji <img width=\"20\" height=\"20\" src='/images/emoji/twitter/o.png?v=${v}' title='O' alt='O' class='emoji'> <img width=\"20\" height=\"20\" src='/images/emoji/twitter/frog.png?v=${v}' title='frog' alt='frog' class='emoji'> <img width=\"20\" height=\"20\" src='/images/emoji/twitter/smile.png?v=${v}' title='smile' alt='smile' class='emoji'>`,
       "title with emoji"
     );
     testUnescape(
@@ -47,27 +47,27 @@ discourseModule("Unit | Utility | emoji", function () {
     );
     testUnescape(
       "(:frog:) :)",
-      `(<img width=\"20\" height=\"20\" src='/images/emoji/google_classic/frog.png?v=${v}' title='frog' alt='frog' class='emoji'>) <img width=\"20\" height=\"20\" src='/images/emoji/google_classic/slight_smile.png?v=${v}' title='slight_smile' alt='slight_smile' class='emoji'>`,
+      `(<img width=\"20\" height=\"20\" src='/images/emoji/twitter/frog.png?v=${v}' title='frog' alt='frog' class='emoji'>) <img width=\"20\" height=\"20\" src='/images/emoji/twitter/slight_smile.png?v=${v}' title='slight_smile' alt='slight_smile' class='emoji'>`,
       "non-word characters allowed next to emoji"
     );
     testUnescape(
       ":smile: hi",
-      `<img width=\"20\" height=\"20\" src='/images/emoji/google_classic/smile.png?v=${v}' title='smile' alt='smile' class='emoji'> hi`,
+      `<img width=\"20\" height=\"20\" src='/images/emoji/twitter/smile.png?v=${v}' title='smile' alt='smile' class='emoji'> hi`,
       "start of line"
     );
     testUnescape(
       "hi :smile:",
-      `hi <img width=\"20\" height=\"20\" src='/images/emoji/google_classic/smile.png?v=${v}' title='smile' alt='smile' class='emoji'>`,
+      `hi <img width=\"20\" height=\"20\" src='/images/emoji/twitter/smile.png?v=${v}' title='smile' alt='smile' class='emoji'>`,
       "end of line"
     );
     testUnescape(
       "hi :blonde_woman:t4:",
-      `hi <img width=\"20\" height=\"20\" src='/images/emoji/google_classic/blonde_woman/4.png?v=${v}' title='blonde_woman:t4' alt='blonde_woman:t4' class='emoji'>`,
+      `hi <img width=\"20\" height=\"20\" src='/images/emoji/twitter/blonde_woman/4.png?v=${v}' title='blonde_woman:t4' alt='blonde_woman:t4' class='emoji'>`,
       "support for skin tones"
     );
     testUnescape(
       "hi :blonde_woman:t4: :blonde_man:t6:",
-      `hi <img width=\"20\" height=\"20\" src='/images/emoji/google_classic/blonde_woman/4.png?v=${v}' title='blonde_woman:t4' alt='blonde_woman:t4' class='emoji'> <img width=\"20\" height=\"20\" src='/images/emoji/google_classic/blonde_man/6.png?v=${v}' title='blonde_man:t6' alt='blonde_man:t6' class='emoji'>`,
+      `hi <img width=\"20\" height=\"20\" src='/images/emoji/twitter/blonde_woman/4.png?v=${v}' title='blonde_woman:t4' alt='blonde_woman:t4' class='emoji'> <img width=\"20\" height=\"20\" src='/images/emoji/twitter/blonde_man/6.png?v=${v}' title='blonde_man:t6' alt='blonde_man:t6' class='emoji'>`,
       "support for multiple skin tones"
     );
     testUnescape(
@@ -95,7 +95,7 @@ discourseModule("Unit | Utility | emoji", function () {
     );
     testUnescape(
       "Hello 😊 World",
-      `Hello <img width=\"20\" height=\"20\" src='/images/emoji/google_classic/blush.png?v=${v}' title='blush' alt='blush' class='emoji'> World`,
+      `Hello <img width=\"20\" height=\"20\" src='/images/emoji/twitter/blush.png?v=${v}' title='blush' alt='blush' class='emoji'> World`,
       "emoji from Unicode emoji"
     );
     testUnescape(
@@ -108,7 +108,7 @@ discourseModule("Unit | Utility | emoji", function () {
     );
     testUnescape(
       "Hello😊World",
-      `Hello<img width=\"20\" height=\"20\" src='/images/emoji/google_classic/blush.png?v=${v}' title='blush' alt='blush' class='emoji'>World`,
+      `Hello<img width=\"20\" height=\"20\" src='/images/emoji/twitter/blush.png?v=${v}' title='blush' alt='blush' class='emoji'>World`,
       "emoji from Unicode emoji when inline translation enabled",
       {
         enable_inline_emoji_translation: true,
@@ -124,13 +124,13 @@ discourseModule("Unit | Utility | emoji", function () {
     );
     testUnescape(
       "hi:smile:",
-      `hi<img width=\"20\" height=\"20\" src='/images/emoji/google_classic/smile.png?v=${v}' title='smile' alt='smile' class='emoji'>`,
+      `hi<img width=\"20\" height=\"20\" src='/images/emoji/twitter/smile.png?v=${v}' title='smile' alt='smile' class='emoji'>`,
       "emoji when inline translation enabled",
       { enable_inline_emoji_translation: true }
     );
     assert.strictEqual(
       emojiUnescape(":smile:", { tabIndex: "0" }),
-      `<img width=\"20\" height=\"20\" src='/images/emoji/google_classic/smile.png?v=${v}' title='smile' alt='smile' class='emoji' tabindex='0'>`,
+      `<img width=\"20\" height=\"20\" src='/images/emoji/twitter/smile.png?v=${v}' title='smile' alt='smile' class='emoji' tabindex='0'>`,
       "emoji when tabindex is enabled"
     );
   });

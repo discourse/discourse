@@ -20,7 +20,6 @@ register_asset "stylesheets/common/chat-drawer.scss"
 register_asset "stylesheets/mobile/chat-index.scss", :mobile
 register_asset "stylesheets/common/chat-channel-preview-card.scss"
 register_asset "stylesheets/common/chat-channel-info.scss"
-register_asset "stylesheets/mobile/chat-channel-info.scss", :mobile
 register_asset "stylesheets/common/chat-draft-channel.scss"
 register_asset "stylesheets/common/chat-tabs.scss"
 register_asset "stylesheets/common/chat-form.scss"
@@ -56,6 +55,9 @@ register_asset "stylesheets/mobile/mobile.scss", :mobile
 register_asset "stylesheets/desktop/desktop.scss", :desktop
 register_asset "stylesheets/sidebar-extensions.scss"
 register_asset "stylesheets/desktop/sidebar-extensions.scss", :desktop
+register_asset "stylesheets/common/chat-message-actions.scss"
+register_asset "stylesheets/desktop/chat-message-actions.scss", :desktop
+register_asset "stylesheets/mobile/chat-message-actions.scss", :mobile
 register_asset "stylesheets/common/chat-message-separator.scss"
 register_asset "stylesheets/common/chat-onebox.scss"
 register_asset "stylesheets/common/chat-skeleton.scss"
@@ -619,7 +621,7 @@ after_initialize do
     get "/browse/archived" => "chat#respond"
     get "/draft-channel" => "chat#respond"
     get "/channel/:channel_id" => "chat#respond"
-    get "/channel/:channel_id/:channel_title" => "chat#respond"
+    get "/channel/:channel_id/:channel_title" => "chat#respond", :as => "channel"
     get "/channel/:channel_id/:channel_title/info" => "chat#respond"
     get "/channel/:channel_id/:channel_title/info/about" => "chat#respond"
     get "/channel/:channel_id/:channel_title/info/members" => "chat#respond"
@@ -673,13 +675,13 @@ after_initialize do
 
       placeholder :channel_name
 
+      triggerables [:recurring]
+
       script do |context, fields, automation|
         sender = User.find_by(username: fields.dig("sender", "value")) || Discourse.system_user
         channel = ChatChannel.find_by(id: fields.dig("chat_channel_id", "value"))
 
-        placeholders = { channel_name: channel.public_channel_title }.merge(
-          context["placeholders"] || {},
-        )
+        placeholders = { channel_name: channel.title(sender) }.merge(context["placeholders"] || {})
 
         creator =
           Chat::ChatMessageCreator.create(
@@ -697,12 +699,7 @@ after_initialize do
 
   add_api_key_scope(
     :chat,
-    {
-      create_message: {
-        actions: %w[chat/chat#create_message],
-        params: %i[chat_channel_id],
-      },
-    },
+    { create_message: { actions: %w[chat/chat#create_message], params: %i[chat_channel_id] } },
   )
 
   # Dark mode email styles

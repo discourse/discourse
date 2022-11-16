@@ -14,6 +14,7 @@ RSpec.shared_examples "a chat channel model" do
   it { is_expected.to have_many(:chat_messages) }
   it { is_expected.to have_many(:user_chat_channel_memberships) }
   it { is_expected.to have_one(:chat_channel_archive) }
+  it { is_expected.to delegate_method(:empty?).to(:chat_messages).with_prefix }
   it do
     is_expected.to define_enum_for(:status).with_values(
       open: 0,

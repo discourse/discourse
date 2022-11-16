@@ -62,7 +62,7 @@ module Jobs
       payload = {
         username: @creator.username,
         notification_type: Notification.types[:chat_message],
-        post_url: "/chat/channel/#{@chat_channel.id}/#{@chat_channel.title(user)}",
+        post_url: @chat_channel.relative_url,
         translated_title: I18n.t(translation_key, translation_args),
         tag: Chat::ChatNotifier.push_notification_tag(:message, @chat_channel.id),
         excerpt: @chat_message.push_notification_excerpt,

@@ -240,13 +240,18 @@ const Topic = RestModel.extend({
 
   @discourseComputed("unread_posts", "new_posts")
   totalUnread(unreadPosts, newPosts) {
-    deprecated("The totalUnread property of the topic model is deprecated");
+    deprecated("The totalUnread property of the topic model is deprecated", {
+      id: "discourse.topic.totalUnread",
+    });
     return unreadPosts || newPosts;
   },
 
   @discourseComputed("unread_posts", "new_posts")
   displayNewPosts(unreadPosts, newPosts) {
-    deprecated("The displayNewPosts property of the topic model is deprecated");
+    deprecated(
+      "The displayNewPosts property of the topic model is deprecated",
+      { id: "discourse.topic.totalUnread" }
+    );
     return unreadPosts || newPosts;
   },
 

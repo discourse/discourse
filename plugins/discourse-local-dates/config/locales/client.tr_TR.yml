@@ -23,7 +23,7 @@ tr_TR:
           timezones_title: Görüntülenecek zaman dilimleri
           timezones_description: Saat dilimleri önizleme ve geri dönüş tarihlerini görüntülemek için kullanılacaktır.
           recurring_title: Yinelenme
-          recurring_description: "Bu olayın ne kadar sürede tekrar edeceğini belirleyin.Bu seçeneği el ile düzenleyebilir veya aşağıdaki anahtarlardan birini kullanabilirsiniz: yıllar, aylar, haftalar, günler, saatler, dakikalar, saniyeler, milisaniyeler."
+          recurring_description: "Bu olayın ne kadar sürede tekrar edeceğini belirleyin.Bu seçeneği el ile düzenleyebilir veya aşağıdaki anahtarlardan birini kullanabilirsiniz: years, quarters, months, weeks, days, hours, minutes, seconds, milliseconds."
           recurring_none: Tekrarlama yok
           invalid_date: 'Geçersiz tarih: Tarih ve saatin doğru olduğundan emin olun!'
           date_title: Tarih

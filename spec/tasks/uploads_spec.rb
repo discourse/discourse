@@ -216,4 +216,31 @@ RSpec.describe "tasks/uploads" do
       )
     end
   end
+
+  describe "uploads:downsize" do
+    def invoke_task
+      capture_stdout do
+        Rake::Task["uploads:downsize"].invoke
+      end
+    end
+
+    before do
+      STDIN.stubs(:beep)
+    end
+
+    fab!(:upload) { Fabricate(:image_upload, width: 200, height: 200) }
+
+    it "corrects upload attributes" do
+      upload.update!(thumbnail_height: 0)
+
+      expect { invoke_task }.to change { upload.reload.thumbnail_height }.to(200)
+    end
+
+    it "updates attributes of uploads that are over the size limit" do
+      upload.update!(thumbnail_height: 0)
+      SiteSetting.max_image_size_kb = 0.001 # 1 byte
+
+      expect { invoke_task }.to change { upload.reload.thumbnail_height }.to(200)
+    end
+  end
 end

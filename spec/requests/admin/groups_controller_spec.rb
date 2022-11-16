@@ -472,7 +472,7 @@ RSpec.describe Admin::GroupsController do
           SiteSetting.moderators_manage_categories_and_groups = false
         end
 
-        it "sets multiple primary users" do
+        it "prevents setting of primary group with a 403 response" do
           user2.update!(primary_group_id: group.id)
 
           put "/admin/groups/#{group.id}/primary.json", params: {
@@ -480,8 +480,9 @@ RSpec.describe Admin::GroupsController do
             primary: "true"
           }
 
-          expect(response.status).to eq(200)
-          expect(User.where(primary_group_id: group.id).size).to eq(3)
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+          expect(User.where(primary_group_id: group.id).size).to eq(1)
         end
       end
     end

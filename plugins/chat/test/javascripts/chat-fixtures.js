@@ -78,7 +78,7 @@ const chatables = {
   8: {
     id: 8,
     name: "Public category",
-    slug: "public_category",
+    slug: "public-category",
     posts_count: 1,
   },
   12: {

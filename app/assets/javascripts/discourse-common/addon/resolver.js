@@ -168,6 +168,7 @@ export function buildResolver(baseName) {
             {
               since: deprecationInfo.since,
               dropFrom: deprecationInfo.dropFrom,
+              id: "discourse.resolver-resolutions",
             }
           );
         }
@@ -264,7 +265,8 @@ export function buildResolver(baseName) {
         resolved = this.legacyResolver.resolveOther(legacyParsedName);
         if (resolved) {
           deprecated(
-            `Unable to resolve with new resolver, but resolved with legacy resolver: ${parsedName.fullName}`
+            `Unable to resolve with new resolver, but resolved with legacy resolver: ${parsedName.fullName}`,
+            { id: "discourse.legacy-resolver-fallback" }
           );
         }
       }

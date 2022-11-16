@@ -1240,7 +1240,9 @@ export default Controller.extend({
 
     if (!this.model.targetRecipients) {
       if (opts.usernames) {
-        deprecated("`usernames` is deprecated, use `recipients` instead.");
+        deprecated("`usernames` is deprecated, use `recipients` instead.", {
+          id: "discourse.composer.usernames",
+        });
         this.model.set("targetRecipients", opts.usernames);
       } else if (opts.recipients) {
         this.model.set("targetRecipients", opts.recipients);

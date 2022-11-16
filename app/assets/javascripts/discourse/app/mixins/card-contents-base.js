@@ -280,10 +280,12 @@ export default Mixin.create({
         // note: we DO NOT use afterRender here cause _positionCard may
         // run afterwards, if we allowed this to happen the usercard
         // may be offscreen and we may scroll all the way to it on focus
-        discourseLater(() => {
-          const firstLink = this.element.querySelector("a");
-          firstLink && firstLink.focus();
-        }, 350);
+        if (event.pointerId === -1) {
+          discourseLater(() => {
+            const firstLink = this.element.querySelector("a");
+            firstLink && firstLink.focus();
+          }, 350);
+        }
       }
     });
   },
