@@ -24,10 +24,14 @@ class Notification < ActiveRecord::Base
       .includes(:topic)
       .limit(limit)
   end
-  scope :prioritized, ->() do
-    order("notifications.high_priority AND NOT notifications.read DESC")
-      .order("NOT notifications.read DESC")
-      .order("notifications.created_at DESC")
+  scope :prioritized, ->(deprioritized_types = []) do
+    scope = order("notifications.high_priority AND NOT notifications.read DESC")
+    if deprioritized_types.present?
+      scope = scope.order(DB.sql_fragment("NOT notifications.read AND notifications.notification_type NOT IN (?) DESC", deprioritized_types))
+    else
+      scope = scope.order("NOT notifications.read DESC")
+    end
+    scope.order("notifications.created_at DESC")
   end
   scope :for_user_menu, ->(user_id, limit: 30) do
     where(user_id: user_id)
@@ -232,22 +236,26 @@ class Notification < ActiveRecord::Base
     Post.find_by(topic_id: topic_id, post_number: post_number)
   end
 
+  def self.like_types
+    [
+      Notification.types[:liked],
+      Notification.types[:liked_consolidated]
+    ]
+  end
+
   def self.prioritized_list(user, count: 30, types: [])
     return [] if !user&.user_option
 
     notifications = user.notifications
       .includes(:topic)
       .visible
-      .prioritized
+      .prioritized(types.present? ? [] : like_types)
       .limit(count)
 
     if types.present?
       notifications = notifications.where(notification_type: types)
     elsif user.user_option.like_notification_frequency == UserOption.like_notification_frequency_type[:never]
-      [
-        Notification.types[:liked],
-        Notification.types[:liked_consolidated]
-      ].each do |notification_type|
+      like_types.each do |notification_type|
         notifications = notifications.where(
           'notification_type <> ?', notification_type
         )

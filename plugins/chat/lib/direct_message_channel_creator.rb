@@ -11,6 +11,7 @@ module Chat::DirectMessageChannelCreator
     if direct_message
       chat_channel = ChatChannel.find_by!(chatable: direct_message)
     else
+      enforce_max_direct_message_users!(acting_user, target_users)
       ensure_actor_can_communicate!(acting_user, target_users)
       direct_message = DirectMessage.create!(user_ids: target_users.map(&:id))
       chat_channel = direct_message.create_chat_channel!
@@ -23,6 +24,20 @@ module Chat::DirectMessageChannelCreator
   end
 
   private
+
+  def self.enforce_max_direct_message_users!(acting_user, target_users)
+    # We never want to prevent the actor from communicating with themself.
+    target_users = target_users.reject { |user| user.id == acting_user.id }
+
+    if !acting_user.staff? && target_users.size > SiteSetting.chat_max_direct_message_users
+      raise NotAllowed.new(
+              I18n.t(
+                "chat.errors.over_chat_max_direct_message_users",
+                count: SiteSetting.chat_max_direct_message_users + 1, # +1 for the acting_user
+              ),
+            )
+    end
+  end
 
   def self.update_memberships(acting_user, target_users, chat_channel_id)
     sql_params = {
