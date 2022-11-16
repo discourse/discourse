@@ -381,12 +381,9 @@ export default class PostCooked {
   }
 
   _rerenderUserStatusOnMentions() {
-    const post = this._post();
-    if (post && post.mentioned_users) {
-      post.mentioned_users.forEach((user) =>
-        this._rerenderUserStatusOnMention(this.cookedDiv, user)
-      );
-    }
+    this._post()?.mentioned_users?.forEach((user) =>
+      this._rerenderUserStatusOnMention(this.cookedDiv, user)
+    );
   }
 
   _rerenderUserStatusOnMention(postElement, user) {
@@ -414,10 +411,7 @@ export default class PostCooked {
   }
 
   _removeUserStatus(mention) {
-    const statusElement = mention.querySelector("img.user-status");
-    if (statusElement) {
-      statusElement.remove();
-    }
+    mention.querySelector("img.user-status")?.remove();
   }
 
   _userStatusTitle(status) {
@@ -434,31 +428,21 @@ export default class PostCooked {
   }
 
   _trackMentionedUsersStatus() {
-    const post = this._post();
-    if (post && post.mentioned_users) {
-      post.mentioned_users.forEach((user) => {
-        user.trackStatus();
-        user.on("status-changed", this, "_rerenderUserStatusOnMentions");
-      });
-    }
+    this._post()?.mentioned_users?.forEach((user) => {
+      user.trackStatus();
+      user.on("status-changed", this, "_rerenderUserStatusOnMentions");
+    });
   }
 
   _stopTrackingMentionedUsersStatus() {
-    const post = this._post();
-    if (post && post.mentioned_users) {
-      post.mentioned_users.forEach((user) => {
-        user.stopTrackingStatus();
-        user.off("status-changed", this, "_rerenderUserStatusOnMentions");
-      });
-    }
+    this._post()?.mentioned_users?.forEach((user) => {
+      user.stopTrackingStatus();
+      user.off("status-changed", this, "_rerenderUserStatusOnMentions");
+    });
   }
 
   _post() {
-    if (!this.decoratorHelper || !this.decoratorHelper.getModel) {
-      return null;
-    }
-
-    return this.decoratorHelper.getModel();
+    return this.decoratorHelper?.getModel();
   }
 }
 
