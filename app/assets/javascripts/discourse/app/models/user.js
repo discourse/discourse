@@ -449,11 +449,13 @@ const User = RestModel.extend({
       .then((result) => {
         this.set("bio_excerpt", result.user.bio_excerpt);
         const userProps = getProperties(
-          this.user_option,
+          result.user.user_option || this.user_option,
           "enable_quoting",
           "enable_defer",
           "external_links_in_new_tab",
-          "dynamic_favicon"
+          "dynamic_favicon",
+          "seen_popups",
+          "skip_new_user_tips"
         );
         User.current()?.setProperties(userProps);
         this.setProperties(updatedState);
@@ -1171,11 +1173,17 @@ const User = RestModel.extend({
     // Hide any shown user tips.
     let seenUserTips = this.seen_popups || [];
     if (userTipId) {
-      hideUserTip(userTipId);
-      if (!seenUserTips.includes(userTips[userTipId])) {
-        seenUserTips.push(userTips[userTipId]);
+      if (seenUserTips.includes(userTips[userTipId])) {
+        return;
       }
+
+      hideUserTip(userTipId);
+      seenUserTips.push(userTips[userTipId]);
     } else {
+      if (seenUserTips.includes(-1)) {
+        return;
+      }
+
       hideAllUserTips();
       seenUserTips = [-1];
     }

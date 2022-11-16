@@ -594,7 +594,7 @@ createWidget("post-contents", {
   },
 
   share() {
-    if (this.currentUser) {
+    if (this.currentUser && this.siteSettings.enable_user_tips) {
       this.currentUser.hideUserTipForever("post_menu");
     }
 
