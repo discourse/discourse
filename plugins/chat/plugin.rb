@@ -717,6 +717,7 @@ after_initialize do
 
   register_about_stat_group("chat_users") { Chat::Statistics.about_users }
 
+  # Make sure to update spec/system/hashtag_autocomplete_spec.rb when changing this.
   register_hashtag_data_source("channel", Chat::ChatChannelHashtagDataSource)
   register_hashtag_type_in_context("channel", "chat-composer", 200)
   register_hashtag_type_in_context("category", "chat-composer", 100)

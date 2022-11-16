@@ -8,7 +8,7 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:category) { Fabricate(:category, name: "Cool Category", slug: "cool-cat") }
   fab!(:tag) { Fabricate(:tag, name: "cooltag") }
-  fab!(:topic_page) { PageObjects::Pages::Topic.new }
+  let(:topic_page) { PageObjects::Pages::Topic.new }
 
   before do
     SiteSetting.enable_experimental_hashtag_autocomplete = true
