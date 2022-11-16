@@ -49,7 +49,8 @@ import userSearch from "discourse/lib/user-search";
 // Group 3 is optional. group 4 can match images with or without a markdown title.
 // All matches are whitespace tolerant as long it's still valid markdown.
 // If the image is inside a code block, we'll ignore it `(?!(.*`))`.
-const IMAGE_MARKDOWN_REGEX = /!\[(.*?)\|(\d{1,4}x\d{1,4})(,\s*\d{1,3}%)?(.*?)\]\((upload:\/\/.*?)\)(?!(.*`))/g;
+const IMAGE_MARKDOWN_REGEX =
+  /!\[(.*?)\|(\d{1,4}x\d{1,4})(,\s*\d{1,3}%)?(.*?)\]\((upload:\/\/.*?)\)(?!(.*`))/g;
 
 let uploadHandlers = [];
 export function addComposerUploadHandler(extensions, method) {
@@ -568,9 +569,8 @@ export default Component.extend(ComposerUploadUppy, {
     );
 
     const scale = event.target.dataset.scale;
-    const matchingPlaceholder = this.get("composer.reply").match(
-      IMAGE_MARKDOWN_REGEX
-    );
+    const matchingPlaceholder =
+      this.get("composer.reply").match(IMAGE_MARKDOWN_REGEX);
 
     if (matchingPlaceholder) {
       const match = matchingPlaceholder[index];
@@ -615,9 +615,8 @@ export default Component.extend(ComposerUploadUppy, {
 
   commitAltText(buttonWrapper) {
     const index = parseInt(buttonWrapper.getAttribute("data-image-index"), 10);
-    const matchingPlaceholder = this.get("composer.reply").match(
-      IMAGE_MARKDOWN_REGEX
-    );
+    const matchingPlaceholder =
+      this.get("composer.reply").match(IMAGE_MARKDOWN_REGEX);
     const match = matchingPlaceholder[index];
     const input = buttonWrapper.querySelector("input.alt-text-input");
     const replacement = match.replace(
@@ -705,9 +704,8 @@ export default Component.extend(ComposerUploadUppy, {
       event.target.closest(".button-wrapper").dataset.imageIndex,
       10
     );
-    const matchingPlaceholder = this.get("composer.reply").match(
-      IMAGE_MARKDOWN_REGEX
-    );
+    const matchingPlaceholder =
+      this.get("composer.reply").match(IMAGE_MARKDOWN_REGEX);
     this.appEvents.trigger(
       "composer:replace-text",
       matchingPlaceholder[index],
