@@ -161,6 +161,6 @@ class ComposerController < ApplicationController
   private
 
   def is_user_allowed?(user, user_ids, group_ids)
-    user_ids.include?(user.id) || user.group_ids.any? { |group_id| group_ids.include?(group_id) }
+    user_ids.include?(user.id) || (user.group_ids & group_ids).any?
   end
 end
