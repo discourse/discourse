@@ -7,7 +7,7 @@
     <form>
       {{#if this.model.error}}
         <div class="error-info">
-          {{this.model.error}}
+          {{html-safe this.model.error}}
         </div>
       {{/if}}
 
