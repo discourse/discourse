@@ -2500,6 +2500,7 @@ en:
         other: "<span>%{count}%{plus} results for</span><span class='term'>%{term}</span>"
       title: "Search"
       full_page_title: "Search"
+      results: "results"
       no_results: "No results found."
       no_more_results: "No more results found."
       post_format: "#%{post_number} by %{username}"

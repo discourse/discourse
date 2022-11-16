@@ -92,7 +92,7 @@ function createSearchResult({ type, linkField, builder }) {
 
     buildAttributes() {
       return {
-        "aria-label": `${type} results`,
+        "aria-label": `${type} ${I18n.t("search.results")}`,
       };
     },
 
@@ -649,7 +649,7 @@ createWidget("search-menu-assistant-item", {
     let content = [
       h(
         "span",
-        { attributes: { "aria-label": "search" } },
+        { attributes: { "aria-label": I18n.t("search.title") } },
         iconNode(attrs.icon || "search")
       ),
     ];
