@@ -39,7 +39,10 @@ export default Component.extend({
         key,
         computed("deprecatedArgs", () => {
           deprecated(
-            `The ${key} property is deprecated, but is being used in ${this.layoutName}`
+            `The ${key} property is deprecated, but is being used in ${this.layoutName}`,
+            {
+              id: "discourse.plugin-connector.deprecated-arg",
+            }
           );
 
           return (this.deprecatedArgs || {})[key];

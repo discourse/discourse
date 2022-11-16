@@ -74,6 +74,7 @@ export function linkSeenMentions(elem, siteSettings) {
     deprecated("linkSeenMentions now expects a DOM node as first parameter", {
       since: "2.8.0.beta7",
       dropFrom: "2.9.0.beta1",
+      id: "discourse.link-mentions.dom-node",
     });
   }
 
