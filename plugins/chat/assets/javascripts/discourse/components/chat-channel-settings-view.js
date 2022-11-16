@@ -29,7 +29,6 @@ export default class ChatChannelSettingsView extends Component {
   @service dialog;
   tagName = "";
   channel = null;
-  lengthOfRetention = 90;
 
   notificationLevels = NOTIFICATION_LEVELS;
   mutedOptions = MUTED_OPTIONS;
