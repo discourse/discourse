@@ -394,7 +394,6 @@ body.invite-page {
   }
 
   form {
-    margin-top: 24px;
     .controls,
     .input {
       margin-bottom: 10px;
@@ -415,6 +414,7 @@ body.invite-page {
   .invitation-cta {
     display: flex;
     align-items: center;
+    margin-top: 2em;
     &__accept {
       margin-right: 1em;
     }
