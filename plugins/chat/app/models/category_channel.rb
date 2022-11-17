@@ -23,7 +23,7 @@ class CategoryChannel < ChatChannel
 
   def generate_auto_slug
     return if self.slug.present?
-    self.slug = Slug.for(self.title.strip, "")
+    self.slug = Slug.for(self.title.strip, "", method: :encoded)
     self.slug = "" if duplicate_slug?
   end
 
