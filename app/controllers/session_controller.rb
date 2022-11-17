@@ -352,7 +352,7 @@ class SessionController < ApplicationController
     else
       render json: {
         can_login: false,
-        error: I18n.t('email_login.invalid_token')
+        error: I18n.t('email_login.invalid_token', base_url: Discourse.base_url)
       }
     end
   end
@@ -383,7 +383,7 @@ class SessionController < ApplicationController
       end
     end
 
-    render json: { error: I18n.t('email_login.invalid_token') }
+    render json: { error: I18n.t('email_login.invalid_token', base_url: Discourse.base_url) }
   end
 
   def one_time_password

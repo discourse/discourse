@@ -841,7 +841,7 @@ en:
     success_unapproved: "You successfully changed your password."
 
   email_login:
-    invalid_token: "Sorry, that email login link is too old. Select the Log In button and use 'I forgot my password' to get a new link."
+    invalid_token: 'Oops! The link you used no longer works. You can <a href="%{base_url}/login">Log In</a> now. If you forgot your password, you can <a href="%{base_url}/password-reset">request a link</a> to reset it.'
     title: "Email login"
 
   user_auth_tokens:
