@@ -421,12 +421,12 @@ export default class PostCooked {
       return status.description;
     }
 
-    const _until = until(
+    const until_ = until(
       status.ends_at,
       this.currentUser.timezone,
       this.currentUser.locale
     );
-    return escapeExpression(`${status.description} ${_until}`);
+    return escapeExpression(`${status.description} ${until_}`);
   }
 
   _trackMentionedUsersStatus() {
