@@ -64,16 +64,20 @@ module.exports = function (defaults) {
         optimization: {
           moduleIds: "size", // Consistent module references https://github.com/ef4/ember-auto-import/issues/478#issuecomment-1000526638
         },
+        resolve: {
+          fallback: {
+            util: require.resolve("util/"),
+          },
+        },
         module: {
           rules: [
             {
-              // test: /sinon\.js$/,
-              test: require.resolve("sinon"),
+              test: require.resolve("util/"),
               use: [
                 {
                   loader: "imports-loader",
                   options: {
-                    additionalCode: "var define = false; var require = false;",
+                    additionalCode: "var process = { env: {} };",
                   },
                 },
               ],

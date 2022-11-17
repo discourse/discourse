@@ -109,6 +109,7 @@
     "ember-cached-decorator-polyfill": "^1.0.1",
     "ember-cli-deprecation-workflow": "^2.1.0",
     "ember-exam": "^8.0.0",
-    "imports-loader": "^4.0.1"
+    "imports-loader": "^4.0.1",
+    "util": "^0.12.5"
   }
 }
