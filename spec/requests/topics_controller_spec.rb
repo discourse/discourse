@@ -2737,6 +2737,36 @@ RSpec.describe TopicsController do
         expect(status["emoji"]).to eq(post_author1.user_status.emoji)
         expect(status["description"]).to eq(post_author1.user_status.description)
       end
+
+      it "returns an empty list of mentioned users if there is no mentions in a post" do
+        Fabricate(
+          :post,
+          user: post_author2,
+          topic: topic,
+          raw: "Post without mentions.")
+
+        get "/t/#{topic.slug}/#{topic.id}.json"
+
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        expect(json["post_stream"]["posts"][2]["mentioned_users"].length).to be(0)
+      end
+
+      it "returns an empty list of mentioned users if an unexisting user was mentioned" do
+        Fabricate(
+          :post,
+          user: post_author2,
+          topic: topic,
+          raw: "Mentioning an @unexisting_user.")
+
+        get "/t/#{topic.slug}/#{topic.id}.json"
+
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        expect(json["post_stream"]["posts"][2]["mentioned_users"].length).to be(0)
+      end
     end
 
     describe "has_escaped_fragment?" do
