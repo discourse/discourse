@@ -252,6 +252,15 @@ body.invite-page {
     .user-fields .input-group {
       .user-field {
         &.text {
+          &.value-entered label.control-label,
+          input:focus + label.control-label {
+            top: -8px;
+            left: calc(1em - 0.25em);
+            background-color: var(--secondary);
+            padding: 0 0.25em 0 0.25em;
+            font-size: 14px;
+            color: var(--primary-medium);
+          }
           label.control-label {
             color: var(--primary-medium);
             font-size: 16px;
@@ -265,15 +274,6 @@ body.invite-page {
             display: inline-block;
             overflow: hidden;
             text-overflow: ellipsis;
-          }
-          &.value-entered label.control-label,
-          label.control-label.value-entered {
-            top: -8px;
-            left: calc(1em - 0.25em);
-            background-color: var(--secondary);
-            padding: 0 0.25em 0 0.25em;
-            font-size: 14px;
-            color: var(--primary-medium);
           }
         }
         span.name {
