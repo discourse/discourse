@@ -68,7 +68,7 @@
     "ember-load-initializers": "^2.1.1",
     "ember-modifier": "^3.2.7",
     "ember-on-resize-modifier": "^1.1.0",
-    "ember-qunit": "^5.1.5",
+    "ember-qunit": "^6.0.0",
     "ember-rfc176-data": "^0.3.17",
     "ember-source": "~3.28.10",
     "ember-test-selectors": "^6.0.0",
