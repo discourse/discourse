@@ -1,0 +1,12 @@
+// Styles for Ember CLI test environment
+
+:root {
+  --font-family: "Arial";
+}
+
+@import "common/foundation/colors";
+@import "common/foundation/variables";
+@import "common/foundation/mixins";
+@import "desktop";
+@import "color_definitions";
+@import "admin";
