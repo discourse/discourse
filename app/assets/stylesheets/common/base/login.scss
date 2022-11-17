@@ -5,6 +5,10 @@ $invite-mobile-bg: absolute-image-url("/branded-background-mobile.svg");
   color: var(--danger);
   font-size: var(--font-down-1);
   font-weight: bold;
+  margin-top: 0.5em;
+  &.invisible {
+    display: none;
+  }
 }
 
 .discourse-no-touch #login-form {
