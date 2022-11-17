@@ -1,1 +1,8 @@
-<DButton @class="btn-primary user-card-chat-btn" @action={{action "startChatting"}} @label="chat.title_capitalized" @icon="comment" />
+{{#if this.chat.userCanDirectMessage}}
+  <DButton
+    @class="btn-primary user-card-chat-btn"
+    @action={{action "startChatting"}}
+    @label="chat.title_capitalized"
+    @icon="comment"
+  />
+{{/if}}
