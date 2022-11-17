@@ -6,8 +6,10 @@
     <a
       role="button"
       {{on "mousedown" this.horizScroll}}
+      {{on "mouseup" this.stopScroll}}
+      {{on "mouseleave" this.stopScroll}}
       data-direction="left"
-      class="horizontal-overflow-nav__scroll-left {{if this.hideLeftScroll "disabled"}}"
+      class={{concat-class "horizontal-overflow-nav__scroll-left" (if this.hideLeftScroll "disabled")}}
     >
       {{d-icon "chevron-left"}}
     </a>
@@ -27,7 +29,9 @@
     <a
       role="button"
       {{on "mousedown" this.horizScroll}}
-      class="horizontal-overflow-nav__scroll-right {{if this.hideRightScroll "disabled"}}"
+      {{on "mouseup" this.stopScroll}}
+      {{on "mouseleave" this.stopScroll}}
+      class={{concat-class "horizontal-overflow-nav__scroll-right" (if this.hideRightScroll "disabled")}}
     >
       {{d-icon "chevron-right"}}
     </a>

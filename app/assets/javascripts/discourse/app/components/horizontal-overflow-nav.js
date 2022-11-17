@@ -94,8 +94,8 @@ export default class HorizontalOverflowNav extends Component {
       });
     };
 
-    document.addEventListener("mousemove", mouseDragScroll);
-    document.addEventListener("mouseup", removeDragScroll);
+    document.addEventListener("mousemove", mouseDragScroll, { once: true });
+    document.addEventListener("mouseup", removeDragScroll, { once: true });
   }
 
   @action
@@ -110,7 +110,7 @@ export default class HorizontalOverflowNav extends Component {
 
     this.scrollInterval = discourseLater(() => {
       siblingTarget.scrollLeft += scrollSpeed;
-      this.stopScroll();
+      this.horizScroll(event);
     }, 50);
   }
 }
