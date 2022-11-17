@@ -872,6 +872,67 @@ RSpec.describe Stylesheet::Manager do
       content = StylesheetCache.last.content
       expect(content).to match(/# sourceMappingURL=[^\/]+\.css\.map\?__ws=test\.localhost/)
     end
+
+    it "generates precompiled CSS with a missing upload" do
+      image = file_from_fixtures("logo.png")
+      upload = UploadCreator.new(image, "logo.png").create_for(-1)
+
+      scheme = ColorScheme.create!(name: "scheme")
+      core_targets = [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :admin, :wizard]
+      theme_targets = [:desktop_theme, :mobile_theme]
+
+      default_theme = Fabricate(:theme, color_scheme: scheme).tap do |t|
+        field = ThemeField.create!(
+          theme_id: t.id,
+          target_id: Theme.targets[:common],
+          name: "logo",
+          value: "",
+          upload_id: upload.id,
+          type_id: ThemeField.types[:theme_upload_var]
+        )
+
+        t.set_field(
+          target: :common,
+          name: :scss,
+          value: "body { background: url($logo); }"
+        )
+
+        t.save!
+      end
+
+      default_theme.set_default!
+      upload.delete
+      StylesheetCache.destroy_all
+
+      # only core
+      output = capture_output(:stderr) do
+        Stylesheet::Manager.precompile_css
+      end
+
+      results = StylesheetCache.pluck(:target)
+      expect(results.size).to eq(core_targets.size)
+
+      StylesheetCache.destroy_all
+
+      # only themes
+      output = capture_output(:stderr) do
+        Stylesheet::Manager.precompile_theme_css
+      end
+
+      # Ensure we force compile each theme once
+      expect(output.scan(/#{default_theme.name}/).length).to eq(7)
+      results = StylesheetCache.pluck(:target)
+      expect(results.size).to eq(7) # 2 targets + 5 default color schemes
+
+      # themes + core
+      Stylesheet::Manager.precompile_css
+      results = StylesheetCache.pluck(:target)
+      expect(results.size).to eq(13) # 6 core targets + 2 theme targets + 5 color schemes
+
+      theme_targets.each do |tar|
+        expect(results.count { |target| target =~ /^#{tar}_#{default_theme.id}$/ }).to eq(1)
+      end
+    end
   end
 
   describe ".fs_asset_cachebuster" do
