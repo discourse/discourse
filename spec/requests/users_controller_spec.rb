@@ -2510,6 +2510,30 @@ RSpec.describe UsersController do
         expect(user.reload.single_sign_on_record).to be_blank
       end
 
+      it 'can update SingleSignOnRecord and UserAssociatedAccount records in a single call' do
+        user = Fabricate(:user)
+        user.user_associated_accounts.create!(provider_name: 'pluginauth', provider_uid: 'pluginauth_uid')
+        SingleSignOnRecord.create!(user_id: user.id, external_id: 'discourse_connect_uid', last_payload: 'discourse_connect_uid')
+
+        params = {
+          external_ids: {
+            discourse_connect: 'discourse_connect_uid_2',
+            pluginauth: 'pluginauth_uid_2'
+          },
+        }
+
+        expect { put "/u/#{user.username}.json", params: params, headers: { HTTP_API_KEY: api_key.key } }
+          .to change { SingleSignOnRecord.count + UserAssociatedAccount.count }.by(0)
+
+        expect(response.status).to eq(200)
+        expect(user.reload.single_sign_on_record.external_id).to eq('discourse_connect_uid_2')
+        user_associated_account = UserAssociatedAccount.last
+        expect(user.reload.user_associated_account_ids).to contain_exactly(user_associated_account.id)
+        expect(user_associated_account.provider_name).to eq('pluginauth')
+        expect(user_associated_account.provider_uid).to eq('pluginauth_uid_2')
+        expect(user_associated_account.user_id).to eq(user.id)
+      end
+
       it 'returns error if external ID provider does not exist' do
         params = {
           external_ids: { 'pluginauth2' => 'pluginauth_uid' },
