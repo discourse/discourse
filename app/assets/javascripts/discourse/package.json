@@ -89,7 +89,7 @@
     "sass": "^1.56.1",
     "select-kit": "1.0.0",
     "sinon": "^14.0.2",
-    "source-map": "^0.6.1",
+    "source-map": "^0.7.4",
     "terser": "5.10.0",
     "tippy.js": "^6.3.7",
     "virtual-dom": "^2.1.1",
