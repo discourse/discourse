@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@mixer/parallel-prettier": "^2.0.3",
-    "chrome-launcher": "^0.15.0",
+    "chrome-launcher": "^0.15.1",
     "chrome-remote-interface": "^0.31.3",
     "lefthook": "^1.2.0",
     "puppeteer-core": "^13.7.0"
