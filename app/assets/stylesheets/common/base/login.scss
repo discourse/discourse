@@ -48,7 +48,7 @@ body.invite-page {
     background-repeat: no-repeat;
     background-position: bottom;
   }
-  .d-header {
+  .d-header .panel.clearfix {
     display: none;
   }
 }
@@ -152,9 +152,6 @@ body.invite-page {
       display: flex;
       flex-direction: column;
       margin-bottom: 0.8em;
-      &:last-child {
-        margin-bottom: 2em;
-      }
       input,
       .select-kit-header {
         padding: 0.75em 0.77em;
@@ -342,6 +339,7 @@ body.invite-page {
   }
 }
 
+// admin invite page
 .invites-show {
   display: grid;
   justify-content: center;
@@ -393,9 +391,6 @@ body.invite-page {
 
   form {
     margin-top: 24px;
-    button.btn-primary {
-      margin-top: 10px;
-    }
     .controls,
     .input {
       margin-bottom: 10px;
@@ -410,6 +405,24 @@ body.invite-page {
     .tip {
       font-size: var(--font-down-1);
       margin-bottom: 0.25em;
+    }
+  }
+
+  .invitation-cta {
+    display: flex;
+    align-items: center;
+    &__accept {
+      margin-right: 1em;
+    }
+    &__signed-up {
+      margin-right: 0.5em;
+    }
+    &__sign-in {
+      padding: 0;
+      &.btn-flat.btn-text:not([disabled]):active {
+        background-color: transparent;
+        background-image: none;
+      }
     }
   }
 }
