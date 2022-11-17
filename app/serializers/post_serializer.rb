@@ -565,6 +565,7 @@ class PostSerializer < BasicPostSerializer
     if @topic_view && (mentions = @topic_view.mentions[object.id])
       return mentions
           .map { |username| @topic_view.mentioned_users[username] }
+          .compact
           .map { |user| BasicUserWithStatusSerializer.new(user, root: false) }
     end
 
