@@ -90,6 +90,10 @@ class Invite < ActiveRecord::Base
     !redeemed? && !expired? && !deleted_at? && !destroyed? && link_valid?
   end
 
+  def redeemed_by_user?(redeeming_user)
+    self.invited_users.exists?(user: redeeming_user)
+  end
+
   def redeemed?
     if is_invite_link?
       redemption_count >= max_redemptions_allowed
@@ -109,7 +113,7 @@ class Invite < ActiveRecord::Base
 
   def can_be_redeemed_by?(user)
     return false if !self.redeemable?
-    return true if self.email.blank? && self.domain.blank?
+    return false if redeemed_by_user?(user)
     return true if self.email.present? && email_matches?(user.email)
     self.domain.present? && domain_matches?(user.email)
   end

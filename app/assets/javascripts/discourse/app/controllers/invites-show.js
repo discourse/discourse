@@ -31,6 +31,9 @@ export default Controller.extend(
     accountEmail: alias("email"),
     existingUserId: readOnly("model.existing_user_id"),
     existingUserCanRedeem: readOnly("model.existing_user_can_redeem"),
+    existingUserCanRedeemError: readOnly(
+      "model.existing_user_can_redeem_error"
+    ),
     existingUserRedeeming: bool("existingUserId"),
     hiddenEmail: alias("model.hidden_email"),
     emailVerifiedByLink: alias("model.email_verified_by_link"),
