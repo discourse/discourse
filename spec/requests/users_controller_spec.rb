@@ -2426,6 +2426,8 @@ RSpec.describe UsersController do
 
       before do
         DiscoursePluginRegistry.register_auth_provider(plugin_auth_provider)
+        SiteSetting.discourse_connect_url = 'http://localhost'
+        SiteSetting.enable_discourse_connect = true
       end
 
       after do
@@ -2461,6 +2463,51 @@ RSpec.describe UsersController do
 
         expect(response.status).to eq(200)
         expect(user.reload.user_associated_account_ids).to be_blank
+      end
+
+      it 'can create SingleSignOnRecord records' do
+        params = {
+          external_ids: { discourse_connect: 'discourse_connect_uid' },
+        }
+
+        expect { put "/u/#{user.username}.json", params: params, headers: { HTTP_API_KEY: api_key.key } }
+          .to change { SingleSignOnRecord.count }.by(1)
+
+        expect(response.status).to eq(200)
+
+        single_sign_on_record = SingleSignOnRecord.last
+        expect(user.reload.single_sign_on_record).to eq(single_sign_on_record)
+        expect(single_sign_on_record.external_id).to eq('discourse_connect_uid')
+      end
+
+      it 'can update SingleSignOnRecord records' do
+        user = Fabricate(:user)
+        SingleSignOnRecord.create!(user_id: user.id, external_id: 'discourse_connect_uid', last_payload: 'discourse_connect_uid')
+
+        params = {
+          external_ids: { discourse_connect: 'discourse_connect_uid_2' },
+        }
+
+        expect { put "/u/#{user.username}.json", params: params, headers: { HTTP_API_KEY: api_key.key } }
+          .not_to change { SingleSignOnRecord.count }
+
+        expect(response.status).to eq(200)
+        expect(user.reload.single_sign_on_record.external_id).to eq('discourse_connect_uid_2')
+      end
+
+      it 'can delete SingleSignOnRecord records' do
+        user = Fabricate(:user)
+        SingleSignOnRecord.create!(user_id: user.id, external_id: 'discourse_connect_uid', last_payload: 'discourse_connect_uid')
+
+        params = {
+          external_ids: { discourse_connect: nil },
+        }
+
+        expect { put "/u/#{user.username}.json", params: params, headers: { HTTP_API_KEY: api_key.key } }
+          .to change { SingleSignOnRecord.count }.by(-1)
+
+        expect(response.status).to eq(200)
+        expect(user.reload.single_sign_on_record).to be_blank
       end
 
       it 'returns error if external ID provider does not exist' do

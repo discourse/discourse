@@ -168,6 +168,14 @@ class UsersController < ApplicationController
       attributes[:user_associated_accounts] = []
 
       params[:external_ids].each do |provider_name, provider_uid|
+        if provider_name == 'discourse_connect'
+          raise Discourse::InvalidParameters.new(:external_ids) unless SiteSetting.enable_discourse_connect
+
+          attributes[:discourse_connect] = { external_id: provider_uid }
+
+          next
+        end
+
         authenticator = Discourse.enabled_authenticators.find { |a| a.name == provider_name }
         raise Discourse::InvalidParameters.new(:external_ids) if !authenticator&.is_managed?
 
