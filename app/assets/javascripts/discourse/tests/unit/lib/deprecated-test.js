@@ -1,6 +1,7 @@
 import {
   default as deprecated,
   withSilencedDeprecations,
+  withSilencedDeprecationsAsync,
 } from "discourse-common/lib/deprecated";
 import DeprecationCounter from "discourse/tests/helpers/deprecation-counter";
 import { module, test } from "qunit";
@@ -173,6 +174,35 @@ module("Unit | Utility | deprecated", function (hooks) {
       this.counterStub.callCount,
       0,
       "counter is not incremented"
+    );
+  });
+
+  test("can silence deprecations with async callback in tests", async function (assert) {
+    await withSilencedDeprecationsAsync("discourse.one", async () => {
+      await Promise.resolve();
+      deprecated("message", { id: "discourse.one" });
+    });
+    assert.strictEqual(
+      this.warnStub.callCount,
+      0,
+      "console.warn is not called"
+    );
+    assert.strictEqual(
+      this.counterStub.callCount,
+      0,
+      "counter is not incremented"
+    );
+
+    deprecated("message", { id: "discourse.one" });
+    assert.strictEqual(
+      this.warnStub.callCount,
+      1,
+      "console.warn is called outside the silenced function"
+    );
+    assert.strictEqual(
+      this.counterStub.callCount,
+      1,
+      "counter is incremented outside the silenced function"
     );
   });
 });

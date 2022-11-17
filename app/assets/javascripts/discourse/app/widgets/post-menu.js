@@ -711,7 +711,7 @@ export default createWidget("post-menu", {
   },
 
   showMoreActions() {
-    if (this.currentUser) {
+    if (this.currentUser && this.siteSettings.enable_user_tips) {
       this.currentUser.hideUserTipForever("post_menu");
     }
 
@@ -734,7 +734,9 @@ export default createWidget("post-menu", {
       keyValueStore &&
         keyValueStore.set({ key: "likedPostId", value: attrs.id });
       return this.sendWidgetAction("showLogin");
-    } else {
+    }
+
+    if (this.currentUser && this.siteSettings.enable_user_tips) {
       this.currentUser.hideUserTipForever("post_menu");
     }
 

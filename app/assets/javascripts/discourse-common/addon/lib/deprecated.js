@@ -60,18 +60,37 @@ export function registerDeprecationHandler(callback) {
 
 /**
  * Silence one or more deprecations while running `callback`
- * @async
  * @param {(string|string[])} deprecationIds A single id, or an array of ids, of deprecations to silence
- * @param {function} callback The function to call while deprecations are silenced. Can be asynchronous.
+ * @param {function} callback The function to call while deprecations are silenced.
  */
-export async function withSilencedDeprecations(deprecationIds, callback) {
+export function withSilencedDeprecations(deprecationIds, callback) {
   const idArray = [].concat(deprecationIds);
-  let result;
   try {
     idArray.forEach((id) => disabledDeprecations.add(id));
-    result = callback();
+    const result = callback();
+    if (result instanceof Promise) {
+      throw new Error(
+        "withSilencedDeprecations callback returned a promise. Use withSilencedDeprecationsAsync instead."
+      );
+    }
+    return result;
   } finally {
     idArray.forEach((id) => disabledDeprecations.delete(id));
-    return result;
+  }
+}
+
+/**
+ * Silence one or more deprecations while running an async `callback`
+ * @async
+ * @param {(string|string[])} deprecationIds A single id, or an array of ids, of deprecations to silence
+ * @param {function} callback The asynchronous function to call while deprecations are silenced.
+ */
+export async function withSilencedDeprecationsAsync(deprecationIds, callback) {
+  const idArray = [].concat(deprecationIds);
+  try {
+    idArray.forEach((id) => disabledDeprecations.add(id));
+    return await callback();
+  } finally {
+    idArray.forEach((id) => disabledDeprecations.delete(id));
   }
 }

@@ -216,7 +216,7 @@ class UserUpdater
       end
 
       if SiteSetting.enable_user_status?
-        update_user_status(attributes[:status])
+        update_user_status(attributes[:status]) if attributes.has_key?(:status)
       end
 
       name_changed = user.name_changed?

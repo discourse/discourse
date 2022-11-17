@@ -193,6 +193,12 @@ export default createWidget("search-menu", {
   services: ["search"],
   searchData,
 
+  buildAttributes() {
+    return {
+      "aria-live": "polite",
+    };
+  },
+
   buildKey: () => "search-menu",
 
   defaultState(attrs) {
@@ -367,7 +373,7 @@ export default createWidget("search-menu", {
       return;
     }
 
-    if (e.key === "A") {
+    if (e.which === 65 /* a */) {
       if (document.activeElement?.classList.contains("search-link")) {
         if (document.querySelector("#reply-control.open")) {
           // add a link and focus composer

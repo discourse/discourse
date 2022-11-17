@@ -2097,7 +2097,6 @@ en:
       name_label: "Name"
       password_label: "Password"
       existing_user_can_redeem: "Redeem your invitation to a topic or group."
-      existing_user_cannot_redeem: "This invitation cannot be redeemed. Please ask the person who invited you to send you a new invitation."
 
     password_reset:
       continue: "Continue to %{site_name}"
@@ -2500,6 +2499,7 @@ en:
         other: "<span>%{count}%{plus} results for</span><span class='term'>%{term}</span>"
       title: "Search"
       full_page_title: "Search"
+      results: "results"
       no_results: "No results found."
       no_more_results: "No more results found."
       post_format: "#%{post_number} by %{username}"
@@ -2547,6 +2547,7 @@ en:
         status: "filters by topic status"
         full_search: "launches full page search"
         full_search_key: "%{modifier} + Enter"
+        me: "shows only your posts"
 
       advanced:
         title: Advanced filters
