@@ -1,4 +1,8 @@
-<div style={{this.style}} class="timeline-scroller">
+<div
+  style={{this.style}}
+  class="timeline-scroller"
+  {{draggable didStartDrag=@didStartDrag didEndDrag=@didEndDrag}}
+>
   {{#if @fullscreen}}
     <div class="timeline-scroller-content">
       <div class="timeline-replies">

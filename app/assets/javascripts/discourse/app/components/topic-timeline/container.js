@@ -123,10 +123,12 @@ export default class TopicTimelineScrollArea extends Component {
   commit() {
     this.calculatePosition();
 
-    if (this.current === this.scrollPosition) {
-      this.args.jumpToIndex(this.current);
-    } else {
-      this.args.jumpEnd();
+    if (!this.dragging) {
+      if (this.current === this.scrollPosition) {
+        this.args.jumpToIndex(this.current);
+      } else {
+        this.args.jumpEnd();
+      }
     }
   }
 
@@ -267,26 +269,7 @@ export default class TopicTimelineScrollArea extends Component {
     }
   }
 
-  drag(e) {
-    this.dragging = true;
-    this.updatePercentage(e.pageY);
-  }
-
-  dragEnd(e) {
-    this.dragging = false;
-    if ($(e.target).is("button")) {
-      this.goBack();
-    } else {
-      this.commit();
-    }
-  }
-
-  @action
-  goBack() {
-    this.args.jumpToIndex(this.lastRead);
-  }
-
-  @action
+  @bind
   updatePercentage(e) {
     const y = e.pageY;
     const $area = $(".timeline-scrollarea");
@@ -294,6 +277,23 @@ export default class TopicTimelineScrollArea extends Component {
 
     this.percentage = this.clamp(parseFloat(y - areaTop) / $area.height());
     this.commit();
+  }
+
+  @bind
+  didStartDrag(e) {
+    this.dragging = true;
+    this.updatePercentage(e);
+  }
+
+  @bind
+  didEndDrag() {
+    this.dragging = false;
+    this.commit();
+  }
+
+  @action
+  goBack() {
+    this.args.jumpToIndex(this.lastRead);
   }
 }
 

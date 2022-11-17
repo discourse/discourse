@@ -234,6 +234,9 @@
       .widget-dragging & {
         transition: none;
       }
+      .dragging & {
+        transition: none;
+      }
     }
 
     .timeline-handle {
