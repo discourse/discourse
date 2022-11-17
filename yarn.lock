@@ -701,10 +701,10 @@ chrome-launcher@^0.15.0:
     is-wsl "^2.2.0"
     lighthouse-logger "^1.0.0"
 
-chrome-remote-interface@^0.31.2:
-  version "0.31.2"
-  resolved "https://registry.yarnpkg.com/chrome-remote-interface/-/chrome-remote-interface-0.31.2.tgz#97fa391420cba0dc0ee9126334246ab377f20e98"
-  integrity sha512-vpdJoI9cDRNAfV5oB2ulwXDltvu3Ov9PTblnV48VXcF4zUx1p4xvCLssc5AZ/WLYp4003YxJqLEi8FagPw2vTQ==
+chrome-remote-interface@^0.31.3:
+  version "0.31.3"
+  resolved "https://registry.yarnpkg.com/chrome-remote-interface/-/chrome-remote-interface-0.31.3.tgz#bd01b89f5f0e968f7eeb37b8b7c5ac20e6e1f4d0"
+  integrity sha512-NTwb1YNPHXLTus1RjqsLxJmdViKwKJg/lrFEcM6pbyQy04Ow2QKWHXyPpxzwE+dFsJghWuvSAdTy4W0trluz1g==
   dependencies:
     commander "2.11.x"
     ws "^7.2.0"
