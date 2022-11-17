@@ -103,6 +103,7 @@
     }
 
     .category-breadcrumb {
+      padding-top: var(--navigation-secondary-padding-top);
       @include breakpoint(large) {
         font-size: var(--font-down-1);
       }
@@ -112,6 +113,7 @@
     }
 
     .navigation-controls {
+      padding-top: var(--navigation-secondary-padding-top);
       flex-wrap: nowrap;
       @include breakpoint(large) {
         font-size: var(--font-down-1);
