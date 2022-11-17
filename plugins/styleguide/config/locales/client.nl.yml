@@ -53,6 +53,8 @@ nl:
           title: "Topicstatussen"
         topic_list:
           title: "Topiclijst"
+        basic_topic_list:
+          title: "Basistopicslijst"
         footer_message:
           title: "Voettekstbericht"
         signup_cta:
@@ -83,6 +85,10 @@ nl:
           title: "Koptekstpictogrammen"
         spinners:
           title: "Kringvelden"
+        empty_state:
+          title: "Lege toestand"
         rich_tooltip:
-          description: "Omschrijving"
+          title: "Rijke tooltip"
+          description: "Beschrijving"
           header: "Koptekst"
+          hover_to_see: "Plaats de aanwijzer om een tooltip te zien"

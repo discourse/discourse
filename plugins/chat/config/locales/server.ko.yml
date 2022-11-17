@@ -27,6 +27,9 @@ ko:
       statuses:
         closed: "닫힘"
         open: "열기"
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "비 ASCII 문자 포함"
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

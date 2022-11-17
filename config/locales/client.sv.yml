@@ -294,7 +294,7 @@ sv:
       like_count: "Gillningar"
       topic_count: "Ämnen"
       post_count: "Inlägg"
-      user_count: "Användare"
+      user_count: "Registreringar"
       active_user_count: "Aktiva användare"
       contact: "Kontakta oss"
       contact_info: "Vid brådskande ärenden rörande webbplatsen, kontakta oss på %{contact_info}."
@@ -351,7 +351,6 @@ sv:
       remove_confirmation: "Är du säker på att du vill ta bort detta utkast?"
       new_topic: "Nytt utkast för ämne"
       new_private_message: "Nytt utkast för personligt meddelande"
-      topic_reply: "Svar på utkast"
       abandon:
         confirm: "Du har ett pågående utkast för detta ämne. Vad vill du göra med det?"
         yes_value: "Förkasta"
@@ -1087,7 +1086,7 @@ sv:
         not_first_time: "Är det inte din första gång?"
         skip_link: "Hoppa över dessa tips"
         read_later: "Jag läser det senare."
-      reset_seen_popups: "Visa nybörjartips igen"
+      reset_seen_user_tips: "Visa användartips igen"
       theme_default_on_all_devices: "Gör detta till standardtema för alla mina enheter"
       color_scheme_default_on_all_devices: "Ange standardfärgschema(n) för alla mina enheter"
       color_scheme: "Färgschema"
@@ -1675,7 +1674,7 @@ sv:
       set_custom_status: "Ställ in anpassad status"
       what_are_you_doing: "Vad gör du?"
       remove_status: "Ta bort status"
-    popup:
+    user_tips:
       primary: "Jag förstår!"
       secondary: "visa mig inte dessa tips"
       first_notification:
@@ -2531,9 +2530,6 @@ sv:
       move_to_inbox:
         title: "Flytta till inkorgen"
         help: "Flytta tillbaka meddelandet till inkorgen"
-      edit_message:
-        help: "Redigera första inlägget av meddelandet"
-        title: "Redigera"
       defer:
         help: "Märk som oläst"
         title: "Skjut upp"
@@ -3254,8 +3250,7 @@ sv:
       this_year: "i år"
       position: "Position på kategorisidan:"
       default_position: "Standardposition"
-      position_disabled: "Kategorier kommer att sorteras efter sin aktivitet. För att ställa in sorteringen av kategorier i den här listan "
-      position_disabled_click: 'aktiverar du inställningen "fasta kategoripositioner".'
+      position_disabled: "Kategorier kommer att visas i aktivitetsordning. För att styra ordningen på kategorier i listor, aktivera inställningen <a href='%{url}'>'fasta kategoripositioner'</a>."
       minimum_required_tags: "Minsta antalet taggar som krävs för ett ämne:"
       default_slow_mode: 'Aktivera "Långsamt läge" för nya ämnen i denna kategori.'
       parent: "Överordnad kategori"
@@ -5467,6 +5462,7 @@ sv:
         destination: "Mål"
         copy_to_clipboard: "Kopiera permalänk till urklipp"
         delete_confirm: Är du säker på att du vill ta bort den här permalänken?
+        no_permalinks: "Du har inga permalänkar än. Skapa en ny permalänk ovan för att börja se en lista över dina permalänkar här."
         form:
           label: "Ny:"
           add: "Lägg till"

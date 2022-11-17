@@ -15,8 +15,8 @@ nl:
   poll:
     poll: "poll"
     invalid_argument: "Ongeldige waarde '%{value}' voor argument '%{argument}'."
-    multiple_polls_without_name: "Er zijn meerdere polls zonder naam. Gebruik het attribuut '<code>naam</code>' om uw polls uniek te identificeren."
-    multiple_polls_with_same_name: "Er zijn meerdere polls met dezelfde naam : <strong>%{name}</strong>. Gebruik het attribuut '<code>naam</code>' om uw polls uniek te identificeren."
+    multiple_polls_without_name: "Er zijn meerdere polls zonder naam. Gebruik het attribuut '<code>naam</code>' om je polls uniek te identificeren."
+    multiple_polls_with_same_name: "Er zijn meerdere polls met dezelfde naam : <strong>%{name}</strong>. Gebruik het attribuut '<code>naam</code>' om je polls uniek te identificeren."
     default_poll_must_have_at_least_1_option: "De poll moet minstens 1 optie hebben."
     named_poll_must_have_at_least_1_option: "De poll met de naam <strong>%{name}</strong> moet minstens 1 optie hebben."
     default_poll_must_have_less_options:
@@ -40,8 +40,15 @@ nl:
     user_cant_post_in_topic: "Je kunt niet stemmen, omdat je geen berichten in dit topic kunt plaatsen."
     topic_must_be_open_to_vote: "Het topic moet geopend zijn om te kunnen stemmen."
     poll_must_be_open_to_vote: "De poll moet geopend zijn om te kunnen stemmen."
+    one_vote_per_user: "Er is slechts 1 stem toegestaan voor deze poll."
+    max_vote_per_user:
+      one: Er is slechts %{count} stem toegestaan voor deze poll.
+      other: Er zijn maximaal %{count} stemmen toegestaan voor deze poll.
+    min_vote_per_user:
+      one: Er is minimaal %{count} stem vereist voor deze poll.
+      other: Er zijn minimaal %{count} stemmen vereist voor deze poll.
     topic_must_be_open_to_toggle_status: "Het topic moet geopend zijn om de status te kunnen omschakelen."
-    only_staff_or_op_can_toggle_status: "Alleen een staflid of de oorspronkelijke plaatser van een bericht kan de status van een poll omschakelen."
+    only_staff_or_op_can_toggle_status: "Alleen een medewerker of de oorspronkelijke plaatser van een bericht kan de status van een poll omschakelen."
     insufficient_rights_to_create: "Je mag geen polls maken."
     email:
       link_to_poll: "Klik om de poll weer te geven."

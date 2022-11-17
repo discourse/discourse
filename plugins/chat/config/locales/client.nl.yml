@@ -6,14 +6,63 @@
 
 nl:
   js:
+    admin:
+      site_settings:
+        categories:
+          chat: Chat
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Status van chatkanaal gewijzigd"
+            chat_channel_delete: "Chatkanaal verwijderd"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "Maak een chatbericht in een opgegeven kanaal."
+    about:
+      chat_messages_count: "Chatberichten"
+      chat_channels_count: "Chatkanalen"
+      chat_users_count: "Chatgebruikers"
     chat:
+      dates:
+        time_tiny: "h:mm"
+      all_loaded: "Alle berichten worden weergeven"
+      already_enabled: "Chat is al ingeschakeld voor dit topic. Vernieuw de pagina."
+      disabled_for_topic: "Chat is uitgeschakeld voor dit topic."
+      bot: "bot"
       create: "Aanmaken"
       cancel: "Annuleren"
+      cancel_reply: "Antwoord annuleren"
+      chat_channels: "Kanalen"
+      browse_all_channels: "Alle kanalen bekijken"
+      move_to_channel:
+        title: "Berichten verplaatsen naar kanaal"
+        confirm_move: "Berichten verplaatsen"
       channel_settings:
+        title: "Kanaalinstellingen"
         edit: "Bewerken"
         add: "Toevoegen"
+        close_channel: "Kanaal sluiten"
+        open_channel: "Kanaal openen"
+        archive_channel: "Kanaal archiveren"
+        delete_channel: "Kanaal verwijderen"
+        join_channel: "Deelnemen aan kanaal"
+        leave_channel: "Kanaal verlaten"
         join: "Toetreden"
         leave: "Verlaten"
+        save_label:
+          desktop_notification: "Voorkeur voor bureaubladmeldingen opgeslagen"
+          mobile_notification: "Voorkeur voor mobiele pushmeldingen opgeslagen"
+      channel_archive:
+        title: "Kanaal archiveren"
+        retry: "Opnieuw proberen"
+      channel_open:
+        title: "Kanaal openen"
+      channel_close:
+        title: "Kanaal sluiten"
+      channel_delete:
+        title: "Kanaal verwijderen"
       close: "Sluiten"
       delete: "Verwijderen"
       edited: "bewerkt"
@@ -25,36 +74,93 @@ nl:
       join: "Toetreden"
       mention_warning:
         dismiss: "negeren"
+      placeholder_others: "Chatten met %{messageRecipient}"
+      placeholder_new_message_disallowed: "Kanaal is %{status}, je kunt momenteel geen nieuwe berichten sturen."
+      placeholder_silenced: "Je kunt op dit moment geen berichten sturen."
+      placeholder_start_conversation: Begin een gesprek met %{usernames}
+      remove_upload: "Bestand verwijderen"
+      react: "Reageren met emoji"
       reply: "Antwoorden"
       edit: "Bewerken"
+      copy_link: "Link kopiëren"
       rebake_message: "HTML opnieuw opbouwen"
+      retry_staged_message:
+        title: "Netwerkfout"
+        action: "Opnieuw sturen?"
+      unreliable_network: "Netwerk is onbetrouwbaar, het verzenden van berichten en het opslaan van concepten werkt mogelijk niet"
       bookmark_message: "Bladwijzer maken"
       bookmark_message_edit: "Bladwijzer bewerken"
+      restore: "Verwijderd bericht herstellen"
       save: "Opslaan"
+      select: "Selecteren"
+      silence: "Gebruiker dempen"
+      return_to_list: "Terug naar kanalenlijst"
+      scroll_to_bottom: "Naar beneden scrollen"
+      scroll_to_new_messages: "Nieuwe berichten weergeven"
+      sound:
+        title: "Geluid bureaubladmelding chat"
       sounds:
         none: "Geen"
+        bell: "Bel"
+        ding: "Ding"
+      title: "chat"
+      title_capitalized: "Chat"
+      upload: "Voeg een bestand toe"
+      uploaded_files:
+        one: "%{count} bestand"
+        other: "%{count} bestanden"
+      you_flagged: "Je hebt dit bericht gemarkeerd"
       exit: "vorige"
       channel_status:
+        read_only_header: "Kanaal is alleen-lezen"
+        read_only: "Alleen-lezen"
+        archived_header: "Kanaal is gearchiveerd"
+        archived: "Gearchiveerd"
+        archive_completed: "Zie <a target=\"_blank\" href=\"%{topic_url}\">het archieftopic</a>"
+        closed_header: "Kanaal is gesloten"
         closed: "Gesloten"
+        open_header: "Kanaal is open"
         open: "Openen"
       browse:
+        back: "Terug"
+        title: Kanalen
         filter_all: Alle
+        filter_open: Geopend
         filter_closed: Gesloten
+        filter_archived: Gearchiveerd
+        filter_input_placeholder: Kanaal zoeken op naam
       chat_message_separator:
         today: Vandaag
         yesterday: Gisteren
+      members_view:
+        filter_placeholder: Leden zoeken
       about_view:
+        associated_topic: Gelinkt topic
+        associated_category: Gelinkte categorie
         title: Titel
-        description: Omschrijving
+        description: Beschrijving
       channel_info:
+        back_to_all_channels: "Alle kanalen"
         back_to_channel: "Vorige"
         tabs:
           about: Over
           members: Leden
           settings: Instellingen
+      channel_edit_title_modal:
+        title: Titel bewerken
+        input_placeholder: Voeg een titel toe
+        description: Geef een korte beschrijvende titel aan je kanaal
+      channel_edit_description_modal:
+        title: Beschrijving bewerken
+        input_placeholder: Voeg een beschrijving toe
+        description: Vertel mensen waar dit kanaal over gaat
       direct_message_creator:
         title: Nieuw bericht
         prefix: "Aan:"
+        no_results: Geen resultaten
+        selected_user_title: "%{username} deselecteren"
+      channel_selector:
+        title: "Naar kanaal springen"
       create_channel:
         type: "Type"
         types:
@@ -75,34 +181,99 @@ nl:
         unfollow: "Verlaten"
       incoming_webhooks:
         back: "Vorige"
-        description: "Omschrijving"
+        description: "Beschrijving"
         delete: "Verwijderen"
         emoji: "Emoji"
         name: "Naam"
+        no_emoji: "Geen emoji geselecteerd"
+        post_to: "Plaatsen op"
+        reset_emoji: "Emoji resetten"
         save: "Opslaan"
         edit: "Bewerken"
+        select_emoji: "Kies emoji"
         system: "systeem"
+        title: "Inkomende webhooks"
         url: "URL"
+        url_instructions: "Deze URL bevat een geheime waarde, bewaar deze veilig."
         username: "Gebruikersnaam"
+        username_instructions: "Gebruikersnaam van bot die in kanaal plaatst. Standaard ingesteld op 'systeem' als dit leeg is gelaten."
       selection:
         cancel: "Annuleren"
+        quote_selection: "Citaat in topic"
         copy: "Kopiëren"
+        move_selection_to_channel: "Verplaatsen naar kanaal"
+        error: "Er was een fout bij het verplaatsen van de chatberichten"
+        title: "Chat verplaatsen naar topic"
         new_topic:
           title: "Verplaatsen naar nieuw topic"
+          instructions:
+            one: "Je staat op het punt een nieuw topic te maken en het in te vullen met het chatbericht dat je hebt geselecteerd."
+            other: "Je staat op het punt een nieuw topic te maken en het in te vullen met de <b>%{count}</b> chatberichten die je hebt geselecteerd."
+          instructions_channel_archive: "Je staat op het punt een nieuw topic te maken en de kanaalberichten daarin te archiveren."
         existing_topic:
           title: "Verplaatsen naar bestaand topic"
+          instructions:
+            one: "Kies het topic waarnaar je dat chatbericht wilt verplaatsen."
+            other: "Kies het topic waarnaar je die <b>%{count}</b> chatberichten wilt verplaatsen."
+          instructions_channel_archive: "Kies het topic waarin je de kanaalberichten wilt archiveren."
         new_message:
           title: "Verplaatsen naar nieuw bericht"
+          instructions:
+            one: "Je staat op het punt een nieuw bericht te maken en het in te vullen met het chatbericht dat je hebt geselecteerd."
+            other: "Je staat op het punt een nieuw bericht te maken en het in te vullen met de <b>%{count}</b> chatberichten die je hebt geselecteerd."
+      replying_indicator:
+        single_user: "%{username} is aan het typen"
+        multiple_users: "%{commaSeparatedUsernames} en %{lastUsername} zijn aan het typen"
+        many_users:
+          one: "%{commaSeparatedUsernames} en %{count} ander zijn aan het typen"
+          other: "%{commaSeparatedUsernames} en %{count} anderen zijn aan het typen"
+      retention_reminders:
+        public: "Kanaalgeschiedenis wordt %{days} dagen bewaard."
+        dm: "Persoonlijke chatgeschiedenis wordt %{days} dagen bewaard."
+      flags:
+        off_topic: "Dit bericht is niet relevant voor de huidige discussie zoals gedefinieerd door de kanaaltitel en moet waarschijnlijk worden verplaats naar elders."
+        inappropriate: "Dit bericht bevat inhoud die een redelijk persoon als aanstootgevend, kwetsend of een overtreding van <a href=\"%{basePath}/guidelines\">onze communityrichtlijnen</a> zou beschouwen."
+        spam: "Dit bericht is een advertentie of vandalisme. Het is niet nuttig of relevant voor het huidige kanaal."
+        notify_user: "Ik wil deze persoon rechtstreeks en persoonlijk spreken over diens bericht."
+        notify_moderators: "Dit bericht vereist aandacht van een medewerker om een andere reden dan hierboven vermeld."
+      flagging:
+        action: "Bericht markeren"
       emoji_picker:
+        favorites: "Veel gebruikt"
+        smileys_&_emotion: "Smileys en emoji's"
         objects: "Objecten"
+        people_&_body: "Mensen en lichaam"
+        travel_&_places: "Reizen en plaatsen"
+        animals_&_nature: "Dieren en natuur"
+        food_&_drink: "Eten en drinken"
         activities: "Activiteiten"
         flags: "Markeringen"
         symbols: "Symbolen"
+        search_placeholder: "Zoek op emojinaam en -alias..."
+        no_results: "Geen resultaten"
       draft_channel_screen:
         header: "Nieuw bericht"
         cancel: "Annuleren"
     notifications:
+      chat_invitation: "heeft je uitgenodigd om deel te nemen aan een chatkanaal"
+      chat_invitation_html: "<span>%{username}</span> <span>heeft je uitgenodigd voor een chatkanaal</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
+      popup:
+        chat_mention:
+          direct: 'heeft je genoemd in "%{channel}"'
+          direct_html: '<span>%{username}</span> <span>heeft je genoemd in "%{channel}"</span>'
+          other_plain: 'heeft %{identifier} genoemd in "%{channel}”'
+          other_html: '<span>%{username}</span> <span>heeft %{identifier} genoemd in "%{channel}"</span>'
+        direct_message_chat_mention:
+          direct: "heeft je genoemd in een privéchat"
+          direct_html: "<span>%{username}</span> <span>heeft je genoemd in een privéchat</span>"
+          other_plain: "heeft %{identifier} genoemd in een privéchat"
+          other_html: "<span>%{username}</span> <span>heeft %{identifier} genoemd in een privéchat</span>"
+        chat_message: "Nieuw chatbericht"
+        chat_quoted: "%{username} heeft je chatbericht geciteerd"
+      titles:
+        chat_mention: "Chatvermelding"
+        chat_invitation: "Chatuitnodiging"
     discourse_automation:
       scriptables:
         send_chat_message:

@@ -267,7 +267,6 @@ ca:
       like_count: "'M'agrada'"
       topic_count: "Temes"
       post_count: "Publicacions"
-      user_count: "Usuaris"
       active_user_count: "Usuaris actius"
       contact: "Contacta amb nosaltres"
       contact_info: "En cas d'una qüestió urgent o greu que afecti aquest lloc web, contacteu amb nosaltres en: %{contact_info}."
@@ -314,7 +313,6 @@ ca:
       remove_confirmation: "Esteu segur que voleu suprimir aquest esborrany?"
       new_topic: "Esborrany de tema nou"
       new_private_message: "Nou esborrany de missatge personal"
-      topic_reply: "Esborrany de resposta"
       abandon:
         confirm: "Teniu un esborrany en curs per a aquest tema. Què t'agradaria fer-hi?"
         yes_value: "Descarta"
@@ -1933,9 +1931,6 @@ ca:
       move_to_inbox:
         title: "Mou a la safata d'entrada"
         help: "Torna el missatge a la safata d'entrada"
-      edit_message:
-        help: "Edita la primera publicació del missatge"
-        title: "Edita"
       defer:
         help: "Marca com a no llegit"
         title: "Ajorna"
@@ -2461,8 +2456,6 @@ ca:
       this_year: "enguany"
       position: "Posició en la pàgina de categories:"
       default_position: "Posició per defecte"
-      position_disabled: "Les categories es mostraran per ordre d'activitat. Per a controlar l'ordre de les categories en llistes, "
-      position_disabled_click: 'activeu la configuració "posicions fixes de categories"'
       minimum_required_tags: "Nombre mínim d'etiquetes necessari en un tema:"
       parent: "Categoria primària"
       num_auto_bump_daily: "Nombre de temes oberts que s'eleven automàticament cada dia:"

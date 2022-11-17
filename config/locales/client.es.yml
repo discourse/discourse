@@ -293,7 +293,6 @@ es:
       like_count: "Me gusta"
       topic_count: "Temas"
       post_count: "Publicaciones"
-      user_count: "Usuarios"
       active_user_count: "Usuarios activos"
       contact: "Contáctanos"
       contact_info: "En caso de un problema crítico o urgente que esté afectando este sitio, contáctanos a través de %{contact_info}."
@@ -350,7 +349,6 @@ es:
       remove_confirmation: "¿Seguro que quieres eliminar este borrador?"
       new_topic: "Nuevo borrador de tema"
       new_private_message: "Nuevo borrador de mensaje personal"
-      topic_reply: "Borrador de respuesta"
       abandon:
         confirm: "Tienes un borrador en curso para este tema. ¿Qué te gustaría hacer?"
         yes_value: "Descartar"
@@ -1656,15 +1654,6 @@ es:
       set_custom_status: "Escribir estado personalizado"
       what_are_you_doing: "¿Qué estás haciendo?"
       remove_status: "Quitar estado"
-    popup:
-      primary: "¡Entendido!"
-      secondary: "no mostrarme estos consejos"
-      first_notification:
-        title: "¡Tu primera notificación!"
-        content: "Las notificaciones se utilizan para mantenerte al día de lo que ocurre en la comunidad."
-      topic_timeline:
-        title: "Cronología del tema"
-        content: "Desplázate rápidamente por una publicación utilizando la cronología del tema."
     loading: "Cargando..."
     errors:
       prev_page: "mientras se intentaba cargar"
@@ -2509,9 +2498,6 @@ es:
       move_to_inbox:
         title: "Mover a la bandeja de entrada"
         help: "Restaurar mensaje a la bandeja de entrada"
-      edit_message:
-        help: "Editar la primera publicación del mensaje"
-        title: "Editar"
       defer:
         help: "Marcar como no leído"
         title: "Aplazar"
@@ -3230,8 +3216,6 @@ es:
       this_year: "este año"
       position: "Posición en la página de categorías:"
       default_position: "Posición predeterminada"
-      position_disabled: "Las Categorías se mostrarán por orden de actividad. Para controlar el orden en que aparecen en las listas,"
-      position_disabled_click: 'activa la opción «posiciones de categoría fijas».'
       minimum_required_tags: "Número mínimo de etiquetas requeridas en un tema:"
       default_slow_mode: 'Activar «modo lento» en los nuevos temas de esta categoría'
       parent: "Categoría principal"

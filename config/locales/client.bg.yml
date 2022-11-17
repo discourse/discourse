@@ -261,7 +261,6 @@ bg:
       like_count: "Харесвания"
       topic_count: "Теми"
       post_count: "Публикации"
-      user_count: "Потребители"
       active_user_count: "Активни потребители"
       contact: "Свържете се с нас"
       contact_info: "В случай на критичен или спешен въпрос засягащ този сайт, моля свържете се с нас на адрес %{contact_email}."
@@ -309,7 +308,6 @@ bg:
       remove_confirmation: "Сигурни ли сте, че искате да изтриете тази чернова?"
       new_topic: "Проект на нова тема"
       new_private_message: "Нова чернова на лично съобщение"
-      topic_reply: "Проект на отговор"
       abandon:
         confirm: "Имате чернова за тази тема. Какво бихте искали да направите с нея?"
         yes_value: "Отхвърляне"
@@ -2117,8 +2115,6 @@ bg:
       move_to_inbox:
         title: "Премести във входящи"
         help: "Премести съобщението обратно във входящи"
-      edit_message:
-        title: "Редактирай"
       defer:
         title: "Отложи "
       list: "Теми"
@@ -2650,8 +2646,6 @@ bg:
       review_group_name: "име на групата"
       this_year: "тази година "
       default_position: "Позиция по подразбиране "
-      position_disabled: "Категорията ще се показва в ред на активност. За да контролирате реда на категориите в списъците, "
-      position_disabled_click: 'Разреши "fixed category positions" настройка '
       minimum_required_tags: "Минимален брой етикети на тема"
       parent: "Главна категория"
       notifications:

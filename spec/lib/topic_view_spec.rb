@@ -167,7 +167,6 @@ RSpec.describe TopicView do
     fab!(:p3) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 0) }
 
     it "it can find the best responses" do
-
       best2 = TopicView.new(topic.id, evil_trout, best: 2)
       expect(best2.posts.count).to eq(2)
       expect(best2.posts[0].id).to eq(p2.id)
@@ -415,7 +414,7 @@ RSpec.describe TopicView do
     describe "#bookmarks" do
       let!(:user) { Fabricate(:user) }
       let!(:bookmark1) { Fabricate(:bookmark_next_business_day_reminder, bookmarkable: topic.first_post, user: user) }
-      let!(:bookmark2) { Fabricate(:bookmark_next_business_day_reminder, bookmarkable: topic.posts[1], user: user) }
+      let!(:bookmark2) { Fabricate(:bookmark_next_business_day_reminder, bookmarkable: topic.posts.order(:post_number)[1], user: user) }
 
       it "gets the first post bookmark reminder at for the user" do
         topic_view = TopicView.new(topic.id, user)

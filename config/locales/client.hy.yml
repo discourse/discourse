@@ -248,7 +248,6 @@ hy:
       like_count: "Հավանումներ"
       topic_count: "Թեմաներ"
       post_count: "Գրառում"
-      user_count: "Օգտատերեր"
       active_user_count: "Ակտիվ Օգտատերեր"
       contact: "Հետադարձ Կապ"
       contact_info: "Այս կայքի հետ կապված կրիտիկական խնդիրների կամ հրատապ հարցերի դեպքում խնդրում ենք կապվել մեզ հետ %{contact_info} էլ. հասցեով:"
@@ -283,7 +282,6 @@ hy:
       resume: "Վերսկսել"
       remove: "Ջնջել"
       new_topic: "Նոր թեմայի սևագիր"
-      topic_reply: "Պատասխանի սևագիր"
       abandon:
         yes_value: "Չեղարկել"
     topic_count_categories:
@@ -1859,9 +1857,6 @@ hy:
       move_to_inbox:
         title: "Տեղափոխել Մուտքային արկղ"
         help: "Տեղափոխել հաղորդագրությունը ետ դեպի Մուտքային արկղ"
-      edit_message:
-        help: "Խմբագրել հաղորդագրության առաջին գրառումը"
-        title: "Խմբագրել"
       defer:
         help: "նշել որպես չընթերցված "
         title: "Հետաձգել"
@@ -2415,8 +2410,6 @@ hy:
       this_year: "այս տարի"
       position: "Դիրքը կատեգորիայի էջում."
       default_position: "Լռելյայն Դիրքը"
-      position_disabled: "Կատեգորիաները կցուցադրվեն ըստ ակտիվության: Ցանկերում կատեգորիաների դասավորությունը վերահսկելու համար,"
-      position_disabled_click: 'միացրեք "fixed category positions" կարգավորումը:'
       minimum_required_tags: "Թեմայում պահանջվող թեգերի նվազագույն քանակը՝"
       parent: "Մայր Կատեգորիա"
       num_auto_bump_daily: "Օրեկան ավտոմատ բարձրացվող բաց թեմաների քանակը՝"

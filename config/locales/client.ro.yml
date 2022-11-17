@@ -292,7 +292,6 @@ ro:
       like_count: "Aprecieri"
       topic_count: "Subiecte"
       post_count: "Postări"
-      user_count: "Utilizatori"
       active_user_count: "Utilizatori activi"
       contact: "Contactează-ne"
       contact_info: "În cazul în care o problemă critică sau alt aspect urgent afectează site-ul, contactează-ne la %{contact_info}."
@@ -345,7 +344,6 @@ ro:
       remove: "Eliminați"
       remove_confirmation: "Ești sigur că vrei să ștergi această ciornă?"
       new_topic: "Ciornă subiect nou"
-      topic_reply: "Răspuns ciornă"
       abandon:
         confirm: "Ai o schiță în curs pentru acest subiect. Ce ai vrea să faci mai departe?"
         yes_value: "Renunță"
@@ -1998,8 +1996,6 @@ ro:
       move_to_inbox:
         title: "Mută în Primite"
         help: "Mută mesajul în Primite"
-      edit_message:
-        title: "Editează"
       defer:
         title: "Amânare"
       list: "Subiecte"
@@ -2508,8 +2504,6 @@ ro:
       require_topic_approval: "Cere obligatoriu aprobarea moderatorilor pentru toate discuțiile noi"
       this_year: "anul acesta"
       default_position: "Poziție inițială"
-      position_disabled: "Categoriile vor fi afișate în ordinea activității. Pentru a controla ordinea categoriilor în listă, "
-      position_disabled_click: 'activează setarea "poziția fixă a categoriei".'
       parent: "Categorie părinte"
       num_auto_bump_daily: "Numărul de discuții active care pot primi bump zilnic"
       navigate_to_first_post_after_read: "Navighează la prima postare după ce le citești pe celelalte"

@@ -293,7 +293,6 @@ it:
       like_count: "Mi piace"
       topic_count: "Argomenti"
       post_count: "Messaggi"
-      user_count: "Utenti"
       active_user_count: "Utenti Attivi"
       contact: "Contattaci"
       contact_info: "Nel caso di un problema grave o urgente riguardante il sito, per favore contattaci all'indirizzo %{contact_info}."
@@ -350,7 +349,6 @@ it:
       remove_confirmation: "Vuoi davvero eliminare questa bozza?"
       new_topic: "Nuovo argomento in bozza"
       new_private_message: "Nuovo messaggio personale in bozza"
-      topic_reply: "Risposta in bozza"
       abandon:
         confirm: "Hai una bozza in corso per questo argomento. Cosa vorresti fare?"
         yes_value: "Elimina"
@@ -2497,9 +2495,6 @@ it:
       move_to_inbox:
         title: "Sposta in posta in arrivo"
         help: "Sposta il messaggio di nuovo nella posta in arrivo"
-      edit_message:
-        help: "Modifica la prima versione del Messaggio"
-        title: "Modifica"
       defer:
         help: "Contrassegna come non letto"
         title: "Leggi più tardi"
@@ -3218,8 +3213,6 @@ it:
       this_year: "quest'anno"
       position: "Posizione nella pagina delle Categorie:"
       default_position: "Posizione predefinita"
-      position_disabled: "Le categorie verranno mostrate in ordine d'attività. Per modificare l'ordinamento delle categorie nelle liste,"
-      position_disabled_click: 'attiva l''impostazione "posizione fissa delle categorie".'
       minimum_required_tags: "Numero minimo di etichette richieste per argomento:"
       default_slow_mode: 'Attiva la "modalità lenta" per i nuovi argomenti in questa categoria.'
       parent: "Categoria Superiore"

@@ -6,6 +6,12 @@
 
 uk:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Статус каналу чату змінено"
+            chat_channel_delete: "Канал чату видалено"
     chat:
       create: "Створити"
       cancel: "Скасувати"
@@ -14,6 +20,8 @@ uk:
         add: "Додати"
         join: "Приєднатися"
         leave: "Покинути"
+      channel_close:
+        instructions: "Закриття каналу забороняє стороннім користувачам надсилати нові повідомлення або редагувати наявні повідомлення. Ви впевнені, що хочете закрити цей канал?"
       close: "Закрити"
       delete: "Видалити"
       edited: "відредагований"
@@ -94,6 +102,8 @@ uk:
           title: "Перенесення до наявної теми"
         new_message:
           title: "Перейти до нового повідомленням"
+      flags:
+        notify_moderators: "Це повідомлення вимагає уваги модераторів з іншої причини, не зазначеної вище."
       emoji_picker:
         objects: "Objects"
         activities: "Діяльність"

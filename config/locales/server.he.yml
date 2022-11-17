@@ -67,6 +67,7 @@ he:
       modifier_values: "המחליפים ב־about.json מכילים ערכים שגויים: %{errors}"
       git: "שגיאה בעת שכפול מאגר git, הגישה נדחיתה או שהמאגר לא נמצא"
       git_ref_not_found: "לא ניתן למשוך (checkout) הפניית git:‏ %{ref}"
+      git_unsupported_scheme: "לא ניתן לשבט מאגר git: אין תמיכה בסכמה"
       unpack_failed: "חילוץ הקובץ נכשל"
       file_too_big: "הקובץ גדול מדי ללא דחיסה."
       unknown_file_type: "הקובץ שהעלית הוא כפי הנראה אינה ערכת עיצוב תקנית של Discourse."
@@ -690,6 +691,7 @@ he:
       disallowed_topic_tags: "לנושא זה יש תגיות שאסור להשתמש בהן בקטגוריה הזו: ‚%{tags}’"
       disallowed_tags_generic: "לנושא זה יש תגיות אסורות."
       slug_contains_non_ascii_chars: "מכיל תווים שאינם בתחום ASCII"
+      is_already_in_use: "כבר בשימוש"
     cannot_delete:
       uncategorized: "קטגוריה זו נחשבת למיוחדת. היא מיועדת לשימוש כמתחם לנושאים מחוסרי קטגוריה, אין אפשרות למחוק אותה."
       has_subcategories: "לא ניתן להסיר קטגוריה זו משום שיש בה תת־קטגוריות."
@@ -1514,6 +1516,7 @@ he:
     search_ignore_accents: "התעלמות מסימנים דיאקריטיים בחיפוש אחר טקסט."
     category_search_priority_low_weight: "משקל שהוחל על הדירוג בעדיפות חיפוש נמוכה בקטגוריות."
     category_search_priority_high_weight: "משקל שהוחל על הדירוג בעדיפות חיפוש גבוהה בקטגוריות."
+    default_composer_category: "הקטגוריה המשמשת לאכלוס מראש של רשימת הקטגוריות הנפתחת בעת יצירת נושא חדש."
     allow_uncategorized_topics: "לאפשר לפתוח נושאים ללא קטגוריה. אזהרה: אם יש נושאים ללא קטגוריה, יש לסדר אותם לפני שמבטלים את ההגדרה הזאת. "
     allow_duplicate_topic_titles: "לאפשר נושאים עם כותרות זהות או כפולות."
     allow_duplicate_topic_titles_category: "לאפשר נושאים עם כותרות זהות, כפולות אם הם לא באותה הקטגוריה. ההגדרה allow_duplicate_topic_titles (לאפשר כותרות נושאים כפולות) חייבת להיות מושבתת."
@@ -2110,7 +2113,7 @@ he:
     delete_merged_stub_topics_after_days: "מספר הימים להמתנה לפני מחיקה אוטומטית של נושאים מקוצרים שמוזגו במלואם. יש להגדיר ל־0 כדי לא למחוק נושאים מקוצרים לעולם."
     bootstrap_mode_min_users: "מספר משתמשים מזערי שנדרש כדי להשבית מצב ראשוניות (0 להשבתה)"
     prevent_anons_from_downloading_files: "למנוע ממשתמשים אלמוניים להוריד קבצים מצורפים."
-    secure_media: 'יצא מכלל שימוש: נא להשתמש בהגדרה secure_uploads במקום, יוסר ב־Discourse 3.0.'
+    secure_media: "יצא מכלל שימוש: נא להשתמש בהגדרה secure_uploads במקום, יוסר ב־Discourse 3.0."
     secure_uploads: 'מגביל גישה לכל ההעלאות (תמונות, סרטונים, שמע, טקסט, קובצי PDF, ארכיוני zip ועוד). אם מופעלת האפשרות „דרישת כניסה”, רק משתמשים שנכנסו למערכת יכולים לגשת להעלאות. אחרת, הגישה תוגבל רק להעלאות מסוגי מדיה בהודעות פרטיות ובקטגוריות פרטיות. אזהרה: מדובר בהגדרה מסובכת שדורשת הבנה עמוקה בניהול המערכת. יש לעיין ב<a target="_blank" href="https://meta.discourse.org/t/-/140017">נושא ההעלאות המאובטחות ב־Meta</a> לקבלת פרטים נוספים.'
     secure_media_allow_embed_images_in_emails: "יצא מכלל שימוש: יש להשתמש ב־secure_uploads_allow_embed_images_in_emails, יוסר ב־Discourse 3.0."
     secure_uploads_allow_embed_images_in_emails: "מאפשר להטמיע תמונות מאובטחות שבדרך כלל יידחסו אם הגודל שלהן קטן מההגדרה ‚secure uploads max email embed image size kb’ (גודל העלאות מרבי להטמעה כתמונה בקילובתים)."
@@ -2210,7 +2213,6 @@ he:
     enable_sitemap: "ליצור מפת אתר עבור האתר שלך ולכלול אותה בקובץ robots.txt."
     sitemap_page_size: "מספר הכתובות שיתווספו בכל עמוד של מפת אתר. 50,000 לכל היותר"
     enable_user_status: "(ניסיוני) לאפשר למשתמשים להגדיר הודעת מצב מותאמת אישית (אמוג׳י + תיאור)."
-    enable_onboarding_popups: "(ניסיוני) לאפשר חלונות קופצים לימודיים המסבירים למשתמשים על תכונות מפתח"
     short_title: "בכותרת הקצרה ייעשה שימוש במסך הבית של המשתמש, במשגר או במקומות אחרים שבהם המקום מוגבל. אורכה לא יעלה על 12 תווים."
     dashboard_hidden_reports: "לאפשר להסתיר את הדוחות המסוימים בלוח הבקרה."
     dashboard_visible_tabs: "נא לבחור אילו לשוניות תופענה בלוח הבקרה."
@@ -2285,6 +2287,7 @@ he:
       search_tokenize_japanese_enabled: "עליך להשבית את ‚search_tokenize_japanese’ (חיפוש מפרק יפנית) בטרם הפעלת הגדרה זו."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "אי אפשר להפעיל את DiscourseConnect אם נאכף אימות דו־שלבי."
       delete_rejected_email_after_days: "הגדרה זו לא יכולה להיות קטנה מ־delete_email_logs_after_days (ימים שלאחריהם למחוק יומני דוא״ל) או גדולה מ־%{max}"
+      invalid_uncategorized_category_setting: "אי אפשר לבחור בקטגוריה שאינה בין הקטגוריות אם הרשאת נושאים שאינם בקטגוריה אסורה"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

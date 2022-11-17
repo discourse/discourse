@@ -261,7 +261,6 @@ ja:
       like_count: "「いいね！」数"
       topic_count: "トピック"
       post_count: "投稿"
-      user_count: "ユーザー"
       active_user_count: "アクティブユーザー"
       contact: "お問い合わせ"
       contact_info: "このサイトに影響を与える重要な問題や緊急の問題が発生した場合は、%{contact_info} までご連絡ください。"
@@ -318,7 +317,6 @@ ja:
       remove_confirmation: "この下書きを削除してもよろしいですか？"
       new_topic: "新しいトピックの下書き"
       new_private_message: "新しい個人メッセージの下書き"
-      topic_reply: "返信の下書き"
       abandon:
         confirm: "このトピックの作成中の下書きがあります。どうしますか？"
         yes_value: "破棄"
@@ -1029,7 +1027,6 @@ ja:
         not_first_time: "初めてのご利用ではありませんか？"
         skip_link: "これらのヒントをスキップ"
         read_later: "後で読む。"
-      reset_seen_popups: "オンボーディングのヒントを再表示"
       theme_default_on_all_devices: "これをすべてのデバイスのデフォルトのテーマにする"
       color_scheme_default_on_all_devices: "デフォルトの色スキームをすべてのデバイスに設定する"
       color_scheme: "色スキーム"
@@ -1600,15 +1597,6 @@ ja:
       set_custom_status: "カスタムステータスを設定する"
       what_are_you_doing: "何をしていますか？"
       remove_status: "ステータスを削除する"
-    popup:
-      primary: "了解！"
-      secondary: "これらのヒントを表示しない"
-      first_notification:
-        title: "はじめての通知です！"
-        content: "通知は、コミュニティーで起きていることの最新情報を提供するために使用されます。"
-      topic_timeline:
-        title: "トピックのタイムライン"
-        content: "トピックタイムラインを使って投稿を素早くスクロールします。"
     loading: "読み込み中..."
     errors:
       prev_page: "次の項目を読み込み中に発生しました:"
@@ -2412,9 +2400,6 @@ ja:
       move_to_inbox:
         title: "受信トレイに移動"
         help: "受信トレイにメッセージを戻す"
-      edit_message:
-        help: "メッセージの最初の投稿を編集する"
-        title: "編集"
       defer:
         help: "未読にする"
         title: "取り下げる"
@@ -3097,8 +3082,6 @@ ja:
       this_year: "今年"
       position: "カテゴリページの位置:"
       default_position: "デフォルトの位置"
-      position_disabled: "カテゴリはアクティビティ順で表示されます。リスト内のカテゴリの順番を管理するには、 "
-      position_disabled_click: '「カテゴリの位置の固定」の設定を有効にしてください。'
       minimum_required_tags: "トピックに必要なタグの最小数:"
       default_slow_mode: 'このカテゴリの新しいトピックに「低速モード」を有効にします。'
       parent: "親カテゴリ"

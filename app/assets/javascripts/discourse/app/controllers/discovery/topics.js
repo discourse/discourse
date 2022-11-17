@@ -71,7 +71,11 @@ const controllerOpts = {
     changeSort() {
       deprecated(
         "changeSort has been changed from an (action) to a (route-action)",
-        { since: "2.6.0", dropFrom: "2.7.0" }
+        {
+          since: "2.6.0",
+          dropFrom: "2.7.0",
+          id: "discourse.topics.change-sort",
+        }
       );
       return routeAction("changeSort", this.router._router, ...arguments)();
     },

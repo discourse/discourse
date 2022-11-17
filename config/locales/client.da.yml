@@ -269,7 +269,6 @@ da:
       like_count: "Synes godt om"
       topic_count: "Emner"
       post_count: "Indlæg"
-      user_count: "Brugere"
       active_user_count: "Aktive brugere"
       contact: "Kontakt os"
       contact_info: "I tilfælde af en kritisk begivenhed eller vigtige spørgsmål angående denne side, kontakt os venligst på %{contact_info}."
@@ -324,7 +323,6 @@ da:
       remove_confirmation: "Er du sikker på, at du vil offentliggøre dette udkast?"
       new_topic: "Nyt emne-kladde"
       new_private_message: "Ny personlig meddelelseskladde"
-      topic_reply: "Kladde til svar"
       abandon:
         confirm: "Du har et udkast i gang for dette emne. Hvad vil du gerne gøre med det?"
         yes_value: "Kassér"
@@ -2308,7 +2306,7 @@ da:
         other: "%{count} indlæg i emnet"
       create: "Nyt emne"
       create_long: "Opret et nyt emne i debatten"
-      open_draft: "Åben kladde"
+      open_draft: "Åbn kladde"
       private_message: "Start en besked"
       archive_message:
         help: "Flyt beskeder til dit arkiv"
@@ -2316,9 +2314,6 @@ da:
       move_to_inbox:
         title: "Flyt til Indbakke"
         help: "Flyt beskeder tilbage til Indbakke"
-      edit_message:
-        help: "Rediger det første indlæg af meddelelsen"
-        title: "Rediger"
       defer:
         help: "Markér som ulæst"
         title: "Udsæt"
@@ -2999,8 +2994,6 @@ da:
       this_year: "dette år"
       position: "Placering på kategorisiden:"
       default_position: "Standarposition"
-      position_disabled: "Kategorier vil blive vist i rækkefølge efter aktivitet. For at styre rækkefølgen af kategorier i lister, "
-      position_disabled_click: 'skal funktionen "fikserede kategori positioner" slås til.'
       minimum_required_tags: "Minimum antal mærker krævet i et emne:"
       default_slow_mode: 'Aktivér "Langsom tilstand" for nye emner i denne kategori.'
       parent: "Overordnet kategori"

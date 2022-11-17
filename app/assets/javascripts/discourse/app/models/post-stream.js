@@ -697,7 +697,10 @@ export default RestModel.extend({
    * */
   triggerNewPostInStream(postId, opts) {
     deprecated(
-      "Please use triggerNewPostsInStream, this method will be removed July 2021"
+      "Please use triggerNewPostsInStream, this method will be removed July 2021",
+      {
+        id: "discourse.post-stream.trigger-new-post",
+      }
     );
     return this.triggerNewPostsInStream([postId], opts);
   },

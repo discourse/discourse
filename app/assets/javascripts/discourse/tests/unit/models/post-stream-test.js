@@ -1,28 +1,30 @@
 import { module, test } from "qunit";
-import AppEvents from "discourse/services/app-events";
 import ArrayProxy from "@ember/array/proxy";
 import Post from "discourse/models/post";
 import User from "discourse/models/user";
-import createStore from "discourse/tests/helpers/create-store";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import sinon from "sinon";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { setupTest } from "ember-qunit";
 
 function buildStream(id, stream) {
-  const store = createStore();
+  const store = getOwner(this).lookup("service:store");
   const topic = store.createRecord("topic", { id, chunk_size: 5 });
-  const ps = topic.postStream;
+
   if (stream) {
-    ps.set("stream", stream);
+    topic.postStream.set("stream", stream);
   }
-  ps.appEvents = AppEvents.create();
-  return ps;
+
+  return topic.postStream;
 }
 
 const participant = { username: "eviltrout" };
 
-module("Unit | Model | post-stream", function () {
+module("Unit | Model | post-stream", function (hooks) {
+  setupTest(hooks);
+
   test("create", function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     assert.ok(
       store.createRecord("postStream"),
       "it can be created with no parameters"
@@ -30,15 +32,15 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("defaults", function (assert) {
-    const postStream = buildStream(1234);
+    const postStream = buildStream.call(this, 1234);
     assert.blank(postStream.posts, "there are no posts in a stream by default");
     assert.ok(!postStream.get("loaded"), "it has never loaded");
     assert.present(postStream.get("topic"));
   });
 
   test("appending posts", function (assert) {
-    const postStream = buildStream(4567, [1, 3, 4]);
-    const store = postStream.store;
+    const postStream = buildStream.call(this, 4567, [1, 3, 4]);
+    const store = getOwner(this).lookup("service:store");
 
     assert.strictEqual(
       postStream.get("lastPostId"),
@@ -121,8 +123,8 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("closestPostNumberFor", function (assert) {
-    const postStream = buildStream(1231);
-    const store = postStream.store;
+    const postStream = buildStream.call(this, 1231);
+    const store = getOwner(this).lookup("service:store");
 
     assert.blank(
       postStream.closestPostNumberFor(1),
@@ -159,7 +161,7 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("closestDaysAgoFor", function (assert) {
-    const postStream = buildStream(1231);
+    const postStream = buildStream.call(this, 1231);
     postStream.set("timelineLookup", [
       [1, 10],
       [3, 8],
@@ -182,14 +184,14 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("closestDaysAgoFor - empty", function (assert) {
-    const postStream = buildStream(1231);
+    const postStream = buildStream.call(this, 1231);
     postStream.set("timelineLookup", []);
 
     assert.strictEqual(postStream.closestDaysAgoFor(1), undefined);
   });
 
   test("updateFromJson", function (assert) {
-    const postStream = buildStream(1231);
+    const postStream = buildStream.call(this, 1231);
 
     postStream.updateFromJson({
       posts: [{ id: 1 }],
@@ -208,8 +210,8 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("removePosts", function (assert) {
-    const postStream = buildStream(10000001, [1, 2, 3]);
-    const store = postStream.store;
+    const postStream = buildStream.call(this, 10000001, [1, 2, 3]);
+    const store = getOwner(this).lookup("service:store");
 
     const p1 = store.createRecord("post", { id: 1, post_number: 2 }),
       p2 = store.createRecord("post", { id: 2, post_number: 3 }),
@@ -229,7 +231,7 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("cancelFilter", function (assert) {
-    const postStream = buildStream(1235);
+    const postStream = buildStream.call(this, 1235);
 
     sinon.stub(postStream, "refresh").resolves();
 
@@ -246,7 +248,11 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("findPostIdForPostNumber", function (assert) {
-    const postStream = buildStream(1234, [10, 20, 30, 40, 50, 60, 70]);
+    const postStream = buildStream.call(
+      this,
+      1234,
+      [10, 20, 30, 40, 50, 60, 70]
+    );
     postStream.set("gaps", { before: { 60: [55, 58] } });
 
     assert.strictEqual(
@@ -272,7 +278,7 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("fillGapBefore", function (assert) {
-    const postStream = buildStream(1234, [60]);
+    const postStream = buildStream.call(this, 1234, [60]);
     sinon.stub(postStream, "findPostsByIds").resolves([]);
     let post = postStream.store.createRecord("post", {
       id: 60,
@@ -292,7 +298,7 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("filterParticipant", function (assert) {
-    const postStream = buildStream(1236);
+    const postStream = buildStream.call(this, 1236);
     sinon.stub(postStream, "refresh").resolves();
 
     assert.strictEqual(
@@ -312,7 +318,7 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("filterReplies", function (assert) {
-    const postStream = buildStream(1234),
+    const postStream = buildStream.call(this, 1234),
       store = postStream.store;
 
     postStream.appendPost(
@@ -343,7 +349,7 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("filterUpwards", function (assert) {
-    const postStream = buildStream(1234),
+    const postStream = buildStream.call(this, 1234),
       store = postStream.store;
 
     postStream.appendPost(
@@ -374,7 +380,7 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("streamFilters", function (assert) {
-    const postStream = buildStream(1237);
+    const postStream = buildStream.call(this, 1237);
     sinon.stub(postStream, "refresh").resolves();
 
     assert.deepEqual(
@@ -424,23 +430,24 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("loading", function (assert) {
-    let postStream = buildStream(1234);
+    let postStream = buildStream.call(this, 1234);
     assert.ok(!postStream.get("loading"), "we're not loading by default");
 
     postStream.set("loadingAbove", true);
     assert.ok(postStream.get("loading"), "we're loading if loading above");
 
-    postStream = buildStream(1234);
+    postStream = buildStream.call(this, 1234);
     postStream.set("loadingBelow", true);
     assert.ok(postStream.get("loading"), "we're loading if loading below");
 
-    postStream = buildStream(1234);
+    postStream = buildStream.call(this, 1234);
     postStream.set("loadingFilter", true);
     assert.ok(postStream.get("loading"), "we're loading if loading a filter");
   });
 
   test("nextWindow", function (assert) {
-    const postStream = buildStream(
+    const postStream = buildStream.call(
+      this,
       1234,
       [1, 2, 3, 5, 8, 9, 10, 11, 13, 14, 15, 16]
     );
@@ -472,7 +479,8 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("previousWindow", function (assert) {
-    const postStream = buildStream(
+    const postStream = buildStream.call(
+      this,
       1234,
       [1, 2, 3, 5, 8, 9, 10, 11, 13, 14, 15, 16]
     );
@@ -504,7 +512,7 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("storePost", function (assert) {
-    const postStream = buildStream(1234),
+    const postStream = buildStream.call(this, 1234),
       store = postStream.store,
       post = store.createRecord("post", {
         id: 1,
@@ -552,8 +560,8 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("identity map", async function (assert) {
-    const postStream = buildStream(1234);
-    const store = postStream.store;
+    const postStream = buildStream.call(this, 1234);
+    const store = getOwner(this).lookup("service:store");
 
     const p1 = postStream.appendPost(
       store.createRecord("post", { id: 1, post_number: 1 })
@@ -578,7 +586,7 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("loadIntoIdentityMap with no data", async function (assert) {
-    const result = await buildStream(1234).loadIntoIdentityMap([]);
+    const result = await buildStream.call(this, 1234).loadIntoIdentityMap([]);
     assert.strictEqual(
       result.length,
       0,
@@ -587,7 +595,7 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("loadIntoIdentityMap with post ids", async function (assert) {
-    const postStream = buildStream(1234);
+    const postStream = buildStream.call(this, 1234);
     await postStream.loadIntoIdentityMap([10]);
 
     assert.present(
@@ -597,8 +605,8 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("appendMore for megatopic", async function (assert) {
-    const postStream = buildStream(1234);
-    const store = createStore();
+    const postStream = buildStream.call(this, 1234);
+    const store = getOwner(this).lookup("service:store");
     const post = store.createRecord("post", { id: 1, post_number: 1 });
 
     postStream.setProperties({
@@ -620,8 +628,8 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("prependMore for megatopic", async function (assert) {
-    const postStream = buildStream(1234);
-    const store = createStore();
+    const postStream = buildStream.call(this, 1234);
+    const store = getOwner(this).lookup("service:store");
     const post = store.createRecord("post", { id: 6, post_number: 6 });
 
     postStream.setProperties({
@@ -643,8 +651,8 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("staging and undoing a new post", function (assert) {
-    const postStream = buildStream(10101, [1]);
-    const store = postStream.store;
+    const postStream = buildStream.call(this, 10101, [1]);
+    const store = getOwner(this).lookup("service:store");
 
     const original = store.createRecord("post", {
       id: 1,
@@ -658,7 +666,7 @@ module("Unit | Model | post-stream", function () {
       "the original post is lastAppended"
     );
 
-    const user = User.create({
+    const user = store.createRecord("user", {
       username: "eviltrout",
       name: "eviltrout",
       id: 321,
@@ -759,8 +767,8 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("staging and committing a post", function (assert) {
-    const postStream = buildStream(10101, [1]);
-    const store = postStream.store;
+    const postStream = buildStream.call(this, 10101, [1]);
+    const store = getOwner(this).lookup("service:store");
 
     const original = store.createRecord("post", {
       id: 1,
@@ -774,7 +782,7 @@ module("Unit | Model | post-stream", function () {
       "the original post is lastAppended"
     );
 
-    const user = User.create({
+    const user = store.createRecord("user", {
       username: "eviltrout",
       name: "eviltrout",
       id: 321,
@@ -843,8 +851,8 @@ module("Unit | Model | post-stream", function () {
   test("loadedAllPosts when the id changes", function (assert) {
     // This can happen in a race condition between staging a post and it coming through on the
     // message bus. If the id of a post changes we should reconsider the loadedAllPosts property.
-    const postStream = buildStream(10101, [1, 2]);
-    const store = postStream.store;
+    const postStream = buildStream.call(this, 10101, [1, 2]);
+    const store = getOwner(this).lookup("service:store");
     const postWithoutId = store.createRecord("post", {
       raw: "hello world this is my new post",
     });
@@ -863,8 +871,8 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("triggerRecoveredPost", async function (assert) {
-    const postStream = buildStream(4567);
-    const store = postStream.store;
+    const postStream = buildStream.call(this, 4567);
+    const store = getOwner(this).lookup("service:store");
 
     [1, 2, 3, 5].forEach((id) => {
       postStream.appendPost(
@@ -892,13 +900,13 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("committing and triggerNewPostsInStream race condition", function (assert) {
-    const postStream = buildStream(4964);
-    const store = postStream.store;
+    const postStream = buildStream.call(this, 4964);
+    const store = getOwner(this).lookup("service:store");
 
     postStream.appendPost(
       store.createRecord("post", { id: 1, post_number: 1 })
     );
-    const user = User.create({
+    const user = store.createRecord("user", {
       username: "eviltrout",
       name: "eviltrout",
       id: 321,
@@ -932,14 +940,14 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("triggerNewPostInStream for ignored posts", async function (assert) {
-    const postStream = buildStream(280, [1]);
-    const store = postStream.store;
+    const postStream = buildStream.call(this, 280, [1]);
+    const store = getOwner(this).lookup("service:store");
     User.resetCurrent(
-      User.create({
+      store.createRecord("user", {
         username: "eviltrout",
         name: "eviltrout",
         id: 321,
-        ignored_users: ["ignoreduser"],
+        ignored_users: ["ignored-user"],
       })
     );
 
@@ -950,13 +958,13 @@ module("Unit | Model | post-stream", function () {
     const post2 = store.createRecord("post", {
       id: 101,
       post_number: 2,
-      username: "regularuser",
+      username: "regular-user",
     });
 
     const post3 = store.createRecord("post", {
       id: 102,
       post_number: 3,
-      username: "ignoreduser",
+      username: "ignored-user",
     });
 
     let stub = sinon.stub(postStream, "findPostsByIds").resolves([post2]);
@@ -990,9 +998,13 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("postsWithPlaceholders", async function (assert) {
-    const postStream = buildStream(4964, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    const postStream = buildStream.call(
+      this,
+      4964,
+      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    );
     const postsWithPlaceholders = postStream.get("postsWithPlaceholders");
-    const store = postStream.store;
+    const store = getOwner(this).lookup("service:store");
 
     const testProxy = ArrayProxy.create({ content: postsWithPlaceholders });
 
@@ -1039,7 +1051,7 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("filteredPostsCount", function (assert) {
-    const postStream = buildStream(4567, [1, 3, 4]);
+    const postStream = buildStream.call(this, 4567, [1, 3, 4]);
 
     assert.strictEqual(postStream.get("filteredPostsCount"), 3);
 
@@ -1051,7 +1063,7 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("lastPostId", function (assert) {
-    const postStream = buildStream(4567, [1, 3, 4]);
+    const postStream = buildStream.call(this, 4567, [1, 3, 4]);
 
     assert.strictEqual(postStream.get("lastPostId"), 4);
 
@@ -1064,8 +1076,8 @@ module("Unit | Model | post-stream", function () {
   });
 
   test("progressIndexOfPostId", function (assert) {
-    const postStream = buildStream(4567, [1, 3, 4]);
-    const store = createStore();
+    const postStream = buildStream.call(this, 4567, [1, 3, 4]);
+    const store = getOwner(this).lookup("service:store");
     const post = store.createRecord("post", { id: 1, post_number: 5 });
 
     assert.strictEqual(postStream.progressIndexOfPostId(post), 1);

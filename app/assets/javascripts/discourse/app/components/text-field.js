@@ -53,12 +53,13 @@ export default TextField.extend({
     next(() => this.onChange(this.value));
   },
 
-  @discourseComputed
-  dir() {
+  get dir() {
     if (this.siteSettings.support_mixed_text_direction) {
-      let val = this.value;
-      if (val) {
-        return isRTL(val) ? "rtl" : "ltr";
+      const val = this.get("value");
+      if (val && isRTL(val)) {
+        return "rtl";
+      } else if (val && isLTR(val)) {
+        return "ltr";
       } else {
         return siteDir();
       }
@@ -68,21 +69,6 @@ export default TextField.extend({
   willDestroyElement() {
     this._super(...arguments);
     cancel(this._timer);
-  },
-
-  keyUp(event) {
-    this._super(event);
-
-    if (this.siteSettings.support_mixed_text_direction) {
-      let val = this.value;
-      if (isRTL(val)) {
-        this.set("dir", "rtl");
-      } else if (isLTR(val)) {
-        this.set("dir", "ltr");
-      } else {
-        this.set("dir", siteDir());
-      }
-    }
   },
 
   @discourseComputed("placeholderKey")

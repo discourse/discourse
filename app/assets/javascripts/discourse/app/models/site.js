@@ -229,6 +229,7 @@ if (typeof Discourse !== "undefined") {
       if (!warned) {
         deprecated("Import the Site class instead of using Discourse.Site", {
           since: "2.4.0",
+          id: "discourse.globals.site",
         });
         warned = true;
       }

@@ -7,8 +7,7 @@ import {
   triggerKeyEvent,
   waitUntil,
 } from "@ember/test-helpers";
-import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
 
 module("Integration | Component | site-header", function (hooks) {
@@ -17,43 +16,6 @@ module("Integration | Component | site-header", function (hooks) {
   hooks.beforeEach(function () {
     this.currentUser.set("unread_high_priority_notifications", 1);
     this.currentUser.set("read_first_notification", false);
-  });
-
-  test("first notification mask", async function (assert) {
-    await render(hbs`<SiteHeader />`);
-
-    assert.strictEqual(
-      count(".ring-backdrop"),
-      1,
-      "there is the first notification mask"
-    );
-
-    // Click anywhere
-    await click("header.d-header");
-
-    assert.ok(
-      !exists(".ring-backdrop"),
-      "it hides the first notification mask"
-    );
-  });
-
-  test("do not call authenticated endpoints as anonymous", async function (assert) {
-    this.owner.unregister("service:current-user");
-
-    await render(hbs`<SiteHeader />`);
-
-    assert.ok(
-      !exists(".ring-backdrop"),
-      "there is no first notification mask for anonymous users"
-    );
-
-    pretender.get("/notifications", () => {
-      assert.ok(false, "it should not try to refresh notifications");
-      return response(403, {});
-    });
-
-    // Click anywhere
-    await click("header.d-header");
   });
 
   test("displaying unread and reviewable notifications count when user's notifications and reviewables count are updated", async function (assert) {
@@ -81,22 +43,6 @@ module("Integration | Component | site-header", function (hooks) {
       ".header-dropdown-toggle.current-user .unread-notifications"
     );
     assert.strictEqual(unreadBadge.textContent, "8");
-  });
-
-  test("user avatar is highlighted when the user receives the first notification", async function (assert) {
-    this.currentUser.set("all_unread_notifications_count", 1);
-    this.currentUser.set("redesigned_user_menu_enabled", true);
-    this.currentUser.set("read_first_notification", false);
-    await render(hbs`<SiteHeader />`);
-    assert.ok(exists(".ring-first-notification"));
-  });
-
-  test("user avatar is not highlighted when the user receives notifications beyond the first one", async function (assert) {
-    this.currentUser.set("redesigned_user_menu_enabled", true);
-    this.currentUser.set("all_unread_notifications_count", 1);
-    this.currentUser.set("read_first_notification", true);
-    await render(hbs`<SiteHeader />`);
-    assert.ok(!exists(".ring-first-notification"));
   });
 
   test("hamburger menu icon shows pending reviewables count", async function (assert) {

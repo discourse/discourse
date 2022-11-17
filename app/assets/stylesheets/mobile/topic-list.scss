@@ -50,6 +50,7 @@
       margin-right: 0;
       font-size: var(--font-down-1);
       border: 1px solid var(--primary-medium);
+      border-radius: var(--d-input-border-radius);
     }
     > li > a {
       line-height: var(--line-height-large);

@@ -12,8 +12,6 @@ acceptance("User Tips - first_notification", function (needs) {
   needs.hooks.afterEach(() => hideAllUserTips());
 
   test("Shows first notification user tip", async function (assert) {
-    this.siteSettings.enable_user_tips = true;
-
     await visit("/t/internationalization-localization/280");
     assert.equal(
       query(".user-tip-title").textContent.trim(),

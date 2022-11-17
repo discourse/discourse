@@ -293,7 +293,6 @@ pt_BR:
       like_count: "Curtidas"
       topic_count: "Tópicos"
       post_count: "Mensagens"
-      user_count: "Usuários"
       active_user_count: "Usuários(as) ativos(as)"
       contact: "Fale conosco"
       contact_info: "Em caso de algum problema crítico ou assunto urgente relacionado a este site, fale conosco em %{contact_info}."
@@ -350,7 +349,6 @@ pt_BR:
       remove_confirmation: "Tem certeza de que deseja excluir este rascunho?"
       new_topic: "Novo rascunho de tópico"
       new_private_message: "Novo rascunho de mensagem"
-      topic_reply: "Rascunho de resposta"
       abandon:
         confirm: "Você tem um rascunho em andamento para este tópico. O que deseja fazer com ele?"
         yes_value: "Descartar"
@@ -1086,7 +1084,6 @@ pt_BR:
         not_first_time: "Não é a sua primeira vez?"
         skip_link: "Pular estas dicas"
         read_later: "Vou ler mais tarde."
-      reset_seen_popups: "Exibir dicas de integração novamente"
       theme_default_on_all_devices: "Definir este tema como padrão em todos os meus dispositivos"
       color_scheme_default_on_all_devices: "Definir esquemas de cores padrão em todos os meus dispositivos"
       color_scheme: "Esquema de cores"
@@ -1671,15 +1668,6 @@ pt_BR:
       set_custom_status: "Definir status personalizados"
       what_are_you_doing: "O que você está fazendo?"
       remove_status: "Remover status"
-    popup:
-      primary: "Entendi!"
-      secondary: "não me mostre essas dicas"
-      first_notification:
-        title: "Sua primeira notificação!"
-        content: "As notificações são usadas para que você se atualize sobre o que está acontecendo na comunidade."
-      topic_timeline:
-        title: "Linha do tempo do tópico"
-        content: "Percorra rapidamente uma postagem usando a linha do tempo do tópico."
     loading: "Carregando..."
     errors:
       prev_page: "ao tentar carregar"
@@ -2525,9 +2513,6 @@ pt_BR:
       move_to_inbox:
         title: "Mover para caixa de entrada"
         help: "Mover mensagem de volta para caixa de entrada"
-      edit_message:
-        help: "Editar primeira postagem da mensagem"
-        title: "Editar"
       defer:
         help: "Marcar como não lido"
         title: "Adiar"
@@ -3248,8 +3233,6 @@ pt_BR:
       this_year: "este ano"
       position: "Posição na página de categorias:"
       default_position: "Posição padrão"
-      position_disabled: "Categorias serão exibidas em ordem de atividade. Para controlar a ordem das categorias nas listas,"
-      position_disabled_click: 'ative a configuração "posições de categoria fixas".'
       minimum_required_tags: "Número mínimo de etiquetas exigidas em um tópico:"
       default_slow_mode: 'Ative o "Modo lento" para obter novos tópicos nesta categoria.'
       parent: "Categoria principal"

@@ -358,7 +358,7 @@ he:
       like_count: "לייקים"
       topic_count: "נושאים"
       post_count: "פוסטים"
-      user_count: "משתמשים"
+      user_count: "הרשמות"
       active_user_count: "משתמשים פעילים"
       contact: "יצירת קשר"
       contact_info: "במקרה של בעיה קריטית או דחופה המשפיעה על אתר זה, נא ליצור אתנו קשר דרך: %{contact_info}."
@@ -415,7 +415,6 @@ he:
       remove_confirmation: "למחוק את הטיוטה הזאת?"
       new_topic: "טיוטת נושא חדשה"
       new_private_message: "טיוטת הודעה אישית חדשה"
-      topic_reply: "טיוטת תשובה"
       abandon:
         confirm: "יש טיוטה שהתחלת לערוך לנושא הזה. מה לעשות אתה?"
         yes_value: "להשליך"
@@ -1201,7 +1200,7 @@ he:
         not_first_time: "לא הפעם הראשונה שלך?"
         skip_link: "דילוג על העצות האלו"
         read_later: "אקרא את זה אחר כך."
-      reset_seen_popups: "להציג את עצות קבלת הפנים שוב"
+      reset_seen_user_tips: "הצגת עצות למשתמש שוב"
       theme_default_on_all_devices: "הגדרת ערכת עיצוב זו כבררת המחדל לכל המכשירים שלי"
       color_scheme_default_on_all_devices: "הגדרת ערכות צבעים כבררת מחדל לכל המכשירים שלי"
       color_scheme: "ערכת צבעים"
@@ -1817,7 +1816,7 @@ he:
       set_custom_status: "הגדרת מצב משלך"
       what_are_you_doing: "מה מעלליך?"
       remove_status: "הסרת מצב"
-    popup:
+    user_tips:
       primary: "הבנתי!"
       secondary: "לא להציג יותר את העצות האלה"
       first_notification:
@@ -2720,9 +2719,6 @@ he:
       move_to_inbox:
         title: "העברה לדואר נכנס"
         help: "החזרת הודעה לדואר נכנס"
-      edit_message:
-        help: "עריכת פוסט ראשון של ההודעה"
-        title: "עריכה"
       defer:
         help: "סימון כלא נקראו"
         title: "אחר כך"
@@ -3518,8 +3514,6 @@ he:
       this_year: "השנה"
       position: "מיקום בעמוד הקטגוריות:"
       default_position: "מיקום ברירת מחדל"
-      position_disabled: "קטגוריות יוצגו על פס סדר הפעילות. כדי לשלוט בסדר הקטגורייות ברשימה,"
-      position_disabled_click: 'אפשרו את ההגדרה "סדר קטגוריות קבוע".'
       minimum_required_tags: "מספר התגיות המזערי הנדרש לנושא:"
       default_slow_mode: 'להפעיל „מצב אטי” לנושאים חדשים בקטגוריה הזאת.'
       parent: "קטגורית אם"
@@ -4194,12 +4188,20 @@ he:
             unread_with_count: "לא נקראה (%{count})"
             archive: "ארכיון"
         tags:
+          links:
+            add_tags:
+              content: "הוספת תגיות"
+              title: "לא הוספת תגיות כלל. יש ללחוץ כדי להתחיל."
           none: "עדיין לא הוספת תגיות."
           click_to_get_started: "ללחוץ כאן כדי להתחיל."
           header_link_text: "תגיות"
           header_action_title: "לערוך את תגיות סרגל הצד שלך"
           configure_defaults: "הגדרת ברירות מחדל"
         categories:
+          links:
+            add_categories:
+              content: "הוספת קטגוריות"
+              title: "לא הוספת קטגוריות כלל. יש ללחוץ כדי להתחיל."
           none: "עדיין לא הוספת קטגוריות."
           click_to_get_started: "ללחוץ כאן כדי להתחיל."
           header_link_text: "קטגוריות"
@@ -4626,6 +4628,7 @@ he:
         change_settings_short: "הגדרות"
         howto: "איך אני מתקין/ה הרחבות?"
         official: "תוסף רשמי"
+        broken_route: "לא ניתן להגדיר את הקישור אל ‚%{name}’. כדאי לוודא שחוסמי פרסומות מושבתים ואז לנסות לטעון את הדף מחדש."
       backups:
         title: "גיבויים"
         menu:
