@@ -11,7 +11,6 @@ import {
   fillIn,
   visit,
 } from "@ember/test-helpers";
-import I18n from "I18n";
 import User from "discourse/models/user";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
