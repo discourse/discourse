@@ -428,7 +428,10 @@ acceptance("Discourse Chat - Core Sidebar", function (needs) {
       ".sidebar-section-chat-channels .sidebar-section-link-wrapper .sidebar-section-link"
     );
 
-    assert.strictEqual(evilChannel.title, "&lt;script&gt;evil&lt;/script&gt;");
+    assert.strictEqual(
+      evilChannel.title,
+      "&lt;script&gt;evil&lt;/script&gt; chat"
+    );
 
     assert.ok(
       evilChannel.className.includes(
@@ -451,7 +454,10 @@ acceptance("Discourse Chat - Core Sidebar", function (needs) {
       ".sidebar-section-chat-dms .sidebar-section-link-wrapper .sidebar-section-link"
     )[3];
 
-    assert.strictEqual(evilChannel.title, "@&lt;script&gt;sam&lt;/script&gt;");
+    assert.strictEqual(
+      evilChannel.title,
+      "chat with @&lt;script&gt;sam&lt;/script&gt;"
+    );
 
     assert.ok(
       evilChannel.className.includes(
