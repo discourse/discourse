@@ -250,8 +250,7 @@ body.invite-page {
     .user-fields .input-group {
       .user-field {
         &.text {
-          &.value-entered label.control-label,
-          input:focus + label.control-label {
+          &.value-entered label.control-label {
             top: -8px;
             left: calc(1em - 0.25em);
             background-color: var(--secondary);
