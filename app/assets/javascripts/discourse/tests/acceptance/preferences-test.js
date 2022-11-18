@@ -91,6 +91,7 @@ acceptance("User Preferences", function (needs) {
       "/u/eviltrout/preferences/account",
       "defaults to account tab"
     );
+
     assert.ok(exists(".user-preferences"), "it shows the preferences");
 
     const savePreferences = async () => {
@@ -112,25 +113,32 @@ acceptance("User Preferences", function (needs) {
     await savePreferences();
 
     await click(".preferences-nav .nav-notifications a");
+
     await selectKit(
       ".control-group.notifications .combo-box.duration"
     ).expand();
+
     await selectKit(
       ".control-group.notifications .combo-box.duration"
     ).selectRowByValue(1440);
+
     await savePreferences();
 
     await click(".preferences-nav .nav-categories a");
+
     const categorySelector = selectKit(
       ".tracking-controls .category-selector "
     );
+
     await categorySelector.expand();
     await categorySelector.fillInFilter("faq");
     await savePreferences();
 
     this.siteSettings.tagging_enabled = false;
+
     await visit("/");
     await visit("/u/eviltrout/preferences");
+
     assert.ok(
       !exists(".preferences-nav .nav-tags a"),
       "tags tab isn't there when tags are disabled"
@@ -564,7 +572,7 @@ acceptance("Ignored users", function (needs) {
   });
 });
 
-acceptance("Security", function (needs) {
+acceptance("User Preferences - Security", function (needs) {
   needs.user();
   needs.pretender(preferencesPretender);
 
