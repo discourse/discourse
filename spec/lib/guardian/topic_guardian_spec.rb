@@ -187,7 +187,7 @@ RSpec.describe TopicGuardian do
       expect(list.count).to eq(1)
     end
 
-    context 'when SiteSetting.suppress_secured_categories_from_admin is enabled' do
+    context 'when SiteSetting.suppress_secured_categories_from_admin is true' do
       before do
         SiteSetting.suppress_secured_categories_from_admin = true
       end
