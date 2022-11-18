@@ -127,7 +127,7 @@ export default class MentionWarnings extends Component {
   @computed("unreachable", "overMembersLimit", "mentions", "tooManyMentions")
   get warningHeaderText() {
     const errorsCount = this.unreachable.length + this.overMembersLimit.length;
-    if (this.mentions.length < errorsCount || this.tooManyMentions) {
+    if (this.mentions.length <= errorsCount || this.tooManyMentions) {
       return I18n.t("chat.mention_warning.groups.header.all");
     } else {
       return I18n.t("chat.mention_warning.groups.header.some");
@@ -140,25 +140,29 @@ export default class MentionWarnings extends Component {
       return;
     }
 
-    let notificationLimit;
+    let notificationLimit = escapeExpression(
+      I18n.t("chat.mention_warning.notification_limit")
+    );
+
     if (this.currentUser.staff) {
-      const limitText = escapeExpression(
-        I18n.t("chat.mention_warning.notification_limit")
-      );
       notificationLimit = htmlSafe(
         `<a 
           target="_blank" 
           href="/admin/site_settings/category/plugins?filter=max_mentions_per_chat_message"
         >
-          ${limitText}
+          ${notificationLimit}
         </a>`
       );
     }
 
+    const settingLimit = I18n.t("chat.mention_warning.mentions_limit", {
+      count: this.siteSettings.max_mentions_per_chat_message,
+    });
+
     return htmlSafe(
       I18n.t("chat.mention_warning.too_many_mentions", {
         notification_limit: notificationLimit,
-        limit: this.siteSettings.max_mentions_per_chat_message,
+        limit: settingLimit,
       })
     );
   }
@@ -189,20 +193,23 @@ export default class MentionWarnings extends Component {
       return;
     }
 
-    let notificationLimit;
+    let notificationLimit = escapeExpression(
+      I18n.t("chat.mention_warning.groups.notification_limit")
+    );
     if (this.currentUser.staff) {
-      const limitText = escapeExpression(
-        I18n.t("chat.mention_warning.notification_limit")
-      );
       notificationLimit = htmlSafe(
         `<a 
           target="_blank" 
           href="/admin/site_settings/category/plugins?filter=max_users_notified_per_group_mention"
         >
-          ${limitText}
+          ${notificationLimit}
         </a>`
       );
     }
+
+    const settingLimit = I18n.t("chat.mention_warning.groups.users_limit", {
+      count: this.siteSettings.max_users_notified_per_group_mention,
+    });
 
     if (this.overMembersLimit.length <= 2) {
       return htmlSafe(
@@ -220,7 +227,7 @@ export default class MentionWarnings extends Component {
           group: this.overMembersLimit[0],
           count: this.overMembersLimit.length - 1, //N others
           notification_limit: notificationLimit,
-          limit: this.siteSettings.max_mentions_per_chat_message,
+          limit: settingLimit,
         })
       );
     }

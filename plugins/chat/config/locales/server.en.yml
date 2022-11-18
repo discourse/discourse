@@ -17,6 +17,7 @@ en:
     default_emoji_reactions: "Default emoji reactions for chat messages. Add up to 5 emojis for quick reaction."
     direct_message_enabled_groups: "Allow users within these groups to create user-to-user Personal Chats. Note: staff can always create Personal Chats, and users will be able to reply to Personal Chats initiated by users who have permission to create them."
     chat_message_flag_allowed_groups: "Users in these groups are allowed to flag chat messages."
+    max_mentions_per_chat_message: "Maximum number of @name notifications a user can use in a chat message."
     chat_max_direct_message_users: "Users cannot add more than this number of other users when creating a new direct message. Set to 0 to only allow messages to oneself. Staff are exempt from this setting."
     chat_allow_archiving_channels: "Allow staff to archive messages to a topic when closing a channel."
     errors:

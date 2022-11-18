@@ -135,11 +135,17 @@ en:
             other: "@%{group} and @%{group_2} doesn't allow mentions"
           unreachable_multiple: "@%{group} and %{count} others doesn't allow mentions"
           too_many_members:
-            one: "Mentioning @%{group} exceeds the %{notification_limit} of %{limit} users"
-            other: "Mentioning both @%{group} or @%{group_2} exceeds the %{notification_limit} of %{limit} users"
-          too_many_members_multiple: "These %{count} groups exceed the %{notification_limit} of %{limit} users"
-        notification_limit: "notification limit"
-        too_many_mentions: "This message exceeds the %{notification_limit} of %{limit} mentions"
+            one: "Mentioning @%{group} exceeds the %{notification_limit} of %{limit}"
+            other: "Mentioning both @%{group} or @%{group_2} exceeds the %{notification_limit} of %{limit}"
+          too_many_members_multiple: "These %{count} groups exceed the %{notification_limit} of %{limit}"
+          users_limit:
+            one: "%{count} user"
+            other: "%{count} users"
+          notification_limit: "notification limit"
+        too_many_mentions: "This message exceeds the %{notification_limit} of %{limit}"
+        mentions_limit:
+          one: "%{count} mention"
+          other: "%{count} mentions"
       aria_roles:
         header: "Chat header"
         composer: "Chat composer"
