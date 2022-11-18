@@ -6,19 +6,19 @@ export default Component.extend({
   classNames: ["create-account-body"],
 
   userInputFocus(event) {
-    let label = event.target.parentElement.previousElementSibling;
-    if (!label.classList.contains("value-entered")) {
-      label.classList.toggle("value-entered");
+    let controls = event.target.parentElement;
+    if (!controls.classList.contains("value-entered")) {
+      controls.classList.toggle("value-entered");
     }
   },
 
   userInputFocusOut(event) {
-    let label = event.target.parentElement.previousElementSibling;
+    let controls = event.target.parentElement;
     if (
       event.target.value.length === 0 &&
-      label.classList.contains("value-entered")
+      controls.classList.contains("value-entered")
     ) {
-      label.classList.toggle("value-entered");
+      controls.classList.toggle("value-entered");
     }
   },
 
@@ -51,8 +51,9 @@ export default Component.extend({
     let userTextFields = document.getElementsByClassName("user-fields")[0];
 
     if (userTextFields) {
-      userTextFields =
-        userTextFields.getElementsByClassName("ember-text-field");
+      userTextFields = userTextFields.getElementsByClassName(
+        "ember-text-field"
+      );
     }
 
     if (userTextFields) {
@@ -75,8 +76,9 @@ export default Component.extend({
     let userTextFields = document.getElementsByClassName("user-fields")[0];
 
     if (userTextFields) {
-      userTextFields =
-        userTextFields.getElementsByClassName("ember-text-field");
+      userTextFields = userTextFields.getElementsByClassName(
+        "ember-text-field"
+      );
     }
 
     if (userTextFields) {
