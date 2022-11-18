@@ -138,7 +138,11 @@ module.exports = function (defaults) {
       return mergeTrees([
         tests,
         testHelpers,
-        discourseScss(`${discourseRoot}/app/assets/stylesheets`, "testem.scss"),
+        discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
+        discourseScss(
+          `${discourseRoot}/app/assets/stylesheets`,
+          "qunit-custom.scss"
+        ),
       ]);
     } else {
       return mergeTrees([tests, testHelpers]);

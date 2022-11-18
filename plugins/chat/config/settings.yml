@@ -48,7 +48,6 @@ chat:
     min: 0
   chat_allow_archiving_channels:
     default: false
-    hidden: true
     client: true
   chat_archive_destination_topic_status:
     type: enum

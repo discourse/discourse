@@ -13,7 +13,11 @@ export default Mixin.create({
   selected: null,
   lastChecked: null,
 
-  canBulkSelect: or("currentUser.staff", "showDismissRead", "showResetNew"),
+  canBulkSelect: or(
+    "currentUser.canManageTopic",
+    "showDismissRead",
+    "showResetNew"
+  ),
 
   @on("init")
   resetSelected() {

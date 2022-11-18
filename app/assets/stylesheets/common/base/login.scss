@@ -453,3 +453,28 @@ button#new-account-link {
     padding-bottom: 1em;
   }
 }
+
+.email-login {
+  border-radius: 10px;
+  background-color: var(--secondary);
+  padding: 20px;
+  margin: 0 auto;
+  .content-wrapper {
+    box-shadow: 0 1px 10px 1px rgba(var(--primary-low-rgb), 1.25);
+    border-radius: 10px;
+    padding: 1em 2.5em 1em 2.5em;
+    .image-wrapper {
+      text-align: center;
+      padding-bottom: 1em;
+    }
+    .email-login-form {
+      text-align: center;
+      .btn-primary {
+        margin-top: 10px;
+      }
+      #security-key {
+        justify-content: center;
+      }
+    }
+  }
+}
