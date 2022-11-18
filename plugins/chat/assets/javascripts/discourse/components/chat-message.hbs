@@ -136,11 +136,11 @@
                 <FlatButton @class="dismiss-mention-warning" @title="chat.mention_warning.dismiss" @action={{action "dismissMentionWarning"}} @icon="times" />
 
                 {{#if this.message.mentionWarning.cannot_see}}
-                  <p class="cannot-see">{{this.mentionedCannotSeeText}}</p>
+                  <p class="warning-item cannot-see">{{this.mentionedCannotSeeText}}</p>
                 {{/if}}
 
                 {{#if this.message.mentionWarning.without_membership}}
-                  <p class="without-membership">
+                  <p class="warning-item without-membership">
                     <span>{{this.mentionedWithoutMembershipText}}</span>
                     <a
                       class="invite-link"
@@ -150,6 +150,13 @@
                       {{i18n "chat.mention_warning.invite"}}
                     </a>
                   </p>
+                {{/if}}
+                {{#if this.message.mentionWarning.group_mentions_disabled}}
+                  <p class="warning-item">{{this.groupsWithDisabledMentions}}</p>
+                {{/if}}
+
+                {{#if this.message.mentionWarning.too_many_members}}
+                  <p class="warning-item">{{this.groupsWithTooManyMembers}}</p>
                 {{/if}}
               {{/if}}
             </div>

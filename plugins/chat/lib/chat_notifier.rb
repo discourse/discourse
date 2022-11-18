@@ -56,17 +56,13 @@ class Chat::ChatNotifier
 
   def notify_new
     to_notify = list_users_to_notify
-    inaccessible = to_notify.extract!(:unreachable, :welcome_to_join)
     mentioned_user_ids = to_notify.extract!(:all_mentioned_user_ids)[:all_mentioned_user_ids]
 
     mentioned_user_ids.each do |member_id|
       ChatPublisher.publish_new_mention(member_id, @chat_channel.id, @chat_message.id)
     end
 
-    notify_creator_of_inaccessible_mentions(
-      inaccessible[:unreachable],
-      inaccessible[:welcome_to_join],
-    )
+    notify_creator_of_inaccessible_mentions(to_notify)
 
     notify_mentioned_users(to_notify)
     notify_watching_users(except: mentioned_user_ids << @user.id)
@@ -80,7 +76,6 @@ class Chat::ChatNotifier
     already_notified_user_ids = existing_notifications.map(&:user_id)
 
     to_notify = list_users_to_notify
-    inaccessible = to_notify.extract!(:unreachable, :welcome_to_join)
     mentioned_user_ids = to_notify.extract!(:all_mentioned_user_ids)[:all_mentioned_user_ids]
 
     needs_deletion = already_notified_user_ids - mentioned_user_ids
@@ -93,10 +88,7 @@ class Chat::ChatNotifier
     needs_notification_ids = mentioned_user_ids - already_notified_user_ids
     return if needs_notification_ids.blank?
 
-    notify_creator_of_inaccessible_mentions(
-      inaccessible[:unreachable],
-      inaccessible[:welcome_to_join],
-    )
+    notify_creator_of_inaccessible_mentions(to_notify)
 
     notify_mentioned_users(to_notify, already_notified_user_ids: already_notified_user_ids)
 
@@ -247,28 +239,40 @@ class Chat::ChatNotifier
       )
   end
 
-  def mentionable_groups
-    @mentionable_groups ||=
-      Group.mentionable(@user, include_public: false).where(
-        "LOWER(name) IN (?)",
-        group_name_mentions,
-      ).where("user_count <= ?", SiteSetting.max_users_notified_per_group_mention)
+  def visible_groups
+    @visible_groups ||=
+        Group
+          .where("LOWER(name) IN (?)", group_name_mentions)
+          .visible_groups(@user)
   end
 
   def expand_group_mentions(to_notify, already_covered_ids, skip)
-    return [] if skip || mentionable_groups.empty?
+    return [] if skip || visible_groups.empty?
 
-    mentionable_groups.each { |g| to_notify[g.name.downcase] = [] }
+    mentionable_groups = Group
+      .mentionable(@user, include_public: false)
+      .where(id: visible_groups.map(&:id))
+
+    mentions_disabled = visible_groups - mentionable_groups
+
+    too_many_members, mentionable = mentionable_groups.partition do |group|
+      group.user_count > SiteSetting.max_users_notified_per_group_mention
+    end
+
+    to_notify[:group_mentions_disabled] = mentions_disabled
+    to_notify[:too_many_members] = too_many_members
+
+    mentionable.each { |g| to_notify[g.name.downcase] = [] }
 
     reached_by_group =
-      chat_users.joins(:groups).where(groups: mentionable_groups).where.not(id: already_covered_ids)
+      chat_users.joins(:groups).where(groups: mentionable).where.not(id: already_covered_ids)
 
     grouped = group_users_to_notify(reached_by_group)
 
     grouped[:already_participating].each do |user|
       # When a user is a member of multiple mentioned groups,
       # the most far to the left should take precedence.
-      ordered_group_names = group_name_mentions & mentionable_groups.map { |mg| mg.name.downcase }
+      ordered_group_names = group_name_mentions & mentionable.map { |mg| mg.name.downcase }
       user_group_names = user.groups.map { |ug| ug.name.downcase }
       group_name = ordered_group_names.detect { |gn| user_group_names.include?(gn) }
 
@@ -280,14 +284,17 @@ class Chat::ChatNotifier
     to_notify[:unreachable] = to_notify[:unreachable].concat(grouped[:unreachable])
   end
 
-  def notify_creator_of_inaccessible_mentions(unreachable, welcome_to_join)
-    return if unreachable.empty? && welcome_to_join.empty?
+  def notify_creator_of_inaccessible_mentions(to_notify)
+    inaccessible = to_notify.extract!(:unreachable, :welcome_to_join, :too_many_members, :group_mentions_disabled)
+    return if inaccessible.values.all?(&:blank?)
 
     ChatPublisher.publish_inaccessible_mentions(
       @user.id,
       @chat_message,
-      unreachable,
-      welcome_to_join,
+      inaccessible[:unreachable].to_a,
+      inaccessible[:welcome_to_join].to_a,
+      inaccessible[:too_many_members].to_a,
+      inaccessible[:group_mentions_disabled].to_a
     )
   end
 
@@ -297,6 +304,8 @@ class Chat::ChatNotifier
   # invitation by the creator.
   def filter_users_ignoring_or_muting_creator(to_notify, already_covered_ids)
     screen_targets = already_covered_ids.concat(to_notify[:welcome_to_join].map(&:id))
+
+    return if screen_targets.blank?
 
     screener = UserCommScreener.new(acting_user: @user, target_user_ids: screen_targets)
     to_notify

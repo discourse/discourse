@@ -448,16 +448,42 @@ export default Component.extend({
   @discourseComputed("message.mentionWarning.cannot_see")
   mentionedCannotSeeText(users) {
     return I18n.t("chat.mention_warning.cannot_see", {
-      usernames: users.mapBy("username").join(", "),
+      username: users[0].username,
       count: users.length,
+      others: this._othersTranslation(users.length - 1),
     });
   },
 
   @discourseComputed("message.mentionWarning.without_membership")
   mentionedWithoutMembershipText(users) {
     return I18n.t("chat.mention_warning.without_membership", {
-      usernames: users.mapBy("username").join(", "),
+      username: users[0].username,
       count: users.length,
+      others: this._othersTranslation(users.length - 1),
+    });
+  },
+
+  @discourseComputed("message.mentionWarning.group_mentions_disabled")
+  groupsWithDisabledMentions(groups) {
+    return I18n.t("chat.mention_warning.group_mentions_disabled", {
+      group_name: groups[0],
+      count: groups.length,
+      others: this._othersTranslation(groups.length - 1),
+    });
+  },
+
+  @discourseComputed("message.mentionWarning.too_many_members")
+  groupsWithTooManyMembers(groups) {
+    return I18n.t("chat.mention_warning.too_many_members", {
+      group_name: groups[0],
+      count: groups.length,
+      others: this._othersTranslation(groups.length - 1),
+    });
+  },
+
+  _othersTranslation(othersCount) {
+    return I18n.t("chat.mention_warning.warning_multiple", {
+      count: othersCount,
     });
   },
 
