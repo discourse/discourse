@@ -203,6 +203,10 @@ class UserUpdater
         update_allowed_pm_users(attributes[:allowed_pm_usernames])
       end
 
+      if attributes.key?(:discourse_connect)
+        update_discourse_connect(attributes[:discourse_connect])
+      end
+
       if attributes.key?(:user_associated_accounts)
         updated_associated_accounts(attributes[:user_associated_accounts])
       end
@@ -351,6 +355,17 @@ class UserUpdater
       @user.clear_status!
     else
       @user.set_status!(status[:description], status[:emoji], status[:ends_at])
+    end
+  end
+
+  def update_discourse_connect(discourse_connect)
+    external_id = discourse_connect[:external_id]
+    sso = SingleSignOnRecord.find_or_initialize_by(user_id: user.id)
+
+    if external_id.present?
+      sso.update!(external_id: discourse_connect[:external_id], last_payload: "external_id=#{discourse_connect[:external_id]}")
+    else
+      sso.destroy!
     end
   end
 
