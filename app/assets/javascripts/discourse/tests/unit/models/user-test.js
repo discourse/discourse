@@ -121,19 +121,19 @@ module("Unit | Model | user", function (hooks) {
   test("subsequent calls to trackStatus and stopTrackingStatus increase and decrease subscribers counter", function (assert) {
     const store = getOwner(this).lookup("service:store");
     const user = store.createRecord("user");
-    assert.equal(user._subscribersCount, 0);
+    assert.strictEqual(user._subscribersCount, 0);
 
     user.trackStatus();
-    assert.equal(user._subscribersCount, 1);
+    assert.strictEqual(user._subscribersCount, 1);
 
     user.trackStatus();
-    assert.equal(user._subscribersCount, 2);
+    assert.strictEqual(user._subscribersCount, 2);
 
     user.stopTrackingStatus();
-    assert.equal(user._subscribersCount, 1);
+    assert.strictEqual(user._subscribersCount, 1);
 
     user.stopTrackingStatus();
-    assert.equal(user._subscribersCount, 0);
+    assert.strictEqual(user._subscribersCount, 0);
   });
 
   test("attempt to stop tracking status if status wasn't tracked doesn't throw", function (assert) {
@@ -163,16 +163,16 @@ module("Unit | Model | user", function (hooks) {
     try {
       user1.trackStatus();
       user2.trackStatus();
-      assert.equal(user1.status, status1);
-      assert.equal(user2.status, status2);
+      assert.strictEqual(user1.status, status1);
+      assert.strictEqual(user2.status, status2);
 
       appEvents.trigger("user-status:changed", { [user1.id]: null });
-      assert.equal(user1.status, null);
-      assert.equal(user2.status, status2);
+      assert.strictEqual(user1.status, null);
+      assert.strictEqual(user2.status, status2);
 
       appEvents.trigger("user-status:changed", { [user2.id]: null });
-      assert.equal(user1.status, null);
-      assert.equal(user2.status, null);
+      assert.strictEqual(user1.status, null);
+      assert.strictEqual(user2.status, null);
     } finally {
       user1.stopTrackingStatus();
       user2.stopTrackingStatus();

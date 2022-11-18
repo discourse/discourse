@@ -231,14 +231,14 @@ module("Unit | Model | category", function (hooks) {
       required_tag_groups: [{ name: "bar", min_count: 2 }],
     });
 
-    assert.equal(foo.minimumRequiredTags, 2);
+    assert.strictEqual(foo.minimumRequiredTags, 2);
 
     const bar = store.createRecord("category", {
       id: 2,
       slug: "bar",
     });
 
-    assert.equal(bar.minimumRequiredTags, null);
+    assert.strictEqual(bar.minimumRequiredTags, null);
 
     const baz = store.createRecord("category", {
       id: 3,
@@ -246,7 +246,7 @@ module("Unit | Model | category", function (hooks) {
       minimum_required_tags: 0,
     });
 
-    assert.equal(baz.minimumRequiredTags, null);
+    assert.strictEqual(baz.minimumRequiredTags, null);
 
     const qux = store.createRecord("category", {
       id: 4,
@@ -254,7 +254,7 @@ module("Unit | Model | category", function (hooks) {
       minimum_required_tags: 2,
     });
 
-    assert.equal(qux.minimumRequiredTags, 2);
+    assert.strictEqual(qux.minimumRequiredTags, 2);
 
     const quux = store.createRecord("category", {
       id: 5,
@@ -262,7 +262,7 @@ module("Unit | Model | category", function (hooks) {
       required_tag_groups: [],
     });
 
-    assert.equal(quux.minimumRequiredTags, null);
+    assert.strictEqual(quux.minimumRequiredTags, null);
   });
 
   test("search with category name", function (assert) {
