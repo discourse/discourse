@@ -13,6 +13,38 @@ RSpec.describe ComposerController do
       sign_in(Fabricate(:user))
     end
 
+    context 'without a topic' do
+      it 'finds mentions' do
+        get '/composer/mentions.json', params: {
+          names: [
+            'invaliduserorgroup',
+            user.username,
+            group.name,
+            invisible_group.name,
+            unmessageable_group.name,
+            unmentionable_group.name
+          ],
+        }
+
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body['users']).to contain_exactly(user.username)
+        expect(response.parsed_body['user_reasons']).to contain_exactly()
+
+        expect(response.parsed_body['groups']).to contain_exactly(
+          [group.name, { 'user_count' => group.user_count }],
+          [unmessageable_group.name, { 'user_count' => unmessageable_group.user_count }],
+          [unmentionable_group.name, { 'user_count' => unmentionable_group.user_count }],
+        )
+        expect(response.parsed_body['group_reasons']).to contain_exactly(
+          [unmentionable_group.name, 'not_mentionable'],
+        )
+
+        expect(response.parsed_body['max_users_notified_per_group_mention'])
+          .to eq(SiteSetting.max_users_notified_per_group_mention)
+      end
+    end
+
     context 'with a regular topic' do
       fab!(:topic) { Fabricate(:topic) }
 
@@ -26,7 +58,10 @@ RSpec.describe ComposerController do
             unmessageable_group.name,
             unmentionable_group.name
           ],
+          topic_id: topic.id,
         }
+
+        expect(response.status).to eq(200)
 
         expect(response.parsed_body['users']).to contain_exactly(user.username)
         expect(response.parsed_body['user_reasons']).to contain_exactly()
@@ -74,6 +109,8 @@ RSpec.describe ComposerController do
           topic_id: topic.id,
         }
 
+        expect(response.status).to eq(200)
+
         expect(response.parsed_body['users']).to contain_exactly(
           user.username, allowed_user.username
         )
@@ -113,6 +150,8 @@ RSpec.describe ComposerController do
           topic_id: topic.id,
         }
 
+        expect(response.status).to eq(200)
+
         expect(response.parsed_body['groups']).to contain_exactly(
           [other_group.name, { 'user_count' => 3, 'notified_count' => 2 }]
         )
@@ -138,6 +177,8 @@ RSpec.describe ComposerController do
           ],
           allowed_names: "#{allowed_user.username},#{unmentionable_group.name}",
         }
+
+        expect(response.status).to eq(200)
 
         expect(response.parsed_body['users']).to contain_exactly(
           user.username, allowed_user.username
@@ -177,12 +218,32 @@ RSpec.describe ComposerController do
           allowed_names: "#{allowed_user.username},#{group.name}",
         }
 
+        expect(response.status).to eq(200)
+
         expect(response.parsed_body['groups']).to contain_exactly(
           [other_group.name, { 'user_count' => 3, 'notified_count' => 2 }]
         )
         expect(response.parsed_body['group_reasons']).to contain_exactly(
           [other_group.name, 'some_not_allowed']
         )
+      end
+    end
+
+    context 'with an invalid topic' do
+      it 'returns an error' do
+        get '/composer/mentions.json', params: {
+          names: [
+            'invaliduserorgroup',
+            user.username,
+            group.name,
+            invisible_group.name,
+            unmessageable_group.name,
+            unmentionable_group.name
+          ],
+          topic_id: -1,
+        }
+
+        expect(response.status).to eq(403)
       end
     end
   end
