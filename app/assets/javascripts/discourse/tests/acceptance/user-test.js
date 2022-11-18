@@ -1,6 +1,5 @@
 import I18n from "I18n";
 import EmberObject from "@ember/object";
-import User from "discourse/models/user";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import sinon from "sinon";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
@@ -155,6 +154,8 @@ acceptance("User Routes - Moderator viewing warnings", function (needs) {
 });
 
 acceptance("User - Saving user options", function (needs) {
+  let lastRequest;
+
   needs.user({
     admin: false,
     moderator: false,
@@ -168,20 +169,20 @@ acceptance("User - Saving user options", function (needs) {
   });
 
   needs.pretender((server, helper) => {
-    server.put("/u/eviltrout.json", () => {
+    server.put("/u/eviltrout.json", (request) => {
+      lastRequest = request;
       return helper.response(200, { user: {} });
     });
   });
 
   test("saving user options", async function (assert) {
-    const spy = sinon.spy(User.current(), "_saveUserData");
-
     await visit("/u/eviltrout/preferences/emails");
     await click(".pref-mailing-list-mode input[type='checkbox']");
     await click(".save-changes");
 
-    assert.ok(
-      spy.calledWithMatch({ mailing_list_mode: true }),
+    assert.equal(
+      lastRequest.requestBody,
+      "mailing_list_mode=true",
       "sends a PUT request to update the specified user option"
     );
 
@@ -190,7 +191,8 @@ acceptance("User - Saving user options", function (needs) {
     await click(".save-changes");
 
     assert.ok(
-      spy.calledWithMatch({ email_messages_level: 2 }),
+      lastRequest.requestBody,
+      "email_messages_level=2",
       "is able to save a different user_option on a subsequent request"
     );
   });
