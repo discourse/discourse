@@ -99,6 +99,13 @@ class ChatMessage < ActiveRecord::Base
 
   def cook
     ensure_last_editor_id
+
+    # A rule in our Markdown pipeline may have Guardian checks that require a
+    # user to be present. The last editing user of the message will be more
+    # generally up to date than the creating user. For example, we use
+    # this when cooking #hashtags to determine whether we should render
+    # the found hashtag based on whether the user can access the channel it
+    # is referencing.
     self.cooked = self.class.cook(self.message, user_id: self.last_editor_id)
     self.cooked_version = BAKED_VERSION
   end

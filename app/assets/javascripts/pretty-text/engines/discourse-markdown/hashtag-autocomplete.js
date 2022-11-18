@@ -34,10 +34,6 @@ function addHashtag(buffer, matches, state) {
     token.block = false;
     buffer.push(token);
 
-    token = new state.Token("span_open", "span", 1);
-    token.block = false;
-    buffer.push(token);
-
     token = new state.Token("svg_open", "svg", 1);
     token.block = false;
     token.attrs = [
@@ -51,8 +47,11 @@ function addHashtag(buffer, matches, state) {
     buffer.push(token);
 
     buffer.push(new state.Token("use_close", "use", -1));
-
     buffer.push(new state.Token("svg_close", "svg", -1));
+
+    token = new state.Token("span_open", "span", 1);
+    token.block = false;
+    buffer.push(token);
 
     token = new state.Token("text", "", 0);
     token.content = result.text;
@@ -77,12 +76,13 @@ function addHashtag(buffer, matches, state) {
     buffer.push(token);
 
     buffer.push(new state.Token("use_close", "use", -1));
-
     buffer.push(new state.Token("svg_close", "svg", -1));
 
+    token = new state.Token("span_open", "span", 1);
     token = new state.Token("text", "", 0);
     token.content = matches[0].replace("#", "");
     buffer.push(token);
+    token = new state.Token("span_close", "span", -1);
 
     token = new state.Token("span_close", "span", -1);
     buffer.push(token);

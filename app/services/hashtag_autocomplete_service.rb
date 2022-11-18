@@ -260,12 +260,11 @@ class HashtagAutocompleteService
 
   private
 
-  # Somtimes a specific ref is required, e.g. for categories that have
+  # Sometimes a specific ref is required, e.g. for categories that have
   # a parent their ref will be parent_slug:child_slug, though most of the
   # time it will be the same as the slug. The ref can then be used for
   # lookup in the UI.
   def set_refs(hashtag_items)
-    return hashtag_items if hashtag_items.blank? || hashtag_items.empty?
     hashtag_items.each { |item| item.ref ||= item.slug }
   end
 end

@@ -240,7 +240,7 @@ function _findAndReplaceSeenHashtagPlaceholder(
       link.href = matchingSeenHashtag.relative_url;
       link.dataset.type = type;
       link.dataset.slug = matchingSeenHashtag.slug;
-      link.innerHTML = `<span><svg class="fa d-icon d-icon-${matchingSeenHashtag.icon} svg-icon svg-node"><use href="#${matchingSeenHashtag.icon}"></use></svg>${matchingSeenHashtag.text}</span>`;
+      link.innerHTML = `<svg class="fa d-icon d-icon-${matchingSeenHashtag.icon} svg-icon svg-node"><use href="#${matchingSeenHashtag.icon}"></use></svg><span>${matchingSeenHashtag.text}</span>`;
       hashtagSpan.replaceWith(link);
     }
   });

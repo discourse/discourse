@@ -38,7 +38,7 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
     expect(page).to have_css(".hashtag-cooked")
     cooked_hashtag = page.find(".hashtag-cooked")
     expected = <<~HTML.chomp
-      <a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"cool-cat\" tabindex=\"-1\"><span><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg>Cool Category</span></a>
+      <a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"cool-cat\" tabindex=\"-1\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>Cool Category</span></a>
     HTML
     expect(cooked_hashtag["outerHTML"].squish).to eq(expected)
 
@@ -48,7 +48,7 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
     expect(page).to have_css(".hashtag-cooked")
     cooked_hashtag = page.find(".hashtag-cooked")
     expect(cooked_hashtag["outerHTML"].squish).to eq(<<~HTML.chomp)
-      <a class=\"hashtag-cooked\" href=\"#{tag.url}\" data-type=\"tag\" data-slug=\"cooltag\" tabindex=\"-1\"><span><svg class=\"fa d-icon d-icon-tag svg-icon svg-node\"><use href=\"#tag\"></use></svg>cooltag</span></a>
+      <a class=\"hashtag-cooked\" href=\"#{tag.url}\" data-type=\"tag\" data-slug=\"cooltag\" tabindex=\"-1\"><svg class=\"fa d-icon d-icon-tag svg-icon svg-node\"><use href=\"#tag\"></use></svg><span>cooltag</span></a>
       HTML
   end
 
@@ -63,10 +63,10 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
       cooked_hashtags = page.all(".hashtag-cooked", count: 2)
 
       expect(cooked_hashtags[0]["outerHTML"]).to eq(<<~HTML.chomp)
-      <a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"cool-cat\"><span><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg>Cool Category</span></a>
+      <a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"cool-cat\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>Cool Category</span></a>
       HTML
       expect(cooked_hashtags[1]["outerHTML"]).to eq(<<~HTML.chomp)
-      <a class=\"hashtag-cooked\" href=\"#{tag.url}\" data-type=\"tag\" data-slug=\"cooltag\"><span><svg class=\"fa d-icon d-icon-tag svg-icon svg-node\"><use href=\"#tag\"></use></svg>cooltag</span></a>
+      <a class=\"hashtag-cooked\" href=\"#{tag.url}\" data-type=\"tag\" data-slug=\"cooltag\"><svg class=\"fa d-icon d-icon-tag svg-icon svg-node\"><use href=\"#tag\"></use></svg><span>cooltag</span></a>
       HTML
     end
   end
