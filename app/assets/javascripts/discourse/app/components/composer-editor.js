@@ -121,6 +121,7 @@ export default Component.extend(ComposerUploadUppy, {
   init() {
     this._super(...arguments);
     this.warnedCannotSeeMentions = [];
+    this.warnedGroupMentions = [];
   },
 
   @discourseComputed("composer.requiredCategoryMissing")
