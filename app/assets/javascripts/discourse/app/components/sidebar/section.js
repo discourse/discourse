@@ -8,7 +8,8 @@ export default class SidebarSection extends Component {
   @service keyValueStore;
 
   @tracked displaySectionContent;
-  collapsedSidebarSectionKey = `sidebar-section-${this.args.sectionName}-collapsed`;
+  sidebarSectionID = `sidebar-section-${this.args.sectionName}`;
+  collapsedSidebarSectionKey = `${this.sidebarSectionID}-collapsed`;
 
   constructor() {
     super(...arguments);
