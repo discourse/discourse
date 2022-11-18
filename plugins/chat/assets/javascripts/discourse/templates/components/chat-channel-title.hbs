@@ -33,14 +33,6 @@
             {{/let}}
           {{/if}}
         </div>
-        <div class="chat-channel-title__last-message">
-          {{#if (eq this.channel.last_message.user_id this.currentUser.id)}}
-            <span class="chat-channel-title__last-message-prefix">
-              {{i18n "chat.direct_messages.you_last_messaged"}}
-            </span>
-          {{/if}}
-          {{this.lastMessage}}
-        </div>
       </div>
 
       {{#if (has-block)}}

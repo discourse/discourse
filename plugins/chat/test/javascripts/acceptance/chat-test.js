@@ -1839,58 +1839,6 @@ acceptance("Discourse Chat - Drawer", function (needs) {
   });
 });
 
-acceptance("Discourse Chat - Channel Row Metadata Test", function (needs) {
-  needs.user({
-    admin: false,
-    moderator: false,
-    username: "eviltrout",
-    id: 1,
-    can_chat: true,
-    has_chat_enabled: true,
-  });
-  needs.settings({
-    chat_enabled: true,
-  });
-  needs.pretender((server, helper) => {
-    baseChatPretenders(server, helper);
-    directMessageChannelPretender(server, helper);
-    // chat channel with ID 75 is direct message channel.
-    chatChannelPretender(server, helper, [
-      { id: 9, unread_count: 3, muted: false },
-      { id: 75, unread_count: 4, muted: false },
-    ]);
-  });
-  needs.hooks.beforeEach(function () {
-    Object.defineProperty(this, "chatService", {
-      get: () => this.container.lookup("service:chat"),
-    });
-  });
-
-  test("Chat float metadata updates after sending a message", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    this.chatService.set("sidebarActive", false);
-
-    await click(".header-dropdown-toggle.open-chat");
-    await this.pauseTest();
-    assert.strictEqual(
-      query(".create-channel-modal .create-channel-name-input").value.trim(),
-      "support",
-      "gg @osama @mark @here",
-      "last message is shown"
-    );
-    await click("#chat-channel-row-75");
-    await fillIn(query(".chat-composer-input"), "hello");
-    await click(".chat-composer .send-btn");
-    await click(".topic-chat-drawer-header__return-to-channels-btn");
-    assert.strictEqual(
-      query(".create-channel-modal .create-channel-name-input").value.trim(),
-      "support",
-      "hello",
-      "last message is updated"
-    );
-  });
-});
-
 function createFile(name, type = "image/png") {
   // the blob content doesn't matter at all, just want it to be random-ish
   const file = new Blob([(Math.random() + 1).toString(36).substring(2)], {

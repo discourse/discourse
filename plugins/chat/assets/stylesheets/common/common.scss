@@ -442,17 +442,6 @@ $float-height: 530px;
       @include ellipsis;
     }
 
-    &__last-message {
-      display: block;
-      font-size: var(--font-down-1);
-      @include ellipsis;
-
-      &-prefix {
-        font-weight: bold;
-        color: var(--primary-very-high);
-      }
-    }
-
     &__usernames {
       display: flex;
       align-items: center;
