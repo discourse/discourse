@@ -201,7 +201,7 @@ module("Unit | Model | user", function (hooks) {
     const site = getOwner(this).lookup("service:site");
     site.set("user_tips", { first_notification: 1 });
     const store = getOwner(this).lookup("service:store");
-    const user = store.createRecord("user", { username: "test" });
+    const user = store.createRecord("user", { username: "eviltrout" });
 
     let requestsCount = 0;
     pretender.put("/u/eviltrout.json", () => {
@@ -226,7 +226,7 @@ module("Unit | Model | user", function (hooks) {
     const site = getOwner(this).lookup("service:site");
     site.set("user_tips", { first_notification: 1 });
     const store = getOwner(this).lookup("service:store");
-    const user = store.createRecord("user", { username: "test" });
+    const user = store.createRecord("user", { username: "eviltrout" });
 
     const hideSpy = sinon.spy(userTips, "hideUserTip");
     const showNextSpy = sinon.spy(userTips, "showNextUserTip");
@@ -240,7 +240,7 @@ module("Unit | Model | user", function (hooks) {
     const site = getOwner(this).lookup("service:site");
     site.set("user_tips", { first_notification: 1 });
     const store = getOwner(this).lookup("service:store");
-    const user = store.createRecord("user", { username: "test" });
+    const user = store.createRecord("user", { username: "eviltrout" });
 
     const hideAllSpy = sinon.spy(userTips, "hideAllUserTips");
     await user.hideUserTipForever();
