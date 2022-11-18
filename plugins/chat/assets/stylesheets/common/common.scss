@@ -553,6 +553,10 @@ $float-height: 530px;
     }
   }
 
+  &:visited {
+    color: var(--primary-high);
+  }
+
   &.muted {
     opacity: 0.65;
   }
@@ -569,12 +573,12 @@ $float-height: 530px;
     }
   }
 
-  .chat-channel-row-unread-count {
-    display: inline-block;
-    margin-left: 5px;
-    font-size: var(--font-down-1);
-    color: var(--primary-high);
-  }
+  // .chat-channel-row-unread-count {
+  //   display: inline-block;
+  //   margin-left: 5px;
+  //   font-size: var(--font-down-1);
+  //   color: var(--primary-high);
+  // }
 
   .emoji {
     margin-left: 0.3em;
