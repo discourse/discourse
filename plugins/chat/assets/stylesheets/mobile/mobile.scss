@@ -73,15 +73,21 @@ body.has-full-page-chat {
   }
 }
 
-.channels-list .chat-channel-row {
-  .category-chat-private .d-icon {
-    background-color: var(--secondary);
-  }
-  .chat-channel-metadata {
-    align-items: flex-end;
+.channels-list {
+  .chat-channel-row {
+    .category-chat-private .d-icon {
+      background-color: var(--secondary);
+    }
 
-    .chat-channel-unread-indicator {
-      font-size: var(--font-down-1);
+    .chat-channel-metadata {
+      .chat-channel-unread-indicator {
+        font-size: var(--font-down-1);
+      }
+    }
+  }
+  .direct-message-channels {
+    .chat-channel-metadata {
+      align-items: flex-end;
     }
   }
 }
