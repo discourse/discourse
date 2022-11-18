@@ -67,6 +67,7 @@ async function loadDraft(store, opts = {}) {
 }
 
 const _popupMenuOptionsCallbacks = [];
+const _composerSaveErrorCallbacks = [];
 
 let _checkDraftPopup = !isTesting();
 
@@ -80,6 +81,14 @@ export function clearPopupMenuOptionsCallback() {
 
 export function addPopupMenuOptionsCallback(callback) {
   _popupMenuOptionsCallbacks.push(callback);
+}
+
+export function clearComposerSaveErrorCallback() {
+  _composerSaveErrorCallbacks.length = 0;
+}
+
+export function addComposerSaveErrorCallback(callback) {
+  _composerSaveErrorCallbacks.push(callback);
 }
 
 export default Controller.extend({
@@ -1039,9 +1048,20 @@ export default Controller.extend({
       .catch((error) => {
         composer.set("disableDrafts", false);
         if (error) {
-          this.appEvents.one("composer:will-open", () =>
-            this.dialog.alert(error)
-          );
+          this.appEvents.one("composer:will-open", () => {
+            if (
+              _composerSaveErrorCallbacks.length === 0 ||
+              !_composerSaveErrorCallbacks
+                .map((c) => {
+                  return c.call(this, error);
+                })
+                .some((i) => {
+                  return i;
+                })
+            ) {
+              this.dialog.alert(error);
+            }
+          });
         }
       });
 
