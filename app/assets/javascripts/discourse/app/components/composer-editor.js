@@ -468,7 +468,7 @@ export default Component.extend(ComposerUploadUppy, {
     fetchUnseenMentions({
       names: unseen,
       topicId: this.get("composer.topic.id"),
-      allowedNames: this.get("composer.targetRecipients"),
+      allowedNames: this.get("composer.targetRecipients")?.split(","),
     }).then((response) => {
       linkSeenMentions(preview, this.siteSettings);
       this._warnMentionedGroups(preview);

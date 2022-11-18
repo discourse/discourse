@@ -175,7 +175,7 @@ RSpec.describe ComposerController do
             unmessageable_group.name,
             unmentionable_group.name
           ],
-          allowed_names: "#{allowed_user.username},#{unmentionable_group.name}",
+          allowed_names: [allowed_user.username, unmentionable_group.name],
         }
 
         expect(response.status).to eq(200)
@@ -215,7 +215,7 @@ RSpec.describe ComposerController do
         # its members have been (allowed_user directly and user via group).
         get '/composer/mentions.json', params: {
           names: [other_group.name],
-          allowed_names: "#{allowed_user.username},#{group.name}",
+          allowed_names: [allowed_user.username, group.name],
         }
 
         expect(response.status).to eq(200)

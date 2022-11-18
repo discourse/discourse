@@ -14,7 +14,8 @@ class ComposerController < ApplicationController
 
     # allowed_names is necessary just for new private messages.
     @allowed_names = if params[:allowed_names].present?
-      params[:allowed_names].split(',') << current_user.username
+      raise Discourse::InvalidParameters(:allowed_names) if !params[:allowed_names].is_a?(Array)
+      params[:allowed_names] << current_user.username
     else
       []
     end
