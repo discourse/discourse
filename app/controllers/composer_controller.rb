@@ -120,7 +120,7 @@ class ComposerController < ApplicationController
   def groups
     @groups ||= Group
       .visible_groups(current_user)
-      .where(name: @names)
+      .where('lower(name) IN (?)', @names)
       .index_by(&:name)
   end
 
