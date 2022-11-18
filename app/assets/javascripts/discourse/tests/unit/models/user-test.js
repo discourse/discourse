@@ -199,9 +199,9 @@ module("Unit | Model | user", function () {
     });
 
     await user.hideUserTipForever("first_notification");
-    assert.equal(requestsCount, 1);
+    assert.strictEqual(requestsCount, 1);
 
     await user.hideUserTipForever("first_notification");
-    assert.equal(requestsCount, 1);
+    assert.strictEqual(requestsCount, 1);
   });
 });
