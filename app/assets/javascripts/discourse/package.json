@@ -76,6 +76,7 @@
     "eslint-plugin-qunit": "^7.3.2",
     "handlebars": "^4.7.7",
     "html-entities": "^2.3.3",
+    "imports-loader": "^4.0.1",
     "js-yaml": "^4.1.0",
     "jsdom": "^20.0.2",
     "loader.js": "^4.7.0",
@@ -92,6 +93,7 @@
     "source-map": "^0.7.4",
     "terser": "5.10.0",
     "tippy.js": "^6.3.7",
+    "util": "^0.12.5",
     "virtual-dom": "^2.1.1",
     "webpack": "^5.75.0",
     "wizard": "1.0.0",
@@ -108,8 +110,6 @@
   "devDependencies": {
     "ember-cached-decorator-polyfill": "^1.0.1",
     "ember-cli-deprecation-workflow": "^2.1.0",
-    "ember-exam": "^8.0.0",
-    "imports-loader": "^4.0.1",
-    "util": "^0.12.5"
+    "ember-exam": "^8.0.0"
   }
 }
