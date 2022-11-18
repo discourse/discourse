@@ -447,18 +447,21 @@ const User = RestModel.extend({
       type: "PUT",
     })
       .then((result) => {
-        this.set("bio_excerpt", result.user.bio_excerpt);
-        const userProps = getProperties(
-          result.user.user_option || this.user_option,
-          "enable_quoting",
-          "enable_defer",
-          "external_links_in_new_tab",
-          "dynamic_favicon",
-          "seen_popups",
-          "skip_new_user_tips"
-        );
-        User.current()?.setProperties(userProps);
         this.setProperties(updatedState);
+        this.setProperties(getProperties(result.user, "bio_excerpt"));
+        if (User.current() === this && result.user.user_option) {
+          this.setProperties(
+            getProperties(
+              result.user.user_option,
+              "enable_quoting",
+              "enable_defer",
+              "external_links_in_new_tab",
+              "dynamic_favicon",
+              "seen_popups",
+              "skip_new_user_tips"
+            )
+          );
+        }
         return result;
       })
       .finally(() => {
