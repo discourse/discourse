@@ -456,7 +456,7 @@ acceptance("Discourse Chat - Core Sidebar", function (needs) {
 
     assert.strictEqual(
       evilChannel.title,
-      "chat with @&lt;script&gt;sam&lt;/script&gt;"
+      "Chat with @&lt;script&gt;sam&lt;/script&gt;"
     );
 
     assert.ok(
