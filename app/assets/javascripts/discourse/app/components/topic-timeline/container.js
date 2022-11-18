@@ -52,6 +52,9 @@ export default class TopicTimelineScrollArea extends Component {
         }
       }
 
+      // listen for scrolling event to update timeline
+      this.appEvents.on("topic:current-post-scrolled", this.postScrolled);
+      // listen for composer sizing changes to update timeline
       this.appEvents.on("composer:opened", this.calculatePosition);
       this.appEvents.on("composer:resized", this.calculatePosition);
       this.appEvents.on("composer:closed", this.calculatePosition);
@@ -118,18 +121,6 @@ export default class TopicTimelineScrollArea extends Component {
 
   get lastReadHeight() {
     return Math.round(this.lastReadPercentage * scrollareaHeight());
-  }
-
-  commit() {
-    this.calculatePosition();
-
-    if (!this.dragging) {
-      if (this.current === this.scrollPosition) {
-        this.args.jumpToIndex(this.current);
-      } else {
-        this.args.jumpEnd();
-      }
-    }
   }
 
   @bind
@@ -238,37 +229,6 @@ export default class TopicTimelineScrollArea extends Component {
     }, 50);
   }
 
-  _percentFor(topic, postIndex) {
-    const total = topic.postStream.filteredPostsCount;
-    switch (postIndex) {
-      // if first post, no top padding
-      case 0:
-        return 0;
-      // if last, no bottom padding
-      case total - 1:
-        return 1;
-      // otherwise, calculate
-      default:
-        return this.clamp(parseFloat(postIndex) / total);
-    }
-  }
-
-  clamp(p, min = 0.0, max = 1.0) {
-    return Math.max(Math.min(p, max), min);
-  }
-
-  scrollareaRemaining() {
-    return scrollareaHeight() - SCROLLER_HEIGHT;
-  }
-
-  willDestroy() {
-    if (!this.args.mobileView) {
-      this.appEvents.off("composer:opened", this.calculatePosition);
-      this.appEvents.off("composer:resized", this.calculatePosition);
-      this.appEvents.off("composer:closed", this.calculatePosition);
-    }
-  }
-
   @bind
   updatePercentage(e) {
     const y = e.pageY;
@@ -291,9 +251,59 @@ export default class TopicTimelineScrollArea extends Component {
     this.commit();
   }
 
+  @bind
+  postScrolled(e) {
+    this.current = e.postIndex;
+    this.percentage = e.percent;
+    this.calculatePosition();
+  }
+
   @action
   goBack() {
     this.args.jumpToIndex(this.lastRead);
+  }
+
+  commit() {
+    this.calculatePosition();
+
+    if (!this.dragging) {
+      if (this.current === this.scrollPosition) {
+        this.args.jumpToIndex(this.current);
+      } else {
+        this.args.jumpEnd();
+      }
+    }
+  }
+
+  clamp(p, min = 0.0, max = 1.0) {
+    return Math.max(Math.min(p, max), min);
+  }
+
+  scrollareaRemaining() {
+    return scrollareaHeight() - SCROLLER_HEIGHT;
+  }
+
+  willDestroy() {
+    if (!this.args.mobileView) {
+      this.appEvents.off("composer:opened", this.calculatePosition);
+      this.appEvents.off("composer:resized", this.calculatePosition);
+      this.appEvents.off("composer:closed", this.calculatePosition);
+    }
+  }
+
+  _percentFor(topic, postIndex) {
+    const total = topic.postStream.filteredPostsCount;
+    switch (postIndex) {
+      // if first post, no top padding
+      case 0:
+        return 0;
+      // if last, no bottom padding
+      case total - 1:
+        return 1;
+      // otherwise, calculate
+      default:
+        return this.clamp(parseFloat(postIndex) / total);
+    }
   }
 }
 
