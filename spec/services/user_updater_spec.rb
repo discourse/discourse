@@ -527,15 +527,21 @@ RSpec.describe UserUpdater do
 
     context 'when skip_new_user_tips is edited' do
       it 'updates all fields' do
-        UserUpdater.new(Discourse.system_user, user).update(skip_new_user_tips: true)
+        messages = MessageBus.track_publish('/user-tips') do
+          UserUpdater.new(Discourse.system_user, user).update(skip_new_user_tips: true)
+        end
 
         expect(user.user_option.skip_new_user_tips).to eq(true)
         expect(user.user_option.seen_popups).to eq([-1])
+        expect(messages.map(&:data)).to contain_exactly([-1])
 
-        UserUpdater.new(Discourse.system_user, user).update(skip_new_user_tips: false)
+        messages = MessageBus.track_publish('/user-tips') do
+          UserUpdater.new(Discourse.system_user, user).update(skip_new_user_tips: false)
+        end
 
         expect(user.user_option.skip_new_user_tips).to eq(false)
         expect(user.user_option.seen_popups).to eq(nil)
+        expect(messages.map(&:data)).to contain_exactly(nil)
       end
     end
 
