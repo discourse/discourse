@@ -130,9 +130,9 @@ export function addSaveableUserOptionField(fieldName) {
   userOptionFields.push(fieldName);
 }
 
-function userOption(key) {
-  return computed(`user_option.${key}`, {
-    get() {
+function userOption(userOptionKey) {
+  return computed(`user_option.${userOptionKey}`, {
+    get(key) {
       deprecated(
         `Getting ${key} property of user object is deprecated. Use user_option object instead`,
         { id: "discourse.user.userOptions" }
@@ -141,7 +141,7 @@ function userOption(key) {
       return this.get(`user_option.${key}`);
     },
 
-    set(value) {
+    set(key, value) {
       deprecated(
         `Setting ${key} property of user object is deprecated. Use user_option object instead`,
         { id: "discourse.user.userOptions" }
@@ -1215,6 +1215,9 @@ const User = RestModel.extend({
     }
 
     // Save seen user tips on the server.
+    if (!this.user_option) {
+      this.set("user_option", {});
+    }
     this.set("user_option.seen_popups", seenUserTips);
     if (userTipId) {
       return this.save(["seen_popups"]);
