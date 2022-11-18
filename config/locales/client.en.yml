@@ -1326,6 +1326,7 @@ en:
         profile: "Profile"
         emails: "Emails"
         notifications: "Notifications"
+        tracking: "Tracking"
         categories: "Categories"
         users: "Users"
         tags: "Tags"
@@ -1604,6 +1605,7 @@ en:
 
       other_settings: "Other"
       categories_settings: "Categories"
+      topics_settings: "Topics"
 
       new_topic_duration:
         label: "Consider topics new when"

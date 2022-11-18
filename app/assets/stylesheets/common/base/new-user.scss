@@ -184,3 +184,26 @@
     margin: 1em 0;
   }
 }
+
+.user-preferences-tracking-page {
+  .user-preferences .form-vertical {
+    width: 100%;
+  }
+}
+
+.user-preferences_tracking-topics-wrapper {
+  margin-bottom: 3em;
+  .control-label {
+    margin-bottom: 1em;
+  }
+}
+
+.user-preferences_tracking-categories-tags-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16em, 1fr));
+  gap: 2em;
+  .control-group {
+    width: 100%;
+    min-width: 16em;
+  }
+}

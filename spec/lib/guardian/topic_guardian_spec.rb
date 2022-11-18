@@ -6,9 +6,11 @@ RSpec.describe TopicGuardian do
   fab!(:tl3_user) { Fabricate(:leader) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:category) { Fabricate(:category) }
-  fab!(:topic) { Fabricate(:topic, category: category) }
-  fab!(:private_message_topic) { Fabricate(:private_message_topic) }
   fab!(:group) { Fabricate(:group) }
+  fab!(:private_category) { Fabricate(:private_category, group: group) }
+  fab!(:topic) { Fabricate(:topic, category: category) }
+  fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+  fab!(:private_message_topic) { Fabricate(:private_message_topic) }
 
   before do
     Guardian.enable_topic_can_see_consistency_check
@@ -173,5 +175,31 @@ RSpec.describe TopicGuardian do
         topic2.id,
       )
     end
+  end
+
+  describe '#filter_allowed_categories' do
+
+    it 'allows admin access to categories without explicit access' do
+      guardian = Guardian.new(admin)
+      list = Topic.where(id: private_topic.id)
+      list = guardian.filter_allowed_categories(list)
+
+      expect(list.count).to eq(1)
+    end
+
+    context 'when SiteSetting.suppress_secured_categories_from_admin is true' do
+      before do
+        SiteSetting.suppress_secured_categories_from_admin = true
+      end
+
+      it 'does not allow admin access to categories without explicit access' do
+        guardian = Guardian.new(admin)
+        list = Topic.where(id: private_topic.id)
+        list = guardian.filter_allowed_categories(list)
+
+        expect(list.count).to eq(0)
+      end
+    end
+
   end
 end
