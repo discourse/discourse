@@ -1,37 +1,42 @@
 import { module, test } from "qunit";
-import Group from "discourse/models/group";
-import User from "discourse/models/user";
+import { setupTest } from "ember-qunit";
 import PreloadStore from "discourse/lib/preload-store";
 import sinon from "sinon";
 import { settled } from "@ember/test-helpers";
-import Site from "discourse/models/site";
+import User from "discourse/models/user";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { getOwner } from "discourse-common/lib/get-owner";
 
-module("Unit | Model | user", function () {
+module("Unit | Model | user", function (hooks) {
+  setupTest(hooks);
+
   test("staff", function (assert) {
-    let user = User.create({ id: 1, username: "eviltrout" });
+    const store = getOwner(this).lookup("service:store");
+    const user = store.createRecord("user", { id: 1, username: "eviltrout" });
 
-    assert.ok(!user.get("staff"), "user is not staff");
+    assert.ok(!user.staff, "user is not staff");
 
     user.toggleProperty("moderator");
-    assert.ok(user.get("staff"), "moderators are staff");
+    assert.ok(user.staff, "moderators are staff");
 
     user.setProperties({ moderator: false, admin: true });
-    assert.ok(user.get("staff"), "admins are staff");
+    assert.ok(user.staff, "admins are staff");
   });
 
   test("searchContext", function (assert) {
-    let user = User.create({ id: 1, username: "EvilTrout" });
+    const store = getOwner(this).lookup("service:store");
+    const user = store.createRecord("user", { id: 1, username: "EvilTrout" });
 
     assert.deepEqual(
-      user.get("searchContext"),
+      user.searchContext,
       { type: "user", id: "eviltrout", user },
       "has a search context"
     );
   });
 
   test("isAllowedToUploadAFile", function (assert) {
-    let user = User.create({ trust_level: 0, admin: true });
+    const store = getOwner(this).lookup("service:store");
+    const user = store.createRecord("user", { trust_level: 0, admin: true });
     assert.ok(
       user.isAllowedToUploadAFile("image"),
       "admin can always upload a file"
@@ -45,8 +50,9 @@ module("Unit | Model | user", function () {
   });
 
   test("canMangeGroup", function (assert) {
-    let user = User.create({ admin: true });
-    let group = Group.create({ automatic: true });
+    const store = getOwner(this).lookup("service:store");
+    const user = store.createRecord("user", { admin: true });
+    const group = store.createRecord("group", { automatic: true });
 
     assert.strictEqual(
       user.canManageGroup(group),
@@ -74,7 +80,11 @@ module("Unit | Model | user", function () {
   });
 
   test("muted ids", function (assert) {
-    let user = User.create({ username: "chuck", muted_category_ids: [] });
+    const store = getOwner(this).lookup("service:store");
+    const user = store.createRecord("user", {
+      username: "chuck",
+      muted_category_ids: [],
+    });
 
     assert.deepEqual(user.calculateMutedIds(0, 1, "muted_category_ids"), [1]);
     assert.deepEqual(user.calculateMutedIds(1, 1, "muted_category_ids"), []);
@@ -109,24 +119,26 @@ module("Unit | Model | user", function () {
   });
 
   test("subsequent calls to trackStatus and stopTrackingStatus increase and decrease subscribers counter", function (assert) {
-    const user = User.create();
-    assert.equal(user._subscribersCount, 0);
+    const store = getOwner(this).lookup("service:store");
+    const user = store.createRecord("user");
+    assert.strictEqual(user._subscribersCount, 0);
 
     user.trackStatus();
-    assert.equal(user._subscribersCount, 1);
+    assert.strictEqual(user._subscribersCount, 1);
 
     user.trackStatus();
-    assert.equal(user._subscribersCount, 2);
+    assert.strictEqual(user._subscribersCount, 2);
 
     user.stopTrackingStatus();
-    assert.equal(user._subscribersCount, 1);
+    assert.strictEqual(user._subscribersCount, 1);
 
     user.stopTrackingStatus();
-    assert.equal(user._subscribersCount, 0);
+    assert.strictEqual(user._subscribersCount, 0);
   });
 
   test("attempt to stop tracking status if status wasn't tracked doesn't throw", function (assert) {
-    const user = User.create();
+    const store = getOwner(this).lookup("service:store");
+    const user = store.createRecord("user");
     user.stopTrackingStatus();
     assert.ok(true);
   });
@@ -140,26 +152,27 @@ module("Unit | Model | user", function () {
       description: "user2 status",
       emoji: "speech_balloon",
     };
-    const user1 = User.create({
+    const store = getOwner(this).lookup("service:store");
+    const user1 = store.createRecord("user", {
       id: 1,
       status: status1,
     });
-    const user2 = User.create({ id: 2, status: status2 });
+    const user2 = store.createRecord("user", { id: 2, status: status2 });
     const appEvents = user1.appEvents;
 
     try {
       user1.trackStatus();
       user2.trackStatus();
-      assert.equal(user1.status, status1);
-      assert.equal(user2.status, status2);
+      assert.strictEqual(user1.status, status1);
+      assert.strictEqual(user2.status, status2);
 
       appEvents.trigger("user-status:changed", { [user1.id]: null });
-      assert.equal(user1.status, null);
-      assert.equal(user2.status, status2);
+      assert.strictEqual(user1.status, null);
+      assert.strictEqual(user2.status, status2);
 
       appEvents.trigger("user-status:changed", { [user2.id]: null });
-      assert.equal(user1.status, null);
-      assert.equal(user2.status, null);
+      assert.strictEqual(user1.status, null);
+      assert.strictEqual(user2.status, null);
     } finally {
       user1.stopTrackingStatus();
       user2.stopTrackingStatus();
@@ -167,7 +180,8 @@ module("Unit | Model | user", function () {
   });
 
   test("create() doesn't set internal status tracking fields", function (assert) {
-    const user = User.create({
+    const store = getOwner(this).lookup("service:store");
+    const user = store.createRecord("user", {
       _subscribersCount: 10,
       _clearStatusTimerId: 100,
     });
@@ -183,8 +197,11 @@ module("Unit | Model | user", function () {
   });
 
   test("hideUserTipForever() makes a single request", async function (assert) {
-    Site.current().set("user_tips", { first_notification: 1 });
-    const user = User.create({ username: "test" });
+    const site = getOwner(this).lookup("service:site");
+    site.set("user_tips", { first_notification: 1 });
+
+    const store = getOwner(this).lookup("service:store");
+    const user = store.createRecord("user", { username: "test" });
 
     let requestsCount = 0;
     pretender.put("/u/test.json", () => {
