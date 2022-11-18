@@ -1773,7 +1773,6 @@ security:
     hidden: true
   suppress_secured_categories_from_admin:
     default: false
-    client: true
     hidden: true
 
 onebox:
