@@ -1771,6 +1771,9 @@ security:
     default: false
     client: true
     hidden: true
+  suppress_secured_categories_from_admin:
+    default: false
+    hidden: true
 
 onebox:
   post_onebox_maxlength:

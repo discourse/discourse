@@ -31,6 +31,7 @@
     > a,
     button {
       border: none;
+      border-radius: var(--d-nav-pill-border-radius);
       padding: 6px 12px;
       color: var(--primary);
       font-size: var(--font-up-1);

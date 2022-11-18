@@ -161,6 +161,7 @@ export default function () {
         this.route("profile");
         this.route("emails");
         this.route("notifications");
+        this.route("tracking");
         this.route("categories");
         this.route("users");
         this.route("tags");

@@ -494,6 +494,7 @@ Discourse::Application.routes.draw do
       put "#{root_path}/:username/preferences/primary-email" => "users#update_primary_email", format: :json, constraints: { username: RouteFormat.username }
       delete "#{root_path}/:username/preferences/email" => "users#destroy_email", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/notifications" => "users#preferences", constraints: { username: RouteFormat.username }
+      get "#{root_path}/:username/preferences/tracking" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/categories" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/users" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/tags" => "users#preferences", constraints: { username: RouteFormat.username }

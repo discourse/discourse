@@ -51,6 +51,7 @@ export default Controller.extend({
     this._super(...arguments);
 
     this.saveAttrNames = [
+      "allow_private_messages",
       "muted_usernames",
       "allowed_pm_usernames",
       "enable_allowed_pm_users",
@@ -70,11 +71,6 @@ export default Controller.extend({
   @discourseComputed("model.user_option.allow_private_messages")
   disableAllowPmUsersSetting(allowPrivateMessages) {
     return !allowPrivateMessages;
-  },
-
-  @discourseComputed("currentUser.can_send_private_messages")
-  showMessageSettings() {
-    return this.currentUser?.can_send_private_messages;
   },
 
   @action

@@ -4,6 +4,8 @@ import User from "discourse/models/user";
 import PreloadStore from "discourse/lib/preload-store";
 import sinon from "sinon";
 import { settled } from "@ember/test-helpers";
+import Site from "discourse/models/site";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module("Unit | Model | user", function () {
   test("staff", function (assert) {
@@ -178,5 +180,28 @@ module("Unit | Model | user", function () {
       user.hasOwnProperty("_clearStatusTimerId"),
       "_clearStatusTimerId wasn't set"
     );
+  });
+
+  test("hideUserTipForever() makes a single request", async function (assert) {
+    Site.current().set("user_tips", { first_notification: 1 });
+    const user = User.create({ username: "test" });
+
+    let requestsCount = 0;
+    pretender.put("/u/test.json", () => {
+      requestsCount += 1;
+      return response(200, {
+        user: {
+          user_option: {
+            seen_popups: [1],
+          },
+        },
+      });
+    });
+
+    await user.hideUserTipForever("first_notification");
+    assert.strictEqual(requestsCount, 1);
+
+    await user.hideUserTipForever("first_notification");
+    assert.strictEqual(requestsCount, 1);
   });
 });
