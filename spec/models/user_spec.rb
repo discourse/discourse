@@ -3110,7 +3110,7 @@ RSpec.describe User do
       expect(admin.secure_category_ids).to include(private_category.id)
     end
 
-    context 'when SiteSetting.suppress_secured_categories_from_admin' do
+    context 'when SiteSetting.suppress_secured_categories_from_admin is true' do
       it 'hides secure categories from admins' do
         SiteSetting.suppress_secured_categories_from_admin = true
         expect(admin.secure_category_ids).not_to include(private_category.id)
