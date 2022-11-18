@@ -68,7 +68,7 @@
     "ember-load-initializers": "^2.1.1",
     "ember-modifier": "^3.2.7",
     "ember-on-resize-modifier": "^1.1.0",
-    "ember-qunit": "^5.1.5",
+    "ember-qunit": "^6.0.0",
     "ember-rfc176-data": "^0.3.17",
     "ember-source": "~3.28.10",
     "ember-test-selectors": "^6.0.0",
@@ -108,6 +108,8 @@
   "devDependencies": {
     "ember-cached-decorator-polyfill": "^1.0.1",
     "ember-cli-deprecation-workflow": "^2.1.0",
-    "ember-exam": "^8.0.0"
+    "ember-exam": "^8.0.0",
+    "imports-loader": "^4.0.1",
+    "util": "^0.12.5"
   }
 }
