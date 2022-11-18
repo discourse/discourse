@@ -459,7 +459,7 @@ module DiscourseTagging
   end
 
   def self.filter_visible(query, guardian = nil)
-    guardian&.is_staff? ? query : query.where("tags.id NOT IN (#{hidden_tags_query.select(:id).to_sql})")
+    guardian&.is_staff? ? query : query.where.not(id: hidden_tags_query.select(:id))
   end
 
   def self.hidden_tag_names(guardian = nil)
@@ -468,13 +468,17 @@ module DiscourseTagging
 
   # most restrictive level of tag groups
   def self.hidden_tags_query
-    query = Tag.joins(:tag_groups)
-      .where('tag_groups.id NOT IN (
-        SELECT tag_group_id
-        FROM tag_group_permissions
-        WHERE group_id = ?)',
-        Group::AUTO_GROUPS[:everyone]
-      )
+    query =
+      Tag
+        .joins(:tag_groups)
+        .where.not(
+          tag_groups: {
+            id:
+              TagGroupPermission
+                .where(group_id: Group::AUTO_GROUPS[:everyone])
+                .select(:tag_group_id)
+          }
+        )
 
     query
   end
@@ -502,11 +506,15 @@ module DiscourseTagging
 
   # explicit permissions to use these tags
   def self.permitted_tag_names(guardian = nil)
-    query = Tag.joins(tag_groups: :tag_group_permissions)
-      .where('tag_group_permissions.group_id IN (?) AND tag_group_permissions.permission_type = ?',
-        permitted_group_ids(guardian),
-        TagGroupPermission.permission_types[:full]
-      )
+    query =
+      Tag
+        .joins(tag_groups: :tag_group_permissions)
+        .where(
+          tag_group_permissions: {
+            group_id: permitted_group_ids(guardian),
+            permission_type: TagGroupPermission.permission_types[:full],
+          },
+        )
 
     query.pluck(:name).uniq
   end
@@ -516,11 +524,16 @@ module DiscourseTagging
     tag_names = Discourse.cache.read(TAGS_STAFF_CACHE_KEY)
 
     if !tag_names
-      tag_names = Tag.joins(tag_groups: :tag_group_permissions)
-        .where('tag_group_permissions.group_id = ? AND tag_group_permissions.permission_type = ?',
-          Group::AUTO_GROUPS[:everyone],
-          TagGroupPermission.permission_types[:readonly]
-        ).pluck(:name)
+      tag_names =
+        Tag
+          .joins(tag_groups: :tag_group_permissions)
+          .where(
+            tag_group_permissions: {
+              group_id: Group::AUTO_GROUPS[:everyone],
+              permission_type: TagGroupPermission.permission_types[:readonly],
+            },
+          )
+          .pluck(:name)
       Discourse.cache.write(TAGS_STAFF_CACHE_KEY, tag_names, expires_in: 1.hour)
     end
 
