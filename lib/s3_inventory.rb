@@ -48,7 +48,10 @@ class S3Inventory
             connection.copy_data("COPY #{table_name} FROM STDIN CSV") do
               for_each_inventory_row do |row|
                 key = row[CSV_KEY_INDEX]
+
                 next if Rails.configuration.multisite && key.exclude?(multisite_prefix)
+                next if key.exclude?("/#{type}/")
+
                 url = File.join(Discourse.store.absolute_base_url, key)
                 connection.put_copy_data("#{url},#{row[CSV_ETAG_INDEX]}\n")
               end
@@ -76,29 +79,38 @@ class S3Inventory
             if model == Upload
               sql_params = {
                 inventory_date: inventory_date,
-                unchecked: Upload.verification_statuses[:unchecked],
                 invalid_etag: Upload.verification_statuses[:invalid_etag],
-                verified: Upload.verification_statuses[:verified]
+                verified: Upload.verification_statuses[:verified],
+                seeded_id_threshold: model::SEEDED_ID_THRESHOLD
               }
+
               DB.exec(<<~SQL, sql_params)
                 UPDATE #{model.table_name}
-                SET verification_status = CASE WHEN table_name_alias.etag IS NULL
-                  THEN :invalid_etag
-                  ELSE :verified
-                END
-                FROM #{model.table_name} AS model_table
-                LEFT JOIN #{table_name} AS table_name_alias ON
-                  model_table.etag = table_name_alias.etag
-                WHERE model_table.id = #{model.table_name}.id
-                AND model_table.updated_at < :inventory_date
-                AND (
-                  model_table.verification_status = :unchecked OR
-                  model_table.verification_status <> CASE WHEN table_name_alias.etag IS NULL
-                    THEN :invalid_etag
-                    ELSE :verified
-                  END
-                )
-                AND model_table.id > #{model::SEEDED_ID_THRESHOLD}
+                SET verification_status = :verified
+                WHERE etag IS NOT NULL
+                  AND verification_status <> :verified
+                  AND updated_at < :inventory_date
+                  AND id > :seeded_id_threshold
+                  AND EXISTS
+                    (
+                        SELECT 1
+                        FROM #{table_name}
+                        WHERE #{table_name}.etag = #{model.table_name}.etag
+                    )
+              SQL
+
+              DB.exec(<<~SQL, sql_params)
+                UPDATE #{model.table_name}
+                SET verification_status = :invalid_etag
+                WHERE verification_status <> :invalid_etag
+                  AND updated_at < :inventory_date
+                  AND id > :seeded_id_threshold
+                  AND NOT EXISTS
+                    (
+                        SELECT 1
+                        FROM #{table_name}
+                        WHERE #{table_name}.etag = #{model.table_name}.etag
+                    )
               SQL
             end
 
