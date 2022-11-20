@@ -11,7 +11,9 @@ export default createWidget("sidebar-toggle", {
           ? "sidebar.hide_sidebar"
           : "sidebar.show_sidebar",
         icon: "bars",
-        action: "toggleSidebar",
+        action: this.site.narrowDesktopView
+          ? "toggleHamburger"
+          : "toggleSidebar",
         className: "btn btn-flat btn-sidebar-toggle",
         ariaExpanded: attrs.showSidebar ? "true" : "false",
         ariaControls: "d-sidebar",

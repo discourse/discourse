@@ -20,7 +20,9 @@ export default Controller.extend({
   init() {
     this._super(...arguments);
     this.showSidebar =
-      this.canDisplaySidebar && !this.keyValueStore.getItem(HIDE_SIDEBAR_KEY);
+      this.canDisplaySidebar &&
+      !this.keyValueStore.getItem(HIDE_SIDEBAR_KEY) &&
+      !this.site.narrowDesktopView;
   },
 
   @discourseComputed
