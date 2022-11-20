@@ -5,7 +5,7 @@ import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 
 const MSG_ACTIONS_HORIZONTAL_PADDING = 2;
-const MSG_ACTIONS_VERTICAL_PADDING = -15;
+const MSG_ACTIONS_VERTICAL_PADDING = -28;
 
 export default Component.extend({
   tagName: "",
