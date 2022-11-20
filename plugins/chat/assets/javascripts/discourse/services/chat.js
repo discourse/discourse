@@ -146,16 +146,19 @@ export default class Chat extends Service {
       return Promise.resolve(this.cook);
     }
 
-    const prettyTextFeatures = {
+    const markdownOptions = {
       featuresOverride: Site.currentProp(
         "markdown_additional_options.chat.limited_pretty_text_features"
       ),
       markdownItRules: Site.currentProp(
         "markdown_additional_options.chat.limited_pretty_text_markdown_rules"
       ),
+      hashtagTypesInPriorityOrder:
+        this.site.hashtag_configurations["chat-composer"],
+      hashtagIcons: this.site.hashtag_icons,
     };
 
-    return generateCookFunction(prettyTextFeatures).then((cookFunction) => {
+    return generateCookFunction(markdownOptions).then((cookFunction) => {
       return this.set("cook", (raw) => {
         return simpleCategoryHashMentionTransform(
           cookFunction(raw),

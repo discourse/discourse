@@ -5,71 +5,42 @@ class HashtagAutocompleteService
   SEARCH_MAX_LIMIT = 20
 
   attr_reader :guardian
-  cattr_reader :data_sources
+  cattr_reader :data_sources, :contexts
 
-  def self.register_data_source(type, &block)
-    @@data_sources[type] = block
+  def self.register_data_source(type, klass)
+    @@data_sources[type] = klass
   end
 
-  def self.clear_data_sources
+  def self.clear_registered
     @@data_sources = {}
+    @@contexts = {}
 
-    register_data_source("category") do |guardian, term, limit|
-      guardian_categories = Site.new(guardian).categories
+    register_data_source("category", CategoryHashtagDataSource)
+    register_data_source("tag", TagHashtagDataSource)
 
-      guardian_categories
-        .select { |category| category[:name].downcase.include?(term) }
-        .take(limit)
-        .map do |category|
-          HashtagItem.new.tap do |item|
-            item.text = category[:name]
-            item.slug = category[:slug]
-
-            # Single-level category heirarchy should be enough to distinguish between
-            # categories here.
-            item.ref =
-              if category[:parent_category_id]
-                parent_category =
-                  guardian_categories.find { |c| c[:id] === category[:parent_category_id] }
-                category[:slug] if !parent_category
-
-                parent_slug = parent_category[:slug]
-                "#{parent_slug}:#{category[:slug]}"
-              else
-                category[:slug]
-              end
-            item.icon = "folder"
-          end
-        end
-    end
-
-    register_data_source("tag") do |guardian, term, limit|
-      if SiteSetting.tagging_enabled
-        tags_with_counts, _ =
-          DiscourseTagging.filter_allowed_tags(
-            guardian,
-            term: term,
-            with_context: true,
-            limit: limit,
-            for_input: true,
-          )
-        TagsController
-          .tag_counts_json(tags_with_counts)
-          .take(limit)
-          .map do |tag|
-            HashtagItem.new.tap do |item|
-              item.text = "#{tag[:name]} x #{tag[:count]}"
-              item.slug = tag[:name]
-              item.icon = "tag"
-            end
-          end
-      else
-        []
-      end
-    end
+    register_type_in_context("category", "topic-composer", 100)
+    register_type_in_context("tag", "topic-composer", 50)
   end
 
-  clear_data_sources
+  def self.register_type_in_context(type, context, priority)
+    @@contexts[context] = @@contexts[context] || {}
+    @@contexts[context][type] = priority
+  end
+
+  def self.data_source_icons
+    @@data_sources.values.map(&:icon)
+  end
+
+  def self.ordered_types_for_context(context)
+    return [] if @@contexts[context].blank?
+    @@contexts[context].sort_by { |param, priority| priority }.reverse.map(&:first)
+  end
+
+  def self.contexts_with_ordered_types
+    Hash[@@contexts.keys.map { |context| [context, ordered_types_for_context(context)] }]
+  end
+
+  clear_registered
 
   class HashtagItem
     # The text to display in the UI autocomplete menu for the item.
@@ -89,13 +60,162 @@ class HashtagAutocompleteService
     # and must be unique so it can be used for lookups via the #lookup
     # method above.
     attr_accessor :ref
+
+    # The relative URL for the resource that is represented by the autocomplete
+    # item, used for the cooked hashtags, e.g. /c/2/staff
+    attr_accessor :relative_url
+
+    def to_h
+      {
+        relative_url: self.relative_url,
+        text: self.text,
+        icon: self.icon,
+        type: self.type,
+        ref: self.ref,
+        slug: self.slug
+      }
+    end
   end
 
   def initialize(guardian)
     @guardian = guardian
   end
 
-  def lookup(slugs)
+  ##
+  # Finds resources of the provided types by their exact slugs, unlike
+  # search which can search partial names, slugs, etc. Used for cooking
+  # fully formed #hashtags in the markdown pipeline. The @guardian handles
+  # permissions around which results should be returned here.
+  #
+  # @param {Array} slugs The fully formed slugs to look up, which can have
+  #                      ::type suffixes attached as well (e.g. ::category),
+  #                      and in the case of categories can have parent:child
+  #                      relationships.
+  # @param {Array} types_in_priority_order The resource types we are looking up
+  #                                        and the priority order in which we should
+  #                                        match them if they do not have type suffixes.
+  # @returns {Hash} A hash with the types as keys and an array of HashtagItem that
+  #                 matches the provided slugs.
+  def lookup(slugs, types_in_priority_order)
+    raise Discourse::InvalidParameters.new(:slugs) if !slugs.is_a?(Array)
+    raise Discourse::InvalidParameters.new(:order) if !types_in_priority_order.is_a?(Array)
+
+    types_in_priority_order =
+      types_in_priority_order.select { |type| @@data_sources.keys.include?(type) }
+    lookup_results = Hash[types_in_priority_order.collect { |type| [type.to_sym, []] }]
+    limited_slugs = slugs[0..HashtagAutocompleteService::HASHTAGS_PER_REQUEST]
+
+    slugs_without_suffixes =
+      limited_slugs.reject do |slug|
+        @@data_sources.keys.any? { |type| slug.ends_with?("::#{type}") }
+      end
+    slugs_with_suffixes = (limited_slugs - slugs_without_suffixes)
+
+    # For all the slugs without a type suffix, we need to lookup in order, falling
+    # back to the next type if no results are returned for a slug for the current
+    # type. This way slugs without suffix make sense in context, e.g. in the topic
+    # composer we want a slug without a suffix to be a category first, tag second.
+    if slugs_without_suffixes.any?
+      types_in_priority_order.each do |type|
+        found_from_slugs = set_refs(@@data_sources[type].lookup(guardian, slugs_without_suffixes))
+        found_from_slugs.each { |item| item.type = type }.sort_by! { |item| item.text.downcase }
+        lookup_results[type.to_sym] = lookup_results[type.to_sym].concat(found_from_slugs)
+        slugs_without_suffixes = slugs_without_suffixes - found_from_slugs.map(&:ref)
+        break if slugs_without_suffixes.empty?
+      end
+    end
+
+    # We then look up the remaining slugs based on their type suffix, stripping out
+    # the type suffix first since it will not match the actual slug.
+    if slugs_with_suffixes.any?
+      types_in_priority_order.each do |type|
+        slugs_for_type =
+          slugs_with_suffixes
+            .select { |slug| slug.ends_with?("::#{type}") }
+            .map { |slug| slug.gsub("::#{type}", "") }
+        next if slugs_for_type.empty?
+        found_from_slugs = set_refs(@@data_sources[type].lookup(guardian, slugs_for_type))
+        found_from_slugs.each { |item| item.type = type }.sort_by! { |item| item.text.downcase }
+        lookup_results[type.to_sym] = lookup_results[type.to_sym].concat(found_from_slugs)
+      end
+    end
+
+    lookup_results
+  end
+
+  ##
+  # Searches registered hashtag data sources using the provided term (data
+  # sources determine what is actually searched) and prioritises the results
+  # based on types_in_priority_order and the limit. For example, if 5 categories
+  # were returned for the term and the limit was 5, we would not even bother
+  # searching tags. The @guardian handles permissions around which results should
+  # be returned here.
+  #
+  # @param {String} term Search term, from the UI generally where the user is typing #has...
+  # @param {Array} types_in_priority_order The resource types we are searching for
+  #                                        and the priority order in which we should
+  #                                        return them.
+  # @param {Integer} limit The maximum number of search results to return, we don't
+  #                        bother searching subsequent types if the first types in
+  #                        the array already reach the limit.
+  # @returns {Array} The results as HashtagItems
+  def search(term, types_in_priority_order, limit: 5)
+    raise Discourse::InvalidParameters.new(:order) if !types_in_priority_order.is_a?(Array)
+    limit = [limit, SEARCH_MAX_LIMIT].min
+
+    limited_results = []
+    slugs_by_type = {}
+    term = term.downcase
+    types_in_priority_order =
+      types_in_priority_order.select { |type| @@data_sources.keys.include?(type) }
+
+    # Search the data source for each type, validate and sort results,
+    # and break off from searching more data sources if we reach our limit
+    types_in_priority_order.each do |type|
+      search_results =
+        set_refs(@@data_sources[type].search(guardian, term, limit - limited_results.length))
+      next if search_results.empty?
+
+      all_data_items_valid =
+        search_results.all? do |item|
+          item.kind_of?(HashtagItem) && item.slug.present? && item.text.present?
+        end
+      next if !all_data_items_valid
+
+      search_results.each { |item| item.type = type }.sort_by! { |item| item.text.downcase }
+      slugs_by_type[type] = search_results.map(&:slug)
+
+      limited_results.concat(search_results)
+      break if limited_results.length >= limit
+    end
+
+    # Any items that are _not_ the top-ranked type (which could possibly not be
+    # the same as the first item in the types_in_priority_order if there was
+    # no data for that type) that have conflicting slugs with other items for
+    # other types need to have a ::type suffix added to their ref.
+    #
+    # This will be used for the lookup method above if one of these items is
+    # chosen in the UI, otherwise there is no way to determine whether a hashtag is
+    # for a category or a tag etc.
+    #
+    # For example, if there is a category with the slug #general and a tag
+    # with the slug #general, then the tag will have its ref changed to #general::tag
+    top_ranked_type = slugs_by_type.keys.first
+    limited_results.each do |hashtag_item|
+      next if hashtag_item.type == top_ranked_type
+
+      other_slugs = limited_results.reject { |r| r.type === hashtag_item.type }.map(&:slug)
+      if other_slugs.include?(hashtag_item.slug)
+        hashtag_item.ref = "#{hashtag_item.slug}::#{hashtag_item.type}"
+      end
+    end
+
+    limited_results.take(limit)
+  end
+
+  # TODO (martin) Remove this once plugins are not relying on the old lookup
+  # behavior via HashtagsController when enable_experimental_hashtag_autocomplete is removed
+  def lookup_old(slugs)
     raise Discourse::InvalidParameters.new(:slugs) if !slugs.is_a?(Array)
 
     all_slugs = []
@@ -138,58 +258,13 @@ class HashtagAutocompleteService
     { categories: categories_hashtags, tags: tag_hashtags }
   end
 
-  def search(term, types_in_priority_order, limit: 5)
-    raise Discourse::InvalidParameters.new(:order) if !types_in_priority_order.is_a?(Array)
-    limit = [limit, SEARCH_MAX_LIMIT].min
+  private
 
-    results = []
-    slugs_by_type = {}
-    term = term.downcase
-    types_in_priority_order =
-      types_in_priority_order.select { |type| @@data_sources.keys.include?(type) }
-
-    types_in_priority_order.each do |type|
-      data = @@data_sources[type].call(guardian, term, limit - results.length)
-      next if data.empty?
-
-      all_data_items_valid = data.all? do |item|
-        item.kind_of?(HashtagItem) && item.slug.present? && item.text.present?
-      end
-      next if !all_data_items_valid
-
-      data.each do |item|
-        item.type = type
-        item.ref = item.ref || item.slug
-      end
-      data.sort_by! { |item| item.text.downcase }
-      slugs_by_type[type] = data.map(&:slug)
-
-      results.concat(data)
-
-      break if results.length >= limit
-    end
-
-    # Any items that are _not_ the top-ranked type (which could possibly not be
-    # the same as the first item in the types_in_priority_order if there was
-    # no data for that type) that have conflicting slugs with other items for
-    # other types need to have a ::type suffix added to their ref.
-    #
-    # This will be used for the lookup method above if one of these items is
-    # chosen in the UI, otherwise there is no way to determine whether a hashtag is
-    # for a category or a tag etc.
-    #
-    # For example, if there is a category with the slug #general and a tag
-    # with the slug #general, then the tag will have its ref changed to #general::tag
-    top_ranked_type = slugs_by_type.keys.first
-    results.each do |hashtag_item|
-      next if hashtag_item.type == top_ranked_type
-
-      other_slugs = results.reject { |r| r.type === hashtag_item.type }.map(&:slug)
-      if other_slugs.include?(hashtag_item.slug)
-        hashtag_item.ref = "#{hashtag_item.slug}::#{hashtag_item.type}"
-      end
-    end
-
-    results.take(limit)
+  # Sometimes a specific ref is required, e.g. for categories that have
+  # a parent their ref will be parent_slug:child_slug, though most of the
+  # time it will be the same as the slug. The ref can then be used for
+  # lookup in the UI.
+  def set_refs(hashtag_items)
+    hashtag_items.each { |item| item.ref ||= item.slug }
   end
 end

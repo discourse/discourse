@@ -19,6 +19,10 @@ import {
   linkSeenHashtags,
 } from "discourse/lib/link-hashtags";
 import {
+  fetchUnseenHashtagsInContext,
+  linkSeenHashtagsInContext,
+} from "discourse/lib/hashtag-autocomplete";
+import {
   cannotSee,
   fetchUnseenMentions,
   linkSeenMentions,
@@ -187,6 +191,10 @@ export default Component.extend(ComposerUploadUppy, {
           }
         }
       },
+
+      hashtagTypesInPriorityOrder:
+        this.site.hashtag_configurations["topic-composer"],
+      hashtagIcons: this.site.hashtag_icons,
     };
   },
 
@@ -477,11 +485,24 @@ export default Component.extend(ComposerUploadUppy, {
   },
 
   _renderUnseenHashtags(preview) {
-    const unseen = linkSeenHashtags(preview);
+    let unseen;
+    const hashtagContext = this.site.hashtag_configurations["topic-composer"];
+    if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
+      unseen = linkSeenHashtagsInContext(hashtagContext, preview);
+    } else {
+      unseen = linkSeenHashtags(preview);
+    }
+
     if (unseen.length > 0) {
-      fetchUnseenHashtags(unseen).then(() => {
-        linkSeenHashtags(preview);
-      });
+      if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
+        fetchUnseenHashtagsInContext(hashtagContext, unseen).then(() => {
+          linkSeenHashtagsInContext(hashtagContext, preview);
+        });
+      } else {
+        fetchUnseenHashtags(unseen).then(() => {
+          linkSeenHashtags(preview);
+        });
+      }
     }
   },
 
@@ -858,8 +879,14 @@ export default Component.extend(ComposerUploadUppy, {
       this._warnMentionedGroups(preview);
       this._warnCannotSeeMention(preview);
 
-      // Paint category and tag hashtags
-      const unseenHashtags = linkSeenHashtags(preview);
+      // Paint category, tag, and other data source hashtags
+      let unseenHashtags;
+      const hashtagContext = this.site.hashtag_configurations["topic-composer"];
+      if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
+        unseenHashtags = linkSeenHashtagsInContext(hashtagContext, preview);
+      } else {
+        unseenHashtags = linkSeenHashtags(preview);
+      }
       if (unseenHashtags.length > 0) {
         discourseDebounce(this, this._renderUnseenHashtags, preview, 450);
       }

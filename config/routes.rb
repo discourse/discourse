@@ -774,7 +774,7 @@ Discourse::Application.routes.draw do
       get "/" => "list#category_default", as: "category_default"
     end
 
-    get "hashtags" => "hashtags#show"
+    get "hashtags" => "hashtags#lookup"
     get "hashtags/search" => "hashtags#search"
 
     TopTopic.periods.each do |period|

@@ -76,11 +76,15 @@ module Chat::ChatChannelFetcher
     channels = channels.where(status: options[:status]) if options[:status].present?
 
     if options[:filter].present?
-      sql = "chat_channels.name ILIKE :filter OR categories.name ILIKE :filter"
+      sql = "chat_channels.name ILIKE :filter OR chat_channels.slug ILIKE :filter OR categories.name ILIKE :filter"
       channels =
         channels.where(sql, filter: "%#{options[:filter].downcase}%").order(
           "chat_channels.name ASC, categories.name ASC",
         )
+    end
+
+    if options.key?(:slugs)
+      channels = channels.where("chat_channels.slug IN (:slugs)", slugs: options[:slugs])
     end
 
     if options.key?(:following)

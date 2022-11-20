@@ -1249,13 +1249,7 @@ blockquote > *:last-child {
 }
 
 a.mention {
-  display: inline-block; // https://bugzilla.mozilla.org/show_bug.cgi?id=1656119
-  font-weight: bold;
-  font-size: 0.93em;
-  color: var(--primary-high-or-secondary-low);
-  padding: 0 4px 1px;
-  background: var(--primary-low);
-  border-radius: 8px;
+  @include mention;
 }
 
 span.mention {

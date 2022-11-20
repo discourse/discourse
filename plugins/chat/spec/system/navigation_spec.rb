@@ -13,14 +13,7 @@ RSpec.describe "Navigation", type: :system, js: true do
   let(:chat_drawer_page) { PageObjects::Pages::ChatDrawer.new }
 
   before do
-    # ensures we have one valid registered admin
-    user.activate
-
-    SiteSetting.chat_enabled = true
-    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
-    category_channel.add(user)
-    category_channel_2.add(user)
-
+    chat_system_bootstrap(user, [category_channel, category_channel_2])
     sign_in(user)
   end
 

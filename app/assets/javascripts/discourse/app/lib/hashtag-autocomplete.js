@@ -12,26 +12,36 @@ import {
 } from "discourse/lib/utilities";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 
+/**
+ * Sets up a textarea using the jQuery autocomplete plugin, specifically
+ * to match on the hashtag (#) character for autocompletion of categories,
+ * tags, and other resource data types.
+ *
+ * @param {Array} contextualHashtagConfiguration - The hashtag datasource types in priority order
+ *   that should be used when searching for or looking up hashtags from the server, determines
+ *   the order of search results and the priority for looking up conflicting hashtags. See also
+ *   Site.hashtag_configurations.
+ * @param {$Element} $textarea - jQuery element to use for the autocompletion
+ *   plugin to attach to, this is what will watch for the # matcher when the user is typing.
+ * @param {Hash} siteSettings - The clientside site settings.
+ * @param {Function} afterComplete - Called with the selected autocomplete option once it is selected.
+ **/
 export function setupHashtagAutocomplete(
-  context,
+  contextualHashtagConfiguration,
   $textArea,
   siteSettings,
   afterComplete
 ) {
   if (siteSettings.enable_experimental_hashtag_autocomplete) {
-    _setupExperimental(context, $textArea, siteSettings, afterComplete);
+    _setupExperimental(
+      contextualHashtagConfiguration,
+      $textArea,
+      siteSettings,
+      afterComplete
+    );
   } else {
     _setup($textArea, siteSettings, afterComplete);
   }
-}
-
-const contextBasedParams = {};
-
-export function registerHashtagSearchParam(param, context, priority) {
-  if (!contextBasedParams[context]) {
-    contextBasedParams[context] = {};
-  }
-  contextBasedParams[context][param] = priority;
 }
 
 export function hashtagTriggerRule(textarea, opts) {
@@ -62,7 +72,61 @@ export function hashtagTriggerRule(textarea, opts) {
   return true;
 }
 
-function _setupExperimental(context, $textArea, siteSettings, afterComplete) {
+const checkedHashtags = new Set();
+let seenHashtags = {};
+
+// NOTE: For future maintainers, the hashtag lookup here does not take
+// into account mixed contexts -- for instance, a chat quote inside a post
+// or a post quote inside a chat message, so this may
+// not provide an accurate priority lookup for hashtags without a ::type suffix in those
+// cases.
+export function fetchUnseenHashtagsInContext(
+  contextualHashtagConfiguration,
+  slugs
+) {
+  return ajax("/hashtags", {
+    data: { slugs, order: contextualHashtagConfiguration },
+  }).then((response) => {
+    Object.keys(response).forEach((type) => {
+      seenHashtags[type] = seenHashtags[type] || {};
+      response[type].forEach((item) => {
+        seenHashtags[type][item.ref] = seenHashtags[type][item.ref] || item;
+      });
+    });
+    slugs.forEach(checkedHashtags.add, checkedHashtags);
+  });
+}
+
+export function linkSeenHashtagsInContext(
+  contextualHashtagConfiguration,
+  elem
+) {
+  const hashtagSpans = [...(elem?.querySelectorAll("span.hashtag-raw") || [])];
+  if (hashtagSpans.length === 0) {
+    return [];
+  }
+  const slugs = [...hashtagSpans.mapBy("innerText")];
+
+  hashtagSpans.forEach((hashtagSpan, index) => {
+    _findAndReplaceSeenHashtagPlaceholder(
+      slugs[index],
+      contextualHashtagConfiguration,
+      hashtagSpan
+    );
+  });
+
+  return slugs
+    .map((slug) => slug.toLowerCase())
+    .uniq()
+    .filter((slug) => !checkedHashtags.has(slug));
+}
+
+function _setupExperimental(
+  contextualHashtagConfiguration,
+  $textArea,
+  siteSettings,
+  afterComplete
+) {
   $textArea.autocomplete({
     template: findRawTemplate("hashtag-autocomplete"),
     key: "#",
@@ -73,7 +137,7 @@ function _setupExperimental(context, $textArea, siteSettings, afterComplete) {
       if (term.match(/\s/)) {
         return null;
       }
-      return _searchGeneric(term, siteSettings, context);
+      return _searchGeneric(term, siteSettings, contextualHashtagConfiguration);
     },
     triggerRule: (textarea, opts) => hashtagTriggerRule(textarea, opts),
   });
@@ -105,7 +169,7 @@ function _updateSearchCache(term, results) {
   return results;
 }
 
-function _searchGeneric(term, siteSettings, context) {
+function _searchGeneric(term, siteSettings, contextualHashtagConfiguration) {
   if (currentSearch) {
     currentSearch.abort();
     currentSearch = null;
@@ -133,16 +197,16 @@ function _searchGeneric(term, siteSettings, context) {
       discourseDebounce(this, _searchRequest, q, ctx, resultFunc, INPUT_DELAY);
     };
 
-    debouncedSearch(term, context, (result) => {
+    debouncedSearch(term, contextualHashtagConfiguration, (result) => {
       cancel(timeoutPromise);
       resolve(_updateSearchCache(term, result));
     });
   });
 }
 
-function _searchRequest(term, context, resultFunc) {
+function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
   currentSearch = ajax("/hashtags/search.json", {
-    data: { term, order: _sortedContextParams(context) },
+    data: { term, order: contextualHashtagConfiguration },
   });
   currentSearch
     .then((r) => {
@@ -154,8 +218,30 @@ function _searchRequest(term, context, resultFunc) {
   return currentSearch;
 }
 
-function _sortedContextParams(context) {
-  return Object.entries(contextBasedParams[context])
-    .sort((a, b) => b[1] - a[1])
-    .map((item) => item[0]);
+function _findAndReplaceSeenHashtagPlaceholder(
+  slug,
+  contextualHashtagConfiguration,
+  hashtagSpan
+) {
+  contextualHashtagConfiguration.forEach((type) => {
+    // remove type suffixes
+    const typePostfix = `::${type}`;
+    if (slug.endsWith(typePostfix)) {
+      slug = slug.slice(0, slug.length - typePostfix.length);
+    }
+
+    // replace raw span for the hashtag with a cooked one
+    const matchingSeenHashtag = seenHashtags[type]?.[slug];
+    if (matchingSeenHashtag) {
+      // NOTE: When changing the HTML structure here, you must also change
+      // it in the hashtag-autocomplete markdown rule, and vice-versa.
+      const link = document.createElement("a");
+      link.classList.add("hashtag-cooked");
+      link.href = matchingSeenHashtag.relative_url;
+      link.dataset.type = type;
+      link.dataset.slug = matchingSeenHashtag.slug;
+      link.innerHTML = `<svg class="fa d-icon d-icon-${matchingSeenHashtag.icon} svg-icon svg-node"><use href="#${matchingSeenHashtag.icon}"></use></svg><span>${matchingSeenHashtag.text}</span>`;
+      hashtagSpan.replaceWith(link);
+    }
+  });
 }
