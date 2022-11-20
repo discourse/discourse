@@ -25,12 +25,22 @@ function addHashtag(buffer, matches, state) {
   let token;
   if (result) {
     token = new state.Token("link_open", "a", 1);
+
+    // Data attributes here are used later on for things like quoting
+    // HTML-to-markdown
     token.attrs = [
       ["class", "hashtag-cooked"],
       ["href", result.relative_url],
       ["data-type", result.type],
       ["data-slug", result.slug],
     ];
+
+    // Most cases these will be the exact same, one standout is categories
+    // which have a parent:child reference.
+    if (result.slug !== result.ref) {
+      token.attrs.push(["data-ref", result.ref]);
+    }
+
     token.block = false;
     buffer.push(token);
 
@@ -127,6 +137,7 @@ export function setup(helper) {
       "span.hashtag-raw",
       "a[data-type]",
       "a[data-slug]",
+      "a[data-ref]",
     ])
   );
 }
