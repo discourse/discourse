@@ -8,7 +8,9 @@ export default createWidget("sidebar-toggle", {
       this.attach("button", {
         title: "",
         icon: "bars",
-        action: "toggleSidebar",
+        action: this.site.narrowDesktopView
+          ? "toggleHamburger"
+          : "toggleSidebar",
         className: "btn btn-flat btn-sidebar-toggle",
       }),
     ];
