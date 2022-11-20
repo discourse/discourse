@@ -112,6 +112,11 @@ RSpec.describe HashtagAutocompleteService do
       )
     end
 
+    it "can search categories by name or slug" do
+      expect(subject.search("book-club", %w[category]).map(&:text)).to eq(["Book Club"])
+      expect(subject.search("Book C", %w[category]).map(&:text)).to eq(["Book Club"])
+    end
+
     it "does not include categories the user cannot access" do
       category1.update!(read_restricted: true)
       expect(subject.search("book", %w[tag category]).map(&:text)).to eq(["great-books x 0"])
@@ -271,6 +276,13 @@ RSpec.describe HashtagAutocompleteService do
       category1.update!(parent_category: nil)
     end
 
+    it "does not return the category if the parent does not match the child" do
+      parent_category = Fabricate(:category, name: "Media", slug: "media")
+      category1.update!(parent_category: parent_category)
+      result = subject.lookup(%w[bad-parent:book-club], %w[category tag])
+      expect(result[:category]).to be_empty
+    end
+
     it "for slugs without a type suffix it falls back in type order until a result is found or types are exhausted" do
       result = subject.lookup(%w[book-club great-books fiction-books], %w[category tag])
       expect(result[:category].map(&:slug)).to eq(["book-club"])
@@ -298,7 +310,9 @@ RSpec.describe HashtagAutocompleteService do
       result = subject.lookup(%w[book-club great-books fiction-books], %w[tag category])
       expect(result[:category]).to eq([])
       expect(result[:tag].map(&:slug)).to eq(%w[book-club fiction-books great-books])
-      expect(result[:tag].map(&:relative_url)).to eq(%w[/tag/book-club /tag/fiction-books /tag/great-books])
+      expect(result[:tag].map(&:relative_url)).to eq(
+        %w[/tag/book-club /tag/fiction-books /tag/great-books],
+      )
     end
 
     it "includes other data sources" do

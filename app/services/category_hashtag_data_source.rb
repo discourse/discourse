@@ -9,7 +9,7 @@ class CategoryHashtagDataSource
   end
 
   def self.category_to_hashtag_item(guardian_categories, category)
-    category = Category.new(category.slice(:id, :slug, :name, :parent_category_id)) if category.is_a?(Hash)
+    category = Category.new(category.slice(:id, :slug, :name, :parent_category_id))
 
     HashtagAutocompleteService::HashtagItem.new.tap do |item|
       item.text = category.name
@@ -22,11 +22,8 @@ class CategoryHashtagDataSource
       item.ref =
         if category.parent_category_id
           parent_category =
-            guardian_categories.find { |gc| gc[:id] === category.parent_category_id }
-          category.slug if !parent_category
-
-          parent_slug = parent_category[:slug]
-          "#{parent_slug}:#{category.slug}"
+            guardian_categories.find { |cat| cat[:id] === category.parent_category_id }
+          !parent_category ? category.slug : "#{parent_category[:slug]}:#{category.slug}"
         else
           category.slug
         end
@@ -34,13 +31,11 @@ class CategoryHashtagDataSource
   end
 
   def self.lookup(guardian, slugs)
+    # We use Site here because it caches all the categories the
+    # user has access to.
     guardian_categories = Site.new(guardian).categories
-    category_slugs_and_ids =
-      slugs.map { |slug| [slug, Category.query_from_hashtag_slug(slug)&.id] }.to_h
     Category
-      .secured(guardian)
-      .select(:id, :slug, :name, :parent_category_id)
-      .where(id: category_slugs_and_ids.values)
+      .query_from_cached_categories(slugs, guardian_categories)
       .map { |category| category_to_hashtag_item(guardian_categories, category) }
   end
 
@@ -48,7 +43,9 @@ class CategoryHashtagDataSource
     guardian_categories = Site.new(guardian).categories
 
     guardian_categories
-      .select { |category| category[:name].downcase.include?(term) }
+      .select do |category|
+        category[:name].downcase.include?(term) || category[:slug].downcase.include?(term)
+      end
       .take(limit)
       .map { |category| category_to_hashtag_item(guardian_categories, category) }
   end
