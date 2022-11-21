@@ -130,7 +130,7 @@ RSpec.describe "Navigation", type: :system, js: true do
         visit("/t/-/#{topic.id}")
         chat_page.open_from_header
         chat_drawer_page.close
-        find("a[title='#{category_channel.title}']").click
+        find("a[class*='sidebar-section-link-#{category_channel.slug}']").click
 
         expect(page).to have_css(".chat-message-container[data-id='#{message.id}']")
       end
@@ -142,7 +142,7 @@ RSpec.describe "Navigation", type: :system, js: true do
         chat_page.open_from_header
         chat_drawer_page.maximize
         visit("/")
-        find("a[title='#{category_channel.title}']").click
+        find("a[class*='sidebar-section-link-#{category_channel.slug}']").click
 
         expect(page).to have_current_path(
           chat.channel_path(category_channel.id, category_channel.slug),
@@ -261,7 +261,7 @@ RSpec.describe "Navigation", type: :system, js: true do
       it "activates the channel in the sidebar" do
         visit("/")
         chat_page.open_from_header
-        find("a[title='#{category_channel.title}']").click
+        find("a[class*='#{category_channel.slug}']").click
 
         expect(page).to have_css(
           ".sidebar-section-link-#{category_channel.slug}.sidebar-section-link--active",
@@ -273,7 +273,7 @@ RSpec.describe "Navigation", type: :system, js: true do
       it "deactivates the channel in the sidebar" do
         visit("/")
         chat_page.open_from_header
-        find("a[title='#{category_channel.title}']").click
+        find("a[class*='sidebar-section-link-#{category_channel.slug}']").click
         chat_drawer_page.close
 
         expect(page).not_to have_css(

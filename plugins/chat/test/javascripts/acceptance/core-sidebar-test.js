@@ -112,6 +112,7 @@ acceptance("Discourse Chat - Core Sidebar", function (needs) {
           {
             id: 3,
             title: "random",
+            description: "The channel for random things",
             chatable_type: "Category",
             chatable: { slug: "random" },
             last_message_sent_at: "2021-11-08T21:26:05.710Z",
@@ -421,6 +422,16 @@ acceptance("Discourse Chat - Core Sidebar", function (needs) {
     assert.strictEqual(currentURL(), "/");
   });
 
+  test("Channel description used as title when present", async function (assert) {
+    await visit("/");
+
+    const randomChannel = queryAll(
+      ".sidebar-section-chat-channels .sidebar-section-link-wrapper .sidebar-section-link"
+    )[3];
+
+    assert.strictEqual(randomChannel.title, "The channel for random things");
+  });
+
   test("Escapes public channel titles", async function (assert) {
     await visit("/");
 
@@ -428,7 +439,10 @@ acceptance("Discourse Chat - Core Sidebar", function (needs) {
       ".sidebar-section-chat-channels .sidebar-section-link-wrapper .sidebar-section-link"
     );
 
-    assert.strictEqual(evilChannel.title, "&lt;script&gt;evil&lt;/script&gt;");
+    assert.strictEqual(
+      evilChannel.title,
+      "&lt;script&gt;evil&lt;/script&gt; chat"
+    );
 
     assert.ok(
       evilChannel.className.includes(
@@ -451,7 +465,10 @@ acceptance("Discourse Chat - Core Sidebar", function (needs) {
       ".sidebar-section-chat-dms .sidebar-section-link-wrapper .sidebar-section-link"
     )[3];
 
-    assert.strictEqual(evilChannel.title, "@&lt;script&gt;sam&lt;/script&gt;");
+    assert.strictEqual(
+      evilChannel.title,
+      "Chat with @&lt;script&gt;sam&lt;/script&gt;"
+    );
 
     assert.ok(
       evilChannel.className.includes(
