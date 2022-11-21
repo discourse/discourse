@@ -41,6 +41,7 @@ class TagHashtagDataSource
         with_context: true,
         limit: limit,
         for_input: true,
+        order_search_results: true,
       )
     TagsController
       .tag_counts_json(tags_with_counts)
