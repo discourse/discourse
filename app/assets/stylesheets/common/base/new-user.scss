@@ -191,14 +191,14 @@
   }
 }
 
-.user-preferences_tracking-topics-wrapper {
+.user-preferences__tracking-topics-wrapper {
   margin-bottom: 3em;
   .control-label {
     margin-bottom: 1em;
   }
 }
 
-.user-preferences_tracking-categories-tags-wrapper {
+.user-preferences__tracking-categories-tags-wrapper {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(16em, 1fr));
   gap: 2em;

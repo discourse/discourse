@@ -1,7 +1,6 @@
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
+import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance(
   "New User Menu - Horizontal nav and preferences relocation",
@@ -32,24 +31,6 @@ acceptance(
     test("User Categories page no longer exists", async function (assert) {
       await visit("/u/eviltrout/preferences");
       assert.ok(!exists(".nav-categories"), "Categories tab no longer exists");
-    });
-
-    test("Can save category tracking preferences", async function (assert) {
-      await visit("/u/eviltrout/preferences/tracking");
-
-      const categorySelector = selectKit(
-        ".tracking-controls .category-selector"
-      );
-
-      const savePreferences = async () => {
-        assert.notOk(exists(".saved"), "it hasn't been saved yet");
-        await click(".save-changes");
-        assert.ok(exists(".saved"), "it displays the saved message");
-      };
-
-      await categorySelector.expand();
-      await categorySelector.fillInFilter("faq");
-      await savePreferences();
     });
 
     test("Can view user api keys on security page", async function (assert) {

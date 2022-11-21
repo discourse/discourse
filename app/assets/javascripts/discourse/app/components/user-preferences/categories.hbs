@@ -1,7 +1,7 @@
 <div class="control-group category-notifications">
   <label class="control-label">{{i18n "user.categories_settings"}}</label>
 
-  <div class="controls tracking-controls tracking-controls--watched-categories">
+  <div class="controls tracking-controls tracking-controls__watched-categories">
     <label>{{d-icon "d-watching"}} {{i18n "user.watched_categories"}}</label>
     {{#if @canSee}}
       <a class="show-tracking" href={{@model.watchingTopicsPath}}>{{i18n "user.tracked_topics_link"}}</a>
@@ -10,7 +10,7 @@
   </div>
   <div class="instructions">{{i18n "user.watched_categories_instructions"}}</div>
 
-  <div class="controls tracking-controls tracking-controls--tracked-categories">
+  <div class="controls tracking-controls tracking-controls__tracked-categories">
     <label>{{d-icon "d-tracking"}} {{i18n "user.tracked_categories"}}</label>
     {{#if @canSee}}
       <a class="show-tracking" href={{@model.trackingTopicsPath}}>{{i18n "user.tracked_topics_link"}}</a>
@@ -19,20 +19,20 @@
   </div>
   <div class="instructions">{{i18n "user.tracked_categories_instructions"}}</div>
 
-  <div class="controls tracking-controls tracking-controls--watched-first-categories">
+  <div class="controls tracking-controls tracking-controls__watched-first-categories">
     <label>{{d-icon "d-watching-first"}} {{i18n "user.watched_first_post_categories"}}</label>
     <CategorySelector @categories={{@model.watchedFirstPostCategories}} @blockedCategories={{@selectedCategories}} @onChange={{action (mut @model.watchedFirstPostCategories)}} />
   </div>
   <div class="instructions">{{i18n "user.watched_first_post_categories_instructions"}}</div>
 
   {{#if @siteSettings.mute_all_categories_by_default}}
-    <div class="controls tracking-controls tracking-controls--regular-categories">
+    <div class="controls tracking-controls tracking-controls__regular-categories">
       <label>{{d-icon "d-regular"}} {{i18n "user.regular_categories"}}</label>
       <CategorySelector @categories={{@model.regularCategories}} @blockedCategories={{@selectedCategories}} @onChange={{action (mut @model.regularCategories)}} />
     </div>
     <div class="instructions">{{i18n "user.regular_categories_instructions"}}</div>
   {{else}}
-    <div class="controls tracking-controls tracking-controls--muted-categories">
+    <div class="controls tracking-controls tracking-controls__muted-categories">
       <label>{{d-icon "d-muted"}} {{i18n "user.muted_categories"}}</label>
 
       {{#if @canSee}}
