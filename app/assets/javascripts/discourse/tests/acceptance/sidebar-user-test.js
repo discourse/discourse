@@ -4,6 +4,7 @@ import { click, visit } from "@ember/test-helpers";
 import {
   acceptance,
   exists,
+  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 
@@ -213,6 +214,38 @@ acceptance(
           ".sidebar-section-community .sidebar-section-header[aria-expanded='false'][aria-controls='sidebar-section-content-community']"
         ),
         "accessibility attributes are set correctly on sidebar section header when section is collapsed"
+      );
+    });
+
+    test("accessibility of sidebar toggle", async function (assert) {
+      await visit("/");
+
+      assert.ok(
+        exists(
+          ".btn-sidebar-toggle[aria-expanded='true'][aria-controls='d-sidebar']"
+        ),
+        "has the right accessibility attributes set when sidebar is expanded"
+      );
+
+      assert.strictEqual(
+        query(".btn-sidebar-toggle").title,
+        I18n.t("sidebar.hide_sidebar"),
+        "has the right title attribute when sidebar is expanded"
+      );
+
+      await click(".btn-sidebar-toggle");
+
+      assert.ok(
+        exists(
+          ".btn-sidebar-toggle[aria-expanded='false'][aria-controls='d-sidebar']"
+        ),
+        "has the right accessibility attributes set when sidebar is collapsed"
+      );
+
+      assert.strictEqual(
+        query(".btn-sidebar-toggle").title,
+        I18n.t("sidebar.show_sidebar"),
+        "has the right title attribute when sidebar is collapsed"
       );
     });
   }
