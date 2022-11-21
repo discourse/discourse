@@ -13,7 +13,7 @@ export default Component.extend({
   },
 
   userInputFocusOut(event) {
-    let controls = event.target.parentElement;
+    const controls = event.target.parentElement;
     if (
       event.target.value.length === 0 &&
       controls.classList.contains("value-entered")
