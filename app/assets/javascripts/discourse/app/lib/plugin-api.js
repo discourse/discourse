@@ -55,7 +55,10 @@ import { addNavItem } from "discourse/models/nav-item";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import { addPluginReviewableParam } from "discourse/components/reviewable-item";
-import { addPopupMenuOptionsCallback } from "discourse/controllers/composer";
+import {
+  addComposerSaveErrorCallback,
+  addPopupMenuOptionsCallback,
+} from "discourse/controllers/composer";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import {
   addGroupPostSmallActionCode,
@@ -109,7 +112,7 @@ import { registerModelTransformer } from "discourse/lib/model-transformers";
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-const PLUGIN_API_VERSION = "1.4.0";
+const PLUGIN_API_VERSION = "1.5.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -1244,6 +1247,27 @@ class PluginApi {
    */
   composerBeforeSave(method) {
     Composer.reopen({ beforeSave: method });
+  }
+
+  /**
+   * Registers a callback function to handle the composer save errors.
+   * This allows you to implement custom logic that will happen before
+   * the raw error is presented to the user.
+   * The passed function is expected to return true if the error was handled,
+   * false otherwise.
+   *
+   * Example:
+   *
+   * api.addComposerSaveErrorCallback((error) => {
+   *   if (error == "my_error") {
+   *      //handle error
+   *      return true;
+   *   }
+   *   return false;
+   * })
+   */
+  addComposerSaveErrorCallback(callback) {
+    addComposerSaveErrorCallback(callback);
   }
 
   /**
