@@ -59,8 +59,11 @@ export default {
           buildTopicRoute("top", {
             actions: {
               willTransition() {
-                User.currentProp("should_be_redirected_to_top", false);
-                User.currentProp("redirected_to_top.reason", null);
+                User.currentProp(
+                  "user_option.should_be_redirected_to_top",
+                  false
+                );
+                User.currentProp("user_option.redirected_to_top.reason", null);
                 return this._super(...arguments);
               },
             },

@@ -154,7 +154,7 @@ export default Component.extend({
     }
 
     this.currentUser.set(
-      "bookmark_auto_delete_preference",
+      "user_option.bookmark_auto_delete_preference",
       this.autoDeletePreference
     );
 

@@ -51,7 +51,7 @@ export default Controller.extend({
     });
   },
 
-  @discourseComputed("model.default_calendar")
+  @discourseComputed("model.user_option.default_calendar")
   canChangeDefaultCalendar(defaultCalendar) {
     return defaultCalendar !== "none_selected";
   },

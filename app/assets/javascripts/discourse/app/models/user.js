@@ -1081,7 +1081,7 @@ const User = RestModel.extend({
 
   // obsolete, just call "user.timezone" instead
   resolvedTimezone() {
-    return this.timezone;
+    return this.user_option.timezone;
   },
 
   calculateMutedIds(notificationLevel, id, type) {

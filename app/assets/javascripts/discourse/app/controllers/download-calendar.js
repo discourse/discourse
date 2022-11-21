@@ -10,10 +10,10 @@ export default Controller.extend(ModalFunctionality, {
   @action
   downloadCalendar() {
     if (this.remember) {
-      this.currentUser.setProperties({
-        default_calendar: this.selectedCalendar,
-        user_option: { default_calendar: this.selectedCalendar },
-      });
+      this.currentUser.user_option.set(
+        "default_calendar",
+        this.selectedCalendar
+      );
       this.currentUser.save(["default_calendar"]);
     }
     if (this.selectedCalendar === "ics") {
