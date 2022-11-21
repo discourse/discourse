@@ -125,12 +125,6 @@ export default Controller.extend({
       return model
         .save(this.saveAttrNames)
         .then(() => {
-          // update the timezone in memory so we can use the new
-          // one if we change routes without reloading the user
-          if (this.currentUser.id === this.model.id) {
-            this.currentUser.timezone = this.model.user_option.timezone;
-          }
-
           cookAsync(model.get("bio_raw"))
             .then(() => {
               model.set("bio_cooked");
