@@ -6,7 +6,7 @@ export default Component.extend({
   classNames: ["create-account-body"],
 
   userInputFocus(event) {
-    let controls = event.target.parentElement;
+    const controls = event.target.parentElement;
     if (!controls.classList.contains("value-entered")) {
       controls.classList.toggle("value-entered");
     }
