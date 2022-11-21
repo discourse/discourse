@@ -1,5 +1,5 @@
 {{#if @prefixType}}
-  <span class={{concat-class "sidebar-section-link-prefix" @prefixType @prefixCSSClass}} style={{html-safe (concat "color: " @prefixColor)}}>
+  <span class={{concat-class "sidebar-section-link-prefix" @prefixType @prefixCSSClass}} style={{if @prefixColor (html-safe (concat "color: " @prefixColor))}}>
     {{#if (eq @prefixType "image")}}
       <img src={{@prefixValue}} class="prefix-image">
     {{/if}}
