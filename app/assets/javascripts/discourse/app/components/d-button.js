@@ -109,8 +109,8 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
 
         if (typeof actionVal === "string") {
           deprecated(...ACTION_AS_STRING_DEPRECATION_ARGS);
-          if (this.parentView?.send) {
-            this.parentView.send(actionVal, actionParam);
+          if (this._target?.send) {
+            this._target.send(actionVal, actionParam);
           } else {
             throw new Error(
               "DButton could not find a target for the action. Use a closure action instead"
