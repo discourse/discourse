@@ -1253,7 +1253,7 @@ class PluginApi {
   /**
    * Registers a callback function to handle the composer save errors.
    * This allows you to implement custom logic that will happen before
-   * the raw error is presented to the user in bootbox modal.
+   * the raw error is presented to the user.
    * The passed function is expected to return true if the error was handled,
    * false otherwise.
    *
