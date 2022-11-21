@@ -11,7 +11,6 @@ import {
   fillIn,
   visit,
 } from "@ember/test-helpers";
-import User from "discourse/models/user";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
 
@@ -26,13 +25,6 @@ function preferencesPretender(server, helper) {
   server.put("/u/second_factors_backup.json", () => {
     return helper.response({
       backup_codes: ["dsffdsd", "fdfdfdsf", "fddsds"],
-    });
-  });
-
-  server.post("/user_avatar/eviltrout/refresh_gravatar.json", () => {
-    return helper.response({
-      gravatar_upload_id: 6543,
-      gravatar_avatar_template: "/images/avatar.png",
     });
   });
 
@@ -124,178 +116,7 @@ acceptance("User Preferences", function (needs) {
     await visit("/u/eviltrout/preferences/username");
     assert.ok(exists("#change_username"), "it has the input element");
   });
-
-  test("default avatar selector", async function (assert) {
-    await visit("/u/eviltrout/preferences");
-
-    await click(".pref-avatar .btn");
-    assert.ok(exists(".avatar-choice", "opens the avatar selection modal"));
-
-    await click(".avatar-selector-refresh-gravatar");
-
-    assert.strictEqual(
-      User.currentProp("gravatar_avatar_upload_id"),
-      6543,
-      "it should set the gravatar_avatar_upload_id property"
-    );
-  });
 });
-
-acceptance(
-  "Avatar selector when selectable avatars is enabled",
-  function (needs) {
-    needs.user();
-    needs.settings({ selectable_avatars_mode: "no_one" });
-    needs.pretender((server, helper) => {
-      server.get("/site/selectable-avatars.json", () =>
-        helper.response([
-          "https://www.discourse.org",
-          "https://meta.discourse.org",
-        ])
-      );
-    });
-
-    test("selectable avatars", async function (assert) {
-      await visit("/u/eviltrout/preferences");
-      await click(".pref-avatar .btn");
-      assert.ok(
-        exists(".selectable-avatars", "opens the avatar selection modal")
-      );
-      assert.notOk(
-        exists(
-          "#uploaded-avatar",
-          "avatar selection modal does not include option to upload"
-        )
-      );
-    });
-  }
-);
-
-acceptance(
-  "Avatar selector when selectable avatars allows staff to upload",
-  function (needs) {
-    needs.user();
-    needs.settings({ selectable_avatars_mode: "staff" });
-    needs.pretender((server, helper) => {
-      server.get("/site/selectable-avatars.json", () =>
-        helper.response([
-          "https://www.discourse.org",
-          "https://meta.discourse.org",
-        ])
-      );
-    });
-
-    test("allows staff to upload", async function (assert) {
-      updateCurrentUser({
-        trust_level: 3,
-        moderator: true,
-        admin: false,
-      });
-      await visit("/u/eviltrout/preferences");
-      await click(".pref-avatar .btn");
-      assert.ok(
-        exists(".selectable-avatars", "opens the avatar selection modal")
-      );
-      assert.ok(
-        exists(
-          "#uploaded-avatar",
-          "avatar selection modal includes option to upload"
-        )
-      );
-    });
-
-    test("disallow non-staff", async function (assert) {
-      await visit("/u/eviltrout/preferences");
-      updateCurrentUser({
-        trust_level: 3,
-        moderator: false,
-        admin: false,
-      });
-      await click(".pref-avatar .btn");
-      assert.ok(
-        exists(".selectable-avatars", "opens the avatar selection modal")
-      );
-      assert.notOk(
-        exists(
-          "#uploaded-avatar",
-          "avatar selection modal does not include option to upload"
-        )
-      );
-    });
-  }
-);
-acceptance(
-  "Avatar selector when selectable avatars allows trust level 3+ to upload",
-  function (needs) {
-    needs.user();
-    needs.settings({ selectable_avatars_mode: "tl3" });
-    needs.pretender((server, helper) => {
-      server.get("/site/selectable-avatars.json", () =>
-        helper.response([
-          "https://www.discourse.org",
-          "https://meta.discourse.org",
-        ])
-      );
-    });
-
-    test("with a tl3 user", async function (assert) {
-      await visit("/u/eviltrout/preferences");
-      updateCurrentUser({
-        trust_level: 3,
-        moderator: false,
-        admin: false,
-      });
-      await click(".pref-avatar .btn");
-      assert.ok(
-        exists(".selectable-avatars", "opens the avatar selection modal")
-      );
-      assert.ok(
-        exists(
-          "#uploaded-avatar",
-          "avatar selection modal does includes option to upload"
-        )
-      );
-    });
-
-    test("with a tl2 user", async function (assert) {
-      await visit("/u/eviltrout/preferences");
-      updateCurrentUser({
-        trust_level: 2,
-        moderator: false,
-        admin: false,
-      });
-      await click(".pref-avatar .btn");
-      assert.ok(
-        exists(".selectable-avatars", "opens the avatar selection modal")
-      );
-      assert.notOk(
-        exists(
-          "#uploaded-avatar",
-          "avatar selection modal does not include option to upload"
-        )
-      );
-    });
-
-    test("always allow staff to upload", async function (assert) {
-      await visit("/u/eviltrout/preferences");
-      updateCurrentUser({
-        trust_level: 2,
-        moderator: true,
-        admin: false,
-      });
-      await click(".pref-avatar .btn");
-      assert.ok(
-        exists(".selectable-avatars", "opens the avatar selection modal")
-      );
-      assert.ok(
-        exists(
-          "#uploaded-avatar",
-          "avatar selection modal includes option to upload"
-        )
-      );
-    });
-  }
-);
 
 acceptance("Custom User Fields", function (needs) {
   needs.user();
