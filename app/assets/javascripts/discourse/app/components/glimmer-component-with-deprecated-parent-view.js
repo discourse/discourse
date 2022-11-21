@@ -20,8 +20,7 @@ class GlimmerComponentWithParentViewManager extends CustomComponentManager {
     result.component.parentView = dynamicScope.view;
     dynamicScope.view = result.component;
 
-    const _target = valueForRef(callerSelfRef);
-    result.component._target = _target;
+    result.component._target = valueForRef(callerSelfRef);
 
     return result;
   }
