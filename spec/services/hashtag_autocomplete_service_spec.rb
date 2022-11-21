@@ -169,10 +169,17 @@ RSpec.describe HashtagAutocompleteService do
       fab!(:category3) { Fabricate(:category, name: "Book Dome", slug: "book-dome") }
       fab!(:tag2) { Fabricate(:tag, name: "mid-books") }
       fab!(:tag3) { Fabricate(:tag, name: "terrible-books") }
+      fab!(:tag4) { Fabricate(:tag, name: "book") }
 
       it "orders them by name within their type order" do
         expect(subject.search("book", %w[category tag], limit: 10).map(&:ref)).to eq(
-          %w[book-club book-dome book-zone great-books mid-books terrible-books],
+          %w[book-club book-dome book-zone book great-books mid-books terrible-books],
+        )
+      end
+
+      it "orders correctly with lower limits" do
+        expect(subject.search("book", %w[category tag], limit: 5).map(&:ref)).to eq(
+          %w[book-club book-dome book-zone book great-books],
         )
       end
     end
