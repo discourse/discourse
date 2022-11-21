@@ -195,5 +195,25 @@ acceptance(
         "the 3 topic tracking state change callbacks are removed"
       );
     });
+
+    test("accessibility of sidebar section header", async function (assert) {
+      await visit("/");
+
+      assert.ok(
+        exists(
+          ".sidebar-section-community .sidebar-section-header[aria-expanded='true'][aria-controls='sidebar-section-content-community']"
+        ),
+        "accessibility attributes are set correctly on sidebar section header when section is expanded"
+      );
+
+      await click(".sidebar-section-header");
+
+      assert.ok(
+        exists(
+          ".sidebar-section-community .sidebar-section-header[aria-expanded='false'][aria-controls='sidebar-section-content-community']"
+        ),
+        "accessibility attributes are set correctly on sidebar section header when section is collapsed"
+      );
+    });
   }
 );
