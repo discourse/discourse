@@ -315,6 +315,18 @@ export class Tag {
           return text;
         }
 
+        if ("hashtag-cooked" === attr.class) {
+          if (attr["data-ref"]) {
+            return `#${attr["data-ref"]}`;
+          } else {
+            let type = "";
+            if (attr["data-type"]) {
+              type = `::${attr["data-type"]}`;
+            }
+            return `#${attr["data-slug"]}${type}`;
+          }
+        }
+
         let img;
         if (
           ["lightbox", "d-lazyload"].includes(attr.class) &&
