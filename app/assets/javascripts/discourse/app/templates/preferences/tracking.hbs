@@ -1,6 +1,6 @@
 <DSection @pageClass="user-preferences-tracking" />
 
-<div class="user-preferences_tracking-topics-wrapper">
+<div class="user-preferences__tracking-topics-wrapper">
   <label class="control-label">{{i18n "user.topics_settings"}}</label>
   <UserPreferences::TopicTracking
     @considerNewTopicOptions={{this.considerNewTopicOptions}}
@@ -9,7 +9,7 @@
     @notificationLevelsForReplying={{this.notificationLevelsForReplying}} />
 </div>
 
-<div class="user-preferences_tracking-categories-tags-wrapper">
+<div class="user-preferences__tracking-categories-tags-wrapper">
   <UserPreferences::Categories
     @canSee={{this.canSee}}
     @model={{this.model}}
