@@ -29,12 +29,6 @@ function preferencesPretender(server, helper) {
     });
   });
 
-  server.post("/u/eviltrout/preferences/revoke-account", () => {
-    return helper.response({
-      success: true,
-    });
-  });
-
   server.post("/user_avatar/eviltrout/refresh_gravatar.json", () => {
     return helper.response({
       gravatar_upload_id: 6543,
@@ -129,31 +123,6 @@ acceptance("User Preferences", function (needs) {
   test("username", async function (assert) {
     await visit("/u/eviltrout/preferences/username");
     assert.ok(exists("#change_username"), "it has the input element");
-  });
-
-  test("connected accounts", async function (assert) {
-    await visit("/u/eviltrout/preferences/account");
-
-    assert.ok(
-      exists(".pref-associated-accounts"),
-      "it has the connected accounts section"
-    );
-    assert.ok(
-      query(
-        ".pref-associated-accounts table tr:nth-of-type(1) td:nth-of-type(1)"
-      ).innerHTML.includes("Facebook"),
-      "it lists facebook"
-    );
-
-    await click(
-      ".pref-associated-accounts table tr:nth-of-type(1) td:last-child button"
-    );
-
-    assert.ok(
-      query(
-        ".pref-associated-accounts table tr:nth-of-type(1) td:last-of-type"
-      ).innerHTML.includes("Connect")
-    );
   });
 
   test("default avatar selector", async function (assert) {
@@ -327,26 +296,6 @@ acceptance(
     });
   }
 );
-
-acceptance("User Preferences when badges are disabled", function (needs) {
-  needs.user();
-  needs.settings({ enable_badges: false });
-  needs.pretender(preferencesPretender);
-
-  test("visit my preferences", async function (assert) {
-    await visit("/u/eviltrout/preferences");
-    assert.ok(
-      document.body.classList.contains("user-preferences-page"),
-      "has the body class"
-    );
-    assert.strictEqual(
-      currentURL(),
-      "/u/eviltrout/preferences/account",
-      "defaults to account tab"
-    );
-    assert.ok(exists(".user-preferences"), "it shows the preferences");
-  });
-});
 
 acceptance("Custom User Fields", function (needs) {
   needs.user();
