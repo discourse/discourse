@@ -6,7 +6,7 @@
 class PostCreator
   include HasErrors
 
-  attr_reader :opts
+  attr_reader :opts, :post
 
   # Acceptable options:
   #
