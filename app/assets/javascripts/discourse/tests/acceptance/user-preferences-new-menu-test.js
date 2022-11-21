@@ -18,21 +18,6 @@ acceptance(
       ],
     });
 
-    test("Horizontal user nav exists", async function (assert) {
-      await visit("/u/eviltrout/preferences");
-      assert.ok(exists(".horizontal-overflow-nav"), "horizontal nav exists");
-    });
-
-    test("User Tracking page exists", async function (assert) {
-      await visit("/u/eviltrout/preferences");
-      assert.ok(exists(".nav-tracking"), "the new tracking page link exists");
-    });
-
-    test("User Categories page no longer exists", async function (assert) {
-      await visit("/u/eviltrout/preferences");
-      assert.ok(!exists(".nav-categories"), "Categories tab no longer exists");
-    });
-
     test("Can view user api keys on security page", async function (assert) {
       await visit("/u/eviltrout/preferences/security");
       assert.ok(exists(".control-group.apps"), "User can see apps section");
