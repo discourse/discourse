@@ -62,7 +62,8 @@ class FileHelper
       skip_rate_limit: skip_rate_limit,
       verbose: verbose,
       validate_uri: validate_uri,
-      timeout: read_timeout
+      timeout: read_timeout,
+      force_custom_user_agent_hosts: SiteSetting.force_custom_user_agent_hosts.split('|')
     )
 
     fd.get do |response, chunk, uri|

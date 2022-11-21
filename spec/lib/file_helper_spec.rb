@@ -166,6 +166,27 @@ RSpec.describe FileHelper do
         end
       end
     end
+
+    describe 'when forcing customer user agents' do
+      it "should respect force_custom_user_agent_hosts site setting" do
+        url2 = "https://behindproxy.com/other.png"
+        SiteSetting.force_custom_user_agent_hosts = "https://behindproxy.com"
+        stub_request(:get, url2).with(headers: { "user-agent" => Onebox.options.user_agent }).to_return(body: png)
+
+        begin
+          found = FileHelper.download(
+            url2,
+            max_file_size: 10000,
+            tmp_file_name: 'tmpfile'
+          )
+
+          expect(found).to be_present
+        ensure
+          found&.close
+          found&.unlink
+        end
+      end
+    end
   end
 
 end
