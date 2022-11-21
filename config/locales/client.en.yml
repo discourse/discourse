@@ -4179,6 +4179,8 @@ en:
       redirect_after_success: "Second factor authentication is successful. Redirecting to the previous page…"
 
     sidebar:
+      show_sidebar: "Show sidebar"
+      hide_sidebar: "Hide sidebar"
       unread_count:
         one: "%{count} unread"
         other: "%{count} unread"
