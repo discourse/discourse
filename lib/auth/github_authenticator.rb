@@ -57,4 +57,10 @@ class Auth::GithubAuthenticator < Auth::ManagedAuthenticator
            },
            scope: "user:email"
   end
+
+  # the omniauth-github gem only picks up the primary email if it's verified:
+  # https://github.com/omniauth/omniauth-github/blob/0ac46b59ccdabd4cbe5be4a665df269355081915/lib/omniauth/strategies/github.rb#L58-L61
+  def primary_email_verified?(auth_token)
+    true
+  end
 end
