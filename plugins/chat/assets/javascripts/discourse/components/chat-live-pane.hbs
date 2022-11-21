@@ -27,7 +27,12 @@
 
 <ChatRetentionReminder @chatChannel={{this.chatChannel}} />
 
-<MentionWarnings @mentions={{this.mentions}} />
+<MentionWarnings
+  @unreachableGroupMentions={{this.unreachableGroupMentions}}
+  @overMembersLimitGroupMentions={{this.overMembersLimitGroupMentions}}
+  @tooManyMentions={{this.tooManyMentions}}
+  @mentionsCount={{this.mentionsCount}}
+/>
 
 <div class="chat-message-actions-mobile-anchor"></div>
 <div
@@ -109,6 +114,26 @@
       @onMention={{this.updateMentions}}
     />
   {{else}}
-    <ChatChannelPreviewCard @channel={{this.chatChannel}} />
+    {{#if (or this.chatChannel.isDraft this.chatChannel.isFollowing)}}
+      <ChatComposer
+        @draft={{this.draft}}
+        @details={{this.details}}
+        @canInteractWithChat={{this.canInteractWithChat}}
+        @sendMessage={{action "sendMessage"}}
+        @editMessage={{action "editMessage"}}
+        @setReplyTo={{action "setReplyTo"}}
+        @loading={{this.sendingLoading}}
+        @editingMessage={{readonly this.editingMessage}}
+        @onCancelEditing={{this.cancelEditing}}
+        @setInReplyToMsg={{this.setInReplyToMsg}}
+        @onEditLastMessageRequested={{this.editLastMessageRequested}}
+        @onValueChange={{action "composerValueChanged"}}
+        @fullPage={{this.fullPage}}
+        @chatChannel={{this.chatChannel}}
+        @onMentionUpdates={{this.updateMentions}}
+      />
+    {{else}}
+      <ChatChannelPreviewCard @channel={{this.chatChannel}} />
+    {{/if}}
   {{/if}}
 {{/if}}

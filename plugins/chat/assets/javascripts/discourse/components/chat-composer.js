@@ -148,15 +148,8 @@ export default Component.extend(TextareaTextManipulation, {
       "_inProgressUploadsChanged"
     );
 
-    if (this.timer) {
-      cancel(this.timer);
-      this.timer = null;
-    }
-
-    if (this.mentionsTimer) {
-      cancel(this.mentionsTimer);
-      this.mentionsTimer = null;
-    }
+    cancel(this.timer);
+    cancel(this.mentionsTimer);
 
     this.appEvents.off("chat:focus-composer", this, "_focusTextArea");
     this.appEvents.off("chat:insert-text", this, "insertText");
@@ -334,7 +327,7 @@ export default Component.extend(TextareaTextManipulation, {
   _captureMentions() {
     if (this.siteSettings.enable_mentions) {
       const mentions = this._extractMentions();
-      this.onMention(mentions);
+      this.onMentionUpdates(mentions);
     }
   },
 
@@ -716,7 +709,7 @@ export default Component.extend(TextareaTextManipulation, {
       value: "",
       inReplyMsg: null,
     });
-    this.onMention([]);
+    this.onMentionUpdates([]);
     this._syncUploads([]);
     this._focusTextArea({ ensureAtEnd: true, resizeTextarea: true });
     this.onValueChange?.(this.value, this._uploads, this.replyToMsg);

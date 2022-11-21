@@ -591,7 +591,7 @@ describe Chat::ChatNotifier do
 
         too_many_members_msg = messages.first
         expect(too_many_members_msg).to be_present
-        too_many_members = too_many_members_msg.data[:too_many_members]
+        too_many_members = too_many_members_msg.data[:groups_with_too_many_members]
         expect(too_many_members).to contain_exactly(group.name)
       end
 

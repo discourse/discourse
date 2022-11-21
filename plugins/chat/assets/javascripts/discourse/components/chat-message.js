@@ -472,7 +472,7 @@ export default Component.extend({
     });
   },
 
-  @discourseComputed("message.mentionWarning.too_many_members")
+  @discourseComputed("message.mentionWarning.groups_with_too_many_members")
   groupsWithTooManyMembers(groups) {
     return I18n.t("chat.mention_warning.too_many_members", {
       group_name: groups[0],

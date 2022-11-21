@@ -164,7 +164,7 @@ module ChatPublisher
         chat_message_id: chat_message.id,
         cannot_see: cannot_chat_users.map { |u| { username: u.username, id: u.id } }.as_json,
         without_membership: without_membership.map { |u| { username: u.username, id: u.id } }.as_json,
-        too_many_members: too_many_members.map(&:name).as_json,
+        groups_with_too_many_members: too_many_members.map(&:name).as_json,
         group_mentions_disabled: mentions_disabled.map(&:name).as_json
       },
       user_ids: [user_id],
