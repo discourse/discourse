@@ -1149,6 +1149,10 @@ acceptance("Composer - Error Extensibility", function (needs) {
     await fillIn(".d-editor-input", "this is the *content* of a post");
     await click("#reply-control button.create");
     assert.ok(exists(".dialog-body"), "it pops up an error message");
+    assert.ok(
+      query(".dialog-body").innerText.match(/PLUGIN_ABC ERROR/),
+      "it contains the server side error text"
+    );
     await click(".dialog-footer .btn-primary");
     assert.ok(!exists(".dialog-body"), "it dismisses the error");
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
