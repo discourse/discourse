@@ -72,7 +72,7 @@ acceptance(
     needs.pretender((server, helper) => {
       server.get("/u/eviltrout.json", () => {
         const cloned = cloneJSON(userFixtures["/u/eviltrout.json"]);
-        cloned.user.default_calendar = "none_selected";
+        cloned.user.user_option.default_calendar = "none_selected";
         return helper.response(200, cloned);
       });
     });
@@ -96,7 +96,7 @@ acceptance(
     needs.pretender((server, helper) => {
       server.get("/u/eviltrout.json", () => {
         const cloned = cloneJSON(userFixtures["/u/eviltrout.json"]);
-        cloned.user.default_calendar = "google";
+        cloned.user.user_option.default_calendar = "google";
         return helper.response(200, cloned);
       });
     });

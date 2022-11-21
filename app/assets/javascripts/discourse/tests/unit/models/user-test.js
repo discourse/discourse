@@ -101,7 +101,7 @@ module("Unit | Model | user", function (hooks) {
 
     const currentUser = User.createCurrent();
 
-    assert.deepEqual(currentUser.timezone, expectedTimezone);
+    assert.deepEqual(currentUser.user_option.timezone, expectedTimezone);
 
     await settled(); // `User` sends a request to save the timezone
   });

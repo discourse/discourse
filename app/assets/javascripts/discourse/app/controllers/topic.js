@@ -1781,7 +1781,7 @@ export default Controller.extend(bufferedProperty("model"), {
       if (
         this.siteSettings.automatically_unpin_topics &&
         this.currentUser &&
-        this.currentUser.automatically_unpin_topics
+        this.currentUser.user_option.automatically_unpin_topics
       ) {
         // automatically unpin topics when the user reaches the bottom
         const max = Math.max(...postNumbers);

@@ -1336,7 +1336,7 @@ User.reopenClass(Singleton, {
     ajax(userPath(user.username + ".json"), {
       type: "PUT",
       dataType: "json",
-      data: { timezone: user.timezone },
+      data: { timezone: user.user_option.timezone },
     });
   },
 });

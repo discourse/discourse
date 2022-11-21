@@ -84,7 +84,7 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   _buildTimeShortcuts() {
-    const timezone = this.currentUser.timezone;
+    const timezone = this.currentUser.user_option.timezone;
     const shortcuts = timeShortcuts(timezone);
     return [shortcuts.oneHour(), shortcuts.twoHours(), shortcuts.tomorrow()];
   },

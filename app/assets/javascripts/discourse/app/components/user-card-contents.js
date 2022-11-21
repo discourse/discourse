@@ -92,7 +92,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     if (!this.showUserLocalTime) {
       return;
     }
-    return user.timezone;
+    return user.user_option.timezone;
   },
 
   @discourseComputed("userTimezone")
