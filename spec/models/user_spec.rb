@@ -89,6 +89,16 @@ RSpec.describe User do
         expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to be_empty
       end
 
+      it "Should not receive any new categories w/ suppress secured categories from admin enabled" do
+        SiteSetting.suppress_secured_categories_from_admin = true
+        user = Fabricate(:user)
+        SidebarSectionLink.where(user: user).delete_all # User has customized their sidebar categories
+        user.update(admin: true)
+        expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to be_empty
+        user.update(admin: false)
+        expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to be_empty
+      end
+
       it 'should not create any sidebar section link records when experimental sidebar is disabled' do
         SiteSetting.enable_experimental_sidebar_hamburger = false
 
