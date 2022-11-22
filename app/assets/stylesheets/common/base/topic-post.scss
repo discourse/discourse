@@ -1249,27 +1249,26 @@ blockquote > *:last-child {
 }
 
 a.mention {
+  // linked
   @include mention;
 }
 
 span.mention {
-  font-weight: bold;
-  font-size: 0.93em;
-  color: var(--primary);
+  // unlinked
+  color: var(--primary-high);
 }
 
 a.mention-group {
+  // unlinked
   display: inline-block;
-  font-weight: bold;
-  font-size: 0.93em;
-  color: var(--primary);
+  color: var(--primary-high);
+  cursor: default;
 
   &.notify,
   .small-action-desc & {
-    color: var(--primary-high-or-secondary-low);
-    padding: 2px 4px;
-    background: var(--primary-low);
-    border-radius: 8px;
+    // linked
+    cursor: pointer;
+    @include mention;
   }
 }
 
