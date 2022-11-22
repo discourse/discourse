@@ -85,7 +85,7 @@ class User < ActiveRecord::Base
 
   has_many :topics_allowed, through: :topic_allowed_users, source: :topic
   has_many :groups, through: :group_users
-  has_many :secure_categories, through: :groups, source: :categories
+  has_many :secure_categories, -> { distinct }, through: :groups, source: :categories
   has_many :associated_groups, through: :user_associated_groups, dependent: :destroy
 
   # deleted in user_second_factors relationship
@@ -135,7 +135,7 @@ class User < ActiveRecord::Base
   after_create :ensure_in_trust_level_group
   after_create :set_default_categories_preferences
   after_create :set_default_tags_preferences
-  after_create :set_default_sidebar_section_links
+  after_create :add_default_sidebar_section_links
 
   after_update :set_default_sidebar_section_links, if: Proc.new  {
     self.saved_change_to_staged? || self.saved_change_to_admin?
@@ -1946,7 +1946,7 @@ class User < ActiveRecord::Base
 
   private
 
-  def set_default_sidebar_section_links
+  def add_default_sidebar_section_links
     return if !SiteSetting.enable_experimental_sidebar_hamburger
     return if staged? || bot?
 
@@ -1963,6 +1963,47 @@ class User < ActiveRecord::Base
         tag_names: SiteSetting.default_sidebar_tags.split("|")
       )
     end
+  end
+
+  def set_default_sidebar_section_links
+    return if !SiteSetting.enable_experimental_sidebar_hamburger
+    return if staged? || bot?
+
+    records = []
+
+    if SiteSetting.default_sidebar_categories.present?
+      default_category_ids = SiteSetting.default_sidebar_categories.split("|")
+
+      # Filters out categories that user does not have access to or do not exist anymore
+      category_ids = Category.secured(self.guardian).where(id: default_category_ids).pluck(:id)
+      existing_category_ids = SidebarSectionLink.where(user: self, linkable_type: 'Category').pluck(:linkable_id)
+
+      # Only include secured categories
+      secured_category_ids = self.secure_category_ids
+
+      # Secured categories that are in the default categories list
+      categories_to_add = existing_category_ids + (category_ids & secured_category_ids)
+
+      updater = UserUpdater.new(self, self)
+      updater.update({ sidebar_category_ids: [categories_to_add] })
+    end
+
+    if SiteSetting.tagging_enabled && SiteSetting.default_sidebar_tags.present?
+      tag_names = SiteSetting.default_sidebar_tags.split("|")
+
+      # Filters out tags that user cannot see or do not exist anymore
+      tag_ids = DiscourseTagging.filter_visible(Tag, self.guardian).where(name: tag_names).pluck(:id)
+
+      tag_ids.each do |tag_id|
+        records.push(
+          linkable_type: 'Tag',
+          linkable_id: tag_id,
+          user_id: self.id
+        )
+      end
+    end
+
+    SidebarSectionLink.insert_all(records) if records.present?
   end
 
   def stat
