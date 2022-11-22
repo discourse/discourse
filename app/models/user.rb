@@ -137,8 +137,12 @@ class User < ActiveRecord::Base
   after_create :set_default_tags_preferences
   after_create :add_default_sidebar_section_links
 
-  after_update :set_default_sidebar_section_links, if: Proc.new  {
-    self.saved_change_to_staged? || self.saved_change_to_admin?
+  after_update :update_default_sidebar_section_links, if: Proc.new  {
+    self.saved_change_to_admin?
+  }
+
+  after_update :add_default_sidebar_section_links, if: Proc.new {
+    self.saved_change_to_staged?
   }
 
   after_update :trigger_user_updated_event, if: Proc.new {
@@ -1965,11 +1969,9 @@ class User < ActiveRecord::Base
     end
   end
 
-  def set_default_sidebar_section_links
+  def update_default_sidebar_section_links
     return if !SiteSetting.enable_experimental_sidebar_hamburger
     return if staged? || bot?
-
-    records = []
 
     if SiteSetting.default_sidebar_categories.present?
       default_category_ids = SiteSetting.default_sidebar_categories.split("|")
@@ -1982,28 +1984,11 @@ class User < ActiveRecord::Base
       secured_category_ids = self.secure_category_ids
 
       # Secured categories that are in the default categories list
-      categories_to_add = existing_category_ids + (category_ids & secured_category_ids)
+      categories_to_update = existing_category_ids + (category_ids & secured_category_ids)
 
       updater = UserUpdater.new(self, self)
-      updater.update({ sidebar_category_ids: [categories_to_add] })
+      updater.update({ sidebar_category_ids: [categories_to_update] })
     end
-
-    if SiteSetting.tagging_enabled && SiteSetting.default_sidebar_tags.present?
-      tag_names = SiteSetting.default_sidebar_tags.split("|")
-
-      # Filters out tags that user cannot see or do not exist anymore
-      tag_ids = DiscourseTagging.filter_visible(Tag, self.guardian).where(name: tag_names).pluck(:id)
-
-      tag_ids.each do |tag_id|
-        records.push(
-          linkable_type: 'Tag',
-          linkable_id: tag_id,
-          user_id: self.id
-        )
-      end
-    end
-
-    SidebarSectionLink.insert_all(records) if records.present?
   end
 
   def stat

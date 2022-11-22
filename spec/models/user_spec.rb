@@ -74,9 +74,19 @@ RSpec.describe User do
         )
 
         expect(SidebarSectionLink.where(linkable_type: 'Tag', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
-          tag.id,
-          hidden_tag.id
+          tag.id
         )
+      end
+
+      it "Should only receive new categories they didn't previously have access to" do
+        user = Fabricate(:user)
+        SidebarSectionLink.where(user: user).delete_all # User has customized their sidebar categories
+        user.update(admin: true)
+        expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
+          secured_category.id
+        )
+        user.update(admin: false)
+        expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to be_empty
       end
 
       it 'should not create any sidebar section link records when experimental sidebar is disabled' do
