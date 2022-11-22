@@ -315,7 +315,7 @@ export class Tag {
           return text;
         }
 
-        if ("hashtag-cooked" === attr.class) {
+        if (attr.class?.includes("hashtag-cooked")) {
           if (attr["data-ref"]) {
             return `#${attr["data-ref"]}`;
           } else {
