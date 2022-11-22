@@ -67,6 +67,7 @@ it:
       modifier_values: "I modificatori about.json contengono valori non validi: %{errors}"
       git: "Errore nella clonazione dell'archivio git, accesso negato o archivio non trovato"
       git_ref_not_found: "Impossibile eseguire il checkout del riferimento git: %{ref}"
+      git_unsupported_scheme: "Impossibile clonare il repository git: schema non supportato"
       unpack_failed: "Impossibile decomprimere il file"
       file_too_big: "Il file non compresso è troppo grande."
       unknown_file_type: "Il file che hai caricato non sembra essere un tema valido di Discourse."
@@ -248,6 +249,7 @@ it:
     max_redemptions_allowed_one: "per gli inviti via e-mail dovrebbe essere 1."
     redemption_count_less_than_max: "deve essere minore di %{max_redemptions_allowed}."
     email_xor_domain: "I campi e-mail e dominio non sono consentiti contemporaneamente"
+    existing_user_success: "Link di invito correttamente riscattato"
   bulk_invite:
     file_should_be_csv: "Il file caricato deve essere in formato csv."
     max_rows: "I primi %{max_bulk_invites} inviti sono stati spediti. Prova a dividere il file in parti più piccole."
@@ -495,6 +497,7 @@ it:
       Puoi modificare la risposta precedente per aggiungere una citazione evidenziando il testo e selezionando il pulsante <b>Cita</b> che comparirà.
 
       E' più facile per chiunque leggere argomenti che hanno poche risposte ma più dettagliate, rispetto a molte brevi risposte singole.
+    dominating_topic: Hai pubblicato più del %{percent}% delle risposte qui; ti suggeriamo di dare anche ad altri l'opportunità di intervenire.
     get_a_room: Abbiamo notato che hai già risposto %{count} volte a @%{reply_username}. Sapevi che puoi anche scambiare messaggi personali con questa persona?
     too_many_replies: |
       ### Hai raggiungo il limite di risposte per questo argomento
@@ -638,6 +641,7 @@ it:
       disallowed_topic_tags: "In questo argomento sono presenti etichette non consentite in questa categoria: '%{tags}'"
       disallowed_tags_generic: "Su questo argomento non sono consentite etichette."
       slug_contains_non_ascii_chars: "contiene caratteri non-ascii"
+      is_already_in_use: "è già in uso"
     cannot_delete:
       uncategorized: "Questa è una categoria speciale. È utilizzata come area di attesa per gli argomenti senza categoria. Non può essere eliminata."
       has_subcategories: "Non puoi cancellare questa categoria perché ha sotto-categorie."
@@ -763,6 +767,7 @@ it:
         one: "quasi %{count} anno fa"
         other: "quasi %{count} anni fa"
   password_reset:
+    no_token: 'Ops! Il link che hai utilizzato non funziona più. Puoi <a href="%{base_url}/login">Accedere</a> adesso. Se hai dimenticato la password, puoi <a href="%{base_url}/password-reset">richiedere un link</a> per reimpostarla.'
     choose_new: "Scegli una nuova password"
     choose: "Scegli una password"
     update: "Aggiorna Password"
@@ -771,7 +776,6 @@ it:
     success: "La tua password è stata cambiata con successo e ora sei connesso."
     success_unapproved: "La tua password è stata cambiata con successo."
   email_login:
-    invalid_token: "Spiacenti, il collegamento per l'accesso via email è scaduto. Seleziona il pulsante Accedi e clicca 'Ho dimenticato la password' per ricevere un nuovo link."
     title: "Accesso via Email"
   user_auth_tokens:
     browser:
@@ -1407,6 +1411,7 @@ it:
     search_ignore_accents: "Ignora gli accenti durante la ricerca di testo."
     category_search_priority_low_weight: "Peso attribuito alla classificazione per ricerche di bassa priorità delle categorie."
     category_search_priority_high_weight: "Peso attribuito alla classificazione per ricerche di alta priorità delle categorie."
+    default_composer_category: "La categoria utilizzata per precompilare l'elenco a discesa delle categorie durante la creazione di un nuovo argomento."
     allow_uncategorized_topics: "Permetti la creazione di argomenti senza categoria. ATTENZIONE: se ci sono argomenti senza categoria, devi ricategorizzarli prima di disabilitare questa opzione."
     allow_duplicate_topic_titles: "Permetti più argomenti con lo stesso identico titolo."
     allow_duplicate_topic_titles_category: "Permetti argomenti con titoli identici e duplicati se la categoria è diversa. L'impostazione allow_duplicate_topic_titles deve essere disabilitata."
@@ -1621,6 +1626,9 @@ it:
     google_oauth2_client_secret: "Segreto client della tua applicazione Google."
     google_oauth2_prompt: "Un elenco facoltativo di valori stringa delimitati da spazi che specifica se il server di autorizzazione richiede all'utente la riautenticazione e il consenso. Vedi <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> per i possibili valori."
     google_oauth2_hd: "Un dominio facoltativo ospitato su Google Apps dal quale sarà consentito l'accesso in via esclusiva. Vedi <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> per maggiori dettagli."
+    google_oauth2_hd_groups: "(sperimentale) Recupera i gruppi Google di utenti sul dominio ospitato durante l'autenticazione. I gruppi Google recuperati possono essere utilizzati per garantire a tali utenti l'appartenenza automatica al gruppo Discourse (vedi le impostazioni del gruppo). Per altre informazioni consulta https://meta.discourse.org/t/226850"
+    google_oauth2_hd_groups_service_account_admin_email: "Un indirizzo email appartenente a un account di amministratore di Google Workspace. Verrà utilizzato con le credenziali dell'account di servizio per recuperare le informazioni sul gruppo."
+    google_oauth2_hd_groups_service_account_json: "Informazioni sulla chiave in formato JSON per l'account di servizio. Verrà utilizzato per recuperare le informazioni del gruppo."
     enable_twitter_logins: "Abilita l'autenticazione di Twitter, richiede twitter_consumer_key e twitter_consumer_secret. Vedi <a href='https://meta.discourse.org/t/13395' target='_blank'>Configurare l'accesso Twitter (e rich embedding) per Discourse</a> ."
     twitter_consumer_key: "Consumer Key per l'autenticazione Twitter, registrata su <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Consumer secret per l'autenticazione Twitter, registrato su <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
@@ -1930,7 +1938,6 @@ it:
     enable_user_directory: "Fornire una directory degli utenti per la navigazione"
     enable_group_directory: "Fornire una directory dei gruppi per la navigazione"
     enable_category_group_moderation: "Consenti ai gruppi di moderare i contenuti in categorie specifiche"
-    group_in_subject: "Imposta %%{optional_pm} nell'oggetto dell'email con il nome del primo gruppo in Messaggio Privato, vedi: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Personalizza il formato oggetto per le e-mail standard</a>"
     allow_anonymous_posting: "Permetti agli utenti di passare alla modalità anonima"
     anonymous_posting_min_trust_level: "Livello di attendibilità minimo richiesto per abilitare la pubblicazione in modalità anonima"
     anonymous_account_duration_minutes: "Per proteggere l'anonimato creare un nuovo account anonimo ogni N minuti per ogni utente. Esempio: se impostato a 600, non appena passano 600 minuti dall'ultimo messaggio E l'utente passa in modalità anonima, viene creato un nuovo account anonimo."
@@ -2044,6 +2051,7 @@ it:
     disable_mailing_list_mode: "Non consentire agli utenti di abilitare la modalità mailing list (impedisce l'invio di email a liste di distribuzione)."
     default_email_previous_replies: "Includi risposte precedenti nelle email di default."
     default_email_in_reply_to: "Includi un estratto della risposta ad un messaggio nelle email di default."
+    default_hide_profile_and_presence: "Nascondi il profilo pubblico e la presenza dell'utente per impostazione predefinita."
     default_other_new_topic_duration_minutes: "Condizione globale predefinita per cui un argomento viene considerato nuovo."
     default_other_auto_track_topics_after_msecs: "Tempo globale predefinito prima che un argomento venga automaticamente seguito."
     default_other_notification_level_when_replying: "Livello di notifica globale predefinito quando un utente risponde ad un argomento."
@@ -2101,6 +2109,7 @@ it:
     enable_sitemap: "Genera una mappa per il tuo sito e includila nel file robots.txt."
     sitemap_page_size: "Numero di URL da includere in ciascuna pagina della mappa del sito. Massimo 50.000"
     enable_user_status: "(sperimentale) Consenti agli utenti di impostare un messaggio di stato personalizzato (emoji + descrizione)."
+    enable_user_tips: "(sperimentale) Abilita i nuovi suggerimenti che descrivono le funzionalità chiave per gli utenti"
     short_title: "Il titolo breve verrà utilizzato nella schermata iniziale dell'utente, nel programma di avvio o in altri contesti in cui lo spazio potrebbe essere limitato. Dovrebbe essere limitato a 12 caratteri."
     dashboard_hidden_reports: "Consenti di nascondere i report specificati dal dashboard."
     dashboard_visible_tabs: "Scegli quali schede del dashboard sono visibili."
@@ -2170,10 +2179,12 @@ it:
       unicode_usernames_avatars: "Gli avatar di sistema interni non supportano i nomi utente Unicode."
       list_value_count: "La lista deve contenere esattamente %{count} valori."
       markdown_linkify_tlds: "Non è possibile includere il valore '*'."
+      google_oauth2_hd_groups: "Prima di attivare questa impostazione, devi configurare le opzioni 'google oauth2 hd'."
       search_tokenize_chinese_enabled: "Devi disattivare \"search_tokenize_chinese\" prima di attivare questa impostazione."
       search_tokenize_japanese_enabled: "Devi disattivare \"search_tokenize_japanese\" prima di attivare questa impostazione."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Non è possibile abilitare DiscourseConnect se è stata forzata l'autenticazione a due fattori 2FA."
       delete_rejected_email_after_days: "Questa impostazione non può essere inferiore al valore dell'impostazione delete_email_logs_after_days né maggiore di %{max}"
+      invalid_uncategorized_category_setting: "La categoria Senza categoria non può essere selezionata se gli argomenti senza categoria non sono consentiti"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3552,6 +3563,7 @@ it:
     png_to_jpg_conversion_failure_message: "Si è verificato un errore durante la conversione da PNG a JPG."
     optimize_failure_message: "Si è verificato un errore nell'ottimizzare l'immagine caricata."
     download_failure: "Il download del file dal provider esterno non è riuscito."
+    size_mismatch_failure: "La dimensione del file caricato su S3 non corrispondeva alla dimensione prevista per il caricamento esterno. %{additional_detail}"
     create_multipart_failure: "Errore nella creazione del caricamento multipart nell'archivio esterno."
     abort_multipart_failure: "Errore nell’annullamento del caricamento multipart nell'archivio esterno."
     complete_multipart_failure: "Impossibile completare il caricamento multipart nell'archivio esterno."
@@ -4313,6 +4325,10 @@ it:
   user_status:
     errors:
       ends_at_should_be_greater_than_set_at: "ends_at deve essere maggiore di set_at"
+  webhooks:
+    payload_url:
+      blocked_or_internal: "L'URL del payload non può essere utilizzato perché si risolve in un IP interno o bloccato"
+      unsafe: "L'URL del payload non può essere utilizzato perché non è sicuro"
   activemodel:
     errors:
       <<: *errors

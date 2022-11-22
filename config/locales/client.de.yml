@@ -232,6 +232,7 @@ de:
     delete: "Löschen"
     generic_error: "Entschuldigung, ein Fehler ist aufgetreten."
     generic_error_with_reason: "Ein Fehler ist aufgetreten: %{error}"
+    multiple_errors: "Es sind mehrere Fehler aufgetreten: %{errors}"
     sign_up: "Registrieren"
     log_in: "Anmelden"
     age: "Alter"
@@ -293,6 +294,7 @@ de:
       like_count: "„Gefällt mir“"
       topic_count: "Themen"
       post_count: "Beiträge"
+      user_count: "Registrierungen"
       active_user_count: "Aktive Benutzer"
       contact: "Kontaktiere uns"
       contact_info: "Im Falle eines kritischen Problems oder einer dringenden Angelegenheit, die diese Website betrifft, kontaktiere uns bitte unter %{contact_info}."
@@ -656,6 +658,8 @@ de:
         reset_to_default: "Auf Standard zurücksetzen"
       group:
         all: "alle Gruppen"
+      sort:
+        label: "Sortieren nach %{criteria}"
     group_histories:
       actions:
         change_group_setting: "Gruppeneinstellung ändern"
@@ -820,6 +824,7 @@ de:
         group_type: "Art der Gruppe"
         is_group_user: "Mitglied"
         is_group_owner: "Eigentümer"
+        search_results: "Die Suchergebnisse werden unten angezeigt."
       title:
         one: "Gruppe"
         other: "Gruppen"
@@ -854,6 +859,7 @@ de:
         no_filter_matches: "Keine Mitglieder entsprechen dieser Suche."
       topics: "Themen"
       posts: "Beiträge"
+      aria_post_number: "%{title} – Beitrag #%{postNumber}"
       mentions: "Erwähnungen"
       messages: "Nachrichten"
       notification_level: "Standard-Benachrichtigungsstufe für Gruppen-Nachrichten"
@@ -1073,13 +1079,10 @@ de:
       no_notifications_page_title: "Du hast noch keine Benachrichtigungen"
       no_notifications_page_body: >
         Du wirst über für dich direkt relevante Aktivitäten benachrichtigt, einschließlich Antworten auf deine Themen und Beiträge, wenn dich jemand mit <b>@</b> erwähnt oder zitiert und wenn jemand auf Themen antwortet, die du beobachtest. Benachrichtigungen werden auch an deine E-Mail-Adresse gesendet, wenn du dich eine Weile nicht eingeloggt hast. <br><br> Suche nach %{icon}, um zu entscheiden, bei welchen Themen, Kategorien und Schlagwörtern du benachrichtigt werden möchtest. Weiteres findest du in den <a href='%{preferencesUrl}'>Benachrichtigungseinstellungen</a>.
-      first_notification: "Deine erste Benachrichtigung! Wähle sie aus, um fortzufahren."
       dynamic_favicon: "Zeige Anzahl im Browser-Icon"
       skip_new_user_tips:
         description: "Keine Tipps für neue Benutzer anzeigen und nicht über den Erhalt von „Erste Schritte“-Abzeichen informieren"
-        not_first_time: "Nicht dein erstes Mal?"
-        skip_link: "Überspringe diese Tipps"
-        read_later: "Ich werde es später lesen."
+      reset_seen_user_tips: "Benutzertipps erneut anzeigen"
       theme_default_on_all_devices: "Mache dieses Theme zum Standard für alle meine Geräte"
       color_scheme_default_on_all_devices: "Standard-Farbschema(s) auf allen meinen Geräten festlegen"
       color_scheme: "Farbschema"
@@ -1099,11 +1102,16 @@ de:
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
       enable_defer: "Aufschieben aktivieren, um Themen als ungelesen zu markieren"
       experimental_sidebar:
+        enable: "Seitenleiste aktivieren"
         options: "Optionen"
         categories_section: "Abschnitt „Kategorien“"
         categories_section_instruction: "Ausgewählte Kategorien werden im Abschnitt „Kategorien“ der Seitenleiste angezeigt."
         tags_section: "Abschnitt „Schlagwörter“"
         tags_section_instruction: "Ausgewählte Schlagwörter werden im Abschnitt „Schlagwörter“ der Seitenleiste angezeigt."
+        navigation_section: "Navigation"
+        list_destination_instruction: "Wenn es neue Inhalte in der Seitenleiste gibt …"
+        list_destination_default: "den Standardlink verwenden und ein Symbol für neue Elemente anzeigen"
+        list_destination_unread_new: "auf ungelesen/neu verlinken und die Anzahl der neuen Elemente anzeigen"
       change: "ändern"
       featured_topic: "Hervorgehobenes Thema"
       moderator: "%{user} ist ein Moderator"
@@ -1274,6 +1282,8 @@ de:
         edit: "Bearbeiten"
         edit_title: "Authentifikator bearbeiten"
         edit_description: "Authentifikator-Name"
+        enable_security_key_description: |
+          Wenn du deinen <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">Hardware-Sicherheitsschlüssel</a> oder dein kompatibles Mobilgerät vorbereitet hast, klicke unten auf „Registrieren“.
         totp:
           title: "Token-basierte Authentifikatoren"
           add: "Authentifikator hinzufügen"
@@ -1281,10 +1291,16 @@ de:
           name_and_code_required_error: "Du musst einen Namen und den Code aus deiner Authentifikator-App angeben."
         security_key:
           register: "Registrieren"
+          title: "Physische Sicherheitsschlüssel"
+          add: "Physischen Sicherheitsschlüssel hinzufügen"
           default_name: "Hauptsicherheitsschlüssel"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "Der Registrierungsvorgang für den Sicherheitsschlüssel ist abgelaufen oder wurde abgebrochen."
           already_added_error: "Du hast diesen Sicherheitsschlüssel bereits registriert. Du musst ihn nicht erneut registrieren."
+          edit: "Physischen Sicherheitsschlüssel bearbeiten"
           save: "Speichern"
+          edit_description: "Name des physischen Sicherheitsschlüssels"
           name_required_error: "Du musst einen Namen für deinen Sicherheitsschlüssel angeben."
       change_about:
         title: "„Über mich“ ändern"
@@ -1654,6 +1670,24 @@ de:
       set_custom_status: "Benutzerdefinierten Status festlegen"
       what_are_you_doing: "Was machst du gerade?"
       remove_status: "Status entfernen"
+    user_tips:
+      primary: "Verstanden!"
+      secondary: "diese Tipps nicht anzeigen"
+      first_notification:
+        title: "Deine erste Benachrichtigung!"
+        content: "Benachrichtigungen dienen dazu, dich auf dem Laufenden zu halten, was in der Community passiert."
+      topic_timeline:
+        title: "Themenzeitleiste"
+        content: "Mit der Themenzeitleiste kannst du schnell durch einen Beitrag scrollen."
+      post_menu:
+        title: "Menü „Beitrag“"
+        content: "Schau dir an, wie du sonst noch mit dem Beitrag interagieren kannst, indem du auf die drei Punkte klickst!"
+      topic_notification_levels:
+        title: "Du folgst nun diesem Thema"
+        content: "Halte nach dieser Glocke Ausschau, um deine Benachrichtigungseinstellungen für bestimmte Themen oder ganze Kategorien anzupassen."
+      suggested_topics:
+        title: "Lies weiter!"
+        content: "Hier sind einige Themen, von denen wir denken, dass du sie als Nächstes lesen möchtest."
     loading: "Wird geladen …"
     errors:
       prev_page: "während des Ladens"
@@ -1802,6 +1836,7 @@ de:
       second_factor_backup_title: "Zwei-Faktor-Backup"
       second_factor_backup_description: "Bitte gib einen deiner Wiederherstellungscodes ein:"
       second_factor: "Anmeldung mit einer Authentifizierungs-App"
+      security_key_description: "Wenn du deinen physischen Sicherheitsschlüssel oder dein kompatibles Mobilgerät vorbereitet hast, klicke unten auf die Schaltfläche „Mit Sicherheitsschlüssel authentifizieren“."
       security_key_alternative: "Versuche es anderweitig"
       security_key_authenticate: "Mit Sicherheitsschlüssel authentifizieren"
       security_key_not_allowed_error: "Der Authentifizierungsprozess für den Sicherheitsschlüssel ist abgelaufen oder wurde abgebrochen."
@@ -1874,6 +1909,7 @@ de:
       success: "Dein Konto wurde erstellt und du bist jetzt angemeldet."
       name_label: "Name"
       password_label: "Passwort"
+      existing_user_can_redeem: "Löse deine Einladung zu einem Thema oder einer Gruppe ein."
     password_reset:
       continue: "Weiter zu %{site_name}"
     emoji_set:
@@ -2917,6 +2953,7 @@ de:
       gap:
         one: "%{count} versteckten Beitrag anzeigen"
         other: "%{count} versteckte Beiträge anzeigen"
+      sr_reply_to: "Antworte auf Beitrag #%{post_number} von @%{username}"
       notice:
         new_user: "Dies ist der erste Beitrag von %{user} – lasst uns das neue Mitglied in unserer Community willkommen heißen!"
         returning_user: "Es ist eine Weile her, dass wir %{user} gesehen haben – der letzte Beitrag war %{time}."
@@ -3130,6 +3167,7 @@ de:
       all: "Alle Kategorien"
       choose: "Kategorie &hellip;"
       edit: "Bearbeiten"
+      edit_title: "Diese Kategorie bearbeiten"
       edit_dialog_title: "Bearbeiten: %{categoryName}"
       view: "Zeige Themen in Kategorie"
       back: "Zurück zur Kategorie"
@@ -3216,6 +3254,7 @@ de:
       this_year: "dieses Jahr"
       position: "Position auf der Kategorien-Seite:"
       default_position: "Standardposition"
+      position_disabled: "Die Kategorien werden in der Reihenfolge ihrer Aktivität angezeigt. Um die Reihenfolge der Kategorien in den Listen zu kontrollieren, aktiviere die Einstellung <a href='%{url}'>„fixed category positions“</a>."
       minimum_required_tags: "Mindestanzahl an Schlagwörtern, die ein Thema erfordert"
       default_slow_mode: '„Langsamer Modus“ für neue Themen in dieser Kategorie aktivieren.'
       parent: "Übergeordnete Kategorie"
@@ -3830,15 +3869,25 @@ de:
             unread_with_count: "Ungelesen (%{count})"
             archive: "Archiv"
         tags:
+          links:
+            add_tags:
+              content: "Schlagwörter hinzufügen"
+              title: "Du hast noch keine Schlagwörter hinzugefügt. Klicke, um loszulegen."
           none: "Du hast keine Schlagwörter hinzugefügt."
           click_to_get_started: "Klicke hier, um zu beginnen."
           header_link_text: "Schlagwörter"
           header_action_title: "bearbeite die Schlagwörter in deiner Seitenleiste"
+          configure_defaults: "Standardeinstellungen konfigurieren"
         categories:
+          links:
+            add_categories:
+              content: "Kategorien hinzufügen"
+              title: "Du hast noch keine Kategorien hinzugefügt. Klicke, um loszulegen."
           none: "Du hast keine Kategorien hinzugefügt."
           click_to_get_started: "Klicke hier, um zu beginnen."
           header_link_text: "Kategorien"
           header_action_title: "bearbeite die Kategorien in deiner Seitenleiste"
+          configure_defaults: "Standardeinstellungen konfigurieren"
         community:
           header_link_text: "Community"
           header_action_title: "ein neues Thema erstellen"
@@ -3854,9 +3903,6 @@ de:
               title: "Alle Themen"
             faq:
               content: "FAQ"
-            tracked:
-              content: "Verfolgt"
-              title: "Alle verfolgten Themen"
             groups:
               content: "Gruppen"
               title: "Alle Gruppen"
@@ -3875,6 +3921,7 @@ de:
               pending_count: "%{count} ausstehend"
     welcome_topic_banner:
       title: "Erstelle dein Willkommensthema"
+      description: "Dein Willkommen-Thema ist das erste, was neue Mitglieder lesen. Betrachte es als dein „Fahrstuhl-Vorstellungsgespräch“ oder „Leitbild“. Hier erfährt jeder, für wen diese Community gedacht ist, was einen hier erwartet und was man direkt zu Beginn tun soll."
       button_title: "Bearbeitung beginnen"
     until: "Bis:"
   admin_js:
@@ -4247,6 +4294,7 @@ de:
         change_settings_short: "Einstellungen"
         howto: "Wie installiere ich Plug-ins?"
         official: "Offizielles Plug-in"
+        broken_route: "Link zu „%{name}“ kann nicht konfiguriert werden. Vergewissere dich, dass Werbeblocker deaktiviert sind, und versuche, die Seite neu zu laden."
       backups:
         title: "Backups"
         menu:
@@ -4468,6 +4516,7 @@ de:
           has_overwritten_history: "Die aktuelle Version des Themes existiert nicht mehr, da die Git-Historie durch einen erzwungenen Push überschrieben wurde."
           add: "Hinzufügen"
           theme_settings: "Theme-Einstellungen"
+          overriden_settings_explanation: "Überschriebene Einstellungen sind mit einem Punkt gekennzeichnet und farblich hervorgehoben. Um diese Einstellungen auf die Standardwerte zurückzusetzen, drücke auf die Schaltfläche „Zurücksetzen“ daneben."
           no_settings: "Dieses Theme hat keine Einstellungen."
           theme_translations: "Theme-Übersetzungen"
           empty: "Keine Elemente"
@@ -5114,6 +5163,7 @@ de:
         trust_level_2_users: "Benutzer mit Vertrauensstufe 2"
         trust_level_3_requirements: "Anforderungen für Vertrauensstufe 3"
         trust_level_locked_tip: "Die Vertrauensstufe ist gesperrt. Das System wird den Benutzer nicht befördern oder zurückstufen."
+        trust_level_unlocked_tip: "Vertrauensstufe ist nicht gesperrt. Das System kann den Benutzer befördern oder zurückstufen."
         lock_trust_level: "Vertrauensstufe sperren"
         unlock_trust_level: "Vertrauensstufe entsperren"
         silenced_count: "Stummgeschaltet"
@@ -5173,18 +5223,23 @@ de:
         delete_confirm: "Bist du dir sicher, dass du dieses Benutzerfeld löschen möchtest?"
         options: "Optionen"
         required:
+          title: "Bei Registrierung erforderlich"
           enabled: "erforderlich"
           disabled: "nicht erforderlich"
         editable:
+          title: "Nach der Registrierung editierbar"
           enabled: "editierbar"
           disabled: "nicht editierbar"
         show_on_profile:
+          title: "Im öffentlichen Profil anzeigen"
           enabled: "wird im Profil angezeigt"
           disabled: "wird im Profil nicht angezeigt"
         show_on_user_card:
+          title: "Auf Benutzerkarte anzeigen"
           enabled: "wird auf Benutzerkarte angezeigt"
           disabled: "wird nicht auf Benutzerkarte angezeigt"
         searchable:
+          title: "In Suche einschließen"
           enabled: "in Suche einschließen"
           disabled: "nicht in Suche einschließen"
         field_types:
@@ -5258,6 +5313,7 @@ de:
           search: "Suche"
           groups: "Gruppen"
           dashboard: "Dashboard"
+          sidebar: "Seitenleiste"
         secret_list:
           invalid_input: "Eingabefelder können nicht leer sein oder vertikale Balkenzeichen enthalten."
         default_categories:
@@ -5372,6 +5428,7 @@ de:
       embedding:
         get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem Hinzufügen des Hosts."
         confirm_delete: "Möchtest du wirklich diesen Host löschen?"
+        sample: "Verwende den folgenden HTML-Code auf deiner Website, um Discourse-Themen zu erstellen und einzubetten. Ersetze <b>REPLACE_ME</b> mit der URL der Seite, auf der du den Inhalt einbettest."
         title: "Einbettung"
         host: "Erlaubte Hosts"
         class_name: "Klassenname"
@@ -5406,6 +5463,7 @@ de:
         destination: "Ziel"
         copy_to_clipboard: "Permalink in die Zwischenablage kopieren"
         delete_confirm: Möchtest du wirklich diesen Permalink löschen?
+        no_permalinks: "Du hast noch keine Permalinks. Erstelle einen neuen Permalink oben, um hier eine Liste deiner Permalinks zu sehen."
         form:
           label: "Neu:"
           add: "Hinzufügen"

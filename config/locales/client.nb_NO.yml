@@ -1000,13 +1000,9 @@ nb_NO:
       no_notifications_body: >
         Du vil bli varslet i dette panelet om aktivitet som er direkte relevant for deg, inkludert svar på dine emner og innlegg, når noen <b>@mentions</b> du eller siterer deg, og svarer på emner du våker. Varsler vil også bli sendt til e-post når du ikke har logget inn en stund. <br><br> Se etter %{icon} for å bestemme hvilke spesielle emner, kategorier og tagger du ønsker å få beskjed om. For mer, se dine <a href='%{preferencesUrl}'>varselpreferanser</a>.
       no_notifications_page_title: "Du har ingen varsler enda"
-      first_notification: "Ditt første varsel! Velg det for å komme i gang."
       dynamic_favicon: "Vis antall på nettleserikonet"
       skip_new_user_tips:
         description: "Hopp over nye brukeropplæringstips og merker"
-        not_first_time: "Ikke din første gang?"
-        skip_link: "Hopp over disse tipsene"
-        read_later: "Jeg leser den senere."
       theme_default_on_all_devices: "Gjør dette standardtemaet til alle mine enheter"
       color_scheme_default_on_all_devices: "Angi standard fargemelding(er) på alle mine enheter"
       color_scheme: "Farge Tema"
@@ -1130,6 +1126,7 @@ nb_NO:
         profile: "Profil"
         emails: "E-poster"
         notifications: "Varsler"
+        tracking: "Overvåkning"
         categories: "Kategorier"
         users: "Brukere"
         tags: "Stikkord"
@@ -1368,6 +1365,7 @@ nb_NO:
       email_in_reply_to: "Inkluder et utdrag i e-poster av innlegget man svarer på"
       other_settings: "Annet"
       categories_settings: "Kategorier"
+      topics_settings: "Emner"
       new_topic_duration:
         label: "Anse emner som nye når"
         not_viewed: "jeg ikke har sett dem ennå"
@@ -2061,6 +2059,7 @@ nb_NO:
         other: "<span>%{count}%{plus} resultater for</span><span class='term'>%{term}</span>"
       title: "Søk"
       full_page_title: "Søk"
+      results: "resultater"
       no_results: "Ingen resultater funnet."
       no_more_results: "Ingen flere resultater funnet."
       post_format: "#%{post_number} av %{username}"
@@ -3444,8 +3443,6 @@ nb_NO:
               content: "Merker"
             faq:
               content: "O-S-S"
-            tracked:
-              content: "Overvåkes"
             groups:
               content: "Grupper"
               title: "Alle grupper"

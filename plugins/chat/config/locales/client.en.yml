@@ -291,8 +291,7 @@ en:
       settings:
         auto_join_users_label: "Automatically add users"
         auto_join_users_info: "Check hourly which users have been active in the last 3 months and, if they have access to the %{category} category, add them to this channel."
-        enable_auto_join_users: "Yes"
-        disable_auto_join_users: "No"
+        enable_auto_join_users: "Automatically add all recently active users"
         auto_join_users_warning: "Every user who isn't a member of this channel and has access to the %{category} category will join. Are you sure?"
         desktop_notification_level: "Desktop notifications"
         follow: "Join"

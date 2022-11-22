@@ -31,6 +31,7 @@ class Chat::ChatMessageCreator
       ChatMessage.new(
         chat_channel: @chat_channel,
         user_id: @user.id,
+        last_editor_id: @user.id,
         in_reply_to_id: @in_reply_to_id,
         message: @content,
       )

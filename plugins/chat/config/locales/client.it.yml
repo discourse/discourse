@@ -7,6 +7,9 @@
 it:
   js:
     admin:
+      site_settings:
+        categories:
+          chat: Chat
       logs:
         staff_actions:
           actions:
@@ -51,6 +54,10 @@ it:
         leave_channel: "Lascia il canale"
         join: "Partecipa"
         leave: "Esci"
+        save_label:
+          mute_channel: "Preferenza canale silenziato salvata"
+          desktop_notification: "Preferenza di notifica desktop salvata"
+          mobile_notification: "Preferenza di notifica push su cellulare salvata"
       channel_archive:
         title: "Archivia canale"
         instructions: "<p>L'archiviazione di un canale lo mette in modalità di sola lettura e sposta tutti i messaggi dal canale a un argomento nuovo o esistente. Non è possibile inviare nuovi messaggi e non è possibile modificare o eliminare messaggi esistenti.</p><p>Sei sicuro di voler archiviare il canale <strong>%{channelTitle}</strong>?</p>"
@@ -76,7 +83,7 @@ it:
       collapse: "Comprimi il cassetto della chat"
       confirm_flag: "Vuoi segnalare il messaggio di %{username}?"
       deleted: "Un messaggio è stato eliminato. [visualizza]"
-      hidden: "Un messaggio è stato nascosto. [view]"
+      hidden: "Un messaggio è stato nascosto. [visualizza]"
       delete: "Elimina"
       edited: "modificato"
       muted: "silenziato"
@@ -177,6 +184,7 @@ it:
         open_header: "Il canale è aperto"
         open: "Aperto"
       browse:
+        back: "Indietro"
         title: Canali
         filter_all: Tutti
         filter_open: Aperti
@@ -266,8 +274,6 @@ it:
         mention: "Solo per le menzioni"
         always: "Per tutte le attività"
       settings:
-        enable_auto_join_users: "Aggiungi automaticamente tutti gli utenti attivi di recente"
-        disable_auto_join_users: "Smetti di aggiungere automaticamente gli utenti"
         auto_join_users_warning: "Tutti gli utenti che non sono membri di questo canale e hanno accesso alla categoria %{category} parteciperanno. Vuoi procedere?"
         desktop_notification_level: "Notifiche sul desktop"
         follow: "Partecipa"

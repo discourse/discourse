@@ -103,9 +103,13 @@ describe Jobs::AutoManageChannelMemberships do
     end
 
     context "when chatable doesn’t exist anymore" do
-      before do
-        channel.chatable.destroy!
-        channel.reload
+      let(:channel) do
+        Fabricate(
+          :category_channel,
+          auto_join_users: true,
+          chatable_type: "Category",
+          chatable_id: -1,
+        )
       end
 
       it "does nothing" do

@@ -17,9 +17,7 @@ module SystemHelpers
     backoff ||= frequency
     yield
   rescue RSpec::Expectations::ExpectationNotMetError
-    if Time.zone.now >= start + timeout.seconds
-      raise
-    end
+    raise if Time.zone.now >= start + timeout.seconds
     sleep backoff
     backoff += frequency
     retry

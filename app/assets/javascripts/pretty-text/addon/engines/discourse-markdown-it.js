@@ -546,6 +546,8 @@ export function setup(opts, siteSettings, state) {
     markdownTypographerQuotationMarks:
       siteSettings.markdown_typographer_quotation_marks,
     markdownLinkifyTlds: siteSettings.markdown_linkify_tlds,
+    enableExperimentalHashtagAutocomplete:
+      siteSettings.enable_experimental_hashtag_autocomplete,
   };
 
   const markdownitOpts = {

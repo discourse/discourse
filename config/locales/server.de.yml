@@ -67,6 +67,7 @@ de:
       modifier_values: "about.json-Modifikatoren enthalten ungültige Werte: %{errors}"
       git: "Fehler beim Klonen des Git-Repository, Zugriff verweigert oder Repository nicht gefunden."
       git_ref_not_found: "Git-Referenz kann nicht ausgecheckt werden: %{ref}"
+      git_unsupported_scheme: "Git-Repo kann nicht geklont werden: Schema wird nicht unterstützt"
       unpack_failed: "Fehler beim Entpacken der Datei"
       file_too_big: "Die unkomprimierte Datei ist zu groß."
       unknown_file_type: "Die Datei, die du hochgeladen hast, scheint kein gültiges Discourse-Theme zu sein."
@@ -248,6 +249,7 @@ de:
     max_redemptions_allowed_one: "für E-Mail-Einladungen sollte es 1 sein."
     redemption_count_less_than_max: "sollte weniger als %{max_redemptions_allowed} sein."
     email_xor_domain: "E-Mail- und Domain-Felder sind nicht gleichzeitig erlaubt"
+    existing_user_success: "Einladung erfolgreich eingelöst"
   bulk_invite:
     file_should_be_csv: "Die hochgeladene Datei sollte im CSV-Format vorliegen."
     max_rows: "Die ersten %{max_bulk_invites} Einladungen wurden versandt. Versuche, die Datei in kleinere Teile aufzuteilen."
@@ -495,6 +497,7 @@ de:
       Du kannst deine letzte Antwort bearbeiten, um ein Zitat hinzuzufügen, indem du den Text auswählst und auf die erscheinende Schaltfläche <b>Zitat</b> klickst.
 
       Es ist für alle einfacher, Themen zu lesen, die wenige umfassende Antworten statt viele kleine und einzelne Antworten haben.
+    dominating_topic: Du hast mehr als %{percent} % der Antworten hier gepostet. Gib bitte anderen auch die Möglichkeit, sich einzubringen.
     get_a_room: Du hast @%{reply_username} %{count} Mal geantwortet. Wusstest du, dass du der Person stattdessen eine persönliche Nachricht schicken kannst?
     too_many_replies: |
       ### Du hast das Antwort-Limit für dieses Thema erreicht
@@ -638,6 +641,7 @@ de:
       disallowed_topic_tags: "Dieses Thema hat Schlagwörter, die in dieser Kategorie nicht erlaubt sind: „%{tags}“"
       disallowed_tags_generic: "Dieses Thema hat unerlaubte Schlagwörter."
       slug_contains_non_ascii_chars: "enthält Nicht-ASCII-Zeichen"
+      is_already_in_use: "wird bereits verwendet"
     cannot_delete:
       uncategorized: "Diese Kategorie ist etwas Spezielles. Sie dient als Bereich für Themen, die keine Kategorie haben, und kann nicht gelöscht werden."
       has_subcategories: "Diese Kategorie kann nicht gelöscht werden, weil sie Unterkategorien enthält."
@@ -763,6 +767,7 @@ de:
         one: "vor fast %{count} Jahr"
         other: "vor fast %{count} Jahren"
   password_reset:
+    no_token: 'Ups! Der Link, den du benutzt hast, funktioniert nicht mehr. Du kannst dich jetzt <a href="%{base_url}/login">anmelden</a>. Falls du dein Passwort vergessen hast, kannst du <a href="%{base_url}/password-reset">einen Link anfordern</a>, um es zurückzusetzen.'
     choose_new: "Wähle ein neues Passwort"
     choose: "Wähle ein Passwort"
     update: "Passwort aktualisieren"
@@ -771,7 +776,6 @@ de:
     success: "Dein Passwort wurde erfolgreich geändert und du bist nun angemeldet."
     success_unapproved: "Dein Passwort wurde erfolgreich geändert."
   email_login:
-    invalid_token: "Entschuldige, aber der Link zum Anmelden ist zu alt. Wähle die Anmelden-Schaltfläche und nutze „Ich habe mein Passwort vergessen“, um einen neuen Link zu erhalten."
     title: "E-Mail-Anmeldung"
   user_auth_tokens:
     browser:
@@ -1407,6 +1411,7 @@ de:
     search_ignore_accents: "Ignoriere Akzente bei der Textsuche."
     category_search_priority_low_weight: "Gewichtung der Rangfolge für geringe Kategorie-Suchpriorität."
     category_search_priority_high_weight: "Gewichtung der Rangfolge für hohe Kategorie-Suchpriorität."
+    default_composer_category: "Die Kategorie, die verwendet wird, um das Kategorie-Drop-down beim Erstellen eines neuen Themas vorab auszufüllen."
     allow_uncategorized_topics: "Erlaube, Themen ohne Kategorie zu erstellen. ACHTUNG: Falls es nicht kategorisierte Themen gibt, musst du sie neu kategorisieren, bevor du diese Option abschaltest."
     allow_duplicate_topic_titles: "Erlaube Themen mit identischen und doppelten Titeln."
     allow_duplicate_topic_titles_category: "Themen mit identischen, doppelten Titeln zulassen, wenn die Kategorie unterschiedlich ist. allow_duplicate_topic_titles muss deaktiviert sein."
@@ -1621,6 +1626,9 @@ de:
     google_oauth2_client_secret: "Client-Geheimnis deiner Google-Anwendung."
     google_oauth2_prompt: "Eine optionale, durch Leerzeichen getrennte Liste von String-Werten, die angibt, ob der Autorisierungsserver den Benutzer zur erneuten Authentifizierung und Zustimmung auffordert. Siehe <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> für die möglichen Werte."
     google_oauth2_hd: "Eine optionale, bei Google Apps gehostete Domain, auf welche die Anmeldung beschränkt wird. Siehe <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> für weitere Details."
+    google_oauth2_hd_groups: "(Experimentell) Google-Gruppen der Benutzer der gehosteten Domain bei der Authentifizierung abrufen. Die abgerufenen Google-Gruppen können verwendet werden, um die automatische Mitgliedschaft in Discourse-Gruppen zu gewähren (siehe Gruppeneinstellungen). Weitere Informationen unter https://meta.discourse.org/t/226850"
+    google_oauth2_hd_groups_service_account_admin_email: "Eine E-Mail-Adresse, die zu einem Google-Workspace-Administratorkonto gehört. Wird zusammen mit den Anmeldedaten für das Dienstkonto verwendet, um Gruppeninformationen abzurufen."
+    google_oauth2_hd_groups_service_account_json: "JSON-formatierte Schlüsselinformationen für das Dienstkonto. Wird verwendet, um Gruppeninformationen abzurufen."
     enable_twitter_logins: "Twitter-Authentifizierung aktivieren, erfordert twitter_consumer_key und twitter_consumer_secret. Siehe <a href='https://meta.discourse.org/t/13395' target='_blank'>Twitter-Anmeldung (und Rich Embeds) für Discourse konfigurieren</a>."
     twitter_consumer_key: "Consumer-Key für Twitter-Authentifizierung, registriert unter <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Consumer-Secret für Twitter-Authentifizierung, registriert unter <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
@@ -1930,7 +1938,6 @@ de:
     enable_user_directory: "Aktiviert ein durchsuchbares Benutzerverzeichnis"
     enable_group_directory: "Aktiviert ein durchsuchbares Gruppenverzeichnis"
     enable_category_group_moderation: "Gruppen erlauben, Inhalte in bestimmten Kategorien zu moderieren"
-    group_in_subject: "Setze %%{optional_pm} im E-Mail-Betreff auf den Namen der ersten Gruppe in der privaten Nachricht, siehe: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Betreffformat für Standard-E-Mails anpassen</a>"
     allow_anonymous_posting: "Benutzern erlauben, in den anonymen Modus zu wechseln"
     anonymous_posting_min_trust_level: "Vertrauensstufe, ab der das Schreiben anonymer Beiträge erlaubt ist"
     anonymous_account_duration_minutes: "Erzeuge alle N Minuten ein neues anonymes Konto je Benutzer, um die Anonymität zu gewährleisten. Beispiel: Ein Wert von 600 sorgt dafür, dass ein neues anonymes Konto erzeugt wird, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit dem letzten Beitrag dieses Benutzers vergangen sind."
@@ -2044,6 +2051,7 @@ de:
     disable_mailing_list_mode: "Benutzern das Aktivieren des Mailinglisten-Modus verbieten (verhindert, dass E-Mails von Mailinglisten gesendet werden)."
     default_email_previous_replies: "Standardmäßig vorhergehende Antworten in E-Mails einschließen."
     default_email_in_reply_to: "Standardmäßig einen Auszug aus dem beantworteten Beitrag in E-Mails einfügen."
+    default_hide_profile_and_presence: "Öffentliches Benutzerprofil und Präsenzfunktionen standardmäßig ausblenden."
     default_other_new_topic_duration_minutes: "Globale Standardbedingung, nach der ein Thema als neu gilt."
     default_other_auto_track_topics_after_msecs: "Globale Standardzeit, bevor ein Thema automatisch verfolgt wird."
     default_other_notification_level_when_replying: "Globale Standard-Benachrichtigungsstufe, wenn ein Benutzer auf ein Thema antwortet."
@@ -2101,6 +2109,7 @@ de:
     enable_sitemap: "Generiere eine Sitemap für deine Website und füge sie in die robots.txt-Datei ein."
     sitemap_page_size: "Anzahl der URLs, die auf jeder Sitemap-Seite enthalten sein sollen. Max 50.000"
     enable_user_status: "(Experimentell) Erlaubt es Benutzern, eine eigene Statusnachricht (Emoji + Beschreibung) einzustellen."
+    enable_user_tips: "(Experimentell) Tipps für neue Benutzer aktivieren, die den Benutzern wichtige Funktionen beschreiben"
     short_title: "Der Kurztitel wird beim Benutzer auf dem Startbildschirm, im Startmenü oder an anderen Stellen mit begrenztem Platz verwendet. Er sollte auf 12 Zeichen begrenzt sein."
     dashboard_hidden_reports: "Erlaube das Ausblenden der angegebenen Berichte im Dashboard."
     dashboard_visible_tabs: "Wähle aus, welche Dashboard-Registerkarten sichtbar sind."
@@ -2170,10 +2179,12 @@ de:
       unicode_usernames_avatars: "Die internen System-Avatare unterstützen keine Unicode-Benutzernamen."
       list_value_count: "Die Liste muss genau %{count} Werte enthalten."
       markdown_linkify_tlds: "Du kannst den Wert „*“ nicht angeben."
+      google_oauth2_hd_groups: "Vor Aktivierung dieser Einstellung müssen zuerst alle „google oauth2 hd“-Einstellungen festgelegt werden."
       search_tokenize_chinese_enabled: "Du musst „search_tokenize_chinese“ deaktivieren, bevor du diese Einstellung aktivierst."
       search_tokenize_japanese_enabled: "Du musst „search_tokenize_japanese“ deaktivieren, bevor du diese Einstellung aktivierst."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kannst DiscourseConnect nicht aktivieren, wenn 2FA erzwungen wird."
       delete_rejected_email_after_days: "Diese Einstellung kann nicht niedriger als die Einstellung delete_email_logs_after_days oder höher als %{max} gesetzt werden"
+      invalid_uncategorized_category_setting: "Die Kategorie „Nicht kategorisiert“ kann nicht ausgewählt werden, wenn „Nicht kategorisierte Themen zulassen“ nicht zulässig ist"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3695,6 +3706,7 @@ de:
     png_to_jpg_conversion_failure_message: "Beim Konvertieren von PNG in JPG ist ein Fehler aufgetreten."
     optimize_failure_message: "Beim Optimieren des hochgeladenen Bildes ist ein Fehler aufgetreten."
     download_failure: "Herunterladen der Datei vom externen Anbieter fehlgeschlagen."
+    size_mismatch_failure: "Die Größe der auf S3 hochgeladenen Datei stimmte nicht mit der beabsichtigten Größe des externen Uploads überein. %{additional_detail}"
     create_multipart_failure: "Fehler beim Erstellen eines mehrteiligen Uploads im externen Speicher."
     abort_multipart_failure: "Fehler beim Abbrechen des mehrteiligen Uploads im externen Speicher."
     complete_multipart_failure: "Der mehrteilige Upload im externen Speicher konnte nicht abgeschlossen werden."
@@ -4731,6 +4743,10 @@ de:
   user_status:
     errors:
       ends_at_should_be_greater_than_set_at: "ends_at sollte größer sein als set_at"
+  webhooks:
+    payload_url:
+      blocked_or_internal: "Payload-URL kann nicht verwendet werden, da sie in eine blockierte oder interne IP aufgelöst wird"
+      unsafe: "Payload-URL kann nicht verwendet werden, da sie unsicher ist"
   activemodel:
     errors:
       <<: *errors

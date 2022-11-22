@@ -1,10 +1,17 @@
 import { module, test } from "qunit";
-import EmailLog from "admin/models/email-log";
 import { setPrefix } from "discourse-common/lib/get-url";
+import { setupTest } from "ember-qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
 
-module("Unit | Model | email-log", function () {
+module("Unit | Model | email-log", function (hooks) {
+  setupTest(hooks);
+
   test("create", function (assert) {
-    assert.ok(EmailLog.create(), "it can be created without arguments");
+    const store = getOwner(this).lookup("service:store");
+    assert.ok(
+      store.createRecord("email-log"),
+      "it can be created without arguments"
+    );
   });
 
   test("subfolder support", function (assert) {
@@ -25,9 +32,11 @@ module("Unit | Model | email-log", function () {
           "/forum/letter_avatar_proxy/v2/letter/w/dfb087/{size}.png",
       },
     };
-    const emailLog = EmailLog.create(attrs);
+    const store = getOwner(this).lookup("service:store");
+    const emailLog = store.createRecord("email-log", attrs);
+
     assert.strictEqual(
-      emailLog.get("post_url"),
+      emailLog.post_url,
       "/forum/t/some-pro-tips-for-you/41/5",
       "includes the subfolder in the post url"
     );

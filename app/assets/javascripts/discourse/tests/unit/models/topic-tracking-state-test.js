@@ -244,10 +244,10 @@ discourseModule("Unit | Model | topic-tracking-state", function (hooks) {
       },
     ]);
 
-    let randomUnread = 0,
-      randomNew = 0,
-      sevenUnread = 0,
-      sevenNew = 0;
+    let randomUnread = 0;
+    let randomNew = 0;
+    let sevenUnread = 0;
+    let sevenNew = 0;
 
     trackingState.forEachTracked((topic, isNew, isUnread) => {
       if (topic.category_id === 7) {

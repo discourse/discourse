@@ -232,6 +232,7 @@ fi:
     delete: "Poista"
     generic_error: "On tapahtunut virhe."
     generic_error_with_reason: "Tapahtui virhe: %{error}"
+    multiple_errors: "Tapahtui useita virheitä: %{errors}"
     sign_up: "Rekisteröidy"
     log_in: "Kirjaudu"
     age: "Ikä"
@@ -293,6 +294,7 @@ fi:
       like_count: "Tykkäyksiä"
       topic_count: "Ketjuja"
       post_count: "Viestejä"
+      user_count: "Rekisteröitymiset"
       active_user_count: "Aktiivisia käyttäjiä"
       contact: "Ota yhteyttä"
       contact_info: "Sivustoon liittyvissä kiireellisissä asioissa, ota yhteyttä osoitteeseen %{contact_info}."
@@ -1077,13 +1079,10 @@ fi:
       no_notifications_page_title: "Sinulla ei ole vielä ilmoituksia"
       no_notifications_page_body: >
         Saat ilmoituksia sinulle relevantista toiminnasta, kuten omien ketjujesi viesteistä ja vastauksista, kun joku <b>@mainitsee</b> nimesi tai lainaa sinua tai vastaa tarkkailemiisi ketjuihin. Ilmoitukset lähetetään sinulle sähköpostitse silloin, kun et ole kirjautunut hetkeen. <br><br> Klikkaa painiketta %{icon}, kun haluat ilmoituksia tietystä ketjusta, alueista tai tunnisteista. Lisää valintoja löydät <a href='%{preferencesUrl}'>ilmoitusasetuksista</a>.
-      first_notification: "Ensimmäinen ilmoitus sinulle! Valitse se aloittaaksesi."
       dynamic_favicon: "Näytä määrät selaimen kuvakkeessa"
       skip_new_user_tips:
         description: "Ohita uuden käyttäjän aloittamisvinkit ja kunniamerkit"
-        not_first_time: "Eikö tämä ole ensikertasi?"
-        skip_link: "Ohita nämä vinkit"
-        read_later: "Luen sen myöhemmin."
+      reset_seen_user_tips: "Näytä käyttäjävinkkejä uudelleen"
       theme_default_on_all_devices: "Tee tästä oletusteema kaikille laitteilleni"
       color_scheme_default_on_all_devices: "Aseta oletusvärimalli(t) kaikille laitteilleni"
       color_scheme: "Värimalli"
@@ -1110,6 +1109,9 @@ fi:
         tags_section: "Tunnisteet-osio"
         tags_section_instruction: "Valitut tunnisteet näkyvät sivupalkin tunnisteet-osiossa."
         navigation_section: "Navigointi"
+        list_destination_instruction: "Kun sivupalkissa on uutta sisältöä..."
+        list_destination_default: "käytä oletuslinkkiä ja näytä merkki uusissa kohteissa"
+        list_destination_unread_new: "linkki lukemattomiin/uusiin ja näytä uusien kohteiden määrä"
       change: "vaihda"
       featured_topic: "Valikoitu ketju"
       moderator: "%{user} on valvoja"
@@ -1668,6 +1670,24 @@ fi:
       set_custom_status: "Aseta mukautettu tila"
       what_are_you_doing: "Mitä teet?"
       remove_status: "Poista tila"
+    user_tips:
+      primary: "Selvä!"
+      secondary: "älä näytä minulle näitä vinkkejä"
+      first_notification:
+        title: "Ensimmäinen ilmoituksesi!"
+        content: "Ilmoitusten avulla pysyt ajan tasalla siitä, mitä yhteisössä tapahtuu."
+      topic_timeline:
+        title: "Ketjun aikajana"
+        content: "Selaa viestiä nopeasti käyttämällä ketjun aikajanaa."
+      post_menu:
+        title: "Viestin valikko"
+        content: "Katso, millä muilla tavoin voit olla vuorovaikutuksessa viestin kanssa klikkaamalla kolmea pistettä!"
+      topic_notification_levels:
+        title: "Seuraat nyt tätä ketjua"
+        content: "Etsi tämä kello säätääksesi ilmoitusasetuksiasi tiettyjen ketjujen tai kokonaisten alueiden osalta."
+      suggested_topics:
+        title: "Jatka lukemista!"
+        content: "Tässä on muutamia ketjuja, joita saatat haluta lukea seuraavaksi."
     loading: "Ladataan..."
     errors:
       prev_page: "yrittäessä ladata"
@@ -1889,6 +1909,7 @@ fi:
       success: "Tili luotiin, ja olet nyt kirjautunut sisään."
       name_label: "Nimi"
       password_label: "Salasana"
+      existing_user_can_redeem: "Lunasta kutsusi ketjuun tai ryhmään."
     password_reset:
       continue: "Jatka sivustolle %{site_name}"
     emoji_set:
@@ -2263,6 +2284,7 @@ fi:
         other: "<span>%{count}%{plus} tulosta haulle</span><span class='term'>%{term}</span>"
       title: "Haku"
       full_page_title: "Haku"
+      results: "tulokset"
       no_results: "Ei tuloksia."
       no_more_results: "Enempää tuloksia ei löytynyt."
       post_format: "#%{post_number} käyttäjältä %{username}"
@@ -2307,6 +2329,7 @@ fi:
         status: "suodatus ketjun tilan mukaan"
         full_search: "käynnistää koko sivun haun"
         full_search_key: "%{modifier} + Enter"
+        me: "näyttää vain sinun viestisi"
       advanced:
         title: Tarkemmat suodattimet
         posted_by:
@@ -3233,6 +3256,7 @@ fi:
       this_year: "tänä vuonna"
       position: "Sijoitus aluesivulla:"
       default_position: "Oletussijoitus"
+      position_disabled: "Alueet näytetään aktiivisuusjärjestyksessä. Voit hallita alueiden järjestystä luetteloissa ottamalla käyttöön <a href='%{url}'>\"fixed category positions\"</a> -asetuksen."
       minimum_required_tags: "Ketjussa vaadittavien tunnisteiden vähimmäismäärä:"
       default_slow_mode: 'Ota "Hidas tila" käyttöön tämän alueen uusille ketjuille.'
       parent: "Ylätason alue"
@@ -3847,12 +3871,20 @@ fi:
             unread_with_count: "Lukematta (%{count})"
             archive: "Arkisto"
         tags:
+          links:
+            add_tags:
+              content: "Lisää tunnisteita"
+              title: "Et ole lisännyt tunnisteita. Aloita klikkaamalla."
           none: "Et ole lisännyt tunnisteita."
           click_to_get_started: "Aloita klikkaamalla tätä."
           header_link_text: "Tunnisteet"
           header_action_title: "muokkaa sivupalkin tunnisteitasi"
           configure_defaults: "Määritä oletukset"
         categories:
+          links:
+            add_categories:
+              content: "Lisää alueita"
+              title: "Et ole lisännyt alueita. Aloita klikkaamalla."
           none: "Et ole lisännyt alueita."
           click_to_get_started: "Aloita klikkaamalla tätä."
           header_link_text: "Alueet"
@@ -3873,9 +3905,6 @@ fi:
               title: "Kaikki ketjut"
             faq:
               content: "UKK"
-            tracked:
-              content: "Seuratut"
-              title: "Kaikki seuratut ketjut"
             groups:
               content: "Ryhmät"
               title: "Kaikki ryhmät"
@@ -4266,6 +4295,7 @@ fi:
         change_settings_short: "Asetukset"
         howto: "Kuinka asennan lisäosia?"
         official: "Virallinen lisäosa"
+        broken_route: "Linkin määrittäminen kohteeseen %{name} ei onnistu. Varmista, että mainostenesto-ohjelmat on poistettu käytöstä, ja kokeile ladata sivu uudelleen."
       backups:
         title: "Varmuuskopiot"
         menu:
@@ -5134,6 +5164,7 @@ fi:
         trust_level_2_users: "Käyttäjät luottamustasolla 2"
         trust_level_3_requirements: "Luottamustason 3 vaatimukset"
         trust_level_locked_tip: "luottamustaso on lukittu, järjestelmä ei ylennä tai alenna käyttäjää"
+        trust_level_unlocked_tip: "luottamustason lukitus on poistettu, järjestelmä voi ylentää tai alentaa käyttäjän"
         lock_trust_level: "Lukitse luottamustaso"
         unlock_trust_level: "Poista luottamustason lukitus"
         silenced_count: "Hiljennetty"
@@ -5193,18 +5224,23 @@ fi:
         delete_confirm: "Oletko varma, että haluat poistaa tämän käyttäjäkentän?"
         options: "Vaihtoehdot"
         required:
+          title: "Pakollinen rekisteröidyttäessä"
           enabled: "pakollinen"
           disabled: "ei pakollinen"
         editable:
+          title: "Muokattavissa rekisteröitymisen jälkeen"
           enabled: "muokattavissa"
           disabled: "ei muokattavissa"
         show_on_profile:
+          title: "Näytetään julkisessa profiilissa"
           enabled: "näytetään profiilissa"
           disabled: "ei näytetä profiilissa"
         show_on_user_card:
+          title: "Näytetään käyttäjäkortilla"
           enabled: "näytetään käyttäjäkortilla"
           disabled: "ei näytetä käyttäjäkortilla"
         searchable:
+          title: "Haettavissa"
           enabled: "haettavissa"
           disabled: "ei haettavissa"
         field_types:
@@ -5428,6 +5464,7 @@ fi:
         destination: "Kohde"
         copy_to_clipboard: "Kopioi pysyvä linkki leikepöydälle"
         delete_confirm: Oletko varma, että haluat poistaa tämän pysyvän linkin?
+        no_permalinks: "Sinulla ei ole vielä ikilinkkejä. Luo uusi ikilinkki yllä, jotta alat näkemään ikilinkkiesi luettelon tässä."
         form:
           label: "Uusi:"
           add: "Lisää"

@@ -934,11 +934,9 @@ zh_TW:
       no_bookmarks_title: "您尚未添加任何書籤"
       no_notifications_title: "您尚未收到任何通知"
       no_notifications_page_title: "您尚未收到任何通知"
-      first_notification: "你的第一則通知！選擇以開始。"
       dynamic_favicon: "在瀏覽器小圖示上顯示計數\\bIcon"
       skip_new_user_tips:
         description: "跳過新使用者登入時的提示和徽章"
-        skip_link: "跳過這些提示"
       theme_default_on_all_devices: "在所有裝置上設為預設佈景主題"
       color_scheme: "色彩配置"
       color_schemes:
@@ -1059,6 +1057,7 @@ zh_TW:
         profile: "基本資料"
         emails: "電子郵件"
         notifications: "通知"
+        tracking: "跟蹤"
         categories: "分類"
         users: "使用者"
         tags: "標籤"
@@ -1253,6 +1252,7 @@ zh_TW:
       email_in_reply_to: "郵件中包含回覆你的內容節選"
       other_settings: "其它"
       categories_settings: "分類"
+      topics_settings: "討論話題"
       new_topic_duration:
         label: "視為新話題的條件"
         not_viewed: "我未看過的討論"
@@ -1538,7 +1538,6 @@ zh_TW:
       name_label: "姓名"
       password_label: "密碼"
       existing_user_can_redeem: "兌換您對某個主題或群組的邀請。"
-      existing_user_cannot_redeem: "此邀請無法兌換。請找當初邀請您的人來重發一個新的邀請。"
     password_reset:
       continue: "繼續連接至 %{site_name}"
     emoji_set:
@@ -1796,6 +1795,7 @@ zh_TW:
         other: "關於<span class='term'>%{term}</span>的<span>%{count}%{plus} 個結果 </span>"
       title: "搜索"
       full_page_title: "搜索"
+      results: "結果"
       no_results: "未找到任何結果。"
       no_more_results: "沒有找到更多的結果。"
       post_format: "#%{post_number} %{username}"
@@ -2903,9 +2903,6 @@ zh_TW:
               title: "所有話題"
             faq:
               content: "常見問答"
-            tracked:
-              content: "已追蹤"
-              title: "所有追蹤話題"
             groups:
               content: "群組"
               title: "所有群組"

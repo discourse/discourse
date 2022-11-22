@@ -4,7 +4,9 @@ import { click, visit } from "@ember/test-helpers";
 import {
   acceptance,
   count,
+  exists,
   query,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -59,6 +61,45 @@ acceptance("User Preferences - Security", function (needs) {
       count(".pref-password.highlighted"),
       1,
       "it should highlight password preferences"
+    );
+  });
+
+  test("Viewing user api keys when user has redesign user page navigation enabled", async function (assert) {
+    updateCurrentUser({
+      redesigned_user_page_nav_enabled: true,
+      user_api_keys: [
+        {
+          id: 1,
+          application_name: "Discourse Hub",
+          scopes: ["Read and clear notifications"],
+          created_at: "2020-11-14T00:57:09.093Z",
+          last_used_at: "2022-09-15T18:55:41.672Z",
+        },
+      ],
+    });
+
+    await visit("/u/eviltrout/preferences/security");
+
+    assert.strictEqual(
+      query(".pref-user-api-keys__application-name").innerText.trim(),
+      "Discourse Hub",
+      "displays the application name for the API key"
+    );
+
+    assert.strictEqual(
+      query(".pref-user-api-keys__scopes-list-item").innerText.trim(),
+      "Read and clear notifications",
+      "displays the scope for the API key"
+    );
+
+    assert.ok(
+      exists(".pref-user-api-keys__created-at"),
+      "displays the created at date for the API key"
+    );
+
+    assert.ok(
+      exists(".pref-user-api-keys__last-used-at"),
+      "displays the last used at date for the API key"
     );
   });
 });

@@ -11,6 +11,10 @@ module PageObjects
         visit("/chat")
       end
 
+      def visit_channel(channel)
+        visit(channel.url)
+      end
+
       def minimize_full_page
         find(".open-drawer-btn").click
       end

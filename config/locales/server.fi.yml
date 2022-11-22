@@ -67,6 +67,7 @@ fi:
       modifier_values: "about.json-tiedoston määreet sisältävät virheellisiä arvoja: %{errors}"
       git: "Virhe git-tietovarastoa kloonattaessa: ei käyttöoikeutta tai tietovarastoa ei löytynyt"
       git_ref_not_found: "git checkout epäonnistui kohteelle: %{ref}"
+      git_unsupported_scheme: "Git-tietolähteen kloonaaminen ei onnistu: skeemaa ei tueta"
       unpack_failed: "Tiedoston purku epäonnistui"
       file_too_big: "Purettu tiedosto on liian suuri."
       unknown_file_type: "Lataamasi tiedosto ei näytä olevan kelvollinen Discourse-teema."
@@ -232,6 +233,8 @@ fi:
       <p>Muussa tapauksessa <a href="%{base_url}/password-reset">vaihda salasanasi</a>.</p>
     not_found_template_link: |
       <p>Tätä kutsua sivustolle <a href="%{base_url}">%{site_name}</a> ei voa enää käyttää. Pyydä henkilöä, joka kutsui sinut, lähettämään sinulle uusi kutsu.</p>
+    existing_user_cannot_redeem: "Tätä kutsua ei voi lunastaa. Pyydä kutsujaasi lähettämään sinulle uusi kutsu."
+    existing_user_already_redemeed: "Olet jo lunastanut tämän kutsulinkin."
     user_exists: "Henkilöä <b>%{email}</b> ei tarvitse kutsua, hänellä on jo tili!"
     invite_exists: "Olet jo lähettänyt kutsun osoitteeseen <b>%{email}</b>."
     invalid_email: "%{email} ei ole kelvollinen sähköpostiosoite."
@@ -248,6 +251,7 @@ fi:
     max_redemptions_allowed_one: "sähköpostikutsuissa pitäisi olla 1."
     redemption_count_less_than_max: "pitäisi olla vähemmän kuin %{max_redemptions_allowed}."
     email_xor_domain: "Sähköposti- ja verkkotunnuskenttiä ei sallitta samanaikaisesti"
+    existing_user_success: "Kutsu lunastettiin"
   bulk_invite:
     file_should_be_csv: "Ladattavan tiedoston tulee olla CSV-muodossa."
     max_rows: "Ensimmäiset %{max_bulk_invites} kutsua lähetettiin. Jaa tiedosto pienempiin osiin."
@@ -495,6 +499,7 @@ fi:
       Voit muokata edellistä viestiäsi ja lisätä siihen lainauksen maalaamalla lainattavan viestin tekstiä ja klikkaamalla ilmestyvää <b>lainaa</b>-painiketta.
 
       On helpompaa lukea ketjua, jossa on vähemmän pidempiä vastauksia kuin sellaista, jossa on paljon lyhyitä yksittäisiä vastauksia.
+    dominating_topic: Olet lähettänyt yli %{percent} % vastauksista täällä; olisiko aika antaa muidenkin osallistua?
     get_a_room: Olet vastannut käyttäjälle @%{reply_username} %{count} kertaa, tiesitkö, että voit lähettää hänelle yksityisviestin?
     too_many_replies: |
       ### Olet kirjoittanut enimmäismäärän vastauksia tähän ketjuun
@@ -638,6 +643,7 @@ fi:
       disallowed_topic_tags: "Ketjulla on tunnisteita, jotka eivät ole sallittuja tällä alueella: '%{tags}'"
       disallowed_tags_generic: "Tällä ketjulla on kiellettyjä tunnisteita."
       slug_contains_non_ascii_chars: "sisältää muita kuin ascii-merkkejä"
+      is_already_in_use: "on jo käytössä"
     cannot_delete:
       uncategorized: "Tämä alue on erityinen. Se on tarkoitettu säilytyspaikaksi ketjuille, joilla ei ole aluetta; sitä ei voi poistaa."
       has_subcategories: "Aluetta ei voi poistaa, koska sillä on ala-alueita."
@@ -763,6 +769,7 @@ fi:
         one: "lähes vuosi sitten"
         other: "lähes %{count} vuotta sitten"
   password_reset:
+    no_token: 'Käyttämäsi linkki ei enää toimi. Voit <a href="%{base_url}/login">kirjautua sisään</a> nyt. Jos olet unohtanut salasanasi, voit <a href="%{base_url}/password-reset">pyytää linkkiä</a> sen palauttamiseksi.'
     choose_new: "Valitse uusi salasana"
     choose: "Valitse salasana"
     update: "Päivitä salasana"
@@ -771,7 +778,7 @@ fi:
     success: "Salasanan vaihto onnistui, ja olet nyt kirjautunut sisään."
     success_unapproved: "Salasana vaihdettu onnistuneesti."
   email_login:
-    invalid_token: "Tämä sähköpostikirjautumislinkki on liian vanha. Paina 'Kirjaudu sisään' -painiketta ja valitse 'Unohdin salasanani' saadaksesi uuden linkin."
+    invalid_token: 'Käyttämäsi linkki ei enää toimi. Voit <a href="%{base_url}/login">kirjautua sisään</a> nyt. Jos olet unohtanut salasanasi, voit <a href="%{base_url}/password-reset">pyytää linkkiä</a> sen palauttamiseksi.'
     title: "Sähköpostikirjautuminen"
   user_auth_tokens:
     browser:
@@ -1407,6 +1414,7 @@ fi:
     search_ignore_accents: "Älä välitä aksenteista, kun haetaan tekstiä."
     category_search_priority_low_weight: "Matalan hakuprioriteetin painoarvo."
     category_search_priority_high_weight: "Korkean hakuprioriteetin painoarvo."
+    default_composer_category: "Alue, jota käytetään alueen avattavan valikon täyttämiseen luotaessa uutta ketjua."
     allow_uncategorized_topics: "Salli ketjujen aloittaminen valitsematta aluetta. VAROITUS: alueettomat ketjut täytyy siirtää jollekin alueelle ennen kuin poistat asetuksen käytöstä."
     allow_duplicate_topic_titles: "Salli ketjun aloittaminen identtisellä otsikolla."
     allow_duplicate_topic_titles_category: "Salli ketjut, joilla on identtiset otsikot, jos ketjut on eri alueella. Asetuksen allow_duplicate_topic_titles on oltava pois käytöstä."
@@ -1933,7 +1941,6 @@ fi:
     enable_user_directory: "Näytä hakemisto käyttäjistä selattavaksi"
     enable_group_directory: "Näytä hakemisto ryhmistä selattavaksi"
     enable_category_group_moderation: "Salli ryhmien valvoa sisältöä tietyillä alueilla"
-    group_in_subject: "Aseta %%{optional_pm} sähköpostin aiheessa ensimmäisen ryhmän nimeksi yksityisviestissä, katso: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Customize subject format for standard emails</a>"
     allow_anonymous_posting: "Salli käyttäjien vaihtaa anonyymiin tilaan"
     anonymous_posting_min_trust_level: "Anonyymien viestien lähettämiseen vaadittava luottamustila"
     anonymous_account_duration_minutes: "Suojellaksesi anonymiteettiä, luo käyttäjälle uusi anonyymi tili N minuutin välein. Esimerkki: jos arvoksi asetetaan 600, kun 600 minuuttia tulee kuluneeksi edellisestä viestistä JA käyttäjä vaihtaa anonyymiin tilaan, luodaan uusi anonyymi tili."
@@ -2047,6 +2054,7 @@ fi:
     disable_mailing_list_mode: "Estä käyttäjiä ottamasta postituslistatilaa käyttöön (estää postituslistojen sähköpostien lähettämisen)"
     default_email_previous_replies: "Sisällytä aiemmat vastaukset sähköposteihin oletuksena."
     default_email_in_reply_to: "Sisällytä katkelma vastattavasta viestistä sähköpostiin oletuksena."
+    default_hide_profile_and_presence: "Piilota käyttäjän julkinen profiili ja läsnäolo-ominaisuudet oletuksena."
     default_other_new_topic_duration_minutes: "Yleinen oletusarvo sille, milloin ketju tulkitaan uudeksi."
     default_other_auto_track_topics_after_msecs: "Yleinen oletusarvo sille, missä ajassa ketjua aletaan seurata."
     default_other_notification_level_when_replying: "Yleinen oletusilmoitustaso, kun käyttäjä vastaa ketjuun."
@@ -2104,6 +2112,7 @@ fi:
     enable_sitemap: "Luo sivustokartta sivustollesi ja sisällytä se robots.txt-tiedostoon."
     sitemap_page_size: "Kuhunkin sivustokartan sivuun lisättävien URL-osoitteiden määrä. Enintään 50 000."
     enable_user_status: "(kokeellinen) Salli käyttäjien asettaa mukautettu tilaviesti (emoji + kuvaus)."
+    enable_user_tips: "(kokeellinen) Ota käyttöön uuden käyttäjän vinkit, jotka kuvaavat keskeisiä ominaisuuksia käyttäjille"
     short_title: "Lyhyttä nimeä käytetään käyttäjän aloitusnäytöllä, käynnistysruudussa ja muissa tilanteissa, joissa tilaa on rajallisesti. Sen tulisi olla enintään 12 merkin pituinen."
     dashboard_hidden_reports: "Salli tiettyjen raporttien piilottaminen hallintapaneelista."
     dashboard_visible_tabs: "Valitse mitkä hallintapaneelin välilehdet ovat näkyvillä."
@@ -2178,6 +2187,7 @@ fi:
       search_tokenize_japanese_enabled: "\"search_tokenize_japanese\" on poistettava käytöstä ennen tämän asetuksen käyttöönottoa."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Et voi ottaa DiscourseConnectia käyttöön, jos 2FA on pakotettu."
       delete_rejected_email_after_days: "Tämä asetus ei voi olla pienempi kuin delete_email_logs_after_days-asetus tai suurempi kuin %{max}"
+      invalid_uncategorized_category_setting: "Luokittelemattomat-aluetta ei voi valita, jos luokittelemattomia ketjuja ei ole sallittu"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3695,6 +3705,7 @@ fi:
     png_to_jpg_conversion_failure_message: "PNG:n muuttamisessa JPG:ksi tapahtui virhe."
     optimize_failure_message: "Ladatun kuvan optimoinnissa tapahtui virhe."
     download_failure: "Tiedoston lataaminen ulkoiselta palveluntarjoajalta epäonnistui."
+    size_mismatch_failure: "S3:een ladatun tiedoston koko ei vastannut ulkoisen latauksen tarkoitettua kokoa. %{additional_detail}"
     create_multipart_failure: "Moniosaisen latauksen luominen ulkoisessa tallennustilassa epäonnistui."
     abort_multipart_failure: "Moniosaisen latauksen hylkääminen ulkoisessa tallennustilassa epäonnistui."
     complete_multipart_failure: "Moniosaisen latauksen viimeistely ulkoisessa tallennustilassa epäonnistui."
@@ -4731,6 +4742,10 @@ fi:
   user_status:
     errors:
       ends_at_should_be_greater_than_set_at: "ends_at täytyy olla suurempi kuin set_at"
+  webhooks:
+    payload_url:
+      blocked_or_internal: "Hyötykuorman URL-osoitetta ei voi käyttää, koska se selvitetään estettyyn tai sisäiseen IP-osoitteeseen"
+      unsafe: "Hyötykuorman URL-osoitetta ei voi käyttää, koska se ei ole turvallinen"
   activemodel:
     errors:
       <<: *errors

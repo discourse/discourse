@@ -43,11 +43,6 @@ export default {
         });
       }
 
-      if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
-        api.registerHashtagSearchParam("category", "chat-composer", 100);
-        api.registerHashtagSearchParam("tag", "chat-composer", 50);
-      }
-
       api.registerChatComposerButton({
         label: "chat.emoji",
         id: "emoji",

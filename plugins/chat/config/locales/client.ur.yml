@@ -74,6 +74,7 @@ ur:
         save: "محفوظ کریں"
         saved: "محفوظ کر لیا گیا"
         unfollow: "چھوڑ دیں"
+        admin_title: "منتظم"
       incoming_webhooks:
         back: "واپس"
         description: "تفصیل"

@@ -1193,13 +1193,9 @@ he:
       no_notifications_page_title: "אין לך התראות עדיין"
       no_notifications_page_body: >
         תישלחנה אליך התראות על פעילות שקשורה ישירות אליך, כולל תגובות לנושאים ולפוסטים שלך, כש<b>@מאזכרים</b> או מצטטים אותך או מגיבים לנושאים ברשימת המעקב שלך. כמו כן, התראות תישלחנה לכתובת הדוא״ל שלך כשלא נכנסת למערכת למשך זמן מה. <br><br> יש לחפש אחר %{icon} כדי להחליט עבור אילו נושאים, קטגוריות ותגיות ברצונך לקבל התראות. למידע נוסף, ניתן לגשת אל <a href='%{preferencesUrl}'>העדפות ההתראות</a> שלך.
-      first_notification: "התראה ראשונה! יש לבחור אותה כדי להתחיל."
       dynamic_favicon: "הצגת ספירה בסמל הדפדפן"
       skip_new_user_tips:
         description: "דילוג על עצות ועיטורים של קבלת משתמשים חדשים"
-        not_first_time: "לא הפעם הראשונה שלך?"
-        skip_link: "דילוג על העצות האלו"
-        read_later: "אקרא את זה אחר כך."
       reset_seen_user_tips: "הצגת עצות למשתמש שוב"
       theme_default_on_all_devices: "הגדרת ערכת עיצוב זו כבררת המחדל לכל המכשירים שלי"
       color_scheme_default_on_all_devices: "הגדרת ערכות צבעים כבררת מחדל לכל המכשירים שלי"
@@ -1340,6 +1336,7 @@ he:
         profile: "פרופיל"
         emails: "כתובות דוא״ל"
         notifications: "התראות"
+        tracking: "מעקב"
         categories: "קטגוריות"
         users: "משתמשים"
         tags: "תגיות"
@@ -1600,6 +1597,7 @@ he:
       email_in_reply_to: "לכלול ציטוטים מתגובות לפוסטים בתוכן הדוא״ל"
       other_settings: "אחר"
       categories_settings: "קטגוריות"
+      topics_settings: "נושאים"
       new_topic_duration:
         label: "נושא יחשב כנושא חדש כאשר"
         not_viewed: "עוד לא ראיתי אותם"
@@ -1825,6 +1823,15 @@ he:
       topic_timeline:
         title: "ציר הזמן של הנושא"
         content: "אפשר לגלול במהירות על פני הפוסט באמצעות ציר הזמן של הנושא."
+      post_menu:
+        title: "תפריט פוסט"
+        content: "ניתן לראות אילו פעולות נוספות ניתן לבצע עם הפוסט על ידי לחיצה על שלוש הנקודות!"
+      topic_notification_levels:
+        title: "הוספת את הנושא הזה לרשימת המעקב שלך"
+        content: "ניתן לחפש את הפעמון הזה כדי לכוון את העדפות ההתראות שלך לנושאים מסוימים או לקטגוריות שלמות."
+      suggested_topics:
+        title: "אפשר להמשיך לקרוא!"
+        content: "הינה כמה נושאים שלדעתנו יעניין אותך לקרוא בהמשך."
     loading: "טוען..."
     errors:
       prev_page: "בזמן הניסיון לטעון"
@@ -2050,6 +2057,7 @@ he:
       success: "החשבון נוצר ונכנסת אליו."
       name_label: "שם"
       password_label: "ססמה"
+      existing_user_can_redeem: "מימוש ההזמנה שלך לנושא או לקבוצה."
     password_reset:
       continue: "המשיכו ל-%{site_name}"
     emoji_set:
@@ -2474,6 +2482,7 @@ he:
         other: "<span>%{count}%{plus} תוצאות עבור </span><span class='term'>%{term}</span>"
       title: "חיפוש"
       full_page_title: "חיפוש"
+      results: "תוצאות"
       no_results: "אין תוצאות."
       no_more_results: "לא נמצאו עוד תוצאות."
       post_format: "#%{post_number} מאת %{username}"
@@ -2518,6 +2527,7 @@ he:
         status: "מסנן לפי מצב נושא"
         full_search: "מפעיל חיפוש מלא בעמוד"
         full_search_key: "‎%{modifier} + Enter"
+        me: "מציג רק את הפוסטים שלך"
       advanced:
         title: מסננים מתקדמים
         posted_by:
@@ -3514,6 +3524,7 @@ he:
       this_year: "השנה"
       position: "מיקום בעמוד הקטגוריות:"
       default_position: "מיקום ברירת מחדל"
+      position_disabled: "הקטגוריות יוצגו לפי סדר הפעילות. כדי לשלוט בסדר הקטגוריות ברשימות, יש להפעיל את ההגדרה <a href='%{url}'>‚מיקומי קטגוריה קבועים’</a>."
       minimum_required_tags: "מספר התגיות המזערי הנדרש לנושא:"
       default_slow_mode: 'להפעיל „מצב אטי” לנושאים חדשים בקטגוריה הזאת.'
       parent: "קטגורית אם"
@@ -4159,6 +4170,8 @@ he:
     second_factor_auth:
       redirect_after_success: "האימות הדו־שלבי הצליח. מתבצעת הפניה לעמוד הקודם…"
     sidebar:
+      show_sidebar: "הצגת סרגל צד"
+      hide_sidebar: "הסתרת סרגל צד"
       unread_count:
         one: "לא נקרא (%{count})"
         two: "לא-נקראו %{count} "
@@ -4222,9 +4235,6 @@ he:
               title: "כל הנושאים"
             faq:
               content: "שאלות נפוצות"
-            tracked:
-              content: "במעקב"
-              title: "כל הנושאים במעקב"
             groups:
               content: "קבוצות"
               title: "כל הקבוצות"
@@ -5811,6 +5821,7 @@ he:
         destination: "יעד"
         copy_to_clipboard: "העתקת קישור קבוע ללוח"
         delete_confirm: ' להסיר את הקישור הקבוע?'
+        no_permalinks: "עדיין אין לך קישורים קבועים. יש ליצור קישור קבוע חדש למעלה כדי להתחיל לראות רשימה של הקישורים הקבועים שלך כאן."
         form:
           label: "חדש:"
           add: "הוספה"

@@ -141,6 +141,8 @@ export function applyDefaultHandlers(pretender) {
       results: [
         { id: "monkey", name: "monkey", count: 1 },
         { id: "gazelle", name: "gazelle", count: 2 },
+        { id: "dog", name: "dog", count: 3 },
+        { id: "cat", name: "cat", count: 4 },
       ],
     };
 

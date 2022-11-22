@@ -1106,6 +1106,59 @@ acceptance("Composer - Customizations", function (needs) {
   });
 });
 
+acceptance("Composer - Error Extensibility", function (needs) {
+  needs.user();
+  needs.settings({
+    general_category_id: 1,
+    default_composer_category: 1,
+  });
+
+  needs.hooks.beforeEach(() => {
+    withPluginApi("1.5.0", (api) => {
+      api.addComposerSaveErrorCallback((error) => {
+        if (error.match(/PLUGIN_XYZ ERROR/)) {
+          // handle error
+          return true;
+        }
+        return false;
+      });
+    });
+  });
+
+  test("Create a topic with server side errors handled by a plugin", async function (assert) {
+    pretender.post("/posts", function () {
+      return response(422, { errors: ["PLUGIN_XYZ ERROR"] });
+    });
+
+    await visit("/");
+    await click("#create-topic");
+    await fillIn("#reply-title", "this title triggers an error");
+    await fillIn(".d-editor-input", "this is the *content* of a post");
+    await click("#reply-control button.create");
+    assert.notOk(exists(".dialog-body"), "it does not pop up an error message");
+  });
+
+  test("Create a topic with server side errors not handled by a plugin", async function (assert) {
+    pretender.post("/posts", function () {
+      return response(422, { errors: ["PLUGIN_ABC ERROR"] });
+    });
+
+    await visit("/");
+    await click("#create-topic");
+    await fillIn("#reply-title", "this title triggers an error");
+    await fillIn(".d-editor-input", "this is the *content* of a post");
+    await click("#reply-control button.create");
+    assert.ok(exists(".dialog-body"), "it pops up an error message");
+    assert.ok(
+      query(".dialog-body").innerText.match(/PLUGIN_ABC ERROR/),
+      "it contains the server side error text"
+    );
+    await click(".dialog-footer .btn-primary");
+    assert.ok(!exists(".dialog-body"), "it dismisses the error");
+    assert.ok(exists(".d-editor-input"), "the composer input is visible");
+  });
+});
+
 acceptance("Composer - Focus Open and Closed", function (needs) {
   needs.user();
   needs.settings({ allow_uncategorized_topics: true });

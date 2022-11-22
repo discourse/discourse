@@ -67,6 +67,7 @@ pt_BR:
       modifier_values: "about.json contém valores inválidos: %{errors}"
       git: "Erro ao clonar o repositório git, o acesso foi negado ou o repositório não foi encontrado"
       git_ref_not_found: "Não é possível conseguir a referência GIT: %{ref}"
+      git_unsupported_scheme: "Não foi possíve clonar repositório git: esquema incompatível"
       unpack_failed: "Falha ao descompactar o arquivo"
       file_too_big: "O arquivo não compactado é muito grande."
       unknown_file_type: "O arquivo que você enviou não parece ser um tema válido do Discourse."
@@ -232,6 +233,8 @@ pt_BR:
       <p>Caso contrário, <a href="%{base_url}/password-reset">redefina a senha</a>.</p>
     not_found_template_link: |
       <p>Este convite para <a href="%{base_url}">%{site_name}</a> não pode ser mais resgatado. Peça que enviem outro convite.</p>
+    existing_user_cannot_redeem: "Este convite não poderá ser resgatado. Peça outro convite a quem enviou."
+    existing_user_already_redemeed: "Você já resgatou este link de convite."
     user_exists: "Não há necessidade de convidar <b>%{email}</b>, visto que já têm uma conta!"
     invite_exists: "Você já convidou <b>%{email}</b>"
     invalid_email: "%{email}' não é um endereço de e-mail válido."
@@ -248,6 +251,7 @@ pt_BR:
     max_redemptions_allowed_one: "para convites por e-mail, deve ser 1."
     redemption_count_less_than_max: "deve ser menor que %{max_redemptions_allowed}."
     email_xor_domain: "Campos de e-mail e domínio não são permitidos ao mesmo tempo"
+    existing_user_success: "Link do convite resgatado com sucesso"
   bulk_invite:
     file_should_be_csv: "O arquivo atualizado deve ter o formato csv."
     max_rows: "Os primeiros %{max_bulk_invites} convites foram enviados. Tente dividir o arquivo em partes menores."
@@ -495,6 +499,7 @@ pt_BR:
       Você pode editar sua resposta anterior para adicionar uma citação selecionando um texto e clicando no botão <b>responder citação</b> que aparecerá.
 
       Fica mais fácil para todos(as) lerem tópicos com poucas respostas e muitas informações em vez de muitas respostas individuais e curtas.
+    dominating_topic: Você postou mais de %{percent}% das respostas aqui. Podemos sugerir que você dê aos outros uma chance para entrarem na conversa?
     get_a_room: Você respondeu a %{reply_username} %{count} vezes, sabia que poderia ter enviado uma mensagem pessoal em vez de fazer isso?
     too_many_replies: |
       ### Você atingiu o limite de respostas para este tópico
@@ -638,6 +643,7 @@ pt_BR:
       disallowed_topic_tags: "Este tópico tem etiquetas não permitidas por esta categoria: \"%{tags}\""
       disallowed_tags_generic: "Este tópico tem etiquetas não permitidas."
       slug_contains_non_ascii_chars: "contém caracteres não-ascii"
+      is_already_in_use: "já está em uso"
     cannot_delete:
       uncategorized: "Esta categoria é especial. É concebida como uma área de espera para tópicos sem categoria e não pode ser excluída."
       has_subcategories: "Não é possível excluir essa categoria porque tem subcategorias."
@@ -763,6 +769,7 @@ pt_BR:
         one: "há quase %{count} ano"
         other: "há quase %{count} anos"
   password_reset:
+    no_token: 'Ops! O link que você usou não funciona mais. Agora você poderá <a href="%{base_url}/login">Log In</a>. Se tiver esquecido sua senha, você poderá <a href="%{base_url}/password-reset">solicitar um link</a> para redefini-la.'
     choose_new: "Escolha uma nova senha"
     choose: "Escolha uma senha"
     update: "Atualizar senha"
@@ -771,7 +778,7 @@ pt_BR:
     success: "Sua senha foi modificada com êxito e você já entrou com a sua conta."
     success_unapproved: "Senha modificada com êxito."
   email_login:
-    invalid_token: "Desculpe, este link enviado por e-mail para entrar com sua conta é muito antigo. Selecione o botão Entrar e use \"Esqueci minha senha\" para obter um novo link."
+    invalid_token: 'Ops! O link que você usou não funciona mais. Agora você poderá <a href="%{base_url}/login">fazer login</a>. Se tiver esquecido sua senha, você poderá <a href="%{base_url}/password-reset">solicitar um link</a> para redefini-la.'
     title: "E-mail para entrar"
   user_auth_tokens:
     browser:
@@ -1407,6 +1414,7 @@ pt_BR:
     search_ignore_accents: "Ignorar acentos ao pesquisar por texto."
     category_search_priority_low_weight: "Peso aplicado à classificação para baixa prioridade de pesquisa de categoria."
     category_search_priority_high_weight: "Peso aplicado à classificação para alta prioridade de pesquisa de categoria."
+    default_composer_category: "A categoria usada para preencher previamente o menu suspenso de categorias ao criar um novo tópico."
     allow_uncategorized_topics: "Permitir criação de tópicos sem categoria. AVISO: se existe algum tópico sem categoria, você deve movê-los para uma categoria antes de desativar esta opção."
     allow_duplicate_topic_titles: "Permitir tópicos com títulos duplicados e idênticos."
     allow_duplicate_topic_titles_category: "Permita tópicos com títulos duplicados e idênticos se a categoria for diferente. É preciso desativar allow_duplicate_topic_titles."
@@ -1933,7 +1941,6 @@ pt_BR:
     enable_user_directory: "Fornecer um diretório de usuários(as) para navegar"
     enable_group_directory: "Fornecer um diretório de grupos para navegação"
     enable_category_group_moderation: "Permitir que grupos moderem conteúdo em categorias específicas"
-    group_in_subject: "Definir %%{optional_pm} o assunto de e-mail como o nome do primeiro grupo em PM, consulte: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Personalizar formato de assunto para e-mails padrão</a>"
     allow_anonymous_posting: "Permitir que usuários(as) quem para modo anônimo(a)"
     anonymous_posting_min_trust_level: "Nível de confiança mínimo necessário para ativar mensagens anônimas"
     anonymous_account_duration_minutes: "Para proteger o anonimato, crie uma conta anônima a cada N minutos para cada usuário(a). Exemplo: se for configurado para 600, assim que passar 600 minutos a partir da última postagen E o(a) usuário(a) trocar para anônimo(a), uma nova conta anônima será criada."
@@ -2047,6 +2054,7 @@ pt_BR:
     disable_mailing_list_mode: "Impedir que usuários(as) ativem o modo lista de endereçamento (evita o envio de e-mails de lista de endereçamento.)"
     default_email_previous_replies: "Inclua respostas anteriores em e-mails por padrão."
     default_email_in_reply_to: "Inclua trecho de resposta de postagem em e-mails por padrão."
+    default_hide_profile_and_presence: "Oculte o perfil público do(a) usuário(a) e recursos de presença por padrão."
     default_other_new_topic_duration_minutes: "Condição padrão global para a qual um tópico é considerado novo."
     default_other_auto_track_topics_after_msecs: "Tempo padrão global antes de um tópico ser monitorado automaticamente."
     default_other_notification_level_when_replying: "Nível de notificação padrão global quando o(a) usuário(a) responde a um tópico."
@@ -2104,6 +2112,7 @@ pt_BR:
     enable_sitemap: "Gerar um mapa para o seu site e incluí-lo no arquivo robots.txt."
     sitemap_page_size: "Número de URLs a serem incluídas em cada página de mapa do site. Máx: 50.000"
     enable_user_status: "(experimental) Permitir que os usuários definam uma mensagem de status personalizada (emoji + descrição)."
+    enable_user_tips: "(experimental) Ativar novas dicas de usuário(s) que descrevem os principais recursos para os(as) usuários(as)"
     short_title: "O título abreviado será usado na tela inicial do(a) usuário(a), no inicializador ou em outros locais com espaço limitado. Deveria ser limitado a 12 caracteres."
     dashboard_hidden_reports: "Permita que relatórios específicos sejam ocultos no painel de controle."
     dashboard_visible_tabs: "Escolha quais abas do painel de controle estão visíveis."
@@ -2178,6 +2187,7 @@ pt_BR:
       search_tokenize_japanese_enabled: "Você deve desativar o 'search_tokenize_japanese' antes de ativar esta configuração."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Você não pode ativar o DiscourseConnect se o 2FA for aplicado."
       delete_rejected_email_after_days: "Esta configuração não pode ser inferior à configuração delete_email_logs_after_days ou superior a %{max}"
+      invalid_uncategorized_category_setting: "A categoria Não categorizado não pode ser selecionada se permitir tópicos não categorizados não for permitido"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exemplo.com.br"
@@ -3684,6 +3694,7 @@ pt_BR:
     png_to_jpg_conversion_failure_message: "Ocorreu um erro ao converter PNG em JPG."
     optimize_failure_message: "Ocorreu um erro ao otimizar a imagem enviada."
     download_failure: "Falha ao baixar o arquivo do provedor externo."
+    size_mismatch_failure: "O tamanho do arquivo enviado para S3 não corresponde ao tamanho pretendido do envio externo. %{additional_detail}"
     create_multipart_failure: "Falha ao criar envio com partes múltiplas no armazenamento externo."
     abort_multipart_failure: "Falha ao anular envio com partes múltiplas no armazenamento externo."
     complete_multipart_failure: "Falha ao concluir envio com partes múltiplas no armazenamento externo."
@@ -4720,6 +4731,10 @@ pt_BR:
   user_status:
     errors:
       ends_at_should_be_greater_than_set_at: "ends_at deve ser maior que set_at"
+  webhooks:
+    payload_url:
+      blocked_or_internal: "A URL da Carga não poderá ser usada porque se refere a um IP interno ou bloqueado"
+      unsafe: "A URL da carga útil não poderá ser usada porque não é segura"
   activemodel:
     errors:
       <<: *errors

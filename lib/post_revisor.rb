@@ -621,7 +621,7 @@ class PostRevisor
   end
 
   def plugin_callbacks
-    DiscourseEvent.trigger(:before_edit_post, @post)
+    DiscourseEvent.trigger(:before_edit_post, @post, @fields)
     DiscourseEvent.trigger(:validate_post, @post)
   end
 

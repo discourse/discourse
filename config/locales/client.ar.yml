@@ -422,6 +422,7 @@ ar:
       like_count: "تسجيلات الإعجاب"
       topic_count: "الموضوعات"
       post_count: "المنشورات"
+      user_count: "عمليات التسجيل"
       active_user_count: "المستخدمون النشطون"
       contact: "تواصل معنا"
       contact_info: "في حال حدوث مشكلة خطيرة أو أمر عاجل يؤثر على الموقع، يُرجى مراسلتنا على %{contact_info}."
@@ -1306,13 +1307,10 @@ ar:
       no_notifications_page_title: "ليس لديك أي إشعارات بعد"
       no_notifications_page_body: >
         سيتم إرسال إشعار إليك بشأن النشاط الذي يتعلق بك مباشرةً، بما في ذلك الردود على موضوعاتك ومشاركاتك، عندما يشير شخص ما إليك <b>@mentions</b> أو يقتبس منك، والردود على الموضوعات التي تشاهدها. سيتم إرسال الإشعارات أيضًا إلى بريدك الإلكتروني عندما لا تسجِّل الدخول لفترة طويلة من الوقت. <br><br> ابحث عن %{icon} لتحديد الموضوعات والفئات والعلامات المحدَّدة التي تريد تلقي إشعار بشأنها. للمزيد، راجع <a href='%{preferencesUrl}'>تفضيلات الإشعارات</a> لديك.
-      first_notification: "أول إشعار تستلمه! اضغط عليه للبدء."
       dynamic_favicon: "عرض الأعداد على أيقونة المتصفح"
       skip_new_user_tips:
         description: "تخطي نصائح وشارات تهيئة المستخدم الجديد"
-        not_first_time: "ليست المرة الأولى لك؟"
-        skip_link: "تخطي هذه النصائح"
-        read_later: "سأقرأها لاحقًا."
+      reset_seen_user_tips: "عرض نصائح المستخدم مرة أخرى"
       theme_default_on_all_devices: "جعل هذه السمة الافتراضية على كل أجهزتي"
       color_scheme_default_on_all_devices: "ضبط نظام (أنظمة) الألوان الافتراضي على جميع أجهزتي"
       color_scheme: "نظام الألوان"
@@ -1339,6 +1337,9 @@ ar:
         tags_section: "قسم الوسوم"
         tags_section_instruction: "سيتم عرض الوسوم المحدَّدة ضمن قسم وسوم الشريط الجانبي."
         navigation_section: "التنقل"
+        list_destination_instruction: "عند وجود محتوى جديد في الشريط الجانبي..."
+        list_destination_default: "استخدام الرابط الافتراضي وعرض شارة للعناصر الجديدة"
+        list_destination_unread_new: "رابط إلى غير المقروءة/الجديدة وعرض عدد العناصر الجديدة"
       change: "تغيير"
       featured_topic: "الموضوع المميز"
       moderator: "‏%{user} مشرف في الموقع"
@@ -1953,6 +1954,24 @@ ar:
       set_custom_status: "تعيين حالة مخصَّصة"
       what_are_you_doing: "ماذا تفعل؟"
       remove_status: "إزالة الحالة"
+    user_tips:
+      primary: "فهمت!"
+      secondary: "عدم عرض هذه النصائح لي"
+      first_notification:
+        title: "أول إشعار لك!"
+        content: "تُستخدَم الإشعارات لإبقائك على اطِّلاع بما يحدث في المجتمع."
+      topic_timeline:
+        title: "الجدول الزمني للموضوع"
+        content: "مرِّر عبر المنشور بسرعة باستخدام الجدول الزمني للموضوع."
+      post_menu:
+        title: "قائمة المشاركة"
+        content: "انظر كيف يمكنك التفاعل بطريقة أخرى مع المنشور بالنقر على النقاط الثلاثة!"
+      topic_notification_levels:
+        title: "أنت الآن تتابع هذا الموضوع"
+        content: "ابحث عن هذا الجرس لتعديل تفضيلات الإشعارات لموضوعات محدَّدة أو فئات بأكملها."
+      suggested_topics:
+        title: "واصل القراءة!"
+        content: "إليك بعض الموضوعات التي نظن أنك قد ترغب في قراءتها بعد ذلك."
     loading: "جارٍ التحميل..."
     errors:
       prev_page: "في أثناء محاولة التحميل"
@@ -2182,6 +2201,7 @@ ar:
       success: "تم إنشاء حسابك وتسجيل دخولك."
       name_label: "الاسم"
       password_label: "كلمة المرور"
+      existing_user_can_redeem: "استخدم دعوتك إلى موضوع أو مجموعة."
     password_reset:
       continue: "المتابعة إلى %{site_name}"
     emoji_set:
@@ -3838,6 +3858,7 @@ ar:
       this_year: "هذا العام"
       position: "الترتيب في صفحة الفئات:"
       default_position: "الترتيب الافتراضي"
+      position_disabled: "سيتم عرض الفئات بترتيب النشاط. للتحكم في ترتيب الفئات في القوائم، فعِّل الإعداد <a href='%{url}'>\"المواضع الثابتة للفئات\"</a>."
       minimum_required_tags: "الحد الأدنى من عدد الوسوم المطلوبة في الموضوع:"
       default_slow_mode: 'تفعيل "الوضع البطيء" للموضوعات الجديدة في هذه الفئة.'
       parent: "الفئة الرئيسية"
@@ -4572,12 +4593,20 @@ ar:
             unread_with_count: "غير المقروءة (%{count})"
             archive: "الأرشيف"
         tags:
+          links:
+            add_tags:
+              content: "إضافة وسوم"
+              title: "لم تُضف أي وسوم. انقر للبدء."
           none: "لم تضف أي وسوم."
           click_to_get_started: "انقر هنا للبدء."
           header_link_text: "الوسوم"
           header_action_title: "تعديل وسوم الشريط الجانبي"
           configure_defaults: "ضبط الإعدادات الافتراضية"
         categories:
+          links:
+            add_categories:
+              content: "إضافة فئات"
+              title: "لم تُضف أي فئات. انقر للبدء."
           none: "لم تضف أي فئات."
           click_to_get_started: "انقر هنا للبدء."
           header_link_text: "الفئات"
@@ -4598,9 +4627,6 @@ ar:
               title: "كل الموضوعات"
             faq:
               content: "الأسئلة الشائعة"
-            tracked:
-              content: "المتتبَّعة"
-              title: "كل الموضوعات المتتبَّعة"
             groups:
               content: "المجموعات"
               title: "كل المجموعات"
@@ -5016,6 +5042,7 @@ ar:
         change_settings_short: "الإعدادات"
         howto: "كيف يمكنني تثبيت الإضافات؟"
         official: "المكوِّن الإضافي الرسمي"
+        broken_route: "تتعذَّر تهيئة الرابط إلى \"%{name}\". تأكَّد من إيقاف كل أدوات حجب الإعلانات وحاول إعادة تحميل الصفحة."
       backups:
         title: "النسخ الاحتياطية"
         menu:
@@ -5904,6 +5931,7 @@ ar:
         trust_level_2_users: "المستخدمون من مستوى الثقة 2."
         trust_level_3_requirements: "متطلبات مستوى الثقة 3"
         trust_level_locked_tip: "مستوى الثقة مقفل، لن يرقِّي النظام المستخدم أو يخفض رتبته"
+        trust_level_unlocked_tip: "تم إلغاء قفل مستوى الثقة، قد يرقِّي النظام المستخدم أو يخفض رتبته"
         lock_trust_level: "قفل مستوى الثقة"
         unlock_trust_level: "إلغاء قفل مستوى الثقة"
         silenced_count: "مكتوم"
@@ -5967,18 +5995,23 @@ ar:
         delete_confirm: "هل تريد بالتأكيد حذف حقل المستخدم هذا؟"
         options: "الخيارات"
         required:
+          title: "مطلوب عند التسجيل"
           enabled: "مطلوب"
           disabled: "غير مطلوب"
         editable:
+          title: "يمكن تعديله بعد التسجيل"
           enabled: "يمكن تعديله"
           disabled: "لا يمكن تعديله"
         show_on_profile:
+          title: "العرض في الملف الشخصي العام"
           enabled: "معروض في الملف الشخصي"
           disabled: "غير معروض في الملف الشخصي"
         show_on_user_card:
+          title: "العرض على بطاقة المستخدم"
           enabled: "العرض على بطاقة المستخدم"
           disabled: "غير معروض على بطاقة المستخدم"
         searchable:
+          title: "قابل للبحث"
           enabled: "قابل للبحث"
           disabled: "غير قابل للبحث"
         field_types:
@@ -6206,6 +6239,7 @@ ar:
         destination: "الوجهة"
         copy_to_clipboard: "نسخ الرابط الثابت إلى الحافظة"
         delete_confirm: هل تريد بالتأكيد حذف هذا الرابط الثابت؟
+        no_permalinks: "ليس لديك أي روابط ثابتة حتى الآن. أنشئ رابطًا ثابتًا جديدًا أعلاه للبدء في رؤية قائمة بروابطك الثابتة هنا."
         form:
           label: "جديد:"
           add: "إضافة"
