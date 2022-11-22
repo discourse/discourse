@@ -63,7 +63,12 @@ export default {
                   "user_option.should_be_redirected_to_top",
                   false
                 );
-                User.currentProp("user_option.redirected_to_top.reason", null);
+                if (User.currentProp("user_option.redirected_to_top")) {
+                  User.currentProp(
+                    "user_option.redirected_to_top.reason",
+                    null
+                  );
+                }
                 return this._super(...arguments);
               },
             },
