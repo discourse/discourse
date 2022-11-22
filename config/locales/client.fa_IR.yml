@@ -3382,7 +3382,6 @@ fa_IR:
               title: "همه کاربران"
             my_posts:
               content: "نوشته‌های من"
-              title: "نوشته‌های من"
               draft_count:
                 one: "%{count} پیش‌نویس"
                 other: "%{count} پیش‌نویس"

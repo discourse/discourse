@@ -4235,7 +4235,6 @@ pl_PL:
               title: "Wszyscy użytkownicy"
             my_posts:
               content: "Wysłane"
-              title: "Moje posty"
               draft_count:
                 one: "%{count} szkic"
                 few: "%{count} szkice"

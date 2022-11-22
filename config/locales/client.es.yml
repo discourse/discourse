@@ -3911,7 +3911,6 @@ es:
               title: "Todos los usuarios"
             my_posts:
               content: "Mis publicaciones"
-              title: "Mis publicaciones"
               draft_count:
                 one: "%{count} borrador"
                 other: "%{count} borradores"

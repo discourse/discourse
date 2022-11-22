@@ -497,7 +497,6 @@ es:
       Puedes editar tu anterior respuesta para añadir una cita. Para ello, selecciona el texto que quieras citar y pulsa el botón <b>citar respuesta</b> que aparecerá.
 
       Es más fácil leer temas que tengan menos respuestas (aunque más profundas), que tener que leer muchas respuestas individuales.
-    dominating_topic: Has publicado más del %{percent} % de las respuestas aquí; ¿podemos sugerirte que des a otras personas la oportunidad de intervenir?
     get_a_room: Has respondido a @%{reply_username} %{count} veces, ¿sabías que también puedes enviarle un mensaje personal directamente?
     too_many_replies: |
       ### Has llegado al límite de respuestas en este tema

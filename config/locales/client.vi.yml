@@ -3638,7 +3638,6 @@ vi:
               title: "Tất cả Thành viên"
             my_posts:
               content: "Bài viết của tôi"
-              title: "Bài viết của tôi"
               draft_count:
                 other: "%{count} bản nháp"
             review:

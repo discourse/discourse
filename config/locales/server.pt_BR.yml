@@ -499,7 +499,6 @@ pt_BR:
       Você pode editar sua resposta anterior para adicionar uma citação selecionando um texto e clicando no botão <b>responder citação</b> que aparecerá.
 
       Fica mais fácil para todos(as) lerem tópicos com poucas respostas e muitas informações em vez de muitas respostas individuais e curtas.
-    dominating_topic: Você postou mais de %{percent}% das respostas aqui. Podemos sugerir que você dê aos outros uma chance para entrarem na conversa?
     get_a_room: Você respondeu a %{reply_username} %{count} vezes, sabia que poderia ter enviado uma mensagem pessoal em vez de fazer isso?
     too_many_replies: |
       ### Você atingiu o limite de respostas para este tópico

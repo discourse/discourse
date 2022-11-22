@@ -3590,7 +3590,6 @@ ko:
               title: "모든 사용자"
             my_posts:
               content: "내 글"
-              title: "내 글"
               draft_count:
                 other: "초안 %{count}"
             review:

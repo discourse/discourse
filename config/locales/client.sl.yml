@@ -3420,7 +3420,6 @@ sl:
               content: "Uporabniki"
             my_posts:
               content: "Moji prispevki"
-              title: "Moji prispevki"
             review:
               content: "Pregled"
               title: "pregled"

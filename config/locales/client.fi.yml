@@ -3913,7 +3913,6 @@ fi:
               title: "Kaikki käyttäjät"
             my_posts:
               content: "Viestini"
-              title: "Viestini"
               draft_count:
                 one: "%{count} luonnos"
                 other: "%{count} luonnosta"

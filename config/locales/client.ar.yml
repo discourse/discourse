@@ -4635,7 +4635,6 @@ ar:
               title: "جميع المستخدمين"
             my_posts:
               content: "منشوراتي"
-              title: "منشوراتي"
               draft_count:
                 zero: "%{count} مسودة"
                 one: "مسودة واحدة (%{count})"
