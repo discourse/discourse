@@ -579,7 +579,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.strictEqual(
       query(".sidebar-section-link-my-posts").title,
-     I18n.t("sidebar.sections.community.links.my_posts.title_drafts"),
+      I18n.t("sidebar.sections.community.links.my_posts.title_drafts"),
       "displays the draft title when drafts are present"
     );
   });
