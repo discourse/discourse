@@ -4470,10 +4470,10 @@ escodegen@^2.0.0:
   optionalDependencies:
     source-map "~0.6.1"
 
-eslint-plugin-qunit@^7.3.2:
-  version "7.3.2"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-qunit/-/eslint-plugin-qunit-7.3.2.tgz#8a42d5e6c9512f2522381c54980efc7848eace67"
-  integrity sha512-nlG1bfXIPo9DZnF117A2vwz3g3vfDB3E8oxswaLjYXKpnklIBCoUn9XoZHyy7IBbAXkyCYPj4p7tcUw+u/p4+A==
+eslint-plugin-qunit@^7.3.3:
+  version "7.3.3"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-qunit/-/eslint-plugin-qunit-7.3.3.tgz#9c166b491325c077698a238e63c9d8219e7034d0"
+  integrity sha512-rSOb4mLnvuQyKCj2kydnIim+e2c4IGjMkINuIPZxJQu0nqFxrQj6y24EXhD0NvTUeaawOaWtnjHOyvI2aQjwdA==
   dependencies:
     eslint-utils "^3.0.0"
     requireindex "^1.2.0"
