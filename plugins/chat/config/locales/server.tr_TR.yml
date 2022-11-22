@@ -23,6 +23,8 @@ tr_TR:
     default_emoji_reactions: "Sohbet mesajları için varsayılan emoji tepkileri. Hızlı tepki için en fazla 5 emoji ekleyin."
     direct_message_enabled_groups: "Bu gruplardaki kullanıcıların kullanıcıdan kullanıcıya Kişisel Sohbetler oluşturmasına izin verin. Not: Personel her zaman Kişisel Sohbetler oluşturabilir ve kullanıcılar, bunları oluşturma iznine sahip kullanıcılar tarafından başlatılan Kişisel Sohbetlere yanıt verebilir."
     chat_message_flag_allowed_groups: "Bu gruplardaki kullanıcıların sohbet mesajlarını işaretlemesine izin verilir."
+    chat_max_direct_message_users: "Kullanıcılar, yeni bir doğrudan mesaj oluştururken bu sayıdan daha fazla kullanıcı ekleyemez. Yalnızca kendisine mesaj gönderilmesine izin vermek için 0 olarak ayarlayın. Personel bu ayardan muaftır."
+    chat_allow_archiving_channels: "Personelin bir kanalı kapatırken mesajları bir konuya arşivlemesine izin verin."
     errors:
       chat_default_channel: "Varsayılan sohbet kanalı genel bir kanal olmalıdır."
       direct_message_enabled_groups_invalid: "Bu ayar için en az bir grup belirtmelisiniz. Personel dışında kimsenin doğrudan mesaj göndermesini istemiyorsanız personel grubunu seçin."
@@ -61,6 +63,9 @@ tr_TR:
       actor_disallowed_dms: "Kullanıcıların size özel ve doğrudan mesaj göndermesini engellemeyi seçtiniz, dolayısıyla yeni doğrudan mesaj oluşturamazsınız."
       actor_preventing_target_user_from_dm: "%{username} adlı kullanıcının size özel ve doğrudan mesaj göndermesini engellemeyi seçtiniz, dolayısıyla ona yeni doğrudan mesaj oluşturamazsınız."
       user_cannot_send_direct_messages: "Üzgünüz, doğrudan mesaj gönderemezsiniz."
+      over_chat_max_direct_message_users:
+        one: "%{count}'den fazla başka kullanıcıyla bir doğrudan mesaj oluşturamazsınız."
+        other: "%{count} üzeri başka kullanıcıyla doğrudan mesaj oluşturamazsınız."
     reviewables:
       message_already_handled: "Teşekkürler, ancak bu mesajı daha önce inceledik ve yeniden işaretlenmesi gerekmediğine karar verdik."
       actions:
@@ -132,8 +137,10 @@ tr_TR:
     popup:
       chat_mention:
         direct: '%{username} sizden bahsetti "%{channel}"'
+        other_type: '%{username} "%{channel}" adlı kanalda %{identifier} bahsetti'
       direct_message_chat_mention:
         direct: "%{username} kişisel sohbette sizden bahsetti"
+        other_type: "%{username} kişisel sohbette %{identifier} bahsetti"
       new_chat_message: '%{username} "%{channel}" adlı kanalda bir mesaj gönderdi'
       new_direct_chat_message: "%{username} kişisel sohbette bir mesaj gönderdi"
   discourse_automation:
@@ -163,6 +170,9 @@ tr_TR:
         direct_message:
           one: "[%{email_prefix}] %{message_title} adlı kullanıcıdan yeni mesaj"
           other: "[%{email_prefix}] %{message_title} ve %{others} kişiden daha yeni mesajlar"
+        chat_channel:
+          one: "[%{email_prefix}] %{message_title} başlıklı mesajda yeni mesaj"
+          other: "[%{email_prefix}] %{message_title} ve %{others} başlıklı mesajda yeni mesajlar"
         others: "%{count} daha"
       unsubscribe: "Bu sohbet özeti siz yokken %{site_link} tarafından gönderildi. %{email_preferences_link} değiştirin veya abonelikten çıkmak için %{unsubscribe_link} bağlantısını kullanın."
       unsubscribe_no_link: "Bu sohbet özeti, siz yokken %{site_link} tarafından gönderildi. %{email_preferences_link} değiştirin."

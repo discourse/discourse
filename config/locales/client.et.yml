@@ -769,10 +769,7 @@ et:
       dismiss: "Ignoreeri"
       dismiss_notifications: "Ignoreeri kõiki"
       dismiss_notifications_tooltip: "Märgi kõik lugemata teavitused loetuks"
-      first_notification: "Sinu esimene teavitus! Vali see et alustada."
       dynamic_favicon: "Kuva arvu brauseri ikoonil"
-      skip_new_user_tips:
-        skip_link: "Jäta need näpunäited vahele"
       theme_default_on_all_devices: "Määra see kõikides minu seadmetes vaiketeemaks"
       color_scheme_default_on_all_devices: "Määra vaikimisi värviskeemi(de)ks kõikides minu seadmetes"
       color_scheme: "Värviskeem"
@@ -880,6 +877,7 @@ et:
         profile: "Profiil"
         emails: "E-post"
         notifications: "Teavitused"
+        tracking: "Jälgimine"
         categories: "Kategooriad"
         users: "Kasutajad"
         tags: "Sildid"
@@ -1039,6 +1037,7 @@ et:
       email_in_reply_to: "Lisa e-kirjale katkend eelmisest vastusest"
       other_settings: "Muu"
       categories_settings: "Foorumid"
+      topics_settings: "Teemasid"
       new_topic_duration:
         label: "Loe teemad uuteks, kui"
         not_viewed: "Ma ei ole neid veel vaadanud"
@@ -2568,8 +2567,6 @@ et:
               content: "Märgised"
             faq:
               content: "KKK"
-            tracked:
-              content: "Jälgitud"
             groups:
               content: "Grupid"
               title: "Kõik grupid"

@@ -722,7 +722,6 @@ sk:
       dismiss: "Zahodiť"
       dismiss_notifications: "Zahodiť všetko"
       dismiss_notifications_tooltip: "Označiť všetky neprečítané upozornenia ako prečítané"
-      first_notification: "Vaša prvé upozornenie! Vyberte ho ak chcete začať."
       color_schemes:
         regular: "Bežné"
       allow_private_messages: "Umožniť iným používateľom, aby mi posielali osobné správy"
@@ -825,6 +824,7 @@ sk:
         profile: "Profil"
         emails: "Emaily"
         notifications: "Upozornenia"
+        tracking: "Pozorovať"
         categories: "Kategórie"
         users: "Používatelia"
         tags: "Štítky"
@@ -971,6 +971,7 @@ sk:
       email_in_reply_to: "Zahrnúť úryvok príspevku, na ktorý používateľ reagoval, v emailoch"
       other_settings: "Ostatné"
       categories_settings: "Kategórie"
+      topics_settings: "Témy"
       new_topic_duration:
         label: "Považuj témy za nové keď"
         not_viewed: "Ešte som ich nevidel"
@@ -1368,6 +1369,7 @@ sk:
       too_short: "Vyhladávací termín je príliš krátky."
       title: "Hľadať"
       full_page_title: "Hľadať"
+      results: "výsledky"
       no_results: "Žiadne výsledky"
       no_more_results: "Nenašlo sa viac výsledkov"
       post_format: "#%{post_number} podľa %{username}"
@@ -2315,8 +2317,6 @@ sk:
               content: "Odznaky"
             faq:
               content: "Časté otázky"
-            tracked:
-              content: "Pozorované"
             groups:
               content: "Skupiny"
               title: "Všetky skupiny"

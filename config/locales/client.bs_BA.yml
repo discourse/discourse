@@ -928,12 +928,9 @@ bs_BA:
       dismiss: "Odpusti"
       dismiss_notifications: "Odpusti sve"
       dismiss_notifications_tooltip: "Markiraj sve nepročitane obavijesti kao pročitane"
-      first_notification: "Vaša prva obavijest! Selektirajte je kako bi započeli."
       dynamic_favicon: "Prikaži brojeve na ikoni preglednika"
       skip_new_user_tips:
         description: "Isključi savjete i upute za novoregistrirane korisnike"
-        not_first_time: "Nije ti prvi put?"
-        skip_link: "Preskoči ove savjete"
       theme_default_on_all_devices: "Postavi ovu temu kao zadanu na svim mojim uređajima"
       color_schemes:
         undo: "Resetovati"
@@ -1050,6 +1047,7 @@ bs_BA:
         profile: "Profil"
         emails: "Email-i"
         notifications: "Obavijesti"
+        tracking: "Praćenje"
         categories: "Kategorije"
         users: "Korisnici"
         tags: "Oznake"
@@ -1264,6 +1262,7 @@ bs_BA:
       email_in_reply_to: "Uključi odlomake sa odgovorenih objava u e-mailovima"
       other_settings: "Ostalo"
       categories_settings: "Kategorije"
+      topics_settings: "Topics"
       new_topic_duration:
         label: "Posmatraj teme kao nove ukoliko"
         not_viewed: "nisam ih još pogledao"
@@ -1870,6 +1869,7 @@ bs_BA:
         other: "<span>%{count}%{plus} rezultata za</span><span class='term'>%{term}</span>"
       title: "Pretraži"
       full_page_title: "Pretraži"
+      results: "rezultati"
       no_results: "Nema rezultata."
       no_more_results: "Nema rezultata pretrage."
       post_format: "#%{post_number} od %{username}"
@@ -3099,8 +3099,6 @@ bs_BA:
               content: "Bedž"
             faq:
               content: "Česta pitanja"
-            tracked:
-              content: "Praćeno"
             groups:
               content: "Grupe"
               title: "Sve grupe"

@@ -24,6 +24,10 @@ RSpec.describe CategoriesController do
           it "deletes the category" do
             expect { destroy_category }.to change { Category.count }.by(-1)
           end
+
+          it "deletes the associated channel" do
+            expect { destroy_category }.to change { CategoryChannel.count }.by(-1)
+          end
         end
 
         context "when channel has messages" do

@@ -92,6 +92,10 @@ hu:
         single_user: "%{user}"
         multi_user: "%{users}"
         multi_user_truncated: "%{users} és még %{leftover} fő"
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "nem ASCII karaktereket tartalmaz"
+        is_already_in_use: "már használatban van"
     personal_chat: "személyes csevegés"
     onebox:
       x_members:

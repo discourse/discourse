@@ -73,6 +73,7 @@ el:
         save: "Αποθήκευση"
         saved: "Αποθηκεύτηκε! "
         unfollow: "Αποχώρηση"
+        admin_title: "Διαχειριστής"
       incoming_webhooks:
         back: "Πίσω"
         description: "Περιγραφή"

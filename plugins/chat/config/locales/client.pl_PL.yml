@@ -222,7 +222,6 @@ pl_PL:
         always: "Dla całej aktywności"
       settings:
         enable_auto_join_users: "Automatycznie dodawaj wszystkich ostatnio aktywnych użytkowników"
-        disable_auto_join_users: "Zatrzymaj automatyczne dodawanie użytkowników"
         desktop_notification_level: "Powiadomienia na pulpicie"
         follow: "Dołącz"
         followed: "Dołączył"
@@ -233,6 +232,7 @@ pl_PL:
         save: "Zapisz"
         saved: "Zapisano"
         unfollow: "Opuść"
+        admin_title: "Administratorzy"
       admin:
         title: "Czat"
       direct_messages:

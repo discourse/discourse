@@ -7,6 +7,9 @@
 zh_CN:
   js:
     admin:
+      site_settings:
+        categories:
+          chat: 聊天
       logs:
         staff_actions:
           actions:
@@ -50,6 +53,10 @@ zh_CN:
         leave_channel: "离开频道"
         join: "加入"
         leave: "离开"
+        save_label:
+          mute_channel: "将频道设为免打扰偏好设置已保存"
+          desktop_notification: "桌面通知偏好设置已保存"
+          mobile_notification: "移动推送通知偏好设置已保存"
       channel_archive:
         title: "归档频道"
         instructions: "<p>归档频道会使它进入只读模式，并将该频道的所有消息移至一个新的或现有的话题。将无法发送新消息，也不能编辑或删除现有消息。</p><p>确定要归档<strong>%{channelTitle}</strong>频道吗？</p>"
@@ -72,7 +79,7 @@ zh_CN:
         create: "新建频道"
       click_to_join: "点击此处查看可用频道。"
       close: "关闭"
-      collapse: "折叠聊天抽屉"
+      collapse: "收起聊天抽屉"
       confirm_flag: "确定要举报 %{username} 的消息吗？"
       deleted: "一条消息已被删除。[查看]"
       hidden: "一条消息已被隐藏。[查看]"
@@ -94,7 +101,7 @@ zh_CN:
       emoji: "插入表情符号"
       flagged: "此消息已被举报，等待审核"
       invalid_access: "您无权查看此聊天频道"
-      invitation_notification: "<span>%{username}</span><span>邀请您加入一个聊天频道</span>"
+      invitation_notification: "<span>%{username}</span><span> 邀请您加入一个聊天频道</span>"
       in_reply_to: "回复"
       heading: "聊天"
       join: "加入"
@@ -172,6 +179,7 @@ zh_CN:
         open_header: "频道处于开放状态"
         open: "开放"
       browse:
+        back: "返回"
         title: 频道
         filter_all: 所有
         filter_open: 已打开
@@ -241,10 +249,10 @@ zh_CN:
         type: "聊天消息"
       reactions:
         only_you: "您回应了 :%{emoji}:"
-        and_others: "您，%{usernames} 回应了 :%{emoji}:"
+        and_others: "您、%{usernames} 回应了 :%{emoji}:"
         only_others: "%{usernames} 回应了 :%{emoji}:"
         others_and_more: "%{usernames} 和其他 %{more} 人回应了 :%{emoji}:"
-        you_others_and_more: "您，%{usernames} 和其他 %{more} 人回应了 :%{emoji}:"
+        you_others_and_more: "您、%{usernames} 和其他 %{more} 人回应了 :%{emoji}:"
       composer:
         toggle_toolbar: "切换工具栏"
         italic_text: "斜体"
@@ -258,9 +266,9 @@ zh_CN:
         mention: "仅限提及"
         always: "所有活动"
       settings:
-        enable_auto_join_users: "自动添加所有最近活跃的用户"
-        disable_auto_join_users: "停止自动添加用户"
-        auto_join_users_warning: "所有不是此频道成员且有权访问%{category}类别的用户都将加入。确定吗？"
+        auto_join_users_label: "自动添加用户"
+        auto_join_users_info: "每小时检查哪些用户在过去 3 个月内处于活跃状态，如果他们有权访问“%{category}”类别，则将他们添加到此频道。"
+        auto_join_users_warning: "所有不是此频道成员且有权访问“%{category}”类别的用户都将加入。确定吗？"
         desktop_notification_level: "桌面通知"
         follow: "加入"
         followed: "已加入"
@@ -273,6 +281,8 @@ zh_CN:
         save: "保存"
         saved: "已保存"
         unfollow: "离开"
+        admin_title: "管理员"
+        retention_info: "聊天历史记录将保存 %{days} 天。"
       admin:
         title: "聊天"
       direct_messages:
@@ -362,8 +372,8 @@ zh_CN:
         cancel: "取消"
     notifications:
       chat_invitation: "邀请您加入聊天频道"
-      chat_invitation_html: "<span>%{username}</span><span>邀请您加入一个聊天频道</span>"
-      chat_quoted: "<span>%{username} </span>%{description}"
+      chat_invitation_html: "<span>%{username}</span><span> 邀请您加入一个聊天频道</span>"
+      chat_quoted: "<span>%{username}</span> %{description}"
       popup:
         chat_mention:
           direct: '在“%{channel}”中提及您'
@@ -393,7 +403,7 @@ zh_CN:
             chat_channel_id:
               label: 聊天频道 ID
             message:
-              label: 私信
+              label: 发送私信
             sender:
               label: 发送人
               description: 默认为“系统”
@@ -421,7 +431,7 @@ zh_CN:
         help: "已为此话题启用聊天"
     user:
       allow_private_messages: "允许其他用户向我发送个人消息和聊天直接消息"
-      muted_users_instructions: "禁止来自这些用户的所有通知、个人消息和聊天消息。"
+      muted_users_instructions: "禁止来自这些用户的所有通知、个人消息和聊天直接消息。"
       allowed_pm_users_instructions: "仅允许来自这些用户的个人消息或聊天直接消息。"
       allow_private_messages_from_specific_users: "只允许特定用户向我发送个人消息或聊天直接消息"
       ignored_users_instructions: "禁止来自这些用户的所有帖子、消息、通知、个人消息和聊天直接消息。"

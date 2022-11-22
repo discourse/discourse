@@ -73,6 +73,7 @@ gl:
         save: "Gardar"
         saved: "Gardado"
         unfollow: "Abandonar"
+        admin_title: "Administrador"
       incoming_webhooks:
         back: "Volver"
         description: "Descrición"
