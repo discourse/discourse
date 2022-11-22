@@ -14,6 +14,19 @@ a.hashtag {
   }
 }
 
+a.hashtag-cooked {
+  @include mention;
+
+  &:visited,
+  &:hover {
+    color: var(--primary-high-or-secondary-low);
+  }
+
+  .d-icon {
+    margin-right: 3px;
+  }
+}
+
 .hashtag-autocomplete {
   .hashtag-autocomplete__option {
     .hashtag-autocomplete__link {
@@ -29,19 +42,5 @@ a.hashtag {
         flex: 1;
       }
     }
-  }
-}
-
-.hashtag-raw,
-.hashtag-cooked {
-  @include mention;
-
-  &:visited,
-  &:hover {
-    color: var(--primary-high-or-secondary-low);
-  }
-
-  .d-icon {
-    margin-right: 3px;
   }
 }
