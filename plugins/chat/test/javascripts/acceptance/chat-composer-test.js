@@ -29,14 +29,18 @@ acceptance("Discourse Chat - Composer", function (needs) {
       helper.response({ chat_messages: [], meta: {} })
     );
     server.get("/chat/emojis.json", () =>
-      helper.response({ favorites: [{ name: "grting" }] })
+      helper.response({ favorites: [{ name: "grinning" }] })
     );
     server.post("/chat/drafts", () => {
       return helper.response([]);
     });
 
     server.get("/chat/api/mentions/groups.json", () => {
-      return helper.response({ unreachable: [GROUP_NAME] });
+      return helper.response({
+        unreachable: [GROUP_NAME],
+        over_members_limit: [],
+        ignored: [],
+      });
     });
   });
 
