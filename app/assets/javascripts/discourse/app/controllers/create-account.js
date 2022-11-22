@@ -116,8 +116,7 @@ export default Controller.extend(
     @discourseComputed
     fullnameRequired() {
       return (
-        this.get("siteSettings.full_name_required") ||
-        this.get("siteSettings.enable_names")
+        this.siteSettings.full_name_required || this.siteSettings.enable_names
       );
     },
 
@@ -129,9 +128,9 @@ export default Controller.extend(
     @discourseComputed
     disclaimerHtml() {
       return I18n.t("create_account.disclaimer", {
-        tos_link: this.get("siteSettings.tos_url") || getURL("/tos"),
+        tos_link: this.siteSettings.tos_url || getURL("/tos"),
         privacy_link:
-          this.get("siteSettings.privacy_policy_url") || getURL("/privacy"),
+          this.siteSettings.privacy_policy_url || getURL("/privacy"),
       });
     },
 

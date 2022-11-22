@@ -135,7 +135,7 @@
               {{#if this.existingUserCanRedeem}}
                 <DButton @class="btn-primary" @action={{action "submit"}} @type="submit" @disabled={{this.submitDisabled}} @label="invites.accept_invite" />
               {{else}}
-                <div class="alert alert-error">{{i18n "invites.existing_user_cannot_redeem"}}</div>
+                <div class="alert alert-error">{{this.existingUserCanRedeemError}}</div>
               {{/if}}
             {{/if}}
           {{/if}}

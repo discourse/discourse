@@ -1086,14 +1086,49 @@ class Plugin::Instance
     About.add_plugin_stat_group(plugin_stat_group_name, show_in_ui: show_in_ui, &block)
   end
 
-  # Registers a new record type to be searched via the HashtagAutocompleteService and the
-  # /hashtags/search endpoint. The data returned by the block must be an array
-  # with each item an instance of HashtagAutocompleteService::HashtagItem.
+  ##
+  # Used to register data sources for HashtagAutocompleteService to look
+  # up results based on a #hashtag string.
   #
-  # See also registerHashtagSearchParam in the plugin JS API, otherwise the
-  # clientside hashtag search code will use the new type registered here.
-  def register_hashtag_data_source(type, &block)
-    HashtagAutocompleteService.register_data_source(type, &block)
+  # @param {String} type - Roughly corresponding to a model, this is used as a unique
+  #                        key for the datasource and is also used when allowing different
+  #                        contexts to search for and lookup these types. The `category`
+  #                        and `tag` types are registered by default.
+  # @param {Class} klass - Must be a class that implements methods with the following
+  # signatures:
+  #
+  #   @param {Guardian} guardian - Current user's guardian, used for permission-based filtering
+  #   @param {Array} slugs - An array of strings that represent slugs to search this type for,
+  #                          e.g. category slugs.
+  #   @returns {Hash} A hash with the slug as the key and the URL of the record as the value.
+  #   def self.lookup(guardian, slugs)
+  #   end
+  #
+  #   @param {Guardian} guardian - Current user's guardian, used for permission-based filtering
+  #   @param {String} term - The search term used to filter results
+  #   @param {Integer} limit - The number of search results that should be returned by the query
+  #   @returns {Array} An Array of HashtagAutocompleteService::HashtagItem
+  #   def self.search(guardian, term, limit)
+  #   end
+  def register_hashtag_data_source(type, klass)
+    HashtagAutocompleteService.register_data_source(type, klass)
+  end
+
+  ##
+  # Used to set up the priority ordering of hashtag autocomplete results by
+  # type using HashtagAutocompleteService.
+  #
+  # @param {String} type - Roughly corresponding to a model, can only be registered once
+  #                        per context. The `category` and `tag` types are registered
+  #                        for the `topic-composer` context by default in that priority order.
+  # @param {String} context - The context in which the hashtag lookup or search is happening
+  #                           in. For example, the Discourse composer context is `topic-composer`.
+  #                           Different contexts may want to have different priority orderings
+  #                           for certain types of hashtag result.
+  # @param {Integer} priority - A number value for ordering type results when hashtag searches
+  #                             or lookups occur. Priority is ordered by DESCENDING order.
+  def register_hashtag_type_in_context(type, context, priority)
+    HashtagAutocompleteService.register_type_in_context(type, context, priority)
   end
 
   protected

@@ -219,7 +219,7 @@ input {
     color: var(--primary);
     background-color: var(--secondary);
     border: 1px solid var(--primary-medium);
-    border-radius: 0;
+    border-radius: var(--d-input-border-radius);
     &:focus {
       @include default-focus;
     }
@@ -346,20 +346,6 @@ table {
   margin-left: 12px;
 }
 
-.top-space {
-  margin-top: 10px;
-}
-
-.message {
-  border-radius: 8px;
-  background-color: var(--secondary);
-  padding: 14px;
-
-  h2 {
-    margin-bottom: 20px;
-  }
-}
-
 .clear-transitions {
   transition: none !important;
 }
@@ -378,11 +364,6 @@ table {
   background-color: var(--secondary);
   display: inline-block;
   border-radius: 50%;
-}
-
-.flex-center-align {
-  display: flex;
-  align-items: center;
 }
 
 .unread-high-priority-notifications {

@@ -19,8 +19,8 @@ const MUTED_OPTIONS = [
 ];
 
 const AUTO_ADD_USERS_OPTIONS = [
-  { name: I18n.t("chat.settings.enable_auto_join_users"), value: true },
-  { name: I18n.t("chat.settings.disable_auto_join_users"), value: false },
+  { name: I18n.t("yes_value"), value: true },
+  { name: I18n.t("no_value"), value: false },
 ];
 
 export default class ChatChannelSettingsView extends Component {

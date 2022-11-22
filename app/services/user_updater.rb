@@ -203,6 +203,10 @@ class UserUpdater
         update_allowed_pm_users(attributes[:allowed_pm_usernames])
       end
 
+      if attributes.key?(:discourse_connect)
+        update_discourse_connect(attributes[:discourse_connect])
+      end
+
       if attributes.key?(:user_associated_accounts)
         updated_associated_accounts(attributes[:user_associated_accounts])
       end
@@ -216,7 +220,7 @@ class UserUpdater
       end
 
       if SiteSetting.enable_user_status?
-        update_user_status(attributes[:status])
+        update_user_status(attributes[:status]) if attributes.has_key?(:status)
       end
 
       name_changed = user.name_changed?
@@ -243,6 +247,13 @@ class UserUpdater
         user_notification_schedule.enabled ?
           user_notification_schedule.create_do_not_disturb_timings(delete_existing: true) :
           user_notification_schedule.destroy_scheduled_timings
+      end
+      if attributes.key?(:seen_popups) || attributes.key?(:skip_new_user_tips)
+        MessageBus.publish(
+          '/user-tips',
+          user.user_option.seen_popups,
+          user_ids: [user.id]
+        )
       end
       DiscourseEvent.trigger(:user_updated, user)
     end
@@ -351,6 +362,17 @@ class UserUpdater
       @user.clear_status!
     else
       @user.set_status!(status[:description], status[:emoji], status[:ends_at])
+    end
+  end
+
+  def update_discourse_connect(discourse_connect)
+    external_id = discourse_connect[:external_id]
+    sso = SingleSignOnRecord.find_or_initialize_by(user_id: user.id)
+
+    if external_id.present?
+      sso.update!(external_id: discourse_connect[:external_id], last_payload: "external_id=#{discourse_connect[:external_id]}")
+    else
+      sso.destroy!
     end
   end
 

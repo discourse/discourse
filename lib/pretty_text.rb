@@ -171,6 +171,9 @@ module PrettyText
   #  user_id           - User id for the post being cooked.
   #  force_quote_link  - Always create the link to the quoted topic for [quote] bbcode. Normally this only happens
   #                      if the topic_id provided is different from the [quote topic:X].
+  #  hashtag_context   - Defaults to "topic-composer" if not supplied. Controls the order of #hashtag lookup results
+  #                      based on registered hashtag contexts from the `#register_hashtag_search_param` plugin API
+  #                      method.
   def self.markdown(text, opts = {})
     # we use the exact same markdown converter as the client
     # TODO: use the same extensions on both client and server (in particular the template for mentions)
@@ -201,6 +204,7 @@ module PrettyText
         __optInput.formatUsername = __formatUsername;
         __optInput.getTopicInfo = __getTopicInfo;
         __optInput.categoryHashtagLookup = __categoryLookup;
+        __optInput.hashtagLookup = __hashtagLookup;
         __optInput.customEmoji = #{custom_emoji.to_json};
         __optInput.customEmojiTranslation = #{Plugin::CustomEmoji.translations.to_json};
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
@@ -221,7 +225,16 @@ module PrettyText
 
       if opts[:user_id]
         buffer << "__optInput.userId = #{opts[:user_id].to_i};\n"
+        buffer << "__optInput.currentUser = #{User.find(opts[:user_id]).to_json}\n"
       end
+
+      opts[:hashtag_context] = opts[:hashtag_context] || "topic-composer"
+      hashtag_types_as_js = HashtagAutocompleteService.ordered_types_for_context(
+        opts[:hashtag_context]
+      ).map { |t| "'#{t}'" }.join(",")
+      hashtag_icons_as_js = HashtagAutocompleteService.data_source_icons.map { |i| "'#{i}'" }.join(",")
+      buffer << "__optInput.hashtagTypesInPriorityOrder = [#{hashtag_types_as_js}];\n"
+      buffer << "__optInput.hashtagIcons = [#{hashtag_icons_as_js}];\n"
 
       buffer << "__textOptions = __buildOptions(__optInput);\n"
       buffer << ("__pt = new __PrettyText(__textOptions);")

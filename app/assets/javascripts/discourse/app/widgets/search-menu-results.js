@@ -53,6 +53,10 @@ const DEFAULT_QUICK_TIPS = [
     label: I18n.t("search.tips.full_search_key", { modifier: "Ctrl" }),
     description: I18n.t("search.tips.full_search"),
   },
+  {
+    label: "@me",
+    description: I18n.t("search.tips.me"),
+  },
 ];
 
 let QUICK_TIPS = [];
@@ -89,6 +93,12 @@ class Highlighted extends RawHtml {
 function createSearchResult({ type, linkField, builder }) {
   return createWidget(`search-result-${type}`, {
     tagName: "ul.list",
+
+    buildAttributes() {
+      return {
+        "aria-label": `${type} ${I18n.t("search.results")}`,
+      };
+    },
 
     html(attrs) {
       return attrs.results.map((r) => {
@@ -640,7 +650,13 @@ createWidget("search-menu-assistant-item", {
     const attributes = {};
     attributes.href = "#";
 
-    let content = [iconNode(attrs.icon || "search")];
+    let content = [
+      h(
+        "span",
+        { attributes: { "aria-label": I18n.t("search.title") } },
+        iconNode(attrs.icon || "search")
+      ),
+    ];
 
     if (prefix) {
       content.push(h("span.search-item-prefix", `${prefix} `));

@@ -6,7 +6,7 @@ class AdminDashboardGeneralData < AdminDashboardData
     {
       updated_at: Time.zone.now.as_json,
       discourse_updated_at: Discourse.last_commit_date,
-      release_notes_link: "https://meta.discourse.org/c/feature/announcements?tags=release-notes&before=#{days_since_update}"
+      release_notes_link: "https://meta.discourse.org/c/announcements/67?tags=release-notes&before=#{days_since_update}"
     }
   end
 

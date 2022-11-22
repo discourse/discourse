@@ -1,22 +1,27 @@
 import { module, test } from "qunit";
 import UserAction from "discourse/models/user-action";
+import { setupTest } from "ember-qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
 
-module("Unit | Model | user-action", function () {
+module("Unit | Model | user-action", function (hooks) {
+  setupTest(hooks);
+
   test("collapsing likes", function (assert) {
-    let actions = UserAction.collapseStream([
-      UserAction.create({
+    const store = getOwner(this).lookup("service:store");
+    const actions = UserAction.collapseStream([
+      store.createRecord("user-action", {
         action_type: UserAction.TYPES.likes_given,
         topic_id: 1,
         user_id: 1,
         post_number: 1,
       }),
-      UserAction.create({
+      store.createRecord("user-action", {
         action_type: UserAction.TYPES.edits,
         topic_id: 2,
         user_id: 1,
         post_number: 1,
       }),
-      UserAction.create({
+      store.createRecord("user-action", {
         action_type: UserAction.TYPES.likes_given,
         topic_id: 1,
         user_id: 2,
@@ -25,7 +30,7 @@ module("Unit | Model | user-action", function () {
     ]);
 
     assert.strictEqual(actions.length, 2);
-    assert.strictEqual(actions[0].get("children.length"), 1);
-    assert.strictEqual(actions[0].get("children")[0].items.length, 2);
+    assert.strictEqual(actions[0].children.length, 1);
+    assert.strictEqual(actions[0].children[0].items.length, 2);
   });
 });

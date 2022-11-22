@@ -3,6 +3,7 @@
   "workspaces": [
     "admin",
     "bootstrap-json",
+    "dialog-holder",
     "discourse",
     "discourse-common",
     "discourse-ensure-deprecation-order",

@@ -447,16 +447,21 @@ const User = RestModel.extend({
       type: "PUT",
     })
       .then((result) => {
-        this.set("bio_excerpt", result.user.bio_excerpt);
-        const userProps = getProperties(
-          this.user_option,
-          "enable_quoting",
-          "enable_defer",
-          "external_links_in_new_tab",
-          "dynamic_favicon"
-        );
-        User.current()?.setProperties(userProps);
         this.setProperties(updatedState);
+        this.setProperties(getProperties(result.user, "bio_excerpt"));
+        if (User.current() === this && result.user.user_option) {
+          this.setProperties(
+            getProperties(
+              result.user.user_option,
+              "enable_quoting",
+              "enable_defer",
+              "external_links_in_new_tab",
+              "dynamic_favicon",
+              "seen_popups",
+              "skip_new_user_tips"
+            )
+          );
+        }
         return result;
       })
       .finally(() => {
@@ -1168,20 +1173,27 @@ const User = RestModel.extend({
       return;
     }
 
-    // Hide any shown user tips.
-    let seenUserTips = this.seen_popups || [];
+    // Hide user tips and maybe show the next one.
     if (userTipId) {
       hideUserTip(userTipId);
-      if (!seenUserTips.includes(userTips[userTipId])) {
-        seenUserTips.push(userTips[userTipId]);
-      }
+      showNextUserTip();
     } else {
       hideAllUserTips();
-      seenUserTips = [-1];
     }
 
-    // Show next user tip in queue.
-    showNextUserTip();
+    // Update list of seen user tips.
+    let seenUserTips = this.seen_popups || [];
+    if (userTipId) {
+      if (seenUserTips.includes(userTips[userTipId])) {
+        return;
+      }
+      seenUserTips.push(userTips[userTipId]);
+    } else {
+      if (seenUserTips.includes(-1)) {
+        return;
+      }
+      seenUserTips = [-1];
+    }
 
     // Save seen user tips on the server.
     if (!this.user_option) {

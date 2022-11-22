@@ -353,6 +353,30 @@ helloWorld();</code>consectetur.`;
     assert.strictEqual(toMarkdown(html), markdown);
   });
 
+  test("keeps hashtag-cooked and converts to bare hashtag with type", function (assert) {
+    const html = `
+      <p dir="ltr">This is <a class="hashtag-cooked" href="/c/ux/14" data-type="category" data-slug="ux">
+      <svg class="fa d-icon d-icon-folder svg-icon svg-node">
+        <use href="#folder"></use>
+      </svg>
+      <span>ux</span>
+      </a> and <a class="hashtag-cooked" href="/tag/design" data-slug="design">
+      <svg class="fa d-icon d-icon-tag svg-icon svg-node">
+        <use href="#tag"></use>
+      </svg>
+      <span>design</span>
+      </a> and <a class="hashtag-cooked" href="/c/uncategorized/design/22" data-type="category" data-slug="design" data-ref="uncategorized:design">
+      <svg class="fa d-icon d-icon-folder svg-icon svg-node">
+        <use href="#folder"></use>
+      </svg>
+      <span>design</span>
+      </a></p>
+    `;
+
+    const markdown = `This is #ux::category and #design and #uncategorized:design`;
+    assert.strictEqual(toMarkdown(html), markdown);
+  });
+
   test("keeps emoji and removes click count", function (assert) {
     const html = `
       <p>

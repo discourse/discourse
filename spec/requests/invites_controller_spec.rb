@@ -126,6 +126,7 @@ RSpec.describe InvitesController do
           json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
           invite_info = JSON.parse(json['invite_info'])
           expect(invite_info['existing_user_can_redeem']).to eq(false)
+          expect(invite_info['existing_user_can_redeem_error']).to eq(I18n.t("invite.existing_user_cannot_redeem"))
         end
       end
 
@@ -139,6 +140,22 @@ RSpec.describe InvitesController do
           json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
           invite_info = JSON.parse(json['invite_info'])
           expect(invite_info['existing_user_can_redeem']).to eq(false)
+        end
+      end
+
+      it "does not allow the user to accept the invite when a multi-use invite link has already been redeemed by the user" do
+        invite.update!(email: nil, max_redemptions_allowed: 10)
+        expect(invite.redeem(redeeming_user: user)).not_to eq(nil)
+
+        get "/invites/#{invite.invite_key}"
+        expect(response.status).to eq(200)
+
+        expect(response.body).to have_tag('div#data-preloaded') do |element|
+          json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+          invite_info = JSON.parse(json['invite_info'])
+          expect(invite_info['existing_user_id']).to eq(user.id)
+          expect(invite_info['existing_user_can_redeem']).to eq(false)
+          expect(invite_info['existing_user_can_redeem_error']).to eq(I18n.t("invite.existing_user_already_redemeed"))
         end
       end
     end

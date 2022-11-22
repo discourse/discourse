@@ -408,6 +408,7 @@ class InvitesController < ApplicationController
     if current_user
       info[:existing_user_id] = current_user.id
       info[:existing_user_can_redeem] = invite.can_be_redeemed_by?(current_user)
+      info[:existing_user_can_redeem_error] = existing_user_can_redeem_error(invite)
       info[:email] = current_user.email
       info[:username] = current_user.username
     end
@@ -491,6 +492,15 @@ class InvitesController < ApplicationController
           )
         end
       end
+    end
+  end
+
+  def existing_user_can_redeem_error(invite)
+    return if invite.can_be_redeemed_by?(current_user)
+    if invite.invited_users.exists?(user: current_user)
+      I18n.t("invite.existing_user_already_redemeed")
+    else
+      I18n.t("invite.existing_user_cannot_redeem")
     end
   end
 end

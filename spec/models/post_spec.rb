@@ -1001,6 +1001,21 @@ RSpec.describe Post do
       expect(post.cooked).to match(/noopener nofollow ugc/)
     end
 
+    it "passes the last_editor_id as the markdown user_id option" do
+      post.save
+      post.reload
+      PostAnalyzer.any_instance.expects(:cook).with(
+        post.raw, { cook_method: Post.cook_methods[:regular], user_id: post.last_editor_id }
+      )
+      post.cook(post.raw)
+      user_editor = Fabricate(:user)
+      post.update!(last_editor_id: user_editor.id)
+      PostAnalyzer.any_instance.expects(:cook).with(
+        post.raw, { cook_method: Post.cook_methods[:regular], user_id: user_editor.id }
+      )
+      post.cook(post.raw)
+    end
+
     describe 'mentions' do
       fab!(:group) do
         Fabricate(:group,

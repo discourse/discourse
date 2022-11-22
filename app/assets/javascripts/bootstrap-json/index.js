@@ -1,7 +1,6 @@
 "use strict";
 
 const express = require("express");
-const fetch = require("node-fetch");
 const { encode } = require("html-entities");
 const cleanBaseURL = require("clean-base-url");
 const path = require("path");
@@ -258,6 +257,7 @@ async function buildFromBootstrap(proxy, baseURL, req, response, preload) {
       url.searchParams.append("preview_theme_id", reqUrlPreviewThemeId);
     }
 
+    const { default: fetch } = await import("node-fetch");
     const res = await fetch(url, { headers: req.headers });
     const json = await res.json();
 
@@ -310,6 +310,7 @@ async function handleRequest(proxy, baseURL, req, res) {
     req.headers["X-Discourse-Ember-CLI"] = "true";
   }
 
+  const { default: fetch } = await import("node-fetch");
   const response = await fetch(url, {
     method: req.method,
     body: /GET|HEAD/.test(req.method) ? null : req.body,

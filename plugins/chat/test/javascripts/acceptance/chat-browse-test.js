@@ -82,6 +82,8 @@ acceptance("Discourse Chat - browse channels", function (needs) {
   });
 
   test("Archived filter", async function (assert) {
+    this.siteSettings.chat_allow_archiving_channels = true;
+
     await visit("/chat/browse");
     await click(".chat-browse-view__filter-link.-archived");
 
@@ -107,5 +109,17 @@ acceptance("Discourse Chat - browse channels", function (needs) {
       query(".empty-state-title").innerText.trim(),
       I18n.t("chat.empty_state.title")
     );
+  });
+
+  test("Archiving channels is not allowed", async function (assert) {
+    this.siteSettings.chat_allow_archiving_channels = false;
+
+    await visit("/chat/browse");
+
+    assert.equal(
+      queryAll(".chat-browse-view__filter-link.-archived").length,
+      0
+    );
+    this.siteSettings.chat_allow_archiving_channels = true;
   });
 });

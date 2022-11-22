@@ -178,7 +178,7 @@ RSpec.describe SessionController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["error"]).to eq(
-          I18n.t('email_login.invalid_token')
+          I18n.t('email_login.invalid_token', base_url: Discourse.base_url)
         )
       end
 
@@ -191,7 +191,7 @@ RSpec.describe SessionController do
           expect(response.status).to eq(200)
 
           expect(response.parsed_body["error"]).to eq(
-            I18n.t('email_login.invalid_token')
+            I18n.t('email_login.invalid_token', base_url: Discourse.base_url)
           )
         end
       end

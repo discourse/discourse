@@ -18,6 +18,7 @@ en:
     direct_message_enabled_groups: "Allow users within these groups to create user-to-user Personal Chats. Note: staff can always create Personal Chats, and users will be able to reply to Personal Chats initiated by users who have permission to create them."
     chat_message_flag_allowed_groups: "Users in these groups are allowed to flag chat messages."
     chat_max_direct_message_users: "Users cannot add more than this number of other users when creating a new direct message. Set to 0 to only allow messages to oneself. Staff are exempt from this setting."
+    chat_allow_archiving_channels: "Allow staff to archive messages to a topic when closing a channel."
     errors:
       chat_default_channel: "The default chat channel must be a public channel."
       direct_message_enabled_groups_invalid: "You must specify at least one group for this setting. If you do not want anyone except staff to send direct messages, choose the staff group."

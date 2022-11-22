@@ -335,6 +335,7 @@ const SiteHeaderComponent = MountWidget.extend(
         topic: this._topic,
         canSignUp: this.canSignUp,
         sidebarEnabled: this.sidebarEnabled,
+        showSidebar: this.showSidebar,
       };
     },
 
