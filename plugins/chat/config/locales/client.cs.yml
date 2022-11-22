@@ -73,6 +73,7 @@ cs:
         save: "Uložit"
         saved: "Uloženo"
         unfollow: "Opustit skupinu"
+        admin_title: "Administrace"
       incoming_webhooks:
         back: "Zpět"
         description: "Popis"

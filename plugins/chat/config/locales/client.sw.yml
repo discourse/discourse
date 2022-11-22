@@ -72,6 +72,7 @@ sw:
         save: "Hifadhi"
         saved: "Imehifadhiwa"
         unfollow: "Ondoka"
+        admin_title: "Kiongozi"
       incoming_webhooks:
         back: "Iliyopita"
         description: "Elezo"

@@ -31,13 +31,16 @@ nl:
       already_enabled: "Chat is al ingeschakeld voor dit topic. Vernieuw de pagina."
       disabled_for_topic: "Chat is uitgeschakeld voor dit topic."
       bot: "bot"
-      create: "Aanmaken"
+      create: "Maken"
       cancel: "Annuleren"
       cancel_reply: "Antwoord annuleren"
       chat_channels: "Kanalen"
       browse_all_channels: "Alle kanalen bekijken"
       move_to_channel:
         title: "Berichten verplaatsen naar kanaal"
+        instructions:
+          one: "Je gaat <strong>%{count}</strong> bericht verplaatsen. Selecteer een bestemmingskanaal. Er wordt een vervangend bericht gemaakt in het kanaal <strong>%{channelTitle}</strong> om aan te geven dat dit bericht is verplaatst."
+          other: "Je gaat <strong>%{count}</strong> berichten verplaatsen. Selecteer een bestemmingskanaal. Er wordt een vervangend bericht gemaakt in het kanaal <strong>%{channelTitle}</strong> om aan te geven dat deze berichten zijn verplaatst."
         confirm_move: "Berichten verplaatsen"
       channel_settings:
         title: "Kanaalinstellingen"
@@ -49,31 +52,89 @@ nl:
         delete_channel: "Kanaal verwijderen"
         join_channel: "Deelnemen aan kanaal"
         leave_channel: "Kanaal verlaten"
-        join: "Toetreden"
+        join: "Deelnemen"
         leave: "Verlaten"
         save_label:
+          mute_channel: "Voorkeur voor kanaal dempen opgeslagen"
           desktop_notification: "Voorkeur voor bureaubladmeldingen opgeslagen"
           mobile_notification: "Voorkeur voor mobiele pushmeldingen opgeslagen"
       channel_archive:
         title: "Kanaal archiveren"
+        instructions: "<p>Door een kanaal te archiveren, wordt het in de alleen-lezen modus gezet en worden alle berichten van het kanaal verplaatst naar een nieuw of bestaand topic. Er kunnen geen nieuwe berichten worden gestuurd en bestaande berichten kunnen niet worden bewerkt of verwijderd.</p><p>Weet je zeker dat je het kanaal <strong>%{channelTitle}</strong> wilt archiveren?</p>"
+        process_started: "Het archiveringsproces is gestart. Dit venster wordt over enkele ogenblikken gesloten en je ontvangt een privébericht wanneer het archiveringsproces is voltooid."
         retry: "Opnieuw proberen"
       channel_open:
         title: "Kanaal openen"
+        instructions: "Heropent het kanaal, alle gebruikers kunnen berichten sturen en hun bestaande berichten bewerken."
       channel_close:
         title: "Kanaal sluiten"
+        instructions: "Door het kanaal te sluiten, kunnen niet-medewerkers geen nieuwe berichten sturen of bestaande berichten bewerken. Weet je zeker dat je dit kanaal wilt sluiten?"
       channel_delete:
         title: "Kanaal verwijderen"
+        instructions: "<p>Verwijdert de het kanaal <strong>%{name}</strong> en de chatgeschiedenis. Alle berichten en gerelateerde gegevens, zoals antwoorden en uploads, worden definitief verwijderd. Als je de kanaalgeschiedenis wilt behouden en buiten gebruik wilt stellen, kun je het kanaal in plaats daarvan archiveren.</p> <p>Weet je zeker dat je het kanaal <strong>permanent wilt verwijderen</strong>? Typ ter bevestiging de naam van het kanaal in het onderstaande vak.</p>"
+        confirm: "Ik begrijp de gevolgen, verwijder het kanaal"
+        confirm_channel_name: "Voer kanaalnaam in"
+        process_started: "Het proces om het kanaal te verwijderen is gestart. Dit venster wordt over enkele ogenblikken gesloten, je ziet het verwijderde kanaal nergens meer."
+      channels_list_popup:
+        browse: "Kanalen bekijken"
+        create: "Nieuw kanaal"
+      click_to_join: "Klik hier om de beschikbare kanalen te bekijken."
       close: "Sluiten"
+      collapse: "Chatlade samenvouwen"
+      confirm_flag: "Weet je zeker dat je het bericht van %{username} wilt markeren?"
+      deleted: "Er is een bericht verwijderd. [weergeven]"
+      hidden: "Er is een bericht verborgen. [weergeven]"
       delete: "Verwijderen"
       edited: "bewerkt"
       muted: "gedempt"
       joined: "lid sinds"
+      empty_state:
+        direct_message_cta: "Start een privéchat"
+        direct_message: "Je kunt ook een privéchat starten met een of meer gebruikers."
+        title: "Geen kanalen gevonden"
       email_frequency:
+        description: "We sturen alleen een e-mail als we je de afgelopen 15 minuten niet hebben gezien."
         never: "Nooit"
+        title: "E-mailmeldingen"
+        when_away: "Alleen wanneer afwezig"
+      enable: "Chat inschakelen"
       flag: "Markeren"
-      join: "Toetreden"
+      emoji: "Emoji invoegen"
+      flagged: "Dit bericht is gemarkeerd voor beoordeling"
+      invalid_access: "Je hebt geen toegang tot dit chatkanaal"
+      invitation_notification: "<span>%{username}</span> <span>heeft je uitgenodigd voor een chatkanaal</span>"
+      in_reply_to: "In antwoord op"
+      heading: "Chat"
+      join: "Deelnemen"
+      new_messages: "nieuwe berichten"
       mention_warning:
+        cannot_see:
+          one: "%{usernames} heeft geen toegang tot dit kanaal en is niet op de hoogte gebracht."
+          other: "%{usernames} hebben geen toegang tot dit kanaal en zijn niet op de hoogte gebracht."
         dismiss: "negeren"
+        invitations_sent:
+          one: "Uitnodiging gestuurd"
+          other: "Uitnodigingen gestuurd"
+        invite: "Uitnodigen voor kanaal"
+        without_membership:
+          one: "%{usernames} is geen lid geworden van dit kanaal."
+          other: "%{usernames} zijn geen lid geworden van dit kanaal."
+      aria_roles:
+        header: "Chatkop"
+        composer: "Chateditor"
+        channels_list: "Chatkanalenlijst"
+      no_public_channels: "Je bent geen lid geworden van kanalen."
+      only_chat_push_notifications:
+        title: "Alleen chatpushmeldingen sturen"
+        description: "Blokkeer de verzending van alle niet-chatpushmeldingen"
+      ignore_channel_wide_mention:
+        title: "Kanaalbrede vermeldingen negeren"
+        description: "Stuur geen meldingen voor kanaalbrede vermeldingen (@here en @all)"
+      open: "Chat openen"
+      open_full_page: "Chat openen op volledig scherm"
+      close_full_page: "Chat op volledig scherm sluiten"
+      open_message: "Bericht openen in chat"
+      placeholder_self: "Schrijf iets"
       placeholder_others: "Chatten met %{messageRecipient}"
       placeholder_new_message_disallowed: "Kanaal is %{status}, je kunt momenteel geen nieuwe berichten sturen."
       placeholder_silenced: "Je kunt op dit moment geen berichten sturen."
@@ -116,11 +177,12 @@ nl:
         read_only: "Alleen-lezen"
         archived_header: "Kanaal is gearchiveerd"
         archived: "Gearchiveerd"
+        archive_failed: "Archiveren van kanaal mislukt. %{completed}/%{total} berichten zijn gearchiveerd in <a target=\"_blank\" href=\"%{topic_url}\">het bestemmingstopic</a>. Druk op Opnieuw proberen om te proberen de archivering te voltooien."
         archive_completed: "Zie <a target=\"_blank\" href=\"%{topic_url}\">het archieftopic</a>"
         closed_header: "Kanaal is gesloten"
         closed: "Gesloten"
         open_header: "Kanaal is open"
-        open: "Openen"
+        open: "Open"
       browse:
         back: "Terug"
         title: Kanalen
@@ -161,30 +223,95 @@ nl:
         selected_user_title: "%{username} deselecteren"
       channel_selector:
         title: "Naar kanaal springen"
+        no_channels: "Er komen geen kanalen overeen met je zoekopdracht"
+      channel:
+        no_memberships: Dit kanaal heeft geen leden
+        no_memberships_found: Geen leden gevonden
+        memberships_count:
+          one: "%{count} lid"
+          other: "%{count} leden"
       create_channel:
+        auto_join_users:
+          public_category_warning: "%{category} is een openbare categorie. Alle recent actieve gebruikers automatisch toevoegen aan dit kanaal?"
+          warning_groups:
+            one: '%{members_count} gebruikers uit %{group} automatisch toevoegen?'
+            other: '%{members_count} gebruikers uit %{group} en %{group_2} automatisch toevoegen?'
+          warning_multiple_groups: '%{members_count} gebruikers uit %{group_1} en %{count} anderen automatisch toevoegen?'
+        choose_category:
+          label: "Kies een categorie"
+          none: "selecteer een..."
+          default_hint: Beheer de toegang door naar <a href=%{link} target="_blank">%{category}beveiligingsinstellingen</a> te gaan
+          hint_groups:
+            one: Gebruikers in %{hint} hebben toegang tot dit kanaal volgens de <a href=%{link} target="_blank">beveiligingsinstellingen</a>
+            other: Gebruikers in %{hint} en %{hint_2} hebben toegang tot dit kanaal volgens de <a href=%{link} target="_blank">beveiligingsinstellingen</a>
+          hint_multiple_groups: Gebruikers in %{hint_1} en %{count} andere groepen hebben toegang tot dit kanaal volgens de <a href=%{link} target="_blank">beveiligingsinstellingen</a>
+        create: "Kanaal maken"
+        description: "Beschrijving (optioneel)"
+        name: "Kanaalnaam"
+        title: "Nieuw kanaal"
         type: "Type"
         types:
           category: "Categorie"
           topic: "Topic"
+      reviewable:
+        type: "Chatbericht"
+      reactions:
+        only_you: "Je hebt gereageerd met :%{emoji}:"
+        and_others: "Jij, %{usernames} hebben gereageerd met :%{emoji}:"
+        only_others: "%{usernames} hebben gereageerd met :%{emoji}:"
+        others_and_more: "%{usernames} en %{more} anderen hebben gereageerd met :%{emoji}:"
+        you_others_and_more: "Jij, %{usernames} en %{more} anderen hebben gereageerd met :%{emoji}:"
       composer:
+        toggle_toolbar: "Werkbalk schakelen"
         italic_text: "Cursieve tekst"
         bold_text: "Vetgedrukte tekst"
+        code_text: "codetekst"
+      quote:
+        original_channel: 'Oorspronkelijk gestuurd in <a href="%{channelLink}">%{channel}</a>'
+        copy_success: "Chatcitaat gekopieerd naar klembord"
       notification_levels:
         never: "Nooit"
+        mention: "Alleen voor vermeldingen"
+        always: "Voor alle activiteit"
       settings:
-        follow: "Toetreden"
+        auto_join_users_label: "Gebruikers automatisch toevoegen"
+        auto_join_users_info: "Controleer elk uur welke gebruikers de afgelopen 3 maanden actief zijn geweest en voeg ze toe aan dit kanaal als ze toegang hebben tot de categorie %{category}."
+        auto_join_users_warning: "Elke gebruiker die geen lid is van dit kanaal en toegang heeft tot de categorie %{category} wordt lid. Weet je het zeker?"
+        desktop_notification_level: "Bureaubladmeldingen"
+        follow: "Deelnemen"
         followed: "Lid sinds"
+        mobile_notification_level: "Mobiele pushmeldingen"
+        mute: "Kanaal dempen"
+        muted_on: "Aan"
+        muted_off: "Uit"
         notifications: "Meldingen"
         preview: "Voorbeeld"
         save: "Opslaan"
         saved: "Opgeslagen"
         unfollow: "Verlaten"
+        admin_title: "Beheerder"
+        retention_info: "Chatgeschiedenis wordt %{days} dagen bewaard."
+      admin:
+        title: "Chat"
+      direct_messages:
+        title: "Privéchat"
+        new: "Nieuwe privéchat"
+        create: "Gaan"
+        leave: "Deze privéchat verlaten"
+        cannot_create: "Sorry, je kunt geen directe berichten sturen."
       incoming_webhooks:
         back: "Vorige"
+        channel_placeholder: "Selecteer een kanaal"
+        confirm_destroy: "Weet je zeker dat je deze inkomende webhook wilt verwijderen? Dit kan niet ongedaan worden gemaakt."
+        current_emoji: "Huidige emoji"
         description: "Beschrijving"
         delete: "Verwijderen"
         emoji: "Emoji"
+        emoji_instructions: "Systeemavatar wordt gebruikt als emoji leeg wordt gelaten."
         name: "Naam"
+        name_placeholder: "naam..."
+        new: "Nieuwe inkomende webhook"
+        none: "Er zijn geen bestaande inkomende webhooks gemaakt."
         no_emoji: "Geen emoji geselecteerd"
         post_to: "Plaatsen op"
         reset_emoji: "Emoji resetten"
@@ -197,6 +324,7 @@ nl:
         url_instructions: "Deze URL bevat een geheime waarde, bewaar deze veilig."
         username: "Gebruikersnaam"
         username_instructions: "Gebruikersnaam van bot die in kanaal plaatst. Standaard ingesteld op 'systeem' als dit leeg is gelaten."
+        instructions: "Inkomende webhooks kunnen door externe systemen worden gebruikt om als botgebruiker berichten in een aangewezen chatkanaal te plaatsen via het eindpunt <code>/hooks/:key</code>. De payload bestaat uit een enkele <code>tekst</code>-parameter, die beperkt is tot 2000 tekens.<br><br>We ondersteunen ook beperkte Slack-opgemaakte <code>tekst</code>-parameters, het extraheren van links en vermeldingen op basis van de opmaak op <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a>, maar het eindpunt <code>/hooks/:key/slack</code> moet hiervoor gebruikt worden."
       selection:
         cancel: "Annuleren"
         quote_selection: "Citaat in topic"
@@ -274,13 +402,57 @@ nl:
       titles:
         chat_mention: "Chatvermelding"
         chat_invitation: "Chatuitnodiging"
+        chat_quoted: "Chat geciteerd"
+    action_codes:
+      chat:
+        enabled: '%{who} heeft <button class="btn-link open-chat">chat</button> %{when} ingeschakeld'
+        disabled: "%{who} heeft de chat %{when} gesloten"
     discourse_automation:
       scriptables:
         send_chat_message:
+          title: Chatbericht sturen
           fields:
+            chat_channel_id:
+              label: Chatkanaal-ID
             message:
               label: Bericht
+            sender:
+              label: Afzender
+              description: Standaard ingesteld op systeem
     review:
+      transcript:
+        view: "Transcript van eerdere berichten weergeven"
       types:
         reviewable_chat_message:
+          title: "Gemarkeerd chatbericht"
           flagged_by: "Gemarkeerd door"
+    keyboard_shortcuts_help:
+      chat:
+        title: "Chat"
+        keyboard_shortcuts:
+          switch_channel_arrows: "%{shortcut} Kanaal wisselen"
+          open_quick_channel_selector: "%{shortcut} Snelle kanaalkiezer openen"
+          open_insert_link_modal: "%{shortcut} Hyperlink invoegen (alleen opstellen)"
+          composer_bold: "%{shortcut} Vet (alleen opstellen)"
+          composer_italic: "%{shortcut} Cursief (alleen opstellen)"
+          composer_code: "%{shortcut} Code (alleen opstellen)"
+          drawer_open: "%{shortcut} Chatlade openen"
+          drawer_close: "%{shortcut} Chatlade sluiten"
+    topic_statuses:
+      chat:
+        help: "Chat is ingeschakeld voor dit topic"
+    user:
+      allow_private_messages: "Toestaan dat andere gebruikers mij privéberichten en directe chatberichten sturen"
+      muted_users_instructions: "Onderdruk alle meldingen, privéberichten en directe chatberichten van deze gebruikers."
+      allowed_pm_users_instructions: "Sta alleen privéberichten of directe chatberichten van deze gebruikers toe."
+      allow_private_messages_from_specific_users: "Alleen specifieke gebruikers toestaan mij privéberichten of directe chatberichten te sturen"
+      ignored_users_instructions: "Onderdruk alle berichten, meldingen, privéberichten en directe chatberichten van deze gebruikers."
+    user_menu:
+      no_chat_notifications_title: "Je hebt nog geen chatmeldingen"
+      no_chat_notifications_body: >
+        Je wordt in dit paneel op de hoogte gesteld wanneer iemand je een direct bericht stuurt of je <b>@noemt</b> in een chat. Er worden ook meldingen naar je e-mail gestuurd als je je een tijdje niet hebt aangemeld. <br><br> Klik op de titel bovenaan een chatkanaal om te configureren welke meldingen je in dat kanaal ontvangt. Zie voor meer informatie je <a href='%{preferencesUrl}'>meldingsvoorkeuren</a>.
+      tabs:
+        chat_notifications: "Chatmeldingen"
+        chat_notifications_with_unread:
+          one: "Chatmeldingen - %{count} ongelezen melding"
+          other: "Chatmeldingen - %{count} ongelezen meldingen"

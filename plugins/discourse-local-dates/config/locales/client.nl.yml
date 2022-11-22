@@ -25,12 +25,13 @@ nl:
           recurring_title: Herhaling
           recurring_description: "Definieer de herhaling van een gebeurtenis. Je kunt de door het formulier gegenereerde herhalingsoptie ook handmatig bewerken en een van de volgende sleutels gebruiken: jaren, kwartalen, maanden, weken, dagen, uren, minuten, seconden, milliseconden."
           recurring_none: Geen herhaling
-          invalid_date: Ongeldige datum; zorg ervoor dat de datum en tijd juist zijn
+          invalid_date: Ongeldige datum; zorg dat de datum en tijd juist zijn
           date_title: Datum
           time_title: Tijd
           format_title: Datumnotatie
           timezone: Tijdzone
           until: Tot...
+          current_timezone: "Huidige tijdzone:"
           recurring:
             every_day: "Elke dag"
             every_week: "Elke week"
@@ -40,3 +41,4 @@ nl:
             every_three_months: "Elke drie maanden"
             every_six_months: "Elke zes maanden"
             every_year: "Elk jaar"
+      default_title: "%{site_name} Evenement"

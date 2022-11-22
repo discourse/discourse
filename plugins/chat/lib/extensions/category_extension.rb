@@ -5,7 +5,7 @@ module Chat::CategoryExtension
 
   include Chatable
 
-  prepended { has_one :category_channel, as: :chatable }
+  prepended { has_one :category_channel, as: :chatable, dependent: :destroy }
 
   def cannot_delete_reason
     return I18n.t("category.cannot_delete.has_chat_channels") if category_channel

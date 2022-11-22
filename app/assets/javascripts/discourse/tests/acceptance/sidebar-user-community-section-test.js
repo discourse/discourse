@@ -564,6 +564,26 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
   });
 
+  test("my posts title changes when drafts are present", async function (assert) {
+    await visit("/");
+
+    assert.strictEqual(
+      query(".sidebar-section-link-my-posts").title,
+      I18n.t("sidebar.sections.community.links.my_posts.title"),
+      "displays the default title when no drafts are present"
+    );
+
+    await publishToMessageBus(`/user-drafts/${loggedInUser().id}`, {
+      draft_count: 1,
+    });
+
+    assert.strictEqual(
+      query(".sidebar-section-link-my-posts").title,
+      I18n.t("sidebar.sections.community.links.my_posts.title_drafts"),
+      "displays the draft title when drafts are present"
+    );
+  });
+
   test("visiting top route", async function (assert) {
     await visit("/top");
 

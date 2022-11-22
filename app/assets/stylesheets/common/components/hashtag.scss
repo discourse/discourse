@@ -19,11 +19,13 @@ a.hashtag-cooked {
 
   &:visited,
   &:hover {
-    color: var(--primary-high-or-secondary-low);
+    color: var(--primary);
   }
 
   .d-icon {
-    margin-right: 3px;
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+    margin: 0 0.2em 0 0.1em;
   }
 }
 

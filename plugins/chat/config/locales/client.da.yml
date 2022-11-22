@@ -166,6 +166,7 @@ da:
         save: "Gem"
         saved: "Gemt"
         unfollow: "Forlad"
+        admin_title: "Admin"
       admin:
         title: "Chat"
       incoming_webhooks:

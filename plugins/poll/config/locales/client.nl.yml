@@ -77,15 +77,15 @@ nl:
       error_while_fetching_voters: "Sorry, er is een fout opgetreden bij het weergeven van de stemmers."
       error_while_exporting_results: "Sorry, er is een fout opgetreden bij het exporteren van pollresultaten."
       ui_builder:
-        title: Poll aanmaken
+        title: Poll maken
         insert: Poll invoegen
         help:
           options_min_count: Voer minimaal 1 optie in.
           options_max_count: Voer maximaal %{count} opties in.
           invalid_min_value: De minimumwaarde moet minimaal 1 zijn.
-          invalid_max_value: De maximale waarde moet minimaal 1 zijn, maar kleiner dan of gelijk aan het aantal opties.
+          invalid_max_value: Maximumwaarde moet minimaal 1 zijn, maar kleiner dan of gelijk aan het aantal opties.
           invalid_values: Minimale waarde moet kleiner zijn dan de maximale waarde.
-          min_step_value: De minimale waarde voor een stap is 1
+          min_step_value: De minimumwaarde voor een stap is 1
         poll_type:
           label: Type
           regular: Eén keuze

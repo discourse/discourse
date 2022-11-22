@@ -74,6 +74,7 @@ lv:
         save: "Saglabāt"
         saved: "Saglabāts"
         unfollow: "Iziet"
+        admin_title: "Administrators"
       incoming_webhooks:
         back: "Atpakaļ"
         description: "Apraksts"

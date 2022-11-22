@@ -963,12 +963,9 @@ gl:
       dismiss_notifications: "Desbotar todo"
       dismiss_notifications_tooltip: "Marcar todas notificacións sen ler como lidas"
       no_bookmarks_search: "Non se atoparon marcadores coa busca fornecida."
-      first_notification: "Xa ten a súa primeira notificación! Selecciónea para comezar."
       dynamic_favicon: "Amosar conta na icona do navegador"
       skip_new_user_tips:
         description: "Saltar consellos e insignias na entrada dos novos usuarios"
-        not_first_time: "Non é a súa primeira vez?"
-        skip_link: "Saltar estes consellos"
       theme_default_on_all_devices: "Facer que este sexa o tema predeterminado en todos os meus dispositivos"
       color_scheme_default_on_all_devices: "Estabelecer esquema(s) de cores predeterminados en todos os dispositivos"
       color_scheme: "Esquema de cor"
@@ -1091,6 +1088,7 @@ gl:
         profile: "Perfil"
         emails: "Correos electrónicos"
         notifications: "Notificacións"
+        tracking: "Seguimento"
         categories: "Categorías"
         users: "Usuarios"
         tags: "Etiquetas"
@@ -1332,6 +1330,7 @@ gl:
       email_in_reply_to: "Incluír nos correos un extracto das respostas á publicación"
       other_settings: "Outro"
       categories_settings: "Categorías"
+      topics_settings: "Temas"
       new_topic_duration:
         label: "Considerar novos temas cando"
         not_viewed: "Aínda non os vin"
@@ -2028,6 +2027,7 @@ gl:
         other: "<span>%{count}%{plus} resultados de</span><span class='term'>%{term}</span>"
       title: "Buscar"
       full_page_title: "Buscar"
+      results: "resultados"
       no_results: "Non se atoparon resultados."
       no_more_results: "Non se atoparon máis resultados."
       post_format: "#%{post_number} de %{username}"
@@ -3379,8 +3379,6 @@ gl:
               content: "Insignias"
             faq:
               content: "PMF"
-            tracked:
-              content: "Seguido"
             groups:
               content: "Grupos"
               title: "Todos os grupos"

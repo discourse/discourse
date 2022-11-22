@@ -1041,13 +1041,9 @@ ur:
       no_notifications_page_title: "آپ کے لئے ابھی تک کوئی اطلاع نہیں"
       no_notifications_page_body: >
         آپ کو براہ راست آپ سے متعلقہ سرگرمی کے بارے میں مطلع کیا جائے گا، بشمول آپ کے عنوانات اور پوسٹس کے جوابات، جب کوئی <b>آپ کا</b> تذکرہ کرتا ہے یا آپ کا حوالہ دیتا ہے، اور آپ جو عنوانات دیکھ رہے ہیں ان کا جواب دیتا ہے۔ جب آپ نے تھوڑی دیر سے لاگ ان نہیں کیا ہو گا تو آپ کے ای میل پر بھی اطلاعات بھیجی جائیں گی۔ <br><br> یہ فیصلہ کرنے کے لیے %{icon} کو تلاش کریں کہ آپ کن مخصوص عنوانات، زمروں اور ٹیگز کے بارے میں مطلع کرنا چاہتے ہیں۔ مزید کے لیے، اپنی <a href='%{preferencesUrl}'>اطلاع کی ترجیحات دیکھیں</a>۔
-      first_notification: "آپ کی پہلی نوٹیفکیشن! شروع کرنے کے لئے اسے منتخب کریں۔"
       dynamic_favicon: "براؤزر آئکن پر پر شمار دکھائیں"
       skip_new_user_tips:
         description: "نئے صارف آن بورڈنگ تجاویز اور بیجز کو چھوڑ دیں"
-        not_first_time: "آپ کےلیے پہلی بار نہیں؟"
-        skip_link: "ان تجاویز کو چھوڑ دیں"
-        read_later: "میں اسے بعد میں پڑھوں گا."
       theme_default_on_all_devices: "میری تمام ڈیوائسز پر اِس کو ڈیفالٹ تھیم بنائیں"
       color_scheme_default_on_all_devices: "میرے تمام آلات پر ڈیفالٹ رنگ کی سکیم (سکیمیں)سیٹ کریں۔"
       color_scheme: "رنگ کی سکیم"
@@ -1175,6 +1171,7 @@ ur:
         profile: "پروفائل"
         emails: "اِی مَیل"
         notifications: "اطلاعات"
+        tracking: "ٹریک کیا جا رہا"
         categories: "زُمرَہ جات"
         users: "صارفین"
         tags: "ٹیگز"
@@ -1422,6 +1419,7 @@ ur:
       email_in_reply_to: "ای میل میں پوسٹ کے جواب کا اقتباس شامل کریں"
       other_settings: "دیگر"
       categories_settings: "زُمرَہ جات"
+      topics_settings: "ٹاپکس"
       new_topic_duration:
         label: "ٹاپک کو نیا سمجھا جائے، جب"
         not_viewed: "میں نے اُنہیں ابھی تک نہیں دیکھا"
@@ -2158,6 +2156,7 @@ ur:
         other: "<span class='term'>%{term}</span><span>کیلئے %{count}%{plus} نتائج</span>"
       title: "تلاش کریں"
       full_page_title: "تلاش کریں"
+      results: "نتائج"
       no_results: "کوئی نتائج نہیں پائے گئے۔"
       no_more_results: "کوئی اور نتائج نہیں پائے گئے۔"
       post_format: "%{username} کی طرف سے #%{post_number}"
@@ -2196,7 +2195,6 @@ ur:
       tips:
         category_tag: "زمرہ یا ٹیگ کے لحاظ سے فلٹرز"
         author: "پوسٹ مصنف کے ذریعہ فلٹرز"
-        in: "میٹا ڈیٹا کےذریعہ سے فلٹرز (مثلاً ان: عنوان، ان:ذاتی، ان:پن کیاہوا)"
         status: "موضوع کی حیثیت کے لحاظ سے فلٹرز"
         full_search: "مکمل صفحہ کی تلاش کا آغاز"
         full_search_key: "%{modifier} + درج کریں"
@@ -3664,8 +3662,6 @@ ur:
               content: "بَیج"
             faq:
               content: "عمومی سوالات"
-            tracked:
-              content: "ٹریک کیا ہوا"
             groups:
               content: "گروپس"
               title: "تمام گروپس"

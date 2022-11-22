@@ -65,6 +65,7 @@ sr:
         notifications: "Obaveštenja"
         save: "Sačuvaj"
         saved: "Sačuvano"
+        admin_title: "Admin"
       incoming_webhooks:
         back: "Nazad"
         description: "Opis"

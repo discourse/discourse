@@ -373,7 +373,7 @@ zh_CN:
           注意，你只有 %{deletion_after} 小时的时间可以取消删除帖子。
       category_hashtag:
         instructions: |-
-          你知道你可以在你的帖子中引用类别和标签吗？例如，你看到过%{category}类别吗？
+          你知道你可以在你的帖子中引用类别和标签吗？例如，你看到过“%{category}”类别吗？
 
           在句子中输入`#`，然后选择任意类别或标签。
         not_found: |-

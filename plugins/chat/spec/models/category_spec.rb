@@ -8,7 +8,7 @@ RSpec.describe Category do
     let(:channel_class) { CategoryChannel }
   end
 
-  it { is_expected.to have_one(:category_channel) }
+  it { is_expected.to have_one(:category_channel).dependent(:destroy) }
 
   describe "#cannot_delete_reason" do
     subject(:reason) { category.cannot_delete_reason }
