@@ -154,8 +154,6 @@ acceptance("User Routes - Moderator viewing warnings", function (needs) {
 });
 
 acceptance("User - Saving user options", function (needs) {
-  let lastRequest;
-
   needs.user({
     admin: false,
     moderator: false,
@@ -168,11 +166,17 @@ acceptance("User - Saving user options", function (needs) {
     disable_mailing_list_mode: false,
   });
 
+  let putRequestData;
+
   needs.pretender((server, helper) => {
     server.put("/u/eviltrout.json", (request) => {
-      lastRequest = request;
-      return helper.response(200, { user: {} });
+      putRequestData = helper.parsePostData(request.requestBody);
+      return helper.response({ user: {} });
     });
+  });
+
+  needs.hooks.afterEach(() => {
+    putRequestData = null;
   });
 
   test("saving user options", async function (assert) {
@@ -180,9 +184,15 @@ acceptance("User - Saving user options", function (needs) {
     await click(".pref-mailing-list-mode input[type='checkbox']");
     await click(".save-changes");
 
-    assert.equal(
-      lastRequest.requestBody,
-      "mailing_list_mode=true",
+    assert.deepEqual(
+      putRequestData,
+      {
+        digest_after_minutes: "10080",
+        email_digests: "true",
+        email_level: "1",
+        email_messages_level: "0",
+        mailing_list_mode: "true",
+      },
       "sends a PUT request to update the specified user option"
     );
 
@@ -190,9 +200,15 @@ acceptance("User - Saving user options", function (needs) {
     await selectKit("#user-email-messages-level").selectRowByValue(2); // never option
     await click(".save-changes");
 
-    assert.ok(
-      lastRequest.requestBody,
-      "email_messages_level=2",
+    assert.deepEqual(
+      putRequestData,
+      {
+        digest_after_minutes: "10080",
+        email_digests: "true",
+        email_level: "1",
+        email_messages_level: "2",
+        mailing_list_mode: "true",
+      },
       "is able to save a different user_option on a subsequent request"
     );
   });
