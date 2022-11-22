@@ -3911,7 +3911,6 @@ it:
               title: "Tutti gli utenti"
             my_posts:
               content: "I miei Messaggi"
-              title: "I miei messaggi"
               draft_count:
                 one: "%{count} bozza"
                 other: "%{count} bozze"

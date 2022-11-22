@@ -2911,7 +2911,6 @@ zh_TW:
               title: "所有使用者"
             my_posts:
               content: "我的貼文"
-              title: "我的貼文"
               draft_count:
                 other: "%{count} 草稿"
             review:

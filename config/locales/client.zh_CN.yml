@@ -3734,7 +3734,6 @@ zh_CN:
               title: "所有用户"
             my_posts:
               content: "我的帖子"
-              title: "我的帖子"
               draft_count:
                 other: "%{count} 个草稿"
             review:

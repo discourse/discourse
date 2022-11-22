@@ -3734,7 +3734,6 @@ ja:
               title: "すべてのユーザー"
             my_posts:
               content: "自分の投稿"
-              title: "自分の投稿"
               draft_count:
                 other: "%{count} 下書き"
             review:

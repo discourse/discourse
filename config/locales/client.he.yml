@@ -4243,7 +4243,8 @@ he:
               title: "כל המשתמשים"
             my_posts:
               content: "הפוסטים שלי"
-              title: "הפוסטים שלי"
+              title: "הפעילות האחרונה שלי בנושא"
+              title_drafts: "הטיוטות שלא פרסמתי"
               draft_count:
                 one: "טיוטה %{count}"
                 two: "%{count} טיוטות"

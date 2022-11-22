@@ -3911,7 +3911,6 @@ fr:
               title: "Tous les utilisateurs"
             my_posts:
               content: "Mes messages"
-              title: "Mes publications"
               draft_count:
                 one: "%{count} brouillon"
                 other: "%{count} brouillons"
