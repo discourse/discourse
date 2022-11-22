@@ -464,7 +464,12 @@ module DiscourseTagging
     else
       # Visible tags either have no permissions or have allowable permissions
       Tag
-        .where.not(id: TagGroupMembership.select(:tag_id))
+        .where.not(
+          id:
+            TagGroupMembership
+              .joins(tag_group: :tag_group_permissions)
+              .select(:tag_id)
+        )
         .or(
           Tag
             .where(
