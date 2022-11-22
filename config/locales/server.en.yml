@@ -542,7 +542,7 @@ en:
 
       It’s easier for everyone to read topics that have fewer in-depth replies versus lots of small, individual replies.
 
-    dominating_topic: You’ve posted more than %{percent}% of the replies here; may we suggest you give other people an opportunity to chime in?
+    dominating_topic: You’ve posted a lot in this topic! Consider giving others an opportunity to reply here and discuss things with each other as well.
 
     get_a_room: You’ve replied to @%{reply_username} %{count} times, did you know you could send them a personal message instead?
 
