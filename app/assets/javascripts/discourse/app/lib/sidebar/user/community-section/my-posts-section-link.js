@@ -47,7 +47,11 @@ export default class MyPostsSectionLink extends BaseSectionLink {
   }
 
   get title() {
-    return I18n.t("sidebar.sections.community.links.my_posts.title");
+    if (this._hasDraft) {
+      return I18n.t("sidebar.sections.community.links.my_posts.title_drafts");
+    } else {
+      return I18n.t("sidebar.sections.community.links.my_posts.title");
+    }
   }
 
   get text() {
