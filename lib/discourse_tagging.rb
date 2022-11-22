@@ -458,12 +458,32 @@ module DiscourseTagging
     end
   end
 
+  def self.visible_tags(guardian)
+    if guardian&.is_staff?
+      Tag.all
+    else
+      # Visible tags either have no permissions or have allowable permissions
+      Tag
+        .where.not(id: TagGroupMembership.select(:tag_id))
+        .or(
+          Tag
+            .where(
+              id:
+                TagGroupPermission
+                  .joins(tag_group: :tag_group_membership)
+                  .where(group_id: permitted_group_ids_query(guardian))
+                  .select('tag_group_memberships.tag_id'),
+            )
+        )
+    end
+  end
+
   def self.filter_visible(query, guardian = nil)
-    guardian&.is_staff? ? query : query.where.not(id: hidden_tags_query.select(:id))
+    guardian&.is_staff? ? query : query.where(id: visible_tags(guardian).select(:id))
   end
 
   def self.hidden_tag_names(guardian = nil)
-    guardian&.is_staff? ? [] : hidden_tags_query.pluck(:name) - permitted_tag_names(guardian)
+    guardian&.is_staff? ? [] : Tag.where.not(id: visible_tags(guardian).select(:id)).pluck(:name)
   end
 
   # most restrictive level of tag groups
@@ -483,14 +503,28 @@ module DiscourseTagging
     query
   end
 
-  def self.permitted_group_ids(guardian = nil)
-    group_ids = [Group::AUTO_GROUPS[:everyone]]
-
+  def self.permitted_group_ids_query(guardian = nil)
     if guardian&.authenticated?
-      group_ids.concat(guardian.user.groups.pluck(:id))
+      Group
+        .from(
+          Group.sanitize_sql(
+            ["(SELECT ? AS id UNION #{guardian.user.groups.select(:id).to_sql}) as groups", Group::AUTO_GROUPS[:everyone]]
+          )
+        )
+        .select(:id)
+    else
+      Group
+        .from(
+          Group.sanitize_sql(
+            ["(SELECT ? AS id) AS groups", Group::AUTO_GROUPS[:everyone]]
+          )
+        )
+        .select(:id)
     end
+  end
 
-    group_ids
+  def self.permitted_group_ids(guardian = nil)
+    permitted_group_ids_query(guardian).pluck(:id)
   end
 
   # read-only tags for this user
