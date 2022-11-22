@@ -1250,8 +1250,8 @@ User.reopenClass(Singleton, {
         }
       }
 
-      if (!userJson.timezone) {
-        userJson.timezone = moment.tz.guess();
+      if (!userJson.user_option.timezone) {
+        userJson.user_option.timezone = moment.tz.guess();
         this._saveTimezone(userJson);
       }
 
