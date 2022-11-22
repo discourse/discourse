@@ -29,22 +29,21 @@ module Chat::ChatChannelFetcher
     SQL
   end
 
-  def self.generate_allowed_channel_ids_sql(guardian)
-    <<~SQL
-      -- secured category chat channels
-      #{
-      ChatChannel
-        .select(:id)
-        .joins(
-          "INNER JOIN categories ON categories.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'Category'",
-        )
-        .where(
-          "categories.id IN (:allowed_category_ids)",
-          allowed_category_ids: guardian.allowed_category_ids,
-        )
-        .to_sql
-    }
+  def self.generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: false)
+    category_channel_sql = ChatChannel
+      .select(:id)
+      .joins(
+        "INNER JOIN categories ON categories.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'Category'",
+      )
+      .where(
+        "categories.id IN (:allowed_category_ids)",
+        allowed_category_ids: guardian.allowed_category_ids,
+      )
+      .to_sql
 
+    dm_channel_sql = ""
+    if !exclude_dm_channels
+      dm_channel_sql = <<~SQL
       UNION
 
       -- secured direct message chat channels
@@ -58,11 +57,31 @@ module Chat::ChatChannelFetcher
         )
         .where("direct_message_users.user_id = :user_id", user_id: guardian.user.id)
         .to_sql
-    }
+      }
+      SQL
+    end
+
+    <<~SQL
+      -- secured category chat channels
+      #{category_channel_sql}
+      #{dm_channel_sql}
     SQL
   end
 
+  def self.secured_public_channel_slug_lookup(guardian, slugs)
+    allowed_channel_ids = generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: true)
+    ChatChannel
+      .joins(
+        "LEFT JOIN categories ON categories.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'Category'",
+      )
+      .where(chatable_type: ChatChannel.public_channel_chatable_types)
+      .where("chat_channels.id IN (#{allowed_channel_ids})")
+      .where("chat_channels.slug IN (:slugs)", slugs: slugs)
+      .limit(1)
+  end
+
   def self.secured_public_channel_search(guardian, options = {})
+    allowed_channel_ids = generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: options[:exclude_dm_channels])
     channels =
       ChatChannel
         .includes(:chat_channel_archive)
@@ -71,7 +90,7 @@ module Chat::ChatChannelFetcher
           "LEFT JOIN categories ON categories.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'Category'",
         )
         .where(chatable_type: ChatChannel.public_channel_chatable_types)
-        .where("chat_channels.id IN (#{generate_allowed_channel_ids_sql(guardian)})")
+        .where("chat_channels.id IN (#{allowed_channel_ids})")
 
     channels = channels.where(status: options[:status]) if options[:status].present?
 

@@ -29,11 +29,16 @@ RSpec.describe HashtagAutocompleteService do
         end
     end
 
-    def self.search(guardian_scoped, term, limit)
-      guardian_scoped
-        .user
-        .bookmarks
-        .where("name ILIKE ?", "%#{term}%")
+    def self.search(guardian_scoped, term, limit, exact_match: false)
+      base_query = guardian_scoped.user.bookmarks
+
+      if exact_match
+        base_query = base_query.where("name = ?", "#{term}")
+      else
+        base_query = base_query.where("name ILIKE ?", "%#{term}%")
+      end
+
+      base_query
         .limit(limit)
         .map do |bm|
           HashtagAutocompleteService::HashtagItem.new.tap do |item|
@@ -92,7 +97,9 @@ RSpec.describe HashtagAutocompleteService do
     end
 
     it "does not search other data sources if the limit is reached by earlier type data sources" do
-      Site.any_instance.expects(:categories).never
+      # only expected once to try get the exact matches first
+      site_guardian_categories = Site.new(guardian).categories
+      Site.any_instance.expects(:categories).once.returns(site_guardian_categories)
       subject.search("book", %w[tag category], limit: 1)
     end
 
@@ -167,19 +174,26 @@ RSpec.describe HashtagAutocompleteService do
     context "when multiple tags and categories are returned" do
       fab!(:category2) { Fabricate(:category, name: "Book Zone", slug: "book-zone") }
       fab!(:category3) { Fabricate(:category, name: "Book Dome", slug: "book-dome") }
+      fab!(:category4) { Fabricate(:category, name: "Bookworld", slug: "book") }
       fab!(:tag2) { Fabricate(:tag, name: "mid-books") }
       fab!(:tag3) { Fabricate(:tag, name: "terrible-books") }
       fab!(:tag4) { Fabricate(:tag, name: "book") }
 
       it "orders them by name within their type order" do
         expect(subject.search("book", %w[category tag], limit: 10).map(&:ref)).to eq(
-          %w[book-club book-dome book-zone book great-books mid-books terrible-books],
+          %w[book book::tag book-club book-dome book-zone great-books mid-books terrible-books],
         )
       end
 
       it "orders correctly with lower limits" do
         expect(subject.search("book", %w[category tag], limit: 5).map(&:ref)).to eq(
-          %w[book-club book-dome book-zone book great-books],
+          %w[book book::tag book-club book-dome book-zone],
+        )
+      end
+
+      it "prioritises exact matches to the top of the list" do
+        expect(subject.search("book", %w[category tag], limit: 10).map(&:ref)).to eq(
+          %w[book book::tag book-club book-dome book-zone great-books mid-books terrible-books],
         )
       end
     end

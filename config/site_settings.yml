@@ -2036,6 +2036,10 @@ developer:
     default: false
     client: true
     hidden: true
+  experimental_hashtag_search_result_limit:
+    default: 20
+    client: true
+    hidden: true
   enable_new_user_profile_nav_groups:
     client: true
     type: group_list
