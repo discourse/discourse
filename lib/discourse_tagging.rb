@@ -491,23 +491,6 @@ module DiscourseTagging
     guardian&.is_staff? ? [] : Tag.where.not(id: visible_tags(guardian).select(:id)).pluck(:name)
   end
 
-  # most restrictive level of tag groups
-  def self.hidden_tags_query
-    query =
-      Tag
-        .joins(:tag_groups)
-        .where.not(
-          tag_groups: {
-            id:
-              TagGroupPermission
-                .where(group_id: Group::AUTO_GROUPS[:everyone])
-                .select(:tag_group_id)
-          }
-        )
-
-    query
-  end
-
   def self.permitted_group_ids_query(guardian = nil)
     if guardian&.authenticated?
       Group
