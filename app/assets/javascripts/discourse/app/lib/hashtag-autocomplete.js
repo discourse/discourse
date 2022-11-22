@@ -105,7 +105,9 @@ export function linkSeenHashtagsInContext(
   if (hashtagSpans.length === 0) {
     return [];
   }
-  const slugs = [...hashtagSpans.mapBy("innerText")];
+  const slugs = [
+    ...hashtagSpans.map((span) => span.innerText.replace("#", "")),
+  ];
 
   hashtagSpans.forEach((hashtagSpan, index) => {
     _findAndReplaceSeenHashtagPlaceholder(

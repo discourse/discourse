@@ -1463,7 +1463,7 @@ RSpec.describe PrettyText do
     cooked = PrettyText.cook(" #unknown::tag #known #known::tag #testing", user_id: user.id)
 
     [
-      "<span class=\"hashtag-raw\"><svg class=\"fa d-icon d-icon-hashtag svg-icon svg-node\"><use href=\"#hashtag\"></use></svg>unknown::tag</span>",
+      "<span class=\"hashtag-raw\">#unknown::tag</span>",
       "<a class=\"hashtag-cooked\" href=\"#{category2.url}\" data-type=\"category\" data-slug=\"known\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>known</span></a>",
       "<a class=\"hashtag-cooked\" href=\"/tag/known\" data-type=\"tag\" data-slug=\"known\"><svg class=\"fa d-icon d-icon-tag svg-icon svg-node\"><use href=\"#tag\"></use></svg><span>known</span></a>",
       "<a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"testing\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>testing</span></a>"
