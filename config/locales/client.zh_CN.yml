@@ -203,6 +203,7 @@ zh_CN:
     delete: "删除"
     generic_error: "抱歉，出错了。"
     generic_error_with_reason: "出错了：%{error}"
+    multiple_errors: "发生多个错误：%{errors}"
     sign_up: "注册"
     log_in: "登录"
     age: "年龄"
@@ -261,6 +262,7 @@ zh_CN:
       like_count: "赞"
       topic_count: "话题"
       post_count: "帖子"
+      user_count: "注册"
       active_user_count: "活跃用户"
       contact: "联系我们"
       contact_info: "如果出现影响此站点的关键问题或紧急事项，请联系我们：%{contact_info}。"
@@ -771,6 +773,7 @@ zh_CN:
         group_type: "群组类型"
         is_group_user: "成员"
         is_group_owner: "所有者"
+        search_results: "搜索结果将出现在下方。"
       title:
         other: "群组"
       activity: "活动"
@@ -804,6 +807,7 @@ zh_CN:
         no_filter_matches: "没有与该搜索匹配的成员。"
       topics: "话题"
       posts: "帖子"
+      aria_post_number: "%{title} - 帖子 #%{postNumber}"
       mentions: "提及"
       messages: "消息"
       notification_level: "群组消息的默认通知级别"
@@ -1018,13 +1022,10 @@ zh_CN:
       no_notifications_page_title: "您还没有任何通知"
       no_notifications_page_body: >
         您将收到有关与您直接相关的活动的通知，其中包括对您的话题和帖子的回复、有人提及 <b>@</b> 您、引用您的帖子时，或者回复您正在关注的话题。当您有一段时间没有登录时，通知也会发送到您的电子邮箱。<br><br> 查找 %{icon} 以决定您希望收到哪些特定话题、类别和标签的通知。有关更多信息，请查看您的<a href='%{preferencesUrl}'>通知偏好设置</a>。
-      first_notification: "您的第一个通知！选中它以开始。"
       dynamic_favicon: "在浏览器图标上显示数量"
       skip_new_user_tips:
         description: "跳过新用户入门提示和徽章"
-        not_first_time: "不是第一次？"
-        skip_link: "跳过这些提示"
-        read_later: "稍后再读。"
+      reset_seen_user_tips: "再次显示用户提示"
       theme_default_on_all_devices: "将其设为我所有设备上的默认主题"
       color_scheme_default_on_all_devices: "在我的所有设备上设置默认配色方案"
       color_scheme: "配色方案"
@@ -1044,11 +1045,16 @@ zh_CN:
       enable_quoting: "为突出显示的文字启用引用回复"
       enable_defer: "启用延迟以将话题标记为未读"
       experimental_sidebar:
+        enable: "启用边栏"
         options: "选项"
         categories_section: "类别版块"
         categories_section_instruction: "所选类别将显示在边栏的类别版块下。"
         tags_section: "标签版块"
         tags_section_instruction: "所选标签将显示在边栏的标签版块下。"
+        navigation_section: "导航"
+        list_destination_instruction: "当边栏中有新内容时…"
+        list_destination_default: "使用默认链接并为新条目显示徽章"
+        list_destination_unread_new: "链接到未读/新条目并显示新条目的数量"
       change: "更改"
       featured_topic: "精选话题"
       moderator: "%{user} 是版主"
@@ -1147,14 +1153,15 @@ zh_CN:
         warnings: "官方警告"
         read_more_in_group: "想阅读更多？浏览 %{groupLink} 中的其他消息。"
         read_more: "想阅读更多？在<a href='%{basePath}/u/%{username}/messages'>个人消息</a>中浏览其他消息。"
-        read_more_group_pm_MF: "还有{ UNREAD, plural, =0 {} other { <a href='{basePath}/unread'># 个未读</a>} }{ NEW, plural, =0 {} other {{BOTH, select, true{和} false {} other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># 个新</a>消息} }，或者浏览{groupLink}的其他消息"
-        read_more_personal_pm_MF: "还有{ UNREAD, plural, =0 {} other { <a href='{basePath}/u/{username}/messages/unread'># 个未读</a>} }{ NEW, plural, =0 {} other {{BOTH, select, true{和} false {} other{}} <a href='{basePath}/u/{username}/messages/new'># 个新</a>消息} }，或者浏览<a href='{basePath}/u/{username}/messages'>个人消息</a>"
+        read_more_group_pm_MF: "还有 { UNREAD, plural, =0 {} other {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># 条未读消息</a>} }{NEW, plural, =0 {} other{ {BOTH, select, true{和} false {are } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># 条新消息</a>} }，或者在{groupLink}中浏览其他消息"
+        read_more_personal_pm_MF: "还有{ UNREAD, plural, =0 {} other { <a href='{basePath}/u/{username}/messages/unread'># 条未读消息</a>} }{ NEW, plural, =0 {} other { {BOTH, select, true{和} false {are } other{}} <a href='{basePath}/u/{username}/messages/new'># 条新个人消息</a>} }，或者浏览其他<a href='{basePath}/u/{username}/messages'>个人消息</a>"
       preferences_nav:
         account: "帐户"
         security: "安全性"
         profile: "个人资料"
         emails: "电子邮件"
         notifications: "通知"
+        tracking: "跟踪"
         categories: "类别"
         users: "用户"
         tags: "标签"
@@ -1215,6 +1222,8 @@ zh_CN:
         edit: "编辑"
         edit_title: "编辑身份验证器"
         edit_description: "身份验证器名称"
+        enable_security_key_description: |
+          准备好<a href="https://www.google.com/search?q=hardware+security+key" target="_blank">硬件安全密钥</a>或兼容的移动设备后，请按下面的“注册”按钮。
         totp:
           title: "基于令牌的身份验证器"
           add: "添加身份验证器"
@@ -1222,10 +1231,16 @@ zh_CN:
           name_and_code_required_error: "您必须提供名称和身份验证器应用中的代码。"
         security_key:
           register: "注册"
+          title: "实物安全密钥"
+          add: "添加实物安全密钥"
           default_name: "主要安全密钥"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "安全密钥注册过程已超时或被取消。"
           already_added_error: "您已注册此安全密钥，无需再次注册。"
+          edit: "编辑实物安全密钥"
           save: "保存"
+          edit_description: "实物安全密钥名称"
           name_required_error: "您必须为您的安全密钥提供一个名称。"
       change_about:
         title: "更改自我介绍"
@@ -1398,6 +1413,7 @@ zh_CN:
       email_in_reply_to: "在电子邮件中包含帖子回复节选"
       other_settings: "其他"
       categories_settings: "类别"
+      topics_settings: "话题"
       new_topic_duration:
         label: "何时视为新话题"
         not_viewed: "我还没看过"
@@ -1585,6 +1601,24 @@ zh_CN:
       set_custom_status: "设置自定义状态"
       what_are_you_doing: "您在做什么？"
       remove_status: "移除状态"
+    user_tips:
+      primary: "知道了！"
+      secondary: "不要为我显示这些提示"
+      first_notification:
+        title: "您的第一个通知！"
+        content: "通知用于让您了解社区中发生的最新情况。"
+      topic_timeline:
+        title: "话题时间线"
+        content: "使用话题时间线快速滚动浏览帖子。"
+      post_menu:
+        title: "帖子菜单"
+        content: "点击三个点，看看您还能如何与帖子互动！"
+      topic_notification_levels:
+        title: "您现在正在关注此话题"
+        content: "查找此铃声来调整您对特定话题或整个类别的通知偏好设置。"
+      suggested_topics:
+        title: "继续阅读！"
+        content: "下面是我们认为您接下来可能想要阅读的一些话题。"
     loading: "正在加载…"
     errors:
       prev_page: "无法加载"
@@ -1731,6 +1765,7 @@ zh_CN:
       second_factor_backup_title: "双重备份"
       second_factor_backup_description: "请输入您的备份代码之一："
       second_factor: "使用身份验证器应用登录"
+      security_key_description: "当您准备好实物安全密钥或兼容的移动设备后，请按下面的“使用安全密钥进行身份验证”按钮。"
       security_key_alternative: "尝试另一种方式"
       security_key_authenticate: "使用安全密钥进行身份验证"
       security_key_not_allowed_error: "安全密钥身份验证过程超时或被取消。"
@@ -1803,6 +1838,7 @@ zh_CN:
       success: "您的帐户已创建，您现在已登录。"
       name_label: "姓名"
       password_label: "密码"
+      existing_user_can_redeem: "兑换您的话题或群组邀请。"
     password_reset:
       continue: "继续访问 %{site_name}"
     emoji_set:
@@ -2152,6 +2188,7 @@ zh_CN:
         other: "<span>%{count}%{plus} 条与 </span>“<span class='term'>%{term}</span>”有关的结果"
       title: "搜索"
       full_page_title: "搜索"
+      results: "结果"
       no_results: "找不到结果。"
       no_more_results: "没有找到更多结果。"
       post_format: "#%{post_number}，来自 %{username}"
@@ -2196,6 +2233,7 @@ zh_CN:
         status: "按话题状态筛选"
         full_search: "启动完整页面搜索"
         full_search_key: "%{modifier} + Enter"
+        me: "仅显示您的帖子"
       advanced:
         title: 高级筛选器
         posted_by:
@@ -2982,6 +3020,7 @@ zh_CN:
       all: "所有类别"
       choose: "类别&hellip;"
       edit: "编辑"
+      edit_title: "编辑此类别"
       edit_dialog_title: "编辑: %{categoryName}"
       view: "查看类别中的话题"
       back: "返回类别"
@@ -3068,6 +3107,7 @@ zh_CN:
       this_year: "今年"
       position: "类别页面上的位置："
       default_position: "默认位置"
+      position_disabled: "类别将按活动顺序显示。要控制列表中类别的顺序，请启用<a href='%{url}'>固定类别位置</a>设置。"
       minimum_required_tags: "话题中所需的最少标签数："
       default_slow_mode: '为此类别中的新话题启用“慢速模式”。'
       parent: "父类别"
@@ -3652,15 +3692,25 @@ zh_CN:
             unread_with_count: "未读 (%{count})"
             archive: "归档"
         tags:
+          links:
+            add_tags:
+              content: "添加标签"
+              title: "您尚未添加任何标签。点击以开始。"
           none: "您还没有添加任何标签。"
           click_to_get_started: "点击此处开始。"
           header_link_text: "标签"
           header_action_title: "编辑您的边栏标签"
+          configure_defaults: "配置默认值"
         categories:
+          links:
+            add_categories:
+              content: "添加类别"
+              title: "您尚未添加任何类别。点击以开始。"
           none: "您还没有添加任何类别。"
           click_to_get_started: "点击此处开始。"
           header_link_text: "类别"
           header_action_title: "编辑您的边栏类别"
+          configure_defaults: "配置默认值"
         community:
           header_link_text: "社区"
           header_action_title: "创建新话题"
@@ -3676,9 +3726,6 @@ zh_CN:
               title: "所有话题"
             faq:
               content: "常见问题解答"
-            tracked:
-              content: "已跟踪"
-              title: "所有跟踪的话题"
             groups:
               content: "群组"
               title: "所有群组"
@@ -4064,6 +4111,7 @@ zh_CN:
         change_settings_short: "设置"
         howto: "如何安装插件？"
         official: "官方插件"
+        broken_route: "无法配置“%{name}”的链接。确保禁用广告拦截器并尝试重新加载页面。"
       backups:
         title: "备份"
         menu:
@@ -4927,6 +4975,7 @@ zh_CN:
         trust_level_2_users: "信任级别 2 用户"
         trust_level_3_requirements: "信任级别 3 要求"
         trust_level_locked_tip: "信任级别已被锁定，系统将不会升降用户的信任级别"
+        trust_level_unlocked_tip: "信任级别已被解锁，系统可能会升降用户的信任级别"
         lock_trust_level: "锁定信任级别"
         unlock_trust_level: "解锁信任级别"
         silenced_count: "被禁言"
@@ -4985,18 +5034,23 @@ zh_CN:
         delete_confirm: "确定要删除该用户字段吗？"
         options: "选项"
         required:
+          title: "注册时需要"
           enabled: "必选"
           disabled: "非必选"
         editable:
+          title: "注册后可以编辑"
           enabled: "可编辑"
           disabled: "不可编辑"
         show_on_profile:
+          title: "在公开个人资料中显示"
           enabled: "在个人资料中显示"
           disabled: "不在个人资料中显示"
         show_on_user_card:
+          title: "在用户卡片上显示"
           enabled: "在用户卡片上显示"
           disabled: "不在用户卡片上显示"
         searchable:
+          title: "可搜索"
           enabled: "可搜索"
           disabled: "不可搜索"
         field_types:
@@ -5070,6 +5124,7 @@ zh_CN:
           search: "搜索"
           groups: "群组"
           dashboard: "信息中心"
+          sidebar: "边栏"
         secret_list:
           invalid_input: "输入字段不能为空或包含竖线字符。"
         default_categories:
@@ -5183,6 +5238,7 @@ zh_CN:
       embedding:
         get_started: "如果您想将 Discourse 嵌入另一个网站，请先添加其主机。"
         confirm_delete: "确定要删除该主机吗？"
+        sample: "将以下 HTML 代码粘贴到您的站点中以创建和嵌入 Discourse 话题。将 <b>REPLACE_ME</b> 替换为您要嵌入它的页面的规范 URL。"
         title: "嵌入"
         host: "允许的主机"
         class_name: "类名"
@@ -5217,6 +5273,7 @@ zh_CN:
         destination: "目标"
         copy_to_clipboard: "将永久链接复制到剪贴板"
         delete_confirm: 确定要删除此永久链接吗？
+        no_permalinks: "您还没有任何永久链接。在上方创建一个新的永久链接，以开始在此处查看您的永久链接列表。"
         form:
           label: "新："
           add: "添加"

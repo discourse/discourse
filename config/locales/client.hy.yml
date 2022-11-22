@@ -824,7 +824,6 @@ hy:
       dismiss: "Չեղարկել"
       dismiss_notifications: "Չեղարկել Բոլորը"
       dismiss_notifications_tooltip: "Նշել բոլոր չկարդացած ծանուցումները որպես կարդացած:"
-      first_notification: "Ձեր առաջին ծանուցումն է! Ընտրեք այն՝ սկսելու համար:"
       dynamic_favicon: "Ցուցադրել քանակը բրաուզերի պատկերակի վրա"
       theme_default_on_all_devices: "Դարձնել սա լռելյայն թեմա իմ բոլոր սարքավորումների համար"
       color_schemes:
@@ -932,6 +931,7 @@ hy:
         profile: "Պրոֆիլ"
         emails: "Էլ. հասցեներ"
         notifications: "Ծանուցումներ"
+        tracking: "Հետևում Եմ"
         categories: "Կատեգորիաներ"
         users: "Օգտատերեր"
         tags: "Թեգեր"
@@ -1135,6 +1135,7 @@ hy:
       email_in_reply_to: "Ներառել գրառումների պատասխանների քաղվածք էլ. նամակներում"
       other_settings: "Այլ"
       categories_settings: "Կատեգորիաներ"
+      topics_settings: "Թեմա"
       new_topic_duration:
         label: "Համարել թեմաները նոր, երբ"
         not_viewed: "Ես դեռևս դրանք չեմ դիտել"
@@ -1718,6 +1719,7 @@ hy:
         other: "<span>%{count}%{plus} արդյունք</span><span class='term'>%{term}</span>-ի համար"
       title: "Որոնում"
       full_page_title: "Որոնում"
+      results: "արդյունքները"
       no_results: "Արդյունքներ չեն գտնվել:"
       no_more_results: "Արդյունքներ այլևս չեն գտնվել:"
       post_format: "#%{post_number} %{username}-ի կողմից"
@@ -2905,8 +2907,6 @@ hy:
               content: "Կրծքանշաններ"
             faq:
               content: "ՀՏՀ"
-            tracked:
-              content: "Հետևած"
             groups:
               content: "Խմբեր"
               title: "Բոլոր խմբերը"

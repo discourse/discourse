@@ -6,6 +6,7 @@
 
 ja:
   site_settings:
+    chat_enabled: "チャットプラグインを有効にします。"
     chat_allowed_groups: "これらのグループのユーザーがチャットできます。スタッフはいつでもチャットにアクセスできることに注意してください。"
     chat_channel_retention_days: "通常のチャンネルのチャットメッセージは、この日数の間保持されます。メッセージを永久に保持するには、'0' に設定します。"
     chat_dm_retention_days: "パーソナルチャットチャンネルのチャットメッセージは、この日数の間保持されます。メッセージを永久に保持するには、'0' に設定します。"
@@ -15,13 +16,15 @@ ja:
     chat_silence_user_sensitivity: "チャットで通報されたユーザーが自動的に投稿禁止にされる可能性。"
     chat_auto_silence_from_flags_duration: "チャットメッセージの通報によって自動的に投稿禁止にされる場合に、ユーザーが投稿禁止になる分数。"
     chat_default_channel_id: "ユーザーに、他のチャンネルの未読のメッセージまたはメンションがない場合に、デフォルトでオープンになるチャットチャンネル。"
-    chat_duplicate_message_sensitivity: "同じ送信者による重複したメッセージが短期間でブロックされる可能性。0～1.0 の 10 進数で、1.0 が最高の設定です（より短期間でより頻繁にメッセージをブロックします）。'0' に設定すると、重複メッセージが許可されます。"
+    chat_duplicate_message_sensitivity: "同じ送信者による重複したメッセージが短期間でブロックされる可能性。0～1.0 の 10 進数で、1.0 が最高の設定です (より短期間でより頻繁にメッセージをブロックします)。'0' に設定すると、重複メッセージが許可されます。"
     chat_minimum_message_length: "チャットメッセージの最低文字数。"
     chat_allow_uploads: "公開チャットチャンネルとダイレクトメッセージチャンネルでアップロードを許可します。"
     chat_archive_destination_topic_status: "チャンネルのアーカイブが完了した後のアーカイブ先トピックのステータス。これは、アーカイブ先のトピックが既存のトピックではなく新しいトピックである場合にのみ適用されます。"
-    default_emoji_reactions: "チャットメッセージのデフォルトの絵文字リアクション。すぐにリアクションするための絵文字を最大 5 個追加できます。"
+    default_emoji_reactions: "チャットメッセージのデフォルトの絵文字リアクション。即時にリアクションするための絵文字を最大 5 個追加できます。"
     direct_message_enabled_groups: "これらのグループのユーザーがユーザー間のパーソナルチャットを作成することを許可します。注意: スタッフはいつでもパーソナルチャットを作成でき、ユーザーは作成権限のあるユーザーが開始したパーソナルチャットに返信できます。"
     chat_message_flag_allowed_groups: "これらのグループのユーザーは、チャットメッセージを通報できます。"
+    chat_max_direct_message_users: "ユーザーは、新しいダイレクトメッセージを作成する際に、この数を超えるユーザーを追加できません。自分宛のメッセージのみを許可する場合は 0 に設定します。スタッフはこの設定から除外されます。"
+    chat_allow_archiving_channels: "チャンネルを閉じる時に、スタッフがメッセージをトピックにアーカイブすることを許可します。"
     errors:
       chat_default_channel: "デフォルトのチャットチャンネルは公開チャンネルである必要があります。"
       direct_message_enabled_groups_invalid: "この設定には、少なくとも 1 つのグループを指定する必要があります。スタッフ以外がダイレクトメッセージを送れないようにするには、スタッフグループを選択します。"
@@ -53,13 +56,15 @@ ja:
       max_reactions_limit_reached: "このメッセージでは、新しいリアクションは許可されていません。"
       message_move_invalid_channel: "移動元と移動先のチャンネルは公開チャンネルである必要があります。"
       message_move_no_messages_found: "指定されたメッセージ ID を持つメッセージは見つかりませんでした。"
-      cant_update_direct_message_channel: "名前や説明と言ったダイレクトメッセージのチャンネルプロパティを更新できません。"
+      cant_update_direct_message_channel: "名前や説明などのダイレクトメッセージのチャンネルプロパティを更新できません。"
       not_accepting_dms: "%{username} は現在、メッセージを受け付けていません。"
       actor_ignoring_target_user: "%{username} を無視しているため、メッセージを送信できません。"
       actor_muting_target_user: "%{username} をミュートしているため、メッセージを送信できません。"
       actor_disallowed_dms: "ユーザーがあなたにプライベートメッセージやダイレクトメッセージを送信できないように選択しているため、新しいダイレクトメッセージを作成できません。"
       actor_preventing_target_user_from_dm: "%{username} があなたにプライベートメッセージやダイレクトメッセージを送信できないように選択しているため、新しいダイレクトメッセージを作成できません。"
       user_cannot_send_direct_messages: "ダイレクトメッセージを送信できません。"
+      over_chat_max_direct_message_users:
+        other: "%{count} 人を超えるユーザーを含むダイレクトメッセージを作成できません。"
     reviewables:
       message_already_handled: "ありがとうございます。ただ、このメッセージはすでにレビュー済みで、通報の必要がないと判断されています。"
       actions:
@@ -93,11 +98,11 @@ ja:
         ignore:
           title: "無視"
       direct_messages:
-        transcript_title: "%{channel_name} の前のメッセージのトランスクリプト"
-        transcript_body: "より文脈を掴みやすいように、この会話の前のメッセージのトランスクリプトを含めました（最大 10 件）。\n\n%{transcript}"
+        transcript_title: "%{channel_name} の過去のメッセージのトランスクリプト"
+        transcript_body: "より文脈を掴みやすいように、この会話の過去のメッセージのトランスクリプトを含めました (最大 10 件)。\n\n%{transcript}"
     channel:
       statuses:
-        read_only: "読み取り専用"
+        read_only: "より文脈を掴みやすいように、この会話の過去のメッセージのトランスクリプトを含めました (最大 10 件)。\n\n%{transcript}"
         archived: "アーカイブ済み"
         closed: "閉鎖"
         open: "オープン"
@@ -109,6 +114,10 @@ ja:
         single_user: "%{user}"
         multi_user: "%{users}"
         multi_user_truncated: "%{users} および他 %{leftover} 人"
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "に非 ASCII 文字が含まれます"
+        is_already_in_use: "はすでに使用されています"
     bookmarkable:
       notification_title: "%{channel_name} のメッセージ"
     personal_chat: "パーソナルチャット"
@@ -165,7 +174,7 @@ ja:
         other: "%{count} 件のメッセージを表示"
       view_more:
         other: "さらに %{count} 件のメッセージを表示"
-      your_chat_settings: "チャットメールの頻度設定"
+      your_chat_settings: "チャットのメール送信頻度設定"
   unsubscribe:
     chat_summary:
       select_title: "チャット要約メールの頻度を設定:"

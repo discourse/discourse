@@ -74,6 +74,7 @@ pt:
         save: "Guardar"
         saved: "Guardado"
         unfollow: "Sair"
+        admin_title: "Administração"
       incoming_webhooks:
         back: "Retroceder"
         description: "Descrição"

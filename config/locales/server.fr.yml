@@ -67,6 +67,7 @@ fr:
       modifier_values: "les modificateurs du fichier about.json contiennent des valeurs invalides : %{errors}"
       git: "Erreur de clonage du dépôt git, l'accès est refusé ou le dépôt n'est pas trouvé."
       git_ref_not_found: "Impossible de récupérer la référence git : %{ref}"
+      git_unsupported_scheme: "Impossible de cloner le dépôt Git : schéma non pris en charge"
       unpack_failed: "Impossible de décompresser le fichier"
       file_too_big: "Le fichier non compressé est trop volumineux."
       unknown_file_type: "Le fichier que vous avez essayé d'envoyer ne semble pas être un thème Discourse valide."
@@ -248,6 +249,7 @@ fr:
     max_redemptions_allowed_one: "pour les invitations par e-mail, la valeur doit être 1"
     redemption_count_less_than_max: "doit être inférieur à %{max_redemptions_allowed}."
     email_xor_domain: "Les champs e-mail et domaine ne sont pas autorisés en même temps"
+    existing_user_success: "Invitation utilisée avec succès"
   bulk_invite:
     file_should_be_csv: "Le fichier envoyé doit être au format CSV."
     max_rows: "Les premières %{max_bulk_invites} invitations ont été envoyées. Essayez de diviser le fichier en parties plus petites."
@@ -495,6 +497,7 @@ fr:
       Vous pouvez modifier votre dernière réponse et ajouter une citation en sélectionnant le texte à citer et en cliquant sur le bouton <b>Citer</b>.
 
       Il est plus facile de lire des discussions comprenant des réponses approfondies plutôt que de nombreuses réponses individuelles brèves.
+    dominating_topic: Vous avez publié plus de %{percent} % des réponses ici ; pouvons-nous vous suggérer de donner l'occasion à d'autres personnes d'intervenir ?
     get_a_room: Nous remarquons que vous avez déjà envoyé un certain nombre de réponses (%{count}) à @%{reply_username}. Saviez-vous qu'il est également possible d'échanger des messages directs avec cette personne sur notre site ?
     too_many_replies: |
       ### Vous avez atteint le nombre maximal de réponses dans ce sujet
@@ -638,6 +641,7 @@ fr:
       disallowed_topic_tags: "Ce sujet contient des étiquettes qui ne sont pas autorisées dans cette catégorie : %{tags}"
       disallowed_tags_generic: "Ce sujet contient des étiquettes interdites."
       slug_contains_non_ascii_chars: "contient des caractères non-ascii"
+      is_already_in_use: "est déjà utilisé"
     cannot_delete:
       uncategorized: "Cette catégorie est spéciale. Elle sert à rassembler les sujets qui n'ont pas de catégorie ; elle ne peut pas être supprimée."
       has_subcategories: "Vous ne pouvez pas supprimer cette catégorie car elle comprend des sous-catégories."
@@ -763,6 +767,7 @@ fr:
         one: "il y a presque un an"
         other: "il y a presque %{count} ans"
   password_reset:
+    no_token: 'Oups ! Le lien que vous avez utilisé ne fonctionne plus. Vous pouvez vous <a href="%{base_url}/login">connecter</a> maintenant. Si vous avez oublié votre mot de passe, vous pouvez <a href="%{base_url}/password-reset">demander un lien</a> pour le réinitialiser.'
     choose_new: "Choisir un nouveau mot de passe"
     choose: "Choisir un mot de passe"
     update: "Mettre à jour le mot de passe"
@@ -771,7 +776,6 @@ fr:
     success: "Vous avez modifié votre mot de passe avec succès et vous êtes maintenant connecté(e)."
     success_unapproved: "Vous avez modifié votre mot de passe avec succès."
   email_login:
-    invalid_token: "Nous sommes désolés, ce lien de connexion par e-mail est trop ancien. Cliquez sur le bouton « Se connecter » et utilisez « J'ai oublié mon mot de passe » pour obtenir un nouveau lien."
     title: "Connexion par e-mail"
   user_auth_tokens:
     browser:
@@ -1407,6 +1411,7 @@ fr:
     search_ignore_accents: "Ignorer les accents dans les recherches textuelles."
     category_search_priority_low_weight: "Pondération appliquée au classement des résultats de recherche pour les catégories à faible priorité."
     category_search_priority_high_weight: "Pondération appliquée au classement des résultats de recherche pour les catégories à priorité élevée."
+    default_composer_category: "Catégorie utilisée pour préremplir la liste déroulante des catégories lors de la création d'un nouveau sujet."
     allow_uncategorized_topics: "Autoriser la création de sujets sans catégorie. ATTENTION : s'il existe des sujets sans catégorie, vous devez les classer avant de désactiver ce paramètre."
     allow_duplicate_topic_titles: "Autoriser la création de sujet avec le même titre."
     allow_duplicate_topic_titles_category: "Permettre l'existence de plusieurs sujets au titre identique s'ils appartiennent à des catégories différentes. Le paramètre « allow_duplicate_topic_titles » doit être désactivé."
@@ -1933,7 +1938,6 @@ fr:
     enable_user_directory: "Activer l'annuaire des utilisateurs"
     enable_group_directory: "Activer l'annuaire des groupes"
     enable_category_group_moderation: "Autoriser les groupes à modérer le contenu dans des catégories spécifiques"
-    group_in_subject: "Mettre %%{optional_pm} dans le sujet de l'e-mail au nom du premier groupe du message direct. Voir : <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>personnaliser le format du sujet des e-mails standards</a>"
     allow_anonymous_posting: "Permettre aux utilisateurs de passer en mode anonyme"
     anonymous_posting_min_trust_level: "Le niveau de confiance minimal pour passer en mode anonyme."
     anonymous_account_duration_minutes: "Pour protéger l'anonymat, créer un nouveau compte anonyme toutes les N minutes pour chaque utilisateur. Exemple : si la valeur 600 est choisie, lorsque 600 minutes seront passées après le dernier message ET que l'utilisateur passera en mode anonyme, un nouveau compte anonyme lui sera créé."
@@ -2047,6 +2051,7 @@ fr:
     disable_mailing_list_mode: "Interdire aux utilisateurs d'activer le mode « liste de diffusion » (empêche tout e-mail d'être expédié vers une liste de diffusion)."
     default_email_previous_replies: "Inclure par défaut les réponses précédentes dans les e-mails."
     default_email_in_reply_to: "Inclure par défaut l'extrait du message auquel se fait la réponse dans les e-mails."
+    default_hide_profile_and_presence: "Masquez le profil public de l'utilisateur et les fonctionnalités de présence par défaut."
     default_other_new_topic_duration_minutes: "Condition par défaut pour considérer un sujet comme nouveau."
     default_other_auto_track_topics_after_msecs: "Durée par défaut après laquelle un sujet est automatiquement suivi."
     default_other_notification_level_when_replying: "Niveau de notification global par défaut quand un utilisateur répond à un sujet."
@@ -2104,6 +2109,7 @@ fr:
     enable_sitemap: "Générez un sitemap pour votre site et l'inclure dans le fichier robots.txt."
     sitemap_page_size: "Nombre d'URL à inclure dans chaque page de sitemap. Maximum 50 000"
     enable_user_status: "(expérimental) Autoriser les utilisateurs à définir un message d'état personnalisé (émoji + description)."
+    enable_user_tips: "(expérimental) Activer les nouveaux conseils d'utilisation qui décrivent les fonctionnalités clés aux utilisateurs"
     short_title: "Le titre court sera utilisé sur l'écran d'accueil de l'utilisateur, le lanceur d'applications ou d'autres endroits où la place disponible est limitée. Il devrait être limité à 12 caractères."
     dashboard_hidden_reports: "Permettre de masquer les rapports du tableau de bord."
     dashboard_visible_tabs: "Choisissez les onglets visibles sur le tableau de bord."
@@ -2178,6 +2184,7 @@ fr:
       search_tokenize_japanese_enabled: "Pour activer ce paramètre, vous devez d'abord désactiver « search_tokenize_japanese »."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Vous ne pouvez pas activer DiscourseConnect si la 2FA est obligatoire."
       delete_rejected_email_after_days: "Ce paramètre ne peut pas être inférieur au paramètre delete_email_logs_after_days ou supérieur à %{max}"
+      invalid_uncategorized_category_setting: "La catégorie Sans catégorie ne peut pas être sélectionnée si l'autorisation des sujets sans catégorie n'est pas autorisée"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3709,6 +3716,7 @@ fr:
     png_to_jpg_conversion_failure_message: "Une erreur est survenue lors de la conversion du format PNG en JPG."
     optimize_failure_message: "Une erreur est survenue lors de l'optimisation de l'image envoyée."
     download_failure: "Le téléchargement du fichier depuis la source externe a échoué."
+    size_mismatch_failure: "La taille du fichier chargé vers S3 ne correspondait pas à la taille prévue pour le téléversement externe. %{additional_detail}"
     create_multipart_failure: "Impossible de créer un téléversement partitionné dans la boutique externe."
     abort_multipart_failure: "Impossible d'interrompre le téléversement partitionné dans la boutique externe."
     complete_multipart_failure: "Impossible de terminer le téléversement partitionné dans la boutique externe."
@@ -4745,6 +4753,10 @@ fr:
   user_status:
     errors:
       ends_at_should_be_greater_than_set_at: "ends_at doit être supérieur à set_at"
+  webhooks:
+    payload_url:
+      blocked_or_internal: "L'URL de la charge utile ne peut pas être utilisée, car elle correspond à une adresse IP interne ou bloquée"
+      unsafe: "L'URL de la charge utile ne peut pas être utilisée, car elle n'est pas sûre"
   activemodel:
     errors:
       <<: *errors

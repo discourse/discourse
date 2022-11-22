@@ -232,6 +232,7 @@ it:
     delete: "Cancella"
     generic_error: "Spiacenti, c'è stato un errore."
     generic_error_with_reason: "Si è verificato un errore: %{error}"
+    multiple_errors: "Si sono verificati più errori: %{errors}"
     sign_up: "Iscriviti"
     log_in: "Accedi"
     age: "Età"
@@ -293,6 +294,7 @@ it:
       like_count: "Mi piace"
       topic_count: "Argomenti"
       post_count: "Messaggi"
+      user_count: "Iscrizioni"
       active_user_count: "Utenti Attivi"
       contact: "Contattaci"
       contact_info: "Nel caso di un problema grave o urgente riguardante il sito, per favore contattaci all'indirizzo %{contact_info}."
@@ -656,6 +658,8 @@ it:
         reset_to_default: "Ripristina impostazioni predefinite"
       group:
         all: "tutti i gruppi"
+      sort:
+        label: "Ordina per %{criteria}"
     group_histories:
       actions:
         change_group_setting: "Cambia le impostazioni del gruppo"
@@ -820,6 +824,7 @@ it:
         group_type: "Tipo di gruppo"
         is_group_user: "Membro"
         is_group_owner: "Proprietario"
+        search_results: "I risultati di ricerca verranno visualizzati di seguito."
       title:
         one: "Group"
         other: "Gruppi"
@@ -854,6 +859,7 @@ it:
         no_filter_matches: "Nessun membro corrisponde a questa ricerca."
       topics: "Argomenti"
       posts: "Messaggi"
+      aria_post_number: "%{title}, messaggio n. %{postNumber}"
       mentions: "Menzioni"
       messages: "Messaggi"
       notification_level: "Livello di notifica predefinito per i messaggi di gruppo"
@@ -1073,13 +1079,10 @@ it:
       no_notifications_page_title: "Non hai ancora notifiche"
       no_notifications_page_body: >
         Riceverai una notifica sulle attività rilevanti per te, fra cui le risposte ai tuoi argomenti e messaggi, quando qualcuno ti <b>@menziona</b> o ti cita, e risponde agli argomenti che osservi. Le notifiche ti saranno inviate anche per e-mail quando è un po' che non accedi al forum. <br><br> Cerca l'icona %{icon} per decidere per quali specifici argomenti, categorie ed etichette vuoi ricevere le notifiche. Per altre opzioni, vai alle tue <a href='%{preferencesUrl}'>preferenze di notifica</a>.
-      first_notification: "La tua prima notifica! Selezionala per iniziare."
       dynamic_favicon: "Mostra il contatore sull'icona del browser"
       skip_new_user_tips:
         description: "Salta i suggerimenti e i distintivi per l'inserimento dei nuovi utenti"
-        not_first_time: "Non sei nuovo qui?"
-        skip_link: "Ignora questi consigli"
-        read_later: "Lo leggerò più tardi."
+      reset_seen_user_tips: "Mostra di nuovo i suggerimenti per gli utenti"
       theme_default_on_all_devices: "Rendi questo il tema predefinito su tutti i miei dispositivi."
       color_scheme_default_on_all_devices: "Imposta questa combinazione di colori predefinita su tutti i miei dispositivi"
       color_scheme: "Combinazione di colori"
@@ -1099,11 +1102,16 @@ it:
       enable_quoting: "Abilita \"rispondi citando\" il testo evidenziato"
       enable_defer: "Abilita opzione di contrassegnare gli argomenti da leggere in seguito"
       experimental_sidebar:
+        enable: "Abilita barra laterale"
         options: "Opzioni"
         categories_section: "Sezione Categorie"
         categories_section_instruction: "Le categorie selezionate saranno visualizzate nella sezione Categorie della barra laterale."
         tags_section: "Sezione etichette"
         tags_section_instruction: "Le etichette selezionate appariranno nella sezione Etichette della barra laterale."
+        navigation_section: "Navigazione"
+        list_destination_instruction: "Quando ci sono nuovi contenuti nella barra laterale..."
+        list_destination_default: "usa il link predefinito e mostra un distintivo per i nuovi elementi"
+        list_destination_unread_new: "collega a elementi non letti/nuovi e mostra un contatore dei nuovi elementi"
       change: "cambia"
       featured_topic: "Argomento in primo piano"
       moderator: "%{user} è un moderatore"
@@ -1274,6 +1282,8 @@ it:
         edit: "Modifica"
         edit_title: "Modifica Authenticator"
         edit_description: "Nome Authenticator"
+        enable_security_key_description: |
+          Quando <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">la chiave di sicurezza hardware</a> o il dispositivo mobile compatibile sono pronti, premi il pulsante Registra qui di seguito.
         totp:
           title: "Authenticator basati su Token"
           add: "Aggiungi Authenticator"
@@ -1281,10 +1291,16 @@ it:
           name_and_code_required_error: "Devi fornire un nome e il codice dalla tua app di autenticazione."
         security_key:
           register: "Registra"
+          title: "Chiavi di sicurezza fisica"
+          add: "Aggiungi chiave di sicurezza fisica"
           default_name: "Chiave di Sicurezza principale"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "Il processo di registrazione della Chiave di Sicurezza è scaduto o è stato annullato."
           already_added_error: "Hai già registrato questa Chiave di Sicurezza. Non è necessario registrarla di nuovo."
+          edit: "Modifica chiave di sicurezza fisica"
           save: "Salva"
+          edit_description: "Nome della chiave di sicurezza fisica"
           name_required_error: "Devi fornire un nome per la Chiave di Sicurezza"
       change_about:
         title: "Modifica i dati personali"
@@ -1636,6 +1652,9 @@ it:
         title: "Flair"
         none: "(nessuno)"
         instructions: "icona visualizzata accanto alla tua immagine del profilo"
+      status:
+        title: "Stato personalizzato"
+        not_set: "Non impostato"
       primary_group:
         title: "Gruppo Primario"
         none: "(nessuno)"
@@ -1651,6 +1670,24 @@ it:
       set_custom_status: "Imposta stato personalizzato"
       what_are_you_doing: "Cosa fai?"
       remove_status: "Rimuovi lo stato"
+    user_tips:
+      primary: "Fatto!"
+      secondary: "non mostrarmi questi suggerimenti"
+      first_notification:
+        title: "La tua prima notifica!"
+        content: "Le notifiche vengono utilizzate per tenerti aggiornato su ciò che sta accadendo nella community."
+      topic_timeline:
+        title: "Cronologia argomenti"
+        content: "Scorri rapidamente un messaggio utilizzando la cronologia degli argomenti."
+      post_menu:
+        title: "Menu messaggi"
+        content: "Scopri in quale altro modo puoi interagire con il messaggio facendo clic sui tre puntini!"
+      topic_notification_levels:
+        title: "Ora stai seguendo questo argomento"
+        content: "Cerca questa campanella per modificare le tue preferenze di notifica per argomenti specifici o per intere categorie."
+      suggested_topics:
+        title: "Continua a leggere!"
+        content: "Ecco alcuni argomenti che riteniamo gradiresti leggere in seguito."
     loading: " Caricamento..."
     errors:
       prev_page: "durante il caricamento"
@@ -1799,6 +1836,7 @@ it:
       second_factor_backup_title: "Backup per l'Autenticazione a Due Fattori"
       second_factor_backup_description: "Inserisci uno dei tuoi codici di backup:"
       second_factor: "Accedi utilizzando l'app Authenticator"
+      security_key_description: "Quando hai preparato la chiave di sicurezza fisica o il dispositivo mobile compatibile, premi il pulsante Autentica con Chiave di Sicurezza qui sotto."
       security_key_alternative: "Prova in un altro modo"
       security_key_authenticate: "Autentica con Chiave di Sicurezza"
       security_key_not_allowed_error: "Il processo di autenticazione con Chiave di Sicurezza è scaduto o è stato annullato."
@@ -1871,6 +1909,7 @@ it:
       success: "Il tuo account è stato creato e ora hai effettuato l'accesso."
       name_label: "Nome"
       password_label: "Password"
+      existing_user_can_redeem: "Riscatta il tuo invito a un argomento o gruppo."
     password_reset:
       continue: "Procedi su %{site_name}"
     emoji_set:
@@ -2914,6 +2953,7 @@ it:
       gap:
         one: "visualizza %{count} risposta nascosta"
         other: "visualizza %{count} riposte nascoste"
+      sr_reply_to: "Rispondi al messaggio %{post_number} di @%{username}"
       notice:
         new_user: "Per la prima volta %{user} ha inviato un messaggio. Diamogli il benvenuto nella nostra comunità!"
         returning_user: "Era da un bel po' che %{user} non si faceva vedere: l'ultimo messaggio risale a %{time}."
@@ -3127,6 +3167,7 @@ it:
       all: "Tutte le categorie"
       choose: "categoria&hellip;"
       edit: "Modifica"
+      edit_title: "Modifica questa categoria"
       edit_dialog_title: "Modifica: %{categoryName}"
       view: "Visualizza Argomenti della Categoria"
       back: "Torna alla categoria"
@@ -3213,6 +3254,7 @@ it:
       this_year: "quest'anno"
       position: "Posizione nella pagina delle Categorie:"
       default_position: "Posizione predefinita"
+      position_disabled: "Le categorie verranno visualizzate in ordine di attività. Per controllare l'ordine delle categorie negli elenchi, abilita l'impostazione <a href='%{url}'>'posizioni di categoria fisse'</a>."
       minimum_required_tags: "Numero minimo di etichette richieste per argomento:"
       default_slow_mode: 'Attiva la "modalità lenta" per i nuovi argomenti in questa categoria.'
       parent: "Categoria Superiore"
@@ -3827,15 +3869,25 @@ it:
             unread_with_count: "Non letti (%{count})"
             archive: "Archiviati"
         tags:
+          links:
+            add_tags:
+              content: "Aggiungi etichette"
+              title: "Non hai aggiunto alcuna etichetta. Fai clic per iniziare."
           none: "Non hai aggiunto nessuna etichetta."
           click_to_get_started: "Clicca qui per iniziare."
           header_link_text: "Etichette"
           header_action_title: "modifica le etichette nella barra laterale"
+          configure_defaults: "Configura impostazioni predefinite"
         categories:
+          links:
+            add_categories:
+              content: "Aggiungi categorie"
+              title: "Non hai aggiunto alcuna categoria. Fai clic per iniziare."
           none: "Non hai aggiunto nessuna categoria."
           click_to_get_started: "Clicca qui per iniziare."
           header_link_text: "Categorie"
           header_action_title: "modifica le categorie nella barra laterale"
+          configure_defaults: "Configura impostazioni predefinite"
         community:
           header_link_text: "Community"
           header_action_title: "crea un nuovo argomento"
@@ -3851,9 +3903,6 @@ it:
               title: "Tutti gli argomenti"
             faq:
               content: "FAQ"
-            tracked:
-              content: "Seguiti"
-              title: "Tutti gli argomenti seguiti"
             groups:
               content: "Gruppi"
               title: "Tutti i gruppi"
@@ -3872,6 +3921,7 @@ it:
               pending_count: "%{count} in attesa"
     welcome_topic_banner:
       title: "Crea il tuo argomento di benvenuto"
+      description: "Il tuo argomento di benvenuto è la prima cosa che leggeranno i nuovi membri. Consideralo come un \"discorso fatto in ascensore\" o una \"dichiarazione di intenti\". Fai sapere a tutti a chi si rivolge questa community, cosa possono aspettarsi di trovare qui e cosa vorresti che facessero prima."
       button_title: "Inizia a modificare"
     until: "Fino a:"
   admin_js:
@@ -4244,6 +4294,7 @@ it:
         change_settings_short: "Impostazioni"
         howto: "Come installo i plugin?"
         official: "Plugin Ufficiale"
+        broken_route: "Impossibile configurare il collegamento a '%{name}'. Assicurati che i blocchi degli annunci siano disabilitati e prova a ricaricare la pagina."
       backups:
         title: "Backup"
         menu:
@@ -4465,6 +4516,7 @@ it:
           has_overwritten_history: "La versione attuale del tema non esiste più perché la cronologia Git è stata sovrascritta da un push forzato."
           add: "Aggiungi"
           theme_settings: "Impostazioni Tema"
+          overriden_settings_explanation: "Le impostazioni sostituite sono contrassegnate da un punto e hanno un colore evidenziato. Per ripristinare queste impostazioni al valore predefinito, premi il pulsante di ripristino accanto a esse."
           no_settings: "Questo tema non ha impostazioni."
           theme_translations: "Traduzioni Tema"
           empty: "Nessun elemento"
@@ -5111,6 +5163,7 @@ it:
         trust_level_2_users: "Utenti con livello di attendibilità 2"
         trust_level_3_requirements: "Requisiti per livello di attendibilità 3"
         trust_level_locked_tip: "il livello di attendibilità è bloccato, il sistema non promuoverà né degraderà l'utente"
+        trust_level_unlocked_tip: "il livello di attendibilità è sbloccato, il sistema può promuovere o degradare l'utente"
         lock_trust_level: "Blocca livello di attendibilità"
         unlock_trust_level: "Sblocca livello di attendibilità"
         silenced_count: "Silenziati"
@@ -5170,18 +5223,23 @@ it:
         delete_confirm: "Sicuro di voler cancellare il campo utente?"
         options: "Opzioni"
         required:
+          title: "Obbligatorio durante l'iscrizione"
           enabled: "obbligatorio"
           disabled: "non obbligatorio"
         editable:
+          title: "Modificabile dopo l'iscrizione"
           enabled: "modificabile"
           disabled: "non modificabile"
         show_on_profile:
+          title: "Mostrare nel profilo pubblico"
           enabled: "mostrato nel profilo"
           disabled: "non mostrato nel profilo"
         show_on_user_card:
+          title: "Mostrare sulla scheda utente"
           enabled: "mostrato sulla scheda utente"
           disabled: "non mostrato sulla scheda utente"
         searchable:
+          title: "Ricercabile"
           enabled: "ricercabile"
           disabled: "non ricercabile"
         field_types:
@@ -5255,6 +5313,7 @@ it:
           search: "Cerca"
           groups: "Gruppi"
           dashboard: "Dashboard"
+          sidebar: "Barra laterale"
         secret_list:
           invalid_input: "I campi di inserimento non possono essere vuoti o contenere il carattere barra verticale."
         default_categories:
@@ -5369,6 +5428,7 @@ it:
       embedding:
         get_started: "Se lo desideri, puoi incorporare Discourse in un altro sito web. Comincia aggiungendo il nome dell'host."
         confirm_delete: "Sicuro di voler cancellare questo host?"
+        sample: "Incolla il seguente codice HTML nel tuo sito per creare e incorporare argomenti Discourse. Sostituire <b>REPLACE_ME</b> con l'URL canonico della pagina su cui stai eseguendo l'operazione."
         title: "Integrato"
         host: "Host Abilitati"
         class_name: "Nome Classe"
@@ -5403,6 +5463,7 @@ it:
         destination: "Destinazione"
         copy_to_clipboard: "Copia permalink negli appunti"
         delete_confirm: Sei sicuro di voler cancellare questo collegamento permanente?
+        no_permalinks: "Non hai ancora alcun collegamento permanente. Crea un nuovo collegamento permanente qui sopra per iniziare a visualizzarne un elenco qui."
         form:
           label: "Nuovo:"
           add: "Aggiungi"

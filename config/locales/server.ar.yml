@@ -67,6 +67,7 @@ ar:
       modifier_values: "تتضمَّن معدِّلات ملف about.json قيمًا غير صالحة: %{errors}"
       git: "حدث خطأ في أثناء استنساخ مستودع Git، تم رفض الوصول أو لم يتم العثور على المستودع"
       git_ref_not_found: "يتعذَّر التحقُّق من مرجع Git:%{ref}"
+      git_unsupported_scheme: "يتعذَّر استنساخ git repo: مخطط غير مدعوم"
       unpack_failed: "فشل إلغاء ضغط الملف"
       file_too_big: "الملف غير المضغوط كبير جدًا."
       unknown_file_type: "يبدو أن الملف الذي حمَّلته ليس سمة Discourse صالحة."
@@ -284,6 +285,7 @@ ar:
     max_redemptions_allowed_one: "يجب أن تكون 1 لدعوات البريد الإلكتروني."
     redemption_count_less_than_max: "ينبغي أن يكون أقل من %{max_redemptions_allowed}."
     email_xor_domain: "غير مسموح بحقول البريد الإلكتروني والنطاق في الوقت نفسه"
+    existing_user_success: "تم استخدام الدعوة بنجاح"
   bulk_invite:
     file_should_be_csv: "يجب أن يكون الملف الذي تم تحميله بتنسيق CSV."
     max_rows: "تم إرسال أول %{max_bulk_invites} دعوة. حاول تقسيم الملف إلى أجزاء أصغر."
@@ -739,6 +741,7 @@ ar:
       disallowed_topic_tags: "يتضمَّن هذا الموضوع وسومًا لا تسمح بها هذه الفئة: \"%{tags}\""
       disallowed_tags_generic: "يتضمَّن الموضوع وسومًا غير مسموح بها."
       slug_contains_non_ascii_chars: "يتضمَّن حروفًا لا تنتمي إلى ترميز ASCII"
+      is_already_in_use: "قيد الاستخدام بالفعل"
     cannot_delete:
       uncategorized: "هذه الفئة خاصة. والغرض منها هو أن تكون منطقة للاحتفاظ بالموضوعات التي ليس لها فئة؛ لا يمكن حذفها."
       has_subcategories: "لا يمكن حذف هذه الفئة لأنها تتضمَّن فئات فرعية."
@@ -968,6 +971,7 @@ ar:
         many: "منذ حوالي %{count} عامًا تقريبًا"
         other: "منذ حوالي %{count} عام تقريبًا"
   password_reset:
+    no_token: 'عذرًا! لم يعُد الرابط الذي استخدمته يعمل. يمكنك <a href="%{base_url}/login">تسجيل الدخول</a> الآن. إذا نسيت كلمة مرورك، يمكنك <a href="%{base_url}/password-reset">طلب رابط</a> لإعادة تعيينها.'
     choose_new: "اختيار كلمة مرور جديدة"
     choose: "اختيار كلمة مرور"
     update: "تحديث كلمة المرور"
@@ -976,7 +980,6 @@ ar:
     success: "لقد غيَّرت كلمة مرورك وسجَّلت الدخول بنجاح."
     success_unapproved: "لقد غيَّرت كلمة مرورك بنجاح."
   email_login:
-    invalid_token: "عذرًا، رابط تسجيل الدخول عبر البريد الإلكتروني قديم جدًا. اضغط على زر تسجيل الدخول واستخدم \"لقد نسيت كلمة المرور\" للحصول على رابط جديد."
     title: "تسجيل الدخول عبر البريد الإلكتروني"
   user_auth_tokens:
     browser:
@@ -1616,6 +1619,7 @@ ar:
     search_ignore_accents: "تجاهل التشكيل عند البحث عن نص"
     category_search_priority_low_weight: "الأهمية المطبَّقة على الترتيب في الأولوية المنخفضة للبحث في الفئات"
     category_search_priority_high_weight: "الأهمية المطبَّقة على الترتيب في الأولوية العالية للبحث في الفئات"
+    default_composer_category: "الفئة المُستخدَمة في ملء القائمة المنسدلة للفئات مُسبقًا عند إنشاء موضوع جديد."
     allow_uncategorized_topics: "السماح بإنشاء الموضوعات دون تحديد فئة. تحذير: إذا كانت هناك موضوعات غير مصنَّفة بفئة، يجب عليك إعادة تصنيفها قبل إيقاف تشغيل هذا الإعداد."
     allow_duplicate_topic_titles: "السماح بالموضوعات ذات العناوين المتطابقة المتكررة"
     allow_duplicate_topic_titles_category: "اسمح بالموضوعات ذات العناوين المتطابقة والمتكررة إذا كانت الفئة مختلفة. يجب أن تكون القيمة allow_duplicate_topic_titles مضبوطة على False."
@@ -2142,7 +2146,6 @@ ar:
     enable_user_directory: "توفير دليل للمستخدمين للتصفُّح"
     enable_group_directory: "توفير دليل بالمجموعات للتصفُّح"
     enable_category_group_moderation: "السماح للمجموعات بالإشراف على المحتوى في فئات معيَّنة"
-    group_in_subject: "ضبط %%{optional_pm} في موضوع الرسالة الإلكترونية على اسم المجموعة الأولى في رسالة خاصة، راجع: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>تخصيص تنسيق الموضوع للرسائل الإلكترونية القياسية</a>"
     allow_anonymous_posting: "السماح للمستخدمين بالتبديل إلى الوضع المجهول"
     anonymous_posting_min_trust_level: "الحد الأدنى لمستوى الثقة المطلوب لتفعيل النشر المجهول"
     anonymous_account_duration_minutes: "لحماية إخفاء الهوية، أنشئ حسابًا مجهولًا جديدًا كل N دقيقة لكل مستخدم. مثال: إذا تم الضبط على 600، سيتم إنشاء حساب مجهول جديد بمجرد مرور 600 دقيقة على آخر منشور وتحوُّل المستخدم إلى مجهول."
@@ -2256,6 +2259,7 @@ ar:
     disable_mailing_list_mode: "عدم السماح للمستخدمين بتفعيل وضع القائمة البريدية (يمنع إرسال أي رسائل إلكترونية من القائمة البريدية.)"
     default_email_previous_replies: "تضمين الردود السابقة في الرسائل الإلكترونية بشكلٍ افتراضي"
     default_email_in_reply_to: "تضمين مقتطفات من الرد للنشر في الرسائل الإلكترونية بشكلٍ افتراضي"
+    default_hide_profile_and_presence: "إخفاء الملف الشخصي العام للمستخدمين وميزات الظهور بشكلٍ افتراضي."
     default_other_new_topic_duration_minutes: "الشرط الافتراضي العام الذي يُعتبَر فيه الموضوع جديدًا"
     default_other_auto_track_topics_after_msecs: "الوقت الافتراضي العام قبل أن يتم تتبُّع الموضوع تلقائيًا"
     default_other_notification_level_when_replying: "مستوى إرسال الإشعارات الافتراضي العام عندما يرد المستخدم موضوع"
@@ -2313,6 +2317,7 @@ ar:
     enable_sitemap: "إنشاء خريطة موقع لموقعك وتضمينها في ملف robots.txt."
     sitemap_page_size: "عدد عناوين URL المراد تضمينها في كل صفحة من خريطة الموقع. الحد الأقصى: 50.000"
     enable_user_status: "(تجريبي) السماح للمستخدمين بتحديد رسالة حالة مخصَّصة (رمز تعبيري + وصف)."
+    enable_user_tips: "(تجريبي) تفعيل نصائح المستخدم الجديدة التي توضِّح الميزات الرئيسية للمستخدمين"
     short_title: "سيتم استخدام العنوان القصير على الشاشة الرئيسية للمستخدم، أو المشغِّل، أو الأماكن الأخرى التي قد تكون المساحة فيها محدودة. يجب أن يقتصر على 12 حرفًا."
     dashboard_hidden_reports: "السماح بإخفاء التقارير المحدَّدة من لوحة المعلومات"
     dashboard_visible_tabs: "اختيار علامات التبويب المرئية في لوحة المعلومات"
@@ -2387,6 +2392,7 @@ ar:
       search_tokenize_japanese_enabled: "يجب عليك إيقاف 'search_tokenize_japanese' قبل تفعيل هذا الإعداد."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "لا يمكنك تفعيل DiscourseConnect في حال فرض المصادقة الثنائية."
       delete_rejected_email_after_days: "لا يمكن ضبط هذا الإعداد على أقل من الإعداد delete_email_logs_after_days أو أكثر من %{max}"
+      invalid_uncategorized_category_setting: "لا يمكن تحديد الفئة غير المصنَّفة إذا كان السماح بالموضوعات غير المصنَّفة غير مسموح به"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4854,6 +4860,10 @@ ar:
   user_status:
     errors:
       ends_at_should_be_greater_than_set_at: "يجب أن تكون end_at أكبر من set_at"
+  webhooks:
+    payload_url:
+      blocked_or_internal: "لا يمكن استخدام عنوان URL للحمولة لأنه يتحوَّل إلى عنوان IP داخلي أو محظور"
+      unsafe: "لا يمكن استخدام عنوان URL للحمولة لأنه غير آمن"
   activemodel:
     errors:
       <<: *errors

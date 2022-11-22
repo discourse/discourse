@@ -67,6 +67,7 @@ zh_CN:
       modifier_values: "about.json 修饰符包含无效值：%{errors}"
       git: "克隆 git 仓库时出错，访问被拒绝或找不到仓库"
       git_ref_not_found: "无法签出 git 参考：%{ref}"
+      git_unsupported_scheme: "无法克隆 git 仓库：方案不受支持"
       unpack_failed: "无法解压缩文件"
       file_too_big: "未压缩的文件过大。"
       unknown_file_type: "您上传的文件似乎不是一个有效的 Discourse 主题。"
@@ -224,6 +225,8 @@ zh_CN:
       <p>否则，请<a href="%{base_url}/password-reset">重置密码</a>。</p>
     not_found_template_link: |
       <p>无法再兑换此加入 <a href="%{base_url}">%{site_name}</a> 的邀请。请让邀请您的人向您发送新的邀请。</p>
+    existing_user_cannot_redeem: "此邀请无法兑换。请让邀请您的人向您发送新的邀请。"
+    existing_user_already_redemeed: "您已经兑换了此邀请链接。"
     user_exists: "不需要邀请 <b>%{email}</b>，他们已经拥有帐户！"
     invite_exists: "您已经邀请 <b>%{email}</b>。"
     invalid_email: "%{email} 不是有效的电子邮件地址。"
@@ -239,6 +242,7 @@ zh_CN:
     max_redemptions_allowed_one: "对于电子邮件邀请，应为 1。"
     redemption_count_less_than_max: "应小于 %{max_redemptions_allowed}。"
     email_xor_domain: "电子邮件和网域字段不允许同时出现"
+    existing_user_success: "邀请兑换成功"
   bulk_invite:
     file_should_be_csv: "上传的文件应为 csv 格式。"
     max_rows: "前 %{max_bulk_invites} 个邀请已发出。尝试将文件拆分成更小的部分。"
@@ -470,6 +474,7 @@ zh_CN:
       您可以突出显示文本并选择出现的<b>引用回复</b>按钮，对您之前的回复进行编辑以添加引用。
 
       这样，每个人都可以更轻松地阅读具有少量嵌套回复的话题，而不是查看大量的个别回复。
+    dominating_topic: 您在这里发布了超过 %{percent}% 的回复；我们可以建议您给其他人发言的机会吗？
     get_a_room: 您已回复 @%{reply_username} %{count} 次，您知道您可以向他们发送个人消息吗？
     too_many_replies: |
       ### 您已达到此话题的回复上限
@@ -597,7 +602,7 @@ zh_CN:
       您可能需要通过管理员设置 :wrench: （右上角和底部）关闭此话题，这样回复就不会积压在此公告下。
   admin_quick_start_title: "首先阅读：管理员快速入门指南"
   category:
-    topic_prefix: "关于%{category}类别"
+    topic_prefix: "关于“%{category}”类别"
     replace_paragraph: "（将第一段替换为新类别的简要说明。此指导将显示在类别选择区域中，因此请尽量将其保持在 200 个字符以内。）"
     post_template: "%{replace_paragraph}\n\n使用以下段落提供详细描述或者建立类别准则或规则：\n\n- 为什么应使用此类别？它用来做什么？\n\n- 此类别和我们已经有的类别究竟有什么不同？\n\n- 此类别中的话题一般包含什么？\n\n- 我们需要此类别吗？我们可以将其与其他类别或子类别合并吗？"
     errors:
@@ -613,6 +618,7 @@ zh_CN:
       disallowed_topic_tags: "此话题包含此类别不允许的标签：%{tags}"
       disallowed_tags_generic: "此话题包含禁止的标签。"
       slug_contains_non_ascii_chars: "包含非 ASCII 字符"
+      is_already_in_use: "已在使用中"
     cannot_delete:
       uncategorized: "此类别比较特殊。它旨在作为没有类别的话题的存放区域；不能删除。"
       has_subcategories: "无法删除此类别，因为它有子类别。"
@@ -712,6 +718,7 @@ zh_CN:
       almost_x_years:
         other: "将近 %{count} 年前"
   password_reset:
+    no_token: '糟糕！您使用的链接不再有效。您现在可以<a href="%{base_url}/login">登录</a>。如果您忘记了密码，可以<a href="%{base_url}/password-reset">请求链接</a>来重置密码。'
     choose_new: "选择一个新密码"
     choose: "选择一个密码"
     update: "更新密码"
@@ -720,7 +727,7 @@ zh_CN:
     success: "您已成功更改密码，现已登录。"
     success_unapproved: "您已成功更改密码。"
   email_login:
-    invalid_token: "抱歉，该电子邮件登录链接太旧。选择“登录”按钮并使用“我忘记密码了”获得新链接。"
+    invalid_token: '糟糕！您使用的链接不再有效。您现在可以<a href="%{base_url}/login">登录</a>。如果您忘记了密码，可以<a href="%{base_url}/password-reset">请求链接</a>来重置密码。'
     title: "电子邮件登录"
   user_auth_tokens:
     browser:
@@ -1355,6 +1362,7 @@ zh_CN:
     search_ignore_accents: "搜索文本时忽略注音。"
     category_search_priority_low_weight: "应用于低类别搜索优先级排名的权重。"
     category_search_priority_high_weight: "应用于高类别搜索优先级排名的权重。"
+    default_composer_category: "创建新话题时用于预填充类别下拉菜单的类别。"
     allow_uncategorized_topics: "允许创建没有类别的话题。警告：如果有任何未分类的话题，您必须先对它们进行重新分类，然后才能将其关闭。"
     allow_duplicate_topic_titles: "允许有相同或重复标题的话题。"
     allow_duplicate_topic_titles_category: "如果类别不同，允许有相同或重复标题的话题。必须禁用 allow_duplicate_topic_titles。"
@@ -1881,7 +1889,6 @@ zh_CN:
     enable_user_directory: "提供用户目录以供浏览"
     enable_group_directory: "提供群组目录以供浏览"
     enable_category_group_moderation: "允许群组审核特定类别的内容"
-    group_in_subject: "在电子邮件主题中将 %%{optional_pm} 设置为 PM 中第一个群组的名称，请参阅：<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>自定义标准电子邮件的主题格式</a>"
     allow_anonymous_posting: "允许用户切换至匿名模式"
     anonymous_posting_min_trust_level: "启用匿名发帖所需的最低信任级别"
     anonymous_account_duration_minutes: "为了保护匿名性，每 N 分钟为每个用户创建一个新的匿名帐户。示例：如果设置为 600，则在距离上次发帖 600 分钟且用户切换到匿名时，将创建一个新的匿名帐户。"
@@ -1995,6 +2002,7 @@ zh_CN:
     disable_mailing_list_mode: "禁止用户启用邮寄名单模式（阻止发送任何邮寄名单电子邮件。）"
     default_email_previous_replies: "在电子邮件中默认包含以前的回复。"
     default_email_in_reply_to: "在电子邮件中默认包含帖子回复节选。"
+    default_hide_profile_and_presence: "默认隐藏用户的公开个人资料和状态功能。"
     default_other_new_topic_duration_minutes: "话题被视为新话题的全局默认条件。"
     default_other_auto_track_topics_after_msecs: "话题在被自动跟踪之前的全局默认时间。"
     default_other_notification_level_when_replying: "用户回复话题时的全局默认通知级别。"
@@ -2052,6 +2060,7 @@ zh_CN:
     enable_sitemap: "为您的站点生成站点地图并将其包含在 robots.txt 文件中。"
     sitemap_page_size: "每个站点地图页面中包含的 URL 数量。最大 50.000"
     enable_user_status: "（实验性）允许用户设置自定义状态消息（表情符号 + 描述）。"
+    enable_user_tips: "（实验性）启用向用户描述关键功能的新用户提示"
     short_title: "短标题将用于用户的主屏幕、启动器或其他空间可能有限的地方。应被限制为 12 个字符。"
     dashboard_hidden_reports: "允许从信息中心隐藏指定报告。"
     dashboard_visible_tabs: "选择可见的信息中心标签页。"
@@ -2126,6 +2135,7 @@ zh_CN:
       search_tokenize_japanese_enabled: "在启用此设置之前，您必须禁用 'search_tokenize_japanese'。"
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "如果强制执行双重身份验证，则无法启用 DiscourseConnect。"
       delete_rejected_email_after_days: "此设置不能设置为低于 delete_email_logs_after_days 设置或大于 %{max}"
+      invalid_uncategorized_category_setting: "如果不允许未分类话题，则无法选择“未分类”类别"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2216,7 +2226,7 @@ zh_CN:
   login:
     invalid_second_factor_method: "所选双重身份验证方法无效。"
     not_enabled_second_factor_method: "您的帐户未启用所选双重身份验证方法。"
-    security_key_description: "当您准备好物理安全密钥后，请按下面的“使用安全密钥进行身份验证”按钮。"
+    security_key_description: "当您准备好实物安全密钥后，请按下面的“使用安全密钥进行身份验证”按钮。"
     security_key_alternative: "尝试另一种方式"
     security_key_authenticate: "使用安全密钥进行身份验证"
     security_key_not_allowed_error: "安全密钥身份验证过程超时或被取消。"
@@ -3617,6 +3627,7 @@ zh_CN:
     png_to_jpg_conversion_failure_message: "从 PNG 转换为 JPG 时出错。"
     optimize_failure_message: "优化上传的图片时出错。"
     download_failure: "从外部提供商下载文件失败。"
+    size_mismatch_failure: "上传到 S3 的文件大小与外部上传文件的预期大小不匹配。%{additional_detail}"
     create_multipart_failure: "无法在外部存储中创建分段上传。"
     abort_multipart_failure: "无法中止外部存储中的分段上传。"
     complete_multipart_failure: "无法在外部存储中完成分段上传。"
@@ -4645,6 +4656,10 @@ zh_CN:
   user_status:
     errors:
       ends_at_should_be_greater_than_set_at: "ends_at 应该大于 set_at"
+  webhooks:
+    payload_url:
+      blocked_or_internal: "无法使用有效负载 URL，因为它解析为被屏蔽的 IP 或内部 IP"
+      unsafe: "无法使用有效负载 URL，因为它不安全"
   activemodel:
     errors:
       <<: *errors

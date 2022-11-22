@@ -61,6 +61,7 @@ be:
         preview: "папярэдні прагляд"
         save: "захаваць"
         saved: "Захавана"
+        admin_title: "адміністратар"
       incoming_webhooks:
         back: "Назад"
         description: "Апісанне"

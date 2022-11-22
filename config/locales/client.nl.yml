@@ -294,6 +294,7 @@ nl:
       like_count: "Likes"
       topic_count: "Topics"
       post_count: "Berichten"
+      user_count: "Registraties"
       active_user_count: "Actieve gebruikers"
       contact: "Contact"
       contact_info: "Neem in het geval van een kritieke kwestie of dringende vraagstukken in verband met deze website contact met ons op via %{contact_info}."
@@ -1078,13 +1079,9 @@ nl:
       no_notifications_page_title: "Je hebt nog geen meldingen"
       no_notifications_page_body: >
         Je krijgt een bericht over activiteit die direct relevant voor je is, inclusief reacties op je topics en berichten, wanneer iemand je <b>@vermeldt</b> of citeert en reacties geeft op topics die je observeert. Er worden ook meldingen gestuurd naar je e-mail wanneer je je een tijdje niet hebt aangemeld. <br><br> Zoek de %{icon} om te bepalen over welke specifieke topics, categorieën en tags je meldingen wilt ontvangen. Zie je <a href='%{preferencesUrl}'>meldingsvoorkeuren</a> voor meer.
-      first_notification: "Je eerste melding! Selecteer deze om te beginnen."
       dynamic_favicon: "Aantallen weergeven op browserpictogram"
       skip_new_user_tips:
         description: "Introductietips en badges voor nieuwe gebruikers overslaan"
-        not_first_time: "Niet je eerste keer?"
-        skip_link: "Deze tips overslaan"
-        read_later: "Ik lees het later."
       reset_seen_user_tips: "Gebruikerstips opnieuw weergeven"
       theme_default_on_all_devices: "Dit het standaardthema maken op al mijn apparaten"
       color_scheme_default_on_all_devices: "Standaard kleurenschema(’s) instellen op al mijn apparaten"
@@ -1682,6 +1679,15 @@ nl:
       topic_timeline:
         title: "Topictijdlijn"
         content: "Blader snel door een bericht met behulp van de topictijdlijn."
+      post_menu:
+        title: "Berichtmenu"
+        content: "Bekijk welke acties je nog meer kunt uitvoeren op het bericht door op de drie stippen te klikken!"
+      topic_notification_levels:
+        title: "Je volgt nu dit topic"
+        content: "Zoek naar deze bel om je meldingsvoorkeuren voor specifieke topics of hele categorieën aan te passen."
+      suggested_topics:
+        title: "Blijf lezen!"
+        content: "Hier zijn enkele topics waarvan we denken dat je ze misschien leuk vindt om te lezen."
     loading: "Laden..."
     errors:
       prev_page: "tijdens het laden van"
@@ -1904,7 +1910,6 @@ nl:
       name_label: "Naam"
       password_label: "Wachtwoord"
       existing_user_can_redeem: "Verzilver je uitnodiging voor een topic of groep."
-      existing_user_cannot_redeem: "Deze uitnodiging kan niet worden verzilverd. Vraag de persoon die je heeft uitgenodigd je een nieuwe uitnodiging te sturen."
     password_reset:
       continue: "Doorgaan naar %{site_name}"
     emoji_set:
@@ -2279,6 +2284,7 @@ nl:
         other: "<span>%{count}%{plus} resultaten voor </span><span class='term'>%{term}</span>"
       title: "Zoeken"
       full_page_title: "Zoeken"
+      results: "resultaten"
       no_results: "Geen resultaten gevonden."
       no_more_results: "Geen verdere resultaten gevonden."
       post_format: "#%{post_number} van %{username}"
@@ -2323,6 +2329,7 @@ nl:
         status: "filtert op topicstatus"
         full_search: "start zoeken op volledige pagina"
         full_search_key: "%{modifier} + Enter"
+        me: "geeft alleen jouw berichten weer"
       advanced:
         title: Geavanceerde filters
         posted_by:
@@ -2356,9 +2363,9 @@ nl:
           all_tags: Alle bovenstaande tags
         statuses:
           label: Waarin topics
-          open: open zijn
-          closed: gesloten zijn
-          public: openbaar zijn
+          open: zijn open
+          closed: zijn gesloten
+          public: zijn openbaar
           archived: gearchiveerd zijn
           noreplies: geen antwoorden hebben
           single_user: maar één gebruiker bevatten
@@ -3215,7 +3222,7 @@ nl:
         reply: "Antwoorden"
         create: "Maken"
         no_groups_selected: "Er is geen toegang verleend aan groepen; deze categorie is alleen zichtbaar voor medewerkers."
-        everyone_has_access: 'Deze categorie is openbaar; iedereen kan berichten zien, beantwoorden en aanmaken. Verwijder een of meer van de verleende toestemmingen voor de groep ''iedereen'' om toestemmingen te beperken.'
+        everyone_has_access: 'Deze categorie is openbaar; iedereen kan berichten zien, beantwoorden en maken. Verwijder een of meer van de verleende toestemmingen voor de groep ''iedereen'' om toestemmingen te beperken.'
         toggle_reply: "Toestemming Antwoorden in-/uitschakelen"
         toggle_full: "Toestemming Maken in-/uitschakelen"
         inherited: 'Deze toestemming is overgenomen van ''iedereen'''
@@ -3606,7 +3613,7 @@ nl:
       search_menu:
         title: "Zoekmenu"
         prev_next: "%{shortcut} Selectie omhoog en omlaag verplaatsen"
-        insert_url: "%{shortcut} Selectie in open editorvenster invoegen"
+        insert_url: "%{shortcut} Selectie invoegen in open editorvenster"
         full_page_search: "%{shortcut} Start zoeken op volledige pagina"
     badges:
       earned_n_times:
@@ -3670,8 +3677,8 @@ nl:
         one: "selecteer %{count} tag uit '%{name}'..."
         other: "selecteer %{count} tags uit '%{name}'..."
       info: "Info"
-      default_info: "Deze tag is niet beperkt tot categorieën, en heeft geen synoniemen."
-      staff_info: "Om beperkingen toe te voegen, plaats deze tag in een <a href=%{basePath}/tag_groups>tag-groep</a>."
+      default_info: "Deze tag is niet beperkt tot categorieën en heeft geen synoniemen."
+      staff_info: "Om beperkingen toe te voegen, moet je deze tag in een <a href=%{basePath}/tag_groups>taggroep</a> plaatsen."
       category_restricted: "Deze tag is beperkt tot categorieën waartoe je geen toegang hebt."
       synonyms: "Synoniemen"
       synonyms_description: "Wanneer de volgende tags worden gebruikt, worden deze vervangen door <b>%{base_tag_name}</b>."
@@ -3780,7 +3787,7 @@ nl:
     invite:
       custom_message: "Maak je uitnodiging iets persoonlijker door een <a href>eigen bericht</a> te schrijven."
       custom_message_placeholder: "Voer je eigen bericht in"
-      approval_not_required: "De gebruiker wordt automatisch goedgekeurd zodra hij of zij deze uitnodiging accepteert."
+      approval_not_required: "De gebruiker wordt automatisch goedgekeurd zodra deze de uitnodiging accepteert."
       custom_message_template_forum: "Hé, je zou moeten deelnemen aan dit forum!"
       custom_message_template_topic: "Hé, dit topic lijkt me wat voor jou!"
     forced_anonymous: "Vanwege overbelasting wordt dit tijdelijk voor iedereen weergegeven zoals niet-aangemelde gebruikers het zien."
@@ -3826,7 +3833,7 @@ nl:
       no_likes_title_others: "%{username} heeft nog geen topics geliket"
       no_likes_body: "Een geweldige manier om deel te nemen en een bijdrage te leveren, is door gesprekken te lezen die al hebben plaatsgevonden en het %{heartIcon} te selecteren bij berichten die je leuk vindt!"
       no_topics_title: "Je hebt nog geen topics gestart"
-      no_topics_body: "Het is altijd het beste om te <a href='%{searchUrl}'>zoeken</a> naar bestaande topics voordat jenieuwe start, maar als je er zeker van bent dat het topic dat je zoekt er nog niet is, ga dan je gang en start een nieuw topic. Zoek de knop <kbd>+ Nieuw topic</kbd> rechtsboven de topicslijst, categorie of tag om een nieuw topic te maken in dat gebied."
+      no_topics_body: "Het is altijd het beste om te <a href='%{searchUrl}'>zoeken</a> naar bestaande topics voordat je een nieuw topic start, maar als je er zeker van bent dat het topic dat je zoekt er nog niet is, ga dan je gang en start een nieuw topic. Zoek de knop <kbd>+ Nieuw topic</kbd> rechtsboven de topicslijst, categorie of tag om een nieuw topic te maken in dat gebied."
       no_topics_title_others: "%{username} heeft nog geen topics gestart"
       no_read_topics_title: "Je hebt nog geen topics gelezen"
       no_read_topics_body: "Wanneer je discussies gaat lezen, zie je hier een lijst. Om te beginnen met lezen, kun je zoeken naar interessante topics onder <a href='%{topUrl}'>Top</a> of <a href='%{categoriesUrl}'>Categorieën</a> of zoeken op trefwoorden %{searchIcon}"
@@ -3898,9 +3905,6 @@ nl:
               title: "Alle topics"
             faq:
               content: "FAQ"
-            tracked:
-              content: "Gevolgd"
-              title: "Alle gevolgde topics"
             groups:
               content: "Groepen"
               title: "Alle groepen"
@@ -3910,6 +3914,9 @@ nl:
             my_posts:
               content: "Mijn berichten"
               title: "Mijn berichten"
+              draft_count:
+                one: "%{count} concept"
+                other: "%{count} concepten"
             review:
               content: "Beoordelen"
               title: "beoordelen"
@@ -3974,9 +3981,9 @@ nl:
         page_views_short: "Paginaweergaven"
         show_traffic_report: "Gedetailleerd verkeersrapport weergeven"
         community_health: Status van community
-        moderators_activity: Moderator-activiteit
+        moderators_activity: Moderatoractiviteit
         whats_new_in_discourse: Wat is er nieuw in Discourse?
-        activity_metrics: Activiteitsgegevens
+        activity_metrics: Activiteitgegevens
         all_reports: "Alle rapporten"
         general_tab: "Algemeen"
         moderation_tab: "Moderatie"
@@ -3993,8 +4000,8 @@ nl:
           trend_title: "%{percent} wijziging. Momenteel %{current}, was %{prev} in voorgaande periode."
           today: "Vandaag"
           yesterday: "Gisteren"
-          last_7_days: "Laatste 7"
-          last_30_days: "Laatste 30"
+          last_7_days: "Afgelopen 7"
+          last_30_days: "Afgelopen 30"
           all_time: "Sinds het begin"
           7_days_ago: "7 dagen geleden"
           30_days_ago: "30 dagen geleden"
@@ -4028,7 +4035,7 @@ nl:
       groups:
         new:
           title: "Nieuwe groep"
-          create: "Aanmaken"
+          create: "Maken"
           name:
             too_short: "Groepsnaam is te kort"
             too_long: "Groepsnaam is te lang"
@@ -4061,11 +4068,11 @@ nl:
             trust_levels_none: "Geen"
             automatic_membership_email_domains: "Gebruikers die zich met een e-maildomein registeren dat precies overeenkomt met een domein in deze lijst worden automatisch aan deze groep toegevoegd:"
             automatic_membership_user_count:
-              one: "%{count} gebruiker heeft de nieuwe e-maildomeinen en zal aan de groep worden toegevoegd."
-              other: "%{count} gebruikers hebben de nieuwe e-maildomeinen en zullen aan de groep worden toegevoegd."
+              one: "%{count} gebruiker heeft de nieuwe e-maildomeinen en wordt toegevoegd aan de groep."
+              other: "%{count} gebruikers hebben de nieuwe e-maildomeinen en worden toegevoegd aan de groep."
             automatic_membership_associated_groups: "Gebruikers die lid zijn van een groep op een service die hier wordt vermeld, worden automatisch toegevoegd aan deze groep wanneer ze zich aanmelden met de service."
             primary_group: "Automatisch instellen als primaire groep"
-        name_placeholder: "Groepsnaam, geen spaties, hetzelfde als gebruikersnaamregel"
+        name_placeholder: "Groepsnaam, zonder spaties, hetzelfde als gebruikersnaamregel"
         primary: "Primaire groep"
         no_primary: "(geen primaire groep)"
         title: "Groepen"
@@ -4169,7 +4176,7 @@ nl:
               show: Krijg informatie over een badge.
               update: Werk een badge bij.
               delete: Verwijder een badge.
-              list_user_badges: TOon gebruikersbadges.
+              list_user_badges: Toon gebruikersbadges.
               assign_badge_to_user: Wijs een badge toe aan een gebruiker.
               revoke_badge_from_user: Trek een badge van een gebruiker in.
             wordpress:
@@ -4181,19 +4188,19 @@ nl:
         title: "Webhooks"
         none: "Er zijn op dit moment geen webhooks."
         instruction: "Via webhooks kan Discourse externe services waarschuwen wanneer bepaalde gebeurtenissen plaatsvinden op je website. Zodra de webhook wordt geactiveerd, wordt een POST-verzoek gestuurd naar opgegeven URL's."
-        detailed_instruction: "Zodra de gekozen gebeurtenis plaatsvindt, wordt een POST-aanvraag naar de opgegeven URL gestuurd."
+        detailed_instruction: "Zodra de gekozen gebeurtenis plaatsvindt, wordt een POST-verzoek naar de opgegeven URL gestuurd."
         new: "Nieuwe webhook"
-        create: "Aanmaken"
+        create: "Maken"
         save: "Opslaan"
         destroy: "Verwijderen"
         description: "Beschrijving"
         controls: "Controlepaneel"
         go_back: "Terug naar lijst"
         payload_url: "Payload-URL"
-        payload_url_placeholder: "https://example.com/postreceive"
+        payload_url_placeholder: "https://voorbeeld.com/postreceive"
         secret_invalid: "Geheim mag geen lege tekens bevatten."
-        secret_too_short: "Geheim dient uit minimaal 12 tekens te bestaan."
-        secret_placeholder: "Een optionele tekenreeks, gebruikt voor het aanmaken van een ondertekening"
+        secret_too_short: "Geheim minimaal 12 tekens lang zijn."
+        secret_placeholder: "Een optionele tekenreeks, gebruikt voor het maken van een ondertekening"
         event_type_missing: "Je moet minimaal één gebeurtenistype instellen."
         content_type: "Inhoudstype"
         secret: "Geheim"
@@ -4203,11 +4210,11 @@ nl:
         verify_certificate: "TLS-certificaat van payload-URL controleren"
         active: "Actief"
         active_notice: "We sturen details over de gebeurtenis wanneer deze plaatsvindt."
-        categories_filter_instructions: "Relevante webhooks worden alleen geactiveerd als de gebeurtenis bij opgegeven categorieën hoort. Laat leeg om webhooks voor alle categorieën te activeren."
+        categories_filter_instructions: "Relevante webhooks worden alleen geactiveerd als de gebeurtenis bij opgegeven categorieën hoort. Laat dit leeg om webhooks voor alle categorieën te activeren."
         categories_filter: "Geactiveerde categorieën"
-        tags_filter_instructions: "Relevante webhooks worden alleen geactiveerd als de gebeurtenis bij opgegeven tags hoort. Laat leeg om webhooks voor alle tags te activeren."
+        tags_filter_instructions: "Relevante webhooks worden alleen geactiveerd als de gebeurtenis bij opgegeven tags hoort. Laat dit leeg om webhooks voor alle tags te activeren."
         tags_filter: "Geactiveerde tags"
-        groups_filter_instructions: "Relevante webhooks worden alleen geactiveerd als de gebeurtenis bij opgegeven groepen hoort. Laat leeg om webhooks voor alle groepen te activeren."
+        groups_filter_instructions: "Relevante webhooks worden alleen geactiveerd als de gebeurtenis bij opgegeven groepen hoort. Laat dit leeg om webhooks voor alle groepen te activeren."
         groups_filter: "Geactiveerde groepen"
         delete_confirm: "Deze webhook verwijderen?"
         topic_event:
@@ -4241,11 +4248,11 @@ nl:
           name: "Badgetoekenningsgebeurtenis"
           details: "Wanneer een gebruiker een badge ontvangt."
         group_user_event:
-          name: "Groep-gebruikersgebeurtenis"
+          name: "Groepgebruikersgebeurtenis"
           details: "Wanneer een gebruiker wordt toegevoegd of verwijderd in een groep."
         like_event:
           name: "Likegebeurtenis"
-          details: "Wanneer een gebruiker een bericht leuk vindt."
+          details: "Wanneer een gebruiker een bericht liket."
         delivery_status:
           title: "Afleveringsstatus"
           inactive: "Inactief"
@@ -4261,7 +4268,7 @@ nl:
           completed_in:
             one: "Voltooid in %{count} seconde."
             other: "Voltooid in %{count} seconden."
-          request: "Aanvraag"
+          request: "Verzoek"
           response: "Reactie"
           redeliver_confirm: "Weet je zeker dat je dezelfde payload opnieuw wilt afleveren?"
           headers: "Koppen"
@@ -4361,8 +4368,8 @@ nl:
       export_json:
         button_text: "Exporteren"
       invite:
-        button_text: "Uitnodigingen versturen"
-        button_title: "Uitnodigingen versturen"
+        button_text: "Uitnodigingen sturen"
+        button_title: "Uitnodigingen sturen"
       customize:
         title: "Aanpassen"
         long_title: "Websiteaanpassingen"
@@ -4384,7 +4391,7 @@ nl:
         email_templates:
           title: "E-mailadres"
           subject: "Onderwerp"
-          multiple_subjects: "Deze e-mailsjabloon heeft meerdere topics."
+          multiple_subjects: "Dit e-mailsjabloon heeft meerdere topics."
           body: "Body"
           revert: "Wijzigingen ongedaan maken"
           revert_confirm: "Weet je zeker dat je je wijzigingen ongedaan wilt maken?"
@@ -4402,7 +4409,7 @@ nl:
           browse_themes: "Communitythema's bekijken"
           customize_desc: "Aanpassen:"
           title: "Thema's"
-          create: "Aanmaken"
+          create: "Maken"
           create_type: "Type"
           create_name: "Naam"
           long_title: "Kleuren, CSS en HTML-inhoud van je website aanpassen"
@@ -4488,7 +4495,7 @@ nl:
           install_create: "Nieuwe maken"
           duplicate_remote_theme: "Het themaonderdeel “%{name}” is al geïnstalleerd, weet je zeker dat je nog een exemplaar wilt installeren?"
           force_install: "Het thema kan niet worden geïnstalleerd omdat de Git-repository niet toegankelijk is. Weet je zeker dat je door wilt gaan met installeren?"
-          create_placeholder: "Tijdelijke aanduiding aanmaken"
+          create_placeholder: "Tijdelijke aanduiding maken"
           about_theme: "Over"
           license: "Licentie"
           version: "Versie:"
@@ -4583,13 +4590,13 @@ nl:
           primary-low-mid:
             name: "primair-laag-mid"
           secondary:
-            name: "secundaire"
+            name: "secundair"
             description: "De hoofdachtergrondkleur, en tekstkleur van sommige knoppen."
           tertiary:
-            name: "tertiaire"
+            name: "tertiair"
             description: "Links, sommige knoppen, meldingen en accentkleur."
           quaternary:
-            name: "quaternaire"
+            name: "quaternair"
             description: "Navigatielinks."
           header_background:
             name: "koptekstachtergrond"
@@ -4627,7 +4634,7 @@ nl:
           reset: "Standaardwaarden terugzetten"
           reset_confirm: "Weet je zeker dat je de standaardwaarde voor %{fieldName} wilt herstellen en alle wijzigingen wilt verwerpen?"
           save_error_with_reason: "Je wijzigingen zijn niet opgeslagen. %{error}"
-          instructions: "De sjabloon waarin alle html-e-mails worden gerenderd aanpassen, en stileren via CSS."
+          instructions: "Het sjabloon waarin alle html-e-mails worden gerenderd aanpassen, en stileren via CSS."
       email:
         title: "E-mails"
         settings: "Instellingen"
@@ -4760,7 +4767,7 @@ nl:
             revoke_badge: "badge intrekken"
             check_email: "e-mail controleren"
             delete_topic: "topic verwijderen"
-            recover_topic: "topic terughalen"
+            recover_topic: "verwijdering van topic ongedaan maken"
             delete_post: "bericht verwijderen"
             impersonate: "aanmelden als gebruiker"
             anonymize_user: "gebruiker anonimiseren"
@@ -4980,7 +4987,7 @@ nl:
         suspend_reason_label: "Waarom schors je deze gebruiker? Deze tekst <b>is zichtbaar voor iedereen</b> op de profielpagina van deze gebruiker en wordt weergegeven aan de gebruiker wanneer deze zich probeert aan te melden. Houd het kort."
         suspend_reason_hidden_label: "Waarom schors je? Deze tekst wordt aan de gebruiker weergegeven wanneer deze zich probeert aan te melden. Houd het kort."
         suspend_reason: "Reden"
-        suspend_reason_title: "Reden van schorsing"
+        suspend_reason_title: "Reden voor schorsing"
         suspend_reasons:
           not_listening_to_staff: "Wilde niet naar feedback van medewerkers luisteren"
           consuming_staff_time: "Heeft onevenredig veel tijd van medewerkers verbruikt"
@@ -5021,7 +5028,7 @@ nl:
         moderator: "Moderator?"
         admin: "Beheerder?"
         suspended: "Geschorst?"
-        staged: "Staged?"
+        staged: "Gefaseerd?"
         show_admin_profile: "Beheerder"
         manage_user: "Gebruiker beheren"
         show_public_profile: "Openbaar profiel weergeven"
@@ -5093,10 +5100,10 @@ nl:
 
               <p>Alle topics, berichten en andere inhoud gemaakt door <b>@%{username}</b> worden overgedragen.</p>
             target_username_placeholder: "Gebruikersnaam van nieuwe eigenaar"
-            transfer_and_delete: "Overdragen en @%{username}en verwijderen"
+            transfer_and_delete: "Overdragen en @%{username} verwijderen"
             cancel: "Annuleren"
           progress:
-            title: "Voortgang met samenvoegen"
+            title: "Voortgang van samenvoegen"
           confirmation:
             title: "Overdragen & @%{username} verwijderen"
             description: |
@@ -5147,7 +5154,7 @@ nl:
         deactivate_explanation: "Een gedeactiveerde gebruiker moet diens e-mailadres opnieuw valideren."
         suspended_explanation: "Een geschorste gebruiker kan zich niet aanmelden."
         silence_explanation: "Een gedempte gebruiker kan geen berichten plaatsen of topics maken."
-        staged_explanation: "Een staged gebruiker kan alleen in bepaalde topics berichten plaatsen via e-mail."
+        staged_explanation: "Een gefaseerde gebruiker kan alleen in bepaalde topics berichten plaatsen via e-mail."
         bounce_score_explanation:
           none: "Er zijn recent geen bounceberichten van dat e-mailadres ontvangen."
           some: "Er zijn recent enkele bounceberichten van dat e-mailadres ontvangen."
@@ -5261,7 +5268,7 @@ nl:
         none: "geen"
       site_settings:
         emoji_list:
-          invalid_input: "Emoji-lijst mag alleen geldige emoji-namen bevatten, bijv.: knuffels"
+          invalid_input: "Emojilijst mag alleen geldige emojinamen bevatten, bijvoorbeeld: knuffels"
           add_emoji_button:
             label: "Emoji toevoegen"
         title: "Instellingen"
@@ -5359,8 +5366,8 @@ nl:
         graphic: Grafisch
         icon_help: "Voer een Font Awesome-pictogramnaam in (gebruik het voorvoegsel 'far-' voor normale pictogrammen en 'fab-' voor merkpictogrammen)"
         image_help: "Het uploaden van een afbeelding overschrijft het pictogramveld als beide zijn ingesteld."
-        select_an_icon: "Een pictogram selecteren"
-        upload_an_image: "Een afbeelding uploaden"
+        select_an_icon: "Selecteer een pictogram"
+        upload_an_image: "Upload een afbeelding"
         read_only_setting_help: "Tekst aanpassen"
         query: Badgequery (SQL)
         target_posts: Geassocieerde berichten opvragen
@@ -5372,7 +5379,7 @@ nl:
           post_action: "Wanneer een gebruiker handelt op een bericht"
           post_revision: "Wanneer een gebruiker een bericht bewerkt of aanmaakt"
           trust_level_change: "Wanneer een gebruiker van vertrouwensniveau verandert"
-          user_change: "Wanneer een gebruiker wordt bewerkt of aangemaakt"
+          user_change: "Wanneer een gebruiker wordt bewerkt of gemaakt"
         preview:
           link_text: "Voorbeeld van toegekende badges"
           plan_text: "Voorbeeld met queryplan"

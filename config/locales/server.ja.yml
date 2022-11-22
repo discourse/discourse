@@ -67,6 +67,7 @@ ja:
       modifier_values: "about.json 修飾子に無効な値が含まれます: %{errors}"
       git: "git リポジトリのクローニング中にエラーが発生しました。アクセスが拒否されたか、リポジトリが見つかりません"
       git_ref_not_found: "git の参照をチェックアウトできません: %{ref}"
+      git_unsupported_scheme: "git リポジトリをクローンできません。サポートされていないスキームです"
       unpack_failed: "ファイルの解凍に失敗しました"
       file_too_big: "解凍されたファイルが大きすぎます。"
       unknown_file_type: "アップロードしたファイルは、有効な Discourse テーマではないようです。"
@@ -224,6 +225,8 @@ ja:
       <p>そうでない場合は、<a href="%{base_url}/password-reset">パスワードをリセット</a>してください。</p>
     not_found_template_link: |
       <p>この <a href="%{base_url}">%{site_name}</a> への招待を引き換えられなくなりました。あなたを招待した人に新しい招待を送るようリクエストしてください。</p>
+    existing_user_cannot_redeem: "この招待は引き換えられません。あなたを招待した人に、新しい招待を送るよう依頼してください。"
+    existing_user_already_redemeed: "この招待リンクはすでに引き換え済みです。"
     user_exists: "<b>%{email}</b> を招待する必要はありません。すでにアカウントを持っています！"
     invite_exists: "<b>%{email}</b> はすでに招待済みです。"
     invalid_email: "%{email} は有効なメールアドレスではありません。"
@@ -239,6 +242,7 @@ ja:
     max_redemptions_allowed_one: "招待メールは 1 である必要があります。"
     redemption_count_less_than_max: "は %{max_redemptions_allowed} より小さい値である必要があります。"
     email_xor_domain: "メールアドレスとドメインのフィールドを同時に使用できません"
+    existing_user_success: "招待は正常に引き換えられました"
   bulk_invite:
     file_should_be_csv: "アップロードファイルは csv 形式である必要があります。"
     max_rows: "最初の %{max_bulk_invites} 件の招待が送信されました。ファイルをより小さく分割してください。"
@@ -470,6 +474,7 @@ ja:
       前の返信を編集する際に、テキストをハイライトして<b>引用して返信</b>ボタンを選択すると、返信に引用を追加することができます。
 
       短い個別の返信を多数読むよりも、詳細な返信を数件読む方が、トピックをフォローしやすくなります。
+    dominating_topic: ここにある返信の %{percent}% 以上はあなたが投稿したものです。他の人にも参加してもらってはどうですか？
     get_a_room: '@%{reply_username} に %{count} 回返信しましたが、個人メッセージを送信できることをご存知ですか？'
     too_many_replies: |
       ### このトピックへの返信数の制限に達しました
@@ -613,6 +618,7 @@ ja:
       disallowed_topic_tags: "このトピックにはこのカテゴリで許可されていないタグがあります: '%{tags}'"
       disallowed_tags_generic: "このトピックはタグを許可していません。"
       slug_contains_non_ascii_chars: "に非 ASCII 文字が含まれます"
+      is_already_in_use: "はすでに使用されています"
     cannot_delete:
       uncategorized: "このカテゴリは特殊です。カテゴリのないトピックを保存するために用意されているため、削除できません。"
       has_subcategories: "サブカテゴリがあるためこのカテゴリを削除できません。"
@@ -712,6 +718,7 @@ ja:
       almost_x_years:
         other: "ほぼ %{count} 年前"
   password_reset:
+    no_token: 'おっとっと！使用したリンクは機能しなくなっています。今すぐ<a href="%{base_url}/login">ログイン</a>しましょう。パスワードを忘れた場合は、リセットするための<a href="%{base_url}/password-reset">リンクをリクエスト</a>できます。'
     choose_new: "新しいパスワードを選択する"
     choose: "パスワードを選択する"
     update: "パスワードを更新"
@@ -720,7 +727,7 @@ ja:
     success: "パスワードを変更し、ログインしました。"
     success_unapproved: "パスワードを変更しました。"
   email_login:
-    invalid_token: "このメールに送られたログインリンクは古すぎます。ログインボタンを選択し、「パスワードを忘れました」を使って新しいリンクを取得してください。"
+    invalid_token: 'おっとっと！使用したリンクは機能しなくなっています。今すぐ<a href="%{base_url}/login">ログイン</a>しましょう。パスワードを忘れた場合は、リセットするための<a href="%{base_url}/password-reset">リンクをリクエスト</a>できます。'
     title: "メールログイン"
   user_auth_tokens:
     browser:
@@ -1355,6 +1362,7 @@ ja:
     search_ignore_accents: "テキストを検索する際にアクセントを無視する。"
     category_search_priority_low_weight: "カテゴリの検索優先度が低いランキングに適用される重み。"
     category_search_priority_high_weight: "カテゴリの検索優先度が高いランキングに適用される重み。"
+    default_composer_category: "新しいトピックを作成するときに、カテゴリのドロップダウン項目を設定するために使用されるカテゴリです。"
     allow_uncategorized_topics: "カテゴリなしでトピックを作成することを許可する。警告: 未分類のトピックがある場合は、これをオフにする前に、カテゴリを設定する必要があります。"
     allow_duplicate_topic_titles: "トピックに同一の重複するタイトルを指定することを許可する。"
     allow_duplicate_topic_titles_category: "カテゴリが異なる場合、同一の重複したタイトルを持つトピックを許可する。allow_duplicate_topic_titles は無効にする必要があります。"
@@ -1881,7 +1889,6 @@ ja:
     enable_user_directory: "閲覧用のユーザーディレクトリを提供"
     enable_group_directory: "閲覧用のグループディレクトリを提供"
     enable_category_group_moderation: "グループが特定のカテゴリのコンテンツに介入することを許可する"
-    group_in_subject: "メールの件名の %%{optional_pm} を PM の最初のグループの名前に設定する。「<a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>標準メールの件名のフォーマットをカスタマイズする</a>」をご覧ください。"
     allow_anonymous_posting: "ユーザーに匿名モードへの切り替えを許可"
     anonymous_posting_min_trust_level: "匿名で投稿するために必要な最低信頼レベル"
     anonymous_account_duration_minutes: "匿名性を守るため、N 分毎に各ユーザーの匿名アカウントを作成しなおします。例 : 600 に設定すると、最終投稿から 600 分が経過し、さらにユーザーが匿名に切り替えると、新しい匿名アカウントが作成されます。"
@@ -1995,6 +2002,7 @@ ja:
     disable_mailing_list_mode: "ユーザーによるメーリングリストモードの有効化を禁止する (メーリングリストのメールは送信されなくなります)。"
     default_email_previous_replies: "デフォルトでメールに以前の返信を含めます。"
     default_email_in_reply_to: "デフォルトで、投稿への返信の抜粋をメールに含める。"
+    default_hide_profile_and_presence: "デフォルトで、ユーザーの公開プロファイルとプレゼンス機能を非表示にします。"
     default_other_new_topic_duration_minutes: "トピックが新規とみなされるグローバルのデフォルト条件。"
     default_other_auto_track_topics_after_msecs: "トピックが自動的に追跡されるまでのグローバルのデフォルト時間。"
     default_other_notification_level_when_replying: "ユーザーがトピックに返信する際のグローバルのデフォルト通知レベル。"
@@ -2052,6 +2060,7 @@ ja:
     enable_sitemap: "サイトのサイトマップを生成し、robots.txt ファイルに含めます。"
     sitemap_page_size: "各サイトマップページに含める URL の数。最大 50,000"
     enable_user_status: "(実験的) ユーザーがカスタムステータスメッセージ (絵文字 + 説明) を設定できるようにします。"
+    enable_user_tips: "(実験的) 重要な機能をユーザーに説明する新しいユーザーヒントを有効にする"
     short_title: "短いタイトルはユーザーのホーム画面、ランチャー、またはスペースが限られている場所に使用されます。12 文字に制限する必要があります。"
     dashboard_hidden_reports: "ダッシュボードから指定されたレポートを非表示にすることを許可する。"
     dashboard_visible_tabs: "表示するダッシュボードのタブを選択します。"
@@ -2126,6 +2135,7 @@ ja:
       search_tokenize_japanese_enabled: "この設定を有効にする前に 'search_tokenize_japanese' を無効にする必要があります。"
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "2FA が適用されている場合、DiscourseConnect を有効にできません。"
       delete_rejected_email_after_days: "この設定は delete_email_logs_after_days 設定より小さいか %{max} より大きく設定することはできません。"
+      invalid_uncategorized_category_setting: "「未分類トピックを許可」が許可されていない場合、未分類カテゴリを選択できません"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3604,6 +3614,7 @@ ja:
     png_to_jpg_conversion_failure_message: "PNG から JPG への変換中にエラーが発生しました。"
     optimize_failure_message: "アップロードされた画像を最適化中にエラーが発生しました。"
     download_failure: "外部プロバイダーからのファイルのダウンロードに失敗しました。"
+    size_mismatch_failure: "S3 にアップロードされたファイルのサイズが、外部アップロードの意図したサイズに一致しませんでした。%{additional_detail}"
     create_multipart_failure: "外部ストアでのマルチパートアップロードの作成に失敗しました。"
     abort_multipart_failure: "外部ストアでのマルチパートアップロードの中止に失敗しました。"
     complete_multipart_failure: "外部ストアでのマルチパートアップロードを完了できませんでした。"
@@ -4632,6 +4643,10 @@ ja:
   user_status:
     errors:
       ends_at_should_be_greater_than_set_at: "ends_at は set_at より大きい必要があります"
+  webhooks:
+    payload_url:
+      blocked_or_internal: "ペイロード URL はブロックされた IP または内部 IP に解決されるため、使用できません。"
+      unsafe: "ペイロード URL は安全でないため使用できません"
   activemodel:
     errors:
       <<: *errors

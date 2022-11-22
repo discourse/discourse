@@ -59,6 +59,7 @@ id:
         save: "Simpan"
         saved: "Tersimpan"
         unfollow: "Keluar"
+        admin_title: "Admin"
       incoming_webhooks:
         delete: "Hapus"
         name: "Name"

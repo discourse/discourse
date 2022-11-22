@@ -216,6 +216,9 @@ fa_IR:
         mention: "فقط برای اشاره کردن"
         always: "برای تمام فعالیت‌ها"
       settings:
+        auto_join_users_label: "افزودن خودکار کاربران"
+        auto_join_users_info: "بررسی کنید که کاربران در ۳ ماه گذشته فعال بوده‌اند و در دسته‌بندی %{category} دسترسی داشته باشند، آنها را به این کانال اضافه کنید."
+        enable_auto_join_users: "به طور خودکار همه کاربران فعال اخیر را اضافه کنید"
         desktop_notification_level: "آگاه‌سازی‌های دسکتاپ"
         follow: "عضو شدن"
         followed: "عضو شده"
@@ -227,6 +230,8 @@ fa_IR:
         save: "ذخیره کردن"
         saved: "ذخیره شد"
         unfollow: "ترک کردن"
+        admin_title: "مدیر کل"
+        retention_info: "تاریخچه گفتگو به مدت %{days} روز ذخیره خواهد شد."
       admin:
         title: "گفتگو"
       direct_messages:

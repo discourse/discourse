@@ -949,13 +949,9 @@ lv:
       no_notifications_page_title: "Jums vēl nav paziņojumu"
       no_notifications_page_body: >
         Jūs saņemsiet paziņojumu par darbībām, kas tieši attiecas uz jums, tostarp atbildēm uz jūsu tēmām un ziņām, kad kāds <b>@minēs</b> vai citēs jūs, un atbildes uz skatītajām tēmām. Paziņojumi tiks nosūtīti arī uz jūsu e -pastu, ja kādu laiku neesat pieteicies. <br><br> Meklējiet %{icon} lai izlemtu, par kurām konkrētām tēmām, kategorijām un tagiem vēlaties saņemt paziņojumu. Lai iegūtu vairāk, skatiet savas <a href='%{preferencesUrl}'>paziņojumu preferences</a>.
-      first_notification: "Jūsu pirmais paziņojums! Izvēlieties to, lai sāktu."
       dynamic_favicon: "Rādīt skaitļus pārlūkprogrammas ikonā"
       skip_new_user_tips:
         description: "Izlaist padomus un emblēmas par jaunu lietotāju iesaisti"
-        not_first_time: "Vai ne pirmo reizi?"
-        skip_link: "Izlaidiet šos padomus"
-        read_later: "Vēlāk izlasīšu."
       theme_default_on_all_devices: "Padarīt to par noklusējuma motīvu visās manās ierīcēs"
       color_scheme_default_on_all_devices: "Iestatīt noklusējuma krāsu shēmu (-as) visās manās ierīcēs"
       color_scheme: "Krāsu shēma"
@@ -1083,6 +1079,7 @@ lv:
         profile: "Profils"
         emails: "E-pasti"
         notifications: "Paziņojumi"
+        tracking: "Sekot"
         categories: "Sadaļas"
         users: "Lietotāji"
         tags: "Tagi"
@@ -1298,6 +1295,7 @@ lv:
       email_in_reply_to: "Iekļaut e-pastā citātu no atbildes uz ierakstu"
       other_settings: "Citi"
       categories_settings: "Sadaļas"
+      topics_settings: "Tēmas"
       new_topic_duration:
         label: "Uzskatīt tēmas par jaunām, ja"
         not_viewed: "Es vēl neesmu tās skatījis"
@@ -2836,8 +2834,6 @@ lv:
               content: "Žetoni"
             faq:
               content: "BUJ"
-            tracked:
-              content: "Sekots"
             groups:
               content: "Grupas"
               title: "Visas grupas"

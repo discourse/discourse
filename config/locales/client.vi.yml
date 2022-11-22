@@ -1007,13 +1007,9 @@ vi:
       no_notifications_page_title: "Bạn chưa có bất kỳ thông báo nào"
       no_notifications_page_body: >
         Bạn sẽ được thông báo về hoạt động liên quan trực tiếp đến bạn, bao gồm các câu trả lời cho các chủ đề và bài đăng của bạn, khi ai đó <b>@mentions</b> bạn hoặc trích dẫn bạn và trả lời các chủ đề bạn đang xem. Thông báo cũng sẽ được gửi đến email của bạn khi bạn không đăng nhập trong một thời gian. <br><br> Tìm %{icon} để quyết định chủ đề, danh mục và thẻ cụ thể mà bạn muốn được thông báo. Để biết thêm, hãy xem <a href='%{preferencesUrl}'>tùy chọn thông báo của bạn</a>.
-      first_notification: "Thông báo đầu tiên của bạn! Chọn để bắt đầu"
       dynamic_favicon: "Hiển thị đếm  trên icon trình duyệt"
       skip_new_user_tips:
         description: "Bỏ qua các mẹo và huy hiệu giới thiệu người dùng mới"
-        not_first_time: "Không phải lần đầu tiên sao?"
-        skip_link: "Bỏ qua những mẹo này"
-        read_later: "Tôi sẽ đọc nó sau."
       theme_default_on_all_devices: "Đặt giao diện này là mặc định trên tất cả các thiết bị của tôi"
       color_scheme_default_on_all_devices: "Đặt (các) bảng màu mặc định trên tất cả các thiết bị của tôi"
       color_scheme: "Sơ đồ màu"
@@ -1033,12 +1029,16 @@ vi:
       enable_quoting: "Bật chế độ làm nổi bật chữ trong đoạn trích dẫn trả lời"
       enable_defer: "Cho phép trì hoãn để đánh dấu các chủ đề chưa đọc"
       experimental_sidebar:
-        options: "Lựa chọn"
+        enable: "Bật thanh bên"
+        options: "Tùy chọn"
         categories_section: "Phần danh mục"
         categories_section_instruction: "Các danh mục đã chọn sẽ được hiển thị trong phần danh mục của Thanh bên."
         tags_section: "Phần thẻ"
         tags_section_instruction: "Các thẻ đã chọn sẽ được hiển thị trong phần thẻ của Thanh bên."
         navigation_section: "Điều hướng"
+        list_destination_instruction: "Khi có nội dung mới trong thanh bên..."
+        list_destination_default: "sử dụng liên kết mặc định và hiển thị huy hiệu cho các mục mới"
+        list_destination_unread_new: "liên kết đến chưa đọc/mới và hiển thị số lượng mục mới"
       change: "thay đổi"
       featured_topic: "Chủ đề nổi bật"
       moderator: "%{user} trong ban quản trị"
@@ -1145,6 +1145,7 @@ vi:
         profile: "Hồ sơ"
         emails: "Email"
         notifications: "Thông báo"
+        tracking: "Đang theo dõi"
         categories: "Chuyên mục"
         users: "Người dùng"
         tags: "Thẻ"
@@ -1388,6 +1389,7 @@ vi:
       email_in_reply_to: "Kèm theo đoạn dẫn trích trả lời bài viết trong email"
       other_settings: "Khác"
       categories_settings: "Chuyên mục"
+      topics_settings: "Chủ đề"
       new_topic_duration:
         label: "Để ý tới chủ đề mới khi"
         not_viewed: "Tôi chưa từng xem họ"
@@ -2123,6 +2125,7 @@ vi:
         other: "Hơn <span>%{count}%{plus} kết quả cho</span><span class='term'>%{term}</span>"
       title: "Tìm kiếm"
       full_page_title: "Tìm kiếm"
+      results: "kết quả"
       no_results: "Không tìm thấy kết quả."
       no_more_results: "Không tìm thấy kết quả"
       post_format: "#%{post_number} bởi %{username}"
@@ -3627,9 +3630,6 @@ vi:
               title: "Tất cả các chủ đề"
             faq:
               content: "Câu hỏi thường gặp"
-            tracked:
-              content: "Theo dõi"
-              title: "Tất cả các chủ đề được theo dõi"
             groups:
               content: "Nhóm"
               title: "Các nhóm"
@@ -4227,6 +4227,7 @@ vi:
           has_overwritten_history: "Phiên bản chủ đề hiện tại không còn tồn tại vì lịch sử Git đã bị ghi đè bởi một lực đẩy."
           add: "Thêm"
           theme_settings: "Cài đặt Themes"
+          overriden_settings_explanation: "Cài đặt bị ghi đè được đánh dấu bằng dấu chấm và có màu nổi bật. Để đặt lại các cài đặt này về giá trị mặc định, hãy nhấn nút đặt lại bên cạnh chúng."
           no_settings: "Theme này không có cài đặt."
           theme_translations: "Bản dịch Theme"
           empty: "Không có mẫu nào"
