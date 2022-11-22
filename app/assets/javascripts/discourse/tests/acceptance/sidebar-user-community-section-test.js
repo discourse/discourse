@@ -569,7 +569,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.strictEqual(
       query(".sidebar-section-link-my-posts").title,
-      "My recent topic activity",
+      I18n.t("sidebar.sections.community.links.my_posts.title"),
       "displays the default title when no drafts are present"
     );
 
