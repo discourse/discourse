@@ -108,7 +108,7 @@ class Tag < ActiveRecord::Base
 
     return [] if scope_category_ids.empty?
 
-    filter_sql = guardian&.is_staff? ? '' : " AND tags.id NOT IN (#{DiscourseTagging.hidden_tags_query.select(:id).to_sql})"
+    filter_sql = guardian&.is_staff? ? '' : " AND tags.id IN (#{DiscourseTagging.visible_tags(guardian).select(:id).to_sql})"
 
     tag_names_with_counts = DB.query <<~SQL
       SELECT tags.name as tag_name, SUM(stats.topic_count) AS sum_topic_count
