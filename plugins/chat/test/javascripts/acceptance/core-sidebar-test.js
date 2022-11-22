@@ -112,7 +112,7 @@ acceptance("Discourse Chat - Core Sidebar", function (needs) {
           {
             id: 3,
             title: "random",
-            description: "The channel for random things",
+            description: "The channel for random <script>evil</script> things",
             chatable_type: "Category",
             chatable: { slug: "random" },
             last_message_sent_at: "2021-11-08T21:26:05.710Z",
@@ -422,14 +422,17 @@ acceptance("Discourse Chat - Core Sidebar", function (needs) {
     assert.strictEqual(currentURL(), "/");
   });
 
-  test("Channel description used as title when present", async function (assert) {
+  test("Escaped channel description used as title when present", async function (assert) {
     await visit("/");
 
     const randomChannel = queryAll(
       ".sidebar-section-chat-channels .sidebar-section-link-wrapper .sidebar-section-link"
     )[3];
 
-    assert.strictEqual(randomChannel.title, "The channel for random things");
+    assert.strictEqual(
+      randomChannel.title,
+      "The channel for random &lt;script&gt;evil&lt;/script&gt; things"
+    );
   });
 
   test("Escapes public channel titles", async function (assert) {

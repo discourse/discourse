@@ -104,8 +104,8 @@ export default {
             }
 
             get title() {
-              return this.channel.description
-                ? htmlSafe(this.channel.description)
+              return this.channel.escapedDescription
+                ? htmlSafe(this.channel.escapedDescription)
                 : `${this.channel.escapedTitle} ${I18n.t("chat.title")}`;
             }
 
