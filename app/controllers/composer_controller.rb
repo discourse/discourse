@@ -69,9 +69,9 @@ class ComposerController < ApplicationController
 
     render json: {
       users: users.keys,
-      user_reasons: user_reasons.compact,
+      user_reasons: user_reasons,
       groups: serialized_groups,
-      group_reasons: group_reasons.compact,
+      group_reasons: group_reasons,
       here_count: here_count,
       max_users_notified_per_group_mention: SiteSetting.max_users_notified_per_group_mention,
     }
@@ -120,7 +120,7 @@ class ComposerController < ApplicationController
   def groups
     @groups ||= Group
       .visible_groups(current_user)
-      .where('lower(name) IN (?)', @names)
+      .where('lower(name) IN (?)', @names.map(&:downcase))
       .index_by(&:name)
   end
 

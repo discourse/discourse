@@ -29,16 +29,16 @@ RSpec.describe ComposerController do
         expect(response.status).to eq(200)
 
         expect(response.parsed_body['users']).to contain_exactly(user.username)
-        expect(response.parsed_body['user_reasons']).to contain_exactly()
+        expect(response.parsed_body['user_reasons']).to eq({})
 
-        expect(response.parsed_body['groups']).to contain_exactly(
-          [group.name, { 'user_count' => group.user_count }],
-          [unmessageable_group.name, { 'user_count' => unmessageable_group.user_count }],
-          [unmentionable_group.name, { 'user_count' => unmentionable_group.user_count }],
-        )
-        expect(response.parsed_body['group_reasons']).to contain_exactly(
-          [unmentionable_group.name, 'not_mentionable'],
-        )
+        expect(response.parsed_body['groups']).to eq({
+          group.name => { 'user_count' => group.user_count },
+          unmessageable_group.name => { 'user_count' => unmessageable_group.user_count },
+          unmentionable_group.name => { 'user_count' => unmentionable_group.user_count },
+        })
+        expect(response.parsed_body['group_reasons']).to eq({
+          unmentionable_group.name => 'not_mentionable',
+        })
 
         expect(response.parsed_body['max_users_notified_per_group_mention'])
           .to eq(SiteSetting.max_users_notified_per_group_mention)
@@ -64,15 +64,15 @@ RSpec.describe ComposerController do
         expect(response.status).to eq(200)
 
         expect(response.parsed_body['users']).to contain_exactly(user.username)
-        expect(response.parsed_body['user_reasons']).to contain_exactly()
+        expect(response.parsed_body['user_reasons']).to eq({})
 
-        expect(response.parsed_body['groups']).to contain_exactly(
-          [group.name, { 'user_count' => group.user_count }],
-          [unmessageable_group.name, { 'user_count' => unmessageable_group.user_count }],
-          [unmentionable_group.name, { 'user_count' => unmentionable_group.user_count }],
+        expect(response.parsed_body['groups']).to eq(
+          group.name => { 'user_count' => group.user_count },
+          unmessageable_group.name => { 'user_count' => unmessageable_group.user_count },
+          unmentionable_group.name => { 'user_count' => unmentionable_group.user_count },
         )
-        expect(response.parsed_body['group_reasons']).to contain_exactly(
-          [unmentionable_group.name, 'not_mentionable'],
+        expect(response.parsed_body['group_reasons']).to eq(
+          unmentionable_group.name => 'not_mentionable',
         )
 
         expect(response.parsed_body['max_users_notified_per_group_mention'])
@@ -114,19 +114,19 @@ RSpec.describe ComposerController do
         expect(response.parsed_body['users']).to contain_exactly(
           user.username, allowed_user.username
         )
-        expect(response.parsed_body['user_reasons']).to contain_exactly(
-          [user.username, 'private']
+        expect(response.parsed_body['user_reasons']).to eq(
+          user.username => 'private'
         )
 
-        expect(response.parsed_body['groups']).to contain_exactly(
-          [group.name, { 'user_count' => group.user_count }],
-          [unmessageable_group.name, { 'user_count' => unmessageable_group.user_count }],
-          [unmentionable_group.name, { 'user_count' => unmentionable_group.user_count }],
+        expect(response.parsed_body['groups']).to eq(
+          group.name => { 'user_count' => group.user_count },
+          unmessageable_group.name => { 'user_count' => unmessageable_group.user_count },
+          unmentionable_group.name => { 'user_count' => unmentionable_group.user_count },
         )
-        expect(response.parsed_body['group_reasons']).to contain_exactly(
-          [group.name, 'not_allowed'],
-          [unmessageable_group.name, 'not_allowed'],
-          [unmentionable_group.name, 'not_mentionable'],
+        expect(response.parsed_body['group_reasons']).to eq(
+          group.name => 'not_allowed',
+          unmessageable_group.name => 'not_allowed',
+          unmentionable_group.name => 'not_mentionable',
         )
 
         expect(response.parsed_body['max_users_notified_per_group_mention'])
@@ -152,11 +152,11 @@ RSpec.describe ComposerController do
 
         expect(response.status).to eq(200)
 
-        expect(response.parsed_body['groups']).to contain_exactly(
-          [other_group.name, { 'user_count' => 3, 'notified_count' => 2 }]
+        expect(response.parsed_body['groups']).to eq(
+          other_group.name => { 'user_count' => 3, 'notified_count' => 2 }
         )
-        expect(response.parsed_body['group_reasons']).to contain_exactly(
-          [other_group.name, 'some_not_allowed']
+        expect(response.parsed_body['group_reasons']).to eq(
+          other_group.name => 'some_not_allowed'
         )
       end
     end
@@ -183,19 +183,19 @@ RSpec.describe ComposerController do
         expect(response.parsed_body['users']).to contain_exactly(
           user.username, allowed_user.username
         )
-        expect(response.parsed_body['user_reasons']).to contain_exactly(
-          [user.username, 'private']
+        expect(response.parsed_body['user_reasons']).to eq(
+          user.username => 'private',
         )
 
-        expect(response.parsed_body['groups']).to contain_exactly(
-          [group.name, { 'user_count' => group.user_count }],
-          [unmessageable_group.name, { 'user_count' => unmessageable_group.user_count }],
-          [unmentionable_group.name, { 'user_count' => unmentionable_group.user_count }],
+        expect(response.parsed_body['groups']).to eq(
+          group.name => { 'user_count' => group.user_count },
+          unmessageable_group.name => { 'user_count' => unmessageable_group.user_count },
+          unmentionable_group.name => { 'user_count' => unmentionable_group.user_count },
         )
-        expect(response.parsed_body['group_reasons']).to contain_exactly(
-          [group.name, 'not_allowed'],
-          [unmessageable_group.name, 'not_allowed'],
-          [unmentionable_group.name, 'not_mentionable'],
+        expect(response.parsed_body['group_reasons']).to eq(
+          group.name => 'not_allowed',
+          unmessageable_group.name => 'not_allowed',
+          unmentionable_group.name => 'not_mentionable',
         )
 
         expect(response.parsed_body['max_users_notified_per_group_mention'])
@@ -220,11 +220,11 @@ RSpec.describe ComposerController do
 
         expect(response.status).to eq(200)
 
-        expect(response.parsed_body['groups']).to contain_exactly(
-          [other_group.name, { 'user_count' => 3, 'notified_count' => 2 }]
+        expect(response.parsed_body['groups']).to eq(
+          other_group.name => { 'user_count' => 3, 'notified_count' => 2 }
         )
-        expect(response.parsed_body['group_reasons']).to contain_exactly(
-          [other_group.name, 'some_not_allowed']
+        expect(response.parsed_body['group_reasons']).to eq(
+          other_group.name => 'some_not_allowed'
         )
       end
     end
