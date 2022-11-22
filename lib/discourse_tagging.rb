@@ -470,7 +470,7 @@ module DiscourseTagging
             .where(
               id:
                 TagGroupPermission
-                  .joins(tag_group: :tag_group_membership)
+                  .joins(tag_group: :tag_group_memberships)
                   .where(group_id: permitted_group_ids_query(guardian))
                   .select('tag_group_memberships.tag_id'),
             )
