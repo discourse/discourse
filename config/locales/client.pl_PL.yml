@@ -1187,13 +1187,9 @@ pl_PL:
       no_notifications_page_title: "Nie masz jeszcze żadnych powiadomień"
       no_notifications_page_body: >
         Zostaniesz powiadomiony o działaniach bezpośrednio związanych z Tobą, w tym o odpowiedziach na Twoje tematy i posty, gdy ktoś <b>@oznaczy</b> Ciebie lub cytuje Ciebie, i odpowiada na tematy, które oglądasz. Powiadomienia będą również wysyłane na Twój adres e-mail, gdy nie zalogujesz się przez jakiś czas. <br><br> Poszukaj %{icon} , aby zdecydować, o których konkretnych tematach, kategoriach i tagach chcesz być powiadamiany. Aby dowiedzieć się więcej, zobacz swoje <a href='%{preferencesUrl}'>preferencje powiadomień</a>.
-      first_notification: "Twoje pierwsze powiadomienie! Kliknij aby zacząć."
       dynamic_favicon: "Pokazuj liczbę nowych/zaktualizowanych tematów w ikonie przeglądarki."
       skip_new_user_tips:
         description: "Pomiń wskazówki i plakietki dotyczące wprowadzania nowych użytkowników"
-        not_first_time: "To nie twój pierwszy raz?"
-        skip_link: "Pomiń te wskazówki"
-        read_later: "Przeczytam to później."
       theme_default_on_all_devices: "Ustaw to jako domyślny motyw na wszystkich urządzeniach"
       color_scheme_default_on_all_devices: "Ustaw domyślne schematy kolorów na wszystkich moich urządzeniach"
       color_scheme: "Schemat kolorów"
@@ -1331,6 +1327,7 @@ pl_PL:
         profile: "Profil"
         emails: "Wiadomości"
         notifications: "Powiadomienia"
+        tracking: "Śledzona"
         categories: "Kategorie"
         users: "Użytkownicy"
         tags: "Tagi"
@@ -1589,6 +1586,7 @@ pl_PL:
       email_in_reply_to: "Zawieraj w e-mailach fragment oryginalnych postów z odpowiedzi"
       other_settings: "Inne"
       categories_settings: "Kategorie"
+      topics_settings: "Tematy"
       new_topic_duration:
         label: "Uznaj, że temat jest nowy, jeśli"
         not_viewed: "niewidziane "
@@ -2447,6 +2445,7 @@ pl_PL:
         other: "<span>%{count}%{plus} wyników dla</span><span class='term'>%{term}</span>"
       title: "Wyszukaj"
       full_page_title: "Wyszukaj"
+      results: "wyniki"
       no_results: "Brak wyników wyszukiwania"
       no_more_results: "Nie znaleziono więcej wyników."
       post_format: "#%{post_number} za %{username}"
@@ -4228,9 +4227,6 @@ pl_PL:
               title: "Wszystkie tematy"
             faq:
               content: "FAQ"
-            tracked:
-              content: "Śledzone"
-              title: "Wszystkie śledzone tematy"
             groups:
               content: "Grupy"
               title: "Wszystkie grupy"

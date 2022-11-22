@@ -544,7 +544,6 @@ sq:
       dismiss: "Hiqe"
       dismiss_notifications: "Hiqini të gjitha"
       dismiss_notifications_tooltip: "Shëno njoftimet e palexuara si të lexuara"
-      first_notification: "Njoftimi juaj i parë! Zgjidheni për të filluar. "
       color_schemes:
         undo: "Rivendos"
         regular: "Normal"
@@ -628,6 +627,7 @@ sq:
         profile: "Profili"
         emails: "Emailat"
         notifications: "Njoftimet"
+        tracking: "Në gjurmim"
         categories: "Kategoritë"
         users: "Users"
         tags: "Etiketat"
@@ -749,6 +749,7 @@ sq:
       email_in_reply_to: "Përfshi një copëz të përgjigjeve ndaj postimit në email"
       other_settings: "Tjetër"
       categories_settings: "Kategoritë"
+      topics_settings: "Topics"
       new_topic_duration:
         label: "Konsidero diskutimin të ri kur"
         not_viewed: "Nuk i kam shikuar akoma"
@@ -1115,6 +1116,7 @@ sq:
       too_short: "Fraza e kërkuar është shumë e shkurtër. "
       title: "Kërko"
       full_page_title: "Kërko"
+      results: "results"
       no_results: "Nuk u gjet asnjë rezultat."
       no_more_results: "Nuk gjetëm rezultate të tjera. "
       post_format: "#%{post_number} nga %{username}"
@@ -1973,8 +1975,6 @@ sq:
               content: "Stemat"
             faq:
               content: "Pyetje të shpeshta"
-            tracked:
-              content: "Gjurmuar"
             groups:
               content: "Grupet"
               title: "Të gjitha grupet"

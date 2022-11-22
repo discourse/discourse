@@ -70,6 +70,7 @@ hu:
         process_started: "A csatorna törlése megkezdődött. Ez a kérdésablak hamarosan bezárul, és már nem fogja látni a törölt csatornát."
       channels_list_popup:
         browse: "Csatornák böngészése"
+        create: "Új csatorna"
       click_to_join: "Kattintson ide az elérhető csatornák megtekintéséhez."
       close: "Lezárás"
       collapse: "Csevegőfiók összecsukása"
@@ -91,6 +92,7 @@ hu:
         when_away: "Csak ha távol van"
       enable: "Csevegés engedélyezése"
       flag: "Jelölés"
+      emoji: "Emodzsi beszúrása"
       flagged: "Ezt az üzenetet felülvizsgálatra jelentették"
       invalid_access: "Nincs hozzáférése ennek a csevegőcsatornának a megtekintéséhez"
       invitation_notification: "<span>%{username}</span> <span>meghvta Önt, hogy csatlakozzon egy csevegőcsatornához</span>"
@@ -235,6 +237,7 @@ hu:
         create: "Csatorna létrehozása"
         description: "Leírás (nem kötelező)"
         name: "Csatorna neve"
+        title: "Új csatorna"
         type: "Típus"
         types:
           category: "Kategória"
@@ -259,8 +262,8 @@ hu:
         mention: "Csak megemlítésnél"
         always: "Összes tevékenységnél"
       settings:
-        enable_auto_join_users: "Az összes nemrég aktív felhasználó automatikus hozzáadása"
-        disable_auto_join_users: "A felhasználók automatikus hozzáadásának leállítása"
+        auto_join_users_label: "Felhasználók automatikus hozzáadása"
+        enable_auto_join_users: "Az összes nemrégiben aktív felhasználó automatikus hozzáadása"
         desktop_notification_level: "Asztali értesítések"
         follow: "Belépés"
         followed: "Csatlakozott"
@@ -273,6 +276,7 @@ hu:
         save: "Mentés"
         saved: "Mentve"
         unfollow: "Elhagyás"
+        admin_title: "Adminisztrátor"
       admin:
         title: "Csevegés"
       direct_messages:
@@ -337,8 +341,16 @@ hu:
       retention_reminders:
         public: "A csatorna előzményei %{days} napig maradnak meg."
         dm: "A személyes csevegési előzményei %{days} napig maradnak meg."
+      flagging:
+        action: "Üzenet megjelölése"
       emoji_picker:
+        favorites: "Gyakran használt"
+        smileys_&_emotion: "Mosolyok és érzelmek"
         objects: "Tárgyak"
+        people_&_body: "Emberek és test"
+        travel_&_places: "Utazás és helyek"
+        animals_&_nature: "Állatok és természet"
+        food_&_drink: "Étel és ital"
         activities: "Tevékenységek"
         flags: "Zászlók"
         symbols: "Szimbólumok"

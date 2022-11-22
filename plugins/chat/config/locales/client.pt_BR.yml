@@ -7,6 +7,9 @@
 pt_BR:
   js:
     admin:
+      site_settings:
+        categories:
+          chat: Chat
       logs:
         staff_actions:
           actions:
@@ -51,19 +54,23 @@ pt_BR:
         leave_channel: "Sair do canal"
         join: "Participar"
         leave: "Sair"
+        save_label:
+          mute_channel: "Preferência de canal silenciado salva"
+          desktop_notification: "Preferência de notificação de desktop salva"
+          mobile_notification: "Preferência de notificação por push móvel"
       channel_archive:
         title: "Arquivar canal"
-        instructions: "<p>O arquivamento de um canal o coloca em modo somente leitura e move todas as mensagens do canal para um tópico novo ou existente. Nenhuma mensagem nova pode ser enviada e nenhuma mensagem existente pode ser editada ou excluída.</p><p>Tem certeza de que deseja arquivar o canal <strong>%{channelTitle}</strong>?</p>"
+        instructions: "<p>O arquivamento de um canal coloca em modo somente leitura e move todas as mensagens do canal para um tópico novo ou existente. Nenhuma mensagem nova pode ser enviada e nenhuma mensagem existente pode ser editada ou excluída.</p><p>Tem certeza de que deseja arquivar o canal <strong>%{channelTitle}</strong>?</p>"
         process_started: "O processo de arquivamento foi iniciado. Este modal será encerrado em breve e você receberá uma mensagem pessoal quando o processo de arquivamento for concluído."
         retry: "Tentar novamente"
       channel_open:
-        title: "Abrir Canal"
-        instructions: "Reabre o canal, todos os usuários poderão enviar mensagens e editar suas mensagens existentes."
+        title: "Abrir canal"
+        instructions: "Reabre o canal, todos(as) os(as) usuários(as) poderão enviar mensagens e editar suas mensagens existentes."
       channel_close:
-        title: "Fechar Canal"
-        instructions: "Fechar o canal impede que usuários não funcionários enviem novas mensagens ou editem mensagens existentes. Tem certeza de que deseja fechar este canal?"
+        title: "Fechar canal"
+        instructions: "Fechar o canal impede que usuários(as) não funcionários(as) enviem novas mensagens ou editem mensagens existentes. Tem certeza de que deseja fechar este canal?"
       channel_delete:
-        title: "Excluir Canal"
+        title: "Excluir canal"
         instructions: "<p>Exclui o canal <strong>%{name}</strong> e o histórico do chat. Todas as mensagens e dados relacionados, como reações e envios, serão excluídos permanentemente. Se você quiser preservar o histórico do canal e desativá-lo, talvez seja melhor arquivar o canal.</p> <p>Tem certeza de que deseja <strong>excluir permanentemente</strong> o canal? Para confirmar, digite o nome do canal na caixa abaixo.</p>"
         confirm: "Eu entendo as consequências, exclua o canal"
         confirm_channel_name: "Digite o nome do canal"
@@ -79,7 +86,7 @@ pt_BR:
       hidden: "Uma mensagem foi ocultada. [view]"
       delete: "Excluir"
       edited: "editou"
-      muted: "silenciado"
+      muted: "silenciado(a)"
       joined: "entrou"
       empty_state:
         direct_message_cta: "Inicie um chat pessoal"
@@ -177,8 +184,9 @@ pt_BR:
         open_header: "Canal aberto"
         open: "Aberto"
       browse:
+        back: "Voltar"
         title: Canais
-        filter_all: Todos
+        filter_all: Tudo
         filter_open: Abertos
         filter_closed: Fechados
         filter_archived: Arquivados
@@ -224,19 +232,19 @@ pt_BR:
           other: "%{count} membros"
       create_channel:
         auto_join_users:
-          public_category_warning: "%{category} é uma categoria pública. Deseja adicionar automaticamente todos os usuários recentemente ativos a este canal?"
+          public_category_warning: "%{category} é uma categoria pública. Deseja adicionar automaticamente todos os(as) usuários(as) recentemente ativos(as) a este canal?"
           warning_groups:
-            one: Adicionar automaticamente %{members_count} usuários de %{group}?
-            other: Adicionar automaticamente %{members_count} usuários de %{group} e %{group_2}?
-          warning_multiple_groups: Adicionar automaticamente %{members_count} usuários de %{group_1} e outros %{count}?
+            one: Adicionar automaticamente %{members_count} usuários(as) de %{group}?
+            other: Adicionar automaticamente %{members_count} usuários(as) de %{group} e %{group_2}?
+          warning_multiple_groups: Adicionar automaticamente %{members_count} usuários(as) de %{group_1} e outros %{count}?
         choose_category:
           label: "Escolha uma categoria"
           none: "selecionar um..."
           default_hint: Gerencie o acesso ao acessar as <a href=%{link} target="_blank">%{category} configurações de segurança</a>
           hint_groups:
-            one: Os usuários em %{hint} terão acesso a este canal de acordo com as <a href=%{link} target="_blank">configurações de segurança</a>
-            other: Os usuários em %{hint} e %{hint_2} terão acesso a este canal de acordo com as <a href=%{link} target="_blank">configurações de segurança</a>
-          hint_multiple_groups: Os usuários em %{hint_1} e %{count} terão acesso a este canal de acordo com as <a href=%{link} target="_blank">configurações de segurança</a>
+            one: Os(as) usuários(as) em %{hint} terão acesso a este canal de acordo com as <a href=%{link} target="_blank">configurações de segurança</a>
+            other: Os(as) usuários(as) em %{hint} e %{hint_2} terão acesso a este canal de acordo com as <a href=%{link} target="_blank">configurações de segurança</a>
+          hint_multiple_groups: Os(as) usuários(as) em %{hint_1} e %{count} terão acesso a este canal de acordo com as <a href=%{link} target="_blank">configurações de segurança</a>
         create: "Criar canal"
         description: "Descrição (opcional)"
         name: "Nome do canal"
@@ -249,7 +257,7 @@ pt_BR:
         type: "Mensagem de chat"
       reactions:
         only_you: "Você reagiu com :%{emoji}:"
-        and_others: "Você, %{usernames} reagiu com :%{emoji}:"
+        and_others: "Você, %{usernames} reagiram com :%{emoji}:"
         only_others: "%{usernames} reagiu com :%{emoji}:"
         others_and_more: "%{usernames} e mais %{more} reagiram com :%{emoji}:"
         you_others_and_more: "Você, %{usernames} e mais %{more} reagiram com :%{emoji}:"
@@ -266,9 +274,9 @@ pt_BR:
         mention: "Apenas para menções"
         always: "Para todas as atividades"
       settings:
-        enable_auto_join_users: "Adicionar automaticamente todos os usuários ativos recentemente"
-        disable_auto_join_users: "Parar de adicionar usuários automaticamente"
-        auto_join_users_warning: "Todos os usuários que não são membros deste canal e têm acesso à categoria %{category} participarão. Tem certeza?"
+        auto_join_users_label: "Adicionar usuários(as) automaticamente"
+        auto_join_users_info: "Verifique a cada hora quais usuários(as) estiveram ativos(as) nos últimos três meses e, se tiverem acesso à categria %{category}, adicione a este canal."
+        auto_join_users_warning: "Todos(as) os(as) usuários(as) que não são membros deste canal e têm acesso à categoria %{category} participarão. Tem certeza?"
         desktop_notification_level: "Notificações do desktop"
         follow: "Participar"
         followed: "Entrou"
@@ -281,6 +289,8 @@ pt_BR:
         save: "Salvar"
         saved: "Salvou"
         unfollow: "Sair"
+        admin_title: "Administrador(a)"
+        retention_info: "O histórico do canal será salvo por %{days} dias."
       admin:
         title: "Chat"
       direct_messages:
@@ -358,7 +368,7 @@ pt_BR:
         action: "Sinalizar mensagem"
       emoji_picker:
         favorites: "Usado frequentemente"
-        smileys_&_emotion: "Smileys e emoções"
+        smileys_&_emotion: "Smileys e emoticons"
         objects: "Objetos"
         people_&_body: "Pessoas e corpo"
         travel_&_places: "Viagens e lugares"
@@ -430,13 +440,13 @@ pt_BR:
           drawer_close: "%{shortcut} Fechar a gaveta do chat"
     topic_statuses:
       chat:
-        help: "O chat está sativado para este tópico"
+        help: "O chat está ativado para este tópico"
     user:
-      allow_private_messages: "Permitir que outros usuários me enviem mensagens pessoais e mensagens diretas no chat"
-      muted_users_instructions: "Suprimir todas as notificações, mensagens pessoais e mensagens diretas no chat desses usuários."
-      allowed_pm_users_instructions: "Permitir apenas mensagens pessoais ou mensagens diretas no chat desses usuários."
-      allow_private_messages_from_specific_users: "Permitir apenas que usuários específicos me enviem mensagens pessoais ou mensagens diretas no chat"
-      ignored_users_instructions: "Suprimir todas as postagens, mensagens, notificações, mensagens pessoais e mensagens diretas no chat desses usuários."
+      allow_private_messages: "Permitir que outros(as) usuários(as) me enviem mensagens pessoais e mensagens diretas no chat"
+      muted_users_instructions: "Suprimir todas as notificações, mensagens pessoais e mensagens diretas no chat desses(as) usuários(as)."
+      allowed_pm_users_instructions: "Permitir apenas mensagens pessoais ou mensagens diretas no chat desses(as) usuários(as)."
+      allow_private_messages_from_specific_users: "Permitir apenas que usuários(as) específicos(as) me enviem mensagens pessoais ou mensagens diretas no chat"
+      ignored_users_instructions: "Suprimir todas as postagens, mensagens, notificações, mensagens pessoais e mensagens diretas no chat desses(as) usuários(as)."
     user_menu:
       no_chat_notifications_title: "Você ainda não tem notificações no chat"
       no_chat_notifications_body: >

@@ -232,6 +232,7 @@ pt_BR:
     delete: "Excluir"
     generic_error: "Desculpe, ocorreu um erro."
     generic_error_with_reason: "Ocorreu um erro: %{error}"
+    multiple_errors: "Ocorreram vários erros; %{errors}"
     sign_up: "Cadastrar-se"
     log_in: "Entrar"
     age: "Idade"
@@ -293,6 +294,7 @@ pt_BR:
       like_count: "Curtidas"
       topic_count: "Tópicos"
       post_count: "Mensagens"
+      user_count: "Cadastros"
       active_user_count: "Usuários(as) ativos(as)"
       contact: "Fale conosco"
       contact_info: "Em caso de algum problema crítico ou assunto urgente relacionado a este site, fale conosco em %{contact_info}."
@@ -1077,13 +1079,10 @@ pt_BR:
       no_notifications_page_title: "Você ainda não tem nenhuma notificação"
       no_notifications_page_body: >
         Você receberá notificações sobre atividades relevantes, inclusive respostas aos seus tópicos e postagens, quando você for citado(a) ou mencionado(a) (<b>@mentions</b>) por alguém e quando os tópicos que você estiver acompanhando receberem respostas. As notificações também serão enviadas por e-mail quando você passar algum tempo sem entrar com a conta. <br><br> Procure por %{icon} para decidir sobre quais tópicos, categorias e etiquetas específicas você quer receber notificações. Para obter mais informações, verifique suas <a href='%{preferencesUrl}'>preferências de notificações</a>.
-      first_notification: "Sua primeira notificação! Selecione-a para começar."
       dynamic_favicon: "Exibir contagens no ícone do navegador"
       skip_new_user_tips:
         description: "Pular emblemas e dicas de integração de novo(a) usuário(a)"
-        not_first_time: "Não é a sua primeira vez?"
-        skip_link: "Pular estas dicas"
-        read_later: "Vou ler mais tarde."
+      reset_seen_user_tips: "Mostrar dicas do(a) usuário(a) novamente"
       theme_default_on_all_devices: "Definir este tema como padrão em todos os meus dispositivos"
       color_scheme_default_on_all_devices: "Definir esquemas de cores padrão em todos os meus dispositivos"
       color_scheme: "Esquema de cores"
@@ -1110,6 +1109,9 @@ pt_BR:
         tags_section: "Seção de Etiquetas"
         tags_section_instruction: "As etiquetas selecionadas serão exibidas na seção de etiquetas da barra lateral."
         navigation_section: "Navegação"
+        list_destination_instruction: "Quando houver conteúdo novo na barra lateral..."
+        list_destination_default: "usar o link padrão e mostrar um emblema para novos itens"
+        list_destination_unread_new: "link para novos/não lidos e mostrar contagem de itens novos"
       change: "alterar"
       featured_topic: "Tópico em destaque"
       moderator: "%{user} é moderador(a)"
@@ -1218,6 +1220,7 @@ pt_BR:
         profile: "Perfil"
         emails: "E-mails"
         notifications: "Notificações"
+        tracking: "Monitorando"
         categories: "Categorias"
         users: "Usuários"
         tags: "Etiquetas"
@@ -1472,6 +1475,7 @@ pt_BR:
       email_in_reply_to: "Incluir um trecho das respostas à postagem nos e-mails"
       other_settings: "Outros(as)"
       categories_settings: "Categorias"
+      topics_settings: "Tópicos"
       new_topic_duration:
         label: "Considerar novos os tópicos quando"
         not_viewed: "Eu ainda não tiver visualizado"
@@ -1668,6 +1672,24 @@ pt_BR:
       set_custom_status: "Definir status personalizados"
       what_are_you_doing: "O que você está fazendo?"
       remove_status: "Remover status"
+    user_tips:
+      primary: "Entendi!"
+      secondary: "não me mostre essas dicas"
+      first_notification:
+        title: "Sua primeira notificação!"
+        content: "As notificações são usadas para que você se atualize sobre o que está acontecendo na comunidade."
+      topic_timeline:
+        title: "Linha do tempo do tópico"
+        content: "Percorra rapidamente uma postagem usando a linha do tempo do tópico."
+      post_menu:
+        title: "Menu de postagem"
+        content: "Mostre mais maneiras de interagir com a postagem ao clicar nos três pontos!"
+      topic_notification_levels:
+        title: "Agora você está seguindo este tópico"
+        content: "Procure por este sino para ajustar suas preferências de notificação para tópicos específicos ou categorias inteiras."
+      suggested_topics:
+        title: "Continue lendo!"
+        content: "Confira alguns tópicos que achamos que você possa gostar de ler em seguida."
     loading: "Carregando..."
     errors:
       prev_page: "ao tentar carregar"
@@ -1889,6 +1911,7 @@ pt_BR:
       success: "Sua conta foi criada e você já entrou."
       name_label: "Nome"
       password_label: "Senha"
+      existing_user_can_redeem: "Resgate seu convite para um tópico ou grupo."
     password_reset:
       continue: "Continuar para %{site_name}"
     emoji_set:
@@ -2263,6 +2286,7 @@ pt_BR:
         other: "<span>%{count}%{plus} resultados para</span><span class='term'>%{term}</span>"
       title: "Pesquisar"
       full_page_title: "Pesquisar"
+      results: "resultados"
       no_results: "Nenhum resultado encontrado."
       no_more_results: "Nenhum outro resultado encontrado."
       post_format: "#%{post_number} por %{username}"
@@ -2307,6 +2331,7 @@ pt_BR:
         status: "filtros por status de tópico"
         full_search: "inicia pesquisa de pa'gina inteira"
         full_search_key: "%{modifier} + Enter"
+        me: "mostrar apenas suas publicações"
       advanced:
         title: Filtros avançados
         posted_by:
@@ -3233,6 +3258,7 @@ pt_BR:
       this_year: "este ano"
       position: "Posição na página de categorias:"
       default_position: "Posição padrão"
+      position_disabled: "As categorias serão exibidas em ordem de atividade. Para controlar a ordem das categorias nas listas, ative a configuração de <a href='%{url}'>\"posições de categorias fixas\"</a>"
       minimum_required_tags: "Número mínimo de etiquetas exigidas em um tópico:"
       default_slow_mode: 'Ative o "Modo lento" para obter novos tópicos nesta categoria.'
       parent: "Categoria principal"
@@ -3847,12 +3873,20 @@ pt_BR:
             unread_with_count: "Não lido(s) (%{count})"
             archive: "Arquivo"
         tags:
+          links:
+            add_tags:
+              content: "Adicionar etiquetas"
+              title: "Você não adicionou nenhuma etiqueta. Clique para começar."
           none: "Você não adicionou nenhuma etiqueta."
           click_to_get_started: "Clique aqui para começar."
           header_link_text: "Etiquetas"
           header_action_title: "editar as suas etiquetas da barra lateral"
           configure_defaults: "Configurar padrões"
         categories:
+          links:
+            add_categories:
+              content: "Adicionar categorias"
+              title: "Você não adicionou nenhuma categoria. Clique para começar."
           none: "Você não adicionou nenhuma categoria."
           click_to_get_started: "Clique aqui para começar."
           header_link_text: "Categorias"
@@ -3873,9 +3907,6 @@ pt_BR:
               title: "Todos os Tópicos"
             faq:
               content: "FAQ"
-            tracked:
-              content: "Monitorados(as)"
-              title: "Todos os tópicos monitorados"
             groups:
               content: "Grupos"
               title: "Todos os grupos"
@@ -4267,6 +4298,7 @@ pt_BR:
         change_settings_short: "Configurações"
         howto: "Como instalo plug-ins?"
         official: "Plug-in oficial"
+        broken_route: "Não foi possível configurar o link para \"%{name}\". Verifique se os bloqueadores de anúncios estão desativados e tente recarregar a página."
       backups:
         title: "Backups"
         menu:
@@ -5135,6 +5167,7 @@ pt_BR:
         trust_level_2_users: "Usuários(as) de nível de confiança 2"
         trust_level_3_requirements: "Requisitos de nível de confiança 3"
         trust_level_locked_tip: "o nível de confiança está bloqueado, o sistema não irá promover ou rebaixará o(a) usuário(a)"
+        trust_level_unlocked_tip: "o nível de confiança está desbloqueado, o sistema poderá promover ou rebaixar o(a) usuário(a)"
         lock_trust_level: "Bloquear nível de confiança"
         unlock_trust_level: "Desbloquear nível de confiança"
         silenced_count: "Silenciado(a)"
@@ -5194,18 +5227,23 @@ pt_BR:
         delete_confirm: "Tem certeza que quer excluir este campo de usuário(a)?"
         options: "Opções"
         required:
+          title: "Necessário para cadastro"
           enabled: "necessário(a)"
           disabled: "não necessário(a)"
         editable:
+          title: "Editável após criar conta"
           enabled: "editável"
           disabled: "não editável"
         show_on_profile:
+          title: "Exibir no perfil público"
           enabled: "exibido(a) no perfil"
           disabled: "não exibido(a) no perfil"
         show_on_user_card:
+          title: "Exibir no cartão de usuário(a)"
           enabled: "exibir no cartão de usuário(a)"
           disabled: "não exibido no cartão de usuário(a)"
         searchable:
+          title: "Pesquisável"
           enabled: "pesquisável"
           disabled: "não pesquisável"
         field_types:
@@ -5429,6 +5467,7 @@ pt_BR:
         destination: "Destino"
         copy_to_clipboard: "Copiar permalink para a área de transferência"
         delete_confirm: Você tem certeza que quer excluir este link permanente?
+        no_permalinks: "Você ainda não tem links permanentes. Crie um novo link permanente acima para começar a ver uma lista com seus links permanentes aqui."
         form:
           label: "Novo:"
           add: "Adicionar"

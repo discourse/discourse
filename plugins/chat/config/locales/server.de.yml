@@ -6,6 +6,7 @@
 
 de:
   site_settings:
+    chat_enabled: "Chat-Plug-in aktivieren."
     chat_allowed_groups: "Benutzer in diesen Gruppen können chatten. Bitte beachte, dass Teammitglieder jederzeit auf den Chat zugreifen können."
     chat_channel_retention_days: "Chat-Nachrichten in regulären Kanälen werden so viele Tage lang aufbewahrt. Auf „0“ setzen, um Nachrichten für immer aufzubewahren."
     chat_dm_retention_days: "Chat-Nachrichten in persönlichen Chat-Kanälen werden so viele Tage lang aufbewahrt. Auf „0“ setzen, um Nachrichten für immer aufzubewahren."
@@ -22,6 +23,7 @@ de:
     default_emoji_reactions: "Standard-Emoji-Reaktionen für Chat-Nachrichten. Füge bis zu 5 Emojis für schnelle Reaktionen hinzu."
     direct_message_enabled_groups: "Benutzern in diesen Gruppen erlauben, persönliche Benutzer-zu-Benutzer-Chats zu erstellen. Hinweis: Teammitglieder können immer persönliche Chats erstellen und Benutzer können auf persönliche Chats antworten, die von Benutzern initiiert wurden, die die Berechtigung haben, sie zu erstellen."
     chat_message_flag_allowed_groups: "Benutzer in diesen Gruppen dürfen Chat-Nachrichten markieren."
+    chat_max_direct_message_users: "Benutzer können nicht mehr als diese Anzahl anderer Benutzer hinzufügen, wenn sie eine neue Direktnachricht erstellen. Auf 0 setzen, um nur Nachrichten an sich selbst zuzulassen. Teammitglieder sind von dieser Einstellung ausgenommen."
     errors:
       chat_default_channel: "Der Standard-Chat-Kanal muss ein öffentlicher Kanal sein."
       direct_message_enabled_groups_invalid: "Du musst mindestens eine Gruppe für diese Einstellung angeben. Wenn du nicht möchtest, dass andere Personen als Teammitglieder Direktnachrichten senden, wähle die Gruppe für Teammitglieder aus."
@@ -60,6 +62,9 @@ de:
       actor_disallowed_dms: "Du hast dich dafür entschieden, dass Benutzer dir keine privaten und Direktnachrichten schicken können, daher kannst du keine neuen Direktnachrichten erstellen."
       actor_preventing_target_user_from_dm: "Du hast dich dafür entschieden, dass %{username} dir keine privaten und Direktnachrichten schicken kann, daher kannst du keine neuen Direktnachrichten an diese Person erstellen."
       user_cannot_send_direct_messages: "Du kannst leider keine Direktnachrichten senden."
+      over_chat_max_direct_message_users:
+        one: "Du kannst nur eine Direktnachricht an dich selbst erstellen."
+        other: "Du kannst keine Direktnachricht an mehr als %{count} andere Benutzer erstellen."
     reviewables:
       message_already_handled: "Danke, aber wir haben diese Nachricht bereits überprüft und festgestellt, dass sie nicht erneut markiert werden muss."
       actions:
@@ -110,6 +115,10 @@ de:
         single_user: "%{user}"
         multi_user: "%{users}"
         multi_user_truncated: "%{users} und %{leftover} andere"
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "enthält Nicht-ASCII-Zeichen"
+        is_already_in_use: "wird bereits verwendet"
     bookmarkable:
       notification_title: "Nachricht in %{channel_name}"
     personal_chat: "persönlicher Chat"

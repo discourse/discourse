@@ -62,7 +62,7 @@ en_GB:
     email_accent_bg_color: "The accent colour to be used as the background of some elements in HTML emails. Enter a colour name ('red') or hex value ('#FF0000')."
     email_accent_fg_color: "The colour of text rendered on the email bg colour in HTML emails. Enter a colour name ('white') or hex value ('#FFFFFF')."
     email_link_color: "The colour of links in HTML emails. Enter a colour name ('blue') or hex value ('#0000FF')."
-    group_in_subject: "Set %%{optional_pm} in email subject to name of first group in PM, see: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Customise subject format for standard emails</a>"
+    group_in_subject: "Set %%{optional_pm} in email subject to name of first group in PM, see: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Customise subject format for standard emails</a>"
     share_anonymized_statistics: "Share anonymised usage statistics."
     errors:
       invalid_hex_value: "Colour values have to be 6-digit hexadecimal codes."

@@ -1008,12 +1008,7 @@ fa_IR:
       no_other_notifications_body: >
         در این پنل در مورد سایر فعالیت‌هایی که ممکن است به شما مرتبط باشند - به عنوان مثال، زمانی که شخصی به یکی از نوشته‌های شما پیوند می‌دهد یا ویرایش می‌کند، به شما اطلاع داده می‌شود.
       no_notifications_page_title: "شما هنوز هیچ آگاه‌سازی ندارید"
-      first_notification: "اولین پیام اطلاع‌رسانی شما! برای شروع آن‌را انتخاب کنید."
       dynamic_favicon: "نمایش تعداد در ایکون بروسر"
-      skip_new_user_tips:
-        not_first_time: "اولين بارت نيست؟"
-        skip_link: "از این نکات بگذر"
-        read_later: "بعدا می‌خوانم"
       theme_default_on_all_devices: "این قالب، حالت پیش فرض در همه ی دستگاه های من باشد"
       color_scheme_default_on_all_devices: "طرح(های) رنگ پیش‌فرض را روی همه دستگاه‌های من تنظیم کن"
       color_scheme: "طرح رنگ"
@@ -1138,6 +1133,7 @@ fa_IR:
         profile: "پروفایل"
         emails: "ایمیل‌ها"
         notifications: "آگاه‌سازی‌ها"
+        tracking: "پیگیری"
         categories: "دسته‌بندی‌ها"
         users: "کاربران"
         tags: "برچسب‌‌ها"
@@ -1362,6 +1358,7 @@ fa_IR:
       email_in_reply_to: "خلاصه‌ی پاسخ‌ها را در ایمیل قرار بده."
       other_settings: "موارد دیگر"
       categories_settings: "دسته‌بندی‌ها"
+      topics_settings: "موضوعات"
       new_topic_duration:
         label: "موضوعات را جدید در نظر بگیر وقتی"
         not_viewed: "من هنوز آن ها را ندیدم"
@@ -1562,6 +1559,13 @@ fa_IR:
       topic_timeline:
         title: "جدول زمانی موضوع"
         content: "با استفاده از جدول زمانی موضوع، به سرعت در یک نوشته پیمایش کنید."
+      post_menu:
+        title: "منوی نوشته"
+        content: "ببینید چگونه می‌توانید با کلیک روی سه نقطه با نوشته‌ ارتباط برقرار کنید!"
+      topic_notification_levels:
+        title: "شما اکنون این موضوع را دنبال می‌کنید"
+      suggested_topics:
+        title: "به خواندن ادامه دهید!"
     loading: "بارگذاری..."
     errors:
       prev_page: "هنگام تلاش برای بارگذاری"
@@ -2085,6 +2089,7 @@ fa_IR:
       too_short: "کلمه جستجو شده بسیار کوتاه است"
       title: "جستجو"
       full_page_title: "جستجو"
+      results: "نتایج"
       no_results: "چیزی یافت نشد."
       no_more_results: "نتایجی بیشتری یافت نشد."
       post_format: "#%{post_number} توسط %{username}"
@@ -2111,6 +2116,7 @@ fa_IR:
         private_messages: "جستجوی پیام‌ها"
       tips:
         full_search_key: "%{modifier} + Enter"
+        me: "فقط نوشته‌های شما را نشان می‌دهد"
       advanced:
         posted_by:
           label: فرستنده
@@ -3315,6 +3321,8 @@ fa_IR:
       no_drafts_body: "برای ارسال کاملا آماده نیستید؟ هر زمان که شروع به نوشتن موضوع، پاسخ یا پیام شخصی کنید، پیش‌نویس جدیدی را به‌طور خودکار ذخیره می‌کنیم و آن را در اینجا فهرست می‌کنیم. برای صرف‌نظر کردن، دکمه لغو را انتخاب کنید یا پیش‌نویس خود را ذخیره کنید تا بعدا ادامه دهید."
       no_likes_title_others: "%{username} هنوز هیچ موضوعی را نپسندیده."
     sidebar:
+      show_sidebar: "نمایش نوار کناری"
+      hide_sidebar: "پنهان کردن نوار کناری"
       unread_count:
         one: "%{count} خوانده نشده"
         other: "%{count} خوانده نشده"
@@ -3366,9 +3374,6 @@ fa_IR:
               title: "همه موضوعات"
             faq:
               content: "پرسش‌های متداول"
-            tracked:
-              content: "پی‌گیری شده"
-              title: "همه موضوعات پیگیری شده"
             groups:
               content: "گروه‌ها"
               title: "همه گروه‌ها"

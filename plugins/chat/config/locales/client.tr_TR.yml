@@ -7,6 +7,9 @@
 tr_TR:
   js:
     admin:
+      site_settings:
+        categories:
+          chat: Sohbet
       logs:
         staff_actions:
           actions:
@@ -267,8 +270,8 @@ tr_TR:
         mention: "Sadece bahsetmeler için"
         always: "Tüm aktiviteler için"
       settings:
-        enable_auto_join_users: "Son zamanlarda aktif olan tüm kullanıcıları otomatik olarak ekle"
-        disable_auto_join_users: "Otomatik olarak kullanıcı eklemeyi durdur"
+        auto_join_users_label: "Kullanıcıları otomatik olarak ekle"
+        auto_join_users_info: "Son 3 ayda hangi kullanıcıların aktif olduğunu saatlik olarak kontrol edin ve %{category} kategorisine erişimleri varsa bu kanala ekleyin."
         auto_join_users_warning: "Bu kanala üye olmayan ve %{category} kategorisine erişimi olan her kullanıcı katılacak. Emin misiniz?"
         desktop_notification_level: "Masaüstü bildirimleri"
         follow: "Katıl"
@@ -282,6 +285,8 @@ tr_TR:
         save: "Kaydet"
         saved: "Kaydedildi"
         unfollow: "Ayrıl"
+        admin_title: "Yönetici"
+        retention_info: "Sohbet geçmişi %{days} gün boyunca kaydedilecek."
       admin:
         title: "Sohbet"
       direct_messages:
@@ -386,6 +391,7 @@ tr_TR:
         direct_message_chat_mention:
           direct: "kişisel sohbette sizden bahsetti"
           direct_html: "<span>%{username}</span> <span>kişisel sohbette sizden bahsetti</span>"
+          other_plain: "kişisel sohbette %{identifier} ifadesinden bahsetti"
         chat_message: "Yeni sohbet mesajı"
         chat_quoted: "%{username} sohbet mesajınızı alıntıladı"
       titles:
@@ -438,6 +444,8 @@ tr_TR:
       ignored_users_instructions: "Bu kullanıcılardan gelen tüm gönderileri, mesajları, bildirimleri, kişisel mesajları ve sohbet doğrudan mesajlarını gizle."
     user_menu:
       no_chat_notifications_title: "Henüz sohbet bildiriminiz yok"
+      no_chat_notifications_body: >
+        Biri size doğrudan mesaj gönderdiğinde veya sohbette sizden <b>@bahsettiğinde</b> bu panelde bildirim alırsınız. Bir süredir giriş yapmadıysanız bildirimler e-postanıza da gönderilir. <br><br>Sohbet kanalında hangi bildirimleri alacağınızı yapılandırmak için o kanalın üst kısmındaki başlığa tıklayın. Daha fazlası için <a href='%{preferencesUrl}'>bildirim tercihlerinize</a> bakın.
       tabs:
         chat_notifications: "Sohbet bildirimleri"
         chat_notifications_with_unread:

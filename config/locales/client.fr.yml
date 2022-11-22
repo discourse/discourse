@@ -232,6 +232,7 @@ fr:
     delete: "Supprimer"
     generic_error: "Nous sommes désolés, une erreur est survenue."
     generic_error_with_reason: "Une erreur est survenue : %{error}"
+    multiple_errors: "Plusieurs erreurs se sont produites : %{errors}"
     sign_up: "S'inscrire"
     log_in: "Se connecter"
     age: "Âge"
@@ -293,6 +294,7 @@ fr:
       like_count: "J'aime"
       topic_count: "Sujets"
       post_count: "Nombre de messages"
+      user_count: "Inscriptions"
       active_user_count: "Utilisateurs actifs"
       contact: "Nous contacter"
       contact_info: "En cas de problème critique ou de sujet urgent concernant ce site, veuillez nous contacter à : %{contact_info}."
@@ -1077,13 +1079,10 @@ fr:
       no_notifications_page_title: "Vous n'avez pas encore reçu de notifications"
       no_notifications_page_body: >
         Des notifications s'afficheront ici pour vous informer des activités qui vous concerne directement sur le forum, telles que les réponses qui vous sont adressées, les personnes qui citent vos messages ou qui mentionnent votre <b>pseudo</b>, et les nouveaux messages publiés dans les sujets que vous suivez. Des notifications vous seront également envoyées par e-mail si vous ne vous êtes pas connecté(e) pendant un certain temps. <br><br>Le bouton %{icon} vous permettra de choisir les sujets, les catégories et les étiquettes pour lesquels vous souhaitez recevoir des notifications. Pour en savoir plus, consultez également vos <a href='%{preferencesUrl}'>préférences de notification</a>.
-      first_notification: "Votre première notification ! Sélectionnez-la pour commencer."
       dynamic_favicon: "Afficher un compteur de notifications sur l'icône du navigateur"
       skip_new_user_tips:
         description: "Ignorer les badges et les conseils d'intégration des nouveaux utilisateurs"
-        not_first_time: "Vous connaissez déjà ?"
-        skip_link: "Ignorer ces conseils"
-        read_later: "J'y jetterai un œil plus tard."
+      reset_seen_user_tips: "Afficher à nouveau les conseils d'utilisation"
       theme_default_on_all_devices: "En faire mon thème par défaut sur tous mes périphériques"
       color_scheme_default_on_all_devices: "Définir comme jeu(x) de couleurs par défaut sur tous mes appareils"
       color_scheme: "Jeu de couleurs"
@@ -1110,6 +1109,9 @@ fr:
         tags_section: "Section Étiquettes"
         tags_section_instruction: "Les étiquettes sélectionnées seront affichées dans la section Étiquettes de la barre latérale."
         navigation_section: "Navigation"
+        list_destination_instruction: "Quand il y a du nouveau contenu dans la barre latérale…"
+        list_destination_default: "utiliser le lien par défaut et afficher un badge pour les nouveaux éléments"
+        list_destination_unread_new: "lien vers les éléments non lus ou nouveaux et afficher le nombre de nouveaux éléments"
       change: "modifier"
       featured_topic: "Sujet vedette"
       moderator: "%{user} a le rôle de modérateur(rice)"
@@ -1668,6 +1670,24 @@ fr:
       set_custom_status: "Définir un statut personnalisé"
       what_are_you_doing: "Que faites-vous ?"
       remove_status: "Supprimer le statut"
+    user_tips:
+      primary: "J'ai compris !"
+      secondary: "ne me montrez pas ces conseils"
+      first_notification:
+        title: "Votre première notification !"
+        content: "Les notifications sont utilisées pour vous tenir au courant de ce qui se passe dans la communauté."
+      topic_timeline:
+        title: "Chronologie du sujet"
+        content: "Parcourez rapidement un article à l'aide de la chronologie des sujets."
+      post_menu:
+        title: "Menu du message"
+        content: "Découvrez comment vous pouvez interagir autrement avec le message en cliquant sur les trois points !"
+      topic_notification_levels:
+        title: "Vous suivez maintenant ce sujet"
+        content: "Recherchez cette cloche pour ajuster vos préférences de notification pour des sujets spécifiques ou des catégories entières."
+      suggested_topics:
+        title: "Continuez de lire !"
+        content: "Voici quelques sujets que vous pourriez vouloir lire ensuite."
     loading: "Chargement…"
     errors:
       prev_page: "lors du chargement de"
@@ -1889,6 +1909,7 @@ fr:
       success: "Votre compte a été créé et vous êtes maintenant connecté(e)."
       name_label: "Nom"
       password_label: "Mot de passe"
+      existing_user_can_redeem: "Valider votre invitation à participer à un sujet ou à un groupe."
     password_reset:
       continue: "Continuer vers %{site_name}"
     emoji_set:
@@ -3233,6 +3254,7 @@ fr:
       this_year: "cette année"
       position: "Position sur la page des catégories :"
       default_position: "Position par défaut"
+      position_disabled: "Les catégories seront affichées par ordre d'activité. Pour contrôler l'ordre des catégories dans les listes, activez le paramètre <a href='%{url}'>« positions de catégorie fixes »</a> ."
       minimum_required_tags: "Nombre minimal d'étiquettes requises dans un sujet :"
       default_slow_mode: 'Activer le mode ralenti pour tous les nouveaux sujets dans cette catégorie'
       parent: "Catégorie parente"
@@ -3847,12 +3869,20 @@ fr:
             unread_with_count: "Non lus (%{count})"
             archive: "Archivés"
         tags:
+          links:
+            add_tags:
+              content: "Ajouter des étiquettes"
+              title: "Vous n'avez ajouté aucune étiquette. Cliquez pour commencer."
           none: "Vous n'avez ajouté aucune étiquette."
           click_to_get_started: "Cliquez ici pour commencer."
           header_link_text: "Étiquettes"
           header_action_title: "modifier les étiquettes de votre barre latérale"
           configure_defaults: "Configurer les valeurs par défaut"
         categories:
+          links:
+            add_categories:
+              content: "Ajouter des catégories"
+              title: "Vous n'avez ajouté aucune catégorie. Cliquez pour commencer."
           none: "Vous n'avez ajouté aucune catégorie."
           click_to_get_started: "Cliquez ici pour commencer."
           header_link_text: "Catégories"
@@ -3873,9 +3903,6 @@ fr:
               title: "Tous les sujets"
             faq:
               content: "FAQ"
-            tracked:
-              content: "Suivis"
-              title: "Tous les sujets suivis"
             groups:
               content: "Groupes"
               title: "Tous les groupes"
@@ -4267,6 +4294,7 @@ fr:
         change_settings_short: "Paramètres"
         howto: "Comment installer des extensions ?"
         official: "Extension officielle"
+        broken_route: "Impossible de configurer le lien vers « %{name} ». Assurez-vous que les bloqueurs de publicités sont désactivés et essayez de recharger la page."
       backups:
         title: "Sauvegardes"
         menu:
@@ -5135,6 +5163,7 @@ fr:
         trust_level_2_users: "Utilisateurs de niveau de confiance 2"
         trust_level_3_requirements: "Prérequis du niveau de confiance 3"
         trust_level_locked_tip: "le niveau de confiance est verrouillé, le système ne changera plus le niveau de confiance de cet utilisateur"
+        trust_level_unlocked_tip: "le niveau de confiance est déverrouillé, le système peut changer le niveau de confiance de cet utilisateur"
         lock_trust_level: "Verrouiller le niveau de confiance"
         unlock_trust_level: "Déverrouiller le niveau de confiance"
         silenced_count: "En sourdine"
@@ -5194,18 +5223,23 @@ fr:
         delete_confirm: "Voulez-vous vraiment supprimer ce champ utilisateur ?"
         options: "Options"
         required:
+          title: "Obligatoire à l'inscription "
           enabled: "obligatoire"
           disabled: "facultatif"
         editable:
+          title: "Modifiable après l'inscription "
           enabled: "modifiable"
           disabled: "non modifiable"
         show_on_profile:
+          title: "Afficher sur le profil public "
           enabled: "affiché dans le profil"
           disabled: "non affiché dans le profil"
         show_on_user_card:
+          title: "Afficher sur la carte de l'utilisateur "
           enabled: "affiché sur la carte de l'utilisateur"
           disabled: "non affiché sur la carte de l'utilisateur"
         searchable:
+          title: "Indexable"
           enabled: "indexable"
           disabled: "non indexable"
         field_types:
@@ -5429,6 +5463,7 @@ fr:
         destination: "Cible"
         copy_to_clipboard: "Copier le permalien dans le presse-papier"
         delete_confirm: Voulez-vous vraiment supprimer ce permalien ?
+        no_permalinks: "Vous n'avez pas encore de permaliens. Créez un nouveau permalien ci-dessus pour commencer à voir une liste de vos permaliens ici."
         form:
           label: "Nouveau :"
           add: "Ajouter"

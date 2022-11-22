@@ -73,6 +73,7 @@ sl:
         save: "Shrani"
         saved: "Shranjeno"
         unfollow: "Zapusti"
+        admin_title: "Admin"
       incoming_webhooks:
         back: "Nazaj"
         description: "Opis"

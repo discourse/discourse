@@ -994,12 +994,9 @@ sl:
       no_bookmarks_title: "Še ničesar niste dodali med zaznamke"
       no_bookmarks_body: >
         Dodajte objave z zaznamkom z gumbom %{icon} in tukaj bodo navedeni za lažjo uporabo. Lahko si nastavite tudi opomnik!
-      first_notification: "Vaše prvo obvestilo! Izberite ga za začetek."
       dynamic_favicon: "Prikaži števec na ikoni brskalnika"
       skip_new_user_tips:
         description: "Preskoči namige in značke za nove uporabnike"
-        not_first_time: "Niste začetnik?"
-        skip_link: "Preskoči te namige"
       theme_default_on_all_devices: "Nastavi kot privzeti videz na vseh mojih napravah"
       color_scheme_default_on_all_devices: "Nastavi privzete barvne sheme v vseh mojih napravah"
       color_scheme: "Barvna shema"
@@ -1125,6 +1122,7 @@ sl:
         profile: "Profil"
         emails: "E-sporočila"
         notifications: "Obvestila"
+        tracking: "Sledim"
         categories: "Kategorije"
         users: "Uporabniki"
         tags: "Oznake"
@@ -1357,6 +1355,7 @@ sl:
       email_in_reply_to: "Vključi povzetek prispevka v e-sporočilo"
       other_settings: "Ostalo"
       categories_settings: "Kategorije"
+      topics_settings: "Tem"
       new_topic_duration:
         label: "Obravnavaj temo kot novo"
         not_viewed: "je še neprebrana"
@@ -2036,6 +2035,7 @@ sl:
         other: "<span>%{count}%{plus} zadetkov za</span><span class='term'>%{term}</span>"
       title: "Išči"
       full_page_title: "Išči"
+      results: "rezultati"
       no_results: "Iskanje nima zadetkov."
       no_more_results: "Ni več zadetkov iskanja."
       post_format: "#%{post_number} od %{username}"
@@ -3413,8 +3413,6 @@ sl:
               content: "Značke"
             faq:
               content: "Pravila skupnosti"
-            tracked:
-              content: "Sledim"
             groups:
               content: "Skupine"
               title: "Vse skupine"

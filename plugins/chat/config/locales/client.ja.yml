@@ -7,6 +7,9 @@
 ja:
   js:
     admin:
+      site_settings:
+        categories:
+          chat: チャット
       logs:
         staff_actions:
           actions:
@@ -50,6 +53,10 @@ ja:
         leave_channel: "チャンネルから退出する"
         join: "参加"
         leave: "退出"
+        save_label:
+          mute_channel: "チャンネルのミュート設定を保存しました"
+          desktop_notification: "デスクトップ通知設定を保存しました"
+          mobile_notification: "モバイルプッシュ通知設定を保存しました"
       channel_archive:
         title: "チャンネルをアーカイブ"
         instructions: "<p>チャンネルをアーカイブすると、チャンネルは読み取り専用モードになり、すべてのメッセージが新しいトピックまたは既存のトピックに移動されます。新しいメッセージを送信することはできません。また既存のメッセージの編集や削除も行えません。</p><p><strong>%{channelTitle}</strong> チャンネルをアーカイブしてもよろしいですか？</p>"
@@ -57,7 +64,7 @@ ja:
         retry: "再試行"
       channel_open:
         title: "チャンネルを開く"
-        instructions: "チャンネルを再開すると、すべてのユーザーがメッセージの送信と、既存のメッセージの編集を行えるようになります。"
+        instructions: "チャンネルを再開すると、すべてのユーザーがメッセージの送信と既存のメッセージの編集を行えるようになります。"
       channel_close:
         title: "チャンネルを閉鎖"
         instructions: "チャンネルを閉鎖すると、スタッフ以外のユーザーが新しいメッセージの送信や既存のメッセージの編集を行えなくなります。このチャンネルを閉鎖してもよろしいですか？"
@@ -172,6 +179,7 @@ ja:
         open_header: "チャンネルは開いています"
         open: "オープン"
       browse:
+        back: "戻る"
         title: チャンネル
         filter_all: すべて
         filter_open: オープン
@@ -198,7 +206,7 @@ ja:
       channel_edit_title_modal:
         title: タイトルを編集する
         input_placeholder: タイトルを追加する
-        description: チャンネルに説明的な短いタイトルを付けます
+        description: チャンネルを説明する短いタイトルを付けます
       channel_edit_description_modal:
         title: 説明を編集する
         input_placeholder: 説明を追加する
@@ -227,10 +235,10 @@ ja:
           none: "1 つ選択してください..."
           default_hint: <a href=%{link} target="_blank">%{category} のセキュリティ設定</a>に移動し、アクセス権を管理します
           hint_groups:
-            other: '%{hint} と %{hint_2} ユーザーは、<a href=%{link} target="_blank">セキュリティ設定</a>に従って、このチャンネルにアクセスできます。'
-          hint_multiple_groups: '%{hint_1} のユーザー他 %{count} 個のグループのユーザーは、<a href=%{link} target="_blank">セキュリティ設定</a>に従って、このチャンネルにアクセスできます。'
+            other: '%{hint} と %{hint_2} のユーザーは、<a href=%{link} target="_blank">セキュリティ設定</a>に従って、このチャンネルにアクセスできます。'
+          hint_multiple_groups: '%{hint_1} と他 %{count} 個のグループのユーザーは、<a href=%{link} target="_blank">セキュリティ設定</a>に従って、このチャンネルにアクセスできます。'
         create: "チャンネルを作成"
-        description: "説明（オプション）"
+        description: "説明 (オプション)"
         name: "チャンネル名"
         title: "新しいチャンネル"
         type: "タイプ"
@@ -258,8 +266,8 @@ ja:
         mention: "メンションのみ"
         always: "すべてのアクティビティ"
       settings:
-        enable_auto_join_users: "最近アクティブなユーザーをすべて自動的に追加する"
-        disable_auto_join_users: "ユーザーの自動追加を停止する"
+        auto_join_users_label: "自動的にユーザーを追加する"
+        auto_join_users_info: "過去 3 か月にアクティブだったユーザーを 1 時間ごとに確認し、それらのユーザーが %{category} カテゴリにアクセスできる場合はこのチャンネルに追加します。"
         auto_join_users_warning: "このチャンネルのメンバーでなく、%{category} カテゴリにアクセスできるすべてのユーザーが参加します。よろしいですか？"
         desktop_notification_level: "デスクトップ通知"
         follow: "参加"
@@ -271,8 +279,10 @@ ja:
         notifications: "通知"
         preview: "プレビュー"
         save: "保存"
-        saved: "保存しました"
+        saved: "保存済み"
         unfollow: "退出"
+        admin_title: "管理者"
+        retention_info: "チャット履歴は %{days} 日間保存されます。"
       admin:
         title: "チャット"
       direct_messages:
@@ -306,7 +316,7 @@ ja:
         url_instructions: "この URL には秘密の値が含まれます。安全に保管してください。"
         username: "ユーザー名"
         username_instructions: "チャンネルに投稿するボットのユーザー名。空白のままにすると、デフォルトで「システム」になります。"
-        instructions: "受信 Webhook は、外部システムが <code>/hooks/:key</code> エンドポイントを介して指定されたチャットチャンネルにボットユーザーとしてメッセージを投稿する際に使用できます。ペイロードは、2000 文字に制限された単一の <code>text</code> パラメーターで構成されます。<br><br>また、Slack 形式の <code>text</code> パラメーターも制限付きでサポートしており、<a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a> のフォーマットに基いてリンクとメンションが抽出されますが、これには、<code>/hooks/:key/slack</code> エンドポイントを使用する必要があります。"
+        instructions: "着信 Webhook は、外部システムが <code>/hooks/:key</code> エンドポイントを介して指定されたチャットチャンネルにボットユーザーとしてメッセージを投稿する際に使用できます。ペイロードは、2000 文字に制限された単一の <code>text</code> パラメーターで構成されます。<br><br>また、Slack 形式の <code>text</code> パラメーターも制限付きでサポートしており、<a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a> のフォーマットに基いてリンクとメンションが抽出されますが、これには、<code>/hooks/:key/slack</code> エンドポイントを使用する必要があります。"
       selection:
         cancel: "キャンセル"
         quote_selection: "トピックで引用"
@@ -384,7 +394,7 @@ ja:
     action_codes:
       chat:
         enabled: '%{who} が<button class="btn-link open-chat">チャット</button>を有効にしました: %{when}'
-        disabled: "%{who} がチャットをクローズしました: %{when}"
+        disabled: "%{who} がチャットを閉じました: %{when}"
     discourse_automation:
       scriptables:
         send_chat_message:
@@ -410,10 +420,10 @@ ja:
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} チャンネルを切り替える"
           open_quick_channel_selector: "%{shortcut} クイックチャンネルセレクターを開く"
-          open_insert_link_modal: "%{shortcut} ハイパーリンクを挿入（作成ツールのみ）"
-          composer_bold: "%{shortcut} 太字（作成ツールのみ）"
-          composer_italic: "%{shortcut} 斜体（作成ツールのみ）"
-          composer_code: "%{shortcut} コード（作成ツールのみ）"
+          open_insert_link_modal: "%{shortcut} ハイパーリンクを挿入する (作成ツールのみ)"
+          composer_bold: "%{shortcut} 太字 (作成ツールのみ)"
+          composer_italic: "%{shortcut} 斜体 (作成ツールのみ)"
+          composer_code: "%{shortcut} コード (作成ツールのみ)"
           drawer_open: "%{shortcut} チャットドロワーを開く"
           drawer_close: "%{shortcut} チャットドロワーを閉じる"
     topic_statuses:

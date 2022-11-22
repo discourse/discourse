@@ -364,6 +364,7 @@ ko:
       too_many: "북마크를 %{limit}개 이상 추가할 수 없습니다. <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a>에서 일부를 제거하세요."
       cannot_set_past_reminder: "북마크 미리 알림을 과거로 설정할 수 없습니다."
       cannot_set_reminder_in_distant_future: "북마크 미리 알림을 10년 이후로 설정할 수 없습니다."
+      time_must_be_provided: "모든 알림은 시간이 설정되어야합니다."
     reminders:
       at_desktop: "다음 데스크톱 접속 시"
       later_today: "오늘 중"
@@ -586,6 +587,7 @@ ko:
       disallowed_topic_tags: "이 주제에는 이 카테고리에서 허용하지 않는 태그가 있습니다. '%{tags}'"
       disallowed_tags_generic: "이 주제는 태그를 허용하지 않습니다."
       slug_contains_non_ascii_chars: "비 ASCII 문자 포함"
+      is_already_in_use: "이미 사용 중"
     cannot_delete:
       uncategorized: "특수 카테고리입니다. 카테고리가 없는 주제의 보관 영역으로 사용되므로 삭제할 수 없습니다."
       has_subcategories: "서브카테고리가 있기 때문에 이 카테고리를 삭제할 수 없습니다."
@@ -600,6 +602,10 @@ ko:
   post:
     image_placeholder:
       broken: "이미지 깨짐"
+      blocked_hotlinked_title: "이미지는 다른 사이트에서 호스팅됩니다. 새 탭에서 열려면 클릭하세요."
+      blocked_hotlinked: "외부 이미지"
+    media_placeholder:
+      blocked_hotlinked: "외부 미디어"
     has_likes:
       other: "%{count}개의 좋아요"
     cannot_permanently_delete:
@@ -687,7 +693,6 @@ ko:
     success: "비밀번호를 변경했으며, 로그인되었습니다."
     success_unapproved: "비밀번호를 변경했습니다."
   email_login:
-    invalid_token: "이 이메일 로그인 링크는 너무 오래됐습니다. 로그인 버튼을 눌러서 '비밀번호가 기억나지 않습니다'를 사용하여 새 링크를 받으세요."
     title: "이메일 로그인"
   user_auth_tokens:
     browser:
@@ -1249,6 +1254,7 @@ ko:
       labels:
         user: 사용자
         qtt_like: 받은 좋아요 수
+      description: "좋아요를 받은 상위 10명의 사용자"
     top_users_by_likes_received_from_inferior_trust_level:
       labels:
         user: 사용자
@@ -1805,7 +1811,7 @@ ko:
     enable_user_directory: "탐색을 위해 사용자의 디렉터리 제공"
     enable_group_directory: "탐색을 위해 그룹의 디렉터리 제공"
     enable_category_group_moderation: "그룹이 특정 카테고리의 콘텐츠를 관리하도록 허용"
-    group_in_subject: "PM의 첫 번째 그룹 이름으로 이메일 제목의 %%{optional_pm} 설정. 참조: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>표준 이메일의 제목 형식 사용자 지정</a>"
+    group_in_subject: "PM의 첫 번째 그룹 이름으로 이메일 제목에 %%{optional_pm} 을 설정합니다. 참조: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>표준 이메일의 제목 형식 사용자 지정</a>"
     allow_anonymous_posting: "사용자의 익명 모드 전환 허용"
     anonymous_posting_min_trust_level: "익명 게시를 활성화하기 위한 최소 신뢰 레벨"
     anonymous_account_duration_minutes: "익명성을 보호하기 위해 각 사용자에 대해 N분마다 새 익명 계정을 만듭니다. 예: 600으로 설정하면 마지막 게시물로부터 600분이 경과하고 사용자가 익명으로 전환하는 즉시 새 익명 계정이 생성됩니다."
@@ -2020,6 +2026,7 @@ ko:
         leading_trailing_slash: "정규식은 슬래시로 시작하거나 끝나서는 안 됩니다."
       unicode_usernames_avatars: "내부 시스템 아바타는 유니코드 아이디를 지원하지 않습니다."
       list_value_count: "목록에 정확히 %{count} 값을 포함해야 합니다."
+      markdown_linkify_tlds: "'*' 값을 포함할 수 없습니다."
       search_tokenize_chinese_enabled: "이 설정을 활성화하기 전에 'search_tokenize_chinese'를 비활성화해야 합니다."
       search_tokenize_japanese_enabled: "이 설정을 활성화하기 전에 'search_tokenize_japanese'를 비활성화해야 합니다."
     placeholder:
@@ -3998,6 +4005,7 @@ ko:
         title: "소개"
         fields:
           title:
+            label: "커뮤니티 이름"
             placeholder: "빠오 소굴"
           site_description:
             placeholder: "빠오가 친구와 함께 재밌는 일들에 대하여 이야기나누는 곳"
@@ -4009,6 +4017,8 @@ ko:
           login_required:
             placeholder: "비공개"
             extra_description: "로그인 한 사용자 만이 커뮤니티에 액세스 할 수 있습니다"
+          invite_only:
+            placeholder: "초대 전용"
           must_approve_users:
             placeholder: "승인 필요"
       ready:
@@ -4037,6 +4047,12 @@ ko:
                 label: "카테고리 및 최신 주제"
               categories_and_top_topics:
                 label: "카테고리 및 주요 주제"
+              categories_boxes:
+                label: "카테고리 박스"
+              categories_boxes_with_topics:
+                label: "글이 있는 카테고리 상자"
+              subcategories_with_featured_topics:
+                label: "추천 글이 포함된 하위 카테고리"
       branding:
         fields:
           logo:
@@ -4048,6 +4064,7 @@ ko:
           large_icon:
             label: "큰 아이콘"
       corporate:
+        title: "소속"
         fields:
           company_name:
             label: "회사 이름"
