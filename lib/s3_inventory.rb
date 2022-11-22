@@ -50,7 +50,7 @@ class S3Inventory
                 key = row[CSV_KEY_INDEX]
 
                 next if Rails.configuration.multisite && key.exclude?(multisite_prefix)
-                next if key.exclude?("/#{type}/")
+                next if key.exclude?("#{type}/")
 
                 url = File.join(Discourse.store.absolute_base_url, key)
                 connection.put_copy_data("#{url},#{row[CSV_ETAG_INDEX]}\n")
