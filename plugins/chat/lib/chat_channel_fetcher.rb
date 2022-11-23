@@ -30,16 +30,17 @@ module Chat::ChatChannelFetcher
   end
 
   def self.generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: false)
-    category_channel_sql = ChatChannel
-      .select(:id)
-      .joins(
-        "INNER JOIN categories ON categories.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'Category'",
-      )
-      .where(
-        "categories.id IN (:allowed_category_ids)",
-        allowed_category_ids: guardian.allowed_category_ids,
-      )
-      .to_sql
+    category_channel_sql =
+      ChatChannel
+        .select(:id)
+        .joins(
+          "INNER JOIN categories ON categories.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'Category'",
+        )
+        .where(
+          "categories.id IN (:allowed_category_ids)",
+          allowed_category_ids: guardian.allowed_category_ids,
+        )
+        .to_sql
 
     dm_channel_sql = ""
     if !exclude_dm_channels
@@ -48,15 +49,15 @@ module Chat::ChatChannelFetcher
 
       -- secured direct message chat channels
       #{
-      ChatChannel
-        .select(:id)
-        .joins(
-          "INNER JOIN direct_message_channels ON direct_message_channels.id = chat_channels.chatable_id
+        ChatChannel
+          .select(:id)
+          .joins(
+            "INNER JOIN direct_message_channels ON direct_message_channels.id = chat_channels.chatable_id
             AND chat_channels.chatable_type = 'DirectMessage'
         INNER JOIN direct_message_users ON direct_message_users.direct_message_channel_id = direct_message_channels.id",
-        )
-        .where("direct_message_users.user_id = :user_id", user_id: guardian.user.id)
-        .to_sql
+          )
+          .where("direct_message_users.user_id = :user_id", user_id: guardian.user.id)
+          .to_sql
       }
       SQL
     end
@@ -81,11 +82,14 @@ module Chat::ChatChannelFetcher
   end
 
   def self.secured_public_channel_search(guardian, options = {})
-    allowed_channel_ids = generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: options[:exclude_dm_channels])
+    allowed_channel_ids =
+      generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: options[:exclude_dm_channels])
+
+    channels = ChatChannel.includes(chatable: [:topic_only_relative_url])
+    channels = channels.includes(:chat_channel_archive) if options[:include_archives]
+
     channels =
-      ChatChannel
-        .includes(:chat_channel_archive)
-        .includes(chatable: [:topic_only_relative_url])
+      channels
         .joins(
           "LEFT JOIN categories ON categories.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'Category'",
         )
@@ -95,7 +99,8 @@ module Chat::ChatChannelFetcher
     channels = channels.where(status: options[:status]) if options[:status].present?
 
     if options[:filter].present?
-      sql = "chat_channels.name ILIKE :filter OR chat_channels.slug ILIKE :filter OR categories.name ILIKE :filter"
+      sql =
+        "chat_channels.name ILIKE :filter OR chat_channels.slug ILIKE :filter OR categories.name ILIKE :filter"
       channels =
         channels.where(sql, filter: "%#{options[:filter].downcase}%").order(
           "chat_channels.name ASC, categories.name ASC",
@@ -134,7 +139,11 @@ module Chat::ChatChannelFetcher
   end
 
   def self.secured_public_channels(guardian, memberships, options = { following: true })
-    channels = secured_public_channel_search(guardian, options)
+    channels =
+      secured_public_channel_search(
+        guardian,
+        options.merge(include_archives: true),
+      )
     decorate_memberships_with_tracking_data(guardian, channels, memberships)
     channels = channels.to_a
     preload_custom_fields_for(channels)
