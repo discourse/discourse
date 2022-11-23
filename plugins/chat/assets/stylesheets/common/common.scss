@@ -146,10 +146,20 @@ $float-height: 530px;
   .open-browse-page-btn,
   .open-draft-channel-page-btn,
   .chat-channel-leave-btn {
+    position: relative;
+    padding: 0;
     background: transparent;
     color: var(--primary-medium);
     font-size: var(--font-0-rem);
-    padding: 0.5rem;
+
+    &:after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+    }
 
     &:hover {
       background: transparent;
@@ -202,9 +212,9 @@ $float-height: 530px;
     }
   }
 
-  .chat-channel-title {
-    padding: 0.5rem;
-  }
+  // .chat-channel-title {
+  //   padding: 0.5rem;
+  // }
 }
 
 .chat-messages-container {
@@ -456,15 +466,19 @@ $float-height: 530px;
   }
 
   .chat-channel-metadata {
-    margin-right: 1rem;
     display: flex;
     align-items: flex-end;
     flex-direction: column;
     gap: 0.25rem;
     padding: 0.5rem 0;
 
-    .direct-message-channels-section & {
-      align-items: flex-end;
+    // .direct-message-channels-section & {
+    //   align-items: flex-end;
+    // }
+
+    &__date {
+      color: var(--primary-medium);
+      font-size: var(--font-down-1);
     }
 
     .chat-channel-unread-indicator {
@@ -495,7 +509,6 @@ $float-height: 530px;
   .toggle-channel-membership-button.-leave {
     display: none;
     margin-left: auto;
-    margin-right: 1rem;
   }
 
   &.can-leave:hover {
@@ -508,7 +521,7 @@ $float-height: 530px;
     }
 
     .chat-channel-metadata {
-      display: none;
+      visibility: hidden;
     }
   }
 
