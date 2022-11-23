@@ -86,6 +86,12 @@
 
       .chat-channel-row {
         padding-right: 0.5rem;
+
+        .chat-channel-metadata {
+          &__date {
+            display: none;
+          }
+        }
       }
 
       .loading-container {
