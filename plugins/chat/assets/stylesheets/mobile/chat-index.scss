@@ -27,6 +27,12 @@
       padding: 0;
       border-radius: 0;
       border-bottom: 1px solid var(--primary-low);
+
+      .chat-channel-metadata {
+        &__date {
+          font-size: var(--font-down-2);
+        }
+      }
     }
 
     .chat-channel-divider {
