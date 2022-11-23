@@ -2,19 +2,18 @@
 
 class SaveChatAllowedGroupsSiteSetting < ActiveRecord::Migration[7.0]
   def up
-    chat_enabled = DB.query_single("SELECT value FROM site_settings WHERE name = 'chat_enabled'")
+    chat_enabled = DB.query_single("SELECT value FROM site_settings WHERE name = 'chat_enabled' AND value = 't'")
+    return if chat_enabled.blank?
 
-    if chat_enabled.present? && chat_enabled[0] == "t"
-      chat_allowed_groups = DB.query_single("SELECT value FROM site_settings WHERE name = 'chat_allowed_groups'")
-      if !chat_allowed_groups.present?
-        # The original default was auto group ID 3 (staff) so we are
-        # using that here.
-        DB.exec(<<~SQL)
+    chat_allowed_groups = DB.query_single("SELECT value FROM site_settings WHERE name = 'chat_allowed_groups'")
+    return if chat_allowed_groups.blank?
+
+    # The original default was auto group ID 3 (staff) so we are
+    # using that here.
+    DB.exec(<<~SQL)
           INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
           VALUES ('chat_allowed_groups', 20, '3', now(), now())
-        SQL
-      end
-    end
+    SQL
   end
 
   def down
