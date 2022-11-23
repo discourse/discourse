@@ -46,6 +46,10 @@ class HashtagAutocompleteService
     # The text to display in the UI autocomplete menu for the item.
     attr_accessor :text
 
+    # The description text to display in the UI autocomplete menu on hover.
+    # This will be things like e.g. category description.
+    attr_accessor :description
+
     # Canonical slug for the item. Different from the ref, which can
     # have the type as a suffix to distinguish between conflicts.
     attr_accessor :slug
@@ -69,6 +73,7 @@ class HashtagAutocompleteService
       {
         relative_url: self.relative_url,
         text: self.text,
+        description: self.description,
         icon: self.icon,
         type: self.type,
         ref: self.ref,

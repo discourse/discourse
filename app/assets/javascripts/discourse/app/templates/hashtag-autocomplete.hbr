@@ -2,7 +2,7 @@
   <ul>
     {{#each options as |option|}}
       <li class="hashtag-autocomplete__option">
-        <a class="hashtag-autocomplete__link" href>{{d-icon option.icon}}<span class="hashtag-autocomplete__text">{{option.text}}</span></a>
+        <a class="hashtag-autocomplete__link" title="{{option.description}}" href>{{d-icon option.icon}}<span class="hashtag-autocomplete__text">{{option.text}}</span></a>
       </li>
     {{/each}}
   </ul>

@@ -9,7 +9,9 @@ class TagHashtagDataSource
   end
 
   def self.tag_to_hashtag_item(tag, include_count: false)
-    tag = Tag.new(tag.slice(:id, :name).merge(topic_count: tag[:count])) if tag.is_a?(Hash)
+    tag = Tag.new(tag.slice(:id, :name, :description).merge(topic_count: tag[:count])) if tag.is_a?(
+      Hash,
+    )
 
     HashtagAutocompleteService::HashtagItem.new.tap do |item|
       if include_count
@@ -17,6 +19,7 @@ class TagHashtagDataSource
       else
         item.text = tag.name
       end
+      item.description = tag.description
       item.slug = tag.name
       item.relative_url = tag.url
       item.icon = icon
