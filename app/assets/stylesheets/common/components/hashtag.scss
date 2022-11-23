@@ -42,6 +42,12 @@ a.hashtag-cooked {
 
       .hashtag-autocomplete__text {
         flex: 1;
+        margin-left: 0;
+
+        .emoji {
+          width: 15px;
+          height: 15px;
+        }
       }
     }
   }

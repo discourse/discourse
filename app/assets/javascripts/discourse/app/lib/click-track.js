@@ -22,11 +22,11 @@ export function isValidLink(link) {
     });
   }
 
-  // .hashtag == category/tag link
+  // .hashtag/.hashtag-cooked == category/tag link
   // .back == quote back ^ button
   if (
-    ["lightbox", "no-track-link", "hashtag", "back"].some((name) =>
-      link.classList.contains(name)
+    ["lightbox", "no-track-link", "hashtag", "hashtag-cooked", "back"].some(
+      (name) => link.classList.contains(name)
     )
   ) {
     return false;
@@ -47,7 +47,9 @@ export function isValidLink(link) {
 
   return (
     link.classList.contains("track-link") ||
-    !link.closest(".hashtag, .badge-category, .onebox-result, .onebox-body")
+    !link.closest(
+      ".hashtag, .hashtag-cooked, .badge-category, .onebox-result, .onebox-body"
+    )
   );
 }
 
@@ -104,7 +106,9 @@ export default {
     const link = e.currentTarget;
     const tracking = isValidLink(link);
 
-    // Return early for mentions and group mentions
+    // Return early for mentions and group mentions. This is not in
+    // isValidLink because returning true here allows the group card
+    // to pop up. If we returned false it would not.
     if (
       ["mention", "mention-group"].some((name) => link.classList.contains(name))
     ) {
