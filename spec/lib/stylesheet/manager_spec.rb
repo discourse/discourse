@@ -901,37 +901,19 @@ RSpec.describe Stylesheet::Manager do
       end
 
       default_theme.set_default!
-      upload.delete
+      upload.destroy!
       StylesheetCache.destroy_all
 
-      # only core
-      output = capture_output(:stderr) do
-        Stylesheet::Manager.precompile_css
-      end
+      Stylesheet::Manager.precompile_theme_css
 
-      results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(core_targets.size)
-
-      StylesheetCache.destroy_all
-
-      # only themes
-      output = capture_output(:stderr) do
-        Stylesheet::Manager.precompile_theme_css
-      end
-
-      # Ensure we force compile each theme once
-      expect(output.scan(/#{default_theme.name}/).length).to eq(7)
-      results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(7) # 2 targets + 5 default color schemes
-
-      # themes + core
-      Stylesheet::Manager.precompile_css
-      results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(13) # 6 core targets + 2 theme targets + 5 color schemes
-
-      theme_targets.each do |tar|
-        expect(results.count { |target| target =~ /^#{tar}_#{default_theme.id}$/ }).to eq(1)
-      end
+      manager = manager(default_theme.id)
+      theme_builder = Stylesheet::Manager::Builder.new(
+        target: :desktop_theme,
+        theme: default_theme,
+        manager: manager
+      )
+      css = File.read(theme_builder.stylesheet_fullpath)
+      expect(css).to include("border:3px solid green}")
     end
   end
 
