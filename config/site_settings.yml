@@ -2033,7 +2033,7 @@ developer:
     default: false
     client: true
   enable_experimental_hashtag_autocomplete:
-    default: true
+    default: false
     client: true
     hidden: true
   enable_new_user_profile_nav_groups:
