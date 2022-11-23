@@ -8,9 +8,12 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import {
   caretPosition,
   caretRowCol,
+  escapeExpression,
   inCodeBlock,
 } from "discourse/lib/utilities";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
+import { emojiUnescape } from "discourse/lib/text";
+import { htmlSafe } from "@ember/template";
 
 /**
  * Sets up a textarea using the jQuery autocomplete plugin, specifically
@@ -212,6 +215,10 @@ function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
   });
   currentSearch
     .then((r) => {
+      r.results?.forEach((result) => {
+        // Convert :emoji: in the result text to HTML safely.
+        result.text = htmlSafe(emojiUnescape(escapeExpression(result.text)));
+      });
       resultFunc(r.results || CANCELLED_STATUS);
     })
     .finally(() => {
