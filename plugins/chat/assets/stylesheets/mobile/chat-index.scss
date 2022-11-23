@@ -6,12 +6,6 @@
     padding-bottom: 6rem;
     box-sizing: border-box;
 
-    .direct-message-channels {
-      .chat-channel-title {
-        padding: 0.6rem 0; //minor adjustment for visual consistency with channels which dont have avatars
-      }
-    }
-
     @media (hover: none) {
       .chat-channel-row:hover {
         background: transparent;
@@ -66,7 +60,6 @@
     }
 
     .chat-channel-title {
-      padding: 1rem 0;
       width: 100%;
       overflow: hidden;
 
