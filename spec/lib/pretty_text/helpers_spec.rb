@@ -48,9 +48,9 @@ RSpec.describe PrettyText::Helpers do
   end
 
   describe ".hashtag_lookup" do
-    fab!(:tag) { Fabricate(:tag, name: "somecooltag") }
+    fab!(:tag) { Fabricate(:tag, name: "somecooltag", description: "Coolest things ever") }
     fab!(:category) do
-      Fabricate(:category, name: "Some Awesome Category", slug: "someawesomecategory")
+      Fabricate(:category, name: "Some Awesome Category", slug: "someawesomecategory", description: "Really great stuff here")
     end
     fab!(:user) { Fabricate(:user) }
 
@@ -59,6 +59,7 @@ RSpec.describe PrettyText::Helpers do
         {
           relative_url: tag.url,
           text: "somecooltag",
+          description: "Coolest things ever",
           icon: "tag",
           slug: "somecooltag",
           ref: "somecooltag",
@@ -69,6 +70,7 @@ RSpec.describe PrettyText::Helpers do
         {
           relative_url: category.url,
           text: "Some Awesome Category",
+          description: "Really great stuff here",
           icon: "folder",
           slug: "someawesomecategory",
           ref: "someawesomecategory",
@@ -84,6 +86,7 @@ RSpec.describe PrettyText::Helpers do
         {
           relative_url: category.url,
           text: "Some Awesome Category",
+          description: "Really great stuff here",
           icon: "folder",
           slug: "someawesomecategory",
           ref: "someawesomecategory",
@@ -97,6 +100,7 @@ RSpec.describe PrettyText::Helpers do
         {
           relative_url: tag.url,
           text: "somecooltag",
+          description: "Coolest things ever",
           icon: "tag",
           slug: "somecooltag",
           ref: "somecooltag",
@@ -107,6 +111,7 @@ RSpec.describe PrettyText::Helpers do
         {
           relative_url: category.url,
           text: "Some Awesome Category",
+          description: "Really great stuff here",
           icon: "folder",
           slug: "someawesomecategory",
           ref: "someawesomecategory",
@@ -125,6 +130,7 @@ RSpec.describe PrettyText::Helpers do
         {
           relative_url: private_category.url,
           text: "Manager Hideout",
+          description: nil,
           icon: "folder",
           slug: "secretcategory",
           ref: "secretcategory",

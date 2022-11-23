@@ -8,6 +8,7 @@ class Chat::ChatChannelHashtagDataSource
   def self.channel_to_hashtag_item(guardian, channel)
     HashtagAutocompleteService::HashtagItem.new.tap do |item|
       item.text = channel.title(guardian.user)
+      item.description = channel.description
       item.slug = channel.slug
       item.icon = icon
       item.relative_url = channel.relative_url
