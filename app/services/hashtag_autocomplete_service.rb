@@ -117,10 +117,8 @@ class HashtagAutocompleteService
     # composer we want a slug without a suffix to be a category first, tag second.
     if slugs_without_suffixes.any?
       types_in_priority_order.each do |type|
-        found_from_slugs = lookup_for_type(type, guardian, slugs_without_suffixes)
-        next if !all_data_items_valid?(found_from_slugs)
-        found_from_slugs.sort_by! { |item| item.text.downcase }
-        lookup_results[type.to_sym] = lookup_results[type.to_sym].concat(found_from_slugs)
+        found_from_slugs = execute_lookup!(lookup_results, type, guardian, slugs_without_suffixes)
+
         slugs_without_suffixes = slugs_without_suffixes - found_from_slugs.map(&:ref)
         break if slugs_without_suffixes.empty?
       end
@@ -135,10 +133,7 @@ class HashtagAutocompleteService
             .select { |slug| slug.ends_with?("::#{type}") }
             .map { |slug| slug.gsub("::#{type}", "") }
         next if slugs_for_type.empty?
-        found_from_slugs = lookup_for_type(type, guardian, slugs_for_type)
-        next if !all_data_items_valid?(found_from_slugs)
-        found_from_slugs.sort_by! { |item| item.text.downcase }
-        lookup_results[type.to_sym] = lookup_results[type.to_sym].concat(found_from_slugs)
+        execute_lookup!(lookup_results, type, guardian, slugs_for_type)
       end
     end
 
@@ -181,12 +176,8 @@ class HashtagAutocompleteService
     # Float exact matches by slug to the top of the list, any of these will be excluded
     # from further results.
     types_in_priority_order.each do |type|
-      search_results = lookup_for_type(type, guardian, [term])
-      next if search_results.empty?
-
-      next if !all_data_items_valid?(search_results)
-
-      limited_results.concat(search_results)
+      search_results = execute_lookup!(nil, type, guardian, [term])
+      limited_results.concat(search_results) if search_results
       break if limited_results.length >= limit
     end
 
@@ -296,6 +287,18 @@ class HashtagAutocompleteService
 
   def search_for_type(type, guardian, term, limit)
     set_refs(@@data_sources[type].search(guardian, term, limit)).each { |item| item.type = type }
+  end
+
+  def execute_lookup!(lookup_results, type, guardian, slugs)
+    found_from_slugs = lookup_for_type(type, guardian, slugs)
+    return if !all_data_items_valid?(found_from_slugs)
+    found_from_slugs.sort_by! { |item| item.text.downcase }
+
+    if lookup_results.present?
+      lookup_results[type.to_sym] = lookup_results[type.to_sym].concat(found_from_slugs)
+    end
+
+    found_from_slugs
   end
 
   def lookup_for_type(type, guardian, slugs)
