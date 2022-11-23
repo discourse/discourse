@@ -38,13 +38,19 @@ body.composer-open .topic-chat-float-container {
 
   .channels-list {
     .chat-channel-row {
-      padding: 0 0 0 0.5rem;
-      margin: 0 0.5rem 0.5rem 0.5rem;
-      border-radius: 0.25em;
+      padding: 0 0.5rem;
+      margin: 0 0.5rem;
+      border-bottom: 1px solid var(--primary-low);
     }
 
     .chat-channel-title {
-      padding: 0.5rem;
+      padding: 1rem 0;
+    }
+  }
+
+  .direct-message-channels {
+    .chat-channel-title {
+      padding: 0.6rem 0;
     }
   }
 }
@@ -211,6 +217,6 @@ body.composer-open .topic-chat-float-container {
   padding-bottom: 0.25em;
 
   .channels-list .chat-channel-divider {
-    padding: 0.25rem 0.5rem 0.25rem 1rem;
+    padding: 1rem 0.5rem 0.25rem 1rem;
   }
 }
