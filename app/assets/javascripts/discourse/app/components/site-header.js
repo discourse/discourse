@@ -40,6 +40,20 @@ const SiteHeaderComponent = MountWidget.extend(
       this.queueRerender();
     },
 
+    @observes("site.narrowDesktopView")
+    narrowDesktopViewChanged() {
+      if (
+        this.siteSettings.enable_experimental_sidebar_hamburger &&
+        (!this.sidebarEnabled || this.site.narrowDesktopView)
+      ) {
+        this.appEvents.on(
+          "sidebar-hamburger-dropdown:rendered",
+          this,
+          "_animateMenu"
+        );
+      }
+    },
+
     _animateOpening(panel) {
       const headerCloak = document.querySelector(".header-cloak");
       panel.classList.add("animate");

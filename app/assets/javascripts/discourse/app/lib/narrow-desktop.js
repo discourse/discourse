@@ -4,7 +4,12 @@ const NarrowDesktop = {
   narrowDesktopView: false,
 
   init() {
-    this.narrowDesktopView = narrowDesktopForced || window.innerWidth < 1100;
+    this.narrowDesktopView =
+      narrowDesktopForced || this.isNarrowDesktopView(window.innerWidth);
+  },
+
+  isNarrowDesktopView(width) {
+    return width < 1100;
   },
 };
 

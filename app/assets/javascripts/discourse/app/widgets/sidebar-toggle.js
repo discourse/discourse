@@ -5,6 +5,10 @@ export default createWidget("sidebar-toggle", {
 
   html() {
     const attrs = this.attrs;
+    this.appEvents.on(
+      "sidebar-toggle:force-refresh",
+      this.forceRefresh.bind(this)
+    );
     return [
       this.attach("button", {
         title: attrs.showSidebar
@@ -19,5 +23,8 @@ export default createWidget("sidebar-toggle", {
         ariaControls: "d-sidebar",
       }),
     ];
+  },
+  forceRefresh() {
+    this.scheduleRerender();
   },
 });
