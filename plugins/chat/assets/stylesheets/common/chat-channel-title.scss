@@ -20,10 +20,6 @@
     top: -4px;
   }
 
-  &__avatar {
-    margin-right: 1rem;
-  }
-
   .user-status-message {
     display: none; // we only show when in channels list
   }
@@ -83,9 +79,9 @@
   align-items: center;
   padding: 0.25rem 0.5rem;
 
-  & + .chat-channel-title__name {
-    margin-left: 0.5rem;
-  }
+  // & + .chat-channel-title__name {
+  //   margin-left: 0.5rem;
+  // }
 }
 
 .chat-channel-title__category-badge {
@@ -94,9 +90,9 @@
   font-size: var(--font-up-1);
   position: relative;
 
-  + .chat-channel-title__name {
-    margin-left: 0.5rem;
-  }
+  // + .chat-channel-title__name {
+  //   margin-left: 0.5rem;
+  // }
 }
 
 .chat-channel-title .chat-user-avatar {
@@ -131,6 +127,7 @@
   @include ellipsis;
   font-size: var(--font-0);
   color: var(--primary);
+  margin-left: 0.5rem;
 }
 
 .channel-info {
