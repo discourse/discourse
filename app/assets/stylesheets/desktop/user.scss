@@ -161,9 +161,6 @@ table.user-invite-list {
       .primary {
         .primary-textual {
           padding: 0 4px 4px;
-          a[href] {
-            text-decoration: underline;
-          }
           h1 {
             max-width: 100%;
             @include ellipsis;
@@ -180,10 +177,6 @@ table.user-invite-list {
 
         .bio {
           max-width: 750px;
-
-          a.mention {
-            text-decoration: none;
-          }
         }
       }
 

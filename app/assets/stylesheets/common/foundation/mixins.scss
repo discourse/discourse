@@ -239,8 +239,10 @@ $hpad: 0.65em;
 @mixin mention() {
   display: inline-block; // https://bugzilla.mozilla.org/show_bug.cgi?id=1656119
   font-size: 0.93em;
+  font-weight: normal;
   color: var(--primary);
-  padding: 0 4px 1px;
+  padding: 0 0.3em 0.07em;
   background: var(--primary-low);
-  border-radius: 8px;
+  border-radius: 0.6em;
+  text-decoration: none;
 }
