@@ -49,8 +49,6 @@ export default Component.extend({
   @discourseComputed("active", "channel.{id,muted}", "channel.focused")
   rowClassNames(active, channel, focused) {
     const classes = ["chat-channel-row", `chat-channel-${channel.id}`];
-    const channelUnreadCount =
-      this.currentUser.chat_channel_tracking_state[channel.id].unread_count;
 
     if (active) {
       classes.push("active");
@@ -61,12 +59,16 @@ export default Component.extend({
     if (channel.current_user_membership.muted) {
       classes.push("muted");
     }
-    if (this.options.leaveButton) {
+    if (this.options?.leaveButton) {
       classes.push("can-leave");
     }
+
+    const channelUnreadCount =
+      this.currentUser.chat_channel_tracking_state?.[channel.id]?.unread_count;
     if (channelUnreadCount > 0) {
       classes.push("has-unread");
     }
+
     return classes.join(" ");
   },
 
