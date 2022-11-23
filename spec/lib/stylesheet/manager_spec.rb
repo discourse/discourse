@@ -894,7 +894,7 @@ RSpec.describe Stylesheet::Manager do
         t.set_field(
           target: :common,
           name: :scss,
-          value: "body { background: url($logo); }"
+          value: "body { background: url($logo); border: 3px solid green; }"
         )
 
         t.save!
