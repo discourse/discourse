@@ -199,7 +199,7 @@
                   {{#if this.model.email}}
                     {{this.model.email}}
                   {{else}}
-                    <DButton @action={{route-action "checkEmail"}} @actionParam={{this.model}} @icon="far-envelope" @label="admin.users.check_email.text" @class="btn-primary" />
+                    <DButton @action={{route-action "checkEmail"}} @actionParam={{this.model}} @icon="envelope" @label="admin.users.check_email.text" @class="btn-primary" />
                   {{/if}}
                 </dd>
                 </div>
@@ -263,7 +263,7 @@
             {{/if}}
 
             {{#if this.showPrivateMessages}}
-              <li class="private-messages"><LinkTo @route="userPrivateMessages">{{d-icon "far-envelope"}}{{i18n 'user.private_messages'}}</LinkTo></li>
+              <li class="private-messages"><LinkTo @route="userPrivateMessages">{{d-icon "envelope"}}{{i18n 'user.private_messages'}}</LinkTo></li>
             {{/if}}
 
             {{#if this.canInviteToForum}}
