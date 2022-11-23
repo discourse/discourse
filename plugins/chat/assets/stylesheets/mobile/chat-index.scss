@@ -29,6 +29,11 @@
       border-bottom: 1px solid var(--primary-low);
       .chat-channel-metadata {
         margin-right: 0;
+
+        &__date {
+          color: var(--primary-medium);
+          font-size: var(--font-down-1);
+        }
       }
     }
 
@@ -75,6 +80,7 @@
       }
 
       &__name {
+        margin-left: 0.75em;
         font-size: var(--font-up-1);
       }
 
