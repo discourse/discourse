@@ -77,7 +77,15 @@
       background: var(--primary-very-low);
 
       .chat-channel-divider {
-        padding: 0.5rem 0.5rem 0 1rem;
+        padding: 2rem 0.5rem 0 1rem;
+
+        &:first-of-type {
+          padding-top: 0.5rem;
+        }
+      }
+
+      .chat-channel-row {
+        padding-right: 0.5rem;
       }
 
       .loading-container {

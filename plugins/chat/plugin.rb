@@ -17,6 +17,7 @@ register_asset "stylesheets/common/dc-filter-input.scss"
 register_asset "stylesheets/common/common.scss"
 register_asset "stylesheets/common/chat-browse.scss"
 register_asset "stylesheets/common/chat-drawer.scss"
+register_asset "stylesheets/common/chat-index.scss"
 register_asset "stylesheets/mobile/chat-index.scss", :mobile
 register_asset "stylesheets/common/chat-channel-preview-card.scss"
 register_asset "stylesheets/common/chat-channel-info.scss"
