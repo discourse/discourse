@@ -1197,6 +1197,13 @@ blockquote > *:last-child {
       padding-right: 0.5em;
       line-height: var(--line-height-medium);
       flex: 1 1;
+      .mention {
+        // needs some special sizing and positioning due to surrounding all-caps text
+        position: relative;
+        top: -1px;
+        font-size: var(--font-0);
+        text-transform: initial;
+      }
     }
   }
 
@@ -1248,28 +1255,15 @@ blockquote > *:last-child {
   }
 }
 
-a.mention {
+a.mention,
+a.mention-group {
   // linked
   @include mention;
 }
 
 span.mention {
-  // unlinked
+  // unlinked, invalid mention
   color: var(--primary-high);
-}
-
-a.mention-group {
-  // unlinked
-  display: inline-block;
-  color: var(--primary-high);
-  cursor: default;
-
-  &.notify,
-  .small-action-desc & {
-    // linked
-    cursor: pointer;
-    @include mention;
-  }
 }
 
 .suggested-topics {
