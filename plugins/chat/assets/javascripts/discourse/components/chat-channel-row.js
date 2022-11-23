@@ -4,8 +4,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { equal } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { CHATABLE_TYPES } from "discourse/plugins/chat/discourse/models/chat-channel";
-import { action } from "@ember/object";
-import getURL from "discourse-common/lib/get-url";
 
 export default Component.extend({
   tagName: "",
@@ -70,52 +68,6 @@ export default Component.extend({
     }
 
     return classes.join(" ");
-  },
-
-  @action
-  handleNewWindow(event) {
-    // Middle mouse click
-    if (event.which === 2) {
-      window
-        .open(
-          getURL(`/chat/channel/${this.channel.id}/${this.channel.title}`),
-          "_blank"
-        )
-        .focus();
-    }
-  },
-
-  @action
-  handleSwitchChannel(event) {
-    if (this.switchChannel) {
-      this.switchChannel(this.channel);
-      event.preventDefault();
-    }
-  },
-
-  @action
-  handleClick(event) {
-    if (event.target.classList.contains("chat-channel-leave-btn")) {
-      return true;
-    }
-
-    if (
-      event.target.classList.contains("chat-channel-settings-btn") ||
-      event.target.parentElement.classList.contains("select-kit-header-wrapper")
-    ) {
-      return;
-    }
-
-    this.handleSwitchChannel(event);
-  },
-
-  @action
-  handleKeyUp(event) {
-    if (event.key !== "Enter") {
-      return;
-    }
-
-    this.handleSwitchChannel(event);
   },
 
   @discourseComputed(
