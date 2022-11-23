@@ -3,7 +3,7 @@
     // Grid layout
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 5fr;
     grid-template-rows: auto 1fr;
     grid-gap: 0;
 
@@ -37,6 +37,20 @@
       align-self: start;
       justify-self: start;
       grid-row-start: 2;
+    }
+
+    // For backwards compatibility with legacy design
+    .user-secondary-navigation {
+      margin-top: 2em;
+      grid-column-start: 1;
+      grid-column-end: 2;
+    }
+
+    // For backwards compatibility with legacy design
+    .user-secondary-navigation ~ .user-content {
+      min-width: 100%;
+      grid-column-start: 2;
+      grid-column-end: 3;
     }
   }
 
