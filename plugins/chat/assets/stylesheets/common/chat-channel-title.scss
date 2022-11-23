@@ -78,10 +78,6 @@
   font-size: var(--font-down-1);
   align-items: center;
   padding: 0.25rem 0.5rem;
-
-  // & + .chat-channel-title__name {
-  //   margin-left: 0.5rem;
-  // }
 }
 
 .chat-channel-title__category-badge {
@@ -89,10 +85,6 @@
   display: flex;
   font-size: var(--font-up-1);
   position: relative;
-
-  // + .chat-channel-title__name {
-  //   margin-left: 0.5rem;
-  // }
 }
 
 .chat-channel-title .chat-user-avatar {
