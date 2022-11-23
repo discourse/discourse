@@ -5,7 +5,6 @@ import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
 import getURL, { samePrefix } from "discourse-common/lib/get-url";
 import { isTesting } from "discourse-common/config/environment";
-import discourseLater from "discourse-common/lib/later";
 import { selectedText } from "discourse/lib/utilities";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import deprecated from "discourse-common/lib/deprecated";
@@ -59,7 +58,7 @@ export function shouldOpenInNewTab(href) {
   return !isInternal && openExternalInNewTab;
 }
 
-export function openLinkInNewTab(link) {
+export function openLinkInNewTab(event, link) {
   let href = (link.href || link.dataset.href || "").trim();
   if (href === "") {
     return;
@@ -69,23 +68,7 @@ export function openLinkInNewTab(link) {
   newWindow.opener = null;
   newWindow.focus();
 
-  // Hack to prevent changing current window.location.
-  // e.preventDefault() does not work.
-  if (!link.dataset.href) {
-    link.classList.add("no-href");
-    link.dataset.href = link.href;
-    link.dataset.autoRoute = true;
-    link.removeAttribute("href");
-
-    discourseLater(() => {
-      if (link) {
-        link.classList.remove("no-href");
-        link.setAttribute("href", link.dataset.href);
-        delete link.dataset.href;
-        delete link.dataset.autoRoute;
-      }
-    }, 50);
-  }
+  event.preventDefault();
 }
 
 export default {
@@ -185,7 +168,7 @@ export default {
 
     if (!wantsNewWindow(e)) {
       if (shouldOpenInNewTab(href)) {
-        openLinkInNewTab(link);
+        openLinkInNewTab(e, link);
       } else {
         trackPromise.finally(() => {
           if (DiscourseURL.isInternal(href) && samePrefix(href)) {

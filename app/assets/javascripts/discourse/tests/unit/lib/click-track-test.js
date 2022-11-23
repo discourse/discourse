@@ -3,7 +3,6 @@ import { module, skip, test } from "qunit";
 import ClickTrack from "discourse/lib/click-track";
 import DiscourseURL from "discourse/lib/url";
 import User from "discourse/models/user";
-import discourseLater from "discourse-common/lib/later";
 import pretender from "discourse/tests/helpers/create-pretender";
 import sinon from "sinon";
 import { setPrefix } from "discourse-common/lib/get-url";
@@ -189,36 +188,6 @@ module("Unit | Utility | click-track", function (hooks) {
 
   test("does not track clicks on mailto", async function (assert) {
     assert.ok(track(generateClickEventOn(".mailto")));
-  });
-
-  test("removes the href and put it as a data attribute", async function (assert) {
-    User.currentProp("external_links_in_new_tab", true);
-
-    assert.notOk(track(generateClickEventOn("a")));
-
-    let link = fixture("a");
-    assert.ok(link.classList.contains("no-href"));
-    assert.strictEqual(link.dataset.href, "http://www.google.com/");
-    assert.blank(link.getAttribute("href"));
-    assert.ok(link.dataset.autoRoute);
-    assert.ok(window.open.calledWith("http://www.google.com/", "_blank"));
-  });
-
-  test("restores the href after a while", async function (assert) {
-    assert.expect(2);
-
-    assert.notOk(track(generateClickEventOn("a")));
-
-    assert.timeout(75);
-
-    const done = assert.async();
-    discourseLater(() => {
-      assert.strictEqual(
-        fixture("a").getAttribute("href"),
-        "http://www.google.com"
-      );
-      done();
-    });
   });
 
   function badgeClickCount(assert, id, expected) {
