@@ -27,14 +27,6 @@
       padding: 0;
       border-radius: 0;
       border-bottom: 1px solid var(--primary-low);
-      .chat-channel-metadata {
-        margin-right: 0;
-
-        &__date {
-          color: var(--primary-medium);
-          font-size: var(--font-down-1);
-        }
-      }
     }
 
     .chat-channel-divider {
