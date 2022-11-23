@@ -1,6 +1,6 @@
 <div class="chat-channel-metadata">
   <div class="chat-channel-metadata__date">
-    {{format-date @channel.last_message_sent_at format="tiny"}}
+    {{this.lastMessageFormatedDate}}
   </div>
 
   {{#if @unreadIndicator}}
