@@ -78,7 +78,7 @@ $float-height: 530px;
   height: 14px;
   border-radius: 100%;
   box-sizing: content-box;
-  border: 2px solid var(--secondary);
+  // border: 2px solid var(--secondary);
   -webkit-touch-callout: none;
   background: var(--tertiary-med-or-tertiary);
   color: var(--secondary);
@@ -419,12 +419,11 @@ $float-height: 530px;
   }
 }
 
-.public-channels .chat-channel-row {
-  .chat-channel-metadata {
-    flex-direction: row-reverse;
-    gap: 0.25rem;
-  }
-}
+// .public-channels .chat-channel-row {
+//   .chat-channel-metadata {
+//     gap: 0.25rem;
+//   }
+// }
 
 .chat-channel-row {
   align-items: center;
@@ -459,8 +458,10 @@ $float-height: 530px;
   .chat-channel-metadata {
     margin-right: 1rem;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.5rem 0;
 
     .direct-message-channels-section & {
       align-items: flex-end;
