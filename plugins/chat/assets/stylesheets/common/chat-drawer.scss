@@ -218,5 +218,9 @@ body.composer-open .topic-chat-float-container {
 
   .channels-list .chat-channel-divider {
     padding: 1rem 0.5rem 0.25rem 1rem;
+
+    &:not(:first-of-type) {
+      padding-top: 2rem;
+    }
   }
 }
