@@ -7,7 +7,7 @@
     </ol>
   {{/if}}
 
-  <HorizontalOverflowNav>
+  <HorizontalOverflowNav @className="messages-nav">
     {{#if @isPersonal}}
       <li class="messages-latest">
         <LinkTo @route="userPrivateMessages.index" @model={{@user}}>
@@ -47,39 +47,37 @@
       </li>
     {{/if}}
 
-    {{#each @user.groups as |group|}}
-      {{#if (and @isGroup (eq @groupFilter group.name))}}
-        {{#if @viewingSelf}}
-          <li class="messages-group-latest">
-            <LinkTo @route="userPrivateMessages.group" @model={{group.name}}>
-              {{d-icon "envelope"}}
-              <span>{{i18n "categories.latest"}}</span>
-            </LinkTo>
-          </li>
+    {{#if @isGroup}}
+      <li class="messages-group-latest">
+        <LinkTo @route="userPrivateMessages.group" @model={{@group.name}}>
+          {{d-icon "envelope"}}
+          <span>{{i18n "categories.latest"}}</span>
+        </LinkTo>
+      </li>
 
-          <li class="messages-group-new">
-            <LinkTo @route="userPrivateMessages.groupNew" @model={{group.name}} class="new">
-              {{d-icon "exclamation-circle"}}
-              <span>{{@newLinkText}}</span>
-            </LinkTo>
-          </li>
+      {{#if @viewingSelf}}
+        <li class="messages-group-new">
+          <LinkTo @route="userPrivateMessages.groupNew" @model={{@group.name}} class="new">
+            {{d-icon "exclamation-circle"}}
+            <span>{{@newLinkText}}</span>
+          </LinkTo>
+        </li>
 
-          <li class="messages-group-unread">
-            <LinkTo @route="userPrivateMessages.groupUnread" @model={{group.name}} class="unread">
-              {{d-icon "plus-circle"}}
-              <span>{{@unreadLinkText}}</span>
-            </LinkTo>
-          </li>
-        {{/if}}
+        <li class="messages-group-unread">
+          <LinkTo @route="userPrivateMessages.groupUnread" @model={{@group.name}} class="unread">
+            {{d-icon "plus-circle"}}
+            <span>{{@unreadLinkText}}</span>
+          </LinkTo>
+        </li>
 
         <li class="messages-group-archive">
-          <LinkTo @route="userPrivateMessages.groupArchive" @model={{group.name}}>
+          <LinkTo @route="userPrivateMessages.groupArchive" @model={{@group.name}}>
             {{d-icon "archive"}}
             <span>{{i18n "user.messages.archive"}}</span>
           </LinkTo>
         </li>
       {{/if}}
-    {{/each}}
+    {{/if}}
 
     {{#if this.displayTags}}
       <li class="tags">
