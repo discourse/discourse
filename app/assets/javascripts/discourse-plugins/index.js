@@ -56,10 +56,10 @@ function unColocateConnectors(tree) {
   });
 }
 
-function namespaceModules(tree, pluginDirectoryName) {
+function namespaceModules(tree, pluginName) {
   return new Funnel(tree, {
     getDestinationPath: function (relativePath) {
-      return `discourse/plugins/${pluginDirectoryName}/${relativePath}`;
+      return `discourse/plugins/${pluginName}/${relativePath}`;
     },
   });
 }
