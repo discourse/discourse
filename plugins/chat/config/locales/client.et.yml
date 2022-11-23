@@ -72,6 +72,7 @@ et:
         save: "Salvesta"
         saved: "Salvestatud"
         unfollow: "Lahku"
+        admin_title: "Admin"
       incoming_webhooks:
         back: "Tagasi"
         description: "Kirjeldus"

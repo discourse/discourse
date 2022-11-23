@@ -990,13 +990,9 @@ ro:
       no_bookmarks_search: "Nu s-au găsit semne de carte cu interogarea de căutare furnizată."
       no_notifications_title: "Încă nu ai nicio notificare"
       no_notifications_page_title: "Încă nu ai nicio notificare"
-      first_notification: "Prima notificare! Selectează pentru a începe."
       dynamic_favicon: "Afișează contoare pe pictograma browser"
       skip_new_user_tips:
         description: "Omitete sfaturile și insignele de înscriere pentru utilizatori noi"
-        not_first_time: "Nu este prima dată?"
-        skip_link: "Sări peste aceste sfaturi"
-        read_later: "O voi citi mai târziu."
       theme_default_on_all_devices: "Faceți ca aceasta să fie tema implicită pe toate dispozitivele mele"
       color_scheme_default_on_all_devices: "Setează schema (schemele) de culori implicite pe toate dispozitivele mele"
       color_scheme: "Schema de culori"
@@ -1114,6 +1110,7 @@ ro:
         profile: "Profil"
         emails: "Adrese de email"
         notifications: "Notificări"
+        tracking: "Urmărire"
         categories: "Categorii"
         users: "Utilizatori"
         tags: "Etichete"
@@ -1305,6 +1302,7 @@ ro:
       email_in_reply_to: "Include un fragment din răspunsurile la postare în emailuri"
       other_settings: "Altele"
       categories_settings: "Categorii"
+      topics_settings: "Discuții"
       new_topic_duration:
         label: "Consideră subiectele ca fiind noi dacă"
         not_viewed: "nu le-am văzut încă "
@@ -1834,6 +1832,7 @@ ro:
       clear_search: "Șterge căutarea"
       title: "Caută"
       full_page_title: "Caută"
+      results: "rezultate"
       no_results: "Nici un rezultat."
       no_more_results: "Nu s-au mai găsit alte rezultate."
       post_format: "#%{post_number} de %{username}"
@@ -1863,7 +1862,7 @@ ro:
       tips:
         category_tag: "filtre după categorie sau etichetă"
         author: "filtrează după autorul postării"
-        in: "filtrează după metadate (de exemplu, în:titlu, în:personal, în:fixat)"
+        in: "filtrează după metadate (de exemplu, in:title, in:personal, in:pinned)"
         status: "filtrează după starea subiectului"
         full_search: "lansează căutarea pe întreaga pagină"
       advanced:
@@ -2972,8 +2971,6 @@ ro:
               content: "Ecusoane"
             faq:
               content: "Întrebări frecvente"
-            tracked:
-              content: "Urmărite"
             groups:
               content: "Grupuri"
               title: "Toate grupurile"

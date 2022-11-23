@@ -95,6 +95,7 @@ module Chat::GuardianExtensions
 
   def can_flag_chat_messages?
     return false if @user.silenced?
+    return true if @user.staff?
 
     @user.in_any_groups?(SiteSetting.chat_message_flag_allowed_groups_map)
   end

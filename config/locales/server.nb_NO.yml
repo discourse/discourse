@@ -532,7 +532,6 @@ nb_NO:
     success: "Du har endret passordet og er nå logget inn."
     success_unapproved: "Du har endret ditt passord."
   email_login:
-    invalid_token: "Beklager, denne lenken for innlogging via e-post er for gammel. Bruk 'Logg Inn' knappen og deretter 'Jeg har glemt passordet' for å motta en oppdatert lenke."
     title: "E-post innlogging"
   change_email:
     confirmed: "E-postaddressen din er blitt oppdatert."

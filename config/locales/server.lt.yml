@@ -689,7 +689,6 @@ lt:
     success: "Jūs sėkmingai pasikeitėte savo slaptažodį ir dabar esate prisijungęs."
     success_unapproved: "Jūs sėkmingai pasikeitėte savo slaptažodį."
   email_login:
-    invalid_token: "Atsiprašome, el. pašto prisijungimo nuoroda yra per sena. Pasirinkite mygtuką \"Prisijungti\" ir naudokite „Pamiršau slaptažodį“, kad gautumėte naują nuorodą."
     title: "Prisijungimas e-paštu"
   user_auth_tokens:
     browser:

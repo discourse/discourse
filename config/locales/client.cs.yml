@@ -918,7 +918,6 @@ cs:
       dismiss: "Označit jako přečtené"
       dismiss_notifications: "Označit vše jako přečtené"
       dismiss_notifications_tooltip: "Označit všechny nepřečtené notifikace jako přečtené"
-      first_notification: "Vaše první notifikace! Klikněte zde a začněte."
       color_schemes:
         undo: "obnovit výchozí"
         regular: "Běžný"
@@ -1020,6 +1019,7 @@ cs:
         profile: "Profil"
         emails: "Emaily"
         notifications: "Upozornění"
+        tracking: "Sledované"
         categories: "Kategorie"
         users: "Uživatelé"
         tags: "Tagy"
@@ -1220,6 +1220,7 @@ cs:
       email_in_reply_to: "Zahrnout v emailech úryvek příspěvku, na který je reagováno"
       other_settings: "Ostatní"
       categories_settings: "Kategorie"
+      topics_settings: "Témata"
       new_topic_duration:
         label: "Považovat témata za nová, pokud"
         not_viewed: "jsem je dosud neviděl."
@@ -2906,8 +2907,6 @@ cs:
               content: "Odznaky"
             faq:
               content: "FAQ"
-            tracked:
-              content: "Sledované"
             groups:
               content: "Skupiny"
               title: "Všechny skupiny"

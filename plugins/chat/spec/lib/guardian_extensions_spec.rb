@@ -143,6 +143,23 @@ RSpec.describe Chat::GuardianExtensions do
       end
     end
 
+    describe "#can_flag_chat_message?" do
+      let!(:message) { Fabricate(:chat_message, chat_channel: channel) }
+      before { SiteSetting.chat_message_flag_allowed_groups = "" }
+
+      context "when user isn't staff" do
+        it "returns false" do
+          expect(guardian.can_flag_chat_message?(message)).to eq(false)
+        end
+      end
+
+      context "when user is staff" do
+        it "returns true" do
+          expect(staff_guardian.can_flag_chat_message?(message)).to eq(true)
+        end
+      end
+    end
+
     describe "#can_moderate_chat?" do
       context "for category channel" do
         fab!(:category) { Fabricate(:category, read_restricted: true) }

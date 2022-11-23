@@ -745,6 +745,7 @@ sr:
         security: "Sigurnost"
         profile: "Profil"
         notifications: "Obaveštenja"
+        tracking: "Praćeno"
         categories: "Kategorije"
         users: "Korisnici"
       change_password:
@@ -849,6 +850,7 @@ sr:
         never: "nikada"
       other_settings: "Drugo"
       categories_settings: "Kategorije"
+      topics_settings: "Teme"
       new_topic_duration:
         label: "Teme smatrati novim kad"
         not_viewed: "Nisam ih pregledao još"
@@ -1157,6 +1159,7 @@ sr:
       too_short: "Vaš termin za pretragu je previše kratak."
       title: "Pretraži"
       full_page_title: "Pretraži"
+      results: "rezultati"
       no_results: "Nema rezultata"
       no_more_results: "Nije pronađeno više rezultata"
       post_format: "#%{post_number} od %{username}"
@@ -1840,8 +1843,6 @@ sr:
               content: "Značke"
             faq:
               content: "FAQ (često postavljana pitanja)"
-            tracked:
-              content: "Praćeno"
             groups:
               content: "Grupe"
             users:

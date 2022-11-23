@@ -75,22 +75,9 @@ function addHashtag(buffer, matches, state) {
     token.attrs = [["class", "hashtag-raw"]];
     buffer.push(token);
 
-    token = new state.Token("svg_open", "svg", 1);
-    token.block = false;
-    token.attrs = [["class", `fa d-icon d-icon-hashtag svg-icon svg-node`]];
-    buffer.push(token);
-
-    token = new state.Token("use_open", "use", 1);
-    token.block = false;
-    token.attrs = [["href", `#hashtag`]];
-    buffer.push(token);
-
-    buffer.push(new state.Token("use_close", "use", -1));
-    buffer.push(new state.Token("svg_close", "svg", -1));
-
     token = new state.Token("span_open", "span", 1);
     token = new state.Token("text", "", 0);
-    token.content = matches[0].replace("#", "");
+    token.content = matches[0];
     buffer.push(token);
     token = new state.Token("span_close", "span", -1);
 

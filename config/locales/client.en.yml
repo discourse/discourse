@@ -4248,7 +4248,8 @@ en:
               title: "All users"
             my_posts:
               content: "My Posts"
-              title: "My posts"
+              title: "My recent topic activity"
+              title_drafts: "My unposted drafts"
               draft_count:
                 one: "%{count} draft"
                 other: "%{count} drafts"
