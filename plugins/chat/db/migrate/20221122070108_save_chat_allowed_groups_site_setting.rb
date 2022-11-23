@@ -6,7 +6,7 @@ class SaveChatAllowedGroupsSiteSetting < ActiveRecord::Migration[7.0]
     return if chat_enabled.blank?
 
     chat_allowed_groups = DB.query_single("SELECT value FROM site_settings WHERE name = 'chat_allowed_groups'")
-    return if chat_allowed_groups.blank?
+    return if chat_allowed_groups.present?
 
     # The original default was auto group ID 3 (staff) so we are
     # using that here.
