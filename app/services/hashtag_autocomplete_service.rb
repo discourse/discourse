@@ -117,9 +117,9 @@ class HashtagAutocompleteService
     # composer we want a slug without a suffix to be a category first, tag second.
     if slugs_without_suffixes.any?
       types_in_priority_order.each do |type|
-        found_from_slugs = set_refs(@@data_sources[type].lookup(guardian, slugs_without_suffixes))
+        found_from_slugs = lookup_for_type(type, guardian, slugs_without_suffixes)
         next if !all_data_items_valid?(found_from_slugs)
-        found_from_slugs.each { |item| item.type = type }.sort_by! { |item| item.text.downcase }
+        found_from_slugs.sort_by! { |item| item.text.downcase }
         lookup_results[type.to_sym] = lookup_results[type.to_sym].concat(found_from_slugs)
         slugs_without_suffixes = slugs_without_suffixes - found_from_slugs.map(&:ref)
         break if slugs_without_suffixes.empty?
@@ -135,9 +135,9 @@ class HashtagAutocompleteService
             .select { |slug| slug.ends_with?("::#{type}") }
             .map { |slug| slug.gsub("::#{type}", "") }
         next if slugs_for_type.empty?
-        found_from_slugs = set_refs(@@data_sources[type].lookup(guardian, slugs_for_type))
+        found_from_slugs = lookup_for_type(type, guardian, slugs_for_type)
         next if !all_data_items_valid?(found_from_slugs)
-        found_from_slugs.each { |item| item.type = type }.sort_by! { |item| item.text.downcase }
+        found_from_slugs.sort_by! { |item| item.text.downcase }
         lookup_results[type.to_sym] = lookup_results[type.to_sym].concat(found_from_slugs)
       end
     end
@@ -153,7 +153,7 @@ class HashtagAutocompleteService
   # searching tags. The @guardian handles permissions around which results should
   # be returned here.
   #
-  # Items which have a slug that exactly matches the search term will be found
+  # Items which have a slug that exactly matches the search term via lookup will be found
   # first and floated to the top of the results, and still be ordered by type.
   #
   # @param {String} term Search term, from the UI generally where the user is typing #has...
@@ -164,21 +164,24 @@ class HashtagAutocompleteService
   #                        bother searching subsequent types if the first types in
   #                        the array already reach the limit.
   # @returns {Array} The results as HashtagItems
-  def search(term, types_in_priority_order, limit: nil)
+  def search(
+    term,
+    types_in_priority_order,
+    limit: SiteSetting.experimental_hashtag_search_result_limit
+  )
     raise Discourse::InvalidParameters.new(:order) if !types_in_priority_order.is_a?(Array)
-    limit = SiteSetting.experimental_hashtag_search_result_limit if limit.nil?
     limit = [limit, SEARCH_MAX_LIMIT].min
 
     limited_results = []
-    slugs_by_type = {}
+    top_ranked_type = nil
     term = term.downcase
     types_in_priority_order =
       types_in_priority_order.select { |type| @@data_sources.keys.include?(type) }
 
-    # Float exact matches to the top of the list, any of these will be excluded
+    # Float exact matches by slug to the top of the list, any of these will be excluded
     # from further results.
     types_in_priority_order.each do |type|
-      search_results = search_for_type(type, guardian, term, limit, exact_match: true)
+      search_results = lookup_for_type(type, guardian, [term])
       next if search_results.empty?
 
       next if !all_data_items_valid?(search_results)
@@ -203,8 +206,8 @@ class HashtagAutocompleteService
             limited_results.any? { |exact| exact.type == type && exact.slug === item.slug }
           end
           .sort_by { |item| item.text.downcase }
-      slugs_by_type[type] = search_results.map(&:slug)
 
+      top_ranked_type = type if top_ranked_type.nil?
       limited_results.concat(search_results)
       break if limited_results.length >= limit
     end
@@ -220,7 +223,6 @@ class HashtagAutocompleteService
     #
     # For example, if there is a category with the slug #general and a tag
     # with the slug #general, then the tag will have its ref changed to #general::tag
-    top_ranked_type = slugs_by_type.keys.first
     limited_results.each do |hashtag_item|
       next if hashtag_item.type == top_ranked_type
 
@@ -292,9 +294,11 @@ class HashtagAutocompleteService
     items.all? { |item| item.kind_of?(HashtagItem) && item.slug.present? && item.text.present? }
   end
 
-  def search_for_type(type, guardian, term, limit, exact_match: false)
-    set_refs(
-      @@data_sources[type].search(guardian, term, limit, exact_match: exact_match),
-    ).each { |item| item.type = type }
+  def search_for_type(type, guardian, term, limit)
+    set_refs(@@data_sources[type].search(guardian, term, limit)).each { |item| item.type = type }
+  end
+
+  def lookup_for_type(type, guardian, slugs)
+    set_refs(@@data_sources[type].lookup(guardian, slugs)).each { |item| item.type = type }
   end
 end

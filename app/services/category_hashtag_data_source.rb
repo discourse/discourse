@@ -39,16 +39,12 @@ class CategoryHashtagDataSource
       .map { |category| category_to_hashtag_item(guardian_categories, category) }
   end
 
-  def self.search(guardian, term, limit, exact_match: false)
+  def self.search(guardian, term, limit)
     guardian_categories = Site.new(guardian).categories
 
     guardian_categories
       .select do |category|
-        if exact_match
-          category[:slug].downcase == term
-        else
-          category[:name].downcase.include?(term) || category[:slug].downcase.include?(term)
-        end
+        category[:name].downcase.include?(term) || category[:slug].downcase.include?(term)
       end
       .take(limit)
       .map { |category| category_to_hashtag_item(guardian_categories, category) }

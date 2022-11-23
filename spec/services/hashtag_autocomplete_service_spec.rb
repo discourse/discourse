@@ -29,16 +29,11 @@ RSpec.describe HashtagAutocompleteService do
         end
     end
 
-    def self.search(guardian_scoped, term, limit, exact_match: false)
-      base_query = guardian_scoped.user.bookmarks
-
-      if exact_match
-        base_query = base_query.where("name = ?", "#{term}")
-      else
-        base_query = base_query.where("name ILIKE ?", "%#{term}%")
-      end
-
-      base_query
+    def self.search(guardian_scoped, term, limit)
+      guardian_scoped
+        .user
+        .bookmarks
+        .where("name ILIKE ?", "%#{term}%")
         .limit(limit)
         .map do |bm|
           HashtagAutocompleteService::HashtagItem.new.tap do |item|

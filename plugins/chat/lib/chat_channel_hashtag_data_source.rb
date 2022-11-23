@@ -25,21 +25,16 @@ class Chat::ChatChannelHashtagDataSource
     end
   end
 
-  def self.search(guardian, term, limit, exact_match: false)
+  def self.search(guardian, term, limit)
     if SiteSetting.enable_experimental_hashtag_autocomplete
-      results =
-        if exact_match
-          lookup(guardian, term)
-        else
-          Chat::ChatChannelFetcher
-            .secured_public_channel_search(
-              guardian,
-              filter: term,
-              limit: limit,
-              exclude_dm_channels: true,
-            )
-            .map { |channel| channel_to_hashtag_item(guardian, channel) }
-        end
+      Chat::ChatChannelFetcher
+        .secured_public_channel_search(
+          guardian,
+          filter: term,
+          limit: limit,
+          exclude_dm_channels: true,
+        )
+        .map { |channel| channel_to_hashtag_item(guardian, channel) }
     else
       []
     end

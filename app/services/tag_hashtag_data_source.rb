@@ -30,22 +30,18 @@ class TagHashtagDataSource
       .map { |tag| tag_to_hashtag_item(tag) }
   end
 
-  def self.search(guardian, term, limit, exact_match: false)
+  def self.search(guardian, term, limit)
     return [] if !SiteSetting.tagging_enabled
 
-    if exact_match
-      tags_with_counts = DiscourseTagging.filter_visible(Tag.where_name([term]), guardian)
-    else
-      tags_with_counts, _ =
-        DiscourseTagging.filter_allowed_tags(
-          guardian,
-          term: term,
-          with_context: true,
-          limit: limit,
-          for_input: true,
-          order_search_results: true,
-        )
-    end
+    tags_with_counts, _ =
+      DiscourseTagging.filter_allowed_tags(
+        guardian,
+        term: term,
+        with_context: true,
+        limit: limit,
+        for_input: true,
+        order_search_results: true,
+      )
 
     TagsController
       .tag_counts_json(tags_with_counts)
