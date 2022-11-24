@@ -7,7 +7,8 @@ export default class UserNavMessagesNav extends Component {
   get messagesDropdownvalue() {
     switch (this.args.currentRouteName) {
       case "userPrivateMessages.tags":
-      case "userPrivateMessages.tagsShow":
+      case "userPrivateMessages.tags.index":
+      case "userPrivateMessages.tags.show":
         return "tags";
       default:
         if (this.args.groupFilter) {

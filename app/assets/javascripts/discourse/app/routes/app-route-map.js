@@ -155,8 +155,9 @@ export default function () {
             this.route("unread");
           });
 
-          this.route("tags");
-          this.route("tagsShow", { path: "tags/:id" });
+          this.route("tags", { path: "/tags" }, function () {
+            this.route("show", { path: ":id" });
+          });
         }
       );
 

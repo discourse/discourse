@@ -87,18 +87,18 @@
 
       {{#if this.pmTaggingEnabled}}
         <li class="tags">
-          <LinkTo @route="userPrivateMessages.tags" @model={{this.model}}>
+          <LinkTo @route="userPrivateMessages.tags.index" @model={{this.model}}>
             {{i18n "user.messages.tags"}}
           </LinkTo>
-
-          {{#if this.tagId}}
-            <li class="archive">
-              <LinkTo @route="userPrivateMessages.tagsShow" @model={{this.tagId}}>
-                {{this.tagId}}
-              </LinkTo>
-            </li>
-          {{/if}}
         </li>
+
+        {{#if this.tagId}}
+          <li class="archive">
+            <LinkTo @route="userPrivateMessages.tags.show" @model={{this.tagId}}>
+              {{this.tagId}}
+            </LinkTo>
+          </li>
+        {{/if}}
       {{/if}}
 
       <PluginOutlet @name="user-messages-nav" @tagName="span" @connectorTagName="li" @args={{hash model=this.model}} />
