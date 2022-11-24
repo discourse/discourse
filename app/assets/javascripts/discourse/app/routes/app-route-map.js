@@ -148,10 +148,13 @@ export default function () {
             this.route("sent");
             this.route("warnings");
           });
-          this.route("group", { path: "group/:name" });
-          this.route("groupArchive", { path: "group/:name/archive" });
-          this.route("groupNew", { path: "group/:name/new" });
-          this.route("groupUnread", { path: "group/:name/unread" });
+
+          this.route("group", { path: "group/:name" }, function () {
+            this.route("archive");
+            this.route("new");
+            this.route("unread");
+          });
+
           this.route("tags");
           this.route("tagsShow", { path: "tags/:id" });
         }

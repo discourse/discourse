@@ -25,38 +25,22 @@
       </LinkTo>
     </li>
 
-    <li class="messages-sent">
-      <LinkTo @route="userPrivateMessages.user.sent" @model={{this.model}}>
-        {{d-icon "reply"}}
-        <span>{{i18n "user.messages.sent"}}</span>
+    <li class="messages-unread">
+      <LinkTo @route="userPrivateMessages.user.unread" @model={{this.model}} class="unread">
+        {{d-icon "plus-circle"}}
+        <span>{{this.unreadLinkText}}</span>
       </LinkTo>
     </li>
+  {{/if}}
 
-    {{#if this.viewingSelf}}
-      <li class="messages-new">
-        <LinkTo @route="userPrivateMessages.user.new" @model={{this.model}} class="new">
-          {{d-icon "exclamation-circle"}}
-          <span>{{this.newLinkText}}</span>
-        </LinkTo>
-      </li>
+  <li class="messages-archive">
+    <LinkTo @route="userPrivateMessages.user.archive" @model={{this.model}}>
+      {{d-icon "archive"}}
+      <span>{{i18n "user.messages.archive"}}</span>
+    </LinkTo>
+  </li>
 
-      <li class="messages-unread">
-        <LinkTo @route="userPrivateMessages.user.unread" @model={{this.model}} class="unread">
-          {{d-icon "plus-circle"}}
-          <span>{{this.unreadLinkText}}</span>
-        </LinkTo>
-      </li>
-    {{/if}}
-
-    <li class="messages-archive">
-      <LinkTo @route="userPrivateMessages.user.archive" @model={{this.model}}>
-        {{d-icon "archive"}}
-        <span>{{i18n "user.messages.archive"}}</span>
-      </LinkTo>
-    </li>
-
-    <PluginOutlet @name="user-messages-nav" @connectorTagName="li" @args={{hash model=this.model}} />
-  {{/in-element}}
-{{/if}}
+  <PluginOutlet @name="user-messages-nav" @connectorTagName="li" @args={{hash model=this.model}} />
+</UserNav::MessagesSecondaryNav>
 
 {{outlet}}
