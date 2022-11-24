@@ -7,6 +7,9 @@
 fr:
   js:
     admin:
+      site_settings:
+        categories:
+          chat: Discussion
       logs:
         staff_actions:
           actions:
@@ -51,6 +54,10 @@ fr:
         leave_channel: "Quitter le canal"
         join: "Rejoindre"
         leave: "Quitter"
+        save_label:
+          mute_channel: "Préférence de mise en sourdine du canal enregistrée"
+          desktop_notification: "Préférence de notification sur le bureau enregistrée"
+          mobile_notification: "Préférence de notification push mobile enregistrée"
       channel_archive:
         title: "Archiver le canal"
         instructions: "<p>L'archivage d'un canal le place en mode lecture seule et déplace tous les messages du canal vers un sujet nouveau ou existant. Aucun nouveau message ne peut être envoyé et aucun message existant ne peut être modifié ou supprimé.</p><p>Voulez-vous vraiment archiver le canal <strong>%{channelTitle}</strong>  ?</p>"
@@ -177,6 +184,7 @@ fr:
         open_header: "Le canal est ouvert"
         open: "Ouvert"
       browse:
+        back: "Retour"
         title: Canaux
         filter_all: Tout
         filter_open: Ouvert
@@ -226,9 +234,9 @@ fr:
         auto_join_users:
           public_category_warning: "%{category} est une catégorie publique. Ajouter automatiquement tous les utilisateurs récemment actifs à ce canal ?"
           warning_groups:
-            one: Ajouter automatiquement %{members_count}  utilisateurs de %{group} ?
-            other: Ajouter automatiquement %{members_count} utilisateurs de %{group} et %{group_2} ?
-          warning_multiple_groups: Ajouter automatiquement %{members_count} utilisateurs de %{group_1} et %{count} autres groupes ?
+            one: Ajouter automatiquement %{members_count} utilisateurs de %{group} ?
+            other: Ajouter automatiquement %{members_count} utilisateurs de %{group} et de %{group_2} ?
+          warning_multiple_groups: Ajouter automatiquement %{members_count} utilisateurs de %{group_1} et de %{count} autres groupes ?
         choose_category:
           label: "Choisir une catégorie"
           none: "sélectionnez-en une…"
@@ -266,8 +274,8 @@ fr:
         mention: "Seulement pour les mentions"
         always: "Pour toutes les activités"
       settings:
-        enable_auto_join_users: "Ajouter automatiquement tous les utilisateurs récemment actifs"
-        disable_auto_join_users: "Arrêter l'ajout automatique d'utilisateurs"
+        auto_join_users_label: "Ajouter automatiquement des utilisateurs"
+        auto_join_users_info: "Vérifier toutes les heures quels utilisateurs ont été actifs au cours des 3 derniers mois et, s'ils ont accès à la catégorie %{category}, les ajouter à ce canal."
         auto_join_users_warning: "Chaque utilisateur qui n'est pas membre de ce canal et qui a accès à la catégorie %{category} le rejoindra. Voulez-vous continuer ?"
         desktop_notification_level: "Notifications sur le bureau"
         follow: "Rejoindre"
@@ -281,6 +289,8 @@ fr:
         save: "Enregistrer"
         saved: "Enregistré"
         unfollow: "Quitter"
+        admin_title: "Administrateur"
+        retention_info: "L'historique des discussions sera enregistré pendant %{days} jours."
       admin:
         title: "Discussion"
       direct_messages:

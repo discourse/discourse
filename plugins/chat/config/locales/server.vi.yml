@@ -5,10 +5,14 @@
 # https://translate.discourse.org/
 
 vi:
+  site_settings:
+    chat_max_direct_message_users: "Người dùng không thể thêm nhiều hơn số lượng người dùng khác này khi tạo một tin nhắn trực tiếp mới. Đặt thành 0 để chỉ cho phép tin nhắn cho chính mình. Nhân viên được miễn cài đặt này."
   chat:
     deleted_chat_username: đã bị xóa
     errors:
       not_accepting_dms: "Xin lỗi, %{username} hiện không chấp nhận tin nhắn."
+      over_chat_max_direct_message_users:
+        other: "Bạn không thể tạo tin nhắn trực tiếp với hơn %{count} người dùng khác."
     reviewables:
       actions:
         agree_and_suspend:
@@ -33,6 +37,7 @@ vi:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"
     notify_moderators:
+      chat_pm_title: 'Tin nhắn trò chuyện trong "%{channel_name}" yêu cầu sự chú ý của nhân viên'
       chat_pm_body: "%{link}\n\n%{message}"
   unsubscribe:
     chat_summary:

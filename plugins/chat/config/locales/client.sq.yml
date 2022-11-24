@@ -64,6 +64,7 @@ sq:
         preview: "Parashikimi"
         save: "Ruaj"
         saved: "U ruajt"
+        admin_title: "Admin"
       incoming_webhooks:
         back: "Kthehu mbrapa"
         description: "Përshkrimi"

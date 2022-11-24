@@ -64,6 +64,29 @@ module.exports = function (defaults) {
         optimization: {
           moduleIds: "size", // Consistent module references https://github.com/ef4/ember-auto-import/issues/478#issuecomment-1000526638
         },
+        resolve: {
+          fallback: {
+            // Sinon needs a `util` polyfill
+            util: require.resolve("util/"),
+          },
+        },
+        module: {
+          rules: [
+            // Sinon/`util` polyfill accesses the `process` global,
+            // so we need to provide a mock
+            {
+              test: require.resolve("util/"),
+              use: [
+                {
+                  loader: "imports-loader",
+                  options: {
+                    additionalCode: "var process = { env: {} };",
+                  },
+                },
+              ],
+            },
+          ],
+        },
       },
     },
     fingerprint: {
@@ -138,7 +161,11 @@ module.exports = function (defaults) {
       return mergeTrees([
         tests,
         testHelpers,
-        discourseScss(`${discourseRoot}/app/assets/stylesheets`, "testem.scss"),
+        discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
+        discourseScss(
+          `${discourseRoot}/app/assets/stylesheets`,
+          "qunit-custom.scss"
+        ),
       ]);
     } else {
       return mergeTrees([tests, testHelpers]);

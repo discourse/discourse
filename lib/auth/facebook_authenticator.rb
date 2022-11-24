@@ -25,4 +25,10 @@ class Auth::FacebookAuthenticator < Auth::ManagedAuthenticator
            scope: "email"
   end
 
+  # facebook doesn't return unverified email addresses so it's safe to assume
+  # whatever email we get from them is verified
+  # https://developers.facebook.com/docs/graph-api/reference/user/
+  def primary_email_verified?(auth_token)
+    true
+  end
 end

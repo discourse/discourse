@@ -7,6 +7,9 @@
 fi:
   js:
     admin:
+      site_settings:
+        categories:
+          chat: Chat
       logs:
         staff_actions:
           actions:
@@ -51,6 +54,10 @@ fi:
         leave_channel: "Poistu kanavalta"
         join: "Liity"
         leave: "Poistu"
+        save_label:
+          mute_channel: "Kanavan vaimennusasetus on tallennettu"
+          desktop_notification: "Työpöytäilmoitusasetus on tallennettu"
+          mobile_notification: "Mobiililaitteiden push-ilmoitusasetus on tallennettu"
       channel_archive:
         title: "Arkistoi kanava"
         instructions: "<p>Kanavan arkistointi asettaa sen vain luku -tilaan ja siirtää kaikki kanavan viestit uuteen tai olemassa olevaan ketjuun. Uusia viestejä ei voi lähettää, eikä olemassa olevia viestejä voi muokata tai poistaa.</p><p>Oletko varma, että haluat arkistoida kanavan <strong>%{channelTitle}</strong>?</p>"
@@ -177,6 +184,7 @@ fi:
         open_header: "Kanava on avoinna"
         open: "Avoinna"
       browse:
+        back: "Takaisin"
         title: Kanavat
         filter_all: Kaikki
         filter_open: Avattu
@@ -266,14 +274,14 @@ fi:
         mention: "Vain maininnoissa"
         always: "Kaikessa toiminnassa"
       settings:
-        enable_auto_join_users: "Lisää automaattisesti kaikki hiljattain aktiiviset käyttäjät"
-        disable_auto_join_users: "Lopeta käyttäjien automaattinen lisääminen"
+        auto_join_users_label: "Lisää käyttäjiä automaattisesti"
+        auto_join_users_info: "Tarkista tunnin välein, ketkä käyttäjistä ovat olleet aktiivisia viimeisten kolmen kuukauden aikana, ja jos heillä on pääsy alueelle %{category}, lisää heidät tälle kanavalle."
         auto_join_users_warning: "Jokainen käyttäjä, joka ei ole tämän kanavan jäsen ja jolla on pääsy alueelle %{category}, liittyy. Oletko varma?"
         desktop_notification_level: "Työpöytäilmoitukset"
         follow: "Liity"
         followed: "Liittyi"
         mobile_notification_level: "Mobiili-push-ilmoitukset"
-        mute: "Mykistä kanava"
+        mute: "Vaimenna kanava"
         muted_on: "Käytössä"
         muted_off: "Pois käytöstä"
         notifications: "Ilmoitukset"
@@ -281,6 +289,8 @@ fi:
         save: "Tallenna"
         saved: "Tallennettu"
         unfollow: "Poistu"
+        admin_title: "Ylläpitäjä"
+        retention_info: "Chat-historia tallennetaan %{days} päivän ajaksi."
       admin:
         title: "Chat"
       direct_messages:
@@ -314,7 +324,7 @@ fi:
         url_instructions: "Tämä URL-osoite sisältää salaisen arvon – pidä se turvassa."
         username: "Käyttäjätunnus"
         username_instructions: "Kanavalle lähettävän botin käyttäjätunnus. Oletus on \"järjestelmä\", kun tämä jätetään tyhjäksi."
-        instructions: "Ulkoiset järjestelmät voivat käyttää saapuvia webhookeja viestien lähettämiseen määrätylle chat-kanavalle bot-käyttäjänä <code>/hooks/:key</code>-päätepisteen kautta. Hyötykuorma koostuu yhdestä <code>text</code>-parametrista, joka on rajoitettu 2 000 merkkiin.<br><br>Tuemme myös rajoitettuja Slack-muotoiltuja <code>text</code>-parametreja, linkkien ja mainintojen poimimista osoitteessa <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a> kuvatun muodon perusteella, mutta tähän täytyy käyttää <code>/hooks/:key/ Slack</code>-päätepistettä."
+        instructions: "Ulkoiset järjestelmät voivat käyttää saapuvia webhookeja viestien lähettämiseen määrätylle chat-kanavalle bot-käyttäjänä <code>/hooks/:key</code>-päätepisteen kautta. Hyötykuorma koostuu yhdestä <code>text</code>-parametrista, joka on rajoitettu 2 000 merkkiin.<br><br>Tuemme myös rajoitettuja Slack-muotoiltuja <code>text</code>-parametreja, linkkien ja mainintojen poimimista osoitteessa <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a> kuvatun muodon perusteella, mutta tähän täytyy käyttää <code>/hooks/:key/slack</code>-päätepistettä."
       selection:
         cancel: "Peruuta"
         quote_selection: "Lainaus ketjussa"
@@ -347,7 +357,7 @@ fi:
           other: "%{commaSeparatedUsernames} ja %{count} muuta kirjoittavat"
       retention_reminders:
         public: "Kanavan historia säilytetään %{days} päivän ajan."
-        dm: "Henkilökohtainen keskusteluhistoria säilytetään %{days} päivän ajan."
+        dm: "Henkilökohtainen chat-historia säilytetään %{days} päivän ajan."
       flags:
         off_topic: "Tämä viesti ei liity nykyiseen keskusteluun kanavan otsikon mukaan, ja se pitäisi todennäköisesti siirtää muualle."
         inappropriate: "Tämä viesti sisältää sisältöä, jota kohtuullinen henkilö pitäisi loukkaavana, herjaavana tai <a href=\"%{basePath}/guidelines\">yhteisömme ohjeiden vastaisena</a>."

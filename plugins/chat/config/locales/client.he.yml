@@ -290,8 +290,9 @@ he:
         mention: "רק אזכורים"
         always: "לכל פעילות"
       settings:
+        auto_join_users_label: "להוסיף משתמשים אוטומטית"
+        auto_join_users_info: "לבדוק כל שעה אילו משתמשים היו פעילים ב־3 החודשים האחרונים ואם יש להם גישה לקטגוריה %{category}, להוסיף אותם לערוץ הזה."
         enable_auto_join_users: "להוסיף אוטומטית את כל המשתמשים שהיו פעילים לאחרונה"
-        disable_auto_join_users: "להפסיק להוסיף משתמשים אוטומטית"
         auto_join_users_warning: "כל משתמש שאינו חבר בערוץ הזה ויש לו גישה לקטגוריה %{category} יצטרף. זה בסדר?"
         desktop_notification_level: "התראות שולחן עבודה"
         follow: "הצטרף"
@@ -305,6 +306,8 @@ he:
         save: "שמירה"
         saved: "נשמר"
         unfollow: "עזוב"
+        admin_title: "הנהלה"
+        retention_info: "היסטוריית הצ׳אט נשמרת למשך %{days} ימים."
       admin:
         title: "צ׳אט"
       direct_messages:

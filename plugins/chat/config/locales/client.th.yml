@@ -73,6 +73,7 @@ th:
         save: "บันทึก"
         saved: "บันทึกแล้ว"
         unfollow: "ออก"
+        admin_title: "ผู้ดูแลระบบ"
       incoming_webhooks:
         back: "กลับ"
         description: "รายละเอียด"

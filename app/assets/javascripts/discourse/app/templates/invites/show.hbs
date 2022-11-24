@@ -102,7 +102,7 @@
                     <InputTip @validation={{this.passwordValidation}} />
                     <div class="instructions">
                       {{this.passwordInstructions}}
-                      <div class="caps-lock-warning {{unless this.capsLockOn "invisible"}}">
+                      <div class="caps-lock-warning {{unless this.capsLockOn " hidden"}}">
                         {{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}
                       </div>
                     </div>
@@ -119,7 +119,13 @@
                   </div>
                 {{/if}}
 
-                <DButton @class="btn-primary" @action={{action "submit"}} @type="submit" @disabled={{this.submitDisabled}} @label="invites.accept_invite" />
+                <div class="invitation-cta">
+                  <DButton @class="btn-primary invitation-cta__accept" @action={{action "submit"}} @type="submit" @disabled={{this.submitDisabled}} @label="invites.accept_invite" />
+                  <div class="invitation-cta__info">
+                    <span class="invitation-cta__signed-up">{{i18n "login.previous_sign_up"}}</span>
+                    <DButton @action={{route-action "showLogin"}} @class="btn-flat invitation-cta__sign-in" @label="log_in" />
+                  </div>
+                </div>
 
                 <div class="disclaimer">
                   {{html-safe this.disclaimerHtml}}

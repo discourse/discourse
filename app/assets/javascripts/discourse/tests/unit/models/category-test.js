@@ -225,44 +225,44 @@ module("Unit | Model | category", function (hooks) {
   test("minimumRequiredTags", function (assert) {
     const store = getOwner(this).lookup("service:store");
 
-    let foo = store.createRecord("category", {
+    const foo = store.createRecord("category", {
       id: 1,
       slug: "foo",
       required_tag_groups: [{ name: "bar", min_count: 2 }],
     });
 
-    assert.equal(foo.minimumRequiredTags, 2);
+    assert.strictEqual(foo.minimumRequiredTags, 2);
 
-    foo = store.createRecord("category", {
+    const bar = store.createRecord("category", {
       id: 2,
-      slug: "foo",
+      slug: "bar",
     });
 
-    assert.equal(foo.minimumRequiredTags, null);
+    assert.strictEqual(bar.minimumRequiredTags, null);
 
-    foo = store.createRecord("category", {
+    const baz = store.createRecord("category", {
       id: 3,
-      slug: "foo",
+      slug: "baz",
       minimum_required_tags: 0,
     });
 
-    assert.equal(foo.minimumRequiredTags, null);
+    assert.strictEqual(baz.minimumRequiredTags, null);
 
-    foo = store.createRecord("category", {
+    const qux = store.createRecord("category", {
       id: 4,
-      slug: "foo",
+      slug: "qux",
       minimum_required_tags: 2,
     });
 
-    assert.equal(foo.minimumRequiredTags, 2);
+    assert.strictEqual(qux.minimumRequiredTags, 2);
 
-    foo = store.createRecord("category", {
+    const quux = store.createRecord("category", {
       id: 5,
-      slug: "foo",
+      slug: "quux",
       required_tag_groups: [],
     });
 
-    assert.equal(foo.minimumRequiredTags, null);
+    assert.strictEqual(quux.minimumRequiredTags, null);
   });
 
   test("search with category name", function (assert) {
@@ -329,7 +329,7 @@ module("Unit | Model | category", function (hooks) {
     const child_category1 = store.createRecord("category", {
         id: 3,
         name: "term start",
-        parent_category_id: category1.get("id"),
+        parent_category_id: category1.id,
       }),
       read_restricted_category = store.createRecord("category", {
         id: 4,

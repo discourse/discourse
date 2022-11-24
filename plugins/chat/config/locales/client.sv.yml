@@ -274,8 +274,9 @@ sv:
         mention: "Endast för omnämnanden"
         always: "För all aktivitet"
       settings:
+        auto_join_users_label: "Lägg till användare automatiskt"
+        auto_join_users_info: "Kontrollera varje timme vilka användare som har varit aktiva under de senaste 3 månaderna och, om de har tillgång till kategorin %{category}, lägg till dem i den här kanalen."
         enable_auto_join_users: "Lägg automatiskt till alla nyligen aktiva användare"
-        disable_auto_join_users: "Sluta lägga till användare automatiskt"
         auto_join_users_warning: "Varje användare som inte är medlem i den här kanalen och har tillgång till kategorin %{category} kommer att gå med. Är du säker?"
         desktop_notification_level: "Skrivbordsaviseringar"
         follow: "Gå med"
@@ -289,6 +290,8 @@ sv:
         save: "Spara"
         saved: "Sparad"
         unfollow: "Lämna"
+        admin_title: "Admin"
+        retention_info: "Chatthistoriken sparas i %{days} dagar."
       admin:
         title: "Chatt"
       direct_messages:

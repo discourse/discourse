@@ -223,7 +223,7 @@ describe UserNotifications do
             expected_other_text =
               I18n.t(
                 "user_notifications.chat_summary.subject.other_direct_message",
-                message_title: sender.username,
+                dm_title: sender.username,
               )
 
             email = described_class.chat_summary(user, {})

@@ -1027,13 +1027,9 @@ lt:
       no_bookmarks_search: "Nerasta jokių žymių pagal pateiktą paieškos užklausą."
       no_notifications_title: "Jūs dar neturite jokių pranešimų"
       no_notifications_page_title: "Jūs dar neturite jokių pranešimų"
-      first_notification: "Asmeniniai perspėjimai. Jūs galite atlikti jums reikiamą užklausą pasirinkdami atitinkamus nustatymus."
       dynamic_favicon: "Rodyti skaičius naršyklės piktogramoje"
       skip_new_user_tips:
         description: "Praleiskite naujų naudotojų patarimus ir ženklelius"
-        not_first_time: "Ne pirmas kartas?"
-        skip_link: "Praleisti šiuos patarimus"
-        read_later: "Perskaitysiu vėliau."
       theme_default_on_all_devices: "Padarykite tai kaip numatytąją temą visuose mano įrenginiuose"
       color_scheme_default_on_all_devices: "Nustatyti numatytąją spalvų schemą (-as) visuose mano įrenginiuose"
       color_scheme: "Spalvų schema"
@@ -1162,6 +1158,7 @@ lt:
         profile: "Profilis"
         emails: "Epaštai"
         notifications: "Pranešimai"
+        tracking: "Seku"
         categories: "Kategorijos"
         users: "Nariai"
         tags: "Gairės"
@@ -1393,6 +1390,7 @@ lt:
       email_in_reply_to: "Įtraukti atsakytų įrašų ištraukas taip pat į mano elektroninį paštą"
       other_settings: "Kita"
       categories_settings: "Kategorijos"
+      topics_settings: "Temos"
       new_topic_duration:
         label: "Laikyti temą nauja kai"
         not_viewed: "Dar neperžiūrėjau"
@@ -2083,6 +2081,7 @@ lt:
         other: "<span>%{count}%{plus} rezultatai iš </span><span class='term'>%{term}</span>"
       title: "Paieška"
       full_page_title: "Paieška"
+      results: "rezultatai"
       no_results: "Nerasta jokių rezultatų."
       no_more_results: "Nerasta jokių rezultatų."
       post_format: "#%{post_number} nuo %{username}"
@@ -2123,7 +2122,6 @@ lt:
       tips:
         category_tag: "filtrai pagal kategoriją ar žymą"
         author: "filtruoti pagal įrašo autorių"
-        in: "filtruoti pagal metaduomenis (pvz. pavadinime)"
         status: "filtruoti pagal temos būseną"
         full_search: "paleidžiama viso puslapio paieška"
         full_search_key: "%{modifier} + Įveskite"
@@ -3537,9 +3535,6 @@ lt:
               title: "Visos temos"
             faq:
               content: "DUK"
-            tracked:
-              content: "Sekami"
-              title: "Visos stebimos temos"
             groups:
               content: "Grupės"
               title: "Visos grupės"

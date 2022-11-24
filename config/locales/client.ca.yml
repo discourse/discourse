@@ -902,7 +902,6 @@ ca:
       dismiss: "Descarta-ho"
       dismiss_notifications: "Descarta-ho tot"
       dismiss_notifications_tooltip: "Marca totes les notificacions no llegides com a llegides"
-      first_notification: "La vostra primera notificació! Seleccioneu-la per a començar."
       dynamic_favicon: "Mostra recomptes en la icona del navegador"
       theme_default_on_all_devices: "Fes que aquesta sigui l'aparença predeterminada en tots els meus dispositius"
       color_schemes:
@@ -1016,6 +1015,7 @@ ca:
         profile: "Perfil"
         emails: "Correus"
         notifications: "Notificacions"
+        tracking: "Seguint"
         categories: "Categories"
         users: "Usuaris"
         tags: "Etiquetes"
@@ -1216,6 +1216,7 @@ ca:
       email_in_reply_to: "Inclou un extracte del que s'ha respost a la publicació en els correus."
       other_settings: "Altres"
       categories_settings: "Categories"
+      topics_settings: "Temes"
       new_topic_duration:
         label: "Considera els temes nous quan "
         not_viewed: "encara no els hagi vist"
@@ -1794,6 +1795,7 @@ ca:
         other: "<span>%{count}%{plus} resultats per a</span><span class='term'>%{term}</span>"
       title: "Cerca"
       full_page_title: "Cerca"
+      results: "resultats"
       no_results: "No hi ha resultats."
       no_more_results: "No s'han trobat més resultats."
       post_format: "#%{post_number} per %{username}"
@@ -2922,8 +2924,6 @@ ca:
               content: "Insígnies"
             faq:
               content: "PMF"
-            tracked:
-              content: "Seguit"
             groups:
               content: "Grups"
               title: "Tots els grups"

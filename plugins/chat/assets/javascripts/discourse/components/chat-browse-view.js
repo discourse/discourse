@@ -2,6 +2,7 @@ import { INPUT_DELAY } from "discourse-common/config/environment";
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
+import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import ChatApi from "discourse/plugins/chat/discourse/lib/chat-api";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -93,6 +94,11 @@ export default class ChatBrowseView extends Component {
   @action
   createChannel() {
     showModal("create-channel");
+  }
+
+  @action
+  focusFilterInput(input) {
+    schedule("afterRender", () => input?.focus());
   }
 
   @bind

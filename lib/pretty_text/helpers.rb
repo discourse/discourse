@@ -41,14 +41,6 @@ module PrettyText
       username
     end
 
-    def category_hashtag_lookup(category_slug)
-      if category = Category.query_from_hashtag_slug(category_slug)
-        [category.url, category_slug]
-      else
-        nil
-      end
-    end
-
     def lookup_upload_urls(urls)
       map = {}
       result = {}
@@ -103,6 +95,8 @@ module PrettyText
       end
     end
 
+    # TODO (martin) Remove this when everything is using hashtag_lookup
+    # after enable_experimental_hashtag_autocomplete is default.
     def category_tag_hashtag_lookup(text)
       is_tag = text =~ /#{TAG_HASHTAG_POSTFIX}$/
 
@@ -114,6 +108,29 @@ module PrettyText
       else
         nil
       end
+    end
+
+    def hashtag_lookup(slug, cooking_user, types_in_priority_order)
+      # This is _somewhat_ expected since we need to be able to cook posts
+      # etc. without a user sometimes, but it is still an edge case.
+      if cooking_user.blank?
+        cooking_user = Discourse.system_user
+      end
+
+      cooking_user = User.new(cooking_user) if cooking_user.is_a?(Hash)
+
+      result = HashtagAutocompleteService.new(
+        Guardian.new(cooking_user)
+      ).lookup([slug], types_in_priority_order)
+
+      found_hashtag = nil
+      types_in_priority_order.each do |type|
+        if result[type.to_sym].any?
+          found_hashtag = result[type.to_sym].first.to_h
+          break
+        end
+      end
+      found_hashtag
     end
 
     def get_current_user(user_id)

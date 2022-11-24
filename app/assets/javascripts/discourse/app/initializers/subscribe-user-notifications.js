@@ -1,4 +1,3 @@
-import { set } from "@ember/object";
 // Subscribes to user events on the message bus
 import {
   alertChannel,
@@ -161,8 +160,9 @@ export default {
         );
       });
 
-      bus.subscribe("/client_settings", (data) =>
-        set(siteSettings, data.name, data.value)
+      bus.subscribe(
+        "/client_settings",
+        (data) => (siteSettings[data.name] = data.value)
       );
 
       if (!isTesting()) {

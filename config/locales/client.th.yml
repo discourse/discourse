@@ -768,7 +768,6 @@ th:
       dismiss: "ซ่อน"
       dismiss_notifications: "ซ่อนทั้งหมด"
       dismiss_notifications_tooltip: "ทำเครื่องหมายอ่านบนการแจ้งเตือนที่ยังไม่ได้อ่านทั้งหมด"
-      first_notification: "การแจ้งเตือนแรกของคุณ! กดเลือกเพื่อเริ่มต้น"
       dynamic_favicon: "แสดงจำนวนบนไอคอนเบราว์เซอร์"
       theme_default_on_all_devices: "ทำให้ธีมนี้เป็นธีมเริ่มต้นบนทุกอุปกรณ์ของฉัน"
       color_schemes:
@@ -858,6 +857,7 @@ th:
         profile: "โปรไฟล์"
         emails: "อีเมล"
         notifications: "การแจ้งเตือน"
+        tracking: "ติดตาม"
         categories: "หมวดหมู่"
         users: "ผู้ใช้"
         tags: "แท็ก"
@@ -1025,6 +1025,7 @@ th:
       email_in_reply_to: "เพิ่มการตอบในโพสท์ที่คัดกรองแล้วในอีเมล"
       other_settings: "อื่นๆ"
       categories_settings: "หมวดหมู่"
+      topics_settings: "หัวข้อ"
       new_topic_duration:
         label: "พิจารณาเป็นกระทู้ใหม่เมื่อ"
         not_viewed: "ฉันยังไม่ได้ดูมันเลย"
@@ -2479,8 +2480,6 @@ th:
               content: "เหรียญ"
             faq:
               content: "คำถามที่พบบ่อย"
-            tracked:
-              content: "ติดตาม"
             groups:
               content: "กลุ่ม"
               title: "กลุ่มทั้งหมด"

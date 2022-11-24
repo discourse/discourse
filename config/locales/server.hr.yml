@@ -509,7 +509,6 @@ hr:
     success: "Uspiješno ste promijenili zaporku i sad ste prijavljeni."
     success_unapproved: "Uspiješno ste promijenili zaporku."
   email_login:
-    invalid_token: "Žao nam je, ta poveznica za prijavu emailom je prestara. Odaberite gumb 'Prijava' i kliknite na 'Zaboravljena lozinka' kako bi dobili novu poveznicu."
     title: "Prijava emailom"
   user_auth_tokens:
     browser:

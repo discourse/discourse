@@ -1121,13 +1121,9 @@ hr:
       no_notifications_page_title: "Još nemate nijednu obavijest"
       no_notifications_page_body: >
         Bit ćete obaviješteni o aktivnostima izravno relevantne za vas, uključujući i odgovorima na vaše teme i postove, kada netko <b>@mentions</b> Vi ili citati vas, i odgovori na temu koju gledate. Obavijesti će se također slati na vašu e -poštu ako se neko vrijeme niste prijavili. <br><br> Potražite %{icon} da biste odlučili o kojim temama, kategorijama i oznakama želite biti obaviješteni. Za više informacija pogledajte <a href='%{preferencesUrl}'>postavki obavijesti</a>.
-      first_notification: "Vaša prva obavijest! Odaberite ju za početak."
       dynamic_favicon: "Prikaži brojeve na ikoni preglednika"
       skip_new_user_tips:
         description: "Preskoči savjete i značke novog korisnika"
-        not_first_time: "Nije ti prvi put?"
-        skip_link: "Preskoči ove savjete"
-        read_later: "Pročitat ću ga kasnije."
       theme_default_on_all_devices: "Postavi ovu temu kao zadanu na svim mojim uređajima"
       color_scheme_default_on_all_devices: "Postavljanje zadane sheme boja na svim mojim uređajima"
       color_scheme: "Shema boja"
@@ -1259,6 +1255,7 @@ hr:
         profile: "Profil"
         emails: "E-adrese"
         notifications: "Obavijest"
+        tracking: "Praćeno"
         categories: "Kategorije"
         users: "Korisnici"
         tags: "Oznake"
@@ -1509,6 +1506,7 @@ hr:
       email_in_reply_to: "Uključite isječak odgovora na postove u e-poruke"
       other_settings: "Drugo"
       categories_settings: "Kategorije"
+      topics_settings: "Tema"
       new_topic_duration:
         label: "Teme smatrati novim kad"
         not_viewed: "Još ih nisam pogledao"
@@ -2306,6 +2304,7 @@ hr:
         other: "<span>%{count}%{plus} rezultata za</span><span class='term'>%{term}</span>"
       title: "Pretraži"
       full_page_title: "Pretraži"
+      results: "rezultati"
       no_results: "Nema rezultata"
       no_more_results: "Nema više rezultata."
       post_format: "#%{post_number} od %{username}"
@@ -2346,7 +2345,7 @@ hr:
       tips:
         category_tag: "filteri po kategoriji ili oznaci"
         author: "filteri po autoru objave"
-        in: "filteri prema metapodacima (npr. u:naslov, u:osobno, u:prikvačeno)"
+        in: "filteri prema metapodacima (npr. in:title, in:personal, in:pinned)"
         status: "filteri prema statusu teme"
         full_search: "pokreće pretraživanje cijele stranice"
         full_search_key: "%{modifier} + Enter"
@@ -3920,9 +3919,6 @@ hr:
               title: "Sve teme"
             faq:
               content: "ČPP"
-            tracked:
-              content: "Praćeno"
-              title: "Sve praćene teme"
             groups:
               content: "Grupe"
               title: "Sve grupe"
