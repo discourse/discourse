@@ -5,6 +5,16 @@
       {{d-icon this.lockIcon}}
     {{/if}}
     <span class="category-name">{{dir-span this.category.name}}</span>
+    {{#if this.site.mobileView}}
+      <div class="category-stat">
+        {{html-safe this.category.statTotal}}
+      </div>
+      {{#unless this.category.pickAll}}
+        <div class="category-stat">
+          {{html-safe this.category.stat}}
+        </div>
+      {{/unless}}
+    {{/if}}
   </div>
   {{#if this.category.uploaded_logo.url}}
     <CategoryLogo @category={{this.category}} />

@@ -1011,8 +1011,8 @@ en:
         week: "week"
         month: "month"
       topic_stat_all_time:
-        one: "%{number} total"
-        other: "%{number} total"
+        one: "%{number} topic"
+        other: "%{number} topics"
       topic_stat_sentence_week:
         one: "%{count} new topic in the past week."
         other: "%{count} new topics in the past week."

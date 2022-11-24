@@ -4,8 +4,23 @@
     <table class="topic-list">
       <tbody>
         <tr>
-          <th class="main-link">
+          <th class="main-link" colspan="2">
             <CategoryTitleLink @category={{this.category}} />
+            {{#if this.category.isGrandParent}}
+              {{#each this.category.subcategories as |subcategory|}}
+                <SubCategoryRow @category={{subcategory}} @listType={{this.listType}} />
+              {{/each}}
+            {{else if this.category.subcategories}}
+              <tr class="subcategories-list">
+                <td>
+                  <div class="subcategories">
+                    {{#each this.category.subcategories as |subcategory|}}
+                      <SubCategoryItem @category={{subcategory}} @listType={{this.listType}} />
+                    {{/each}}
+                  </div>
+                </td>
+              </tr>
+            {{/if}}
           </th>
         </tr>
         {{#if this.category.description_excerpt}}
@@ -22,36 +37,7 @@
             {{/each}}
           {{/if}}
         {{/unless}}
-        {{#if this.category.isGrandParent}}
-          {{#each this.category.subcategories as |subcategory|}}
-            <SubCategoryRow @category={{subcategory}} @listType={{this.listType}} />
-          {{/each}}
-        {{else if this.category.subcategories}}
-          <tr class="subcategories-list">
-            <td>
-              <div class="subcategories">
-                {{#each this.category.subcategories as |subcategory|}}
-                  <SubCategoryItem @category={{subcategory}} @listType={{this.listType}} />
-                {{/each}}
-              </div>
-            </td>
-          </tr>
-        {{/if}}
       </tbody>
     </table>
-    <footer class="clearfix category-topics-count">
-      <div class="category-stat">
-        <a href={{this.category.url}}>
-          {{html-safe this.category.statTotal}}
-        </a>
-      </div>
-      {{#unless this.category.pickAll}}
-        <div class="category-stat">
-          <a href={{this.category.url}}>
-            {{html-safe this.category.stat}}
-          </a>
-        </div>
-      {{/unless}}
-    </footer>
   </div>
 {{/unless}}
