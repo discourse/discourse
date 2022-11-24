@@ -162,16 +162,13 @@ acceptance("Admin - Watched Words - Emoji Replacement", function (needs) {
     await click("button.reply-to-post");
     await fillIn(".d-editor-input", "betis betis betis");
     const cooked = query(".d-editor-preview p");
-    const threeEmojis = `<img src="/images/emoji/twitter/poop.png?v=12" title=":poop:" class="emoji only-emoji" alt=":poop:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;"> <img src="/images/emoji/twitter/poop.png?v=12" title=":poop:" class="emoji only-emoji" alt=":poop:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;"> <img src="/images/emoji/twitter/poop.png?v=12" title=":poop:" class="emoji only-emoji" alt=":poop:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;">`;
+    const cookedChildren = Array.from(cooked.children);
+    const emojis = cookedChildren.filter((child) => child.nodeName === "IMG");
+    assert.strictEqual(emojis.length, 3, "three emojis have been rendered");
     assert.strictEqual(
-      cooked.children.length,
-      3,
-      "3 elements have been rendered"
-    );
-    assert.strictEqual(
-      cooked.innerHTML,
-      threeEmojis,
-      "3 emojis have been rendered"
+      emojis.every((emoji) => emoji.title === ":poop:"),
+      true,
+      "all emojis are :poop:"
     );
   });
 });
