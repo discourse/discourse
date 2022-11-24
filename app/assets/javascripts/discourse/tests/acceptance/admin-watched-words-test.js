@@ -8,7 +8,6 @@ import {
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Admin - Watched Words", function (needs) {
   needs.user();
@@ -157,46 +156,10 @@ acceptance("Admin - Watched Words - Emoji Replacement", function (needs) {
       },
     },
   });
-  needs.pretender((server, helper) => {
-    server.get("/admin/customize/watched_words.json", () => {
-      return helper.response({
-        actions: ["block", "censor", "require_approval", "flag", "replace"],
-        words: [
-          {
-            id: 81,
-            word: "betis",
-            regexp: "(?:\\W|^)(betis)(?=\\W|$)",
-            replacement: ":poop:",
-            action: "replace",
-            case_sensitive: false,
-          },
-        ],
-        compiled_regular_expressions: {
-          block: null,
-          censor: null,
-          require_approval: null,
-          flag: null,
-          replace: [
-            {
-              "(?:\\W|^)(betis)(?=\\W|$)": {
-                case_sensitive: false,
-              },
-            },
-          ],
-        },
-      });
-    });
-  });
 
   test("emoji renders successfully after replacement", async function (assert) {
-    await visit("/admin/customize/watched_words/action/replace");
-    // await this.pauseTest();
-    await visit("/");
-    await click("#create-topic");
-    const categoryChooser = selectKit(".category-chooser");
-    await categoryChooser.expand();
-    await categoryChooser.selectRowByValue(2);
-    await fillIn("#reply-title", "Watched Words Replacement Test");
+    await visit("/t/internationalization-localization/280");
+    await click("button.reply-to-post");
     await fillIn(".d-editor-input", "betis betis betis");
     const cooked = query(".d-editor-preview p");
     const threeEmojis = `<img src="/images/emoji/twitter/poop.png?v=12" title=":poop:" class="emoji only-emoji" alt=":poop:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;"> <img src="/images/emoji/twitter/poop.png?v=12" title=":poop:" class="emoji only-emoji" alt=":poop:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;"> <img src="/images/emoji/twitter/poop.png?v=12" title=":poop:" class="emoji only-emoji" alt=":poop:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;">`;
