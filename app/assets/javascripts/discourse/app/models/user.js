@@ -1075,8 +1075,12 @@ const User = RestModel.extend({
     );
   },
 
-  // obsolete, just call "user.timezone" instead
   resolvedTimezone() {
+    deprecated(
+      "You should use `user.user_option.timezone` instead of `resolvedTimezone`",
+      { id: "discourse.user.resovled-timezone" }
+    );
+
     return this.user_option.timezone;
   },
 
