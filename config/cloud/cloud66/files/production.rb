@@ -43,9 +43,6 @@ Discourse::Application.configure do
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
 
-  # this will cause all handlebars templates to be pre-compiles, making your page faster
-  config.handlebars.precompile = true
-
   # this setting enables rack_cache so it caches various requests in redis
   config.enable_rack_cache = true
 
