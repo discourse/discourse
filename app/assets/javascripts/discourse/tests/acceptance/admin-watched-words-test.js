@@ -149,6 +149,14 @@ acceptance("Admin - Watched Words", function (needs) {
 
 acceptance("Admin - Watched Words - Emoji Replacement", function (needs) {
   needs.user();
+  needs.site({
+    watched_words_replace: {
+      "(?:\\W|^)(betis)(?=\\W|$)": {
+        replacement: ":poop:",
+        case_sensitive: false,
+      },
+    },
+  });
   needs.pretender((server, helper) => {
     server.get("/admin/customize/watched_words.json", () => {
       return helper.response({
