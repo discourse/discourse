@@ -88,7 +88,7 @@ export default {
             }
 
             get text() {
-              return htmlSafe(emojiUnescape(this.title));
+              return htmlSafe(emojiUnescape(this.channel.escapedTitle));
             }
 
             get prefixType() {
@@ -104,7 +104,9 @@ export default {
             }
 
             get title() {
-              return this.channel.escapedTitle;
+              return this.channel.escapedDescription
+                ? htmlSafe(this.channel.escapedDescription)
+                : `${this.channel.escapedTitle} ${I18n.t("chat.title")}`;
             }
 
             get prefixBadge() {
@@ -276,7 +278,9 @@ export default {
             }
 
             get title() {
-              return this.channel.escapedTitle;
+              return I18n.t("chat.placeholder_others", {
+                messageRecipient: this.channel.escapedTitle,
+              });
             }
 
             get oneOnOneMessage() {
@@ -284,7 +288,7 @@ export default {
             }
 
             get text() {
-              const username = this.title.replaceAll("@", "");
+              const username = this.channel.escapedTitle.replaceAll("@", "");
               if (this.oneOnOneMessage) {
                 const status = this.channel.chatable.users[0].get("status");
                 const statusHtml = status ? this._userStatusHtml(status) : "";

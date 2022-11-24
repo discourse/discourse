@@ -4,7 +4,6 @@ import Composer from "discourse/models/composer";
 import { getOwner } from "discourse-common/lib/get-owner";
 import PermissionType from "discourse/models/permission-type";
 import EverythingSectionLink from "discourse/lib/sidebar/common/community-section/everything-section-link";
-import TrackedSectionLink from "discourse/lib/sidebar/user/community-section/tracked-section-link";
 import MyPostsSectionLink from "discourse/lib/sidebar/user/community-section/my-posts-section-link";
 import GroupsSectionLink from "discourse/lib/sidebar/common/community-section/groups-section-link";
 import UsersSectionLink from "discourse/lib/sidebar/common/community-section/users-section-link";
@@ -35,7 +34,6 @@ export default class SidebarUserCommunitySection extends SidebarCommonCommunityS
   get defaultMainSectionLinks() {
     return [
       EverythingSectionLink,
-      TrackedSectionLink,
       MyPostsSectionLink,
       AdminSectionLink,
       ReviewSectionLink,

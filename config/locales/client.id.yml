@@ -909,11 +909,6 @@ id:
       dismiss: "Bubar"
       dismiss_notifications: "Bubarkan Semua"
       dismiss_notifications_tooltip: "Tandai semua notifikasi belum dibaca telah dibaca"
-      first_notification: "Notifikasi pertama Anda! Pilih untuk memulai."
-      skip_new_user_tips:
-        not_first_time: "Bukan pertama kali?"
-        skip_link: "Lewati tips ini"
-        read_later: "Aku akan membacanya nanti."
       theme_default_on_all_devices: "Jadikan ini tema default di semua perangkat saya"
       color_scheme_default_on_all_devices: "Setel skema warna default di semua perangkat saya"
       color_scheme: "Skema warna"
@@ -1008,6 +1003,7 @@ id:
         profile: "Profil"
         emails: "Surel"
         notifications: "Pemberitahuan"
+        tracking: "melacak"
         categories: "Kategori"
         users: "Pengguna"
         tags: "Label"
@@ -1145,6 +1141,7 @@ id:
         never: "tidak pernah"
       other_settings: "Lainnya"
       categories_settings: "Kategori"
+      topics_settings: "Topik-topik"
       new_topic_duration:
         last_here: "dibuat sejak terakhir aku kesini"
         after_1_day: "dibuat hari ini"
@@ -1508,6 +1505,7 @@ id:
       select_all: "Pilih Semua"
       title: "Cari"
       full_page_title: "Cari"
+      results: "hasil"
       search_google_button: "Google"
       search_button: "Cari"
       categories: "Kategori"
@@ -1823,8 +1821,6 @@ id:
               content: "Admin"
             faq:
               content: "FAQ"
-            tracked:
-              content: "Dilacak"
             groups:
               content: "Grup"
             users:

@@ -11,21 +11,6 @@ export default class extends Controller {
   @service siteSettings;
   @tracked saved = false;
 
-  saveAttrNames = [
-    "new_topic_duration_minutes",
-    "auto_track_topics_after_msecs",
-    "notification_level_when_replying",
-    "muted_category_ids",
-    "regular_category_ids",
-    "watched_category_ids",
-    "tracked_category_ids",
-    "watched_first_post_category_ids",
-    "muted_tags",
-    "tracked_tags",
-    "watched_tags",
-    "watching_first_post_tags",
-  ];
-
   likeNotificationFrequencies = [
     { name: I18n.t("user.like_notification_frequency.always"), value: 0 },
     {
@@ -121,15 +106,19 @@ export default class extends Controller {
     "model.watchedCategories",
     "model.watchedFirstPostCategories",
     "model.trackedCategories",
-    "model.mutedCategories"
+    "model.mutedCategories",
+    "model.regularCategories",
+    "siteSettings.mute_all_categories_by_default"
   )
   get selectedCategories() {
     return []
       .concat(
-        this.modelwatchedCategories,
+        this.model.watchedCategories,
         this.model.watchedFirstPostCategories,
-        this.model.tracakedCategories,
-        this.model.mutedCategories
+        this.model.trackedCategories,
+        this.siteSettings.mute_all_categories_by_default
+          ? this.model.regularCategories
+          : this.model.mutedCategories
       )
       .filter((t) => t);
   }
@@ -141,6 +130,35 @@ export default class extends Controller {
 
   get canSave() {
     return this.canSee || this.currentUser.admin;
+  }
+
+  @computed(
+    "siteSettings.tagging_enabled",
+    "siteSettings.mute_all_categories_by_default"
+  )
+  get saveAttrNames() {
+    const attrs = [
+      "new_topic_duration_minutes",
+      "auto_track_topics_after_msecs",
+      "notification_level_when_replying",
+      this.siteSettings.mute_all_categories_by_default
+        ? "regular_category_ids"
+        : "muted_category_ids",
+      "watched_category_ids",
+      "tracked_category_ids",
+      "watched_first_post_category_ids",
+    ];
+
+    if (this.siteSettings.tagging_enabled) {
+      attrs.push(
+        "muted_tags",
+        "tracked_tags",
+        "watched_tags",
+        "watching_first_post_tags"
+      );
+    }
+
+    return attrs;
   }
 
   @action

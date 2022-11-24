@@ -497,6 +497,7 @@ be:
         profile: "Профіль"
         emails: "Емейлы"
         notifications: "Натыфікацыі"
+        tracking: "Сачыць"
         categories: "Катэгорыі"
         users: "Карыстальнікі"
         tags: "Цэтлікі"
@@ -599,6 +600,7 @@ be:
         never: "ніколі"
       other_settings: "іншае"
       categories_settings: "Катэгорыі"
+      topics_settings: "тэмы"
       new_topic_duration:
         label: "Лічыць тэмы новымі, калі"
         not_viewed: "я іх яшчэ не прагледзеў"
@@ -883,6 +885,7 @@ be:
       select_all: "выбраць усе"
       title: "Пошук"
       full_page_title: "Пошук"
+      results: "вынікі"
       no_results: "Нічога не знойдзена."
       results_page: "Вынікі пошуку для '%{term}'"
       search_google_button: "Google"

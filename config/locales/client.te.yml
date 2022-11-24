@@ -455,6 +455,7 @@ te:
         security: "సంరక్షణ"
         profile: "ప్రవర"
         notifications: "ప్రకటనలు"
+        tracking: "గమనిస్తున్నారు"
         categories: "వర్గాలు"
         users: "వాడుకరులు"
         tags: "ట్యాగులు"
@@ -552,6 +553,7 @@ te:
         never: "ఎప్పటికీ వద్దు"
       other_settings: "ఇతర"
       categories_settings: "వర్గాలు"
+      topics_settings: "విషయాలు"
       new_topic_duration:
         label: "విషయాలు కొత్తగా భావించు, ఎప్పుడంటే"
         not_viewed: "నేను వాటిని ఇంకా చూడనప్పుడు"
@@ -783,6 +785,7 @@ te:
     search:
       title: "వెతుకు"
       full_page_title: "వెతుకు"
+      results: "ఫలితాలు"
       no_results: "ఎటువంటి ఫలితాలు దొరకలేదు."
       post_format: "%{username} నుండి #%{post_number}"
       search_google_button: "గూగుల్"
@@ -1387,8 +1390,6 @@ te:
               content: "బ్యాడ్జీలు"
             faq:
               content: "తవసం"
-            tracked:
-              content: "గమనించారు"
             groups:
               content: "గుంపులు"
             users:

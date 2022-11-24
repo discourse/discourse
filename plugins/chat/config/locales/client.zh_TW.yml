@@ -159,6 +159,7 @@ zh_TW:
         save: "保存"
         saved: "已儲存"
         unfollow: "離開"
+        admin_title: "管理員"
       incoming_webhooks:
         back: "上一步"
         description: "簡述"

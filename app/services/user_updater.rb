@@ -248,6 +248,13 @@ class UserUpdater
           user_notification_schedule.create_do_not_disturb_timings(delete_existing: true) :
           user_notification_schedule.destroy_scheduled_timings
       end
+      if attributes.key?(:seen_popups) || attributes.key?(:skip_new_user_tips)
+        MessageBus.publish(
+          '/user-tips',
+          user.user_option.seen_popups,
+          user_ids: [user.id]
+        )
+      end
       DiscourseEvent.trigger(:user_updated, user)
     end
 

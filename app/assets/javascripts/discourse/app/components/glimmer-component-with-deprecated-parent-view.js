@@ -4,15 +4,29 @@ import {
   setInternalComponentManager,
 } from "@glimmer/manager";
 import EmberGlimmerComponentManager from "@glimmer/component/-private/ember-component-manager";
+import { valueForRef } from "@glimmer/reference";
 
 class GlimmerComponentWithParentViewManager extends CustomComponentManager {
-  create(owner, componentClass, args, environment, dynamicScope) {
+  create(
+    owner,
+    componentClass,
+    args,
+    environment,
+    dynamicScope,
+    callerSelfRef
+  ) {
     const result = super.create(...arguments);
 
     result.component.parentView = dynamicScope.view;
     dynamicScope.view = result.component;
 
+    result.component._target = valueForRef(callerSelfRef);
+
     return result;
+  }
+
+  getCapabilities() {
+    return { ...super.getCapabilities(), createCaller: true };
   }
 }
 

@@ -6,6 +6,7 @@ import { allowsImages } from "discourse/lib/uploads";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { setting } from "discourse/lib/computed";
+import { isTesting } from "discourse-common/config/environment";
 
 export default Controller.extend(ModalFunctionality, {
   gravatarName: setting("gravatar_name"),
@@ -175,7 +176,11 @@ export default Controller.extend(ModalFunctionality, {
 
       this.user
         .pickAvatar(selectedUploadId, type)
-        .then(() => window.location.reload())
+        .then(() => {
+          if (!isTesting()) {
+            window.location.reload();
+          }
+        })
         .catch(popupAjaxError);
     },
   },

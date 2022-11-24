@@ -6,6 +6,7 @@
 
 it:
   site_settings:
+    chat_enabled: "Abilita il plug-in della chat."
     chat_allowed_groups: "Gli utenti di questi gruppi possono chattare. Tieni presente che lo staff può sempre accedere alla chat."
     chat_channel_retention_days: "I messaggi di chat nei canali normali saranno conservati per i giorni indicati. Impostare il parametro a '0' per conservare i messaggi per sempre."
     chat_dm_retention_days: "I messaggi di chat nei canali di chat personali saranno conservati per i giorni indicati. Impostare il parametro a '0' per conservare i messaggi per sempre."
@@ -22,6 +23,7 @@ it:
     default_emoji_reactions: "Reazioni emoji predefinite per i messaggi di chat. Aggiungi fino a 5 emoji per una reazione rapida."
     direct_message_enabled_groups: "Consenti agli utenti all'interno di questi gruppi di creare chat personali da utente a utente. Nota: lo staff può sempre creare chat personali e gli utenti potranno rispondere alle chat personali avviate da utenti che dispongono dell'autorizzazione per crearle."
     chat_message_flag_allowed_groups: "Gli utenti di questi gruppi possono contrassegnare i messaggi di chat."
+    chat_max_direct_message_users: "Gli utenti non possono aggiungere più utenti di quelli indicati da questa opzione durante la creazione di un nuovo messaggio diretto. Impostare l'opzione a 0 per consentire solo i messaggi a se stessi. Questa impostazione non si applica allo staff."
     errors:
       chat_default_channel: "Il canale di chat predefinito deve essere un canale pubblico."
       direct_message_enabled_groups_invalid: "Devi specificare almeno un gruppo per questa impostazione. Se non vuoi che nessuno al di fuori dello staff possa inviare messaggi diretti, scegli il gruppo dello staff."
@@ -60,6 +62,9 @@ it:
       actor_disallowed_dms: "Hai scelto di impedire agli utenti di inviarti messaggi privati e diretti, quindi non puoi creare nuovi messaggi diretti."
       actor_preventing_target_user_from_dm: "Hai scelto di impedire a %{username} di inviarti messaggi privati e diretti, quindi non puoi creare nuovi messaggi diretti per questo destinatario."
       user_cannot_send_direct_messages: "Spiacenti, non puoi inviare messaggi diretti."
+      over_chat_max_direct_message_users:
+        one: "Puoi creare solo un messaggio diretto a te stesso."
+        other: "Non puoi creare un messaggio diretto con più di altri %{count} utenti."
     reviewables:
       message_already_handled: "Grazie, ma abbiamo già esaminato questo messaggio e stabilito che non è necessario contrassegnarlo di nuovo."
       actions:
@@ -98,8 +103,8 @@ it:
     channel:
       statuses:
         read_only: "Sola lettura"
-        archived: "Archiviati"
-        closed: "Chiusi"
+        archived: "Archiviato"
+        closed: "Chiuso"
         open: "Aperto"
       archive:
         first_post_raw: "Questo argomento è un archivio del canale di chat [%{channel_name}](%{channel_url})."
@@ -110,6 +115,10 @@ it:
         single_user: "%{user}"
         multi_user: "%{users}"
         multi_user_truncated: "%{users} e altri %{leftover}"
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "contiene caratteri non-ascii"
+        is_already_in_use: "è già in uso"
     bookmarkable:
       notification_title: "messaggio in %{channel_name}"
     personal_chat: "chat personale"

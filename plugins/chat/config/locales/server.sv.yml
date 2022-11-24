@@ -23,6 +23,8 @@ sv:
     default_emoji_reactions: "Standardval av emoji-reaktioner för chattmeddelanden. Lägg till upp till 5 emojis som snabbval."
     direct_message_enabled_groups: "Tillåt användare inom dessa grupper att skapa personliga chattar från användare till användare. Obs: personal kan alltid skapa personliga chattar och användare kommer att kunna svara på personliga chattar som initieras av användare som har tillstånd att skapa dem."
     chat_message_flag_allowed_groups: "Användare i dessa grupper får flagga chattmeddelanden."
+    chat_max_direct_message_users: "Användare kan inte lägga till fler än detta antal andra användare när de skapar ett nytt direktmeddelande. Ställ in till 0 för att endast tillåta meddelanden till sig själv. Personalen är undantagen från denna inställning."
+    chat_allow_archiving_channels: "Tillåt att personalen arkiverar meddelanden till ett ämne när en kanal stängs."
     errors:
       chat_default_channel: "Standardchattkanalen måste vara en offentlig kanal."
       direct_message_enabled_groups_invalid: "Du måste ange minst en grupp för den här inställningen. Om du inte vill att någon förutom personal ska skicka direktmeddelanden, välj personalgrupp."
@@ -61,6 +63,9 @@ sv:
       actor_disallowed_dms: "Du har valt att hindra användare från att skicka dig privata och direkta meddelanden, så du kan inte skapa nya direkta meddelanden."
       actor_preventing_target_user_from_dm: "Du har valt att hindra %{username} från att skicka privata och direkta meddelanden, så du kan inte skapa nya direktmeddelanden till dem."
       user_cannot_send_direct_messages: "Tyvärr kan du inte skicka direktmeddelanden."
+      over_chat_max_direct_message_users:
+        one: "Du kan bara skapa ett direktmeddelande med dig själv."
+        other: "Du kan inte skapa ett direktmeddelande med fler än %{count} andra användare."
     reviewables:
       message_already_handled: "Tack, men vi har redan granskat det här meddelandet och beslutat att det inte behöver flaggas igen."
       actions:

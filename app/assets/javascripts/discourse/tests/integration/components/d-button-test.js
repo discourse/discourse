@@ -5,6 +5,7 @@ import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import { hbs } from "ember-cli-htmlbars";
 import ClassicComponent from "@ember/component";
+import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
 
 module("Integration | Component | d-button", function (hooks) {
   setupRenderingTest(hooks);
@@ -266,16 +267,48 @@ module("Integration | Component | d-button", function (hooks) {
           this.legacyActionTriggered();
         },
       },
+      layout: hbs`<DButton @action="myLegacyAction" />`,
     });
 
-    await render(
-      hbs`<this.classicComponent @legacyActionTriggered={{this.legacyActionTriggered}}>
-          <DButton @action="myLegacyAction" />
-        </this.classicComponent>
-        `
+    await withSilencedDeprecationsAsync(
+      "discourse.d-button-action-string",
+      async () => {
+        await render(
+          hbs`<this.classicComponent @legacyActionTriggered={{this.legacyActionTriggered}} />`
+        );
+
+        await click(".btn");
+      }
     );
 
-    await click(".btn");
+    assert.strictEqual(this.foo, "bar");
+  });
+
+  test("Uses correct target with @action string when component called with block", async function (assert) {
+    this.set("foo", null);
+    this.set("legacyActionTriggered", () => this.set("foo", "bar"));
+
+    this.simpleWrapperComponent = ClassicComponent.extend();
+
+    this.classicComponent = ClassicComponent.extend({
+      actions: {
+        myLegacyAction() {
+          this.legacyActionTriggered();
+        },
+      },
+      layout: hbs`<@simpleWrapperComponent><DButton @action="myLegacyAction" /></@simpleWrapperComponent>`,
+    });
+
+    await withSilencedDeprecationsAsync(
+      "discourse.d-button-action-string",
+      async () => {
+        await render(
+          hbs`<this.classicComponent @legacyActionTriggered={{this.legacyActionTriggered}} @simpleWrapperComponent={{this.simpleWrapperComponent}} />`
+        );
+
+        await click(".btn");
+      }
+    );
 
     assert.strictEqual(this.foo, "bar");
   });

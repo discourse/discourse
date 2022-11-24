@@ -82,6 +82,7 @@ uk:
         save: "Зберегти"
         saved: "Збережено"
         unfollow: "Покинути"
+        admin_title: "Адміністратор"
       incoming_webhooks:
         back: "Назад"
         description: "Опис"

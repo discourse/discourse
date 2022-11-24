@@ -774,7 +774,7 @@ Discourse::Application.routes.draw do
       get "/" => "list#category_default", as: "category_default"
     end
 
-    get "hashtags" => "hashtags#show"
+    get "hashtags" => "hashtags#lookup"
     get "hashtags/search" => "hashtags#search"
 
     TopTopic.periods.each do |period|
@@ -1037,6 +1037,7 @@ Discourse::Application.routes.draw do
     post "/presence/update" => "presence#update"
     get "/presence/get" => "presence#get"
 
+    get "user-status" => "user_status#get"
     put "user-status" => "user_status#set"
     delete "user-status" => "user_status#clear"
 

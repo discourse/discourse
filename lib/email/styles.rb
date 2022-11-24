@@ -185,6 +185,7 @@ module Email
       correct_first_body_margin
       correct_footer_style
       correct_footer_style_highlight_first
+      decorate_hashtags
       reset_tables
 
       html_lang = SiteSetting.default_locale.sub("_", "-")
@@ -320,6 +321,16 @@ module Email
           img.add_previous_sibling(img['title'] || "emoji")
           img.remove
         end
+      end
+    end
+
+    def decorate_hashtags
+      @fragment.search(".hashtag-cooked").each do |hashtag|
+        hashtag_text = hashtag.search("span").first
+        hashtag_text.add_next_sibling(<<~HTML)
+          <span>##{hashtag["data-slug"]}</span>
+        HTML
+        hashtag_text.remove
       end
     end
 

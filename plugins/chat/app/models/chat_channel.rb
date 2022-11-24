@@ -76,11 +76,11 @@ class ChatChannel < ActiveRecord::Base
   end
 
   def url
-    "#{Discourse.base_url}#{relative_url}"
+    "#{Discourse.base_url}/chat/channel/#{self.id}/#{self.slug || "-"}"
   end
 
   def relative_url
-    "/chat/channel/#{self.id}/#{self.slug || "-"}"
+    "#{Discourse.base_path}/chat/channel/#{self.id}/#{self.slug || "-"}"
   end
 
   private

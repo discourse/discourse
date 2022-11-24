@@ -257,8 +257,13 @@ class Badge < ActiveRecord::Base
   end
 
   def default_allow_title=(val)
-    return unless self.new_record?
-    self.allow_title ||= val
+    return if !self.new_record?
+    self.allow_title = val
+  end
+
+  def default_enabled=(val)
+    return if !self.new_record?
+    self.enabled = val
   end
 
   def default_badge_grouping_id=(val)

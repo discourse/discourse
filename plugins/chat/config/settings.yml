@@ -6,7 +6,7 @@ chat:
     client: true
     type: group_list
     list_type: compact
-    default: "3" # 3 is staff group id
+    default: "3|11" # 3: @staff, 11: @trust_level_1
     allow_any: false
     refresh: true
   needs_chat_seeded:
@@ -85,14 +85,14 @@ chat:
     hidden: true
     client: true
   direct_message_enabled_groups:
-    default: "11" # auto group trust_level_1
+    default: "11" # @trust_level_1
     type: group_list
     client: true
     allow_any: false
     refresh: true
     validator: "DirectMessageEnabledGroupsValidator"
   chat_message_flag_allowed_groups:
-    default: "11" # auto group trust_level_1
+    default: "11" # @trust_level_1
     type: group_list
     client: true
     allow_any: false

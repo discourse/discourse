@@ -157,6 +157,7 @@ after_initialize do
   load File.expand_path("../app/serializers/user_chat_message_bookmark_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/reviewable_chat_message_serializer.rb", __FILE__)
   load File.expand_path("../lib/chat_channel_fetcher.rb", __FILE__)
+  load File.expand_path("../lib/chat_channel_hashtag_data_source.rb", __FILE__)
   load File.expand_path("../lib/chat_mailer.rb", __FILE__)
   load File.expand_path("../lib/chat_message_creator.rb", __FILE__)
   load File.expand_path("../lib/chat_message_processor.rb", __FILE__)
@@ -228,10 +229,6 @@ after_initialize do
     ReviewableScore.add_new_types([:needs_review])
 
     Site.preloaded_category_custom_fields << Chat::HAS_CHAT_ENABLED
-    Site.markdown_additional_options["chat"] = {
-      limited_pretty_text_features: ChatMessage::MARKDOWN_FEATURES,
-      limited_pretty_text_markdown_rules: ChatMessage::MARKDOWN_IT_RULES,
-    }
 
     Guardian.prepend Chat::GuardianExtensions
     UserNotifications.prepend Chat::UserNotificationsExtension
@@ -719,6 +716,19 @@ after_initialize do
   register_about_stat_group("chat_channels") { Chat::Statistics.about_channels }
 
   register_about_stat_group("chat_users") { Chat::Statistics.about_users }
+
+  # Make sure to update spec/system/hashtag_autocomplete_spec.rb when changing this.
+  register_hashtag_data_source("channel", Chat::ChatChannelHashtagDataSource)
+  register_hashtag_type_in_context("channel", "chat-composer", 200)
+  register_hashtag_type_in_context("category", "chat-composer", 100)
+  register_hashtag_type_in_context("tag", "chat-composer", 50)
+  register_hashtag_type_in_context("channel", "topic-composer", 10)
+
+  Site.markdown_additional_options["chat"] = {
+    limited_pretty_text_features: ChatMessage::MARKDOWN_FEATURES,
+    limited_pretty_text_markdown_rules: ChatMessage::MARKDOWN_IT_RULES,
+    hashtag_configurations: HashtagAutocompleteService.contexts_with_ordered_types,
+  }
 end
 
 if Rails.env == "test"

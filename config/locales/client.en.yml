@@ -2038,6 +2038,7 @@ en:
       blank_username_or_password: "Please enter your email or username, and password."
       reset_password: "Reset Password"
       logging_in: "Signing In..."
+      previous_sign_up: "Already have an account?"
       or: "Or"
       authenticating: "Authenticating..."
       awaiting_activation: "Your account is awaiting activation, use the forgot password link to issue another activation email."
@@ -4179,6 +4180,8 @@ en:
       redirect_after_success: "Second factor authentication is successful. Redirecting to the previous page…"
 
     sidebar:
+      show_sidebar: "Show sidebar"
+      hide_sidebar: "Hide sidebar"
       unread_count:
         one: "%{count} unread"
         other: "%{count} unread"
@@ -4238,9 +4241,6 @@ en:
               title: "All topics"
             faq:
               content: "FAQ"
-            tracked:
-              content: "Tracked"
-              title: "All tracked topics"
             groups:
               content: "Groups"
               title: "All groups"
@@ -4249,7 +4249,8 @@ en:
               title: "All users"
             my_posts:
               content: "My Posts"
-              title: "My posts"
+              title: "My recent topic activity"
+              title_drafts: "My unposted drafts"
               draft_count:
                 one: "%{count} draft"
                 other: "%{count} drafts"
@@ -4517,6 +4518,9 @@ en:
               anonymize: Anonymize user accounts.
               delete: Delete user accounts.
               list: Get a list of users.
+            user_status:
+              read: Read user status.
+              update: Update user status.
             email:
               receive_emails: Combine this scope with the mail-receiver to process incoming emails.
             badges:

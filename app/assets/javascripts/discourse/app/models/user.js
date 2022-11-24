@@ -1173,26 +1173,27 @@ const User = RestModel.extend({
       return;
     }
 
-    // Hide any shown user tips.
+    // Hide user tips and maybe show the next one.
+    if (userTipId) {
+      hideUserTip(userTipId);
+      showNextUserTip();
+    } else {
+      hideAllUserTips();
+    }
+
+    // Update list of seen user tips.
     let seenUserTips = this.seen_popups || [];
     if (userTipId) {
       if (seenUserTips.includes(userTips[userTipId])) {
         return;
       }
-
-      hideUserTip(userTipId);
       seenUserTips.push(userTips[userTipId]);
     } else {
       if (seenUserTips.includes(-1)) {
         return;
       }
-
-      hideAllUserTips();
       seenUserTips = [-1];
     }
-
-    // Show next user tip in queue.
-    showNextUserTip();
 
     // Save seen user tips on the server.
     if (!this.user_option) {

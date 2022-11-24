@@ -6,7 +6,7 @@
 class PostCreator
   include HasErrors
 
-  attr_reader :opts
+  attr_reader :opts, :post
 
   # Acceptable options:
   #
@@ -161,7 +161,7 @@ class PostCreator
       return false
     end
 
-    DiscourseEvent.trigger :before_create_post, @post
+    DiscourseEvent.trigger :before_create_post, @post, @opts
     DiscourseEvent.trigger :validate_post, @post
 
     post_validator = PostValidator.new(skip_topic: true)

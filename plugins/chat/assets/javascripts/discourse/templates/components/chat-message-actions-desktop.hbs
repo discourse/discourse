@@ -21,7 +21,7 @@
     {{/if}}
 
     {{#if this.secondaryButtons.length}}
-      <DropdownSelectBox @class="more-buttons" @options={{hash icon="ellipsis-v" placement="bottom-end"}} @content={{this.secondaryButtons}} @onChange={{action "handleSecondaryButtons"}} />
+      <DropdownSelectBox @class="more-buttons" @options={{hash icon="ellipsis-v" placement="left"}} @content={{this.secondaryButtons}} @onChange={{action "handleSecondaryButtons"}} />
     {{/if}}
   </div>
 </div>

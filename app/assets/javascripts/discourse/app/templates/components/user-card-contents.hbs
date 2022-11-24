@@ -196,11 +196,11 @@
             {{/if}}
             {{#if this.showCheckEmail}}
               <h3 class="email">
-                {{d-icon "far-envelope" title="user.email.title"}}
+                {{d-icon "envelope" title="user.email.title"}}
                 {{#if this.user.email}}
                   {{this.user.email}}
                 {{else}}
-                  <DButton @action={{action "checkEmail"}} @actionParam={{this.user}} @icon="far-envelope" @label="admin.users.check_email.text" @class="btn-primary" />
+                  <DButton @action={{action "checkEmail"}} @actionParam={{this.user}} @icon="envelope" @label="admin.users.check_email.text" @class="btn-primary" />
                 {{/if}}
               </h3>
             {{/if}}

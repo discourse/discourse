@@ -7,6 +7,9 @@
 de:
   js:
     admin:
+      site_settings:
+        categories:
+          chat: Chat
       logs:
         staff_actions:
           actions:
@@ -51,6 +54,10 @@ de:
         leave_channel: "Kanal verlassen"
         join: "Beitreten"
         leave: "Verlassen"
+        save_label:
+          mute_channel: "Einstellung für „Kanal stummschalten“ gespeichert"
+          desktop_notification: "Einstellung für Desktop-Benachrichtigungen gespeichert"
+          mobile_notification: "Einstellung für mobile Push-Benachrichtigungen gespeichert"
       channel_archive:
         title: "Kanal archivieren"
         instructions: "<p>Das Archivieren eines Kanals versetzt ihn in den schreibgeschützten Modus und verschiebt alle Nachrichten aus dem Kanal in ein neues oder vorhandenes Thema. Es können keine neuen Nachrichten gesendet und keine bestehenden Nachrichten bearbeitet oder gelöscht werden.</p><p>Möchtest du den Kanal <strong>%{channelTitle}</strong> wirklich archivieren?</p>"
@@ -58,7 +65,7 @@ de:
         retry: "Erneut versuchen"
       channel_open:
         title: "Kanal öffnen"
-        instructions: "Wenn du den Kanal wieder öffnest, können alle Benutzer Nachrichten senden und ihre bestehenden Nachrichten bearbeiten."
+        instructions: "Öffnet den Kanal wieder. Alle Benutzer können Nachrichten senden und ihre bestehenden Nachrichten bearbeiten."
       channel_close:
         title: "Kanal schließen"
         instructions: "Das Schließen des Kanals verhindert, dass Nicht-Teammitglieder neue Nachrichten senden oder bestehende Nachrichten bearbeiten können. Bist du sicher, dass du diesen Kanal schließen möchtest?"
@@ -177,6 +184,7 @@ de:
         open_header: "Kanal ist offen"
         open: "Offen"
       browse:
+        back: "Zurück"
         title: Kanäle
         filter_all: Alle
         filter_open: Offen
@@ -266,8 +274,8 @@ de:
         mention: "Nur für Erwähnungen"
         always: "Für alle Aktivitäten"
       settings:
-        enable_auto_join_users: "Automatisch alle kürzlich aktiven Benutzer hinzufügen"
-        disable_auto_join_users: "Benutzer nicht mehr automatisch hinzufügen"
+        auto_join_users_label: "Benutzer automatisch hinzufügen"
+        auto_join_users_info: "Stündlich prüfen, welche Benutzer in den letzten 3 Monaten aktiv waren, und zu diesem Kanal hinzufügen, falls sie Zugriff auf die Kategorie %{category} haben."
         auto_join_users_warning: "Jeder Benutzer, der kein Mitglied dieses Kanals ist und Zugriff auf die Kategorie %{category} hat, wird beitreten. Bist du dir sicher?"
         desktop_notification_level: "Desktop-Benachrichtigungen"
         follow: "Beitreten"
@@ -281,6 +289,8 @@ de:
         save: "Speichern"
         saved: "Gespeichert"
         unfollow: "Verlassen"
+        admin_title: "Administrator"
+        retention_info: "Der Chat-Verlauf wird für %{days} Tage gespeichert."
       admin:
         title: "Chat"
       direct_messages:
@@ -317,7 +327,7 @@ de:
         instructions: "Eingehende Webhooks können von externen Systemen verwendet werden, um Nachrichten als Bot-Benutzer über den Endpunkt <code>/hooks/:key</code> in einem bestimmten Chat-Kanal zu posten. Die Payload besteht aus einem einzigen <code>text</code>-Parameter, der auf 2000 Zeichen begrenzt ist.<br><br>Wir unterstützen auch in begrenztem Umfang Slack-formatierte <code>text</code>-Parameter und extrahieren Links und Erwähnungen basierend auf dem Format unter <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a>, aber dazu muss der Endpunkt <code>/hooks/:key/slack</code> verwendet werden."
       selection:
         cancel: "Abbrechen"
-        quote_selection: "Zitat im Thema"
+        quote_selection: "In Thema zitieren"
         copy: "Kopieren"
         move_selection_to_channel: "In Kanal verschieben"
         error: "Beim Verschieben der Chat-Nachrichten ist ein Fehler aufgetreten"
