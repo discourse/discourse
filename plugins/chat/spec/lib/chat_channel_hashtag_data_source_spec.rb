@@ -55,20 +55,10 @@ RSpec.describe Chat::ChatChannelHashtagDataSource do
   end
 
   describe "#search" do
-    it "finds a channel by category name" do
+    it "does not find channels by category name" do
       category.update!(name: "Randomizer")
       result = described_class.search(guardian, "randomiz", 10).first
-      expect(result.to_h).to eq(
-        {
-          relative_url: channel1.relative_url,
-          text: "Zany Things",
-          description: "Just weird stuff",
-          icon: "comment",
-          type: "channel",
-          ref: nil,
-          slug: "random",
-        },
-      )
+      expect(result.to_h).to eq({})
     end
 
     it "finds a channel by slug" do

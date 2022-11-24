@@ -30,8 +30,8 @@ a.hashtag-cooked {
 }
 
 .hashtag-autocomplete {
-  max-height: 300px;
-  overflow-y: scroll;
+  max-height: 210px;
+  overflow-y: auto;
 
   .hashtag-autocomplete__option {
     .hashtag-autocomplete__link {
@@ -46,6 +46,9 @@ a.hashtag-cooked {
       .hashtag-autocomplete__text {
         flex: 1;
         margin-left: 0;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
 
         .emoji {
           width: 15px;
