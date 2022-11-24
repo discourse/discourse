@@ -99,8 +99,15 @@ module Chat::ChatChannelFetcher
     channels = channels.where(status: options[:status]) if options[:status].present?
 
     if options[:filter].present?
+      category_filter = \
+        if options[:filter_on_category_name]
+          "OR categories.name ILIKE :filter"
+        else
+          ""
+        end
+
       sql =
-        "chat_channels.name ILIKE :filter OR chat_channels.slug ILIKE :filter OR categories.name ILIKE :filter"
+        "chat_channels.name ILIKE :filter OR chat_channels.slug ILIKE :filter #{category_filter}"
       channels =
         channels.where(sql, filter: "%#{options[:filter].downcase}%").order(
           "chat_channels.name ASC, categories.name ASC",
@@ -142,7 +149,7 @@ module Chat::ChatChannelFetcher
     channels =
       secured_public_channel_search(
         guardian,
-        options.merge(include_archives: true),
+        options.merge(include_archives: true, filter_on_category_name: true),
       )
     decorate_memberships_with_tracking_data(guardian, channels, memberships)
     channels = channels.to_a
