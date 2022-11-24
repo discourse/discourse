@@ -1132,6 +1132,11 @@ en:
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
       dismiss_bookmarks_tooltip: "Mark all unread bookmark reminders as read"
       dismiss_messages_tooltip: "Mark all unread personal messages notifications as read"
+      no_likes_title: "You haven't received any likes yet"
+      no_likes_body: >
+        You will be notified here any time someone likes one of your posts so you can see what others are finding valuable. Others will see the same when you like their posts too!
+        <br><br>
+        Notifications for likes are never emailed to you, but you can tune how you receive notifications about likes on the site in your <a href='%{preferencesUrl}'>notification preferences</a>.
       no_messages_title: "You don’t have any messages"
       no_messages_body: >
         Need to have a direct personal conversation with someone, outside the normal conversational flow? Message them by selecting their avatar and using the %{icon} message button.<br><br>
