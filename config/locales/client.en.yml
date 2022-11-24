@@ -4518,6 +4518,9 @@ en:
               anonymize: Anonymize user accounts.
               delete: Delete user accounts.
               list: Get a list of users.
+            user_status:
+              read: Read user status.
+              update: Update user status.
             email:
               receive_emails: Combine this scope with the mail-receiver to process incoming emails.
             badges:
