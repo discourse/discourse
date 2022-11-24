@@ -3914,7 +3914,6 @@ tr_TR:
               title: "Tüm kullanıcılar"
             my_posts:
               content: "Gönderilerim"
-              title: "Gönderilerim"
               draft_count:
                 one: "%{count} taslak"
                 other: "%{count} taslak"

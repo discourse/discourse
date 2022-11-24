@@ -492,7 +492,6 @@ tr_TR:
 
       Herkesin benzersiz bir profil resmi olduğunda, tartışmaları takip etmek ve konuşmalarda ilginç insanlar bulmak daha kolay!
     sequential_replies: "### Aynı anda birkaç gönderiye yanıt vermeyi denediniz \nBunun yerine yerine, lütfen önceki gönderilerden alıntılar veya @name referansları içeren tek bir yanıt veriniz.\nMetni vurgulayıp görünen <b>alıntı</b> düğmesini seçerek önceki yanıtınızı düzenleyebilirsiniz. Böylece diğer kullanıcıların, yanıtlarınızı okuması daha kolay olacaktır.\n"
-    dominating_topic: Yanıtların %%{percent} kadarından fazlasını buraya gönderdiniz; diğer insanlara da katkıda bulunma fırsatı vermenizi önerebilir miyiz?
     get_a_room: '@%{reply_username} %{count} kez yanıt verdiniz, bunun yerine ona kişisel bir ileti gönderebileceğinizi biliyor muydunuz?'
     too_many_replies: |
       ### Bu konu için yanıt limitinizi doldurdunuz

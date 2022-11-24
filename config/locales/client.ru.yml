@@ -4239,7 +4239,6 @@ ru:
               title: "Все пользователи"
             my_posts:
               content: "Мои записи"
-              title: "Мои записи"
               draft_count:
                 one: "%{count} черновик"
                 few: "%{count} черновика"

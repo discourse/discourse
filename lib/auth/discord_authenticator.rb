@@ -70,4 +70,9 @@ class Auth::DiscordAuthenticator < Auth::ManagedAuthenticator
 
     super
   end
+
+  # the `info` block above only picks the email from Discord API if it's verified
+  def primary_email_verified?(auth_token)
+    true
+  end
 end

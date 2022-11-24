@@ -9,11 +9,13 @@ class CategoryHashtagDataSource
   end
 
   def self.category_to_hashtag_item(guardian_categories, category)
-    category = Category.new(category.slice(:id, :slug, :name, :parent_category_id))
+    category =
+      Category.new(category.slice(:id, :slug, :name, :parent_category_id, :description))
 
     HashtagAutocompleteService::HashtagItem.new.tap do |item|
       item.text = category.name
       item.slug = category.slug
+      item.description = category.description_text
       item.icon = icon
       item.relative_url = category.url
 

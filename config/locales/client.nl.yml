@@ -3913,7 +3913,6 @@ nl:
               title: "Alle gebruikers"
             my_posts:
               content: "Mijn berichten"
-              title: "Mijn berichten"
               draft_count:
                 one: "%{count} concept"
                 other: "%{count} concepten"

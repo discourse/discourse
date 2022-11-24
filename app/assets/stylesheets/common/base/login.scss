@@ -5,6 +5,7 @@ $invite-mobile-bg: absolute-image-url("/branded-background-mobile.svg");
   color: var(--danger);
   font-size: var(--font-down-1);
   font-weight: bold;
+  margin-top: 0.5em;
 }
 
 .discourse-no-touch #login-form {
@@ -48,7 +49,7 @@ body.invite-page {
     background-repeat: no-repeat;
     background-position: bottom;
   }
-  .d-header {
+  .d-header .panel.clearfix {
     display: none;
   }
 }
@@ -152,9 +153,6 @@ body.invite-page {
       display: flex;
       flex-direction: column;
       margin-bottom: 0.8em;
-      &:last-child {
-        margin-bottom: 2em;
-      }
       input,
       .select-kit-header {
         padding: 0.75em 0.77em;
@@ -249,6 +247,14 @@ body.invite-page {
     .user-fields .input-group {
       .user-field {
         &.text {
+          &.value-entered label.control-label {
+            top: -8px;
+            left: calc(1em - 0.25em);
+            background-color: var(--secondary);
+            padding: 0 0.25em 0 0.25em;
+            font-size: 14px;
+            color: var(--primary-medium);
+          }
           label.control-label {
             color: var(--primary-medium);
             font-size: 16px;
@@ -262,15 +268,6 @@ body.invite-page {
             display: inline-block;
             overflow: hidden;
             text-overflow: ellipsis;
-          }
-          &.value-entered label.control-label,
-          label.control-label.value-entered {
-            top: -8px;
-            left: calc(1em - 0.25em);
-            background-color: var(--secondary);
-            padding: 0 0.25em 0 0.25em;
-            font-size: 14px;
-            color: var(--primary-medium);
           }
         }
         span.name {
@@ -339,6 +336,7 @@ body.invite-page {
   }
 }
 
+// admin invite page
 .invites-show {
   display: grid;
   justify-content: center;
@@ -359,8 +357,7 @@ body.invite-page {
   .invite-form {
     margin-bottom: 50px;
     box-shadow: 0 4px 19px 6px rgba(0, 0, 0, 0.05);
-    padding: 1em 3em;
-    max-width: calc(33em - 6em);
+    max-width: calc(30em);
     .tip {
       display: block;
     }
@@ -389,10 +386,6 @@ body.invite-page {
   }
 
   form {
-    margin-top: 24px;
-    button.btn-primary {
-      margin-top: 10px;
-    }
     .controls,
     .input {
       margin-bottom: 10px;
@@ -407,6 +400,25 @@ body.invite-page {
     .tip {
       font-size: var(--font-down-1);
       margin-bottom: 0.25em;
+    }
+  }
+
+  .invitation-cta {
+    display: flex;
+    align-items: center;
+    margin-top: 2em;
+    &__accept {
+      margin-right: 1em;
+    }
+    &__signed-up {
+      margin-right: 0.5em;
+    }
+    &__sign-in {
+      padding: 0;
+      &.btn-flat.btn-text:not([disabled]):active {
+        background-color: transparent;
+        background-image: none;
+      }
     }
   }
 }

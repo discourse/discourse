@@ -497,7 +497,6 @@ nl:
       Je kunt je eerdere antwoord bewerken om een citaat toe te voegen door tekst te markeren en de knop <b>Bericht citeren</b> die verschijnt te selecteren.
 
       Het is voor iedereen makkelijker om topics te lezen die minder, maar uitgebreidere antwoorden bevatten dan met veel kleine, individuele antwoorden.
-    dominating_topic: Je hebt hier meer dan %{percent}% van de antwoorden geplaatst. Mogen we je aanraden andere mensen de kans te geven om mee te doen?
     get_a_room: Je hebt %{count} keer geantwoord @%{reply_username}. Wist je dat je ze in plaats daarvan een persoonlijk bericht kunt sturen?
     too_many_replies: |
       ### Je hebt de antwoordlimiet voor dit topic bereikt

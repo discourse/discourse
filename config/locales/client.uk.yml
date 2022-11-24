@@ -4276,7 +4276,6 @@ uk:
               title: "Всі користувачі"
             my_posts:
               content: "Мої дописи"
-              title: "Мої дописи"
               draft_count:
                 one: "%{count} чернетка"
                 few: "%{count} чернетки"

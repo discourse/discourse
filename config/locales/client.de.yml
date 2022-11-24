@@ -3911,7 +3911,6 @@ de:
               title: "Alle Benutzer"
             my_posts:
               content: "Meine Beiträge"
-              title: "Meine Beiträge"
               draft_count:
                 one: "%{count} Entwurf"
                 other: "%{count} Entwürfe"

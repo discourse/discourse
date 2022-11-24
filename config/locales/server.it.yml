@@ -497,7 +497,6 @@ it:
       Puoi modificare la risposta precedente per aggiungere una citazione evidenziando il testo e selezionando il pulsante <b>Cita</b> che comparirà.
 
       E' più facile per chiunque leggere argomenti che hanno poche risposte ma più dettagliate, rispetto a molte brevi risposte singole.
-    dominating_topic: Hai pubblicato più del %{percent}% delle risposte qui; ti suggeriamo di dare anche ad altri l'opportunità di intervenire.
     get_a_room: Abbiamo notato che hai già risposto %{count} volte a @%{reply_username}. Sapevi che puoi anche scambiare messaggi personali con questa persona?
     too_many_replies: |
       ### Hai raggiungo il limite di risposte per questo argomento

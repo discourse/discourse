@@ -2036,6 +2036,10 @@ developer:
     default: false
     client: true
     hidden: true
+  experimental_hashtag_search_result_limit:
+    default: 20
+    client: true
+    hidden: true
   enable_new_user_profile_nav_groups:
     client: true
     type: group_list
@@ -2311,7 +2315,7 @@ uncategorized:
   educate_until_posts: 2
   sequential_replies_threshold: 2
   get_a_room_threshold: 3
-  dominating_topic_minimum_percent: 20
+  dominating_topic_minimum_percent: 40
   disable_avatar_education_message: false
   pm_warn_user_last_seen_months_ago: 24
 

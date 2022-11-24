@@ -2038,6 +2038,7 @@ en:
       blank_username_or_password: "Please enter your email or username, and password."
       reset_password: "Reset Password"
       logging_in: "Signing In..."
+      previous_sign_up: "Already have an account?"
       or: "Or"
       authenticating: "Authenticating..."
       awaiting_activation: "Your account is awaiting activation, use the forgot password link to issue another activation email."

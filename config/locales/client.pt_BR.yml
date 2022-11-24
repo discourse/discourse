@@ -3915,7 +3915,6 @@ pt_BR:
               title: "Todos(as) os(as) usuários(as)"
             my_posts:
               content: "Minhas postagens"
-              title: "Minhas postagens"
               draft_count:
                 one: "%{count} rascunho"
                 other: "%{count} rascunhos"
