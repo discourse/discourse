@@ -713,6 +713,10 @@ class TopicView
     @mentioned_users = mentioned_users.to_h { |u| [u.username, u] }
   end
 
+  def tags
+    @topic.tags.map(&:name)
+  end
+
   protected
 
   def read_posts_set
@@ -814,13 +818,9 @@ class TopicView
   end
 
   def find_topic(topic_or_topic_id)
-    if topic_or_topic_id.is_a?(Topic)
-      topic_or_topic_id
-    else
-      # with_deleted covered in #check_and_raise_exceptions
-      finder = Topic.with_deleted.where(id: topic_or_topic_id).includes(:category)
-      finder.first
-    end
+    return topic_or_topic_id if topic_or_topic_id.is_a?(Topic)
+    # with_deleted covered in #check_and_raise_exceptions
+    Topic.with_deleted.includes(:category, :tags).find_by(id: topic_or_topic_id)
   end
 
   def unfiltered_posts
