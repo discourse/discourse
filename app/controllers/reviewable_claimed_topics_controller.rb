@@ -38,11 +38,10 @@ class ReviewableClaimedTopicsController < ApplicationController
   private
 
   def notify_users(topic, claimed_by)
-    user_ids = User.staff.pluck(:id)
+    group_ids = Set.new([Group::AUTO_GROUPS[:staff]])
 
     if SiteSetting.enable_category_group_moderation? && group_id = topic.category&.reviewable_by_group_id.presence
-      user_ids.concat(GroupUser.where(group_id: group_id).pluck(:user_id))
-      user_ids.uniq!
+      group_ids.add(group_id)
     end
 
     if claimed_by.present?
@@ -51,6 +50,6 @@ class ReviewableClaimedTopicsController < ApplicationController
       data = { topic_id: topic.id }
     end
 
-    MessageBus.publish("/reviewable_claimed", data, user_ids: user_ids)
+    MessageBus.publish("/reviewable_claimed", data, group_ids: group_ids.to_a)
   end
 end
