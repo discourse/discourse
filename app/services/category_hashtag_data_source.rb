@@ -9,8 +9,7 @@ class CategoryHashtagDataSource
   end
 
   def self.category_to_hashtag_item(guardian_categories, category)
-    category =
-      Category.new(category.slice(:id, :slug, :name, :parent_category_id, :description))
+    category = Category.new(category.slice(:id, :slug, :name, :parent_category_id, :description))
 
     HashtagAutocompleteService::HashtagItem.new.tap do |item|
       item.text = category.name
@@ -50,5 +49,14 @@ class CategoryHashtagDataSource
       end
       .take(limit)
       .map { |category| category_to_hashtag_item(guardian_categories, category) }
+  end
+
+  def self.search_sort(search_results, term)
+    search_results
+      .select { |item| item.slug == term }
+      .sort_by { |item| item.text.downcase }
+      .concat(
+        search_results.select { |item| item.slug != term }.sort_by { |item| item.text.downcase },
+      )
   end
 end

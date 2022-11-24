@@ -197,11 +197,12 @@ class HashtagAutocompleteService
       next if !all_data_items_valid?(search_results)
 
       search_results =
-        search_results
-          .reject do |item|
+        @@data_sources[type].search_sort(
+          search_results.reject do |item|
             limited_results.any? { |exact| exact.type == type && exact.slug === item.slug }
-          end
-          .sort_by { |item| item.text.downcase }
+          end,
+          term,
+        )
 
       top_ranked_type = type if top_ranked_type.nil?
       limited_results.concat(search_results)

@@ -43,6 +43,10 @@ RSpec.describe HashtagAutocompleteService do
           end
         end
     end
+
+    def self.search_sort(search_results, _)
+      search_results.sort_by { |item| item.text.downcase }
+    end
   end
 
   describe ".contexts_with_ordered_types" do
@@ -163,6 +167,19 @@ RSpec.describe HashtagAutocompleteService do
 
       expect(subject.search("book", %w[category tag bookmark]).map(&:ref)).to eq(
         %w[book-club book-club::tag great-books book-club::bookmark],
+      )
+    end
+
+    it "orders categories by exact match (ignoring parent/child distinction) and name then name for everything else" do
+      category2 = Fabricate(:category, name: "Book Library", slug: "book-library")
+      category3 = Fabricate(:category, name: "Horror", slug: "book", parent_category: category2)
+      category4 = Fabricate(:category, name: "Romance", slug: "romance-books")
+      category5 =
+        Fabricate(:category, name: "Abstract Philosophy", slug: "abstract-philosophy-books")
+      category6 = Fabricate(:category, name: "Book Reviews", slug: "book-reviews")
+      category7 = Fabricate(:category, name: "Good Books", slug: "book", parent_category: category6)
+      expect(subject.search("book", %w[category]).map(&:ref)).to eq(
+        %w[book-reviews:book book-library:book abstract-philosophy-books book-club book-library book-reviews romance-books],
       )
     end
 
