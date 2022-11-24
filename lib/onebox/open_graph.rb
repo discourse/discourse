@@ -22,6 +22,8 @@ module Onebox
 
     private
 
+    COLLECTIONS = %i[article_section article_section_color article_tag]
+
     def extract(doc)
       return {} if Onebox::Helpers.blank?(doc)
 
@@ -33,7 +35,14 @@ module Onebox
           if (m["property"] && m["property"][/^(?:og|article|product):(.+)$/i]) ||
                (m["name"] && m["name"][/^(?:og|article|product):(.+)$/i])
             value = (m["content"] || m["value"]).to_s
-            data[$1.tr("-:", "_").to_sym] ||= value unless Onebox::Helpers.blank?(value)
+            next if Onebox::Helpers.blank?(value)
+            key = $1.tr("-:", "_").to_sym
+            data[key] ||= value
+            if key.in?(COLLECTIONS)
+              collection_name = "#{key}s".to_sym
+              data[collection_name] ||= []
+              data[collection_name] << value
+            end
           end
         end
 

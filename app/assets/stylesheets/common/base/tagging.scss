@@ -131,7 +131,8 @@
 .discourse-tags {
   display: inline-flex;
   flex-wrap: wrap;
-  a {
+  a,
+  span {
     margin-right: 0.25em;
   }
 }
