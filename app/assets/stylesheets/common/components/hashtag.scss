@@ -30,6 +30,9 @@ a.hashtag-cooked {
 }
 
 .hashtag-autocomplete {
+  max-height: 300px;
+  overflow-y: scroll;
+
   .hashtag-autocomplete__option {
     .hashtag-autocomplete__link {
       align-items: center;

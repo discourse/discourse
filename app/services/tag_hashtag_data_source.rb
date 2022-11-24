@@ -28,7 +28,6 @@ class TagHashtagDataSource
 
   def self.lookup(guardian, slugs)
     return [] if !SiteSetting.tagging_enabled
-
     DiscourseTagging
       .filter_visible(Tag.where_name(slugs), guardian)
       .map { |tag| tag_to_hashtag_item(tag) }
@@ -46,6 +45,7 @@ class TagHashtagDataSource
         for_input: true,
         order_search_results: true,
       )
+
     TagsController
       .tag_counts_json(tags_with_counts)
       .take(limit)
