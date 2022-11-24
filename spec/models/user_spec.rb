@@ -2997,6 +2997,21 @@ RSpec.describe User do
       user.update!(last_seen_reviewable_id: group_reviewable.id)
       expect(user.unseen_reviewable_count).to eq(0)
     end
+
+    it "doesn't include reviewables that are claimed by other users" do
+      user.update!(admin: true)
+
+      claimed_by_user = Fabricate(:reviewable, topic: Fabricate(:topic))
+      Fabricate(:reviewable_claimed_topic, topic: claimed_by_user.topic, user: user)
+
+      user2 = Fabricate(:user)
+      claimed_by_user2 = Fabricate(:reviewable, topic: Fabricate(:topic))
+      Fabricate(:reviewable_claimed_topic, topic: claimed_by_user2.topic, user: user2)
+
+      unclaimed = Fabricate(:reviewable, topic: Fabricate(:topic))
+
+      expect(user.unseen_reviewable_count).to eq(5)
+    end
   end
 
   describe "#bump_last_seen_reviewable!" do
@@ -3061,7 +3076,7 @@ RSpec.describe User do
       expect(messages.first).to have_attributes(
         channel: "/reviewable_counts/#{user.id}",
         user_ids: [user.id],
-        data: { unseen_reviewable_count: 0 }
+        data: { unseen_reviewable_count: 0, reviewable_count: 1 }
       )
     end
   end

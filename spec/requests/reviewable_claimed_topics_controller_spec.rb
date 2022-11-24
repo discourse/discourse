@@ -17,12 +17,11 @@ RSpec.describe ReviewableClaimedTopicsController do
 
     context "when logged in" do
       before do
+        SiteSetting.reviewable_claiming = 'optional'
         sign_in(moderator)
       end
 
       it "works" do
-        SiteSetting.reviewable_claiming = 'optional'
-
         messages = MessageBus.track_publish("/reviewable_claimed") do
           post "/reviewable_claimed_topics.json", params: params
           expect(response.status).to eq(200)
@@ -61,7 +60,6 @@ RSpec.describe ReviewableClaimedTopicsController do
       end
 
       it "works with deleted topics" do
-        SiteSetting.reviewable_claiming = 'optional'
         first_post = topic.first_post || Fabricate(:post, topic: topic)
         PostDestroyer.new(Discourse.system_user, first_post).destroy
 
@@ -72,19 +70,40 @@ RSpec.describe ReviewableClaimedTopicsController do
       end
 
       it "raises an error if user cannot claim the topic" do
+        SiteSetting.reviewable_claiming = 'disabled'
         post "/reviewable_claimed_topics.json", params: params
 
         expect(response.status).to eq(403)
       end
 
       it "raises an error if topic is already claimed" do
-        SiteSetting.reviewable_claiming = 'optional'
-
         post "/reviewable_claimed_topics.json", params: params
         expect(ReviewableClaimedTopic.where(user_id: moderator.id, topic_id: topic.id).exists?).to eq(true)
 
         post "/reviewable_claimed_topics.json", params: params
         expect(response.status).to eq(409)
+      end
+
+      it "queues a sidekiq job to refresh reviewable counts for users who can see the reviewable" do
+        SiteSetting.enable_experimental_sidebar_hamburger = true
+        SiteSetting.enable_category_group_moderation = true
+
+        not_notified = Fabricate(:user)
+
+        group = Fabricate(:group)
+        topic.category.update!(reviewable_by_group: group)
+        reviewable.update!(reviewable_by_group: group)
+
+        notified = Fabricate(:user)
+        group.add(notified)
+
+        expect_enqueued_with(
+          job: :refresh_users_reviewable_counts,
+          args: { group_ids: [Group::AUTO_GROUPS[:staff], group.id] }
+        ) do
+          post "/reviewable_claimed_topics.json", params: params
+          expect(response.status).to eq(200)
+        end
       end
     end
   end
@@ -136,6 +155,29 @@ RSpec.describe ReviewableClaimedTopicsController do
       delete "/reviewable_claimed_topics/#{claimed.topic_id}.json"
 
       expect(response.status).to eq(403)
+    end
+
+    it "queues a sidekiq job to refresh reviewable counts for users who can see the reviewable" do
+      SiteSetting.reviewable_claiming = 'optional'
+      SiteSetting.enable_experimental_sidebar_hamburger = true
+      SiteSetting.enable_category_group_moderation = true
+
+      not_notified = Fabricate(:user)
+
+      group = Fabricate(:group)
+      topic.category.update!(reviewable_by_group: group)
+      reviewable.update!(reviewable_by_group: group)
+
+      notified = Fabricate(:user)
+      group.add(notified)
+
+      expect_enqueued_with(
+        job: :refresh_users_reviewable_counts,
+        args: { group_ids: [Group::AUTO_GROUPS[:staff], group.id] }
+      ) do
+        delete "/reviewable_claimed_topics/#{claimed.topic_id}.json"
+        expect(response.status).to eq(200)
+      end
     end
   end
 end

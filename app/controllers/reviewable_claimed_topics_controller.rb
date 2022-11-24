@@ -51,5 +51,8 @@ class ReviewableClaimedTopicsController < ApplicationController
     end
 
     MessageBus.publish("/reviewable_claimed", data, group_ids: group_ids.to_a)
+    if SiteSetting.enable_experimental_sidebar_hamburger
+      Jobs.enqueue(:refresh_users_reviewable_counts, group_ids: group_ids.to_a)
+    end
   end
 end

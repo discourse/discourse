@@ -245,6 +245,28 @@ RSpec.describe NotificationsController do
             ])
           end
 
+          it "doesn't include reviewables that are claimed by someone that's not the current user" do
+            SiteSetting.enable_experimental_sidebar_hamburger = true
+            user.update!(admin: true)
+
+            claimed_by_user = Fabricate(:reviewable, topic: Fabricate(:topic), created_at: 5.minutes.ago)
+            Fabricate(:reviewable_claimed_topic, topic: claimed_by_user.topic, user: user)
+
+            user2 = Fabricate(:user)
+            claimed_by_user2 = Fabricate(:reviewable, topic: Fabricate(:topic))
+            Fabricate(:reviewable_claimed_topic, topic: claimed_by_user2.topic, user: user2)
+
+            unclaimed = Fabricate(:reviewable, topic: Fabricate(:topic), created_at: 10.minutes.ago)
+
+            get "/notifications.json", params: { recent: true }
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["pending_reviewables"].map { |r| r["id"] }).to eq([
+              pending_reviewable.id,
+              claimed_by_user.id,
+              unclaimed.id,
+            ])
+          end
+
           it "doesn't include reviewables when the setting is disabled" do
             SiteSetting.enable_experimental_sidebar_hamburger = false
             user.update!(admin: true)
