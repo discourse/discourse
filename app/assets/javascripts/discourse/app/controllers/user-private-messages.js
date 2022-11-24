@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { alias, and, equal, readOnly } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
-import { VIEW_NAME_WARNINGS } from "discourse/routes/user-private-messages-warnings";
+import { VIEW_NAME_WARNINGS } from "discourse/routes/user-private-messages-user-warnings";
 import I18n from "I18n";
 
 export const PERSONAL_INBOX = "__personal_inbox__";
@@ -23,11 +23,6 @@ export default Controller.extend({
   tagId: null,
 
   showNewPM: and("user.viewingSelf", "currentUser.can_send_private_messages"),
-
-  @discourseComputed("viewingSelf", "pmView", "currentUser.admin")
-  showWarningsWarning(viewingSelf, pmView, isAdmin) {
-    return pmView === VIEW_NAME_WARNINGS && !viewingSelf && !isAdmin;
-  },
 
   @discourseComputed(
     "pmTopicTrackingState.newIncoming.[]",
