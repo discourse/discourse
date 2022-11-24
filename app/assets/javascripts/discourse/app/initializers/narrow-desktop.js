@@ -20,9 +20,11 @@ export default {
               "controller:application"
             );
             site.set("narrowDesktopView", newNarrowDesktopView);
-            applicationController.set("showSidebar", !newNarrowDesktopView);
+            if (newNarrowDesktopView) {
+              applicationController.set("showSidebar", false);
+            }
             applicationController.appEvents.trigger(
-              "sidebar-toggle:force-refresh"
+              "site-header:force-refresh"
             );
           }
         }
