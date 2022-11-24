@@ -40,8 +40,6 @@ Discourse::Application.configure do
   config.active_record.migration_error = :page_load
   config.watchable_dirs['lib'] = [:rb]
 
-  config.handlebars.precompile = true
-
   # we recommend you use mailhog https://github.com/mailhog/MailHog
   config.action_mailer.smtp_settings = { address: "localhost", port: 1025 }
 
