@@ -1,4 +1,5 @@
 import EmberObject, { computed, get, getProperties } from "@ember/object";
+import { camelize } from "@ember/string";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import {
@@ -434,22 +435,17 @@ const User = RestModel.extend({
           fields === undefined ||
           fields.includes(`${categoryNotificationLevel}_category_ids`)
         ) {
-          const prop =
-            categoryNotificationLevel === "watched_first_post"
-              ? "watchedFirstPostCategories"
-              : `${categoryNotificationLevel}Categories`;
+          const categories = this.get(
+            `${camelize(categoryNotificationLevel)}Categories`
+          );
 
-          const cats = this.get(prop);
-          if (cats) {
-            let cat_ids = cats.map((c) => c.get("id"));
-            updatedState[`${categoryNotificationLevel}_category_ids`] = cat_ids;
-
-            // HACK: denote lack of categories
-            if (cats.length === 0) {
-              cat_ids = [-1];
-            }
-
-            data[`${categoryNotificationLevel}_category_ids`] = cat_ids;
+          if (categories) {
+            const ids = categories.map((c) => c.get("id"));
+            updatedState[`${categoryNotificationLevel}_category_ids`] = ids;
+            // HACK: Empty arrays are not sent in the request, we use [-1],
+            // an invalid category ID, that will be ignored by the server.
+            data[`${categoryNotificationLevel}_category_ids`] =
+              ids.length === 0 ? [-1] : ids;
           }
         }
       }
