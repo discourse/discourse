@@ -10,7 +10,7 @@ import { test } from "qunit";
 import I18n from "I18n";
 import { hbs } from "ember-cli-htmlbars";
 import showModal from "discourse/lib/show-modal";
-import Ember from "ember";
+import { registerTemplateModule } from "../helpers/template-module-helper";
 
 acceptance("Modal", function (needs) {
   let _translations;
@@ -54,9 +54,10 @@ acceptance("Modal", function (needs) {
     await triggerKeyEvent("#main-outlet", "keydown", "Escape");
     assert.ok(!exists(".d-modal:visible"), "ESC should close the modal");
 
-    Ember.TEMPLATES[
-      "modal/not-dismissable"
-    ] = hbs`{{#d-modal-body title="" class="" dismissable=false}}test{{/d-modal-body}}`;
+    registerTemplateModule(
+      "discourse/templates/modal/not-dismissable",
+      hbs`{{#d-modal-body title="" class="" dismissable=false}}test{{/d-modal-body}}`
+    );
 
     showModal("not-dismissable", {});
     await settled();
@@ -78,7 +79,10 @@ acceptance("Modal", function (needs) {
   });
 
   test("rawTitle in modal panels", async function (assert) {
-    Ember.TEMPLATES["modal/test-raw-title-panels"] = hbs``;
+    registerTemplateModule(
+      "discourse/templates/modal/test-raw-title-panels",
+      hbs``
+    );
     const panels = [
       { id: "test1", rawTitle: "Test 1" },
       { id: "test2", rawTitle: "Test 2" },
@@ -96,10 +100,11 @@ acceptance("Modal", function (needs) {
   });
 
   test("modal title", async function (assert) {
-    Ember.TEMPLATES["modal/test-title"] = hbs``;
-    Ember.TEMPLATES[
-      "modal/test-title-with-body"
-    ] = hbs`{{#d-modal-body}}test{{/d-modal-body}}`;
+    registerTemplateModule("discourse/templates/modal/test-title", hbs``);
+    registerTemplateModule(
+      "discourse/templates/modal/test-title-with-body",
+      hbs`{{#d-modal-body}}test{{/d-modal-body}}`
+    );
 
     await visit("/");
 

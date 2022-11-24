@@ -1,6 +1,6 @@
 import { buildRawConnectorCache } from "discourse-common/lib/raw-templates";
 import deprecated from "discourse-common/lib/deprecated";
-import Ember from "ember";
+import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 
 let _connectorCache;
 let _rawConnectorCache;
@@ -25,11 +25,11 @@ const DefaultConnectorClass = {
   teardownComponent() {},
 };
 
-function findOutlets(collection, callback) {
-  Object.keys(collection).forEach(function (res) {
-    if (res.includes("/connectors/")) {
-      const segments = res.split("/");
-      let outletName = segments[segments.length - 2];
+function findOutlets(keys, callback) {
+  keys.forEach(function (res) {
+    const segments = res.split("/");
+    if (segments.includes("connectors")) {
+      const outletName = segments[segments.length - 2];
       const uniqueName = segments[segments.length - 1];
 
       callback(outletName, res, uniqueName);
@@ -45,7 +45,7 @@ export function clearCache() {
 function findClass(outletName, uniqueName) {
   if (!_classPaths) {
     _classPaths = {};
-    findOutlets(require._eak_seen, (outlet, res, un) => {
+    findOutlets(Object.keys(require._eak_seen), (outlet, res, un) => {
       const possibleConnectorClass = requirejs(res).default;
       if (possibleConnectorClass.__id) {
         // This is the template, not the connector class
@@ -63,20 +63,31 @@ function findClass(outletName, uniqueName) {
     : DefaultConnectorClass;
 }
 
+/**
+ * Clear the cache of connectors. Should only be used in tests when
+ * `requirejs.entries` is changed.
+ */
+export function expireConnectorCache() {
+  _connectorCache = null;
+}
+
 function buildConnectorCache() {
   _connectorCache = {};
 
-  findOutlets(Ember.TEMPLATES, (outletName, resource, uniqueName) => {
-    _connectorCache[outletName] = _connectorCache[outletName] || [];
+  findOutlets(
+    DiscourseTemplateMap.keys(),
+    (outletName, resource, uniqueName) => {
+      _connectorCache[outletName] = _connectorCache[outletName] || [];
 
-    _connectorCache[outletName].push({
-      outletName,
-      templateName: resource.replace("javascripts/", ""),
-      template: Ember.TEMPLATES[resource],
-      classNames: `${outletName}-outlet ${uniqueName}`,
-      connectorClass: findClass(outletName, uniqueName),
-    });
-  });
+      _connectorCache[outletName].push({
+        outletName,
+        templateName: resource,
+        template: require(DiscourseTemplateMap.resolve(resource)).default,
+        classNames: `${outletName}-outlet ${uniqueName}`,
+        connectorClass: findClass(outletName, uniqueName),
+      });
+    }
+  );
 }
 
 export function connectorsFor(outletName) {
