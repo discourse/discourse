@@ -829,7 +829,7 @@ RSpec.describe TopicQuery do
 
     context 'with whispers' do
       before do
-        SiteSetting.enable_whispers = true
+        SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
       end
 
       it 'correctly shows up in unread for staff' do
@@ -1079,13 +1079,8 @@ RSpec.describe TopicQuery do
   end
 
   describe '#list_related_for' do
-    let(:user) do
-      Fabricate(:admin)
-    end
-
-    let(:sender) do
-      Fabricate(:admin)
-    end
+    let(:user) { Fabricate(:user) }
+    let(:sender) { Fabricate(:user) }
 
     let(:group_with_user) do
       group = Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone])

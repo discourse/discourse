@@ -997,8 +997,8 @@ RSpec.describe Guardian do
       end
 
       it 'respects whispers' do
-        SiteSetting.enable_whispers = true
-        SiteSetting.whispers_allowed_groups = "#{group.id}"
+        SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}|#{group.id}"
+
         regular_post = post
         whisper_post = Fabricate(:post, post_type: Post.types[:whisper])
 

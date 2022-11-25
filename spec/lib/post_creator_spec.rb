@@ -1046,7 +1046,7 @@ RSpec.describe PostCreator do
     end
 
     it 'does not add whisperers to allowed users of the topic' do
-      SiteSetting.enable_whispers = true
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
       unrelated_user.update!(admin: true)
 
       PostCreator.create!(

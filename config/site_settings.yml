@@ -328,9 +328,6 @@ basic:
     default: 2
     min: 0
     max: 6
-  enable_whispers:
-    client: true
-    default: false
   whispers_allowed_groups:
     client: true
     type: group_list
