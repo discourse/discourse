@@ -770,4 +770,36 @@ RSpec.describe Plugin::Instance do
       expect(About.displayed_plugin_stat_groups).to eq([])
     end
   end
+
+  describe "#register_user_destroyer_on_content_deletion_callback" do
+    let(:plugin) { Plugin::Instance.new }
+
+    after do
+      DiscoursePluginRegistry.reset_register!(:user_destroyer_on_content_deletion_callbacks)
+    end
+
+    fab!(:user) { Fabricate(:user) }
+
+    it "calls the callback when the UserDestroyer runs with the delete_posts opt set to true" do
+      callback_called = false
+
+      cb = Proc.new { callback_called = true }
+      plugin.register_user_destroyer_on_content_deletion_callback(cb)
+
+      UserDestroyer.new(Discourse.system_user).destroy(user, { delete_posts: true })
+
+      expect(callback_called).to eq(true)
+    end
+
+    it "doesn't run the callback when delete_posts opt is not true" do
+      callback_called = false
+
+      cb = Proc.new { callback_called = true }
+      plugin.register_user_destroyer_on_content_deletion_callback(cb)
+
+      UserDestroyer.new(Discourse.system_user).destroy(user, {})
+
+      expect(callback_called).to eq(false)
+    end
+  end
 end

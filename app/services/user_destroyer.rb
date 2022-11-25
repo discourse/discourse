@@ -35,6 +35,10 @@ class UserDestroyer
       category_topic_ids = Category.where("topic_id IS NOT NULL").pluck(:topic_id)
 
       if opts[:delete_posts]
+        DiscoursePluginRegistry.user_destroyer_on_content_deletion_callbacks.each do |cb|
+          cb.call(user, @guardian, opts)
+        end
+
         agree_with_flags(user) if opts[:delete_as_spammer]
         block_external_urls(user) if opts[:block_urls]
         delete_posts(user, category_topic_ids, opts)
