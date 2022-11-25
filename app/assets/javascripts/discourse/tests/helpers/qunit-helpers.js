@@ -11,10 +11,6 @@ import {
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
-import {
-  forceNarrowDesktop,
-  resetNarrowDesktop,
-} from "discourse/lib/narrow-desktop";
 import { getApplication, settled } from "@ember/test-helpers";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { run } from "@ember/runloop";
@@ -292,7 +288,6 @@ export function acceptance(name, optionsOrCallback) {
 
   let loggedIn = false;
   let mobileView = false;
-  let narrowDesktopView = false;
   let siteChanges;
   let settingChanges;
   let userChanges;
@@ -300,15 +295,10 @@ export function acceptance(name, optionsOrCallback) {
   const setup = {
     beforeEach() {
       resetMobile();
-      resetNarrowDesktop();
 
       resetExtraClasses();
       if (mobileView) {
         forceMobile();
-      }
-
-      if (narrowDesktopView) {
-        forceNarrowDesktop();
       }
 
       if (loggedIn) {
@@ -342,7 +332,6 @@ export function acceptance(name, optionsOrCallback) {
 
     afterEach() {
       resetMobile();
-      resetNarrowDesktop();
       let app = getApplication();
       options?.afterEach?.call(this);
       if (loggedIn) {
@@ -371,9 +360,6 @@ export function acceptance(name, optionsOrCallback) {
     },
     mobileView() {
       mobileView = true;
-    },
-    narrowDesktopView() {
-      narrowDesktopView = true;
     },
   };
 

@@ -13,12 +13,4 @@ const NarrowDesktop = {
   },
 };
 
-export function forceNarrowDesktop() {
-  narrowDesktopForced = true;
-}
-
-export function resetNarrowDesktop() {
-  narrowDesktopForced = false;
-}
-
 export default NarrowDesktop;

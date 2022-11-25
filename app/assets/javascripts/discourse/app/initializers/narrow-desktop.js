@@ -5,7 +5,10 @@ export default {
 
   initialize(container) {
     NarrowDesktop.init();
-    const site = container.lookup("service:site");
+    const site = container?.lookup("service:site");
+    if (!site) {
+      return;
+    }
     site.set("narrowDesktopView", NarrowDesktop.narrowDesktopView);
 
     if ("ResizeObserver" in window) {
@@ -30,9 +33,9 @@ export default {
         }
       });
 
-      const mainElement = document.querySelector("#main");
-      if (mainElement) {
-        this._resizeObserver.observe(mainElement);
+      const bodyElement = document.querySelector("body");
+      if (bodyElement) {
+        this._resizeObserver.observe(bodyElement);
       }
     }
   },
