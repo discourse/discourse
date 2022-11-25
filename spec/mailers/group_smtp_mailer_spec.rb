@@ -35,6 +35,7 @@ RSpec.describe GroupSmtpMailer do
       Message-ID: <a52f67a3d3560f2a35276cda8519b10b595623bcb66912bb92df6651ad5f75be@mail.gmail.com>
       Subject: Hello from John
       To: "bugs@gmail.com" <bugs@gmail.com>
+      Cc: someotherperson@test.com
       Content-Type: text/plain; charset="UTF-8"
 
       Hello,
@@ -75,6 +76,7 @@ RSpec.describe GroupSmtpMailer do
 
     sent_mail = ActionMailer::Base.deliveries[0]
     expect(sent_mail.to).to contain_exactly('john@doe.com')
+    expect(sent_mail.cc).to contain_exactly('someotherperson@test.com')
     expect(sent_mail.reply_to).to eq(nil)
     expect(sent_mail.subject).to eq('Re: Hello from John')
     expect(sent_mail.to_s).to include(raw)

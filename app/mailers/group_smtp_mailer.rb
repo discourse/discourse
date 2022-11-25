@@ -3,7 +3,7 @@
 class GroupSmtpMailer < ActionMailer::Base
   include Email::BuildEmailHelper
 
-  def send_mail(from_group, to_address, post, cc_addresses = nil)
+  def send_mail(from_group, to_address, post, cc_addresses: nil, bcc_addresses: nil)
     raise 'SMTP is disabled' if !SiteSetting.enable_smtp
 
     op_incoming_email = post.topic.first_post.incoming_email
@@ -46,7 +46,8 @@ class GroupSmtpMailer < ActionMailer::Base
       from: from_group.smtp_from_address,
       from_alias: I18n.t('email_from_without_site', group_name: group_name),
       html_override: html_override(post),
-      cc: cc_addresses
+      cc: cc_addresses,
+      bcc: bcc_addresses
     )
   end
 

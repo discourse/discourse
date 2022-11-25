@@ -98,6 +98,10 @@ module Email
         email_log.cc_user_ids = User.with_email(cc_addresses).pluck(:id)
       end
 
+      if bcc_addresses.any?
+        email_log.bcc_addresses = bcc_addresses.join(";")
+      end
+
       host = Email::Sender.host_for(Discourse.base_url)
 
       post_id   = header_value('X-Discourse-Post-Id')
@@ -297,6 +301,12 @@ module Email
     def cc_addresses
       @cc_addresses ||= begin
         @message.try(:cc) || []
+      end
+    end
+
+    def bcc_addresses
+      @bcc_addresses ||= begin
+        @message.try(:bcc) || []
       end
     end
 
