@@ -97,7 +97,7 @@ export default Service.extend({
   },
 
   _renderFavicon() {
-    if (this.currentUser && this.currentUser.user_option.dynamic_favicon) {
+    if (this.currentUser?.user_option.dynamic_favicon) {
       let url = this.siteSettings.site_favicon_url;
 
       // Since the favicon is cached on the browser for a really long time, we

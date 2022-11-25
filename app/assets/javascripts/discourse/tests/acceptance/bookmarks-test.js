@@ -171,7 +171,7 @@ acceptance("Bookmarking", function (needs) {
     await click("#save-bookmark");
 
     assert.equal(
-      User.current().user_option.bookmark_auto_delete_preference,
+      User.currentProp("user_option.bookmark_auto_delete_preference"),
       "1"
     );
 
