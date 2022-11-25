@@ -16,12 +16,13 @@ RSpec.describe Jobs::RefreshUsersReviewableCounts do
     SiteSetting.enable_category_group_moderation = true
     group.add(user)
     topic.category.update!(reviewable_by_group: group)
+    Group.refresh_automatic_groups!
   end
 
   describe '#execute' do
-    it "publishes reviewable counts for the specified users" do
+    it "publishes reviewable counts for the members of the specified groups" do
       messages = MessageBus.track_publish do
-        described_class.new.execute(user_ids: [moderator.id, admin.id])
+        described_class.new.execute(group_ids: [Group::AUTO_GROUPS[:staff]])
       end
       expect(messages.size).to eq(2)
 
@@ -32,12 +33,9 @@ RSpec.describe Jobs::RefreshUsersReviewableCounts do
       expect(moderator_message.channel).to eq("/reviewable_counts/#{moderator.id}")
 
       messages = MessageBus.track_publish do
-        described_class.new.execute(user_ids: [moderator.id, user.id])
+        described_class.new.execute(group_ids: [group.id])
       end
-      expect(messages.size).to eq(2)
-
-      moderator_message = messages.find { |m| m.user_ids == [moderator.id] }
-      expect(moderator_message.channel).to eq("/reviewable_counts/#{moderator.id}")
+      expect(messages.size).to eq(1)
 
       user_message = messages.find { |m| m.user_ids == [user.id] }
       expect(user_message.channel).to eq("/reviewable_counts/#{user.id}")
@@ -45,7 +43,7 @@ RSpec.describe Jobs::RefreshUsersReviewableCounts do
 
     it "published counts respect reviewables visibility" do
       messages = MessageBus.track_publish do
-        described_class.new.execute(user_ids: [moderator.id, admin.id, user.id])
+        described_class.new.execute(group_ids: [Group::AUTO_GROUPS[:staff], group.id])
       end
       expect(messages.size).to eq(3)
 
