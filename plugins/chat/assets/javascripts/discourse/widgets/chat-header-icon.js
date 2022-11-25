@@ -64,13 +64,21 @@ export default createWidget("header-chat-link", {
   },
 
   click() {
-    if (this.chatStateManager.isFullPageActive && !this.site.mobileView) {
+    if (this.chatStateManager.isFullPageActive && this.site.desktopView) {
       return;
     }
 
-    return this.router.transitionTo(
-      this.chatStateManager.lastKnownChatURL || "chat"
-    );
+    if (this.chatStateManager.isFullPageActive && this.site.mobileView) {
+      return this.router.transitionTo("chat");
+    }
+
+    if (this.chatStateManager.isDrawerActive) {
+      return this.router.transitionTo("chat");
+    } else {
+      return this.router.transitionTo(
+        this.chatStateManager.lastKnownChatURL || "chat"
+      );
+    }
   },
 
   chatRerenderHeader() {
