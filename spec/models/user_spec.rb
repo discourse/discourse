@@ -2188,6 +2188,18 @@ RSpec.describe User do
         expect(message.data[:all_unread_notifications_count]).to eq(2)
         expect(message.data[:grouped_unread_notifications]).to eq({ 1 => 1, 15 => 1 })
       end
+
+      it "adds new_personal_messages_notifications_count to the payload" do
+        Fabricate(:notification, user: user, notification_type: Notification.types[:private_message], read: false)
+
+        messages = MessageBus.track_publish("/notification/#{user.id}") do
+          user.publish_notifications_state
+        end
+        expect(messages.size).to eq(1)
+
+        message = messages.first
+        expect(message.data[:new_personal_messages_notifications_count]).to eq(1)
+      end
     end
   end
 
@@ -3116,6 +3128,53 @@ RSpec.describe User do
         expect(admin.secure_category_ids).not_to include(private_category.id)
       end
     end
+  end
 
+  describe '#new_personal_messages_notifications_count' do
+    it "returns count of new and unread private_message notifications of the user" do
+      another_user = Fabricate(:user)
+
+      Fabricate(:notification, user: user, read: false)
+
+      last_seen_id = Fabricate(
+        :notification,
+        user: user,
+        read: false,
+        notification_type: Notification.types[:private_message]
+      ).id
+
+      expect(user.new_personal_messages_notifications_count).to eq(1)
+
+      Fabricate(
+        :notification,
+        user: user,
+        read: false,
+        notification_type: Notification.types[:private_message]
+      )
+
+      Fabricate(
+        :notification,
+        user: another_user,
+        read: false,
+        notification_type: Notification.types[:private_message]
+      )
+
+      Fabricate(
+        :notification,
+        user: user,
+        read: true,
+        notification_type: Notification.types[:private_message]
+      )
+
+      Fabricate(
+        :notification,
+        user: user,
+        read: false,
+        notification_type: Notification.types[:replied]
+      )
+
+      user.update!(seen_notification_id: last_seen_id)
+      expect(user.new_personal_messages_notifications_count).to eq(1)
+    end
   end
 end

@@ -2383,6 +2383,12 @@ en:
         high_priority:
           one: "%{count} unread high priority notification"
           other: "%{count} unread high priority notifications"
+        new_message_notification:
+          one: "%{count} new message notification"
+          other: "%{count} new message notifications"
+        new_reviewable:
+          one: "%{count} new reviewable"
+          other: "%{count} new reviewables"
       title: "notifications of @name mentions, replies to your posts and topics, messages, etc"
       none: "Unable to load notifications at this time."
       empty: "No notifications found."
