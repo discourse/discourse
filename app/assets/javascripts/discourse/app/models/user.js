@@ -136,7 +136,11 @@ function userOption(userOptionKey) {
     get(key) {
       deprecated(
         `Getting ${key} property of user object is deprecated. Use user_option object instead`,
-        { id: "discourse.user.userOptions" }
+        {
+          id: "discourse.user.userOptions",
+          since: "2.9.0.beta12",
+          dropFrom: "3.0.0.beta1",
+        }
       );
 
       return this.get(`user_option.${key}`);
@@ -145,7 +149,11 @@ function userOption(userOptionKey) {
     set(key, value) {
       deprecated(
         `Setting ${key} property of user object is deprecated. Use user_option object instead`,
-        { id: "discourse.user.userOptions" }
+        {
+          id: "discourse.user.userOptions",
+          since: "2.9.0.beta12",
+          dropFrom: "3.0.0.beta1",
+        }
       );
 
       if (!this.user_option) {
@@ -1077,8 +1085,12 @@ const User = RestModel.extend({
 
   resolvedTimezone() {
     deprecated(
-      "You should use `user.user_option.timezone` instead of `resolvedTimezone`",
-      { id: "discourse.user.resovled-timezone" }
+      "user.resolvedTimezone() has been deprecated. Use user.user_option.timezone instead",
+      {
+        id: "discourse.user.resolved-timezone",
+        since: "2.9.0.beta12",
+        dropFrom: "3.0.0.beta1",
+      }
     );
 
     return this.user_option.timezone;
