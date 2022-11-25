@@ -15,19 +15,20 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
   needs.hooks.beforeEach(function () {
     window.innerWidth = 1280;
   });
+  needs.hooks.afterEach(function () {
+    $("body").width(1280);
+  });
 
   test("wide sidebar is changed to cloak when resize to narrow screen", async function (assert) {
     await visit("/");
     await settled();
-
     assert.ok(exists("#d-sidebar"), "wide sidebar is displayed");
 
     await click(".header-sidebar-toggle .btn");
 
     assert.ok(!exists("#d-sidebar"), "widge sidebar is collapsed");
 
-    $("body").width(500);
-
+    $("body").width(1000);
     await settled();
     await click(".btn-sidebar-toggle");
     await settled();

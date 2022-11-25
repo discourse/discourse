@@ -5,14 +5,17 @@ export default {
 
   initialize(container) {
     NarrowDesktop.init();
-    const site = container?.lookup("service:site");
-    if (!site) {
-      return;
+    let site;
+    if (!container.isDestroyed) {
+      site = container.lookup("service:site");
+      site.set("narrowDesktopView", NarrowDesktop.narrowDesktopView);
     }
-    site.set("narrowDesktopView", NarrowDesktop.narrowDesktopView);
 
     if ("ResizeObserver" in window) {
       this._resizeObserver = new ResizeObserver((entries) => {
+        if (container.isDestroyed) {
+          return;
+        }
         for (let entry of entries) {
           const oldNarrowDesktopView = site.narrowDesktopView;
           const newNarrowDesktopView = NarrowDesktop.isNarrowDesktopView(
