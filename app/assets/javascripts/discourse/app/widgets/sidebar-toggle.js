@@ -14,7 +14,9 @@ export default createWidget("sidebar-toggle", {
         action: this.site.narrowDesktopView
           ? "toggleHamburger"
           : "toggleSidebar",
-        className: "btn btn-flat btn-sidebar-toggle",
+        className: `btn btn-flat btn-sidebar-toggle ${
+          this.site.narrowDesktopView ? "narrow-desktop" : ""
+        }`,
         ariaExpanded: attrs.showSidebar ? "true" : "false",
         ariaControls: "d-sidebar",
       }),

@@ -1,6 +1,6 @@
 import { test } from "qunit";
 
-import { click, settled, visit } from "@ember/test-helpers";
+import { click, settled, visit, waitUntil } from "@ember/test-helpers";
 
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
@@ -29,9 +29,14 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
     assert.ok(!exists("#d-sidebar"), "widge sidebar is collapsed");
 
     $("body").width(1000);
-    await settled();
+
+    await waitUntil(
+      () => document.querySelector(".btn-sidebar-toggle.narrow-desktop"),
+      {
+        timeout: 5000,
+      }
+    );
     await click(".btn-sidebar-toggle");
-    await settled();
 
     assert.ok(
       exists(".sidebar-hamburger-dropdown"),
@@ -39,7 +44,6 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
     );
 
     await click("#main-outlet");
-
     assert.ok(
       !exists(".sidebar-hamburger-dropdown"),
       "cloak sidebar is collapsed"

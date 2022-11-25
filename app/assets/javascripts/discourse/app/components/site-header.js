@@ -486,7 +486,7 @@ export default SiteHeaderComponent.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    this.appEvents.on("site-header:force-refresh", this, "rerenderWidget");
+    this.appEvents.on("site-header:force-refresh", this, "queueRerender");
 
     const header = document.querySelector(".d-header-wrap");
     if (header) {
@@ -518,7 +518,7 @@ export default SiteHeaderComponent.extend({
     this._super(...arguments);
 
     this._resizeObserver?.disconnect();
-    this.appEvents.off("site-header:force-refresh", this, "rerenderWidget");
+    this.appEvents.off("site-header:force-refresh", this, "queueRerender");
   },
 });
 
