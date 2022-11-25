@@ -32,9 +32,5 @@ export default DiscourseRoute.extend({
       showToggleBulkSelect: false,
       selected: [],
     });
-
-    this.controllerFor("user-private-messages").setProperties({
-      pmView: "tags",
-    });
   },
 });
