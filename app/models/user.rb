@@ -669,10 +669,6 @@ class User < ActiveRecord::Base
     ).count
   end
 
-  def unseen_reviewable_count
-    Reviewable.unseen_list_for(self).count
-  end
-
   def saw_notification_id(notification_id)
     Discourse.deprecate(<<~TEXT, since: "2.9", drop_from: "3.0")
       User#saw_notification_id is deprecated. Please use User#bump_last_seen_notification! instead.
@@ -715,7 +711,7 @@ class User < ActiveRecord::Base
   def publish_reviewable_counts(extra_data = nil)
     data = {
       reviewable_count: self.reviewable_count,
-      unseen_reviewable_count: self.unseen_reviewable_count
+      unseen_reviewable_count: Reviewable.unseen_reviewable_count(self)
     }
     data.merge!(extra_data) if extra_data.present?
     MessageBus.publish("/reviewable_counts/#{self.id}", data, user_ids: [self.id])

@@ -431,6 +431,10 @@ class Reviewable < ActiveRecord::Base
     list_for(user).count
   end
 
+  def self.unseen_reviewable_count(user)
+    self.unseen_list_for(user).count
+  end
+
   def self.list_for(
     user,
     ids: nil,
