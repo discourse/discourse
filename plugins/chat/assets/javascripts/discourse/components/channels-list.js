@@ -98,7 +98,7 @@ export default class ChannelsList extends Component {
 
   @bind
   _applyScrollPosition() {
-    const position = this.chatStateManager.isFullPage
+    const position = this.chatStateManager.isFullPageActive
       ? this.session.channelsListPosition || 0
       : 0;
     const scroller = document.querySelector(".channels-list");

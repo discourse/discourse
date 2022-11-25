@@ -288,7 +288,7 @@
 }
 
 .has-full-page-chat .chat-message .onebox:not(img),
-.topic-chat-float-container .chat-message .onebox {
+.chat-drawer-container .chat-message .onebox {
   margin: 0.5em 0;
   border-width: 2px;
 
@@ -311,7 +311,7 @@
   }
 }
 
-.topic-chat-float-container .chat-message .onebox {
+.chat-drawer-container .chat-message .onebox {
   width: 85%;
   border: 2px solid var(--primary-low);
 

@@ -418,7 +418,7 @@ acceptance("Discourse Chat - Core Sidebar", function (needs) {
     await click(".sidebar-section-chat-dms .sidebar-section-header-button");
 
     assert.ok(exists(".direct-message-creator"));
-    assert.ok(exists(".topic-chat-container.expanded.visible"));
+    assert.ok(exists(".chat-drawer.is-expanded"));
     assert.strictEqual(currentURL(), "/");
   });
 

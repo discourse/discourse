@@ -4,12 +4,10 @@ import Service from "@ember/service";
 
 let publicChannels;
 let userCanChat;
-let fullScreenChatOpen;
 
 class ChatStub extends Service {
   userCanChat = userCanChat;
   publicChannels = publicChannels;
-  fullScreenChatOpen = fullScreenChatOpen;
 }
 
 export function setup(context, options = {}) {
@@ -20,13 +18,9 @@ export function setup(context, options = {}) {
     ? options.publicChannels
     : [fabricators.chatChannel()];
   userCanChat = isPresent(options.userCanChat) ? options.userCanChat : true;
-  fullScreenChatOpen = isPresent(options.fullScreenChatOpen)
-    ? options.fullScreenChatOpen
-    : false;
 }
 
 export function teardown() {
   publicChannels = [];
   userCanChat = true;
-  fullScreenChatOpen = false;
 }

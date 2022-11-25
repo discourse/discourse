@@ -110,7 +110,7 @@ acceptance("Discourse Chat | Quoting in composer", async function (needs) {
     await visit("/t/internationalization-localization/280");
 
     await click(".header-dropdown-toggle.open-chat");
-    assert.ok(visible(".topic-chat-float-container"), "chat float is open");
+    assert.ok(visible(".chat-drawer-container"), "chat drawer is open");
     assert.ok(exists(".chat-message-container"));
 
     const firstMessage = query(".chat-message-container");

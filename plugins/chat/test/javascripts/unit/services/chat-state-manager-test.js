@@ -71,12 +71,12 @@ module(
       assert.strictEqual(this.subject.lastKnownAppURL, "/bar");
     });
 
-    test("isFullPage", function (assert) {
+    test("isFullPageActive", function (assert) {
       sinon.stub(this.subject.router, "currentRouteName").value("foo");
-      assert.notOk(this.subject.isFullPage);
+      assert.notOk(this.subject.isFullPageActive);
 
       sinon.stub(this.subject.router, "currentRouteName").value("chat");
-      assert.ok(this.subject.isFullPage);
+      assert.ok(this.subject.isFullPageActive);
     });
   }
 );

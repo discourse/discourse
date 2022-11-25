@@ -11,16 +11,14 @@ import { cancel, next, throttle } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 
 export default Component.extend({
+  tagName: "",
   listView: equal("view", LIST_VIEW),
   chatView: equal("view", CHAT_VIEW),
   draftChannelView: equal("view", DRAFT_CHANNEL_VIEW),
-  classNameBindings: [":topic-chat-float-container", "hidden"],
   chat: service(),
   router: service(),
   chatStateManager: service(),
-  hidden: true,
   loading: false,
-  expanded: true, // TODO - false when not first-load topic
   showClose: true, // TODO - false when on same topic
   sizeTimer: null,
   rafTimer: null,
@@ -95,19 +93,18 @@ export default Component.extend({
     }
   },
 
-  @observes("hidden")
+  @observes("chatStateManager.isDrawerActive")
   _fireHiddenAppEvents() {
-    this.chat.set("chatOpen", !this.hidden);
     this.appEvents.trigger("chat:rerender-header");
   },
 
-  @discourseComputed("expanded")
+  @discourseComputed("chatStateManager.isDrawerExpanded")
   topLineClass(expanded) {
-    const baseClass = "topic-chat-drawer-header__top-line";
+    const baseClass = "chat-drawer-header__top-line";
     return expanded ? `${baseClass}--expanded` : `${baseClass}--collapsed`;
   },
 
-  @discourseComputed("expanded", "chat.activeChannel")
+  @discourseComputed("chatStateManager.isDrawerExpanded", "chat.activeChannel")
   displayMembers(expanded, channel) {
     return expanded && !channel?.isDirectMessageChannel;
   },
@@ -163,28 +160,7 @@ export default Component.extend({
     );
   },
 
-  @discourseComputed(
-    "hidden",
-    "expanded",
-    "displayMembers",
-    "chat.activeChannel",
-    "chatView"
-  )
-  containerClassNames(hidden, expanded, displayMembers, activeChannel) {
-    const classNames = ["topic-chat-container"];
-    if (expanded) {
-      classNames.push("expanded");
-    }
-    if (!hidden && expanded) {
-      classNames.push("visible");
-    }
-    if (activeChannel) {
-      classNames.push(`channel-${activeChannel.id}`);
-    }
-    return classNames.join(" ");
-  },
-
-  @discourseComputed("expanded")
+  @discourseComputed("chatStateManager.isDrawerExpanded")
   expandIcon(expanded) {
     if (expanded) {
       return "angle-double-down";
@@ -204,10 +180,7 @@ export default Component.extend({
   @action
   openURL(URL = null) {
     this.chat.setActiveChannel(null);
-    this.set("hidden", false);
-    this.set("expanded", true);
-
-    this.chatStateManager.storeChatURL(URL);
+    this.chatStateManager.didOpenDrawer(URL);
 
     const route = this._buildRouteFromURL(
       URL || this.chatStateManager.lastKnownChatURL
@@ -216,6 +189,7 @@ export default Component.extend({
     switch (route.name) {
       case "chat":
         this.set("view", LIST_VIEW);
+        this.refreshChannels();
         this.appEvents.trigger("chat:float-toggled", false);
         return;
       case "chat.draft-channel":
@@ -245,16 +219,18 @@ export default Component.extend({
 
   @action
   toggleExpand() {
-    this.set("expanded", !this.expanded);
-    this.appEvents.trigger("chat:toggle-expand", this.expanded);
+    this.chatStateManager.didToggleDrawer();
+    this.appEvents.trigger(
+      "chat:toggle-expand",
+      this.chatStateManager.isDrawerExpanded
+    );
   },
 
   @action
   close() {
-    this.set("hidden", true);
-    this.set("expanded", false);
+    this.chatStateManager.didCloseDrawer();
     this.chat.setActiveChannel(null);
-    this.appEvents.trigger("chat:float-toggled", this.hidden);
+    this.appEvents.trigger("chat:float-toggled", true);
   },
 
   @action
@@ -275,10 +251,10 @@ export default Component.extend({
 
       this.setProperties({
         loading: false,
-        expanded: true,
         view: LIST_VIEW,
       });
 
+      this.chatStateManager.didExpandDrawer();
       this.chat.setActiveChannel(null);
     });
   },

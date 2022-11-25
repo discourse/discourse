@@ -1,8 +1,8 @@
-body.composer-open .topic-chat-float-container {
+body.composer-open .chat-drawer-outlet-container {
   bottom: 11px; // prevent height of grippie from obscuring ...is typing indicator
 }
 
-.topic-chat-float-container {
+.chat-drawer-outlet-container {
   font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   // higher than timeline, lower than composer, lower than user card (bump up below)
@@ -60,22 +60,24 @@ body.composer-open .topic-chat-float-container {
 
 .chat-drawer {
   align-self: flex-end;
-}
 
-.topic-chat-container {
-  background: var(--secondary);
-  border: 1px solid var(--primary-low);
-  border-bottom: 0;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.125);
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
+  .chat-drawer-container {
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    border-bottom: 0;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.125);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
 
-  &.expanded {
-    max-height: $float-height;
-    height: calc(85vh - var(--composer-height, 0px));
+  &.is-expanded {
+    .chat-drawer-container {
+      max-height: $float-height;
+      height: calc(85vh - var(--composer-height, 0px));
+    }
   }
 
   .chat-live-pane {
@@ -83,30 +85,30 @@ body.composer-open .topic-chat-float-container {
   }
 }
 
-.topic-chat-drawer-header__left-actions {
+.chat-drawer-header__left-actions {
   display: flex;
   height: 100%;
 }
 
-.topic-chat-drawer-header__right-actions {
+.chat-drawer-header__right-actions {
   display: flex;
   height: 100%;
   margin-left: auto;
 }
 
-.topic-chat-drawer-header__top-line {
+.chat-drawer-header__top-line {
   height: 2.5rem;
   display: flex;
   align-items: center;
 }
 
-.topic-chat-drawer-header__bottom-line {
+.chat-drawer-header__bottom-line {
   height: 1.5rem;
   display: flex;
   align-items: start;
 }
 
-.topic-chat-drawer-header__title {
+.chat-drawer-header__title {
   @include ellipsis;
   display: flex;
   flex-direction: column;
@@ -120,7 +122,7 @@ body.composer-open .topic-chat-float-container {
   }
 }
 
-.topic-chat-drawer-header {
+.chat-drawer-header {
   box-sizing: border-box;
   border-bottom: solid 1px var(--primary-low);
   border-radius: 8px 8px 0 0;
@@ -138,13 +140,13 @@ body.composer-open .topic-chat-float-container {
     width: 100%;
 
     .chat-name,
-    .topic-chat-name,
+    .chat-drawer-name,
     .category-chat-name,
     .dm-usernames {
       color: var(--primary);
     }
     .category-chat-badge,
-    .topic-chat-badge {
+    .chat-drawer-badge {
       display: flex;
       justify-content: center;
       align-content: center;
@@ -213,7 +215,7 @@ body.composer-open .topic-chat-float-container {
   }
 }
 
-.topic-chat-drawer-content {
+.chat-drawer-content {
   box-sizing: border-box;
   height: 100%;
   min-height: 1px;
