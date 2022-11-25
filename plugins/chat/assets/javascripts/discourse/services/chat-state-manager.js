@@ -10,7 +10,10 @@ const FULL_PAGE_CHAT = "FULL_PAGE_CHAT";
 const DRAWER_CHAT = "DRAWER_CHAT";
 
 export default class ChatStateManager extends Service {
+  @service chat;
   @service router;
+  isDrawerExpanded = false;
+  isDrawerActive = false;
   @tracked _chatURL = null;
   @tracked _appURL = null;
 
@@ -30,6 +33,39 @@ export default class ChatStateManager extends Service {
     this._store.setObject({ key: PREFERRED_MODE_KEY, value: DRAWER_CHAT });
   }
 
+  didOpenDrawer(URL = null) {
+    this.set("isDrawerActive", true);
+    this.set("isDrawerExpanded", true);
+
+    if (URL) {
+      this.storeChatURL(URL);
+    }
+
+    this.chat.updatePresence();
+  }
+
+  didCloseDrawer() {
+    this.set("isDrawerActive", false);
+    this.set("isDrawerExpanded", false);
+    this.chat.updatePresence();
+  }
+
+  didExpandDrawer() {
+    this.set("isDrawerActive", true);
+    this.set("isDrawerExpanded", true);
+    this.chat.updatePresence();
+  }
+
+  didCollapseDrawer() {
+    this.set("isDrawerActive", true);
+    this.set("isDrawerExpanded", false);
+  }
+
+  didToggleDrawer() {
+    this.set("isDrawerExpanded", !this.isDrawerExpanded);
+    this.set("isDrawerActive", true);
+  }
+
   get isFullPagePreferred() {
     return !!(
       Site.currentProp("mobileView") ||
@@ -46,7 +82,7 @@ export default class ChatStateManager extends Service {
     );
   }
 
-  get isFullPage() {
+  get isFullPageActive() {
     return this.router.currentRouteName?.startsWith("chat");
   }
 

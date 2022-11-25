@@ -32,7 +32,7 @@ module("Discourse Chat | Component | sidebar-channels", function (hooks) {
     template: hbs`{{sidebar-channels}}`,
 
     beforeEach() {
-      setupChatStub(this, { fullScreenChatOpen: true });
+      setupChatStub(this, {});
     },
 
     afterEach() {
@@ -48,7 +48,7 @@ module("Discourse Chat | Component | sidebar-channels", function (hooks) {
     template: hbs`{{sidebar-channels}}`,
 
     beforeEach() {
-      setupChatStub(this, { userCanChat: false, fullScreenChatOpen: false });
+      setupChatStub(this, { userCanChat: false });
     },
 
     afterEach() {

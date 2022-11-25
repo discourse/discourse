@@ -40,7 +40,10 @@ export default createWidget("header-chat-link", {
   chatLinkHtml(indicatorNode) {
     return h(
       `a.icon${
-        this.chatStateManager.isFullPage || this.chat.chatOpen ? ".active" : ""
+        this.chatStateManager.isFullPageActive ||
+        this.chatStateManager.isDrawerActive
+          ? ".active"
+          : ""
       }`,
       { attributes: { tabindex: 0 } },
       [iconNode("comment"), indicatorNode].filter(Boolean)
@@ -61,7 +64,7 @@ export default createWidget("header-chat-link", {
   },
 
   click() {
-    if (this.chatStateManager.isFullPage && !this.site.mobileView) {
+    if (this.chatStateManager.isFullPageActive && !this.site.mobileView) {
       return;
     }
 

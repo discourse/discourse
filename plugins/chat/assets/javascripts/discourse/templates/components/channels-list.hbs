@@ -8,7 +8,7 @@
   role="region"
   aria-label={{i18n "chat.aria_roles.channels_list"}}
   class="channels-list"
-  {{on "scroll" (if this.chatStateManager.isFullPage this.storeScrollPosition (noop))}}
+  {{on "scroll" (if this.chatStateManager.isFullPageActive this.storeScrollPosition (noop))}}
 >
   {{#if this.displayPublicChannels}}
     <div class="chat-channel-divider public-channels-section">

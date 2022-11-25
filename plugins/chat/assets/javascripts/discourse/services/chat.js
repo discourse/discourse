@@ -56,7 +56,6 @@ export default class Chat extends Service {
   directMessagesLimit = 20;
   isNetworkUnreliable = false;
   @and("currentUser.has_chat_enabled", "siteSettings.chat_enabled") userCanChat;
-  _chatOpen = false;
   _fetchingChannels = null;
 
   @computed("currentUser.staff", "currentUser.groups.[]")
@@ -168,18 +167,16 @@ export default class Chat extends Service {
     });
   }
 
-  get chatOpen() {
-    return this._chatOpen;
-  }
-
-  set chatOpen(status) {
-    this.set("_chatOpen", status);
-    this.updatePresence();
-  }
-
   updatePresence() {
     next(() => {
-      if (this.chatStateManager.isFullPage || this.chatOpen) {
+      if (this.isDestroyed || this.isDestroying) {
+        return;
+      }
+
+      if (
+        this.chatStateManager.isFullPageActive ||
+        this.chatStateManager.isDrawerActive
+      ) {
         this.presenceChannel.enter({ activeOptions: CHAT_ONLINE_OPTIONS });
       } else {
         this.presenceChannel.leave();
@@ -202,19 +199,6 @@ export default class Chat extends Service {
 
   truncateDirectMessageChannels(channels) {
     return channels.slice(0, this.directMessagesLimit);
-  }
-
-  getActiveChannel() {
-    let channelId;
-    if (this.router.currentRouteName === "chat.channel") {
-      channelId = this.router.currentRoute.params.channelId;
-    } else {
-      channelId = document.querySelector(".topic-chat-container.visible")
-        ?.dataset?.chatChannelId;
-    }
-    return channelId
-      ? this.allChannels.findBy("id", parseInt(channelId, 10))
-      : null;
   }
 
   async getChannelsWithFilter(filter, opts = { excludeActiveChannel: true }) {
@@ -528,7 +512,7 @@ export default class Chat extends Service {
     this.setActiveChannel(channel);
 
     if (
-      this.chatStateManager.isFullPage ||
+      this.chatStateManager.isFullPageActive ||
       this.site.mobileView ||
       this.chatStateManager.isFullPagePreferred
     ) {

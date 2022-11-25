@@ -18,7 +18,7 @@ import {
 } from "../helpers/chat-pretenders";
 
 acceptance("Discourse Chat - Composer", function (needs) {
-  needs.user({ id: 1, has_chat_enabled: true });
+  needs.user({ has_chat_enabled: true });
   needs.settings({ chat_enabled: true, enable_rich_text_paste: true });
   needs.pretender((server, helper) => {
     baseChatPretenders(server, helper);

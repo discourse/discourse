@@ -471,9 +471,6 @@ $float-height: 530px;
 
   &:hover,
   &.active {
-    .topic-chat-badge .topic-chat-icon .d-icon {
-      background: transparent;
-    }
     &.active {
       font-weight: 600;
     }
@@ -632,8 +629,6 @@ body.has-full-page-chat {
         background-color: var(--primary-low);
         .chat-channel-title {
           .category-chat-name,
-          .topic-chat-name,
-          .tag-chat-name,
           .chat-name,
           .dm-usernames {
             color: var(--primary);
@@ -664,8 +659,6 @@ body.has-full-page-chat {
 
     .chat-channel-title {
       .category-chat-name,
-      .topic-chat-name,
-      .tag-chat-name,
       .chat-name,
       .dm-usernames {
         color: var(--primary);
@@ -735,8 +728,7 @@ body.has-full-page-chat {
     }
 
     .category-chat-name,
-    .dm-username,
-    .topic-chat-name {
+    .dm-username {
       font-weight: 700;
       font-size: var(--font-up-1);
       line-height: var(--font-up-1);
@@ -754,9 +746,7 @@ body.has-full-page-chat {
 }
 
 .channels-list {
-  .tag-chat-badge,
-  .category-chat-badge,
-  .topic-chat-badge {
+  .category-chat-badge {
     color: var(--primary-low-mid);
     display: flex;
     align-items: center;
@@ -766,12 +756,6 @@ body.has-full-page-chat {
       height: 1.25em;
       width: 1.25em;
       margin: 0;
-    }
-  }
-
-  .topic-chat-badge {
-    .d-icon {
-      z-index: 1;
     }
   }
 

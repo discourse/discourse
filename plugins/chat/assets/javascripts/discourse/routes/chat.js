@@ -79,6 +79,7 @@ export default class ChatRoute extends DiscourseRoute {
   willTransition(transition) {
     if (!transition?.to?.name?.startsWith("chat.")) {
       this.chatStateManager.storeChatURL();
+      this.chat.updatePresence();
     }
   }
 }

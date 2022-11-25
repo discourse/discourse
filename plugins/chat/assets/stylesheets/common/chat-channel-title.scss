@@ -21,8 +21,6 @@
 
   .chat-name,
   .category-chat-name,
-  .topic-chat-name,
-  .tag-chat-name,
   &__usernames,
   .dm-usernames {
     @include ellipsis;

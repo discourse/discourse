@@ -1,4 +1,4 @@
-{{#if (and this.chatStateManager.isFullPage this.includeHeader)}}
+{{#if (and this.chatStateManager.isFullPageActive this.includeHeader)}}
   <div
     class="chat-full-page-header
       {{unless this.chatChannel.isFollowing "-not-following"}}"
@@ -16,7 +16,7 @@
 
       {{#if this.showCloseFullScreenBtn}}
         <div class="chat-full-page-header__right-actions">
-          <DButton @icon="discourse-compress" @title="chat.close_full_page" class="open-drawer-btn btn-flat no-text" @action={{action "onCloseFullScreen"}} />
+          <DButton @icon="discourse-compress" @title="chat.close_full_page" class="open-drawer-btn btn-flat no-text" @action={{action this.onCloseFullScreen}} />
         </div>
       {{/if}}
     </div>
@@ -86,14 +86,12 @@
   </div>
 {{/if}}
 
-{{#if this.expanded}}
-  {{#if this.selectingMessages}}
-    <ChatSelectionManager @selectedMessageIds={{this.selectedMessageIds}} @chatChannel={{this.chatChannel}} @canModerate={{this.details.can_moderate}} @cancelSelecting={{action "cancelSelecting"}} />
+{{#if this.selectingMessages}}
+  <ChatSelectionManager @selectedMessageIds={{this.selectedMessageIds}} @chatChannel={{this.chatChannel}} @canModerate={{this.details.can_moderate}} @cancelSelecting={{action "cancelSelecting"}} />
+{{else}}
+  {{#if (or this.chatChannel.isDraft this.chatChannel.isFollowing)}}
+    <ChatComposer @draft={{this.draft}} @details={{this.details}} @canInteractWithChat={{this.canInteractWithChat}} @sendMessage={{action "sendMessage"}} @editMessage={{action "editMessage"}} @setReplyTo={{action "setReplyTo"}} @loading={{this.sendingLoading}} @editingMessage={{readonly this.editingMessage}} @onCancelEditing={{this.cancelEditing}} @setInReplyToMsg={{this.setInReplyToMsg}} @onEditLastMessageRequested={{this.editLastMessageRequested}} @onValueChange={{action "composerValueChanged"}} @chatChannel={{this.chatChannel}} />
   {{else}}
-    {{#if (or this.chatChannel.isDraft this.chatChannel.isFollowing)}}
-      <ChatComposer @draft={{this.draft}} @details={{this.details}} @canInteractWithChat={{this.canInteractWithChat}} @sendMessage={{action "sendMessage"}} @editMessage={{action "editMessage"}} @setReplyTo={{action "setReplyTo"}} @loading={{this.sendingLoading}} @editingMessage={{readonly this.editingMessage}} @onCancelEditing={{this.cancelEditing}} @setInReplyToMsg={{this.setInReplyToMsg}} @onEditLastMessageRequested={{this.editLastMessageRequested}} @onValueChange={{action "composerValueChanged"}} @fullPage={{this.fullPage}} @chatChannel={{this.chatChannel}} />
-    {{else}}
-      <ChatChannelPreviewCard @channel={{this.chatChannel}} />
-    {{/if}}
+    <ChatChannelPreviewCard @channel={{this.chatChannel}} />
   {{/if}}
 {{/if}}
