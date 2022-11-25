@@ -12,15 +12,6 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
     enable_sidebar: true,
   });
 
-  needs.hooks.beforeEach(function () {
-    window.oldWidth = window.innerWidth;
-    window.innerWidth = 1280;
-  });
-  needs.hooks.afterEach(function () {
-    $("body").width(window.oldWidth);
-    delete window.oldWidth;
-  });
-
   test("wide sidebar is changed to cloak when resize to narrow screen", async function (assert) {
     await visit("/");
     await settled();
@@ -30,7 +21,8 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
 
     assert.ok(!exists("#d-sidebar"), "widge sidebar is collapsed");
 
-    $("body").width(1000);
+    const bodyElement = document.querySelector("body");
+    bodyElement.style.width = "1000px";
 
     await waitUntil(
       () => document.querySelector(".btn-sidebar-toggle.narrow-desktop"),
@@ -50,5 +42,6 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
       !exists(".sidebar-hamburger-dropdown"),
       "cloak sidebar is collapsed"
     );
+    bodyElement.style.width = null;
   });
 });
