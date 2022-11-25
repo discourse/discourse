@@ -170,16 +170,34 @@ RSpec.describe HashtagAutocompleteService do
       )
     end
 
-    it "orders categories by exact match (ignoring parent/child distinction) and name then name for everything else" do
+    it "orders categories by exact match on slug (ignoring parent/child distinction) then name, and then name for everything else" do
       category2 = Fabricate(:category, name: "Book Library", slug: "book-library")
-      category3 = Fabricate(:category, name: "Horror", slug: "book", parent_category: category2)
-      category4 = Fabricate(:category, name: "Romance", slug: "romance-books")
-      category5 =
-        Fabricate(:category, name: "Abstract Philosophy", slug: "abstract-philosophy-books")
+      Fabricate(:category, name: "Horror", slug: "book", parent_category: category2)
+      Fabricate(:category, name: "Romance", slug: "romance-books")
+      Fabricate(:category, name: "Abstract Philosophy", slug: "abstract-philosophy-books")
       category6 = Fabricate(:category, name: "Book Reviews", slug: "book-reviews")
-      category7 = Fabricate(:category, name: "Good Books", slug: "book", parent_category: category6)
+      Fabricate(:category, name: "Good Books", slug: "book", parent_category: category6)
       expect(subject.search("book", %w[category]).map(&:ref)).to eq(
-        %w[book-reviews:book book-library:book abstract-philosophy-books book-club book-library book-reviews romance-books],
+        %w[
+          book-reviews:book
+          book-library:book
+          abstract-philosophy-books
+          book-club
+          book-library
+          book-reviews
+          romance-books
+        ],
+      )
+      expect(subject.search("book", %w[category]).map(&:text)).to eq(
+        [
+          "Good Books",
+          "Horror",
+          "Abstract Philosophy",
+          "Book Club",
+          "Book Library",
+          "Book Reviews",
+          "Romance",
+        ],
       )
     end
 
