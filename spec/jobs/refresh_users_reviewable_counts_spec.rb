@@ -24,13 +24,23 @@ RSpec.describe Jobs::RefreshUsersReviewableCounts do
         described_class.new.execute(user_ids: [moderator.id, admin.id])
       end
       expect(messages.size).to eq(2)
-      expect(messages.map(&:user_ids).flatten).to contain_exactly(moderator.id, admin.id)
+
+      moderator_message = messages.find { |m| m.user_ids == [moderator.id] }
+      expect(moderator_message.channel).to eq("/reviewable_counts/#{moderator.id}")
+
+      admin_message = messages.find { |m| m.user_ids == [admin.id] }
+      expect(moderator_message.channel).to eq("/reviewable_counts/#{moderator.id}")
 
       messages = MessageBus.track_publish do
         described_class.new.execute(user_ids: [moderator.id, user.id])
       end
       expect(messages.size).to eq(2)
-      expect(messages.map(&:user_ids).flatten).to contain_exactly(moderator.id, user.id)
+
+      moderator_message = messages.find { |m| m.user_ids == [moderator.id] }
+      expect(moderator_message.channel).to eq("/reviewable_counts/#{moderator.id}")
+
+      user_message = messages.find { |m| m.user_ids == [user.id] }
+      expect(user_message.channel).to eq("/reviewable_counts/#{user.id}")
     end
 
     it "published counts respect reviewables visibility" do
