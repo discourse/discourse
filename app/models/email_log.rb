@@ -132,6 +132,7 @@ end
 #  cc_user_ids   :integer          is an Array
 #  raw           :text
 #  topic_id      :integer
+#  bcc_addresses :text
 #
 # Indexes
 #
