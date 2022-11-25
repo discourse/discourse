@@ -13,10 +13,12 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
   });
 
   needs.hooks.beforeEach(function () {
+    window.oldWidth = window.innerWidth;
     window.innerWidth = 1280;
   });
   needs.hooks.afterEach(function () {
-    $("body").width(1280);
+    $("body").width(window.oldWidth);
+    delete window.oldWidth;
   });
 
   test("wide sidebar is changed to cloak when resize to narrow screen", async function (assert) {
