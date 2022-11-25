@@ -123,36 +123,65 @@ export default Component.extend({
   },
 
   _dynamicCheckSize() {
-    if (!this.rafTimer) {
-      this.rafTimer = window.requestAnimationFrame(() => {
-        this.rafTimer = null;
-        this._performCheckSize();
-      });
+    if (!this.chatStateManager.isDrawerActive) {
+      return;
     }
+
+    if (this.rafTimer) {
+      return;
+    }
+
+    this.rafTimer = window.requestAnimationFrame(() => {
+      this.rafTimer = null;
+      this._performCheckSize();
+    });
   },
 
   _startDynamicCheckSize() {
-    this.element.classList.add("clear-transitions");
+    if (!this.chatStateManager.isDrawerActive) {
+      return;
+    }
+
+    document.querySelector(".chat-drawer").classList.add("clear-transitions");
   },
 
   _clearDynamicCheckSize() {
-    this.element.classList.remove("clear-transitions");
+    if (!this.chatStateManager.isDrawerActive) {
+      return;
+    }
+
+    document
+      .querySelector(".chat-drawer")
+      .classList.remove("clear-transitions");
     this._checkSize();
   },
 
   _checkSize() {
+    if (!this.chatStateManager.isDrawerActive) {
+      return;
+    }
+
     this.sizeTimer = throttle(this, this._performCheckSize, 150);
   },
 
   _performCheckSize() {
-    if (!this.element || this.isDestroying || this.isDestroyed) {
+    if (!this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    if (!this.chatStateManager.isDrawerActive) {
+      return;
+    }
+
+    const drawer = document.querySelector(".chat-drawer");
+    if (!drawer) {
       return;
     }
 
     const composer = document.getElementById("reply-control");
     const composerIsClosed = composer.classList.contains("closed");
     const minRightMargin = 15;
-    this.element.style.setProperty(
+    drawer.style.setProperty(
       "--composer-right",
       (composerIsClosed
         ? minRightMargin
