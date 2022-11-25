@@ -40,4 +40,8 @@ class Chat::ChatChannelHashtagDataSource
       []
     end
   end
+
+  def self.search_sort(search_results, _)
+    search_results.sort_by { |result| result.text.downcase }
+  end
 end
