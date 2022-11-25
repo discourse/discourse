@@ -82,13 +82,13 @@ export default Service.extend({
     let title = this._title || this.siteSettings.title;
 
     let displayCount = this._displayCount();
-    let dynamicFavicon =
-      this.currentUser && this.currentUser.user_option.dynamic_favicon;
+    let dynamicFavicon = this.currentUser?.user_option.dynamic_favicon;
 
-    if (this.currentUser && this.currentUser.isInDoNotDisturb()) {
+    if (this.currentUser?.isInDoNotDisturb()) {
       document.title = title;
       return;
     }
+
     if (displayCount > 0 && !dynamicFavicon) {
       title = `(${displayCount}) ${title}`;
     }
