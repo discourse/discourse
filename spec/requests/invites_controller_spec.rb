@@ -158,6 +158,20 @@ RSpec.describe InvitesController do
           expect(invite_info['existing_user_can_redeem_error']).to eq(I18n.t("invite.existing_user_already_redemeed"))
         end
       end
+
+      it "allows the user to accept the invite when its an invite link that they have not redeemed" do
+        invite.update!(email: nil, max_redemptions_allowed: 10)
+
+        get "/invites/#{invite.invite_key}"
+        expect(response.status).to eq(200)
+
+        expect(response.body).to have_tag('div#data-preloaded') do |element|
+          json = JSON.parse(element.current_scope.attribute('data-preloaded').value)
+          invite_info = JSON.parse(json['invite_info'])
+          expect(invite_info['existing_user_id']).to eq(user.id)
+          expect(invite_info['existing_user_can_redeem']).to eq(true)
+        end
+      end
     end
 
     it 'fails if invite does not exist' do
