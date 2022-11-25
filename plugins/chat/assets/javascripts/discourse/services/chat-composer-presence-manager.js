@@ -13,7 +13,7 @@ export default class ChatComposerPresenceManager extends Service {
   @service presence;
 
   willDestroy() {
-    !isTesting() && this.leave();
+    this.leave();
   }
 
   notifyState(chatChannelId, replying) {
