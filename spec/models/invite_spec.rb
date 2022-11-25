@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Invite do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user, email: "existinguser@invitetest.com") }
   let(:xss_email) { "<b onmouseover=alert('wufff!')>email</b><script>alert('test');</script>@test.com" }
   let(:escaped_email) { "&lt;b onmouseover=alert(&#39;wufff!&#39;)&gt;email&lt;/b&gt;&lt;script&gt;alert(&#39;test&#39;);&lt;/script&gt;@test.com" }
 
@@ -467,6 +467,93 @@ RSpec.describe Invite do
       invite.resend_invite
       expect(invite).not_to be_expired
       expect(invite.invalidated_at).to be_nil
+    end
+  end
+
+  describe "#can_be_redeemed_by?" do
+    context "for invite links" do
+      fab!(:invite) { Fabricate(:invite, email: nil, domain: nil, max_redemptions_allowed: 1) }
+
+      it "returns false if invite is already redeemed" do
+        invite.update!(redemption_count: 1)
+        expect(invite.can_be_redeemed_by?(user)).to eq(false)
+      end
+
+      it "returns false if the invite is expired" do
+        invite.update!(expires_at: 10.days.ago)
+        expect(invite.can_be_redeemed_by?(user)).to eq(false)
+      end
+
+      it "returns false if invite is deleted" do
+        invite.trash!
+        expect(invite.can_be_redeemed_by?(user)).to eq(false)
+      end
+
+      it "returns false if invite is invalidated" do
+        invite.update!(invalidated_at: 1.day.ago)
+        expect(invite.can_be_redeemed_by?(user)).to eq(false)
+      end
+
+      it "returns false if the user already redeemed it" do
+        InvitedUser.create(user: user, invite: invite)
+        expect(invite.can_be_redeemed_by?(user)).to eq(false)
+      end
+
+      it "returns false if domain does not match user email" do
+        invite.update!(domain: "zzzzz.com")
+        expect(invite.can_be_redeemed_by?(user)).to eq(false)
+      end
+
+      it "returns true if domain does match user email" do
+        invite.update!(domain: "invitetest.com")
+        expect(invite.can_be_redeemed_by?(user)).to eq(true)
+      end
+
+      it "returns true by default if all other conditions are met and domain and invite are blank" do
+        expect(invite.can_be_redeemed_by?(user)).to eq(true)
+      end
+    end
+
+    context "for email invites" do
+      fab!(:invite) do
+        invite = Fabricate(:invite, email: "otherexisting@invitetest.com", domain: nil)
+        user.update!(email: "otherexisting@invitetest.com")
+        invite
+      end
+
+      it "returns false if invite is already redeemed" do
+        InvitedUser.create(user: Fabricate(:user), invite: invite)
+        expect(invite.can_be_redeemed_by?(user)).to eq(false)
+      end
+
+      it "returns false if the invite is expired" do
+        invite.update!(expires_at: 10.days.ago)
+        expect(invite.can_be_redeemed_by?(user)).to eq(false)
+      end
+
+      it "returns false if invite is deleted" do
+        invite.trash!
+        expect(invite.can_be_redeemed_by?(user)).to eq(false)
+      end
+
+      it "returns false if invite is invalidated" do
+        invite.update!(invalidated_at: 1.day.ago)
+        expect(invite.can_be_redeemed_by?(user)).to eq(false)
+      end
+
+      it "returns false if the user already redeemed it" do
+        InvitedUser.create(user: user, invite: invite)
+        expect(invite.can_be_redeemed_by?(user)).to eq(false)
+      end
+
+      it "returns false if email does not match user email" do
+        invite.update!(email: "blahblah@test.com")
+        expect(invite.can_be_redeemed_by?(user)).to eq(false)
+      end
+
+      it "returns true if email does match user email" do
+        expect(invite.can_be_redeemed_by?(user)).to eq(true)
+      end
     end
   end
 end
