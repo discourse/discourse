@@ -160,7 +160,7 @@ export default {
       return;
     }
 
-    this.appEvents.off("discourse:focus-changed", this, "_handleFocusChanged");
+    this.appEvents?.off("discourse:focus-changed", this, "_handleFocusChanged");
     _lastForcedRefreshAt = null;
     clearChatComposerButtons();
   },
