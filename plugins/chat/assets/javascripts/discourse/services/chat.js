@@ -169,6 +169,10 @@ export default class Chat extends Service {
 
   updatePresence() {
     next(() => {
+      if (this.isDestroyed || this.isDestroying) {
+        return;
+      }
+
       if (
         this.chatStateManager.isFullPageActive ||
         this.chatStateManager.isDrawerActive

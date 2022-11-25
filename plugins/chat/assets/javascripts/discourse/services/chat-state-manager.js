@@ -40,6 +40,7 @@ export default class ChatStateManager extends Service {
     if (URL) {
       this.storeChatURL(URL);
     }
+
     this.chat.updatePresence();
   }
 
@@ -62,6 +63,7 @@ export default class ChatStateManager extends Service {
 
   didToggleDrawer() {
     this.set("isDrawerExpanded", !this.isDrawerExpanded);
+    this.set("isDrawerActive", true);
   }
 
   get isFullPagePreferred() {
