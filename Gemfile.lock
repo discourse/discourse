@@ -73,9 +73,6 @@ GEM
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.5.0)
       aws-eventstream (~> 1, >= 1.0.2)
-    barber (0.12.2)
-      ember-source (>= 1.0, < 3.1)
-      execjs (>= 1.2, < 3)
     better_errors (2.9.1)
       coderay (>= 1.0.0)
       erubi (>= 1.0.0)
@@ -119,14 +116,6 @@ GEM
     diff-lcs (1.5.0)
     diffy (3.4.2)
     digest (3.1.0)
-    discourse-ember-rails (0.18.6)
-      active_model_serializers
-      ember-data-source (>= 1.0.0.beta.5)
-      ember-handlebars-template (>= 0.1.1, < 1.0)
-      ember-source (>= 1.1.0)
-      jquery-rails (>= 1.0.17)
-      railties (>= 3.1)
-    discourse-ember-source (3.12.2.3)
     discourse-fonts (0.0.9)
     discourse-seed-fu (2.3.12)
       activerecord (>= 3.1)
@@ -138,12 +127,6 @@ GEM
     ecma-re-validator (0.4.0)
       regexp_parser (~> 2.2)
     email_reply_trimmer (0.1.13)
-    ember-data-source (3.0.2)
-      ember-source (>= 2, < 3.0)
-    ember-handlebars-template (0.8.0)
-      barber (>= 0.11.0)
-      sprockets (>= 3.3, < 4.1)
-    ember-source (2.18.2)
     erubi (1.11.0)
     excon (0.94.0)
     execjs (2.8.1)
@@ -185,10 +168,6 @@ GEM
     image_size (3.2.0)
     in_threads (1.6.0)
     jmespath (1.6.1)
-    jquery-rails (4.5.1)
-      rails-dom-testing (>= 1, < 3)
-      railties (>= 4.2.0)
-      thor (>= 0.14, < 2.0)
     json (2.6.2)
     json-schema (3.0.0)
       addressable (>= 2.8)
@@ -531,7 +510,6 @@ DEPENDENCIES
   annotate
   aws-sdk-s3
   aws-sdk-sns
-  barber
   better_errors
   binding_of_caller
   bootsnap
@@ -546,13 +524,10 @@ DEPENDENCIES
   css_parser
   diffy
   digest
-  discourse-ember-rails (= 0.18.6)
-  discourse-ember-source (~> 3.12.2)
   discourse-fonts
   discourse-seed-fu
   discourse_dev_assets
   email_reply_trimmer
-  ember-handlebars-template (= 0.8.0)
   excon
   execjs
   fabrication

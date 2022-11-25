@@ -35,9 +35,6 @@ Discourse::Application.configure do
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
 
-  # precompile handlebar assets
-  config.handlebars.precompile = true
-
   # allows users to use mini profiler
   config.load_mini_profiler = false
 

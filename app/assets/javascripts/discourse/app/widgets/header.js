@@ -476,7 +476,7 @@ export default createWidget("header", {
         );
       } else if (state.hamburgerVisible) {
         if (this.siteSettings.enable_experimental_sidebar_hamburger) {
-          if (!attrs.sidebarEnabled) {
+          if (!attrs.sidebarEnabled || this.site.narrowDesktopView) {
             panels.push(this.attach("revamped-hamburger-menu-wrapper", {}));
           }
         } else {
@@ -501,7 +501,7 @@ export default createWidget("header", {
         }
       });
 
-      if (this.site.mobileView) {
+      if (this.site.mobileView || this.site.narrowDesktopView) {
         panels.push(this.attach("header-cloak"));
       }
 
@@ -591,7 +591,8 @@ export default createWidget("header", {
   toggleHamburger() {
     if (
       this.siteSettings.enable_experimental_sidebar_hamburger &&
-      this.attrs.sidebarEnabled
+      this.attrs.sidebarEnabled &&
+      !this.site.narrowDesktopView
     ) {
       this.sendWidgetAction("toggleSidebar");
     } else {
@@ -601,7 +602,7 @@ export default createWidget("header", {
       schedule("afterRender", () => {
         if (this.siteSettings.enable_experimental_sidebar_hamburger) {
           // Remove focus from hamburger toggle button
-          document.querySelector("#toggle-hamburger-menu").blur();
+          document.querySelector("#toggle-hamburger-menu")?.blur();
         } else {
           // auto focus on first link in dropdown
           document.querySelector(".hamburger-panel .menu-links a")?.focus();

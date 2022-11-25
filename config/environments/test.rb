@@ -40,7 +40,6 @@ Discourse::Application.configure do
 
   # lower iteration count for test
   config.pbkdf2_iterations = 10
-  config.ember.variant = :development
 
   config.assets.compile = true
   config.assets.digest = false

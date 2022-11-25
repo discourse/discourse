@@ -586,6 +586,13 @@ class Plugin::Instance
   end
 
   def register_asset(file, opts = nil)
+    if file.end_with?(".hbs", ".handlebars")
+      raise <<~ERROR
+        [#{name}] Handlebars templates can no longer be included via `register_asset`.
+        Any hbs files under `assets/javascripts` will be automatically compiled and included."
+      ERROR
+    end
+
     if opts && opts == :vendored_core_pretty_text
       full_path = DiscoursePluginRegistry.core_asset_for_name(file)
     else

@@ -1,6 +1,46 @@
 # frozen_string_literal: true
 
 RSpec.describe UserStatusController do
+  describe '#get' do
+    it 'requires user to be logged in' do
+      get "/user-status.json"
+      expect(response.status).to eq(403)
+    end
+
+    it "returns 404 if the feature is disabled" do
+      user = Fabricate(:user)
+      sign_in(user)
+      SiteSetting.enable_user_status = false
+
+      get "/user-status.json"
+
+      expect(response.status).to eq(404)
+    end
+
+    describe 'when feature is enabled and a user is logged in' do
+      fab!(:user) { Fabricate(:user) }
+
+      before do
+        sign_in(user)
+        SiteSetting.enable_user_status = true
+      end
+
+      it "returns user status" do
+        status = "off to dentist"
+        status_emoji = "tooth"
+        ends_at = "2100-01-01T18:00:00.000Z"
+        user.set_status!(status, status_emoji, DateTime.parse(ends_at))
+
+        get "/user-status.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["description"]).to eq(status)
+        expect(response.parsed_body["emoji"]).to eq(status_emoji)
+        expect(response.parsed_body["ends_at"]).to eq(ends_at)
+      end
+    end
+  end
+
   describe '#set' do
     it 'requires user to be logged in' do
       put "/user-status.json", params: { description: "off to dentist" }
