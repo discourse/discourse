@@ -17,6 +17,38 @@ RSpec.describe "Navigation", type: :system, js: true do
     sign_in(user)
   end
 
+  context "when clicking chat icon and drawer is viewing channel" do
+    it "navigates to index" do
+      chat_page.open_from_header
+      chat_drawer_page.open_channel(category_channel_2)
+      chat_page.open_from_header
+
+      expect(page).to have_content(I18n.t("js.chat.direct_messages.title"))
+    end
+  end
+
+  context "when clicking chat icon on mobile and is viewing channel" do
+    it "navigates to index" do
+      visit("/chat?mobile_view=1")
+      chat_page.visit_channel(category_channel_2)
+      chat_page.open_from_header
+
+      expect(page).to have_current_path(chat_path)
+    end
+  end
+
+  context "when clicking chat icon on desktop and is viewing channel" do
+    it "stays on channel page" do
+      visit("/chat")
+      chat_page.visit_channel(category_channel_2)
+      chat_page.open_from_header
+
+      expect(page).to have_current_path(
+        chat.channel_path(category_channel_2.id, category_channel_2.slug),
+      )
+    end
+  end
+
   context "when visiting /chat" do
     it "opens full page" do
       chat_page.open
