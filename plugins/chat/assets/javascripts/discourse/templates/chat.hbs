@@ -11,15 +11,13 @@
     class={{concat-class
       "full-page-chat"
       (if
-        this.siteSettings.enable_sidebar
+        this.shouldUseCoreSidebar
         "full-page-chat-sidebar-enabled"
       )
     }}
   >
-    {{#if
-      (and (not this.siteSettings.enable_sidebar) (not this.site.mobileView))
-    }}
-      <ChannelsList @onSelect={{action "switchChannel"}} />
+    {{#if this.shouldUseChatSidebar}}
+      <ChannelsList />
     {{/if}}
 
     <div id="main-chat-outlet">
