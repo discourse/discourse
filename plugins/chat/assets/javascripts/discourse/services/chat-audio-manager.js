@@ -13,6 +13,7 @@ const DEFAULT_SOUND_NAME = "bell";
 
 const createAudioCache = (sources) => {
   const audio = new Audio();
+  audio.pause();
   sources.forEach(({ type, src }) => {
     const source = document.createElement("source");
     source.type = type;
