@@ -4,7 +4,7 @@
   gap: 0.5rem;
   padding: 0.5rem;
 
-  .topic-chat-drawer-content & {
+  .chat-drawer-content & {
     flex-direction: column;
   }
 
@@ -12,7 +12,7 @@
     display: flex;
     gap: 0.5rem;
 
-    .topic-chat-drawer-content & {
+    .chat-drawer-content & {
       flex-direction: column;
       width: 100%;
     }

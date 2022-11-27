@@ -73,6 +73,7 @@ hy:
         save: "Պահպանել"
         saved: "Պահված է"
         unfollow: "Լքել"
+        admin_title: "Ադմին"
       incoming_webhooks:
         back: "Ետ"
         description: "Նկարագրությունը"

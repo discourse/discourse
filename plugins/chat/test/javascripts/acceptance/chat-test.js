@@ -65,6 +65,7 @@ acceptance("Discourse Chat - without unread", function (needs) {
     has_chat_enabled: true,
   });
   needs.settings({
+    enable_sidebar: false,
     chat_enabled: true,
   });
   needs.pretender((server, helper) => {
@@ -144,8 +145,8 @@ acceptance("Discourse Chat - without unread", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click(".header-dropdown-toggle.current-user");
     await click("#quick-access-notifications .chat-mention");
-    assert.ok(visible(".topic-chat-float-container"), "chat float is open");
-    assert.ok(query(".topic-chat-container").classList.contains("channel-9"));
+    assert.ok(visible(".chat-drawer-container"), "drawer is open");
+    assert.ok(query(".chat-drawer-container").classList.contains("channel-9"));
   });
 
   test("notifications for current user and here/all are highlighted", async function (assert) {
@@ -366,20 +367,18 @@ acceptance("Discourse Chat - without unread", function (needs) {
   });
 
   test("Reply-to is stored in draft", async function (assert) {
-    this.chatService.set("sidebarActive", false);
-
     await visit("/latest");
     await click(".header-dropdown-toggle.open-chat");
     await click(".chat-channel-row");
     await settled();
 
-    await click(".topic-chat-drawer-header__return-to-channels-btn");
+    await click(".chat-drawer-header__return-to-channels-btn");
     await click(".chat-channel-row.chat-channel-9");
     await triggerEvent(".chat-message-container[data-id='174']", "mouseenter");
     await click(".chat-message-actions-container[data-id='174'] .reply-btn");
     // Reply-to line is present
     assert.ok(exists(".chat-composer-message-details .chat-reply"));
-    await click(".topic-chat-drawer-header__return-to-channels-btn");
+    await click(".chat-drawer-header__return-to-channels-btn");
     await click(".chat-channel-row.chat-channel-11");
     // Reply-to line is gone since switching channels
     assert.notOk(exists(".chat-composer-message-details .chat-reply"));
@@ -390,13 +389,13 @@ acceptance("Discourse Chat - without unread", function (needs) {
     await click(".cancel-message-action");
 
     // Go back to channel 9 and check that reply-to is present
-    await click(".topic-chat-drawer-header__return-to-channels-btn");
+    await click(".chat-drawer-header__return-to-channels-btn");
     await click(".chat-channel-row.chat-channel-9");
     // Now reply-to should be back and loaded from draft
     assert.ok(exists(".chat-composer-message-details .chat-reply"));
 
     // Go back one for time to channel 7 and make sure reply-to is gone
-    await click(".topic-chat-drawer-header__return-to-channels-btn");
+    await click(".chat-drawer-header__return-to-channels-btn");
     await click(".chat-channel-row.chat-channel-11");
     assert.notOk(exists(".chat-composer-message-details .chat-reply"));
   });
@@ -725,7 +724,7 @@ Widget.triangulate(arg: "test")
   });
 
   test("creating a new direct message channel from popup chat works", async function (assert) {
-    await visit("/t/internationalization-localization/280");
+    await visit("/chat");
     await click(".open-draft-channel-page-btn");
     await fillIn(".filter-usernames", "hawk");
     await click('.chat-user-avatar-container[data-user-card="hawk"]');
@@ -978,9 +977,8 @@ acceptance(
 
     test("Expand button takes you to full page chat on the correct channel", async function (assert) {
       await visit("/t/internationalization-localization/280");
-      this.chatService.set("sidebarActive", false);
       await click(".header-dropdown-toggle.open-chat");
-      await click(".topic-chat-drawer-header__full-screen-btn");
+      await click(".chat-drawer-header__full-screen-btn");
 
       assert.equal(currentURL(), `/chat/channel/11/another-category`);
     });
@@ -1032,7 +1030,7 @@ acceptance(
 );
 
 acceptance(
-  "Discourse Chat - Expand and collapse chat drawer (topic-chat-float)",
+  "Discourse Chat - Expand and collapse drawer (chat-drawer)",
   function (needs) {
     needs.user({
       admin: false,
@@ -1061,62 +1059,59 @@ acceptance(
       });
     });
 
-    test("chat drawer can be collapsed and expanded", async function (assert) {
+    test("drawer can be collapsed and expanded", async function (assert) {
       await visit("/t/internationalization-localization/280");
-      this.chatService.set("sidebarActive", false);
       await click(".header-dropdown-toggle.open-chat");
       assert.ok(
-        visible(".topic-chat-drawer-header__top-line--expanded"),
-        "chat float is expanded"
+        visible(".chat-drawer-header__top-line--expanded"),
+        "drawer is expanded"
       );
-      await click(".topic-chat-drawer-header__expand-btn");
+      await click(".chat-drawer-header__expand-btn");
       assert.ok(
-        visible(".topic-chat-drawer-header__top-line--collapsed"),
-        "chat float is collapsed"
+        visible(".chat-drawer-header__top-line--collapsed"),
+        "drawer is collapsed"
       );
-      await click(".topic-chat-drawer-header__expand-btn");
+      await click(".chat-drawer-header__expand-btn");
       assert.ok(
-        visible(".topic-chat-drawer-header__top-line--expanded"),
-        "chat float is expanded"
+        visible(".chat-drawer-header__top-line--expanded"),
+        "drawer is expanded"
       );
     });
 
-    test("chat drawer title links to channel info when expanded", async function (assert) {
+    test("drawer title links to channel info when expanded", async function (assert) {
       await visit("/t/internationalization-localization/280");
-      this.chatService.set("sidebarActive", false);
       await click(".header-dropdown-toggle.open-chat");
       assert.ok(
-        visible(".topic-chat-drawer-header__top-line--expanded"),
-        "chat float is expanded"
+        visible(".chat-drawer-header__top-line--expanded"),
+        "drawer is expanded"
       );
       await click("#chat-channel-row-9");
-      await click(".topic-chat-drawer-header__title");
+      await click(".chat-drawer-header__title");
       assert.equal(currentURL(), `/chat/channel/9/site/info/members`);
     });
 
-    test("chat drawer title expands the chat drawer when collapsed", async function (assert) {
+    test("drawer title expands the drawer when collapsed", async function (assert) {
       await visit("/t/internationalization-localization/280");
-      this.chatService.set("sidebarActive", false);
       await click(".header-dropdown-toggle.open-chat");
       await click(".chat-channel-row");
 
       assert.ok(
-        visible(".topic-chat-drawer-header__top-line--expanded"),
-        "chat float is expanded"
+        visible(".chat-drawer-header__top-line--expanded"),
+        "drawer is expanded"
       );
 
-      await click(".topic-chat-drawer-header__expand-btn");
+      await click(".chat-drawer-header__expand-btn");
 
       assert.ok(
-        visible(".topic-chat-drawer-header__top-line--collapsed"),
-        "chat float is collapsed"
+        visible(".chat-drawer-header__top-line--collapsed"),
+        "drawer is collapsed"
       );
 
-      await click(".topic-chat-drawer-header__title");
+      await click(".chat-drawer-header__title");
 
       assert.ok(
-        visible(".topic-chat-drawer-header__top-line--expanded"),
-        "chat float is expanded"
+        visible(".chat-drawer-header__top-line--expanded"),
+        "drawer is expanded"
       );
     });
   }
@@ -1164,14 +1159,12 @@ acceptance(
       );
     });
 
-    test("Chat float open to DM channel with unread messages with sidebar off", async function (assert) {
+    test("drawer open to DM channel with unread messages with sidebar off", async function (assert) {
       await visit("/t/internationalization-localization/280");
-      this.chatService.set("sidebarActive", false);
-
       await click(".header-dropdown-toggle.open-chat");
       await click("#chat-channel-row-75");
-      const chatContainer = query(".topic-chat-container");
-      assert.ok(chatContainer.classList.contains("channel-75"));
+      const chatContainer = query(".chat-drawer");
+      assert.strictEqual(chatContainer.dataset.chatChannelId, "75");
     });
 
     test("Chat full page open to DM channel with unread messages with sidebar on", async function (assert) {
@@ -1400,10 +1393,10 @@ acceptance("Discourse Chat - image uploads", function (needs) {
 
   test("uploading files in chat works", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    this.container.lookup("service:chat").set("sidebarActive", false);
     await click(".header-dropdown-toggle.open-chat");
+    await click(".chat-channel-row");
 
-    assert.ok(visible(".topic-chat-float-container"), "chat float is open");
+    assert.ok(exists(".chat-drawer.is-expanded"), "drawer is open");
 
     const appEvents = loggedInUser().appEvents;
     const done = assert.async();
@@ -1462,7 +1455,7 @@ acceptance("Discourse Chat - image uploads", function (needs) {
     this.container.lookup("service:chat").set("sidebarActive", false);
     await click(".header-dropdown-toggle.open-chat");
     await click(".chat-channel-row");
-    assert.ok(visible(".topic-chat-float-container"), "chat float is open");
+    assert.ok(visible(".chat-drawer-container"), "drawer is open");
 
     const appEvents = loggedInUser().appEvents;
     const done = assert.async();
@@ -1808,34 +1801,6 @@ acceptance("Discourse Chat - Direct Message Creator", function (needs) {
     );
     await click(".btn.open-draft-channel-page-btn");
     assert.ok(exists(".chat-draft"), "view changes to draft channel screen");
-  });
-});
-
-acceptance("Discourse Chat - Drawer", function (needs) {
-  needs.user({ has_chat_enabled: true });
-  needs.settings({ chat_enabled: true });
-  needs.pretender((server, helper) => {
-    baseChatPretenders(server, helper);
-    chatChannelPretender(server, helper);
-  });
-
-  needs.hooks.beforeEach(function () {
-    Object.defineProperty(this, "chatService", {
-      get: () => this.container.lookup("service:chat"),
-    });
-  });
-
-  test("Position after closing reduced composer", async function (assert) {
-    await visit("/t/internationalization-localization/280");
-    await click(".btn.create");
-    await click(".toggle-preview");
-    await click(".header-dropdown-toggle.open-chat");
-    await click(".save-or-cancel .cancel");
-    const float = document.querySelector(".topic-chat-float-container");
-    const key = "--composer-right";
-    const value = getComputedStyle(float).getPropertyValue(key);
-
-    assert.strictEqual(value, "15px");
   });
 });
 

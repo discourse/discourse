@@ -1,7 +1,8 @@
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import Component from "@ember/component";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
+import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import ChatApi from "discourse/plugins/chat/discourse/lib/chat-api";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -17,7 +18,6 @@ export default class ChatBrowseView extends Component {
   @tracked channels = [];
   tagName = "";
 
-  tabs = TABS;
   offset = 0;
   canLoadMore = true;
 
@@ -59,6 +59,15 @@ export default class ChatBrowseView extends Component {
     }
   }
 
+  @computed("siteSettings.chat_allow_archiving_channels")
+  get tabs() {
+    if (this.siteSettings.chat_allow_archiving_channels) {
+      return TABS;
+    } else {
+      return [...TABS].removeObject("archived");
+    }
+  }
+
   get chatProgressBarContainer() {
     return document.querySelector("#chat-progress-bar-container");
   }
@@ -85,6 +94,11 @@ export default class ChatBrowseView extends Component {
   @action
   createChannel() {
     showModal("create-channel");
+  }
+
+  @action
+  focusFilterInput(input) {
+    schedule("afterRender", () => input?.focus());
   }
 
   @bind

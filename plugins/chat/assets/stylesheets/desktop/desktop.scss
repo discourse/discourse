@@ -172,3 +172,9 @@
     }
   }
 }
+
+.chat-form {
+  &__description.-autojoin {
+    max-width: 50%;
+  }
+}

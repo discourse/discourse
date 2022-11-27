@@ -203,24 +203,6 @@ header .discourse-tag {
   }
 }
 
-.hashtag-autocomplete {
-  .hashtag-autocomplete__option {
-    .hashtag-autocomplete__link {
-      align-items: center;
-      color: var(--primary-medium);
-      display: flex;
-
-      .d-icon {
-        padding-right: 0.5em;
-      }
-
-      .hashtag-autocomplete__text {
-        flex: 1;
-      }
-    }
-  }
-}
-
 .tags-admin-menu {
   margin-top: 20px;
   ul {

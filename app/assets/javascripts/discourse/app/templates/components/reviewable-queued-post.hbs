@@ -7,7 +7,7 @@
   <ReviewableTags @tags={{this.reviewable.payload.tags}} @tagName="" />
   {{#if this.reviewable.payload.via_email}}
     <a href {{on "click" this.showRawEmail}} class="show-raw-email">
-      {{d-icon "far-envelope" title="post.via_email"}}
+      {{d-icon "envelope" title="post.via_email"}}
     </a>
   {{/if}}
 </ReviewableTopicLink>

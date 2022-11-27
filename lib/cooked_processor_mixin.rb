@@ -45,10 +45,7 @@ module CookedProcessorMixin
     oneboxed_images.each do |img|
       next if img["src"].blank?
 
-      src = img["src"].sub(/^https?:/i, "")
       parent = img.parent
-      img_classes = (img["class"] || "").split(" ")
-      link_classes = ((parent&.name == "a" && parent["class"]) || "").split(" ")
 
       if respond_to?(:process_hotlinked_image, true)
         still_an_image = process_hotlinked_image(img)
@@ -183,7 +180,13 @@ module CookedProcessorMixin
 
     return unless is_valid_image_url?(absolute_url)
 
-    @size_cache[url] = FastImage.size(absolute_url)
+    upload = Upload.get_from_url(absolute_url)
+    if upload && upload.width && upload.width > 0
+      @size_cache[url] = [upload.width, upload.height]
+    else
+      @size_cache[url] = FastImage.size(absolute_url)
+    end
+
   rescue Zlib::BufError, URI::Error, OpenSSL::SSL::SSLError
     # FastImage.size raises BufError for some gifs, leave it.
   end

@@ -145,7 +145,7 @@ RSpec.describe ThemeJavascriptsController do
       expect(response.body).to include(
         "require(\"discourse/lib/theme-settings-store\").registerSettings(" +
         "#{component.id}, {\"num_setting\":5,\"theme_uploads\":{\"vendorlib\":" +
-        "\"/uploads/default/test_#{ENV['TEST_ENV_NUMBER']}/original/1X/#{js_upload.sha1}.js\"},\"theme_uploads_local\":{\"vendorlib\":" +
+        "\"/uploads/default/test_#{ENV['TEST_ENV_NUMBER'].presence || '0'}/original/1X/#{js_upload.sha1}.js\"},\"theme_uploads_local\":{\"vendorlib\":" +
         "\"/theme-javascripts/#{js_upload.sha1}.js?__ws=test.localhost\"}}, { force: true });"
       )
       expect(response.body).to include("assert.ok(true);")

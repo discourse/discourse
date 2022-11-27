@@ -421,6 +421,7 @@ RSpec.describe Admin::ApiController do
           "email",
           "posts",
           "uploads",
+          "user_status",
           "global",
           "badges",
           "categories",

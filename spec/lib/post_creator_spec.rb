@@ -119,6 +119,15 @@ RSpec.describe PostCreator do
         )
       end
 
+      it "before_create_post event signature contains both post and opts" do
+        events = DiscourseEvent.track_events { creator.create }
+
+        expect(events).to include(
+          event_name: :before_create_post,
+          params: [creator.post, creator.opts]
+        )
+      end
+
       it "does not notify on system messages" do
         messages = MessageBus.track_publish do
           p = PostCreator.create(admin, basic_topic_params.merge(post_type: Post.types[:moderator_action]))

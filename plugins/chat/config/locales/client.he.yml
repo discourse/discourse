@@ -7,6 +7,9 @@
 he:
   js:
     admin:
+      site_settings:
+        categories:
+          chat: צ׳אט
       logs:
         staff_actions:
           actions:
@@ -53,6 +56,10 @@ he:
         leave_channel: "יציאה מהערוץ"
         join: "הצטרף"
         leave: "עזוב"
+        save_label:
+          mute_channel: "העדפת השתקת ערוץ נשמרה"
+          desktop_notification: "העדפת התראות שולחן עבודה נשמרה"
+          mobile_notification: "העדפת דחיפת התראות לניידים נשמרה"
       channel_archive:
         title: "העברת ערוץ לארכיון"
         instructions: "<p>העברת ערוץ לארכיון מעבירה אותו למצב לקריאה בלבד ומעביר את כל ההודעות מהערוץ לנושא חדש או קיים. אי אפשר לשלוח הודעות חדשות ואי אפשר לערוך או למחוק הודעות קיימות.</p><p>להעביר את הערוץ ‎<strong>%{channelTitle}</strong> לארכיון?</p>"
@@ -283,8 +290,9 @@ he:
         mention: "רק אזכורים"
         always: "לכל פעילות"
       settings:
+        auto_join_users_label: "להוסיף משתמשים אוטומטית"
+        auto_join_users_info: "לבדוק כל שעה אילו משתמשים היו פעילים ב־3 החודשים האחרונים ואם יש להם גישה לקטגוריה %{category}, להוסיף אותם לערוץ הזה."
         enable_auto_join_users: "להוסיף אוטומטית את כל המשתמשים שהיו פעילים לאחרונה"
-        disable_auto_join_users: "להפסיק להוסיף משתמשים אוטומטית"
         auto_join_users_warning: "כל משתמש שאינו חבר בערוץ הזה ויש לו גישה לקטגוריה %{category} יצטרף. זה בסדר?"
         desktop_notification_level: "התראות שולחן עבודה"
         follow: "הצטרף"
@@ -298,6 +306,8 @@ he:
         save: "שמירה"
         saved: "נשמר"
         unfollow: "עזוב"
+        admin_title: "הנהלה"
+        retention_info: "היסטוריית הצ׳אט נשמרת למשך %{days} ימים."
       admin:
         title: "צ׳אט"
       direct_messages:
@@ -373,7 +383,6 @@ he:
       retention_reminders:
         public: "היסטוריית הערוץ נשמרת למשך %{days} ימים."
         dm: "היסטוריית הצ׳אט האישית נשמרת למשך %{days} ימים."
-      topic_button_title: "צ׳אט"
       flags:
         off_topic: "הודעה זו לא תואמת לדיון הנוכחי כפי שהוגדר בכותרת הערוץ וכנראה שצריך להעביר אותה."
         inappropriate: "הודעה זו מכילה תוכן שאדם מן השורה עשוי להחשיב כפוגעני, נצלני או מפר את <a href=\"%{basePath}/guidelines\">הכללים המנחים את הקהילה שלנו</a>."

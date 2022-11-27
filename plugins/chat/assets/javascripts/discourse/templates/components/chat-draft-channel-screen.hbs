@@ -21,8 +21,6 @@
   {{#if this.previewedChannel}}
     <ChatLivePane
       @chatChannel={{this.previewedChannel}}
-      @expanded={{true}}
-      @floatHidden={{false}}
       @includeHeader={{false}}
       @onSwitchChannel={{action "onSwitchFromDraftChannel"}}
     />

@@ -10,6 +10,7 @@ import {
 } from "discourse/lib/utilities";
 import discourseComputed, {
   bind,
+  debounce,
   observes,
   on,
 } from "discourse-common/utils/decorators";
@@ -17,6 +18,10 @@ import {
   fetchUnseenHashtags,
   linkSeenHashtags,
 } from "discourse/lib/link-hashtags";
+import {
+  fetchUnseenHashtagsInContext,
+  linkSeenHashtagsInContext,
+} from "discourse/lib/hashtag-autocomplete";
 import {
   cannotSee,
   fetchUnseenMentions,
@@ -118,6 +123,11 @@ export default Component.extend(ComposerUploadUppy, {
   uploadPreProcessors,
   uploadHandlers,
 
+  init() {
+    this._super(...arguments);
+    this.warnedCannotSeeMentions = [];
+  },
+
   @discourseComputed("composer.requiredCategoryMissing")
   replyPlaceholder(requiredCategoryMissing) {
     if (requiredCategoryMissing) {
@@ -181,6 +191,10 @@ export default Component.extend(ComposerUploadUppy, {
           }
         }
       },
+
+      hashtagTypesInPriorityOrder:
+        this.site.hashtag_configurations["topic-composer"],
+      hashtagIcons: this.site.hashtag_icons,
     };
   },
 
@@ -471,11 +485,24 @@ export default Component.extend(ComposerUploadUppy, {
   },
 
   _renderUnseenHashtags(preview) {
-    const unseen = linkSeenHashtags(preview);
+    let unseen;
+    const hashtagContext = this.site.hashtag_configurations["topic-composer"];
+    if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
+      unseen = linkSeenHashtagsInContext(hashtagContext, preview);
+    } else {
+      unseen = linkSeenHashtags(preview);
+    }
+
     if (unseen.length > 0) {
-      fetchUnseenHashtags(unseen).then(() => {
-        linkSeenHashtags(preview);
-      });
+      if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
+        fetchUnseenHashtagsInContext(hashtagContext, unseen).then(() => {
+          linkSeenHashtagsInContext(hashtagContext, preview);
+        });
+      } else {
+        fetchUnseenHashtags(unseen).then(() => {
+          linkSeenHashtags(preview);
+        });
+      }
     }
   },
 
@@ -504,41 +531,30 @@ export default Component.extend(ComposerUploadUppy, {
     });
   },
 
+  // add a delay to allow for typing, so you don't open the warning right away
+  // previously we would warn after @bob even if you were about to mention @bob2
+  @debounce(2000)
   _warnCannotSeeMention(preview) {
-    const composerDraftKey = this.get("composer.draftKey");
-
-    if (composerDraftKey === Composer.NEW_PRIVATE_MESSAGE_KEY) {
+    if (this.composer.draftKey === Composer.NEW_PRIVATE_MESSAGE_KEY) {
       return;
     }
 
-    schedule("afterRender", () => {
-      let found = this.warnedCannotSeeMentions || [];
+    const warnings = [];
 
-      preview?.querySelectorAll(".mention.cannot-see")?.forEach((mention) => {
-        let name = mention.dataset.name;
+    preview.querySelectorAll(".mention.cannot-see").forEach((mention) => {
+      const { name } = mention.dataset;
 
-        if (!found.includes(name)) {
-          // add a delay to allow for typing, so you don't open the warning right away
-          // previously we would warn after @bob even if you were about to mention @bob2
-          discourseLater(
-            this,
-            () => {
-              if (
-                preview?.querySelectorAll(
-                  `.mention.cannot-see[data-name="${name}"]`
-                )?.length > 0
-              ) {
-                this.cannotSeeMention([{ name, reason: cannotSee[name] }]);
-                found.push(name);
-              }
-            },
-            2000
-          );
-        }
-      });
+      if (this.warnedCannotSeeMentions.includes(name)) {
+        return;
+      }
 
-      this.set("warnedCannotSeeMentions", found);
+      this.warnedCannotSeeMentions.push(name);
+      warnings.push({ name, reason: cannotSee[name] });
     });
+
+    if (warnings.length > 0) {
+      this.cannotSeeMention(warnings);
+    }
   },
 
   _warnHereMention(hereCount) {
@@ -863,8 +879,14 @@ export default Component.extend(ComposerUploadUppy, {
       this._warnMentionedGroups(preview);
       this._warnCannotSeeMention(preview);
 
-      // Paint category and tag hashtags
-      const unseenHashtags = linkSeenHashtags(preview);
+      // Paint category, tag, and other data source hashtags
+      let unseenHashtags;
+      const hashtagContext = this.site.hashtag_configurations["topic-composer"];
+      if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
+        unseenHashtags = linkSeenHashtagsInContext(hashtagContext, preview);
+      } else {
+        unseenHashtags = linkSeenHashtags(preview);
+      }
       if (unseenHashtags.length > 0) {
         discourseDebounce(this, this._renderUnseenHashtags, preview, 450);
       }

@@ -55,7 +55,10 @@ import { addNavItem } from "discourse/models/nav-item";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import { addPluginReviewableParam } from "discourse/components/reviewable-item";
-import { addPopupMenuOptionsCallback } from "discourse/controllers/composer";
+import {
+  addComposerSaveErrorCallback,
+  addPopupMenuOptionsCallback,
+} from "discourse/controllers/composer";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import {
   addGroupPostSmallActionCode,
@@ -104,13 +107,12 @@ import DiscourseURL from "discourse/lib/url";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
-import { registerHashtagSearchParam } from "discourse/lib/hashtag-autocomplete";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-const PLUGIN_API_VERSION = "1.4.0";
+const PLUGIN_API_VERSION = "1.5.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -531,7 +533,8 @@ class PluginApi {
           this.addCommunitySectionLink(args, name.match(/footerLinks/));
         } catch {
           deprecated(
-            `Usage of \`api.decorateWidget('hamburger-menu:generalLinks')\` is incompatible with the \`enable_experimental_sidebar_hamburger\` site setting. Please use \`api.addCommunitySectionLink\` instead.`
+            `Usage of \`api.decorateWidget('hamburger-menu:generalLinks')\` is incompatible with the \`enable_experimental_sidebar_hamburger\` site setting. Please use \`api.addCommunitySectionLink\` instead.`,
+            { id: "discourse.decorate-widget.hamburger-widget-links" }
           );
         }
 
@@ -798,7 +801,8 @@ class PluginApi {
 
   addFlagProperty() {
     deprecated(
-      "addFlagProperty has been removed. Use the reviewable API instead."
+      "addFlagProperty has been removed. Use the reviewable API instead.",
+      { id: "discourse.add-flag-property" }
     );
   }
 
@@ -1243,6 +1247,27 @@ class PluginApi {
    */
   composerBeforeSave(method) {
     Composer.reopen({ beforeSave: method });
+  }
+
+  /**
+   * Registers a callback function to handle the composer save errors.
+   * This allows you to implement custom logic that will happen before
+   * the raw error is presented to the user.
+   * The passed function is expected to return true if the error was handled,
+   * false otherwise.
+   *
+   * Example:
+   *
+   * api.addComposerSaveErrorCallback((error) => {
+   *   if (error == "my_error") {
+   *      //handle error
+   *      return true;
+   *   }
+   *   return false;
+   * })
+   */
+  addComposerSaveErrorCallback(callback) {
+    addComposerSaveErrorCallback(callback);
   }
 
   /**
@@ -1992,35 +2017,6 @@ class PluginApi {
    */
   registerModelTransformer(modelName, transformer) {
     registerModelTransformer(modelName, transformer);
-  }
-
-  /**
-   * EXPERIMENTAL. Do not use.
-   *
-   * When initiating a search inside the composer or other designated inputs
-   * with the `#` key, we search records based on params registered with
-   * this function, and order them by type using the priority here. Since
-   * there can be many different inputs that use `#` and some may need to
-   * weight different types higher in priority, we also require a context
-   * parameter.
-   *
-   * For example, the topic composer may wish to search for categories
-   * and tags, with categories appearing first in the results. The usage
-   * looks like this:
-   *
-   * api.registerHashtagSearchParam("category", "topic-composer", 100);
-   * api.registerHashtagSearchParam("tag", "topic-composer", 50);
-   *
-   * Additional types of records used for the hashtag search results
-   * can be registered via the #register_hashtag_data_source plugin API
-   * method.
-   *
-   * @param {string} param - The type of record to be fetched.
-   * @param {string} context - Where the hashtag search is being initiated using `#`
-   * @param {number} priority - Used for ordering types of records. Priority order is descending.
-   */
-  registerHashtagSearchParam(param, context, priority) {
-    registerHashtagSearchParam(param, context, priority);
   }
 }
 

@@ -259,7 +259,6 @@ id:
       like_count: "Suka"
       topic_count: "Topik"
       post_count: "Pos"
-      user_count: "Pengguna"
       active_user_count: "Pengguna Aktif"
       contact: "Kontak kami"
       contact_info: "Pada kegiatan dari sebuah isu kritikal atau penting terjadi pada situs ini, silahkan kontak kami di %{contact_info}."
@@ -316,7 +315,6 @@ id:
       remove_confirmation: "Anda yakin ingin menghapus rancangan ini?"
       new_topic: "Konsep topik baru"
       new_private_message: "Rancangan pesan pribadi baru"
-      topic_reply: "Balasan konsep"
       abandon:
         confirm: "Anda memiliki rancangan yang sedang diproses untuk topik ini. Apa yang ingin Anda lakukan dengannya?"
         yes_value: "Batalkan"
@@ -911,11 +909,6 @@ id:
       dismiss: "Bubar"
       dismiss_notifications: "Bubarkan Semua"
       dismiss_notifications_tooltip: "Tandai semua notifikasi belum dibaca telah dibaca"
-      first_notification: "Notifikasi pertama Anda! Pilih untuk memulai."
-      skip_new_user_tips:
-        not_first_time: "Bukan pertama kali?"
-        skip_link: "Lewati tips ini"
-        read_later: "Aku akan membacanya nanti."
       theme_default_on_all_devices: "Jadikan ini tema default di semua perangkat saya"
       color_scheme_default_on_all_devices: "Setel skema warna default di semua perangkat saya"
       color_scheme: "Skema warna"
@@ -1010,6 +1003,7 @@ id:
         profile: "Profil"
         emails: "Surel"
         notifications: "Pemberitahuan"
+        tracking: "melacak"
         categories: "Kategori"
         users: "Pengguna"
         tags: "Label"
@@ -1147,6 +1141,7 @@ id:
         never: "tidak pernah"
       other_settings: "Lainnya"
       categories_settings: "Kategori"
+      topics_settings: "Topik-topik"
       new_topic_duration:
         last_here: "dibuat sejak terakhir aku kesini"
         after_1_day: "dibuat hari ini"
@@ -1510,6 +1505,7 @@ id:
       select_all: "Pilih Semua"
       title: "Cari"
       full_page_title: "Cari"
+      results: "hasil"
       search_google_button: "Google"
       search_button: "Cari"
       categories: "Kategori"
@@ -1548,8 +1544,6 @@ id:
         title: "Arsip"
       move_to_inbox:
         title: "Pindah ke Kotak Masuk"
-      edit_message:
-        title: "Ubah"
       list: "Topik"
       new: "topik baru"
       unread: "belum dibaca"
@@ -1827,8 +1821,6 @@ id:
               content: "Admin"
             faq:
               content: "FAQ"
-            tracked:
-              content: "Dilacak"
             groups:
               content: "Grup"
             users:

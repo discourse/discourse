@@ -222,6 +222,7 @@ RSpec.describe ContentSecurityPolicy do
 
       plugin.enabled = true
       expect(parse(policy)['script-src']).to include('https://from-plugin.com')
+      expect(parse(policy)['script-src']).to include('http://test.localhost/local/path')
       expect(parse(policy)['object-src']).to include('https://test-stripping.com')
       expect(parse(policy)['object-src']).to_not include("'none'")
       expect(parse(policy)['manifest-src']).to include("'self'")

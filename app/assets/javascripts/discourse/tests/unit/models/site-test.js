@@ -1,32 +1,27 @@
 import { module, test } from "qunit";
 import Site from "discourse/models/site";
-import createStore from "discourse/tests/helpers/create-store";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { setupTest } from "ember-qunit";
 
-module("Unit | Model | site", function () {
+module("Unit | Model | site", function (hooks) {
+  setupTest(hooks);
+
   test("create", function (assert) {
-    assert.ok(Site.create(), "it can create with no parameters");
+    const store = getOwner(this).lookup("service:store");
+    assert.ok(store.createRecord("site"), "it can create with no parameters");
   });
 
   test("instance", function (assert) {
     const site = Site.current();
 
     assert.present(site, "We have a current site singleton");
-    assert.present(
-      site.get("categories"),
-      "The instance has a list of categories"
-    );
-    assert.present(
-      site.get("flagTypes"),
-      "The instance has a list of flag types"
-    );
-    assert.present(
-      site.get("trustLevels"),
-      "The instance has a list of trust levels"
-    );
+    assert.present(site.categories, "The instance has a list of categories");
+    assert.present(site.flagTypes, "The instance has a list of flag types");
+    assert.present(site.trustLevels, "The instance has a list of trust levels");
   });
 
   test("create categories", function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     const site = store.createRecord("site", {
       categories: [
         { id: 3456, name: "Test Subcategory", parent_category_id: 1234 },
@@ -78,7 +73,7 @@ module("Unit | Model | site", function () {
   });
 
   test("sortedCategories returns categories sorted by topic counts and sorts child categories after parent", function (assert) {
-    const store = createStore();
+    const store = getOwner(this).lookup("service:store");
     const site = store.createRecord("site", {
       categories: [
         {

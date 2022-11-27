@@ -8,6 +8,7 @@ require 'discourse_tagging'
 RSpec.describe DiscourseTagging do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user)  { Fabricate(:user) }
+  let(:admin_guardian) { Guardian.new(admin) }
   let(:guardian) { Guardian.new(user) }
 
   fab!(:tag1) { Fabricate(:tag, name: "fun") }
@@ -18,6 +19,82 @@ RSpec.describe DiscourseTagging do
     SiteSetting.tagging_enabled = true
     SiteSetting.min_trust_to_create_tag = 0
     SiteSetting.min_trust_level_to_tag_topics = 0
+  end
+
+  describe 'visible_tags' do
+    fab!(:tag4) { Fabricate(:tag, name: "fun4") }
+
+    fab!(:user2)  { Fabricate(:user) }
+    let(:guardian2) { Guardian.new(user2) }
+
+    fab!(:group) { Fabricate(:group, name: "my-group") }
+    fab!(:group_user) { Fabricate(:group_user, group: group, user: user) }
+
+    fab!(:tag_group2) do
+      Fabricate(:tag_group, permissions: { "everyone" => 1 }, tag_names: [tag2.name])
+    end
+
+    fab!(:tag_group3) do
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag3.name])
+    end
+
+    fab!(:tag_group4) do
+      Fabricate(:tag_group, permissions: { "my-group" => 1 }, tag_names: [tag4.name])
+    end
+
+    context 'for admin' do
+      it "includes tags with no tag_groups" do
+        expect(DiscourseTagging.visible_tags(admin_guardian)).to include(tag1)
+      end
+
+      it "includes tags with tags visible to everyone" do
+        expect(DiscourseTagging.visible_tags(admin_guardian)).to include(tag2)
+      end
+
+      it "includes tags which are visible to staff" do
+        expect(DiscourseTagging.visible_tags(admin_guardian)).to include(tag3)
+      end
+
+      it "includes tags which are visible to members of certain groups" do
+        expect(DiscourseTagging.visible_tags(admin_guardian)).to include(tag4)
+      end
+    end
+
+    context 'for users in a group' do
+      it "includes tags with no tag_groups" do
+        expect(DiscourseTagging.visible_tags(guardian)).to include(tag1)
+      end
+
+      it "includes tags with tags visible to everyone" do
+        expect(DiscourseTagging.visible_tags(guardian)).to include(tag2)
+      end
+
+      it "does not include tags which are only visible to staff" do
+        expect(DiscourseTagging.visible_tags(guardian)).not_to include(tag3)
+      end
+
+      it "includes tags which are visible to members of the group" do
+        expect(DiscourseTagging.visible_tags(guardian)).to include(tag4)
+      end
+    end
+
+    context 'for other users' do
+      it "includes tags with no tag_groups" do
+        expect(DiscourseTagging.visible_tags(guardian2)).to include(tag1)
+      end
+
+      it "includes tags with tags visible to everyone" do
+        expect(DiscourseTagging.visible_tags(guardian2)).to include(tag2)
+      end
+
+      it "does not include tags which are only visible to staff" do
+        expect(DiscourseTagging.visible_tags(guardian2)).not_to include(tag3)
+      end
+
+      it "does not include tags which are visible to members of another group" do
+        expect(DiscourseTagging.visible_tags(guardian2)).not_to include(tag4)
+      end
+    end
   end
 
   describe 'filter_allowed_tags' do

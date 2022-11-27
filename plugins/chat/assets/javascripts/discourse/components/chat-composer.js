@@ -63,7 +63,7 @@ export default Component.extend(TextareaTextManipulation, {
     return picker.opened && picker.context === "chat-composer";
   },
 
-  @discourseComputed("chatStateManager.isFullPage")
+  @discourseComputed("chatStateManager.isFullPageActive")
   fileUploadElementId(fullPage) {
     return fullPage ? "chat-full-page-uploader" : "chat-widget-uploader";
   },
@@ -357,7 +357,7 @@ export default Component.extend(TextareaTextManipulation, {
 
   _applyCategoryHashtagAutocomplete($textarea) {
     setupHashtagAutocomplete(
-      "chat-composer",
+      this.site.hashtag_configurations["chat-composer"],
       $textarea,
       this.siteSettings,
       (value) => {

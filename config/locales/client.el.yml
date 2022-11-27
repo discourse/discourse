@@ -252,7 +252,6 @@ el:
       like_count: "Μου αρέσει"
       topic_count: "Θέματα"
       post_count: "Αναρτήσεις"
-      user_count: "Χρήστες"
       active_user_count: "Ενεργοί χρήστες"
       contact: "Επικοινωνήστε μαζί μας"
       contact_info: "Σε περίπτωση που προκύψει κάποιο κρίσιμο πρόβλημα ή κάποιο επείγον θέμα που αφορά αυτόν τον ιστότοπο, παρακαλούμε να επικοινωνήσετε μαζί μας στο %{contact_info}."
@@ -293,7 +292,6 @@ el:
       resume: "Βιογραφικό"
       remove: "Αφαίρεση"
       new_topic: "Νέο προσχέδιο θέματος"
-      topic_reply: "Προσχέδιο απάντησης"
       abandon:
         yes_value: "Απόρριψη"
     topic_count_categories:
@@ -891,12 +889,9 @@ el:
       dismiss: "Απόρριψη"
       dismiss_notifications: "Απόρριψη Όλων"
       dismiss_notifications_tooltip: "Όλες οι αδιάβαστες ειδοποιήσεις να χαρακτηριστούν διαβασμένες"
-      first_notification: "Η πρώτη σου ειδοποίηση! Επίλεξε την για να ξεκινήσεις."
       dynamic_favicon: "Εμφάνιση μετρήσεων στο εικονίδιο του περιηγητή"
       skip_new_user_tips:
         description: "Παράλειψη συμβουλών και σημάτων για την ενσωμάτωση νέου χρήστη"
-        not_first_time: "Δεν είναι η πρώτη σας φορά;"
-        skip_link: "Παραλείψτε αυτές τις συμβουλές"
       theme_default_on_all_devices: "Όρισε αυτό ως προεπιλεγμένο θέμα σε όλες τις συσκευές μου"
       color_scheme_default_on_all_devices: "Όρισε προεπιλεγμένο συνδυασμό χρωμάτων σε όλες τις συσκευές μου"
       color_scheme: "Συνδυασμός χρωμάτων"
@@ -1020,6 +1015,7 @@ el:
         profile: "Προφίλ"
         emails: "Emails"
         notifications: "Ειδοποιήσεις"
+        tracking: "Παρακολουθείται"
         categories: "Κατηγορίες"
         users: "Χρήστες"
         tags: "Ετικέτες"
@@ -1234,6 +1230,7 @@ el:
       email_in_reply_to: "Συμπερίλαβε ένα απόσπασμα της απαντημένης ανάρτησης στο email"
       other_settings: "Λοιπά"
       categories_settings: "Κατηγορίες"
+      topics_settings: "Θέματα"
       new_topic_duration:
         label: "Τα νήματα να θεωρούνται νέα όταν"
         not_viewed: "Δεν τα έχω δει αυτά ακόμη"
@@ -1851,6 +1848,7 @@ el:
         other: "<span>%{count}%{plus} αποτελέσματα για</span><span class='term'>%{term}</span>"
       title: "Αναζήτηση"
       full_page_title: "Αναζήτηση"
+      results: "αποτελέσματα"
       no_results: "Δε βρέθηκαν αποτελέσματα."
       no_more_results: "Δε βρέθηκαν άλλα αποτελέσματα"
       post_format: "#%{post_number} από %{username}"
@@ -1990,9 +1988,6 @@ el:
       move_to_inbox:
         title: "Μετακίνηση στα Εισερχόμενα"
         help: "Μετακίνηση μηνύματος πίσω στα Εισερχόμενα"
-      edit_message:
-        help: "Επεξεργασία της πρώτης ανάρτησης του μηνύματος"
-        title: "Επεξεργασία"
       defer:
         help: "Σήμανση ως μη αναγνωσμένο"
         title: "Αναβολή"
@@ -2575,8 +2570,6 @@ el:
       this_year: "φέτος"
       position: "Θέση στη σελίδα κατηγοριών:"
       default_position: "Προκαθορισμένη Θέση"
-      position_disabled: "Οι κατηγορίες εμφανίζονται ανάλογα με το πόσο ενεργές είναι. Για να αλλάξει η σειρά εμφάνισης των κατηγοριών, "
-      position_disabled_click: 'ενεργοποίησε τη ρύθμιση «σταθερές θεσεις κατηγοριών»'
       minimum_required_tags: "Ελάχιστος αριθμός ετικετών που απαιτούνται σε ένα θέμα:"
       parent: "Μητρική Κατηγορία"
       num_auto_bump_daily: "Αριθμός ανοιχτών θεμάτων για αυτόματη ώθηση καθημερινά:"
@@ -3096,8 +3089,6 @@ el:
               content: "Παράσημα"
             faq:
               content: "Συχνές ερωτήσεις"
-            tracked:
-              content: "Παρακολουθείται"
             groups:
               content: "Ομάδες"
               title: "Όλες οι ομάδες"

@@ -16,8 +16,8 @@ export default TextField.extend({
   @on("init")
   deprecateComponent() {
     deprecated(
-      "`{{user-selector}}` is deprecated. Please use `{{email-group-user-chooser}}` instead.",
-      { since: "2.7", dropFrom: "2.8" }
+      "The `<UserSelector>` component is deprecated. Please use `<EmailGroupUserChooser>` instead.",
+      { since: "2.7", dropFrom: "2.8", id: "discourse.user-selector-component" }
     );
   },
 

@@ -12,6 +12,11 @@
     }
   }
 
+  // For backwards compatibility with legacy design
+  .user-secondary-navigation {
+    margin-top: 1.5em;
+  }
+
   .user-navigation-secondary {
     font-size: var(--font-up-1);
 

@@ -3,8 +3,7 @@
   <div class="user-navigation user-navigation-secondary">
     <HorizontalOverflowNav>
       <UserNav::PreferencesNav
-          @user={{this.model}}
-          @viewingSelf={{this.viewingSelf}}
+          @currentUser={{this.currentUser}}
           @model={{this.model}}
           @siteSettings={{this.siteSettings}}/>
     </HorizontalOverflowNav>
@@ -79,6 +78,7 @@
           </LinkTo>
         </li>
       {{/if}}
+
       <PluginOutlet @name="user-preferences-nav" @tagName="span" @connectorTagName="li" @args={{hash model=this.model}} />
     </MobileNav>
   </DSection>

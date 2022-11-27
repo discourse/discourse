@@ -66,12 +66,10 @@ export default Component.extend(UppyUploadMixin, {
 
   _uploadDropTargetOptions() {
     let targetEl;
-    if (this.chatStateManager.isFullPage) {
+    if (this.chatStateManager.isFullPageActive) {
       targetEl = document.querySelector(".full-page-chat");
     } else {
-      targetEl = document.querySelector(
-        ".topic-chat-container.expanded.visible"
-      );
+      targetEl = document.querySelector(".chat-drawer.is-expanded");
     }
 
     if (!targetEl) {

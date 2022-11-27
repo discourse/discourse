@@ -54,36 +54,34 @@
         </li>
       {{/if}}
 
-      {{#each this.model.groups as |group|}}
-        {{#if group.has_messages}}
-          <li>
-            <LinkTo @route="userPrivateMessages.group" @model={{group.name}}>
-              {{d-icon "users"}}
-              {{capitalize-string group.name}}
-            </LinkTo>
-          </li>
+      {{#each this.model.groupsWithMessages as |group|}}
+        <li>
+          <LinkTo @route="userPrivateMessages.group" @model={{group.name}}>
+            {{d-icon "users"}}
+            {{capitalize-string group.name}}
+          </LinkTo>
+        </li>
 
-          {{#if (and this.isGroup (eq this.groupFilter group.name))}}
-            {{#if this.viewingSelf}}
-              <li class="archive">
-                <LinkTo @route="userPrivateMessages.groupNew" @model={{group.name}} class="new">
-                  {{this.newLinkText}}
-                </LinkTo>
-              </li>
-
-              <li class="archive">
-                <LinkTo @route="userPrivateMessages.groupUnread" @model={{group.name}} class="unread">
-                  {{this.unreadLinkText}}
-                </LinkTo>
-              </li>
-            {{/if}}
+        {{#if (and this.isGroup (eq this.groupFilter group.name))}}
+          {{#if this.viewingSelf}}
+            <li class="archive">
+              <LinkTo @route="userPrivateMessages.groupNew" @model={{group.name}} class="new">
+                {{this.newLinkText}}
+              </LinkTo>
+            </li>
 
             <li class="archive">
-              <LinkTo @route="userPrivateMessages.groupArchive" @model={{group.name}}>
-                {{i18n "user.messages.archive"}}
+              <LinkTo @route="userPrivateMessages.groupUnread" @model={{group.name}} class="unread">
+                {{this.unreadLinkText}}
               </LinkTo>
             </li>
           {{/if}}
+
+          <li class="archive">
+            <LinkTo @route="userPrivateMessages.groupArchive" @model={{group.name}}>
+              {{i18n "user.messages.archive"}}
+            </LinkTo>
+          </li>
         {{/if}}
       {{/each}}
 

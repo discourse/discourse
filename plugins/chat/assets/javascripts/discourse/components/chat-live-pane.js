@@ -701,9 +701,9 @@ export default Component.extend({
     }
   },
 
-  @observes("floatHidden")
+  @observes("chatStateManager.isDrawerActive")
   onFloatHiddenChange() {
-    if (!this.floatHidden) {
+    if (this.chatStateManager.isDrawerActive) {
       this.set("expanded", true);
       this._markLastReadMessage({ reRender: true });
       this._stickScrollToBottom();
@@ -1265,7 +1265,6 @@ export default Component.extend({
   @action
   onCloseFullScreen() {
     this.chatStateManager.prefersDrawer();
-
     this.router.transitionTo(this.chatStateManager.lastKnownAppURL).then(() => {
       this.appEvents.trigger(
         "chat:open-url",
@@ -1381,6 +1380,10 @@ export default Component.extend({
   },
 
   _reportReplyingPresence(composerValue) {
+    if (this._selfDeleted) {
+      return;
+    }
+
     if (this.chatChannel.isDraft) {
       return;
     }

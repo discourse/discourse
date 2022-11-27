@@ -74,6 +74,7 @@ ca:
         save: "Desa"
         saved: "Desat"
         unfollow: "Abandona"
+        admin_title: "Administració"
       incoming_webhooks:
         back: "Enrere"
         description: "Descripció"

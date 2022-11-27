@@ -15,7 +15,7 @@ RSpec.describe HashtagsController do
     tag_group
   end
 
-  describe "#check" do
+  describe "#lookup" do
     context "when logged in" do
       context "as regular user" do
         before do
@@ -119,4 +119,7 @@ RSpec.describe HashtagsController do
       end
     end
   end
+
+  # TODO (martin) write a spec here for the new
+  # #lookup behaviour and the new #search behaviour
 end

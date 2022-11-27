@@ -71,6 +71,7 @@ bg:
         save: "Запази "
         saved: "Запазено"
         unfollow: "Напусни"
+        admin_title: "Администратор"
       incoming_webhooks:
         back: "Назад"
         description: "Описание"

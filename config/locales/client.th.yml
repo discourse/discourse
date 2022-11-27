@@ -252,7 +252,6 @@ th:
       like_count: "ถูกใจ"
       topic_count: "กระทู้"
       post_count: "โพสต์"
-      user_count: "ผู้ใช้"
       active_user_count: "ผู้ใช้ที่ใช้งานอยู่"
       contact: "ติดต่อเรา"
       contact_info: "ในกรณีที่เกิดเหตุฉุกเฉินหรือประเด็นสำคัญที่ส่งผลต่อเว็บไซต์นี้ กรุณาติดต่อเราที่ %{contact_info}"
@@ -291,7 +290,6 @@ th:
       resume: "ดำเนินการต่อ"
       remove: "ลบ"
       new_topic: "แบบร่างกระทู้ใหม่"
-      topic_reply: "ตอบแบบร่าง"
     topic_count_categories:
       other: "ดู %{count} กระทู้ใหม่หรือที่อัปเดต"
     topic_count_latest:
@@ -770,7 +768,6 @@ th:
       dismiss: "ซ่อน"
       dismiss_notifications: "ซ่อนทั้งหมด"
       dismiss_notifications_tooltip: "ทำเครื่องหมายอ่านบนการแจ้งเตือนที่ยังไม่ได้อ่านทั้งหมด"
-      first_notification: "การแจ้งเตือนแรกของคุณ! กดเลือกเพื่อเริ่มต้น"
       dynamic_favicon: "แสดงจำนวนบนไอคอนเบราว์เซอร์"
       theme_default_on_all_devices: "ทำให้ธีมนี้เป็นธีมเริ่มต้นบนทุกอุปกรณ์ของฉัน"
       color_schemes:
@@ -860,6 +857,7 @@ th:
         profile: "โปรไฟล์"
         emails: "อีเมล"
         notifications: "การแจ้งเตือน"
+        tracking: "ติดตาม"
         categories: "หมวดหมู่"
         users: "ผู้ใช้"
         tags: "แท็ก"
@@ -1027,6 +1025,7 @@ th:
       email_in_reply_to: "เพิ่มการตอบในโพสท์ที่คัดกรองแล้วในอีเมล"
       other_settings: "อื่นๆ"
       categories_settings: "หมวดหมู่"
+      topics_settings: "หัวข้อ"
       new_topic_duration:
         label: "พิจารณาเป็นกระทู้ใหม่เมื่อ"
         not_viewed: "ฉันยังไม่ได้ดูมันเลย"
@@ -1669,9 +1668,6 @@ th:
       move_to_inbox:
         title: "ย้ายไปกล่องขาเข้า"
         help: "ย้ายข้อความกลับไปกล่องขาเข้า"
-      edit_message:
-        help: "แก้ไขโพสต์แรกของข้อความ"
-        title: "แก้ไข"
       defer:
         help: "ทำเครื่องหมายว่ายังไม่ได้อ่าน"
       list: "กระทู้"
@@ -2484,8 +2480,6 @@ th:
               content: "เหรียญ"
             faq:
               content: "คำถามที่พบบ่อย"
-            tracked:
-              content: "ติดตาม"
             groups:
               content: "กลุ่ม"
               title: "กลุ่มทั้งหมด"
