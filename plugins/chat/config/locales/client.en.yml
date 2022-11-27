@@ -49,7 +49,7 @@ en:
         leave_channel: "Leave channel"
         join: "Join"
         leave: "Leave"
-        save_label: 
+        save_label:
           mute_channel: "Mute channel preference saved"
           desktop_notification: "Desktop notification preference saved"
           mobile_notification: "Mobile push notification preference saved"
@@ -317,8 +317,7 @@ en:
         create: "Go"
         leave: "Leave this personal chat"
         cannot_create: "Sorry, you cannot send direct messages."
-        you_last_messaged: "You:"
-        
+
       incoming_webhooks:
         back: "Back"
         channel_placeholder: "Select a channel"
