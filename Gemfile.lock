@@ -167,7 +167,7 @@ GEM
       progress (~> 3.0, >= 3.0.1)
     image_size (3.2.0)
     in_threads (1.6.0)
-    jmespath (1.6.1)
+    jmespath (1.6.2)
     json (2.6.2)
     json-schema (3.0.0)
       addressable (>= 2.8)
