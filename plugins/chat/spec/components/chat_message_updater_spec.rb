@@ -68,15 +68,38 @@ describe Chat::ChatMessageUpdater do
     expect(chat_message.reload.message).to eq(og_message)
   end
 
+  it "errors when length is greater than `chat_maximum_message_length`" do
+    SiteSetting.chat_maximum_message_length = 100
+    og_message = "This won't be changed!"
+    chat_message = create_chat_message(user1, og_message, public_chat_channel)
+    new_message = "2 long" * 100
+
+    updater =
+      Chat::ChatMessageUpdater.update(
+        guardian: guardian,
+        chat_message: chat_message,
+        new_content: new_message,
+      )
+    expect(updater.failed?).to eq(true)
+    expect(updater.error.message).to match(
+      I18n.t(
+        "chat.errors.message_too_long",
+        { maximum: SiteSetting.chat_maximum_message_length },
+      ),
+    )
+    expect(chat_message.reload.message).to eq(og_message)
+  end
+
   it "errors if a user other than the message user is trying to edit the message" do
     og_message = "This won't be changed!"
     chat_message = create_chat_message(user1, og_message, public_chat_channel)
     new_message = "2 short"
-    updater = Chat::ChatMessageUpdater.update(
-      guardian: Guardian.new(Fabricate(:user)),
-      chat_message: chat_message,
-      new_content: new_message,
-    )
+    updater =
+      Chat::ChatMessageUpdater.update(
+        guardian: Guardian.new(Fabricate(:user)),
+        chat_message: chat_message,
+        new_content: new_message,
+      )
     expect(updater.failed?).to eq(true)
     expect(updater.error).to match(Discourse::InvalidAccess)
   end
@@ -95,13 +118,14 @@ describe Chat::ChatMessageUpdater do
 
   it "publishes a DiscourseEvent for updated messages" do
     chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
-    events = DiscourseEvent.track_events {
-      Chat::ChatMessageUpdater.update(
-        guardian: guardian,
-        chat_message: chat_message,
-        new_content: "Change to this!",
-      )
-    }
+    events =
+      DiscourseEvent.track_events do
+        Chat::ChatMessageUpdater.update(
+          guardian: guardian,
+          chat_message: chat_message,
+          new_content: "Change to this!",
+        )
+      end
     expect(events.map { _1[:event_name] }).to include(:chat_message_edited)
   end
 
