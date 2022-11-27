@@ -351,7 +351,7 @@ export default MountWidget.extend({
     window.removeEventListener("scroll", this._debouncedScroll);
     this.appEvents.off("post-stream:refresh", this, "_debouncedScroll");
     this.element.removeEventListener(
-      "mouseenter",
+      "mouseover",
       this._handleWidgetButtonHoverState
     );
     this.element.removeEventListener(
