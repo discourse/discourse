@@ -12,6 +12,9 @@
       color: var(--primary-medium);
     }
   }
+  tr {
+    border-bottom: none;
+  }
   tbody {
     border-top: none;
   }
