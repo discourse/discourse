@@ -4,8 +4,10 @@ const NarrowDesktop = {
   narrowDesktopView: false,
 
   init() {
+    const bodyElement = document.querySelector("body");
     this.narrowDesktopView =
-      narrowDesktopForced || this.isNarrowDesktopView(window.innerWidth);
+      narrowDesktopForced ||
+      this.isNarrowDesktopView(bodyElement.getBoundingClientRect().width);
   },
 
   isNarrowDesktopView(width) {
