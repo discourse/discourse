@@ -118,7 +118,7 @@ $float-height: 530px;
     }
 
     .chat-channel-unread-indicator {
-      border-color: var(--header_background);
+      border: 2px solid var(--header_background);
       position: absolute;
       right: 2px;
       bottom: 2px;
@@ -449,9 +449,12 @@ $float-height: 530px;
 
     .user-status-message {
       display: inline-block;
-      color: var(--primary-medium);
       font-size: var(--font-down-2);
       margin-right: 0.5rem;
+
+      &-description {
+        color: var(--primary-medium);
+      }
     }
   }
 
