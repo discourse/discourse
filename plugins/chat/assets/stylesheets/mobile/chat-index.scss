@@ -31,12 +31,11 @@
 
     .chat-channel-divider {
       background-color: var(--secondary);
-      padding: 2.5rem 1.5rem 0.5rem 1.5rem;
+      padding: 2.5rem 1.5rem 0.75rem 1.5rem;
       font-size: var(--font-up-1);
 
       &:first-of-type {
         padding-top: 1rem;
-        padding-bottom: 0; //visual compensation
       }
 
       .channel-title {

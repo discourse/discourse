@@ -212,10 +212,7 @@ body.composer-open .chat-drawer-outlet-container {
   padding-bottom: 0.25em;
 
   .channels-list .chat-channel-divider {
-    padding: 1rem 0.5rem 0.25rem 1rem;
-
-    &:not(:first-of-type) {
-      padding-top: 2rem;
-    }
+    padding: 1.5rem 0.5rem 1rem 1rem;
+    color: var(--quaternary);
   }
 }
