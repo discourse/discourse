@@ -1138,6 +1138,17 @@ class Plugin::Instance
     HashtagAutocompleteService.register_type_in_context(type, context, priority)
   end
 
+  ##
+  # Register a block that will be called when the UserDestroyer runs
+  # with the :delete_posts opt set to true. It's important to note that the block will
+  # execute before any other :delete_posts actions, it allows us to manipulate flags
+  # before agreeing with them. For example, discourse-akismet makes use of this
+  #
+  # @param {Block} callback to be called with the user, guardian, and the destroyer opts as arguments
+  def register_user_destroyer_on_content_deletion_callback(callback)
+    DiscoursePluginRegistry.register_user_destroyer_on_content_deletion_callback(callback, self)
+  end
+
   protected
 
   def self.js_path
