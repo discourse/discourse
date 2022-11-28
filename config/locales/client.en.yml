@@ -1989,7 +1989,6 @@ en:
       password_label: "Password"
       optional_description: "(optional)"
       existing_user_can_redeem: "Redeem your invitation to a topic or group."
-      existing_user_cannot_redeem: "This invitation cannot be redeemed. Please ask the person who invited you to send you a new invitation."
 
     password_reset:
       continue: "Continue to %{site_name}"
