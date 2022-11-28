@@ -10,4 +10,10 @@
   .chat-channel-title {
     padding-right: 0.5em;
   }
+
+  .chat-channel-title {
+    &__avatar {
+      padding: 1px 0; //for green active box-shadow effect;
+    }
+  }
 }
