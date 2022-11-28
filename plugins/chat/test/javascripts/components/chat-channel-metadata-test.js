@@ -17,7 +17,7 @@ module("Discourse Chat | Component | chat-channel-metadata", function (hooks) {
 
     assert
       .dom(".chat-channel-metadata__date")
-      .hasText(lastMessageSentAt.format("hh:mm"));
+      .hasText(lastMessageSentAt.format("LT"));
   });
 
   test("unreadIndicator", async function (assert) {
