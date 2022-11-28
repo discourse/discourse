@@ -463,6 +463,7 @@ $float-height: 530px;
     &__date {
       color: var(--primary-high);
       font-size: var(--font-down-2);
+      white-space: nowrap;
     }
 
     .chat-channel-unread-indicator {
