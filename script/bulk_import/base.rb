@@ -99,6 +99,7 @@ class BulkImport::Base
     load_indexes
     execute
     fix_primary_keys
+    execute_after
     puts "Done! Now run the 'import:ensure_consistency' rake task."
   end
 
@@ -225,6 +226,9 @@ class BulkImport::Base
 
   def execute
     raise NotImplementedError
+  end
+
+  def execute_after
   end
 
   def fix_primary_keys
@@ -713,6 +717,7 @@ class BulkImport::Base
     imported_ids = []
     process_method_name = "process_#{name}"
     sql = "COPY #{name.pluralize} (#{columns.map { |c| "\"#{c}\"" }.join(",")}) FROM STDIN"
+    rows_created = 0
 
     @raw_connection.copy_data(sql, @encoder) do
       rows.each do |row|
@@ -722,7 +727,8 @@ class BulkImport::Base
           imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
           imported_ids |= mapped[:imported_ids] unless mapped[:imported_ids].nil?
           @raw_connection.put_copy_data columns.map { |c| processed[c] } unless processed[:skip]
-          print "\r%7d - %6d/sec" % [imported_ids.size, imported_ids.size.to_f / (Time.now - start)] if imported_ids.size % 5000 == 0
+          rows_created += 1
+          print "\r%7d - %6d/sec" % [rows_created, rows_created.to_f / (Time.now - start)] if rows_created % 100 == 0
         rescue => e
           puts "\n"
           puts "ERROR: #{e.message}"
@@ -731,10 +737,7 @@ class BulkImport::Base
       end
     end
 
-    if imported_ids.size > 0
-      print "\r%7d - %6d/sec" % [imported_ids.size, imported_ids.size.to_f / (Time.now - start)]
-      puts
-    end
+    print "\r%7d - %6d/sec\n" % [rows_created, rows_created.to_f / (Time.now - start)] if rows_created > 0
 
     id_mapping_method_name = "#{name}_id_from_imported_id".freeze
     return unless respond_to?(id_mapping_method_name)
@@ -745,6 +748,7 @@ class BulkImport::Base
       }
     end
   rescue => e
+    # FIXME: errors catched here stop the rest of the COPY
     puts e.message
     puts e.backtrace.join("\n")
   end
