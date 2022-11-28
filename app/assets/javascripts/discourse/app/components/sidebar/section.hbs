@@ -1,7 +1,12 @@
 {{#if this.displaySection}}
   <div class={{concat "sidebar-section-wrapper sidebar-section-" @sectionName}}>
     <div class="sidebar-section-header-wrapper sidebar-row">
-      <Sidebar::SectionHeader @collapsable={{@collapsable}} @toggleSectionDisplay={{this.toggleSectionDisplay}}>
+      <Sidebar::SectionHeader
+        @collapsable={{@collapsable}}
+        @sidebarSectionContentID={{this.sidebarSectionContentID}}
+        @toggleSectionDisplay={{this.toggleSectionDisplay}}
+        @isExpanded={{this.displaySectionContent}}
+      >
         {{#if @collapsable}}
           <span class="sidebar-section-header-caret">
             {{d-icon this.headerCaretIcon}}
@@ -36,9 +41,9 @@
     </div>
 
     {{#if this.displaySectionContent}}
-      <div class="sidebar-section-content">
+      <ul class="sidebar-section-content" id={{this.sidebarSectionContentID}}>
         {{yield}}
-      </div>
+      </ul>
     {{/if}}
   </div>
 {{/if}}

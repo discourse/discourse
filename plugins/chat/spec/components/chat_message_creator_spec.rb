@@ -72,6 +72,23 @@ describe Chat::ChatMessageCreator do
       )
     end
 
+    it "errors when length is greater than `chat_maximum_message_length`" do
+      SiteSetting.chat_maximum_message_length = 100
+      creator =
+        Chat::ChatMessageCreator.create(
+          chat_channel: public_chat_channel,
+          user: user1,
+          content: "a really long and in depth message that is just too detailed" * 100,
+        )
+      expect(creator.failed?).to eq(true)
+      expect(creator.error.message).to match(
+        I18n.t(
+          "chat.errors.message_too_long",
+          { maximum: SiteSetting.chat_maximum_message_length },
+        ),
+      )
+    end
+
     it "allows message creation when length is less than `chat_minimum_message_length` when upload is present" do
       upload = Fabricate(:upload, user: user1)
       SiteSetting.chat_minimum_message_length = 10

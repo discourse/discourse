@@ -109,7 +109,9 @@ export function buildArgsWithDeprecations(args, deprecatedArgs) {
   Object.keys(deprecatedArgs).forEach((key) => {
     Object.defineProperty(output, key, {
       get() {
-        deprecated(`${key} is deprecated`);
+        deprecated(`${key} is deprecated`, {
+          id: "discourse.plugin-connector.deprecated-arg",
+        });
 
         return deprecatedArgs[key];
       },

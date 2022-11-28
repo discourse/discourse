@@ -23,7 +23,7 @@ zh_CN:
           timezones_title: 要显示的时区
           timezones_description: 时区将用于在预览和回退中显示日期。
           recurring_title: 重复
-          recurring_description: "定义事件的重复发生。您还可以手动编辑表单生成的重复选项并使用以下键之一：年、季度、月、周、日、小时、分钟、秒、毫秒。"
+          recurring_description: "定义事件的重复频率。您还可以手动编辑表单生成的重复选项并使用以下键之一：years、quarters、months、weeks、days、hours、minutes、seconds、milliseconds"
           recurring_none: 不重复
           invalid_date: 日期无效，请确保日期和时间正确
           date_title: 日期

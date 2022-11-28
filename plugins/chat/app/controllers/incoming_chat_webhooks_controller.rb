@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Chat::IncomingChatWebhooksController < ApplicationController
-  WEBHOOK_MAX_MESSAGE_LENGTH = 2000
   WEBHOOK_MESSAGES_PER_MINUTE_LIMIT = 10
 
   skip_before_action :verify_authenticity_token, :redirect_to_login_if_required
@@ -80,9 +79,9 @@ class Chat::IncomingChatWebhooksController < ApplicationController
   end
 
   def validate_message_length(message)
-    return if message.length <= WEBHOOK_MAX_MESSAGE_LENGTH
+    return if message.length <= SiteSetting.chat_maximum_message_length
     raise Discourse::InvalidParameters.new(
-            "Body cannot be over #{WEBHOOK_MAX_MESSAGE_LENGTH} characters",
+            "Body cannot be over #{SiteSetting.chat_maximum_message_length} characters",
           )
   end
 

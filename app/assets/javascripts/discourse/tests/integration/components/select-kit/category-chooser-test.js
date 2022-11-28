@@ -2,9 +2,9 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import I18n from "I18n";
-import createStore from "discourse/tests/helpers/create-store";
 import { hbs } from "ember-cli-htmlbars";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 module(
   "Integration | Component | select-kit/category-chooser",
@@ -126,9 +126,9 @@ module(
       assert.strictEqual(this.subject.header().label(), "category…");
     });
 
-    test("with allowUncategorized=null and generalCategoryId present", async function (assert) {
+    test("with allowUncategorized=null and defaultComposerCategory present", async function (assert) {
       this.siteSettings.allow_uncategorized_topics = false;
-      this.siteSettings.general_category_id = 4;
+      this.siteSettings.default_composer_category = 4;
 
       await render(hbs`
         <CategoryChooser
@@ -143,9 +143,9 @@ module(
       assert.strictEqual(this.subject.header().label(), "");
     });
 
-    test("with allowUncategorized=null and generalCategoryId present, but not set", async function (assert) {
+    test("with allowUncategorized=null and defaultComposerCategory present, but not set", async function (assert) {
       this.siteSettings.allow_uncategorized_topics = false;
-      this.siteSettings.general_category_id = -1;
+      this.siteSettings.default_composer_category = -1;
 
       await render(hbs`
         <CategoryChooser
@@ -267,7 +267,7 @@ module(
     });
 
     test("filter works with non english characters", async function (assert) {
-      const store = createStore();
+      const store = getOwner(this).lookup("service:store");
       store.createRecord("category", {
         id: 1,
         name: "chữ Quốc ngữ",
@@ -287,7 +287,7 @@ module(
     });
 
     test("decodes entities in row title", async function (assert) {
-      const store = createStore();
+      const store = getOwner(this).lookup("service:store");
       store.createRecord("category", {
         id: 1,
         name: "cat-with-entities",

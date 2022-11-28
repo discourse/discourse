@@ -414,7 +414,6 @@ sw:
     success: "Umebadilisha nywila yako kwa mafanikio na sasa umeingia."
     success_unapproved: "Umebadilisha nywila yako kwa mafanikio."
   email_login:
-    invalid_token: "Samahani, kiungo hicho cha kuingia kupitia barua pepe ni cha mda sana. Bonyeza kitufe cha Kuingia na tumia 'Nimesahau nywila' ili upate kiungo kipya."
     title: "Ingia kupitia barua pepe"
   change_email:
     confirmed: "Barua pepe yako imesasishwa."

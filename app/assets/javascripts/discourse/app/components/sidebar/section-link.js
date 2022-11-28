@@ -7,6 +7,12 @@ export default class SectionLink extends Component {
     }
   }
 
+  didInsert(_element, [args]) {
+    if (args.didInsert) {
+      args.didInsert();
+    }
+  }
+
   get shouldDisplay() {
     if (this.args.shouldDisplay === undefined) {
       return true;

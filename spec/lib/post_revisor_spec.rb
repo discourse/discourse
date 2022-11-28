@@ -691,6 +691,17 @@ RSpec.describe PostRevisor do
           expect(post.revisions.size).to eq(1)
         end
       end
+
+      context 'when editing the before_edit_post event signature' do
+        it 'contains post and params' do
+          params = { raw: 'body (edited)' }
+          events = DiscourseEvent.track_events { subject.revise!(user, params) }
+          expect(events).to include(
+            event_name: :before_edit_post,
+            params: [post, params]
+          )
+        end
+      end
     end
 
     describe "topic excerpt" do

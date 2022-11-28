@@ -305,8 +305,13 @@ class Post < ActiveRecord::Base
     options = opts.dup
     options[:cook_method] = cook_method
 
-    post_user = self.user
-    options[:user_id] = post_user.id if post_user
+    # A rule in our Markdown pipeline may have Guardian checks that require a
+    # user to be present. The last editing user of the post will be more
+    # generally up to date than the creating user. For example, we use
+    # this when cooking #hashtags to determine whether we should render
+    # the found hashtag based on whether the user can access the category it
+    # is referencing.
+    options[:user_id] = self.last_editor_id
     options[:omit_nofollow] = true if omit_nofollow?
 
     if self.with_secure_uploads?

@@ -73,6 +73,7 @@ ro:
         save: "Salvare"
         saved: "Salvat"
         unfollow: "Părăsește"
+        admin_title: "Administrator"
       incoming_webhooks:
         back: "Înapoi"
         description: "Descriere"

@@ -10,5 +10,5 @@ export const PUBLIC_JS_VERSIONS = {
   "diffhtml.min.js": "diffhtml/1.0.0-beta.20/diffhtml.min.js",
   "jquery.magnific-popup.min.js":
     "magnific-popup/1.1.0/jquery.magnific-popup.min.js",
-  "pikaday.js": "pikaday/1.8.0/pikaday.js",
+  "pikaday.js": "pikaday/1.8.2/pikaday.js",
 };

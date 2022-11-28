@@ -7,6 +7,9 @@
 sv:
   js:
     admin:
+      site_settings:
+        categories:
+          chat: Chatt
       logs:
         staff_actions:
           actions:
@@ -51,6 +54,10 @@ sv:
         leave_channel: "Lämna kanal"
         join: "Gå med"
         leave: "Lämna"
+        save_label:
+          mute_channel: "Inställningen för att tysta kanalen har sparats"
+          desktop_notification: "Inställningen för skrivbordsaviseringar har sparats"
+          mobile_notification: "Inställningen för mobila push-aviseringar har sparats"
       channel_archive:
         title: "Arkivera kanal"
         instructions: "<p>Arkivering av en kanal sätter den i skrivskyddat läge och flyttar alla meddelanden från kanalen till ett nytt eller existerande ämne. Inga nya meddelanden kan skickas och inga befintliga meddelanden kan redigeras eller raderas.</p><p>Är du säker på att du vill arkivera kanalen <strong>%{channelTitle}</strong>?</p>"
@@ -267,8 +274,9 @@ sv:
         mention: "Endast för omnämnanden"
         always: "För all aktivitet"
       settings:
+        auto_join_users_label: "Lägg till användare automatiskt"
+        auto_join_users_info: "Kontrollera varje timme vilka användare som har varit aktiva under de senaste 3 månaderna och, om de har tillgång till kategorin %{category}, lägg till dem i den här kanalen."
         enable_auto_join_users: "Lägg automatiskt till alla nyligen aktiva användare"
-        disable_auto_join_users: "Sluta lägga till användare automatiskt"
         auto_join_users_warning: "Varje användare som inte är medlem i den här kanalen och har tillgång till kategorin %{category} kommer att gå med. Är du säker?"
         desktop_notification_level: "Skrivbordsaviseringar"
         follow: "Gå med"
@@ -282,6 +290,8 @@ sv:
         save: "Spara"
         saved: "Sparad"
         unfollow: "Lämna"
+        admin_title: "Admin"
+        retention_info: "Chatthistoriken sparas i %{days} dagar."
       admin:
         title: "Chatt"
       direct_messages:
@@ -349,7 +359,6 @@ sv:
       retention_reminders:
         public: "Kanalhistoriken behålls i %{days} dagar."
         dm: "Personlig chatthistorik behålls i %{days} dagar."
-      topic_button_title: "Chatt"
       flags:
         off_topic: "Det här meddelandet är inte relevant för den aktuella diskussionen enligt kanaltiteln och bör förmodligen flyttas någon annanstans."
         inappropriate: "Detta meddelande innehåller saker som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href=\"%{basePath}/guidelines\">vårt forums riktlinjer</a>."

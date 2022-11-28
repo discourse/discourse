@@ -45,6 +45,7 @@
       @filterAction={{action "debouncedFiltering"}}
       @icons={{hash right="search"}}
       placeholder={{i18n "chat.browse.filter_input_placeholder"}}
+      {{did-insert (action this.focusFilterInput)}}
     />
   </div>
 

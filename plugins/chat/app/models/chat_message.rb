@@ -33,7 +33,7 @@ class ChatMessage < ActiveRecord::Base
 
   scope :created_before, ->(date) { where("chat_messages.created_at < ?", date) }
 
-  before_save { self.last_editor_id ||= self.user_id }
+  before_save { ensure_last_editor_id }
 
   def validate_message(has_uploads:)
     WatchedWordsValidator.new(attributes: [:message]).validate(self)
@@ -45,6 +45,16 @@ class ChatMessage < ActiveRecord::Base
         I18n.t(
           "chat.errors.minimum_length_not_met",
           minimum: SiteSetting.chat_minimum_message_length,
+        ),
+      )
+    end
+
+    if message_too_long?
+      self.errors.add(
+        :base,
+        I18n.t(
+          "chat.errors.message_too_long",
+          maximum: SiteSetting.chat_maximum_message_length,
         ),
       )
     end
@@ -98,7 +108,15 @@ class ChatMessage < ActiveRecord::Base
   end
 
   def cook
-    self.cooked = self.class.cook(self.message)
+    ensure_last_editor_id
+
+    # A rule in our Markdown pipeline may have Guardian checks that require a
+    # user to be present. The last editing user of the message will be more
+    # generally up to date than the creating user. For example, we use
+    # this when cooking #hashtags to determine whether we should render
+    # the found hashtag based on whether the user can access the channel it
+    # is referencing.
+    self.cooked = self.class.cook(self.message, user_id: self.last_editor_id)
     self.cooked_version = BAKED_VERSION
   end
 
@@ -130,6 +148,7 @@ class ChatMessage < ActiveRecord::Base
     emojiShortcuts
     inlineEmoji
     html-img
+    hashtag-autocomplete
     mentions
     unicodeUsernames
     onebox
@@ -164,6 +183,8 @@ class ChatMessage < ActiveRecord::Base
         features_override: MARKDOWN_FEATURES + DiscoursePluginRegistry.chat_markdown_features.to_a,
         markdown_it_rules: MARKDOWN_IT_RULES,
         force_quote_link: true,
+        user_id: opts[:user_id],
+        hashtag_context: "chat-composer"
       )
 
     result =
@@ -192,6 +213,14 @@ class ChatMessage < ActiveRecord::Base
 
   def message_too_short?
     message.length < SiteSetting.chat_minimum_message_length
+  end
+
+  def message_too_long?
+    message.length > SiteSetting.chat_maximum_message_length
+  end
+
+  def ensure_last_editor_id
+    self.last_editor_id ||= self.user_id
   end
 end
 

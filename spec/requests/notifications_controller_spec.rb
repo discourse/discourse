@@ -339,6 +339,50 @@ RSpec.describe NotificationsController do
             expect(response.status).to eq(404)
           end
         end
+
+        context "with notifications for inaccessible topics" do
+          fab!(:sender) { Fabricate.build(:topic_allowed_user, user: Fabricate(:coding_horror)) }
+          fab!(:allowed_user) { Fabricate.build(:topic_allowed_user, user: user) }
+          fab!(:another_allowed_user) { Fabricate.build(:topic_allowed_user, user: Fabricate(:user)) }
+          fab!(:allowed_pm) { Fabricate(:private_message_topic, topic_allowed_users: [sender, allowed_user, another_allowed_user]) }
+          fab!(:forbidden_pm) { Fabricate(:private_message_topic, topic_allowed_users: [sender, another_allowed_user]) }
+          fab!(:allowed_pm_notification) { Fabricate(:private_message_notification, user: user, topic: allowed_pm) }
+          fab!(:forbidden_pm_notification) { Fabricate(:private_message_notification, user: user, topic: forbidden_pm) }
+
+          def expect_correct_notifications(response)
+            notification_ids = response.parsed_body["notifications"].map { |n| n["id"] }
+            expect(notification_ids).to include(allowed_pm_notification.id)
+            expect(notification_ids).to_not include(forbidden_pm_notification.id)
+          end
+
+          context "with 'recent' filter" do
+            it "doesn't include notifications from topics the user isn't allowed to see" do
+              SiteSetting.enable_experimental_sidebar_hamburger = true
+              get "/notifications.json", params: { recent: true }
+              expect(response.status).to eq(200)
+              expect_correct_notifications(response)
+
+              SiteSetting.enable_experimental_sidebar_hamburger = false
+              get "/notifications.json", params: { recent: true }
+              expect(response.status).to eq(200)
+              expect_correct_notifications(response)
+            end
+          end
+
+          context "without 'recent' filter" do
+            it "doesn't include notifications from topics the user isn't allowed to see" do
+              SiteSetting.enable_experimental_sidebar_hamburger = true
+              get "/notifications.json"
+              expect(response.status).to eq(200)
+              expect_correct_notifications(response)
+
+              SiteSetting.enable_experimental_sidebar_hamburger = false
+              get "/notifications.json"
+              expect(response.status).to eq(200)
+              expect_correct_notifications(response)
+            end
+          end
+        end
       end
 
       it 'should succeed' do

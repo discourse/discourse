@@ -288,6 +288,9 @@ class User < ActiveRecord::Base
     @user_tips ||= Enum.new(
       first_notification: 1,
       topic_timeline: 2,
+      post_menu: 3,
+      topic_notification_levels: 4,
+      suggested_topics: 5,
     )
   end
 
@@ -1280,7 +1283,13 @@ class User < ActiveRecord::Base
   end
 
   def secure_category_ids
-    cats = self.admin? ? Category.unscoped.where(read_restricted: true) : secure_categories.references(:categories)
+    cats =
+      if self.admin? && !SiteSetting.suppress_secured_categories_from_admin
+        Category.unscoped.where(read_restricted: true)
+      else
+        secure_categories.references(:categories)
+      end
+
     cats.pluck('categories.id').sort
   end
 

@@ -34,8 +34,8 @@ const REPLACEMENTS = {
   "notification.liked_2": "heart",
   "notification.liked_many": "heart",
   "notification.liked_consolidated": "heart",
-  "notification.private_message": "far-envelope",
-  "notification.invited_to_private_message": "far-envelope",
+  "notification.private_message": "envelope",
+  "notification.invited_to_private_message": "envelope",
   "notification.invited_to_topic": "hand-point-right",
   "notification.invitee_accepted": "user",
   "notification.moved_post": "sign-out-alt",
@@ -169,6 +169,7 @@ registerIconRenderer({
       deprecated(`use 'translatedTitle' option instead of 'translatedtitle'`, {
         since: "2.9.0.beta6",
         dropFrom: "2.10.0.beta1",
+        id: "discourse.icon-renderer-translatedtitle",
       });
       params.translatedTitle = params.translatedtitle;
     }

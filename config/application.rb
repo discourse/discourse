@@ -172,18 +172,6 @@ module Discourse
     require 'middleware/discourse_public_exceptions'
     config.exceptions_app = Middleware::DiscoursePublicExceptions.new(Rails.public_path)
 
-    # Our templates shouldn't start with 'discourse/app/templates'
-    config.handlebars.templates_root = {
-      'discourse/app/templates' => '',
-      'admin/addon/templates' => 'admin/templates/',
-      'wizard/addon/templates' => 'wizard/templates/',
-      'select-kit/addon/templates' => 'select-kit/templates/'
-    }
-
-    config.handlebars.raw_template_namespace = "__DISCOURSE_RAW_TEMPLATES"
-    Sprockets.register_mime_type 'text/x-handlebars', extensions: ['.hbr']
-    Sprockets.register_transformer 'text/x-handlebars', 'application/javascript', Ember::Handlebars::Template
-
     require 'discourse_js_processor'
     require 'discourse_sourcemapping_url_processor'
 
@@ -210,11 +198,6 @@ module Discourse
     # we configure rack cache on demand in an initializer
     # our setup does not use rack cache and instead defers to nginx
     config.action_dispatch.rack_cache = nil
-
-    # ember stuff only used for asset precompilation, production variant plays up
-    config.ember.variant = :development
-    config.ember.ember_location = "#{Rails.root}/vendor/assets/javascripts/production/ember.js"
-    config.ember.handlebars_location = "#{Rails.root}/vendor/assets/javascripts/handlebars.js"
 
     require 'auth'
 

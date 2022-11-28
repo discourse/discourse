@@ -262,13 +262,13 @@ module TopicGuardian
   end
 
   def filter_allowed_categories(records)
-    unless is_admin?
-      records = allowed_category_ids.size == 0 ?
-        records.where('topics.category_id IS NULL') :
-        records.where('topics.category_id IS NULL or topics.category_id IN (?)', allowed_category_ids)
-      records = records.references(:categories)
-    end
-    records
+    return records if is_admin? && !SiteSetting.suppress_secured_categories_from_admin
+
+    records = allowed_category_ids.size == 0 ?
+      records.where('topics.category_id IS NULL') :
+      records.where('topics.category_id IS NULL or topics.category_id IN (?)', allowed_category_ids)
+
+    records.references(:categories)
   end
 
   def can_edit_featured_link?(category_id)

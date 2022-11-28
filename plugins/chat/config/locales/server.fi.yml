@@ -6,6 +6,7 @@
 
 fi:
   site_settings:
+    chat_enabled: "Ota chat-lisäosa käyttöön."
     chat_allowed_groups: "Näiden ryhmien käyttäjät voivat keskustella chatissa. Huomaa, että henkilökunnalla on aina chatin käyttöoikeus."
     chat_channel_retention_days: "Tavallisten kanavien chat-viestit säilytetään näin monta päivää. Viestit säilytetään ikuisesti, jos asetat arvoksi 0."
     chat_dm_retention_days: "Henkilökohtaisten chat-kanavien chat-viestit säilytetään näin monta päivää. Viestit säilytetään ikuisesti, jos asetat arvoksi 0."
@@ -22,6 +23,7 @@ fi:
     default_emoji_reactions: "Chat-viestien oletusarvoiset emoji-reaktiot. Lisää enintään 5 emojia nopeaa reagointia varten."
     direct_message_enabled_groups: "Salli näiden ryhmien käyttäjien luoda käyttäjien välisiä henkilökohtaisia chat-keskusteluja. Huomautus: henkilökunta voi aina luoda henkilökohtaisia chat-keskusteluja, ja käyttäjät voivat vastata henkilökohtaisiin chat-keskusteluihin, jotka on aloittanut käyttäjä, jolla on oikeus luoda niitä."
     chat_message_flag_allowed_groups: "Näiden ryhmien käyttäjät voivat liputtaa chat-viestejä."
+    chat_max_direct_message_users: "Käyttäjät eivät voi lisätä tätä määrää enempää muita käyttäjiä luodessaan uutta yksityisviestiä. Aseta arvoksi 0, jos haluat sallia ainostaan viestit itselle. Tämä asetus ei koske henkilökuntaa."
     errors:
       chat_default_channel: "Oletus-chat-kanavan täytyy olla julkinen kanava."
       direct_message_enabled_groups_invalid: "Sinun täytyy määrittää vähintään yksi ryhmä tälle asetukselle. Jos et halua muiden kuin henkilökunnan lähettävän yksityisviestejä, valitse henkilökunnan ryhmä."
@@ -56,10 +58,13 @@ fi:
       cant_update_direct_message_channel: "Yksityisviestikanavan ominaisuuksia, kuten nimeä ja kuvausta, ei voi päivittää."
       not_accepting_dms: "%{username} ei ota vastaan viestejä tällä hetkellä."
       actor_ignoring_target_user: "Ohitat käyttäjän %{username} tällä hetkellä, joten et voi lähettää hänelle viestejä."
-      actor_muting_target_user: "Mykistät käyttäjän %{username} tällä hetkellä, joten et voi lähettää hänelle viestejä."
+      actor_muting_target_user: "Olet vaimentanut käyttäjän %{username}, joten et voi lähettää hänelle viestejä."
       actor_disallowed_dms: "Olet päättänyt estää käyttäjiä lähettämästä sinulle yksityisviestejä, joten et voi luoda uusia yksityisviestejä."
       actor_preventing_target_user_from_dm: "Olet päättänyt estää käyttäjää %{username} lähettämästä sinulle yksityisviestejä, joten et voi luoda uusia yksityisviestejä hänelle."
       user_cannot_send_direct_messages: "Valitettavasti et voi lähettää yksityisviestejä."
+      over_chat_max_direct_message_users:
+        one: "Voit luoda yksityisviestin vain itsellesi."
+        other: "Et voi luoda yksityisviestiä useammalle kuin %{count} muulle käyttäjälle."
     reviewables:
       message_already_handled: "Kiitos, mutta olemme jo käsitelleet tämän viestin ja todenneet, ettei sitä tarvitse liputtaa uudelleen."
       actions:
@@ -110,6 +115,10 @@ fi:
         single_user: "%{user}"
         multi_user: "%{users}"
         multi_user_truncated: "%{users} ja %{leftover} muuta"
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "sisältää muita kuin ascii-merkkejä"
+        is_already_in_use: "on jo käytössä"
     bookmarkable:
       notification_title: "viesti kanavalla %{channel_name}"
     personal_chat: "henkilökohtainen chat"
@@ -148,7 +157,7 @@ fi:
       chat_pm_body: "%{link}\n\n%{message}"
   reviewables:
     reasons:
-      chat_message_queued_by_staff: "Henkilökunnan jäsenen mielestä tämä chat-viesti täytyy tarkastaa."
+      chat_message_queued_by_staff: "Henkilökunnan jäsenen mielestä tämä chat-viesti täytyy käsitellä."
   user_notifications:
     chat_summary:
       deleted_user: "Poistettu käyttäjä"
@@ -164,7 +173,7 @@ fi:
           one: "[%{email_prefix}] Uusi viesti kanavalta %{message_title}"
           other: "[%{email_prefix}] Uusia viestejä kanavalta %{message_title} ja %{others}"
         other_direct_message: "käyttäjältä %{message_title}"
-        others: "ja %{count} muulta"
+        others: "%{count} muulta"
       unsubscribe: "Tämä chat-yhteenveto lähetetään sivustolta %{site_link}, kun olet poissa. Määritä %{email_preferences_link} tai %{unsubscribe_link} peruuttaaksesi tilauksen."
       unsubscribe_no_link: "Tämä chat-yhteenveto lähetetään sivustolta %{site_link}, kun olet poissa. Määritä %{email_preferences_link}."
       view_messages:

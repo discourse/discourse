@@ -217,15 +217,54 @@ RSpec.describe Badge do
   end
 
   describe "#seed" do
-    let(:regular_badge) do
-      Badge.find(Badge::Regular)
-    end
+    let(:badge_id) { Badge.maximum(:id) + 1 }
 
     it "`allow_title` is not updated for existing records" do
-      regular_badge.update(allow_title: false)
-      SeedFu.seed
-      regular_badge.reload
-      expect(regular_badge.allow_title).to eq(false)
+      Badge.seed do |b|
+        b.id = badge_id
+        b.name = "Foo"
+        b.badge_type_id = BadgeType::Bronze
+        b.default_allow_title = true
+      end
+
+      badge = Badge.find(badge_id)
+      expect(badge.allow_title).to eq(true)
+
+      badge.update!(allow_title: false)
+
+      Badge.seed do |b|
+        b.id = badge_id
+        b.name = "Foo"
+        b.badge_type_id = BadgeType::Bronze
+        b.default_allow_title = true
+      end
+
+      badge.reload
+      expect(badge.allow_title).to eq(false)
+    end
+
+    it "`enabled` is not updated for existing records" do
+      Badge.seed do |b|
+        b.id = badge_id
+        b.name = "Foo"
+        b.badge_type_id = BadgeType::Bronze
+        b.default_enabled = false
+      end
+
+      badge = Badge.find(badge_id)
+      expect(badge.enabled).to eq(false)
+
+      badge.update!(enabled: true)
+
+      Badge.seed do |b|
+        b.id = badge_id
+        b.name = "Foo"
+        b.badge_type_id = BadgeType::Bronze
+        b.default_enabled = false
+      end
+
+      badge.reload
+      expect(badge.enabled).to eq(true)
     end
   end
 end

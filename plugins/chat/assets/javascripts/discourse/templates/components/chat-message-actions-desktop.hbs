@@ -1,6 +1,6 @@
 <div class="chat-message-actions-container" data-id={{this.message.id}}>
   <div class="chat-message-actions">
-    {{#if this.chatStateManager.isFullPagePreferred}}
+    {{#if this.chatStateManager.isFullPageActive}}
       {{#each this.emojiReactions as |reaction|}}
         <ChatMessageReaction @reaction={{reaction}} @react={{this.messageActions.react}} @class="show" />
       {{/each}}
@@ -21,7 +21,7 @@
     {{/if}}
 
     {{#if this.secondaryButtons.length}}
-      <DropdownSelectBox @class="more-buttons" @options={{hash icon="ellipsis-v" placement="bottom-end"}} @content={{this.secondaryButtons}} @onChange={{action "handleSecondaryButtons"}} />
+      <DropdownSelectBox @class="more-buttons" @options={{hash icon="ellipsis-v" placement="left"}} @content={{this.secondaryButtons}} @onChange={{action "handleSecondaryButtons"}} />
     {{/if}}
   </div>
 </div>

@@ -3100,4 +3100,22 @@ RSpec.describe User do
       expect(user.visible_sidebar_tags).to contain_exactly(tag, hidden_tag)
     end
   end
+
+  describe '#secure_category_ids' do
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:group) { Fabricate(:group) }
+    fab!(:private_category) { Fabricate(:private_category, group: group) }
+
+    it 'allows admin to see all secure categories' do
+      expect(admin.secure_category_ids).to include(private_category.id)
+    end
+
+    context 'when SiteSetting.suppress_secured_categories_from_admin is true' do
+      it 'hides secure categories from admins' do
+        SiteSetting.suppress_secured_categories_from_admin = true
+        expect(admin.secure_category_ids).not_to include(private_category.id)
+      end
+    end
+
+  end
 end

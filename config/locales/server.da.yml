@@ -216,6 +216,7 @@ da:
       <p>Hvis du husker din adgangskode, kan du <a href="%{base_url}/login">Log på</a>.</p>
 
       <p>Ellers bedes du <a href="%{base_url}/password-reset">Nulstille adgangskode</a>.</p>
+    existing_user_already_redemeed: "Du har allerede indløst dette invitationslink."
     invite_exists: "Du har allerede inviteret <b>%{email}</b>."
     invalid_email: "%{email} er ikke en gyldig e-mailadresse."
     rate_limit:

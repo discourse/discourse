@@ -277,7 +277,6 @@ bs_BA:
       like_count: "Sviđanja"
       topic_count: "Tema"
       post_count: "Objave"
-      user_count: "Korisnici"
       active_user_count: "Aktivnih korisnika"
       contact: "Kontaktirajte nas"
       contact_info: "U slučaju da forum ne radi, molimo kontaktirajte nas na %{contact_info}."
@@ -316,7 +315,6 @@ bs_BA:
       resume: "Nastavi"
       remove: "Ukloni"
       new_topic: "Nacrt nove teme"
-      topic_reply: "skica odgovora"
       abandon:
         yes_value: "Odbaci"
     topic_count_categories:
@@ -930,12 +928,9 @@ bs_BA:
       dismiss: "Odpusti"
       dismiss_notifications: "Odpusti sve"
       dismiss_notifications_tooltip: "Markiraj sve nepročitane obavijesti kao pročitane"
-      first_notification: "Vaša prva obavijest! Selektirajte je kako bi započeli."
       dynamic_favicon: "Prikaži brojeve na ikoni preglednika"
       skip_new_user_tips:
         description: "Isključi savjete i upute za novoregistrirane korisnike"
-        not_first_time: "Nije ti prvi put?"
-        skip_link: "Preskoči ove savjete"
       theme_default_on_all_devices: "Postavi ovu temu kao zadanu na svim mojim uređajima"
       color_schemes:
         undo: "Resetovati"
@@ -1052,6 +1047,7 @@ bs_BA:
         profile: "Profil"
         emails: "Email-i"
         notifications: "Obavijesti"
+        tracking: "Praćenje"
         categories: "Kategorije"
         users: "Korisnici"
         tags: "Oznake"
@@ -1266,6 +1262,7 @@ bs_BA:
       email_in_reply_to: "Uključi odlomake sa odgovorenih objava u e-mailovima"
       other_settings: "Ostalo"
       categories_settings: "Kategorije"
+      topics_settings: "Topics"
       new_topic_duration:
         label: "Posmatraj teme kao nove ukoliko"
         not_viewed: "nisam ih još pogledao"
@@ -1872,6 +1869,7 @@ bs_BA:
         other: "<span>%{count}%{plus} rezultata za</span><span class='term'>%{term}</span>"
       title: "Pretraži"
       full_page_title: "Pretraži"
+      results: "rezultati"
       no_results: "Nema rezultata."
       no_more_results: "Nema rezultata pretrage."
       post_format: "#%{post_number} od %{username}"
@@ -2012,9 +2010,6 @@ bs_BA:
       move_to_inbox:
         title: "Premjesti u Sanduče"
         help: "Premjesti poruke nazad u Sanduče"
-      edit_message:
-        help: "Izmijeni prvu objavu ove poruke"
-        title: "Izmijeni"
       defer:
         help: "Označi kao nepročitano"
         title: "Defer"
@@ -2569,8 +2564,6 @@ bs_BA:
       this_year: "this year"
       position: "Pozicija na stranici kategorije:"
       default_position: "Default Position"
-      position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, "
-      position_disabled_click: 'enable the "fixed category positions" setting.'
       minimum_required_tags: "Minimalni broj oznaka potrebnih za temu:"
       parent: "Parent Category"
       num_auto_bump_daily: "Broj otvorenih tema koje se svakodnevno automatski izbijaju:"
@@ -3106,8 +3099,6 @@ bs_BA:
               content: "Bedž"
             faq:
               content: "Česta pitanja"
-            tracked:
-              content: "Praćeno"
             groups:
               content: "Grupe"
               title: "Sve grupe"

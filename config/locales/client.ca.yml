@@ -267,7 +267,6 @@ ca:
       like_count: "'M'agrada'"
       topic_count: "Temes"
       post_count: "Publicacions"
-      user_count: "Usuaris"
       active_user_count: "Usuaris actius"
       contact: "Contacta amb nosaltres"
       contact_info: "En cas d'una qüestió urgent o greu que afecti aquest lloc web, contacteu amb nosaltres en: %{contact_info}."
@@ -314,7 +313,6 @@ ca:
       remove_confirmation: "Esteu segur que voleu suprimir aquest esborrany?"
       new_topic: "Esborrany de tema nou"
       new_private_message: "Nou esborrany de missatge personal"
-      topic_reply: "Esborrany de resposta"
       abandon:
         confirm: "Teniu un esborrany en curs per a aquest tema. Què t'agradaria fer-hi?"
         yes_value: "Descarta"
@@ -904,7 +902,6 @@ ca:
       dismiss: "Descarta-ho"
       dismiss_notifications: "Descarta-ho tot"
       dismiss_notifications_tooltip: "Marca totes les notificacions no llegides com a llegides"
-      first_notification: "La vostra primera notificació! Seleccioneu-la per a començar."
       dynamic_favicon: "Mostra recomptes en la icona del navegador"
       theme_default_on_all_devices: "Fes que aquesta sigui l'aparença predeterminada en tots els meus dispositius"
       color_schemes:
@@ -1018,6 +1015,7 @@ ca:
         profile: "Perfil"
         emails: "Correus"
         notifications: "Notificacions"
+        tracking: "Seguint"
         categories: "Categories"
         users: "Usuaris"
         tags: "Etiquetes"
@@ -1218,6 +1216,7 @@ ca:
       email_in_reply_to: "Inclou un extracte del que s'ha respost a la publicació en els correus."
       other_settings: "Altres"
       categories_settings: "Categories"
+      topics_settings: "Temes"
       new_topic_duration:
         label: "Considera els temes nous quan "
         not_viewed: "encara no els hagi vist"
@@ -1796,6 +1795,7 @@ ca:
         other: "<span>%{count}%{plus} resultats per a</span><span class='term'>%{term}</span>"
       title: "Cerca"
       full_page_title: "Cerca"
+      results: "resultats"
       no_results: "No hi ha resultats."
       no_more_results: "No s'han trobat més resultats."
       post_format: "#%{post_number} per %{username}"
@@ -1933,9 +1933,6 @@ ca:
       move_to_inbox:
         title: "Mou a la safata d'entrada"
         help: "Torna el missatge a la safata d'entrada"
-      edit_message:
-        help: "Edita la primera publicació del missatge"
-        title: "Edita"
       defer:
         help: "Marca com a no llegit"
         title: "Ajorna"
@@ -2461,8 +2458,6 @@ ca:
       this_year: "enguany"
       position: "Posició en la pàgina de categories:"
       default_position: "Posició per defecte"
-      position_disabled: "Les categories es mostraran per ordre d'activitat. Per a controlar l'ordre de les categories en llistes, "
-      position_disabled_click: 'activeu la configuració "posicions fixes de categories"'
       minimum_required_tags: "Nombre mínim d'etiquetes necessari en un tema:"
       parent: "Categoria primària"
       num_auto_bump_daily: "Nombre de temes oberts que s'eleven automàticament cada dia:"
@@ -2929,8 +2924,6 @@ ca:
               content: "Insígnies"
             faq:
               content: "PMF"
-            tracked:
-              content: "Seguit"
             groups:
               content: "Grups"
               title: "Tots els grups"

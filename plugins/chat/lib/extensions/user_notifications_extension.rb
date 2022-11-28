@@ -66,6 +66,8 @@ module Chat::UserNotificationsExtension
     dm_users = grouped_channels.last.flat_map { |c| grouped_messages[c].map(&:user) }.uniq
 
     total_count_for_subject = non_dm_channels.size + dm_users.size
+
+    # Prioritize messages from regular channels.
     first_message_from = non_dm_channels.pop
     if first_message_from
       first_message_title = first_message_from.title(user)
@@ -107,6 +109,7 @@ module Chat::UserNotificationsExtension
     return if total_count <= 1
     return I18n.t(with_subject_prefix("others"), count: total_count - 1) if total_count > 2
 
+    # The summary contains exactly two messages.
     if other_non_dm_channels.empty?
       second_message_from = other_dm_users.first
       second_message_title = second_message_from.username
@@ -115,8 +118,9 @@ module Chat::UserNotificationsExtension
       second_message_title = second_message_from.title(user)
     end
 
-    return second_message_title if first_message_from.class == second_message_from.class
+    second_message_is_from_channel = first_message_from.class == second_message_from.class
+    return second_message_title if second_message_is_from_channel
 
-    I18n.t(with_subject_prefix("other_direct_message"), message_title: second_message_title)
+    I18n.t(with_subject_prefix("other_direct_message"), dm_title: second_message_title)
   end
 end

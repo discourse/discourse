@@ -74,6 +74,7 @@ vi:
         save: "Lưu lại"
         saved: "Lưu trữ"
         unfollow: "Rời nhóm"
+        admin_title: "Quản trị"
       incoming_webhooks:
         back: "Quay lại"
         description: "Mô tả"
@@ -94,6 +95,8 @@ vi:
           title: "Di chuyển tới chủ đề đang tồn tại"
         new_message:
           title: "Chuyển đến tin nhắn mới"
+      flags:
+        notify_moderators: "Thông báo này yêu cầu sự chú ý của nhân viên vì một lý do khác không được liệt kê ở trên."
       emoji_picker:
         objects: "Vật thể"
         activities: "Hoạt động"

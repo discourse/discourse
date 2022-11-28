@@ -5,6 +5,7 @@ require "file_store/s3_store"
 
 RSpec.describe CookedPostProcessor do
   fab!(:upload) { Fabricate(:upload) }
+  fab!(:large_image_upload) { Fabricate(:large_image_upload)  }
   let(:upload_path) { Discourse.store.upload_path }
 
   describe "#post_process" do
@@ -764,7 +765,6 @@ RSpec.describe CookedPostProcessor do
         end
 
         it "won't remove the original image if another post doesn't have an image" do
-          FastImage.stubs(:size)
           topic = post.topic
 
           cpp.post_process
@@ -781,8 +781,7 @@ RSpec.describe CookedPostProcessor do
         end
 
         it "generates thumbnails correctly" do
-          FastImage.expects(:size).returns([1750, 2000])
-
+          # image size in cooked is 1500*2000
           topic = post.topic
           cpp.post_process
           topic.reload
@@ -941,17 +940,13 @@ RSpec.describe CookedPostProcessor do
   describe "#convert_to_link" do
     fab!(:thumbnail) { Fabricate(:optimized_image, upload: upload, width: 512, height: 384) }
 
-    before do
-      CookedPostProcessor.any_instance.stubs(:get_size).with(upload.url).returns([1024, 768])
-    end
-
     it "adds lightbox and optimizes images" do
-      post = Fabricate(:post, raw: "![image|1024x768, 50%](#{upload.short_url})")
-
+      post = Fabricate(:post, raw: "![image|1024x768, 50%](#{large_image_upload.short_url})")
       cpp = CookedPostProcessor.new(post, disable_dominant_color: true)
       cpp.post_process
 
       doc = Nokogiri::HTML5::fragment(cpp.html)
+
       expect(doc.css('.lightbox-wrapper').size).to eq(1)
       expect(doc.css('img').first['srcset']).to_not eq(nil)
     end
@@ -1001,7 +996,7 @@ RSpec.describe CookedPostProcessor do
     it "optimizes images in quotes" do
       post = Fabricate(:post, raw: <<~MD)
         [quote]
-        ![image|1024x768, 50%](#{upload.short_url})
+        ![image|1024x768, 50%](#{large_image_upload.short_url})
         [/quote]
       MD
 
@@ -1016,7 +1011,7 @@ RSpec.describe CookedPostProcessor do
     it "optimizes images in Onebox" do
       Oneboxer.expects(:onebox)
         .with("https://discourse.org", anything)
-        .returns("<aside class='onebox'><img src='#{upload.url}' width='512' height='384'></aside>")
+        .returns("<aside class='onebox'><img src='#{large_image_upload.url}' width='512' height='384'></aside>")
 
       post = Fabricate(:post, raw: "https://discourse.org")
 

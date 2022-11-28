@@ -5,7 +5,6 @@ import {
   loggedInUser,
   query,
   queryAll,
-  visible,
 } from "discourse/tests/helpers/qunit-helpers";
 import {
   click,
@@ -84,9 +83,9 @@ acceptance("Discourse Chat - Keyboard shortcuts", function (needs) {
 
   test("channel selector opens channel in float", async function (assert) {
     await visit("/latest");
-
     await showModal("chat-channel-selector-modal");
     await settled();
+
     assert.ok(exists("#chat-channel-selector-modal-inner"));
 
     // All channels should show because the input is blank
@@ -110,7 +109,8 @@ acceptance("Discourse Chat - Keyboard shortcuts", function (needs) {
     );
 
     await triggerKeyEvent(document.body, "keyup", "Enter");
-    assert.ok(exists(".topic-chat-container.visible"));
+
+    assert.ok(exists(".chat-drawer.is-expanded"));
     assert.notOk(exists("#chat-channel-selector-modal-inner"));
     assert.equal(currentURL(), "/latest");
   });
@@ -164,28 +164,24 @@ acceptance("Discourse Chat - Keyboard shortcuts", function (needs) {
 
   test("switching channel with alt+arrow keys in float", async function (assert) {
     await visit("/latest");
-    this.chatService.set("sidebarActive", false);
-
     await click(".header-dropdown-toggle.open-chat");
     await click("#chat-channel-row-4");
 
-    assert.ok(visible(".topic-chat-float-container"), "chat float is open");
-    assert.ok(query(".topic-chat-container").classList.contains("channel-4"));
+    assert.ok(exists(`.chat-drawer.is-expanded[data-chat-channel-id="4"]`));
 
     await triggerKeyEvent(document.body, "keydown", "ArrowDown", {
       altKey: true,
     });
 
-    assert.ok(query(".topic-chat-container").classList.contains("channel-10"));
+    assert.ok(exists(`.chat-drawer.is-expanded[data-chat-channel-id="10`));
 
     await triggerKeyEvent(document.body, "keydown", "ArrowUp", {
       altKey: true,
     });
-    assert.ok(query(".topic-chat-container").classList.contains("channel-4"));
+    assert.ok(exists(`.chat-drawer.is-expanded[data-chat-channel-id="4"]`));
   });
 
   test("simple composer formatting shortcuts", async function (assert) {
-    this.chatService.set("sidebarActive", false);
     await visit("/latest");
     await click(".header-dropdown-toggle.open-chat");
     await click(".chat-channel-row");
@@ -230,7 +226,6 @@ acceptance("Discourse Chat - Keyboard shortcuts", function (needs) {
     const stagedMessageText = "This is a test";
     await visit("/latest");
 
-    this.chatService.set("sidebarActive", false);
     await click(".header-dropdown-toggle.open-chat");
     await click(".chat-channel-row");
     await fillIn(".chat-composer-input", stagedMessageText);
@@ -246,7 +241,6 @@ acceptance("Discourse Chat - Keyboard shortcuts", function (needs) {
   test("insert link shortcut", async function (assert) {
     await visit("/latest");
 
-    this.chatService.set("sidebarActive", false);
     await click(".header-dropdown-toggle.open-chat");
     await click(".chat-channel-row");
 
@@ -276,32 +270,7 @@ acceptance("Discourse Chat - Keyboard shortcuts", function (needs) {
     );
   });
 
-  test("Dash key (-) opens chat float", async function (assert) {
-    await visit("/latest");
-    this.chatService.set("sidebarActive", false);
-
-    await triggerKeyEvent(document.body, "keydown", "-");
-    assert.ok(exists(".topic-chat-drawer-content"), "chat float is open");
-  });
-
-  test("Pressing Escape when drawer is opened", async function (assert) {
-    this.chatService.set("sidebarActive", false);
-    await visit("/latest");
-    await click(".header-dropdown-toggle.open-chat");
-    await click(".chat-channel-row");
-
-    const composerInput = query(".chat-composer-input");
-    await focus(composerInput);
-    await triggerKeyEvent(composerInput, "keydown", "Escape");
-
-    assert.ok(
-      exists(".topic-chat-float-container.hidden"),
-      "it closes the drawer"
-    );
-  });
-
   test("Pressing Escape when full page is opened", async function (assert) {
-    this.chatService.set("sidebarActive", false);
     await visit("/chat/channel/75/@hawk");
     const composerInput = query(".chat-composer-input");
     await focus(composerInput);

@@ -1,13 +1,13 @@
+import { module, test } from "qunit";
 import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
-import User from "discourse/models/user";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
-import createStore from "discourse/tests/helpers/create-store";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { setupTest } from "ember-qunit";
 
-discourseModule("Unit | Model | topic", function (hooks) {
+module("Unit | Model | topic", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     this.store = getOwner(this).lookup("service:store");
   });
@@ -15,8 +15,8 @@ discourseModule("Unit | Model | topic", function (hooks) {
   test("defaults", function (assert) {
     const topic = this.store.createRecord("topic", { id: 1234 });
 
-    assert.blank(topic.get("deleted_at"), "deleted_at defaults to blank");
-    assert.blank(topic.get("deleted_by"), "deleted_by defaults to blank");
+    assert.blank(topic.deleted_at, "deleted_at defaults to blank");
+    assert.blank(topic.deleted_by, "deleted_by defaults to blank");
   });
 
   test("visited", function (assert) {
@@ -25,17 +25,14 @@ discourseModule("Unit | Model | topic", function (hooks) {
       last_read_post_number: 1,
     });
 
-    assert.notOk(
-      topic.get("visited"),
-      "not visited unless we've read all the posts"
-    );
+    assert.notOk(topic.visited, "not visited unless we've read all the posts");
 
     topic.set("last_read_post_number", 2);
-    assert.ok(topic.get("visited"), "is visited once we've read all the posts");
+    assert.ok(topic.visited, "is visited once we've read all the posts");
 
     topic.set("last_read_post_number", 3);
     assert.ok(
-      topic.get("visited"),
+      topic.visited,
       "is visited if we've read all the posts and some are deleted at the end"
     );
   });
@@ -74,8 +71,7 @@ discourseModule("Unit | Model | topic", function (hooks) {
   });
 
   test("lastUnreadUrl with navigate_to_first_post_after_read setting", function (assert) {
-    const store = createStore();
-    const category = store.createRecord("category", {
+    const category = this.store.createRecord("category", {
       id: 22,
       navigate_to_first_post_after_read: true,
     });
@@ -92,8 +88,7 @@ discourseModule("Unit | Model | topic", function (hooks) {
   });
 
   test("lastUnreadUrl with navigate_to_first_post_after_read setting and unread posts", function (assert) {
-    const store = createStore();
-    const category = store.createRecord("category", {
+    const category = this.store.createRecord("category", {
       id: 22,
       navigate_to_first_post_after_read: true,
     });
@@ -111,11 +106,11 @@ discourseModule("Unit | Model | topic", function (hooks) {
 
   test("has details", function (assert) {
     const topic = this.store.createRecord("topic", { id: 1234 });
-    const topicDetails = topic.get("details");
+    const topicDetails = topic.details;
 
     assert.present(topicDetails, "a topic has topicDetails after we create it");
     assert.strictEqual(
-      topicDetails.get("topic"),
+      topicDetails.topic,
       topic,
       "the topicDetails has a reference back to the topic"
     );
@@ -123,11 +118,11 @@ discourseModule("Unit | Model | topic", function (hooks) {
 
   test("has a postStream", function (assert) {
     const topic = this.store.createRecord("topic", { id: 1234 });
-    const postStream = topic.get("postStream");
+    const postStream = topic.postStream;
 
     assert.present(postStream, "a topic has a postStream after we create it");
     assert.strictEqual(
-      postStream.get("topic"),
+      postStream.topic,
       topic,
       "the postStream has a reference back to the topic"
     );
@@ -137,7 +132,7 @@ discourseModule("Unit | Model | topic", function (hooks) {
     const topic = this.store.createRecord("topic", {
       suggested_topics: [{ id: 1 }, { id: 2 }],
     });
-    const suggestedTopics = topic.get("suggestedTopics");
+    const suggestedTopics = topic.suggestedTopics;
 
     assert.strictEqual(
       suggestedTopics.length,
@@ -152,10 +147,10 @@ discourseModule("Unit | Model | topic", function (hooks) {
     const category = Category.list()[0];
     const topic = this.store.createRecord("topic", {
       id: 1111,
-      category_id: category.get("id"),
+      category_id: category.id,
     });
 
-    assert.strictEqual(topic.get("category"), category);
+    assert.strictEqual(topic.category, category);
   });
 
   test("updateFromJson", function (assert) {
@@ -166,25 +161,17 @@ discourseModule("Unit | Model | topic", function (hooks) {
       post_stream: [1, 2, 3],
       details: { hello: "world" },
       cool: "property",
-      category_id: category.get("id"),
+      category_id: category.id,
     });
 
-    assert.blank(topic.get("post_stream"), "it does not update post_stream");
-    assert.strictEqual(
-      topic.get("details.hello"),
-      "world",
-      "it updates the details"
-    );
-    assert.strictEqual(
-      topic.get("cool"),
-      "property",
-      "it updates other properties"
-    );
-    assert.strictEqual(topic.get("category"), category);
+    assert.blank(topic.post_stream, "it does not update post_stream");
+    assert.strictEqual(topic.details.hello, "world", "it updates the details");
+    assert.strictEqual(topic.cool, "property", "it updates other properties");
+    assert.strictEqual(topic.category, category);
   });
 
   test("recover", async function (assert) {
-    const user = User.create({ username: "eviltrout" });
+    const user = this.store.createRecord("user", { username: "eviltrout" });
     const topic = this.store.createRecord("topic", {
       id: 1234,
       deleted_at: new Date(),
@@ -193,8 +180,8 @@ discourseModule("Unit | Model | topic", function (hooks) {
 
     await topic.recover();
 
-    assert.blank(topic.get("deleted_at"), "it clears deleted_at");
-    assert.blank(topic.get("deleted_by"), "it clears deleted_by");
+    assert.blank(topic.deleted_at, "it clears deleted_at");
+    assert.blank(topic.deleted_by, "it clears deleted_by");
   });
 
   test("fancyTitle", function (assert) {
@@ -203,7 +190,7 @@ discourseModule("Unit | Model | topic", function (hooks) {
     });
 
     assert.strictEqual(
-      topic.get("fancyTitle"),
+      topic.fancyTitle,
       `<img width=\"20\" height=\"20\" src='/images/emoji/twitter/smile.png?v=${v}' title='smile' alt='smile' class='emoji'> with all <img width=\"20\" height=\"20\" src='/images/emoji/twitter/slight_smile.png?v=${v}' title='slight_smile' alt='slight_smile' class='emoji'> the emojis <img width=\"20\" height=\"20\" src='/images/emoji/twitter/pear.png?v=${v}' title='pear' alt='pear' class='emoji'><img width=\"20\" height=\"20\" src='/images/emoji/twitter/peach.png?v=${v}' title='peach' alt='peach' class='emoji'>`,
       "supports emojis"
     );
@@ -217,14 +204,16 @@ discourseModule("Unit | Model | topic", function (hooks) {
       fancy_title: "This is a test",
     });
 
-    this.siteSettings.support_mixed_text_direction = true;
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+    siteSettings.support_mixed_text_direction = true;
+
     assert.strictEqual(
-      rtlTopic.get("fancyTitle"),
+      rtlTopic.fancyTitle,
       `<span dir="rtl">هذا اختبار</span>`,
       "sets the dir-span to rtl"
     );
     assert.strictEqual(
-      ltrTopic.get("fancyTitle"),
+      ltrTopic.fancyTitle,
       `<span dir="ltr">This is a test</span>`,
       "sets the dir-span to ltr"
     );
@@ -237,7 +226,7 @@ discourseModule("Unit | Model | topic", function (hooks) {
     });
 
     assert.strictEqual(
-      topic.get("escapedExcerpt"),
+      topic.escapedExcerpt,
       `This is a test topic <img width=\"20\" height=\"20\" src='/images/emoji/twitter/smile.png?v=${v}' title='smile' alt='smile' class='emoji'>`,
       "supports emojis"
     );

@@ -358,7 +358,6 @@ pl_PL:
       like_count: "Polubienia"
       topic_count: "Tematy"
       post_count: "Posty"
-      user_count: "Użytkownicy"
       active_user_count: "Aktywni użytkownicy"
       contact: "Kontakt"
       contact_info: "W sprawach wymagających szybkiej reakcji lub związanych z poprawnym funkcjonowaniem serwisu, prosimy o kontakt: %{contact_info}."
@@ -415,7 +414,6 @@ pl_PL:
       remove_confirmation: "Czy na pewno chcesz usunąć ten szkic?"
       new_topic: "Nowy szkic tematu"
       new_private_message: "Nowy szkic wiadomości osobistej"
-      topic_reply: "Szkic odpowiedzi"
       abandon:
         confirm: "Masz projekt w toku dla tego tematu. Co chcesz z nim zrobić?"
         yes_value: "Odrzuć"
@@ -1189,14 +1187,9 @@ pl_PL:
       no_notifications_page_title: "Nie masz jeszcze żadnych powiadomień"
       no_notifications_page_body: >
         Zostaniesz powiadomiony o działaniach bezpośrednio związanych z Tobą, w tym o odpowiedziach na Twoje tematy i posty, gdy ktoś <b>@oznaczy</b> Ciebie lub cytuje Ciebie, i odpowiada na tematy, które oglądasz. Powiadomienia będą również wysyłane na Twój adres e-mail, gdy nie zalogujesz się przez jakiś czas. <br><br> Poszukaj %{icon} , aby zdecydować, o których konkretnych tematach, kategoriach i tagach chcesz być powiadamiany. Aby dowiedzieć się więcej, zobacz swoje <a href='%{preferencesUrl}'>preferencje powiadomień</a>.
-      first_notification: "Twoje pierwsze powiadomienie! Kliknij aby zacząć."
       dynamic_favicon: "Pokazuj liczbę nowych/zaktualizowanych tematów w ikonie przeglądarki."
       skip_new_user_tips:
         description: "Pomiń wskazówki i plakietki dotyczące wprowadzania nowych użytkowników"
-        not_first_time: "To nie twój pierwszy raz?"
-        skip_link: "Pomiń te wskazówki"
-        read_later: "Przeczytam to później."
-      reset_seen_popups: "Pokaż ponownie wskazówki wprowadzające"
       theme_default_on_all_devices: "Ustaw to jako domyślny motyw na wszystkich urządzeniach"
       color_scheme_default_on_all_devices: "Ustaw domyślne schematy kolorów na wszystkich moich urządzeniach"
       color_scheme: "Schemat kolorów"
@@ -1334,6 +1327,7 @@ pl_PL:
         profile: "Profil"
         emails: "Wiadomości"
         notifications: "Powiadomienia"
+        tracking: "Śledzona"
         categories: "Kategorie"
         users: "Użytkownicy"
         tags: "Tagi"
@@ -1592,6 +1586,7 @@ pl_PL:
       email_in_reply_to: "Zawieraj w e-mailach fragment oryginalnych postów z odpowiedzi"
       other_settings: "Inne"
       categories_settings: "Kategorie"
+      topics_settings: "Tematy"
       new_topic_duration:
         label: "Uznaj, że temat jest nowy, jeśli"
         not_viewed: "niewidziane "
@@ -1806,7 +1801,7 @@ pl_PL:
       set_custom_status: "Ustaw własny status"
       what_are_you_doing: "Co robisz?"
       remove_status: "Usuń status"
-    popup:
+    user_tips:
       primary: "Zrozumiano!"
       secondary: "nie pokazuj mi tych wskazówek"
       first_notification:
@@ -2450,6 +2445,7 @@ pl_PL:
         other: "<span>%{count}%{plus} wyników dla</span><span class='term'>%{term}</span>"
       title: "Wyszukaj"
       full_page_title: "Wyszukaj"
+      results: "wyniki"
       no_results: "Brak wyników wyszukiwania"
       no_more_results: "Nie znaleziono więcej wyników."
       post_format: "#%{post_number} za %{username}"
@@ -2730,9 +2726,6 @@ pl_PL:
       move_to_inbox:
         title: "Przenieś do skrzynki odbiorczej"
         help: "Przenieś wiadomość z powrotem do skrzynki odbiorczej"
-      edit_message:
-        help: "Edytuj pierwszy post wiadomości"
-        title: "Edytuj"
       defer:
         help: "Oznacz jako nieprzeczytane"
         title: "Zignoruj"
@@ -3528,8 +3521,6 @@ pl_PL:
       this_year: "ten rok"
       position: "Pozycja na stronie kategorii:"
       default_position: "Domyślna pozycja"
-      position_disabled: "Kolejność kategorii będzie uzależniona od aktywności. Aby kontrolować ich kolejność,"
-      position_disabled_click: 'włącz statyczną kolejność kategorii'
       minimum_required_tags: "Minimalna liczba tagów wymaganych w temacie:"
       default_slow_mode: 'Włącz „Tryb powolny” dla nowych tematów w tej kategorii.'
       parent: "Kategoria rodzica"
@@ -4236,9 +4227,6 @@ pl_PL:
               title: "Wszystkie tematy"
             faq:
               content: "FAQ"
-            tracked:
-              content: "Śledzone"
-              title: "Wszystkie śledzone tematy"
             groups:
               content: "Grupy"
               title: "Wszystkie grupy"
@@ -4247,7 +4235,6 @@ pl_PL:
               title: "Wszyscy użytkownicy"
             my_posts:
               content: "Wysłane"
-              title: "Moje posty"
               draft_count:
                 one: "%{count} szkic"
                 few: "%{count} szkice"

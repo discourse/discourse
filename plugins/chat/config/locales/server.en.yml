@@ -17,6 +17,8 @@ en:
     default_emoji_reactions: "Default emoji reactions for chat messages. Add up to 5 emojis for quick reaction."
     direct_message_enabled_groups: "Allow users within these groups to create user-to-user Personal Chats. Note: staff can always create Personal Chats, and users will be able to reply to Personal Chats initiated by users who have permission to create them."
     chat_message_flag_allowed_groups: "Users in these groups are allowed to flag chat messages."
+    chat_max_direct_message_users: "Users cannot add more than this number of other users when creating a new direct message. Set to 0 to only allow messages to oneself. Staff are exempt from this setting."
+    chat_allow_archiving_channels: "Allow staff to archive messages to a topic when closing a channel."
     errors:
       chat_default_channel: "The default chat channel must be a public channel."
       direct_message_enabled_groups_invalid: "You must specify at least one group for this setting. If you do not want anyone except staff to send direct messages, choose the staff group."
@@ -46,6 +48,7 @@ en:
       duplicate_message: "You posted an identical message too recently."
       delete_channel_failed: "Delete channel failed, please try again."
       minimum_length_not_met: "Message is too short, must have a minimum of %{minimum} characters."
+      message_too_long: "Message is too long, messages must be a maximum of %{maximum} characters."
       max_reactions_limit_reached: "New reactions are not allowed on this message."
       message_move_invalid_channel: "The source and destination channel must be public channels."
       message_move_no_messages_found: "No messages were found with the provided message IDs."
@@ -56,6 +59,9 @@ en:
       actor_disallowed_dms: "You have chosen to prevent users from sending you private and direct messages, so you cannot create new direct messages."
       actor_preventing_target_user_from_dm: "You have chosen to prevent %{username} from sending you private and direct messages, so you cannot create new direct messages to them."
       user_cannot_send_direct_messages: "Sorry, you cannot send direct messages."
+      over_chat_max_direct_message_users:
+        one: "You can only create a direct message with yourself."
+        other: "You can't create a direct message with more than %{count} other users."
     reviewables:
       message_already_handled: "Thanks, but we've already reviewed this message and determined it does not need to be flagged again."
       actions:
@@ -173,7 +179,7 @@ en:
         chat_channel:
           one: "[%{email_prefix}] New message in %{message_title}"
           other: "[%{email_prefix}] New messages in %{message_title} and %{others}"
-        other_direct_message: "from %{message_title}"
+        other_direct_message: "from %{dm_title}"
         others: "%{count} others"
       unsubscribe: "This chat summary is sent from %{site_link} when you are away. Change your %{email_preferences_link}, or %{unsubscribe_link} to unsubscribe."
       unsubscribe_no_link: "This chat summary is sent from %{site_link} when you are away. Change your %{email_preferences_link}."

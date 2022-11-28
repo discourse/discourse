@@ -13,3 +13,48 @@ a.hashtag {
     }
   }
 }
+
+a.hashtag-cooked {
+  @include mention;
+
+  &:visited,
+  &:hover {
+    color: var(--primary);
+  }
+
+  .d-icon {
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+    margin: 0 0.2em 0 0.1em;
+  }
+}
+
+.hashtag-autocomplete {
+  max-height: 210px;
+  overflow-y: auto;
+
+  .hashtag-autocomplete__option {
+    .hashtag-autocomplete__link {
+      align-items: center;
+      color: var(--primary-medium);
+      display: flex;
+
+      .d-icon {
+        padding-right: 0.5em;
+      }
+
+      .hashtag-autocomplete__text {
+        flex: 1;
+        margin-left: 0;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+
+        .emoji {
+          width: 15px;
+          height: 15px;
+        }
+      }
+    }
+  }
+}

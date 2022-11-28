@@ -711,6 +711,10 @@ export default createWidget("post-menu", {
   },
 
   showMoreActions() {
+    if (this.currentUser && this.siteSettings.enable_user_tips) {
+      this.currentUser.hideUserTipForever("post_menu");
+    }
+
     this.state.collapsed = false;
     const likesPromise = !this.state.likedUsers.length
       ? this.getWhoLiked()
@@ -730,6 +734,10 @@ export default createWidget("post-menu", {
       keyValueStore &&
         keyValueStore.set({ key: "likedPostId", value: attrs.id });
       return this.sendWidgetAction("showLogin");
+    }
+
+    if (this.currentUser && this.siteSettings.enable_user_tips) {
+      this.currentUser.hideUserTipForever("post_menu");
     }
 
     if (this.capabilities.canVibrate && !isTesting()) {

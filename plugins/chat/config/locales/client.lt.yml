@@ -74,6 +74,7 @@ lt:
         save: "Išsaugoti"
         saved: "Išsaugota"
         unfollow: "Palikti"
+        admin_title: "Administratorius"
       incoming_webhooks:
         back: "Atgal"
         description: "Aprašymas"
