@@ -142,32 +142,4 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
       );
     },
   });
-
-  componentTest("unreadIndicator", {
-    template: hbs`{{chat-channel-title channel=channel unreadIndicator=unreadIndicator}}`,
-
-    beforeEach() {
-      const channel = fabricators.chatChannel({
-        chatable_type: CHATABLE_TYPES.directMessageChannel,
-      });
-
-      const state = {};
-      state[channel.id] = {
-        unread_count: 1,
-      };
-      this.currentUser.set("chat_channel_tracking_state", state);
-
-      this.set("channel", channel);
-    },
-
-    async test(assert) {
-      this.set("unreadIndicator", true);
-
-      assert.ok(exists(".chat-channel-unread-indicator"));
-
-      this.set("unreadIndicator", false);
-
-      assert.notOk(exists(".chat-channel-unread-indicator"));
-    },
-  });
 });

@@ -4,8 +4,6 @@
   </div>
 
   {{#if @unreadIndicator}}
-    <div class="chat-channel-metadata__unread-count">
-      <ChatChannelUnreadIndicator @channel={{@channel}} />
-    </div>
+    <ChatChannelUnreadIndicator @channel={{@channel}} />
   {{/if}}
 </div>
