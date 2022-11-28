@@ -6,7 +6,7 @@ const NarrowDesktop = {
   init() {
     this.narrowDesktopView =
       narrowDesktopForced ||
-      this.isNarrowDesktopView(bodyElement.getBoundingClientRect().width);
+      this.isNarrowDesktopView(document.body.getBoundingClientRect().width);
   },
 
   isNarrowDesktopView(width) {
