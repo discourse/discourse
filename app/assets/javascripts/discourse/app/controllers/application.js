@@ -19,10 +19,7 @@ export default Controller.extend({
 
   init() {
     this._super(...arguments);
-    this.showSidebar =
-      this.canDisplaySidebar &&
-      !this.keyValueStore.getItem(HIDE_SIDEBAR_KEY) &&
-      !this.site.narrowDesktopView;
+    this.showSidebar = this.calculateShowSidebar();
   },
 
   @discourseComputed
@@ -99,6 +96,14 @@ export default Controller.extend({
     }
 
     return enableSidebar;
+  },
+
+  calculateShowSidebar() {
+    return (
+      this.canDisplaySidebar &&
+      !this.keyValueStore.getItem(HIDE_SIDEBAR_KEY) &&
+      !this.site.narrowDesktopView
+    );
   },
 
   @action
