@@ -449,9 +449,12 @@ $float-height: 530px;
 
     .user-status-message {
       display: inline-block;
-      color: var(--primary-medium);
       font-size: var(--font-down-2);
       margin-right: 0.5rem;
+
+      &-description {
+        color: var(--primary-medium);
+      }
     }
   }
 
