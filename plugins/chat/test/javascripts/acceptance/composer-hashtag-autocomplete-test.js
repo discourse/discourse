@@ -5,7 +5,7 @@ import {
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
+import { skip } from "qunit";
 import { chatChannelPretender } from "../helpers/chat-pretenders";
 import { fillIn, settled, triggerKeyEvent, visit } from "@ember/test-helpers";
 
@@ -41,7 +41,7 @@ acceptance(
       enable_experimental_hashtag_autocomplete: true,
     });
 
-    test("using # in the chat composer shows category and tag autocomplete options", async function (assert) {
+    skip("using # in the chat composer shows category and tag autocomplete options", async function (assert) {
       await visit("/chat/channel/11/-");
       const composerInput = query(".chat-composer-input");
       await fillIn(".chat-composer-input", "abc #");
