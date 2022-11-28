@@ -11,7 +11,7 @@ import {
   triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
-import { test } from "qunit";
+import { skip, test } from "qunit";
 import {
   baseChatPretenders,
   chatChannelPretender,
@@ -84,7 +84,7 @@ acceptance("Discourse Chat - Composer", function (needs) {
     );
   });
 
-  test("when selecting an emoji from the autocomplete", async function (assert) {
+  skip("when selecting an emoji from the autocomplete", async function (assert) {
     const emojiReactionStore = this.container.lookup(
       "service:chat-emoji-reaction-store"
     );
