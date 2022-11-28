@@ -8,11 +8,6 @@
   }
 
   .chat-channel-title {
-    padding: 0.75rem 0;
-  }
-  .direct-message-channels {
-    .chat-channel-title {
-      padding: 0.6rem 0; //minor adjustment for visual consistency with channels which dont have avatars
-    }
+    padding-right: 0.5em;
   }
 }

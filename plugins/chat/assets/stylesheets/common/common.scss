@@ -459,8 +459,6 @@ $float-height: 530px;
     display: flex;
     align-items: flex-end;
     flex-direction: column;
-    gap: 0.25rem;
-    padding: 0.5rem 0;
 
     &__date {
       color: var(--primary-high);
@@ -471,7 +469,7 @@ $float-height: 530px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-left: 0.5rem;
+      margin-top: 0.25rem;
       width: auto;
       min-width: 14px;
       padding: 2px;
@@ -507,7 +505,7 @@ $float-height: 530px;
     }
 
     .chat-channel-metadata {
-      visibility: hidden;
+      display: none;
     }
   }
 
