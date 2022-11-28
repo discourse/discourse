@@ -35,7 +35,7 @@ export function buildRawConnectorCache(findOutlets) {
   findOutlets(
     Object.keys(__DISCOURSE_RAW_TEMPLATES),
     (outletName, resource) => {
-      result[outletName] = result[outletName] || [];
+      result[outletName] ??= [];
       result[outletName].push({
         template: __DISCOURSE_RAW_TEMPLATES[resource],
       });
