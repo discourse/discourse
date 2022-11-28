@@ -1,5 +1,5 @@
 :root {
-  --chat-mobile-avatar-size: 38px;
+  --channel-list-avatar-size: 38px;
 }
 
 .chat-message {
@@ -73,16 +73,17 @@ body.has-full-page-chat {
   }
 }
 
-.channels-list .chat-channel-row {
-  .category-chat-private .d-icon {
-    background-color: var(--secondary);
-  }
+.channels-list {
+  .chat-channel-row {
+    .category-chat-private .d-icon {
+      background-color: var(--secondary);
+    }
 
-  .chat-channel-unread-indicator {
-    width: 6px;
-    height: 6px;
-    left: 5px;
-    top: calc(50% - 3px);
+    .chat-channel-metadata {
+      .chat-channel-unread-indicator {
+        font-size: var(--font-down-2);
+      }
+    }
   }
 }
 

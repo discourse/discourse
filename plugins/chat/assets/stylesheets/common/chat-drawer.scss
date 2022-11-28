@@ -38,22 +38,13 @@ body.composer-open .chat-drawer-outlet-container {
 
   .channels-list {
     .chat-channel-row {
-      padding: 0 0 0 0.5rem;
-      margin: 0 0.5rem 0.125rem 0.5rem;
-      border-radius: 0.25em;
-    }
+      height: 3.6em;
+      padding: 0 0.5rem;
+      margin: 0 0 0 0.5rem;
 
-    .chat-channel-unread-indicator {
-      left: 3px;
-      min-width: 8px;
-      width: 8px;
-      height: 8px;
-      border-radius: 7px;
-      top: calc(50% - 5px);
-    }
-
-    .chat-channel-title {
-      padding: 0.5rem;
+      &:not(:last-of-type) {
+        border-bottom: 1px solid var(--primary-low);
+      }
     }
   }
 }
@@ -114,7 +105,7 @@ body.composer-open .chat-drawer-outlet-container {
   flex-direction: column;
   width: 100%;
   font-weight: 700;
-  padding: 0 0.5rem;
+  padding: 0 0.5rem 0 1rem;
   cursor: pointer;
 
   .chat-channel-title {
@@ -222,6 +213,7 @@ body.composer-open .chat-drawer-outlet-container {
   padding-bottom: 0.25em;
 
   .channels-list .chat-channel-divider {
-    padding: 0.25rem 0.5rem 0.25rem 1rem;
+    padding: 1.5rem 0.5rem 1rem 1rem;
+    color: var(--quaternary);
   }
 }

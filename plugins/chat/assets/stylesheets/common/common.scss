@@ -4,6 +4,7 @@ $float-height: 530px;
   --message-left-width: 42px;
   --full-page-border-radius: 12px;
   --full-page-sidebar-width: 275px;
+  --channel-list-avatar-size: 30px;
   --chat-header-offset: 65px;
 }
 
@@ -77,10 +78,11 @@ $float-height: 530px;
   height: 14px;
   border-radius: 100%;
   box-sizing: content-box;
-  border: 2px solid var(--secondary);
   -webkit-touch-callout: none;
   background: var(--tertiary-med-or-tertiary);
+  color: var(--secondary);
   font-size: var(--font-down-2);
+  text-align: center;
 
   &.urgent {
     background: var(--success);
@@ -137,26 +139,26 @@ $float-height: 530px;
   }
 
   .chat-channel-unread-indicator {
-    flex-shrink: 0;
-    width: 10px;
-    height: 10px;
-    border-radius: 10px;
-    border: 0;
-    right: 7px;
-    top: calc(50% - 5px);
-
-    &.urgent .number-wrap {
-      display: none;
-    }
+    font-size: var(--font-down-1);
   }
 
   .open-browse-page-btn,
   .open-draft-channel-page-btn,
   .chat-channel-leave-btn {
+    position: relative;
+    padding: 0;
     background: transparent;
     color: var(--primary-medium);
     font-size: var(--font-0-rem);
-    padding: 0.5rem;
+
+    &:after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+    }
 
     &:hover {
       background: transparent;
@@ -208,10 +210,6 @@ $float-height: 530px;
     &:hover {
       background: none;
     }
-  }
-
-  .chat-channel-title {
-    padding: 0.5rem;
   }
 }
 
@@ -431,18 +429,61 @@ $float-height: 530px;
   align-items: center;
   box-sizing: border-box;
   display: flex;
+  justify-content: space-between;
   position: relative;
   cursor: pointer;
   color: var(--primary-high);
   transition: opacity 50ms ease-in;
   opacity: 1;
 
-  .chat-user-avatar {
-    pointer-events: none;
+  .chat-channel-title {
+    &__user-info {
+      @include ellipsis;
+    }
+
+    &__usernames {
+      display: flex;
+      align-items: center;
+      justify-content: start;
+    }
+
+    .user-status-message {
+      display: inline-block;
+      color: var(--primary-medium);
+      font-size: var(--font-down-2);
+      margin-right: 0.5rem;
+    }
   }
 
-  .chat-channel-unread-indicator {
-    margin-left: 0.5rem;
+  .chat-channel-metadata {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+
+    &__date {
+      color: var(--primary-high);
+      font-size: var(--font-down-2);
+    }
+
+    .chat-channel-unread-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.25rem;
+      width: auto;
+      min-width: 14px;
+      padding: 2px;
+      font-size: var(--font-down-3);
+      border-radius: 1em;
+
+      .number {
+        line-height: 1rem;
+      }
+    }
+  }
+
+  .chat-user-avatar {
+    pointer-events: none;
   }
 
   &.unfollowing {
@@ -450,17 +491,21 @@ $float-height: 530px;
   }
 
   .toggle-channel-membership-button.-leave {
-    visibility: hidden;
+    display: none;
     margin-left: auto;
   }
 
-  &:hover {
+  &.can-leave:hover {
     .toggle-channel-membership-button.-leave {
-      visibility: visible;
+      display: block;
 
       > * {
         pointer-events: auto;
       }
+    }
+
+    .chat-channel-metadata {
+      display: none;
     }
   }
 
@@ -492,6 +537,10 @@ $float-height: 530px;
     }
   }
 
+  &:visited {
+    color: var(--primary-high);
+  }
+
   &.muted {
     opacity: 0.65;
   }
@@ -506,13 +555,6 @@ $float-height: 530px;
     &.urgent {
       background: var(--success);
     }
-  }
-
-  .chat-channel-row-unread-count {
-    display: inline-block;
-    margin-left: 5px;
-    font-size: var(--font-down-1);
-    color: var(--primary-high);
   }
 
   .emoji {
@@ -971,4 +1013,23 @@ html.has-full-page-chat {
 
 [data-popper-reference-hidden] {
   visibility: hidden;
+}
+
+.channels-list {
+  .chat-user-avatar {
+    img {
+      width: calc(var(--channel-list-avatar-size) - 2px);
+      height: calc(var(--channel-list-avatar-size) - 2px);
+    }
+  }
+
+  .chat-channel-title {
+    &__users-count {
+      width: var(--channel-list-avatar-size);
+      height: var(--channel-list-avatar-size);
+      padding: 0;
+      font-size: var(--font-up-1);
+      justify-content: center;
+    }
+  }
 }

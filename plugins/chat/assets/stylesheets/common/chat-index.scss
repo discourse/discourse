@@ -1,0 +1,13 @@
+.channels-list {
+  .chat-channel-divider {
+    padding: 2.5rem 1.5rem 0.5rem 1.5rem;
+
+    &:first-of-type {
+      padding-top: 1rem;
+    }
+  }
+
+  .chat-channel-title {
+    padding-right: 0.5em;
+  }
+}
