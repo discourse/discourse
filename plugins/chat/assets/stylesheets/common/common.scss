@@ -499,17 +499,19 @@ $float-height: 530px;
     margin-left: auto;
   }
 
-  &.can-leave:hover {
-    .toggle-channel-membership-button.-leave {
-      display: block;
+  @media (hover: hover) {
+    &.can-leave:hover {
+      .toggle-channel-membership-button.-leave {
+        display: block;
 
-      > * {
-        pointer-events: auto;
+        > * {
+          pointer-events: auto;
+        }
       }
-    }
 
-    .chat-channel-metadata {
-      display: none;
+      .chat-channel-metadata {
+        display: none;
+      }
     }
   }
 
