@@ -55,7 +55,7 @@ RSpec.describe ReviewableChatMessage, type: :model do
     expect(chat_message.reload.deleted_at).not_to be_present
   end
 
-  context "when the flagged message autho is silenced" do
+  context "when the flagged message author is silenced" do
     before do
       UserSilencer.silence(
         user,
