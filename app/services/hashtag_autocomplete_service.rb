@@ -172,6 +172,8 @@ class HashtagAutocompleteService
     raise Discourse::InvalidParameters.new(:order) if !types_in_priority_order.is_a?(Array)
     limit = [limit, SEARCH_MAX_LIMIT].min
 
+    return search_without_term(types_in_priority_order, limit) if term.blank?
+
     limited_results = []
     top_ranked_type = nil
     term = term.downcase
@@ -279,6 +281,21 @@ class HashtagAutocompleteService
 
   private
 
+  def search_without_term(types_in_priority_order, limit)
+    split_limits = (limit.to_f / types_in_priority_order.length.to_f).ceil
+    limited_results = []
+
+    types_in_priority_order.each do |type|
+      search_results = @@data_sources[type].search_without_term(guardian, limit)
+      next if search_results.empty?
+      next if !all_data_items_valid?(search_results)
+      search_results = @@data_sources[type].search_sort(search_results, nil)
+      limited_results.concat(set_types(set_refs(search_results), type))
+    end
+
+    limited_results.take(limit)
+  end
+
   # Sometimes a specific ref is required, e.g. for categories that have
   # a parent their ref will be parent_slug:child_slug, though most of the
   # time it will be the same as the slug. The ref can then be used for
@@ -287,12 +304,16 @@ class HashtagAutocompleteService
     hashtag_items.each { |item| item.ref ||= item.slug }
   end
 
+  def set_types(hashtag_items, type)
+    hashtag_items.each { |item| item.type = type }
+  end
+
   def all_data_items_valid?(items)
     items.all? { |item| item.kind_of?(HashtagItem) && item.slug.present? && item.text.present? }
   end
 
   def search_for_type(type, guardian, term, limit)
-    set_refs(@@data_sources[type].search(guardian, term, limit)).each { |item| item.type = type }
+    set_types(set_refs(@@data_sources[type].search(guardian, term, limit)), type)
   end
 
   def execute_lookup!(lookup_results, type, guardian, slugs)
@@ -308,6 +329,6 @@ class HashtagAutocompleteService
   end
 
   def lookup_for_type(type, guardian, slugs)
-    set_refs(@@data_sources[type].lookup(guardian, slugs)).each { |item| item.type = type }
+    set_types(set_refs(@@data_sources[type].lookup(guardian, slugs)), type)
   end
 end

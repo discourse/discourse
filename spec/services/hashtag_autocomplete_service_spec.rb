@@ -4,6 +4,7 @@ RSpec.describe HashtagAutocompleteService do
   fab!(:user) { Fabricate(:user) }
   fab!(:category1) { Fabricate(:category, name: "Book Club", slug: "book-club") }
   fab!(:tag1) { Fabricate(:tag, name: "great-books") }
+  fab!(:topic1) { Fabricate(:topic) }
   let(:guardian) { Guardian.new(user) }
 
   subject { described_class.new(guardian) }
@@ -233,6 +234,37 @@ RSpec.describe HashtagAutocompleteService do
 
       it "does not return any tags" do
         expect(subject.search("book", %w[category tag]).map(&:text)).to eq(["Book Club"])
+      end
+    end
+
+    context "when no term is provided (default results) triggered by a # with no characters in the UI" do
+      fab!(:category2) { Fabricate(:category, name: "Book Zone", slug: "book-zone") }
+      fab!(:category3) { Fabricate(:category, name: "Book Dome", slug: "book-dome") }
+      fab!(:category4) { Fabricate(:category, name: "Bookworld", slug: "book") }
+      fab!(:category5) { Fabricate(:category, name: "Media", slug: "media") }
+      fab!(:tag2) { Fabricate(:tag, name: "mid-books") }
+      fab!(:tag3) { Fabricate(:tag, name: "terrible-books") }
+      fab!(:tag4) { Fabricate(:tag, name: "book") }
+
+      it "returns the N most recently used categories and tags (based on posts created within topics utilizing those categories/tags) that the user can access" do
+        Fabricate(:post, created_at: 1.day.ago, topic: Fabricate(:topic, category: category3))
+        Fabricate(:post, created_at: 6.days.ago, topic: Fabricate(:topic, category: category2))
+        Fabricate(:post, created_at: 1.hour.ago, topic: Fabricate(:topic, category: category1))
+
+        Fabricate(:post, created_at: 2.days.ago, topic: Fabricate(:topic, tags: [tag2], category: category5))
+        Fabricate(:post, created_at: 3.days.ago, topic: Fabricate(:topic, tags: [tag4], category: category5))
+        Fabricate(:post, created_at: 4.hours.ago, topic: Fabricate(:topic, tags: [tag3], category: category5))
+
+        category1.update!(read_restricted: true)
+        Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["terrible-books"])
+
+        expect(subject.search(nil, %w[category tag]).map(&:text)).to eq([
+          "Book Dome",
+          "Book Zone",
+          "Media",
+          "book x 1",
+          "mid-books x 1"
+        ])
       end
     end
   end

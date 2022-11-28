@@ -44,4 +44,26 @@ class Chat::ChatChannelHashtagDataSource
   def self.search_sort(search_results, _)
     search_results.sort_by { |result| result.text.downcase }
   end
+
+  def self.search_without_term(guardian, limit)
+    if SiteSetting.enable_experimental_hashtag_autocomplete
+      allowed_channel_ids_sql =
+        Chat::ChatChannelFetcher.generate_allowed_channel_ids_sql(
+          guardian,
+          exclude_dm_channels: true,
+        )
+      channel_ids = DB.query(<<~SQL, limit: limit).map(&:chat_channel_id)
+      SELECT DISTINCT chat_channel_id, chat_messages.created_at
+      FROM chat_messages
+      WHERE chat_messages.deleted_at IS NULL AND chat_channel_id IN (#{allowed_channel_ids_sql})
+      ORDER BY chat_messages.created_at DESC
+      LIMIT :limit
+      SQL
+      ChatChannel
+        .where(id: channel_ids)
+        .map { |channel| channel_to_hashtag_item(guardian, channel) }
+    else
+      []
+    end
+  end
 end

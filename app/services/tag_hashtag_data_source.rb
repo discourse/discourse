@@ -55,4 +55,34 @@ class TagHashtagDataSource
   def self.search_sort(search_results, _)
     search_results.sort_by { |result| result.text.downcase }
   end
+
+  def self.search_without_term(guardian, limit)
+    return [] if !SiteSetting.tagging_enabled
+
+    tags = DB.query(<<~SQL, limit: limit).map(&:name)
+    SELECT DISTINCT tags.name, posts.created_at
+    FROM tags
+    INNER JOIN topic_tags ON topic_tags.tag_id = tags.id
+    INNER JOIN topics ON topic_tags.topic_id = topics.id
+    INNER JOIN posts ON topics.id = posts.topic_id
+    WHERE posts.deleted_at IS NULL AND topics.deleted_at IS NULL
+    ORDER BY posts.created_at DESC
+    LIMIT :limit
+    SQL
+
+    tags_with_counts, _ =
+      DiscourseTagging.filter_allowed_tags(
+        guardian,
+        with_context: true,
+        limit: limit,
+        for_input: true,
+        order_search_results: true,
+        only_tag_names: tags
+      )
+
+    TagsController
+      .tag_counts_json(tags_with_counts)
+      .take(limit)
+      .map { |tag| tag_to_hashtag_item(tag, include_count: true) }
+  end
 end
