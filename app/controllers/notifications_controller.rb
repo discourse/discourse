@@ -23,6 +23,7 @@ class NotificationsController < ApplicationController
       limit = 50 if limit > 50
 
       notifications = Notification.recent_report(current_user, limit)
+      notifications = filter_inaccessible_notifications(notifications)
       changed = false
 
       if notifications.present? && !(params.has_key?(:silent) || @readonly_mode)
@@ -50,6 +51,7 @@ class NotificationsController < ApplicationController
 
       total_rows = notifications.dup.count
       notifications = notifications.offset(offset).limit(60)
+      notifications = filter_inaccessible_notifications(notifications)
       render_json_dump(notifications: serialize_data(notifications, NotificationSerializer),
                        total_rows_notifications: total_rows,
                        seen_notification_id: user.seen_notification_id,
@@ -101,4 +103,9 @@ class NotificationsController < ApplicationController
     render_json_dump(NotificationSerializer.new(@notification, scope: guardian, root: false))
   end
 
+  def filter_inaccessible_notifications(notifications)
+    topic_ids = notifications.map { |n| n.topic_id }.compact.uniq
+    accessible_topic_ids = guardian.can_see_topic_ids(topic_ids: topic_ids)
+    notifications.select { |n| n.topic_id.blank? || accessible_topic_ids.include?(n.topic_id) }
+  end
 end
