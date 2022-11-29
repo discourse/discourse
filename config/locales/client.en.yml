@@ -2237,6 +2237,7 @@ en:
         one: "By mentioning <b>@%{here}</b>, you are about to notify %{count} user – are you sure?"
         other: "By mentioning <b>@%{here}</b>, you are about to notify %{count} users – are you sure?"
       duplicate_link: "It looks like your link to <b>%{domain}</b> was already posted in the topic by <b>@%{username}</b> in <a href='%{post_url}'>a reply on %{ago}</a> – are you sure you want to post it again?"
+      duplicate_link_same_user: "It looks like you already posted a link to <b>%{domain}</b> in this topic in <a href='%{post_url}'>a reply on %{ago}</a> - are you sure you want to post it again?"
       reference_topic_title: "RE: %{title}"
 
       error:
