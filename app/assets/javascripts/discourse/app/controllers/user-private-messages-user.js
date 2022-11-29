@@ -37,9 +37,9 @@ export default class extends Controller {
   }
 
   #linkText(type) {
-    const count =
-      this.pmTopicTrackingState?.lookupCount(type, { inboxFilter: "user" }) ||
-      0;
+    const count = this.pmTopicTrackingState?.lookupCount(type, {
+      inboxFilter: "user",
+    });
 
     if (count === 0) {
       return I18n.t(`user.messages.${type}`);

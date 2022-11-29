@@ -26,11 +26,10 @@ export default class extends Controller {
   }
 
   #linkText(type) {
-    const count =
-      this.pmTopicTrackingState?.lookupCount(type, {
-        inboxFilter: "group",
-        groupName: this.groupName,
-      }) || 0;
+    const count = this.pmTopicTrackingState?.lookupCount(type, {
+      inboxFilter: "group",
+      groupName: this.groupName,
+    });
 
     if (count === 0) {
       return I18n.t(`user.messages.${type}`);
