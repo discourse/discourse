@@ -167,6 +167,9 @@ function _updateSearchCache(term, results) {
   return results;
 }
 
+// Note that the search term is _not_ required here, and we follow special
+// logic similar to @mentions when there is no search term, to show some
+// useful default categories, tags, etc.
 function _searchGeneric(term, siteSettings, contextualHashtagConfiguration) {
   if (currentSearch) {
     currentSearch.abort();
@@ -187,8 +190,10 @@ function _searchGeneric(term, siteSettings, contextualHashtagConfiguration) {
           resolve(CANCELLED_STATUS);
         }, 5000);
 
-    if (term === "") {
-      return resolve(CANCELLED_STATUS);
+    if (!siteSettings.enable_experimental_hashtag_autocomplete) {
+      if (term === "") {
+        return resolve(CANCELLED_STATUS);
+      }
     }
 
     const debouncedSearch = (q, ctx, resultFunc) => {
