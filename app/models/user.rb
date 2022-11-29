@@ -1986,8 +1986,17 @@ class User < ActiveRecord::Base
       # Secured categories that are in the default categories list
       categories_to_update = existing_category_ids + (category_ids & secured_category_ids)
 
+      default_tag_names = SiteSetting.default_sidebar_tags.split("|")
+      default_tag_ids = Tag.where(name: [default_tag_names]).pluck(:id)
+      tag_names = DiscourseTagging.filter_visible(Tag, self.guardian).where(id: default_tag_ids).pluck(:name)
+      hidden_tag_names = DiscourseTagging.hidden_tag_names
+      existing_tag_ids = SidebarSectionLink.where(user: self, linkable_type: 'Tag').pluck(:linkable_id)
+      #existing_tag_names = DiscourseTagging.filter_visible(Tag, self.guardian).where(id: existing_tag_ids).pluck(:name)
+      existing_tag_names = Tag.where(id: [existing_tag_ids]).pluck(:name)
+      tags_to_update = existing_tag_names + (tag_names & hidden_tag_names)
+
       updater = UserUpdater.new(self, self)
-      updater.update({ sidebar_category_ids: [categories_to_update] })
+      updater.update({ sidebar_category_ids: [categories_to_update], sidebar_tag_names: [tags_to_update] })
     end
   end
 

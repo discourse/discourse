@@ -74,16 +74,21 @@ RSpec.describe User do
         )
 
         expect(SidebarSectionLink.where(linkable_type: 'Tag', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
-          tag.id
+          tag.id,
+          hidden_tag.id
         )
       end
 
-      it "Should only receive new categories they didn't previously have access to" do
+      it "Should create and remove the right sidebar section link records when user is promoted/demoted as an admin" do
         user = Fabricate(:user)
+        #TODO: Customize a user's sidebar categories better than just deleting them. Remove all defaults but add one that isn't in the default list
         SidebarSectionLink.where(user: user).delete_all # User has customized their sidebar categories
         user.update(admin: true)
         expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
           secured_category.id
+        )
+        expect(SidebarSectionLink.where(linkable_type: 'Tag', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
+          hidden_tag.id
         )
         user.update(admin: false)
         expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to be_empty
