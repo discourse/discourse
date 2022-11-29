@@ -322,6 +322,14 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(Jobs::SendSystemMessage.jobs.last["args"].first["message_type"]).to eq("flags_agreed_and_post_deleted_for_responders")
     end
 
+    it "skips responders notification when the score type doesn't match any post action flag type" do
+      flagged_post.reviewable_scores.first.update!(reviewable_score_type: ReviewableScore.types[:needs_approval])
+
+      expect {
+        flagged_post.perform(moderator, :delete_and_agree_replies)
+      }.not_to change(Jobs::SendSystemMessage.jobs, :size)
+    end
+
     it "ignores flagged responses" do
       SiteSetting.notify_users_after_responses_deleted_on_flagged_post = true
       flagged_reply = Fabricate(:reviewable_flagged_post, target: reply)
@@ -361,9 +369,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
 
   def assert_pm_creation_enqueued(user_id, pm_type)
     expect(Jobs::SendSystemMessage.jobs.length).to eq(1)
-      job = Jobs::SendSystemMessage.jobs[0]
-      expect(job["args"][0]["user_id"]).to eq(user_id)
-      expect(job["args"][0]["message_type"]).to eq(pm_type)
+    job = Jobs::SendSystemMessage.jobs[0]
+    expect(job["args"][0]["user_id"]).to eq(user_id)
+    expect(job["args"][0]["message_type"]).to eq(pm_type)
   end
 
   def create_reply(post)
