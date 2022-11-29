@@ -2969,6 +2969,7 @@ ko:
       pending_permission_change_alert: "이 카테고리에 %{group} 그룹을 추가하지 않았습니다. 이 버튼을 클릭하여 추가하세요."
       images: "이미지"
       email_in: "수신 메일 주소 사용자 지정:"
+      email_in_tooltip: "| 문자로 여러 이메일 주소를 구분할 수 있습니다."
       email_in_allow_strangers: "계정이 없는 익명 사용자의 이메일을 수신합니다"
       email_in_disabled: "이메일을 통한 새 주제 게시가 사이트 설정에서 비활성화되었습니다. 이메일을 통해 새 주제를 게시하려면 "
       email_in_disabled_click: '''이메일'' 설정에서 활성화하세요.'

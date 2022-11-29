@@ -651,6 +651,11 @@ cs:
         post: Příspěvek
         editor: Editor
         edit_reason: Reason
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "Uživatelské API"
+      yaxis: "Den"
     dau_by_mau:
       xaxis: "Den"
     daily_engaged_users:

@@ -790,6 +790,11 @@ vi:
         editor: Biên tập
         author: Tác giả
         edit_reason: Lý do
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "API người dùng"
+      yaxis: "Ngày"
     dau_by_mau:
       xaxis: "Ngày"
     daily_engaged_users:

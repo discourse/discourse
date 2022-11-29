@@ -276,6 +276,7 @@ nl:
       settings:
         auto_join_users_label: "Gebruikers automatisch toevoegen"
         auto_join_users_info: "Controleer elk uur welke gebruikers de afgelopen 3 maanden actief zijn geweest en voeg ze toe aan dit kanaal als ze toegang hebben tot de categorie %{category}."
+        enable_auto_join_users: "Automatisch alle recent actieve gebruikers toevoegen"
         auto_join_users_warning: "Elke gebruiker die geen lid is van dit kanaal en toegang heeft tot de categorie %{category} wordt lid. Weet je het zeker?"
         desktop_notification_level: "Bureaubladmeldingen"
         follow: "Deelnemen"
@@ -390,7 +391,7 @@ nl:
         chat_mention:
           direct: 'heeft je genoemd in "%{channel}"'
           direct_html: '<span>%{username}</span> <span>heeft je genoemd in "%{channel}"</span>'
-          other_plain: 'heeft %{identifier} genoemd in "%{channel}”'
+          other_plain: 'heeft %{identifier} genoemd in "%{channel}"'
           other_html: '<span>%{username}</span> <span>heeft %{identifier} genoemd in "%{channel}"</span>'
         direct_message_chat_mention:
           direct: "heeft je genoemd in een privéchat"

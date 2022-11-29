@@ -1658,7 +1658,7 @@ da:
     first_post: Første indlæg
     mute: Ignorer
     unmute: Unmute
-    last_post: Sendt
+    last_post: Sidste indlæg
     local_time: "Lokal Tid"
     time_read: Læste
     time_read_recently: "%{time_read} for nylig"
@@ -2212,6 +2212,7 @@ da:
         title: Avancerede filtre
         posted_by:
           label: Skrevet af
+          aria_label: Filtrer efter indlægsforfatter
         in_category:
           label: Kategoriseret
         in_group:
@@ -2254,6 +2255,7 @@ da:
             placeholder: maksimum
           time:
             label: Sendt
+            aria_label: Filtrer efter opslagsdato
             before: før
             after: efter
         views:
@@ -3591,6 +3593,7 @@ da:
       no_likes_title: "Du har ikke 'syntes godt om' nogen emner endnu"
       no_likes_body: "En god måde at hoppe ind og begynde at bidrage på, er at begynde at læse samtaler, der allerede har fundet sted, og vælge %{heartIcon} på indlæg, som du kan lide!"
       no_topics_title: "Du har ikke startet nogen emner endnu"
+      no_topics_body: "Det er altid bedst at <a href='%{searchUrl}'>søge</a> efter eksisterende samtaleemner, før du starter et nyt. Men hvis du er sikker på, at det emne, du ønsker, ikke allerede findes, så fortsæt og start dit eget, nye emne. Find knappen <kbd>+ Nyt emne</kbd> øverst til højre på emnelisten, kategorien eller tagget for at begynde at oprette et nyt emne i det pågældende område."
       no_topics_title_others: "%{username} har endnu ikke startet nogen emner"
       no_read_topics_title: "Du har ikke læst nogen emner endnu"
     no_group_messages_title: "Ingen gruppemeddelelser fundet"
@@ -3649,6 +3652,7 @@ da:
               content: "Brugere"
             my_posts:
               content: "Mine indlæg"
+              title_drafts: "Mine uopslåede kladder"
             review:
               content: "Anmeldelse"
               title: "anmeldelse"

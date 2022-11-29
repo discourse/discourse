@@ -565,6 +565,11 @@ sw:
         post: Ujumbe
         editor: Mhariri
         edit_reason: Sababu
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "API ya Mtumiaji"
+      yaxis: "Siku"
     dau_by_mau:
       xaxis: "Siku"
     daily_engaged_users:

@@ -379,6 +379,10 @@ te:
       labels:
         editor: ఎడిటరు
         edit_reason: కారణం
+    consolidated_api_requests:
+      xaxis:
+        api: "ఏపీఐ"
+      yaxis: "రోజు"
     dau_by_mau:
       xaxis: "రోజు"
     daily_engaged_users:

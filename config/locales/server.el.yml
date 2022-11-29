@@ -703,6 +703,11 @@ el:
         post: Ανάρτηση
         editor: Συντάκτης
         edit_reason: Αιτία
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "User API"
+      yaxis: "Ημέρα"
     dau_by_mau:
       xaxis: "Ημέρα"
     daily_engaged_users:

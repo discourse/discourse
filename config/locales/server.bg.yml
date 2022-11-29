@@ -478,6 +478,10 @@ bg:
         post: Публикация
         editor: Редактор
         edit_reason: Причина
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+      yaxis: "Ден"
     dau_by_mau:
       xaxis: "Ден"
     daily_engaged_users:
