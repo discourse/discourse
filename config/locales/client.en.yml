@@ -3286,6 +3286,7 @@ en:
           one: "Sorry, you can only upload %{count} file at a time."
           other: "Sorry, you can only upload %{count} files at a time."
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
+        no_uploads_authorized: "Sorry, no files are authorized to be uploaded."
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
         attachment_download_requires_login: "Sorry, you need to be logged in to download attachments."
