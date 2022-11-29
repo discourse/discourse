@@ -92,6 +92,7 @@ RSpec.describe GroupsController do
       end
 
       fab!(:group_with_2_users) { Fabricate(:group, name: "other_group", users: [user, other_user]) }
+      Group.reset_all_counters!
 
       context "with default (descending) order" do
         it "sorts by name" do

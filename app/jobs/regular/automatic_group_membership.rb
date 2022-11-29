@@ -20,7 +20,7 @@ module Jobs
         GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
       end
 
-      Group.reset_counters(group.id, :group_users)
+      Group.reset_all_counters!(group.name)
     end
 
   end

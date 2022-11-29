@@ -63,6 +63,7 @@ RSpec.describe GroupSmtpMailer do
     SiteSetting.manual_polling_enabled = true
     SiteSetting.reply_by_email_address = "test+%{reply_key}@test.com"
     SiteSetting.reply_by_email_enabled = true
+    Group.reset_all_counters!
   end
 
   it 'sends an email as reply' do

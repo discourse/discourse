@@ -596,6 +596,8 @@ RSpec.describe UserNotifications do
       user1 = Fabricate(:user, username: "one", groups: [group1, group2])
       user2 = Fabricate(:user, username: "two", groups: [group1], staged: true)
 
+      Group.reset_all_counters!
+
       topic.allowed_users = [user, user1, user2]
       topic.allowed_groups = [group1, group2]
 
@@ -1113,6 +1115,7 @@ RSpec.describe UserNotifications do
         Fabricate(:post, topic: topic, post_number: 7, user: user4)
       ]
     end
+    Group.reset_all_counters!
 
     it "returns a list of participants (except for the recipient), groups first, followed by users in order of their last reply" do
       expect(UserNotifications.participants(posts.last, user3)).to eq("[group1 (3)](http://test.localhost/g/group1), " \

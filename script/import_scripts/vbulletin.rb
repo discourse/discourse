@@ -196,7 +196,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
           INSERT INTO group_users (group_id, user_id, created_at, updated_at) VALUES #{values}
         SQL
 
-        Group.reset_counters(group.id, :group_users)
+        Group.reset_all_counters!(group.name)
       rescue Exception => e
         puts e.message
         puts e.backtrace.join("\n")

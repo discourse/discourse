@@ -227,6 +227,7 @@ RSpec.describe UserMerger do
     group3.add(walter)
 
     merge_users!
+    Group.reset_all_counters!
 
     [group1, group2, group3].each do |g|
       owner = [group1, group3].include?(g)

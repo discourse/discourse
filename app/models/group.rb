@@ -542,7 +542,7 @@ class Group < ActiveRecord::Base
     refresh_has_messages!
   end
 
-  def self.reset_all_counters!(groups)
+  def self.reset_all_counters!(groups = [])
 
     where = ''
     if groups.present?
