@@ -1599,6 +1599,14 @@
     "@uppy/utils" "^4.1.0"
     namespace-emitter "^2.0.1"
 
+"@uppy/companion-client@^3.0.2":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@uppy/companion-client/-/companion-client-3.1.1.tgz#8c9974f70b899a40771da9a90113941356f9842e"
+  integrity sha512-S1M37vjWu8gdOgdI3Hh/1fVZ9GaLdyPQjVyUujZDTsr79b4VG7v/zjdqJ0FiOTjfGbpnj8s9kr1uyYi0Zf5VFw==
+  dependencies:
+    "@uppy/utils" "^5.1.1"
+    namespace-emitter "^2.0.1"
+
 "@uppy/core@^2.3.1":
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/@uppy/core/-/core-2.3.1.tgz#1d7a40f0a0b96a2709115bf7d087b4e6ab1403f4"
@@ -1632,6 +1640,13 @@
   dependencies:
     lodash.throttle "^4.1.1"
 
+"@uppy/utils@^5.0.2", "@uppy/utils@^5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@uppy/utils/-/utils-5.1.1.tgz#9597e8696e17d71413672bd56eb082c7410514a3"
+  integrity sha512-uoI+PcIVQboky0ZbN4PQeK1seZnnJocomzeK7blId9HKJ6QNgZLf2ibk2CQuQxrOuNsWhgrhs5uLO5Si0oM0Yw==
+  dependencies:
+    lodash.throttle "^4.1.1"
+
 "@uppy/xhr-upload@^2.1.2":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@uppy/xhr-upload/-/xhr-upload-2.1.2.tgz#0f644e3371b611b10cd5ddbd7d799ab9f88a3786"
@@ -1640,6 +1655,15 @@
     "@uppy/companion-client" "^2.2.1"
     "@uppy/utils" "^4.1.0"
     nanoid "^3.1.25"
+
+"@uppy/xhr-upload@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@uppy/xhr-upload/-/xhr-upload-3.0.4.tgz#219a92c832bee1f089992958d27ec71dbe9d9d7d"
+  integrity sha512-uJ1oxcwEaSLnrexvi6Lp57hV3z3DsovgVmYIVwg+z/EnrRcL32wNRE7FcIr8Mk9e1jdMiFYlk6cQmiP2dZep8A==
+  dependencies:
+    "@uppy/companion-client" "^3.0.2"
+    "@uppy/utils" "^5.0.2"
+    nanoid "^4.0.0"
 
 "@webassemblyjs/ast@1.11.1":
   version "1.11.1"
@@ -7100,6 +7124,11 @@ nanoid@^3.1.25, nanoid@^3.1.30:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.2.0.tgz#62667522da6673971cca916a6d3eff3f415ff80c"
   integrity sha512-fmsZYa9lpn69Ad5eDn7FMcnnSR+8R34W9qJEijxYhTbfOWzr22n1QxCMzXLK+ODyW2973V3Fux959iQoUxzUIA==
+
+nanoid@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-4.0.0.tgz#6e144dee117609232c3f415c34b0e550e64999a5"
+  integrity sha512-IgBP8piMxe/gf73RTQx7hmnhwz0aaEXYakvqZyE302IXW3HyVNhdNGC+O2MwMAVhLEnvXlvKtGbtJf6wvHihCg==
 
 nanomatch@^1.2.9:
   version "1.2.13"
