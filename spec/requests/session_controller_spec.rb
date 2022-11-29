@@ -1460,7 +1460,7 @@ RSpec.describe SessionController do
         expect(redirect_query["sig"][0]).to eq(expected_sig)
       end
 
-      it "it fails to log in if secret is wrong" do
+      it "fails to log in if secret is wrong" do
         get "/session/sso_provider",
             params: Rack::Utils.parse_query(@sso.payload("secretForRandomSite"))
         expect(response.status).to eq(422)
@@ -1509,6 +1509,47 @@ RSpec.describe SessionController do
         expect(sso2.avatar_url).to start_with(Discourse.base_url)
         expect(sso2.profile_background_url).to start_with(Discourse.base_url)
         expect(sso2.card_background_url).to start_with(Discourse.base_url)
+        expect(sso2.confirmed_2fa).to eq(nil)
+        expect(sso2.no_2fa_methods).to eq(nil)
+      end
+
+      it "fails with a nice error message if `prompt` parameter has an invalid value" do
+        @sso.prompt = "xyzpdq"
+
+        get "/session/sso_provider",
+            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+
+        expect(response.status).to eq(400)
+        expect(response.body).to eq(
+          I18n.t("discourse_connect.invalid_parameter_value", param: "prompt"),
+        )
+      end
+
+      it "redirects browser to return_sso_url with auth failure when prompt=none is requested and the user is not logged in" do
+        @sso.prompt = "none"
+
+        get "/session/sso_provider",
+            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+
+        location = response.header["Location"]
+        expect(location).to match(%r{^http://somewhere.over.rainbow/sso})
+
+        payload = location.split("?")[1]
+        sso2 = DiscourseConnectProvider.parse(payload)
+
+        expect(sso2.failed).to eq(true)
+
+        expect(sso2.email).to eq(nil)
+        expect(sso2.name).to eq(nil)
+        expect(sso2.username).to eq(nil)
+        expect(sso2.external_id).to eq(nil)
+        expect(sso2.admin).to eq(nil)
+        expect(sso2.moderator).to eq(nil)
+        expect(sso2.groups).to eq(nil)
+
+        expect(sso2.avatar_url).to eq(nil)
+        expect(sso2.profile_background_url).to eq(nil)
+        expect(sso2.card_background_url).to eq(nil)
         expect(sso2.confirmed_2fa).to eq(nil)
         expect(sso2.no_2fa_methods).to eq(nil)
       end

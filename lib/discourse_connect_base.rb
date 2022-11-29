@@ -7,7 +7,6 @@ class DiscourseConnectBase
   ACCESSORS = %i[
     add_groups
     admin
-    moderator
     avatar_force_update
     avatar_url
     bio
@@ -15,14 +14,17 @@ class DiscourseConnectBase
     confirmed_2fa
     email
     external_id
+    failed
     groups
     locale
     locale_force_update
     location
     logout
+    moderator
     name
     no_2fa_methods
     nonce
+    prompt
     profile_background_url
     remove_groups
     require_2fa
@@ -40,6 +42,7 @@ class DiscourseConnectBase
     admin
     avatar_force_update
     confirmed_2fa
+    failed
     locale_force_update
     logout
     moderator
