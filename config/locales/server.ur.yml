@@ -1062,6 +1062,11 @@ ur:
         editor: ترمیم کنندہ
         author: مصنف
         edit_reason: وجہ
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "یُوزَر API"
+      yaxis: "دن"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "دن"

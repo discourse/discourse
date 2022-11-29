@@ -307,6 +307,7 @@ hu:
 
       További információért lásd [közösségi irányelveinket](%{base_path}/guidelines). Ez a panel csak az első %{education_posts_text} alkalommal jelenik meg.
     "new-reply": "Üdözöllek a %{site_name} &mdash; n - **köszönjük, hogy aktív vagy!**\n\n- Kérlek, szelíden fogalmazz!\n\n- Mielőtt elküldöd a választ, gondold végig, hogy építő-e, amit írtál!\n\n- Az építő kritikáknak mindig örülünk, de vigyázz, hogy a *felvetést* kritizáld, ne a hozzászólót. \n\nA szabályzatunkat megtalálod ide kattintva: [see our community guidelines](%{base_path}/guidelines). Ez a panel csak az első %{education_posts_text} megírásakor fog megjelenni, utána magától eltűnik.\n"
+    dominating_topic: Sokat írt ebben a témában! Fontolja meg, hogy lehetőséget ad másoknak arra, hogy itt válaszoljanak, és megbeszéljék egymással a dolgokat.
     too_many_replies: |
       ### Elérted a válaszkorlátot ebben a témában
 
@@ -696,6 +697,11 @@ hu:
         editor: Szerkesztő
         author: Szerző
         edit_reason: Indok
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "Felhasználói API"
+      yaxis: "Nap"
     dau_by_mau:
       xaxis: "Nap"
     daily_engaged_users:
@@ -1845,6 +1851,7 @@ hu:
         Ezt a jelvényt akkor kapod meg, amikor először válaszolsz egy bejegyzésre e-mailben.
     basic_user:
       name: Alapvető
+      description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Tapasztalt felhasználó</a>, ismer minden alapvető közösségi funkciót
       long_description: |
         Ezt a jelvényt akkor kapod meg, amikor eléred az 1. bizalmi szintet. Köszönjük, hogy kitartottál és elolvastál néhány témát, hogy megtudd, miről szól a közösségünk. Több felhasználói funkció életbe lépett: megkaptad az összes alapvető közösségi képességet, például a személyes üzenetküldést, a megjelölést, a wiki szerkesztését, valamint több kép és link közzétételének lehetőségét.
     member:

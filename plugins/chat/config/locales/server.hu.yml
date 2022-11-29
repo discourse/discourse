@@ -43,6 +43,7 @@ hu:
       duplicate_message: "Nemrég küldött egy azonos tartalmú üzenetet."
       delete_channel_failed: "A csatorna törlése sikertelen, próbálja meg újra."
       minimum_length_not_met: "Az üzenet túl rövid, legalább %{minimum} karaktert kell tartalmaznia."
+      message_too_long: "Az üzenet túl hosszú, az üzenetek legfeljebb %{maximum} karakterekből állhatnak."
       max_reactions_limit_reached: "Új reakciók nem engedélyezettek ezen az üzeneten."
       message_move_invalid_channel: "A forrás- és célcsatornának nyilvános csatornának kell lennie."
       message_move_no_messages_found: "A megadott üzenetazonosítókkal nem találhatók üzenetek."
@@ -136,7 +137,7 @@ hu:
         direct_message:
           one: "[%{email_prefix}] Új üzenet a következőtől: %{message_title}"
           other: "[%{email_prefix}] Új üzenetek a következőktől: %{message_title} és %{others}"
-        other_direct_message: "a következőtől: %{message_title}"
+        other_direct_message: "a következőtől: %{dm_title}"
         others: "és még %{count} fő"
       view_messages:
         one: "Üzenet megtekintése"

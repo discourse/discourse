@@ -794,6 +794,11 @@ zh_TW:
         editor: 編輯者
         author: 作者
         edit_reason: 原因
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "使用者 API"
+      yaxis: "天"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "天"

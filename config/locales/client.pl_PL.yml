@@ -358,6 +358,7 @@ pl_PL:
       like_count: "Polubienia"
       topic_count: "Tematy"
       post_count: "Posty"
+      user_count: "Rejestracje"
       active_user_count: "Aktywni użytkownicy"
       contact: "Kontakt"
       contact_info: "W sprawach wymagających szybkiej reakcji lub związanych z poprawnym funkcjonowaniem serwisu, prosimy o kontakt: %{contact_info}."
@@ -4164,6 +4165,8 @@ pl_PL:
     second_factor_auth:
       redirect_after_success: "Uwierzytelnianie dwuskładnikowe powiodło się. Przekierowanie do poprzedniej strony…"
     sidebar:
+      show_sidebar: "Pokaż pasek boczny"
+      hide_sidebar: "Ukryj pasek boczny"
       unread_count:
         one: "%{count} nieprzeczytany"
         few: "%{count} nieprzeczytane"
@@ -4219,7 +4222,7 @@ pl_PL:
             about:
               content: "O stronie"
             admin:
-              content: "Administratorzy"
+              content: "Administracja"
             badges:
               content: "Odznaki"
             everything:
@@ -4235,6 +4238,8 @@ pl_PL:
               title: "Wszyscy użytkownicy"
             my_posts:
               content: "Wysłane"
+              title: "Moja ostatnia aktywność w temacie"
+              title_drafts: "Moje nieopublikowane wersje robocze"
               draft_count:
                 one: "%{count} szkic"
                 few: "%{count} szkice"
@@ -4629,6 +4634,7 @@ pl_PL:
         change_settings_short: "Ustawienia"
         howto: "Jak zainstalować wtyczkę?"
         official: "Oficjalna wtyczka"
+        broken_route: "Nie można skonfigurować łącza do '%{name}'. Upewnij się, że blokery reklam są wyłączone i spróbuj ponownie załadować stronę."
       backups:
         title: "Kopie zapasowe"
         menu:
