@@ -12,6 +12,11 @@ import {
 import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
 import selectKit from "../helpers/select-kit-helper";
 import { cloneJSON } from "discourse-common/lib/object";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import {
+  resetHighestReadCache,
+  setHighestReadCache,
+} from "discourse/lib/topic-list-tracker";
 
 acceptance(
   "User Private Messages - user with no group messages",
@@ -92,9 +97,22 @@ function testUserPrivateMessagesWithGroupMessages(needs, customUserProps) {
       return helper.response({
         topic_list: {
           topics: [
-            { id: 1, posters: [] },
-            { id: 2, posters: [] },
-            { id: 3, posters: [] },
+            {
+              id: 1,
+              posters: [],
+              notification_level: NotificationLevels.TRACKING,
+              unread_posts: 1,
+              last_read_post_number: 1,
+              highest_post_number: 2,
+            },
+            {
+              id: 2,
+              posters: [],
+            },
+            {
+              id: 3,
+              posters: [],
+            },
           ],
         },
       });
@@ -546,6 +564,22 @@ function testUserPrivateMessagesWithGroupMessages(needs, customUserProps) {
     );
   });
 
+  test("viewing messages when highest read cache has been set for a topic", async function (assert) {
+    try {
+      setHighestReadCache(1, 2);
+
+      await visit("/u/charlie/messages");
+
+      assert.strictEqual(
+        query(".topic-post-badges").textContent.trim(),
+        "",
+        "does not display unread posts count badge"
+      );
+    } finally {
+      resetHighestReadCache();
+    }
+  });
+
   test("viewing messages", async function (assert) {
     await visit("/u/charlie/messages");
 
@@ -553,6 +587,12 @@ function testUserPrivateMessagesWithGroupMessages(needs, customUserProps) {
       count(".topic-list-item"),
       3,
       "displays the right topic list"
+    );
+
+    assert.strictEqual(
+      query(`tr[data-topic-id="1"] .topic-post-badges`).textContent.trim(),
+      "1",
+      "displays the right unread posts count badge"
     );
 
     await visit("/u/charlie/messages/group/awesome_group");

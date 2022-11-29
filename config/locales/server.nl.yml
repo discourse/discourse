@@ -54,7 +54,7 @@ nl:
   on_another_topic: "In een ander topic"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
-    topic_page_title_post_number_by_user: "#%{post_number} door %{username}"
+    topic_page_title_post_number_by_user: "%{post_number} van %{username}"
   themes:
     bad_color_scheme: "Kan thema niet bijwerken, ongeldig kleurenpalet"
     other_error: "Er is iets misgegaan bij het bijwerken van het thema"
@@ -233,6 +233,8 @@ nl:
       <p>Zo niet, dan kun je je <a href="%{base_url}/password-reset">Wachtwoord herstellen</a>.</p>
     not_found_template_link: |
       <p>Deze uitnodiging voor <a href="%{base_url}">%{site_name}</a> kan niet meer worden verzilverd. Vraag de persoon die je heeft uitgenodigd om je een nieuwe uitnodiging te sturen.</p>
+    existing_user_cannot_redeem: "Deze uitnodiging kan niet worden verzilverd. Vraag de persoon die je heeft uitgenodigd je een nieuwe uitnodiging te sturen."
+    existing_user_already_redemeed: "Je hebt deze uitnodigingslink al verzilverd."
     user_exists: "Het is niet nodig om <b>%{email}</b>uit te nodigen, deze heeft al een account!"
     invite_exists: "Je hebt <b>%{email}</b> al uitgenodigd."
     invalid_email: "%{email} is geen geldig e-mailadres."
@@ -497,6 +499,7 @@ nl:
       Je kunt je eerdere antwoord bewerken om een citaat toe te voegen door tekst te markeren en de knop <b>Bericht citeren</b> die verschijnt te selecteren.
 
       Het is voor iedereen makkelijker om topics te lezen die minder, maar uitgebreidere antwoorden bevatten dan met veel kleine, individuele antwoorden.
+    dominating_topic: Je hebt veel geplaatst in dit topic! Overweeg om anderen de kans te geven om hier te reageren en ook met elkaar te overleggen.
     get_a_room: Je hebt %{count} keer geantwoord @%{reply_username}. Wist je dat je ze in plaats daarvan een persoonlijk bericht kunt sturen?
     too_many_replies: |
       ### Je hebt de antwoordlimiet voor dit topic bereikt
@@ -698,40 +701,40 @@ nl:
     short_time: "een paar seconden"
   datetime:
     distance_in_words:
-      half_a_minute: "< 1m"
+      half_a_minute: "< 1 m"
       less_than_x_seconds:
-        one: "< %{count}s"
-        other: "< %{count}s"
+        one: "< %{count} s"
+        other: "< %{count} s"
       x_seconds:
-        one: "%{count}s"
-        other: "%{count}s"
+        one: "%{count} s"
+        other: "%{count} s"
       less_than_x_minutes:
-        one: "< %{count}m"
-        other: "< %{count}m"
+        one: "< %{count} m"
+        other: "< %{count} m"
       x_minutes:
-        one: "%{count}m"
-        other: "%{count}m"
+        one: "%{count} m"
+        other: "%{count} m"
       about_x_hours:
-        one: "%{count}u"
-        other: "%{count}u"
+        one: "%{count} u"
+        other: "%{count} u"
       x_days:
-        one: "%{count}d"
-        other: "%{count}d"
+        one: "%{count} d"
+        other: "%{count} d"
       about_x_months:
-        one: "%{count}mnd"
-        other: "%{count}mnd"
+        one: "%{count} mnd"
+        other: "%{count} mnd"
       x_months:
-        one: "%{count}mnd"
-        other: "%{count}mnd"
+        one: "%{count} mnd"
+        other: "%{count} mnd"
       about_x_years:
-        one: "%{count}j"
-        other: "%{count}j"
+        one: "%{count} j"
+        other: "%{count} j"
       over_x_years:
-        one: "> %{count}j"
-        other: "> %{count}j"
+        one: "> %{count} j"
+        other: "> %{count} j"
       almost_x_years:
-        one: "%{count}j"
-        other: "%{count}j"
+        one: "%{count} j"
+        other: "%{count} j"
     distance_in_words_verbose:
       half_a_minute: "zojuist"
       less_than_x_seconds: "zojuist"
@@ -767,14 +770,15 @@ nl:
         other: "bijna %{count} jaar geleden"
   password_reset:
     no_token: 'Oeps! De link die je hebt gebruikt werkt niet meer. Je kunt je nu <a href="%{base_url}/login">aanmelden</a> . Als je je wachtwoord bent vergeten, kun je <a href="%{base_url}/password-reset">een link verzoeken</a> om het te herstellen.'
-    choose_new: "Een nieuw wachtwoord kiezen"
-    choose: "Een wachtwoord kiezen"
+    choose_new: "Kies een nieuw wachtwoord"
+    choose: "Kies een wachtwoord"
     update: "Wachtwoord bijwerken"
     save: "Wachtwoord instellen"
     title: "Wachtwoord herstellen"
     success: "Je hebt je wachtwoord gewijzigd en bent nu aangemeld."
     success_unapproved: "Je hebt je wachtwoord gewijzigd."
   email_login:
+    invalid_token: 'Oeps! De link die je hebt gebruikt werkt niet meer. Je kunt je nu <a href="%{base_url}/login">aanmelden</a>. Als je je wachtwoord bent vergeten, kun je <a href="%{base_url}/password-reset">een link verzoeken</a> om het te herstellen.'
     title: "E-mailaanmelding"
   user_auth_tokens:
     browser:
@@ -1020,7 +1024,7 @@ nl:
         edited_at: Datum
         post: Bericht
         editor: Bewerker
-        author: Schrijver
+        author: Auteur
         edit_reason: Reden
       description: "Aantal nieuwe berichtbewerkingen."
     user_flagging_ratio:
@@ -1092,7 +1096,7 @@ nl:
       labels:
         post: Bericht
         editor: Bewerker
-        author: Schrijver
+        author: Auteur
         edit_reason: Reden
     dau_by_mau:
       title: "DAU/MAU"
@@ -1321,7 +1325,7 @@ nl:
       labels:
         filename: Bestandsnaam
         extension: Extensie
-        author: Maker
+        author: Auteur
         filesize: Bestandsgrootte
       description: "Lijst van alle uploads op extensie, bestandsgrootte en maker."
     top_ignored_users:
@@ -1424,7 +1428,7 @@ nl:
     crawl_images: "Afbeeldingen van externe URL's ophalen om de juiste breedte- en hoogteafmetingen in te voegen"
     download_remote_images_to_local: "Externe afbeeldingen (gehotlinkt) converteren naar lokale afbeeldingen door ze te downloaden; Zo blijft de inhoud behouden, ook als de afbeeldingen in de toekomst van de externe website worden verwijderd."
     download_remote_images_threshold: "Minimaal vereiste schijfruimte om externe afbeeldingen lokaal te downloaden (percentage)"
-    disabled_image_download_domains: "Externe afbeeldingen zullen nooit vanaf deze domeinen worden gedownload. Pipe-gescheiden lijst."
+    disabled_image_download_domains: "Externe afbeeldingen worden nooit gedownload vanaf deze domeinen. Lijst gescheiden door pijpsymbolen."
     block_hotlinked_media: "Voorkomen dat gebruikers externe media (gehotlinkt) opnemen in hun berichten. Externe media die niet via 'download_remote_images_to_local' zijn gedownload, worden vervangen door een tijdelijke link."
     block_hotlinked_media_exceptions: "Een lijst van basis-URL's die zijn uitgezonderd van de instelling block_hotlinked_media. Voeg het protocol toe (bijvoorbeeld https://voorbeeld.com)."
     editing_grace_period: "De eerste (n) seconden na plaatsing van een bericht leidt bewerking ervan niet tot een nieuwe versie in de berichtgeschiedenis."
@@ -1470,7 +1474,7 @@ nl:
     opengraph_image: "Standaard opengraph-afbeelding, gebruikt wanneer de pagina geen andere geschikte afbeelding bevat. Bij leeg laten wordt large_icon gebruikt."
     twitter_summary_large_image: "Twitter-kaart 'grote samenvattingsafbeelding' (moet minimaal 280 breed en minimaal 150 hoog zijn, mag geen .svg zijn). Als dit leeg wordt gelaten, worden reguliere kaartmetagegevens gegenereerd met behulp van de opengraph_image, zolang dat niet ook een .svg is"
     notification_email: "Het Van:-e-mailadres adres dat wordt gebruikt voor het verzenden van alle essentiële systeem-e-mails. Het hier opgegeven domein moet goed ingestelde SPF-, DKIM- en reverse-PTR-records hebben om e-mails te doen aankomen."
-    email_custom_headers: "Een door een pipe (|) gescheiden lijst van aangepaste e-mailheaders"
+    email_custom_headers: "Een lijst gescheiden door pijpsymbolen van aangepaste e-mailheaders"
     email_subject: "Aanpasbare onderwerpnotatie voor standaard-e-mails. Zie <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "Biedt gebruikers meer informatie over waarom ze geen toegang hebben tot een bepaald topic. Opmerking: dit is minder veilig, omdat gebruikers dan weten of een URL naar een geldig topic verwijst."
     enforce_second_factor: "Dwingt gebruikers om tweeledige verificatie in te schakelen. Selecteer 'alle' om dit voor alle gebruikers te doen. Selecteer 'medewerkers' om dit alleen voor medewerkers te doen."
@@ -1547,7 +1551,7 @@ nl:
     content_security_policy_frame_ancestors: "Beperken wie deze website kan insluiten in iframes via CSP. Beheer toegestane hosts op <a href='%{base_path}/admin/customize/embedding'>Insluiten</a>"
     content_security_policy_script_src: "Aanvullende scriptbronnen op de acceptatielijst. De huidige host en CDN zijn standaard inbegrepen. Zie <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy</a>."
     invalidate_inactive_admin_email_after_days: "Beheerdersaccounts die de website dit aantal dagen niet hebben bezocht, dienen hun e-mailadres voor het aanmelden opnieuw te valideren. Stel dit in op 0 om uit te schakelen."
-    top_menu: "Bepaal welke items in het hoofdnavigatiemenu worden weergegeven en in welke volgorde. Voorbeeld: latest|new|unread|categories|top|read|posted|bookmarks"
+    top_menu: "Bepaal welke items in de navigatie op de startpagina worden weergegeven en in welke volgorde. Voorbeeld: latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Bepaal welke items in het berichtmenu worden weergegeven en in welke volgorde. Voorbeeld: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "De menu-items die standaard in het berichtmenu moeten worden verborgen, totdat er op een uitvouw-ellipsis wordt geklikt."
     share_links: "Bepaal welke items in de deeldialoog worden weergegeven en in welke volgorde."
@@ -1576,8 +1580,8 @@ nl:
     enable_whispers: "Privécommunicatie van medewerkers binnen topics toestaan."
     whispers_allowed_groups: "Sta privécommunicatie binnen topics toe voor leden van bepaalde groepen."
     allow_index_in_robots_txt: "Geef in robots.txt op dat deze website door webzoekmachines mag worden geïndexeerd. In uitzonderlijke gevallen kun je <a href='%{base_path}/admin/customize/robots'>robots.txt</a> blijvend negeren."
-    blocked_email_domains: "Een door een verticaal streepje (pipe) gescheiden lijst van e-maildomeinen waarbij gebruikers geen accounts mogen registreren. Voorbeeld: mailinator.com|trashmail.net"
-    allowed_email_domains: "Een door een verticaal streepje (pipe) gescheiden lijst van e-maildomeinen waarmee gebruikers accounts MOETEN registreren. WAARSCHUWING: gebruikers met andere dan de vermelde e-maildomeinen worden niet toegestaan!"
+    blocked_email_domains: "Een lijst gescheiden door pijpsymbolen van e-maildomeinen waarvan gebruikers geen accounts mogen registreren. Voorbeeld: mailinator.com|trashmail.net"
+    allowed_email_domains: "Een lijst gescheiden door pijpsymbolen van e-maildomeinen waarvan gebruikers accounts MOETEN registreren. WAARSCHUWING: gebruikers met andere dan de vermelde e-maildomeinen worden niet toegestaan!"
     normalize_emails: "Controleren of het genormaliseerde e-mailadres uniek is. Normalisering van e-mailadressen verwijdert alle punten uit de gebruikersnaam en alles tussen de symbolen + en @."
     auto_approve_email_domains: "Gebruikers met e-mailadressen van deze lijst met domeinen worden automatisch goedgekeurd."
     hide_email_address_taken: "Laat gebruikers niet weten dat er een account bestaat met een bepaald e-mailadres bij het registreren. bij het herstellen van een wachtwoord. Volledig e-mailadres wordt vereist voor wachtwoordherstelverzoeken."
@@ -1689,7 +1693,7 @@ nl:
     categories_topics: "Aantal topics dat op de pagina /categories wordt weergegeven. Als dit op 0 is ingesteld, wordt automatisch naar een waarde gezocht die de twee kolommen symmetrisch houdt (categorieën en topics)."
     suggested_topics: "Aantal uitgelichte topics onderaan een topic."
     limit_suggested_to_category: "Alleen topics van de huidige categorie weergeven in uitgelichte topics."
-    suggested_topics_max_days_old: "Aanbevolen topics mogen niet meer dan n dagen oud zijn."
+    suggested_topics_max_days_old: "Voorgestelde topics mogen niet meer dan n dagen oud zijn."
     suggested_topics_unread_max_days_old: "Voorgestelde ongelezen topics mogen niet meer dan n dagen oud zijn."
     clean_up_uploads: "Weesuploads zonder referentie verwijderen om illegale hosting te voorkomen. WAARSCHUWING: maak een back-up van je map /uploads voordat je deze instelling inschakelt."
     clean_orphan_uploads_grace_period_hours: "Wachtperiode (in uren) voordat een weesupload wordt verwijderd."
@@ -1869,7 +1873,7 @@ nl:
     soft_bounce_score: "Bouncescore die aan de gebruiker wordt toegevoegd wanneer een tijdelijke bounce optreedt."
     hard_bounce_score: "Bouncescore die aan de gebruiker wordt toegevoegd wanneer een permanente bounce optreedt."
     bounce_score_threshold: "Maximale bouncescore voordat we stoppen met het e-mailen van een gebruiker."
-    reset_bounce_score_after_days: "Bouncescore na X dagen automatisch terugzetten."
+    reset_bounce_score_after_days: "Bouncescore na X dagen automatisch resetten."
     blocked_attachment_content_types: "Lijst van trefwoorden voor het blokkeren van bijlagen op basis van het type inhoud."
     blocked_attachment_filenames: "Lijst van trefwoorden voor het blokkeren van bijlagen op basis van de bestandsnaam."
     forwarded_emails_behaviour: "Hoe een doorgestuurde e-mail naar Discourse te behandelen"
@@ -1937,6 +1941,7 @@ nl:
     enable_user_directory: "Een lijst van gebruikers aanbieden om door te bladeren"
     enable_group_directory: "Een lijst van groepen aanbieden om door te bladeren"
     enable_category_group_moderation: "Groepen mogen inhoud in bepaalde categorieën modereren"
+    group_in_subject: "Stel %%{optional_pm} in het e-mailonderwerp in op de naam van de eerste groep in PB; zie <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Onderwerpnotatie aanpassen voor standaard e-mails</a>"
     allow_anonymous_posting: "Gebruikers mogen naar anonieme modus overschakelen"
     anonymous_posting_min_trust_level: "Het minimale vertrouwensniveau dat nodig is om anonieme berichtplaatsing in te schakelen"
     anonymous_account_duration_minutes: "Om anonimiteit te beschermen, elke N minuten voor iedere gebruiker een nieuwe anoniem account maken. Voorbeeld: als dit is ingesteld op 600, wordt een nieuwe anonieme account gemaakt als er 600 minuten zijn verstreken na het laatste bericht EN de gebruiker naar anon overschakelt."
@@ -1952,7 +1957,7 @@ nl:
     clean_up_unused_staged_users_after_days: "Aantal dagen voordat een niet-gebruikte gefaseerde gebruiker (zonder berichten) wordt verwijderd. Stel dit in op 0 om opschonen uit te schakelen."
     user_selected_primary_groups: "Gebruikers mogen hun eigen primaire groep instellen"
     max_notifications_per_user: "Maximale aantal meldingen per gebruiker. Als dit aantal wordt overschreden, worden oude meldingen verwijderd. Wekelijks afgedwongen. Stel dit in op 0 om uit te schakelen."
-    allowed_user_website_domains: "Website van gebruiker wordt op deze domeinen gecontroleerd. Door pipes gescheiden lijst."
+    allowed_user_website_domains: "Website van gebruiker wordt op deze domeinen gecontroleerd. Lijst gescheiden door pijpsymbolen."
     allow_profile_backgrounds: "Gebruikers mogen profielachtergronden uploaden."
     sequential_replies_threshold: "Aantal berichten dat een gebruiker achter elkaar in één topic moet plaatsen voordat deze aan te veel opeenvolgende antwoorden wordt herinnerd."
     get_a_room_threshold: "Aantal berichten dat een gebruiker aan dezelfde persoon in hetzelfde topic moet richten voordat deze wordt gewaarschuwd."
@@ -2098,7 +2103,7 @@ nl:
     force_lowercase_tags: "Gebruik van kleine letters voor alle nieuwe tags afdwingen."
     company_name: "Bedrijfsnaam"
     governing_law: "Toepasselijk recht"
-    city_for_disputes: "Stad voor geschillen"
+    city_for_disputes: "Plaats voor geschillen"
     shared_drafts_category: "Schakel de functie Gedeelde concepten in door een categorie voor topicconcepten aan te geven. Topics in deze categorie worden onderdrukt in topiclijsten voor medewerkers."
     shared_drafts_min_trust_level: "Gebruikers mogen gedeelde concepten zien en bewerken."
     push_notifications_prompt: "Prompt voor gebruikerstoestemming weergeven."
@@ -2190,7 +2195,7 @@ nl:
         value: "DiscourseConnect geheim"
   search:
     extreme_load_error: "Website wordt zwaar belast; zoeken is uitgeschakeld, probeer het later opnieuw"
-    within_post: "#%{post_number} door %{username}"
+    within_post: "%{post_number} van %{username}"
     types:
       category: "Categorieën"
       topic: "Resultaten"
@@ -2293,12 +2298,12 @@ nl:
   login:
     invalid_second_factor_method: "De geselecteerde methode voor tweeledige verificatie is ongeldig."
     not_enabled_second_factor_method: "De geselecteerde methode voor tweeledige verificatie is niet ingeschakeld voor je account."
-    security_key_description: "Houd je fysieke beveiligingssleutel gereed en klik op de onderstaande knop Authenticeren met beveiligingssleutel."
+    security_key_description: "Houd je fysieke beveiligingssleutel gereed en klik op de onderstaande knop Verifiëren met beveiligingssleutel."
     security_key_alternative: "Andere manier proberen"
-    security_key_authenticate: "Authenticeren met beveiligingssleutel"
-    security_key_not_allowed_error: "Het verificatieproces van de beveiligingssleutel had een time-out of is geannuleerd."
-    security_key_no_matching_credential_error: "Geen referenties gevonden in de opgegeven beveiligingssleutel."
-    security_key_support_missing_error: "Je huidige apparaat of browser ondersteunt geen gebruik van beveiligingssleutels. Gebruik een andere methode."
+    security_key_authenticate: "Verifiëren met beveiligingssleutel"
+    security_key_not_allowed_error: "Het verificatieproces met beveiligingssleutel had een time-out of is geannuleerd."
+    security_key_no_matching_credential_error: "Geen aanmeldingsgegevens gevonden in de opgegeven beveiligingssleutel."
+    security_key_support_missing_error: "Je huidige apparaat of browser ondersteunt het gebruik van beveiligingssleutels niet. Gebruik een andere methode."
     security_key_invalid: "Er is een fout opgetreden bij het valideren van de beveiligingssleutel."
     not_approved: "Je account is nog niet goedgekeurd. Je ontvangt een melding via e-mail zodra je je kunt aanmelden."
     incorrect_username_email_or_password: "Onjuiste gebruikersnaam, e-mailadres of wachtwoord"
@@ -2308,7 +2313,7 @@ nl:
     activate_email: "<p>Je bent er bijna! We hebben een activerings-e-mail naar <b>%{email}</b> gestuurd. Volg de instructies in de e-mail om je account te activeren.</p><p>Als deze niet aankomt, controleer dan je spammap.</p>"
     not_activated: "Je kunt je nog niet aanmelden. We hebben je een activerings-e-mail gestuurd. Volg de instructies in de e-mail om je account te activeren."
     not_allowed_from_ip_address: "Je kunt zich niet als %{username} aanmelden vanaf dat IP-adres."
-    admin_not_allowed_from_ip_address: "Je kunt zich niet als beheerder aanmelden vanaf dat IP-adres."
+    admin_not_allowed_from_ip_address: "Je kunt je niet aanmelden als beheerder vanaf dat IP-adres."
     reset_not_allowed_from_ip_address: "Je kunt geen wachtwoordherstel verzoeken vanaf dat IP-adres."
     suspended: "Je kunt zich tot %{date} niet aanmelden."
     suspended_with_reason: "Account geschorst tot %{date}: %{reason}"
@@ -2334,7 +2339,7 @@ nl:
     auth_complete: "Authenticatie is voltooid."
     click_to_continue: "Klik hier om door te gaan."
     already_logged_in: "Sorry! Deze uitnodiging is bedoeld voor nieuwe gebruikers die nog geen bestaand account hebben."
-    second_factor_title: "Tweefactorverificatie"
+    second_factor_title: "Tweeledige verificatie"
     second_factor_description: "Voer de vereiste verificatiecode van je app in:"
     second_factor_backup_description: "Voer een van je back-upcodes in:"
     second_factor_backup_title: "Back-upcode voor tweeledige verificatie"
@@ -2344,7 +2349,7 @@ nl:
     missing_second_factor_code: "Geef een code op."
     second_factor_toggle:
       totp: "Een authenticator-app of beveiligingssleutel gebruiken"
-      backup_code: "Een back-upcode gebruiken"
+      backup_code: "Back-upcode gebruiken"
   second_factor_auth:
     challenge_not_found: "Kon geen 2FA-uitdaging vinden in je huidige sessie."
     challenge_expired: "Er is te veel tijd verstreken sinds de 2FA-uitdaging is gegeven, deze is niet langer geldig. Probeer het opnieuw."
@@ -2578,7 +2583,7 @@ nl:
     notify_moderators: "Je bericht is gemarkeerd voor **aandacht van een moderator**: de community vindt dat iets in het bericht handmatige interventie door een medewerker vereist."
     responder:
       off_topic: "Het is gemarkeerd als **off-topic**: de community vindt dat het niet goed bij het topic past, zoals momenteel bepaald door de titel en het eerste bericht."
-      inappropriate: "Het bericht is gemarkeerd als **ongepast**: de community vindt het bericht aanstootgevend, grof of een schending van [onze communityrichtlijnen(%{base_path}/guidelines)."
+      inappropriate: "Het bericht is gemarkeerd als **ongepast**: de community vindt het bericht aanstootgevend, grof of een schending van [onze communityrichtlijnen](%{base_path}/guidelines)."
       spam: "Het bericht is gemarkeerd als **spam**: de community vindt dat het bericht een advertentie is, dat wil zeggen overdreven promotioneel van aard in plaats van nuttig of relevant voor het topic, zoals verwacht."
       notify_moderators: "Het bericht is gemarkeerd als **aandacht van een moderator**: de community vindt dat iets in het bericht handmatige interventie door een medewerker vereist."
   flags_dispositions:
@@ -2631,7 +2636,7 @@ nl:
 
         Zie onze [communityrichtlijnen](%{base_url}/richtlijnen) voor meer informatie.
     queued_by_staff:
-      title: "Bericht heeft goedkeuring nodig"
+      title: "Bericht vereist goedkeuring"
       subject_template: "Bericht verborgen door medewerker, wacht op goedkeuring"
       text_body_template: |
         Hallo,
@@ -2787,8 +2792,8 @@ nl:
 
         %{logs}
     restore_failed:
-      title: "Terugzetten mislukt"
-      subject_template: "Terugzetten mislukt"
+      title: "Herstellen mislukt"
+      subject_template: "Herstellen mislukt"
       text_body_template: |
         Het herstellen is mislukt.
 
@@ -3081,7 +3086,7 @@ nl:
         Zie onze [communityrichtlijnen](%{base_url}/richtlijnen) voor meer advies.
     too_many_spam_flags:
       title: "Te veel spammarkeringen"
-      subject_template: "Nieuwe account in wachtstand"
+      subject_template: "Nieuw account in wacht"
       text_body_template: |
         Hallo,
 
@@ -3548,7 +3553,7 @@ nl:
         Klik op de volgende link om een wachtwoord voor je nieuwe account te kiezen:
         %{base_url}/u/password-reset/%{email_token}
     confirm_new_email:
-      title: "Nieuw e-mailadres bevestigen"
+      title: "Bevestig nieuw e-mailadres"
       subject_template: "[%{email_prefix}] Bevestig je nieuwe e-mailadres"
       text_body_template: |
         Bevestig je nieuwe e-mailadres voor %{site_name} door op de volgende link te klikken:
@@ -3794,7 +3799,7 @@ nl:
   csv_export:
     boolean_yes: "Ja"
     boolean_no: "Nee"
-    rate_limit_error: "Berichten kunnen maar één keer per dag worden gedownload; probeer het morgen opnieuw."
+    rate_limit_error: "Berichten kunnen één keer per dag worden gedownload. Probeer het morgen opnieuw."
   static_topic_first_reply: |
     Bewerk het eerste bericht in dit topic om de inhoud van de pagina %{page_name} te wijzigen.
   guidelines_topic:
@@ -3898,7 +3903,7 @@ nl:
 
       Ja, juridisch jargon is saai, maar we moeten onszelf &ndash; en bij uitbreiding jou en je gegevens &ndash; beschermen tegen onvriendelijke mensen. We hebben [Gebruiksvoorwaarden](%{base_path}/tos) die jouw (en ons) gedrag en rechten beschrijft met betrekking tot inhoud, privacy en wetten. Om deze dienst te gebruiken, moet je akkoord gaan met onze [Gebruiksvoorwaarden](%{base_path}/tos).
   tos_topic:
-    title: "Algemene Voorwaarden"
+    title: "Gebruiksvoorwaarden"
     body: |
       Deze voorwaarden regelen het gebruik van het internetforum op <%{base_url}>. Om het forum te gebruiken, moet je akkoord gaan met deze voorwaarden van %{company_name}, het bedrijf dat het forum beheert.
 
@@ -4416,8 +4421,8 @@ nl:
     initial_topic_title: Performancerapportages van de website
   tags:
     title: "Tags"
-    restricted_tag_disallowed: 'Je kunt de tag "%{tag}” niet toepassen.'
-    restricted_tag_remove_disallowed: 'Je kunt de tag "%{tag}” niet verwijderen.'
+    restricted_tag_disallowed: 'Je kunt de tag "%{tag}" niet toepassen.'
+    restricted_tag_remove_disallowed: 'Je kunt de tag "%{tag}" niet verwijderen.'
     minimum_required_tags:
       one: "Je moet minstens %{count} tag selecteren."
       other: "Je moet minstens %{count} tags selecteren."
@@ -4493,7 +4498,7 @@ nl:
             placeholder: "Alleen op uitnodiging"
             extra_description: "Gebruikers moeten worden uitgenodigd door vertrouwde gebruikers of medewerkers, anders kunnen gebruikers zich zelf registreren"
           must_approve_users:
-            placeholder: "Heeft goedkeuring nodig"
+            placeholder: "Goedkeuring vereisen"
             extra_description: "Gebruikers moeten worden goedgekeurd door medewerkers"
       ready:
         title: "Je Discourse is gereed!"
@@ -4588,7 +4593,7 @@ nl:
       replied: '%{username} heeft op je geantwoord in ''%{topic}'' - %{site_title}'
       posted: '%{username} heeft een bericht geplaatst in ''%{topic}'' - %{site_title}'
       private_message: '%{username} heeft je een privébericht gestuurd in ''%{topic}'' - %{site_title}'
-      linked: '%{username} heeft een link naar je bericht geplaatst vanaf ''%{topic}'' - %{site_title}'
+      linked: '%{username} heeft een link naar je bericht geplaatst vanuit ''%{topic}'' - %{site_title}'
       watching_first_post: '%{username} heeft een nieuw topic gemaakt: ''%{topic}'' - %{site_title}'
       confirm_title: "Meldingen ingeschakeld - %{site_title}"
       confirm_body: "Gelukt! Meldingen zijn ingeschakeld."
@@ -4656,8 +4661,8 @@ nl:
         title: "Gebruiker dempen"
         description: "Akkoord met markering en de gebruiker dempen."
       agree_and_restore:
-        title: "Bericht terugzetten"
-        description: "Het bericht terugzetten, zodat alle gebruikers het kunnen zien."
+        title: "Bericht herstellen"
+        description: "Het bericht herstellen, zodat alle gebruikers het kunnen zien."
       agree_and_hide:
         title: "Bericht verbergen"
         description: "Dit bericht verbergen en de gebruiker automatisch een bericht sturen waarin dringend wordt gevraagd het te bewerken."
@@ -4680,8 +4685,8 @@ nl:
         description: "Bericht en alle antwoorden erop verwijderen; als dit het eerste bericht is, ook het topic verwijderen"
         confirm: "Weet je zeker dat je de antwoorden op het bericht ook wilt verwijderen?"
       disagree_and_restore:
-        title: "Niet akkoord en bericht terugzetten"
-        description: "Het bericht terugzetten, zodat alle gebruikers het kunnen zien."
+        title: "Niet akkoord en bericht herstellen"
+        description: "Het bericht herstellen, zodat alle gebruikers het kunnen zien."
       disagree:
         title: "Niet akkoord"
       ignore:

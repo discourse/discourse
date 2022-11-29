@@ -778,6 +778,11 @@ hy:
         editor: Խմբագրիչ
         author: Հեղինակ
         edit_reason: Պատճառ
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "Օգտատիրոջ API"
+      yaxis: "Օր"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Օր"

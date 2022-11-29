@@ -1198,6 +1198,11 @@ uk:
         editor: Редактор
         author: Автор
         edit_reason: Причина
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "API користувача"
+      yaxis: "День"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "День"

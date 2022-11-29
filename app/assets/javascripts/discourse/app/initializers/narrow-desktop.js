@@ -26,9 +26,10 @@ export default {
               "controller:application"
             );
             site.set("narrowDesktopView", newNarrowDesktopView);
-            if (newNarrowDesktopView) {
-              applicationController.set("showSidebar", false);
-            }
+            applicationController.set(
+              "showSidebar",
+              applicationController.calculateShowSidebar()
+            );
             applicationController.appEvents.trigger(
               "site-header:force-refresh"
             );

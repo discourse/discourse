@@ -3,50 +3,6 @@
     throw "Unsupported browser detected";
   }
 
-  // TODO: Remove this and have resolver find the templates
-  const discoursePrefix = "discourse/templates/";
-  const adminPrefix = "admin/templates/";
-  const wizardPrefix = "wizard/templates/";
-  const discoursePrefixLength = discoursePrefix.length;
-
-  const pluginRegex = /^discourse\/plugins\/([^\/]+)\//;
-  const themeRegex = /^discourse\/theme-([^\/]+)\//;
-
-  Object.keys(requirejs.entries).forEach(function (key) {
-    let templateKey;
-    let pluginName;
-    let themeId;
-    if (key.startsWith(discoursePrefix)) {
-      templateKey = key.slice(discoursePrefixLength);
-    } else if (key.startsWith(adminPrefix) || key.startsWith(wizardPrefix)) {
-      templateKey = key;
-    } else if (
-      (pluginName = key.match(pluginRegex)?.[1]) &&
-      key.includes("/templates/") &&
-      require(key).default.__id // really is a template
-    ) {
-      // This logic mimics the old sprockets compilation system which used to
-      // output templates directly to `Ember.TEMPLATES` with this naming logic
-      templateKey = key.slice(`discourse/plugins/${pluginName}/`.length);
-      templateKey = templateKey.replace("discourse/templates/", "");
-      templateKey = `javascripts/${templateKey}`;
-    } else if (
-      (themeId = key.match(themeRegex)?.[1]) &&
-      key.includes("/templates/")
-    ) {
-      // And likewise for themes - this mimics the old logic
-      templateKey = key.slice(`discourse/theme-${themeId}/`.length);
-      templateKey = templateKey.replace("discourse/templates/", "");
-      if (!templateKey.startsWith("javascripts/")) {
-        templateKey = `javascripts/${templateKey}`;
-      }
-    }
-
-    if (templateKey) {
-      Ember.TEMPLATES[templateKey] = require(key).default;
-    }
-  });
-
   window.__widget_helpers = require("discourse-widget-hbs/helpers").default;
 
   // TODO: Eliminate this global

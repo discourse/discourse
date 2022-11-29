@@ -979,6 +979,11 @@ lt:
         editor: Redaguotojas
         author: Autorius
         edit_reason: Priežastis
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "Nario API"
+      yaxis: "Diena"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Diena"

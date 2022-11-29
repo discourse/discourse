@@ -9,7 +9,6 @@ class ReviewableChatMessage < Reviewable
       agree_and_silence: :agree_and_delete,
       agree_and_suspend: :agree_and_delete,
       delete_and_agree: :agree_and_delete,
-      disagree_and_restore: :disagree,
     }
   end
 
@@ -112,6 +111,9 @@ class ReviewableChatMessage < Reviewable
 
   def disagree
     yield if block_given?
+
+    UserSilencer.unsilence(chat_message_creator)
+
     create_result(:success, :rejected) do |result|
       result.update_flag_stats = { status: :disagreed, user_ids: flagged_by_user_ids }
       result.recalculate_score = true

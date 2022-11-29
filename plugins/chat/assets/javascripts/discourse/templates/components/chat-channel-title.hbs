@@ -8,20 +8,32 @@
 {{else}}
   {{#if this.channel.isDirectMessageChannel}}
     <div class="chat-channel-title is-dm">
-      {{#if this.multiDm}}
-        <span class="chat-channel-title__users-count">
-          {{this.channel.chatable.users.length}}
-        </span>
-        <span class="chat-channel-title__name">{{this.usernames}}</span>
-      {{else}}
-        <ChatUserAvatar @user={{this.channel.chatable.users.firstObject}} />
-        <span class="chat-channel-title__usernames">
-          {{#let this.channel.chatable.users.firstObject as |user|}}
-            <span class="chat-channel-title__name">{{user.username}}</span>
-            <PluginOutlet @name="after-chat-channel-username" @args={{hash user=user}} @tagName="" @connectorTagName="" />
-          {{/let}}
-        </span>
-      {{/if}}
+
+      <div class="chat-channel-title__avatar">
+        {{#if this.multiDm}}
+          <span class="chat-channel-title__users-count">
+            {{this.channel.chatable.users.length}}
+          </span>
+        {{else}}
+          <ChatUserAvatar @user={{this.channel.chatable.users.firstObject}} />
+        {{/if}}
+      </div>
+
+      <div class="chat-channel-title__user-info">
+        <div class="chat-channel-title__usernames">
+          {{#if this.multiDm}}
+            <span class="chat-channel-title__name">{{this.usernames}}</span>
+          {{else}}
+            {{#let this.channel.chatable.users.firstObject as |user|}}
+              <span class="chat-channel-title__name">{{user.username}}</span>
+              {{#if this.showUserStatus}}
+                <UserStatusMessage @status={{this.channel.chatable.users.firstObject.status}} @showDescription={{if this.site.mobileView "true"}} />
+              {{/if}}
+              <PluginOutlet @name="after-chat-channel-username" @args={{hash user=user}} @tagName="" @connectorTagName="" />
+            {{/let}}
+          {{/if}}
+        </div>
+      </div>
 
       {{#if (has-block)}}
         {{yield}}
@@ -46,9 +58,5 @@
         {{yield}}
       {{/if}}
     </div>
-  {{/if}}
-
-  {{#if this.unreadIndicator}}
-    <ChatChannelUnreadIndicator @channel={{this.channel}} />
   {{/if}}
 {{/if}}

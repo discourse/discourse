@@ -640,6 +640,10 @@ be:
         editor: рэдактар
         author: аўтар
         edit_reason: прычына
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+      yaxis: "дзень"
     dau_by_mau:
       xaxis: "дзень"
     daily_engaged_users:

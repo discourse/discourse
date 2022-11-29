@@ -83,6 +83,25 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(reviewable.actions_for(guardian).has?(:agree_and_silence)).to eq(false)
         expect(reviewable.actions_for(guardian).has?(:agree_and_suspend)).to eq(false)
       end
+
+      context "when flagged as potential_spam" do
+        before { reviewable.update!(potential_spam: true) }
+
+        it "excludes delete action if the reviewer cannot delete the user" do
+          post.user.user_stat.update!(
+            first_post_created_at: 1.year.ago,
+            post_count: User::MAX_STAFF_DELETE_POST_COUNT + 1
+          )
+
+          expect(reviewable.actions_for(guardian).has?(:delete_user)).to be false
+          expect(reviewable.actions_for(guardian).has?(:delete_user_block)).to be false
+        end
+
+        it "includes delete actions if the reviewer can delete the user" do
+          expect(reviewable.actions_for(guardian).has?(:delete_user)).to be true
+          expect(reviewable.actions_for(guardian).has?(:delete_user_block)).to be true
+        end
+      end
     end
 
     it "agree_and_keep agrees with the flags and keeps the post" do

@@ -32,11 +32,25 @@ export function findRawTemplate(name) {
 
 export function buildRawConnectorCache(findOutlets) {
   let result = {};
-  findOutlets(__DISCOURSE_RAW_TEMPLATES, (outletName, resource) => {
-    result[outletName] = result[outletName] || [];
-    result[outletName].push({
-      template: __DISCOURSE_RAW_TEMPLATES[resource],
-    });
-  });
+  findOutlets(
+    Object.keys(__DISCOURSE_RAW_TEMPLATES),
+    (outletName, resource) => {
+      result[outletName] ??= [];
+      result[outletName].push({
+        template: __DISCOURSE_RAW_TEMPLATES[resource],
+      });
+    }
+  );
   return result;
+}
+
+export function eagerLoadRawTemplateModules() {
+  for (const [key, value] of Object.entries(requirejs.entries)) {
+    if (
+      key.includes("/templates/") &&
+      value.deps.includes("discourse-common/lib/raw-templates")
+    ) {
+      require(key);
+    }
+  }
 }

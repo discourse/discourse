@@ -21,8 +21,12 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
 
     assert.ok(!exists("#d-sidebar"), "widge sidebar is collapsed");
 
+    await click(".header-sidebar-toggle .btn");
+
+    assert.ok(exists("#d-sidebar"), "wide sidebar is displayed");
+
     const bodyElement = document.querySelector("body");
-    bodyElement.style.width = "1000px";
+    bodyElement.style.width = "990px";
 
     await waitUntil(
       () => document.querySelector(".btn-sidebar-toggle.narrow-desktop"),
@@ -42,6 +46,13 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
       !exists(".sidebar-hamburger-dropdown"),
       "cloak sidebar is collapsed"
     );
+
+    bodyElement.style.width = "1200px";
+    await waitUntil(() => document.querySelector("#d-sidebar"), {
+      timeout: 5000,
+    });
+    assert.ok(exists("#d-sidebar"), "wide sidebar is displayed");
+
     bodyElement.style.width = null;
   });
 });

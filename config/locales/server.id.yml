@@ -425,6 +425,8 @@ id:
       labels:
         post: Postingan
         edit_reason: Alasan
+    consolidated_api_requests:
+      yaxis: "Hari"
     dau_by_mau:
       xaxis: "Hari"
     daily_engaged_users:

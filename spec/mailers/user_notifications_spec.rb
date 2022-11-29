@@ -298,7 +298,13 @@ RSpec.describe UserNotifications do
     let(:category) { Fabricate(:category, name: 'India') }
     let(:tag1) { Fabricate(:tag, name: 'Taggo') }
     let(:tag2) { Fabricate(:tag, name: 'Taggie') }
-    let(:topic) { Fabricate(:topic, category: category, tags: [tag1, tag2], title: "Super cool topic") }
+
+    let(:hidden_tag) { Fabricate(:tag, name: "hidden") }
+    let!(:hidden_tag_group) do
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+    end
+
+    let(:topic) { Fabricate(:topic, category: category, tags: [tag1, tag2, hidden_tag], title: "Super cool topic") }
     let(:post) { Fabricate(:post, topic: topic, raw: 'This is My super duper cool topic') }
     let(:response) { Fabricate(:basic_reply, topic: post.topic, user: response_by_user) }
     let(:user) { Fabricate(:user) }
@@ -376,6 +382,9 @@ RSpec.describe UserNotifications do
       mail_html = mail.html_part.body.to_s
       expect(mail_html.scan(/>Bob Marley/).count).to eq(1)
       expect(mail_html.scan(/>bobmarley/).count).to eq(0)
+
+      expect(mail.subject.scan(/#{tag1.name}/).count).to eq(1)
+      expect(mail.subject.scan(/#{hidden_tag.name}/).count).to eq(0)
 
       SiteSetting.prioritize_username_in_ux = true
 

@@ -590,15 +590,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
     end
 
     current_count = 0
-
-    total_count = mysql_query(<<-SQL
-      SELECT COUNT(postid) count
-        FROM #{TABLE_PREFIX}post p
-        JOIN #{TABLE_PREFIX}thread t ON t.threadid = p.threadid
-       WHERE t.firstpostid <> p.postid
-    SQL
-    ).first["count"]
-
+    total_count = Post.count
     success_count = 0
     fail_count = 0
 
