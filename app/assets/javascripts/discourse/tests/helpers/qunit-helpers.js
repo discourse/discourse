@@ -76,6 +76,7 @@ import { resetNotificationTypeRenderers } from "discourse/lib/notification-types
 import { resetUserMenuTabs } from "discourse/lib/user-menu/tab";
 import { reset as resetLinkLookup } from "discourse/lib/link-lookup";
 import { resetModelTransformers } from "discourse/lib/model-transformers";
+import { cleanupTemporaryTemplateRegistrations } from "./template-module-helper";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -207,6 +208,7 @@ export function testCleanup(container, app) {
   resetUserMenuTabs();
   resetLinkLookup();
   resetModelTransformers();
+  cleanupTemporaryTemplateRegistrations();
 }
 
 export function discourseModule(name, options) {
