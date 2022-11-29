@@ -2,11 +2,11 @@ import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
-import { registerTemplateModule } from "discourse/tests/helpers/template-module-helper";
+import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 
 acceptance("CustomHTML template", function (needs) {
   needs.hooks.beforeEach(() => {
-    registerTemplateModule(
+    registerTemporaryModule(
       "discourse/templates/top",
       hbs`<span class='top-span'>TOP</span>`
     );
