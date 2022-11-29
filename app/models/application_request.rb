@@ -11,7 +11,9 @@ class ApplicationRequest < ActiveRecord::Base
                     page_view_logged_in
                     page_view_anon
                     page_view_logged_in_mobile
-                    page_view_anon_mobile)
+                    page_view_anon_mobile
+                    api
+                    user_api)
 
   include CachedCounting
 

@@ -1233,6 +1233,53 @@ RSpec.describe Report do
     end
   end
 
+  describe ".report_consolidated_api_requests" do
+    before do
+      freeze_time(Time.now.at_midnight)
+      Theme.clear_default!
+    end
+
+    let(:reports) { Report.find('consolidated_api_requests') }
+
+    context "with no data" do
+      it "works" do
+        reports.data.each do |report|
+          expect(report[:data]).to be_empty
+        end
+      end
+    end
+
+    context "with data" do
+      before do
+        CachedCounting.reset
+        CachedCounting.enable
+        ApplicationRequest.enable
+      end
+
+      after do
+        ApplicationRequest.disable
+        CachedCounting.disable
+      end
+
+      it "works" do
+        2.times { ApplicationRequest.increment!(:api) }
+        ApplicationRequest.increment!(:user_api)
+
+        CachedCounting.flush
+
+        api_report = reports.data.find { |r| r[:req] == "api" }
+        user_api_report = reports.data.find { |r| r[:req] == "user_api" }
+
+        expect(api_report[:color]).to eql("rgba(0,136,204,1)")
+        expect(api_report[:data][0][:y]).to eql(2)
+
+        expect(user_api_report[:color]).to eql("rgba(200,0,1,1)")
+        expect(user_api_report[:data][0][:y]).to eql(1)
+      ensure
+      end
+    end
+  end
+
   describe "trust_level_growth" do
     before do
       freeze_time(Time.now.at_midnight)

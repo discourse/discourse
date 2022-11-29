@@ -64,10 +64,11 @@ class Middleware::RequestTracker
   end
 
   def self.log_request(data)
-    status = data[:status]
-    track_view = data[:track_view]
-
-    if track_view
+    if data[:is_api]
+      ApplicationRequest.increment!(:api)
+    elsif data[:is_user_api]
+      ApplicationRequest.increment!(:user_api)
+    elsif data[:track_view]
       if data[:is_crawler]
         ApplicationRequest.increment!(:page_view_crawler)
         WebCrawlerRequest.increment!(data[:user_agent])
@@ -82,6 +83,7 @@ class Middleware::RequestTracker
 
     ApplicationRequest.increment!(:http_total)
 
+    status = data[:status]
     if status >= 500
       ApplicationRequest.increment!(:http_5xx)
     elsif data[:is_background]
@@ -110,6 +112,9 @@ class Middleware::RequestTracker
     has_auth_cookie = Auth::DefaultCurrentUserProvider.find_v0_auth_cookie(request).present?
     has_auth_cookie ||= Auth::DefaultCurrentUserProvider.find_v1_auth_cookie(env).present?
 
+    is_api ||= !!env[Auth::DefaultCurrentUserProvider::API_KEY_ENV]
+    is_user_api ||= !!env[Auth::DefaultCurrentUserProvider::USER_API_KEY_ENV]
+
     is_message_bus = request.path.start_with?("#{Discourse.base_path}/message-bus/")
     is_topic_timings = request.path.start_with?("#{Discourse.base_path}/topics/timings")
 
@@ -117,6 +122,8 @@ class Middleware::RequestTracker
       status: status,
       is_crawler: helper.is_crawler?,
       has_auth_cookie: has_auth_cookie,
+      is_api: is_api,
+      is_user_api: is_user_api,
       is_background: is_message_bus || is_topic_timings,
       background_type: is_message_bus ? "message-bus" : "topic-timings",
       is_mobile: helper.is_mobile?,

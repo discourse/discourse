@@ -1179,6 +1179,13 @@ en:
         editor: Editor
         author: Author
         edit_reason: Reason
+    consolidated_api_requests:
+      title: "Consolidated API Requests"
+      xaxis:
+        api: "API"
+        user_api: "User API"
+      yaxis: "Day"
+      description: "API requests for regular API keys and user API keys."
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Day"
