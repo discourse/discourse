@@ -71,9 +71,6 @@ export default Controller.extend(bufferedProperty("model"), {
   currentPostId: null,
   userLastReadPostNumber: null,
   highestPostNumber: null,
-  // remove once topic-timeline glimmer upgrade is complete
-  experimentalTimelineLocalStorage:
-    window.localStorage.enable_experimental_timeline,
 
   init() {
     this._super(...arguments);

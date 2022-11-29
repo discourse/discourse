@@ -1,6 +1,12 @@
 import Modifier from "ember-modifier";
+import { registerDestructor } from "@ember/destroyable";
 
 export default class DraggableModifier extends Modifier {
+  constructor(owner, args) {
+    super(owner, args);
+    registerDestructor(this, (instance) => instance.cleanup());
+  }
+
   modify(el, _, { didStartDrag, didEndDrag }) {
     this._drag(el, didStartDrag, didEndDrag);
   }
@@ -21,19 +27,19 @@ export default class DraggableModifier extends Modifier {
         //apply mouse styles when dragging
         document.body.classList.add("dragging");
         hasStarted = true;
-      }
-    });
 
-    // On leaving click, stop moving.
-    document.addEventListener(isTouch ? "touchend" : "mouseup", (e) => {
-      if (didEndDrag && hasStarted) {
-        didEndDrag(e, target);
+        // On leaving click, stop moving.
+        document.addEventListener(isTouch ? "touchend" : "mouseup", (e) => {
+          if (didEndDrag && hasStarted) {
+            didEndDrag(e, target);
 
-        // remove event listener from target when dragging complete
-        document.removeEventListener("touchmove", drag);
-        document.removeEventListener("mousemove", drag);
-        document.body.classList.remove("dragging");
-        hasStarted = false;
+            // remove event listener from target when dragging complete
+            document.removeEventListener("touchmove", drag);
+            document.removeEventListener("mousemove", drag);
+            document.body.classList.remove("dragging");
+            hasStarted = false;
+          }
+        });
       }
     });
 
@@ -43,5 +49,12 @@ export default class DraggableModifier extends Modifier {
         didStartDrag(e, target);
       }
     };
+  }
+
+  cleanup() {
+    // remove event listener from target when dragging complete
+    document.removeEventListener("touchmove", drag);
+    document.removeEventListener("mousemove", drag);
+    document.body.classList.remove("dragging");
   }
 }

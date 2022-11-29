@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import discourseLater from "discourse-common/lib/later";
 import { action } from "@ember/object";
 import { relativeAge } from "discourse/lib/formatter";
 import I18n from "I18n";
 import { htmlSafe } from "@ember/template";
 import { inject as service } from "@ember/service";
-import { bind } from "discourse-common/utils/decorators";
+import { bind, debounce } from "discourse-common/utils/decorators";
 import { actionDescriptionHtml } from "discourse/widgets/post-small-action";
+import domUtils from "discourse-common/utils/dom-utils";
 
 export const SCROLLER_HEIGHT = 50;
 const MIN_SCROLLAREA_HEIGHT = 170;
@@ -34,10 +34,11 @@ export default class TopicTimelineScrollArea extends Component {
   @tracked dragging = false;
   @tracked excerpt = "";
 
-  showTags =
-    this.siteSettings.tagging_enabled &&
-    this.args.model.tags &&
-    this.args.model.tags.length > 0;
+  get showTags() {
+    return (
+      this.siteSettings.tagging_enabled && this.args.model.tags?.length > 0
+    );
+  }
 
   constructor() {
     super(...arguments);
@@ -193,7 +194,7 @@ export default class TopicTimelineScrollArea extends Component {
     }
   }
 
-  @bind
+  @debounce(50)
   updateScrollPosition(scrollPosition) {
     // only ran on mobile
     if (!this.args.fullscreen) {
@@ -202,40 +203,37 @@ export default class TopicTimelineScrollArea extends Component {
 
     const stream = this.args.model.postStream;
 
-    // a little debounce to avoid flashing
-    discourseLater(() => {
-      if (!this.position === scrollPosition) {
-        return;
-      }
+    if (!this.position === scrollPosition) {
+      return;
+    }
 
-      // we have an off by one, stream is zero based,
-      stream.excerpt(scrollPosition - 1).then((info) => {
-        if (info && this.position === scrollPosition) {
-          let excerpt = "";
-          if (info.username) {
-            excerpt = "<span class='username'>" + info.username + ":</span> ";
-          }
-          if (info.excerpt) {
-            this.excerpt = excerpt + info.excerpt;
-          } else if (info.action_code) {
-            this.excerpt = `${excerpt} ${actionDescriptionHtml(
-              info.action_code,
-              info.created_at,
-              info.username
-            )}`;
-          }
+    // we have an off by one, stream is zero based,
+    stream.excerpt(scrollPosition - 1).then((info) => {
+      if (info && this.position === scrollPosition) {
+        let excerpt = "";
+        if (info.username) {
+          excerpt = "<span class='username'>" + info.username + ":</span> ";
         }
-      });
-    }, 50);
+        if (info.excerpt) {
+          this.excerpt = excerpt + info.excerpt;
+        } else if (info.action_code) {
+          this.excerpt = `${excerpt} ${actionDescriptionHtml(
+            info.action_code,
+            info.created_at,
+            info.username
+          )}`;
+        }
+      }
+    });
   }
 
   @bind
   updatePercentage(e) {
     const y = e.pageY;
-    const $area = $(".timeline-scrollarea");
-    const areaTop = $area.offset().top;
+    const area = document.querySelector(".timeline-scrollarea");
+    const areaTop = domUtils.offset(area).top;
 
-    this.percentage = this.clamp(parseFloat(y - areaTop) / $area.height());
+    this.percentage = this.clamp(parseFloat(y - areaTop) / area.offsetHeight);
     this.commit();
   }
 
@@ -288,6 +286,7 @@ export default class TopicTimelineScrollArea extends Component {
       this.appEvents.off("composer:opened", this.calculatePosition);
       this.appEvents.off("composer:resized", this.calculatePosition);
       this.appEvents.off("composer:closed", this.calculatePosition);
+      this.appEvents.on("topic:current-post-scrolled", this.postScrolled);
     }
   }
 
@@ -310,7 +309,7 @@ export default class TopicTimelineScrollArea extends Component {
 export function scrollareaHeight() {
   const composerHeight =
       document.getElementById("reply-control").offsetHeight || 0,
-    headerHeight = document.querySelectorAll(".d-header")[0].offsetHeight || 0;
+    headerHeight = document.querySelector(".d-header")?.offsetHeight || 0;
 
   // scrollarea takes up about half of the timeline's height
   const availableHeight =

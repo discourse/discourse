@@ -26,7 +26,7 @@
     />
 
     <div class="timeline-footer-controls">
-      {{#if (and this.siteSettings.summary_timeline_button @model.has_summary (not (and @fullscreen @model.postStream.summary)))}}
+      {{#if this.displaySummary}}
         <button type="button" class="show-summary btn-small" label={{i18n "summary.short_label"}} title={{i18n "summary.short_title"}} {{on "click" @showSummary}}>
           {{d-icon "layer-group"}}
         </button>
@@ -61,7 +61,6 @@
           @showFullTitle={{false}}
           @appendReason={{false}}
           @placement={{"bottom-end"}}
-          @mountedAsWidget={{true}}
           @showCaret={{false}}
         />
         {{#if @mobileView}}

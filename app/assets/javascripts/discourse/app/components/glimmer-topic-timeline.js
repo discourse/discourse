@@ -5,6 +5,7 @@ import { inject as service } from "@ember/service";
 
 export default class GlimmerTopicTimeline extends Component {
   @service site;
+  @service siteSettings;
   @service currentUser;
 
   @tracked dockAt = null;
@@ -22,29 +23,34 @@ export default class GlimmerTopicTimeline extends Component {
     }
 
     if (!this.site.mobileView) {
-      if ("IntersectionObserver" in window) {
-        this.intersectionObserver = new IntersectionObserver((entries) => {
-          for (const entry of entries) {
-            const bounds = entry.boundingClientRect;
+      this.intersectionObserver = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          const bounds = entry.boundingClientRect;
 
-            if (entry.target.id === "topic-bottom") {
-              this.topicBottom = bounds.y + window.scrollY;
-            } else {
-              this.topicTop = bounds.y + window.scrollY;
-            }
+          if (entry.target.id === "topic-bottom") {
+            this.topicBottom = bounds.y + window.scrollY;
+          } else {
+            this.topicTop = bounds.y + window.scrollY;
           }
-        });
-
-        const elements = [
-          document.querySelector(".container.posts"),
-          document.querySelector("#topic-bottom"),
-        ];
-
-        for (let i = 0; i < elements.length; i++) {
-          this.intersectionObserver.observe(elements[i]);
         }
+      });
+
+      const elements = [
+        document.querySelector(".container.posts"),
+        document.querySelector("#topic-bottom"),
+      ];
+
+      for (let i = 0; i < elements.length; i++) {
+        this.intersectionObserver.observe(elements[i]);
       }
     }
+  }
+
+  get displaySummary() {
+    this.siteSettings.summary_timeline_button &&
+      !this.args.fullScreen &&
+      this.args.model.has_summary &&
+      !this.args.model.postStream.summary;
   }
 
   get class() {
@@ -81,10 +87,8 @@ export default class GlimmerTopicTimeline extends Component {
 
   willDestroy() {
     if (!this.site.mobileView) {
-      if ("IntersectionObserver" in window) {
-        this.intersectionObserver?.disconnect();
-        this.intersectionObserver = null;
-      }
+      this.intersectionObserver?.disconnect();
+      this.intersectionObserver = null;
     }
   }
 }
