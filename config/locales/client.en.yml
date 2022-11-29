@@ -3534,6 +3534,7 @@ en:
       pending_permission_change_alert: "You haven't added %{group} to this category; click this button to add them."
       images: "Images"
       email_in: "Custom incoming email address:"
+      email_in_tooltip: "You can separate multiple email addresses with the | character."
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
       email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
       email_in_disabled_click: 'enable the "email in" setting.'

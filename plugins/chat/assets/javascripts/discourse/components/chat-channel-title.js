@@ -6,7 +6,6 @@ import { gt, reads } from "@ember/object/computed";
 export default class ChatChannelTitle extends Component {
   tagName = "";
   channel = null;
-  unreadIndicator = false;
 
   @reads("channel.chatable.users.[]") users;
   @gt("users.length", 1) multiDm;
@@ -19,5 +18,16 @@ export default class ChatChannelTitle extends Component {
   @computed("channel.chatable.color")
   get channelColorStyle() {
     return htmlSafe(`color: #${this.channel.chatable.color}`);
+  }
+
+  @computed(
+    "channel.chatable.users.length",
+    "channel.chatable.users.@each.status"
+  )
+  get showUserStatus() {
+    return !!(
+      this.channel.chatable.users.length === 1 &&
+      this.channel.chatable.users[0].status
+    );
   }
 }

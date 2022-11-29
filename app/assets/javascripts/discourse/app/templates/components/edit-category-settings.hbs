@@ -233,6 +233,10 @@
         {{i18n "category.email_in"}}
       </label>
       <TextField @id="category-email-in" @class="email-in" @value={{this.category.email_in}} />
+      <span>
+        {{d-icon "info-circle"}}
+        <DTooltip>{{i18n "category.email_in_tooltip"}}</DTooltip>
+      </span>
     </section>
 
     <section class="field email-in-allow-strangers">

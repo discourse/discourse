@@ -1,9 +1,6 @@
 <LinkTo @route="chat.channel" @models={{array this.channel.id (or this.channel.slug "-")}} class={{this.rowClassNames}} id={{concat "chat-channel-row-" this.channel.id}} tabindex="0" data-chat-channel-id={{this.channel.id}}>
-  <ChatChannelTitle @channel={{this.channel}} @unreadIndicator={{true}} />
-
-  {{#if this.showUserStatus}}
-    <UserStatusMessage @status={{this.channel.chatable.users.firstObject.status}} />
-  {{/if}}
+  <ChatChannelTitle @channel={{this.channel}} />
+  <ChatChannelMetadata @channel={{this.channel}} @unreadIndicator={{true}} />
 
   {{#if (and this.options.leaveButton this.channel.isFollowing (not this.site.mobileView))}}
     <ToggleChannelMembershipButton
