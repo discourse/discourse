@@ -14,26 +14,25 @@ RSpec.describe 'request tracker' do
   end
 
   before do
-    ApplicationRequest.enable
     CachedCounting.reset
     CachedCounting.enable
+    ApplicationRequest.enable
   end
 
   after do
     ApplicationRequest.disable
+    CachedCounting.reset
     CachedCounting.disable
   end
 
   context 'when using an api key' do
     it 'is counted as an API request' do
       get "/u/#{api_key.user.username}.json", headers: { HTTP_API_KEY: api_key.key }
-      CachedCounting.flush
-
       expect(response.status).to eq(200)
 
+      CachedCounting.flush
       expect(ApplicationRequest.http_total.first.count).to eq(1)
       expect(ApplicationRequest.http_2xx.first.count).to eq(1)
-
       expect(ApplicationRequest.api.first.count).to eq(1)
     end
   end
@@ -41,13 +40,11 @@ RSpec.describe 'request tracker' do
   context 'when using an user api key' do
     it 'is counted as a user API request' do
       get '/session/current.json', headers: { HTTP_USER_API_KEY: user_api_key.key }
-      CachedCounting.flush
-
       expect(response.status).to eq(200)
 
+      CachedCounting.flush
       expect(ApplicationRequest.http_total.first.count).to eq(1)
       expect(ApplicationRequest.http_2xx.first.count).to eq(1)
-
       expect(ApplicationRequest.user_api.first.count).to eq(1)
     end
   end

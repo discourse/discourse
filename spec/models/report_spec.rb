@@ -1233,7 +1233,7 @@ RSpec.describe Report do
     end
   end
 
-  describe "consolidated_api_requests" do
+  describe ".report_consolidated_api_requests" do
     before do
       freeze_time(Time.now.at_midnight)
       Theme.clear_default!

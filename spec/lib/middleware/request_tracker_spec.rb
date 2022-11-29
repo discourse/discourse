@@ -100,7 +100,7 @@ RSpec.describe Middleware::RequestTracker do
       expect(ApplicationRequest.page_view_crawler.first.count).to eq(1)
     end
 
-    it "can log API requests correctly" do
+    it "logs API requests correctly" do
       data = Middleware::RequestTracker.get_data(
         env("_DISCOURSE_API" => "1"), ["200", { "Content-Type" => 'text/json' }], 0.1
       )
