@@ -1,6 +1,7 @@
 import Service from "@ember/service";
 import A11yDialog from "a11y-dialog";
 import { bind } from "discourse-common/utils/decorators";
+import { isBlank } from "@ember/utils";
 
 export default Service.extend({
   message: null,
@@ -13,7 +14,10 @@ export default Service.extend({
   confirmButtonIcon: null,
   confirmButtonLabel: null,
   confirmButtonClass: null,
+  confirmPhrase: null,
+  confirmPhraseInput: null,
   cancelButtonLabel: null,
+  cancelButtonClass: null,
   shouldDisplayCancel: null,
 
   didConfirm: null,
@@ -32,12 +36,22 @@ export default Service.extend({
       confirmButtonLabel = "ok_value",
       confirmButtonClass = "btn-primary",
       cancelButtonLabel = "cancel_value",
+      cancelButtonClass = "btn-default",
+      confirmPhrase,
       shouldDisplayCancel,
 
       didConfirm,
       didCancel,
       buttons,
     } = params;
+
+    let confirmButtonDisabled = !isBlank(confirmPhrase);
+    this.addObserver("confirmPhraseInput", this, () => {
+      this.set(
+        "confirmButtonDisabled",
+        this.confirmPhrase && this.confirmPhraseInput !== this.confirmPhrase
+      );
+    });
 
     const element = document.getElementById("dialog-holder");
 
@@ -49,10 +63,13 @@ export default Service.extend({
       title,
       titleElementId: title !== null ? "dialog-title" : null,
 
+      confirmButtonDisabled,
       confirmButtonClass,
       confirmButtonLabel,
       confirmButtonIcon,
+      confirmPhrase,
       cancelButtonLabel,
+      cancelButtonClass,
       shouldDisplayCancel,
 
       didConfirm,
@@ -131,7 +148,10 @@ export default Service.extend({
       confirmButtonLabel: null,
       confirmButtonIcon: null,
       cancelButtonLabel: null,
+      cancelButtonClass: null,
       shouldDisplayCancel: null,
+      confirmPhrase: null,
+      confirmPhraseInput: null,
 
       didConfirm: null,
       didCancel: null,

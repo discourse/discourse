@@ -433,3 +433,15 @@
     margin-top: 1em;
   }
 }
+.second-factor {
+  .second-factor-item {
+    width: auto;
+    display: flex;
+    justify-content: space-between;
+  }
+  .details {
+    width: 75%;
+    // width: 150px;
+    // float: right;
+  }
+}

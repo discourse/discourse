@@ -250,16 +250,6 @@ RSpec.describe UserSerializer do
           expect(json[:second_factor_enabled]).to eq(true)
         end
       end
-
-      context "when backup codes enabled" do
-        before do
-          User.any_instance.stubs(:backup_codes_enabled?).returns(true)
-        end
-
-        it "is true" do
-          expect(json[:second_factor_enabled]).to eq(true)
-        end
-      end
     end
 
     describe "ignored and muted" do

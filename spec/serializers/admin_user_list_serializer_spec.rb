@@ -31,18 +31,6 @@ RSpec.describe AdminUserListSerializer do
     end
   end
 
-  context "when backup codes enabled" do
-    before do
-      Fabricate(:user_second_factor_backup, user: user)
-    end
-
-    it "is true" do
-      json = serializer.as_json
-
-      expect(json[:second_factor_enabled]).to eq(true)
-    end
-  end
-
   describe "emails" do
     fab!(:admin) { Fabricate(:user, admin: true, email: "admin@email.com") }
     fab!(:moderator) { Fabricate(:user, moderator: true, email: "moderator@email.com") }

@@ -1393,6 +1393,12 @@ en:
         enforced_notice: "You are required to enable two-factor authentication before accessing this site."
         disable: "Disable"
         disable_confirm: "Are you sure you want to disable all two-factor methods?"
+        disable_confirm_header: "These Token-Based Authenticators and Physical Security Keys will be deleted:"
+        disable_confirm_instruction: 'To confirm, type <strong>%{confirm}</strong> in the box below.'
+        disable_single_confirm_title: "Disabling an authenticator"
+        disable_single_confirm_message: "You are disabling <strong>%{name}</strong>. You can't undo this action. If you change your mind, you have to register this authenticator again."
+        disable_backup_codes_confirm_title: "Disabling backup codes"
+        disable_backup_codes_confirm_message: "You are disabling <strong>backup codes</strong>. You can't undo this action. If you change your mind, you have to regenerate backup codes."
         save: "Save"
         edit: "Edit"
         edit_title: "Edit Authenticator"
