@@ -2,6 +2,7 @@
 
 RSpec.describe ComposerController do
   describe '#mentions' do
+    fab!(:current_user) { Fabricate(:user) }
     fab!(:user) { Fabricate(:user) }
 
     fab!(:group) { Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone], mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
@@ -10,7 +11,7 @@ RSpec.describe ComposerController do
     fab!(:unmentionable_group) { Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone], mentionable_level: Group::ALIAS_LEVELS[:nobody]) }
 
     before do
-      sign_in(Fabricate(:user))
+      sign_in(current_user)
     end
 
     context 'without a topic' do
