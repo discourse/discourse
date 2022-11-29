@@ -367,9 +367,7 @@ const SiteHeaderComponent = MountWidget.extend(
       const menuPanels = document.querySelectorAll(".menu-panel");
 
       if (menuPanels.length === 0) {
-        if (this.site.mobileView || this.site.narrowDesktopView) {
-          this._animate = true;
-        }
+        this._animate = this.site.mobileView || this.site.narrowDesktopView;
         return;
       }
 
