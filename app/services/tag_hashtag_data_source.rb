@@ -60,13 +60,15 @@ class TagHashtagDataSource
     return [] if !SiteSetting.tagging_enabled
 
     tags = DB.query(<<~SQL, limit: limit).map(&:name)
-    SELECT DISTINCT tags.name, posts.created_at
+    SELECT tags.name, MAX(posts.created_at)
     FROM tags
     INNER JOIN topic_tags ON topic_tags.tag_id = tags.id
-    INNER JOIN topics ON topic_tags.topic_id = topics.id
-    INNER JOIN posts ON topics.id = posts.topic_id
-    WHERE posts.deleted_at IS NULL AND topics.deleted_at IS NULL
-    ORDER BY posts.created_at DESC
+          INNER JOIN topics ON topic_tags.topic_id = topics.id
+          INNER JOIN posts ON topics.id = posts.topic_id
+          WHERE posts.deleted_at IS NULL AND topics.deleted_at IS NULL
+            AND posts.created_at > (NOW() - INTERVAL '2 WEEKS')
+    GROUP BY tags.name
+    ORDER BY MAX(posts.created_at) DESC
     LIMIT :limit
     SQL
 
@@ -77,7 +79,7 @@ class TagHashtagDataSource
         limit: limit,
         for_input: true,
         order_search_results: true,
-        only_tag_names: tags
+        only_tag_names: tags,
       )
 
     TagsController

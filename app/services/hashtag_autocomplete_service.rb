@@ -282,11 +282,11 @@ class HashtagAutocompleteService
   private
 
   def search_without_term(types_in_priority_order, limit)
-    split_limits = (limit.to_f / types_in_priority_order.length.to_f).ceil
+    split_limit = (limit.to_f / types_in_priority_order.length.to_f).ceil
     limited_results = []
 
     types_in_priority_order.each do |type|
-      search_results = @@data_sources[type].search_without_term(guardian, limit)
+      search_results = @@data_sources[type].search_without_term(guardian, split_limit)
       next if search_results.empty?
       next if !all_data_items_valid?(search_results)
       search_results = @@data_sources[type].search_sort(search_results, nil)

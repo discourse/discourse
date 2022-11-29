@@ -66,17 +66,26 @@ class CategoryHashtagDataSource
 
   def self.search_without_term(guardian, limit)
     guardian_categories = Site.new(guardian).categories
-    category_ids =
-      DB.query(<<~SQL, category_ids: guardian_categories.map { |cat| cat[:id] }, limit: limit).map(
-      SELECT DISTINCT category_id, posts.created_at
+
+    category_id_sql = <<~SQL
+      SELECT category_id, MAX(posts.created_at)
       FROM topics
       INNER JOIN posts ON posts.topic_id = topics.id
-      WHERE category_id IN (:category_ids) AND posts.deleted_at IS NULL and topics.deleted_at IS NULL
-      ORDER BY posts.created_at DESC
+      WHERE topics.deleted_at IS NULL
+        AND posts.deleted_at IS NULL
+        AND posts.created_at > (NOW() - INTERVAL '2 WEEKS')
+        AND topics.category_id IN (:category_ids)
+      GROUP BY category_id
+      ORDER BY MAX(posts.created_at) DESC
       LIMIT :limit
     SQL
-        &:category_id
-      )
+    category_ids =
+      DB.query(
+        category_id_sql,
+        category_ids: guardian_categories.map { |cat| cat[:id] },
+        limit: limit,
+      ).map(&:category_id)
+
     guardian_categories
       .select { |category| category_ids.include?(category[:id]) }
       .take(limit)

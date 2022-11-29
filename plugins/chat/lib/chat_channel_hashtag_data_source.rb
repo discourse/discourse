@@ -53,11 +53,16 @@ class Chat::ChatChannelHashtagDataSource
           exclude_dm_channels: true,
         )
       channel_ids = DB.query(<<~SQL, limit: limit).map(&:chat_channel_id)
-      SELECT DISTINCT chat_channel_id, chat_messages.created_at
-      FROM chat_messages
-      WHERE chat_messages.deleted_at IS NULL AND chat_channel_id IN (#{allowed_channel_ids_sql})
-      ORDER BY chat_messages.created_at DESC
-      LIMIT :limit
+        SELECT chat_channel_id, MAX(chat_messages.created_at)
+        FROM chat_messages
+        INNER JOIN chat_channels ON chat_messages.chat_channel_id = chat_channels.id
+        WHERE chat_messages.deleted_at IS NULL
+          AND chat_channels.deleted_at IS NULL
+          AND chat_channel_id IN (#{allowed_channel_ids_sql})
+          AND chat_messages.created_at > (NOW() - INTERVAL '2 WEEKS')
+        GROUP BY chat_channel_id
+        ORDER BY MAX(chat_messages.created_at) DESC
+        LIMIT :limit
       SQL
       ChatChannel
         .where(id: channel_ids)
