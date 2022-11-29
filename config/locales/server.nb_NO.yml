@@ -711,6 +711,11 @@ nb_NO:
         editor: Tekstbehandler
         author: Forfatter
         edit_reason: Begrunnelse
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "Bruker-API"
+      yaxis: "Dag"
     dau_by_mau:
       title: "DAB/MAB"
       xaxis: "Dag"

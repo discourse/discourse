@@ -97,6 +97,8 @@ class DiscoursePluginRegistry
 
   define_filtered_register :email_unsubscribers
 
+  define_filtered_register :user_destroyer_on_content_deletion_callbacks
+
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider
   end

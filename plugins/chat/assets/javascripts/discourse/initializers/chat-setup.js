@@ -12,8 +12,12 @@ export default {
   name: "chat-setup",
   initialize(container) {
     this.chatService = container.lookup("service:chat");
-    this.siteSettings = container.lookup("service:site-settings");
 
+    if (!this.chatService.userCanChat) {
+      return;
+    }
+
+    this.siteSettings = container.lookup("service:site-settings");
     this.appEvents = container.lookup("service:appEvents");
     this.appEvents.on("discourse:focus-changed", this, "_handleFocusChanged");
 
@@ -110,7 +114,7 @@ export default {
         this._registeredDocumentTitleCountCallback = true;
       }
 
-      api.addCardClickListenerSelector(".topic-chat-float-container");
+      api.addCardClickListenerSelector(".chat-drawer-outlet");
 
       api.dispatchWidgetAppEvent(
         "site-header",
@@ -152,6 +156,10 @@ export default {
   },
 
   teardown() {
+    if (!this.chatService.userCanChat) {
+      return;
+    }
+
     this.appEvents.off("discourse:focus-changed", this, "_handleFocusChanged");
     _lastForcedRefreshAt = null;
     clearChatComposerButtons();

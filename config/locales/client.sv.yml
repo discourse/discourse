@@ -1063,6 +1063,9 @@ sv:
       dismiss_notifications_tooltip: "Markera alla olästa aviseringar som lästa"
       dismiss_bookmarks_tooltip: "Markera alla olästa bokmärkespåminnelser som lästa"
       dismiss_messages_tooltip: "Markera alla olästa personliga meddelanden som lästa"
+      no_likes_title: "Du har inte fått några gillningar än"
+      no_likes_body: >
+        Du kommer att aviseras här varje gång någon gillar ett av dina inlägg så att du kan se vad andra tycker är värdefullt. Andra kommer att se samma sak när du gillar deras inlägg också! <br><br> Aviseringar om gillningar skickas aldrig till dig via e-post, men du kan ställa in hur du får aviseringar om gillningar på webbplatsen i dina <a href='%{preferencesUrl}'>aviseringsinställningar</a>.
       no_messages_title: "Du har inga meddelanden"
       no_messages_body: >
         Behöver du ha en direkt personlig konversation med någon, utanför det normala konversationsflödet? Meddela dem genom att klicka på deras avatar och använd %{icon} meddelandeknappen.<br><br> Om du behöver hjälp kan du <a href='%{aboutUrl}'>meddela någon ur personalen</a>.
@@ -1853,6 +1856,7 @@ sv:
       blank_username_or_password: "Ange din e-postadress eller ditt användarnamn och lösenord."
       reset_password: "Återställ lösenord"
       logging_in: "Loggar in..."
+      previous_sign_up: "Har du redan ett konto?"
       or: "Eller"
       authenticating: "Autentiserar..."
       awaiting_activation: "Ditt konto väntar på aktivering, använd Glömt lösenord-länken för att skicka ett nytt aktiveringsmail."
@@ -3234,6 +3238,7 @@ sv:
       pending_permission_change_alert: "Du har inte lagt till %{group} för denna kategori. Klicka på följande knapp för att lägga till den."
       images: "Bilder"
       email_in: "Egenvald inkommande e-postadress:"
+      email_in_tooltip: "Du kan skilja på flera e-postadresser med tecknet |."
       email_in_allow_strangers: "Ta emot e-post från anonyma användare utan konton"
       email_in_disabled: "Att skapa nya ämnen via e-post är inaktiverat i webbplatsinställningarna. För att aktivera ämnen skapade via e-post "
       email_in_disabled_click: 'aktiverar du inställningen "inkommande e-post".'
@@ -3848,6 +3853,8 @@ sv:
     second_factor_auth:
       redirect_after_success: "Andra faktorautentiseringen lyckades. Omdirigerar till föregående sida…"
     sidebar:
+      show_sidebar: "Visa sidofältet"
+      hide_sidebar: "Dölj sidofältet"
       unread_count:
         one: "%{count} oläst"
         other: "%{count} olästa"
@@ -3915,6 +3922,8 @@ sv:
               title: "Alla användare"
             my_posts:
               content: "Mina inlägg"
+              title: "Min senaste ämnesaktivitet"
+              title_drafts: "Mina utkast som inte har publicerats"
               draft_count:
                 one: "%{count} utkast"
                 other: "%{count} utkast"
@@ -4170,6 +4179,9 @@ sv:
               anonymize: Anonymisera användarkonton.
               delete: Ta bort användarkonton.
               list: Få en lista över användare.
+            user_status:
+              read: Läs användarstatus.
+              update: Uppdatera användarstatistik.
             email:
               receive_emails: Kombinera detta omfång med e-postmottagaren för att bearbeta inkommande e-post.
             badges:

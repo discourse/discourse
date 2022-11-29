@@ -421,4 +421,17 @@ describe Chat do
       end
     end
   end
+
+  describe "Deleting posts while deleting a user" do
+    fab!(:user) { Fabricate(:user) }
+
+    it "queues a job to also delete chat messages" do
+      deletion_opts = { delete_posts: true }
+
+      expect { UserDestroyer.new(Discourse.system_user).destroy(user, deletion_opts) }.to change(
+        Jobs::DeleteUserMessages.jobs,
+        :size,
+      ).by(1)
+    end
+  end
 end

@@ -153,13 +153,20 @@ class CookedPostProcessor
     src = img["src"]
     return if src.blank? || is_a_hyperlink?(img) || is_svg?(img)
 
-    original_width, original_height = (get_size(src) || [0, 0]).map(&:to_i)
-    if original_width == 0 || original_height == 0
-      Rails.logger.info "Can't reach '#{src}' to get its dimension."
-      return
-    end
-
     upload = Upload.get_from_url(src)
+
+    original_width, original_height  = nil
+
+    if (upload.present?)
+      original_width = upload.width || 0
+      original_height = upload.height || 0
+    else
+      original_width, original_height = (get_size(src) || [0, 0]).map(&:to_i)
+      if original_width == 0 || original_height == 0
+        Rails.logger.info "Can't reach '#{src}' to get its dimension."
+        return
+      end
+    end
 
     if (upload.present? && upload.animated?) || src.match?(GIF_SOURCES_REGEXP)
       img.add_class("animated")

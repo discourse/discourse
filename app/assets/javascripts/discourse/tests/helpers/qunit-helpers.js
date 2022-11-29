@@ -77,6 +77,7 @@ import { resetUserMenuTabs } from "discourse/lib/user-menu/tab";
 import { reset as resetLinkLookup } from "discourse/lib/link-lookup";
 import { resetMentions } from "discourse/lib/link-mentions";
 import { resetModelTransformers } from "discourse/lib/model-transformers";
+import { cleanupTemporaryTemplateRegistrations } from "./template-module-helper";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -209,6 +210,7 @@ export function testCleanup(container, app) {
   resetLinkLookup();
   resetModelTransformers();
   resetMentions();
+  cleanupTemporaryTemplateRegistrations();
 }
 
 export function discourseModule(name, options) {

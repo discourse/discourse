@@ -23,15 +23,41 @@ RSpec.describe ReviewableClaimedTopicsController do
       it "works" do
         SiteSetting.reviewable_claiming = 'optional'
 
-        messages = MessageBus.track_publish { post "/reviewable_claimed_topics.json", params: params }
+        messages = MessageBus.track_publish("/reviewable_claimed") do
+          post "/reviewable_claimed_topics.json", params: params
+          expect(response.status).to eq(200)
+        end
 
-        expect(response.status).to eq(200)
         expect(ReviewableClaimedTopic.where(user_id: moderator.id, topic_id: topic.id).exists?).to eq(true)
         expect(topic.reviewables.first.history.where(reviewable_history_type: ReviewableHistory.types[:claimed]).size).to eq(1)
         expect(messages.size).to eq(1)
-        expect(messages[0].channel).to eq("/reviewable_claimed")
-        expect(messages[0].data[:topic_id]).to eq(topic.id)
-        expect(messages[0].data[:user][:id]).to eq(moderator.id)
+
+        message = messages[0]
+
+        expect(message.data[:topic_id]).to eq(topic.id)
+        expect(message.data[:user][:id]).to eq(moderator.id)
+        expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff])
+      end
+
+      it "publishes reviewable claimed changes to the category moderators of the topic's category" do
+        SiteSetting.enable_category_group_moderation = true
+        SiteSetting.reviewable_claiming = 'optional'
+
+        group = Fabricate(:group)
+        topic.category.update!(reviewable_by_group: group)
+
+        messages = MessageBus.track_publish("/reviewable_claimed") do
+          post "/reviewable_claimed_topics.json", params: params
+          expect(response.status).to eq(200)
+        end
+
+        expect(messages.size).to eq(1)
+
+        message = messages[0]
+
+        expect(message.data[:topic_id]).to eq(topic.id)
+        expect(message.data[:user][:id]).to eq(moderator.id)
+        expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff], group.id)
       end
 
       it "works with deleted topics" do
@@ -73,15 +99,20 @@ RSpec.describe ReviewableClaimedTopicsController do
     it "works" do
       SiteSetting.reviewable_claiming = 'optional'
 
-      messages = MessageBus.track_publish { delete "/reviewable_claimed_topics/#{claimed.topic_id}.json" }
+      messages = MessageBus.track_publish("/reviewable_claimed") do
+        delete "/reviewable_claimed_topics/#{claimed.topic_id}.json"
+        expect(response.status).to eq(200)
+      end
 
-      expect(response.status).to eq(200)
       expect(ReviewableClaimedTopic.where(topic_id: claimed.topic_id).exists?).to eq(false)
       expect(topic.reviewables.first.history.where(reviewable_history_type: ReviewableHistory.types[:unclaimed]).size).to eq(1)
       expect(messages.size).to eq(1)
-      expect(messages[0].channel).to eq("/reviewable_claimed")
-      expect(messages[0].data[:topic_id]).to eq(topic.id)
-      expect(messages[0].data[:user]).to eq(nil)
+
+      message = messages[0]
+
+      expect(message.data[:topic_id]).to eq(topic.id)
+      expect(message.data[:user]).to eq(nil)
+      expect(message.group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff])
     end
 
     it "works with deleted topics" do

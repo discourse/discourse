@@ -75,6 +75,13 @@ chat:
     min: 1
     max: 50
     client: true
+  chat_maximum_message_length:
+    type: integer
+    default: 6000
+    client: true
+    hidden: true
+    min: 100
+    max: 12000
   chat_allow_uploads:
     default: true
     client: true

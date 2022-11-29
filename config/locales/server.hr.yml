@@ -673,6 +673,11 @@ hr:
         post: Objava
         editor: Urednik
         edit_reason: Razlog
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "Korisnički API"
+      yaxis: "Dan"
     dau_by_mau:
       xaxis: "Dan"
     daily_engaged_users:

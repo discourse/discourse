@@ -200,7 +200,6 @@ ar:
           few: "[%{email_prefix}] رسائل جديدة في %{message_title} و%{others}"
           many: "[%{email_prefix}] رسالتان جديدتان في %{message_title} و%{others}"
           other: "[%{email_prefix}] رسالتان جديدتان في %{message_title} و%{others}"
-        other_direct_message: "من %{message_title}"
         others: "%{count} آخرين"
       unsubscribe: "يتم إرسال ملخص الدردشة هذا من %{site_link} عندما تكون غائبًا. غيِّر %{email_preferences_link} أو %{unsubscribe_link} لإلغاء الاشتراك."
       unsubscribe_no_link: "يتم إرسال ملخص الدردشة هذا من %{site_link} عندما تكون غائبًا. غيِّر %{email_preferences_link} لديك."

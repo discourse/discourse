@@ -11,16 +11,14 @@ import { cancel, next, throttle } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 
 export default Component.extend({
+  tagName: "",
   listView: equal("view", LIST_VIEW),
   chatView: equal("view", CHAT_VIEW),
   draftChannelView: equal("view", DRAFT_CHANNEL_VIEW),
-  classNameBindings: [":topic-chat-float-container", "hidden"],
   chat: service(),
   router: service(),
   chatStateManager: service(),
-  hidden: true,
   loading: false,
-  expanded: true, // TODO - false when not first-load topic
   showClose: true, // TODO - false when on same topic
   sizeTimer: null,
   rafTimer: null,
@@ -95,19 +93,18 @@ export default Component.extend({
     }
   },
 
-  @observes("hidden")
+  @observes("chatStateManager.isDrawerActive")
   _fireHiddenAppEvents() {
-    this.chat.set("chatOpen", !this.hidden);
     this.appEvents.trigger("chat:rerender-header");
   },
 
-  @discourseComputed("expanded")
+  @discourseComputed("chatStateManager.isDrawerExpanded")
   topLineClass(expanded) {
-    const baseClass = "topic-chat-drawer-header__top-line";
+    const baseClass = "chat-drawer-header__top-line";
     return expanded ? `${baseClass}--expanded` : `${baseClass}--collapsed`;
   },
 
-  @discourseComputed("expanded", "chat.activeChannel")
+  @discourseComputed("chatStateManager.isDrawerExpanded", "chat.activeChannel")
   displayMembers(expanded, channel) {
     return expanded && !channel?.isDirectMessageChannel;
   },
@@ -126,36 +123,65 @@ export default Component.extend({
   },
 
   _dynamicCheckSize() {
-    if (!this.rafTimer) {
-      this.rafTimer = window.requestAnimationFrame(() => {
-        this.rafTimer = null;
-        this._performCheckSize();
-      });
+    if (!this.chatStateManager.isDrawerActive) {
+      return;
     }
+
+    if (this.rafTimer) {
+      return;
+    }
+
+    this.rafTimer = window.requestAnimationFrame(() => {
+      this.rafTimer = null;
+      this._performCheckSize();
+    });
   },
 
   _startDynamicCheckSize() {
-    this.element.classList.add("clear-transitions");
+    if (!this.chatStateManager.isDrawerActive) {
+      return;
+    }
+
+    document.querySelector(".chat-drawer").classList.add("clear-transitions");
   },
 
   _clearDynamicCheckSize() {
-    this.element.classList.remove("clear-transitions");
+    if (!this.chatStateManager.isDrawerActive) {
+      return;
+    }
+
+    document
+      .querySelector(".chat-drawer")
+      .classList.remove("clear-transitions");
     this._checkSize();
   },
 
   _checkSize() {
+    if (!this.chatStateManager.isDrawerActive) {
+      return;
+    }
+
     this.sizeTimer = throttle(this, this._performCheckSize, 150);
   },
 
   _performCheckSize() {
-    if (!this.element || this.isDestroying || this.isDestroyed) {
+    if (!this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    if (!this.chatStateManager.isDrawerActive) {
+      return;
+    }
+
+    const drawer = document.querySelector(".chat-drawer");
+    if (!drawer) {
       return;
     }
 
     const composer = document.getElementById("reply-control");
     const composerIsClosed = composer.classList.contains("closed");
     const minRightMargin = 15;
-    this.element.style.setProperty(
+    drawer.style.setProperty(
       "--composer-right",
       (composerIsClosed
         ? minRightMargin
@@ -163,28 +189,7 @@ export default Component.extend({
     );
   },
 
-  @discourseComputed(
-    "hidden",
-    "expanded",
-    "displayMembers",
-    "chat.activeChannel",
-    "chatView"
-  )
-  containerClassNames(hidden, expanded, displayMembers, activeChannel) {
-    const classNames = ["topic-chat-container"];
-    if (expanded) {
-      classNames.push("expanded");
-    }
-    if (!hidden && expanded) {
-      classNames.push("visible");
-    }
-    if (activeChannel) {
-      classNames.push(`channel-${activeChannel.id}`);
-    }
-    return classNames.join(" ");
-  },
-
-  @discourseComputed("expanded")
+  @discourseComputed("chatStateManager.isDrawerExpanded")
   expandIcon(expanded) {
     if (expanded) {
       return "angle-double-down";
@@ -204,10 +209,7 @@ export default Component.extend({
   @action
   openURL(URL = null) {
     this.chat.setActiveChannel(null);
-    this.set("hidden", false);
-    this.set("expanded", true);
-
-    this.chatStateManager.storeChatURL(URL);
+    this.chatStateManager.didOpenDrawer(URL);
 
     const route = this._buildRouteFromURL(
       URL || this.chatStateManager.lastKnownChatURL
@@ -216,6 +218,7 @@ export default Component.extend({
     switch (route.name) {
       case "chat":
         this.set("view", LIST_VIEW);
+        this.refreshChannels();
         this.appEvents.trigger("chat:float-toggled", false);
         return;
       case "chat.draft-channel":
@@ -245,16 +248,18 @@ export default Component.extend({
 
   @action
   toggleExpand() {
-    this.set("expanded", !this.expanded);
-    this.appEvents.trigger("chat:toggle-expand", this.expanded);
+    this.chatStateManager.didToggleDrawer();
+    this.appEvents.trigger(
+      "chat:toggle-expand",
+      this.chatStateManager.isDrawerExpanded
+    );
   },
 
   @action
   close() {
-    this.set("hidden", true);
-    this.set("expanded", false);
+    this.chatStateManager.didCloseDrawer();
     this.chat.setActiveChannel(null);
-    this.appEvents.trigger("chat:float-toggled", this.hidden);
+    this.appEvents.trigger("chat:float-toggled", true);
   },
 
   @action
@@ -275,10 +280,10 @@ export default Component.extend({
 
       this.setProperties({
         loading: false,
-        expanded: true,
         view: LIST_VIEW,
       });
 
+      this.chatStateManager.didExpandDrawer();
       this.chat.setActiveChannel(null);
     });
   },

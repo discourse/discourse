@@ -51,4 +51,8 @@ class TagHashtagDataSource
       .take(limit)
       .map { |tag| tag_to_hashtag_item(tag, include_count: true) }
   end
+
+  def self.search_sort(search_results, _)
+    search_results.sort_by { |result| result.text.downcase }
+  end
 end

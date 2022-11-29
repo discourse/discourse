@@ -49,7 +49,7 @@ en:
         leave_channel: "Leave channel"
         join: "Join"
         leave: "Leave"
-        save_label: 
+        save_label:
           mute_channel: "Mute channel preference saved"
           desktop_notification: "Desktop notification preference saved"
           mobile_notification: "Mobile push notification preference saved"
