@@ -22,6 +22,16 @@
       padding: 0;
       border-radius: 0;
       border-bottom: 1px solid var(--primary-low);
+      box-sizing: content-box; //needed to make hovereffect work without any visible height changes
+
+      &:hover,
+      &:active {
+        //this is to create the nicest hover/active effect I can think of, without content sticking to the side, and without the visible dip in the topborder
+        margin-inline: 0;
+        padding-inline: 1.5rem;
+        margin-top: -1px;
+        padding-top: 1px;
+      }
 
       .chat-channel-metadata {
         &__date {
@@ -49,9 +59,9 @@
       background: var(--secondary);
     }
 
-    .chat-user-avatar-container {
-      padding-left: 1px; //for is-online boxshadow effect
-    }
+    // .chat-user-avatar-container {
+    //   padding-left: 1px; //for is-online boxshadow effect
+    // }
 
     .chat-user-avatar {
       + .chat-channel-title__usernames {
