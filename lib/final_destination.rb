@@ -67,7 +67,7 @@ class FinalDestination
 
     @status = :ready
     @follow_canonical = @opts[:follow_canonical]
-    @http_verb = http_verb(@force_get_hosts, @follow_canonical)
+    @http_verb = @opts[:http_verb] || http_verb(@force_get_hosts, @follow_canonical)
     @cookie = nil
     @limited_ips = []
     @verbose = @opts[:verbose] || false
@@ -82,8 +82,8 @@ class FinalDestination
     20
   end
 
-  def self.resolve(url)
-    new(url).resolve
+  def self.resolve(url, opts = nil)
+    new(url, opts).resolve
   end
 
   def http_verb(force_get_hosts, follow_canonical)
