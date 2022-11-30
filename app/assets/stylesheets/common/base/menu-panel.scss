@@ -661,6 +661,13 @@ div.menu-links-header {
   }
 }
 
+body.footer-nav-ipad {
+  .hamburger-panel .revamped,
+  .menu-panel.slide-in {
+    margin-top: var(--footer-nav-height);
+  }
+}
+
 .hamburger-panel .menu-panel.slide-in {
   left: 0;
 
