@@ -6,10 +6,6 @@ export default DiscourseRoute.extend(ViewingActionType, {
   controllerName: "user-notifications",
   queryParams: { filter: { refreshModel: true } },
 
-  renderTemplate() {
-    this.render("user/notifications");
-  },
-
   @action
   didTransition() {
     this.controllerFor("user-notifications")._showFooter();
