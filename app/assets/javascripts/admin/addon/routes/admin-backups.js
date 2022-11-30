@@ -10,19 +10,46 @@ import { extractError } from "discourse/lib/ajax-error";
 import getURL from "discourse-common/lib/get-url";
 import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
-import { bind } from "discourse-common/utils/decorators";
-
 const LOG_CHANNEL = "/admin/backups/logs";
 
 export default DiscourseRoute.extend({
   dialog: service(),
 
   activate() {
-    this.messageBus.subscribe(LOG_CHANNEL, this.onMessage);
-  },
-
-  deactivate() {
-    this.messageBus.unsubscribe(LOG_CHANNEL, this.onMessage);
+    this.messageBus.subscribe(LOG_CHANNEL, (log) => {
+      if (log.message === "[STARTED]") {
+        User.currentProp("hideReadOnlyAlert", true);
+        this.controllerFor("adminBackups").set(
+          "model.isOperationRunning",
+          true
+        );
+        this.controllerFor("adminBackupsLogs").get("logs").clear();
+      } else if (log.message === "[FAILED]") {
+        this.controllerFor("adminBackups").set(
+          "model.isOperationRunning",
+          false
+        );
+        this.dialog.alert(
+          I18n.t("admin.backups.operations.failed", {
+            operation: log.operation,
+          })
+        );
+      } else if (log.message === "[SUCCESS]") {
+        User.currentProp("hideReadOnlyAlert", false);
+        this.controllerFor("adminBackups").set(
+          "model.isOperationRunning",
+          false
+        );
+        if (log.operation === "restore") {
+          // redirect to homepage when the restore is done (session might be lost)
+          window.location = getURL("/");
+        }
+      } else {
+        this.controllerFor("adminBackupsLogs")
+          .get("logs")
+          .pushObject(EmberObject.create(log));
+      }
+    });
   },
 
   model() {
@@ -37,31 +64,8 @@ export default DiscourseRoute.extend({
     );
   },
 
-  @bind
-  onMessage(log) {
-    if (log.message === "[STARTED]") {
-      User.currentProp("hideReadOnlyAlert", true);
-      this.controllerFor("adminBackups").set("model.isOperationRunning", true);
-      this.controllerFor("adminBackupsLogs").get("logs").clear();
-    } else if (log.message === "[FAILED]") {
-      this.controllerFor("adminBackups").set("model.isOperationRunning", false);
-      this.dialog.alert(
-        I18n.t("admin.backups.operations.failed", {
-          operation: log.operation,
-        })
-      );
-    } else if (log.message === "[SUCCESS]") {
-      User.currentProp("hideReadOnlyAlert", false);
-      this.controllerFor("adminBackups").set("model.isOperationRunning", false);
-      if (log.operation === "restore") {
-        // redirect to homepage when the restore is done (session might be lost)
-        window.location = getURL("/");
-      }
-    } else {
-      this.controllerFor("adminBackupsLogs")
-        .get("logs")
-        .pushObject(EmberObject.create(log));
-    }
+  deactivate() {
+    this.messageBus.unsubscribe(LOG_CHANNEL);
   },
 
   actions: {

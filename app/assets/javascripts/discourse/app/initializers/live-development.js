@@ -1,14 +1,13 @@
 import DiscourseURL from "discourse/lib/url";
 import { isDevelopment } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
-import { bind } from "discourse-common/utils/decorators";
 
 //  Use the message bus for live reloading of components for faster development.
 export default {
   name: "live-development",
 
   initialize(container) {
-    this.messageBus = container.lookup("service:message-bus");
+    const messageBus = container.lookup("service:message-bus");
     const session = container.lookup("service:session");
 
     // Preserve preview_theme_id=## and pp=async-flamegraph parameters across pages
@@ -39,44 +38,35 @@ export default {
     }
 
     // Observe file changes
-    this.messageBus.subscribe(
+    messageBus.subscribe(
       "/file-change",
-      this.onFileChange,
+      (data) => {
+        data.forEach((me) => {
+          if (me === "refresh") {
+            // Refresh if necessary
+            document.location.reload(true);
+          } else if (me.new_href && me.target) {
+            const link_target = !!me.theme_id
+              ? `[data-target='${me.target}'][data-theme-id='${me.theme_id}']`
+              : `[data-target='${me.target}']`;
+
+            const links = document.querySelectorAll(`link${link_target}`);
+            if (links.length > 0) {
+              const lastLink = links[links.length - 1];
+              // this check is useful when message-bus has multiple file updates
+              // it avoids the browser doing a lot of work for nothing
+              // should the filenames be unchanged
+              if (
+                lastLink.href.split("/").pop() !== me.new_href.split("/").pop()
+              ) {
+                this.refreshCSS(lastLink, me.new_href);
+              }
+            }
+          }
+        });
+      },
       session.mbLastFileChangeId
     );
-  },
-
-  teardown() {
-    this.messageBus.unsubscribe("/file-change", this.onFileChange);
-  },
-
-  @bind
-  onFileChange(data) {
-    data.forEach((me) => {
-      if (me === "refresh") {
-        // Refresh if necessary
-        document.location.reload(true);
-      } else if (me.new_href && me.target) {
-        let query = `link[data-target='${me.target}']`;
-
-        if (me.theme_id) {
-          query += `[data-theme-id='${me.theme_id}']`;
-        }
-
-        const links = document.querySelectorAll(query);
-
-        if (links.length > 0) {
-          const lastLink = links[links.length - 1];
-
-          // this check is useful when message-bus has multiple file updates
-          // it avoids the browser doing a lot of work for nothing
-          // should the filenames be unchanged
-          if (lastLink.href.split("/").pop() !== me.new_href.split("/").pop()) {
-            this.refreshCSS(lastLink, me.new_href);
-          }
-        }
-      }
-    });
   },
 
   refreshCSS(node, newHref) {

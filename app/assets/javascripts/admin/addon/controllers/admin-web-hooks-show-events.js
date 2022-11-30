@@ -2,7 +2,7 @@ import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
 import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
@@ -23,22 +23,24 @@ export default Controller.extend({
   subscribe() {
     this.messageBus.subscribe(
       `/web_hook_events/${this.get("model.extras.web_hook_id")}`,
-      this._addIncoming
+      (data) => {
+        if (data.event_type === "ping") {
+          this.set("pingDisabled", false);
+        }
+        this._addIncoming(data.web_hook_event_id);
+      }
     );
   },
 
   unsubscribe() {
-    this.messageBus.unsubscribe("/web_hook_events/*", this._addIncoming);
+    this.messageBus.unsubscribe("/web_hook_events/*");
   },
 
-  @bind
-  _addIncoming(data) {
-    if (data.event_type === "ping") {
-      this.set("pingDisabled", false);
-    }
+  _addIncoming(eventId) {
+    const incomingEventIds = this.incomingEventIds;
 
-    if (!this.incomingEventIds.includes(data.web_hook_event_id)) {
-      this.incomingEventIds.pushObject(data.web_hook_event_id);
+    if (!incomingEventIds.includes(eventId)) {
+      incomingEventIds.pushObject(eventId);
     }
   },
 
