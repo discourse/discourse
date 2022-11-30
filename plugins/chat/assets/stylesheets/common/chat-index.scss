@@ -1,19 +1,280 @@
 .channels-list {
+  overflow-y: auto;
+  height: 100%;
+  padding-bottom: env(safe-area-inset-bottom);
+  position: relative;
+  @include chat-scrollbar(var(--secondary));
+
+  @include breakpoint(mobile-large) {
+    @include chat-scrollbar();
+  }
+
+  // .category-chat-badge {
+  //   color: var(--primary-low-mid);
+  //   display: flex;
+  //   align-items: center;
+  //   justify-content: center;
+
+  //   .d-icon {
+  //     height: 1.25em;
+  //     width: 1.25em;
+  //     margin: 0;
+  //   }
+  // }
+
+  // .category-chat-private .d-icon {
+  //   background-color: var(--secondary);
+  //   position: absolute;
+  //   border-radius: 5px;
+  //   padding: 3px 2px;
+  //   color: var(--primary-high);
+  //   height: 0.5em;
+  //   width: 0.5em;
+  //   left: calc(0.6125em + 6px);
+  //   top: -4px;
+  // }
+
+  .open-browse-page-btn,
+  .open-draft-channel-page-btn,
+  .chat-channel-leave-btn {
+    position: relative;
+    padding: 0;
+    background: transparent;
+    color: var(--primary-medium);
+    font-size: var(--font-0-rem);
+
+    &:after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+    }
+
+    &:hover {
+      background: transparent;
+
+      .d-icon {
+        color: var(--primary);
+      }
+    }
+  }
+
+  .public-channel-empty-message {
+    margin: 0 0.5em 0.5em 0.5em;
+    padding: 0 1em;
+  }
+
+  // .edit-channels-dropdown {
+  //   .select-kit-header {
+  //     background: none;
+  //     border: none;
+  //     font-size: var(--font-0-rem);
+  //     padding: 0.5rem;
+
+  //     .d-icon {
+  //       color: var(--primary-medium);
+  //       margin: 0;
+  //     }
+
+  //     &:focus .d-icon,
+  //     &:hover .d-icon {
+  //       color: var(--primary);
+  //     }
+  //   }
+  // }
+
   .chat-channel-divider {
     padding: 2.5rem 1.5rem 0.5rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: bold;
+    padding: 0.25rem 0.5rem 0.25rem 2rem;
+    font-family: var(--heading-font-family);
+    font-size: var(--font-0);
+
+    .channel-title {
+      line-height: var(--line-height-medium);
+    }
 
     &:first-of-type {
       padding-top: 1rem;
     }
   }
 
-  .chat-channel-title {
-    padding-right: 0.5em;
-  }
+  .chat-channel-row {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    cursor: pointer;
+    color: var(--primary-high);
+    transition: opacity 50ms ease-in;
+    opacity: 1;
 
-  .chat-channel-title {
-    &__avatar {
-      padding: 1px 0; //for green active box-shadow effect;
+    @media (hover: hover) {
+      &.can-leave:hover {
+        .toggle-channel-membership-button.-leave {
+          display: block;
+
+          > * {
+            pointer-events: auto;
+          }
+        }
+
+        .chat-channel-metadata {
+          display: none;
+        }
+      }
+    }
+
+    .discourse-no-touch &:hover,
+    &.active {
+      background: var(--primary-low);
+    }
+
+    &:hover,
+    &.active {
+      &.active {
+        font-weight: 600;
+      }
+
+      // .chat-channel-unread-indicator {
+      //   border-color: var(--primary-low);
+      // }
+
+      .chat-channel-title {
+        &,
+        .category-chat-name,
+        .dm-usernames {
+          color: var(--primary);
+        }
+
+        .d-icon-lock {
+          background-color: var(--primary-low);
+        }
+      }
+    }
+
+    &:visited {
+      color: var(--primary-high);
+    }
+
+    &.muted {
+      opacity: 0.65;
+    }
+
+    .chat-channel-title {
+      padding-right: 0.5em;
+
+      &__users-count {
+        width: var(--channel-list-avatar-size);
+        height: var(--channel-list-avatar-size);
+        padding: 0;
+        font-size: var(--font-up-1);
+        justify-content: center;
+      }
+
+      &__avatar {
+        padding: 1px 0; //for green active box-shadow effect;
+
+        .chat-user-avatar {
+          img {
+            width: calc(var(--channel-list-avatar-size) - 2px);
+            height: calc(var(--channel-list-avatar-size) - 2px);
+          }
+        }
+      }
+      &__user-info {
+        @include ellipsis;
+      }
+      &__usernames {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+      }
+      .user-status-message {
+        display: inline-block;
+        font-size: var(--font-down-2);
+        margin-right: 0.5rem;
+
+        &-description {
+          color: var(--primary-medium);
+        }
+      }
+    }
+
+    .chat-channel-metadata {
+      display: flex;
+      align-items: flex-end;
+      flex-direction: column;
+
+      &__date {
+        color: var(--primary-high);
+        font-size: var(--font-down-2);
+        white-space: nowrap;
+      }
+
+      .chat-channel-unread-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 0.25rem;
+        width: auto;
+        min-width: 14px;
+        padding: 2px;
+        font-size: var(--font-down-3);
+        border-radius: 1em;
+        background: var(--tertiary-med-or-tertiary);
+
+        &.urgent {
+          background: var(--success);
+        }
+
+        .number {
+          line-height: 1rem;
+        }
+      }
+    }
+
+    // .chat-user-avatar {
+    //   pointer-events: none;
+    // }
+
+    &.unfollowing {
+      opacity: 0;
+    }
+
+    .toggle-channel-membership-button.-leave {
+      display: none;
+      margin-left: auto;
+    }
+    .badge-wrapper {
+      align-items: center;
+      margin-right: 0;
+    }
+
+    // .chat-channel-unread-indicator {
+    //   background: var(--tertiary-med-or-tertiary);
+
+    //   &.urgent {
+    //     background: var(--success);
+    //   }
+    // }
+
+    .emoji {
+      margin-left: 0.3em;
     }
   }
+
+  // .chat-channel-title {
+  //   padding-right: 0.5em;
+
+  //   &__avatar {
+  //     padding: 1px 0; //for green active box-shadow effect;
+  //   }
+  // }
 }
