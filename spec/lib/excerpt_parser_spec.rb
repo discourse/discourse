@@ -34,6 +34,18 @@ RSpec.describe ExcerptParser do
     expect(ExcerptParser.get_excerpt(html, 2, {})).to match_html('<details class="disabled"><summary>fo&hellip;</summary></details>')
   end
 
+  it "allows <svg> with <use> inside for icons when keep_svg is true" do
+    html = '<svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg>'
+    expect(ExcerptParser.get_excerpt(html, 100, { keep_svg: true })).to match_html('<svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg>')
+    expect(ExcerptParser.get_excerpt(html, 100, {})).to match_html('')
+
+    html = '<svg class="blah"><use href="#folder"></use></svg>'
+    expect(ExcerptParser.get_excerpt(html, 100, { keep_svg: true })).to match_html('')
+
+    html = '<use href="#user"></use><svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg>'
+    expect(ExcerptParser.get_excerpt(html, 100, { keep_svg: true })).to match_html('<svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg>')
+  end
+
   describe "keep_onebox_body parameter" do
     it "keeps the body content for external oneboxes" do
       html = <<~HTML.strip

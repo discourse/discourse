@@ -19,6 +19,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     @keep_onebox_source = options[:keep_onebox_source] == true
     @keep_onebox_body = options[:keep_onebox_body] == true
     @keep_quotes = options[:keep_quotes] == true
+    @keep_svg = options[:keep_svg] == true
     @remap_emoji = options[:remap_emoji] == true
     @start_excerpt = false
     @in_details_depth = 0
@@ -133,6 +134,17 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
         @in_summary = true
       end
 
+    when "svg"
+      attributes = Hash[*attributes.flatten]
+      if attributes["class"].include?("d-icon") && @keep_svg
+        include_tag(name, attributes)
+        @in_svg = true
+      end
+
+    when "use"
+      if @in_svg && @keep_svg
+        include_tag(name, attributes)
+      end
     end
   end
 
@@ -178,6 +190,11 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
       @in_summary = false if @in_details_depth == 1
     when "div", "span"
       throw :done if @start_excerpt
+    when "svg"
+      characters("</svg>", truncate: false, count_it: false, encode: false)
+      @in_svg = false
+    when "use"
+      characters("</use>", truncate: false, count_it: false, encode: false)
     end
   end
 
