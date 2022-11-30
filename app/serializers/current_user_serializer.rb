@@ -355,6 +355,10 @@ class CurrentUserSerializer < BasicUserSerializer
     UserStatusSerializer.new(object.user_status, root: false)
   end
 
+  def unseen_reviewable_count
+    Reviewable.unseen_reviewable_count(object)
+  end
+
   def redesigned_user_menu_enabled
     object.redesigned_user_menu_enabled?
   end

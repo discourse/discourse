@@ -2974,33 +2974,6 @@ RSpec.describe User do
     end
   end
 
-  describe "#unseen_reviewable_count" do
-    fab!(:admin_reviewable) { Fabricate(:reviewable, reviewable_by_moderator: false) }
-    fab!(:mod_reviewable) { Fabricate(:reviewable, reviewable_by_moderator: true) }
-    fab!(:group_reviewable) { Fabricate(:reviewable, reviewable_by_moderator: false, reviewable_by_group: group) }
-
-    it "doesn't include reviewables that can't be seen by the user" do
-      SiteSetting.enable_category_group_moderation = true
-      expect(user.unseen_reviewable_count).to eq(0)
-      user.groups << group
-      user.save!
-      expect(user.unseen_reviewable_count).to eq(1)
-      user.update!(moderator: true)
-      expect(user.unseen_reviewable_count).to eq(2)
-      user.update!(admin: true)
-      expect(user.unseen_reviewable_count).to eq(3)
-    end
-
-    it "returns count of unseen reviewables" do
-      user.update!(admin: true)
-      expect(user.unseen_reviewable_count).to eq(3)
-      user.update!(last_seen_reviewable_id: mod_reviewable.id)
-      expect(user.unseen_reviewable_count).to eq(1)
-      user.update!(last_seen_reviewable_id: group_reviewable.id)
-      expect(user.unseen_reviewable_count).to eq(0)
-    end
-  end
-
   describe "#bump_last_seen_reviewable!" do
     it "doesn't error if there are no reviewables" do
       Reviewable.destroy_all
@@ -3063,7 +3036,7 @@ RSpec.describe User do
       expect(messages.first).to have_attributes(
         channel: "/reviewable_counts/#{user.id}",
         user_ids: [user.id],
-        data: { unseen_reviewable_count: 0 }
+        data: { unseen_reviewable_count: 0, reviewable_count: 1 }
       )
     end
   end
