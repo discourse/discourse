@@ -2,10 +2,10 @@
   --channel-list-avatar-size: 38px;
 }
 
-.chat-message {
-  // 1px to account for .is-online box-shadow
-  padding: 0.1em 1px;
-}
+// .chat-message {
+//   // 1px to account for .is-online box-shadow
+//   padding: 0.1em 1px;
+// }
 
 .chat-message:not(.user-info-hidden) {
   padding-top: 0.75em;

@@ -192,9 +192,10 @@ $float-height: 530px;
 
   .chat-user-avatar-container {
     position: relative;
+    padding: 1px; //for is-online boxshadow effect, preventing cutoff
 
     .avatar {
-      padding: 1px;
+      padding: 1px; ////for is-online boxshadow effect, preventing shift
     }
 
     .chat-user-presence-flair {
