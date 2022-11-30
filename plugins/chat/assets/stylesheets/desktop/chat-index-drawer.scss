@@ -12,6 +12,12 @@
     &:not(:last-of-type) {
       border-bottom: 1px solid var(--primary-low);
     }
+
+    .chat-channel-metadata {
+      .chat-channel-unread-indicator {
+        margin-top: 0.25rem;
+      }
+    }
   }
 
   .toggle-channel-membership-button.-leave {

@@ -6,7 +6,7 @@
       background: var(--primary-very-low);
 
       .chat-channel-divider {
-        padding: 2rem 0.5rem 0.5rem 1rem;
+        padding: 2rem 1rem 0.5rem 1rem;
 
         &:first-of-type {
           padding-top: 1.5rem;
@@ -32,14 +32,11 @@
               color: var(--primary);
             }
           }
-          .category-chat-private .d-icon {
-            background-color: var(--primary-low);
-          }
+          //legacy?
+          // .category-chat-private .d-icon {
+          //   background-color: var(--primary-low);
+          // }
         }
-
-        // .category-chat-private .d-icon {
-        //   background-color: var(--primary-very-low);
-        // }
 
         .chat-channel-metadata {
           &__date {

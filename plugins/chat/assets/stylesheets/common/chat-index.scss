@@ -9,31 +9,6 @@
     @include chat-scrollbar();
   }
 
-  // .category-chat-badge {
-  //   color: var(--primary-low-mid);
-  //   display: flex;
-  //   align-items: center;
-  //   justify-content: center;
-
-  //   .d-icon {
-  //     height: 1.25em;
-  //     width: 1.25em;
-  //     margin: 0;
-  //   }
-  // }
-
-  // .category-chat-private .d-icon {
-  //   background-color: var(--secondary);
-  //   position: absolute;
-  //   border-radius: 5px;
-  //   padding: 3px 2px;
-  //   color: var(--primary-high);
-  //   height: 0.5em;
-  //   width: 0.5em;
-  //   left: calc(0.6125em + 6px);
-  //   top: -4px;
-  // }
-
   .open-browse-page-btn,
   .open-draft-channel-page-btn,
   .chat-channel-leave-btn {
@@ -66,34 +41,15 @@
     padding: 0 1em;
   }
 
-  // .edit-channels-dropdown {
-  //   .select-kit-header {
-  //     background: none;
-  //     border: none;
-  //     font-size: var(--font-0-rem);
-  //     padding: 0.5rem;
-
-  //     .d-icon {
-  //       color: var(--primary-medium);
-  //       margin: 0;
-  //     }
-
-  //     &:focus .d-icon,
-  //     &:hover .d-icon {
-  //       color: var(--primary);
-  //     }
-  //   }
-  // }
-
   .chat-channel-divider {
     padding: 2.5rem 1.5rem 0.5rem 1.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
     font-weight: bold;
-    padding: 0.25rem 0.5rem 0.25rem 2rem;
     font-family: var(--heading-font-family);
-    font-size: var(--font-0);
+    font-size: var(--font-down-1);
+    color: var(--quaternary);
 
     .channel-title {
       line-height: var(--line-height-medium);
@@ -142,10 +98,6 @@
         font-weight: 600;
       }
 
-      // .chat-channel-unread-indicator {
-      //   border-color: var(--primary-low);
-      // }
-
       .chat-channel-title {
         &,
         .category-chat-name,
@@ -168,8 +120,6 @@
     }
 
     .chat-channel-title {
-      padding-right: 0.5em;
-
       &__users-count {
         width: var(--channel-list-avatar-size);
         height: var(--channel-list-avatar-size);
@@ -179,8 +129,6 @@
       }
 
       &__avatar {
-        padding: 1px 0; //for green active box-shadow effect;
-
         .chat-user-avatar {
           img {
             width: calc(var(--channel-list-avatar-size) - 2px);
@@ -211,6 +159,7 @@
       display: flex;
       align-items: flex-end;
       flex-direction: column;
+      margin-left: 0.5em;
 
       &__date {
         color: var(--primary-high);
@@ -222,7 +171,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-top: 0.25rem;
         width: auto;
         min-width: 14px;
         padding: 2px;
@@ -240,10 +188,6 @@
       }
     }
 
-    // .chat-user-avatar {
-    //   pointer-events: none;
-    // }
-
     &.unfollowing {
       opacity: 0;
     }
@@ -257,24 +201,8 @@
       margin-right: 0;
     }
 
-    // .chat-channel-unread-indicator {
-    //   background: var(--tertiary-med-or-tertiary);
-
-    //   &.urgent {
-    //     background: var(--success);
-    //   }
-    // }
-
     .emoji {
       margin-left: 0.3em;
     }
   }
-
-  // .chat-channel-title {
-  //   padding-right: 0.5em;
-
-  //   &__avatar {
-  //     padding: 1px 0; //for green active box-shadow effect;
-  //   }
-  // }
 }
