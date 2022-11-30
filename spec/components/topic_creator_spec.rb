@@ -286,5 +286,27 @@ describe TopicCreator do
         expect(topic.pinned_at).to eq_time(time2)
       end
     end
+
+    context "when invisible/unlisted" do
+      let(:unlisted_attrs) { valid_attrs.merge(visible: false) }
+
+      it "throws an exception for a non-staff user" do
+        expect do
+          TopicCreator.create(user, Guardian.new(user), unlisted_attrs)
+        end.to raise_error(ActiveRecord::Rollback)
+      end
+
+      it "is invalid for a non-staff user" do
+        expect(TopicCreator.new(user, Guardian.new(user), unlisted_attrs).valid?).to eq(false)
+      end
+
+      it "creates unlisted topic for an admin" do
+        expect(TopicCreator.create(admin, Guardian.new(admin), unlisted_attrs)).to be_valid
+      end
+
+      it "is valid for an admin" do
+        expect(TopicCreator.new(admin, Guardian.new(admin), unlisted_attrs).valid?).to eq(true)
+      end
+    end
   end
 end
