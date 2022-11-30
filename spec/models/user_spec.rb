@@ -2176,28 +2176,18 @@ RSpec.describe User do
         user.update!(admin: true)
         Fabricate(:notification, user: user, notification_type: 1)
         Fabricate(:notification, notification_type: 15, high_priority: true, read: false, user: user)
-
-        messages = MessageBus.track_publish("/notification/#{user.id}") do
-          user.publish_notifications_state
-        end
-
-        expect(messages.size).to eq(1)
-
-        message = messages.first
-
-        expect(message.data[:all_unread_notifications_count]).to eq(2)
-        expect(message.data[:grouped_unread_notifications]).to eq({ 1 => 1, 15 => 1 })
-      end
-
-      it "adds new_personal_messages_notifications_count to the payload" do
         Fabricate(:notification, user: user, notification_type: Notification.types[:private_message], read: false)
 
         messages = MessageBus.track_publish("/notification/#{user.id}") do
           user.publish_notifications_state
         end
+
         expect(messages.size).to eq(1)
 
         message = messages.first
+
+        expect(message.data[:all_unread_notifications_count]).to eq(3)
+        expect(message.data[:grouped_unread_notifications]).to eq({ 1 => 1, 15 => 1, Notification.types[:private_message] => 1 })
         expect(message.data[:new_personal_messages_notifications_count]).to eq(1)
       end
     end

@@ -603,7 +603,8 @@ class User < ActiveRecord::Base
       seen_notification_id: self.seen_notification_id,
       private_message: Notification.types[:private_message]
     }
-    DB.query_single(<<~SQL, **args).first
+
+    DB.query_single(<<~SQL, args).first
       SELECT COUNT(*)
       FROM notifications
       WHERE user_id = :user_id
