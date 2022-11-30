@@ -97,39 +97,8 @@ export default createWidget("post-small-action", {
 
   html(attrs) {
     const contents = [];
-
-    if (attrs.canRecover) {
-      contents.push(
-        this.attach("button", {
-          className: "small-action-recover",
-          icon: "undo",
-          action: "recoverPost",
-          title: "post.controls.undelete",
-        })
-      );
-    }
-
-    if (attrs.canDelete) {
-      contents.push(
-        this.attach("button", {
-          className: "small-action-delete",
-          icon: "trash-alt",
-          action: "deletePost",
-          title: "post.controls.delete",
-        })
-      );
-    }
-
-    if (attrs.canEdit && !attrs.canRecover) {
-      contents.push(
-        this.attach("button", {
-          className: "small-action-edit",
-          icon: "pencil-alt",
-          action: "editPost",
-          title: "post.controls.edit",
-        })
-      );
-    }
+    const buttons = [];
+    const customMessage = [];
 
     contents.push(
       avatarFor.call(this, "small", {
@@ -149,19 +118,56 @@ export default createWidget("post-small-action", {
         attrs.actionCodePath
       );
       contents.push(new RawHtml({ html: `<p>${description}</p>` }));
+    }
 
-      if (attrs.cooked) {
-        contents.push(
-          new RawHtml({
-            html: `<div class='custom-message'>${attrs.cooked}</div>`,
-          })
-        );
-      }
+    if (attrs.canRecover) {
+      buttons.push(
+        this.attach("button", {
+          className: "btn-flat small-action-recover",
+          icon: "undo",
+          action: "recoverPost",
+          title: "post.controls.undelete",
+        })
+      );
+    }
+
+    if (attrs.canEdit && !attrs.canRecover) {
+      buttons.push(
+        this.attach("button", {
+          className: "btn-flat small-action-edit",
+          icon: "pencil-alt",
+          action: "editPost",
+          title: "post.controls.edit",
+        })
+      );
+    }
+
+    if (attrs.canDelete) {
+      buttons.push(
+        this.attach("button", {
+          className: "btn-flat btn-danger small-action-delete",
+          icon: "trash-alt",
+          action: "deletePost",
+          title: "post.controls.delete",
+        })
+      );
+    }
+
+    if (!attrs.actionDescriptionWidget && attrs.cooked) {
+      customMessage.push(
+        new RawHtml({
+          html: `<div class='small-action-custom-message'>${attrs.cooked}</div>`,
+        })
+      );
     }
 
     return [
       h("div.topic-avatar", iconNode(icons[attrs.actionCode] || "exclamation")),
-      h("div.small-action-desc", contents),
+      h("div.small-action-desc", [
+        h("div.small-action-contents", contents),
+        h("div.small-action-buttons", buttons),
+        customMessage,
+      ]),
     ];
   },
 });
