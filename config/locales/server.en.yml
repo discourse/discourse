@@ -589,6 +589,7 @@ en:
               target_user_not_found: "One of the users you are sending this message to could not be found."
               unable_to_update: "There was an error updating that topic."
               unable_to_tag: "There was an error tagging the topic."
+              unable_to_unlist: "Sorry, you cannot create an unlisted topic."
             featured_link:
               invalid: "is invalid. URL should include http:// or https://."
         user:

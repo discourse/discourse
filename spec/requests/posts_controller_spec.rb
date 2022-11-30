@@ -923,6 +923,34 @@ RSpec.describe PostsController do
 
         expect(response.status).to eq(422)
       end
+
+      it "creates unlisted topic with admin master key" do
+        master_key = Fabricate(:api_key).key
+
+        expect do
+          post "/posts.json",
+            params: { raw: "this is a test title", title: "this is test body", unlist_topic: true },
+            headers: { HTTP_API_USERNAME: admin.username, HTTP_API_KEY: master_key }
+        end.to change { Topic.count }.by(1)
+
+        expect(response.status).to eq(200)
+        expect(Topic.find(response.parsed_body["topic_id"]).visible).to eq(false)
+      end
+
+      it "prevents creation of unlisted topic with non-admin key" do
+        user_key = ApiKey.create!(user: user).key
+
+        expect do
+          post "/posts.json",
+            params: { raw: "this is a test title", title: "this is test body", unlist_topic: true },
+            headers: { HTTP_API_USERNAME: user.username, HTTP_API_KEY: user_key }
+        end.not_to change { Topic.count }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("activerecord.errors.models.topic.attributes.base.unable_to_unlist")
+        )
+      end
     end
 
     describe "when logged in" do
@@ -1250,6 +1278,7 @@ RSpec.describe PostsController do
         expect(topic.title).to eq('This is the test title for the topic')
         expect(topic.category).to eq(category)
         expect(topic.meta_data).to eq("xyz" => 'abc')
+        expect(topic.visible).to eq(true)
       end
 
       it 'can create an uncategorized topic' do
@@ -1407,6 +1436,48 @@ RSpec.describe PostsController do
               expect(response).not_to be_successful
             end
           end
+        end
+      end
+    end
+
+    context "with topic unlisting" do
+      context "when logged in as staff" do
+        before do
+          sign_in(admin)
+        end
+
+        it "creates an unlisted topic" do
+          expect do
+            post "/posts.json", params: {
+              raw: "this is the test content",
+              title: "this is the test title for the topic",
+              unlist_topic: true
+            }
+          end.to change { Topic.count }.by(1)
+
+          expect(response.status).to eq(200)
+          expect(Topic.find(response.parsed_body["topic_id"]).visible).to eq(false)
+        end
+      end
+
+      context "when logged in as a non-staff user" do
+        before do
+          sign_in(user)
+        end
+
+        it "prevents creation of an unlisted topic" do
+          expect do
+            post "/posts.json", params: {
+              raw: "this is the test content",
+              title: "this is the test title for the topic",
+              unlist_topic: true
+            }
+          end.not_to change { Topic.count }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(
+            I18n.t("activerecord.errors.models.topic.attributes.base.unable_to_unlist")
+          )
         end
       end
     end
