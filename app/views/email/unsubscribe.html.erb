@@ -1,14 +1,16 @@
 <div class='container unsubscribe'>
-  <%- if !@found || @different_user %>
+  <%- if !@found || !@key_owner_found || @different_user %>
 
     <%if !@found %>
       <p><%= t "unsubscribe.not_found_description" %></p>
+    <%- elsif !@key_owner_found %>
+      <p><%= t "unsubscribe.user_not_found_description" %></p>
     <%- else %>
       <p><%= t("unsubscribe.different_user_description").html_safe %></p>
       <%= form_tag(session_path(id: current_user.username_lower), method: :delete) do %>
         <%= hidden_field_tag(:return_url, @return_url) %>
         <%= submit_tag t('unsubscribe.log_out'), class: 'btn btn-danger' %>
-      <%- end%>
+      <%- end %>
     <%- end %>
   <%- else %>
     <br/>

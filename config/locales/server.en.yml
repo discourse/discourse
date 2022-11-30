@@ -1048,7 +1048,8 @@ en:
     mailing_list_mode: "Turn off mailing list mode"
     all: "Don’t send me any mail from %{sitename}"
     different_user_description: "You are currently logged in as a different user than the one we emailed. Please log out, or enter anonymous mode, and try again."
-    not_found_description: "Sorry, we couldn't find this unsubscribe. It’s possible the link in your email is too old and has expired?"
+    not_found_description: Sorry, we couldn't find that subscription. It's possible the link in your email is too old and has expired?"
+    user_not_found_description: "Sorry, we couldn't find a user for this subscription. You are probably attempting to unsubscribe an account that no longer exists."
     log_out: "Log Out"
     submit: "Save preferences"
     digest_frequency:
