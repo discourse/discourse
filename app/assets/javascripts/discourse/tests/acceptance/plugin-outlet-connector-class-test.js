@@ -9,7 +9,7 @@ import { action } from "@ember/object";
 import { extraConnectorClass } from "discourse/lib/plugin-connectors";
 import { hbs } from "ember-cli-htmlbars";
 import { test } from "qunit";
-import { registerTemplateModule } from "discourse/tests/helpers/template-module-helper";
+import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 
 const PREFIX = "discourse/plugins/some-plugin/templates/connectors";
 
@@ -49,19 +49,19 @@ acceptance("Plugin Outlet - Connector Class", function (needs) {
       },
     });
 
-    registerTemplateModule(
+    registerTemporaryModule(
       `${PREFIX}/user-profile-primary/hello`,
       hbs`<span class='hello-username'>{{model.username}}</span>
         <button class='say-hello' {{on "click" (action "sayHello")}}></button>
         <button class='say-hello-using-this' {{on "click" this.sayHello}}></button>
         <span class='hello-result'>{{hello}}</span>`
     );
-    registerTemplateModule(
+    registerTemporaryModule(
       `${PREFIX}/user-profile-primary/hi`,
       hbs`<button class='say-hi' {{on "click" (action "sayHi")}}></button>
         <span class='hi-result'>{{hi}}</span>`
     );
-    registerTemplateModule(
+    registerTemporaryModule(
       `${PREFIX}/user-profile-primary/dont-render`,
       hbs`I'm not rendered!`
     );
