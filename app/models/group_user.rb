@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class GroupUser < ActiveRecord::Base
-  belongs_to :group, counter_cache: "user_count"
+  belongs_to :group
   belongs_to :user
 
   after_save :update_title
@@ -14,6 +14,9 @@ class GroupUser < ActiveRecord::Base
   after_save :grant_trust_level
   after_save :set_category_notifications
   after_save :set_tag_notifications
+
+  after_commit :increase_group_user_count, on: [:create]
+  after_commit :decrease_group_user_count, on: [:destroy]
 
   def self.notification_levels
     NotificationLevels.all
@@ -185,6 +188,14 @@ class GroupUser < ActiveRecord::Base
         )
       end
     end
+  end
+
+  def increase_group_user_count
+    Group.increment_counter(:user_count, self.group_id)
+  end
+
+  def decrease_group_user_count
+    Group.decrement_counter(:user_count, self.group_id)
   end
 end
 
