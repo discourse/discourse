@@ -1615,7 +1615,7 @@ export default Controller.extend(bufferedProperty("model"), {
       return;
     }
 
-    this.messageBus.unsubscribe("/topic/*");
+    this.messageBus.unsubscribe("/topic/*", this.onMessage);
   },
 
   @bind
