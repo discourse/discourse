@@ -54,6 +54,10 @@ acceptance("Discourse Chat - Core Sidebar", function (needs) {
         muted: true,
         following: true,
       },
+      message_bus_last_ids: {
+        new_mentions: 0,
+        new_messages: 0,
+      },
     });
     directChannels.push({
       chatable: {
@@ -82,6 +86,10 @@ acceptance("Discourse Chat - Core Sidebar", function (needs) {
         muted: false,
         following: true,
       },
+      message_bus_last_ids: {
+        new_mentions: 0,
+        new_messages: 0,
+      },
     });
 
     server.get("/chat/chat_channels.json", () => {
@@ -97,6 +105,10 @@ acceptance("Discourse Chat - Core Sidebar", function (needs) {
               unread_count: 0,
               unread_mentions: 0,
             },
+            message_bus_last_ids: {
+              new_mentions: 0,
+              new_messages: 0,
+            },
           },
           {
             id: 2,
@@ -107,6 +119,10 @@ acceptance("Discourse Chat - Core Sidebar", function (needs) {
             current_user_membership: {
               unread_count: 1,
               unread_mentions: 0,
+            },
+            message_bus_last_ids: {
+              new_mentions: 0,
+              new_messages: 0,
             },
           },
           {
@@ -121,6 +137,10 @@ acceptance("Discourse Chat - Core Sidebar", function (needs) {
               unread_count: 1,
               unread_mentions: 1,
             },
+            message_bus_last_ids: {
+              new_mentions: 0,
+              new_messages: 0,
+            },
           },
           {
             id: 4,
@@ -132,15 +152,30 @@ acceptance("Discourse Chat - Core Sidebar", function (needs) {
               unread_count: 1,
               unread_mentions: 1,
             },
+            message_bus_last_ids: {
+              new_mentions: 0,
+              new_messages: 0,
+            },
           },
         ],
         direct_message_channels: directChannels,
+        message_bus_last_ids: {
+          channel_metadata: 0,
+          channel_edits: 0,
+          channel_status: 0,
+          new_channel: 0,
+          user_tracking_state: 0,
+        },
       });
     });
 
     server.get("/chat/1/messages.json", () =>
       helper.response({
-        meta: { can_chat: true, user_silenced: false },
+        meta: {
+          can_chat: true,
+          user_silenced: false,
+          channel_message_bus_last_id: 0,
+        },
         chat_messages: [],
       })
     );
@@ -568,6 +603,13 @@ acceptance(
         return helper.response({
           public_channels: [],
           direct_message_channels: [],
+          message_bus_last_ids: {
+            channel_metadata: 0,
+            channel_edits: 0,
+            channel_status: 0,
+            new_channel: 0,
+            user_tracking_state: 0,
+          },
         });
       });
     });
@@ -604,6 +646,13 @@ acceptance(
         return helper.response({
           public_channels: [],
           direct_message_channels: [],
+          message_bus_last_ids: {
+            channel_metadata: 0,
+            channel_edits: 0,
+            channel_status: 0,
+            new_channel: 0,
+            user_tracking_state: 0,
+          },
         });
       });
     });
@@ -640,6 +689,13 @@ acceptance(
         return helper.response({
           public_channels: [],
           direct_message_channels: [],
+          message_bus_last_ids: {
+            channel_metadata: 0,
+            channel_edits: 0,
+            channel_status: 0,
+            new_channel: 0,
+            user_tracking_state: 0,
+          },
         });
       });
     });
@@ -679,6 +735,13 @@ acceptance(
         return helper.response({
           public_channels: [],
           direct_message_channels: directChannels,
+          message_bus_last_ids: {
+            channel_metadata: 0,
+            channel_edits: 0,
+            channel_status: 0,
+            new_channel: 0,
+            user_tracking_state: 0,
+          },
         });
       });
     });
