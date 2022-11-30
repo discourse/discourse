@@ -56,33 +56,30 @@ describe "Using #hashtag autocompletion to search for and lookup channels",
     expect(hashtag_results.map(&:text)).to eq(["Raspberry", "razed x 0", "Random"])
   end
 
-  # TODO (martin) Commenting this out for now, we need to add the MessageBus
-  # last_message_id to our chat subscriptions in JS for this to work, since it
-  # relies on a MessageBus "sent" event to be published to substitute the
-  # staged message ID for the real one.
-  xit "cooks the hashtags for channels, categories, and tags serverside when the chat message is saved to the database" do
+  it "cooks the hashtags for channels, categories, and tags serverside when the chat message is saved to the database" do
     chat_page.visit_channel(channel1)
     expect(chat_channel_page).to have_no_loading_skeleton
-    chat_channel_page.type_in_composer("this is #random and this is #raspberry and this is #razed which is cool")
+    chat_channel_page.type_in_composer("this is #random and this is #raspberry-beret and this is #razed which is cool")
     chat_channel_page.click_send_message
 
+    message = nil
     try_until_success do
-      expect(ChatMessage.exists?(user: user, message: "this is #random and this is #raspberry and this is #razed which is cool")).to eq(true)
+      message = ChatMessage.find_by(user: user, message: "this is #random and this is #raspberry-beret and this is #razed which is cool")
+      expect(message).not_to eq(nil)
     end
-    message = ChatMessage.where(user: user).last
     expect(chat_channel_page).to have_message(id: message.id)
 
     within chat_channel_page.message_by_id(message.id) do
       cooked_hashtags = page.all(".hashtag-cooked", count: 3)
 
       expect(cooked_hashtags[0]["outerHTML"]).to eq(<<~HTML.chomp)
-      <a class=\"hashtag-cooked\" href=\"#{channel1.relative_url}\" data-type=\"channel\" data-slug=\"random\"><span><svg class=\"fa d-icon d-icon-comment svg-icon svg-node\"><use href=\"#comment\"></use></svg>Random</span></a>
+      <a class=\"hashtag-cooked\" href=\"#{channel2.relative_url}\" data-type=\"channel\" data-slug=\"random\"><svg class=\"fa d-icon d-icon-comment svg-icon svg-node\"><use href=\"#comment\"></use></svg><span>Random</span></a>
       HTML
       expect(cooked_hashtags[1]["outerHTML"]).to eq(<<~HTML.chomp)
-      <a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"raspberry\"><span><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg>raspberry</span></a>
+      <a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"raspberry-beret\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>Raspberry</span></a>
       HTML
       expect(cooked_hashtags[2]["outerHTML"]).to eq(<<~HTML.chomp)
-      <a class=\"hashtag-cooked\" href=\"#{tag.url}\" data-type=\"tag\" data-slug=\"razed\"><span><svg class=\"fa d-icon d-icon-tag svg-icon svg-node\"><use href=\"#tag\"></use></svg>razed</span></a>
+      <a class=\"hashtag-cooked\" href=\"#{tag.url}\" data-type=\"tag\" data-slug=\"razed\"><svg class=\"fa d-icon d-icon-tag svg-icon svg-node\"><use href=\"#tag\"></use></svg><span>razed</span></a>
       HTML
     end
   end

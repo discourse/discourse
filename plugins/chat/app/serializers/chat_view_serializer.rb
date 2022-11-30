@@ -22,11 +22,12 @@ class ChatViewSerializer < ApplicationSerializer
       can_moderate: scope.can_moderate_chat?(object.chat_channel.chatable),
       can_delete_self: scope.can_delete_own_chats?(object.chat_channel.chatable),
       can_delete_others: scope.can_delete_other_chats?(object.chat_channel.chatable),
+      channel_message_bus_last_id: MessageBus.last_id("/chat/#{object.chat_channel.id}"),
     }
-    meta_hash[:can_load_more_past] = object.can_load_more_past unless object.can_load_more_past.nil?
+    meta_hash[:can_load_more_past] = object.can_load_more_past if object.can_load_more_past.present?
     meta_hash[
       :can_load_more_future
-    ] = object.can_load_more_future unless object.can_load_more_future.nil?
+    ] = object.can_load_more_future if object.can_load_more_future.present?
     meta_hash
   end
 end
