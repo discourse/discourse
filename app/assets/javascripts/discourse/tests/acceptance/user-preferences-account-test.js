@@ -1,14 +1,17 @@
 import { test } from "qunit";
 import I18n from "I18n";
 import sinon from "sinon";
-import { click, visit } from "@ember/test-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import DiscourseURL from "discourse/lib/url";
-import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
+import pretender, {
+  fixturesByUrl,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("User Preferences - Account", function (needs) {
@@ -56,6 +59,41 @@ acceptance("User Preferences - Account", function (needs) {
   needs.hooks.afterEach(() => {
     customUserProps = {};
     pickAvatarRequestData = null;
+  });
+
+  test("changing username", async function (assert) {
+    const stub = sinon
+      .stub(DiscourseURL, "redirectTo")
+      .withArgs("/u/good_trout/preferences");
+
+    pretender.put("/u/eviltrout/preferences/username", (data) => {
+      assert.strictEqual(data.requestBody, "new_username=good_trout");
+
+      return response({
+        id: fixturesByUrl["/u/eviltrout.json"].user.id,
+        username: "good_trout",
+      });
+    });
+
+    await visit("/u/eviltrout/preferences/account");
+
+    assert.strictEqual(
+      query(".username-preference__current-username").innerText,
+      "eviltrout"
+    );
+
+    await click(".username-preference__edit-username");
+
+    assert.strictEqual(query(".username-preference__input").value, "eviltrout");
+    assert.true(query(".username-preference__submit").disabled);
+
+    await fillIn(query(".username-preference__input"), "good_trout");
+    assert.false(query(".username-preference__submit").disabled);
+
+    await click(".username-preference__submit");
+    await click(".dialog-container .btn-primary");
+
+    sinon.assert.calledOnce(stub);
   });
 
   test("Delete dialog", async function (assert) {
