@@ -160,6 +160,16 @@ RSpec.describe EmailController do
     end
 
     fab!(:user) { Fabricate(:user) }
+
+    it "displays an error when the key has no associated user" do
+      key_without_owner = UnsubscribeKey.create_key_for(user, UnsubscribeKey::DIGEST_TYPE)
+      user.destroy!
+
+      navigate_to_unsubscribe(key_without_owner)
+
+      expect(response.body).to include(CGI.escapeHTML(I18n.t("unsubscribe.user_not_found_description")))
+    end
+
     let(:unsubscribe_key) { UnsubscribeKey.create_key_for(user, key_type, post: post) }
 
     context 'when unsubscribing from digest' do
