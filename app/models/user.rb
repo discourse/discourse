@@ -597,6 +597,23 @@ class User < ActiveRecord::Base
     @unread_high_prios ||= unread_notifications_of_priority(high_priority: true)
   end
 
+  def new_personal_messages_notifications_count
+    args = {
+      user_id: self.id,
+      seen_notification_id: self.seen_notification_id,
+      private_message: Notification.types[:private_message]
+    }
+
+    DB.query_single(<<~SQL, args).first
+      SELECT COUNT(*)
+      FROM notifications
+      WHERE user_id = :user_id
+      AND id > :seen_notification_id
+      AND NOT read
+      AND notification_type = :private_message
+    SQL
+  end
+
   # PERF: This safeguard is in place to avoid situations where
   # a user with enormous amounts of unread data can issue extremely
   # expensive queries
@@ -775,6 +792,7 @@ class User < ActiveRecord::Base
     if self.redesigned_user_menu_enabled?
       payload[:all_unread_notifications_count] = all_unread_notifications_count
       payload[:grouped_unread_notifications] = grouped_unread_notifications
+      payload[:new_personal_messages_notifications_count] = new_personal_messages_notifications_count
     end
 
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
