@@ -1,4 +1,4 @@
-import { bind, debounce } from "discourse-common/utils/decorators";
+import { debounce } from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
@@ -43,32 +43,35 @@ function initialize(api) {
       return this._super(bookmark, post);
     },
 
-    @bind
-    onMessage(data) {
+    subscribe() {
       this._super(...arguments);
 
-      const topic = this.model;
+      this.messageBus.subscribe(`/topic/${this.model.id}`, (data) => {
+        const topic = this.model;
 
-      // scroll only for discobot (-2 is discobot id)
-      if (
-        topic.isPrivateMessage &&
-        this.currentUser &&
-        this.currentUser.id !== data.user_id &&
-        data.user_id === -2 &&
-        data.type === "created"
-      ) {
-        const postNumber = data.post_number;
-        const notInPostStream = topic.get("highest_post_number") <= postNumber;
-        const postNumberDifference = postNumber - topic.currentPost;
-
+        // scroll only for discobot (-2 is discobot id)
         if (
-          notInPostStream &&
-          postNumberDifference > 0 &&
-          postNumberDifference < 7
+          topic.isPrivateMessage &&
+          this.currentUser &&
+          this.currentUser.id !== data.user_id &&
+          data.user_id === -2 &&
+          data.type === "created"
         ) {
-          this._scrollToDiscobotPost(data.post_number);
+          const postNumber = data.post_number;
+          const notInPostStream =
+            topic.get("highest_post_number") <= postNumber;
+          const postNumberDifference = postNumber - topic.currentPost;
+
+          if (
+            notInPostStream &&
+            postNumberDifference > 0 &&
+            postNumberDifference < 7
+          ) {
+            this._scrollToDiscobotPost(data.post_number);
+          }
         }
-      }
+      });
+      // No need to unsubscribe, core unsubscribes /topic/* routes
     },
 
     @debounce(500)

@@ -1,24 +1,15 @@
-import { bind } from "discourse-common/utils/decorators";
-
 export default {
   name: "welcome-topic-banner",
   after: "message-bus",
 
   initialize(container) {
-    this.site = container.lookup("service:site");
-    this.messageBus = container.lookup("service:message-bus");
+    const site = container.lookup("service:site");
 
-    if (this.site.show_welcome_topic_banner) {
-      this.messageBus.subscribe("/site/welcome-topic-banner", this.onMessage);
+    if (site.show_welcome_topic_banner) {
+      const messageBus = container.lookup("service:message-bus");
+      messageBus.subscribe("/site/welcome-topic-banner", (disabled) => {
+        site.set("show_welcome_topic_banner", disabled);
+      });
     }
-  },
-
-  teardown() {
-    this.messageBus.unsubscribe("/site/welcome-topic-banner", this.onMessage);
-  },
-
-  @bind
-  onMessage(disabled) {
-    this.site.set("show_welcome_topic_banner", disabled);
   },
 };
