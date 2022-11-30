@@ -107,9 +107,10 @@ export default Component.extend({
     }
 
     const dasherized = dasherize(type);
-    const componentExists = getOwner(this).hasRegistration(
-      `component:${dasherized}`
-    );
+    const owner = getOwner(this);
+    const componentExists =
+      owner.hasRegistration(`component:${dasherized}`) ||
+      owner.hasRegistration(`template:components/${dasherized}`);
     _components[type] = componentExists ? dasherized : null;
     return _components[type];
   },
