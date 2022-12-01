@@ -1,60 +1,73 @@
 import Modifier from "ember-modifier";
 import { registerDestructor } from "@ember/destroyable";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class DraggableModifier extends Modifier {
+  hasStarted = false;
+  element;
+
   constructor(owner, args) {
     super(owner, args);
     registerDestructor(this, (instance) => instance.cleanup());
   }
 
   modify(el, _, { didStartDrag, didEndDrag }) {
-    this._drag(el, didStartDrag, didEndDrag);
+    this.element = el;
+    this.didStartDragCallback = didStartDrag;
+    this.didEndDragCallback = didEndDrag;
+    this.element.addEventListener("touchstart", this.didStartDrag);
+    this.element.addEventListener("mousedown", this.didStartDrag);
   }
 
-  _drag(target, didStartDrag, didEndDrag) {
-    const isTouch = window.ontouchstart !== undefined;
-    let hasStarted = false;
+  @bind
+  didStartDrag(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    if (!this.hasStarted) {
+      this.hasStarted = true;
 
-    target.addEventListener(isTouch ? "touchstart" : "mousedown", (e) => {
-      e.stopPropagation();
-      e.preventDefault();
+      // Register a global event to capture mouse moves when element 'clicked'.
+      document.addEventListener("touchmove", this.drag, { passive: false });
+      document.addEventListener("mousemove", this.drag, { passive: false });
+      document.body.classList.add("dragging");
 
-      if (!hasStarted) {
-        // Register a global event to capture mouse moves when element 'clicked'.
-        document.addEventListener("touchmove", drag, { passive: false });
-        document.addEventListener("mousemove", drag, { passive: false });
+      // On leaving click, stop moving.
+      document.addEventListener("touchend", this.didEndDrag, {
+        passive: false,
+      });
+      document.addEventListener("mouseup", this.didEndDrag, {
+        passive: false,
+      });
+    }
+  }
 
-        //apply mouse styles when dragging
-        document.body.classList.add("dragging");
-        hasStarted = true;
+  @bind
+  drag(e) {
+    if (this.hasStarted) {
+      this.didStartDragCallback(e, this.element);
+    }
+  }
 
-        // On leaving click, stop moving.
-        document.addEventListener(isTouch ? "touchend" : "mouseup", (e) => {
-          if (didEndDrag && hasStarted) {
-            didEndDrag(e, target);
+  @bind
+  didEndDrag(e) {
+    if (this.hasStarted) {
+      this.didEndDragCallback(e, this.element);
 
-            // remove event listener from target when dragging complete
-            document.removeEventListener("touchmove", drag);
-            document.removeEventListener("mousemove", drag);
-            document.body.classList.remove("dragging");
-            hasStarted = false;
-          }
-        });
-      }
-    });
+      document.removeEventListener("touchmove", this.drag);
+      document.removeEventListener("mousemove", this.drag);
 
-    // Register mouse-move callback to move the element.
-    const drag = (e) => {
-      if (hasStarted) {
-        didStartDrag(e, target);
-      }
-    };
+      document.body.classList.remove("dragging");
+      this.hasStarted = false;
+    }
   }
 
   cleanup() {
-    // remove event listener from target when dragging complete
-    document.removeEventListener("touchmove", drag);
-    document.removeEventListener("mousemove", drag);
+    document.removeEventListener("touchstart", this.didStartDrag);
+    document.removeEventListener("mousedown", this.didStartDrag);
+    document.removeEventListener("touchend", this.didEndDrag);
+    document.removeEventListener("mouseup", this.didEndDrag);
+    document.removeEventListener("mousemove", this.drag);
+    document.removeEventListener("touchmove", this.drag);
     document.body.classList.remove("dragging");
   }
 }
