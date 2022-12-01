@@ -8,18 +8,6 @@
   align-items: center;
   @include ellipsis;
 
-  .category-chat-private .d-icon {
-    background-color: var(--secondary);
-    position: absolute;
-    border-radius: 5px;
-    padding: 2px 2px 3px;
-    color: var(--primary-high);
-    height: 0.5em;
-    width: 0.5em;
-    left: calc(0.6125em + 3px);
-    top: -4px;
-  }
-
   .user-status-message {
     display: none; // we only show when in channels list
   }
