@@ -47,14 +47,16 @@ export default class GlimmerTopicTimeline extends Component {
   }
 
   get displaySummary() {
-    this.siteSettings.summary_timeline_button &&
+    return (
+      this.siteSettings.summary_timeline_button &&
       !this.args.fullScreen &&
       this.args.model.has_summary &&
-      !this.args.model.postStream.summary;
+      !this.args.model.postStream.summary
+    );
   }
 
   get class() {
-    let classes = [];
+    const classes = [];
     if (this.args.fullscreen) {
       if (this.addShowClass) {
         classes.push("timeline-fullscreen show");
@@ -74,7 +76,7 @@ export default class GlimmerTopicTimeline extends Component {
   }
 
   get addShowClass() {
-    return this.args.fullscreen && !this.args.addShowClass ? true : false;
+    return this.args.fullscreen && !this.args.addShowClass;
   }
 
   get canCreatePost() {

@@ -34,12 +34,6 @@ export default class TopicTimelineScrollArea extends Component {
   @tracked dragging = false;
   @tracked excerpt = "";
 
-  get showTags() {
-    return (
-      this.siteSettings.tagging_enabled && this.args.model.tags?.length > 0
-    );
-  }
-
   constructor() {
     super(...arguments);
 
@@ -62,6 +56,12 @@ export default class TopicTimelineScrollArea extends Component {
     }
 
     this.calculatePosition();
+  }
+
+  get showTags() {
+    return (
+      this.siteSettings.tagging_enabled && this.args.model.tags?.length > 0
+    );
   }
 
   get style() {
