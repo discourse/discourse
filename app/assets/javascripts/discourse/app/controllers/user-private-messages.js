@@ -1,47 +1,47 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { alias, and, equal, readOnly } from "@ember/object/computed";
-import discourseComputed from "discourse-common/utils/decorators";
+import { tracked } from "@glimmer/tracking";
 import I18n from "I18n";
 
 export const PERSONAL_INBOX = "__personal_inbox__";
 
-export default Controller.extend({
-  user: controller(),
-  router: service(),
+export default class extends Controller {
+  @service router;
+  @controller user;
 
-  viewingSelf: alias("user.viewingSelf"),
-  isGroup: equal("currentParentRouteName", "userPrivateMessages.group"),
-  isPersonal: equal("currentParentRouteName", "userPrivateMessages.user"),
-  group: null,
-  groupFilter: alias("group.name"),
-  currentRouteName: readOnly("router.currentRouteName"),
-  currentParentRouteName: readOnly("router.currentRoute.parent.name"),
-  pmTaggingEnabled: alias("site.can_tag_pms"),
-  tagId: null,
+  @tracked group;
+  @tracked tagId;
 
-  showNewPM: and("user.viewingSelf", "currentUser.can_send_private_messages"),
+  @alias("group.name") groupFilter;
+  @and("user.viewingSelf", "currentUser.can_send_private_messages") showNewPM;
+  @equal("currentParentRouteName", "userPrivateMessages.group") isGroup;
+  @equal("currentParentRouteName", "userPrivateMessages.user") isPersonal;
+  @readOnly("user.viewingSelf") viewingSelf;
+  @readOnly("router.currentRouteName") currentRouteName;
+  @readOnly("router.currentRoute.parent.name") currentParentRouteName;
+  @readOnly("site.can_tag_pms") pmTaggingEnabled;
 
-  @discourseComputed(
+  @computed(
     "pmTopicTrackingState.newIncoming.[]",
     "pmTopicTrackingState.statesModificationCounter",
     "group"
   )
-  newLinkText() {
-    return this._linkText("new");
-  },
+  get newLinkText() {
+    return this.#linkText("new");
+  }
 
-  @discourseComputed(
+  @computed(
     "pmTopicTrackingState.newIncoming.[]",
     "pmTopicTrackingState.statesModificationCounter",
     "group"
   )
-  unreadLinkText() {
-    return this._linkText("unread");
-  },
+  get unreadLinkText() {
+    return this.#linkText("unread");
+  }
 
-  _linkText(type) {
+  #linkText(type) {
     const count = this.pmTopicTrackingState?.lookupCount(type) || 0;
 
     if (count === 0) {
@@ -49,10 +49,10 @@ export default Controller.extend({
     } else {
       return I18n.t(`user.messages.${type}_with_count`, { count });
     }
-  },
+  }
 
   @action
   changeGroupNotificationLevel(notificationLevel) {
     this.group.setNotification(notificationLevel, this.get("user.model.id"));
-  },
-});
+  }
+}
