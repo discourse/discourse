@@ -229,7 +229,8 @@ export default class TopicTimelineScrollArea extends Component {
 
   @bind
   updatePercentage(e) {
-    const y = e.pageY;
+    // pageY for mouse and mobile
+    const y = e.pageY || e.touches[0].pageY;
     const area = document.querySelector(".timeline-scrollarea");
     const areaTop = domUtils.offset(area).top;
 
@@ -290,7 +291,7 @@ export default class TopicTimelineScrollArea extends Component {
       this.appEvents.off("composer:opened", this.calculatePosition);
       this.appEvents.off("composer:resized", this.calculatePosition);
       this.appEvents.off("composer:closed", this.calculatePosition);
-      this.appEvents.on("topic:current-post-scrolled", this.postScrolled);
+      this.appEvents.off("topic:current-post-scrolled", this.postScrolled);
     }
   }
 
