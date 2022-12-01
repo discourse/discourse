@@ -100,6 +100,33 @@ RSpec.describe UserAvatarsController do
       expect(response).to redirect_to("http://awesome.com/boom/user_avatar/default/#{user.encoded_username(lower: true)}/98/#{upload.id}_#{OptimizedImage::VERSION}.png")
     end
 
+    it "redirects to external store when enabled" do
+      global_setting :redirect_avatar_requests, true
+      setup_s3
+      SiteSetting.avatar_sizes = "100|49"
+      SiteSetting.s3_cdn_url = "https://s3-cdn.example.com"
+      set_cdn_url("https://app-cdn.example.com")
+
+      upload = Fabricate(:upload, url: "//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-west-1.amazonaws.com/upload/path")
+
+      optimized_image = Fabricate(:optimized_image,
+        sha1: SecureRandom.hex << "A" * 8,
+        upload: upload,
+        width: 98,
+        height: 98,
+        url: "//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-west-1.amazonaws.com/optimized/path",
+        version: OptimizedImage::VERSION
+      )
+
+      user = Fabricate(:user, uploaded_avatar_id: upload.id)
+
+      get "/user_avatar/default/#{user.username}/98/#{upload.id}.png"
+
+      expect(response.status).to eq(302)
+      expect(response.location).to eq("https://s3-cdn.example.com/optimized/path")
+      expect(response.headers["Cache-Control"]).to eq('max-age=31556952, public, immutable')
+    end
+
     it 'serves new version for old urls' do
       user = Fabricate(:user)
       SiteSetting.avatar_sizes = "45"

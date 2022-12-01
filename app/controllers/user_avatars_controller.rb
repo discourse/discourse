@@ -126,7 +126,11 @@ class UserAvatarsController < ApplicationController
         optimized_path = Discourse.store.path_for(optimized)
         image = optimized_path if File.exist?(optimized_path)
       else
-        return proxy_avatar(Discourse.store.cdn_url(optimized.url), upload.created_at)
+        if GlobalSetting.redirect_avatar_requests
+          return redirect_s3_avatar(Discourse.store.cdn_url(optimized.url))
+        else
+          return proxy_avatar(Discourse.store.cdn_url(optimized.url), upload.created_at)
+        end
       end
     end
 
@@ -177,6 +181,11 @@ class UserAvatarsController < ApplicationController
     response.headers["Content-Length"] = File.size(path).to_s
     immutable_for(1.year)
     send_file path, disposition: nil
+  end
+
+  def redirect_s3_avatar(url)
+    immutable_for 1.year
+    redirect_to url, allow_other_host: true
   end
 
   # this protects us from a DoS
