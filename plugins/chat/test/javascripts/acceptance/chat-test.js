@@ -236,21 +236,6 @@ acceptance("Discourse Chat - without unread", function (needs) {
       currentUserDropdown.rowByValue("rebakeMessage").exists(),
       "it shows the rebake button"
     );
-
-    assert.notOk(
-      currentUserDropdown.rowByValue("silence").exists(),
-      "it hides the silence button"
-    );
-
-    const notCurrentUserDropdown = selectKit(
-      ".chat-message-actions-container[data-id='175'] .more-buttons"
-    );
-    await triggerEvent(".chat-message-container[data-id='175']", "mouseenter");
-    await notCurrentUserDropdown.expand();
-    assert.ok(
-      notCurrentUserDropdown.rowByValue("silence").exists(),
-      "it shows the silence button"
-    );
   });
 
   test("Message controls are present and correct for permissions", async function (assert) {
@@ -286,11 +271,6 @@ acceptance("Discourse Chat - without unread", function (needs) {
     assert.notOk(
       currentUserDropdown.rowByValue("flag").exists(),
       "it hides the flag button"
-    );
-
-    assert.notOk(
-      currentUserDropdown.rowByValue("silence").exists(),
-      "it hides the silence button"
     );
 
     assert.ok(
