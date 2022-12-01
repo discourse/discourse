@@ -136,14 +136,6 @@ acceptance("Admin - Watched Words", function (needs) {
     assert.strictEqual(query(".modal-body li .match").innerText, "Hello");
     assert.strictEqual(query(".modal-body li .tag").innerText, "greeting");
   });
-
-  test("emoji replacement", async function (assert) {
-    await visit("/admin/customize/watched_words/action/replace");
-    await click(".watched-word-test");
-    await fillIn(".modal-body textarea", "Hi there!");
-    assert.strictEqual(query(".modal-body li .match").innerText, "Hi");
-    assert.strictEqual(query(".modal-body li .replacement").innerText, "hello");
-  });
 });
 
 acceptance("Admin - Watched Words - Emoji Replacement", function (needs) {
