@@ -42,6 +42,9 @@ RSpec.describe ExcerptParser do
     html = '<svg class="blah"><use href="#folder"></use></svg>'
     expect(ExcerptParser.get_excerpt(html, 100, { keep_svg: true })).to match_html('')
 
+    html = '<svg><use href="#folder"></use></svg>'
+    expect(ExcerptParser.get_excerpt(html, 100, { keep_svg: true })).to match_html('')
+
     html = '<use href="#user"></use><svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg>'
     expect(ExcerptParser.get_excerpt(html, 100, { keep_svg: true })).to match_html('<svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg>')
   end
