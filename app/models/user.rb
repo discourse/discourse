@@ -1950,39 +1950,19 @@ class User < ActiveRecord::Base
     return if !SiteSetting.enable_experimental_sidebar_hamburger
     return if staged? || bot?
 
-    records = []
-
     if SiteSetting.default_sidebar_categories.present?
-      category_ids = SiteSetting.default_sidebar_categories.split("|")
-
-      # Filters out categories that user does not have access to or do not exist anymore
-      category_ids = Category.secured(self.guardian).where(id: category_ids).pluck(:id)
-
-      category_ids.each do |category_id|
-        records.push(
-          linkable_type: 'Category',
-          linkable_id: category_id,
-          user_id: self.id
-        )
-      end
+      SidebarSectionLinksUpdater.update_category_section_links(
+        self,
+        category_ids: SiteSetting.default_sidebar_categories.split("|")
+      )
     end
 
     if SiteSetting.tagging_enabled && SiteSetting.default_sidebar_tags.present?
-      tag_names = SiteSetting.default_sidebar_tags.split("|")
-
-      # Filters out tags that user cannot see or do not exist anymore
-      tag_ids = DiscourseTagging.filter_visible(Tag, self.guardian).where(name: tag_names).pluck(:id)
-
-      tag_ids.each do |tag_id|
-        records.push(
-          linkable_type: 'Tag',
-          linkable_id: tag_id,
-          user_id: self.id
-        )
-      end
+      SidebarSectionLinksUpdater.update_tag_section_links(
+        self,
+        tag_names: SiteSetting.default_sidebar_tags.split("|")
+      )
     end
-
-    SidebarSectionLink.insert_all(records) if records.present?
   end
 
   def stat
