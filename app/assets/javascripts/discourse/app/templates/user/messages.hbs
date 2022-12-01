@@ -21,34 +21,34 @@
   <DSection @class="user-secondary-navigation" @pageClass="user-messages">
     <MobileNav @class="messages-nav" @desktopClass="nav-stacked action-list">
       <li>
-        <LinkTo @route="userPrivateMessages.index" @model={{this.model}}>
+        <LinkTo @route="userPrivateMessages.user.index" @model={{this.model}}>
           {{i18n "user.messages.inbox"}}
         </LinkTo>
       </li>
 
       {{#if this.isPersonal}}
         <li class="archive">
-          <LinkTo @route="userPrivateMessages.sent" @model={{this.model}}>
+          <LinkTo @route="userPrivateMessages.user.sent" @model={{this.model}}>
             {{i18n "user.messages.sent"}}
           </LinkTo>
         </li>
 
         {{#if this.viewingSelf}}
           <li class="archive">
-            <LinkTo @route="userPrivateMessages.new" @model={{this.model}} class="new">
+            <LinkTo @route="userPrivateMessages.user.new" @model={{this.model}} class="new">
               {{this.newLinkText}}
             </LinkTo>
           </li>
 
           <li class="archive">
-            <LinkTo @route="userPrivateMessages.unread" @model={{this.model}} class="unread">
+            <LinkTo @route="userPrivateMessages.user.unread" @model={{this.model}} class="unread">
               {{this.unreadLinkText}}
             </LinkTo>
           </li>
         {{/if}}
 
         <li class="archive">
-          <LinkTo @route="userPrivateMessages.archive" @model={{this.model}}>
+          <LinkTo @route="userPrivateMessages.user.archive" @model={{this.model}}>
             {{i18n "user.messages.archive"}}
           </LinkTo>
         </li>
@@ -65,20 +65,20 @@
         {{#if (and this.isGroup (eq this.groupFilter group.name))}}
           {{#if this.viewingSelf}}
             <li class="archive">
-              <LinkTo @route="userPrivateMessages.groupNew" @model={{group.name}} class="new">
+              <LinkTo @route="userPrivateMessages.group.new" @model={{group.name}} class="new">
                 {{this.newLinkText}}
               </LinkTo>
             </li>
 
             <li class="archive">
-              <LinkTo @route="userPrivateMessages.groupUnread" @model={{group.name}} class="unread">
+              <LinkTo @route="userPrivateMessages.group.unread" @model={{group.name}} class="unread">
                 {{this.unreadLinkText}}
               </LinkTo>
             </li>
           {{/if}}
 
           <li class="archive">
-            <LinkTo @route="userPrivateMessages.groupArchive" @model={{group.name}}>
+            <LinkTo @route="userPrivateMessages.group.archive" @model={{group.name}}>
               {{i18n "user.messages.archive"}}
             </LinkTo>
           </li>
@@ -87,18 +87,18 @@
 
       {{#if this.pmTaggingEnabled}}
         <li class="tags">
-          <LinkTo @route="userPrivateMessages.tags" @model={{this.model}}>
+          <LinkTo @route="userPrivateMessages.tags.index" @model={{this.model}}>
             {{i18n "user.messages.tags"}}
           </LinkTo>
-
-          {{#if this.tagId}}
-            <li class="archive">
-              <LinkTo @route="userPrivateMessages.tagsShow" @model={{this.tagId}}>
-                {{this.tagId}}
-              </LinkTo>
-            </li>
-          {{/if}}
         </li>
+
+        {{#if this.tagId}}
+          <li class="archive">
+            <LinkTo @route="userPrivateMessages.tags.show" @model={{this.tagId}}>
+              {{this.tagId}}
+            </LinkTo>
+          </li>
+        {{/if}}
       {{/if}}
 
       <PluginOutlet @name="user-messages-nav" @tagName="span" @connectorTagName="li" @args={{hash model=this.model}} />
@@ -129,10 +129,6 @@
       {{/if}}
     {{/if}}
   </div>
-
-  {{#if this.showWarningsWarning}}
-    <div class="alert alert-info">{{html-safe (i18n "admin.user.warnings_list_warning")}}</div>
-  {{/if}}
 
   {{outlet}}
 </section>
