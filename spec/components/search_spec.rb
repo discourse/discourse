@@ -953,7 +953,7 @@ describe Search do
     context 'post searching' do
       before do
         SiteSetting.tagging_enabled = true
-        DiscourseTagging.tag_topic_by_names(post.topic, Guardian.new(Fabricate.build(:admin)), [tag.name, uppercase_tag.name])
+        DiscourseTagging.tag_topic_by_names(post.topic, Guardian.new(admin), [tag.name, uppercase_tag.name])
         post.topic.save
       end
 
