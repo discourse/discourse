@@ -83,7 +83,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :grouped_unread_notifications,
              :redesigned_user_menu_enabled,
              :redesigned_user_page_nav_enabled,
-             :sidebar_list_destination
+             :sidebar_list_destination,
+             :redesigned_topic_timeline_enabled
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -386,6 +387,14 @@ class CurrentUserSerializer < BasicUserSerializer
   def redesigned_user_page_nav_enabled
     if SiteSetting.enable_new_user_profile_nav_groups.present?
       object.in_any_groups?(SiteSetting.enable_new_user_profile_nav_groups_map)
+    else
+      false
+    end
+  end
+
+  def redesigned_topic_timeline_enabled
+    if SiteSetting.enable_experimental_topic_timeline_groups.present?
+      object.in_any_groups?(SiteSetting.enable_experimental_topic_timeline_groups.split("|").map(&:to_i))
     else
       false
     end
