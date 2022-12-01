@@ -99,7 +99,7 @@ export default Component.extend({
       passive: true,
     });
     window.addEventListener("resize", this.onResizeHandler);
-    window.addEventListener("mousewheel", this.onScrollHandler, {
+    window.addEventListener("wheel", this.onScrollHandler, {
       passive: true,
     });
 
@@ -124,7 +124,7 @@ export default Component.extend({
       ?.removeEventListener("scroll", this.onScrollHandler);
 
     window.removeEventListener("resize", this.onResizeHandler);
-    window.removeEventListener("mousewheel", this.onScrollHandler);
+    window.removeEventListener("wheel", this.onScrollHandler);
 
     this.appEvents.off(
       "chat-live-pane:highlight-message",
@@ -1320,8 +1320,6 @@ export default Component.extend({
 
   @action
   onHoverMessage(message, options = {}, event) {
-    cancel(this._onHoverMessageDebouncedHandler);
-
     if (this.site.mobileView && options.desktopOnly) {
       return;
     }

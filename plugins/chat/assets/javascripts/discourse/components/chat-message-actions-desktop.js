@@ -32,6 +32,12 @@ export default Component.extend({
           modifiers: [
             { name: "hide", enabled: true },
             {
+              name: "eventListeners",
+              options: {
+                scroll: false,
+              },
+            },
+            {
               name: "offset",
               options: {
                 offset: ({ popper, placement }) => {
