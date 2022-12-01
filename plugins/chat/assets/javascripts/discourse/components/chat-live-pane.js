@@ -39,9 +39,9 @@ const PAST = "past";
 const FUTURE = "future";
 
 const MENTION_RESULT = {
+  invalid: -1,
   unreachable: 0,
   over_members_limit: 1,
-  ignored: 2,
 };
 
 export default Component.extend({
@@ -1369,8 +1369,8 @@ export default Component.extend({
             MENTION_RESULT["over_members_limit"];
         });
 
-        newWarnings.ignored.forEach((warning) => {
-          this._mentionWarningsSeen[warning] = MENTION_RESULT["ignored"];
+        newWarnings.invalid.forEach((warning) => {
+          this._mentionWarningsSeen[warning] = MENTION_RESULT["invalid"];
         });
 
         this._rebuildWarnings(mentions);
@@ -1383,7 +1383,7 @@ export default Component.extend({
       (memo, mention) => {
         if (
           mention in this._mentionWarningsSeen &&
-          !(this._mentionWarningsSeen[mention] === MENTION_RESULT["ignored"])
+          !(this._mentionWarningsSeen[mention] === MENTION_RESULT["invalid"])
         ) {
           if (
             this._mentionWarningsSeen[mention] === MENTION_RESULT["unreachable"]

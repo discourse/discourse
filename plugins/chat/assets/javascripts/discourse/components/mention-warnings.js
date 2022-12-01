@@ -1,32 +1,52 @@
 import Component from "@glimmer/component";
 import I18n from "I18n";
-import { escapeExpression } from "discourse/lib/utilities";
 import { htmlSafe } from "@ember/template";
 import { inject as service } from "@ember/service";
 
 export default class MentionWarnings extends Component {
   @service siteSettings;
   @service currentUser;
-  tagName = "";
+
+  get unreachableGroupMentionsCount() {
+    return this.args?.unreachableGroupMentions.length;
+  }
+
+  get overMembersLimitMentionsCount() {
+    return this.args?.overMembersLimitGroupMentions.length;
+  }
+
+  get hasTooManyMentions() {
+    return this.args?.tooManyMentions;
+  }
+
+  get hasUnreachableGroupMentions() {
+    return this.unreachableGroupMentionsCount > 0;
+  }
+
+  get hasOverMembersLimitGroupMentions() {
+    return this.overMembersLimitMentionsCount > 0;
+  }
+
+  get warningsCount() {
+    return (
+      this.unreachableGroupMentionsCount + this.overMembersLimitMentionsCount
+    );
+  }
 
   get show() {
     return (
-      this.args.tooManyMentions ||
-      this.args.unreachableGroupMentions.length > 0 ||
-      this.args.overMembersLimitGroupMentions.length > 0
+      this.hasTooManyMentions ||
+      this.hasUnreachableGroupMentions ||
+      this.hasOverMembersLimitGroupMentions
     );
   }
 
   get listStyleClass() {
-    if (this.args.tooManyMentions) {
+    if (this.hasTooManyMentions) {
       return "chat-mention-warnings-list-simple";
     }
 
-    if (
-      this.args.unreachableGroupMentions.length +
-        this.args.overMembersLimitGroupMentions.length >
-      1
-    ) {
+    if (this.warningsCount > 1) {
       return "chat-mention-warnings-list-multiple";
     } else {
       return "chat-mention-warnings-list-simple";
@@ -34,10 +54,10 @@ export default class MentionWarnings extends Component {
   }
 
   get warningHeaderText() {
-    const errorsCount =
-      this.args.unreachableGroupMentions.length +
-      this.args.overMembersLimitGroupMentions.length;
-    if (this.args.mentionsCount <= errorsCount || this.args.tooManyMentions) {
+    if (
+      this.args?.mentionsCount <= this.warningsCount ||
+      this.hasTooManyMentions
+    ) {
       return I18n.t("chat.mention_warning.groups.header.all");
     } else {
       return I18n.t("chat.mention_warning.groups.header.some");
@@ -45,12 +65,12 @@ export default class MentionWarnings extends Component {
   }
 
   get tooManyMentionsBody() {
-    if (!this.args.tooManyMentions) {
+    if (!this.hasTooManyMentions) {
       return;
     }
 
-    let notificationLimit = escapeExpression(
-      I18n.t("chat.mention_warning.groups.notification_limit")
+    let notificationLimit = I18n.t(
+      "chat.mention_warning.groups.notification_limit"
     );
 
     if (this.currentUser.staff) {
@@ -77,32 +97,33 @@ export default class MentionWarnings extends Component {
   }
 
   get unreachableBody() {
-    if (this.args.unreachableGroupMentions.length === 0) {
+    if (!this.hasUnreachableGroupMentions) {
       return;
     }
 
-    if (this.args.unreachableGroupMentions.length <= 2) {
+    if (this.unreachableGroupMentionsCount <= 2) {
       return I18n.t("chat.mention_warning.groups.unreachable", {
         group: this.args.unreachableGroupMentions[0],
         group_2: this.args.unreachableGroupMentions[1],
-        count: this.args.unreachableGroupMentions.length,
+        count: this.unreachableGroupMentionsCount,
       });
     } else {
       return I18n.t("chat.mention_warning.groups.unreachable_multiple", {
         group: this.args.unreachableGroupMentions[0],
-        count: this.args.unreachableGroupMentions.length - 1, //N others
+        count: this.unreachableGroupMentionsCount - 1, //N others
       });
     }
   }
 
   get overMembersLimitBody() {
-    if (this.args.overMembersLimitGroupMentions.length === 0) {
+    if (!this.hasOverMembersLimitGroupMentions) {
       return;
     }
 
-    let notificationLimit = escapeExpression(
-      I18n.t("chat.mention_warning.groups.notification_limit")
+    let notificationLimit = I18n.t(
+      "chat.mention_warning.groups.notification_limit"
     );
+
     if (this.currentUser.staff) {
       notificationLimit = htmlSafe(
         `<a 
@@ -118,12 +139,12 @@ export default class MentionWarnings extends Component {
       count: this.siteSettings.max_users_notified_per_group_mention,
     });
 
-    if (this.args.overMembersLimitGroupMentions.length <= 2) {
+    if (this.hasOverMembersLimitGroupMentions <= 2) {
       return htmlSafe(
         I18n.t("chat.mention_warning.groups.too_many_members", {
           group: this.args.overMembersLimitGroupMentions[0],
           group_2: this.args.overMembersLimitGroupMentions[1],
-          count: this.args.overMembersLimitGroupMentions.length,
+          count: this.overMembersLimitMentionsCount,
           notification_limit: notificationLimit,
           limit: settingLimit,
         })
@@ -132,7 +153,7 @@ export default class MentionWarnings extends Component {
       return htmlSafe(
         I18n.t("chat.mention_warning.groups.too_many_members_multiple", {
           group: this.args.overMembersLimitGroupMentions[0],
-          count: this.args.overMembersLimitGroupMentions.length - 1, //N others
+          count: this.overMembersLimitMentionsCount - 1, //N others
           notification_limit: notificationLimit,
           limit: settingLimit,
         })

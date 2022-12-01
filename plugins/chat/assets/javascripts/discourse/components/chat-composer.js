@@ -9,7 +9,7 @@ import I18n from "I18n";
 import TextareaTextManipulation from "discourse/mixins/textarea-text-manipulation";
 import userSearch from "discourse/lib/user-search";
 import { action } from "@ember/object";
-import { cancel, debounce, next, schedule, throttle } from "@ember/runloop";
+import { cancel, next, schedule, throttle } from "@ember/runloop";
 import { cloneJSON } from "discourse-common/lib/object";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
@@ -21,6 +21,7 @@ import { Promise } from "rsvp";
 import { translations } from "pretty-text/emoji/data";
 import { channelStatusName } from "discourse/plugins/chat/discourse/models/chat-channel";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
+import discourseDebounce from "discourse-common/lib/debounce";
 import {
   chatComposerButtons,
   chatComposerButtonsDependentKeys,
@@ -316,7 +317,7 @@ export default Component.extend(TextareaTextManipulation, {
 
   @bind
   _debouncedCaptureMentions() {
-    this.mentionsTimer = debounce(
+    this.mentionsTimer = discourseDebounce(
       this,
       this._captureMentions,
       MENTION_DEBOUNCE_MS

@@ -39,7 +39,7 @@ acceptance("Discourse Chat - Composer", function (needs) {
       return helper.response({
         unreachable: [GROUP_NAME],
         over_members_limit: [],
-        ignored: [],
+        invalid: [],
       });
     });
   });

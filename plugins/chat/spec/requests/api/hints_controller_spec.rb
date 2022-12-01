@@ -80,7 +80,7 @@ RSpec.describe Chat::Api::HintsController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["unreachable"]).to be_empty
         expect(response.parsed_body["over_members_limit"]).to be_empty
-        expect(response.parsed_body["ignored"]).to contain_exactly(invisible_group.name)
+        expect(response.parsed_body["invalid"]).to contain_exactly(invisible_group.name)
       end
 
       it "triggers a rate-limit on too many requests" do
