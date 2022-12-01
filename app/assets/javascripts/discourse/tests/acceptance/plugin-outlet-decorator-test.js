@@ -7,7 +7,7 @@ import { hbs } from "ember-cli-htmlbars";
 import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { registerTemplateModule } from "../helpers/template-module-helper";
+import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 
 const PREFIX = "discourse/plugins/some-plugin/templates/connectors";
 
@@ -15,11 +15,11 @@ acceptance("Plugin Outlet - Decorator", function (needs) {
   needs.user();
 
   needs.hooks.beforeEach(() => {
-    registerTemplateModule(
+    registerTemporaryModule(
       `${PREFIX}/discovery-list-container-top/foo`,
       hbs`FOO`
     );
-    registerTemplateModule(
+    registerTemporaryModule(
       `${PREFIX}/discovery-list-container-top/bar`,
       hbs`BAR`
     );

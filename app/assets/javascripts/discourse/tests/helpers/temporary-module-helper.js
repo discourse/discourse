@@ -3,28 +3,28 @@ import { expireConnectorCache } from "discourse/lib/plugin-connectors";
 
 const modifications = [];
 
-function generateTemplateModule(template) {
+function generateTemporaryModule(defaultExport) {
   return function (_exports) {
     Object.defineProperty(_exports, "__esModule", {
       value: true,
     });
-    _exports.default = template;
+    _exports.default = defaultExport;
   };
 }
 
-export function registerTemplateModule(moduleName, template) {
+export function registerTemporaryModule(moduleName, defaultExport) {
   const modificationData = {
     moduleName,
     existingModule: requirejs.entries[moduleName],
   };
   delete requirejs.entries[moduleName];
-  define(moduleName, ["exports"], generateTemplateModule(template));
+  define(moduleName, ["exports"], generateTemporaryModule(defaultExport));
   modifications.push(modificationData);
   expireConnectorCache();
   DiscourseTemplateMap.setModuleNames(Object.keys(requirejs.entries));
 }
 
-export function cleanupTemporaryTemplateRegistrations() {
+export function cleanupTemporaryModuleRegistrations() {
   for (const modificationData of modifications.reverse()) {
     const { moduleName, existingModule } = modificationData;
     delete requirejs.entries[moduleName];

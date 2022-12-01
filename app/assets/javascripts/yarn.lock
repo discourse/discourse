@@ -1150,10 +1150,10 @@
     semver "^7.3.5"
     typescript-memoize "^1.0.1"
 
-"@embroider/test-setup@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@embroider/test-setup/-/test-setup-2.0.1.tgz#57f4e338310a49206671a588f955286568505966"
-  integrity sha512-IPUBb9tiBckcr3YxOAh43FJHIOvFxA6QO1MLvcIi4SiUA9i40oEoweVk86uLn964HvpfJTKUNLKxbDEoZGcogA==
+"@embroider/test-setup@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@embroider/test-setup/-/test-setup-2.0.2.tgz#fa9e2e0dbaaba481e889875114727dd78aa280fd"
+  integrity sha512-0rapCTr7T94TprLW11q60Lddeuom+bkBI35zyCsAp7A7idlTUekH9k7BTx9rbnPFuQJkwILGuZ05t03IAyQ4Ig==
   dependencies:
     lodash "^4.17.21"
     resolve "^1.20.0"
@@ -4269,10 +4269,10 @@ ember-source-channel-url@^3.0.0:
   dependencies:
     node-fetch "^2.6.0"
 
-ember-source@~3.28.10:
-  version "3.28.10"
-  resolved "https://registry.yarnpkg.com/ember-source/-/ember-source-3.28.10.tgz#f4be7e2852d421a558f686505748f4c88f6d6ae6"
-  integrity sha512-TH8ug2rRUq6pLwqjciwvnuF8GDKBXNW2v5mvDkkf+k5S84XVHPjn3K0q2uGaR2W/mCDYg+mGmqu/PIGy0STx9Q==
+ember-source@~3.28.11:
+  version "3.28.11"
+  resolved "https://registry.yarnpkg.com/ember-source/-/ember-source-3.28.11.tgz#7b1a7d0483c886af8f38cc058fd647c359803543"
+  integrity sha512-oM3X2lYUWJM+CJEdPvJGVZNUTzUAYbDeOOoAJW7im20LkQrv0ce0MAJ1Gf/SnI3H+ZL7lj8qggP+D9P7ZxBvsw==
   dependencies:
     "@babel/helper-module-imports" "^7.8.3"
     "@babel/plugin-transform-block-scoping" "^7.8.3"
@@ -4492,10 +4492,10 @@ escodegen@^2.0.0:
   optionalDependencies:
     source-map "~0.6.1"
 
-eslint-plugin-qunit@^7.3.3:
-  version "7.3.3"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-qunit/-/eslint-plugin-qunit-7.3.3.tgz#9c166b491325c077698a238e63c9d8219e7034d0"
-  integrity sha512-rSOb4mLnvuQyKCj2kydnIim+e2c4IGjMkINuIPZxJQu0nqFxrQj6y24EXhD0NvTUeaawOaWtnjHOyvI2aQjwdA==
+eslint-plugin-qunit@^7.3.4:
+  version "7.3.4"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-qunit/-/eslint-plugin-qunit-7.3.4.tgz#2465b6f29ff56fbe9b741bde2740dec109ee9bec"
+  integrity sha512-EbDM0zJerH9zVdUswMJpcFF7wrrpvsGuYfNexUpa5hZkkdFhaFcX+yD+RSK4Nrauw4psMGlcqeWUMhaVo+Manw==
   dependencies:
     eslint-utils "^3.0.0"
     requireindex "^1.2.0"

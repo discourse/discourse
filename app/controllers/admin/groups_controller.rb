@@ -101,8 +101,6 @@ class Admin::GroupsController < Admin::StaffController
       GroupActionLogger.new(current_user, group).log_remove_user_as_group_owner(user)
     end
 
-    Group.reset_counters(group.id, :group_users)
-
     render json: success_json
   end
 

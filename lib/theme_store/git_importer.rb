@@ -77,6 +77,25 @@ class ThemeStore::GitImporter
 
   protected
 
+  def redirected_uri
+    first_clone_uri = @uri.dup
+    first_clone_uri.path.gsub!(/\/\z/, "")
+    first_clone_uri.path += "/info/refs"
+    first_clone_uri.query = "service=git-upload-pack"
+
+    redirected_uri = FinalDestination.resolve(first_clone_uri.to_s, http_verb: :get)
+
+    if redirected_uri&.path.ends_with?("/info/refs")
+      redirected_uri.path.gsub!(/\/info\/refs\z/, "")
+      redirected_uri.query = nil
+      redirected_uri
+    else
+      @uri
+    end
+  rescue
+    @uri
+  end
+
   def raise_import_error!
     raise RemoteTheme::ImportError.new(I18n.t("themes.import_error.git"))
   end
@@ -117,44 +136,28 @@ class ThemeStore::GitImporter
   end
 
   def clone_http!
-    uris = [@uri]
+    @uri = redirected_uri
+    @url = @uri.to_s
 
-    begin
-      resolved_uri = FinalDestination.resolve(@uri.to_s)
-      if resolved_uri && resolved_uri != @uri
-        uris.unshift(resolved_uri)
-      end
-    rescue
-      # If this fails, we can stil attempt to clone using the original URI
+    unless ["http", "https"].include?(@uri.scheme)
+      raise_import_error!
     end
 
-    uris.each do |uri|
-      @uri = uri
-      @url = @uri.to_s
+    addresses = FinalDestination::SSRFDetector.lookup_and_filter_ips(@uri.host)
 
-      unless ["http", "https"].include?(@uri.scheme)
-        raise_import_error!
-      end
+    unless addresses.empty?
+      env = { "GIT_TERMINAL_PROMPT" => "0" }
 
-      addresses = FinalDestination::SSRFDetector.lookup_and_filter_ips(@uri.host)
+      args = clone_args(
+        "http.followRedirects" => "false",
+        "http.curloptResolve" => "#{@uri.host}:#{@uri.port}:#{addresses.join(',')}",
+      )
 
-      unless addresses.empty?
-        env = { "GIT_TERMINAL_PROMPT" => "0" }
-
-        args = clone_args(
-          "http.followRedirects" => "false",
-          "http.curloptResolve" => "#{@uri.host}:#{@uri.port}:#{addresses.join(',')}",
-        )
-
-        begin
-          Discourse::Utils.execute_command(env, *args, timeout: COMMAND_TIMEOUT_SECONDS)
-          return
-        rescue RuntimeError
-        end
+      begin
+        Discourse::Utils.execute_command(env, *args, timeout: COMMAND_TIMEOUT_SECONDS)
+      rescue RuntimeError
       end
     end
-
-    raise_import_error!
   end
 
   def clone_ssh!

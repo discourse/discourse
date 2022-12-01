@@ -195,13 +195,13 @@ class ImportScripts::VBulletin < ImportScripts::Base
         DB.exec <<~SQL
           INSERT INTO group_users (group_id, user_id, created_at, updated_at) VALUES #{values}
         SQL
-
-        Group.reset_counters(group.id, :group_users)
       rescue Exception => e
         puts e.message
         puts e.backtrace.join("\n")
       end
     end
+
+    Group.reset_all_counters!
   end
 
   def import_profile_picture(old_user, imported_user)

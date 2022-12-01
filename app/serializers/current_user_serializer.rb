@@ -46,6 +46,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :is_anonymous,
              :reviewable_count,
              :unseen_reviewable_count,
+             :new_personal_messages_notifications_count,
              :read_faq?,
              :automatically_unpin_topics,
              :mailing_list_mode,
@@ -354,6 +355,10 @@ class CurrentUserSerializer < BasicUserSerializer
     UserStatusSerializer.new(object.user_status, root: false)
   end
 
+  def unseen_reviewable_count
+    Reviewable.unseen_reviewable_count(object)
+  end
+
   def redesigned_user_menu_enabled
     object.redesigned_user_menu_enabled?
   end
@@ -371,6 +376,10 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def include_unseen_reviewable_count?
+    redesigned_user_menu_enabled
+  end
+
+  def include_new_personal_messages_notifications_count?
     redesigned_user_menu_enabled
   end
 

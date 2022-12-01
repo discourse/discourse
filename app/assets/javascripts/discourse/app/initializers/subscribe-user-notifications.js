@@ -53,6 +53,8 @@ export default {
             read_first_notification: data.read_first_notification,
             all_unread_notifications_count: data.all_unread_notifications_count,
             grouped_unread_notifications: data.grouped_unread_notifications,
+            new_personal_messages_notifications_count:
+              data.new_personal_messages_notifications_count,
           });
 
           if (

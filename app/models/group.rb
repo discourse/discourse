@@ -534,7 +534,7 @@ class Group < ActiveRecord::Base
     end
 
     # we want to ensure consistency
-    Group.reset_counters(group.id, :group_users)
+    Group.reset_user_count(group)
 
     group
   end
@@ -545,12 +545,28 @@ class Group < ActiveRecord::Base
     refresh_has_messages!
   end
 
+  def self.reset_user_count(group)
+    reset_groups_user_count!(only_group_ids: [group.id])
+  end
+
   def self.reset_all_counters!
+    reset_groups_user_count!
+  end
+
+  def self.reset_groups_user_count!(only_group_ids: [])
+    where_sql = ''
+
+    if only_group_ids.present?
+      where_sql = "WHERE group_id IN (#{only_group_ids.map(&:to_i).join(",")})"
+    end
+
     DB.exec <<-SQL
       WITH X AS (
-          SELECT group_id
-               , COUNT(user_id) users
-            FROM group_users
+        SELECT
+          group_id,
+          COUNT(user_id) users
+        FROM group_users
+        #{where_sql}
         GROUP BY group_id
       )
       UPDATE groups
@@ -560,6 +576,7 @@ class Group < ActiveRecord::Base
          AND user_count <> X.users
     SQL
   end
+  private_class_method :reset_groups_user_count!
 
   def self.refresh_automatic_groups!(*args)
     args = AUTO_GROUPS.keys if args.empty?

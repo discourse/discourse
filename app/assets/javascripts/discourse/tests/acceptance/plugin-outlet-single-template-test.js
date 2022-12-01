@@ -6,14 +6,14 @@ import {
 import { hbs } from "ember-cli-htmlbars";
 import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
-import { registerTemplateModule } from "../helpers/template-module-helper";
+import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 
 const CONNECTOR_MODULE =
   "discourse/theme-12/templates/connectors/user-profile-primary/hello";
 
 acceptance("Plugin Outlet - Single Template", function (needs) {
   needs.hooks.beforeEach(() => {
-    registerTemplateModule(
+    registerTemporaryModule(
       CONNECTOR_MODULE,
       hbs`<span class='hello-username'>{{model.username}}</span>`
     );

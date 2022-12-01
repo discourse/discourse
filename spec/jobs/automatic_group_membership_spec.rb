@@ -45,6 +45,7 @@ RSpec.describe Jobs::AutomaticGroupMembership do
     expect(group.users.include?(user4)).to eq(true)
     expect(group.users.include?(user5)).to eq(false)
     expect(group.users.include?(user6)).to eq(true)
+    expect(group.user_count).to eq(2)
   end
 
 end

@@ -6,6 +6,7 @@ require 'theme_store/git_importer'
 RSpec.describe ThemeStore::GitImporter do
   describe "#import" do
     let(:url) { "https://github.com/example/example.git" }
+    let(:first_fetch_url) { "https://github.com/example/example.git/info/refs?service=git-upload-pack" }
     let(:trailing_slash_url) { "https://github.com/example/example/" }
     let(:ssh_url) { "git@github.com:example/example.git" }
     let(:branch) { "dev" }
@@ -13,8 +14,17 @@ RSpec.describe ThemeStore::GitImporter do
     before do
       hex = "xxx"
       SecureRandom.stubs(:hex).returns(hex)
-      FinalDestination.stubs(:resolve).with(url).returns(URI.parse(url))
-      FinalDestination::SSRFDetector.stubs(:lookup_and_filter_ips).with("github.com").returns(["192.0.2.100"])
+
+      FinalDestination::SSRFDetector
+        .stubs(:lookup_and_filter_ips)
+        .with("github.com")
+        .returns(["192.0.2.100"])
+
+      FinalDestination
+        .stubs(:resolve)
+        .with(first_fetch_url, http_verb: :get)
+        .returns(URI.parse(first_fetch_url))
+
       @temp_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{hex}"
       @ssh_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_ssh_#{hex}"
     end

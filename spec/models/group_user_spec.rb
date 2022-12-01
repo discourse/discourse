@@ -1,6 +1,22 @@
 # frozen_string_literal: true
 
 RSpec.describe GroupUser do
+  fab!(:group) { Fabricate(:group) }
+  fab!(:user) { Fabricate(:user) }
+
+  describe 'callbacks' do
+    it "increments and decrements `Group#user_count` when record is created and destroyed" do
+      group_user = GroupUser.new(user: user, group: group)
+
+      expect do
+        group_user.save!
+      end.to change { group.reload.user_count }.from(0).to(1)
+
+      expect do
+        group_user.destroy!
+      end.to change { group.reload.user_count }.from(1).to(0)
+    end
+  end
 
   it 'correctly sets notification level' do
     moderator = Fabricate(:moderator)

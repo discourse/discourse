@@ -486,21 +486,6 @@ table {
   }
 }
 
-.ring {
-  $gradient-start: transparent;
-  $gradient-end: #090;
-  background: radial-gradient($gradient-start, $gradient-end);
-  top: -11px !important;
-  right: 23.5px !important;
-  border-radius: 100%;
-  width: 20px;
-  height: 20px;
-  transform-origin: center;
-  animation-iteration-count: infinite;
-  animation-duration: 3s;
-  animation-name: ping;
-}
-
 .fade {
   opacity: 0;
   transition: opacity 0.15s linear;
