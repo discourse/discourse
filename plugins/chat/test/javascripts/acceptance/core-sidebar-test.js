@@ -545,6 +545,10 @@ acceptance("Discourse Chat - Plugin Sidebar", function (needs) {
               unread_count: 1,
               unread_mentions: 1,
             },
+            message_bus_last_ids: {
+              new_mentions: 0,
+              new_messages: 0,
+            },
           },
           {
             id: 2,
@@ -555,6 +559,10 @@ acceptance("Discourse Chat - Plugin Sidebar", function (needs) {
             current_user_membership: {
               unread_count: 1,
               unread_mentions: 1,
+            },
+            message_bus_last_ids: {
+              new_mentions: 0,
+              new_messages: 0,
             },
           },
           {
@@ -567,9 +575,20 @@ acceptance("Discourse Chat - Plugin Sidebar", function (needs) {
               unread_count: 1,
               unread_mentions: 1,
             },
+            message_bus_last_ids: {
+              new_mentions: 0,
+              new_messages: 0,
+            },
           },
         ],
         direct_message_channels: [],
+        message_bus_last_ids: {
+          channel_metadata: 0,
+          channel_edits: 0,
+          channel_status: 0,
+          new_channel: 0,
+          user_tracking_state: 0,
+        },
       });
     });
 
