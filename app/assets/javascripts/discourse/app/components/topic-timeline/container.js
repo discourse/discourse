@@ -238,8 +238,12 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   @bind
-  didStartDrag(e) {
+  didStartDrag() {
     this.dragging = true;
+  }
+
+  @bind
+  dragMove(e) {
     this.updatePercentage(e);
   }
 

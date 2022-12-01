@@ -11,24 +11,29 @@ export default class DraggableModifier extends Modifier {
     registerDestructor(this, (instance) => instance.cleanup());
   }
 
-  modify(el, _, { didStartDrag, didEndDrag }) {
+  modify(el, _, { didStartDrag, didEndDrag, dragMove }) {
     this.element = el;
     this.didStartDragCallback = didStartDrag;
     this.didEndDragCallback = didEndDrag;
-    this.element.addEventListener("touchstart", this.didStartDrag, {
+    this.dragMoveCallback = dragMove;
+    this.element.addEventListener("touchstart", this.dragMove, {
       passive: false,
     });
-    this.element.addEventListener("mousedown", this.didStartDrag, {
+    this.element.addEventListener("mousedown", this.dragMove, {
       passive: false,
     });
   }
 
   @bind
-  didStartDrag(e) {
+  dragMove(e) {
     e.stopPropagation();
     e.preventDefault();
     if (!this.hasStarted) {
       this.hasStarted = true;
+
+      if (this.didStartDragCallback) {
+        this.didStartDragCallback();
+      }
 
       // Register a global event to capture mouse moves when element 'clicked'.
       document.addEventListener("touchmove", this.drag, { passive: false });
@@ -47,8 +52,8 @@ export default class DraggableModifier extends Modifier {
 
   @bind
   drag(e) {
-    if (this.hasStarted) {
-      this.didStartDragCallback(e, this.element);
+    if (this.hasStarted && this.dragMoveCallback) {
+      this.dragMoveCallback(e, this.element);
     }
   }
 
@@ -66,8 +71,8 @@ export default class DraggableModifier extends Modifier {
   }
 
   cleanup() {
-    document.removeEventListener("touchstart", this.didStartDrag);
-    document.removeEventListener("mousedown", this.didStartDrag);
+    document.removeEventListener("touchstart", this.dragMove);
+    document.removeEventListener("mousedown", this.dragMove);
     document.removeEventListener("touchend", this.didEndDrag);
     document.removeEventListener("mouseup", this.didEndDrag);
     document.removeEventListener("mousemove", this.drag);

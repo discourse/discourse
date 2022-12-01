@@ -1,7 +1,7 @@
 <div
   style={{this.style}}
   class="timeline-scroller"
-  {{draggable didStartDrag=@didStartDrag didEndDrag=@didEndDrag}}
+  {{draggable didStartDrag=@didStartDrag didEndDrag=@didEndDrag dragMove=@dragMove }}
 >
   {{#if @fullscreen}}
     <div class="timeline-scroller-content">
