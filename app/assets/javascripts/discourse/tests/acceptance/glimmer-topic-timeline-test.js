@@ -7,9 +7,9 @@ import {
 import { test } from "qunit";
 
 acceptance("Glimmer Topic Timeline", function (needs) {
-  needs.user({ admin: true });
-  needs.settings({
-    enable_glimmer_topic_timeline: true,
+  needs.user({
+    admin: true,
+    redesigned_topic_timeline_enabled: true,
   });
   needs.pretender((server, helper) => {
     server.get("/t/129.json", () => {

@@ -15,8 +15,12 @@ export default class DraggableModifier extends Modifier {
     this.element = el;
     this.didStartDragCallback = didStartDrag;
     this.didEndDragCallback = didEndDrag;
-    this.element.addEventListener("touchstart", this.didStartDrag);
-    this.element.addEventListener("mousedown", this.didStartDrag);
+    this.element.addEventListener("touchstart", this.didStartDrag, {
+      passive: false,
+    });
+    this.element.addEventListener("mousedown", this.didStartDrag, {
+      passive: false,
+    });
   }
 
   @bind
