@@ -24,6 +24,8 @@ class TopicCreator
     # this allows us to add errors
     valid = topic.valid?
 
+    validate_visibility(topic)
+
     category = find_category
     if category.present? && guardian.can_tag?(topic)
       tags = @opts[:tags].presence || []
@@ -46,6 +48,8 @@ class TopicCreator
 
   def create
     topic = Topic.new(setup_topic_params)
+
+    validate_visibility!(topic)
     setup_tags(topic)
 
     if fields = @opts[:custom_fields]
@@ -66,6 +70,18 @@ class TopicCreator
   end
 
   private
+
+  def validate_visibility(topic)
+    if !@opts[:skip_validations] && !topic.visible && !guardian.can_create_unlisted_topic?(topic)
+      topic.errors.add(:base, :unable_to_unlist)
+    end
+  end
+
+  def validate_visibility!(topic)
+    validate_visibility(topic)
+
+    rollback_from_errors!(topic) if topic.errors.full_messages.present?
+  end
 
   def create_shared_draft(topic)
     return if @opts[:shared_draft].blank? || @opts[:shared_draft] == 'false'
@@ -302,5 +318,4 @@ class TopicCreator
 
     user
   end
-
 end

@@ -107,7 +107,10 @@ export function setup(helper) {
               currentToken.type === "span_open") &&
             currentToken.attrs &&
             currentToken.attrs.some(
-              (attr) => attr[0] === "class" && attr[1] === "hashtag"
+              (attr) =>
+                attr[0] === "class" &&
+                (attr[1].includes("hashtag") ||
+                  attr[1].includes("hashtag-cooked"))
             )
           ) {
             lastType =

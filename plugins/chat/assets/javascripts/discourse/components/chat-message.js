@@ -213,14 +213,6 @@ export default Component.extend({
       });
     }
 
-    if (this.showSilenceButton) {
-      buttons.push({
-        id: "silence",
-        name: I18n.t("chat.silence"),
-        icon: "microphone-slash",
-      });
-    }
-
     if (this.showDeleteButton) {
       buttons.push({
         id: "deleteMessage",
@@ -256,7 +248,6 @@ export default Component.extend({
       edit: this.edit,
       selectMessage: this.selectMessage,
       flag: this.flag,
-      silence: this.silence,
       deleteMessage: this.deleteMessage,
       restore: this.restore,
       rebakeMessage: this.rebakeMessage,
@@ -390,15 +381,6 @@ export default Component.extend({
       canFlag &&
       !message.chat_webhook_event &&
       !deletedAt
-    );
-  },
-
-  @discourseComputed("message")
-  showSilenceButton(message) {
-    return (
-      this.currentUser?.staff &&
-      this.currentUser?.id !== message.user?.id &&
-      !message.chat_webhook_event
     );
   },
 
@@ -691,11 +673,6 @@ export default Component.extend({
     } else {
       this._legacyFlag();
     }
-  },
-
-  @action
-  silence() {
-    this.adminTools.showSilenceModal(EmberObject.create(this.message.user));
   },
 
   @action

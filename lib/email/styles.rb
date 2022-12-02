@@ -326,11 +326,10 @@ module Email
 
     def decorate_hashtags
       @fragment.search(".hashtag-cooked").each do |hashtag|
-        hashtag_text = hashtag.search("span").first
-        hashtag_text.add_next_sibling(<<~HTML)
+        hashtag.children.each(&:remove)
+        hashtag.add_child(<<~HTML)
           <span>##{hashtag["data-slug"]}</span>
         HTML
-        hashtag_text.remove
       end
     end
 
