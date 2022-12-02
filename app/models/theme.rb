@@ -759,7 +759,7 @@ class Theme < ActiveRecord::Base
   attr_accessor :theme_setting_requests_refresh
 
   def to_scss_variable(name, value)
-    escaped = SassC::Script::Value::String.quote(value, sass: true)
+    escaped = SassC::Script::Value::String.quote(value.to_s, sass: true)
     "$#{name}: unquote(#{escaped});"
   end
 

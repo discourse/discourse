@@ -47,7 +47,7 @@ RSpec.describe "i18n integrity checks" do
 
   Dir["#{Rails.root}/config/locales/client.*.yml"].each do |path|
     it "has valid client YAML for '#{path}'" do
-      yaml = YAML.load_file(path)
+      yaml = YAML.load_file(path, aliases: true)
       locale = extract_locale(path)
 
       expect(yaml.keys).to eq([locale])
@@ -62,7 +62,7 @@ RSpec.describe "i18n integrity checks" do
   end
 
   Dir["#{Rails.root}/**/locale*/*.en.yml"].each do |english_path|
-    english_yaml = YAML.load_file(english_path)["en"]
+    english_yaml = YAML.load_file(english_path, aliases: true)["en"]
 
     context(english_path) do
       it "has no duplicate keys" do
@@ -76,7 +76,7 @@ RSpec.describe "i18n integrity checks" do
 
       context(path) do
         locale = extract_locale(path)
-        yaml = YAML.load_file(path)
+        yaml = YAML.load_file(path, aliases: true)
 
         it "has no duplicate keys" do
           duplicates = DuplicateKeyFinder.new.find_duplicates(path)
