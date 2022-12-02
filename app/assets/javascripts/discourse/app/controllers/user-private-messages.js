@@ -4,6 +4,7 @@ import { inject as service } from "@ember/service";
 import { alias, and, equal, readOnly } from "@ember/object/computed";
 import { tracked } from "@glimmer/tracking";
 import I18n from "I18n";
+import DiscourseURL from "discourse/lib/url";
 
 export const PERSONAL_INBOX = "__personal_inbox__";
 
@@ -22,6 +23,51 @@ export default class extends Controller {
   @readOnly("router.currentRouteName") currentRouteName;
   @readOnly("router.currentRoute.parent.name") currentParentRouteName;
   @readOnly("site.can_tag_pms") pmTaggingEnabled;
+
+  get messagesDropdownValue() {
+    const parentRoute = this.router.currentRoute.parent;
+
+    if (Object.keys(parentRoute.params).length > 0) {
+      return this.router.urlFor(
+        parentRoute.name,
+        this.model.username,
+        parentRoute.params
+      );
+    } else {
+      return this.router.urlFor(parentRoute.name, this.model.username);
+    }
+  }
+
+  get messagesDropdownContent() {
+    const content = [
+      {
+        id: this.router.urlFor("userPrivateMessages.user", this.model.username),
+        name: I18n.t("user.messages.inbox"),
+      },
+    ];
+
+    this.model.groupsWithMessages.forEach((group) => {
+      content.push({
+        id: this.router.urlFor(
+          "userPrivateMessages.group",
+          this.model.username,
+          group.name
+        ),
+        name: group.name,
+        icon: "inbox",
+      });
+    });
+
+    if (this.pmTaggingEnabled) {
+      content.push({
+        id: this.router.urlFor("userPrivateMessages.tags", this.model.username),
+        name: I18n.t("user.messages.tags"),
+        icon: "tags",
+      });
+    }
+
+    return content;
+  }
 
   @computed(
     "pmTopicTrackingState.newIncoming.[]",
@@ -54,5 +100,10 @@ export default class extends Controller {
   @action
   changeGroupNotificationLevel(notificationLevel) {
     this.group.setNotification(notificationLevel, this.get("user.model.id"));
+  }
+
+  @action
+  onMessagesDropdownChange(item) {
+    return DiscourseURL.routeTo(item);
   }
 }
