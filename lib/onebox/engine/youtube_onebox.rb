@@ -102,6 +102,11 @@ module Onebox
           if uri.path["/embed/"]
             id ||= uri.path[/\/embed\/([\w\-]+)/, 1]
           end
+          
+          # https://www.youtube.com/shorts/wi2jAtpBl0Y
+          if uri.path["/shorts/"]
+            id ||= uri.path[/\/shorts\/([\w\-]+)/, 1]
+          end
 
           # https://www.youtube.com/watch?v=Z0UISCEe52Y
           id ||= params['v']
