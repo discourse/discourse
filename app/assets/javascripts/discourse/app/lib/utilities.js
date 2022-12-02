@@ -58,12 +58,13 @@ export function replaceFormatter(fn) {
   _usernameFormatDelegate = fn;
 }
 
-export function avatarUrl(template, size) {
+export function avatarUrl(template, size, { customGetURL } = {}) {
   if (!template) {
     return "";
   }
   const rawSize = getRawSize(translateSize(size));
-  return template.replace(/\{size\}/g, rawSize);
+  const templatedPath = template.replace(/\{size\}/g, rawSize);
+  return (customGetURL || getURLWithCDN)(templatedPath);
 }
 
 export function getRawSize(size) {
@@ -79,13 +80,12 @@ export function getRawSize(size) {
 
 export function avatarImg(options, customGetURL) {
   const size = translateSize(options.size);
-  let path = avatarUrl(options.avatarTemplate, size);
+  let url = avatarUrl(options.avatarTemplate, size, { customGetURL });
 
   // We won't render an invalid url
-  if (!path || path.length === 0) {
+  if (!url) {
     return "";
   }
-  path = (customGetURL || getURLWithCDN)(path);
 
   const classes =
     "avatar" + (options.extraClasses ? " " + options.extraClasses : "");
@@ -96,7 +96,7 @@ export function avatarImg(options, customGetURL) {
     title = ` title='${escaped}' aria-label='${escaped}'`;
   }
 
-  return `<img loading='lazy' alt='' width='${size}' height='${size}' src='${path}' class='${classes}'${title}>`;
+  return `<img loading='lazy' alt='' width='${size}' height='${size}' src='${url}' class='${classes}'${title}>`;
 }
 
 export function tinyAvatar(avatarTemplate, options) {
