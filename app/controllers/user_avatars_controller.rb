@@ -182,7 +182,7 @@ class UserAvatarsController < ApplicationController
   end
 
   def redirect_s3_avatar(url)
-    immutable_for 1.year
+    immutable_for 1.hour
     redirect_to url, allow_other_host: true
   end
 
