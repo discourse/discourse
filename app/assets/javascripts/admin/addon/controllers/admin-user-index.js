@@ -232,7 +232,7 @@ export default Controller.extend(CanCheckEmails, {
               queryParams: { nonce },
             });
           } else {
-            popupAjaxError(error);
+            popupAjaxError(error, { htmlMessage: true });
           }
         });
     },

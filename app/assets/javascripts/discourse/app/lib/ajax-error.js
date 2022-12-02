@@ -1,5 +1,6 @@
 import I18n from "I18n";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { htmlSafe } from "@ember/template";
 
 export function extractError(error, defaultMessage) {
   if (error instanceof Error) {
@@ -69,7 +70,11 @@ export function throwAjaxError(undoCallback) {
   };
 }
 
-export function popupAjaxError(error) {
+export function popupAjaxError(error, opts = {}) {
   const dialog = getOwner(this).lookup("service:dialog");
-  dialog.alert(extractError(error));
+  dialog.alert({
+    message: opts.htmlMessage
+      ? htmlSafe(extractError(error))
+      : extractError(error),
+  });
 }
