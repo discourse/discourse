@@ -17,6 +17,8 @@ import {
   resetHighestReadCache,
   setHighestReadCache,
 } from "discourse/lib/topic-list-tracker";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { resetCustomUserNavMessagesDropdownRows } from "discourse/controllers/user-private-messages";
 
 acceptance(
   "User Private Messages - user with no group messages",
@@ -752,6 +754,30 @@ function testUserPrivateMessagesWithGroupMessages(needs, customUserProps) {
         I18n.t("user.messages.tags"),
         "All tags is still selected in dropdown"
       );
+    });
+
+    test("addUserMessagesNavigationDropdownRow plugin api", async function (assert) {
+      try {
+        withPluginApi("1.5.0", (api) => {
+          api.addUserMessagesNavigationDropdownRow(
+            "preferences",
+            "test nav",
+            "arrow-left"
+          );
+        });
+
+        await visit("/u/eviltrout/messages");
+
+        const messagesDropdown = selectKit(".user-nav-messages-dropdown");
+        await messagesDropdown.expand();
+
+        const row = messagesDropdown.rowByName("test nav");
+
+        assert.strictEqual(row.value(), "/u/eviltrout/preferences");
+        assert.ok(row.icon().classList.contains("d-icon-arrow-left"));
+      } finally {
+        resetCustomUserNavMessagesDropdownRows();
+      }
     });
   }
 }
