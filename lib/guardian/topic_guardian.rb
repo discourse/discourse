@@ -163,6 +163,8 @@ module TopicGuardian
     can_moderate?(topic) || can_perform_action_available_to_group_moderators?(topic)
   end
 
+  alias :can_create_unlisted_topic? :can_toggle_topic_visibility?
+
   def can_convert_topic?(topic)
     return false unless SiteSetting.enable_personal_messages?
     return false if topic.blank?
