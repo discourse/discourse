@@ -124,7 +124,7 @@ RSpec.describe UserAvatarsController do
 
       expect(response.status).to eq(302)
       expect(response.location).to eq("https://s3-cdn.example.com/optimized/path")
-      expect(response.headers["Cache-Control"]).to eq('max-age=31556952, public, immutable')
+      expect(response.headers["Cache-Control"]).to eq('max-age=3600, public, immutable')
     end
 
     it 'serves new version for old urls' do
