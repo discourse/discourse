@@ -60,7 +60,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
 
     assert.dom(".toggle-channel-membership-button").doesNotExist();
 
-    this.categoryChatChannel.isFollowing = true;
+    this.categoryChatChannel.current_user_membership.following = true;
 
     await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
 
