@@ -217,9 +217,11 @@ body.invite-page {
         }
       }
 
-      #forgot-password-link,
-      #email-login-link {
+      #email-login-link,
+      .login__password-links {
         font-size: var(--font-down-1);
+        display: flex;
+        justify-content: space-between;
       }
 
       .tip:not(:empty) + label.more-info {
@@ -333,6 +335,15 @@ body.invite-page {
     label {
       color: var(--primary-medium);
     }
+  }
+  #new-account-password {
+    width: 15em;
+  }
+  .tip {
+    margin: 0 0 0.5em;
+  }
+  .toggle-password-mask {
+    margin-left: 0.25em;
   }
 }
 
@@ -489,4 +500,9 @@ button#new-account-link {
       }
     }
   }
+}
+
+.create-account__password-info {
+  display: flex;
+  justify-content: space-between;
 }
