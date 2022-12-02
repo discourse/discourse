@@ -1950,57 +1950,52 @@ class User < ActiveRecord::Base
 
   private
 
-  def add_default_sidebar_section_links
+  def set_default_sidebar_section_links(update: false)
     return if !SiteSetting.enable_experimental_sidebar_hamburger
     return if staged? || bot?
 
     if SiteSetting.default_sidebar_categories.present?
+      categories_to_update = SiteSetting.default_sidebar_categories.split("|")
+
+      if update
+        filtered_default_category_ids = Category.secured(self.guardian).where(id: categories_to_update).pluck(:id)
+        existing_category_ids = SidebarSectionLink.where(user: self, linkable_type: 'Category').pluck(:linkable_id)
+
+        categories_to_update = existing_category_ids + (filtered_default_category_ids & self.secure_category_ids)
+      end
+
       SidebarSectionLinksUpdater.update_category_section_links(
         self,
-        category_ids: SiteSetting.default_sidebar_categories.split("|")
+        category_ids: categories_to_update
       )
     end
 
     if SiteSetting.tagging_enabled && SiteSetting.default_sidebar_tags.present?
+      tags_to_update = SiteSetting.default_sidebar_tags.split("|")
+
+      if update
+        default_tag_ids = Tag.where(name: tags_to_update).pluck(:id)
+        filtered_default_tags = DiscourseTagging.filter_visible(Tag, self.guardian).where(id: default_tag_ids).pluck(:name)
+
+        existing_tag_ids = SidebarSectionLink.where(user: self, linkable_type: 'Tag').pluck(:linkable_id)
+        existing_tags = DiscourseTagging.filter_visible(Tag, self.guardian).where(id: existing_tag_ids).pluck(:name)
+
+        tags_to_update = existing_tags + (filtered_default_tags & DiscourseTagging.hidden_tag_names)
+      end
+
       SidebarSectionLinksUpdater.update_tag_section_links(
         self,
-        tag_names: SiteSetting.default_sidebar_tags.split("|")
+        tag_names: tags_to_update
       )
     end
   end
 
+  def add_default_sidebar_section_links
+    set_default_sidebar_section_links
+  end
+
   def update_default_sidebar_section_links
-    return if !SiteSetting.enable_experimental_sidebar_hamburger
-    return if staged? || bot?
-
-    if SiteSetting.default_sidebar_categories.present?
-      default_category_ids = SiteSetting.default_sidebar_categories.split("|")
-
-      # Filters out categories that user does not have access to or do not exist anymore
-      category_ids = Category.secured(self.guardian).where(id: default_category_ids).pluck(:id)
-      existing_category_ids = SidebarSectionLink.where(user: self, linkable_type: 'Category').pluck(:linkable_id)
-
-      # Only include secured categories
-      secured_category_ids = self.secure_category_ids
-
-      # Secured categories that are in the default categories list
-      categories_to_update = existing_category_ids + (category_ids & secured_category_ids)
-    end
-
-    if SiteSetting.tagging_enabled && SiteSetting.default_sidebar_tags.present?
-      default_tag_names = SiteSetting.default_sidebar_tags.split("|")
-      default_tag_ids = Tag.where(name: [default_tag_names]).pluck(:id)
-      tag_names = DiscourseTagging.filter_visible(Tag, self.guardian).where(id: default_tag_ids).pluck(:name)
-      hidden_tag_names = DiscourseTagging.hidden_tag_names
-      existing_tag_ids = SidebarSectionLink.where(user: self, linkable_type: 'Tag').pluck(:linkable_id)
-      existing_tag_names = Tag.where(id: [existing_tag_ids]).pluck(:name)
-      tags_to_update = existing_tag_names + (tag_names & hidden_tag_names)
-    end
-
-    updater = UserUpdater.new(self, self)
-    h = { sidebar_category_ids: categories_to_update }
-    h[:sidebar_tag_names] = tags_to_update if tags_to_update
-    updater.update(h)
+    set_default_sidebar_section_links(update: true)
   end
 
   def stat

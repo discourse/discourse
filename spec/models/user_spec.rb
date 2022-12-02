@@ -64,37 +64,40 @@ RSpec.describe User do
           tag.id,
           hidden_tag.id
         )
-
-        # A user promoted to admin should get secured sidebar records
-        user.update(admin: true)
-
-        expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
-          category.id,
-          secured_category.id
-        )
-
-        expect(SidebarSectionLink.where(linkable_type: 'Tag', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
-          tag.id,
-          hidden_tag.id
-        )
       end
 
-      it "Should create and remove the right sidebar section link records when user is promoted/demoted as an admin" do
+      it 'should create and remove the right sidebar section link records when user is promoted/demoted as an admin' do
         user = Fabricate(:user)
-        #TODO: Customize a user's sidebar categories better than just deleting them. Remove all defaults but add one that isn't in the default list
-        SidebarSectionLink.where(user: user).delete_all # User has customized their sidebar categories
+        another_category = Fabricate(:category)
+        another_tag = Fabricate(:tag)
+
+        # User has customized their sidebar categories and tags
+        SidebarSectionLink.where(user: user).delete_all
+        SidebarSectionLinksUpdater.update_category_section_links(user, category_ids: [another_category.id])
+        SidebarSectionLinksUpdater.update_tag_section_links(user, tag_names: [another_tag.name])
+
+        # A user promoted to admin now has any default categories/tags they didn't previously have access to
         user.update(admin: true)
         expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
+          another_category.id,
           secured_category.id
         )
         expect(SidebarSectionLink.where(linkable_type: 'Tag', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
+          another_tag.id,
           hidden_tag.id
         )
+
+        # User still has their customized sidebar categories and tags after demotion
         user.update(admin: false)
-        expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to be_empty
+        expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
+          another_category.id
+        )
+        expect(SidebarSectionLink.where(linkable_type: 'Tag', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
+          another_tag.id
+        )
       end
 
-      it "Should not receive any new categories w/ suppress secured categories from admin enabled" do
+      it 'should not receive any new categories w/ suppress secured categories from admin enabled' do
         SiteSetting.suppress_secured_categories_from_admin = true
         user = Fabricate(:user)
         SidebarSectionLink.where(user: user).delete_all # User has customized their sidebar categories

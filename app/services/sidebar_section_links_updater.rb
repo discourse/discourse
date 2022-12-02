@@ -48,4 +48,5 @@ class SidebarSectionLinksUpdater
     end
   end
   private_class_method :update_section_links
+
 end
