@@ -88,9 +88,7 @@ RSpec.describe CategoryChannel do
     subject(:channel) { Fabricate(:category_channel) }
 
     context "when slug is not provided" do
-      before do
-        channel.slug = nil
-      end
+      before { channel.slug = nil }
 
       it "uses channel name when present" do
         channel.name = "Some Cool Stuff"
@@ -129,12 +127,20 @@ RSpec.describe CategoryChannel do
       end
 
       context "when there is a duplicate slug" do
-        before { Fabricate(:category_channel, slug: "awesome-channel") }
+        fab!(:awesome_channel) { Fabricate(:category_channel, slug: "awesome-channel") }
 
         it "adds a validation error" do
           channel.slug = "awesome-channel"
           channel.validate
-          expect(channel.errors.full_messages.first).to include(I18n.t("chat.category_channel.errors.is_already_in_use"))
+          expect(channel.errors.full_messages.first).to include(
+            I18n.t("chat.category_channel.errors.is_already_in_use"),
+          )
+        end
+
+        it "does not allow setting the slug conflict directly in SQL" do
+          expect {
+            DB.exec("UPDATE chat_channels SET slug = 'awesome-channel' WHERE id = #{channel.id}")
+          }.to raise_error(PG::UniqueViolation)
         end
       end
 
@@ -144,7 +150,9 @@ RSpec.describe CategoryChannel do
         it "fails if slug contains non-ascii characters" do
           channel.slug = "sem-acentuação"
           channel.validate
-          expect(channel.errors.full_messages.first).to match(/#{I18n.t("chat.category_channel.errors.slug_contains_non_ascii_chars")}/)
+          expect(channel.errors.full_messages.first).to match(
+            /#{I18n.t("chat.category_channel.errors.slug_contains_non_ascii_chars")}/,
+          )
         end
       end
     end
