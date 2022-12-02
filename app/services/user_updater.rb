@@ -212,11 +212,11 @@ class UserUpdater
       end
 
       if attributes.key?(:sidebar_category_ids)
-        update_sidebar_category_section_links(attributes[:sidebar_category_ids])
+        SidebarSectionLinksUpdater.update_category_section_links(user, category_ids: attributes[:sidebar_category_ids])
       end
 
       if attributes.key?(:sidebar_tag_names) && SiteSetting.tagging_enabled
-        update_sidebar_tag_section_links(attributes[:sidebar_tag_names])
+        SidebarSectionLinksUpdater.update_tag_section_links(user, tag_names: attributes[:sidebar_tag_names])
       end
 
       if SiteSetting.enable_user_status?
@@ -314,48 +314,6 @@ class UserUpdater
   end
 
   private
-
-  def delete_all_sidebar_section_links(linkable_type)
-    SidebarSectionLink.where(user: user, linkable_type: linkable_type).delete_all
-  end
-
-  def update_sidebar_section_links(linkable_type, new_linkable_ids)
-    if new_linkable_ids.blank?
-      SidebarSectionLink.where(user: user, linkable_type: linkable_type).delete_all
-    else
-      existing_linkable_ids = SidebarSectionLink.where(user: user, linkable_type: linkable_type).pluck(:linkable_id)
-
-      to_delete = existing_linkable_ids - new_linkable_ids
-      to_insert = new_linkable_ids - existing_linkable_ids
-
-      to_insert_attributes = to_insert.map do |linkable_id|
-        {
-          linkable_type: linkable_type,
-          linkable_id: linkable_id,
-          user_id: user.id
-        }
-      end
-
-      SidebarSectionLink.where(user: user, linkable_type: linkable_type, linkable_id: to_delete).delete_all if to_delete.present?
-      SidebarSectionLink.insert_all(to_insert_attributes) if to_insert_attributes.present?
-    end
-  end
-
-  def update_sidebar_tag_section_links(tag_names)
-    if tag_names.blank?
-      delete_all_sidebar_section_links('Tag')
-    else
-      update_sidebar_section_links('Tag', Tag.where(name: tag_names).pluck(:id))
-    end
-  end
-
-  def update_sidebar_category_section_links(category_ids)
-    if category_ids.blank?
-      delete_all_sidebar_section_links('Category')
-    else
-      update_sidebar_section_links('Category', Category.secured(guardian).where(id: category_ids).pluck(:id))
-    end
-  end
 
   def update_user_status(status)
     if status.blank?

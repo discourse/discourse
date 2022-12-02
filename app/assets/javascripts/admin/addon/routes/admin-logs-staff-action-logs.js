@@ -34,13 +34,6 @@ export default DiscourseRoute.extend({
     return this._super(value, urlKey, defaultValueType);
   },
 
-  // TODO: make this automatic using an `{{outlet}}`
-  renderTemplate() {
-    this.render("admin/templates/logs/staff-action-logs", {
-      into: "adminLogs",
-    });
-  },
-
   actions: {
     onFiltersChange(filters) {
       if (filters && Object.keys(filters) === 0) {

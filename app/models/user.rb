@@ -597,6 +597,23 @@ class User < ActiveRecord::Base
     @unread_high_prios ||= unread_notifications_of_priority(high_priority: true)
   end
 
+  def new_personal_messages_notifications_count
+    args = {
+      user_id: self.id,
+      seen_notification_id: self.seen_notification_id,
+      private_message: Notification.types[:private_message]
+    }
+
+    DB.query_single(<<~SQL, args).first
+      SELECT COUNT(*)
+      FROM notifications
+      WHERE user_id = :user_id
+      AND id > :seen_notification_id
+      AND NOT read
+      AND notification_type = :private_message
+    SQL
+  end
+
   # PERF: This safeguard is in place to avoid situations where
   # a user with enormous amounts of unread data can issue extremely
   # expensive queries
@@ -663,11 +680,10 @@ class User < ActiveRecord::Base
   end
 
   def reviewable_count
-    Reviewable.list_for(self).count
-  end
-
-  def unseen_reviewable_count
-    Reviewable.unseen_list_for(self).count
+    Reviewable.list_for(
+      self,
+      include_claimed_by_others: !redesigned_user_menu_enabled?
+    ).count
   end
 
   def saw_notification_id(notification_id)
@@ -699,17 +715,22 @@ class User < ActiveRecord::Base
     query = Reviewable.unseen_list_for(self, preload: false)
 
     if last_seen_reviewable_id
-      query = query.where("id > ?", last_seen_reviewable_id)
+      query = query.where("reviewables.id > ?", last_seen_reviewable_id)
     end
     max_reviewable_id = query.maximum(:id)
 
     if max_reviewable_id
       update!(last_seen_reviewable_id: max_reviewable_id)
-      publish_reviewable_counts(unseen_reviewable_count: self.unseen_reviewable_count)
+      publish_reviewable_counts
     end
   end
 
-  def publish_reviewable_counts(data)
+  def publish_reviewable_counts(extra_data = nil)
+    data = {
+      reviewable_count: self.reviewable_count,
+      unseen_reviewable_count: Reviewable.unseen_reviewable_count(self)
+    }
+    data.merge!(extra_data) if extra_data.present?
     MessageBus.publish("/reviewable_counts/#{self.id}", data, user_ids: [self.id])
   end
 
@@ -775,6 +796,7 @@ class User < ActiveRecord::Base
     if self.redesigned_user_menu_enabled?
       payload[:all_unread_notifications_count] = all_unread_notifications_count
       payload[:grouped_unread_notifications] = grouped_unread_notifications
+      payload[:new_personal_messages_notifications_count] = new_personal_messages_notifications_count
     end
 
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
@@ -1928,39 +1950,19 @@ class User < ActiveRecord::Base
     return if !SiteSetting.enable_experimental_sidebar_hamburger
     return if staged? || bot?
 
-    records = []
-
     if SiteSetting.default_sidebar_categories.present?
-      category_ids = SiteSetting.default_sidebar_categories.split("|")
-
-      # Filters out categories that user does not have access to or do not exist anymore
-      category_ids = Category.secured(self.guardian).where(id: category_ids).pluck(:id)
-
-      category_ids.each do |category_id|
-        records.push(
-          linkable_type: 'Category',
-          linkable_id: category_id,
-          user_id: self.id
-        )
-      end
+      SidebarSectionLinksUpdater.update_category_section_links(
+        self,
+        category_ids: SiteSetting.default_sidebar_categories.split("|")
+      )
     end
 
     if SiteSetting.tagging_enabled && SiteSetting.default_sidebar_tags.present?
-      tag_names = SiteSetting.default_sidebar_tags.split("|")
-
-      # Filters out tags that user cannot see or do not exist anymore
-      tag_ids = DiscourseTagging.filter_visible(Tag, self.guardian).where(name: tag_names).pluck(:id)
-
-      tag_ids.each do |tag_id|
-        records.push(
-          linkable_type: 'Tag',
-          linkable_id: tag_id,
-          user_id: self.id
-        )
-      end
+      SidebarSectionLinksUpdater.update_tag_section_links(
+        self,
+        tag_names: SiteSetting.default_sidebar_tags.split("|")
+      )
     end
-
-    SidebarSectionLink.insert_all(records) if records.present?
   end
 
   def stat

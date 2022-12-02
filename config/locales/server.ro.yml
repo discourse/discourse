@@ -609,6 +609,11 @@ ro:
         post: Postare
         editor: Editor
         edit_reason: Motiv
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "API Utilizator"
+      yaxis: "Zi"
     dau_by_mau:
       xaxis: "Zi"
     daily_engaged_users:

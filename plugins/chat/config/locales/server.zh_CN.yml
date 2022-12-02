@@ -166,7 +166,6 @@ zh_CN:
           other: "[%{email_prefix}] 来自%{message_title}和%{others}的新消息"
         chat_channel:
           other: "[%{email_prefix}] %{message_title}和%{others}中的新消息"
-        other_direct_message: "来自%{message_title}"
         others: "其他 %{count} 个"
       unsubscribe: "此聊天摘要在您离开时从%{site_link}发送。更改您的%{email_preferences_link}，或者%{unsubscribe_link}以退订。"
       unsubscribe_no_link: "此聊天摘要在您离开时从%{site_link}发送。更改您的%{email_preferences_link}。"

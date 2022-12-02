@@ -1,5 +1,4 @@
 import { debounce } from "discourse-common/utils/decorators";
-import { ajax } from "discourse/lib/ajax";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -21,27 +20,6 @@ function initialize(api) {
 
   api.modifyClass("controller:topic", {
     pluginId: PLUGIN_ID,
-
-    _modifyBookmark(bookmark, post) {
-      // if we are talking to discobot then any bookmarks should just
-      // be created without reminder options, to streamline the new user
-      // narrative.
-      const discobotUserId = -2;
-      if (post && post.user_id === discobotUserId && !post.bookmarked) {
-        return ajax("/bookmarks", {
-          type: "POST",
-          data: { post_id: post.id },
-        }).then((response) => {
-          post.setProperties({
-            "topic.bookmarked": true,
-            bookmarked: true,
-            bookmark_id: response.id,
-          });
-          post.appEvents.trigger("post-stream:refresh", { id: this.id });
-        });
-      }
-      return this._super(bookmark, post);
-    },
 
     subscribe() {
       this._super(...arguments);

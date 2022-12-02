@@ -1,0 +1,97 @@
+{{#if @fullscreen}}
+  <div class="title">
+    <h2>
+      <a class="fancy-title" href {{on "click" @jumpTop}}>{{if @mobileView @model.fancyTitle ""}}</a>
+    </h2>
+    {{#if (or this.siteSettings.topic_featured_link_enabled this.showTags)}}
+      <div class="topic-header-extra">
+        {{#if this.showTags}}
+          <div class="list-tags">
+            {{discourse-tags @model mode="list" tags=@model.tags}}
+          </div>
+        {{/if}}
+        {{#if this.siteSettings.topic_featured_link_enabled}}
+          {{topic-featured-link @model}}
+        {{/if}}
+      </div>
+    {{/if}}
+
+    {{#if (and (not @model.isPrivateMessage) @model.category)}}
+      <div class="topic-category">
+        {{#if @model.category.parentCategory}}
+          {{category-link @model.category.parentCategory}}
+        {{/if}}
+        {{category-link @model.category}}
+      </div>
+    {{/if}}
+    {{#if this.excerpt}}
+      <div class="post-excerpt">{{html-safe this.excerpt}}</div>
+    {{/if}}
+  </div>
+{{/if}}
+
+{{#if (and (not @fullscreen) @currentUser)}}
+  <div class="timeline-controls">
+    <TopicAdminMenuButton
+      @topic={{@model}}
+      @addKeyboardTargetClass={{true}}
+      @toggleMultiSelect={{@toggleMultiSelect}}
+      @showTopicSlowModeUpdate={{@showTopicSlowModeUpdate}}
+      @deleteTopic={{@deleteTopic}}
+      @recoverTopic={{@recoverTopic}}
+      @toggleClosed={{@toggleClosed}}
+      @toggleArchived={{@toggleArchived}}
+      @toggleVisibility={{@toggleVisibility}}
+      @showTopicTimerModal={{@showTopicTimerModal}}
+      @showFeatureTopic={{@showFeatureTopic}}
+      @showChangeTimestamp={{@showChangeTimestamp}}
+      @resetBumpDate={{@resetBumpDate}}
+      @convertToPublicTopic={{@convertToPublicTopic}}
+      @convertToPrivateMessage={{@convertToPrivateMessage}}
+    />
+  </div>
+{{/if}}
+
+{{#if this.displayTimeLineScrollArea}}
+  <div class="timeline-scrollarea-wrapper">
+    <div class="timeline-date-wrapper">
+      <a class="start-date" onClick={{this.updatePercentage}} title={{this.startDate}}>
+        <span>
+          {{this.startDate}}
+        </span>
+      </a>
+    </div>
+    <div class="timeline-scrollarea" style={{this.timelineScrollareaStyle}}>
+      <div class="timeline-padding" style={{this.beforePadding}} onClick={{this.updatePercentage}}></div>
+      <TopicTimeline::Scroller
+        @current={{this.current}}
+        @total={{this.total}}
+        @goBack={{this.goBack}}
+        @fullscreen={{@fullscreen}}
+        @showDockedButton={{this.showDockedButton}}
+        @date={{this.date}}
+        @didStartDrag={{this.didStartDrag}}
+        @dragMove={{this.dragMove}}
+        @didEndDrag={{this.didEndDrag}}
+      />
+      <div class="timeline-padding" style={{this.afterPadding}} onClick={{this.updatePercentage}}></div>
+
+      {{#if this.hasBackPosition}}
+        <div class="timeline-last-read" style={{this.lastReadStyle}}>
+          {{d-icon "minus" class="progress"}}
+          {{#if this.showButton}}
+            <TopicTimeline::BackButton @onClick={{this.goBack}}/>
+          {{/if}}
+        </div>
+      {{/if}}
+    </div>
+
+    <div class="timeline-date-wrapper">
+      <a class="now-date" onClick={{this.updatePercentage}} title={{this.nowDate}}>
+        <span>
+          {{this.nowDate}}
+        </span>
+      </a>
+    </div>
+  </div>
+{{/if}}

@@ -17,7 +17,7 @@ export default DiscourseRoute.extend(ViewingActionType, {
   },
 
   renderTemplate() {
-    this.render("user/badges", { into: "user" });
+    this.render("user/badges");
   },
 
   @action

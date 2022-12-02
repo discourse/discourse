@@ -10,7 +10,7 @@ import { test } from "qunit";
 import I18n from "I18n";
 import { hbs } from "ember-cli-htmlbars";
 import showModal from "discourse/lib/show-modal";
-import { registerTemplateModule } from "../helpers/template-module-helper";
+import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 
 acceptance("Modal", function (needs) {
   let _translations;
@@ -54,7 +54,7 @@ acceptance("Modal", function (needs) {
     await triggerKeyEvent("#main-outlet", "keydown", "Escape");
     assert.ok(!exists(".d-modal:visible"), "ESC should close the modal");
 
-    registerTemplateModule(
+    registerTemporaryModule(
       "discourse/templates/modal/not-dismissable",
       hbs`{{#d-modal-body title="" class="" dismissable=false}}test{{/d-modal-body}}`
     );
@@ -79,7 +79,7 @@ acceptance("Modal", function (needs) {
   });
 
   test("rawTitle in modal panels", async function (assert) {
-    registerTemplateModule(
+    registerTemporaryModule(
       "discourse/templates/modal/test-raw-title-panels",
       hbs``
     );
@@ -100,8 +100,8 @@ acceptance("Modal", function (needs) {
   });
 
   test("modal title", async function (assert) {
-    registerTemplateModule("discourse/templates/modal/test-title", hbs``);
-    registerTemplateModule(
+    registerTemporaryModule("discourse/templates/modal/test-title", hbs``);
+    registerTemporaryModule(
       "discourse/templates/modal/test-title-with-body",
       hbs`{{#d-modal-body}}test{{/d-modal-body}}`
     );

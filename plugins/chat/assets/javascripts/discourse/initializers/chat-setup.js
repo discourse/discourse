@@ -101,7 +101,7 @@ export default {
       if (currentUser?.chat_channels) {
         this.chatService.setupWithPreloadedChannels(currentUser.chat_channels);
       } else {
-        this.chatService.getChannels();
+        this.chatService.setupWithoutPreloadedChannels();
       }
 
       const chatNotificationManager = container.lookup(

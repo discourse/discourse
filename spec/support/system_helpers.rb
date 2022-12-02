@@ -22,4 +22,12 @@ module SystemHelpers
     backoff += frequency
     retry
   end
+
+  def resize_window(width: nil, height: nil)
+    original_size = page.driver.browser.manage.window.size
+    page.driver.browser.manage.window.resize_to(width || original_size.width, height || original_size.height)
+    yield
+  ensure
+    page.driver.browser.manage.window.resize_to(original_size.width, original_size.height)
+  end
 end

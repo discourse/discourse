@@ -137,6 +137,11 @@ RSpec.describe Chat::ChatController do
       expect(reactions[smile_emoji]["reacted"]).to be false
     end
 
+    it "sends the last message bus id for the channel" do
+      get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
+      expect(response.parsed_body["meta"]["channel_message_bus_last_id"]).not_to eq(nil)
+    end
+
     describe "scrolling to the past" do
       it "returns the correct messages in created_at, id order" do
         get "/chat/#{chat_channel.id}/messages.json",
@@ -1030,7 +1035,8 @@ RSpec.describe Chat::ChatController do
       }.to change {
         user.notifications.where(notification_type: Notification.types[:chat_invitation]).count
       }.by(1)
-      notification = user.notifications.where(notification_type: Notification.types[:chat_invitation]).last
+      notification =
+        user.notifications.where(notification_type: Notification.types[:chat_invitation]).last
       parsed_data = JSON.parse(notification[:data])
       expect(parsed_data["chat_channel_title"]).to eq(chat_channel.title(user))
       expect(parsed_data["chat_channel_slug"]).to eq(chat_channel.slug)

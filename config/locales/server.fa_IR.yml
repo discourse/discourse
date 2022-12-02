@@ -693,6 +693,11 @@ fa_IR:
         post: فرسته
         editor: ویرایشگر
         edit_reason: دلیل
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "API کاربر"
+      yaxis: "روز"
     dau_by_mau:
       xaxis: "روز"
     daily_engaged_users:

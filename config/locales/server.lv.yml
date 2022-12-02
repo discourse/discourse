@@ -252,6 +252,11 @@ lv:
       labels:
         post: Ieraksts
         edit_reason: Iemesls
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "Lietotāja API"
+      yaxis: "Diena"
     dau_by_mau:
       xaxis: "Diena"
     daily_engaged_users:

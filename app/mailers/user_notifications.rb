@@ -533,11 +533,13 @@ class UserNotifications < ActionMailer::Base
 
     # tag names
     if opts[:show_tags_in_subject] && post.topic_id
-
-      tags = Tag.joins(:topic_tags)
-        .where("topic_tags.topic_id = ?", post.topic_id)
-        .limit(3)
-        .pluck(:name)
+      tags =
+        DiscourseTagging
+          .visible_tags(Guardian.new(user))
+          .joins(:topic_tags)
+          .where("topic_tags.topic_id = ?", post.topic_id)
+          .limit(3)
+          .pluck(:name)
 
       show_tags_in_subject = tags.any? ? tags.join(" ") : nil
     end

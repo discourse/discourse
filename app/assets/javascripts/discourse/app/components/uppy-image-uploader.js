@@ -7,10 +7,22 @@ import { isEmpty } from "@ember/utils";
 import lightbox from "discourse/lib/lightbox";
 import { next } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
+import { authorizesOneOrMoreExtensions } from "discourse/lib/uploads";
 
 export default Component.extend(UppyUploadMixin, {
   classNames: ["image-uploader"],
-  uploadingOrProcessing: or("uploading", "processing"),
+  disabled: or("notAllowed", "uploading", "processing"),
+
+  @discourseComputed(
+    "currentUser.staff",
+    "siteSettings.{authorized_extensions,authorized_extensions_for_staff}"
+  )
+  notAllowed() {
+    return !authorizesOneOrMoreExtensions(
+      this.currentUser?.staff,
+      this.siteSettings
+    );
+  },
 
   @discourseComputed("imageUrl", "placeholderUrl")
   showingPlaceholder(imageUrl, placeholderUrl) {

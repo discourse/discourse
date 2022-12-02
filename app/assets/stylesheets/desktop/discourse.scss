@@ -12,6 +12,10 @@ body.widget-dragging {
   cursor: ns-resize;
 }
 
+body.dragging {
+  cursor: ns-resize;
+}
+
 // Common classes
 .boxed {
   height: 100%;

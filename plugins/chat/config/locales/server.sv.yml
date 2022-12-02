@@ -53,6 +53,7 @@ sv:
       duplicate_message: "Du skrev också ett identiskt meddelande nyligen."
       delete_channel_failed: "Det gick inte att ta bort kanalen, försök igen."
       minimum_length_not_met: "Meddelandet är för kort, måste ha minst %{minimum} tecken."
+      message_too_long: "Meddelandet är för långt, måste ha högst %{maximum} tecken."
       max_reactions_limit_reached: "Nya reaktioner är inte tillåtna för detta meddelande."
       message_move_invalid_channel: "Käll- och destinationskanalen måste vara offentliga kanaler."
       message_move_no_messages_found: "Inga meddelanden hittades med de angivna meddelande-ID:n."
@@ -173,7 +174,7 @@ sv:
         chat_channel:
           one: "[%{email_prefix}] Nytt meddelande i %{message_title}"
           other: "[%{email_prefix}] Nya meddelanden i %{message_title} och %{others}"
-        other_direct_message: "från %{message_title}"
+        other_direct_message: "från %{dm_title}"
         others: "%{count} andra"
       unsubscribe: "Den här chattsammanfattningen skickas från %{site_link} när du är borta. Ändra din %{email_preferences_link} eller %{unsubscribe_link} för att avsluta prenumerationen."
       unsubscribe_no_link: "Den här chattsammanfattningen skickas från %{site_link} när du är borta. Ändra din %{email_preferences_link}."

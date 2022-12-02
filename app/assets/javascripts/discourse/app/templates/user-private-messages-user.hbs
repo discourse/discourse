@@ -1,0 +1,46 @@
+{{#if this.showWarningsWarning}}
+  <div class="alert alert-info">{{html-safe (i18n "admin.user.warnings_list_warning")}}</div>
+{{/if}}
+
+<UserNav::MessagesSecondaryNav>
+  <li class="messages-latest">
+    <LinkTo @route="userPrivateMessages.user.index" @model={{this.model}}>
+      {{d-icon "envelope"}}
+      <span>{{i18n "categories.latest"}}</span>
+    </LinkTo>
+  </li>
+
+  <li class="messages-sent">
+    <LinkTo @route="userPrivateMessages.user.sent" @model={{this.model}}>
+      {{d-icon "reply"}}
+      <span>{{i18n "user.messages.sent"}}</span>
+    </LinkTo>
+  </li>
+
+  {{#if this.viewingSelf}}
+    <li class="messages-new">
+      <LinkTo @route="userPrivateMessages.user.new" @model={{this.model}} class="new">
+        {{d-icon "exclamation-circle"}}
+        <span>{{this.newLinkText}}</span>
+      </LinkTo>
+    </li>
+
+    <li class="messages-unread">
+      <LinkTo @route="userPrivateMessages.user.unread" @model={{this.model}} class="unread">
+        {{d-icon "plus-circle"}}
+        <span>{{this.unreadLinkText}}</span>
+      </LinkTo>
+    </li>
+  {{/if}}
+
+  <li class="messages-archive">
+    <LinkTo @route="userPrivateMessages.user.archive" @model={{this.model}}>
+      {{d-icon "archive"}}
+      <span>{{i18n "user.messages.archive"}}</span>
+    </LinkTo>
+  </li>
+
+  <PluginOutlet @name="user-messages-nav" @connectorTagName="li" @args={{hash model=this.model}} />
+</UserNav::MessagesSecondaryNav>
+
+{{outlet}}

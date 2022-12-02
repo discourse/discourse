@@ -16,6 +16,7 @@ fa_IR:
     deleted_chat_username: حذف شد
     errors:
       channel_exists_for_category: "یک کانال دیگر از قبل برای این دسته‌بندی و نام وجود دارد"
+      message_too_long: "پیام خیلی طولانی است، پیام‌ها باید حداکثر %{maximum} کاراکتر داشته باشند."
       cant_update_direct_message_channel: "ویژگی پیام مستقیم کانال مانند نام و توضیحات را نمی‌توان به‌روز کرد."
       not_accepting_dms: "با عرض پوزش، کاربر %{username} در حال حاضر پیام نمی‌پذیرد."
       actor_ignoring_target_user: "شما در حال نادیده گرفتن %{username} هستید، بنابراین نمی‌توانید پیامی را برای او ارسال کنید."
@@ -92,7 +93,7 @@ fa_IR:
         chat_channel:
           one: "[%{email_prefix}] پیام جدید در %{message_title}"
           other: "[%{email_prefix}] پیام جدید در %{message_title} و %{others}"
-        other_direct_message: "از %{message_title}"
+        other_direct_message: "از %{dm_title}"
         others: "%{count} نفر دیگر"
       view_messages:
         one: "مشاهده پیام"

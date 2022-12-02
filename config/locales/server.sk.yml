@@ -597,6 +597,10 @@ sk:
         post: Príspevok
         editor: Editor
         edit_reason: Dôvod
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+      yaxis: "Deň"
     dau_by_mau:
       xaxis: "Deň"
     daily_engaged_users:
