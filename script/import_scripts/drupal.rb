@@ -413,7 +413,7 @@ class ImportScripts::Drupal < ImportScripts::Base
         tcf = topic.custom_fields
         if tcf && tcf['import_id']
           node_id = tcf['import_id'][/nid:(\d+)/, 1]
-          slug = "/topic/#{node_id}"
+          slug = "/node/#{node_id}"
           Permalink.create(url: slug, topic_id: topic.id)
         end
       rescue => e
