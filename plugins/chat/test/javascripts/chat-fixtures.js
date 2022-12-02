@@ -32,6 +32,10 @@ export const directMessageChannels = [
         following: true,
       },
       last_message_sent_at: "2021-07-20T08:14:16.950Z",
+      message_bus_last_ids: {
+        new_mentions: 0,
+        new_messages: 0,
+      },
     },
   },
   {
@@ -63,6 +67,10 @@ export const directMessageChannels = [
         following: true,
       },
       last_message_sent_at: "2021-07-05T12:04:00.850Z",
+      message_bus_last_ids: {
+        new_mentions: 0,
+        new_messages: 0,
+      },
     },
   },
 ];
@@ -105,6 +113,10 @@ export const chatChannels = {
         muted: false,
         following: true,
       },
+      message_bus_last_ids: {
+        new_mentions: 0,
+        new_messages: 0,
+      },
     },
     {
       id: 7,
@@ -119,6 +131,10 @@ export const chatChannels = {
         unread_count: 0,
         muted: false,
         following: true,
+      },
+      message_bus_last_ids: {
+        new_mentions: 0,
+        new_messages: 0,
       },
     },
     {
@@ -135,6 +151,10 @@ export const chatChannels = {
         muted: false,
         following: true,
       },
+      message_bus_last_ids: {
+        new_mentions: 0,
+        new_messages: 0,
+      },
     },
     {
       id: 5,
@@ -149,6 +169,10 @@ export const chatChannels = {
         unread_count: 0,
         muted: false,
         following: true,
+      },
+      message_bus_last_ids: {
+        new_mentions: 0,
+        new_messages: 0,
       },
     },
     {
@@ -165,6 +189,10 @@ export const chatChannels = {
         muted: false,
         following: true,
       },
+      message_bus_last_ids: {
+        new_mentions: 0,
+        new_messages: 0,
+      },
     },
     {
       id: 10,
@@ -179,6 +207,10 @@ export const chatChannels = {
         unread_count: 0,
         muted: false,
         following: true,
+      },
+      message_bus_last_ids: {
+        new_mentions: 0,
+        new_messages: 0,
       },
     },
     {
@@ -195,9 +227,20 @@ export const chatChannels = {
         muted: false,
         following: true,
       },
+      message_bus_last_ids: {
+        new_mentions: 0,
+        new_messages: 0,
+      },
     },
   ],
   direct_message_channels: directMessageChannels.mapBy("chat_channel"),
+  message_bus_last_ids: {
+    channel_metadata: 0,
+    channel_edits: 0,
+    channel_status: 0,
+    new_channel: 0,
+    user_tracking_state: 0,
+  },
 };
 
 const message0 = {

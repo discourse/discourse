@@ -403,6 +403,8 @@ export default Component.extend({
         can_flag: messages.resultSetMeta.can_flag,
         user_silenced: messages.resultSetMeta.user_silenced,
         can_moderate: messages.resultSetMeta.can_moderate,
+        channel_message_bus_last_id:
+          messages.resultSetMeta.channel_message_bus_last_id,
       },
       registeredChatChannelId: this.chatChannel.id,
     });
@@ -1407,13 +1409,17 @@ export default Component.extend({
 
   _subscribeToUpdates(channelId) {
     this._unsubscribeToUpdates(channelId);
-    this.messageBus.subscribe(`/chat/${channelId}`, (busData) => {
-      if (!this.details.can_load_more_future || busData.type !== "sent") {
-        this.handleMessage(busData);
-      } else {
-        this.set("hasNewMessages", true);
-      }
-    });
+    this.messageBus.subscribe(
+      `/chat/${channelId}`,
+      (busData) => {
+        if (!this.details.can_load_more_future || busData.type !== "sent") {
+          this.handleMessage(busData);
+        } else {
+          this.set("hasNewMessages", true);
+        }
+      },
+      this.details.channel_message_bus_last_id
+    );
   },
 
   @bind

@@ -79,6 +79,13 @@ acceptance("Discourse Chat - Chat live pane collapse", function (needs) {
       helper.response({
         public_channels: [],
         direct_message_channels: [],
+        message_bus_last_ids: {
+          channel_metadata: 0,
+          channel_edits: 0,
+          channel_status: 0,
+          new_channel: 0,
+          user_tracking_state: 0,
+        },
       })
     );
 
