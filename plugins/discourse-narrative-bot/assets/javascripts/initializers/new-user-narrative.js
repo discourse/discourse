@@ -1,19 +1,17 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 
-const PLUGIN_ID = "new-user-narrative";
-
 function initialize(api) {
-  const messageBus = api.container.lookup("service:message-bus");
   const currentUser = api.getCurrentUser();
-  const appEvents = api.container.lookup("service:app-events");
 
-  api.modifyClass("component:site-header", {
-    pluginId: PLUGIN_ID,
-    didInsertElement() {
-      this._super(...arguments);
-      this.dispatch("header:search-context-trigger", "header");
-    },
-  });
+  if (!currentUser) {
+    return;
+  }
+
+  api.dispatchWidgetAppEvent(
+    "site-header",
+    "header",
+    "header:search-context-trigger"
+  );
 
   api.attachWidgetAction("header", "headerSearchContextTrigger", function () {
     if (this.site.mobileView) {
@@ -24,11 +22,12 @@ function initialize(api) {
     }
   });
 
-  if (messageBus && currentUser) {
-    messageBus.subscribe(`/new_user_narrative/tutorial_search`, () => {
-      appEvents.trigger("header:search-context-trigger");
-    });
-  }
+  const messageBus = api.container.lookup("service:message-bus");
+  const appEvents = api.container.lookup("service:app-events");
+
+  messageBus.subscribe(`/new_user_narrative/tutorial_search`, () => {
+    appEvents.trigger("header:search-context-trigger");
+  });
 }
 
 export default {
