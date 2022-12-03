@@ -13,10 +13,6 @@ export default {
     this.messageBus = container.lookup("service:message-bus");
     this.dialog = container.lookup("service:dialog");
 
-    if (!this.messageBus) {
-      return;
-    }
-
     this.messageBus.subscribe("/logout", this.onMessage);
   },
 
