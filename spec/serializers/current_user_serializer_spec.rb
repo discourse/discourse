@@ -390,5 +390,19 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
+  describe "#new_personal_messages_notifications_count" do
+    fab!(:notification) { Fabricate(:notification, user: user, read: false, notification_type: Notification.types[:private_message]) }
+
+    it "isn't included when enable_experimental_sidebar_hamburger is disabled" do
+      SiteSetting.enable_experimental_sidebar_hamburger = false
+      expect(serializer.as_json[:new_personal_messages_notifications_count]).to be_nil
+    end
+
+    it "is included when enable_experimental_sidebar_hamburger is enabled" do
+      SiteSetting.enable_experimental_sidebar_hamburger = true
+      expect(serializer.as_json[:new_personal_messages_notifications_count]).to eq(1)
+    end
+  end
+
   include_examples "#display_sidebar_tags", described_class
 end

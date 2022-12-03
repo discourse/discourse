@@ -104,6 +104,15 @@ RSpec.describe Email::Styles do
       expect(frag.at('a')).to be_present
       expect(frag.at('a')['href']).to eq(original_url)
     end
+
+    it "replaces hashtag-cooked text with raw #hashtag" do
+      hashtag_html = "<a class=\"hashtag-cooked\" href=\"#{Discourse.base_url}/c/123/dev\" data-type=\"category\" data-slug=\"dev\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>Dev Zone</span></a>"
+      frag = html_fragment(hashtag_html)
+      expect(frag.at("a").text.chomp).to eq("#dev")
+      hashtag_html = "<a class=\"hashtag-cooked\" href=\"#{Discourse.base_url}/c/123/dev\" data-type=\"category\" data-slug=\"dev\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\">Dev Zone</a>"
+      frag = html_fragment(hashtag_html)
+      expect(frag.at("a").text.chomp).to eq("#dev")
+    end
   end
 
   describe "rewriting protocol relative URLs to the forum" do

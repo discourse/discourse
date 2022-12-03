@@ -144,6 +144,6 @@ end
 #
 #  index_chat_channels_on_chatable_id                    (chatable_id)
 #  index_chat_channels_on_chatable_id_and_chatable_type  (chatable_id,chatable_type)
-#  index_chat_channels_on_slug                           (slug)
+#  index_chat_channels_on_slug                           (slug) UNIQUE
 #  index_chat_channels_on_status                         (status)
 #

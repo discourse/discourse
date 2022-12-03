@@ -73,36 +73,6 @@
     border-right: 1px solid var(--primary-low);
     border-left: 1px solid var(--primary-low);
 
-    .channels-list {
-      background: var(--primary-very-low);
-
-      .chat-channel-divider {
-        padding: 2rem 0.5rem 0.5rem 1rem;
-
-        &:first-of-type {
-          padding-top: 1.5rem;
-        }
-      }
-
-      .chat-channel-row {
-        height: 2.5em;
-        padding-right: 0.5rem;
-
-        .chat-channel-metadata {
-          &__date {
-            display: none;
-          }
-          .chat-channel-unread-indicator {
-            margin-top: 0;
-          }
-        }
-      }
-
-      .loading-container {
-        padding-bottom: 1em;
-      }
-    }
-
     .chat-live-pane {
       border-radius: unset;
     }

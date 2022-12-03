@@ -29,6 +29,7 @@ import {
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import { setupURL } from "discourse-common/lib/get-url";
 
 discourseModule("Unit | Utilities", function () {
   test("escapeExpression", function (assert) {
@@ -97,6 +98,14 @@ discourseModule("Unit | Utilities", function () {
       avatarUrl("/fake/template/{size}.png", "large"),
       "/fake/template/" + rawSize(45) + ".png",
       "different size"
+    );
+
+    setupURL("https://app-cdn.example.com", "https://example.com", "");
+
+    assert.strictEqual(
+      avatarUrl("/fake/template/{size}.png", "large"),
+      "https://app-cdn.example.com/fake/template/" + rawSize(45) + ".png",
+      "uses CDN if present"
     );
   });
 

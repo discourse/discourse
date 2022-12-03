@@ -136,7 +136,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
 
     when "svg"
       attributes = Hash[*attributes.flatten]
-      if attributes["class"].include?("d-icon") && @keep_svg
+      if attributes["class"]&.include?("d-icon") && @keep_svg
         include_tag(name, attributes)
         @in_svg = true
       end

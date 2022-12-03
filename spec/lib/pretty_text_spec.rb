@@ -1690,13 +1690,22 @@ HTML
       SiteSetting.watched_words_regular_expressions = true
 
       Fabricate(:user, username: "test")
-      category = Fabricate(:category, slug: "test")
+      category = Fabricate(:category, slug: "test", name: "test")
       Fabricate(:watched_word, action: WatchedWord.actions[:replace], word: "es", replacement: "discourse")
 
       expect(PrettyText.cook("@test #test test")).to match_html(<<~HTML)
         <p>
           <a class="mention" href="/u/test">@test</a>
           <a class="hashtag" href="/c/test/#{category.id}">#<span>test</span></a>
+          tdiscourset
+        </p>
+      HTML
+
+      SiteSetting.enable_experimental_hashtag_autocomplete = true
+      expect(PrettyText.cook("@test #test test")).to match_html(<<~HTML)
+        <p>
+          <a class="mention" href="/u/test">@test</a>
+          <a class="hashtag-cooked" href="#{category.url}" data-type="category" data-slug="test"><svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg><span>test</span></a>
           tdiscourset
         </p>
       HTML

@@ -195,13 +195,33 @@ function applyEmoji(
   emojiUnicodeReplacer,
   enableShortcuts,
   inlineEmoji,
-  customEmojiTranslation
+  customEmojiTranslation,
+  watchedWordsReplacer
 ) {
   let result = null;
   let start = 0;
 
   if (emojiUnicodeReplacer) {
     content = emojiUnicodeReplacer(content);
+  }
+
+  if (watchedWordsReplacer) {
+    const watchedWordRegex = Object.keys(watchedWordsReplacer);
+
+    watchedWordRegex.forEach((watchedWord) => {
+      if (content?.match(watchedWord)) {
+        const regex = new RegExp(watchedWord, "g");
+        const matches = content.match(regex);
+        const replacement = watchedWordsReplacer[watchedWord].replacement;
+
+        matches.forEach(() => {
+          const matchingRegex = regex.exec(content);
+          if (matchingRegex) {
+            content = content.replace(matchingRegex[1], replacement);
+          }
+        });
+      }
+    });
   }
 
   let end = content.length;
@@ -337,7 +357,8 @@ export function setup(helper) {
           md.options.discourse.emojiUnicodeReplacer,
           md.options.discourse.features.emojiShortcuts,
           md.options.discourse.features.inlineEmoji,
-          md.options.discourse.customEmojiTranslation
+          md.options.discourse.customEmojiTranslation,
+          md.options.discourse.watchedWordsReplace
         )
       )
     );
