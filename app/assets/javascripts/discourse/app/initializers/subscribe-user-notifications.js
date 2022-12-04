@@ -54,7 +54,7 @@ export default {
     );
 
     this.messageBus.subscribe(
-      `/do-not-disturb/${this.currentUser.get("id")}`,
+      `/do-not-disturb/${this.currentUser.id}`,
       this.onDoNotDisturb
     );
 
@@ -83,7 +83,7 @@ export default {
   },
 
   teardown() {
-    if (!this.messageBus) {
+    if (!this.currentUser) {
       return;
     }
 
@@ -103,7 +103,7 @@ export default {
     );
 
     this.messageBus.unsubscribe(
-      `/do-not-disturb/${this.currentUser.get("id")}`,
+      `/do-not-disturb/${this.currentUser.id}`,
       this.onDoNotDisturb
     );
 
