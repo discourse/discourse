@@ -58,6 +58,10 @@ export default class TopicTimelineScrollArea extends Component {
     this.calculatePosition();
   }
 
+  get topicTitle() {
+    return htmlSafe(this.args.mobileView ? this.args.model.fancyTitle : "");
+  }
+
   get showTags() {
     return (
       this.siteSettings.tagging_enabled && this.args.model.tags?.length > 0
