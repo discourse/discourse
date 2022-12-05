@@ -752,7 +752,7 @@ export default class Chat extends Service {
 
         (this.directMessageChannels || [])
           .findBy("id", parseInt(channel.id, 10))
-          ?.reSortDirectMessageChannels();
+          ?.reSortDirectMessageChannels?.();
       },
       channel.message_bus_last_ids.new_messages
     );
