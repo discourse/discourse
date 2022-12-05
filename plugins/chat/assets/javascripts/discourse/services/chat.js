@@ -748,16 +748,11 @@ export default class Chat extends Service {
           }
         }
         this.userChatChannelTrackingStateChanged();
+        channel.set("last_message_sent_at", new Date());
 
-        // Update last_message_sent_at timestamp for channel if direct message
-        const dmChatChannel = (this.directMessageChannels || []).findBy(
-          "id",
-          parseInt(channel.id, 10)
-        );
-        if (dmChatChannel) {
-          dmChatChannel.set("last_message_sent_at", new Date());
-          this.reSortDirectMessageChannels();
-        }
+        (this.directMessageChannels || [])
+          .findBy("id", parseInt(channel.id, 10))
+          ?.reSortDirectMessageChannels?.();
       },
       channel.message_bus_last_ids.new_messages
     );
