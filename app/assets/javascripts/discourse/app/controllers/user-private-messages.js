@@ -2,11 +2,27 @@ import Controller, { inject as controller } from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { alias, and, equal, readOnly } from "@ember/object/computed";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import I18n from "I18n";
 import DiscourseURL from "discourse/lib/url";
 
-export const PERSONAL_INBOX = "__personal_inbox__";
+const customUserNavMessagesDropdownRows = [];
+
+export function registerCustomUserNavMessagesDropdownRow(
+  routeName,
+  name,
+  icon
+) {
+  customUserNavMessagesDropdownRows.push({
+    routeName,
+    name,
+    icon,
+  });
+}
+
+export function resetCustomUserNavMessagesDropdownRows() {
+  customUserNavMessagesDropdownRows.length = 0;
+}
 
 export default class extends Controller {
   @service router;
@@ -25,19 +41,21 @@ export default class extends Controller {
   @readOnly("site.can_tag_pms") pmTaggingEnabled;
 
   get messagesDropdownValue() {
-    const parentRoute = this.router.currentRoute.parent;
+    let value;
 
-    if (Object.keys(parentRoute.params).length > 0) {
-      return this.router.urlFor(
-        parentRoute.name,
-        this.model.username,
-        parentRoute.params
-      );
-    } else {
-      return this.router.urlFor(parentRoute.name, this.model.username);
+    for (let i = this.messagesDropdownContent.length - 1; i >= 0; i--) {
+      const row = this.messagesDropdownContent[i];
+
+      if (this.router.currentURL.includes(row.id)) {
+        value = row.id;
+        break;
+      }
     }
+
+    return value;
   }
 
+  @cached
   get messagesDropdownContent() {
     const content = [
       {
@@ -65,6 +83,14 @@ export default class extends Controller {
         icon: "tags",
       });
     }
+
+    customUserNavMessagesDropdownRows.forEach((row) => {
+      content.push({
+        id: this.router.urlFor(row.routeName, this.model.username),
+        name: row.name,
+        icon: row.icon,
+      });
+    });
 
     return content;
   }
