@@ -4,16 +4,16 @@ class UpdateChatChannelMessageCounts < ActiveRecord::Migration[7.0]
   def up
     DB.exec <<~SQL
       UPDATE chat_channels channels
-      SET chat_message_count = subquery.chat_message_count
+      SET messages_count = subquery.messages_count
       FROM (
-        SELECT COUNT(*) AS chat_message_count, chat_channel_id
+        SELECT COUNT(*) AS messages_count, chat_channel_id
         FROM chat_messages
         WHERE chat_messages.deleted_at IS NULL
         GROUP BY chat_channel_id
       ) subquery
       WHERE channels.id = subquery.chat_channel_id
       AND channels.deleted_at IS NULL
-      AND subquery.chat_message_count != channels.chat_message_count
+      AND subquery.messages_count != channels.messages_count
     SQL
   end
 

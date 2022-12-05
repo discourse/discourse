@@ -90,21 +90,21 @@ class ChatChannel < ActiveRecord::Base
   # TODO (martin) Move UpdateUserCountsForChatChannels into here
   def self.update_counts
 
-    # NOTE: ChatChannel#chat_message_count is not updated every time
+    # NOTE: ChatChannel#messages_count is not updated every time
     # a message is created or deleted in a channel, so it should not
     # be displayed in the UI. It is updated eventually via Jobs::ChatPeriodicalUpdates
     DB.exec <<~SQL
       UPDATE chat_channels channels
-      SET chat_message_count = subquery.chat_message_count
+      SET messages_count = subquery.messages_count
       FROM (
-        SELECT COUNT(*) AS chat_message_count, chat_channel_id
+        SELECT COUNT(*) AS messages_count, chat_channel_id
         FROM chat_messages
         WHERE chat_messages.deleted_at IS NULL
         GROUP BY chat_channel_id
       ) subquery
       WHERE channels.id = subquery.chat_channel_id
       AND channels.deleted_at IS NULL
-      AND subquery.chat_message_count != channels.chat_message_count
+      AND subquery.messages_count != channels.messages_count
     SQL
   end
 
@@ -168,7 +168,7 @@ end
 #
 # Indexes
 #
-#  index_chat_channels_on_chat_message_count             (chat_message_count)
+#  index_chat_channels_on_messages_count             (messages_count)
 #  index_chat_channels_on_chatable_id                    (chatable_id)
 #  index_chat_channels_on_chatable_id_and_chatable_type  (chatable_id,chatable_type)
 #  index_chat_channels_on_slug                           (slug) UNIQUE

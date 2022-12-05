@@ -45,21 +45,21 @@ RSpec.describe ChatChannel do
       Fabricate(:chat_message, chat_channel: dm_channel2)
     end
 
-    describe "updating chat_message_count for all channels" do
+    describe "updating messages_count for all channels" do
       it "counts correctly" do
         described_class.ensure_consistency!
-        expect(category_channel1.reload.chat_message_count).to eq(3)
-        expect(category_channel2.reload.chat_message_count).to eq(4)
-        expect(category_channel3.reload.chat_message_count).to eq(1)
-        expect(category_channel4.reload.chat_message_count).to eq(0)
-        expect(dm_channel1.reload.chat_message_count).to eq(0)
-        expect(dm_channel2.reload.chat_message_count).to eq(2)
+        expect(category_channel1.reload.messages_count).to eq(3)
+        expect(category_channel2.reload.messages_count).to eq(4)
+        expect(category_channel3.reload.messages_count).to eq(1)
+        expect(category_channel4.reload.messages_count).to eq(0)
+        expect(dm_channel1.reload.messages_count).to eq(0)
+        expect(dm_channel2.reload.messages_count).to eq(2)
       end
 
       it "does not count deleted messages" do
         category_channel3.chat_messages.last.trash!
         described_class.ensure_consistency!
-        expect(category_channel3.reload.chat_message_count).to eq(0)
+        expect(category_channel3.reload.messages_count).to eq(0)
       end
 
       it "does not update deleted channels" do
@@ -67,7 +67,7 @@ RSpec.describe ChatChannel do
         category_channel3.chat_messages.last.trash!
         category_channel3.trash!
         described_class.ensure_consistency!
-        expect(category_channel3.reload.chat_message_count).to eq(1)
+        expect(category_channel3.reload.messages_count).to eq(1)
       end
     end
   end
