@@ -1,0 +1,34 @@
+<div class="penalty-similar-users">
+  <p>{{i18n "admin.user.other_matches" (hash count=this.user.similar_users_count username=this.user.username)}}</p>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>{{i18n "username"}}</th>
+        <th>{{i18n "last_seen"}}</th>
+        <th>{{i18n "admin.user.topics_entered"}}</th>
+        <th>{{i18n "admin.user.posts_read_count"}}</th>
+        <th>{{i18n "admin.user.time_read"}}</th>
+        <th>{{i18n "created"}}</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{#each this.user.similar_users as |user|}}
+        <tr>
+          <td>
+            <a href={{user.path}} data-user-card={{user.username}}>
+              {{avatar user imageSize="small"}}
+            </a>
+            <LinkTo @route="user" @model={{user}}>{{user.username}}</LinkTo>
+          </td>
+          <td>{{format-duration user.last_seen_age}}</td>
+          <td>{{number user.topics_entered}}</td>
+          <td>{{number user.posts_read_count}}</td>
+          <td>{{format-duration user.time_read}}</td>
+          <td>{{format-duration user.created_at_age}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>

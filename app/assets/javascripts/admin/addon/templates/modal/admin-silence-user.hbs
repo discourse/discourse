@@ -18,6 +18,10 @@
       <PenaltyPostAction @postId={{this.postId}} @postAction={{this.postAction}} @postEdit={{this.postEdit}} />
     {{/if}}
 
+    {{#if this.user.similar_users}}
+      <AdminPenaltySimilarUsers @user={{this.user}} @selectedUserIds={{this.selectedSimilarUserIds}} />
+    {{/if}}
+
   </ConditionalLoadingSpinner>
 
 </DModalBody>

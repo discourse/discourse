@@ -28,7 +28,6 @@ export default Controller.extend(PenaltyController, {
       }
 
       this.set("suspending", true);
-
       this.penalize(() => {
         return this.user.suspend({
           suspend_until: this.suspendUntil,

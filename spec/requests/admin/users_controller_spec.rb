@@ -103,6 +103,18 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["id"]).to eq(user.id)
       end
+
+      it 'returns similar users' do
+        Fabricate(:user, ip_address: '88.88.88.88')
+        similar_user = Fabricate(:user, ip_address: user.ip_address)
+
+        get "/admin/users/#{user.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["id"]).to eq(user.id)
+        expect(response.parsed_body["similar_users_count"]).to eq(1)
+        expect(response.parsed_body["similar_users"].map { |u| u["id"] }).to contain_exactly(similar_user.id)
+      end
     end
 
     context "when logged in as a non-staff user" do

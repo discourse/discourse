@@ -40,7 +40,19 @@ class Admin::UsersController < Admin::StaffController
   def show
     @user = User.find_by(id: params[:id])
     raise Discourse::NotFound unless @user
-    render_serialized(@user, AdminDetailedUserSerializer, root: false)
+
+    similar_users = User.real
+      .where.not(id: @user.id)
+      .where(ip_address: @user.ip_address)
+    similar_users_count = similar_users.count
+
+    render_serialized(
+      @user,
+      AdminDetailedUserSerializer,
+      root: false,
+      similar_users: similar_users.limit(10),
+      similar_users_count: similar_users_count,
+    )
   end
 
   def delete_posts_batch
