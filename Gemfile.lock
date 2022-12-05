@@ -114,7 +114,7 @@ GEM
     debug_inspector (1.1.0)
     diff-lcs (1.5.0)
     diffy (3.4.2)
-    digest (3.1.0)
+    digest (3.1.1)
     discourse-fonts (0.0.9)
     discourse-seed-fu (2.3.12)
       activerecord (>= 3.1)
