@@ -201,6 +201,7 @@ after_initialize do
   load File.expand_path("../app/jobs/scheduled/update_user_counts_for_chat_channels.rb", __FILE__)
   load File.expand_path("../app/jobs/scheduled/email_chat_notifications.rb", __FILE__)
   load File.expand_path("../app/jobs/scheduled/auto_join_users.rb", __FILE__)
+  load File.expand_path("../app/jobs/scheduled/chat_periodical_updates.rb", __FILE__)
   load File.expand_path("../app/services/chat_publisher.rb", __FILE__)
   load File.expand_path("../app/services/chat_message_destroyer.rb", __FILE__)
   load File.expand_path("../app/controllers/api_controller.rb", __FILE__)

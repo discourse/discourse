@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module Jobs
+  # TODO (martin) Move into ChatChannel.ensure_consistency! so it
+  # is run with ChatPeriodicalUpdates
   class UpdateUserCountsForChatChannels < ::Jobs::Scheduled
     every 1.hour
 

@@ -83,6 +83,31 @@ class ChatChannel < ActiveRecord::Base
     "#{Discourse.base_path}/chat/channel/#{self.id}/#{self.slug || "-"}"
   end
 
+  def self.ensure_consistency!
+    update_counts
+  end
+
+  # TODO (martin) Move UpdateUserCountsForChatChannels into here
+  def self.update_counts
+
+    # NOTE: ChatChannel#messages_count is not updated every time
+    # a message is created or deleted in a channel, so it should not
+    # be displayed in the UI. It is updated eventually via Jobs::ChatPeriodicalUpdates
+    DB.exec <<~SQL
+      UPDATE chat_channels channels
+      SET messages_count = subquery.messages_count
+      FROM (
+        SELECT COUNT(*) AS messages_count, chat_channel_id
+        FROM chat_messages
+        WHERE chat_messages.deleted_at IS NULL
+        GROUP BY chat_channel_id
+      ) subquery
+      WHERE channels.id = subquery.chat_channel_id
+      AND channels.deleted_at IS NULL
+      AND subquery.messages_count != channels.messages_count
+    SQL
+  end
+
   private
 
   def change_status(acting_user, target_status)
@@ -143,6 +168,7 @@ end
 #
 # Indexes
 #
+#  index_chat_channels_on_messages_count             (messages_count)
 #  index_chat_channels_on_chatable_id                    (chatable_id)
 #  index_chat_channels_on_chatable_id_and_chatable_type  (chatable_id,chatable_type)
 #  index_chat_channels_on_slug                           (slug) UNIQUE
