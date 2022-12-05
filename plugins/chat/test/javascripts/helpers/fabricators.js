@@ -31,6 +31,7 @@ export default {
     name: "My category name",
     chatable: categoryChatableFabricator(),
     last_message_sent_at: "2021-11-08T21:26:05.710Z",
+    allow_channel_wide_mentions: true,
     message_bus_last_ids: {
       new_mentions: 0,
       new_messages: 0,
