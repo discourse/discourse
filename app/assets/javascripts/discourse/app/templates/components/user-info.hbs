@@ -28,7 +28,10 @@
       {{/if}}
     </span>
     {{#if (and @showStatus @user.status)}}
-      <UserStatusMessage @status={{@user.status}} @showDescription={{true}} @showTooltip={{false}} />
+      <UserStatusMessage
+        @status={{@user.status}}
+        @showDescription={{@showStatusDescription}}
+        @showTooltip={{@showStatusTooltip}} />
     {{/if}}
     <PluginOutlet @name="after-user-name" @tagName="span" @connectorTagName="span" @args={{hash user=this.user}} />
   </div>

@@ -48,7 +48,12 @@
                 {{on "keyup" (action "handleUserKeyUp" user)}}
               >
                 <ChatUserAvatar @user={{user}} @avatarSize="medium" />
-                <UserInfo @user={{user}} @includeLink={{false}} @includeAvatar={{false}} @showStatus={{true}} />
+                <UserInfo
+                  @user={{user}}
+                  @includeLink={{false}}
+                  @includeAvatar={{false}}
+                  @showStatus={{true}}
+                  @showStatusDescription={{true}} />
               </li>
             {{/each}}
           </ul>
