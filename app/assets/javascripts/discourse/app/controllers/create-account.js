@@ -437,11 +437,6 @@ export default Controller.extend(
       });
     },
 
-    @action
-    togglePasswordMask() {
-      this.toggleProperty("maskPassword");
-    },
-
     actions: {
       externalLogin(provider) {
         this.login.send("externalLogin", provider, { signup: true });

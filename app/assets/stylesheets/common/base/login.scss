@@ -347,6 +347,11 @@ body.invite-page {
   }
 }
 
+.toggle-password-mask {
+  align-self: start;
+  line-height: 1.4; // aligns with input description text
+}
+
 // admin invite page
 .invites-show {
   display: grid;
@@ -410,7 +415,9 @@ body.invite-page {
     }
     .tip {
       font-size: var(--font-down-1);
-      margin-bottom: 0.25em;
+      &:not(:empty) {
+        margin-bottom: 0.25em;
+      }
     }
   }
 
