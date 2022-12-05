@@ -11,7 +11,7 @@ class ScreenedIpAddress < ActiveRecord::Base
   default_action :block
 
   validates :ip_address, ip_address_format: true, presence: true
-  after_validation :check_for_match
+  after_validation :check_for_match, if: :will_save_change_to_ip_address?
 
   ROLLED_UP_BLOCKS = [
     # IPv4
