@@ -55,4 +55,30 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
 
     bodyElement.style.width = null;
   });
+
+  test("transition from narrow screen to wide screen", async function (assert) {
+    await visit("/");
+    await settled();
+
+    const bodyElement = document.querySelector("body");
+    bodyElement.style.width = "990px";
+
+    await waitUntil(
+      () => document.querySelector(".btn-sidebar-toggle.narrow-desktop"),
+      {
+        timeout: 5000,
+      }
+    );
+    await click(".btn-sidebar-toggle");
+
+    bodyElement.style.width = "1200px";
+    await waitUntil(() => document.querySelector("#d-sidebar"), {
+      timeout: 5000,
+    });
+    await click(".header-dropdown-toggle.current-user");
+    $(".header-dropdown-toggle.current-user").click();
+    assert.ok(exists(".quick-access-panel"));
+
+    bodyElement.style.width = null;
+  });
 });
