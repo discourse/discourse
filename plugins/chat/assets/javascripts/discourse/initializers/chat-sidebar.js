@@ -383,7 +383,7 @@ export default {
               if (status.ends_at) {
                 const untilFormatted = until(
                   status.ends_at,
-                  this.chatService.currentUser.timezone,
+                  this.chatService.currentUser.user_option.timezone,
                   this.chatService.currentUser.locale
                 );
                 title += ` ${untilFormatted}`;

@@ -94,14 +94,14 @@ module("Unit | Model | user", function (hooks) {
   test("createCurrent() guesses timezone if user doesn't have it set", async function (assert) {
     PreloadStore.store("currentUser", {
       username: "eviltrout",
-      timezone: null,
+      user_option: { timezone: null },
     });
     const expectedTimezone = "Africa/Casablanca";
     sinon.stub(moment.tz, "guess").returns(expectedTimezone);
 
     const currentUser = User.createCurrent();
 
-    assert.deepEqual(currentUser.timezone, expectedTimezone);
+    assert.deepEqual(currentUser.user_option.timezone, expectedTimezone);
 
     await settled(); // `User` sends a request to save the timezone
   });
@@ -110,7 +110,7 @@ module("Unit | Model | user", function (hooks) {
     const timezone = "Africa/Casablanca";
     PreloadStore.store("currentUser", {
       username: "eviltrout",
-      timezone,
+      user_option: { timezone },
     });
     const spyMomentGuess = sinon.spy(moment.tz, "guess");
 

@@ -289,6 +289,8 @@ en:
         always: "For all activity"
 
       settings:
+        channel_wide_mentions_label: "Allow @all and @here mentions"
+        channel_wide_mentions_description: "Allow users to notify all members of #%{channel} with @all or only those who are active in the moment with @here"
         auto_join_users_label: "Automatically add users"
         auto_join_users_info: "Check hourly which users have been active in the last 3 months and, if they have access to the %{category} category, add them to this channel."
         enable_auto_join_users: "Automatically add all recently active users"

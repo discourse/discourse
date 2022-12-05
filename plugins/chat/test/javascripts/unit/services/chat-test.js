@@ -134,6 +134,28 @@ acceptance("Discourse Chat | Unit | Service | chat", function (needs) {
     );
   });
 
+  test("new message", async function (assert) {
+    setupMockPresenceChannel(this.chatService);
+    await this.chatService.forceRefreshChannels();
+
+    await publishToMessageBus("/chat/1/new-messages", {
+      user_id: this.currentUser.id,
+      username: this.currentUser.username,
+      message_id: 124,
+    });
+
+    assert.equal(
+      this.currentUser.chat_channel_tracking_state[1].chat_message_id,
+      124,
+      "updates tracking state last message id to the message id sent by current user"
+    );
+    assert.equal(
+      this.currentUser.chat_channel_tracking_state[1].unread_count,
+      2,
+      "does not increment unread count"
+    );
+  });
+
   test("/chat/:channelId/new-messages - message from current user", async function (assert) {
     setupMockPresenceChannel(this.chatService);
     await this.chatService.forceRefreshChannels();

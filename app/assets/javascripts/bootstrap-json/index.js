@@ -319,7 +319,13 @@ async function handleRequest(proxy, baseURL, req, res) {
   });
 
   response.headers.forEach((value, header) => {
-    res.set(header, value);
+    if (header === "set-cookie") {
+      // Special handling to get array of multiple Set-Cookie header values
+      // per https://github.com/node-fetch/node-fetch/issues/251#issuecomment-428143940
+      res.set("set-cookie", response.headers.raw()["set-cookie"]);
+    } else {
+      res.set(header, value);
+    }
   });
   res.set("content-encoding", null);
 

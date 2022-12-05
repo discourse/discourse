@@ -1123,121 +1123,107 @@ blockquote > *:last-child {
   display: flex;
   align-items: center;
 
+  &.deleted {
+    background-color: var(--danger-low-mid);
+  }
+
   .topic-avatar,
   .small-action-desc {
     border-top: 1px solid var(--primary-low);
   }
 
   .topic-avatar {
-    align-self: flex-start;
-    padding: 0.7em 0;
+    display: flex;
+    align-self: stretch;
     flex: 0 0 auto;
+    margin: 0;
+    padding-top: 1em;
     width: var(--topic-avatar-width);
+    justify-content: center;
     .d-icon {
-      font-size: 2em;
+      font-size: var(--font-up-3);
       width: var(--topic-avatar-width);
-      text-align: center;
       color: var(--primary-low-mid);
     }
-  }
-
-  &.deleted {
-    background-color: var(--danger-low-mid);
-  }
-
-  .small-action-desc.timegap {
-    color: var(--primary-medium);
   }
 
   .small-action-desc {
     box-sizing: border-box;
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    color: var(--primary-700);
     padding: 1em 0 1em var(--topic-body-width-padding);
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: var(--font-down-1);
-    color: var(--primary-medium);
     width: calc(
       var(--topic-body-width) + (var(--topic-body-width-padding) * 2)
     );
     min-width: 0; // Allows flex container to shrink
 
-    button {
-      align-self: flex-start;
-      font-size: var(--font-up-1);
-      .d-icon {
-        font-size: var(--font-down-1);
-      }
-    }
-
-    .custom-message {
-      flex: 1 1 100%;
-      text-transform: none;
-      font-weight: normal;
-      font-size: var(--font-up-1);
-      order: 12;
-      word-break: break-word;
-      min-width: 0; // Allows content like oneboxes to shrink
-      p {
-        margin-bottom: 0;
-      }
-    }
-    a.trigger-user-card {
-      align-self: stretch;
-    }
     .avatar {
-      margin-right: 0.8em;
+      margin-right: 0.5em;
       float: left;
     }
 
-    > p {
+    p {
       margin: 0;
       padding-right: 0.5em;
-      line-height: var(--line-height-medium);
-      flex: 1 1;
-      .mention {
-        // needs some special sizing and positioning due to surrounding all-caps text
-        position: relative;
-        top: -1px;
-        font-size: var(--font-0);
-        text-transform: initial;
-      }
+    }
+  }
+
+  .small-action-contents {
+    flex: 1 1 auto;
+  }
+
+  .small-action-buttons {
+    margin-left: auto;
+  }
+
+  .small-action-custom-message {
+    flex: 1 1 100%;
+    font-weight: normal;
+    margin-top: 0.5em;
+    word-break: break-word;
+    min-width: 0; // Allows content like oneboxes to shrink
+    color: var(--primary);
+    p {
+      margin-bottom: 0;
     }
   }
 
   button {
     background: transparent;
-    border: 0;
-    order: 9;
-    &:last-of-type {
-      margin-left: auto;
-      order: 8;
+    font-size: var(--font-down-1);
+    .d-icon {
+      color: var(--primary-500);
+    }
+
+    .discourse-no-touch & {
+      &:hover,
+      &:focus {
+        background: var(--primary-200);
+        .d-icon {
+          color: var(--primary);
+        }
+      }
     }
   }
 
   &.topic-post-visited {
-    border-top: none;
-
-    + .small-action {
-      border-top: none;
-    }
-
     .topic-post-visited-line {
       text-align: center;
       border-bottom: 1px solid var(--danger-medium);
-      line-height: 0.1em;
-      margin: 1rem 0px;
+      z-index: z("base") + 2; // ensures last visit border is on top of post borders
+      line-height: 0;
+      margin: 0;
+      margin-bottom: -1px;
+      color: var(--danger-medium);
+      font-size: var(--font-down-1);
       width: calc(
         var(--topic-body-width) + var(--topic-avatar-width) +
           (var(--topic-body-width-padding) * 2)
       );
       .topic-post-visited-message {
         background-color: var(--secondary);
-        color: var(--danger-medium);
-        font-size: var(--font-down-1);
-        padding: 0 8px;
+        padding: 0 0.5em;
       }
     }
   }

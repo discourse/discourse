@@ -393,6 +393,7 @@ Discourse::Application.routes.draw do
       post "session/2fa/test-action" => "session#test_second_factor_restricted_route"
     end
     get "session/scopes" => "session#scopes"
+    get "composer/mentions" => "composer#mentions"
     get "composer_messages" => "composer_messages#index"
     get "composer_messages/user_not_seen_in_a_while" => "composer_messages#user_not_seen_in_a_while"
 
@@ -425,7 +426,6 @@ Discourse::Application.routes.draw do
         collection do
           get "check_username"
           get "check_email"
-          get "is_local_username"
         end
       end
 

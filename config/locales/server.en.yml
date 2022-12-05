@@ -5003,12 +5003,6 @@ en:
           logo_small:
             label: "Square Logo"
             description: "A square version of your logo. Shown at the top left when scrolling down, and when sharing on social platforms. Ideally at least 512x512."
-          favicon:
-            label: "Browser Icon"
-            description: "Icon used to represent your site in web browsers that looks good at small sizes. PNG or JPG is recommended. Square logo is used by default."
-          large_icon:
-            label: "Large Icon"
-            description: "Icon used to represent your site on mobile devices that looks good at larger sizes. Ideally greater than 512x512. Square logo used by default."
 
       corporate:
         title: "Your Organization"

@@ -42,6 +42,7 @@ const SiteHeaderComponent = MountWidget.extend(
 
     @observes("site.narrowDesktopView")
     narrowDesktopViewChanged() {
+      this.eventDispatched("dom:clean", "header");
       if (
         this.siteSettings.enable_experimental_sidebar_hamburger &&
         (!this.sidebarEnabled || this.site.narrowDesktopView)

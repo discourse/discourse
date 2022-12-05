@@ -13,7 +13,7 @@ import { cloneJSON } from "discourse-common/lib/object";
 acceptance(
   "Local Dates - Download calendar without default calendar option set",
   function (needs) {
-    needs.user({ default_calendar: "none_selected" });
+    needs.user({ "user_option.default_calendar": "none_selected" });
     needs.settings({ discourse_local_dates_enabled: true });
     needs.pretender((server, helper) => {
       const response = cloneJSON(fixturesByUrl["/t/281.json"]);
@@ -43,7 +43,7 @@ acceptance(
 acceptance(
   "Local Dates - Download calendar is not available for dates in the past",
   function (needs) {
-    needs.user({ default_calendar: "none_selected" });
+    needs.user({ "user_option.default_calendar": "none_selected" });
     needs.settings({ discourse_local_dates_enabled: true });
     needs.pretender((server, helper) => {
       const response = cloneJSON(fixturesByUrl["/t/281.json"]);
@@ -69,7 +69,7 @@ acceptance(
 acceptance(
   "Local Dates - Download calendar with default calendar option set",
   function (needs) {
-    needs.user({ default_calendar: "google" });
+    needs.user({ "user_option.default_calendar": "google" });
     needs.settings({ discourse_local_dates_enabled: true });
     needs.pretender((server, helper) => {
       const response = cloneJSON(fixturesByUrl["/t/281.json"]);

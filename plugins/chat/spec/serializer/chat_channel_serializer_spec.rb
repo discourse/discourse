@@ -17,6 +17,10 @@ describe ChatChannelSerializer do
       it "does not return any sort of archive status" do
         expect(subject.as_json.key?(:archive_completed)).to eq(false)
       end
+
+      it "includes allow_channel_wide_mentions" do
+        expect(subject.as_json.key?(:allow_channel_wide_mentions)).to eq(true)
+      end
     end
 
     context "when user is staff" do
@@ -36,6 +40,10 @@ describe ChatChannelSerializer do
         )
         chat_channel.reload
         expect(subject.as_json.key?(:archive_completed)).to eq(true)
+      end
+
+      it "includes allow_channel_wide_mentions" do
+        expect(subject.as_json.key?(:allow_channel_wide_mentions)).to eq(true)
       end
     end
   end

@@ -23,7 +23,10 @@ acceptance("Topic - Bulk Actions", function (needs) {
   });
 
   test("bulk select - modal", async function (assert) {
-    updateCurrentUser({ moderator: true, enable_defer: true });
+    updateCurrentUser({
+      moderator: true,
+      user_option: { enable_defer: true },
+    });
     await visit("/latest");
     await click("button.bulk-select");
 
@@ -168,7 +171,13 @@ acceptance("Topic - Bulk Actions", function (needs) {
   });
 
   test("TL4 users can bulk select", async function (assert) {
-    updateCurrentUser({ moderator: false, admin: false, trust_level: 4 });
+    updateCurrentUser({
+      moderator: false,
+      admin: false,
+      trust_level: 4,
+      user_option: { enable_defer: false },
+    });
+
     await visit("/latest");
     await click("button.bulk-select");
 

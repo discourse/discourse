@@ -71,4 +71,16 @@ RSpec.describe ChatChannel do
       end
     end
   end
+
+  describe "#allow_channel_wide_mentions" do
+    it "defaults to true" do
+      expect(category_channel.allow_channel_wide_mentions).to be(true)
+    end
+
+    it "cant be nullified" do
+      expect { category_channel.update!(allow_channel_wide_mentions: nil) }.to raise_error(
+        ActiveRecord::NotNullViolation,
+      )
+    end
+  end
 end

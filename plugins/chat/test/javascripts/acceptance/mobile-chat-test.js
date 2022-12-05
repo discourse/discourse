@@ -39,7 +39,7 @@ acceptance("Discourse Chat - Mobile test", function (needs) {
     await click(".header-dropdown-toggle.open-chat");
     assert.equal(currentURL(), "/chat");
     assert.ok(exists(".channels-list"));
-    await click(".chat-channel-row.chat-channel-7");
+    await click('.chat-channel-row[data-chat-channel-id="7"]');
     assert.notOk(exists(".open-drawer-btn"));
   });
 
