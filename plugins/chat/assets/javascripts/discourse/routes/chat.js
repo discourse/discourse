@@ -36,10 +36,7 @@ export default class ChatRoute extends DiscourseRoute {
       transition.abort();
 
       let URL = transition.intent.url;
-      if (
-        transition.targetName === "chat.channel.index" ||
-        transition.targetName === "chat.channel"
-      ) {
+      if (transition.targetName.startsWith("chat.channel")) {
         URL ??= this.router.urlFor(
           transition.targetName,
           ...transition.intent.contexts
@@ -75,7 +72,9 @@ export default class ChatRoute extends DiscourseRoute {
 
   @action
   willTransition(transition) {
-    this.chat.setActiveChannel(null);
+    if (!transition?.to?.name?.startsWith("chat.channel")) {
+      this.chat.setActiveChannel(null);
+    }
 
     if (!transition?.to?.name?.startsWith("chat.")) {
       this.chatStateManager.storeChatURL();
