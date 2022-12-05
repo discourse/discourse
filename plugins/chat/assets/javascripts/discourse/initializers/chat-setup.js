@@ -130,15 +130,15 @@ export default {
 
       api.addToHeaderIcons("header-chat-link");
 
-      api.decorateChatMessage(function (chatMessage) {
+      api.decorateChatMessage(function (chatMessage, chatChannel) {
         if (!this.currentUser) {
           return;
         }
 
-        const highlightable = [
-          `@${this.currentUser.username}`,
-          ...MENTION_KEYWORDS.map((k) => `@${k}`),
-        ];
+        const highlightable = [`@${this.currentUser.username}`];
+        if (chatChannel.allow_channel_wide_mentions) {
+          highlightable.push(...MENTION_KEYWORDS.map((k) => `@${k}`));
+        }
 
         chatMessage.querySelectorAll(".mention").forEach((node) => {
           const mention = node.textContent.trim();

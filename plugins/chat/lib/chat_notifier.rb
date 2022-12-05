@@ -164,7 +164,7 @@ class Chat::ChatNotifier
   def expand_global_mention(to_notify, already_covered_ids)
     typed_global_mention = direct_mentions_from_cooked.include?("@all")
 
-    if typed_global_mention
+    if typed_global_mention && @chat_channel.allow_channel_wide_mentions
       to_notify[:global_mentions] = members_accepting_channel_wide_notifications
         .where.not(username_lower: normalized_mentions(direct_mentions_from_cooked))
         .where.not(id: already_covered_ids)
@@ -179,7 +179,7 @@ class Chat::ChatNotifier
   def expand_here_mention(to_notify, already_covered_ids)
     typed_here_mention = direct_mentions_from_cooked.include?("@here")
 
-    if typed_here_mention
+    if typed_here_mention && @chat_channel.allow_channel_wide_mentions
       to_notify[:here_mentions] = members_accepting_channel_wide_notifications
         .where("last_seen_at > ?", 5.minutes.ago)
         .where.not(username_lower: normalized_mentions(direct_mentions_from_cooked))
