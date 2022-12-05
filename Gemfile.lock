@@ -167,7 +167,7 @@ GEM
     image_size (3.2.0)
     in_threads (1.6.0)
     jmespath (1.6.2)
-    json (2.6.2)
+    json (2.6.3)
     json-schema (3.0.0)
       addressable (>= 2.8)
     json_schemer (0.2.23)
