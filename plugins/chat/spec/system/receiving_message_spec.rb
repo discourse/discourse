@@ -25,7 +25,7 @@ RSpec.describe "Receiving message", type: :system, js: true do
     end
 
     context "when receiving a direct message" do
-      it "moves the channel to the top" do
+      it "reorders the direct messages sidebar section links ordering by last message received" do
         visit("/")
 
         expect(
