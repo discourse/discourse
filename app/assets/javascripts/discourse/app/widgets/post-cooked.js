@@ -61,7 +61,7 @@ export default class PostCooked {
   init() {
     this.originalQuoteContents = null;
     // todo should be a better way of detecting if it is composer preview
-    this.isInComposerPreview = !this.decoratorHelper;
+    this._isInComposerPreview = !this.decoratorHelper;
 
     const cookedDiv = this._computeCooked();
     this.cookedDiv = cookedDiv;
@@ -375,7 +375,7 @@ export default class PostCooked {
   }
 
   _initUserStatusToMentions() {
-    if (!this.isInComposerPreview) {
+    if (!this._isInComposerPreview) {
       this._trackMentionedUsersStatus();
       this._rerenderUserStatusOnMentions();
     }
