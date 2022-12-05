@@ -89,16 +89,6 @@ acceptance("Password Reset", function (needs) {
       "server validation error message shows"
     );
 
-    assert.ok(
-      exists("#new-account-password[type='password']"),
-      "password is masked by default"
-    );
-    await click(".toggle-password-mask");
-    assert.ok(
-      exists("#new-account-password[type='text']"),
-      "password is unmasked after toggle is clicked"
-    );
-
     await fillIn(".password-reset input", "perf3ctly5ecur3");
     sinon.stub(DiscourseURL, "redirectTo");
     await click(".password-reset form button");
