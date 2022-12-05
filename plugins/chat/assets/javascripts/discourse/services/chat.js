@@ -750,9 +750,13 @@ export default class Chat extends Service {
         this.userChatChannelTrackingStateChanged();
         channel.set("last_message_sent_at", new Date());
 
-        (this.directMessageChannels || [])
-          .findBy("id", parseInt(channel.id, 10))
-          ?.reSortDirectMessageChannels?.();
+        const directMessageChannel = (this.directMessageChannels || []).findBy(
+          "id",
+          parseInt(channel.id, 10)
+        );
+        if (directMessageChannel) {
+          this.reSortDirectMessageChannels();
+        }
       },
       channel.message_bus_last_ids.new_messages
     );
