@@ -61,7 +61,7 @@ export default Component.extend({
 
     if (
       this.currentUser &&
-      this.currentUser.mailing_list_mode &&
+      this.currentUser.user_option.mailing_list_mode &&
       level > NotificationLevels.MUTED
     ) {
       return I18n.t("topic.notifications.reasons.mailing_list_mode");

@@ -189,6 +189,8 @@ acceptance("User Preferences - Tracking", function (needs) {
     await click(".save-changes");
 
     assert.deepEqual(putRequestData, {
+      auto_track_topics_after_msecs: "60000",
+      new_topic_duration_minutes: "1440",
       "regular_category_ids[]": ["-1"],
       "tracked_category_ids[]": ["4"],
       "watched_category_ids[]": ["3"],
@@ -211,6 +213,8 @@ acceptance("User Preferences - Tracking", function (needs) {
     await click(".save-changes");
 
     assert.deepEqual(putRequestData, {
+      auto_track_topics_after_msecs: "60000",
+      new_topic_duration_minutes: "1440",
       "muted_category_ids[]": ["-1"],
       "tracked_category_ids[]": ["4"],
       "watched_category_ids[]": ["3"],

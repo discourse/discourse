@@ -26,7 +26,7 @@ acceptance("User Status", function (needs) {
   const userId = 1;
   const userTimezone = "UTC";
 
-  needs.user({ id: userId, timezone: userTimezone });
+  needs.user({ id: userId, "user_option.timezone": userTimezone });
 
   needs.pretender((server, helper) => {
     server.put("/user-status.json", () => {
