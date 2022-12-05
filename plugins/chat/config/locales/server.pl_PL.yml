@@ -94,7 +94,7 @@ pl_PL:
         other: "Masz nowe wiadomości na czacie"
       from: "%{site_name}"
       subject:
-        other_direct_message: "od %{message_title}"
+        other_direct_message: "od %{dm_title}"
         others: "%{count} inni"
       view_messages:
         one: "Zobacz wiadomość"

@@ -99,7 +99,7 @@ export default Component.extend({
       passive: true,
     });
     window.addEventListener("resize", this.onResizeHandler);
-    window.addEventListener("mousewheel", this.onScrollHandler, {
+    window.addEventListener("wheel", this.onScrollHandler, {
       passive: true,
     });
 
@@ -124,7 +124,7 @@ export default Component.extend({
       ?.removeEventListener("scroll", this.onScrollHandler);
 
     window.removeEventListener("resize", this.onResizeHandler);
-    window.removeEventListener("mousewheel", this.onScrollHandler);
+    window.removeEventListener("wheel", this.onScrollHandler);
 
     this.appEvents.off(
       "chat-live-pane:highlight-message",
@@ -403,6 +403,8 @@ export default Component.extend({
         can_flag: messages.resultSetMeta.can_flag,
         user_silenced: messages.resultSetMeta.user_silenced,
         can_moderate: messages.resultSetMeta.can_moderate,
+        channel_message_bus_last_id:
+          messages.resultSetMeta.channel_message_bus_last_id,
       },
       registeredChatChannelId: this.chatChannel.id,
     });
@@ -701,9 +703,9 @@ export default Component.extend({
     }
   },
 
-  @observes("floatHidden")
+  @observes("chatStateManager.isDrawerActive")
   onFloatHiddenChange() {
-    if (!this.floatHidden) {
+    if (this.chatStateManager.isDrawerActive) {
       this.set("expanded", true);
       this._markLastReadMessage({ reRender: true });
       this._stickScrollToBottom();
@@ -1265,7 +1267,6 @@ export default Component.extend({
   @action
   onCloseFullScreen() {
     this.chatStateManager.prefersDrawer();
-
     this.router.transitionTo(this.chatStateManager.lastKnownAppURL).then(() => {
       this.appEvents.trigger(
         "chat:open-url",
@@ -1321,8 +1322,6 @@ export default Component.extend({
 
   @action
   onHoverMessage(message, options = {}, event) {
-    cancel(this._onHoverMessageDebouncedHandler);
-
     if (this.site.mobileView && options.desktopOnly) {
       return;
     }
@@ -1381,6 +1380,10 @@ export default Component.extend({
   },
 
   _reportReplyingPresence(composerValue) {
+    if (this._selfDeleted) {
+      return;
+    }
+
     if (this.chatChannel.isDraft) {
       return;
     }
@@ -1406,13 +1409,17 @@ export default Component.extend({
 
   _subscribeToUpdates(channelId) {
     this._unsubscribeToUpdates(channelId);
-    this.messageBus.subscribe(`/chat/${channelId}`, (busData) => {
-      if (!this.details.can_load_more_future || busData.type !== "sent") {
-        this.handleMessage(busData);
-      } else {
-        this.set("hasNewMessages", true);
-      }
-    });
+    this.messageBus.subscribe(
+      `/chat/${channelId}`,
+      (busData) => {
+        if (!this.details.can_load_more_future || busData.type !== "sent") {
+          this.handleMessage(busData);
+        } else {
+          this.set("hasNewMessages", true);
+        }
+      },
+      this.details.channel_message_bus_last_id
+    );
   },
 
   @bind

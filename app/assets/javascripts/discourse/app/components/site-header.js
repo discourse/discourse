@@ -40,6 +40,21 @@ const SiteHeaderComponent = MountWidget.extend(
       this.queueRerender();
     },
 
+    @observes("site.narrowDesktopView")
+    narrowDesktopViewChanged() {
+      this.eventDispatched("dom:clean", "header");
+      if (
+        this.siteSettings.enable_experimental_sidebar_hamburger &&
+        (!this.sidebarEnabled || this.site.narrowDesktopView)
+      ) {
+        this.appEvents.on(
+          "sidebar-hamburger-dropdown:rendered",
+          this,
+          "_animateMenu"
+        );
+      }
+    },
+
     _animateOpening(panel) {
       const headerCloak = document.querySelector(".header-cloak");
       panel.classList.add("animate");
@@ -219,7 +234,7 @@ const SiteHeaderComponent = MountWidget.extend(
 
       if (
         this.siteSettings.enable_experimental_sidebar_hamburger &&
-        !this.sidebarEnabled
+        (!this.sidebarEnabled || this.site.narrowDesktopView)
       ) {
         this.appEvents.on(
           "sidebar-hamburger-dropdown:rendered",
@@ -353,14 +368,15 @@ const SiteHeaderComponent = MountWidget.extend(
       const menuPanels = document.querySelectorAll(".menu-panel");
 
       if (menuPanels.length === 0) {
-        if (this.site.mobileView) {
-          this._animate = true;
-        }
+        this._animate = this.site.mobileView || this.site.narrowDesktopView;
         return;
       }
 
       const windowWidth = document.body.offsetWidth;
-      const viewMode = this.site.mobileView ? "slide-in" : "drop-down";
+      const viewMode =
+        this.site.mobileView || this.site.narrowDesktopView
+          ? "slide-in"
+          : "drop-down";
 
       menuPanels.forEach((panel) => {
         const headerCloak = document.querySelector(".header-cloak");
@@ -377,7 +393,7 @@ const SiteHeaderComponent = MountWidget.extend(
         panel.classList.add(viewMode);
         if (this._animate || this._panMenuOffset !== 0) {
           if (
-            this.site.mobileView &&
+            (this.site.mobileView || this.site.narrowDesktopView) &&
             panel.parentElement.classList.contains(this._leftMenuClass())
           ) {
             this._panMenuOrigin = "left";
@@ -394,7 +410,7 @@ const SiteHeaderComponent = MountWidget.extend(
         // We use a mutationObserver to check for style changes, so it's important
         // we don't set it if it doesn't change. Same goes for the panelBody!
 
-        if (!this.site.mobileView) {
+        if (!this.site.mobileView && !this.site.narrowDesktopView) {
           const buttonPanel = document.querySelectorAll("header ul.icons");
           if (buttonPanel.length === 0) {
             return;
@@ -469,6 +485,8 @@ export default SiteHeaderComponent.extend({
   didInsertElement() {
     this._super(...arguments);
 
+    this.appEvents.on("site-header:force-refresh", this, "queueRerender");
+
     const header = document.querySelector(".d-header-wrap");
     if (header) {
       schedule("afterRender", () => {
@@ -499,6 +517,7 @@ export default SiteHeaderComponent.extend({
     this._super(...arguments);
 
     this._resizeObserver?.disconnect();
+    this.appEvents.off("site-header:force-refresh", this, "queueRerender");
   },
 });
 

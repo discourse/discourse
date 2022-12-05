@@ -872,6 +872,49 @@ RSpec.describe Stylesheet::Manager do
       content = StylesheetCache.last.content
       expect(content).to match(/# sourceMappingURL=[^\/]+\.css\.map\?__ws=test\.localhost/)
     end
+
+    it "generates precompiled CSS with a missing upload" do
+      image = file_from_fixtures("logo.png")
+      upload = UploadCreator.new(image, "logo.png").create_for(-1)
+
+      scheme = ColorScheme.create!(name: "scheme")
+      core_targets = [:desktop, :mobile, :desktop_rtl, :mobile_rtl, :admin, :wizard]
+      theme_targets = [:desktop_theme, :mobile_theme]
+
+      default_theme = Fabricate(:theme, color_scheme: scheme).tap do |t|
+        field = ThemeField.create!(
+          theme_id: t.id,
+          target_id: Theme.targets[:common],
+          name: "logo",
+          value: "",
+          upload_id: upload.id,
+          type_id: ThemeField.types[:theme_upload_var]
+        )
+
+        t.set_field(
+          target: :common,
+          name: :scss,
+          value: "body { background: url($logo); border: 3px solid green; }"
+        )
+
+        t.save!
+      end
+
+      default_theme.set_default!
+      upload.destroy!
+      StylesheetCache.destroy_all
+
+      Stylesheet::Manager.precompile_theme_css
+
+      manager = manager(default_theme.id)
+      theme_builder = Stylesheet::Manager::Builder.new(
+        target: :desktop_theme,
+        theme: default_theme,
+        manager: manager
+      )
+      css = File.read(theme_builder.stylesheet_fullpath)
+      expect(css).to include("border:3px solid green}")
+    end
   end
 
   describe ".fs_asset_cachebuster" do

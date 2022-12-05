@@ -336,7 +336,6 @@ acceptance("Bookmarking", function (needs) {
 
     // open the modal and accept deleting
     await click("#topic-footer-button-bookmark");
-    // pauseTest();
     await click(yesButton);
 
     assert.ok(

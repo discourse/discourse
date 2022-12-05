@@ -9,7 +9,14 @@ import { CHATABLE_TYPES } from "discourse/plugins/chat/discourse/models/chat-cha
 import { module } from "qunit";
 
 function membershipFixture(id, options = {}) {
-  options = Object.assign({}, options, { muted: false, following: true });
+  options = Object.assign(
+    {},
+    {
+      muted: false,
+      following: true,
+    },
+    options
+  );
 
   return {
     following: options.following,
@@ -99,7 +106,7 @@ module(
             return [
               200,
               { "Content-Type": "application/json" },
-              membershipFixture(this.channel.id, { muted: true }),
+              membershipFixture(this.channel.id, { muted: false }),
             ];
           }
         );
@@ -107,6 +114,34 @@ module(
         const sk = selectKit(".channel-settings-view__muted-selector");
         await sk.expand();
         await sk.selectRowByName("Off");
+
+        assert.equal(sk.header().value(), "false");
+      },
+    });
+
+    componentTest("allow channel wide mentions", {
+      template: hbs`{{chat-channel-settings-view channel=channel}}`,
+
+      beforeEach() {
+        this.set("channel", fabricators.chatChannel());
+      },
+
+      async test(assert) {
+        pretender.put(`/chat/api/chat_channels/${this.channel.id}.json`, () => {
+          return [
+            200,
+            { "Content-Type": "application/json" },
+            {
+              allow_channel_wide_mentions: false,
+            },
+          ];
+        });
+
+        const sk = selectKit(
+          ".channel-settings-view__channel-wide-mentions-selector"
+        );
+        await sk.expand();
+        await sk.selectRowByName("No");
 
         assert.equal(sk.header().value(), "false");
       },
@@ -205,7 +240,7 @@ module(
             return [
               200,
               { "Content-Type": "application/json" },
-              membershipFixture(this.channel.id, { muted: true }),
+              membershipFixture(this.channel.id, { muted: false }),
             ];
           }
         );
@@ -215,6 +250,25 @@ module(
         await sk.selectRowByName("Off");
 
         assert.equal(sk.header().value(), "false");
+      },
+    });
+
+    componentTest("allow channel wide mentions", {
+      template: hbs`{{chat-channel-settings-view channel=channel}}`,
+
+      beforeEach() {
+        this.set(
+          "channel",
+          fabricators.chatChannel({
+            chatable_type: CHATABLE_TYPES.directMessageChannel,
+          })
+        );
+      },
+
+      async test(assert) {
+        assert
+          .dom(".channel-settings-view__channel-wide-mentions-selector")
+          .doesNotExist();
       },
     });
   }

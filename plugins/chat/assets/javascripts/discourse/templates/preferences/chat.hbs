@@ -29,7 +29,7 @@
 
 <div class="control-group chat-setting controls-dropdown">
   <label for="user_chat_sounds">{{i18n "chat.sound.title"}}</label>
-  <ComboBox @none="chat.sounds.none" @valueProperty="value" @content={{this.chatSounds}} @value={{this.model.user_option.chat_sound}} @id="user_chat_sounds" @onChange={{action "onChangeChatSound"}} />
+  <ComboBox @options={{hash none="chat.sounds.none"}} @valueProperty="value" @content={{this.chatSounds}} @value={{this.model.user_option.chat_sound}} @id="user_chat_sounds" @onChange={{action "onChangeChatSound"}} />
 </div>
 
 <div class="control-group chat-setting controls-dropdown">

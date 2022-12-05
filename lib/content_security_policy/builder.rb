@@ -27,12 +27,13 @@ class ContentSecurityPolicy
 
     def initialize(base_url:)
       @directives = Default.new(base_url: base_url).directives
+      @base_url = base_url
     end
 
     def <<(extension)
       return unless valid_extension?(extension)
 
-      extension.each { |directive, sources| extend_directive(normalize(directive), sources) }
+      extension.each { |directive, sources| extend_directive(normalize_directive(directive), sources) }
     end
 
     def build
@@ -51,8 +52,18 @@ class ContentSecurityPolicy
 
     private
 
-    def normalize(directive)
+    def normalize_directive(directive)
       directive.to_s.gsub('-', '_').to_sym
+    end
+
+    def normalize_source(source)
+      if source.starts_with?("/")
+        "#{@base_url}#{source}"
+      else
+        source
+      end
+    rescue URI::ParseError
+      source
     end
 
     def extend_directive(directive, sources)
@@ -60,11 +71,8 @@ class ContentSecurityPolicy
 
       @directives[directive] ||= []
 
-      if sources.is_a?(Array)
-        @directives[directive].concat(sources)
-      else
-        @directives[directive] << sources
-      end
+      sources = Array(sources).map { |s| normalize_source(s) }
+      @directives[directive].concat(sources)
 
       @directives[directive].delete(:none) if @directives[directive].count > 1
     end

@@ -192,7 +192,7 @@ RSpec.describe DiscourseJsProcessor do
       }
 
       result = DiscourseJsProcessor::Transpiler.new.terser(sources, { sourceMap: { includeSources: true } })
-      expect(result.keys).to contain_exactly("code", "map")
+      expect(result.keys).to contain_exactly("code", "decoded_map", "map")
 
       begin
         # Check the code still works

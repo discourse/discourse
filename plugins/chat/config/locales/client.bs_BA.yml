@@ -73,6 +73,7 @@ bs_BA:
         save: "Save"
         saved: "Spašeno"
         unfollow: "Napusti"
+        admin_title: "Admin"
       incoming_webhooks:
         back: "Prethodno"
         description: "Opis"

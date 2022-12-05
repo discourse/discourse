@@ -4,6 +4,7 @@ $float-height: 530px;
   --message-left-width: 42px;
   --full-page-border-radius: 12px;
   --full-page-sidebar-width: 275px;
+  --channel-list-avatar-size: 30px;
   --chat-header-offset: 65px;
 }
 
@@ -77,10 +78,11 @@ $float-height: 530px;
   height: 14px;
   border-radius: 100%;
   box-sizing: content-box;
-  border: 2px solid var(--secondary);
   -webkit-touch-callout: none;
   background: var(--tertiary-med-or-tertiary);
+  color: var(--secondary);
   font-size: var(--font-down-2);
+  text-align: center;
 
   &.urgent {
     background: var(--success);
@@ -116,102 +118,12 @@ $float-height: 530px;
     }
 
     .chat-channel-unread-indicator {
-      border-color: var(--header_background);
+      border: 2px solid var(--header_background);
       position: absolute;
       right: 2px;
       bottom: 2px;
       transition: border-color linear 0.15s;
     }
-  }
-}
-
-.channels-list {
-  overflow-y: auto;
-  height: 100%;
-  padding-bottom: env(safe-area-inset-bottom);
-  position: relative;
-  @include chat-scrollbar(var(--secondary));
-
-  @include breakpoint(mobile-large) {
-    @include chat-scrollbar();
-  }
-
-  .chat-channel-unread-indicator {
-    flex-shrink: 0;
-    width: 10px;
-    height: 10px;
-    border-radius: 10px;
-    border: 0;
-    right: 7px;
-    top: calc(50% - 5px);
-
-    &.urgent .number-wrap {
-      display: none;
-    }
-  }
-
-  .open-browse-page-btn,
-  .open-draft-channel-page-btn,
-  .chat-channel-leave-btn {
-    background: transparent;
-    color: var(--primary-medium);
-    font-size: var(--font-0-rem);
-    padding: 0.5rem;
-
-    &:hover {
-      background: transparent;
-
-      .d-icon {
-        color: var(--primary);
-      }
-    }
-  }
-
-  .public-channel-empty-message {
-    margin: 0 0.5em 0.5em 0.5em;
-    padding: 0 1em;
-  }
-
-  .chat-channel-divider {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-weight: bold;
-    padding: 0.25rem 0.5rem 0.25rem 2rem;
-    font-family: var(--heading-font-family);
-    font-size: var(--font-0);
-
-    .channel-title {
-      line-height: var(--line-height-medium);
-    }
-  }
-
-  .edit-channels-dropdown {
-    .select-kit-header {
-      background: none;
-      border: none;
-      font-size: var(--font-0-rem);
-      padding: 0.5rem;
-
-      .d-icon {
-        color: var(--primary-medium);
-        margin: 0;
-      }
-
-      &:focus .d-icon,
-      &:hover .d-icon {
-        color: var(--primary);
-      }
-    }
-  }
-  .open-browse-page-btn {
-    &:hover {
-      background: none;
-    }
-  }
-
-  .chat-channel-title {
-    padding: 0.5rem;
   }
 }
 
@@ -280,9 +192,10 @@ $float-height: 530px;
 
   .chat-user-avatar-container {
     position: relative;
+    padding: 1px; //for is-online boxshadow effect, preventing cutoff
 
     .avatar {
-      padding: 1px;
+      padding: 1px; ////for is-online boxshadow effect, preventing shift
     }
 
     .chat-user-presence-flair {
@@ -427,102 +340,6 @@ $float-height: 530px;
   }
 }
 
-.chat-channel-row {
-  align-items: center;
-  box-sizing: border-box;
-  display: flex;
-  position: relative;
-  cursor: pointer;
-  color: var(--primary-high);
-  transition: opacity 50ms ease-in;
-  opacity: 1;
-
-  .chat-user-avatar {
-    pointer-events: none;
-  }
-
-  .chat-channel-unread-indicator {
-    margin-left: 0.5rem;
-  }
-
-  &.unfollowing {
-    opacity: 0;
-  }
-
-  .toggle-channel-membership-button.-leave {
-    visibility: hidden;
-    margin-left: auto;
-  }
-
-  &:hover {
-    .toggle-channel-membership-button.-leave {
-      visibility: visible;
-
-      > * {
-        pointer-events: auto;
-      }
-    }
-  }
-
-  .discourse-no-touch &:hover,
-  &.active {
-    background: var(--primary-low);
-  }
-
-  &:hover,
-  &.active {
-    .topic-chat-badge .topic-chat-icon .d-icon {
-      background: transparent;
-    }
-    &.active {
-      font-weight: 600;
-    }
-
-    .chat-channel-unread-indicator {
-      border-color: var(--primary-low);
-    }
-
-    .chat-channel-title {
-      &,
-      .category-chat-name,
-      .dm-usernames {
-        color: var(--primary);
-      }
-
-      .d-icon-lock {
-        background-color: var(--primary-low);
-      }
-    }
-  }
-
-  &.muted {
-    opacity: 0.65;
-  }
-  .badge-wrapper {
-    align-items: center;
-    margin-right: 0;
-  }
-
-  .chat-channel-unread-indicator {
-    background: var(--tertiary-med-or-tertiary);
-
-    &.urgent {
-      background: var(--success);
-    }
-  }
-
-  .chat-channel-row-unread-count {
-    display: inline-block;
-    margin-left: 5px;
-    font-size: var(--font-down-1);
-    color: var(--primary-high);
-  }
-
-  .emoji {
-    margin-left: 0.3em;
-  }
-}
-
 .chat-channel-settings-row {
   display: flex;
   padding: 0.5em;
@@ -572,12 +389,6 @@ $float-height: 530px;
       }
     }
   }
-  .btn-container {
-    margin-left: auto;
-  }
-}
-
-.chat-channel-settings-row {
   .channel-name-edit {
     display: flex;
     align-items: center;
@@ -591,6 +402,9 @@ $float-height: 530px;
     .cancel-btn {
       margin-left: 0.25em;
     }
+  }
+  .btn-container {
+    margin-left: auto;
   }
 }
 
@@ -614,38 +428,6 @@ body.has-full-page-chat {
   display: grid;
   grid-template-columns: var(--full-page-sidebar-width) 1fr;
 
-  .channels-list {
-    height: 100%;
-    border-right: 1px solid var(--primary-low);
-
-    .chat-channel-row {
-      padding: 0 0 0 0.5rem;
-      margin: 0 0.5rem 0.125rem 0.5rem;
-      border-radius: 0.25em;
-
-      .category-chat-private .d-icon {
-        background-color: var(--primary-very-low);
-      }
-
-      &:hover,
-      &.active {
-        background-color: var(--primary-low);
-        .chat-channel-title {
-          .category-chat-name,
-          .topic-chat-name,
-          .tag-chat-name,
-          .chat-name,
-          .dm-usernames {
-            color: var(--primary);
-          }
-        }
-        .category-chat-private .d-icon {
-          background-color: var(--primary-low);
-        }
-      }
-    }
-  }
-
   .chat-full-page-header {
     border-top: 1px solid var(--primary-low);
     border-bottom: 1px solid var(--primary-low);
@@ -664,8 +446,6 @@ body.has-full-page-chat {
 
     .chat-channel-title {
       .category-chat-name,
-      .topic-chat-name,
-      .tag-chat-name,
       .chat-name,
       .dm-usernames {
         color: var(--primary);
@@ -735,8 +515,7 @@ body.has-full-page-chat {
     }
 
     .category-chat-name,
-    .dm-username,
-    .topic-chat-name {
+    .dm-username {
       font-weight: 700;
       font-size: var(--font-up-1);
       line-height: var(--font-up-1);
@@ -750,41 +529,6 @@ body.has-full-page-chat {
   .chat-channel-retry-archive {
     display: flex;
     margin-top: 1em;
-  }
-}
-
-.channels-list {
-  .tag-chat-badge,
-  .category-chat-badge,
-  .topic-chat-badge {
-    color: var(--primary-low-mid);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    .d-icon {
-      height: 1.25em;
-      width: 1.25em;
-      margin: 0;
-    }
-  }
-
-  .topic-chat-badge {
-    .d-icon {
-      z-index: 1;
-    }
-  }
-
-  .category-chat-private .d-icon {
-    background-color: var(--secondary);
-    position: absolute;
-    border-radius: 5px;
-    padding: 3px 2px;
-    color: var(--primary-high);
-    height: 0.5em;
-    width: 0.5em;
-    left: calc(0.6125em + 6px);
-    top: -4px;
   }
 }
 
@@ -858,14 +602,6 @@ body.has-full-page-chat {
   }
   .chat-channel-title {
     margin: 1em 0 0 0;
-  }
-}
-
-.small-action {
-  .open-chat {
-    text-transform: uppercase;
-    font-weight: 700;
-    font-size-adjust: var(--font-down-0);
   }
 }
 

@@ -5,7 +5,7 @@ RSpec.describe Chat::ChatChannelHashtagDataSource do
   fab!(:category) { Fabricate(:category) }
   fab!(:group) { Fabricate(:group) }
   fab!(:private_category) { Fabricate(:private_category, group: group) }
-  fab!(:channel1) { Fabricate(:chat_channel, slug: "random", name: "Zany Things", chatable: category) }
+  fab!(:channel1) { Fabricate(:chat_channel, slug: "random", name: "Zany Things", chatable: category, description: "Just weird stuff") }
   fab!(:channel2) do
     Fabricate(:chat_channel, slug: "secret", name: "Secret Stuff", chatable: private_category)
   end
@@ -20,6 +20,7 @@ RSpec.describe Chat::ChatChannelHashtagDataSource do
         {
           relative_url: channel1.relative_url,
           text: "Zany Things",
+          description: "Just weird stuff",
           icon: "comment",
           type: "channel",
           ref: nil,
@@ -38,6 +39,7 @@ RSpec.describe Chat::ChatChannelHashtagDataSource do
         {
           relative_url: channel2.relative_url,
           text: "Secret Stuff",
+          description: nil,
           icon: "comment",
           type: "channel",
           ref: nil,
@@ -53,19 +55,10 @@ RSpec.describe Chat::ChatChannelHashtagDataSource do
   end
 
   describe "#search" do
-    it "finds a channel by category name" do
+    it "does not find channels by category name" do
       category.update!(name: "Randomizer")
       result = described_class.search(guardian, "randomiz", 10).first
-      expect(result.to_h).to eq(
-        {
-          relative_url: channel1.relative_url,
-          text: "Zany Things",
-          icon: "comment",
-          type: "channel",
-          ref: nil,
-          slug: "random",
-        },
-      )
+      expect(result.to_h).to eq({})
     end
 
     it "finds a channel by slug" do
@@ -74,6 +67,7 @@ RSpec.describe Chat::ChatChannelHashtagDataSource do
         {
           relative_url: channel1.relative_url,
           text: "Zany Things",
+          description: "Just weird stuff",
           icon: "comment",
           type: "channel",
           ref: nil,
@@ -88,6 +82,7 @@ RSpec.describe Chat::ChatChannelHashtagDataSource do
         {
           relative_url: channel1.relative_url,
           text: "Zany Things",
+          description: "Just weird stuff",
           icon: "comment",
           type: "channel",
           ref: nil,
@@ -105,6 +100,7 @@ RSpec.describe Chat::ChatChannelHashtagDataSource do
         {
           relative_url: channel2.relative_url,
           text: "Secret Stuff",
+          description: nil,
           icon: "comment",
           type: "channel",
           ref: nil,

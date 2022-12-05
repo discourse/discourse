@@ -152,6 +152,7 @@ hr:
         save: "Spremi"
         saved: "Spremljeno"
         unfollow: "Napustiti"
+        admin_title: "Administrator"
       admin:
         title: "Čet"
       incoming_webhooks:

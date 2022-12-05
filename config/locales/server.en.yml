@@ -542,7 +542,7 @@ en:
 
       It’s easier for everyone to read topics that have fewer in-depth replies versus lots of small, individual replies.
 
-    dominating_topic: You’ve posted more than %{percent}% of the replies here; may we suggest you give other people an opportunity to chime in?
+    dominating_topic: You’ve posted a lot in this topic! Consider giving others an opportunity to reply here and discuss things with each other as well.
 
     get_a_room: You’ve replied to @%{reply_username} %{count} times, did you know you could send them a personal message instead?
 
@@ -589,6 +589,7 @@ en:
               target_user_not_found: "One of the users you are sending this message to could not be found."
               unable_to_update: "There was an error updating that topic."
               unable_to_tag: "There was an error tagging the topic."
+              unable_to_unlist: "Sorry, you cannot create an unlisted topic."
             featured_link:
               invalid: "is invalid. URL should include http:// or https://."
         user:
@@ -1048,7 +1049,8 @@ en:
     mailing_list_mode: "Turn off mailing list mode"
     all: "Don’t send me any mail from %{sitename}"
     different_user_description: "You are currently logged in as a different user than the one we emailed. Please log out, or enter anonymous mode, and try again."
-    not_found_description: "Sorry, we couldn't find this unsubscribe. It’s possible the link in your email is too old and has expired?"
+    not_found_description: Sorry, we couldn't find that subscription. It's possible the link in your email is too old and has expired?"
+    user_not_found_description: "Sorry, we couldn't find a user for this subscription. You are probably attempting to unsubscribe an account that no longer exists."
     log_out: "Log Out"
     submit: "Save preferences"
     digest_frequency:
@@ -1179,6 +1181,13 @@ en:
         editor: Editor
         author: Author
         edit_reason: Reason
+    consolidated_api_requests:
+      title: "Consolidated API Requests"
+      xaxis:
+        api: "API"
+        user_api: "User API"
+      yaxis: "Day"
+      description: "API requests for regular API keys and user API keys."
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Day"
@@ -2120,7 +2129,7 @@ en:
     enable_user_directory: "Provide a directory of users for browsing"
     enable_group_directory: "Provide a directory of groups for browsing"
     enable_category_group_moderation: "Allow groups to moderate content in specific categories"
-    group_in_subject: "Set %%{optional_pm} in email subject to name of first group in PM, see: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Customize subject format for standard emails</a>"
+    group_in_subject: "Set %%{optional_pm} in email subject to name of first group in PM, see: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Customize subject format for standard emails</a>"
     allow_anonymous_posting: "Allow users to switch to anonymous mode"
     anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
@@ -2383,6 +2392,7 @@ en:
     default_sidebar_categories: "Selected categories will be displayed under Sidebar's Categories section by default."
     default_sidebar_tags: "Selected tags will be displayed under Sidebar's Tags section by default."
     enable_new_user_profile_nav_groups: "EXPERIMENTAL: Users of the selected groups will be shown the new user profile navigation menu"
+    enable_experimental_topic_timeline_groups: "EXPERIMENTAL: Users of the selected groups will be shown the refactored topic timeline"
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -4993,12 +5003,6 @@ en:
           logo_small:
             label: "Square Logo"
             description: "A square version of your logo. Shown at the top left when scrolling down, and when sharing on social platforms. Ideally at least 512x512."
-          favicon:
-            label: "Browser Icon"
-            description: "Icon used to represent your site in web browsers that looks good at small sizes. PNG or JPG is recommended. Square logo is used by default."
-          large_icon:
-            label: "Large Icon"
-            description: "Icon used to represent your site on mobile devices that looks good at larger sizes. Ideally greater than 512x512. Square logo used by default."
 
       corporate:
         title: "Your Organization"

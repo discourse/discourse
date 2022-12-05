@@ -25,6 +25,11 @@
 
     <AdminReport @dataSourceName="user_flagging_ratio" @filters={{this.lastWeekfilters}} @reportOptions={{this.userFlaggingRatioOptions}} />
 
-    <PluginOutlet @name="admin-dashboard-moderation-bottom" @tagName="span" @connectorTagName="div" />
+    <PluginOutlet
+      @name="admin-dashboard-moderation-bottom"
+      @tagName="span"
+      @connectorTagName="div"
+      @args={{hash filters=this.lastWeekfilters}}
+    />
   </div>
 </div>

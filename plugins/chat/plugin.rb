@@ -17,7 +17,10 @@ register_asset "stylesheets/common/dc-filter-input.scss"
 register_asset "stylesheets/common/common.scss"
 register_asset "stylesheets/common/chat-browse.scss"
 register_asset "stylesheets/common/chat-drawer.scss"
+register_asset "stylesheets/common/chat-index.scss"
 register_asset "stylesheets/mobile/chat-index.scss", :mobile
+register_asset "stylesheets/desktop/chat-index-full-page.scss", :desktop
+register_asset "stylesheets/desktop/chat-index-drawer.scss", :desktop
 register_asset "stylesheets/common/chat-channel-preview-card.scss"
 register_asset "stylesheets/common/chat-channel-info.scss"
 register_asset "stylesheets/common/chat-draft-channel.scss"
@@ -63,6 +66,7 @@ register_asset "stylesheets/common/chat-onebox.scss"
 register_asset "stylesheets/common/chat-skeleton.scss"
 register_asset "stylesheets/colors.scss", :color_definitions
 register_asset "stylesheets/common/reviewable-chat-message.scss"
+register_asset "stylesheets/common/chat-channel-settings-saved-indicator.scss"
 
 register_svg_icon "comments"
 register_svg_icon "comment-slash"
@@ -192,11 +196,13 @@ after_initialize do
   load File.expand_path("../app/jobs/regular/chat_notify_mentioned.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/chat_notify_watching.rb", __FILE__)
   load File.expand_path("../app/jobs/regular/update_channel_user_count.rb", __FILE__)
+  load File.expand_path("../app/jobs/regular/delete_user_messages.rb", __FILE__)
   load File.expand_path("../app/jobs/scheduled/delete_old_chat_messages.rb", __FILE__)
   load File.expand_path("../app/jobs/scheduled/update_user_counts_for_chat_channels.rb", __FILE__)
   load File.expand_path("../app/jobs/scheduled/email_chat_notifications.rb", __FILE__)
   load File.expand_path("../app/jobs/scheduled/auto_join_users.rb", __FILE__)
   load File.expand_path("../app/services/chat_publisher.rb", __FILE__)
+  load File.expand_path("../app/services/chat_message_destroyer.rb", __FILE__)
   load File.expand_path("../app/controllers/api_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_channels_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_channel_memberships_controller.rb", __FILE__)
@@ -729,6 +735,10 @@ after_initialize do
     limited_pretty_text_markdown_rules: ChatMessage::MARKDOWN_IT_RULES,
     hashtag_configurations: HashtagAutocompleteService.contexts_with_ordered_types,
   }
+
+  register_user_destroyer_on_content_deletion_callback(
+    Proc.new { |user| Jobs.enqueue(:delete_user_messages, user_id: user.id) }
+  )
 end
 
 if Rails.env == "test"

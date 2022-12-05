@@ -586,6 +586,13 @@ class Plugin::Instance
   end
 
   def register_asset(file, opts = nil)
+    if file.end_with?(".hbs", ".handlebars")
+      raise <<~ERROR
+        [#{name}] Handlebars templates can no longer be included via `register_asset`.
+        Any hbs files under `assets/javascripts` will be automatically compiled and included."
+      ERROR
+    end
+
     if opts && opts == :vendored_core_pretty_text
       full_path = DiscoursePluginRegistry.core_asset_for_name(file)
     else
@@ -1129,6 +1136,17 @@ class Plugin::Instance
   #                             or lookups occur. Priority is ordered by DESCENDING order.
   def register_hashtag_type_in_context(type, context, priority)
     HashtagAutocompleteService.register_type_in_context(type, context, priority)
+  end
+
+  ##
+  # Register a block that will be called when the UserDestroyer runs
+  # with the :delete_posts opt set to true. It's important to note that the block will
+  # execute before any other :delete_posts actions, it allows us to manipulate flags
+  # before agreeing with them. For example, discourse-akismet makes use of this
+  #
+  # @param {Block} callback to be called with the user, guardian, and the destroyer opts as arguments
+  def register_user_destroyer_on_content_deletion_callback(callback)
+    DiscoursePluginRegistry.register_user_destroyer_on_content_deletion_callback(callback, self)
   end
 
   protected

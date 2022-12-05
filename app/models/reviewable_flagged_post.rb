@@ -72,7 +72,7 @@ class ReviewableFlaggedPost < Reviewable
 
     build_action(actions, :ignore, icon: 'external-link-alt')
 
-    if potential_spam? && guardian.can_delete_all_posts?(target_created_by)
+    if potential_spam? && guardian.can_delete_user?(target_created_by)
       delete_user_actions(actions)
     end
 

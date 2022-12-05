@@ -21,6 +21,16 @@ Fabricator(:upload) do
   extension "png"
 end
 
+Fabricator(:large_image_upload, from: :upload) do
+  width 2000
+  height 2000
+  after_create do |upload, _transients|
+    file = file_from_fixtures("2000x2000.png")
+    upload.url = Discourse.store.store_upload(file, upload)
+    upload.sha1 = Upload.generate_digest(file)
+  end
+end
+
 Fabricator(:image_upload, from: :upload) do
   transient color: "white"
 

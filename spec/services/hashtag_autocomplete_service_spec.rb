@@ -43,6 +43,10 @@ RSpec.describe HashtagAutocompleteService do
           end
         end
     end
+
+    def self.search_sort(search_results, _)
+      search_results.sort_by { |item| item.text.downcase }
+    end
   end
 
   describe ".contexts_with_ordered_types" do
@@ -92,7 +96,9 @@ RSpec.describe HashtagAutocompleteService do
     end
 
     it "does not search other data sources if the limit is reached by earlier type data sources" do
-      Site.any_instance.expects(:categories).never
+      # only expected once to try get the exact matches first
+      site_guardian_categories = Site.new(guardian).categories
+      Site.any_instance.expects(:categories).once.returns(site_guardian_categories)
       subject.search("book", %w[tag category], limit: 1)
     end
 
@@ -164,22 +170,60 @@ RSpec.describe HashtagAutocompleteService do
       )
     end
 
+    it "orders categories by exact match on slug (ignoring parent/child distinction) then name, and then name for everything else" do
+      category2 = Fabricate(:category, name: "Book Library", slug: "book-library")
+      Fabricate(:category, name: "Horror", slug: "book", parent_category: category2)
+      Fabricate(:category, name: "Romance", slug: "romance-books")
+      Fabricate(:category, name: "Abstract Philosophy", slug: "abstract-philosophy-books")
+      category6 = Fabricate(:category, name: "Book Reviews", slug: "book-reviews")
+      Fabricate(:category, name: "Good Books", slug: "book", parent_category: category6)
+      expect(subject.search("book", %w[category]).map(&:ref)).to eq(
+        %w[
+          book-reviews:book
+          book-library:book
+          abstract-philosophy-books
+          book-club
+          book-library
+          book-reviews
+          romance-books
+        ],
+      )
+      expect(subject.search("book", %w[category]).map(&:text)).to eq(
+        [
+          "Good Books",
+          "Horror",
+          "Abstract Philosophy",
+          "Book Club",
+          "Book Library",
+          "Book Reviews",
+          "Romance",
+        ],
+      )
+    end
+
     context "when multiple tags and categories are returned" do
       fab!(:category2) { Fabricate(:category, name: "Book Zone", slug: "book-zone") }
       fab!(:category3) { Fabricate(:category, name: "Book Dome", slug: "book-dome") }
+      fab!(:category4) { Fabricate(:category, name: "Bookworld", slug: "book") }
       fab!(:tag2) { Fabricate(:tag, name: "mid-books") }
       fab!(:tag3) { Fabricate(:tag, name: "terrible-books") }
       fab!(:tag4) { Fabricate(:tag, name: "book") }
 
       it "orders them by name within their type order" do
         expect(subject.search("book", %w[category tag], limit: 10).map(&:ref)).to eq(
-          %w[book-club book-dome book-zone book great-books mid-books terrible-books],
+          %w[book book::tag book-club book-dome book-zone great-books mid-books terrible-books],
         )
       end
 
       it "orders correctly with lower limits" do
         expect(subject.search("book", %w[category tag], limit: 5).map(&:ref)).to eq(
-          %w[book-club book-dome book-zone book great-books],
+          %w[book book::tag book-club book-dome book-zone],
+        )
+      end
+
+      it "prioritises exact matches to the top of the list" do
+        expect(subject.search("book", %w[category tag], limit: 10).map(&:ref)).to eq(
+          %w[book book::tag book-club book-dome book-zone great-books mid-books terrible-books],
         )
       end
     end

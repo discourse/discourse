@@ -100,6 +100,33 @@ RSpec.describe Middleware::RequestTracker do
       expect(ApplicationRequest.page_view_crawler.first.count).to eq(1)
     end
 
+    it "logs API requests correctly" do
+      data = Middleware::RequestTracker.get_data(
+        env("_DISCOURSE_API" => "1"), ["200", { "Content-Type" => 'text/json' }], 0.1
+      )
+
+      Middleware::RequestTracker.log_request(data)
+
+      data = Middleware::RequestTracker.get_data(
+        env("_DISCOURSE_API" => "1"), ["404", { "Content-Type" => 'text/json' }], 0.1
+      )
+
+      Middleware::RequestTracker.log_request(data)
+
+      data = Middleware::RequestTracker.get_data(
+        env("_DISCOURSE_USER_API" => "1"), ["200", {}], 0.1
+      )
+
+      Middleware::RequestTracker.log_request(data)
+      CachedCounting.flush
+
+      expect(ApplicationRequest.http_total.first.count).to eq(3)
+      expect(ApplicationRequest.http_2xx.first.count).to eq(2)
+
+      expect(ApplicationRequest.api.first.count).to eq(2)
+      expect(ApplicationRequest.user_api.first.count).to eq(1)
+    end
+
     it "can log Discourse user agent requests correctly" do
       # log discourse api agents as crawlers for page view stats...
       data = Middleware::RequestTracker.get_data(env(

@@ -1063,6 +1063,9 @@ sv:
       dismiss_notifications_tooltip: "Markera alla olästa aviseringar som lästa"
       dismiss_bookmarks_tooltip: "Markera alla olästa bokmärkespåminnelser som lästa"
       dismiss_messages_tooltip: "Markera alla olästa personliga meddelanden som lästa"
+      no_likes_title: "Du har inte fått några gillningar än"
+      no_likes_body: >
+        Du kommer att aviseras här varje gång någon gillar ett av dina inlägg så att du kan se vad andra tycker är värdefullt. Andra kommer att se samma sak när du gillar deras inlägg också! <br><br> Aviseringar om gillningar skickas aldrig till dig via e-post, men du kan ställa in hur du får aviseringar om gillningar på webbplatsen i dina <a href='%{preferencesUrl}'>aviseringsinställningar</a>.
       no_messages_title: "Du har inga meddelanden"
       no_messages_body: >
         Behöver du ha en direkt personlig konversation med någon, utanför det normala konversationsflödet? Meddela dem genom att klicka på deras avatar och använd %{icon} meddelandeknappen.<br><br> Om du behöver hjälp kan du <a href='%{aboutUrl}'>meddela någon ur personalen</a>.
@@ -1079,13 +1082,9 @@ sv:
       no_notifications_page_title: "Du har inga aviseringar än"
       no_notifications_page_body: >
         Du kommer att aviseras om aktivitet som är direkt relevant för dig, bland annat svar på dina ämnen och inlägg, när någon <b>@nämner</b> dig eller citerar dig och svarar på ämnen du tittar på. Aviseringar kommer också att skickas som e-post när du inte har loggat in på ett tag. <br><br> Leta efter %{icon} för att bestämma vilka specifika ämnen, kategorier och taggar du vill aviseras om. Se mer i dina <a href='%{preferencesUrl}'>aviseringsinställningar</a>.
-      first_notification: "Du har fått din första avisering! Markera den för att börja."
       dynamic_favicon: "Visa räknare i webbläsarens ikon"
       skip_new_user_tips:
         description: "Hoppa över nybörjartips och utmärkelser för ny användare"
-        not_first_time: "Är det inte din första gång?"
-        skip_link: "Hoppa över dessa tips"
-        read_later: "Jag läser det senare."
       reset_seen_user_tips: "Visa användartips igen"
       theme_default_on_all_devices: "Gör detta till standardtema för alla mina enheter"
       color_scheme_default_on_all_devices: "Ange standardfärgschema(n) för alla mina enheter"
@@ -1223,6 +1222,7 @@ sv:
         profile: "Profil"
         emails: "E-post"
         notifications: "Aviseringar"
+        tracking: "Följer"
         categories: "Kategorier"
         users: "Användare"
         tags: "Taggar"
@@ -1478,6 +1478,7 @@ sv:
       email_in_reply_to: "Inkludera ett utdrag av inlägg som svarats på i e-postmeddelanden"
       other_settings: "Övrigt"
       categories_settings: "Kategorier"
+      topics_settings: "Ämnen"
       new_topic_duration:
         label: "Betrakta ämnen som nya när"
         not_viewed: "Jag har inte tittat på dem än"
@@ -1683,6 +1684,15 @@ sv:
       topic_timeline:
         title: "Ämnestidslinje"
         content: "Bläddra snabbt genom ett inlägg med hjälp av ämnestidslinjen."
+      post_menu:
+        title: "Inläggsmeny"
+        content: "Se hur du annars kan interagera med inlägget genom att klicka på de tre prickarna!"
+      topic_notification_levels:
+        title: "Du följer nu detta ämne"
+        content: "Leta efter den här klockan för att justera dina aviseringsinställningar för specifika ämnen eller hela kategorier."
+      suggested_topics:
+        title: "Fortsätt läsa!"
+        content: "Här är några ämnen som vi tror att du kanske vill läsa härnäst."
     loading: "Laddar..."
     errors:
       prev_page: "medan vi försökte ladda"
@@ -1846,6 +1856,7 @@ sv:
       blank_username_or_password: "Ange din e-postadress eller ditt användarnamn och lösenord."
       reset_password: "Återställ lösenord"
       logging_in: "Loggar in..."
+      previous_sign_up: "Har du redan ett konto?"
       or: "Eller"
       authenticating: "Autentiserar..."
       awaiting_activation: "Ditt konto väntar på aktivering, använd Glömt lösenord-länken för att skicka ett nytt aktiveringsmail."
@@ -1905,7 +1916,6 @@ sv:
       name_label: "Namn"
       password_label: "Lösenord"
       existing_user_can_redeem: "Lös in din inbjudan till ett ämne eller en grupp."
-      existing_user_cannot_redeem: "Denna inbjudan kan inte lösas in. Be personen som bjöd in dig att skicka en ny inbjudan till dig."
     password_reset:
       continue: "Fortsätt till %{site_name}"
     emoji_set:
@@ -2280,6 +2290,7 @@ sv:
         other: "<span>%{count}%{plus} resultat för</span><span class='term'>%{term}</span>"
       title: "Sök"
       full_page_title: "Sök"
+      results: "resultat"
       no_results: "Inga resultat hittades."
       no_more_results: "Inga fler resultat hittades."
       post_format: "Nr %{post_number} av %{username}"
@@ -2320,10 +2331,11 @@ sv:
       tips:
         category_tag: "filter efter kategori eller tagg"
         author: "filter efter inläggsförfattare"
-        in: "filter efter metadata (t.ex. i: titel, i:personlig, i:fäst)"
+        in: "filter efter metadata (t.ex. in:title, in:personal, in:pinned)"
         status: "filter efter ämnesstatus"
         full_search: "startar helsidesökning"
         full_search_key: "%{modifier} + Enter"
+        me: "visar bara dina inlägg"
       advanced:
         title: Avancerade filter
         posted_by:
@@ -3226,6 +3238,7 @@ sv:
       pending_permission_change_alert: "Du har inte lagt till %{group} för denna kategori. Klicka på följande knapp för att lägga till den."
       images: "Bilder"
       email_in: "Egenvald inkommande e-postadress:"
+      email_in_tooltip: "Du kan skilja på flera e-postadresser med tecknet |."
       email_in_allow_strangers: "Ta emot e-post från anonyma användare utan konton"
       email_in_disabled: "Att skapa nya ämnen via e-post är inaktiverat i webbplatsinställningarna. För att aktivera ämnen skapade via e-post "
       email_in_disabled_click: 'aktiverar du inställningen "inkommande e-post".'
@@ -3840,6 +3853,8 @@ sv:
     second_factor_auth:
       redirect_after_success: "Andra faktorautentiseringen lyckades. Omdirigerar till föregående sida…"
     sidebar:
+      show_sidebar: "Visa sidofältet"
+      hide_sidebar: "Dölj sidofältet"
       unread_count:
         one: "%{count} oläst"
         other: "%{count} olästa"
@@ -3899,9 +3914,6 @@ sv:
               title: "Alla ämnen"
             faq:
               content: "FAQ"
-            tracked:
-              content: "Följda"
-              title: "Alla följda ämnen"
             groups:
               content: "Grupper"
               title: "Alla grupper"
@@ -3910,7 +3922,8 @@ sv:
               title: "Alla användare"
             my_posts:
               content: "Mina inlägg"
-              title: "Mina inlägg"
+              title: "Min senaste ämnesaktivitet"
+              title_drafts: "Mina utkast som inte har publicerats"
               draft_count:
                 one: "%{count} utkast"
                 other: "%{count} utkast"
@@ -4166,6 +4179,9 @@ sv:
               anonymize: Anonymisera användarkonton.
               delete: Ta bort användarkonton.
               list: Få en lista över användare.
+            user_status:
+              read: Läs användarstatus.
+              update: Uppdatera användarstatistik.
             email:
               receive_emails: Kombinera detta omfång med e-postmottagaren för att bearbeta inkommande e-post.
             badges:

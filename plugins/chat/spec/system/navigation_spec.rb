@@ -17,6 +17,38 @@ RSpec.describe "Navigation", type: :system, js: true do
     sign_in(user)
   end
 
+  context "when clicking chat icon and drawer is viewing channel" do
+    it "navigates to index" do
+      chat_page.open_from_header
+      chat_drawer_page.open_channel(category_channel_2)
+      chat_page.open_from_header
+
+      expect(page).to have_content(I18n.t("js.chat.direct_messages.title"))
+    end
+  end
+
+  context "when clicking chat icon on mobile and is viewing channel" do
+    it "navigates to index" do
+      visit("/chat?mobile_view=1")
+      chat_page.visit_channel(category_channel_2)
+      chat_page.open_from_header
+
+      expect(page).to have_current_path(chat_path)
+    end
+  end
+
+  context "when clicking chat icon on desktop and is viewing channel" do
+    it "stays on channel page" do
+      visit("/chat")
+      chat_page.visit_channel(category_channel_2)
+      chat_page.open_from_header
+
+      expect(page).to have_current_path(
+        chat.channel_path(category_channel_2.id, category_channel_2.slug),
+      )
+    end
+  end
+
   context "when visiting /chat" do
     it "opens full page" do
       chat_page.open
@@ -34,7 +66,7 @@ RSpec.describe "Navigation", type: :system, js: true do
       visit("/")
       chat_page.open_from_header
 
-      expect(page).to have_css(".topic-chat-container.expanded.visible")
+      expect(page).to have_css(".chat-drawer.is-expanded")
     end
   end
 
@@ -62,12 +94,12 @@ RSpec.describe "Navigation", type: :system, js: true do
       chat_page.open
       chat_page.minimize_full_page
 
-      expect(page).to have_css(".topic-chat-container.expanded.visible")
+      expect(page).to have_css(".chat-drawer.is-expanded")
 
       visit("/")
       chat_page.open_from_header
 
-      expect(page).to have_css(".topic-chat-container.expanded.visible")
+      expect(page).to have_css(".chat-drawer.is-expanded")
     end
   end
 
@@ -114,7 +146,7 @@ RSpec.describe "Navigation", type: :system, js: true do
       find("a", text: "foo").click
 
       expect(page).to have_css(
-        ".topic-chat-container.expanded.visible .chat-message-container.highlighted[data-id='#{message.id}']",
+        ".chat-drawer.is-expanded .chat-message-container.highlighted[data-id='#{message.id}']",
       )
     end
   end
@@ -156,7 +188,7 @@ RSpec.describe "Navigation", type: :system, js: true do
         sidebar_page.open_draft_channel
 
         expect(page).to have_current_path("/")
-        expect(page).to have_css(".topic-chat-container.expanded.visible  .direct-message-creator")
+        expect(page).to have_css(".chat-drawer.is-expanded .direct-message-creator")
       end
     end
 
@@ -167,7 +199,7 @@ RSpec.describe "Navigation", type: :system, js: true do
         chat_drawer_page.open_draft_channel
 
         expect(page).to have_current_path("/")
-        expect(page).to have_css(".topic-chat-container.expanded.visible .direct-message-creator")
+        expect(page).to have_css(".chat-drawer.is-expanded .direct-message-creator")
       end
     end
 
@@ -180,7 +212,7 @@ RSpec.describe "Navigation", type: :system, js: true do
         sidebar_page.open_draft_channel
 
         expect(page).to have_current_path("/chat/draft-channel")
-        expect(page).not_to have_css(".topic-chat-container.expanded.visible")
+        expect(page).not_to have_css(".chat-drawer.is-expanded")
       end
     end
 
@@ -191,7 +223,7 @@ RSpec.describe "Navigation", type: :system, js: true do
         chat_drawer_page.open_browse
 
         expect(page).to have_current_path("/chat/browse/open")
-        expect(page).not_to have_css(".topic-chat-container.expanded.visible")
+        expect(page).not_to have_css(".chat-drawer.is-expanded")
       end
     end
 
@@ -202,7 +234,7 @@ RSpec.describe "Navigation", type: :system, js: true do
         sidebar_page.open_browse
 
         expect(page).to have_current_path("/chat/browse/open")
-        expect(page).not_to have_css(".topic-chat-container.expanded.visible")
+        expect(page).not_to have_css(".chat-drawer.is-expanded")
       end
     end
 
@@ -216,7 +248,7 @@ RSpec.describe "Navigation", type: :system, js: true do
         chat_page.open_from_header
 
         expect(page).to have_current_path("/")
-        expect(page).to have_css(".topic-chat-container.expanded.visible")
+        expect(page).to have_css(".chat-drawer.is-expanded")
         expect(page).to have_content(category_channel_2.title)
       end
     end

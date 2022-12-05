@@ -49,6 +49,7 @@ te:
         followed: "చేరినారు"
         notifications: "ప్రకటనలు"
         save: "భద్రపరుచు"
+        admin_title: "అధికారి"
       incoming_webhooks:
         back: "వెనుకకు"
         description: "వివరణ"

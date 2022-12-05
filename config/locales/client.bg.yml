@@ -1009,13 +1009,9 @@ bg:
       no_notifications_page_title: "Все още нямате известия"
       no_notifications_page_body: >
         Ще бъдете уведомени за дейност, пряко свързана с вас, включително отговори на вашите теми и публикации, когато някой <b>@спомене</b> или ви цитира, и отговори на теми, които гледате. Известия също ще бъдат изпращани на вашия имейл, когато не сте влизали известно време. <br><br> Потърсете %{icon} да решите за кои конкретни теми, категории и тагове искате да получавате известия. За повече информация вижте вашите <a href='%{preferencesUrl}'>предпочитания за уведомяване</a>.
-      first_notification: "Вашето първо известие! Изберете го за да започнете."
       dynamic_favicon: "Показване на броя на иконата на браузъра"
       skip_new_user_tips:
         description: "Пропуснете съвети и значки за въвеждане на нови потребители"
-        not_first_time: "Не ти ли е за първи път?"
-        skip_link: "Пропуснете тези съвети"
-        read_later: "Ще го прочета по-късно."
       theme_default_on_all_devices: "Направи тази тема стандарт на всичките ми устройства"
       color_scheme_default_on_all_devices: "Задаване на цветова схема(и) по подразбиране на всички мои устройства"
       color_scheme: "Цветова схема"
@@ -1145,6 +1141,7 @@ bg:
         profile: "Профил"
         emails: "Имейли"
         notifications: "Известия"
+        tracking: "Следене"
         categories: "Категории"
         users: "Потребители"
         tags: "Етикети"
@@ -1387,6 +1384,7 @@ bg:
       email_in_reply_to: "Включи откъс от отговора на поста в мейлите"
       other_settings: "Други"
       categories_settings: "Категории"
+      topics_settings: "Теми"
       new_topic_duration:
         label: "Отбелязване на темите като нови, когато"
         not_viewed: "Аз все още не съм ги видял"
@@ -1975,6 +1973,7 @@ bg:
         other: "<span>%{count}%{plus} резултата за</span><span class='term'>%{term}</span>"
       title: "Търсене"
       full_page_title: "Търсене"
+      results: "резултати"
       no_results: "Няма резултати "
       no_more_results: "Не са намерени резултати."
       post_format: "#%{post_number} от %{username} "
@@ -2009,7 +2008,7 @@ bg:
       tips:
         category_tag: "филтри по категория или таг"
         author: "филтри по автор на публикацията"
-        in: "филтри по метаданни (напр. в:заглавие, в:лично, в:закрепено)"
+        in: "филтри по метаданни (напр. in:title, in:personal, in:pinned)"
         status: "филтри по статус на темата"
         full_search: "стартира търсене в цялата страница"
         full_search_key: "%{modifier} + Enter"
@@ -3018,8 +3017,6 @@ bg:
               content: "Значки"
             faq:
               content: "FAQ"
-            tracked:
-              content: "Следени"
             groups:
               content: "Групи"
               title: "Всички групи"

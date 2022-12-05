@@ -99,12 +99,6 @@ class Jobs::NotifyReviewable < ::Jobs::Base
   end
 
   def notify_user(user, updates)
-    data = {
-      reviewable_count: user.reviewable_count,
-      unseen_reviewable_count: user.unseen_reviewable_count
-    }
-    data[:updates] = updates if updates.present?
-
-    user.publish_reviewable_counts(data)
+    user.publish_reviewable_counts(updates.present? ? { updates: updates } : nil)
   end
 end

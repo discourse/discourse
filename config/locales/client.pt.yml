@@ -1019,13 +1019,9 @@ pt:
       no_notifications_body: >
         Você será notificado neste painel sobre atividades diretamente relevantes para você, incluindo respostas aos seus tópicos e postagens, quando alguém <b>@menciona</b> você ou cita você, e responde aos tópicos que você está observando. As notificações também serão enviadas para o seu e-mail quando você não estiver logado por um tempo. <br><br> Procure o %{icon} para decidir sobre quais tópicos, categorias e marcas específicas você deseja ser notificado. Para obter mais informações, consulte suas <a href='%{preferencesUrl}'>preferências de notificação</a>.
       no_notifications_page_title: "Você ainda não possui quaisquer notificações"
-      first_notification: "A sua primeira notificação! Seleccione-a para começar."
       dynamic_favicon: "Mostrar contagens no ícone do navegador"
       skip_new_user_tips:
         description: "Ignorar dicas e emblemas de integração de novos usuários"
-        not_first_time: "Não é a sua primeira vez?"
-        skip_link: "Ignorar estas dicas"
-        read_later: "Vou ler mais tarde."
       theme_default_on_all_devices: "Usar este tema por defeito em todos os meus dispositivos"
       color_scheme_default_on_all_devices: "Definir esquema(s) de cor padrão em todos os meus dispositivos"
       color_scheme: "Esquema de Cores"
@@ -1153,6 +1149,7 @@ pt:
         profile: "Perfil"
         emails: "E-mails"
         notifications: "Notificações"
+        tracking: "A Seguir"
         categories: "Categorias"
         users: "Utilizadores"
         tags: "Etiquetas"
@@ -1394,6 +1391,7 @@ pt:
       email_in_reply_to: "Incluir um excerto de resposta para publicar nas mensgaens"
       other_settings: "Outros"
       categories_settings: "Categorias"
+      topics_settings: "Tópicos"
       new_topic_duration:
         label: "Considerar tópicos como novos quando"
         not_viewed: "Eu ainda não os vi"
@@ -2087,6 +2085,7 @@ pt:
         other: "<span>%{count}%{plus} resultados para</span><span class='term'>%{term}</span>"
       title: "Pesquisar"
       full_page_title: "Pesquisar"
+      results: "resultados"
       no_results: "Não foram encontrados resultados."
       no_more_results: "Não foram encontrados mais resultados."
       post_format: "#%{post_number} por %{username}"
@@ -3453,8 +3452,6 @@ pt:
               content: "Crachás"
             faq:
               content: "FAQ"
-            tracked:
-              content: "Seguido"
             groups:
               content: "Grupos"
               title: "Todos os grupos"

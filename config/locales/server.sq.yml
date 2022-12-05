@@ -429,6 +429,11 @@ sq:
         post: Postim
         editor: Redaktor
         edit_reason: Arsye
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "API e përdoruesit"
+      yaxis: "Dit"
     dau_by_mau:
       xaxis: "Day"
     daily_engaged_users:

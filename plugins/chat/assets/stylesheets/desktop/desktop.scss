@@ -73,18 +73,6 @@
     border-right: 1px solid var(--primary-low);
     border-left: 1px solid var(--primary-low);
 
-    .channels-list {
-      background: var(--primary-very-low);
-
-      .chat-channel-divider {
-        padding: 0.5rem 0.5rem 0 1rem;
-      }
-
-      .loading-container {
-        padding-bottom: 1em;
-      }
-    }
-
     .chat-live-pane {
       border-radius: unset;
     }
@@ -160,7 +148,8 @@
 }
 
 .chat-form {
-  &__description.-autojoin {
+  &__description.-autojoin,
+  &__description.-channel-wide-mentions {
     max-width: 50%;
   }
 }

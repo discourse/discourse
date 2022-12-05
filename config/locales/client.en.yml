@@ -1132,6 +1132,11 @@ en:
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
       dismiss_bookmarks_tooltip: "Mark all unread bookmark reminders as read"
       dismiss_messages_tooltip: "Mark all unread personal messages notifications as read"
+      no_likes_title: "You haven't received any likes yet"
+      no_likes_body: >
+        You will be notified here any time someone likes one of your posts so you can see what others are finding valuable. Others will see the same when you like their posts too!
+        <br><br>
+        Notifications for likes are never emailed to you, but you can tune how you receive notifications about likes on the site in your <a href='%{preferencesUrl}'>notification preferences</a>.
       no_messages_title: "You don’t have any messages"
       no_messages_body: >
         Need to have a direct personal conversation with someone, outside the normal conversational flow? Message them by selecting their avatar and using the %{icon} message button.<br><br>
@@ -1883,18 +1888,18 @@ en:
     staff_writes_only_mode:
       enabled: "This site is in staff only mode. Please continue to browse, but replying, likes, and other actions are limited to staff members only."
     too_few_topics_and_posts_notice_MF: >-
-      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">start the discussion!</a>
+      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">start the discussion!</a>
       There {currentTopics, plural, one {is <strong>#</strong> topic} other {are <strong>#</strong> topics}} and
       {currentPosts, plural, one {<strong>#</strong> post} other {<strong>#</strong> posts}}. Visitors need more to
       read and reply to – we recommend at least {requiredTopics, plural, one {<strong>#</strong> topic} other {<strong>#</strong> topics}}
       and {requiredPosts, plural, one {<strong>#</strong> post} other {<strong>#</strong> posts}}. Only staff can see this message.
     too_few_topics_notice_MF: >-
-      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">start the discussion!</a>
+      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">start the discussion!</a>
       There {currentTopics, plural, one {is <strong>#</strong> topic} other {are <strong>#</strong> topics}}. Visitors need more to
       read and reply to – we recommend at least {requiredTopics, plural, one {<strong>#</strong> topic} other {<strong>#</strong> topics}}.
       Only staff can see this message.
     too_few_posts_notice_MF: >-
-      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">start the discussion!</a>
+      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">start the discussion!</a>
       There {currentPosts, plural, one {is <strong>#</strong> post} other {are <strong>#</strong> posts}}. Visitors need more to
       read and reply to – we recommend at least {requiredPosts, plural, one {<strong>#</strong> post} other {<strong>#</strong> posts}}.
       Only staff can see this message.
@@ -2038,6 +2043,7 @@ en:
       blank_username_or_password: "Please enter your email or username, and password."
       reset_password: "Reset Password"
       logging_in: "Signing In..."
+      previous_sign_up: "Already have an account?"
       or: "Or"
       authenticating: "Authenticating..."
       awaiting_activation: "Your account is awaiting activation, use the forgot password link to issue another activation email."
@@ -2231,6 +2237,7 @@ en:
         one: "By mentioning <b>@%{here}</b>, you are about to notify %{count} user – are you sure?"
         other: "By mentioning <b>@%{here}</b>, you are about to notify %{count} users – are you sure?"
       duplicate_link: "It looks like your link to <b>%{domain}</b> was already posted in the topic by <b>@%{username}</b> in <a href='%{post_url}'>a reply on %{ago}</a> – are you sure you want to post it again?"
+      duplicate_link_same_user: "It looks like you already posted a link to <b>%{domain}</b> in this topic in <a href='%{post_url}'>a reply on %{ago}</a> - are you sure you want to post it again?"
       reference_topic_title: "RE: %{title}"
 
       error:
@@ -2376,6 +2383,12 @@ en:
         high_priority:
           one: "%{count} unread high priority notification"
           other: "%{count} unread high priority notifications"
+        new_message_notification:
+          one: "%{count} new message notification"
+          other: "%{count} new message notifications"
+        new_reviewable:
+          one: "%{count} new reviewable"
+          other: "%{count} new reviewables"
       title: "notifications of @name mentions, replies to your posts and topics, messages, etc"
       none: "Unable to load notifications at this time."
       empty: "No notifications found."
@@ -3280,6 +3293,7 @@ en:
           one: "Sorry, you can only upload %{count} file at a time."
           other: "Sorry, you can only upload %{count} files at a time."
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
+        no_uploads_authorized: "Sorry, no files are authorized to be uploaded."
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
         attachment_download_requires_login: "Sorry, you need to be logged in to download attachments."
@@ -3528,6 +3542,7 @@ en:
       pending_permission_change_alert: "You haven't added %{group} to this category; click this button to add them."
       images: "Images"
       email_in: "Custom incoming email address:"
+      email_in_tooltip: "You can separate multiple email addresses with the | character."
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
       email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
       email_in_disabled_click: 'enable the "email in" setting.'
@@ -4248,7 +4263,8 @@ en:
               title: "All users"
             my_posts:
               content: "My Posts"
-              title: "My posts"
+              title: "My recent topic activity"
+              title_drafts: "My unposted drafts"
               draft_count:
                 one: "%{count} draft"
                 other: "%{count} drafts"
@@ -4427,10 +4443,10 @@ en:
         about: "Edit your group membership and names here"
         group_members: "Group members"
         delete: "Delete"
-        delete_confirm: "Delete this group?"
+        delete_confirm: "Are you sure you want to delete this group?"
         delete_with_messages_confirm:
-          one: "Deleting this group will cause %{count} message to be orphaned, group members will no longer have access to it.<br><br>Are you sure?"
-          other: "Deleting this group will cause %{count} messages to be orphaned, group members will no longer have access to them.<br><br>Are you sure?"
+          one: "Deleting this group will cause %{count} message to be orphaned, group members will no longer have access to it."
+          other: "Deleting this group will cause %{count} messages to be orphaned, group members will no longer have access to them."
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
         delete_automatic_group: This is an automatic group and cannot be deleted.
         delete_owner_confirm: "Remove owner privilege for '%{username}'?"
@@ -4516,6 +4532,9 @@ en:
               anonymize: Anonymize user accounts.
               delete: Delete user accounts.
               list: Get a list of users.
+            user_status:
+              read: Read user status.
+              update: Update user status.
             email:
               receive_emails: Combine this scope with the mail-receiver to process incoming emails.
             badges:

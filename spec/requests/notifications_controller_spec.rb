@@ -245,6 +245,28 @@ RSpec.describe NotificationsController do
             ])
           end
 
+          it "doesn't include reviewables that are claimed by someone that's not the current user" do
+            SiteSetting.enable_experimental_sidebar_hamburger = true
+            user.update!(admin: true)
+
+            claimed_by_user = Fabricate(:reviewable, topic: Fabricate(:topic), created_at: 5.minutes.ago)
+            Fabricate(:reviewable_claimed_topic, topic: claimed_by_user.topic, user: user)
+
+            user2 = Fabricate(:user)
+            claimed_by_user2 = Fabricate(:reviewable, topic: Fabricate(:topic))
+            Fabricate(:reviewable_claimed_topic, topic: claimed_by_user2.topic, user: user2)
+
+            unclaimed = Fabricate(:reviewable, topic: Fabricate(:topic), created_at: 10.minutes.ago)
+
+            get "/notifications.json", params: { recent: true }
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["pending_reviewables"].map { |r| r["id"] }).to eq([
+              pending_reviewable.id,
+              claimed_by_user.id,
+              unclaimed.id,
+            ])
+          end
+
           it "doesn't include reviewables when the setting is disabled" do
             SiteSetting.enable_experimental_sidebar_hamburger = false
             user.update!(admin: true)
@@ -337,6 +359,50 @@ RSpec.describe NotificationsController do
           it 'should raise the right error' do
             get "/notifications.json", params: { username: 'somedude' }
             expect(response.status).to eq(404)
+          end
+        end
+
+        context "with notifications for inaccessible topics" do
+          fab!(:sender) { Fabricate.build(:topic_allowed_user, user: Fabricate(:coding_horror)) }
+          fab!(:allowed_user) { Fabricate.build(:topic_allowed_user, user: user) }
+          fab!(:another_allowed_user) { Fabricate.build(:topic_allowed_user, user: Fabricate(:user)) }
+          fab!(:allowed_pm) { Fabricate(:private_message_topic, topic_allowed_users: [sender, allowed_user, another_allowed_user]) }
+          fab!(:forbidden_pm) { Fabricate(:private_message_topic, topic_allowed_users: [sender, another_allowed_user]) }
+          fab!(:allowed_pm_notification) { Fabricate(:private_message_notification, user: user, topic: allowed_pm) }
+          fab!(:forbidden_pm_notification) { Fabricate(:private_message_notification, user: user, topic: forbidden_pm) }
+
+          def expect_correct_notifications(response)
+            notification_ids = response.parsed_body["notifications"].map { |n| n["id"] }
+            expect(notification_ids).to include(allowed_pm_notification.id)
+            expect(notification_ids).to_not include(forbidden_pm_notification.id)
+          end
+
+          context "with 'recent' filter" do
+            it "doesn't include notifications from topics the user isn't allowed to see" do
+              SiteSetting.enable_experimental_sidebar_hamburger = true
+              get "/notifications.json", params: { recent: true }
+              expect(response.status).to eq(200)
+              expect_correct_notifications(response)
+
+              SiteSetting.enable_experimental_sidebar_hamburger = false
+              get "/notifications.json", params: { recent: true }
+              expect(response.status).to eq(200)
+              expect_correct_notifications(response)
+            end
+          end
+
+          context "without 'recent' filter" do
+            it "doesn't include notifications from topics the user isn't allowed to see" do
+              SiteSetting.enable_experimental_sidebar_hamburger = true
+              get "/notifications.json"
+              expect(response.status).to eq(200)
+              expect_correct_notifications(response)
+
+              SiteSetting.enable_experimental_sidebar_hamburger = false
+              get "/notifications.json"
+              expect(response.status).to eq(200)
+              expect_correct_notifications(response)
+            end
           end
         end
       end

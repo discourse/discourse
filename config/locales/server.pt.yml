@@ -756,6 +756,11 @@ pt:
         post: Publicação
         editor: Editor
         edit_reason: Motivo
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "API de Utlizador"
+      yaxis: "Dia"
     dau_by_mau:
       xaxis: "Dia"
     daily_engaged_users:

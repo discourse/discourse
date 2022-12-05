@@ -38,7 +38,7 @@
         {{#if this.model.email}}
           <a href="mailto:{{this.model.email}}">{{this.model.email}}</a>
         {{else}}
-          <DButton @class="btn-default" @action={{route-action "checkEmail"}} @actionParam={{this.model}} @icon="far-envelope" @label="admin.users.check_email.text" @title="admin.users.check_email.title" />
+          <DButton @class="btn-default" @action={{route-action "checkEmail"}} @actionParam={{this.model}} @icon="envelope" @label="admin.users.check_email.text" @title="admin.users.check_email.title" />
         {{/if}}
       </div>
       <div class="controls">
@@ -65,7 +65,7 @@
             {{i18n "user.email.no_secondary"}}
           {{/if}}
         {{else}}
-          <DButton @action={{route-action "checkEmail"}} @class="btn-default" @actionParam={{this.model}} @icon="far-envelope" @label="admin.users.check_email.text" @title="admin.users.check_email.title" />
+          <DButton @action={{route-action "checkEmail"}} @class="btn-default" @actionParam={{this.model}} @icon="envelope" @label="admin.users.check_email.text" @title="admin.users.check_email.title" />
         {{/if}}
       </div>
 
@@ -99,7 +99,7 @@
         {{#if this.associatedAccountsLoaded}}
           {{this.associatedAccounts}}
         {{else}}
-          <DButton @class="btn-default" @action={{route-action "checkEmail"}} @actionParam={{this.model}} @icon="far-envelope" @label="admin.users.check_email.text" @title="admin.users.check_email.title" />
+          <DButton @class="btn-default" @action={{route-action "checkEmail"}} @actionParam={{this.model}} @icon="envelope" @label="admin.users.check_email.text" @title="admin.users.check_email.title" />
         {{/if}}
       </div>
     </div>
@@ -561,7 +561,7 @@
           {{#if this.ssoExternalEmail}}
             <div class="value">{{this.ssoExternalEmail}}</div>
           {{else}}
-            <DButton @class="btn-default" @action={{action "checkSsoEmail"}} @actionParam={{this.model}} @icon="far-envelope" @label="admin.users.check_email.text" @title="admin.users.check_email.title" />
+            <DButton @class="btn-default" @action={{action "checkSsoEmail"}} @actionParam={{this.model}} @icon="envelope" @label="admin.users.check_email.text" @title="admin.users.check_email.title" />
           {{/if}}
         </div>
       {{/if}}

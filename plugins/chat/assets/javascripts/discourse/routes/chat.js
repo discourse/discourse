@@ -66,8 +66,6 @@ export default class ChatRoute extends DiscourseRoute {
   }
 
   deactivate() {
-    this.chat.setActiveChannel(null);
-
     schedule("afterRender", () => {
       document.body.classList.remove("has-full-page-chat");
       document.documentElement.classList.remove("has-full-page-chat");
@@ -77,8 +75,11 @@ export default class ChatRoute extends DiscourseRoute {
 
   @action
   willTransition(transition) {
+    this.chat.setActiveChannel(null);
+
     if (!transition?.to?.name?.startsWith("chat.")) {
       this.chatStateManager.storeChatURL();
+      this.chat.updatePresence();
     }
   }
 }

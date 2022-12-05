@@ -48,6 +48,16 @@ class ChatMessage < ActiveRecord::Base
         ),
       )
     end
+
+    if message_too_long?
+      self.errors.add(
+        :base,
+        I18n.t(
+          "chat.errors.message_too_long",
+          maximum: SiteSetting.chat_maximum_message_length,
+        ),
+      )
+    end
   end
 
   def attach_uploads(uploads)
@@ -203,6 +213,10 @@ class ChatMessage < ActiveRecord::Base
 
   def message_too_short?
     message.length < SiteSetting.chat_minimum_message_length
+  end
+
+  def message_too_long?
+    message.length > SiteSetting.chat_maximum_message_length
   end
 
   def ensure_last_editor_id

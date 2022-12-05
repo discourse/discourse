@@ -1,3 +1,4 @@
+import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 let _allCategories = null;
 let _sectionsById = {};
 let _notes = {};
@@ -30,7 +31,7 @@ export function allCategories() {
 
   // Find a list of sections based on what templates are available
   // eslint-disable-next-line no-undef
-  Object.keys(Ember.TEMPLATES).forEach((e) => {
+  DiscourseTemplateMap.keys().forEach((e) => {
     let regexp = new RegExp(`styleguide\/(${paths})\/(\\d+)?\\-?([^\\/]+)$`);
     let matches = e.match(regexp);
     if (matches) {

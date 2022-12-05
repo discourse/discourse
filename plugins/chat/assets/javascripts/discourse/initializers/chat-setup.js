@@ -12,8 +12,12 @@ export default {
   name: "chat-setup",
   initialize(container) {
     this.chatService = container.lookup("service:chat");
-    this.siteSettings = container.lookup("service:site-settings");
 
+    if (!this.chatService.userCanChat) {
+      return;
+    }
+
+    this.siteSettings = container.lookup("service:site-settings");
     this.appEvents = container.lookup("service:appEvents");
     this.appEvents.on("discourse:focus-changed", this, "_handleFocusChanged");
 
@@ -97,7 +101,7 @@ export default {
       if (currentUser?.chat_channels) {
         this.chatService.setupWithPreloadedChannels(currentUser.chat_channels);
       } else {
-        this.chatService.getChannels();
+        this.chatService.setupWithoutPreloadedChannels();
       }
 
       const chatNotificationManager = container.lookup(
@@ -110,7 +114,7 @@ export default {
         this._registeredDocumentTitleCountCallback = true;
       }
 
-      api.addCardClickListenerSelector(".topic-chat-float-container");
+      api.addCardClickListenerSelector(".chat-drawer-outlet");
 
       api.dispatchWidgetAppEvent(
         "site-header",
@@ -126,15 +130,15 @@ export default {
 
       api.addToHeaderIcons("header-chat-link");
 
-      api.decorateChatMessage(function (chatMessage) {
+      api.decorateChatMessage(function (chatMessage, chatChannel) {
         if (!this.currentUser) {
           return;
         }
 
-        const highlightable = [
-          `@${this.currentUser.username}`,
-          ...MENTION_KEYWORDS.map((k) => `@${k}`),
-        ];
+        const highlightable = [`@${this.currentUser.username}`];
+        if (chatChannel.allow_channel_wide_mentions) {
+          highlightable.push(...MENTION_KEYWORDS.map((k) => `@${k}`));
+        }
 
         chatMessage.querySelectorAll(".mention").forEach((node) => {
           const mention = node.textContent.trim();
@@ -152,6 +156,10 @@ export default {
   },
 
   teardown() {
+    if (!this.chatService.userCanChat) {
+      return;
+    }
+
     this.appEvents.off("discourse:focus-changed", this, "_handleFocusChanged");
     _lastForcedRefreshAt = null;
     clearChatComposerButtons();

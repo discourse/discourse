@@ -41,15 +41,25 @@ RSpec.describe PostCreator do
       expect(post.wiki).to eq(true)
     end
 
-    it "can be created with a hidden reason" do
+    it "creates post with a hidden reason for staff user" do
       hri = Post.hidden_reasons[:flag_threshold_reached]
-      post = PostCreator.create(user, basic_topic_params.merge(hidden_reason_id: hri))
+      post = PostCreator.create(admin, basic_topic_params.merge(hidden_reason_id: hri))
       expect(post.hidden).to eq(true)
       expect(post.hidden_at).to be_present
       expect(post.hidden_reason_id).to eq(hri)
       expect(post.topic.visible).to eq(false)
       expect(post.user.topic_count).to eq(0)
       expect(post.user.post_count).to eq(0)
+    end
+
+    it "fails to create post with a hidden reason for non-staff user" do
+      hri = Post.hidden_reasons[:flag_threshold_reached]
+
+      expect do
+        post = PostCreator.create(user, basic_topic_params.merge(hidden_reason_id: hri))
+
+        expect(post).to be_nil
+      end.not_to change { Post.count }
     end
 
     it "ensures the user can create the topic" do

@@ -74,6 +74,7 @@ nb_NO:
         save: "Lagre"
         saved: "Lagret"
         unfollow: "Forlat"
+        admin_title: "Admin"
       incoming_webhooks:
         back: "Forrige"
         description: "Beskrivelse"

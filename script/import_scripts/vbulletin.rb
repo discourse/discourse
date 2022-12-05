@@ -195,13 +195,13 @@ class ImportScripts::VBulletin < ImportScripts::Base
         DB.exec <<~SQL
           INSERT INTO group_users (group_id, user_id, created_at, updated_at) VALUES #{values}
         SQL
-
-        Group.reset_counters(group.id, :group_users)
       rescue Exception => e
         puts e.message
         puts e.backtrace.join("\n")
       end
     end
+
+    Group.reset_all_counters!
   end
 
   def import_profile_picture(old_user, imported_user)
@@ -590,15 +590,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
     end
 
     current_count = 0
-
-    total_count = mysql_query(<<-SQL
-      SELECT COUNT(postid) count
-        FROM #{TABLE_PREFIX}post p
-        JOIN #{TABLE_PREFIX}thread t ON t.threadid = p.threadid
-       WHERE t.firstpostid <> p.postid
-    SQL
-    ).first["count"]
-
+    total_count = Post.count
     success_count = 0
     fail_count = 0
 

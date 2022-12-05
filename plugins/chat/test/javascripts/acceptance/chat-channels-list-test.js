@@ -15,6 +15,8 @@ acceptance(
 
     needs.settings({
       chat_enabled: true,
+      enable_sidebar: false,
+      enable_experimental_sidebar_hamburger: false,
     });
 
     needs.pretender((server, helper) => {
@@ -24,6 +26,13 @@ acceptance(
           direct_message_channels: cloneJSON(directMessageChannels).mapBy(
             "chat_channel"
           ),
+          message_bus_last_ids: {
+            channel_metadata: 0,
+            channel_edits: 0,
+            channel_status: 0,
+            new_channel: 0,
+            user_tracking_state: 0,
+          },
         });
       });
 

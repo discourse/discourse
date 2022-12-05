@@ -8,9 +8,12 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import {
   caretPosition,
   caretRowCol,
+  escapeExpression,
   inCodeBlock,
 } from "discourse/lib/utilities";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
+import { emojiUnescape } from "discourse/lib/text";
+import { htmlSafe } from "@ember/template";
 
 /**
  * Sets up a textarea using the jQuery autocomplete plugin, specifically
@@ -47,22 +50,15 @@ export function setupHashtagAutocomplete(
 export function hashtagTriggerRule(textarea, opts) {
   const result = caretRowCol(textarea);
   const row = result.rowNum;
-  let col = result.colNum;
   let line = textarea.value.split("\n")[row - 1];
 
   if (opts && opts.backSpace) {
-    col = col - 1;
     line = line.slice(0, line.length - 1);
 
     // Don't trigger autocomplete when backspacing into a `#category |` => `#category|`
     if (/^#{1}\w+/.test(line)) {
       return false;
     }
-  }
-
-  // Don't trigger autocomplete when ATX-style headers are used
-  if (col < 6 && line.slice(0, col) === "#".repeat(col)) {
-    return false;
   }
 
   if (inCodeBlock(textarea.value, caretPosition(textarea))) {
@@ -212,6 +208,10 @@ function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
   });
   currentSearch
     .then((r) => {
+      r.results?.forEach((result) => {
+        // Convert :emoji: in the result text to HTML safely.
+        result.text = htmlSafe(emojiUnescape(escapeExpression(result.text)));
+      });
       resultFunc(r.results || CANCELLED_STATUS);
     })
     .finally(() => {

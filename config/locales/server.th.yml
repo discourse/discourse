@@ -221,6 +221,9 @@ th:
       labels:
         post: โพส
         edit_reason: เหตุผล
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
     topics:
       title: "หัวข้อ"
     posts:

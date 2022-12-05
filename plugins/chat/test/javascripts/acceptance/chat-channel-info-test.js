@@ -14,8 +14,15 @@ acceptance("Discourse Chat - chat channel info", function (needs) {
     const channel = fabricators.chatChannel();
     server.get("/chat/chat_channels.json", () => {
       return helper.response({
-        publicMessageChannels: [channel],
-        directMessageChannels: [],
+        public_channels: [],
+        direct_message_channels: [],
+        message_bus_last_ids: {
+          channel_metadata: 0,
+          channel_edits: 0,
+          channel_status: 0,
+          new_channel: 0,
+          user_tracking_state: 0,
+        },
       });
     });
     server.get("/chat/chat_channels/:id.json", () => {
