@@ -210,7 +210,6 @@ export function testCleanup(container, app) {
   resetLinkLookup();
   resetModelTransformers();
   resetMentions();
-  cleanupTemporaryTemplateRegistrations();
   cleanupTemporaryModuleRegistrations();
 }
 
