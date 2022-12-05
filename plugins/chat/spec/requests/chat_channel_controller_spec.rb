@@ -101,6 +101,21 @@ RSpec.describe Chat::ChatChannelsController do
         expect(cc["current_user_membership"]["unread_mentions"]).to eq(1)
       end
 
+      it "returns the last message bus ids for various message bus channels scoped to this channel id" do
+        sign_in(admin)
+        get "/chat/chat_channels.json"
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body["message_bus_last_ids"]["channel_metadata"]).not_to eq(nil)
+        expect(response.parsed_body["message_bus_last_ids"]["channel_edits"]).not_to eq(nil)
+        expect(response.parsed_body["message_bus_last_ids"]["channel_status"]).not_to eq(nil)
+        expect(response.parsed_body["message_bus_last_ids"]["new_channel"]).not_to eq(nil)
+
+        first_channel = response.parsed_body["public_channels"][0]
+        expect(first_channel["message_bus_last_ids"]["new_messages"]).not_to eq(nil)
+        expect(first_channel["message_bus_last_ids"]["new_mentions"]).not_to eq(nil)
+      end
+
       describe "direct messages" do
         fab!(:user1) { Fabricate(:user) }
         fab!(:user2) { Fabricate(:user) }

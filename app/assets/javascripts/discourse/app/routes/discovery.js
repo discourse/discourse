@@ -25,10 +25,11 @@ export default DiscourseRoute.extend(OpenComposer, {
     if (
       (url === "/" || url === "/latest" || url === "/categories") &&
       !transition.targetName.includes("discovery.top") &&
-      User.currentProp("should_be_redirected_to_top")
+      User.currentProp("user_option.should_be_redirected_to_top")
     ) {
-      User.currentProp("should_be_redirected_to_top", false);
-      const period = User.currentProp("redirected_to_top.period") || "all";
+      User.currentProp("user_option.should_be_redirected_to_top", false);
+      const period =
+        User.currentProp("user_option.redirected_to_top.period") || "all";
       this.replaceWith("discovery.top", {
         queryParams: {
           period,

@@ -32,20 +32,11 @@
   color: var(--primary-medium);
 }
 
-// Settings view
-.channel-settings-view__saved {
-  color: var(--success);
-  padding-left: 0.5rem;
-
-  .d-icon-check {
-    margin-right: 0.25rem;
-  }
-}
-
 .channel-settings-view__desktop-notification-level-selector,
 .channel-settings-view__mobile-notification-level-selector,
 .channel-settings-view__muted-selector,
-.channel-settings-view__auto-join-selector {
+.channel-settings-view__auto-join-selector,
+.channel-settings-view__channel-wide-mentions-selector {
   width: 220px;
 }
 

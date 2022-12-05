@@ -59,7 +59,7 @@ class ReviewablesController < ApplicationController
       meta: filters.merge(
         total_rows_reviewables: total_rows, types: meta_types, reviewable_types: Reviewable.types,
         reviewable_count: current_user.reviewable_count,
-        unseen_reviewable_count: current_user.unseen_reviewable_count
+        unseen_reviewable_count: Reviewable.unseen_reviewable_count(current_user)
       )
     }
     if (offset + PER_PAGE) < total_rows

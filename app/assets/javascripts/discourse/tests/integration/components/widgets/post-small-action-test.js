@@ -16,9 +16,9 @@ module(
         hbs`<MountWidget @widget="post-small-action" @args={{this.args}} />`
       );
 
-      assert.ok(!exists(".small-action-desc > .small-action-delete"));
-      assert.ok(!exists(".small-action-desc > .small-action-recover"));
-      assert.ok(!exists(".small-action-desc > .small-action-edit"));
+      assert.ok(!exists(".small-action-desc .small-action-delete"));
+      assert.ok(!exists(".small-action-desc .small-action-recover"));
+      assert.ok(!exists(".small-action-desc .small-action-edit"));
     });
 
     test("shows edit button if canEdit", async function (assert) {
@@ -29,7 +29,7 @@ module(
       );
 
       assert.ok(
-        exists(".small-action-desc > .small-action-edit"),
+        exists(".small-action-desc .small-action-edit"),
         "it adds the edit small action button"
       );
     });
@@ -55,11 +55,11 @@ module(
       );
 
       assert.ok(
-        !exists(".small-action-desc > .small-action-edit"),
+        !exists(".small-action-desc .small-action-edit"),
         "it does not add the edit small action button"
       );
       assert.ok(
-        exists(".small-action-desc > .small-action-recover"),
+        exists(".small-action-desc .small-action-recover"),
         "it adds the recover small action button"
       );
     });
@@ -72,7 +72,7 @@ module(
       );
 
       assert.ok(
-        exists(".small-action-desc > .small-action-delete"),
+        exists(".small-action-desc .small-action-delete"),
         "it adds the delete small action button"
       );
     });
@@ -85,7 +85,7 @@ module(
       );
 
       assert.ok(
-        exists(".small-action-desc > .small-action-recover"),
+        exists(".small-action-desc .small-action-recover"),
         "it adds the recover small action button"
       );
     });

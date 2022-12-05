@@ -132,6 +132,22 @@ RSpec.describe TopicGuardian do
     end
   end
 
+  describe "#can_create_unlisted_topic?" do
+    it "returns true for moderators" do
+      expect(Guardian.new(moderator).can_create_unlisted_topic?(topic)).to eq(true)
+    end
+
+    it "returns true for TL4 users" do
+      tl4_user = Fabricate(:user, trust_level: TrustLevel[4])
+
+      expect(Guardian.new(tl4_user).can_create_unlisted_topic?(topic)).to eq(true)
+    end
+
+    it "returns false for regular users" do
+      expect(Guardian.new(user).can_create_unlisted_topic?(topic)).to eq(false)
+    end
+  end
+
   # The test cases here are intentionally kept brief because majority of the cases are already handled by
   # `TopicGuardianCanSeeConsistencyCheck` which we run to ensure that the implementation between `TopicGuardian#can_see_topic_ids`
   # and `TopicGuardian#can_see_topic?` is consistent.

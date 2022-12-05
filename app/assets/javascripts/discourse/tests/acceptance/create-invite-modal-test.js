@@ -191,7 +191,7 @@ acceptance(
     });
 
     needs.hooks.beforeEach(() => {
-      const timezone = loggedInUser().timezone;
+      const timezone = loggedInUser().user_option.timezone;
       clock = fakeTime("2100-05-03T08:00:00", timezone, true); // Monday morning
     });
 

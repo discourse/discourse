@@ -322,7 +322,7 @@ module Oneboxer
     return if !post || post.hidden || !allowed_post_types.include?(post.post_type)
 
     if post_number > 1 && opts[:topic_id] == topic.id
-      excerpt = post.excerpt(SiteSetting.post_onebox_maxlength)
+      excerpt = post.excerpt(SiteSetting.post_onebox_maxlength, keep_svg: true)
       excerpt.gsub!(/[\r\n]+/, " ")
       excerpt.gsub!("[/quote]", "[quote]") # don't break my quote
 
@@ -337,7 +337,7 @@ module Oneboxer
         original_url: url,
         title: PrettyText.unescape_emoji(CGI::escapeHTML(topic.title)),
         category_html: CategoryBadge.html_for(topic.category),
-        quote: PrettyText.unescape_emoji(post.excerpt(SiteSetting.post_onebox_maxlength)),
+        quote: PrettyText.unescape_emoji(post.excerpt(SiteSetting.post_onebox_maxlength, keep_svg: true)),
       }
 
       template = template("discourse_topic_onebox")

@@ -41,7 +41,7 @@ export default class BookmarkIcon extends Component {
     if (!isEmpty(this.bookmark.reminder_at)) {
       const formattedTime = formattedReminderTime(
         this.bookmark.reminder_at,
-        this.currentUser.timezone
+        this.currentUser.user_option.timezone
       );
       return I18n.t("bookmarks.created_with_reminder_generic", {
         date: formattedTime,

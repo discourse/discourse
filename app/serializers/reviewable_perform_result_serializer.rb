@@ -47,7 +47,7 @@ class ReviewablePerformResultSerializer < ApplicationSerializer
   end
 
   def unseen_reviewable_count
-    scope.user.unseen_reviewable_count
+    Reviewable.unseen_reviewable_count(scope.user)
   end
 
   def include_unseen_reviewable_count?

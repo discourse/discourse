@@ -6,7 +6,7 @@ import {
 import { hbs } from "ember-cli-htmlbars";
 import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
-import { registerTemplateModule } from "../helpers/template-module-helper";
+import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 
 const HELLO =
   "discourse/plugins/my-plugin/templates/connectors/user-profile-primary/hello";
@@ -15,8 +15,11 @@ const GOODBYE =
 
 acceptance("Plugin Outlet - Multi Template", function (needs) {
   needs.hooks.beforeEach(() => {
-    registerTemplateModule(HELLO, hbs`<span class='hello-span'>Hello</span>`);
-    registerTemplateModule(GOODBYE, hbs`<span class='bye-span'>Goodbye</span>`);
+    registerTemporaryModule(HELLO, hbs`<span class='hello-span'>Hello</span>`);
+    registerTemporaryModule(
+      GOODBYE,
+      hbs`<span class='bye-span'>Goodbye</span>`
+    );
   });
 
   test("Renders a template into the outlet", async function (assert) {

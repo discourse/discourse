@@ -28,8 +28,7 @@ export default class HorizontalOverflowNav extends Component {
     }
 
     this.watchScroll(event);
-    return (this.hasScroll =
-      event.target.scrollWidth > event.target.offsetWidth);
+    this.hasScroll = event.target.scrollWidth > event.target.offsetWidth;
   }
 
   @bind
@@ -86,19 +85,22 @@ export default class HorizontalOverflowNav extends Component {
     };
 
     const removeDragScroll = function () {
-      document.removeEventListener("mousemove", mouseDragScroll);
-
       navPills.querySelectorAll("a").forEach((a) => {
         a.style.cursor = "pointer";
       });
     };
 
-    document.addEventListener("mousemove", mouseDragScroll);
-    document.addEventListener("mouseup", removeDragScroll);
+    document.addEventListener("mousemove", mouseDragScroll, { once: true });
+    document.addEventListener("mouseup", removeDragScroll, { once: true });
   }
 
   @action
-  horizScroll(event) {
+  horizontalScroll(event) {
+    // Do nothing if it is not left mousedown
+    if (event.which !== 1) {
+      return;
+    }
+
     let scrollSpeed = 175;
     let siblingTarget = event.target.previousElementSibling;
 
@@ -107,11 +109,10 @@ export default class HorizontalOverflowNav extends Component {
       siblingTarget = event.target.nextElementSibling;
     }
 
+    siblingTarget.scrollLeft += scrollSpeed;
+
     this.scrollInterval = setInterval(function () {
       siblingTarget.scrollLeft += scrollSpeed;
     }, 50);
-
-    event.target.addEventListener("mouseup", this.stopScroll);
-    event.target.addEventListener("mouseleave", this.stopScroll);
   }
 }

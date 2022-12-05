@@ -31,7 +31,7 @@ export default Route.extend({
       model,
       parentController,
       allThemes: parentController.get("model"),
-      colorSchemeId: model.get("color_scheme_id"),
+      colorSchemeId: model.get("user_option.color_scheme_id"),
       colorSchemes: parentController.get("model.extras.color_schemes"),
       editingName: false,
     });

@@ -342,18 +342,6 @@ span.highlighted {
   /* must render on top of topic-body + topic-meta-data, otherwise not tappable */
 }
 
-.small-action .topic-avatar {
-  display: flex;
-  align-self: stretch;
-  align-items: flex-start;
-  margin-right: 0;
-  float: unset;
-  height: auto;
-  .d-icon {
-    font-size: 1.8em;
-  }
-}
-
 .topic-meta-data {
   margin-left: 50px;
   font-size: var(--font-down-1);
