@@ -153,23 +153,19 @@ module ChatPublisher
     user_id,
     chat_message,
     cannot_chat_users,
-    without_membership
+    without_membership,
+    too_many_members,
+    mentions_disabled
   )
     MessageBus.publish(
       "/chat/#{chat_message.chat_channel_id}",
       {
         type: :mention_warning,
         chat_message_id: chat_message.id,
-        cannot_see:
-          ActiveModel::ArraySerializer.new(
-            cannot_chat_users,
-            each_serializer: BasicUserSerializer,
-          ).as_json,
-        without_membership:
-          ActiveModel::ArraySerializer.new(
-            without_membership,
-            each_serializer: BasicUserSerializer,
-          ).as_json,
+        cannot_see: cannot_chat_users.map { |u| { username: u.username, id: u.id } }.as_json,
+        without_membership: without_membership.map { |u| { username: u.username, id: u.id } }.as_json,
+        groups_with_too_many_members: too_many_members.map(&:name).as_json,
+        group_mentions_disabled: mentions_disabled.map(&:name).as_json
       },
       user_ids: [user_id],
     )

@@ -56,17 +56,13 @@ class Chat::ChatNotifier
 
   def notify_new
     to_notify = list_users_to_notify
-    inaccessible = to_notify.extract!(:unreachable, :welcome_to_join)
     mentioned_user_ids = to_notify.extract!(:all_mentioned_user_ids)[:all_mentioned_user_ids]
 
     mentioned_user_ids.each do |member_id|
       ChatPublisher.publish_new_mention(member_id, @chat_channel.id, @chat_message.id)
     end
 
-    notify_creator_of_inaccessible_mentions(
-      inaccessible[:unreachable],
-      inaccessible[:welcome_to_join],
-    )
+    notify_creator_of_inaccessible_mentions(to_notify)
 
     notify_mentioned_users(to_notify)
     notify_watching_users(except: mentioned_user_ids << @user.id)
@@ -80,7 +76,6 @@ class Chat::ChatNotifier
     already_notified_user_ids = existing_notifications.map(&:user_id)
 
     to_notify = list_users_to_notify
-    inaccessible = to_notify.extract!(:unreachable, :welcome_to_join)
     mentioned_user_ids = to_notify.extract!(:all_mentioned_user_ids)[:all_mentioned_user_ids]
 
     needs_deletion = already_notified_user_ids - mentioned_user_ids
@@ -93,10 +88,7 @@ class Chat::ChatNotifier
     needs_notification_ids = mentioned_user_ids - already_notified_user_ids
     return if needs_notification_ids.blank?
 
-    notify_creator_of_inaccessible_mentions(
-      inaccessible[:unreachable],
-      inaccessible[:welcome_to_join],
-    )
+    notify_creator_of_inaccessible_mentions(to_notify)
 
     notify_mentioned_users(to_notify, already_notified_user_ids: already_notified_user_ids)
 
@@ -106,16 +98,23 @@ class Chat::ChatNotifier
   private
 
   def list_users_to_notify
+    direct_mentions_count = direct_mentions_from_cooked.length
+    group_mentions_count = group_name_mentions.length
+
+    skip_notifications =
+      (direct_mentions_count + group_mentions_count) >
+        SiteSetting.max_mentions_per_chat_message
+
     {}.tap do |to_notify|
       # The order of these methods is the precedence
       # between different mention types.
 
       already_covered_ids = []
 
-      expand_direct_mentions(to_notify, already_covered_ids)
-      expand_group_mentions(to_notify, already_covered_ids)
-      expand_here_mention(to_notify, already_covered_ids)
-      expand_global_mention(to_notify, already_covered_ids)
+      expand_direct_mentions(to_notify, already_covered_ids, skip_notifications)
+      expand_group_mentions(to_notify, already_covered_ids, skip_notifications)
+      expand_here_mention(to_notify, already_covered_ids, skip_notifications)
+      expand_global_mention(to_notify, already_covered_ids, skip_notifications)
 
       filter_users_ignoring_or_muting_creator(to_notify, already_covered_ids)
 
@@ -161,10 +160,10 @@ class Chat::ChatNotifier
     end
   end
 
-  def expand_global_mention(to_notify, already_covered_ids)
+  def expand_global_mention(to_notify, already_covered_ids, skip)
     typed_global_mention = direct_mentions_from_cooked.include?("@all")
 
-    if typed_global_mention && @chat_channel.allow_channel_wide_mentions
+    if typed_global_mention && @chat_channel.allow_channel_wide_mentions && !skip
       to_notify[:global_mentions] = members_accepting_channel_wide_notifications
         .where.not(username_lower: normalized_mentions(direct_mentions_from_cooked))
         .where.not(id: already_covered_ids)
@@ -176,10 +175,10 @@ class Chat::ChatNotifier
     end
   end
 
-  def expand_here_mention(to_notify, already_covered_ids)
+  def expand_here_mention(to_notify, already_covered_ids, skip)
     typed_here_mention = direct_mentions_from_cooked.include?("@here")
 
-    if typed_here_mention && @chat_channel.allow_channel_wide_mentions
+    if typed_here_mention && @chat_channel.allow_channel_wide_mentions && !skip
       to_notify[:here_mentions] = members_accepting_channel_wide_notifications
         .where("last_seen_at > ?", 5.minutes.ago)
         .where.not(username_lower: normalized_mentions(direct_mentions_from_cooked))
@@ -215,11 +214,15 @@ class Chat::ChatNotifier
     }
   end
 
-  def expand_direct_mentions(to_notify, already_covered_ids)
-    direct_mentions =
-      chat_users
-        .where(username_lower: normalized_mentions(direct_mentions_from_cooked))
-        .where.not(id: already_covered_ids)
+  def expand_direct_mentions(to_notify, already_covered_ids, skip)
+    if skip
+      direct_mentions = []
+    else
+      direct_mentions =
+        chat_users
+          .where(username_lower: normalized_mentions(direct_mentions_from_cooked))
+          .where.not(id: already_covered_ids)
+    end
 
     grouped = group_users_to_notify(direct_mentions)
 
@@ -236,47 +239,62 @@ class Chat::ChatNotifier
       )
   end
 
-  def mentionable_groups
-    @mentionable_groups ||=
-      Group.mentionable(@user, include_public: false).where(
-        "LOWER(name) IN (?)",
-        group_name_mentions,
-      )
+  def visible_groups
+    @visible_groups ||=
+        Group
+          .where("LOWER(name) IN (?)", group_name_mentions)
+          .visible_groups(@user)
   end
 
-  def expand_group_mentions(to_notify, already_covered_ids)
-    return [] if mentionable_groups.empty?
+  def expand_group_mentions(to_notify, already_covered_ids, skip)
+    return [] if skip || visible_groups.empty?
 
-    mentionable_groups.each { |g| to_notify[g.name.downcase] = [] }
+    mentionable_groups = Group
+      .mentionable(@user, include_public: false)
+      .where(id: visible_groups.map(&:id))
+
+    mentions_disabled = visible_groups - mentionable_groups
+
+    too_many_members, mentionable = mentionable_groups.partition do |group|
+      group.user_count > SiteSetting.max_users_notified_per_group_mention
+    end
+
+    to_notify[:group_mentions_disabled] = mentions_disabled
+    to_notify[:too_many_members] = too_many_members
+
+    mentionable.each { |g| to_notify[g.name.downcase] = [] }
 
     reached_by_group =
-      chat_users.joins(:groups).where(groups: mentionable_groups).where.not(id: already_covered_ids)
+      chat_users.joins(:groups).where(groups: mentionable).where.not(id: already_covered_ids)
 
     grouped = group_users_to_notify(reached_by_group)
 
     grouped[:already_participating].each do |user|
       # When a user is a member of multiple mentioned groups,
       # the most far to the left should take precedence.
-      ordered_group_names = group_name_mentions & mentionable_groups.map { |mg| mg.name.downcase }
+      ordered_group_names = group_name_mentions & mentionable.map { |mg| mg.name.downcase }
       user_group_names = user.groups.map { |ug| ug.name.downcase }
       group_name = ordered_group_names.detect { |gn| user_group_names.include?(gn) }
 
       to_notify[group_name] << user.id
+      already_covered_ids << user.id
     end
-    already_covered_ids.concat(grouped[:already_participating])
 
     to_notify[:welcome_to_join] = to_notify[:welcome_to_join].concat(grouped[:welcome_to_join])
     to_notify[:unreachable] = to_notify[:unreachable].concat(grouped[:unreachable])
   end
 
-  def notify_creator_of_inaccessible_mentions(unreachable, welcome_to_join)
-    return if unreachable.empty? && welcome_to_join.empty?
+  def notify_creator_of_inaccessible_mentions(to_notify)
+    inaccessible = to_notify.extract!(:unreachable, :welcome_to_join, :too_many_members, :group_mentions_disabled)
+    return if inaccessible.values.all?(&:blank?)
 
     ChatPublisher.publish_inaccessible_mentions(
       @user.id,
       @chat_message,
-      unreachable,
-      welcome_to_join,
+      inaccessible[:unreachable].to_a,
+      inaccessible[:welcome_to_join].to_a,
+      inaccessible[:too_many_members].to_a,
+      inaccessible[:group_mentions_disabled].to_a
     )
   end
 
@@ -284,30 +302,28 @@ class Chat::ChatNotifier
   # ignoring or muting the creator of the message, so they will not receive
   # a notification via the ChatNotifyMentioned job and are not prompted for
   # invitation by the creator.
-  #
-  # already_covered_ids and to_notify sometimes contain IDs and sometimes contain
-  # Users, hence the gymnastics to resolve the user_id
   def filter_users_ignoring_or_muting_creator(to_notify, already_covered_ids)
-    user_ids_to_screen =
-      already_covered_ids
-        .map { |ac| user_id_resolver(ac) }
-        .concat(to_notify.values.flatten.map { |tn| user_id_resolver(tn) })
-        .uniq
-    screener = UserCommScreener.new(acting_user: @user, target_user_ids: user_ids_to_screen)
+    screen_targets = already_covered_ids.concat(to_notify[:welcome_to_join].map(&:id))
+
+    return if screen_targets.blank?
+
+    screener = UserCommScreener.new(acting_user: @user, target_user_ids: screen_targets)
     to_notify
-      .except(:unreachable)
-      .each do |key, users_or_ids|
-        to_notify[key] = users_or_ids.reject do |user_or_id|
-          screener.ignoring_or_muting_actor?(user_id_resolver(user_or_id))
+      .except(:unreachable, :welcome_to_join)
+      .each do |key, user_ids|
+        to_notify[key] = user_ids.reject do |user_id|
+          screener.ignoring_or_muting_actor?(user_id)
         end
       end
-    already_covered_ids.reject! do |already_covered|
-      screener.ignoring_or_muting_actor?(user_id_resolver(already_covered))
-    end
-  end
 
-  def user_id_resolver(obj)
-    obj.is_a?(User) ? obj.id : obj
+    # :welcome_to_join contains users because it's serialized by MB.
+    to_notify[:welcome_to_join] = to_notify[:welcome_to_join].reject do |user|
+      screener.ignoring_or_muting_actor?(user.id)
+    end
+
+    already_covered_ids.reject! do |already_covered|
+      screener.ignoring_or_muting_actor?(already_covered)
+    end
   end
 
   def notify_mentioned_users(to_notify, already_notified_user_ids: [])

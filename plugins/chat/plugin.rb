@@ -66,6 +66,7 @@ register_asset "stylesheets/common/chat-onebox.scss"
 register_asset "stylesheets/common/chat-skeleton.scss"
 register_asset "stylesheets/colors.scss", :color_definitions
 register_asset "stylesheets/common/reviewable-chat-message.scss"
+register_asset "stylesheets/common/chat-mention-warnings.scss"
 register_asset "stylesheets/common/chat-channel-settings-saved-indicator.scss"
 
 register_svg_icon "comments"
@@ -212,6 +213,7 @@ after_initialize do
          __FILE__,
        )
   load File.expand_path("../app/controllers/api/category_chatables_controller.rb", __FILE__)
+  load File.expand_path("../app/controllers/api/hints_controller.rb", __FILE__)
   load File.expand_path("../app/queries/chat_channel_memberships_query.rb", __FILE__)
 
   if Discourse.allow_dev_populate?
@@ -585,10 +587,13 @@ after_initialize do
       put "/chat_channels/:chat_channel_id/notifications_settings" =>
             "chat_channel_notifications_settings#update"
 
-      # hints controller. Only used by staff members, we don't want to leak category permissions.
+      # Category chatables controller hints. Only used by staff members, we don't want to leak category permissions.
       get "/category-chatables/:id/permissions" => "category_chatables#permissions",
           :format => :json,
           :constraints => StaffConstraint.new
+
+      # Hints for JIT warnings.
+      get "/mentions/groups" => "hints#check_group_mentions", :format => :json
     end
 
     # direct_messages_controller routes
