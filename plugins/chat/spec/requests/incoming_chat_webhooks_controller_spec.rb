@@ -36,13 +36,6 @@ RSpec.describe Chat::IncomingChatWebhooksController do
       expect(chat_webhook_event.chat_message_id).to eq(ChatMessage.last.id)
     end
 
-    it "updates the channel’s last message date" do
-      previous_last_message_sent_at = chat_channel.last_message_sent_at
-      post "/chat/hooks/#{webhook.key}.json", params: { text: "A new signup woo!" }
-
-      expect(previous_last_message_sent_at).to be < chat_channel.reload.last_message_sent_at
-    end
-
     it "handles create message failures gracefully and does not create the chat message" do
       watched_word = Fabricate(:watched_word, action: WatchedWord.actions[:block])
 
