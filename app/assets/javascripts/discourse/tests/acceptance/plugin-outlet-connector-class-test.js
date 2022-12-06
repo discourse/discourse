@@ -9,9 +9,9 @@ import { action } from "@ember/object";
 import { extraConnectorClass } from "discourse/lib/plugin-connectors";
 import { hbs } from "ember-cli-htmlbars";
 import { test } from "qunit";
-import Ember from "ember";
+import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 
-const PREFIX = "javascripts/single-test/connectors";
+const PREFIX = "discourse/plugins/some-plugin/templates/connectors";
 
 acceptance("Plugin Outlet - Connector Class", function (needs) {
   needs.hooks.beforeEach(() => {
@@ -49,25 +49,22 @@ acceptance("Plugin Outlet - Connector Class", function (needs) {
       },
     });
 
-    Ember.TEMPLATES[
-      `${PREFIX}/user-profile-primary/hello`
-    ] = hbs`<span class='hello-username'>{{model.username}}</span>
+    registerTemporaryModule(
+      `${PREFIX}/user-profile-primary/hello`,
+      hbs`<span class='hello-username'>{{model.username}}</span>
         <button class='say-hello' {{on "click" (action "sayHello")}}></button>
         <button class='say-hello-using-this' {{on "click" this.sayHello}}></button>
-        <span class='hello-result'>{{hello}}</span>`;
-    Ember.TEMPLATES[
-      `${PREFIX}/user-profile-primary/hi`
-    ] = hbs`<button class='say-hi' {{on "click" (action "sayHi")}}></button>
-        <span class='hi-result'>{{hi}}</span>`;
-    Ember.TEMPLATES[
-      `${PREFIX}/user-profile-primary/dont-render`
-    ] = hbs`I'm not rendered!`;
-  });
-
-  needs.hooks.afterEach(() => {
-    delete Ember.TEMPLATES[`${PREFIX}/user-profile-primary/hello`];
-    delete Ember.TEMPLATES[`${PREFIX}/user-profile-primary/hi`];
-    delete Ember.TEMPLATES[`${PREFIX}/user-profile-primary/dont-render`];
+        <span class='hello-result'>{{hello}}</span>`
+    );
+    registerTemporaryModule(
+      `${PREFIX}/user-profile-primary/hi`,
+      hbs`<button class='say-hi' {{on "click" (action "sayHi")}}></button>
+        <span class='hi-result'>{{hi}}</span>`
+    );
+    registerTemporaryModule(
+      `${PREFIX}/user-profile-primary/dont-render`,
+      hbs`I'm not rendered!`
+    );
   });
 
   test("Renders a template into the outlet", async function (assert) {

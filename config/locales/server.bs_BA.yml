@@ -433,6 +433,11 @@ bs_BA:
         post: Objava
         editor: Urednik
         edit_reason: Reason
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "Korisnički API"
+      yaxis: "Day"
     dau_by_mau:
       xaxis: "Day"
     daily_engaged_users:

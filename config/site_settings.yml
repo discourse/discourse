@@ -2050,6 +2050,13 @@ developer:
   include_associated_account_ids:
     default: false
     hidden: true
+  enable_experimental_topic_timeline_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
 
 sidebar:
   enable_sidebar:

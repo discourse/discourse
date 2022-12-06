@@ -14,7 +14,7 @@ export default class UserStatusMessage extends Component {
 
     return until(
       this.status.ends_at,
-      this.currentUser.timezone,
+      this.currentUser.user_option.timezone,
       this.currentUser.locale
     );
   }

@@ -876,6 +876,11 @@ ca:
         editor: Editor
         author: Autor
         edit_reason: Motiu
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "API d'usuari"
+      yaxis: "Dia"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Dia"

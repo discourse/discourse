@@ -7,16 +7,22 @@ import { hbs } from "ember-cli-htmlbars";
 import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import Ember from "ember";
+import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 
-const PREFIX = "javascripts/single-test/connectors";
+const PREFIX = "discourse/plugins/some-plugin/templates/connectors";
 
 acceptance("Plugin Outlet - Decorator", function (needs) {
   needs.user();
 
   needs.hooks.beforeEach(() => {
-    Ember.TEMPLATES[`${PREFIX}/discovery-list-container-top/foo`] = hbs`FOO`;
-    Ember.TEMPLATES[`${PREFIX}/discovery-list-container-top/bar`] = hbs`BAR`;
+    registerTemporaryModule(
+      `${PREFIX}/discovery-list-container-top/foo`,
+      hbs`FOO`
+    );
+    registerTemporaryModule(
+      `${PREFIX}/discovery-list-container-top/bar`,
+      hbs`BAR`
+    );
 
     withPluginApi("0.8.38", (api) => {
       api.decoratePluginOutlet(
@@ -35,11 +41,6 @@ acceptance("Plugin Outlet - Decorator", function (needs) {
         { id: "yellow-decorator" }
       );
     });
-  });
-
-  needs.hooks.afterEach(() => {
-    delete Ember.TEMPLATES[`${PREFIX}/discovery-list-container-top/foo`];
-    delete Ember.TEMPLATES[`${PREFIX}/discovery-list-container-top/bar`];
   });
 
   test("Calls the plugin callback with the rendered outlet", async function (assert) {

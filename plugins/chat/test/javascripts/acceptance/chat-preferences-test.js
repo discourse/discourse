@@ -15,7 +15,7 @@ acceptance("Discourse Chat | User Preferences", function (needs) {
   needs.settings({ chat_enabled: true });
   needs.pretender(preferencesPretender);
 
-  test("when user has not chat sound set", async function (assert) {
+  test("when user has no chat sound set", async function (assert) {
     const sounds = Object.keys(CHAT_SOUNDS);
     await visit("/u/eviltrout/preferences/chat");
     const dropdown = selectKit("#user_chat_sounds");

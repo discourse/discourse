@@ -71,7 +71,9 @@ acceptance(
     test("it clears any unread messages in the sidebar for the archived channel", async function (assert) {
       await visit("/chat/channel/4/public-category");
       assert.ok(
-        exists("#chat-channel-row-4 .chat-channel-unread-indicator"),
+        exists(
+          '.chat-channel-row[data-chat-channel-id="4"] .chat-channel-unread-indicator'
+        ),
         "unread indicator shows for channel"
       );
 
@@ -80,7 +82,9 @@ acceptance(
         status: "archived",
       });
       assert.notOk(
-        exists("#chat-channel-row-4 .chat-channel-unread-indicator"),
+        exists(
+          '.chat-channel-row[data-chat-channel-id="4"] .chat-channel-unread-indicator'
+        ),
         "unread indicator should not show after archive status change"
       );
     });

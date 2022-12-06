@@ -499,6 +499,7 @@ sv:
       Du kan redigera ditt tidigare svar och lägga till ett citat genom att markera text och välja knappen <b>citera</b> som dyker upp.
 
       Det blir lättare för alla att läsa ämnen som har färre in-på-djupet-svar istället för flera små, individuella svar.
+    dominating_topic: Du har skrivit mycket i det här ämnet! Tänk på att ge andra en möjlighet att svara här och diskutera med andra också.
     get_a_room: Du har svarat @%{reply_username} %{count} gånger. Visste du att du istället kunde skicka ett personligt meddelande till henne/honom?
     too_many_replies: |
       ### Du har nått svarsgränsen för detta ämne
@@ -1097,6 +1098,11 @@ sv:
         editor: Redigerare
         author: Författare
         edit_reason: Anledning
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "Användar-API"
+      yaxis: "Dag"
     dau_by_mau:
       title: "DAA/MAA"
       xaxis: "Dag"

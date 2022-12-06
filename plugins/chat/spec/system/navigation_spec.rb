@@ -278,6 +278,14 @@ RSpec.describe "Navigation", type: :system, js: true do
       end
     end
 
+    context "when going back to channel from channel settings in full page" do
+      it "activates the channel in the sidebar" do
+        visit("/chat/channel/#{category_channel.id}/#{category_channel.slug}/info/settings")
+        find(".chat-full-page-header__back-btn").click
+        expect(page).to have_content(message.message)
+      end
+    end
+
     context "when clicking logo from a channel in full page" do
       it "deactivates the channel in the sidebar" do
         visit("/chat/channel/#{category_channel.id}/#{category_channel.slug}")

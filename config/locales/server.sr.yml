@@ -267,6 +267,9 @@ sr:
       labels:
         editor: Urednik
         edit_reason: Razlog
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
     topics:
       title: "Teme"
     posts:

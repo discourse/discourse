@@ -190,20 +190,21 @@ export default MountWidget.extend({
           refresh(() => {
             const refreshedElem = document.getElementById(elemId);
 
-            // Quickly going back might mean the element is destroyed
-            const position = domUtils.position(refreshedElem);
-            if (position && position.top) {
-              let whereY = position.top - distToElement;
-              document.documentElement.scroll({ top: whereY, left: 0 });
-
-              // This seems weird, but somewhat infrequently a rerender
-              // will cause the browser to scroll to the top of the document
-              // in Chrome. This makes sure the scroll works correctly if that
-              // happens.
-              schedule("afterRender", () => {
-                document.documentElement.scroll({ top: whereY, left: 0 });
-              });
+            if (!refreshedElem) {
+              return;
             }
+
+            const position = domUtils.position(refreshedElem);
+            const top = position.top - distToElement;
+            document.documentElement.scroll({ top, left: 0 });
+
+            // This seems weird, but somewhat infrequently a rerender
+            // will cause the browser to scroll to the top of the document
+            // in Chrome. This makes sure the scroll works correctly if that
+            // happens.
+            schedule("afterRender", () => {
+              document.documentElement.scroll({ top, left: 0 });
+            });
           });
         };
         this.topVisibleChanged({

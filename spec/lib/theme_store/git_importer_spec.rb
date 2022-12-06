@@ -6,6 +6,7 @@ require 'theme_store/git_importer'
 RSpec.describe ThemeStore::GitImporter do
   describe "#import" do
     let(:url) { "https://github.com/example/example.git" }
+    let(:first_fetch_url) { "https://github.com/example/example.git/info/refs?service=git-upload-pack" }
     let(:trailing_slash_url) { "https://github.com/example/example/" }
     let(:ssh_url) { "git@github.com:example/example.git" }
     let(:branch) { "dev" }
@@ -13,34 +14,14 @@ RSpec.describe ThemeStore::GitImporter do
     before do
       hex = "xxx"
       SecureRandom.stubs(:hex).returns(hex)
-      FinalDestination.stubs(:resolve).with(url).returns(URI.parse(url))
-      FinalDestination::SSRFDetector.stubs(:lookup_and_filter_ips).with("github.com").returns(["192.0.2.100"])
+
+      FinalDestination::SSRFDetector
+        .stubs(:lookup_and_filter_ips)
+        .with("github.com")
+        .returns(["192.0.2.100"])
+
       @temp_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{hex}"
       @ssh_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_ssh_#{hex}"
-    end
-
-    it "imports http urls" do
-      Discourse::Utils
-        .expects(:execute_command)
-        .with(
-          { "GIT_TERMINAL_PROMPT" => "0" },
-          "git", "-c", "http.followRedirects=false", "-c", "http.curloptResolve=github.com:443:192.0.2.100", "clone", "https://github.com/example/example.git", @temp_folder, timeout: 20
-        )
-
-      importer = ThemeStore::GitImporter.new(url)
-      importer.import!
-    end
-
-    it "imports when the url has a trailing slash" do
-      Discourse::Utils
-        .expects(:execute_command)
-        .with(
-          { "GIT_TERMINAL_PROMPT" => "0" },
-          "git", "-c", "http.followRedirects=false", "-c", "http.curloptResolve=github.com:443:192.0.2.100", "clone", "https://github.com/example/example.git", @temp_folder, timeout: 20
-        )
-
-      importer = ThemeStore::GitImporter.new(trailing_slash_url)
-      importer.import!
     end
 
     it "imports ssh urls" do
@@ -55,18 +36,6 @@ RSpec.describe ThemeStore::GitImporter do
       importer.import!
     end
 
-    it "imports http urls with a particular branch" do
-      Discourse::Utils
-        .expects(:execute_command)
-        .with(
-          { "GIT_TERMINAL_PROMPT" => "0" },
-          "git", "-c", "http.followRedirects=false", "-c", "http.curloptResolve=github.com:443:192.0.2.100", "clone", "--single-branch", "-b", branch, "https://github.com/example/example.git", @temp_folder, timeout: 20
-        )
-
-      importer = ThemeStore::GitImporter.new(url, branch: branch)
-      importer.import!
-    end
-
     it "imports ssh urls with a particular branch" do
       Discourse::Utils
         .expects(:execute_command)
@@ -77,6 +46,74 @@ RSpec.describe ThemeStore::GitImporter do
 
       importer = ThemeStore::GitImporter.new(ssh_url, private_key: "private_key", branch: branch)
       importer.import!
+    end
+
+    context "with a redirect" do
+      before do
+        FinalDestination
+          .stubs(:resolve)
+          .with(first_fetch_url, http_verb: :get)
+          .returns(URI.parse("https://github.com/redirected/example.git/info/refs?service=git-upload-pack"))
+      end
+
+      it "imports http urls" do
+        Discourse::Utils
+          .expects(:execute_command)
+          .with(
+            { "GIT_TERMINAL_PROMPT" => "0" },
+            "git", "-c", "http.followRedirects=false", "-c", "http.curloptResolve=github.com:443:192.0.2.100", "clone", "https://github.com/redirected/example.git", @temp_folder, timeout: 20
+          )
+
+        importer = ThemeStore::GitImporter.new(url)
+        importer.import!
+
+        expect(importer.url).to eq(url)
+      end
+    end
+
+    context "without a redirect" do
+      before do
+        FinalDestination
+          .stubs(:resolve)
+          .with(first_fetch_url, http_verb: :get)
+          .returns(URI.parse(first_fetch_url))
+      end
+
+      it "imports http urls" do
+        Discourse::Utils
+          .expects(:execute_command)
+          .with(
+            { "GIT_TERMINAL_PROMPT" => "0" },
+            "git", "-c", "http.followRedirects=false", "-c", "http.curloptResolve=github.com:443:192.0.2.100", "clone", "https://github.com/example/example.git", @temp_folder, timeout: 20
+          )
+
+        importer = ThemeStore::GitImporter.new(url)
+        importer.import!
+      end
+
+      it "imports when the url has a trailing slash" do
+        Discourse::Utils
+          .expects(:execute_command)
+          .with(
+            { "GIT_TERMINAL_PROMPT" => "0" },
+            "git", "-c", "http.followRedirects=false", "-c", "http.curloptResolve=github.com:443:192.0.2.100", "clone", "https://github.com/example/example.git", @temp_folder, timeout: 20
+          )
+
+        importer = ThemeStore::GitImporter.new(trailing_slash_url)
+        importer.import!
+      end
+
+      it "imports http urls with a particular branch" do
+        Discourse::Utils
+          .expects(:execute_command)
+          .with(
+            { "GIT_TERMINAL_PROMPT" => "0" },
+            "git", "-c", "http.followRedirects=false", "-c", "http.curloptResolve=github.com:443:192.0.2.100", "clone", "--single-branch", "-b", branch, "https://github.com/example/example.git", @temp_folder, timeout: 20
+          )
+
+        importer = ThemeStore::GitImporter.new(url, branch: branch)
+        importer.import!
+      end
     end
   end
 end

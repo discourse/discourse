@@ -165,7 +165,7 @@ acceptance("Discourse Chat - Keyboard shortcuts", function (needs) {
   test("switching channel with alt+arrow keys in float", async function (assert) {
     await visit("/latest");
     await click(".header-dropdown-toggle.open-chat");
-    await click("#chat-channel-row-4");
+    await click('.chat-channel-row[data-chat-channel-id="4"]');
 
     assert.ok(exists(`.chat-drawer.is-expanded[data-chat-channel-id="4"]`));
 

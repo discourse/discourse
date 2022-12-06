@@ -31,7 +31,7 @@ acceptance("Topic - Edit timer", function (needs) {
   });
 
   needs.hooks.beforeEach(() => {
-    const timezone = loggedInUser().timezone;
+    const timezone = loggedInUser().user_option.timezone;
     const tuesday = "2100-06-15T08:00:00";
     clock = fakeTime(tuesday, timezone, true);
   });

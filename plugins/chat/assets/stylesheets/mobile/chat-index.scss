@@ -1,6 +1,7 @@
 @import "common/foundation/mixins";
 .full-page-chat {
   overflow: hidden; //prevents double scroll
+
   .channels-list {
     overflow-y: overlay;
     padding-bottom: 6rem;
@@ -16,6 +17,10 @@
       }
     }
 
+    .channels-list-container {
+      background: var(--secondary);
+    }
+
     .chat-channel-row {
       height: 4em;
       margin: 0 1.5rem;
@@ -24,6 +29,10 @@
       border-bottom: 1px solid var(--primary-low);
 
       .chat-channel-metadata {
+        .chat-channel-unread-indicator {
+          font-size: var(--font-down-2);
+          margin-top: 0.25rem;
+        }
         &__date {
           font-size: var(--font-down-2);
         }
@@ -31,8 +40,6 @@
     }
 
     .chat-channel-divider {
-      background-color: var(--secondary);
-      padding: 2.5rem 1.5rem 0.75rem 1.5rem;
       font-size: var(--font-up-1);
 
       &:first-of-type {
@@ -43,14 +50,6 @@
         color: var(--quaternary);
         font-size: var(--font-down-1);
       }
-    }
-
-    .channels-list-container {
-      background: var(--secondary);
-    }
-
-    .chat-user-avatar-container {
-      padding-left: 1px; //for is-online boxshadow effect
     }
 
     .chat-user-avatar {

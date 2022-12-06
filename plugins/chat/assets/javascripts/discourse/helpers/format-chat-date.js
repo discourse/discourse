@@ -7,9 +7,7 @@ import User from "discourse/models/user";
 registerUnbound("format-chat-date", function (message, details, mode) {
   let currentUser = User.current();
 
-  let tz = currentUser
-    ? currentUser.resolvedTimezone(currentUser)
-    : moment.tz.guess();
+  let tz = currentUser ? currentUser.user_option.timezone : moment.tz.guess();
 
   let date = moment(new Date(message.created_at), tz);
 

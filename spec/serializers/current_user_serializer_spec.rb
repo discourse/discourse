@@ -331,16 +331,16 @@ RSpec.describe CurrentUserSerializer do
   describe "#likes_notifications_disabled" do
     it "is true if the user disables likes notifications" do
       user.user_option.update!(like_notification_frequency: UserOption.like_notification_frequency_type[:never])
-      expect(serializer.as_json[:likes_notifications_disabled]).to eq(true)
+      expect(serializer.as_json[:user_option][:likes_notifications_disabled]).to eq(true)
     end
 
     it "is false if the user doesn't disable likes notifications" do
       user.user_option.update!(like_notification_frequency: UserOption.like_notification_frequency_type[:always])
-      expect(serializer.as_json[:likes_notifications_disabled]).to eq(false)
+      expect(serializer.as_json[:user_option][:likes_notifications_disabled]).to eq(false)
       user.user_option.update!(like_notification_frequency: UserOption.like_notification_frequency_type[:first_time_and_daily])
-      expect(serializer.as_json[:likes_notifications_disabled]).to eq(false)
+      expect(serializer.as_json[:user_option][:likes_notifications_disabled]).to eq(false)
       user.user_option.update!(like_notification_frequency: UserOption.like_notification_frequency_type[:first_time])
-      expect(serializer.as_json[:likes_notifications_disabled]).to eq(false)
+      expect(serializer.as_json[:user_option][:likes_notifications_disabled]).to eq(false)
     end
   end
 
@@ -387,6 +387,20 @@ RSpec.describe CurrentUserSerializer do
 
       user.user_option.update!(sidebar_list_destination: "unread_new")
       expect(serializer.as_json[:sidebar_list_destination]).to eq("unread_new")
+    end
+  end
+
+  describe "#new_personal_messages_notifications_count" do
+    fab!(:notification) { Fabricate(:notification, user: user, read: false, notification_type: Notification.types[:private_message]) }
+
+    it "isn't included when enable_experimental_sidebar_hamburger is disabled" do
+      SiteSetting.enable_experimental_sidebar_hamburger = false
+      expect(serializer.as_json[:new_personal_messages_notifications_count]).to be_nil
+    end
+
+    it "is included when enable_experimental_sidebar_hamburger is enabled" do
+      SiteSetting.enable_experimental_sidebar_hamburger = true
+      expect(serializer.as_json[:new_personal_messages_notifications_count]).to eq(1)
     end
   end
 

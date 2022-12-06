@@ -1012,6 +1012,11 @@ ko:
         editor: 에디터
         author: 작성자
         edit_reason: 사유
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "사용자 API"
+      yaxis: "일"
     dau_by_mau:
       title: "DAU / MAU"
       xaxis: "일"

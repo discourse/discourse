@@ -5365,55 +5365,55 @@ tr_TR:
         image: Görsel
         graphic: Grafik
         icon_help: "Font Awesome simge adı girin (normal simgeler için 'far-' önünü ve marka simgeleri için 'fab-' kullanın)"
-        image_help: "Her ikisi de seçiliyse, bir resmin yüklenmesi simge alanını geçersiz kılar."
-        select_an_icon: "Bir ikon seçin"
-        upload_an_image: "İmaj Yükle"
+        image_help: "Her ikisi de belirlenmişse bir görüntünün yüklenmesi simge alanını geçersiz kılar."
+        select_an_icon: "Simge seç"
+        upload_an_image: "Görüntü yükle"
         read_only_setting_help: "Metni özelleştir"
         query: Rozet Sorgusu (SQL)
         target_posts: Sorgu hedefleri gönderileri
         auto_revoke: Günlük iptal sorgusunu çalıştır
         show_posts: Rozet sayfasında yayınlanan rozetleri göster
-        trigger: Tetikleme
+        trigger: Tetikleyici
         trigger_type:
           none: "Her gün güncelle"
           post_action: "Kullanıcı gönderi üzerinde işlem yaptığında"
           post_revision: "Kullanıcı bir gönderiyi düzenlediğinde veya yeni bir gönderi oluşturduğunda"
-          trust_level_change: "Kullanıcı güven düzeyini değiştirdiğinde"
+          trust_level_change: "Kullanıcı güven seviyesini değiştirdiğinde"
           user_change: "Kullanıcı düzenlendiğinde veya oluşturduğunda"
         preview:
-          link_text: "Verilen rozetleri önizle"
-          plan_text: "Sorgu planı ile önizleme"
-          modal_title: "Rozet Sorgu Önizlemesi"
+          link_text: "Verilen rozetleri ön izle"
+          plan_text: "Sorgu planı ile ön izle"
+          modal_title: "Rozet Sorgu Ön İzlemesi"
           sql_error_header: "Sorgu ile ilgili bir hata oluştu."
-          error_help: "Rozet sorgularıyla ilgili yardım için aşağıdaki bağlantılara bak"
+          error_help: "Rozet sorgularıyla ilgili yardım için aşağıdaki bağlantılara bakın"
           bad_count_warning:
             header: "UYARI!"
-            text: "Verilen bazı örnekler bulunamıyor. Bu durum, rozet sorgusunda var olmayan kullanıcı kimliği veya gönderi kimliği dönünce gerçekleşir. İleride beklenmedik sonuçlara sebep olabilir - lütfen sorgunuzu yeniden denetleyin."
+            text: "Verilen bazı örnekler bulunamıyor. Bu durum, rozet sorgusunda var olmayan kullanıcı kimliği veya gönderi kimliği dönünce gerçekleşir. İleride beklenmedik sonuçlara sebep olabilir. Lütfen sorgunuzu tekrar kontrol edin."
           no_grant_count: "Verilecek rozet bulunmuyor."
           grant_count:
-            one: "<b>%{count}</b> rozet verilecek."
-            other: "<b>%{count}</b> rozet verilecek."
+            one: "<b>%{count}</b> rozet atanacak."
+            other: "<b>%{count}</b> rozet atanacak."
           sample: "Örnek:"
           grant:
             with: <span class="username">%{username}</span>
-            with_post: <span class="username">%{username}</span> buradaki gönderi için %{link}
-            with_post_time: <span class="username">%{username}</span> %{link} gönderisi için <span class="time">%{time}</span> zamanında
+            with_post: <span class="username">%{username}</span> %{link} bağlantısındaki gönderi için
+            with_post_time: <span class="username">%{username}</span> <span class="time">%{time}</span> saatinde %{link} bağlantısındaki gönderi için
             with_time: <span class="username">%{username}</span>, <span class="time">%{time}</span>
         badge_intro:
-          title: "Başlamak için var olan bir rozeti seç veya yeni bir tane oluştur."
-          emoji: "kadın öğrenci emojisi"
-          what_are_badges_title: "Rozetler nedir?"
+          title: "Başlamak için var olan bir rozeti seçin veya yeni bir tane oluşturun"
+          emoji: "kadın öğrenci emoji'si"
+          what_are_badges_title: "Rozet nedir?"
           badge_query_examples_title: "Rozet sorgusu örnekleri"
         mass_award:
           title: Toplu Ödül
-          description: Aynı rozeti aynı anda birçok kullanıcıya verin.
-          no_badge_selected: Başlamak için lütfen bir rütbe seçin.
-          perform: "Kullanıcılara Ödül Rozeti"
+          description: Aynı rozeti tek seferde birçok kullanıcıya verin.
+          no_badge_selected: Başlamak için lütfen bir rozet seçin.
+          perform: "Kullanıcılara Rozet Verin"
           upload_csv: Kullanıcı e-postalarını veya kullanıcı adlarını içeren bir CSV yükleyin
           aborted: Lütfen kullanıcı e-postalarını veya kullanıcı adlarını içeren bir CSV dosyası yükleyin
-          success: CSV'niz alındı ve %{count} adet kullanıcı kısa süre içinde rozetlerini alacak.
+          success: CSV'niz alındı ve %{count} kullanıcı kısa süre içinde rozetlerini alacak.
           csv_has_unmatched_users: "Aşağıdakiler CSV dosyasında var ama mevcut kullanıcılarla eşleştirilemedi ve bu nedenle rozeti almayacaklar:"
-          csv_has_unmatched_users_truncated_list: "CSV dosyasında mevcut kullanıcılarla eşleştirilemeyen %{count} girdi var ve bu nedenle rozeti almıyor. Eşleştirilemeyen girişlerin sayısı çok olduğundan, yalnızca ilk 100 tanesi gösteriliyor:"
+          csv_has_unmatched_users_truncated_list: "CSV dosyasında mevcut kullanıcılarla eşleştirilemeyen %{count} girdi var ve bu nedenle rozeti almayacak. Eşleştirilemeyen girdilerin sayısı çok olduğundan, yalnızca ilk 100'ü gösteriliyor:"
           replace_owners: Rozeti önceki sahiplerden kaldır
           grant_existing_holders: Mevcut rozet sahiplerine ek rozetler ver
       emoji:
@@ -5424,47 +5424,47 @@ tr_TR:
         uploading: "Yükleniyor..."
         name: "Ad"
         group: "Grup"
-        image: "Resim"
-        alt: "özel emoji önizlemesi"
-        delete_confirm: ":%{name}: emojisini silmek istediğine emin misin?"
+        image: "Görüntü"
+        alt: "özel emoji ön izlemesi"
+        delete_confirm: ":%{name}: emojisini silmek istediğinize emin misiniz?"
       embedding:
-        get_started: "Eğer Discourse'u başka bir web sitesine yerleştirmek istiyorsan bu sitenin sunucusunu ekleyerek başla."
-        confirm_delete: "Bu sunucuyu silmek istediğine emin misin?"
+        get_started: "Discourse'u başka bir web sitesine yerleştirmek istiyorsanız bu sitenin sunucusunu eklemekle işe başlayın."
+        confirm_delete: "Bu sunucuyu silmek istediğinizden emin misiniz?"
         sample: "Discourse konuları oluşturmak ve gömmek için aşağıdaki HTML kodunu sitenize yapıştırın. <b>REPLACE_ME</b> kısmını, gömdüğünüz sayfanın standart URL'si ile değiştirin."
         title: "Yerleştirme"
         host: "İzin Verilen Sunucular"
         class_name: "Sınıf adı"
-        allowed_paths: "İzin Verilmiş Klasörler"
+        allowed_paths: "Yol İzin Verilenler Listesi"
         edit: "düzenle"
         category: "Kategoriye Gönder"
         add_host: "Sunucu Ekle"
         settings: "Yerleştirme Ayarları"
-        crawling_settings: "Yazı Ayarları"
-        crawling_description: "Discourse gönderilerin için bir konu oluşturduğunda eğer bir RSS/ATOM beslemesi yoksa içeriği HTML'den ayrıştırmaya çalışacaktır. Bazen içeriğini çıkartmak zor olabilir. İçeriğini kolayca çıkartabilmen için CSS kuralları belirtme yeteneği sağlıyoruz."
+        crawling_settings: "Gezgin Ayarları"
+        crawling_description: "Discourse gönderileriniz için bir konu oluşturduğunuzda bir RSS/ATOM beslemesi yoksa içeriği HTML'den ayrıştırmaya çalışacaktır. Bazen içeriğinizi çıkartmak zor olabilir. İçeriğinizi kolayca çıkartabilmeniz için CSS kuralları belirtme özelliği sağlıyoruz."
         embed_by_username: "Konu oluşturmak için kullanıcı adı"
-        embed_post_limit: "Yerleştirmek için en fazla gönderi sayısı"
-        embed_title_scrubber: "Gönderilerin başlığını temizlemek için kullanılan düzenli ifade"
-        embed_truncate: "Saklı gönderileri kırp"
-        embed_unlisted: "İlgili konuya bir yanıt gelene kadar içe aktarılan konular listelenmeyecek."
-        allowed_embed_selectors: "Gömülü olarak izin verilen öğeler için CSS seçici"
-        blocked_embed_selectors: "Gömülmüş öğelerden kaldırılan öğeler için CSS seçici"
+        embed_post_limit: "Gömmek için en fazla gönderi sayısı"
+        embed_title_scrubber: "Gönderilerin başlığını temizlemek için kullanılan normal ifade"
+        embed_truncate: "Gömülü gönderileri kırp"
+        embed_unlisted: "İlgili konuya yanıt gelene kadar içe aktarılan konular listelenmeyecek."
+        allowed_embed_selectors: "Gömülü olarak izin verilen ögeler için CSS seçici"
+        blocked_embed_selectors: "Gömülü ögelerden kaldırılan ögeler için CSS seçici"
         allowed_embed_classnames: "İzin verilen CSS sınıfı adları"
         save: "Gömme Ayarlarını Kaydet"
       permalink:
         title: "Kalıcı Bağlantılar"
         description: "Forum tarafından bilinmeyen URL'lere başvurmak için olan yönlendirmeler"
         url: "URL"
-        topic_id: "Konu ID"
+        topic_id: "Konu kimliği"
         topic_title: "Konu"
-        post_id: "Gönderi ID"
+        post_id: "Gönderi kimliği"
         post_title: "Gönderi"
-        category_id: "Kategori ID"
+        category_id: "Kategori kimliği"
         category_title: "Kategori"
         tag_name: "Etiket adı"
         external_url: "Harici veya Göreli URL"
         destination: "Hedef"
-        copy_to_clipboard: "Kalıcı Bağlantıyı Kopyala"
-        delete_confirm: Bu kalıcı bağlantıyı silmek istediğine emin misin?
+        copy_to_clipboard: "Kalıcı Bağlantıyı Panoya Kopyala"
+        delete_confirm: Bu kalıcı bağlantıyı silmek istediğinizden emin misiniz?
         no_permalinks: "Henüz kalıcı bağlantınız yok. Kalıcı bağlantılarınızın listesini burada görmeye başlamak için yukarıda yeni bir kalıcı bağlantı oluşturun."
         form:
           label: "Yeni:"
@@ -5482,29 +5482,29 @@ tr_TR:
           replace: "Değiştir"
   wizard_js:
     wizard:
-      jump_in: "Başla!"
+      jump_in: "Başlayın!"
       finish: "Kurulumdan çık"
       back: "Geri"
       next: "İleri"
-      configure_more: "Daha Fazla Ayar..."
-      step-text: "Aralık"
+      configure_more: "Daha Fazla Yapılandır..."
+      step-text: "Adım"
       step: "%{current} / %{total}"
       upload: "Yükle"
       uploading: "Yükleniyor..."
       upload_error: "Üzgünüz, bu dosyayı yüklerken bir hata oluştu. Lütfen yeniden deneyin."
       staff_count:
-        one: "Topluluğunuzda %{count} görevli üye var (siz)."
-        other: "Toplulukta sen dahil toplam %{count} görevli üye var."
+        one: "Topluluğunuzda %{count} personel (siz) var."
+        other: "Topluluğunuzda siz dahil toplam %{count} personel var."
       invites:
         add_user: "ekle"
-        none_added: "Hiçbir görevliyi davet etmediniz. Sürdürmek istediğinize emin misiniz?"
+        none_added: "Personel davet etmediniz. Devam etmek istediğinize emin misiniz?"
         roles:
           admin: "Yönetici"
           moderator: "Moderatör"
-          regular: "Sürekli Kullanıcı"
+          regular: "Düzenli Kullanıcı"
       previews:
-        topic_title: "Bir tartışma konusu başlığı"
+        topic_title: "Tartışma konusu başlığı"
         share_button: "Paylaş"
-        reply_button: "Yanıt"
-        topic_preview: "Konu önizlemesi"
-        homepage_preview: "Ana sayfa önizlemesi"
+        reply_button: "Yanıtla"
+        topic_preview: "Konu ön izlemesi"
+        homepage_preview: "Ana sayfa ön izlemesi"

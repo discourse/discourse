@@ -623,4 +623,48 @@ RSpec.describe Reviewable, type: :model do
       end
     end
   end
+
+  describe ".unseen_reviewable_count" do
+    fab!(:group) { Fabricate(:group) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:admin_reviewable) { Fabricate(:reviewable, reviewable_by_moderator: false) }
+    fab!(:mod_reviewable) { Fabricate(:reviewable, reviewable_by_moderator: true) }
+    fab!(:group_reviewable) { Fabricate(:reviewable, reviewable_by_moderator: false, reviewable_by_group: group) }
+
+    it "doesn't include reviewables that can't be seen by the user" do
+      SiteSetting.enable_category_group_moderation = true
+      expect(Reviewable.unseen_reviewable_count(user)).to eq(0)
+      user.groups << group
+      user.save!
+      expect(Reviewable.unseen_reviewable_count(user)).to eq(1)
+      user.update!(moderator: true)
+      expect(Reviewable.unseen_reviewable_count(user)).to eq(2)
+      user.update!(admin: true)
+      expect(Reviewable.unseen_reviewable_count(user)).to eq(3)
+    end
+
+    it "returns count of unseen reviewables" do
+      user.update!(admin: true)
+      expect(Reviewable.unseen_reviewable_count(user)).to eq(3)
+      user.update!(last_seen_reviewable_id: mod_reviewable.id)
+      expect(Reviewable.unseen_reviewable_count(user)).to eq(1)
+      user.update!(last_seen_reviewable_id: group_reviewable.id)
+      expect(Reviewable.unseen_reviewable_count(user)).to eq(0)
+    end
+
+    it "doesn't include reviewables that are claimed by other users" do
+      user.update!(admin: true)
+
+      claimed_by_user = Fabricate(:reviewable, topic: Fabricate(:topic))
+      Fabricate(:reviewable_claimed_topic, topic: claimed_by_user.topic, user: user)
+
+      user2 = Fabricate(:user)
+      claimed_by_user2 = Fabricate(:reviewable, topic: Fabricate(:topic))
+      Fabricate(:reviewable_claimed_topic, topic: claimed_by_user2.topic, user: user2)
+
+      unclaimed = Fabricate(:reviewable, topic: Fabricate(:topic))
+
+      expect(Reviewable.unseen_reviewable_count(user)).to eq(5)
+    end
+  end
 end

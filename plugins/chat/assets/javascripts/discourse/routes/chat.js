@@ -36,10 +36,7 @@ export default class ChatRoute extends DiscourseRoute {
       transition.abort();
 
       let URL = transition.intent.url;
-      if (
-        transition.targetName === "chat.channel.index" ||
-        transition.targetName === "chat.channel"
-      ) {
+      if (transition.targetName.startsWith("chat.channel")) {
         URL ??= this.router.urlFor(
           transition.targetName,
           ...transition.intent.contexts
@@ -66,8 +63,6 @@ export default class ChatRoute extends DiscourseRoute {
   }
 
   deactivate() {
-    this.chat.setActiveChannel(null);
-
     schedule("afterRender", () => {
       document.body.classList.remove("has-full-page-chat");
       document.documentElement.classList.remove("has-full-page-chat");
@@ -77,6 +72,10 @@ export default class ChatRoute extends DiscourseRoute {
 
   @action
   willTransition(transition) {
+    if (!transition?.to?.name?.startsWith("chat.channel")) {
+      this.chat.setActiveChannel(null);
+    }
+
     if (!transition?.to?.name?.startsWith("chat.")) {
       this.chatStateManager.storeChatURL();
       this.chat.updatePresence();

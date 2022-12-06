@@ -82,7 +82,7 @@ acceptance("Discourse Chat - User card test", function (needs) {
   test("user card has chat button that opens the correct channel", async function (assert) {
     await visit("/");
     await click(".header-dropdown-toggle.open-chat");
-    await click(".chat-channel-row.chat-channel-9");
+    await click('.chat-channel-row[data-chat-channel-id="9"]');
     await click("[data-user-card='hawk']");
 
     assert.ok(exists(".user-card-chat-btn"));

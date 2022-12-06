@@ -173,7 +173,6 @@ pt_BR:
         chat_channel:
           one: "[%{email_prefix}] Nova mensagem de %{message_title}"
           other: "[%{email_prefix}] Novas mensagens em %{message_title} e %{others}"
-        other_direct_message: "de %{message_title}"
         others: "outros %{count}"
       unsubscribe: "Este resumo do chat será enviado de %{site_link} quando você estiver ausente. Altere seu %{email_preferences_link}, ou %{unsubscribe_link} para cancelar a inscrição."
       unsubscribe_no_link: "Este resumo do chat será enviado de %{site_link} quando você estiver ausente. Altere seu %{email_preferences_link}."

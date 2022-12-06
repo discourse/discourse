@@ -19,8 +19,6 @@ module Jobs
         group.add(user, automatic: true)
         GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
       end
-
-      Group.reset_counters(group.id, :group_users)
     end
 
   end

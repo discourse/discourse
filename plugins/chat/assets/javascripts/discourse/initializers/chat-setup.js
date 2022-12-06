@@ -66,8 +66,7 @@ export default {
       api.decorateCookedElement(
         (elem) => {
           const currentUser = getOwner(this).lookup("service:current-user");
-          const currentUserTimezone =
-            currentUser?.resolvedTimezone(currentUser);
+          const currentUserTimezone = currentUser?.user_option?.timezone;
           const chatTranscriptElements =
             elem.querySelectorAll(".chat-transcript");
 
@@ -101,7 +100,7 @@ export default {
       if (currentUser?.chat_channels) {
         this.chatService.setupWithPreloadedChannels(currentUser.chat_channels);
       } else {
-        this.chatService.getChannels();
+        this.chatService.setupWithoutPreloadedChannels();
       }
 
       const chatNotificationManager = container.lookup(
@@ -130,15 +129,15 @@ export default {
 
       api.addToHeaderIcons("header-chat-link");
 
-      api.decorateChatMessage(function (chatMessage) {
+      api.decorateChatMessage(function (chatMessage, chatChannel) {
         if (!this.currentUser) {
           return;
         }
 
-        const highlightable = [
-          `@${this.currentUser.username}`,
-          ...MENTION_KEYWORDS.map((k) => `@${k}`),
-        ];
+        const highlightable = [`@${this.currentUser.username}`];
+        if (chatChannel.allow_channel_wide_mentions) {
+          highlightable.push(...MENTION_KEYWORDS.map((k) => `@${k}`));
+        }
 
         chatMessage.querySelectorAll(".mention").forEach((node) => {
           const mention = node.textContent.trim();

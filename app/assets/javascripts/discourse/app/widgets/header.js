@@ -82,24 +82,47 @@ createWidget("header-notifications", {
       contents.push(h("div.do-not-disturb-background", iconNode("moon")));
     } else {
       if (this.currentUser.redesigned_user_menu_enabled) {
-        const unread = user.all_unread_notifications_count || 0;
-        const reviewables = user.unseen_reviewable_count || 0;
-        const count = unread + reviewables;
-        if (count > 0) {
-          if (this._shouldHighlightAvatar()) {
-            contents.push(h("span.ring"));
-          }
-
+        let ringClass = null;
+        if (user.new_personal_messages_notifications_count) {
+          ringClass = "personal-messages";
+          contents.push(
+            this.attach("link", {
+              action: attrs.action,
+              className: "badge-notification with-icon new-pms",
+              icon: "envelope",
+              omitSpan: true,
+              title: "notifications.tooltip.new_message_notification",
+              titleOptions: {
+                count: user.new_personal_messages_notifications_count,
+              },
+            })
+          );
+        } else if (user.unseen_reviewable_count) {
+          contents.push(
+            this.attach("link", {
+              action: attrs.action,
+              className: "badge-notification with-icon new-reviewables",
+              icon: "flag",
+              omitSpan: true,
+              title: "notifications.tooltip.new_reviewable",
+              titleOptions: { count: user.unseen_reviewable_count },
+            })
+          );
+        } else if (user.all_unread_notifications_count) {
+          ringClass = "regular-notifications";
           contents.push(
             this.attach("link", {
               action: attrs.action,
               className: "badge-notification unread-notifications",
-              rawLabel: count,
+              rawLabel: user.all_unread_notifications_count,
               omitSpan: true,
               title: "notifications.tooltip.regular",
-              titleOptions: { count },
+              titleOptions: { count: user.all_unread_notifications_count },
             })
           );
+        }
+        if (ringClass && this._shouldHighlightAvatar()) {
+          contents.push(h(`span.ring.revamped.${ringClass}`));
         }
       } else {
         const unreadNotifications = user.unread_notifications;

@@ -34,12 +34,23 @@ acceptance("Discourse Chat - Sidebar - User Status", function (needs) {
       },
       chatable_type: "DirectMessage",
       title: "@user1",
+      message_bus_last_ids: {
+        new_mentions: 0,
+        new_messages: 0,
+      },
     };
 
     server.get("/chat/chat_channels.json", () => {
       return helper.response({
         public_channels: [],
         direct_message_channels: [directMessageChannel],
+        message_bus_last_ids: {
+          channel_metadata: 0,
+          channel_edits: 0,
+          channel_status: 0,
+          new_channel: 0,
+          user_tracking_state: 0,
+        },
       });
     });
   });
