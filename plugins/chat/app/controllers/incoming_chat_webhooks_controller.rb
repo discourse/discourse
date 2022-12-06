@@ -60,6 +60,7 @@ class Chat::IncomingChatWebhooksController < ApplicationController
     if chat_message_creator.failed?
       render_json_error(chat_message_creator.error)
     else
+      webhook.chat_channel.touch(:last_message_sent_at)
       render json: success_json
     end
   end
