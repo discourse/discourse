@@ -72,7 +72,7 @@ class UsersController < ApplicationController
       user_serializer = serializer_class.new(@user, scope: guardian, root: 'user')
 
       topic_id = params[:include_post_count_for].to_i
-      if topic_id != 0
+      if topic_id != 0 && guardian.can_see?(Topic.find_by_id(topic_id))
         user_serializer.topic_post_count = { topic_id => Post.secured(guardian).where(topic_id: topic_id, user_id: @user.id).count }
       end
     else
