@@ -14,8 +14,24 @@ export default class UserStatusMessage extends Component {
 
     return until(
       this.status.ends_at,
-      this.currentUser.user_option.timezone,
-      this.currentUser.locale
+      this.currentUserTimezone,
+      this.currentUserLocale
     );
+  }
+
+  get currentUserTimezone() {
+    if (this.currentUser) {
+      return this.currentUser.user_option.timezone;
+    } else {
+      return moment.tz.guess();
+    }
+  }
+
+  get currentUserLocale() {
+    if (this.currentUser) {
+      this.currentUser.locale;
+    } else {
+      return "";
+    }
   }
 }
