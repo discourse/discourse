@@ -936,7 +936,7 @@ en:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Inappropriate"
-      description: 'This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="%{base_path}/guidelines">our community guidelines</a>.'
+      description: 'This post contains content that a reasonable person would consider offensive, abusive, to be hateful conduct or a violation of <a href="%{base_path}/guidelines">our community guidelines</a>.'
       short_description: 'A violation of <a href="%{base_path}/guidelines">our community guidelines</a>'
     notify_user:
       title: "Send @%{username} a message"
@@ -1005,7 +1005,7 @@ en:
       short_description: "This is an advertisement"
     inappropriate:
       title: "Inappropriate"
-      description: 'This topic contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="%{base_path}/guidelines">our community guidelines</a>.'
+      description: 'This topic contains content that a reasonable person would consider offensive, abusive, to be hateful conduct or a violation of <a href="%{base_path}/guidelines">our community guidelines</a>.'
       long_form: "flagged this as inappropriate"
       short_description: 'A violation of <a href="%{base_path}/guidelines">our community guidelines</a>'
     notify_moderators:
@@ -2869,12 +2869,12 @@ en:
 
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
-    inappropriate: "Your post was flagged as **inappropriate**: the community feels it is offensive, abusive, or a violation of [our community guidelines](%{base_path}/guidelines)."
+    inappropriate: "Your post was flagged as **inappropriate**: the community feels it is offensive, abusive, to be hateful conduct or a violation of [our community guidelines](%{base_path}/guidelines)."
     spam: "Your post was flagged as **spam**: the community feels it is an advertisement, something that is overly promotional in nature instead of being useful or relevant to the topic as expected."
     notify_moderators: "Your post was flagged **for moderator attention**: the community feels something about the post requires manual intervention by a staff member."
     responder:
       off_topic: "The post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
-      inappropriate: "The post was flagged as **inappropriate**: the community feels it is offensive, abusive, or a violation of [our community guidelines](%{base_path}/guidelines)."
+      inappropriate: "The post was flagged as **inappropriate**: the community feels it is offensive, abusive, to be hateful conduct or a violation of [our community guidelines](%{base_path}/guidelines)."
       spam: "The post was flagged as **spam**: the community feels it is an advertisement, something that is overly promotional in nature instead of being useful or relevant to the topic as expected."
       notify_moderators: "The post was flagged **for moderator attention**: the community feels something about the post requires manual intervention by a staff member."
 
@@ -4426,7 +4426,7 @@ en:
 
       <h2 id="heading--content-standards"><a href="#heading--content-standards">Content Standards</a></h2>
 
-      1. You may not submit content to the forum that is illegal, offensive, or otherwise harmful to others. This includes content that is harassing, inappropriate, or abusive.
+      1. You may not submit content to the forum that is illegal, offensive, or otherwise harmful to others. This includes content that is harassing, inappropriate, abusive, or hateful conduct.
 
       2. You may not submit content to the forum that violates the law, infringes anyone's intellectual property rights, violates anyone's privacy, or breaches agreements you have with others.
 
