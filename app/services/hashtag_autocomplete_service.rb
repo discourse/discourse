@@ -289,7 +289,9 @@ class HashtagAutocompleteService
       search_results = @@data_sources[type].search_without_term(guardian, split_limit)
       next if search_results.empty?
       next if !all_data_items_valid?(search_results)
-      search_results = @@data_sources[type].search_sort(search_results, nil)
+
+      # This is purposefully unsorted as search_without_term should sort
+      # in its own way.
       limited_results.concat(set_types(set_refs(search_results), type))
     end
 

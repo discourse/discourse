@@ -3,7 +3,7 @@
 RSpec.describe HashtagAutocompleteService do
   fab!(:user) { Fabricate(:user) }
   fab!(:category1) { Fabricate(:category, name: "Book Club", slug: "book-club") }
-  fab!(:tag1) { Fabricate(:tag, name: "great-books") }
+  fab!(:tag1) { Fabricate(:tag, name: "great-books", topic_count: 22) }
   fab!(:topic1) { Fabricate(:topic) }
   let(:guardian) { Guardian.new(user) }
 
@@ -238,33 +238,34 @@ RSpec.describe HashtagAutocompleteService do
     end
 
     context "when no term is provided (default results) triggered by a # with no characters in the UI" do
-      fab!(:category2) { Fabricate(:category, name: "Book Zone", slug: "book-zone") }
-      fab!(:category3) { Fabricate(:category, name: "Book Dome", slug: "book-dome") }
-      fab!(:category4) { Fabricate(:category, name: "Bookworld", slug: "book") }
-      fab!(:category5) { Fabricate(:category, name: "Media", slug: "media") }
-      fab!(:tag2) { Fabricate(:tag, name: "mid-books") }
-      fab!(:tag3) { Fabricate(:tag, name: "terrible-books") }
-      fab!(:tag4) { Fabricate(:tag, name: "book") }
+      fab!(:category2) do
+        Fabricate(:category, name: "Book Zone", slug: "book-zone", topic_count: 546)
+      end
+      fab!(:category3) do
+        Fabricate(:category, name: "Book Dome", slug: "book-dome", topic_count: 987)
+      end
+      fab!(:category4) { Fabricate(:category, name: "Bookworld", slug: "book", topic_count: 56) }
+      fab!(:category5) { Fabricate(:category, name: "Media", slug: "media", topic_count: 446) }
+      fab!(:tag2) { Fabricate(:tag, name: "mid-books", topic_count: 33) }
+      fab!(:tag3) { Fabricate(:tag, name: "terrible-books", topic_count: 2) }
+      fab!(:tag4) { Fabricate(:tag, name: "book", topic_count: 1) }
 
-      it "returns the N most recently used categories and tags (based on posts created within topics utilizing those categories/tags) that the user can access" do
-        Fabricate(:post, created_at: 1.day.ago, topic: Fabricate(:topic, category: category3))
-        Fabricate(:post, created_at: 6.days.ago, topic: Fabricate(:topic, category: category2))
-        Fabricate(:post, created_at: 1.hour.ago, topic: Fabricate(:topic, category: category1))
-
-        Fabricate(:post, created_at: 2.days.ago, topic: Fabricate(:topic, tags: [tag2], category: category5))
-        Fabricate(:post, created_at: 3.days.ago, topic: Fabricate(:topic, tags: [tag4], category: category5))
-        Fabricate(:post, created_at: 4.hours.ago, topic: Fabricate(:topic, tags: [tag3], category: category5))
-
+      it "returns the N top categories and tags (based on topic_count) that the user can access" do
         category1.update!(read_restricted: true)
         Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["terrible-books"])
 
-        expect(subject.search(nil, %w[category tag]).map(&:text)).to eq([
-          "Book Dome",
-          "Book Zone",
-          "Media",
-          "book x 1",
-          "mid-books x 1"
-        ])
+        expect(subject.search(nil, %w[category tag]).map(&:text)).to eq(
+          [
+            "Book Dome",
+            "Book Zone",
+            "Media",
+            "Bookworld",
+            Category.find(SiteSetting.uncategorized_category_id).name,
+            "mid-books x 33",
+            "great-books x 22",
+            "book x 1",
+          ],
+        )
       end
     end
   end
