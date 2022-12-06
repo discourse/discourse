@@ -4957,6 +4957,12 @@ en:
           must_approve_users:
             placeholder: "Require Approval"
             extra_description: "Users must be approved by staff"
+          chat_enabled:
+            placeholder: "Enable Chat"
+            extra_description: "A fast-lane for team discussion"
+          enable_sidebar:
+            placeholder: "Enable Sidebar"
+            extra_description: "Additional navigation, on-the-side"
 
       ready:
         title: "Your Discourse is Ready!"
