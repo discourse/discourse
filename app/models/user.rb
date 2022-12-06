@@ -85,7 +85,7 @@ class User < ActiveRecord::Base
 
   has_many :topics_allowed, through: :topic_allowed_users, source: :topic
   has_many :groups, through: :group_users
-  has_many :secure_categories, through: :groups, source: :categories
+  has_many :secure_categories, -> { distinct }, through: :groups, source: :categories
   has_many :associated_groups, through: :user_associated_groups, dependent: :destroy
 
   # deleted in user_second_factors relationship
@@ -135,10 +135,14 @@ class User < ActiveRecord::Base
   after_create :ensure_in_trust_level_group
   after_create :set_default_categories_preferences
   after_create :set_default_tags_preferences
-  after_create :set_default_sidebar_section_links
+  after_create :add_default_sidebar_section_links
 
-  after_update :set_default_sidebar_section_links, if: Proc.new  {
-    self.saved_change_to_staged? || self.saved_change_to_admin?
+  after_update :update_default_sidebar_section_links, if: Proc.new  {
+    self.saved_change_to_admin?
+  }
+
+  after_update :add_default_sidebar_section_links, if: Proc.new {
+    self.saved_change_to_staged?
   }
 
   after_update :trigger_user_updated_event, if: Proc.new {
@@ -1946,23 +1950,52 @@ class User < ActiveRecord::Base
 
   private
 
-  def set_default_sidebar_section_links
+  def set_default_sidebar_section_links(update: false)
     return if !SiteSetting.enable_experimental_sidebar_hamburger
     return if staged? || bot?
 
     if SiteSetting.default_sidebar_categories.present?
+      categories_to_update = SiteSetting.default_sidebar_categories.split("|")
+
+      if update
+        filtered_default_category_ids = Category.secured(self.guardian).where(id: categories_to_update).pluck(:id)
+        existing_category_ids = SidebarSectionLink.where(user: self, linkable_type: 'Category').pluck(:linkable_id)
+
+        categories_to_update = existing_category_ids + (filtered_default_category_ids & self.secure_category_ids)
+      end
+
       SidebarSectionLinksUpdater.update_category_section_links(
         self,
-        category_ids: SiteSetting.default_sidebar_categories.split("|")
+        category_ids: categories_to_update
       )
     end
 
     if SiteSetting.tagging_enabled && SiteSetting.default_sidebar_tags.present?
+      tags_to_update = SiteSetting.default_sidebar_tags.split("|")
+
+      if update
+        default_tag_ids = Tag.where(name: tags_to_update).pluck(:id)
+        filtered_default_tags = DiscourseTagging.filter_visible(Tag, self.guardian).where(id: default_tag_ids).pluck(:name)
+
+        existing_tag_ids = SidebarSectionLink.where(user: self, linkable_type: 'Tag').pluck(:linkable_id)
+        existing_tags = DiscourseTagging.filter_visible(Tag, self.guardian).where(id: existing_tag_ids).pluck(:name)
+
+        tags_to_update = existing_tags + (filtered_default_tags & DiscourseTagging.hidden_tag_names)
+      end
+
       SidebarSectionLinksUpdater.update_tag_section_links(
         self,
-        tag_names: SiteSetting.default_sidebar_tags.split("|")
+        tag_names: tags_to_update
       )
     end
+  end
+
+  def add_default_sidebar_section_links
+    set_default_sidebar_section_links
+  end
+
+  def update_default_sidebar_section_links
+    set_default_sidebar_section_links(update: true)
   end
 
   def stat

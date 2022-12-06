@@ -117,7 +117,7 @@ class ThemeStore::GitImporter
     end
   end
 
-  def clone_args(config = {})
+  def clone_args(url, config = {})
     args = ["git"]
 
     config.each do |key, value|
@@ -130,27 +130,27 @@ class ThemeStore::GitImporter
       args.concat(['--single-branch', "-b", @branch])
     end
 
-    args.concat([@url, @temp_folder])
+    args.concat([url, @temp_folder])
 
     args
   end
 
   def clone_http!
-    @uri = redirected_uri
-    @url = @uri.to_s
+    uri = redirected_uri
 
     unless ["http", "https"].include?(@uri.scheme)
       raise_import_error!
     end
 
-    addresses = FinalDestination::SSRFDetector.lookup_and_filter_ips(@uri.host)
+    addresses = FinalDestination::SSRFDetector.lookup_and_filter_ips(uri.host)
 
     unless addresses.empty?
       env = { "GIT_TERMINAL_PROMPT" => "0" }
 
       args = clone_args(
+        uri.to_s,
         "http.followRedirects" => "false",
-        "http.curloptResolve" => "#{@uri.host}:#{@uri.port}:#{addresses.join(',')}",
+        "http.curloptResolve" => "#{uri.host}:#{uri.port}:#{addresses.join(',')}",
       )
 
       begin
@@ -168,7 +168,7 @@ class ThemeStore::GitImporter
     with_ssh_private_key do |ssh_folder|
       # Use only the specified SSH key
       env = { 'GIT_SSH_COMMAND' => "ssh -i #{ssh_folder}/id_rsa -o IdentitiesOnly=yes -o IdentityFile=#{ssh_folder}/id_rsa -o StrictHostKeyChecking=no" }
-      args = clone_args
+      args = clone_args(@url)
 
       begin
         Discourse::Utils.execute_command(env, *args, timeout: COMMAND_TIMEOUT_SECONDS)

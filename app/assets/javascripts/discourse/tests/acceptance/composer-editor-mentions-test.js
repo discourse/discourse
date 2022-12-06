@@ -126,7 +126,7 @@ acceptance("Composer - editor mentions", function (needs) {
   });
 
   test("shows status on search results when mentioning a user", async function (assert) {
-    const timezone = loggedInUser().timezone;
+    const timezone = loggedInUser().user_option.timezone;
     const now = moment(status.ends_at).add(-1, "hour").format();
     clock = fakeTime(now, timezone, true);
 

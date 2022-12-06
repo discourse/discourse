@@ -277,6 +277,17 @@ describe Chat::Api::ChatChannelsController do
         expect(response.parsed_body).to match_response_schema("category_chat_channel")
       end
 
+      describe "when updating allow_channel_wide_mentions" do
+        it "sets the new value" do
+          put "/chat/api/chat_channels/#{chat_channel.id}.json",
+              params: {
+                allow_channel_wide_mentions: false,
+              }
+
+          expect(response.parsed_body["allow_channel_wide_mentions"]).to eq(false)
+        end
+      end
+
       describe "Updating a channel to add users automatically" do
         it "sets the channel to auto-update users automatically" do
           put "/chat/api/chat_channels/#{chat_channel.id}.json", params: { auto_join_users: true }

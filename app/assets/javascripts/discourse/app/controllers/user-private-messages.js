@@ -1,47 +1,119 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { alias, and, equal, readOnly } from "@ember/object/computed";
-import discourseComputed from "discourse-common/utils/decorators";
+import { cached, tracked } from "@glimmer/tracking";
 import I18n from "I18n";
+import DiscourseURL from "discourse/lib/url";
 
-export const PERSONAL_INBOX = "__personal_inbox__";
+const customUserNavMessagesDropdownRows = [];
 
-export default Controller.extend({
-  user: controller(),
-  router: service(),
+export function registerCustomUserNavMessagesDropdownRow(
+  routeName,
+  name,
+  icon
+) {
+  customUserNavMessagesDropdownRows.push({
+    routeName,
+    name,
+    icon,
+  });
+}
 
-  viewingSelf: alias("user.viewingSelf"),
-  isGroup: equal("currentParentRouteName", "userPrivateMessages.group"),
-  isPersonal: equal("currentParentRouteName", "userPrivateMessages.user"),
-  group: null,
-  groupFilter: alias("group.name"),
-  currentRouteName: readOnly("router.currentRouteName"),
-  currentParentRouteName: readOnly("router.currentRoute.parent.name"),
-  pmTaggingEnabled: alias("site.can_tag_pms"),
-  tagId: null,
+export function resetCustomUserNavMessagesDropdownRows() {
+  customUserNavMessagesDropdownRows.length = 0;
+}
 
-  showNewPM: and("user.viewingSelf", "currentUser.can_send_private_messages"),
+export default class extends Controller {
+  @service router;
+  @controller user;
 
-  @discourseComputed(
+  @tracked group;
+  @tracked tagId;
+
+  @alias("group.name") groupFilter;
+  @and("user.viewingSelf", "currentUser.can_send_private_messages") showNewPM;
+  @equal("currentParentRouteName", "userPrivateMessages.group") isGroup;
+  @equal("currentParentRouteName", "userPrivateMessages.user") isPersonal;
+  @readOnly("user.viewingSelf") viewingSelf;
+  @readOnly("router.currentRouteName") currentRouteName;
+  @readOnly("router.currentRoute.parent.name") currentParentRouteName;
+  @readOnly("site.can_tag_pms") pmTaggingEnabled;
+
+  get messagesDropdownValue() {
+    let value;
+
+    for (let i = this.messagesDropdownContent.length - 1; i >= 0; i--) {
+      const row = this.messagesDropdownContent[i];
+
+      if (this.router.currentURL.includes(row.id)) {
+        value = row.id;
+        break;
+      }
+    }
+
+    return value;
+  }
+
+  @cached
+  get messagesDropdownContent() {
+    const content = [
+      {
+        id: this.router.urlFor("userPrivateMessages.user", this.model.username),
+        name: I18n.t("user.messages.inbox"),
+      },
+    ];
+
+    this.model.groupsWithMessages.forEach((group) => {
+      content.push({
+        id: this.router.urlFor(
+          "userPrivateMessages.group",
+          this.model.username,
+          group.name
+        ),
+        name: group.name,
+        icon: "inbox",
+      });
+    });
+
+    if (this.pmTaggingEnabled) {
+      content.push({
+        id: this.router.urlFor("userPrivateMessages.tags", this.model.username),
+        name: I18n.t("user.messages.tags"),
+        icon: "tags",
+      });
+    }
+
+    customUserNavMessagesDropdownRows.forEach((row) => {
+      content.push({
+        id: this.router.urlFor(row.routeName, this.model.username),
+        name: row.name,
+        icon: row.icon,
+      });
+    });
+
+    return content;
+  }
+
+  @computed(
     "pmTopicTrackingState.newIncoming.[]",
     "pmTopicTrackingState.statesModificationCounter",
     "group"
   )
-  newLinkText() {
-    return this._linkText("new");
-  },
+  get newLinkText() {
+    return this.#linkText("new");
+  }
 
-  @discourseComputed(
+  @computed(
     "pmTopicTrackingState.newIncoming.[]",
     "pmTopicTrackingState.statesModificationCounter",
     "group"
   )
-  unreadLinkText() {
-    return this._linkText("unread");
-  },
+  get unreadLinkText() {
+    return this.#linkText("unread");
+  }
 
-  _linkText(type) {
+  #linkText(type) {
     const count = this.pmTopicTrackingState?.lookupCount(type) || 0;
 
     if (count === 0) {
@@ -49,10 +121,15 @@ export default Controller.extend({
     } else {
       return I18n.t(`user.messages.${type}_with_count`, { count });
     }
-  },
+  }
 
   @action
   changeGroupNotificationLevel(notificationLevel) {
     this.group.setNotification(notificationLevel, this.get("user.model.id"));
-  },
-});
+  }
+
+  @action
+  onMessagesDropdownChange(item) {
+    return DiscourseURL.routeTo(item);
+  }
+}

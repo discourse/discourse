@@ -131,24 +131,34 @@ class Topic < ActiveRecord::Base
   end
 
   def trash!(trashed_by = nil)
+    trigger_event = false
+
     if deleted_at.nil?
       update_category_topic_count_by(-1) if visible?
       CategoryTagStat.topic_deleted(self) if self.tags.present?
-      DiscourseEvent.trigger(:topic_trashed, self)
+      trigger_event = true
     end
+
     super(trashed_by)
+
+    DiscourseEvent.trigger(:topic_trashed, self) if trigger_event
+
     self.topic_embed.trash! if has_topic_embed?
   end
 
   def recover!(recovered_by = nil)
+    trigger_event = false
+
     unless deleted_at.nil?
       update_category_topic_count_by(1) if visible?
       CategoryTagStat.topic_recovered(self) if self.tags.present?
-      DiscourseEvent.trigger(:topic_recovered, self)
+      trigger_event = true
     end
 
     # Note parens are required because superclass doesn't take `recovered_by`
     super()
+
+    DiscourseEvent.trigger(:topic_recovered, self) if trigger_event
 
     unless (topic_embed = TopicEmbed.with_deleted.find_by_topic_id(id)).nil?
       topic_embed.recover!

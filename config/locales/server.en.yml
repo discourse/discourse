@@ -1089,6 +1089,7 @@ en:
       write: "Write all"
       one_time_password: "Create a one-time login token"
       bookmarks_calendar: "Read bookmark reminders"
+      user_status: "Read and update user status"
     invalid_public_key: "Sorry, the public key is invalid."
     invalid_auth_redirect: "Sorry, this auth_redirect host is not allowed."
     invalid_token: "Missing, invalid or expired token."
@@ -2392,6 +2393,7 @@ en:
     default_sidebar_categories: "Selected categories will be displayed under Sidebar's Categories section by default."
     default_sidebar_tags: "Selected tags will be displayed under Sidebar's Tags section by default."
     enable_new_user_profile_nav_groups: "EXPERIMENTAL: Users of the selected groups will be shown the new user profile navigation menu"
+    enable_experimental_topic_timeline_groups: "EXPERIMENTAL: Users of the selected groups will be shown the refactored topic timeline"
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -5002,12 +5004,6 @@ en:
           logo_small:
             label: "Square Logo"
             description: "A square version of your logo. Shown at the top left when scrolling down, and when sharing on social platforms. Ideally at least 512x512."
-          favicon:
-            label: "Browser Icon"
-            description: "Icon used to represent your site in web browsers that looks good at small sizes. PNG or JPG is recommended. Square logo is used by default."
-          large_icon:
-            label: "Large Icon"
-            description: "Icon used to represent your site on mobile devices that looks good at larger sizes. Ideally greater than 512x512. Square logo used by default."
 
       corporate:
         title: "Your Organization"

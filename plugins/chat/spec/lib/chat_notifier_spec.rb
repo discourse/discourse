@@ -49,6 +49,15 @@ describe Chat::ChatNotifier do
         expect(to_notify[list_key]).to be_empty
       end
 
+      it "will never mention when channel is not accepting channel wide mentions" do
+        channel.update!(allow_channel_wide_mentions: false)
+        msg = build_cooked_msg(mention, user_1)
+
+        to_notify = described_class.new(msg, msg.created_at).notify_new
+
+        expect(to_notify[list_key]).to be_empty
+      end
+
       it "includes all members of a channel except the sender" do
         msg = build_cooked_msg(mention, user_1)
 

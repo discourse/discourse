@@ -3,6 +3,7 @@
 class ChatChannelSerializer < ApplicationSerializer
   attributes :id,
              :auto_join_users,
+             :allow_channel_wide_mentions,
              :chatable,
              :chatable_id,
              :chatable_type,
@@ -18,7 +19,8 @@ class ChatChannelSerializer < ApplicationSerializer
              :total_messages,
              :archive_topic_id,
              :memberships_count,
-             :current_user_membership
+             :current_user_membership,
+             :message_bus_last_ids
 
   def initialize(object, opts)
     super(object, opts)
@@ -92,6 +94,13 @@ class ChatChannelSerializer < ApplicationSerializer
       scope: scope,
       root: false,
     ).as_json
+  end
+
+  def message_bus_last_ids
+    {
+      new_messages: MessageBus.last_id("/chat/#{object.id}/new-messages"),
+      new_mentions: MessageBus.last_id("/chat/#{object.id}/new-mentions"),
+    }
   end
 
   alias_method :include_archive_topic_id?, :include_archive_status?

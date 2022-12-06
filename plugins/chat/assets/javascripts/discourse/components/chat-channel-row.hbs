@@ -1,15 +1,34 @@
-<LinkTo @route="chat.channel" @models={{array this.channel.id (or this.channel.slug "-")}} class={{this.rowClassNames}} id={{concat "chat-channel-row-" this.channel.id}} tabindex="0" data-chat-channel-id={{this.channel.id}}>
-  <ChatChannelTitle @channel={{this.channel}} />
-  <ChatChannelMetadata @channel={{this.channel}} @unreadIndicator={{true}} />
+<LinkTo
+  @route="chat.channel"
+  @models={{array @channel.id (or @channel.slug "-")}}
+  class={{concat-class
+    "chat-channel-row"
+    (if @channel.focused "focused")
+    (if @channel.current_user_membership.muted "muted")
+    (if @options.leaveButton "can-leave")
+    (if (eq this.chat.activeChannel.id @channel.id) "active")
+    (if this.channelHasUnread "has-unread")
+  }}
+  tabindex="0"
+  data-chat-channel-id={{@channel.id}}
+  {{did-insert this.startTrackingStatus}}
+  {{will-destroy this.stopTrackingStatus}}
+>
+  <ChatChannelTitle @channel={{@channel}} />
+  <ChatChannelMetadata @channel={{@channel}} @unreadIndicator={{true}} />
 
-  {{#if (and this.options.leaveButton this.channel.isFollowing (not this.site.mobileView))}}
+  {{#if (and @options.leaveButton @channel.isFollowing this.site.desktopView)}}
     <ToggleChannelMembershipButton
-      @channel={{this.channel}}
+      @channel={{@channel}}
       @options={{hash
         leaveClass="btn-flat chat-channel-leave-btn"
         labelType="none"
         leaveIcon="times"
-        leaveTitle=this.leaveChatTitle
+        leaveTitle=(if
+          @channel.isDirectMessageChannel
+          (i18n "chat.direct_messages.leave")
+          (i18n "chat.channel_settings.leave_channel")
+        )
       }}
     />
   {{/if}}

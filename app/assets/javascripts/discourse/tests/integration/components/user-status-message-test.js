@@ -12,7 +12,7 @@ module("Integration | Component | user-status-message", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.currentUser.timezone = "UTC";
+    this.currentUser.user_option.timezone = "UTC";
   });
 
   hooks.afterEach(function () {
@@ -49,7 +49,7 @@ module("Integration | Component | user-status-message", function (hooks) {
   test("it shows the until TIME on the tooltip if status will expire today", async function (assert) {
     this.clock = fakeTime(
       "2100-02-01T08:00:00.000Z",
-      this.currentUser.timezone,
+      this.currentUser.user_option.timezone,
       true
     );
     this.set("status", {
@@ -72,7 +72,7 @@ module("Integration | Component | user-status-message", function (hooks) {
   test("it shows the until DATE on the tooltip if status will expire tomorrow", async function (assert) {
     this.clock = fakeTime(
       "2100-02-01T08:00:00.000Z",
-      this.currentUser.timezone,
+      this.currentUser.user_option.timezone,
       true
     );
     this.set("status", {
@@ -95,7 +95,7 @@ module("Integration | Component | user-status-message", function (hooks) {
   test("it doesn't show until datetime on the tooltip if status doesn't have expiration date", async function (assert) {
     this.clock = fakeTime(
       "2100-02-01T08:00:00.000Z",
-      this.currentUser.timezone,
+      this.currentUser.user_option.timezone,
       true
     );
     this.set("status", {

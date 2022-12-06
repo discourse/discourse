@@ -17,6 +17,8 @@ import {
   resetHighestReadCache,
   setHighestReadCache,
 } from "discourse/lib/topic-list-tracker";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { resetCustomUserNavMessagesDropdownRows } from "discourse/controllers/user-private-messages";
 
 acceptance(
   "User Private Messages - user with no group messages",
@@ -84,7 +86,7 @@ function testUserPrivateMessagesWithGroupMessages(needs, customUserProps) {
 
   needs.pretender((server, helper) => {
     server.get("/tags/personal_messages/:username.json", () => {
-      return helper.response({ tags: [] });
+      return helper.response({ tags: [{ id: "tag1" }] });
     });
 
     server.get("/t/13.json", () => {
@@ -125,6 +127,7 @@ function testUserPrivateMessagesWithGroupMessages(needs, customUserProps) {
       "/topics/private-messages-group/:username/:group_name/new.json",
       "/topics/private-messages-group/:username/:group_name/unread.json",
       "/topics/private-messages-group/:username/:group_name/archive.json",
+      "/topics/private-messages-tags/:username/:tag_name",
     ].forEach((url) => {
       server.get(url, () => {
         let topics;
@@ -685,6 +688,98 @@ function testUserPrivateMessagesWithGroupMessages(needs, customUserProps) {
       "displays the right browse more message"
     );
   });
+
+  if (customUserProps?.redesigned_user_page_nav_enabled) {
+    test("navigating between user messages route with dropdown", async function (assert) {
+      await visit("/u/charlie/messages");
+
+      const messagesDropdown = selectKit(".user-nav-messages-dropdown");
+
+      assert.strictEqual(
+        messagesDropdown.header().name(),
+        I18n.t("user.messages.inbox"),
+        "User personal inbox is selected in dropdown"
+      );
+
+      await click(".messages-sent");
+
+      assert.strictEqual(
+        messagesDropdown.header().name(),
+        I18n.t("user.messages.inbox"),
+        "User personal inbox is still selected when viewing sent messages"
+      );
+
+      await messagesDropdown.expand();
+      await messagesDropdown.selectRowByName("awesome_group");
+
+      assert.strictEqual(
+        currentURL(),
+        "/u/charlie/messages/group/awesome_group",
+        "routes to the right URL when selecting awesome_group in the dropdown"
+      );
+
+      assert.strictEqual(
+        messagesDropdown.header().name(),
+        "awesome_group",
+        "Group inbox is selected in dropdown"
+      );
+
+      await click(".messages-group-new");
+
+      assert.strictEqual(
+        messagesDropdown.header().name(),
+        "awesome_group",
+        "Group inbox is still selected in dropdown"
+      );
+
+      await messagesDropdown.expand();
+      await messagesDropdown.selectRowByName(I18n.t("user.messages.tags"));
+
+      assert.strictEqual(
+        currentURL(),
+        "/u/charlie/messages/tags",
+        "routes to the right URL when selecting tags in the dropdown"
+      );
+
+      assert.strictEqual(
+        messagesDropdown.header().name(),
+        I18n.t("user.messages.tags"),
+        "All tags is selected in dropdown"
+      );
+
+      await click(".discourse-tag[data-tag-name='tag1']");
+
+      assert.strictEqual(
+        messagesDropdown.header().name(),
+        I18n.t("user.messages.tags"),
+        "All tags is still selected in dropdown"
+      );
+    });
+
+    test("addUserMessagesNavigationDropdownRow plugin api", async function (assert) {
+      try {
+        withPluginApi("1.5.0", (api) => {
+          api.addUserMessagesNavigationDropdownRow(
+            "preferences",
+            "test nav",
+            "arrow-left"
+          );
+        });
+
+        await visit("/u/eviltrout/messages");
+
+        const messagesDropdown = selectKit(".user-nav-messages-dropdown");
+        await messagesDropdown.expand();
+
+        const row = messagesDropdown.rowByName("test nav");
+
+        assert.strictEqual(row.value(), "/u/eviltrout/preferences");
+        assert.ok(row.icon().classList.contains("d-icon-arrow-left"));
+      } finally {
+        resetCustomUserNavMessagesDropdownRows();
+      }
+    });
+  }
 }
 
 acceptance(

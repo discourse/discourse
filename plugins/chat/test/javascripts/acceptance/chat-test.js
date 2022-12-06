@@ -206,7 +206,7 @@ acceptance("Discourse Chat - without unread", function (needs) {
   test("Unfollowing a direct message channel transitions to another channel", async function (assert) {
     await visit("/chat/channel/75/@hawk");
     await click(
-      ".chat-channel-row.chat-channel-75 .toggle-channel-membership-button.-leave"
+      '.chat-channel-row[data-chat-channel-id="75"] .toggle-channel-membership-button.-leave'
     );
 
     assert.ok(/^\/chat\/channel\/4/.test(currentURL()));
@@ -353,13 +353,13 @@ acceptance("Discourse Chat - without unread", function (needs) {
     await settled();
 
     await click(".chat-drawer-header__return-to-channels-btn");
-    await click(".chat-channel-row.chat-channel-9");
+    await click('.chat-channel-row[data-chat-channel-id="9"]');
     await triggerEvent(".chat-message-container[data-id='174']", "mouseenter");
     await click(".chat-message-actions-container[data-id='174'] .reply-btn");
     // Reply-to line is present
     assert.ok(exists(".chat-composer-message-details .chat-reply"));
     await click(".chat-drawer-header__return-to-channels-btn");
-    await click(".chat-channel-row.chat-channel-11");
+    await click('.chat-channel-row[data-chat-channel-id="11"]');
     // Reply-to line is gone since switching channels
     assert.notOk(exists(".chat-composer-message-details .chat-reply"));
     // Now click on reply btn and cancel it on channel 7
@@ -370,13 +370,13 @@ acceptance("Discourse Chat - without unread", function (needs) {
 
     // Go back to channel 9 and check that reply-to is present
     await click(".chat-drawer-header__return-to-channels-btn");
-    await click(".chat-channel-row.chat-channel-9");
+    await click('.chat-channel-row[data-chat-channel-id="9"]');
     // Now reply-to should be back and loaded from draft
     assert.ok(exists(".chat-composer-message-details .chat-reply"));
 
     // Go back one for time to channel 7 and make sure reply-to is gone
     await click(".chat-drawer-header__return-to-channels-btn");
-    await click(".chat-channel-row.chat-channel-11");
+    await click('.chat-channel-row[data-chat-channel-id="11"]');
     assert.notOk(exists(".chat-composer-message-details .chat-reply"));
   });
 
@@ -922,7 +922,7 @@ Widget.triangulate(arg: "test")
     await dropdown.expand();
     await dropdown.selectRowByValue("selectMessage");
     await click("#chat-copy-btn");
-    await click("#chat-channel-row-9");
+    await click('.chat-channel-row[data-chat-channel-id="9"]');
 
     assert.notOk(exists("#chat-copy-btn"));
   });
@@ -1065,7 +1065,7 @@ acceptance(
         visible(".chat-drawer-header__top-line--expanded"),
         "drawer is expanded"
       );
-      await click("#chat-channel-row-9");
+      await click('.chat-channel-row[data-chat-channel-id="9"]');
       await click(".chat-drawer-header__title");
       assert.equal(currentURL(), `/chat/channel/9/site/info/members`);
     });
@@ -1142,7 +1142,7 @@ acceptance(
     test("drawer open to DM channel with unread messages with sidebar off", async function (assert) {
       await visit("/t/internationalization-localization/280");
       await click(".header-dropdown-toggle.open-chat");
-      await click("#chat-channel-row-75");
+      await click('.chat-channel-row[data-chat-channel-id="75"]');
       const chatContainer = query(".chat-drawer");
       assert.strictEqual(chatContainer.dataset.chatChannelId, "75");
     });

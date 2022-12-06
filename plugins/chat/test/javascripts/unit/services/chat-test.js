@@ -39,9 +39,20 @@ acceptance("Discourse Chat | Unit | Service | chat", function (needs) {
               unread_mentions: 0,
               muted: false,
             },
+            message_bus_last_ids: {
+              new_mentions: 0,
+              new_messages: 0,
+            },
           },
         ],
         direct_message_channels: [],
+        message_bus_last_ids: {
+          channel_metadata: 0,
+          channel_edits: 0,
+          channel_status: 0,
+          new_channel: 0,
+          user_tracking_state: 0,
+        },
       });
     });
 
@@ -120,6 +131,28 @@ acceptance("Discourse Chat | Unit | Service | chat", function (needs) {
     assert.notOk(
       this.currentUser.chat_channel_tracking_state[channel.id],
       "it doesn’t track it"
+    );
+  });
+
+  test("new message", async function (assert) {
+    setupMockPresenceChannel(this.chatService);
+    await this.chatService.forceRefreshChannels();
+
+    await publishToMessageBus("/chat/1/new-messages", {
+      user_id: this.currentUser.id,
+      username: this.currentUser.username,
+      message_id: 124,
+    });
+
+    assert.equal(
+      this.currentUser.chat_channel_tracking_state[1].chat_message_id,
+      124,
+      "updates tracking state last message id to the message id sent by current user"
+    );
+    assert.equal(
+      this.currentUser.chat_channel_tracking_state[1].unread_count,
+      2,
+      "does not increment unread count"
     );
   });
 

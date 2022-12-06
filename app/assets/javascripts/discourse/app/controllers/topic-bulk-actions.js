@@ -62,7 +62,7 @@ addBulkButton("deletePostTiming", "defer", {
   icon: "circle",
   class: "btn-default",
   buttonVisible() {
-    return this.currentUser.enable_defer;
+    return this.currentUser.user_option.enable_defer;
   },
 });
 addBulkButton("unlistTopics", "unlist_topics", {

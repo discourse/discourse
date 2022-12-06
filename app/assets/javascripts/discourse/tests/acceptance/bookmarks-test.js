@@ -170,7 +170,10 @@ acceptance("Bookmarking", function (needs) {
     await selectKit(".bookmark-option-selector").selectRowByValue(1);
     await click("#save-bookmark");
 
-    assert.equal(User.current().bookmark_auto_delete_preference, "1");
+    assert.equal(
+      User.currentProp("user_option.bookmark_auto_delete_preference"),
+      "1"
+    );
 
     await openEditBookmarkModal();
 
@@ -243,7 +246,7 @@ acceptance("Bookmarking", function (needs) {
 
   test("Editing a bookmark", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    let now = moment.tz(loggedInUser().timezone);
+    let now = moment.tz(loggedInUser().user_option.timezone);
     let tomorrow = now.add(1, "day").format("YYYY-MM-DD");
     await openBookmarkModal();
     await fillIn("input#bookmark-name", "Test name");
@@ -269,7 +272,7 @@ acceptance("Bookmarking", function (needs) {
 
   test("Using a post date for the reminder date", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    let postDate = moment.tz("2036-01-15", loggedInUser().timezone);
+    let postDate = moment.tz("2036-01-15", loggedInUser().user_option.timezone);
     let postDateFormatted = postDate.format("YYYY-MM-DD");
     await openBookmarkModal();
     await fillIn("input#bookmark-name", "Test name");

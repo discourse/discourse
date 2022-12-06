@@ -8,27 +8,22 @@ import domFromString from "discourse-common/lib/dom-from-string";
 
 module("Unit | Utility | link-mentions", function () {
   test("linkSeenMentions replaces users and groups", async function (assert) {
-    pretender.get("/u/is_local_username", () =>
+    pretender.get("/composer/mentions", () =>
       response({
-        valid: ["valid_user"],
-        valid_groups: ["valid_group"],
-        mentionable_groups: [
-          {
-            name: "mentionable_group",
-            user_count: 1,
-          },
-        ],
-        cannot_see: [],
+        users: ["valid_user"],
+        user_reasons: {},
+        groups: {
+          valid_group: { user_count: 1 },
+          mentionable_group: { user_count: 1 },
+        },
+        group_reasons: { valid_group: "not_mentionable" },
         max_users_notified_per_group_mention: 100,
       })
     );
 
-    await fetchUnseenMentions([
-      "valid_user",
-      "mentionable_group",
-      "valid_group",
-      "invalid",
-    ]);
+    await fetchUnseenMentions({
+      names: ["valid_user", "mentionable_group", "valid_group", "invalid"],
+    });
 
     const root = domFromString(`
       <div>
@@ -43,7 +38,7 @@ module("Unit | Utility | link-mentions", function () {
     assert.strictEqual(root.querySelector("a").innerText, "@valid_user");
     assert.strictEqual(root.querySelectorAll("a")[1].innerText, "@valid_group");
     assert.strictEqual(
-      root.querySelector("a.notify").innerText,
+      root.querySelector("a[data-mentionable-user-count]").innerText,
       "@mentionable_group"
     );
     assert.strictEqual(
