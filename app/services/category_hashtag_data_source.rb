@@ -66,30 +66,22 @@ class CategoryHashtagDataSource
   end
 
   def self.search_without_term(guardian, limit)
-    guardian_categories = Site.new(guardian).categories
-
-    category_id_sql = <<~SQL
-      SELECT category_id, MAX(posts.created_at)
-      FROM topics
-      INNER JOIN posts ON posts.topic_id = topics.id
-      WHERE topics.deleted_at IS NULL
-        AND posts.deleted_at IS NULL
-        AND posts.created_at > (NOW() - INTERVAL '2 WEEKS')
-        AND topics.category_id IN (:category_ids)
-      GROUP BY category_id
-      ORDER BY MAX(posts.created_at) DESC
-      LIMIT :limit
-    SQL
-    category_ids =
-      DB.query(
-        category_id_sql,
-        category_ids: guardian_categories.map { |cat| cat[:id] },
-        limit: limit,
-      ).map(&:category_id)
-
-    guardian_categories
-      .select { |category| category_ids.include?(category[:id]) }
+    Category
+      .includes(:parent_category)
+      .joins(
+        "LEFT JOIN category_users ON category_users.user_id = #{guardian.user.id}
+        AND category_users.category_id = categories.id",
+      )
+      .where(
+        "NOT categories.read_restricted OR categories.id IN (?)",
+        guardian.user.secure_category_ids,
+      )
+      .where(
+        "category_users.notification_level IS NULL OR category_users.notification_level != ?",
+        CategoryUser.notification_levels[:muted],
+      )
+      .order(topic_count: :desc)
       .take(limit)
-      .map { |category| category_to_hashtag_item(guardian_categories, category) }
+      .map { |category| category_to_hashtag_item(category.parent_category, category) }
   end
 end

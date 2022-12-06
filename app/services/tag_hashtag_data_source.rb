@@ -59,27 +59,14 @@ class TagHashtagDataSource
   def self.search_without_term(guardian, limit)
     return [] if !SiteSetting.tagging_enabled
 
-    tags = DB.query(<<~SQL, limit: limit).map(&:name)
-    SELECT tags.name, MAX(posts.created_at)
-    FROM tags
-    INNER JOIN topic_tags ON topic_tags.tag_id = tags.id
-          INNER JOIN topics ON topic_tags.topic_id = topics.id
-          INNER JOIN posts ON topics.id = posts.topic_id
-          WHERE posts.deleted_at IS NULL AND topics.deleted_at IS NULL
-            AND posts.created_at > (NOW() - INTERVAL '2 WEEKS')
-    GROUP BY tags.name
-    ORDER BY MAX(posts.created_at) DESC
-    LIMIT :limit
-    SQL
-
     tags_with_counts, _ =
       DiscourseTagging.filter_allowed_tags(
         guardian,
         with_context: true,
         limit: limit,
         for_input: true,
-        order_search_results: true,
-        only_tag_names: tags,
+        order_popularity: true,
+        excluded_tag_names: DiscourseTagging.muted_tags(guardian.user),
       )
 
     TagsController

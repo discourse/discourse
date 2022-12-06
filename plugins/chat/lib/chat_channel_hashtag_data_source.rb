@@ -52,20 +52,16 @@ class Chat::ChatChannelHashtagDataSource
           guardian,
           exclude_dm_channels: true,
         )
-      channel_ids = DB.query(<<~SQL, limit: limit).map(&:chat_channel_id)
-        SELECT chat_channel_id, MAX(chat_messages.created_at)
-        FROM chat_messages
-        INNER JOIN chat_channels ON chat_messages.chat_channel_id = chat_channels.id
-        WHERE chat_messages.deleted_at IS NULL
-          AND chat_channels.deleted_at IS NULL
-          AND chat_channel_id IN (#{allowed_channel_ids_sql})
-          AND chat_messages.created_at > (NOW() - INTERVAL '2 WEEKS')
-        GROUP BY chat_channel_id
-        ORDER BY MAX(chat_messages.created_at) DESC
-        LIMIT :limit
-      SQL
       ChatChannel
-        .where(id: channel_ids)
+        .joins(
+          "INNER JOIN user_chat_channel_memberships
+            ON user_chat_channel_memberships.chat_channel_id = chat_channels.id
+            AND user_chat_channel_memberships.user_id = #{guardian.user.id}
+            AND user_chat_channel_memberships.following = true",
+        )
+        .where("chat_channels.id IN (#{allowed_channel_ids_sql})")
+        .order(messages_count: :desc)
+        .limit(limit)
         .map { |channel| channel_to_hashtag_item(guardian, channel) }
     else
       []
