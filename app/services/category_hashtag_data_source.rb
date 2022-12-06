@@ -8,7 +8,7 @@ class CategoryHashtagDataSource
     "folder"
   end
 
-  def self.category_to_hashtag_item(guardian_categories, category)
+  def self.category_to_hashtag_item(parent_category, category)
     category = Category.new(category.slice(:id, :slug, :name, :parent_category_id, :description))
 
     HashtagAutocompleteService::HashtagItem.new.tap do |item|
@@ -22,8 +22,6 @@ class CategoryHashtagDataSource
       # categories here.
       item.ref =
         if category.parent_category_id
-          parent_category =
-            guardian_categories.find { |cat| cat[:id] === category.parent_category_id }
           !parent_category ? category.slug : "#{parent_category[:slug]}:#{category.slug}"
         else
           category.slug
@@ -37,7 +35,11 @@ class CategoryHashtagDataSource
     guardian_categories = Site.new(guardian).categories
     Category
       .query_from_cached_categories(slugs, guardian_categories)
-      .map { |category| category_to_hashtag_item(guardian_categories, category) }
+      .map do |category|
+        parent_category =
+          guardian_categories.find { |cat| cat[:id] == category[:parent_category_id] }
+        category_to_hashtag_item(parent_category, category)
+      end
   end
 
   def self.search(guardian, term, limit)
@@ -48,17 +50,16 @@ class CategoryHashtagDataSource
         category[:name].downcase.include?(term) || category[:slug].downcase.include?(term)
       end
       .take(limit)
-      .map { |category| category_to_hashtag_item(guardian_categories, category) }
+      .map do |category|
+        parent_category =
+          guardian_categories.find { |cat| cat[:id] == category[:parent_category_id] }
+        category_to_hashtag_item(parent_category, category)
+      end
   end
 
   def self.search_sort(search_results, term)
     if term.present?
-      search_results
-        .select { |item| item.slug == term }
-        .sort_by { |item| item.text.downcase }
-        .concat(
-          search_results.select { |item| item.slug != term }.sort_by { |item| item.text.downcase },
-        )
+      search_results.sort_by { |item| [item.slug == term ? 0 : 1, item.text.downcase] }
     else
       search_results.sort_by { |item| item.text.downcase }
     end
