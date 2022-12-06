@@ -139,6 +139,7 @@ class Notification < ActiveRecord::Base
                         assigned: 34,
                         question_answer_user_commented: 35, # Used by https://github.com/discourse/discourse-question-answer
                         watching_category_or_tag: 36,
+                        new_features: 37,
                        )
   end
 
