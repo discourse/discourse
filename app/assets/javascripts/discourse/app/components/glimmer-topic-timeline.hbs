@@ -7,6 +7,7 @@
       @jumpBottom={{@jumpBottom}}
       @jumpEnd={{@jumpEnd}}
       @jumpToIndex={{@jumpToIndex}}
+      @jumpToPostPrompt={{@jumpToPostPrompt}}
       @fullscreen={{@fullscreen}}
       @mobileView={{@mobileView}}
       @currentUser={{this.currentUser}}
@@ -23,50 +24,7 @@
       @resetBumpDate={{@resetBumpDate}}
       @convertToPublicTopic={{@convertToPublicTopic}}
       @convertToPrivateMessage={{@convertToPrivateMessage}}
+      @replyToPost={{@replyToPost}}
     />
-
-    <div class="timeline-footer-controls">
-      {{#if this.displaySummary}}
-        <button type="button" class="show-summary btn-small" label={{i18n "summary.short_label"}} title={{i18n "summary.short_title"}} {{on "click" @showSummary}}>
-          {{d-icon "layer-group"}}
-        </button>
-      {{/if}}
-
-      {{#if (and this.currentUser (not @fullscreen))}}
-        {{#if this.canCreatePost}}
-          <button type="button" class="btn btn-default create reply-to-post no-text btn-icon" title={{i18n "topic.reply.help"}} {{on "click" (fn @replyToPost null)}}>
-            {{d-icon "reply"}}
-          </button>
-        {{/if}}
-      {{/if}}
-
-      {{#if @fullscreen}}
-        <button
-          type="button"
-          {{!-- we need to keep this a widget-button to not close the modal when opening form --}}
-          class="widget-button btn btn-text jump-to-post"
-          title={{i18n "topic.progress.jump_prompt_long"}}
-          {{on "click" @jumpToPostPrompt}}
-         >
-          <span class="d-button-label">
-            {{i18n "topic.progress.jump_prompt"}}
-          </span>
-        </button>
-      {{/if}}
-
-      {{#if this.currentUser}}
-        <TopicNotificationsButton
-          @notificationLevel={{@model.details.notification_level}}
-          @topic={{@model}}
-          @showFullTitle={{false}}
-          @appendReason={{false}}
-          @placement={{"bottom-end"}}
-          @showCaret={{false}}
-        />
-        {{#if @mobileView}}
-          <TopicAdminMenuButton @topic={{@model}} @addKeyboardTargetClass={{true}} @openUpwards={{true}} />
-        {{/if}}
-      {{/if}}
-    </div>
   </div>
 </div>
