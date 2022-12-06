@@ -14,12 +14,12 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    this.user.trackStatus?.();
+    this.user?.trackStatus?.();
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    this.user.stopTrackingStatus?.();
+    this.user?.stopTrackingStatus?.();
   },
 
   @discourseComputed("user.username")
