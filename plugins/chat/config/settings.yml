@@ -108,4 +108,5 @@ chat:
     client: true
     type: integer
     default: 5
+    max: 10
     min: 0

@@ -5,22 +5,22 @@
   color: var(--primary);
   margin: 0.5em;
 
-  .chat-mention-warning-icon,
-  .chat-mention-warning-text {
+  .chat-mention-warning__icon,
+  .chat-mention-warning__text {
     margin: 0.5em;
   }
 
-  .chat-mention-warnings-list-simple {
+  .chat-mention-warnings-list__simple {
     margin: 0.5em 0 0 0;
     list-style: none;
   }
 
-  .chat-mention-warnings-list-multiple {
+  .chat-mention-warnings-list__multiple {
     margin: 0.5em 0 0 1em;
   }
 
-  .chat-mention-warning-header,
-  .chat-mention-warning-icon {
+  .chat-mention-warning__header,
+  .chat-mention-warning__icon {
     font-size: var(--font-up-2);
   }
 }

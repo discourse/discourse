@@ -121,7 +121,7 @@ acceptance("Discourse Chat - Composer", function (needs) {
     await fillIn(".chat-composer-input", `@${GROUP_NAME}`);
 
     assert.equal(
-      query(".chat-mention-warnings .chat-mention-warnings-list-simple li")
+      query(".chat-mention-warnings .chat-mention-warnings-list__simple li")
         .innerText,
       `@${GROUP_NAME} doesn't allow mentions`,
       "displays a warning when the group is unreachable"

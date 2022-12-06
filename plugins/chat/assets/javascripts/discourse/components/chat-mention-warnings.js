@@ -3,7 +3,7 @@ import I18n from "I18n";
 import { htmlSafe } from "@ember/template";
 import { inject as service } from "@ember/service";
 
-export default class MentionWarnings extends Component {
+export default class ChatMentionWarnings extends Component {
   @service siteSettings;
   @service currentUser;
 
@@ -43,13 +43,13 @@ export default class MentionWarnings extends Component {
 
   get listStyleClass() {
     if (this.hasTooManyMentions) {
-      return "chat-mention-warnings-list-simple";
+      return "chat-mention-warnings-list__simple";
     }
 
     if (this.warningsCount > 1) {
-      return "chat-mention-warnings-list-multiple";
+      return "chat-mention-warnings-list__multiple";
     } else {
-      return "chat-mention-warnings-list-simple";
+      return "chat-mention-warnings-list__simple";
     }
   }
 
