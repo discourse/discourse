@@ -241,6 +241,7 @@ RSpec.describe Admin::UsersController do
 
   describe '#suspend' do
     fab!(:created_post) { Fabricate(:post) }
+    fab!(:other_user) { Fabricate(:user) }
     let(:suspend_params) do
       { suspend_until: 5.hours.from_now,
         reason: "because of this post",
@@ -432,6 +433,18 @@ RSpec.describe Admin::UsersController do
           post_id: Fabricate(:post).id
         }, headers: { HTTP_API_KEY: api_key.key }
         expect(response.status).to eq(403)
+      end
+
+      it "can silence multiple users" do
+        put "/admin/users/#{user.id}/suspend.json", params: {
+          suspend_until: 10.days.from_now,
+          reason: "short reason",
+          message: "long reason",
+          other_user_ids: [other_user.id],
+        }
+        expect(response.status).to eq(200)
+        expect(user.reload).to be_suspended
+        expect(other_user.reload).to be_suspended
       end
     end
 
@@ -1398,6 +1411,7 @@ RSpec.describe Admin::UsersController do
 
   describe '#silence' do
     fab!(:reg_user) { Fabricate(:user) }
+    fab!(:other_user) { Fabricate(:user) }
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -1482,6 +1496,13 @@ RSpec.describe Admin::UsersController do
             time_ago: FreedomPatches::Rails4.time_ago_in_words(user.silenced_record.created_at, true, scope: :'datetime.distance_in_words_verbose')
           )
         )
+      end
+
+      it "can silence multiple users" do
+        put "/admin/users/#{reg_user.id}/silence.json", params: { other_user_ids: [other_user.id] }
+        expect(response.status).to eq(200)
+        expect(reg_user.reload).to be_silenced
+        expect(other_user.reload).to be_silenced
       end
     end
 

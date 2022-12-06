@@ -116,44 +116,52 @@ class Admin::UsersController < Admin::StaffController
 
     params.require([:suspend_until, :reason])
 
-    @user.suspended_till = params[:suspend_until]
-    @user.suspended_at = DateTime.now
-
-    message = params[:message]
+    all_users = [@user]
+    if Array === params[:other_user_ids]
+      all_users.concat(User.where(id: params[:other_user_ids]).to_a)
+      all_users.uniq!
+    end
 
     user_history = nil
 
-    User.transaction do
-      @user.save!
+    all_users.each do |user|
+      user.suspended_till = params[:suspend_until]
+      user.suspended_at = DateTime.now
 
-      user_history = StaffActionLogger.new(current_user).log_user_suspend(
-        @user,
-        params[:reason],
+      message = params[:message]
+
+      User.transaction do
+        user.save!
+
+        user_history = StaffActionLogger.new(current_user).log_user_suspend(
+          user,
+          params[:reason],
+          message: message,
+          post_id: params[:post_id]
+        )
+      end
+      user.logged_out
+
+      if message.present?
+        Jobs.enqueue(
+          :critical_user_email,
+          type: "account_suspended",
+          user_id: user.id,
+          user_history_id: user_history.id
+        )
+      end
+
+      DiscourseEvent.trigger(
+        :user_suspended,
+        user: user,
+        reason: params[:reason],
         message: message,
-        post_id: params[:post_id]
+        user_history: user_history,
+        post_id: params[:post_id],
+        suspended_till: params[:suspend_until],
+        suspended_at: DateTime.now
       )
     end
-    @user.logged_out
-
-    if message.present?
-      Jobs.enqueue(
-        :critical_user_email,
-        type: "account_suspended",
-        user_id: @user.id,
-        user_history_id: user_history.id
-      )
-    end
-
-    DiscourseEvent.trigger(
-      :user_suspended,
-      user: @user,
-      reason: params[:reason],
-      message: message,
-      user_history: user_history,
-      post_id: params[:post_id],
-      suspended_till: params[:suspend_until],
-      suspended_at: DateTime.now
-    )
 
     perform_post_action
 
@@ -353,31 +361,42 @@ class Admin::UsersController < Admin::StaffController
       return render json: failed_json.merge(message: message), status: 409
     end
 
-    message = params[:message]
-
-    silencer = UserSilencer.new(
-      @user,
-      current_user,
-      silenced_till: params[:silenced_till],
-      reason: params[:reason],
-      message_body: message,
-      keep_posts: true,
-      post_id: params[:post_id]
-    )
-    if silencer.silence
-      Jobs.enqueue(
-        :critical_user_email,
-        type: "account_silenced",
-        user_id: @user.id,
-        user_history_id: silencer.user_history.id
-      )
+    all_users = [@user]
+    if Array === params[:other_user_ids]
+      all_users.concat(User.where(id: params[:other_user_ids]).to_a)
+      all_users.uniq!
     end
+
+    user_history = nil
+
+    all_users.each do |user|
+      silencer = UserSilencer.new(
+        user,
+        current_user,
+        silenced_till: params[:silenced_till],
+        reason: params[:reason],
+        message_body: params[:message],
+        keep_posts: true,
+        post_id: params[:post_id]
+      )
+
+      if silencer.silence
+        user_history = silencer.user_history
+        Jobs.enqueue(
+          :critical_user_email,
+          type: "account_silenced",
+          user_id: user.id,
+          user_history_id: user_history.id
+        )
+      end
+    end
+
     perform_post_action
 
     render_json_dump(
       silence: {
         silenced: true,
-        silence_reason: silencer.user_history.try(:details),
+        silence_reason: user_history.try(:details),
         silenced_till: @user.silenced_till,
         silenced_at: @user.silenced_at,
         silenced_by: BasicUserSerializer.new(current_user, root: false).as_json

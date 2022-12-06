@@ -20,7 +20,7 @@
       {{/if}}
 
       {{#if this.user.similar_users}}
-        <AdminPenaltySimilarUsers @user={{this.user}} @selectedUserIds={{this.selectedSimilarUserIds}} />
+        <AdminPenaltySimilarUsers @type="suspend" @user={{this.user}} @selectedUserIds={{this.otherUserIds}} />
       {{/if}}
     {{else}}
       <div class="cant-suspend">

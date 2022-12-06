@@ -162,6 +162,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
     ActiveModel::ArraySerializer.new(
       @options[:similar_users],
       each_serializer: AdminUserListSerializer,
+      each_serializer: SimilarAdminUserSerializer,
       scope: scope,
       root: false,
     ).as_json
