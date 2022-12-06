@@ -445,6 +445,20 @@ module PrettyText
     links
   end
 
+  def self.extract_mentions(cooked)
+    mentions = cooked.css('.mention, .mention-group').map do |e|
+      if (name = e.inner_text)
+        name = name[1..-1]
+        name = User.normalize_username(name)
+        name
+      end
+    end
+
+    mentions.compact!
+    mentions.uniq!
+    mentions
+  end
+
   def self.excerpt(html, max_length, options = {})
     # TODO: properly fix this HACK in ExcerptParser without introducing XSS
     doc = Nokogiri::HTML5.fragment(html)
