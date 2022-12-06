@@ -56,7 +56,7 @@ export default Component.extend({
 
   canInviteTo: alias("topic.details.can_invite_to"),
 
-  canDefer: alias("currentUser.enable_defer"),
+  canDefer: alias("currentUser.user_option.enable_defer"),
 
   inviteDisabled: or("topic.archived", "topic.closed", "topic.deleted"),
 

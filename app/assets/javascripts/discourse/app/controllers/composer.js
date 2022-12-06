@@ -782,51 +782,62 @@ export default Controller.extend({
       }
     },
 
-    groupsMentioned(groups) {
+    groupsMentioned({ name, userCount, maxMentions }) {
       if (
-        !this.get("model.creatingPrivateMessage") &&
-        !this.get("model.topic.isPrivateMessage")
+        this.get("model.creatingPrivateMessage") ||
+        this.get("model.topic.isPrivateMessage")
       ) {
-        groups.forEach((group) => {
-          let body;
-          const groupLink = getURL(`/g/${group.name}/members`);
-          const maxMentions = parseInt(group.max_mentions, 10);
-          const userCount = parseInt(group.user_count, 10);
+        return;
+      }
 
-          if (maxMentions < userCount) {
-            body = I18n.t("composer.group_mentioned_limit", {
-              group: `@${group.name}`,
-              count: maxMentions,
-              group_link: groupLink,
-            });
-          } else if (group.user_count > 0) {
-            body = I18n.t("composer.group_mentioned", {
-              group: `@${group.name}`,
-              count: userCount,
-              group_link: groupLink,
-            });
-          }
+      maxMentions = parseInt(maxMentions, 10);
+      userCount = parseInt(userCount, 10);
 
-          if (body) {
-            this.appEvents.trigger("composer-messages:create", {
-              extraClass: "custom-body",
-              templateName: "education",
-              body,
-            });
-          }
+      let body;
+      const groupLink = getURL(`/g/${name}/members`);
+
+      if (userCount > maxMentions) {
+        body = I18n.t("composer.group_mentioned_limit", {
+          group: `@${name}`,
+          count: maxMentions,
+          group_link: groupLink,
+        });
+      } else if (userCount > 0) {
+        body = I18n.t("composer.group_mentioned", {
+          group: `@${name}`,
+          count: userCount,
+          group_link: groupLink,
+        });
+      }
+
+      if (body) {
+        this.appEvents.trigger("composer-messages:create", {
+          extraClass: "custom-body",
+          templateName: "education",
+          body,
         });
       }
     },
 
-    cannotSeeMention(mentions) {
-      mentions.forEach((mention) => {
-        this.appEvents.trigger("composer-messages:create", {
-          extraClass: "custom-body",
-          templateName: "education",
-          body: I18n.t(`composer.cannot_see_mention.${mention.reason}`, {
-            username: mention.name,
-          }),
+    cannotSeeMention({ name, reason, notifiedCount, isGroup }) {
+      notifiedCount = parseInt(notifiedCount, 10);
+
+      let body;
+      if (isGroup) {
+        body = I18n.t(`composer.cannot_see_group_mention.${reason}`, {
+          group: name,
+          count: notifiedCount,
         });
+      } else {
+        body = I18n.t(`composer.cannot_see_mention.${reason}`, {
+          username: name,
+        });
+      }
+
+      this.appEvents.trigger("composer-messages:create", {
+        extraClass: "custom-body",
+        templateName: "education",
+        body,
       });
     },
 

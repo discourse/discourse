@@ -1,7 +1,7 @@
 {{#if @fullscreen}}
   <div class="title">
     <h2>
-      <a class="fancy-title" href {{on "click" @jumpTop}}>{{if @mobileView @model.fancyTitle ""}}</a>
+      <a class="fancy-title" href {{on "click" @jumpTop}}>{{this.topicTitle}}</a>
     </h2>
     {{#if (or this.siteSettings.topic_featured_link_enabled this.showTags)}}
       <div class="topic-header-extra">

@@ -5,6 +5,8 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse-common/lib/object";
+import userFixtures from "discourse/tests/fixtures/user-fixtures";
 
 acceptance("User - Preferences - Profile - Featured topic", function (needs) {
   needs.user();
@@ -65,7 +67,15 @@ acceptance("User - Preferences - Profile - Featured topic", function (needs) {
 acceptance(
   "User - Preferences - Profile - No default calendar set",
   function (needs) {
-    needs.user({ default_calendar: "none_selected" });
+    needs.user();
+
+    needs.pretender((server, helper) => {
+      server.get("/u/eviltrout.json", () => {
+        const cloned = cloneJSON(userFixtures["/u/eviltrout.json"]);
+        cloned.user.user_option.default_calendar = "none_selected";
+        return helper.response(200, cloned);
+      });
+    });
 
     test("default calendar option is not visible", async function (assert) {
       await visit("/u/eviltrout/preferences/profile");
@@ -81,7 +91,15 @@ acceptance(
 acceptance(
   "User - Preferences - Profile - Default calendar set",
   function (needs) {
-    needs.user({ default_calendar: "google" });
+    needs.user();
+
+    needs.pretender((server, helper) => {
+      server.get("/u/eviltrout.json", () => {
+        const cloned = cloneJSON(userFixtures["/u/eviltrout.json"]);
+        cloned.user.user_option.default_calendar = "google";
+        return helper.response(200, cloned);
+      });
+    });
 
     test("default calendar can be changed", async function (assert) {
       await visit("/u/eviltrout/preferences/profile");

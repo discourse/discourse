@@ -2233,6 +2233,12 @@ en:
         private: "You mentioned @%{username} but they won't be notified because they are unable to see this personal message. You will need to invite them to this personal message."
         muted_topic: "You mentioned @%{username} but they won't be notified because they muted this topic."
         not_allowed: "You mentioned @%{username} but they won't be notified because they were not invited to this topic."
+      cannot_see_group_mention:
+        not_mentionable: "You cannot mention group @%{group}."
+        some_not_allowed:
+          one: "You mentioned @%{group} but only %{count} member will be notified because the other members are unable to see this personal message. You will need to invite them to this personal message."
+          other: "You mentioned @%{group} but only %{count} members will be notified because the other members are unable to see this personal message. You will need to invite them to this personal message."
+        not_allowed: "You mentioned @%{group} but none of its members will be notified because they are unable to see this personal message. You will need to invite them to this personal message."
       here_mention:
         one: "By mentioning <b>@%{here}</b>, you are about to notify %{count} user – are you sure?"
         other: "By mentioning <b>@%{here}</b>, you are about to notify %{count} users – are you sure?"

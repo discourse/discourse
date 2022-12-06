@@ -1,4 +1,5 @@
 import EmberObject, { computed, get, getProperties } from "@ember/object";
+import { camelize } from "@ember/string";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import {
@@ -130,14 +131,64 @@ export function addSaveableUserOptionField(fieldName) {
   userOptionFields.push(fieldName);
 }
 
+function userOption(userOptionKey) {
+  return computed(`user_option.${userOptionKey}`, {
+    get(key) {
+      deprecated(
+        `Getting ${key} property of user object is deprecated. Use user_option object instead`,
+        {
+          id: "discourse.user.userOptions",
+          since: "2.9.0.beta12",
+          dropFrom: "3.0.0.beta1",
+        }
+      );
+
+      return this.get(`user_option.${key}`);
+    },
+
+    set(key, value) {
+      deprecated(
+        `Setting ${key} property of user object is deprecated. Use user_option object instead`,
+        {
+          id: "discourse.user.userOptions",
+          since: "2.9.0.beta12",
+          dropFrom: "3.0.0.beta1",
+        }
+      );
+
+      if (!this.user_option) {
+        this.set("user_option", {});
+      }
+
+      return this.set(`user_option.${key}`, value);
+    },
+  });
+}
+
 const User = RestModel.extend({
+  mailing_list_mode: userOption("mailing_list_mode"),
+  external_links_in_new_tab: userOption("external_links_in_new_tab"),
+  enable_quoting: userOption("enable_quoting"),
+  dynamic_favicon: userOption("dynamic_favicon"),
+  automatically_unpin_topics: userOption("automatically_unpin_topics"),
+  likes_notifications_disabled: userOption("likes_notifications_disabled"),
+  hide_profile_and_presence: userOption("hide_profile_and_presence"),
+  title_count_mode: userOption("title_count_mode"),
+  enable_defer: userOption("enable_defer"),
+  timezone: userOption("timezone"),
+  skip_new_user_tips: userOption("skip_new_user_tips"),
+  default_calendar: userOption("default_calendar"),
+  bookmark_auto_delete_preference: userOption(
+    "bookmark_auto_delete_preference"
+  ),
+  seen_popups: userOption("seen_popups"),
+  should_be_redirected_to_top: userOption("should_be_redirected_to_top"),
+  redirected_to_top: userOption("redirected_to_top"),
+  treat_as_new_topic_start_date: userOption("treat_as_new_topic_start_date"),
+
   hasPMs: gt("private_messages_stats.all", 0),
   hasStartedPMs: gt("private_messages_stats.mine", 0),
   hasUnreadPMs: gt("private_messages_stats.unread", 0),
-
-  redirected_to_top: {
-    reason: null,
-  },
 
   @discourseComputed("can_be_deleted", "post_count")
   canBeDeleted(canBeDeleted, postCount) {
@@ -376,20 +427,15 @@ const User = RestModel.extend({
       userFields.filter((uf) => !fields || fields.includes(uf))
     );
 
-    let filteredUserOptionFields = [];
-    if (fields) {
-      filteredUserOptionFields = userOptionFields.filter((uo) =>
-        fields.includes(uo)
-      );
-    } else {
-      filteredUserOptionFields = userOptionFields;
-    }
+    const filteredUserOptionFields = fields
+      ? userOptionFields.filter((uo) => fields.includes(uo))
+      : userOptionFields;
 
     filteredUserOptionFields.forEach((s) => {
       data[s] = this.get(`user_option.${s}`);
     });
 
-    let updatedState = {};
+    const updatedState = {};
 
     ["muted", "regular", "watched", "tracked", "watched_first_post"].forEach(
       (categoryNotificationLevel) => {
@@ -397,23 +443,17 @@ const User = RestModel.extend({
           fields === undefined ||
           fields.includes(`${categoryNotificationLevel}_category_ids`)
         ) {
-          let prop =
-            categoryNotificationLevel === "watched_first_post"
-              ? "watchedFirstPostCategories"
-              : `${categoryNotificationLevel}Categories`;
+          const categories = this.get(
+            `${camelize(categoryNotificationLevel)}Categories`
+          );
 
-          let cats = this.get(prop);
-
-          if (cats) {
-            let cat_ids = cats.map((c) => c.get("id"));
-            updatedState[`${categoryNotificationLevel}_category_ids`] = cat_ids;
-
-            // HACK: denote lack of categories
-            if (cats.length === 0) {
-              cat_ids = [-1];
-            }
-
-            data[`${categoryNotificationLevel}_category_ids`] = cat_ids;
+          if (categories) {
+            const ids = categories.map((c) => c.get("id"));
+            updatedState[`${categoryNotificationLevel}_category_ids`] = ids;
+            // HACK: Empty arrays are not sent in the request, we use [-1],
+            // an invalid category ID, that will be ignored by the server.
+            data[`${categoryNotificationLevel}_category_ids`] =
+              ids.length === 0 ? [-1] : ids;
           }
         }
       }
@@ -436,10 +476,6 @@ const User = RestModel.extend({
       }
     });
 
-    return this._saveUserData(data, updatedState);
-  },
-
-  _saveUserData(data, updatedState) {
     // TODO: We can remove this when migrated fully to rest model.
     this.set("isSaving", true);
     return ajax(userPath(`${this.username_lower}.json`), {
@@ -449,19 +485,6 @@ const User = RestModel.extend({
       .then((result) => {
         this.setProperties(updatedState);
         this.setProperties(getProperties(result.user, "bio_excerpt"));
-        if (User.current() === this && result.user.user_option) {
-          this.setProperties(
-            getProperties(
-              result.user.user_option,
-              "enable_quoting",
-              "enable_defer",
-              "external_links_in_new_tab",
-              "dynamic_favicon",
-              "seen_popups",
-              "skip_new_user_tips"
-            )
-          );
-        }
         return result;
       })
       .finally(() => {
@@ -1060,9 +1083,17 @@ const User = RestModel.extend({
     );
   },
 
-  // obsolete, just call "user.timezone" instead
   resolvedTimezone() {
-    return this.timezone;
+    deprecated(
+      "user.resolvedTimezone() has been deprecated. Use user.user_option.timezone instead",
+      {
+        id: "discourse.user.resolved-timezone",
+        since: "2.9.0.beta12",
+        dropFrom: "3.0.0.beta1",
+      }
+    );
+
+    return this.user_option.timezone;
   },
 
   calculateMutedIds(notificationLevel, id, type) {
@@ -1199,12 +1230,10 @@ const User = RestModel.extend({
     if (!this.user_option) {
       this.set("user_option", {});
     }
-    this.set("seen_popups", seenUserTips);
     this.set("user_option.seen_popups", seenUserTips);
     if (userTipId) {
       return this.save(["seen_popups"]);
     } else {
-      this.set("skip_new_user_tips", true);
       this.set("user_option.skip_new_user_tips", true);
       return this.save(["seen_popups", "skip_new_user_tips"]);
     }
@@ -1233,8 +1262,8 @@ User.reopenClass(Singleton, {
         }
       }
 
-      if (!userJson.timezone) {
-        userJson.timezone = moment.tz.guess();
+      if (!userJson.user_option.timezone) {
+        userJson.user_option.timezone = moment.tz.guess();
         this._saveTimezone(userJson);
       }
 
@@ -1319,7 +1348,7 @@ User.reopenClass(Singleton, {
     ajax(userPath(user.username + ".json"), {
       type: "PUT",
       dataType: "json",
-      data: { timezone: user.timezone },
+      data: { timezone: user.user_option.timezone },
     });
   },
 });
