@@ -26,6 +26,6 @@ module UserSidebarTagsMixin
   end
 
   def include_display_sidebar_tags?
-    SiteSetting.tagging_enabled && SiteSetting.enable_experimental_sidebar_hamburger
+    SiteSetting.tagging_enabled && !SiteSetting.legacy_navigation_menu?
   end
 end

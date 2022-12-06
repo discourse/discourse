@@ -1676,8 +1676,6 @@ nl:
     top_topics_formula_first_post_likes_multiplier: "waarde van vermenigvuldiger (n) voor likes van eerste berichten in toptopicsformule: 'log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)'"
     top_topics_formula_least_likes_per_post_multiplier: "waarde van vermenigvuldiger (n) voor minste likes per bericht in toptopicsformule: 'log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)'"
     enable_safe_mode: "Gebruikers mogen de veilige modus betreden om plug-ins te debuggen."
-    enable_experimental_sidebar_hamburger: "Staat toe dat de experimentele zijbalk en het hamburgermenu van de gebruiker worden ingeschakeld."
-    enable_sidebar: "Schakelt de experimentele zijbalk in."
     rate_limit_create_topic: "Na het maken van een topic moeten gebruikers (n) seconden wachten voordat ze een ander topic kunnen maken."
     rate_limit_create_post: "Na het plaatsen van een bericht moeten gebruikers (n) seconden wachten voor ze een ander bericht kunnen plaatsen."
     rate_limit_new_user_create_topic: "Na het maken van een topic moeten nieuwe gebruikers (n) seconden wachten voor ze een ander topic kunnen maken."

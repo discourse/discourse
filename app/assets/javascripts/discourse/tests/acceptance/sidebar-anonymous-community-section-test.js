@@ -12,8 +12,7 @@ import { click, visit } from "@ember/test-helpers";
 
 acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
   needs.settings({
-    enable_experimental_sidebar_hamburger: true,
-    enable_sidebar: true,
+    navigation_menu: "sidebar",
   });
 
   test("display short site description site setting when it is set", async function (assert) {

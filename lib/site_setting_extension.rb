@@ -235,13 +235,7 @@ module SiteSettingExtension
 
     defaults.all(default_locale)
       .reject do |setting_name, _|
-        if !include_hidden && hidden_settings.include?(setting_name)
-          true
-        elsif categories[setting_name].to_s == "sidebar" && !SiteSetting.enable_experimental_sidebar_hamburger
-          true
-        else
-          false
-        end
+        !include_hidden && hidden_settings.include?(setting_name)
       end.map do |s, v|
         type_hash = type_supervisor.type_hash(s)
         default = defaults.get(s, default_locale).to_s

@@ -1761,8 +1761,6 @@ ru:
     top_topics_formula_first_post_likes_multiplier: "значение первого поста множитель лайков (n) в формуле топ-тем: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "значение наименьшего количества лайков на множитель поста (n) в формуле топ-тем: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     enable_safe_mode: "Разрешать пользователям входить в безопасный режим для отладки плагинов."
-    enable_experimental_sidebar_hamburger: "Позволяет включить экспериментальную боковую панель и раскрывающееся меню пользователя."
-    enable_sidebar: "Включить экспериментальную боковую панель."
     rate_limit_create_topic: "Пользователи могут создавать новую тему после создания предыдущей только по прошествии указанного здесь количества секунд."
     rate_limit_create_post: "Пользователи могут создавать новое сообщение после создания предыдущего только по прошествии указанного здесь количества секунд."
     rate_limit_new_user_create_topic: "Новички могут создавать новую тему после создания предыдущей только по прошествии указанного здесь количества секунд."

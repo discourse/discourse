@@ -237,6 +237,10 @@ class SiteSetting < ActiveRecord::Base
     c.present? && c.to_i != SiteSetting.uncategorized_category_id.to_i
   end
 
+  def self.legacy_navigation_menu?
+    SiteSetting.navigation_menu == "legacy"
+  end
+
   ALLOWLIST_DEPRECATED_SITE_SETTINGS = {
     'email_domains_blacklist': 'blocked_email_domains',
     'email_domains_whitelist': 'allowed_email_domains',

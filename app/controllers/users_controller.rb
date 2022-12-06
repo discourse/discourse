@@ -1870,7 +1870,7 @@ class UsersController < ApplicationController
     permitted.concat UserUpdater::TAG_NAMES.keys
     permitted << UserUpdater::NOTIFICATION_SCHEDULE_ATTRS
 
-    if SiteSetting.enable_experimental_sidebar_hamburger
+    if !SiteSetting.legacy_navigation_menu?
       if params.has_key?(:sidebar_category_ids) && params[:sidebar_category_ids].blank?
         params[:sidebar_category_ids] = []
       end

@@ -4678,6 +4678,11 @@ en:
         official: "Official Plugin"
         broken_route: "Unable to configure link to '%{name}'. Ensure ad-blockers are disabled and try reloading the page."
 
+      navigation_menu:
+        sidebar: "Sidebar"
+        header_dropdown: "Header Dropdown"
+        legacy: "Legacy"
+
       backups:
         title: "Backups"
         menu:
@@ -5724,7 +5729,7 @@ en:
           search: "Search"
           groups: "Groups"
           dashboard: "Dashboard"
-          sidebar: "Sidebar"
+          navigation: "Navigation"
         secret_list:
           invalid_input: "Input fields cannot be empty or contain vertical bar character."
         default_categories:

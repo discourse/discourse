@@ -258,7 +258,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def include_sidebar_category_ids?
-    SiteSetting.enable_experimental_sidebar_hamburger
+    !SiteSetting.legacy_navigation_menu?
   end
 
   def include_status?

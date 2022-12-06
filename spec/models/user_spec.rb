@@ -36,7 +36,7 @@ RSpec.describe User do
       fab!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
 
       before do
-        SiteSetting.enable_experimental_sidebar_hamburger = true
+        SiteSetting.navigation_menu = "sidebar"
         SiteSetting.tagging_enabled = true
         SiteSetting.default_sidebar_categories = "#{category.id}|#{secured_category.id}"
         SiteSetting.default_sidebar_tags = "#{tag.name}|#{hidden_tag.name}"
@@ -107,8 +107,8 @@ RSpec.describe User do
         expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to be_empty
       end
 
-      it 'should not create any sidebar section link records when experimental sidebar is disabled' do
-        SiteSetting.enable_experimental_sidebar_hamburger = false
+      it 'should not create any sidebar section link records when navigation_menu site setting is still legacy' do
+        SiteSetting.navigation_menu = "legacy"
 
         user = Fabricate(:user)
 
@@ -2195,9 +2195,9 @@ RSpec.describe User do
       expect(message).to eq(nil)
     end
 
-    context "with redesigned_user_menu_enabled on" do
+    context "with sidebar based navigation menu" do
       before do
-        SiteSetting.enable_experimental_sidebar_hamburger = true
+        SiteSetting.navigation_menu = "sidebar"
       end
 
       it "adds all_unread_notifications and grouped_unread_notifications to the payload" do

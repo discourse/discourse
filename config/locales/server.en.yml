@@ -1792,8 +1792,6 @@ en:
     top_topics_formula_least_likes_per_post_multiplier: "value of least likes per post multiplier (n) in top topics formula: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
 
     enable_safe_mode: "Allow users to enter safe mode to debug plugins."
-    enable_experimental_sidebar_hamburger: "Allows experimental sidebar and user hamburger dropdown menu to be enabled."
-    enable_sidebar: "Enables experimental sidebar."
 
     rate_limit_create_topic: "After creating a topic, users must wait (n) seconds before creating another topic."
     rate_limit_create_post: "After posting, users must wait (n) seconds before creating another post."
@@ -2390,6 +2388,7 @@ en:
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
 
     splash_screen: "Displays a temporary loading screen while site assets load"
+    navigation_menu: "Determine which navigation menu to be used for the site."
     default_sidebar_categories: "Selected categories will be displayed under Sidebar's Categories section by default."
     default_sidebar_tags: "Selected tags will be displayed under Sidebar's Tags section by default."
     enable_new_user_profile_nav_groups: "EXPERIMENTAL: Users of the selected groups will be shown the new user profile navigation menu"
