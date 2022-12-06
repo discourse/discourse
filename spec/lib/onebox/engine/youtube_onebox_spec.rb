@@ -107,7 +107,7 @@ RSpec.describe Onebox::Engine::YoutubeOnebox do
   end
 
   it "can parse youtube shorts results" do
-    preview = expect(Onebox.preview('https://www.youtube.com/watch?v=VvoFuaLAslw').placeholder_html)
+    preview = expect(Onebox.preview('https://youtube.com/shorts/VvoFuaLAslw').placeholder_html)
     preview.to match(/POMBO/)
     preview.to match(/hqdefault/)
   end
