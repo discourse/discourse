@@ -396,6 +396,7 @@ export default RestModel.extend({
       if (postIdx !== -1) {
         return this.findPostsByIds(headGap).then((posts) => {
           posts.forEach((p) => {
+            this._initUserModels(p);
             const stored = this.storePost(p);
             if (!currentPosts.includes(stored)) {
               currentPosts.insertAt(postIdx++, stored);

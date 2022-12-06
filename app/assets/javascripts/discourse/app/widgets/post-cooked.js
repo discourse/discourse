@@ -69,7 +69,7 @@ export default class PostCooked {
     this._insertQuoteControls(cookedDiv);
     this._showLinkCounts(cookedDiv);
     this._applySearchHighlight(cookedDiv);
-    this._initUserStatusToMentions();
+    this._initUserStatusOnMentions();
     this._decorateAndAdopt(cookedDiv);
 
     return cookedDiv;
@@ -374,7 +374,7 @@ export default class PostCooked {
     return cookedDiv;
   }
 
-  _initUserStatusToMentions() {
+  _initUserStatusOnMentions() {
     if (!this._isInComposerPreview) {
       this._trackMentionedUsersStatus();
       this._rerenderUserStatusOnMentions();
