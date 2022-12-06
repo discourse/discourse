@@ -539,6 +539,7 @@ sv:
               target_user_not_found: "En av användarna som du skickar detta meddelande till kunde inte hittas."
               unable_to_update: "Det uppstod ett fel vid uppdatering av detta ämnet."
               unable_to_tag: "Det uppstod ett fel vid taggning av ämnet."
+              unable_to_unlist: "Tyvärr kan du inte skapa ett olistat ämne."
             featured_link:
               invalid: "är ogiltig. URL måste innehålla http:// eller http://."
         user:
@@ -969,7 +970,8 @@ sv:
     mailing_list_mode: "Stäng av utskicksläge"
     all: "Skicka mig inga fler e-postmeddelanden från %{sitename}"
     different_user_description: "Du är för tillfället inloggad som en annan användare än den som vi skickade e-post till. Logga ut, eller aktivera anonymt läge, och försök igen."
-    not_found_description: "Tyvärr kunde vi inte hitta den här avprenumerationen. Kan länken i din e-post vara för gammal och ha löpt ut?"
+    not_found_description: Tyvärr kunde vi inte hitta den avprenumerationen. Kan länken i din e-post vara för gammal och ha löpt ut?"
+    user_not_found_description: "Tyvärr kunde vi inte hitta någon användare för den här prenumerationen. Du försöker troligen avprenumerera ett konto som inte längre finns."
     log_out: "Logga ut"
     submit: "Spara inställningar"
     digest_frequency:
@@ -1006,6 +1008,7 @@ sv:
       write: "Skriv alla"
       one_time_password: "Skapa ett engångsinloggningsbevis"
       bookmarks_calendar: "Läs påminnelser om bokmärken"
+      user_status: "Läs och uppdatera användarstatus"
     invalid_public_key: "Tyvärr är den offentliga nyckeln ogiltig."
     invalid_auth_redirect: "Tyvärr är denna auth_redirect-värd inte tillåten."
     invalid_token: "Saknat, ogiltigt eller utgånget bevis."
@@ -1099,10 +1102,12 @@ sv:
         author: Författare
         edit_reason: Anledning
     consolidated_api_requests:
+      title: "Konsoliderade API-förfrågningar"
       xaxis:
         api: "API"
         user_api: "Användar-API"
       yaxis: "Dag"
+      description: "API-förfrågningar för vanliga API-nycklar och användar-API-nycklar."
     dau_by_mau:
       title: "DAA/MAA"
       xaxis: "Dag"
@@ -2137,6 +2142,7 @@ sv:
     default_sidebar_categories: "Valda kategorier kommer att visas under sidofältets sektion Kategorier som standard."
     default_sidebar_tags: "Valda taggar kommer att visas under sidofältets sektion Taggar som standard."
     enable_new_user_profile_nav_groups: "EXPERIMENTELL: Användare i de valda grupperna visas den nya navigeringsmenyn för användarprofiler."
+    enable_experimental_topic_timeline_groups: "EXPERIMENTELLT: Användare i de valda grupperna visas det omstrukturerade ämnets tidslinje"
     errors:
       invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."
       invalid_email: "Felaktig e-postadress."
@@ -4188,12 +4194,6 @@ sv:
           logo_small:
             label: "Fyrkantig logga"
             description: "En fyrkantig version av din logga. Visas i övre vänstra hörnet när du scrollar ner, samt när du delar på sociala plattformar. Helst större än 512 x 512."
-          favicon:
-            label: "Webbläsarikon"
-            description: "Ikon som används för att representera din webbplats i webbläsare och som ser bra ut i små storlekar. PNG eller JPG rekommenderas. Som standard används en fyrkantig logotyp."
-          large_icon:
-            label: "Stor ikon"
-            description: "Ikon som används för att representera din webbplats på mobila enheter och som ser bra ut i större storlekar. Helst större än 512x512. Som standard används en fyrkantig logotyp."
       corporate:
         title: "Din organisation"
         fields:

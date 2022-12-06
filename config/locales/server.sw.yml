@@ -2046,8 +2046,6 @@ sw:
         fields:
           logo:
             label: "Nembo Msingi"
-          large_icon:
-            label: "Ikoni Kubwa"
       corporate:
         fields:
           contact_url:

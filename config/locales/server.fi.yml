@@ -968,7 +968,6 @@ fi:
     mailing_list_mode: "Poistu postituslistatilasta"
     all: "Älä lähetä minulle sähköpostia sivustolta %{sitename}"
     different_user_description: "Olet kirjautunut sisään eri käyttäjänä kuin käyttäjä, jolle sähköposti lähetettiin. Kirjaudu ulos tai siirry anonyymitilaan ja yritä sitten uudelleen."
-    not_found_description: "Tilauksen peruutusta ei löytynyt. Kenties sinulle lähetetty linkki on vanhentunut?"
     log_out: "Kirjaudu ulos"
     submit: "Tallenna asetukset"
     digest_frequency:
@@ -4533,12 +4532,6 @@ fi:
           logo_small:
             label: "Neliölogo"
             description: "Neliön muotoinen versio sivuston logosta. Näkyy vasemmassa yläkulmassa, kun vierität sivua alaspäin, sekä sosiaalisen median julkaisuissa. Mielellään vähintään 512x512."
-          favicon:
-            label: "Selaimen kuvake"
-            description: "Kuvake, jota käytetään kuvaamaan sivustoasi verkkoselaimissa, ja joka näyttää hyvältä pienessä koossa. Suositellut kuvamuodot ovat PNG ja JPG. Neliönmuotoista logoa käytetään oletuksena."
-          large_icon:
-            label: "Suuri kuvake"
-            description: "Kuvake, jota käytetään kuvaamaan sivustoa mobiililaitteilla, ja joka näyttää hyvältä suuremmissa kokoluokissa. Mielellään suurempi kuin 512×512. Neliönmuotoista logoa käytetään oletuksena."
       corporate:
         title: "Organisaatiosi"
         fields:

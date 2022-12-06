@@ -1653,12 +1653,6 @@ ja:
       logout_disabled: "閲覧専用モードのため、ログアウトできません。"
     staff_writes_only_mode:
       enabled: "このサイトはスタッフ専用モードになっています。このまま閲覧できますが、返信や「いいね！」、その他の操作はスタッフメンバーのみに制限されています。"
-    too_few_topics_and_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">ディスカッションを開始しましょう！</a> 現在、{currentTopics, plural, one {<strong>#</strong> 件のトピック} other {<strong>#</strong> 件のトピック}}と{currentPosts, plural, one {<strong>#</strong> 件の投稿} other {<strong>#</strong> 件の投稿}}があります。訪問者が読んで返信できる項目がもっと必要です。少なくとも {requiredTopics, plural, one {<strong>#</strong> 件のトピック} other {<strong>#</strong> 件のトピック}}と{requiredPosts, plural, one {<strong>#</strong> 件の投稿} other {<strong>#</strong> 件の投稿}}を作成することをお勧めします。このメッセージはスタッフのみに表示されます。
-    too_few_topics_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">ディスカッションを開始しましょう！</a> 現在、{currentTopics, plural, one {<strong>#</strong> 件のトピック} other {<strong>#</strong> 件のトピック}}があります。訪問者が読んで返信できる項目がもっと必要です。少なくとも {requiredTopics, plural, one {<strong>#</strong> 件のトピック} other {<strong>#</strong> 件のトピック}}を作成することをお勧めします。このメッセージはスタッフのみに表示されます。
-    too_few_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">ディスカッションを開始しましょう！</a> 現在、{currentPosts, plural, one {<strong>#</strong> 件の投稿} other {<strong>#</strong> 件の投稿}}があります。訪問者が読んで返信できる項目がもっと必要です。少なくとも {requiredPosts, plural, one {<strong>#</strong> 件の投稿} other {<strong>#</strong> 件の投稿}}を作成することをお勧めします。このメッセージはスタッフのみに表示されます。
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 時間当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限に達しました。"
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 分当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限に達しました。"
@@ -3898,9 +3892,6 @@ ja:
         about: "グループのメンバーシップとグループ名を編集"
         group_members: "グループメンバー"
         delete: "削除"
-        delete_confirm: "このグループを削除しますか？"
-        delete_with_messages_confirm:
-          other: "このグループを削除すると %{count} 件のメッセージが孤立し、グループメンバーがアクセスできなくなります。<br><br>よろしいですか？"
         delete_failed: "グループを削除できません。自動作成グループを削除することはできません。"
         delete_automatic_group: これは自動グループであるため削除できません。
         delete_owner_confirm: "'%{username}' のオーナー権限を削除しますか？"

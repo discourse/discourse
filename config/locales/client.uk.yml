@@ -1866,12 +1866,8 @@ uk:
       logout_disabled: "Вихід вимкнено, поки сайт перебуває в режимі лише для читання."
     staff_writes_only_mode:
       enabled: "Сайт працює в режимі \"тільки для команди обслуговування\". Зараз ви можете продовжувати переглядати сайт, але інші дії доступні лише членам команди обслуговування."
-    too_few_topics_and_posts_notice_MF: >-
-      Почнемо <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">дискусію!</a> Тут {currentTopics, plural, one {<strong>#</strong> тема} few {<strong>#</strong> теми} many {<strong>#</strong> тем} other {are <strong>#</strong> тем}} та {currentPosts, plural, one {<strong>#</strong> допис} few {<strong>#</strong> дописи} many {<strong>#</strong> дописів} other {<strong>#</strong> дописів}}. Відвідувачам потрібно більше читати та відповідати — ми рекомендуємо {requiredTopics, plural, one {<strong>#</strong> тему} few {<strong>#</strong> тем} many {<strong>#</strong> тем} other {<strong>#</strong> тем}} та {requiredPosts, plural, one {<strong>#</strong> допис} few {<strong>#</strong> дописів} many {<strong>#</strong> дописів} other {<strong>#</strong> posts}}. Це повідомлення можуть бачити лише члени команди обслуговування.
-    too_few_topics_notice_MF: >-
-      Розпочнемо <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">обговорення!</a> Тут {currentTopics, plural, one {<strong>#</strong> тема} few {<strong>#</strong> теми} many {are <strong>#</strong> тем} other {<strong>#</strong> тем}}. Відвідувачам потрібно більше читати та відповідати – ми рекомендуємо {requiredTopics, plural, one {<strong>#</strong> тему} few {<strong>#</strong> теми} many {<strong>#</strong> тем} other {<strong>#</strong> тем}}. Це повідомлення можуть бачити лише члени команди обслуговування.
     too_few_posts_notice_MF: >-
-      Почнемо <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">старт дискусії!</a> Тут {currentPosts, plural, one {<strong>#</strong> допис} few {<strong>#</strong> дописи} many {<strong>#</strong> дописів} other {<strong>#</strong> дописів}}. Відвідувачам потрібно більше читати та відповідати – ми рекомендуємо {requiredPosts, plural, one {<strong>#</strong> допис} few {<strong>#</strong> дописи} many {<strong>#</strong> дописів} other {<strong>#</strong> дописів}}. Це повідомлення може бачити лише члени команди обслуговування.
+      Почнемо <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">старт дискусії!</a> Тут {currentPosts, plural, one {<strong>#</strong> допис} few {<strong>#</strong> дописи} many {<strong>#</strong> дописів} other {<strong>#</strong> дописів}}. Відвідувачам потрібно більше читати та відповідати – ми рекомендуємо {requiredPosts, plural, one {<strong>#</strong> допис} few {<strong>#</strong> дописи} many {<strong>#</strong> дописів} other {<strong>#</strong> дописів}}. Це повідомлення може бачити лише члени команди обслуговування.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# помилка/година} other {# помилок/година}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# помилка/година} other {# помилок/година}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# помилка/хвилина} other {# помилок/хвилина}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# помилка/хвилина} other {# помилок/хвилина}}."
@@ -4449,12 +4445,6 @@ uk:
         about: "Edit your group membership and names here"
         group_members: "Учасники групи"
         delete: "Видалити"
-        delete_confirm: "Видалити цю групу?"
-        delete_with_messages_confirm:
-          one: "Видалення цієї групи спричинить обмеження для %{count} повідомлення, учасники групи більше не матимуть до нього доступу.<br><br>Ви впевнені?"
-          few: "Видалення цієї групи спричинить обмеження для %{count} повідомлень, учасники групи більше не матимуть до нього доступу.<br><br>Ви впевнені?"
-          many: "Видалення цієї групи спричинить обмеження для %{count} повідомлень, учасники групи більше не матимуть до нього доступу.<br><br>Ви впевнені?"
-          other: "Видалення цієї групи спричинить обмеження для %{count} повідомлень, учасники групи більше не матимуть до нього доступу.<br><br>Ви впевнені?"
         delete_failed: "Не вдалося видалити групу. Якщо це - автоматична група, її неможливо знищити."
         delete_automatic_group: Це автоматична група, яку не можна видалити.
         delete_owner_confirm: "Відкликати права власника у користувача '%{username}'?"

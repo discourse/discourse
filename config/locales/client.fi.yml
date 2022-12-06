@@ -1722,12 +1722,6 @@ fi:
       logout_disabled: "Et voi kirjautua ulos, kun sivusto on vain luku -tilassa."
     staff_writes_only_mode:
       enabled: "Sivusto on vain henkilökunta -tilassa. Voit jatkaa selailua, mutta vastaaminen, tykkääminen ja muita toimintoja on rajoitettu vain henkilökunnan jäsenille."
-    too_few_topics_and_posts_notice_MF: >-
-      Laitetaanpa <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">keskustelu alulle!</a> Ketjuja {currentTopics, plural, one {on <strong>#</strong>} other {on <strong>#</strong>}} ja viestejä {currentPosts, plural, one {<strong>#</strong>} other {<strong>#</strong>}}. Vierailijoilla tulisi olla enemmän vastauksia innoittavaa luettavaa – suositamme ainakin {requiredTopics, plural, one {<strong>#</strong> ketjun} other {<strong>#</strong> ketjua}} ja {requiredPosts, plural, one {<strong>#</strong> viestin} other {<strong>#</strong> viestiä}}. Tämä viesti näkyy vain henkilökunnalle.
-    too_few_topics_notice_MF: >-
-      Laitetaanpa <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">keskustelu alulle!</a> Ketjuja {currentTopics, plural, one {on <strong>#</strong>} other {on <strong>#</strong>}}. Vierailijoilla tulisi olla enemmän vastauksia innoittavaa luettavaa – suositamme ainakin {requiredTopics, plural, one {<strong>#</strong> ketjun} other {<strong>#</strong> ketjua}}. Tämä viesti näkyy vain henkilökunnalle.
-    too_few_posts_notice_MF: >-
-      Laitetaanpa <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">keskustelu alulle!</a> Viestejä {currentPosts, plural, one {on <strong>#</strong>} other {on <strong>#</strong>}}. Vierailijoilla tulisi olla enemmän vastauksia innoittavaa luettavaa – suositamme ainakin {requiredPosts, plural, one {<strong>#</strong> viestin} other {<strong>#</strong> viestiä}}. Tämä viesti näkyy vain henkilökunnalle.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# virhe/tunti} other {# virhettä/tunti}}</a> saavutti sivustoasetusrajan {limit, plural, one {# virhe/tunti} other {# virhettä/tunti}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# virhe/minuutti} other {# virhettä/minuutti}}</a> saavutti sivustoasetusrajan {limit, plural, one {# virhe/minuutti} other {# virhettä/minuutti}}."
@@ -4080,10 +4074,6 @@ fi:
         about: "Muokkaa ryhmien jäsenyyksiä ja nimiä täällä"
         group_members: "Ryhmän jäsenet"
         delete: "Poista"
-        delete_confirm: "Poistetaanko tämä ryhmä?"
-        delete_with_messages_confirm:
-          one: "Tämän ryhmän poistaminen aiheuttaa %{count} viestin orpoutumisen, ja ryhmän jäsenillä ei ole tämän jälkeen pääsyä siihen.<br><br>Oletko varma?"
-          other: "Tämän ryhmän poistaminen aiheuttaa %{count} viestin orpoutumisen, ja ryhmän jäsenillä ei ole tämän jälkeen pääsyä niihin.<br><br>Oletko varma?"
         delete_failed: "Ryhmän poistaminen ei onnistu. Jos tämä on automaattinen ryhmä, sitä ei voi poistaa."
         delete_automatic_group: Tämä on automaattisesti luotu ryhmä, eikä sitä voi poistaa.
         delete_owner_confirm: "Perutaanko käyttäjältä '%{username}' isännyys?"

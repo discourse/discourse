@@ -1063,6 +1063,9 @@ nl:
       dismiss_notifications_tooltip: "Alle ongelezen meldingen markeren als gelezen"
       dismiss_bookmarks_tooltip: "Markeer alle ongelezen bladwijzerherinneringen als gelezen"
       dismiss_messages_tooltip: "Markeer alle ongelezen persoonlijke berichten als gelezen"
+      no_likes_title: "Je hebt nog geen likes ontvangen"
+      no_likes_body: >
+        Je krijgt hier een melding wanneer iemand een van je berichten liket, zodat je kunt zien wat anderen waardevol vinden. Anderen zien hetzelfde als je hun berichten liket. <br><br> Meldingen voor likes worden nooit naar je ge-e-maild, maar je kunt instellen hoe je meldingen over likes ontvangt op de site in je <a href='%{preferencesUrl}'>meldingsvoorkeuren</a>.
       no_messages_title: "Je hebt geen berichten"
       no_messages_body: >
         Wil je een direct persoonlijk gesprek met iemand hebben, buiten de normale gespreksstroom? Stuur de persoon een bericht door diens avatar te selecteren en de %{icon} berichtknop te gebruiken.<br><br> Als je hulp nodig hebt, kun je <a href='%{aboutUrl}'>een medewerker een bericht sturen</a>.
@@ -1724,12 +1727,6 @@ nl:
       logout_disabled: "Afmelden is uitgeschakeld zolang de website zich in de alleen-lezenmodus bevindt."
     staff_writes_only_mode:
       enabled: "Deze site is in de medewerkermodus. Ga door met bekijken, maar antwoorden, liken en andere acties zijn beperkt tot medewerkers."
-    too_few_topics_and_posts_notice_MF: >-
-      Laten we <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">de discussie starten!</a> Er {currentTopics, plural, one {is <strong>#</strong> topic} other {zijn <strong>#</strong> topics}} en {currentPosts, plural, one {<strong>#</strong> bericht} other {<strong>#</strong> berichten}}. Bezoekers hebben er meer nodig om te lezen en op te antwoorden – minimaal {requiredTopics, plural, one {<strong>#</strong> topic} other {<strong>#</strong> topics}} en {requiredPosts, plural, one {<strong>#</strong> bericht} other {<strong>#</strong> berichten}} wordt aanbevolen. Alleen medewerkers kunnen dit bericht zien.
-    too_few_topics_notice_MF: >-
-      Laten we <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">de discussie starten!</a> Er {currentTopics, plural, one {is <strong>#</strong> topic} other {zijn <strong>#</strong> topics}}. Bezoekers hebben er meer nodig om te lezen en op te antwoorden – minimaal {requiredTopics, plural, one {<strong>#</strong> topic} other {<strong>#</strong> topics}} wordt aanbevolen. Alleen medewerkers kunnen dit bericht zien.
-    too_few_posts_notice_MF: >-
-      Laten we <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">de discussie starten!</a> Er {currentPosts, plural, one {is <strong>#</strong> bericht} other {zijn <strong>#</strong> berichten}}. Bezoekers hebben er meer nodig om te lezen en op te antwoorden – minimaal {requiredPosts, plural, one {<strong>#</strong> bericht} other {<strong>#</strong> berichten}} wordt aanbevolen. Alleen medewerkers kunnen dit bericht zien.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/uur} other {# fouten/uur}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/uur} other {# fouten/uur}} bereikt."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/minuut} other {# fouten/minuut}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/minuut} other {# fouten/minuut}} bereikt."
@@ -2032,6 +2029,7 @@ nl:
         one: "Door <b>@%{here}</b>te vermelden, sta je op het punt om %{count} gebruiker te informeren. Weet je het zeker?"
         other: "Door <b>@%{here}</b>te vermelden, sta je op het punt om %{count} gebruikers te informeren. Weet je het zeker?"
       duplicate_link: "Het lijkt erop dat je link naar <b>%{domain}</b> al in het topic is geplaatst door <b>@%{username}</b> in <a href='%{post_url}'>een antwoord op %{ago}</a> – weet je zeker dat je deze opnieuw wilt plaatsen?"
+      duplicate_link_same_user: "Het lijkt erop dat je al een link naar <b>%{domain}</b> in dit topic hebt geplaatst in <a href='%{post_url}'>een antwoord op %{ago}</a>. Weet je zeker dat je het nog een keer wilt plaatsen?"
       reference_topic_title: "RE: %{title}"
       error:
         title_missing: "Titel is vereist"
@@ -2167,6 +2165,12 @@ nl:
         high_priority:
           one: "%{count} ongelezen melding met hoge prioriteit"
           other: "%{count} ongelezen meldingen met hoge prioriteit"
+        new_message_notification:
+          one: "%{count} nieuwe berichtmelding"
+          other: "%{count} nieuwe berichtmeldingen"
+        new_reviewable:
+          one: "%{count} nieuw beoordeelbaar item"
+          other: "%{count} nieuwe beoordeelbare items"
       title: "meldingen van @naamvermeldingen, antwoorden op je berichten en topics, berichten, enz."
       none: "Meldingen kunnen momenteel niet worden geladen."
       empty: "Geen meldingen gevonden."
@@ -3001,6 +3005,7 @@ nl:
           one: "Sorry, je kunt slechts %{count} bestand tegelijk uploaden."
           other: "Sorry, je kunt slechts %{count} bestanden tegelijk uploaden."
         upload_not_authorized: "Sorry, het bestand dat je probeert te uploaden is niet toegestaan (toegestane extensies: %{authorized_extensions})."
+        no_uploads_authorized: "Sorry, er zijn geen bestanden geautoriseerd om te uploaden."
         image_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers kunnen geen afbeeldingen uploaden."
         attachment_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers kunnen geen bijlagen uploaden."
         attachment_download_requires_login: "Sorry, je moet aangemeld zijn om bijlagen te downloaden."
@@ -3235,6 +3240,7 @@ nl:
       pending_permission_change_alert: "Je hebt %{group} niet toegevoegd aan deze categorie. Klik op deze knop om de groep toe te voegen."
       images: "Afbeeldingen"
       email_in: "Aangepast adres voor inkomende e-mail:"
+      email_in_tooltip: "Je kunt meerdere e-mailadressen scheiden met het teken |."
       email_in_allow_strangers: "E-mails van anonieme gebruikers zonder account accepteren"
       email_in_disabled: "Het plaatsen van nieuwe topics via e-mail is uitgeschakeld in de webite-instellingen. Om het plaatsen van nieuwe topics via e-mail mogelijk te maken, "
       email_in_disabled_click: 'schakel de instelling ''e-mail in'' in.'
@@ -4087,10 +4093,10 @@ nl:
         about: "Bewerk hier je groepslidmaatschap en namen"
         group_members: "Groepsleden"
         delete: "Verwijderen"
-        delete_confirm: "Deze groepen verwijderen?"
+        delete_confirm: "Weet je zeker dat je deze groep wilt verwijderen?"
         delete_with_messages_confirm:
-          one: "Als je deze groep verwijdert, wordt %{count} bericht verweesd en hebben groepsleden er geen toegang meer toe.<br><br>Weet je het zeker?"
-          other: "Als je deze groep verwijdert, worden %{count} berichten verweesd en hebben groepsleden er geen toegang meer toe.<br><br>Weet je het zeker?"
+          one: "Als je deze groep verwijdert, wordt %{count} bericht verweesd en hebben groepsleden er geen toegang meer toe."
+          other: "Als je deze groep verwijdert, worden %{count} berichten verweesd en hebben groepsleden er geen toegang meer toe."
         delete_failed: "Kan groep niet verwijderen. Als dit een automatische groep is, kan deze niet worden verwijderd."
         delete_automatic_group: Dit is een automatische groep en kan niet worden verwijderd.
         delete_owner_confirm: "Eigenaarsprivileges van '%{username}' verwijderen?"
@@ -4175,6 +4181,9 @@ nl:
               anonymize: Gebruikersaccounts anonimiseren.
               delete: Gebruikersaccounts verwijderen.
               list: Haal een lijst van gebruikers op.
+            user_status:
+              read: Gebruikersstatus lezen.
+              update: Gebruikersstatus bijwerken.
             email:
               receive_emails: Deze scope met de e-mailontvanger combineren om inkomende e-mails te verwerken.
             badges:

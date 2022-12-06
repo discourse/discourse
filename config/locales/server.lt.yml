@@ -861,7 +861,6 @@ lt:
     mailing_list_mode: "Išjunkite adresatų sąrašo režimą"
     all: "Nesiųskite man laiškų iš %{sitename}"
     different_user_description: "Šiuo metu esate prisijungę kaip kitas vartotojas, nei tas, kuriam rašėme el. paštu. Atsijunkite arba įjunkite anoniminį režimą ir bandykite dar kartą."
-    not_found_description: "Atsiprašome, nepavyko rasti šio prenumeratos atsisakymo. Ar gali būti, kad el. laiške esanti nuoroda yra per sena ir pasibaigė jos galiojimo laikas?"
     log_out: "Atsijungti"
     submit: "Išsaugoti nuostatas"
     digest_frequency:
@@ -2706,10 +2705,6 @@ lt:
             label: "Pirminis logotipas"
           logo_small:
             label: "Kvadratinis logotipas"
-          favicon:
-            label: "Naršyklės piktograma"
-          large_icon:
-            label: "Didelė piktograma"
       corporate:
         fields:
           company_name:

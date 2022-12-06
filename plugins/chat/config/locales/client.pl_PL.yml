@@ -32,6 +32,12 @@ pl_PL:
       chat_channels: "Kanały"
       browse_all_channels: "Przeglądaj wszystkie kanały"
       move_to_channel:
+        title: "Przenieś wiadomości na kanał"
+        instructions:
+          one: "Przenosisz <strong>%{count}</strong> wiadomość. Wybierz kanał docelowy. Na kanale <strong>%{channelTitle}</strong> zostanie utworzona wiadomość zastępcza informująca o przeniesieniu tej wiadomości."
+          few: "Przenosisz <strong>%{count}</strong> wiadomości. Wybierz kanał docelowy. Na kanale <strong>%{channelTitle}</strong> zostanie utworzona wiadomość zastępcza informująca o przeniesieniu tych wiadomości."
+          many: "Przenosisz <strong>%{count}</strong> wiadomości. Wybierz kanał docelowy. Na kanale <strong>%{channelTitle}</strong> zostanie utworzona wiadomość zastępcza informująca o przeniesieniu tych wiadomości."
+          other: "Przenosisz <strong>%{count}</strong> wiadomości. Wybierz kanał docelowy. Na kanale <strong>%{channelTitle}</strong> zostanie utworzona wiadomość zastępcza informująca o przeniesieniu tych wiadomości."
         confirm_move: "Przenieś wiadomości"
       channel_settings:
         title: "Ustawienia kanału"
@@ -39,11 +45,21 @@ pl_PL:
         add: "Dodaj"
         close_channel: "Zamknij kanał"
         open_channel: "Otwórz kanał"
+        archive_channel: "Archiwizuj kanał"
         delete_channel: "Usuń kanał"
         join_channel: "Dołącz do kanału"
         leave_channel: "Opuść kanał"
         join: "Dołącz"
         leave: "Opuść"
+        save_label:
+          mute_channel: "Zapisano preferencje wyciszenia kanału"
+          desktop_notification: "Zapisano preferencje powiadomień na pulpicie"
+          mobile_notification: "Zapisano preferencje powiadomień push na urządzeniach mobilnych"
+      channel_archive:
+        title: "Archiwizuj kanał"
+        instructions: "<p>Archiwizacja kanału przełącza go w tryb tylko do odczytu i przenosi wszystkie wiadomości z kanału do nowego lub istniejącego tematu. Nie można wysyłać nowych wiadomości ani edytować ani usuwać istniejących wiadomości.</p><p>Czy na pewno chcesz zarchiwizować kanał <strong>%{channelTitle}</strong>?</p>"
+        process_started: "Proces archiwizacji został rozpoczęty. Ten modal zostanie wkrótce zamknięty, a po zakończeniu procesu archiwizacji otrzymasz osobistą wiadomość."
+        retry: "Ponów"
       channel_open:
         title: "Otwórz kanał"
       channel_close:
@@ -150,8 +166,10 @@ pl_PL:
         back: "Poprzednia"
         title: Kanały
         filter_all: Wszystkie
+        filter_open: Otwarty
         filter_closed: Zamknięta
         filter_archived: Zarchiwizowany
+        filter_input_placeholder: Szukaj kanału według nazwy
       chat_message_separator:
         today: Dzisiaj
         yesterday: Wczoraj
@@ -159,6 +177,7 @@ pl_PL:
         filter_placeholder: Znajdź członków
       about_view:
         associated_topic: Powiązany temat
+        associated_category: Połączona kategoria
         title: Tytuł
         description: Opis
       channel_info:
@@ -182,6 +201,7 @@ pl_PL:
         title: "Przejdź do kanału"
         no_channels: "Żadne kanały nie pasują do Twojego wyszukiwania"
       channel:
+        no_memberships: Ten kanał nie ma członków
         no_memberships_found: Nie znaleziono członków
         memberships_count:
           one: "%{count} członek"

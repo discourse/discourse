@@ -109,6 +109,7 @@ zh_TW:
         screened_email_error: "發件人郵箱已經被封禁。"
         unsubscribe_not_allowed: "當這位使用者無法透過 email 取消訂閱時會發生。"
       unrecognized_error: "不知名的錯誤"
+    view_redacted_media: "查看媒體"
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>：%{message}"
@@ -3054,10 +3055,6 @@ zh_TW:
             label: "主要標誌"
           logo_small:
             label: "正方形 Logo"
-          favicon:
-            label: "瀏覽器的 Icon"
-          large_icon:
-            label: "大表徵圖"
       corporate:
         fields:
           company_name:

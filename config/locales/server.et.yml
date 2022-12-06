@@ -1052,8 +1052,6 @@ et:
         fields:
           logo:
             label: "Peamine logo"
-          large_icon:
-            label: "Suur ikoon"
       corporate:
         fields:
           contact_url:

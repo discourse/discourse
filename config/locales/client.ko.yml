@@ -1601,12 +1601,8 @@ ko:
       enabled: "이 사이트는 현재 읽기 전용 모드입니다. 탐색은 가능하지만 댓글, 좋아요 및 기타 작업은 일시적으로 비활성화되었습니다."
       login_disabled: "사이트가 읽기 전용 모드인 동안에는 로그인이 비활성화됩니다."
       logout_disabled: "사이트가 읽기 전용 모드인 동안에는 로그아웃이 비활성화됩니다."
-    too_few_topics_and_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">토론을 시작하세요!</a> 현재 {currentTopics, plural, one {is <strong>#</strong>개의 주제} other {are <strong>#</strong>개의 주제}} 및 {currentPosts, plural, one {<strong>#</strong>개의 게시물} other {<strong>#</strong>개의 게시물}}이 있습니다. 방문자에게 다양한 주제를 선보이고 댓글을 독려할 수 있도록 최소 {requiredTopics, plural, one {<strong>#</strong>개의 주제} other {<strong>#</strong>개의 주제}} 및 {requiredPosts, plural, one {<strong>#</strong>개의 게시물} other {<strong>#</strong>개의 게시물}}을 제공하세요. 운영진만 이 메시지를 볼 수 있습니다.
-    too_few_topics_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">토론을 시작하세요!</a> 현재 {currentTopics, plural, one {is <strong>#</strong>개의 주제} other {are <strong>#</strong>개의 주제}}가 있습니다. 방문자에게 다양한 주제와 게시물을 선보이고 댓글을 독려할 수 있도록 최소 {requiredTopics, plural, one {<strong>#</strong>개의 주제} other {<strong>#</strong>개의 주제}}를 제공하세요. 운영진만 이 메시지를 볼 수 있습니다.
     too_few_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">토론을 시작하세요!</a> 현재 {currentPosts, plural, one {is <strong>#</strong>개의 게시물} other {are <strong>#</strong>개의 게시물}}이 있습니다. 방문자에게 다양한 주제와 게시물을 선보이고 댓글을 독려할 수 있도록 최소 {requiredPosts, plural, one { <strong>#</strong>개의 게시물} other { <strong>#</strong>개의 게시물}}을 제공하세요. 운영진만 이 메시지를 볼 수 있습니다.
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">토론을 시작</a> 합시다 <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">!</a> {currentPosts, plural, one {is <strong>#</strong> post} other {are <strong>#</strong> posts}}가 있습니다. 방문자는 더 읽고 답장해야합니다. – {requiredPosts, plural, one { <strong>#</strong> post} other { <strong>#</strong> posts}} 이상을 권장합니다. 직원 만이 메시지를 볼 수 있습니다.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/시간} other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/시간} other {#개의 오류/시간}}에 도달했습니다."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/분} other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/분} other {#개의 오류/분}}에 도달했습니다."
@@ -3750,9 +3746,6 @@ ko:
         about: "여기서 회원과 이름 편집"
         group_members: "그룹 멤버"
         delete: "삭제"
-        delete_confirm: "이 그룹을 삭제할까요?"
-        delete_with_messages_confirm:
-          other: "이 그룹을 삭제하면 %{count}개의 메시지가 분리되고 그룹 회원은 더 이상 메시지에 액세스할 수 없습니다.<br><br>삭제할까요?"
         delete_failed: "그룹을 삭제할 수 없습니다. 자동 그룹인 경우 제거할 수 없습니다."
         delete_automatic_group: 이 그룹은 자동 그룹이므로 삭제할 수 없습니다.
         delete_owner_confirm: "'%{username}' 님의 소유자 권한을 제거할까요?"

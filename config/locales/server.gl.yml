@@ -872,7 +872,6 @@ gl:
     mailing_list_mode: "Desactivar o modo de listaxe de correo"
     all: "Non me envíe ningún correo electrónico de %{sitename}"
     different_user_description: "Actualmente ten a sesión iniciada cun usuario diferente ao que lle enviamos un correo electrónico. Saia, ou entre en modo anónimo, e vólvao tentar."
-    not_found_description: "Non puidemos atopar a cancelación da subscrición. Será porque a ligazón de que dispón é vella de máis ou xa expiraría?"
     log_out: "Saír da sesión"
     submit: "Gardar preferencias"
     digest_frequency:
@@ -4001,10 +4000,6 @@ gl:
             label: "Logotipo principal"
           logo_small:
             label: "Logotipo cadrado"
-          favicon:
-            label: "Icona do navegador"
-          large_icon:
-            label: "Icona grande"
       corporate:
         fields:
           company_name:
