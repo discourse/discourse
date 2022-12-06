@@ -1605,12 +1605,8 @@ vi:
       enabled: "Website đang ở chế độ chỉ đọc, bạn có thể duyệt xem nhưng không thể trả lời, likes, hay thực hiện các hành động khác."
       login_disabled: "Chức năng Đăng nhập đã bị tắt khi website trong trạng thái chỉ đọc"
       logout_disabled: "Chức năng đăng xuất đã bị tắt khi website đang trong trạng thái chỉ đọc."
-    too_few_topics_and_posts_notice_MF: >-
-      Hãy cùng <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">bắt đầu thảo luận nhé!</a> Đây {currentTopics, plural, other {là <strong>#</strong> chủ đề}} và {currentPosts, plural, other {<strong>#</strong> bài viết}}. Khách truy cập cần nhiều hơn để đọc và trả lời - chúng tôi khuyên bạn nên ít nhất {requiredTopics, plural, other {<strong>#</strong> chủ đề}} và {requiredPosts, plural, other {<strong>#</strong> bài viết}}. Chỉ nhân viên mới có thể nhìn thấy thông báo này.
-    too_few_topics_notice_MF: >-
-      Hãy cùng <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">bắt đầu thảo luận!</a> Đó {currentTopics, plural, other {là <strong>chủ đề #</strong> }}. Khách truy cập cần nhiều hơn để đọc và trả lời - chúng tôi khuyên bạn nên ít nhất {requiredTopics, plural, other {<strong>#</strong> chủ đề}}. Chỉ nhân viên mới có thể nhìn thấy thông báo này.
     too_few_posts_notice_MF: >-
-      Hãy cùng <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">bắt đầu thảo luận!</a> Đó {currentPosts, plural, other {là <strong>bài #</strong> }}. Khách truy cập cần nhiều hơn để đọc và trả lời - chúng tôi khuyên bạn nên ít nhất {requiredPosts, plural, other {<strong>#</strong> bài viết}}. Chỉ nhân viên mới có thể nhìn thấy thông báo này.
+      Hãy cùng <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">bắt đầu thảo luận!</a> Đó {currentPosts, plural, other {là <strong>bài #</strong> }}. Khách truy cập cần nhiều hơn để đọc và trả lời - chúng tôi khuyên bạn nên ít nhất {requiredPosts, plural, other {<strong>#</strong> bài viết}}. Chỉ nhân viên mới có thể nhìn thấy thông báo này.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / giờ}}</a> trang web đạt đến giới hạn thiết lập của {limit, plural, other {# lỗi / giờ}}."
       reached_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / phút}}</a> trang web đạt đến giới hạn thiết lập của {limit, plural, other {# lỗi / phút}}."
@@ -3797,9 +3793,6 @@ vi:
         about: "Chỉnh sửa nhóm thành viên và tên của bạn ở đây"
         group_members: "Nhóm thành viên"
         delete: "Xóa"
-        delete_confirm: "Xóa nhóm này?"
-        delete_with_messages_confirm:
-          other: "Xóa nhóm này sẽ khiến %{count} tin nhắn bị tách biệt, các thành viên trong nhóm sẽ không có quyền truy cập vào chúng nữa.<br><br>Bạn có chắc không?"
         delete_failed: "Không thể xóa nhóm. Nếu đây là một nhóm tự động, nó không thể hủy bỏ."
         delete_automatic_group: Đây là một nhóm tự động và không thể bị xóa.
         delete_owner_confirm: "Loại bỏ quyền sở hữu của '%{username}'?"

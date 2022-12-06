@@ -15,10 +15,10 @@ ru:
           format: "%n %u"
           units:
             byte:
-              one: байт
-              few: байта
-              many: байтов
-              other: байта
+              one: Байт
+              few: Байта
+              many: Байт
+              other: Байт
             gb: ГБ
             kb: КБ
             mb: МБ
@@ -48,44 +48,44 @@ ru:
         half_a_minute: "< 1 мин"
         less_than_x_seconds:
           one: "< %{count} с"
-          few: "< %{count} с"
-          many: "< %{count} с"
-          other: "< %{count} с"
+          few: "< %{count}сек"
+          many: "< %{count}сек"
+          other: "< %{count}с"
         x_seconds:
-          one: "%{count} с"
-          few: "%{count} с"
-          many: "< %{count} с"
-          other: "< %{count} с"
+          one: "%{count}с"
+          few: "%{count}с"
+          many: "%{count}с"
+          other: "%{count}с"
         less_than_x_minutes:
-          one: "< %{count} мин"
+          one: "< %{count}мин"
           few: "< %{count} мин"
           many: "< %{count} мин"
-          other: "< %{count} мин"
+          other: "< %{count}мин"
         x_minutes:
           one: "%{count} мин"
-          few: "%{count} мин"
-          many: "%{count} мин"
-          other: "%{count} мин"
+          few: "%{count}мин"
+          many: "%{count}мин"
+          other: "%{count}мин"
         about_x_hours:
-          one: "%{count} ч"
-          few: "%{count} ч"
-          many: "%{count} ч"
-          other: "%{count} ч"
+          one: "%{count}ч"
+          few: "%{count}ч"
+          many: "%{count}ч"
+          other: "%{count}ч"
         x_days:
-          one: "%{count} д"
-          few: "%{count} дн"
-          many: "%{count} дн"
-          other: "%{count} дн"
+          one: "%{count}д"
+          few: "%{count}д"
+          many: "%{count}д"
+          other: "%{count}д"
         x_months:
           one: "%{count} мес"
-          few: "%{count} мес"
-          many: "%{count} мес"
-          other: "%{count} мес"
+          few: "%{count}мес"
+          many: "%{count}мес"
+          other: "%{count}мес"
         about_x_years:
-          one: "%{count} год"
-          few: "%{count} года"
-          many: "%{count} лет"
-          other: "%{count} года"
+          one: "%{count}год"
+          few: "%{count}года"
+          many: "%{count}лет"
+          other: "%{count}лет"
         over_x_years:
           one: "> %{count} года"
           few: "> %{count} лет"
@@ -110,10 +110,10 @@ ru:
           many: "%{count} мин"
           other: "%{count} мин"
         x_hours:
-          one: "%{count} час"
-          few: "%{count} часа"
-          many: "%{count} часов"
-          other: "%{count} часа"
+          one: "%{count} час"
+          few: "%{count} часа"
+          many: "%{count} часов"
+          other: "%{count} часов"
         about_x_hours:
           one: "около %{count} часа"
           few: "около %{count} часов"
@@ -123,7 +123,7 @@ ru:
           one: "%{count} день"
           few: "%{count} дня"
           many: "%{count} дней"
-          other: "%{count} дня"
+          other: "%{count} дней"
         x_months:
           one: "%{count} месяц"
           few: "%{count} месяца"
@@ -147,15 +147,15 @@ ru:
         date_year: "D MMM YYYY"
       medium_with_ago:
         x_minutes:
-          one: "%{count} мин назад"
-          few: "%{count} мин назад"
-          many: "%{count} мин назад"
-          other: "%{count} мин назад"
+          one: "%{count} мин. назад"
+          few: "%{count} мин. назад"
+          many: "%{count} мин. назад"
+          other: "%{count} мин. назад"
         x_hours:
-          one: "%{count} час назад"
-          few: "%{count} часа назад"
-          many: "%{count} часов назад"
-          other: "%{count} часа назад"
+          one: "%{count} ч. назад"
+          few: "%{count} ч. назад"
+          many: "%{count} ч. назад"
+          other: "%{count} ч. назад"
         x_days:
           one: "%{count} день назад"
           few: "%{count} дня назад"
@@ -343,7 +343,7 @@ ru:
       title: "Похожие темы"
       pm_title: "Похожие сообщения"
     about:
-      simple_title: "Информация"
+      simple_title: "О форуме"
       title: "Информация о %{title}"
       stats: "Статистика сайта"
       our_admins: "Наши администраторы"
@@ -536,7 +536,7 @@ ru:
       filtered_topic: "Вы отфильтровали проверяемый контент в рамках одной темы."
       filtered_user: "Пользователь"
       filtered_reviewed_by: "Проверено"
-      show_all_topics: "показать все темы"
+      show_all_topics: "Показать все темы"
       deleted_post: "(запись удалена)"
       deleted_user: "(пользователь удалён)"
       user:
@@ -699,7 +699,7 @@ ru:
       this_weekend: "В эти выходные"
       start_of_next_business_week: "В понедельник"
       start_of_next_business_week_alt: "В следующий понедельник"
-      next_week: "Через неделю"
+      next_week: "На следующей неделе"
       two_weeks: "Через 2 недели"
       next_month: "В следующем месяце"
       two_months: "Через 2 месяца"
@@ -966,7 +966,7 @@ ru:
       messages: "Сообщения"
       notification_level: "Уровень уведомлений по умолчанию для сообщений группы"
       alias_levels:
-        mentionable: "Кто может @упоминать эту группу?"
+        mentionable: "Кто может @mention (упоминать) эту группу?"
         messageable: "Кто может отправить сообщения в эту группу?"
         nobody: "Никто"
         only_admins: "Только администраторы"
@@ -1005,7 +1005,7 @@ ru:
         modal_title: "Стандартные уведомления пользователя"
         modal_description: "Применить это изменение к уже существующим пользователям? Это изменит настройки для существующих пользователей (%{count})."
         modal_yes: "Да"
-        modal_no: "Нет, применять изменения только в будущем"
+        modal_no: "Нет, применить изменение только к будущим пользователям"
     user_action_groups:
       "1": "Лайки"
       "2": "Лайки"
@@ -1069,7 +1069,7 @@ ru:
     ip_lookup:
       title: Поиск IP-адреса
       hostname: Название хоста
-      location: Местонахождение
+      location: Расположение
       location_not_found: (расположение неизвестно)
       organisation: Организация
       phone: Телефон
@@ -1290,11 +1290,11 @@ ru:
       home: "Домашняя страница"
       staged: "Сымитированный"
       staff_counters:
-        flags_given: "полезные жалобы"
+        flags_given: "Полезные жалобы"
         flagged_posts: "записи с жалобами"
         deleted_posts: "удалённые записи"
         suspensions: "приостановки"
-        warnings_received: "предупреждения"
+        warnings_received: "Предупреждения"
         rejected_posts: "отклонённые записи"
       messages:
         all: "все"
@@ -1386,7 +1386,7 @@ ru:
         disable_description: "Введите код аутентификации из приложения"
         show_key_description: "Введите вручную"
         short_description: |
-          Защитите свой аккаунт одноразовыми кодами безопасности.
+          Защитите свою учётную запись одноразовыми кодами безопасности.
         extended_description: |
           Двухфакторная аутентификация повышает безопасность аккаунта: в дополнение к паролю необходимо указывать одноразовый токен. Токены могут быть сгенерированы на устройствах <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> и <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Внимание: после включения двухфакторной аутентификации в аккаунте вход через соцсети будет отключен."
@@ -1491,9 +1491,9 @@ ru:
         title: "Подключённые аккаунты"
         connect: "Подключить"
         revoke: "Отозвать"
-        cancel: "Отмена"
+        cancel: "Отменить"
         not_connected: "(не подключённый)"
-        confirm_modal_title: "Подключить аккаунт %{provider}"
+        confirm_modal_title: "Подключить учётную запись %{provider}"
         confirm_description:
           disconnect: "Существующий аккаунт %{provider} «%{account_description}» будет отключен."
           account_specific: "Аккаунт %{provider} «%{account_description}» будет использоваться для аутентификации."
@@ -1573,20 +1573,20 @@ ru:
         title: "Добавлять предыдущие ответы к концу электронных писем"
         unless_emailed: "Только при первой отправке"
         always: "Всегда"
-        never: "никогда"
+        never: "Никогда"
       email_digests:
         title: "В случае моего отсутствия на форуме присылать мне сводку популярных новостей (дайджест)"
-        every_30_minutes: "каждые 30 минут"
-        every_hour: "каждый час"
-        daily: "ежедневно"
-        weekly: "еженедельно"
-        every_month: "каждый месяц"
-        every_six_months: "каждые шесть месяцев"
+        every_30_minutes: "Каждые 30 минут"
+        every_hour: "Каждый час"
+        daily: "Ежедневно"
+        weekly: "Еженедельно"
+        every_month: "Каждый месяц"
+        every_six_months: "Каждые шесть месяцев"
       email_level:
         title: "Написать мне письмо, когда я цитирую или отвечаю на запись, когда упоминается мое @имя пользователя, или когда есть новая активность в наблюдаемых категориях, темах или тегах"
         always: "Всегда"
         only_when_away: "Если вы находитесь офлайн"
-        never: "никогда"
+        never: "Никогда"
       email_messages_level: "Написать мне письмо, когда я отправляю личное сообщение"
       include_tl0_in_digests: "Включать в сводку контент от новых пользователей"
       email_in_reply_to: "Включать в электронное письмо выдержку из ответов на запись"
@@ -1602,7 +1602,7 @@ ru:
         after_2_weeks: "Созданы за последние 2 недели"
       auto_track_topics: "Автоматически отслеживать темы, которые я просматриваю"
       auto_track_options:
-        never: "никогда"
+        never: "Никогда"
         immediately: "Немедленно"
         after_30_seconds: "Более 30 секунд"
         after_1_minute: "Более 1 минуты"
@@ -1707,7 +1707,7 @@ ru:
         instructions: "не менее %{count} символов"
         required: "Введите пароль"
       summary:
-        title: "Сводка"
+        title: "Спойлер"
         stats: "Статистика"
         time_read: "время чтения"
         time_read_title: "%{duration} (за всё время)"
@@ -1720,13 +1720,13 @@ ru:
           other: "темы созданы"
         post_count:
           one: "запись написана"
-          few: "записи написаны"
+          few: "сообщения написаны"
           many: "записей написано"
-          other: "записи написаны"
+          other: "сообщения написаны"
         likes_given:
           one: "поставлен"
-          few: "поставлено"
-          many: "поставлено"
+          few: "выражены"
+          many: "выражены"
           other: "поставлены"
         likes_received:
           one: "получен"
@@ -1799,7 +1799,7 @@ ru:
       stream:
         posted_by: "Опубликовано"
         sent_by: "Отправлено"
-        private_message: "сообщение"
+        private_message: "личное сообщение"
         the_topic: "тема"
     user_status:
       save: "Сохранить"
@@ -1840,12 +1840,6 @@ ru:
       logout_disabled: "Выход отключён, пока сайт находится в режиме «только для чтения»"
     staff_writes_only_mode:
       enabled: "Сайт находится в режиме «только для персонала». Продолжайте просмотр, но отвечать, ставить лайки и выполнять другие действия, влияющие на контент, могут только сотрудники."
-    too_few_topics_and_posts_notice_MF: >-
-      Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">приступим к обсуждению!</a> Есть {currentTopics, plural, one {<strong>#</strong> тема} few {<strong>#</strong> темы} other {<strong>#</strong> тем}} и {currentPosts, plural, one {<strong>#</strong> сообщение} few {<strong>#</strong> сообщения} other {<strong>#</strong> сообщений}}. Пользователи должны больше читать и отвечать – мы рекомендуем по крайней мере {requiredTopics, plural, one {<strong>#</strong> тему} few {<strong>#</strong> темы} other {<strong>#</strong> тем}} и {requiredPosts, plural, one {<strong>#</strong> сообщение} few {<strong>#</strong> сообщения} other {<strong>#</strong> сообщений}}. Только сотрудники могут видеть это сообщение.
-    too_few_topics_notice_MF: >-
-      Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">приступим к обсуждению!</a> Есть {currentTopics, plural, one {<strong>#</strong> тема} few {<strong>#</strong> темы} other {<strong>#</strong> тем}}. Пользователи должны больше читать и отвечать – мы рекомендуем по крайней мере {requiredTopics, plural, one {<strong>#</strong> тему} few {<strong>#</strong> темы} other {<strong>#</strong> тем}}. Только сотрудники могут видеть это сообщение.
-    too_few_posts_notice_MF: >-
-      Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">приступим к обсуждению!</a> Есть {currentPosts, plural, one {<strong>#</strong> сообщение} few {<strong>#</strong> сообщения} other {<strong>#</strong> сообщений}}. Пользователи должны больше читать и отвечать – мы рекомендуем по крайней мере {requiredPosts, plural, one {<strong>#</strong> сообщение} few {<strong>#</strong> сообщения} other {<strong>#</strong> сообщений}}. Только сотрудники могут видеть это сообщение.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> достигнут предел настройки сайта {limit, plural, one {# error/hour} other {# errors/hour}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a> достигнут предел настройки сайта {limit, plural, one {# error/minute} other {# errors/minute}}."
@@ -1872,7 +1866,7 @@ ru:
       hide_session: "Возможно, позже"
       hide_forever: "нет, спасибо"
       hidden_for_session: "Хорошо, напомним завтра. Кстати, зарегистрироваться можно также и с помощью кнопки «Войти»."
-      intro: "Здравствуйте! Похоже, вам нравится обсуждение, но вы ещё не зарегистрировали аккаунт."
+      intro: "Здравствуйте! Похоже, вам нравится обсуждение, но вы ещё не зарегистрировали учётную запись."
       value_prop: "Устали листать одни и те же темы? Создав аккаунт, вы всегда будете возвращаться туда, где остановились. Также вы сможете получать уведомления о новых ответах, сохранять закладки и ставить лайки. Общими усилиями мы сможем сделать сообщество интересным. :heart:"
     summary:
       enabled_description: "Вы просматриваете сводку из темы — только самые интересные сообщения по мнению сообщества."
@@ -1926,7 +1920,7 @@ ru:
       complete_username: "Если аккаунт совпадает с именем пользователя <b>%{username}</b>, вы скоро получите письмо с инструкциями о том, как сбросить пароль."
       complete_email: "Если аккаунт совпадает с <b>%{email}</b>, вы должны получить письмо с инструкциями о том, как сбросить ваш пароль."
       complete_username_found: "Мы нашли аккаунт, который соответствует имени пользователя <b>%{username}</b>. Вы должны получить письмо с инструкциями о том, как сбросить пароль."
-      complete_email_found: "Мы нашли аккаунт, который соответствует <b>%{email}</b>. Вы должны получить письмо с инструкциями о том, как сбросить пароль."
+      complete_email_found: "Мы нашли учётную запись, которая соответствует <b>%{email}</b>. Вы должны получить письмо с инструкциями о том, как сбросить пароль."
       complete_username_not_found: "Ни один аккаунт не соответствует имени пользователя <b>%{username}</b>"
       complete_email_not_found: "Ни один аккаунт не соответствует <b>%{email}</b>"
       help: "Письмо не доходит? Для начала проверьте папку «Спам» почтового ящика.<p>Не уверены в том, какой адрес использовали? Введите его, и мы подскажем, есть ли он в нашей базе.</p><p>Если вы более не имеете доступа к связанному с аккаунтом адресу электронной почты, то свяжитесь с <a href='%{basePath}/about'>персоналом</a>.</p>"
@@ -2136,7 +2130,7 @@ ru:
       options: "Параметры"
       whisper: "скрытое сообщение"
       unlist: "тема скрыта"
-      add_warning: "Это официальное предупреждение."
+      add_warning: "Официальное предупреждение"
       toggle_whisper: "Скрытое сообщение"
       toggle_unlisted: "Скрыть"
       posting_not_on_topic: "В какой теме вы хотите ответить?"
@@ -2231,12 +2225,12 @@ ru:
       italic_title: "Курсив"
       italic_text: "текст, выделенный курсивом"
       link_title: "Ссылка"
-      link_description: "введите описание ссылки"
+      link_description: "Введите описание ссылки"
       link_dialog_title: "Вставить ссылку"
       link_optional_text: "необязательный текст ссылки"
       link_url_placeholder: "Вставьте URL или введите текст для поиска темы"
       blockquote_title: "Цитата"
-      blockquote_text: "Цитата"
+      blockquote_text: "Впишите сюда текст цитаты"
       code_title: "Текст «как есть» (без применения форматирования)"
       code_text: "отключить форматирование можно, начав строку с четырех пробелов"
       paste_code_text: "введите или вставьте сюда код"
@@ -2387,7 +2381,7 @@ ru:
             many: "Продолжить? У вас %{count} непрочитанных личных сообщений."
             other: "Продолжить? У вас %{count} непрочитанного личного сообщения."
         dismiss: "Пометить прочитанными"
-        cancel: "Отмена"
+        cancel: "Нет"
       group_message_summary:
         one: "%{count} сообщение в вашей группе %{group_name}"
         few: "%{count} сообщения в вашей группе %{group_name}"
@@ -2428,7 +2422,7 @@ ru:
         liked_consolidated: "новые лайки"
         post_approved: "запись одобрена"
         membership_request_consolidated: "новые запросы на членство"
-        reaction: "новая реакция"
+        reaction: "Новая реакция"
         votes_released: "Голосование опубликовано"
     upload_selector:
       uploading: "Загрузка"
@@ -2874,7 +2868,7 @@ ru:
         back_description: "Перейти к последней непрочитанной записи"
         replies_short: "%{current} / %{total}"
       progress:
-        title: текущее местоположение в теме
+        title: Текущее местоположение в теме
         jump_prompt: "перейти к…"
         jump_prompt_of:
           one: "из %{count} записи"
@@ -2885,7 +2879,7 @@ ru:
         jump_prompt_to_date: "дате"
         jump_prompt_or: "или"
       notifications:
-        title: изменить частоту уведомлений об этой теме
+        title: Изменить частоту уведомлений об этой теме
         reasons:
           mailing_list_mode: "Вы включили режим почтовой рассылки, поэтому вы будете получать уведомления об ответах в этой теме через эл. почту."
           "3_10": "Вы будете получать уведомления, поскольку наблюдаете за тегом этой темы."
@@ -3051,7 +3045,7 @@ ru:
           other: "%{count} записи"
         cancel: "Отменить фильтр"
       move_to:
-        title: "Перемещение"
+        title: "Перемещение сообщений"
         action: "переместить"
         error: "При перемещении записей произошла ошибка."
       split_topic:
@@ -3079,7 +3073,7 @@ ru:
         title: "Переместить в новое сообщение"
         action: "переместить в новое сообщение"
         message_title: "Заголовок нового сообщения"
-        radio_label: "Новое сообщение"
+        radio_label: "Новое личное сообщение"
         participants: "Участники"
         instructions:
           one: "Вы создадите новое сообщение и заполните его <b>%{count}</b> выбранной вами записью."
@@ -3178,7 +3172,7 @@ ru:
       follow_quote: "перейти к цитируемой записи"
       show_full: "Показать полный текст"
       show_hidden: "Просмотр игнорируемого контента."
-      deleted_by_author_simple: "(запись удалена автором)"
+      deleted_by_author_simple: "(сообщение удалено автором)"
       collapse: "свернуть"
       sr_collapse_replies: "Свернуть встроенные ответы"
       sr_date: "Дата записи"
@@ -3585,7 +3579,7 @@ ru:
         appearance: "Внешний вид"
         email: "Эл. почта"
       list_filters:
-        all: "все темы"
+        all: "Все непрочитанные темы"
         none: "без подкатегорий"
       colors_disabled: "Вы не можете выбирать цвета, поскольку не указан стиль категории."
     flagging:
@@ -3752,7 +3746,7 @@ ru:
       unread:
         title: "Непрочитанные"
         title_with_count:
-          one: "Непрочитанные (%{count})"
+          one: "Непрочитанная (%{count})"
           few: "Непрочитанные (%{count})"
           many: "Непрочитанные (%{count})"
           other: "Непрочитанные (%{count})"
@@ -3981,7 +3975,7 @@ ru:
       selector_no_tags: "Без тегов"
       changed: "Теги изменены:"
       tags: "Теги"
-      choose_for_topic: "необязательные теги"
+      choose_for_topic: "Выберите теги..."
       choose_for_topic_required:
         one: "выберите как минимум %{count} тег…"
         few: "выберите как минимум %{count} тега…"
@@ -4177,7 +4171,7 @@ ru:
       redirect_after_success: "Двухфакторная аутентификация прошла успешно. Перенаправление на предыдущую страницу…"
     sidebar:
       unread_count:
-        one: "%{count} непрочитанная"
+        one: "Непрочитанных: %{count}"
         few: "%{count} непрочитанные"
         many: "%{count} непрочитанных"
         other: "%{count} непрочитанной"
@@ -4194,7 +4188,7 @@ ru:
         about:
           header_link_text: "Информация"
         messages:
-          header_link_text: "Сообщения"
+          header_link_text: "Личные сообщения"
           header_action_title: "создать личное сообщение"
           links:
             inbox: "Входящие"
@@ -4262,7 +4256,7 @@ ru:
         remove_muted_tags_from_latest:
           always: "Всегда"
           only_muted: "При использовании одного выключающего тега или вместе с другими выключающими тегами"
-          never: "никогда"
+          never: "Никогда"
       reports:
         title: "Список доступных отчётов"
       dashboard:
@@ -4412,12 +4406,6 @@ ru:
         about: "Здесь можно редактировать членство в группе и её название"
         group_members: "Участники группы"
         delete: "Удалить"
-        delete_confirm: "Удалить эту группу?"
-        delete_with_messages_confirm:
-          one: "Удаление приведет к тому, что члены группы больше не будут иметь доступа к %{count} сообщению.<br><br>Продолжить?"
-          few: "Удаление приведет к тому, что члены группы больше не будут иметь доступа к %{count} сообщениям.<br><br>Продолжить?"
-          many: "Удаление приведет к тому, что члены группы больше не будут иметь доступа к %{count} сообщениям.<br><br>Продолжить?"
-          other: "Удаление приведет к тому, что члены группы больше не будут иметь доступа к %{count} сообщения.<br><br>Продолжить?"
         delete_failed: "Невозможно удалить группу. Если группа была создана автоматически, то она не может быть удалена."
         delete_automatic_group: Это автоматическая группа и она не может быть удалена.
         delete_owner_confirm: "Отозвать права владельца у пользователя «%{username}»?"
@@ -4762,7 +4750,7 @@ ru:
           extra_files: "Дополнительные файлы"
           extra_files_upload: "Экспортируйте тему для просмотра файлов."
           extra_files_remote: "Экспортируйте тему или откройте соответствующий git-репозиторий для просмотра файлов."
-          preview: "Предпросмотр"
+          preview: "Предварительный просмотр"
           show_advanced: "Показать дополнительные поля"
           hide_advanced: "Скрыть дополнительные поля"
           hide_unused_fields: "Скрыть неиспользуемые поля"
@@ -5210,8 +5198,8 @@ ru:
             title: "Создание новой записи запрета подсети, если уже имеется хотя бы «min_ban_entries_for_roll_up» записей отдельных IP-адресов."
         search_logs:
           title: "Логи поиска"
-          term: "Запрос"
-          searches: "Поиски"
+          term: "Термин"
+          searches: "Количество запросов"
           click_through_rate: "CTR"
           types:
             all_search_types: "Все типы поиска"
@@ -5430,7 +5418,7 @@ ru:
               <p><p>Для продолжения введите: <code>%{text}</code>.</p></p>
             text: "удалить все сообщения от пользователя @%{username}"
             delete: "Удалить все сообщения от пользователя @%{username}"
-            cancel: "Отмена"
+            cancel: "Отменить"
         merge:
           button: "Объединить пользователей"
           prompt:
@@ -5452,7 +5440,7 @@ ru:
               <p><b>Это действие нельзя отменить!</b></p>
 
               <p><p>Для продолжения введите: <code>%{text}</code>.</p></p>
-            text: "объединить пользователя @%{username} с пользователем @%{targetUsername}"
+            text: "Объединить пользователя @%{username} с пользователем @%{targetUsername}"
             transfer_and_delete: "Объединить контент и удалить пользователя @%{username}"
             cancel: "Отмена"
         merging_user: "Объединение пользователей…"
@@ -5595,7 +5583,7 @@ ru:
         description: "Вы можете отредактировать любой текст на форуме. Начните с поиска:"
         search: "Найдите текст, который вы хотите отредактировать"
         title: "Текст"
-        edit: "изменить"
+        edit: "Изменить"
         revert: "Отменить изменения"
         revert_confirm: "Действительно отменить внесённые изменения?"
         go_back: "Вернуться к поиску"
@@ -5700,7 +5688,7 @@ ru:
         no_badges: Нет значков, которые можно было бы выдать.
         none_selected: "Выберите значок в списке слева"
         allow_title: Разрешить использовать название значка в качестве титула
-        multiple_grant: Может быть предоставлен несколько раз
+        multiple_grant: Может быть предоставлена несколько раз
         listable: Отображать значок на публичной странице значков
         enabled: Активировать использование этого значка
         icon: Значок
@@ -5736,7 +5724,7 @@ ru:
             one: "Будет выдана <b>%{count}</b> награда."
             few: "Будут выданы <b>%{count}</b> награды."
             many: "Будут выданы <b>%{count}</b> наград."
-            other: "Будут выданы <b>%{count}</b> награды."
+            other: "Будут выданы <b>%{count}</b> наград."
           sample: "Пример:"
           grant:
             with: <span class="username">%{username}</span>

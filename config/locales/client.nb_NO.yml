@@ -1580,12 +1580,8 @@ nb_NO:
       enabled: "Dette nettstedet er i lesemodus. Fortsett gjerne å lese, men du kan ikke svare, gi likes eller utføre andre handlinger som er slått av."
       login_disabled: "Innlogging er deaktivert mens nettsiden er i skrivebeskyttet modus."
       logout_disabled: "Du kan ikke logge ut når nettstedet er i lese-modus."
-    too_few_topics_and_posts_notice_MF: >-
-      La oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">starte diskusjonen!</a> Der {currentTopics, plural, one {er <strong>#</strong> tema} other {er <strong>#</strong> temaer}} og {currentPosts, plural, one {<strong>#</strong> innlegg} other {<strong>#</strong> innlegg}}. Besøkende trenger mer å lese og svare på - vi anbefaler i det minste {requiredTopics, plural, one {<strong>#</strong> tema} other {<strong>#</strong> emner}} og {requiredPosts, plural, one {<strong>#</strong> innlegg} other {<strong>#</strong> innlegg}}. Bare ansatte kan se denne meldingen.
-    too_few_topics_notice_MF: >-
-      La oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">starte diskusjonen!</a> Der {currentTopics, plural, one {er <strong>#</strong> tema} other {er <strong>#</strong> emner}}. Besøkende trenger mer å lese og svare på - vi anbefaler i det minste {requiredTopics, plural, one {<strong>#</strong> tema} other {<strong>#</strong> emner}}. Bare ansatte kan se denne meldingen.
     too_few_posts_notice_MF: >-
-      La oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">starte diskusjonen!</a> Der {currentPosts, plural, one {er <strong>#</strong> innlegg} other {er <strong>#</strong> innlegg}}. Besøkende trenger mer å lese og svare på — vi anbefaler minst {requiredPosts, plural, one {<strong>#</strong> innlegg} other {<strong>#</strong> innlegg}}. Bare ansatte kan se denne meldingen.
+      La oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">starte diskusjonen!</a> Der {currentPosts, plural, one {er <strong>#</strong> innlegg} other {er <strong>#</strong> innlegg}}. Besøkende trenger mer å lese og svare på — vi anbefaler minst {requiredPosts, plural, one {<strong>#</strong> innlegg} other {<strong>#</strong> innlegg}}. Bare ansatte kan se denne meldingen.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# feil/time} other {# feil/time}}</a> nådd området innstillingen grense for {limit, plural, one {# feil/time} other {# feil/time}}."
       reached_minute_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# feil/minutt} other {# feil/minutt}}</a> nådd området innstillingen grense for {limit, plural, one {# feil/minutt} other {# feil/minutt}}."
@@ -3598,7 +3594,6 @@ nb_NO:
         about: "Rediger gruppemedlemskap og navn her."
         group_members: "Gruppemedlemmer"
         delete: "Slett"
-        delete_confirm: "Slette denne grupper?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
         delete_owner_confirm: "Frata '%{username}' eier-privilegium?"
         add: "Legg til"

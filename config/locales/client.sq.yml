@@ -2065,7 +2065,6 @@ sq:
         about: "Modifiko anëtarët e grupit dhe emrin këtu"
         group_members: "Përdorues grupi"
         delete: "Fshij"
-        delete_confirm: "Fshije këtë grup?"
         delete_failed: "Nuk e fshimë dot grupin. Nëse ky është një grup automatik, nuk fshihet dot. "
         delete_owner_confirm: "Hiqe privilegjin e pronarit për '%{username}'?"
         add: "Shto"

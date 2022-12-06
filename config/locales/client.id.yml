@@ -1875,7 +1875,6 @@ id:
         title: "Grup"
         refresh: "Segarkan"
         delete: "Hapus"
-        delete_confirm: "Hapus grup ini?"
         add: "Menambahkan"
         automatic: "Otomatis"
       api:

@@ -53,17 +53,24 @@ hu:
   redirect_warning: "Nem tudtuk megerősíteni, hogy a kiválasztott hivatkozás tényleg közzé lett-e téve a fórumban. Ha mindenképp folytatni szeretné, akkor kattintson a lenti hivatkozásra."
   on_another_topic: "Egy másik témában"
   inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} általa: %{username}"
   themes:
     bad_color_scheme: "A téma nem frissíthető, érvénytelen színpaletta"
     other_error: "Hiba történt az oldal stílusának frissítésekor"
     import_error:
+      generic: Hiba történt a téma importálása során
+      upload: "Hiba a feltöltési tartalom létrehozásakor: %{name}. %{errors}"
+      about_json: "Importálási hiba: az about.json nem létezik, vagy érvénytelen. Biztos, hogy ez egy Discourse téma?"
       about_json_values: "Az about.json érvénytelen értékeket tartalmaz: %{errors}"
       modifier_values: "Az about.json módosítók érvénytelen értékeket tartalmaznak: %{errors}"
       git: "Nem sikerült klónozni a git tárolót, a hozzáférés meg lett tagadva vagy a tároló nem található"
+      git_ref_not_found: "Nem sikerült a git-hivatkozást ellenőrizni: %{ref}"
+      git_unsupported_scheme: "Nem sikerült klónozni a git repót: nem támogatott séma"
       unpack_failed: "A fájl kibontása sikertelen"
       file_too_big: "A kibontott fájl túl nagy."
       unknown_file_type: "A feltöltött fájl nem tűnik érvényes Discourse témának."
+      ssh_key_gone: "Túl sokáig várt a téma telepítésével, és az SSH-kulcs lejárt. Kérjük, próbálja meg újra."
     errors:
       component_no_user_selectable: "A téma összetevőit nem választhatja ki a felhasználó"
       component_no_default: "A témaösszetevő nem lehet alapértelmezett téma"
@@ -71,6 +78,7 @@ hu:
       no_multilevels_components: "A gyermektémákat tartalmazó témák nem lehet maguk is gyermektémák"
     settings_errors:
       invalid_yaml: "A megadott YAML érvénytelen."
+      data_type_not_a_number: "A `%{name}` típus beállítása nem támogatott. Támogatott típusok: `integer`, `bool`, `list`, `enum` és `upload`."
       name_too_long: "Az egyik beállítás neve túl hosszú. A legnagyobb hossz 255"
       default_value_missing: "A(z) „%{name}” beállításnak nincs alapértelmezett értéke."
       default_not_match_type: "A(z) „%{name}” beállítás alapértelmezett értékének típusa nem egyezik a beállítás típusával."
@@ -93,13 +101,16 @@ hu:
       show_trimmed_content: "Levágott tartalom megjelenítése"
       no_subject: "(nincs tárgy)"
       no_body: "(nincs törzs)"
+      missing_attachment: "(A(z) %{filename} melléklet hiányzik)"
       errors:
         empty_email_error: "Akkor fordul elő, ha üres volt a kapott nyers e-mail."
         no_message_id_error: "Akkor történik, ha a levélnek nincs „Message-Id” fejléce."
         inactive_user_error: "Akkor fordul elő, ha a feladó nem aktív."
         strangers_not_allowed_error: "Akkor fordul elő, ha a felhasználó új témát akar létrehozni egy olyan kategóriában, amelynek nem tagja."
+        bounced_email_error: "Az e-mail egy visszapattant e-mail jelentés."
         unsubscribe_not_allowed: "Akkor történik, ha e-mailben történő leiratkozás nem engedélyezett ennek a felhasználónak."
       unrecognized_error: "Ismeretlen hiba"
+    view_redacted_media: "Média megtekintése"
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
@@ -120,6 +131,11 @@ hu:
       has_already_been_used: "már használatban van"
       inclusion: nincs benne a listában
       invalid: érvénytelen
+      is_invalid: "nem tűnik egyértelműnek, ez egy teljes mondat?"
+      is_invalid_meaningful: "nem tűnik egyértelműnek, a legtöbb szó ugyanazokat a betűket tartalmazza újra és újra?"
+      is_invalid_unpretentious: "nem tűnik egyértelműnek, egy vagy több szó nagyon hosszú?"
+      is_invalid_quiet: "homályosnak tűnik, CSUTA BETŐVEL akarta írni?"
+      invalid_timezone: "'%{tz}' nem érvényes időzóna"
       contains_censored_words: "tartalmazza a következő nem engedélyezett szavakat: %{censored_words}"
       less_than: kevesebbnek kell lenni, mint %{count}
       less_than_or_equal_to: kisebb vagy egyenlőnek kell lennie, mint %{count}
@@ -129,6 +145,7 @@ hu:
       record_invalid: ! "Érvényesítés sikertelen: %{errors}"
       max_emojis: "nem lehet több mint %{max_emojis_count} emodzsi"
       emojis_disabled: "nem tartalmazhat emodzsit"
+      ip_address_already_screened: "már szerepel egy meglévő szabályban"
       restrict_dependent_destroy:
         one: "Nem lehet törölni a rekordot, mert létezik egy függő %{record}"
         other: "Nem lehet törölni a rekordot, mert létezik függő %{record}"
@@ -142,16 +159,25 @@ hu:
         one: nem megfelelő hosszúságú. (%{count} karakter szükséges)
         other: nem megfelelő hosszúságú. (%{count} karakter szükséges)
       other_than: "nem lehet %{count}"
+      auth_overrides_username: "A felhasználónevet frissíteni kell a hitelesítési szolgáltató oldalán, mivel az `auth_overrides_username` beállítás engedélyezve van."
     template:
       body: ! "Problémák vannak az alábbi mezőkkel:"
     embed:
       load_from_remote: "Hiba történt a bejegyzés betöltésekor."
     site_settings:
+      invalid_category_id: "Olyan kategóriát adott meg, amely nem létezik"
       default_categories_already_selected: "Nem választhat olyan kategóriát, amely már szerepel egy másik listában."
+      default_tags_already_selected: "Más listában használt címke nem választható ki."
       s3_upload_bucket_is_required: "Nem lehet engedélyezni a feltöltést az S3-ba, amíg nincs megadva az „s3_upload_bucket”."
+      enable_s3_uploads_is_required: "Az S3 leltár használatát csak akkor engedélyezheti, ha engedélyezte az S3 feltöltéseket."
+      secure_uploads_requirements: "A biztonságos feltöltés engedélyezése előtt engedélyezni kell az S3 feltöltést."
+      share_quote_facebook_requirements: "Be kell állítania egy Facebook-alkalmazás azonosítót, hogy engedélyezhesse a megosztást Facebookon."
+      second_factor_cannot_enforce_with_socials: "A közösségi bejelentkezések engedélyezése mellett nem lehet 2FA-t érvényesíteni. Először le kell tiltania ezt a bejelentkezést: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "A 2FA nem kényszeríthető, ha a helyi bejelentkezés le van tiltva."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "A 2FA nem kényszeríthető, ha a DiscourseConnect engedélyezett."
       local_login_cannot_be_disabled_if_second_factor_enforced: "A helyi bejelentkezés nem tiltható le, ha a 2FA kényszerítve van. A helyi bejelentkezések letiltása előtt tiltsa le a kényszerített 2FA-t."
+      cannot_enable_s3_uploads_when_s3_enabled_globally: "Nem engedélyezheti az S3 feltöltést, mivel az S3 feltöltés már globálisan engedélyezve van, és a helyszintű engedélyezés kritikus problémákat okozna a feltöltésekkel kapcsolatban."
+      cors_origins_should_not_have_trailing_slash: "A CORS-eredethez nem szabad hozzáadni az utolsóként használt perjelet (/)."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "A felhasználói ügynököknek legalább 3 karakteresnek kell lenniük, hogy elkerülje az emberi felhasználók téves korlátozását."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "A következő értékek egyikét sem adhatja hozzá a beállításhoz: %{values}."
       twitter_summary_large_image_no_svg: "A twitter:image metaadatokhoz használt Twitter összefoglaló képek nem lehetnek .svg képek."
@@ -339,6 +365,7 @@ hu:
               too_many_users: "Egyszerre csak egy felhasználónak küldhet figyelmeztetést."
               no_user_selected: "Érvényes felhasználót kell választania."
               reply_by_email_disabled: "Az e-mailes válasz letiltva."
+              unable_to_unlist: "Sajnos nem hozhat létre listán nem szereplő témát."
         user:
           attributes:
             password:
@@ -619,7 +646,8 @@ hu:
     mailing_list_mode: "Levelezőlista mód kikapcsolása"
     all: "Ne küldjön nekem semmilyen e-mailt a %{sitename} oldalról"
     different_user_description: "Jelenleg más felhasználóként van bejelentkezve, mint amit e-mailben küldtünk. Kérjük, jelentkezz ki, vagy lépj be anonim módban, és próbálkozz újra."
-    not_found_description: "Sajnáljuk, nem találtuk ezt a leiratkozást. Lehetséges, hogy az e-mailben szereplő link túl régi és lejárt?"
+    not_found_description: Sajnáljuk, de nem találtuk ezt az előfizetést. Lehetséges, hogy az e-mailben található link túl régi és lejárt?"
+    user_not_found_description: "Sajnáljuk, nem találtunk felhasználót ehhez az előfizetéshez. Valószínűleg megpróbál leiratkozni egy olyan fiókról, amely már nem létezik."
     log_out: "Kijelentkezés"
     submit: "Beállítások mentése"
     digest_frequency:
@@ -645,6 +673,7 @@ hu:
     scopes:
       message_bus: "Élő frissítések"
       one_time_password: "Hozzon létre egyszeri bejelentkezési tokent"
+      user_status: "Felhasználói állapot olvasása és frissítése"
   reports:
     default:
       labels:
@@ -698,10 +727,12 @@ hu:
         author: Szerző
         edit_reason: Indok
     consolidated_api_requests:
+      title: "Összevont API-kérelmek"
       xaxis:
         api: "API"
         user_api: "Felhasználói API"
       yaxis: "Nap"
+      description: "API-kérelmek a normál API-kulcsokhoz és a felhasználói API-kulcsokhoz."
     dau_by_mau:
       xaxis: "Nap"
     daily_engaged_users:
@@ -964,6 +995,7 @@ hu:
     default_other_like_notification_frequency: "A felhasználók értesítése a kedvelésekről alapértelmezett esetben."
     company_name: "Cégnév"
     use_email_for_username_and_name_suggestions: "Használja az e-mail címek első részét a felhasználónév- és névjavaslatokhoz. Vegye figyelembe, hogy ez megkönnyíti a nyilvánosság számára a teljes felhasználói e-mail címek kitalálását (mivel az emberek nagy része olyan gyakori szolgáltatásokat használ, mint a „gmail.com”)."
+    enable_experimental_topic_timeline_groups: "KÍSÉRLETI: A kiválasztott csoportok felhasználóinak megjelenik az átdolgozott téma idővonala"
     errors:
       invalid_email: "Érvénytelen e-mail cím."
       invalid_username: "Nincs ilyen nevű felhasználó."
@@ -2115,8 +2147,6 @@ hu:
             label: "Elsődleges logó"
           logo_small:
             label: "Négyzet alakú logó"
-          large_icon:
-            label: "Nagy ikon"
       corporate:
         fields:
           company_name:

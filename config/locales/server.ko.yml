@@ -883,7 +883,6 @@ ko:
     mailing_list_mode: "메일링 리스트 모드 끄기"
     all: "%{sitename}의 메일 전송 중지"
     different_user_description: "이메일이 전송되는 사용자가 아닌 계정으로 로그인했습니다. 로그아웃한 후 익명 모드를 시작하고 다시 시도하세요."
-    not_found_description: "이 구독 해제를 찾을 수 없습니다. 이메일의 링크가 너무 오래되어 만료되었을 수 있습니다."
     log_out: "로그아웃"
     submit: "환경설정 저장"
     digest_frequency:
@@ -4064,10 +4063,6 @@ ko:
             label: "기본 로고"
           logo_small:
             label: "스퀘어 로고"
-          favicon:
-            label: "브라우저 아이콘"
-          large_icon:
-            label: "큰 아이콘"
       corporate:
         title: "소속"
         fields:

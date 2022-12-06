@@ -262,6 +262,7 @@ hu:
         mention: "Csak megemlítésnél"
         always: "Összes tevékenységnél"
       settings:
+        channel_wide_mentions_label: "Engedélyezve az @all és @here említések"
         auto_join_users_label: "Felhasználók automatikus hozzáadása"
         enable_auto_join_users: "Az összes nemrégiben aktív felhasználó automatikus hozzáadása"
         desktop_notification_level: "Asztali értesítések"

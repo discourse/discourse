@@ -1463,7 +1463,6 @@ be:
         about: "Edit your group membership and names here"
         group_members: "Удзельнікі групы"
         delete: "выдаліць"
-        delete_confirm: "Выдаліць гэтую групу?"
         delete_failed: "Не атрымалася выдаліць групу. Калі гэта - аўтаматычная група, яе немагчыма знішчыць."
         add: "дадаць"
       api:

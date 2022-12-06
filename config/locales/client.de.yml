@@ -1722,12 +1722,6 @@ de:
       logout_disabled: "Die Abmeldung ist deaktiviert, während sich die Website im Nur-Lesen-Modus befindet."
     staff_writes_only_mode:
       enabled: "Diese Website befindet sich im Nur-Team-Modus. Du kannst weiterhin Inhalte lesen, aber das Antworten, Vergeben von „Gefällt mir“ und Durchführen einiger weiterer Aktionen ist derzeit nur für Team-Mitglieder möglich."
-    too_few_topics_and_posts_notice_MF: >-
-      Lass <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">die Diskussion beginnen!</a> Es {currentTopics, plural, one {ist <strong>#</strong> Thema} other {sind <strong>#</strong> Themen}} und {currentPosts, plural, one {<strong>#</strong> Beitrag} other {<strong>#</strong> Beiträge}} vorhanden. Besucher brauchen mehr zum Lesen und Beantworten – wir empfehlen mindestens {requiredTopics, plural, one {<strong>#</strong> Thema} other {<strong>#</strong> Themen}} und {requiredPosts, plural, one {<strong>#</strong> Beitrag} other {<strong>#</strong> Beiträge}}. Dieser Hinweis wird nur Team-Mitgliedern angezeigt.
-    too_few_topics_notice_MF: >-
-      Lass <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">die Diskussion beginnen!</a> Es {currentTopics, plural, one {ist <strong>#</strong> Thema} other {sind <strong>#</strong> Themen}} vorhanden. Besucher brauchen mehr zum Lesen und Beantworten – wir empfehlen mindestens {requiredTopics, plural, one {<strong>#</strong> Thema} other {<strong>#</strong> Themen}}. Dieser Hinweis wird nur Team-Mitgliedern angezeigt.
-    too_few_posts_notice_MF: >-
-      Lass <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">die Diskussion beginnen!</a> Es {currentPosts, plural, one {ist <strong>#</strong> Beitrag} other {sind <strong>#</strong> Beiträge}} vorhanden. Besucher brauchen mehr zum Lesen und Beantworten – wir empfehlen mindestens {requiredPosts, plural, one {<strong>#</strong> Beitrag} other {<strong>#</strong> Beiträge}}. Dieser Hinweis wird nur Team-Mitgliedern angezeigt.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Stunde} other {# Fehlern/Stunde}} erreicht."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Minute} other {# Fehler/Minute}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Minute} other {# Fehlern/Minute}} erreicht."
@@ -4078,10 +4072,6 @@ de:
         about: "Hier kannst du Gruppenzugehörigkeiten und Gruppennamen bearbeiten."
         group_members: "Gruppenmitglieder"
         delete: "Löschen"
-        delete_confirm: "Diese Gruppe löschen?"
-        delete_with_messages_confirm:
-          one: "Wenn du diese Gruppe löschst, wird %{count} Nachricht verwaist sein, die Gruppenmitglieder haben keinen Zugriff mehr darauf.<br><br>Bist du dir sicher?"
-          other: "Wenn du diese Gruppe löschst, werden %{count} Nachrichten verwaist sein, die Gruppenmitglieder haben keinen Zugriff mehr darauf.<br><br>Bist du dir sicher?"
         delete_failed: "Gruppe konnte nicht gelöscht werden. Wenn dies eine automatische Gruppe ist, kann sie nicht gelöscht werden."
         delete_automatic_group: Dies ist eine automatische Gruppe und sie kann nicht gelöscht werden.
         delete_owner_confirm: "Eigentümerrechte für „%{username}“ entfernen?"

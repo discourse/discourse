@@ -539,6 +539,7 @@ nl:
               target_user_not_found: "Een van de gebruikers waarnaar je dit bericht stuurt, kon niet worden gevonden."
               unable_to_update: "Er is een fout opgetreden bij het bijwerken van dat topic."
               unable_to_tag: "Er is een fout opgetreden bij het taggen van het topic."
+              unable_to_unlist: "Sorry, je kunt geen verborgen topic maken."
             featured_link:
               invalid: "is ongeldig. URL moet http:// of https:// bevatten."
         user:
@@ -969,7 +970,8 @@ nl:
     mailing_list_mode: "Mailinglijstmodus uitschakelen"
     all: "Stuur me geen e-mail van %{sitename}"
     different_user_description: "Je bent momenteel aangemeld als een andere gebruiker dan die we een e-mail hebben gestuurd. Meld je af of open de anonieme modus en probeer het opnieuw."
-    not_found_description: "Sorry, we konden deze afmelding niet vinden. De link in je e-mail is mogelijk te oud en verlopen."
+    not_found_description: Sorry, we konden dat abonnement niet vinden. Het is mogelijk dat de link in je e-mail te oud is en verlopen is?"
+    user_not_found_description: "Sorry, we konden geen gebruiker vinden voor dit abonnement. Je probeert waarschijnlijk een account op te zeggen dat niet meer bestaat."
     log_out: "Afmelden"
     submit: "Voorkeuren opslaan"
     digest_frequency:
@@ -1098,6 +1100,13 @@ nl:
         editor: Bewerker
         author: Auteur
         edit_reason: Reden
+    consolidated_api_requests:
+      title: "Geconsolideerde API-verzoeken"
+      xaxis:
+        api: "API"
+        user_api: "Gebruikers-API"
+      yaxis: "Dag"
+      description: "API-verzoeken voor reguliere API-sleutels en gebruikers-API-sleutels."
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Day"
@@ -2132,6 +2141,7 @@ nl:
     default_sidebar_categories: "Geselecteerde categorieën worden standaard weergegeven onder de sectie Categorieën van de zijbalk."
     default_sidebar_tags: "Geselecteerde tags worden standaard weergegeven onder de sectie Tags van de zijbalk."
     enable_new_user_profile_nav_groups: "EXPERIMENTEEL: gebruikers van de geselecteerde groepen krijgen het nieuwe navigatiemenu voor gebruikersprofielen te zien"
+    enable_experimental_topic_timeline_groups: "EXPERIMENTEEL: gebruikers in de geselecteerde groepen krijgen de tijdlijn van het geherformuleerde topic te zien"
     errors:
       invalid_css_color: "Ongeldige kleur. Voer een kleurnaam of hexadecimale waarde in."
       invalid_email: "Ongeldig e-mailadres."
@@ -4544,12 +4554,6 @@ nl:
           logo_small:
             label: "Vierkant logo"
             description: "Een vierkante versie van je logo. Wordt linksboven weergegeven bij omlaag scrollen en bij delen op sociale platformen. Idealiter minimaal 512x512."
-          favicon:
-            label: "Browserpictogram"
-            description: "Pictogram dat je website representeert in webbrowsers en dat er goed uitziet in kleine formaten. PNG of JPG wordt aanbevolen. Standaard wordt het vierkante logo gebruikt."
-          large_icon:
-            label: "Groot pictogram"
-            description: "Pictogram dat je website representeert op mobiele apparaten en dat er goed uitziet in grote formaten. Idealiter groter dan 512x512. Standaard wordt het vierkante logo gebruikt."
       corporate:
         title: "Je organisatie"
         fields:

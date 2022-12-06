@@ -326,6 +326,7 @@ fa_IR:
               too_many_users: "شما در هر بار می توانید به یک کاربر اخطار ارسال نمایید."
               no_user_selected: "باید یک کاربر معتبر انتخاب کنید"
               reply_by_email_disabled: "پاسخ با ایمیل از کار انداخته شده است."
+              unable_to_unlist: "با عرض پوزش، شما نمی‌توانید یک موضوع فهرست نشده ایجاد کنید."
             featured_link:
               invalid: "نامعتبر است. لینک باید شامل http:// یا https:// باشد."
         user:
@@ -628,6 +629,7 @@ fa_IR:
     unwatch_category: "موضوعات دسته‌بندی %{category} را مشاهده نکنید"
     mailing_list_mode: "غیرفعال سازی حالت فهرست ایمیل"
     different_user_description: "در حال حاضر با نام کاربری متفاوتی با آن که برایتان ایمیل شده است وارد شده‌اید. لطفا خارج شوید یا در حالت ناشناس وارد شده و دوباره تلاش کنید."
+    not_found_description: با عرض پوزش، نتوانستیم آن اشتراک را پیدا کنیم. ممکن است پیوند ایمیل شما خیلی قدیمی باشد و منقضی شده باشد؟
     log_out: "خروج"
     digest_frequency:
       never: "هیچوقت"
@@ -656,6 +658,7 @@ fa_IR:
       session_info: "خواندن اطلاعات session کاربر"
       read: "خواندن همه"
       write: "نوشتن همه"
+      user_status: "خواندن و به‌روزرسانی وضعیت کاربر"
   reports:
     default:
       labels:
@@ -694,10 +697,12 @@ fa_IR:
         editor: ویرایشگر
         edit_reason: دلیل
     consolidated_api_requests:
+      title: "درخواست‌های API تلفیقی"
       xaxis:
         api: "API"
         user_api: "API کاربر"
       yaxis: "روز"
+      description: "درخواست‌های API برای کلیدهای API معمولی و کلیدهای API کاربر."
     dau_by_mau:
       xaxis: "روز"
     daily_engaged_users:
@@ -2311,8 +2316,6 @@ fa_IR:
         fields:
           logo:
             label: "لوگو اصلی"
-          large_icon:
-            label: "آیکن بزرگ"
       corporate:
         title: "سازمان شما"
         fields:

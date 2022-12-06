@@ -1653,12 +1653,6 @@ zh_CN:
       logout_disabled: "当站点处于只读模式时，退出被禁用。"
     staff_writes_only_mode:
       enabled: "此站点处于管理人员专用模式。请继续浏览，但回复、赞和其他操作仅限于管理人员。"
-    too_few_topics_and_posts_notice_MF: >-
-      让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">开始讨论</a>吧！现在有 {currentTopics, plural, one {<strong>#</strong> 个话题} other {<strong>#</strong> 个话题}}和 {currentPosts, plural, one {<strong>#</strong> 个帖子} other {<strong>#</strong> 个帖子}}。访客需要阅读和回复更多 - 我们建议至少 {requiredTopics, plural, one {<strong>#</strong> 个话题} other {<strong>#</strong> 个话题}}和 {requiredPosts, plural, one {<strong>#</strong> 个帖子} other {<strong>#</strong> 个帖子}}。只有管理人员可以看到此消息。
-    too_few_topics_notice_MF: >-
-      让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">开始讨论</a>吧！现在有 {currentTopics, plural, one {<strong>#</strong> 个话题} other {<strong>#</strong> 个话题}}。访客需要阅读和回复更多 - 我们建议至少 {requiredTopics, plural, one {<strong>#</strong> 个话题} other {<strong>#</strong> 个话题}}。只有管理人员可以看到此消息。
-    too_few_posts_notice_MF: >-
-      让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">开始讨论</a>吧！现在有 {currentPosts, plural, one {<strong>#</strong> 个帖子} other {<strong>#</strong> 个帖子}}。访客需要阅读和回复更多 - 我们建议至少 {requiredPosts, plural, one {<strong>#</strong> 个帖子} other {<strong>#</strong> 个帖子}}。只有管理人员可以看到此消息。
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# 个错误/小时} other {# 个错误/小时}}</a>达到了站点设置中 {limit, plural, one {# 个错误/小时} other {# 个错误/小时}}的限制。"
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# 个错误/分钟} other {# 个错误/分钟}}</a>达到了站点设置中 {limit, plural, one {# 个错误/分钟} other {# 个错误/分钟}}的限制。"
@@ -3898,9 +3892,6 @@ zh_CN:
         about: "在此处编辑您的群组成员资格和名称"
         group_members: "群组成员"
         delete: "删除"
-        delete_confirm: "删除此群组？"
-        delete_with_messages_confirm:
-          other: "删除此群组将导致 %{count} 条消息被孤立，群组成员将无法再访问它们。<br><br>确定吗？"
         delete_failed: "无法删除群组。如果此群组是自动生成的，则无法删除。"
         delete_automatic_group: 这是一个自动生成的群组，无法删除。
         delete_owner_confirm: "移除 '%{username}' 的所有者权限？"

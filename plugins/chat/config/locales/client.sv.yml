@@ -274,6 +274,8 @@ sv:
         mention: "Endast för omnämnanden"
         always: "För all aktivitet"
       settings:
+        channel_wide_mentions_label: "Tillåt @all och @here omnämnanden"
+        channel_wide_mentions_description: "Tillåt användare att avisera alla #%{channel}-medlemmar med @all eller bara de som är aktiva för tillfället med @here"
         auto_join_users_label: "Lägg till användare automatiskt"
         auto_join_users_info: "Kontrollera varje timme vilka användare som har varit aktiva under de senaste 3 månaderna och, om de har tillgång till kategorin %{category}, lägg till dem i den här kanalen."
         enable_auto_join_users: "Lägg automatiskt till alla nyligen aktiva användare"

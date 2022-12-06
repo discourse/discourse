@@ -965,7 +965,6 @@ de:
     mailing_list_mode: "Mailinglisten-Modus ausschalten"
     all: "Sende mir keine E-Mail mehr von %{sitename}"
     different_user_description: "Du bist derzeit als ein anderer Benutzer angemeldet als der, dem wir die E-Mail geschickt haben. Bitte melde dich ab oder gehe in den anonymen Modus und versuche es erneut."
-    not_found_description: "Entschuldige, wir konnten dein Abo nicht abbestellen. Kann es sein, dass der Link aus deiner E-Mail zu alt und abgelaufen ist?"
     log_out: "Abmelden"
     submit: "Einstellungen speichern"
     digest_frequency:
@@ -4534,12 +4533,6 @@ de:
           logo_small:
             label: "Quadratisches Logo"
             description: "Eine quadratische Version deines Logos. Es wird beim Scrollen nach unten und beim Teilen auf sozialen Netzwerken oben links angezeigt. Idealerweise mindestens 512 x 512 Pixel."
-          favicon:
-            label: "Browser-Symbol"
-            description: "Ein Icon, das deine Website in Webbrowsern repräsentiert und auch in kleinen Größen gut aussieht. PNG oder JPG wird empfohlen. Standardmäßig wird das quadratische Logo verwendet."
-          large_icon:
-            label: "Großes Symbol"
-            description: "Ein Icon, das deine Website auf mobilen Geräten repräsentiert und auch bei größeren Größen gut aussieht. Idealerweise größer als 512 x 512 Pixel. Standardmäßig wird das quadratische Logo verwendet."
       corporate:
         title: "Deine Organisation"
         fields:

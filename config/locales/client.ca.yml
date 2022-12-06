@@ -3076,7 +3076,6 @@ ca:
         about: "Editeu aquí la vostra afiliació a grups i els vostres noms"
         group_members: "Membres de grup"
         delete: "Suprimeix"
-        delete_confirm: "Voleu suprimir aquest grup?"
         delete_failed: "És impossible suprimir aquest grup. Si és un grup automàtic, no pot ser destruït."
         delete_owner_confirm: "Voleu eliminar privilegis de propietari per a '%{username}'?"
         add: "Afegeix"

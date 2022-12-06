@@ -1918,7 +1918,6 @@ sr:
         about: "Ovde izmenite svoje članstvo u grupama i imenima grupa"
         group_members: "Članovi grupe"
         delete: "Obriši"
-        delete_confirm: "Obriši ovu grupu?"
         delete_failed: "Nemoguće obrisati grupu. Ako je ovo automatska grupa, ne možete je obrisati."
         add: "Dodaj"
         custom: "Posebna"

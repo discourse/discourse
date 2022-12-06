@@ -2204,8 +2204,6 @@ pt:
         fields:
           logo:
             label: "Logo Primário"
-          large_icon:
-            label: "Ícone Grande"
       corporate:
         fields:
           contact_url:

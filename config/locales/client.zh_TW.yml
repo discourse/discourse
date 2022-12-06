@@ -3051,7 +3051,6 @@ zh_TW:
         about: "請在此編輯你的群組成員與名稱"
         group_members: "群組成員"
         delete: "刪除"
-        delete_confirm: "刪除此群組？"
         delete_failed: "無法刪除群組，自動建立的群組無法刪除。"
         delete_owner_confirm: "移除“%{username}”的權限？"
         add: "加入"

@@ -2422,7 +2422,6 @@ sk:
         about: "Tu upravíte Vaše členstvo v skupinách a mená"
         group_members: "Členovia skupiny"
         delete: "Odstrániť"
-        delete_confirm: "Zmazať túto skupinu?"
         delete_failed: "Nepodarilo sa zmazať skupinu. Pokiaľ je skupina automatická, nemôže byť zrušená."
         delete_owner_confirm: "Odobrať vlastnícke práva %{username}'?"
         add: "Pridať"

@@ -968,7 +968,6 @@ pt_BR:
     mailing_list_mode: "Desativar o modo lista de endereçamento"
     all: "Não enviar e-mail de %{sitename}"
     different_user_description: "No momento, você está entrou como um(a) usuário(a) diferente daquele(a) para quem mandamos o e-mail. Saia ou entre no modo anônimo(a) de seu navegador e tente novamente."
-    not_found_description: "Desculpe, não foi possível encontrar o cancelamento desta inscrição. Talvez o link no seu e-mail seja muito antigo e tenha expirado."
     log_out: "Sair"
     submit: "Salvar preferências"
     digest_frequency:
@@ -4522,12 +4521,6 @@ pt_BR:
           logo_small:
             label: "Logotipo quadrado"
             description: "Uma versão quadrada da sua logo. Exibida no canto superior esquerdo da página quando rolado para baixo em um navegador e exibido ao compartilhar em redes sociais. Idealmente deve ter ao menos 512x512."
-          favicon:
-            label: "Ícone do navegador"
-            description: "Ícone usado para representar seu site em Navegadores Web e fique bem em tamanhos pequenos. PNG ou JPG é recomendado. O logo quadrado é usado por padrão."
-          large_icon:
-            label: "Ícone grande"
-            description: "Ícone usado para representar seu site em dispositivos móveis e fique bem em tamanhos maiores. Idealmente maior que 512x512. O logo quadrado é usado por padrão."
       corporate:
         title: "Sua organização"
         fields:

@@ -890,7 +890,6 @@ da:
     mailing_list_mode: "Sluk mailing list modus"
     all: "Send mig ikke nogen mail fra %{sitename}"
     different_user_description: "Du er i øjeblikket logget ind som en anden bruger, end den vi har emailet. Venligst log ud, eller gå i anonym modus, og prøv igen"
-    not_found_description: "Beklager, vi kunne ikke finde denne afmelding. Det er muligt at linket i din e-mail er for gammel og nu er udløbet?"
     log_out: "Log ud"
     submit: "Gem indstillinger"
     digest_frequency:
@@ -3571,10 +3570,6 @@ da:
             label: "Primært logo"
           logo_small:
             label: "Firkantet Logo"
-          favicon:
-            label: "Browser Ikon"
-          large_icon:
-            label: "Stort ikon"
       corporate:
         fields:
           company_name:

@@ -1717,12 +1717,8 @@ hu:
       logout_disabled: "A kilépés le van tiltva, amíg az oldal írásvédett módban van."
     staff_writes_only_mode:
       enabled: "Ez az oldal csak a munkatársaknak van fenntartva. Továbbra is böngészheted, de a válaszadás és egyéb műveletek csak a munkatársak számára elérhetők."
-    too_few_topics_and_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Kezdjük el a beszélgetést!</a> Jelenleg {currentTopics, plural, one {<strong>#</strong> téma} other {<strong>#</strong> téma}} és {currentPosts, plural, one {<strong>#</strong> bejegyzés} other {<strong>#</strong> bejegyzés}} található. A látogatóknak több olvasnivalóra van szükségük – azt javasoljuk, hogy legalább {requiredTopics, plural, one {<strong>#</strong> téma} other {<strong>#</strong> téma}} és {requiredPosts, plural, one {<strong>#</strong> bejegyzés} other {<strong>#</strong> bejegyzés}} legyen. Csak a stáb láthatja ezt az üzenetet.
-    too_few_topics_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Kezdjük el a beszélgetést!</a> Jelenleg {currentTopics, plural, one {<strong>#</strong> téma} other {<strong>#</strong> téma}} található. A látogatóknak több olvasnivalóra van szükségük – azt javasoljuk, hogy legalább {requiredTopics, plural, one {<strong>#</strong> téma} other {<strong>#</strong> téma}} legyen. Csak a stáb láthatja ezt az üzenetet.
     too_few_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Kezdjük el a beszélgetést!</a> Jelenleg {currentPosts, plural, one {<strong>#</strong> bejegyzés} other {<strong>#</strong> bejegyzés}} található. A látogatóknak több olvasnivalóra van szükségük – azt javasoljuk, hogy legalább {requiredPosts, plural, one {<strong>#</strong> bejegyzés} other {<strong>#</strong> bejegyzés}} legyen. Csak a stáb láthatja ezt az üzenetet.
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">Kezdjük el a beszélgetést!</a> Jelenleg {currentPosts, plural, one {<strong>#</strong> bejegyzés} other {<strong>#</strong> bejegyzés}} található. A látogatóknak több olvasnivalóra van szükségük – azt javasoljuk, hogy legalább {requiredPosts, plural, one {<strong>#</strong> bejegyzés} other {<strong>#</strong> bejegyzés}} legyen. Csak a stáb láthatja ezt az üzenetet.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hiba/óra} other {# hiba/óra}}</a>, elérte az oldal beállításiban megadott {limit, plural, one {# hiba/órás} other {# hiba/órás}} korlátot."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hiba/perc} other {# hiba/perc}}</a>, elérte az oldal beállításiban megadott {limit, plural, one {# hiba/perces} other {# hiba/perces}} korlátot."
@@ -2923,6 +2919,7 @@ hu:
         file_too_large_humanized: "Sajnos ez a fájl túl nagy (a maximális méret %{max_size}). Töltse fel a nagyméretű fájlt egy felhőmegosztó szolgáltatásba, majd illessze be annak a linkjét."
         too_many_uploads: "Sajnos egyszerre csak egy fájlt tölthet fel."
         upload_not_authorized: "Sajnos a feltölteni kívánt fájl nem engedélyezett (engedélyezett kiterjesztések: %{authorized_extensions})."
+        no_uploads_authorized: "Sajnos nincs engedélyezve a fájlok feltöltése."
         image_upload_not_allowed_for_new_user: "Sajnos az új felhasználók nem tölthetnek fel képeket."
         attachment_upload_not_allowed_for_new_user: "Sajnos az új felhasználók nem tölthetnek fel mellékleteket."
         attachment_download_requires_login: "Sajnos be kell jelentkeznie, hogy letölthesse a mellékleteket."
@@ -3815,7 +3812,7 @@ hu:
         refresh: "Frissítés"
         group_members: "A csoport tagjai"
         delete: "Törlés"
-        delete_confirm: "Törlöd a csoportot?"
+        delete_confirm: "Biztos, hogy törölni szeretné ezt a csoportot?"
         delete_failed: "A csoport törlése sikertelen. Ha ez egy automatikusan létrehozott csoport, akkor nem törölhető."
         delete_automatic_group: Ez egy automatikus csoport, nem törölhető.
         delete_owner_confirm: "Eltávolítja „%{username}” tulajdonosi jogosultságát?"

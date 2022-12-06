@@ -1538,12 +1538,8 @@ gl:
       enabled: "Este sitio está en modo só-lectura. Continúe navegando pero responder, gustar e outras accións estarán desactivadas polo de agora."
       login_disabled: "Cando o sitio está no modo de só-lectura, desactívase o inicio de sesión."
       logout_disabled: "O peche de sesión desactívase mentres o sitio está en modo de só lectura."
-    too_few_topics_and_posts_notice_MF: >-
-      Comecemos <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/"> a discusión!</a> E {currentTopics, plural, one {hai <strong>#</strong> temas} other {hai <strong>#</strong> temas}} e {currentPosts, plural, one {<strong>#</strong> publicación} other {<strong>#</strong> publicacións}}. Os visitantes necesitan máis para ler e responder – recomendamos que haxa cando menos {requiredTopics, plural, one {<strong>#</strong> tema} other {<strong>#</strong> temas}} e {requiredPosts, plural, one {<strong>#</strong> publicación} other {<strong>#</strong> publicacións}}. Soamente o equipo pode ver esta mensaxe.
-    too_few_topics_notice_MF: >-
-      Comecemos <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">a discusión!</a> E {currentTopics, plural, one {hai <strong>#</strong> temas} other {hai <strong>#</strong> temas}}. Os visitantes necesitan máis para ler e responder – recomendamos que haxa cando menos {requiredTopics, plural, one {<strong>#</strong> tema} other {<strong>#</strong> temas}}. Soamente o equipo pode ver esta mensaxe.
     too_few_posts_notice_MF: >-
-      Comecemos <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">a discusión!</a> E {currentPosts, plural, one {hai <strong>#</strong> publicación} other {hai <strong>#</strong> publicacións}}. Os visitantes necesitan máis para ler e responder – recomendamos que haxa cando menos {requiredPosts, plural, one {<strong>#</strong> publicación} other {<strong>#</strong> publicacións}}. Soamente o equipo pode ver esta mensaxe.
+      Comecemos <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">a discusión!</a> E {currentPosts, plural, one {hai <strong>#</strong> publicación} other {hai <strong>#</strong> publicacións}}. Os visitantes necesitan máis para ler e responder – recomendamos que haxa cando menos {requiredPosts, plural, one {<strong>#</strong> publicación} other {<strong>#</strong> publicacións}}. Soamente o equipo pode ver esta mensaxe.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> acadou o límite configurado no sitio de {limit, plural, one {# erro/hora} other {# erros/hora}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> acadou o límite configurado no sitio de {limit, plural, one {# erro/minuto} other {# erros/minuto}}."
@@ -3541,10 +3537,6 @@ gl:
         about: "Edite aquí a súa pertenza a un grupo e nomes"
         group_members: "Membros do grupo"
         delete: "Eliminar"
-        delete_confirm: "Eliminar este grupo?"
-        delete_with_messages_confirm:
-          one: "Se elimina este grupo, quedará orfa %{count} mensaxe, os membros do grupo xa non terán acceso a ela.<br><br>Está seguro?"
-          other: "Se elimina este grupo, quedarán orfas %{count} mensaxes, os membros do grupo xa non terán acceso a elas.<br><br>Está seguro?"
         delete_failed: "Non é posíbel eliminar o grupo. Se este é un grupo automático, non se pode destruír."
         delete_automatic_group: Este é un grupo automático e non se pode eliminar.
         delete_owner_confirm: "Eliminar os privilexios de usuario de «%{username}»?"

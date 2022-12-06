@@ -3691,7 +3691,6 @@ lt:
         about: "Čia galite redaguoti savo grupių narystę ir pavadinimus"
         group_members: "Grupės nariai"
         delete: "Ištrinti"
-        delete_confirm: "Ištrinti šią grupę?"
         delete_failed: "Negalima ištrinti grupės. Jei tai yra automatinė grupė, jos negalima ištrinti."
         delete_automatic_group: Tai yra automatinė grupė ir jos negalima ištrinti.
         delete_owner_confirm: "Ar nori pašalinti valdytojo privilegijas '%{username}'?"
