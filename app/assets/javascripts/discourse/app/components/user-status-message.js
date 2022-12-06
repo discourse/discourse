@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { until } from "discourse/lib/formatter";
+import { AnonymousUser } from "discourse/lib/anonymous-user";
 
 export default class UserStatusMessage extends Component {
   tagName = "";
@@ -12,26 +13,7 @@ export default class UserStatusMessage extends Component {
       return null;
     }
 
-    return until(
-      this.status.ends_at,
-      this.currentUserTimezone,
-      this.currentUserLocale
-    );
-  }
-
-  get currentUserTimezone() {
-    if (this.currentUser) {
-      return this.currentUser.user_option.timezone;
-    } else {
-      return moment.tz.guess();
-    }
-  }
-
-  get currentUserLocale() {
-    if (this.currentUser) {
-      this.currentUser.locale;
-    } else {
-      return "";
-    }
+    const user = this.currentUser || new AnonymousUser();
+    return until(this.status.ends_at, user.timezone, user.locale);
   }
 }
