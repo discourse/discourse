@@ -105,21 +105,21 @@ acceptance("User Preferences - Second Factor", function (needs) {
     await click(".totp .btn-danger");
     assert.strictEqual(
       query("#dialog-title").innerText.trim(),
-      "Disabling an authenticator"
+      "Deleting an authenticator"
     );
     await click(".dialog-close");
 
     await click(".security-key .btn-danger");
     assert.strictEqual(
       query("#dialog-title").innerText.trim(),
-      "Disabling an authenticator"
+      "Deleting an authenticator"
     );
     await click(".dialog-close");
 
     await click(".btn-danger.btn-icon-text");
     assert.strictEqual(
       query("#dialog-title").innerText.trim(),
-      "Are you sure you want to disable all two-factor methods?"
+      "Are you sure you want to disable two-factor authentication?"
     );
   });
 });

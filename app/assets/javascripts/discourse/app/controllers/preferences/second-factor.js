@@ -114,10 +114,8 @@ export default Controller.extend(CanCheckEmails, {
       .finally(() => this.set("resetPasswordLoading", false));
   },
 
-  disableAllModalTemplate() {
-    let templateElements = [
-      I18n.t("user.second_factor.disable_confirm_header"),
-    ];
+  disableAllMessage() {
+    let templateElements = [I18n.t("user.second_factor.delete_confirm_header")];
     templateElements.push("<ul>");
     this.totps.forEach((totp) => {
       templateElements.push(`<li>${totp.name}</li>`);
@@ -132,11 +130,11 @@ export default Controller.extend(CanCheckEmails, {
     }
     templateElements.push("</ul>");
     templateElements.push(
-      I18n.t("user.second_factor.disable_confirm_instruction", {
+      I18n.t("user.second_factor.delete_confirm_instruction", {
         confirm: I18n.t("user.second_factor.disable"),
       })
     );
-    return templateElements.join("");
+    return htmlSafe(templateElements.join(""));
   },
 
   actions: {
@@ -156,7 +154,7 @@ export default Controller.extend(CanCheckEmails, {
 
       this.dialog.deleteConfirm({
         title: I18n.t("user.second_factor.disable_confirm"),
-        message: htmlSafe(this.disableAllModalTemplate()),
+        message: this.disableAllMessage(),
         confirmButtonLabel: "user.second_factor.disable",
         confirmPhrase: I18n.t("user.second_factor.disable"),
         confirmButtonIcon: "ban",
@@ -179,13 +177,11 @@ export default Controller.extend(CanCheckEmails, {
         return;
       }
       this.dialog.deleteConfirm({
-        title: I18n.t("user.second_factor.disable_single_confirm_title"),
-        message: htmlSafe(
-          I18n.t("user.second_factor.disable_single_confirm_message", {
-            name: secondFactorMethod.name,
-          })
-        ),
-        confirmButtonLabel: "user.second_factor.disable",
+        title: I18n.t("user.second_factor.delete_single_confirm_title"),
+        message: I18n.t("user.second_factor.delete_single_confirm_message", {
+          name: secondFactorMethod.name,
+        }),
+        confirmButtonLabel: "user.second_factor.delete",
         confirmButtonIcon: "ban",
         cancelButtonClass: "btn-flat",
         didConfirm: () => {
@@ -225,11 +221,11 @@ export default Controller.extend(CanCheckEmails, {
 
     disableSecondFactorBackup() {
       this.dialog.deleteConfirm({
-        title: I18n.t("user.second_factor.disable_backup_codes_confirm_title"),
-        message: htmlSafe(
-          I18n.t("user.second_factor.disable_backup_codes_confirm_message")
+        title: I18n.t("user.second_factor.delete_backup_codes_confirm_title"),
+        message: I18n.t(
+          "user.second_factor.delete_backup_codes_confirm_message"
         ),
-        confirmButtonLabel: "user.second_factor.disable",
+        confirmButtonLabel: "user.second_factor.delete",
         confirmButtonIcon: "ban",
         cancelButtonClass: "btn-flat",
         didConfirm: () => {

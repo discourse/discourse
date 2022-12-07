@@ -53,7 +53,7 @@ acceptance("User Preferences - Second Factor Backup", function (needs) {
     await click(".pref-second-factor-backup .btn-danger");
     assert.strictEqual(
       query("#dialog-title").innerText.trim(),
-      "Disabling backup codes"
+      "Deleting backup codes"
     );
   });
 });

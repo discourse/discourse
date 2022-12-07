@@ -10,15 +10,14 @@
         </div>
       {{/if}}
 
-      {{#if this.dialog.message}}
+      {{#if (or this.dialog.message this.dialog.confirmPhrase)}}
         <div class="dialog-body">
-          {{this.dialog.message}}
-        </div>
-      {{/if}}
-
-      {{#if this.dialog.confirmPhrase}}
-        <div class="dialog-body">
-          <TextField @value={{this.dialog.confirmPhraseInput}} @id="confirm-phrase" @autocorrect="off" @autocapitalize="off" />
+          {{#if this.dialog.message}}
+            <p>{{this.dialog.message}}</p>
+          {{/if}}
+          {{#if this.dialog.confirmPhrase}}
+            <TextField @value={{this.dialog.confirmPhraseInput}} @id="confirm-phrase" @autocorrect="off" @autocapitalize="off" />
+          {{/if}}
         </div>
       {{/if}}
 
