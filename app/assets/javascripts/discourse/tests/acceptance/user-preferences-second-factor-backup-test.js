@@ -3,6 +3,7 @@ import { click, visit } from "@ember/test-helpers";
 import {
   acceptance,
   exists,
+  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 
@@ -41,5 +42,18 @@ acceptance("User Preferences - Second Factor Backup", function (needs) {
     await click(".second-factor-backup-preferences .btn-primary");
 
     assert.ok(exists(".backup-codes-area"), "shows backup codes");
+  });
+
+  test("delete backup codes", async function (assert) {
+    updateCurrentUser({ second_factor_enabled: true });
+    await visit("/u/eviltrout/preferences/second-factor");
+    await click(".edit-2fa-backup");
+    await click(".second-factor-backup-preferences .btn-primary");
+    await click(".modal-close");
+    await click(".pref-second-factor-backup .btn-danger");
+    assert.strictEqual(
+      query("#dialog-title").innerText.trim(),
+      "Deleting backup codes"
+    );
   });
 });

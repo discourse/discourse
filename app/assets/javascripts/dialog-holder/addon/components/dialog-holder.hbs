@@ -10,9 +10,14 @@
         </div>
       {{/if}}
 
-      {{#if this.dialog.message}}
+      {{#if (or this.dialog.message this.dialog.confirmPhrase)}}
         <div class="dialog-body">
-          {{this.dialog.message}}
+          {{#if this.dialog.message}}
+            <p>{{this.dialog.message}}</p>
+          {{/if}}
+          {{#if this.dialog.confirmPhrase}}
+            <TextField @value={{this.dialog.confirmPhraseInput}} {{on "input" this.dialog.onConfirmPhraseInput}} @id="confirm-phrase" @autocorrect="off" @autocapitalize="off" />
+          {{/if}}
         </div>
       {{/if}}
 
@@ -21,9 +26,9 @@
           {{#each this.dialog.buttons as |button|}}
             <DButton @icon={{button.icon}} @class={{button.class}} @action={{action "handleButtonAction" button}} @translatedLabel={{button.label}} />
           {{else}}
-            <DButton @class={{this.dialog.confirmButtonClass}} @action={{this.dialog.didConfirmWrapped}} @icon={{this.dialog.confirmButtonIcon}} @label={{this.dialog.confirmButtonLabel}} />
+            <DButton @class={{this.dialog.confirmButtonClass}} @disabled={{this.dialog.confirmButtonDisabled}} @action={{this.dialog.didConfirmWrapped}} @icon={{this.dialog.confirmButtonIcon}} @label={{this.dialog.confirmButtonLabel}} />
             {{#if this.dialog.shouldDisplayCancel}}
-              <DButton @class="btn-default" @action={{this.dialog.cancel}} @label={{this.dialog.cancelButtonLabel}} />
+              <DButton @class={{this.dialog.cancelButtonClass}} @action={{this.dialog.cancel}} @label={{this.dialog.cancelButtonLabel}} />
             {{/if}}
           {{/each}}
         </div>

@@ -79,7 +79,7 @@ module SecondFactorManager
   end
 
   def has_any_second_factor_methods_enabled?
-    totp_enabled? || security_keys_enabled? || backup_codes_enabled?
+    totp_enabled? || security_keys_enabled?
   end
 
   def has_multiple_second_factor_methods?
