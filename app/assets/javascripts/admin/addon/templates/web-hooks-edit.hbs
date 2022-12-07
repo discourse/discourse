@@ -86,7 +86,12 @@
   </form>
 
   <div class="controls">
-    <DButton @class="btn-default" @translatedLabel={{this.saveButtonText}} @action={{action "save"}} @disabled={{this.saveButtonDisabled}} />
+    <DButton
+      @translatedLabel={{this.saveButtonText}}
+      @action={{action "save"}}
+      @disabled={{this.saveButtonDisabled}}
+      @class="btn-default admin-webhooks__save-button"
+    />
 
     {{#unless this.model.isNew}}
       <DButton @class="btn-danger" @label="admin.web_hooks.destroy" @action={{action "destroy"}} />
