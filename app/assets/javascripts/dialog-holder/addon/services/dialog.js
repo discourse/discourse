@@ -46,12 +46,6 @@ export default Service.extend({
     } = params;
 
     let confirmButtonDisabled = !isBlank(confirmPhrase);
-    this.addObserver("confirmPhraseInput", this, () => {
-      this.set(
-        "confirmButtonDisabled",
-        this.confirmPhrase && this.confirmPhraseInput !== this.confirmPhrase
-      );
-    });
 
     const element = document.getElementById("dialog-holder");
 
@@ -179,5 +173,13 @@ export default Service.extend({
   @bind
   cancel() {
     this.dialogInstance.hide();
+  },
+
+  @bind
+  onConfirmPhraseInput() {
+    this.set(
+      "confirmButtonDisabled",
+      this.confirmPhrase && this.confirmPhraseInput !== this.confirmPhrase
+    );
   },
 });
