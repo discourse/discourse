@@ -1,18 +1,6 @@
 <div class="control-group pref-username">
   <label class="control-label">{{i18n "user.username.title"}}</label>
-  <div class="controls">
-    <span class="static">{{this.model.username}}</span>
-    {{#if this.model.can_edit_username}}
-      <LinkTo @route="preferences.username" title={{i18n "user.username.edit"}} class="btn btn-default btn-small btn-icon pad-left no-text">
-        {{d-icon "pencil-alt"}}
-      </LinkTo>
-    {{/if}}
-  </div>
-  {{#if this.siteSettings.enable_mentions}}
-    <div class="instructions">
-      {{html-safe (i18n "user.username.short_instructions" username=this.model.username)}}
-    </div>
-  {{/if}}
+  <UsernamePreference @user={{this.model}} />
 </div>
 
 {{#unless this.siteSettings.discourse_connect_overrides_avatar}}
