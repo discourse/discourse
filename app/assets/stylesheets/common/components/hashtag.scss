@@ -27,6 +27,12 @@ a.hashtag-cooked {
     font-size: var(--font-down-1);
     margin: 0 0.2em 0 0.1em;
   }
+
+  img.emoji {
+    width: 15px;
+    height: 15px;
+    vertical-align: text-bottom;
+  }
 }
 
 .hashtag-autocomplete {
