@@ -1769,7 +1769,7 @@ en:
 
     enable_backups: "Allow administrators to create backups of the forum"
     allow_restore: "Allow restore, which can replace ALL site data! Leave disabled unless you plan to restore a backup"
-    maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
+    maximum_backups: "The maximum amount of backups to keep. Older backups are automatically deleted"
     automatic_backups_enabled: "Run automatic backups as defined in backup frequency"
     backup_frequency: "The number of days between backups."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
