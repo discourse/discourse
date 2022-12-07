@@ -4,6 +4,8 @@ import { action } from "@ember/object";
 import I18n from "I18n";
 
 export default DiscourseRoute.extend(ViewingActionType, {
+  templateName: "user_stream",
+
   queryParams: {
     acting_username: { refreshModel: true },
   },
@@ -27,10 +29,6 @@ export default DiscourseRoute.extend(ViewingActionType, {
       filter: this.userActionType,
       actingUsername: transition.to.queryParams.acting_username,
     });
-  },
-
-  renderTemplate() {
-    this.render("user_stream");
   },
 
   setupController(controller, model) {

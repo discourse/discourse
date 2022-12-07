@@ -4,9 +4,7 @@ import Draft from "discourse/models/draft";
 import { action } from "@ember/object";
 
 export default DiscourseRoute.extend({
-  renderTemplate() {
-    this.render("user/messages");
-  },
+  templateName: "user/messages",
 
   model() {
     return this.modelFor("user");

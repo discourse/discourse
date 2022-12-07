@@ -5,11 +5,7 @@ import { action } from "@ember/object";
 
 export default function (filter) {
   return DiscourseRoute.extend({
-    @action
-    didTransition() {
-      this.controllerFor("user-posts")._showFooter();
-      return true;
-    },
+    templateName: "user/posts",
 
     model() {
       return this.modelFor("user").get("postsStream");
@@ -32,8 +28,10 @@ export default function (filter) {
       this.controllerFor("user-posts").set("model", model);
     },
 
-    renderTemplate() {
-      this.render("user/posts");
+    @action
+    didTransition() {
+      this.controllerFor("user-posts")._showFooter();
+      return true;
     },
   });
 }

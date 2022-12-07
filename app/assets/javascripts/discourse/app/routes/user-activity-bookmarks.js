@@ -4,6 +4,8 @@ import DiscourseRoute from "discourse/routes/discourse";
 import { Promise } from "rsvp";
 
 export default DiscourseRoute.extend({
+  templateName: "user_bookmarks",
+
   queryParams: {
     acting_username: { refreshModel: true },
     q: { refreshModel: true },
@@ -44,10 +46,6 @@ export default DiscourseRoute.extend({
       })
       .catch(() => controller.set("permissionDenied", true))
       .finally(() => controller.set("loading", false));
-  },
-
-  renderTemplate() {
-    this.render("user_bookmarks");
   },
 
   @action

@@ -5,6 +5,7 @@ import { action, get } from "@ember/object";
 export function buildGroupPage(type) {
   return DiscourseRoute.extend({
     type,
+    templateName: "group-activity-posts",
 
     titleToken() {
       return I18n.t(`groups.${type}`);
@@ -23,10 +24,6 @@ export function buildGroupPage(type) {
         canLoadMore: !loadedAll,
       });
       this.controllerFor("application").set("showFooter", loadedAll);
-    },
-
-    renderTemplate() {
-      this.render("group-activity-posts");
     },
 
     @action

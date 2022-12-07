@@ -4,6 +4,8 @@ import ViewingActionType from "discourse/mixins/viewing-action-type";
 import { action } from "@ember/object";
 
 export default DiscourseRoute.extend(ViewingActionType, {
+  templateName: "user/badges",
+
   model() {
     return UserBadge.findByUsername(
       this.modelFor("user").get("username_lower"),
@@ -14,10 +16,6 @@ export default DiscourseRoute.extend(ViewingActionType, {
   setupController(controller, model) {
     this.viewingActionType(-1);
     controller.set("model", model);
-  },
-
-  renderTemplate() {
-    this.render("user/badges");
   },
 
   @action
