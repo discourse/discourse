@@ -10,7 +10,6 @@ RSpec.describe UserPostBookmarkSerializer do
     let(:whisperers_group) { Fabricate(:group) }
 
     before do
-      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
       SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
     end
 

@@ -29,7 +29,6 @@ RSpec.describe TopicTrackingState do
       whisperers_group = Fabricate(:group)
       Fabricate(:user, groups: [whisperers_group])
       Fabricate(:topic_user_watching, topic: topic, user: user)
-      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
       SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
       post.update!(post_type: Post.types[:whisper])
 
@@ -137,7 +136,6 @@ RSpec.describe TopicTrackingState do
     it "publishes whisper post to staff users and members of whisperers group" do
       whisperers_group = Fabricate(:group)
       Fabricate(:topic_user_watching, topic: topic, user: user)
-      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
       SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
       post.update!(post_type: Post.types[:whisper])
 

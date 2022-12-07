@@ -2935,9 +2935,7 @@ RSpec.describe User do
       expect(user.whisperer?).to eq(false)
     end
 
-    it 'returns false if no whispers email exist' do
-      SiteSetting.whispers_allowed_groups = ""
-
+    it 'returns false if no whispers groups exist' do
       expect(subject.whisperer?).to eq(false)
     end
   end
