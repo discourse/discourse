@@ -634,14 +634,27 @@ class Topic < ActiveRecord::Base
 
     tsquery = Search.to_tsquery(term: tsquery, joiner: "|")
 
+    guardian = Guardian.new(user)
+
+    excluded_category_ids_sql = Category.secured(guardian).where(search_priority: Searchable::PRIORITIES[:ignore]).select(:id).to_sql
+
+    if user
+      excluded_category_ids_sql = <<~SQL
+      #{excluded_category_ids_sql}
+      UNION
+      #{CategoryUser.where(notification_level: CategoryUser.notification_levels[:muted], user: user).select(:category_id).to_sql}
+      SQL
+    end
+
     candidates = Topic
       .visible
       .listable_topics
-      .secured(Guardian.new(user))
+      .secured(guardian)
       .joins("JOIN topic_search_data s ON topics.id = s.topic_id")
       .joins("LEFT JOIN categories c ON topics.id = c.topic_id")
       .where("search_data @@ #{tsquery}")
       .where("c.topic_id IS NULL")
+      .where("topics.category_id NOT IN (#{excluded_category_ids_sql})")
       .order("ts_rank(search_data, #{tsquery}) DESC")
       .limit(SiteSetting.max_similar_results * 3)
 

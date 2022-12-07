@@ -685,10 +685,28 @@ RSpec.describe Topic do
         expect(topics).to eq([])
       end
 
+      it 'does not return topics from categories with search priority set to ignore' do
+        expect(Topic.similar_to("has evil trout made any topics?", "")).to eq([topic])
+
+        topic.category.update!(search_priority: Searchable::PRIORITIES[:ignore])
+
+        expect(Topic.similar_to("has evil trout made any topics?", "")).to eq([])
+      end
+
+      it 'does not return topics from categories which the user has muted' do
+        expect(Topic.similar_to("has evil trout made any topics?", "", user)).to eq([topic])
+
+        CategoryUser.create!(category: topic.category, user: user, notification_level: CategoryUser.notification_levels[:muted])
+
+        expect(Topic.similar_to("has evil trout made any topics?", "", user)).to eq([])
+      end
+
       context "with secure categories" do
+        fab!(:group) { Fabricate(:group) }
+        fab!(:private_category) { Fabricate(:private_category, group: group) }
+
         before do
-          category.update!(read_restricted: true)
-          topic.update!(category: category)
+          topic.update!(category: private_category)
         end
 
         it "doesn't return topics from private categories" do
@@ -696,7 +714,8 @@ RSpec.describe Topic do
         end
 
         it "should return the cat since the user can see it" do
-          Guardian.any_instance.expects(:secure_category_ids).returns([category.id])
+          group.add(user)
+
           expect(Topic.similar_to("has evil trout made any topics?", "i am wondering has evil trout made any topics?", user)).to include(topic)
         end
       end
