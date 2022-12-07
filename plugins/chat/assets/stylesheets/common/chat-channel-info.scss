@@ -154,9 +154,10 @@ input.channel-members-view__search-input {
   padding-bottom: 0.75rem;
   color: var(--primary-medium);
 
-  &-word-count {
+  &-word-counter {
     display: block;
     text-align: right;
     margin-top: 0.5rem;
+    font-size: var(--font-down-1);
   }
 }

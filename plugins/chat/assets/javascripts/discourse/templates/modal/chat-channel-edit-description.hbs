@@ -1,4 +1,4 @@
-<DModalBody @title="chat.channel_edit_description_modal.title" @class={{if this.wordCount.exceeded "exceeded-word-count"}}>
+<DModalBody @title="chat.channel_edit_description_modal.title" @class={{if (gt this.editedDescription.length this.descriptionMaxLength) "exceeded-word-count"}}>
   <span class="chat-channel-edit-description-modal__description">
     {{i18n "chat.channel_edit_description_modal.description"}}
   </span>
@@ -10,10 +10,12 @@
       (action "onChangeChatChannelDescription" value="target.value")
     }}
   >{{this.model.description}}</textarea>
-  <small class="chat-channel-edit-description-modal__description-word-count">
-    {{this.wordCount.label}}
-  </small>
 
+  <WordCounter
+    @currentWordLength={{this.editedDescription.length}}
+    @max={{this.descriptionMaxLength}}
+    class="chat-channel-edit-description-modal__description-word-counter"
+  />
 </DModalBody>
 
 <div class="modal-footer">

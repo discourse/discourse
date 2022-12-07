@@ -19,11 +19,8 @@ export default class ChatChannelEditDescriptionController extends Controller.ext
     );
   }
 
-  get wordCount() {
-    return {
-      exceeded: this.editedDescription.length > DESCRIPTION_MAX_LENGTH,
-      label: `${this.editedDescription.length}/${DESCRIPTION_MAX_LENGTH}`,
-    };
+  get descriptionMaxLength() {
+    return DESCRIPTION_MAX_LENGTH;
   }
 
   onShow() {

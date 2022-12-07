@@ -724,3 +724,9 @@ html.has-full-page-chat {
 [data-popper-reference-hidden] {
   visibility: hidden;
 }
+
+.word-counter {
+  &.exceeded {
+    color: var(--danger);
+  }
+}
