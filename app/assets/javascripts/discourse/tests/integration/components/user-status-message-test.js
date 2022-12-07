@@ -141,4 +141,17 @@ module("Integration | Component | user-status-message", function (hooks) {
       document.querySelector("[data-tippy-root] .user-status-message-tooltip")
     );
   });
+
+  test("doesn't blow up with an anonymous user", async function (assert) {
+    this.owner.unregister("service:current-user");
+    this.set("status", {
+      emoji: "tooth",
+      description: "off to dentist",
+      ends_at: "2100-02-02T12:30:00.000Z",
+    });
+
+    await render(hbs`<UserStatusMessage @status={{this.status}} />`);
+
+    assert.dom(".user-status-message").exists();
+  });
 });
