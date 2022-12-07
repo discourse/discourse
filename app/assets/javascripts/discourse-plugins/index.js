@@ -176,7 +176,15 @@ module.exports = {
 
     tree = RawHandlebarsCompiler(tree);
 
-    tree = new DiscoursePluginColocatedTemplateProcessor(tree, pluginName);
+    const colocateBase = `discourse/plugins/${pluginName}`;
+    tree = new DiscoursePluginColocatedTemplateProcessor(
+      tree,
+      `${colocateBase}/discourse`
+    );
+    tree = new DiscoursePluginColocatedTemplateProcessor(
+      tree,
+      `${colocateBase}/admin`
+    );
     tree = this.compileTemplates(tree);
 
     tree = this.processedAddonJsFiles(tree);
