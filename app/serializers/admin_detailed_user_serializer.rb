@@ -168,12 +168,12 @@ class AdminDetailedUserSerializer < AdminUserSerializer
     ).as_json
   end
 
-  def similar_users_count
-    @options[:similar_users_count]
-  end
-
   def include_similar_users?
     @options[:similar_users].present?
+  end
+
+  def similar_users_count
+    @options[:similar_users_count]
   end
 
   def include_similar_users_count?

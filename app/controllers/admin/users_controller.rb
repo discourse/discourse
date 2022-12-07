@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Admin::UsersController < Admin::StaffController
+  MAX_SIMILAR_USERS = 10
 
   before_action :fetch_user, only: [:suspend,
                                     :unsuspend,
@@ -44,14 +45,13 @@ class Admin::UsersController < Admin::StaffController
     similar_users = User.real
       .where.not(id: @user.id)
       .where(ip_address: @user.ip_address)
-    similar_users_count = similar_users.count
 
     render_serialized(
       @user,
       AdminDetailedUserSerializer,
       root: false,
-      similar_users: similar_users.limit(10),
-      similar_users_count: similar_users_count,
+      similar_users: similar_users.limit(MAX_SIMILAR_USERS),
+      similar_users_count: similar_users.count,
     )
   end
 
