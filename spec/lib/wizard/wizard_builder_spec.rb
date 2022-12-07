@@ -81,7 +81,7 @@ RSpec.describe Wizard::Builder do
       invite_only_field = fields.second
       must_approve_users_field = fields.last
 
-      expect(fields.length).to eq(3)
+      expect(fields.length).to eq(4)
       expect(login_required_field.id).to eq('login_required')
       expect(login_required_field.value).to eq(true)
       expect(invite_only_field.id).to eq('invite_only')
