@@ -449,7 +449,7 @@ GEM
       sprockets (>= 3.0.0)
     sshkey (2.0.0)
     stackprof (0.2.23)
-    test-prof (1.0.11)
+    test-prof (1.1.0)
     thor (1.2.1)
     tilt (2.0.11)
     timeout (0.3.1)
