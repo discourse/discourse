@@ -1990,7 +1990,7 @@ en:
     faq_url: "If you have a FAQ hosted elsewhere that you want to use, provide the full URL here."
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
-    log_anonymizer_details: "Whether to keep a user's details in the log after being anonymized. When complying to GDPR you'll need to turn this off."
+    log_anonymizer_details: "Whether to keep a user's details in the log after being anonymized."
 
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_threshold` posts before being considered spam."
 
