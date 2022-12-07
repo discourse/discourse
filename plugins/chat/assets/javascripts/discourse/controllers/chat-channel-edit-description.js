@@ -4,24 +4,25 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 import ChatApi from "discourse/plugins/chat/discourse/lib/chat-api";
 import { tracked } from "@glimmer/tracking";
 
+const DESCRIPTION_MAX_LENGTH = 280;
+
 export default class ChatChannelEditDescriptionController extends Controller.extend(
   ModalFunctionality
 ) {
   @tracked editedDescription = "";
-  DESCRIPTION_MAX_LENGTH = 280;
 
   @computed("model.description", "editedDescription")
   get isSaveDisabled() {
     return (
       this.model.description === this.editedDescription ||
-      this.editedDescription?.length > this.DESCRIPTION_MAX_LENGTH
+      this.editedDescription?.length > DESCRIPTION_MAX_LENGTH
     );
   }
 
   get wordCount() {
     return {
-      exceeded: this.editedDescription.length > this.DESCRIPTION_MAX_LENGTH,
-      label: `${this.editedDescription.length}/${this.DESCRIPTION_MAX_LENGTH}`,
+      exceeded: this.editedDescription.length > DESCRIPTION_MAX_LENGTH,
+      label: `${this.editedDescription.length}/${DESCRIPTION_MAX_LENGTH}`,
     };
   }
 
