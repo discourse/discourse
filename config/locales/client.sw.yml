@@ -2409,7 +2409,6 @@ sw:
         about: "Hariri uanachama wa kikundi chako na majina hapa"
         group_members: "Wanachama wa kikundi"
         delete: "Ondoa"
-        delete_confirm: "Ondoa kikundi hiki?"
         delete_failed: "Tumeshindwa kuondoa kikundi. Kama kikundi kilitengenezwa otomatikali, hakiwezi kuvunjwa."
         delete_owner_confirm: "Ondoa haki ya mmiliki kwa '%{username}'?"
         add: "ongeza"

@@ -44,12 +44,6 @@ const RESPONSES = {
     security_keys_enabled: true,
     allowed_methods: [BACKUP_CODE],
   },
-  ok010010: {
-    totp_enabled: false,
-    backup_enabled: true,
-    security_keys_enabled: false,
-    allowed_methods: [BACKUP_CODE],
-  },
 };
 
 Object.keys(RESPONSES).forEach((k) => {
@@ -180,14 +174,6 @@ acceptance("Second Factor Auth Page", function (needs) {
 
     await visit("/");
     await visit("/session/2fa?nonce=ok111010");
-    assert.ok(
-      !exists(".toggle-second-factor-method"),
-      "no alternative methods are shown if only 1 method is allowed"
-    );
-
-    // only backup codes
-    await visit("/session/2fa?nonce=ok010010");
-    assert.ok(exists("form.backup-code-token"), "backup code form is shown");
     assert.ok(
       !exists(".toggle-second-factor-method"),
       "no alternative methods are shown if only 1 method is allowed"

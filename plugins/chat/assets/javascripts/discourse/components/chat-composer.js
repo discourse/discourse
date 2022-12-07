@@ -21,12 +21,15 @@ import { Promise } from "rsvp";
 import { translations } from "pretty-text/emoji/data";
 import { channelStatusName } from "discourse/plugins/chat/discourse/models/chat-channel";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
+import discourseDebounce from "discourse-common/lib/debounce";
 import {
   chatComposerButtons,
   chatComposerButtonsDependentKeys,
 } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
+import { mentionRegex } from "pretty-text/mentions";
 
 const THROTTLE_MS = 150;
+const MENTION_DEBOUNCE_MS = 1000;
 
 export default Component.extend(TextareaTextManipulation, {
   chatChannel: null,
@@ -41,12 +44,14 @@ export default Component.extend(TextareaTextManipulation, {
   editingMessage: null,
   onValueChange: null,
   timer: null,
+  mentionsTimer: null,
   value: "",
   inProgressUploads: null,
   composerEventPrefix: "chat",
   composerFocusSelector: ".chat-composer-input",
   canAttachUploads: reads("siteSettings.chat_allow_uploads"),
   isNetworkUnreliable: reads("chat.isNetworkUnreliable"),
+  typingMention: false,
 
   @discourseComputed(...chatComposerButtonsDependentKeys())
   inlineButtons() {
@@ -144,10 +149,8 @@ export default Component.extend(TextareaTextManipulation, {
       "_inProgressUploadsChanged"
     );
 
-    if (this.timer) {
-      cancel(this.timer);
-      this.timer = null;
-    }
+    cancel(this.timer);
+    cancel(this.mentionsTimer);
 
     this.appEvents.off("chat:focus-composer", this, "_focusTextArea");
     this.appEvents.off("chat:insert-text", this, "insertText");
@@ -230,6 +233,7 @@ export default Component.extend(TextareaTextManipulation, {
         replyToMsg: this.draft.replyToMsg,
       });
 
+      this._debouncedCaptureMentions();
       this._syncUploads(this.draft.uploads);
       this.setInReplyToMsg(this.draft.replyToMsg);
     }
@@ -294,6 +298,13 @@ export default Component.extend(TextareaTextManipulation, {
     this.set("value", value);
     this.resizeTextarea();
 
+    this.typingMention = value.slice(-1) === "@";
+
+    if (this.typingMention && value.slice(-1) === " ") {
+      this.typingMention = false;
+      this._debouncedCaptureMentions();
+    }
+
     // throttle, not debounce, because we do eventually want to react during the typing
     this.timer = throttle(this, this._handleTextareaInput, THROTTLE_MS);
   },
@@ -302,6 +313,44 @@ export default Component.extend(TextareaTextManipulation, {
   _handleTextareaInput() {
     this._applyUserAutocomplete();
     this.onValueChange?.(this.value, this._uploads, this.replyToMsg);
+  },
+
+  @bind
+  _debouncedCaptureMentions() {
+    this.mentionsTimer = discourseDebounce(
+      this,
+      this._captureMentions,
+      MENTION_DEBOUNCE_MS
+    );
+  },
+
+  @bind
+  _captureMentions() {
+    if (this.siteSettings.enable_mentions) {
+      const mentions = this._extractMentions();
+      this.onMentionUpdates(mentions);
+    }
+  },
+
+  _extractMentions() {
+    let message = this.value;
+    const regex = mentionRegex(this.siteSettings.unicode_usernames);
+    const mentions = [];
+    let mentionsLeft = true;
+
+    while (mentionsLeft) {
+      const matches = message.match(regex);
+
+      if (matches) {
+        const mention = matches[1] || matches[2];
+        mentions.push(mention);
+        message = message.replaceAll(`${mention}`, "");
+      } else {
+        mentionsLeft = false;
+      }
+    }
+
+    return mentions;
   },
 
   @bind
@@ -350,6 +399,7 @@ export default Component.extend(TextareaTextManipulation, {
         afterComplete: (text) => {
           this.set("value", text);
           this._focusTextArea();
+          this._debouncedCaptureMentions();
         },
       });
     }
@@ -660,6 +710,7 @@ export default Component.extend(TextareaTextManipulation, {
       value: "",
       inReplyMsg: null,
     });
+    this.onMentionUpdates([]);
     this._syncUploads([]);
     this._focusTextArea({ ensureAtEnd: true, resizeTextarea: true });
     this.onValueChange?.(this.value, this._uploads, this.replyToMsg);

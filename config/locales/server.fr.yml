@@ -965,7 +965,6 @@ fr:
     mailing_list_mode: "Désactiver la liste de diffusion"
     all: "Ne pas m'envoyer d'e-mail de %{sitename}"
     different_user_description: "Vous êtes actuellement connecté(e) avec un utilisateur différent de celui à qui l'e-mail est adressé. Veuillez vous déconnecter ou utiliser le mode anonyme avant de réessayer."
-    not_found_description: "Nous sommes désolés, nous n'avons pas pu trouver ce désabonnement. Il est possible que le lien dans votre e-mail soit trop ancien et qu'il ait expiré."
     log_out: "Déconnexion"
     submit: "Enregistrer les préférences"
     digest_frequency:
@@ -4544,12 +4543,6 @@ fr:
           logo_small:
             label: "Logo carré"
             description: "Une version carrée de votre logo. Affiché en haut à gauche lors du défilement vers le bas et lors du partage sur les réseaux sociaux. Idéalement, au moins 512 x 512."
-          favicon:
-            label: "Icône du navigateur"
-            description: "Icône utilisée pour représenter votre site dans les navigateurs Web qui s'affiche bien dans de petites tailles. Le format PNG ou JPG est recommandé. Le logo carré est utilisé par défaut."
-          large_icon:
-            label: "Grande icône"
-            description: "Icône utilisée pour représenter votre site sur les appareils mobiles et qui s'affiche bien dans des tailles plus grandes. Idéalement supérieure à 512 x 512. Logo carré utilisé par défaut."
       corporate:
         title: "Votre organisation"
         fields:

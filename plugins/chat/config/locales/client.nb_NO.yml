@@ -67,6 +67,8 @@ nb_NO:
       notification_levels:
         never: "Aldri"
       settings:
+        channel_wide_mentions_label: "Tillat @alle og @her omtaler"
+        channel_wide_mentions_description: "Tillat brukere å varsle alle medlemmer av #%{channel} med @alle eller bare de som er aktive i øyeblikket med @alleher"
         follow: "Bli medlem"
         followed: "Medlem fra"
         notifications: "Varsler"

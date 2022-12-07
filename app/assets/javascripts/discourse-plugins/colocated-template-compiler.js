@@ -3,12 +3,12 @@ const ColocatedTemplateProcessor = require("ember-cli-htmlbars/lib/colocated-bro
 module.exports = class DiscoursePluginColocatedTemplateProcessor extends (
   ColocatedTemplateProcessor
 ) {
-  constructor(tree, discoursePluginName) {
+  constructor(tree, rootName) {
     super(tree);
-    this.discoursePluginName = discoursePluginName;
+    this.rootName = rootName;
   }
 
   detectRootName() {
-    return `discourse/plugins/${this.discoursePluginName}/discourse`;
+    return this.rootName;
   }
 };

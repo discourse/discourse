@@ -59,6 +59,30 @@ RSpec.describe StylesheetsController do
     expect(response.status).to eq(200)
   end
 
+  it 'ignores Accept header and does not include Vary header' do
+    StylesheetCache.destroy_all
+    manager = Stylesheet::Manager.new(theme_id: nil)
+    builder = Stylesheet::Manager::Builder.new(target: 'desktop', manager: manager, theme: nil)
+    builder.compile
+
+    digest = StylesheetCache.first.digest
+
+    get "/stylesheets/desktop_#{digest}.css"
+    expect(response.status).to eq(200)
+    expect(response.headers["Content-Type"]).to eq("text/css")
+    expect(response.headers["Vary"]).to eq(nil)
+
+    get "/stylesheets/desktop_#{digest}.css", headers: { "Accept" => "text/html" }
+    expect(response.status).to eq(200)
+    expect(response.headers["Content-Type"]).to eq("text/css")
+    expect(response.headers["Vary"]).to eq(nil)
+
+    get "/stylesheets/desktop_#{digest}.css", headers: { "Accept" => "invalidcontenttype" }
+    expect(response.status).to eq(200)
+    expect(response.headers["Content-Type"]).to eq("text/css")
+    expect(response.headers["Vary"]).to eq(nil)
+  end
+
   describe "#color_scheme" do
     it 'works as expected' do
       scheme = ColorScheme.last

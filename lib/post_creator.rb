@@ -425,8 +425,11 @@ class PostCreator
   def track_latest_on_category
     return unless @post && @post.errors.count == 0 && @topic && @topic.category_id
 
-    Category.where(id: @topic.category_id).update_all(latest_post_id: @post.id)
-    Category.where(id: @topic.category_id).update_all(latest_topic_id: @topic.id) if @post.is_first_post?
+    if @post.is_first_post?
+      Category.where(id: @topic.category_id).update_all(latest_topic_id: @topic.id, latest_post_id: @post.id)
+    else
+      Category.where(id: @topic.category_id).update_all(latest_post_id: @post.id)
+    end
   end
 
   def ensure_in_allowed_users

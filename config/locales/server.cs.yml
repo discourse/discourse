@@ -1150,8 +1150,6 @@ cs:
         fields:
           logo:
             label: "Primární loga"
-          large_icon:
-            label: "Velká ikona"
       corporate:
         fields:
           contact_url:

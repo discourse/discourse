@@ -1,6 +1,7 @@
 import Service from "@ember/service";
 import { debounce } from "discourse-common/utils/decorators";
 import { isTesting } from "discourse-common/config/environment";
+import { getURLWithCDN } from "discourse-common/lib/get-url";
 
 const AUDIO_DEBOUNCE_DELAY = 3000;
 
@@ -17,7 +18,7 @@ const createAudioCache = (sources) => {
   sources.forEach(({ type, src }) => {
     const source = document.createElement("source");
     source.type = type;
-    source.src = src;
+    source.src = getURLWithCDN(src);
     audio.appendChild(source);
   });
   return audio;

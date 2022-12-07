@@ -2560,8 +2560,6 @@ el:
         fields:
           logo:
             label: "Κυρίως Λογότυπο"
-          large_icon:
-            label: "Μεγάλο εικονίδιο"
       corporate:
         fields:
           contact_url:

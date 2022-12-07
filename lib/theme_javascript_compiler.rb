@@ -89,8 +89,6 @@ class ThemeJavascriptCompiler
   end
 
   def append_tree(tree, for_tests: false)
-    root_name = "discourse"
-
     # Replace legacy extensions
     tree.transform_keys! do |filename|
       if filename.ends_with? ".js.es6"
@@ -121,7 +119,7 @@ class ThemeJavascriptCompiler
 
     # Handle colocated components
     tree.dup.each_pair do |filename, content|
-      is_component_template = filename.end_with?(".hbs") && filename.start_with?("#{root_name}/components/")
+      is_component_template = filename.end_with?(".hbs") && filename.start_with?("discourse/components/", "admin/components/")
       next if !is_component_template
       template_contents = content
 

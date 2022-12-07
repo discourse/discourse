@@ -17,6 +17,7 @@ en:
     default_emoji_reactions: "Default emoji reactions for chat messages. Add up to 5 emojis for quick reaction."
     direct_message_enabled_groups: "Allow users within these groups to create user-to-user Personal Chats. Note: staff can always create Personal Chats, and users will be able to reply to Personal Chats initiated by users who have permission to create them."
     chat_message_flag_allowed_groups: "Users in these groups are allowed to flag chat messages."
+    max_mentions_per_chat_message: "Maximum number of @name notifications a user can use in a chat message."
     chat_max_direct_message_users: "Users cannot add more than this number of other users when creating a new direct message. Set to 0 to only allow messages to oneself. Staff are exempt from this setting."
     chat_allow_archiving_channels: "Allow staff to archive messages to a topic when closing a channel."
     errors:
@@ -161,7 +162,7 @@ en:
     notify_moderators:
       chat_pm_title: 'A chat message in "%{channel_name}" requires staff attention'
       chat_pm_body: "%{link}\n\n%{message}"
-  
+
   reviewables:
     reasons:
       chat_message_queued_by_staff: "A staff member thinks this chat message needs review."
@@ -173,14 +174,17 @@ en:
         other: "You have new chat messages"
       from: "%{site_name}"
       subject:
-        direct_message:
-          one: "[%{email_prefix}] New message from %{message_title}"
-          other: "[%{email_prefix}] New messages from %{message_title} and %{others}"
-        chat_channel:
-          one: "[%{email_prefix}] New message in %{message_title}"
-          other: "[%{email_prefix}] New messages in %{message_title} and %{others}"
-        other_direct_message: "from %{dm_title}"
-        others: "%{count} others"
+        direct_message_from_1: "[%{email_prefix}] New message from %{username}"
+        direct_message_from_2: "[%{email_prefix}] New message from %{username1} and %{username2}"
+        direct_message_from_more:
+          one: "[%{email_prefix}] New message from %{username} and %{count} other"
+          other: "[%{email_prefix}] New message from %{username} and %{count} others"
+        chat_channel_1: "[%{email_prefix}] New message in %{channel}"
+        chat_channel_2: "[%{email_prefix}] New message in %{channel1} and %{channel2}"
+        chat_channel_more:
+          one: "[%{email_prefix}] New message in %{channel} and %{count} other"
+          other: "[%{email_prefix}] New message in %{channel} and %{count} others"
+        chat_channel_and_direct_message: "[%{email_prefix}] New message in %{channel} and from %{username}"
       unsubscribe: "This chat summary is sent from %{site_link} when you are away. Change your %{email_preferences_link}, or %{unsubscribe_link} to unsubscribe."
       unsubscribe_no_link: "This chat summary is sent from %{site_link} when you are away. Change your %{email_preferences_link}."
       view_messages:

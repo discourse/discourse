@@ -3567,12 +3567,6 @@ sl:
         about: "Uredite svoje članstvo v skupinah in imena tukaj"
         group_members: "Člani skupine"
         delete: "Izbriši"
-        delete_confirm: "Izbriši skupino?"
-        delete_with_messages_confirm:
-          one: "Če izbrišete to skupino, bo %{count} \nsporočilo osirotelo in člani skupine ne bodo več imeli dostopa do njega.<br><br>Ali ste prepričani?"
-          two: "Če izbrišete to skupino, bosta %{count} \nsporočili osiroteli in člani skupine ne bodo več imeli dostopa do njiju.<br><br>Ali ste prepričani?"
-          few: "Če izbrišete to skupino, bodo %{count} \nsporočila osirotela in člani skupine ne bodo več imeli dostopa do njih.<br><br>Ali ste prepričani?"
-          other: "Če izbrišete to skupino, bo %{count} \nsporočil osirotelo in člani skupine ne bodo več imeli dostopa do njih.<br><br>Ali ste prepričani?"
         delete_owner_confirm: "Odstrani vlogo skrbnika uporabniku '%{username}'?"
         add: "Dodaj"
         custom: "Po meri"

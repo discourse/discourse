@@ -965,7 +965,6 @@ es:
     mailing_list_mode: "Desactivar el modo lista de correo"
     all: "No enviarme ningún correo electrónico desde %{sitename}"
     different_user_description: "Actualmente has iniciado sesión con un usuario diferente al que te hemos enviado el correo electrónico. Cierra sesión o entra en modo anónimo antes de intentarlo de nuevo."
-    not_found_description: "Lo sentimos, pero no hemos encontrado este enlace de baja. ¿Es posible que el enlace en el correo electrónico sea antiguo y haya caducado?"
     log_out: "Cerrar sesión"
     submit: "Guardar preferencias"
     digest_frequency:
@@ -4535,12 +4534,6 @@ es:
           logo_small:
             label: "Logo cuadrado"
             description: "Una versión cuadrada del logotipo. Estará en la parte superior izquierda al bajar en la página, y saldrá como icono cuando se comparta en las redes sociales. Lo ideal es que sea de al menos de 512x512 píxeles."
-          favicon:
-            label: "Icono del navegador"
-            description: "Icono utilizado para representar tu sitio en los navegadores web que se ve bien en tamaños pequeños. Se recomienda PNG o JPG. El logotipo cuadrado se utiliza por defecto."
-          large_icon:
-            label: "Icono grande"
-            description: "Icono utilizado para representar tu sitio en dispositivos móviles que se ve bien en tamaños mayores. Lo ideal es que sea superior a 512x512. Logotipo cuadrado utilizado por defecto."
       corporate:
         title: "Tu organización"
         fields:

@@ -1430,8 +1430,6 @@ nb_NO:
         fields:
           logo:
             label: "Primær logo"
-          large_icon:
-            label: "Stort ikon"
       corporate:
         fields:
           contact_url:

@@ -2146,8 +2146,6 @@ ro:
         fields:
           logo:
             label: "Logo-ul principal"
-          large_icon:
-            label: "Iconiță mare"
       corporate:
         fields:
           contact_url:

@@ -1724,12 +1724,6 @@ pt_BR:
       logout_disabled: "Não é possível sair enquanto o site estiver em modo somente leitura. Esse recurso está desativado."
     staff_writes_only_mode:
       enabled: "Este site está no modo apenas para funcionários. Continue navegando, mas as respostas, curtidas e outras ações são limitadas apenas aos membros da equipe."
-    too_few_topics_and_posts_notice_MF: >-
-      Vamos <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">começar a discussão!</a> {currentTopics, plural, one {Existe <strong>#</strong> tópico} other {Existem <strong>#</strong> tópicos}} e {currentPosts, plural, one {<strong>#</strong> uma postagem} other {<strong>#</strong> postagens}}. Os visitantes precisam de mais conteúdo para ler e responder. Recomendamos pelo menos {requiredTopics, plural, one {<strong>#</strong> tópico} other {<strong>#</strong> tópicos}} e {requiredPosts, plural, one {<strong>#</strong> postagem} other {<strong>#</strong> postagens}}. Somente a equipe pode ver esta mensagem.
-    too_few_topics_notice_MF: >-
-      Vamos <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">começar a discussão!</a> {currentTopics, plural, one {Existe <strong>#</strong> tópico} other {Existem <strong>#</strong> tópicos}}. Os visitantes precisam de mais conteúdo para ler e responder. Recomendamos pelo menos {requiredTopics, plural, one {<strong>#</strong> tópico} other { <strong>#</strong> tópicos}}. Somente a equipe pode ver esta mensagem.
-    too_few_posts_notice_MF: >-
-      Vamos <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">começar a discussão!</a> {currentPosts, plural, one {Existe <strong>#</strong> postagem} other {Existem <strong>#</strong> postagens}}. Os visitantes precisam de mais conteúdo para ler e responder. Recomendamos pelo menos {requiredPosts, plural, one {<strong>#</strong> postagem} other {<strong>#</strong> postagens}}. Somente a equipe pode ver esta mensagem.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>a quantidade de {rate, plural, one {# erro/hora} other {# erros/hora}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/hora} other {# erros/hora}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>a quantidade de {rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/minuto} other {# erros/minuto}}."
@@ -4082,10 +4076,6 @@ pt_BR:
         about: "Edite a associação no seu grupo e os nomes aqui"
         group_members: "Membros do grupo"
         delete: "Apagar"
-        delete_confirm: "Apagar este grupos?"
-        delete_with_messages_confirm:
-          one: "Excluir este grupo fará com que %{count} mensagem fiquem órfãs, os membros do grupo não poderão mais acessá-la.<br><br>Deseja prosseguir?"
-          other: "Excluir este grupo fará com que %{count} mensagens fiquem órfãs, os membros do grupo não poderão mais acessá-la.<br><br>Deseja prosseguir?"
         delete_failed: "Não é possível excluir o grupo. Se for um grupo automático, não poderá ser desfeito."
         delete_automatic_group: Este é um grupo automático e não pode ser excluído.
         delete_owner_confirm: "Remover privilégio de proprietário(a) de \"%{username}\"?"

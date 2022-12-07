@@ -238,7 +238,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def second_factor_enabled
-    object.totp_enabled? || object.security_keys_enabled? || object.backup_codes_enabled?
+    object.totp_enabled? || object.security_keys_enabled?
   end
 
   def featured_topic

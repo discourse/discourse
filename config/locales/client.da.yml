@@ -1643,12 +1643,8 @@ da:
       enabled: "Dette websted er i skrivebeskyttet tilstand lige nu. Fortsæt endelig med at kigge, men der kan ikke svares, sendes 'Synes godt om' eller andet indtil videre."
       login_disabled: "Login er deaktiveret, mens webstedet er i skrivebeskyttet tilstand."
       logout_disabled: "Log ud er deaktiveret mens webstedet er i skrivebeskyttet tilstand."
-    too_few_topics_and_posts_notice_MF: >-
-      Lad os <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">starte diskussionen!</a> Der {currentTopics, plural, one {er <strong>#</strong> emne} other {er <strong>#</strong> emner}} og {currentPosts, plural, one {<strong>#</strong> indlæg} other {<strong>#</strong> indlæg}}. Besøgende har brug for mere at læse og svare på — vi anbefaler i det mindste {requiredTopics, plural, one {<strong>#</strong> emne} other {<strong>#</strong> emner}} og {requiredPosts, plural, one {<strong>#</strong> indlæg} other {<strong>#</strong> indlæg}}. Kun medarbejdere kan se denne besked.
-    too_few_topics_notice_MF: >-
-      Lad os <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">starte diskussionen!</a> Der {currentTopics, plural, one {er <strong>#</strong> emne} other {er <strong>#</strong> emner}}. Besøgende har brug for mere at læse og svare på — vi anbefaler i det mindste {requiredTopics, plural, one {<strong>#</strong> emne} other {<strong>#</strong> emner}}. Kun medarbejdere kan se denne besked.
     too_few_posts_notice_MF: >-
-      Lad os <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">starte diskussionen!</a> Der {currentPosts, plural, one {er <strong>#</strong> indlæg} other {er <strong>#</strong> indlæg}}. Besøgende har brug for mere at læse og svare på — vi anbefaler i det mindste {requiredPosts, plural, one {<strong>#</strong> indlæg} other {<strong>#</strong> indlæg}}. Kun administratorer kan se denne besked.
+      Lad os <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">starte diskussionen!</a> Der {currentPosts, plural, one {er <strong>#</strong> indlæg} other {er <strong>#</strong> indlæg}}. Besøgende har brug for mere at læse og svare på — vi anbefaler i det mindste {requiredPosts, plural, one {<strong>#</strong> indlæg} other {<strong>#</strong> indlæg}}. Kun administratorer kan se denne besked.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# fejl/minut} other {# fejl/minut}}</a> har overskredet webstedsindstillingsgrænsen på {limit, plural, one {# fejl / minut} other {# fejl/minut}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fejl/minut} other {# fejl/minut}}</a> har nået webstedets indstillingsgrænse på {limit, plural, one {# fejl/minut} other {# fejl/minut}}."
@@ -3811,10 +3807,6 @@ da:
         about: "Redigér gruppemedlemsskaber og gruppenavne her"
         group_members: "Gruppe medlemmer"
         delete: "Slet"
-        delete_confirm: "Slet denne gruppe?"
-        delete_with_messages_confirm:
-          one: "Hvis du sletter denne gruppe, bliver %{count} besked forældreløs, gruppemedlemmer har ikke længere adgang til den.<br><br>Er du sikker?"
-          other: "Hvis du sletter denne gruppe, bliver %{count} beskeder forældreløse, gruppemedlemmer har ikke længere adgang til dem.<br><br>Er du sikker?"
         delete_failed: "Kan ikke slette gruppen. Hvis dette er en automatisk gruppe, kan den ikke ødelægges."
         delete_automatic_group: Dette er en automatisk gruppe og kan ikke slettes.
         delete_owner_confirm: "Fjern ejer-privilegier for '%{username}'?"

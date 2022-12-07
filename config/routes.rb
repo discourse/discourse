@@ -561,11 +561,11 @@ Discourse::Application.routes.draw do
 
     get "highlight-js/:hostname/:version.js" => "highlight_js#show", constraints: { hostname: /[\w\.-]+/, format: :js }
 
-    get "stylesheets/:name.css.map" => "stylesheets#show_source_map", constraints: { name: /[-a-z0-9_]+/ }
-    get "stylesheets/:name.css" => "stylesheets#show", constraints: { name: /[-a-z0-9_]+/ }
+    get "stylesheets/:name" => "stylesheets#show_source_map", constraints: { name: /[-a-z0-9_]+/, format: /css\.map/ }, format: true
+    get "stylesheets/:name" => "stylesheets#show", constraints: { name: /[-a-z0-9_]+/, format: "css" }, format: true
     get "color-scheme-stylesheet/:id(/:theme_id)" => "stylesheets#color_scheme", constraints: { format: :json }
-    get "theme-javascripts/:digest.js" => "theme_javascripts#show", constraints: { digest: /\h{40}/ }
-    get "theme-javascripts/:digest.map" => "theme_javascripts#show_map", constraints: { digest: /\h{40}/ }
+    get "theme-javascripts/:digest" => "theme_javascripts#show", constraints: { digest: /\h{40}/, format: :js }, format: true
+    get "theme-javascripts/:digest" => "theme_javascripts#show_map", constraints: { digest: /\h{40}/, format: :map }, format: true
     get "theme-javascripts/tests/:theme_id-:digest.js" => "theme_javascripts#show_tests"
 
     post "uploads/lookup-metadata" => "uploads#metadata"

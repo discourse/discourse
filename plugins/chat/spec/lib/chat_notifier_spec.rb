@@ -297,6 +297,38 @@ describe Chat::ChatNotifier do
         expect(to_notify_2[@chat_group.name]).to be_empty
       end
 
+      it "skips groups with too many members" do
+        SiteSetting.max_users_notified_per_group_mention = (group.user_count - 1)
+
+        msg = build_cooked_msg("Hello @#{group.name}", user_1)
+
+        to_notify = described_class.new(msg, msg.created_at).notify_new
+
+        expect(to_notify[group.name]).to be_nil
+      end
+
+      it "respects the 'max_mentions_per_chat_message' setting and skips notifications" do
+        SiteSetting.max_mentions_per_chat_message = 1
+
+        msg = build_cooked_msg("Hello @#{user_2.username} and @#{user_3.username}", user_1)
+
+        to_notify = described_class.new(msg, msg.created_at).notify_new
+
+        expect(to_notify[:direct_mentions]).to be_empty
+        expect(to_notify[group.name]).to be_nil
+      end
+
+      it "respects the max mentions setting and skips notifications when mixing users and groups" do
+        SiteSetting.max_mentions_per_chat_message = 1
+
+        msg = build_cooked_msg("Hello @#{user_2.username} and @#{group.name}", user_1)
+
+        to_notify = described_class.new(msg, msg.created_at).notify_new
+
+        expect(to_notify[:direct_mentions]).to be_empty
+        expect(to_notify[group.name]).to be_nil
+      end
+
       describe "users ignoring or muting the user creating the message" do
         it "does not send notifications to the user inside the group who is muting the acting user" do
           group.add(user_3)
@@ -341,7 +373,7 @@ describe Chat::ChatNotifier do
 
         expect(unreachable_msg).to be_present
         expect(unreachable_msg.data[:without_membership]).to be_empty
-        unreachable_users = unreachable_msg.data[:cannot_see].map { |u| u[:id] }
+        unreachable_users = unreachable_msg.data[:cannot_see].map { |u| u["id"] }
         expect(unreachable_users).to contain_exactly(user_3.id)
       end
 
@@ -375,7 +407,7 @@ describe Chat::ChatNotifier do
 
           expect(unreachable_msg).to be_present
           expect(unreachable_msg.data[:without_membership]).to be_empty
-          unreachable_users = unreachable_msg.data[:cannot_see].map { |u| u[:id] }
+          unreachable_users = unreachable_msg.data[:cannot_see].map { |u| u["id"] }
           expect(unreachable_users).to contain_exactly(user_3.id)
         end
 
@@ -400,7 +432,7 @@ describe Chat::ChatNotifier do
 
           expect(unreachable_msg).to be_present
           expect(unreachable_msg.data[:without_membership]).to be_empty
-          unreachable_users = unreachable_msg.data[:cannot_see].map { |u| u[:id] }
+          unreachable_users = unreachable_msg.data[:cannot_see].map { |u| u["id"] }
           expect(unreachable_users).to contain_exactly(user_3.id)
         end
       end
@@ -425,7 +457,7 @@ describe Chat::ChatNotifier do
 
         expect(not_participating_msg).to be_present
         expect(not_participating_msg.data[:cannot_see]).to be_empty
-        not_participating_users = not_participating_msg.data[:without_membership].map { |u| u[:id] }
+        not_participating_users = not_participating_msg.data[:without_membership].map { |u| u["id"] }
         expect(not_participating_users).to contain_exactly(user_3.id)
       end
 
@@ -477,7 +509,7 @@ describe Chat::ChatNotifier do
 
         expect(not_participating_msg).to be_present
         expect(not_participating_msg.data[:cannot_see]).to be_empty
-        not_participating_users = not_participating_msg.data[:without_membership].map { |u| u[:id] }
+        not_participating_users = not_participating_msg.data[:without_membership].map { |u| u["id"] }
         expect(not_participating_users).to contain_exactly(user_3.id)
       end
 
@@ -501,7 +533,7 @@ describe Chat::ChatNotifier do
 
         expect(not_participating_msg).to be_present
         expect(not_participating_msg.data[:cannot_see]).to be_empty
-        not_participating_users = not_participating_msg.data[:without_membership].map { |u| u[:id] }
+        not_participating_users = not_participating_msg.data[:without_membership].map { |u| u["id"] }
         expect(not_participating_users).to contain_exactly(user_3.id)
       end
 
@@ -543,6 +575,49 @@ describe Chat::ChatNotifier do
           end
 
         expect(messages).to be_empty
+      end
+    end
+
+    describe "enforcing limits when mentioning groups" do
+      fab!(:user_3) { Fabricate(:user) }
+      fab!(:group) do
+        Fabricate(
+          :public_group,
+          users: [user_2, user_3],
+          mentionable_level: Group::ALIAS_LEVELS[:everyone],
+        )
+      end
+
+      it "sends a message to the client signaling the group has too many members" do
+        SiteSetting.max_users_notified_per_group_mention = (group.user_count - 1)
+        msg = build_cooked_msg("Hello @#{group.name}", user_1)
+
+        messages = MessageBus.track_publish("/chat/#{channel.id}") do
+          to_notify = described_class.new(msg, msg.created_at).notify_new
+
+          expect(to_notify[group.name]).to be_nil
+        end
+
+        too_many_members_msg = messages.first
+        expect(too_many_members_msg).to be_present
+        too_many_members = too_many_members_msg.data[:groups_with_too_many_members]
+        expect(too_many_members).to contain_exactly(group.name)
+      end
+
+      it "sends a message to the client signaling the group doesn't allow mentions" do
+        group.update!(mentionable_level: Group::ALIAS_LEVELS[:only_admins])
+        msg = build_cooked_msg("Hello @#{group.name}", user_1)
+
+        messages = MessageBus.track_publish("/chat/#{channel.id}") do
+          to_notify = described_class.new(msg, msg.created_at).notify_new
+
+          expect(to_notify[group.name]).to be_nil
+        end
+
+        mentions_disabled_msg = messages.first
+        expect(mentions_disabled_msg).to be_present
+        mentions_disabled = mentions_disabled_msg.data[:group_mentions_disabled]
+        expect(mentions_disabled).to contain_exactly(group.name)
       end
     end
   end

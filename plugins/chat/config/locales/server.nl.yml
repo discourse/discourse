@@ -53,6 +53,7 @@ nl:
       duplicate_message: "Je hebt te kort geleden een identiek bericht geplaatst."
       delete_channel_failed: "Kanaal verwijderen mislukt, probeer het opnieuw."
       minimum_length_not_met: "Bericht is te kort, moet minimaal %{minimum} tekens bevatten."
+      message_too_long: "Bericht is te lang, berichten mogen maximaal %{maximum} tekens lang zijn."
       max_reactions_limit_reached: "Nieuwe reacties op dit bericht zijn niet toegestaan."
       message_move_invalid_channel: "Het bron- en bestemmingskanaal moeten openbare kanalen zijn."
       message_move_no_messages_found: "Er zijn geen berichten gevonden met de opgegeven bericht-ID's."

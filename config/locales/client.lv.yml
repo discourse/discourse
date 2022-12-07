@@ -1496,8 +1496,6 @@ lv:
       enabled: "Vietne ir \"tikai lasīšanas\" režīmā. Lūdzu turpiniet lasīt, taču atbildēšana, atzinības izteikšana un citas funkcijas šobrīd ir atslēgtas."
       login_disabled: "Pieslēgšanās ir atslēgta, kamēr vietne ir \"tikai lasīšanas\" režīmā."
       logout_disabled: "Iziešana ir atslēgta, kamēr vietne ir \"tikai lasīšanas\" režīmā."
-    too_few_topics_and_posts_notice_MF: >-
-      Sāksim diskusiju <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/"></a> Tur {currentTopics, plural, zero {} one {ir <strong>#</strong> tēma} other {ir <strong>#</strong> tēmas}} un {currentPosts, plural, one {<strong>#</strong> ziņa} other {<strong>#</strong> ziņas}}. Apmeklētājiem ir nepieciešams vairāk lasīt un atbildēt - mēs vismaz iesakām {requiredTopics, plural, one {<strong>#</strong> tēma} other {<strong>#</strong> tēmas}} un {requiredPosts, plural, one {<strong>#</strong> ziņa} other {<strong>#</strong> ziņas}}. Šo ziņojumu var redzēt tikai darbinieki.
     learn_more: "uzzināt vairāk..."
     first_post: Pirmais ieraksts
     mute: Noklusināt
@@ -2931,7 +2929,6 @@ lv:
         about: "Labot jūsu piederīgu grupām un to nosaukumus"
         group_members: "Grupas biedri"
         delete: "Dzēst"
-        delete_confirm: "Dzēst šo grupu?"
         delete_failed: "Neizdevās izdzēst grupu. Ja šī ir automātiski izveidota grupa, to nav iespējams iznīcināt."
         delete_owner_confirm: "Noņemt lietotāja privilēģijas '%{username}'?"
         add: "Pievienot"

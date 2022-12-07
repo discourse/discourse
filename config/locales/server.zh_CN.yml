@@ -917,7 +917,6 @@ zh_CN:
     mailing_list_mode: "关闭邮寄名单模式"
     all: "不要从 %{sitename} 向我发送任何邮件"
     different_user_description: "您当前登录的用户与我们通过电子邮件联系的用户不同。请退出，或进入匿名模式，然后重试。"
-    not_found_description: "抱歉，我们找不到此退订。可能是您电子邮件中的链接太旧并且已过期？"
     log_out: "退出"
     submit: "保存偏好设置"
     digest_frequency:
@@ -4449,12 +4448,6 @@ zh_CN:
           logo_small:
             label: "方形徽标"
             description: "您徽标的方形版本。向下滚动时以及在社交平台上分享时显示在左上角。理想情况下至少为 512x512。"
-          favicon:
-            label: "浏览器图标"
-            description: "用于在 Web 浏览器中表示您的站点的图标，在小尺寸下看起来不错。建议使用 PNG 或 JPG。默认使用方形徽标。"
-          large_icon:
-            label: "大图标"
-            description: "用于在移动设备上表示您的站点的图标，在较大尺寸下看起来不错。理想情况下大于 512x512。默认使用方形标志。"
       corporate:
         title: "您的组织"
         fields:

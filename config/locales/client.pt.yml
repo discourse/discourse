@@ -3612,7 +3612,6 @@ pt:
         about: "Editar aqui a sua participação e nomes no grupo"
         group_members: "Membros do grupo"
         delete: "Eliminar"
-        delete_confirm: "Eliminar este grupo?"
         delete_failed: "Impossível eliminar grupo. Se se trata de um grupo automático, não pode ser eliminado."
         delete_automatic_group: Este é um grupo automático e não pode ser apagado.
         delete_owner_confirm: "Remover privilégios do proprietário para '%{username}'?"

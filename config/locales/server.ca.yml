@@ -2983,10 +2983,6 @@ ca:
             label: "Logo principal"
           logo_small:
             label: "Logotip quadrat"
-          favicon:
-            label: "Icona del navegador"
-          large_icon:
-            label: "Icona gran"
       corporate:
         fields:
           company_name:

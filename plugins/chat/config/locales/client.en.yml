@@ -105,17 +105,47 @@ en:
       join: "Join"
       new_messages: "new messages"
       mention_warning:
-        cannot_see:
-          one: "%{usernames} cannot access this channel and was not notified."
-          other: "%{usernames} cannot access this channel and were not notified."
         dismiss: "dismiss"
+        cannot_see:
+          one: "%{username} cannot access this channel and was not notified."
+          other: "%{username} and %{others} cannot access this channel and were not notified."
         invitations_sent:
           one: "Invitation sent"
           other: "Invitations sent"
         invite: "Invite to channel"
         without_membership:
-          one: "%{usernames} has not joined this channel."
-          other: "%{usernames} have not joined this channel."
+          one: "%{username} has not joined this channel."
+          other: "%{username} and %{others} have not joined this channel."
+        group_mentions_disabled: 
+          one: "%{group_name} doesn't allow mentions"
+          other: "%{group_name} and %{others} doesn't allow mentions"
+        too_many_members: 
+          one: "%{group_name} has too many members. No one was notified"
+          other: "%{group_name} and %{others} have too many members. No one was notified"
+        warning_multiple:
+          one: "%{count} other"
+          other: "%{count} others"
+
+        groups:
+          header:
+            some: "Some users won't be notified"
+            all: "Nobody will be notified"
+          unreachable:
+            one: "@%{group} doesn't allow mentions"
+            other: "@%{group} and @%{group_2} doesn't allow mentions"
+          unreachable_multiple: "@%{group} and %{count} others doesn't allow mentions"
+          too_many_members:
+            one: "Mentioning @%{group} exceeds the %{notification_limit} of %{limit}"
+            other: "Mentioning both @%{group} or @%{group_2} exceeds the %{notification_limit} of %{limit}"
+          too_many_members_multiple: "These %{count} groups exceed the %{notification_limit} of %{limit}"
+          users_limit:
+            one: "%{count} user"
+            other: "%{count} users"
+          notification_limit: "notification limit"
+        too_many_mentions: "This message exceeds the %{notification_limit} of %{limit}"
+        mentions_limit:
+          one: "%{count} mention"
+          other: "%{count} mentions"
       aria_roles:
         header: "Chat header"
         composer: "Chat composer"

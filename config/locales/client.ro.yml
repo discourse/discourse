@@ -3071,7 +3071,6 @@ ro:
         about: "Editează aici numele și apartenența la grupuri"
         group_members: "Membrii grupului"
         delete: "Șterge"
-        delete_confirm: "Ștergi acest grup?"
         delete_failed: "Imposibil de șters grupul. Dacă este unul automat, nu se poate șterge."
         delete_owner_confirm: "Revocă dreptul de proprietar pentru '%{username}'?"
         add: "Adaugă"

@@ -758,6 +758,19 @@
   }
   .second-factor-item {
     margin-top: 0.75em;
+    width: 500px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    margin: 5px 0px;
+    align-items: center;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+    .btn-danger .d-icon {
+      color: var(--danger);
+    }
   }
   .btn.edit {
     min-height: auto;

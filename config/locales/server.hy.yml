@@ -2995,8 +2995,6 @@ hy:
         fields:
           logo:
             label: "Հիմնական Լոգո"
-          large_icon:
-            label: "Մեծ Պատկերակ"
       corporate:
         fields:
           company_name:

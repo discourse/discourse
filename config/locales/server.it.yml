@@ -965,7 +965,6 @@ it:
     mailing_list_mode: "Disabilita la modalità mailing list"
     all: "Non inviarmi nessuna email da %{sitename}"
     different_user_description: "Attualmente hai effettuato l'accesso con un account utente diverso da quello a cui abbiamo scritto. Per favore disconnettiti, oppure attiva la modalità anonima, e riprova."
-    not_found_description: "Spiacenti, non siamo riusciti ad annullare questa iscrizione. È possibile che il collegamento nella tua email sia troppo vecchio e sia scaduto?"
     log_out: "Disconnetti"
     submit: "Salva preferenze"
     digest_frequency:
@@ -4123,12 +4122,6 @@ it:
           logo_small:
             label: "Logo quadrato"
             description: "Una versione quadrata del tuo logo. Mostrata nell'angolo in alto a sinistra quando scorri verso il basso e nelle condivisioni su social media. Idealmente più grande di 512x512."
-          favicon:
-            label: "Icona del Browser"
-            description: "Icona utilizzata per rappresentare il tuo sito nei browser web che si veda bene in dimensioni ridotte. Si consiglia il formato PNG o JPG. Il logo quadrato è utilizzato per impostazione predefinita."
-          large_icon:
-            label: "Icona Grande"
-            description: "Icona usata per rappresentare il tuo sito sul dispositivi mobili, che si veda bene in grandi dimensioni. Idealmente più grande di 512 x 512. Per impostazione predefinita si usa il logo quadrato."
       corporate:
         title: "La tua organizzazione"
         fields:

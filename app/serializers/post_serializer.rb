@@ -88,7 +88,8 @@ class PostSerializer < BasicPostSerializer
              :reviewable_score_count,
              :reviewable_score_pending_count,
              :user_suspended,
-             :user_status
+             :user_status,
+             :mentioned_users
 
   def initialize(object, opts)
     super(object, opts)
@@ -560,6 +561,17 @@ class PostSerializer < BasicPostSerializer
     UserStatusSerializer.new(object.user&.user_status, root: false)
   end
 
+  def mentioned_users
+    if @topic_view && (mentions = @topic_view.mentions[object.id])
+      return mentions
+          .map { |username| @topic_view.mentioned_users[username] }
+          .compact
+          .map { |user| BasicUserWithStatusSerializer.new(user, root: false) }
+    end
+
+    []
+  end
+
 private
 
   def can_review_topic?
@@ -590,5 +602,4 @@ private
   def post_actions
     @post_actions ||= (@topic_view&.all_post_actions || {})[object.id]
   end
-
 end

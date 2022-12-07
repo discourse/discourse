@@ -864,7 +864,7 @@ Widget.triangulate(arg: "test")
       ".chat-message-container[data-id='176'] .chat-message-mention-warning .without-membership"
     ).innerText;
     assert.ok(withoutMembershipText.includes("eviltrout"));
-    assert.ok(withoutMembershipText.includes("sam"));
+    assert.ok(withoutMembershipText.includes("1 other"));
 
     await click(
       ".chat-message-container[data-id='176'] .chat-message-mention-warning .invite-link"
