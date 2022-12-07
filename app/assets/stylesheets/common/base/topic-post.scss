@@ -1065,7 +1065,15 @@ kbd {
   margin: 0 0.15em;
   min-width: 24px;
   padding: 0.15em 0.6em;
-
+  img {
+    margin: 0 .5em;
+    &:first-child {
+      margin-left: 0;
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+  }
   // don't allow more than 3 nested elements to prevent FF from crashing
   // cf. http://what.thedailywtf.com/t/nested-elements/7927
   // 3 levels are needed to prevent highlighted words being hidden
