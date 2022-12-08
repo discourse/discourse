@@ -13,17 +13,21 @@
 
     <HorizontalOverflowNav @className="messages-nav" id="user-navigation-secondary__horizontal-nav" />
 
-    {{#if this.site.desktopView}}
-      <div class="navigation-controls">
-        {{#if this.isGroup}}
-          <GroupNotificationsButton @value={{this.group.group_user.notification_level}} @onChange={{this.changeGroupNotificationLevel}} />
+    <div class="navigation-controls">
+      {{#if this.site.mobileView}}
+        {{#if this.currentUser.admin}}
+          <BulkSelectToggle @parentController={{"user-topics-list"}} @tagName=""/>
         {{/if}}
+      {{/if}}
 
-        {{#if this.showNewPM}}
-          <DButton @class="btn-primary new-private-message" @action={{route-action "composePrivateMessage"}} @icon="envelope" @label="user.new_private_message" />
-        {{/if}}
-      </div>
-    {{/if}}
+      {{#if this.isGroup}}
+        <GroupNotificationsButton @value={{this.group.group_user.notification_level}} @onChange={{this.changeGroupNotificationLevel}} />
+      {{/if}}
+
+      {{#if this.showNewPM}}
+        <DButton @class="btn-primary new-private-message" @action={{route-action "composePrivateMessage"}} @icon="envelope" @label="user.new_private_message" />
+      {{/if}}
+    </div>
   </div>
 {{else}}
   <DSection @class="user-secondary-navigation" @pageClass="user-messages">
@@ -127,16 +131,17 @@
 {{/if}}
 
 <section class="user-content">
-  <div class="list-actions">
-    {{#if this.site.mobileView}}
-      {{#if this.showNewPM}}
-        <DButton @class="btn-primary new-private-message" @action={{route-action "composePrivateMessage"}} @icon="envelope" @label="user.new_private_message" />
+  {{#unless this.currentUser.redesigned_user_page_nav_enabled}}
+    <div class="list-actions">
+      {{#if this.site.mobileView}}
+        {{#if this.showNewPM}}
+          <DButton @class="btn-primary new-private-message" @action={{route-action "composePrivateMessage"}} @icon="envelope" @label="user.new_private_message" />
+        {{/if}}
+        {{#if this.currentUser.admin}}
+          <BulkSelectToggle @parentController={{"user-topics-list"}} @tagName=""/>
+        {{/if}}
       {{/if}}
-      {{#if this.currentUser.admin}}
-        <BulkSelectToggle @parentController={{"user-topics-list"}} @tagName=""/>
-      {{/if}}
-    {{/if}}
-  </div>
-
+    </div>
+  {{/unless}}
   {{outlet}}
 </section>
