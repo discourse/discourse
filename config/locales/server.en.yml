@@ -727,7 +727,7 @@ en:
       one: "%{count} Like"
       other: "%{count} Likes"
     cannot_permanently_delete:
-      many_posts: "You can not permanently delete this topic because there are other posts."
+      many_posts: "This topic has undeleted posts. Please permanently delete them before permanently deleting the topic."
       wait_or_different_admin: "You must wait %{time_left} before permanently deleting this post or a different administrator must do it."
 
   rate_limiter:
