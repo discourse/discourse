@@ -4013,6 +4013,32 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(403)
         expect(response.parsed_body["error_type"]).to eq('invalid_access')
       end
+
+      it "raises an error if the user sets a delete timer" do
+        user.update!(trust_level: TrustLevel[4])
+        sign_in(user)
+
+        post "/t/#{topic.id}/timer.json", params: {
+          time: 10,
+          status_type: 'delete'
+        }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq('invalid_access')
+      end
+
+      it "raises an error if the user sets a delete_replies timer" do
+        user.update!(trust_level: TrustLevel[4])
+        sign_in(user)
+
+        post "/t/#{topic.id}/timer.json", params: {
+          time: 10,
+          status_type: 'delete_replies'
+        }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq('invalid_access')
+      end
     end
   end
 

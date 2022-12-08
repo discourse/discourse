@@ -496,7 +496,7 @@ class TopicsController < ApplicationController
 
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_moderate!(topic)
-    puts status_type
+
     if TopicTimer.destructive_types.values.include?(status_type)
       guardian.ensure_can_delete!(topic)
     end
