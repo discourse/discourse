@@ -143,7 +143,7 @@ input.channel-members-view__search-input {
   }
 }
 
-.chat-channel-edit-description-modal__description-input {
+.chat-channel-edit-description-modal__description-input textarea {
   display: flex;
   margin: 0;
   min-height: 200px;
@@ -153,11 +153,4 @@ input.channel-members-view__search-input {
   display: flex;
   padding-bottom: 0.75rem;
   color: var(--primary-medium);
-
-  &-word-counter {
-    display: block;
-    text-align: right;
-    margin-top: 0.5rem;
-    font-size: var(--font-down-1);
-  }
 }

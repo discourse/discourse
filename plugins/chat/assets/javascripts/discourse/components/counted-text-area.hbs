@@ -1,0 +1,6 @@
+<div ...attributes class={{concat-class "counted-text-area" (if (gt @value.length @max) "exceeded")}}>
+  <textarea {{on "input" (action @onChangeTextAreaValue value="target.value")}}>{{@value}}</textarea>
+  <small>
+    {{@value.length}}/{{@max}}
+  </small>
+</div>

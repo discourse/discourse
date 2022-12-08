@@ -9,7 +9,9 @@ const DESCRIPTION_MAX_LENGTH = 280;
 export default class ChatChannelEditDescriptionController extends Controller.extend(
   ModalFunctionality
 ) {
-  @tracked editedDescription = "";
+  @tracked editedDescription = this.model.description || "";
+  onChangeChatChannelDescription = (newDescription) =>
+    (this.editedDescription = newDescription);
 
   @computed("model.description", "editedDescription")
   get isSaveDisabled() {
@@ -23,12 +25,7 @@ export default class ChatChannelEditDescriptionController extends Controller.ext
     return DESCRIPTION_MAX_LENGTH;
   }
 
-  onShow() {
-    this.set("editedDescription", this.model.description || "");
-  }
-
   onClose() {
-    this.set("editedDescription", "");
     this.clearFlash();
   }
 
@@ -46,11 +43,5 @@ export default class ChatChannelEditDescriptionController extends Controller.ext
           this.flash(event.jqXHR.responseJSON.errors.join("\n"), "error");
         }
       });
-  }
-
-  @action
-  onChangeChatChannelDescription(description) {
-    this.clearFlash();
-    this.set("editedDescription", description);
   }
 }
