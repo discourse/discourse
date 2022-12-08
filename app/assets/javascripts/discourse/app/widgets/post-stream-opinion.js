@@ -26,6 +26,7 @@ export function addPostTransformCallback(callback) {
 }
 
 let _enabled = true;
+const _PLACEHOLDER = "Add your opinion about whether this legislation or candidate benefits you or not. Use tags to indicate what interest group or demographic you identify with."
 const DAY = 1000 * 60 * 60 * 24;
 
 const _dontCloak = {};
@@ -249,7 +250,7 @@ export default createWidget("post-stream-opinion", {
 
       // Handle time gaps
       const curTime = new Date(transformed.created_at).getTime();
-      if (prevDate) {
+      if (prevDate && result.length) {
         const daysSince = Math.floor((curTime - prevDate) / DAY);
         if (daysSince > this.siteSettings.show_time_gap_days) {
           result.push(this.attach("time-gap", { daysSince }));
@@ -317,7 +318,7 @@ export default createWidget("post-stream-opinion", {
     if (!result.length) {
       return [
         new RawHtml({
-          html: "<div><p>No opinions have been provided yet. Be the first to share your opinion.</p></div>"
+          html: `<div style='padding-right: 8rem;'><p>${_PLACEHOLDER}</p></div>`
         })
       ]
     }
