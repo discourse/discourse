@@ -1462,14 +1462,10 @@ RSpec.describe PrettyText do
 
     cooked = PrettyText.cook(" #unknown::tag #known #known::tag #testing", user_id: user.id)
 
-    [
-      "<span class=\"hashtag-raw\">#unknown::tag</span>",
-      "<a class=\"hashtag-cooked\" href=\"#{category2.url}\" data-type=\"category\" data-slug=\"known\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>known</span></a>",
-      "<a class=\"hashtag-cooked\" href=\"/tag/known\" data-type=\"tag\" data-slug=\"known\"><svg class=\"fa d-icon d-icon-tag svg-icon svg-node\"><use href=\"#tag\"></use></svg><span>known</span></a>",
-      "<a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"testing\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>testing</span></a>"
-    ].each do |element|
-      expect(cooked).to include(element)
-    end
+    expect(cooked).to include("<span class=\"hashtag-raw\">#unknown::tag</span>")
+    expect(cooked).to include("<a class=\"hashtag-cooked\" href=\"#{category2.url}\" data-type=\"category\" data-slug=\"known\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>known</span></a>")
+    expect(cooked).to include("<a class=\"hashtag-cooked\" href=\"/tag/known\" data-type=\"tag\" data-slug=\"known\" data-ref=\"known::tag\"><svg class=\"fa d-icon d-icon-tag svg-icon svg-node\"><use href=\"#tag\"></use></svg><span>known</span></a>")
+    expect(cooked).to include("<a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"testing\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>testing</span></a>")
 
     cooked = PrettyText.cook("[`a` #known::tag here](http://example.com)", user_id: user.id)
 
@@ -1485,7 +1481,7 @@ RSpec.describe PrettyText do
 
     cooked = PrettyText.cook("<A href='/a'>test</A> #known::tag", user_id: user.id)
     html = <<~HTML
-      <p><a href="/a">test</a> <a class="hashtag-cooked" href="/tag/known" data-type="tag" data-slug="known"><svg class="fa d-icon d-icon-tag svg-icon svg-node"><use href="#tag"></use></svg><span>known</span></a></p>
+      <p><a href="/a">test</a> <a class="hashtag-cooked" href="/tag/known" data-type="tag" data-slug="known" data-ref="known::tag"><svg class="fa d-icon d-icon-tag svg-icon svg-node"><use href="#tag"></use></svg><span>known</span></a></p>
     HTML
     expect(cooked).to eq(html.strip)
 
