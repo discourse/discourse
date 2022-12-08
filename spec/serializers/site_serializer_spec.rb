@@ -147,7 +147,7 @@ RSpec.describe SiteSerializer do
     fab!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
 
     before do
-      SiteSetting.enable_experimental_sidebar_hamburger = true
+      SiteSetting.navigation_menu = "sidebar"
       SiteSetting.tagging_enabled = true
       SiteSetting.default_sidebar_tags = "#{tag.name}|#{tag2.name}|#{hidden_tag.name}"
     end
@@ -160,8 +160,8 @@ RSpec.describe SiteSerializer do
       expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
     end
 
-    it 'is not included in the serialised object when experimental sidebar has not been enabled' do
-      SiteSetting.enable_experimental_sidebar_hamburger = false
+    it 'is not included in the serialised object when navigation menu is legacy' do
+      SiteSetting.navigation_menu = "legacy"
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
       expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)

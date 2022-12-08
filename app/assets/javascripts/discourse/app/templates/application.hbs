@@ -25,7 +25,7 @@
 
     <div class="sidebar-wrapper">
       {{!-- empty div allows for animation --}}
-      {{#if (and this.siteSettings.enable_experimental_sidebar_hamburger this.sidebarEnabled this.showSidebar)}}
+      {{#if (and this.sidebarEnabled this.showSidebar)}}
         <Sidebar @toggleSidebar={{action "toggleSidebar"}}/>
       {{/if}}
     </div>

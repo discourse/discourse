@@ -115,6 +115,26 @@ RSpec.describe DiscourseRedis do
       end
     end
 
+    describe '#sadd?' do
+      it "should send the right command with the right key prefix to redis" do
+        redis = DiscourseRedis.new
+
+        redis.without_namespace.expects(:sadd?).with("default:testset", "1", anything)
+
+        redis.sadd?("testset", "1")
+      end
+    end
+
+    describe '#srem?' do
+      it "should send the right command with the right key prefix to redis" do
+        redis = DiscourseRedis.new
+
+        redis.without_namespace.expects(:srem?).with("default:testset", "1", anything)
+
+        redis.srem?("testset", "1")
+      end
+    end
+
     describe 'when namespace is disabled' do
       let(:redis) { DiscourseRedis.new(nil, namespace: false) }
 

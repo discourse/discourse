@@ -167,6 +167,9 @@ function _updateSearchCache(term, results) {
   return results;
 }
 
+// Note that the search term is _not_ required here, and we follow special
+// logic similar to @mentions when there is no search term, to show some
+// useful default categories, tags, etc.
 function _searchGeneric(term, siteSettings, contextualHashtagConfiguration) {
   if (currentSearch) {
     currentSearch.abort();
@@ -187,7 +190,7 @@ function _searchGeneric(term, siteSettings, contextualHashtagConfiguration) {
           resolve(CANCELLED_STATUS);
         }, 5000);
 
-    if (term === "") {
+    if (!siteSettings.enable_experimental_hashtag_autocomplete && term === "") {
       return resolve(CANCELLED_STATUS);
     }
 
@@ -221,19 +224,13 @@ function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
 }
 
 function _findAndReplaceSeenHashtagPlaceholder(
-  slug,
+  slugRef,
   contextualHashtagConfiguration,
   hashtagSpan
 ) {
   contextualHashtagConfiguration.forEach((type) => {
-    // remove type suffixes
-    const typePostfix = `::${type}`;
-    if (slug.endsWith(typePostfix)) {
-      slug = slug.slice(0, slug.length - typePostfix.length);
-    }
-
     // replace raw span for the hashtag with a cooked one
-    const matchingSeenHashtag = seenHashtags[type]?.[slug];
+    const matchingSeenHashtag = seenHashtags[type]?.[slugRef];
     if (matchingSeenHashtag) {
       // NOTE: When changing the HTML structure here, you must also change
       // it in the hashtag-autocomplete markdown rule, and vice-versa.

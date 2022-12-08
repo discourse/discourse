@@ -14,7 +14,7 @@ acceptance(
     needs.user();
 
     needs.settings({
-      enable_experimental_sidebar_hamburger: false,
+      navigation_menu: "legacy",
     });
 
     test("clicking header hamburger icon displays old hamburger dropdown", async function (assert) {
@@ -32,8 +32,7 @@ acceptance(
     needs.user();
 
     needs.settings({
-      enable_experimental_sidebar_hamburger: true,
-      enable_sidebar: false,
+      navigation_menu: "header dropdown",
     });
 
     test("showing and hiding sidebar", async function (assert) {
@@ -80,8 +79,7 @@ acceptance(
     needs.user();
 
     needs.settings({
-      enable_experimental_sidebar_hamburger: true,
-      enable_sidebar: true,
+      navigation_menu: "sidebar",
     });
 
     test("viewing keyboard shortcuts using sidebar", async function (assert) {

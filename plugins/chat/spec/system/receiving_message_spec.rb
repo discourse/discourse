@@ -20,8 +20,7 @@ RSpec.describe "Receiving message", type: :system, js: true do
 
   context "when core sidebar is enabled" do
     before do
-      SiteSetting.enable_sidebar = true
-      SiteSetting.enable_experimental_sidebar_hamburger = true
+      SiteSetting.navigation_menu = "sidebar"
     end
 
     context "when receiving a direct message" do

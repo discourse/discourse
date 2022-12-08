@@ -962,8 +962,6 @@ hu:
     min_password_length: "Minimum jelszóhossz."
     block_common_passwords: "A 10 000 leggyakoribb jelszó tiltása."
     discord_secret: "Discord titkos kulcs"
-    enable_experimental_sidebar_hamburger: "Lehetővé teszi a kísérleti oldalsáv és a felhasználói hamburger legördülő menü engedélyezését."
-    enable_sidebar: "Engedélyezi a kísérleti oldalsávot."
     rate_limit_new_user_create_topic: "Egy téma létrehozása után az új felhasználóknak (n) másodpercet kell várniuk, mielőtt új témát hozhatnak létre."
     suggested_topics: "A javasolt témák száma a téma alján láthatók."
     limit_suggested_to_category: "Csak a javasolt kategóriákból származó témakörök jelenhetnek meg a javasolt témakörökben."

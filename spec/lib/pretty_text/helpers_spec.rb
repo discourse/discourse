@@ -62,7 +62,7 @@ RSpec.describe PrettyText::Helpers do
           description: "Coolest things ever",
           icon: "tag",
           slug: "somecooltag",
-          ref: "somecooltag",
+          ref: "somecooltag::tag",
           type: "tag",
         },
       )
@@ -73,7 +73,7 @@ RSpec.describe PrettyText::Helpers do
           description: "Really great stuff here",
           icon: "folder",
           slug: "someawesomecategory",
-          ref: "someawesomecategory",
+          ref: "someawesomecategory::category",
           type: "category",
         },
       )

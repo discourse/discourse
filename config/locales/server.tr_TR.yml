@@ -1669,8 +1669,6 @@ tr_TR:
     top_topics_formula_first_post_likes_multiplier: "en popüler konular formülünde ilk gönderi beğeni çarpanının (n) değeri: \"log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)\""
     top_topics_formula_least_likes_per_post_multiplier: "en popüler konular formülünde gönderi başına en az beğeni çarpanı (n) değeri: \"log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)\""
     enable_safe_mode: "Kullanıcıların eklentilerde hata ayıklamak için güvenli moda girmesine izin verin."
-    enable_experimental_sidebar_hamburger: "Deneysel kenar çubuğunun ve kullanıcı hamburger açılır menüsünün etkinleştirilmesini sağlar."
-    enable_sidebar: "Deneysel kenar çubuğunu etkinleştirir."
     rate_limit_create_topic: "Bir konu oluşturduktan sonra, kullanıcılar başka bir konu oluşturabilmek için (n) saniye beklemelidir."
     rate_limit_create_post: "Gönderi yaptıktan sonra, kullanıcılar başka bir gönderi oluşturabilmek için (n) saniye beklemelidir."
     rate_limit_new_user_create_topic: "Bir konu oluşturduktan sonra, yeni kullanıcılar başka bir konu oluşturabilmek için (n) saniye beklemelidir."

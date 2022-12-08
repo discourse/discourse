@@ -151,10 +151,9 @@ RSpec.describe "Navigation", type: :system, js: true do
     end
   end
 
-  context "when sidebar is enabled" do
+  context "when sidebar is configured as the navigation menu" do
     before do
-      SiteSetting.enable_experimental_sidebar_hamburger = true
-      SiteSetting.enable_sidebar = true
+      SiteSetting.navigation_menu = "sidebar"
     end
 
     context "when opening channel from sidebar with drawer preferred" do

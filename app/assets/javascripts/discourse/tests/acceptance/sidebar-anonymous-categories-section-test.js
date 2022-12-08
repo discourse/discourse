@@ -9,8 +9,7 @@ import Site from "discourse/models/site";
 
 acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
   needs.settings({
-    enable_experimental_sidebar_hamburger: true,
-    enable_sidebar: true,
+    navigation_menu: "sidebar",
   });
 
   test("category section links ordered by category's topic count when default_sidebar_categories has not been configured and site setting to fix categories positions is disabled", async function (assert) {

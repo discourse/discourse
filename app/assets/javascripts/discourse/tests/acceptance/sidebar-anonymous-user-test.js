@@ -6,8 +6,7 @@ import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Sidebar - Anonymous User", function (needs) {
   needs.settings({
-    enable_experimental_sidebar_hamburger: true,
-    enable_sidebar: true,
+    navigation_menu: "sidebar",
   });
 
   test("sidebar is displayed", async function (assert) {
@@ -30,7 +29,7 @@ acceptance("Sidebar - Anonymous User", function (needs) {
   });
 
   test("sidebar hamburger panel dropdown when sidebar has been disabled", async function (assert) {
-    this.siteSettings.enable_sidebar = false;
+    this.siteSettings.navigation_menu = "header dropdown";
 
     await visit("/");
     await click(".hamburger-dropdown");
@@ -44,8 +43,7 @@ acceptance("Sidebar - Anonymous User", function (needs) {
 
 acceptance("Sidebar - Anonymous User - Login Required", function (needs) {
   needs.settings({
-    enable_experimental_sidebar_hamburger: true,
-    enable_sidebar: true,
+    navigation_menu: "sidebar",
     login_required: true,
   });
 

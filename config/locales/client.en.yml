@@ -1392,7 +1392,14 @@ en:
         use: "Use Authenticator app"
         enforced_notice: "You are required to enable two-factor authentication before accessing this site."
         disable: "Disable"
-        disable_confirm: "Are you sure you want to disable all two-factor methods?"
+        disable_confirm: "Are you sure you want to disable two-factor authentication?"
+        delete: "Delete"
+        delete_confirm_header: "These Token-Based Authenticators and Physical Security Keys will be deleted:"
+        delete_confirm_instruction: 'To confirm, type <strong>%{confirm}</strong> in the box below.'
+        delete_single_confirm_title: "Deleting an authenticator"
+        delete_single_confirm_message: "You are deleting %{name}. You can't undo this action. If you change your mind, you have to register this authenticator again."
+        delete_backup_codes_confirm_title: "Deleting backup codes"
+        delete_backup_codes_confirm_message: "You are deleting backup codes. You can't undo this action. If you change your mind, you have to regenerate backup codes."
         save: "Save"
         edit: "Edit"
         edit_title: "Edit Authenticator"
@@ -4671,6 +4678,11 @@ en:
         official: "Official Plugin"
         broken_route: "Unable to configure link to '%{name}'. Ensure ad-blockers are disabled and try reloading the page."
 
+      navigation_menu:
+        sidebar: "Sidebar"
+        header_dropdown: "Header Dropdown"
+        legacy: "Legacy"
+
       backups:
         title: "Backups"
         menu:
@@ -5717,7 +5729,7 @@ en:
           search: "Search"
           groups: "Groups"
           dashboard: "Dashboard"
-          sidebar: "Sidebar"
+          navigation: "Navigation"
         secret_list:
           invalid_input: "Input fields cannot be empty or contain vertical bar character."
         default_categories:

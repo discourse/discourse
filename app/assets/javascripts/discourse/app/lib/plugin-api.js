@@ -509,7 +509,7 @@ class PluginApi {
     ) {
       const siteSettings = this.container.lookup("service:site-settings");
 
-      if (siteSettings.enable_experimental_sidebar_hamburger) {
+      if (siteSettings.navigation_menu !== "legacy") {
         try {
           const { href, route, label, rawLabel, className } = fn();
           const textContent = rawLabel || I18n.t(label);
@@ -534,7 +534,7 @@ class PluginApi {
           this.addCommunitySectionLink(args, name.match(/footerLinks/));
         } catch {
           deprecated(
-            `Usage of \`api.decorateWidget('hamburger-menu:generalLinks')\` is incompatible with the \`enable_experimental_sidebar_hamburger\` site setting. Please use \`api.addCommunitySectionLink\` instead.`,
+            `Usage of \`api.decorateWidget('hamburger-menu:generalLinks')\` is incompatible with the \`navigation_menu\` site setting when not set to "legacy". Please use \`api.addCommunitySectionLink\` instead.`,
             { id: "discourse.decorate-widget.hamburger-widget-links" }
           );
         }

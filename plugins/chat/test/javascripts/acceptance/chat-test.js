@@ -65,7 +65,7 @@ acceptance("Discourse Chat - without unread", function (needs) {
     has_chat_enabled: true,
   });
   needs.settings({
-    enable_sidebar: false,
+    navigation_menu: "legacy",
     chat_enabled: true,
   });
   needs.pretender((server, helper) => {
