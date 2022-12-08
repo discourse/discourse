@@ -1,12 +1,15 @@
 <DModalBody @title="chat.channel_edit_title_modal.title">
-  <textarea
-    class="chat-channel-edit-title-modal__title-input"
-    placeholder={{i18n "chat.channel_edit_title_modal.input_placeholder"}}
-    {{on "input" (action "onChangeChatChannelTitle" value="target.value")}}
-  >{{this.model.title}}</textarea>
   <span class="chat-channel-edit-title-modal__description">
     {{i18n "chat.channel_edit_title_modal.description"}}
   </span>
+
+  <CountedTextArea
+    class="chat-channel-edit-title-modal__title-input"
+    placeholder={{i18n "chat.channel_edit_title_modal.input_placeholder"}}
+    @max={{this.siteSettings.max_topic_title_length}}
+    @value={{this.editedTitle}}
+    @onChangeTextAreaValue={{this.onChangeChatChannelTitle}}
+  />
 </DModalBody>
 
 <div class="modal-footer">

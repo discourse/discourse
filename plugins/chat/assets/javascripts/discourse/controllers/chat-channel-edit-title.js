@@ -2,11 +2,13 @@ import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import ChatApi from "discourse/plugins/chat/discourse/lib/chat-api";
+import { tracked } from "@glimmer/tracking";
 
 export default class ChatChannelEditTitleController extends Controller.extend(
   ModalFunctionality
 ) {
-  editedTitle = "";
+  @tracked editedTitle = this.model.title || "";
+  onChangeChatChannelTitle = (newTitle) => (this.editedTitle = newTitle);
 
   @computed("model.title", "editedTitle")
   get isSaveDisabled() {
@@ -39,11 +41,5 @@ export default class ChatChannelEditTitleController extends Controller.extend(
           this.flash(event.jqXHR.responseJSON.errors.join("\n"), "error");
         }
       });
-  }
-
-  @action
-  onChangeChatChannelTitle(title) {
-    this.clearFlash();
-    this.set("editedTitle", title);
   }
 }
