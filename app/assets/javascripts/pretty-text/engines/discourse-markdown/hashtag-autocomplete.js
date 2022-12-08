@@ -14,11 +14,7 @@ function addHashtag(buffer, matches, state) {
   // slug lookup.
   const result =
     hashtagLookup &&
-    hashtagLookup(
-      slug,
-      options.currentUser,
-      options.hashtagTypesInPriorityOrder
-    );
+    hashtagLookup(slug, options.userId, options.hashtagTypesInPriorityOrder);
 
   // NOTE: When changing the HTML structure here, you must also change
   // it in the placeholder HTML code inside lib/hashtag-autocomplete, and vice-versa.

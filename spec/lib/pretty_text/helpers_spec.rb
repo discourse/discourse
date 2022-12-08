@@ -55,7 +55,7 @@ RSpec.describe PrettyText::Helpers do
     fab!(:user) { Fabricate(:user) }
 
     it "handles tags and categories based on slug with type suffix" do
-      expect(PrettyText::Helpers.hashtag_lookup("somecooltag::tag", user, %w[category tag])).to eq(
+      expect(PrettyText::Helpers.hashtag_lookup("somecooltag::tag", user.id, %w[category tag])).to eq(
         {
           relative_url: tag.url,
           text: "somecooltag",
@@ -66,7 +66,7 @@ RSpec.describe PrettyText::Helpers do
           type: "tag",
         },
       )
-      expect(PrettyText::Helpers.hashtag_lookup("someawesomecategory::category", user, %w[category tag])).to eq(
+      expect(PrettyText::Helpers.hashtag_lookup("someawesomecategory::category", user.id, %w[category tag])).to eq(
         {
           relative_url: category.url,
           text: "Some Awesome Category",
@@ -81,7 +81,7 @@ RSpec.describe PrettyText::Helpers do
 
     it "handles categories based on slug" do
       expect(
-        PrettyText::Helpers.hashtag_lookup("someawesomecategory", user, %w[category tag]),
+        PrettyText::Helpers.hashtag_lookup("someawesomecategory", user.id, %w[category tag]),
       ).to eq(
         {
           relative_url: category.url,
@@ -96,7 +96,7 @@ RSpec.describe PrettyText::Helpers do
     end
 
     it "handles tags and categories based on slug without type suffix" do
-      expect(PrettyText::Helpers.hashtag_lookup("somecooltag", user, %w[category tag])).to eq(
+      expect(PrettyText::Helpers.hashtag_lookup("somecooltag", user.id, %w[category tag])).to eq(
         {
           relative_url: tag.url,
           text: "somecooltag",
@@ -107,7 +107,7 @@ RSpec.describe PrettyText::Helpers do
           type: "tag",
         },
       )
-      expect(PrettyText::Helpers.hashtag_lookup("someawesomecategory", user, %w[category tag])).to eq(
+      expect(PrettyText::Helpers.hashtag_lookup("someawesomecategory", user.id, %w[category tag])).to eq(
         {
           relative_url: category.url,
           text: "Some Awesome Category",
@@ -123,10 +123,10 @@ RSpec.describe PrettyText::Helpers do
     it "does not include categories the cooking user does not have access to" do
       group = Fabricate(:group)
       private_category = Fabricate(:private_category, slug: "secretcategory", name: "Manager Hideout", group: group)
-      expect(PrettyText::Helpers.hashtag_lookup("secretcategory", user, %w[category tag])).to eq(nil)
+      expect(PrettyText::Helpers.hashtag_lookup("secretcategory", user.id, %w[category tag])).to eq(nil)
 
       GroupUser.create(group: group, user: user)
-      expect(PrettyText::Helpers.hashtag_lookup("secretcategory", user, %w[category tag])).to eq(
+      expect(PrettyText::Helpers.hashtag_lookup("secretcategory", user.id, %w[category tag])).to eq(
         {
           relative_url: private_category.url,
           text: "Manager Hideout",
@@ -140,7 +140,7 @@ RSpec.describe PrettyText::Helpers do
     end
 
     it "returns nil when no tag or category that matches exists" do
-      expect(PrettyText::Helpers.hashtag_lookup("blah", user, %w[category tag])).to eq(nil)
+      expect(PrettyText::Helpers.hashtag_lookup("blah", user.id, %w[category tag])).to eq(nil)
     end
 
     it "uses the system user if the cooking_user is nil" do
