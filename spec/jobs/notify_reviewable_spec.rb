@@ -11,7 +11,7 @@ RSpec.describe Jobs::NotifyReviewable do
     fab!(:user) { group_user.user }
 
     it "will notify users of new reviewable content for the new user menu" do
-      SiteSetting.enable_experimental_sidebar_hamburger = true
+      SiteSetting.navigation_menu = "sidebar"
       SiteSetting.enable_category_group_moderation = true
 
       GroupUser.create!(group_id: group.id, user_id: moderator.id)
@@ -84,7 +84,7 @@ RSpec.describe Jobs::NotifyReviewable do
     end
 
     it "will notify users of new reviewable content for the old user menu" do
-      SiteSetting.enable_experimental_sidebar_hamburger = false
+      SiteSetting.navigation_menu = "legacy"
       SiteSetting.enable_category_group_moderation = true
 
       GroupUser.create!(group_id: group.id, user_id: moderator.id)

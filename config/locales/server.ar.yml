@@ -1870,8 +1870,6 @@ ar:
     top_topics_formula_first_post_likes_multiplier: "قيمة مُضاعِف تسجيلات الإعجاب على أول منشور (n) في معادلة الموضوعات الأكثر نشاطًا: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "قيمة أقل عدد من تسجيلات الإعجاب لكل مُضاعِف منشورات (n) في معادلة الموضوعات الأكثر نشاطًا: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     enable_safe_mode: "السماح للمستخدمين بالدخول إلى الوضع الآمن لتصحيح أخطاء المكوِّنات الإضافية"
-    enable_experimental_sidebar_hamburger: "يسمح بتفعيل الشريط الجانبي التجريبي وقائمة الثلاث شرط المنسدلة."
-    enable_sidebar: "يفعِّل الشريط الجانبي التجريبي."
     rate_limit_create_topic: "بعد إنشاء موضوع، يجب على المستخدمين الانتظار (n) ثانية قبل إنشاء موضوع آخر."
     rate_limit_create_post: "بعد النشر، يجب على المستخدمين الانتظار (n) ثانية قبل إنشاء منشور آخر."
     rate_limit_new_user_create_topic: "بعد إنشاء موضوع، يجب على المستخدمين الجُدد الانتظار (n) ثانية قبل إنشاء موضوع آخر."

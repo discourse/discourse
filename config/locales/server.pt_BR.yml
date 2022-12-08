@@ -1665,8 +1665,6 @@ pt_BR:
     top_topics_formula_first_post_likes_multiplier: "valor do multiplicador de curtidas da primeira postagem (n) na fórmula dos melhores tópicos: \"log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)\""
     top_topics_formula_least_likes_per_post_multiplier: "valor do multiplicador da menor quantidade de curtidas por publicação (n) na fórmula de melhores tópicos: \"log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)\""
     enable_safe_mode: "Permitir que os(as) usuários(as) insiram o modo de segurança para depurar plug-ins."
-    enable_experimental_sidebar_hamburger: "Permite que a barra lateral experimental e o menu hambúrguer suspenso do usuário sejam ativados."
-    enable_sidebar: "Ativar barra lateral experimental."
     rate_limit_create_topic: "Após criar um tópico, os(as) usuários(as) devem aguardar (n) segundos antes de criar um outro tópico."
     rate_limit_create_post: "Após postar, os(as) usuários(as) devem aguardar (n) segundos antes de criar outra postagem."
     rate_limit_new_user_create_topic: "Após criar um tópico, novos(as) usuários(as) devem aguardar (n) segundos antes de criar outro tópico."

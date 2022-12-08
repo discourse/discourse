@@ -379,22 +379,22 @@ RSpec.describe UserSerializer do
     context 'when viewing self' do
       subject(:json) { UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json }
 
-      it "is not included when SiteSetting.enable_experimental_sidebar_hamburger is false" do
-        SiteSetting.enable_experimental_sidebar_hamburger = false
+      it "is not included when navigation menu is set to legacy" do
+        SiteSetting.navigation_menu = "legacy"
         SiteSetting.tagging_enabled = true
 
         expect(json[:sidebar_tags]).to eq(nil)
       end
 
       it "is not included when SiteSetting.tagging_enabled is false" do
-        SiteSetting.enable_experimental_sidebar_hamburger = true
+        SiteSetting.navigation_menu = "sidebar"
         SiteSetting.tagging_enabled = false
 
         expect(json[:sidebar_tags]).to eq(nil)
       end
 
-      it "is present when experimental sidebar and tagging has been enabled" do
-        SiteSetting.enable_experimental_sidebar_hamburger = true
+      it "is present when sidebar and tagging has been enabled" do
+        SiteSetting.navigation_menu = "sidebar"
         SiteSetting.tagging_enabled = true
 
         tag_sidebar_section_link_2.linkable.update!(pm_topic_count: 5, topic_count: 0)
@@ -411,8 +411,8 @@ RSpec.describe UserSerializer do
 
       subject(:json) { UserSerializer.new(user, scope: Guardian.new(user2), root: false).as_json }
 
-      it "is not present even when experimental sidebar and tagging has been enabled" do
-        SiteSetting.enable_experimental_sidebar_hamburger = true
+      it "is not present even when sidebar and tagging has been enabled" do
+        SiteSetting.navigation_menu = "sidebar"
         SiteSetting.tagging_enabled = true
 
         expect(json[:sidebar_tags]).to eq(nil)

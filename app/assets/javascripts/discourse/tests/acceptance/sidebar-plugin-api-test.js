@@ -14,8 +14,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
   needs.user();
 
   needs.settings({
-    enable_experimental_sidebar_hamburger: true,
-    enable_sidebar: true,
+    navigation_menu: "sidebar",
   });
 
   needs.hooks.afterEach(() => {

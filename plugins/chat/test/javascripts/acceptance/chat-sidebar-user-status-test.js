@@ -15,8 +15,7 @@ acceptance("Discourse Chat - Sidebar - User Status", function (needs) {
 
   needs.settings({
     chat_enabled: true,
-    enable_experimental_sidebar_hamburger: true,
-    enable_sidebar: true,
+    navigation_menu: "sidebar",
   });
 
   needs.pretender((server, helper) => {

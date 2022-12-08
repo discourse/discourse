@@ -324,9 +324,8 @@ createWidget("header-icons", {
     });
 
     if (
-      !this.siteSettings.enable_experimental_sidebar_hamburger ||
-      (this.siteSettings.enable_experimental_sidebar_hamburger &&
-        !attrs.sidebarEnabled) ||
+      this.siteSettings.navigation_menu === "legacy" ||
+      !attrs.sidebarEnabled ||
       this.site.mobileView
     ) {
       icons.push(hamburger);
@@ -498,7 +497,7 @@ export default createWidget("header", {
           })
         );
       } else if (state.hamburgerVisible) {
-        if (this.siteSettings.enable_experimental_sidebar_hamburger) {
+        if (this.siteSettings.navigation_menu !== "legacy") {
           if (!attrs.sidebarEnabled || this.site.narrowDesktopView) {
             panels.push(this.attach("revamped-hamburger-menu-wrapper", {}));
           }
@@ -613,7 +612,7 @@ export default createWidget("header", {
 
   toggleHamburger() {
     if (
-      this.siteSettings.enable_experimental_sidebar_hamburger &&
+      this.siteSettings.navigation_menu !== "legacy" &&
       this.attrs.sidebarEnabled &&
       !this.site.narrowDesktopView
     ) {
@@ -623,7 +622,7 @@ export default createWidget("header", {
       this.toggleBodyScrolling(this.state.hamburgerVisible);
 
       schedule("afterRender", () => {
-        if (this.siteSettings.enable_experimental_sidebar_hamburger) {
+        if (this.siteSettings.navigation_menu !== "legacy") {
           // Remove focus from hamburger toggle button
           document.querySelector("#toggle-hamburger-menu")?.blur();
         } else {

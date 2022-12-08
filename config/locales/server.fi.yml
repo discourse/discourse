@@ -1665,8 +1665,6 @@ fi:
     top_topics_formula_first_post_likes_multiplier: "avausviestin tykkäysmäärän kerroin (n) Suositut-listauksen kaavassa: `log(katselut) * 2 + avausviestin tykkäykset * (n) + PIENEMPI(tykkäysten määrä / viestien määrä, 3) + 10 + log(viestien määrä)`"
     top_topics_formula_least_likes_per_post_multiplier: "tykkäykset/viestit -suhteen enimmäisarvo (n) Suositut-listauksen kaavassa: `log(katselut) * 2 + avausviestin tykkäykset * 0.5 + PIENEMPI(tykkäysten määrä / viestien määrä, (n)) + 10 + log(viestien määrä)`"
     enable_safe_mode: "Salli käyttäjän siirtyä vikasietotilaan lisäosien vianmääritystä varten."
-    enable_experimental_sidebar_hamburger: "Mahdollistaa kokeellisen sivupalkin ja käyttäjän hampurilaisvalikon käyttöönoton."
-    enable_sidebar: "Ottaa käyttöön kokeellisen sivupalkin."
     rate_limit_create_topic: "Ketjun aloittamisen jälkeen käyttäjän täytyy odottaa (n) sekuntia ennen toisen ketjun aloittamista."
     rate_limit_create_post: "Viestin luomisen jälkeen käyttäjän täytyy odottaa (n) sekuntia ennen uuden viestin luomista."
     rate_limit_new_user_create_topic: "Ketjun luomisen jälkeen uuden käyttäjän täytyy odottaa (n) sekuntia ennen uuden ketjun luomista."
