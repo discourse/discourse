@@ -132,7 +132,7 @@ RSpec.describe Search do
       [post_1, post_2].each { |post| SearchIndexer.index(post.topic, force: true) }
 
       expect(Search.execute("John's").posts).to contain_exactly(post_1, post_2)
-      expect(Search.execute("John’s").posts).to contain_exactly(post_1)
+      expect(Search.execute("John’s").posts).to contain_exactly(post_1, post_2)
       expect(Search.execute("Johns").posts).to contain_exactly(post_1, post_2)
     end
 
