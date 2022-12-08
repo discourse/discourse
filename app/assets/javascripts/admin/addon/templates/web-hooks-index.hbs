@@ -30,11 +30,11 @@
                 </LinkTo>
               </td>
               <td class="payload-url">
-                <LinkTo @route="adminWebHooks.edit" @model={{webHook}}>{{webHook.payload_url}}</LinkTo>
+                <LinkTo @route="adminWebHooks.edit" @model={{webHook.id}}>{{webHook.payload_url}}</LinkTo>
               </td>
               <td class="description">{{webHook.description}}</td>
               <td class="controls">
-                <LinkTo @route="adminWebHooks.edit" @model={{webHook}} class="btn btn-default no-text">{{d-icon "far-edit"}}</LinkTo>
+                <LinkTo @route="adminWebHooks.edit" @model={{webHook.id}} class="btn btn-default no-text">{{d-icon "far-edit"}}</LinkTo>
                 <DButton @class="destroy btn-danger" @action={{action "destroy"}} @actionParam={{webHook}} @icon="times" />
               </td>
             </tr>

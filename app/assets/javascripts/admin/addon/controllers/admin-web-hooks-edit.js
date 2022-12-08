@@ -97,7 +97,7 @@ export default Controller.extend({
           this.adminWebHooks.get("model").addObject(model);
 
           if (isNew) {
-            this.transitionToRoute("adminWebHooks.show", model);
+            this.transitionToRoute("adminWebHooks.show", model.id);
           }
         })
         .catch(popupAjaxError);
