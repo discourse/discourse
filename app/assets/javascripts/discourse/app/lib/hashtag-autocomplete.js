@@ -190,10 +190,8 @@ function _searchGeneric(term, siteSettings, contextualHashtagConfiguration) {
           resolve(CANCELLED_STATUS);
         }, 5000);
 
-    if (!siteSettings.enable_experimental_hashtag_autocomplete) {
-      if (term === "") {
-        return resolve(CANCELLED_STATUS);
-      }
+    if (!siteSettings.enable_experimental_hashtag_autocomplete && term === "") {
+      return resolve(CANCELLED_STATUS);
     }
 
     const debouncedSearch = (q, ctx, resultFunc) => {

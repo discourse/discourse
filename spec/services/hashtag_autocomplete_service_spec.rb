@@ -250,7 +250,7 @@ RSpec.describe HashtagAutocompleteService do
       fab!(:tag3) { Fabricate(:tag, name: "terrible-books", topic_count: 2) }
       fab!(:tag4) { Fabricate(:tag, name: "book", topic_count: 1) }
 
-      it "returns the N top categories and tags (based on topic_count) that the user can access" do
+      it "returns the 'most polular' categories and tags (based on topic_count) that the user can access" do
         category1.update!(read_restricted: true)
         Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["terrible-books"])
 

@@ -68,13 +68,10 @@ class CategoryHashtagDataSource
   def self.search_without_term(guardian, limit)
     Category
       .includes(:parent_category)
+      .secured(guardian)
       .joins(
         "LEFT JOIN category_users ON category_users.user_id = #{guardian.user.id}
         AND category_users.category_id = categories.id",
-      )
-      .where(
-        "NOT categories.read_restricted OR categories.id IN (?)",
-        guardian.user.secure_category_ids,
       )
       .where(
         "category_users.notification_level IS NULL OR category_users.notification_level != ?",
