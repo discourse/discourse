@@ -173,11 +173,12 @@
     {{/if}}
 
     {{#unless this.model.component}}
-      <DSection @class="form-horizontal theme settings control-unit">
+      <DSection @class="form-horizontal theme settings control-unit theme-settings__color-scheme">
         <div class="row setting">
           <div class="setting-label">
             {{i18n "admin.customize.theme.color_scheme"}}
           </div>
+
           <div class="setting-value">
             <ColorPalettes @content={{this.colorSchemes}} @value={{this.colorSchemeId}} @icon="paint-brush" @options={{hash
                 filterable=true
@@ -185,6 +186,7 @@
 
             <div class="desc">{{i18n "admin.customize.theme.color_scheme_select"}}</div>
           </div>
+
           <div class="setting-controls">
             {{#if this.colorSchemeChanged}}
               <DButton @action={{action "changeScheme"}} @class="ok submit-edit" @icon="check" />

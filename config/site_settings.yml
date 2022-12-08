@@ -2032,9 +2032,6 @@ developer:
   enable_safe_mode:
     default: true
     client: true
-  enable_experimental_sidebar_hamburger:
-    default: false
-    client: true
   enable_experimental_hashtag_autocomplete:
     default: false
     client: true
@@ -2060,10 +2057,12 @@ developer:
     allow_any: false
     refresh: true
 
-sidebar:
-  enable_sidebar:
-    default: true
+navigation:
+  navigation_menu:
     client: true
+    default: "legacy"
+    type: enum
+    enum: "NavigationMenuSiteSetting"
   default_sidebar_categories:
     type: category_list
     default: ""

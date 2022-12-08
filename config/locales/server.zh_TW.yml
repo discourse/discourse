@@ -1247,8 +1247,6 @@ zh_TW:
     top_topics_formula_first_post_likes_multiplier: "熱門主題公式中首貼讚的數量的因子的值（n）：`log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "熱門主題公式中贊和貼文數量的比例的最小值（n）：`log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     enable_safe_mode: "允許使用者進入安全模式以偵錯插件（plugins）。"
-    enable_experimental_sidebar_hamburger: "允許啟用實驗側選單和漢堡下拉選單。"
-    enable_sidebar: "啟用實驗性側選單。"
     rate_limit_create_topic: "建立新討論話題之後，使用者必須間隔多少秒 (n) 才能再建立新討論話題"
     rate_limit_create_post: "建立新貼文之後，使用者必須間隔多少秒 (n) 才能再建立新貼文"
     rate_limit_new_user_create_topic: "建立一個話題後，新使用者必須等待 (n) 秒才能建立另一個新話題"

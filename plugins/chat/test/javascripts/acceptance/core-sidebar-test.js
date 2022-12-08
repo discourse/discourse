@@ -18,8 +18,7 @@ acceptance("Discourse Chat - Core Sidebar", function (needs) {
 
   needs.settings({
     chat_enabled: true,
-    enable_experimental_sidebar_hamburger: true,
-    enable_sidebar: true,
+    navigation_menu: "sidebar",
   });
 
   needs.pretender((server, helper) => {
@@ -528,7 +527,7 @@ acceptance("Discourse Chat - Plugin Sidebar", function (needs) {
 
   needs.settings({
     chat_enabled: true,
-    enable_sidebar: false,
+    navigation_menu: "legacy",
   });
 
   needs.pretender((server, helper) => {
@@ -613,8 +612,7 @@ acceptance(
 
     needs.settings({
       chat_enabled: true,
-      enable_experimental_sidebar_hamburger: true,
-      enable_sidebar: true,
+      navigation_menu: "sidebar",
     });
 
     needs.pretender((server, helper) => {
@@ -656,8 +654,7 @@ acceptance(
 
     needs.settings({
       chat_enabled: true,
-      enable_experimental_sidebar_hamburger: true,
-      enable_sidebar: true,
+      navigation_menu: "sidebar",
     });
 
     needs.pretender((server, helper) => {
@@ -698,8 +695,7 @@ acceptance(
 
     needs.settings({
       chat_enabled: true,
-      enable_experimental_sidebar_hamburger: true,
-      enable_sidebar: true,
+      navigation_menu: "sidebar",
       direct_message_enabled_groups: "13", // trust_level_3 auto group ID;
     });
 
@@ -741,8 +737,7 @@ acceptance(
 
     needs.settings({
       chat_enabled: true,
-      enable_experimental_sidebar_hamburger: true,
-      enable_sidebar: true,
+      navigation_menu: "sidebar",
       direct_message_enabled_groups: "13", // trust_level_3 auto group ID;
     });
 

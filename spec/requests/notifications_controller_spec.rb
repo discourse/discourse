@@ -111,7 +111,7 @@ RSpec.describe NotificationsController do
           expect(JSON.parse(response.body)['notifications'][0]['read']).to eq(false)
         end
 
-        context "with the enable_experimental_sidebar_hamburger setting" do
+        context "when navigation menu settings is non-legacy" do
           fab!(:unread_high_priority) do
             Fabricate(
               :notification,
@@ -121,6 +121,7 @@ RSpec.describe NotificationsController do
               created_at: 10.minutes.ago
             )
           end
+
           fab!(:read_high_priority) do
             Fabricate(
               :notification,
@@ -130,6 +131,7 @@ RSpec.describe NotificationsController do
               created_at: 8.minutes.ago
             )
           end
+
           fab!(:unread_regular) do
             Fabricate(
               :notification,
@@ -139,6 +141,7 @@ RSpec.describe NotificationsController do
               created_at: 6.minutes.ago
             )
           end
+
           fab!(:read_regular) do
             Fabricate(
               :notification,
@@ -148,12 +151,18 @@ RSpec.describe NotificationsController do
               created_at: 4.minutes.ago
             )
           end
+
           fab!(:pending_reviewable) { Fabricate(:reviewable) }
 
-          it "gets notifications list with unread ones at the top when the setting is enabled" do
-            SiteSetting.enable_experimental_sidebar_hamburger = true
+          before do
+            SiteSetting.navigation_menu = "sidebar"
+          end
+
+          it "gets notifications list with unread ones at the top" do
             get "/notifications.json", params: { recent: true }
+
             expect(response.status).to eq(200)
+
             expect(response.parsed_body["notifications"].map { |n| n["id"] }).to eq([
               unread_high_priority.id,
               notification.id,
@@ -163,10 +172,13 @@ RSpec.describe NotificationsController do
             ])
           end
 
-          it "gets notifications list with unread high priority notifications at the top when the setting is disabled" do
-            SiteSetting.enable_experimental_sidebar_hamburger = false
+          it "gets notifications list with unread high priority notifications at the top when navigation menu is legacy" do
+            SiteSetting.navigation_menu = "legacy"
+
             get "/notifications.json", params: { recent: true }
+
             expect(response.status).to eq(200)
+
             expect(response.parsed_body["notifications"].map { |n| n["id"] }).to eq([
               unread_high_priority.id,
               notification.id,
@@ -177,9 +189,10 @@ RSpec.describe NotificationsController do
           end
 
           it "should not bump last seen reviewable in readonly mode" do
-            SiteSetting.enable_experimental_sidebar_hamburger = true
             user.update!(admin: true)
+
             Discourse.received_redis_readonly!
+
             expect {
               get "/notifications.json", params: { recent: true, bump_last_seen_reviewable: true }
               expect(response.status).to eq(200)
@@ -189,7 +202,6 @@ RSpec.describe NotificationsController do
           end
 
           it "should not bump last seen reviewable if the user can't see reviewables" do
-            SiteSetting.enable_experimental_sidebar_hamburger = true
             expect {
               get "/notifications.json", params: { recent: true, bump_last_seen_reviewable: true }
               expect(response.status).to eq(200)
@@ -197,8 +209,8 @@ RSpec.describe NotificationsController do
           end
 
           it "should not bump last seen reviewable if the silent param is present" do
-            SiteSetting.enable_experimental_sidebar_hamburger = true
             user.update!(admin: true)
+
             expect {
               get "/notifications.json", params: {
                 recent: true,
@@ -210,8 +222,8 @@ RSpec.describe NotificationsController do
           end
 
           it "should not bump last seen reviewable if the bump_last_seen_reviewable param is not present" do
-            SiteSetting.enable_experimental_sidebar_hamburger = true
             user.update!(admin: true)
+
             expect {
               get "/notifications.json", params: { recent: true }
               expect(response.status).to eq(200)
@@ -219,26 +231,33 @@ RSpec.describe NotificationsController do
           end
 
           it "bumps last_seen_reviewable_id" do
-            SiteSetting.enable_experimental_sidebar_hamburger = true
             user.update!(admin: true)
+
             expect(user.last_seen_reviewable_id).to eq(nil)
+
             get "/notifications.json", params: { recent: true, bump_last_seen_reviewable: true }
+
+            expect(response.status).to eq(200)
             expect(user.reload.last_seen_reviewable_id).to eq(pending_reviewable.id)
 
             reviewable2 = Fabricate(:reviewable)
+
             get "/notifications.json", params: { recent: true, bump_last_seen_reviewable: true }
+
+            expect(response.status).to eq(200)
             expect(user.reload.last_seen_reviewable_id).to eq(reviewable2.id)
           end
 
           it "includes pending reviewables when the setting is enabled" do
-            SiteSetting.enable_experimental_sidebar_hamburger = true
             user.update!(admin: true)
             pending_reviewable2 = Fabricate(:reviewable, created_at: 4.minutes.ago)
             Fabricate(:reviewable, status: Reviewable.statuses[:approved])
             Fabricate(:reviewable, status: Reviewable.statuses[:rejected])
 
             get "/notifications.json", params: { recent: true }
+
             expect(response.status).to eq(200)
+
             expect(response.parsed_body["pending_reviewables"].map { |r| r["id"] }).to eq([
               pending_reviewable.id,
               pending_reviewable2.id
@@ -246,7 +265,6 @@ RSpec.describe NotificationsController do
           end
 
           it "doesn't include reviewables that are claimed by someone that's not the current user" do
-            SiteSetting.enable_experimental_sidebar_hamburger = true
             user.update!(admin: true)
 
             claimed_by_user = Fabricate(:reviewable, topic: Fabricate(:topic), created_at: 5.minutes.ago)
@@ -267,17 +285,17 @@ RSpec.describe NotificationsController do
             ])
           end
 
-          it "doesn't include reviewables when the setting is disabled" do
-            SiteSetting.enable_experimental_sidebar_hamburger = false
+          it "doesn't include reviewables when navigation menu is legacy" do
+            SiteSetting.navigation_menu = "legacy"
             user.update!(admin: true)
 
             get "/notifications.json", params: { recent: true }
+
             expect(response.status).to eq(200)
             expect(response.parsed_body.key?("pending_reviewables")).to eq(false)
           end
 
           it "doesn't include reviewables if the user can't see the review queue" do
-            SiteSetting.enable_experimental_sidebar_hamburger = true
             user.update!(admin: false)
 
             get "/notifications.json", params: { recent: true }
@@ -379,12 +397,14 @@ RSpec.describe NotificationsController do
 
           context "with 'recent' filter" do
             it "doesn't include notifications from topics the user isn't allowed to see" do
-              SiteSetting.enable_experimental_sidebar_hamburger = true
+              SiteSetting.navigation_menu = "sidebar"
+
               get "/notifications.json", params: { recent: true }
               expect(response.status).to eq(200)
               expect_correct_notifications(response)
 
-              SiteSetting.enable_experimental_sidebar_hamburger = false
+              SiteSetting.navigation_menu = "legacy"
+
               get "/notifications.json", params: { recent: true }
               expect(response.status).to eq(200)
               expect_correct_notifications(response)
@@ -393,12 +413,14 @@ RSpec.describe NotificationsController do
 
           context "without 'recent' filter" do
             it "doesn't include notifications from topics the user isn't allowed to see" do
-              SiteSetting.enable_experimental_sidebar_hamburger = true
+              SiteSetting.navigation_menu = "sidebar"
+
               get "/notifications.json"
               expect(response.status).to eq(200)
               expect_correct_notifications(response)
 
-              SiteSetting.enable_experimental_sidebar_hamburger = false
+              SiteSetting.navigation_menu = "legacy"
+
               get "/notifications.json"
               expect(response.status).to eq(200)
               expect_correct_notifications(response)

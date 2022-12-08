@@ -17,8 +17,7 @@ acceptance("User Preferences - Sidebar", function (needs) {
   });
 
   needs.settings({
-    enable_experimental_sidebar_hamburger: true,
-    enable_sidebar: true,
+    navigation_menu: "sidebar",
     tagging_enabled: true,
   });
 

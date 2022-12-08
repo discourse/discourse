@@ -1613,8 +1613,6 @@ zh_CN:
     top_topics_formula_first_post_likes_multiplier: "热门话题中第一个帖子点赞因子 (n) 值的公式：`log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "热门话题中每个帖子的最少点赞因子 (n) 值的公式：`log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     enable_safe_mode: "允许用户进入安全模式以调试插件。"
-    enable_experimental_sidebar_hamburger: "允许启用实验性边栏和用户汉堡下拉菜单。"
-    enable_sidebar: "启用实验性边栏。"
     rate_limit_create_topic: "创建话题后，用户必须等待 (n) 秒才能创建另一个话题。"
     rate_limit_create_post: "发帖后，用户必须等待 (n) 秒才能创建另一个帖子。"
     rate_limit_new_user_create_topic: "创建话题后，新用户必须等待 (n) 秒才能创建另一个话题。"

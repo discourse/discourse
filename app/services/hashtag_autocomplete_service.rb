@@ -122,7 +122,18 @@ class HashtagAutocompleteService
     # composer we want a slug without a suffix to be a category first, tag second.
     if slugs_without_suffixes.any?
       types_in_priority_order.each do |type|
-        found_from_slugs = execute_lookup!(lookup_results, type, guardian, slugs_without_suffixes)
+        # We do not want to continue fallback if there are conflicting slugs where
+        # one has a type and one does not, this may result in duplication. An
+        # example:
+        #
+        # A category with slug `management` is not found because of permissions
+        # and we also have a slug with suffix in the form of `management::tag`.
+        # There is a tag that exists with the `management` slug. The tag should
+        # not be found here but rather in the next lookup since it's got a more
+        # specific lookup with the type.
+        slugs_to_lookup =
+          slugs_without_suffixes.reject { |slug| slugs_with_suffixes.include?("#{slug}::#{type}") }
+        found_from_slugs = execute_lookup!(lookup_results, type, guardian, slugs_to_lookup)
 
         slugs_without_suffixes = slugs_without_suffixes - found_from_slugs.map(&:ref)
         break if slugs_without_suffixes.empty?
@@ -139,6 +150,11 @@ class HashtagAutocompleteService
             .map { |slug| slug.gsub("::#{type}", "") }
         next if slugs_for_type.empty?
         execute_lookup!(lookup_results, type, guardian, slugs_for_type)
+
+        # Make sure the refs are the same going out as they were going in.
+        lookup_results[type.to_sym].each do |item|
+          item.ref = "#{item.ref}::#{type}" if slugs_with_suffixes.include?("#{item.ref}::#{type}")
+        end
       end
     end
 
