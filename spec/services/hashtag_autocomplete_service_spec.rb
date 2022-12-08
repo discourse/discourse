@@ -377,6 +377,14 @@ RSpec.describe HashtagAutocompleteService do
       expect(result[:bookmark].map(&:slug)).to eq(["coolrock"])
     end
 
+    it "handles type suffix lookups where there is another type with a conflicting slug that the user cannot access" do
+      category1.update!(read_restricted: true)
+      Fabricate(:tag, name: "book-club")
+      result = subject.lookup(%w[book-club::tag book-club], %w[category tag])
+      expect(result[:category].map(&:ref)).to eq([])
+      expect(result[:tag].map(&:ref)).to eq(["book-club::tag"])
+    end
+
     context "when not tagging_enabled" do
       before { SiteSetting.tagging_enabled = false }
 

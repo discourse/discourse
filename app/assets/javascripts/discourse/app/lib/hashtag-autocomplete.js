@@ -221,19 +221,13 @@ function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
 }
 
 function _findAndReplaceSeenHashtagPlaceholder(
-  slug,
+  slugRef,
   contextualHashtagConfiguration,
   hashtagSpan
 ) {
   contextualHashtagConfiguration.forEach((type) => {
-    // remove type suffixes
-    const typePostfix = `::${type}`;
-    if (slug.endsWith(typePostfix)) {
-      slug = slug.slice(0, slug.length - typePostfix.length);
-    }
-
     // replace raw span for the hashtag with a cooked one
-    const matchingSeenHashtag = seenHashtags[type]?.[slug];
+    const matchingSeenHashtag = seenHashtags[type]?.[slugRef];
     if (matchingSeenHashtag) {
       // NOTE: When changing the HTML structure here, you must also change
       // it in the hashtag-autocomplete markdown rule, and vice-versa.
