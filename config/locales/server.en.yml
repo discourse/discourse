@@ -4959,10 +4959,10 @@ en:
             extra_description: "Users must be approved by staff"
           chat_enabled:
             placeholder: "Enable Chat"
-            extra_description: "A fast-lane for team discussion"
+            extra_description: "Engage with your members in real time"
           enable_sidebar:
             placeholder: "Enable Sidebar"
-            extra_description: "Additional navigation, on-the-side"
+            extra_description: "Access your favorite spaces with ease"
 
       ready:
         title: "Your Discourse is Ready!"
