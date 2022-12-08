@@ -3,7 +3,8 @@
 RSpec.describe HashtagAutocompleteService do
   fab!(:user) { Fabricate(:user) }
   fab!(:category1) { Fabricate(:category, name: "Book Club", slug: "book-club") }
-  fab!(:tag1) { Fabricate(:tag, name: "great-books") }
+  fab!(:tag1) { Fabricate(:tag, name: "great-books", topic_count: 22) }
+  fab!(:topic1) { Fabricate(:topic) }
   let(:guardian) { Guardian.new(user) }
 
   subject { described_class.new(guardian) }
@@ -71,19 +72,19 @@ RSpec.describe HashtagAutocompleteService do
   describe "#search" do
     it "returns search results for tags and categories by default" do
       expect(subject.search("book", %w[category tag]).map(&:text)).to eq(
-        ["Book Club", "great-books x 0"],
+        ["Book Club", "great-books x 22"],
       )
     end
 
     it "respects the types_in_priority_order param" do
       expect(subject.search("book", %w[tag category]).map(&:text)).to eq(
-        ["great-books x 0", "Book Club"],
+        ["great-books x 22", "Book Club"],
       )
     end
 
     it "respects the limit param" do
       expect(subject.search("book", %w[tag category], limit: 1).map(&:text)).to eq(
-        ["great-books x 0"],
+        ["great-books x 22"],
       )
     end
 
@@ -111,10 +112,10 @@ RSpec.describe HashtagAutocompleteService do
 
     it "does case-insensitive search" do
       expect(subject.search("book", %w[category tag]).map(&:text)).to eq(
-        ["Book Club", "great-books x 0"],
+        ["Book Club", "great-books x 22"],
       )
       expect(subject.search("bOOk", %w[category tag]).map(&:text)).to eq(
-        ["Book Club", "great-books x 0"],
+        ["Book Club", "great-books x 22"],
       )
     end
 
@@ -125,7 +126,7 @@ RSpec.describe HashtagAutocompleteService do
 
     it "does not include categories the user cannot access" do
       category1.update!(read_restricted: true)
-      expect(subject.search("book", %w[tag category]).map(&:text)).to eq(["great-books x 0"])
+      expect(subject.search("book", %w[tag category]).map(&:text)).to eq(["great-books x 22"])
     end
 
     it "does not include tags the user cannot access" do
@@ -141,7 +142,7 @@ RSpec.describe HashtagAutocompleteService do
       HashtagAutocompleteService.register_data_source("bookmark", BookmarkDataSource)
 
       expect(subject.search("book", %w[category tag bookmark]).map(&:text)).to eq(
-        ["Book Club", "great-books x 0", "read review of this fantasy book"],
+        ["Book Club", "great-books x 22", "read review of this fantasy book"],
       )
     end
 
@@ -233,6 +234,38 @@ RSpec.describe HashtagAutocompleteService do
 
       it "does not return any tags" do
         expect(subject.search("book", %w[category tag]).map(&:text)).to eq(["Book Club"])
+      end
+    end
+
+    context "when no term is provided (default results) triggered by a # with no characters in the UI" do
+      fab!(:category2) do
+        Fabricate(:category, name: "Book Zone", slug: "book-zone", topic_count: 546)
+      end
+      fab!(:category3) do
+        Fabricate(:category, name: "Book Dome", slug: "book-dome", topic_count: 987)
+      end
+      fab!(:category4) { Fabricate(:category, name: "Bookworld", slug: "book", topic_count: 56) }
+      fab!(:category5) { Fabricate(:category, name: "Media", slug: "media", topic_count: 446) }
+      fab!(:tag2) { Fabricate(:tag, name: "mid-books", topic_count: 33) }
+      fab!(:tag3) { Fabricate(:tag, name: "terrible-books", topic_count: 2) }
+      fab!(:tag4) { Fabricate(:tag, name: "book", topic_count: 1) }
+
+      it "returns the 'most polular' categories and tags (based on topic_count) that the user can access" do
+        category1.update!(read_restricted: true)
+        Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["terrible-books"])
+
+        expect(subject.search(nil, %w[category tag]).map(&:text)).to eq(
+          [
+            "Book Dome",
+            "Book Zone",
+            "Media",
+            "Bookworld",
+            Category.find(SiteSetting.uncategorized_category_id).name,
+            "mid-books x 33",
+            "great-books x 22",
+            "book x 1",
+          ],
+        )
       end
     end
   end
