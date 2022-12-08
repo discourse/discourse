@@ -53,7 +53,7 @@ class WebhooksController < ActionController::Base
 
     message_id = Email::MessageIdService.message_id_clean(params["message_id"])
     to_address = params["to"]
-    status = params["Type"]
+    status = params["status"]
 
     case status
     when "bounced"
