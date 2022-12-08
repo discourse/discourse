@@ -13,4 +13,8 @@ export default DiscourseRoute.extend({
   deactivate() {
     this.controllerFor("adminWebHooks.show").unsubscribe();
   },
+
+  renderTemplate() {
+    this.render("admin/templates/web-hooks-show", { into: "adminApi" });
+  },
 });
