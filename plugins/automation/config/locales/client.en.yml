@@ -98,7 +98,7 @@ en:
             P1Y: "One year"
           fields:
             restricted_category:
-              label: Retricted to category
+              label: Restricted to category
             stalled_after:
               label: Trigger delay
               description: Defines delay between last wiki edit and automation’s trigger
