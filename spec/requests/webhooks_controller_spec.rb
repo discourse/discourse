@@ -147,6 +147,7 @@ RSpec.describe WebhooksController do
       expect(email_log.bounce_error_code).to eq(nil) # mailpace doesn't give us this
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
     end
+
     it "soft bounces" do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
