@@ -48,6 +48,23 @@ class WebhooksController < ActionController::Base
     success
   end
 
+  def mailpace
+    # see https://docs.mailpace.com/guide/webhooks#email-events
+
+    message_id = Email::MessageIdService.message_id_clean(params["message_id"])
+    to_address = params["to"]
+    status = params["Type"]
+
+    case status
+    when "bounced"
+      process_bounce(message_id, to_address, SiteSetting.hard_bounce_score)
+    when "deferred"
+      process_bounce(message_id, to_address, SiteSetting.soft_bounce_score)
+    end
+
+    success
+  end
+
   def mandrill
     events = params["mandrill_events"]
     events.each do |event|
