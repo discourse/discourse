@@ -3999,6 +3999,9 @@ RSpec.describe TopicsController do
     end
 
     context 'when logged in as a TL4 user' do
+      before do
+        SiteSetting.enable_category_group_moderation = true
+      end
       it "raises an error if the user can't see the topic" do
         user.update!(trust_level: TrustLevel[4])
         sign_in(user)
@@ -4014,7 +4017,21 @@ RSpec.describe TopicsController do
         expect(response.parsed_body["error_type"]).to eq('invalid_access')
       end
 
-      it "does not allow TL4 to set a delete timer" do
+      it "allows a category moderator to create a delete timer" do
+        user.update!(trust_level: TrustLevel[4])
+        topic.category.update!(reviewable_by_group: user.groups.first)
+
+        sign_in(user)
+
+        post "/t/#{topic.id}/timer.json", params: {
+          time: 10,
+          status_type: 'delete'
+        }
+
+        expect(response.status).to eq(200)
+      end
+
+      it "raises an error setting a delete timer" do
         user.update!(trust_level: TrustLevel[4])
         sign_in(user)
 
@@ -4027,7 +4044,7 @@ RSpec.describe TopicsController do
         expect(response.parsed_body["error_type"]).to eq('invalid_access')
       end
 
-      it "raises an error if a TL4 user sets a delete_replies timer" do
+      it "raises an error setting delete_replies timer" do
         user.update!(trust_level: TrustLevel[4])
         sign_in(user)
 
