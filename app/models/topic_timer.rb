@@ -98,6 +98,10 @@ class TopicTimer < ActiveRecord::Base
     @_private_types ||= types.only(:reminder, :clear_slow_mode)
   end
 
+  def self.destructive_types
+    @_destructive_types ||= types.only(:delete, :delete_replies)
+  end
+
   def public_type?
     !!self.class.public_types[self.status_type]
   end
