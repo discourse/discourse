@@ -83,10 +83,11 @@ export default Component.extend({
   isEnabled: or("isEnabledDesktop", "isEnabledPush"),
 
   isPushNotificationsPreferred() {
-    if (!this.site.mobileView) {
-      return false;
-    }
-    return isPushNotificationsSupported();
+    return (
+      (this.site.mobileView ||
+        this.siteSettings.enable_desktop_push_notifications) &&
+      isPushNotificationsSupported()
+    );
   },
 
   actions: {
