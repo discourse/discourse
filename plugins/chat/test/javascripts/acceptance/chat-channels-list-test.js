@@ -15,8 +15,7 @@ acceptance(
 
     needs.settings({
       chat_enabled: true,
-      enable_sidebar: false,
-      enable_experimental_sidebar_hamburger: false,
+      navigation_menu: "legacy",
     });
 
     needs.pretender((server, helper) => {

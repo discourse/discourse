@@ -14,10 +14,9 @@ RSpec.describe "Navigation", type: :system, js: true do
     sign_in(user)
   end
 
-  context "when core sidebar is enabled" do
+  context "when sidebar is enabled as the navigation menu" do
     before do
-      SiteSetting.enable_sidebar = true
-      SiteSetting.enable_experimental_sidebar_hamburger = true
+      SiteSetting.navigation_menu = "sidebar"
     end
 
     it "uses core sidebar" do

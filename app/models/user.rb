@@ -1719,7 +1719,7 @@ class User < ActiveRecord::Base
   end
 
   def redesigned_user_menu_enabled?
-    SiteSetting.enable_experimental_sidebar_hamburger
+    !SiteSetting.legacy_navigation_menu?
   end
 
   protected
@@ -1951,7 +1951,7 @@ class User < ActiveRecord::Base
   private
 
   def set_default_sidebar_section_links(update: false)
-    return if !SiteSetting.enable_experimental_sidebar_hamburger
+    return if SiteSetting.legacy_navigation_menu?
     return if staged? || bot?
 
     if SiteSetting.default_sidebar_categories.present?

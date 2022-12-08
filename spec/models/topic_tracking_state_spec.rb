@@ -593,13 +593,13 @@ RSpec.describe TopicTrackingState do
       )
     end
 
-    it "includes tags when SiteSetting.enable_experimental_sidebar_hamburger is true" do
+    it "includes tags when SiteSetting.navigation_menu is not legacy" do
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(1)
       row = report[0]
       expect(row.respond_to?(:tags)).to eq(false)
 
-      SiteSetting.enable_experimental_sidebar_hamburger = true
+      SiteSetting.navigation_menu = "sidebar"
 
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(1)

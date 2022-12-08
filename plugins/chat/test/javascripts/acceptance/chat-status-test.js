@@ -61,7 +61,6 @@ acceptance(
     needs.settings({
       chat_enabled: true,
       chat_allow_archiving_channels: true,
-      enable_sidebar: false,
     });
 
     needs.pretender((server, helper) => {

@@ -285,8 +285,7 @@ acceptance("Second Factor Auth Page", function (needs) {
   });
 
   test("sidebar is disabled on 2FA route", async function (assert) {
-    this.siteSettings.enable_experimental_sidebar_hamburger = true;
-    this.siteSettings.enable_sidebar = true;
+    this.siteSettings.navigation_menu = "sidebar";
 
     await visit("/session/2fa?nonce=ok110111");
 

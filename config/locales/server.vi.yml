@@ -1156,8 +1156,6 @@ vi:
     top_topics_formula_log_views_multiplier: "giá trị nhật ký lượt xem nhân với (n) trong công thức chủ đề top: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "giá trị của lượt like bài viết đầu tiên nhân với (n) trong công thức chủ đề top: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "giá trị số lượt like tối thiểu của mỗi bài viết nhân với (n) trong công thức chủ đề top: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
-    enable_experimental_sidebar_hamburger: "Cho phép bật thanh bên thử nghiệm và menu thả xuống hamburger người dùng."
-    enable_sidebar: "Bật thanh bên thử nghiệm."
     rate_limit_create_topic: "Sau khi tạo một chủ đề, người dùng phải chờ (n) giây trước khi tạo một chủ đề khác."
     rate_limit_create_post: "Sau khi đăn bài, người dùng phải chờ (n) giây trước khi đăng bài khác."
     rate_limit_new_user_create_topic: "Sau khi tạo một chủ đề, người dùng mới phải chờ (n) giây trước khi tạo chủ đề khác."

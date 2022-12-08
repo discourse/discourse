@@ -1662,8 +1662,6 @@ it:
     top_topics_formula_first_post_likes_multiplier: "valore del moltiplicatore (n) dei mi piace sul primo messaggio nella formula dei migliori argomenti: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "valore del moltiplicatore (n) del numero minimo di \"mi piace\" per messaggio nella formula dei migliori argomenti: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     enable_safe_mode: "Consenti agli utenti di accedere alla modalità sicura per eseguire il debug dei plug-in."
-    enable_experimental_sidebar_hamburger: "Consente di abilitare in via sperimentale la barra laterale e il menu utente a tendina."
-    enable_sidebar: "Abilita la barra laterale sperimentale."
     rate_limit_create_topic: "Dopo aver creato un argomento, gli utenti devono aspettare (n) secondi prima di poterne creare un altro."
     rate_limit_create_post: "Dopo aver inviato un messaggio, gli utenti devono aspettare (n) secondi prima di creare un altro messaggio. "
     rate_limit_new_user_create_topic: "Dopo aver creato un argomento, i nuovi utenti devono aspettare (n) secondi prima di poter creare un altro argomento."

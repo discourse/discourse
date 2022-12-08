@@ -229,8 +229,8 @@ RSpec.describe CurrentUserSerializer do
     fab!(:tag_sidebar_section_link_2) { Fabricate(:tag_sidebar_section_link, user: user, linkable: pm_tag) }
     fab!(:tag_sidebar_section_link_3) { Fabricate(:tag_sidebar_section_link, user: user, linkable: hidden_tag) }
 
-    it "is not included when experimental sidebar has not been enabled" do
-      SiteSetting.enable_experimental_sidebar_hamburger = false
+    it "is not included when navigation menu is legacy" do
+      SiteSetting.navigation_menu = "legacy"
       SiteSetting.tagging_enabled = true
 
       json = serializer.as_json
@@ -239,7 +239,7 @@ RSpec.describe CurrentUserSerializer do
     end
 
     it "is not included when tagging has not been enabled" do
-      SiteSetting.enable_experimental_sidebar_hamburger = true
+      SiteSetting.navigation_menu = "sidebar"
       SiteSetting.tagging_enabled = false
 
       json = serializer.as_json
@@ -247,8 +247,8 @@ RSpec.describe CurrentUserSerializer do
       expect(json[:sidebar_tags]).to eq(nil)
     end
 
-    it "serializes only the tags that the user can see when experimental sidebar and tagging has been enabled" do
-      SiteSetting.enable_experimental_sidebar_hamburger = true
+    it "serializes only the tags that the user can see when sidebar and tagging has been enabled" do
+      SiteSetting.navigation_menu = "sidebar"
       SiteSetting.tagging_enabled = true
 
       json = serializer.as_json
@@ -279,25 +279,17 @@ RSpec.describe CurrentUserSerializer do
     fab!(:category_sidebar_section_link_2) { Fabricate(:category_sidebar_section_link, user: user, linkable: category_2) }
     fab!(:category_sidebar_section_link_3) { Fabricate(:category_sidebar_section_link, user: user, linkable: private_category) }
 
-    it "is not included when SiteSetting.enable_experimental_sidebar_hamburger is false" do
+    it "is not included when navigation menu is legacy" do
       category_sidebar_section_link
-      SiteSetting.enable_experimental_sidebar_hamburger = false
+      SiteSetting.navigation_menu = "legacy"
 
       json = serializer.as_json
 
       expect(json[:sidebar_category_ids]).to eq(nil)
     end
 
-    it "is not included when experimental sidebar has not been enabled" do
-      SiteSetting.enable_experimental_sidebar_hamburger = false
-
-      json = serializer.as_json
-
-      expect(json[:sidebar_category_ids]).to eq(nil)
-    end
-
-    it 'serializes only the categories that the user can see when experimental sidebar and tagging has been enabled"' do
-      SiteSetting.enable_experimental_sidebar_hamburger = true
+    it 'serializes only the categories that the user can see when sidebar and tagging has been enabled"' do
+      SiteSetting.navigation_menu = "sidebar"
 
       json = serializer.as_json
 
@@ -383,13 +375,15 @@ RSpec.describe CurrentUserSerializer do
   describe "#new_personal_messages_notifications_count" do
     fab!(:notification) { Fabricate(:notification, user: user, read: false, notification_type: Notification.types[:private_message]) }
 
-    it "isn't included when enable_experimental_sidebar_hamburger is disabled" do
-      SiteSetting.enable_experimental_sidebar_hamburger = false
+    it "isn't included when navigation menu is legacy" do
+      SiteSetting.navigation_menu = "legacy"
+
       expect(serializer.as_json[:new_personal_messages_notifications_count]).to be_nil
     end
 
-    it "is included when enable_experimental_sidebar_hamburger is enabled" do
-      SiteSetting.enable_experimental_sidebar_hamburger = true
+    it "is included when sidebar is enabled" do
+      SiteSetting.navigation_menu = "sidebar"
+
       expect(serializer.as_json[:new_personal_messages_notifications_count]).to eq(1)
     end
   end

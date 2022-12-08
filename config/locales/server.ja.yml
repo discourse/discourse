@@ -1613,8 +1613,6 @@ ja:
     top_topics_formula_first_post_likes_multiplier: "人気のトピックの計算式に使用する最初の投稿の「いいね！」の乗数 (n) の値: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "人気のトピックの計算式に使用する最小「いいね！」率の乗数 (n) の値: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     enable_safe_mode: "プラグインをデバッグするためにユーザーによる安全モードの開始を許可する。"
-    enable_experimental_sidebar_hamburger: "実験的サイドバーとユーザーのハンバーガードロップダウンメニューを有効にできます。"
-    enable_sidebar: "実験的サイドバーを有効にします。"
     rate_limit_create_topic: "トピック作成後、ユーザーは (n) 秒待ってから次のトピックを作成する必要があります。"
     rate_limit_create_post: "投稿後、ユーザーは (n) 秒待ってから次の投稿を作成する必要があります。"
     rate_limit_new_user_create_topic: "トピック作成後、新規ユーザーは (n) 秒待ってから次のトピックを作成する必要があります。"
