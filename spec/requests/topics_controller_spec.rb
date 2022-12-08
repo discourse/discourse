@@ -4014,7 +4014,7 @@ RSpec.describe TopicsController do
         expect(response.parsed_body["error_type"]).to eq('invalid_access')
       end
 
-      it "raises an error if the user sets a delete timer" do
+      it "does not allow TL4 to set a delete timer" do
         user.update!(trust_level: TrustLevel[4])
         sign_in(user)
 
