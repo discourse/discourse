@@ -623,13 +623,16 @@ class Topic < ActiveRecord::Base
       prepared_data = cooked.present? && Search.prepare_data(cooked)
 
       if prepared_data.present?
-        raw_tsquery = Search.set_tsquery_weight_filter(prepared_data, 'B')
+        raw_tsquery = Search.set_tsquery_weight_filter(
+          prepared_data,
+          'B'
+        )
 
         tsquery = "#{tsquery} & #{raw_tsquery}"
       end
     end
 
-    tsquery = Search.to_tsquery(term: tsquery, joiner: '|')
+    tsquery = Search.to_tsquery(term: tsquery, joiner: "|")
 
     guardian = Guardian.new(user)
 
