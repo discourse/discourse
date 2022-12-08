@@ -2246,6 +2246,8 @@ en:
       reply_original: "Reply on Original Topic"
       reply_here: "Reply Here"
       reply: "Reply"
+      reply_sponsor: "Add bill sponsor"
+      reply_opinion: "Add your opinion"
       cancel: "Cancel"
       create_topic: "Create Topic"
       create_pm: "Message"
