@@ -51,16 +51,6 @@ acceptance("Admin - Webhooks", function (needs) {
       });
     });
 
-    pretender.get("/admin/api/web_hook_events/1", () => {
-      return response({
-        web_hook: {
-          id: 1,
-          // other attrs
-        },
-        web_hook_events: [],
-      });
-    });
-
     await visit("/admin/api/web_hooks");
     await click(".admin-webhooks__new-button");
 
