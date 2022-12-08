@@ -31,9 +31,8 @@ module CategoryHashtag
     # depth supported).
     #
     # @param {Array} category_slugs - Slug strings to look up, can also be in the parent:child format
-    # @param {Array} cached_categories - An array of Hashes representing categories, Site.categories
-    #                                    should be used here since it is scoped to the Guardian.
-    def query_from_cached_categories(category_slugs, cached_categories)
+    # @param {Array} categories - An array of Category models scoped to the user's guardian permissions.
+    def query_from_cached_categories(category_slugs, categories)
       category_slugs
         .map(&:downcase)
         .map do |slug|
@@ -51,15 +50,15 @@ module CategoryHashtag
           # by its slug then find the child by its slug and its parent's
           # ID to make sure they match.
           if child_slug.present?
-            parent_category = cached_categories.find { |cat| cat[:slug].downcase == parent_slug }
+            parent_category = categories.find { |cat| cat.slug.downcase == parent_slug }
             if parent_category.present?
-              cached_categories.find do |cat|
-                cat[:slug].downcase == child_slug && cat[:parent_category_id] == parent_category[:id]
+              categories.find do |cat|
+                cat.slug.downcase == child_slug && cat.parent_category_id == parent_category.id
               end
             end
           else
-            cached_categories.find do |cat|
-              cat[:slug].downcase == parent_slug && cat[:parent_category_id].nil?
+            categories.find do |cat|
+              cat.slug.downcase == parent_slug && cat.parent_category_id.nil?
             end
           end
         end.compact
