@@ -23,4 +23,8 @@ export default DiscourseRoute.extend({
     model.set("group_ids", model.get("group_ids"));
     controller.setProperties({ model, saved: false });
   },
+
+  renderTemplate() {
+    this.render("admin/templates/web-hooks-show", { into: "adminApi" });
+  },
 });
