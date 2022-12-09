@@ -1,43 +1,19 @@
-<div class="web-hook-direction">
-  <LinkTo @route="adminWebHooks" class="btn">
-    {{d-icon "list"}} {{i18n "admin.web_hooks.events.go_list"}}
-  </LinkTo>
+<div class="admin-webhooks__summary">
+  <h1>
+    {{this.model.payload_url}}
 
-  <DButton @icon="paper-plane" @label="admin.web_hooks.events.ping" @action={{action "ping"}} @disabled={{this.pingDisabled}} />
+    <LinkTo @route="adminWebHooks.edit" @model={{this.model}} class="btn no-text admin-webhooks__edit-button">
+      {{d-icon "far-edit"}}
+    </LinkTo>
+  </h1>
 
-  <LinkTo @route="adminWebHooks.edit" @model={{this.model.extras.web_hook_id}} class="btn">
-    {{d-icon "far-edit"}} {{i18n "admin.web_hooks.events.go_details"}}
-  </LinkTo>
+  <div>
+    <span class="admin-webhooks__description-label">
+      {{i18n "admin.web_hooks.description_label"}}:
+    </span>
+
+    {{this.model.description}}
+  </div>
 </div>
 
-<div class="web-hook-events-listing">
-  {{#if this.model}}
-    <LoadMore @selector=".web-hook-events li" @action={{action "loadMore"}}>
-      <div class="web-hook-events content-list">
-        <div class="heading-container">
-          <div class="col heading first status">{{i18n "admin.web_hooks.events.status"}}</div>
-          <div class="col heading event-id">{{i18n "admin.web_hooks.events.event_id"}}</div>
-          <div class="col heading timestamp">{{i18n "admin.web_hooks.events.timestamp"}}</div>
-          <div class="col heading completion">{{i18n "admin.web_hooks.events.completion"}}</div>
-          <div class="col heading actions">{{i18n "admin.web_hooks.events.actions"}}</div>
-        </div>
-
-        {{#if this.hasIncoming}}
-          <a href tabindex="0" {{on "click" this.showInserted}} class="alert alert-info clickable">
-            <CountI18n @key="admin.web_hooks.events.incoming" @count={{this.incomingCount}} />
-          </a>
-        {{/if}}
-
-        <ul>
-          {{#each this.model as |webHookEvent|}}
-            <AdminWebHookEvent @model={{webHookEvent}} />
-          {{/each}}
-        </ul>
-      </div>
-
-      <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />
-    </LoadMore>
-  {{else}}
-    <p>{{i18n "admin.web_hooks.events.none"}}</p>
-  {{/if}}
-</div>
+<WebhookEvents @webhookId={{this.model.id}} />

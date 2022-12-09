@@ -265,11 +265,12 @@ table.api-keys {
   }
 }
 
-.web-hook-direction {
-  a,
-  button {
-    margin-right: 10px;
-  }
+.admin-webhooks__summary {
+  margin-bottom: 1rem;
+}
+
+.admin-webhooks__edit-button {
+  font-size: var(--font-0-rem);
 }
 
 .web-hook-events {
@@ -325,8 +326,11 @@ table.api-keys {
   }
 }
 
+.webhook-events__ping-button {
+  margin-bottom: 1rem;
+}
+
 .web-hook-events-listing {
-  margin-top: 1rem;
   .alert {
     margin: 0;
   }

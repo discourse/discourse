@@ -95,9 +95,6 @@
 
     {{#unless this.model.isNew}}
       <DButton @class="btn-danger" @label="admin.web_hooks.destroy" @action={{action "destroy"}} />
-      <LinkTo @route="adminWebHooks.show" @model={{this.model.id}} class="btn">
-        {{i18n "admin.web_hooks.events.go_events"}}
-      </LinkTo>
     {{/unless}}
 
     <span class="saving">{{this.savingStatus}}</span>

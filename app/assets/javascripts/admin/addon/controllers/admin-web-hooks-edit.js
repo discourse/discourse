@@ -1,5 +1,5 @@
 import Controller, { inject as controller } from "@ember/controller";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -84,38 +84,34 @@ export default Controller.extend({
       : secretValidation || eventTypeValidation || isEmpty(payloadUrl);
   },
 
-  actions: {
-    save() {
-      this.set("saved", false);
-      const model = this.model;
-      const isNew = model.get("isNew");
+  @action
+  async save() {
+    this.set("saved", false);
 
-      return model
-        .save()
-        .then(() => {
-          this.set("saved", true);
-          this.adminWebHooks.get("model").addObject(model);
+    try {
+      await this.model.save();
 
-          if (isNew) {
-            this.transitionToRoute("adminWebHooks.show", model);
-          }
-        })
-        .catch(popupAjaxError);
-    },
+      this.set("saved", true);
+      this.adminWebHooks.get("model").addObject(this.model);
+      this.transitionToRoute("adminWebHooks.show", this.model);
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  },
 
-    destroy() {
-      return this.dialog.yesNoConfirm({
-        message: I18n.t("admin.web_hooks.delete_confirm"),
-        didConfirm: () => {
-          this.model
-            .destroyRecord()
-            .then(() => {
-              this.adminWebHooks.get("model").removeObject(this.model);
-              this.transitionToRoute("adminWebHooks");
-            })
-            .catch(popupAjaxError);
-        },
-      });
-    },
+  @action
+  destroy() {
+    return this.dialog.yesNoConfirm({
+      message: I18n.t("admin.web_hooks.delete_confirm"),
+      didConfirm: () => {
+        this.model
+          .destroyRecord()
+          .then(() => {
+            this.adminWebHooks.get("model").removeObject(this.model);
+            this.transitionToRoute("adminWebHooks");
+          })
+          .catch(popupAjaxError);
+      },
+    });
   },
 });

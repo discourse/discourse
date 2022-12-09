@@ -14,7 +14,7 @@
           <tr>
             <th>{{i18n "admin.web_hooks.delivery_status.title"}}</th>
             <th>{{i18n "admin.web_hooks.payload_url"}}</th>
-            <th>{{i18n "admin.web_hooks.description"}}</th>
+            <th>{{i18n "admin.web_hooks.description_label"}}</th>
             <th>{{i18n "admin.web_hooks.controls"}}</th>
           </tr>
         </thead>
@@ -22,7 +22,7 @@
           {{#each this.model as |webHook|}}
             <tr>
               <td class="delivery-status">
-                <LinkTo @route="adminWebHooks.show" @model={{webHook.id}}>
+                <LinkTo @route="adminWebHooks.show" @model={{webHook}}>
                   <AdminWebHookStatus
                     @deliveryStatuses={{this.deliveryStatuses}}
                     @model={{webHook}}
