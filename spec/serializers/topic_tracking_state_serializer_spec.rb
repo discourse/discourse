@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicTrackingStateSerializer do
+  SiteSetting.navigation_menu = "legacy"
+  SiteSetting.chat_enabled = false if defined?(::Chat)
+
   fab!(:user) { Fabricate(:user) }
   fab!(:post) { create_post }
 
