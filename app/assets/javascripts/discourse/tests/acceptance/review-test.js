@@ -135,13 +135,17 @@ acceptance("Review", function (needs) {
 
   test("Editing a reviewable", async function (assert) {
     const topic = '.reviewable-item[data-reviewable-id="4321"]';
+
     await visit("/review");
+
     assert.ok(exists(`${topic} .reviewable-action.approve`));
     assert.ok(!exists(`${topic} .category-name`));
+
     assert.strictEqual(
       query(`${topic} .discourse-tag:nth-of-type(1)`).innerText,
       "hello"
     );
+
     assert.strictEqual(
       query(`${topic} .discourse-tag:nth-of-type(2)`).innerText,
       "world"
@@ -154,10 +158,12 @@ acceptance("Review", function (needs) {
 
     await click(`${topic} .reviewable-action.edit`);
     await click(`${topic} .reviewable-action.save-edit`);
+
     assert.ok(
       exists(`${topic} .reviewable-action.approve`),
       "saving without changes is a cancel"
     );
+
     await click(`${topic} .reviewable-action.edit`);
 
     assert.ok(
@@ -167,6 +173,7 @@ acceptance("Review", function (needs) {
 
     await fillIn(".editable-field.payload-raw textarea", "new raw contents");
     await click(`${topic} .reviewable-action.cancel-edit`);
+
     assert.strictEqual(
       query(`${topic} .post-body`).innerText.trim(),
       "existing body",
@@ -175,8 +182,15 @@ acceptance("Review", function (needs) {
 
     await click(`${topic} .reviewable-action.edit`);
     let category = selectKit(`${topic} .category-id .select-kit`);
+
     await category.expand();
     await category.selectRowByValue("6");
+
+    assert.strictEqual(
+      category.header().name(),
+      "support",
+      "displays the right header"
+    );
 
     let tags = selectKit(`${topic} .payload-tags .mini-tag-chooser`);
     requests = [];

@@ -202,6 +202,10 @@ class Category < ActiveRecord::Base
     Category.clear_subcategory_ids
   end
 
+  def top_level?
+    self.parent_category_id.nil?
+  end
+
   def self.scoped_to_permissions(guardian, permission_types)
     if guardian.try(:is_admin?)
       all
@@ -374,7 +378,7 @@ class Category < ActiveRecord::Base
       elsif SiteSetting.slug_generation_method == 'ascii' && !CGI.unescape(self.slug).ascii_only?
         errors.add(:slug, I18n.t("category.errors.slug_contains_non_ascii_chars"))
       elsif duplicate_slug?
-        errors.add(:slug, 'is already in use')
+        errors.add(:slug, I18n.t("category.errors.is_already_in_use"))
       end
     else
       # auto slug

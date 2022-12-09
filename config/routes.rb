@@ -393,6 +393,7 @@ Discourse::Application.routes.draw do
       post "session/2fa/test-action" => "session#test_second_factor_restricted_route"
     end
     get "session/scopes" => "session#scopes"
+    get "composer/mentions" => "composer#mentions"
     get "composer_messages" => "composer_messages#index"
     get "composer_messages/user_not_seen_in_a_while" => "composer_messages#user_not_seen_in_a_while"
 
@@ -425,7 +426,6 @@ Discourse::Application.routes.draw do
         collection do
           get "check_username"
           get "check_email"
-          get "is_local_username"
         end
       end
 
@@ -494,6 +494,7 @@ Discourse::Application.routes.draw do
       put "#{root_path}/:username/preferences/primary-email" => "users#update_primary_email", format: :json, constraints: { username: RouteFormat.username }
       delete "#{root_path}/:username/preferences/email" => "users#destroy_email", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/notifications" => "users#preferences", constraints: { username: RouteFormat.username }
+      get "#{root_path}/:username/preferences/tracking" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/categories" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/users" => "users#preferences", constraints: { username: RouteFormat.username }
       get "#{root_path}/:username/preferences/tags" => "users#preferences", constraints: { username: RouteFormat.username }
@@ -560,11 +561,11 @@ Discourse::Application.routes.draw do
 
     get "highlight-js/:hostname/:version.js" => "highlight_js#show", constraints: { hostname: /[\w\.-]+/, format: :js }
 
-    get "stylesheets/:name.css.map" => "stylesheets#show_source_map", constraints: { name: /[-a-z0-9_]+/ }
-    get "stylesheets/:name.css" => "stylesheets#show", constraints: { name: /[-a-z0-9_]+/ }
+    get "stylesheets/:name" => "stylesheets#show_source_map", constraints: { name: /[-a-z0-9_]+/, format: /css\.map/ }, format: true
+    get "stylesheets/:name" => "stylesheets#show", constraints: { name: /[-a-z0-9_]+/, format: "css" }, format: true
     get "color-scheme-stylesheet/:id(/:theme_id)" => "stylesheets#color_scheme", constraints: { format: :json }
-    get "theme-javascripts/:digest.js" => "theme_javascripts#show", constraints: { digest: /\h{40}/ }
-    get "theme-javascripts/:digest.map" => "theme_javascripts#show_map", constraints: { digest: /\h{40}/ }
+    get "theme-javascripts/:digest" => "theme_javascripts#show", constraints: { digest: /\h{40}/, format: :js }, format: true
+    get "theme-javascripts/:digest" => "theme_javascripts#show_map", constraints: { digest: /\h{40}/, format: :map }, format: true
     get "theme-javascripts/tests/:theme_id-:digest.js" => "theme_javascripts#show_tests"
 
     post "uploads/lookup-metadata" => "uploads#metadata"
@@ -773,7 +774,7 @@ Discourse::Application.routes.draw do
       get "/" => "list#category_default", as: "category_default"
     end
 
-    get "hashtags" => "hashtags#show"
+    get "hashtags" => "hashtags#lookup"
     get "hashtags/search" => "hashtags#search"
 
     TopTopic.periods.each do |period|
@@ -838,8 +839,8 @@ Discourse::Application.routes.draw do
     get 'embed/count' => 'embed#count'
     get 'embed/info' => 'embed#info'
 
-    get "new-topic" => "list#latest"
-    get "new-message" => "list#latest"
+    get "new-topic" => "new_topic#index"
+    get "new-message" => "new_topic#index"
 
     # Topic routes
     get "t/id_for/:slug" => "topics#id_for_slug"
@@ -1036,6 +1037,7 @@ Discourse::Application.routes.draw do
     post "/presence/update" => "presence#update"
     get "/presence/get" => "presence#get"
 
+    get "user-status" => "user_status#get"
     put "user-status" => "user_status#set"
     delete "user-status" => "user_status#clear"
 

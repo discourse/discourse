@@ -1,20 +1,13 @@
 <div class="control-group notifications">
   <label class="control-label">{{i18n "user.notifications"}}</label>
 
-  <div class="controls controls-dropdown">
-    <label>{{i18n "user.new_topic_duration.label"}}</label>
-    <ComboBox @class="duration" @valueProperty="value" @content={{this.considerNewTopicOptions}} @value={{this.model.user_option.new_topic_duration_minutes}} @onChange={{action (mut this.model.user_option.new_topic_duration_minutes)}} />
-  </div>
-
-  <div class="controls controls-dropdown">
-    <label>{{i18n "user.auto_track_topics"}}</label>
-    <ComboBox @valueProperty="value" @content={{this.autoTrackDurations}} @value={{this.model.user_option.auto_track_topics_after_msecs}} @onChange={{action (mut this.model.user_option.auto_track_topics_after_msecs)}} />
-  </div>
-
-  <div class="controls controls-dropdown">
-    <label>{{i18n "user.notification_level_when_replying"}}</label>
-    <ComboBox @valueProperty="value" @content={{this.notificationLevelsForReplying}} @value={{this.model.user_option.notification_level_when_replying}} @onChange={{action (mut this.model.user_option.notification_level_when_replying)}} />
-  </div>
+  {{#unless this.currentUser.redesigned_user_page_nav_enabled}}
+    <UserPreferences::TopicTracking
+      @considerNewTopicOptions={{this.considerNewTopicOptions}}
+      @model={{this.model}}
+      @autoTrackDurations={{this.autoTrackDurations}}
+      @notificationLevelsForReplying={{this.notificationLevelsForReplying}} />
+  {{/unless}}
 
   <div class="controls controls-dropdown">
     <label>{{i18n "user.like_notification_frequency.title"}}</label>
@@ -34,13 +27,9 @@
 <UserNotificationSchedule @model={{this.model}} />
 
 {{#if this.showMessageSettings}}
-  <div class="control-group private-messages">
-    <label class="control-label">{{i18n "user.private_messages"}}</label>
-
-    <div class="controls">
-      <PreferenceCheckbox @labelKey="user.allow_private_messages" @checked={{this.model.user_option.allow_private_messages}} />
-    </div>
-  </div>
+  {{#unless this.currentUser.redesigned_user_page_nav_enabled}}
+    <UserPreferences::AllowPrivateMessages @model={{this.model}} />
+  {{/unless}}
 {{/if}}
 
 <PluginOutlet @name="user-preferences-notifications" @tagName="span" @connectorTagName="div" @args={{hash model=this.model save=(action "save")}} />

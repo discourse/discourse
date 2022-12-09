@@ -271,7 +271,6 @@ lv:
       like_count: "Atzinības"
       topic_count: "Tēmas"
       post_count: "Ieraksti"
-      user_count: "Lietotāji"
       active_user_count: "Aktīvi lietotāji"
       contact: "Sazinies ar mums"
       contact_info: "Ar šo vietni saistītu kritisku problēmu gadījumā lūdzu sazinieties ar mums %{contact_info}."
@@ -314,7 +313,6 @@ lv:
       remove_confirmation: "Vai tiešām vēlaties dzēst šo melnrakstu?"
       new_topic: "Jaunas tēmas melnraksts"
       new_private_message: "Jauns personīgā ziņojuma melnraksts"
-      topic_reply: "Atbildes projekts"
       abandon:
         confirm: "Šim tematam tiek izstrādāts melnraksts. Ko jūs vēlētos ar to darīt?"
         yes_value: "Izmest"
@@ -951,13 +949,9 @@ lv:
       no_notifications_page_title: "Jums vēl nav paziņojumu"
       no_notifications_page_body: >
         Jūs saņemsiet paziņojumu par darbībām, kas tieši attiecas uz jums, tostarp atbildēm uz jūsu tēmām un ziņām, kad kāds <b>@minēs</b> vai citēs jūs, un atbildes uz skatītajām tēmām. Paziņojumi tiks nosūtīti arī uz jūsu e -pastu, ja kādu laiku neesat pieteicies. <br><br> Meklējiet %{icon} lai izlemtu, par kurām konkrētām tēmām, kategorijām un tagiem vēlaties saņemt paziņojumu. Lai iegūtu vairāk, skatiet savas <a href='%{preferencesUrl}'>paziņojumu preferences</a>.
-      first_notification: "Jūsu pirmais paziņojums! Izvēlieties to, lai sāktu."
       dynamic_favicon: "Rādīt skaitļus pārlūkprogrammas ikonā"
       skip_new_user_tips:
         description: "Izlaist padomus un emblēmas par jaunu lietotāju iesaisti"
-        not_first_time: "Vai ne pirmo reizi?"
-        skip_link: "Izlaidiet šos padomus"
-        read_later: "Vēlāk izlasīšu."
       theme_default_on_all_devices: "Padarīt to par noklusējuma motīvu visās manās ierīcēs"
       color_scheme_default_on_all_devices: "Iestatīt noklusējuma krāsu shēmu (-as) visās manās ierīcēs"
       color_scheme: "Krāsu shēma"
@@ -979,7 +973,6 @@ lv:
       experimental_sidebar:
         options: "Iespējas"
         navigation_section: "Pārvietošanās"
-        list_destination_default: "Noklusējums"
       change: "mainīt"
       featured_topic: "Piedāvātā tēma"
       moderator: "%{user} ir moderators"
@@ -1086,6 +1079,7 @@ lv:
         profile: "Profils"
         emails: "E-pasti"
         notifications: "Paziņojumi"
+        tracking: "Sekot"
         categories: "Sadaļas"
         users: "Lietotāji"
         tags: "Tagi"
@@ -1301,6 +1295,7 @@ lv:
       email_in_reply_to: "Iekļaut e-pastā citātu no atbildes uz ierakstu"
       other_settings: "Citi"
       categories_settings: "Sadaļas"
+      topics_settings: "Tēmas"
       new_topic_duration:
         label: "Uzskatīt tēmas par jaunām, ja"
         not_viewed: "Es vēl neesmu tās skatījis"
@@ -1501,8 +1496,6 @@ lv:
       enabled: "Vietne ir \"tikai lasīšanas\" režīmā. Lūdzu turpiniet lasīt, taču atbildēšana, atzinības izteikšana un citas funkcijas šobrīd ir atslēgtas."
       login_disabled: "Pieslēgšanās ir atslēgta, kamēr vietne ir \"tikai lasīšanas\" režīmā."
       logout_disabled: "Iziešana ir atslēgta, kamēr vietne ir \"tikai lasīšanas\" režīmā."
-    too_few_topics_and_posts_notice_MF: >-
-      Sāksim diskusiju <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/"></a> Tur {currentTopics, plural, zero {} one {ir <strong>#</strong> tēma} other {ir <strong>#</strong> tēmas}} un {currentPosts, plural, one {<strong>#</strong> ziņa} other {<strong>#</strong> ziņas}}. Apmeklētājiem ir nepieciešams vairāk lasīt un atbildēt - mēs vismaz iesakām {requiredTopics, plural, one {<strong>#</strong> tēma} other {<strong>#</strong> tēmas}} un {requiredPosts, plural, one {<strong>#</strong> ziņa} other {<strong>#</strong> ziņas}}. Šo ziņojumu var redzēt tikai darbinieki.
     learn_more: "uzzināt vairāk..."
     first_post: Pirmais ieraksts
     mute: Noklusināt
@@ -1981,8 +1974,6 @@ lv:
       move_to_inbox:
         title: "Pārvietot uz iesūtni"
         help: "Atgriezt ziņu uz iesūtni "
-      edit_message:
-        title: "Labot"
       defer:
         title: "Nepiekrist"
       list: "Tēmas"
@@ -2422,8 +2413,6 @@ lv:
       review_group_name: "grupas nosaukums"
       this_year: "šogad"
       default_position: "Noklusētā pozīcija"
-      position_disabled: "Sadaļas tiks sakārtotas pēc aktivitātes. Lai kontrolētu sadaļu secību sarakstos,"
-      position_disabled_click: 'ieslēgt iestatījumu "fiksētas sadaļu pozīcijas".'
       parent: "Vecāksadaļa"
       notifications:
         watching:
@@ -2843,8 +2832,6 @@ lv:
               content: "Žetoni"
             faq:
               content: "BUJ"
-            tracked:
-              content: "Sekots"
             groups:
               content: "Grupas"
               title: "Visas grupas"
@@ -2942,7 +2929,6 @@ lv:
         about: "Labot jūsu piederīgu grupām un to nosaukumus"
         group_members: "Grupas biedri"
         delete: "Dzēst"
-        delete_confirm: "Dzēst šo grupu?"
         delete_failed: "Neizdevās izdzēst grupu. Ja šī ir automātiski izveidota grupa, to nav iespējams iznīcināt."
         delete_owner_confirm: "Noņemt lietotāja privilēģijas '%{username}'?"
         add: "Pievienot"
@@ -3483,7 +3469,6 @@ lv:
         trust_level_2_users: "Uzticības 2. līmeņa lietotāji"
         trust_level_3_requirements: "Uzticības 3. līmeņa prasības:"
         trust_level_locked_tip: "Uzticības līmenis ir slēgts, sistēma nepaaugstinās vai nepazeminās lietotāju"
-        trust_level_unlocked_tip: "Uzticības līmenis ir atslēgts, sistēma paaugstinās vai pazeminās lietotāju"
         lock_trust_level: "Slēgt Uzticības līmeni"
         unlock_trust_level: "Atslēgt Uzticības līmeni"
         suspended_count: "Apturēts"
@@ -3536,19 +3521,19 @@ lv:
         delete_confirm: "Vai tiešām vēlaties dzēst šo lietotāju laukā?"
         options: "Opcijas"
         required:
-          title: "Nepieciešams pierakstoties?"
+          title: "Nepieciešams pierakstoties"
           enabled: "obligāts"
           disabled: "nav obligāts"
         editable:
-          title: "Labot pēc pierakstīšanās?"
+          title: "Labot pēc pierakstīšanās"
           enabled: "labojams"
           disabled: "nav labojams"
         show_on_profile:
-          title: "Rādīt publiskajā profilā?"
+          title: "Rādīt publiskajā profilā"
           enabled: "redzams profilā"
           disabled: "nav redzams profilā"
         show_on_user_card:
-          title: "Parādīt leitotāja kartē?"
+          title: "Parādīt leitotāja kartē"
           enabled: "redzams lietotāja kartē"
           disabled: "nav redzams lietotāja kartē"
         field_types:

@@ -22,21 +22,7 @@ const controllerOpts = {
 
   canStar: alias("currentUser.id"),
   showTopicPostBadges: not("new"),
-  redirectedReason: alias("currentUser.redirected_to_top.reason"),
-
-  @discourseComputed(
-    "model.filter",
-    "site.show_welcome_topic_banner",
-    "model.listParams.f"
-  )
-  showEditWelcomeTopicBanner(filter, showWelcomeTopicBanner, hasListParams) {
-    return (
-      this.currentUser?.staff &&
-      filter === "latest" &&
-      showWelcomeTopicBanner &&
-      !hasListParams
-    );
-  },
+  redirectedReason: alias("currentUser.user_option.redirected_to_top.reason"),
 
   expandGloballyPinned: false,
   expandAllPinned: false,
@@ -85,7 +71,11 @@ const controllerOpts = {
     changeSort() {
       deprecated(
         "changeSort has been changed from an (action) to a (route-action)",
-        { since: "2.6.0", dropFrom: "2.7.0" }
+        {
+          since: "2.6.0",
+          dropFrom: "2.7.0",
+          id: "discourse.topics.change-sort",
+        }
       );
       return routeAction("changeSort", this.router._router, ...arguments)();
     },

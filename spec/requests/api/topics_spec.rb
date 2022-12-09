@@ -337,8 +337,7 @@ RSpec.describe 'topics' do
           },
           primary_groups: {
             type: :array,
-            items: {
-            },
+            items: {},
           },
           topic_list: {
             type: :object,
@@ -442,8 +441,7 @@ RSpec.describe 'topics' do
           },
           primary_groups: {
             type: :array,
-            items: {
-            },
+            items: {},
           },
           topic_list: {
             type: :object,

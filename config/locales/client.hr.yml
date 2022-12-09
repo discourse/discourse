@@ -324,7 +324,6 @@ hr:
       like_count: "Likeovi"
       topic_count: "Teme"
       post_count: "Objave"
-      user_count: "Korisnici"
       active_user_count: "Aktivni korisnici"
       contact: "Kontaktirajte nas"
       contact_info: "U slučaju kritičnog problema ili hitnosti koje utječu na rad stranice, kontaktirajte nas na %{contact_info}."
@@ -381,7 +380,6 @@ hr:
       remove_confirmation: "Jeste li sigurni da želite izbrisati ovaj nacrt?"
       new_topic: "Nova skica teme"
       new_private_message: "Nova skica osobne poruke"
-      topic_reply: "Skica odgovora"
       abandon:
         confirm: "Imate nacrt u tijeku za ovu temu. Što biste željeli učiniti s njom?"
         yes_value: "Odbaci"
@@ -1123,13 +1121,9 @@ hr:
       no_notifications_page_title: "Još nemate nijednu obavijest"
       no_notifications_page_body: >
         Bit ćete obaviješteni o aktivnostima izravno relevantne za vas, uključujući i odgovorima na vaše teme i postove, kada netko <b>@mentions</b> Vi ili citati vas, i odgovori na temu koju gledate. Obavijesti će se također slati na vašu e -poštu ako se neko vrijeme niste prijavili. <br><br> Potražite %{icon} da biste odlučili o kojim temama, kategorijama i oznakama želite biti obaviješteni. Za više informacija pogledajte <a href='%{preferencesUrl}'>postavki obavijesti</a>.
-      first_notification: "Vaša prva obavijest! Odaberite ju za početak."
       dynamic_favicon: "Prikaži brojeve na ikoni preglednika"
       skip_new_user_tips:
         description: "Preskoči savjete i značke novog korisnika"
-        not_first_time: "Nije ti prvi put?"
-        skip_link: "Preskoči ove savjete"
-        read_later: "Pročitat ću ga kasnije."
       theme_default_on_all_devices: "Postavi ovu temu kao zadanu na svim mojim uređajima"
       color_scheme_default_on_all_devices: "Postavljanje zadane sheme boja na svim mojim uređajima"
       color_scheme: "Shema boja"
@@ -1151,7 +1145,6 @@ hr:
       experimental_sidebar:
         options: "Mogućnosti"
         navigation_section: "Navigacija"
-        list_destination_default: "Zadano"
       change: "promijeni"
       featured_topic: "Istaknuta tema"
       moderator: "%{user} je moderator"
@@ -1262,6 +1255,7 @@ hr:
         profile: "Profil"
         emails: "E-adrese"
         notifications: "Obavijest"
+        tracking: "Praćeno"
         categories: "Kategorije"
         users: "Korisnici"
         tags: "Oznake"
@@ -1512,6 +1506,7 @@ hr:
       email_in_reply_to: "Uključite isječak odgovora na postove u e-poruke"
       other_settings: "Drugo"
       categories_settings: "Kategorije"
+      topics_settings: "Tema"
       new_topic_duration:
         label: "Teme smatrati novim kad"
         not_viewed: "Još ih nisam pogledao"
@@ -1745,12 +1740,8 @@ hr:
       enabled: "Ova stranica je u načinu rada samo za čitanje. Nastavite pregledavati, ali odgovaranje, sviđanja i druge radnje su za sada onemogućene."
       login_disabled: "Prijava je onemogućena dok je stranica u modelu \"samo čitanje\","
       logout_disabled: "Odjava je onemogućena dok je forum u načinu rada samo za čitanje."
-    too_few_topics_and_posts_notice_MF: >-
-      Počnimo <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">raspravu!</a> Tamo {currentTopics, plural, one {je <strong>#</strong> tema} few {su <strong>#</strong> tema} other {su <strong>#</strong> tema}} i {currentPosts, plural, one {<strong>#</strong> post} few {<strong>#</strong> postova} other {<strong>#</strong> postova}}, Posjetitelji trebaju više za čitanje i odgovaranje na njih - preporučujemo ih barem {requiredTopics, plural, one {<strong>#</strong> tema} few {<strong>#</strong> tema} other {<strong>#</strong> tema}} i {requiredPosts, plural, one {<strong>#</strong> post} few {<strong>#</strong> postova} other {<strong>#</strong> postova}}, Samo osoblje može vidjeti ovu poruku.
-    too_few_topics_notice_MF: >-
-      Hajde da <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">započnemo diskusiju!</a> Tamo {currentTopics, plural, one {je <strong>#</strong> tema} few {su <strong>#</strong> teme} other {su <strong>#</strong> teme}}. Posjetiteljima je potrebno više čitati i odgovoriti na — preporučujemo barem {requiredTopics, plural, one {<strong>#</strong> tema} few {<strong>#</strong> teme} other {<strong>#</strong> teme}}. Samo osoblje može vidjeti ovu poruku.
     too_few_posts_notice_MF: >-
-      Hajde da <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">započnemo diskusiju!</a> Tamo {currentPosts, plural, one {je <strong>#</strong> tema} few {su <strong>#</strong> teme} other {su <strong>#</strong> teme}}. Posjetiteljima je potrebno više čitati i odgovoriti na — preporučujemo barem {requiredPosts, plural, one {<strong>#</strong> tema} few {<strong>#</strong> teme} other {<strong>#</strong> teme}}. Samo osoblje može vidjeti ovu poruku.
+      Hajde da <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">započnemo diskusiju!</a> Tamo {currentPosts, plural, one {je <strong>#</strong> tema} few {su <strong>#</strong> teme} other {su <strong>#</strong> teme}}. Posjetiteljima je potrebno više čitati i odgovoriti na — preporučujemo barem {requiredPosts, plural, one {<strong>#</strong> tema} few {<strong>#</strong> teme} other {<strong>#</strong> teme}}. Samo osoblje može vidjeti ovu poruku.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}</a> dosegao ograničenje za postavljanje stranice {limit, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}."
       reached_minute_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}</a> dosegao ograničenje za postavljanje stranice {limit, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}."
@@ -2309,6 +2300,7 @@ hr:
         other: "<span>%{count}%{plus} rezultata za</span><span class='term'>%{term}</span>"
       title: "Pretraži"
       full_page_title: "Pretraži"
+      results: "rezultati"
       no_results: "Nema rezultata"
       no_more_results: "Nema više rezultata."
       post_format: "#%{post_number} od %{username}"
@@ -2349,7 +2341,7 @@ hr:
       tips:
         category_tag: "filteri po kategoriji ili oznaci"
         author: "filteri po autoru objave"
-        in: "filteri prema metapodacima (npr. u:naslov, u:osobno, u:prikvačeno)"
+        in: "filteri prema metapodacima (npr. in:title, in:personal, in:pinned)"
         status: "filteri prema statusu teme"
         full_search: "pokreće pretraživanje cijele stranice"
         full_search_key: "%{modifier} + Enter"
@@ -2523,9 +2515,6 @@ hr:
       move_to_inbox:
         title: "Premjesti u ulaznu poštu"
         help: "Premjestite poruku nazad u dolazni pretinac"
-      edit_message:
-        help: "Uredite prvu objavu u poruci"
-        title: "Izmijeni"
       defer:
         help: "Označi kao nepročitano"
         title: "Odloži"
@@ -3276,8 +3265,6 @@ hr:
       this_year: "ove godine"
       position: "Položaj na stranici kategorija:"
       default_position: "Zadana pozicija"
-      position_disabled: "Kategorije će u nizu biti prikazivane po razini aktivnosti. Za kontrolu redosljeda kategorija u popisu,"
-      position_disabled_click: 'omogućite postavku "fiksa pozicija kategorija".'
       minimum_required_tags: "Minimalan broj oznaka potrebnih u temi:"
       default_slow_mode: 'Omogućite "Spori način rada" za nove teme u ovoj kategoriji.'
       parent: "Nadkategorija"
@@ -3928,9 +3915,6 @@ hr:
               title: "Sve teme"
             faq:
               content: "ČPP"
-            tracked:
-              content: "Praćeno"
-              title: "Sve praćene teme"
             groups:
               content: "Grupe"
               title: "Sve grupe"
@@ -4098,11 +4082,6 @@ hr:
         about: "Ovdje izmijenite svoje članstvo u grupama i imena grupa"
         group_members: "Članovi grupe"
         delete: "Obriši"
-        delete_confirm: "Obriši ovu grupu?"
-        delete_with_messages_confirm:
-          one: "Brisanjem ove grupe %{count} poruka ostati bez roditelja, članovi grupe više joj neće imati pristup.<br><br>Jeste li sigurni?"
-          few: "Brisanjem ove grupe %{count} poruka ostati bez roditelja, članovi grupe više joj neće imati pristup.<br><br>Jeste li sigurni?"
-          other: "Brisanjem ove grupe %{count} poruka ostati bez roditelja, članovi grupe im više neće imati pristup.<br><br>Jeste li sigurni?"
         delete_failed: "Nemoguće obrisati grupu. Ako je ovo automatska grupa, ne možete ju obrisati."
         delete_automatic_group: Ovo je automatska grupa i ne može se izbrisati.
         delete_owner_confirm: "Ukloniti vlasničku privilegiju za \"%{username}\"?"
@@ -4216,7 +4195,6 @@ hr:
         go_back: "Povratak na popis"
         payload_url: "URL nosivosti"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "Čini se da pokušavate postaviti webhook na lokalni url. Događaj dostavljen na lokalnu adresu može uzrokovati nuspojave ili neočekivana ponašanja. Nastaviti?"
         secret_invalid: "Tajna ne smije imati praznih znakova."
         secret_too_short: "Tajna treba sadržavati najmanje 12 znakova."
         secret_placeholder: "Izborni niz koji se koristi za generiranje potpisa"
@@ -4505,7 +4483,6 @@ hr:
           is_private: "Tema je u privatnom git repozitoriju"
           remote_branch: "Naziv podružnice (izborno)"
           public_key: "Omogućite pristup sljedećem javnom ključu repo:"
-          public_key_note: "Nakon unosa važećeg URL-a privatnog spremišta gore, ovdje će se generirati i prikazati SSH ključ."
           install: "Instaliraj"
           installed: "Instalirano"
           install_popular: "Popularno"
@@ -5178,7 +5155,6 @@ hr:
         trust_level_2_users: "Korisnici na razini povjerenja 2"
         trust_level_3_requirements: "Predispozicije za razinu povjerenja 3"
         trust_level_locked_tip: "razina povjerenja zaključana, sistem neće promovirati ili demotirati korisnika"
-        trust_level_unlocked_tip: "razina povjerenja odključana, sistem će promovirati ili demotirati korisnika"
         lock_trust_level: "Zaključaj razinu povjerenja"
         unlock_trust_level: "Odključaj razinu povjerenja"
         silenced_count: "Utišano"
@@ -5239,23 +5215,23 @@ hr:
         delete_confirm: "Jeste li sigurni da želite obrisati to korisničko polje?"
         options: "Mogućnosti"
         required:
-          title: "Potrebno pri registraciji?"
+          title: "Potrebno pri registraciji"
           enabled: "potrebno"
           disabled: "nije potrebno"
         editable:
-          title: "Izmijenjivo nakon registracije?"
+          title: "Izmijenjivo nakon registracije"
           enabled: "izmijenjivo"
           disabled: "nije izmijenjivo"
         show_on_profile:
-          title: "Prikaži na javnom profilu?"
+          title: "Prikaži na javnom profilu"
           enabled: "prikazano na profilu"
           disabled: "nije prikazano na profilu"
         show_on_user_card:
-          title: "Prikaži na korisničkoj kartici?"
+          title: "Prikaži na korisničkoj kartici"
           enabled: "prikaži na korisničkoj kartici"
           disabled: "nije prikazano na korisničkoj kartici"
         searchable:
-          title: "Može se pretraživati?"
+          title: "Može se pretraživati"
           enabled: "može se pretraživati"
           disabled: "nije moguće pretraživati"
         field_types:
@@ -5444,7 +5420,6 @@ hr:
       embedding:
         get_started: "Ako želite ugraditi Discourse na drugu web-stranicu, počnite dodavanjem njegovog hosta."
         confirm_delete: "Jeste li sigurni da želite izbrisati tog hosta?"
-        sample: "Zalijepite sljedeći HTML kod na svoju web-lokaciju kako biste stvorili i ugradili teme diskursa. Zamijenite <b>ZAMJENI_ME</b> kanonskim URL-om stranice na koju ga ugrađujete."
         title: "Ugrađivanje"
         host: "Dopušteni hostovi"
         class_name: "Naziv klase"

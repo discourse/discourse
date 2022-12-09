@@ -126,6 +126,7 @@ class PostAlerter
 
       if mentioned_users
         mentioned_users = only_allowed_users(mentioned_users, post)
+        mentioned_users = mentioned_users - pm_watching_users(post)
         notified += notify_users(mentioned_users - notified, :mentioned, post, mentioned_opts)
       end
 
@@ -146,8 +147,15 @@ class PostAlerter
     # replies
     reply_to_user = post.reply_notification_target
 
-    if new_record && reply_to_user && !notified.include?(reply_to_user) && notify_about_reply?(post)
-      notified += notify_non_pm_users(reply_to_user, :replied, post)
+    if new_record && notify_about_reply?(post)
+      if reply_to_user && !notified.include?(reply_to_user)
+        notified += notify_non_pm_users(reply_to_user, :replied, post)
+      end
+
+      topic_author = post.topic.user
+      if topic_author && !notified.include?(topic_author) && user_watching_topic?(topic_author, post.topic)
+        notified += notify_non_pm_users(topic_author, :replied, post)
+      end
     end
 
     DiscourseEvent.trigger(:post_alerter_before_quotes, post, new_record, notified)
@@ -635,6 +643,14 @@ class PostAlerter
     users
   end
 
+  def pm_watching_users(post)
+    return [] if !post.topic.private_message?
+    directly_targeted_users(post).filter do |u|
+      notification_level = TopicUser.get(post.topic, u)&.notification_level
+      notification_level == TopicUser.notification_levels[:watching]
+    end
+  end
+
   def notify_pm_users(post, reply_to_user, quoted_users, notified)
     return [] unless post.topic
 
@@ -653,8 +669,7 @@ class PostAlerter
     users = directly_targeted_users(post).reject { |u| notified.include?(u) }
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
     users.each do |user|
-      notification_level = TopicUser.get(post.topic, user)&.notification_level
-      if reply_to_user == user || notification_level == TopicUser.notification_levels[:watching] || user.staged?
+      if reply_to_user == user || pm_watching_users(post).include?(user) || user.staged?
         create_notification(user, Notification.types[:private_message], post, skip_send_email_to: emails_to_skip_send)
       end
     end
@@ -884,5 +899,13 @@ class PostAlerter
 
   def is_replying?(user, reply_to_user, quoted_users)
     reply_to_user == user || quoted_users.include?(user)
+  end
+
+  def user_watching_topic?(user, topic)
+    TopicUser.exists?(
+      user_id: user.id,
+      topic_id: topic.id,
+      notification_level: TopicUser.notification_levels[:watching]
+    )
   end
 end

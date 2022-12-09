@@ -1,0 +1,10 @@
+<% if @chat_email_frequencies %>
+  <p>
+    <label><%= t 'unsubscribe.chat_summary.select_title' %></label>
+    <%=
+      select_tag :chat_email_frequency,
+      options_for_select(@chat_email_frequencies, @current_chat_email_frequency),
+      class: 'combobox'
+    %>
+  </p>
+<% end %>

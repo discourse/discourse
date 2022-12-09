@@ -31,13 +31,11 @@ RSpec.describe 'tags' do
                 name: { type: :string },
                 tag_names: {
                   type: :array,
-                  items: {
-                  },
+                  items: {},
                 },
                 parent_tag_name: {
                   type: :array,
-                  items: {
-                  },
+                  items: {},
                 },
                 one_per_topic: { type: :boolean },
                 permissions: {
@@ -101,13 +99,11 @@ RSpec.describe 'tags' do
               name: { type: :string },
               tag_names: {
                 type: :array,
-                items: {
-                },
+                items: {},
               },
               parent_tag_name: {
                 type: :array,
-                items: {
-                },
+                items: {},
               },
               one_per_topic: { type: :boolean },
               permissions: {
@@ -151,13 +147,11 @@ RSpec.describe 'tags' do
               name: { type: :string },
               tag_names: {
                 type: :array,
-                items: {
-                },
+                items: {},
               },
               parent_tag_name: {
                 type: :array,
-                items: {
-                },
+                items: {},
               },
               one_per_topic: { type: :boolean },
               permissions: {
@@ -204,8 +198,7 @@ RSpec.describe 'tags' do
             properties: {
               categories: {
                 type: :array,
-                items: {
-                },
+                items: {},
               },
             }
           },
@@ -240,8 +233,7 @@ RSpec.describe 'tags' do
           },
           primary_groups: {
             type: :array,
-            items: {
-            },
+            items: {},
           },
           topic_list: {
             type: :object,
@@ -294,8 +286,7 @@ RSpec.describe 'tags' do
                     liked: { type: :boolean },
                     tags: {
                       type: :array,
-                      items: {
-                      },
+                      items: {},
                     },
                     views: { type: :integer },
                     like_count: { type: :integer },

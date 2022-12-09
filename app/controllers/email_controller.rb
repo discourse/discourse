@@ -6,10 +6,11 @@ class EmailController < ApplicationController
   skip_before_action :check_xhr, :preload_json, :redirect_to_login_if_required
 
   def unsubscribe
-    key = UnsubscribeKey.find_by(key: params[:key])
+    key = UnsubscribeKey.includes(:user).find_by(key: params[:key])
     @found = key.present?
+    @key_owner_found = key&.user.present?
 
-    if @found
+    if @found && @key_owner_found
       UnsubscribeKey
         .get_unsubscribe_strategy_for(key)
         &.prepare_unsubscribe_options(self)

@@ -248,7 +248,6 @@ hy:
       like_count: "Հավանումներ"
       topic_count: "Թեմաներ"
       post_count: "Գրառում"
-      user_count: "Օգտատերեր"
       active_user_count: "Ակտիվ Օգտատերեր"
       contact: "Հետադարձ Կապ"
       contact_info: "Այս կայքի հետ կապված կրիտիկական խնդիրների կամ հրատապ հարցերի դեպքում խնդրում ենք կապվել մեզ հետ %{contact_info} էլ. հասցեով:"
@@ -283,7 +282,6 @@ hy:
       resume: "Վերսկսել"
       remove: "Ջնջել"
       new_topic: "Նոր թեմայի սևագիր"
-      topic_reply: "Պատասխանի սևագիր"
       abandon:
         yes_value: "Չեղարկել"
     topic_count_categories:
@@ -826,7 +824,6 @@ hy:
       dismiss: "Չեղարկել"
       dismiss_notifications: "Չեղարկել Բոլորը"
       dismiss_notifications_tooltip: "Նշել բոլոր չկարդացած ծանուցումները որպես կարդացած:"
-      first_notification: "Ձեր առաջին ծանուցումն է! Ընտրեք այն՝ սկսելու համար:"
       dynamic_favicon: "Ցուցադրել քանակը բրաուզերի պատկերակի վրա"
       theme_default_on_all_devices: "Դարձնել սա լռելյայն թեմա իմ բոլոր սարքավորումների համար"
       color_schemes:
@@ -840,7 +837,6 @@ hy:
       experimental_sidebar:
         options: "Տարբերակներ"
         navigation_section: "Նավիգացիա"
-        list_destination_default: "Լռելյայն"
       change: "փոխել"
       featured_topic: "Հանրահայտ թեմա"
       moderator: "%{user}-ը մոդերատոր է"
@@ -935,6 +931,7 @@ hy:
         profile: "Պրոֆիլ"
         emails: "Էլ. հասցեներ"
         notifications: "Ծանուցումներ"
+        tracking: "Հետևում Եմ"
         categories: "Կատեգորիաներ"
         users: "Օգտատերեր"
         tags: "Թեգեր"
@@ -1138,6 +1135,7 @@ hy:
       email_in_reply_to: "Ներառել գրառումների պատասխանների քաղվածք էլ. նամակներում"
       other_settings: "Այլ"
       categories_settings: "Կատեգորիաներ"
+      topics_settings: "Թեմա"
       new_topic_duration:
         label: "Համարել թեմաները նոր, երբ"
         not_viewed: "Ես դեռևս դրանք չեմ դիտել"
@@ -1721,6 +1719,7 @@ hy:
         other: "<span>%{count}%{plus} արդյունք</span><span class='term'>%{term}</span>-ի համար"
       title: "Որոնում"
       full_page_title: "Որոնում"
+      results: "արդյունքները"
       no_results: "Արդյունքներ չեն գտնվել:"
       no_more_results: "Արդյունքներ այլևս չեն գտնվել:"
       post_format: "#%{post_number} %{username}-ի կողմից"
@@ -1860,9 +1859,6 @@ hy:
       move_to_inbox:
         title: "Տեղափոխել Մուտքային արկղ"
         help: "Տեղափոխել հաղորդագրությունը ետ դեպի Մուտքային արկղ"
-      edit_message:
-        help: "Խմբագրել հաղորդագրության առաջին գրառումը"
-        title: "Խմբագրել"
       defer:
         help: "նշել որպես չընթերցված "
         title: "Հետաձգել"
@@ -2416,8 +2412,6 @@ hy:
       this_year: "այս տարի"
       position: "Դիրքը կատեգորիայի էջում."
       default_position: "Լռելյայն Դիրքը"
-      position_disabled: "Կատեգորիաները կցուցադրվեն ըստ ակտիվության: Ցանկերում կատեգորիաների դասավորությունը վերահսկելու համար,"
-      position_disabled_click: 'միացրեք "fixed category positions" կարգավորումը:'
       minimum_required_tags: "Թեմայում պահանջվող թեգերի նվազագույն քանակը՝"
       parent: "Մայր Կատեգորիա"
       num_auto_bump_daily: "Օրեկան ավտոմատ բարձրացվող բաց թեմաների քանակը՝"
@@ -2913,8 +2907,6 @@ hy:
               content: "Կրծքանշաններ"
             faq:
               content: "ՀՏՀ"
-            tracked:
-              content: "Հետևած"
             groups:
               content: "Խմբեր"
               title: "Բոլոր խմբերը"
@@ -3070,7 +3062,6 @@ hy:
         about: "Խմբագրեք Ձեր խմբի անդամակցությունը և անուններն այստեղ"
         group_members: "Խմբի անդամները"
         delete: "Ջնջել"
-        delete_confirm: "Ջնջե՞լ այս խումբը:"
         delete_failed: "Հնարավոր չէ ջնջել խումբը: Եթե սա ավտոմատ խումբ է, այն հնարավոր չէ ջնջել:"
         delete_owner_confirm: "Հեռացնե՞լ սեփականատիրոջ արտոնությունը '%{username}' -ի համար:"
         add: "Ավելացնել"
@@ -3971,7 +3962,6 @@ hy:
         trust_level_2_users: "Վստահության 2-րդ Մակարդակի Օգտատերեր"
         trust_level_3_requirements: "Վստահության 3 Մակարդակի Պահանջներ"
         trust_level_locked_tip: "վստահության մակարդակը արգելափակված է, համակարգը չի խթանի կամ խանգարի օգտատիրոջը"
-        trust_level_unlocked_tip: "վստահության մակարդակը արգելաբացված է, համակարգը կարող է խթանել կամ խանգարել օգտատիրոջը"
         lock_trust_level: "Արգելափակել Վստահության Մակարդակը"
         unlock_trust_level: "Արգելաբացել Վստահության Մակարդակը"
         silenced_count: "Լռեցված"
@@ -4026,19 +4016,15 @@ hy:
         delete_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել օգտատիրոջ այդ դաշտը:"
         options: "Տարբերակներ"
         required:
-          title: "Պարտադի՞ր է գրանցվելիս:"
           enabled: "պարտադիր է"
           disabled: "պարտադիր չէ"
         editable:
-          title: "Խմբագրելի՞ է գրանցումից հետո:"
           enabled: "խմբագրելի է"
           disabled: "խմբագրելի չէ"
         show_on_profile:
-          title: "Ցու՞յց տալ հրապարակային պրոֆիլում"
           enabled: "ցուցադրել պրոֆիլում"
           disabled: "չցուցադրել պրոֆիլում"
         show_on_user_card:
-          title: "Ցուցադրե՞լ օգտատիրոջ քարտի վրա:"
           enabled: "ցուցադրել օգտատիրոջ քարտի վրա"
           disabled: "չցուցադրել օգտատիրոջ քարտի վրա"
         field_types:

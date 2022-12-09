@@ -320,7 +320,6 @@ cs:
       like_count: "Líbí se"
       topic_count: "Témata"
       post_count: "Příspěvky"
-      user_count: "Uživatelé"
       active_user_count: "Aktivní uživatelé"
       contact: "Kontaktujte nás"
       contact_info: "V případě kritické chyby nebo urgentní záležitosti ovlivňující tuto stránku nás prosím kontaktujte na %{contact_info}."
@@ -377,7 +376,6 @@ cs:
       remove_confirmation: "Opravdu chcete tento koncept smazat?"
       new_topic: "Nový koncept tématu"
       new_private_message: "Nový koncept soukromé zprávy"
-      topic_reply: "Koncept odpovědi"
       abandon:
         confirm: "Máte rozpracovaný koncept tohoto tématu. Co byste s ním chtěli udělat?"
         yes_value: "Zahodit"
@@ -920,7 +918,6 @@ cs:
       dismiss: "Označit jako přečtené"
       dismiss_notifications: "Označit vše jako přečtené"
       dismiss_notifications_tooltip: "Označit všechny nepřečtené notifikace jako přečtené"
-      first_notification: "Vaše první notifikace! Klikněte zde a začněte."
       color_schemes:
         undo: "obnovit výchozí"
         regular: "Běžný"
@@ -930,7 +927,6 @@ cs:
       experimental_sidebar:
         options: "Možnosti"
         navigation_section: "Navigace"
-        list_destination_default: "Výchozí"
       change: "změnit"
       featured_topic: "Doporučené téma"
       moderator: "%{user} je moderátor"
@@ -1023,6 +1019,7 @@ cs:
         profile: "Profil"
         emails: "Emaily"
         notifications: "Upozornění"
+        tracking: "Sledované"
         categories: "Kategorie"
         users: "Uživatelé"
         tags: "Tagy"
@@ -1223,6 +1220,7 @@ cs:
       email_in_reply_to: "Zahrnout v emailech úryvek příspěvku, na který je reagováno"
       other_settings: "Ostatní"
       categories_settings: "Kategorie"
+      topics_settings: "Témata"
       new_topic_duration:
         label: "Považovat témata za nová, pokud"
         not_viewed: "jsem je dosud neviděl."
@@ -1914,9 +1912,6 @@ cs:
       move_to_inbox:
         title: "Přesunout do Přijaté"
         help: "Přesunout zprávu zpět do Přijaté"
-      edit_message:
-        help: "Upravit první příspěvek zprávy"
-        title: "Upravit"
       defer:
         title: "Odložit"
       list: "Témata"
@@ -2436,8 +2431,6 @@ cs:
       require_reply_approval: "Požadovat schválení moderátorů pro všechny nové odpovědi"
       this_year: "letos"
       default_position: "Výchozí umístění"
-      position_disabled: "Kategorie jsou zobrazovány podle pořadí aktivity. Pro kontrolu pořadí kategorií v seznamech,"
-      position_disabled_click: 'povolte nastavení "neměnné pozice kategorií" (fixed category positions).'
       minimum_required_tags: "Nejmenší počet tagů požadovaných pro téma:"
       parent: "Nadřazená kategorie"
       num_auto_bump_daily: "Počet otevřených témat, která mají být denně automaticky zvýrazněna:"
@@ -2914,8 +2907,6 @@ cs:
               content: "Odznaky"
             faq:
               content: "FAQ"
-            tracked:
-              content: "Sledované"
             groups:
               content: "Skupiny"
               title: "Všechny skupiny"
@@ -3024,7 +3015,6 @@ cs:
         about: "Zde můžete upravit názvy skupin a členství"
         group_members: "Členové skupiny"
         delete: "Smazat"
-        delete_confirm: "Smazat tuto skupinu?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
         delete_owner_confirm: "Odstranit vlastnickou výsadu od '%{username}'?"
         add: "Přidat"
@@ -3721,7 +3711,6 @@ cs:
         trust_level_2_users: "Uživatelé důvěryhodnosti 2"
         trust_level_3_requirements: "Požadavky pro důvěryhodnost 3"
         trust_level_locked_tip: "úroveň důvěryhodnosti uzamčena. Systém nebude povyšovat ani degradovat uživatele"
-        trust_level_unlocked_tip: "úroveň důvěryhodnosti odemčena. Systém může povyšovat nebo degradovat uživatele"
         lock_trust_level: "Zamknout úroveň důvěryhodnosti"
         unlock_trust_level: "Odemknout úroveň důvěryhodnosti"
         silenced_count: "Ztišení"
@@ -3776,19 +3765,19 @@ cs:
         delete_confirm: "Určitě chcete smazat toto rozšíření?"
         options: "Možnosti"
         required:
-          title: "Povinné pro registraci?"
+          title: "Povinné pro registraci"
           enabled: "povinné"
           disabled: "není povinné"
         editable:
-          title: "Editovatelné po registraci?"
+          title: "Editovatelné po registraci"
           enabled: "editovatelné"
           disabled: "není editovatelné"
         show_on_profile:
-          title: "Zveřejnit na uživatelském profilu?"
+          title: "Zveřejnit na uživatelském profilu"
           enabled: "zveřejněno na profilu"
           disabled: "nezveřejněno na profilu"
         show_on_user_card:
-          title: "Zobrazit na kartě uživatele?"
+          title: "Zobrazit na kartě uživatele"
           enabled: "zobrazeno na kartě uživatele"
           disabled: "Nezobrazeno na kartě uživatele"
         field_types:

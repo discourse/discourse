@@ -6,12 +6,12 @@ RSpec.shared_examples "#display_sidebar_tags" do |serializer_klass|
   let(:serializer) { serializer_klass.new(user, scope: Guardian.new(user), root: false) }
 
   before do
-    SiteSetting.enable_experimental_sidebar_hamburger = true
+    SiteSetting.navigation_menu = "sidebar"
   end
 
-  it 'should not be included in serialised object when experimental hamburger and sidebar has been disabled' do
+  it 'should not be included in serialised object when navigation menu is legacy' do
     SiteSetting.tagging_enabled = true
-    SiteSetting.enable_experimental_sidebar_hamburger = false
+    SiteSetting.navigation_menu = "legacy"
 
     expect(serializer.as_json[:display_sidebar_tags]).to eq(nil)
   end

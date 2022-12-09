@@ -4,7 +4,13 @@ import {
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  settled,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import I18n from "I18n";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -333,7 +339,10 @@ acceptance("Search - Anonymous", function (needs) {
 
 acceptance("Search - Authenticated", function (needs) {
   needs.user();
-  needs.settings({ log_search_queries: true });
+  needs.settings({
+    log_search_queries: true,
+    allow_uncategorized_topics: true,
+  });
 
   needs.pretender((server, helper) => {
     server.get("/search/query", (request) => {
@@ -365,6 +374,17 @@ acceptance("Search - Authenticated", function (needs) {
 
       return helper.response(searchFixtures["search/query"]);
     });
+
+    server.get("/inline-onebox", () =>
+      helper.response({
+        "inline-oneboxes": [
+          {
+            url: "http://www.something.com",
+            title: searchFixtures["search/query"].topics[0].title,
+          },
+        ],
+      })
+    );
   });
 
   test("Right filters are shown in full page search", async function (assert) {
@@ -476,6 +496,7 @@ acceptance("Search - Authenticated", function (needs) {
       "href"
     );
     await triggerKeyEvent(".search-menu", "keydown", "A");
+    await settled();
 
     assert.strictEqual(
       query("#reply-control textarea").value,
@@ -507,6 +528,30 @@ acceptance("Search - Authenticated", function (needs) {
     assert.ok(exists(query(`${container} ul li`)), "has a list of items");
     await triggerKeyEvent("#search-term", "keydown", "Enter");
     assert.ok(exists(query(`.search-menu`)), "search dropdown is visible");
+  });
+
+  test("search while composer is open", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".reply");
+    await fillIn(".d-editor-input", "a link");
+    await click("#search-button");
+    await fillIn("#search-term", "dev");
+
+    await triggerKeyEvent("#search-term", "keydown", "Enter");
+    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
+    await triggerKeyEvent("#search-term", "keydown", 65); // maps to lowercase a
+
+    assert.ok(
+      query(".d-editor-input").value.includes("a link"),
+      "still has the original composer content"
+    );
+
+    assert.ok(
+      query(".d-editor-input").value.includes(
+        searchFixtures["search/query"].topics[0].slug
+      ),
+      "adds link from search to composer"
+    );
   });
 
   test("Shows recent search results", async function (assert) {

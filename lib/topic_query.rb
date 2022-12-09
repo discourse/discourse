@@ -311,9 +311,9 @@ class TopicQuery
   def list_group_topics(group)
     list = default_results.where("
       topics.user_id IN (
-        SELECT user_id FROM group_users gu WHERE gu.group_id = #{group.id.to_i}
+        SELECT user_id FROM group_users gu WHERE gu.group_id = ?
       )
-    ")
+    ", group.id.to_i)
 
     create_list(:group_topics, {}, list)
   end

@@ -153,7 +153,6 @@ be:
       like_count: "перавагі"
       topic_count: "Тэмы"
       post_count: "Паведамленні"
-      user_count: "Карыстальнікі"
       active_user_count: "дзеючыя карыстальнікі"
       contact: "Кантакты"
       contact_info: "У выпадку сур'ёзных праблем з гэтым сайтам, калі ласка, звяжыцеся з намі праз %{contact_info}."
@@ -498,6 +497,7 @@ be:
         profile: "Профіль"
         emails: "Емейлы"
         notifications: "Натыфікацыі"
+        tracking: "Сачыць"
         categories: "Катэгорыі"
         users: "Карыстальнікі"
         tags: "Цэтлікі"
@@ -600,6 +600,7 @@ be:
         never: "ніколі"
       other_settings: "іншае"
       categories_settings: "Катэгорыі"
+      topics_settings: "тэмы"
       new_topic_duration:
         label: "Лічыць тэмы новымі, калі"
         not_viewed: "я іх яшчэ не прагледзеў"
@@ -884,6 +885,7 @@ be:
       select_all: "выбраць усе"
       title: "Пошук"
       full_page_title: "Пошук"
+      results: "вынікі"
       no_results: "Нічога не знойдзена."
       results_page: "Вынікі пошуку для '%{term}'"
       search_google_button: "Google"
@@ -957,8 +959,6 @@ be:
         title: "архіў"
       move_to_inbox:
         title: "Перамясціць у тэчцы Уваходныя"
-      edit_message:
-        title: "рэдагаваць"
       list: "тэмы"
       new: "новая тэма"
       unread: "непрачытаныя"
@@ -1463,7 +1463,6 @@ be:
         about: "Edit your group membership and names here"
         group_members: "Удзельнікі групы"
         delete: "выдаліць"
-        delete_confirm: "Выдаліць гэтую групу?"
         delete_failed: "Не атрымалася выдаліць групу. Калі гэта - аўтаматычная група, яе немагчыма знішчыць."
         add: "дадаць"
       api:

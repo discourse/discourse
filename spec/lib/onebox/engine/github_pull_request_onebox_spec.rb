@@ -59,7 +59,9 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
     end
 
     it "includes commit name" do
-      expect(html).to include("Add audio onebox")
+      doc = Nokogiri::HTML5(html)
+      expect(doc.css('h4').text.strip).to eq("Add audio onebox")
+      expect(doc.css('.github-body-container').text).to include("http://meta.discourse.org/t/audio-html5-tag/8168")
     end
   end
 

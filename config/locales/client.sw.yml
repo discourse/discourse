@@ -218,7 +218,6 @@ sw:
       like_count: "Upendo"
       topic_count: "Mada"
       post_count: "Machapisho"
-      user_count: "Watumiaji"
       active_user_count: "Watumiaji wa Mara kwa Mara"
       contact: "Wasiliana Nasi"
       contact_info: "Iwapo kuna suala la muhimu au haraka linalohusiana na mtandao huu, tafadhali wasiliana nasi kupitia %{contact_info}."
@@ -635,7 +634,6 @@ sw:
       dismiss: "Ondosha"
       dismiss_notifications: "Puuzia Zote"
       dismiss_notifications_tooltip: "Weka alama kuwa taarifa zote ambazo hazijasomwa kuwa zimesomwa"
-      first_notification: "Umepata taarifa ya kwanza! Ichague kuanza."
       color_schemes:
         undo: "Anza Upya"
         regular: "Kawaida"
@@ -645,7 +643,6 @@ sw:
       experimental_sidebar:
         options: "Chaguo"
         navigation_section: "Abiri"
-        list_destination_default: "Halisi"
       change: "badilisha"
       moderator: "%{mtumiaji} ni msimamizi"
       admin: "%{mtumiaji} ni kiongozi"
@@ -731,6 +728,7 @@ sw:
         profile: "Maelezo mafupi"
         emails: "Barua pepe"
         notifications: "Taarifa"
+        tracking: "Fuatilia"
         categories: "Vikundi"
         users: "Watumiaji"
         tags: "Lebo"
@@ -867,6 +865,7 @@ sw:
       email_in_reply_to: "Jumuisha dhana ya majibu ya posti kwenye barua pepe"
       other_settings: "Zingine"
       categories_settings: "Kategoria"
+      topics_settings: "Mada"
       new_topic_duration:
         label: "Mada ni mpya kama"
         not_viewed: "Bado sijazipitia"
@@ -1363,6 +1362,7 @@ sw:
         other: "<span>%{count}%{plus} majibu kwa</span><span class='term'>%{term}</span>"
       title: "Tafuta"
       full_page_title: "Tafuta"
+      results: "majibu"
       no_results: "Hakuna Majibu Yaliyopatikana."
       no_more_results: "Hakuna majibu zaidi yaliyopatikana."
       post_format: "#%{post_number} za %{username}"
@@ -1498,9 +1498,6 @@ sw:
       move_to_inbox:
         title: "Hamisha kwenda Kisanduku pokezi"
         help: "Hamisha kwenda Kisanduku pokezi"
-      edit_message:
-        help: "Hariri chapisho la kwanza la ujumbe"
-        title: "Hariri"
       list: "Mada"
       new: "mada mpya"
       unread: "haijasomwa"
@@ -1925,7 +1922,6 @@ sw:
       review_group_name: "jina la kikundi"
       this_year: "mwaka huu"
       default_position: "Chaguo Msingi la Nafasi"
-      position_disabled: "Kategoria zitaonyeshwa kulingana na oda ya shughuli. Kudhibiti oda ya kategoria kwenye orodha,"
       minimum_required_tags: "Kiwango cha chini cha lebo zinazohitajika kwenye mada:"
       parent: "Kategoria Miliki"
       notifications:
@@ -2298,8 +2294,6 @@ sw:
               content: "Beji"
             faq:
               content: "FAQ"
-            tracked:
-              content: "Imefuatiliwa"
             groups:
               content: "Vikundi"
               title: "Vikundi vyote"
@@ -2415,7 +2409,6 @@ sw:
         about: "Hariri uanachama wa kikundi chako na majina hapa"
         group_members: "Wanachama wa kikundi"
         delete: "Ondoa"
-        delete_confirm: "Ondoa kikundi hiki?"
         delete_failed: "Tumeshindwa kuondoa kikundi. Kama kikundi kilitengenezwa otomatikali, hakiwezi kuvunjwa."
         delete_owner_confirm: "Ondoa haki ya mmiliki kwa '%{username}'?"
         add: "ongeza"
@@ -3079,7 +3072,6 @@ sw:
         trust_level_2_users: "Watumiaji wenye Kiwango cha 2 cha Uaminifu"
         trust_level_3_requirements: "Mahitaji ya Kiwango cha 3 cha uaminifu"
         trust_level_locked_tip: "kiwango cha uaminifu kimefungwa, mfumo hauta mvusha au kumshusha mtu daraja"
-        trust_level_unlocked_tip: "kiwango cha uaminifu kimefunguliwa, mfumo unaweza kumvusha au kumshusha mtu daraja"
         lock_trust_level: "Funga Kiwango cha Uaminifu"
         unlock_trust_level: "Fungua Kiwango cha Uaminifu"
         silenced_count: "Amenyamazishwa"
@@ -3129,19 +3121,19 @@ sw:
         delete_confirm: "Una uhakika unataka kufuta sehemu ya taarifa ya mtumiaji?"
         options: "Machaguo"
         required:
-          title: "Inahitajika wakati wa kujiunga?"
+          title: "Inahitajika wakati wa kujiunga"
           enabled: "muhimu"
           disabled: "sio muhimu"
         editable:
-          title: "Inaweza kufanyiwa uhariri baada ya kujiunga?"
+          title: "Inaweza kufanyiwa uhariri baada ya kujiunga"
           enabled: "inaweza kufanyiwa uhariri"
           disabled: "haiwezi kufanyiwa uhariri"
         show_on_profile:
-          title: "Imeonyeshwa kwenye maelezo mafupi ya mtumiaji yanayo onwa na umma?"
+          title: "Imeonyeshwa kwenye maelezo mafupi ya mtumiaji yanayo onwa na umma"
           enabled: "imeonyeshwa kwenye maelezo mafupi ya mtumiaji"
           disabled: "haijaonyeshwa kwenye maelezo mafupi ya mtumiaji"
         show_on_user_card:
-          title: "Onyesha kwenye kadi ya mtumiaji?"
+          title: "Onyesha kwenye kadi ya mtumiaji"
           enabled: "onyesha kwenye kadi ya mtumiaji"
           disabled: "usioneshe kwenye kadi ya mtumiaji"
         field_types:

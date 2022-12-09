@@ -376,6 +376,10 @@ pre.onebox code ol.lines li:before {
   counter-increment: li-counter;
 }
 
+.onebox.githubblob h4 {
+  word-break: break-all;
+}
+
 pre.onebox code ol {
   margin-left: 0;
   line-height: var(--line-height-large);

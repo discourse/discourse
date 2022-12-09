@@ -357,6 +357,15 @@ export default RestModel.extend({
           loaded: true,
         });
         this._checkIfShouldShowRevisions();
+
+        // Reset all error props
+        topic.setProperties({
+          errorLoading: false,
+          errorTitle: null,
+          errorHtml: null,
+          errorMessage: null,
+          noRetry: false,
+        });
       })
       .catch((result) => {
         this.errorLoading(result);
@@ -386,6 +395,7 @@ export default RestModel.extend({
       if (postIdx !== -1) {
         return this.findPostsByIds(headGap).then((posts) => {
           posts.forEach((p) => {
+            this._initUserModels(p);
             const stored = this.storePost(p);
             if (!currentPosts.includes(stored)) {
               currentPosts.insertAt(postIdx++, stored);
@@ -599,7 +609,7 @@ export default RestModel.extend({
   },
 
   prependPost(post) {
-    this._initUserModel(post);
+    this._initUserModels(post);
     const stored = this.storePost(post);
     if (stored) {
       const posts = this.posts;
@@ -610,8 +620,7 @@ export default RestModel.extend({
   },
 
   appendPost(post) {
-    // NOTE: meta tag is still existent here
-    this._initUserModel(post);
+    this._initUserModels(post);
     const stored = this.storePost(post);
     if (stored) {
       const posts = this.posts;
@@ -689,7 +698,10 @@ export default RestModel.extend({
    * */
   triggerNewPostInStream(postId, opts) {
     deprecated(
-      "Please use triggerNewPostsInStream, this method will be removed July 2021"
+      "Please use triggerNewPostsInStream, this method will be removed July 2021",
+      {
+        id: "discourse.post-stream.trigger-new-post",
+      }
     );
     return this.triggerNewPostsInStream([postId], opts);
   },
@@ -1252,7 +1264,7 @@ export default RestModel.extend({
     }
   },
 
-  _initUserModel(post) {
+  _initUserModels(post) {
     post.user = User.create({
       id: post.user_id,
       username: post.username,
@@ -1260,6 +1272,10 @@ export default RestModel.extend({
 
     if (post.user_status) {
       post.user.status = post.user_status;
+    }
+
+    if (post.mentioned_users) {
+      post.mentioned_users = post.mentioned_users.map((u) => User.create(u));
     }
   },
 

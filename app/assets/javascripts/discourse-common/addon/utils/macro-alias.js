@@ -18,7 +18,8 @@ export default function macroAlias(fn) {
       return handleDescriptor(...params, fn);
     } else {
       deprecated(
-        `Importing ${fn.name} from 'discourse-common/utils/decorators' is deprecated. You should instead import it from '@ember/object/computed' directly.`
+        `Importing ${fn.name} from 'discourse-common/utils/decorators' is deprecated. You should instead import it from '@ember/object/computed' directly.`,
+        { id: "discourse.utils-decorators-import" }
       );
       return function (target, property, desc) {
         return handleDescriptor(target, property, desc, fn, params);

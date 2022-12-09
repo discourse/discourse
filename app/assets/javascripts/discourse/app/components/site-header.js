@@ -40,6 +40,19 @@ const SiteHeaderComponent = MountWidget.extend(
       this.queueRerender();
     },
 
+    @observes("site.narrowDesktopView")
+    narrowDesktopViewChanged() {
+      this.eventDispatched("dom:clean", "header");
+
+      if (this._dropDownHeaderEnabled()) {
+        this.appEvents.on(
+          "sidebar-hamburger-dropdown:rendered",
+          this,
+          "_animateMenu"
+        );
+      }
+    },
+
     _animateOpening(panel) {
       const headerCloak = document.querySelector(".header-cloak");
       panel.classList.add("animate");
@@ -217,10 +230,7 @@ const SiteHeaderComponent = MountWidget.extend(
         this.appEvents.on("user-menu:rendered", this, "_animateMenu");
       }
 
-      if (
-        this.siteSettings.enable_experimental_sidebar_hamburger &&
-        !this.sidebarEnabled
-      ) {
+      if (this._dropDownHeaderEnabled()) {
         this.appEvents.on(
           "sidebar-hamburger-dropdown:rendered",
           this,
@@ -236,43 +246,6 @@ const SiteHeaderComponent = MountWidget.extend(
 
       if (this.currentUser) {
         this.currentUser.on("status-changed", this, "queueRerender");
-      }
-
-      if (!this.siteSettings.enable_onboarding_popups) {
-        if (
-          this.currentUser &&
-          !this.get("currentUser.read_first_notification")
-        ) {
-          document.body.classList.add("unread-first-notification");
-        }
-
-        // Allow first notification to be dismissed on a click anywhere
-        if (
-          this.currentUser &&
-          !this.get("currentUser.read_first_notification") &&
-          !this.get("currentUser.enforcedSecondFactor")
-        ) {
-          this._dismissFirstNotification = (e) => {
-            if (document.body.classList.contains("unread-first-notification")) {
-              document.body.classList.remove("unread-first-notification");
-            }
-            if (
-              !e.target.closest("#current-user") &&
-              !e.target.closest(".ring-backdrop") &&
-              this.currentUser &&
-              !this.get("currentUser.read_first_notification") &&
-              !this.get("currentUser.enforcedSecondFactor")
-            ) {
-              this.eventDispatched(
-                "header:dismiss-first-notification-mask",
-                "header"
-              );
-            }
-          };
-          document.addEventListener("click", this._dismissFirstNotification, {
-            once: true,
-          });
-        }
       }
 
       const header = document.querySelector("header.d-header");
@@ -346,10 +319,7 @@ const SiteHeaderComponent = MountWidget.extend(
         this.appEvents.off("user-menu:rendered", this, "_animateMenu");
       }
 
-      if (
-        this.siteSettings.enable_experimental_sidebar_hamburger &&
-        !this.sidebarEnabled
-      ) {
+      if (this._dropDownHeaderEnabled()) {
         this.appEvents.off(
           "sidebar-hamburger-dropdown:rendered",
           this,
@@ -365,8 +335,6 @@ const SiteHeaderComponent = MountWidget.extend(
 
       this._itsatrap?.destroy();
       this._itsatrap = null;
-
-      document.removeEventListener("click", this._dismissFirstNotification);
     },
 
     buildArgs() {
@@ -374,6 +342,7 @@ const SiteHeaderComponent = MountWidget.extend(
         topic: this._topic,
         canSignUp: this.canSignUp,
         sidebarEnabled: this.sidebarEnabled,
+        showSidebar: this.showSidebar,
       };
     },
 
@@ -391,14 +360,15 @@ const SiteHeaderComponent = MountWidget.extend(
       const menuPanels = document.querySelectorAll(".menu-panel");
 
       if (menuPanels.length === 0) {
-        if (this.site.mobileView) {
-          this._animate = true;
-        }
+        this._animate = this.site.mobileView || this.site.narrowDesktopView;
         return;
       }
 
       const windowWidth = document.body.offsetWidth;
-      const viewMode = this.site.mobileView ? "slide-in" : "drop-down";
+      const viewMode =
+        this.site.mobileView || this.site.narrowDesktopView
+          ? "slide-in"
+          : "drop-down";
 
       menuPanels.forEach((panel) => {
         const headerCloak = document.querySelector(".header-cloak");
@@ -415,7 +385,7 @@ const SiteHeaderComponent = MountWidget.extend(
         panel.classList.add(viewMode);
         if (this._animate || this._panMenuOffset !== 0) {
           if (
-            this.site.mobileView &&
+            (this.site.mobileView || this.site.narrowDesktopView) &&
             panel.parentElement.classList.contains(this._leftMenuClass())
           ) {
             this._panMenuOrigin = "left";
@@ -432,7 +402,7 @@ const SiteHeaderComponent = MountWidget.extend(
         // We use a mutationObserver to check for style changes, so it's important
         // we don't set it if it doesn't change. Same goes for the panelBody!
 
-        if (!this.site.mobileView) {
+        if (!this.site.mobileView && !this.site.narrowDesktopView) {
           const buttonPanel = document.querySelectorAll("header ul.icons");
           if (buttonPanel.length === 0) {
             return;
@@ -491,6 +461,14 @@ const SiteHeaderComponent = MountWidget.extend(
         this._animate = false;
       });
     },
+
+    _dropDownHeaderEnabled() {
+      return (
+        (!this.sidebarEnabled &&
+          this.siteSettings.navigation_menu !== "legacy") ||
+        this.site.narrowDesktopView
+      );
+    },
   }
 );
 
@@ -506,6 +484,8 @@ export default SiteHeaderComponent.extend({
 
   didInsertElement() {
     this._super(...arguments);
+
+    this.appEvents.on("site-header:force-refresh", this, "queueRerender");
 
     const header = document.querySelector(".d-header-wrap");
     if (header) {
@@ -537,6 +517,7 @@ export default SiteHeaderComponent.extend({
     this._super(...arguments);
 
     this._resizeObserver?.disconnect();
+    this.appEvents.off("site-header:force-refresh", this, "queueRerender");
   },
 });
 

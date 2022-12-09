@@ -8,7 +8,6 @@ export default Component.extend({
   tagName: "a",
   classNameBindings: [":popup-tip", "good", "bad", "lastShownAt::hide"],
   attributeBindings: ["role", "ariaLabel", "tabindex"],
-  rerenderTriggers: ["validation.reason"],
   tipReason: null,
   lastShownAt: or("shownAt", "validation.lastShownAt"),
   bad: reads("validation.failed"),

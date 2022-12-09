@@ -74,6 +74,7 @@
     display: flex;
     align-items: stretch;
     &:not(.btn) {
+      border-radius: var(--d-input-border-radius);
       padding-left: 0.5em;
       padding-right: 0.5em;
     }

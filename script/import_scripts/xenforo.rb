@@ -2,6 +2,18 @@
 
 require "mysql2"
 
+begin
+  require 'php_serialize' # https://github.com/jqr/php-serialize
+rescue LoadError
+  puts
+  puts 'php_serialize not found.'
+  puts 'Add to Gemfile, like this: '
+  puts
+  puts "echo gem \\'php-serialize\\' >> Gemfile"
+  puts "bundle install"
+  exit
+end
+
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 # Call it like this:
@@ -30,6 +42,20 @@ class ImportScripts::XenForo < ImportScripts::Base
     import_users
     import_categories
     import_posts
+    import_private_messages
+    import_likes
+  end
+
+  def import_avatar(id, imported_user)
+    filename = File.join(AVATAR_DIR, 'l', (id / 1000).to_s, "#{id}.jpg")
+    unless File.exist?(filename)
+      return nil
+    end
+    upload = create_upload(imported_user.id, filename, "avatar_#{id}")
+    return if !upload.persisted?
+    imported_user.create_user_avatar
+    imported_user.user_avatar.update(custom_upload_id: upload.id)
+    imported_user.update(uploaded_avatar_id: upload.id)
   end
 
   def import_users
@@ -59,7 +85,10 @@ class ImportScripts::XenForo < ImportScripts::Base
           created_at: Time.zone.at(user['created_at']),
           last_seen_at: Time.zone.at(user['last_visit_time']),
           moderator: user['is_moderator'] == 1 || user['is_staff'] == 1,
-          admin: user['is_admin'] == 1 }
+          admin: user['is_admin'] == 1,
+          post_create_action: proc do |u|
+            import_avatar(user['id'], u)
+          end
       end
     end
   end
@@ -72,6 +101,7 @@ class ImportScripts::XenForo < ImportScripts::Base
                title,
                description,
                parent_node_id,
+               node_name,
                display_order
           FROM #{TABLE_PREFIX}node
       ORDER BY parent_node_id, display_order
@@ -84,7 +114,11 @@ class ImportScripts::XenForo < ImportScripts::Base
         id: c['id'],
         name: c['title'],
         description: c['description'],
-        position: c['display_order']
+        position: c['display_order'],
+        post_create_action: proc do |category|
+          url = "board/#{c['node_name']}"
+          Permalink.find_or_create_by(url: url, category_id: category.id) 
+        end
       }
     end
 
@@ -98,7 +132,11 @@ class ImportScripts::XenForo < ImportScripts::Base
         name: c['title'],
         description: c['description'],
         position: c['display_order'],
-        parent_category_id: category_id_from_imported_category_id(c['parent_node_id'])
+        parent_category_id: category_id_from_imported_category_id(c['parent_node_id']),
+        post_create_action: proc do |category|
+          url = "board/#{c['node_name']}"
+          Permalink.find_or_create_by(url: url, category_id: category.id) 
+        end
       }
     end
 
@@ -149,6 +187,29 @@ class ImportScripts::XenForo < ImportScripts::Base
     @prefix_as_category = true
   end
 
+  def import_likes
+    puts '', 'importing likes'
+    total_count = mysql_query("SELECT COUNT(*) AS count FROM #{TABLE_PREFIX}liked_content WHERE content_type = 'post'").first["count"]
+    batches(BATCH_SIZE) do |offset|
+      results = mysql_query(
+        "SELECT like_id, content_id, like_user_id, like_date 
+         FROM #{TABLE_PREFIX}liked_content
+         WHERE content_type = 'post'
+         ORDER BY like_id
+         LIMIT #{BATCH_SIZE}
+         OFFSET #{offset};"
+      )
+      break if results.size < 1
+      create_likes(results, total: total_count, offset: offset) do |row|
+        {
+           post_id: row['content_id'],
+           user_id: row['like_user_id'],
+           created_at: Time.zone.at(row['like_date'])
+        }
+      end
+    end
+  end
+
   def import_posts
     puts "", "creating topics and posts"
 
@@ -160,6 +221,7 @@ class ImportScripts::XenForo < ImportScripts::Base
                #{@prefix_as_category ? 't.prefix_id' : 't.node_id'} category_id,
                t.title title,
                t.first_post_id first_post_id,
+               t.view_count,
                p.user_id user_id,
                p.message raw,
                p.post_date created_at
@@ -194,6 +256,10 @@ class ImportScripts::XenForo < ImportScripts::Base
               @category_mappings[m['category_id']].try(:[], :category_id)
           end
           mapped[:title] = CGI.unescapeHTML(m['title'])
+          mapped[:views] = m['view_count']
+          mapped[:post_create_action] = proc do |pp|
+            Permalink.find_or_create_by(url: "threads/#{m['topic_id']}", topic_id: pp.topic_id)
+          end
         else
           parent = topic_lookup_from_imported_post_id(m['first_post_id'])
           if parent
@@ -224,6 +290,60 @@ class ImportScripts::XenForo < ImportScripts::Base
       end
     end
 
+  end
+
+  def import_private_messages
+    puts "", "importing private messages..."
+    post_count = mysql_query("SELECT COUNT(*) count FROM xf_conversation_message").first["count"]
+    batches(BATCH_SIZE) do |offset|
+      posts = mysql_query <<-SQL
+        SELECT c.conversation_id, c.recipients, c.title, m.message, m.user_id, m.message_date, m.message_id, IF(c.first_message_id != m.message_id, c.first_message_id, 0) as topic_id 
+        FROM xf_conversation_master c 
+        LEFT JOIN xf_conversation_message m ON m.conversation_id = c.conversation_id 
+        ORDER BY c.conversation_id, m.message_id 
+        LIMIT #{BATCH_SIZE}
+        OFFSET #{offset}
+      SQL
+      break if posts.size < 1
+      next if all_records_exist? :posts, posts.map { |post| "pm_#{post["message_id"]}" }
+      create_posts(posts, total: post_count, offset: offset) do |post|
+        user_id = user_id_from_imported_user_id(post["user_id"]) || Discourse::SYSTEM_USER_ID
+        title = post["title"]
+        message_id = "pm_#{post["message_id"]}"
+        raw = process_xenforo_post(post["message"], 0)
+        if raw.present?
+          msg = {
+            id: message_id,
+            user_id: user_id,
+            raw: raw,
+            created_at:  Time.zone.at(post["message_date"].to_i),
+            import_mode: true
+          }
+          unless post["topic_id"] > 0
+            msg[:title] = post["title"]
+            msg[:archetype] = Archetype.private_message
+            to_user_array = PHP.unserialize(post['recipients'])
+            if to_user_array.size > 0
+              discourse_user_ids = to_user_array.keys.map { |id| user_id_from_imported_user_id(id) }
+              usernames = User.where(id: [discourse_user_ids]).pluck(:username)
+              msg[:target_usernames] = usernames.join(',')
+            end
+          else
+            topic_id = post["topic_id"]
+            if t = topic_lookup_from_imported_post_id("pm_#{topic_id}")
+              msg[:topic_id] = t[:topic_id]
+            else
+              puts "Topic ID #{topic_id} not found, skipping post #{post['message_id']} from #{post['user_id']}"
+              next
+            end
+          end
+          msg
+        else
+          puts "Empty message, skipping post #{post['message_id']}"
+          next
+        end
+      end
+    end
   end
 
   def process_xenforo_post(raw, import_id)
@@ -276,54 +396,70 @@ class ImportScripts::XenForo < ImportScripts::Base
     end
 
     # [URL=...]...[/URL]
-    s.gsub!(/\[url="?(.+?)"?\](.+)\[\/url\]/i) { "[#{$2}](#{$1})" }
+    s.gsub!(/\[url="?(.+?)"?\](.+?)\[\/url\]/i) { "[#{$2}](#{$1})" }
+
+    # [URL]...[/URL]
+    s.gsub!(/\[url\](.+?)\[\/url\]/i) { " #{$1} " }
 
     # [IMG]...[/IMG]
     s.gsub!(/\[\/?img\]/i, "")
 
     # convert list tags to ul and list=1 tags to ol
     # (basically, we're only missing list=a here...)
-    s.gsub!(/\[list\](.*?)\[\/list:u\]/m, '[ul]\1[/ul]')
-    s.gsub!(/\[list=1\](.*?)\[\/list:o\]/m, '[ol]\1[/ol]')
+    s.gsub!(/\[list\](.*?)\[\/list\]/im, '[ul]\1[/ul]')
+    s.gsub!(/\[list=1\](.*?)\[\/list\]/im, '[ol]\1[/ol]')
+    s.gsub!(/\[list\](.*?)\[\/list:u\]/im, '[ul]\1[/ul]')
+    s.gsub!(/\[list=1\](.*?)\[\/list:o\]/im, '[ol]\1[/ol]')
+
     # convert *-tags to li-tags so bbcode-to-md can do its magic on phpBB's lists:
+    s.gsub!(/\[\*\]\n/, '')
     s.gsub!(/\[\*\](.*?)\[\/\*:m\]/, '[li]\1[/li]')
+    s.gsub!(/\[\*\](.*?)\n/, '[li]\1[/li]')
+    s.gsub!(/\[\*=1\]/, '')
 
     # [YOUTUBE]<id>[/YOUTUBE]
     s.gsub!(/\[youtube\](.+?)\[\/youtube\]/i) { "\nhttps://www.youtube.com/watch?v=#{$1}\n" }
 
     # [youtube=425,350]id[/youtube]
-    s.gsub!(/\[youtube="?(.+?)"?\](.+)\[\/youtube\]/i) { "\nhttps://www.youtube.com/watch?v=#{$2}\n" }
+    s.gsub!(/\[youtube="?(.+?)"?\](.+?)\[\/youtube\]/i) { "\nhttps://www.youtube.com/watch?v=#{$2}\n" }
 
     # [MEDIA=youtube]id[/MEDIA]
     s.gsub!(/\[MEDIA=youtube\](.+?)\[\/MEDIA\]/i) { "\nhttps://www.youtube.com/watch?v=#{$1}\n" }
 
     # [ame="youtube_link"]title[/ame]
-    s.gsub!(/\[ame="?(.+?)"?\](.+)\[\/ame\]/i) { "\n#{$1}\n" }
+    s.gsub!(/\[ame="?(.+?)"?\](.+?)\[\/ame\]/i) { "\n#{$1}\n" }
 
     # [VIDEO=youtube;<id>]...[/VIDEO]
     s.gsub!(/\[video=youtube;([^\]]+)\].*?\[\/video\]/i) { "\nhttps://www.youtube.com/watch?v=#{$1}\n" }
 
     # [USER=706]@username[/USER]
-    s.gsub!(/\[user="?(.+?)"?\](.+)\[\/user\]/i) { $2 }
+    s.gsub!(/\[user="?(.+?)"?\](.+?)\[\/user\]/i) { $2 }
 
     # Remove the color tag
     s.gsub!(/\[color=[#a-z0-9]+\]/i, "")
     s.gsub!(/\[\/color\]/i, "")
 
     if Dir.exist? ATTACHMENT_DIR
-      s = process_xf_attachments(:gallery, s)
-      s = process_xf_attachments(:attachment, s)
+      s = process_xf_attachments(:gallery, s, import_id)
+      s = process_xf_attachments(:attachment, s, import_id)
     end
 
     s
   end
 
-  def process_xf_attachments(xf_type, s)
+  def process_xf_attachments(xf_type, s, import_id)
     ids = Set.new
     ids.merge(s.scan(get_xf_regexp(xf_type)).map { |x| x[0].to_i })
+    
+    # not all attachments have an [ATTACH=] tag so we need to get the other ID's from the xf_attachment table
+    if xf_type == :attachment && import_id > 0
+      sql = "SELECT attachment_id FROM #{TABLE_PREFIX}attachment WHERE content_id=#{import_id} and content_type='post';"
+      ids.merge(mysql_query(sql).to_a.map { |v| v["attachment_id"].to_i})
+    end
+    
     ids.each do |id|
       next unless id
-      sql = get_xf_sql(xf_type, id).squish!
+      sql = get_xf_sql(xf_type, id).dup.squish!
       results = mysql_query(sql)
       if results.size < 1
         # Strip attachment
@@ -334,11 +470,13 @@ class ImportScripts::XenForo < ImportScripts::Base
       original_filename = results.first['filename']
       result = results.first
       upload = import_xf_attachment(result['data_id'], result['file_hash'], result['user_id'], original_filename)
-      next unless upload
-      if upload.present? && upload.persisted?
-        s.gsub!(get_xf_regexp(xf_type, id), @uploader.html_for_upload(upload, original_filename))
+      if upload && upload.present? && upload.persisted?
+        html = @uploader.html_for_upload(upload, original_filename)
+        unless s.gsub!(get_xf_regexp(xf_type, id), html)
+          s = s + "\n\n#{html}\n\n"
+        end
       else
-        STDERR.puts "Could not find upload: #{upload.id}. Skipping attachment id #{id}"
+        STDERR.puts "Could not process upload: #{original_filename}. Skipping attachment id #{id}"
       end
     end
     s
@@ -372,18 +510,19 @@ class ImportScripts::XenForo < ImportScripts::Base
     case type
     when :gallery
       <<-SQL
-		SELECT m.media_id, m.media_title, a.attachment_id, a.data_id, d.filename, d.file_hash,d.user_id
-		FROM xengallery_media as m
-		INNER JOIN #{TABLE_PREFIX}attachment a on m.attachment_id = a.attachment_id
-		INNER JOIN #{TABLE_PREFIX}attachment_data d on a.data_id = d.data_id
-		WHERE media_id = #{id}
+        SELECT m.media_id, m.media_title, a.attachment_id, a.data_id, d.filename, d.file_hash, d.user_id
+        FROM xengallery_media AS m
+        INNER JOIN #{TABLE_PREFIX}attachment a ON (m.attachment_id = a.attachment_id AND a.content_type = 'xengallery_media')
+        INNER JOIN #{TABLE_PREFIX}attachment_data d ON a.data_id = d.data_id
+        WHERE media_id = #{id}
       SQL
     when :attachment
       <<-SQL
-		SELECT a.attachment_id, a.data_id, d.filename, d.file_hash, d.user_id
-		FROM #{TABLE_PREFIX}attachment AS a
-		INNER JOIN #{TABLE_PREFIX}attachment_data d ON a.data_id = d.data_id
-		WHERE attachment_id = #{id}
+        SELECT a.attachment_id, a.data_id, d.filename, d.file_hash, d.user_id
+        FROM #{TABLE_PREFIX}attachment AS a 
+        INNER JOIN #{TABLE_PREFIX}attachment_data d ON a.data_id = d.data_id
+        WHERE attachment_id = #{id}
+        AND content_type = 'post'
       SQL
     end
   end

@@ -96,6 +96,7 @@ module("Integration | Component | Widget | hamburger-menu", function (hooks) {
       [...queryAll(".category-link .category-name")].map((el) => el.innerText),
       this.site
         .get("categoriesByCount")
+        .reject((c) => c.id === this.site.uncategorized_category_id)
         .slice(0, 8)
         .map((c) => c.name)
     );
@@ -103,7 +104,7 @@ module("Integration | Component | Widget | hamburger-menu", function (hooks) {
 
   test("top categories - allow_uncategorized_topics", async function (assert) {
     this.owner.unregister("service:current-user");
-    this.siteSettings.allow_uncategorized_topics = false;
+    this.siteSettings.allow_uncategorized_topics = true;
     this.siteSettings.header_dropdown_category_count = 8;
 
     await render(hbs`<MountWidget @widget="hamburger-menu" />`);
@@ -113,7 +114,6 @@ module("Integration | Component | Widget | hamburger-menu", function (hooks) {
       [...queryAll(".category-link .category-name")].map((el) => el.innerText),
       this.site
         .get("categoriesByCount")
-        .filter((c) => c.name !== "uncategorized")
         .slice(0, 8)
         .map((c) => c.name)
     );
@@ -122,7 +122,10 @@ module("Integration | Component | Widget | hamburger-menu", function (hooks) {
   test("top categories", async function (assert) {
     this.siteSettings.header_dropdown_category_count = 8;
     maxCategoriesToDisplay = this.siteSettings.header_dropdown_category_count;
-    categoriesByCount = this.site.get("categoriesByCount").slice();
+    categoriesByCount = this.site
+      .get("categoriesByCount")
+      .reject((c) => c.id === this.site.uncategorized_category_id)
+      .slice();
     categoriesByCount.every((c) => {
       if (!topCategoryIds.includes(c.id)) {
         if (mutedCategoryIds.length === 0) {

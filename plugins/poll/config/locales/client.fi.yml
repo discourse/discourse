@@ -43,6 +43,9 @@ fi:
       show-results:
         title: "Näytä kyselyn tulos"
         label: "Näytä tulokset"
+      remove-vote:
+        title: "Poista äänesi"
+        label: "Poista ääni"
       hide-results:
         title: "Palaa äänestysvalintaasi"
         label: "Näytä äänestys"

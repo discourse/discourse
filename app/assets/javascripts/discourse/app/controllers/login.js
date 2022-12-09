@@ -231,6 +231,7 @@ export default Controller.extend(ModalFunctionality, {
                 secondFactorRequired: true,
                 showLoginButtons: false,
                 backupEnabled: result.backup_enabled,
+                totpEnabled: result.totp_enabled,
                 showSecondFactor: result.totp_enabled,
                 showSecurityKey: result.security_key_enabled,
                 secondFactorMethod: result.security_key_enabled

@@ -6,7 +6,7 @@ class SiteSerializer < ApplicationSerializer
     :default_archetype,
     :notification_types,
     :post_types,
-    :onboarding_popup_types,
+    :user_tips,
     :trust_levels,
     :groups,
     :filters,
@@ -35,6 +35,8 @@ class SiteSerializer < ApplicationSerializer
     :watched_words_link,
     :categories,
     :markdown_additional_options,
+    :hashtag_configurations,
+    :hashtag_icons,
     :displayed_about_plugin_stat_groups,
     :show_welcome_topic_banner,
     :anonymous_default_sidebar_tags
@@ -104,12 +106,12 @@ class SiteSerializer < ApplicationSerializer
     Post.types
   end
 
-  def onboarding_popup_types
-    OnboardingPopup.types
+  def user_tips
+    User.user_tips
   end
 
-  def include_onboarding_popup_types?
-    SiteSetting.enable_onboarding_popups
+  def include_user_tips?
+    SiteSetting.enable_user_tips
   end
 
   def filters
@@ -220,6 +222,14 @@ class SiteSerializer < ApplicationSerializer
     Site.markdown_additional_options
   end
 
+  def hashtag_configurations
+    HashtagAutocompleteService.contexts_with_ordered_types
+  end
+
+  def hashtag_icons
+    HashtagAutocompleteService.data_source_icons
+  end
+
   def displayed_about_plugin_stat_groups
     About.displayed_plugin_stat_groups
   end
@@ -229,11 +239,11 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def anonymous_default_sidebar_tags
-    User.new.sidebar_tags.pluck(:name)
+    SiteSetting.default_sidebar_tags.split("|") - DiscourseTagging.hidden_tag_names(scope)
   end
 
   def include_anonymous_default_sidebar_tags?
-    scope.anonymous? && SiteSetting.tagging_enabled && SiteSetting.default_sidebar_tags.present?
+    scope.anonymous? && !SiteSetting.legacy_navigation_menu? && SiteSetting.tagging_enabled && SiteSetting.default_sidebar_tags.present?
   end
 
   private

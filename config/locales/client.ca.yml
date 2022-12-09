@@ -267,7 +267,6 @@ ca:
       like_count: "'M'agrada'"
       topic_count: "Temes"
       post_count: "Publicacions"
-      user_count: "Usuaris"
       active_user_count: "Usuaris actius"
       contact: "Contacta amb nosaltres"
       contact_info: "En cas d'una qüestió urgent o greu que afecti aquest lloc web, contacteu amb nosaltres en: %{contact_info}."
@@ -314,7 +313,6 @@ ca:
       remove_confirmation: "Esteu segur que voleu suprimir aquest esborrany?"
       new_topic: "Esborrany de tema nou"
       new_private_message: "Nou esborrany de missatge personal"
-      topic_reply: "Esborrany de resposta"
       abandon:
         confirm: "Teniu un esborrany en curs per a aquest tema. Què t'agradaria fer-hi?"
         yes_value: "Descarta"
@@ -904,7 +902,6 @@ ca:
       dismiss: "Descarta-ho"
       dismiss_notifications: "Descarta-ho tot"
       dismiss_notifications_tooltip: "Marca totes les notificacions no llegides com a llegides"
-      first_notification: "La vostra primera notificació! Seleccioneu-la per a començar."
       dynamic_favicon: "Mostra recomptes en la icona del navegador"
       theme_default_on_all_devices: "Fes que aquesta sigui l'aparença predeterminada en tots els meus dispositius"
       color_schemes:
@@ -924,7 +921,6 @@ ca:
       experimental_sidebar:
         options: "Opcions"
         navigation_section: "Navegació"
-        list_destination_default: "Per defecte"
       change: "canvia"
       featured_topic: "Tema destacat"
       moderator: "%{user} és un moderador"
@@ -1019,6 +1015,7 @@ ca:
         profile: "Perfil"
         emails: "Correus"
         notifications: "Notificacions"
+        tracking: "Seguint"
         categories: "Categories"
         users: "Usuaris"
         tags: "Etiquetes"
@@ -1219,6 +1216,7 @@ ca:
       email_in_reply_to: "Inclou un extracte del que s'ha respost a la publicació en els correus."
       other_settings: "Altres"
       categories_settings: "Categories"
+      topics_settings: "Temes"
       new_topic_duration:
         label: "Considera els temes nous quan "
         not_viewed: "encara no els hagi vist"
@@ -1797,6 +1795,7 @@ ca:
         other: "<span>%{count}%{plus} resultats per a</span><span class='term'>%{term}</span>"
       title: "Cerca"
       full_page_title: "Cerca"
+      results: "resultats"
       no_results: "No hi ha resultats."
       no_more_results: "No s'han trobat més resultats."
       post_format: "#%{post_number} per %{username}"
@@ -1934,9 +1933,6 @@ ca:
       move_to_inbox:
         title: "Mou a la safata d'entrada"
         help: "Torna el missatge a la safata d'entrada"
-      edit_message:
-        help: "Edita la primera publicació del missatge"
-        title: "Edita"
       defer:
         help: "Marca com a no llegit"
         title: "Ajorna"
@@ -2462,8 +2458,6 @@ ca:
       this_year: "enguany"
       position: "Posició en la pàgina de categories:"
       default_position: "Posició per defecte"
-      position_disabled: "Les categories es mostraran per ordre d'activitat. Per a controlar l'ordre de les categories en llistes, "
-      position_disabled_click: 'activeu la configuració "posicions fixes de categories"'
       minimum_required_tags: "Nombre mínim d'etiquetes necessari en un tema:"
       parent: "Categoria primària"
       num_auto_bump_daily: "Nombre de temes oberts que s'eleven automàticament cada dia:"
@@ -2930,8 +2924,6 @@ ca:
               content: "Insígnies"
             faq:
               content: "PMF"
-            tracked:
-              content: "Seguit"
             groups:
               content: "Grups"
               title: "Tots els grups"
@@ -3084,7 +3076,6 @@ ca:
         about: "Editeu aquí la vostra afiliació a grups i els vostres noms"
         group_members: "Membres de grup"
         delete: "Suprimeix"
-        delete_confirm: "Voleu suprimir aquest grup?"
         delete_failed: "És impossible suprimir aquest grup. Si és un grup automàtic, no pot ser destruït."
         delete_owner_confirm: "Voleu eliminar privilegis de propietari per a '%{username}'?"
         add: "Afegeix"
@@ -3944,7 +3935,6 @@ ca:
         trust_level_2_users: "Usuaris de nivell de confiança 2"
         trust_level_3_requirements: "Requisits del nivell de confiança 3"
         trust_level_locked_tip: "el nivell de confiança està blocat, el sistema no promourà o degradarà l'usuari"
-        trust_level_unlocked_tip: "el nivell de confiança està desblocat, el sistema pot promoure o degradar l'usuari"
         lock_trust_level: "Bloca el nivell de confiança"
         unlock_trust_level: "Desbloca el nivell de confiança"
         silenced_count: "Silenciat"
@@ -3999,19 +3989,18 @@ ca:
         delete_confirm: "Esteu segur que voleu suprimir aquest camp d'usuari?"
         options: "Opcions"
         required:
-          title: "Necessari en identificar-se?"
+          title: "Necessari en identificar-se"
           enabled: "necessari"
           disabled: "no necessari"
         editable:
-          title: "¿És editable després del registre?"
           enabled: "editable"
           disabled: "no editable"
         show_on_profile:
-          title: "Voleu mostrar-ho en el perfil públic?"
+          title: "Voleu mostrar-ho en el perfil públic"
           enabled: "mostrat en el perfil"
           disabled: "no mostrat en el perfil"
         show_on_user_card:
-          title: "Mostra en la targeta d'usuari?"
+          title: "Mostra en la targeta d'usuari"
           enabled: "mostrat en la targeta d'usuari"
           disabled: "no mostrat en la targeta de l'usuari"
         field_types:

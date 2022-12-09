@@ -690,7 +690,6 @@ gl:
         one: "hai case %{count} ano"
         other: "hai case %{count} anos"
   password_reset:
-    no_token: "Sentímolo, esa ligazón de cambio de contrasinal é antiga de máis. Prema no botón Iniciar sesión e déalle a «Esquecín o meu contrasinal» para obter unha nova ligazón."
     choose_new: "Elixir un novo contrasinal"
     choose: "Elixir un contrasinal"
     update: "Actualizar o contrasinal"
@@ -699,7 +698,6 @@ gl:
     success: "Cambiou correctamente o seu contrasinal e agora iniciou sesión."
     success_unapproved: "Cambiou correctamente o seu contrasinal."
   email_login:
-    invalid_token: "Sentímolo, a ligazón para iniciar sesión a través do correo electrónico é antiga de máis. Prema no botón Iniciar sesión e déalle a «Esquecín o meu contrasinal» para obter unha nova."
     title: "Iniciar sesión vía correo electrónico"
   user_auth_tokens:
     browser:
@@ -874,7 +872,6 @@ gl:
     mailing_list_mode: "Desactivar o modo de listaxe de correo"
     all: "Non me envíe ningún correo electrónico de %{sitename}"
     different_user_description: "Actualmente ten a sesión iniciada cun usuario diferente ao que lle enviamos un correo electrónico. Saia, ou entre en modo anónimo, e vólvao tentar."
-    not_found_description: "Non puidemos atopar a cancelación da subscrición. Será porque a ligazón de que dispón é vella de máis ou xa expiraría?"
     log_out: "Saír da sesión"
     submit: "Gardar preferencias"
     digest_frequency:
@@ -1003,6 +1000,11 @@ gl:
         editor: Editor
         author: Autor
         edit_reason: Motivo
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "API de usuario"
+      yaxis: "Día"
     dau_by_mau:
       title: "UAD/UAM"
       xaxis: "Día"
@@ -1770,7 +1772,7 @@ gl:
     enable_user_directory: "Fornecer un directorio de usuarios para explorar"
     enable_group_directory: "Fornecer un directorio de grupos para explorar"
     enable_category_group_moderation: "Permitirlles aos grupos moderar contido en categorías específicas"
-    group_in_subject: "Estabelece %%{optional_pm} no asunto do correo electrónico co nome do primeiro grupo en MP, véxase: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Personaliza o formato do asunto para correos estándar</a>"
+    group_in_subject: "Estabelece %%{optional_pm} no asunto do correo electrónico co nome do primeiro grupo en MP, véxase: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Personaliza o formato do asunto para correos estándar</a>"
     allow_anonymous_posting: "Permitir que os usuarios cambien ao modo anónimo"
     anonymous_posting_min_trust_level: "O nivel de confianza mínimo requirido para activar a publicación anónima"
     anonymous_account_duration_minutes: "Para protexer o anonimato, crear unha nova conta anónima cada N minutos para cada usuario. Exemplo: se se estabelece en 600, así que pasen 600 minutos desde a última publicación E o usuario cambie a anónimo, crearase unha nova conta anónima."
@@ -3998,10 +4000,6 @@ gl:
             label: "Logotipo principal"
           logo_small:
             label: "Logotipo cadrado"
-          favicon:
-            label: "Icona do navegador"
-          large_icon:
-            label: "Icona grande"
       corporate:
         fields:
           company_name:

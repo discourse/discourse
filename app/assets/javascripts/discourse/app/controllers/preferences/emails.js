@@ -82,13 +82,11 @@ export default Controller.extend({
 
   @discourseComputed()
   emailFrequencyInstructions() {
-    if (this.siteSettings.email_time_window_mins) {
-      return I18n.t("user.email.frequency", {
-        count: this.siteSettings.email_time_window_mins,
-      });
-    } else {
-      return I18n.t("user.email.frequency_immediately");
-    }
+    return this.siteSettings.email_time_window_mins
+      ? I18n.t("user.email.frequency", {
+          count: this.siteSettings.email_time_window_mins,
+        })
+      : null;
   },
 
   actions: {

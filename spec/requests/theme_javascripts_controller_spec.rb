@@ -75,6 +75,25 @@ RSpec.describe ThemeJavascriptsController do
         //# sourceMappingURL=#{digest}.map?__ws=test.localhost
       JS
     end
+
+    it "ignores Accept header and does not return Vary header" do
+      js_cache_url = "/theme-javascripts/#{javascript_cache.digest}.js"
+
+      get js_cache_url
+      expect(response.status).to eq(200)
+      expect(response.headers["Content-Type"]).to eq("text/javascript")
+      expect(response.headers["Vary"]).to eq(nil)
+
+      get js_cache_url, headers: { "Accept" => "text/html" }
+      expect(response.status).to eq(200)
+      expect(response.headers["Content-Type"]).to eq("text/javascript")
+      expect(response.headers["Vary"]).to eq(nil)
+
+      get js_cache_url, headers: { "Accept" => "invalidcontenttype" }
+      expect(response.status).to eq(200)
+      expect(response.headers["Content-Type"]).to eq("text/javascript")
+      expect(response.headers["Vary"]).to eq(nil)
+    end
   end
 
   describe "#show_map" do
@@ -145,7 +164,7 @@ RSpec.describe ThemeJavascriptsController do
       expect(response.body).to include(
         "require(\"discourse/lib/theme-settings-store\").registerSettings(" +
         "#{component.id}, {\"num_setting\":5,\"theme_uploads\":{\"vendorlib\":" +
-        "\"/uploads/default/test_#{ENV['TEST_ENV_NUMBER']}/original/1X/#{js_upload.sha1}.js\"},\"theme_uploads_local\":{\"vendorlib\":" +
+        "\"/uploads/default/test_#{ENV['TEST_ENV_NUMBER'].presence || '0'}/original/1X/#{js_upload.sha1}.js\"},\"theme_uploads_local\":{\"vendorlib\":" +
         "\"/theme-javascripts/#{js_upload.sha1}.js?__ws=test.localhost\"}}, { force: true });"
       )
       expect(response.body).to include("assert.ok(true);")

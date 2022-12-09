@@ -252,7 +252,6 @@ th:
       like_count: "ถูกใจ"
       topic_count: "กระทู้"
       post_count: "โพสต์"
-      user_count: "ผู้ใช้"
       active_user_count: "ผู้ใช้ที่ใช้งานอยู่"
       contact: "ติดต่อเรา"
       contact_info: "ในกรณีที่เกิดเหตุฉุกเฉินหรือประเด็นสำคัญที่ส่งผลต่อเว็บไซต์นี้ กรุณาติดต่อเราที่ %{contact_info}"
@@ -291,7 +290,6 @@ th:
       resume: "ดำเนินการต่อ"
       remove: "ลบ"
       new_topic: "แบบร่างกระทู้ใหม่"
-      topic_reply: "ตอบแบบร่าง"
     topic_count_categories:
       other: "ดู %{count} กระทู้ใหม่หรือที่อัปเดต"
     topic_count_latest:
@@ -770,7 +768,6 @@ th:
       dismiss: "ซ่อน"
       dismiss_notifications: "ซ่อนทั้งหมด"
       dismiss_notifications_tooltip: "ทำเครื่องหมายอ่านบนการแจ้งเตือนที่ยังไม่ได้อ่านทั้งหมด"
-      first_notification: "การแจ้งเตือนแรกของคุณ! กดเลือกเพื่อเริ่มต้น"
       dynamic_favicon: "แสดงจำนวนบนไอคอนเบราว์เซอร์"
       theme_default_on_all_devices: "ทำให้ธีมนี้เป็นธีมเริ่มต้นบนทุกอุปกรณ์ของฉัน"
       color_schemes:
@@ -782,7 +779,6 @@ th:
       experimental_sidebar:
         options: "ตัวเลือก"
         navigation_section: "การนำทาง"
-        list_destination_default: "ค่าเริ่มต้น"
       change: "เปลี่ยนแปลง"
       featured_topic: "กระทู้เด่น"
       moderator: "%{user} เป็นผู้ดูแลระบบ"
@@ -861,6 +857,7 @@ th:
         profile: "โปรไฟล์"
         emails: "อีเมล"
         notifications: "การแจ้งเตือน"
+        tracking: "ติดตาม"
         categories: "หมวดหมู่"
         users: "ผู้ใช้"
         tags: "แท็ก"
@@ -1028,6 +1025,7 @@ th:
       email_in_reply_to: "เพิ่มการตอบในโพสท์ที่คัดกรองแล้วในอีเมล"
       other_settings: "อื่นๆ"
       categories_settings: "หมวดหมู่"
+      topics_settings: "หัวข้อ"
       new_topic_duration:
         label: "พิจารณาเป็นกระทู้ใหม่เมื่อ"
         not_viewed: "ฉันยังไม่ได้ดูมันเลย"
@@ -1670,9 +1668,6 @@ th:
       move_to_inbox:
         title: "ย้ายไปกล่องขาเข้า"
         help: "ย้ายข้อความกลับไปกล่องขาเข้า"
-      edit_message:
-        help: "แก้ไขโพสต์แรกของข้อความ"
-        title: "แก้ไข"
       defer:
         help: "ทำเครื่องหมายว่ายังไม่ได้อ่าน"
       list: "กระทู้"
@@ -2485,8 +2480,6 @@ th:
               content: "เหรียญ"
             faq:
               content: "คำถามที่พบบ่อย"
-            tracked:
-              content: "ติดตาม"
             groups:
               content: "กลุ่ม"
               title: "กลุ่มทั้งหมด"
@@ -2599,7 +2592,6 @@ th:
         about: "แก้ไขสมาชิกและชื่อกลุ่มของคุณได้ที่นี่"
         group_members: "สมาชิกกลุ่ม"
         delete: "ลบ"
-        delete_confirm: "ลบกลุ่มนี้"
         delete_failed: "ไม่สามารถลบกลุ่มได้ ถ้ากลุ่มนี้เป็นกลุ่มอัตโนมัติ จะไม่สามารถทำให้หายไปได้"
         delete_owner_confirm: "ลบสิทธิ์การเป็นเจ้าของ ของ '%{username}'?"
         add: "เพิ่ม"
@@ -2994,7 +2986,6 @@ th:
         trust_level_2_users: "ระดับความไว้ใจ 2 ผู้ใช้"
         trust_level_3_requirements: "ระดับความไว้ใจ 3 ความต้องการ"
         trust_level_locked_tip: "ระดับความไว้ใจถูกล็อกไว้ระบบจะไม่ปรับระดับความไว้ใจของผู้ใช้ขึ้นหรือลง"
-        trust_level_unlocked_tip: "ระดับความไว้ใจถูกปลดล็อก ระบบจะปรับระดับความไว้ใจขึ้นหรือลงของผู้ใช้ตามปกติ"
         lock_trust_level: "ล็อกระดับความไว้ใจ"
         unlock_trust_level: "ปลดล็อกระดับความไว้ใจ"
         suspended_count: "ระงับการใช้งาน"
@@ -3038,19 +3029,17 @@ th:
         delete_confirm: "คุณแน่ใจหรือว่าจะลบฟิวส์ของผู้ใช้นี้?"
         options: "ตัวเลือก"
         required:
-          title: "ต้องการเมื่อลงทะเบียน?"
+          title: "ต้องการเมื่อลงทะเบียน"
           enabled: "ต้องการ"
           disabled: "ไม่ต้องการ"
         editable:
-          title: "แก้ไขหลังลงทะเบียนได้ใช่ไหม"
           enabled: "แก้ไขได้"
           disabled: "แก้ไขไม่ได้"
         show_on_profile:
-          title: "แสดงในข้อมูลสาธารณะ?"
+          title: "แสดงในข้อมูลสาธารณะ"
           enabled: "แสดงแสดงในข้อมูลส่วนตัว"
           disabled: "ไม่แสดงในข้อมูลส่วนตัว"
         show_on_user_card:
-          title: "แสดงบนการ์ดผู้ใช้?"
           enabled: "แสดงบนการ์ดผู้ใช้"
           disabled: "ไม่แสดงบนการ์ดผู้ใช้"
         field_types:

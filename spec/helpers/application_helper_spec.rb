@@ -88,6 +88,12 @@ RSpec.describe ApplicationHelper do
         link = helper.preload_script('discourse/tests/theme_qunit_ember_jquery')
         expect(link).to eq(script_tag("https://s3cdn.com/assets/discourse/tests/theme_qunit_ember_jquery.js"))
       end
+
+      it "uses separate asset CDN if configured" do
+        global_setting :s3_asset_cdn_url, "https://s3-asset-cdn.example.com"
+        expect(helper.preload_script("discourse")).to include("https://s3-asset-cdn.example.com/assets/discourse.js")
+      end
+
     end
   end
 
@@ -737,6 +743,36 @@ RSpec.describe ApplicationHelper do
     it 'returns current user locale if request' do
       helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
       expect(helper.html_lang).to eq(I18n.locale.to_s)
+    end
+  end
+
+  describe "#discourse_theme_color_meta_tags" do
+    before do
+      light = Fabricate(:color_scheme)
+      light.color_scheme_colors << ColorSchemeColor.new(name: "header_background", hex: "abcdef")
+      light.save!
+      helper.request.cookies["color_scheme_id"] = light.id
+
+      dark = Fabricate(:color_scheme)
+      dark.color_scheme_colors << ColorSchemeColor.new(name: "header_background", hex: "defabc")
+      dark.save!
+      helper.request.cookies["dark_scheme_id"] = dark.id
+    end
+
+    it "renders theme-color meta for the light scheme with media=(prefers-color-scheme: light) and another one for the dark scheme with media=(prefers-color-scheme: dark)" do
+      expect(helper.discourse_theme_color_meta_tags).to eq(<<~HTML)
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#abcdef">
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#defabc">
+      HTML
+    end
+
+    it "doesn't render theme-color meta tag for the dark scheme if none is set" do
+      SiteSetting.default_dark_mode_color_scheme_id = -1
+      helper.request.cookies.delete("dark_scheme_id")
+
+      expect(helper.discourse_theme_color_meta_tags).to eq(<<~HTML)
+        <meta name="theme-color" media="all" content="#abcdef">
+      HTML
     end
   end
 end

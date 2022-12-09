@@ -243,6 +243,7 @@ NavItem.reopenClass({
       deprecated("You must supply `buildList` with a `siteSettings` object", {
         since: "2.6.0",
         dropFrom: "2.7.0",
+        id: "discourse.nav-item.built-list-site-settings",
       });
       args.siteSettings = getOwner(this).lookup("service:site-settings");
     }

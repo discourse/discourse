@@ -6,5 +6,5 @@
 
 tr_TR:
   site_settings:
-    styleguide_enabled: 'Söylemin stiline yardımcı olması için bir "/ stil kılavuzu" yolunu etkinleştir'
-    styleguide_admin_only: "Stil kılavuzunun görünürlüğünü yöneticilerle sınırla"
+    styleguide_enabled: 'Discourse''un şekillendirilmesine yardımcı olmak için bir "/styleguide" yolunu etkinleştirin'
+    styleguide_admin_only: "Stil rehberinin görünürlüğünü yöneticilerle sınırlar"

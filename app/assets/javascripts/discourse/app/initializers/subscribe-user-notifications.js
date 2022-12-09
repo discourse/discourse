@@ -1,4 +1,3 @@
-import { set } from "@ember/object";
 // Subscribes to user events on the message bus
 import {
   alertChannel,
@@ -54,6 +53,8 @@ export default {
             read_first_notification: data.read_first_notification,
             all_unread_notifications_count: data.all_unread_notifications_count,
             grouped_unread_notifications: data.grouped_unread_notifications,
+            new_personal_messages_notifications_count:
+              data.new_personal_messages_notifications_count,
           });
 
           if (
@@ -161,8 +162,9 @@ export default {
         );
       });
 
-      bus.subscribe("/client_settings", (data) =>
-        set(siteSettings, data.name, data.value)
+      bus.subscribe(
+        "/client_settings",
+        (data) => (siteSettings[data.name] = data.value)
       );
 
       if (!isTesting()) {

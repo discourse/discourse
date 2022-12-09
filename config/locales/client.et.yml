@@ -241,7 +241,6 @@ et:
       like_count: "Meeldimisi"
       topic_count: "Teemad"
       post_count: "Postitused"
-      user_count: "Kasutajaid"
       active_user_count: "Aktiivsed kasutajad"
       contact: "Võta meiega ühendust"
       contact_info: "Kriitilise vea või edasilükkamatu probleemi korral võta palun meiega ühendust aadressil %{contact_info}."
@@ -278,7 +277,6 @@ et:
       remove: "Eemalda"
       remove_confirmation: "Oled kindel, et soovid selle mustandi kustutada?"
       new_topic: "Uus teema mustand"
-      topic_reply: "Mustandi vastus"
     topic_count_categories:
       one: "Vaata %{count} uut või uuendatud teemat"
       other: "Vaata %{count} uut või uuendatud teemat"
@@ -771,10 +769,7 @@ et:
       dismiss: "Ignoreeri"
       dismiss_notifications: "Ignoreeri kõiki"
       dismiss_notifications_tooltip: "Märgi kõik lugemata teavitused loetuks"
-      first_notification: "Sinu esimene teavitus! Vali see et alustada."
       dynamic_favicon: "Kuva arvu brauseri ikoonil"
-      skip_new_user_tips:
-        skip_link: "Jäta need näpunäited vahele"
       theme_default_on_all_devices: "Määra see kõikides minu seadmetes vaiketeemaks"
       color_scheme_default_on_all_devices: "Määra vaikimisi värviskeemi(de)ks kõikides minu seadmetes"
       color_scheme: "Värviskeem"
@@ -789,7 +784,6 @@ et:
       experimental_sidebar:
         options: "Võimalused"
         navigation_section: "Navigatsioon"
-        list_destination_default: "Vaikimisi"
       change: "muuda"
       featured_topic: "Esile tõstetud teema"
       moderator: "%{user} on moderaator"
@@ -883,6 +877,7 @@ et:
         profile: "Profiil"
         emails: "E-post"
         notifications: "Teavitused"
+        tracking: "Jälgimine"
         categories: "Kategooriad"
         users: "Kasutajad"
         tags: "Sildid"
@@ -1042,6 +1037,7 @@ et:
       email_in_reply_to: "Lisa e-kirjale katkend eelmisest vastusest"
       other_settings: "Muu"
       categories_settings: "Foorumid"
+      topics_settings: "Teemasid"
       new_topic_duration:
         label: "Loe teemad uuteks, kui"
         not_viewed: "Ma ei ole neid veel vaadanud"
@@ -1633,9 +1629,6 @@ et:
       move_to_inbox:
         title: "Liiguta Postkasti"
         help: "Liiguta sõnum tagasi Postkasti"
-      edit_message:
-        help: "Muuda sõnumi esimest postitust"
-        title: "Muuda"
       defer:
         help: "Märgi mitteloetuks"
         title: "Lükka edasi"
@@ -2164,8 +2157,6 @@ et:
       this_year: "sel aastal"
       position: "Asukoht kategooriate lehel:"
       default_position: "Vaikepositsioon"
-      position_disabled: "Foorumid kuvatakse aktiivsuse järjekorras. Foorumite järjestuse seadistamiseks loeteludes,"
-      position_disabled_click: 'aktiveeri säte "foorumite positsioonid fikseeritud".'
       minimum_required_tags: "Minimaalne nõutud siltide arv teemas:"
       parent: "Emafoorum"
       num_auto_bump_daily: "Avatud teemade arv, mida iga päev automaatselt tõsta:"
@@ -2576,8 +2567,6 @@ et:
               content: "Märgised"
             faq:
               content: "KKK"
-            tracked:
-              content: "Jälgitud"
             groups:
               content: "Grupid"
               title: "Kõik grupid"
@@ -2692,7 +2681,6 @@ et:
         about: "Siin saad muuta oma grupi liikmelisust ja nimesid"
         group_members: "Grupi liikmed"
         delete: "Kustuta"
-        delete_confirm: "Kustutame selle grupi?"
         delete_failed: "Ei suuda kustutada seda gruppi. Kui see on automaatne grupp, ei saa seda hävitada."
         delete_owner_confirm: "Eemaldan kasutajalt '%{username}' omaniku õigused?"
         add: "Lisa"
@@ -3316,7 +3304,6 @@ et:
         trust_level_2_users: "Kasutajad usaldustasemel 2"
         trust_level_3_requirements: "Usaldustaseme 3 nõuded"
         trust_level_locked_tip: "usaldustase on lukustatud, süsteem ei eduta ega alanda kasutajat."
-        trust_level_unlocked_tip: "usaldustase on lukustamata, süsteem saab kasutajat edutada või alandada."
         lock_trust_level: "Lukusta usaldustase"
         unlock_trust_level: "Eemalda usaldustaseme lukustus"
         silenced_count: "Vaigistatud"
@@ -3369,19 +3356,19 @@ et:
         delete_confirm: "Oled Sa kindel, et soovid kustutada selle kasutajavälja?"
         options: "Suvandid"
         required:
-          title: "Nõutud registreerumisel?"
+          title: "Nõutud registreerumisel"
           enabled: "nõutud"
           disabled: "ei ole nõutud"
         editable:
-          title: "Muudetav pärast registreerumist?"
+          title: "Muudetav pärast registreerumist"
           enabled: "muudetav"
           disabled: "ei ole muudetav"
         show_on_profile:
-          title: "Näidata avalikul profiilil?"
+          title: "Näidata avalikul profiilil"
           enabled: "näidatav profiilil"
           disabled: "ei ole näidatav profiilil"
         show_on_user_card:
-          title: "Kuva kasutaja profiilil?"
+          title: "Kuva kasutaja profiilil"
           enabled: "kuvatud kasutaja profiilil"
           disabled: "ei kuvata kasutaja profiilil"
         field_types:

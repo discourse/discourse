@@ -232,6 +232,7 @@ de:
     delete: "Löschen"
     generic_error: "Entschuldigung, ein Fehler ist aufgetreten."
     generic_error_with_reason: "Ein Fehler ist aufgetreten: %{error}"
+    multiple_errors: "Es sind mehrere Fehler aufgetreten: %{errors}"
     sign_up: "Registrieren"
     log_in: "Anmelden"
     age: "Alter"
@@ -293,7 +294,7 @@ de:
       like_count: "„Gefällt mir“"
       topic_count: "Themen"
       post_count: "Beiträge"
-      user_count: "Benutzer"
+      user_count: "Registrierungen"
       active_user_count: "Aktive Benutzer"
       contact: "Kontaktiere uns"
       contact_info: "Im Falle eines kritischen Problems oder einer dringenden Angelegenheit, die diese Website betrifft, kontaktiere uns bitte unter %{contact_info}."
@@ -350,7 +351,6 @@ de:
       remove_confirmation: "Bist du sicher, dass du diesen Entwurf löschen möchtest?"
       new_topic: "Neuer Entwurf für Thema"
       new_private_message: "Neuer Entwurf für persönliche Nachricht"
-      topic_reply: "Entwurf für Antwort"
       abandon:
         confirm: "Du hast einen Entwurf für dieses Thema in Arbeit. Was würdest du gerne damit machen?"
         yes_value: "Verwerfen"
@@ -658,6 +658,8 @@ de:
         reset_to_default: "Auf Standard zurücksetzen"
       group:
         all: "alle Gruppen"
+      sort:
+        label: "Sortieren nach %{criteria}"
     group_histories:
       actions:
         change_group_setting: "Gruppeneinstellung ändern"
@@ -822,6 +824,7 @@ de:
         group_type: "Art der Gruppe"
         is_group_user: "Mitglied"
         is_group_owner: "Eigentümer"
+        search_results: "Die Suchergebnisse werden unten angezeigt."
       title:
         one: "Gruppe"
         other: "Gruppen"
@@ -856,6 +859,7 @@ de:
         no_filter_matches: "Keine Mitglieder entsprechen dieser Suche."
       topics: "Themen"
       posts: "Beiträge"
+      aria_post_number: "%{title} – Beitrag #%{postNumber}"
       mentions: "Erwähnungen"
       messages: "Nachrichten"
       notification_level: "Standard-Benachrichtigungsstufe für Gruppen-Nachrichten"
@@ -970,7 +974,7 @@ de:
     user_fields:
       none: "(wähle eine Option aus)"
       required: 'Bitte gib einen Wert für „%{name}“ ein'
-      same_as_password: 'Dein Passwort sollte nicht in anderen Feldern wiederholt werden.'
+      same_as_password: "Dein Passwort sollte nicht in anderen Feldern wiederholt werden."
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -1075,13 +1079,10 @@ de:
       no_notifications_page_title: "Du hast noch keine Benachrichtigungen"
       no_notifications_page_body: >
         Du wirst über für dich direkt relevante Aktivitäten benachrichtigt, einschließlich Antworten auf deine Themen und Beiträge, wenn dich jemand mit <b>@</b> erwähnt oder zitiert und wenn jemand auf Themen antwortet, die du beobachtest. Benachrichtigungen werden auch an deine E-Mail-Adresse gesendet, wenn du dich eine Weile nicht eingeloggt hast. <br><br> Suche nach %{icon}, um zu entscheiden, bei welchen Themen, Kategorien und Schlagwörtern du benachrichtigt werden möchtest. Weiteres findest du in den <a href='%{preferencesUrl}'>Benachrichtigungseinstellungen</a>.
-      first_notification: "Deine erste Benachrichtigung! Wähle sie aus, um fortzufahren."
       dynamic_favicon: "Zeige Anzahl im Browser-Icon"
       skip_new_user_tips:
         description: "Keine Tipps für neue Benutzer anzeigen und nicht über den Erhalt von „Erste Schritte“-Abzeichen informieren"
-        not_first_time: "Nicht dein erstes Mal?"
-        skip_link: "Überspringe diese Tipps"
-        read_later: "Ich werde es später lesen."
+      reset_seen_user_tips: "Benutzertipps erneut anzeigen"
       theme_default_on_all_devices: "Mache dieses Theme zum Standard für alle meine Geräte"
       color_scheme_default_on_all_devices: "Standard-Farbschema(s) auf allen meinen Geräten festlegen"
       color_scheme: "Farbschema"
@@ -1101,11 +1102,16 @@ de:
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
       enable_defer: "Aufschieben aktivieren, um Themen als ungelesen zu markieren"
       experimental_sidebar:
+        enable: "Seitenleiste aktivieren"
         options: "Optionen"
         categories_section: "Abschnitt „Kategorien“"
         categories_section_instruction: "Ausgewählte Kategorien werden im Abschnitt „Kategorien“ der Seitenleiste angezeigt."
         tags_section: "Abschnitt „Schlagwörter“"
         tags_section_instruction: "Ausgewählte Schlagwörter werden im Abschnitt „Schlagwörter“ der Seitenleiste angezeigt."
+        navigation_section: "Navigation"
+        list_destination_instruction: "Wenn es neue Inhalte in der Seitenleiste gibt …"
+        list_destination_default: "den Standardlink verwenden und ein Symbol für neue Elemente anzeigen"
+        list_destination_unread_new: "auf ungelesen/neu verlinken und die Anzahl der neuen Elemente anzeigen"
       change: "ändern"
       featured_topic: "Hervorgehobenes Thema"
       moderator: "%{user} ist ein Moderator"
@@ -1276,6 +1282,8 @@ de:
         edit: "Bearbeiten"
         edit_title: "Authentifikator bearbeiten"
         edit_description: "Authentifikator-Name"
+        enable_security_key_description: |
+          Wenn du deinen <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">Hardware-Sicherheitsschlüssel</a> oder dein kompatibles Mobilgerät vorbereitet hast, klicke unten auf „Registrieren“.
         totp:
           title: "Token-basierte Authentifikatoren"
           add: "Authentifikator hinzufügen"
@@ -1283,10 +1291,16 @@ de:
           name_and_code_required_error: "Du musst einen Namen und den Code aus deiner Authentifikator-App angeben."
         security_key:
           register: "Registrieren"
+          title: "Physische Sicherheitsschlüssel"
+          add: "Physischen Sicherheitsschlüssel hinzufügen"
           default_name: "Hauptsicherheitsschlüssel"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "Der Registrierungsvorgang für den Sicherheitsschlüssel ist abgelaufen oder wurde abgebrochen."
           already_added_error: "Du hast diesen Sicherheitsschlüssel bereits registriert. Du musst ihn nicht erneut registrieren."
+          edit: "Physischen Sicherheitsschlüssel bearbeiten"
           save: "Speichern"
+          edit_description: "Name des physischen Sicherheitsschlüssels"
           name_required_error: "Du musst einen Namen für deinen Sicherheitsschlüssel angeben."
       change_about:
         title: "„Über mich“ ändern"
@@ -1656,7 +1670,7 @@ de:
       set_custom_status: "Benutzerdefinierten Status festlegen"
       what_are_you_doing: "Was machst du gerade?"
       remove_status: "Status entfernen"
-    popup:
+    user_tips:
       primary: "Verstanden!"
       secondary: "diese Tipps nicht anzeigen"
       first_notification:
@@ -1665,6 +1679,15 @@ de:
       topic_timeline:
         title: "Themenzeitleiste"
         content: "Mit der Themenzeitleiste kannst du schnell durch einen Beitrag scrollen."
+      post_menu:
+        title: "Menü „Beitrag“"
+        content: "Schau dir an, wie du sonst noch mit dem Beitrag interagieren kannst, indem du auf die drei Punkte klickst!"
+      topic_notification_levels:
+        title: "Du folgst nun diesem Thema"
+        content: "Halte nach dieser Glocke Ausschau, um deine Benachrichtigungseinstellungen für bestimmte Themen oder ganze Kategorien anzupassen."
+      suggested_topics:
+        title: "Lies weiter!"
+        content: "Hier sind einige Themen, von denen wir denken, dass du sie als Nächstes lesen möchtest."
     loading: "Wird geladen …"
     errors:
       prev_page: "während des Ladens"
@@ -1699,12 +1722,6 @@ de:
       logout_disabled: "Die Abmeldung ist deaktiviert, während sich die Website im Nur-Lesen-Modus befindet."
     staff_writes_only_mode:
       enabled: "Diese Website befindet sich im Nur-Team-Modus. Du kannst weiterhin Inhalte lesen, aber das Antworten, Vergeben von „Gefällt mir“ und Durchführen einiger weiterer Aktionen ist derzeit nur für Team-Mitglieder möglich."
-    too_few_topics_and_posts_notice_MF: >-
-      Lass <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">die Diskussion beginnen!</a> Es {currentTopics, plural, one {ist <strong>#</strong> Thema} other {sind <strong>#</strong> Themen}} und {currentPosts, plural, one {<strong>#</strong> Beitrag} other {<strong>#</strong> Beiträge}} vorhanden. Besucher brauchen mehr zum Lesen und Beantworten – wir empfehlen mindestens {requiredTopics, plural, one {<strong>#</strong> Thema} other {<strong>#</strong> Themen}} und {requiredPosts, plural, one {<strong>#</strong> Beitrag} other {<strong>#</strong> Beiträge}}. Dieser Hinweis wird nur Team-Mitgliedern angezeigt.
-    too_few_topics_notice_MF: >-
-      Lass <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">die Diskussion beginnen!</a> Es {currentTopics, plural, one {ist <strong>#</strong> Thema} other {sind <strong>#</strong> Themen}} vorhanden. Besucher brauchen mehr zum Lesen und Beantworten – wir empfehlen mindestens {requiredTopics, plural, one {<strong>#</strong> Thema} other {<strong>#</strong> Themen}}. Dieser Hinweis wird nur Team-Mitgliedern angezeigt.
-    too_few_posts_notice_MF: >-
-      Lass <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">die Diskussion beginnen!</a> Es {currentPosts, plural, one {ist <strong>#</strong> Beitrag} other {sind <strong>#</strong> Beiträge}} vorhanden. Besucher brauchen mehr zum Lesen und Beantworten – wir empfehlen mindestens {requiredPosts, plural, one {<strong>#</strong> Beitrag} other {<strong>#</strong> Beiträge}}. Dieser Hinweis wird nur Team-Mitgliedern angezeigt.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Stunde} other {# Fehlern/Stunde}} erreicht."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Minute} other {# Fehler/Minute}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Minute} other {# Fehlern/Minute}} erreicht."
@@ -1813,6 +1830,7 @@ de:
       second_factor_backup_title: "Zwei-Faktor-Backup"
       second_factor_backup_description: "Bitte gib einen deiner Wiederherstellungscodes ein:"
       second_factor: "Anmeldung mit einer Authentifizierungs-App"
+      security_key_description: "Wenn du deinen physischen Sicherheitsschlüssel oder dein kompatibles Mobilgerät vorbereitet hast, klicke unten auf die Schaltfläche „Mit Sicherheitsschlüssel authentifizieren“."
       security_key_alternative: "Versuche es anderweitig"
       security_key_authenticate: "Mit Sicherheitsschlüssel authentifizieren"
       security_key_not_allowed_error: "Der Authentifizierungsprozess für den Sicherheitsschlüssel ist abgelaufen oder wurde abgebrochen."
@@ -1885,6 +1903,7 @@ de:
       success: "Dein Konto wurde erstellt und du bist jetzt angemeldet."
       name_label: "Name"
       password_label: "Passwort"
+      existing_user_can_redeem: "Löse deine Einladung zu einem Thema oder einer Gruppe ein."
     password_reset:
       continue: "Weiter zu %{site_name}"
     emoji_set:
@@ -2509,9 +2528,6 @@ de:
       move_to_inbox:
         title: "In Posteingang verschieben"
         help: "Nachricht in den Posteingang zurück verschieben"
-      edit_message:
-        help: "Ersten Beitrag dieser Unterhaltung bearbeiten"
-        title: "Bearbeiten"
       defer:
         help: "Als ungelesen markieren"
         title: "Aufschieben"
@@ -2931,6 +2947,7 @@ de:
       gap:
         one: "%{count} versteckten Beitrag anzeigen"
         other: "%{count} versteckte Beiträge anzeigen"
+      sr_reply_to: "Antworte auf Beitrag #%{post_number} von @%{username}"
       notice:
         new_user: "Dies ist der erste Beitrag von %{user} – lasst uns das neue Mitglied in unserer Community willkommen heißen!"
         returning_user: "Es ist eine Weile her, dass wir %{user} gesehen haben – der letzte Beitrag war %{time}."
@@ -3144,6 +3161,7 @@ de:
       all: "Alle Kategorien"
       choose: "Kategorie &hellip;"
       edit: "Bearbeiten"
+      edit_title: "Diese Kategorie bearbeiten"
       edit_dialog_title: "Bearbeiten: %{categoryName}"
       view: "Zeige Themen in Kategorie"
       back: "Zurück zur Kategorie"
@@ -3230,8 +3248,7 @@ de:
       this_year: "dieses Jahr"
       position: "Position auf der Kategorien-Seite:"
       default_position: "Standardposition"
-      position_disabled: "Kategorien werden in der Reihenfolge der Aktivität angezeigt. Um die Reihenfolge von Kategorien in Listen zu steuern, "
-      position_disabled_click: 'aktiviere die Einstellung „fixed category positions“.'
+      position_disabled: "Die Kategorien werden in der Reihenfolge ihrer Aktivität angezeigt. Um die Reihenfolge der Kategorien in den Listen zu kontrollieren, aktiviere die Einstellung <a href='%{url}'>„fixed category positions“</a>."
       minimum_required_tags: "Mindestanzahl an Schlagwörtern, die ein Thema erfordert"
       default_slow_mode: '„Langsamer Modus“ für neue Themen in dieser Kategorie aktivieren.'
       parent: "Übergeordnete Kategorie"
@@ -3846,15 +3863,25 @@ de:
             unread_with_count: "Ungelesen (%{count})"
             archive: "Archiv"
         tags:
+          links:
+            add_tags:
+              content: "Schlagwörter hinzufügen"
+              title: "Du hast noch keine Schlagwörter hinzugefügt. Klicke, um loszulegen."
           none: "Du hast keine Schlagwörter hinzugefügt."
           click_to_get_started: "Klicke hier, um zu beginnen."
           header_link_text: "Schlagwörter"
           header_action_title: "bearbeite die Schlagwörter in deiner Seitenleiste"
+          configure_defaults: "Standardeinstellungen konfigurieren"
         categories:
+          links:
+            add_categories:
+              content: "Kategorien hinzufügen"
+              title: "Du hast noch keine Kategorien hinzugefügt. Klicke, um loszulegen."
           none: "Du hast keine Kategorien hinzugefügt."
           click_to_get_started: "Klicke hier, um zu beginnen."
           header_link_text: "Kategorien"
           header_action_title: "bearbeite die Kategorien in deiner Seitenleiste"
+          configure_defaults: "Standardeinstellungen konfigurieren"
         community:
           header_link_text: "Community"
           header_action_title: "ein neues Thema erstellen"
@@ -3862,7 +3889,7 @@ de:
             about:
               content: "Über uns"
             admin:
-              content: "Administration"
+              content: "Admin-Panel"
             badges:
               content: "Abzeichen"
             everything:
@@ -3870,9 +3897,6 @@ de:
               title: "Alle Themen"
             faq:
               content: "FAQ"
-            tracked:
-              content: "Verfolgt"
-              title: "Alle verfolgten Themen"
             groups:
               content: "Gruppen"
               title: "Alle Gruppen"
@@ -3881,7 +3905,6 @@ de:
               title: "Alle Benutzer"
             my_posts:
               content: "Meine Beiträge"
-              title: "Meine Beiträge"
               draft_count:
                 one: "%{count} Entwurf"
                 other: "%{count} Entwürfe"
@@ -3891,6 +3914,7 @@ de:
               pending_count: "%{count} ausstehend"
     welcome_topic_banner:
       title: "Erstelle dein Willkommensthema"
+      description: "Dein Willkommen-Thema ist das erste, was neue Mitglieder lesen. Betrachte es als dein „Fahrstuhl-Vorstellungsgespräch“ oder „Leitbild“. Hier erfährt jeder, für wen diese Community gedacht ist, was einen hier erwartet und was man direkt zu Beginn tun soll."
       button_title: "Bearbeitung beginnen"
     until: "Bis:"
   admin_js:
@@ -4048,10 +4072,6 @@ de:
         about: "Hier kannst du Gruppenzugehörigkeiten und Gruppennamen bearbeiten."
         group_members: "Gruppenmitglieder"
         delete: "Löschen"
-        delete_confirm: "Diese Gruppe löschen?"
-        delete_with_messages_confirm:
-          one: "Wenn du diese Gruppe löschst, wird %{count} Nachricht verwaist sein, die Gruppenmitglieder haben keinen Zugriff mehr darauf.<br><br>Bist du dir sicher?"
-          other: "Wenn du diese Gruppe löschst, werden %{count} Nachrichten verwaist sein, die Gruppenmitglieder haben keinen Zugriff mehr darauf.<br><br>Bist du dir sicher?"
         delete_failed: "Gruppe konnte nicht gelöscht werden. Wenn dies eine automatische Gruppe ist, kann sie nicht gelöscht werden."
         delete_automatic_group: Dies ist eine automatische Gruppe und sie kann nicht gelöscht werden.
         delete_owner_confirm: "Eigentümerrechte für „%{username}“ entfernen?"
@@ -4165,7 +4185,6 @@ de:
         go_back: "Zurück zur Liste"
         payload_url: "Payload-URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "Es scheint, dass du versuchst, den Webhook für eine lokale URL einzurichten. Ein Ereignis, das an eine lokale Adresse übermittelt wird, kann einen Nebeneffekt oder ein unerwartetes Verhalten verursachen. Möchtest du fortfahren?"
         secret_invalid: "Das Geheimnis darf keine Leerzeichen enthalten."
         secret_too_short: "Das Geheimnis sollte mindestens 12 Zeichen enthalten."
         secret_placeholder: "Eine optionale Zeichenkette für die Signatur"
@@ -4264,6 +4283,7 @@ de:
         change_settings_short: "Einstellungen"
         howto: "Wie installiere ich Plug-ins?"
         official: "Offizielles Plug-in"
+        broken_route: "Link zu „%{name}“ kann nicht konfiguriert werden. Vergewissere dich, dass Werbeblocker deaktiviert sind, und versuche, die Seite neu zu laden."
       backups:
         title: "Backups"
         menu:
@@ -4454,7 +4474,6 @@ de:
           last_attempt: "Der Installationsvorgang wurde nicht abgeschlossen, letzter Versuch:"
           remote_branch: "Branch-Name (optional)"
           public_key: "Gewähre dem folgenden öffentlichen Schlüssel den Zugriff auf das Repository:"
-          public_key_note: "Nach Eingabe einer gültigen privaten Repository-URL wird ein SSH-Schlüssel generiert und hier angezeigt."
           install: "Installieren"
           installed: "Installiert"
           install_popular: "Beliebt"
@@ -4486,6 +4505,7 @@ de:
           has_overwritten_history: "Die aktuelle Version des Themes existiert nicht mehr, da die Git-Historie durch einen erzwungenen Push überschrieben wurde."
           add: "Hinzufügen"
           theme_settings: "Theme-Einstellungen"
+          overriden_settings_explanation: "Überschriebene Einstellungen sind mit einem Punkt gekennzeichnet und farblich hervorgehoben. Um diese Einstellungen auf die Standardwerte zurückzusetzen, drücke auf die Schaltfläche „Zurücksetzen“ daneben."
           no_settings: "Dieses Theme hat keine Einstellungen."
           theme_translations: "Theme-Übersetzungen"
           empty: "Keine Elemente"
@@ -5192,23 +5212,23 @@ de:
         delete_confirm: "Bist du dir sicher, dass du dieses Benutzerfeld löschen möchtest?"
         options: "Optionen"
         required:
-          title: "Bei Registrierung erforderlich?"
+          title: "Bei Registrierung erforderlich"
           enabled: "erforderlich"
           disabled: "nicht erforderlich"
         editable:
-          title: "Nach der Registrierung editierbar?"
+          title: "Nach der Registrierung editierbar"
           enabled: "editierbar"
           disabled: "nicht editierbar"
         show_on_profile:
-          title: "Im öffentlichen Profil anzeigen?"
+          title: "Im öffentlichen Profil anzeigen"
           enabled: "wird im Profil angezeigt"
           disabled: "wird im Profil nicht angezeigt"
         show_on_user_card:
-          title: "Auf Benutzerkarte anzeigen?"
+          title: "Auf Benutzerkarte anzeigen"
           enabled: "wird auf Benutzerkarte angezeigt"
           disabled: "wird nicht auf Benutzerkarte angezeigt"
         searchable:
-          title: "In Suche einschließen?"
+          title: "In Suche einschließen"
           enabled: "in Suche einschließen"
           disabled: "nicht in Suche einschließen"
         field_types:
@@ -5282,6 +5302,7 @@ de:
           search: "Suche"
           groups: "Gruppen"
           dashboard: "Dashboard"
+          sidebar: "Seitenleiste"
         secret_list:
           invalid_input: "Eingabefelder können nicht leer sein oder vertikale Balkenzeichen enthalten."
         default_categories:
@@ -5431,6 +5452,7 @@ de:
         destination: "Ziel"
         copy_to_clipboard: "Permalink in die Zwischenablage kopieren"
         delete_confirm: Möchtest du wirklich diesen Permalink löschen?
+        no_permalinks: "Du hast noch keine Permalinks. Erstelle einen neuen Permalink oben, um hier eine Liste deiner Permalinks zu sehen."
         form:
           label: "Neu:"
           add: "Hinzufügen"
@@ -5447,7 +5469,7 @@ de:
           replace: "Ersetzen"
   wizard_js:
     wizard:
-      jump_in: "Leg los!"
+      jump_in: "Jetzt loslegen!"
       finish: "Installation verlassen"
       back: "Zurück"
       next: "Nächstes"

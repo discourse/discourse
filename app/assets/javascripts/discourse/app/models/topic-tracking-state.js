@@ -207,7 +207,7 @@ const TopicTrackingState = EmberObject.extend({
       }
     }
 
-    if (filterTag && !data.payload.tags.includes(filterTag)) {
+    if (filterTag && !data.payload.tags?.includes(filterTag)) {
       return;
     }
 

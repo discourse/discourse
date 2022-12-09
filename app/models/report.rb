@@ -40,6 +40,7 @@ class Report
   include Reports::UserFlaggingRatio
   include Reports::TrustLevelGrowth
   include Reports::ConsolidatedPageViews
+  include Reports::ConsolidatedApiRequests
   include Reports::Visits
   include Reports::TimeToFirstResponse
   include Reports::UsersByTrustLevel

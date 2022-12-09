@@ -399,7 +399,6 @@ et:
         one: "peaaegu %{count} aasta tagasi"
         other: "peaaegu %{count} aastat tagasi"
   password_reset:
-    no_token: "Vabandust, see parooli uuendamise link on liiga vana. Vajuta sisselogimise nuppu ja kasuta värske lingi saamiseks 'Unustasin parooli'."
     choose_new: "Vali uus parool"
     choose: "Vali parool"
     update: "Uuenda parooli"
@@ -565,6 +564,11 @@ et:
         post: Postitus
         author: Autor
         edit_reason: Põhjus
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "Kasutaja API"
+      yaxis: "Päev"
     dau_by_mau:
       xaxis: "Päev"
     daily_engaged_users:
@@ -1048,8 +1052,6 @@ et:
         fields:
           logo:
             label: "Peamine logo"
-          large_icon:
-            label: "Suur ikoon"
       corporate:
         fields:
           contact_url:

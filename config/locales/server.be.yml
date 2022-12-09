@@ -640,6 +640,10 @@ be:
         editor: рэдактар
         author: аўтар
         edit_reason: прычына
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+      yaxis: "дзень"
     dau_by_mau:
       xaxis: "дзень"
     daily_engaged_users:
@@ -2397,10 +2401,6 @@ be:
             label: "першасны Logo"
           logo_small:
             label: "плошчу лагатыпа"
-          favicon:
-            label: "браўзэр Абразок"
-          large_icon:
-            label: "вялікая абразок"
       corporate:
         fields:
           company_name:

@@ -95,9 +95,10 @@ module ApplicationHelper
     path = ActionController::Base.helpers.asset_path("#{script}.js")
 
     if GlobalSetting.use_s3? && GlobalSetting.s3_cdn_url
+      resolved_s3_asset_cdn_url = GlobalSetting.s3_asset_cdn_url.presence || GlobalSetting.s3_cdn_url
       if GlobalSetting.cdn_url
         folder = ActionController::Base.config.relative_url_root || "/"
-        path = path.gsub(File.join(GlobalSetting.cdn_url, folder, "/"), File.join(GlobalSetting.s3_cdn_url, "/"))
+        path = path.gsub(File.join(GlobalSetting.cdn_url, folder, "/"), File.join(resolved_s3_asset_cdn_url, "/"))
       else
         # we must remove the subfolder path here, assets are uploaded to s3
         # without it getting involved
@@ -105,7 +106,7 @@ module ApplicationHelper
           path = path.sub(ActionController::Base.config.relative_url_root, "")
         end
 
-        path = "#{GlobalSetting.s3_cdn_url}#{path}"
+        path = "#{resolved_s3_asset_cdn_url}#{path}"
       end
 
       # assets needed for theme testing are not compressed because they take a fair
@@ -622,6 +623,21 @@ module ApplicationHelper
       result << stylesheet_manager.color_scheme_stylesheet_link_tag(dark_scheme_id, '(prefers-color-scheme: dark)', self.method(:add_resource_preload_list))
     end
 
+    result.html_safe
+  end
+
+  def discourse_theme_color_meta_tags
+    result = +""
+    if dark_scheme_id != -1
+      result << <<~HTML
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="##{ColorScheme.hex_for_name('header_background', scheme_id)}">
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="##{ColorScheme.hex_for_name('header_background', dark_scheme_id)}">
+      HTML
+    else
+      result << <<~HTML
+        <meta name="theme-color" media="all" content="##{ColorScheme.hex_for_name('header_background', scheme_id)}">
+      HTML
+    end
     result.html_safe
   end
 

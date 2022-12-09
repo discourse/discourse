@@ -1,5 +1,5 @@
 <section class="user-navigation user-navigation-primary">
-  <ul class="main-nav nav nav-pills user-nav">
+  <HorizontalOverflowNav @className="main-nav nav user-nav">
     {{#unless @user.profile_hidden}}
       <li class="summary">
         <LinkTo @route="user.summary">
@@ -28,7 +28,7 @@
     {{#if @showPrivateMessages}}
       <li class="private-messages">
         <LinkTo @route="userPrivateMessages">
-          {{d-icon "far-envelope"}}
+          {{d-icon "envelope"}}
           <span>{{i18n "user.private_messages"}}</span>
         </LinkTo>
       </li>
@@ -74,5 +74,5 @@
         </a>
       </li>
     {{/if}}
-  </ul>
+  </HorizontalOverflowNav>
 </section>

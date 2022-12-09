@@ -261,7 +261,6 @@ vi:
       like_count: "Lượt thích"
       topic_count: "Các chủ đề"
       post_count: "Các bài viết"
-      user_count: "Người dùng"
       active_user_count: "Thành viên tích cực"
       contact: "Liên hệ chúng tôi"
       contact_info: "Trong trường hợp có bất kỳ sự cố nào ảnh hưởng tới trang này, xin vui lòng liên hệ với chúng tôi theo địa chỉ %{contact_info}."
@@ -318,7 +317,6 @@ vi:
       remove_confirmation: "Bạn có chắc chắn muốn xóa bản nháp này không?"
       new_topic: "Chủ đề nháp mới"
       new_private_message: "Bản nháp tin nhắn cá nhân mới"
-      topic_reply: "Trả lời nháp"
       abandon:
         confirm: "Bạn đang có một bản nháp cho chủ đề này. Bạn muốn làm gì với nó?"
         yes_value: "Hủy bỏ"
@@ -1009,13 +1007,9 @@ vi:
       no_notifications_page_title: "Bạn chưa có bất kỳ thông báo nào"
       no_notifications_page_body: >
         Bạn sẽ được thông báo về hoạt động liên quan trực tiếp đến bạn, bao gồm các câu trả lời cho các chủ đề và bài đăng của bạn, khi ai đó <b>@mentions</b> bạn hoặc trích dẫn bạn và trả lời các chủ đề bạn đang xem. Thông báo cũng sẽ được gửi đến email của bạn khi bạn không đăng nhập trong một thời gian. <br><br> Tìm %{icon} để quyết định chủ đề, danh mục và thẻ cụ thể mà bạn muốn được thông báo. Để biết thêm, hãy xem <a href='%{preferencesUrl}'>tùy chọn thông báo của bạn</a>.
-      first_notification: "Thông báo đầu tiên của bạn! Chọn để bắt đầu"
       dynamic_favicon: "Hiển thị đếm  trên icon trình duyệt"
       skip_new_user_tips:
         description: "Bỏ qua các mẹo và huy hiệu giới thiệu người dùng mới"
-        not_first_time: "Không phải lần đầu tiên sao?"
-        skip_link: "Bỏ qua những mẹo này"
-        read_later: "Tôi sẽ đọc nó sau."
       theme_default_on_all_devices: "Đặt giao diện này là mặc định trên tất cả các thiết bị của tôi"
       color_scheme_default_on_all_devices: "Đặt (các) bảng màu mặc định trên tất cả các thiết bị của tôi"
       color_scheme: "Sơ đồ màu"
@@ -1035,13 +1029,16 @@ vi:
       enable_quoting: "Bật chế độ làm nổi bật chữ trong đoạn trích dẫn trả lời"
       enable_defer: "Cho phép trì hoãn để đánh dấu các chủ đề chưa đọc"
       experimental_sidebar:
-        options: "Lựa chọn"
+        enable: "Bật thanh bên"
+        options: "Tùy chọn"
         categories_section: "Phần danh mục"
         categories_section_instruction: "Các danh mục đã chọn sẽ được hiển thị trong phần danh mục của Thanh bên."
         tags_section: "Phần thẻ"
         tags_section_instruction: "Các thẻ đã chọn sẽ được hiển thị trong phần thẻ của Thanh bên."
         navigation_section: "Điều hướng"
-        list_destination_default: "Mặc định"
+        list_destination_instruction: "Khi có nội dung mới trong thanh bên..."
+        list_destination_default: "sử dụng liên kết mặc định và hiển thị huy hiệu cho các mục mới"
+        list_destination_unread_new: "liên kết đến chưa đọc/mới và hiển thị số lượng mục mới"
       change: "thay đổi"
       featured_topic: "Chủ đề nổi bật"
       moderator: "%{user} trong ban quản trị"
@@ -1148,6 +1145,7 @@ vi:
         profile: "Hồ sơ"
         emails: "Email"
         notifications: "Thông báo"
+        tracking: "Đang theo dõi"
         categories: "Chuyên mục"
         users: "Người dùng"
         tags: "Thẻ"
@@ -1391,6 +1389,7 @@ vi:
       email_in_reply_to: "Kèm theo đoạn dẫn trích trả lời bài viết trong email"
       other_settings: "Khác"
       categories_settings: "Chuyên mục"
+      topics_settings: "Chủ đề"
       new_topic_duration:
         label: "Để ý tới chủ đề mới khi"
         not_viewed: "Tôi chưa từng xem họ"
@@ -1606,12 +1605,8 @@ vi:
       enabled: "Website đang ở chế độ chỉ đọc, bạn có thể duyệt xem nhưng không thể trả lời, likes, hay thực hiện các hành động khác."
       login_disabled: "Chức năng Đăng nhập đã bị tắt khi website trong trạng thái chỉ đọc"
       logout_disabled: "Chức năng đăng xuất đã bị tắt khi website đang trong trạng thái chỉ đọc."
-    too_few_topics_and_posts_notice_MF: >-
-      Hãy cùng <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">bắt đầu thảo luận nhé!</a> Đây {currentTopics, plural, other {là <strong>#</strong> chủ đề}} và {currentPosts, plural, other {<strong>#</strong> bài viết}}. Khách truy cập cần nhiều hơn để đọc và trả lời - chúng tôi khuyên bạn nên ít nhất {requiredTopics, plural, other {<strong>#</strong> chủ đề}} và {requiredPosts, plural, other {<strong>#</strong> bài viết}}. Chỉ nhân viên mới có thể nhìn thấy thông báo này.
-    too_few_topics_notice_MF: >-
-      Hãy cùng <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">bắt đầu thảo luận!</a> Đó {currentTopics, plural, other {là <strong>chủ đề #</strong> }}. Khách truy cập cần nhiều hơn để đọc và trả lời - chúng tôi khuyên bạn nên ít nhất {requiredTopics, plural, other {<strong>#</strong> chủ đề}}. Chỉ nhân viên mới có thể nhìn thấy thông báo này.
     too_few_posts_notice_MF: >-
-      Hãy cùng <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">bắt đầu thảo luận!</a> Đó {currentPosts, plural, other {là <strong>bài #</strong> }}. Khách truy cập cần nhiều hơn để đọc và trả lời - chúng tôi khuyên bạn nên ít nhất {requiredPosts, plural, other {<strong>#</strong> bài viết}}. Chỉ nhân viên mới có thể nhìn thấy thông báo này.
+      Hãy cùng <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">bắt đầu thảo luận!</a> Đó {currentPosts, plural, other {là <strong>bài #</strong> }}. Khách truy cập cần nhiều hơn để đọc và trả lời - chúng tôi khuyên bạn nên ít nhất {requiredPosts, plural, other {<strong>#</strong> bài viết}}. Chỉ nhân viên mới có thể nhìn thấy thông báo này.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / giờ}}</a> trang web đạt đến giới hạn thiết lập của {limit, plural, other {# lỗi / giờ}}."
       reached_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / phút}}</a> trang web đạt đến giới hạn thiết lập của {limit, plural, other {# lỗi / phút}}."
@@ -2126,6 +2121,7 @@ vi:
         other: "Hơn <span>%{count}%{plus} kết quả cho</span><span class='term'>%{term}</span>"
       title: "Tìm kiếm"
       full_page_title: "Tìm kiếm"
+      results: "kết quả"
       no_results: "Không tìm thấy kết quả."
       no_more_results: "Không tìm thấy kết quả"
       post_format: "#%{post_number} bởi %{username}"
@@ -2357,9 +2353,6 @@ vi:
       move_to_inbox:
         title: "Chuyển sang hộp thư"
         help: "Chuyển tin nhắn trở lại hộp thư"
-      edit_message:
-        help: "Chỉnh sửa bài đăng đầu tiên của tin nhắn"
-        title: "Sửa"
       defer:
         help: "đánh dấu là chưa đọc"
         title: "Hoãn"
@@ -3032,8 +3025,6 @@ vi:
       this_year: "năm nay"
       position: "Vị trí trên trang danh mục:"
       default_position: "vị trí mặc định"
-      position_disabled: "Chuyên mục sẽ được hiển thị theo thứ tự hoạt động. Để kiểm soát thứ tự chuyên mục trong danh sách, "
-      position_disabled_click: 'bật thiết lập "cố định vị trí chuyên mục".'
       minimum_required_tags: "Số lượng thẻ tối thiểu được yêu cầu trong một chủ đề:"
       default_slow_mode: 'Bật "Chế độ chậm" cho các chủ đề mới trong danh mục này.'
       parent: "Danh mục cha"
@@ -3635,9 +3626,6 @@ vi:
               title: "Tất cả các chủ đề"
             faq:
               content: "Câu hỏi thường gặp"
-            tracked:
-              content: "Theo dõi"
-              title: "Tất cả các chủ đề được theo dõi"
             groups:
               content: "Nhóm"
               title: "Các nhóm"
@@ -3646,7 +3634,6 @@ vi:
               title: "Tất cả Thành viên"
             my_posts:
               content: "Bài viết của tôi"
-              title: "Bài viết của tôi"
               draft_count:
                 other: "%{count} bản nháp"
             review:
@@ -3806,9 +3793,6 @@ vi:
         about: "Chỉnh sửa nhóm thành viên và tên của bạn ở đây"
         group_members: "Nhóm thành viên"
         delete: "Xóa"
-        delete_confirm: "Xóa nhóm này?"
-        delete_with_messages_confirm:
-          other: "Xóa nhóm này sẽ khiến %{count} tin nhắn bị tách biệt, các thành viên trong nhóm sẽ không có quyền truy cập vào chúng nữa.<br><br>Bạn có chắc không?"
         delete_failed: "Không thể xóa nhóm. Nếu đây là một nhóm tự động, nó không thể hủy bỏ."
         delete_automatic_group: Đây là một nhóm tự động và không thể bị xóa.
         delete_owner_confirm: "Loại bỏ quyền sở hữu của '%{username}'?"
@@ -3922,7 +3906,6 @@ vi:
         go_back: "Quay lại danh sách"
         payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "Có vẻ như bạn đang cố gắng thiết lập webhook thành một url cục bộ. Sự kiện được gửi đến một địa chỉ cục bộ có thể gây ra tác dụng phụ hoặc các hành vi không mong muốn. Tiếp tục?"
         secret_invalid: "Bí mật không được có bất kỳ ký tự trống nào."
         secret_too_short: "Bí mật phải có ít nhất 12 ký tự."
         secret_placeholder: "Một chuỗi tùy chọn, được sử dụng để tạo chữ ký"
@@ -4207,7 +4190,6 @@ vi:
           is_private: "Theme nằm trong kho git riêng"
           remote_branch: "Tên chi nhánh (không bắt buộc)"
           public_key: "Cấp quyền truy cập khóa công khai sau vào repo:"
-          public_key_note: "Sau khi nhập URL kho lưu trữ riêng hợp lệ ở trên, khóa SSH sẽ được tạo và hiển thị ở đây."
           install: "Cài đặt"
           installed: "Đã cài đặt"
           install_popular: "Phổ biến"
@@ -4237,6 +4219,7 @@ vi:
           has_overwritten_history: "Phiên bản chủ đề hiện tại không còn tồn tại vì lịch sử Git đã bị ghi đè bởi một lực đẩy."
           add: "Thêm"
           theme_settings: "Cài đặt Themes"
+          overriden_settings_explanation: "Cài đặt bị ghi đè được đánh dấu bằng dấu chấm và có màu nổi bật. Để đặt lại các cài đặt này về giá trị mặc định, hãy nhấn nút đặt lại bên cạnh chúng."
           no_settings: "Theme này không có cài đặt."
           theme_translations: "Bản dịch Theme"
           empty: "Không có mẫu nào"
@@ -4827,7 +4810,6 @@ vi:
         trust_level_2_users: "Độ tin cậy tài khoản mức 2"
         trust_level_3_requirements: "Độ tin cậy bắt buộc mức 3"
         trust_level_locked_tip: "mức độ tin cậy đang khóa, hệ thống sẽ không thể thăng hoặc giáng chức người dùng"
-        trust_level_unlocked_tip: "độ tin cậy đang được mở, hệ thống có thể thăng hoặc giáng chức người dùng"
         lock_trust_level: "Khóa Cấp độ Tin tưởng"
         unlock_trust_level: "Mở khóa độ tin cậy"
         silenced_count: "Im lặng"
@@ -4883,19 +4865,18 @@ vi:
         delete_confirm: "Bạn muốn xóa trường thành viên?"
         options: "Lựa chọn"
         required:
-          title: "Bắt buộc lúc đăng ký?"
+          title: "Bắt buộc lúc đăng ký"
           enabled: "bắt buộc"
           disabled: "không bắt buộc"
         editable:
-          title: "Có thể chỉnh sửa sau khi đăng ký?"
+          title: "Có thể chỉnh sửa sau khi đăng ký"
           enabled: "có thể chỉnh sửa"
           disabled: "không thể chỉnh sửa"
         show_on_profile:
-          title: "Hiển thị trong hồ sơ công khai"
           enabled: "hiển thị trong hồ sơ"
           disabled: "không hiển thị trong hồ sơ"
         show_on_user_card:
-          title: "Hiện trên thẻ người dùng?"
+          title: "Hiện trên thẻ người dùng"
           enabled: "hiển trên thẻ người dùng"
           disabled: "không hiện trên thẻ người dùng"
         searchable:
@@ -5085,7 +5066,6 @@ vi:
       embedding:
         get_started: "Nếu bạn muốn nhúng Discourse trên một website khác, bắt đầu bằng cách thêm host."
         confirm_delete: "Bạn muốn xóa host này?"
-        sample: "Dán mã HTML sau vào trang web của bạn để tạo và nhúng các chủ đề diễn ngôn. Thay thế <b>REPLACE_ME</b> bằng URL chuẩn của trang mà bạn đang nhúng nó vào."
         title: "Nhúng"
         host: "Cho phép Host"
         class_name: "Tên lớp"

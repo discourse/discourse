@@ -9,7 +9,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { action, set } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
-import Ember from "ember";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 let _components = {};
 
@@ -106,12 +106,12 @@ export default Component.extend({
       return _components[type];
     }
 
-    let dasherized = dasherize(type);
-    let templatePath = `components/${dasherized}`;
-    let template =
-      Ember.TEMPLATES[`${templatePath}`] ||
-      Ember.TEMPLATES[`javascripts/${templatePath}`];
-    _components[type] = template ? dasherized : null;
+    const dasherized = dasherize(type);
+    const owner = getOwner(this);
+    const componentExists =
+      owner.hasRegistration(`component:${dasherized}`) ||
+      owner.hasRegistration(`template:components/${dasherized}`);
+    _components[type] = componentExists ? dasherized : null;
     return _components[type];
   },
 

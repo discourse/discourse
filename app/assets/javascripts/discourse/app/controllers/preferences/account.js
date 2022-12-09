@@ -157,8 +157,8 @@ export default Controller.extend(CanCheckEmails, {
       modalClass: "user-status",
       model: {
         status,
-        saveAction: async (s) => this.set("newStatus", s),
-        deleteAction: async () => this.set("newStatus", null),
+        saveAction: (s) => this.set("newStatus", s),
+        deleteAction: () => this.set("newStatus", null),
       },
     });
   },

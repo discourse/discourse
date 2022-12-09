@@ -11,6 +11,7 @@ export function registerOption() {
     {
       since: "2.8.0.beta9",
       dropFrom: "2.9.0.beta1",
+      id: "discourse.pretty-text.registerOption",
     }
   );
 }
@@ -45,6 +46,9 @@ export function buildOptions(state) {
     featuresOverride,
     markdownItRules,
     additionalOptions,
+    hashtagTypesInPriorityOrder,
+    hashtagIcons,
+    hashtagLookup,
   } = state;
 
   let features = {};
@@ -87,6 +91,9 @@ export function buildOptions(state) {
     featuresOverride,
     markdownItRules,
     additionalOptions,
+    hashtagTypesInPriorityOrder,
+    hashtagIcons,
+    hashtagLookup,
   };
 
   // note, this will mutate options due to the way the API is designed

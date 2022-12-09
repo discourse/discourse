@@ -458,7 +458,6 @@ sl:
         few: "skoraj %{count} leta nazaj"
         other: "skoraj %{count} let nazaj"
   password_reset:
-    no_token: "Povezava za zamenjavo gesla je potekla. Izberite gumb Prijava in uporabite 'Pozabil sem geslo' da dobite novo povezavo.."
     choose_new: "Vnesite novo geslo"
     choose: "Vnesite geslo"
     update: "Spremenite geslo"
@@ -467,7 +466,6 @@ sl:
     success: "Uspešno ste zamenjali geslo in ste sedaj prijavljeni."
     success_unapproved: "Uspešno ste zamenjali geslo."
   email_login:
-    invalid_token: "Povezava za prijavo je potekla. Izberite gumb Prijava in uporabite 'Pozabil sem geslo' da dobite novo povezavo."
     title: "Prijava z e-naslovom"
   user_auth_tokens:
     browser:
@@ -624,6 +622,10 @@ sl:
         post: Prispevek
         editor: Urednik
         edit_reason: Razlog
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "Uporabniški API"
     topics:
       title: "Tem"
     posts:

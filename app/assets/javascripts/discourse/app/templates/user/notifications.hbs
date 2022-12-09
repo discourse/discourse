@@ -1,18 +1,19 @@
 {{#if this.currentUser.redesigned_user_page_nav_enabled}}
   <DSection @pageClass="user-notifications" />
+
   <div class="user-navigation user-navigation-secondary">
     <HorizontalOverflowNav>
       <UserNav::NotificationsNav
           @model={{this.model}}
           @siteSettings={{this.siteSettings}}/>
     </HorizontalOverflowNav>
-  </div>
-  {{#if this.model}}
-    <div class="navigation-controls">
-      <DButton @title="user.dismiss_notifications_tooltip" @class="btn btn-default dismiss-notifications" @action={{action "resetNew"}} @label="user.dismiss_notifications" @icon="check" @disabled={{this.allNotificationsRead}} />
-    </div>
-  {{/if}}
 
+    {{#if this.model}}
+      <div class="navigation-controls">
+        <DButton @title="user.dismiss_notifications_tooltip" @class="btn btn-default dismiss-notifications" @action={{action "resetNew"}} @label="user.dismiss_notifications" @icon="check" @disabled={{this.allNotificationsRead}} />
+      </div>
+    {{/if}}
+  </div>
 {{else}}
   <DSection @pageClass="user-notifications" @class="user-secondary-navigation">
     <MobileNav @class="notifications-nav" @desktopClass="notification-list action-list nav-stacked">

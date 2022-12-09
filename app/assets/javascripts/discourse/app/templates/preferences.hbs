@@ -3,8 +3,7 @@
   <div class="user-navigation user-navigation-secondary">
     <HorizontalOverflowNav>
       <UserNav::PreferencesNav
-          @user={{this.model}}
-          @viewingSelf={{this.viewingSelf}}
+          @currentUser={{this.currentUser}}
           @model={{this.model}}
           @siteSettings={{this.siteSettings}}/>
     </HorizontalOverflowNav>
@@ -62,7 +61,7 @@
         </LinkTo>
       </li>
 
-      {{#if this.siteSettings.enable_experimental_sidebar_hamburger}}
+      {{#if (not (eq @siteSettings.navigation_menu "legacy"))}}
         <li class="indent nav-sidebar">
           <LinkTo @route="preferences.sidebar">
             {{i18n "user.preferences_nav.sidebar"}}
@@ -79,6 +78,7 @@
           </LinkTo>
         </li>
       {{/if}}
+
       <PluginOutlet @name="user-preferences-nav" @tagName="span" @connectorTagName="li" @args={{hash model=this.model}} />
     </MobileNav>
   </DSection>

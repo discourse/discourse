@@ -262,7 +262,6 @@ nb_NO:
       like_count: "Likes"
       topic_count: "Emner"
       post_count: "Innlegg"
-      user_count: "Brukere"
       active_user_count: "Aktive brukere"
       contact: "Kontakt oss"
       contact_info: "I tilfelle en kritisk hendelse skulle inntreffe eller det er en hastesak som påvirker siden, ta kontakt på %{contact_info}."
@@ -309,7 +308,6 @@ nb_NO:
       remove_confirmation: "Er du sikker på at du vil slette dette utkastet?"
       new_topic: "Nytt emneutkast"
       new_private_message: "Nytt personlig meldingsutkast"
-      topic_reply: "Svarutkast"
       abandon:
         confirm: "Du har et pågående utkast for dette emnet. Hva vil du gjøre med det?"
         yes_value: "Forkast"
@@ -1002,13 +1000,9 @@ nb_NO:
       no_notifications_body: >
         Du vil bli varslet i dette panelet om aktivitet som er direkte relevant for deg, inkludert svar på dine emner og innlegg, når noen <b>@mentions</b> du eller siterer deg, og svarer på emner du våker. Varsler vil også bli sendt til e-post når du ikke har logget inn en stund. <br><br> Se etter %{icon} for å bestemme hvilke spesielle emner, kategorier og tagger du ønsker å få beskjed om. For mer, se dine <a href='%{preferencesUrl}'>varselpreferanser</a>.
       no_notifications_page_title: "Du har ingen varsler enda"
-      first_notification: "Ditt første varsel! Velg det for å komme i gang."
       dynamic_favicon: "Vis antall på nettleserikonet"
       skip_new_user_tips:
         description: "Hopp over nye brukeropplæringstips og merker"
-        not_first_time: "Ikke din første gang?"
-        skip_link: "Hopp over disse tipsene"
-        read_later: "Jeg leser den senere."
       theme_default_on_all_devices: "Gjør dette standardtemaet til alle mine enheter"
       color_scheme_default_on_all_devices: "Angi standard fargemelding(er) på alle mine enheter"
       color_scheme: "Farge Tema"
@@ -1030,7 +1024,6 @@ nb_NO:
       experimental_sidebar:
         options: "Alternativer"
         navigation_section: "Navigasjon"
-        list_destination_default: "Forvalg"
       change: "Endre"
       featured_topic: "Utvalgte emne"
       moderator: "%{user} er en moderator"
@@ -1133,6 +1126,7 @@ nb_NO:
         profile: "Profil"
         emails: "E-poster"
         notifications: "Varsler"
+        tracking: "Overvåkning"
         categories: "Kategorier"
         users: "Brukere"
         tags: "Stikkord"
@@ -1371,6 +1365,7 @@ nb_NO:
       email_in_reply_to: "Inkluder et utdrag i e-poster av innlegget man svarer på"
       other_settings: "Annet"
       categories_settings: "Kategorier"
+      topics_settings: "Emner"
       new_topic_duration:
         label: "Anse emner som nye når"
         not_viewed: "jeg ikke har sett dem ennå"
@@ -1585,12 +1580,8 @@ nb_NO:
       enabled: "Dette nettstedet er i lesemodus. Fortsett gjerne å lese, men du kan ikke svare, gi likes eller utføre andre handlinger som er slått av."
       login_disabled: "Innlogging er deaktivert mens nettsiden er i skrivebeskyttet modus."
       logout_disabled: "Du kan ikke logge ut når nettstedet er i lese-modus."
-    too_few_topics_and_posts_notice_MF: >-
-      La oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">starte diskusjonen!</a> Der {currentTopics, plural, one {er <strong>#</strong> tema} other {er <strong>#</strong> temaer}} og {currentPosts, plural, one {<strong>#</strong> innlegg} other {<strong>#</strong> innlegg}}. Besøkende trenger mer å lese og svare på - vi anbefaler i det minste {requiredTopics, plural, one {<strong>#</strong> tema} other {<strong>#</strong> emner}} og {requiredPosts, plural, one {<strong>#</strong> innlegg} other {<strong>#</strong> innlegg}}. Bare ansatte kan se denne meldingen.
-    too_few_topics_notice_MF: >-
-      La oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">starte diskusjonen!</a> Der {currentTopics, plural, one {er <strong>#</strong> tema} other {er <strong>#</strong> emner}}. Besøkende trenger mer å lese og svare på - vi anbefaler i det minste {requiredTopics, plural, one {<strong>#</strong> tema} other {<strong>#</strong> emner}}. Bare ansatte kan se denne meldingen.
     too_few_posts_notice_MF: >-
-      La oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">starte diskusjonen!</a> Der {currentPosts, plural, one {er <strong>#</strong> innlegg} other {er <strong>#</strong> innlegg}}. Besøkende trenger mer å lese og svare på — vi anbefaler minst {requiredPosts, plural, one {<strong>#</strong> innlegg} other {<strong>#</strong> innlegg}}. Bare ansatte kan se denne meldingen.
+      La oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">starte diskusjonen!</a> Der {currentPosts, plural, one {er <strong>#</strong> innlegg} other {er <strong>#</strong> innlegg}}. Besøkende trenger mer å lese og svare på — vi anbefaler minst {requiredPosts, plural, one {<strong>#</strong> innlegg} other {<strong>#</strong> innlegg}}. Bare ansatte kan se denne meldingen.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# feil/time} other {# feil/time}}</a> nådd området innstillingen grense for {limit, plural, one {# feil/time} other {# feil/time}}."
       reached_minute_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# feil/minutt} other {# feil/minutt}}</a> nådd området innstillingen grense for {limit, plural, one {# feil/minutt} other {# feil/minutt}}."
@@ -2064,6 +2055,7 @@ nb_NO:
         other: "<span>%{count}%{plus} resultater for</span><span class='term'>%{term}</span>"
       title: "Søk"
       full_page_title: "Søk"
+      results: "resultater"
       no_results: "Ingen resultater funnet."
       no_more_results: "Ingen flere resultater funnet."
       post_format: "#%{post_number} av %{username}"
@@ -2224,9 +2216,6 @@ nb_NO:
       move_to_inbox:
         title: "Flytt til innboks"
         help: "Flytt melding tilbake til innboks"
-      edit_message:
-        help: "Rediger første innlegg i meldingen"
-        title: "Rediger"
       defer:
         help: "Merk som ulest"
         title: "Utsett"
@@ -2888,8 +2877,6 @@ nb_NO:
       this_year: "dette året"
       position: "Posisjon på kategorisiden:"
       default_position: "Forvalgt posisjon"
-      position_disabled: "Kategorier vil bli vist i henhold til aktivitet. For å styre rekkefølgen av kategorier i listen"
-      position_disabled_click: 'aktiver innstillingen "faste kategoriposisjoner".'
       minimum_required_tags: "Minste antall stikkord som kreves for et emne:"
       default_slow_mode: 'Aktiver "Sakte modus" for nye emner i denne kategorien.'
       parent: "Foreldrekategori"
@@ -3452,8 +3439,6 @@ nb_NO:
               content: "Merker"
             faq:
               content: "O-S-S"
-            tracked:
-              content: "Overvåkes"
             groups:
               content: "Grupper"
               title: "Alle grupper"
@@ -3609,7 +3594,6 @@ nb_NO:
         about: "Rediger gruppemedlemskap og navn her."
         group_members: "Gruppemedlemmer"
         delete: "Slett"
-        delete_confirm: "Slette denne grupper?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
         delete_owner_confirm: "Frata '%{username}' eier-privilegium?"
         add: "Legg til"
@@ -4439,7 +4423,6 @@ nb_NO:
         trust_level_2_users: "Brukere på tillitsnivå 2"
         trust_level_3_requirements: "Krav til tillitsnivå 3"
         trust_level_locked_tip: "tillitsnivå er låst, systemet vil ikke forfremme eller degradere bruker"
-        trust_level_unlocked_tip: "tillitsnivå er ulåst, systemet kan forfremme eller degradere bruker"
         lock_trust_level: "Lås tillitsnivå"
         unlock_trust_level: "Lås opp tillitsnivå"
         silenced_count: "Dempet"
@@ -4492,19 +4475,19 @@ nb_NO:
         delete_confirm: "Er du sikker på at du vil fjerne brukerfeltet?"
         options: "Alternativer"
         required:
-          title: "Nødvendig ved registrering?"
+          title: "Nødvendig ved registrering"
           enabled: "nødvendig"
           disabled: "ikke obligatorisk"
         editable:
-          title: "Kan det endres etter registrering?"
+          title: "Kan det endres etter registrering"
           enabled: "kan endres"
           disabled: "kan ikke endres"
         show_on_profile:
-          title: "Vis på offentlig profil?"
+          title: "Vis på offentlig profil"
           enabled: "vises på profil"
           disabled: "vises ikke på profil"
         show_on_user_card:
-          title: "Vis på brukerkort?"
+          title: "Vis på brukerkort"
           enabled: "vist på brukerkort"
           disabled: "ikke vist på brukerkort"
         field_types:

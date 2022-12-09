@@ -1,0 +1,8 @@
+.chat-composer-uploads {
+  .chat-composer-uploads-container {
+    .full-page-chat & {
+      flex-wrap: wrap;
+      row-gap: 0.5rem;
+    }
+  }
+}

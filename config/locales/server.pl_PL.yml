@@ -260,6 +260,9 @@ pl_PL:
       invalid_access: "Nie masz uprawnień do przeglądania żądanego zasobu."
     requires_groups: "Zaproszenie nie zostało zapisane, ponieważ podany temat jest niedostępny. Dodaj jedną z następujących grup: %{groups}."
     domain_not_allowed: "Twój adres e-mail nie może zostać użyty do zrealizowania tego zaproszenia."
+    redemption_count_less_than_max: "powinien być mniejszy niż %{max_redemptions_allowed}."
+    email_xor_domain: "Pola adresu e-mail i domeny nie są dozwolone jednocześnie"
+    existing_user_success: "Zaproszenie zostało pomyślnie zrealizowane"
   bulk_invite:
     file_should_be_csv: "Wgrywany plik powinien być formatu csv."
     max_rows: "Wysłano %{max_bulk_invites} pierwszych zaproszeń. Sprobuj podzielić plik na mniejsze części."
@@ -269,6 +272,7 @@ pl_PL:
     max_redemptions_limit: "powinien być między 2, a 1%{max_limit}"
   topic_invite:
     failed_to_invite: "Nie można zaprosić użytkownika do tego tematu, ponieważ nie jest członkiem choć jednej z następujących grup: %{group_names}."
+    not_pm: "Możesz zapraszać tylko do prywatnych wiadomości."
     user_exists: "Przepraszamy, ten użytkownik został już zaproszony. Możesz zaprosić użytkownika do tematu tylko raz."
     muted_topic: "Przepraszamy, ten użytkownik wyciszył ten temat."
     receiver_does_not_allow_pm: "Przepraszamy, ten użytkownik nie pozwala na wysyłanie mu prywatnych wiadomości."
@@ -441,6 +445,7 @@ pl_PL:
       cannot_set_reminder_in_distant_future: "Nie możesz ustawić przypomnienia o zakładce na więcej niż 10 lat w przyszłości."
       time_must_be_provided: "Czas musi zostać podany dla wszystkich przypomnień"
       for_topic_must_use_first_post: "Możesz użyć tylko pierwszego posta, aby dodać do zakładek temat."
+      bookmarkable_id_type_required: "Wymagana jest nazwa i typ rekordu do zakładki."
       invalid_bookmarkable: "%{type} nie można dodać do zakładek."
     reminders:
       at_desktop: "Następnym razem będę na swoim pulpicie"
@@ -538,7 +543,7 @@ pl_PL:
       Możesz edytować swoje wcześniejsze odpowiedzi, aby dodać cytat, poprzez podświetlenie tekstu i wybranie przycisku <b>cytuj odpowiedź</b> który się pojawi.
 
       Każdemu łatwiej będzie przeczytać temat, który ma kilka pogłębionych odpowiedzi, zamiast wielu niewielkich, indywidualnych.
-    dominating_topic: Zamieściłeś tutaj ponad %{percent}% odpowiedzi, czy jest ktoś jeszcze, z kim chciałbyś się skontaktować?
+    dominating_topic: Dużo pisałeś w tym temacie! Zastanów się, czy nie dać innym możliwości odpowiadania tutaj i dyskutowania ze sobą.
     get_a_room: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
     too_many_replies: |
       ### Osiągnąłeś/łaś limit odpowiedzi w tym temacie
@@ -578,6 +583,7 @@ pl_PL:
               target_user_not_found: "Jeden z użytkowników, do których chciałaś/łeś/łaś wysłać tę wiadomość nie został znaleziony."
               unable_to_update: "Wystąpił błąd przy aktualizacji tego tematu."
               unable_to_tag: "Wystąpił błąd podczas tagowania tematu."
+              unable_to_unlist: "Przepraszamy, nie możesz utworzyć niepublicznego tematu."
             featured_link:
               invalid: "Link jest nieprawidłowy, powinien zawierać http:// lub https://."
         user:
@@ -635,6 +641,7 @@ pl_PL:
               too_many: "Za długi opis akcji"
             base:
               invalid_url: "Adres URL zamiany jest nieprawidłowy"
+              invalid_tag_list: "Zastępcza lista tagów jest nieprawidłowa"
         sidebar_section_link:
           attributes:
             linkable_type:
@@ -642,11 +649,13 @@ pl_PL:
       <<: *errors
   uncategorized_category_name: "Bez kategorii"
   general_category_name: "Ogólne"
+  general_category_description: "Utwórz tutaj tematy, które nie pasują do żadnej innej istniejącej kategorii."
   meta_category_name: "Dyskusje o serwisie"
   meta_category_description: "Dyskusje o tej stronie, jej organizacji, tym jak działa i jak możemy ją usprawnić."
   staff_category_name: "Zespół"
   staff_category_description: "Ukryta kategoria dla rozmów zespołu. Tematy są widoczne tylko dla adminów i moderatorów."
   discourse_welcome_topic:
+    title: "Witamy w naszej społeczności!"
     body: |2
 
       Pierwszy paragraf tego przypiętego tematu będzie widoczny jako wiadomość powitalna dla wszystkich odwiedzających stronę główną. Jest bardzo ważny!
@@ -679,6 +688,7 @@ pl_PL:
       disallowed_topic_tags: "Ten temat zawiera tagi %{tags}, które nie są dozwolone w tej kategorii"
       disallowed_tags_generic: "W tym temacie niedozwolone są tagi."
       slug_contains_non_ascii_chars: "zawiera znaki inne niż ascii"
+      is_already_in_use: "jest już w użyciu"
     cannot_delete:
       uncategorized: "Ta kategoria ma specjalny charakter. Jest przeznaczona jako miejsce do przechowywania tematów nieprzypisanych do żadnej kategorii i jako taka nie może zostać usunięta."
       has_subcategories: "Nie można usunąć tej kategorii ponieważ posiada podkategorie. "
@@ -856,7 +866,7 @@ pl_PL:
         many: "prawie %{count} lat temu"
         other: "prawie %{count} lat temu"
   password_reset:
-    no_token: "Przepraszamy, ten link do zmiany hasła jest zbyt stary. Wybierz przycisk \"Zaloguj\", a następnie \"Zapomniałem hasła\", by uzyskać nowy link."
+    no_token: 'Ups! Link, którego użyłeś, już nie działa. Możesz <a href="%{base_url}/login">zalogować się</a> teraz. Jeśli nie pamiętasz swojego hasła, możesz <a href="%{base_url}/password-reset">poprosić o łącze</a>, aby je zresetować.'
     choose_new: "Wprowadź nowe hasło"
     choose: "Wprowadź hasło"
     update: "Aktualizuj hasło"
@@ -865,7 +875,7 @@ pl_PL:
     success: "Twoje hasło zostało pomyślnie zmienione, zalogowano."
     success_unapproved: "Zmieniłeś(-a) swoje hasło."
   email_login:
-    invalid_token: "Przepraszamy, ten link do logowania jest zbyt stary. Kliknij przycisk \"Zaloguj\" i użyj opcji \"Zapomniałem hasła\", aby otrzymać nowy link."
+    invalid_token: 'Ups! Link, którego użyłeś, już nie działa. Możesz <a href="%{base_url}/login">zalogować się</a> teraz. Jeśli nie pamiętasz swojego hasła, możesz <a href="%{base_url}/password-reset">poprosić o łącze</a>, aby je zresetować.'
     title: "Logowanie e-mailem"
   user_auth_tokens:
     browser:
@@ -1056,7 +1066,8 @@ pl_PL:
     mailing_list_mode: "Wyłącz tryb listy mailingowej"
     all: "Nie wysyłaj mi żadnych wiadomości z %{sitename}"
     different_user_description: "Jesteś zalogowany jako inny użytkownik niż ten do którego wysłano wysłaliśmy emaila. proszę wyloguj się, lub przejść do trybu incognito i spróbuj ponownie."
-    not_found_description: "Przepraszamy: nie mogliśmy Cię wypisać z subskrypcji. Możliwe, że link wysłany w wiadomości email wygasł."
+    not_found_description: Przykro nam, nie udało nam się znaleźć tej subskrypcji. Możliwe, że link w twoim mailu jest zbyt stary i stracił ważność?".
+    user_not_found_description: "Przepraszamy, nie mogliśmy znaleźć użytkownika dla tej subskrypcji. Prawdopodobnie próbujesz zrezygnować z subskrypcji z konta, które już nie istnieje."
     log_out: "Wyloguj"
     submit: "Zapisz ustawienia"
     digest_frequency:
@@ -1185,6 +1196,11 @@ pl_PL:
         editor: Edytor
         author: Autor
         edit_reason: Powód
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "API użytkownika"
+      yaxis: "Dzień"
     dau_by_mau:
       title: "DAU / MAU"
       xaxis: "Dzień"
@@ -1635,6 +1651,7 @@ pl_PL:
     post_menu: "Określ które elementy menu wpisu powinny być widoczne i w jakiej kolejności. Przykład like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Elementy w menu, które w menu wpisu będą ukryte, chyba że kliknięty zostanie przycisk rozwijania."
     share_links: "Określ które elementy menu udostępniania powinny być widoczne i w jakiej kolejności. "
+    allow_username_in_share_links: "Zezwalaj na umieszczanie nazw użytkowników w linkach do udostępniania. Jest to przydatne, aby nagradzać odznaki na podstawie unikalnych odwiedzających."
     site_contact_username: "Nazwa użytkownika, spod której wysyłane będą automatyczne wiadomości. Jeśli pusta, użyte będzie domyślne konto System."
     site_contact_group_name: "Prawidłowa nazwa grupy, do której zostaną zaproszone wszystkie automatyczne wiadomości."
     send_welcome_message: "Wyślij wszystkim nowym użytkownikom powitalną wiadomość z krótkim przewodnikiem."
@@ -1657,6 +1674,7 @@ pl_PL:
     enable_badges: "Włącz system odznak"
     max_favorite_badges: "Maksymalna liczba odznak, które użytkownik może wybrać"
     enable_whispers: "Pozwalaj administracji na prywatną rozmowę w tematach."
+    whispers_allowed_groups: "Zezwalaj na prywatną komunikację w ramach tematów członkom określonych grup."
     allow_index_in_robots_txt: "W pliku robots.txt określ, że ta witryna może być indeksowana przez wyszukiwarki internetowe. W wyjątkowych przypadkach możesz trwale <a href='%{base_path}/admin/customize/robots'>zastąpić plik robots.txt</a>."
     blocked_email_domains: "Lista domen poczty e-mail rozdzielonych pionową kreską, z których użytkownicy nie mogą rejestrować kont. Przykład: mailinator.com|trashmail.net"
     allowed_email_domains: "Lista rozdzielonych pionową kreską domen e-mail, z których użytkownicy MUSZĄ się rejestrować. UWAGA: Użytkownicy z domenami e-mail innymi niż wypisane tutaj nie będą mogli się zarejestrować!"
@@ -1707,6 +1725,7 @@ pl_PL:
     google_oauth2_client_secret: "Client Secret twojej aplikacji w Google"
     google_oauth2_prompt: "Opcjonalna lista wartości łańcuchowych rozdzielanych spacjami, która określa, czy serwer autoryzacji monituje użytkownika o ponowne uwierzytelnienie i zgodę. Możliwe wartości można znaleźć na <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> ."
     google_oauth2_hd: "Opcjonalna domena Google Apps Hosted, do której logowanie będzie ograniczone. Więcej informacji można znaleźć na <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a>"
+    google_oauth2_hd_groups: "(eksperymentalne) Pobierz grupy dyskusyjne Google użytkowników w domenie hostowanej po uwierzytelnieniu. Pobrane grupy dyskusyjne Google mogą być używane do przyznawania automatycznego członkostwa w grupach Discourse (zobacz ustawienia grupy). Więcej informacji znajdziesz na https://meta.discourse.org/t/226850"
     enable_twitter_logins: "Włącz uwierzytelnianie przez Twittera, wymaga twitter_consumer_key i twitter_consumer_secret. Zobacz <a href='https://meta.discourse.org/t/13395' target='_blank'>Konfigurowanie logowania przez Twittera (i bogatych embedów) dla Discourse</a>."
     twitter_consumer_key: "Klucz klienta do uwierzytelnienia na Twitterze, zarejestrowany na <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Sekret klienta dotyczący uwierzytelniania na Twitterze, zarejestrowany na <a href='https://developer.twitter.com/apps' target='_blank'>stronie https://developer.twitter.com/apps</a>"
@@ -1742,8 +1761,6 @@ pl_PL:
     top_topics_formula_first_post_likes_multiplier: "wartość mnożnika polubień pierwszego wpisu (n) w tematach formuła: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "wartość mnożnika najmniejszej liczby polubień na wpis w (n) tematach formuła: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     enable_safe_mode: "Zezwól użytkownikom na wchodzenie do trybu awaryjnego w celu debudowania wtyczek."
-    enable_experimental_sidebar_hamburger: "Umożliwia włączenie eksperymentalnego paska bocznego i rozwijanego hamburger menu użytkownika."
-    enable_sidebar: "Włącza eksperymentalny pasek boczny."
     rate_limit_create_topic: "Po otworzeniu tematu użytkownicy muszą odczekać (n) sekund, zanim otworzą inny temat."
     rate_limit_create_post: "Po napisaniu wpisu użytkownicy muszą odczekać (n) sekund, zanim napiszą inny wpis."
     rate_limit_new_user_create_topic: "Po otworzeniu tematu nowi użytkownicy muszą odczekać (n) sekund, zanim otworzą inny temat."
@@ -2011,7 +2028,7 @@ pl_PL:
     enable_user_directory: "Dostarcz katalog użytkowników do wyszukiwania"
     enable_group_directory: "Udostępnij katalog grup do przeglądania"
     enable_category_group_moderation: "Zezwalaj grupom na moderowanie treści w określonych kategoriach"
-    group_in_subject: "Ustaw %%{optional_pm} w temacie wiadomości e-mail z nazwą pierwszej grupy w prywatnej wiadomości, zobacz: <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>Dostosuj format tematu dla standardowych wiadomości e-mail</a>"
+    group_in_subject: "Ustaw %%{optional_pm} w temacie wiadomości e-mail z nazwą pierwszej grupy w prywatnej wiadomości, zobacz: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Dostosuj format tematu dla standardowych wiadomości e-mail</a>"
     allow_anonymous_posting: "Zezwól użytkownikom na przechodzenie w tryb anonimowości."
     anonymous_posting_min_trust_level: "Minimalny poziom zaufania potrzebny by aktywować anonimowe wpisy"
     anonymous_account_duration_minutes: "Aby chronić anonimowość twórz nowe anonimowe konto co N minut dla każdego użytkownika. Przykład: jeśli ustawione na 600, dopóki nie minie 600 minut od ostatniego wpisu i użytkownik przełącza się na anon, zostanie utworzone nowe anonimowe konto."
@@ -3792,7 +3809,6 @@ pl_PL:
     png_to_jpg_conversion_failure_message: "Wystąpił błąd podczas konwersji z PNG na JPG."
     optimize_failure_message: "Wystąpił błąd podczas optymalizacji przesłanego obrazu."
     download_failure: "Pobieranie pliku od zewnętrznego dostawcy nie powiodło się."
-    size_mismatch_failure: "Rozmiar pliku przesłanego do S3 nie był zgodny z rozmiarem przewidzianym przez zewnętrzny serwer przesyłania. %{additional_detail}"
     create_multipart_failure: "Nie udało się utworzyć wieloczęściowego przesyłania w zewnętrznym sklepie."
     checksum_mismatch_failure: "Suma kontrolna przesłanego pliku nie zgadza się. Zawartość pliku mogła ulec zmianie podczas przesyłania. Proszę spróbuj ponownie."
     cannot_promote_failure: "Przesyłanie nie może zostać zakończone, być może zostało już zakończone lub wcześniej zakończone niepowodzeniem."
@@ -4532,6 +4548,7 @@ pl_PL:
     register:
       button: "Zarejestruj"
       title: "Zarejestrowano konto administratora"
+      help: "Zarejestruj nowe konto, aby rozpocząć."
       no_emails: "Niestety, podczas instalacji nie zdefiniowano żadnych e-maili administratora, więc finalizacja konfiguracji może być trudna. Dodaj adres e-mail programisty w pliku konfiguracyjnym lub <a href='https://meta.discourse.org/t/create-admin-account-from-console/17274'>utwórz konto administratora z konsoli</a>."
     confirm_email:
       title: "Potwierdzenie przez email"
@@ -4620,13 +4637,8 @@ pl_PL:
           logo_small:
             label: "Kwadratowe logo"
             description: "Kwadratowa wersja Twojego logo. Wyświetlana w lewym górnym rogu podczas przewijania w dół i podczas udostępniania na platformach społecznościowych. Najlepiej w rozmiarze co najmniej 512x512."
-          favicon:
-            label: "Ikona przeglądarki"
-            description: "Ikona służąca do reprezentowania Twojej witryny w przeglądarkach internetowych, która dobrze wygląda w małych rozmiarach. Zalecane jest PNG lub JPG. Domyślnie używane jest logo kwadratowe."
-          large_icon:
-            label: "Duża ikona"
-            description: "Ikona używana do reprezentowania Twojej witryny na urządzeniach mobilnych, która dobrze wygląda w większych rozmiarach. Najlepiej, jeśli jest większa niż 512x512. Domyślnie używane jest logo kwadratowe."
       corporate:
+        title: "Twoja organizacja"
         fields:
           company_name:
             label: "Nazwa firmy"

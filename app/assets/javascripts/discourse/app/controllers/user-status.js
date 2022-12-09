@@ -52,8 +52,7 @@ export default Controller.extend(ModalFunctionality, {
 
   @action
   delete() {
-    this.model
-      .deleteAction()
+    Promise.resolve(this.model.deleteAction())
       .then(() => this.send("closeModal"))
       .catch((e) => this._handleError(e));
   },
@@ -71,8 +70,7 @@ export default Controller.extend(ModalFunctionality, {
       ends_at: this.status.endsAt?.toISOString(),
     };
 
-    this.model
-      .saveAction(newStatus)
+    Promise.resolve(this.model.saveAction(newStatus))
       .then(() => this.send("closeModal"))
       .catch((e) => this._handleError(e));
   },
@@ -86,7 +84,7 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   _buildTimeShortcuts() {
-    const timezone = this.currentUser.timezone;
+    const timezone = this.currentUser.user_option.timezone;
     const shortcuts = timeShortcuts(timezone);
     return [shortcuts.oneHour(), shortcuts.twoHours(), shortcuts.tomorrow()];
   },

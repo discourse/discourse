@@ -6,5 +6,5 @@
 
 tr_TR:
   site_settings:
-    presence_enabled: "Geçerli konuyu yanıtlayan veya mevcut gönderiyi düzenleyen kullanıcılar gösterilsin mi?"
+    presence_enabled: "Şu anda geçerli konuya yanıt veren veya geçerli gönderiyi düzenleyen kullanıcılar gösterilsin mi?"
     presence_max_users_shown: "Gösterilen maksimum kullanıcı sayısı."

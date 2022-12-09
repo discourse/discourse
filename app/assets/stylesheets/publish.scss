@@ -1,11 +1,18 @@
 @import "common";
 
 .published-page-content-wrapper {
+  box-sizing: border-box;
   margin: 2em auto;
-  max-width: 800px;
+  padding: 0.5em 10px 2em; // 10px matches .wrap
+  max-width: calc(
+    var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+      var(--topic-avatar-width)
+  );
+  width: 100%;
 }
 
 .published-page-header {
+  box-sizing: border-box;
   width: 100%;
   top: 0;
   z-index: z("header");
@@ -14,10 +21,15 @@
   position: sticky;
   top: 0;
   .published-page-header-wrapper {
-    width: 925px;
+    box-sizing: border-box;
+    max-width: calc(
+      var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+        var(--topic-avatar-width)
+    );
+    width: 100%;
     display: flex;
     margin: 0em auto;
-    padding: 0.5em 0;
+    padding: 0.5em 10px; // 10px matches .wrap padding
     align-items: center;
     .published-page-logo {
       height: 45px;
@@ -26,9 +38,12 @@
     }
     .published-page-title {
       color: var(--header_primary);
-      font-size: 2em;
+      font-size: var(--font-up-5);
       margin: 0;
-      max-height: 1.25em;
+      line-height: var(--line-height-medium);
+      @include breakpoint(mobile-extra-large) {
+        font-size: var(--font-up-3);
+      }
     }
   }
 }
@@ -62,5 +77,8 @@
 
 .published-page-content-body {
   font-size: 1.25em;
-  padding-bottom: 2em;
+  img {
+    max-width: 100%;
+    height: auto;
+  }
 }

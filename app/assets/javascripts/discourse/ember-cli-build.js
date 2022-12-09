@@ -6,6 +6,7 @@ const mergeTrees = require("broccoli-merge-trees");
 const concat = require("broccoli-concat");
 const prettyTextEngine = require("./lib/pretty-text-engine");
 const { createI18nTree } = require("./lib/translation-plugin");
+const { parsePluginClientSettings } = require("./lib/site-settings-plugin");
 const discourseScss = require("./lib/discourse-scss");
 const generateScriptsTree = require("./lib/scripts");
 const funnel = require("broccoli-funnel");
@@ -57,6 +58,36 @@ module.exports = function (defaults) {
     autoImport: {
       forbidEval: true,
       insertScriptsAt: "ember-auto-import-scripts",
+      webpack: {
+        // Workarounds for https://github.com/ef4/ember-auto-import/issues/519 and https://github.com/ef4/ember-auto-import/issues/478
+        devtool: isProduction ? false : "source-map", // Sourcemaps contain reference to the ephemeral broccoli cache dir, which changes on every deploy
+        optimization: {
+          moduleIds: "size", // Consistent module references https://github.com/ef4/ember-auto-import/issues/478#issuecomment-1000526638
+        },
+        resolve: {
+          fallback: {
+            // Sinon needs a `util` polyfill
+            util: require.resolve("util/"),
+          },
+        },
+        module: {
+          rules: [
+            // Sinon/`util` polyfill accesses the `process` global,
+            // so we need to provide a mock
+            {
+              test: require.resolve("util/"),
+              use: [
+                {
+                  loader: "imports-loader",
+                  options: {
+                    additionalCode: "var process = { env: {} };",
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      },
     },
     fingerprint: {
       // Handled by Rails asset pipeline
@@ -130,7 +161,11 @@ module.exports = function (defaults) {
       return mergeTrees([
         tests,
         testHelpers,
-        discourseScss(`${discourseRoot}/app/assets/stylesheets`, "testem.scss"),
+        discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
+        discourseScss(
+          `${discourseRoot}/app/assets/stylesheets`,
+          "qunit-custom.scss"
+        ),
       ]);
     } else {
       return mergeTrees([tests, testHelpers]);
@@ -161,6 +196,7 @@ module.exports = function (defaults) {
 
   return mergeTrees([
     createI18nTree(discourseRoot, vendorJs),
+    parsePluginClientSettings(discourseRoot, vendorJs, app),
     app.toTree(),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
     funnel(`${vendorJs}/highlightjs`, {

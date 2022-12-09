@@ -135,24 +135,34 @@ class Topic < ActiveRecord::Base
   end
 
   def trash!(trashed_by = nil)
+    trigger_event = false
+
     if deleted_at.nil?
       update_category_topic_count_by(-1) if visible?
       CategoryTagStat.topic_deleted(self) if self.tags.present?
-      DiscourseEvent.trigger(:topic_trashed, self)
+      trigger_event = true
     end
+
     super(trashed_by)
+
+    DiscourseEvent.trigger(:topic_trashed, self) if trigger_event
+
     self.topic_embed.trash! if has_topic_embed?
   end
 
   def recover!(recovered_by = nil)
+    trigger_event = false
+
     unless deleted_at.nil?
       update_category_topic_count_by(1) if visible?
       CategoryTagStat.topic_recovered(self) if self.tags.present?
-      DiscourseEvent.trigger(:topic_recovered, self)
+      trigger_event = true
     end
 
     # Note parens are required because superclass doesn't take `recovered_by`
     super()
+
+    DiscourseEvent.trigger(:topic_recovered, self) if trigger_event
 
     unless (topic_embed = TopicEmbed.with_deleted.find_by_topic_id(id)).nil?
       topic_embed.recover!
@@ -427,8 +437,12 @@ class Topic < ActiveRecord::Base
     posts.where(post_type: Post.types[:regular], user_deleted: false).order('score desc nulls last').limit(1).first
   end
 
+  def self.has_flag_scope
+    ReviewableFlaggedPost.pending_and_default_visible
+  end
+
   def has_flags?
-    ReviewableFlaggedPost.pending.default_visible.where(topic_id: id).exists?
+    self.class.has_flag_scope.exists?(topic_id: self.id)
   end
 
   def is_official_warning?
@@ -624,14 +638,27 @@ class Topic < ActiveRecord::Base
 
     tsquery = Search.to_tsquery(term: tsquery, joiner: "|")
 
+    guardian = Guardian.new(user)
+
+    excluded_category_ids_sql = Category.secured(guardian).where(search_priority: Searchable::PRIORITIES[:ignore]).select(:id).to_sql
+
+    if user
+      excluded_category_ids_sql = <<~SQL
+      #{excluded_category_ids_sql}
+      UNION
+      #{CategoryUser.where(notification_level: CategoryUser.notification_levels[:muted], user: user).select(:category_id).to_sql}
+      SQL
+    end
+
     candidates = Topic
       .visible
       .listable_topics
-      .secured(Guardian.new(user))
+      .secured(guardian)
       .joins("JOIN topic_search_data s ON topics.id = s.topic_id")
       .joins("LEFT JOIN categories c ON topics.id = c.topic_id")
       .where("search_data @@ #{tsquery}")
       .where("c.topic_id IS NULL")
+      .where("topics.category_id NOT IN (#{excluded_category_ids_sql})")
       .order("ts_rank(search_data, #{tsquery}) DESC")
       .limit(SiteSetting.max_similar_results * 3)
 

@@ -278,7 +278,6 @@ sk:
       like_count: "Páči sa mi"
       topic_count: "Témy"
       post_count: "Príspevky"
-      user_count: "Používatelia"
       active_user_count: "Aktívni používatelia"
       contact: "Kontaktujte nás"
       contact_info: "V prípade kritickej chyby alebo naliehavej záležitosti nás prosím konaktujte na %{contact_info}."
@@ -723,7 +722,6 @@ sk:
       dismiss: "Zahodiť"
       dismiss_notifications: "Zahodiť všetko"
       dismiss_notifications_tooltip: "Označiť všetky neprečítané upozornenia ako prečítané"
-      first_notification: "Vaša prvé upozornenie! Vyberte ho ak chcete začať."
       color_schemes:
         regular: "Bežné"
       allow_private_messages: "Umožniť iným používateľom, aby mi posielali osobné správy"
@@ -732,7 +730,6 @@ sk:
       experimental_sidebar:
         options: "Možnosti"
         navigation_section: "Navigácia"
-        list_destination_default: "Predvolené"
       change: "zmeniť"
       moderator: "%{user} je moderátor"
       admin: "%{user} je administrátor"
@@ -827,6 +824,7 @@ sk:
         profile: "Profil"
         emails: "Emaily"
         notifications: "Upozornenia"
+        tracking: "Pozorovať"
         categories: "Kategórie"
         users: "Používatelia"
         tags: "Štítky"
@@ -973,6 +971,7 @@ sk:
       email_in_reply_to: "Zahrnúť úryvok príspevku, na ktorý používateľ reagoval, v emailoch"
       other_settings: "Ostatné"
       categories_settings: "Kategórie"
+      topics_settings: "Témy"
       new_topic_duration:
         label: "Považuj témy za nové keď"
         not_viewed: "Ešte som ich nevidel"
@@ -1370,6 +1369,7 @@ sk:
       too_short: "Vyhladávací termín je príliš krátky."
       title: "Hľadať"
       full_page_title: "Hľadať"
+      results: "výsledky"
       no_results: "Žiadne výsledky"
       no_more_results: "Nenašlo sa viac výsledkov"
       post_format: "#%{post_number} podľa %{username}"
@@ -1486,8 +1486,6 @@ sk:
       move_to_inbox:
         title: "Presunúť do schránky"
         help: "Presunúť správu späť do schránky"
-      edit_message:
-        title: "Upraviť"
       defer:
         title: "Odložiť"
       list: "Témy"
@@ -1908,8 +1906,6 @@ sk:
       review_group_name: "názov skupiny"
       this_year: "tento rok"
       default_position: "Predvolená pozícia"
-      position_disabled: "Kategórie budú zobrazené podľa aktivity. Pre možnosť ovládania poradia kategórií v zozname,"
-      position_disabled_click: 'povoľte možnosť "pevné poradie kategórií"'
       parent: "Nadradená kategória"
       notifications:
         watching:
@@ -2321,8 +2317,6 @@ sk:
               content: "Odznaky"
             faq:
               content: "Časté otázky"
-            tracked:
-              content: "Pozorované"
             groups:
               content: "Skupiny"
               title: "Všetky skupiny"
@@ -2428,7 +2422,6 @@ sk:
         about: "Tu upravíte Vaše členstvo v skupinách a mená"
         group_members: "Členovia skupiny"
         delete: "Odstrániť"
-        delete_confirm: "Zmazať túto skupinu?"
         delete_failed: "Nepodarilo sa zmazať skupinu. Pokiaľ je skupina automatická, nemôže byť zrušená."
         delete_owner_confirm: "Odobrať vlastnícke práva %{username}'?"
         add: "Pridať"
@@ -2942,7 +2935,6 @@ sk:
         trust_level_2_users: "Používatelia na stupni dôvery 2"
         trust_level_3_requirements: "Požiadavky pre 3 stupeň dôvery"
         trust_level_locked_tip: "stupeň dôvery je zamknutý, systém používateľovi stupeň nezvýši ani nezníži "
-        trust_level_unlocked_tip: "stupeň dôvery je odomknutý, systém môže používateľovi stupeň zvýšiť alebo znížiť"
         lock_trust_level: "Zamknúť stupeň dôvery"
         unlock_trust_level: "Odomknúť stupeň dôvery"
         suspended_count: "Odobrate práva"
@@ -2991,15 +2983,15 @@ sk:
         delete_confirm: "Ste si istý, že chcete zmazať toto používateľské pole?"
         options: "Možnosti"
         required:
-          title: "Požadované pri registrácii?"
+          title: "Požadované pri registrácii"
           enabled: "povinné"
           disabled: "nepovinné"
         editable:
-          title: "Upravovateľné po registrácii?"
+          title: "Upravovateľné po registrácii"
           enabled: "upravovateľné "
           disabled: "neupravovateľné "
         show_on_profile:
-          title: "Ukázať na verejnom profile?"
+          title: "Ukázať na verejnom profile"
           enabled: "zobrazené na profile"
           disabled: "nezobrazené na profile"
         field_types:

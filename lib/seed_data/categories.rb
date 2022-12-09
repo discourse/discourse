@@ -87,7 +87,8 @@ module SeedData
           text_color: 'FFFFFF',
           permissions: { everyone: :full },
           force_permissions: true,
-          sidebar: true
+          sidebar: true,
+          default_composer_category: true
         }
       ]
 
@@ -99,7 +100,7 @@ module SeedData
     end
 
     def create_category(site_setting_name:, name:, description:, position:, color:, text_color:,
-                        permissions:, force_permissions:, force_existence: false, sidebar: false)
+                        permissions:, force_permissions:, force_existence: false, sidebar: false, default_composer_category: false)
       category_id = SiteSetting.get(site_setting_name)
 
       if should_create_category?(category_id, force_existence)
@@ -122,6 +123,10 @@ module SeedData
           sidebar_categories = SiteSetting.default_sidebar_categories.split('|')
           sidebar_categories << category.id
           SiteSetting.set('default_sidebar_categories', sidebar_categories.join('|'))
+        end
+
+        if default_composer_category
+          SiteSetting.set('default_composer_category', category.id)
         end
       elsif category = Category.find_by(id: category_id)
         if description.present? && (category.topic_id.blank? || !Topic.exists?(category.topic_id))

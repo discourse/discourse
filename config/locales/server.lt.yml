@@ -681,7 +681,6 @@ lt:
         many: "beveik prieš %{count} metų"
         other: "beveik prieš %{count} metų"
   password_reset:
-    no_token: "Atsiprašome, slaptažodžio keitimo nuoroda yra per sena. Pasirinkite mygtuką \"Prisijungti\" ir naudokite „Pamiršau slaptažodį“, kad gautumėte naują nuorodą."
     choose_new: "Pasirinkite naują slaptažodį"
     choose: "Pasirinkite slaptažodį"
     update: "Atnaujinti slaptažodį"
@@ -690,7 +689,6 @@ lt:
     success: "Jūs sėkmingai pasikeitėte savo slaptažodį ir dabar esate prisijungęs."
     success_unapproved: "Jūs sėkmingai pasikeitėte savo slaptažodį."
   email_login:
-    invalid_token: "Atsiprašome, el. pašto prisijungimo nuoroda yra per sena. Pasirinkite mygtuką \"Prisijungti\" ir naudokite „Pamiršau slaptažodį“, kad gautumėte naują nuorodą."
     title: "Prisijungimas e-paštu"
   user_auth_tokens:
     browser:
@@ -863,7 +861,6 @@ lt:
     mailing_list_mode: "Išjunkite adresatų sąrašo režimą"
     all: "Nesiųskite man laiškų iš %{sitename}"
     different_user_description: "Šiuo metu esate prisijungę kaip kitas vartotojas, nei tas, kuriam rašėme el. paštu. Atsijunkite arba įjunkite anoniminį režimą ir bandykite dar kartą."
-    not_found_description: "Atsiprašome, nepavyko rasti šio prenumeratos atsisakymo. Ar gali būti, kad el. laiške esanti nuoroda yra per sena ir pasibaigė jos galiojimo laikas?"
     log_out: "Atsijungti"
     submit: "Išsaugoti nuostatas"
     digest_frequency:
@@ -981,6 +978,11 @@ lt:
         editor: Redaguotojas
         author: Autorius
         edit_reason: Priežastis
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "Nario API"
+      yaxis: "Diena"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Diena"
@@ -2703,10 +2705,6 @@ lt:
             label: "Pirminis logotipas"
           logo_small:
             label: "Kvadratinis logotipas"
-          favicon:
-            label: "Naršyklės piktograma"
-          large_icon:
-            label: "Didelė piktograma"
       corporate:
         fields:
           company_name:

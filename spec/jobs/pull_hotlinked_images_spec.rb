@@ -271,7 +271,6 @@ RSpec.describe Jobs::PullHotlinkedImages do
           post = Fabricate(:post, raw: "<img src='#{url}'>")
           upload.update(access_control_post: Fabricate(:post))
           FileStore::S3Store.any_instance.stubs(:store_upload).returns(upload.url)
-          FastImage.expects(:size).returns([100, 100]).at_least_once
 
           expect { Jobs::PullHotlinkedImages.new.execute(post_id: post.id) }
             .to change { Upload.count }.by(1)
@@ -374,7 +373,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
         post.rebake!
         post.reload
 
-        expect(post.cooked).to match(/<img src=.*\/uploads/)
+        expect(post.cooked).to match(/<img src=.*\/uploads.*\ class="thumbnail/)
         expect(post.upload_references.count).to eq(1)
       end
 
@@ -418,7 +417,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
         MD
 
         expect(post.cooked).to match(/<p><img src=.*\/uploads/)
-        expect(post.cooked).to match(/<img src=.*\/uploads.*\ class="thumbnail"/)
+        expect(post.cooked).to match(/<img src=.*\/uploads.*\ class="thumbnail/)
         expect(post.cooked).to match(/<span class="broken-image/)
         expect(post.cooked).to match(/<div class="large-image-placeholder">/)
       end
@@ -542,12 +541,10 @@ RSpec.describe Jobs::PullHotlinkedImages do
   end
 
   describe "with a lightboxed image" do
-    fab!(:upload) { Fabricate(:upload) }
+    fab!(:upload) { Fabricate(:large_image_upload) }
     fab!(:user) { Fabricate(:user) }
 
     before do
-      FastImage.expects(:size).returns([1750, 2000]).at_least_once
-      OptimizedImage.stubs(:resize).returns(true)
       Jobs.run_immediately!
     end
 

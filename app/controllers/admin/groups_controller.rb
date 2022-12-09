@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Admin::GroupsController < Admin::AdminController
+class Admin::GroupsController < Admin::StaffController
   def create
     guardian.ensure_can_create_group!
 
@@ -101,8 +101,6 @@ class Admin::GroupsController < Admin::AdminController
       GroupActionLogger.new(current_user, group).log_remove_user_as_group_owner(user)
     end
 
-    Group.reset_counters(group.id, :group_users)
-
     render json: success_json
   end
 
@@ -111,7 +109,7 @@ class Admin::GroupsController < Admin::AdminController
     raise Discourse::NotFound unless group
 
     users = User.where(username: group_params[:usernames].split(","))
-    users.each { |user| guardian.ensure_can_change_primary_group!(user) }
+    users.each { |user| guardian.ensure_can_change_primary_group!(user, group) }
     users.update_all(primary_group_id: params[:primary] == "true" ? group.id : nil)
 
     render json: success_json

@@ -174,7 +174,9 @@ def spec(plugin, parallel: false)
   params << "--seed #{ENV['RSPEC_SEED']}" if Integer(ENV['RSPEC_SEED'], exception: false)
 
   ruby = `which ruby`.strip
-  files = Dir.glob("./plugins/#{plugin}/spec/**/*_spec.rb").sort
+  # reject system specs as they are slow and need dedicated setup
+  files =
+    Dir.glob("./plugins/#{plugin}/spec/**/*_spec.rb").reject { |f| f.include?("spec/system/") }.sort
   if files.length > 0
     cmd = parallel ? "bin/turbo_rspec" : "bin/rspec"
     sh "LOAD_PLUGINS=1 #{cmd} #{files.join(' ')} #{params.join(' ')}"

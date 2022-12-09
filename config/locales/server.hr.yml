@@ -509,7 +509,6 @@ hr:
     success: "Uspiješno ste promijenili zaporku i sad ste prijavljeni."
     success_unapproved: "Uspiješno ste promijenili zaporku."
   email_login:
-    invalid_token: "Žao nam je, ta poveznica za prijavu emailom je prestara. Odaberite gumb 'Prijava' i kliknite na 'Zaboravljena lozinka' kako bi dobili novu poveznicu."
     title: "Prijava emailom"
   user_auth_tokens:
     browser:
@@ -674,6 +673,11 @@ hr:
         post: Objava
         editor: Urednik
         edit_reason: Razlog
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "Korisnički API"
+      yaxis: "Dan"
     dau_by_mau:
       xaxis: "Dan"
     daily_engaged_users:

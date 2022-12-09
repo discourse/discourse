@@ -74,12 +74,24 @@ class Invite < ActiveRecord::Base
     end
   end
 
+  # Even if a domain is specified on the invite, it still counts as
+  # an invite link.
   def is_invite_link?
-    email.blank?
+    self.email.blank?
+  end
+
+  # Email invites have specific behaviour and it's easier to visually
+  # parse is_email_invite? than !is_invite_link?
+  def is_email_invite?
+    self.email.present?
   end
 
   def redeemable?
     !redeemed? && !expired? && !deleted_at? && !destroyed? && link_valid?
+  end
+
+  def redeemed_by_user?(redeeming_user)
+    self.invited_users.exists?(user: redeeming_user)
   end
 
   def redeemed?
@@ -88,6 +100,23 @@ class Invite < ActiveRecord::Base
     else
       self.invited_users.count > 0
     end
+  end
+
+  def email_matches?(email)
+    email.downcase == self.email.downcase
+  end
+
+  def domain_matches?(email)
+    _, domain = email.split('@')
+    self.domain == domain
+  end
+
+  def can_be_redeemed_by?(user)
+    return false if !self.redeemable?
+    return false if redeemed_by_user?(user)
+    return true if self.domain.blank? && self.email.blank?
+    return true if self.email.present? && email_matches?(user.email)
+    self.domain.present? && domain_matches?(user.email)
   end
 
   def expired?
@@ -172,10 +201,18 @@ class Invite < ActiveRecord::Base
     invite.reload
   end
 
-  def redeem(email: nil, username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil, session: nil, email_token: nil)
+  def redeem(
+    email: nil,
+    username: nil,
+    name: nil,
+    password: nil,
+    user_custom_fields: nil,
+    ip_address: nil,
+    session: nil,
+    email_token: nil,
+    redeeming_user: nil
+  )
     return if !redeemable?
-
-    email = self.email if email.blank? && !is_invite_link?
 
     InviteRedeemer.new(
       invite: self,
@@ -186,14 +223,15 @@ class Invite < ActiveRecord::Base
       user_custom_fields: user_custom_fields,
       ip_address: ip_address,
       session: session,
-      email_token: email_token
+      email_token: email_token,
+      redeeming_user: redeeming_user
     ).redeem
   end
 
-  def self.redeem_from_email(email)
-    invite = Invite.find_by(email: Email.downcase(email))
+  def self.redeem_for_existing_user(user)
+    invite = Invite.find_by(email: Email.downcase(user.email))
     if invite.present? && invite.redeemable?
-      InviteRedeemer.new(invite: invite, email: invite.email).redeem
+      InviteRedeemer.new(invite: invite, redeeming_user: user).redeem
     end
     invite
   end

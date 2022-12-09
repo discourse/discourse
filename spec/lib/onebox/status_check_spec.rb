@@ -54,6 +54,12 @@ RSpec.describe Onebox::StatusCheck do
     it 'returns :connection_error if there is a general HTTP error' do
       expect(described_class.new("http://www.amazon.com/http-error").human_status).to eq(:connection_error)
     end
+
+    it 'returns :connection_error for private ips' do
+      FinalDestination::TestHelper.stub_to_fail do
+        expect(described_class.new("http://www.amazon.com/http-error").human_status).to eq(:connection_error)
+      end
+    end
   end
 
   describe '#ok?' do

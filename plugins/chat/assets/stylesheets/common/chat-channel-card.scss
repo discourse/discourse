@@ -1,0 +1,116 @@
+.chat-channel-card {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 1.25rem;
+  background-color: var(--primary-very-low);
+  border-radius: 5px;
+  min-height: 0;
+  min-width: 0;
+  border-left: 5px solid transparent;
+
+  &__header {
+    align-items: center;
+    display: flex;
+  }
+
+  &__header-actions {
+    align-items: center;
+    display: flex;
+    margin-left: auto;
+  }
+
+  &__read-restricted {
+    color: var(--primary-medium);
+    font-size: var(--font-down-4);
+    padding: 0 0.25rem;
+  }
+
+  &__description {
+    @include line-clamp(2);
+    color: var(--primary-medium);
+    padding-top: 1rem;
+
+    .-closed &,
+    .-archived & {
+      opacity: 0.5;
+    }
+  }
+
+  &__setting {
+    svg {
+      fill: var(--primary-medium);
+    }
+
+    .-archived & {
+      opacity: 0.5;
+    }
+  }
+
+  &__members {
+    margin-left: auto;
+    font-size: 0.875rem;
+  }
+
+  &__name {
+    @include ellipsis;
+  }
+
+  &__name-container {
+    display: flex;
+    align-items: center;
+    color: var(--primary);
+    font-size: 1.15rem;
+    text-decoration: none;
+    min-width: 0;
+    margin-right: 2rem;
+
+    &:visited,
+    &:hover {
+      color: var(--primary);
+    }
+
+    .-closed &,
+    .-archived & {
+      opacity: 0.5;
+    }
+  }
+
+  &__tag {
+    border-radius: 10px;
+    margin-right: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    font-weight: bold;
+    background-color: var(--secondary);
+
+    &.-muted {
+      color: var(--primary-medium);
+      border: 1px solid var(--primary-low-mid);
+
+      & + .chat-channel-card__setting {
+        margin-left: 0.5rem;
+      }
+    }
+    &.-joined {
+      color: var(--success);
+      border: 1px solid var(--success);
+    }
+
+    &.-closed,
+    &.-archived {
+      display: inline-block;
+      padding-left: 0;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  &__cta {
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    margin-top: 1rem;
+  }
+}

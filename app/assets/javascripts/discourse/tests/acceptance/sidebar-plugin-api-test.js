@@ -14,16 +14,16 @@ acceptance("Sidebar - Plugin API", function (needs) {
   needs.user();
 
   needs.settings({
-    enable_experimental_sidebar_hamburger: true,
-    enable_sidebar: true,
+    navigation_menu: "sidebar",
   });
 
   needs.hooks.afterEach(() => {
+    linkDidInsert = undefined;
     linkDestroy = undefined;
     sectionDestroy = undefined;
   });
 
-  let linkDestroy, sectionDestroy;
+  let linkDidInsert, linkDestroy, sectionDestroy;
 
   test("Multiple header actions and links", async function (assert) {
     withPluginApi("1.3.0", (api) => {
@@ -69,6 +69,10 @@ acceptance("Sidebar - Plugin API", function (needs) {
                     return "random-channel";
                   }
 
+                  get classNames() {
+                    return "my-class-name";
+                  }
+
                   get route() {
                     return "topic";
                   }
@@ -111,6 +115,11 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
                   get suffixCSSClass() {
                     return "unread";
+                  }
+
+                  @bind
+                  didInsert() {
+                    linkDidInsert = "link test";
                   }
 
                   @bind
@@ -198,6 +207,12 @@ acceptance("Sidebar - Plugin API", function (needs) {
     await visit("/");
 
     assert.strictEqual(
+      linkDidInsert,
+      "link test",
+      "calls link didInsert function"
+    );
+
+    assert.strictEqual(
       query(
         ".sidebar-section-test-chat-channels .sidebar-section-header-text"
       ).textContent.trim(),
@@ -241,6 +256,11 @@ acceptance("Sidebar - Plugin API", function (needs) {
       links[0].textContent.trim(),
       "random channel text",
       "displays first link with correct text"
+    );
+
+    assert.ok(
+      exists(".sidebar-section-link.my-class-name"),
+      "sets the custom class name for the section link"
     );
 
     assert.strictEqual(

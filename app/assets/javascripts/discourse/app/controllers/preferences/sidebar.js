@@ -13,6 +13,12 @@ export default class extends Controller {
   @tracked selectedSidebarCategories = [];
   @tracked selectedSidebarTagNames = [];
 
+  saveAttrNames = [
+    "sidebar_category_ids",
+    "sidebar_tag_names",
+    "sidebar_list_destination",
+  ];
+
   sidebarListDestinations = [
     {
       name: I18n.t("user.experimental_sidebar.list_destination_default"),
@@ -27,6 +33,7 @@ export default class extends Controller {
   @action
   save() {
     const initialSidebarCategoryIds = this.model.sidebarCategoryIds;
+    const initialSidebarListDestination = this.model.sidebar_list_destination;
 
     this.model.set(
       "sidebarCategoryIds",
@@ -41,7 +48,7 @@ export default class extends Controller {
     );
 
     this.model
-      .save()
+      .save(this.saveAttrNames)
       .then((result) => {
         if (result.user.sidebar_tags) {
           this.model.set("sidebar_tags", result.user.sidebar_tags);
@@ -59,6 +66,9 @@ export default class extends Controller {
       })
       .finally(() => {
         this.model.set("sidebar_tag_names", []);
+        if (initialSidebarListDestination !== this.newSidebarListDestination) {
+          window.location.reload();
+        }
       });
   }
 }

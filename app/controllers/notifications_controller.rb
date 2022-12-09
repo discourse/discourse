@@ -31,16 +31,17 @@ class NotificationsController < ApplicationController
       limit = 50 if limit > 50
 
       include_reviewables = false
-      if SiteSetting.enable_experimental_sidebar_hamburger
+
+      if SiteSetting.legacy_navigation_menu?
+        notifications = Notification.recent_report(current_user, limit, notification_types)
+      else
         notifications = Notification.prioritized_list(current_user, count: limit, types: notification_types)
         # notification_types is blank for the "all notifications" user menu tab
         include_reviewables = notification_types.blank? && guardian.can_see_review_queue?
-      else
-        notifications = Notification.recent_report(current_user, limit, notification_types)
       end
 
       if notifications.present? && !(params.has_key?(:silent) || @readonly_mode)
-        if changed = current_user.bump_last_seen_notification!
+        if current_user.bump_last_seen_notification!
           current_user.reload
           current_user.publish_notifications_state
         end
@@ -57,16 +58,20 @@ class NotificationsController < ApplicationController
         end
       end
 
+      notifications = filter_inaccessible_notifications(notifications)
+
       json = {
         notifications: serialize_data(notifications, NotificationSerializer),
         seen_notification_id: current_user.seen_notification_id
       }
+
       if include_reviewables
         json[:pending_reviewables] = Reviewable.basic_serializers_for_list(
           Reviewable.user_menu_list_for(current_user),
           current_user
         ).as_json
       end
+
       render_json_dump(json)
     else
       offset = params[:offset].to_i
@@ -82,6 +87,7 @@ class NotificationsController < ApplicationController
 
       total_rows = notifications.dup.count
       notifications = notifications.offset(offset).limit(60)
+      notifications = filter_inaccessible_notifications(notifications)
       render_json_dump(notifications: serialize_data(notifications, NotificationSerializer),
                        total_rows_notifications: total_rows,
                        seen_notification_id: user.seen_notification_id,
@@ -145,4 +151,9 @@ class NotificationsController < ApplicationController
     render_json_dump(NotificationSerializer.new(@notification, scope: guardian, root: false))
   end
 
+  def filter_inaccessible_notifications(notifications)
+    topic_ids = notifications.map { |n| n.topic_id }.compact.uniq
+    accessible_topic_ids = guardian.can_see_topic_ids(topic_ids: topic_ids)
+    notifications.select { |n| n.topic_id.blank? || accessible_topic_ids.include?(n.topic_id) }
+  end
 end

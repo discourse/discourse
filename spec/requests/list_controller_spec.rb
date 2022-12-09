@@ -89,6 +89,16 @@ RSpec.describe ListController do
 
       expect(response.body).to have_tag "title", text: "Discourse - Best community"
     end
+
+    it "returns structured data" do
+      get "/latest"
+
+      expect(response.status).to eq(200)
+      topic_list = Nokogiri::HTML5(response.body).css('.topic-list')
+      first_item = topic_list.css('[itemprop="itemListElement"]')
+      expect(first_item.css('[itemprop="position"]')[0]['content']).to eq('1')
+      expect(first_item.css('[itemprop="url"]')[0]['href']).to eq(topic.url)
+    end
   end
 
   describe "categories and X" do
@@ -1003,14 +1013,14 @@ RSpec.describe ListController do
       expect(parsed["topic_list"]["topics"].first["id"]).to eq(welcome_topic.id)
     end
 
-    it "is shown to admins" do
+    it "is hidden to admins" do
       sign_in(admin)
 
       get "/latest.json"
       expect(response.status).to eq(200)
       parsed = response.parsed_body
-      expect(parsed["topic_list"]["topics"].length).to eq(2)
-      expect(parsed["topic_list"]["topics"].first["id"]).to eq(welcome_topic.id)
+      expect(parsed["topic_list"]["topics"].length).to eq(1)
+      expect(parsed["topic_list"]["topics"].first["id"]).not_to eq(welcome_topic.id)
     end
 
     it "is shown to users when bootstrap mode is disabled" do

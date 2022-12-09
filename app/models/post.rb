@@ -310,8 +310,13 @@ class Post < ActiveRecord::Base
     options = opts.dup
     options[:cook_method] = cook_method
 
-    post_user = self.user
-    options[:user_id] = post_user.id if post_user
+    # A rule in our Markdown pipeline may have Guardian checks that require a
+    # user to be present. The last editing user of the post will be more
+    # generally up to date than the creating user. For example, we use
+    # this when cooking #hashtags to determine whether we should render
+    # the found hashtag based on whether the user can access the category it
+    # is referencing.
+    options[:user_id] = self.last_editor_id
     options[:omit_nofollow] = true if omit_nofollow?
 
     if self.with_secure_uploads?
@@ -994,10 +999,6 @@ class Post < ActiveRecord::Base
     end
   end
 
-  def downloaded_images
-    self.custom_fields[Post::DOWNLOADED_IMAGES] || {}
-  end
-
   def each_upload_url(fragments: nil, include_local_upload: true)
     current_db = RailsMultisite::ConnectionManagement.current_db
     upload_patterns = [
@@ -1130,6 +1131,10 @@ class Post < ActiveRecord::Base
       time_left = RateLimiter.time_left(Post::PERMANENT_DELETE_TIMER.to_i - Time.zone.now.to_i + self.deleted_at.to_i)
       I18n.t('post.cannot_permanently_delete.wait_or_different_admin', time_left: time_left)
     end
+  end
+
+  def mentions
+    PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked))
   end
 
   private

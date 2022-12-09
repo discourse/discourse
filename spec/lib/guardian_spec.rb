@@ -27,6 +27,11 @@ RSpec.describe Guardian do
 
   before do
     Group.refresh_automatic_groups!
+    Guardian.enable_topic_can_see_consistency_check
+  end
+
+  after do
+    Guardian.disable_topic_can_see_consistency_check
   end
 
   it 'can be created without a user (not logged in)' do
@@ -303,7 +308,7 @@ RSpec.describe Guardian do
       end
 
       it "returns true for bot user" do
-        expect(Guardian.new(Fabricate(:user, id: -19876)).can_send_private_message?(another_user)).to be_truthy
+        expect(Guardian.new(Fabricate(:bot)).can_send_private_message?(another_user)).to be_truthy
       end
 
       it "returns true for system user" do
@@ -411,6 +416,78 @@ RSpec.describe Guardian do
               .to eq(true)
           end
         end
+      end
+    end
+  end
+
+  describe 'can_send_private_messages' do
+    fab!(:suspended_user) { Fabricate(:user, suspended_till: 1.week.from_now, suspended_at: 1.day.ago) }
+
+    it "returns false when the user is nil" do
+      expect(Guardian.new(nil).can_send_private_messages?).to be_falsey
+    end
+
+    it "disallows pms to other users if the user is not in the automated trust level used for personal_message_enabled_groups" do
+      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_2]
+      user.update!(trust_level: TrustLevel[1])
+      Group.user_trust_level_change!(user.id, TrustLevel[1])
+      user.reload
+      expect(Guardian.new(user).can_send_private_messages?).to be_falsey
+      user.update!(trust_level: TrustLevel[2])
+      Group.user_trust_level_change!(user.id, TrustLevel[2])
+      user.reload
+      expect(Guardian.new(user).can_send_private_messages?).to be_truthy
+    end
+
+    context "when personal_message_enabled_groups does contain the user" do
+      let(:group) { Fabricate(:group) }
+      before do
+        SiteSetting.personal_message_enabled_groups = group.id
+      end
+
+      it "returns true" do
+        expect(Guardian.new(user).can_send_private_messages?).to be_falsey
+        GroupUser.create(user: user, group: group)
+        user.reload
+        expect(Guardian.new(user).can_send_private_messages?).to be_truthy
+      end
+    end
+
+    context "when personal_message_enabled_groups does not contain the user" do
+      let(:group) { Fabricate(:group) }
+      before do
+        SiteSetting.personal_message_enabled_groups = group.id
+      end
+
+      it "returns false if user is not staff member" do
+        expect(Guardian.new(trust_level_4).can_send_private_messages?).to be_falsey
+        GroupUser.create(user: trust_level_4, group: group)
+        trust_level_4.reload
+        expect(Guardian.new(trust_level_4).can_send_private_messages?).to be_truthy
+      end
+
+      it "returns true for staff member" do
+        expect(Guardian.new(moderator).can_send_private_messages?).to be_truthy
+        expect(Guardian.new(admin).can_send_private_messages?).to be_truthy
+      end
+
+      it "returns true for bot user" do
+        expect(Guardian.new(Fabricate(:bot)).can_send_private_messages?).to be_truthy
+      end
+
+      it "returns true for system user" do
+        expect(Guardian.new(Discourse.system_user).can_send_private_messages?).to be_truthy
+      end
+    end
+
+    context "when author is silenced" do
+      before do
+        user.silenced_till = 1.year.from_now
+        user.save
+      end
+
+      it "returns true, since there is no target user, we do that check separately" do
+        expect(Guardian.new(user).can_send_private_messages?).to be_truthy
       end
     end
   end
@@ -853,6 +930,7 @@ RSpec.describe Guardian do
         expect(Guardian.new(user_gm).can_see?(topic)).to be_falsey
 
         topic.category.update!(reviewable_by_group_id: group.id, topic_id: post.topic.id)
+
         expect(Guardian.new(user_gm).can_see?(topic)).to be_truthy
       end
 
@@ -1118,7 +1196,7 @@ RSpec.describe Guardian do
 
       context "with trashed topic" do
         before do
-          topic.deleted_at = Time.now
+          topic.trash!(admin)
         end
 
         it "doesn't allow new posts from regular users" do
@@ -1729,14 +1807,14 @@ RSpec.describe Guardian do
       end
 
       context 'with private message' do
+        fab!(:private_message) { Fabricate(:private_message_topic) }
+
         it 'returns false at trust level 3' do
-          topic.archetype = 'private_message'
-          expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(false)
+          expect(Guardian.new(trust_level_3).can_edit?(private_message)).to eq(false)
         end
 
         it 'returns false at trust level 4' do
-          topic.archetype = 'private_message'
-          expect(Guardian.new(trust_level_4).can_edit?(topic)).to eq(false)
+          expect(Guardian.new(trust_level_4).can_edit?(private_message)).to eq(false)
         end
       end
 
@@ -2719,6 +2797,40 @@ RSpec.describe Guardian do
     it 'is true if the user is a part of the group and the group has a flair' do
       user.update(groups: [group])
       expect(Guardian.new(user).can_use_flair_group?(user, group.id)).to eq(true)
+    end
+  end
+
+  describe "#can_change_primary_group?" do
+    it "returns false without a logged in user" do
+      expect(Guardian.new(nil).can_change_primary_group?(user, group)).to eq(false)
+    end
+
+    it "returns false for regular users" do
+      expect(Guardian.new(user).can_change_primary_group?(user, group)).to eq(false)
+    end
+
+    it "returns true for admins" do
+      expect(Guardian.new(admin).can_change_primary_group?(user, group)).to eq(true)
+    end
+
+    context "when moderators_manage_categories_and_groups site setting is enabled" do
+      before do
+        SiteSetting.moderators_manage_categories_and_groups = true
+      end
+
+      it "returns true for moderators" do
+        expect(Guardian.new(moderator).can_change_primary_group?(user, group)).to eq(true)
+      end
+    end
+
+    context "when moderators_manage_categories_and_groups site setting is disabled" do
+      before do
+        SiteSetting.moderators_manage_categories_and_groups = false
+      end
+
+      it "returns false for moderators" do
+        expect(Guardian.new(moderator).can_change_primary_group?(user, group)).to eq(false)
+      end
     end
   end
 
@@ -3965,7 +4077,7 @@ RSpec.describe Guardian do
 
     it "should correctly detect category moderation" do
       group.add(user)
-      category.reviewable_by_group_id = group.id
+      category.update!(reviewable_by_group_id: group.id)
       guardian = Guardian.new(user)
 
       # implementation detail, ensure memoization is good (hence testing twice)

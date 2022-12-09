@@ -83,6 +83,17 @@ RSpec.describe PostAlerter do
 
     end
 
+    it "notifies about private message even if direct mention" do
+      pm = Fabricate(:topic, archetype: 'private_message', category_id: nil)
+      op = Fabricate(:post, topic: pm, user: pm.user, raw: "Hello @#{user.username}, nice to meet you")
+      pm.allowed_users << pm.user
+      pm.allowed_users << user
+      TopicUser.create!(user_id: user.id, topic_id: pm.id, notification_level: TopicUser.notification_levels[:watching])
+      PostAlerter.post_created(op)
+
+      expect(Notification.where(user_id: user.id).pluck_first(:notification_type)).to eq(Notification.types[:private_message])
+    end
+
     context "with group inboxes" do
       fab!(:user1) { Fabricate(:user) }
       fab!(:user2) { Fabricate(:user) }
@@ -758,15 +769,18 @@ RSpec.describe PostAlerter do
             before do
               set_topic_notification_level(alice, pm_topic, notification_level)
             end
+            let(:expected_notification) {
+              notification_level == :watching ? :private_message : :mentioned
+            }
 
             it "notifies about @username mention" do
               args = { user: bob, topic: pm_topic, raw: 'Hello @alice' }
-              expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
+              expect { create_post_with_alerts(args) }.to add_notification(alice, expected_notification)
             end
 
             it "notifies about @username mentions by non-human users" do
               args = { user: Discourse.system_user, topic: pm_topic, raw: 'Hello @alice' }
-              expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
+              expect { create_post_with_alerts(args) }.to add_notification(alice, expected_notification)
             end
 
             it "notifies about @group mention when allowed user is part of group" do
@@ -1321,6 +1335,42 @@ RSpec.describe PostAlerter do
       category.mailinglist_mirror = false
       NotificationEmailer.expects(:process_notification).once
       expect { PostAlerter.post_created(reply) }.to change(user.notifications, :count).by(1)
+    end
+
+    it "creates a notification of type `replied` instead of `posted` for the topic author if they're watching the topic" do
+      Jobs.run_immediately!
+
+      u1 = Fabricate(:admin)
+      u2 = Fabricate(:admin)
+
+      topic = create_topic(user: u1)
+
+      u1.notifications.destroy_all
+
+      expect do
+        create_post(topic: topic, user: u2)
+      end.to change { u1.reload.notifications.count }.by(1)
+      expect(u1.notifications.exists?(
+        topic_id: topic.id,
+        notification_type: Notification.types[:replied],
+        post_number: 1,
+        read: false
+      )).to eq(true)
+    end
+
+    it "it doesn't notify about small action posts when the topic author is watching the topic " do
+      Jobs.run_immediately!
+
+      u1 = Fabricate(:admin)
+      u2 = Fabricate(:admin)
+
+      topic = create_topic(user: u1)
+
+      u1.notifications.destroy_all
+
+      expect do
+        topic.update_status("closed", true, u2, message: "hello world")
+      end.not_to change { u1.reload.notifications.count }
     end
   end
 

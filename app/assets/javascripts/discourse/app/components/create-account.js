@@ -6,19 +6,19 @@ export default Component.extend({
   classNames: ["create-account-body"],
 
   userInputFocus(event) {
-    let label = event.target.parentElement.previousElementSibling;
-    if (!label.classList.contains("value-entered")) {
-      label.classList.toggle("value-entered");
+    const controls = event.target.parentElement;
+    if (!controls.classList.contains("value-entered")) {
+      controls.classList.toggle("value-entered");
     }
   },
 
   userInputFocusOut(event) {
-    let label = event.target.parentElement.previousElementSibling;
+    const controls = event.target.parentElement;
     if (
       event.target.value.length === 0 &&
-      label.classList.contains("value-entered")
+      controls.classList.contains("value-entered")
     ) {
-      label.classList.toggle("value-entered");
+      controls.classList.toggle("value-entered");
     }
   },
 

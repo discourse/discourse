@@ -232,6 +232,7 @@ sv:
     delete: "Radera"
     generic_error: "Tyvärr, ett fel har inträffat."
     generic_error_with_reason: "Ett fel inträffade: %{error}"
+    multiple_errors: "Flera fel inträffade: %{errors}"
     sign_up: "Registrera"
     log_in: "Logga in"
     age: "Ålder"
@@ -293,7 +294,7 @@ sv:
       like_count: "Gillningar"
       topic_count: "Ämnen"
       post_count: "Inlägg"
-      user_count: "Användare"
+      user_count: "Registreringar"
       active_user_count: "Aktiva användare"
       contact: "Kontakta oss"
       contact_info: "Vid brådskande ärenden rörande webbplatsen, kontakta oss på %{contact_info}."
@@ -350,7 +351,6 @@ sv:
       remove_confirmation: "Är du säker på att du vill ta bort detta utkast?"
       new_topic: "Nytt utkast för ämne"
       new_private_message: "Nytt utkast för personligt meddelande"
-      topic_reply: "Svar på utkast"
       abandon:
         confirm: "Du har ett pågående utkast för detta ämne. Vad vill du göra med det?"
         yes_value: "Förkasta"
@@ -824,6 +824,7 @@ sv:
         group_type: "Grupptyper"
         is_group_user: "Medlem"
         is_group_owner: "Ägare"
+        search_results: "Sökresultat kommer att visas nedan."
       title:
         one: "Grupp"
         other: "Grupper"
@@ -858,6 +859,7 @@ sv:
         no_filter_matches: "Inga medlemmar matchar den sökningen."
       topics: "Ämnen"
       posts: "Inlägg"
+      aria_post_number: "%{title} - inlägg #%{postNumber}"
       mentions: "Omnämnanden"
       messages: "Meddelanden"
       notification_level: "Standardaviseringsnivå för gruppmeddelanden"
@@ -972,7 +974,7 @@ sv:
     user_fields:
       none: "(välj ett alternativ)"
       required: 'Ange ett värde för "%{name}"'
-      same_as_password: 'Upprepa inte ditt lösenord i andra fält.'
+      same_as_password: "Upprepa inte ditt lösenord i andra fält."
     user:
       said: "%{username}:"
       profile: "Profil"
@@ -1061,6 +1063,9 @@ sv:
       dismiss_notifications_tooltip: "Markera alla olästa aviseringar som lästa"
       dismiss_bookmarks_tooltip: "Markera alla olästa bokmärkespåminnelser som lästa"
       dismiss_messages_tooltip: "Markera alla olästa personliga meddelanden som lästa"
+      no_likes_title: "Du har inte fått några gillningar än"
+      no_likes_body: >
+        Du kommer att aviseras här varje gång någon gillar ett av dina inlägg så att du kan se vad andra tycker är värdefullt. Andra kommer att se samma sak när du gillar deras inlägg också! <br><br> Aviseringar om gillningar skickas aldrig till dig via e-post, men du kan ställa in hur du får aviseringar om gillningar på webbplatsen i dina <a href='%{preferencesUrl}'>aviseringsinställningar</a>.
       no_messages_title: "Du har inga meddelanden"
       no_messages_body: >
         Behöver du ha en direkt personlig konversation med någon, utanför det normala konversationsflödet? Meddela dem genom att klicka på deras avatar och använd %{icon} meddelandeknappen.<br><br> Om du behöver hjälp kan du <a href='%{aboutUrl}'>meddela någon ur personalen</a>.
@@ -1077,13 +1082,10 @@ sv:
       no_notifications_page_title: "Du har inga aviseringar än"
       no_notifications_page_body: >
         Du kommer att aviseras om aktivitet som är direkt relevant för dig, bland annat svar på dina ämnen och inlägg, när någon <b>@nämner</b> dig eller citerar dig och svarar på ämnen du tittar på. Aviseringar kommer också att skickas som e-post när du inte har loggat in på ett tag. <br><br> Leta efter %{icon} för att bestämma vilka specifika ämnen, kategorier och taggar du vill aviseras om. Se mer i dina <a href='%{preferencesUrl}'>aviseringsinställningar</a>.
-      first_notification: "Du har fått din första avisering! Markera den för att börja."
       dynamic_favicon: "Visa räknare i webbläsarens ikon"
       skip_new_user_tips:
         description: "Hoppa över nybörjartips och utmärkelser för ny användare"
-        not_first_time: "Är det inte din första gång?"
-        skip_link: "Hoppa över dessa tips"
-        read_later: "Jag läser det senare."
+      reset_seen_user_tips: "Visa användartips igen"
       theme_default_on_all_devices: "Gör detta till standardtema för alla mina enheter"
       color_scheme_default_on_all_devices: "Ange standardfärgschema(n) för alla mina enheter"
       color_scheme: "Färgschema"
@@ -1103,13 +1105,16 @@ sv:
       enable_quoting: "Aktivera citatsvar för markerad text"
       enable_defer: "Aktivera fördröjning för att markera ämnen som lästa"
       experimental_sidebar:
+        enable: "Aktivera sidofältet"
         options: "Alternativ"
         categories_section: "Sektion Kategorier"
         categories_section_instruction: "Valda kategorier kommer att visas under sidofältets kategorisektion."
         tags_section: "Sektion Taggar"
         tags_section_instruction: "Valda taggar kommer att visas under sidofältets tagg-sektion."
         navigation_section: "Navigering"
-        list_destination_default: "Standard"
+        list_destination_instruction: "När det finns nytt innehåll i sidofältet..."
+        list_destination_default: "använd standardlänken och visa en utmärkelse för nya objekt"
+        list_destination_unread_new: "länka till oläst/nytt och visa ett antal nya objekt"
       change: "ändra"
       featured_topic: "Utvalt ämne"
       moderator: "%{user} är en moderator"
@@ -1217,6 +1222,7 @@ sv:
         profile: "Profil"
         emails: "E-post"
         notifications: "Aviseringar"
+        tracking: "Följer"
         categories: "Kategorier"
         users: "Användare"
         tags: "Taggar"
@@ -1280,6 +1286,8 @@ sv:
         edit: "Redigera"
         edit_title: "Redigera autentisering"
         edit_description: "Autentiseringsnamn"
+        enable_security_key_description: |
+          När du har din <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">maskinvarusäkerhetsnyckel</a> eller kompatibel mobil enhet till hands, tryck på registrera-knappen nedan.
         totp:
           title: "Bevisbaserad autentisering"
           add: "Lägg till autentisering"
@@ -1287,12 +1295,16 @@ sv:
           name_and_code_required_error: "Du måste ange ett namn samt koden från din app för autentisering."
         security_key:
           register: "Registrera"
+          title: "Fysiska säkerhetsnycklar"
+          add: "Lägg till fysisk säkerhetsnyckel"
           default_name: "Huvudsäkerhetsnyckel"
           iphone_default_name: "iPhone"
           android_default_name: "Android"
           not_allowed_error: "Registreringsprocessen för säkerhetsnyckel dröjde antingen för länge eller avbröts."
           already_added_error: "Du har redan registrerat denna säkerhetsnyckel.\nDu behöver inte registrera den igen."
+          edit: "Redigera fysisk säkerhetsnyckel"
           save: "Spara"
+          edit_description: "Namn på fysisk säkerhetsnyckel"
           name_required_error: "Du måste ge din säkerhetsnyckel ett namn."
       change_about:
         title: "Ändra Om mig"
@@ -1466,6 +1478,7 @@ sv:
       email_in_reply_to: "Inkludera ett utdrag av inlägg som svarats på i e-postmeddelanden"
       other_settings: "Övrigt"
       categories_settings: "Kategorier"
+      topics_settings: "Ämnen"
       new_topic_duration:
         label: "Betrakta ämnen som nya när"
         not_viewed: "Jag har inte tittat på dem än"
@@ -1662,7 +1675,7 @@ sv:
       set_custom_status: "Ställ in anpassad status"
       what_are_you_doing: "Vad gör du?"
       remove_status: "Ta bort status"
-    popup:
+    user_tips:
       primary: "Jag förstår!"
       secondary: "visa mig inte dessa tips"
       first_notification:
@@ -1671,6 +1684,15 @@ sv:
       topic_timeline:
         title: "Ämnestidslinje"
         content: "Bläddra snabbt genom ett inlägg med hjälp av ämnestidslinjen."
+      post_menu:
+        title: "Inläggsmeny"
+        content: "Se hur du annars kan interagera med inlägget genom att klicka på de tre prickarna!"
+      topic_notification_levels:
+        title: "Du följer nu detta ämne"
+        content: "Leta efter den här klockan för att justera dina aviseringsinställningar för specifika ämnen eller hela kategorier."
+      suggested_topics:
+        title: "Fortsätt läsa!"
+        content: "Här är några ämnen som vi tror att du kanske vill läsa härnäst."
     loading: "Laddar..."
     errors:
       prev_page: "medan vi försökte ladda"
@@ -1706,11 +1728,11 @@ sv:
     staff_writes_only_mode:
       enabled: "Webbplatsen är i läget endast för personal. Du kan fortsätta bläddra på sidan, men att skriva inlägg, gilla och andra åtgärder är begränsat till personal."
     too_few_topics_and_posts_notice_MF: >-
-      Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">inleda diskussionen!</a> Det {currentTopics, plural, one {finns <strong>#</strong> ämne} other {finns <strong>#</strong> ämnen}} och {currentPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Besökare behöver mer att läsa och svara på – vi rekommenderar åtminstone {requiredTopics, plural, one {<strong>#</strong> ämne} other {<strong>#</strong> ämnen}} och {requiredPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Enbart personal kan se detta meddelande.
+      Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">inleda diskussionen!</a> Det {currentTopics, plural, one {finns <strong>#</strong> ämne} other {finns <strong>#</strong> ämnen}} och {currentPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Besökare behöver mer att läsa och svara på – vi rekommenderar åtminstone {requiredTopics, plural, one {<strong>#</strong> ämne} other {<strong>#</strong> ämnen}} och {requiredPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Enbart personal kan se detta meddelande.
     too_few_topics_notice_MF: >-
-      Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">inleda diskussionen!</a> Det {currentTopics, plural, one {finns <strong>#</strong> ämne} other {finns <strong>#</strong> ämnen}}. Besökare behöver mer att läsa och svara på  – vi rekommenderar åtminstone {requiredTopics, plural, one {<strong>#</strong> ämne} other {<strong>#</strong> ämnen}}. Enbart personal kan se detta meddelande.
+      Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">inleda diskussionen!</a> Det {currentTopics, plural, one {finns <strong>#</strong> ämne} other {finns <strong>#</strong> ämnen}}. Besökare behöver mer att läsa och svara på – vi rekommenderar minst {requiredTopics, plural, one {<strong>#</strong> ämne} other {<strong>#</strong> ämnen}}. Enbart personal kan se detta meddelande.
     too_few_posts_notice_MF: >-
-      Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">inleda diskussionen!</a> Det {currentPosts, plural, one {finns <strong>#</strong> inlägg} other {finns <strong>#</strong> inlägg}}. Besökare behöver mer att läsa och svara på – vi rekommenderar minst {requiredPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Enbart personal kan se detta meddelande.
+      Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">inleda diskussionen!</a> Det {currentPosts, plural, one {finns <strong>#</strong> inlägg} other {finns <strong>#</strong> inlägg}}. Besökare behöver mer att läsa och svara på – vi rekommenderar minst {requiredPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Enbart personal kan se detta meddelande.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# fel/timma} other  {# fel/timma}}</a> har uppnått webbplatsinställningarnas gräns som är {limit, plural, one {# fel/timma} other {# fel/timma}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fel/minut} other {# fel/minut}}</a> har uppnått webbplatsinställningarnas gräns som är {limit, plural, one {# fel/minut} other {# fel/minut}}."
@@ -1819,6 +1841,7 @@ sv:
       second_factor_backup_title: "Tvåfaktorsreserv"
       second_factor_backup_description: "Ange en av dina reservkoder:"
       second_factor: "Logga in via autentiseringsappen"
+      security_key_description: "När du har din fysiska säkerhetsnyckel eller kompatibla mobil enhet beredd, tryck på knappen Autentisera med knappen Säkerhetsnyckel nedanför."
       security_key_alternative: "Prova ett annat sätt"
       security_key_authenticate: "Autentisera med säkerhetsnyckel"
       security_key_not_allowed_error: "Processen för autentiseringssäkerhetsnyckel dröjde antingen för länge eller avbröts."
@@ -1833,6 +1856,7 @@ sv:
       blank_username_or_password: "Ange din e-postadress eller ditt användarnamn och lösenord."
       reset_password: "Återställ lösenord"
       logging_in: "Loggar in..."
+      previous_sign_up: "Har du redan ett konto?"
       or: "Eller"
       authenticating: "Autentiserar..."
       awaiting_activation: "Ditt konto väntar på aktivering, använd Glömt lösenord-länken för att skicka ett nytt aktiveringsmail."
@@ -1891,6 +1915,7 @@ sv:
       success: "Ditt konto har skapats och du är nu inloggad."
       name_label: "Namn"
       password_label: "Lösenord"
+      existing_user_can_redeem: "Lös in din inbjudan till ett ämne eller en grupp."
     password_reset:
       continue: "Fortsätt till %{site_name}"
     emoji_set:
@@ -2006,10 +2031,17 @@ sv:
         private: "Du nämnde @%{username} men de kommer inte att meddelas eftersom de inte kan se detta personliga meddelande. Du måste bjuda in dem till detta personliga meddelande."
         muted_topic: "Du nämnde @%{username} men de kommer inte att meddelas eftersom de tystade detta ämne."
         not_allowed: "Du nämnde @%{username} men de kommer inte att meddelas eftersom de inte var inbjudna till detta ämne."
+      cannot_see_group_mention:
+        not_mentionable: "Du kan inte nämna gruppen @%{group}."
+        some_not_allowed:
+          one: "Du nämnde @%{group} men bara %{count} medlem kommer att aviseras eftersom de andra medlemmarna inte kan se detta personliga meddelande. Du måste bjuda in dem till detta personliga meddelande."
+          other: "Du nämnde @%{group} men bara %{count} medlemmar kommer att aviseras eftersom de andra medlemmarna inte kan se detta personliga meddelande. Du måste bjuda in dem till detta personliga meddelande."
+        not_allowed: "Du nämnde @%{group} men ingen av dess medlemmar kommer att aviseras eftersom de inte kan se detta personliga meddelande. Du måste bjuda in dem till detta personliga meddelande."
       here_mention:
         one: "Genom att nämna <b>@%{here}</b>kommer du att meddela %{count} användare – är du säker?"
         other: "Genom att nämna <b>@%{here}</b>kommer du att meddela %{count} användare – är du säker?"
       duplicate_link: "Det verkar som din länk till <b>%{domain}</b> redan har lagts in i ämnet av <b>@%{username}</b> i <a href='%{post_url}'> ett svar den %{ago}</a> – är du säker på att du vill lägga upp den igen?"
+      duplicate_link_same_user: "Det verkar som om du redan har lagt upp en länk till <b>%{domain}</b> i det här ämnet i <a href='%{post_url}'>ett svar på %{ago}</a> - är du säker på att du vill lägga upp det igen?"
       reference_topic_title: "SV: %{title}"
       error:
         title_missing: "Du måste ange en rubrik"
@@ -2145,6 +2177,12 @@ sv:
         high_priority:
           one: "%{count} oläst avisering med hög prioritet"
           other: "%{count} olästa aviseringar med hög prioritet"
+        new_message_notification:
+          one: "%{count} avisering om nytt meddelande"
+          other: "%{count} aviseringar om nytt meddelande"
+        new_reviewable:
+          one: "%{count} nytt granskningsbart"
+          other: "%{count} nya granskningsbara"
       title: "aviseringar från @namn-omnämnanden, svar på dina inlägg och ämnen, meddelanden, etc"
       none: "Kan inte ladda aviseringar just nu."
       empty: "Inga aviseringar hittades."
@@ -2265,6 +2303,7 @@ sv:
         other: "<span>%{count}%{plus} resultat för</span><span class='term'>%{term}</span>"
       title: "Sök"
       full_page_title: "Sök"
+      results: "resultat"
       no_results: "Inga resultat hittades."
       no_more_results: "Inga fler resultat hittades."
       post_format: "Nr %{post_number} av %{username}"
@@ -2305,10 +2344,11 @@ sv:
       tips:
         category_tag: "filter efter kategori eller tagg"
         author: "filter efter inläggsförfattare"
-        in: "filter efter metadata (t.ex. i: titel, i:personlig, i:fäst)"
+        in: "filter efter metadata (t.ex. in:title, in:personal, in:pinned)"
         status: "filter efter ämnesstatus"
         full_search: "startar helsidesökning"
         full_search_key: "%{modifier} + Enter"
+        me: "visar bara dina inlägg"
       advanced:
         title: Avancerade filter
         posted_by:
@@ -2515,9 +2555,6 @@ sv:
       move_to_inbox:
         title: "Flytta till inkorgen"
         help: "Flytta tillbaka meddelandet till inkorgen"
-      edit_message:
-        help: "Redigera första inlägget av meddelandet"
-        title: "Redigera"
       defer:
         help: "Märk som oläst"
         title: "Skjut upp"
@@ -2937,6 +2974,7 @@ sv:
       gap:
         one: "visa %{count} dolt svar"
         other: "visa %{count} dolda svar"
+      sr_reply_to: "Svara på inlägg #%{post_number} av @%{username}"
       notice:
         new_user: "Detta är första gången som användaren %{user} har skapat ett inlägg — låt oss välkomna hen till vår gemenskap!"
         returning_user: "Det var ett tag sedan vi såg %{user} — senaste inlägget gjordes %{time}."
@@ -2979,6 +3017,7 @@ sv:
           one: "Tyvärr kan du bara ladda upp %{count} fil åt gången."
           other: "Tyvärr kan du bara ladda upp %{count} filer åt gången."
         upload_not_authorized: "Tyvärr tillåts inte filen som du försöker ladda upp (tillåtna filtyper: %{authorized_extensions})."
+        no_uploads_authorized: "Tyvärr, inga filer får laddas upp."
         image_upload_not_allowed_for_new_user: "Tyvärr kan nya användare inte ladda upp bilder."
         attachment_upload_not_allowed_for_new_user: "Tyvärr kan nya användare inte bifoga filer."
         attachment_download_requires_login: "Tyvärr måste du vara inloggad för att kunna ladda ned bifogade filer."
@@ -3150,6 +3189,7 @@ sv:
       all: "Alla kategorier"
       choose: "kategori&hellip;"
       edit: "Redigera"
+      edit_title: "Redigera denna kategori"
       edit_dialog_title: "Ändra: %{categoryName}"
       view: "Visa ämnen i kategori"
       back: "Tillbaka till kategorin"
@@ -3212,6 +3252,7 @@ sv:
       pending_permission_change_alert: "Du har inte lagt till %{group} för denna kategori. Klicka på följande knapp för att lägga till den."
       images: "Bilder"
       email_in: "Egenvald inkommande e-postadress:"
+      email_in_tooltip: "Du kan skilja på flera e-postadresser med tecknet |."
       email_in_allow_strangers: "Ta emot e-post från anonyma användare utan konton"
       email_in_disabled: "Att skapa nya ämnen via e-post är inaktiverat i webbplatsinställningarna. För att aktivera ämnen skapade via e-post "
       email_in_disabled_click: 'aktiverar du inställningen "inkommande e-post".'
@@ -3236,8 +3277,7 @@ sv:
       this_year: "i år"
       position: "Position på kategorisidan:"
       default_position: "Standardposition"
-      position_disabled: "Kategorier kommer att sorteras efter sin aktivitet. För att ställa in sorteringen av kategorier i den här listan "
-      position_disabled_click: 'aktiverar du inställningen "fasta kategoripositioner".'
+      position_disabled: "Kategorier kommer att visas i aktivitetsordning. För att styra ordningen på kategorier i listor, aktivera inställningen <a href='%{url}'>'fasta kategoripositioner'</a>."
       minimum_required_tags: "Minsta antalet taggar som krävs för ett ämne:"
       default_slow_mode: 'Aktivera "Långsamt läge" för nya ämnen i denna kategori.'
       parent: "Överordnad kategori"
@@ -3827,6 +3867,8 @@ sv:
     second_factor_auth:
       redirect_after_success: "Andra faktorautentiseringen lyckades. Omdirigerar till föregående sida…"
     sidebar:
+      show_sidebar: "Visa sidofältet"
+      hide_sidebar: "Dölj sidofältet"
       unread_count:
         one: "%{count} oläst"
         other: "%{count} olästa"
@@ -3852,15 +3894,25 @@ sv:
             unread_with_count: "Oläst (%{count})"
             archive: "Arkiv"
         tags:
+          links:
+            add_tags:
+              content: "Lägg till taggar"
+              title: "Du har inte lagt till några taggar. Klicka för att komma igång."
           none: "Du har inte lagt till några taggar."
           click_to_get_started: "Klicka här för att komma igång."
           header_link_text: "Taggar"
           header_action_title: "redigera sidofältets taggar"
+          configure_defaults: "Konfigurera standardvärden"
         categories:
+          links:
+            add_categories:
+              content: "Lägg till kategorier"
+              title: "Du har inte lagt till några kategorier. Klicka för att komma igång."
           none: "Du har inte lagt till några kategorier."
           click_to_get_started: "Klicka här för att komma igång."
           header_link_text: "Kategorier"
           header_action_title: "redigera sidofältets kategorier"
+          configure_defaults: "Konfigurera standardvärden"
         community:
           header_link_text: "Community"
           header_action_title: "skapa ett nytt ämne"
@@ -3876,9 +3928,6 @@ sv:
               title: "Alla ämnen"
             faq:
               content: "FAQ"
-            tracked:
-              content: "Följda"
-              title: "Alla följda ämnen"
             groups:
               content: "Grupper"
               title: "Alla grupper"
@@ -3887,7 +3936,8 @@ sv:
               title: "Alla användare"
             my_posts:
               content: "Mina inlägg"
-              title: "Mina inlägg"
+              title: "Min senaste ämnesaktivitet"
+              title_drafts: "Mina utkast som inte har publicerats"
               draft_count:
                 one: "%{count} utkast"
                 other: "%{count} utkast"
@@ -3897,7 +3947,7 @@ sv:
               pending_count: "%{count} väntande"
     welcome_topic_banner:
       title: "Skapa ditt välkomstämne"
-      description: 'Ditt välkomstämne är det första som nya medlemmar kommer att läsa. Tänk på det som din "snabbpresentation" eller "målbeskrivning". Låt alla veta vem den här gruppen är till för, vad de kan förvänta sig att hitta här och vad du vill att de ska göra först.'
+      description: "Ditt välkomstämne är det första som nya medlemmar kommer att läsa. Tänk på det som din \"snabbpresentation\" eller \"målbeskrivning\". Låt alla veta vem den här gruppen är till för, vad de kan förvänta sig att hitta här och vad du vill att de ska göra först."
       button_title: "Börja redigera"
     until: "T.o.m.:"
   admin_js:
@@ -4055,10 +4105,10 @@ sv:
         about: "Redigera dina gruppmedlemskap och -namn här."
         group_members: "Gruppmedlemmar"
         delete: "Radera"
-        delete_confirm: "Ta bort den här gruppen?"
+        delete_confirm: "Är du säker på att du vill ta bort den här gruppen?"
         delete_with_messages_confirm:
-          one: "Om du raderar den här gruppen blir %{count} meddelande ägarlöst, och gruppmedlemmarna får inte längre tillgång till det.<br><br>Är du säker?"
-          other: "Om du raderar den här gruppen blir %{count} meddelanden ägarlösa, och gruppmedlemmarna får inte längre tillgång till dem.<br><br>Är du säker?"
+          one: "Om du raderar den här gruppen blir %{count} meddelande ägarlöst, och gruppmedlemmarna får inte längre tillgång till det."
+          other: "Om du raderar den här gruppen blir %{count} meddelanden ägarlösa, och gruppmedlemmarna får inte längre tillgång till dem."
         delete_failed: "Det går inte att ta bort grupp. Om det här är en automatisk grupp så kan den inte raderas."
         delete_automatic_group: Detta är en automatisk grupp och kan inte raderas.
         delete_owner_confirm: "Vill du ta bort användarprivilegier för '%{username}'?"
@@ -4143,6 +4193,9 @@ sv:
               anonymize: Anonymisera användarkonton.
               delete: Ta bort användarkonton.
               list: Få en lista över användare.
+            user_status:
+              read: Läs användarstatus.
+              update: Uppdatera användarstatistik.
             email:
               receive_emails: Kombinera detta omfång med e-postmottagaren för att bearbeta inkommande e-post.
             badges:
@@ -4172,7 +4225,6 @@ sv:
         go_back: "Tillbaka till listan"
         payload_url: "Försändelse-URL"
         payload_url_placeholder: "https://example.com/postreceive"
-        warn_local_payload_url: "Det verkar som du försöker upprätta en webhook till en lokal URL. Händelser levererade till en lokal adress kan orsaka bieffekter eller oväntad funktion. Vill du fortsätta?"
         secret_invalid: "Hemligheten får inte ha några blanka tecken."
         secret_too_short: "Hemligheten bör vara minst 12 tecken."
         secret_placeholder: "En alternativ sträng som används för att generera signatur"
@@ -4271,6 +4323,7 @@ sv:
         change_settings_short: "Inställningar"
         howto: "Hur installerar jag tillägg?"
         official: "Officiellt tillägg"
+        broken_route: "Det går inte att konfigurera länken till '%{name}'. Se till att annonsblockerare är inaktiverade och försök ladda om sidan."
       backups:
         title: "Säkerhetskopior"
         menu:
@@ -4461,7 +4514,6 @@ sv:
           last_attempt: "Installationsprocessen slutfördes inte, det senaste försöket:"
           remote_branch: "Filialnamn (valfritt)"
           public_key: "Ge följande offentliga nyckel tillträde till lagringsplatsen:"
-          public_key_note: "När du har angett en giltig privat lagringsplats URL ovan genereras det en SSH-nyckel som visas här."
           install: "Installera"
           installed: "Installerad"
           install_popular: "Populära"
@@ -5140,7 +5192,7 @@ sv:
         trust_level_2_users: "Användare med förtroendenivå 2"
         trust_level_3_requirements: "Krav för förtroendenivå 3"
         trust_level_locked_tip: "förtroendenivå är låst, systemet kommer ej att befordra eller degradera användare"
-        trust_level_unlocked_tip: "förtroendenivå är olåst, systemet kan komma att befordra eller degradera användare"
+        trust_level_unlocked_tip: "förtroendenivån är olåst, systemet kan befordra eller degradera användare"
         lock_trust_level: "Lås förtroendenivå"
         unlock_trust_level: "Lås upp förtroendenivå"
         silenced_count: "Tystad"
@@ -5200,23 +5252,23 @@ sv:
         delete_confirm: "Är du säker på att du vill ta bort det här användarfältet?"
         options: "Alternativ"
         required:
-          title: "Krävs vid registrering?"
+          title: "Krävs vid registrering"
           enabled: "krävs"
           disabled: "krävs ej"
         editable:
-          title: "Redigerbar efter registrering?"
+          title: "Redigerbar efter registrering"
           enabled: "redigerbar"
           disabled: "ej redigerbar"
         show_on_profile:
-          title: "Visa på offentlig profil?"
+          title: "Visa på offentlig profil"
           enabled: "visas på profil"
           disabled: "visas ej på profil"
         show_on_user_card:
-          title: "Ska visas på användarkort?"
+          title: "Ska visas på användarkort"
           enabled: "visas på användarkort"
           disabled: "visas inte på användarkort"
         searchable:
-          title: "Sökbart?"
+          title: "Sökbart"
           enabled: "sökbart"
           disabled: "inte sökbart"
         field_types:
@@ -5405,7 +5457,7 @@ sv:
       embedding:
         get_started: "Börja genom att lägga till värden, om du vill bädda in Discourse på en annan hemsida. "
         confirm_delete: "Är du säker på att du vill ta bort värden?"
-        sample: "Klistra in följande HTML-kod på din webbplats för att skapa och bädda in discourse-ämnen. Byt ut <b>REPLACE_ME</b> mot den vägledande URL-en för sidan som du bäddar in den i."
+        sample: "Klistra in följande HTML-kod på din webbplats för att skapa och bädda in Discourse-ämnen. Byt ut <b>REPLACE_ME</b> mot den vägledande URL-en för sidan som du bäddar in den i."
         title: "Inbäddning"
         host: "Tillåtna värdar"
         class_name: "Klassnamn"
@@ -5440,6 +5492,7 @@ sv:
         destination: "Mål"
         copy_to_clipboard: "Kopiera permalänk till urklipp"
         delete_confirm: Är du säker på att du vill ta bort den här permalänken?
+        no_permalinks: "Du har inga permalänkar än. Skapa en ny permalänk ovan för att börja se en lista över dina permalänkar här."
         form:
           label: "Ny:"
           add: "Lägg till"

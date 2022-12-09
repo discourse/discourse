@@ -34,7 +34,9 @@ class TopicView
     :queued_posts_enabled,
     :personal_message,
     :can_review_topic,
-    :page
+    :page,
+    :mentioned_users,
+    :mentions
   )
   alias queued_posts_enabled? queued_posts_enabled
 
@@ -159,6 +161,9 @@ class TopicView
         @topic_custom_fields = Topic.custom_fields_for_ids(@topic[:id].to_i, allowed_topic_fields)
       end
     end
+
+    parse_mentions
+    load_mentioned_users
 
     TopicView.preload(self)
 
@@ -316,8 +321,8 @@ class TopicView
   end
 
   def image_url
-    url = desired_post&.image_url if @post_number > 1
-    url || @topic.image_url
+    return @topic.image_url if @post_number == 1
+    desired_post&.image_url
   end
 
   def filter_posts(opts = {})
@@ -683,6 +688,23 @@ class TopicView
 
   def published_page
     @topic.published_page
+  end
+
+  def parse_mentions
+    @mentions = @posts
+      .to_h { |p| [p.id, p.mentions] }
+      .reject { |_, v| v.empty? }
+  end
+
+  def load_mentioned_users
+    usernames = @mentions.values.flatten.uniq
+    mentioned_users = User.where(username: usernames)
+
+    if SiteSetting.enable_user_status
+      mentioned_users = mentioned_users.includes(:user_status)
+    end
+
+    @mentioned_users = mentioned_users.to_h { |u| [u.username, u] }
   end
 
   protected

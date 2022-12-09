@@ -569,8 +569,8 @@ export default Controller.extend(bufferedProperty("model"), {
       return this.get("model.details").removeAllowedGroup(group);
     },
 
-    deleteTopic() {
-      this.deleteTopic();
+    deleteTopic(opts = {}) {
+      this.deleteTopic(opts);
     },
 
     // Archive a PM (as opposed to archiving a topic)
@@ -616,6 +616,10 @@ export default Controller.extend(bufferedProperty("model"), {
 
     // Post related methods
     replyToPost(post) {
+      if (this.currentUser && this.siteSettings.enable_user_tips) {
+        this.currentUser.hideUserTipForever("post_menu");
+      }
+
       const composerController = this.composer;
       const topic = post ? post.get("topic") : this.model;
       const quoteState = this.quoteState;
@@ -949,7 +953,7 @@ export default Controller.extend(bufferedProperty("model"), {
               bookmarkable_id: post.id,
               bookmarkable_type: "Post",
               auto_delete_preference:
-                this.currentUser.bookmark_auto_delete_preference,
+                this.currentUser.user_option.bookmark_auto_delete_preference,
             }),
           post
         );
@@ -1462,7 +1466,7 @@ export default Controller.extend(bufferedProperty("model"), {
           bookmarkable_id: this.model.id,
           bookmarkable_type: "Topic",
           auto_delete_preference:
-            this.currentUser.bookmark_auto_delete_preference,
+            this.currentUser.user_option.bookmark_auto_delete_preference,
         })
       );
     }
@@ -1638,7 +1642,11 @@ export default Controller.extend(bufferedProperty("model"), {
     this.model.recover();
   },
 
-  deleteTopic(opts) {
+  deleteTopic(opts = {}) {
+    if (opts.force_destroy) {
+      return this.model.destroy(this.currentUser, opts);
+    }
+
     if (
       this.model.views > this.siteSettings.min_topic_views_for_delete_confirm
     ) {
@@ -1889,7 +1897,7 @@ export default Controller.extend(bufferedProperty("model"), {
       if (
         this.siteSettings.automatically_unpin_topics &&
         this.currentUser &&
-        this.currentUser.automatically_unpin_topics
+        this.currentUser.user_option.automatically_unpin_topics
       ) {
         // automatically unpin topics when the user reaches the bottom
         const max = Math.max(...postNumbers);

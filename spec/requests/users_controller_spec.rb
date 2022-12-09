@@ -178,7 +178,7 @@ RSpec.describe UsersController do
         SiteSetting.login_required = true
         get "/u/password-reset/#{token}"
         expect(response.status).to eq(200)
-        expect(CGI.unescapeHTML(response.body)).to include(I18n.t('password_reset.no_token'))
+        expect(CGI.unescapeHTML(response.body)).to include(I18n.t('password_reset.no_token', base_url: Discourse.base_url))
       end
     end
 
@@ -189,7 +189,7 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
 
         expect(CGI.unescapeHTML(response.body))
-          .to include(I18n.t('password_reset.no_token'))
+          .to include(I18n.t('password_reset.no_token', base_url: Discourse.base_url))
 
         expect(response.body).to_not have_tag(:script, with: {
           src: '/assets/application.js'
@@ -202,7 +202,7 @@ RSpec.describe UsersController do
         get "/u/password-reset/#{token}.json"
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["message"]).to eq(I18n.t('password_reset.no_token'))
+        expect(response.parsed_body["message"]).to eq(I18n.t('password_reset.no_token', base_url: Discourse.base_url))
         expect(session[:current_user_id]).to be_blank
       end
     end
@@ -214,7 +214,7 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
 
         expect(CGI.unescapeHTML(response.body))
-          .to include(I18n.t('password_reset.no_token'))
+          .to include(I18n.t('password_reset.no_token', base_url: Discourse.base_url))
 
         expect(response.body).to_not have_tag(:script, with: {
           src: '/assets/application.js'
@@ -227,7 +227,7 @@ RSpec.describe UsersController do
         put "/u/password-reset/evil_trout!.json", params: { password: "awesomeSecretPassword" }
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["message"]).to eq(I18n.t('password_reset.no_token'))
+        expect(response.parsed_body["message"]).to eq(I18n.t('password_reset.no_token', base_url: Discourse.base_url))
         expect(session[:current_user_id]).to be_blank
       end
     end
@@ -2308,9 +2308,9 @@ RSpec.describe UsersController do
           expect(json['user']['id']).to eq user.id
         end
 
-        context 'with experimental sidebar' do
+        context 'with sidebar' do
           before do
-            SiteSetting.enable_experimental_sidebar_hamburger = true
+            SiteSetting.navigation_menu = "sidebar"
           end
 
           it 'does not remove category or tag sidebar section links when params are not present' do
@@ -2426,6 +2426,8 @@ RSpec.describe UsersController do
 
       before do
         DiscoursePluginRegistry.register_auth_provider(plugin_auth_provider)
+        SiteSetting.discourse_connect_url = 'http://localhost'
+        SiteSetting.enable_discourse_connect = true
       end
 
       after do
@@ -2461,6 +2463,75 @@ RSpec.describe UsersController do
 
         expect(response.status).to eq(200)
         expect(user.reload.user_associated_account_ids).to be_blank
+      end
+
+      it 'can create SingleSignOnRecord records' do
+        params = {
+          external_ids: { discourse_connect: 'discourse_connect_uid' },
+        }
+
+        expect { put "/u/#{user.username}.json", params: params, headers: { HTTP_API_KEY: api_key.key } }
+          .to change { SingleSignOnRecord.count }.by(1)
+
+        expect(response.status).to eq(200)
+
+        single_sign_on_record = SingleSignOnRecord.last
+        expect(user.reload.single_sign_on_record).to eq(single_sign_on_record)
+        expect(single_sign_on_record.external_id).to eq('discourse_connect_uid')
+      end
+
+      it 'can update SingleSignOnRecord records' do
+        user = Fabricate(:user)
+        SingleSignOnRecord.create!(user_id: user.id, external_id: 'discourse_connect_uid', last_payload: 'discourse_connect_uid')
+
+        params = {
+          external_ids: { discourse_connect: 'discourse_connect_uid_2' },
+        }
+
+        expect { put "/u/#{user.username}.json", params: params, headers: { HTTP_API_KEY: api_key.key } }
+          .not_to change { SingleSignOnRecord.count }
+
+        expect(response.status).to eq(200)
+        expect(user.reload.single_sign_on_record.external_id).to eq('discourse_connect_uid_2')
+      end
+
+      it 'can delete SingleSignOnRecord records' do
+        user = Fabricate(:user)
+        SingleSignOnRecord.create!(user_id: user.id, external_id: 'discourse_connect_uid', last_payload: 'discourse_connect_uid')
+
+        params = {
+          external_ids: { discourse_connect: nil },
+        }
+
+        expect { put "/u/#{user.username}.json", params: params, headers: { HTTP_API_KEY: api_key.key } }
+          .to change { SingleSignOnRecord.count }.by(-1)
+
+        expect(response.status).to eq(200)
+        expect(user.reload.single_sign_on_record).to be_blank
+      end
+
+      it 'can update SingleSignOnRecord and UserAssociatedAccount records in a single call' do
+        user = Fabricate(:user)
+        user.user_associated_accounts.create!(provider_name: 'pluginauth', provider_uid: 'pluginauth_uid')
+        SingleSignOnRecord.create!(user_id: user.id, external_id: 'discourse_connect_uid', last_payload: 'discourse_connect_uid')
+
+        params = {
+          external_ids: {
+            discourse_connect: 'discourse_connect_uid_2',
+            pluginauth: 'pluginauth_uid_2'
+          },
+        }
+
+        expect { put "/u/#{user.username}.json", params: params, headers: { HTTP_API_KEY: api_key.key } }
+          .to change { SingleSignOnRecord.count + UserAssociatedAccount.count }.by(0)
+
+        expect(response.status).to eq(200)
+        expect(user.reload.single_sign_on_record.external_id).to eq('discourse_connect_uid_2')
+        user_associated_account = UserAssociatedAccount.last
+        expect(user.reload.user_associated_account_ids).to contain_exactly(user_associated_account.id)
+        expect(user_associated_account.provider_name).to eq('pluginauth')
+        expect(user_associated_account.provider_uid).to eq('pluginauth_uid_2')
+        expect(user_associated_account.user_id).to eq(user.id)
       end
 
       it 'returns error if external ID provider does not exist' do
@@ -2576,6 +2647,25 @@ RSpec.describe UsersController do
 
           user1.reload
           expect(user1.user_status).not_to be_nil
+        end
+
+        it "doesn't clear user status if it wasn't sent in the payload" do
+          new_status = {
+            emoji: "off to dentist",
+            description: "tooth",
+          }
+          user.set_status!(new_status[:description], new_status[:emoji])
+          user.reload
+
+          put "/u/#{user.username}.json", params: {
+            bio_raw: "new bio"
+          }
+          expect(response.status).to eq(200)
+
+          user.reload
+          expect(user.user_status).not_to be_nil
+          expect(user.user_status.emoji).to eq(new_status[:emoji])
+          expect(user.user_status.description).to eq(new_status[:description])
         end
 
         context 'when user status is disabled' do
@@ -3577,116 +3667,6 @@ RSpec.describe UsersController do
         .to change { user1.email_tokens.count }.by(-1)
 
       expect(user1.email_tokens.first.email).to eq(user1.email)
-    end
-  end
-
-  describe '#is_local_username' do
-    fab!(:group) { Fabricate(:group, name: "Discourse", mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
-    let(:unmentionable) {
-      Fabricate(:group, name: "Unmentionable", mentionable_level: Group::ALIAS_LEVELS[:nobody])
-    }
-    fab!(:topic) { Fabricate(:topic) }
-    fab!(:allowed_user) { Fabricate(:user) }
-    fab!(:private_topic) { Fabricate(:private_message_topic, user: allowed_user) }
-
-    it "finds the user" do
-      get "/u/is_local_username.json", params: { username: user1.username }
-
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["valid"][0]).to eq(user1.username)
-    end
-
-    it "finds the group" do
-      sign_in(user1)
-      get "/u/is_local_username.json", params: { username: group.name }
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["valid_groups"]).to include(group.name)
-      expect(response.parsed_body["mentionable_groups"].find { |g| g['name'] == group.name }).to be_present
-    end
-
-    it "finds unmentionable groups" do
-      sign_in(user1)
-      get "/u/is_local_username.json", params: { username: unmentionable.name }
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["valid_groups"]).to include(unmentionable.name)
-      expect(response.parsed_body["mentionable_groups"]).to be_blank
-    end
-
-    it "supports multiples usernames" do
-      get "/u/is_local_username.json", params: { usernames: [user1.username, "system"] }
-
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["valid"]).to contain_exactly(user1.username, "system")
-    end
-
-    it "never includes staged accounts" do
-      staged = Fabricate(:user, staged: true)
-
-      get "/u/is_local_username.json", params: { usernames: [staged.username] }
-
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["valid"]).to be_blank
-    end
-
-    it "returns user who cannot see topic" do
-      Guardian.any_instance.expects(:can_see?).with(topic).returns(false)
-
-      get "/u/is_local_username.json", params: {
-        usernames: [user1.username], topic_id: topic.id
-      }
-
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["cannot_see"][user1.username]).to eq("category")
-    end
-
-    it "never returns a user who can see the topic" do
-      get "/u/is_local_username.json", params: {
-        usernames: [user1.username], topic_id: topic.id
-      }
-
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["cannot_see"]).to be_blank
-    end
-
-    it "returns user who cannot see a private topic" do
-      get "/u/is_local_username.json", params: {
-        usernames: [user1.username], topic_id: private_topic.id
-      }
-
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["cannot_see"][user1.username]).to eq("private")
-    end
-
-    it "returns user who was not invited to topic" do
-      sign_in(Fabricate(:admin))
-
-      get "/u/is_local_username.json", params: {
-        usernames: [admin.username], topic_id: private_topic.id
-      }
-
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["cannot_see"][admin.username]).to eq("not_allowed")
-    end
-
-    it "never returns a user who can see the topic" do
-      get "/u/is_local_username.json", params: {
-        usernames: [allowed_user.username], topic_id: private_topic.id
-      }
-
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["cannot_see"]).to be_blank
-    end
-
-    it "returns the appropriate reason why user cannot see the topic" do
-      TopicUser.create!(user_id: user1.id, topic_id: topic.id, notification_level: TopicUser.notification_levels[:muted])
-
-      sign_in(admin)
-      get "/u/is_local_username.json", params: {
-        usernames: [user1.username], topic_id: topic.id
-      }
-
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["cannot_see"][user1.username]).to eq("muted_topic")
     end
   end
 

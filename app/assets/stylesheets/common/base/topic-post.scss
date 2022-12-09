@@ -35,9 +35,9 @@ $quote-share-maxwidth: 150px;
 }
 
 .placeholder-text {
-  margin-left: 11px;
+  margin-left: var(--topic-body-width-padding);
   display: inline-block;
-  width: calc(100% - 11px);
+  width: calc(100% - var(--topic-body-width-padding));
   height: 1.5em;
   margin-bottom: 0.6em;
 }
@@ -196,6 +196,7 @@ $quote-share-maxwidth: 150px;
   img:not(.thumbnail):not(.ytp-thumbnail-image):not(.emoji) {
     max-width: 100%;
     height: auto;
+    display: inline-block; // Ensure dimensions are maintained even after load error
 
     @supports not (aspect-ratio: 1) {
       // (see javascripts/discourse/app/initializers/image-aspect-ratio.js)
@@ -1084,7 +1085,8 @@ blockquote > *:last-child {
 }
 
 .gap {
-  padding: 0.25em 0 0.5em 56px; // 45px (topic avatar) + 11px (margin) = 56px
+  padding: 0.25em 0 0.5em
+    calc(var(--topic-avatar-width) + var(--topic-body-width-padding));
   color: var(--primary-med-or-secondary-high);
   cursor: pointer;
   text-transform: uppercase;
@@ -1120,107 +1122,108 @@ blockquote > *:last-child {
 .small-action {
   display: flex;
   align-items: center;
-  max-width: 758px;
-  border-top: 1px solid var(--primary-low);
-  .topic-avatar {
-    align-self: flex-start;
-    padding: 0.7em 0;
-    border-top: none;
-    margin-right: 11px;
-    flex: 0 0 auto;
-    .d-icon {
-      font-size: 2em;
-      width: 45px;
-      text-align: center;
-      color: var(--primary-low-mid);
-    }
-  }
 
   &.deleted {
     background-color: var(--danger-low-mid);
   }
 
-  .small-action-desc.timegap {
-    color: var(--primary-medium);
+  .topic-avatar,
+  .small-action-desc {
+    border-top: 1px solid var(--primary-low);
+  }
+
+  .topic-avatar {
+    display: flex;
+    align-self: stretch;
+    flex: 0 0 auto;
+    margin: 0;
+    padding-top: 1em;
+    width: var(--topic-avatar-width);
+    justify-content: center;
+    .d-icon {
+      font-size: var(--font-up-3);
+      width: var(--topic-avatar-width);
+      color: var(--primary-low-mid);
+    }
   }
 
   .small-action-desc {
+    box-sizing: border-box;
     display: flex;
     flex-wrap: wrap;
-    flex: 1 1 100%;
-    align-items: center;
-    padding: 1em 0;
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--primary-700);
+    padding: 1em 0 1em var(--topic-body-width-padding);
+    width: calc(
+      var(--topic-body-width) + (var(--topic-body-width-padding) * 2)
+    );
     min-width: 0; // Allows flex container to shrink
 
-    button {
-      align-self: flex-start;
-      font-size: var(--font-up-1);
-      .d-icon {
-        font-size: var(--font-down-1);
-      }
-    }
-
-    .custom-message {
-      flex: 1 1 100%;
-      text-transform: none;
-      font-weight: normal;
-      font-size: var(--font-up-1);
-      order: 12;
-      word-break: break-word;
-      min-width: 0; // Allows content like oneboxes to shrink
-      p {
-        margin-bottom: 0;
-      }
-    }
-    a.trigger-user-card {
-      align-self: stretch;
-    }
     .avatar {
-      margin-right: 0.8em;
+      margin-right: 0.5em;
       float: left;
     }
 
-    > p {
+    p {
       margin: 0;
       padding-right: 0.5em;
-      line-height: var(--line-height-medium);
-      flex: 1 1;
+    }
+  }
+
+  .small-action-contents {
+    flex: 1 1 auto;
+  }
+
+  .small-action-buttons {
+    margin-left: auto;
+  }
+
+  .small-action-custom-message {
+    flex: 1 1 100%;
+    font-weight: normal;
+    margin-top: 0.5em;
+    word-break: break-word;
+    min-width: 0; // Allows content like oneboxes to shrink
+    color: var(--primary);
+    p {
+      margin-bottom: 0;
     }
   }
 
   button {
     background: transparent;
-    border: 0;
-    order: 9;
-    &:last-of-type {
-      margin-left: auto;
-      order: 8;
+    font-size: var(--font-down-1);
+    .d-icon {
+      color: var(--primary-500);
+    }
+
+    .discourse-no-touch & {
+      &:hover,
+      &:focus {
+        background: var(--primary-200);
+        .d-icon {
+          color: var(--primary);
+        }
+      }
     }
   }
 
   &.topic-post-visited {
-    border-top: none;
-
-    + .small-action {
-      border-top: none;
-    }
-
     .topic-post-visited-line {
       text-align: center;
       border-bottom: 1px solid var(--danger-medium);
-      line-height: 0.1em;
-      margin: 1rem 0px;
-      width: 100%;
-
+      z-index: z("base") + 2; // ensures last visit border is on top of post borders
+      line-height: 0;
+      margin: 0;
+      margin-bottom: -1px;
+      color: var(--danger-medium);
+      font-size: var(--font-down-1);
+      width: calc(
+        var(--topic-body-width) + var(--topic-avatar-width) +
+          (var(--topic-body-width-padding) * 2)
+      );
       .topic-post-visited-message {
         background-color: var(--secondary);
-        color: var(--danger-medium);
-        font-size: var(--font-down-1);
-        padding: 0 8px;
+        padding: 0 0.5em;
       }
     }
   }
@@ -1238,35 +1241,15 @@ blockquote > *:last-child {
   }
 }
 
-a.mention {
-  display: inline-block; // https://bugzilla.mozilla.org/show_bug.cgi?id=1656119
-  font-weight: bold;
-  font-size: 0.93em;
-  color: var(--primary-high-or-secondary-low);
-  padding: 0 4px 1px;
-  background: var(--primary-low);
-  border-radius: 8px;
+a.mention,
+a.mention-group {
+  // linked
+  @include mention;
 }
 
 span.mention {
-  font-weight: bold;
-  font-size: 0.93em;
-  color: var(--primary);
-}
-
-a.mention-group {
-  display: inline-block;
-  font-weight: bold;
-  font-size: 0.93em;
-  color: var(--primary);
-
-  &.notify,
-  .small-action-desc & {
-    color: var(--primary-high-or-secondary-low);
-    padding: 2px 4px;
-    background: var(--primary-low);
-    border-radius: 8px;
-  }
+  // unlinked, invalid mention
+  color: var(--primary-high);
 }
 
 .suggested-topics {
@@ -1409,8 +1392,9 @@ a.mention-group {
 
 .signup-cta {
   box-sizing: border-box;
-  max-width: calc(#{$topic-body-width} + 4.5em);
-  padding: 3em 5em 2em 56px; // 45px (topic avatar) + 11px (margin) = 56px
+  max-width: calc(var(--topic-body-width) + 4.5em);
+  padding: 3em 5em 2em
+    calc(var(--topic-avatar-width + var(--topic-body-width-padding)));
   @include breakpoint(mobile-extra-large) {
     padding: 1.5em 1.5em 0.25em;
   }
@@ -1454,11 +1438,11 @@ a.mention-group {
   display: flex;
   width: 100%;
   max-width: calc(
-    #{$topic-body-width} + (#{$topic-body-width-padding} * 2) + #{$topic-avatar-width} -
-      (0.8em * 2)
+    var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+      var(--topic-avatar-width)
   );
-  padding: 0.8em;
-
+  padding: var(--topic-body-width-padding);
+  padding-left: 0;
   &.old {
     background-color: unset;
     color: var(--primary-medium);
@@ -1474,8 +1458,9 @@ a.mention-group {
 
   .d-icon {
     font-size: 2em;
+    width: var(--topic-avatar-width);
     color: var(--primary-high);
-    margin-right: 0.65em;
+    margin-right: var(--topic-body-width-padding);
   }
 }
 
@@ -1559,8 +1544,8 @@ a.mention-group {
   justify-content: center;
   align-items: center;
   max-width: calc(
-    #{$topic-body-width} + (#{$topic-body-width-padding} * 2) + #{$topic-avatar-width} -
-      (0.8em * 2)
+    var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+      var(--topic-avatar-width)
   );
 
   .filtered-avatar {

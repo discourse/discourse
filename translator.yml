@@ -18,6 +18,11 @@ files:
   - source_path: public/503.html
     destination_path: error_pages/503.html
 
+  - source_path: plugins/chat/config/locales/client.en.yml
+    destination_path: plugins/chat/client.yml
+  - source_path: plugins/chat/config/locales/server.en.yml
+    destination_path: plugins/chat/server.yml
+
   - source_path: plugins/discourse-details/config/locales/client.en.yml
     destination_path: plugins/details/client.yml
   - source_path: plugins/discourse-details/config/locales/server.en.yml

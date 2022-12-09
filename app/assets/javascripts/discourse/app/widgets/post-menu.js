@@ -19,7 +19,7 @@ const VIBRATE_DURATION = 5;
 const _builders = {};
 export let apiExtraButtons = {};
 let _extraButtons = {};
-let _buttonsToRemove = {};
+let _buttonsToRemoveCallbacks = {};
 
 export function addButton(name, builder) {
   _extraButtons[name] = builder;
@@ -31,17 +31,13 @@ export function resetPostMenuExtraButtons() {
   }
 
   _extraButtons = {};
-  _buttonsToRemove = {};
+  _buttonsToRemoveCallbacks = {};
 }
 
 export function removeButton(name, callback) {
-  if (callback) {
-    _buttonsToRemove[name] = callback;
-  } else {
-    _buttonsToRemove[name] = () => {
-      return true;
-    };
-  }
+  // 🏌️
+  _buttonsToRemoveCallbacks[name] ??= [];
+  _buttonsToRemoveCallbacks[name].push(callback || (() => true));
 }
 
 function registerButton(name, builder) {
@@ -53,13 +49,9 @@ export function buildButton(name, widget) {
 
   let shouldAddButton = true;
 
-  if (_buttonsToRemove[name]) {
-    shouldAddButton = !_buttonsToRemove[name](
-      attrs,
-      state,
-      siteSettings,
-      settings,
-      currentUser
+  if (_buttonsToRemoveCallbacks[name]) {
+    shouldAddButton = !_buttonsToRemoveCallbacks[name].some((c) =>
+      c(attrs, state, siteSettings, settings, currentUser)
     );
   }
 
@@ -361,7 +353,7 @@ registerButton(
       if (attrs.bookmarkReminderAt) {
         let formattedReminder = formattedReminderTime(
           attrs.bookmarkReminderAt,
-          currentUser.timezone
+          currentUser.user_option.timezone
         );
         title = "bookmarks.created_with_reminder";
         titleOptions.date = formattedReminder;
@@ -555,13 +547,15 @@ export default createWidget("post-menu", {
     Object.values(_extraButtons).forEach((builder) => {
       let shouldAddButton = true;
 
-      if (_buttonsToRemove[name]) {
-        shouldAddButton = !_buttonsToRemove[name](
-          attrs,
-          this.state,
-          this.siteSettings,
-          this.settings,
-          this.currentUser
+      if (_buttonsToRemoveCallbacks[name]) {
+        shouldAddButton = !_buttonsToRemoveCallbacks[name].some((c) =>
+          c(
+            attrs,
+            this.state,
+            this.siteSettings,
+            this.settings,
+            this.currentUser
+          )
         );
       }
 
@@ -717,6 +711,10 @@ export default createWidget("post-menu", {
   },
 
   showMoreActions() {
+    if (this.currentUser && this.siteSettings.enable_user_tips) {
+      this.currentUser.hideUserTipForever("post_menu");
+    }
+
     this.state.collapsed = false;
     const likesPromise = !this.state.likedUsers.length
       ? this.getWhoLiked()
@@ -736,6 +734,10 @@ export default createWidget("post-menu", {
       keyValueStore &&
         keyValueStore.set({ key: "likedPostId", value: attrs.id });
       return this.sendWidgetAction("showLogin");
+    }
+
+    if (this.currentUser && this.siteSettings.enable_user_tips) {
+      this.currentUser.hideUserTipForever("post_menu");
     }
 
     if (this.capabilities.canVibrate && !isTesting()) {

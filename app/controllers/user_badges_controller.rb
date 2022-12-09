@@ -24,11 +24,19 @@ class UserBadgesController < ApplicationController
       user_badges = user_badges.offset(offset.to_i)
     end
 
+    user_badges_topic_ids = user_badges.map { |user_badge| user_badge.post&.topic_id }.compact
+
     user_badges = UserBadges.new(user_badges: user_badges,
                                  username: params[:username],
                                  grant_count: grant_count)
 
-    render_serialized(user_badges, UserBadgesSerializer, root: :user_badge_info, include_long_description: true)
+    render_serialized(
+      user_badges,
+      UserBadgesSerializer,
+      root: :user_badge_info,
+      include_long_description: true,
+      allowed_user_badge_topic_ids: guardian.can_see_topic_ids(topic_ids: user_badges_topic_ids)
+    )
   end
 
   def username
@@ -46,9 +54,12 @@ class UserBadgesController < ApplicationController
       .includes(post: :topic)
       .includes(:granted_by)
 
+    user_badges_topic_ids = user_badges.map { |user_badge| user_badge.post&.topic_id }.compact
+
     render_serialized(
       user_badges,
       DetailedUserBadgeSerializer,
+      allowed_user_badge_topic_ids: guardian.can_see_topic_ids(topic_ids: user_badges_topic_ids),
       root: :user_badges,
     )
   end

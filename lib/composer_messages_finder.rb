@@ -145,7 +145,7 @@ class ComposerMessagesFinder
       templateName: 'dominating-topic',
       wait_for_typing: true,
       extraClass: 'education-message dominating-topic-message',
-      body: PrettyText.cook(I18n.t('education.dominating_topic', percent: (ratio * 100).round))
+      body: PrettyText.cook(I18n.t('education.dominating_topic'))
     }
   end
 

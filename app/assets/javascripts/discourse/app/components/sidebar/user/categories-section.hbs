@@ -21,13 +21,21 @@
           @prefixType={{sectionLink.prefixType}}
           @prefixValue={{sectionLink.prefixValue}}
           @prefixColor={{sectionLink.prefixColor}}
-          @prefixElementColors={{sectionLink.prefixElementColors}} >
+          @prefixElementColors={{sectionLink.prefixElementColors}}
+          @suffixCSSClass={{sectionLink.suffixCSSClass}}
+          @suffixValue={{sectionLink.suffixValue}}
+          @suffixType={{sectionLink.suffixType}} >
         </Sidebar::SectionLink>
       {{/each}}
     {{else}}
-      <Sidebar::SectionMessage>
-        {{html-safe this.noCategoriesText}}
-      </Sidebar::SectionMessage>
+      <Sidebar::SectionLink
+        @linkName="configure-categories"
+        @route="preferences.sidebar"
+        @prefixType="icon"
+        @prefixValue="pencil-alt"
+        @model={{this.currentUser}}
+        @content={{i18n "sidebar.sections.categories.links.add_categories.content"}}
+        @title={{i18n "sidebar.sections.categories.links.add_categories.title"}} />
     {{/if}}
 
     <Sidebar::Common::AllCategoriesSectionLink />

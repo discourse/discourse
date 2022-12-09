@@ -209,13 +209,38 @@ RSpec.describe "tasks/uploads" do
       expect(post2.reload.baked_at).not_to eq_time(1.week.ago)
     end
 
-    it "updates the affected ACLs" do
-      expect_enqueued_with(
-        job: :sync_acls_for_uploads,
-        args: { upload_ids: [upload1.id, upload2.id, upload3.id, upload4.id] },
-      ) do
-        invoke_task
+    it "updates the affected ACLs via the SyncAclsForUploads job" do
+      invoke_task
+      expect(Jobs::SyncAclsForUploads.jobs.last["args"][0]["upload_ids"]).to match_array(
+        [upload1.id, upload2.id, upload3.id, upload4.id]
+      )
+    end
+  end
+
+  describe "uploads:downsize" do
+    def invoke_task
+      capture_stdout do
+        Rake::Task["uploads:downsize"].invoke
       end
+    end
+
+    before do
+      STDIN.stubs(:beep)
+    end
+
+    fab!(:upload) { Fabricate(:image_upload, width: 200, height: 200) }
+
+    it "corrects upload attributes" do
+      upload.update!(thumbnail_height: 0)
+
+      expect { invoke_task }.to change { upload.reload.thumbnail_height }.to(200)
+    end
+
+    it "updates attributes of uploads that are over the size limit" do
+      upload.update!(thumbnail_height: 0)
+      SiteSetting.max_image_size_kb = 0.001 # 1 byte
+
+      expect { invoke_task }.to change { upload.reload.thumbnail_height }.to(200)
     end
   end
 end

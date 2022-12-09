@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class ReviewableFlaggedPost < Reviewable
+  scope :pending_and_default_visible, -> {
+    pending.default_visible
+  }
 
   # Penalties are handled by the modal after the action is performed
   def self.action_aliases
@@ -69,7 +72,7 @@ class ReviewableFlaggedPost < Reviewable
 
     build_action(actions, :ignore, icon: 'external-link-alt')
 
-    if potential_spam? && guardian.can_delete_all_posts?(target_created_by)
+    if potential_spam? && guardian.can_delete_user?(target_created_by)
       delete_user_actions(actions)
     end
 

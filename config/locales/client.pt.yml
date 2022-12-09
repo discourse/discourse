@@ -270,7 +270,6 @@ pt:
       like_count: "Gostos"
       topic_count: "Tópicos"
       post_count: "Publicações"
-      user_count: "Utilizadores"
       active_user_count: "Utilizadores Activos"
       contact: "Contacte-nos"
       contact_info: "No caso de um problema crítico ou de algum assunto urgente que afecte este sítio, por favor contacte-nos em %{contact_info}."
@@ -317,7 +316,6 @@ pt:
       remove: "Remover"
       remove_confirmation: "Tem a certeza que pretende eliminar este rascunho?"
       new_topic: "Novo rascunho de tópico"
-      topic_reply: "Rascunho da resposta"
       abandon:
         confirm: "Tem um rascunho em andamento neste tópico. O que gostaria de fazer com ele?"
         yes_value: "Descartar"
@@ -1021,13 +1019,9 @@ pt:
       no_notifications_body: >
         Você será notificado neste painel sobre atividades diretamente relevantes para você, incluindo respostas aos seus tópicos e postagens, quando alguém <b>@menciona</b> você ou cita você, e responde aos tópicos que você está observando. As notificações também serão enviadas para o seu e-mail quando você não estiver logado por um tempo. <br><br> Procure o %{icon} para decidir sobre quais tópicos, categorias e marcas específicas você deseja ser notificado. Para obter mais informações, consulte suas <a href='%{preferencesUrl}'>preferências de notificação</a>.
       no_notifications_page_title: "Você ainda não possui quaisquer notificações"
-      first_notification: "A sua primeira notificação! Seleccione-a para começar."
       dynamic_favicon: "Mostrar contagens no ícone do navegador"
       skip_new_user_tips:
         description: "Ignorar dicas e emblemas de integração de novos usuários"
-        not_first_time: "Não é a sua primeira vez?"
-        skip_link: "Ignorar estas dicas"
-        read_later: "Vou ler mais tarde."
       theme_default_on_all_devices: "Usar este tema por defeito em todos os meus dispositivos"
       color_scheme_default_on_all_devices: "Definir esquema(s) de cor padrão em todos os meus dispositivos"
       color_scheme: "Esquema de Cores"
@@ -1049,7 +1043,6 @@ pt:
       experimental_sidebar:
         options: "Opções"
         navigation_section: "Navegação"
-        list_destination_default: "Predefinição"
       change: "alterar"
       featured_topic: "Tópico em Destaque"
       moderator: "%{user} é um moderador"
@@ -1156,6 +1149,7 @@ pt:
         profile: "Perfil"
         emails: "E-mails"
         notifications: "Notificações"
+        tracking: "A Seguir"
         categories: "Categorias"
         users: "Utilizadores"
         tags: "Etiquetas"
@@ -1397,6 +1391,7 @@ pt:
       email_in_reply_to: "Incluir um excerto de resposta para publicar nas mensgaens"
       other_settings: "Outros"
       categories_settings: "Categorias"
+      topics_settings: "Tópicos"
       new_topic_duration:
         label: "Considerar tópicos como novos quando"
         not_viewed: "Eu ainda não os vi"
@@ -2090,6 +2085,7 @@ pt:
         other: "<span>%{count}%{plus} resultados para</span><span class='term'>%{term}</span>"
       title: "Pesquisar"
       full_page_title: "Pesquisar"
+      results: "resultados"
       no_results: "Não foram encontrados resultados."
       no_more_results: "Não foram encontrados mais resultados."
       post_format: "#%{post_number} por %{username}"
@@ -2280,9 +2276,6 @@ pt:
       move_to_inbox:
         title: "Mover para Caixa de Entrada"
         help: "Mover mensagem de volta para a Caixa de Entrada"
-      edit_message:
-        help: "Editar primeira publicação da mensagem"
-        title: "Editar"
       defer:
         help: "Marcar como não lida"
         title: "Diferir"
@@ -2931,8 +2924,6 @@ pt:
       review_group_name: "nome do grupo"
       this_year: "este ano"
       default_position: "Posição Padrão"
-      position_disabled: "As categorias serão exibidas por ordem de actividade. Para controlar a ordenação das categorias nas listas,"
-      position_disabled_click: 'ative a definição "categoria em posição fixa".'
       parent: "Categoria Principal"
       notifications:
         title: "alterar o nível de notificação desta categoria"
@@ -3461,8 +3452,6 @@ pt:
               content: "Crachás"
             faq:
               content: "FAQ"
-            tracked:
-              content: "Seguido"
             groups:
               content: "Grupos"
               title: "Todos os grupos"
@@ -3623,7 +3612,6 @@ pt:
         about: "Editar aqui a sua participação e nomes no grupo"
         group_members: "Membros do grupo"
         delete: "Eliminar"
-        delete_confirm: "Eliminar este grupo?"
         delete_failed: "Impossível eliminar grupo. Se se trata de um grupo automático, não pode ser eliminado."
         delete_automatic_group: Este é um grupo automático e não pode ser apagado.
         delete_owner_confirm: "Remover privilégios do proprietário para '%{username}'?"
@@ -4393,7 +4381,6 @@ pt:
         trust_level_2_users: "Utilizadores no Nível de Confiança 2"
         trust_level_3_requirements: "Requisitos do Nível de Confiança 3"
         trust_level_locked_tip: "o Nível de Confiança está bloqueado, o sistema não irá promover ou despromover o utilizador"
-        trust_level_unlocked_tip: "o Nível de Confiança está desbloqueado, o sistema poderá promover ou despromover o utilizador"
         lock_trust_level: "Bloquear Nível de Confiança"
         unlock_trust_level: "Desbloquear Nível de Confiança"
         silenced_count: "Silenciado"
@@ -4446,19 +4433,19 @@ pt:
         delete_confirm: "Tem a certeza que quer eliminar esse campo de utilizador?"
         options: "Opções"
         required:
-          title: "Obrigatório na inscrição?"
+          title: "Obrigatório na inscrição"
           enabled: "obrigatório"
           disabled: "não obrigatório"
         editable:
-          title: "Editável depois da inscrição?"
+          title: "Editável depois da inscrição"
           enabled: "editável"
           disabled: "não editável"
         show_on_profile:
-          title: "Exibir no perfil público?"
+          title: "Exibir no perfil público"
           enabled: "exibido no perfil"
           disabled: "não exibido no perfil"
         show_on_user_card:
-          title: "Mostrar no cartão de utilizador?"
+          title: "Mostrar no cartão de utilizador"
           enabled: "mostrar no cartão de utilizador"
           disabled: "não apresentado no cartão de utilizador"
         field_types:

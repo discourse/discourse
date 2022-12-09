@@ -39,7 +39,10 @@ export default Component.extend({
         key,
         computed("deprecatedArgs", () => {
           deprecated(
-            `The ${key} property is deprecated, but is being used in ${this.layoutName}`
+            `The ${key} property is deprecated, but is being used in ${this.layoutName}`,
+            {
+              id: "discourse.plugin-connector.deprecated-arg",
+            }
           );
 
           return (this.deprecatedArgs || {})[key];
@@ -51,7 +54,7 @@ export default Component.extend({
     this.set("actions", connectorClass.actions);
 
     for (const [name, action] of Object.entries(this.actions)) {
-      this.set(name, action);
+      this.set(name, action.bind(this));
     }
 
     const merged = buildArgsWithDeprecations(args, deprecatedArgs);

@@ -8,22 +8,15 @@ class ThemeStore::GitImporter
   attr_reader :url
 
   def initialize(url, private_key: nil, branch: nil)
-    @url = url
-    if @url.start_with?("https://github.com") && !@url.end_with?(".git")
-      @url = @url.gsub(/\/$/, '')
-      @url += ".git"
-    end
+    @url = GitUrl.normalize(url)
     @temp_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{SecureRandom.hex}"
     @private_key = private_key
     @branch = branch
   end
 
   def import!
-    if @private_key
-      import_private!
-    else
-      import_public!
-    end
+    clone!
+
     if version = Discourse.find_compatible_git_resource(@temp_folder)
       begin
         execute "git", "cat-file", "-e", version
@@ -84,35 +77,115 @@ class ThemeStore::GitImporter
 
   protected
 
-  def import_public!
+  def redirected_uri
+    first_clone_uri = @uri.dup
+    first_clone_uri.path.gsub!(/\/\z/, "")
+    first_clone_uri.path += "/info/refs"
+    first_clone_uri.query = "service=git-upload-pack"
+
+    redirected_uri = FinalDestination.resolve(first_clone_uri.to_s, http_verb: :get)
+
+    if redirected_uri&.path.ends_with?("/info/refs")
+      redirected_uri.path.gsub!(/\/info\/refs\z/, "")
+      redirected_uri.query = nil
+      redirected_uri
+    else
+      @uri
+    end
+  rescue
+    @uri
+  end
+
+  def raise_import_error!
+    raise RemoteTheme::ImportError.new(I18n.t("themes.import_error.git"))
+  end
+
+  def clone!
     begin
-      if @branch.present?
-        Discourse::Utils.execute_command({ "GIT_TERMINAL_PROMPT" => "0" }, "git", "clone", "--single-branch", "-b", @branch, @url, @temp_folder)
-      else
-        Discourse::Utils.execute_command({ "GIT_TERMINAL_PROMPT" => "0" }, "git", "clone", @url, @temp_folder)
-      end
-    rescue RuntimeError
-      raise RemoteTheme::ImportError.new(I18n.t("themes.import_error.git"))
+      @uri = URI.parse(@url)
+    rescue URI::Error
+      raise_import_error!
+    end
+
+    case @uri&.scheme
+    when "http", "https"
+      clone_http!
+    when "ssh"
+      clone_ssh!
+    else
+      raise RemoteTheme::ImportError.new(I18n.t("themes.import_error.git_unsupported_scheme"))
     end
   end
 
-  def import_private!
+  def clone_args(url, config = {})
+    args = ["git"]
+
+    config.each do |key, value|
+      args.concat(['-c', "#{key}=#{value}"])
+    end
+
+    args << "clone"
+
+    if @branch.present?
+      args.concat(['--single-branch', "-b", @branch])
+    end
+
+    args.concat([url, @temp_folder])
+
+    args
+  end
+
+  def clone_http!
+    uri = redirected_uri
+
+    unless ["http", "https"].include?(@uri.scheme)
+      raise_import_error!
+    end
+
+    addresses = FinalDestination::SSRFDetector.lookup_and_filter_ips(uri.host)
+
+    unless addresses.empty?
+      env = { "GIT_TERMINAL_PROMPT" => "0" }
+
+      args = clone_args(
+        uri.to_s,
+        "http.followRedirects" => "false",
+        "http.curloptResolve" => "#{uri.host}:#{uri.port}:#{addresses.join(',')}",
+      )
+
+      begin
+        Discourse::Utils.execute_command(env, *args, timeout: COMMAND_TIMEOUT_SECONDS)
+      rescue RuntimeError
+      end
+    end
+  end
+
+  def clone_ssh!
+    unless @private_key.present?
+      raise_import_error!
+    end
+
+    with_ssh_private_key do |ssh_folder|
+      # Use only the specified SSH key
+      env = { 'GIT_SSH_COMMAND' => "ssh -i #{ssh_folder}/id_rsa -o IdentitiesOnly=yes -o IdentityFile=#{ssh_folder}/id_rsa -o StrictHostKeyChecking=no" }
+      args = clone_args(@url)
+
+      begin
+        Discourse::Utils.execute_command(env, *args, timeout: COMMAND_TIMEOUT_SECONDS)
+      rescue RuntimeError
+        raise_import_error!
+      end
+    end
+  end
+
+  def with_ssh_private_key
     ssh_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_ssh_#{SecureRandom.hex}"
     FileUtils.mkdir_p ssh_folder
 
     File.write("#{ssh_folder}/id_rsa", @private_key)
     FileUtils.chmod(0600, "#{ssh_folder}/id_rsa")
 
-    begin
-      git_ssh_command = { 'GIT_SSH_COMMAND' => "ssh -i #{ssh_folder}/id_rsa -o StrictHostKeyChecking=no" }
-      if @branch.present?
-        Discourse::Utils.execute_command(git_ssh_command, "git", "clone", "--single-branch", "-b", @branch, @url, @temp_folder)
-      else
-        Discourse::Utils.execute_command(git_ssh_command, "git", "clone", @url, @temp_folder)
-      end
-    rescue RuntimeError
-      raise RemoteTheme::ImportError.new(I18n.t("themes.import_error.git"))
-    end
+    yield ssh_folder
   ensure
     FileUtils.rm_rf ssh_folder
   end

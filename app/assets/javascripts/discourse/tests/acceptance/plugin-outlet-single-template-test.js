@@ -6,20 +6,17 @@ import {
 import { hbs } from "ember-cli-htmlbars";
 import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
-import Ember from "ember";
+import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 
-const CONNECTOR =
-  "javascripts/single-test/connectors/user-profile-primary/hello";
+const CONNECTOR_MODULE =
+  "discourse/theme-12/templates/connectors/user-profile-primary/hello";
 
 acceptance("Plugin Outlet - Single Template", function (needs) {
   needs.hooks.beforeEach(() => {
-    Ember.TEMPLATES[
-      CONNECTOR
-    ] = hbs`<span class='hello-username'>{{model.username}}</span>`;
-  });
-
-  needs.hooks.afterEach(() => {
-    delete Ember.TEMPLATES[CONNECTOR];
+    registerTemporaryModule(
+      CONNECTOR_MODULE,
+      hbs`<span class='hello-username'>{{model.username}}</span>`
+    );
   });
 
   test("Renders a template into the outlet", async function (assert) {

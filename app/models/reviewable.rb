@@ -431,6 +431,10 @@ class Reviewable < ActiveRecord::Base
     list_for(user).count
   end
 
+  def self.unseen_reviewable_count(user)
+    self.unseen_list_for(user).count
+  end
+
   def self.list_for(
     user,
     ids: nil,
@@ -447,7 +451,8 @@ class Reviewable < ActiveRecord::Base
     from_date: nil,
     to_date: nil,
     additional_filters: {},
-    preload: true
+    preload: true,
+    include_claimed_by_others: true
   )
     order = case sort_order
             when 'score_asc'
@@ -518,13 +523,18 @@ class Reviewable < ActiveRecord::Base
       )
     end
 
+    if !include_claimed_by_others
+      result = result
+        .joins("LEFT JOIN reviewable_claimed_topics rct ON reviewables.topic_id = rct.topic_id")
+        .where("rct.user_id IS NULL OR rct.user_id = ?", user.id)
+    end
     result = result.limit(limit) if limit
     result = result.offset(offset) if offset
     result
   end
 
   def self.unseen_list_for(user, preload: true, limit: nil)
-    results = list_for(user, preload: preload, limit: limit)
+    results = list_for(user, preload: preload, limit: limit, include_claimed_by_others: false)
     if user.last_seen_reviewable_id
       results = results.where(
         "reviewables.id > ?",
@@ -535,7 +545,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.user_menu_list_for(user, limit: 30)
-    list_for(user, limit: limit, status: :pending).to_a
+    list_for(user, limit: limit, status: :pending, include_claimed_by_others: false).to_a
   end
 
   def self.basic_serializers_for_list(reviewables, user)

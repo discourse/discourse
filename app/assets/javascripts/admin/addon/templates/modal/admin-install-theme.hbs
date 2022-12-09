@@ -61,25 +61,15 @@
             <div class="label">{{i18n "admin.customize.theme.remote_branch"}}</div>
             <Input @value={{this.branch}} placeholder="main" />
           </div>
+        {{/if}}
 
-          <div class="check-private">
-            <label>
-              <Input @type="checkbox" @checked={{this.privateChecked}} />
-              {{i18n "admin.customize.theme.is_private"}}
-            </label>
-          </div>
-          {{#if this.showPublicKey}}
-            <div class="public-key">
-              <div class="label">{{i18n "admin.customize.theme.public_key"}}</div>
-              <div class="public-key-text-wrapper">
-                <Textarea class="public-key-value" readonly={{true}} @value={{this.publicKey}} />                <CopyButton @selector="textarea.public-key-value" />
-              </div>
+        {{#if this.showPublicKey}}
+          <div class="public-key">
+            <div class="label">{{i18n "admin.customize.theme.public_key"}}</div>
+            <div class="public-key-text-wrapper">
+              <Textarea class="public-key-value" readonly={{true}} @value={{this.publicKey}} />                <CopyButton @selector="textarea.public-key-value" />
             </div>
-          {{else}}
-            {{#if this.privateChecked}}
-              <div class="public-key-note">{{i18n "admin.customize.theme.public_key_note"}}</div>
-            {{/if}}
-          {{/if}}
+          </div>
         {{/if}}
       </div>
     {{/if}}

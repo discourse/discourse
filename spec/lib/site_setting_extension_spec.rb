@@ -771,7 +771,8 @@ RSpec.describe SiteSettingExtension do
   describe '.all_settings' do
     describe 'uploads settings' do
       it 'should return the right values' do
-        system_upload = Fabricate(:upload, id: -999)
+        negative_upload_id = [(Upload.minimum(:id) || 0) - 1, -10].min
+        system_upload = Fabricate(:upload, id: negative_upload_id)
         settings.setting(:logo, system_upload.id, type: :upload)
         settings.refresh!
         setting = settings.all_settings.last
@@ -829,26 +830,6 @@ RSpec.describe SiteSettingExtension do
         settings.some_upload = upload2
 
         expect(settings.some_upload).to eq(upload2)
-      end
-    end
-  end
-
-  describe 'sidebar category site settings' do
-    describe '.all_settings' do
-      before do
-        settings.setting(:test_setting, 88, category: :sidebar)
-      end
-
-      it 'does not include the sidebar category setting when enable_experimental_sidebar_hamburger site setting is disabled' do
-        SiteSetting.enable_experimental_sidebar_hamburger = false
-
-        expect(settings.all_settings.detect { |s| s[:setting] == :test_setting }).to eq(nil)
-      end
-
-      it 'includes the sidebar category setting when enable_experimental_sidebar_hamburger site setting is enabled' do
-        SiteSetting.enable_experimental_sidebar_hamburger = true
-
-        expect(settings.all_settings.detect { |s| s[:setting] == :test_setting }[:setting]).to eq(:test_setting)
       end
     end
   end

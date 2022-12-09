@@ -168,6 +168,14 @@ class UsersController < ApplicationController
       attributes[:user_associated_accounts] = []
 
       params[:external_ids].each do |provider_name, provider_uid|
+        if provider_name == 'discourse_connect'
+          raise Discourse::InvalidParameters.new(:external_ids) unless SiteSetting.enable_discourse_connect
+
+          attributes[:discourse_connect] = { external_id: provider_uid }
+
+          next
+        end
+
         authenticator = Discourse.enabled_authenticators.find { |a| a.name == provider_name }
         raise Discourse::InvalidParameters.new(:external_ids) if !authenticator&.is_managed?
 
@@ -487,93 +495,6 @@ class UsersController < ApplicationController
     else
       render_json_error(I18n.t("invite.disabled_errors.invalid_access"))
     end
-  end
-
-  def is_local_username
-    usernames = params[:usernames] if params[:usernames].present?
-    usernames = [params[:username]] if params[:username].present?
-
-    raise Discourse::InvalidParameters.new(:usernames) if !usernames.kind_of?(Array) || usernames.size > 20
-
-    groups = Group.where(name: usernames).pluck(:name)
-    mentionable_groups =
-      if current_user
-        Group.mentionable(current_user, include_public: false)
-          .where(name: usernames)
-          .pluck(:name, :user_count)
-          .map do |name, user_count|
-          {
-            name: name,
-            user_count: user_count
-          }
-        end
-      end
-
-    usernames -= groups
-    usernames.each(&:downcase!)
-
-    users = User
-      .where(staged: false, username_lower: usernames)
-      .index_by(&:username_lower)
-
-    cannot_see = {}
-    here_count = nil
-
-    topic_id = params[:topic_id]
-    if topic_id.present? && topic = Topic.find_by(id: topic_id)
-      topic_muted_by = TopicUser
-        .where(topic: topic)
-        .where(user_id: users.values.map(&:id))
-        .where(notification_level: TopicUser.notification_levels[:muted])
-        .pluck(:user_id)
-        .to_set
-
-      if topic.private_message?
-        topic_allowed_user_ids = TopicAllowedUser
-          .where(topic: topic)
-          .where(user_id: users.values.map(&:id))
-          .pluck(:user_id)
-          .to_set
-
-        topic_allowed_group_ids = TopicAllowedGroup
-          .where(topic: topic)
-          .pluck(:group_id)
-          .to_set
-      end
-
-      usernames.each do |username|
-        user = users[username]
-        next if user.blank?
-
-        cannot_see_reason = nil
-        if !user.guardian.can_see?(topic)
-          cannot_see_reason = topic.private_message? ? :private : :category
-        elsif topic_muted_by.include?(user.id)
-          cannot_see_reason = :muted_topic
-        elsif topic.private_message? && !topic_allowed_user_ids.include?(user.id) && !user.group_ids.any? { |group_id| topic_allowed_group_ids.include?(group_id) }
-          cannot_see_reason = :not_allowed
-        end
-
-        if !guardian.is_staff? && cannot_see_reason.present? && cannot_see_reason != :private && cannot_see_reason != :category
-          cannot_see_reason = nil # do not leak private information
-        end
-
-        cannot_see[username] = cannot_see_reason if cannot_see_reason.present?
-      end
-
-      if usernames.include?(SiteSetting.here_mention) && guardian.can_mention_here?
-        here_count = PostAlerter.new.expand_here_mention(topic.first_post, exclude_ids: [current_user.id]).size
-      end
-    end
-
-    render json: {
-      valid: users.keys,
-      valid_groups: groups,
-      mentionable_groups: mentionable_groups,
-      cannot_see: cannot_see,
-      here_count: here_count,
-      max_users_notified_per_group_mention: SiteSetting.max_users_notified_per_group_mention
-    }
   end
 
   def render_available_true
@@ -1916,7 +1837,7 @@ class UsersController < ApplicationController
       @user = User.find(user_id) if user_id > 0
     end
 
-    @error = I18n.t('password_reset.no_token') if !@user
+    @error = I18n.t('password_reset.no_token', base_url: Discourse.base_url) if !@user
   end
 
   def respond_to_suspicious_request
@@ -1970,7 +1891,7 @@ class UsersController < ApplicationController
     permitted.concat UserUpdater::TAG_NAMES.keys
     permitted << UserUpdater::NOTIFICATION_SCHEDULE_ATTRS
 
-    if SiteSetting.enable_experimental_sidebar_hamburger
+    if !SiteSetting.legacy_navigation_menu?
       if params.has_key?(:sidebar_category_ids) && params[:sidebar_category_ids].blank?
         params[:sidebar_category_ids] = []
       end
@@ -1987,6 +1908,7 @@ class UsersController < ApplicationController
     end
 
     if SiteSetting.enable_user_status
+      permitted << :status
       permitted << { status: [:emoji, :description, :ends_at] }
     end
 

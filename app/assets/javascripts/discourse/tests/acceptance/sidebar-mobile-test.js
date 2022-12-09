@@ -9,8 +9,7 @@ acceptance("Sidebar - Mobile - User with sidebar enabled", function (needs) {
   needs.user();
 
   needs.settings({
-    enable_experimental_sidebar_hamburger: true,
-    enable_sidebar: true,
+    navigation_menu: "sidebar",
   });
 
   needs.mobileView();

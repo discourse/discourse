@@ -41,6 +41,7 @@ function createHelper(
     deprecated("`whiteList` has been replaced with `allowList`", {
       since: "2.6.0.beta.4",
       dropFrom: "2.7.0",
+      id: "discourse.markdown-it.whitelist",
     });
     helper.allowList(info);
   };
@@ -385,6 +386,12 @@ function setupMarkdownEngine(opts, featureConfig) {
 
   opts.pluginCallbacks.forEach(([feature, callback]) => {
     if (featureConfig[feature]) {
+      if (callback === null || callback === undefined) {
+        // eslint-disable-next-line no-console
+        console.log("BAD MARKDOWN CALLBACK FOUND");
+        // eslint-disable-next-line no-console
+        console.log(`FEATURE IS: ${feature}`);
+      }
       opts.engine.use(callback);
     }
   });
@@ -539,6 +546,8 @@ export function setup(opts, siteSettings, state) {
     markdownTypographerQuotationMarks:
       siteSettings.markdown_typographer_quotation_marks,
     markdownLinkifyTlds: siteSettings.markdown_linkify_tlds,
+    enableExperimentalHashtagAutocomplete:
+      siteSettings.enable_experimental_hashtag_autocomplete,
   };
 
   const markdownitOpts = {
