@@ -32,13 +32,13 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
     )
   end
 
-  xit "searches for categories and tags with # and prioritises categories in the results" do
+  it "searches for categories and tags with # and prioritises categories in the results" do
     visit_topic_and_initiate_autocomplete
     hashtag_results = page.all(".hashtag-autocomplete__link", count: 2)
     expect(hashtag_results.map(&:text)).to eq(["Cool Category", "cooltag x 325"])
   end
 
-  xit "begins showing results as soon as # is pressed based on categories and tags topic_count" do
+  it "begins showing results as soon as # is pressed based on categories and tags topic_count" do
     visit_topic_and_initiate_autocomplete(initiation_text: "#", expected_count: 5)
     hashtag_results = page.all(".hashtag-autocomplete__link")
     expect(hashtag_results.map(&:text)).to eq(
@@ -52,7 +52,7 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
     )
   end
 
-  xit "cooks the selected hashtag clientside with the correct url and icon" do
+  it "cooks the selected hashtag clientside with the correct url and icon" do
     visit_topic_and_initiate_autocomplete
     hashtag_results = page.all(".hashtag-autocomplete__link", count: 2)
     hashtag_results[0].click
@@ -73,7 +73,7 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
       HTML
   end
 
-  xit "cooks the hashtags for tag and category correctly serverside when the post is saved to the database" do
+  it "cooks the hashtags for tag and category correctly serverside when the post is saved to the database" do
     topic_page.visit_topic_and_open_composer(topic)
     expect(topic_page).to have_expanded_composer
     topic_page.type_in_composer("this is a #cool-cat category and a #cooltag tag")

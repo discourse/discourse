@@ -172,7 +172,7 @@ jobs:
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
-        run: bin/rspec spec/system --format documentation --profile
+        run: bin/rspec spec/system --format documentation --profile --seed=63112
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
