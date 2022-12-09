@@ -282,6 +282,14 @@ export default Controller.extend({
       return "composer.create_pm";
     }
 
+    if(modelAction == Composer.REPLY) {
+      if(this.model.meta_tag == 'sponsor') {
+        return 'composer.reply_sponsor'
+      }
+      if(this.model.meta_tag == 'opinion') {
+        return 'composer.reply_opinion'
+      }
+    }
     return SAVE_LABELS[modelAction];
   },
 

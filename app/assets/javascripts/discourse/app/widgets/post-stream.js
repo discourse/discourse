@@ -26,6 +26,7 @@ export function addPostTransformCallback(callback) {
 }
 
 let _enabled = true;
+const _PLACEHOLDER = "No summary have been provided yet. Be the first to add summary."
 const DAY = 1000 * 60 * 60 * 24;
 
 const _dontCloak = {};
@@ -317,7 +318,7 @@ export default createWidget("post-stream", {
     if (!result.length) {
       return [
         new RawHtml({
-          html: "<div><p>No summary have been provided yet. Be the first to add summary.</p></div>"
+          html: `<div style='padding-right: 8rem;'><p>${_PLACEHOLDER}</p></div>`
         })
       ]
     }

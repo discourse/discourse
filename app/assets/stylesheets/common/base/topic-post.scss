@@ -1270,6 +1270,7 @@ a.mention-group {
 }
 
 .suggested-topics {
+  display: none;
   .topics {
     padding-bottom: 15px;
   }
@@ -1699,7 +1700,6 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
 }
 
 .user-generated-tags {
-
   ul {
     display: inline;
   }
@@ -1712,4 +1712,11 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
   li:last-child::after {
     content: "";
   }
+}
+
+.nested-reply {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
 }
