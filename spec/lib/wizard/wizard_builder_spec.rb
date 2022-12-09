@@ -79,9 +79,10 @@ RSpec.describe Wizard::Builder do
       fields = privacy_step.fields
       login_required_field = fields.first
       invite_only_field = fields.second
-      must_approve_users_field = fields.last
+      must_approve_users_field = fields.third
 
-      expect(fields.length).to eq(4)
+      count = defined?(::Chat) ? 5 : 4
+      expect(fields.length).to eq(count)
       expect(login_required_field.id).to eq('login_required')
       expect(login_required_field.value).to eq(true)
       expect(invite_only_field.id).to eq('invite_only')
