@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe CategoryHashtagDataSource do
-  fab!(:parent_category) { Fabricate(:category, slug: "fun") }
+  fab!(:parent_category) { Fabricate(:category, slug: "fun", topic_count: 2) }
   fab!(:category1) do
     Fabricate(:category, slug: "random", topic_count: 12, parent_category: parent_category)
   end
@@ -71,7 +71,7 @@ RSpec.describe CategoryHashtagDataSource do
   describe "#search_without_term" do
     it "returns distinct categories ordered by topic_count" do
       expect(described_class.search_without_term(guardian, 5).map(&:slug)).to eq(
-        ["books", "movies", "casual", "random", "#{uncategorized_category.slug}"],
+        ["books", "movies", "casual", "random", "fun"],
       )
     end
 
