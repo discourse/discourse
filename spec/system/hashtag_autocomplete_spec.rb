@@ -32,7 +32,7 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
     )
   end
 
-  xit "searches for categories and tags with # and prioritises categories in the results" do
+  it "searches for categories and tags with # and prioritises categories in the results" do
     visit_topic_and_initiate_autocomplete
     hashtag_results = page.all(".hashtag-autocomplete__link", count: 2)
     expect(hashtag_results.map(&:text)).to eq(["Cool Category", "cooltag x 325"])
