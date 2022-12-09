@@ -440,4 +440,106 @@ RSpec.describe WebhooksController do
       expect(email_log.reload.bounced).to eq(false)
     end
   end
+
+  describe "#aws" do
+    let(:payload) do
+      {
+        "Type" => "Notification",
+        "Message" => {
+          "notificationType" => "Bounce",
+          "bounce": {
+            "bounceType" => "Permanent",
+            "reportingMTA" => "dns; email.example.com",
+            "bouncedRecipients": [
+              {
+                "emailAddress" => email,
+                "status" => "5.1.1",
+                "action" => "failed",
+                "diagnosticCode" => "smtp; 550 5.1.1 <#{email}>... User"
+              }
+            ],
+            "bounceSubType" => "General",
+            "timestamp" => "2016-01-27T14:59:38.237Z",
+            "feedbackId" => "00000138111222aa-33322211-cccc-cccc-cccc-ddddaaaa068a-000000",
+            "remoteMtaIp" => "127.0.2.0"
+          },
+          "mail": {
+            "timestamp" => "2016-01-27T14:59:38.237Z",
+            "source" => "john@example.com",
+            "sourceArn" => "arn:aws:ses:us-east-1:888888888888:identity/example.com",
+            "sourceIp" => "127.0.3.0",
+            "sendingAccountId" => "123456789012",
+            "callerIdentity" => "IAM_user_or_role_name",
+            "messageId" => message_id,
+            "destination" => [
+              email,
+              "jane@example.com",
+              "mary@example.com",
+              "richard@example.com"],
+            "headersTruncated" => false,
+            "headers" => [
+            {
+              "name" => "From",
+              "value" => "\"John Doe\" <john@example.com>"
+            },
+            {
+              "name" => "To",
+              "value" => "\"Test\" <#{email}>, \"Jane Doe\" <jane@example.com>, \"Mary Doe\" <mary@example.com>, \"Richard Doe\" <richard@example.com>"
+            },
+            {
+              "name" => "Message-ID",
+              "value" => message_id
+            },
+            {
+              "name" => "Subject",
+              "value" => "Hello"
+            },
+            {
+              "name" => "Content-Type",
+              "value" => "text/plain; charset=\"UTF-8\""
+            },
+            {
+              "name" => "Content-Transfer-Encoding",
+              "value" => "base64"
+            },
+            {
+              "name" => "Date",
+              "value" => "Wed, 27 Jan 2016 14:05:45 +0000"
+            }
+            ],
+            "commonHeaders" => {
+              "from" => [
+                  "John Doe <john@example.com>"
+              ],
+              "date" => "Wed, 27 Jan 2016 14:05:45 +0000",
+              "to" => [
+                  "\"Test\" <#{email}>, Jane Doe <jane@example.com>, Mary Doe <mary@example.com>, Richard Doe <richard@example.com>"
+              ],
+              "messageId" => message_id,
+              "subject" => "Hello"
+            }
+          }
+        }.to_json
+      }.to_json
+    end
+
+    before do
+      Jobs.run_immediately!
+    end
+
+    it "works" do
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      require "aws-sdk-sns"
+      Aws::SNS::MessageVerifier.any_instance.stubs(:authentic?).with(payload).returns(true)
+
+      post "/webhooks/aws.json", headers: { "RAW_POST_DATA" => payload }
+      expect(response.status).to eq(200)
+
+      email_log.reload
+      expect(email_log.bounced).to eq(true)
+      expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
+    end
+  end
 end
