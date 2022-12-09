@@ -38,7 +38,7 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
     expect(hashtag_results.map(&:text)).to eq(["Cool Category", "cooltag x 325"])
   end
 
-  xit "begins showing results as soon as # is pressed based on categories and tags topic_count" do
+  it "begins showing results as soon as # is pressed based on categories and tags topic_count" do
     visit_topic_and_initiate_autocomplete(initiation_text: "#", expected_count: 5)
     hashtag_results = page.all(".hashtag-autocomplete__link")
     expect(hashtag_results.map(&:text)).to eq(
