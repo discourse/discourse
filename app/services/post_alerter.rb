@@ -126,6 +126,7 @@ class PostAlerter
 
       if mentioned_users
         mentioned_users = only_allowed_users(mentioned_users, post)
+        mentioned_users = mentioned_users - pm_watching_users(post)
         notified += notify_users(mentioned_users - notified, :mentioned, post, mentioned_opts)
       end
 
@@ -642,6 +643,14 @@ class PostAlerter
     users
   end
 
+  def pm_watching_users(post)
+    return [] if !post.topic.private_message?
+    directly_targeted_users(post).filter do |u|
+      notification_level = TopicUser.get(post.topic, u)&.notification_level
+      notification_level == TopicUser.notification_levels[:watching]
+    end
+  end
+
   def notify_pm_users(post, reply_to_user, quoted_users, notified)
     return [] unless post.topic
 
@@ -660,8 +669,7 @@ class PostAlerter
     users = directly_targeted_users(post).reject { |u| notified.include?(u) }
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
     users.each do |user|
-      notification_level = TopicUser.get(post.topic, user)&.notification_level
-      if reply_to_user == user || notification_level == TopicUser.notification_levels[:watching] || user.staged?
+      if reply_to_user == user || pm_watching_users(post).include?(user) || user.staged?
         create_notification(user, Notification.types[:private_message], post, skip_send_email_to: emails_to_skip_send)
       end
     end
