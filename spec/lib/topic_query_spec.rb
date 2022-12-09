@@ -921,7 +921,7 @@ RSpec.describe TopicQuery do
 
     context 'when preloading associations' do
       it "preloads associations" do
-        TopicList.topic_preloader_associations << :first_post
+        DiscoursePluginRegistry.register_topic_preloader_association(:first_post, Plugin::Instance.new)
 
         topic = Fabricate(:topic)
         Fabricate(:post, topic: topic)
@@ -931,7 +931,7 @@ RSpec.describe TopicQuery do
         expect(new_topic.association(:first_post).loaded?).to eq(true)   # Testing a user-defined preloaded association
         expect(new_topic.association(:user).loaded?).to eq(false)        # Testing the negative
 
-        TopicList.topic_preloader_associations.clear
+        DiscoursePluginRegistry.reset_register!(:topic_preloader_associations)
       end
     end
 
