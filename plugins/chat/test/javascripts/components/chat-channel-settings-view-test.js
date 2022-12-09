@@ -119,7 +119,7 @@ module(
       },
     });
 
-    componentTest("allow channel wide mentions", {
+    componentTest("hide channel wide mentions", {
       template: hbs`{{chat-channel-settings-view channel=channel}}`,
 
       beforeEach() {
@@ -127,23 +127,21 @@ module(
       },
 
       async test(assert) {
-        pretender.put(`/chat/api/chat_channels/${this.channel.id}.json`, () => {
-          return [
-            200,
-            { "Content-Type": "application/json" },
-            {
-              allow_channel_wide_mentions: false,
-            },
-          ];
-        });
+        assert
+          .dom(".channel-settings-view__channel-wide-mentions-selector")
+          .doesNotExist();
+      },
+    });
 
-        const sk = selectKit(
-          ".channel-settings-view__channel-wide-mentions-selector"
-        );
-        await sk.expand();
-        await sk.selectRowByName("No");
+    componentTest("hide channel auto join", {
+      template: hbs`{{chat-channel-settings-view channel=channel}}`,
 
-        assert.equal(sk.header().value(), "false");
+      beforeEach() {
+        this.set("channel", fabricators.chatChannel());
+      },
+
+      async test(assert) {
+        assert.dom(".channel-settings-view__auto-join-selector").doesNotExist();
       },
     });
   }
@@ -253,7 +251,7 @@ module(
       },
     });
 
-    componentTest("allow channel wide mentions", {
+    componentTest("hide channel wide mentions", {
       template: hbs`{{chat-channel-settings-view channel=channel}}`,
 
       beforeEach() {
@@ -269,6 +267,23 @@ module(
         assert
           .dom(".channel-settings-view__channel-wide-mentions-selector")
           .doesNotExist();
+      },
+    });
+
+    componentTest("hide channel auto join", {
+      template: hbs`{{chat-channel-settings-view channel=channel}}`,
+
+      beforeEach() {
+        this.set(
+          "channel",
+          fabricators.chatChannel({
+            chatable_type: CHATABLE_TYPES.directMessageChannel,
+          })
+        );
+      },
+
+      async test(assert) {
+        assert.dom(".channel-settings-view__auto-join-selector").doesNotExist();
       },
     });
   }

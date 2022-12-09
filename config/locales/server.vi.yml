@@ -541,8 +541,6 @@ vi:
   post:
     image_placeholder:
       broken: "Hình ảnh này bị hỏng"
-    cannot_permanently_delete:
-      many_posts: "Bạn không thể xóa vĩnh viễn chủ đề này vì có những bài viết khác."
   rate_limiter:
     slow_down: "Bạn đã thực hiện hành động này quá nhiều lần, vui lòng thử lại sau."
     too_many_requests: "Bạn đã thực hiện hành động này quá nhiều lần. Vui lòng đợi %{time_left} trước khi thử lại."
@@ -1145,7 +1143,6 @@ vi:
     enable_github_logins: "Bật xác thực GitHub, yêu cầu github_client_id và github_client_secret. Xem <a href='https://meta.discourse.org/t/13745' target='_blank'>Định cấu hình đăng nhập GitHub cho Discourse</a>."
     github_client_id: "Id ứng dụng khách để xác thực GitHub, đã đăng ký tại <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "Bí mật ứng dụng khách để xác thực GitHub, đã đăng ký tại <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
-    maximum_backups: "Số bản sao lưu tối đa lưu trong đĩa cứng. Những bản sao lưu cũ sẽ được xóa tự động"
     automatic_backups_enabled: "Chạy sao lưu tự động như cấu hình trong tần số sao lưu"
     s3_backup_bucket: "Địa chỉ tách biệt lưu trữ backup. LƯU Ý: đây phải là địa chỉ được giành riêng."
     backup_time_of_day: "Thời gian theo ngày UTC khi backup."
@@ -1616,7 +1613,6 @@ vi:
     subject_template: "[%{email_prefix}] có bản cập nhật"
   flag_reasons:
     off_topic: "Bài viết của bạn được đánh dấu là **off-topic**: cộng đồng cảm thấy nó không phù hợp cho chủ đề này, được xác định bởi tiêu đề và bài viết đầu tiên."
-    inappropriate: "Bài viết của bạn được đánh dấu là **inappropriate**: cộng đồng cảm thấy đó là sự xúc phạm, lăng mạ, hoặc vi phạm [nội quy diễn đàn](%{base_path}/guidelines)."
     spam: "Bài viết của bạn được đánh dấu là **spam**: cộng đồng cảm thấy đó là một quảng cáo, khuyến mại thay vì một nội dung hữu ích như mong đợi."
     notify_moderators: "Bài viết của bạn được đánh dấu là **for moderator attention**: cộng đồng cảm thấy có điều gì đó cần được BQT xét duyệt."
     responder:

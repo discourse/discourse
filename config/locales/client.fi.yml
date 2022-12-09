@@ -1277,7 +1277,6 @@ fi:
         use: "Käytä Authenticator-sovellusta"
         enforced_notice: "Kaksivaiheinen tunnistus täytyy ottaa käyttöön, jotta voit käyttää sivustoa."
         disable: "Poista käytöstä"
-        disable_confirm: "Oletko varma, että haluat poistaa kaikki kaksivaiheiset tunnistustavat käytöstä?"
         save: "Tallenna"
         edit: "Muokkaa"
         edit_title: "Muokkaa todentajaa"
@@ -1365,7 +1364,6 @@ fi:
         authenticated: "%{provider} on todentanut sähköpostiosoitteesi"
         invite_auth_email_invalid: "Kutsun sähköpostiosoite ei täsmää sähköpostiosoitteen kanssa, jonka %{provider} todensi"
         authenticated_by_invite: "Kutsu on vahvistanut sähköpostiosoitteesi"
-        frequency_immediately: "Lähetämme sinulle välittömästi sähköpostiviestin, jos et ole lukenut asiaa, josta lähetämme sinulle sähköpostia."
         frequency:
           one: "Lähetämme sähköpostin vain, jos emme ole nähneet sinua viimeisen minuutin aikana."
           other: "Lähetämme sähköpostin vain, jos emme ole nähneet sinua viimeisten %{count} minuutin aikana."
@@ -5303,7 +5301,6 @@ fi:
           search: "Haku"
           groups: "Ryhmät"
           dashboard: "Hallintapaneeli"
-          sidebar: "Sivupalkki"
         secret_list:
           invalid_input: "Tekstikentät eivät voi olla tyhjiä tai sisältää pystyviivamerkkiä."
         default_categories:

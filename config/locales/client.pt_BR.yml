@@ -1278,7 +1278,6 @@ pt_BR:
         use: "Usar app autenticador"
         enforced_notice: "Você precisa ativar a autenticação de dois fatores antes de acessar este site."
         disable: "Desativar"
-        disable_confirm: "Tem certeza que você quer desativar todos os métodos de dois fatores?"
         save: "Salvar"
         edit: "Editar"
         edit_title: "Editar autenticador"
@@ -1366,7 +1365,6 @@ pt_BR:
         authenticated: "Seu e-mail foi autenticado por %{provider}"
         invite_auth_email_invalid: "Seu e-mail de convite não é igual ao e-mail autenticado por %{provider}"
         authenticated_by_invite: "Seu e-mail foi autenticado pelo convite"
-        frequency_immediately: "Enviaremos um e-mail imediatamente se você não tiver lido sobre o motivo do envio da nossa mensagem."
         frequency:
           one: "Enviaremos um e-mail apenas se você não tiver acessado no último minuto."
           other: "Enviaremos um e-mail apenas se você não tiver acessado nos últimos %{count} minutos."
@@ -5306,7 +5304,6 @@ pt_BR:
           search: "Pesquisar"
           groups: "Grupos"
           dashboard: "Painel de controle"
-          sidebar: "Barra Lateral"
         secret_list:
           invalid_input: "Os campos de entrada não podem estar vazios ou conter o caractere de barra vertical."
         default_categories:

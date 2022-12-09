@@ -165,14 +165,6 @@ fr:
         one: "Vous avez un nouveau message de discussion"
         other: "Vous avez de nouveaux messages de discussions"
       from: "%{site_name}"
-      subject:
-        direct_message:
-          one: "[%{email_prefix}] Nouveau message de %{message_title}"
-          other: "[%{email_prefix}] Nouveaux messages de %{message_title} et de %{others}"
-        chat_channel:
-          one: "[%{email_prefix}] Nouveau message dans %{message_title}"
-          other: "[%{email_prefix}] Nouveaux messages dans %{message_title} et %{others}"
-        others: "%{count} autres"
       unsubscribe: "Ce résumé de discussion est envoyé à partir de %{site_link} lorsque vous vous absentez. Changez vos %{email_preferences_link} ou %{unsubscribe_link} pour vous désabonner."
       unsubscribe_no_link: "Ce résumé de discussion est envoyé à partir de %{site_link} lorsque vous vous absentez. Changez vos %{email_preferences_link}."
       view_messages:

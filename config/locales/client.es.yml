@@ -1277,7 +1277,6 @@ es:
         use: "Utilizar la aplicación de autenticación"
         enforced_notice: "Es obligatorio que actives la autenticación de dos factores antes de acceder al sitio web."
         disable: "Desactivar"
-        disable_confirm: "¿Seguro que quieres desactivar todos los métodos de dos factores?"
         save: "Guardar"
         edit: "Editar"
         edit_title: "Editar autenticador"
@@ -1365,7 +1364,6 @@ es:
         authenticated: "Tu correo electrónico ha sido autenticado por %{provider}"
         invite_auth_email_invalid: "Tu correo electrónico de invitación no coincide con el correo electrónico autenticado por %{provider}"
         authenticated_by_invite: "Tu correo electrónico ha sido autenticado a través de la invitación"
-        frequency_immediately: "Te enviaremos un correo electrónico inmediatamente si no has leído el asunto por el cual te estamos enviando el correo."
         frequency:
           one: "Solo te enviaremos un correo electrónico si no te hemos visto en el último minuto."
           other: "Solo te enviaremos un correo electrónico si no te hemos visto en los últimos %{count} minutos."
@@ -5301,7 +5299,6 @@ es:
           search: "Buscar"
           groups: "Grupos"
           dashboard: "Panel de control"
-          sidebar: "Barra lateral"
         secret_list:
           invalid_input: "Los campos no pueden estar vacíos o contener el carácter de barra vertical."
         default_categories:

@@ -1030,6 +1030,7 @@ id:
         label: "Kode"
         show_key_description: "Masukkan secara manual"
         disable: "Nonaktifkan"
+        delete: "Hapus"
         save: "Simpan"
         edit: "Ubah"
         security_key:
@@ -2051,6 +2052,11 @@ id:
           confirmation:
             cancel: "Batal"
         delete_and_block: "Hapus dan <b>block</b> email dan alamat IP ini"
+        other_matches_list:
+          username: "Nama Pengguna"
+          trust_level: "Level Kepercayaan"
+          read_time: "Waktu Baca"
+          posts: "Pos"
         tl3_requirements:
           visits: "mengunjungi"
           days: "hari"
@@ -2087,6 +2093,7 @@ id:
           tags: "Label"
           search: "Cari"
           groups: "Grup"
+          navigation: "Navigasi"
         default_categories:
           modal_yes: "Ya"
       badges:

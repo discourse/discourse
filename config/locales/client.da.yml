@@ -1221,7 +1221,7 @@ da:
         use: "Brug Autentificeringsapp"
         enforced_notice: "Du skal aktivere To-faktor godkendelse før du kan gå ind på denne side."
         disable: "Deaktivér"
-        disable_confirm: "Er du sikker på, at du vil deaktivere alle to-faktor metoder?"
+        delete: "Slet"
         save: "Gem"
         edit: "Rediger"
         edit_title: "Rediger godkendelsesenhed"
@@ -1305,7 +1305,6 @@ da:
         authenticated: "Din email er blevet bekræftet af %{provider}"
         invite_auth_email_invalid: "Din invitations e-mail matcher ikke den godkendte e-mail af %{provider}"
         authenticated_by_invite: "Din e-mail er blevet godkendt af invitationen"
-        frequency_immediately: "Vi sender dig en email med det samme, hvis du ikke har læst den ting vi emailer dig om."
         frequency:
           one: "Vi sender dig kun email, hvis vi ikke har set dig i det seneste minut."
           other: "Vi sender dig kun email. hvis vi ikke har set dig i de sidste %{count} minutter."
@@ -4850,6 +4849,11 @@ da:
         silenced_count: "Mådeholdt (silenced)"
         suspended_count: "Suspenderet"
         last_six_months: "Seneste 6 måneder"
+        other_matches_list:
+          username: "Brugernavn"
+          trust_level: "Tillidsniveau"
+          read_time: "Læsetid"
+          posts: "Indlæg"
         tl3_requirements:
           title: "Krav for fortrolighedsniveau 3"
           table_title:
@@ -4994,6 +4998,7 @@ da:
           search: "Søg"
           groups: "Grupper"
           dashboard: "Dashboard"
+          navigation: "Navigation"
         secret_list:
           invalid_input: "Inputfelter kan ikke være tomme eller indeholde lodret bjælketegn."
         default_categories:

@@ -518,6 +518,7 @@ be:
       second_factor:
         name: "Імя"
         disable: "Адключыць"
+        delete: "выдаляць"
         save: "Захаваць"
         edit: "рэдагаваць"
         security_key:
@@ -1853,6 +1854,11 @@ be:
         trust_level_3_requirements: "Патрабаванні для Узроўня даверу 3"
         silenced_count: "глушыцелем"
         suspended_count: "падвешаны"
+        other_matches_list:
+          username: "Імя карыстальніка"
+          trust_level: "узровень даверу"
+          read_time: "час чытання"
+          posts: "паведамленняў"
         tl3_requirements:
           title: "Патрабаванні для Узроўня даверу 3"
           table_title:
@@ -1938,6 +1944,7 @@ be:
           search: "пошук"
           groups: "групы"
           dashboard: "Галоўная панэль"
+          navigation: "рух"
         default_categories:
           modal_yes: "ды"
       badges:

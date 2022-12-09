@@ -1400,7 +1400,7 @@ pl_PL:
         use: "Użyj aplikacji Authenticator"
         enforced_notice: "Aby uzyskać dostęp do tej witryny, musisz włączyć uwierzytelnianie dwuskładnikowe."
         disable: "Wyłącz"
-        disable_confirm: "Czy na pewno chcesz wyłączyć wszystkie metody dwuskładnikowe?"
+        delete: "Usuń"
         save: "Zapisz"
         edit: "Edytuj"
         edit_title: "Edytuj Authenticator"
@@ -1486,7 +1486,6 @@ pl_PL:
         authenticated: "Twój email został potwierdzony przez %{provider}"
         invite_auth_email_invalid: "Twój e-mail z zaproszeniem nie jest zgodny z e-mailem uwierzytelnionym przez %{provider}"
         authenticated_by_invite: "Twój e-mail został uwierzytelniony przez zaproszenie"
-        frequency_immediately: "Wyślemy powiadomienie jeśli wskazana rzecz nie została jeszcze przez Ciebie przeczytana."
         frequency:
           one: "Otrzymasz e-mail tylko jeśli nie widzieliśmy Cię w ciągu ostatniej minuty."
           few: "Otrzymasz e-mail tylko jeśli nie widzieliśmy Cię w ciągu ostatnich %{count} minut."
@@ -4661,6 +4660,8 @@ pl_PL:
         howto: "Jak zainstalować wtyczkę?"
         official: "Oficjalna wtyczka"
         broken_route: "Nie można skonfigurować łącza do '%{name}'. Upewnij się, że blokery reklam są wyłączone i spróbuj ponownie załadować stronę."
+      navigation_menu:
+        sidebar: "Pasek boczny"
       backups:
         title: "Kopie zapasowe"
         menu:
@@ -5541,6 +5542,11 @@ pl_PL:
         silenced_count: "Wyciszony"
         suspended_count: "Zawieszeni"
         last_six_months: "Ostatnie 6 miesięcy"
+        other_matches_list:
+          username: "Nazwa użytkownika"
+          trust_level: "Poziom zaufania"
+          read_time: "Czas czytania"
+          posts: "Postów"
         tl3_requirements:
           title: "Wymagania dla osiągnięcia 3. poziomu zaufania"
           table_title:
@@ -5687,7 +5693,7 @@ pl_PL:
           search: "Wyszukaj"
           groups: "Grupy"
           dashboard: "Panel"
-          sidebar: "Pasek boczny"
+          navigation: "Nawigacja"
         secret_list:
           invalid_input: "Pola tekstowe nie mogą być puste ani zawierać znaku pionowej kreski."
         default_categories:

@@ -497,6 +497,10 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_moderate!(topic)
 
+    if TopicTimer.destructive_types.values.include?(status_type)
+      guardian.ensure_can_delete!(topic)
+    end
+
     options = {
       by_user: current_user,
       based_on_last_post: based_on_last_post

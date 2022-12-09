@@ -1281,7 +1281,7 @@ sv:
         use: "Använd autentiseringsappen"
         enforced_notice: "Du måste aktivera tvåfaktorsautentisering innan du kan besöka denna sida."
         disable: "Inaktivera"
-        disable_confirm: "Är du säker på att du vill inaktivera alla tvåfaktorsmetoder?"
+        delete: "Radera"
         save: "Spara"
         edit: "Redigera"
         edit_title: "Redigera autentisering"
@@ -1369,7 +1369,6 @@ sv:
         authenticated: "Din e-postadress har blivit verifierad av %{provider}"
         invite_auth_email_invalid: "Ditt inbjudningsmeddelande matchar inte den e-postadress som autentiserats av %{provider}"
         authenticated_by_invite: "Din e-postadress har verifierats genom inbjudan"
-        frequency_immediately: "Vi kommer att skicka e-post till dig omedelbart om du inte har läst det som vi skickar e-post till dig om."
         frequency:
           one: "Vi skickar bara e-post om du inte synts till den senaste minuten."
           other: "Vi skickar bara e-post om du inte synts till de senaste %{count} minuterna."
@@ -4324,6 +4323,8 @@ sv:
         howto: "Hur installerar jag tillägg?"
         official: "Officiellt tillägg"
         broken_route: "Det går inte att konfigurera länken till '%{name}'. Se till att annonsblockerare är inaktiverade och försök ladda om sidan."
+      navigation_menu:
+        sidebar: "Sidofält"
       backups:
         title: "Säkerhetskopior"
         menu:
@@ -5198,6 +5199,11 @@ sv:
         silenced_count: "Tystad"
         suspended_count: "Avstängd"
         last_six_months: "Senaste 6 månaderna"
+        other_matches_list:
+          username: "Användarnamn"
+          trust_level: "Förtroendenivå"
+          read_time: "Lästid"
+          posts: "Inlägg"
         tl3_requirements:
           title: "Krav för förtroendenivå 3"
           table_title:
@@ -5342,7 +5348,7 @@ sv:
           search: "Sök"
           groups: "Grupper"
           dashboard: "Översiktspanel"
-          sidebar: "Sidofält"
+          navigation: "Navigering"
         secret_list:
           invalid_input: "Inmatningsfältet kan inte vara tomt eller innehålla vertikalstreck."
         default_categories:

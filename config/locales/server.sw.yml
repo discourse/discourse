@@ -819,7 +819,6 @@ sw:
     google_oauth2_client_id: "Utambulisho wa Mtumiaji kwa ajili ya Programu-timizi ya Google"
     google_oauth2_client_secret: "Siri ya Mtumiaji kwa ajili ya Programu-timizi ya Google"
     enable_backups: "Ruhusu wasimamizi watengeneze machelezo ya jamii"
-    maximum_backups: "Kiwango cha juu cha chelezo kutunza kwenye diski. Machelezo ya mda yatafutwa otomatikali"
     backup_frequency: "idadi ya siku kati ya machelezo."
     rate_limit_create_topic: "Baada ya kutengeneza mada, watumiaji wasubiri sekunde (n) kabla ya kutengeneza mada nyingine."
     rate_limit_create_post: "Baada ya kuchapisha, watumiaji wasubiri sekunde (n) kabla ya kutengeneza mada nyingine."
@@ -1147,7 +1146,6 @@ sw:
     subject_template: "[%{email_prefix}] sasisho linapatikana"
   flag_reasons:
     off_topic: "Mada yako imeripotiwa kuwa **haihusiki**: jumuiya inaona kuwa haiko sawa kuwa mada, kulingana na kichwa cha habari na chapisho lake la kwanza."
-    inappropriate: "Chapisho hili limeripotiwa kuwa **halifai**: jumuiya inaona kuwa ni matusi, ubaguzi, au inakauka [mwongozo wa jumuiya](%{base_path}/mwongozo)."
     spam: "Chapisho lako limeripotiwa kuwa ni **taka**: jumuiya inaona kuwa ni tangazo, kitu ambacho kinatanganaza badala ya kuwa muhimu au na faida kwenye mada kama ilivyotarajiwa."
     notify_moderators: "Chapisho lako limeripotiwa **kupitiwa na msimamizi**: jukwaa limeona kuwa kuna kitu kuhusu chapisho lako kinachohitaji kupitiwa na msaidizi."
   flags_dispositions:

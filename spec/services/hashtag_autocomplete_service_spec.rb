@@ -98,9 +98,8 @@ RSpec.describe HashtagAutocompleteService do
 
     it "does not search other data sources if the limit is reached by earlier type data sources" do
       # only expected once to try get the exact matches first
-      site_guardian_categories = Site.new(guardian).categories
-      Site.any_instance.expects(:categories).once.returns(site_guardian_categories)
-      subject.search("book", %w[tag category], limit: 1)
+      DiscourseTagging.expects(:filter_allowed_tags).never
+      subject.search("book", %w[category tag], limit: 1)
     end
 
     it "includes the tag count" do

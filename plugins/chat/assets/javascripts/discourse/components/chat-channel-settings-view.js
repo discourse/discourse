@@ -61,7 +61,7 @@ export default class ChatChannelSettingsView extends Component {
   @computed("autoJoinAvailable", "togglingChannelWideMentionsAvailable")
   get adminSectionAvailable() {
     return (
-      this.chatGuardian.canEditChatChannel &&
+      this.chatGuardian.canEditChatChannel() &&
       (this.autoJoinAvailable || this.togglingChannelWideMentionsAvailable)
     );
   }

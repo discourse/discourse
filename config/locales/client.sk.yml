@@ -856,6 +856,7 @@ sk:
         disable_description: "Prosím zadajte autentifikačný kód z vašej aplikácie"
         show_key_description: "Vložiť ručne"
         disable: "Zakázať"
+        delete: "Vymazať"
         save: "Uložiť"
         edit: "Upraviť"
         security_key:
@@ -896,7 +897,6 @@ sk:
         ok: "Pošleme vám email pre potvrdenie"
         invalid: "Zadajte prosím platný email"
         authenticated: "Váš email bude autentifikovaný pomocou %{provider}"
-        frequency_immediately: "Odošleme vám email ak ste neprečítali to, čo vám posielame emailom."
         frequency:
           one: "Odošleme vám email iba ak sme vás nevideli poslednú minútu"
           few: "Odošleme vám email iba ak sme vás nevideli posledné %{count} minúty."
@@ -2938,6 +2938,11 @@ sk:
         lock_trust_level: "Zamknúť stupeň dôvery"
         unlock_trust_level: "Odomknúť stupeň dôvery"
         suspended_count: "Odobrate práva"
+        other_matches_list:
+          username: "Používateľské meno"
+          trust_level: "Stupeň dôvery"
+          read_time: "Doba Čítania"
+          posts: "Príspevky"
         tl3_requirements:
           title: "Požiadavky pre stupeň dôvery 3"
           value_heading: "Hodnota"
@@ -3048,6 +3053,7 @@ sk:
           search: "Hľadať"
           groups: "Skupiny"
           dashboard: "Ovládací panel"
+          navigation: "Navigácia"
         default_categories:
           modal_yes: "Áno"
       badges:

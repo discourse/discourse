@@ -108,17 +108,11 @@ de:
       join: "Beitreten"
       new_messages: "neue Nachrichten"
       mention_warning:
-        cannot_see:
-          one: "%{usernames} kann nicht auf diesen Kanal zugreifen und wurde nicht benachrichtigt."
-          other: "%{usernames} können nicht auf diesen Kanal zugreifen und wurden nicht benachrichtigt."
         dismiss: "verwerfen"
         invitations_sent:
           one: "Einladung gesendet"
           other: "Einladungen gesendet"
         invite: "Zum Kanal einladen"
-        without_membership:
-          one: "%{usernames} ist diesem Kanal nicht beigetreten."
-          other: "%{usernames} sind diesem Kanal nicht beigetreten."
       aria_roles:
         header: "Chat-Kopfzeile"
         composer: "Chat-Composer"

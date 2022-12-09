@@ -1314,7 +1314,7 @@ hr:
         use: "Korištenje aplikacije Authenticator"
         enforced_notice: "Prije pristupanja ovoj stranici morate omogućiti autentifikaciju dva faktora."
         disable: "Onemogući"
-        disable_confirm: "Jeste li sigurni da želite onemogućiti sve metode s dva faktora?"
+        delete: "Izbriši"
         save: "Spremi"
         edit: "Izmijeni"
         edit_title: "Uredi autentifikator"
@@ -1396,7 +1396,6 @@ hr:
         authenticated: "E-mail vam je potvrđen od %{provider}"
         invite_auth_email_invalid: "Adresa e-pošte s pozivnicom ne podudara se s adresom e-pošte koju je autentificirao %{provider}"
         authenticated_by_invite: "Vaša e-pošta potvrđena je pozivnicom"
-        frequency_immediately: "Odmah ćemo vam poslati e-mail ako niste pročitali ono o ćemu vam šaljemo e-mailove."
         frequency:
           one: "Poslat ćemo vam e -poruku samo ako vas nismo vidjeli u zadnjoj minuti."
           few: "Poslat ćemo vam e -poruku samo ako vas nismo vidjeli u zadnjih %{count} minuta."
@@ -5160,6 +5159,11 @@ hr:
         silenced_count: "Utišano"
         suspended_count: "Suspendirani"
         last_six_months: "Posljednjih 6 mjeseci"
+        other_matches_list:
+          username: "Korisničko ime"
+          trust_level: "Razina povjerenja"
+          read_time: "Vrijeme čitanja"
+          posts: "Postovi"
         tl3_requirements:
           title: "Predispozicije za razinu povjerenja 3"
           table_title:
@@ -5305,6 +5309,7 @@ hr:
           search: "Pretraži"
           groups: "Grupe"
           dashboard: "Nadzorna ploča"
+          navigation: "Navigacija"
         secret_list:
           invalid_input: "Polja za unos ne mogu biti prazna niti sadrže znak vertikalne trake."
         default_categories:

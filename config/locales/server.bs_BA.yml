@@ -361,7 +361,6 @@ bs_BA:
       long_form: "opomenuo kao spam"
     inappropriate:
       title: "Inappropriate"
-      description: 'Ova tema sadrži sadržaj koji bi razumna osoba smatrala uvredljivim, nasilnim ili kršenjem <a href="%{base_path}/guidelines">smjernica naše zajednice</a>.'
       long_form: "opomenuto kao neprikladno"
     notify_moderators:
       title: "Obavijesti Moderatore"
@@ -667,7 +666,6 @@ bs_BA:
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     google_oauth2_client_id: "Client ID of your Google application."
     google_oauth2_client_secret: "Client secret of your Google application."
-    maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     verbose_localization: "Show extended localization tips in the UI"
@@ -849,7 +847,6 @@ bs_BA:
     subject_template: "Set password for your %{site_name} account"
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community thinks it does not fit into the topic, as currently defined by the title and the first post."
-    inappropriate: "Your post was flagged as **inappropriate**: the community thinks it is offensive, abusive, or a violation of [the community guidelines](%{base_path}/guidelines)."
     spam: "Your post was flagged as **spam**: the community thinks it is an advertisement, not useful or relevant to the topic, but promotional in nature."
     notify_moderators: "Your post was flagged **for moderator attention**: the community thinks something about the post requires moderator intervention."
   flags_dispositions:

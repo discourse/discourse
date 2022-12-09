@@ -1206,7 +1206,7 @@ pt:
         use: "Utilizar a aplicação Authenticator"
         enforced_notice: "É necessário ativar a autenticação em dois passos para aceder a este site."
         disable: "Desativar"
-        disable_confirm: "Tem a certeza que deseja desativar todos os métodos de dois passos?"
+        delete: "Apagar"
         save: "Guardar"
         edit: "Editar"
         edit_title: "Editar Autenticador"
@@ -1285,7 +1285,6 @@ pt:
         authenticated: "O seu email foi autenticado por %{provider}"
         invite_auth_email_invalid: "O seu email de convite não coincide com o email autenticado por %{provider}"
         authenticated_by_invite: "Seu e-mail foi autenticado pelo convite"
-        frequency_immediately: "Enviar-lhe-emos um email imediatamente caso não leia o que lhe estamos a enviar."
         frequency:
           one: "Só iremos enviar-lhe um email se não o tivermos visto no último minuto."
           other: "Só iremos enviar-lhe um email se não o tivermos visto nos últimos %{count} minutos."
@@ -4385,6 +4384,11 @@ pt:
         unlock_trust_level: "Desbloquear Nível de Confiança"
         silenced_count: "Silenciado"
         suspended_count: "Suspenso"
+        other_matches_list:
+          username: "Nome de Utilizador"
+          trust_level: "Nível de Confiança"
+          read_time: "Tempo de leitura"
+          posts: "Mensagens"
         tl3_requirements:
           title: "Requisitos para o Nível de Confiança 3"
           table_title:
@@ -4504,6 +4508,7 @@ pt:
           search: "Pesquisar"
           groups: "Grupos"
           dashboard: "Painel de Administração"
+          navigation: "Navegação"
         default_categories:
           modal_yes: "Sim"
       badges:

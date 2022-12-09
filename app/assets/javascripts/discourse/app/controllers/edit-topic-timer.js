@@ -47,7 +47,7 @@ export default Controller.extend(ModalFunctionality, {
       });
     }
 
-    if (this.currentUser.staff) {
+    if (this.model.details.can_delete) {
       types.push({
         id: DELETE_STATUS_TYPE,
         name: I18n.t("topic.auto_delete.title"),
@@ -59,7 +59,7 @@ export default Controller.extend(ModalFunctionality, {
       name: I18n.t("topic.auto_bump.title"),
     });
 
-    if (this.currentUser.staff) {
+    if (this.model.details.can_delete) {
       types.push({
         id: DELETE_REPLIES_TYPE,
         name: I18n.t("topic.auto_delete_replies.title"),

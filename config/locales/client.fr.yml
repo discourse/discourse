@@ -1277,7 +1277,6 @@ fr:
         use: "Utiliser l'application Authenticator"
         enforced_notice: "Vous devez activer l'authentification à deux facteurs avant d'accéder à ce site."
         disable: "Désactiver"
-        disable_confirm: "Voulez-vous vraiment désactiver toutes les méthodes d'authentification à deux facteurs ?"
         save: "Enregistrer"
         edit: "Modifier"
         edit_title: "Gérer l'application d'authentification"
@@ -1365,7 +1364,6 @@ fr:
         authenticated: "Votre adresse e-mail a été authentifiée par %{provider}"
         invite_auth_email_invalid: "Votre e-mail d'invitation ne correspond pas à l'e-mail authentifié par %{provider}"
         authenticated_by_invite: "Votre adresse e-mail a été authentifiée par l'invitation"
-        frequency_immediately: "Nous vous enverrons un e-mail immédiatement si vous n'avez pas lu le contenu en question."
         frequency:
           one: "Nous vous enverrons des e-mails seulement si nous ne vous avons pas vu(e) sur le site au cours de la dernière minute."
           other: "Nous vous enverrons des e-mails seulement si nous ne vous avons pas vu(e) sur le site au cours des %{count} dernières minutes."
@@ -5302,7 +5300,6 @@ fr:
           search: "Recherche"
           groups: "Groupes"
           dashboard: "Tableau de bord"
-          sidebar: "Barre latérale"
         secret_list:
           invalid_input: "Les champs de saisie ne peuvent pas être vide ou contenir le caractère de la barre verticale"
         default_categories:
