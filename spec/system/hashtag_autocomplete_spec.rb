@@ -52,7 +52,7 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
     )
   end
 
-  xit "cooks the selected hashtag clientside with the correct url and icon" do
+  it "cooks the selected hashtag clientside with the correct url and icon" do
     visit_topic_and_initiate_autocomplete
     hashtag_results = page.all(".hashtag-autocomplete__link", count: 2)
     hashtag_results[0].click
