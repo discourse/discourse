@@ -878,6 +878,7 @@ th:
         confirm_password_description: "กรุณายืนยันรหัสผ่านเพื่อดำเนินการต่อ"
         name: "ชื่อ"
         disable: "ปิดใช้งาน"
+        delete: "ลบ"
         save: "บันทึก"
         edit: "แก้ไข"
         security_key:
@@ -934,7 +935,6 @@ th:
         required: "กรุณากรอกที่อยู่อีเมล"
         invalid: "กรุณาใส่อีเมลที่ถูกต้อง"
         authenticated: "อีเมลของคุณได้รับการยืนยันโดย %{provider}"
-        frequency_immediately: "เราจะอีเมลถึงคุณทันทีหากคุณยังไม่ได้อ่านสิ่งที่เราอีเมลหาคุณ"
         frequency:
           other: "เราจะอีเมลหาคุณเฉพาะตอนที่ไม่ได้เห็นคุณเป็นเวลา %{count} นาที"
       associated_accounts:
@@ -2989,6 +2989,11 @@ th:
         lock_trust_level: "ล็อกระดับความไว้ใจ"
         unlock_trust_level: "ปลดล็อกระดับความไว้ใจ"
         suspended_count: "ระงับการใช้งาน"
+        other_matches_list:
+          username: "ชื่อผู้ใช้"
+          trust_level: "ระดับความไว้ใจ"
+          read_time: "เวลาอ่าน"
+          posts: "โพส"
         tl3_requirements:
           title: "ความต้องการเพิ่มปรับระดับความไว้ใจเป็น 3"
           table_title:
@@ -3095,6 +3100,7 @@ th:
           search: "ค้นหา"
           groups: "กลุ่ม"
           dashboard: "แดชบอร์ด"
+          navigation: "การนำทาง"
         default_categories:
           modal_yes: "ใช่"
       badges:

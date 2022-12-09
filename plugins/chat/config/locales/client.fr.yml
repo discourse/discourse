@@ -108,17 +108,11 @@ fr:
       join: "Rejoindre"
       new_messages: "nouveaux messages"
       mention_warning:
-        cannot_see:
-          one: "%{usernames} ne peut pas accéder à ce canal et n'a pas été averti(e)."
-          other: "%{usernames} ne peuvent pas accéder à ce canal et n'ont pas été avertis."
         dismiss: "rejeter"
         invitations_sent:
           one: "Invitation envoyée"
           other: "Invitations envoyées"
         invite: "Inviter à rejoindre le canal"
-        without_membership:
-          one: "%{usernames} n'a pas rejoint ce canal."
-          other: "%{usernames} n'ont pas rejoint ce canal."
       aria_roles:
         header: "En-tête de discussion"
         composer: "Compositeur de discussion"

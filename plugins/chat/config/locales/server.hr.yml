@@ -32,6 +32,11 @@ hr:
       chat_pm_body: "%{link}\n\n%{message}"
     notify_moderators:
       chat_pm_body: "%{link}\n\n%{message}"
+  user_notifications:
+    chat_summary:
+      subject:
+        direct_message_from_1: "[%{email_prefix}] Nova poruka od %{username}"
+        direct_message_from_2: "[%{email_prefix}] Nova poruka od %{username1} i %{username2}"
   unsubscribe:
     chat_summary:
       never: Nikad

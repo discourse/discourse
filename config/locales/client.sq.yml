@@ -647,6 +647,7 @@ sq:
       second_factor:
         name: "Emri"
         disable: "Çaktivizo"
+        delete: "Fshije"
         save: "Ruaj"
         edit: "Redakto"
         security_key:
@@ -684,7 +685,6 @@ sq:
         ok: "Do ju nisim emailin e konfirmimit"
         invalid: "Ju lutemi të vendosni një email të vlefshëm"
         authenticated: "Emaili juaj është verifikuar nga %{provider}"
-        frequency_immediately: "Do t'ju dërgojmë një email menjëherë nëse nuk e keni lexuar temën për të cilën po ju dërgojmë email."
         frequency:
           one: "Do t'ju dërgojmë një email vetëm nëse nuk të kemi parë në faqe në minutën e fundit."
           other: "Do t'ju dërgojmë një email vetëm nëse nuk të kemi parë në faqe në %{count} minutat e fundit."
@@ -2545,6 +2545,11 @@ sq:
         lock_trust_level: "Kyç nivelin e besimit"
         unlock_trust_level: "Çkyç nivelin e besimit"
         suspended_count: "Të pezulluar"
+        other_matches_list:
+          username: "Emri i përdoruesit"
+          trust_level: "Niveli i besimit"
+          read_time: "Koha e Leximit"
+          posts: "Postime"
         tl3_requirements:
           title: "Kërkesat për përdorues me Nivel Besimi 3"
           table_title:
@@ -2662,6 +2667,7 @@ sq:
           search: "Kërko"
           groups: "Grupet"
           dashboard: "Paneli i kontrollit"
+          navigation: "Shfletimi"
         default_categories:
           modal_yes: "Po"
       badges:

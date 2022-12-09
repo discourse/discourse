@@ -1089,6 +1089,7 @@ bs_BA:
           Zaštitite svoj račun pomoću jednokratnih sigurnosnih kodova.
         use: "Koristi Authenticator app?"
         disable: "Onemogući"
+        delete: "Obriši"
         save: "Sačuvaj"
         edit: "Izmijeni"
         totp:
@@ -1159,7 +1160,6 @@ bs_BA:
         required: "Unesite e-mail adresu"
         invalid: "Molimo vas da unesete validnu email adresu."
         authenticated: "Vaš email je ovjeren od strane %{provider}."
-        frequency_immediately: "Slati ćemo vam e-mail obavijesti odmah na novo, ukoliko niste pročitali sadržaj koji smo vam prvobitno e-mailom poslali."
         frequency:
           one: "Poslaćemo vam email samo u slučaju da vas nismo vidjeli u zadnjoj minuti."
           few: "Poslaćemo vam email samo u slučaju da vas nismo vidjeli u zadnje%{count} minute."
@@ -4099,6 +4099,11 @@ bs_BA:
         unlock_trust_level: "Unlock Trust Level"
         silenced_count: "Stišano"
         suspended_count: "Suspended"
+        other_matches_list:
+          username: "Nadimak"
+          trust_level: "Trust Level"
+          read_time: "Read Time"
+          posts: "Objave"
         tl3_requirements:
           title: "Requirements for Trust Level 3"
           table_title:
@@ -4229,6 +4234,7 @@ bs_BA:
           search: "Pretraži"
           groups: "Grupa"
           dashboard: "Dashboard"
+          navigation: "Navigacija"
         secret_list:
           invalid_input: "Polja za unos ne mogu biti prazna ili sadrže znak vertikalne trake."
         default_categories:

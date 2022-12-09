@@ -1277,7 +1277,6 @@ de:
         use: "Benutze die Authentifizierungs-App"
         enforced_notice: "Du musst die Zwei-Faktor-Authentifizierung aktivieren, um auf die Website zugreifen zu können."
         disable: "Deaktivieren"
-        disable_confirm: "Sollen wirklich alle Methoden zur Zwei-Faktor-Authentifizierung deaktiviert werden?"
         save: "Speichern"
         edit: "Bearbeiten"
         edit_title: "Authentifikator bearbeiten"
@@ -1365,7 +1364,6 @@ de:
         authenticated: "Deine E-Mail wurde von %{provider} authentifiziert"
         invite_auth_email_invalid: "Deine Einladungs-E-Mail stimmt nicht mit der von %{provider} authentifizierten E-Mail überein"
         authenticated_by_invite: "Deine E-Mail wurde durch die Einladung authentifiziert"
-        frequency_immediately: "Wir werden dir sofort eine E-Mail senden, wenn du die betroffenen Inhalte noch nicht gelesen hast."
         frequency:
           one: "Wir werden dir nur dann eine E-Mail senden, wenn wir dich nicht innerhalb der letzten Minute gesehen haben."
           other: "Wir werden dir nur dann eine E-Mail senden, wenn wir dich nicht innerhalb der letzten %{count} Minuten gesehen haben."
@@ -5302,7 +5300,6 @@ de:
           search: "Suche"
           groups: "Gruppen"
           dashboard: "Dashboard"
-          sidebar: "Seitenleiste"
         secret_list:
           invalid_input: "Eingabefelder können nicht leer sein oder vertikale Balkenzeichen enthalten."
         default_categories:

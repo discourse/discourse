@@ -670,7 +670,6 @@ nl:
       one: "%{count} like"
       other: "%{count} likes"
     cannot_permanently_delete:
-      many_posts: "Je kunt dit topic niet permanent verwijderen omdat er andere berichten zijn."
       wait_or_different_admin: "Je moet %{time_left} wachten voordat je dit bericht definitief verwijdert, of een andere beheerder moet het doen."
   rate_limiter:
     slow_down: "Je hebt deze actie te vaak uitgevoerd; probeer het later opnieuw."
@@ -866,7 +865,6 @@ nl:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Ongepast"
-      description: 'Dit bericht bevat inhoud die een redelijk persoon als beledigend, kwetsend of een overtreding van <a href="%{base_path}/guidelines">onze communityrichtlijnen</a> zou beschouwen.'
       short_description: 'Een overtreding van <a href="%{base_path}/guidelines">onze communityrichtlijnen</a>'
     notify_user:
       title: "@%{username} een bericht sturen"
@@ -932,7 +930,6 @@ nl:
       short_description: "Dit is een advertentie"
     inappropriate:
       title: "Ongepast"
-      description: 'Dit topic bevat inhoud die een redelijk persoon als beledigend, kwetsend of een overtreding van <a href="%{base_path}/guidelines">onze communityrichtlijnen</a> zou beschouwen.'
       long_form: "heeft dit als ongepast gemarkeerd"
       short_description: 'Een overtreding van <a href="%{base_path}/guidelines">onze communityrichtlijnen</a>'
     notify_moderators:
@@ -1656,7 +1653,6 @@ nl:
     discord_trusted_guilds: 'Alleen leden van deze Discord-guilds mogen zich aanmelden via Discord. Gebruik de numerieke ID voor de guild. Bekijk de instructies <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">hier</a> voor meer informatie. Laat dit leeg om alle guilds toe te staan.'
     enable_backups: "Beheerders mogen back-ups van het forum maken"
     allow_restore: "Herstellen van gegevens toestaan, waarbij ALLE websitegegevens kunnen worden overschreven! Laat dit op 'onwaar' staan, tenzij je een back-up wilt herstellen."
-    maximum_backups: "Het maximale aantal back-ups om op schijf te bewaren. Oudere back-ups worden automatisch verwijderd."
     automatic_backups_enabled: "Automatische back-ups uitvoeren volgens de opgegeven back-upfrequentie."
     backup_frequency: "Het aantal dagen tussen back-ups."
     s3_backup_bucket: "De externe bucket om back-ups te bewaren. WAARSCHUWING: Zorg dat het een privébucket is."
@@ -1831,7 +1827,6 @@ nl:
     faq_url: "Als je ergens anders een FAQ hebt gehost die je wilt gebruiken, geef hier dan de volledige URL op."
     tos_url: "Als je ergens anders een document met Algemene voorwaarden hebt gehost, geef hier dan de volledige URL op."
     privacy_policy_url: "Als je ergens anders een document met een Privacybeleid hebt gehost, geef hier dan de volledige URL op."
-    log_anonymizer_details: "Of de gegevens van een gebruiker in de log worden behouden nadat ze zijn geanonimiseerd. Om aan de AVG te voldoen, moet dit worden uitgeschakeld."
     newuser_spam_host_threshold: "Hoe vaak een nieuwe gebruiker een link naar dezelfde host kan plaatsen binnen de 'newuser_spam_host_threshold' berichten ervan voordat deze als spam wordt beschouwd."
     allowed_spam_host_domains: "Een lijst met domeinen die niet op spam worden gecontroleerd. Nieuwe gebruikers kunnen onbeperkt links naar deze domeinen plaatsen."
     staff_like_weight: "Hoeveel gewicht om aan likes van medewerkers te geven (likes die niet van medewerkers zijn, hebben een gewicht van 1)."
@@ -2586,12 +2581,10 @@ nl:
       %{notes}
   flag_reasons:
     off_topic: "Je bericht is gemarkeerd als **off-topic**: de community vindt dat het niet goed bij het topic past, zoals momenteel bepaald door de titel en het eerste bericht."
-    inappropriate: "Je bericht is gemarkeerd als **ongepast**: de community vindt het bericht beledigend, grof, of een schending van [onze communityrichtlijnen](%{base_path}/guidelines)."
     spam: "Je bericht is gemarkeerd als **spam**: de community vindt dat het bericht een advertentie is, dat wil zeggen overdreven promotioneel van aard in plaats van nuttig of relevant voor het topic, zoals verwacht."
     notify_moderators: "Je bericht is gemarkeerd voor **aandacht van een moderator**: de community vindt dat iets in het bericht handmatige interventie door een medewerker vereist."
     responder:
       off_topic: "Het is gemarkeerd als **off-topic**: de community vindt dat het niet goed bij het topic past, zoals momenteel bepaald door de titel en het eerste bericht."
-      inappropriate: "Het bericht is gemarkeerd als **ongepast**: de community vindt het bericht aanstootgevend, grof of een schending van [onze communityrichtlijnen](%{base_path}/guidelines)."
       spam: "Het bericht is gemarkeerd als **spam**: de community vindt dat het bericht een advertentie is, dat wil zeggen overdreven promotioneel van aard in plaats van nuttig of relevant voor het topic, zoals verwacht."
       notify_moderators: "Het bericht is gemarkeerd als **aandacht van een moderator**: de community vindt dat iets in het bericht handmatige interventie door een medewerker vereist."
   flags_dispositions:
@@ -3912,178 +3905,6 @@ nl:
       Ja, juridisch jargon is saai, maar we moeten onszelf &ndash; en bij uitbreiding jou en je gegevens &ndash; beschermen tegen onvriendelijke mensen. We hebben [Gebruiksvoorwaarden](%{base_path}/tos) die jouw (en ons) gedrag en rechten beschrijft met betrekking tot inhoud, privacy en wetten. Om deze dienst te gebruiken, moet je akkoord gaan met onze [Gebruiksvoorwaarden](%{base_path}/tos).
   tos_topic:
     title: "Gebruiksvoorwaarden"
-    body: |
-      Deze voorwaarden regelen het gebruik van het internetforum op <%{base_url}>. Om het forum te gebruiken, moet je akkoord gaan met deze voorwaarden van %{company_name}, het bedrijf dat het forum beheert.
-
-      Het bedrijf kan andere producten en diensten aanbieden, onder andere voorwaarden. Deze voorwaarden zijn alleen van toepassing op het gebruik van het forum.
-
-      Ga naar:
-
-      - [Belangrijke termen](#heading--important-terms)
-      - [Je toestemming om het forum te gebruiken](#heading--permission)
-      - [Voorwaarden voor het gebruik van het forum](#heading--conditions)
-      - [Aanvaardbaar gebruik](#heading--acceptable-use)
-      - [Inhoudsnormen](#heading--content-standards)
-      - [Handhaving](#heading--enforcement)
-      - [je account](#heading--your-account)
-      - [Je inhoud](#heading--your-content)
-      - [Je verantwoordelijkheid](#heading--responsibility)
-      - [Disclaimers](#heading--disclaimers)
-      - [Beperking van de aansprakelijkheid](#heading--liability)
-      - [Feedback](#heading--feedback)
-      - [Beëindiging](#heading--termination)
-      - [Geschillen](#heading--disputes)
-      - [Algemene voorwaarden](#heading--general)
-      - [Contact](#heading--contact)
-      - [Wijzigingen](#heading--changes)
-
-      <h2 id="heading--important-terms"><a href="#heading--important-terms">Belangrijke termen</a></h2>
-
-      ***Deze voorwaarden bevatten een aantal belangrijke bepalingen die je rechten en verantwoordelijkheden beïnvloeden, zoals de disclaimers in [Disclaimers](#heading--disclaimers), beperking van de aansprakelijkheid van het bedrijf tegenover jou in [Beperking van de aansprakelijkheid](#heading--liability), je instemming om het bedrijf te dekken voor schade veroorzaakt door je misbruik van het forum in [Je verantwoordelijkheid](#heading--responsibility) en een overeenkomst om geschillen te arbitreren in [Geschillen](#heading--disputes).***
-
-      <h2 id="heading--permission"><a href="#heading--permission">Je toestemming om het forum te gebruiken</a></h2>
-
-      Onder deze voorwaarden geeft het bedrijf je toestemming om het forum te gebruiken. Iedereen moet akkoord gaan met deze voorwaarden om het forum te kunnen gebruiken.
-
-      <h2 id="heading--conditions"><a href="#heading--conditions">Voorwaarden voor het gebruik van het forum</a></h2>
-
-      Je toestemming om het forum te gebruiken is onderworpen aan de volgende voorwaarden:
-
-      1. Je moet ten minste dertien jaar oud zijn.
-
-      2. Je mag het forum niet meer gebruiken als het bedrijf rechtstreeks contact met je opneemt om te zeggen dat je dat niet mag.
-
-      3. Je moet het forum gebruiken overeenkomstig [Aanvaardbaar gebruik](#heading--acceptable-use) en [Inhoudsnormen](#heading--content-standards).
-
-      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Aanvaardbaar gebruik</a></h2>
-
-      1. Je mag de wet niet overtreden door gebruik te maken van het forum.
-
-      2. Je mag het account van een ander op het forum niet gebruiken of proberen te gebruiken zonder diens specifieke toestemming.
-
-      3. Je mag geen gebruikersnamen of andere unieke identificaties op het forum kopen, verkopen of anderszins verhandelen.
-
-      4. Je mag geen advertenties, kettingbrieven of andere verzoeken sturen via het forum of het forum gebruiken om adressen of andere persoonsgegevens te verzamelen voor commerciële mailinglijsten of databases.
-
-      5. Je mag de toegang tot het forum niet automatiseren en je mag het forum niet monitoren, bijvoorbeeld met een webcrawler, browserplug-in of -add-on of een ander computerprogramma dat geen webbrowser is. Je mag het forum crawlen om het te indexeren voor een openbare zoekmachine, als je die beheert.
-
-      6. Je mag het forum niet gebruiken om e-mail te sturen naar distributielijsten, nieuwsgroepen of groeps-e-mailaliassen.
-
-      7. Je mag niet ten onrechte suggereren dat je verbonden bent aan of onderschreven wordt door het bedrijf.
-
-      8. Je mag op andere webpagina's niet hyperlinken naar afbeeldingen of andere non-hypertext inhoud van het forum.
-
-      9. Je mag geen merken die eigendomsrecht aangeven verwijderen uit materiaal dat je van het forum downloadt.
-
-      10. Je mag geen enkel deel van het forum op andere websites tonen met '<iframe>'.
-
-      11. Je mag beveiligings- of toegangsbeperkingen van het forum niet uitschakelen, ontwijken of omzeilen.
-
-      12. Je mag de infrastructuur van het forum niet belasten met een onredelijke hoeveelheid verzoeken of verzoeken die een onredelijke belasting vormen voor de informatiesystemen die aan het forum ten grondslag liggen.
-
-      13. Je mag je via het forum niet voordoen als iemand anders.
-
-      14. Je mag niemand aanmoedigen of helpen deze voorwaarden te schenden.
-
-      <h2 id="heading--content-standards"><a href="#heading--content-standards">Inhoudsnormen</a></h2>
-
-      1. Je mag geen inhoud naar het forum sturen die illegaal, aanstootgevend of anderszins schadelijk is voor anderen. Hieronder valt ook inhoud die intimiderend, ongepast of beledigend is.
-
-      2. Je mag geen inhoud naar het forum sturen die de wet overtreedt, inbreuk maakt op intellectuele-eigendomsrechten, iemands privacy schendt of inbreuk maakt op overeenkomsten die je met anderen hebt.
-
-      3. Je mag geen inhoud naar het forum sturen die kwaadaardige computercode bevat, zoals computervirussen of spyware.
-
-      4. Je mag geen inhoud naar het forum sturen als louter een plaatsaanduider, om een bepaald adres, gebruikersnaam of andere unieke identificatie te bevatten.
-
-      5. Je mag het forum niet gebruiken om informatie bekend te maken waarvoor je niet het recht hebt om deze bekend te maken, zoals vertrouwelijke informatie of persoonsgegevens van anderen.
-
-      <h2 id="heading--enforcement"><a href="#heading--enforcement">Handhaving</a></h2>
-
-      Het bedrijf kan overtredingen van deze voorwaarden onderzoeken en vervolgen voor zover toegestaan door de wet. Het bedrijf kan wetshandhavingsautoriteiten inlichten en met hen samenwerken in de vervolging van schendingen van de wet en deze voorwaarden.
-
-      Het bedrijf behoudt zich het recht voor om inhoud op het forum om welke reden dan ook te wijzigen, te bewerken en te verwijderen. Als je denkt dat iemand in strijd met deze voorwaarden inhoud op het forum heeft geplaatst, [neem dan onmiddellijk contact met ons op](#heading--contact).
-
-      <h2 id="heading--your-account"><a href="#heading--your-account">Je account</a></h2>
-
-      Je moet een account maken en je aanmelden om sommige functies van het forum te kunnen gebruiken.
-
-      Om een account te maken, moet je enkele gegevens over jezelf verstrekken. Als je een account maakt, ga je ermee akkoord om ten minste een geldig e-mailadres op te geven en dat adres actueel te houden. Je kunt je account op elk moment sluiten door een e-mail te sturen naar <%{contact_email}>.
-
-      Je gaat ermee akkoord dat je verantwoordelijk bent voor alle acties die met je account worden ondernomen, ongeacht of je daarvoor toestemming hebt gegeven of niet, totdat je je account sluit of het bedrijf ervan op de hoogte stelt dat je account is gecompromitteerd. Je gaat ermee akkoord het bedrijf onmiddellijk op de hoogte te stellen als je vermoedt dat je account gecompromitteerd is. Je gaat ermee akkoord een veilig wachtwoord voor je account te kiezen en dit geheim te houden.
-
-      Het bedrijf kan je account op het forum beperken, schorsen of sluiten volgens zijn beleid voor het afhandelen van auteursrechtgerelateerde verwijderings–verzoeken, of als het bedrijf redelijkerwijs van mening is dat je een regel in deze voorwaarden hebt overtreden.
-
-      <h2 id="heading--your-content"><a href="#heading--your-content">Je inhoud</a></h2>
-
-      Niets in deze voorwaarden geeft het bedrijf eigendomsrechten op intellectueel eigendom dat je met het forum deelt, zoals je accountgegevens, berichten of andere inhoud die je op het forum plaatst. Niets in deze voorwaarden geeft je enig eigendomsrecht op het intellectuele eigendom van het bedrijf.
-
-      Tussen jou en het bedrijf blijft alleen jij verantwoordelijk voor de inhoud die je naar het forum stuurt. Je gaat ermee akkoord dat je niet ten onrechte impliceert dat inhoud die je naar het forum stuurt, gesponsord of goedgekeurd is door het bedrijf. Deze voorwaarden verplichten het bedrijf niet tot het opslaan, onderhouden of verstrekken van kopieën van inhoud die je indient of tot het wijzigen ervan, volgens deze voorwaarden.
-
-      Inhoud die je naar het forum stuurt is van jou en jij beslist welke toestemming je anderen daarvoor geeft. Je verleent het bedrijft echter ten minste een licentie om inhoud die je naar het forum stuurt te verstrekken aan andere gebruikers van het forum. Die speciale licentie staat het bedrijf toe inhoud die je naar het forum stuurt te kopiëren, te publiceren en te analyseren.
-
-      Wanneer inhoud die je stuurt wordt verwijderd van het forum, door jou of door het bedrijf, eindigt de speciale licentie van het bedrijf wanneer de laatste kopie verdwijnt uit de back-ups, caches en andere systemen van het bedrijf. Andere licenties die je toepast op inhoud die je stuurt, zoals [Creative Commons](https://creativecommons.org)-licenties, kunnen blijven bestaan nadat je inhoud is verwijderd. Die licenties kunnen anderen, of het bedrijf zelf, het recht geven om je inhoud weer via het forum te delen.
-
-      Anderen die inhoud ontvangen die jij naar het forum stuurt, kunnen de voorwaarden schenden waaronder jij je inhoud in licentie geeft. Je gaat ermee akkoord dat het bedrijf tegenover jou niet aansprakelijk is voor deze overtredingen of de gevolgen daarvan.
-
-      <h2 id="heading--responsibility"><a href="#heading--responsibility">Je verantwoordelijkheid</a></h2>
-
-      Je gaat ermee akkoord het bedrijf te vrijwaren van juridische vorderingen van anderen in verband met je overtreding van deze voorwaarden, of overtreding van deze voorwaarden door anderen die je account op het forum gebruiken. Zowel jij als het bedrijf komen overeen de andere partij zo snel mogelijk op de hoogte te stellen van alle juridische vorderingen waarvoor je het bedrijf mogelijk moet vrijwaren. Als het bedrijf je niet onmiddellijk op de hoogte stelt van een rechtsvordering, hoef je het bedrijf niet schadeloos te stellen voor schade die je met een snelle kennisgeving had kunnen verdedigen of beperken. Je staat het bedrijf toe het onderzoek, de verdediging en de schikking van juridische vorderingen waarvoor je het bedrijf zou moeten vrijwaren te beheren en mee te werken met deze inspanningen. Het bedrijf gaat ermee akkoord niet in te stemmen met een schikking die jouw schuld toegeeft of je verplichtingen oplegt zonder je voorafgaande toestemming.
-
-      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Disclaimers</a></h2>
-
-      ***Je accepteert alle risico's van het gebruik van het forum en de inhoud op het forum. Voor toegestaan door de wet, leveren het bedrijf en zijn leveranciers het forum in de staat waarin het verkeert, zonder enige garantie.***
-
-      Het forum kan hyperlinks naar forums en diensten van anderen plaatsen en deze integreren. Het bedrijf geeft geen enkele garantie over diensten van anderen of de inhoud die zij kunnen leveren. Op het gebruik van diensten die door anderen worden uitgevoerd kunnen andere voorwaarden van toepassing zijn tussen jou en degene die de dienst uitvoert.
-
-      <h2 id="heading--liability"><a href="#heading--liability">Beperking van de aansprakelijkheid</a></h2>
-
-      ***Het bedrijf noch zijn leveranciers zijn tegenover jou aansprakelijk voor contractbreukschade die hun personeel redelijkerwijs niet kon voorzien toen je akkoord ging met deze voorwaarden.***
-
-      ***Voor toegestaan door de wet, is de totale aansprakelijkheid tegenover jou voor vorderingen van welke aard dan ook die verband houden met het forum of de inhoud op het forum beperkt tot $ 50.***
-
-      <h2 id="heading--feedback"><a href="#heading--feedback">Feedback</a></h2>
-
-      Het bedrijf verwelkomt je feedback en suggesties voor het forum. Zie het onderdeel [Contact](#heading--contact) hieronder voor manieren om met ons in contact te komen.
-
-      Je gaat ermee akkoord dat het bedrijf vrij is om te handelen naar aanleiding van de feedback en suggesties die je geeft en dat het bedrijf je niet hoeft te melden dat je feedback is gebruikt, je niet om toestemming hoeft te vragen om die te gebruiken en je niet hoeft te betalen. Je stemt ermee in om geen feedback of suggesties te geven waarvan je denkt dat ze vertrouwelijk zijn of eigendom zijn van jou of anderen.
-
-      <h2 id="heading--termination"><a href="#heading--termination">Beëindiging</a></h2>
-
-      Zowel jij als het bedrijf kunnen de in deze voorwaarden beschreven overeenkomst te allen tijde beëindigen. Als onze overeenkomst eindigt, eindigt ook je toestemming om het forum te gebruiken.
-
-      De volgende bepalingen blijven van kracht na beëindiging van onze overeenkomst: [Je inhoud](#heading--your-content), [Feedback](#heading--feedback), [Je verantwoordelijkheid](#heading--responsibility), [Disclaimers](#heading--disclaimers), [Beperking van de aansprakelijkheid](#heading--liability) en [Algemene voorwaarden](#heading--general).
-
-      <h2 id="heading--disputes"><a href="#heading--disputes">Geschillen</a></h2>
-
-      %{governing_law} is van toepassing op elk geschil met betrekking tot deze voorwaarden en je gebruik van het forum.
-
-      Jij en het bedrijf komen overeen om alleen vorderingen met betrekking tot deze voorwaarden in te stellen bij een staats- of federale rechtbank in %{city_for_disputes}. Jij en het bedrijf zullen geen bezwaar maken tegen de rechtsbevoegdheid, de samenstelling of de locatie van die rechtbanken.
-
-      ***Anders dan voor het verkrijgen van een gerechtelijk bevel of voor vorderingen uit hoofde van de Computer Fraud and Abuse Act van de Verenigde Staten, zullen jij en het bedrijf elk geschil oplossen door bindende arbitrage door de American Arbitration Association. De arbitrage volgt de commerciële arbitrageregels en de aanvullende procedures voor consumentengeschillen van de AAA. Arbitrage zal plaatsvinden in %{city_for_disputes}. U zult elk geschil als individu regelen en niet als onderdeel van een collectieve actie of een andere representatieve procedure, hetzij als eiser, hetzij als lid van een groep. Geen enkele arbiter zal een geschil consolideren met een andere arbitrage zonder toestemming van het bedrijf.***
-
-      Elke arbitrage-uitspraak zal de kosten van de arbitrage, redelijke advocatenhonoraria en redelijke kosten voor getuigen omvatten. Jij en het bedrijf kunnen een arbitrage-uitspraak doen in elke bevoegde rechtbank.
-
-      <h2 id="heading--general"><a href="#heading--general">Algemene voorwaarden</a></h2>
-
-      Indien een bepaling van deze voorwaarden niet afdwingbaar is zoals deze geschreven is, maar gewijzigd zou kunnen worden om deze afdwingbaar te maken, moet de bepaling worden gewijzigd in de minimale mate die nodig is om deze afdwingbaar te maken. Anders moet de bepaling worden geschrapt.
-
-      Je mag je overeenkomst met het bedrijf niet overdragen. Het bedrijf kan je overeenkomst overdragen aan een gelieerde onderneming van het bedrijf, een ander bedrijf dat de controle over het bedrijf verkrijgt, of een ander bedrijf dat activa van het bedrijf koopt die verband houden met het forum. Elke poging tot overdracht in strijd met deze voorwaarden heeft geen rechtsgevolgen.
-
-      Noch de uitoefening van enig recht uit hoofde van deze overeenkomst, noch het afstand doen van een inbreuk op deze overeenkomst, doet afstand van enige andere inbreuk op deze overeenkomst.
-
-      Deze voorwaarden belichamen alle afspraken tussen jou en het bedrijf betreffende het gebruik van het forum. Deze voorwaarden vervangen volledig alle andere overeenkomsten betreffende je gebruik van het forum, geschreven of anderszins.
-
-      <h2 id="heading--contact"><a href="#heading--contact">Contact</a></h2>
-
-      Je kunt het bedrijf onder deze voorwaarden informeren en vragen aan het bedrijf sturen via <%{contact_email}>.
-
-      Het bedrijf kan je onder deze voorwaarden informeren via het e-mailadres dat je hebt opgegeven voor je account op het forum of door een bericht te plaatsen op de startpagina van het forum of op je accountpagina.
-
-      <h2 id="heading--changes"><a href="#heading--changes">Wijzigingen</a></h2>
-
-      Het bedrijf heeft deze voorwaarden voor het laatst bijgewerkt op 12 juli 2018 en kan deze voorwaarden opnieuw bijwerken. Het bedrijf zal alle updates op het forum plaatsen. Voor updates die wezenlijke veranderingen bevatten, gaat het bedrijf ermee akkoord je een e-mail te sturen, als je een account hebt gemaakt en een geldig e-mailadres hebt opgegeven. Het bedrijf kan ook updates aankondigen met speciale berichten of waarschuwingen op het forum.
-
-      Zodra je bericht krijgt over een update van deze voorwaarden, moet je akkoord gaan met de nieuwe voorwaarden om het forum te kunnen blijven gebruiken.
   privacy_topic:
     title: "Privacybeleid"
     body: |

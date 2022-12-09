@@ -108,17 +108,15 @@ sv:
       join: "Gå med"
       new_messages: "nya meddelanden"
       mention_warning:
-        cannot_see:
-          one: "%{usernames} kan inte komma åt den här kanalen och har inte blivit meddelad."
-          other: "%{usernames} kan inte komma åt den här kanalen och har inte blivit meddelade."
         dismiss: "avfärda"
         invitations_sent:
           one: "Inbjudan skickad"
           other: "Inbjudningar skickade"
         invite: "Bjud in till kanal"
-        without_membership:
-          one: "%{usernames} har inte gått med i den här kanalen."
-          other: "%{usernames} har inte gått med i den här kanalen."
+        groups:
+          users_limit:
+            one: "%{count} användare"
+            other: "%{count} användare"
       aria_roles:
         header: "Chatthuvud"
         composer: "Chattkompositör"

@@ -1180,7 +1180,7 @@ nb_NO:
         use: "Bruk Autentisering-appen"
         enforced_notice: "Du er nødvendig for å aktivere to-faktor-autentisering før du går inn på dette nettstedet."
         disable: "Deaktiver"
-        disable_confirm: "Er du sikker på at du vil skru av alle to-faktor-metoder?"
+        delete: "Slett"
         save: "Lagre"
         edit: "Rediger"
         edit_title: "Rediger autentisering"
@@ -1259,7 +1259,6 @@ nb_NO:
         authenticated: "Din e-post har blitt autentisert av %{provider}"
         invite_auth_email_invalid: "Invitasjons-e-posten din samsvarer ikke med e-posten godkjent av %{provider}"
         authenticated_by_invite: "E-posten din er blitt godkjent av invitasjonen"
-        frequency_immediately: "Vi sender deg umiddelbart en e-post hvis du ikke har lest det vi sender e-post om."
         frequency:
           one: "Vi sender deg bare e-post hvis vi ikke har sett deg deg det siste minuttet."
           other: "Vi sender deg bare e-post hvis vi ikke har sett deg de siste %{count} minuttene."
@@ -4427,6 +4426,11 @@ nb_NO:
         unlock_trust_level: "Lås opp tillitsnivå"
         silenced_count: "Dempet"
         suspended_count: "Utestengt"
+        other_matches_list:
+          username: "Brukernavn"
+          trust_level: "Tillitsnivå"
+          read_time: "Lesetid"
+          posts: "Innlegg"
         tl3_requirements:
           title: "Krav til tillitsnivå 3"
           table_title:
@@ -4551,6 +4555,7 @@ nb_NO:
           search: "Søk"
           groups: "Grupper"
           dashboard: "Dashbord"
+          navigation: "Navigasjon"
         default_categories:
           modal_yes: "Ja"
       badges:

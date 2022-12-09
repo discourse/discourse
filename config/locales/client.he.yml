@@ -1401,7 +1401,7 @@ he:
         use: "להשתמש ביישומון אימות"
         enforced_notice: "עליך להפעיל אימות דו־שלבי בטרם הגישה לאתר הזה."
         disable: "בטל"
-        disable_confirm: "להשבית את כל שיטות האימות הדו־שלבי?"
+        delete: "מחיקה"
         save: "שמירה"
         edit: "עריכה"
         edit_title: "עריכת מאמת"
@@ -1489,7 +1489,6 @@ he:
         authenticated: "כתובת הדואר האלקטרוני שלך אושרה על ידי %{provider}"
         invite_auth_email_invalid: "הודעת ההזמנה שלך בדוא״ל אינה תואמת להודעה שאומתה על ידי %{provider}"
         authenticated_by_invite: "כתובת הדוא״ל שלך אושרה על ידי ההזמנה"
-        frequency_immediately: "נשלח לך הודעה בדוא״ל מיידית אם טרם קראת את מה ששלחנו לך קודם."
         frequency:
           one: "נשלח לך הודעה בדוא״ל רק אם לא הופעת בדקה האחרונה."
           two: "נשלח לך הודעה בדוא״ל רק אם לא הופעת ב־%{count} הדקות האחרונות."
@@ -4663,6 +4662,8 @@ he:
         howto: "איך אני מתקין/ה הרחבות?"
         official: "תוסף רשמי"
         broken_route: "לא ניתן להגדיר את הקישור אל ‚%{name}’. כדאי לוודא שחוסמי פרסומות מושבתים ואז לנסות לטעון את הדף מחדש."
+      navigation_menu:
+        sidebar: "סרגל צד"
       backups:
         title: "גיבויים"
         menu:
@@ -5547,6 +5548,11 @@ he:
         silenced_count: "מושתק"
         suspended_count: "מושעה"
         last_six_months: "חצי השנה האחרונה"
+        other_matches_list:
+          username: "שם משתמש"
+          trust_level: "דרגת אמון"
+          read_time: "זמן קריאה"
+          posts: "פוסטים"
         tl3_requirements:
           title: "דרישות עבור דרגת אמון 3"
           table_title:
@@ -5693,7 +5699,7 @@ he:
           search: "חיפוש"
           groups: "קבוצות"
           dashboard: "לוח בקרה"
-          sidebar: "סרגל צד"
+          navigation: "ניווט"
         secret_list:
           invalid_input: "שדות הקלט לא יכולים להישאר ריקים או להכיל תווים של קווים אנכיים."
         default_categories:

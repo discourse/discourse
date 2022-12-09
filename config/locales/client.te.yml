@@ -472,6 +472,7 @@ te:
       second_factor:
         name: "పేరు"
         disable: "అచేతనం"
+        delete: "తొలగించు"
         save: "భద్రపరచు"
         edit: "సవరించు"
         security_key:
@@ -505,7 +506,6 @@ te:
         ok: "ద్రువపరుచుటకు మీకు ఈమెయిల్ పంపాము"
         invalid: "దయచేసి చెల్లుబాటులోని ఈమెయిల్ చిరునామా రాయండి"
         authenticated: "మీ ఈమెయిల్ %{provider} చేత ద్రువీకరించబడింది"
-        frequency_immediately: "మీకు వెంటనే ఈమెయిల్ చేసాము, మీరు ఈమెయిల్ విషయం చదవకపోతే. "
       associated_accounts:
         revoke: "రివోక్"
         cancel: "రద్దుచేయి"
@@ -1869,6 +1869,11 @@ te:
         lock_trust_level: "నమ్మకపు స్థాయి ని బంధించు"
         unlock_trust_level: "నమ్మకపు స్థాయిని వదిలేయి"
         suspended_count: "సస్పెడయ్యాడు"
+        other_matches_list:
+          username: "సభ్యనామం"
+          trust_level: "నమ్మకం స్థాయి"
+          read_time: "చదువు సమయం"
+          posts: "టపాలు"
         tl3_requirements:
           title: "నమ్మకపు స్థాయి 3 అవసరాలు"
           value_heading: "విలువ"
@@ -1966,6 +1971,7 @@ te:
           search: "వెతుకు"
           groups: "గుంపులు"
           dashboard: "రంగస్థలం"
+          navigation: "నావిగేషను"
         default_categories:
           modal_yes: "అవును"
       badges:

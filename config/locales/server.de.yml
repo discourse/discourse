@@ -666,7 +666,6 @@ de:
       one: "%{count} „Gefällt mir“"
       other: "%{count} „Gefällt mir“"
     cannot_permanently_delete:
-      many_posts: "Du kannst dieses Thema nicht dauerhaft löschen, da es andere Beiträge gibt."
       wait_or_different_admin: "Du musst %{time_left} warten, bevor du diesen Beitrag endgültig löschen kannst, oder ein anderer Administrator muss dies tun."
   rate_limiter:
     slow_down: "Du hast diese Aktion zu oft durchgeführt. Bitte versuche es später noch einmal."
@@ -861,7 +860,6 @@ de:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Unangemessen"
-      description: 'Dieser Beitrag enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder <a href="%{base_path}/guidelines">unsere Community-Richtlinien verletzend</a> auffassen würde.'
       short_description: 'Ein Verstoß gegen <a href="%{base_path}/guidelines">unsere Community-Richtlinien</a>'
     notify_user:
       title: "Schreibe @%{username} eine Nachricht"
@@ -927,7 +925,6 @@ de:
       short_description: "Dies ist Werbung"
     inappropriate:
       title: "Unangemessen"
-      description: 'Dieses Thema enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder <a href="%{base_path}/guidelines">unsere Community-Richtlinien verletzend</a> auffassen würde.'
       long_form: "als unangemessen gemeldet"
       short_description: 'Ein Verstoß gegen <a href="%{base_path}/guidelines">unsere Community-Richtlinien</a>'
     notify_moderators:
@@ -1642,7 +1639,6 @@ de:
     discord_trusted_guilds: 'Das Anmelden per Discord nur Mitgliedern dieser Discord-Gilden gestatten. Verwende die numerische ID der Gilde. Lies die Anleitung <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">hier</a>, um mehr zu erfahren. Leer lassen, um jede Gilde zuzulassen.'
     enable_backups: "Erlaube Administratoren, Backups des Forums zu erstellen"
     allow_restore: "Wiederherstellung zulassen, die ALLE Website-Daten ersetzen kann! Lasse dies deaktiviert, es sei denn, du möchtest ein Backup wiederherstellen"
-    maximum_backups: "Die maximale Anzahl an Backups, die gespeichert werden. Ältere Backups werden automatisch gelöscht."
     automatic_backups_enabled: "Automatische Backups aktivieren. Die Backups werden im eingestellten Zeitintervall erstellt."
     backup_frequency: "Die Anzahl von Tagen zwischen Backups."
     s3_backup_bucket: "Der entfernte Bucket, in dem Backups gespeichert werden. WARNUNG: Achte darauf, dass es ein privater Bucket ist."
@@ -1817,7 +1813,6 @@ de:
     faq_url: "Die vollständige URL zu deiner extern gehosteten FAQ, sofern vorhanden."
     tos_url: "Die vollständige URL zu deinen extern gehosteten Nutzungsbedingungen, sofern vorhanden."
     privacy_policy_url: "Die vollständige URL zu deiner extern gehosteten Datenschutzerklärung, sofern vorhanden."
-    log_anonymizer_details: "Gibt an, ob die Daten eines Benutzers nach der Anonymisierung im Protokoll gespeichert werden sollen. Zur Einhaltung der DSGVO muss dies abgeschaltet werden."
     newuser_spam_host_threshold: "Wie oft ein neuer Benutzer einen Link zum selben Host innerhalb seiner `newuser_spam_host_threshold` Beiträge veröffentlichen kann, bevor dies als Spam angesehen wird."
     allowed_spam_host_domains: "Liste von Domains, die keinem Spam-Host-Test unterzogen werden. Neue Benutzer werden niemals daran gehindert, Beiträge mit Links zu diesen Domains zu erstellen."
     staff_like_weight: "Wie viel Gewicht „Gefällt mir“-Angaben des Teams haben sollen („Gefällt mir“-Angaben von Nicht-Team-Mitgliedern haben ein Gewicht von 1.)"
@@ -2571,12 +2566,10 @@ de:
       %{notes}
   flag_reasons:
     off_topic: "Dein Beitrag wurde als **Thema verfehlt** gemeldet: Die Community denkt, dass er nicht zum Thema passt, wie es durch den Titel und den ersten Beitrag definiert wurde."
-    inappropriate: "Dein Beitrag wurde als **unangemessen** gemeldet: Die Community denkt, dass er anstößig oder beleidigend ist oder einen Verstoß gegen [die Community-Richtlinien](%{base_path}/guidelines) darstellt."
     spam: "Dein Beitrag wurde als **Spam** gemeldet: Die Community denkt, dass es sich um Werbung handelt, zu werblich in seiner Art und nicht nützlich oder für das Diskussionsthema relevant ist."
     notify_moderators: "Dein Beitrag wurde **den Moderatoren gemeldet**: Die Community denkt, dass etwas an deinem Beitrag das Eingreifen eines Team-Mitglieds erfordert."
     responder:
       off_topic: "Der Beitrag wurde als **Thema verfehlt** gemeldet: Die Community denkt, dass er nicht zum Thema passt, wie es durch den Titel und den ersten Beitrag definiert wurde."
-      inappropriate: "Der Beitrag wurde als **unangemessen** gemeldet: Die Community denkt, dass er anstößig oder beleidigend ist oder einen Verstoß gegen [die Community-Richtlinien](%{base_path}/guidelines) darstellt."
       spam: "Der Beitrag wurde als **Spam** gemeldet: Die Community denkt, dass es sich um Werbung handelt oder der Beitrag zu werblich in seiner Art und nicht nützlich oder für das Diskussionsthema relevant ist."
       notify_moderators: "Der Beitrag wurde **den Moderatoren gemeldet**: Die Community denkt, dass etwas an dem Beitrag das Eingreifen eines Team-Mitglieds erfordert."
   flags_dispositions:
@@ -3891,178 +3884,6 @@ de:
       Ja, Juristensprache ist langweilig, aber wir müssen uns &ndash; und damit auch dich und deine Daten &ndash; vor unfreundlichen Leuten schützen. Wir haben [Nutzungsbedingungen](%{base_path}/tos), die dein (und unser) Verhalten und deine Rechte in Bezug auf Inhalte, Datenschutz und Gesetze beschreiben. Um diesen Dienst zu nutzen, musst du zustimmen, unsere [Nutzungsbedingungen](%{base_path}/tos) einzuhalten.
   tos_topic:
     title: "Nutzungsbedingungen"
-    body: |
-      Diese Bedingungen regeln die Nutzung des Internetforums unter <%{base_url}>. Um das Forum zu nutzen, musst du diesen Bedingungen gegenüber %{company_name} zustimmen, dem Betreiber des Forums.
-
-      Der Betreiber kann andere Produkte und Dienstleistungen zu unterschiedlichen Bedingungen anbieten. Diese Bedingungen gelten nur für die Nutzung des Forums.
-
-      Springe zu:
-
-      - [Wichtige Bedingungen](#heading--important-terms)
-      - [Erlaubnis zur Nutzung des Forums](#heading--permission)
-      - [Bedingungen für die Nutzung des Forums](#heading--conditions)
-      - [Zulässige Nutzung](#heading--acceptable-use)
-      - [Zulässige Inhalte](#heading--content-standards)
-      - [Rechtsdurchsetzung](#heading--enforcement)
-      - [Deine Konto](#heading--your-account)
-      - [Deine Inhalte](#heading--your-content)
-      - [Deine Pflichten](#heading--responsibility)
-      - [Haftungsausschlüsse](#heading--disclaimers)
-      - [Haftungsbeschränkungen](#heading--liability)
-      - [Feedback](#heading--feedback)
-      - [Kündigung](#heading--termination)
-      - [Streitigkeiten](#heading--disputes)
-      - [Allgemeine Bedingungen](#heading--general)
-      - [Kontakt](#heading--contact)
-      - [Änderungen](#heading--changes)
-
-      <h2 id="heading--important-terms"><a href="#heading--important-terms">Wichtige Bedingungen</a></h2>
-
-      ***Diese Bedingungen beinhalten eine Reihe wichtiger Bestimmungen, die deine Rechte und Pflichten betreffen, z. B. [Haftungsausschlüsse](#heading--disclaimers), [Haftungsbeschränkungen](#heading--liability), dein Einverständnis, durch Missbrauch des Forums verursachte Schäden gegenüber dem Betreiber zu decken unter [Deine Pflichten](#heading--responsibility) und eine Vereinbarung zur Schlichtung von Streitfällen unter [Streitigkeiten](#heading--disputes).***
-
-      <h2 id="heading--permission"><a href="#heading--permission">Erlaubnis zur Nutzung des Forums</a></h2>
-
-      Vorbehaltlich dieser Bedingungen erteilt dir der Betreiber die Erlaubnis, das Forum zu nutzen. Jeder muss diesen Bedingungen zustimmen, um das Forum nutzen zu können.
-
-      <h2 id="heading--conditions"><a href="#heading--conditions">Bedingungen für die Nutzung des Forums</a></h2>
-
-      Deine Erlaubnis zur Nutzung des Forums unterliegt den folgenden Bedingungen:
-
-      1. Du musst mindestens dreizehn Jahre alt sein.
-
-      2. Du darfst das Forum nicht mehr nutzen, wenn sich der Betreiber direkt mit dir in Verbindung setzt, um dir mitzuteilen, dass du es nicht mehr nutzen darfst.
-
-      3. Du musst das Forum in Übereinstimmung mit den Standards für [zulässige Nutzung](#heading--acceptable-use) und [zulässige Inhalte](#heading--content-standards) nutzen.
-
-      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Zulässige Nutzung</a></h2>
-
-      1. Du darfst nicht gegen das Gesetz verstoßen, wenn du das Forum benutzt.
-
-      2. Du darfst das Konto eines anderen im Forum ohne dessen ausdrückliche Erlaubnis nicht nutzen oder versuchen, es zu nutzen.
-
-      3. Du darfst keine Benutzernamen oder andere eindeutige Identifikatoren im Forum kaufen, verkaufen oder anderweitig handeln.
-
-      4. Du darfst keine Werbung, Kettenbriefe oder andere Aufforderungen über das Forum senden oder das Forum nutzen, um Adressen oder andere persönliche Daten für kommerzielle Mailinglisten oder Datenbanken zu sammeln.
-
-      5. Du darfst den Zugriff auf das Forum nicht automatisieren oder das Forum überwachen, z. B. mit einem Webcrawler, Browser-Plug-in oder -Add-on oder einem anderen Computerprogramm, das kein Webbrowser ist. Du darfst das Forum crawlen, um es für eine öffentlich zugängliche Suchmaschine zu indizieren, falls du eine solche betreibst.
-
-      6. Du darfst das Forum nicht nutzen, um E-Mails an Verteilerlisten, Newsgroups oder Gruppenmail-Aliase zu senden.
-
-      7. Du darfst nicht fälschlicherweise andeuten, dass du mit dem Betreiber verbunden bist oder von diesem unterstützt wirst.
-
-      8. Du darfst keinen Hyperlink zu Bildern oder anderen nicht-hypertextuellen Inhalten im Forum auf anderen Webseiten setzen.
-
-      9. Du darfst keine Marken entfernen, die Eigentum an Materialien zeigen, die du vom Forum herunterlädst.
-
-      10. Du darfst keinen Teil des Forums auf anderen Websites mit `<iframe>` zeigen.
-
-      11. Du darfst keine Sicherheits- oder Zugriffsbeschränkungen des Forums deaktivieren, vermeiden oder umgehen.
-
-      12. Du darfst die Infrastruktur des Forums nicht mit einer unangemessenen Anzahl von Anfragen oder Anfragen belasten, die darauf abzielen, die dem Forum zugrunde liegenden Informationssysteme unangemessen zu belasten.
-
-      13. Du darfst dich über das Forum nicht für andere ausgeben.
-
-      14. Du darfst niemanden ermutigen oder ihm helfen, der gegen diese Bedingungen verstößt.
-
-      <h2 id="heading--content-standards"><a href="#heading--content-standards">Zulässige Inhalte</a></h2>
-
-      1. Du darfst keine Inhalte in das Forum einstellen, die illegal, anstößig oder anderweitig schädlich für andere sind. Dazu gehören auch Inhalte, die belästigend, unangemessen oder beleidigend sind.
-
-      2. Du darfst keine Inhalte an das Forum übermitteln, die gegen das Gesetz verstoßen, die Rechte an geistigem Eigentum Dritter verletzen, die Privatsphäre Dritter verletzen oder Vereinbarungen verletzen, die du mit anderen hast.
-
-      3. Du darfst keine Inhalte an das Forum übermitteln, die bösartigen Computercode wie Computerviren oder Spyware enthalten.
-
-      4. Du darfst keine Inhalte an das Forum als bloßen Platzhalter übermitteln, um eine bestimmte Adresse, einen bestimmten Benutzernamen oder eine andere eindeutige Kennung zu speichern.
-
-      5. Du darfst das Forum nicht nutzen, um Informationen offenzulegen, zu denen du nicht das Recht hast, sie offenzulegen, z. B. vertrauliche oder persönliche Informationen anderer.
-
-      <h2 id="heading--enforcement"><a href="#heading--enforcement">Rechtsdurchsetzung</a></h2>
-
-      Der Betreiber kann Verstöße gegen diese Bedingungen im vollen rechtlichen Umfang untersuchen und verfolgen. Der Betreiber kann die Strafverfolgungsbehörden bei der Verfolgung von Verstößen gegen das Gesetz und diese Bedingungen informieren und mit ihnen zusammenarbeiten.
-
-      Der Betreiber behält sich das Recht vor, Inhalte im Forum aus einem beliebigen Grund zu ändern, zu bearbeiten und zu löschen. Wenn du glaubst, dass jemand Inhalte in das Forum gestellt hat, die gegen diese Bedingungen verstoßen, [kontaktiere uns sofort](#heading-contact).
-
-      <h2 id="heading--your-account"><a href="#heading--your-account">Dein Konto</a></h2>
-
-      Du musst ein Konto erstellen und dich damit anmelden, um einige Funktionen des Forums nutzen zu können.
-
-      Um ein Konto zu erstellen, musst du einige Informationen über dich selbst angeben. Wenn du ein Konto einrichtest, stimmst du zu, mindestens eine gültige E-Mail-Adresse anzugeben und diese Adresse auf dem neuesten Stand zu halten. Du kannst dein Konto jederzeit per E-Mail an <%{contact_email}> schließen.
-
-      Du stimmst zu, für alle Aktivitäten verantwortlich zu sein, die über dein Konto ergriffen werden, unabhängig davon, ob diese von dir autorisiert sind oder nicht, bis du entweder dein Konto schließt oder den Betreiber darüber informierst, dass dein Konto kompromittiert wurde. Du stimmst zu, den Betreiber unverzüglich zu informieren, wenn du den Verdacht hast, dass dein Konto kompromittiert wurde. Du stimmst zu, ein sicheres Passwort für dein Konto zu wählen und es geheim zu halten.
-
-      Der Betreiber kann dein Konto im Forum gemäß seiner Richtlinie für die Bearbeitung von urheberrechtlichen Löschanträgen oder wenn der Betreiber der begründeten Annahme ist, dass du gegen eine Regel in diesen Bedingungen verstoßen hast, einschränken, sperren oder schließen.
-
-      <h2 id="heading--your-content"><a href="#heading--your-content">Deine Inhalte</a></h2>
-
-      Nichts in diesen Bedingungen gibt dem Betreiber Eigentumsrechte an geistigem Eigentum, das du mit dem Forum teilst, z. B. deine Kontoinformationen, Beiträge oder andere Inhalte, die du im Forum einreichst. Nichts in diesen Bedingungen gibt dir irgendwelche Eigentumsrechte an dem geistigen Eigentum des Betreibers.
-
-      Zwischen dir und dem Betreiber bleibst du allein verantwortlich für die Inhalte, die du in das Forum einbringst. Du stimmst zu, nicht fälschlicherweise anzudeuten, dass Inhalte, die du in das Forum einbringst, vom Betreiber gesponsert oder genehmigt werden. Diese Bedingungen verpflichten den Betreiber nicht, die von dir übermittelten Inhalte zu speichern, zu pflegen oder zu kopieren und gemäß diesen Bedingungen zu ändern.
-
-      Die Inhalte, die du im Forum einreichst, gehören dir und du entscheidest, welche Erlaubnis du anderen diesbezüglich erteilst. Aber zumindest lizenzierst du den Betreiber, Inhalte, die du im Forum einreichst, anderen Benutzern des Forums zur Verfügung zu stellen. Diese spezielle Lizenz erlaubt es dem Betreiber, Inhalte, die du an das Forum übermittelst, zu kopieren, zu veröffentlichen und zu analysieren.
-
-      Wenn von dir eingereichte Inhalte aus dem Forum entfernt werden, sei es von dir oder vom Betreiber, endet die spezielle Lizenz des Betreibers, wenn die letzte Kopie aus den Backups, Caches und anderen Systemen des Betreibers verschwindet. Andere Lizenzen, die du auf Inhalte anwendest, die du einreichst, z. B. Lizenzen von [Creative Commons](https://creativecommons.org), können fortgesetzt werden, nachdem deine Inhalte entfernt wurden. Diese Lizenzen können anderen oder dem Betreiber selbst das Recht geben, deine Inhalte über das Forum erneut zu teilen.
-
-      Andere, die Inhalte erhalten, die du in das Forum stellst, können gegen die Bedingungen verstoßen, unter denen du deine Inhalte lizenzierst. Du stimmst zu, dass der Betreiber dir gegenüber nicht für diese Verstöße oder deren Folgen haftet.
-
-      <h2 id="heading--responsibility"><a href="#heading--responsibility">Deine Pflichten</a></h2>
-
-      Du stimmst zu, den Betreiber von Rechtsansprüchen Dritter freizustellen, die mit deinem Verstoß gegen diese Bedingungen oder mit einem Verstoß gegen diese Bedingungen durch andere, die dein Konto im Forum nutzen, zusammenhängen. Sowohl du als auch der Betreiber verpflichten sich, die andere Partei über alle Rechtsansprüche zu informieren, für die du den Betreiber möglicherweise so schnell wie möglich entschädigen musst. Wenn der Betreiber dich nicht unverzüglich über einen Rechtsanspruch informiert, musst du den Betreiber nicht für Schäden entschädigen, die du hättest verteidigen oder mildern können. Du stimmst zu, dass der Betreiber die Untersuchung, Verteidigung und Beilegung von Rechtsansprüchen, für die du den Betreiber entschädigen müsstest, kontrollieren darf und du entsprechend kooperierst. Der Betreiber verpflichtet sich, ohne deine vorherige Zustimmung keinem Vergleich zuzustimmen, der dir ein Verschulden zuschreibt oder dir Verpflichtungen auferlegt.
-
-      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Haftungsausschlüsse</a></h2>
-
-      ***Du akzeptierst alle Risiken der Nutzung des Forums und der Inhalte im Forum. Soweit es das Gesetz zulässt, stellen der Betreiber und seine Lieferanten das Forum im vorliegenden Zustand ohne jegliche Gewährleistung zur Verfügung.***
-
-      Das Forum kann Hyperlinks zu Foren und Diensten anderer Anbieter enthalten und einbinden. Der Betreiber übernimmt keine Garantie für Dienste, die von anderen betrieben werden, oder für Inhalte, die sie bereitstellen. Die Nutzung von Diensten, die von anderen betrieben werden, kann durch andere Bedingungen zwischen dir und dem entsprechenden Betreiber geregelt sein.
-
-      <h2 id="heading--liability"><a href="#heading--liability">Haftungsbeschränkungen</a></h2>
-
-      ***Weder der Betreiber noch seine Lieferanten haften dir gegenüber für Schäden aus Vertragsverletzungen, die ihr Personal nicht vorhersehen konnte, als du diesen Bedingungen zugestimmt hast.***
-
-      ***Soweit es das Gesetz erlaubt, ist die Gesamthaftung dir gegenüber für Ansprüche jeglicher Art, die sich auf das Forum oder den Inhalt des Forums beziehen, auf $ 50 begrenzt.***
-
-      <h2 id="heading--feedback"><a href="#heading--feedback">Feedback</a></h2>
-
-      Der Betreiber freut sich über dein Feedback und deine Vorschläge für das Forum. Im Abschnitt [Kontakt](#heading--contact) unten findest du Möglichkeiten, mit uns in Kontakt zu treten.
-
-      Du stimmst zu, dass es dem Betreiber freisteht, auf Feedback und Vorschläge, die du machst, zu reagieren und dass der Betreiber dich nicht darüber informieren muss, dass dein Feedback verwendet wurde, nicht deine Erlaubnis einholen muss, es zu verwenden, oder dich nicht dafür bezahlen muss. Du stimmst zu, kein Feedback oder Vorschläge, die deiner Meinung nach für dich oder andere vertraulich oder urheberrechtlich geschützt sind, zu übermitteln.
-
-      <h2 id="heading--termination"><a href="#heading--termination">Kündigung</a></h2>
-
-      Du oder der Betreiber können die in diesen Bedingungen ausgeführte Vereinbarung jederzeit kündigen. Wenn unsere Vereinbarung endet, endet auch deine Erlaubnis, das Forum zu nutzen.
-
-      Die folgenden Bestimmungen gelten auch über das Ende unserer Vereinbarung hinaus: [Deine Inhalte](#heading--your-content), [Feedback](#heading--feedback), [Deine Pflichten](#heading--responsibility), [Haftungsausschlüsse](#heading--disclaimers), [Haftungsbeschränkungen](#heading--liability), und [Allgemeine Bedingungen](#heading--general).
-
-      <h2 id="heading--disputes"><a href="#heading--disputes">Streitigkeiten</a></h2>
-
-      %{governing_law} wird alle Streitigkeiten im Zusammenhang mit diesen Bedingungen oder deiner Nutzung des Forums regeln.
-
-      Du und der Betreiber stimmen zu, Unterlassungsansprüche im Zusammenhang mit diesen Bedingungen nur vor einem staatlichen oder bundesstaatlichen Gericht in %{city_for_disputes} zu erheben. Weder du noch der Betreiber werden der Zuständigkeit, dem Gerichtsstand oder dem Gerichtsstand dieser Gerichte widersprechen.
-
-      ***Abgesehen von der Erhebung von Unterlassungsansprüchen oder von Ansprüchen nach dem Computer Fraud and Abuse Act, werden du und der Betreiber alle Streitigkeiten durch ein verbindliches Schiedsverfahren der American Arbitration Association lösen. Das Schiedsverfahren folgt den Commercial Arbitration Rules und Supplementary Procedures for Consumer Related Disputes der AAA. Das Schiedsverfahren findet in %{city_for_disputes} statt. Du wirst alle Streitigkeiten als Einzelperson beilegen und nicht im Rahmen einer Sammelklage oder eines anderen repräsentativen Verfahrens, sei es als Kläger oder als Mitglied einer Sammelklage. Kein Schiedsrichter wird Streitigkeiten mit anderen Schiedsgerichten ohne die Erlaubnis des Betreibers konsolidieren.***
-
-      Jeder Schiedsspruch beinhaltet die Kosten des Schiedsverfahrens, angemessene Anwaltskosten und angemessene Kosten für Zeugen. Du und der Betreiber können Schiedssprüche vor jedem zuständigen Gericht einreichen.
-
-      <h2 id="heading--general"><a href="#heading--general">Allgemeine Bedingungen</a></h2>
-
-      Wenn eine Bestimmung dieser Bedingungen nicht wie geschrieben durchsetzbar ist, aber geändert werden könnte, um sie durchsetzbar zu machen, sollte diese Bestimmung so weit wie nötig geändert werden, um sie durchsetzbar zu machen. Andernfalls sollte diese Bestimmung aufgehoben werden.
-
-      Du darfst deine Vereinbarung mit dem Betreiber nicht abtreten. Der Betreiber kann deine Zustimmung an jedes verbundene Unternehmen des Betreibers, jedes andere Unternehmen, das die Kontrolle über den Betreiber erlangt, oder jedes andere Unternehmen, das Vermögenswerte des Betreibers im Zusammenhang mit dem Forum kauft, übertragen. Jede versuchte Abtretung gegen diese Bedingungen hat keine Rechtswirkung.
-
-      Weder die Ausübung eines Rechts aus dieser Vereinbarung noch der Verzicht auf eine Verletzung dieser Vereinbarung bedeutet den Verzicht auf eine andere Verletzung dieser Vereinbarung.
-
-      Diese Bedingungen stellen alle Bedingungen der Vereinbarung zwischen dir und dem Betreiber über die Nutzung des Forums dar. Diese Bedingungen ersetzen vollständig alle anderen Vereinbarungen über deine Nutzung des Forums, ob schriftlich oder anderweitig.
-
-      <h2 id="heading--contact"><a href="#heading--contact">Kontakt</a></h2>
-
-      Du kannst den Betreiber unter diesen Bedingungen informieren und Fragen an den Betreiber senden unter <%{contact_email}>.
-
-      Der Betreiber kann dich unter diesen Bedingungen über die E-Mail-Adresse, die du für dein Konto im Forum angegeben hast, oder durch eine Nachricht auf der Homepage des Forums oder deiner Kontoseite informieren.
-
-      <h2 id="heading--changes"><a href="#heading--changes">Änderungen</a></h2>
-
-      Der Betreiber hat diese Bedingungen zuletzt am 12. Juli 2018 aktualisiert und kann diese Bedingungen erneut aktualisieren. Der Betreiber wird alle Aktualisierungen im Forum veröffentlichen. Bei Aktualisierungen, die wesentliche Änderungen enthalten, erklärt sich der Betreiber damit einverstanden, dir eine E-Mail zu senden, wenn du ein Konto erstellt und eine gültige E-Mail-Adresse angegeben hast. Der Betreiber kann auch Aktualisierungen mit speziellen Nachrichten oder Warnungen im Forum ankündigen.
-
-      Sobald du von einer Aktualisierung dieser Bedingungen Kenntnis erlangst, musst du den neuen Bedingungen zustimmen, um das Forum weiterhin nutzen zu können.
   privacy_topic:
     title: "Datenschutzerklärung"
     body: |

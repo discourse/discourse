@@ -97,17 +97,30 @@ pl_PL:
       new_messages: "nowe wiadomości"
       mention_warning:
         dismiss: "odrzuć"
+        cannot_see:
+          one: "%{username} nie może uzyskać dostępu do tego kanału i nie został powiadomiony."
+          few: "%{username} i %{others} nie mogą uzyskać dostępu do tego kanału i nie zostali powiadomieni."
+          many: "%{username} i %{others} nie mogą uzyskać dostępu do tego kanału i nie zostali powiadomieni."
+          other: "%{username} i %{others} nie mogą uzyskać dostępu do tego kanału i nie zostali powiadomieni."
         invitations_sent:
           one: "Zaproszenie wysłane"
           few: "Zaproszenia wysłane"
           many: "Zaproszenia wysłane"
           other: "Zaproszenia wysłane"
         invite: "Zaproś do kanału"
-        without_membership:
-          one: "%{usernames} nie dołączył do tego kanału."
-          few: "%{usernames} nie dołączyli do tego kanału."
-          many: "%{usernames} nie dołączyli do tego kanału."
-          other: "%{usernames} nie dołączyli do tego kanału."
+        warning_multiple:
+          one: "%{count} inny"
+          few: "%{count} inni"
+          many: "%{count} inni"
+          other: "%{count} inni"
+        groups:
+          users_limit:
+            one: "%{count} użytkownik"
+            few: "%{count} użytkownicy"
+            many: "%{count} użytkowników"
+            other: "%{count} użytkownicy"
+          notification_limit: "limit powiadomień"
+        too_many_mentions: "Ta wiadomość przekracza %{notification_limit} z %{limit}"
       aria_roles:
         header: "Nagłówek czatu"
         channels_list: "Lista kanałów czatu"

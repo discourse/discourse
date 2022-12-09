@@ -1217,7 +1217,6 @@ zh_CN:
         use: "使用身份验证器应用"
         enforced_notice: "在访问此站点之前，您需要启用双重身份验证。"
         disable: "禁用"
-        disable_confirm: "确定要禁用所有的双重方法吗？"
         save: "保存"
         edit: "编辑"
         edit_title: "编辑身份验证器"
@@ -1305,7 +1304,6 @@ zh_CN:
         authenticated: "您的电子邮件已被 %{provider} 验证"
         invite_auth_email_invalid: "您的邀请电子邮件与 %{provider} 验证的电子邮件不匹配"
         authenticated_by_invite: "您的电子邮件已被此邀请验证"
-        frequency_immediately: "如果您还没有阅读我们通过电子邮件发送给您的内容，我们会立即给您发送电子邮件。"
         frequency:
           other: "只有在过去 %{count} 分钟内没有见到您，我们才会向您发送电子邮件。"
       associated_accounts:
@@ -5114,7 +5112,6 @@ zh_CN:
           search: "搜索"
           groups: "群组"
           dashboard: "信息中心"
-          sidebar: "边栏"
         secret_list:
           invalid_input: "输入字段不能为空或包含竖线字符。"
         default_categories:

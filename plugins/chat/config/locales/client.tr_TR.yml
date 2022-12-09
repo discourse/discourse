@@ -108,17 +108,11 @@ tr_TR:
       join: "Katıl"
       new_messages: "yeni mesajlar"
       mention_warning:
-        cannot_see:
-          one: "%{usernames} bu kanala erişemiyor ve bildirim almadı."
-          other: "%{usernames} bu kanala erişemiyor ve bildirim almadı."
         dismiss: "kapat"
         invitations_sent:
           one: "Davet gönderildi"
           other: "Davet gönderildi"
         invite: "Kanala davet et"
-        without_membership:
-          one: "%{usernames} bu kanala katılmadı."
-          other: "%{usernames} bu kanala katılmadı."
       aria_roles:
         header: "Sohbet başlığı"
         composer: "Sohbet oluşturucu"

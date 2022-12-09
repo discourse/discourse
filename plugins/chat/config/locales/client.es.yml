@@ -108,17 +108,11 @@ es:
       join: "Unirse"
       new_messages: "nuevos mensajes"
       mention_warning:
-        cannot_see:
-          one: "%{usernames} no puede acceder a este canal y no fue notificado."
-          other: "%{usernames} no pueden acceder a este canal y no fueron notificados."
         dismiss: "descartar"
         invitations_sent:
           one: "Invitación enviada"
           other: "Invitaciones enviadas"
         invite: "Invitar al canal"
-        without_membership:
-          one: "%{usernames} no se ha unido a este canal."
-          other: "%{usernames} no se han unido a este canal."
       aria_roles:
         header: "Encabezado del chat"
         composer: "Compositor del chat"

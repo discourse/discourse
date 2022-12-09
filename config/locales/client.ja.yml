@@ -1217,7 +1217,6 @@ ja:
         use: "認証アプリを使用する"
         enforced_notice: "このサイトにアクセスするには二要素認証を有効にする必要があります。"
         disable: "無効化"
-        disable_confirm: "すべての二要素認証を無効にしてもよろしいですか？"
         save: "保存"
         edit: "編集"
         edit_title: "認証アプリの編集"
@@ -1305,7 +1304,6 @@ ja:
         authenticated: "あなたのメールアドレスは %{provider} によって認証されました"
         invite_auth_email_invalid: "あなたの招待メールは %{provider} が認証したメールと一致しません"
         authenticated_by_invite: "あなたのメールは招待によって認証されました"
-        frequency_immediately: "メールの内容をまだ読んでいない場合は、今すぐメールを送信します。"
         frequency:
           other: "最後のアクセスから %{count} 分以上アクセスがない場合にのみメールを送信します。"
       associated_accounts:
@@ -5114,7 +5112,6 @@ ja:
           search: "検索"
           groups: "グループ"
           dashboard: "ダッシュボード"
-          sidebar: "サイドバー"
         secret_list:
           invalid_input: "入力フィールドを空にしたり、縦棒文字を含めることはできません。"
         default_categories:

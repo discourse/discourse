@@ -110,11 +110,6 @@ he:
       join: "הצטרף"
       new_messages: "הודעות חדשות"
       mention_warning:
-        cannot_see:
-          one: "ל־%{usernames} אין גישה לערוץ הזה ולא נשלחה הודעה."
-          two: "ל־%{usernames} אין גישה לערוץ הזה ולא נשלחה הודעה."
-          many: "ל־%{usernames} אין גישה לערוץ הזה ולא נשלחה הודעה."
-          other: "ל־%{usernames} אין גישה לערוץ הזה ולא נשלחה הודעה."
         dismiss: "התעלמות"
         invitations_sent:
           one: "נשלחה הזמנה"
@@ -122,11 +117,36 @@ he:
           many: "נשלחו הזמנות"
           other: "נשלחו הזמנות"
         invite: "הזמנה לערוץ"
-        without_membership:
-          one: "לא הצטרפו לערוץ הזה: %{usernames}."
-          two: "%{usernames} לא הצטרפו לערוץ הזה."
-          many: "%{usernames} לא הצטרפו לערוץ הזה."
-          other: "%{usernames} לא הצטרפו לערוץ הזה."
+        group_mentions_disabled:
+          one: "אזכורים אסורים בקבוצה %{group_name}"
+          two: "אזכורים אסורים בקבוצה %{group_name} ובעוד %{others}"
+          many: "אזכורים אסורים בקבוצה %{group_name} ובעוד %{others}"
+          other: "אזכורים אסורים בקבוצה %{group_name} ובעוד %{others}"
+        warning_multiple:
+          one: "%{count} נוסף"
+          two: "%{count} נוספים"
+          many: "%{count} נוספים"
+          other: "%{count} נוספים"
+        groups:
+          header:
+            some: "חלק מהמשתמשים לא יקבלו התראה"
+            all: "אף אחד לא יקבל התראה"
+          unreachable:
+            one: "אזכורים אסורים בקבוצה ‎@%{group}"
+            two: "אזכורים אסורים בקבוצה ‎@%{group} ובקבוצה ‎@%{group_2}"
+            many: "אזכורים אסורים בקבוצה ‎@%{group} ובקבוצה ‎@%{group_2}"
+            other: "אזכורים אסורים בקבוצה ‎@%{group} ובקבוצה ‎@%{group_2}"
+          users_limit:
+            one: "משתמש/ת %{count}"
+            two: "%{count} משתמשים"
+            many: "%{count} משתמשים"
+            other: "%{count} משתמשים"
+          notification_limit: "מגבלת התראה"
+        mentions_limit:
+          one: "אזכור %{count}"
+          two: "%{count} אזכורים"
+          many: "%{count} אזכורים"
+          other: "%{count} אזכורים"
       aria_roles:
         header: "כותרת צ׳אט"
         composer: "כותב צ׳אט"

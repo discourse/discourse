@@ -534,7 +534,6 @@ lt:
       broken: "Šis paveikslėlis yra sugadintas"
     hidden_bidi_character: "Dvikrypčiai simboliai gali pakeisti teksto pateikimo tvarką. Tai gali būti naudojama kenkėjiškam kodui paslėpti."
     cannot_permanently_delete:
-      many_posts: "Negalite visam laikui ištrinti šios temos, nes yra kitų įrašų."
       wait_or_different_admin: "Prieš visam laikui ištrindami šį įrašą, turite palaukti %{time_left} arba kitas administratorius turi tai padaryti."
   rate_limiter:
     slow_down: "Šį veiksmą atlikote per daug kartų, vėliau bandykite dar kartą."
@@ -774,7 +773,6 @@ lt:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nederamas"
-      description: 'Šiame įraše yra turinio, kurį protingas asmuo laikytų įžeidžiančiu, piktnaudžiaujančiu ar <a href="%{base_path}/guidelines">mūsų bendruomenės gairių</a>pažeidimu.'
     notify_user:
       title: "Siųsti @%{username} žinutę"
       description: "Noriu tiesiogiai ir asmeniškai pasikalbėti su šiuo asmeniu apie jo įrašą."
@@ -1334,7 +1332,6 @@ lt:
     discord_client_id: '„Discord“ kliento ID (reikia vieno? Apsilankykite <a href="https://discordapp.com/developers/applications/me">„Discord“ kūrėjų portale</a>)'
     discord_secret: "Discord slaptas raktas"
     enable_backups: "Leiskite administratoriams kurti forumo atsargines kopijas"
-    maximum_backups: "Didžiausias atsarginių kopijų kiekis diske. Senesnės atsarginės kopijos automatiškai ištrinamos"
     backup_frequency: "Dienų skaičius tarp atsarginių kopijų kūrimo."
     s3_disable_cleanup: "Neleiskite pašalinti senų atsarginių kopijų iš S3, kai atsarginių kopijų yra daugiau nei leidžiama."
     enable_s3_inventory: "Kurkite ataskaitas ir patikrinkite įkėlimus naudodami „Amazon S3“ inventorių. SVARBU: reikalingi galiojantys S3 kredencialai (ir prieigos rakto ID, ir slaptasis prieigos raktas)."
@@ -1705,12 +1702,10 @@ lt:
   new_version_mailer_with_notes:
     subject_template: "[%{email_prefix}] Galimas atnaujinimas"
   flag_reasons:
-    inappropriate: "Jūsų įrašas buvo pažymėtas kaip **netinkamas**: bendruomenė mano, kad jis yra piktnaudžiaujantis, įžeidžiantis arba pažeidžia [mūsų bendruomenės gaires] (%{base_path}/gairės)."
     spam: "Jūsų įrašas buvo pažymėtas kaip **šlamštas**: bendruomenė mano, kad tai reklama, kažkas, kas yra pernelyg reklaminio pobūdžio, o ne naudinga ar aktualu temai, kaip tikėtasi."
     notify_moderators: "Jūsų įrašas buvo pažymėtas **moderatoriaus dėmesiui**: bendruomenė mano, kad dėl įrašo reikia rankinio darbuotojo įsikišimo."
     responder:
       off_topic: "Įrašas buvo pažymėtas kaip **ne į temą**: bendruomenė mano, kad jis nėra tinkamas temai, kaip šiuo metu apibrėžia pavadinimas ir pirmasis įrašas."
-      inappropriate: "Jūsų įrašas buvo pažymėtas kaip **netinkamas**: bendruomenė mano, kad jis yra piktnaudžiaujantis, įžeidžiantis arba pažeidžia [mūsų bendruomenės gaires] (%{base_path}/gairės)."
       spam: "Jūsų įrašas buvo pažymėtas kaip **šlamštas**: bendruomenė mano, kad tai reklama, kažkas, kas yra pernelyg reklaminio pobūdžio, o ne naudinga ar aktualu temai, kaip tikėtasi."
       notify_moderators: "Jūsų įrašas buvo pažymėtas **moderatoriaus dėmesiui**: bendruomenė mano, kad dėl įrašo reikia rankinio darbuotojo įsikišimo."
   flags_dispositions:

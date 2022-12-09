@@ -1055,6 +1055,7 @@ ca:
           Protegiu el vostre compte amb codis de seguretat d'un sol ús.
         use: "Utilitza l'aplicació Authenticator"
         disable: "Desactiva"
+        delete: "Suprimeix"
         save: "Desa"
         edit: "Edita"
         totp:
@@ -1120,7 +1121,6 @@ ca:
         required: "Introduïu una adreça de correu electrònic"
         invalid: "Introduïu una adreça vàlida de correu electrònic"
         authenticated: "El vostre correu electrònic ha estat autenticat per %{provider}"
-        frequency_immediately: "Us enviarem un correu immediatament si no heu llegit la cosa sobre la qual us escrivim."
         frequency:
           one: "Sols us enviarem un correu electrònic si no us hem vist en el darrer minut."
           other: "Sols us enviarem un correu electrònic si no us hem vist en els darrers %{count} minuts."
@@ -3939,6 +3939,11 @@ ca:
         unlock_trust_level: "Desbloca el nivell de confiança"
         silenced_count: "Silenciat"
         suspended_count: "Suspesos"
+        other_matches_list:
+          username: "Nom d'usuari "
+          trust_level: "Nivell de confiança"
+          read_time: "Temps de lectura"
+          posts: "Publicacions"
         tl3_requirements:
           title: "Requisits per al nivell de confiança 3"
           table_title:
@@ -4067,6 +4072,7 @@ ca:
           search: "Cerca"
           groups: "Grups"
           dashboard: "Tauler de control"
+          navigation: "Navegació"
         secret_list:
           invalid_input: "Els camps d'entrada no poden ser buits o contenir un caràcter de barra vertical."
         default_categories:
