@@ -16,15 +16,15 @@ export default Controller.extend({
 
   @action
   destroy(webhook) {
-    return this.dialog.yesNoConfirm({
+    return this.dialog.deleteConfirm({
       message: I18n.t("admin.web_hooks.delete_confirm"),
-      didConfirm: () => {
-        webhook
-          .destroyRecord()
-          .then(() => {
-            this.model.removeObject(webhook);
-          })
-          .catch(popupAjaxError);
+      didConfirm: async () => {
+        try {
+          await webhook.destroyRecord();
+          this.model.removeObject(webhook);
+        } catch (e) {
+          popupAjaxError(e);
+        }
       },
     });
   },
