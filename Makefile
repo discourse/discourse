@@ -15,3 +15,6 @@ delete-test-branch: delete-test-branch-local delete-test-branch-remote
 create-test-branch:
 	git checkout -b $(TEST_BRANCH)
 	git push -u origin $(TEST_BRANCH)
+
+get-latest-tag:
+	git describe --abbrev=0 --tags
