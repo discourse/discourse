@@ -101,16 +101,16 @@ export default Controller.extend({
 
   @action
   destroy() {
-    return this.dialog.yesNoConfirm({
+    return this.dialog.deleteConfirm({
       message: I18n.t("admin.web_hooks.delete_confirm"),
-      didConfirm: () => {
-        this.model
-          .destroyRecord()
-          .then(() => {
-            this.adminWebHooks.get("model").removeObject(this.model);
-            this.transitionToRoute("adminWebHooks");
-          })
-          .catch(popupAjaxError);
+      didConfirm: async () => {
+        try {
+          await this.model.destroyRecord();
+          this.adminWebHooks.model.removeObject(this.model);
+          this.transitionToRoute("adminWebHooks");
+        } catch (e) {
+          popupAjaxError(e);
+        }
       },
     });
   },
