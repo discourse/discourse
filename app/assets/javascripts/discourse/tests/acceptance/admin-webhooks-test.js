@@ -36,6 +36,16 @@ acceptance("Admin - Webhooks", function (needs) {
       });
     });
 
+    pretender.get("/admin/api/web_hook_events/1", () => {
+      return response({
+        web_hook_events: [],
+        load_more_web_hook_events:
+          "/admin/api/web_hook_events/1.json?limit=50&offset=50",
+        total_rows_web_hook_events: 15,
+        extras: { web_hook_id: 1 },
+      });
+    });
+
     pretender.post("/admin/api/web_hooks", (request) => {
       const data = parsePostData(request.requestBody);
       assert.strictEqual(
