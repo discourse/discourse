@@ -6,12 +6,16 @@ class WebhooksController < ActionController::Base
   skip_before_action :verify_authenticity_token
 
   def mailgun
-    return mailgun_failure if SiteSetting.mailgun_api_key.blank?
+    return signature_failure if SiteSetting.mailgun_api_key.blank?
 
     params["event-data"] ? handle_mailgun_new(params) : handle_mailgun_legacy(params)
   end
 
   def sendgrid
+    if SiteSetting.sendgrid_verification_key.present? && !valid_sendgrid_signature?
+      return signature_failure
+    end
+
     events = params["_json"] || [params]
     events.each do |event|
       message_id = Email::MessageIdService.message_id_clean((event["smtp-id"] || ""))
@@ -32,6 +36,8 @@ class WebhooksController < ActionController::Base
   end
 
   def mailjet
+    return signature_failure if SiteSetting.mailjet_webhook_token.present? && !valid_mailjet_token?
+
     events = params["_json"] || [params]
     events.each do |event|
       message_id = event["CustomID"]
@@ -49,6 +55,10 @@ class WebhooksController < ActionController::Base
   end
 
   def mandrill
+    if SiteSetting.mandrill_webhook_token.present? && !valid_mandrill_token?
+      return signature_failure
+    end
+
     events = JSON.parse(params["mandrill_events"])
     events.each do |event|
       message_id = event.dig("msg", "metadata", "message_id")
@@ -73,6 +83,10 @@ class WebhooksController < ActionController::Base
   end
 
   def postmark
+    if SiteSetting.postmark_webhook_token.present? && !valid_postmark_token?
+      return signature_failure
+    end
+
     # see https://postmarkapp.com/developer/webhooks/bounce-webhook#bounce-webhook-data
     # and https://postmarkapp.com/developer/api/bounce-api#bounce-types
 
@@ -90,6 +104,10 @@ class WebhooksController < ActionController::Base
   end
 
   def sparkpost
+    if SiteSetting.sparkpost_webhook_token.present? && !valid_sparkpost_token?
+      return signature_failure
+    end
+
     events = params["_json"] || [params]
     events.each do |event|
       message_event = event.dig("msys", "message_event")
@@ -131,7 +149,7 @@ class WebhooksController < ActionController::Base
 
   private
 
-  def mailgun_failure
+  def signature_failure
     render body: nil, status: 406
   end
 
@@ -158,7 +176,7 @@ class WebhooksController < ActionController::Base
 
   def handle_mailgun_legacy(params)
     unless valid_mailgun_signature?(params["token"], params["timestamp"], params["signature"])
-      return mailgun_failure
+      return signature_failure
     end
 
     event = params["event"]
@@ -185,7 +203,7 @@ class WebhooksController < ActionController::Base
              signature["timestamp"],
              signature["signature"],
            )
-      return mailgun_failure
+      return signature_failure
     end
 
     data = params["event-data"]
@@ -203,6 +221,41 @@ class WebhooksController < ActionController::Base
     end
 
     success
+  end
+
+  def valid_sendgrid_signature?
+    signature = request.headers["X-Twilio-Email-Event-Webhook-Signature"]
+    timestamp = request.headers["X-Twilio-Email-Event-Webhook-Timestamp"]
+    request.body.rewind
+    payload = request.body.read
+
+    hashed_payload = Digest::SHA256.digest("#{timestamp}#{payload}")
+    decoded_signature = Base64.decode64(signature)
+
+    begin
+      public_key = OpenSSL::PKey::EC.new(Base64.decode64(SiteSetting.sendgrid_verification_key))
+    rescue StandardError => err
+      Rails.logger.error("Invalid Sendgrid verification key")
+      return false
+    end
+
+    public_key.dsa_verify_asn1(hashed_payload, decoded_signature)
+  end
+
+  def valid_mailjet_token?
+    ActiveSupport::SecurityUtils.secure_compare(params[:t], SiteSetting.mailjet_webhook_token)
+  end
+
+  def valid_mandrill_token?
+    ActiveSupport::SecurityUtils.secure_compare(params[:t], SiteSetting.mandrill_webhook_token)
+  end
+
+  def valid_postmark_token?
+    ActiveSupport::SecurityUtils.secure_compare(params[:t], SiteSetting.postmark_webhook_token)
+  end
+
+  def valid_sparkpost_token?
+    ActiveSupport::SecurityUtils.secure_compare(params[:t], SiteSetting.sparkpost_webhook_token)
   end
 
   def process_bounce(message_id, to_address, bounce_score, bounce_error_code = nil)
