@@ -70,7 +70,7 @@ class Wizard
           value: SiteSetting.must_approve_users
         )
 
-        if respond_to?(:discourse_chat)
+        if defined?(::Chat)
           step.add_field(
             id: 'chat_enabled',
             type: 'checkbox',
@@ -83,16 +83,15 @@ class Wizard
           id: 'enable_sidebar',
           type: 'checkbox',
           icon: 'bars',
-          value: SiteSetting.enable_sidebar && SiteSetting.enable_experimental_sidebar_hamburger
+          value: SiteSetting.navigation_menu == NavigationMenuSiteSetting::SIDEBAR
         )
 
         step.on_update do |updater|
           updater.update_setting(:login_required, updater.fields[:login_required])
           updater.update_setting(:invite_only, updater.fields[:invite_only])
           updater.update_setting(:must_approve_users, updater.fields[:must_approve_users])
-          updater.update_setting(:chat_enabled, updater.fields[:chat_enabled]) if respond_to?(:discourse_chat)
-          updater.update_setting(:enable_sidebar, updater.fields[:enable_sidebar])
-          updater.update_setting(:enable_experimental_sidebar_hamburger, updater.fields[:enable_sidebar])
+          updater.update_setting(:chat_enabled, updater.fields[:chat_enabled]) if defined?(::Chat)
+          updater.update_setting(:navigation_menu, updater.fields[:enable_sidebar])
         end
       end
 
