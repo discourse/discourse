@@ -3,6 +3,12 @@
     <div class="control-group">
       <UserStatusPicker @status={{this.status}} />
     </div>
+    <div class="control-group pause-notifications">
+      <label class="checkbox-label">
+        <Input @type="checkbox" @checked={{this.pauseNotifications}} />
+        {{i18n "user_status.pause_notifications"}}
+      </label>
+    </div>
     <div class="control-group control-group-remove-status">
       <label class="control-label">
         {{i18n "user_status.remove_status"}}
