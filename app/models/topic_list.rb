@@ -38,10 +38,6 @@ class TopicList
     user_ids
   end
 
-  def self.topic_preloader_associations
-    @topic_preloader_associations ||= [:image_upload, { topic_thumbnails: :optimized_image }]
-  end
-
   attr_accessor(
     :more_topics_url,
     :prev_topics_url,
