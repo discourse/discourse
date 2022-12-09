@@ -1456,16 +1456,24 @@ RSpec.describe PrettyText do
     SiteSetting.enable_experimental_hashtag_autocomplete = true
 
     user = Fabricate(:user)
-    category = Fabricate(:category, name: 'testing')
-    category2 = Fabricate(:category, name: 'known')
+    category = Fabricate(:category, name: 'testing', slug: 'testing')
+    category2 = Fabricate(:category, name: 'known', slug: 'known')
+    group = Fabricate(:group)
+    private_category = Fabricate(:private_category, name: 'secret', group: group, slug: 'secret')
     Fabricate(:topic, tags: [Fabricate(:tag, name: 'known')])
 
-    cooked = PrettyText.cook(" #unknown::tag #known #known::tag #testing", user_id: user.id)
+    cooked = PrettyText.cook(" #unknown::tag #known #known::tag #testing #secret", user_id: user.id)
 
     expect(cooked).to include("<span class=\"hashtag-raw\">#unknown::tag</span>")
     expect(cooked).to include("<a class=\"hashtag-cooked\" href=\"#{category2.url}\" data-type=\"category\" data-slug=\"known\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>known</span></a>")
     expect(cooked).to include("<a class=\"hashtag-cooked\" href=\"/tag/known\" data-type=\"tag\" data-slug=\"known\" data-ref=\"known::tag\"><svg class=\"fa d-icon d-icon-tag svg-icon svg-node\"><use href=\"#tag\"></use></svg><span>known</span></a>")
     expect(cooked).to include("<a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"testing\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>testing</span></a>")
+    expect(cooked).to include("<span class=\"hashtag-raw\">#secret</span>")
+
+    # If the user hash access to the private category it should be cooked with the details + icon
+    group.add(user)
+    cooked = PrettyText.cook(" #unknown::tag #known #known::tag #testing #secret", user_id: user.id)
+    expect(cooked).to include("<a class=\"hashtag-cooked\" href=\"#{private_category.url}\" data-type=\"category\" data-slug=\"secret\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>secret</span></a>")
 
     cooked = PrettyText.cook("[`a` #known::tag here](http://example.com)", user_id: user.id)
 

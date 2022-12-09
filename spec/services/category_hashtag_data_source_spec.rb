@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe CategoryHashtagDataSource do
-  fab!(:category1) { Fabricate(:category, slug: "random", topic_count: 12) }
-  fab!(:category2) { Fabricate(:category, slug: "books", topic_count: 566) }
+  fab!(:parent_category) { Fabricate(:category, slug: "fun") }
+  fab!(:category1) do
+    Fabricate(:category, slug: "random", topic_count: 12, parent_category: parent_category)
+  end
+  fab!(:category2) { Fabricate(:category, name: "Book Section", slug: "books", topic_count: 566) }
   fab!(:category3) { Fabricate(:category, slug: "movies", topic_count: 245) }
   fab!(:group) { Fabricate(:group) }
   fab!(:category4) { Fabricate(:private_category, slug: "secret", group: group, topic_count: 40) }
@@ -10,6 +13,60 @@ RSpec.describe CategoryHashtagDataSource do
   fab!(:user) { Fabricate(:user) }
   let(:guardian) { Guardian.new(user) }
   let(:uncategorized_category) { Category.find(SiteSetting.uncategorized_category_id) }
+
+  describe "#lookup" do
+    it "finds categories using their slug, downcasing for matches" do
+      result = described_class.lookup(guardian, ["movies"]).first
+      expect(result.ref).to eq("movies")
+      expect(result.slug).to eq("movies")
+
+      result = described_class.lookup(guardian, ["BoOKs"]).first
+      expect(result.ref).to eq("books")
+      expect(result.slug).to eq("books")
+    end
+
+    it "finds categories using the parent:child slug format" do
+      result = described_class.lookup(guardian, ["fun:random"]).first
+      expect(result.ref).to eq("fun:random")
+      expect(result.slug).to eq("random")
+    end
+
+    it "does not find child categories by their standalone slug" do
+      expect(described_class.lookup(guardian, ["random"]).first).to eq(nil)
+    end
+
+    it "does not find categories the user cannot access" do
+      expect(described_class.lookup(guardian, ["secret"]).first).to eq(nil)
+      group.add(user)
+      expect(described_class.lookup(Guardian.new(user), ["secret"]).first).not_to eq(nil)
+    end
+  end
+
+  describe "#search" do
+    it "finds categories by partial name" do
+      result = described_class.search(guardian, "mov", 5).first
+      expect(result.ref).to eq("movies")
+      expect(result.slug).to eq("movies")
+    end
+
+    it "finds categories by partial slug" do
+      result = described_class.search(guardian, "ook sec", 5).first
+      expect(result.ref).to eq("books")
+      expect(result.slug).to eq("books")
+    end
+
+    it "does not find categories the user cannot access" do
+      expect(described_class.search(guardian, "secret", 5).first).to eq(nil)
+      group.add(user)
+      expect(described_class.search(Guardian.new(user), "secret", 5).first).not_to eq(nil)
+    end
+
+    it "uses the correct ref format for a parent:child category that is found" do
+      result = described_class.search(guardian, "random", 5).first
+      expect(result.ref).to eq("fun:random")
+      expect(result.slug).to eq("random")
+    end
+  end
 
   describe "#search_without_term" do
     it "returns distinct categories ordered by topic_count" do

@@ -110,14 +110,14 @@ module PrettyText
       end
     end
 
-    def hashtag_lookup(slug, cooking_user, types_in_priority_order)
+    def hashtag_lookup(slug, cooking_user_id, types_in_priority_order)
       # This is _somewhat_ expected since we need to be able to cook posts
       # etc. without a user sometimes, but it is still an edge case.
-      if cooking_user.blank?
+      if cooking_user_id.blank?
         cooking_user = Discourse.system_user
+      else
+        cooking_user = User.find(cooking_user_id)
       end
-
-      cooking_user = User.new(cooking_user) if cooking_user.is_a?(Hash)
 
       result = HashtagAutocompleteService.new(
         Guardian.new(cooking_user)
