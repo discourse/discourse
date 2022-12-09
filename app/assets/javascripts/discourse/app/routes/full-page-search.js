@@ -62,7 +62,6 @@ export default DiscourseRoute.extend({
   @action
   didTransition() {
     this.controllerFor("full-page-search")._afterTransition();
-    this.controllerFor("full-page-search").reset();
     return true;
   },
 });
