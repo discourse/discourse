@@ -333,6 +333,14 @@ hu:
 
       További információért lásd [közösségi irányelveinket](%{base_path}/guidelines). Ez a panel csak az első %{education_posts_text} alkalommal jelenik meg.
     "new-reply": "Üdözöllek a %{site_name} &mdash; n - **köszönjük, hogy aktív vagy!**\n\n- Kérlek, szelíden fogalmazz!\n\n- Mielőtt elküldöd a választ, gondold végig, hogy építő-e, amit írtál!\n\n- Az építő kritikáknak mindig örülünk, de vigyázz, hogy a *felvetést* kritizáld, ne a hozzászólót. \n\nA szabályzatunkat megtalálod ide kattintva: [see our community guidelines](%{base_path}/guidelines). Ez a panel csak az első %{education_posts_text} megírásakor fog megjelenni, utána magától eltűnik.\n"
+    sequential_replies: |
+      ### Fontolja meg, hogy egyszerre több hozzászólásra válaszoljon
+
+      Ahelyett, hogy több választ adna egy témára egymás után, fontolja meg, hogy egyetlen választ adjon, amely idézeteket tartalmaz korábbi hozzászólásokból vagy @névre való hivatkozást.
+
+      Korábbi válaszát úgy szerkesztheti idézet hozzáadásához, hogy kiemeli a szöveget, és kiválasztja a megjelenő <b>quote reply</b> gombot.
+
+      Mindenki számára könnyebb elolvasni azokat a témákat, amelyekben kevesebb mélyreható válasz van, mint a sok apró, egyedi válasz.
     dominating_topic: Sokat írt ebben a témában! Fontolja meg, hogy lehetőséget ad másoknak arra, hogy itt válaszoljanak, és megbeszéljék egymással a dolgokat.
     too_many_replies: |
       ### Elérted a válaszkorlátot ebben a témában
@@ -441,6 +449,8 @@ hu:
     has_likes:
       one: "%{count} kedvelés"
       other: "%{count} kedvelés"
+    cannot_permanently_delete:
+      many_posts: "Ebben a témában vannak nem törölt bejegyzések. Kérjük, törölje őket a téma végleges törlése előtt."
   rate_limiter:
     slow_down: "Túl sokszor hajtotta végre ezt a műveletet, próbálja újra később."
     too_many_requests: "Túl sokszor hajtotta végre ezt a műveletet. Az újrapróbálkozás előtt várjon ennyi időt: %{time_left}."
@@ -954,6 +964,8 @@ hu:
     review_every_post: "Minden bejegyzést jóvá kell hagyni. FIGYELEM! FORGALMAS OLDALAKON NEM AJÁNLOTT."
     use_admin_ip_allowlist: "Az adminokk csak akkor tudnak bejelentkezni, ha a Screened IPs listában megadott IP-címmel vannak megadva (Admin > Naplók > Screened Ips)."
     slow_down_crawler_user_agents: 'A forgalmi korlátozás alá elő webes robotok felhasználói ügynökei, ahogy a „robotok sebességének lelassítása” beállításban meg van adva. Minden egyes értéknek legalább 3 karakteresnek kell lennie.'
+    content_security_policy: "Tartalom-biztonsági házirend engedélyezése"
+    content_security_policy_collect_reports: "Engedélyezze a CSP-szabálysértési jelentések gyűjtését /csp_reports címen."
     remove_full_quote: "Automatikusan eltávolítja az idézetet, ha (a) a hozzászólás elején jelenik meg, (b) egy teljes hozzászólás, és (c) ha a közvetlenül az előző hozzászólásból származik. A részletekért lásd: <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>Teljes idézetek eltávolítása a közvetlen válaszokból</a>"
     email_token_valid_hours: "Elfelejtett jelszó / fiókaktiválási tokenek (n) óráig érvényesek."
     enable_badges: "A jelvény rendszer engedélyezése"
@@ -962,6 +974,7 @@ hu:
     min_password_length: "Minimum jelszóhossz."
     block_common_passwords: "A 10 000 leggyakoribb jelszó tiltása."
     discord_secret: "Discord titkos kulcs"
+    maximum_backups: "A maximálisan megtartandó biztonsági másolatok száma. A régebbi biztonsági mentések automatikusan törlődnek"
     rate_limit_new_user_create_topic: "Egy téma létrehozása után az új felhasználóknak (n) másodpercet kell várniuk, mielőtt új témát hozhatnak létre."
     suggested_topics: "A javasolt témák száma a téma alján láthatók."
     limit_suggested_to_category: "Csak a javasolt kategóriákból származó témakörök jelenhetnek meg a javasolt témakörökben."
@@ -976,6 +989,7 @@ hu:
     min_trust_level_for_here_mention: "Az @itt megemlítés használatához szükséges minimális bizalmi szint."
     dark_mode_none: "Egyik sem"
     cold_age_days_low: "Ennyi nap beszélgetés után az utolsó tevékenység dátuma kissé elhomályosul."
+    log_anonymizer_details: "Anonimizálás után meg kell-e őrizni a felhasználó adatait a naplóban."
     reply_by_email_enabled: "E-mail válaszok engedélyezése."
     block_auto_generated_emails: "Az automatikusan generáltként azonosított bejövő e-mailek letiltása."
     email_editable: "Engedélyezi a felhasználóknak, hogy a regisztráció után megváltoztassák az e-mail címüket."
@@ -993,7 +1007,9 @@ hu:
     default_other_like_notification_frequency: "A felhasználók értesítése a kedvelésekről alapértelmezett esetben."
     company_name: "Cégnév"
     use_email_for_username_and_name_suggestions: "Használja az e-mail címek első részét a felhasználónév- és névjavaslatokhoz. Vegye figyelembe, hogy ez megkönnyíti a nyilvánosság számára a teljes felhasználói e-mail címek kitalálását (mivel az emberek nagy része olyan gyakori szolgáltatásokat használ, mint a „gmail.com”)."
+    navigation_menu: "Határozza meg, melyik navigációs menüt használja. Az oldalsáv és a fejléc navigációja a felhasználók által testreszabható. A visszamenőleges kompatibilitás érdekében a régebbi opció is elérhető."
     enable_experimental_topic_timeline_groups: "KÍSÉRLETI: A kiválasztott csoportok felhasználóinak megjelenik az átdolgozott téma idővonala"
+    enable_experimental_hashtag_autocomplete: "KÍSÉRLETI: Használja az új #hashtag automatikus kiegészítési rendszert a kategóriákhoz és címkékhez, amelyek másképp jelenítik meg a kiválasztott elemet, és javítják a keresést"
     errors:
       invalid_email: "Érvénytelen e-mail cím."
       invalid_username: "Nincs ilyen nevű felhasználó."
@@ -1134,7 +1150,6 @@ hu:
   flag_reasons:
     responder:
       off_topic: "Ezt a bejegyzést **nem témába vágóként** jelentették: a közösség úgy érzi, hogy a cím és az első bejegyzés alapján nem felel meg a témának."
-      inappropriate: "Ezt a bejegyzést **nem helyénvalónak** jelentették: a közösség úgy érzi, hogy sértő, káros vagy megsérti a [közösségi irányelveket](%{base_path}/guidelines)."
       spam: "Ezt a bejegyzést **kéretlen tatalomként** jelentették: a közösség úgy érzi, hogy reklám, túlságosan hirdetésjellege van, ahelyett hogy hasznos vagy releváns lenne a témában."
       notify_moderators: "Ezt a bejegyzést **moderátori figyelmet igénylőnek** jelentették: a közösség úgy érzi, hogy a bejegyzéssel kapcsolatosan valami kézi beavatkozást igényel egy stábtag részéről."
   flags_dispositions:
@@ -1149,7 +1164,7 @@ hu:
         one: "%{mentions} Elemek lettek beküldve %{count} órával ezelőtt. [Tekintse át őket](%{base_url}/review)."
         other: "%{mentions} Elemek lettek beküldve %{count} órával ezelőtt. [Tekintse át őket](%{base_url}/review)."
     private_topic_title: "Téma #%{id}"
-    contents_hidden: "Kérjük, látogass el a bejegyzésre, hogy a tartalom megtekintéséhez!"
+    contents_hidden: "Kérjük, látogasson el a bejegyzésre a tartalom megtekintéséhez!"
     post_hidden:
       text_body_template: |
         Üdv!
@@ -1449,7 +1464,7 @@ hu:
     unsubscribe:
       title: "Leiratkozás"
       description: "Nem szeretné ezeket az e-maileket megkapni? Nem probléma! Kattintson ide és iratkozzon le azonnal:"
-    reply_by_email: "[Látogass el a témára](%{base_url}%{url}), vagy válaszolj erre az e-mailre a válaszadáshoz."
+    reply_by_email: "[Látogasson el a témához](%{base_url}%{url}), vagy válaszoljon erre az e-mailre."
     only_reply_by_email: "Válaszolj erre az e-mailre a válaszadáshoz!"
     only_reply_by_email_pm: "Válaszolj erre az e-mailre, hogy válaszolj neki: %{participants}."
     visit_link_to_respond: "[Látogasd meg a témát](%{base_url}%{url}) a válaszadáshoz."
@@ -1873,29 +1888,29 @@ hu:
       name: Szerkesztő
       description: Első bejegyzés szerkesztése
       long_description: |
-        Ezt a jelvényt akkor kapod meg, amikor először szerkeszted az egyik bejegyzést. Noha örökké nem tudod szerkeszteni a bejegyzéseidet, a szerkesztés javasolt - javíthatod a formázást, kijavíthatod az apróbb hibákat, vagy hozzáadhatsz bármit, amit az eredetileg közzétett üzenetnél kihagytál. Szerkeszd, hogy a bejegyzéseid még jobbak legyenek!
+        Ezt a jelvényt akkor kapja meg, amikor először újraszerkeszt egy saját bejegyzést. Noha örökké nem tudja szerkeszteni a bejegyzéseit, az utólagos szerkesztés mégis javasolt - javíthatja a formázást, az apróbb hibákat, vagy hozzáadhat bármit, amit az eredetileg közzétett üzenetnél kihagyott. Szerkesszen, hogy a bejegyzései még jobbak legyenek!
     wiki_editor:
       name: Wikiszerkesztő
       description: Első wikiszerkesztés
       long_description: |
-        Ezt a jelvényt akkor kapod meg, amikor először válaszolsz egy bejegyzésre e-mailben.
+        Ezt a jelvényt akkor kapja meg, amikor először válaszol egy bejegyzésre e-mailben.
     basic_user:
       name: Alapvető
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Tapasztalt felhasználó</a>, ismer minden alapvető közösségi funkciót
       long_description: |
-        Ezt a jelvényt akkor kapod meg, amikor eléred az 1. bizalmi szintet. Köszönjük, hogy kitartottál és elolvastál néhány témát, hogy megtudd, miről szól a közösségünk. Több felhasználói funkció életbe lépett: megkaptad az összes alapvető közösségi képességet, például a személyes üzenetküldést, a megjelölést, a wiki szerkesztését, valamint több kép és link közzétételének lehetőségét.
+        Ezt a jelvényt akkor kapja meg, amikor eléri az 1. bizalmi szintet. Köszönjük, hogy kitartott és elolvasott néhány témát, hogy megtudja, miről szól a közösségünk. Több felhasználói funkció életbe lépett: megkapta az összes alapvető közösségi képességet, például a személyes üzenetküldést, a megjelölést, a wiki szerkesztését, valamint több kép és link közzétételének lehetőségét.
     member:
       name: Tag
       long_description: |
-        Ezt a jelvényt akkor kapod meg, amikor eléred a 2. bizalmi szintet. Köszönjük, hogy heteken át részt vettél a közösségünk építésében. Mostantól küldhetsz meghívókat a felhasználói oldalról vagy az egyes témákról, csoportos személyes üzeneteket hozhatsz létre, és naponta több lájkot szerezhetsz.
+        Ezt a jelvényt akkor kapja meg, amikor eléri a 2. bizalmi szintet. Köszönjük, hogy heteken át részt vett a közösségünk építésében. Mostantól küldhet meghívókat a felhasználói oldalról vagy az egyes témákról, csoportos személyes üzeneteket hozhat létre, és naponta több lájkot szerezhet.
     regular:
       name: Rendes tag
       long_description: |
-        Ezt a jelvényt akkor kapod meg, amikor eléred a 3. bizalmi szintet. Köszönjük, hogy hónapok óta rendszeresen részt veszel a közösségünk építésében. Az egyik legaktívabb olvasó vagy és megbízható közreműködő, aki nagyszerűvé teszi közösségünket. Mostantól kategorizálhatod és átnevezheted a témákat, használhatod az erősebb spamzászlókat, hozzáférhetsz egy privát társalgóhoz és naponta sokkal több kedvelést is szerezhetsz.
+        Ezt a jelvényt akkor kapja meg, amikor eléri a 3. bizalmi szintet. Köszönjük, hogy hónapok óta rendszeresen részt vesz a közösségünk építésében. Az egyik legaktívabb olvasónk és megbízható közreműködő, aki nagyszerűvé teszi közösségünket. Mostantól kategorizálhatja és átnevezheti a témákat, használhatja az erősebb spamzászlókat, hozzáférhet privát társalgóhoz és naponta sokkal több kedvelést szerezhet.
     leader:
       name: Vezető
       long_description: |
-        Ezt a jelvényt akkor kapod meg, amikor eléred a 4. bizalmi szintet. A közösség egyik vezetője vagy, akit a többi tag választott ki, és itt bemutatott aktivitásoddal és szavaiddal pozitív példát mutatsz a közösség többi tagjának. Már képes vagy szerkeszteni az összes bejegyzést, elvégezheted a témakör moderátorának olyan műveleteit, mint a rögzítés, bezárás, kilistázás, archiválás, felosztás és egyesítés.
+        Ezt a jelvényt akkor kapja meg, amikor eléri a 4. bizalmi szintet. A közösség egyik vezetője, akit a többi tag választott ki, és itt bemutatott aktivitásával és szavaival pozitív példát mutat a közösség többi tagjának. Már képes szerkeszteni az összes bejegyzést, elvégezheti a témakör moderátorának olyan műveleteit, mint a rögzítés, bezárás, kilistázás, archiválás, felosztás és egyesítés.
     welcome:
       name: Üdvözöljük
       description: Kedvelést kapott
@@ -1960,10 +1975,10 @@ hu:
       name: Első kedvelés
       description: Tetszett egy bejegyzés
       long_description: |
-        Ezt a jelvényt akkor kapod meg, amikor először kedvelsz egy bejegyzést a :heart: gombbal. A bejegyzések kedvelése nagyszerű módja annak, hogy a közösség tagjai tudják, hogy amit közzé tettek, érdekesek, hasznosak, jók vagy szórakoztatók voltak számodra. Oszd meg a szeretetet!
+        Ezt a jelvényt akkor kapja meg, amikor először kedvel egy bejegyzést a :heart: gombbal. A bejegyzések kedvelése nagyszerű módja annak, hogy a közösség tagjai tudják, hogy amit közzé tettek, érdekesek, hasznosak, jók vagy szórakoztatók voltak az Ön számára. Oszza meg a szeretetet!
     first_flag:
       long_description: |
-        Ezt a jelvényt akkor kapod meg, amikor először jelölsz meg egy bejegyzést. A megjelöléssel segíthetsz, hogy mindenki számára kellemes hely maradjon a fórum. Ha bármi olyan bejegyzést észlelsz, amely valamilyen okból moderátori figyelmet igényel, ne habozz megjelölni. Ha problémát látsz, :flag_black: jelöld meg!
+        Ezt a jelvényt akkor kapja meg, amikor először jelöl meg egy bejegyzést. A megjelöléssel segíthet, hogy mindenki számára kellemes hely maradjon a fórum. Ha bármi olyan bejegyzést észlel, amely valamilyen okból moderátori figyelmet igényel, ne habozzon megjelölni. Ha problémát lát, :flag_black: jelölje meg!
     promoter:
       name: Népszerűsítő
       long_description: |
@@ -1979,15 +1994,15 @@ hu:
     first_share:
       name: Első megosztás
       long_description: |
-        Ezt a jelvényt akkor kapod meg, amikor először megosztasz egy válaszra vagy témára mutató linket a megosztás gomb használatával. A linkek megosztása nagyszerű módja annak, hogy érdekes beszélgetéseket mutass be és gyarapítsd a közösséget.
+        Ezt a jelvényt akkor kapja meg, amikor először megoszt egy válaszra vagy témára mutató linket a megosztás gomb használatával. A linkek megosztása nagyszerű módja annak, hogy érdekes beszélgetéseket mutassunk be és gyarapítsuk a közösséget.
     first_link:
       name: Első hivatkozás
       long_description: |
-        Ezt a jelvényt akkor kapod meg, amikor először adsz linket egy másik témához. A témák összekapcsolása segít az olvasótársaknak érdekes kapcsolódó beszélgetéseket találni, megmutatva a témák közötti összefüggéseket mindkét irányba. Linkelj szabadon!
+        Ezt a jelvényt akkor kapja meg, amikor először ad linket egy másik témához. A témák összekapcsolása segít az olvasótársaknak érdekes kapcsolódó beszélgetéseket találni, megmutatva a témák közötti összefüggéseket mindkét irányba. Linkeljünk szabadon!
     first_quote:
       name: Első idézet
       long_description: |
-        Ezt a jelvényt akkor kapja meg, amikor első alkalommal idéz egy bejegyzést a válaszában. A válaszban a korábbi bejegyzések releváns részeinek idézése segít a megbeszélések és témák összekapcsolásában. Az idézés legegyszerűbb módja, ha kiemelei a bejegyzés egy részét, majd megnyomja bármelyik válasz gombot. Idézzen gyakran!
+        Ezt a jelvényt akkor kapja meg, amikor első alkalommal idéz egy bejegyzést a válaszában. A válaszban a korábbi bejegyzések releváns részeinek idézése segít a megbeszélések és témák összekapcsolásában. Az idézés legegyszerűbb módja, ha kiemeli a bejegyzés egy részét, majd megnyomja bármelyik válasz gombot. Idézzen gyakran!
     read_guidelines:
       name: Irányelvek elolvasva
       description: Elolvasta a <a href="%{base_uri}/guidelines">közösségi útmutatókat</a>
@@ -1995,8 +2010,9 @@ hu:
         Ezt a jelvényt <a href="%{base_uri}/guidelines">adjuk, ha elolvasod a közösségi irányelveket</a>. Ezen egyszerű irányelvek betartása és megosztása biztonságos, szórakoztató és fenntartható közösséget kínál mindenki számára. Mindig emlékezz arra, hogy van egy másik ember a képernyő másik oldalán. Kedvesnek lenni menő!
     reader:
       name: Olvasó
+      description: Elolvasva minden válasz egy több mint 100 választ tartalmazó témában
       long_description: |
-        Ezt a jelvényt akkor kapod meg, amikor először olvasol el egy hosszú témát, amely több, mint 100 választ tartalmaz. A beszélgetés olvasása segít a téma nyomon követésében, a különböző nézőpontok megértésében, és érdekesebb beszélgetésekhez vezet. Minél többet olvasol, annál jobb a beszélgetés. Mint azt szeretjük mondani, az olvasás alapvető! :slight_smile:
+        Ezt a jelvényt akkor kapja meg, amikor először olvas el egy hosszú témát, amely több mint 100 választ tartalmaz. A beszélgetések olvasása segít a téma nyomon követésében, a különböző nézőpontok megértésében, és érdekesebb beszélgetésekhez vezet. Minél többet olvas, annál jobb a beszélgetés. Ahogy mondani szoktuk, az olvasás alapvető! :slight_smile:
     popular_link:
       name: Népszerű hivatkozás
       description: Külső linket tett közzé 50 kattintással
@@ -2060,25 +2076,26 @@ hu:
       name: Első megemlítés
     first_reply_by_email:
       name: Első e-mail válasz
+      description: E-mailben válaszolt egy hozzászólásra
       long_description: |
-        Ezt a jelvényt akkor kapod meg, amikor először válaszolsz egy bejegyzésre :e-mail: e-mailben.
+        Ezt a jelvényt akkor kapja meg, amikor először válaszol egy bejegyzésre :e-mail: e-mailben.
     new_user_of_the_month:
       name: "A hónap új felhasználója"
       long_description: |
         Ez a jelvény minden hónapban két új felhasználónak jár, a fórumhoz való hozzáállásukért annak mérésével, hogy kiknek és milyen gyakran kedvelték a bejegyzéseiket.
     enthusiast:
       name: Lelkes
-      description: 10 egymást követő napon jártál nálunk
+      description: 10 egymást követő napon járt nálunk
       long_description: |
         Ezt a jelvényt 10 egymást követő nap meglátogatására kapod meg. Köszönjük, hogy több mint egy hétig velünk tartottál!
     aficionado:
       name: Rajongó
-      description: 100 egymást követő napon jártál nálunk
+      description: 100 egymást követő napon járt nálunk
       long_description: |
         Ezt a jelvényt azok kapják, akik 100 egymást követő napon látogatják meg a fórumunkat. Wow, egy több, mint három hónap!
     devotee:
       name: Elkötelezett
-      description: 365 egymást követő napon jártál nálunk
+      description: 365 egymást követő napon járt nálunk
       long_description: |
         Ezt a jelvényt azok kapják, akik 365 egymást követő napon látogatják meg a fórumunkat. Wow, egy egész év!
   admin_login:

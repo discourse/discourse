@@ -1182,7 +1182,7 @@ fa_IR:
         use: "از اپلیکیشن احراز هویت استفاده کنید"
         enforced_notice: "شما باید احراز هویت دو عامله را قبل از دسترسی به سایت فعال کنید"
         disable: "ازکاراندازی"
-        disable_confirm: "ایا از غیرفعال‌ سازی تمامی تایید‌های دوعاملی مطمعن‌ هستید؟"
+        delete: "حذف"
         save: "ذخیره"
         edit: "ویرایش"
         edit_title: "ویرایش احراز‌کننده‌ی هویت"
@@ -1252,7 +1252,6 @@ fa_IR:
         invalid: "لطفا یک آدرس ایمیل معتبر وارد کنید"
         authenticated: "ایمیل شما توسط %{provider} تصدیق شد"
         invite_auth_email_invalid: "ایمیل دعوتنامه شما با ایمیل تایید شده توسط %{provider} تطابق نمی کند"
-        frequency_immediately: "اگر به سرعت چیزی را که برایتان ارسال نکردیم نخوانده باشید، بلافاصله برایتان ایمیل ارسال می‌کنیم."
         frequency:
           one: "ما فقط در صورتی برای شما ایمیل میفرستیم که در %{count} دقیقه آخر شما را ندیده باشیم."
           other: "ما فقط در صورتی برای شما ایمیل میفرستیم که در %{count} دقیقه آخر شما را ندیده باشیم."
@@ -3664,6 +3663,8 @@ fa_IR:
         change_settings_short: "تنظیمات"
         howto: "چگونه یک افزونه نصب کنیم؟"
         official: "پلاگین رسمی"
+      navigation_menu:
+        sidebar: "نوار کناری"
       backups:
         title: "پشتیبان گیری"
         menu:
@@ -4259,6 +4260,11 @@ fa_IR:
         lock_trust_level: "قفل سطح اعتماد"
         unlock_trust_level: "باز کردن سطح اعتماد"
         suspended_count: "تعلیق شد "
+        other_matches_list:
+          username: "نام‌کاربری"
+          trust_level: "سطح‌اعتماد"
+          read_time: "زمان خواندن"
+          posts: "فرسته‌ها"
         tl3_requirements:
           title: "شرایط لازم برای سطح اعتماد 3."
           table_title:
@@ -4384,7 +4390,7 @@ fa_IR:
           search: "جستجو"
           groups: "گروه‌ها"
           dashboard: "پیشخوان"
-          sidebar: "نوار کناری"
+          navigation: "ناوبری"
         default_categories:
           modal_yes: "بله"
       badges:

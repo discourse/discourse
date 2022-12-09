@@ -1281,7 +1281,6 @@ tr_TR:
         use: "Authenticator uygulamasını kullan"
         enforced_notice: "Bu siteye erişmeden önce iki adımlı kimlik doğrulamayı etkinleştirmeniz gerekir."
         disable: "Devre dışı bırak"
-        disable_confirm: "Tüm iki adımlı yöntemleri devre dışı bırakmak istediğinizden emin misiniz?"
         save: "Kaydet"
         edit: "Düzenle"
         edit_title: "Authenticator'ı Düzenle"
@@ -1369,7 +1368,6 @@ tr_TR:
         authenticated: "E-postanız %{provider} tarafından doğrulandı"
         invite_auth_email_invalid: "Davet e-postanız %{provider} tarafından doğrulanan e-postayla eşleşmiyor."
         authenticated_by_invite: "E-postanız davetle doğrulandı"
-        frequency_immediately: "Gönderdiğimiz e-postayı okumadıysan sana hemen e-posta göndereceğiz."
         frequency:
           one: "Yalnızca sizi son dakika içinde görmemişsek e-posta göndeririz."
           other: "Yalnızca sizi son %{count} dakika içinde görmemişsek e-posta göndeririz."
@@ -5336,7 +5334,6 @@ tr_TR:
           search: "Ara"
           groups: "Gruplar"
           dashboard: "Pano"
-          sidebar: "Kenar çubuğu"
         secret_list:
           invalid_input: "Girdi alanları boş olamaz veya dikey çubuk karakteri içeremez."
         default_categories:

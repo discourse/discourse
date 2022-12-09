@@ -1201,7 +1201,7 @@ vi:
         use: "Sử dụng ứng dụng Authenticator"
         enforced_notice: "Bạn được yêu cầu bật xác thực hai yếu tố trước khi truy cập trang web này."
         disable: "Vô hiệu hóa"
-        disable_confirm: "Bạn có chắc chắn muốn tắt tất cả các phương pháp hai yếu tố không?"
+        delete: "Xoá"
         save: "Lưu"
         edit: "Sửa"
         edit_title: "Chỉnh sửa Authenticator"
@@ -1281,7 +1281,6 @@ vi:
         authenticated: "Thư điện tử của bạn đã được xác nhận bởi %{provider}"
         invite_auth_email_invalid: "Email lời mời của bạn không khớp với email xác thực bằng %{provider}"
         authenticated_by_invite: "Email của bạn đã được xác thực bởi lời mời"
-        frequency_immediately: "Chúng tôi sẽ gửi email cho bạn ngay lập tức nếu bạn đã chưa đọc những điều chúng tôi đã gửi cho bạn qua email."
         frequency:
           other: "Chúng tôi sẽ chỉ gửi email cho bạn nếu chúng tôi đã không nhìn thấy bạn trong %{count} phút cuối."
       associated_accounts:
@@ -4002,6 +4001,8 @@ vi:
         change_settings_short: "Cấu hình"
         howto: "Plugin cài như thế nào?"
         official: "Plugin chính thức"
+      navigation_menu:
+        sidebar: "Thanh bên"
       backups:
         title: "Bản sao lưu"
         menu:
@@ -4815,6 +4816,11 @@ vi:
         silenced_count: "Im lặng"
         suspended_count: "Đã tạm khóa"
         last_six_months: "6 tháng qua"
+        other_matches_list:
+          username: "Tên tài khoản"
+          trust_level: "Bậc tin tưởng"
+          read_time: "Thời gian đọc"
+          posts: "Bài viết"
         tl3_requirements:
           title: "Yêu cầu Cấp độ tin tưởng 3"
           table_title:
@@ -4952,7 +4958,7 @@ vi:
           search: "Tìm kiếm"
           groups: "Nhóm"
           dashboard: "Bảng điều khiển"
-          sidebar: "Thanh bên"
+          navigation: "Điều hướng"
         secret_list:
           invalid_input: "Các trường nhập không được để trống hoặc chứa ký tự thanh dọc."
         default_categories:

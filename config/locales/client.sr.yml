@@ -761,6 +761,7 @@ sr:
       second_factor:
         name: "Ime foruma"
         disable: "Onemogući"
+        delete: "Obriši"
         save: "Sačuvaj"
         edit: "Izmeni"
         security_key:
@@ -794,7 +795,6 @@ sr:
         ok: "Poslaćemo vam e-mail za potvrdu"
         invalid: "Molimo unesite validnu e-mail adresu"
         authenticated: "E-mail vam je potvrđen od %{provider}"
-        frequency_immediately: "Odmah ćemo vam poslati e-mail ako niste pročitali ono o ćemu vam šaljemo e-mailove."
       associated_accounts:
         revoke: "Povuci"
         cancel: "Odustani"
@@ -2325,6 +2325,11 @@ sr:
         lock_trust_level: "Zaključaj Nivo Poverenja"
         unlock_trust_level: "Odključaj Nivo Poverenja"
         suspended_count: "Suspendovani"
+        other_matches_list:
+          username: "Korisničko Ime"
+          trust_level: "Nivo poverenja"
+          read_time: "Vreme Čitanja"
+          posts: "Poruka"
         tl3_requirements:
           title: "Predispozicije Za Nivo Poverenja 3"
           value_heading: "Vriednost"
@@ -2423,6 +2428,7 @@ sr:
           search: "Pretraži"
           groups: "Grupe"
           dashboard: "Komandna Tabla"
+          navigation: "Navigacija"
         default_categories:
           modal_yes: "Da"
       badges:

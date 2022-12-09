@@ -164,18 +164,6 @@ ru:
         many: "У вас в чате есть новые сообщения"
         other: "У вас в чате есть новые сообщения"
       from: "%{site_name}"
-      subject:
-        direct_message:
-          one: "[%{email_prefix}] Новое сообщение от %{message_title}"
-          few: "[%{email_prefix}] Новые сообщения от %{message_title} и %{others}"
-          many: "[%{email_prefix}] Новые сообщения от %{message_title} и %{others}"
-          other: "[%{email_prefix}] Новые сообщения от %{message_title} и %{others}"
-        chat_channel:
-          one: "[%{email_prefix}] Новое сообщение в %{message_title}"
-          few: "[%{email_prefix}] Новые сообщения в %{message_title} и %{others}"
-          many: "[%{email_prefix}] Новые сообщения в %{message_title} и %{others}"
-          other: "[%{email_prefix}] Новые сообщения в %{message_title} и %{others}"
-        others: "%{count} других"
       unsubscribe: "Этот дайджест чата рассылается с сайта %{site_link} в период вашего отсутствия на форуме. Для отмены подписки измените %{email_preferences_link} или %{unsubscribe_link}."
       unsubscribe_no_link: "Этот дайджест чата рассылается с сайта %{site_link} в период вашего отсутствия на форуме. Настройка рассылки: %{email_preferences_link}."
       view_messages:

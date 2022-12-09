@@ -1099,7 +1099,7 @@ zh_TW:
         short_description: |
           以一次性安全碼保護您的帳號
         disable: "禁用"
-        disable_confirm: "您確定要停用所有兩步驟驗證的方法？"
+        delete: "刪除"
         save: "儲存"
         edit: "編輯"
         security_key:
@@ -1154,7 +1154,6 @@ zh_TW:
         required: "請輸入電子郵件地址"
         invalid: "請輸入有效的電子郵件地址。"
         authenticated: "你的 Email 已由 %{provider} 驗證完成。"
-        frequency_immediately: "如果您沒有閱讀過重要通知，我們會立即發送電子郵件給您。"
         frequency:
           other: "我們只會在您 %{count} 分鐘內沒有活動時，才會寄送電郵通知給您。"
       associated_accounts:
@@ -3171,6 +3170,8 @@ zh_TW:
         change_settings_short: "設定"
         howto: "如何安裝外掛?"
         official: "官方套件"
+      navigation_menu:
+        sidebar: "側選單"
       backups:
         title: "備份"
         menu:
@@ -3866,6 +3867,11 @@ zh_TW:
         unlock_trust_level: "解鎖信任等級"
         silenced_count: "被靜音"
         suspended_count: "被停權的"
+        other_matches_list:
+          username: "使用者名稱"
+          trust_level: "信任等級"
+          read_time: "閱讀時間"
+          posts: "新發表的貼文"
         tl3_requirements:
           title: "信任等級 3 之條件"
           table_title:
@@ -3994,7 +4000,7 @@ zh_TW:
           search: "搜索"
           groups: "群組"
           dashboard: "控制面板"
-          sidebar: "側選單"
+          navigation: "導覽"
         secret_list:
           invalid_input: "輸入欄位不能為空或包含垂直字元"
         default_categories:

@@ -81,6 +81,10 @@ da:
       new_messages: "nye beskeder"
       mention_warning:
         dismiss: "afvis"
+        groups:
+          users_limit:
+            one: "%{count} bruger"
+            other: "%{count} brugere"
       reply: "Svar"
       edit: "Rediger"
       rebake_message: "Gendan HTML"

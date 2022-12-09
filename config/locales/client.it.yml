@@ -1277,7 +1277,6 @@ it:
         use: "Usa l'app Authenticator"
         enforced_notice: "È necessario abilitare l'autenticazione a due fattori prima di accedere a questo sito."
         disable: "Disabilita"
-        disable_confirm: "Vuoi davvero disabilitare tutti i metodi a due fattori?"
         save: "Salva"
         edit: "Modifica"
         edit_title: "Modifica Authenticator"
@@ -1365,7 +1364,6 @@ it:
         authenticated: "%{provider} ha autenticato la tua email"
         invite_auth_email_invalid: "La tua email di invito non corrisponde all'email autenticata da %{provider}"
         authenticated_by_invite: "La tua email è stata autenticata dall'invito"
-        frequency_immediately: "Ti invieremo immediatamente una email se non hai letto ciò per cui ti stiamo scrivendo."
         frequency:
           one: "TI invieremo un'email solo se non ti avremo visto nell'ultimo minuto."
           other: "Ti invieremo un'email solo se manchi da almeno %{count} minuti."
@@ -5302,7 +5300,6 @@ it:
           search: "Cerca"
           groups: "Gruppi"
           dashboard: "Dashboard"
-          sidebar: "Barra laterale"
         secret_list:
           invalid_input: "I campi di inserimento non possono essere vuoti o contenere il carattere barra verticale."
         default_categories:

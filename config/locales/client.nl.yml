@@ -1281,7 +1281,6 @@ nl:
         use: "Authenticator-app gebruiken"
         enforced_notice: "Je moet tweeledige verificatie inschakelen voordat je deze website bezoekt."
         disable: "Uitschakelen"
-        disable_confirm: "Weet je zeker dat je alle methoden voor tweeledige verificatie wilt uitschakelen?"
         save: "Opslaan"
         edit: "Bewerken"
         edit_title: "Authenticator bewerken"
@@ -1369,7 +1368,6 @@ nl:
         authenticated: "Je e-mailadres is geverifieerd door %{provider}"
         invite_auth_email_invalid: "Je uitnodigings-e-mail komt niet overeen met het e-mailadres dat door %{provider} is geverifieerd"
         authenticated_by_invite: "Je e-mailadres is geverifieerd door de uitnodiging"
-        frequency_immediately: "Als je de inhoud in kwestie nog niet hebt gelezen, sturen we je direct een e-mail."
         frequency:
           one: "We sturen alleen een e-mail als we je de afgelopen minuut niet hebben gezien."
           other: "We sturen alleen een e-mail als we je de afgelopen %{count} minuten niet hebben gezien."
@@ -5330,7 +5328,6 @@ nl:
           search: "Zoeken"
           groups: "Groepen"
           dashboard: "Dashboard"
-          sidebar: "Zijbalk"
         secret_list:
           invalid_input: "Invoervelden mogen niet leeg zijn of verticale-streeptekens bevatten."
         default_categories:

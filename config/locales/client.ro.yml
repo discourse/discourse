@@ -1142,6 +1142,7 @@ ro:
           Protejează-ți contul cu coduri de securitate de unică folosință.
         oauth_enabled_warning: "Atenție! Autentificarea cu rețelele sociale va fi dezactivată atunci când activezi autentificarea în doi pași (2FA)."
         disable: "Dezactivează"
+        delete: "Șterge"
         save: "Salvează"
         edit: "Editează"
         security_key:
@@ -1207,7 +1208,6 @@ ro:
         required: "Te rugăm să introduci o adresă de e-mail"
         invalid: "Introduceți o adresă de email validă."
         authenticated: "Emailul a fost autentificat de către %{provider}."
-        frequency_immediately: "Vom trimite imediat un email dacă nu ai citit deja despre ce este vorba. "
         frequency:
           one: "Vom trimite un email doar dacă nu te-am văzut în ultimul minut."
           few: "Vom trimite un email doar dacă nu te-am văzut în ultimele %{count} minute."
@@ -3713,6 +3713,11 @@ ro:
         lock_trust_level: "Blochează nivelul de încredere"
         unlock_trust_level: "Deblochează nivelul de încredere"
         suspended_count: "Suspendați"
+        other_matches_list:
+          username: "Nume utilizator"
+          trust_level: "Nivel de încredere"
+          read_time: "Timp de citire"
+          posts: "Postări"
         tl3_requirements:
           title: "Cerințe pentru nivelul 3 de încredere"
           table_title:
@@ -3832,6 +3837,7 @@ ro:
           search: "Căutare"
           groups: "Grupuri"
           dashboard: "Panou de control"
+          navigation: "Navigare"
         default_categories:
           modal_yes: "Da"
       badges:

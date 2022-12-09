@@ -1228,7 +1228,7 @@ ur:
         use: "تصدیق کنندہ ایپ استعمال کریں"
         enforced_notice: "اس سائٹ تک رسائی سے پہلے آپ کو دو عنصر کی تصدیق کو فعال کرنے کی ضرورت ہے۔"
         disable: "غیر فعال کریں"
-        disable_confirm: "کیا آپ واقعی تمام دو عنصر والے طریقوں کو غیر فعال کرنا چاہتے ہیں؟"
+        delete: "مٹائیں"
         save: "محفوظ کریں"
         edit: "ترمیم"
         edit_title: "تصدیق کنندہ میں ترمیم کریں"
@@ -1310,7 +1310,6 @@ ur:
         authenticated: "آپ کے اِی میل کی توثیق کر دی گئی ہے %{provider}"
         invite_auth_email_invalid: "%{provider} ذریعہ تصدیق شدہ ای میل سے مماثلت نہیں ہے"
         authenticated_by_invite: "آپ کے ای میل کی دعوت کے ذریعہ توثیق کردی گئی ہے"
-        frequency_immediately: "جس بارے میں ہم آپ کو اِی میل کر رہے ہیں، اگر آپ نے نہیں پڑھی ہوئی تو ہم فوری طور پر آپ کو اِی میل کریں گے۔"
         frequency:
           one: "ہم آپ کو اِی میل کریں گے صرف اُس صور میں کہ ہم نے آپ کو گزشتہ ایک منٹ میں نہ دیکھا ہو۔"
           other: "ہم آپ کو اِی میل کریں گے صرف اُس صور میں کہ ہم نے آپ کو گزشتہ %{count} منٹ میں نہ دیکھا ہو۔"
@@ -4892,6 +4891,11 @@ ur:
         silenced_count: "خاموش کیو ہوئے"
         suspended_count: "معطل کردہ"
         last_six_months: "گزشتہ 6 ماہ"
+        other_matches_list:
+          username: "صارف نام"
+          trust_level: "ٹرسٹ لَیول"
+          read_time: "پڑھنے کیلئے اِستعمال ہونے والا وقت"
+          posts: "پوسٹس"
         tl3_requirements:
           title: "ٹرسٹ لَیول 3 کے تقاضے"
           table_title:
@@ -5031,6 +5035,7 @@ ur:
           search: "سرچ"
           groups: "گروپس"
           dashboard: "ڈَیش بورڈ"
+          navigation: "نیویگیشن"
         secret_list:
           invalid_input: "اِن پُٹ فیلڈز خالی یا عمودی بار کے حرف پر مشتمل نہیں ہو سکتیں۔"
         default_categories:

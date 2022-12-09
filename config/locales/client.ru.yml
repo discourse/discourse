@@ -8,17 +8,17 @@ ru:
   js:
     number:
       format:
-        separator: "."
-        delimiter: ","
+        separator: ","
+        delimiter: " "
       human:
         storage_units:
           format: "%n %u"
           units:
             byte:
-              one: Байт
-              few: Байта
-              many: Байт
-              other: Байт
+              one: байт
+              few: байта
+              many: байтов
+              other: байта
             gb: ГБ
             kb: КБ
             mb: МБ
@@ -48,44 +48,44 @@ ru:
         half_a_minute: "< 1 мин"
         less_than_x_seconds:
           one: "< %{count} с"
-          few: "< %{count}сек"
-          many: "< %{count}сек"
-          other: "< %{count}с"
+          few: "< %{count} с"
+          many: "< %{count} с"
+          other: "< %{count} с"
         x_seconds:
-          one: "%{count}с"
-          few: "%{count}с"
-          many: "%{count}с"
-          other: "%{count}с"
+          one: "%{count} с"
+          few: "%{count} с"
+          many: "< %{count} с"
+          other: "< %{count} с"
         less_than_x_minutes:
-          one: "< %{count}мин"
+          one: "< %{count} мин"
           few: "< %{count} мин"
           many: "< %{count} мин"
-          other: "< %{count}мин"
+          other: "< %{count} мин"
         x_minutes:
           one: "%{count} мин"
-          few: "%{count}мин"
-          many: "%{count}мин"
-          other: "%{count}мин"
+          few: "%{count} мин"
+          many: "%{count} мин"
+          other: "%{count} мин"
         about_x_hours:
-          one: "%{count}ч"
-          few: "%{count}ч"
-          many: "%{count}ч"
-          other: "%{count}ч"
+          one: "%{count} ч"
+          few: "%{count} ч"
+          many: "%{count} ч"
+          other: "%{count} ч"
         x_days:
-          one: "%{count}д"
-          few: "%{count}д"
-          many: "%{count}д"
-          other: "%{count}д"
+          one: "%{count} д"
+          few: "%{count} дн"
+          many: "%{count} дн"
+          other: "%{count} дн"
         x_months:
           one: "%{count} мес"
-          few: "%{count}мес"
-          many: "%{count}мес"
-          other: "%{count}мес"
+          few: "%{count} мес"
+          many: "%{count} мес"
+          other: "%{count} мес"
         about_x_years:
-          one: "%{count}год"
-          few: "%{count}года"
-          many: "%{count}лет"
-          other: "%{count}лет"
+          one: "%{count} год"
+          few: "%{count} года"
+          many: "%{count} лет"
+          other: "%{count} года"
         over_x_years:
           one: "> %{count} года"
           few: "> %{count} лет"
@@ -110,10 +110,10 @@ ru:
           many: "%{count} мин"
           other: "%{count} мин"
         x_hours:
-          one: "%{count} час"
-          few: "%{count} часа"
-          many: "%{count} часов"
-          other: "%{count} часов"
+          one: "%{count} час"
+          few: "%{count} часа"
+          many: "%{count} часов"
+          other: "%{count} часа"
         about_x_hours:
           one: "около %{count} часа"
           few: "около %{count} часов"
@@ -123,7 +123,7 @@ ru:
           one: "%{count} день"
           few: "%{count} дня"
           many: "%{count} дней"
-          other: "%{count} дней"
+          other: "%{count} дня"
         x_months:
           one: "%{count} месяц"
           few: "%{count} месяца"
@@ -147,15 +147,15 @@ ru:
         date_year: "D MMM YYYY"
       medium_with_ago:
         x_minutes:
-          one: "%{count} мин. назад"
-          few: "%{count} мин. назад"
-          many: "%{count} мин. назад"
-          other: "%{count} мин. назад"
+          one: "%{count} мин назад"
+          few: "%{count} мин назад"
+          many: "%{count} мин назад"
+          other: "%{count} мин назад"
         x_hours:
-          one: "%{count} ч. назад"
-          few: "%{count} ч. назад"
-          many: "%{count} ч. назад"
-          other: "%{count} ч. назад"
+          one: "%{count} час назад"
+          few: "%{count} часа назад"
+          many: "%{count} часов назад"
+          other: "%{count} часа назад"
         x_days:
           one: "%{count} день назад"
           few: "%{count} дня назад"
@@ -199,7 +199,7 @@ ru:
       twitter: "Поделиться в Твиттере"
       facebook: "Поделиться в Фейсбуке"
       email: "Отправить по электронной почте"
-      url: "Копировать и поделиться ссылкой"
+      url: "Копировать ссылку и поделиться"
     action_codes:
       public_topic: "сделал(а) тему публичной %{when}"
       open_topic: "преобразовал(а) это в тему %{when}"
@@ -230,16 +230,16 @@ ru:
         enabled: "включил(а) отображение темы %{when}"
         disabled: "выключил(а) отображение темы %{when}"
       banner:
-        enabled: "создал(а) баннер %{when}. Он будет отображаться у каждого пользователя сверху на всех страницах, пока он скроет ее."
+        enabled: "создал(а) баннер %{when}, который будет отображаться сверху на всех страницах, пока пользователь не скроет его."
         disabled: "удалил(а) баннер %{when}. Он не будет отображаться вверху каждой страницы."
       forwarded: "переадресовал(а) вышеуказанное письмо"
     topic_admin_menu: "действия администратора над темой"
     skip_to_main_content: "Перейти к основному контенту"
-    emails_are_disabled: "Все исходящие письма были глобально отключены администратором. Никакие уведомления отправляться не будут."
+    emails_are_disabled: "Все исходящие письма были глобально отключены администратором. Никакие уведомления по электронной почте отправляться не будут."
     emails_are_disabled_non_staff: "Отправка писем отключена для пользователей, не являющихся сотрудниками."
     software_update_prompt:
-      message: "Сайт был обновлён, <span>обновите страницу</span>."
-      dismiss: "Отклонить"
+      message: "Сайт обновлён. <span>Перезагрузите страницу</span> (иначе вы можете столкнуться с неожиданным поведением)."
+      dismiss: "Закрыть"
     bootstrap_mode_enabled:
       one: "Для скорейшего развития сайта был включен специальный режим работы. В этом режиме всем новым пользователям присваивается 1-й уровень доверия и включается ежедневная почтовая рассылка сводки новостей. Этот режим будет автоматически выключен, как только количество зарегистрированных пользователей достигнет %{count}."
       few: "Для скорейшего развития сайта был включен специальный режим работы. В этом режиме всем новым пользователям присваивается 1-й уровень доверия и включается ежедневная почтовая рассылка сводки новостей. Этот режим будет автоматически выключен, как только количество зарегистрированных пользователей достигнет %{count}."
@@ -249,11 +249,11 @@ ru:
     bootstrap_invite_button_title: "Отправить приглашения"
     bootstrap_wizard_link_title: "Завершить работу мастера настройки"
     themes:
-      default_description: "Цветовая схема по умолчанию"
-      broken_theme_alert: "Ваш сайт может не работать, потому что в теме / компоненте есть ошибки."
-      error_caused_by: "Ошибка из-за «%{name}». <a target='blank' href='%{path}'>Нажмите здесь</a>, чтобы обновить, перенастроить или отключить тему."
+      default_description: "По умолчанию"
+      broken_theme_alert: "Сайт может не работать: в теме (компоненте) есть ошибки."
+      error_caused_by: "Ошибка из-за темы «%{name}». <a target='blank' href='%{path}'>Нажмите здесь</a>, чтобы обновить, перенастроить или отключить ее."
       only_admins: "(это сообщение отображается только для администраторов сайта)"
-    broken_decorator_alert: "Записи могут отображаться неправильно, потому что один из декораторов контента записей вызвал ошибку."
+    broken_decorator_alert: "Записи могут отображаться неправильно: один из декораторов контента записей вызвал ошибку."
     s3:
       regions:
         ap_northeast_1: "Азиатско-Тихоокеанский регион (Токио)"
@@ -267,15 +267,15 @@ ru:
         cn_northwest_1: "Китай (Нинся)"
         eu_central_1: "ЕС (Франкфурт)"
         eu_north_1: "ЕС (Стокгольм)"
-        eu_south_1: "EU (Milan)"
+        eu_south_1: "ЕС (Милан)"
         eu_west_1: "ЕС (Ирландия)"
         eu_west_2: "ЕС (Лондон)"
         eu_west_3: "ЕС (Париж)"
         sa_east_1: "Южная Америка (Сан-Паулу)"
         us_east_1: "Восток США (Северная Вирджиния)"
         us_east_2: "Восток США (Огайо)"
-        us_gov_east_1: "AWS GovCloud (США-восток)"
-        us_gov_west_1: "AWS GovCloud (США-Запад)"
+        us_gov_east_1: "AWS GovCloud (США, восток)"
+        us_gov_west_1: "AWS GovCloud (США, запад)"
         us_west_1: "Запад США (Северная Калифорния)"
         us_west_2: "Запад США (Орегон)"
     clear_input: "Очистить"
@@ -294,7 +294,7 @@ ru:
     log_in: "Вход"
     age: "Возраст"
     joined: "Регистрация"
-    admin_title: "Администратор"
+    admin_title: "Администрирование"
     show_more: "показать ещё"
     show_help: "расширенный поиск"
     links: "Ссылки"
@@ -1393,7 +1393,6 @@ ru:
         use: "Используйте приложение аутентификации"
         enforced_notice: "Перед входом на сайт вы должны включить двухфакторную аутентификацию."
         disable: "Отключить"
-        disable_confirm: "Действительно отключить все методы двухфакторной аутентификации?"
         save: "Сохранить"
         edit: "Изменить"
         edit_title: "Изменить аутентификатор"
@@ -1481,7 +1480,6 @@ ru:
         authenticated: "Ваш адрес электронной почты подтверждён через %{provider}"
         invite_auth_email_invalid: "Ваш пригласительный адрес не совпадает с адресом электронной почты, подтверждённым через %{provider}"
         authenticated_by_invite: "Ваш адрес электронной почты подтверждён через приглашение"
-        frequency_immediately: "Получать уведомления о новых непрочитанных сообщениях незамедлительно."
         frequency:
           one: "Мы отправим вам письмо только в том случае, если вы не были онлайн последнюю %{count} минуту."
           few: "Мы отправим вам письмо только в том случае, если вы не были онлайн последние %{count} минуты."
@@ -5645,7 +5643,6 @@ ru:
           search: "Поиск"
           groups: "Группы"
           dashboard: "Панель управления"
-          sidebar: "Боковая панель"
         secret_list:
           invalid_input: "Поля ввода не могут быть пустыми или содержать символ вертикальной черты."
         default_categories:

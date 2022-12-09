@@ -1070,7 +1070,7 @@ cs:
         use: "Použijte ověřovací aplikaci"
         enforced_notice: "Před přístupem na tento web musíte povolit dvoufaktorové ověřování."
         disable: "Vypnout"
-        disable_confirm: "Opravdu chcete zakázat všechny dvoufaktorové metody?"
+        delete: "Smazat"
         save: "Uložit"
         edit: "Upravit"
         edit_title: "Upravit autentifikátor"
@@ -1140,7 +1140,6 @@ cs:
         ok: "Pro potvrzení vám pošleme email."
         invalid: "Zadejte prosím správnou emailovou adresu"
         authenticated: "Vaše emailová adresa byla autorizována přes službu %{provider}."
-        frequency_immediately: "Pokud jste obsah dosud nečetli, pošleme vám ho ihned emailem."
         frequency:
           one: "Email vám zašleme pouze pokud jste se neukázali během poslední minuty."
           few: "Email vám zašleme pouze pokud jste se neukázali během posledních %{count} minut."
@@ -3715,6 +3714,11 @@ cs:
         unlock_trust_level: "Odemknout úroveň důvěryhodnosti"
         silenced_count: "Ztišení"
         suspended_count: "Zakázaní"
+        other_matches_list:
+          username: "Uživatelské jméno"
+          trust_level: "Věrohodnost"
+          read_time: "Čas strávený čtením"
+          posts: "Příspěvky"
         tl3_requirements:
           title: "Požadavky pro důvěryhodnost 3"
           table_title:
@@ -3835,6 +3839,7 @@ cs:
           search: "Vyhledávání"
           groups: "Skupiny"
           dashboard: "Rozcestník"
+          navigation: "Navigace"
         default_categories:
           modal_yes: "Ano"
       badges:

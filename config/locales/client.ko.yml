@@ -1191,7 +1191,7 @@ ko:
         use: "인증 앱 사용"
         enforced_notice: "이 사이트에 액세스하려면 2단계 인증을 활성화해야 합니다."
         disable: "비활성화"
-        disable_confirm: "모든 2단계 인증 방법을 비활성화할까요?"
+        delete: "삭제하기"
         save: "저장"
         edit: "편집"
         edit_title: "인증 편집"
@@ -1277,7 +1277,6 @@ ko:
         authenticated: "이메일이 %{provider}에 의해 인증되었습니다"
         invite_auth_email_invalid: "초대 이메일이 %{provider}에서 인증한 이메일과 일치하지 않습니다"
         authenticated_by_invite: "이메일이 초대 이메일로 인증되었습니다"
-        frequency_immediately: "만약 전송된 이메일을 읽지 않았을 경우, 즉시 이메일을 다시 보내드립니다."
         frequency:
           other: "최근 %{count}분 동안 접속하지 않을 경우에만 이메일이 전송됩니다."
       associated_accounts:
@@ -3946,6 +3945,8 @@ ko:
         change_settings_short: "설정"
         howto: "플러그인은 어떻게 설치하나요?"
         official: "공식 플러그인"
+      navigation_menu:
+        sidebar: "사이드바"
       backups:
         title: "백업"
         menu:
@@ -4809,6 +4810,11 @@ ko:
         silenced_count: "차단됨"
         suspended_count: "정지됨"
         last_six_months: "지난 6개월"
+        other_matches_list:
+          username: "아이디"
+          trust_level: "회원 레벨"
+          read_time: "읽은 시간"
+          posts: "글"
         tl3_requirements:
           title: "신뢰 레벨 3의 요구사항"
           table_title:
@@ -4952,7 +4958,7 @@ ko:
           search: "검색"
           groups: "그룹"
           dashboard: "대시보드"
-          sidebar: "사이드바"
+          navigation: "내비게이션"
         secret_list:
           invalid_input: "입력 필드는 비워 두거나 수직 막대 문자를 포함할 수 없습니다."
         default_categories:

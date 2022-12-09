@@ -1279,7 +1279,14 @@ hu:
         use: "Hitelesítő alkalmazás használata"
         enforced_notice: "A webhely elérése előtt engedélyeznie kell a kétfaktoros hitelesítést."
         disable: "Letiltás"
-        disable_confirm: "Biztos, hogy letiltja az összes kétfaktoros hitelesítési módot?"
+        disable_confirm: "Biztos, hogy ki akarja kapcsolni a kétfaktoros hitelesítést?"
+        delete: "Törlés"
+        delete_confirm_header: "Ezek a token-alapú hitelesítők és fizikai biztonsági kulcsok törlődnek:"
+        delete_confirm_instruction: 'A megerősítéshez írja be <strong>%{confirm}</strong> az alábbi mezőbe.'
+        delete_single_confirm_title: "Hitelesítő törlése"
+        delete_single_confirm_message: "%{name} törlése. Ez a művelet nem vonható vissza. Ha meggondolja magát, újra regisztrálnia kell ezt a hitelesítőt."
+        delete_backup_codes_confirm_title: "Biztonsági kódok törlése"
+        delete_backup_codes_confirm_message: "Ön törli a biztonsági kódokat. Ez a művelet nem vonható vissza. Ha meggondolja magát, újra kell generálnia a biztonsági kódokat."
         save: "Mentés"
         edit: "Szerkesztés"
         edit_title: "Hitelesítő szerkesztése"
@@ -1365,7 +1372,6 @@ hu:
         authenticated: "Az e-mail-címét a(z) %{provider} hitelesítette"
         invite_auth_email_invalid: "A meghívási e-mail-címe nem egyezik a(z) %{provider} által hitelesített e-mail-címmel"
         authenticated_by_invite: "Az e-mail-címét a meghívás hitelesítette"
-        frequency_immediately: "Azonnal e-mailt fog kapni, ha még nem olvasta el azt, amiről e-mailt küldtünk."
         frequency:
           one: "Csak akkor küldünk e-mailt, ha nem láttuk az elmúlt percben."
           other: "Csak akkor küldünk e-mailt, ha nem láttuk az elmúlt %{count} percben."
@@ -3968,6 +3974,10 @@ hu:
         change_settings_short: "Beállítások"
         howto: "Hogyan lehet plugin-eket telepíteni?"
         official: "Hivatalos plugin"
+      navigation_menu:
+        sidebar: "Oldalsáv"
+        header_dropdown: "Fejléc legördülő menü"
+        legacy: "Hagyaték"
       backups:
         title: "Biztonsági mentések"
         menu:
@@ -4602,6 +4612,12 @@ hu:
         suspend_modal_title: "Felhasználó felfüggesztése"
         silenced_count: "Némított"
         suspended_count: "Felfüggesztett"
+        other_matches_list:
+          username: "Felhasználónév"
+          trust_level: "Bizalmi szint"
+          read_time: "Olvasási idő"
+          topics_entered: "Beírt témák"
+          posts: "Bejegyzések"
         tl3_requirements:
           value_heading: "Érték"
           visits: "Látogatások"
@@ -4701,6 +4717,7 @@ hu:
           search: "Keresés"
           groups: "Csoportok"
           dashboard: "Vezérlőpult"
+          navigation: "Navigáció"
         default_categories:
           modal_yes: "Igen"
       badges:

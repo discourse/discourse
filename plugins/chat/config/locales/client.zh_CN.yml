@@ -107,14 +107,10 @@ zh_CN:
       join: "加入"
       new_messages: "新消息"
       mention_warning:
-        cannot_see:
-          other: "%{usernames} 无法访问此频道且未收到通知。"
         dismiss: "忽略"
         invitations_sent:
           other: "已发送邀请"
         invite: "邀请加入频道"
-        without_membership:
-          other: "%{usernames} 尚未加入此频道。"
       aria_roles:
         header: "聊天标题"
         composer: "聊天输入框"

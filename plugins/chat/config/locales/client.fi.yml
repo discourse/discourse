@@ -108,17 +108,11 @@ fi:
       join: "Liity"
       new_messages: "uusia viestejä"
       mention_warning:
-        cannot_see:
-          one: "%{usernames} ei voi käyttää tätä kanavaa, eikä hänelle ilmoitettu."
-          other: "%{usernames} eivät voi käyttää tätä kanavaa, eikä heille ilmoitettu."
         dismiss: "hylkää"
         invitations_sent:
           one: "Kutsu lähetetty"
           other: "Kutsut lähetettiin"
         invite: "Kutsu kanavalle"
-        without_membership:
-          one: "%{usernames} ei ole liittynyt tälle kanavalle."
-          other: "%{usernames} eivät ole liittyneet tälle kanavalle."
       aria_roles:
         header: "Chatin ylätunniste"
         composer: "Chatin tekstieditori"

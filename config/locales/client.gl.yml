@@ -1145,7 +1145,7 @@ gl:
         use: "Usar app de autenticador"
         enforced_notice: "Requírese activar a autenticación de dobre paso para acceder a este sitio."
         disable: "Desactivar"
-        disable_confirm: "Confirma que quere desactivar todos os métodos de dobre paso?"
+        delete: "Eliminar"
         save: "Gardar"
         edit: "Editar"
         edit_title: "Editar autenticador"
@@ -1224,7 +1224,6 @@ gl:
         invalid: "Introduza un enderezo de correo electrónico correcto"
         authenticated: "O seu enderezo de correo electrónico foi autenticado por %{provider}"
         invite_auth_email_invalid: "A súa mensaxe de convite non casa co enderezo de correo autenticado en %{provider}"
-        frequency_immediately: "Enviarémosllee unha mensaxe de correo axiña se non leu sobre o que lle estamos a enviar."
         frequency:
           one: "Só lle eviaremos un correo se non o vimos a vostede no último minuto."
           other: "Só lle eviaremos un correo se non o vimos a vostede nos últimos %{count} minutos."
@@ -4534,6 +4533,11 @@ gl:
         unlock_trust_level: "Desbloquear o nivel de confianza"
         silenced_count: "Silenciado"
         suspended_count: "Suspendido"
+        other_matches_list:
+          username: "Nome de usuario"
+          trust_level: "Nivel de confianza"
+          read_time: "Tempo de lectura"
+          posts: "Publicacións"
         tl3_requirements:
           title: "Requirimentos para o nivel 3 de confianza"
           table_title:
@@ -4669,6 +4673,7 @@ gl:
           search: "Buscar"
           groups: "Grupos"
           dashboard: "Panel"
+          navigation: "Navegación"
         secret_list:
           invalid_input: "Os campos de entrada de datos non poden quedar baleiros nin conter a barra vertical."
         default_categories:

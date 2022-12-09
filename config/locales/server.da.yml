@@ -794,7 +794,6 @@ da:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Upassende"
-      description: 'Dette indlæg indeholder indhold, som en fornuftig person ville anse offensiv, misbrug, eller en overtrædelse af <a href="%{base_path}/guidelines">vores retningslinjer for fællesskabet</a>.'
       short_description: 'En overtrædelse af <a href="%{base_path}/guidelines">vores retningslinjer for fællesskabet</a>'
     notify_user:
       title: "Send @%{username} en besked"
@@ -853,7 +852,6 @@ da:
       short_description: "Dette er en annonce"
     inappropriate:
       title: "Upassende"
-      description: 'Dette emne indeholder indhold, som en fornuftig person anser for stødende, krænkende eller en overtrædelse af <a href="%{base_path}/guidelines">vores retningslinjer for fællesskabet</a>.'
       long_form: "anmeldte dette som upassende"
       short_description: 'En overtrædelse af <a href="%{base_path}/guidelines">vores retningslinjer for fællesskabet</a>'
     notify_moderators:
@@ -1979,7 +1977,6 @@ da:
     subject_template: "[%{email_prefix}] opdatering tilgængelig"
   flag_reasons:
     off_topic: "Dit indlæg blev anmeldt som **undenfor-emnet**: Fællesskabet synes ikke, at det passer godt ind i emnet, som er blevet defineret af titlen og det første indlæg."
-    inappropriate: "Dit indlæg blev anmeldt som **upassende**: Fællesskabet synes, at det er stødende, groft eller krænker [vores fællesskabs retningslinier](%{base_path}/guidelines)."
     spam: "Dit indlæg blev anmeldt som **spam**: Fællesskabet synes, at det er en reklame, noget der er overdrevent salgsfremmende i stedet for at være brugbart eller relevant for emnet."
     notify_moderators: "Dit indlæg var anmeldt **til moderation**: Fællesskabet synes, at noget ved indlægget kræver ingriben af et medlem af hjælperteamet."
   flags_dispositions:
@@ -2971,181 +2968,6 @@ da:
     title: "OSS/Retningslinjer"
   tos_topic:
     title: "Vilkår"
-    body: |
-      Disse vilkår vedrører brugen af Internet forummet på <%{base_url}>. For at bruge dette forum, skal du acceptere disse vilkår med %{company_name}, virksomheden der driver dette forum.
-
-      Virksomheden kan tilbyde andre produkter og tjenester, under forskellige vilkår. Disse vilkår finder kun anvendelse på dette forum.
-
-      Spring til:
-
-      - [Vigtige Vilkår](#heading--important-terms)
-      - [Din Tilladelse til at Bruge dette Forum](#heading--permission)
-      - [Betingelser for Brugen af dette Forum](#heading--conditions)
-      - [Acceptabel Brug](#heading--acceptable-use)
-      - [Indholds Standarder](#heading--content-standards)
-      - [Håndhævelse](#heading--enforcement)
-      - [Din Konto](#heading--your-account)
-      - [Dit Indhold](#heading--your-content)
-      - [Dit Ansvar](#heading--responsibility)
-      - [Forbehold](#heading--disclaimers)
-      - [Grænser for Ansvar](#heading--liability)
-      - [Tilbagemelding](#heading--feedback)
-      - [Opsigelse](#heading--termination)
-      - [Tvister](#heading--disputes)
-      - [Generelle Vilkår](#heading--general)
-      - [Kontakt](#heading--contact)
-      - [Ændringer](#heading--changes)
-
-      <h2 id="heading--important-terms"><a href="#heading--important-terms">Vigtige Vilkår</a></h2>
-
-      ***Disse vilkår indeholder et antal af vigtige bestemmelser der berører dine rettigheder og dit ansvar såsom Forbehold i [Forbehold](#heading--disclaimers), begrænsninger i virksomhedens ansvar overfor dig i [Grænser for Ansvar](#heading--liability), din aftale om at dække virksomhedens skader forsaget af dit forkerte brug af dette forum i [Ansvar for Dit Brug](#heading--responsibility), og en aftale om at mægle Tvister i [Tvister](#heading--disputes).***
-
-      <h2 id="heading--permission"><a href="#heading--permission">Din Tilladelse til at Bruge dette Forum</a></h2>
-
-      Med forbehold for disse vilkår, giver virksomheden dig tilladelse til at benytte dette forum. Alle skal acceptere disse vilkår for at benytte dette forum.
-
-      <h2 id="heading--conditions"><a href="#heading--conditions">Betingelser for Brugen af dette Forum</a></h2>
-
-      Din Tilladelse til at Bruge dette Forum er underlagt følgende betingelser:
-
-      1. Du skal være mindst tretten år gammel.
-
-      2. Du må ikke længere benytte dette forum, hvis virksomheden Kontakter dig direkte for at sige at du ikke må.
-
-      3. Du skal benytte forummet i overensstemmelse med [Acceptabel Brug](#heading--acceptable-use) og [Indholds Standarder](#heading--content-standards).
-
-      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Acceptabel Brug</a></h2>
-
-      1. Du må ikke bryde loven ved hjælp af dette forum.
-
-      2. Du må ikke bruge eller forsøge at bruge en andens konto på forummet uden deres udtrykkelige tilladelse.
-
-      3. Du må ikke købe, sælge, eller på anden vis bytte brugernavne eller andre unikke kendetegn på dette forum.
-
-      4. Du må ikke sende reklamer, kædebreve, eller andre anmodninger igennem dette forum, eller bruge forummet til at indsamle adresser eller andre personlige data for kommercielle adresse-lister eller databaser.
-
-      5. Du må ikke automatisere adgang til forummet, eller overvåge forummet, såsom med brug af en gennemsøger (web crawler), browser udvidelser eller tilføjelser, eller andet computer program der ikke er en web browser. Du må gennemsøge forummet for at indeksere dette for en offentligt tilgængelig søgemaskine, hvis du driver en sådanne.
-
-      6. Du må ikke benytte dette forum til at sende e-mais til distributionslister, nyhedsgrupper, eller gruppe e-mail-aliaser .
-
-      7. Du må ikke fejlagtigt antyde at du er tilknyttet eller godkendt af virksomheden.
-
-      8. Du må ikke hyperlinke til billeder eller andet ikke-hypertekst indhold på forummet eller andre websteder.
-
-      9. Du må ikke fjerne nogen mærker der viser proprietært ejerskab over materialer som du har hentet fra forummet.
-
-      10. Du må ikke vise nogen dele af dette forum på andre websteder med `<iframe>`.
-
-      11. Du må ikke deaktivere, undgå eller omgå nogensomhelst sikkerheds ellers adgangsbegrænsninger på dette forum.
-
-      12. Du må ikke belaste infrastukturen bag dette forum med en urimelig mængde forespørgsler, eller forespørgsler indrettet til at påføre en urimelig belastning på informationssystemer, der ligger til grund for dette forum.
-
-      13. Du må ikke udgive dig for at være andre igennem dette forum.
-
-      14. Du må ikke opfordre eller hjælpe nogen til at overtræde disse vikår.
-
-      <h2 id="heading--content-standards"><a href="#heading--content-standards">Indholds Standarder</a></h2>
-
-      1. Du må ikke sende indhold til forummet der er ulovligt, stødende, eller på anden måde skadeligt for andre. Dette inkluderer indhold der er chikanerende, upassende eller voldeligt.
-
-      2. Du må ikke sende indhold til forummet der er i strid med loven, krænker andres interllektuelle ejemdomsrettigheder, krænker andres privatliv, eller bryder aftaler du har med andre.
-
-      3. Du må ikke sende indhold til forummet der indeholde skadelig computer kode, såsom computer viraer eller spyware.
-
-      4. Du må ikke sende indhold til forummet som en simpel pladsholder, der indeholder en bestemt adresse, brugernavn eller anden unik identifikator.
-
-      5. Du må ikke bruge dette forum til at afsløre oplysninger, som du ikke har ret til at afsløre, såsom andres fortrolige eller personlige oplysninger..
-
-      <h2 id="heading--enforcement"><a href="#heading--enforcement">Håndhævelse</a></h2>
-
-      Virksomheden må undersøge og retsforfølge overtrædelser af disse vilkår i videst muligt omfang i henhold til gældende lov. Virksomheden må underette og samarbejde med retshåndhævende myndigheder for retsforfølgning af lovovertrædelser og disse vilkår.
-
-      Virksomheden forbeholder sig retten til at ændre, redigere og slette indhold på forummet af enhver grund. Hvis du mener at nogen har indsendt indhold til forummet i strid med disse vilkår, [Kontakt os straks](#heading--contact).
-
-      <h2 id="heading--your-account"><a href="#heading--your-account">Din Konto</a></h2>
-
-      Du skal oprette og logge ind med en konto for at bruge nogle af forummets funktioner.
-
-      For at oprette en konto, skal du give nogle oplysninger om dig selv. Hvis du opretter en konto, accepter du som minumum at oplyse en gyldig e-mail adresse, og at holde denne adresse opdateret.
-      Du kan lukke din konto til enhver tid ved at sende en e-mail til <%{contact_email}>.
-
-      Du accepterer at være ansvarlig for alle handlinger udført ved brug af din konto, hvad enten det er godkendt af dig selv eller ej, indtil du enten lukker som konto eller underretter virksomheden om, at din konto er blevet kompromitteret. Du accepterer straks at underrette virksomheden, hvis du har mistanke om at din komto er blevet kompromiteret. Du accepterer at vælge en sikker adgangskode til din konto, og holde denne hemmelig.
-
-      Virksomheden må begrændse, suspendere, eller lukke din konto på forummet i henhold til sin politik for håndtering af copyrigth-relaterede fjernelsesanmodninger, eller hvis virksomheden med rimelighed mener, at du har brudt enhver regel i disse vilkår.
-
-      <h2 id="heading--your-content"><a href="#heading--your-content">Dit Indhold</a></h2>
-
-      Intet i disse vilkår giver virksomheden ejendomsrettigheder over intellektuel ejendomsret du deler med forummet, såsom din konto, indlæg, eller andet indhold du sender til dette forum.
-      Intet i disse vilkår giver ligeledes ikke dig nogen ejendomsret over virksomhedens intellektuelle ejendom.
-
-      Mellem dig og virksomheden, forbliver du eneansvarlig for det indhold du sender til forummet. Du accepterer ikke at antyde på forkert grundlag, at indhold du sender til forummet er sponsoreret eller godkendt af virksomheden. Disse vilkår forpligter ikke virksomheden til at gemme, vedligeholde, eller udlevere kopier af indhold du sender, og til at ændre det i henhold til disse vilkår.
-
-      Indhold du sender til forummet tilhører dig, og du kan afgøre hvilke tilladelser (for indholdet) du giver til andre. Men i udgangspunktet, licenserer du virksomheden, til at levere indhold som du sender til forummet til andre brugere af forummet. Denne særlige licens giver virksomheden mulighed for at kopiere, offentliggøre og analysere indhold, du sender til forummet.
-
-      Når indhold du sender bliver fjernet fra forummet, af dig eller af virksomheden, slutter virksomhedesn specielle licens, når den sidste kopi forsvinder fra virksomhedens backup, cache, og andre systemer. Andre licenser du anvender på indhold du sender, såsom [Creative Commons](https://creativecommons.org) licenser, kan fortsætte efter dit indhold er blevet fjernet. Disse licenser kan give andre, eller virksomheden self, retten til at dele dit indhold igennem forummet igen.
-
-      Andre som modtager indhold du sender til forummetm kan overtræde vilkårene som du licenserer dit indhold under. Du accepteret at virksomheden ikke vil blive holdt ansvarlig overfor dig, for disse overtrædelser eller deres konsekvenser.
-
-      <h2 id="heading--responsibility"><a href="#heading--responsibility">Dit Ansvar</a></h2>
-
-      Du accepterer at holde virksomheden skadesløs overfor juridiske krav fra andre i forbindelse med din overtrædelse af disse vilkør, eller overtrædelse af disse vilkår begået af andre under brug af din konto på forummet.
-      Både du og virksomheden er enige om at underrette modparten om eventuelle juridiske krav, som du muligvis er nødt til at friholde virksomheden hurtigst muligt. Hvis virksomheden ikke straks underretter di om et juridisk krav, behøver du ikke at skadesløsholde virksomheden for skader som, du kunne have forsvarer eller mildnet med hurtig varsling. Du accepterer at tillade virksomheden, at kontrollere efterforskning, forsvar og forlig, af juridiske krav, som du ville skulle holde virksomheden skadeløst for, og til at samarbejde med disse bestræbelser. Virksomheden accepterer, ikke-at-acceptere nogen forlig, der indrømmer skyld for dig eller pålægger dig forpligtigelser uden din forudgående aftale.
-
-      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Forbehold</a></h2>
-
-      ***Du accepterer al risiko ved brug af dette forum og indhold på forummet. Så vidt lovgivningen tillader, leverer virksomheden og dets leverandører forummet som der er uden nogen som helst garanti.***
-
-      Forummet må hyper-linke til og integrere foraer og tjenester der drives af andre. Virksomheden giver ingen garanti for tjenester der drives af andre, eller indhold de måtte levere. Brug af tjenester der drives af andre, kan være underlagt andre vilkår mellem dig og den enkelte kørende tjeneste.
-
-      <h2 id="heading--liability"><a href="#heading--liability">Grænser for Ansvar</a></h2>
-
-      ***Hverken virksomheden eller dets leverandører vil være ansvarlige overfor dig for skader på kontraktbrud, som deres personale ikke med rimelighed kunne have forudset, da du accepterede disse vilkår.***
-
-      ***Så langt som lovgivningen tillader, vil det totale ansvar overfor dig, for krav af enhver art, der er relateret til forummet eller indhold på forummet være begrændset til et beløb svarende til $50 USD.***
-
-      <h2 id="heading--feedback"><a href="#heading--feedback">Tilbagemelding</a></h2>
-
-      Virksomheden byder dine tilbagemeldinger og forslag til forummet velkommen. Se [Kontakt](#heading--contact) sektionen nedenunder for måder du kan komme i forbindelse med os.
-
-      Du accepterer at virksomheden frit kan handle på tilbagemeldingen du kommer med, og at virksomheden ikke behøver at give dig besked, om at din tilbagemelding blev fulgt, indhente din tilladelse til at bruge den, eller betale dig. Du accepterer, ikke at sende tilbagemelding med forslag du tror kan være fortroligt eller proprietært, for dig eller andre.
-
-      <h2 id="heading--termination"><a href="#heading--termination">Opsigelse</a></h2>
-
-      Enten du eller virksomheden kan til enhver tid afslutte aftalen, der er skrevet i disse vilkår. Når vores aftale slutter, slutter også din tilladelse til at bruge dette forum.
-
-      Følgende bestemmelser bistår slutningen af vores aftale: [Dit Indhold](#heading--your-content), [Tilbagemelding](#heading--feedback), [Dit Ansvar](#heading--responsibility), [Forbehold](#heading--disclaimers), [Grænser for Ansvar](#heading--liability), og [Generelle Vilkår](#heading--general).
-
-      <h2 id="heading--disputes"><a href="#heading--disputes">Tvister</a></h2>
-
-      %{governing_law} vil afgøre enhver tvist i forbindelse med disse vilkår eller din brug af forummet.
-
-      Du og virksomheden er enige om kun at søge påbud relateret til disse vilkår behandlet i byretten eller landsretten i %{city_for_disputes}. Hverken du eller virksomheden vil gøre indsigelse mod jurisdiktion, forum eller mødested ved disse domstole..
-
-      ***Ud over at søge et påbud eller for krav under gældende lovgivning, vil du og virksomheden løse enhver tvist ved en voldgiftsret. Voldgiftsretten vil følger Regler og Gældende Procedurer for Forbruger Relaterede Tvister. Voldgift skal udredes i %{city_for_disputes}. Du vil afgøre enhver uoverensstemmelse som et individ, og ikke som en del af en gruppesag eller anden repræsentativ procedure, hverken som sagsøger eller klasse medlem. Ingen voldgiftsmand vil konsolidere enhver tvist med nogen anden voldgift uden virksomhedens tilladelse.***
-
-      Enhver voldgiftskendelse inkluderer omkostninger til voldgift, rimelige advokatsalærer og rimelige omkostninger for vidner. Du og virksomheden kan optage voldgiftskendelser i enhver domstol med jurisdiktion.
-
-      <h2 id="heading--general"><a href="#heading--general">Generelle Vilkår</a></h2>
-
-      Hvis en bestemmelse i disse vilkår ikke kan håndhæves som skrevet, men kan ændres for at gøre det muligt, skal bestemmelsen ændres i det mindst mulige omfang for at gøre det muligt at håndtere. Ellers bør denne bestemmelse fjernes.
-
-      Du må ikke overdrage din aftale med virksomheden. Virksomheden må overdrage din aftale med enhver tilknyttet selvskab, ethvert andet selvskab der får kontrol over virksomheden, eller ethvert andet firma der køber aktier i virksomheden relateret til forummet. Ethvert forsøg på at overdrage disse vilkår, vil ikke have nogen retsbindende virkning.
-
-      Hverken udøvelsen af nogen rettighed i henhold til denne Aftale eller afkald på enhver overtrædelse af denne Aftale frafalder andre brud på denne Aftale.
-
-      Disse vilkår indeholder alle vilkårene for aftale mellem dig og virksomheden om brug af forummet. Disse vilkår erstatter helt andre aftaler om din brug af forummet, skrevet eller ej.
-
-      <h2 id="heading--contact"><a href="#heading--contact">Kontakt</a></h2>
-
-      Du kan underrette virksomheden under disse vilkår, og sende spørgsmål til virksomheden, på <%{contact_email}>.
-
-      Virksomheden kan underrette dig under disse vilkår, ved at benytte den e-mail adresse du angiver for din konto på forummet, eller ved at sende en meddelelse til websiden for forummet eller din kontoside.
-
-      <h2 id="heading--changes"><a href="#heading--changes">Ændringer</a></h2>
-
-      Virksomheden har sidst opdateret disse vilkår d. 12. juli 2018, og må opdatere disse vilkår igen. Virksomheden vil skrive alle opdateringer på forummet. For opdateringer der indeholder væsentlige ændringer, vil virksomheden orientere dig via e-mail, hvis du har oprettet en konto, og har oplyst en gyldig e-mail adresse. Virksomheden kan også annoncere opdateringer med specielle meddelelser eller advarsler på forummet.
-
-      Så snart du informeres om opdateringen af disse vilkår, skal du godkende de nye vilkår, for at kunne fortsætte med at benytte forummet.
   privacy_topic:
     title: "Privatlivspolitik"
     body: |

@@ -516,7 +516,6 @@ ro:
       long_form: "Marchează ca spam"
     inappropriate:
       title: "Necorespunzător"
-      description: 'Acest subiect conține conținut pe care o persoană rezonabilă l-ar considera ofensator, abuziv sau o încălcare a <a href="%{base_path}/guidelines">ghidurilor comunității noastre</a>.'
       long_form: "marcat cu marcaj de avertizare ca inadecvat"
     notify_moderators:
       title: "Alt motiv"
@@ -901,7 +900,6 @@ ro:
     enable_signup_cta: "Arată o notificare către utilizatorii anonimi care revin prin care să le ceri să se înscrie pentru a avea un cont pe site."
     google_oauth2_client_id: "ID client al aplicației tale Google."
     google_oauth2_client_secret: "Secret client al aplicației tale Google."
-    maximum_backups: "Maximul de fișiere backup păstrate. Fișierele backup vechi sunt șterse automat"
     automatic_backups_enabled: "Rulează automat operațiuni de backup după cum este definit la frecvența de backup"
     s3_backup_bucket: "Containerul (bucket) de la distanță care ține backupurile. ATENȚIE: Asgură-te că e un container privat."
     backup_time_of_day: "Ora în format UTC la care să înceapă operațiunea de backup."
@@ -1285,7 +1283,6 @@ ro:
     subject_template: "Setează parolă pentru contul tău %{site_name}"
   flag_reasons:
     off_topic: "Postarea ta a fost marcată cu marcaj de avertizare **în afara subiectului**: comunitatea simte că nu se potrivește subiectului, așa cum e el momentan definit de titlu și de prima postare."
-    inappropriate: "Postarea ta a fost marcată cu marcaj de avertizare **inadecvat**: comunitatea simte că este ofensatoare, abuzivă sau în contradicție cu [ghidul comunității noastre](%{base_path}/guidelines)."
     spam: "Postarea ta a fost marcată cu marcaj de avertizare **spam**: comunitatea crede că reprezintă o reclamă, ceva ce este de natura excesiv de promoțională, în loc să fie o postare utilă sau relevantă pentru subiect după cum se presupune."
     notify_moderators: "Postarea ta a fost marcată cu marcaj de avertizare **în atenția moderatorului**: comunitatea simte că există ceva legat de această postare care necesită intervenția manuală a unui membrul al echipei."
   flags_dispositions:

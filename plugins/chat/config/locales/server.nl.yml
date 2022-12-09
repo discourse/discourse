@@ -167,15 +167,6 @@ nl:
         one: "Je hebt een nieuw chatbericht"
         other: "Je hebt nieuwe chatberichten"
       from: "%{site_name}"
-      subject:
-        direct_message:
-          one: "[%{email_prefix}] Nieuw bericht van %{message_title}"
-          other: "[%{email_prefix}] Nieuwe berichten van %{message_title} en %{others}"
-        chat_channel:
-          one: "[%{email_prefix}] Nieuw bericht in %{message_title}"
-          other: "[%{email_prefix}] Nieuwe berichten in %{message_title} en %{others}"
-        other_direct_message: "van %{dm_title}"
-        others: "%{count} anderen"
       unsubscribe: "Deze chatsamenvatting wordt verzonden van %{site_link} wanneer je afwezig bent. Wijzig je %{email_preferences_link}, of %{unsubscribe_link} om je af te melden."
       unsubscribe_no_link: "Deze chatsamenvatting wordt verzonden van %{site_link} wanneer je afwezig bent. Wijzig je %{email_preferences_link}."
       view_messages:

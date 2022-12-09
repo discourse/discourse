@@ -1204,7 +1204,7 @@ lt:
         use: "Naudoti autentifikavimo programėlę"
         enforced_notice: "Prieš prisijungdami prie šios svetainės turite įjungti dviejų veiksnių autentifikavimą."
         disable: "Išjungti"
-        disable_confirm: "Ar tikrai norite išjungti visus dviejų veiksnių metodus?"
+        delete: "Ištrinti"
         save: "Saugoti"
         edit: "Redaguoti"
         edit_title: "Redaguoti autentifikavimo priemonę"
@@ -1284,7 +1284,6 @@ lt:
         invalid: "Prašom įrašyti teisingą elektroninį adresą"
         authenticated: "Tavo elektroninis laiškas buvo %{provider} autorizuotas"
         authenticated_by_invite: "Jūsų el. pašto adresas patvirtintas kvietimu"
-        frequency_immediately: "Mes jums atsiųsime elektroninį laišką iš karto, jeigu jūs neperskaitėte žinutės, kurią siuntėme praeitame laiške."
         frequency:
           one: "Mes atsiųsime el. laišką jeigu nebuvai prisijungęs per paskutinę minutę."
           few: "Mes atsiųsime el. laišką jeigu nebuvai prisijungęs per paskutines %{count} minutes."
@@ -4630,6 +4629,11 @@ lt:
         silenced_count: "Nutildytas"
         suspended_count: "Suspenduotas"
         last_six_months: "Paskutiniai 6 mėnesiai"
+        other_matches_list:
+          username: "Vartotojo vardas"
+          trust_level: "Patikimumo lygis"
+          read_time: "Skaitymo laikas"
+          posts: "Pranešimai"
         tl3_requirements:
           title: "Reikalavimai 3 pasitikėjimo lygiui"
           value_heading: "Reikšmė"
@@ -4769,6 +4773,7 @@ lt:
           search: "Ieškoti"
           groups: "Grupės"
           dashboard: "Apžvalga"
+          navigation: "Navigacija"
         default_categories:
           modal_description: "Ar norėtumėte šį pakeitimą pritaikyti istoriškai? Tai pakeis %{count} esamų vartotojų nuostatas."
           modal_yes: "Taip"
