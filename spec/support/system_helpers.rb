@@ -1,6 +1,16 @@
 # frozen_string_literal: true
+require "highline/import"
 
 module SystemHelpers
+  def pause_test
+    result =
+      ask(
+        "\n\e[33mTest paused, press enter to resume, type `d` and press enter to start debugger.\e[0m",
+      )
+    byebug if result == "d" # rubocop:disable Lint/Debugger
+    self
+  end
+
   def sign_in(user)
     visit "/session/#{user.encoded_username}/become"
   end

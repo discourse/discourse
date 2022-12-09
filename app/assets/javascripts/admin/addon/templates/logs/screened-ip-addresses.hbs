@@ -54,10 +54,8 @@
             </td>
             <td class="col last_match_at">
               {{#if item.last_match_at}}
-                <div class="label">
-                  {{i18n "admin.logs.last_match_at"}}
-                  {{age-with-tooltip item.last_match_at}}
-                </div>
+                <div class="label">{{i18n "admin.logs.last_match_at"}}</div>
+                {{age-with-tooltip item.last_match_at}}
               {{/if}}
             </td>
             <td class="col actions">

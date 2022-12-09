@@ -5581,6 +5581,15 @@ en:
         silenced_count: "Silenced"
         suspended_count: "Suspended"
         last_six_months: "Last 6 months"
+        other_matches:
+          one: "There is %{count} other user with the same IP address. Review and select the suspicious ones to suspend along with %{username}."
+          other: "There are %{count} other users with the same IP address. Review and select the suspicious ones to suspend along with %{username}."
+        other_matches_list:
+          username: "Username"
+          trust_level: "Trust Level"
+          read_time: "Read Time"
+          topics_entered: "Topics Entered"
+          posts: "Posts"
         tl3_requirements:
           title: "Requirements for Trust Level 3"
           table_title:

@@ -133,6 +133,19 @@ RSpec.describe ContentSecurityPolicy do
         https://cdn.com/theme-javascripts/
         http://test.localhost/extra-locales/
       ])
+
+      global_setting(:s3_asset_cdn_url, 'https://s3-asset-cdn.com')
+
+      script_srcs = parse(policy)['script-src']
+      expect(script_srcs).to include(*%w[
+        https://s3-asset-cdn.com/assets/
+        https://s3-asset-cdn.com/brotli_asset/
+        https://cdn.com/highlight-js/
+        https://cdn.com/javascripts/
+        https://cdn.com/plugins/
+        https://cdn.com/theme-javascripts/
+        http://test.localhost/extra-locales/
+      ])
     end
 
     it 'adds subfolder to CDN assets' do
