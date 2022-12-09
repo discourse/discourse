@@ -31,7 +31,7 @@ RSpec.describe CategoryHashtagDataSource do
       expect(result.slug).to eq("random")
     end
 
-    it "does not finds child categories by their standalone slug" do
+    it "does not find child categories by their standalone slug" do
       expect(described_class.lookup(guardian, ["random"]).first).to eq(nil)
     end
 

@@ -12,9 +12,7 @@ module CategoryHashtag
       slug_path = category_slug.split(SEPARATOR)
       return nil if slug_path.empty? || slug_path.size > 2
 
-      if SiteSetting.slug_generation_method == "encoded"
-        slug_path.map! { |slug| CGI.escape(slug) }
-      end
+      slug_path.map! { |slug| CGI.escape(slug) } if SiteSetting.slug_generation_method == "encoded"
 
       parent_slug, child_slug = slug_path.last(2)
       categories = Category.where(slug: parent_slug)
@@ -32,7 +30,7 @@ module CategoryHashtag
     #
     # @param {Array} category_slugs - Slug strings to look up, can also be in the parent:child format
     # @param {Array} categories - An array of Category models scoped to the user's guardian permissions.
-    def query_from_cached_categories(category_slugs, categories)
+    def query_loaded_from_slugs(category_slugs, categories)
       category_slugs
         .map(&:downcase)
         .map do |slug|
@@ -50,7 +48,7 @@ module CategoryHashtag
           # by its slug then find the child by its slug and its parent's
           # ID to make sure they match.
           if child_slug.present?
-            parent_category = categories.find { |cat| cat.slug.downcase == parent_slug }
+            parent_category = categories.find { |cat| cat.slug.casecmp?(parent_slug) }
             if parent_category.present?
               categories.find do |cat|
                 cat.slug.downcase == child_slug && cat.parent_category_id == parent_category.id
@@ -58,10 +56,11 @@ module CategoryHashtag
             end
           else
             categories.find do |cat|
-              cat.slug.downcase == parent_slug && cat.parent_category_id.nil?
+              cat.slug.downcase == parent_slug && cat.top_level?
             end
           end
-        end.compact
+        end
+        .compact
     end
   end
 end
