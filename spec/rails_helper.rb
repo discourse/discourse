@@ -280,6 +280,33 @@ RSpec.configure do |config|
       )
     end
 
+    mobile_chrome_browser_options =
+      Selenium::WebDriver::Chrome::Options
+        .new(logging_prefs: { "browser" => "ALL", "driver" => "ALL" })
+        .tap do |options|
+          options.add_argument("--window-size=390,950")
+          options.add_argument("--no-sandbox")
+          options.add_argument("--disable-dev-shm-usage")
+          options.add_emulation(device_name: "iPhone 12 Pro")
+        end
+
+    Capybara.register_driver :selenium_mobile_chrome do |app|
+      Capybara::Selenium::Driver.new(
+        app,
+        browser: :chrome,
+        capabilities: mobile_chrome_browser_options,
+      )
+    end
+
+    Capybara.register_driver :selenium_mobile_chrome_headless do |app|
+      mobile_chrome_browser_options.add_argument("--headless")
+      Capybara::Selenium::Driver.new(
+        app,
+        browser: :chrome,
+        capabilities: mobile_chrome_browser_options,
+      )
+    end
+
     if ENV['ELEVATED_UPLOADS_ID']
       DB.exec "SELECT setval('uploads_id_seq', 10000)"
     else
@@ -342,9 +369,11 @@ RSpec.configure do |config|
   last_driven_by = nil
   config.before(:each, type: :system) do |example|
     if example.metadata[:js]
-      driver = "selenium_chrome"
-      driver += "_headless" unless ENV["SELENIUM_HEADLESS"] == "0"
-      driven_by driver.to_sym
+      driver = [:selenium]
+      driver << :mobile if example.metadata[:mobile]
+      driver << :chrome
+      driver << :headless unless ENV["SELENIUM_HEADLESS"] == "0"
+      driven_by driver.join("_").to_sym
     end
     setup_system_test
   end
