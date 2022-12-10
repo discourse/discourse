@@ -278,7 +278,6 @@ en:
     conduct: "Code of Conduct"
     mobile_view: "Mobile View"
     desktop_view: "Desktop View"
-    or: "or"
     now: "just now"
     read_more: "read more"
     more: "More"
@@ -2908,10 +2907,10 @@ en:
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
 
-      browse_all_categories: Browse all categories
-      browse_all_tags: Browse all tags
+      browse_all_categories_latest: "<a href='%{basePath}/categories'>Browse all categories</a> or <a href='%{basePath}/latest'>view latest topics</a>."
+      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Browse all categories</a>, <a href='%{basePath}/latest'>view latest topics</a> or see top:"
+      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Browse all tags</a> or <a href='%{basePath}/latest'>view latest topics</a>."
 
-      view_latest_topics: view latest topics
       suggest_create_topic: Ready to <a href>start a new conversation?</a>
       jump_reply_up: jump to earlier reply
       jump_reply_down: jump to later reply
@@ -3910,7 +3909,6 @@ en:
         this_month: "Month"
         this_week: "Week"
         today: "Today"
-        other_periods: "see top:"
 
     browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is unsupported</a>. Please <a href="https://browsehappy.com">switch to a supported browser</a> to view rich content, log in and reply.'
 

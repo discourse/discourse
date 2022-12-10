@@ -57,7 +57,7 @@
 
               {{#unless this.list.canLoadMore}}
                 <FooterMessage @education={{this.footerEducation}} @message={{this.footerMessage}}>
-                  <LinkTo @route="tags"> {{i18n "topic.browse_all_tags"}}</LinkTo> {{i18n "or"}} <LinkTo @route="discovery.latest">{{i18n "topic.view_latest_topics"}}</LinkTo>.
+                  {{html-safe (i18n "topic.browse_all_tags_or_latest" basePath=(base-path))}}
                 </FooterMessage>
               {{/unless}}
             </footer>
