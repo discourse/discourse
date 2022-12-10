@@ -9,18 +9,20 @@ export default DiscourseRoute.extend({
     if (params.web_hook_id === "new") {
       return this.store.createRecord("web-hook");
     }
+
     return this.store.find("web-hook", params.web_hook_id);
   },
 
   setupController(controller, model) {
+    this._super(...arguments);
+
     if (model.get("isNew")) {
-      model.set("web_hook_event_types", controller.get("defaultEventTypes"));
+      model.set(
+        "web_hook_event_types",
+        this.controllerFor("adminWebHooks").defaultEventTypes
+      );
     }
 
-    model.set("category_ids", model.get("category_ids"));
-    model.set("tag_names", model.get("tag_names"));
-    model.set("group_ids", model.get("group_ids"));
-
-    controller.setProperties({ model, saved: false });
+    controller.set("saved", false);
   },
 });

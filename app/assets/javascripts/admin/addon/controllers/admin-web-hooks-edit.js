@@ -92,7 +92,7 @@ export default Controller.extend({
       await this.model.save();
 
       this.set("saved", true);
-      this.adminWebHooks.get("model").addObject(this.model);
+      this.adminWebHooks.model.addObject(this.model);
       this.transitionToRoute("adminWebHooks.show", this.model);
     } catch (e) {
       popupAjaxError(e);
