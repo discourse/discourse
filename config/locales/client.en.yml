@@ -2863,25 +2863,47 @@ en:
       show_links: "show links within this topic"
       collapse_details: "collapse topic details"
       expand_details: "expand topic details"
-      read_more_in_category: "Want to read more? Browse other topics in %{catLink} or %{latestLink}."
-      read_more: "Want to read more? %{catLink} or %{latestLink}."
+      read_more_in_category: "Want to read more? Browse other topics in %{categoryLink} or <a href='%{latestLink}'>view latest topics</a>."
+      read_more: "Want to read more? <a href='%{categoryLink}'>Browse all categories</a> or <a href='%{latestLink}'>view latest topics</a>."
       unread_indicator: "No member has read the last post of this topic yet."
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-      read_more_MF: "There {
-        UNREAD, plural,
-        =0 {}
-        one {
-        is <a href='{basePath}/unread'># unread</a>
-        } other {
-        are <a href='{basePath}/unread'># unread</a>
+      #
+      # Both UNREAD and NEW are greater than 0 when HAS_UNREAD_AND_NEW is true
+      # Either UNREAD or NEW is greater than 0 when HAS_UNREAD_AND_NEW is false
+      read_more_MF: |
+        { HAS_UNREAD_AND_NEW, select,
+          true {
+            { UNREAD, plural,
+                 =0 {}
+                one { There is <a href="{basePath}/unread"># unread</a> }
+              other { There are <a href="{basePath}/unread"># unread</a> }
+            }
+            { NEW, plural,
+                 =0 {}
+                one { and <a href="{basePath}/new"># new</a> topic remaining, }
+              other { and <a href="{basePath}/new"># new</a> topics remaining, }
+            }
+          }
+          false {
+            { UNREAD, plural,
+                 =0 {}
+                one { There is <a href="{basePath}/unread"># unread</a> topic remaining, }
+              other { There are <a href="{basePath}/unread"># unread</a> topics remaining, }
+            }
+            { NEW, plural,
+                 =0 {}
+                one { There is <a href="{basePath}/new"># new</a> topic remaining, }
+              other { There are <a href="{basePath}/new"># new</a> topics remaining, }
+            }
+          }
+          other {}
         }
-        } {
-        NEW, plural,
-        =0 {}
-        one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'># new</a> topic}
-        other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># new</a> topics}
-        } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
+        { HAS_CATEGORY, select,
+          true { or browse other topics in {categoryLink} }
+          false { or <a href="{basePath}/latest">view latest topics</a> }
+          other {}
+        }
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"

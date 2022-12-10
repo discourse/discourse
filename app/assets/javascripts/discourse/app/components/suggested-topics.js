@@ -80,11 +80,6 @@ export default Component.extend({
   },
 
   _topicBrowseMoreMessage(topic) {
-    const opts = {
-      latestLink: `<a href="${getURL("/latest")}">${I18n.t(
-        "topic.view_latest_topics"
-      )}</a>`,
-    };
     let category = topic.get("category");
 
     if (
@@ -92,17 +87,6 @@ export default Component.extend({
       get(category, "id") === this.site.uncategorized_category_id
     ) {
       category = null;
-    }
-
-    if (category) {
-      opts.catLink = categoryBadgeHTML(category);
-    } else {
-      opts.catLink =
-        '<a href="' +
-        getURL("/categories") +
-        '">' +
-        I18n.t("topic.browse_all_categories") +
-        "</a>";
     }
 
     let unreadTopics = 0;
@@ -114,21 +98,24 @@ export default Component.extend({
     }
 
     if (newTopics + unreadTopics > 0) {
-      const hasBoth = unreadTopics > 0 && newTopics > 0;
-
       return I18n.messageFormat("topic.read_more_MF", {
-        BOTH: hasBoth,
+        HAS_UNREAD_AND_NEW: unreadTopics > 0 && newTopics > 0,
         UNREAD: unreadTopics,
         NEW: newTopics,
-        CATEGORY: category ? true : false,
-        latestLink: opts.latestLink,
-        catLink: opts.catLink,
+        HAS_CATEGORY: category ? true : false,
+        categoryLink: category ? categoryBadgeHTML(category) : null,
         basePath: getURL(""),
       });
     } else if (category) {
-      return I18n.t("topic.read_more_in_category", opts);
+      return I18n.t("topic.read_more_in_category", {
+        categoryLink: categoryBadgeHTML(category),
+        latestLink: getURL("/latest"),
+      });
     } else {
-      return I18n.t("topic.read_more", opts);
+      return I18n.t("topic.read_more", {
+        categoryLink: getURL("/categories"),
+        latestLink: getURL("/latest"),
+      });
     }
   },
 
