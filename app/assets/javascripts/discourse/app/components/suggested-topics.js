@@ -50,7 +50,7 @@ export default Component.extend({
 
       if (suggestedGroupName) {
         return I18n.messageFormat("user.messages.read_more_group_pm_MF", {
-          BOTH: hasBoth,
+          HAS_UNREAD_AND_NEW: hasBoth,
           UNREAD: unreadCount,
           NEW: newCount,
           username,
@@ -60,7 +60,7 @@ export default Component.extend({
         });
       } else {
         return I18n.messageFormat("user.messages.read_more_personal_pm_MF", {
-          BOTH: hasBoth,
+          HAS_UNREAD_AND_NEW: hasBoth,
           UNREAD: unreadCount,
           NEW: newCount,
           username,
