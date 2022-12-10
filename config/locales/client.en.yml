@@ -1962,7 +1962,6 @@ en:
 
     learn_more: "learn more..."
 
-    first_post: First post
     mute: Mute
     unmute: Unmute
     last_post: Posted
@@ -2904,8 +2903,9 @@ en:
           other {}
         }
 
-      # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
+      bumped_at_title: |
+        First post: %{createdAtDate}
+        Posted: %{bumpedAtDate}
 
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Browse all categories</a> or <a href='%{basePath}/latest'>view latest topics</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Browse all categories</a>, <a href='%{basePath}/latest'>view latest topics</a> or see top:"
