@@ -61,8 +61,8 @@ export default class WebhookEvents extends Component {
       data: { ids: this.incomingEventIds },
     });
 
-    const objects = data.map((webHookEvent) =>
-      this.store.createRecord("web-hook-event", webHookEvent)
+    const objects = data.map((webhookEvent) =>
+      this.store.createRecord("web-hook-event", webhookEvent)
     );
     this.events.unshiftObjects(objects);
     this.incomingEventIds = [];

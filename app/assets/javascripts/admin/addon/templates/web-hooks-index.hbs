@@ -24,24 +24,26 @@
           </tr>
         </thead>
         <tbody>
-          {{#each this.model as |webHook|}}
+          {{#each this.model as |webhook|}}
             <tr>
               <td class="delivery-status">
-                <LinkTo @route="adminWebHooks.show" @model={{webHook}}>
-                  <AdminWebHookStatus
+                <LinkTo @route="adminWebHooks.show" @model={{webhook}}>
+                  <WebhookStatus
                     @deliveryStatuses={{this.deliveryStatuses}}
-                    @model={{webHook}}
+                    @webhook={{webhook}}
                   />
                 </LinkTo>
               </td>
               <td class="payload-url">
-                <LinkTo @route="adminWebHooks.edit" @model={{webHook}}>{{webHook.payload_url}}</LinkTo>
+                <LinkTo @route="adminWebHooks.edit" @model={{webhook}}>
+                  {{webhook.payload_url}}
+                </LinkTo>
               </td>
-              <td class="description">{{webHook.description}}</td>
+              <td class="description">{{webhook.description}}</td>
               <td class="controls">
                 <LinkTo
                   @route="adminWebHooks.edit"
-                  @model={{webHook}}
+                  @model={{webhook}}
                   class="btn btn-default no-text"
                   title={{i18n "admin.web_hooks.edit"}}
                 >
@@ -51,7 +53,7 @@
                 <DButton
                   @class="destroy btn-danger"
                   @action={{this.destroy}}
-                  @actionParam={{webHook}}
+                  @actionParam={{webhook}}
                   @icon="times"
                   @title="delete"
                 />
