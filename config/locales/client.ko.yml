@@ -2355,10 +2355,7 @@ ko:
       show_links: "이 주제에 링크 표시"
       collapse_details: "주제 상세 정보 접기"
       expand_details: "주제 상세 정보 펼치기"
-      read_more_in_category: "더 읽고 싶으신가요? %{catLink} 또는 %{latestLink}에서 다른 주제를 찾아보세요."
-      read_more: "더 읽고 싶으신가요? %{catLink} 또는 %{latestLink}에서 확인하세요."
       unread_indicator: "아직 이 주제의 마지막 게시물을 읽은 회원이 없습니다."
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: 모든 카테고리 탐색
       browse_all_tags: 모든 태그 탐색
       view_latest_topics: 최근 글 보기

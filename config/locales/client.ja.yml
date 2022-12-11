@@ -1153,8 +1153,6 @@ ja:
         warnings: "運営スタッフからの警告"
         read_more_in_group: "もっと読みますか？%{groupLink} で他のメッセージを閲覧できます。"
         read_more: "もっと読みますか？<a href='%{basePath}/u/%{username}/messages'>個人メッセージ</a>で他のメッセージを閲覧できます。"
-        read_more_group_pm_MF: "{ UNREAD, plural, =0 {} one {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># 未読</a> } other { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># 未読</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{および } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># 新規</a>のメッセージ} other { {BOTH, select, true{および } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># 新規</a>のメッセージ} }があります。または{groupLink}で他のメッセージを閲覧できます。"
-        read_more_personal_pm_MF: "{ UNREAD, plural, =0 {} one {<a href='{basePath}/u/{username}/messages/unread'># 未読</a> } other { are <a href='{basePath}/u/{username}/messages/unread'># 未読</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{および} false {} other{}} <a href='{basePath}/u/{username}/messages/new'># 新規</a>のメッセージ} other { {BOTH, select, true{および} false {} other{}} <a href='{basePath}/u/{username}/messages/new'># 新規</a>のメッセージ} }が残っています。または、他の<a href='{basePath}/u/{username}/messages'>個人メッセージ</a>を閲覧できます。"
       preferences_nav:
         account: "アカウント"
         security: "セキュリティ"
@@ -2447,11 +2445,7 @@ ja:
       show_links: "このトピック内のリンクを表示する"
       collapse_details: "トピックの詳細を折りたたむ"
       expand_details: "トピックの詳細を展開する"
-      read_more_in_category: "もっと読みますか？%{catLink} または %{latestLink} での他のトピックを閲覧できます。"
-      read_more: "もっと読みますか？%{catLink} または %{latestLink}。"
       unread_indicator: "このトピックの最後の投稿を読んだメンバーはまだいません。"
-      read_more_MF: "{ UNREAD, plural, =0 {} other {<a href='{basePath}/unread'># 件の未読</a>} }{ NEW, plural, =0 {} other { {BOTH, select, true{と} false {} other{}} <a href='{basePath}/new'># 件の新しい</a>トピック} } が残っています。または {CATEGORY, select, true {{catLink} のほかのトピックを閲覧してください} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: すべてのカテゴリを閲覧する
       browse_all_tags: すべてのタグを閲覧する
       view_latest_topics: 最新のトピックを表示する

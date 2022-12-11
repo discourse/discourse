@@ -2042,8 +2042,6 @@ bs_BA:
       back_to_list: "Vrati se na Listu Tema"
       options: "Opcije Teme"
       show_links: "pokaži linkove unutar ove teme"
-      read_more_in_category: "Želite dalje čitati? Pregledajte druge teme u %{catLink} ili %{latestLink}."
-      read_more: "Želite li dalje čitati? %{catLink} Ili %{latestLink}."
       browse_all_categories: Pregledaj sve kategorije
       view_latest_topics: pogledaj najnovije teme
       jump_reply_up: jump to earlier reply

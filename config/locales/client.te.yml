@@ -882,8 +882,6 @@ te:
       back_to_list: "విషయాల జాబితాకు మరలు"
       options: "విషయపు ఐచ్చికాలు"
       show_links: "ఈ విషయంలో లంకెలు చూపు"
-      read_more_in_category: "మరింత చదవాలనుకుంటున్నారా? %{catLink} లేదా %{latestLink} లో ఇతర విషయాలు చూడు."
-      read_more: "మరిన్ని చదవాలనుకుంటున్నారా? %{catLink} లేదా %{latestLink}."
       browse_all_categories: అన్ని వర్గాలూ జల్లించు
       view_latest_topics: తాజా విషయాలు చూడు
       jump_reply_up: పాత జవాబుకు వెళ్లు

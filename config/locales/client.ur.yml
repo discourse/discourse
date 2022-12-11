@@ -2393,10 +2393,7 @@ ur:
       show_links: "اِس ٹاپک کے اندر موجود لنکس دکھایں"
       collapse_details: "موضوع کی تفصیلات کوسکیڑیں"
       expand_details: "موضوع کی تفصیلات کو پھیلائیں"
-      read_more_in_category: "مزید پڑھنا چاہتے ہیں؟ %{catLink} اور %{latestLink} میں دوسرے ٹاپک دیکھیں۔"
-      read_more: "مزید پڑھنا چاہتے ہیں؟ %{catLink} یا %{latestLink}۔"
       unread_indicator: "کسی ممبر نے ابھی تک اِس ٹاپک کی آخری پوسٹ نہیں پڑھی ہے۔"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: تمام زمرہ جات براؤز کریں
       browse_all_tags: تمام ٹیگز براؤز کریں
       view_latest_topics: تازہ ترین ٹاپک دیکھیے
