@@ -411,6 +411,8 @@ RSpec.configure do |config|
         end
       end
     end
+
+    Discourse.redis.flushdb
   end
 
   config.before(:each, type: :multisite) do
