@@ -19,6 +19,7 @@ export default Controller.extend(ModalFunctionality, {
     const currentStatus = { ...this.model.status };
     this.setProperties({
       status: currentStatus,
+      hidePauseNotifications: this.model.hidePauseNotifications,
       pauseNotifications: this.model.pauseNotifications,
       showDeleteButton: !!this.model.status,
       timeShortcuts: this._buildTimeShortcuts(),

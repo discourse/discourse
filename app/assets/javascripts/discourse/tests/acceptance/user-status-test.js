@@ -379,6 +379,15 @@ acceptance(
       );
     });
 
+    test("shows the pause notifications control group", async function (assert) {
+      this.siteSettings.enable_user_status = true;
+
+      await visit("/");
+      await openUserStatusModal();
+
+      assert.dom(".pause-notifications").exists();
+    });
+
     test("sets do-not-disturb mode", async function (assert) {
       this.siteSettings.enable_user_status = true;
 
