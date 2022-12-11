@@ -642,7 +642,7 @@ class Topic < ActiveRecord::Base
       excluded_category_ids_sql = <<~SQL
       #{excluded_category_ids_sql}
       UNION
-      #{CategoryUser.where(notification_level: CategoryUser.notification_levels[:muted], user: user).select(:category_id).to_sql}
+      #{CategoryUser.muted_category_ids_query(user, include_direct: true).select("categories.id").to_sql}
       SQL
     end
 
