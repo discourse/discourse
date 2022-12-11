@@ -2030,9 +2030,6 @@ ro:
       back_to_list: "Înapoi la lista de subiecte"
       options: "Opțiuni pentru subiect"
       show_links: "arată link-urile din acest subiect"
-      read_more_in_category: "Vrei să citești mai mult? Răsfoiește alte subiecte din %{catLink} sau %{latestLink}."
-      read_more: "Vrei să citești mai multe subiecte? %{catLink} sau %{latestLink}."
-      read_more_MF: "Există { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'># subiect</a> necitit} other { <a href='{basePath}/unread'># subiecte</a> necitite} }{ NEW, plural, =0 {} one {{ BOTH, select, true{&nbsp;și } false {} other{} } <a href='{basePath}/new'># discuție nouă</a>} other {{ BOTH, select, true{&nbsp;și } false {} other{} } <a href='{basePath}/new'># discuții noi</a>} }. {CATEGORY, select, true {Răsfoiește altele subiecte în {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Răsfoiți prin toate categoriile
       view_latest_topics: arată ultimele subiecte
       suggest_create_topic: Ești gata să <a href>începi o nouă conversație?</a>

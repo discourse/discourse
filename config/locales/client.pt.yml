@@ -2309,11 +2309,7 @@ pt:
       show_links: "mostrar hiperligações dentro deste tópico"
       collapse_details: "ocultar detalhes do tópico"
       expand_details: "expandir detalhes do tópico"
-      read_more_in_category: "Pretende ler mais? Navegue por outros tópicos em %{catLink} ou %{latestLink}."
-      read_more: "Pretende ler mais? %{catLink} ou %{latestLink}."
       unread_indicator: "Nenhum membro leu o último post deste tópico ainda."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { Existe <a href='{basePath}/unread'>1 não lido </a> } other { Existem <a href='{basePath}/unread'># não lidos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {existe } other{}} <a href='{basePath}/new'>1 novo</a> tópico} other { {BOTH, select, true{e } false {existem } other{}} <a href='{basePath}/new'># novos</a> tópicos} } restantes, ou {CATEGORY, select, true {navegue por outros tópicos em {catLink}} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Pesquisar em todas as categorias
       browse_all_tags: Procurar todas as tags
       view_latest_topics: ver os tópicos mais recentes

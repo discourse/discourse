@@ -1965,8 +1965,6 @@ ca:
       back_to_list: "Torna a la llista de temes"
       options: "Opcions del tema"
       show_links: "mostra enllaços dins d'aquest tema"
-      read_more_in_category: "Voleu llegir-ne més? Navegueu per altres temes a %{catLink} o %{latestLink}."
-      read_more: "Voleu llegir-ne més? %{catLink} o %{latestLink}."
       unread_indicator: "Cap membre encara no ha llegit la darrera publicació d'aquest tema."
       browse_all_categories: Navega per totes les categories
       view_latest_topics: mira els temes més recents

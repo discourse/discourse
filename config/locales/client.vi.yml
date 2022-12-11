@@ -2382,10 +2382,7 @@ vi:
       show_links: "Hiển thị liên kết trong chủ đề này"
       collapse_details: "thu gọn chi tiết chủ đề"
       expand_details: "mở rộng chi tiết chủ đề"
-      read_more_in_category: "Muốn đọc nữa? Xem qua các chủ đề khác trong %{catLink} hoặc %{latestLink}"
-      read_more: "Muốn đọc nữa? %{catLink} hoặc %{latestLink}"
       unread_indicator: "Chưa có thành viên nào đọc bài cuối cùng của chủ đề này."
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Duyệt tất cả các hạng mục
       browse_all_tags: Duyệt qua tất cả các thẻ
       view_latest_topics: xem các chủ đề mới nhất

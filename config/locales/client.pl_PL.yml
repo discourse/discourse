@@ -1330,8 +1330,6 @@ pl_PL:
         warnings: "Oficjalne ostrzeżenia"
         read_more_in_group: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w %{groupLink}."
         read_more: "Chcesz przeczytać więcej? Przeglądaj inne wiadomości w <a href='%{basePath}/u/%{username}/messages'>wiadomościach osobistych</a>."
-        read_more_group_pm_MF: "Masz do zobaczenia { UNREAD, plural, =0 {} one { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytaną wiadomość</a> } few { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytane wiadomości</a> } many { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytanych wiadomości</a> } other { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nieprzeczytanych wiadomości</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{i } false {} other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nową</a> wiadomość } few {} many {} other { {BOTH, select, true{i } false {are } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nowych</a> wiadomości} }lub przeglądaj inne wiadomości w {groupLink}"
-        read_more_personal_pm_MF: "Masz do zobaczenia { UNREAD, plural, =0 {} one { <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytaną wiadomość</a> } few { <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytane wiadomości</a> } many { <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytanych wiadomości</a> } other { <a href='{basePath}/u/{username}/messages/unread'># nieprzeczytanych</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{i } false {} other{}} <a href='{basePath}/u/{username}/messages/new'># nową</a> wiadomość} few {} many {} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/u/{username}/messages/new'># nowych</a> wiadomości} } lub przeglądaj inne <a href='{basePath}/u/{username}/messages'>wiadomości osobiste</a>"
       preferences_nav:
         account: "Konto"
         security: "Bezpieczeństwo"
@@ -2792,11 +2790,7 @@ pl_PL:
       show_links: "pokaż odnośniki z tego tematu"
       collapse_details: "zwiń szczegóły tematu"
       expand_details: "rozwiń szczegóły tematu"
-      read_more_in_category: "Chcesz przeczytać więcej? Przeglądaj inne tematy w %{catLink} lub %{latestLink}."
-      read_more: "Chcesz przeczytać więcej? %{catLink} lub %{latestLink}."
       unread_indicator: "Nikt jeszcze nie czytał ostatniego postu w tym temacie."
-      read_more_MF: "Masz do zobaczenia { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'># nieprzeczytany</a> temat } other { <a href='{basePath}/unread'># nieprzeczytanych</a> tematów } }{ NEW, plural, =0 {} one { {BOTH, select, true{ oraz} false {} other{}} <a href='{basePath}/new'># nowy</a> temat} other { {BOTH, select, true{oraz } false {} other{}}<a href='{basePath}/new'># nowych</a> tematów} }, lub {CATEGORY, select, true {przejrzyj inne tematy w {catLink}} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT} {LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Przeglądaj wszystkie kategorie
       browse_all_tags: Przeglądaj wszystkie tagi
       view_latest_topics: pokaż aktualne tematy

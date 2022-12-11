@@ -2314,8 +2314,6 @@ lt:
       show_links: "Rodyti šios temos nuorodas"
       collapse_details: "sutraukti temos informaciją"
       expand_details: "išplėsti temos informaciją"
-      read_more_in_category: "Nori skaityti daugiau? Ieškok kitų temų %{catLink} arba %{latestLink}."
-      read_more: "Norite skaityti daugiau? %{catLink} arba %{latestLink}."
       unread_indicator: "Nė vienas narys dar neperskaitė paskutinio šios temos įrašo."
       browse_all_categories: Žiūrėkite visas kategorijas
       browse_all_tags: Naršyti visas žymes

@@ -1247,8 +1247,6 @@ hr:
         warnings: "Službena upozorenja"
         read_more_in_group: "Želite li pročitati više? Pregledajte ostale poruke u %{groupLink}."
         read_more: "Želite li pročitati više? Pregledajte ostale poruke u <a href='%{basePath}/u/%{username}/messages'>osobnim porukama</a>."
-        read_more_group_pm_MF: "tamo { UNREAD, plural, =0 {} one { je <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nepročitano</a> } few { su <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nepročitano</a> } other { su <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nepročitano</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{i } false {je } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nova</a> poruka} few {} other { {BOTH, select, true{i } false {su } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># novih</a> poruka} } preostale ili pregledajte druge poruke u {groupLink}"
-        read_more_personal_pm_MF: "tamo { UNREAD, plural, =0 {} one { je <a href='{basePath}/u/{username}/messages/unread'># nepročitano</a> } few { su <a href='{basePath}/u/{username}/messages/unread'># nepročitano</a> } other { su <a href='{basePath}/u/{username}/messages/unread'># nepročitano</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{i } false {je } other{}} <a href='{basePath}/u/{username}/messages/new'># nova</a> poruka} few {} other { {BOTH, select, true{i } false {su } other{}} <a href='{basePath}/u/{username}/messages/new'># nova</a> poruka} } preostale, ili pregledajte druge <a href='{basePath}/u/{username}/messages'>osobne poruke</a>"
       preferences_nav:
         account: "Račun"
         security: "Sigurnost"
@@ -2552,11 +2550,7 @@ hr:
       show_links: "pokaži poveznice u temi"
       collapse_details: "Sažmi detalje teme"
       expand_details: "proširite pojedinosti o temi"
-      read_more_in_category: "Želite čitati više? Pregledajte druge teme u %{catLink} ili %{latestLink}."
-      read_more: "Želite li čitati više? %{catLink} Ili %{latestLink}."
       unread_indicator: "Još nijedan član nije pročitao zadnji post ove teme."
-      read_more_MF: "Tamo { UNREAD, plural, =0 {} one { je <a href='{basePath}/unread'># nepročitano</a> } few { su <a href='{basePath}/unread'># nepročitanih</a> } other { su <a href='{basePath}/unread'># nepročitanih</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{i } false {je } other{}} <a href='{basePath}/new'># nova</a> tema} few {} other { {BOTH, select, true{i } false {jesu } other{}} <a href='{basePath}/new'># nove</a> teme} } preostalo, ili {CATEGORY, select, true {pregledajte ostale teme u {catLink}} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Pregledaj sve kategorije
       browse_all_tags: Pregledajte sve oznake
       view_latest_topics: pogledaj najnovije teme

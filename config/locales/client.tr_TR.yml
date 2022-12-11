@@ -1215,8 +1215,6 @@ tr_TR:
         warnings: "Resmi Uyarılar"
         read_more_in_group: "Daha fazla okumak ister misiniz? %{groupLink} bağlantısındaki diğer mesajlara göz atın."
         read_more: "Daha fazla okumak isterseniz <a href='%{basePath}/u/%{username}/messages'>kişisel mesajlardaki</a> diğer mesajlara göz atın."
-        read_more_group_pm_MF: "{ UNREAD, plural, =0 {} one {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># okunmamış</a> } other {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># okunmamış</a> } } var { NEW, plural, =0 {} one { {BOTH, select, true{ve } false {kalan } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># yeni</a> mesajı} other { {BOTH, select, true{ve } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># yeni</a> mesajı} } veya {groupLink} grubundaki diğer mesajlara göz atın"
-        read_more_personal_pm_MF: "{ UNREAD, plural, =0 {} one {<a href='{basePath}/u/{username}/messages/unread'># adet okunmamış</a>} other {<a href='{basePath}/u/{username}/messages/unread'># adet okunmamış</a> }} ileti { NEW, plural, =0 {} one { {BOTH, select, true{ve } false {var } other{}} <a href='{basePath}/u/{username}/messages/new'># adet yeni</a> ileti} other { {BOTH, select, true{ve } false {var } other{}} <a href='{basePath}/u/{username}/messages/new'># adet yeni</a> ileti} } var, ya da<a href='{basePath}/u/{username}/messages'>kişisel iletilere</a> göz atın"
       preferences_nav:
         account: "Hesap"
         security: "Güvenlik"
@@ -2581,11 +2579,7 @@ tr_TR:
       show_links: "Bu konudaki bağlantıları göster"
       collapse_details: "konu ayrıntılarını daralt"
       expand_details: "konu ayrıntılarını genişlet"
-      read_more_in_category: "Daha fazla mı okumak istiyorsunuz? %{catLink} veya %{latestLink} bağlantılarındaki diğer konulara göz atın."
-      read_more: "Daha fazla mı okumak istiyorsunuz? %{catLink} veya %{latestLink}."
       unread_indicator: "Bu konunun son gönderisini henüz hiçbir üye okumadı."
-      read_more_MF: "{ UNREAD, plural, =0 {} one {<a href='{basePath}/unread'># okunmamış</a> } other { <a href='{basePath}/unread'># okunmamış</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {} other{}} <a href='{basePath}/new'># yeni</a> konu} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># yeni</a> konu} } kaldı veya {CATEGORY, select, true {{catLink}} false {{latestLink}} other {}} adresindeki diğer konulara göz atın"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Bütün kategorilere göz atın
       browse_all_tags: Tüm etiketlere göz atın
       view_latest_topics: en son konuları görüntüleyin

@@ -1212,8 +1212,6 @@ pt_BR:
         warnings: "Avisos oficiais"
         read_more_in_group: "Quer ler mais? Veja outras mensagens em %{groupLink}."
         read_more: "Quer ler mais? Veja outras mensagens em <a href='%{basePath}/u/%{username}/messages'>mensagens pessoais</a>."
-        read_more_group_pm_MF: "Há { UNREAD, plural, =0 {} one { não foi <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># lida</a> } other { não foram <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># lidas</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {é } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nova</a> mensagem} other { {BOTH, select, true{e } false {são } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># novas</a> mensagens} } restantes, ou veja outras mensagens em {groupLink}"
-        read_more_personal_pm_MF: "Há { UNREAD, plural, =0 {} one { não foi <a href='{basePath}/u/{username}/messages/unread'># lia</a> } other { não foram <a href='{basePath}/u/{username}/messages/unread'># lidas</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {é } other{}} <a href='{basePath}/u/{username}/messages/new'># nova</a> mensagem} other { {BOTH, select, true{e } false {são } other{}} <a href='{basePath}/u/{username}/messages/new'># novas</a> mensagens} } restantes, ou veja outras <a href='{basePath}/u/{username}/messages'>mensagens pessoais</a>"
       preferences_nav:
         account: "Conta"
         security: "Segurança"
@@ -2564,11 +2562,7 @@ pt_BR:
       show_links: "exibir links neste tópico"
       collapse_details: "recolher detalhes do tópico"
       expand_details: "expandir detalhes do tópico"
-      read_more_in_category: "Quer ler mais? Veja outros tópicos em %{catLink} ou %{latestLink}."
-      read_more: "Quer ler mais? %{catLink} ou %{latestLink}."
       unread_indicator: "Nenhum membro leu a última postagem deste tópico ainda."
-      read_more_MF: "Há { UNREAD, plural, =0 {} one {<a href='{basePath}/unread'># não lido</a> } other {<a href='{basePath}/unread'># não lidos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {é } other{}} <a href='{basePath}/new'># novo</a> tópico} other { {BOTH, select, true{e } false {são } other{}} <a href='{basePath}/new'># novos</a> tópicos} } restante(s), ou {CATEGORY, select, true {procure outros tópicos em {catLink}} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Ver todas as categorias
       browse_all_tags: Procurar todas as etiquetas
       view_latest_topics: ver últimos tópicos

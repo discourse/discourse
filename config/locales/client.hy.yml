@@ -1891,10 +1891,7 @@ hy:
       back_to_list: "Վերադառնալ Թեմաների Ցանկին"
       options: "Թեմաների Տարբերակները"
       show_links: "ցուցադրել այս թեմայի հղումները"
-      read_more_in_category: "Ցանկանո՞ւմ եք կարդալ ավելին: Դիտեք այլ թեմաներ՝ %{catLink}-ում կամ %{latestLink}."
-      read_more: "Ցանկանո՞ւմ եք կարդալ ավելին: %{catLink} կամ %{latestLink}."
       unread_indicator: "Ոչ մի անդամ դեռ չի կարդացել այս թեմայի մինչև վերջին գրառումը: "
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Դիտել բոլոր կատեգորիաները
       view_latest_topics: դիտեք վերջին թեմաները
       jump_reply_up: ցատկել դեպի ավելի վաղ պատասխան
