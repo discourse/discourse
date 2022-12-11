@@ -1932,33 +1932,98 @@ en:
     # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
     too_few_topics_and_posts_notice_MF: >-
       Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">start the discussion!</a>
-      There {currentTopics, plural, one {is <strong>#</strong> topic} other {are <strong>#</strong> topics}} and
-      {currentPosts, plural, one {<strong>#</strong> post} other {<strong>#</strong> posts}}. Visitors need more to
-      read and reply to – we recommend at least {requiredTopics, plural, one {<strong>#</strong> topic} other {<strong>#</strong> topics}}
-      and {requiredPosts, plural, one {<strong>#</strong> post} other {<strong>#</strong> posts}}. Only staff can see this message.
+      There
+      { currentTopics, plural,
+          one {is <strong>#</strong> topic}
+        other {are <strong>#</strong> topics}
+      } and
+      { currentPosts, plural,
+          one {<strong>#</strong> post}
+        other {<strong>#</strong> posts}
+      }. Visitors need more to read and reply to – we recommend at least
+      { requiredTopics, plural,
+          one {<strong>#</strong> topic}
+        other {<strong>#</strong> topics}
+      } and
+      { requiredPosts, plural,
+          one {<strong>#</strong> post}
+        other {<strong>#</strong> posts}
+      }. Only staff can see this message.
 
     # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
     too_few_topics_notice_MF: >-
       Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">start the discussion!</a>
-      There {currentTopics, plural, one {is <strong>#</strong> topic} other {are <strong>#</strong> topics}}. Visitors need more to
-      read and reply to – we recommend at least {requiredTopics, plural, one {<strong>#</strong> topic} other {<strong>#</strong> topics}}.
-      Only staff can see this message.
+      There
+      { currentTopics, plural,
+          one {is <strong>#</strong> topic}
+        other {are <strong>#</strong> topics}
+      }. Visitors need more to read and reply to – we recommend at least
+      { requiredTopics, plural,
+          one {<strong>#</strong> topic}
+        other {<strong>#</strong> topics}
+      }. Only staff can see this message.
 
     # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
     too_few_posts_notice_MF: >-
       Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">start the discussion!</a>
-      There {currentPosts, plural, one {is <strong>#</strong> post} other {are <strong>#</strong> posts}}. Visitors need more to
-      read and reply to – we recommend at least {requiredPosts, plural, one {<strong>#</strong> post} other {<strong>#</strong> posts}}.
-      Only staff can see this message.
+      There
+      { currentPosts, plural,
+          one {is <strong>#</strong> post}
+        other {are <strong>#</strong> posts}
+      }. Visitors need more to read and reply to – we recommend at least
+      { requiredPosts, plural,
+          one {<strong>#</strong> post}
+        other {<strong>#</strong> posts}
+      }. Only staff can see this message.
+
     logs_error_rate_notice:
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> reached site setting limit of {limit, plural, one {# error/hour} other {# errors/hour}}."
+      reached_hour_MF: >-
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>
+        { rate, plural,
+            one {# error/hour}
+          other {# errors/hour}
+        }</a> reached site setting limit of
+        { limit, plural,
+            one {# error/hour}
+          other {# errors/hour}
+        }.
+
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a> reached site setting limit of {limit, plural, one {# error/minute} other {# errors/minute}}."
+      reached_minute_MF: >-
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>
+        { rate, plural,
+            one {# error/minute}
+          other {# errors/minute}
+        }</a> reached site setting limit of
+        { limit, plural,
+            one {# error/minute}
+          other {# errors/minute}
+        }.
+
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> exceeded site setting limit of {limit, plural, one {# error/hour} other {# errors/hour}}."
+      exceeded_hour_MF: >-
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>
+        { rate, plural,
+            one {# error/hour}
+          other {# errors/hour}
+        }</a> exceeded site setting limit of
+        { limit, plural,
+            one {# error/hour}
+          other {# errors/hour}
+        }.
+
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} other {# errors/minute}}</a> exceeded site setting limit of {limit, plural, one {# error/minute} other {# errors/minute}}."
+      exceeded_minute_MF: >-
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>
+        { rate, plural,
+            one {# error/minute}
+          other {# errors/minute}
+        }</a> exceeded site setting limit of
+        { limit, plural,
+            one {# error/minute}
+          other {# errors/minute}
+        }.
 
     learn_more: "learn more..."
 
@@ -1988,8 +2053,19 @@ en:
       description:
         one: "There is <b>%{count}</b> reply."
         other: "There are <b>%{count}</b> replies."
+
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-      description_time_MF: "There {replyCount, plural, one {is <b>#</b> reply} other {are <b>#</b> replies}} with an estimated read time of <b>{readingTime, plural, one {# minute} other {# minutes}}</b>."
+      description_time_MF: >-
+        There
+        { replyCount, plural,
+            one {is <b>#</b> reply}
+          other {are <b>#</b> replies}
+        } with an estimated read time of <b>
+        { readingTime, plural,
+            one {# minute}
+          other {# minutes}
+        }</b>.
+
       enable: "Summarize This Topic"
       disable: "Show All Posts"
       short_label: "Summarize"
@@ -3722,7 +3798,17 @@ en:
       flag_for_review: "Queue For Review"
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-      delete_confirm_MF: "You are about to delete {POSTS, plural, one {<b>#</b> post} other {<b>#</b> posts}} and {TOPICS, plural, one {<b>#</b> topic} other {<b>#</b> topics}} from this user, remove their account, block signups from their IP address <b>{ip_address}</b>, and add their email address <b>{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
+      delete_confirm_MF: >-
+        You are about to delete
+        { POSTS, plural,
+            one {<b>#</b> post}
+          other {<b>#</b> posts}
+        } and
+        { TOPICS, plural,
+            one {<b>#</b> topic}
+          other {<b>#</b> topics}
+        } from this user, remove their account, block signups from their IP address <b>{ip_address}</b>, and add their email address <b>{email}</b> to a permanent block list. Are you sure this user is really a spammer?
+
       yes_delete_spammer: "Yes, Delete Spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(hidden)"
@@ -3797,12 +3883,19 @@ en:
       label_with_count: "Pending (%{count})"
 
     # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-    posts_likes_MF: |
-      This topic has {count, plural, one {# reply} other {# replies}} {ratio, select,
-        low {with a high like to post ratio}
-        med {with a very high like to post ratio}
-        high {with an extremely high like to post ratio}
-        other {}}
+    posts_likes_MF: >-
+      This topic has
+      { count, plural,
+          one {# reply}
+        other {# replies}
+      }
+      { ratio, select,
+          low {with a high like to post ratio}
+          med {with a very high like to post ratio}
+         high {with an extremely high like to post ratio}
+        other {}
+      }
+
     original_post: "Original Post"
     views: "Views"
     sr_views: "Sort by views"
@@ -5488,7 +5581,17 @@ en:
           description: "users with penalties cannot reach TL3"
 
         # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-        delete_all_posts_confirm_MF: "You are about to delete {POSTS, plural, one {# post} other {# posts}} and {TOPICS, plural, one {# topic} other {# topics}}. Are you sure?"
+        delete_all_posts_confirm_MF: >-
+          You are about to delete
+          { POSTS, plural,
+              one {# post}
+            other {# posts}
+          } and
+          { TOPICS, plural,
+              one {# topic}
+            other {# topics}
+          }. Are you sure?
+
         silence: "Silence"
         unsilence: "Unsilence"
         silenced: "Silenced?"
