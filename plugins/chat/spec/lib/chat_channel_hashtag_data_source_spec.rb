@@ -26,7 +26,11 @@ RSpec.describe Chat::ChatChannelHashtagDataSource do
   end
   let!(:guardian) { Guardian.new(user) }
 
-  before { SiteSetting.enable_experimental_hashtag_autocomplete = true }
+  before do
+    SiteSetting.enable_experimental_hashtag_autocomplete = true
+    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
+    Group.refresh_automatic_groups!
+  end
 
   describe "#lookup" do
     it "finds a channel by a slug" do
@@ -66,6 +70,12 @@ RSpec.describe Chat::ChatChannelHashtagDataSource do
     it "returns nothing if the slugs array is empty" do
       result = described_class.lookup(guardian, []).first
       expect(result).to eq(nil)
+    end
+
+    it "returns nothing if the user cannot chat" do
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
+      Group.refresh_automatic_groups!
+      expect(described_class.lookup(Guardian.new(user), ["random"])).to be_empty
     end
   end
 
@@ -123,6 +133,12 @@ RSpec.describe Chat::ChatChannelHashtagDataSource do
         },
       )
     end
+
+    it "returns nothing if the user cannot chat" do
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
+      Group.refresh_automatic_groups!
+      expect(described_class.search(Guardian.new(user), "rand", 10)).to be_empty
+    end
   end
 
   describe "#search_without_term" do
@@ -159,6 +175,12 @@ RSpec.describe Chat::ChatChannelHashtagDataSource do
       membership5.destroy
       membership3.update!(following: false)
       expect(described_class.search_without_term(guardian, 5).map(&:slug)).to eq(%w[chat random])
+    end
+
+    it "returns nothing if the user cannot chat" do
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
+      Group.refresh_automatic_groups!
+      expect(described_class.search_without_term(Guardian.new(user), 10)).to be_empty
     end
   end
 end
