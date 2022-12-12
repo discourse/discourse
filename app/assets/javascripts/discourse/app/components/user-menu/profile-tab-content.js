@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
+import DoNotDisturb from "discourse/lib/do-not-disturb";
 
 export default class UserMenuProfileTabContent extends Component {
   @service currentUser;
@@ -25,6 +26,12 @@ export default class UserMenuProfileTabContent extends Component {
 
   get doNotDisturbDateTime() {
     return this.#doNotDisturbUntilDate.getTime();
+  }
+
+  get showDoNotDisturbEndDate() {
+    return !DoNotDisturb.isEternal(
+      this.currentUser.get("do_not_disturb_until")
+    );
   }
 
   get #doNotDisturbUntilDate() {
