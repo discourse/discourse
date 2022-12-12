@@ -3,7 +3,7 @@
 module Chat::UserNotificationsExtension
   def chat_summary(user, opts)
     guardian = Guardian.new(user)
-    return unless guardian.can_chat?(user)
+    return unless guardian.can_chat?
 
     @messages =
       ChatMessage
