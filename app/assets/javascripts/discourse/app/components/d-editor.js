@@ -464,9 +464,11 @@ export default Component.extend(TextareaTextManipulation, {
       this.site.hashtag_configurations["topic-composer"],
       this._$textarea,
       this.siteSettings,
-      (value) => {
-        this.set("value", value);
-        schedule("afterRender", this, this.focusTextArea);
+      {
+        afterComplete: (value) => {
+          this.set("value", value);
+          schedule("afterRender", this, this.focusTextArea);
+        },
       }
     );
   },
