@@ -27,23 +27,30 @@ import { htmlSafe } from "@ember/template";
  * @param {$Element} $textarea - jQuery element to use for the autocompletion
  *   plugin to attach to, this is what will watch for the # matcher when the user is typing.
  * @param {Hash} siteSettings - The clientside site settings.
- * @param {Function} afterComplete - Called with the selected autocomplete option once it is selected.
+ * @param {Function} autocompleteOptions - Options to pass to the jQuery plugin. Must at least include:
+ *
+ *  - afterComplete - Called with the selected autocomplete option once it is selected.
+ *
+ *  Can also include:
+ *
+ *  - treatAsTextarea - Whether to anchor the autocompletion to the start of the input and
+ *                      ensure the popper is always on top.
  **/
 export function setupHashtagAutocomplete(
   contextualHashtagConfiguration,
   $textArea,
   siteSettings,
-  afterComplete
+  autocompleteOptions = {}
 ) {
   if (siteSettings.enable_experimental_hashtag_autocomplete) {
     _setupExperimental(
       contextualHashtagConfiguration,
       $textArea,
       siteSettings,
-      afterComplete
+      autocompleteOptions
     );
   } else {
-    _setup($textArea, siteSettings, afterComplete);
+    _setup($textArea, siteSettings, autocompleteOptions.afterComplete);
   }
 }
 
@@ -123,13 +130,14 @@ function _setupExperimental(
   contextualHashtagConfiguration,
   $textArea,
   siteSettings,
-  afterComplete
+  autocompleteOptions
 ) {
   $textArea.autocomplete({
     template: findRawTemplate("hashtag-autocomplete"),
     key: "#",
-    afterComplete,
-    treatAsTextarea: $textArea[0].tagName === "INPUT",
+    afterComplete: autocompleteOptions.afterComplete,
+    treatAsTextarea: autocompleteOptions.treatAsTextarea,
+    autoSelectFirstSuggestion: true,
     transformComplete: (obj) => obj.ref,
     dataSource: (term) => {
       if (term.match(/\s/)) {

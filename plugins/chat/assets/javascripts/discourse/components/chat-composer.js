@@ -410,9 +410,12 @@ export default Component.extend(TextareaTextManipulation, {
       this.site.hashtag_configurations["chat-composer"],
       $textarea,
       this.siteSettings,
-      (value) => {
-        this.set("value", value);
-        return this._focusTextArea();
+      {
+        treatAsTextarea: true,
+        afterComplete: (value) => {
+          this.set("value", value);
+          return this._focusTextArea();
+        },
       }
     );
   },
