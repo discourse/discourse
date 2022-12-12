@@ -5,6 +5,7 @@
         <a href title="{{user.name}}">
           {{avatar user imageSize="tiny"}}
           <span class='username'>{{format-username user.username}}</span>
+          <span class='name'>{{user.name}}</span>
           {{#if user.status}}
             {{emoji user.status.emoji}}
             <span class='status-description' title='{{user.status.description}}'>
