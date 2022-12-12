@@ -40,4 +40,17 @@ module SystemHelpers
   ensure
     page.driver.browser.manage.window.resize_to(original_size.width, original_size.height)
   end
+
+  def wait_for_message_bus
+    timeout = 2
+
+    while !page.evaluate_script("MessageBus.status() === 'started'") do
+      if timeout <= 0
+        raise 'MessageBus took longer than #{timeout} seconds to be started.'
+      end
+
+      timeout -= 0.01
+      sleep 0.01
+    end
+  end
 end
