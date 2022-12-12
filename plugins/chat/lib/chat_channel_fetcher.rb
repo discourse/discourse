@@ -43,7 +43,7 @@ module Chat::ChatChannelFetcher
         .to_sql
 
     dm_channel_sql = ""
-    if !exclude_dm_channels
+    if !exclude_dm_channels && defined?(guardian.user.id)
       dm_channel_sql = <<~SQL
       UNION
 
