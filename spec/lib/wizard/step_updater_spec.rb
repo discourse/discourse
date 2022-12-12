@@ -56,7 +56,7 @@ RSpec.describe Wizard::StepUpdater do
       expect(SiteSetting.login_required?).to eq(false)
       expect(SiteSetting.invite_only?).to eq(false)
       expect(SiteSetting.must_approve_users?).to eq(false)
-      expect(SiteSetting.navigation_menu).to eq(NavigationMenuSiteSetting::LEGACY)
+      expect(SiteSetting.navigation_menu).to eq(NavigationMenuSiteSetting::HEADER_DROPDOWN)
       expect(wizard.completed_steps?('privacy')).to eq(true)
     end
 
