@@ -93,9 +93,15 @@
       @class="btn-primary admin-webhooks__save-button"
     />
 
-    {{#unless this.model.isNew}}
-      <DButton @class="btn-danger" @label="admin.web_hooks.destroy" @action={{action "destroy"}} />
-    {{/unless}}
+    {{#if this.model.isNew}}
+      <LinkTo @route="adminWebHooks" class="btn btn-default">
+        {{i18n "cancel"}}
+      </LinkTo>
+    {{else}}
+      <LinkTo @route="adminWebHooks.show" @model={{this.model}} class="btn btn-default">
+        {{i18n "cancel"}}
+      </LinkTo>
+    {{/if}}
 
     <span class="saving">{{this.savingStatus}}</span>
   </div>

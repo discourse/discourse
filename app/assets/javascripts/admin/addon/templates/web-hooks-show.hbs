@@ -7,9 +7,17 @@
   <h1>
     {{this.model.payload_url}}
 
-    <LinkTo @route="adminWebHooks.edit" @model={{this.model}} class="btn no-text admin-webhooks__edit-button">
-      {{d-icon "far-edit"}}
-    </LinkTo>
+    <DButton
+      @action={{this.edit}}
+      @icon="far-edit"
+      class="btn no-text admin-webhooks__edit-button"
+    />
+
+    <DButton
+      @action={{this.destroy}}
+      @icon="times"
+      class="destroy btn-danger admin-webhooks__delete-button"
+    />
   </h1>
 
   <div>

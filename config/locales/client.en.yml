@@ -4571,7 +4571,6 @@ en:
         new: "New Webhook"
         create: "Create"
         save: "Save"
-        destroy: "Delete"
         description_label: "Event triggers"
         controls: "Controls"
         go_back: "Back to list"

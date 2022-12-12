@@ -8,7 +8,7 @@
   </div>
 
   {{#if this.model}}
-    <LoadMore @selector=".web-hooks tr" @action={{action "loadMore"}}>
+    <LoadMore @selector=".web-hooks tr" @action={{this.loadMore}}>
       <table class="web-hooks grid">
         <thead>
           <tr>
@@ -35,7 +35,7 @@
               <td class="description">{{webHook.description}}</td>
               <td class="controls">
                 <LinkTo @route="adminWebHooks.edit" @model={{webHook}} class="btn btn-default no-text">{{d-icon "far-edit"}}</LinkTo>
-                <DButton @class="destroy btn-danger" @action={{action "destroy"}} @actionParam={{webHook}} @icon="times" />
+                <DButton @class="destroy btn-danger" @action={{this.destroy}} @actionParam={{webHook}} @icon="times" />
               </td>
             </tr>
           {{/each}}

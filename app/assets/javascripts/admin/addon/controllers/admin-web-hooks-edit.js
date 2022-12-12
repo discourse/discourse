@@ -98,20 +98,4 @@ export default Controller.extend({
       popupAjaxError(e);
     }
   },
-
-  @action
-  destroy() {
-    return this.dialog.deleteConfirm({
-      message: I18n.t("admin.web_hooks.delete_confirm"),
-      didConfirm: async () => {
-        try {
-          await this.model.destroyRecord();
-          this.adminWebHooks.model.removeObject(this.model);
-          this.transitionToRoute("adminWebHooks");
-        } catch (e) {
-          popupAjaxError(e);
-        }
-      },
-    });
-  },
 });

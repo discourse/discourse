@@ -269,7 +269,8 @@ table.api-keys {
   margin-bottom: 1rem;
 }
 
-.admin-webhooks__edit-button {
+.admin-webhooks__edit-button,
+.admin-webhooks__delete-button {
   font-size: var(--font-0-rem);
 }
 
