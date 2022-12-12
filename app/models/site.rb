@@ -134,7 +134,7 @@ class Site
       categories.reject! { |c| c[:parent_category_id] && !by_id[c[:parent_category_id]] }
 
       self.class.categories_callbacks.each do |callback|
-        callback.call(categories)
+        callback.call(categories, @guardian)
       end
 
       categories
