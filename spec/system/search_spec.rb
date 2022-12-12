@@ -28,6 +28,7 @@ describe 'Search', type: :system, js: true do
       expect(search_page.is_search_page).to be_falsey
 
       page.go_back
+      # ensure results are still there when using browser's history
       expect(search_page).to have_search_result
 
       search_page.click_home_logo
