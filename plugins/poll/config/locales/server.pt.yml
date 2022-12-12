@@ -40,6 +40,7 @@ pt:
     user_cant_post_in_topic: "Não pode votar porque não pode publicar neste tópico."
     topic_must_be_open_to_vote: "O tópico tem que estar aberto para votação."
     poll_must_be_open_to_vote: "A sondagem deve estar aberta para votação."
+    one_vote_per_user: "Apenas 1 voto é permitido para esta sondagem."
     topic_must_be_open_to_toggle_status: "O tópico tem que estar aberto para alternar o estado."
     only_staff_or_op_can_toggle_status: "Apenas um membro da equipa ou o autor original pode alternar o estado da sondagem."
     insufficient_rights_to_create: "Não está autorizado para criar sondagens."

@@ -22,8 +22,7 @@ acceptance(
     });
 
     needs.settings({
-      enable_experimental_sidebar_hamburger: true,
-      enable_sidebar: true,
+      navigation_menu: "sidebar",
     });
 
     test("clicking on section header button", async function (assert) {
@@ -43,8 +42,7 @@ acceptance(
     needs.user({ can_send_private_messages: true });
 
     needs.settings({
-      enable_experimental_sidebar_hamburger: true,
-      enable_sidebar: true,
+      navigation_menu: "sidebar",
     });
 
     needs.pretender((server, helper) => {

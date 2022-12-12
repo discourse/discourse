@@ -1130,7 +1130,7 @@ lv:
         use: "Izmantojiet lietotni Autentifikators"
         enforced_notice: "Pirms piekļuves šai vietnei jums ir jāiespējo divu faktoru autentifikācija."
         disable: "Atslēgt"
-        disable_confirm: "Vai tiešām vēlaties atspējot visas divu faktoru metodes?"
+        delete: "Dzēst"
         save: "Saglabāt"
         edit: "Labot"
         edit_title: "Rediģēt autentifikatoru"
@@ -1209,7 +1209,6 @@ lv:
         authenticated: "Jūsu e-pastu autentificēja %{provider}"
         invite_auth_email_invalid: "Jūsu ielūguma e -pasta adrese neatbilst e -pasta adresei, kuras autentificēts ar %{provider}"
         authenticated_by_invite: "Jūsu e -pasta adrese ir apstiprināta ar uzaicinājumu"
-        frequency_immediately: "Mēs nekavējoties sūtīsim jums epastu par jaunām neizlasītām ziņām."
         frequency:
           zero: "Mēs sūtīsim jums e-pastu tikai tad, ja nebūsim jūs redzējuši pēdējo %{count} minūšu laikā."
           one: "Mēs sūtīsim jums e-pastu tikai tad, ja nebūsim jūs redzējuši pēdējās minūtes laikā."
@@ -1496,8 +1495,6 @@ lv:
       enabled: "Vietne ir \"tikai lasīšanas\" režīmā. Lūdzu turpiniet lasīt, taču atbildēšana, atzinības izteikšana un citas funkcijas šobrīd ir atslēgtas."
       login_disabled: "Pieslēgšanās ir atslēgta, kamēr vietne ir \"tikai lasīšanas\" režīmā."
       logout_disabled: "Iziešana ir atslēgta, kamēr vietne ir \"tikai lasīšanas\" režīmā."
-    too_few_topics_and_posts_notice_MF: >-
-      Sāksim diskusiju <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/"></a> Tur {currentTopics, plural, zero {} one {ir <strong>#</strong> tēma} other {ir <strong>#</strong> tēmas}} un {currentPosts, plural, one {<strong>#</strong> ziņa} other {<strong>#</strong> ziņas}}. Apmeklētājiem ir nepieciešams vairāk lasīt un atbildēt - mēs vismaz iesakām {requiredTopics, plural, one {<strong>#</strong> tēma} other {<strong>#</strong> tēmas}} un {requiredPosts, plural, one {<strong>#</strong> ziņa} other {<strong>#</strong> ziņas}}. Šo ziņojumu var redzēt tikai darbinieki.
     learn_more: "uzzināt vairāk..."
     first_post: Pirmais ieraksts
     mute: Noklusināt
@@ -2931,7 +2928,6 @@ lv:
         about: "Labot jūsu piederīgu grupām un to nosaukumus"
         group_members: "Grupas biedri"
         delete: "Dzēst"
-        delete_confirm: "Dzēst šo grupu?"
         delete_failed: "Neizdevās izdzēst grupu. Ja šī ir automātiski izveidota grupa, to nav iespējams iznīcināt."
         delete_owner_confirm: "Noņemt lietotāja privilēģijas '%{username}'?"
         add: "Pievienot"
@@ -3475,6 +3471,11 @@ lv:
         lock_trust_level: "Slēgt Uzticības līmeni"
         unlock_trust_level: "Atslēgt Uzticības līmeni"
         suspended_count: "Apturēts"
+        other_matches_list:
+          username: "Lietotājvārds"
+          trust_level: "Uzticības līmenis"
+          read_time: "Kopējais lasīšanas laiks"
+          posts: "Ieraksti"
         tl3_requirements:
           title: "Prasības uzticības 3. līmenim"
           table_title:
@@ -3594,6 +3595,7 @@ lv:
           search: "Meklēt"
           groups: "Grupas"
           dashboard: "Administrācijas panelis"
+          navigation: "Pārvietošanās"
         default_categories:
           modal_yes: "Jā"
       badges:

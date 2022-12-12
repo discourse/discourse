@@ -27,13 +27,11 @@ describe UserNotifications do
 
       describe "email subject" do
         it "includes the sender username in the subject" do
-          expected_subject =
-            I18n.t(
-              "user_notifications.chat_summary.subject.direct_message",
-              count: 1,
-              email_prefix: SiteSetting.title,
-              message_title: sender.username,
-            )
+          expected_subject = I18n.t(
+            "user_notifications.chat_summary.subject.direct_message_from_1",
+            email_prefix: SiteSetting.title,
+            username: sender.username
+          )
           Fabricate(:chat_message, user: sender, chat_channel: channel)
           email = described_class.chat_summary(user, {})
 
@@ -49,13 +47,11 @@ describe UserNotifications do
             chat_channel: channel,
           )
           DirectMessageUser.create!(direct_message: channel.chatable, user: another_participant)
-          expected_subject =
-            I18n.t(
-              "user_notifications.chat_summary.subject.direct_message",
-              count: 1,
-              email_prefix: SiteSetting.title,
-              message_title: sender.username,
-            )
+          expected_subject = I18n.t(
+            "user_notifications.chat_summary.subject.direct_message_from_1",
+            email_prefix: SiteSetting.title,
+            username: sender.username
+          )
           Fabricate(:chat_message, user: sender, chat_channel: channel)
           email = described_class.chat_summary(user, {})
 
@@ -64,7 +60,7 @@ describe UserNotifications do
           expect(email.subject).not_to include(another_participant.username)
         end
 
-        it "includes both channel titles when there are exactly two with unread messages" do
+        it "includes both usernames when there are exactly two DMs with unread messages" do
           another_dm_user = Fabricate(:user, group_ids: [chatters_group.id])
           refresh_auto_groups
           another_dm_user.reload
@@ -77,17 +73,27 @@ describe UserNotifications do
           Fabricate(:chat_message, user: sender, chat_channel: channel)
           email = described_class.chat_summary(user, {})
 
+          expected_subject = I18n.t(
+            "user_notifications.chat_summary.subject.direct_message_from_2",
+            email_prefix: SiteSetting.title,
+            username1: another_dm_user.username,
+            username2: sender.username
+          )
+
+          expect(email.subject).to eq(expected_subject)
           expect(email.subject).to include(sender.username)
           expect(email.subject).to include(another_dm_user.username)
         end
 
         it "displays a count when there are more than two DMs with unread messages" do
           user = Fabricate(:user, group_ids: [chatters_group.id])
+          senders = []
 
           3.times do
             sender = Fabricate(:user, group_ids: [chatters_group.id])
             refresh_auto_groups
             sender.reload
+            senders << sender
             channel =
               Chat::DirectMessageChannelCreator.create!(
                 acting_user: sender,
@@ -101,11 +107,16 @@ describe UserNotifications do
             Fabricate(:chat_message, user: sender, chat_channel: channel)
           end
 
-          expected_count_text = I18n.t("user_notifications.chat_summary.subject.others", count: 2)
-
           email = described_class.chat_summary(user, {})
 
-          expect(email.subject).to include(expected_count_text)
+          expected_subject = I18n.t(
+            "user_notifications.chat_summary.subject.direct_message_from_more",
+            email_prefix: SiteSetting.title,
+            username: senders.first.username,
+            count: 2
+          )
+
+          expect(email.subject).to eq(expected_subject)
         end
 
         it "returns an email if the user is not following the direct channel" do
@@ -144,13 +155,11 @@ describe UserNotifications do
           before { Fabricate(:chat_mention, user: user, chat_message: chat_message) }
 
           it "includes the sender username in the subject" do
-            expected_subject =
-              I18n.t(
-                "user_notifications.chat_summary.subject.chat_channel",
-                count: 1,
-                email_prefix: SiteSetting.title,
-                message_title: channel.title(user),
-              )
+            expected_subject = I18n.t(
+              "user_notifications.chat_summary.subject.chat_channel_1",
+              email_prefix: SiteSetting.title,
+              channel: channel.title(user)
+            )
 
             email = described_class.chat_summary(user, {})
 
@@ -177,6 +186,14 @@ describe UserNotifications do
 
             email = described_class.chat_summary(user, {})
 
+            expected_subject = I18n.t(
+              "user_notifications.chat_summary.subject.chat_channel_2",
+              email_prefix: SiteSetting.title,
+              channel1: channel.title(user),
+              channel2: another_chat_channel.title(user)
+            )
+
+            expect(email.subject).to eq(expected_subject)
             expect(email.subject).to include(channel.title(user))
             expect(email.subject).to include(another_chat_channel.title(user))
           end
@@ -199,11 +216,17 @@ describe UserNotifications do
               )
               Fabricate(:chat_mention, user: user, chat_message: another_chat_message)
             end
-            expected_count_text = I18n.t("user_notifications.chat_summary.subject.others", count: 2)
+
+            expected_subject = I18n.t(
+              "user_notifications.chat_summary.subject.chat_channel_more",
+              email_prefix: SiteSetting.title,
+              channel: channel.title(user),
+              count: 2
+            )
 
             email = described_class.chat_summary(user, {})
 
-            expect(email.subject).to include(expected_count_text)
+            expect(email.subject).to eq(expected_subject)
           end
         end
 
@@ -220,15 +243,16 @@ describe UserNotifications do
           end
 
           it "always includes the DM second" do
-            expected_other_text =
-              I18n.t(
-                "user_notifications.chat_summary.subject.other_direct_message",
-                dm_title: sender.username,
-              )
+            expected_subject = I18n.t(
+              "user_notifications.chat_summary.subject.chat_channel_and_direct_message",
+              email_prefix: SiteSetting.title,
+              channel: channel.title(user),
+              username: sender.username
+            )
 
             email = described_class.chat_summary(user, {})
 
-            expect(email.subject).to include(expected_other_text)
+            expect(email.subject).to eq(expected_subject)
           end
         end
       end

@@ -68,7 +68,7 @@ export default Component.extend({
   @on("init")
   _setupPicker() {
     this.setProperties({
-      userTimezone: this.currentUser.timezone,
+      userTimezone: this.currentUser.user_option.timezone,
       hiddenOptions: this.hiddenOptions || [],
       customOptions: this.customOptions || [],
       customLabels: this.customLabels || {},

@@ -3,6 +3,7 @@
 class ChatChannelSerializer < ApplicationSerializer
   attributes :id,
              :auto_join_users,
+             :allow_channel_wide_mentions,
              :chatable,
              :chatable_id,
              :chatable_type,

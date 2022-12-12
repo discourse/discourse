@@ -27,23 +27,30 @@ import { htmlSafe } from "@ember/template";
  * @param {$Element} $textarea - jQuery element to use for the autocompletion
  *   plugin to attach to, this is what will watch for the # matcher when the user is typing.
  * @param {Hash} siteSettings - The clientside site settings.
- * @param {Function} afterComplete - Called with the selected autocomplete option once it is selected.
+ * @param {Function} autocompleteOptions - Options to pass to the jQuery plugin. Must at least include:
+ *
+ *  - afterComplete - Called with the selected autocomplete option once it is selected.
+ *
+ *  Can also include:
+ *
+ *  - treatAsTextarea - Whether to anchor the autocompletion to the start of the input and
+ *                      ensure the popper is always on top.
  **/
 export function setupHashtagAutocomplete(
   contextualHashtagConfiguration,
   $textArea,
   siteSettings,
-  afterComplete
+  autocompleteOptions = {}
 ) {
   if (siteSettings.enable_experimental_hashtag_autocomplete) {
     _setupExperimental(
       contextualHashtagConfiguration,
       $textArea,
       siteSettings,
-      afterComplete
+      autocompleteOptions
     );
   } else {
-    _setup($textArea, siteSettings, afterComplete);
+    _setup($textArea, siteSettings, autocompleteOptions.afterComplete);
   }
 }
 
@@ -123,13 +130,14 @@ function _setupExperimental(
   contextualHashtagConfiguration,
   $textArea,
   siteSettings,
-  afterComplete
+  autocompleteOptions
 ) {
   $textArea.autocomplete({
     template: findRawTemplate("hashtag-autocomplete"),
     key: "#",
-    afterComplete,
-    treatAsTextarea: $textArea[0].tagName === "INPUT",
+    afterComplete: autocompleteOptions.afterComplete,
+    treatAsTextarea: autocompleteOptions.treatAsTextarea,
+    autoSelectFirstSuggestion: true,
     transformComplete: (obj) => obj.ref,
     dataSource: (term) => {
       if (term.match(/\s/)) {
@@ -167,6 +175,9 @@ function _updateSearchCache(term, results) {
   return results;
 }
 
+// Note that the search term is _not_ required here, and we follow special
+// logic similar to @mentions when there is no search term, to show some
+// useful default categories, tags, etc.
 function _searchGeneric(term, siteSettings, contextualHashtagConfiguration) {
   if (currentSearch) {
     currentSearch.abort();
@@ -187,7 +198,7 @@ function _searchGeneric(term, siteSettings, contextualHashtagConfiguration) {
           resolve(CANCELLED_STATUS);
         }, 5000);
 
-    if (term === "") {
+    if (!siteSettings.enable_experimental_hashtag_autocomplete && term === "") {
       return resolve(CANCELLED_STATUS);
     }
 
@@ -221,19 +232,13 @@ function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
 }
 
 function _findAndReplaceSeenHashtagPlaceholder(
-  slug,
+  slugRef,
   contextualHashtagConfiguration,
   hashtagSpan
 ) {
   contextualHashtagConfiguration.forEach((type) => {
-    // remove type suffixes
-    const typePostfix = `::${type}`;
-    if (slug.endsWith(typePostfix)) {
-      slug = slug.slice(0, slug.length - typePostfix.length);
-    }
-
     // replace raw span for the hashtag with a cooked one
-    const matchingSeenHashtag = seenHashtags[type]?.[slug];
+    const matchingSeenHashtag = seenHashtags[type]?.[slugRef];
     if (matchingSeenHashtag) {
       // NOTE: When changing the HTML structure here, you must also change
       // it in the hashtag-autocomplete markdown rule, and vice-versa.

@@ -271,6 +271,7 @@ module DiscourseTagging
   #   exclude_synonyms: exclude synonyms from results
   #   order_search_results: result should be ordered for name search results
   #   order_popularity: order result by topic_count
+  #   excluded_tag_names: an array of tag names not to include in the results
   def self.filter_allowed_tags(guardian, opts = {})
     selected_tag_ids = opts[:selected_tags] ? Tag.where_name(opts[:selected_tags]).pluck(:id) : []
     category = opts[:category]
@@ -425,6 +426,10 @@ module DiscourseTagging
 
     if opts[:exclude_has_synonyms]
       builder.where("id NOT IN (SELECT target_tag_id FROM tags WHERE target_tag_id IS NOT NULL)")
+    end
+
+    if opts[:excluded_tag_names]&.any?
+      builder.where("name NOT IN (?)", opts[:excluded_tag_names])
     end
 
     if opts[:limit]

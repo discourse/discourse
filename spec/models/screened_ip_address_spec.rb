@@ -181,8 +181,9 @@ RSpec.describe ScreenedIpAddress do
     end
 
     it 'returns false when no record matches' do
-      Fabricate(:screened_ip_address, ip_address: '111.234.23.11', action_type: described_class.actions[:block])
+      screened_ip_address = Fabricate(:screened_ip_address, ip_address: '111.234.23.11', action_type: described_class.actions[:block])
       expect(described_class.should_block?('222.12.12.12')).to eq(false)
+      expect(screened_ip_address.reload.match_count).to eq(0)
     end
 
     it 'returns false if a more specific recrord matches and action is :do_nothing' do
@@ -199,25 +200,29 @@ RSpec.describe ScreenedIpAddress do
 
     context 'with IPv4' do
       it 'returns false when when record matches and action is :do_nothing' do
-        Fabricate(:screened_ip_address, ip_address: '111.234.23.11', action_type: described_class.actions[:do_nothing])
+        screened_ip_address = Fabricate(:screened_ip_address, ip_address: '111.234.23.11', action_type: described_class.actions[:do_nothing])
         expect(described_class.should_block?('111.234.23.11')).to eq(false)
+        expect(screened_ip_address.reload.match_count).to eq(0)
       end
 
       it 'returns true when when record matches and action is :block' do
-        Fabricate(:screened_ip_address, ip_address: '111.234.23.11', action_type: described_class.actions[:block])
+        screened_ip_address = Fabricate(:screened_ip_address, ip_address: '111.234.23.11', action_type: described_class.actions[:block])
         expect(described_class.should_block?('111.234.23.11')).to eq(true)
+        expect(screened_ip_address.reload.match_count).to eq(1)
       end
     end
 
     context 'with IPv6' do
       it 'returns false when when record matches and action is :do_nothing' do
-        Fabricate(:screened_ip_address, ip_address: '2001:db8::ff00:42:8329', action_type: described_class.actions[:do_nothing])
+        screened_ip_address = Fabricate(:screened_ip_address, ip_address: '2001:db8::ff00:42:8329', action_type: described_class.actions[:do_nothing])
         expect(described_class.should_block?('2001:db8::ff00:42:8329')).to eq(false)
+        expect(screened_ip_address.reload.match_count).to eq(0)
       end
 
       it 'returns true when when record matches and action is :block' do
-        Fabricate(:screened_ip_address, ip_address: '2001:db8::ff00:42:8329', action_type: described_class.actions[:block])
+        screened_ip_address = Fabricate(:screened_ip_address, ip_address: '2001:db8::ff00:42:8329', action_type: described_class.actions[:block])
         expect(described_class.should_block?('2001:db8::ff00:42:8329')).to eq(true)
+        expect(screened_ip_address.reload.match_count).to eq(1)
       end
     end
   end
@@ -228,31 +233,36 @@ RSpec.describe ScreenedIpAddress do
     end
 
     it 'returns false when no record matches' do
-      Fabricate(:screened_ip_address, ip_address: '111.234.23.11', action_type: described_class.actions[:do_nothing])
+      screened_ip_address = Fabricate(:screened_ip_address, ip_address: '111.234.23.11', action_type: described_class.actions[:do_nothing])
       expect(described_class.is_allowed?('222.12.12.12')).to eq(false)
+      expect(screened_ip_address.reload.match_count).to eq(0)
     end
 
     context 'with IPv4' do
       it 'returns true when when record matches and action is :do_nothing' do
-        Fabricate(:screened_ip_address, ip_address: '111.234.23.11', action_type: described_class.actions[:do_nothing])
+        screened_ip_address = Fabricate(:screened_ip_address, ip_address: '111.234.23.11', action_type: described_class.actions[:do_nothing])
         expect(described_class.is_allowed?('111.234.23.11')).to eq(true)
+        expect(screened_ip_address.reload.match_count).to eq(1)
       end
 
       it 'returns false when when record matches and action is :block' do
-        Fabricate(:screened_ip_address, ip_address: '111.234.23.11', action_type: described_class.actions[:block])
+        screened_ip_address = Fabricate(:screened_ip_address, ip_address: '111.234.23.11', action_type: described_class.actions[:block])
         expect(described_class.is_allowed?('111.234.23.11')).to eq(false)
+        expect(screened_ip_address.reload.match_count).to eq(0)
       end
     end
 
     context 'with IPv6' do
       it 'returns true when when record matches and action is :do_nothing' do
-        Fabricate(:screened_ip_address, ip_address: '2001:db8::ff00:42:8329', action_type: described_class.actions[:do_nothing])
+        screened_ip_address = Fabricate(:screened_ip_address, ip_address: '2001:db8::ff00:42:8329', action_type: described_class.actions[:do_nothing])
         expect(described_class.is_allowed?('2001:db8::ff00:42:8329')).to eq(true)
+        expect(screened_ip_address.reload.match_count).to eq(1)
       end
 
       it 'returns false when when record matches and action is :block' do
-        Fabricate(:screened_ip_address, ip_address: '2001:db8::ff00:42:8329', action_type: described_class.actions[:block])
+        screened_ip_address = Fabricate(:screened_ip_address, ip_address: '2001:db8::ff00:42:8329', action_type: described_class.actions[:block])
         expect(described_class.is_allowed?('2001:db8::ff00:42:8329')).to eq(false)
+        expect(screened_ip_address.reload.match_count).to eq(0)
       end
     end
   end

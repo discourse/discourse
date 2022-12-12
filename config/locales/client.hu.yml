@@ -1279,7 +1279,14 @@ hu:
         use: "Hitelesítő alkalmazás használata"
         enforced_notice: "A webhely elérése előtt engedélyeznie kell a kétfaktoros hitelesítést."
         disable: "Letiltás"
-        disable_confirm: "Biztos, hogy letiltja az összes kétfaktoros hitelesítési módot?"
+        disable_confirm: "Biztos, hogy ki akarja kapcsolni a kétfaktoros hitelesítést?"
+        delete: "Törlés"
+        delete_confirm_header: "Ezek a token-alapú hitelesítők és fizikai biztonsági kulcsok törlődnek:"
+        delete_confirm_instruction: 'A megerősítéshez írja be <strong>%{confirm}</strong> az alábbi mezőbe.'
+        delete_single_confirm_title: "Hitelesítő törlése"
+        delete_single_confirm_message: "%{name} törlése. Ez a művelet nem vonható vissza. Ha meggondolja magát, újra regisztrálnia kell ezt a hitelesítőt."
+        delete_backup_codes_confirm_title: "Biztonsági kódok törlése"
+        delete_backup_codes_confirm_message: "Ön törli a biztonsági kódokat. Ez a művelet nem vonható vissza. Ha meggondolja magát, újra kell generálnia a biztonsági kódokat."
         save: "Mentés"
         edit: "Szerkesztés"
         edit_title: "Hitelesítő szerkesztése"
@@ -1365,7 +1372,6 @@ hu:
         authenticated: "Az e-mail-címét a(z) %{provider} hitelesítette"
         invite_auth_email_invalid: "A meghívási e-mail-címe nem egyezik a(z) %{provider} által hitelesített e-mail-címmel"
         authenticated_by_invite: "Az e-mail-címét a meghívás hitelesítette"
-        frequency_immediately: "Azonnal e-mailt fog kapni, ha még nem olvasta el azt, amiről e-mailt küldtünk."
         frequency:
           one: "Csak akkor küldünk e-mailt, ha nem láttuk az elmúlt percben."
           other: "Csak akkor küldünk e-mailt, ha nem láttuk az elmúlt %{count} percben."
@@ -1717,12 +1723,8 @@ hu:
       logout_disabled: "A kilépés le van tiltva, amíg az oldal írásvédett módban van."
     staff_writes_only_mode:
       enabled: "Ez az oldal csak a munkatársaknak van fenntartva. Továbbra is böngészheted, de a válaszadás és egyéb műveletek csak a munkatársak számára elérhetők."
-    too_few_topics_and_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Kezdjük el a beszélgetést!</a> Jelenleg {currentTopics, plural, one {<strong>#</strong> téma} other {<strong>#</strong> téma}} és {currentPosts, plural, one {<strong>#</strong> bejegyzés} other {<strong>#</strong> bejegyzés}} található. A látogatóknak több olvasnivalóra van szükségük – azt javasoljuk, hogy legalább {requiredTopics, plural, one {<strong>#</strong> téma} other {<strong>#</strong> téma}} és {requiredPosts, plural, one {<strong>#</strong> bejegyzés} other {<strong>#</strong> bejegyzés}} legyen. Csak a stáb láthatja ezt az üzenetet.
-    too_few_topics_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Kezdjük el a beszélgetést!</a> Jelenleg {currentTopics, plural, one {<strong>#</strong> téma} other {<strong>#</strong> téma}} található. A látogatóknak több olvasnivalóra van szükségük – azt javasoljuk, hogy legalább {requiredTopics, plural, one {<strong>#</strong> téma} other {<strong>#</strong> téma}} legyen. Csak a stáb láthatja ezt az üzenetet.
     too_few_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Kezdjük el a beszélgetést!</a> Jelenleg {currentPosts, plural, one {<strong>#</strong> bejegyzés} other {<strong>#</strong> bejegyzés}} található. A látogatóknak több olvasnivalóra van szükségük – azt javasoljuk, hogy legalább {requiredPosts, plural, one {<strong>#</strong> bejegyzés} other {<strong>#</strong> bejegyzés}} legyen. Csak a stáb láthatja ezt az üzenetet.
+      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">Kezdjük el a beszélgetést!</a> Jelenleg {currentPosts, plural, one {<strong>#</strong> bejegyzés} other {<strong>#</strong> bejegyzés}} található. A látogatóknak több olvasnivalóra van szükségük – azt javasoljuk, hogy legalább {requiredPosts, plural, one {<strong>#</strong> bejegyzés} other {<strong>#</strong> bejegyzés}} legyen. Csak a stáb láthatja ezt az üzenetet.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hiba/óra} other {# hiba/óra}}</a>, elérte az oldal beállításiban megadott {limit, plural, one {# hiba/órás} other {# hiba/órás}} korlátot."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hiba/perc} other {# hiba/perc}}</a>, elérte az oldal beállításiban megadott {limit, plural, one {# hiba/perces} other {# hiba/perces}} korlátot."
@@ -2923,6 +2925,7 @@ hu:
         file_too_large_humanized: "Sajnos ez a fájl túl nagy (a maximális méret %{max_size}). Töltse fel a nagyméretű fájlt egy felhőmegosztó szolgáltatásba, majd illessze be annak a linkjét."
         too_many_uploads: "Sajnos egyszerre csak egy fájlt tölthet fel."
         upload_not_authorized: "Sajnos a feltölteni kívánt fájl nem engedélyezett (engedélyezett kiterjesztések: %{authorized_extensions})."
+        no_uploads_authorized: "Sajnos nincs engedélyezve a fájlok feltöltése."
         image_upload_not_allowed_for_new_user: "Sajnos az új felhasználók nem tölthetnek fel képeket."
         attachment_upload_not_allowed_for_new_user: "Sajnos az új felhasználók nem tölthetnek fel mellékleteket."
         attachment_download_requires_login: "Sajnos be kell jelentkeznie, hogy letölthesse a mellékleteket."
@@ -3815,7 +3818,7 @@ hu:
         refresh: "Frissítés"
         group_members: "A csoport tagjai"
         delete: "Törlés"
-        delete_confirm: "Törlöd a csoportot?"
+        delete_confirm: "Biztos, hogy törölni szeretné ezt a csoportot?"
         delete_failed: "A csoport törlése sikertelen. Ha ez egy automatikusan létrehozott csoport, akkor nem törölhető."
         delete_automatic_group: Ez egy automatikus csoport, nem törölhető.
         delete_owner_confirm: "Eltávolítja „%{username}” tulajdonosi jogosultságát?"
@@ -3971,6 +3974,10 @@ hu:
         change_settings_short: "Beállítások"
         howto: "Hogyan lehet plugin-eket telepíteni?"
         official: "Hivatalos plugin"
+      navigation_menu:
+        sidebar: "Oldalsáv"
+        header_dropdown: "Fejléc legördülő menü"
+        legacy: "Hagyaték"
       backups:
         title: "Biztonsági mentések"
         menu:
@@ -4605,6 +4612,12 @@ hu:
         suspend_modal_title: "Felhasználó felfüggesztése"
         silenced_count: "Némított"
         suspended_count: "Felfüggesztett"
+        other_matches_list:
+          username: "Felhasználónév"
+          trust_level: "Bizalmi szint"
+          read_time: "Olvasási idő"
+          topics_entered: "Beírt témák"
+          posts: "Bejegyzések"
         tl3_requirements:
           value_heading: "Érték"
           visits: "Látogatások"
@@ -4704,6 +4717,7 @@ hu:
           search: "Keresés"
           groups: "Csoportok"
           dashboard: "Vezérlőpult"
+          navigation: "Navigáció"
         default_categories:
           modal_yes: "Igen"
       badges:

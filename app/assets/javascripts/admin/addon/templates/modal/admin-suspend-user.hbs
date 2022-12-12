@@ -13,12 +13,15 @@
           <FutureDateInput @class="suspend-until" @label="admin.user.suspend_duration" @clearable={{false}} @input={{this.suspendUntil}} @onChangeInput={{action (mut this.suspendUntil)}} />
         </label>
       </div>
-      <SuspensionDetails @reason={{this.reason}} @message={{this.message}} />
 
+      <SuspensionDetails @reason={{this.reason}} @message={{this.message}} />
       {{#if this.postId}}
         <PenaltyPostAction @postId={{this.postId}} @postAction={{this.postAction}} @postEdit={{this.postEdit}} />
       {{/if}}
 
+      {{#if this.user.similar_users}}
+        <AdminPenaltySimilarUsers @type="suspend" @user={{this.user}} @selectedUserIds={{this.otherUserIds}} />
+      {{/if}}
     {{else}}
       <div class="cant-suspend">
         {{i18n "admin.user.cant_suspend"}}

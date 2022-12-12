@@ -107,6 +107,7 @@ import DiscourseURL from "discourse/lib/url";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
+import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -508,7 +509,7 @@ class PluginApi {
     ) {
       const siteSettings = this.container.lookup("service:site-settings");
 
-      if (siteSettings.enable_experimental_sidebar_hamburger) {
+      if (siteSettings.navigation_menu !== "legacy") {
         try {
           const { href, route, label, rawLabel, className } = fn();
           const textContent = rawLabel || I18n.t(label);
@@ -533,7 +534,7 @@ class PluginApi {
           this.addCommunitySectionLink(args, name.match(/footerLinks/));
         } catch {
           deprecated(
-            `Usage of \`api.decorateWidget('hamburger-menu:generalLinks')\` is incompatible with the \`enable_experimental_sidebar_hamburger\` site setting. Please use \`api.addCommunitySectionLink\` instead.`,
+            `Usage of \`api.decorateWidget('hamburger-menu:generalLinks')\` is incompatible with the \`navigation_menu\` site setting when not set to "legacy". Please use \`api.addCommunitySectionLink\` instead.`,
             { id: "discourse.decorate-widget.hamburger-widget-links" }
           );
         }
@@ -2017,6 +2018,19 @@ class PluginApi {
    */
   registerModelTransformer(modelName, transformer) {
     registerModelTransformer(modelName, transformer);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Adds a row to the dropdown used on the `userPrivateMessages` route used to navigate between the different user
+   * messages pages.
+   *
+   * @param {string} routeName The Ember route name to transition to when the row is selected in the dropdown
+   * @param {string} name The text displayed to represent the row in the dropdown
+   * @param {string} [icon] The name of the icon that will be used when displaying the row in the dropdown
+   */
+  addUserMessagesNavigationDropdownRow(routeName, name, icon) {
+    registerCustomUserNavMessagesDropdownRow(routeName, name, icon);
   }
 }
 

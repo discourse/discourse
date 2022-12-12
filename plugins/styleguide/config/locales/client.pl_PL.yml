@@ -88,5 +88,7 @@ pl_PL:
         empty_state:
           title: "Pusty stan"
         rich_tooltip:
+          title: "Bogata podpowiedź"
           description: "Opis"
           header: "Nagłówek"
+          hover_to_see: "Najedź kursorem, aby zobaczyć podpowiedź"

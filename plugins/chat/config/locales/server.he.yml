@@ -23,6 +23,7 @@ he:
     default_emoji_reactions: "רגשות אמוג׳י כברירת מחדל להודעות צ׳אט. ניתן להוסיף עד 5 אמוג׳ים לתגובה מהירה."
     direct_message_enabled_groups: "לאפשר למשתמשים בקבוצות אלה ליצור צ׳אטים אישיים בין המשתמשים לבין עצמם. הערה: הסגל תמיד יכול ליצור צ׳אטים אישיים, ומשתמשים יוכלו להשיב לצ׳אטים אישיים שיזמו משתמשים שיש להם הרשאה ליצור אותם."
     chat_message_flag_allowed_groups: "משתמשים בקבוצות אלו רשאים לסמן הודעות צ׳אט בדגל."
+    chat_max_direct_message_users: "משתמשים לא יכולים להוסיף יותר מכמות זו של משתמשים אחרים בעת יצירת הודעה ישירה חדשה. יש להגדיר ל־0 כדי לאפשר הודעות עצמיות. הסגל מוחרג מההגדרה הזאת."
     chat_allow_archiving_channels: "לאפשר לסגל להעביר הודעות לארכיון בנושא בעת סגירת ערוץ."
     errors:
       chat_default_channel: "ערוץ הצ׳אט כברירת המחדל חייב להיות ערוץ ציבורי."
@@ -172,18 +173,8 @@ he:
         other: "יש לך הודעות חדשות בצ׳אט"
       from: "%{site_name}"
       subject:
-        direct_message:
-          one: "[%{email_prefix}] הודעה חדשה מאת %{message_title}"
-          two: "[%{email_prefix}] הודעה חדשה מאת %{message_title} ועוד %{others}"
-          many: "[%{email_prefix}] הודעה חדשה מאת %{message_title} ועוד %{others}"
-          other: "[%{email_prefix}] הודעה חדשה מאת %{message_title} ועוד %{others}"
-        chat_channel:
-          one: "[%{email_prefix}] הודעה חדשה תחת %{message_title}"
-          two: "[%{email_prefix}] הודעה חדשה תחת %{message_title} ועוד %{others}"
-          many: "[%{email_prefix}] הודעה חדשה תחת %{message_title} ועוד %{others}"
-          other: "[%{email_prefix}] הודעה חדשה תחת %{message_title} ועוד %{others}"
-        other_direct_message: "מאת %{dm_title}"
-        others: "%{count} נוספים"
+        direct_message_from_1: "[%{email_prefix}] הודעה חדשה מאת %{username}"
+        chat_channel_1: "[%{email_prefix}] הודעה חדשה תחת %{channel}"
       unsubscribe: "סיכום צ׳אט זה נשלח מהאתר %{site_link} כשנעדרת ממנו. ניתן לשנות את %{email_preferences_link} שלך או %{unsubscribe_link} כדי להפסיק לקבל הודעות."
       unsubscribe_no_link: "סיכום צ׳אט זה נשלח מהאתר %{site_link} כשנעדרת ממנו. ניתן לשנות את %{email_preferences_link} שלך."
       view_messages:

@@ -111,11 +111,6 @@ acceptance("User Preferences", function (needs) {
       "apps tab isn't there when you have no authorized apps"
     );
   });
-
-  test("username", async function (assert) {
-    await visit("/u/eviltrout/preferences/username");
-    assert.ok(exists("#change_username"), "it has the input element");
-  });
 });
 
 acceptance("Custom User Fields", function (needs) {

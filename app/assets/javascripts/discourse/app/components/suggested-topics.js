@@ -1,7 +1,6 @@
 import { computed, get } from "@ember/object";
 import Component from "@ember/component";
 import I18n from "I18n";
-import Site from "discourse/models/site";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
@@ -90,7 +89,7 @@ export default Component.extend({
 
     if (
       category &&
-      get(category, "id") === Site.currentProp("uncategorized_category_id")
+      get(category, "id") === this.site.uncategorized_category_id
     ) {
       category = null;
     }

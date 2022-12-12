@@ -1277,7 +1277,6 @@ fr:
         use: "Utiliser l'application Authenticator"
         enforced_notice: "Vous devez activer l'authentification à deux facteurs avant d'accéder à ce site."
         disable: "Désactiver"
-        disable_confirm: "Voulez-vous vraiment désactiver toutes les méthodes d'authentification à deux facteurs ?"
         save: "Enregistrer"
         edit: "Modifier"
         edit_title: "Gérer l'application d'authentification"
@@ -1365,7 +1364,6 @@ fr:
         authenticated: "Votre adresse e-mail a été authentifiée par %{provider}"
         invite_auth_email_invalid: "Votre e-mail d'invitation ne correspond pas à l'e-mail authentifié par %{provider}"
         authenticated_by_invite: "Votre adresse e-mail a été authentifiée par l'invitation"
-        frequency_immediately: "Nous vous enverrons un e-mail immédiatement si vous n'avez pas lu le contenu en question."
         frequency:
           one: "Nous vous enverrons des e-mails seulement si nous ne vous avons pas vu(e) sur le site au cours de la dernière minute."
           other: "Nous vous enverrons des e-mails seulement si nous ne vous avons pas vu(e) sur le site au cours des %{count} dernières minutes."
@@ -1722,12 +1720,6 @@ fr:
       logout_disabled: "La déconnexion est désactivée quand le site est en lecture seule."
     staff_writes_only_mode:
       enabled: "Ce site est en mode réservé aux responsables. Vous pouvez continuer à naviguer, mais les réponses, les j'aime et les autres actions sont limitées aux responsables uniquement."
-    too_few_topics_and_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Commençons la discussion !</a> Il y a {currentTopics, plural, one {<strong>#</strong> sujet} other {<strong>#</strong> sujets}} et {currentPosts, plural, one {<strong>#</strong> message} other {<strong>#</strong> messages}}. Il en faudrait davantage pour les visiteurs : nous recommandons au moins {requiredTopics, plural, one {<strong>#</strong> sujet} other {<strong>#</strong> sujets}} et {requiredPosts, plural, one {<strong>#</strong> message} other {<strong>#</strong> messages}}. Seuls les responsables peuvent voir ce message.
-    too_few_topics_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Commençons la discussion !</a> Il y a {currentTopics, plural, one {<strong>#</strong> sujet} other {<strong>#</strong> sujets}}. Il en faudrait davantage pour les visiteurs : nous recommandons au moins {requiredTopics, plural, one {<strong>#</strong> sujet} other {<strong>#</strong> sujets}}. Seuls les responsables peuvent voir ce message.
-    too_few_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Commençons la discussion !</a> Il y a {currentPosts, plural, one {<strong>#</strong> message} other {<strong>#</strong> messages}}. Il en faudrait davantage pour les visiteurs : nous recommandons au moins {requiredPosts, plural, one {<strong>#</strong> message} other {<strong>#</strong> messages}}. Seuls les responsables peuvent voir ce message.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/heure} other {# erreurs/heure}}</a> arrive à la limite paramétrée de {limit, plural, one {# erreur/heure} other {# erreurs/heure}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/minute} other {# erreurs/minute}}</a> arrive à la limite paramétrée de {limit, plural, one {# erreur/minute} other {# erreurs/minute}}."
@@ -4078,10 +4070,6 @@ fr:
         about: "Modifier votre adhésion et les noms ici"
         group_members: "Membres du groupe"
         delete: "Supprimer"
-        delete_confirm: "Supprimer ce groupe ?"
-        delete_with_messages_confirm:
-          one: "La suppression de ce groupe rendra %{count} message orphelin, les membres du groupe n'y auront plus accès.<br><br>Voulez-vous continuer ?"
-          other: "La suppression de ce groupe rendra %{count} messages orphelins, les membres du groupe n'y auront plus accès.<br><br>Voulez-vous continuer ?"
         delete_failed: "Impossible de supprimer le groupe. S'il s'agit d'un groupe automatique, il ne peut pas être détruit."
         delete_automatic_group: Ce groupe ne peut pas être supprimé car il est constitué de façon automatique.
         delete_owner_confirm: "Retirer les privilèges de propriétaire pour %{username} ?"
@@ -5312,7 +5300,6 @@ fr:
           search: "Recherche"
           groups: "Groupes"
           dashboard: "Tableau de bord"
-          sidebar: "Barre latérale"
         secret_list:
           invalid_input: "Les champs de saisie ne peuvent pas être vide ou contenir le caractère de la barre verticale"
         default_categories:

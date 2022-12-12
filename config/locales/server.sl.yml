@@ -520,7 +520,6 @@ sl:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Neprimerno"
-      description: 'Prispevek vključuje vsebino, ki bi jo razumna oseba označila kot žaljivo, nesramno ali kot kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>.'
       short_description: 'Kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>'
     notify_user:
       title: "Pošlji uporabniku @%{username} ZS"
@@ -543,7 +542,6 @@ sl:
       short_description: "To je oglas"
     inappropriate:
       title: "Neprimerno"
-      description: 'Tema vključuje vsebino, ki bi jo razumna oseba označila kot žaljivo, nesramno ali kot kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>.'
       long_form: "prijavljeno kot neprimerno"
       short_description: 'Kršitev <a href="%{base_path}/guidelines">pravil skupnosti</a>'
     notify_moderators:
@@ -973,7 +971,6 @@ sl:
       (Če je zgornja povezava potekla, izberite "Pozabil sem geslo" pri prijavi z e-naslovom.)
   flag_reasons:
     off_topic: "Vaš prispevek je prijavljen kot **ne ustreza**: skupnost je mnenja, da ne ustreza temi kakor je določena z naslovom in prvim prispevkom."
-    inappropriate: "Vaš prispevek je bil prijavljen kot **ni primeren**: skupnost meni da je žaljiv, nesramen ali krši [pravila skupnosti](%{base_path}/guidelines)."
     spam: "Vaš prispevek je bil prijavljen kot **nezaželen**: skupnost meni da je prispevek oglas ali vsebuje preveč oglaševalske vsebine, da bi bil uporaben in bistven za temo."
     notify_moderators: "Vaš prispevek je bil prijavljen za **pregled osebja**: skupnost meni, da prispevek zahteva poseg člana osebja foruma."
   flags_dispositions:

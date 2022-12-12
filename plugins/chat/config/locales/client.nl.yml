@@ -108,17 +108,11 @@ nl:
       join: "Deelnemen"
       new_messages: "nieuwe berichten"
       mention_warning:
-        cannot_see:
-          one: "%{usernames} heeft geen toegang tot dit kanaal en is niet op de hoogte gebracht."
-          other: "%{usernames} hebben geen toegang tot dit kanaal en zijn niet op de hoogte gebracht."
         dismiss: "negeren"
         invitations_sent:
           one: "Uitnodiging gestuurd"
           other: "Uitnodigingen gestuurd"
         invite: "Uitnodigen voor kanaal"
-        without_membership:
-          one: "%{usernames} is geen lid geworden van dit kanaal."
-          other: "%{usernames} zijn geen lid geworden van dit kanaal."
       aria_roles:
         header: "Chatkop"
         composer: "Chateditor"

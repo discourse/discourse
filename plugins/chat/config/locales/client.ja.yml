@@ -107,14 +107,10 @@ ja:
       join: "参加"
       new_messages: "新しいメッセージ"
       mention_warning:
-        cannot_see:
-          other: "%{usernames} はこのチャンネルにアクセスできないため通知されませんでした。"
         dismiss: "閉じる"
         invitations_sent:
           other: "招待状を送信しました"
         invite: "チャンネルに招待する"
-        without_membership:
-          other: "%{usernames} はこのチャンネルに参加していません。"
       aria_roles:
         header: "チャットヘッダー"
         composer: "チャット作成ツール"

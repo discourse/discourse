@@ -1221,7 +1221,7 @@ da:
         use: "Brug Autentificeringsapp"
         enforced_notice: "Du skal aktivere To-faktor godkendelse før du kan gå ind på denne side."
         disable: "Deaktivér"
-        disable_confirm: "Er du sikker på, at du vil deaktivere alle to-faktor metoder?"
+        delete: "Slet"
         save: "Gem"
         edit: "Rediger"
         edit_title: "Rediger godkendelsesenhed"
@@ -1305,7 +1305,6 @@ da:
         authenticated: "Din email er blevet bekræftet af %{provider}"
         invite_auth_email_invalid: "Din invitations e-mail matcher ikke den godkendte e-mail af %{provider}"
         authenticated_by_invite: "Din e-mail er blevet godkendt af invitationen"
-        frequency_immediately: "Vi sender dig en email med det samme, hvis du ikke har læst den ting vi emailer dig om."
         frequency:
           one: "Vi sender dig kun email, hvis vi ikke har set dig i det seneste minut."
           other: "Vi sender dig kun email. hvis vi ikke har set dig i de sidste %{count} minutter."
@@ -1643,12 +1642,8 @@ da:
       enabled: "Dette websted er i skrivebeskyttet tilstand lige nu. Fortsæt endelig med at kigge, men der kan ikke svares, sendes 'Synes godt om' eller andet indtil videre."
       login_disabled: "Login er deaktiveret, mens webstedet er i skrivebeskyttet tilstand."
       logout_disabled: "Log ud er deaktiveret mens webstedet er i skrivebeskyttet tilstand."
-    too_few_topics_and_posts_notice_MF: >-
-      Lad os <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">starte diskussionen!</a> Der {currentTopics, plural, one {er <strong>#</strong> emne} other {er <strong>#</strong> emner}} og {currentPosts, plural, one {<strong>#</strong> indlæg} other {<strong>#</strong> indlæg}}. Besøgende har brug for mere at læse og svare på — vi anbefaler i det mindste {requiredTopics, plural, one {<strong>#</strong> emne} other {<strong>#</strong> emner}} og {requiredPosts, plural, one {<strong>#</strong> indlæg} other {<strong>#</strong> indlæg}}. Kun medarbejdere kan se denne besked.
-    too_few_topics_notice_MF: >-
-      Lad os <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">starte diskussionen!</a> Der {currentTopics, plural, one {er <strong>#</strong> emne} other {er <strong>#</strong> emner}}. Besøgende har brug for mere at læse og svare på — vi anbefaler i det mindste {requiredTopics, plural, one {<strong>#</strong> emne} other {<strong>#</strong> emner}}. Kun medarbejdere kan se denne besked.
     too_few_posts_notice_MF: >-
-      Lad os <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">starte diskussionen!</a> Der {currentPosts, plural, one {er <strong>#</strong> indlæg} other {er <strong>#</strong> indlæg}}. Besøgende har brug for mere at læse og svare på — vi anbefaler i det mindste {requiredPosts, plural, one {<strong>#</strong> indlæg} other {<strong>#</strong> indlæg}}. Kun administratorer kan se denne besked.
+      Lad os <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">starte diskussionen!</a> Der {currentPosts, plural, one {er <strong>#</strong> indlæg} other {er <strong>#</strong> indlæg}}. Besøgende har brug for mere at læse og svare på — vi anbefaler i det mindste {requiredPosts, plural, one {<strong>#</strong> indlæg} other {<strong>#</strong> indlæg}}. Kun administratorer kan se denne besked.
     logs_error_rate_notice:
       reached_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# fejl/minut} other {# fejl/minut}}</a> har overskredet webstedsindstillingsgrænsen på {limit, plural, one {# fejl / minut} other {# fejl/minut}}."
       reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fejl/minut} other {# fejl/minut}}</a> har nået webstedets indstillingsgrænse på {limit, plural, one {# fejl/minut} other {# fejl/minut}}."
@@ -3811,10 +3806,6 @@ da:
         about: "Redigér gruppemedlemsskaber og gruppenavne her"
         group_members: "Gruppe medlemmer"
         delete: "Slet"
-        delete_confirm: "Slet denne gruppe?"
-        delete_with_messages_confirm:
-          one: "Hvis du sletter denne gruppe, bliver %{count} besked forældreløs, gruppemedlemmer har ikke længere adgang til den.<br><br>Er du sikker?"
-          other: "Hvis du sletter denne gruppe, bliver %{count} beskeder forældreløse, gruppemedlemmer har ikke længere adgang til dem.<br><br>Er du sikker?"
         delete_failed: "Kan ikke slette gruppen. Hvis dette er en automatisk gruppe, kan den ikke ødelægges."
         delete_automatic_group: Dette er en automatisk gruppe og kan ikke slettes.
         delete_owner_confirm: "Fjern ejer-privilegier for '%{username}'?"
@@ -4858,6 +4849,11 @@ da:
         silenced_count: "Mådeholdt (silenced)"
         suspended_count: "Suspenderet"
         last_six_months: "Seneste 6 måneder"
+        other_matches_list:
+          username: "Brugernavn"
+          trust_level: "Tillidsniveau"
+          read_time: "Læsetid"
+          posts: "Indlæg"
         tl3_requirements:
           title: "Krav for fortrolighedsniveau 3"
           table_title:
@@ -5002,6 +4998,7 @@ da:
           search: "Søg"
           groups: "Grupper"
           dashboard: "Dashboard"
+          navigation: "Navigation"
         secret_list:
           invalid_input: "Inputfelter kan ikke være tomme eller indeholde lodret bjælketegn."
         default_categories:

@@ -88,6 +88,12 @@ RSpec.describe ApplicationHelper do
         link = helper.preload_script('discourse/tests/theme_qunit_ember_jquery')
         expect(link).to eq(script_tag("https://s3cdn.com/assets/discourse/tests/theme_qunit_ember_jquery.js"))
       end
+
+      it "uses separate asset CDN if configured" do
+        global_setting :s3_asset_cdn_url, "https://s3-asset-cdn.example.com"
+        expect(helper.preload_script("discourse")).to include("https://s3-asset-cdn.example.com/assets/discourse.js")
+      end
+
     end
   end
 

@@ -64,13 +64,13 @@ export default Controller.extend({
 
   @discourseComputed(
     "sidebarQueryParamOverride",
-    "siteSettings.enable_sidebar",
+    "siteSettings.navigation_menu",
     "canDisplaySidebar",
     "sidebarDisabledRouteOverride"
   )
   sidebarEnabled(
     sidebarQueryParamOverride,
-    enableSidebar,
+    navigationMenu,
     canDisplaySidebar,
     sidebarDisabledRouteOverride
   ) {
@@ -95,7 +95,7 @@ export default Controller.extend({
       return false;
     }
 
-    return enableSidebar;
+    return navigationMenu === "sidebar";
   },
 
   calculateShowSidebar() {

@@ -17,9 +17,6 @@ export default class ChatController extends Controller {
   }
 
   get shouldUseCoreSidebar() {
-    return (
-      this.siteSettings.enable_sidebar &&
-      this.siteSettings.enable_experimental_sidebar_hamburger
-    );
+    return this.siteSettings.navigation_menu === "sidebar";
   }
 }

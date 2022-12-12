@@ -727,7 +727,7 @@ en:
       one: "%{count} Like"
       other: "%{count} Likes"
     cannot_permanently_delete:
-      many_posts: "You can not permanently delete this topic because there are other posts."
+      many_posts: "This topic has undeleted posts. Please permanently delete them before permanently deleting the topic."
       wait_or_different_admin: "You must wait %{time_left} before permanently deleting this post or a different administrator must do it."
 
   rate_limiter:
@@ -936,7 +936,7 @@ en:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Inappropriate"
-      description: 'This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="%{base_path}/guidelines">our community guidelines</a>.'
+      description: 'This post contains content that a reasonable person would consider offensive, abusive, to be hateful conduct or a violation of <a href="%{base_path}/guidelines">our community guidelines</a>.'
       short_description: 'A violation of <a href="%{base_path}/guidelines">our community guidelines</a>'
     notify_user:
       title: "Send @%{username} a message"
@@ -1005,7 +1005,7 @@ en:
       short_description: "This is an advertisement"
     inappropriate:
       title: "Inappropriate"
-      description: 'This topic contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="%{base_path}/guidelines">our community guidelines</a>.'
+      description: 'This topic contains content that a reasonable person would consider offensive, abusive, to be hateful conduct or a violation of <a href="%{base_path}/guidelines">our community guidelines</a>.'
       long_form: "flagged this as inappropriate"
       short_description: 'A violation of <a href="%{base_path}/guidelines">our community guidelines</a>'
     notify_moderators:
@@ -1089,6 +1089,7 @@ en:
       write: "Write all"
       one_time_password: "Create a one-time login token"
       bookmarks_calendar: "Read bookmark reminders"
+      user_status: "Read and update user status"
     invalid_public_key: "Sorry, the public key is invalid."
     invalid_auth_redirect: "Sorry, this auth_redirect host is not allowed."
     invalid_token: "Missing, invalid or expired token."
@@ -1512,9 +1513,9 @@ en:
     allow_duplicate_topic_titles_category: "Allow topics with identical, duplicate titles if the category is different. allow_duplicate_topic_titles must be disabled."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
-    title: "The name of this site, as used in the title tag."
-    site_description: "Describe this site in one sentence, as used in the meta description tag."
-    short_site_description: "Short description, as used in the title tag on homepage."
+    title: "The name of this site. Visible to all visitors including anonymous users."
+    site_description: "Describe this site in one sentence. Visible to all visitors including anonymous users."
+    short_site_description: "Short description in a few words. Visible to all visitors including anonymous users."
     contact_email: "Email address of key contact responsible for this site. Used for critical notifications, and also displayed on <a href='%{base_path}/about' target='_blank'>/about</a> for urgent matters."
     contact_url: "Contact URL for this site. Displayed on the <a href='%{base_path}/about' target='_blank'>/about</a> page for urgent matters."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
@@ -1532,8 +1533,8 @@ en:
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
     notify_users_after_responses_deleted_on_flagged_post: "When a post is flagged and then removed, all users that responded to the post and had their responses removed will be notified."
-    max_image_width: "Maximum thumbnail width of images in a post"
-    max_image_height: "Maximum thumbnail height of images in a post"
+    max_image_width: "Maximum thumbnail width of images in a post. Images with a larger width will be resized and lightboxed."
+    max_image_height: "Maximum thumbnail height of images in a post. Images with a larger height will be resized and lightboxed."
     responsive_post_image_sizes: "Resize lightbox preview images to allow for high DPI screens of the following pixel ratios. Remove all values to disable responsive images."
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
     fixed_category_positions_on_create: "If checked, category ordering will be maintained on topic creation dialog (requires fixed_category_positions)."
@@ -1768,7 +1769,7 @@ en:
 
     enable_backups: "Allow administrators to create backups of the forum"
     allow_restore: "Allow restore, which can replace ALL site data! Leave disabled unless you plan to restore a backup"
-    maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
+    maximum_backups: "The maximum amount of backups to keep. Older backups are automatically deleted"
     automatic_backups_enabled: "Run automatic backups as defined in backup frequency"
     backup_frequency: "The number of days between backups."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
@@ -1791,8 +1792,6 @@ en:
     top_topics_formula_least_likes_per_post_multiplier: "value of least likes per post multiplier (n) in top topics formula: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
 
     enable_safe_mode: "Allow users to enter safe mode to debug plugins."
-    enable_experimental_sidebar_hamburger: "Allows experimental sidebar and user hamburger dropdown menu to be enabled."
-    enable_sidebar: "Enables experimental sidebar."
 
     rate_limit_create_topic: "After creating a topic, users must wait (n) seconds before creating another topic."
     rate_limit_create_post: "After posting, users must wait (n) seconds before creating another post."
@@ -1989,7 +1988,7 @@ en:
     faq_url: "If you have a FAQ hosted elsewhere that you want to use, provide the full URL here."
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
-    log_anonymizer_details: "Whether to keep a user's details in the log after being anonymized. When complying to GDPR you'll need to turn this off."
+    log_anonymizer_details: "Whether to keep a user's details in the log after being anonymized."
 
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_threshold` posts before being considered spam."
 
@@ -2389,10 +2388,12 @@ en:
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
 
     splash_screen: "Displays a temporary loading screen while site assets load"
+    navigation_menu: "Determine which navigation menu to use. Sidebar and header navigation are customizable by users. Legacy option is available for backward compatibility."
     default_sidebar_categories: "Selected categories will be displayed under Sidebar's Categories section by default."
     default_sidebar_tags: "Selected tags will be displayed under Sidebar's Tags section by default."
     enable_new_user_profile_nav_groups: "EXPERIMENTAL: Users of the selected groups will be shown the new user profile navigation menu"
     enable_experimental_topic_timeline_groups: "EXPERIMENTAL: Users of the selected groups will be shown the refactored topic timeline"
+    enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Use the new #hashtag autocompletion system for categories and tags that renders the selected item differently and has improved search"
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -2868,12 +2869,12 @@ en:
 
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
-    inappropriate: "Your post was flagged as **inappropriate**: the community feels it is offensive, abusive, or a violation of [our community guidelines](%{base_path}/guidelines)."
+    inappropriate: "Your post was flagged as **inappropriate**: the community feels it is offensive, abusive, to be hateful conduct or a violation of [our community guidelines](%{base_path}/guidelines)."
     spam: "Your post was flagged as **spam**: the community feels it is an advertisement, something that is overly promotional in nature instead of being useful or relevant to the topic as expected."
     notify_moderators: "Your post was flagged **for moderator attention**: the community feels something about the post requires manual intervention by a staff member."
     responder:
       off_topic: "The post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
-      inappropriate: "The post was flagged as **inappropriate**: the community feels it is offensive, abusive, or a violation of [our community guidelines](%{base_path}/guidelines)."
+      inappropriate: "The post was flagged as **inappropriate**: the community feels it is offensive, abusive, to be hateful conduct or a violation of [our community guidelines](%{base_path}/guidelines)."
       spam: "The post was flagged as **spam**: the community feels it is an advertisement, something that is overly promotional in nature instead of being useful or relevant to the topic as expected."
       notify_moderators: "The post was flagged **for moderator attention**: the community feels something about the post requires manual intervention by a staff member."
 
@@ -4425,7 +4426,7 @@ en:
 
       <h2 id="heading--content-standards"><a href="#heading--content-standards">Content Standards</a></h2>
 
-      1. You may not submit content to the forum that is illegal, offensive, or otherwise harmful to others. This includes content that is harassing, inappropriate, or abusive.
+      1. You may not submit content to the forum that is illegal, offensive, or otherwise harmful to others. This includes content that is harassing, inappropriate, abusive, or hateful conduct.
 
       2. You may not submit content to the forum that violates the law, infringes anyone's intellectual property rights, violates anyone's privacy, or breaches agreements you have with others.
 
@@ -5003,12 +5004,6 @@ en:
           logo_small:
             label: "Square Logo"
             description: "A square version of your logo. Shown at the top left when scrolling down, and when sharing on social platforms. Ideally at least 512x512."
-          favicon:
-            label: "Browser Icon"
-            description: "Icon used to represent your site in web browsers that looks good at small sizes. PNG or JPG is recommended. Square logo is used by default."
-          large_icon:
-            label: "Large Icon"
-            description: "Icon used to represent your site on mobile devices that looks good at larger sizes. Ideally greater than 512x512. Square logo used by default."
 
       corporate:
         title: "Your Organization"

@@ -161,12 +161,6 @@ ja:
       description:
         other: "新しいチャットメッセージがあります"
       from: "%{site_name}"
-      subject:
-        direct_message:
-          other: "[%{email_prefix}] %{message_title} と他 %{others} 件のチャットの新しいメッセージ"
-        chat_channel:
-          other: "[%{email_prefix}] %{message_title} と他 %{others} 件の新しいメッセージ"
-        others: "他 %{count} 件"
       unsubscribe: "このチャットの要約は、あなたが退席中のときに %{site_link} から送信されます。%{email_preferences_link} を変更するか、%{unsubscribe_link} から購読を停止します。"
       unsubscribe_no_link: "このチャットの要約は、あなたが退席中のときに %{site_link} から送信されます。%{email_preferences_link} を変更します。"
       view_messages:

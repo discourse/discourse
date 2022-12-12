@@ -75,6 +75,25 @@ RSpec.describe ThemeJavascriptsController do
         //# sourceMappingURL=#{digest}.map?__ws=test.localhost
       JS
     end
+
+    it "ignores Accept header and does not return Vary header" do
+      js_cache_url = "/theme-javascripts/#{javascript_cache.digest}.js"
+
+      get js_cache_url
+      expect(response.status).to eq(200)
+      expect(response.headers["Content-Type"]).to eq("text/javascript")
+      expect(response.headers["Vary"]).to eq(nil)
+
+      get js_cache_url, headers: { "Accept" => "text/html" }
+      expect(response.status).to eq(200)
+      expect(response.headers["Content-Type"]).to eq("text/javascript")
+      expect(response.headers["Vary"]).to eq(nil)
+
+      get js_cache_url, headers: { "Accept" => "invalidcontenttype" }
+      expect(response.status).to eq(200)
+      expect(response.headers["Content-Type"]).to eq("text/javascript")
+      expect(response.headers["Vary"]).to eq(nil)
+    end
   end
 
   describe "#show_map" do

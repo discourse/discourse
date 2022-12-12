@@ -840,7 +840,7 @@ export default Controller.extend(bufferedProperty("model"), {
               bookmarkable_id: post.id,
               bookmarkable_type: "Post",
               auto_delete_preference:
-                this.currentUser.bookmark_auto_delete_preference,
+                this.currentUser.user_option.bookmark_auto_delete_preference,
             }),
           post
         );
@@ -1353,7 +1353,7 @@ export default Controller.extend(bufferedProperty("model"), {
           bookmarkable_id: this.model.id,
           bookmarkable_type: "Topic",
           auto_delete_preference:
-            this.currentUser.bookmark_auto_delete_preference,
+            this.currentUser.user_option.bookmark_auto_delete_preference,
         })
       );
     }
@@ -1775,7 +1775,7 @@ export default Controller.extend(bufferedProperty("model"), {
       if (
         this.siteSettings.automatically_unpin_topics &&
         this.currentUser &&
-        this.currentUser.automatically_unpin_topics
+        this.currentUser.user_option.automatically_unpin_topics
       ) {
         // automatically unpin topics when the user reaches the bottom
         const max = Math.max(...postNumbers);

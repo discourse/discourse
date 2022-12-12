@@ -175,7 +175,6 @@ export default function () {
         this.route("apps");
         this.route("sidebar");
 
-        this.route("username");
         this.route("email");
         this.route("second-factor");
         this.route("second-factor-backup");
