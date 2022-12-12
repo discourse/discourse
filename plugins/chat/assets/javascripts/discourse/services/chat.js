@@ -56,6 +56,8 @@ export default class Chat extends Service {
   unreadUrgentCount = null;
   directMessagesLimit = 20;
   isNetworkUnreliable = false;
+  #onNewMentions = null;
+  #onNewMessages = null;
   @and("currentUser.has_chat_enabled", "siteSettings.chat_enabled") userCanChat;
   _fetchingChannels = null;
 
@@ -608,7 +610,7 @@ export default class Chat extends Service {
   _subscribeToChannelMetadata() {
     this.messageBus.subscribe(
       "/chat/channel-metadata",
-      this.onChannelMetadata,
+      this.#onChannelMetadata,
       this.messageBusLastIds.channel_metadata
     );
   }
@@ -616,40 +618,40 @@ export default class Chat extends Service {
   _subscribeToChannelEdits() {
     this.messageBus.subscribe(
       "/chat/channel-edits",
-      this.onChannelEdits,
+      this.#onChannelEdits,
       this.messageBusLastIds.channel_edits
     );
   }
 
   _subscribeToChannelStatusChange() {
-    this.messageBus.subscribe("/chat/channel-status", this.onChannelStatus);
+    this.messageBus.subscribe("/chat/channel-status", this.#onChannelStatus);
   }
 
   _unsubscribeFromChannelStatusChange() {
-    this.messageBus.unsubscribe("/chat/channel-status", this.onChannelStatus);
+    this.messageBus.unsubscribe("/chat/channel-status", this.#onChannelStatus);
   }
 
   _unsubscribeFromChannelEdits() {
-    this.messageBus.unsubscribe("/chat/channel-edits", this.onChannelEdits);
+    this.messageBus.unsubscribe("/chat/channel-edits", this.#onChannelEdits);
   }
 
   _unsubscribeFromChannelMetadata() {
     this.messageBus.unsubscribe(
       "/chat/channel-metadata",
-      this.onChannelMetadata
+      this.#onChannelMetadata
     );
   }
 
   _subscribeToNewChannelUpdates() {
     this.messageBus.subscribe(
       "/chat/new-channel",
-      this.onNewChannel,
+      this.#onNewChannel,
       this.messageBusLastIds.new_channel
     );
   }
 
   _unsubscribeFromNewDmChannelUpdates() {
-    this.messageBus.unsubscribe("/chat/new-channel", this.onNewChannel);
+    this.messageBus.unsubscribe("/chat/new-channel", this.#onNewChannel);
   }
 
   _subscribeToSingleUpdateChannel(channel) {
@@ -670,61 +672,66 @@ export default class Chat extends Service {
   }
 
   _subscribeToMentionChannel(channel) {
+    this.#onNewMentions = () => {
+      const trackingState =
+        this.currentUser.chat_channel_tracking_state[channel.id];
+
+      if (trackingState) {
+        const count = (trackingState.unread_mentions || 0) + 1;
+        trackingState.set("unread_mentions", count);
+        this.userChatChannelTrackingStateChanged();
+      }
+    };
+
     this.messageBus.subscribe(
       `/chat/${channel.id}/new-mentions`,
-      () => {
-        const trackingState =
-          this.currentUser.chat_channel_tracking_state[channel.id];
-        if (trackingState) {
-          trackingState.set(
-            "unread_mentions",
-            (trackingState.unread_mentions || 0) + 1
-          );
-          this.userChatChannelTrackingStateChanged();
-        }
-      },
+      this.#onNewMentions,
       channel.message_bus_last_ids.new_mentions
     );
   }
 
   _subscribeToNewMessagesChannel(channel) {
-    this.messageBus.subscribe(
-      `/chat/${channel.id}/new-messages`,
-      (busData) => {
-        const trackingState =
-          this.currentUser.chat_channel_tracking_state[channel.id];
+    this.#onNewMessages = (busData) => {
+      const trackingState =
+        this.currentUser.chat_channel_tracking_state[channel.id];
 
-        if (busData.user_id === this.currentUser.id) {
-          // User sent message, update tracking state to no unread
+      if (busData.user_id === this.currentUser.id) {
+        // User sent message, update tracking state to no unread
+        trackingState.set("chat_message_id", busData.message_id);
+      } else {
+        // Ignored user sent message, update tracking state to no unread
+        if (this.currentUser.ignored_users.includes(busData.username)) {
           trackingState.set("chat_message_id", busData.message_id);
         } else {
-          // Ignored user sent message, update tracking state to no unread
-          if (this.currentUser.ignored_users.includes(busData.username)) {
-            trackingState.set("chat_message_id", busData.message_id);
-          } else {
-            // Message from other user. Increment trackings state
-            if (busData.message_id > (trackingState.chat_message_id || 0)) {
-              trackingState.set("unread_count", trackingState.unread_count + 1);
-            }
+          // Message from other user. Increment trackings state
+          if (busData.message_id > (trackingState.chat_message_id || 0)) {
+            trackingState.set("unread_count", trackingState.unread_count + 1);
           }
         }
-        this.userChatChannelTrackingStateChanged();
-        channel.set("last_message_sent_at", new Date());
+      }
 
-        const directMessageChannel = (this.directMessageChannels || []).findBy(
-          "id",
-          parseInt(channel.id, 10)
-        );
-        if (directMessageChannel) {
-          this.reSortDirectMessageChannels();
-        }
-      },
+      this.userChatChannelTrackingStateChanged();
+      channel.set("last_message_sent_at", new Date());
+
+      const directMessageChannel = (this.directMessageChannels || []).findBy(
+        "id",
+        parseInt(channel.id, 10)
+      );
+
+      if (directMessageChannel) {
+        this.reSortDirectMessageChannels();
+      }
+    };
+
+    this.messageBus.subscribe(
+      `/chat/${channel.id}/new-messages`,
+      this.#onNewMessages,
       channel.message_bus_last_ids.new_messages
     );
   }
 
   @bind
-  onChannelMetadata(busData) {
+  #onChannelMetadata(busData) {
     this.getChannelBy("id", busData.chat_channel_id).then((channel) => {
       if (channel) {
         channel.setProperties({
@@ -736,7 +743,7 @@ export default class Chat extends Service {
   }
 
   @bind
-  onChannelEdits(busData) {
+  #onChannelEdits(busData) {
     this.getChannelBy("id", busData.chat_channel_id).then((channel) => {
       if (channel) {
         channel.setProperties({
@@ -748,7 +755,7 @@ export default class Chat extends Service {
   }
 
   @bind
-  onChannelStatus(busData) {
+  #onChannelStatus(busData) {
     this.getChannelBy("id", busData.chat_channel_id).then((channel) => {
       if (!channel) {
         return;
@@ -774,7 +781,7 @@ export default class Chat extends Service {
   }
 
   @bind
-  onNewChannel(busData) {
+  #onNewChannel(busData) {
     this.startTrackingChannel(ChatChannel.create(busData.chat_channel));
   }
 
@@ -803,16 +810,16 @@ export default class Chat extends Service {
   }
 
   _unsubscribeFromChatChannel(channel) {
-    this.messageBus.unsubscribe(`/chat/${channel.id}/new-messages`);
+    this.messageBus.unsubscribe("/chat/*", this.#onNewMessages);
     if (!channel.isDirectMessageChannel) {
-      this.messageBus.unsubscribe(`/chat/${channel.id}/new-mentions`);
+      this.messageBus.unsubscribe("/chat/*", this.#onNewMentions);
     }
   }
 
   _subscribeToUserTrackingChannel() {
     this.messageBus.subscribe(
       `/chat/user-tracking-state/${this.currentUser.id}`,
-      this.onUserTrackingState,
+      this.#onUserTrackingState,
       this.messageBusLastIds.user_tracking_state
     );
   }
@@ -820,12 +827,12 @@ export default class Chat extends Service {
   _unsubscribeFromUserTrackingChannel() {
     this.messageBus.unsubscribe(
       `/chat/user-tracking-state/${this.currentUser.id}`,
-      this.onUserTrackingState
+      this.#onUserTrackingState
     );
   }
 
   @bind
-  onUserTrackingState(busData, _, messageId) {
+  #onUserTrackingState(busData, _, messageId) {
     const lastId = this.lastUserTrackingMessageId;
 
     // we don't want this state to go backwards, only catch
