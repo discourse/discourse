@@ -445,11 +445,6 @@ html.composer-open {
           width: 1em;
         }
 
-        .user-status-emoji .emoji {
-          height: 0.75em;
-          width: 0.75em;
-        }
-
         .relative-date {
           font-size: var(--font-down-3);
         }
@@ -459,6 +454,13 @@ html.composer-open {
         color: var(--primary-medium);
         padding: 0 2px;
       }
+    }
+  }
+
+  &.ac-user {
+    .emoji {
+      height: 0.75em;
+      width: 0.75em;
     }
   }
 }
