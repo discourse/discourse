@@ -409,7 +409,7 @@ html.composer-open {
         color: var(--primary);
         display: flex;
         gap: 0.25em;
-        padding: 0.5em 1em;
+        padding: 0.3em 1em;
 
         @include hover {
           background-color: var(--highlight-low);
@@ -420,7 +420,8 @@ html.composer-open {
           background-color: var(--highlight);
 
           .username,
-          .name {
+          .name,
+          .emoji-shortname {
             font-weight: bold;
           }
         }
@@ -440,11 +441,6 @@ html.composer-open {
           color: var(--primary-high);
         }
 
-        .emoji {
-          height: 1em;
-          width: 1em;
-        }
-
         .relative-date {
           font-size: var(--font-down-3);
         }
@@ -458,9 +454,21 @@ html.composer-open {
   }
 
   &.ac-user {
+    li a {
+      padding: 0.5em 1em;
+    }
     .emoji {
       height: 0.75em;
       width: 0.75em;
+    }
+  }
+
+  &.ac-emoji {
+    li:last-of-type a {
+      color: var(--primary-high);
+    }
+    .emoji {
+      margin-right: 0.25em;
     }
   }
 }
