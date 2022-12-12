@@ -7,7 +7,7 @@ module SystemHelpers
       ask(
         "\n\e[33mTest paused, press enter to resume, type `d` and press enter to start debugger.\e[0m",
       )
-    byebug if result == "d" # rubocop:disable Lint/Debugger
+    binding.pry if result == "d" # rubocop:disable Lint/Debugger
     self
   end
 
