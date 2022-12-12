@@ -346,7 +346,7 @@ class Chat::ChatController < Chat::ChatBaseController
         .where(id: params[:user_ids])
     users.each do |user|
       guardian = Guardian.new(user)
-      if guardian.can_chat?(user) && guardian.can_see_chat_channel?(@chat_channel)
+      if guardian.can_chat? && guardian.can_see_chat_channel?(@chat_channel)
         data = {
           message: "chat.invitation_notification",
           chat_channel_id: @chat_channel.id,
@@ -368,7 +368,7 @@ class Chat::ChatController < Chat::ChatBaseController
 
   def dismiss_retention_reminder
     params.require(:chatable_type)
-    guardian.ensure_can_chat!(current_user)
+    guardian.ensure_can_chat!
     unless ChatChannel.chatable_types.include?(params[:chatable_type])
       raise Discourse::InvalidParameters
     end

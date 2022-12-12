@@ -44,22 +44,36 @@ RSpec.describe Wizard::StepUpdater do
 
   describe "privacy" do
     it "updates to open correctly" do
-      updater = wizard.create_updater('privacy', login_required: false, invite_only: false, must_approve_users: false)
+      updater = wizard.create_updater(
+        'privacy',
+        login_required: false,
+        invite_only: false,
+        must_approve_users: false,
+        enable_sidebar: false
+      )
       updater.update
       expect(updater.success?).to eq(true)
       expect(SiteSetting.login_required?).to eq(false)
       expect(SiteSetting.invite_only?).to eq(false)
       expect(SiteSetting.must_approve_users?).to eq(false)
+      expect(SiteSetting.navigation_menu).to eq(NavigationMenuSiteSetting::HEADER_DROPDOWN)
       expect(wizard.completed_steps?('privacy')).to eq(true)
     end
 
     it "updates to private correctly" do
-      updater = wizard.create_updater('privacy', login_required: true, invite_only: true, must_approve_users: true)
+      updater = wizard.create_updater(
+        'privacy',
+        login_required: true,
+        invite_only: true,
+        must_approve_users: true,
+        enable_sidebar: true
+      )
       updater.update
       expect(updater.success?).to eq(true)
       expect(SiteSetting.login_required?).to eq(true)
       expect(SiteSetting.invite_only?).to eq(true)
       expect(SiteSetting.must_approve_users?).to eq(true)
+      expect(SiteSetting.navigation_menu).to eq(NavigationMenuSiteSetting::SIDEBAR)
       expect(wizard.completed_steps?('privacy')).to eq(true)
     end
   end

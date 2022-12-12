@@ -618,15 +618,27 @@ body.wizard {
   &__checkbox-slider:before,
   &__checkbox-slider:after {
     content: "";
+    display: block;
+    position: absolute;
+  }
+
+  &__checkbox-slider:after {
+    content: "\2713"; // checkmark
+    color: var(--secondary);
+    top: 4px;
+    left: 10px;
+    @media only screen and (max-device-width: 568px) {
+      top: 3px;
+      left: 5px;
+      font-size: var(--font-down-3);
+    }
   }
 
   &__checkbox-slider:before {
-    display: block;
     background: var(--secondary);
     border-radius: 50%;
     width: 24px;
     height: 24px;
-    position: absolute;
     top: 4px;
     left: 4px;
     transition: left 0.25s;
@@ -658,6 +670,10 @@ body.wizard {
 
   &__checkbox-label {
     position: relative;
+    top: 2px;
+  }
+
+  label .svg-icon {
     top: 2px;
   }
 

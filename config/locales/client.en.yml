@@ -4724,6 +4724,7 @@ en:
         detailed_instruction: "A POST request will be sent to provided URL when chosen event happens."
         new: "New Webhook"
         create: "Create"
+        edit: "Edit"
         save: "Save"
         description_label: "Event triggers"
         controls: "Controls"

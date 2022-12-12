@@ -195,7 +195,7 @@ class Chat::ChatNotifier
     potential_participants, unreachable =
       users.partition do |user|
         guardian = Guardian.new(user)
-        guardian.can_chat?(user) && guardian.can_see_chat_channel?(@chat_channel)
+        guardian.can_chat? && guardian.can_see_chat_channel?(@chat_channel)
       end
 
     participants, welcome_to_join =
