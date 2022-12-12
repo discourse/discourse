@@ -20,6 +20,7 @@ import EmberObject, { computed } from "@ember/object";
 import ChatApi from "discourse/plugins/chat/discourse/lib/chat-api";
 import discourseLater from "discourse-common/lib/later";
 import userPresent from "discourse/lib/user-presence";
+import { bind } from "discourse-common/utils/decorators";
 
 export const LIST_VIEW = "list_view";
 export const CHAT_VIEW = "chat_view";
@@ -57,6 +58,8 @@ export default class Chat extends Service {
   isNetworkUnreliable = false;
   @and("currentUser.has_chat_enabled", "siteSettings.chat_enabled") userCanChat;
   _fetchingChannels = null;
+  _onNewMentionsCallbacks = new Map();
+  _onNewMessagesCallbacks = new Map();
 
   @computed("currentUser.staff", "currentUser.groups.[]")
   get userCanDirectMessage() {
@@ -607,16 +610,7 @@ export default class Chat extends Service {
   _subscribeToChannelMetadata() {
     this.messageBus.subscribe(
       "/chat/channel-metadata",
-      (busData) => {
-        this.getChannelBy("id", busData.chat_channel_id).then((channel) => {
-          if (channel) {
-            channel.setProperties({
-              memberships_count: busData.memberships_count,
-            });
-            this.appEvents.trigger("chat:refresh-channel-members");
-          }
-        });
-      },
+      this._onChannelMetadata,
       this.messageBusLastIds.channel_metadata
     );
   }
@@ -624,71 +618,40 @@ export default class Chat extends Service {
   _subscribeToChannelEdits() {
     this.messageBus.subscribe(
       "/chat/channel-edits",
-      (busData) => {
-        this.getChannelBy("id", busData.chat_channel_id).then((channel) => {
-          if (channel) {
-            channel.setProperties({
-              title: busData.name,
-              description: busData.description,
-            });
-          }
-        });
-      },
+      this._onChannelEdits,
       this.messageBusLastIds.channel_edits
     );
   }
 
   _subscribeToChannelStatusChange() {
-    this.messageBus.subscribe("/chat/channel-status", (busData) => {
-      this.getChannelBy("id", busData.chat_channel_id).then((channel) => {
-        if (!channel) {
-          return;
-        }
-
-        channel.set("status", busData.status);
-
-        // it is not possible for the user to set their last read message id
-        // if the channel has been archived, because all the messages have
-        // been deleted. we don't want them seeing the blue dot anymore so
-        // just completely reset the unreads
-        if (busData.status === CHANNEL_STATUSES.archived) {
-          this.currentUser.chat_channel_tracking_state[channel.id] = {
-            unread_count: 0,
-            unread_mentions: 0,
-            chatable_type: channel.chatable_type,
-          };
-          this.userChatChannelTrackingStateChanged();
-        }
-
-        this.appEvents.trigger("chat:refresh-channel", channel.id);
-      }, this.messageBusLastIds.channel_status);
-    });
+    this.messageBus.subscribe("/chat/channel-status", this._onChannelStatus);
   }
 
   _unsubscribeFromChannelStatusChange() {
-    this.messageBus.unsubscribe("/chat/channel-status");
+    this.messageBus.unsubscribe("/chat/channel-status", this._onChannelStatus);
   }
 
   _unsubscribeFromChannelEdits() {
-    this.messageBus.unsubscribe("/chat/channel-edits");
+    this.messageBus.unsubscribe("/chat/channel-edits", this._onChannelEdits);
   }
 
   _unsubscribeFromChannelMetadata() {
-    this.messageBus.unsubscribe("/chat/channel-metadata");
+    this.messageBus.unsubscribe(
+      "/chat/channel-metadata",
+      this._onChannelMetadata
+    );
   }
 
   _subscribeToNewChannelUpdates() {
     this.messageBus.subscribe(
       "/chat/new-channel",
-      (busData) => {
-        this.startTrackingChannel(ChatChannel.create(busData.chat_channel));
-      },
+      this._onNewChannel,
       this.messageBusLastIds.new_channel
     );
   }
 
   _unsubscribeFromNewDmChannelUpdates() {
-    this.messageBus.unsubscribe("/chat/new-channel");
+    this.messageBus.unsubscribe("/chat/new-channel", this._onNewChannel);
   }
 
   _subscribeToSingleUpdateChannel(channel) {
@@ -709,57 +672,121 @@ export default class Chat extends Service {
   }
 
   _subscribeToMentionChannel(channel) {
+    const onNewMentions = () => {
+      const trackingState =
+        this.currentUser.chat_channel_tracking_state[channel.id];
+
+      if (trackingState) {
+        const count = (trackingState.unread_mentions || 0) + 1;
+        trackingState.set("unread_mentions", count);
+        this.userChatChannelTrackingStateChanged();
+      }
+    };
+
+    this._onNewMentionsCallbacks.set(channel.id, onNewMentions);
+
     this.messageBus.subscribe(
       `/chat/${channel.id}/new-mentions`,
-      () => {
-        const trackingState =
-          this.currentUser.chat_channel_tracking_state[channel.id];
-        if (trackingState) {
-          trackingState.set(
-            "unread_mentions",
-            (trackingState.unread_mentions || 0) + 1
-          );
-          this.userChatChannelTrackingStateChanged();
-        }
-      },
+      onNewMentions,
       channel.message_bus_last_ids.new_mentions
     );
   }
 
   _subscribeToNewMessagesChannel(channel) {
-    this.messageBus.subscribe(
-      `/chat/${channel.id}/new-messages`,
-      (busData) => {
-        const trackingState =
-          this.currentUser.chat_channel_tracking_state[channel.id];
+    const onNewMessages = (busData) => {
+      const trackingState =
+        this.currentUser.chat_channel_tracking_state[channel.id];
 
-        if (busData.user_id === this.currentUser.id) {
-          // User sent message, update tracking state to no unread
+      if (busData.user_id === this.currentUser.id) {
+        // User sent message, update tracking state to no unread
+        trackingState.set("chat_message_id", busData.message_id);
+      } else {
+        // Ignored user sent message, update tracking state to no unread
+        if (this.currentUser.ignored_users.includes(busData.username)) {
           trackingState.set("chat_message_id", busData.message_id);
         } else {
-          // Ignored user sent message, update tracking state to no unread
-          if (this.currentUser.ignored_users.includes(busData.username)) {
-            trackingState.set("chat_message_id", busData.message_id);
-          } else {
-            // Message from other user. Increment trackings state
-            if (busData.message_id > (trackingState.chat_message_id || 0)) {
-              trackingState.set("unread_count", trackingState.unread_count + 1);
-            }
+          // Message from other user. Increment trackings state
+          if (busData.message_id > (trackingState.chat_message_id || 0)) {
+            trackingState.set("unread_count", trackingState.unread_count + 1);
           }
         }
-        this.userChatChannelTrackingStateChanged();
-        channel.set("last_message_sent_at", new Date());
+      }
 
-        const directMessageChannel = (this.directMessageChannels || []).findBy(
-          "id",
-          parseInt(channel.id, 10)
-        );
-        if (directMessageChannel) {
-          this.reSortDirectMessageChannels();
-        }
-      },
+      this.userChatChannelTrackingStateChanged();
+      channel.set("last_message_sent_at", new Date());
+
+      const directMessageChannel = (this.directMessageChannels || []).findBy(
+        "id",
+        parseInt(channel.id, 10)
+      );
+
+      if (directMessageChannel) {
+        this.reSortDirectMessageChannels();
+      }
+    };
+
+    this._onNewMessagesCallbacks.set(channel.id, onNewMessages);
+
+    this.messageBus.subscribe(
+      `/chat/${channel.id}/new-messages`,
+      onNewMessages,
       channel.message_bus_last_ids.new_messages
     );
+  }
+
+  @bind
+  _onChannelMetadata(busData) {
+    this.getChannelBy("id", busData.chat_channel_id).then((channel) => {
+      if (channel) {
+        channel.setProperties({
+          memberships_count: busData.memberships_count,
+        });
+        this.appEvents.trigger("chat:refresh-channel-members");
+      }
+    });
+  }
+
+  @bind
+  _onChannelEdits(busData) {
+    this.getChannelBy("id", busData.chat_channel_id).then((channel) => {
+      if (channel) {
+        channel.setProperties({
+          title: busData.name,
+          description: busData.description,
+        });
+      }
+    });
+  }
+
+  @bind
+  _onChannelStatus(busData) {
+    this.getChannelBy("id", busData.chat_channel_id).then((channel) => {
+      if (!channel) {
+        return;
+      }
+
+      channel.set("status", busData.status);
+
+      // it is not possible for the user to set their last read message id
+      // if the channel has been archived, because all the messages have
+      // been deleted. we don't want them seeing the blue dot anymore so
+      // just completely reset the unreads
+      if (busData.status === CHANNEL_STATUSES.archived) {
+        this.currentUser.chat_channel_tracking_state[channel.id] = {
+          unread_count: 0,
+          unread_mentions: 0,
+          chatable_type: channel.chatable_type,
+        };
+        this.userChatChannelTrackingStateChanged();
+      }
+
+      this.appEvents.trigger("chat:refresh-channel", channel.id);
+    }, this.messageBusLastIds.channel_status);
+  }
+
+  @bind
+  _onNewChannel(busData) {
+    this.startTrackingChannel(ChatChannel.create(busData.chat_channel));
   }
 
   async followChannel(channel) {
@@ -787,47 +814,52 @@ export default class Chat extends Service {
   }
 
   _unsubscribeFromChatChannel(channel) {
-    this.messageBus.unsubscribe(`/chat/${channel.id}/new-messages`);
+    this.messageBus.unsubscribe("/chat/*", this._onNewMessagesCallbacks);
     if (!channel.isDirectMessageChannel) {
-      this.messageBus.unsubscribe(`/chat/${channel.id}/new-mentions`);
+      this.messageBus.unsubscribe("/chat/*", this._onNewMentionsCallbacks);
     }
   }
 
   _subscribeToUserTrackingChannel() {
     this.messageBus.subscribe(
       `/chat/user-tracking-state/${this.currentUser.id}`,
-      (busData, _, messageId) => {
-        const lastId = this.lastUserTrackingMessageId;
-
-        // we don't want this state to go backwards, only catch
-        // up if messages from messagebus were missed
-        if (!lastId || messageId > lastId) {
-          this.lastUserTrackingMessageId = messageId;
-        }
-
-        // we are too far out of sync, we should resync everything.
-        // this will trigger a route transition and blur the chat input
-        if (lastId && messageId > lastId + 1) {
-          return this.forceRefreshChannels();
-        }
-
-        const trackingState =
-          this.currentUser.chat_channel_tracking_state[busData.chat_channel_id];
-        if (trackingState) {
-          trackingState.set("chat_message_id", busData.chat_message_id);
-          trackingState.set("unread_count", 0);
-          trackingState.set("unread_mentions", 0);
-          this.userChatChannelTrackingStateChanged();
-        }
-      },
+      this._onUserTrackingState,
       this.messageBusLastIds.user_tracking_state
     );
   }
 
   _unsubscribeFromUserTrackingChannel() {
     this.messageBus.unsubscribe(
-      `/chat/user-tracking-state/${this.currentUser.id}`
+      `/chat/user-tracking-state/${this.currentUser.id}`,
+      this._onUserTrackingState
     );
+  }
+
+  @bind
+  _onUserTrackingState(busData, _, messageId) {
+    const lastId = this.lastUserTrackingMessageId;
+
+    // we don't want this state to go backwards, only catch
+    // up if messages from messagebus were missed
+    if (!lastId || messageId > lastId) {
+      this.lastUserTrackingMessageId = messageId;
+    }
+
+    // we are too far out of sync, we should resync everything.
+    // this will trigger a route transition and blur the chat input
+    if (lastId && messageId > lastId + 1) {
+      return this.forceRefreshChannels();
+    }
+
+    const trackingState =
+      this.currentUser.chat_channel_tracking_state[busData.chat_channel_id];
+
+    if (trackingState) {
+      trackingState.set("chat_message_id", busData.chat_message_id);
+      trackingState.set("unread_count", 0);
+      trackingState.set("unread_mentions", 0);
+      this.userChatChannelTrackingStateChanged();
+    }
   }
 
   resetTrackingStateForChannel(channelId) {

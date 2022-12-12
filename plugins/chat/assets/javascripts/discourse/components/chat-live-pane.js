@@ -1496,22 +1496,25 @@ export default Component.extend({
   },
 
   _unsubscribeToUpdates(channelId) {
-    this.messageBus.unsubscribe(`/chat/${channelId}`);
+    this.messageBus.unsubscribe(`/chat/${channelId}`, this.onMessage);
   },
 
   _subscribeToUpdates(channelId) {
     this._unsubscribeToUpdates(channelId);
     this.messageBus.subscribe(
       `/chat/${channelId}`,
-      (busData) => {
-        if (!this.details.can_load_more_future || busData.type !== "sent") {
-          this.handleMessage(busData);
-        } else {
-          this.set("hasNewMessages", true);
-        }
-      },
+      this.onMessage,
       this.details.channel_message_bus_last_id
     );
+  },
+
+  @bind
+  onMessage(busData) {
+    if (!this.details.can_load_more_future || busData.type !== "sent") {
+      this.handleMessage(busData);
+    } else {
+      this.set("hasNewMessages", true);
+    }
   },
 
   @bind

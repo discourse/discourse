@@ -5,7 +5,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse-common/lib/get-url";
 import { action } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   channel: null,
@@ -56,26 +56,29 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
     if (this.currentUser.admin) {
-      this.messageBus.subscribe("/chat/channel-archive-status", (busData) => {
-        if (busData.chat_channel_id === this.channel.id) {
-          this.channel.setProperties({
-            archive_failed: busData.archive_failed,
-            archive_completed: busData.archive_completed,
-            archived_messages: busData.archived_messages,
-            archive_topic_id: busData.archive_topic_id,
-            total_messages: busData.total_messages,
-          });
-        }
-      });
+      this.messageBus.subscribe("/chat/channel-archive-status", this.onMessage);
     }
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    this.messageBus.unsubscribe("/chat/channel-archive-status");
+    this.messageBus.unsubscribe("/chat/channel-archive-status", this.onMessage);
   },
 
   _getTopicUrl() {
     return getURL(`/t/-/${this.channel.archive_topic_id}`);
+  },
+
+  @bind
+  onMessage(busData) {
+    if (busData.chat_channel_id === this.channel.id) {
+      this.channel.setProperties({
+        archive_failed: busData.archive_failed,
+        archive_completed: busData.archive_completed,
+        archived_messages: busData.archived_messages,
+        archive_topic_id: busData.archive_topic_id,
+        total_messages: busData.total_messages,
+      });
+    }
   },
 });
