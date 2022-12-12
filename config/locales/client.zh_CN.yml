@@ -1153,8 +1153,6 @@ zh_CN:
         warnings: "官方警告"
         read_more_in_group: "想阅读更多？浏览 %{groupLink} 中的其他消息。"
         read_more: "想阅读更多？在<a href='%{basePath}/u/%{username}/messages'>个人消息</a>中浏览其他消息。"
-        read_more_group_pm_MF: "还有 { UNREAD, plural, =0 {} other {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># 条未读消息</a>} }{NEW, plural, =0 {} other{ {BOTH, select, true{和} false {are } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># 条新消息</a>} }，或者在{groupLink}中浏览其他消息"
-        read_more_personal_pm_MF: "还有{ UNREAD, plural, =0 {} other { <a href='{basePath}/u/{username}/messages/unread'># 条未读消息</a>} }{ NEW, plural, =0 {} other { {BOTH, select, true{和} false {are } other{}} <a href='{basePath}/u/{username}/messages/new'># 条新个人消息</a>} }，或者浏览其他<a href='{basePath}/u/{username}/messages'>个人消息</a>"
       preferences_nav:
         account: "帐户"
         security: "安全性"
@@ -2447,11 +2445,7 @@ zh_CN:
       show_links: "显示此话题中的链接"
       collapse_details: "收起话题详细信息"
       expand_details: "展开话题详细信息"
-      read_more_in_category: "想阅读更多？浏览%{catLink}或%{latestLink}中的其他话题。"
-      read_more: "想阅读更多？%{catLink}或%{latestLink}。"
       unread_indicator: "还没有成员读过此话题的最新帖子。"
-      read_more_MF: "还有{ UNREAD, plural, =0 {} other { <a href='{basePath}/unread'># 个未读</a>} }{ NEW, plural, =0 {} other {{BOTH, select, true{和} false {} other{}} <a href='{basePath}/new'># 个新</a>话题} }，或者{CATEGORY, select, true {浏览{catLink}中的其他话题} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}：{CREATED_AT}\n{LAST_POST}：{BUMPED_AT}"
       browse_all_categories: 浏览所有类别
       browse_all_tags: 浏览所有标签
       view_latest_topics: 查看最新话题

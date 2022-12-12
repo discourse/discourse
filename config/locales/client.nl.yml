@@ -1215,8 +1215,6 @@ nl:
         warnings: "Officiële waarschuwingen"
         read_more_in_group: "Wil je meer lezen? Bekijk andere berichten in %{groupLink}."
         read_more: "Wil je meer lezen? Bekijk andere berichten in <a href='%{basePath}/u/%{username}/messages'>persoonlijke berichten</a>."
-        read_more_group_pm_MF: "Er { UNREAD, plural, =0 {} one { is <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ongelezen</a> } other { zijn <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ongelezen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{en } false {is } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nieuw</a> bericht} other { {BOTH, select, true{en } false {zijn } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nieuwe</a> berichten} } resterend, of bekijk andere berichten in {groupLink}"
-        read_more_personal_pm_MF: "Er { UNREAD, plural, =0 {} one { is <a href='{basePath}/u/{username}/messages/unread'># ongelezen</a> } other { zijn <a href='{basePath}/u/{username}/messages/unread'># ongelezen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{en } false {is } other{}} <a href='{basePath}/u/{username}/messages/new'># nieuw</a> bericht} other { {BOTH, select, true{en } false {zijn } other{}} <a href='{basePath}/u/{username}/messages/new'># nieuwe</a> berichten} } resterend, of bekijk andere <a href='{basePath}/u/{username}/messages'>persoonlijke berichten</a>"
       preferences_nav:
         account: "Account"
         security: "Beveiliging"
@@ -2575,11 +2573,7 @@ nl:
       show_links: "links binnen dit topic weergeven"
       collapse_details: "topicdetails samenvouwen"
       expand_details: "topicdetails uitvouwen"
-      read_more_in_category: "Wil je meer lezen? Je kunt andere topics bekijken in %{catLink} of %{latestLink}."
-      read_more: "Wil je meer lezen? %{catLink} of %{latestLink}."
       unread_indicator: "Laatste bericht van dit topic is nog niet gelezen door een lid gelezen."
-      read_more_MF: "Er { UNREAD, plural, =0 {} one { is <a href='{basePath}/unread'># ongelezen</a> } other { zijn <a href='{basePath}/unread'># ongelezen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{en } false {is } other{}} <a href='{basePath}/new'># nieuw</a> topic} other { {BOTH, select, true{en } false {zijn } other{}} <a href='{basePath}/new'># nieuwe</a> topics} } over, of {CATEGORY, select, true {bekijk andere topics in {catLink}} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Alle categorieën bekijken
       browse_all_tags: Alle tags bekijken
       view_latest_topics: nieuwste topics weergeven

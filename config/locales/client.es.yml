@@ -1212,8 +1212,6 @@ es:
         warnings: "Advertencias oficiales"
         read_more_in_group: "¿Quieres leer más? Consulta otros mensajes de %{groupLink}."
         read_more: "¿Quieres seguir leyendo? Echa un vistazo a otros mensajes en tus <a href='%{basePath}/u/%{username}/messages'>mensajes personales</a>."
-        read_more_group_pm_MF: "Hay {UNREAD, plural, =0{} one{<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># mensaje sin leer</a>} other{<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># mensajes sin leer</a>}}{BOTH, select, true{ y } false{} other{}}{NEW, plural, =0{} one{<a href='{basePath}/u/{username}/messages/group/{groupName}/new'># mensaje nuevo</a>} other{<a href='{basePath}/u/{username}/messages/group/{groupName}/new'># mensajes nuevos</a>}}. Puedes ver todos los mensajes en {groupLink}"
-        read_more_personal_pm_MF: "Tienes {UNREAD, plural, =0{} one{<a href='{basePath}/u/{username}/messages/unread'># mensaje sin leer</a>} other{<a href='{basePath}/u/{username}/messages/unread'># mensajes sin leer</a>}}{BOTH, select, true{ y } false{} other{}}{NEW, plural, =0{} one{<a href='{basePath}/u/{username}/messages/new'># mensaje nuevo</a>} other{<a href='{basePath}/u/{username}/messages/new'># mensajes nuevos</a>}}. <a href='{basePath}/u/{username}/messages'>Ver todos tus mensajes</a>"
       preferences_nav:
         account: "Cuenta"
         security: "Seguridad"
@@ -2560,11 +2558,7 @@ es:
       show_links: "mostrar enlaces dentro de este tema"
       collapse_details: "ocultar detalles del tema"
       expand_details: "expandir detalles del tema"
-      read_more_in_category: "¿Quieres leer más? Consulta otros temas en %{catLink} o %{latestLink}."
-      read_more: "¿Quieres leer más? %{catLink} o %{latestLink}."
       unread_indicator: "Ningún miembro ha leído todavía la última publicación de este tema."
-      read_more_MF: "Hay { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'># no leído</a> } other { <a href='{basePath}/unread'># no leídos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{y } false { } other{}} <a href='{basePath}/new'># nuevo</a> tema} other { {BOTH, select, true{y } false { } other{}} <a href='{basePath}/new'># nuevos</a> temas} } restantes, o {CATEGORY, select, true {explora otros temas en {catLink}} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Ver todas las categorías
       browse_all_tags: Ver todas las etiquetas
       view_latest_topics: ver los temas recientes

@@ -1,7 +1,6 @@
 import { helperContext, registerUnbound } from "discourse-common/lib/helpers";
 import Category from "discourse/models/category";
 import I18n from "I18n";
-import Site from "discourse/models/site";
 import { escapeExpression } from "discourse/lib/utilities";
 import { get } from "@ember/object";
 import getURL from "discourse-common/lib/get-url";
@@ -39,13 +38,13 @@ export function addExtraIconRenderer(renderer) {
     @param {Number}  [opts.depth] Current category depth, used for limiting recursive calls
 **/
 export function categoryBadgeHTML(category, opts) {
-  let siteSettings = helperContext().siteSettings;
+  const { site, siteSettings } = helperContext();
   opts = opts || {};
 
   if (
     !category ||
     (!opts.allowUncategorized &&
-      get(category, "id") === Site.currentProp("uncategorized_category_id") &&
+      get(category, "id") === site.uncategorized_category_id &&
       siteSettings.suppress_uncategorized_badge)
   ) {
     return "";

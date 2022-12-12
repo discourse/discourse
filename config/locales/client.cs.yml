@@ -1950,8 +1950,6 @@ cs:
       back_to_list: "Zpátky na seznam témat"
       options: "Možnosti"
       show_links: "zobrazit odkazy v tomto tématu"
-      read_more_in_category: "Chcete si toho přečíst víc? Projděte si témata v %{catLink} nebo %{latestLink}."
-      read_more: "Chcete si přečíst další informace? %{catLink} nebo %{latestLink}."
       browse_all_categories: Projděte všechny kategorie
       view_latest_topics: zobrazte si populární témata
       jump_reply_up: přejít na předchozí odpověď

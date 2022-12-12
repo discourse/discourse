@@ -115,6 +115,37 @@ RSpec.describe Search do
     end
   end
 
+  context "with apostrophes" do
+    fab!(:post_1) { Fabricate(:post, raw: "searching for: John's") }
+    fab!(:post_2) { Fabricate(:post, raw: "searching for: Johns") }
+
+    before do
+      SearchIndexer.enable
+    end
+
+    after do
+      SearchIndexer.disable
+    end
+
+    it "returns correct results" do
+      SiteSetting.search_ignore_accents = false
+      [post_1, post_2].each { |post| SearchIndexer.index(post.topic, force: true) }
+
+      expect(Search.execute("John's").posts).to contain_exactly(post_1, post_2)
+      expect(Search.execute("John’s").posts).to contain_exactly(post_1, post_2)
+      expect(Search.execute("Johns").posts).to contain_exactly(post_1, post_2)
+    end
+
+    it "returns correct results with accents" do
+      SiteSetting.search_ignore_accents = true
+      [post_1, post_2].each { |post| SearchIndexer.index(post.topic, force: true) }
+
+      expect(Search.execute("John's").posts).to contain_exactly(post_1, post_2)
+      expect(Search.execute("John’s").posts).to contain_exactly(post_1, post_2)
+      expect(Search.execute("Johns").posts).to contain_exactly(post_1, post_2)
+    end
+  end
+
   describe "custom_eager_load" do
     fab!(:topic) { Fabricate(:topic) }
     fab!(:post) { Fabricate(:post, topic: topic) }

@@ -1956,8 +1956,6 @@ zh_TW:
       back_to_list: "回到話題列表"
       options: "話題選項"
       show_links: "在話題裡顯示連結"
-      read_more_in_category: "要閱讀更多貼文嗎? 瀏覽 %{catLink} 裡的話題或 %{latestLink}。"
-      read_more: "要閱讀更多貼文嗎? 請按 %{catLink} 或 %{latestLink}。"
       browse_all_categories: 瀏覽所有分類
       browse_all_tags: 瀏覽所有標籤
       view_latest_topics: 檢視最近的貼文

@@ -1242,8 +1242,6 @@ sq:
       back_to_list: "Kthehu tek lista e temave"
       options: "Opsionet e temës"
       show_links: "trego lidhjet në këtë temë"
-      read_more_in_category: "Dëshironi të lexoni më shumë? Shfleto temat në %{catLink} ose %{latestLink}."
-      read_more: "Dëshironi të lexoni më shumë? %{catLink} ose %{latestLink}."
       browse_all_categories: Shfleto kategoritë
       view_latest_topics: shiko temat më të fundit
       jump_reply_up: hidhe tek përgjigja paraardhëse
