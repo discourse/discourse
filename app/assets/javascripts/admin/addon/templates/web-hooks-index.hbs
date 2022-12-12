@@ -2,8 +2,13 @@
   <p>{{i18n "admin.web_hooks.instruction"}}</p>
 
   <div class="new-webhook">
-    <LinkTo @route="adminWebHooks.edit" @model="new" class="btn btn-default admin-webhooks__new-button">
-      {{d-icon "plus"}} {{i18n "admin.web_hooks.new"}}
+    <LinkTo
+      @route="adminWebHooks.edit"
+      @model="new"
+      class="btn btn-default admin-webhooks__new-button"
+    >
+      {{d-icon "plus"}}
+      {{i18n "admin.web_hooks.new"}}
     </LinkTo>
   </div>
 
@@ -34,8 +39,21 @@
               </td>
               <td class="description">{{webHook.description}}</td>
               <td class="controls">
-                <LinkTo @route="adminWebHooks.edit" @model={{webHook}} class="btn btn-default no-text">{{d-icon "far-edit"}}</LinkTo>
-                <DButton @class="destroy btn-danger" @action={{this.destroy}} @actionParam={{webHook}} @icon="times" />
+                <LinkTo
+                  @route="adminWebHooks.edit"
+                  @model={{webHook}}
+                  class="btn btn-default no-text"
+                  title={{i18n "edit"}}
+                >
+                  {{d-icon "far-edit"}}
+                </LinkTo>
+
+                <DButton
+                  @class="destroy btn-danger"
+                  @action={{this.destroy}}
+                  @actionParam={{webHook}}
+                  @icon="times"
+                />
               </td>
             </tr>
           {{/each}}

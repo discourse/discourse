@@ -26,11 +26,11 @@
 
     <div class="control-group">
       <label>{{i18n "admin.web_hooks.event_chooser"}}</label>
-      <div>
+      <label>
         <RadioButton @class="subscription-choice" @name="subscription-choice" @value="individual" @selection={{this.model.webHookType}} />
         {{i18n "admin.web_hooks.individual_event"}}
         <InputTip @validation={{this.eventTypeValidation}} />
-      </div>
+      </label>
 
       {{#unless this.model.wildcard_web_hook}}
         <div class="event-selector">
@@ -40,10 +40,10 @@
         </div>
       {{/unless}}
 
-      <div>
+      <label>
         <RadioButton @class="subscription-choice" @name="subscription-choice" @value="wildcard" @selection={{this.model.webHookType}} />
         {{i18n "admin.web_hooks.wildcard_event"}}
-      </div>
+      </label>
     </div>
 
     <div class="filters control-group">
@@ -70,14 +70,16 @@
 
     <PluginOutlet @name="web-hook-fields" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
 
-    <div>
-      <Input @type="checkbox" name="verify_certificate" @checked={{this.model.verify_certificate}} /> {{i18n "admin.web_hooks.verify_certificate"}}
-    </div>
+    <label>
+      <Input @type="checkbox" name="verify_certificate" @checked={{this.model.verify_certificate}} />
+      {{i18n "admin.web_hooks.verify_certificate"}}
+    </label>
 
     <div>
-      <div>
-        <Input @type="checkbox" name="active" @checked={{this.model.active}} /> {{i18n "admin.web_hooks.active"}}
-      </div>
+      <label>
+        <Input @type="checkbox" name="active" @checked={{this.model.active}} />
+        {{i18n "admin.web_hooks.active"}}
+      </label>
 
       {{#if this.model.active}}
         <div class="instructions">{{i18n "admin.web_hooks.active_notice"}}</div>
