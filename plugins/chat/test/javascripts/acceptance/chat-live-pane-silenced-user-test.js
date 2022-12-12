@@ -15,6 +15,7 @@ acceptance("Discourse Chat - Chat live pane", function (needs) {
   });
   needs.settings({
     chat_enabled: true,
+    navigation_menu: "legacy",
   });
   needs.pretender((server, helper) => {
     server.get("/chat/:chatChannelId/messages.json", () =>
