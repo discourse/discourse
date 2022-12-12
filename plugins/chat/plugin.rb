@@ -386,7 +386,7 @@ after_initialize do
     return false if !SiteSetting.chat_enabled
     return false if scope.user.blank?
 
-    scope.user.id != object.id && scope.can_chat?(scope.user) && scope.can_chat?(object)
+    scope.user.id != object.id && scope.can_chat? && Guardian.new(object).can_chat?
   end
 
   add_to_serializer(:current_user, :can_chat) { true }
@@ -394,7 +394,7 @@ after_initialize do
   add_to_serializer(:current_user, :include_can_chat?) do
     return @can_chat if defined?(@can_chat)
 
-    @can_chat = SiteSetting.chat_enabled && scope.can_chat?(object)
+    @can_chat = SiteSetting.chat_enabled && scope.can_chat?
   end
 
   add_to_serializer(:current_user, :has_chat_enabled) { true }
