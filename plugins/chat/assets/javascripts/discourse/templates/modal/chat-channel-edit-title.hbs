@@ -3,13 +3,14 @@
     {{i18n "chat.channel_edit_title_modal.description"}}
   </span>
 
-  <CountedTextArea
-    class="chat-channel-edit-title-modal__title-input"
-    placeholder={{i18n "chat.channel_edit_title_modal.input_placeholder"}}
+  <CharCounter
     @max={{this.siteSettings.max_topic_title_length}}
-    @value={{this.editedTitle}}
-    @onChangeTextAreaValue={{this.onChangeChatChannelTitle}}
-  />
+    @value={{this.editedTitle}}>
+    <textarea
+      {{on "input" (action this.onChangeChatChannelTitle value="target.value")}}
+      class="chat-channel-edit-title-modal__title-input"
+      placeholder={{i18n "chat.channel_edit_title_modal.input_placeholder"}}>{{@description}}</textarea>
+  </CharCounter>
 </DModalBody>
 
 <div class="modal-footer">

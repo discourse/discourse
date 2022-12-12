@@ -1,0 +1,6 @@
+<div class={{concat-class "char-counter" (if (gt @value.length @max) "exceeded")}}>
+  {{yield}}
+  <small>
+    {{@value.length}}/{{@max}}
+  </small>
+</div>

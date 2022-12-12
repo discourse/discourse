@@ -10,8 +10,6 @@ export default class ChatChannelEditDescriptionController extends Controller.ext
   ModalFunctionality
 ) {
   @tracked editedDescription = this.model.description || "";
-  onChangeChatChannelDescription = (newDescription) =>
-    (this.editedDescription = newDescription);
 
   @computed("model.description", "editedDescription")
   get isSaveDisabled() {
@@ -43,5 +41,11 @@ export default class ChatChannelEditDescriptionController extends Controller.ext
           this.flash(event.jqXHR.responseJSON.errors.join("\n"), "error");
         }
       });
+  }
+
+  @action
+  onChangeChatChannelDescription(description) {
+    this.clearFlash();
+    this.editedDescription = description;
   }
 }
