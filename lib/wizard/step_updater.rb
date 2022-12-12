@@ -38,7 +38,7 @@ class Wizard
       end
 
       if id == :navigation_menu
-        value = value.to_s == "true" ? NavigationMenuSiteSetting::SIDEBAR : NavigationMenuSiteSetting::LEGACY
+        value = value.to_s == "true" ? NavigationMenuSiteSetting::SIDEBAR : NavigationMenuSiteSetting::HEADER_DROPDOWN
       end
 
       SiteSetting.set_and_log(id, value, @current_user) if SiteSetting.get(id) != value
