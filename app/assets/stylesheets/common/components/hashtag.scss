@@ -36,31 +36,84 @@ a.hashtag-cooked {
 }
 
 .hashtag-autocomplete {
-  max-height: 210px;
+  max-height: 13.3em;
   overflow-y: auto;
+  box-shadow: shadow("dropdown-lite");
+  border-radius: 8px;
 
-  .hashtag-autocomplete__option {
-    .hashtag-autocomplete__link {
-      align-items: center;
+  &__fadeout {
+    height: inherit;
+    max-height: inherit;
+    overflow-y: auto;
+    -webkit-mask: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 1) calc(100% - 1em),
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
+
+  // &:after {
+  //   content: "";
+  //   position: absolute;
+  //   top: 0;
+  //   left: 0;
+  //   width: 100%;
+  //   height: 100%;
+  //   height: inherit;
+  //   max-height: inherit;
+  //   overflow-y: auto;
+  //   -webkit-mask: linear-gradient(
+  //     180deg,
+  //     rgba(255, 255, 255, 1) 90%,
+  //     rgba(255, 255, 255, 0) 100%
+  //   );
+  // }
+
+  &__option {
+    border: 0 !important; //overrule for regular autocomplete
+
+    &:last-of-type {
+      margin-bottom: 0.5em; //used to the fadeout doesn't overlap the last item
+    }
+  }
+
+  &__link {
+    align-items: center;
+    color: var(
+      --primary
+    ) !important; //important needed to overrule regular autocomplete
+    display: flex;
+    padding: 0.5em 1em !important; //important needed to overrule regular autocomplete
+
+    &.selected {
+      font-weight: bold;
+      background-color: var(
+        --highlight
+      ) !important; //important needed to overrule regular autocomplete
+    }
+
+    &:hover {
+      background-color: var(
+        --highlight-low
+      ) !important; //important needed to overrule regular autocomplete
+    }
+
+    .d-icon {
+      padding-right: 0.5em;
       color: var(--primary-medium);
-      display: flex;
+    }
+  }
 
-      .d-icon {
-        padding-right: 0.5em;
-      }
+  &__text {
+    flex: 1;
+    margin-left: 0 !important; //important needed to overrule regular autocomplete
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 
-      .hashtag-autocomplete__text {
-        flex: 1;
-        margin-left: 0;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-
-        .emoji {
-          width: 15px;
-          height: 15px;
-        }
-      }
+    .emoji {
+      width: 15px;
+      height: 15px;
     }
   }
 }
