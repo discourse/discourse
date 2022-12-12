@@ -33,24 +33,22 @@ export default class WebhookEvents extends Component {
   @bind
   subscribe() {
     const channel = `/web_hook_events/${this.args.webhookId}`;
-
-    this.messageBus.subscribe(channel, (data) => {
-      if (data.event_type === "ping") {
-        this.pingEnabled = true;
-      }
-
-      this.#addIncoming(data.web_hook_event_id);
-    });
+    this.messageBus.subscribe(channel, this._addIncoming);
   }
 
   @bind
   unsubscribe() {
-    this.messageBus.unsubscribe("/web_hook_events/*");
+    this.messageBus.unsubscribe("/web_hook_events/*", this._addIncoming);
   }
 
-  #addIncoming(eventId) {
-    if (!this.incomingEventIds.includes(eventId)) {
-      this.incomingEventIds.pushObject(eventId);
+  @bind
+  _addIncoming(data) {
+    if (data.event_type === "ping") {
+      this.pingEnabled = true;
+    }
+
+    if (!this.incomingEventIds.includes(data.web_hook_event_id)) {
+      this.incomingEventIds.pushObject(data.web_hook_event_id);
     }
   }
 
