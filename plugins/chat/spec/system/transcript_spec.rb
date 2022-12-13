@@ -112,10 +112,10 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
 
         within(".d-editor-preview") { expect(page).to have_css(".chat-transcript") }
 
-        topic_page.send_reply
+        find("#reply-control .save-or-cancel .create").click
         selector = topic_page.post_by_number_selector(2)
 
-        expect(page).to have_css(selector, wait: 5)
+        expect(page).to have_css(selector)
         within(selector) { expect(page).to have_css(".chat-transcript") }
       end
     end
@@ -137,10 +137,10 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
         within(".d-editor-preview") { expect(page).to have_css(".chat-transcript", count: 2) }
         expect(page).to have_content("Originally sent in #{chat_channel_1.name}")
 
-        topic_page.send_reply
+        find("#reply-control .save-or-cancel .create").click
 
         selector = topic_page.post_by_number_selector(2)
-        expect(page).to have_css(selector, wait: 5)
+        expect(page).to have_css(selector)
         within(selector) { expect(page).to have_css(".chat-transcript", count: 2) }
       end
     end
@@ -215,9 +215,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
       expect(page).not_to have_current_path(chat_channel_1.chatable.url)
 
       topic_page.fill_in_composer_title("Some topic title for testing")
-
       find("#reply-control .save-or-cancel .create").click
-      p save_screenshot
 
       selector = topic_page.post_by_number_selector(1)
       expect(page).to have_css(selector)
