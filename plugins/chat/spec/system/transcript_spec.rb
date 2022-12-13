@@ -117,7 +117,8 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
         expect(page).to have_css(".chat-transcript")
       end
       topic_page.send_reply
-      expect(page).to have_no_selector(".topic-post.staged")
+      expect(page).to have_css(".post-stream")
+      expect(page).to have_no_css(".topic-post.staged")
       within topic_page.post_by_number(topic.posts.reload.last.post_number) do
         expect(page).to have_css(".chat-transcript")
       end
@@ -139,7 +140,8 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
       end
       expect(page).to have_content("Originally sent in #{chat_channel_1.name}")
       topic_page.send_reply
-      expect(page).to have_no_selector(".topic-post.staged")
+      expect(page).to have_css(".post-stream")
+      expect(page).to have_no_css(".topic-post.staged")
       within topic_page.post_by_number(topic.posts.reload.last.post_number) do
         expect(page).to have_css(".chat-transcript", count: 4)
       end
@@ -211,7 +213,8 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
       # create the topic with the transcript as the OP
       topic_page.fill_in_composer_title("Some topic title for testing")
       topic_page.send_reply
-      expect(page).to have_no_selector(".topic-post.staged")
+      expect(page).to have_css(".post-stream")
+      expect(page).to have_no_css(".topic-post.staged")
       topic = Topic.where(user: current_user).last
       expect(page).to have_current_path(topic.url)
       within(topic_page.post_by_number(1)) { expect(page).to have_css(".chat-transcript") }
