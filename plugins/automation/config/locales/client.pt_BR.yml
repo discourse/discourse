@@ -103,8 +103,6 @@ pt_BR:
             P6M: "Seis meses"
             P1Y: "Um ano"
           fields:
-            restricted_category:
-              label: Restrito à categoria
             stalled_after:
               label: Atraso do acionador
               description: Define o atraso entre a última edição do wiki e o acionador da automação

@@ -103,8 +103,6 @@ it:
             P6M: "Sei mesi"
             P1Y: "Un anno"
           fields:
-            restricted_category:
-              label: Limitato alla categoria
             stalled_after:
               label: Ritardo di attivazione
               description: Definisce il ritardo tra l'ultima modifica wiki e l'attivazione dell'automazione

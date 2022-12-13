@@ -103,8 +103,6 @@ fi:
             P6M: "Kuusi kuukautta"
             P1Y: "Yksi vuosi"
           fields:
-            restricted_category:
-              label: Rajoitettu alueeseen
             stalled_after:
               label: Triggerin viive
               description: Määrittää viiveen viimeisimmän wiki-muokkauksen ja automaation triggerin välillä

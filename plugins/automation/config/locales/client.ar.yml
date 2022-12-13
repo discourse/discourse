@@ -103,8 +103,6 @@ ar:
             P6M: "ستة أشهر"
             P1Y: "عام واحد"
           fields:
-            restricted_category:
-              label: مقتصر على الفئة
             stalled_after:
               label: تأخير المشغِّل
               description: يحدِّد التأخير بين تعديل Wiki الأخير ومشغِّل الأتمتة

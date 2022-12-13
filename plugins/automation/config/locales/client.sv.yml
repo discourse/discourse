@@ -103,8 +103,6 @@ sv:
             P6M: "Sex månader"
             P1Y: "Ett år"
           fields:
-            restricted_category:
-              label: Begränsad till kategori
             stalled_after:
               label: Utlösningsfördröjning
               description: Definierar fördröjning mellan senaste wiki-redigering och automatisk utlösare

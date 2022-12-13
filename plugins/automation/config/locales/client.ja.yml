@@ -103,8 +103,6 @@ ja:
             P6M: "6 か月"
             P1Y: "1 年"
           fields:
-            restricted_category:
-              label: カテゴリに限定
             stalled_after:
               label: トリガー遅延
               description: 最後のウィキ編集と自動化のトリガーの間の遅延を定義します

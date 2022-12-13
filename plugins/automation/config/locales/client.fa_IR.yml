@@ -76,6 +76,9 @@ fa_IR:
             P3M: "سه ماه"
             P6M: "شش ماه"
             P1Y: "یک سال"
+          fields:
+            restricted_category:
+              label: محدود به دسته‌بندی
         post_created_edited:
           fields:
             restricted_category:

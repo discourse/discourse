@@ -103,8 +103,6 @@ nl:
             P6M: "Zes maanden"
             P1Y: "Eén jaar"
           fields:
-            restricted_category:
-              label: Beperkt tot categorie
             stalled_after:
               label: Triggervertraging
               description: Definieert de vertraging tussen de laatste wikibewerking en de automatiseringstrigger

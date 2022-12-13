@@ -103,8 +103,6 @@ hu:
             P6M: "Hat hónap"
             P1Y: "Egy év"
           fields:
-            restricted_category:
-              label: Kategóriára korlátozva
             stalled_after:
               label: Aktiváló késleltetése
               description: Meghatározza a késleltetést az utolsó wikiszerkesztés és az automatizálás aktiválása között.

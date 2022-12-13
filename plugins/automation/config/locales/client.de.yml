@@ -103,8 +103,6 @@ de:
             P6M: "Sechs Monate"
             P1Y: "Ein Jahr"
           fields:
-            restricted_category:
-              label: Auf Kategorie beschränkt
             stalled_after:
               label: Auslöseverzögerung
               description: Definiert die Verzögerung zwischen der letzten Wiki-Bearbeitung und dem Auslöser der Automatisierung

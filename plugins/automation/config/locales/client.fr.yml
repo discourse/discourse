@@ -103,8 +103,6 @@ fr:
             P6M: "Six mois"
             P1Y: "Un an"
           fields:
-            restricted_category:
-              label: Limité à la catégorie
             stalled_after:
               label: Délai de déclenchement
               description: Définit le délai entre la dernière modification du wiki et le déclenchement de l'automatisation

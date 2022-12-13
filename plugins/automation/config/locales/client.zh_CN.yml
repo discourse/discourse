@@ -103,8 +103,6 @@ zh_CN:
             P6M: "六个月"
             P1Y: "一年"
           fields:
-            restricted_category:
-              label: 限制为类别
             stalled_after:
               label: 触发延迟
               description: 定义上次 Wiki 编辑和自动化触发器之间的延迟
