@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe WebHookUserSerializer do
-  SiteSetting.navigation_menu = "legacy"
-  SiteSetting.chat_enabled = false if defined?(::Chat)
-
   let(:user) do
     user = Fabricate(:user)
     SingleSignOnRecord.create!(user_id: user.id, external_id: '12345', last_payload: '')
@@ -14,6 +11,11 @@ RSpec.describe WebHookUserSerializer do
 
   let :serializer do
     WebHookUserSerializer.new(user, scope: Guardian.new(admin), root: false)
+  end
+
+  before do
+    SiteSetting.navigation_menu = "legacy"
+    SiteSetting.chat_enabled = false if defined?(::Chat)
   end
 
   it "should include relevant user info" do
