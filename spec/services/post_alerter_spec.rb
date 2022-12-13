@@ -1395,10 +1395,10 @@ RSpec.describe PostAlerter do
         whispered_post = Fabricate(:post, user: Fabricate(:admin), topic: topic, post_type: Post.types[:whisper])
         expect {
           PostAlerter.post_created(whispered_post)
-        }.to add_notification(admin, :posted)
+        }.to add_notification(admin, :watching_category_or_tag)
         expect {
           PostAlerter.post_created(whispered_post)
-        }.not_to add_notification(user, :posted)
+        }.not_to add_notification(user, :watching_category_or_tag)
       end
 
       it "notifies a staged user about a private post, but only if the user has access" do
@@ -1424,8 +1424,8 @@ RSpec.describe PostAlerter do
 
         expect {
           PostAlerter.post_created(post)
-        }.to add_notification(staged_member, :posted)
-          .and not_add_notification(staged_non_member, :posted)
+        }.to add_notification(staged_member, :watching_category_or_tag)
+          .and not_add_notification(staged_non_member, :watching_category_or_tag)
       end
 
       it "does not update existing unread notification" do
@@ -1622,7 +1622,7 @@ RSpec.describe PostAlerter do
       end
 
       context "with :watching notification level" do
-        include_examples "tag user with notification level", :watching, :posted
+        include_examples "tag user with notification level", :watching, :watching_category_or_tag
       end
 
       context "with :watching_first_post notification level" do
@@ -2089,7 +2089,7 @@ RSpec.describe PostAlerter do
 
     notification = Notification.last
     expect(notification.user).to eq(user)
-    expect(notification.notification_type).to eq(Notification.types[:posted])
+    expect(notification.notification_type).to eq(Notification.types[:watching_category_or_tag])
     expect(notification.topic).to eq(post.topic)
     expect(notification.post_number).to eq(1)
   end
