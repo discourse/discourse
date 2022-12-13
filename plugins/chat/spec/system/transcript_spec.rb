@@ -3,12 +3,6 @@
 RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:chat_channel_1) { Fabricate(:chat_channel) }
-  fab!(:chat_message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
-  fab!(:chat_message_2) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
-  fab!(:chat_message_3) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
-  fab!(:chat_message_4) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
-  fab!(:chat_message_5) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
-  fab!(:topic) { Fabricate(:with_posts_topic) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:chat_channel_page) { PageObjects::Pages::ChatChannel.new }
@@ -103,139 +97,141 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
   describe "copying quote transcripts with the clipboard" do
     before { cdp_allow_clipboard_access! }
 
-    it "quotes a single chat message into a topic " do
-      chat_page.visit_channel(chat_channel_1)
-      expect(chat_channel_page).to have_no_loading_skeleton
-      expect(chat_channel_page).to have_content(chat_message_5.message)
+    context "when quoting a single message into a topic" do
+      fab!(:post_1) { Fabricate(:post) }
+      fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
 
-      clip_text = copy_messages_to_clipboard(chat_message_5)
+      it "quotes the message" do
+        chat_page.visit_channel(chat_channel_1)
 
-      # post transcript in topic
-      topic_page.visit_topic_and_open_composer(topic)
-      topic_page.fill_in_composer("This is a new post!\n\n" + clip_text)
-      within ".d-editor-preview" do
-        expect(page).to have_css(".chat-transcript")
-      end
-      topic_page.send_reply
-      expect(page).to have_css(".post-stream")
-      expect(page).to have_no_css(".topic-post.staged")
-      within topic_page.post_by_number(topic.posts.reload.last.post_number) do
-        expect(page).to have_css(".chat-transcript")
-      end
-    end
+        expect(chat_channel_page).to have_no_loading_skeleton
 
-    it "quotes multiple chat messages into a topic" do
-      chat_page.visit_channel(chat_channel_1)
-      expect(chat_channel_page).to have_no_loading_skeleton
-      expect(chat_channel_page).to have_content(chat_message_5.message)
+        clip_text = copy_messages_to_clipboard(message_1)
+        topic_page.visit_topic_and_open_composer(post_1.topic)
+        topic_page.fill_in_composer("This is a new post!\n\n" + clip_text)
 
-      messages = [chat_message_5, chat_message_4, chat_message_3, chat_message_2]
-      clip_text = copy_messages_to_clipboard(messages)
+        within(".d-editor-preview") { expect(page).to have_css(".chat-transcript") }
 
-      # post transcript in topic
-      topic_page.visit_topic_and_open_composer(topic)
-      topic_page.fill_in_composer("This is a new post!\n\n" + clip_text)
-      within ".d-editor-preview" do
-        expect(page).to have_css(".chat-transcript", count: 4)
-      end
-      expect(page).to have_content("Originally sent in #{chat_channel_1.name}")
-      topic_page.send_reply
-      expect(page).to have_css(".post-stream")
-      expect(page).to have_no_css(".topic-post.staged")
-      within topic_page.post_by_number(topic.posts.reload.last.post_number) do
-        expect(page).to have_css(".chat-transcript", count: 4)
+        topic_page.send_reply
+
+        within(topic_page.post_by_number(2)) { expect(page).to have_css(".chat-transcript") }
       end
     end
 
-    it "does not error in preview when quoting a chat message with a onebox" do
-      Oneboxer.stubs(:preview).returns(
-        "<aside class=\"onebox\"><article class=\"onebox-body\"><h3><a href=\"http://www.example.com/article.html\" tabindex=\"-1\">An interesting article</a></h3></article></aside>",
-      )
-      chat_message_3.update!(message: "http://www.example.com/has-title.html")
-      chat_message_3.rebake!
+    context "when quoting multiple messages into a topic" do
+      fab!(:post_1) { Fabricate(:post) }
+      fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
+      fab!(:message_2) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
 
-      chat_page.visit_channel(chat_channel_1)
-      expect(chat_channel_page).to have_no_loading_skeleton
-      expect(chat_channel_page).to have_content(chat_message_5.message)
+      it "quotes the messages" do
+        chat_page.visit_channel(chat_channel_1)
 
-      clip_text = copy_messages_to_clipboard(chat_message_3)
+        expect(chat_channel_page).to have_no_loading_skeleton
 
-      # post transcript in topic
-      topic_page.visit_topic_and_open_composer(topic)
-      topic_page.fill_in_composer(clip_text)
+        messages = clip_text = copy_messages_to_clipboard([message_1, message_2])
+        topic_page.visit_topic_and_open_composer(post_1.topic)
+        topic_page.fill_in_composer("This is a new post!\n\n" + clip_text)
 
-      within ".chat-transcript-messages" do
-        expect(page).to have_content("An interesting article")
+        within(".d-editor-preview") { expect(page).to have_css(".chat-transcript", count: 2) }
+        expect(page).to have_content("Originally sent in #{chat_channel_1.name}")
+
+        topic_page.send_reply
+
+        within(topic_page.post_by_number(2)) do
+          expect(page).to have_css(".chat-transcript", count: 2)
+        end
       end
     end
 
-    it "quotes a single chat message into another chat message " do
-      chat_page.visit_channel(chat_channel_1)
-      expect(chat_channel_page).to have_no_loading_skeleton
-      expect(chat_channel_page).to have_content(chat_message_5.message)
+    context "when quoting a message containing a onebox" do
+      fab!(:post_1) { Fabricate(:post) }
+      fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
 
-      # select message + copy to clipboard
-      clip_text = copy_messages_to_clipboard(chat_message_5)
-      click_selection_button("cancel")
+      before do
+        Oneboxer.stubs(:preview).returns(
+          "<aside class=\"onebox\"><article class=\"onebox-body\"><h3><a href=\"http://www.example.com/article.html\" tabindex=\"-1\">An interesting article</a></h3></article></aside>",
+        )
+        message_1.update!(message: "http://www.example.com/has-title.html")
+        message_1.rebake!
+      end
 
-      # send transcript message in chat
-      chat_channel_page.fill_composer(clip_text)
-      chat_channel_page.click_send_message
-      message = nil
-      try_until_success do
+      it "works" do
+        chat_page.visit_channel(chat_channel_1)
+
+        expect(chat_channel_page).to have_no_loading_skeleton
+
+        clip_text = copy_messages_to_clipboard(message_1)
+        topic_page.visit_topic_and_open_composer(post_1.topic)
+        topic_page.fill_in_composer(clip_text)
+
+        within(".chat-transcript-messages") do
+          expect(page).to have_content("An interesting article")
+        end
+      end
+    end
+
+    context "when quoting a message in another message" do
+      fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
+
+      it "quotes the message" do
+        chat_page.visit_channel(chat_channel_1)
+
+        expect(chat_channel_page).to have_no_loading_skeleton
+
+        clip_text = copy_messages_to_clipboard(message_1)
+        click_selection_button("cancel")
+        chat_channel_page.fill_composer(clip_text)
+        chat_channel_page.click_send_message
+
+        expect(page).to have_selector(".chat-message", count: 2)
+
         message = ChatMessage.find_by(user: current_user, message: clip_text.chomp)
-        expect(message).not_to eq(nil)
-      end
-      expect(chat_channel_page).to have_message(id: message.id)
-      within chat_channel_page.message_by_id(message.id) do
-        expect(page).to have_css(".chat-transcript")
+
+        within(chat_channel_page.message_by_id(message.id)) do
+          expect(page).to have_css(".chat-transcript")
+        end
       end
     end
   end
 
-  describe "quoting into a topic directly" do
-    it "opens the topic composer with the quote prefilled and the channel category preselected" do
-      topic.update!(category: chat_channel_1.chatable)
-      chat_page.visit_channel(chat_channel_1)
-      expect(chat_channel_page).to have_no_loading_skeleton
-      expect(chat_channel_page).to have_content(chat_message_5.message)
+  context "when quoting into a topic directly" do
+    fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
 
-      # select message + prefill in composer
-      select_message(chat_message_5)
+    it "opens the topic composer with correct state" do
+      chat_page.visit_channel(chat_channel_1)
+
+      expect(chat_channel_page).to have_no_loading_skeleton
+
+      select_message(message_1)
       click_selection_button("quote")
+
       expect(topic_page).to have_expanded_composer
-      expect(topic_page).to have_composer_content(generate_transcript(chat_message_5, current_user))
+      expect(topic_page).to have_composer_content(generate_transcript(message_1, current_user))
       expect(page).to have_css(
         ".category-input .select-kit-header[data-value='#{chat_channel_1.chatable.id}']",
       )
       expect(page).not_to have_current_path(chat_channel_1.chatable.url)
 
-      # create the topic with the transcript as the OP
       topic_page.fill_in_composer_title("Some topic title for testing")
       topic_page.send_reply
-      expect(page).to have_css(".post-stream")
-      expect(page).to have_no_css(".topic-post.staged")
+
+      within(topic_page.post_by_number(1)) { expect(page).to have_css(".chat-transcript") }
+
       topic = Topic.where(user: current_user).last
       expect(page).to have_current_path(topic.url)
-      within(topic_page.post_by_number(1)) { expect(page).to have_css(".chat-transcript") }
     end
 
     context "when on mobile" do
       it "first navigates to the channel's category before opening the topic composer with the quote prefilled",
          mobile: true do
-        topic.update!(category: chat_channel_1.chatable)
         chat_page.visit_channel(chat_channel_1)
         expect(chat_channel_page).to have_no_loading_skeleton
-        expect(chat_channel_page).to have_content(chat_message_5.message)
 
-        # select message + prefill in composer
-        select_message(chat_message_5, mobile: true)
+        select_message(message_1, mobile: true)
         click_selection_button("quote")
 
         expect(topic_page).to have_expanded_composer
-        expect(topic_page).to have_composer_content(
-          generate_transcript(chat_message_5, current_user),
-        )
+        expect(topic_page).to have_composer_content(generate_transcript(message_1, current_user))
         expect(page).to have_current_path(chat_channel_1.chatable.url)
         expect(page).to have_css(
           ".category-input .select-kit-header[data-value='#{chat_channel_1.chatable.id}']",
