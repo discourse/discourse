@@ -222,7 +222,6 @@ zh_TW:
     conduct: "行為準則"
     mobile_view: "手機版"
     desktop_view: "電腦版"
-    or: "或"
     now: "就在剛才"
     read_more: "閱讀更多"
     more: "更多"
@@ -1417,7 +1416,6 @@ zh_TW:
       login_disabled: "在唯讀模式下不能登入"
       logout_disabled: "站點在只讀模式下無法登出。"
     learn_more: "進一步了解..."
-    first_post: 第一篇貼文
     mute: 靜音
     unmute: 取消靜音
     last_post: 最新貼文
@@ -1956,9 +1954,6 @@ zh_TW:
       back_to_list: "回到話題列表"
       options: "話題選項"
       show_links: "在話題裡顯示連結"
-      browse_all_categories: 瀏覽所有分類
-      browse_all_tags: 瀏覽所有標籤
-      view_latest_topics: 檢視最近的貼文
       suggest_create_topic: 準備好 <a href>開始新的對話了嗎？</a>
       jump_reply_up: 跳到更早的回覆
       jump_reply_down: 跳到更晚的回覆
@@ -3081,9 +3076,8 @@ zh_TW:
         detailed_instruction: "一個 POST 請求將在選定事件發生時發至指定 URL。"
         new: "新建 Webhook"
         create: "創建"
+        edit: "編輯"
         save: "保存"
-        destroy: "刪除"
-        description: "描述"
         controls: "控制"
         go_back: "返回列表"
         payload_url: "Payload URL"
@@ -3146,9 +3140,6 @@ zh_TW:
           headers: "頭部"
           payload: "內容"
           body: "內容"
-          go_list: "前往列表"
-          go_details: "編輯 Webhook"
-          go_events: "前往事件列表"
           ping: "Ping"
           status: "狀態碼"
           event_id: "ID"

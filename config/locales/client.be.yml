@@ -119,7 +119,6 @@ be:
     rules: "Правілы"
     mobile_view: "Выгляд для мабільнага"
     desktop_view: "Выгляд для настольнага кампутара"
-    or: "або"
     now: "толькі што"
     read_more: "чытаць далей"
     more: "больш"
@@ -711,7 +710,6 @@ be:
     read_only_mode:
       login_disabled: "Login is disabled while the site is in read only mode."
     learn_more: "даведацца больш ..."
-    first_post: першы паведамленне
     mute: Mute
     unmute: Unmute
     time_read: прачытаныя
@@ -977,8 +975,6 @@ be:
       back_to_list: "Вярнуцца да спісу тым"
       options: "Налады тэмы"
       show_links: "паказаць спасылкі ў гэтай тэме"
-      browse_all_categories: Паглядзець усе катэгорыі
-      view_latest_topics: Праглядзіце апошнія тэмы
       jump_reply_up: перайсці да больш ранняй адказы
       jump_reply_down: перайсці да больш позняй адказы
       deleted: "Тэма была выдаленая"
@@ -1483,9 +1479,8 @@ be:
           action: дзеянне
       web_hooks:
         create: "стварыць"
+        edit: "рэдагаваць"
         save: "стварыць..."
-        destroy: "выдаліць"
-        description: "апісанне"
         go_back: "Вярнуцца да спісу"
         secret: "сакрэт"
         active: "актыўны"

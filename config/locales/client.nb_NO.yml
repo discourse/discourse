@@ -223,7 +223,6 @@ nb_NO:
     conduct: "Regler for god oppførsel"
     mobile_view: "Mobilvisning"
     desktop_view: "Skrivebordsvisning"
-    or: "eller"
     now: "akkurat nå"
     read_more: "les mer"
     more: "Mer"
@@ -1579,15 +1578,18 @@ nb_NO:
       enabled: "Dette nettstedet er i lesemodus. Fortsett gjerne å lese, men du kan ikke svare, gi likes eller utføre andre handlinger som er slått av."
       login_disabled: "Innlogging er deaktivert mens nettsiden er i skrivebeskyttet modus."
       logout_disabled: "Du kan ikke logge ut når nettstedet er i lese-modus."
-    too_few_posts_notice_MF: >-
+    too_few_posts_notice_MF: |
       La oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">starte diskusjonen!</a> Der {currentPosts, plural, one {er <strong>#</strong> innlegg} other {er <strong>#</strong> innlegg}}. Besøkende trenger mer å lese og svare på — vi anbefaler minst {requiredPosts, plural, one {<strong>#</strong> innlegg} other {<strong>#</strong> innlegg}}. Bare ansatte kan se denne meldingen.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# feil/time} other {# feil/time}}</a> nådd området innstillingen grense for {limit, plural, one {# feil/time} other {# feil/time}}."
-      reached_minute_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# feil/minutt} other {# feil/minutt}}</a> nådd området innstillingen grense for {limit, plural, one {# feil/minutt} other {# feil/minutt}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# feil/time} other {# feil/time}}</a> overskrider sideinnstillingsgrensen på {limit, plural, one {# error/time} other {# errors/hour}}"
-      exceeded_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# feil / minutt} other {# feil / minutt}}</a> overskredet nettstedsinnstillingsgrensen på {limit, plural, one {# feil / minutt} other {# feil / minutt}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# feil/time} other {# feil/time}}</a> nådd området innstillingen grense for {limit, plural, one {# feil/time} other {# feil/time}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# feil/minutt} other {# feil/minutt}}</a> nådd området innstillingen grense for {limit, plural, one {# feil/minutt} other {# feil/minutt}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# feil/time} other {# feil/time}}</a> overskrider sideinnstillingsgrensen på {limit, plural, one {# error/time} other {# errors/hour}}
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# feil / minutt} other {# feil / minutt}}</a> overskredet nettstedsinnstillingsgrensen på {limit, plural, one {# feil / minutt} other {# feil / minutt}}.
     learn_more: "lær mer…"
-    first_post: Første innlegg
     mute: Ignorer
     unmute: Fjern ignorering
     last_post: Postet
@@ -1607,7 +1609,8 @@ nb_NO:
       intro: "Hei! Ser ut som du liker diskusjonen, men du har ikke registrert deg for en konto ennå."
     summary:
       enabled_description: "Du ser for øyeblikket en oppsummering av dette emnet: de mest interessante innleggene ifølge brukerne."
-      description_time_MF: "Det {replyCount, plural, one {er <b>#</b> svar} other {er <b>#</b> svarer}} med en estimert lesetid på <b>{readingTime, plural, one {# minutt} other {# minutter}}</b>."
+      description_time_MF: |
+        Det {replyCount, plural, one {er <b>#</b> svar} other {er <b>#</b> svarer}} med en estimert lesetid på <b>{readingTime, plural, one {# minutt} other {# minutter}}</b>.
       enable: "Oppsummer dette emnet"
       disable: "Vis alle innlegg"
     deleted_filter:
@@ -2250,9 +2253,6 @@ nb_NO:
       collapse_details: "vis/skjul detaljer for emnet"
       expand_details: "utvid emnebeskrivelse"
       unread_indicator: "Ingen medlem har lest den siste posten i dette emnet ennå."
-      browse_all_categories: Se alle kategorier
-      browse_all_tags: Bla gjennom alle tagger
-      view_latest_topics: se siste emner
       suggest_create_topic: Klar til å <a href>starte en ny samtale?</a>
       jump_reply_up: hopp til tidligere svar
       jump_reply_down: hopp til senere svar
@@ -2946,7 +2946,8 @@ nb_NO:
       official_warning: "Offisiell advarsel"
       delete_spammer: "Slett spammer"
       flag_for_review: "Kø for gjennomgang"
-      delete_confirm_MF: "Du er i ferd med å slette {POSTS, plural, one {<b>1</b> innlegg} other {<b>#</b> innlegg}} og {TOPICS, plural, one {<b>1</b> emne} other {<b>#</b> emner}} opprettet av denne brukeren, fjerne kontoen, blokkere påmeldinger fra IP-adressen <b>{ip_address}</b>, og legge til e-postadressen <b>{email}</b> til en permanent blokkeringsliste. Er du sikker på at denne brukeren virkelig sender søppelpost?"
+      delete_confirm_MF: |
+        Du er i ferd med å slette {POSTS, plural, one {<b>1</b> innlegg} other {<b>#</b> innlegg}} og {TOPICS, plural, one {<b>1</b> emne} other {<b>#</b> emner}} opprettet av denne brukeren, fjerne kontoen, blokkere påmeldinger fra IP-adressen <b>{ip_address}</b>, og legge til e-postadressen <b>{email}</b> til en permanent blokkeringsliste. Er du sikker på at denne brukeren virkelig sender søppelpost?
       yes_delete_spammer: "Ja, slett spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(skjult)"
@@ -3115,7 +3116,6 @@ nb_NO:
         this_month: "Den siste måneden"
         this_week: "Den siste uken"
         today: "I dag"
-        other_periods: "se toppen:"
     permission_types:
       full: "Opprett / Svar / Se"
       create_post: "Svar / Se"
@@ -3622,9 +3622,8 @@ nb_NO:
         detailed_instruction: "En POST-forespørsel sendes til den angitte URL-en når den valgte hendelsen skjer."
         new: "Ny webhook"
         create: "Opprett"
+        edit: "Endre"
         save: "Lagre"
-        destroy: "Slett"
-        description: "Beskrivelse"
         controls: "Handlinger"
         go_back: "Tilbake til liste"
         payload_url: "Payload URL"
@@ -3702,9 +3701,6 @@ nb_NO:
           headers: "Hoder"
           payload: "Payload"
           body: "Body"
-          go_list: "Gå til liste"
-          go_details: "Rediger webhook"
-          go_events: "Gå til hendelser"
           ping: "Ping"
           status: "Statuskode"
           event_id: "ID"

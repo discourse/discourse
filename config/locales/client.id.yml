@@ -220,7 +220,6 @@ id:
     conduct: "Kode Etik"
     mobile_view: "Tampilan Mobile"
     desktop_view: "Tampilan Desktop"
-    or: "atau"
     now: "baru saja"
     read_more: "baca selengkapnya"
     more: "Selengkapnya"
@@ -1273,7 +1272,6 @@ id:
     home: "Beranda"
     read_only_mode:
       logout_disabled: "Logout di-nonaktifkan saat situs dalam mode hanya-baca."
-    first_post: Tulisan pertama
     mute: Bisu
     unmute: Buka Bisu
     time_read: Dibaca
@@ -1560,8 +1558,6 @@ id:
       back_to_list: "Kembali ke Daftar Topik"
       options: "Opsi Topik"
       show_links: "tampilkan pranala dalam topik ini"
-      browse_all_categories: Lihat semua kategori
-      view_latest_topics: lihat topik terbaru
       jump_reply_up: lompat ke balasan sebelumnya
       slow_mode_update:
         enable: "Aktifkan"
@@ -1888,8 +1884,8 @@ id:
         scopes:
           action: Aksi
       web_hooks:
+        edit: "Ubah"
         save: "Simpan"
-        destroy: "Hapus"
         active: "Aktif"
         delivery_status:
           failed: "Gagal"

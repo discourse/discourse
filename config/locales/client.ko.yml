@@ -219,7 +219,6 @@ ko:
     conduct: "준수 사항"
     mobile_view: "모바일 보기"
     desktop_view: "데스크톱 보기"
-    or: "또는"
     now: "방금"
     read_more: "더 보기"
     more: "더 보기"
@@ -1600,15 +1599,18 @@ ko:
       enabled: "이 사이트는 현재 읽기 전용 모드입니다. 탐색은 가능하지만 댓글, 좋아요 및 기타 작업은 일시적으로 비활성화되었습니다."
       login_disabled: "사이트가 읽기 전용 모드인 동안에는 로그인이 비활성화됩니다."
       logout_disabled: "사이트가 읽기 전용 모드인 동안에는 로그아웃이 비활성화됩니다."
-    too_few_posts_notice_MF: >-
+    too_few_posts_notice_MF: |
       <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">토론을 시작</a> 합시다 <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">!</a> {currentPosts, plural, one {is <strong>#</strong> post} other {are <strong>#</strong> posts}}가 있습니다. 방문자는 더 읽고 답장해야합니다. – {requiredPosts, plural, one { <strong>#</strong> post} other { <strong>#</strong> posts}} 이상을 권장합니다. 직원 만이 메시지를 볼 수 있습니다.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/시간} other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/시간} other {#개의 오류/시간}}에 도달했습니다."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/분} other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/분} other {#개의 오류/분}}에 도달했습니다."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/시간} other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/시간} other {#개의 오류/시간}}을 초과했습니다."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/분} other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/분} other {#개의 오류/분}}을 초과했습니다."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/시간} other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/시간} other {#개의 오류/시간}}에 도달했습니다.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/분} other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/분} other {#개의 오류/분}}에 도달했습니다.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/시간} other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/시간} other {#개의 오류/시간}}을 초과했습니다.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/분} other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/분} other {#개의 오류/분}}을 초과했습니다.
     learn_more: "더 알아보기..."
-    first_post: 첫 게시물
     mute: 뮤트
     unmute: 뮤트 해제
     last_post: 게시됨
@@ -2356,9 +2358,6 @@ ko:
       collapse_details: "주제 상세 정보 접기"
       expand_details: "주제 상세 정보 펼치기"
       unread_indicator: "아직 이 주제의 마지막 게시물을 읽은 회원이 없습니다."
-      browse_all_categories: 모든 카테고리 탐색
-      browse_all_tags: 모든 태그 탐색
-      view_latest_topics: 최근 글 보기
       suggest_create_topic: <a href>새 대화를 시작</a>할 준비가 되었나요?
       jump_reply_up: 이전 댓글로 이동
       jump_reply_down: 다음 댓글로 이동
@@ -3060,7 +3059,8 @@ ko:
       official_warning: "공식 경고"
       delete_spammer: "스팸 사용자 삭제"
       flag_for_review: "검토 대기열"
-      delete_confirm_MF: "이 사용자의 {POSTS, plural, one {<b>#</b>개의 게시물} other {<b>#</b>개의 게시물}} 및 {TOPICS, plural, one {<b>#</b>개의 주제} other {<b>#</b>개의 주제}}를 삭제하고, 사용자의 계정을 제거하고, 해당 IP 주소 <b>{ip_address}</b>의 가입을 차단하고, 해당 이메일 주소(<b>{email}</b>)를 영구 차단 목록에 추가하려 합니다. 이 사용자가 정말 스팸 사용자인가요?"
+      delete_confirm_MF: |
+        이 사용자의 {POSTS, plural, one {<b>#</b>개의 게시물} other {<b>#</b>개의 게시물}} 및 {TOPICS, plural, one {<b>#</b>개의 주제} other {<b>#</b>개의 주제}}를 삭제하고, 사용자의 계정을 제거하고, 해당 IP 주소 <b>{ip_address}</b>의 가입을 차단하고, 해당 이메일 주소(<b>{email}</b>)를 영구 차단 목록에 추가하려 합니다. 이 사용자가 정말 스팸 사용자인가요?
       yes_delete_spammer: "예, 스팸 사용자를 삭제합니다"
       ip_address_missing: "(해당 사항 없음)"
       hidden_email_address: "(숨김)"
@@ -3214,7 +3214,6 @@ ko:
         this_month: "월"
         this_week: "주"
         today: "오늘"
-        other_periods: "다음 주요 항목 보기:"
     browser_update: '<a href="https://www.discourse.org/faq/#browser">브라우저 버전이 너무 낮아 이 사이트에서 작동하지 않습니다</a>. <a href="https://browsehappy.com">브라우저를 업그레이드</a>하여 서식 있는 콘텐츠를 표시하고 로그인하여 댓글도 달아보세요.'
     safari_13_warning: 이 사이트는 곧 iOS 및 Safari 버전 13 이하에 대한 지원을 중단할 예정입니다. 단순화된 읽기 전용 버전은 계속 사용할 수 있습니다. (<a href="https://meta.discourse.org/t/224747">더 보기</a>)
     permission_types:
@@ -3842,9 +3841,8 @@ ko:
         detailed_instruction: "선택된 이벤트가 발생할 경우 POST 요청이 제공된 URL로 전송됩니다."
         new: "새 Webhook"
         create: "생성"
+        edit: "수정"
         save: "저장하기"
-        destroy: "삭제하기"
-        description: "설명"
         controls: "컨트롤"
         go_back: "목록으로 돌아가기"
         payload_url: "Payload URL"
@@ -3920,9 +3918,6 @@ ko:
           headers: "헤더"
           payload: "페이로드"
           body: "본문"
-          go_list: "목록으로 가기"
-          go_details: "Webhook 편집"
-          go_events: "이벤트로 가기"
           ping: "Ping"
           status: "상태 코드"
           event_id: "ID"
@@ -4661,7 +4656,8 @@ ko:
         clear_penalty_history:
           title: "페널티 히스토리 지우기"
           description: "페널티가 있는 사용자는 신뢰 레벨 3을 받을 수 없음"
-        delete_all_posts_confirm_MF: "{POSTS, plural, one {#개의 댓글} other {#개의 댓글}} 및 {TOPICS, plural, one {#개의 주제} other {#개의 주제}}를 삭제하려고 합니다. 계속할까요?"
+        delete_all_posts_confirm_MF: |
+          {POSTS, plural, one {#개의 댓글} other {#개의 댓글}} 및 {TOPICS, plural, one {#개의 주제} other {#개의 주제}}를 삭제하려고 합니다. 계속할까요?
         silence: "차단"
         unsilence: "차단 해제"
         silenced: "차단되었나요?"

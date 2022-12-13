@@ -272,7 +272,6 @@ lt:
     conduct: "Elgesio kodeksas"
     mobile_view: "Mobili peržiūra"
     desktop_view: "Pilna peržiūra"
-    or: "arba"
     now: "Ką tik"
     read_more: "skaityti daugiau"
     more: "Daugiau"
@@ -1596,7 +1595,6 @@ lt:
       login_disabled: "Prisijungimas yra išjungtas, kai svetainė yra skaitymo režime."
       logout_disabled: "Atsijungimas yra laikinai išjunktas kuomet puslapis yra žiūrimas skaitymo režimu"
     learn_more: "sužinoti daugiau..."
-    first_post: Pirmas įrašas
     mute: Nutildyti
     unmute: Pašalinti nutildymą
     last_post: Paskelbta
@@ -2315,9 +2313,6 @@ lt:
       collapse_details: "sutraukti temos informaciją"
       expand_details: "išplėsti temos informaciją"
       unread_indicator: "Nė vienas narys dar neperskaitė paskutinio šios temos įrašo."
-      browse_all_categories: Žiūrėkite visas kategorijas
-      browse_all_tags: Naršyti visas žymes
-      view_latest_topics: peržiūrėkite paskutines temas
       suggest_create_topic: Pasirengę <a href>pradėti naują pokalbį?</a>
       jump_reply_up: Pereiti į ankstesnį atsakymą
       jump_reply_down: Pereitį į sekantį atsakymą
@@ -3200,7 +3195,6 @@ lt:
         this_month: "Per mėnesį"
         this_week: "Per savaitę"
         today: "Šandien"
-        other_periods: "žiūrėti viršuje:"
     permission_types:
       full: "Kurti / Atsakyti / Peržiūrėti"
       create_post: "Atsakyti / Peržiūrėti"
@@ -3774,9 +3768,8 @@ lt:
       web_hooks:
         detailed_instruction: "POST užklausa bus išsiųsta nurodytu URL, kai įvyks pasirinktas įvykis."
         create: "Sukurti"
+        edit: "Redaguoti"
         save: "Saugoti"
-        destroy: "Pašalinti"
-        description: "Aprašymas"
         controls: "Valdymai"
         go_back: "Atgal į sąrašą"
         payload_url: "Naudingos apkrovos URL"
@@ -3834,8 +3827,6 @@ lt:
           request: "Užklausa"
           response: "Atsakymas"
           body: "Turinys"
-          go_list: "Eiti į sąrašą"
-          go_events: "Eiti į renginius"
           status: "Būsenos kodas"
           event_id: "ID"
           timestamp: "Sukurta"

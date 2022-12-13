@@ -275,7 +275,6 @@ cs:
     conduct: "Kodex chování"
     mobile_view: "Mobilní verze"
     desktop_view: "Plná verze"
-    or: "nebo"
     now: "právě teď"
     read_more: "číst dále"
     more: "Více"
@@ -1402,7 +1401,6 @@ cs:
       login_disabled: "Přihlášení je zakázáno jelikož je stránka v režimu jen pro čtení."
       logout_disabled: "Odhlášení je zakázáno zatímco je stránka v režimu jen pro čtení."
     learn_more: "více informací..."
-    first_post: První příspěvek
     mute: Ignorovat
     unmute: Zrušit ignorování
     last_post: Přispěl
@@ -1950,8 +1948,6 @@ cs:
       back_to_list: "Zpátky na seznam témat"
       options: "Možnosti"
       show_links: "zobrazit odkazy v tomto tématu"
-      browse_all_categories: Projděte všechny kategorie
-      view_latest_topics: zobrazte si populární témata
       jump_reply_up: přejít na předchozí odpověď
       jump_reply_down: přejít na následující odpověď
       deleted: "Téma bylo smazáno"
@@ -3045,9 +3041,8 @@ cs:
         detailed_instruction: "Pokud nastane vybraná událost, žádost o příspěvek bude odeslána na uvedené URL."
         new: "Nový Webhook"
         create: "Vytvoř"
+        edit: "Upravit"
         save: "Uložit"
-        destroy: "Smazat"
-        description: "Popis"
         controls: "Správa"
         go_back: "Zpět na seznam"
         payload_url: "Payload URL"
@@ -3101,9 +3096,6 @@ cs:
           headers: "Hlavičky"
           payload: "Payload"
           body: "Tělo"
-          go_list: "Přejít na seznam"
-          go_details: "Editovat webhook"
-          go_events: "Přejít na události"
           ping: "Ping"
           status: "Stavový kód"
           event_id: "ID"

@@ -213,7 +213,6 @@ th:
     conduct: "กฎเกณฑ์และเงื่อนไข"
     mobile_view: "ดูแบบอุปกรณ์เคลื่อนที่"
     desktop_view: "ดูแบบเดสก์ท็อป"
-    or: "หรือ"
     now: "ขณะนี้"
     read_more: "อ่านเพิ่มเติม"
     more: "เพิ่มเติม"
@@ -1186,7 +1185,6 @@ th:
       login_disabled: "การลงชื่อเข้าใช้จะไม่สามารถใช้งานได้เมื่อเว็บไซต์อยู่ในโหมดอ่านเท่านั้น"
       logout_disabled: "การออกจากระบบจะไม่สามารถใช้งานได้เมื่อเว็บไซต์อยู่ในโหมดอ่านเท่านั้น"
     learn_more: "เรียนรู้เพิ่มเติม..."
-    first_post: โพสต์แรก
     mute: ปิดเสียง
     unmute: เลิกปิดเสียง
     last_post: โพสต์แล้ว
@@ -1696,7 +1694,6 @@ th:
       options: "ตัวเลือกกระทู้"
       show_links: "แสดงลิงก์ในกระทู้นี้"
       unread_indicator: "ยังไม่มีสมาชิกอ่านโพสต์ล่าสุดของกระทู้นี้"
-      view_latest_topics: ดูกระทู้ล่าสุด
       jump_reply_up: ข้ามไปยังคำตอบก่อนหน้านี้
       jump_reply_down: ข้ามไปยังคำตอบหลังจากนี้
       deleted: "กระทู้ถูกลบ"
@@ -2272,7 +2269,6 @@ th:
         this_month: "เดือน"
         this_week: "สัปดาห์"
         today: "วันนี้"
-        other_periods: "ดูด้านบน:"
     permission_types:
       full: "สร้าง / ตอบ / ดู"
       create_post: "ตอบ / ดู"
@@ -2613,9 +2609,8 @@ th:
         continue: ดำเนินการต่อ
       web_hooks:
         create: "สร้าง"
+        edit: "แก้ไข"
         save: "บันทึก"
-        destroy: "ลบ"
-        description: "รายละเอียด"
         wildcard_event: "ส่งทุกอย่างหาฉัน"
         active: "ใช้งานอยู่"
         user_badge_event:

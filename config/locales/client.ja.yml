@@ -223,7 +223,6 @@ ja:
     conduct: "行動規範"
     mobile_view: "モバイルビュー"
     desktop_view: "デスクトップビュー"
-    or: "または"
     now: "たった今"
     read_more: "もっと読む"
     more: "もっと"
@@ -1650,12 +1649,15 @@ ja:
     staff_writes_only_mode:
       enabled: "このサイトはスタッフ専用モードになっています。このまま閲覧できますが、返信や「いいね！」、その他の操作はスタッフメンバーのみに制限されています。"
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 時間当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限に達しました。"
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 分当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限に達しました。"
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 時間当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限を超えました。"
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 分当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限を超えました。"
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 時間当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限に達しました。
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 分当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限に達しました。
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 時間当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限を超えました。
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 分当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限を超えました。
     learn_more: "もっと詳しく..."
-    first_post: 最初の投稿
     mute: ミュート
     unmute: ミュート解除
     last_post: 最終投稿
@@ -1678,7 +1680,8 @@ ja:
       enabled_description: "このトピックの要約を閲覧しています。コミュニティーが最も面白いとした投稿のまとめです。"
       description:
         other: "<b>%{count}</b> 件の返信があります。"
-      description_time_MF: "{replyCount, plural, other {<b>#</b> 件の返信}}があります。読了目安時間は <b>{readingTime, plural, other {# 分}}</b>です。"
+      description_time_MF: |
+        {replyCount, plural, other {<b>#</b> 件の返信}}があります。読了目安時間は <b>{readingTime, plural, other {# 分}}</b>です。
       enable: "このトピックを要約する"
       disable: "すべての投稿を表示"
       short_label: "要約"
@@ -2446,9 +2449,6 @@ ja:
       collapse_details: "トピックの詳細を折りたたむ"
       expand_details: "トピックの詳細を展開する"
       unread_indicator: "このトピックの最後の投稿を読んだメンバーはまだいません。"
-      browse_all_categories: すべてのカテゴリを閲覧する
-      browse_all_tags: すべてのタグを閲覧する
-      view_latest_topics: 最新のトピックを表示する
       suggest_create_topic: <a href>新しい会話を開始しますか？</a>
       jump_reply_up: 以前の返信へジャンプ
       jump_reply_down: 以後の返信へジャンプ
@@ -3169,7 +3169,8 @@ ja:
       official_warning: "運営スタッフからの警告"
       delete_spammer: "迷惑行為者を削除"
       flag_for_review: "レビューのキューに入れる"
-      delete_confirm_MF: "このユーザーの {POSTS, plural, other {<b>#</b> 件の投稿}}と{TOPICS, plural, other {<b>#</b> 件のトピック}}を削除し、アカウントを削除し、IP アドレス <b>{ip_address}</b> からの登録をブロックし、メールアドレス <b>{email}</b> を永久ブロックリストに追加しようとしています。このユーザーは本当に迷惑行為者ですか？"
+      delete_confirm_MF: |
+        このユーザーの {POSTS, plural, other {<b>#</b> 件の投稿}}と{TOPICS, plural, other {<b>#</b> 件のトピック}}を削除し、アカウントを削除し、IP アドレス <b>{ip_address}</b> からの登録をブロックし、メールアドレス <b>{email}</b> を永久ブロックリストに追加しようとしています。このユーザーは本当に迷惑行為者ですか？
       yes_delete_spammer: "はい、迷惑行為者を削除する"
       ip_address_missing: "(該当なし)"
       hidden_email_address: "(非表示)"
@@ -3333,7 +3334,6 @@ ja:
         this_month: "今月"
         this_week: "今週"
         today: "今日"
-        other_periods: "人気を参照:"
     browser_update: '残念ながら、<a href="https://www.discourse.org/faq/#browser">あなたのブラウザはサポートされていません</a>。リッチコンテンツを表示するには<a href="https://browsehappy.com">サポートされているブラウザに切り替え</a>てから、ログインして返信してください。'
     safari_13_warning: このサイトは、まもなく iOS と Safari バージョン 13 以下のサポートを終了します。簡易版の読み取り専用バージョンは、引き続き利用可能です。(<a href="https://meta.discourse.org/t/224747">詳細</a>)
     permission_types:
@@ -3991,8 +3991,6 @@ ja:
         new: "新しい Webhook"
         create: "作成"
         save: "保存"
-        destroy: "削除"
-        description: "説明"
         controls: "コントロール"
         go_back: "リストに戻る"
         payload_url: "ペイロード URL"
@@ -4071,9 +4069,6 @@ ja:
           headers: "ヘッダー"
           payload: "ペイロード"
           body: "本文"
-          go_list: "リストに移動"
-          go_details: "Webhook の編集"
-          go_events: "イベントに移動"
           ping: "Ping"
           status: "ステータスコード"
           event_id: "ID"
@@ -4816,7 +4811,8 @@ ja:
         clear_penalty_history:
           title: "ペナルティ履歴をクリア"
           description: "ペナルティのあるユーザーは TL3 に昇格されません"
-        delete_all_posts_confirm_MF: "{POSTS, plural, other {# 件の投稿}}と{TOPICS, plural, other {# 件のトピック}}を削除しようとしています。よろしいですか？"
+        delete_all_posts_confirm_MF: |
+          {POSTS, plural, other {# 件の投稿}}と{TOPICS, plural, other {# 件のトピック}}を削除しようとしています。よろしいですか？
         silence: "投稿禁止"
         unsilence: "投稿禁止を解除"
         silenced: "投稿禁止？"

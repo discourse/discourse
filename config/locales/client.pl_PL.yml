@@ -313,7 +313,6 @@ pl_PL:
     conduct: "Regulamin"
     mobile_view: "Widok mobilny"
     desktop_view: "Wersja komputerowa"
-    or: "lub"
     now: "teraz"
     read_more: "więcej"
     more: "Więcej"
@@ -1227,6 +1226,7 @@ pl_PL:
         tags_section_instruction: "Wybrane tagi będą wyświetlane w sekcji tagów paska bocznego."
         navigation_section: "Nawigacja"
         list_destination_instruction: "Gdy na pasku bocznym pojawi się nowa zawartość..."
+        list_destination_default: "użyj linku domyślnego i pokaż odznakę dla nowych elementów"
       change: "zmień"
       featured_topic: "Wyróżniony temat"
       moderator: "%{user} jest moderatorem"
@@ -1399,6 +1399,8 @@ pl_PL:
         enforced_notice: "Aby uzyskać dostęp do tej witryny, musisz włączyć uwierzytelnianie dwuskładnikowe."
         disable: "Wyłącz"
         delete: "Usuń"
+        delete_confirm_instruction: "Aby potwierdzić, wpisz <strong>%{confirm}</strong> w polu poniżej."
+        delete_backup_codes_confirm_title: "Usuwanie kodów zapasowych"
         save: "Zapisz"
         edit: "Edytuj"
         edit_title: "Edytuj Authenticator"
@@ -1822,6 +1824,7 @@ pl_PL:
         title: "Menu postu"
         content: "Zobacz, jak jeszcze możesz wejść w interakcję z postem, klikając trzy kropki!"
       topic_notification_levels:
+        title: "Obserwujesz teraz ten temat"
         content: "Poszukaj tego dzwonka, aby dostosować preferencje powiadomień dla określonych tematów lub całych kategorii."
       suggested_topics:
         title: "Czytaj dalej!"
@@ -1859,15 +1862,20 @@ pl_PL:
       logout_disabled: "Wylogowanie jest zablokowane gdy strona jest w trybie tylko do odczytu."
     staff_writes_only_mode:
       enabled: "Ta strona jest w trybie tylko dla personelu. Kontynuuj przeglądanie, ale odpowiadanie, polubienia i inne działania są ograniczone tylko do członków personelu."
-    too_few_posts_notice_MF: >-
+    too_few_topics_and_posts_notice_MF: |
+      Zacznijmy <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">dyskutować!</a> Mamy {currentTopics, plural, one {<strong>#</strong> temat}  few {<strong>#</strong> tematy} other {<strong>#</strong> tematów}} i {currentPosts, plural, one {<strong>#</strong> wpis} few {<strong>#</strong> wpisy} other {<strong>#</strong> wpisów}}. Odwiedzający potrzebują więcej do dyskusji – zalecamy przynajmniej {requiredTopics, plural, one {<strong>#</strong> temat} few {<strong>#</strong> tematy} other {<strong>#</strong> tematów}} i {requiredPosts, plural, one {<strong>#</strong> wpis} few {<strong>#</strong> wpisy} other {<strong>#</strong> wpisów}}. Tylko członkowie personelu widzą tę wiadomość.
+    too_few_posts_notice_MF: |
       Zacznijmy <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">dyskutować!</a> Mamy {currentPosts, plural, one {<strong>#</strong> wpis} few {<strong>#</strong> wpisy} other {<strong>#</strong> wpisów}}. Odwiedzający potrzebują więcej do dyskusji – zalecamy przynajmniej {requiredPosts, plural, one {<strong>#</strong> wpis} few {<strong>#</strong> wpisy} other {<strong>#</strong> wpisów}}. Tylko członkowie zespołu widzą tę wiadomość.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} few {# errors/hour} many {# errors/hour} other {# errors/hour}}</a> osiągnięto limit ustawień witryny wynoszący {limit, plural, one {# error/hour} few {# errors/hour} many {# errors/hour} other {# errors/hour}}."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} few {# errors/minute} many {# errors/minute} other {# errors/minute}}</a> osiągnięto limit ustawień witryny wynoszący {limit, plural, one {# error/minute} few {# errors/minute} many {# errors/minute} other {# errors/minute}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} few {# errors/hour} many {# errors/hour} other {# errors/hour}}</a> osiągnięto limit ustawień witryny wynoszący {limit, plural, one {# error/hour} few {# errors/hour} many {# errors/hour} other {# errors/hour}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} few {# errors/minute} many {# errors/minute} other {# errors/minute}}</a> osiągnięto limit ustawień witryny wynoszący {limit, plural, one {# error/minute} few {# errors/minute} many {# errors/minute} other {# errors/minute}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} few {# errors/hour} many {# errors/hour} other {# errors/hour}}</a> osiągnięto limit ustawień witryny wynoszący {limit, plural, one {# error/hour} few {# errors/hour} many {# errors/hour} other {# errors/hour}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} few {# errors/minute} many {# errors/minute} other {# errors/minute}}</a> osiągnięto limit ustawień witryny wynoszący {limit, plural, one {# error/minute} few {# errors/minute} many {# errors/minute} other {# errors/minute}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} few {# errors/hour} many {# errors/hour} other {# errors/hour}}</a> osiągnięto limit ustawień witryny wynoszący {limit, plural, one {# error/hour} few {# errors/hour} many {# errors/hour} other {# errors/hour}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minute} few {# errors/minute} many {# errors/minute} other {# errors/minute}}</a> osiągnięto limit ustawień witryny wynoszący {limit, plural, one {# error/minute} few {# errors/minute} many {# errors/minute} other {# errors/minute}}.
     learn_more: "dowiedz się więcej…"
-    first_post: Pierwszy wpis
     mute: Wycisz
     unmute: Wyłącz wyciszenie
     last_post: Opublikowano
@@ -1896,7 +1904,8 @@ pl_PL:
         few: "Jest <b>%{count}</b> odpowiedzi."
         many: "Jest <b>%{count}</b> odpowiedzi."
         other: "Jest <b>%{count}</b> odpowiedzi."
-      description_time_MF: "Istnieje {replyCount, plural, one {<b>#</b> odpowiedź} few {<b>#</b> odpowiedzi} many {<b>#</b> odpowiedzi} other {<b>#</b> odpowiedzi}} z szacowanym czasem czytania <b>{readingTime, plural, one {# minuty} few {# minut} many {# minut} other {# minut}}</b>."
+      description_time_MF: |
+        Istnieje {replyCount, plural, one {<b>#</b> odpowiedź} few {<b>#</b> odpowiedzi} many {<b>#</b> odpowiedzi} other {<b>#</b> odpowiedzi}} z szacowanym czasem czytania <b>{readingTime, plural, one {# minuty} few {# minut} many {# minut} other {# minut}}</b>.
       enable: "Podsumuj ten temat"
       disable: "Pokaż wszystkie posty"
       short_label: "Podsumuj"
@@ -1987,6 +1996,7 @@ pl_PL:
       blank_username_or_password: "Podaj swój email lub nazwę użytkownika i hasło"
       reset_password: "Resetuj hasło"
       logging_in: "Uwierzytelnianie…"
+      previous_sign_up: "Masz już konto?"
       or: "Lub"
       authenticating: "Autentykacja…"
       awaiting_activation: "Twoje konto czeka na aktywację. Użyj linku przypomnienia hasła, aby otrzymać kolejny email aktywujący."
@@ -2791,9 +2801,6 @@ pl_PL:
       collapse_details: "zwiń szczegóły tematu"
       expand_details: "rozwiń szczegóły tematu"
       unread_indicator: "Nikt jeszcze nie czytał ostatniego postu w tym temacie."
-      browse_all_categories: Przeglądaj wszystkie kategorie
-      browse_all_tags: Przeglądaj wszystkie tagi
-      view_latest_topics: pokaż aktualne tematy
       suggest_create_topic: Gotowy na <a href>rozpoczęcie nowej rozmowy?</a>
       jump_reply_up: skocz do wcześniejszej odpowiedzi
       jump_reply_down: skocz do późniejszej odpowiedzi
@@ -3614,7 +3621,8 @@ pl_PL:
       official_warning: "Oficjalne ostrzeżenie"
       delete_spammer: "Usuń spamera"
       flag_for_review: "Kolejka do sprawdzenia"
-      delete_confirm_MF: "Zamierzasz usunąć {POSTS, plural, one {<b>#</b> wpis} few {<b>#</b> wpisy} other {<b>#</b> wpisów}} i {TOPICS, plural, one {<b>#</b> temat} few {<b>#</b> tematy} other {<b>#</b> tematów}} użytkownika, usunąć jego konto, zablokować możliwość zakładania kont z jego adresu IP <b>{ip_address}</b> i dodać jego email <b>{email}</b> do listy trwale zablokowanych. Czy na pewno ten użytkownik jest spamerem?"
+      delete_confirm_MF: |
+        Zamierzasz usunąć {POSTS, plural, one {<b>#</b> wpis} few {<b>#</b> wpisy} other {<b>#</b> wpisów}} i {TOPICS, plural, one {<b>#</b> temat} few {<b>#</b> tematy} other {<b>#</b> tematów}} użytkownika, usunąć jego konto, zablokować możliwość zakładania kont z jego adresu IP <b>{ip_address}</b> i dodać jego email <b>{email}</b> do listy trwale zablokowanych. Czy na pewno ten użytkownik jest spamerem?
       yes_delete_spammer: "Tak, usuń spamera"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(ukryto)"
@@ -3823,7 +3831,6 @@ pl_PL:
         this_month: "Miesiąc"
         this_week: "Tydzień"
         today: "Dzisiaj"
-        other_periods: "Zobacz najczęściej dyskutowane:"
     browser_update: 'Niestety, <a href="https://www.discourse.org/faq/#browser">twoja przeglądarka nie jest obsługiwana</a>. Proszę <a href="https://browsehappy.com">przełączyć się na obsługiwaną przeglądarkę</a>, aby móc oglądać bogatą zawartość, zalogować się i odpowiedzieć.'
     safari_13_warning: Ta strona wkrótce przestanie obsługiwać systemy iOS i Safari w wersji 13 i niższej. Nadal będzie dostępna uproszczona wersja tylko do odczytu. (<a href="https://meta.discourse.org/t/224747">więcej informacji</a>)
     permission_types:
@@ -4544,9 +4551,8 @@ pl_PL:
         detailed_instruction: "Zapytanie POST zostanie wysłane na podany adres URL gdy zostanie spełnione wybrane wydarzenie"
         new: "Nowy webhook"
         create: "Stwórz"
+        edit: "Edytuj"
         save: "Zapisz"
-        destroy: "Usuń"
-        description: "Opis"
         controls: "Ustawienia"
         go_back: "Powrót do listy"
         payload_url: "Zawartość URL"
@@ -4631,9 +4637,6 @@ pl_PL:
           headers: "Nagłówki"
           payload: "Zawartość"
           body: "Body"
-          go_list: "Przejdź do listy"
-          go_details: "Edytuj webhook"
-          go_events: "Przejdź do wydarzeń"
           ping: "Ping"
           status: "Kod stanu"
           event_id: "ID"
@@ -5380,7 +5383,8 @@ pl_PL:
         clear_penalty_history:
           title: "Wyczyść Historię Przewinień"
           description: "użytkownicy z karami nie mogą otrzymać TL3"
-        delete_all_posts_confirm_MF: "Zamierzasz usunąć {POSTS, plural, one {# post} few {# posty} many {# postów} other {# postów}} i {TOPICS, plural, one {# temat} few {# tematy} many {# tematów} other {# tematów}}. Jesteś pewien?"
+        delete_all_posts_confirm_MF: |
+          Zamierzasz usunąć {POSTS, plural, one {# post} few {# posty} many {# postów} other {# postów}} i {TOPICS, plural, one {# temat} few {# tematy} many {# tematów} other {# tematów}}. Jesteś pewien?
         silence: "Wycisz"
         unsilence: "Cofnij wyciszenie"
         silenced: "Wyciszony?"

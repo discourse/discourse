@@ -230,7 +230,6 @@ lv:
     conduct: "Rīcības kodekss"
     mobile_view: "Mobilais skats"
     desktop_view: "Datora skats"
-    or: "vai"
     now: "tikko"
     read_more: "lasīt vairāk"
     more: "Vairāk"
@@ -1496,7 +1495,6 @@ lv:
       login_disabled: "Pieslēgšanās ir atslēgta, kamēr vietne ir \"tikai lasīšanas\" režīmā."
       logout_disabled: "Iziešana ir atslēgta, kamēr vietne ir \"tikai lasīšanas\" režīmā."
     learn_more: "uzzināt vairāk..."
-    first_post: Pirmais ieraksts
     mute: Noklusināt
     unmute: Pārtraukt klusināšanu
     last_post: Ierakstīts
@@ -2008,8 +2006,6 @@ lv:
       back_to_list: "Atpakaļ pie tēmu saraksta "
       options: "Tēmas iestatījumi "
       show_links: "rādīt saites šajā tēmā"
-      browse_all_categories: Pārlūkot visas sadaļas
-      view_latest_topics: Skatīt jaunākās tēmas
       jump_reply_up: pāriet uz agrāku atbildi
       jump_reply_down: pāriet uz vēlāku atbildi
       deleted: "Tēma ir dzēsta "
@@ -2952,9 +2948,8 @@ lv:
       web_hooks:
         detailed_instruction: "Ja būs signāls par izvēlēto notikumu, uz norādīto URL tiks nosūtīts POST pieprasījums."
         create: "Izveidot"
+        edit: "Rediģēt"
         save: "Saglabāt"
-        destroy: "Dzēst"
-        description: "Apraksts"
         controls: "Pārvaldīšana"
         go_back: "Atgriezties pie saraksta"
         secret_invalid: "Noslēpums nedrīkst saturēt tukšus simbolus."
@@ -2995,8 +2990,6 @@ lv:
           response: "Atbilde"
           headers: "Virsraksts"
           body: "Ķermenis"
-          go_list: "Doties uz sarakstu"
-          go_events: "Pāriet pie notikumiem"
           status: "Statusa kods"
           event_id: "ID"
           timestamp: "Izveidots"

@@ -190,7 +190,6 @@ sw:
     tos: "Masharti ya Huduma"
     mobile_view: "Mtazamo wa Simu"
     desktop_view: "Muonekano wa Eneo Kazi"
-    or: "au"
     now: "sasa hivi"
     read_more: "soma zaidi"
     more: "Zaidi"
@@ -1030,7 +1029,6 @@ sw:
       login_disabled: "Kuingia kumesitishwa kipindi tovuti ipo kwenye hali-tumizi ya kusoma tu."
       logout_disabled: "Kutoka kumesitishwa kipindi tovuti ipo kwenye hali-tumizi ya kusoma tu."
     learn_more: "jifunze zaidi..."
-    first_post: Chapisho la kwanza
     mute: Nyamazisha
     unmute: Toa kwenye Ukimya
     last_post: Alichapisha
@@ -1527,8 +1525,6 @@ sw:
       back_to_list: "Rudi tena kwenye Orodha ya Mada"
       options: "Machaguo ya Mada"
       show_links: "onyesha viungo ndani ya hii mada"
-      browse_all_categories: Vinjari kategoria zote
-      view_latest_topics: tembelea mada mpya
       jump_reply_up: fikia jibu la awali
       jump_reply_down: fikia jibu la baadaye
       deleted: "Mada imefutwa"
@@ -2434,9 +2430,8 @@ sw:
           action: Kitendo
       web_hooks:
         create: "Tengeneza"
+        edit: "Hariri"
         save: "Hifadhi"
-        destroy: "Futa"
-        description: "Elezo"
         controls: "Vidhibiti"
         go_back: "Rudi kwenye orodha"
         payload_url_placeholder: "https://example.com/postreceive"
@@ -2480,8 +2475,6 @@ sw:
           response: "Mwitikio"
           headers: "Vichwa"
           body: "Mwili"
-          go_list: "Nenda kwenye orodha"
-          go_events: "Nenda kwenye matukio"
           ping: "Ping"
           status: "Kodi ya Hali"
           event_id: "Utambulisho"

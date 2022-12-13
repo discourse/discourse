@@ -263,7 +263,6 @@ sl:
     conduct: "Pravila obnašanja"
     mobile_view: "Mobilni pogled"
     desktop_view: "Namizni pogled"
-    or: "ali"
     now: "ravnokar"
     read_more: "preberi več"
     more: "Več"
@@ -1559,7 +1558,6 @@ sl:
       login_disabled: "Prijava je onemogočena dokler je stran v načinu za branje."
       logout_disabled: "Odjava je onemogočena dokler je stran v načinu za branje."
     learn_more: "izvedite več..."
-    first_post: Prvi prispevek
     mute: Utišano
     unmute: Povrni glasnost
     last_post: Zadnji prispevek
@@ -2232,9 +2230,6 @@ sl:
       options: "Možnosti teme"
       show_links: "pokaži povezave v tej temi"
       unread_indicator: "Noben član ni še prebral zadnjega prispevka v tej temi."
-      browse_all_categories: Brskajte po vseh kategorijah
-      browse_all_tags: Brskanje po vseh oznakah
-      view_latest_topics: poglej najnovejše teme
       jump_reply_up: pojdi na prejšni odgovor
       jump_reply_down: pojdi na naslednji odgovor
       deleted: "Tema je bila izbrisana"
@@ -3597,9 +3592,8 @@ sl:
               show: Pridobi informacije o uporabniku.
       web_hooks:
         create: "Ustvari"
+        edit: "Uredi"
         save: "Shrani"
-        destroy: "Izbriši"
-        description: "Opis"
         secret: "Skriven"
         wildcard_event: "Pošlji mi vse."
         active: "Aktivni"

@@ -253,7 +253,6 @@ fi:
     conduct: "Käytännesäännöt"
     mobile_view: "Mobiilinäkymä"
     desktop_view: "Työpöytänäkymä"
-    or: "tai"
     now: "hetki sitten"
     read_more: "lue lisää"
     more: "Lisää"
@@ -1719,12 +1718,15 @@ fi:
     staff_writes_only_mode:
       enabled: "Sivusto on vain henkilökunta -tilassa. Voit jatkaa selailua, mutta vastaaminen, tykkääminen ja muita toimintoja on rajoitettu vain henkilökunnan jäsenille."
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# virhe/tunti} other {# virhettä/tunti}}</a> saavutti sivustoasetusrajan {limit, plural, one {# virhe/tunti} other {# virhettä/tunti}}."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# virhe/minuutti} other {# virhettä/minuutti}}</a> saavutti sivustoasetusrajan {limit, plural, one {# virhe/minuutti} other {# virhettä/minuutti}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# virhe/tunti} other {# virhettä/tunti}}</a> ylitti sivustoasetusrajan {limit, plural, one {# virhe/tunti} other {# virhettä/tunti}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# virhe/minuutti} other {# virhettä/minuutti}}</a> ylitti sivustoasetusrajan {limit, plural, one {# virhe/minuutti} other {# virhettä/minuutti}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# virhe/tunti} other {# virhettä/tunti}}</a> saavutti sivustoasetusrajan {limit, plural, one {# virhe/tunti} other {# virhettä/tunti}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# virhe/minuutti} other {# virhettä/minuutti}}</a> saavutti sivustoasetusrajan {limit, plural, one {# virhe/minuutti} other {# virhettä/minuutti}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# virhe/tunti} other {# virhettä/tunti}}</a> ylitti sivustoasetusrajan {limit, plural, one {# virhe/tunti} other {# virhettä/tunti}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# virhe/minuutti} other {# virhettä/minuutti}}</a> ylitti sivustoasetusrajan {limit, plural, one {# virhe/minuutti} other {# virhettä/minuutti}}.
     learn_more: "lisätietoja..."
-    first_post: Ensimmäinen viesti
     mute: Vaimenna
     unmute: Poista vaimennus
     last_post: Kirjoitti
@@ -1749,7 +1751,8 @@ fi:
       description:
         one: "Ketjussa on <b>%{count}</b> vastaus."
         other: "Ketjussa on <b>%{count}</b> vastausta."
-      description_time_MF: "Ketjussa {replyCount, plural, one {on <b>#</b> vastaus} other {on <b>#</b> vastausta}}, joiden arvioitu lukuaika on <b>{readingTime, plural, one {# minuutti} other {# minuuttia}}</b>."
+      description_time_MF: |
+        Ketjussa {replyCount, plural, one {on <b>#</b> vastaus} other {on <b>#</b> vastausta}}, joiden arvioitu lukuaika on <b>{readingTime, plural, one {# minuutti} other {# minuuttia}}</b>.
       enable: "Näytä ketjun tiivistelmä"
       disable: "Näytä kaikki viestit"
       short_label: "Tee yhteenveto"
@@ -2561,9 +2564,6 @@ fi:
       collapse_details: "kutista ketjun tiedot"
       expand_details: "laajenna ketjun tiedot"
       unread_indicator: "Kukaan jäsen ei ole lukenut ketjun viimeistä viestiä vielä."
-      browse_all_categories: Selaa kaikkia alueita
-      browse_all_tags: Selaa kaikkia tunnisteita
-      view_latest_topics: katso tuoreimmat ketjut
       suggest_create_topic: Valmiina <a href>aloittamaan uuden keskustelun?</a>
       jump_reply_up: siirry aiempaan vastaukseen
       jump_reply_down: siirry myöhempään vastaukseen
@@ -3318,7 +3318,8 @@ fi:
       official_warning: "Virallinen varoitus"
       delete_spammer: "Poista roskapostittaja"
       flag_for_review: "Tarkastettavien jono"
-      delete_confirm_MF: "Olet poistamassa {POSTS, plural, one {<b>1</b> viestin} other {<b>#</b> viestiä}} ja {TOPICS, plural, one {<b>1</b> ketjun} other {<b>#</b> ketjua}} tältä käyttäjältä, poistamassa käyttäjätilin, estämässä uusien tunnusten luonnin IP-osoitteestaan <b>{ip_address}</b> ja lisäämässä hänen sähköpostiosoitteensa <b>{email}</b> pysyvälle estolistalle. Oletko varma, että käyttäjä todella on roskapostittaja?"
+      delete_confirm_MF: |
+        Olet poistamassa {POSTS, plural, one {<b>1</b> viestin} other {<b>#</b> viestiä}} ja {TOPICS, plural, one {<b>1</b> ketjun} other {<b>#</b> ketjua}} tältä käyttäjältä, poistamassa käyttäjätilin, estämässä uusien tunnusten luonnin IP-osoitteestaan <b>{ip_address}</b> ja lisäämässä hänen sähköpostiosoitteensa <b>{email}</b> pysyvälle estolistalle. Oletko varma, että käyttäjä todella on roskapostittaja?
       yes_delete_spammer: "Kyllä, poista roskapostittaja"
       ip_address_missing: "-"
       hidden_email_address: "(piilotettu)"
@@ -3497,7 +3498,6 @@ fi:
         this_month: "Kuukausi"
         this_week: "Viikko"
         today: "Tänään"
-        other_periods: "katso suosituimmat:"
     browser_update: 'Valitettavasti <a href="https://www.discourse.org/faq/#browser">selaintasi ei tueta</a>. <a href="https://browsehappy.com">Vaihda tuettuun selaimeen</a>, niin voit katsella monipuolista sisältöä, kirjautua sisään ja vastata.'
     safari_13_warning: Tämä sivusto poistaa pian iOS:n ja Safarin version 13 ja sitä vanhempien versioiden tuen. Yksinkertaistettu vain luku -versio on edelleen käytettävissä. (<a href="https://meta.discourse.org/t/224747">Lisätietoja</a>)
     permission_types:
@@ -4172,8 +4172,6 @@ fi:
         new: "Uusi webhook"
         create: "Luo"
         save: "Tallenna"
-        destroy: "Poista"
-        description: "Kuvaus"
         controls: "Hallinta"
         go_back: "Takaisin luetteloon"
         payload_url: "Tietosisällön URL"
@@ -4254,9 +4252,6 @@ fi:
           headers: "Ylätunnisteet"
           payload: "Tietosisältö"
           body: "Leipäteksti"
-          go_list: "Siirry luetteloon"
-          go_details: "Muokkaa webhookia"
-          go_events: "Siirry tapahtumiin"
           ping: "Ping"
           status: "Tilakoodi"
           event_id: "ID"
@@ -5001,7 +4996,8 @@ fi:
         clear_penalty_history:
           title: "Pyyhi rangaistushistoria"
           description: "käyttäjä, jota on rangaistu, ei voi nousta LT3:lle"
-        delete_all_posts_confirm_MF: "Olet poistamassa {POSTS, plural, one {1 viestin} other {# viestiä}} ja {TOPICS, plural, one {1 ketjun} other {# ketjua}}. Oletko varma?"
+        delete_all_posts_confirm_MF: |
+          Olet poistamassa {POSTS, plural, one {1 viestin} other {# viestiä}} ja {TOPICS, plural, one {1 ketjun} other {# ketjua}}. Oletko varma?
         silence: "Hiljennä"
         unsilence: "Kumoa hiljennys"
         silenced: "Hiljennetty?"

@@ -1029,8 +1029,6 @@ vi:
     allow_duplicate_topic_titles: "Cho phép các chủ đề trùng tiêu đề."
     unique_posts_mins: "Trong bao nhiêu phút người sử dụng có thể viết bài khác với nội dung giống nhau"
     educate_until_posts: "Khi người dùng bắt đầu đăng (n) bài viết đầu tiên, hiện pop-up để hướng dẫn họ khi soạn thảo."
-    title: "Tên của trang này, sử dụng trong thẻ tiêu đề"
-    site_description: "Mô tả trang này trong một câu, nó sẽ được sử dụng trong thẻ meta description"
     crawl_images: "Lấy hình ảnh tử URL bên ngoài để thêm vào đúng chiều dài và chiều cao."
     download_remote_images_threshold: "Dung lượng tối thiểu cần để tải ảnh từ xa về lưu trữ (tính bằng phần trăm)"
     disabled_image_download_domains: "Tải ảnh từ xa sẽ không áp dụng với các tên miền sau. Phân cách bằng dấu |"
@@ -1038,8 +1036,6 @@ vi:
     edit_history_visible_to_public: "Cho phép mọi người nhìn thấy phiên bản trước khi chỉnh sửa bài viết. Khi không cho phép, chỉ nhân viên có thể xem."
     delete_removed_posts_after: "Bài viết đã được xóa bởi tác giả sẽ được tự động xóa sau (n) giờ. Nếu cài là 0, bài viết sẽ được xóa ngay lập tức."
     notify_users_after_responses_deleted_on_flagged_post: "Khi một bài đăng bị gắn cờ và sau đó bị xóa, tất cả người dùng đã phản hồi bài đăng và đã xóa phản hồi của họ sẽ được thông báo."
-    max_image_width: "Chiều rộng tối đa của ảnh thu nhỏ trong bài viết."
-    max_image_height: "Chiều cao tối đa của ảnh thu nhỏ trong bài viết."
     fixed_category_positions: "Nếu được bật, bạn sẽ có thể sắp xếp chuyên mục theo một thứ tự cố định. Nếu không bật, chuyên mục sẽ được sắp xếp theo thứ tử hoạt động."
     fixed_category_positions_on_create: "Nếu chọn, sắp xếp danh mục sẽ được thực hiện trong cửa sổ tạo chủ đề (yêu cầu fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'Thêm rel=''nofollow'' cho tất cả các nội dung mà người dùng gửi, ngoại trừ các liên kết nội bộ (của tên miền chính). Nếu thay đổi, bạn phải thực hiện lại cho tất cả các bài viết với: "rake posts:rebake"'
