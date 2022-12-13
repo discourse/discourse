@@ -64,7 +64,9 @@ export function enableMissingIconWarning() {
   warnMissingIcons = false;
 }
 
-export function renderIcon(renderType, id, params = {}) {
+export function renderIcon(renderType, id, params) {
+  params ||= {};
+
   for (const renderer of _renderers) {
     const rendererForType = renderer[renderType];
     if (!rendererForType) {
