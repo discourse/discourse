@@ -7,6 +7,10 @@ require Rails.root.join(
 # To be removed before merging
 RSpec.describe "EnableSidebar" do
   describe 'when the site is new' do
+    before do
+      DB.exec("DELETE FROM site_settings WHERE name = 'navigation_menu'")
+    end
+
     it 'should set navigation_menu to sidebar' do
       EnableSidebarAndChat.new.up
 
@@ -16,6 +20,7 @@ RSpec.describe "EnableSidebar" do
 
   describe 'site is not new' do
     before do
+      DB.exec("DELETE FROM site_settings WHERE name = 'navigation_menu'")
       DB.exec("INSERT INTO schema_migration_details (version, created_at) VALUES (20000225050318, current_date - INTERVAL '1 day')") # Make db creation old
     end
 
@@ -28,6 +33,7 @@ RSpec.describe "EnableSidebar" do
 
   describe 'when header dropdown is set' do
     before do
+      DB.exec("DELETE FROM site_settings WHERE name = 'navigation_menu'")
       DB.exec("INSERT INTO schema_migration_details (version, created_at) VALUES (20000225050318, current_date - INTERVAL '1 day')") # Make db creation old
       DB.exec("INSERT INTO site_settings (name, data_type, value, created_at, updated_at) VALUES ('navigation_menu', 7, 'header_dropdown', now(), now())")
     end
@@ -41,6 +47,7 @@ RSpec.describe "EnableSidebar" do
 
   describe 'when legacy is set' do
     before do
+      DB.exec("DELETE FROM site_settings WHERE name = 'navigation_menu'")
       DB.exec("INSERT INTO schema_migration_details (version, created_at) VALUES (20000225050318, current_date - INTERVAL '1 day')") # Make db creation old
       DB.exec("INSERT INTO site_settings (name, data_type, value, created_at, updated_at) VALUES ('navigation_menu', 7, 'legacy', now(), now())")
     end
