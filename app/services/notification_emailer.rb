@@ -22,6 +22,10 @@ class NotificationEmailer
       enqueue :user_posted
     end
 
+    def watching_category_or_tag
+      enqueue :user_posted
+    end
+
     def quoted
       enqueue :user_quoted
     end
@@ -134,7 +138,6 @@ class NotificationEmailer
 
     email_user   = EmailUser.new(notification, no_delay: no_delay)
     email_method = Notification.types[notification.notification_type]
-
     email_user.public_send(email_method) if email_user.respond_to? email_method
   end
 
