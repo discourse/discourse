@@ -172,6 +172,14 @@ $float-height: 530px;
   }
 }
 
+.mention-user-is-online {
+  .avatar {
+    box-shadow: 0px 0px 0px 1px var(--success);
+    border: 1px solid var(--secondary);
+    padding: 0;
+  }
+}
+
 .chat-user-avatar {
   @include unselectable;
   display: flex;

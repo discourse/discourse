@@ -2,7 +2,7 @@
   <ul>
     {{#each options.users as |user|}}
       <li>
-        <a href title="{{user.name}}">
+        <a href title="{{user.name}}" class="{{user.cssClasses}}">
           {{avatar user imageSize="tiny"}}
           <span class='username'>{{format-username user.username}}</span>
           <span class='name'>{{user.name}}</span>
