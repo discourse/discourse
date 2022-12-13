@@ -37,7 +37,10 @@ class ChatMessage < ActiveRecord::Base
 
   def validate_message(has_uploads:)
     WatchedWordsValidator.new(attributes: [:message]).validate(self)
-    Chat::DuplicateMessageValidator.new(self).validate
+
+    if self.new_record? || self.changed.include?("message")
+      Chat::DuplicateMessageValidator.new(self).validate
+    end
 
     if !has_uploads && message_too_short?
       self.errors.add(
@@ -52,10 +55,7 @@ class ChatMessage < ActiveRecord::Base
     if message_too_long?
       self.errors.add(
         :base,
-        I18n.t(
-          "chat.errors.message_too_long",
-          maximum: SiteSetting.chat_maximum_message_length,
-        ),
+        I18n.t("chat.errors.message_too_long", maximum: SiteSetting.chat_maximum_message_length),
       )
     end
   end
@@ -184,7 +184,7 @@ class ChatMessage < ActiveRecord::Base
         markdown_it_rules: MARKDOWN_IT_RULES,
         force_quote_link: true,
         user_id: opts[:user_id],
-        hashtag_context: "chat-composer"
+        hashtag_context: "chat-composer",
       )
 
     result =
