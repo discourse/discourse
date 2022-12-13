@@ -1,6 +1,6 @@
 <div class="penalty-similar-users">
-  <p class="alert alert-danger">
-    {{i18n "admin.user.other_matches" (hash count=this.user.similar_users_count username=this.user.username)}}
+  <p class="alert alert-warning">
+    {{html-safe (i18n "admin.user.other_matches" (hash count=this.user.similar_users_count username=this.user.username))}}
   </p>
 
   <table class="table">
