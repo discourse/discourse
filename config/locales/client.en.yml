@@ -5027,7 +5027,6 @@ en:
             error: "This theme has been automatically disabled because it is not compatible with this version of Discourse."
             minimum: "Requires Discourse version %{version} or above."
             maximum: "Requires Discourse version %{version} or below."
-          component_of: "Component of:"
           update_to_latest: "Update to Latest"
           check_for_updates: "Check for Updates"
           updating: "Updating..."
