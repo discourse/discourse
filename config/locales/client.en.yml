@@ -1430,7 +1430,7 @@ en:
         disable_confirm: "Are you sure you want to disable two-factor authentication?"
         delete: "Delete"
         delete_confirm_header: "These Token-Based Authenticators and Physical Security Keys will be deleted:"
-        delete_confirm_instruction: 'To confirm, type <strong>%{confirm}</strong> in the box below.'
+        delete_confirm_instruction: "To confirm, type <strong>%{confirm}</strong> in the box below."
         delete_single_confirm_title: "Deleting an authenticator"
         delete_single_confirm_message: "You are deleting %{name}. You can't undo this action. If you change your mind, you have to register this authenticator again."
         delete_backup_codes_confirm_title: "Deleting backup codes"
@@ -2937,6 +2937,8 @@ en:
       show_links: "show links within this topic"
       collapse_details: "collapse topic details"
       expand_details: "expand topic details"
+      read_more_in_category: "Want to read more? Browse other topics in %{categoryLink} or <a href='%{latestLink}'>view latest topics</a>."
+      read_more: "Want to read more? <a href='%{categoryLink}'>Browse all categories</a> or <a href='%{latestLink}'>view latest topics</a>."
       unread_indicator: "No member has read the last post of this topic yet."
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
