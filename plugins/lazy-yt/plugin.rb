@@ -6,7 +6,7 @@
 # authors: Arpit Jalan
 # url: https://github.com/discourse/discourse/tree/main/plugins/lazy-yt
 
-hide_plugin if self.respond_to?(:hide_plugin)
+enabled_site_setting :lazy_yt_enabled
 
 require "onebox"
 
