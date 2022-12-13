@@ -169,7 +169,7 @@ class StaticController < ApplicationController
         immutable_for 1.year
         response.headers["Expires"] = 1.year.from_now.httpdate
         response.headers["Content-Length"] = data.bytesize.to_s
-        response.headers["Last-Modified"] = Time.new('2000-01-01').httpdate
+        response.headers["Last-Modified"] = Time.new(2000, 01, 01).httpdate
         render body: data, content_type: "image/png"
       end
     end
