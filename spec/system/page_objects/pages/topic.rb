@@ -106,7 +106,9 @@ module PageObjects
       end
 
       def send_reply
-        within("#reply-control") { find(".save-or-cancel .create").click }
+        within("#reply-control") do |reply_control|
+          reply_control.find(".save-or-cancel .create").click
+        end
       end
 
       def fill_in_composer_title(title)
