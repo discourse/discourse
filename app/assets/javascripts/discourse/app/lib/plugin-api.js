@@ -62,6 +62,7 @@ import {
 import { addPostClassesCallback } from "discourse/widgets/post";
 import {
   addGroupPostSmallActionCode,
+  addPostSmallActionClassesCallback,
   addPostSmallActionIcon,
 } from "discourse/widgets/post-small-action";
 import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profile";
@@ -930,6 +931,22 @@ class PluginApi {
    **/
   addGroupPostSmallActionCode(actionCode) {
     addGroupPostSmallActionCode(actionCode);
+  }
+
+  /**
+   * Adds a callback to be called before rendering any small action post
+   * that returns custom classes to add to the small action post
+   *
+   * ```javascript
+   * addPostSmallActionClassesCallback(post => {
+   *   if (post.actionCode.includes("group")) {
+   *     return ["group-small-post"];
+   *   }
+   * });
+   * ```
+   **/
+  addPostSmallActionClassesCallback(callback) {
+    addPostSmallActionClassesCallback(callback);
   }
 
   /**
