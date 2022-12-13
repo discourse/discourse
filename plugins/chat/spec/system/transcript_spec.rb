@@ -216,6 +216,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
 
       topic_page.fill_in_composer_title("Some topic title for testing")
       topic_page.send_reply
+      p save_screenshot
 
       expect(page).to have_css(".topic-post")
       p find(".topic-post")["outerHTML"]
