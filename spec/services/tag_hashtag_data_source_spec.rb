@@ -31,9 +31,9 @@ RSpec.describe TagHashtagDataSource do
       )
     end
 
-    it "includes the topic count for the text of the tag" do
-      expect(described_class.search(guardian, "fact", 5).map(&:text)).to eq(
-        ["fact x 0", "factor x 5", "factory x 4", "factorio x 3", "factz x 1"],
+    it "includes the topic count for the text of the tag in secondary text" do
+      expect(described_class.search(guardian, "fact", 5).map(&:secondary_text)).to eq(
+        ["x0", "x5", "x4", "x3", "x1"],
       )
     end
 

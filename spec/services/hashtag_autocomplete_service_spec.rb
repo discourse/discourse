@@ -72,19 +72,19 @@ RSpec.describe HashtagAutocompleteService do
   describe "#search" do
     it "returns search results for tags and categories by default" do
       expect(subject.search("book", %w[category tag]).map(&:text)).to eq(
-        ["Book Club", "great-books x 22"],
+        ["Book Club", "great-books"],
       )
     end
 
     it "respects the types_in_priority_order param" do
       expect(subject.search("book", %w[tag category]).map(&:text)).to eq(
-        ["great-books x 22", "Book Club"],
+        ["great-books", "Book Club"],
       )
     end
 
     it "respects the limit param" do
       expect(subject.search("book", %w[tag category], limit: 1).map(&:text)).to eq(
-        ["great-books x 22"],
+        ["great-books"],
       )
     end
 
@@ -105,16 +105,16 @@ RSpec.describe HashtagAutocompleteService do
     it "includes the tag count" do
       tag1.update!(topic_count: 78)
       expect(subject.search("book", %w[tag category]).map(&:text)).to eq(
-        ["great-books x 78", "Book Club"],
+        ["great-books", "Book Club"],
       )
     end
 
     it "does case-insensitive search" do
       expect(subject.search("book", %w[category tag]).map(&:text)).to eq(
-        ["Book Club", "great-books x 22"],
+        ["Book Club", "great-books"],
       )
       expect(subject.search("bOOk", %w[category tag]).map(&:text)).to eq(
-        ["Book Club", "great-books x 22"],
+        ["Book Club", "great-books"],
       )
     end
 
@@ -125,7 +125,7 @@ RSpec.describe HashtagAutocompleteService do
 
     it "does not include categories the user cannot access" do
       category1.update!(read_restricted: true)
-      expect(subject.search("book", %w[tag category]).map(&:text)).to eq(["great-books x 22"])
+      expect(subject.search("book", %w[tag category]).map(&:text)).to eq(["great-books"])
     end
 
     it "does not include tags the user cannot access" do
@@ -141,7 +141,7 @@ RSpec.describe HashtagAutocompleteService do
       HashtagAutocompleteService.register_data_source("bookmark", BookmarkDataSource)
 
       expect(subject.search("book", %w[category tag bookmark]).map(&:text)).to eq(
-        ["Book Club", "great-books x 22", "read review of this fantasy book"],
+        ["Book Club", "great-books", "read review of this fantasy book"],
       )
     end
 
@@ -260,9 +260,9 @@ RSpec.describe HashtagAutocompleteService do
             "Media",
             "Bookworld",
             Category.find(SiteSetting.uncategorized_category_id).name,
-            "mid-books x 33",
-            "great-books x 22",
-            "book x 1",
+            "mid-books",
+            "great-books",
+            "book",
           ],
         )
       end
