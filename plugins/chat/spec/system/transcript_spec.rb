@@ -215,13 +215,12 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
       expect(page).not_to have_current_path(chat_channel_1.chatable.url)
 
       topic_page.fill_in_composer_title("Some topic title for testing")
-      topic_page.send_reply
 
-      p find(".topic-post")["outerHTML"]
-      expect(page).to have_css(".topic-post", wait: 5)
+      find("#reply-control .save-or-cancel .create").click
+      p save_screenshot
 
       selector = topic_page.post_by_number_selector(1)
-      expect(page).to have_css(selector, wait: 5)
+      expect(page).to have_css(selector)
       within(selector) { expect(page).to have_css(".chat-transcript") }
 
       topic = Topic.where(user: current_user).last
