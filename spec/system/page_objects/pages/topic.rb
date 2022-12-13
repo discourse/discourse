@@ -74,6 +74,7 @@ module PageObjects
 
       def click_reply_button
         find(".topic-footer-main-buttons > .create").click
+        has_expanded_composer?
       end
 
       def has_expanded_composer?
