@@ -1,3 +1,11 @@
-<Input id={{this.typeName}} @type="checkbox" name="event-choice" @checked={{this.enabled}} />
-<label for={{this.typeName}}>{{this.name}}</label>
-<p>{{this.details}}</p>
+<label>
+  <Input
+    @type="checkbox"
+    @checked={{this.enabled}}
+    name="event-choice"
+  />
+
+  {{this.name}}
+
+  <p>{{this.details}}</p>
+</label>

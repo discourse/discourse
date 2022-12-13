@@ -32,6 +32,10 @@ class Admin::WebHooksController < Admin::AdminController
     render_serialized(@web_hook, AdminWebHookSerializer, root: 'web_hook')
   end
 
+  def edit
+    render_serialized(@web_hook, AdminWebHookSerializer, root: 'web_hook')
+  end
+
   def create
     web_hook = WebHook.new(web_hook_params)
 
@@ -56,9 +60,6 @@ class Admin::WebHooksController < Admin::AdminController
     @web_hook.destroy!
     StaffActionLogger.new(current_user).log_web_hook(@web_hook, UserHistory.actions[:web_hook_destroy])
     render json: success_json
-  end
-
-  def new
   end
 
   def list_events
