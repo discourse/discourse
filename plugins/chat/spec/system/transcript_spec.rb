@@ -114,7 +114,9 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
 
         topic_page.send_reply
 
-        within(topic_page.post_by_number(2)) { expect(page).to have_css(".chat-transcript") }
+        selector = topic_page.post_by_number_selector(2)
+        expect(page).to have_css(selector)
+        within(selector) { expect(page).to have_css(".chat-transcript") }
       end
     end
 
@@ -137,9 +139,9 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
 
         topic_page.send_reply
 
-        within(topic_page.post_by_number(2)) do
-          expect(page).to have_css(".chat-transcript", count: 2)
-        end
+        selector = topic_page.post_by_number_selector(2)
+        expect(page).to have_css(selector)
+        within(selector) { expect(page).to have_css(".chat-transcript", count: 2) }
       end
     end
 
@@ -215,7 +217,9 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
       topic_page.fill_in_composer_title("Some topic title for testing")
       topic_page.send_reply
 
-      within(topic_page.post_by_number(1)) { expect(page).to have_css(".chat-transcript") }
+      selector = topic_page.post_by_number_selector(1)
+      expect(page).to have_css(selector)
+      within(selector) { expect(page).to have_css(".chat-transcript") }
 
       topic = Topic.where(user: current_user).last
       expect(page).to have_current_path(topic.url)

@@ -37,6 +37,10 @@ module PageObjects
         find(".topic-post:not(.staged) #post_#{post_or_number}")
       end
 
+      def post_by_number_selector(post_number)
+        ".topic-post:not(.staged) #post_#{post_number}"
+      end
+
       def has_post_more_actions?(post)
         within post_by_number(post) do
           has_css?(".show-more-actions")
