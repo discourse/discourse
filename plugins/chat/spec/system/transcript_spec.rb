@@ -112,7 +112,9 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
       # post transcript in topic
       topic_page.visit_topic_and_open_composer(topic)
       topic_page.fill_in_composer("This is a new post!\n\n" + clip_text)
-      expect(page).to have_css(".d-editor-preview .chat-transcript")
+      within ".d-editor-preview" do
+        expect(page).to have_css(".chat-transcript")
+      end
       topic_page.send_reply
       expect(page).to have_content("This is a new post!")
       within topic_page.post_by_number(topic.posts.reload.last.post_number) do
@@ -131,7 +133,9 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
       # post transcript in topic
       topic_page.visit_topic_and_open_composer(topic)
       topic_page.fill_in_composer("This is a new post!\n\n" + clip_text)
-      expect(page).to have_css(".d-editor-preview .chat-transcript", count: 4)
+      within ".d-editor-preview" do
+        expect(page).to have_css(".chat-transcript", count: 4)
+      end
       expect(page).to have_content("Originally sent in #{chat_channel_1.name}")
       topic_page.send_reply
       expect(page).to have_content("This is a new post!")

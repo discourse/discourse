@@ -176,14 +176,14 @@ jobs:
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
-        run: LOAD_PLUGINS=1 bin/rspec plugins/*/spec/system
+        run: LOAD_PLUGINS=1 bin/rspec plugins/*/spec/system --format documentation --profile
 
       - name: Upload failed system test screenshots
         uses: actions/upload-artifact@v3
         if: matrix.build_type == 'system' && failure()
         with:
           name: failed-system-test-screenshots
-          path: tmp/screenshots/*.png
+          path: tmp/capybara/*.png
 
       - name: Check Annotations
         if: matrix.build_type == 'annotations'
