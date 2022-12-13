@@ -781,7 +781,7 @@ class PostAlerter
     emails_to_skip_send.uniq
   end
 
-  def notify_post_users(post, notified, group_ids: nil, include_topic_watchers: true, include_category_watchers: true, include_tag_watchers: true, new_record: false, notification_type: false)
+  def notify_post_users(post, notified, group_ids: nil, include_topic_watchers: true, include_category_watchers: true, include_tag_watchers: true, new_record: false, notification_type: nil)
     return [] unless post.topic
 
     warn_if_not_sidekiq
