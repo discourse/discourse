@@ -430,8 +430,6 @@ en:
     disable: "Disable"
     continue: "Continue"
     undo: "Undo"
-    revert: "Revert"
-    failed: "Failed"
 
     switch_to_anon: "Enter Anonymous Mode"
     switch_from_anon: "Exit Anonymous Mode"
