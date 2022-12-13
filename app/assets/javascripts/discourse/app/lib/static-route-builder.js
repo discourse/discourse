@@ -12,6 +12,7 @@ const configs = {
 export default function (page) {
   return DiscourseRoute.extend({
     templateName: "static",
+    controllerName: "static",
 
     beforeModel(transition) {
       const configKey = configs[page];
