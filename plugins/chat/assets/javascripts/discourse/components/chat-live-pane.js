@@ -170,10 +170,7 @@ export default Component.extend({
   didReceiveAttrs() {
     this._super(...arguments);
 
-    this.currentUserTimezone = this.currentUser?.resolvedTimezone(
-      this.currentUser
-    );
-
+    this.currentUserTimezone = this.currentUser?.user_option.timezone;
     this.set("targetMessageId", this.chat.messageId);
 
     if (
