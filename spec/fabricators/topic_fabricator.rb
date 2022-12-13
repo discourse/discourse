@@ -20,6 +20,14 @@ Fabricator(:banner_topic, from: :topic) do
   archetype Archetype.banner
 end
 
+Fabricator(:with_posts_topic, from: :topic) do
+  after_create do |topic|
+    3.times do
+      Fabricate(:post, topic: topic)
+    end
+  end
+end
+
 Fabricator(:private_message_topic, from: :topic) do
   transient :recipient
   category_id { nil }

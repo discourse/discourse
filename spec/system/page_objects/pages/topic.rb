@@ -80,16 +80,32 @@ module PageObjects
         has_css?("#reply-control.open")
       end
 
+      def find_composer
+        find("#reply-control .d-editor .d-editor-input")
+      end
+
       def type_in_composer(input)
-        find("#reply-control .d-editor .d-editor-input").send_keys(input)
+        find_composer.send_keys(input)
+      end
+
+      def fill_in_composer(input)
+        find_composer.set(input)
       end
 
       def clear_composer
-        find("#reply-control .d-editor .d-editor-input").set("")
+        fill_in_composer("")
+      end
+
+      def has_composer_content?(content)
+        find_composer.value == content
       end
 
       def send_reply
         within("#reply-control") { find(".save-or-cancel .create").click }
+      end
+
+      def fill_in_composer_title(title)
+        find("#reply-title").set(title)
       end
 
       private

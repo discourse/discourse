@@ -23,6 +23,10 @@ module PageObjects
         has_no_css?(".chat-skeleton")
       end
 
+      def has_selection_management?
+        has_css?(".chat-selection-management")
+      end
+
       def has_message?(text: nil, id: nil)
         if text
           has_css?(".chat-message-text", text: text)
