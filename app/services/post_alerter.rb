@@ -178,7 +178,8 @@ class PostAlerter
         notified += notify_pm_users(post, reply_to_user, quoted_users, notified)
       elsif notify_about_reply?(post)
         # posts
-        notified += notify_post_users(post, notified, new_record: new_record)
+        notified += notify_post_users(post, notified, new_record: new_record, include_category_watchers: false, include_tag_watchers: false)
+        notified += notify_post_users(post, notified, new_record: new_record, include_topic_watchers: false, notification_type: :watching_category_or_tag)
       end
     end
 
@@ -400,6 +401,7 @@ class PostAlerter
     Notification.types[:replied],
     Notification.types[:posted],
     Notification.types[:private_message],
+    Notification.types[:watching_category_or_tag],
   ]
 
   def create_notification(user, type, post, opts = {})
@@ -779,7 +781,7 @@ class PostAlerter
     emails_to_skip_send.uniq
   end
 
-  def notify_post_users(post, notified, group_ids: nil, include_topic_watchers: true, include_category_watchers: true, include_tag_watchers: true, new_record: false)
+  def notify_post_users(post, notified, group_ids: nil, include_topic_watchers: true, include_category_watchers: true, include_tag_watchers: true, new_record: false, notification_type: nil)
     return [] unless post.topic
 
     warn_if_not_sidekiq
@@ -871,10 +873,17 @@ class PostAlerter
     )
 
     each_user_in_batches(notify) do |user|
-      notification_type = !new_record && already_seen_user_ids.include?(user.id) ? Notification.types[:edited] : Notification.types[:posted]
+      calculated_type =
+        if !new_record && already_seen_user_ids.include?(user.id)
+          Notification.types[:edited]
+        elsif notification_type
+          Notification.types[notification_type]
+        else
+          Notification.types[:posted]
+        end
       opts = {}
-      opts[:display_username] = post.last_editor.username if notification_type == Notification.types[:edited]
-      create_notification(user, notification_type, post, opts)
+      opts[:display_username] = post.last_editor.username if calculated_type == Notification.types[:edited]
+      create_notification(user, calculated_type, post, opts)
     end
 
     notify
