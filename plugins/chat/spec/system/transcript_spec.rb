@@ -15,7 +15,8 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
   before do
-    chat_system_bootstrap(current_user, [chat_channel_1])
+    chat_system_bootstrap(Fabricate(:admin), [chat_channel_1])
+    chat_channel_1.add(current_user)
     sign_in(current_user)
   end
 
