@@ -65,16 +65,19 @@ export function enableMissingIconWarning() {
 }
 
 export function renderIcon(renderType, id, params) {
-  for (let i = 0; i < _renderers.length; i++) {
-    let renderer = _renderers[i];
-    let rendererForType = renderer[renderType];
+  params ||= {};
 
-    if (rendererForType) {
-      const icon = { id, replacementId: REPLACEMENTS[id] };
-      let result = rendererForType(icon, params || {});
-      if (result) {
-        return result;
-      }
+  for (const renderer of _renderers) {
+    const rendererForType = renderer[renderType];
+    if (!rendererForType) {
+      continue;
+    }
+
+    const icon = { id, replacementId: REPLACEMENTS[id] };
+    const result = rendererForType(icon, params);
+
+    if (result) {
+      return result;
     }
   }
 }
