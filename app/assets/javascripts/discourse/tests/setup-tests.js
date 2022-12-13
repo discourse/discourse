@@ -28,10 +28,8 @@ import QUnit from "qunit";
 import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";
-import Site from "discourse/models/site";
 import bootbox from "bootbox";
 import { buildResolver } from "discourse-common/resolver";
-import { createHelperContext } from "discourse-common/lib/helpers";
 import deprecated from "discourse-common/lib/deprecated";
 import { flushMap } from "discourse/services/store";
 import sinon from "sinon";
@@ -304,17 +302,6 @@ export default function setupTests(config) {
       session.highlightJsPath = setupData.highlightJsPath;
     }
     User.resetCurrent();
-
-    createHelperContext({
-      get siteSettings() {
-        return app.__container__.lookup("service:site-settings");
-      },
-      capabilities: {},
-      get site() {
-        return app.__container__.lookup("service:site") || Site.current();
-      },
-      registry: app.__registry__,
-    });
 
     PreloadStore.reset();
     resetSite();

@@ -919,6 +919,22 @@ RSpec.describe TopicQuery do
       end
     end
 
+    context 'when preloading associations' do
+      it "preloads associations" do
+        DiscoursePluginRegistry.register_topic_preloader_association(:first_post, Plugin::Instance.new)
+
+        topic = Fabricate(:topic)
+        Fabricate(:post, topic: topic)
+
+        new_topic = topic_query.list_new.topics.first
+        expect(new_topic.association(:image_upload).loaded?).to eq(true) # Preloaded by default
+        expect(new_topic.association(:first_post).loaded?).to eq(true)   # Testing a user-defined preloaded association
+        expect(new_topic.association(:user).loaded?).to eq(false)        # Testing the negative
+
+        DiscoursePluginRegistry.reset_register!(:topic_preloader_associations)
+      end
+    end
+
     context 'with a new topic' do
       let!(:new_topic) { Fabricate(:topic, user: creator, bumped_at: 10.minutes.ago) }
       let(:topics) { topic_query.list_new.topics }

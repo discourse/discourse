@@ -2215,11 +2215,7 @@ gl:
       back_to_list: "Volver á listase de temas"
       options: "Opcións de temas"
       show_links: "amosar as ligazóns a este tema"
-      read_more_in_category: "Quere ler máis? explore outros temas en %{catLink} ou %{latestLink}."
-      read_more: "Quere ler máis? %{catLink} ou %{latestLink}."
       unread_indicator: "Ningún membro leu aínda a última publicación neste tema."
-      read_more_MF: "Hai { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'># pendente de lectura</a> } other { <a href='{basePath}/unread'># pendentes de lectura</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'># novo</a> tema} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># novos</a> temas} } pendentes ou {CATEGORY, select, true {ver outros temas en {catLink}} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Explorar todas as categorías
       browse_all_tags: Explorar todas as etiquetas
       view_latest_topics: ver os últimos temas

@@ -10,10 +10,9 @@ module Chat::GuardianExtensions
     end
   end
 
-  def can_chat?(user)
-    return false unless user
-
-    user.staff? || user.in_any_groups?(Chat.allowed_group_ids)
+  def can_chat?
+    return false if anonymous?
+    @user.staff? || @user.in_any_groups?(Chat.allowed_group_ids)
   end
 
   def can_create_chat_message?

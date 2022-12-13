@@ -1212,8 +1212,6 @@ de:
         warnings: "Offizielle Warnungen"
         read_more_in_group: "Möchtest du mehr lesen? Entdecke andere Nachrichten in %{groupLink}."
         read_more: "Möchtest du mehr lesen? Durchsuche andere Nachrichten in <a href='%{basePath}/u/%{username}/messages'>persönliche Nachrichten</a>."
-        read_more_group_pm_MF: "Es gibt { UNREAD, plural, =0 {} one { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ungelesene</a> Nachricht} other { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># ungelesene</a> Nachrichten} } { NEW, plural, =0 {} one { {BOTH, select, true{und } false {} other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># neue</a> Nachricht} other { {BOTH, select, true{und } false {} other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># neue</a> Nachrichten} } – oder entdecke andere Nachrichten in {groupLink}"
-        read_more_personal_pm_MF: "Es gibt { UNREAD, plural, =0 {} one { <a href='{basePath}/u/{username}/messages/unread'># ungelesene</a> Nachricht } other { <a href='{basePath}/u/{username}/messages/unread'># ungelesene</a> Nachrichten} } { NEW, plural, =0 {} one { {BOTH, select, true{und } false {} other{}} <a href='{basePath}/u/{username}/messages/new'># neue</a> Nachricht} other { {BOTH, select, true{und } false { } other{}} <a href='{basePath}/u/{username}/messages/new'># neue</a> Nachrichten} } – oder durchsuche andere <a href='{basePath}/u/{username}/messages'>persönliche Nachrichten</a>"
       preferences_nav:
         account: "Konto"
         security: "Sicherheit"
@@ -2560,11 +2558,7 @@ de:
       show_links: "zeige Links innerhalb dieses Themas"
       collapse_details: "Themendetails einklappen"
       expand_details: "Themendetails erweitern"
-      read_more_in_category: "Möchtest du mehr lesen? Entdecke andere Themen in %{catLink} oder %{latestLink}."
-      read_more: "Möchtest du mehr lesen? %{catLink} oder %{latestLink}."
       unread_indicator: "Kein Mitglied hat den letzten Beitrag dieses Themas bisher gelesen."
-      read_more_MF: "Du {UNREAD, plural, =0 {} one {hast <a href='{basePath}/unread'>ein ungelesenes</a> Thema } other {hast <a href='{basePath}/unread'># ungelesene</a> Themen } } {NEW, plural, =0 {} one { {BOTH, select, true{und } false {hast } other{}} <a href='{basePath}/new'>ein neues</a> Thema} other { {BOTH, select, true{und } false {hast } other{}} <a href='{basePath}/new'># neue</a> Themen} }. Oder {CATEGORY, select, true {entdecke andere Themen in {catLink}} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Alle Kategorien durchsehen
       browse_all_tags: Alle Schlagwörter durchsuchen
       view_latest_topics: aktuelle Themen anzeigen

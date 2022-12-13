@@ -1324,8 +1324,6 @@ ru:
         warnings: "Официальные предупреждения"
         read_more_in_group: "Хотите почитать что-нибудь ещё? Просмотрите другие сообщения в группе %{groupLink}."
         read_more: "Хотите почитать что-нибудь ещё? Просмотрите другие сообщения в <a href='%{basePath}/u/%{username}/messages'>личных сообщениях</a>."
-        read_more_group_pm_MF: "У вас { UNREAD, plural, =0 {} one { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанное</a> } few { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанных</a> } many { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанных</a> } other { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитанного</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># новое</a> сообщение} few { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># новых</a> сообщения} many { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># новых</a> сообщений} other { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нового</a> сообщения} }, вы также можете посмотреть другие сообщения в группе {groupLink}"
-        read_more_personal_pm_MF: "У вас { UNREAD, plural, =0 {} one { <a href='{basePath}/u/{username}/messages/unread'># непрочитанное</a> } few { <a href='{basePath}/u/{username}/messages/unread'># непрочитанных</a> } many { <a href='{basePath}/u/{username}/messages/unread'># непрочитанных</a> } other { <a href='{basePath}/u/{username}/messages/unread'># непрочитанного</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/new'># новое</a> личное сообщение} few { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/new'># новых</a> личных сообщения} many { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/new'># новых</a> личных сообщений} other { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/new'># новых</a> личного сообщения} }, вы также можете посмотреть другие <a href='{basePath}/u/{username}/messages'>личные сообщения</a>"
       preferences_nav:
         account: "Аккаунт"
         security: "Безопасность"
@@ -2769,11 +2767,7 @@ ru:
       show_links: "Показать ссылки в теме"
       collapse_details: "Скрыть подробную информацию о теме"
       expand_details: "Показать подробную информацию о теме"
-      read_more_in_category: "Хотите почитать что-нибудь ещё? Можно просмотреть темы в разделе %{catLink} или %{latestLink}."
-      read_more: "Хотите почитать что-нибудь ещё? %{catLink} или %{latestLink}."
       unread_indicator: "Никто ещё не дочитал до конца этой темы."
-      read_more_MF: "У вас { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'># непрочитанная</a> } few { <a href='{basePath}/unread'># непрочитанные</a> } other { <a href='{basePath}/unread'># непрочитанных</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'># новая</a> тема} few { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'># новые</a> темы} other { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'># новых</a> тем} }, вы также можете {CATEGORY, select, true {посмотреть другие темы в разделе {catLink}} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Просмотреть все разделы
       browse_all_tags: Просмотреть все теги
       view_latest_topics: Просмотреть последние темы

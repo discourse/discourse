@@ -2249,11 +2249,7 @@ nb_NO:
       show_links: "vis lenker i dette emnet"
       collapse_details: "vis/skjul detaljer for emnet"
       expand_details: "utvid emnebeskrivelse"
-      read_more_in_category: "Vil du lese mer? Les andre emner i %{catLink} eller %{latestLink}."
-      read_more: "Vil du lese mer? %{catLink} eller %{latestLink}."
       unread_indicator: "Ingen medlem har lest den siste posten i dette emnet ennå."
-      read_more_MF: "Der { UNREAD, plural, =0 {} one { er <a href='{basePath}/unread'># ulest</a> } other { er <a href='{basePath}/unread'># ulest</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{og } false {er } other{}} <a href='{basePath}/new'># nye</a> emne} other { {BOTH, select, true{og } false {er } other{}} <a href='{basePath}/new'># nye</a> emner} } gjenstår, eller {CATEGORY, select, true {bla gjennom andre emner i {catLink}} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Se alle kategorier
       browse_all_tags: Bla gjennom alle tagger
       view_latest_topics: se siste emner

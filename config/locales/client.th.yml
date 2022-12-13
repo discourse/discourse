@@ -1695,8 +1695,6 @@ th:
       back_to_list: "กลับไปที่รายชื่อกระทู้"
       options: "ตัวเลือกกระทู้"
       show_links: "แสดงลิงก์ในกระทู้นี้"
-      read_more_in_category: "ต้องการอ่านเพิ่มใช่ไหม ลองดูกระทู้อื่นใน %{catLink} หรือ %{latestLink}"
-      read_more: "ต้องการอ่านเพิ่มใช่ไหม %{catLink} หรือ %{latestLink}"
       unread_indicator: "ยังไม่มีสมาชิกอ่านโพสต์ล่าสุดของกระทู้นี้"
       view_latest_topics: ดูกระทู้ล่าสุด
       jump_reply_up: ข้ามไปยังคำตอบก่อนหน้านี้

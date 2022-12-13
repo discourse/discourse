@@ -4,7 +4,7 @@ class Chat::DirectMessagesController < Chat::ChatBaseController
   # NOTE: For V1 of chat channel archiving and deleting we are not doing
   # anything for DM channels, their behaviour will stay as is.
   def create
-    guardian.ensure_can_chat!(current_user)
+    guardian.ensure_can_chat!
     users = users_from_usernames(current_user, params)
 
     begin
@@ -22,7 +22,7 @@ class Chat::DirectMessagesController < Chat::ChatBaseController
   end
 
   def index
-    guardian.ensure_can_chat!(current_user)
+    guardian.ensure_can_chat!
     users = users_from_usernames(current_user, params)
 
     direct_message = DirectMessage.for_user_ids(users.map(&:id).uniq)

@@ -649,13 +649,17 @@ RSpec.describe Plugin::Instance do
     it 'adds a callback to the Site#categories' do
       instance = Plugin::Instance.new
 
-      instance.register_site_categories_callback do |categories|
+      site_guardian = Guardian.new
+
+      instance.register_site_categories_callback do |categories, guardian|
         categories.each do |category|
           category[:test_field] = "test"
         end
+
+        expect(guardian).to eq(site_guardian)
       end
 
-      site = Site.new(Guardian.new)
+      site = Site.new(site_guardian)
 
       expect(site.categories.first[:test_field]).to eq("test")
     ensure

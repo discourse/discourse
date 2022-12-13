@@ -8,6 +8,6 @@ class Chat::Api < Chat::ChatBaseController
 
   def ensure_can_chat
     raise Discourse::NotFound unless SiteSetting.chat_enabled
-    guardian.ensure_can_chat!(current_user)
+    guardian.ensure_can_chat!
   end
 end

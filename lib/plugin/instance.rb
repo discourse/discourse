@@ -1220,6 +1220,10 @@ class Plugin::Instance
     end
   end
 
+  def register_topic_preloader_associations(fields)
+    DiscoursePluginRegistry.register_topic_preloader_association(fields, self)
+  end
+
   private
 
   def validate_directory_column_name(column_name)

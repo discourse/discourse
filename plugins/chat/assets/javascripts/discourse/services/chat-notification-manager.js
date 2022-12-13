@@ -102,13 +102,11 @@ export default class ChatNotificationManager extends Service {
     this.set("_countChatInDocTitle", true);
 
     if (!this._subscribedToChat) {
-      this.messageBus.subscribe(this._chatAlertChannel(), (data) =>
-        onNotification(data, this.siteSettings, this.currentUser)
-      );
+      this.messageBus.subscribe(this._chatAlertChannel(), this.onMessage);
     }
 
     if (opts.only && this._subscribedToCore) {
-      this.messageBus.unsubscribe(this._coreAlertChannel());
+      this.messageBus.unsubscribe(this._coreAlertChannel(), this.onMessage);
       this.set("_subscribedToCore", false);
     }
   }
@@ -118,15 +116,18 @@ export default class ChatNotificationManager extends Service {
       this.set("_countChatInDocTitle", false);
     }
     if (!this._subscribedToCore) {
-      this.messageBus.subscribe(this._coreAlertChannel(), (data) =>
-        onNotification(data, this.siteSettings, this.currentUser)
-      );
+      this.messageBus.subscribe(this._coreAlertChannel(), this.onMessage);
     }
 
     if (this.only && this._subscribedToChat) {
-      this.messageBus.unsubscribe(this._chatAlertChannel());
+      this.messageBus.unsubscribe(this._chatAlertChannel(), this.onMessage);
       this.set("_subscribedToChat", false);
     }
+  }
+
+  @bind
+  onMessage(data) {
+    return onNotification(data, this.siteSettings, this.currentUser);
   }
 
   _shouldRun() {

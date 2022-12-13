@@ -1133,8 +1133,6 @@ bg:
         warnings: "Официални предупреждения"
         read_more_in_group: "Искате ли да прочетете повече? Разгледайте други съобщения в %{groupLink}."
         read_more: "Искате ли да прочетете повече? Разгледайте други съобщения в <a href='%{basePath}/u/%{username}/messages'>лични съобщения</a>."
-        read_more_group_pm_MF: "Има{ UNREAD, plural, =0 {} one { е <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочетено</a> } other { са <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочетени</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false {е } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># ново</a> съобщение} other { {BOTH, select, true{и } false {са } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нови</a> съобщения} } оставащи, или прегледайте други съобщения в {groupLink}"
-        read_more_personal_pm_MF: "Има { UNREAD, plural, =0 {} one { е <a href='{basePath}/u/{username}/messages/unread'># непрочетено</a> } other { са <a href='{basePath}/u/{username}/messages/unread'># непрочетени</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false {е } other{}} <a href='{basePath}/u/{username}/messages/new'># ново</a> съобщение} other { {BOTH, select, true{и } false {са } other{}} <a href='{basePath}/u/{username}/messages/new'># нови</a> съобщения} } оставащи, или прегледайте други <a href='{basePath}/u/{username}/messages'>лични съобщения</a>"
       preferences_nav:
         account: "Профил"
         security: "Сигурност"
@@ -2144,8 +2142,6 @@ bg:
       back_to_list: "Назад към Списъка с теми"
       options: "Настройки на темата"
       show_links: "покажи връзките в тази тема"
-      read_more_in_category: "Искате да прочетете повече ? Разгледайте други теми в %{catLink} или %{latestLink}."
-      read_more: "Искате да прочетете повече ? %{catLink} или %{latestLink}."
       browse_all_categories: Прегледай всички категории
       view_latest_topics: виж последните теми
       jump_reply_up: към по ранен отговор

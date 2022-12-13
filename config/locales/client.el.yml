@@ -2020,10 +2020,7 @@ el:
       back_to_list: "Επιστροφή στη Λίστα Νημάτων"
       options: "Ρυθμίσεις Νήματος"
       show_links: "εμφάνιση συνδέσμων εντός του νήματος"
-      read_more_in_category: "Θέλεις να διαβάσεις περισσότερα; Βρες άλλα νήματα στο %{catLink} ή %{latestLink}."
-      read_more: "Θέλεις να διαβασεις περισσότερα; %{catLink} ή %{latestLink}."
       unread_indicator: "Κανένα μέλος δεν έχει διαβάσει ακόμη την τελευταία ανάρτηση αυτού του θέματος."
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Περιήγηση σε όλες τις κατηγορίες
       browse_all_tags: Περιηγηθείτε σε όλες τις ετικέτες
       view_latest_topics: δες τα πρόσφατα νήματα

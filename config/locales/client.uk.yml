@@ -1330,8 +1330,6 @@ uk:
         warnings: "Офіційні попередження"
         read_more_in_group: "Бажаєте дізнатися більше? Перегляньте інші повідомлення в %{groupLink}."
         read_more: "Хочете прочитати більше? Перегляньте інші повідомлення в <a href='%{basePath}/u/%{username}/messages'>особистих повідомленнях</a>."
-        read_more_group_pm_MF: "У вас { UNREAD, plural, =0 {} one { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитане</a> } few { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитаних</a> } other { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># непрочитаних</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нове</a> повідомлення} few { {BOTH, select, true{і } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлень} other { {BOTH, select, true{і } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлень} }, ви також можете продивитись інші повідомлення в групі {groupLink}"
-        read_more_personal_pm_MF: "У вас { UNREAD, plural, =0 {} one { є <a href='{basePath}/u/{username}/messages/unread'># непрочитане</a> } few { є <a href='{basePath}/u/{username}/messages/unread'># непрочитані</a> } many { є <a href='{basePath}/u/{username}/messages/unread'># непрочитаних</a> } other { є <a href='{basePath}/u/{username}/messages/unread'># непрочитані</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{та } false {є } other{}} <a href='{basePath}/u/{username}/messages/new'># нове</a> повідомлення} few {} many {} other { {BOTH, select, true{та } false {є } other{}} <a href='{basePath}/u/{username}/messages/new'># нові</a> повідомлення} } залишайтесь, або перегляньте інші <a href='{basePath}/u/{username}/messages'>приватні повідомлень</a>"
       preferences_nav:
         account: "Обліковий запис"
         security: "Безпека"
@@ -2800,11 +2798,7 @@ uk:
       show_links: "показати посилання в цій темі"
       collapse_details: "згорнути детальну інформацію теми"
       expand_details: "розгорнути детальну інформацію"
-      read_more_in_category: "Хочете почитати ще? Перегляньте інші теми в %{catLink} або %{latestLink}."
-      read_more: "Хочете почитати ще? %{catLink} або %{latestLink}."
       unread_indicator: "Поки що ніхто з учасників не прочитав останній допис цієї теми."
-      read_more_MF: "У вас залишилося { UNREAD, plural, =0 {0 непрочитаних } one { <a href='{basePath}/unread'> # непрочитана</a> } other { <a href='{basePath}/unread'># непрочитаних</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ та } false { } other{}} <a href='{basePath}/new'> # нова</a> тема} other { {BOTH, select, true{и } false { } other{}} <a href='{basePath}/new'># нових</a> тем} }, або {CATEGORY, select, true {подивіться інші теми в розділі {catLink}} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
       browse_all_categories: Переглянути всі розділи
       browse_all_tags: Переглянути всі теґи
       view_latest_topics: перегляньте останні теми
