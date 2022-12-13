@@ -34,7 +34,7 @@ module PageObjects
 
       def post_by_number(post_or_number)
         post_or_number = post_or_number.is_a?(Post) ? post_or_number.post_number : post_or_number
-        find("#post_#{post_or_number}:not(.staged)")
+        find(".topic-post:not(.staged) #post_#{post_or_number}")
       end
 
       def has_post_more_actions?(post)
