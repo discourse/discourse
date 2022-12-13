@@ -313,7 +313,6 @@ he:
     conduct: "נהלי התנהגות"
     mobile_view: "תצוגת נייד"
     desktop_view: "תצוגת מחשב"
-    or: "או"
     now: "ממש עכשיו"
     read_more: "מידע נוסף"
     more: "עוד"
@@ -1401,7 +1400,14 @@ he:
         use: "להשתמש ביישומון אימות"
         enforced_notice: "עליך להפעיל אימות דו־שלבי בטרם הגישה לאתר הזה."
         disable: "בטל"
+        disable_confirm: "להשבית אימות דו־שלבי?"
         delete: "מחיקה"
+        delete_confirm_header: "מאמתים מבוססי אסימון אלו ומפתחות האבטחה הפיזיים האלו יימחקו:"
+        delete_confirm_instruction: "כדי לאשר, יש להקליד <strong>%{confirm}</strong> בתיבה שלהלן."
+        delete_single_confirm_title: "מחיקת מאמת"
+        delete_single_confirm_message: "בחרת למחוק את %{name}. זאת פעולה בלתי הפיכה. חרטה על המהלך הזה תאלץ אותך לרשום את המאמת מחדש."
+        delete_backup_codes_confirm_title: "מחיקת קודים לגיבוי"
+        delete_backup_codes_confirm_message: "פעולה זו תמחק קודים לגיבוי. זאת פעולה בלתי הפיכה. חרטה על המהלך הזה תאלץ אותך לייצר את הקודים לגיבוי מחדש."
         save: "שמירה"
         edit: "עריכה"
         edit_title: "עריכת מאמת"
@@ -1868,19 +1874,22 @@ he:
       logout_disabled: "היציאה מושבתת בזמן שהאתר במצב של קריאה בלבד."
     staff_writes_only_mode:
       enabled: "אתר זה נמצא במצב סגל בלבד. אפשר להמשיך לשוטט, אך תגובות, לייקים, ופעולות נוספות כרגע מוגבלות לחברי הסגל בלבד."
-    too_few_topics_and_posts_notice_MF: >-
+    too_few_topics_and_posts_notice_MF: |
       הבה <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">נתחיל להתדיין!</a> כרגע יש {currentTopics, plural, one {נושא <strong>אחד</strong>} other {<strong>#</strong> נושאים}} ו{currentPosts, plural, one {פוסט <strong>אחד</strong>} other {־<strong>#</strong> פוסטים}}. המבקרים זקוקים ליותר מכך כדי לקרוא ולהיות מעורבים – אנו ממליצים על {requiredTopics, plural, one {נושא<strong>אחד</strong>} other {<strong>#</strong> נושאים}} ו{requiredPosts, plural, one {פוסט <strong>אחד</strong>} other {־<strong>#</strong> פוסטים}} לפחות. רק חברי הסגל יכולים לראות את ההודעה הזאת.
-    too_few_topics_notice_MF: >-
+    too_few_topics_notice_MF: |
       הבה <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">נתחיל להתדיין!</a> כרגע יש {currentTopics, plural, one {נושא <strong>אחד</strong>} other {<strong>#</strong> נושאים}}. המבקרים זקוקים ליותר מכך כדי לקרוא ולהיות מעורבים – אנו ממליצים על {requiredTopics, plural, one {נושא <strong>אחד</strong>} other {<strong>#</strong> נושאים}} לפחות. רק חברי הסגל יכולים לראות את ההודעה הזאת.
-    too_few_posts_notice_MF: >-
+    too_few_posts_notice_MF: |
       הבה <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">נתחיל להתדיין!</a> כרגע יש {currentPosts, plural, one {פוסט <strong>אחד</strong>} other {<strong>#</strong> פוסטים}}. המבקרים זקוקים ליותר מכך כדי לקרוא ולהיות מעורבים – אנו ממליצים על {requiredPosts, plural, one {פוסט <strong>אחד</strong>} other {<strong>#</strong> פוסטים}} לפחות. רק חברי הסגל יכולים לראות את ההודעה הזאת.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {שגיאה אחת בשעה הגיעה} other {# שגיאות בשעה הגיעו}}</a> למגבלת האתר שהיא {limit, plural, one {שגיאה אחת בשעה} other {# שגיאות בשעה}}."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {שגיאה אחת בדקה הגיעה} other {# שגיאות בדקה הגיעו}}</a> למגבלת האתר שהיא {limit, plural, one {שגיאה אחת בדקה} other {# שגיאות בדקה}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {שגיאה אחת בשעה חרגה} other {# שגיאות בשעה חרגו}}</a> ממגבלת האתר שהיא {limit, plural, one {שגיאה אחת בשעה} other {# שגיאות בשעה}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {שגיאה אחת בדקה חרגה} other {# שגיאות בדקה חרגו}}</a> ממגבלת האתר שהיא {limit, plural, one {שגיאה אחת בדקה} other {# שגיאות בדקה}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {שגיאה אחת בשעה הגיעה} other {# שגיאות בשעה הגיעו}}</a> למגבלת האתר שהיא {limit, plural, one {שגיאה אחת בשעה} other {# שגיאות בשעה}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {שגיאה אחת בדקה הגיעה} other {# שגיאות בדקה הגיעו}}</a> למגבלת האתר שהיא {limit, plural, one {שגיאה אחת בדקה} other {# שגיאות בדקה}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {שגיאה אחת בשעה חרגה} other {# שגיאות בשעה חרגו}}</a> ממגבלת האתר שהיא {limit, plural, one {שגיאה אחת בשעה} other {# שגיאות בשעה}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {שגיאה אחת בדקה חרגה} other {# שגיאות בדקה חרגו}}</a> ממגבלת האתר שהיא {limit, plural, one {שגיאה אחת בדקה} other {# שגיאות בדקה}}.
     learn_more: "למד עוד..."
-    first_post: פוסט ראשון
     mute: השתק
     unmute: ביטול השתקה
     last_post: פורסמו
@@ -1909,7 +1918,8 @@ he:
         two: "יש <b>%{count}</b> תגובות."
         many: "יש <b>%{count}</b> תגובות."
         other: "יש <b>%{count}</b> תגובות."
-      description_time_MF: "יש {replyCount, plural, one {תגובה <b>אחת</b>} other {<b>#</b> תגובות}} עם זמן קריאה משוערך של <b>{readingTime, plural, one {דקה} other {# דקות}}</b>."
+      description_time_MF: |
+        יש {replyCount, plural, one {תגובה <b>אחת</b>} other {<b>#</b> תגובות}} עם זמן קריאה משוערך של <b>{readingTime, plural, one {דקה} other {# דקות}}</b>.
       enable: "סכם נושא זה"
       disable: "הצג את כל הפוסטים"
       short_label: "סיכום"
@@ -2789,9 +2799,12 @@ he:
       collapse_details: "צמצום פרטי הנושא"
       expand_details: "הרחבת פרטי הנושא"
       unread_indicator: "אף אחד מהחברים לא קרא את הפוסט האחרון של הנושא הזה עדיין."
-      browse_all_categories: עיינו בכל הקטגוריות
-      browse_all_tags: עיון בכל התגיות
-      view_latest_topics: הצגת נושאים אחרונים
+      bumped_at_title: |
+        פוסט ראשון: %{createdAtDate}
+        פורסם: %{bumpedAtDate}
+      browse_all_categories_latest: "<a href='%{basePath}/categories'>עיון בכל הקטגוריות</a> או <a href='%{basePath}/latest'>הצגת הנושאים העדכניים ביותר</a>."
+      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>עיון בכל הקטגוריות</a>, <a href='%{basePath}/latest'>הצגת הנושאים העדכניים ביותר</a> או צפייה במובילים:"
+      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>עיון בכל התגיות</a> או <a href='%{basePath}/latest'>הצגת הנושאים העדכניים ביותר</a>."
       suggest_create_topic: מעניין אותך <a href>לפתוח בדיון חדש?</a>
       jump_reply_up: קפיצה לתגובה קודמת
       jump_reply_down: קפיצה לתגובה מאוחרת
@@ -3616,7 +3629,8 @@ he:
       official_warning: "אזהרה רשמית"
       delete_spammer: "מחק ספאמר"
       flag_for_review: "תור לסקירה"
-      delete_confirm_MF: "פעולה זו תסיר {POSTS, plural, one {פוסט <b>אחד</b>} other {<b>#</b> פוסטים}} ו{TOPICS, plural, one {נושא <b>אחד</b>} other {־<b>#</b> נושאים}} שנכתבו על ידי משתמש זה, תסיר את החשבון שלו, תחסום הרשמה מכתובת ה־IP‏ <b> ‏{ip_address}</b> ותוסיף את כתובת הדוא״ל שלו <b>{email}</b> לרשימת חסימה קבועה. האם משתמש זה הוא בוודאות מפיץ זבל (ספאמר)?"
+      delete_confirm_MF: |
+        פעולה זו תסיר {POSTS, plural, one {פוסט <b>אחד</b>} other {<b>#</b> פוסטים}} ו{TOPICS, plural, one {נושא <b>אחד</b>} other {־<b>#</b> נושאים}} שנכתבו על ידי משתמש זה, תסיר את החשבון שלו, תחסום הרשמה מכתובת ה־IP‏ <b> ‏{ip_address}</b> ותוסיף את כתובת הדוא״ל שלו <b>{email}</b> לרשימת חסימה קבועה. האם משתמש זה הוא בוודאות מפיץ זבל (ספאמר)?
       yes_delete_spammer: "כן, מחק ספאמר"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(מוסתר)"
@@ -3825,7 +3839,6 @@ he:
         this_month: "חודש"
         this_week: "שבוע"
         today: "היום"
-        other_periods: "להציג את המובילים:"
     browser_update: 'אתרע מזלך וכי <a href="https://www.discourse.org/faq/#browser">דפדפנך אינו נתמך עוד</a>. נא <a href="https://browsehappy.com">לעבור לדפדפן נתמך</a> כדי לצפות בתוכן עשיר, להיכנס ולהגיב.'
     safari_13_warning: אתר זה יסיר בקרוב את התמיכה בגרסאות 13 ומטה של Safari ושל iOS. גרסה מופשאת לקריאה בלבד תישאר זמינה עבורם. (<a href="https://meta.discourse.org/t/224747">מידע נוסף</a>)
     permission_types:
@@ -4549,9 +4562,8 @@ he:
         detailed_instruction: "בקשת POST תישלח ל URL שמוגדר כאשר מתרחש האירוע שנבחר."
         new: "Webhook חדש"
         create: "יצירה"
+        edit: "עריכה"
         save: "שמירה"
-        destroy: "מחיקה"
-        description: "תיאור"
         controls: "מכוונים"
         go_back: "חזרה לרשימה"
         payload_url: "URL של התוכן"
@@ -4636,9 +4648,6 @@ he:
           headers: "כותרות"
           payload: "תוכן"
           body: "גוף"
-          go_list: "לכו לרשימה"
-          go_details: "עריכת webhook"
-          go_events: "לכו לארועים"
           ping: "פינג"
           status: "קוד סטטוס"
           event_id: "מזהה"
@@ -5389,7 +5398,8 @@ he:
         clear_penalty_history:
           title: "מחיקת היסטוריית עונשין"
           description: "משתמשים עם עונשין לא יכולים להגיע לדרגת אמון 3"
-        delete_all_posts_confirm_MF: "פעולה זו תמחק {POSTS, plural, one {פוסט אחד} two {שני פוסטים} many {# פוסטים} other {# פוסטים}} ו{TOPICS, plural, one {נושא אחד} two {שני נושאים} many {־# נושאים} other {־# נושאים}}. להמשיך?"
+        delete_all_posts_confirm_MF: |
+          פעולה זו תמחק {POSTS, plural, one {פוסט אחד} two {שני פוסטים} many {# פוסטים} other {# פוסטים}} ו{TOPICS, plural, one {נושא אחד} two {שני נושאים} many {־# נושאים} other {־# נושאים}}. להמשיך?
         silence: "השתקה"
         unsilence: "ביטול השתקה"
         silenced: "בהשתקה?"

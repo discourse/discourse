@@ -228,7 +228,6 @@ fa_IR:
     conduct: "دستورالعمل"
     mobile_view: "نمایش برای موبایل "
     desktop_view: "نمایش برای کامپیوتر"
-    or: "یا"
     now: "هم‌اکنون"
     read_more: "بیشتر بخوانید"
     more: "بیشتر"
@@ -1600,12 +1599,15 @@ fa_IR:
     staff_writes_only_mode:
       enabled: "این سایت در حالت فقط کارکنان است. می‌توانید موضوعات را مشاهده کنید، ولی امکان پاسخ دادن، پسندیدن و سایر اقدامات فقط برای اعضای کارکنان محدود شده است."
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> به حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} رسیده است."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> به حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} رسیده است."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> از حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} عبور کرده است."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> از حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} عبور کرده است."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> به حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} رسیده است.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> به حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} رسیده است.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> از حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} عبور کرده است.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> از حد مجاز از {limit, plural, one {# error/hour} other {# errors/hour}} عبور کرده است.
     learn_more: "بیشتر بدانید..."
-    first_post: نوشته نخست
     mute: خاموش
     unmute: صدادار
     last_post: ارسال شده
@@ -2330,9 +2332,6 @@ fa_IR:
       options: "گزینه‌های موضوع"
       show_links: "نمایش پیوندهای درون این موضوع"
       unread_indicator: "هیچ کاربری آخرین فرستهٔ این مبحث را نخوانده است."
-      browse_all_categories: جستوجوی همه‌ی دسته‌‌بندی‌ها
-      browse_all_tags: همه برچسب ها را مرور کنید
-      view_latest_topics: مشاهده آخرین موضوع
       suggest_create_topic: برای <a href>شروع یک موضوع جدید آماده‌اید؟</a>
       jump_reply_up: رفتن به جدید ترین پاسخ
       jump_reply_down: رفتن به پاسخ بعدی
@@ -3575,9 +3574,8 @@ fa_IR:
         detailed_instruction: "وقتی رویداد اتفاق بیفتد، یک درخواست POST به لینک ارائه شده ارسال می‌شود."
         new: "webhook جدید"
         create: "ایجاد"
+        edit: "ویرایش"
         save: "ذخیره"
-        destroy: "حذف"
-        description: "توضیحات"
         controls: "کنترل‌ها"
         go_back: "بازگشت به فهرست"
         payload_url: "لینک payload"
@@ -3639,9 +3637,6 @@ fa_IR:
           headers: "سربرگ‌ها"
           payload: "Payload"
           body: "بدنه"
-          go_list: "برو به لیست"
-          go_details: "ویرایش وب هوک"
-          go_events: "برو به رویداد‌ها"
           ping: "پینگ"
           status: "کد وضعیت"
           event_id: "شناسه"

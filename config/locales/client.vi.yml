@@ -222,7 +222,6 @@ vi:
     conduct: "Quy tắc ứng xử"
     mobile_view: "Xem chế độ điện thoại"
     desktop_view: "Xem chế độ máy tính"
-    or: "hoặc"
     now: "ngay lúc này"
     read_more: "đọc thêm"
     more: "Nhiều hơn"
@@ -1604,15 +1603,18 @@ vi:
       enabled: "Website đang ở chế độ chỉ đọc, bạn có thể duyệt xem nhưng không thể trả lời, likes, hay thực hiện các hành động khác."
       login_disabled: "Chức năng Đăng nhập đã bị tắt khi website trong trạng thái chỉ đọc"
       logout_disabled: "Chức năng đăng xuất đã bị tắt khi website đang trong trạng thái chỉ đọc."
-    too_few_posts_notice_MF: >-
+    too_few_posts_notice_MF: |
       Hãy cùng <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">bắt đầu thảo luận!</a> Đó {currentPosts, plural, other {là <strong>bài #</strong> }}. Khách truy cập cần nhiều hơn để đọc và trả lời - chúng tôi khuyên bạn nên ít nhất {requiredPosts, plural, other {<strong>#</strong> bài viết}}. Chỉ nhân viên mới có thể nhìn thấy thông báo này.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / giờ}}</a> trang web đạt đến giới hạn thiết lập của {limit, plural, other {# lỗi / giờ}}."
-      reached_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / phút}}</a> trang web đạt đến giới hạn thiết lập của {limit, plural, other {# lỗi / phút}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / giờ}}</a> vượt quá giới hạn thiết lập trang web của {limit, plural, other {# lỗi / giờ}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / phút}}</a> vượt quá giới hạn thiết lập trang web của {limit, plural, other {# lỗi / phút}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / giờ}}</a> trang web đạt đến giới hạn thiết lập của {limit, plural, other {# lỗi / giờ}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / phút}}</a> trang web đạt đến giới hạn thiết lập của {limit, plural, other {# lỗi / phút}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / giờ}}</a> vượt quá giới hạn thiết lập trang web của {limit, plural, other {# lỗi / giờ}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / phút}}</a> vượt quá giới hạn thiết lập trang web của {limit, plural, other {# lỗi / phút}}.
     learn_more: "tìm hiểu thêm..."
-    first_post: Bài viết đầu tiên
     mute: Im lặng
     unmute: Bỏ im lặng
     last_post: Được gửi
@@ -2383,9 +2385,6 @@ vi:
       collapse_details: "thu gọn chi tiết chủ đề"
       expand_details: "mở rộng chi tiết chủ đề"
       unread_indicator: "Chưa có thành viên nào đọc bài cuối cùng của chủ đề này."
-      browse_all_categories: Duyệt tất cả các hạng mục
-      browse_all_tags: Duyệt qua tất cả các thẻ
-      view_latest_topics: xem các chủ đề mới nhất
       suggest_create_topic: Bạn đã sẵn sàng để <a href>đầu một cuộc trò chuyện mới chưa?</a>
       jump_reply_up: nhảy đến những trả lời trước đó
       jump_reply_down: nhảy tới những trả lời sau đó
@@ -3259,7 +3258,6 @@ vi:
         this_month: "Tháng"
         this_week: "Tuần"
         today: "Ngày"
-        other_periods: "xem đầu trang:"
     permission_types:
       full: "Tạo / Trả lời / Xem"
       create_post: "Trả lời / Xem"
@@ -3895,9 +3893,8 @@ vi:
         detailed_instruction: "POST sẽ được gửi đến URL được cung cấp khi sự kiện đã chọn xảy ra."
         new: "Webhook mới"
         create: "Tạo"
+        edit: "Sửa"
         save: "Lưu"
-        destroy: "Xóa"
-        description: "Mô tả"
         controls: "Kiểm soát"
         go_back: "Quay lại danh sách"
         payload_url: "Payload URL"
@@ -3976,9 +3973,6 @@ vi:
           headers: "Tên"
           payload: "Nội dung"
           body: "Thân"
-          go_list: "Đi đến danh sách"
-          go_details: "Chỉnh sửa webhook"
-          go_events: "Đi đến các sự kiện"
           ping: "Ping"
           status: "Mã trạng thái"
           event_id: "ID"

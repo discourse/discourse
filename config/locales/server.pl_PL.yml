@@ -1521,9 +1521,8 @@ pl_PL:
     allow_duplicate_topic_titles_category: "Zezwalaj na tematy z identycznymi, zduplikowanymi tytułami, jeśli kategoria jest inna. allow_duplicate_topic_titles musi być wyłączone."
     unique_posts_mins: "Ile minut musi upłynąć zanim użytkownik będzie mógł/mogła ponownie zrobić wpis z tą samą treścią"
     educate_until_posts: "Wyświetlaj okno edukacyjne po rozpoczęciu pisania dopóki nowy użytkownik nie napisze tylu wpisów."
-    title: "Nazwa tej strony używana w tagu title."
-    site_description: "Opis strony w jednym zdaniu, wykorzystywany w meta tagu description."
-    short_site_description: "Krótki opis, użyty w tytule na stronie głównej."
+    site_description: "Opisz tę stronę w jednym zdaniu. Widoczne dla wszystkich odwiedzających, w tym użytkowników anonimowych."
+    short_site_description: "Krótki opis w kilku słowach. Widoczne dla wszystkich odwiedzających, w tym użytkowników anonimowych."
     contact_email: "Adres e-mail do kluczowego kontaktu do osoby odpowiedzialnej za tę witrynę. Używany do krytycznych powiadomień, a także wyświetlany na <a href='%{base_path}/about' target='_blank'>/about</a> w pilnych sprawach."
     contact_url: "Adres URL kontaktu dla tej witryny. Wyświetlany na stronie <a href='%{base_path}/about' target='_blank'>/about</a> dla pilnych spraw."
     crawl_images: "Pobieraj grafiki ze zdalnych URLi aby ustawić poprawną wysokość i szerokość w tagu img."
@@ -1540,8 +1539,6 @@ pl_PL:
     edit_history_visible_to_public: "Pozwól wszystkim zobaczyć poprzednie wersje edytowanego posta. Gdy wyłączone, tylko członkowie personelu mogą je przeglądać."
     delete_removed_posts_after: "Wpisy usunięte przez autora będą automatycznie zlikwidowane po (n) godzinach. Jeżeli liczba godzin będzie wynosić 0, to zostaną usunięte natychmiast. "
     notify_users_after_responses_deleted_on_flagged_post: "Gdy post zostanie oznaczony, a następnie usunięty, wszyscy użytkownicy, którzy na niego odpowiedzieli, a ich odpowiedzi zostały usunięte, zostaną powiadomieni."
-    max_image_width: "Maksymalna szerokość miniaturki grafiki we wpisie. "
-    max_image_height: "Maksymalna wysokość miniaturki grafiki we wpisie. "
     responsive_post_image_sizes: "Zmień rozmiar podglądu lightbox, aby umożliwić wyświetlanie ekranów o wysokiej rozdzielczości DPI o następujących proporcjach pikseli. Usuń wszystkie wartości, aby wyłączyć responsywne obrazy."
     fixed_category_positions: "Zaznacz, aby ręcznie ustawiać kolejność kategorii. Odznacz, aby kategorie były sortowane na podstawie aktywności. "
     fixed_category_positions_on_create: "Jeśli zaznaczone, kolejność kategorii będzie utrzymywana w oknie dialogowym tworzenia tematu (wymaga fixed_category_positions)."
@@ -4419,6 +4416,8 @@ pl_PL:
           must_approve_users:
             placeholder: "Wymaga zatwierdzenia"
             extra_description: "Użytkownicy muszą być zatwierdzeni przez personel"
+          chat_enabled:
+            placeholder: "Włącz czat"
       ready:
         title: "Twój Discourse jest Gotowy!"
         description: "Otóż to! Wykonałeś podstawowe czynności związane z utworzeniem swojej społeczności. Teraz możesz wejść i rozejrzeć się, napisać temat powitalny i wysłać zaproszenia!<br><br>Baw się dobrze!"

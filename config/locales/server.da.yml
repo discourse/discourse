@@ -1317,9 +1317,6 @@ da:
     allow_duplicate_topic_titles: "Tillad emner med identiske titler ."
     unique_posts_mins: "Hvor mange minutter der skal gå før en bruger kan skrive et indlæg med det samme indhold igen."
     educate_until_posts: "Når brugeren begynder at skrive deres første (n) nye indlæg, skal pop op panel med ny bruger undervisning vises i editoren."
-    title: "Sitets navn, som anvendt i tittel."
-    site_description: "Beskriv denne side i én sætning, som anvendt i meta beskrivelsen."
-    short_site_description: "Kort beskrivelse, som bruges i titelmærket på websiden."
     crawl_images: "Hent billeder fra eksterne URLs for at indsætte de korrekte bredde og højde dimensioner."
     download_remote_images_threshold: "Minimum hukommelse påkrævet på drev for at downloade billeder lokalt (i procent)"
     disabled_image_download_domains: "Eksterne billeder vil ikke blive hentet fra disse domæner. Afgrænset liste."
@@ -1327,8 +1324,6 @@ da:
     staff_edit_locks_post: "Indlæg vil være låst fra redigering, hvis de redigeres af personalet"
     edit_history_visible_to_public: "Tillad alle at se tidligere versioner af et redigeret indlæg. Når slået fra, kan kun administrator se dette."
     delete_removed_posts_after: "Indlæg, fjernet af forfatteren, vil blive automatisk slettet efter (n) hours. Såfremt værdien sat til 0 vil indlæg blive fjernet straks."
-    max_image_width: "Maximum thumbnail width of images in a post"
-    max_image_height: "Maksimum miniaturebillede højde for billeder i et indlæg"
     fixed_category_positions: "Hvis afkrydset, vil du være i stand til at arrangere kategorier i en fast rækkefølge. Hvis ikke afkrydset vil de være listet i en rækkefølge baseret på aktivitet."
     fixed_category_positions_on_create: "Hvis afkrydset vil kategori visning blive vedligeholdt baseret på emne (kræver manuelt valgt visning af kategorier)."
     add_rel_nofollow_to_user_content: 'Tilføj rel nofollow til alt indsendt brugerindhold, undtagen interne links (herunder overordnede domæner). Hvis du ændrer dette, skal du gen-bage alle indlæg med: "rake indlæg:rebake“'
@@ -3364,6 +3359,8 @@ da:
             extra_description: "Kun brugere, der er logget ind, har adgang til dette fællesskab"
           must_approve_users:
             placeholder: "Kræv godkendelse"
+          chat_enabled:
+            placeholder: "Aktiver Chat"
       ready:
         title: "Discourse er gjort klar til dig!"
       styling:

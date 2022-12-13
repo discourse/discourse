@@ -229,7 +229,6 @@ pt:
     conduct: "Código de Conduta"
     mobile_view: "Visualização Mobile"
     desktop_view: "Visualização Desktop"
-    or: "ou"
     now: "ainda agora"
     read_more: "ler mais"
     more: "Mais"
@@ -1604,7 +1603,6 @@ pt:
       login_disabled: "Enquanto o site se encontrar no modo só de leitura, a opção de iniciar a sessão está desativada."
       logout_disabled: "Enquanto o site se encontrar no modo só de leitura, a opção de terminar a sessão está desativada."
     learn_more: "saber mais..."
-    first_post: Primeira publicação
     mute: Silenciar
     unmute: Desativar silêncio
     last_post: Publicado
@@ -2310,9 +2308,6 @@ pt:
       collapse_details: "ocultar detalhes do tópico"
       expand_details: "expandir detalhes do tópico"
       unread_indicator: "Nenhum membro leu o último post deste tópico ainda."
-      browse_all_categories: Pesquisar em todas as categorias
-      browse_all_tags: Procurar todas as tags
-      view_latest_topics: ver os tópicos mais recentes
       suggest_create_topic: Pronto para <a href>iniciar uma nova conversa?</a>
       jump_reply_up: avançar para resposta mais recente
       jump_reply_down: avançar para resposta mais antiga
@@ -3675,9 +3670,8 @@ pt:
         detailed_instruction: "Um pedido POST será enviado ao URL fornecido quando o evento escolhido acontecer."
         new: "Novo Webhook"
         create: "Criar"
+        edit: "Editar"
         save: "Guardar"
-        destroy: "Apagar"
-        description: "Descrição"
         controls: "Controlos"
         go_back: "Voltar à lista"
         payload_url: "URL de carga"
@@ -3726,9 +3720,6 @@ pt:
           headers: "Cabeçalhos"
           payload: "Carga"
           body: "Corpo"
-          go_list: "Ir para à lista"
-          go_details: "Editar webhook"
-          go_events: "Ir para eventos"
           ping: "Ping"
           status: "Código de Estado"
           event_id: "ID"

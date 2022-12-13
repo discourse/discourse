@@ -226,7 +226,6 @@ ca:
     conduct: "Codi de Conducta"
     mobile_view: "Vista mòbil"
     desktop_view: "Vista d'escriptori"
-    or: "o"
     now: "ara mateix"
     read_more: "llegeix més"
     more: "Més"
@@ -1383,12 +1382,15 @@ ca:
       login_disabled: "S'ha desactivat l'inici de sessió mentre aquest lloc web es trobi en mode només de lectura."
       logout_disabled: "S'ha desactivat el tancament de sessió mentre aquest lloc web es trobi en mode només de lectura."
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errors/hora}}</a> s'ha arribat al límit de configuració del lloc web de {limit, plural, one {# error/hora} other {# errors/hora}}."
-      reached_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# error/minut} other {# errors/minut}}</a> s'ha arribat al límit de configuració del lloc web de {limit, plural, one {# error/minut} other {# errors/minut}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errors/hora}}</a> s'ha superat el límit de la configuració del lloc web de {limit, plural, one {# error/hora} other {# errors/hora}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minut} other {# errors/minut}}</a> s'ha superat el límit de la configuració del lloc web de {limit, plural, one {# error/minut} other {# errors/minut}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errors/hora}}</a> s'ha arribat al límit de configuració del lloc web de {limit, plural, one {# error/hora} other {# errors/hora}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# error/minut} other {# errors/minut}}</a> s'ha arribat al límit de configuració del lloc web de {limit, plural, one {# error/minut} other {# errors/minut}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errors/hora}}</a> s'ha superat el límit de la configuració del lloc web de {limit, plural, one {# error/hora} other {# errors/hora}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minut} other {# errors/minut}}</a> s'ha superat el límit de la configuració del lloc web de {limit, plural, one {# error/minut} other {# errors/minut}}.
     learn_more: "per a saber-ne més..."
-    first_post: Primera publicació
     mute: Silencia
     unmute: Desfés el silenciament
     last_post: Publicat
@@ -1966,8 +1968,6 @@ ca:
       options: "Opcions del tema"
       show_links: "mostra enllaços dins d'aquest tema"
       unread_indicator: "Cap membre encara no ha llegit la darrera publicació d'aquest tema."
-      browse_all_categories: Navega per totes les categories
-      view_latest_topics: mira els temes més recents
       jump_reply_up: salta a la resposta anterior
       jump_reply_down: salta a la resposta posterior
       deleted: "El tema ha estat suprimit"
@@ -2679,7 +2679,6 @@ ca:
         this_month: "Mes"
         this_week: "Setmana"
         today: "Avui"
-        other_periods: "Vegeu a dalt:"
     permission_types:
       full: "Crea / Respon / Mira"
       create_post: "Respon / Mira"
@@ -3122,9 +3121,8 @@ ca:
         detailed_instruction: "S'enviarà una petició POST a l'URL facilitat quan passi l'esdeveniment seleccionat."
         new: "Webhook nou"
         create: "Crea"
+        edit: "Edita"
         save: "Desa"
-        destroy: "Suprimeix"
-        description: "Descripció"
         controls: "Controls"
         go_back: "Torna a la llista"
         payload_url: "URL de càrrega útil"
@@ -3192,9 +3190,6 @@ ca:
           headers: "Capçaleres (headers)"
           payload: "Càrrega útil"
           body: "Cos"
-          go_list: "Vés a la llista"
-          go_details: "Edita webhook"
-          go_events: "Vés a esdeveniments"
           ping: "Ping"
           status: "Codi d'estat"
           event_id: "ID"

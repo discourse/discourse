@@ -253,7 +253,6 @@ de:
     conduct: "Verhaltenskodex"
     mobile_view: "Mobile Ansicht"
     desktop_view: "Desktop-Ansicht"
-    or: "oder"
     now: "gerade eben"
     read_more: "weiterlesen"
     more: "Mehr"
@@ -1719,12 +1718,15 @@ de:
     staff_writes_only_mode:
       enabled: "Diese Website befindet sich im Nur-Team-Modus. Du kannst weiterhin Inhalte lesen, aber das Antworten, Vergeben von „Gefällt mir“ und Durchführen einiger weiterer Aktionen ist derzeit nur für Team-Mitglieder möglich."
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Stunde} other {# Fehlern/Stunde}} erreicht."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Minute} other {# Fehler/Minute}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Minute} other {# Fehlern/Minute}} erreicht."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Stunde} other {# Fehlern/Stunde}} überschritten."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Minute} other {# Fehler/Minute}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Minute} other {# Fehlern/Minute}} überschritten."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Stunde} other {# Fehlern/Stunde}} erreicht.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Minute} other {# Fehler/Minute}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Minute} other {# Fehlern/Minute}} erreicht.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Stunde} other {# Fehlern/Stunde}} überschritten.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Minute} other {# Fehler/Minute}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Minute} other {# Fehlern/Minute}} überschritten.
     learn_more: "mehr erfahren …"
-    first_post: Erster Beitrag
     mute: Stummschalten
     unmute: Stummschaltung aufheben
     last_post: Geschrieben
@@ -1749,7 +1751,8 @@ de:
       description:
         one: "Es gibt <b>%{count}</b> Antwort."
         other: "Es gibt <b>%{count}</b> Antworten."
-      description_time_MF: "Es gibt {replyCount, plural, one {<b>#</b> Antwort} other {<b>#</b> Antworten}} mit einer geschätzten Lesezeit von <b>{readingTime, plural, one {# Minute} other {# Minuten}}</b>."
+      description_time_MF: |
+        Es gibt {replyCount, plural, one {<b>#</b> Antwort} other {<b>#</b> Antworten}} mit einer geschätzten Lesezeit von <b>{readingTime, plural, one {# Minute} other {# Minuten}}</b>.
       enable: "Dieses Thema zusammenfassen"
       disable: "Alle Beiträge anzeigen"
       short_label: "Zusammenfassen"
@@ -2559,9 +2562,6 @@ de:
       collapse_details: "Themendetails einklappen"
       expand_details: "Themendetails erweitern"
       unread_indicator: "Kein Mitglied hat den letzten Beitrag dieses Themas bisher gelesen."
-      browse_all_categories: Alle Kategorien durchsehen
-      browse_all_tags: Alle Schlagwörter durchsuchen
-      view_latest_topics: aktuelle Themen anzeigen
       suggest_create_topic: Bereit, <a href>eine neue Unterhaltung zu beginnen?</a>
       jump_reply_up: zur vorherigen Antwort springen
       jump_reply_down: zur nachfolgenden Antwort springen
@@ -3316,7 +3316,8 @@ de:
       official_warning: "Offizielle Warnung"
       delete_spammer: "Spammer löschen"
       flag_for_review: "Zur Überprüfung einreihen"
-      delete_confirm_MF: "Du wirst {POSTS, plural, one {<b>einen</b> Beitrag} other {<b>#</b> Beiträge}} und {TOPICS, plural, one {<b>ein</b> Thema} other {<b>#</b> Themen}} von diesem Benutzer löschen, sein Konto entfernen, seine IP-Adresse <b>{ip_address}</b> für Neuanmeldungen sperren und die E-Mail-Adresse <b>{email}</b> auf eine permanente Sperrliste setzen. Bist du dir sicher, dass dieser Benutzer wirklich ein Spammer ist?"
+      delete_confirm_MF: |
+        Du wirst {POSTS, plural, one {<b>einen</b> Beitrag} other {<b>#</b> Beiträge}} und {TOPICS, plural, one {<b>ein</b> Thema} other {<b>#</b> Themen}} von diesem Benutzer löschen, sein Konto entfernen, seine IP-Adresse <b>{ip_address}</b> für Neuanmeldungen sperren und die E-Mail-Adresse <b>{email}</b> auf eine permanente Sperrliste setzen. Bist du dir sicher, dass dieser Benutzer wirklich ein Spammer ist?
       yes_delete_spammer: "Ja, lösche den Spammer"
       ip_address_missing: "(nicht verfügbar)"
       hidden_email_address: "(versteckt)"
@@ -3495,7 +3496,6 @@ de:
         this_month: "Monat"
         this_week: "Woche"
         today: "Heute"
-        other_periods: "angesagte Themen ansehen:"
     browser_update: 'Leider wird <a href="https://www.discourse.org/faq/#browser">dein Browser nicht unterstützt</a>. Bitte <a href="https://browsehappy.com">wechsle zu einem unterstützten Browser</a>, um die Inhalte in vollem Umfang zu sehen, dich anzumelden und zu antworten.'
     safari_13_warning: Diese Website wird bald die Unterstützung für iOS und Safari Version 13 und darunter entfernen. Eine vereinfachte Nur-Lesen-Version wird weiterhin verfügbar sein. (<a href="https://meta.discourse.org/t/224747">Mehr Informationen</a>)
     permission_types:
@@ -4171,8 +4171,6 @@ de:
         new: "Neuer Webhook"
         create: "Erstellen"
         save: "Speichern"
-        destroy: "Löschen"
-        description: "Beschreibung"
         controls: "Kontrollelemente"
         go_back: "Zurück zur Liste"
         payload_url: "Payload-URL"
@@ -4253,9 +4251,6 @@ de:
           headers: "Headers"
           payload: "Payload"
           body: "Body"
-          go_list: "Gehe zur Liste"
-          go_details: "Webhook bearbeiten"
-          go_events: "Gehe zu Ereignissen"
           ping: "Ping"
           status: "Statuscode"
           event_id: "ID"
@@ -5000,7 +4995,8 @@ de:
         clear_penalty_history:
           title: "Lösche die Strafenhistorie"
           description: "Benutzer mit Strafen können VS3 nicht erreichen"
-        delete_all_posts_confirm_MF: "Du wirst {POSTS, plural, one {# Beitrag} other {# Beiträge}} und {TOPICS, plural, one {# Thema} other {# Themen}} löschen. Bist du dir sicher?"
+        delete_all_posts_confirm_MF: |
+          Du wirst {POSTS, plural, one {# Beitrag} other {# Beiträge}} und {TOPICS, plural, one {# Thema} other {# Themen}} löschen. Bist du dir sicher?
         silence: "Stummschalten"
         unsilence: "Stummschaltung aufheben"
         silenced: "Stummgeschaltet?"

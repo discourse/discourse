@@ -251,7 +251,6 @@ ro:
     conduct: "Codul de conduită"
     mobile_view: "Vedere pentru mobil"
     desktop_view: "Vedere pentru desktop"
-    or: "sau"
     now: "Acum"
     read_more: "Citește mai mult"
     more: "Mai mult"
@@ -1481,7 +1480,6 @@ ro:
       login_disabled: "Autentificarea este dezactivată când siteul este în modul exclusiv-citire."
       logout_disabled: "Deautentificarea este dezactivată cât timp site-ul este în modul exclusiv-citire."
     learn_more: "află mai multe..."
-    first_post: Prima postare
     mute: Blochează
     unmute: Deblochează
     last_post: Postat
@@ -2030,8 +2028,6 @@ ro:
       back_to_list: "Înapoi la lista de subiecte"
       options: "Opțiuni pentru subiect"
       show_links: "arată link-urile din acest subiect"
-      browse_all_categories: Răsfoiți prin toate categoriile
-      view_latest_topics: arată ultimele subiecte
       suggest_create_topic: Ești gata să <a href>începi o nouă conversație?</a>
       jump_reply_up: sări la un răspuns mai vechi
       jump_reply_down: sări la un răspuns mai nou
@@ -2726,7 +2722,6 @@ ro:
         this_month: "Lună"
         this_week: "Săptămână"
         today: "Astăzi"
-        other_periods: "vezi top"
     permission_types:
       full: "Creează / Răspunde / Vizualizează"
       create_post: "Răspunde / Vizualizează"
@@ -3100,9 +3095,8 @@ ro:
         detailed_instruction: "O interogare POST va fi trimisă catre URL-ul menționat atunci când se produc evenimentele alese."
         new: "Nou webhook"
         create: "Creează"
+        edit: "Modifică"
         save: "Salvează"
-        destroy: "Șterge"
-        description: "Descriere"
         controls: "Controale"
         go_back: "Înapoi la listă"
         payload_url: "URL-ul încărcăturii "
@@ -3153,9 +3147,6 @@ ro:
           headers: "Antete"
           payload: "Încărcătură"
           body: "Corp"
-          go_list: "Mergi la listă"
-          go_details: "Editează webhook"
-          go_events: "Mergi la evenimente"
           ping: "Ping"
           status: "Cod de stare"
           event_id: "ID"

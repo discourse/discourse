@@ -221,7 +221,6 @@ gl:
     conduct: "Código de conduta"
     mobile_view: "Visualización móbil"
     desktop_view: "Visualización en escritorio"
-    or: "ou"
     now: "agora mesmiño"
     read_more: "ler máis"
     more: "Máis"
@@ -1537,15 +1536,18 @@ gl:
       enabled: "Este sitio está en modo só-lectura. Continúe navegando pero responder, gustar e outras accións estarán desactivadas polo de agora."
       login_disabled: "Cando o sitio está no modo de só-lectura, desactívase o inicio de sesión."
       logout_disabled: "O peche de sesión desactívase mentres o sitio está en modo de só lectura."
-    too_few_posts_notice_MF: >-
+    too_few_posts_notice_MF: |
       Comecemos <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">a discusión!</a> E {currentPosts, plural, one {hai <strong>#</strong> publicación} other {hai <strong>#</strong> publicacións}}. Os visitantes necesitan máis para ler e responder – recomendamos que haxa cando menos {requiredPosts, plural, one {<strong>#</strong> publicación} other {<strong>#</strong> publicacións}}. Soamente o equipo pode ver esta mensaxe.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> acadou o límite configurado no sitio de {limit, plural, one {# erro/hora} other {# erros/hora}}."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> acadou o límite configurado no sitio de {limit, plural, one {# erro/minuto} other {# erros/minuto}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/hora} other {# erros/hora}}</a> excedeu o límite configurado do sitio de {limit, plural, one {# erro/hora} other {# erros/hora}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> excedeu o límite configurado do sitio de {limit, plural, one {# erro/minuto} other {# erros/minuto}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> acadou o límite configurado no sitio de {limit, plural, one {# erro/hora} other {# erros/hora}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> acadou o límite configurado no sitio de {limit, plural, one {# erro/minuto} other {# erros/minuto}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/hora} other {# erros/hora}}</a> excedeu o límite configurado do sitio de {limit, plural, one {# erro/hora} other {# erros/hora}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> excedeu o límite configurado do sitio de {limit, plural, one {# erro/minuto} other {# erros/minuto}}.
     learn_more: "saber máis..."
-    first_post: Publicación inicial
     mute: Silenciar
     unmute: Non silenciar
     last_post: Publicado
@@ -1567,7 +1569,8 @@ gl:
       description:
         one: "Hai <b>%{count}</b> resposta."
         other: "Hai <b>%{count}</b> respostas."
-      description_time_MF: "Hai {replyCount, plural, one {<b>#</b> resposta} other {<b>#</b> respostas}} que supoñen un tempo estimado de lectura de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>."
+      description_time_MF: |
+        Hai {replyCount, plural, one {<b>#</b> resposta} other {<b>#</b> respostas}} que supoñen un tempo estimado de lectura de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>.
       enable: "Resumir este tema"
       disable: "Amosar todas as publicacións"
     deleted_filter:
@@ -2216,9 +2219,6 @@ gl:
       options: "Opcións de temas"
       show_links: "amosar as ligazóns a este tema"
       unread_indicator: "Ningún membro leu aínda a última publicación neste tema."
-      browse_all_categories: Explorar todas as categorías
-      browse_all_tags: Explorar todas as etiquetas
-      view_latest_topics: ver os últimos temas
       jump_reply_up: ir a unha resposta anterior
       jump_reply_down: ir a unha resposta posterior
       deleted: "Eliminouse o tema"
@@ -2903,7 +2903,8 @@ gl:
       official_warning: "Aviso oficial"
       delete_spammer: "Eliminar remitente de lixo"
       flag_for_review: "Cola para revisión"
-      delete_confirm_MF: "Vai eliminar {POSTS, plural, one {<b>#</b> publicación} other {<b>#</b> publicacións}} e {TOPICS, plural, one {<b>#</b> tema} other {<b>#</b> temas}} deste usuario, retirar a súa conta, bloquear accesos desde o seu enderezo IP <b>{ip_address}</b>, e engadir o seu enderezo de correo <b>{email}</b> a unha listaxe de bloqueo permanente. Confirma que este usuario se dedica a enviar lixo?"
+      delete_confirm_MF: |
+        Vai eliminar {POSTS, plural, one {<b>#</b> publicación} other {<b>#</b> publicacións}} e {TOPICS, plural, one {<b>#</b> tema} other {<b>#</b> temas}} deste usuario, retirar a súa conta, bloquear accesos desde o seu enderezo IP <b>{ip_address}</b>, e engadir o seu enderezo de correo <b>{email}</b> a unha listaxe de bloqueo permanente. Confirma que este usuario se dedica a enviar lixo?
       yes_delete_spammer: "Si, eliminar o remitente de lixo"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(agochado)"
@@ -3071,7 +3072,6 @@ gl:
         this_month: "Mes"
         this_week: "Semana"
         today: "Hoxe"
-        other_periods: "ver arriba:"
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
@@ -3609,9 +3609,8 @@ gl:
         detailed_instruction: "Enviarase unha petición POST ao URL proporcionado se sucede o evento escollido."
         new: "Novo enganche de web"
         create: "Crear"
+        edit: "Editar"
         save: "Gardar"
-        destroy: "Eliminar"
-        description: "Descrición"
         controls: "Controis"
         go_back: "Volver á lista"
         payload_url: "URL que carga"
@@ -3682,9 +3681,6 @@ gl:
           headers: "Cabeceiras"
           payload: "Datos de carga"
           body: "Corpo"
-          go_list: "Ir á listaxe"
-          go_details: "Editar enganche de web "
-          go_events: "Ir a eventos"
           ping: "Ping"
           status: "Código de estado"
           event_id: "ID"
@@ -4396,7 +4392,8 @@ gl:
         clear_penalty_history:
           title: "Borrar o historial de penalizacións"
           description: "os usuarios con sancións non poden acadar TL3"
-        delete_all_posts_confirm_MF: "Vai eliminar {POSTS, plural, one {# publicación} other {# publicacións}} e {TOPICS, plural, one {# tema} other {# temas}}. Está seguro?"
+        delete_all_posts_confirm_MF: |
+          Vai eliminar {POSTS, plural, one {# publicación} other {# publicacións}} e {TOPICS, plural, one {# tema} other {# temas}}. Está seguro?
         silence: "Silenciar"
         unsilence: "Levantar silencio"
         silenced: "Silenciado?"

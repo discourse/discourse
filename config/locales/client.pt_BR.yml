@@ -253,7 +253,6 @@ pt_BR:
     conduct: "Código de Conduta"
     mobile_view: "VIsualização Móvel"
     desktop_view: "Visualização do Desktop"
-    or: "ou"
     now: "agora"
     read_more: "leia mais"
     more: "Mais"
@@ -1721,12 +1720,15 @@ pt_BR:
     staff_writes_only_mode:
       enabled: "Este site está no modo apenas para funcionários. Continue navegando, mas as respostas, curtidas e outras ações são limitadas apenas aos membros da equipe."
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>a quantidade de {rate, plural, one {# erro/hora} other {# erros/hora}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/hora} other {# erros/hora}}."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>a quantidade de {rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/minuto} other {# erros/minuto}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>a quantidade de {rate, plural, one {# erro/hora} other {# erros/hora}}</a> ultrapassou o limite de configuração do site de {limit, plural, one {# erro/hora} other {# erros/hora}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minutos}}</a> ultrapassou o limite de configuração do site de {limit, plural, one {# erro/minuto} other {# erro/minutos}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>a quantidade de {rate, plural, one {# erro/hora} other {# erros/hora}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/hora} other {# erros/hora}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>a quantidade de {rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/minuto} other {# erros/minuto}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>a quantidade de {rate, plural, one {# erro/hora} other {# erros/hora}}</a> ultrapassou o limite de configuração do site de {limit, plural, one {# erro/hora} other {# erros/hora}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minutos}}</a> ultrapassou o limite de configuração do site de {limit, plural, one {# erro/minuto} other {# erro/minutos}}.
     learn_more: "saiba mais..."
-    first_post: Primeira postagem
     mute: Silenciar
     unmute: Remover silêncio
     last_post: Postado
@@ -1751,7 +1753,8 @@ pt_BR:
       description:
         one: "Existe <b>%{count}</b> resposta."
         other: "Existem <b>%{count}</b> respostas."
-      description_time_MF: "Há {replyCount, plural, one {<b>#</b> resposta} other {<b>#</b> respostas}} com um tempo de leitura estimado de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>."
+      description_time_MF: |
+        Há {replyCount, plural, one {<b>#</b> resposta} other {<b>#</b> respostas}} com um tempo de leitura estimado de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>.
       enable: "Resumir este tópico"
       disable: "Exibir todas as postagens"
       short_label: "Resumir"
@@ -2563,9 +2566,6 @@ pt_BR:
       collapse_details: "recolher detalhes do tópico"
       expand_details: "expandir detalhes do tópico"
       unread_indicator: "Nenhum membro leu a última postagem deste tópico ainda."
-      browse_all_categories: Ver todas as categorias
-      browse_all_tags: Procurar todas as etiquetas
-      view_latest_topics: ver últimos tópicos
       suggest_create_topic: Tudo pronto para <a href>começar uma nova conversa?</a>
       jump_reply_up: pular para a primeira resposta
       jump_reply_down: pular para a última resposta
@@ -3320,7 +3320,8 @@ pt_BR:
       official_warning: "Aviso oficial"
       delete_spammer: "Excluir remetente de spam"
       flag_for_review: "Fila para revisão"
-      delete_confirm_MF: "Você está prestes a excluir {POSTS, plural, one {<b>#</b> postagem} other {<b>#</b> postagens}} e {TOPICS, plural, one {<b>#</b> tópico} other {<b>#</b> tópicos}} deste(a) usuário(a), remover sua conta, bloquear cadastros a partir do seu endereço IP <b>{ip_address}</b> e adicionar seu endereço de e-mail <b>{email}</b> a uma lista de bloqueio permanente. Você tem certeza que este(a) usuário(a) é realmente remetente de spam?"
+      delete_confirm_MF: |
+        Você está prestes a excluir {POSTS, plural, one {<b>#</b> postagem} other {<b>#</b> postagens}} e {TOPICS, plural, one {<b>#</b> tópico} other {<b>#</b> tópicos}} deste(a) usuário(a), remover sua conta, bloquear cadastros a partir do seu endereço IP <b>{ip_address}</b> e adicionar seu endereço de e-mail <b>{email}</b> a uma lista de bloqueio permanente. Você tem certeza que este(a) usuário(a) é realmente remetente de spam?
       yes_delete_spammer: "Sim, excluir remetente de spam"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(oculto)"
@@ -3499,7 +3500,6 @@ pt_BR:
         this_month: "Mês"
         this_week: "Semana"
         today: "Hoje"
-        other_periods: "ver melhores:"
     browser_update: 'Infelizmente, <a href="https://www.discourse.org/faq/#browser">seu navegador não é compatível</a>. <a href="https://browsehappy.com">Use um navegador compatível</a> para visualizar um conteúdo interessante, entrar com a conta e responder.'
     safari_13_warning: Este site em breve removerá o suporte para iOS e Safari versões 13 e anteriores. Uma versão simplificada somente para leitura permanecerá disponível. (<a href="https://meta.discourse.org/t/224747">mais informações</a>)
     permission_types:
@@ -4175,8 +4175,6 @@ pt_BR:
         new: "Novo webhook"
         create: "Criar"
         save: "Salvar"
-        destroy: "Excluir"
-        description: "Descrição"
         controls: "Controles"
         go_back: "Voltar para a lista"
         payload_url: "URL do conteúdo"
@@ -4257,9 +4255,6 @@ pt_BR:
           headers: "Cabeçalhos"
           payload: "Conteúdo"
           body: "Corpo"
-          go_list: "Ir para lista"
-          go_details: "Editar webhook"
-          go_events: "Ir para eventos"
           ping: "Latência"
           status: "Código de status"
           event_id: "ID"
@@ -5004,7 +4999,8 @@ pt_BR:
         clear_penalty_history:
           title: "Limpar histórico de penalidades"
           description: "usuários(as) com penalidades não podem alcançar TL3"
-        delete_all_posts_confirm_MF: "Você está prestes a excluir {POSTS, plural, one {# postagem} other {# postagens}} e {TOPICS, plural, one {# tópico} other {# tópicos}}. Deseja prosseguir?"
+        delete_all_posts_confirm_MF: |
+          Você está prestes a excluir {POSTS, plural, one {# postagem} other {# postagens}} e {TOPICS, plural, one {# tópico} other {# tópicos}}. Deseja prosseguir?
         silence: "Silenciar"
         unsilence: "Ativar som"
         silenced: "Silenciado(a)?"

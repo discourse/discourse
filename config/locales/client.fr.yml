@@ -253,7 +253,6 @@ fr:
     conduct: "Code de conduite"
     mobile_view: "Version mobile"
     desktop_view: "Version ordinateur"
-    or: "ou"
     now: "à l'instant"
     read_more: "lire la suite"
     more: "Plus"
@@ -1719,12 +1718,15 @@ fr:
     staff_writes_only_mode:
       enabled: "Ce site est en mode réservé aux responsables. Vous pouvez continuer à naviguer, mais les réponses, les j'aime et les autres actions sont limitées aux responsables uniquement."
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/heure} other {# erreurs/heure}}</a> arrive à la limite paramétrée de {limit, plural, one {# erreur/heure} other {# erreurs/heure}}."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/minute} other {# erreurs/minute}}</a> arrive à la limite paramétrée de {limit, plural, one {# erreur/minute} other {# erreurs/minute}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/heure} other {# erreurs/heure}}</a> a dépassé la limite paramétrée de {limit, plural, one {# erreur/heure} other {# erreurs/heure}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/minute} other {# erreurs/minute}}</a> a dépassé la limite paramétrée de {limit, plural, one {# erreur/minute} other {# erreurs/minute}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/heure} other {# erreurs/heure}}</a> arrive à la limite paramétrée de {limit, plural, one {# erreur/heure} other {# erreurs/heure}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/minute} other {# erreurs/minute}}</a> arrive à la limite paramétrée de {limit, plural, one {# erreur/minute} other {# erreurs/minute}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/heure} other {# erreurs/heure}}</a> a dépassé la limite paramétrée de {limit, plural, one {# erreur/heure} other {# erreurs/heure}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/minute} other {# erreurs/minute}}</a> a dépassé la limite paramétrée de {limit, plural, one {# erreur/minute} other {# erreurs/minute}}.
     learn_more: "en savoir plus…"
-    first_post: Premier message
     mute: Mettre en sourdine
     unmute: Rétablir
     last_post: Dernier message
@@ -1749,7 +1751,8 @@ fr:
       description:
         one: "Il y a <b>%{count}</b> réponse."
         other: "Il y a <b>%{count}</b> réponses."
-      description_time_MF: "Il y a {replyCount, plural, one {<b>#</b> réponse} other {<b>#</b> réponses}} avec un temps de lecture estimé à <b>{readingTime, plural, one {# minute} other {# minutes}}</b>."
+      description_time_MF: |
+        Il y a {replyCount, plural, one {<b>#</b> réponse} other {<b>#</b> réponses}} avec un temps de lecture estimé à <b>{readingTime, plural, one {# minute} other {# minutes}}</b>.
       enable: "Résumer ce sujet"
       disable: "Afficher tous les messages"
       short_label: "Résumer"
@@ -2559,9 +2562,6 @@ fr:
       collapse_details: "masquer les détails de ce sujet"
       expand_details: "afficher les détails de ce sujet"
       unread_indicator: "Aucun membre n'a encore lu le dernier message de ce sujet."
-      browse_all_categories: Voir toutes les catégories
-      browse_all_tags: Parcourir toutes les étiquettes
-      view_latest_topics: consulter les sujets récents
       suggest_create_topic: Prêt à <a href>démarrer une nouvelle conversation ?</a>
       jump_reply_up: accéder aux réponses précédentes
       jump_reply_down: accéder aux réponses ultérieures
@@ -3316,7 +3316,8 @@ fr:
       official_warning: "Avertissement officiel"
       delete_spammer: "Supprimer le spammeur"
       flag_for_review: "Mettre en file d'attente pour examen"
-      delete_confirm_MF: "Vous êtes sur le point de supprimer {POSTS, plural, one {<b>#</b> message} other {<b>#</b> messages}} et {TOPICS, plural, one {<b>#</b> sujet} other {<b>#</b> sujets}} de cet utilisateur, supprimer son compte, bloquer les inscriptions depuis son adresse IP <b>{ip_address}</b> et ajouter son adresse e-mail <b>{email}</b> à une liste de blocage permanent. Êtes-vous sûr(e) que cet utilisateur est un spammeur ?"
+      delete_confirm_MF: |
+        Vous êtes sur le point de supprimer {POSTS, plural, one {<b>#</b> message} other {<b>#</b> messages}} et {TOPICS, plural, one {<b>#</b> sujet} other {<b>#</b> sujets}} de cet utilisateur, supprimer son compte, bloquer les inscriptions depuis son adresse IP <b>{ip_address}</b> et ajouter son adresse e-mail <b>{email}</b> à une liste de blocage permanent. Êtes-vous sûr(e) que cet utilisateur est un spammeur ?
       yes_delete_spammer: "Oui, supprimer le spammeur"
       ip_address_missing: "(S.O.)"
       hidden_email_address: "(masqué)"
@@ -3495,7 +3496,6 @@ fr:
         this_month: "Mois"
         this_week: "Semaine"
         today: "Aujourd'hui"
-        other_periods: "voir le top :"
     browser_update: 'Malheureusement, <a href="https://www.discourse.org/faq/#browser">votre navigateur n''est pas pris en charge</a>. Merci de <a href="https://browsehappy.com">mettre à jour votre navigateur</a> pour afficher le contenu enrichi, vous connecter et répondre.'
     safari_13_warning: Ce site va bientôt supprimer la prise en charge des versions 13 et inférieures d'iOS et de Safari. Une version simplifiée en lecture seule restera disponible. (<a href="https://meta.discourse.org/t/224747">plus d'informations</a>)
     permission_types:
@@ -4171,8 +4171,6 @@ fr:
         new: "Nouveau Webhook"
         create: "Créer"
         save: "Enregistrer"
-        destroy: "Supprimer"
-        description: "Description"
         controls: "Contrôles"
         go_back: "Retour à la liste"
         payload_url: "URL cible"
@@ -4253,9 +4251,6 @@ fr:
           headers: "En-têtes"
           payload: "Données"
           body: "Corps"
-          go_list: "Accéder à la liste"
-          go_details: "Modifier le Webhook"
-          go_events: "Accéder aux événements"
           ping: "Ping"
           status: "Code de retour"
           event_id: "ID"
@@ -5000,7 +4995,8 @@ fr:
         clear_penalty_history:
           title: "Effacer l'historique des pénalités"
           description: "les utilisateurs ayant des pénalités ne peuvent pas atteindre le niveau de confiance 3"
-        delete_all_posts_confirm_MF: "Vous êtes sur le point de supprimer {POSTS, plural, one {# message} other {# messages}} et {TOPICS, plural, one {# sujet} other {# sujets}}. Voulez-vous continuer ?"
+        delete_all_posts_confirm_MF: |
+          Vous êtes sur le point de supprimer {POSTS, plural, one {# message} other {# messages}} et {TOPICS, plural, one {# sujet} other {# sujets}}. Voulez-vous continuer ?
         silence: "Mettre en sourdine"
         unsilence: "Ne plus mettre en sourdine"
         silenced: "En sourdine ?"

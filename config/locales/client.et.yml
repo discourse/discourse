@@ -205,7 +205,6 @@ et:
     conduct: "Käitumise juhised"
     mobile_view: "Mobiilne vaade"
     desktop_view: "Täisvaade"
-    or: "või"
     now: "just nüüd"
     read_more: "loe edasi"
     more: "Veel"
@@ -1201,7 +1200,6 @@ et:
       login_disabled: "Sisselogimine on blokeeritud seni, kuni sait on kirjutuskaitstud režiimis."
       logout_disabled: "Väljalogimine on blokeeritud kuni sait on kirjutuskaitstud režiimis."
     learn_more: "uuri veel..."
-    first_post: Esimene postitus
     mute: Vaigista
     unmute: Tühista vaigistus
     last_post: Postitatud
@@ -1662,9 +1660,6 @@ et:
       options: "Teema Suvandid"
       show_links: "näita viiteid selles teemas"
       unread_indicator: "Ükski liige pole veel selle teema viimast postitust lugenud."
-      browse_all_categories: Vaata kõiki foorumeid
-      browse_all_tags: Sirvi kõiki silte
-      view_latest_topics: vaata värskeid teemasid
       jump_reply_up: hüppa varasema vastuse juurde
       jump_reply_down: hüppa hilisema vastuse juurde
       deleted: "See teema on kustutatud"
@@ -2710,9 +2705,8 @@ et:
         detailed_instruction: "Valitud sündmuse toimumisel saadetakse etteantud URL-le POST päring."
         new: "Uus veebihaak"
         create: "Loo"
+        edit: "Muuda"
         save: "Salvesta"
-        destroy: "Kustuta"
-        description: "Kirjeldus"
         controls: "Juhtpult"
         go_back: "Tagasi nimekirja"
         payload_url: "Kasuliku lasti URL"
@@ -2762,9 +2756,6 @@ et:
           headers: "Päised"
           payload: "Kasulik last"
           body: "Sisu"
-          go_list: "Mine nimekirja"
-          go_details: "Muuda veebihaaki"
-          go_events: "Mine sündmuste juurde"
           ping: "Ping"
           status: "Staatus"
           event_id: "ID"

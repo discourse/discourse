@@ -23,6 +23,7 @@ sv:
     default_emoji_reactions: "Standardval av emoji-reaktioner för chattmeddelanden. Lägg till upp till 5 emojis som snabbval."
     direct_message_enabled_groups: "Tillåt användare inom dessa grupper att skapa personliga chattar från användare till användare. Obs: personal kan alltid skapa personliga chattar och användare kommer att kunna svara på personliga chattar som initieras av användare som har tillstånd att skapa dem."
     chat_message_flag_allowed_groups: "Användare i dessa grupper får flagga chattmeddelanden."
+    max_mentions_per_chat_message: "Maximalt antal @namnomnämnanden en användare kan göra i ett chattmeddelande."
     chat_max_direct_message_users: "Användare kan inte lägga till fler än detta antal andra användare när de skapar ett nytt direktmeddelande. Ställ in till 0 för att endast tillåta meddelanden till sig själv. Personalen är undantagen från denna inställning."
     chat_allow_archiving_channels: "Tillåt att personalen arkiverar meddelanden till ett ämne när en kanal stängs."
     errors:
@@ -169,7 +170,16 @@ sv:
       from: "%{site_name}"
       subject:
         direct_message_from_1: "[%{email_prefix}] Nytt meddelande från %{username}"
+        direct_message_from_2: "[%{email_prefix}] Nytt meddelande från %{username1} och %{username2}"
+        direct_message_from_more:
+          one: "[%{email_prefix}] Nytt meddelande från %{username} och ytterligare %{count}"
+          other: "[%{email_prefix}] Nytt meddelande från %{username} och ytterligare %{count}"
         chat_channel_1: "[%{email_prefix}] Nytt meddelande i %{channel}"
+        chat_channel_2: "[%{email_prefix}] Nytt meddelande i %{channel1} och %{channel2}"
+        chat_channel_more:
+          one: "[%{email_prefix}] Nytt meddelande i %{channel} och ytterligare %{count}"
+          other: "[%{email_prefix}] Nytt meddelande i %{channel} och ytterligare %{count}"
+        chat_channel_and_direct_message: "[%{email_prefix}] Nytt meddelande i %{channel} och från %{username}"
       unsubscribe: "Den här chattsammanfattningen skickas från %{site_link} när du är borta. Ändra din %{email_preferences_link} eller %{unsubscribe_link} för att avsluta prenumerationen."
       unsubscribe_no_link: "Den här chattsammanfattningen skickas från %{site_link} när du är borta. Ändra din %{email_preferences_link}."
       view_messages:

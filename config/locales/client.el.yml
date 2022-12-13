@@ -216,7 +216,6 @@ el:
     conduct: "Κώδικας δεοντολογίας"
     mobile_view: "Προβολή κινητού"
     desktop_view: "Προβολή υπολογιστή"
-    or: "ή"
     now: "μόλις τώρα"
     read_more: "διαβάστε περισσότερα"
     more: "Περισσότερα"
@@ -1404,7 +1403,6 @@ el:
       login_disabled: "Η δυνατότητα σύνδεσης έχει απενεργοποιηθεί όσο η ιστοσελίδα είναι σε κατάσταση μόνο ανάγνωσης."
       logout_disabled: "Η αποσύνδεση δεν είναι διαθέσιμη ενώ η ιστοσελίδα είναι σε λειτουργία μόνο ανάγνωσης."
     learn_more: "μάθε περισσότερα..."
-    first_post: Πρώτη ανάρτηση
     mute: Σίγαση
     unmute: Αναίρεση σίγασης
     last_post: Αναρτήθηκε
@@ -2021,9 +2019,6 @@ el:
       options: "Ρυθμίσεις Νήματος"
       show_links: "εμφάνιση συνδέσμων εντός του νήματος"
       unread_indicator: "Κανένα μέλος δεν έχει διαβάσει ακόμη την τελευταία ανάρτηση αυτού του θέματος."
-      browse_all_categories: Περιήγηση σε όλες τις κατηγορίες
-      browse_all_tags: Περιηγηθείτε σε όλες τις ετικέτες
-      view_latest_topics: δες τα πρόσφατα νήματα
       jump_reply_up: μετάβαση στην απάντηση που προηγείται
       jump_reply_down: μετάβαση στην απάντηση που ακολουθεί
       deleted: "Το νήμα έχει διαγραφεί "
@@ -2793,7 +2788,6 @@ el:
         this_month: "Μήνας"
         this_week: "Εβδομάδα"
         today: "Σήμερα"
-        other_periods: "δείτε τα κορυφαία:"
     permission_types:
       full: "Δημιούργησε / Απάντησε / Δες"
       create_post: "Απάντησε / Δες"
@@ -3309,9 +3303,8 @@ el:
         detailed_instruction: "Ένα POST request θα σταλεί στο παρεχόμενο URL όταν συμβεί το γεγονός που έχει επιλεγεί."
         new: "Νέο Webhook"
         create: "Δημιουργία"
+        edit: "Επεξεργασία"
         save: "Αποθήκευση"
-        destroy: "Διαγραφή"
-        description: "Περιγραφή"
         controls: "Έλεγχοι"
         go_back: "Πίσω στη λίστα"
         payload_url: "Payload URL"
@@ -3382,9 +3375,6 @@ el:
           headers: "Headers"
           payload: "Payload"
           body: "Body"
-          go_list: "Πήγαινε στη λίστα"
-          go_details: "Επεξεργασία Webhook"
-          go_events: "Πήγαινε στα γεγονότα"
           ping: "Ping"
           status: "Status Code"
           event_id: "ID"

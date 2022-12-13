@@ -253,7 +253,6 @@ it:
     conduct: "Codice di Condotta"
     mobile_view: "Visualizzazione cellulari"
     desktop_view: "Visualizzazione Desktop"
-    or: "oppure"
     now: "proprio ora"
     read_more: "altre informazioni"
     more: "Altro"
@@ -1719,12 +1718,15 @@ it:
     staff_writes_only_mode:
       enabled: "Questo sito è in modalità di sola lettura per lo staff. Puoi continuare a navigare nel sito, ma le risposte, i \"Mi piace\" e altre azioni sono limitate ai soli membri dello staff."
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# errore/ora} other {# errori/ore}}</a> ha raggiunto il limite di {limit, plural, one {# errore/ora} other {# errori/ora}} impostato dal sito."
-      reached_minute_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/minuto} other {# errori/minuto}}</a> ha raggiunto il limite di {limit, plural, one {# errore/minuto} other {# errori/minuto}} impostato dal sito."
-      exceeded_hour_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/ora} other {# errori/ora}}</a> ha superato il limite di {limit, plural, one {# errore/ora} other {# errori/ora}} impostato dal sito."
-      exceeded_minute_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/minuto} other {# errori/minuto}}</a> ha superato il limite di {limit, plural, one {# errore/minuto} other {# errori/minuto}} impostato dal sito."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# errore/ora} other {# errori/ore}}</a> ha raggiunto il limite di {limit, plural, one {# errore/ora} other {# errori/ora}} impostato dal sito.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/minuto} other {# errori/minuto}}</a> ha raggiunto il limite di {limit, plural, one {# errore/minuto} other {# errori/minuto}} impostato dal sito.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/ora} other {# errori/ora}}</a> ha superato il limite di {limit, plural, one {# errore/ora} other {# errori/ora}} impostato dal sito.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/minuto} other {# errori/minuto}}</a> ha superato il limite di {limit, plural, one {# errore/minuto} other {# errori/minuto}} impostato dal sito.
     learn_more: "per saperne di più..."
-    first_post: Primo messaggio
     mute: Silenzia
     unmute: Riattiva
     last_post: Pubblicato
@@ -1749,7 +1751,8 @@ it:
       description:
         one: "C'è <b>%{count}</b> risposta."
         other: "Ci sono <b>%{count}</b> risposte."
-      description_time_MF: "{replyCount, plural, one {C'è <b>#</b> risposta} other {Ci sono <b>#</b> risposte}} con un tempo di lettura stimato di <b>{readingTime, plural, one {# minuto} other {# minuti}}</b>."
+      description_time_MF: |
+        {replyCount, plural, one {C'è <b>#</b> risposta} other {Ci sono <b>#</b> risposte}} con un tempo di lettura stimato di <b>{readingTime, plural, one {# minuto} other {# minuti}}</b>.
       enable: "Riassumi Questo Argomento"
       disable: "Mostra Tutti i Messaggi"
       short_label: "Riassumi"
@@ -2559,9 +2562,6 @@ it:
       collapse_details: "comprimi i dettagli dell'argomento"
       expand_details: "espandi i dettagli dell'argomento"
       unread_indicator: "Nessun utente ha ancora letto l'ultimo messaggio di questo Argomento."
-      browse_all_categories: Scorri tutte le categorie
-      browse_all_tags: Sfoglia tutte le etichette
-      view_latest_topics: visualizza gli argomenti più recenti
       suggest_create_topic: Pronto per <a href>iniziare una nuova conversazione?</a>
       jump_reply_up: passa a una risposta precedente
       jump_reply_down: passa a una risposta successiva
@@ -3316,7 +3316,8 @@ it:
       official_warning: "Avvertimento Ufficiale"
       delete_spammer: "Cancella Spammer"
       flag_for_review: "Coda per la revisione"
-      delete_confirm_MF: "Stai per cancellare {POSTS, plural, one {<b>#</b> messaggio} other {<b>#</b> messaggi}} e {TOPICS, plural, one {<b>#</b> argomento} other {<b>#</b> argomenti}} di questo utente, rimuovere il suo account, bloccare le registrazioni dal suo indirizzo IP <b>{ip_address}</b> e aggiungere il suo indirizzo email <b>{email}</b> ad un elenco di indirizzi bloccati permanente. Sei sicuro che questo utente sia veramente uno spammer?"
+      delete_confirm_MF: |
+        Stai per cancellare {POSTS, plural, one {<b>#</b> messaggio} other {<b>#</b> messaggi}} e {TOPICS, plural, one {<b>#</b> argomento} other {<b>#</b> argomenti}} di questo utente, rimuovere il suo account, bloccare le registrazioni dal suo indirizzo IP <b>{ip_address}</b> e aggiungere il suo indirizzo email <b>{email}</b> ad un elenco di indirizzi bloccati permanente. Sei sicuro che questo utente sia veramente uno spammer?
       yes_delete_spammer: "Sì, cancella lo spammer"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(nascosto)"
@@ -3495,7 +3496,6 @@ it:
         this_month: "Mese"
         this_week: "Settimana"
         today: "Oggi"
-        other_periods: "vedi argomenti popolari:"
     browser_update: 'Purtroppo, <a href="https://www.discourse.org/faq/#browser">il tuo browser non è supportato</a>. Per visualizzare i contenuti multimediali, <a href="https://browsehappy.com">passa a un browser supportato</a>, accedi e rispondi.'
     safari_13_warning: Questo sito a breve non supporterà più iOS e Safari nelle versioni 13 e precedenti. Rimarrà disponibile una versione semplificata a sola lettura. (<a href="https://meta.discourse.org/t/224747">Altre informazioni</a>)
     permission_types:
@@ -4171,8 +4171,6 @@ it:
         new: "Nuovo Webhook"
         create: "Crea"
         save: "Salva"
-        destroy: "Elimina"
-        description: "Descrizione"
         controls: "Controlli"
         go_back: "Torna all'elenco"
         payload_url: "URL di Payload"
@@ -4253,9 +4251,6 @@ it:
           headers: "Intestazioni"
           payload: "Payload"
           body: "Corpo"
-          go_list: "Vai all'elenco"
-          go_details: "Modifica webhook"
-          go_events: "Vai agli eventi"
           ping: "Ping"
           status: "Codice Stato"
           event_id: "ID"
@@ -5000,7 +4995,8 @@ it:
         clear_penalty_history:
           title: "Cancella cronologia delle penalizzazioni"
           description: "utenti con penalizzazioni non possono accedere al Livello di affidabilità 3"
-        delete_all_posts_confirm_MF: "Stai per eliminare {POSTS, plural, one {# messaggio} other {# messaggi}} e {TOPICS, plural, one {# argomento} other {# argomenti}}. Vuoi continuare?"
+        delete_all_posts_confirm_MF: |
+          Stai per eliminare {POSTS, plural, one {# messaggio} other {# messaggi}} e {TOPICS, plural, one {# argomento} other {# argomenti}}. Vuoi continuare?
         silence: "Silenzia"
         unsilence: "Riattiva utente"
         silenced: "Silenziato?"

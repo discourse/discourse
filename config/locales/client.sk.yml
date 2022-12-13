@@ -240,7 +240,6 @@ sk:
     rules: "Pravidlá"
     mobile_view: "Mobilná verzia"
     desktop_view: "Zobrazenie pre počítač"
-    or: "alebo"
     now: "práve teraz"
     read_more: "čítaj ďalej"
     more: "Viac"
@@ -1148,7 +1147,6 @@ sk:
       login_disabled: "Keď je zapnutý mód iba na čítanie, prihlásenie nie je možné."
       logout_disabled: "Odhlásenie nie je možné, kým je stránka v móde iba na čítanie."
     learn_more: "zistiť viac..."
-    first_post: Prvý príspevok
     mute: Ignorovať
     unmute: Prestať ignorovať
     last_post: Odoslané
@@ -1525,8 +1523,6 @@ sk:
       back_to_list: "Naspäť na zoznam tém"
       options: "Možnosti tém"
       show_links: "zobrazovať odkazy v tejto téme"
-      browse_all_categories: Prezrieť všetky kategórie
-      view_latest_topics: zobraziť najnošie témy
       jump_reply_up: prejsť na predchádzajúcu odpoveď
       jump_reply_down: prejsť na nasledujúcu odpoveď
       deleted: "Téma bola vymazaná"
@@ -2444,9 +2440,8 @@ sk:
           action: Akcia
       web_hooks:
         create: "Vytvoriť"
+        edit: "Upraviť"
         save: "Uložiť"
-        destroy: "Vymazať"
-        description: "Popis"
         go_back: "Späť na zoznam"
         payload_url_placeholder: "https://example.com/postreceive"
         active: "Aktívny"

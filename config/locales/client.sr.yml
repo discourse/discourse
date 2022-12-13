@@ -251,7 +251,6 @@ sr:
     conduct: "Kodeks ponašanja"
     mobile_view: "Mobilni pogled"
     desktop_view: "Računarski pogled"
-    or: "ili"
     now: "upravo sad"
     read_more: "pročitaj više"
     more: "Više"
@@ -997,7 +996,6 @@ sr:
     read_only_mode:
       login_disabled: "Prijave su onemogućene dok je stranica u modulu \"samo čitanje\"."
     learn_more: "saznaj više..."
-    first_post: Prva poruka
     mute: Utišaj
     unmute: Poništi utišanje
     last_post: Pisao
@@ -1268,8 +1266,6 @@ sr:
       back_to_list: "Nazad na listu tema"
       options: "Opcije Teme"
       show_links: "Prikaži linkove u ovoj temi"
-      browse_all_categories: Pregledaj sve kategorije
-      view_latest_topics: pogledaj najnovije teme
       jump_reply_up: skoči na raniji odgovor
       jump_reply_down: skoči na kasniji odgovor
       deleted: "Tema je obrisana"
@@ -1936,9 +1932,8 @@ sr:
         scopes:
           action: Akcije
       web_hooks:
+        edit: "Izmeni"
         save: "Sačuvaj"
-        destroy: "Obriši"
-        description: "Opis"
         active: "Aktivni"
         delivery_status:
           failed: "Neuspešno"

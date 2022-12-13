@@ -223,7 +223,6 @@ bg:
     conduct: "Правила за поведение"
     mobile_view: "Мобилен изглед"
     desktop_view: "Десктоп изглед"
-    or: "или"
     now: "преди малко"
     read_more: "прочетете повече"
     more: "Повече"
@@ -1552,11 +1551,13 @@ bg:
       login_disabled: "Влизането е изключено, докато страницата е в режим само за четене."
       logout_disabled: "Излизане от сайта е временно спряно, докато е пуснат режим \"само за четене\"."
     logs_error_rate_notice:
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# грешка/минута} other {# грешки/минута}}</a> достигна ограничението за настройка на сайта от {limit, plural, one {# грешка/минута} other {# грешки/минута}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# грешка/час} other {# грешки/час}}</a> превиши лимита за настройка на сайта от {limit, plural, one {# грешка/час} other {# грешки/час}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# грешка/минута} other {# грешки/минута}}</a> превиши лимита за настройка на сайта от {limit, plural, one {# грешка/минута} other {# грешки/минута}}."
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# грешка/минута} other {# грешки/минута}}</a> достигна ограничението за настройка на сайта от {limit, plural, one {# грешка/минута} other {# грешки/минута}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# грешка/час} other {# грешки/час}}</a> превиши лимита за настройка на сайта от {limit, plural, one {# грешка/час} other {# грешки/час}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# грешка/минута} other {# грешки/минута}}</a> превиши лимита за настройка на сайта от {limit, plural, one {# грешка/минута} other {# грешки/минута}}.
     learn_more: "научете повече..."
-    first_post: Първа публикация
     mute: Заглушаване
     unmute: Премахване на заглушаване
     last_post: Публикувано
@@ -1576,7 +1577,8 @@ bg:
       intro: "Здравейте! Изглежда, че следите дискусията, но все още не сте създали собствен профил."
     summary:
       enabled_description: "В момента гледате резюме на тази тема: най-интересните публикации определени от общността."
-      description_time_MF: "Има{replyCount, plural, one {<b>#</b> reply} other { <b>#</b> отговора}} с очаквано време за четене <b>{readingTime, plural, one {# минута} other {# минути}}</b>."
+      description_time_MF: |
+        Има{replyCount, plural, one {<b>#</b> reply} other { <b>#</b> отговора}} с очаквано време за четене <b>{readingTime, plural, one {# минута} other {# минути}}</b>.
       enable: "Обобщи Тази Тема"
       disable: "Покажи всички публикации"
       short_label: "Обобщаване"
@@ -2142,8 +2144,6 @@ bg:
       back_to_list: "Назад към Списъка с теми"
       options: "Настройки на темата"
       show_links: "покажи връзките в тази тема"
-      browse_all_categories: Прегледай всички категории
-      view_latest_topics: виж последните теми
       jump_reply_up: към по ранен отговор
       jump_reply_down: към по-късен отговор
       deleted: "Темата беше изтрита"
@@ -3127,9 +3127,8 @@ bg:
         scopes:
           action: Действие
       web_hooks:
+        edit: "Редактирай"
         save: "Запази"
-        destroy: "Изтрий"
-        description: "Описание"
         active: "Активни"
         post_event:
           details: "Когато има нов отговор, редакция, изтриване или възстановяване."

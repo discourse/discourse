@@ -953,8 +953,6 @@ nb_NO:
     allow_duplicate_topic_titles: "Tillat flere emner med identisk tittel."
     unique_posts_mins: "Hvor mange minutter før en bruker kan lage et innlegg med det samme innholdet igjen"
     educate_until_posts: "Når brukeren begynner å skrive sine første (n) innlegg, vis pop-up med opplæringspanelet for nye brukere i redigeringspanelet."
-    title: "Navnet på denne siden, slik du vil ha det i title-taggen."
-    site_description: "Beskriv siden med en setning, vil brukes i beskrivelses-merkelappen."
     crawl_images: "Hent bilder fra ekstern URL for å sette inn korrekt høyde og bredde."
     download_remote_images_threshold: "Minimum ledig diskplass for å kunne laste ned eksterne bilder (i prosent)"
     disabled_image_download_domains: "Eksterne bilder vil aldri bli lastet ned fra disse domenene (pipe-separert liste)."
@@ -964,8 +962,6 @@ nb_NO:
     staff_edit_locks_post: "Innlegg vil bli sperret for redigering av brukere hvis de har vært redigert av staben "
     edit_history_visible_to_public: "La alle se tidligere versjoner av et redigert innlegg. Hvis det er slått av, kan kun staben se det."
     delete_removed_posts_after: "Innlegg som blir fjernet av forfatter blir automatisk slettet etter (n) timer. Sett til 0 og innleggene blir slettet øyeblikkelig."
-    max_image_width: "Maksimal thumbnail bredde for bilder i et innlegg"
-    max_image_height: "Maksimal thumbnail høyde for bilder i et innlegg"
     fixed_category_positions: "Hvis denne er valgt kan du manuelt bestemme rekkefølgen i listen over kategorier. Ellers vil kategoriene sorteres automatisk basert på aktivitet."
     fixed_category_positions_on_create: "Hvis denne er valgt vil den fastsatte rekkefølgen på kategorier også gjelde for dialogboksen når man lager nye emner (krever fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'Legg til rel nofollow på alle lenker som publiseres av brukere, bortsett fra interne lenker (inkludert foreldredomener). Hvis du endrer denne, må du rebake alle innlegg med: "rake posts:rebake"'

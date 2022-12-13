@@ -130,7 +130,6 @@ te:
     tos: "సేవా నిబంధనలు"
     mobile_view: "చర సందర్శనం"
     desktop_view: "డెస్క్ టాప్ సందర్శనం"
-    or: "లేదా"
     now: "ఇప్పుడే"
     read_more: "మరింత చదువు"
     more: "మరింత"
@@ -644,7 +643,6 @@ te:
     read_only_mode:
       login_disabled: "సేటు కేవలం చదివే రీతిలో ఉన్నప్పుడు లాగిన్ వీలవదు."
     learn_more: "మరింత తెలుసుకోండి..."
-    first_post: తొలి టపా
     mute: నిశ్శబ్దం
     unmute: వినిశ్శబ్దం
     time_read: చదివిన
@@ -882,8 +880,6 @@ te:
       back_to_list: "విషయాల జాబితాకు మరలు"
       options: "విషయపు ఐచ్చికాలు"
       show_links: "ఈ విషయంలో లంకెలు చూపు"
-      browse_all_categories: అన్ని వర్గాలూ జల్లించు
-      view_latest_topics: తాజా విషయాలు చూడు
       jump_reply_up: పాత జవాబుకు వెళ్లు
       jump_reply_down: తరువాతి జవాబుకు వెళ్లు
       deleted: "ఈ విషయం తొలగించబడింది"
@@ -1481,9 +1477,8 @@ te:
         scopes:
           action: చర్య
       web_hooks:
+        edit: "సవరణ"
         save: "భద్రపరచు"
-        destroy: "తొలగించు"
-        description: "వివరణ"
         active: "క్రియాశీల"
         delivery_status:
           failed: "విఫలం"
