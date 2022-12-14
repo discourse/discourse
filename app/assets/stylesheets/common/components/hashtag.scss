@@ -81,4 +81,9 @@ a.hashtag-cooked {
     white-space: nowrap;
     overflow: hidden;
   }
+
+  &__meta-text {
+    color: var(--primary-700);
+    font-size: var(--font-down-1);
+  }
 }

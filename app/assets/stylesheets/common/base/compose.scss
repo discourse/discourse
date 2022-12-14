@@ -403,6 +403,14 @@ html.composer-open {
     margin: 0;
 
     li {
+      &:first-of-type a {
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+      }
+      &:last-of-type a {
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+      }
       a {
         @include ellipsis;
         align-items: center;
