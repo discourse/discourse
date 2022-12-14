@@ -84,13 +84,14 @@ RSpec.describe I18n::Backend::DiscourseI18n do
     it 'uses fallback locales when a pluralization key is missing' do
       SiteSetting.default_locale = 'ru'
 
-      backend.store_translations(:ru, items: { one: '%{count} Russian item', other: '%{count} Russian items' })
+      backend.store_translations(:ru, items: { one: '%{count} Russian item', many: '%{count} Russian items are many', other: '%{count} Russian items' })
 
       expect(backend.translate(:ru, :items, count: 1)).to eq('1 Russian item')
       expect(backend.translate(:ru, :items, count: 2)).to eq('2 items')
-      expect(backend.translate(:ru, :items, count: 5)).to eq('5 Russian items')
+      expect(backend.translate(:ru, :items, count: 5)).to eq('5 Russian items are many')
+      expect(backend.translate(:ru, :items, count: 10.2)).to eq('10.2 Russian items')
 
-      backend.store_translations(:ru, items: { one: '%{count} Russian item', few: '%{count} Russian items are a few', other: '%{count} Russian items' })
+      backend.store_translations(:ru, items: { one: '%{count} Russian item', few: '%{count} Russian items are a few', many: '%{count} Russian items are many', other: '%{count} Russian items' })
       expect(backend.translate(:ru, :items, count: 2)).to eq('2 Russian items are a few')
 
       backend.store_translations(:en, airplanes: { one: '%{count} airplane' })
