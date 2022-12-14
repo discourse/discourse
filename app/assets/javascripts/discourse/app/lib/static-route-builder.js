@@ -12,7 +12,7 @@ const configs = {
 export default function (page) {
   return DiscourseRoute.extend({
     renderTemplate() {
-      this.render("static");
+      this.render(this.templateName || "static");
     },
 
     beforeModel(transition) {
@@ -33,7 +33,8 @@ export default function (page) {
     },
 
     setupController(controller, model) {
-      this.controllerFor("static").set("model", model);
+      const controllerName = this.controllerName || "static";
+      this.controllerFor(controllerName).set("model", model);
     },
 
     titleToken() {
