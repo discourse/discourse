@@ -8,9 +8,5 @@ export default function (pageName) {
     model() {
       return StaticPage.find(pageName);
     },
-
-    setupController(controller, model) {
-      this.controllerFor("static").set("model", model);
-    },
   });
 }
