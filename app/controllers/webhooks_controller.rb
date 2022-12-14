@@ -55,23 +55,24 @@ class WebhooksController < ActionController::Base
   end
 
   def mandrill
-    if SiteSetting.mandrill_webhook_token.present? && !valid_mandrill_token?
+    if SiteSetting.mandrill_authentication_key.present? && !valid_mandrill_signature?
       return signature_failure
     end
 
-    events = JSON.parse(params["mandrill_events"])
-    events.each do |event|
-      message_id = event.dig("msg", "metadata", "message_id")
-      to_address = event.dig("msg", "email")
-      error_code = event.dig("msg", "diag")
+    JSON
+      .parse(params["mandrill_events"])
+      .each do |event|
+        message_id = event.dig("msg", "metadata", "message_id")
+        to_address = event.dig("msg", "email")
+        error_code = event.dig("msg", "diag")
 
-      case event["event"]
-      when "hard_bounce"
-        process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
-      when "soft_bounce"
-        process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
+        case event["event"]
+        when "hard_bounce"
+          process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
+        when "soft_bounce"
+          process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
+        end
       end
-    end
 
     success
   end
@@ -246,8 +247,25 @@ class WebhooksController < ActionController::Base
     ActiveSupport::SecurityUtils.secure_compare(params[:t], SiteSetting.mailjet_webhook_token)
   end
 
-  def valid_mandrill_token?
-    ActiveSupport::SecurityUtils.secure_compare(params[:t], SiteSetting.mandrill_webhook_token)
+  def valid_mandrill_signature?
+    signature = request.headers["X-Mandrill-Signature"]
+
+    payload = "#{Discourse.base_url}/webhooks/mandrill"
+    params
+      .permit(:mandrill_events)
+      .to_h
+      .sort_by(&:first)
+      .each do |key, value|
+        payload += key.to_s
+        payload += value
+      end
+
+    payload_signature =
+      OpenSSL::HMAC.digest("sha1", SiteSetting.mandrill_authentication_key, payload)
+    ActiveSupport::SecurityUtils.secure_compare(
+      signature,
+      Base64.strict_encode64(payload_signature),
+    )
   end
 
   def valid_postmark_token?

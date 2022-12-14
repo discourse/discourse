@@ -1252,7 +1252,7 @@ email:
   mailjet_webhook_token:
     default: ""
     secret: true
-  mandrill_webhook_token:
+  mandrill_authentication_key:
     default: ""
     secret: true
   postmark_webhook_token:

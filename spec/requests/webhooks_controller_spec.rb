@@ -180,12 +180,13 @@ RSpec.describe WebhooksController do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
-      post "/webhooks/mailjet.json?t=foo", params: {
-        "event" => "bounce",
-        "email" => email,
-        "hard_bounce" => true,
-        "CustomID" => message_id
-      }
+      post "/webhooks/mailjet.json?t=foo",
+           params: {
+             "event" => "bounce",
+             "email" => email,
+             "hard_bounce" => true,
+             "CustomID" => message_id,
+           }
 
       expect(response.status).to eq(200)
       expect(email_log.reload.bounced).to eq(true)
@@ -196,12 +197,13 @@ RSpec.describe WebhooksController do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
-      post "/webhooks/mailjet.json?t=bar", params: {
-        "event" => "bounce",
-        "email" => email,
-        "hard_bounce" => true,
-        "CustomID" => message_id
-      }
+      post "/webhooks/mailjet.json?t=bar",
+           params: {
+             "event" => "bounce",
+             "email" => email,
+             "hard_bounce" => true,
+             "CustomID" => message_id,
+           }
 
       expect(response.status).to eq(406)
       expect(email_log.reload.bounced).to eq(false)
@@ -209,6 +211,10 @@ RSpec.describe WebhooksController do
   end
 
   describe "#mandrill" do
+    let(:payload) do
+      "mandrill_events=%5B%7B%22event%22%3A%22hard_bounce%22%2C%22msg%22%3A%7B%22email%22%3A%22em%40il.com%22%2C%22diag%22%3A%225.1.1%22%2C%22bounce_description%22%3A%22smtp%3B+550-5.1.1+The+email+account+that+you+tried+to+reach+does+not+exist.%22%2C%22metadata%22%3A%7B%22message_id%22%3A%2212345%40il.com%22%7D%7D%7D%5D"
+    end
+
     it "works" do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
@@ -240,49 +246,35 @@ RSpec.describe WebhooksController do
     end
 
     it "verifies signatures" do
-      SiteSetting.mandrill_webhook_token = "foo"
-      user = Fabricate(:user, email: email)
-      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+      SiteSetting.mandrill_authentication_key = "wr_JeJNO9OI65RFDrvk3Zw"
 
-      post "/webhooks/mandrill.json?t=foo", params: {
-        mandrill_events: [{
-          "event" => "hard_bounce",
-          "msg" => {
-            "email" => email,
-            "diag" => "5.1.1",
-            "bounce_description": "smtp; 550-5.1.1 The email account that you tried to reach does not exist.",
-            "metadata" => {
-              "message_id" => message_id
-            }
-          }
-        }]
-      }
+      post "/webhooks/mandrill.json",
+           headers: {
+             "X-Mandrill-Signature" => "Q5pCb903EjEqRZ99gZrlYKOfvIU=",
+           },
+           params: payload
 
       expect(response.status).to eq(200)
-      expect(email_log.reload.bounced).to eq(true)
     end
 
     it "returns error if signature verification fails" do
-      SiteSetting.mandrill_webhook_token = "foo"
-      user = Fabricate(:user, email: email)
-      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+      SiteSetting.mandrill_authentication_key = "wr_JeJNO9OI65RFDrvk3Zw"
 
-      post "/webhooks/mandrill.json?t=bar", params: {
-        mandrill_events: [{
-          "event" => "hard_bounce",
-          "msg" => {
-            "email" => email,
-            "diag" => "5.1.1",
-            "bounce_description": "smtp; 550-5.1.1 The email account that you tried to reach does not exist.",
-            "metadata" => {
-              "message_id" => message_id
-            }
-          }
-        }]
-      }
+      post "/webhooks/mandrill.json", headers: { "X-Mandrill-Signature" => "foo" }, params: payload
 
       expect(response.status).to eq(406)
-      expect(email_log.reload.bounced).to eq(false)
+    end
+
+    it "returns error if signature is invalid" do
+      SiteSetting.mandrill_authentication_key = "foo"
+
+      post "/webhooks/mandrill.json",
+           headers: {
+             "X-Mandrill-Signature" => "Q5pCb903EjEqRZ99gZrlYKOfvIU=",
+           },
+           params: payload
+
+      expect(response.status).to eq(406)
     end
   end
 
@@ -336,11 +328,12 @@ RSpec.describe WebhooksController do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
-      post "/webhooks/postmark.json?t=foo", params: {
-        "Type" => "HardBounce",
-        "MessageID" => message_id,
-        "Email" => email
-      }
+      post "/webhooks/postmark.json?t=foo",
+           params: {
+             "Type" => "HardBounce",
+             "MessageID" => message_id,
+             "Email" => email,
+           }
 
       expect(response.status).to eq(200)
       expect(email_log.reload.bounced).to eq(true)
@@ -351,11 +344,12 @@ RSpec.describe WebhooksController do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
-      post "/webhooks/postmark.json?t=bar", params: {
-        "Type" => "HardBounce",
-        "MessageID" => message_id,
-        "Email" => email
-      }
+      post "/webhooks/postmark.json?t=bar",
+           params: {
+             "Type" => "HardBounce",
+             "MessageID" => message_id,
+             "Email" => email,
+           }
 
       expect(response.status).to eq(406)
       expect(email_log.reload.bounced).to eq(false)
@@ -397,20 +391,23 @@ RSpec.describe WebhooksController do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
-      post "/webhooks/sparkpost.json?t=foo", params: {
-        "_json" => [{
-          "msys" => {
-            "message_event" => {
-              "bounce_class" => 10,
-              "error_code" => "554",
-              "rcpt_to" => email,
-              "rcpt_meta" => {
-                "message_id" => message_id
-              }
-            }
-          }
-        }]
-      }
+      post "/webhooks/sparkpost.json?t=foo",
+           params: {
+             "_json" => [
+               {
+                 "msys" => {
+                   "message_event" => {
+                     "bounce_class" => 10,
+                     "error_code" => "554",
+                     "rcpt_to" => email,
+                     "rcpt_meta" => {
+                       "message_id" => message_id,
+                     },
+                   },
+                 },
+               },
+             ],
+           }
 
       expect(response.status).to eq(200)
       expect(email_log.reload.bounced).to eq(true)
@@ -421,20 +418,23 @@ RSpec.describe WebhooksController do
       user = Fabricate(:user, email: email)
       email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
 
-      post "/webhooks/sparkpost.json?t=bar", params: {
-        "_json" => [{
-          "msys" => {
-            "message_event" => {
-              "bounce_class" => 10,
-              "error_code" => "554",
-              "rcpt_to" => email,
-              "rcpt_meta" => {
-                "message_id" => message_id
-              }
-            }
-          }
-        }]
-      }
+      post "/webhooks/sparkpost.json?t=bar",
+           params: {
+             "_json" => [
+               {
+                 "msys" => {
+                   "message_event" => {
+                     "bounce_class" => 10,
+                     "error_code" => "554",
+                     "rcpt_to" => email,
+                     "rcpt_meta" => {
+                       "message_id" => message_id,
+                     },
+                   },
+                 },
+               },
+             ],
+           }
 
       expect(response.status).to eq(406)
       expect(email_log.reload.bounced).to eq(false)
@@ -447,23 +447,23 @@ RSpec.describe WebhooksController do
         "Type" => "Notification",
         "Message" => {
           "notificationType" => "Bounce",
-          "bounce": {
+          :"bounce" => {
             "bounceType" => "Permanent",
             "reportingMTA" => "dns; email.example.com",
-            "bouncedRecipients": [
+            :"bouncedRecipients" => [
               {
                 "emailAddress" => email,
                 "status" => "5.1.1",
                 "action" => "failed",
-                "diagnosticCode" => "smtp; 550 5.1.1 <#{email}>... User"
-              }
+                "diagnosticCode" => "smtp; 550 5.1.1 <#{email}>... User",
+              },
             ],
             "bounceSubType" => "General",
             "timestamp" => "2016-01-27T14:59:38.237Z",
             "feedbackId" => "00000138111222aa-33322211-cccc-cccc-cccc-ddddaaaa068a-000000",
-            "remoteMtaIp" => "127.0.2.0"
+            "remoteMtaIp" => "127.0.2.0",
           },
-          "mail": {
+          :"mail" => {
             "timestamp" => "2016-01-27T14:59:38.237Z",
             "source" => "john@example.com",
             "sourceArn" => "arn:aws:ses:us-east-1:888888888888:identity/example.com",
@@ -471,61 +471,36 @@ RSpec.describe WebhooksController do
             "sendingAccountId" => "123456789012",
             "callerIdentity" => "IAM_user_or_role_name",
             "messageId" => message_id,
-            "destination" => [
-              email,
-              "jane@example.com",
-              "mary@example.com",
-              "richard@example.com"],
+            "destination" => [email, "jane@example.com", "mary@example.com", "richard@example.com"],
             "headersTruncated" => false,
             "headers" => [
-            {
-              "name" => "From",
-              "value" => "\"John Doe\" <john@example.com>"
-            },
-            {
-              "name" => "To",
-              "value" => "\"Test\" <#{email}>, \"Jane Doe\" <jane@example.com>, \"Mary Doe\" <mary@example.com>, \"Richard Doe\" <richard@example.com>"
-            },
-            {
-              "name" => "Message-ID",
-              "value" => message_id
-            },
-            {
-              "name" => "Subject",
-              "value" => "Hello"
-            },
-            {
-              "name" => "Content-Type",
-              "value" => "text/plain; charset=\"UTF-8\""
-            },
-            {
-              "name" => "Content-Transfer-Encoding",
-              "value" => "base64"
-            },
-            {
-              "name" => "Date",
-              "value" => "Wed, 27 Jan 2016 14:05:45 +0000"
-            }
+              { "name" => "From", "value" => "\"John Doe\" <john@example.com>" },
+              {
+                "name" => "To",
+                "value" =>
+                  "\"Test\" <#{email}>, \"Jane Doe\" <jane@example.com>, \"Mary Doe\" <mary@example.com>, \"Richard Doe\" <richard@example.com>",
+              },
+              { "name" => "Message-ID", "value" => message_id },
+              { "name" => "Subject", "value" => "Hello" },
+              { "name" => "Content-Type", "value" => "text/plain; charset=\"UTF-8\"" },
+              { "name" => "Content-Transfer-Encoding", "value" => "base64" },
+              { "name" => "Date", "value" => "Wed, 27 Jan 2016 14:05:45 +0000" },
             ],
             "commonHeaders" => {
-              "from" => [
-                  "John Doe <john@example.com>"
-              ],
+              "from" => ["John Doe <john@example.com>"],
               "date" => "Wed, 27 Jan 2016 14:05:45 +0000",
               "to" => [
-                  "\"Test\" <#{email}>, Jane Doe <jane@example.com>, Mary Doe <mary@example.com>, Richard Doe <richard@example.com>"
+                "\"Test\" <#{email}>, Jane Doe <jane@example.com>, Mary Doe <mary@example.com>, Richard Doe <richard@example.com>",
               ],
               "messageId" => message_id,
-              "subject" => "Hello"
-            }
-          }
-        }.to_json
+              "subject" => "Hello",
+            },
+          },
+        }.to_json,
       }.to_json
     end
 
-    before do
-      Jobs.run_immediately!
-    end
+    before { Jobs.run_immediately! }
 
     it "works" do
       user = Fabricate(:user, email: email)
