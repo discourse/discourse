@@ -257,6 +257,27 @@ RSpec.describe Wizard::StepUpdater do
         expect(SiteSetting.top_menu).to eq('latest|categories|new|top')
       end
 
+      it "updates style even when categories is first in top menu" do
+        SiteSetting.top_menu = "categories|new|latest"
+        updater = wizard.create_updater('styling',
+          body_font: 'arial',
+          heading_font: 'arial',
+          homepage_style: "categories_with_featured_topics"
+        )
+        updater.update
+        expect(updater).to be_success
+        expect(SiteSetting.desktop_category_page_style).to eq('categories_with_featured_topics')
+
+        updater = wizard.create_updater('styling',
+          body_font: 'arial',
+          heading_font: 'arial',
+          homepage_style: "subcategories_with_featured_topics"
+        )
+        updater.update
+        expect(updater).to be_success
+        expect(SiteSetting.desktop_category_page_style).to eq('subcategories_with_featured_topics')
+      end
+
       it "does not overwrite top_menu site setting" do
         SiteSetting.top_menu = "latest|unread|unseen|categories"
         updater = wizard.create_updater('styling',

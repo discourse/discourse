@@ -166,7 +166,7 @@ class Wizard
           if updater.fields[:homepage_style] == 'latest' && top_menu[0] != "latest"
             top_menu.delete("latest")
             top_menu.insert(0, "latest")
-          elsif updater.fields[:homepage_style] != 'latest' && top_menu[0] != "categories"
+          elsif updater.fields[:homepage_style] != 'latest'
             top_menu.delete("categories")
             top_menu.insert(0, "categories")
             updater.update_setting(:desktop_category_page_style, updater.fields[:homepage_style])
