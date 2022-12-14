@@ -4,6 +4,7 @@ import { setTopicList } from "discourse/lib/topic-list-tracker";
 
 export default DiscourseRoute.extend(ViewingActionType, {
   templateName: "user-topics-list",
+  controllerName: "user-topics-list",
 
   setupController(controller, model) {
     setTopicList(model);
