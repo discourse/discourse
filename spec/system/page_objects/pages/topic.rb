@@ -106,7 +106,12 @@ module PageObjects
       end
 
       def send_reply
-        find("#reply-control .save-or-cancel .create").click
+        # find("#reply-control .save-or-cancel .create").click
+        within("#reply-control") do
+          puts "REPLY CONTROL HTML"
+          puts current_scope["innerHTML"]
+          find(".save-or-cancel .create").click
+        end
       end
 
       def fill_in_composer_title(title)
