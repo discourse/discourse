@@ -113,7 +113,13 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
         topic_page.send_reply
         selector = topic_page.post_by_number_selector(2)
 
-        expect(page).to have_css(selector)
+        begin
+          expect(page).to have_css(selector)
+        rescue RSpec::Expectations::ExpectationNotMetError
+          puts "SELECTOR FAILED #{selector}"
+          puts page.html
+          raise
+        end
         within(selector) { expect(page).to have_css(".chat-transcript") }
       end
     end
