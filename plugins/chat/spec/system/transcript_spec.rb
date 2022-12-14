@@ -110,7 +110,6 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
 
         within(".d-editor-preview") { expect(page).to have_css(".chat-transcript") }
 
-        sleep 1
         topic_page.send_reply
         # find("#reply-control .save-or-cancel .create").click
         selector = topic_page.post_by_number_selector(2)

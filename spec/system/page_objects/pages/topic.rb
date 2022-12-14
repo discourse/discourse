@@ -94,7 +94,7 @@ module PageObjects
       end
 
       def fill_in_composer(input)
-        find_composer.set(input)
+        find_composer.fill_in(with: input)
       end
 
       def clear_composer
