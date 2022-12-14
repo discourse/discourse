@@ -14,25 +14,23 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
     sign_in(current_user)
   end
 
-  def select_message(message, mobile: false)
+  def select_message_desktop(message)
     if page.has_css?(".chat-message-container.selecting-messages")
       chat_channel_page.message_by_id(message.id).find(".chat-message-selector").click
     else
-      # we long press instead of hover on mobile
-      if mobile
-        chat_channel_page.message_by_id(message.id).click(delay: 0.5)
-      else
-        chat_channel_page.message_by_id(message.id).hover
-      end
+      chat_channel_page.message_by_id(message.id).hover
+      expect(page).to have_css(".chat-message-actions .more-buttons")
+      find(".chat-message-actions .more-buttons").click
+      find(".select-kit-row[data-value=\"selectMessage\"]").click
+    end
+  end
 
-      # we also have a different actions menu on mobile
-      if mobile
-        find(".chat-message-action-item[data-id=\"selectMessage\"]").click
-      else
-        expect(page).to have_css(".chat-message-actions .more-buttons")
-        find(".chat-message-actions .more-buttons").click
-        find(".select-kit-row[data-value=\"selectMessage\"]").click
-      end
+  def select_message_mobile(message)
+    if page.has_css?(".chat-message-container.selecting-messages")
+      chat_channel_page.message_by_id(message.id).find(".chat-message-selector").click
+    else
+      chat_channel_page.message_by_id(message.id).click(delay: 0.5)
+      find(".chat-message-action-item[data-id=\"selectMessage\"]").click
     end
   end
 
@@ -77,7 +75,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
 
   def copy_messages_to_clipboard(messages)
     messages = Array.wrap(messages)
-    messages.each { |message| select_message(message) }
+    messages.each { |message| select_message_desktop(message) }
     expect(chat_channel_page).to have_selection_management
     click_selection_button("copy")
     expect(page).to have_content("Chat quote copied to clipboard")
@@ -130,7 +128,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
 
         expect(chat_channel_page).to have_no_loading_skeleton
 
-        messages = clip_text = copy_messages_to_clipboard([message_1, message_2])
+        clip_text = copy_messages_to_clipboard([message_1, message_2])
         topic_page.visit_topic_and_open_composer(post_1.topic)
         topic_page.fill_in_composer("This is a new post!\n\n" + clip_text)
 
@@ -198,13 +196,14 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
 
   context "when quoting into a topic directly" do
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel_1) }
+    let(:topic_title) { "Some topic title for testing" }
 
     it "opens the topic composer with correct state" do
       chat_page.visit_channel(chat_channel_1)
 
       expect(chat_channel_page).to have_no_loading_skeleton
 
-      select_message(message_1)
+      select_message_desktop(message_1)
       click_selection_button("quote")
 
       expect(topic_page).to have_expanded_composer
@@ -214,14 +213,14 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
       )
       expect(page).not_to have_current_path(chat_channel_1.chatable.url)
 
-      topic_page.fill_in_composer_title("Some topic title for testing")
+      topic_page.fill_in_composer_title(topic_title)
       find("#reply-control .save-or-cancel .create").click
 
       selector = topic_page.post_by_number_selector(1)
       expect(page).to have_css(selector)
       within(selector) { expect(page).to have_css(".chat-transcript") }
 
-      topic = Topic.where(user: current_user).last
+      topic = Topic.find_by(user: current_user, title: topic_title)
       expect(page).to have_current_path(topic.url)
     end
 
@@ -231,7 +230,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
         chat_page.visit_channel(chat_channel_1)
         expect(chat_channel_page).to have_no_loading_skeleton
 
-        select_message(message_1, mobile: true)
+        select_message_mobile(message_1)
         click_selection_button("quote")
 
         expect(topic_page).to have_expanded_composer
