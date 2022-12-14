@@ -232,7 +232,6 @@ ur:
     conduct: "ضابطہ اخلاق"
     mobile_view: "موبائل وِیو"
     desktop_view: "ڈیسک ٹاپ وِیو"
-    or: "یا"
     now: "ابھی ابھی"
     read_more: "مزید پڑھیں"
     more: "مزید"
@@ -1228,7 +1227,7 @@ ur:
         use: "تصدیق کنندہ ایپ استعمال کریں"
         enforced_notice: "اس سائٹ تک رسائی سے پہلے آپ کو دو عنصر کی تصدیق کو فعال کرنے کی ضرورت ہے۔"
         disable: "غیر فعال کریں"
-        disable_confirm: "کیا آپ واقعی تمام دو عنصر والے طریقوں کو غیر فعال کرنا چاہتے ہیں؟"
+        delete: "مٹائیں"
         save: "محفوظ کریں"
         edit: "ترمیم"
         edit_title: "تصدیق کنندہ میں ترمیم کریں"
@@ -1310,7 +1309,6 @@ ur:
         authenticated: "آپ کے اِی میل کی توثیق کر دی گئی ہے %{provider}"
         invite_auth_email_invalid: "%{provider} ذریعہ تصدیق شدہ ای میل سے مماثلت نہیں ہے"
         authenticated_by_invite: "آپ کے ای میل کی دعوت کے ذریعہ توثیق کردی گئی ہے"
-        frequency_immediately: "جس بارے میں ہم آپ کو اِی میل کر رہے ہیں، اگر آپ نے نہیں پڑھی ہوئی تو ہم فوری طور پر آپ کو اِی میل کریں گے۔"
         frequency:
           one: "ہم آپ کو اِی میل کریں گے صرف اُس صور میں کہ ہم نے آپ کو گزشتہ ایک منٹ میں نہ دیکھا ہو۔"
           other: "ہم آپ کو اِی میل کریں گے صرف اُس صور میں کہ ہم نے آپ کو گزشتہ %{count} منٹ میں نہ دیکھا ہو۔"
@@ -1641,7 +1639,6 @@ ur:
       login_disabled: "جب تک سائٹ صرف پڑھنے کے مَوڈ میں ہے لاگ اِن غیر فعال رہے گا۔"
       logout_disabled: "جب تک سائٹ صرف پڑھنے کے مَوڈ میں ہے لاگ آؤٹ غیر فعال رہے گا۔"
     learn_more: "اورجانیے..."
-    first_post: پہلی پوسٹ
     mute: خاموش کریں
     unmute: آواز چالو کریں
     last_post: پوسٹ کیا
@@ -1664,7 +1661,8 @@ ur:
       description:
         one: "یہاں<b>%{count}</b> جواب ہے۔"
         other: "یہاں<b>%{count}</b> جوابات ہیں۔"
-      description_time_MF: "وہاں {replyCount, plural, one { <b>#</b> جواب ہے} other { <b>#</b> جوابات ہیں}} ایک متوقع مطالعہ <b>{readingTime, plural, one {# منٹ} other {# منٹ}}</b>۔"
+      description_time_MF: |
+        وہاں {replyCount, plural, one { <b>#</b> جواب ہے} other { <b>#</b> جوابات ہیں}} ایک متوقع مطالعہ <b>{readingTime, plural, one {# منٹ} other {# منٹ}}</b>۔
       enable: "اس ڑاپک کا خلاصہ کریں"
       disable: "تمام پوسٹیں دکھائیں"
       short_label: "خلاصہ"
@@ -2394,13 +2392,7 @@ ur:
       show_links: "اِس ٹاپک کے اندر موجود لنکس دکھایں"
       collapse_details: "موضوع کی تفصیلات کوسکیڑیں"
       expand_details: "موضوع کی تفصیلات کو پھیلائیں"
-      read_more_in_category: "مزید پڑھنا چاہتے ہیں؟ %{catLink} اور %{latestLink} میں دوسرے ٹاپک دیکھیں۔"
-      read_more: "مزید پڑھنا چاہتے ہیں؟ %{catLink} یا %{latestLink}۔"
       unread_indicator: "کسی ممبر نے ابھی تک اِس ٹاپک کی آخری پوسٹ نہیں پڑھی ہے۔"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
-      browse_all_categories: تمام زمرہ جات براؤز کریں
-      browse_all_tags: تمام ٹیگز براؤز کریں
-      view_latest_topics: تازہ ترین ٹاپک دیکھیے
       suggest_create_topic: <a href>نئی گفتگو شروع</a> کرنے کے لیے تیار ہیں؟
       jump_reply_up: اِس سے پرانے جواب پر جائیں
       jump_reply_down: اِس سے نئے جواب پر جائیں
@@ -3126,7 +3118,8 @@ ur:
       official_warning: "آفیشل انتباہ"
       delete_spammer: "اسپامر کو مٹائیں"
       flag_for_review: "جائزہ کے لیے قطار"
-      delete_confirm_MF: "آپ مٹانے والے ہیں {POSTS, plural, one {<b>#</b> پوسٹ} other {<b>#</b> پوسٹس}} اور {TOPICS, plural, one {<b>#</b> موضوع} other {<b>#</b> موضوعات}} اس صارف سے، ان کا اکاؤنٹ مٹائیں، ان کے IP ایڈریس <b>{ip_address}</b>سے سائن اپ بلاک کریں، اور ان کا ای میل ایڈریس <b>{email}</b> مستقل بلاک لسٹ میں شامل کریں۔ کیا آپ کو یقین ہے کہ یہ صارف واقعی اسپامر ہے؟"
+      delete_confirm_MF: |
+        آپ مٹانے والے ہیں {POSTS, plural, one {<b>#</b> پوسٹ} other {<b>#</b> پوسٹس}} اور {TOPICS, plural, one {<b>#</b> موضوع} other {<b>#</b> موضوعات}} اس صارف سے، ان کا اکاؤنٹ مٹائیں، ان کے IP ایڈریس <b>{ip_address}</b>سے سائن اپ بلاک کریں، اور ان کا ای میل ایڈریس <b>{email}</b> مستقل بلاک لسٹ میں شامل کریں۔ کیا آپ کو یقین ہے کہ یہ صارف واقعی اسپامر ہے؟
       yes_delete_spammer: "ہاں، اسپامر کو مٹائیں"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(مخفی)"
@@ -3305,7 +3298,6 @@ ur:
         this_month: "مہینہ"
         this_week: "ہفتہ"
         today: "آج"
-        other_periods: "اوپر دیکھیں:"
     permission_types:
       full: "بنائیں / جواب دیں / ملاحظہ کریں"
       create_post: "جواب دیں / ملاحظہ کریں"
@@ -3827,10 +3819,6 @@ ur:
         about: "یہاں اپنے گروپ کی رکنیت کو اور ناموں میں ترمیم کریں"
         group_members: "گروپ کے اراکین"
         delete: "مٹائیں"
-        delete_confirm: "اِس گروپ کو مٹائیں؟"
-        delete_with_messages_confirm:
-          one: "اس گروپ کومٹانے سے %{count} میسج یتیم ہو جائیں گے، گروپ ممبرز کو مزید اس تک رسائی حاصل نہیں ہو گی۔<br><br>کیا آپ کو یقین ہے؟"
-          other: "اس گروپ کومٹانے سے %{count} پیغامات یتیم ہو جائیں گے، گروپ کے ممبران ان تک مزید رسائی حاصل نہیں کر سکیں گے۔<br><br>کیا آپ کو یقین ہے؟"
         delete_failed: "گروپ کو مٹانے میں ناکامی۔ اگر یہ ایک خودکار گروپ ہے تو اسے ختم نہیں کیا جا سکتا۔"
         delete_automatic_group: یہ ایک خودکار گروپ ہے اور اسے حذف نہیں کیا جا سکتا۔
         delete_owner_confirm: "'%{username}' کے لیے مالک کے استحقاق کو ہٹائیں؟"
@@ -3932,9 +3920,8 @@ ur:
         detailed_instruction: "جب منتخب کیا گیا واقعہ پیش آئے گا تو فراہم کیے گئے یو.آر.ایل. کو ایک POST ریکویسٹ بھیج دی جائے گی۔"
         new: "نیا وَیب ھُوک٘"
         create: "بنائیں"
+        edit: "ترمیم کریں"
         save: "محفوظ کریں"
-        destroy: "حذف کریں"
-        description: "تفصیل"
         controls: "کنٹرولز"
         go_back: "واپس فہرست پر"
         payload_url: "پَیلوڈ یو.آر.ایل."
@@ -4015,9 +4002,6 @@ ur:
           headers: "ہیڈرز"
           payload: "پَیلوڈ"
           body: "متن"
-          go_list: "فہرست پر جائیں"
-          go_details: "وَیب ھُوک٘ میں ترمیم کریں"
-          go_events: "واقعات پر جائیں"
           ping: "پِنگ"
           status: "سٹیٹس کوڈ"
           event_id: "ID"
@@ -4750,7 +4734,7 @@ ur:
         clear_penalty_history:
           title: "سزا ہِسٹری صاف کریں"
           description: "سزاوں والے صارفین TL3 تک نہیں پہنچ سکتے"
-        delete_all_posts_confirm_MF: "آپ مٹانے والے ہیں {POSTS, plural, one {#پوسٹ} other {# پوسٹس}} اور {TOPICS, plural, one {# موضوع} other {# موضوعات}}. کیا آپ پر \n یقین ہیں؟"
+        delete_all_posts_confirm_MF: "آپ مٹانے والے ہیں {POSTS, plural, one {#پوسٹ} other {# پوسٹس}} اور {TOPICS, plural, one {# موضوع} other {# موضوعات}}. کیا آپ پر \n یقین ہیں؟\n"
         silence: "خاموش کریں"
         unsilence: "خاموشی ختم کریں"
         silenced: "خاموش کیا ہوا؟"
@@ -4896,6 +4880,11 @@ ur:
         silenced_count: "خاموش کیو ہوئے"
         suspended_count: "معطل کردہ"
         last_six_months: "گزشتہ 6 ماہ"
+        other_matches_list:
+          username: "صارف نام"
+          trust_level: "ٹرسٹ لَیول"
+          read_time: "پڑھنے کیلئے اِستعمال ہونے والا وقت"
+          posts: "پوسٹس"
         tl3_requirements:
           title: "ٹرسٹ لَیول 3 کے تقاضے"
           table_title:
@@ -5035,6 +5024,7 @@ ur:
           search: "سرچ"
           groups: "گروپس"
           dashboard: "ڈَیش بورڈ"
+          navigation: "نیویگیشن"
         secret_list:
           invalid_input: "اِن پُٹ فیلڈز خالی یا عمودی بار کے حرف پر مشتمل نہیں ہو سکتیں۔"
         default_categories:

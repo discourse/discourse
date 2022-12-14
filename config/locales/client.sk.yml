@@ -240,7 +240,6 @@ sk:
     rules: "Pravidlá"
     mobile_view: "Mobilná verzia"
     desktop_view: "Zobrazenie pre počítač"
-    or: "alebo"
     now: "práve teraz"
     read_more: "čítaj ďalej"
     more: "Viac"
@@ -856,6 +855,7 @@ sk:
         disable_description: "Prosím zadajte autentifikačný kód z vašej aplikácie"
         show_key_description: "Vložiť ručne"
         disable: "Zakázať"
+        delete: "Vymazať"
         save: "Uložiť"
         edit: "Upraviť"
         security_key:
@@ -896,7 +896,6 @@ sk:
         ok: "Pošleme vám email pre potvrdenie"
         invalid: "Zadajte prosím platný email"
         authenticated: "Váš email bude autentifikovaný pomocou %{provider}"
-        frequency_immediately: "Odošleme vám email ak ste neprečítali to, čo vám posielame emailom."
         frequency:
           one: "Odošleme vám email iba ak sme vás nevideli poslednú minútu"
           few: "Odošleme vám email iba ak sme vás nevideli posledné %{count} minúty."
@@ -1148,7 +1147,6 @@ sk:
       login_disabled: "Keď je zapnutý mód iba na čítanie, prihlásenie nie je možné."
       logout_disabled: "Odhlásenie nie je možné, kým je stránka v móde iba na čítanie."
     learn_more: "zistiť viac..."
-    first_post: Prvý príspevok
     mute: Ignorovať
     unmute: Prestať ignorovať
     last_post: Odoslané
@@ -1525,10 +1523,6 @@ sk:
       back_to_list: "Naspäť na zoznam tém"
       options: "Možnosti tém"
       show_links: "zobrazovať odkazy v tejto téme"
-      read_more_in_category: "Chcete si prečítať viac? Prezrite si témy v %{catLink} alebo v %{latestLink}."
-      read_more: "Chcete si prečítať viac? %{catLink} alebo v %{latestLink}."
-      browse_all_categories: Prezrieť všetky kategórie
-      view_latest_topics: zobraziť najnošie témy
       jump_reply_up: prejsť na predchádzajúcu odpoveď
       jump_reply_down: prejsť na nasledujúcu odpoveď
       deleted: "Téma bola vymazaná"
@@ -2422,7 +2416,6 @@ sk:
         about: "Tu upravíte Vaše členstvo v skupinách a mená"
         group_members: "Členovia skupiny"
         delete: "Odstrániť"
-        delete_confirm: "Zmazať túto skupinu?"
         delete_failed: "Nepodarilo sa zmazať skupinu. Pokiaľ je skupina automatická, nemôže byť zrušená."
         delete_owner_confirm: "Odobrať vlastnícke práva %{username}'?"
         add: "Pridať"
@@ -2447,9 +2440,8 @@ sk:
           action: Akcia
       web_hooks:
         create: "Vytvoriť"
+        edit: "Upraviť"
         save: "Uložiť"
-        destroy: "Vymazať"
-        description: "Popis"
         go_back: "Späť na zoznam"
         payload_url_placeholder: "https://example.com/postreceive"
         active: "Aktívny"
@@ -2939,6 +2931,11 @@ sk:
         lock_trust_level: "Zamknúť stupeň dôvery"
         unlock_trust_level: "Odomknúť stupeň dôvery"
         suspended_count: "Odobrate práva"
+        other_matches_list:
+          username: "Používateľské meno"
+          trust_level: "Stupeň dôvery"
+          read_time: "Doba Čítania"
+          posts: "Príspevky"
         tl3_requirements:
           title: "Požiadavky pre stupeň dôvery 3"
           value_heading: "Hodnota"
@@ -3049,6 +3046,7 @@ sk:
           search: "Hľadať"
           groups: "Skupiny"
           dashboard: "Ovládací panel"
+          navigation: "Navigácia"
         default_categories:
           modal_yes: "Áno"
       badges:

@@ -110,6 +110,20 @@ RSpec.describe ThemeJavascriptCompiler do
       expect(compiler.raw_content).to include("setComponentTemplate")
     end
 
+    it "handles colocated admin components" do
+      compiler.append_tree(
+        {
+          "admin/components/mycomponent.js" => <<~JS,
+            import Component from "@glimmer/component";
+            export default class MyComponent extends Component {}
+          JS
+          "admin/components/mycomponent.hbs" => "{{my-component-template}}"
+        }
+      )
+      expect(compiler.raw_content).to include("__COLOCATED_TEMPLATE__ =")
+      expect(compiler.raw_content).to include("setComponentTemplate")
+    end
+
     it "applies theme AST transforms to colocated components" do
       compiler = ThemeJavascriptCompiler.new(12345678910, 'my theme name')
       compiler.append_tree(

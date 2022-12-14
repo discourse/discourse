@@ -70,10 +70,28 @@ class Wizard
           value: SiteSetting.must_approve_users
         )
 
+        if defined?(::Chat)
+          step.add_field(
+            id: 'chat_enabled',
+            type: 'checkbox',
+            icon: 'comment',
+            value: SiteSetting.chat_enabled
+          )
+        end
+
+        step.add_field(
+          id: 'enable_sidebar',
+          type: 'checkbox',
+          icon: 'bars',
+          value: SiteSetting.navigation_menu == NavigationMenuSiteSetting::SIDEBAR
+        )
+
         step.on_update do |updater|
           updater.update_setting(:login_required, updater.fields[:login_required])
           updater.update_setting(:invite_only, updater.fields[:invite_only])
           updater.update_setting(:must_approve_users, updater.fields[:must_approve_users])
+          updater.update_setting(:chat_enabled, updater.fields[:chat_enabled]) if defined?(::Chat)
+          updater.update_setting(:navigation_menu, updater.fields[:enable_sidebar])
         end
       end
 
@@ -148,7 +166,7 @@ class Wizard
           if updater.fields[:homepage_style] == 'latest' && top_menu[0] != "latest"
             top_menu.delete("latest")
             top_menu.insert(0, "latest")
-          elsif updater.fields[:homepage_style] != 'latest' && top_menu[0] != "categories"
+          elsif updater.fields[:homepage_style] != 'latest'
             top_menu.delete("categories")
             top_menu.insert(0, "categories")
             updater.update_setting(:desktop_category_page_style, updater.fields[:homepage_style])

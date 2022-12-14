@@ -36,7 +36,7 @@ RSpec.describe User do
       fab!(:staff_tag_group) { Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name]) }
 
       before do
-        SiteSetting.enable_experimental_sidebar_hamburger = true
+        SiteSetting.navigation_menu = "sidebar"
         SiteSetting.tagging_enabled = true
         SiteSetting.default_sidebar_categories = "#{category.id}|#{secured_category.id}"
         SiteSetting.default_sidebar_tags = "#{tag.name}|#{hidden_tag.name}"
@@ -64,23 +64,51 @@ RSpec.describe User do
           tag.id,
           hidden_tag.id
         )
+      end
 
-        # A user promoted to admin should get secured sidebar records
+      it 'should create and remove the right sidebar section link records when user is promoted/demoted as an admin' do
+        user = Fabricate(:user)
+        another_category = Fabricate(:category)
+        another_tag = Fabricate(:tag)
+
+        # User has customized their sidebar categories and tags
+        SidebarSectionLink.where(user: user).delete_all
+        SidebarSectionLinksUpdater.update_category_section_links(user, category_ids: [another_category.id])
+        SidebarSectionLinksUpdater.update_tag_section_links(user, tag_names: [another_tag.name])
+
+        # A user promoted to admin now has any default categories/tags they didn't previously have access to
         user.update(admin: true)
-
         expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
-          category.id,
+          another_category.id,
           secured_category.id
         )
-
         expect(SidebarSectionLink.where(linkable_type: 'Tag', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
-          tag.id,
+          another_tag.id,
           hidden_tag.id
+        )
+
+        # User still has their customized sidebar categories and tags after demotion
+        user.update(admin: false)
+        expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
+          another_category.id
+        )
+        expect(SidebarSectionLink.where(linkable_type: 'Tag', user_id: user.id).pluck(:linkable_id)).to contain_exactly(
+          another_tag.id
         )
       end
 
-      it 'should not create any sidebar section link records when experimental sidebar is disabled' do
-        SiteSetting.enable_experimental_sidebar_hamburger = false
+      it 'should not receive any new categories w/ suppress secured categories from admin enabled' do
+        SiteSetting.suppress_secured_categories_from_admin = true
+        user = Fabricate(:user)
+        SidebarSectionLink.where(user: user).delete_all # User has customized their sidebar categories
+        user.update(admin: true)
+        expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to be_empty
+        user.update(admin: false)
+        expect(SidebarSectionLink.where(linkable_type: 'Category', user_id: user.id).pluck(:linkable_id)).to be_empty
+      end
+
+      it 'should not create any sidebar section link records when navigation_menu site setting is still legacy' do
+        SiteSetting.navigation_menu = "legacy"
 
         user = Fabricate(:user)
 
@@ -2167,9 +2195,9 @@ RSpec.describe User do
       expect(message).to eq(nil)
     end
 
-    context "with redesigned_user_menu_enabled on" do
+    context "with sidebar based navigation menu" do
       before do
-        SiteSetting.enable_experimental_sidebar_hamburger = true
+        SiteSetting.navigation_menu = "sidebar"
       end
 
       it "adds all_unread_notifications and grouped_unread_notifications to the payload" do

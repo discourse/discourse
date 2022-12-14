@@ -28,8 +28,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
   });
 
   needs.settings({
-    enable_experimental_sidebar_hamburger: true,
-    enable_sidebar: true,
+    navigation_menu: "sidebar",
   });
 
   needs.pretender((server, helper) => {

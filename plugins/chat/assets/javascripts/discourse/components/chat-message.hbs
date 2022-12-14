@@ -122,25 +122,25 @@
             </div>
           {{/if}}
 
-          {{#if this.message.mentionWarning}}
+          {{#if this.mentionWarning}}
             <div class="alert alert-info chat-message-mention-warning">
-              {{#if this.message.mentionWarning.invitationSent}}
+              {{#if this.mentionWarning.invitationSent}}
                 {{d-icon "check"}}
                 <span>
                   {{i18n
                     "chat.mention_warning.invitations_sent"
-                    count=this.message.mentionWarning.without_membership.length
+                    count=this.mentionWarning.without_membership.length
                   }}
                 </span>
               {{else}}
                 <FlatButton @class="dismiss-mention-warning" @title="chat.mention_warning.dismiss" @action={{action "dismissMentionWarning"}} @icon="times" />
 
-                {{#if this.message.mentionWarning.cannot_see}}
-                  <p class="cannot-see">{{this.mentionedCannotSeeText}}</p>
+                {{#if this.mentionWarning.cannot_see}}
+                  <p class="warning-item cannot-see">{{this.mentionedCannotSeeText}}</p>
                 {{/if}}
 
-                {{#if this.message.mentionWarning.without_membership}}
-                  <p class="without-membership">
+                {{#if this.mentionWarning.without_membership}}
+                  <p class="warning-item without-membership">
                     <span>{{this.mentionedWithoutMembershipText}}</span>
                     <a
                       class="invite-link"
@@ -150,6 +150,13 @@
                       {{i18n "chat.mention_warning.invite"}}
                     </a>
                   </p>
+                {{/if}}
+                {{#if this.mentionWarning.group_mentions_disabled}}
+                  <p class="warning-item">{{this.groupsWithDisabledMentions}}</p>
+                {{/if}}
+
+                {{#if this.mentionWarning.groups_with_too_many_members}}
+                  <p class="warning-item">{{this.groupsWithTooManyMembers}}</p>
                 {{/if}}
               {{/if}}
             </div>

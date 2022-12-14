@@ -38,6 +38,12 @@ const FETCH_MORE_MESSAGES_THROTTLE_MS = isTesting() ? 0 : 500;
 const PAST = "past";
 const FUTURE = "future";
 
+const MENTION_RESULT = {
+  invalid: -1,
+  unreachable: 0,
+  over_members_limit: 1,
+};
+
 export default Component.extend({
   classNameBindings: [":chat-live-pane", "sendingLoading", "loading"],
   chatChannel: null,
@@ -68,6 +74,14 @@ export default Component.extend({
   targetMessageId: null,
   hasNewMessages: null,
 
+  // Track mention hints to display warnings
+  unreachableGroupMentions: null, // Array
+  overMembersLimitGroupMentions: null, // Array
+  tooManyMentions: false,
+  mentionsCount: null,
+  // Complimentary structure to avoid repeating mention checks.
+  _mentionWarningsSeen: null, // Hash
+
   chat: service(),
   router: service(),
   chatEmojiPickerManager: service(),
@@ -82,6 +96,9 @@ export default Component.extend({
     this._super(...arguments);
 
     this.set("messages", []);
+    this.set("_mentionWarningsSeen", {});
+    this.set("unreachableGroupMentions", []);
+    this.set("overMembersLimitGroupMentions", []);
   },
 
   didInsertElement() {
@@ -153,10 +170,7 @@ export default Component.extend({
   didReceiveAttrs() {
     this._super(...arguments);
 
-    this.currentUserTimezone = this.currentUser?.resolvedTimezone(
-      this.currentUser
-    );
-
+    this.currentUserTimezone = this.currentUser?.user_option.timezone;
     this.set("targetMessageId", this.chat.messageId);
 
     if (
@@ -1314,6 +1328,81 @@ export default Component.extend({
   },
 
   @action
+  updateMentions(mentions) {
+    const mentionsCount = mentions?.length;
+    this.set("mentionsCount", mentionsCount);
+
+    if (mentionsCount > 0) {
+      if (mentionsCount > this.siteSettings.max_mentions_per_chat_message) {
+        this.set("tooManyMentions", true);
+      } else {
+        this.set("tooManyMentions", false);
+        const newMentions = mentions.filter(
+          (mention) => !(mention in this._mentionWarningsSeen)
+        );
+
+        if (newMentions?.length > 0) {
+          this._recordNewWarnings(newMentions, mentions);
+        } else {
+          this._rebuildWarnings(mentions);
+        }
+      }
+    } else {
+      this.set("tooManyMentions", false);
+      this.set("unreachableGroupMentions", []);
+      this.set("overMembersLimitGroupMentions", []);
+    }
+  },
+
+  _recordNewWarnings(newMentions, mentions) {
+    ajax("/chat/api/mentions/groups.json", {
+      data: { mentions: newMentions },
+    })
+      .then((newWarnings) => {
+        newWarnings.unreachable.forEach((warning) => {
+          this._mentionWarningsSeen[warning] = MENTION_RESULT["unreachable"];
+        });
+
+        newWarnings.over_members_limit.forEach((warning) => {
+          this._mentionWarningsSeen[warning] =
+            MENTION_RESULT["over_members_limit"];
+        });
+
+        newWarnings.invalid.forEach((warning) => {
+          this._mentionWarningsSeen[warning] = MENTION_RESULT["invalid"];
+        });
+
+        this._rebuildWarnings(mentions);
+      })
+      .catch(this._rebuildWarnings(mentions));
+  },
+
+  _rebuildWarnings(mentions) {
+    const newWarnings = mentions.reduce(
+      (memo, mention) => {
+        if (
+          mention in this._mentionWarningsSeen &&
+          !(this._mentionWarningsSeen[mention] === MENTION_RESULT["invalid"])
+        ) {
+          if (
+            this._mentionWarningsSeen[mention] === MENTION_RESULT["unreachable"]
+          ) {
+            memo[0].push(mention);
+          } else {
+            memo[1].push(mention);
+          }
+        }
+
+        return memo;
+      },
+      [[], []]
+    );
+
+    this.set("unreachableGroupMentions", newWarnings[0]);
+    this.set("overMembersLimitGroupMentions", newWarnings[1]);
+  },
+
+  @action
   reStickScrollIfNeeded() {
     if (this.stickyScroll) {
       this._stickScrollToBottom();
@@ -1404,22 +1493,25 @@ export default Component.extend({
   },
 
   _unsubscribeToUpdates(channelId) {
-    this.messageBus.unsubscribe(`/chat/${channelId}`);
+    this.messageBus.unsubscribe(`/chat/${channelId}`, this.onMessage);
   },
 
   _subscribeToUpdates(channelId) {
     this._unsubscribeToUpdates(channelId);
     this.messageBus.subscribe(
       `/chat/${channelId}`,
-      (busData) => {
-        if (!this.details.can_load_more_future || busData.type !== "sent") {
-          this.handleMessage(busData);
-        } else {
-          this.set("hasNewMessages", true);
-        }
-      },
+      this.onMessage,
       this.details.channel_message_bus_last_id
     );
+  },
+
+  @bind
+  onMessage(busData) {
+    if (!this.details.can_load_more_future || busData.type !== "sent") {
+      this.handleMessage(busData);
+    } else {
+      this.set("hasNewMessages", true);
+    }
   },
 
   @bind

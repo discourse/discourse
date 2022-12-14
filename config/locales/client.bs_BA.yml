@@ -239,7 +239,6 @@ bs_BA:
     conduct: "Kodeks ponašanja"
     mobile_view: "Mobilni prikaz"
     desktop_view: "Desktop prikaz"
-    or: "ili"
     now: "upravo sada"
     read_more: "pročitaj više"
     more: "Više"
@@ -1089,6 +1088,7 @@ bs_BA:
           Zaštitite svoj račun pomoću jednokratnih sigurnosnih kodova.
         use: "Koristi Authenticator app?"
         disable: "Onemogući"
+        delete: "Obriši"
         save: "Sačuvaj"
         edit: "Izmijeni"
         totp:
@@ -1159,7 +1159,6 @@ bs_BA:
         required: "Unesite e-mail adresu"
         invalid: "Molimo vas da unesete validnu email adresu."
         authenticated: "Vaš email je ovjeren od strane %{provider}."
-        frequency_immediately: "Slati ćemo vam e-mail obavijesti odmah na novo, ukoliko niste pročitali sadržaj koji smo vam prvobitno e-mailom poslali."
         frequency:
           one: "Poslaćemo vam email samo u slučaju da vas nismo vidjeli u zadnjoj minuti."
           few: "Poslaćemo vam email samo u slučaju da vas nismo vidjeli u zadnje%{count} minute."
@@ -1444,12 +1443,7 @@ bs_BA:
       enabled: "Ovaj sajt je u read only mod-u: Dozvoljeno je čitati. Možete nastaviti sa pregledom, ali odgovaranje na objave, lajkanje i ostale akcije su isključene za sada."
       login_disabled: "Ulogovanje je isključeno jer je sajt u read only načinu rada."
       logout_disabled: "Odjava je isključena sve dok je sajt u read only tj. samo čitanje je dozvoljeno načinu rada."
-    too_few_topics_and_posts_notice_MF: >-
-      Počnimo <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">raspravu!</a> Tamo {currentTopics, plural, one {je <strong>#</strong> tema} few {su <strong>#</strong> tema} other {su <strong>#</strong> tema}} i {currentPosts, plural, one {<strong>#</strong> post} few {<strong>#</strong> postova} other {<strong>#</strong> postova}}, Posjetitelji trebaju više za čitanje i odgovaranje na njih - preporučujemo ih barem {requiredTopics, plural, one {<strong>#</strong> tema} few {<strong>#</strong> tema} other {<strong>#</strong> tema}} i {requiredPosts, plural, one {<strong>#</strong> post} few {<strong>#</strong> postova} other {<strong>#</strong> postova}}. Samo osoblje može vidjeti ovu poruku.
-    too_few_topics_notice_MF: >-
-      Hajde da <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">započnemo diskusiju!</a> Tamo {currentTopics, plural, one {je <strong>#</strong> tema} few {su <strong>#</strong> teme} other {su <strong>#</strong> teme}}. Posjetiteljima je potrebno više sadržaja za čitati i odgovoriti na — preporučujemo barem {requiredTopics, plural, one {<strong>#</strong> tema} few {<strong>#</strong> teme} other {<strong>#</strong> teme}}. Samo osoblje može vidjeti ovu poruku.
     learn_more: "saznaj više..."
-    first_post: Prva objava
     mute: Utišaj
     unmute: Normalno
     last_post: Zadnja objava
@@ -2046,10 +2040,6 @@ bs_BA:
       back_to_list: "Vrati se na Listu Tema"
       options: "Opcije Teme"
       show_links: "pokaži linkove unutar ove teme"
-      read_more_in_category: "Želite dalje čitati? Pregledajte druge teme u %{catLink} ili %{latestLink}."
-      read_more: "Želite li dalje čitati? %{catLink} Ili %{latestLink}."
-      browse_all_categories: Pregledaj sve kategorije
-      view_latest_topics: pogledaj najnovije teme
       jump_reply_up: jump to earlier reply
       jump_reply_down: jump to later reply
       deleted: "Ova tema je obrisana"
@@ -3255,7 +3245,6 @@ bs_BA:
         about: "Edit your group membership and names here"
         group_members: "Group members"
         delete: "Delete"
-        delete_confirm: "Delete this group?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
         delete_owner_confirm: "Ukloni privilegije vlasnika za '%{username}'?"
         add: "Dodaj"
@@ -3304,9 +3293,8 @@ bs_BA:
         detailed_instruction: "POST zahtjev će biti poslan na navedenu URL adresu kada se dogodi odabrani događaj."
         new: "Novi Webhook"
         create: "napravi"
+        edit: "Edit"
         save: "Sačuvaj"
-        destroy: "Delete"
-        description: "Opis"
         controls: "Kontrole"
         go_back: "Nazad na listu"
         payload_url: "URL naslova"
@@ -3373,9 +3361,6 @@ bs_BA:
           headers: "Zaglavlja"
           payload: "Payload"
           body: "Tijelo"
-          go_list: "Idi na listu"
-          go_details: "Promjeni webhook"
-          go_events: "Idi na događaje"
           ping: "Ping"
           status: "Šifra statusa"
           event_id: "ID"
@@ -4104,6 +4089,11 @@ bs_BA:
         unlock_trust_level: "Unlock Trust Level"
         silenced_count: "Stišano"
         suspended_count: "Suspended"
+        other_matches_list:
+          username: "Nadimak"
+          trust_level: "Trust Level"
+          read_time: "Read Time"
+          posts: "Objave"
         tl3_requirements:
           title: "Requirements for Trust Level 3"
           table_title:
@@ -4234,6 +4224,7 @@ bs_BA:
           search: "Pretraži"
           groups: "Grupa"
           dashboard: "Dashboard"
+          navigation: "Navigacija"
         secret_list:
           invalid_input: "Polja za unos ne mogu biti prazna ili sadrže znak vertikalne trake."
         default_categories:

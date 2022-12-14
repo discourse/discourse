@@ -213,7 +213,6 @@ th:
     conduct: "กฎเกณฑ์และเงื่อนไข"
     mobile_view: "ดูแบบอุปกรณ์เคลื่อนที่"
     desktop_view: "ดูแบบเดสก์ท็อป"
-    or: "หรือ"
     now: "ขณะนี้"
     read_more: "อ่านเพิ่มเติม"
     more: "เพิ่มเติม"
@@ -878,6 +877,7 @@ th:
         confirm_password_description: "กรุณายืนยันรหัสผ่านเพื่อดำเนินการต่อ"
         name: "ชื่อ"
         disable: "ปิดใช้งาน"
+        delete: "ลบ"
         save: "บันทึก"
         edit: "แก้ไข"
         security_key:
@@ -934,7 +934,6 @@ th:
         required: "กรุณากรอกที่อยู่อีเมล"
         invalid: "กรุณาใส่อีเมลที่ถูกต้อง"
         authenticated: "อีเมลของคุณได้รับการยืนยันโดย %{provider}"
-        frequency_immediately: "เราจะอีเมลถึงคุณทันทีหากคุณยังไม่ได้อ่านสิ่งที่เราอีเมลหาคุณ"
         frequency:
           other: "เราจะอีเมลหาคุณเฉพาะตอนที่ไม่ได้เห็นคุณเป็นเวลา %{count} นาที"
       associated_accounts:
@@ -1186,7 +1185,6 @@ th:
       login_disabled: "การลงชื่อเข้าใช้จะไม่สามารถใช้งานได้เมื่อเว็บไซต์อยู่ในโหมดอ่านเท่านั้น"
       logout_disabled: "การออกจากระบบจะไม่สามารถใช้งานได้เมื่อเว็บไซต์อยู่ในโหมดอ่านเท่านั้น"
     learn_more: "เรียนรู้เพิ่มเติม..."
-    first_post: โพสต์แรก
     mute: ปิดเสียง
     unmute: เลิกปิดเสียง
     last_post: โพสต์แล้ว
@@ -1695,10 +1693,7 @@ th:
       back_to_list: "กลับไปที่รายชื่อกระทู้"
       options: "ตัวเลือกกระทู้"
       show_links: "แสดงลิงก์ในกระทู้นี้"
-      read_more_in_category: "ต้องการอ่านเพิ่มใช่ไหม ลองดูกระทู้อื่นใน %{catLink} หรือ %{latestLink}"
-      read_more: "ต้องการอ่านเพิ่มใช่ไหม %{catLink} หรือ %{latestLink}"
       unread_indicator: "ยังไม่มีสมาชิกอ่านโพสต์ล่าสุดของกระทู้นี้"
-      view_latest_topics: ดูกระทู้ล่าสุด
       jump_reply_up: ข้ามไปยังคำตอบก่อนหน้านี้
       jump_reply_down: ข้ามไปยังคำตอบหลังจากนี้
       deleted: "กระทู้ถูกลบ"
@@ -2274,7 +2269,6 @@ th:
         this_month: "เดือน"
         this_week: "สัปดาห์"
         today: "วันนี้"
-        other_periods: "ดูด้านบน:"
     permission_types:
       full: "สร้าง / ตอบ / ดู"
       create_post: "ตอบ / ดู"
@@ -2592,7 +2586,6 @@ th:
         about: "แก้ไขสมาชิกและชื่อกลุ่มของคุณได้ที่นี่"
         group_members: "สมาชิกกลุ่ม"
         delete: "ลบ"
-        delete_confirm: "ลบกลุ่มนี้"
         delete_failed: "ไม่สามารถลบกลุ่มได้ ถ้ากลุ่มนี้เป็นกลุ่มอัตโนมัติ จะไม่สามารถทำให้หายไปได้"
         delete_owner_confirm: "ลบสิทธิ์การเป็นเจ้าของ ของ '%{username}'?"
         add: "เพิ่ม"
@@ -2616,9 +2609,8 @@ th:
         continue: ดำเนินการต่อ
       web_hooks:
         create: "สร้าง"
+        edit: "แก้ไข"
         save: "บันทึก"
-        destroy: "ลบ"
-        description: "รายละเอียด"
         wildcard_event: "ส่งทุกอย่างหาฉัน"
         active: "ใช้งานอยู่"
         user_badge_event:
@@ -2990,6 +2982,11 @@ th:
         lock_trust_level: "ล็อกระดับความไว้ใจ"
         unlock_trust_level: "ปลดล็อกระดับความไว้ใจ"
         suspended_count: "ระงับการใช้งาน"
+        other_matches_list:
+          username: "ชื่อผู้ใช้"
+          trust_level: "ระดับความไว้ใจ"
+          read_time: "เวลาอ่าน"
+          posts: "โพส"
         tl3_requirements:
           title: "ความต้องการเพิ่มปรับระดับความไว้ใจเป็น 3"
           table_title:
@@ -3096,6 +3093,7 @@ th:
           search: "ค้นหา"
           groups: "กลุ่ม"
           dashboard: "แดชบอร์ด"
+          navigation: "การนำทาง"
         default_categories:
           modal_yes: "ใช่"
       badges:

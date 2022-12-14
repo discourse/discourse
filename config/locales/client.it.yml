@@ -253,7 +253,6 @@ it:
     conduct: "Codice di Condotta"
     mobile_view: "Visualizzazione cellulari"
     desktop_view: "Visualizzazione Desktop"
-    or: "oppure"
     now: "proprio ora"
     read_more: "altre informazioni"
     more: "Altro"
@@ -1212,8 +1211,6 @@ it:
         warnings: "Avvertimenti ufficiali"
         read_more_in_group: "Vuoi continuare a leggere? Sfoglia altri messaggi in %{groupLink}."
         read_more: "Vuoi continuare a leggere? Sfoglia altri messaggi in <a href='%{basePath}/u/%{username}/messages'>messaggi personali</a>."
-        read_more_group_pm_MF: "{ UNREAD, plural, =0 {} one { C'è<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># messaggio non letto</a> } other { Ci sono <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># messaggi non letti</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {c'è } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nuovo</a> messaggio} other { {BOTH, select, true{e } false {ci sono} other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nuovi</a> messaggi} } rimanenti, oppure sfoglia altri messaggi in {groupLink}"
-        read_more_personal_pm_MF: "{ UNREAD, plural, =0 {} one { C'è <a href='{basePath}/u/{username}/messages/unread'># messaggio non letto</a> } other { Ci sono <a href='{basePath}/u/{username}/messages/unread'># messaggi non letti</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {c'è } other{}} <a href='{basePath}/u/{username}/messages/new'># nuovo</a> messaggio} other { {BOTH, select, true{e } false {ci sono } other{}} <a href='{basePath}/u/{username}/messages/new'># nuovi</a> messaggi} } rimanenti, o sfoglia altri <a href='{basePath}/u/{username}/messages'>messaggi personali</a>"
       preferences_nav:
         account: "Account"
         security: "Sicurezza"
@@ -1277,7 +1274,6 @@ it:
         use: "Usa l'app Authenticator"
         enforced_notice: "È necessario abilitare l'autenticazione a due fattori prima di accedere a questo sito."
         disable: "Disabilita"
-        disable_confirm: "Vuoi davvero disabilitare tutti i metodi a due fattori?"
         save: "Salva"
         edit: "Modifica"
         edit_title: "Modifica Authenticator"
@@ -1365,7 +1361,6 @@ it:
         authenticated: "%{provider} ha autenticato la tua email"
         invite_auth_email_invalid: "La tua email di invito non corrisponde all'email autenticata da %{provider}"
         authenticated_by_invite: "La tua email è stata autenticata dall'invito"
-        frequency_immediately: "Ti invieremo immediatamente una email se non hai letto ciò per cui ti stiamo scrivendo."
         frequency:
           one: "TI invieremo un'email solo se non ti avremo visto nell'ultimo minuto."
           other: "Ti invieremo un'email solo se manchi da almeno %{count} minuti."
@@ -1722,19 +1717,16 @@ it:
       logout_disabled: "La disconnessione è disabilitata quando il sito è in modalità di sola lettura."
     staff_writes_only_mode:
       enabled: "Questo sito è in modalità di sola lettura per lo staff. Puoi continuare a navigare nel sito, ma le risposte, i \"Mi piace\" e altre azioni sono limitate ai soli membri dello staff."
-    too_few_topics_and_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Cominciamo la discussione!</a> {currentTopics, plural, one {C'è <strong>#</strong> argomento} other {Ci sono <strong>#</strong> argomenti}} e {currentPosts, plural, one {<strong>#</strong> messaggio} other {<strong>#</strong> messaggi}}. I visitatori hanno bisogno d'altro per leggere e rispondere: consigliamo almeno {requiredTopics, plural, one {<strong>#</strong> argomento} other {<strong>#</strong> argomenti}} e {requiredPosts, plural, one {<strong>#</strong> messaggio} other {<strong>#</strong> messaggi}}. Solo lo staff può vedere questo messaggio.
-    too_few_topics_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Cominciamo la discussione!</a> {currentTopics, plural, one {C'è <strong>#</strong> argomento} other {Ci sono<strong>#</strong> argomenti}}. I visitatori hanno bisogno di più per leggere e rispondere: – consigliamo almeno {requiredTopics, plural, one {<strong>#</strong> argomento} other {<strong>#</strong> argomenti}}. Solo lo staff può vedere questo messaggio.
-    too_few_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">Cominciamo la discussione!</a> {currentPosts, plural, one {C'è <strong>#</strong> messaggio} other {Ci sono <strong>#</strong> messaggi}}. I visitatori hanno bisogno di più per leggere e rispondere: – consigliamo almeno {requiredPosts, plural, one {<strong>#</strong> messaggio} other {<strong>#</strong> messaggi}}. Solo lo staff può vedere questo messaggio.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# errore/ora} other {# errori/ore}}</a> ha raggiunto il limite di {limit, plural, one {# errore/ora} other {# errori/ora}} impostato dal sito."
-      reached_minute_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/minuto} other {# errori/minuto}}</a> ha raggiunto il limite di {limit, plural, one {# errore/minuto} other {# errori/minuto}} impostato dal sito."
-      exceeded_hour_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/ora} other {# errori/ora}}</a> ha superato il limite di {limit, plural, one {# errore/ora} other {# errori/ora}} impostato dal sito."
-      exceeded_minute_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/minuto} other {# errori/minuto}}</a> ha superato il limite di {limit, plural, one {# errore/minuto} other {# errori/minuto}} impostato dal sito."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# errore/ora} other {# errori/ore}}</a> ha raggiunto il limite di {limit, plural, one {# errore/ora} other {# errori/ora}} impostato dal sito.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/minuto} other {# errori/minuto}}</a> ha raggiunto il limite di {limit, plural, one {# errore/minuto} other {# errori/minuto}} impostato dal sito.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/ora} other {# errori/ora}}</a> ha superato il limite di {limit, plural, one {# errore/ora} other {# errori/ora}} impostato dal sito.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# errore/minuto} other {# errori/minuto}}</a> ha superato il limite di {limit, plural, one {# errore/minuto} other {# errori/minuto}} impostato dal sito.
     learn_more: "per saperne di più..."
-    first_post: Primo messaggio
     mute: Silenzia
     unmute: Riattiva
     last_post: Pubblicato
@@ -1759,7 +1751,8 @@ it:
       description:
         one: "C'è <b>%{count}</b> risposta."
         other: "Ci sono <b>%{count}</b> risposte."
-      description_time_MF: "{replyCount, plural, one {C'è <b>#</b> risposta} other {Ci sono <b>#</b> risposte}} con un tempo di lettura stimato di <b>{readingTime, plural, one {# minuto} other {# minuti}}</b>."
+      description_time_MF: |
+        {replyCount, plural, one {C'è <b>#</b> risposta} other {Ci sono <b>#</b> risposte}} con un tempo di lettura stimato di <b>{readingTime, plural, one {# minuto} other {# minuti}}</b>.
       enable: "Riassumi Questo Argomento"
       disable: "Mostra Tutti i Messaggi"
       short_label: "Riassumi"
@@ -2568,14 +2561,7 @@ it:
       show_links: "mostra i collegamenti in questo argomento"
       collapse_details: "comprimi i dettagli dell'argomento"
       expand_details: "espandi i dettagli dell'argomento"
-      read_more_in_category: "Vuoi saperne di più? Leggi altri argomenti in %{catLink} o %{latestLink}."
-      read_more: "Vuoi saperne di più? Consulta %{catLink} o %{latestLink}."
       unread_indicator: "Nessun utente ha ancora letto l'ultimo messaggio di questo Argomento."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { C'è <a href='{basePath}/unread'># non letto</a> } other { Ci sono <a href='{basePath}/unread'># non letti</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {c'è } other{}} <a href='{basePath}/new'># nuovo</a> argomento} other { {BOTH, select, true{e } false {ci sono } other{}} <a href='{basePath}/new'># nuovi</a> argomenti} } restanti, o {CATEGORY, select, true {sfoglia altri argomenti in {catLink}} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
-      browse_all_categories: Scorri tutte le categorie
-      browse_all_tags: Sfoglia tutte le etichette
-      view_latest_topics: visualizza gli argomenti più recenti
       suggest_create_topic: Pronto per <a href>iniziare una nuova conversazione?</a>
       jump_reply_up: passa a una risposta precedente
       jump_reply_down: passa a una risposta successiva
@@ -3330,7 +3316,8 @@ it:
       official_warning: "Avvertimento Ufficiale"
       delete_spammer: "Cancella Spammer"
       flag_for_review: "Coda per la revisione"
-      delete_confirm_MF: "Stai per cancellare {POSTS, plural, one {<b>#</b> messaggio} other {<b>#</b> messaggi}} e {TOPICS, plural, one {<b>#</b> argomento} other {<b>#</b> argomenti}} di questo utente, rimuovere il suo account, bloccare le registrazioni dal suo indirizzo IP <b>{ip_address}</b> e aggiungere il suo indirizzo email <b>{email}</b> ad un elenco di indirizzi bloccati permanente. Sei sicuro che questo utente sia veramente uno spammer?"
+      delete_confirm_MF: |
+        Stai per cancellare {POSTS, plural, one {<b>#</b> messaggio} other {<b>#</b> messaggi}} e {TOPICS, plural, one {<b>#</b> argomento} other {<b>#</b> argomenti}} di questo utente, rimuovere il suo account, bloccare le registrazioni dal suo indirizzo IP <b>{ip_address}</b> e aggiungere il suo indirizzo email <b>{email}</b> ad un elenco di indirizzi bloccati permanente. Sei sicuro che questo utente sia veramente uno spammer?
       yes_delete_spammer: "Sì, cancella lo spammer"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(nascosto)"
@@ -3509,7 +3496,6 @@ it:
         this_month: "Mese"
         this_week: "Settimana"
         today: "Oggi"
-        other_periods: "vedi argomenti popolari:"
     browser_update: 'Purtroppo, <a href="https://www.discourse.org/faq/#browser">il tuo browser non è supportato</a>. Per visualizzare i contenuti multimediali, <a href="https://browsehappy.com">passa a un browser supportato</a>, accedi e rispondi.'
     safari_13_warning: Questo sito a breve non supporterà più iOS e Safari nelle versioni 13 e precedenti. Rimarrà disponibile una versione semplificata a sola lettura. (<a href="https://meta.discourse.org/t/224747">Altre informazioni</a>)
     permission_types:
@@ -4078,10 +4064,6 @@ it:
         about: "Modifica qui la tua appartenenza ai gruppi e i loro nomi"
         group_members: "Membri del gruppo"
         delete: "Cancella"
-        delete_confirm: "Cancellare questo gruppo?"
-        delete_with_messages_confirm:
-          one: "L'eliminazione di questo gruppo farà sì che %{count} messaggio sia orfano, e i membri del gruppo non potranno più accedervi.<br><br>Proseguire?"
-          other: "L'eliminazione di questo gruppo farà sì che %{count} messaggi siano orfani, e i membri del gruppo non potranno più accedervi.<br><br>Proseguire?"
         delete_failed: "Impossibile cancellare il gruppo. Se questo è un gruppo automatico, non può essere eliminato."
         delete_automatic_group: Questo è un gruppo automatico e non può essere eliminato.
         delete_owner_confirm: "Rimuovere i privilegi per '%{username}'?"
@@ -4189,8 +4171,6 @@ it:
         new: "Nuovo Webhook"
         create: "Crea"
         save: "Salva"
-        destroy: "Elimina"
-        description: "Descrizione"
         controls: "Controlli"
         go_back: "Torna all'elenco"
         payload_url: "URL di Payload"
@@ -4271,9 +4251,6 @@ it:
           headers: "Intestazioni"
           payload: "Payload"
           body: "Corpo"
-          go_list: "Vai all'elenco"
-          go_details: "Modifica webhook"
-          go_events: "Vai agli eventi"
           ping: "Ping"
           status: "Codice Stato"
           event_id: "ID"
@@ -5018,7 +4995,8 @@ it:
         clear_penalty_history:
           title: "Cancella cronologia delle penalizzazioni"
           description: "utenti con penalizzazioni non possono accedere al Livello di affidabilità 3"
-        delete_all_posts_confirm_MF: "Stai per eliminare {POSTS, plural, one {# messaggio} other {# messaggi}} e {TOPICS, plural, one {# argomento} other {# argomenti}}. Vuoi continuare?"
+        delete_all_posts_confirm_MF: |
+          Stai per eliminare {POSTS, plural, one {# messaggio} other {# messaggi}} e {TOPICS, plural, one {# argomento} other {# argomenti}}. Vuoi continuare?
         silence: "Silenzia"
         unsilence: "Riattiva utente"
         silenced: "Silenziato?"
@@ -5312,7 +5290,6 @@ it:
           search: "Cerca"
           groups: "Gruppi"
           dashboard: "Dashboard"
-          sidebar: "Barra laterale"
         secret_list:
           invalid_input: "I campi di inserimento non possono essere vuoti o contenere il carattere barra verticale."
         default_categories:

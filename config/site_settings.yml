@@ -908,7 +908,10 @@ posting:
     default: true
     client: true
   max_mentions_per_post: 10
-  max_users_notified_per_group_mention: 100
+  max_users_notified_per_group_mention:
+    default: 100
+    max: 250
+    client: true
   newuser_max_replies_per_topic: 3
   newuser_max_mentions_per_post: 2
   here_mention:
@@ -2029,13 +2032,9 @@ developer:
   enable_safe_mode:
     default: true
     client: true
-  enable_experimental_sidebar_hamburger:
-    default: false
-    client: true
   enable_experimental_hashtag_autocomplete:
     default: false
     client: true
-    hidden: true
   experimental_hashtag_search_result_limit:
     default: 20
     client: true
@@ -2058,10 +2057,12 @@ developer:
     allow_any: false
     refresh: true
 
-sidebar:
-  enable_sidebar:
-    default: true
+navigation:
+  navigation_menu:
     client: true
+    default: "sidebar"
+    type: enum
+    enum: "NavigationMenuSiteSetting"
   default_sidebar_categories:
     type: category_list
     default: ""

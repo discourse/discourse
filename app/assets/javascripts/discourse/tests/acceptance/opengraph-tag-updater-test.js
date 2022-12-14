@@ -8,6 +8,9 @@ acceptance("Opengraph Tag Updater", function (needs) {
       return helper.response({});
     });
   });
+  needs.settings({
+    navigation_menu: "legacy",
+  });
 
   test("updates OG title and URL", async function (assert) {
     await visit("/");

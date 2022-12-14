@@ -263,7 +263,6 @@ sl:
     conduct: "Pravila obnašanja"
     mobile_view: "Mobilni pogled"
     desktop_view: "Namizni pogled"
-    or: "ali"
     now: "ravnokar"
     read_more: "preberi več"
     more: "Več"
@@ -1170,7 +1169,7 @@ sl:
         use: "Uporabite aplikacijo Authenticator"
         enforced_notice: "Obvezno morate vklopiti preverjanje v dveh korakih za dostop to tega spletnega mesta."
         disable: "Onemogoči"
-        disable_confirm: "Ali ste prepričani, da želite onemogočiti vse metode za preverjanje v dveh korakih?"
+        delete: "Izbriši"
         save: "Shrani"
         edit: "Uredi"
         edit_title: "Uredi overitelja"
@@ -1248,7 +1247,6 @@ sl:
         required: "Vnesite e-poštni naslov"
         invalid: "Vnesite veljaven e-naslov."
         authenticated: "Vaš e-poštni naslov je overil %{provider}"
-        frequency_immediately: "Takoj vam bomo poslali e-pošto, če še niste prebrali stvari, o kateri vam pišemo."
         frequency:
           one: "E-sporočilo bo poslano samo če niste bili aktivni v zadnji minuti."
           two: "E-sporočilo bo poslano samo če niste bili aktivni vsaj %{count} minuti."
@@ -1560,7 +1558,6 @@ sl:
       login_disabled: "Prijava je onemogočena dokler je stran v načinu za branje."
       logout_disabled: "Odjava je onemogočena dokler je stran v načinu za branje."
     learn_more: "izvedite več..."
-    first_post: Prvi prispevek
     mute: Utišano
     unmute: Povrni glasnost
     last_post: Zadnji prispevek
@@ -2232,13 +2229,7 @@ sl:
       back_to_list: "Nazaj na seznam tem"
       options: "Možnosti teme"
       show_links: "pokaži povezave v tej temi"
-      read_more_in_category: "Brskaj po ostalih temah v %{catLink} ali %{latestLink}."
-      read_more: "Brskaj po ostalih temah %{catLink} ali %{latestLink}."
       unread_indicator: "Noben član ni še prebral zadnjega prispevka v tej temi."
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
-      browse_all_categories: Brskajte po vseh kategorijah
-      browse_all_tags: Brskanje po vseh oznakah
-      view_latest_topics: poglej najnovejše teme
       jump_reply_up: pojdi na prejšni odgovor
       jump_reply_down: pojdi na naslednji odgovor
       deleted: "Tema je bila izbrisana"
@@ -3567,12 +3558,6 @@ sl:
         about: "Uredite svoje članstvo v skupinah in imena tukaj"
         group_members: "Člani skupine"
         delete: "Izbriši"
-        delete_confirm: "Izbriši skupino?"
-        delete_with_messages_confirm:
-          one: "Če izbrišete to skupino, bo %{count} \nsporočilo osirotelo in člani skupine ne bodo več imeli dostopa do njega.<br><br>Ali ste prepričani?"
-          two: "Če izbrišete to skupino, bosta %{count} \nsporočili osiroteli in člani skupine ne bodo več imeli dostopa do njiju.<br><br>Ali ste prepričani?"
-          few: "Če izbrišete to skupino, bodo %{count} \nsporočila osirotela in člani skupine ne bodo več imeli dostopa do njih.<br><br>Ali ste prepričani?"
-          other: "Če izbrišete to skupino, bo %{count} \nsporočil osirotelo in člani skupine ne bodo več imeli dostopa do njih.<br><br>Ali ste prepričani?"
         delete_owner_confirm: "Odstrani vlogo skrbnika uporabniku '%{username}'?"
         add: "Dodaj"
         custom: "Po meri"
@@ -3607,9 +3592,8 @@ sl:
               show: Pridobi informacije o uporabniku.
       web_hooks:
         create: "Ustvari"
+        edit: "Uredi"
         save: "Shrani"
-        destroy: "Izbriši"
-        description: "Opis"
         secret: "Skriven"
         wildcard_event: "Pošlji mi vse."
         active: "Aktivni"
@@ -4092,6 +4076,11 @@ sl:
         unlock_trust_level: "Odkleni nivo zaupanja"
         silenced_count: "Utišani"
         suspended_count: "Suspendirani"
+        other_matches_list:
+          username: "Uporabniško ime"
+          trust_level: "Nivo zaupanja"
+          read_time: "Čas branja"
+          posts: "Prispevki"
         tl3_requirements:
           title: "Zahteve za nivo zaupanja 3"
           table_title:
@@ -4214,6 +4203,7 @@ sl:
           search: "Išči"
           groups: "Skupine"
           dashboard: "Nadzorna plošča"
+          navigation: "Navigacija"
         default_categories:
           modal_yes: "Da"
       badges:

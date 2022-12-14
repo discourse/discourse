@@ -12,12 +12,12 @@ RSpec.describe "Navigation", type: :system, js: true do
   before do
     chat_system_bootstrap(user, [category_channel, category_channel_2])
     sign_in(user)
+    SiteSetting.navigation_menu = "legacy"
   end
 
-  context "when core sidebar is enabled" do
+  context "when sidebar is enabled as the navigation menu" do
     before do
-      SiteSetting.enable_sidebar = true
-      SiteSetting.enable_experimental_sidebar_hamburger = true
+      SiteSetting.navigation_menu = "sidebar"
     end
 
     it "uses core sidebar" do

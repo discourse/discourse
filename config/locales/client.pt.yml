@@ -229,7 +229,6 @@ pt:
     conduct: "Código de Conduta"
     mobile_view: "Visualização Mobile"
     desktop_view: "Visualização Desktop"
-    or: "ou"
     now: "ainda agora"
     read_more: "ler mais"
     more: "Mais"
@@ -1206,7 +1205,7 @@ pt:
         use: "Utilizar a aplicação Authenticator"
         enforced_notice: "É necessário ativar a autenticação em dois passos para aceder a este site."
         disable: "Desativar"
-        disable_confirm: "Tem a certeza que deseja desativar todos os métodos de dois passos?"
+        delete: "Apagar"
         save: "Guardar"
         edit: "Editar"
         edit_title: "Editar Autenticador"
@@ -1285,7 +1284,6 @@ pt:
         authenticated: "O seu email foi autenticado por %{provider}"
         invite_auth_email_invalid: "O seu email de convite não coincide com o email autenticado por %{provider}"
         authenticated_by_invite: "Seu e-mail foi autenticado pelo convite"
-        frequency_immediately: "Enviar-lhe-emos um email imediatamente caso não leia o que lhe estamos a enviar."
         frequency:
           one: "Só iremos enviar-lhe um email se não o tivermos visto no último minuto."
           other: "Só iremos enviar-lhe um email se não o tivermos visto nos últimos %{count} minutos."
@@ -1605,7 +1603,6 @@ pt:
       login_disabled: "Enquanto o site se encontrar no modo só de leitura, a opção de iniciar a sessão está desativada."
       logout_disabled: "Enquanto o site se encontrar no modo só de leitura, a opção de terminar a sessão está desativada."
     learn_more: "saber mais..."
-    first_post: Primeira publicação
     mute: Silenciar
     unmute: Desativar silêncio
     last_post: Publicado
@@ -2310,14 +2307,7 @@ pt:
       show_links: "mostrar hiperligações dentro deste tópico"
       collapse_details: "ocultar detalhes do tópico"
       expand_details: "expandir detalhes do tópico"
-      read_more_in_category: "Pretende ler mais? Navegue por outros tópicos em %{catLink} ou %{latestLink}."
-      read_more: "Pretende ler mais? %{catLink} ou %{latestLink}."
       unread_indicator: "Nenhum membro leu o último post deste tópico ainda."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { Existe <a href='{basePath}/unread'>1 não lido </a> } other { Existem <a href='{basePath}/unread'># não lidos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {existe } other{}} <a href='{basePath}/new'>1 novo</a> tópico} other { {BOTH, select, true{e } false {existem } other{}} <a href='{basePath}/new'># novos</a> tópicos} } restantes, ou {CATEGORY, select, true {navegue por outros tópicos em {catLink}} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
-      browse_all_categories: Pesquisar em todas as categorias
-      browse_all_tags: Procurar todas as tags
-      view_latest_topics: ver os tópicos mais recentes
       suggest_create_topic: Pronto para <a href>iniciar uma nova conversa?</a>
       jump_reply_up: avançar para resposta mais recente
       jump_reply_down: avançar para resposta mais antiga
@@ -3612,7 +3602,6 @@ pt:
         about: "Editar aqui a sua participação e nomes no grupo"
         group_members: "Membros do grupo"
         delete: "Eliminar"
-        delete_confirm: "Eliminar este grupo?"
         delete_failed: "Impossível eliminar grupo. Se se trata de um grupo automático, não pode ser eliminado."
         delete_automatic_group: Este é um grupo automático e não pode ser apagado.
         delete_owner_confirm: "Remover privilégios do proprietário para '%{username}'?"
@@ -3681,9 +3670,8 @@ pt:
         detailed_instruction: "Um pedido POST será enviado ao URL fornecido quando o evento escolhido acontecer."
         new: "Novo Webhook"
         create: "Criar"
+        edit: "Editar"
         save: "Guardar"
-        destroy: "Apagar"
-        description: "Descrição"
         controls: "Controlos"
         go_back: "Voltar à lista"
         payload_url: "URL de carga"
@@ -3732,9 +3720,6 @@ pt:
           headers: "Cabeçalhos"
           payload: "Carga"
           body: "Corpo"
-          go_list: "Ir para à lista"
-          go_details: "Editar webhook"
-          go_events: "Ir para eventos"
           ping: "Ping"
           status: "Código de Estado"
           event_id: "ID"
@@ -4386,6 +4371,11 @@ pt:
         unlock_trust_level: "Desbloquear Nível de Confiança"
         silenced_count: "Silenciado"
         suspended_count: "Suspenso"
+        other_matches_list:
+          username: "Nome de Utilizador"
+          trust_level: "Nível de Confiança"
+          read_time: "Tempo de leitura"
+          posts: "Mensagens"
         tl3_requirements:
           title: "Requisitos para o Nível de Confiança 3"
           table_title:
@@ -4505,6 +4495,7 @@ pt:
           search: "Pesquisar"
           groups: "Grupos"
           dashboard: "Painel de Administração"
+          navigation: "Navegação"
         default_categories:
           modal_yes: "Sim"
       badges:

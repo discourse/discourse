@@ -151,10 +151,9 @@ RSpec.describe "Navigation", type: :system, js: true do
     end
   end
 
-  context "when sidebar is enabled" do
+  context "when sidebar is configured as the navigation menu" do
     before do
-      SiteSetting.enable_experimental_sidebar_hamburger = true
-      SiteSetting.enable_sidebar = true
+      SiteSetting.navigation_menu = "sidebar"
     end
 
     context "when opening channel from sidebar with drawer preferred" do
@@ -275,6 +274,14 @@ RSpec.describe "Navigation", type: :system, js: true do
         expect(page).to have_css(
           ".sidebar-section-link-#{category_channel.slug}.sidebar-section-link--active",
         )
+      end
+    end
+
+    context "when going back to channel from channel settings in full page" do
+      it "activates the channel in the sidebar" do
+        visit("/chat/channel/#{category_channel.id}/#{category_channel.slug}/info/settings")
+        find(".chat-full-page-header__back-btn").click
+        expect(page).to have_content(message.message)
       end
     end
 

@@ -20,7 +20,6 @@
       <div class="actions">
         {{#if this.backupEnabled}}
           <DButton @class="btn-primary" @icon="redo" @action={{action "generateSecondFactorCodes"}} @type="submit" @isLoading={{this.loading}} @label="user.second_factor_backup.regenerate" />
-          <DButton @class="btn-danger" @icon="ban" @action={{action "disableSecondFactorBackup"}} @disabled={{this.loading}} @label="user.second_factor_backup.disable" />
         {{else}}
           <DButton @class="btn-primary" @action={{action "generateSecondFactorCodes"}} @type="submit" @disabled={{this.loading}} @label="user.second_factor_backup.enable" />
         {{/if}}

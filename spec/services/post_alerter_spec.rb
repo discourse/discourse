@@ -83,6 +83,17 @@ RSpec.describe PostAlerter do
 
     end
 
+    it "notifies about private message even if direct mention" do
+      pm = Fabricate(:topic, archetype: 'private_message', category_id: nil)
+      op = Fabricate(:post, topic: pm, user: pm.user, raw: "Hello @#{user.username}, nice to meet you")
+      pm.allowed_users << pm.user
+      pm.allowed_users << user
+      TopicUser.create!(user_id: user.id, topic_id: pm.id, notification_level: TopicUser.notification_levels[:watching])
+      PostAlerter.post_created(op)
+
+      expect(Notification.where(user_id: user.id).pluck_first(:notification_type)).to eq(Notification.types[:private_message])
+    end
+
     context "with group inboxes" do
       fab!(:user1) { Fabricate(:user) }
       fab!(:user2) { Fabricate(:user) }
@@ -758,15 +769,18 @@ RSpec.describe PostAlerter do
             before do
               set_topic_notification_level(alice, pm_topic, notification_level)
             end
+            let(:expected_notification) {
+              notification_level == :watching ? :private_message : :mentioned
+            }
 
             it "notifies about @username mention" do
               args = { user: bob, topic: pm_topic, raw: 'Hello @alice' }
-              expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
+              expect { create_post_with_alerts(args) }.to add_notification(alice, expected_notification)
             end
 
             it "notifies about @username mentions by non-human users" do
               args = { user: Discourse.system_user, topic: pm_topic, raw: 'Hello @alice' }
-              expect { create_post_with_alerts(args) }.to add_notification(alice, :mentioned)
+              expect { create_post_with_alerts(args) }.to add_notification(alice, expected_notification)
             end
 
             it "notifies about @group mention when allowed user is part of group" do
@@ -1381,10 +1395,10 @@ RSpec.describe PostAlerter do
         whispered_post = Fabricate(:post, user: Fabricate(:admin), topic: topic, post_type: Post.types[:whisper])
         expect {
           PostAlerter.post_created(whispered_post)
-        }.to add_notification(admin, :posted)
+        }.to add_notification(admin, :watching_category_or_tag)
         expect {
           PostAlerter.post_created(whispered_post)
-        }.not_to add_notification(user, :posted)
+        }.not_to add_notification(user, :watching_category_or_tag)
       end
 
       it "notifies a staged user about a private post, but only if the user has access" do
@@ -1410,8 +1424,8 @@ RSpec.describe PostAlerter do
 
         expect {
           PostAlerter.post_created(post)
-        }.to add_notification(staged_member, :posted)
-          .and not_add_notification(staged_non_member, :posted)
+        }.to add_notification(staged_member, :watching_category_or_tag)
+          .and not_add_notification(staged_non_member, :watching_category_or_tag)
       end
 
       it "does not update existing unread notification" do
@@ -1608,7 +1622,7 @@ RSpec.describe PostAlerter do
       end
 
       context "with :watching notification level" do
-        include_examples "tag user with notification level", :watching, :posted
+        include_examples "tag user with notification level", :watching, :watching_category_or_tag
       end
 
       context "with :watching_first_post notification level" do
@@ -2075,7 +2089,7 @@ RSpec.describe PostAlerter do
 
     notification = Notification.last
     expect(notification.user).to eq(user)
-    expect(notification.notification_type).to eq(Notification.types[:posted])
+    expect(notification.notification_type).to eq(Notification.types[:watching_category_or_tag])
     expect(notification.topic).to eq(post.topic)
     expect(notification.post_number).to eq(1)
   end

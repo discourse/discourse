@@ -8,9 +8,7 @@ class CategoryHashtagDataSource
     "folder"
   end
 
-  def self.category_to_hashtag_item(guardian_categories, category)
-    category = Category.new(category.slice(:id, :slug, :name, :parent_category_id, :description))
-
+  def self.category_to_hashtag_item(category)
     HashtagAutocompleteService::HashtagItem.new.tap do |item|
       item.text = category.name
       item.slug = category.slug
@@ -22,9 +20,7 @@ class CategoryHashtagDataSource
       # categories here.
       item.ref =
         if category.parent_category_id
-          parent_category =
-            guardian_categories.find { |cat| cat[:id] === category.parent_category_id }
-          !parent_category ? category.slug : "#{parent_category[:slug]}:#{category.slug}"
+          "#{category.parent_category.slug}:#{category.slug}"
         else
           category.slug
         end
@@ -32,31 +28,43 @@ class CategoryHashtagDataSource
   end
 
   def self.lookup(guardian, slugs)
-    # We use Site here because it caches all the categories the
-    # user has access to.
-    guardian_categories = Site.new(guardian).categories
+    user_categories = Category.secured(guardian).includes(:parent_category)
     Category
-      .query_from_cached_categories(slugs, guardian_categories)
-      .map { |category| category_to_hashtag_item(guardian_categories, category) }
+      .query_loaded_from_slugs(slugs, user_categories)
+      .map { |category| category_to_hashtag_item(category) }
   end
 
   def self.search(guardian, term, limit)
-    guardian_categories = Site.new(guardian).categories
-
-    guardian_categories
-      .select do |category|
-        category[:name].downcase.include?(term) || category[:slug].downcase.include?(term)
-      end
+    Category
+      .secured(guardian)
+      .includes(:parent_category)
+      .where("LOWER(name) LIKE :term OR LOWER(slug) LIKE :term", term: "%#{term}%")
       .take(limit)
-      .map { |category| category_to_hashtag_item(guardian_categories, category) }
+      .map { |category| category_to_hashtag_item(category) }
   end
 
   def self.search_sort(search_results, term)
-    search_results
-      .select { |item| item.slug == term }
-      .sort_by { |item| item.text.downcase }
-      .concat(
-        search_results.select { |item| item.slug != term }.sort_by { |item| item.text.downcase },
+    if term.present?
+      search_results.sort_by { |item| [item.slug == term ? 0 : 1, item.text.downcase] }
+    else
+      search_results.sort_by { |item| item.text.downcase }
+    end
+  end
+
+  def self.search_without_term(guardian, limit)
+    Category
+      .includes(:parent_category)
+      .secured(guardian)
+      .joins(
+        "LEFT JOIN category_users ON category_users.user_id = #{guardian.user.id}
+        AND category_users.category_id = categories.id",
       )
+      .where(
+        "category_users.notification_level IS NULL OR category_users.notification_level != ?",
+        CategoryUser.notification_levels[:muted],
+      )
+      .order(topic_count: :desc)
+      .take(limit)
+      .map { |category| category_to_hashtag_item(category) }
   end
 end

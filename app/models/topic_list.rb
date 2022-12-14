@@ -136,8 +136,11 @@ class TopicList
       ft.topic_list = self
     end
 
+    topic_preloader_associations = [:image_upload, { topic_thumbnails: :optimized_image }]
+    topic_preloader_associations.concat(DiscoursePluginRegistry.topic_preloader_associations.to_a)
+
     ActiveRecord::Associations::Preloader
-      .new(records: @topics, associations: [:image_upload, topic_thumbnails: :optimized_image])
+      .new(records: @topics, associations: topic_preloader_associations)
       .call
 
     if preloaded_custom_fields.present?

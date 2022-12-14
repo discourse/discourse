@@ -534,7 +534,6 @@ lt:
       broken: "Šis paveikslėlis yra sugadintas"
     hidden_bidi_character: "Dvikrypčiai simboliai gali pakeisti teksto pateikimo tvarką. Tai gali būti naudojama kenkėjiškam kodui paslėpti."
     cannot_permanently_delete:
-      many_posts: "Negalite visam laikui ištrinti šios temos, nes yra kitų įrašų."
       wait_or_different_admin: "Prieš visam laikui ištrindami šį įrašą, turite palaukti %{time_left} arba kitas administratorius turi tai padaryti."
   rate_limiter:
     slow_down: "Šį veiksmą atlikote per daug kartų, vėliau bandykite dar kartą."
@@ -774,7 +773,6 @@ lt:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nederamas"
-      description: 'Šiame įraše yra turinio, kurį protingas asmuo laikytų įžeidžiančiu, piktnaudžiaujančiu ar <a href="%{base_path}/guidelines">mūsų bendruomenės gairių</a>pažeidimu.'
     notify_user:
       title: "Siųsti @%{username} žinutę"
       description: "Noriu tiesiogiai ir asmeniškai pasikalbėti su šiuo asmeniu apie jo įrašą."
@@ -861,7 +859,6 @@ lt:
     mailing_list_mode: "Išjunkite adresatų sąrašo režimą"
     all: "Nesiųskite man laiškų iš %{sitename}"
     different_user_description: "Šiuo metu esate prisijungę kaip kitas vartotojas, nei tas, kuriam rašėme el. paštu. Atsijunkite arba įjunkite anoniminį režimą ir bandykite dar kartą."
-    not_found_description: "Atsiprašome, nepavyko rasti šio prenumeratos atsisakymo. Ar gali būti, kad el. laiške esanti nuoroda yra per sena ir pasibaigė jos galiojimo laikas?"
     log_out: "Atsijungti"
     submit: "Išsaugoti nuostatas"
     digest_frequency:
@@ -1251,9 +1248,6 @@ lt:
     allow_duplicate_topic_titles: "Leisti temas su identiškais, pasikartojančiais pavadinimais."
     allow_duplicate_topic_titles_category: "Leisti temas su identiškais, pasikartojančiais pavadinimais, jei kategorija skiriasi. allow_duplicate_topic_titles turi būti išjungtas."
     unique_posts_mins: "Kiek minučių prieš vartotojas gali padaryti įrašą su tuo pačiu turiniu dar kartą"
-    title: "Šios svetainės pavadinimas, naudojamas pavadinimo žymoje."
-    site_description: "Apibūdinkite šią svetainę vienu sakiniu, kaip naudojama meta aprašymo žymoje."
-    short_site_description: "Trumpas aprašymas, naudojamas pagrindinio puslapio žymoje."
     crawl_images: "Gaukite vaizdus iš nuotolinių URL, kad įterptumėte teisingus pločio ir aukščio matmenis."
     download_remote_images_threshold: "Minimali vieta diske, reikalinga nuotoliniams vaizdams atsisiųsti vietoje (procentais)"
     editing_grace_period_max_diff_high_trust: "Didžiausias leidžiamas simbolių pakeitimų skaičius per redagavimo atidėjimo laikotarpį, jei pakeitimų daugiau, išsaugokite kitą įrašo versiją (2 pasitikėjimo lygis ir aukštesnis)"
@@ -1335,7 +1329,6 @@ lt:
     discord_client_id: '„Discord“ kliento ID (reikia vieno? Apsilankykite <a href="https://discordapp.com/developers/applications/me">„Discord“ kūrėjų portale</a>)'
     discord_secret: "Discord slaptas raktas"
     enable_backups: "Leiskite administratoriams kurti forumo atsargines kopijas"
-    maximum_backups: "Didžiausias atsarginių kopijų kiekis diske. Senesnės atsarginės kopijos automatiškai ištrinamos"
     backup_frequency: "Dienų skaičius tarp atsarginių kopijų kūrimo."
     s3_disable_cleanup: "Neleiskite pašalinti senų atsarginių kopijų iš S3, kai atsarginių kopijų yra daugiau nei leidžiama."
     enable_s3_inventory: "Kurkite ataskaitas ir patikrinkite įkėlimus naudodami „Amazon S3“ inventorių. SVARBU: reikalingi galiojantys S3 kredencialai (ir prieigos rakto ID, ir slaptasis prieigos raktas)."
@@ -1706,12 +1699,10 @@ lt:
   new_version_mailer_with_notes:
     subject_template: "[%{email_prefix}] Galimas atnaujinimas"
   flag_reasons:
-    inappropriate: "Jūsų įrašas buvo pažymėtas kaip **netinkamas**: bendruomenė mano, kad jis yra piktnaudžiaujantis, įžeidžiantis arba pažeidžia [mūsų bendruomenės gaires] (%{base_path}/gairės)."
     spam: "Jūsų įrašas buvo pažymėtas kaip **šlamštas**: bendruomenė mano, kad tai reklama, kažkas, kas yra pernelyg reklaminio pobūdžio, o ne naudinga ar aktualu temai, kaip tikėtasi."
     notify_moderators: "Jūsų įrašas buvo pažymėtas **moderatoriaus dėmesiui**: bendruomenė mano, kad dėl įrašo reikia rankinio darbuotojo įsikišimo."
     responder:
       off_topic: "Įrašas buvo pažymėtas kaip **ne į temą**: bendruomenė mano, kad jis nėra tinkamas temai, kaip šiuo metu apibrėžia pavadinimas ir pirmasis įrašas."
-      inappropriate: "Jūsų įrašas buvo pažymėtas kaip **netinkamas**: bendruomenė mano, kad jis yra piktnaudžiaujantis, įžeidžiantis arba pažeidžia [mūsų bendruomenės gaires] (%{base_path}/gairės)."
       spam: "Jūsų įrašas buvo pažymėtas kaip **šlamštas**: bendruomenė mano, kad tai reklama, kažkas, kas yra pernelyg reklaminio pobūdžio, o ne naudinga ar aktualu temai, kaip tikėtasi."
       notify_moderators: "Jūsų įrašas buvo pažymėtas **moderatoriaus dėmesiui**: bendruomenė mano, kad dėl įrašo reikia rankinio darbuotojo įsikišimo."
   flags_dispositions:
@@ -2706,10 +2697,6 @@ lt:
             label: "Pirminis logotipas"
           logo_small:
             label: "Kvadratinis logotipas"
-          favicon:
-            label: "Naršyklės piktograma"
-          large_icon:
-            label: "Didelė piktograma"
       corporate:
         fields:
           company_name:

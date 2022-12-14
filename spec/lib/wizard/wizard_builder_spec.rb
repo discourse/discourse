@@ -75,19 +75,30 @@ RSpec.describe Wizard::Builder do
       SiteSetting.login_required = true
       SiteSetting.invite_only = false
       SiteSetting.must_approve_users = true
+      SiteSetting.chat_enabled = true if defined?(::Chat)
+      SiteSetting.navigation_menu = NavigationMenuSiteSetting::SIDEBAR
 
       fields = privacy_step.fields
       login_required_field = fields.first
       invite_only_field = fields.second
-      must_approve_users_field = fields.last
+      must_approve_users_field = fields.third
+      chat_enabled_field = fields.second_to_last if defined?(::Chat)
+      navigation_menu_field = fields.last
 
-      expect(fields.length).to eq(3)
+      count = defined?(::Chat) ? 5 : 4
+      expect(fields.length).to eq(count)
       expect(login_required_field.id).to eq('login_required')
       expect(login_required_field.value).to eq(true)
       expect(invite_only_field.id).to eq('invite_only')
       expect(invite_only_field.value).to eq(false)
       expect(must_approve_users_field.id).to eq('must_approve_users')
       expect(must_approve_users_field.value).to eq(true)
+      if defined?(::Chat)
+        expect(chat_enabled_field.id).to eq('chat_enabled')
+        expect(chat_enabled_field.value).to eq(true)
+      end
+      expect(navigation_menu_field.id).to eq('enable_sidebar')
+      expect(navigation_menu_field.value).to eq(true)
     end
   end
 

@@ -281,7 +281,6 @@ hr:
     conduct: "Pravila ponašanja"
     mobile_view: "Mobilni prikaz"
     desktop_view: "Desktop prikaz"
-    or: "ili"
     now: "upravo"
     read_more: "pročitaj više"
     more: "Više"
@@ -1247,8 +1246,6 @@ hr:
         warnings: "Službena upozorenja"
         read_more_in_group: "Želite li pročitati više? Pregledajte ostale poruke u %{groupLink}."
         read_more: "Želite li pročitati više? Pregledajte ostale poruke u <a href='%{basePath}/u/%{username}/messages'>osobnim porukama</a>."
-        read_more_group_pm_MF: "tamo { UNREAD, plural, =0 {} one { je <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nepročitano</a> } few { su <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nepročitano</a> } other { su <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># nepročitano</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{i } false {je } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nova</a> poruka} few {} other { {BOTH, select, true{i } false {su } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># novih</a> poruka} } preostale ili pregledajte druge poruke u {groupLink}"
-        read_more_personal_pm_MF: "tamo { UNREAD, plural, =0 {} one { je <a href='{basePath}/u/{username}/messages/unread'># nepročitano</a> } few { su <a href='{basePath}/u/{username}/messages/unread'># nepročitano</a> } other { su <a href='{basePath}/u/{username}/messages/unread'># nepročitano</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{i } false {je } other{}} <a href='{basePath}/u/{username}/messages/new'># nova</a> poruka} few {} other { {BOTH, select, true{i } false {su } other{}} <a href='{basePath}/u/{username}/messages/new'># nova</a> poruka} } preostale, ili pregledajte druge <a href='{basePath}/u/{username}/messages'>osobne poruke</a>"
       preferences_nav:
         account: "Račun"
         security: "Sigurnost"
@@ -1314,7 +1311,7 @@ hr:
         use: "Korištenje aplikacije Authenticator"
         enforced_notice: "Prije pristupanja ovoj stranici morate omogućiti autentifikaciju dva faktora."
         disable: "Onemogući"
-        disable_confirm: "Jeste li sigurni da želite onemogućiti sve metode s dva faktora?"
+        delete: "Izbriši"
         save: "Spremi"
         edit: "Izmijeni"
         edit_title: "Uredi autentifikator"
@@ -1396,7 +1393,6 @@ hr:
         authenticated: "E-mail vam je potvrđen od %{provider}"
         invite_auth_email_invalid: "Adresa e-pošte s pozivnicom ne podudara se s adresom e-pošte koju je autentificirao %{provider}"
         authenticated_by_invite: "Vaša e-pošta potvrđena je pozivnicom"
-        frequency_immediately: "Odmah ćemo vam poslati e-mail ako niste pročitali ono o ćemu vam šaljemo e-mailove."
         frequency:
           one: "Poslat ćemo vam e -poruku samo ako vas nismo vidjeli u zadnjoj minuti."
           few: "Poslat ćemo vam e -poruku samo ako vas nismo vidjeli u zadnjih %{count} minuta."
@@ -1740,19 +1736,18 @@ hr:
       enabled: "Ova stranica je u načinu rada samo za čitanje. Nastavite pregledavati, ali odgovaranje, sviđanja i druge radnje su za sada onemogućene."
       login_disabled: "Prijava je onemogućena dok je stranica u modelu \"samo čitanje\","
       logout_disabled: "Odjava je onemogućena dok je forum u načinu rada samo za čitanje."
-    too_few_topics_and_posts_notice_MF: >-
-      Počnimo <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">raspravu!</a> Tamo {currentTopics, plural, one {je <strong>#</strong> tema} few {su <strong>#</strong> tema} other {su <strong>#</strong> tema}} i {currentPosts, plural, one {<strong>#</strong> post} few {<strong>#</strong> postova} other {<strong>#</strong> postova}}, Posjetitelji trebaju više za čitanje i odgovaranje na njih - preporučujemo ih barem {requiredTopics, plural, one {<strong>#</strong> tema} few {<strong>#</strong> tema} other {<strong>#</strong> tema}} i {requiredPosts, plural, one {<strong>#</strong> post} few {<strong>#</strong> postova} other {<strong>#</strong> postova}}, Samo osoblje može vidjeti ovu poruku.
-    too_few_topics_notice_MF: >-
-      Hajde da <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">započnemo diskusiju!</a> Tamo {currentTopics, plural, one {je <strong>#</strong> tema} few {su <strong>#</strong> teme} other {su <strong>#</strong> teme}}. Posjetiteljima je potrebno više čitati i odgovoriti na — preporučujemo barem {requiredTopics, plural, one {<strong>#</strong> tema} few {<strong>#</strong> teme} other {<strong>#</strong> teme}}. Samo osoblje može vidjeti ovu poruku.
-    too_few_posts_notice_MF: >-
-      Hajde da <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">započnemo diskusiju!</a> Tamo {currentPosts, plural, one {je <strong>#</strong> tema} few {su <strong>#</strong> teme} other {su <strong>#</strong> teme}}. Posjetiteljima je potrebno više čitati i odgovoriti na — preporučujemo barem {requiredPosts, plural, one {<strong>#</strong> tema} few {<strong>#</strong> teme} other {<strong>#</strong> teme}}. Samo osoblje može vidjeti ovu poruku.
+    too_few_posts_notice_MF: |
+      Hajde da <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">započnemo diskusiju!</a> Tamo {currentPosts, plural, one {je <strong>#</strong> tema} few {su <strong>#</strong> teme} other {su <strong>#</strong> teme}}. Posjetiteljima je potrebno više čitati i odgovoriti na — preporučujemo barem {requiredPosts, plural, one {<strong>#</strong> tema} few {<strong>#</strong> teme} other {<strong>#</strong> teme}}. Samo osoblje može vidjeti ovu poruku.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}</a> dosegao ograničenje za postavljanje stranice {limit, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}."
-      reached_minute_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}</a> dosegao ograničenje za postavljanje stranice {limit, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}</a> dosegao ograničenje za postavljanje stranice {limit, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}</a> premašio ograničenje za postavljanje stranice {limit, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}</a> dosegao ograničenje za postavljanje stranice {limit, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}</a> dosegao ograničenje za postavljanje stranice {limit, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}</a> dosegao ograničenje za postavljanje stranice {limit, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}</a> premašio ograničenje za postavljanje stranice {limit, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}.
     learn_more: "saznaj više..."
-    first_post: Prvi članak
     mute: Utišaj
     unmute: Poništi utišanje
     last_post: Objavljeno
@@ -1777,7 +1772,8 @@ hr:
         one: "Postoji <b>%{count}</b> odgovor."
         few: "Postoji <b>%{count}</b> odgovora."
         other: "Ima <b>%{count}</b> odgovora."
-      description_time_MF: "Tamo {replyCount, plural, one {je <b>#</b> odgovor} few {su <b>#</b> odgovora} other {su <b>#</b> odgovora}} s predviđenim vremenom čitanja <b>{readingTime, plural, one {# minuta} few {# minuta} other {# minuta}}</b>."
+      description_time_MF: |
+        Tamo {replyCount, plural, one {je <b>#</b> odgovor} few {su <b>#</b> odgovora} other {su <b>#</b> odgovora}} s predviđenim vremenom čitanja <b>{readingTime, plural, one {# minuta} few {# minuta} other {# minuta}}</b>.
       enable: "Sažmi ovu temu"
       disable: "Prikaži sve članke"
       short_label: "Rezimirati"
@@ -2557,14 +2553,7 @@ hr:
       show_links: "pokaži poveznice u temi"
       collapse_details: "Sažmi detalje teme"
       expand_details: "proširite pojedinosti o temi"
-      read_more_in_category: "Želite čitati više? Pregledajte druge teme u %{catLink} ili %{latestLink}."
-      read_more: "Želite li čitati više? %{catLink} Ili %{latestLink}."
       unread_indicator: "Još nijedan član nije pročitao zadnji post ove teme."
-      read_more_MF: "Tamo { UNREAD, plural, =0 {} one { je <a href='{basePath}/unread'># nepročitano</a> } few { su <a href='{basePath}/unread'># nepročitanih</a> } other { su <a href='{basePath}/unread'># nepročitanih</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{i } false {je } other{}} <a href='{basePath}/new'># nova</a> tema} few {} other { {BOTH, select, true{i } false {jesu } other{}} <a href='{basePath}/new'># nove</a> teme} } preostalo, ili {CATEGORY, select, true {pregledajte ostale teme u {catLink}} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
-      browse_all_categories: Pregledaj sve kategorije
-      browse_all_tags: Pregledajte sve oznake
-      view_latest_topics: pogledaj najnovije teme
       suggest_create_topic: Spremni za <a href>započeti novi razgovor?</a>
       jump_reply_up: skoči na raniji odgovor
       jump_reply_down: skoči na kasniji odgovor
@@ -3344,7 +3333,8 @@ hr:
       official_warning: "Službeno upozorenje"
       delete_spammer: "Obriši korisnika zbog nepoželjnih objava."
       flag_for_review: "Red čekanja za pregled"
-      delete_confirm_MF: "Spremate se izbrisati {POSTS, plural, one {<b>#</b> post} few {<b>#</b> postova} other {<b>#</b> postova}} i {TOPICS, plural, one {<b>#</b> tema} few {<b>#</b> tema} other {<b>#</b> tema}} od ovog korisnika, uklonite njegov račun, blokirajte prijave s njegove IP adrese <b>{ip_address}</b>i dodajte njegovu e-adresu <b>{email}</b> na trajni popis blokiranih. Jeste li sigurni da je ovaj korisnik doista neželjena pošta?"
+      delete_confirm_MF: |
+        Spremate se izbrisati {POSTS, plural, one {<b>#</b> post} few {<b>#</b> postova} other {<b>#</b> postova}} i {TOPICS, plural, one {<b>#</b> tema} few {<b>#</b> tema} other {<b>#</b> tema}} od ovog korisnika, uklonite njegov račun, blokirajte prijave s njegove IP adrese <b>{ip_address}</b>i dodajte njegovu e-adresu <b>{email}</b> na trajni popis blokiranih. Jeste li sigurni da je ovaj korisnik doista neželjena pošta?
       yes_delete_spammer: "Da, obriši korisnika."
       ip_address_missing: "(N/A)"
       hidden_email_address: "(skriveno)"
@@ -3538,7 +3528,6 @@ hr:
         this_month: "Mjesec"
         this_week: "Tjedan"
         today: "Danas"
-        other_periods: "vidi vrh:"
     permission_types:
       full: "Otvoriti / Odgovoriti / Vidjeti"
       create_post: "Odgovoriti / Vidjeti"
@@ -4086,11 +4075,6 @@ hr:
         about: "Ovdje izmijenite svoje članstvo u grupama i imena grupa"
         group_members: "Članovi grupe"
         delete: "Obriši"
-        delete_confirm: "Obriši ovu grupu?"
-        delete_with_messages_confirm:
-          one: "Brisanjem ove grupe %{count} poruka ostati bez roditelja, članovi grupe više joj neće imati pristup.<br><br>Jeste li sigurni?"
-          few: "Brisanjem ove grupe %{count} poruka ostati bez roditelja, članovi grupe više joj neće imati pristup.<br><br>Jeste li sigurni?"
-          other: "Brisanjem ove grupe %{count} poruka ostati bez roditelja, članovi grupe im više neće imati pristup.<br><br>Jeste li sigurni?"
         delete_failed: "Nemoguće obrisati grupu. Ako je ovo automatska grupa, ne možete ju obrisati."
         delete_automatic_group: Ovo je automatska grupa i ne može se izbrisati.
         delete_owner_confirm: "Ukloniti vlasničku privilegiju za \"%{username}\"?"
@@ -4197,9 +4181,8 @@ hr:
         detailed_instruction: "POST zahtjev će se poslati na navedeni URL kada se dogodi odabrani događaj."
         new: "Novi Webhook"
         create: "Kreiraj"
+        edit: "Uredi"
         save: "Spremi"
-        destroy: "Pobriši"
-        description: "Opis"
         controls: "Kontrole"
         go_back: "Povratak na popis"
         payload_url: "URL nosivosti"
@@ -4282,9 +4265,6 @@ hr:
           headers: "Zaglavlja"
           payload: "Teret"
           body: "Tijelo"
-          go_list: "Idi na popis"
-          go_details: "Uredi webhook"
-          go_events: "Idi na događaje"
           ping: "Ping"
           status: "Statusni kod"
           event_id: "ID"
@@ -5020,7 +5000,8 @@ hr:
         clear_penalty_history:
           title: "Obriši povijest kazne"
           description: "korisnici s kaznama ne mogu doseći TL3"
-        delete_all_posts_confirm_MF: "Uskoro ćete izbrisati {POSTS, plural, one {# post} few {# postova} other {# postova}} i {TOPICS, plural, one {# tema} few {# tema} other {# tema}}. Jesi li siguran?"
+        delete_all_posts_confirm_MF: |
+          Uskoro ćete izbrisati {POSTS, plural, one {# post} few {# postova} other {# postova}} i {TOPICS, plural, one {# tema} few {# tema} other {# tema}}. Jesi li siguran?
         silence: "Utišaj"
         unsilence: "Vrati šutnju"
         silenced: "Utišano?"
@@ -5169,6 +5150,11 @@ hr:
         silenced_count: "Utišano"
         suspended_count: "Suspendirani"
         last_six_months: "Posljednjih 6 mjeseci"
+        other_matches_list:
+          username: "Korisničko ime"
+          trust_level: "Razina povjerenja"
+          read_time: "Vrijeme čitanja"
+          posts: "Postovi"
         tl3_requirements:
           title: "Predispozicije za razinu povjerenja 3"
           table_title:
@@ -5314,6 +5300,7 @@ hr:
           search: "Pretraži"
           groups: "Grupe"
           dashboard: "Nadzorna ploča"
+          navigation: "Navigacija"
         secret_list:
           invalid_input: "Polja za unos ne mogu biti prazna niti sadrže znak vertikalne trake."
         default_categories:

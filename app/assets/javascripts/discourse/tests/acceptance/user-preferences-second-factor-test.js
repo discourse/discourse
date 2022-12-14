@@ -4,6 +4,7 @@ import {
   acceptance,
   exists,
   query,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("User Preferences - Second Factor", function (needs) {
@@ -14,6 +15,8 @@ acceptance("User Preferences - Second Factor", function (needs) {
       return helper.response({
         success: "OK",
         password_required: "true",
+        totps: [{ id: 1, name: "one of them" }],
+        security_keys: [{ id: 2, name: "key" }],
       });
     });
 
@@ -89,5 +92,34 @@ acceptance("User Preferences - Second Factor", function (needs) {
         "shows name missing error message"
       );
     }
+  });
+
+  test("delete second factor security method", async function (assert) {
+    updateCurrentUser({ moderator: false, admin: false, trust_level: 1 });
+    await visit("/u/eviltrout/preferences/second-factor");
+
+    assert.ok(exists("#password"), "it has a password input");
+
+    await fillIn("#password", "secrets");
+    await click(".user-preferences .btn-primary");
+    await click(".totp .btn-danger");
+    assert.strictEqual(
+      query("#dialog-title").innerText.trim(),
+      "Deleting an authenticator"
+    );
+    await click(".dialog-close");
+
+    await click(".security-key .btn-danger");
+    assert.strictEqual(
+      query("#dialog-title").innerText.trim(),
+      "Deleting an authenticator"
+    );
+    await click(".dialog-close");
+
+    await click(".btn-danger.btn-icon-text");
+    assert.strictEqual(
+      query("#dialog-title").innerText.trim(),
+      "Are you sure you want to disable two-factor authentication?"
+    );
   });
 });

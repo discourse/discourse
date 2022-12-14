@@ -13,28 +13,28 @@ RSpec.describe Chat::GuardianExtensions do
 
   it "cannot chat if the user is not in the Chat.allowed_group_ids" do
     SiteSetting.chat_allowed_groups = ""
-    expect(guardian.can_chat?(user)).to eq(false)
+    expect(guardian.can_chat?).to eq(false)
   end
 
   it "staff can always chat regardless of chat_allowed_grups" do
     SiteSetting.chat_allowed_groups = ""
-    expect(guardian.can_chat?(staff)).to eq(true)
+    expect(staff_guardian.can_chat?).to eq(true)
   end
 
   it "allows TL1 to chat by default and by extension higher trust levels" do
     Group.refresh_automatic_groups!
-    expect(guardian.can_chat?(user)).to eq(true)
+    expect(guardian.can_chat?).to eq(true)
     user.update!(trust_level: TrustLevel[3])
     Group.refresh_automatic_groups!
-    expect(guardian.can_chat?(user)).to eq(true)
+    expect(guardian.can_chat?).to eq(true)
   end
 
   it "allows user in specific group to chat" do
     SiteSetting.chat_allowed_groups = chat_group.id
-    expect(guardian.can_chat?(user)).to eq(false)
+    expect(guardian.can_chat?).to eq(false)
     chat_group.add(user)
     user.reload
-    expect(guardian.can_chat?(user)).to eq(true)
+    expect(guardian.can_chat?).to eq(true)
   end
 
   describe "chat channel" do

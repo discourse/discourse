@@ -9,7 +9,11 @@ export default Controller.extend(PenaltyController, {
 
   onShow() {
     this.resetModal();
-    this.setProperties({ suspendUntil: null, suspending: false });
+    this.setProperties({
+      suspendUntil: null,
+      suspending: false,
+      otherUserIds: [],
+    });
   },
 
   finishedSetup() {
@@ -28,7 +32,6 @@ export default Controller.extend(PenaltyController, {
       }
 
       this.set("suspending", true);
-
       this.penalize(() => {
         return this.user.suspend({
           suspend_until: this.suspendUntil,
@@ -37,6 +40,7 @@ export default Controller.extend(PenaltyController, {
           post_id: this.postId,
           post_action: this.postAction,
           post_edit: this.postEdit,
+          other_user_ids: this.otherUserIds,
         });
       }).finally(() => this.set("suspending", false));
     },

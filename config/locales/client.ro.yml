@@ -251,7 +251,6 @@ ro:
     conduct: "Codul de conduită"
     mobile_view: "Vedere pentru mobil"
     desktop_view: "Vedere pentru desktop"
-    or: "sau"
     now: "Acum"
     read_more: "Citește mai mult"
     more: "Mai mult"
@@ -1142,6 +1141,7 @@ ro:
           Protejează-ți contul cu coduri de securitate de unică folosință.
         oauth_enabled_warning: "Atenție! Autentificarea cu rețelele sociale va fi dezactivată atunci când activezi autentificarea în doi pași (2FA)."
         disable: "Dezactivează"
+        delete: "Șterge"
         save: "Salvează"
         edit: "Editează"
         security_key:
@@ -1207,7 +1207,6 @@ ro:
         required: "Te rugăm să introduci o adresă de e-mail"
         invalid: "Introduceți o adresă de email validă."
         authenticated: "Emailul a fost autentificat de către %{provider}."
-        frequency_immediately: "Vom trimite imediat un email dacă nu ai citit deja despre ce este vorba. "
         frequency:
           one: "Vom trimite un email doar dacă nu te-am văzut în ultimul minut."
           few: "Vom trimite un email doar dacă nu te-am văzut în ultimele %{count} minute."
@@ -1481,7 +1480,6 @@ ro:
       login_disabled: "Autentificarea este dezactivată când siteul este în modul exclusiv-citire."
       logout_disabled: "Deautentificarea este dezactivată cât timp site-ul este în modul exclusiv-citire."
     learn_more: "află mai multe..."
-    first_post: Prima postare
     mute: Blochează
     unmute: Deblochează
     last_post: Postat
@@ -2030,11 +2028,6 @@ ro:
       back_to_list: "Înapoi la lista de subiecte"
       options: "Opțiuni pentru subiect"
       show_links: "arată link-urile din acest subiect"
-      read_more_in_category: "Vrei să citești mai mult? Răsfoiește alte subiecte din %{catLink} sau %{latestLink}."
-      read_more: "Vrei să citești mai multe subiecte? %{catLink} sau %{latestLink}."
-      read_more_MF: "Există { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'># subiect</a> necitit} other { <a href='{basePath}/unread'># subiecte</a> necitite} }{ NEW, plural, =0 {} one {{ BOTH, select, true{&nbsp;și } false {} other{} } <a href='{basePath}/new'># discuție nouă</a>} other {{ BOTH, select, true{&nbsp;și } false {} other{} } <a href='{basePath}/new'># discuții noi</a>} }. {CATEGORY, select, true {Răsfoiește altele subiecte în {catLink}} false {{latestLink}} other {}}"
-      browse_all_categories: Răsfoiți prin toate categoriile
-      view_latest_topics: arată ultimele subiecte
       suggest_create_topic: Ești gata să <a href>începi o nouă conversație?</a>
       jump_reply_up: sări la un răspuns mai vechi
       jump_reply_down: sări la un răspuns mai nou
@@ -2729,7 +2722,6 @@ ro:
         this_month: "Lună"
         this_week: "Săptămână"
         today: "Astăzi"
-        other_periods: "vezi top"
     permission_types:
       full: "Creează / Răspunde / Vizualizează"
       create_post: "Răspunde / Vizualizează"
@@ -3071,7 +3063,6 @@ ro:
         about: "Editează aici numele și apartenența la grupuri"
         group_members: "Membrii grupului"
         delete: "Șterge"
-        delete_confirm: "Ștergi acest grup?"
         delete_failed: "Imposibil de șters grupul. Dacă este unul automat, nu se poate șterge."
         delete_owner_confirm: "Revocă dreptul de proprietar pentru '%{username}'?"
         add: "Adaugă"
@@ -3104,9 +3095,8 @@ ro:
         detailed_instruction: "O interogare POST va fi trimisă catre URL-ul menționat atunci când se produc evenimentele alese."
         new: "Nou webhook"
         create: "Creează"
+        edit: "Modifică"
         save: "Salvează"
-        destroy: "Șterge"
-        description: "Descriere"
         controls: "Controale"
         go_back: "Înapoi la listă"
         payload_url: "URL-ul încărcăturii "
@@ -3157,9 +3147,6 @@ ro:
           headers: "Antete"
           payload: "Încărcătură"
           body: "Corp"
-          go_list: "Mergi la listă"
-          go_details: "Editează webhook"
-          go_events: "Mergi la evenimente"
           ping: "Ping"
           status: "Cod de stare"
           event_id: "ID"
@@ -3714,6 +3701,11 @@ ro:
         lock_trust_level: "Blochează nivelul de încredere"
         unlock_trust_level: "Deblochează nivelul de încredere"
         suspended_count: "Suspendați"
+        other_matches_list:
+          username: "Nume utilizator"
+          trust_level: "Nivel de încredere"
+          read_time: "Timp de citire"
+          posts: "Postări"
         tl3_requirements:
           title: "Cerințe pentru nivelul 3 de încredere"
           table_title:
@@ -3833,6 +3825,7 @@ ro:
           search: "Căutare"
           groups: "Grupuri"
           dashboard: "Panou de control"
+          navigation: "Navigare"
         default_categories:
           modal_yes: "Da"
       badges:

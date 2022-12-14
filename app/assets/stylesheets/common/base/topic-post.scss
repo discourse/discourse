@@ -1059,6 +1059,7 @@ kbd {
   box-sizing: border-box;
   color: var(--primary);
   display: inline-flex;
+  gap: 0 0.5em; // space between text and images/emoji
   font-size: var(--font-down-1);
   justify-content: center;
   line-height: var(--line-height-large);

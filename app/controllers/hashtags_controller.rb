@@ -12,7 +12,6 @@ class HashtagsController < ApplicationController
   end
 
   def search
-    params.require(:term)
     params.require(:order)
 
     results = HashtagAutocompleteService.new(guardian).search(params[:term], params[:order])

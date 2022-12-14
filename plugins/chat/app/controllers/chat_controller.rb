@@ -110,7 +110,6 @@ class Chat::ChatController < Chat::ChatBaseController
 
     return render_json_error(chat_message_creator.error) if chat_message_creator.failed?
 
-    @chat_channel.touch(:last_message_sent_at)
     @user_chat_channel_membership.update(last_read_message_id: chat_message_creator.chat_message.id)
 
     if @chat_channel.direct_message_channel?
@@ -347,7 +346,7 @@ class Chat::ChatController < Chat::ChatBaseController
         .where(id: params[:user_ids])
     users.each do |user|
       guardian = Guardian.new(user)
-      if guardian.can_chat?(user) && guardian.can_see_chat_channel?(@chat_channel)
+      if guardian.can_chat? && guardian.can_see_chat_channel?(@chat_channel)
         data = {
           message: "chat.invitation_notification",
           chat_channel_id: @chat_channel.id,
@@ -369,7 +368,7 @@ class Chat::ChatController < Chat::ChatBaseController
 
   def dismiss_retention_reminder
     params.require(:chatable_type)
-    guardian.ensure_can_chat!(current_user)
+    guardian.ensure_can_chat!
     unless ChatChannel.chatable_types.include?(params[:chatable_type])
       raise Discourse::InvalidParameters
     end

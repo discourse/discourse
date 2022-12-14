@@ -173,12 +173,13 @@ export function applyDefaultHandlers(pretender) {
     return response({ email: "eviltrout@example.com" });
   });
 
-  pretender.get("/u/is_local_username", () =>
+  pretender.get("/composer/mentions", () =>
     response({
-      valid: [],
-      valid_groups: [],
-      mentionable_groups: [],
-      cannot_see: [],
+      users: [],
+      user_reasons: {},
+      groups: {},
+      group_reasons: {},
+      max_users_notified_per_group_mention: 100,
     })
   );
 

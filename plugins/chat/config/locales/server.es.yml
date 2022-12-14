@@ -165,14 +165,6 @@ es:
         one: "Tienes un nuevo mensaje de chat"
         other: "Tienes nuevos mensajes de chat"
       from: "%{site_name}"
-      subject:
-        direct_message:
-          one: "[%{email_prefix}] Nuevo mensaje de %{message_title}"
-          other: "[%{email_prefix}] Nuevos mensajes de %{message_title} y %{others}"
-        chat_channel:
-          one: "[%{email_prefix}] Nuevo mensaje en %{message_title}"
-          other: "[%{email_prefix}] Nuevos mensajes en %{message_title} y %{others}"
-        others: "%{count} otros"
       unsubscribe: "Este resumen del chat se envía desde %{site_link} cuando estás fuera. Cambia tu %{email_preferences_link}, o %{unsubscribe_link} para darte de baja."
       unsubscribe_no_link: "Este resumen del chat se envía desde %{site_link} cuando estás fuera. Cambia tu %{email_preferences_link}."
       view_messages:

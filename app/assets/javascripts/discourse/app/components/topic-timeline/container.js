@@ -27,7 +27,6 @@ export default class TopicTimelineScrollArea extends Component {
   @tracked total;
   @tracked date;
   @tracked lastReadPercentage = null;
-  @tracked displayTimeLineScrollArea = true;
   @tracked before;
   @tracked after;
   @tracked timelineScrollareaStyle;
@@ -38,15 +37,6 @@ export default class TopicTimelineScrollArea extends Component {
     super(...arguments);
 
     if (!this.args.mobileView) {
-      const streamLength = this.args.model.postStream?.stream?.length;
-
-      if (streamLength === 1) {
-        const postsWrapper = document.querySelector(".posts-wrapper");
-        if (postsWrapper && postsWrapper.offsetHeight < 1000) {
-          this.displayTimeLineScrollArea = false;
-        }
-      }
-
       // listen for scrolling event to update timeline
       this.appEvents.on("topic:current-post-scrolled", this.postScrolled);
       // listen for composer sizing changes to update timeline
@@ -56,6 +46,26 @@ export default class TopicTimelineScrollArea extends Component {
     }
 
     this.calculatePosition();
+  }
+
+  get displayTimeLineScrollArea() {
+    if (this.args.mobileView) {
+      return true;
+    }
+
+    const streamLength = this.args.model.postStream?.stream?.length;
+    if (streamLength === 1) {
+      const postsWrapper = document.querySelector(".posts-wrapper");
+      if (postsWrapper && postsWrapper.offsetHeight < 1000) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  get canCreatePost() {
+    return this.args.model.details?.can_create_post;
   }
 
   get topicTitle() {

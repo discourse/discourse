@@ -373,7 +373,6 @@ ar:
     conduct: "قواعد السلوك"
     mobile_view: "العرض على الجوَّال"
     desktop_view: "العرض على كمبيوتر سطح المكتب"
-    or: "أو"
     now: "الآن"
     read_more: "قراءة المزيد"
     more: "المزيد"
@@ -1448,8 +1447,6 @@ ar:
         warnings: "تحذيرات رسمية"
         read_more_in_group: "هل ترغب في قراءة المزيد؟ تصفح الرسائل الأخرى في %{groupLink}."
         read_more: "هل ترغب في قراءة المزيد؟ تصفح الرسائل الأخرى في <a href='%{basePath}/u/%{username}/messages'>الرسائل الشخصية</a>."
-        read_more_group_pm_MF: "هناك { UNREAD, plural, zero {} =0 {} one { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># غير مقروء</a> } two { هي <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># غير مقروءة</a> } few { هي <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># غير مقروءة</a> } many { هي <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># غير مقروءة</a> } other { هي <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># غير مقروءة</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{و } false {يكون } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'>#</a> رسالة جديدة} two {} few {} many {} other { {BOTH, select, true{و } false {نكون } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'>#</a> رسالة جديدة} } المتبقية ، أو تصفح الرسائل الأخرى في {groupLink}"
-        read_more_personal_pm_MF: "هناك { UNREAD, plural, zero {} =0 {} one { هو <a href='{basePath}/u/{username}/messages/unread'></a> غير مقروء } two { هي <a href='{basePath}/u/{username}/messages/unread'></a> غير مقروءة } few { هي <a href='{basePath}/u/{username}/messages/unread'></a> غير مقروءة } many { هي <a href='{basePath}/u/{username}/messages/unread'></a> غير مقروءة } other { هي <a href='{basePath}/u/{username}/messages/unread'></a> غير مقروءة } } { NEW, plural, =0 {} one { {BOTH, select, true{و } false {يكون } other{}} <a href='{basePath}/u/{username}/messages/new'>#</a> رسالة جديدة} two {} few {} many {} other { {BOTH, select, true{و } false {نكون } other{}} <a href='{basePath}/u/{username}/messages/new'>#</a> رسالة جديدة} } المتبقية ، أو تصفح <a href='{basePath}/u/{username}/messages'>رسائلك شخصية</a>"
       preferences_nav:
         account: "الحساب"
         security: "الأمان"
@@ -1521,7 +1518,6 @@ ar:
         use: "استخدام تطبيق المصادقة"
         enforced_notice: "يلزم تفعيل المصادقة الثنائية قبل الوصول إلى هذا الموقع."
         disable: "إيقاف"
-        disable_confirm: "هل تريد بالتأكيد إيقاف جميع وسائل المصادقة الثنائية؟"
         save: "حفظ"
         edit: "تعديل"
         edit_title: "تعديل تطبيق المصادقة"
@@ -1609,7 +1605,6 @@ ar:
         authenticated: "تمت مصادقة عنوان بريدك الإلكتروني بواسطة %{provider}"
         invite_auth_email_invalid: "لا يتطابق البريد الإلكتروني للدعوة مع البريد الإلكتروني المُصادَق عليه بواسطة %{provider}"
         authenticated_by_invite: "تمت المصادقة على بريدك الإلكتروني من خلال الدعوة"
-        frequency_immediately: "سنُرسل إليك رسالة إلكترونية فورًا إذا كنت لم تقرأ الشيء الذي نُرسل إليك بشأنه."
         frequency:
           zero: "لن نراسلك عبر البريد الإلكتروني إلا في حال مُضي %{count} دقيقة على آخر زيارة لك للموقع."
           one: "لن نراسلك عبر البريد الإلكتروني إلا في حال مُضي دقيقة واحدة (%{count}) على آخر زيارة لك للموقع."
@@ -2006,19 +2001,16 @@ ar:
       logout_disabled: "يتم إيقاف تسجيل الخروج عندما يكون الموقع في وضع القراءة فقط."
     staff_writes_only_mode:
       enabled: "هذا الموقع في وضع القراءة فقط. يُرجى المتابعة للتصفح، لكن سيقتصر التصفح والرد وتسجيل الإعجاب والإجراءات الأخرى على الأعضاء في طاقم العمل فقط."
-    too_few_topics_and_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">لنبدأ المناقشة!</a> هناك {currentTopics, plural, zero {<strong>#</strong> موضوع} one {موضوع واحد (<strong>#</strong>)} two {موضوعان (<strong>#</strong>)} few {<strong>#</strong> موضوعات} many {<strong>#</strong> موضوعًا} other {<strong>#</strong> موضوع}} و{currentPosts, plural, zero {<strong>#</strong> منشور} one {منشور واحد (<strong>#</strong>)} two {منشوران (<strong>#</strong>)} few {<strong>#</strong> منشورات} many {<strong>#</strong> منشورًا} other {<strong>#</strong> منشور}}. يحتاج الزوار إلى المزيد ليقرؤوه ويردوا عليه. إننا نقترح {requiredTopics, plural, zero {<strong>#</strong> موضوع} one {موضوع واحد (<strong>#</strong>)} two {موضوعان (<strong>#</strong>)} few {<strong>#</strong> موضوعات} many {<strong>#</strong> موضوعًا} other {<strong>#</strong> موضوع}} و{requiredPosts, plural, zero {<strong>#</strong> منشور} one {منشور واحد (<strong>#</strong>)} two {منشوران (<strong>#</strong>)} few {<strong>#</strong> منشورات} many {<strong>#</strong> منشورًا} other {<strong>#</strong> منشور}} على الأقل. يمكن لفريق العمل فقط رؤية هذه الرسالة.
-    too_few_topics_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">لنبدأ المناقشة!</a> هناك {currentTopics, plural, zero {<strong>#</strong> موضوع} one {موضوع واحد (<strong>#</strong>)} two {موضوعان (<strong>#</strong>)} few {<strong>#</strong> موضوعات} many {<strong>#</strong> موضوعًا} other {<strong>#</strong> موضوع}}. يحتاج الزوار إلى المزيد ليقرؤوه ويردوا عليه. إننا نقترح {requiredTopics, plural, zero {<strong>#</strong> موضوع} one {موضوع واحد (<strong>#</strong>)} two {موضوعان (<strong>#</strong>)} few {<strong>#</strong> موضوعات} many {<strong>#</strong> موضوعًا} other {<strong>#</strong> موضوع}} على الأقل. يمكن لفريق العمل فقط رؤية هذه الرسالة.
-    too_few_posts_notice_MF: >-
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">لنبدأ المناقشة!</a> هناك {currentPosts, plural, zero {<strong>#</strong> منشور} one {منشور واحد (<strong>#</strong>)} two {منشوران (<strong>#</strong>)} few {<strong>#</strong> منشورات} many {<strong>#</strong> منشورًا} other {<strong>#</strong> منشور}}. يحتاج الزوار إلى المزيد ليقرؤوه ويردوا عليه. إننا نقترح {requiredPosts, plural, zero {<strong>#</strong> منشور} one {منشور واحد (<strong>#</strong>)} two {منشوران (<strong>#</strong>)} few {<strong>#</strong> منشورات} many {<strong>#</strong> منشورًا} other {<strong>#</strong> منشور}} على الأقل. يمكن لفريق العمل فقط رؤية هذه الرسالة.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – لقد بلغ معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}."
-      reached_minute_MF: "<b>{relativeAge}</b> – لقد بلغ معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – لقد تجاوز معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – لقد تجاوز معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – لقد بلغ معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – لقد بلغ معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – لقد تجاوز معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – لقد تجاوز معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}.
     learn_more: "معرفة المزيد..."
-    first_post: أول منشور
     mute: كتم
     unmute: إلغاء الكتم
     last_post: آخر منشور
@@ -2051,7 +2043,8 @@ ar:
         few: "هناك <b>%{count}</b> من الردود."
         many: "هناك <b>%{count}</b> من الردود."
         other: "هناك <b>%{count}</b> من الردود."
-      description_time_MF: "هناك {replyCount, plural, zero {<strong>#</strong> رد} one {رد واحد (<strong>#</strong>)} two {ردَّان (<strong>#</strong>)} few {<strong>#</strong> ردود} many {<strong>#</strong> ردًا} other {<strong>#</strong> رد}} والوقت المقدَّر للقراءة هو <b>{readingTime, plural, zero {<strong>#</strong> دقيقة} one {دقيقة واحدة (<strong>#</strong>)} two {دقيقتان (<strong>#</strong>)} few {<strong>#</strong> دقائق} many {<strong>#</strong> دقيقة} other {<strong>#</strong> دقيقة}}</b>"
+      description_time_MF: |
+        هناك {replyCount, plural, zero {<strong>#</strong> رد} one {رد واحد (<strong>#</strong>)} two {ردَّان (<strong>#</strong>)} few {<strong>#</strong> ردود} many {<strong>#</strong> ردًا} other {<strong>#</strong> رد}} والوقت المقدَّر للقراءة هو <b>{readingTime, plural, zero {<strong>#</strong> دقيقة} one {دقيقة واحدة (<strong>#</strong>)} two {دقيقتان (<strong>#</strong>)} few {<strong>#</strong> دقائق} many {<strong>#</strong> دقيقة} other {<strong>#</strong> دقيقة}}</b>
       enable: "تلخيص هذا الموضوع"
       disable: "عرض كل المنشورات"
       short_label: "تلخيص"
@@ -3036,14 +3029,7 @@ ar:
       show_links: "إظهار الروابط في هذا الموضوع"
       collapse_details: "طي تفاصيل الموضوع"
       expand_details: "توسيع تفاصيل الموضوع"
-      read_more_in_category: "هل تريد قراءة المزيد؟ تصفَّح الموضوعات الأخرى في %{catLink} أو %{latestLink}."
-      read_more: "هل تريد قراءة المزيد؟ %{catLink} أو %{latestLink}."
       unread_indicator: "لم يقرأ أي عضو آخر منشور في هذا الموضوع بعد."
-      read_more_MF: "متبقٍ {UNREAD, plural, zero {<a href='{basePath}/unread'># موضوع غير مقروء</a>} one {<a href='{basePath}/unread'>موضوع واحد غير مقروء (#)</a>} two {<a href='{basePath}/unread'>موضوعان غير مقروءَين (#)</a>} few {<a href='{basePath}/unread'># موضوعات غير مقروءة</a>} many {<a href='{basePath}/unread'># موضوعًا غير مقروء</a>} other {<a href='{basePath}/unread'># موضوع غير مقروء</a>}} و{NEW, plural, zero {<a href='{basePath}/new'># موضوع جديد</a>} one {<a href='{basePath}/new'>موضوع واحد جديد (#)</a>} two {<a href='{basePath}/new'>موضوعان جديدان (#)</a>} few {<a href='{basePath}/new'># موضوعات جديدة</a>} many {<a href='{basePath}/new'># موضوعًا جديدًا</a>} other {<a href='{basePath}/new'># موضوع جديد</a>}}، أو {CATEGORY, select, true {يمكنك تصفُّح الموضوعات الأخرى في {catLink}} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
-      browse_all_categories: تصفُّح كل الفئات
-      browse_all_tags: تصفُّح كل الوسوم
-      view_latest_topics: عرض أحدث الموضوعات
       suggest_create_topic: هل أنت مستعد <a href>لبدء محادثة جديدة؟</a>
       jump_reply_up: الانتقال إلى الرد السابق
       jump_reply_down: الانتقال إلى الرد التالي
@@ -3934,7 +3920,8 @@ ar:
       official_warning: "تحذير رسمي"
       delete_spammer: "حذف صاحب الأسلوب غير المرغوب فيه"
       flag_for_review: "قائمة انتظار المراجعة"
-      delete_confirm_MF: "أنت على وشك حذف {POSTS, plural, zero {<b>#</b> منشور} one {منشور واحد (<b>#</b>)} two {منشوران (<b>#</b>)} few {<b>#</b> منشورات} many {<b>#</b> منشورًا} other {<b>#</b> منشور}} و{TOPICS, plural, zero {<b>#</b> موضوع} one {موضوع واحد (<b>#</b>)} two {موضوعان (<b>#</b>)} few {<b>#</b> موضوعات} many {<b>#</b> موضوعًا} other {<b>#</b> موضوع}} من هذا المستخدم، وإزالة حسابه، وحظر عمليات الاشتراك من عنوان IP الخاص به <b>{ip_address}</b>، وإضافة عنوان بريده الإلكتروني <b>{email}</b> إلى قائمة الحظر الدائمة. هل أنت متأكد من أن هذا المستخدم هو بالفعل صاحب الأسلوب غير المرغوب فيه؟"
+      delete_confirm_MF: |
+        أنت على وشك حذف {POSTS, plural, zero {<b>#</b> منشور} one {منشور واحد (<b>#</b>)} two {منشوران (<b>#</b>)} few {<b>#</b> منشورات} many {<b>#</b> منشورًا} other {<b>#</b> منشور}} و{TOPICS, plural, zero {<b>#</b> موضوع} one {موضوع واحد (<b>#</b>)} two {موضوعان (<b>#</b>)} few {<b>#</b> موضوعات} many {<b>#</b> موضوعًا} other {<b>#</b> موضوع}} من هذا المستخدم، وإزالة حسابه، وحظر عمليات الاشتراك من عنوان IP الخاص به <b>{ip_address}</b>، وإضافة عنوان بريده الإلكتروني <b>{email}</b> إلى قائمة الحظر الدائمة. هل أنت متأكد من أن هذا المستخدم هو بالفعل صاحب الأسلوب غير المرغوب فيه؟
       yes_delete_spammer: "نعم، حذف صاحب الأسلوب غير المرغوب فيه"
       ip_address_missing: "(لا يوجد)"
       hidden_email_address: "(مخفي)"
@@ -4173,7 +4160,6 @@ ar:
         this_month: "الشهر"
         this_week: "الأسبوع"
         today: "اليوم"
-        other_periods: "رؤية الأكثر نشاطًا:"
     browser_update: 'عذرًا، <a href="https://www.discourse.org/faq/#browser">متصفحك غير مدعوم</a>. يُرجى <a href="https://browsehappy.com">التبديل إلى متصفح مدعوم</a> لعرض المحتوى الغني، وتسجيل الدخول والرد.'
     safari_13_warning: سيزيل هذا الموقع الدعم لإصدارات 13 من iOS وSafari، والإصدارات الأقدم. ستظل هناك نسخة مبسَّطة متاحة للقراءة فقط. (<a href="https://meta.discourse.org/t/224747">المزيد من المعلومات</a>)
     permission_types:
@@ -4814,14 +4800,6 @@ ar:
         about: "يمكنك تعديل عضوية المجموعة والأسماء من هنا"
         group_members: "أعضاء المجموعة"
         delete: "حذف"
-        delete_confirm: "هل تريد حذف هذه المجموعة؟"
-        delete_with_messages_confirm:
-          zero: "سيؤدي حذف هذه المجموعة إلى عزل %{count} رسالة، ولن يتمكن أعضاء المجموعة من الوصول إليها مرة أخرى.<br><br>هل أنت متأكد؟"
-          one: "سيؤدي حذف هذه المجموعة إلى عزل رسالة واحدة (%{count})، ولن يتمكن أعضاء المجموعة من الوصول إليها مرة أخرى.<br><br>هل أنت متأكد؟"
-          two: "سيؤدي حذف هذه المجموعة إلى عزل رسالتَين (%{count})، ولن يتمكن أعضاء المجموعة من الوصول إليهما مرة أخرى.<br><br>هل أنت متأكد؟"
-          few: "سيؤدي حذف هذه المجموعة إلى عزل %{count} رسائل، ولن يتمكن أعضاء المجموعة من الوصول إليها مرة أخرى.<br><br>هل أنت متأكد؟"
-          many: "سيؤدي حذف هذه المجموعة إلى عزل %{count} رسالة، ولن يتمكن أعضاء المجموعة من الوصول إليها مرة أخرى.<br><br>هل أنت متأكد؟"
-          other: "سيؤدي حذف هذه المجموعة إلى عزل %{count} رسالة، ولن يتمكن أعضاء المجموعة من الوصول إليها مرة أخرى.<br><br>هل أنت متأكد؟"
         delete_failed: "يتعذَّر حذف المجموعة. إذا كانت هذه مجموعة تلقائية، فلا يمكن تدميرها."
         delete_automatic_group: هذه مجموعة تلقائية ولا يمكن حذفها.
         delete_owner_confirm: "هل تريد إزالة صلاحيات المالك من \"%{username}\"؟"
@@ -4929,8 +4907,6 @@ ar:
         new: "خطاف ويب جديد"
         create: "إنشاء"
         save: "حفظ"
-        destroy: "حذف"
-        description: "الوصف"
         controls: "عناصر التحكم"
         go_back: "العودة إلي القائمة"
         payload_url: "عنوان URL للحمولة"
@@ -5019,9 +4995,6 @@ ar:
           headers: "الرؤوس"
           payload: "الحمولة"
           body: "النص الأساسي"
-          go_list: "الانتقال إلى القائمة"
-          go_details: "تعديل خطاف الويب"
-          go_events: "الانتقال إلى الأحداث"
           ping: "اختبار الاتصال"
           status: "رمز الحالة"
           event_id: "المعرِّف"
@@ -5774,7 +5747,8 @@ ar:
         clear_penalty_history:
           title: "مسح سجل العقوبات"
           description: "لا يمكن للمستخدمين الذين حصلوا على عقوبات الوصول إلى مستوى الثقة 3"
-        delete_all_posts_confirm_MF: "أنت على وشك حذف {POSTS, plural, zero {# منشور} one {منشور واحد (#)} two {منشوران (#)} few {# منشورات} many {# منشورًا} other {# منشور}} و{TOPICS, plural, zero {# موضوع} one {موضوع واحد (#)} two {موضوعان (#)} few {# موضوعات} many {# موضوعًا} other {# موضوع}}. هل أنت متأكد؟"
+        delete_all_posts_confirm_MF: |
+          أنت على وشك حذف {POSTS, plural, zero {# منشور} one {منشور واحد (#)} two {منشوران (#)} few {# منشورات} many {# منشورًا} other {# منشور}} و{TOPICS, plural, zero {# موضوع} one {موضوع واحد (#)} two {موضوعان (#)} few {# موضوعات} many {# موضوعًا} other {# موضوع}}. هل أنت متأكد؟
         silence: "كتم"
         unsilence: "إلغاء الكتم"
         silenced: "تم كتمه؟"
@@ -6084,7 +6058,6 @@ ar:
           search: "البحث"
           groups: "المجموعات"
           dashboard: "لوحة المعلومات"
-          sidebar: "الشريط الجانبي"
         secret_list:
           invalid_input: "لا يمكن ترك حقول الإدخال فارغة أو أن تتضمَّن شريطًا عموديًا."
         default_categories:

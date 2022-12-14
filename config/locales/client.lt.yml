@@ -272,7 +272,6 @@ lt:
     conduct: "Elgesio kodeksas"
     mobile_view: "Mobili peržiūra"
     desktop_view: "Pilna peržiūra"
-    or: "arba"
     now: "Ką tik"
     read_more: "skaityti daugiau"
     more: "Daugiau"
@@ -1204,7 +1203,7 @@ lt:
         use: "Naudoti autentifikavimo programėlę"
         enforced_notice: "Prieš prisijungdami prie šios svetainės turite įjungti dviejų veiksnių autentifikavimą."
         disable: "Išjungti"
-        disable_confirm: "Ar tikrai norite išjungti visus dviejų veiksnių metodus?"
+        delete: "Ištrinti"
         save: "Saugoti"
         edit: "Redaguoti"
         edit_title: "Redaguoti autentifikavimo priemonę"
@@ -1284,7 +1283,6 @@ lt:
         invalid: "Prašom įrašyti teisingą elektroninį adresą"
         authenticated: "Tavo elektroninis laiškas buvo %{provider} autorizuotas"
         authenticated_by_invite: "Jūsų el. pašto adresas patvirtintas kvietimu"
-        frequency_immediately: "Mes jums atsiųsime elektroninį laišką iš karto, jeigu jūs neperskaitėte žinutės, kurią siuntėme praeitame laiške."
         frequency:
           one: "Mes atsiųsime el. laišką jeigu nebuvai prisijungęs per paskutinę minutę."
           few: "Mes atsiųsime el. laišką jeigu nebuvai prisijungęs per paskutines %{count} minutes."
@@ -1597,7 +1595,6 @@ lt:
       login_disabled: "Prisijungimas yra išjungtas, kai svetainė yra skaitymo režime."
       logout_disabled: "Atsijungimas yra laikinai išjunktas kuomet puslapis yra žiūrimas skaitymo režimu"
     learn_more: "sužinoti daugiau..."
-    first_post: Pirmas įrašas
     mute: Nutildyti
     unmute: Pašalinti nutildymą
     last_post: Paskelbta
@@ -2315,12 +2312,7 @@ lt:
       show_links: "Rodyti šios temos nuorodas"
       collapse_details: "sutraukti temos informaciją"
       expand_details: "išplėsti temos informaciją"
-      read_more_in_category: "Nori skaityti daugiau? Ieškok kitų temų %{catLink} arba %{latestLink}."
-      read_more: "Norite skaityti daugiau? %{catLink} arba %{latestLink}."
       unread_indicator: "Nė vienas narys dar neperskaitė paskutinio šios temos įrašo."
-      browse_all_categories: Žiūrėkite visas kategorijas
-      browse_all_tags: Naršyti visas žymes
-      view_latest_topics: peržiūrėkite paskutines temas
       suggest_create_topic: Pasirengę <a href>pradėti naują pokalbį?</a>
       jump_reply_up: Pereiti į ankstesnį atsakymą
       jump_reply_down: Pereitį į sekantį atsakymą
@@ -3203,7 +3195,6 @@ lt:
         this_month: "Per mėnesį"
         this_week: "Per savaitę"
         today: "Šandien"
-        other_periods: "žiūrėti viršuje:"
     permission_types:
       full: "Kurti / Atsakyti / Peržiūrėti"
       create_post: "Atsakyti / Peržiūrėti"
@@ -3691,7 +3682,6 @@ lt:
         about: "Čia galite redaguoti savo grupių narystę ir pavadinimus"
         group_members: "Grupės nariai"
         delete: "Ištrinti"
-        delete_confirm: "Ištrinti šią grupę?"
         delete_failed: "Negalima ištrinti grupės. Jei tai yra automatinė grupė, jos negalima ištrinti."
         delete_automatic_group: Tai yra automatinė grupė ir jos negalima ištrinti.
         delete_owner_confirm: "Ar nori pašalinti valdytojo privilegijas '%{username}'?"
@@ -3778,9 +3768,8 @@ lt:
       web_hooks:
         detailed_instruction: "POST užklausa bus išsiųsta nurodytu URL, kai įvyks pasirinktas įvykis."
         create: "Sukurti"
+        edit: "Redaguoti"
         save: "Saugoti"
-        destroy: "Pašalinti"
-        description: "Aprašymas"
         controls: "Valdymai"
         go_back: "Atgal į sąrašą"
         payload_url: "Naudingos apkrovos URL"
@@ -3838,8 +3827,6 @@ lt:
           request: "Užklausa"
           response: "Atsakymas"
           body: "Turinys"
-          go_list: "Eiti į sąrašą"
-          go_events: "Eiti į renginius"
           status: "Būsenos kodas"
           event_id: "ID"
           timestamp: "Sukurta"
@@ -4631,6 +4618,11 @@ lt:
         silenced_count: "Nutildytas"
         suspended_count: "Suspenduotas"
         last_six_months: "Paskutiniai 6 mėnesiai"
+        other_matches_list:
+          username: "Vartotojo vardas"
+          trust_level: "Patikimumo lygis"
+          read_time: "Skaitymo laikas"
+          posts: "Pranešimai"
         tl3_requirements:
           title: "Reikalavimai 3 pasitikėjimo lygiui"
           value_heading: "Reikšmė"
@@ -4770,6 +4762,7 @@ lt:
           search: "Ieškoti"
           groups: "Grupės"
           dashboard: "Apžvalga"
+          navigation: "Navigacija"
         default_categories:
           modal_description: "Ar norėtumėte šį pakeitimą pritaikyti istoriškai? Tai pakeis %{count} esamų vartotojų nuostatas."
           modal_yes: "Taip"

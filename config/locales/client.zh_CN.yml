@@ -223,7 +223,6 @@ zh_CN:
     conduct: "行为准则"
     mobile_view: "移动版视图"
     desktop_view: "桌面版视图"
-    or: "或者"
     now: "刚刚"
     read_more: "阅读更多"
     more: "更多"
@@ -1153,8 +1152,6 @@ zh_CN:
         warnings: "官方警告"
         read_more_in_group: "想阅读更多？浏览 %{groupLink} 中的其他消息。"
         read_more: "想阅读更多？在<a href='%{basePath}/u/%{username}/messages'>个人消息</a>中浏览其他消息。"
-        read_more_group_pm_MF: "还有 { UNREAD, plural, =0 {} other {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># 条未读消息</a>} }{NEW, plural, =0 {} other{ {BOTH, select, true{和} false {are } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># 条新消息</a>} }，或者在{groupLink}中浏览其他消息"
-        read_more_personal_pm_MF: "还有{ UNREAD, plural, =0 {} other { <a href='{basePath}/u/{username}/messages/unread'># 条未读消息</a>} }{ NEW, plural, =0 {} other { {BOTH, select, true{和} false {are } other{}} <a href='{basePath}/u/{username}/messages/new'># 条新个人消息</a>} }，或者浏览其他<a href='{basePath}/u/{username}/messages'>个人消息</a>"
       preferences_nav:
         account: "帐户"
         security: "安全性"
@@ -1217,7 +1214,6 @@ zh_CN:
         use: "使用身份验证器应用"
         enforced_notice: "在访问此站点之前，您需要启用双重身份验证。"
         disable: "禁用"
-        disable_confirm: "确定要禁用所有的双重方法吗？"
         save: "保存"
         edit: "编辑"
         edit_title: "编辑身份验证器"
@@ -1305,7 +1301,6 @@ zh_CN:
         authenticated: "您的电子邮件已被 %{provider} 验证"
         invite_auth_email_invalid: "您的邀请电子邮件与 %{provider} 验证的电子邮件不匹配"
         authenticated_by_invite: "您的电子邮件已被此邀请验证"
-        frequency_immediately: "如果您还没有阅读我们通过电子邮件发送给您的内容，我们会立即给您发送电子邮件。"
         frequency:
           other: "只有在过去 %{count} 分钟内没有见到您，我们才会向您发送电子邮件。"
       associated_accounts:
@@ -1653,19 +1648,16 @@ zh_CN:
       logout_disabled: "当站点处于只读模式时，退出被禁用。"
     staff_writes_only_mode:
       enabled: "此站点处于管理人员专用模式。请继续浏览，但回复、赞和其他操作仅限于管理人员。"
-    too_few_topics_and_posts_notice_MF: >-
-      让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">开始讨论</a>吧！现在有 {currentTopics, plural, one {<strong>#</strong> 个话题} other {<strong>#</strong> 个话题}}和 {currentPosts, plural, one {<strong>#</strong> 个帖子} other {<strong>#</strong> 个帖子}}。访客需要阅读和回复更多 - 我们建议至少 {requiredTopics, plural, one {<strong>#</strong> 个话题} other {<strong>#</strong> 个话题}}和 {requiredPosts, plural, one {<strong>#</strong> 个帖子} other {<strong>#</strong> 个帖子}}。只有管理人员可以看到此消息。
-    too_few_topics_notice_MF: >-
-      让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">开始讨论</a>吧！现在有 {currentTopics, plural, one {<strong>#</strong> 个话题} other {<strong>#</strong> 个话题}}。访客需要阅读和回复更多 - 我们建议至少 {requiredTopics, plural, one {<strong>#</strong> 个话题} other {<strong>#</strong> 个话题}}。只有管理人员可以看到此消息。
-    too_few_posts_notice_MF: >-
-      让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">开始讨论</a>吧！现在有 {currentPosts, plural, one {<strong>#</strong> 个帖子} other {<strong>#</strong> 个帖子}}。访客需要阅读和回复更多 - 我们建议至少 {requiredPosts, plural, one {<strong>#</strong> 个帖子} other {<strong>#</strong> 个帖子}}。只有管理人员可以看到此消息。
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# 个错误/小时} other {# 个错误/小时}}</a>达到了站点设置中 {limit, plural, one {# 个错误/小时} other {# 个错误/小时}}的限制。"
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# 个错误/分钟} other {# 个错误/分钟}}</a>达到了站点设置中 {limit, plural, one {# 个错误/分钟} other {# 个错误/分钟}}的限制。"
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# 个错误/小时} other {# 个错误/小时}}</a>超过了站点设置中 {limit, plural, one {# 个错误/小时} other {# 个错误/小时}}的限制。"
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# 个错误/分钟} other {# 个错误/分钟}}</a>超过了站点设置中 {limit, plural, one {# 个错误/分钟} other {# 个错误/分钟}}的限制。"
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# 个错误/小时} other {# 个错误/小时}}</a>达到了站点设置中 {limit, plural, one {# 个错误/小时} other {# 个错误/小时}}的限制。
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# 个错误/分钟} other {# 个错误/分钟}}</a>达到了站点设置中 {limit, plural, one {# 个错误/分钟} other {# 个错误/分钟}}的限制。
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# 个错误/小时} other {# 个错误/小时}}</a>超过了站点设置中 {limit, plural, one {# 个错误/小时} other {# 个错误/小时}}的限制。
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# 个错误/分钟} other {# 个错误/分钟}}</a>超过了站点设置中 {limit, plural, one {# 个错误/分钟} other {# 个错误/分钟}}的限制。
     learn_more: "了解更多…"
-    first_post: 第一个帖子
     mute: 免打扰
     unmute: 取消免打扰
     last_post: 发布时间
@@ -1688,7 +1680,8 @@ zh_CN:
       enabled_description: "您正在查看此话题的摘要：社区确定的最有趣的帖子。"
       description:
         other: "有 <b>%{count}</b> 个回复。"
-      description_time_MF: "有 {replyCount, plural, one {<b>#</b> 个回复} other {<b>#</b> 个回复}}，预计阅读时间为 <b>{readingTime, plural,one {# 分钟}other {# 分钟}}</b>。"
+      description_time_MF: |
+        有 {replyCount, plural, one {<b>#</b> 个回复} other {<b>#</b> 个回复}}，预计阅读时间为 <b>{readingTime, plural,one {# 分钟}other {# 分钟}}</b>。
       enable: "总结此话题"
       disable: "显示所有帖子"
       short_label: "摘要"
@@ -2455,14 +2448,7 @@ zh_CN:
       show_links: "显示此话题中的链接"
       collapse_details: "收起话题详细信息"
       expand_details: "展开话题详细信息"
-      read_more_in_category: "想阅读更多？浏览%{catLink}或%{latestLink}中的其他话题。"
-      read_more: "想阅读更多？%{catLink}或%{latestLink}。"
       unread_indicator: "还没有成员读过此话题的最新帖子。"
-      read_more_MF: "还有{ UNREAD, plural, =0 {} other { <a href='{basePath}/unread'># 个未读</a>} }{ NEW, plural, =0 {} other {{BOTH, select, true{和} false {} other{}} <a href='{basePath}/new'># 个新</a>话题} }，或者{CATEGORY, select, true {浏览{catLink}中的其他话题} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}：{CREATED_AT}\n{LAST_POST}：{BUMPED_AT}"
-      browse_all_categories: 浏览所有类别
-      browse_all_tags: 浏览所有标签
-      view_latest_topics: 查看最新话题
       suggest_create_topic: 准备好<a href>开始新对话</a>了吗？
       jump_reply_up: 跳转到较早的回复
       jump_reply_down: 跳转到较晚的回复
@@ -3183,7 +3169,8 @@ zh_CN:
       official_warning: "官方警告"
       delete_spammer: "删除垃圾信息发布者"
       flag_for_review: "加入审核队列"
-      delete_confirm_MF: "您将删除此用户的 {POSTS, plural, other {<b>#</b> 个帖子}}和 {TOPICS, plural, other {<b>#</b> 个话题}}，移除他们的帐户，禁止其 IP 地址 <b>{ip_address}</b> 再次注册，同时将其电子邮件地址 <b>{email}</b> 加入永久屏蔽名单。确定此用户是垃圾信息发布者吗？"
+      delete_confirm_MF: |
+        您将删除此用户的 {POSTS, plural, other {<b>#</b> 个帖子}}和 {TOPICS, plural, other {<b>#</b> 个话题}}，移除他们的帐户，禁止其 IP 地址 <b>{ip_address}</b> 再次注册，同时将其电子邮件地址 <b>{email}</b> 加入永久屏蔽名单。确定此用户是垃圾信息发布者吗？
       yes_delete_spammer: "是，删除垃圾信息发布者"
       ip_address_missing: "（不适用）"
       hidden_email_address: "（已隐藏）"
@@ -3347,7 +3334,6 @@ zh_CN:
         this_month: "月"
         this_week: "周"
         today: "今天"
-        other_periods: "查看热门："
     browser_update: '很抱歉，<a href="https://www.discourse.org/faq/#browser">您的浏览器不受支持</a>。请<a href="https://browsehappy.com">切换到支持的浏览器</a>查看富内容、登录和回复。'
     safari_13_warning: 此站点将很快移除对 iOS 和 Safari 13 及以下版本的支持。简化的只读版本将保持可用。（<a href="https://meta.discourse.org/t/224747">更多信息</a>）
     permission_types:
@@ -3898,9 +3884,6 @@ zh_CN:
         about: "在此处编辑您的群组成员资格和名称"
         group_members: "群组成员"
         delete: "删除"
-        delete_confirm: "删除此群组？"
-        delete_with_messages_confirm:
-          other: "删除此群组将导致 %{count} 条消息被孤立，群组成员将无法再访问它们。<br><br>确定吗？"
         delete_failed: "无法删除群组。如果此群组是自动生成的，则无法删除。"
         delete_automatic_group: 这是一个自动生成的群组，无法删除。
         delete_owner_confirm: "移除 '%{username}' 的所有者权限？"
@@ -4008,8 +3991,6 @@ zh_CN:
         new: "新网络钩子"
         create: "创建"
         save: "保存"
-        destroy: "删除"
-        description: "描述"
         controls: "控件"
         go_back: "返回列表"
         payload_url: "有效负载 URL"
@@ -4088,9 +4069,6 @@ zh_CN:
           headers: "标题"
           payload: "有效负载"
           body: "正文"
-          go_list: "转到列表"
-          go_details: "编辑网络钩子"
-          go_events: "转到事件"
           ping: "Ping"
           status: "状态代码"
           event_id: "ID"
@@ -4833,7 +4811,8 @@ zh_CN:
         clear_penalty_history:
           title: "清除处罚历史记录"
           description: "有处罚的用户无法达到信任级别 3"
-        delete_all_posts_confirm_MF: "您将删除 {POSTS, plural, other {# 个帖子}}和 {TOPICS, plural, other {# 个话题}}。确定吗？"
+        delete_all_posts_confirm_MF: |
+          您将删除 {POSTS, plural, other {# 个帖子}}和 {TOPICS, plural, other {# 个话题}}。确定吗？
         silence: "禁言"
         unsilence: "取消禁言"
         silenced: "已禁言？"
@@ -5123,7 +5102,6 @@ zh_CN:
           search: "搜索"
           groups: "群组"
           dashboard: "信息中心"
-          sidebar: "边栏"
         secret_list:
           invalid_input: "输入字段不能为空或包含竖线字符。"
         default_categories:

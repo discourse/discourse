@@ -205,7 +205,6 @@ et:
     conduct: "Käitumise juhised"
     mobile_view: "Mobiilne vaade"
     desktop_view: "Täisvaade"
-    or: "või"
     now: "just nüüd"
     read_more: "loe edasi"
     more: "Veel"
@@ -908,6 +907,7 @@ et:
         rate_limit: "Palun oota enne kui proovid mõnda teist autentimise koodi."
         show_key_description: "Sisesta käsitsi"
         disable: "Keela"
+        delete: "Kustuta"
         save: "Salvesta"
         edit: "Muuda"
         security_key:
@@ -959,7 +959,6 @@ et:
         ok: "Saadame sulle kinnituseks meili"
         invalid: "Sisesta palun korrektne meiliaadress"
         authenticated: "Sinu meil on autenditud %{provider} poolt"
-        frequency_immediately: "Saadame sulle kohe meili, kui sa ei ole seda lugenud, mille kohta meili saatsime."
         frequency:
           one: "Saadame meili vaid siis, kui pole sind viimase minuti jooksul näinud."
           other: "Saadame meili vaid siis, kui pole Sind viimase %{count} minuti jooksul näinud."
@@ -1201,7 +1200,6 @@ et:
       login_disabled: "Sisselogimine on blokeeritud seni, kuni sait on kirjutuskaitstud režiimis."
       logout_disabled: "Väljalogimine on blokeeritud kuni sait on kirjutuskaitstud režiimis."
     learn_more: "uuri veel..."
-    first_post: Esimene postitus
     mute: Vaigista
     unmute: Tühista vaigistus
     last_post: Postitatud
@@ -1661,13 +1659,7 @@ et:
       back_to_list: "Tagasi Teemade Loendisse"
       options: "Teema Suvandid"
       show_links: "näita viiteid selles teemas"
-      read_more_in_category: "Soovid veel lugeda? Vaata teisi teemasid %{catLink} või %{latestLink}."
-      read_more: "Soovid veel lugeda? %{catLink} või %{latestLink}."
       unread_indicator: "Ükski liige pole veel selle teema viimast postitust lugenud."
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
-      browse_all_categories: Vaata kõiki foorumeid
-      browse_all_tags: Sirvi kõiki silte
-      view_latest_topics: vaata värskeid teemasid
       jump_reply_up: hüppa varasema vastuse juurde
       jump_reply_down: hüppa hilisema vastuse juurde
       deleted: "See teema on kustutatud"
@@ -2681,7 +2673,6 @@ et:
         about: "Siin saad muuta oma grupi liikmelisust ja nimesid"
         group_members: "Grupi liikmed"
         delete: "Kustuta"
-        delete_confirm: "Kustutame selle grupi?"
         delete_failed: "Ei suuda kustutada seda gruppi. Kui see on automaatne grupp, ei saa seda hävitada."
         delete_owner_confirm: "Eemaldan kasutajalt '%{username}' omaniku õigused?"
         add: "Lisa"
@@ -2714,9 +2705,8 @@ et:
         detailed_instruction: "Valitud sündmuse toimumisel saadetakse etteantud URL-le POST päring."
         new: "Uus veebihaak"
         create: "Loo"
+        edit: "Muuda"
         save: "Salvesta"
-        destroy: "Kustuta"
-        description: "Kirjeldus"
         controls: "Juhtpult"
         go_back: "Tagasi nimekirja"
         payload_url: "Kasuliku lasti URL"
@@ -2766,9 +2756,6 @@ et:
           headers: "Päised"
           payload: "Kasulik last"
           body: "Sisu"
-          go_list: "Mine nimekirja"
-          go_details: "Muuda veebihaaki"
-          go_events: "Mine sündmuste juurde"
           ping: "Ping"
           status: "Staatus"
           event_id: "ID"
@@ -3309,6 +3296,11 @@ et:
         unlock_trust_level: "Eemalda usaldustaseme lukustus"
         silenced_count: "Vaigistatud"
         suspended_count: "Peatatud"
+        other_matches_list:
+          username: "Kasutajanimi"
+          trust_level: "Usaldustase"
+          read_time: "Lugemise aeg"
+          posts: "Postitust"
         tl3_requirements:
           title: "Usaldustaseme 3 nõuded"
           table_title:
@@ -3427,6 +3419,7 @@ et:
           search: "Otsi"
           groups: "Grupid"
           dashboard: "Armatuurlaud"
+          navigation: "Navigatsioon"
         default_categories:
           modal_yes: "Jah"
       badges:

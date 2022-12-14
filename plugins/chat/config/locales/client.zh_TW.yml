@@ -76,6 +76,9 @@ zh_TW:
       join: "加入"
       mention_warning:
         dismiss: "忽略"
+        groups:
+          users_limit:
+            other: "%{count} 個使用者"
       placeholder_start_conversation: 從 %{usernames}開始對話
       remove_upload: "移除檔案"
       react: "用表情符號反應"

@@ -68,6 +68,9 @@ ko:
       new_messages: "새 메시지"
       mention_warning:
         dismiss: "무시"
+        groups:
+          users_limit:
+            other: "사용자 %{count}명"
       aria_roles:
         header: "채팅 헤더"
         composer: "채팅 작성기"

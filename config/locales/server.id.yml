@@ -581,7 +581,6 @@ id:
     allow_user_locale: "Perbolehkan pengguna untuk memilih bahasa sendiri"
     allow_duplicate_topic_titles: "Perbolehkan topik dengan judul yang sama."
     send_welcome_message: "Kirim semua pengguna ucapan selamat datang dengan panduan awal singkat."
-    maximum_backups: "Jumlah maksimum backup yang disimpan dalam disk. Backup lama akan dihapus secara otomatis."
     dark_mode_none: "Tidak ada"
     email_editable: "Perbolehkan pengguna untuk mengganti alamat email setelah registrasi."
     emoji_set: "Bagaimana dengan emoji Anda?"

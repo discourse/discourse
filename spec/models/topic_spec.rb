@@ -685,10 +685,39 @@ RSpec.describe Topic do
         expect(topics).to eq([])
       end
 
+      it 'does not return topics from categories with search priority set to ignore' do
+        expect(Topic.similar_to("has evil trout made any topics?", "")).to eq([topic])
+
+        topic.category.update!(search_priority: Searchable::PRIORITIES[:ignore])
+
+        expect(Topic.similar_to("has evil trout made any topics?", "")).to eq([])
+      end
+
+      it 'does not return topics from categories which the user has muted' do
+        expect(Topic.similar_to("has evil trout made any topics?", "", user)).to eq([topic])
+
+        CategoryUser.create!(category: topic.category, user: user, notification_level: CategoryUser.notification_levels[:muted])
+
+        expect(Topic.similar_to("has evil trout made any topics?", "", user)).to eq([])
+      end
+
+      it 'does not return topics from child categories where the user has muted the parent category' do
+        expect(Topic.similar_to("has evil trout made any topics?", "", user)).to eq([topic])
+
+        parent_category = topic.category
+        child_category = Fabricate(:category, parent_category: parent_category)
+        topic.update!(category: child_category)
+        CategoryUser.create!(category: parent_category, user: user, notification_level: CategoryUser.notification_levels[:muted])
+
+        expect(Topic.similar_to("has evil trout made any topics?", "", user)).to eq([])
+      end
+
       context "with secure categories" do
+        fab!(:group) { Fabricate(:group) }
+        fab!(:private_category) { Fabricate(:private_category, group: group) }
+
         before do
-          category.update!(read_restricted: true)
-          topic.update!(category: category)
+          topic.update!(category: private_category)
         end
 
         it "doesn't return topics from private categories" do
@@ -696,7 +725,8 @@ RSpec.describe Topic do
         end
 
         it "should return the cat since the user can see it" do
-          Guardian.any_instance.expects(:secure_category_ids).returns([category.id])
+          group.add(user)
+
           expect(Topic.similar_to("has evil trout made any topics?", "i am wondering has evil trout made any topics?", user)).to include(topic)
         end
       end
@@ -2392,6 +2422,8 @@ RSpec.describe Topic do
   end
 
   describe 'trash!' do
+    fab!(:topic) { Fabricate(:topic) }
+
     context "with category's topic count" do
       fab!(:category) { Fabricate(:category_with_definition) }
 
@@ -2412,16 +2444,35 @@ RSpec.describe Topic do
     end
 
     it "trashes topic embed record" do
-      topic = Fabricate(:topic)
       post = Fabricate(:post, topic: topic, post_number: 1)
       topic_embed = TopicEmbed.create!(topic_id: topic.id, embed_url: "https://blog.codinghorror.com/password-rules-are-bullshit", post_id: post.id)
       topic.trash!
       topic_embed.reload
       expect(topic_embed.deleted_at).not_to eq(nil)
     end
+
+    it 'triggers the topic trashed event' do
+      events = DiscourseEvent.track_events(:topic_trashed) do
+        topic.trash!
+      end
+
+      expect(events.size).to eq(1)
+    end
+
+    it 'does not trigger the topic trashed event when topic is already trashed' do
+      topic.trash!
+
+      events = DiscourseEvent.track_events(:topic_trashed) do
+        topic.trash!
+      end
+
+      expect(events.size).to eq(0)
+    end
   end
 
   describe 'recover!' do
+    fab!(:topic) { Fabricate(:topic) }
+
     context "with category's topic count" do
       fab!(:category) { Fabricate(:category_with_definition) }
 
@@ -2448,6 +2499,27 @@ RSpec.describe Topic do
       topic.recover!
       topic_embed.reload
       expect(topic_embed.deleted_at).to be_nil
+    end
+
+    it 'triggers the topic recovered event' do
+      topic.trash!
+
+      events = DiscourseEvent.track_events(:topic_recovered) do
+        topic.recover!
+      end
+
+      expect(events.size).to eq(1)
+    end
+
+    it 'does not trigger the topic recovered event when topic is already recovered' do
+      topic.trash!
+      topic.recover!
+
+      events = DiscourseEvent.track_events(:topic_recovered) do
+        topic.recover!
+      end
+
+      expect(events.size).to eq(0)
     end
   end
 

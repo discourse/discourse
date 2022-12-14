@@ -238,7 +238,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def second_factor_enabled
-    object.totp_enabled? || object.security_keys_enabled? || object.backup_codes_enabled?
+    object.totp_enabled? || object.security_keys_enabled?
   end
 
   def featured_topic
@@ -258,7 +258,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def include_sidebar_category_ids?
-    SiteSetting.enable_experimental_sidebar_hamburger
+    !SiteSetting.legacy_navigation_menu?
   end
 
   def include_status?

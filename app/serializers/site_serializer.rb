@@ -243,7 +243,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def include_anonymous_default_sidebar_tags?
-    scope.anonymous? && SiteSetting.enable_experimental_sidebar_hamburger && SiteSetting.tagging_enabled && SiteSetting.default_sidebar_tags.present?
+    scope.anonymous? && !SiteSetting.legacy_navigation_menu? && SiteSetting.tagging_enabled && SiteSetting.default_sidebar_tags.present?
   end
 
   private

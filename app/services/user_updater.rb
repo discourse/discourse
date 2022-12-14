@@ -180,8 +180,8 @@ class UserUpdater
       end
     end
 
-    if attributes.key?(:skip_new_user_tips)
-      user.user_option.seen_popups = user.user_option.skip_new_user_tips ? [-1] : nil
+    if attributes.key?(:skip_new_user_tips) && user.user_option.skip_new_user_tips
+      user.user_option.seen_popups = [-1]
     end
 
     # automatically disable digests when mailing_list_mode is enabled

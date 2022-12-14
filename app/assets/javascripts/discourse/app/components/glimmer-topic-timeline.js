@@ -79,10 +79,6 @@ export default class GlimmerTopicTimeline extends Component {
     return this.args.fullscreen && !this.args.addShowClass;
   }
 
-  get canCreatePost() {
-    return this.args.model.details?.can_create_post;
-  }
-
   get createdAt() {
     return new Date(this.args.model.created_at);
   }
