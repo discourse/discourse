@@ -3,7 +3,7 @@
     <div class="placeholder-overlay" style={{this.placeholderStyle}}></div>
   {{/if}}
   <div class="image-upload-controls">
-    <label class="btn btn-default pad-left no-text {{if this.disabled "disabled"}}">
+    <label class="btn btn-default pad-left no-text {{if this.disabled "disabled"}}" title={{this.disabledReason}}>
       {{d-icon "far-image"}}
       <PickFilesButton @fileInputDisabled={{this.disabled}} @fileInputClass="hidden-upload-field" @acceptedFormatsOverride="image/*" />
     </label>
