@@ -12,18 +12,44 @@ import { Promise } from "rsvp";
 export default Controller.extend(ModalFunctionality, {
   dialog: service(),
 
+  loadingUser: false,
   errorMessage: null,
+  penaltyType: null,
+  penalizeUntil: null,
   reason: null,
   message: null,
-  postEdit: null,
-  postAction: null,
-  user: null,
   postId: null,
-  successCallback: null,
-  confirmClose: false,
-  penalizeUntil: null,
-  penalizing: false,
+  postAction: null,
+  postEdit: null,
+  user: null,
   otherUserIds: null,
+  loading: false,
+  confirmClose: false,
+
+  onShow() {
+    this.setProperties({
+      loadingUser: true,
+      errorMessage: null,
+      penaltyType: null,
+      penalizeUntil: null,
+      reason: null,
+      message: null,
+      postId: null,
+      postAction: "delete",
+      postEdit: null,
+      user: null,
+      otherUserIds: [],
+      loading: false,
+      errorMessage: null,
+      reason: null,
+      message: null,
+      confirmClose: false,
+    });
+  },
+
+  finishedSetup() {
+    this.set("penalizeUntil", this.user?.next_penalty);
+  },
 
   beforeClose() {
     // prompt a confirmation if we have unsaved content
@@ -43,30 +69,9 @@ export default Controller.extend(ModalFunctionality, {
         },
         didCancel: () => this.send("reopenModal"),
       });
+
       return false;
     }
-  },
-
-  onShow() {
-    this.setProperties({
-      errorMessage: null,
-      reason: null,
-      message: null,
-      loadingUser: true,
-      postId: null,
-      postEdit: null,
-      postAction: "delete",
-      before: null,
-      successCallback: null,
-      confirmClose: false,
-      penalizeUntil: null,
-      penalizing: false,
-      otherUserIds: [],
-    });
-  },
-
-  finishedSetup() {
-    this.set("penalizeUntil", this.user?.next_penalty);
   },
 
   @discourseComputed("penaltyType")
@@ -121,6 +126,7 @@ export default Controller.extend(ModalFunctionality, {
     }
 
     this.set("penalizing", true);
+    this.set("confirmClose", true);
 
     const promise = this.before ? this.before() : Promise.resolve();
     return promise
@@ -135,10 +141,10 @@ export default Controller.extend(ModalFunctionality, {
         };
 
         if (this.penaltyType === "suspend") {
-          opts.suspend_until = this.suspendUntil;
+          opts.suspend_until = this.penalizeUntil;
           return this.user.suspend(opts);
         } else if (this.penaltyType === "silence") {
-          opts.silenced_till = this.silenceUntil;
+          opts.silenced_till = this.penalizeUntil;
           return this.user.silence(opts);
         }
 
@@ -146,7 +152,6 @@ export default Controller.extend(ModalFunctionality, {
         console.error("Unknown penalty type:", this.penaltyType);
       })
       .then((result) => {
-        this.set("confirmClose", true);
         this.send("closeModal");
         if (this.successCallback) {
           this.successCallback(result);
