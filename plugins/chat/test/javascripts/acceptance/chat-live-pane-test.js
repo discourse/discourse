@@ -37,6 +37,7 @@ acceptance(
     });
     needs.settings({
       chat_enabled: true,
+      navigation_menu: "legacy",
     });
 
     let loadAllMessages = false;
@@ -195,6 +196,7 @@ acceptance(
     });
     needs.settings({
       chat_enabled: true,
+      navigation_menu: "legacy",
     });
 
     needs.pretender((server, helper) => {

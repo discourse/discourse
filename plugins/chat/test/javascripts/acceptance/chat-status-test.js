@@ -61,6 +61,7 @@ acceptance(
     needs.settings({
       chat_enabled: true,
       chat_allow_archiving_channels: true,
+      navigation_menu: "legacy",
     });
 
     needs.pretender((server, helper) => {

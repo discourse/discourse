@@ -594,6 +594,7 @@ RSpec.describe TopicTrackingState do
     end
 
     it "includes tags when SiteSetting.navigation_menu is not legacy" do
+      SiteSetting.navigation_menu = "legacy"
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(1)
       row = report[0]
@@ -608,6 +609,7 @@ RSpec.describe TopicTrackingState do
     end
 
     it "includes tags when TopicTrackingState.include_tags_in_report option is enabled" do
+      SiteSetting.navigation_menu = "legacy"
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(1)
       row = report[0]
