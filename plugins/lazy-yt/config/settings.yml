@@ -2,3 +2,4 @@ plugins:
   lazy_yt_enabled:
     default: true
     client: false
+    hidden: true
