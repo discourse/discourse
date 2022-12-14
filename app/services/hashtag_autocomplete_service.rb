@@ -4,6 +4,9 @@ class HashtagAutocompleteService
   HASHTAGS_PER_REQUEST = 20
   SEARCH_MAX_LIMIT = 50
 
+  SEARCH_CONDITION_CONTAINS = "contains"
+  SEARCH_CONDITION_STARTS_WITH = "starts_with"
+
   attr_reader :guardian
   cattr_reader :data_sources, :contexts
 
@@ -68,6 +71,16 @@ class HashtagAutocompleteService
     # The relative URL for the resource that is represented by the autocomplete
     # item, used for the cooked hashtags, e.g. /c/2/staff
     attr_accessor :relative_url
+
+    def initialize(params = {})
+      @relative_url = params[:relative_url]
+      @text = params[:text]
+      @description = params[:description]
+      @icon = params[:icon]
+      @type = params[:type]
+      @ref = params[:ref]
+      @slug = params[:slug]
+    end
 
     def to_h
       {
@@ -206,24 +219,20 @@ class HashtagAutocompleteService
 
     return limited_results if limited_results.length >= limit
 
+    # Next priority are slugs which start with the search term.
+    types_in_priority_order.each do |type|
+      limited_results = search_using_condition(limited_results, term, type, limit, SEARCH_CONDITION_STARTS_WITH)
+      top_ranked_type = type if top_ranked_type.nil?
+      break if limited_results.length >= limit
+    end
+
+    return limited_results if limited_results.length >= limit
+
     # Search the data source for each type, validate and sort results,
     # and break off from searching more data sources if we reach our limit
     types_in_priority_order.each do |type|
-      search_results = search_for_type(type, guardian, term, limit - limited_results.length)
-      next if search_results.empty?
-
-      next if !all_data_items_valid?(search_results)
-
-      search_results =
-        @@data_sources[type].search_sort(
-          search_results.reject do |item|
-            limited_results.any? { |exact| exact.type == type && exact.slug === item.slug }
-          end,
-          term,
-        )
-
+      limited_results = search_using_condition(limited_results, term, type, limit, SEARCH_CONDITION_CONTAINS)
       top_ranked_type = type if top_ranked_type.nil?
-      limited_results.concat(search_results)
       break if limited_results.length >= limit
     end
 
@@ -297,6 +306,24 @@ class HashtagAutocompleteService
 
   private
 
+  def search_using_condition(limited_results, term, type, limit, condition)
+    search_results =
+      search_for_type(type, guardian, term, limit - limited_results.length, condition)
+    return limited_results if search_results.empty?
+
+    return limited_results if !all_data_items_valid?(search_results)
+
+    search_results =
+      @@data_sources[type].search_sort(
+        search_results.reject do |item|
+          limited_results.any? { |exact| exact.type == type && exact.slug === item.slug }
+        end,
+        term,
+      )
+
+    limited_results.concat(search_results)
+  end
+
   def search_without_term(types_in_priority_order, limit)
     split_limit = (limit.to_f / types_in_priority_order.length.to_f).ceil
     limited_results = []
@@ -330,8 +357,14 @@ class HashtagAutocompleteService
     items.all? { |item| item.kind_of?(HashtagItem) && item.slug.present? && item.text.present? }
   end
 
-  def search_for_type(type, guardian, term, limit)
-    set_types(set_refs(@@data_sources[type].search(guardian, term, limit)), type)
+  def search_for_type(
+    type,
+    guardian,
+    term,
+    limit,
+    condition = HashtagAutocompleteService::SEARCH_CONDITION_CONTAINS
+  )
+    set_types(set_refs(@@data_sources[type].search(guardian, term, limit, condition)), type)
   end
 
   def execute_lookup!(lookup_results, type, guardian, slugs)

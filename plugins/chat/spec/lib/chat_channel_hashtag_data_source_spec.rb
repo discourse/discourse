@@ -183,4 +183,22 @@ RSpec.describe Chat::ChatChannelHashtagDataSource do
       expect(described_class.search_without_term(Guardian.new(user), 10)).to be_empty
     end
   end
+
+  describe "#search_sort" do
+    it "orders by exact slug match, starts with, then text" do
+      results_to_sort = [
+        HashtagAutocompleteService::HashtagItem.new(
+          text: "System Tests",
+          slug: "system-test-development",
+        ),
+        HashtagAutocompleteService::HashtagItem.new(text: "Ruby Dev", slug: "ruby-dev"),
+        HashtagAutocompleteService::HashtagItem.new(text: "Dev", slug: "dev"),
+        HashtagAutocompleteService::HashtagItem.new(text: "Dev Tools", slug: "dev-tools"),
+        HashtagAutocompleteService::HashtagItem.new(text: "Dev Lore", slug: "dev-lore"),
+      ]
+      expect(described_class.search_sort(results_to_sort, "dev").map(&:slug)).to eq(
+        %w[dev dev-lore dev-tools ruby-dev system-test-development],
+      )
+    end
+  end
 end

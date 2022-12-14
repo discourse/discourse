@@ -33,13 +33,14 @@ class TagHashtagDataSource
       .map { |tag| tag_to_hashtag_item(tag) }
   end
 
-  def self.search(guardian, term, limit)
+  def self.search(guardian, term, limit, condition = HashtagAutocompleteService::SEARCH_CONDITION_CONTAINS)
     return [] if !SiteSetting.tagging_enabled
 
     tags_with_counts, _ =
       DiscourseTagging.filter_allowed_tags(
         guardian,
         term: term,
+        match_term_on_starts_with: condition == HashtagAutocompleteService::SEARCH_CONDITION_STARTS_WITH,
         with_context: true,
         limit: limit,
         for_input: true,
@@ -53,7 +54,7 @@ class TagHashtagDataSource
   end
 
   def self.search_sort(search_results, _)
-    search_results.sort_by { |result| result.text.downcase }
+    search_results.sort_by { |item| item.text.downcase }
   end
 
   def self.search_without_term(guardian, limit)
