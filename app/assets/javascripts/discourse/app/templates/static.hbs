@@ -1,10 +1,19 @@
 <DSection @bodyClass={{this.bodyClass}} @class="container">
   <div class="contents clearfix body-page">
-    <PluginOutlet @name="above-static" @tagName="span" @connectorTagName="div" />
+    <PluginOutlet
+      @name="above-static"
+      @tagName="span"
+      @connectorTagName="div"
+      @args={{hash model=this.model}}
+    />
 
     {{html-safe this.model.html}}
 
-    <PluginOutlet @name="below-static" @connectorTagName="div" />
+    <PluginOutlet
+      @name="below-static"
+      @connectorTagName="div"
+      @args={{hash model=this.model}}
+    />
 
     {{#if this.anyButtons}}
       <div class="body-page-button-container">
