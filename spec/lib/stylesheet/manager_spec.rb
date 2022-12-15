@@ -929,7 +929,7 @@ RSpec.describe Stylesheet::Manager do
 
       after do
         path = Stylesheet::Manager.send(:manifest_full_path)
-        File.delete(path) if File.exists?(path)
+        File.delete(path) if File.exist?(path)
       end
 
       it "returns a hash" do
