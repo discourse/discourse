@@ -76,10 +76,10 @@
       {{d-icon (if this.isInDoNotDisturb "toggle-on" "toggle-off")}}
       <span class="item-label">
         {{#if this.isInDoNotDisturb}}
-          <span>{{i18n "do_not_disturb.label"}}</span>
+          <span>{{i18n "pause_notifications.label"}}</span>
           {{format-age this.doNotDisturbDateTime}}
         {{else}}
-          {{i18n "do_not_disturb.label"}}
+          {{i18n "pause_notifications.label"}}
         {{/if}}
       </span>
     </DButton>

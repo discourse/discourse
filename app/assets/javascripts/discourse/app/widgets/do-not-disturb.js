@@ -15,7 +15,7 @@ export default createWidget("do-not-disturb", {
         h("button.btn-flat.do-not-disturb-inner-container", [
           iconNode("toggle-on"),
           h("span.do-not-disturb-label", [
-            h("span", I18n.t("do_not_disturb.label")),
+            h("span", I18n.t("pause_notifications.label")),
             dateNode(this.currentUser.do_not_disturb_until),
           ]),
         ]),
@@ -24,7 +24,7 @@ export default createWidget("do-not-disturb", {
       return [
         h("button.btn-flat.do-not-disturb-inner-container", [
           iconNode("toggle-off"),
-          h("span.do-not-disturb-label", I18n.t("do_not_disturb.label")),
+          h("span.do-not-disturb-label", I18n.t("pause_notifications.label")),
         ]),
       ];
     }
