@@ -9,8 +9,8 @@ RSpec.describe Onebox::Engine::MotokoOnebox do
   end
 
   it "returns the expected iframe markup" do
-    expect(Onebox.preview('https://embed.smartcontracts.org').to_s.chomp).to eq(
-      '<iframe src="https://embed.smartcontracts.org" width="800" height="500" style="border:0" />'
+    expect(Onebox.preview('https://embed.smartcontracts.org').to_s.chomp).to include(
+      '<iframe src="https://embed.smartcontracts.org" width="800" height="500" style="border:0"'
     )
   end
 end
