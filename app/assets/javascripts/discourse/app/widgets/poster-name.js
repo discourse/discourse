@@ -17,6 +17,22 @@ export function disableNameSuppression() {
 createWidget("poster-name-title", {
   tagName: "span.user-title",
 
+  buildClasses(attrs) {
+    let classNames = [];
+
+    classNames.push(attrs.title);
+
+    if (attrs.titleIsGroup) {
+      classNames.push(attrs.primaryGroupName);
+    }
+
+    classNames = classNames.map(function (className) {
+      return `user-title--${className.replace(/\s+/g, "-").toLowerCase()}`;
+    });
+
+    return classNames;
+  },
+
   html(attrs) {
     let titleContents = attrs.title;
     if (attrs.primaryGroupName && attrs.titleIsGroup) {
@@ -111,7 +127,7 @@ export default createWidget("poster-name", {
 
     const primaryGroupName = attrs.primary_group_name;
     if (primaryGroupName && primaryGroupName.length) {
-      classNames.push(primaryGroupName);
+      classNames.push(`group--${primaryGroupName}`);
     }
     let nameContents = [this.userLink(attrs, nameFirst ? name : username)];
 
