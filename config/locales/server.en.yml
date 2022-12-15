@@ -4929,6 +4929,7 @@ en:
     step:
       introduction:
         title: "Tell us about your community"
+        description: "These will be shown on your login and any public pages. You can always change them later."
 
         fields:
           title:
@@ -5013,6 +5014,7 @@ en:
 
       corporate:
         title: "Your Organization"
+        description: "The following information will be used in your Terms of Service and About pages. Feel free to skip if no company exists."
 
         fields:
           company_name:

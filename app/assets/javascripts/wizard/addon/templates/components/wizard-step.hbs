@@ -1,6 +1,14 @@
 <div class="wizard-container__step-contents">
+  {{#if this.step.emoji}}
+    <div class="wizard-container__step-emoji">
+      {{emoji this.step.emoji}}
+    </div>
+  {{/if}}
   {{#if this.step.title}}
     <h1 class="wizard-container__step-title">{{this.step.title}}</h1>
+    {{#if this.step.description}}
+      <p class="wizard-container__step-description">{{html-safe this.step.description}}</p>
+    {{/if}}
   {{/if}}
 
   <div class="wizard-container__step-container">
@@ -23,24 +31,6 @@
           {{/each}}
         </div>
       </WizardStepForm>
-    {{/if}}
-    {{#if (or this.bannerImage this.step.description)}}
-      <div class={{this.bannerAndDescriptionClass}}>
-        {{#if this.step.description}}
-          <p class="wizard-container__step-description">{{html-safe this.step.description}}</p>
-        {{/if}}
-        {{#if this.bannerImage}}
-          <div class="wizard-container__step-banner-image">
-            {{#if (eq this.bannerImage "welcome-illustration")}}
-              <IllustrationWelcome />
-            {{else if (eq this.bannerImage "members-illustration")}}
-              <IllustrationMembers />
-            {{else if (eq this.bannerImage "finished-illustration")}}
-              <IllustrationFinished />
-            {{/if}}
-          </div>
-        {{/if}}
-      </div>
     {{/if}}
   </div>
 </div>

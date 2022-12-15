@@ -12,10 +12,11 @@ class Wizard
 
       @wizard.append_step('introduction') do |step|
         step.banner = "welcome-illustration"
+        step.emoji = "wave"
+        step.description_vars = { base_path: Discourse.base_path }
 
         step.add_field(id: 'title', type: 'text', required: true, value: SiteSetting.title == SiteSetting.defaults[:title] ? "" : SiteSetting.title)
         step.add_field(id: 'site_description', type: 'text', required: false, value: SiteSetting.site_description)
-        step.add_field(id: 'contact_email', type: 'text', required: true, value: SiteSetting.contact_email)
 
         languages = step.add_field(id: 'default_locale',
                                    type: 'dropdown',
@@ -49,6 +50,7 @@ class Wizard
 
       @wizard.append_step('privacy') do |step|
         step.banner = "members-illustration"
+        step.emoji = "hugs"
         step.add_field(
           id: 'login_required',
           type: 'checkbox',
@@ -98,6 +100,20 @@ class Wizard
       @wizard.append_step('ready') do |step|
         # no form on this page, just info.
         step.banner = "finished-illustration"
+        step.emoji = "rocket"
+      end
+
+      @wizard.append_step('branding') do |step|
+        step.add_field(id: 'logo', type: 'image', value: SiteSetting.site_logo_url)
+        step.add_field(id: 'logo_small', type: 'image', value: SiteSetting.site_logo_small_url)
+
+        step.on_update do |updater|
+          if SiteSetting.site_logo_url != updater.fields[:logo] ||
+            SiteSetting.site_logo_small_url != updater.fields[:logo_small]
+            updater.apply_settings(:logo, :logo_small)
+            updater.refresh_required = true
+          end
+        end
       end
 
       @wizard.append_step('styling') do |step|
@@ -205,25 +221,13 @@ class Wizard
         end
       end
 
-      @wizard.append_step('branding') do |step|
-        step.add_field(id: 'logo', type: 'image', value: SiteSetting.site_logo_url)
-        step.add_field(id: 'logo_small', type: 'image', value: SiteSetting.site_logo_small_url)
-
-        step.on_update do |updater|
-          if SiteSetting.site_logo_url != updater.fields[:logo] ||
-            SiteSetting.site_logo_small_url != updater.fields[:logo_small]
-            updater.apply_settings(:logo, :logo_small)
-            updater.refresh_required = true
-          end
-        end
-      end
-
       @wizard.append_step('corporate') do |step|
         step.description_vars = { base_path: Discourse.base_path }
         step.add_field(id: 'company_name', type: 'text', value: SiteSetting.company_name)
         step.add_field(id: 'governing_law', type: 'text', value: SiteSetting.governing_law)
         step.add_field(id: 'contact_url', type: 'text', value: SiteSetting.contact_url)
         step.add_field(id: 'city_for_disputes', type: 'text', value: SiteSetting.city_for_disputes)
+        step.add_field(id: 'contact_email', type: 'text', required: true, value: SiteSetting.contact_email)
 
         username = SiteSetting.site_contact_username
         username = Discourse.system_user.username if username.blank?
