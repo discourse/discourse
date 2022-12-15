@@ -34,11 +34,11 @@ RSpec.describe HashtagAutocompleteService do
       guardian_scoped,
       term,
       limit,
-      condition = HashtagAutocompleteService::SEARCH_CONDITION_CONTAINS
+      condition = HashtagAutocompleteService.search_conditions[:starts_with]
     )
       query = guardian_scoped.user.bookmarks
 
-      if condition == HashtagAutocompleteService::SEARCH_CONDITION_STARTS_WITH
+      if condition == HashtagAutocompleteService.search_conditions[:starts_with]
         query = query.where("name ILIKE ?", "#{term}%")
       else
         query = query.where("name ILIKE ?", "%#{term}%")
