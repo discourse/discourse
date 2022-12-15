@@ -17,7 +17,7 @@ class RemoveEnableWhispersSiteSetting < ActiveRecord::Migration[7.0]
       UPDATE site_settings
       SET value = ''
       WHERE name = 'whispers_allowed_groups' AND
-            EXISTS(SELECT 1 FROM site_settings WHERE name = 'enable_whispers' AND value = 'f')
+            NOT EXISTS(SELECT 1 FROM site_settings WHERE name = 'enable_whispers' AND value = 't')
     SQL
 
     # Delete enable_whispers site setting
