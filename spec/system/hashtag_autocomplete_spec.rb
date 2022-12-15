@@ -36,7 +36,7 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
     visit_topic_and_initiate_autocomplete
     hashtag_results = page.all(".hashtag-autocomplete__link", count: 2)
     expect(hashtag_results.map(&:text).map { |r| r.gsub("\n", " ") }).to eq(
-      ["Cool Category", "cooltag x325"],
+      ["Cool Category", "cooltag (x325)"],
     )
   end
 
@@ -48,8 +48,8 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
         "Cool Category",
         "Other Category",
         uncategorized_category.name,
-        "cooltag x325",
-        "othertag x66",
+        "cooltag (x325)",
+        "othertag (x66)",
       ],
     )
   end
