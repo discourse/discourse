@@ -190,6 +190,11 @@ export default Controller.extend(ModalFunctionality, {
     this.send("showForgotPassword");
   },
 
+  @action
+  togglePasswordMask() {
+    this.toggleProperty("maskPassword");
+  },
+
   actions: {
     forgotPassword() {
       this.handleForgotPassword();

@@ -59,6 +59,11 @@ export default Controller.extend(PasswordValidation, {
     DiscourseURL.redirectTo(this.redirectTo || "/");
   },
 
+  @action
+  togglePasswordMask() {
+    this.toggleProperty("maskPassword");
+  },
+
   actions: {
     submit() {
       ajax({

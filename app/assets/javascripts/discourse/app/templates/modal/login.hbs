@@ -24,7 +24,11 @@
               <label class="alt-placeholder" for="login-account-password">{{i18n "login.password"}}</label>
               <div class="login__password-links">
                 <a href id="forgot-password-link" tabindex="3" {{on "click" this.handleForgotPassword}}>{{i18n "forgot_password.action"}}</a>
-                <TogglePasswordMask @maskPassword={{this.maskPassword}} @togglePasswordMask={{this.togglePasswordMask}} @parentController={{"login"}} @tabindex={{"3"}}/>
+                <TogglePasswordMask
+                  @maskPassword={{this.maskPassword}}
+                  @togglePasswordMask={{this.togglePasswordMask}}
+                  tabindex="3"
+                />
               </div>
               <div class="caps-lock-warning {{unless this.capsLockOn "hidden"}}">{{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}</div>
             </div>
