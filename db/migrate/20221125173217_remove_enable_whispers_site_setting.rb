@@ -2,8 +2,16 @@
 
 class RemoveEnableWhispersSiteSetting < ActiveRecord::Migration[7.0]
   def up
-    # If enable_whispers is enabled, add 'staff' group to whispers_allowed_groups
-    # if it was not already added.
+    # If enable_whispers was enabled, insert whispers_allowed_groups or add
+    # staff group to whispers_allowed_groups.
+    execute <<~SQL
+      INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
+      SELECT 'whispers_allowed_groups', '20', '3', created_at, NOW()
+      FROM site_settings
+      WHERE name = 'enable_whispers' AND value = 't'
+      ON CONFLICT DO NOTHING
+    SQL
+
     execute <<~SQL
       UPDATE site_settings
       SET value = array_to_string(array_append(string_to_array(value, '|'), '3'), '|')
@@ -12,7 +20,7 @@ class RemoveEnableWhispersSiteSetting < ActiveRecord::Migration[7.0]
             NOT '3' = ANY(string_to_array(value, '|'))
     SQL
 
-    # If enable_whispers is disabled, reset whispers_allowed_groups
+    # If enable_whispers was disabled, reset whispers_allowed_groups
     execute <<~SQL
       UPDATE site_settings
       SET value = ''
