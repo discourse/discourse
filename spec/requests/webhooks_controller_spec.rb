@@ -137,7 +137,8 @@ describe WebhooksController do
           "event" => "hard_bounce",
           "msg" => {
             "email" => email,
-            "diag" => "smtp;550 5.1.1 The email account that you tried to reach does not exist. Please try double-checking the recipient's email address for typos or unnecessary spaces.",
+            "diag" => "5.1.1",
+            "bounce_description": "smtp; 550-5.1.1 The email account that you tried to reach does not exist.",
             "metadata" => {
               "message_id" => message_id
             }
@@ -149,7 +150,7 @@ describe WebhooksController do
 
       email_log.reload
       expect(email_log.bounced).to eq(true)
-      expect(email_log.bounce_error_code).to eq("smtp;550 5.1.1 The email account that you tried to reach does not exist. Please try double-checking the recipient's email address for typos or unnecessary spaces.")
+      expect(email_log.bounce_error_code).to eq("5.1.1")
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
     end
   end
