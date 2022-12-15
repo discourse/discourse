@@ -10,21 +10,21 @@ RSpec.describe Admin::DashboardController do
     Jobs::VersionCheck.any_instance.stubs(:execute).returns(true)
   end
 
-  def populate_new_features
+  def populate_new_features(date1 = nil, date2 = nil)
     sample_features = [
       {
         "id" => "1",
         "emoji" => "🤾",
         "title" => "Cool Beans",
         "description" => "Now beans are included",
-        "created_at" => Time.zone.now - 40.minutes
+        "created_at" => date1 || (Time.zone.now - 40.minutes)
       },
       {
         "id" => "2",
         "emoji" => "🙈",
         "title" => "Fancy Legumes",
         "description" => "Legumes too!",
-        "created_at" => Time.zone.now - 20.minutes
+        "created_at" => date2 || (Time.zone.now - 20.minutes)
       }
     ]
 
@@ -177,6 +177,7 @@ RSpec.describe Admin::DashboardController do
         sign_in(admin)
         Discourse.redis.del "new_features_last_seen_user_#{admin.id}"
         Discourse.redis.del "new_features"
+        Discourse.redis.del "last_viewed_feature_dates_for_users_hash"
       end
 
       it 'is empty by default' do
@@ -217,6 +218,30 @@ RSpec.describe Admin::DashboardController do
 
         expect(json['has_unseen_features']).to eq(false)
       end
+
+      it "sets/bumps the last viewed feature date for the admin" do
+        date1 = 30.minutes.ago
+        date2 = 20.minutes.ago
+        populate_new_features(date1, date2)
+
+        expect(DiscourseUpdates.get_last_viewed_feature_date(admin.id)).to eq(nil)
+
+        get "/admin/dashboard/new-features.json"
+        expect(response.status).to eq(200)
+        expect(DiscourseUpdates.get_last_viewed_feature_date(admin.id)).to be_within_one_second_of(date2)
+
+        date2 = 10.minutes.ago
+        populate_new_features(date1, date2)
+
+        get "/admin/dashboard/new-features.json"
+        expect(response.status).to eq(200)
+        expect(DiscourseUpdates.get_last_viewed_feature_date(admin.id)).to be_within_one_second_of(date2)
+      end
+
+      it "doesn't error when there are no new features" do
+        get "/admin/dashboard/new-features.json"
+        expect(response.status).to eq(200)
+      end
     end
 
     context "when logged in as a moderator" do
@@ -233,6 +258,16 @@ RSpec.describe Admin::DashboardController do
         expect(json['new_features'][0]["emoji"]).to eq("🙈")
         expect(json['new_features'][0]["title"]).to eq("Fancy Legumes")
         expect(json['has_unseen_features']).to eq(true)
+      end
+
+      it "doesn't set last viewed feature date for moderators" do
+        populate_new_features
+
+        expect(DiscourseUpdates.get_last_viewed_feature_date(moderator.id)).to eq(nil)
+
+        get "/admin/dashboard/new-features.json"
+        expect(response.status).to eq(200)
+        expect(DiscourseUpdates.get_last_viewed_feature_date(moderator.id)).to eq(nil)
       end
     end
 

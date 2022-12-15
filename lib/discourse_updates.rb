@@ -176,6 +176,16 @@ module DiscourseUpdates
       Discourse.redis.set(new_features_last_seen_key(user_id), last_seen["created_at"])
     end
 
+    def get_last_viewed_feature_date(user_id)
+      date = Discourse.redis.hget(last_viewed_feature_dates_for_users_key, user_id.to_s)
+      return if date.blank?
+      Time.zone.parse(date)
+    end
+
+    def bump_last_viewed_feature_date(user_id, feature_date)
+      Discourse.redis.hset(last_viewed_feature_dates_for_users_key, user_id.to_s, feature_date)
+    end
+
     private
 
     def last_installed_version_key
@@ -216,6 +226,10 @@ module DiscourseUpdates
 
     def new_features_last_seen_key(user_id)
       "new_features_last_seen_user_#{user_id}"
+    end
+
+    def last_viewed_feature_dates_for_users_key
+      "last_viewed_feature_dates_for_users_hash"
     end
   end
 end
