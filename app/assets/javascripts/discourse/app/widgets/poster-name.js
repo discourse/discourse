@@ -26,9 +26,9 @@ createWidget("poster-name-title", {
       classNames.push(attrs.primaryGroupName);
     }
 
-    classNames = classNames.map(function (className) {
-      return `user-title--${className.replace(/\s+/g, "-").toLowerCase()}`;
-    });
+    classNames = classNames.map(
+      (className) => `user-title--${className.replace(/\s+/g, "-").toLowerCase()}`
+    );
 
     return classNames;
   },
