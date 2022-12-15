@@ -71,7 +71,7 @@ RSpec.describe CategoryHashtagDataSource do
   describe "#search_without_term" do
     it "returns distinct categories ordered by topic_count" do
       expect(described_class.search_without_term(guardian, 5).map(&:slug)).to eq(
-        ["books", "movies", "casual", "random", "fun"],
+        %w[books movies casual random fun],
       )
     end
 
@@ -90,6 +90,21 @@ RSpec.describe CategoryHashtagDataSource do
         notification_level: CategoryUser.notification_levels[:muted],
       )
       expect(described_class.search_without_term(guardian, 5).map(&:slug)).not_to include("random")
+    end
+  end
+
+  describe "#search_sort" do
+    it "orders by exact slug match then text" do
+      results_to_sort = [
+        HashtagAutocompleteService::HashtagItem.new(text: "System Tests", slug: "system-test-development"),
+        HashtagAutocompleteService::HashtagItem.new(text: "Ruby Dev", slug: "ruby-dev"),
+        HashtagAutocompleteService::HashtagItem.new(text: "Dev", slug: "dev"),
+        HashtagAutocompleteService::HashtagItem.new(text: "Dev Tools", slug: "dev-tools"),
+        HashtagAutocompleteService::HashtagItem.new(text: "Dev Lore", slug: "dev-lore"),
+      ]
+      expect(described_class.search_sort(results_to_sort, "dev").map(&:slug)).to eq(
+        %w[dev dev-lore dev-tools ruby-dev system-test-development],
+      )
     end
   end
 end
