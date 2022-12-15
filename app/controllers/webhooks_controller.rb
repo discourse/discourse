@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "json"
 require "openssl"
 
 class WebhooksController < ActionController::Base
