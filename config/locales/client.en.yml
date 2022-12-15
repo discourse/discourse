@@ -2539,6 +2539,7 @@ en:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completed"
+      new_features: "New features available!"
       dismiss_confirmation:
         body:
           default:
@@ -2596,6 +2597,7 @@ en:
         membership_request_consolidated: "new membership requests"
         reaction: "new reaction"
         votes_released: "Vote was released"
+        new_features: "new Discourse features have been released!"
 
     upload_selector:
       uploading: "Uploading"

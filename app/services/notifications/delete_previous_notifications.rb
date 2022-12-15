@@ -17,7 +17,7 @@
 
 module Notifications
   class DeletePreviousNotifications < ConsolidationPlan
-    def initialize(type:, previous_query_blk:)
+    def initialize(type:, previous_query_blk: nil)
       @type = type
       @previous_query_blk = previous_query_blk
     end
