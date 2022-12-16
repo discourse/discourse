@@ -142,7 +142,7 @@ RSpec.describe WebhooksController do
               "message_id" => message_id
             }
           }
-        }]
+        }].to_json
       }
 
       expect(response.status).to eq(200)

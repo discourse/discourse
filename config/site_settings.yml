@@ -348,6 +348,9 @@ basic:
   push_notifications_icon:
     default: ""
     type: upload
+  enable_desktop_push_notifications:
+    default: true
+    client: true
   short_title:
     default: ""
     max: 12

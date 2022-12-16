@@ -7,7 +7,6 @@ import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse-common/lib/debounce";
 import {
   caretPosition,
-  caretRowCol,
   escapeExpression,
   inCodeBlock,
 } from "discourse/lib/utilities";
@@ -54,20 +53,7 @@ export function setupHashtagAutocomplete(
   }
 }
 
-export function hashtagTriggerRule(textarea, opts) {
-  const result = caretRowCol(textarea);
-  const row = result.rowNum;
-  let line = textarea.value.split("\n")[row - 1];
-
-  if (opts && opts.backSpace) {
-    line = line.slice(0, line.length - 1);
-
-    // Don't trigger autocomplete when backspacing into a `#category |` => `#category|`
-    if (/^#{1}\w+/.test(line)) {
-      return false;
-    }
-  }
-
+export function hashtagTriggerRule(textarea) {
   if (inCodeBlock(textarea.value, caretPosition(textarea))) {
     return false;
   }

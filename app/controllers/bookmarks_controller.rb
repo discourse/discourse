@@ -19,8 +19,7 @@ class BookmarksController < ApplicationController
       name: params[:name],
       reminder_at: params[:reminder_at],
       options: {
-        auto_delete_preference: params[:auto_delete_preference],
-        save_user_preferences: true
+        auto_delete_preference: params[:auto_delete_preference]
       }
     )
 
@@ -47,8 +46,7 @@ class BookmarksController < ApplicationController
       name: params[:name],
       reminder_at: params[:reminder_at],
       options: {
-        auto_delete_preference: params[:auto_delete_preference],
-        save_user_preferences: true
+        auto_delete_preference: params[:auto_delete_preference]
       }
     )
 

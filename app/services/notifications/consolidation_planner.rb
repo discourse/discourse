@@ -12,7 +12,7 @@ module Notifications
     private
 
     def plan_for(notification)
-      consolidation_plans = [liked_by_two_users, liked, group_message_summary, group_membership]
+      consolidation_plans = [liked_by_two_users, liked, group_message_summary, group_membership, new_features_notification]
       consolidation_plans.concat(DiscoursePluginRegistry.notification_consolidation_plans)
 
       consolidation_plans.detect { |plan| plan.can_consolidate_data?(notification) }
@@ -121,6 +121,10 @@ module Notifications
           notifications
         end
       end
+    end
+
+    def new_features_notification
+      DeletePreviousNotifications.new(type: Notification.types[:new_features])
     end
   end
 end
