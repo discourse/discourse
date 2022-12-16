@@ -3,7 +3,8 @@
 class RemoveEnableWhispersSiteSetting < ActiveRecord::Migration[7.0]
   def up
     # If enable_whispers was true, insert whispers_allowed_groups or add
-    # staff group to whispers_allowed_groups.
+    # staff group to whispers_allowed_groups. This is necessary to keep
+    # the current behavior which has a bypass for staff members.
     execute <<~SQL
       INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
       SELECT 'whispers_allowed_groups', '20', '3', created_at, NOW()
