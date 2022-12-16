@@ -92,15 +92,20 @@ RSpec.describe Chat::GuardianExtensions do
 
         before { channel.update(chatable: category) }
 
-        it "returns true if the user can see the category" do
-          expect(Guardian.new(user).can_see_chat_channel?(channel)).to eq(false)
-          group = Fabricate(:group)
-          CategoryGroup.create(group: group, category: category)
-          GroupUser.create(group: group, user: user)
+        it "returns true if the user can create post in the category" do
+          guardian = Guardian.new(user)
 
-          # have to make a new instance of guardian because `user.secure_category_ids`
-          # is memoized there
-          expect(Guardian.new(user).can_see_chat_channel?(channel)).to eq(true)
+          readonly_group = Fabricate(:group)
+          CategoryGroup.create(group: readonly_group, category: category, permission_type: CategoryGroup.permission_types[:readonly])
+          GroupUser.create(group: readonly_group, user: user)
+
+          create_post_group = Fabricate(:group)
+          CategoryGroup.create(group: create_post_group, category: category, permission_type: CategoryGroup.permission_types[:create_post])
+
+          expect(guardian.can_see_chat_channel?(channel)).to eq(false)
+
+          GroupUser.create(group: create_post_group, user: user)
+          expect(guardian.can_see_chat_channel?(channel)).to eq(true)
         end
       end
     end

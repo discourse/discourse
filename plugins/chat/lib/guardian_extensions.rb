@@ -86,7 +86,7 @@ module Chat::GuardianExtensions
     if chat_channel.direct_message_channel?
       chat_channel.chatable.user_can_access?(@user)
     elsif chat_channel.category_channel?
-      can_see_category?(chat_channel.chatable)
+      Category.post_create_allowed(self).where(id: chat_channel.chatable_id).present?
     else
       true
     end
