@@ -1078,7 +1078,7 @@ en:
       notification_schedule:
         title: "Notification Schedule"
         label: "Enable custom notification schedule"
-        tip: "Outside of these hours you will be put in 'do not disturb' automatically."
+        tip: "Outside of these hours your notifications will be paused."
         midnight: "Midnight"
         none: "None"
         monday: "Monday"
@@ -4289,9 +4289,9 @@ en:
 
     image_removed: "(image removed)"
 
-    do_not_disturb:
-      title: "Do not disturb for..."
-      label: "Do not disturb"
+    pause_notifications:
+      title: "Pause notifications for..."
+      label: "Pause notifications"
       remaining: "%{remaining} remaining"
       options:
         half_hour: "30 minutes"
