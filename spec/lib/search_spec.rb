@@ -945,8 +945,7 @@ RSpec.describe Search do
     it 'allows staff and members of whisperers group to search for whispers' do
       whisperers_group = Fabricate(:group)
       user = Fabricate(:user)
-      SiteSetting.enable_whispers = true
-      SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}|#{whisperers_group.id}"
 
       post.update!(post_type: Post.types[:whisper], raw: 'this is a tiger')
 

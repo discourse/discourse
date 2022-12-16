@@ -4202,7 +4202,7 @@ RSpec.describe UsersController do
         end
 
         it "includes all post types for staff members" do
-          SiteSetting.enable_whispers = true
+          SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
           sign_in(admin)
 
           get "/u/#{admin.username}.json", params: { include_post_count_for: topic.id }

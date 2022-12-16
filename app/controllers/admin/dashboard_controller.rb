@@ -24,8 +24,14 @@ class Admin::DashboardController < Admin::StaffController
   end
 
   def new_features
+    new_features = DiscourseUpdates.new_features
+
+    if current_user.admin? && most_recent = new_features&.first
+      DiscourseUpdates.bump_last_viewed_feature_date(current_user.id, most_recent["created_at"])
+    end
+
     data = {
-      new_features: DiscourseUpdates.new_features,
+      new_features: new_features,
       has_unseen_features: DiscourseUpdates.has_unseen_features?(current_user.id),
       release_notes_link: AdminDashboardGeneralData.fetch_cached_stats["release_notes_link"]
     }

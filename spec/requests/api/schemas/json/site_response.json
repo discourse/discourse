@@ -38,6 +38,9 @@
         "watching_category_or_tag": {
           "type": "integer"
         },
+        "new_features": {
+          "type": "integer"
+        },
         "moved_post": {
           "type": "integer"
         },

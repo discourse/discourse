@@ -25,7 +25,6 @@ acceptance("Composer Actions", function (needs) {
   needs.settings({
     prioritize_username_in_ux: true,
     display_name_on_posts: false,
-    enable_whispers: true,
   });
   needs.site({ can_tag_topics: true });
   needs.pretender((server, helper) => {
@@ -412,10 +411,7 @@ function stubDraftResponse() {
 }
 
 acceptance("Composer Actions With New Topic Draft", function (needs) {
-  needs.user();
-  needs.settings({
-    enable_whispers: true,
-  });
+  needs.user({ whisperer: true });
   needs.site({
     can_tag_topics: true,
   });

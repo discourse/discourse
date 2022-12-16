@@ -523,7 +523,7 @@ acceptance("User menu", function (needs) {
         .replaceAll(/\s+/g, " ")
         .replaceAll(/\u200B/g, "")
         .trim(),
-      I18n.t("do_not_disturb.label"),
+      I18n.t("pause_notifications.label"),
       "Do Not Disturb button has the right label"
     );
     assert.ok(
@@ -546,7 +546,7 @@ acceptance("User menu", function (needs) {
         .replaceAll(/\s+/g, " ")
         .replaceAll(/\u200B/g, "")
         .trim(),
-      `${I18n.t("do_not_disturb.label")} 2h`,
+      `${I18n.t("pause_notifications.label")} 2h`,
       "Do Not Disturb button has the right label when Do Not Disturb is enabled"
     );
     assert.ok(

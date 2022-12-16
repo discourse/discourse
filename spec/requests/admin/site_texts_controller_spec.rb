@@ -171,7 +171,7 @@ RSpec.describe Admin::SiteTextsController do
 
         context 'with language with different plural keys and missing translations' do
           let(:locale) { :ru }
-          let(:expected_translations) { { one: '%{count} colour', few: '%{count} colours', other: '%{count} colours' } }
+          let(:expected_translations) { { one: '%{count} colour', few: '%{count} colours', many: '%{count} colours', other: '%{count} colours' } }
 
           include_examples 'finds correct plural keys'
         end
@@ -182,7 +182,7 @@ RSpec.describe Admin::SiteTextsController do
           end
 
           let(:locale) { :ru }
-          let(:expected_translations) { { one: '%{count} colour', few: '%{count} цвета', other: '%{count} colours' } }
+          let(:expected_translations) { { one: '%{count} colour', few: '%{count} цвета', many: '%{count} цветов', other: '%{count} colours' } }
 
           include_examples 'finds correct plural keys'
         end
@@ -195,7 +195,7 @@ RSpec.describe Admin::SiteTextsController do
           end
 
           let(:locale) { :ru }
-          let(:expected_translations) { { one: 'ONE', few: 'FEW', other: '%{count} colours' } }
+          let(:expected_translations) { { one: 'ONE', few: 'FEW', many: '%{count} цветов', other: '%{count} colours' } }
           let(:expected_overridden) { { one: true, few: true } }
 
           include_examples 'finds correct plural keys'

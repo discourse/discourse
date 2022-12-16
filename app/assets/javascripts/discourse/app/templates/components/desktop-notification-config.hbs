@@ -5,7 +5,7 @@
   <DButton @icon="bell-slash" @class="btn-default" @label="user.desktop_notifications.perm_denied_btn" @action={{action "recheckPermission"}} @disabled="true" />
   {{i18n "user.desktop_notifications.perm_denied_expl"}}
 {{else}}
-  {{#if this.isEnabled}}
+  {{#if this.isSubscribed}}
     <DButton @icon="far-bell-slash" @class="btn-default" @label="user.desktop_notifications.disable" @action={{action "turnoff"}} />
   {{else}}
     <DButton @icon="far-bell" @class="btn-default" @label="user.desktop_notifications.enable" @action={{action "turnon"}} />

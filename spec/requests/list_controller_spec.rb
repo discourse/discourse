@@ -209,8 +209,6 @@ RSpec.describe ListController do
   end
 
   describe '#private_messages_group' do
-    fab!(:user) { Fabricate(:user) }
-
     describe 'when user not in personal_message_enabled_groups group' do
       let!(:topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
 
@@ -245,7 +243,6 @@ RSpec.describe ListController do
       it "should not display group private messages for a moderator's group" do
         moderator = Fabricate(:moderator)
         sign_in(moderator)
-        group.add(moderator)
 
         get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
 

@@ -62,6 +62,7 @@ import {
 import { addPostClassesCallback } from "discourse/widgets/post";
 import {
   addGroupPostSmallActionCode,
+  addPostSmallActionClassesCallback,
   addPostSmallActionIcon,
 } from "discourse/widgets/post-small-action";
 import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profile";
@@ -113,7 +114,7 @@ import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-const PLUGIN_API_VERSION = "1.5.0";
+const PLUGIN_API_VERSION = "1.6.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -930,6 +931,22 @@ class PluginApi {
    **/
   addGroupPostSmallActionCode(actionCode) {
     addGroupPostSmallActionCode(actionCode);
+  }
+
+  /**
+   * Adds a callback to be called before rendering any small action post
+   * that returns custom classes to add to the small action post
+   *
+   * ```javascript
+   * addPostSmallActionClassesCallback(post => {
+   *   if (post.actionCode.includes("group")) {
+   *     return ["group-small-post"];
+   *   }
+   * });
+   * ```
+   **/
+  addPostSmallActionClassesCallback(callback) {
+    addPostSmallActionClassesCallback(callback);
   }
 
   /**

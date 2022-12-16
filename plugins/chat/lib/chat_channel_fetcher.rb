@@ -99,19 +99,19 @@ module Chat::ChatChannelFetcher
     channels = channels.where(status: options[:status]) if options[:status].present?
 
     if options[:filter].present?
-      category_filter = \
-        if options[:filter_on_category_name]
-          "OR categories.name ILIKE :filter"
-        else
-          ""
-        end
+      category_filter =
+        (options[:filter_on_category_name] ? "OR categories.name ILIKE :filter" : "")
 
       sql =
         "chat_channels.name ILIKE :filter OR chat_channels.slug ILIKE :filter #{category_filter}"
+      if options[:match_filter_on_starts_with]
+        filter_sql = "#{options[:filter].downcase}%"
+      else
+        filter_sql = "%#{options[:filter].downcase}%"
+      end
+
       channels =
-        channels.where(sql, filter: "%#{options[:filter].downcase}%").order(
-          "chat_channels.name ASC, categories.name ASC",
-        )
+        channels.where(sql, filter: filter_sql).order("chat_channels.name ASC, categories.name ASC")
     end
 
     if options.key?(:slugs)

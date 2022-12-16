@@ -213,4 +213,14 @@ RSpec.describe DiscourseUpdates do
       expect(result[2]["title"]).to eq("Bells")
     end
   end
+
+  describe "#get_last_viewed_feature_date" do
+    fab!(:user) { Fabricate(:user) }
+
+    it "returns an ActiveSupport::TimeWithZone object" do
+      time = Time.zone.parse("2022-12-13T21:33:59Z")
+      DiscourseUpdates.bump_last_viewed_feature_date(user.id, time)
+      expect(DiscourseUpdates.get_last_viewed_feature_date(user.id)).to eq(time)
+    end
+  end
 end
