@@ -11,21 +11,10 @@ export default createWidget("do-not-disturb", {
   saving: false,
 
   html() {
-    if (this.currentUser.isInDoNotDisturb()) {
-      return [
-        h("button.btn-flat.do-not-disturb-inner-container", [
-          iconNode("toggle-on"),
-          this.label(),
-        ]),
-      ];
-    } else {
-      return [
-        h("button.btn-flat.do-not-disturb-inner-container", [
-          iconNode("toggle-off"),
-          h("span.do-not-disturb-label", I18n.t("pause_notifications.label")),
-        ]),
-      ];
-    }
+    const isOn = this.currentUser.isInDoNotDisturb();
+    const button = this._menuButton(isOn);
+
+    return [button];
   },
 
   click() {
@@ -44,7 +33,15 @@ export default createWidget("do-not-disturb", {
     }
   },
 
-  label() {
+  _menuButton(isOn) {
+    const icon = iconNode(isOn ? "toggle-on" : "toggle-off");
+    return h("button.btn-flat.do-not-disturb-inner-container", [
+      icon,
+      this._label(),
+    ]);
+  },
+
+  _label() {
     const content = [h("span", I18n.t("pause_notifications.label"))];
 
     const until = this.currentUser.do_not_disturb_until;
