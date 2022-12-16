@@ -122,18 +122,25 @@ export default function (options) {
       return;
     }
 
-    const divEl = div[0];
-    const selectedEl = getSelectedOptionEl();
-    const selectedElTop = selectedEl.offsetTop;
-    const selectedElBottom = selectedElTop + selectedEl.clientHeight;
+    const divElement = div[0];
+    const selectedElement = getSelectedOptionElement();
+    const selectedElementTop = selectedElement.offsetTop;
+    const selectedElementBottom =
+      selectedElementTop + selectedElement.clientHeight;
 
     // the top of the item is above the top of the div, so scroll UP
-    if (selectedElTop <= divEl.scrollTop) {
-      divEl.scrollTo(0, selectedElTop);
+    if (selectedElementTop <= divElement.scrollTop) {
+      divElement.scrollTo(0, selectedElementTop);
 
       // the bottom of the item is below the bottom of the div, so scroll DOWN
-    } else if (selectedElBottom >= divEl.scrollTop + divEl.clientHeight) {
-      divEl.scrollTo(0, divEl.scrollTop + selectedEl.clientHeight);
+    } else if (
+      selectedElementBottom >=
+      divElement.scrollTop + divElement.clientHeight
+    ) {
+      divElement.scrollTo(
+        0,
+        divElement.scrollTop + selectedElement.clientHeight
+      );
     }
   }
 
@@ -309,10 +316,10 @@ export default function (options) {
 
   function markSelected() {
     getLinks().removeClass("selected");
-    return $(getSelectedOptionEl()).addClass("selected");
+    return $(getSelectedOptionElement()).addClass("selected");
   }
 
-  function getSelectedOptionEl() {
+  function getSelectedOptionElement() {
     return getLinks()[selectedOption];
   }
 
