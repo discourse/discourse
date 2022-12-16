@@ -45,7 +45,7 @@ export default createWidget("do-not-disturb", {
   },
 
   label() {
-    const content = [h("span", I18n.t("do_not_disturb.label"))];
+    const content = [h("span", I18n.t("pause_notifications.label"))];
 
     const until = this.currentUser.do_not_disturb_until;
     if (!DoNotDisturb.isEternal(until)) {
