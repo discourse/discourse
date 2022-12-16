@@ -80,16 +80,21 @@ module Chat::GuardianExtensions
     is_staff? || @user.has_trust_level?(TrustLevel[4])
   end
 
-  def can_see_chat_channel?(chat_channel)
+  def can_preview_chat_channel?(chat_channel)
     return false unless chat_channel.chatable
 
     if chat_channel.direct_message_channel?
       chat_channel.chatable.user_can_access?(@user)
     elsif chat_channel.category_channel?
-      can_post_in_category?(chat_channel.chatable)
+      can_see_category?(chat_channel.chatable)
     else
       true
     end
+  end
+
+  def can_join_chat_channel?(chat_channel)
+    can_preview_chat_channel?(chat_channel) &&
+      (!chat_channel.category_channel? || can_post_in_category?(chat_channel.chatable))
   end
 
   def can_flag_chat_messages?
@@ -102,7 +107,7 @@ module Chat::GuardianExtensions
   def can_flag_in_chat_channel?(chat_channel)
     return false if !can_modify_channel_message?(chat_channel)
 
-    can_see_chat_channel?(chat_channel)
+    can_join_chat_channel?(chat_channel)
   end
 
   def can_flag_chat_message?(chat_message)

@@ -247,7 +247,7 @@ RSpec.describe Chat::ChatController do
       let(:channel) { Fabricate(:category_channel, chatable: category) }
 
       it "ensures created channel can be seen" do
-        Guardian.any_instance.expects(:can_see_chat_channel?).with(channel)
+        Guardian.any_instance.expects(:can_join_chat_channel?).with(channel)
 
         sign_in(admin)
         post "/chat/enable.json", params: { chatable_type: "category", chatable_id: category.id }
@@ -255,7 +255,7 @@ RSpec.describe Chat::ChatController do
 
       # TODO: rewrite specs to ensure no exception is raised
       it "ensures existing channel can be seen" do
-        Guardian.any_instance.expects(:can_see_chat_channel?)
+        Guardian.any_instance.expects(:can_join_chat_channel?)
 
         sign_in(admin)
         post "/chat/enable.json", params: { chatable_type: "category", chatable_id: category.id }
@@ -270,7 +270,7 @@ RSpec.describe Chat::ChatController do
         channel = Fabricate(:category_channel, chatable: category)
         message = Fabricate(:chat_message, chat_channel: channel)
 
-        Guardian.any_instance.expects(:can_see_chat_channel?).with(channel)
+        Guardian.any_instance.expects(:can_join_chat_channel?).with(channel)
 
         sign_in(admin)
         post "/chat/disable.json", params: { chatable_type: "category", chatable_id: category.id }
@@ -1312,7 +1312,7 @@ RSpec.describe Chat::ChatController do
       channel = Fabricate(:category_channel, chatable: Fabricate(:category))
       message = Fabricate(:chat_message, chat_channel: channel)
 
-      Guardian.any_instance.expects(:can_see_chat_channel?).with(channel)
+      Guardian.any_instance.expects(:can_join_chat_channel?).with(channel)
 
       sign_in(Fabricate(:user))
       get "/chat/message/#{message.id}.json"
@@ -1328,7 +1328,7 @@ RSpec.describe Chat::ChatController do
     before { sign_in(user) }
 
     it "ensures message's channel can be seen" do
-      Guardian.any_instance.expects(:can_see_chat_channel?).with(channel)
+      Guardian.any_instance.expects(:can_join_chat_channel?).with(channel)
       get "/chat/lookup/#{message.id}.json", { params: { chat_channel_id: channel.id } }
     end
 

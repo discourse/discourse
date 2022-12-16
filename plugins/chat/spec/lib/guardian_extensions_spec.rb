@@ -72,18 +72,18 @@ RSpec.describe Chat::GuardianExtensions do
       expect(staff_guardian.can_change_channel_status?(channel, :read_only)).to eq(true)
     end
 
-    describe "#can_see_chat_channel?" do
+    describe "#can_join_chat_channel?" do
       context "for direct message channels" do
         fab!(:chatable) { Fabricate(:direct_message) }
         fab!(:channel) { Fabricate(:direct_message_channel, chatable: chatable) }
 
         it "returns false if the user is not part of the direct message" do
-          expect(guardian.can_see_chat_channel?(channel)).to eq(false)
+          expect(guardian.can_join_chat_channel?(channel)).to eq(false)
         end
 
         it "returns true if the user is part of the direct message" do
           DirectMessageUser.create!(user: user, direct_message: chatable)
-          expect(guardian.can_see_chat_channel?(channel)).to eq(true)
+          expect(guardian.can_join_chat_channel?(channel)).to eq(true)
         end
       end
 
@@ -102,10 +102,10 @@ RSpec.describe Chat::GuardianExtensions do
           create_post_group = Fabricate(:group)
           CategoryGroup.create(group: create_post_group, category: category, permission_type: CategoryGroup.permission_types[:create_post])
 
-          expect(guardian.can_see_chat_channel?(channel)).to eq(false)
+          expect(guardian.can_join_chat_channel?(channel)).to eq(false)
 
           GroupUser.create(group: create_post_group, user: user)
-          expect(guardian.can_see_chat_channel?(channel)).to eq(true)
+          expect(guardian.can_join_chat_channel?(channel)).to eq(true)
         end
       end
     end

@@ -31,7 +31,7 @@ class ChatMessageBookmarkable < BaseBookmarkable
   end
 
   def self.validate_before_create(guardian, bookmarkable)
-    if bookmarkable.blank? || !guardian.can_see_chat_channel?(bookmarkable.chat_channel)
+    if bookmarkable.blank? || !guardian.can_join_chat_channel?(bookmarkable.chat_channel)
       raise Discourse::InvalidAccess
     end
   end
@@ -55,7 +55,7 @@ class ChatMessageBookmarkable < BaseBookmarkable
   end
 
   def self.can_see?(guardian, bookmark)
-    guardian.can_see_chat_channel?(bookmark.bookmarkable.chat_channel)
+    guardian.can_join_chat_channel?(bookmark.bookmarkable.chat_channel)
   end
 
   def self.cleanup_deleted

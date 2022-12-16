@@ -43,7 +43,7 @@ module Jobs
     def send_notifications(membership)
       user = membership.user
       guardian = Guardian.new(user)
-      return unless guardian.can_chat? && guardian.can_see_chat_channel?(@chat_channel)
+      return unless guardian.can_chat? && guardian.can_join_chat_channel?(@chat_channel)
       return if Chat::ChatNotifier.user_has_seen_message?(membership, @chat_message.id)
       return if online_user_ids.include?(user.id)
 
