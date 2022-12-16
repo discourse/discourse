@@ -8,7 +8,7 @@ class SiteSettings::YamlLoader
   end
 
   def load
-    yaml = YAML.load_file(@file)
+    yaml = load_yaml(@file)
     yaml.each_key do |category|
       yaml[category].each do |setting_name, hash|
         if hash.is_a?(Hash)
@@ -29,6 +29,16 @@ class SiteSettings::YamlLoader
           yield category, setting_name, hash, {}
         end
       end
+    end
+  end
+
+  private
+
+  def load_yaml(path)
+    if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.1.0')
+      YAML.load_file(path, aliases: true)
+    else
+      YAML.load_file(path)
     end
   end
 end
