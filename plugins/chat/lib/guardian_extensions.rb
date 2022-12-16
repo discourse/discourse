@@ -93,6 +93,7 @@ module Chat::GuardianExtensions
   end
 
   def can_join_chat_channel?(chat_channel)
+    return false if !@user
     can_preview_chat_channel?(chat_channel) &&
       (!chat_channel.category_channel? || can_post_in_category?(chat_channel.chatable))
   end
