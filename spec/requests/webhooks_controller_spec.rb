@@ -133,11 +133,11 @@ RSpec.describe WebhooksController do
 
       post "/webhooks/mailpace.json", params: {
         "event": "email.bounced",
-        "payload": {
+        "payload": [{
             "status": "bounced",
             "to": email,
             "message_id": "<#{message_id}>",
-        }
+        }]
       }
 
       expect(response.status).to eq(200)
@@ -154,11 +154,11 @@ RSpec.describe WebhooksController do
 
       post "/webhooks/mailpace.json", params: {
         "event": "email.deferred",
-        "payload": {
+        "payload": [{
             "status": "deferred",
             "to": email,
             "message_id": "<#{message_id}>",
-        }
+        }]
       }
 
       expect(response.status).to eq(200)
