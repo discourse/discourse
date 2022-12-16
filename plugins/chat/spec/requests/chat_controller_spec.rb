@@ -1137,6 +1137,8 @@ RSpec.describe Chat::ChatController do
 
     it "returns a 403 if the user can't see the channel" do
       category.update!(read_restricted: true)
+      group = Fabricate(:group)
+      CategoryGroup.create(group: group, category: category, permission_type: CategoryGroup.permission_types[:create_post])
       sign_in(user)
       post "/chat/#{channel.id}/quote.json",
            params: {
