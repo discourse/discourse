@@ -54,6 +54,8 @@ Fabricator(:moderator, from: :user) do
 
   after_create do |user|
     user.group_users << Fabricate(:group_user, user: user, group: Group[:moderators])
+    # HACK: Some plugins add the user to staff group already which breaks because of duplication
+    user.group_users << Fabricate(:group_user, user: user, group: Group[:staff]) if group_users.none? { |gu| gu.group == Group[:staff] }
   end
 end
 
@@ -65,6 +67,8 @@ Fabricator(:admin, from: :user) do
 
   after_create do |user|
     user.group_users << Fabricate(:group_user, user: user, group: Group[:admins])
+    # HACK: Some plugins add the user to staff group already which breaks because of duplication
+    user.group_users << Fabricate(:group_user, user: user, group: Group[:staff]) if group_users.none? { |gu| gu.group == Group[:staff] }
   end
 end
 

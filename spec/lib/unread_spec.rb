@@ -27,8 +27,8 @@ RSpec.describe Unread do
 
   describe 'staff counts' do
     it 'should correctly return based on staff post number' do
-      SiteSetting.enable_whispers = true
-      user.admin = true
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+      user.grant_admin!
 
       topic_user.last_read_post_number = 13
 
@@ -48,15 +48,13 @@ RSpec.describe Unread do
     end
 
     it 'returns the right unread posts for a staff user' do
-      SiteSetting.enable_whispers = true
-      SiteSetting.whispers_allowed_groups = ""
-      user.admin = true
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+      user.grant_admin!
       topic_user.last_read_post_number = 10
       expect(unread.unread_posts).to eq(5)
     end
 
     it 'returns the right unread posts for a whisperer user' do
-      SiteSetting.enable_whispers = true
       SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
       topic_user.last_read_post_number = 10
       expect(unread.unread_posts).to eq(5)

@@ -427,7 +427,7 @@ RSpec.describe PostAction do
     end
 
     it 'should not increase topic like count when liking a whisper' do
-      SiteSetting.set(:enable_whispers, true)
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
       post.revise(admin, post_type: Post.types[:whisper])
 
       PostActionCreator.like(admin, post)

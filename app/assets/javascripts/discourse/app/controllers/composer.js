@@ -296,11 +296,7 @@ export default Controller.extend({
 
   @discourseComputed("whisperer", "model.action")
   canWhisper(whisperer, modelAction) {
-    return (
-      this.siteSettings.enable_whispers &&
-      Composer.REPLY === modelAction &&
-      whisperer
-    );
+    return whisperer && modelAction === Composer.REPLY;
   },
 
   _setupPopupMenuOption(callback) {

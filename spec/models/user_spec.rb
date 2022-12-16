@@ -2920,24 +2920,21 @@ RSpec.describe User do
   end
 
   describe "#whisperer?" do
-    before do
-      SiteSetting.enable_whispers = true
-    end
+    fab!(:group) { Fabricate(:group) }
 
     it 'returns true for an admin user' do
+      SiteSetting.whispers_allowed_groups = "#{group.id}"
+
       admin = Fabricate.create(:admin)
       expect(admin.whisperer?).to eq(true)
     end
 
     it 'returns false for an admin user when whispers are not enabled' do
-      SiteSetting.enable_whispers = false
-
       admin = Fabricate.create(:admin)
       expect(admin.whisperer?).to eq(false)
     end
 
     it 'returns true for user belonging to whisperers groups' do
-      group = Fabricate(:group)
       whisperer = Fabricate(:user)
       user = Fabricate(:user)
       SiteSetting.whispers_allowed_groups = "#{group.id}"
@@ -2949,6 +2946,10 @@ RSpec.describe User do
 
       expect(whisperer.whisperer?).to eq(true)
       expect(user.whisperer?).to eq(false)
+    end
+
+    it 'returns false if no whispers groups exist' do
+      expect(subject.whisperer?).to eq(false)
     end
   end
 

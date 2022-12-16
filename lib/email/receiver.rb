@@ -286,7 +286,7 @@ module Email
         Email::Receiver.update_bounce_score(@from_email, SiteSetting.hard_bounce_score)
       end
 
-      if SiteSetting.enable_whispers? && @from_user&.staged?
+      if SiteSetting.whispers_allowed_groups.present? && @from_user&.staged?
         return if email_log.blank?
 
         if post.present? && topic.present? && topic.archetype == Archetype.private_message

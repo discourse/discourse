@@ -806,7 +806,7 @@ RSpec.describe PostsController do
 
     before do
       SiteSetting.min_first_post_typing_time = 0
-      SiteSetting.enable_whispers = true
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
     end
 
     context 'with api' do
