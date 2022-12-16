@@ -15,6 +15,10 @@ module SystemHelpers
     visit "/session/#{user.encoded_username}/become"
   end
 
+  def sign_out
+    delete "/session"
+  end
+
   def setup_system_test
     SiteSetting.login_required = false
     SiteSetting.content_security_policy = false
