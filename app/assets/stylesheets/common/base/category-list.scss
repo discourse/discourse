@@ -43,9 +43,9 @@
 
 .category-boxes,
 .category-boxes-with-topics {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
+  gap: 1.5em;
   margin-top: 1em;
   margin-bottom: 1em;
   width: 100%;
@@ -118,8 +118,6 @@
 
 .category-boxes {
   .category-box {
-    width: 23%;
-    margin: 0 1% 1.5em 1%;
     > a {
       width: 100%;
       padding: 0;
@@ -254,8 +252,6 @@
 
 .category-boxes-with-topics {
   .category-box {
-    width: 31%;
-    margin: 0 1% 1.5em 1%;
     padding: 0;
   }
 
