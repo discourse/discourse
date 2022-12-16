@@ -5735,8 +5735,8 @@ en:
         suspended_count: "Suspended"
         last_six_months: "Last 6 months"
         other_matches:
-          one: "There is <b>%{count} other user</b> with the same IP address. Review and select the suspicious ones to suspend along with %{username}."
-          other: "There are <b>%{count} other users</b> with the same IP address. Review and select the suspicious ones to suspend along with %{username}."
+          one: "There is <b>%{count} other user</b> with the same IP address. Review and select the suspicious ones to penalize along with %{username}."
+          other: "There are <b>%{count} other users</b> with the same IP address. Review and select the suspicious ones to penalize along with %{username}."
         other_matches_list:
           username: "Username"
           trust_level: "Trust Level"
