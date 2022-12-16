@@ -44,7 +44,6 @@
 .category-boxes,
 .category-boxes-with-topics {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
   gap: 1.5em;
   margin-top: 1em;
   margin-bottom: 1em;
@@ -117,6 +116,7 @@
 }
 
 .category-boxes {
+  grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
   .category-box {
     > a {
       width: 100%;
@@ -251,6 +251,7 @@
 }
 
 .category-boxes-with-topics {
+  grid-template-columns: repeat(auto-fit, minmax(18em, 1fr));
   .category-box {
     padding: 0;
   }
