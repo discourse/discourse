@@ -32,6 +32,7 @@
 
 {{#if (and (not @fullscreen) @currentUser)}}
   <div class="timeline-controls">
+    <PluginOutlet @name="timeline-controls-before" @tagName="span" @connectorTagName="span" @args={{hash model=@model}} />
     <TopicAdminMenuButton
       @topic={{@model}}
       @addKeyboardTargetClass={{true}}
@@ -137,5 +138,6 @@
         <TopicAdminMenuButton @topic={{@model}} @addKeyboardTargetClass={{true}} @openUpwards={{true}} />
       {{/if}}
     {{/if}}
+    <PluginOutlet @name="timeline-footer-controls-after" @tagName="span" @connectorTagName="span" @args={{hash model=@model}}/>
   </div>
 {{/if}}
