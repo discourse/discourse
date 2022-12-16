@@ -8,6 +8,10 @@ class CategoryHashtagDataSource
     "folder"
   end
 
+  def self.type
+    "category"
+  end
+
   def self.category_to_hashtag_item(category)
     HashtagAutocompleteService::HashtagItem.new.tap do |item|
       item.text = category.name

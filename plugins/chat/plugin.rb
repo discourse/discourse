@@ -730,11 +730,11 @@ after_initialize do
   register_about_stat_group("chat_users") { Chat::Statistics.about_users }
 
   # Make sure to update spec/system/hashtag_autocomplete_spec.rb when changing this.
-  register_hashtag_data_source("channel", Chat::ChatChannelHashtagDataSource)
-  register_hashtag_type_in_context("channel", "chat-composer", 200)
-  register_hashtag_type_in_context("category", "chat-composer", 100)
-  register_hashtag_type_in_context("tag", "chat-composer", 50)
-  register_hashtag_type_in_context("channel", "topic-composer", 10)
+  register_hashtag_data_source(Chat::ChatChannelHashtagDataSource)
+  register_hashtag_type_priority_for_context("channel", "chat-composer", 200)
+  register_hashtag_type_priority_for_context("category", "chat-composer", 100)
+  register_hashtag_type_priority_for_context("tag", "chat-composer", 50)
+  register_hashtag_type_priority_for_context("channel", "topic-composer", 10)
 
   Site.markdown_additional_options["chat"] = {
     limited_pretty_text_features: ChatMessage::MARKDOWN_FEATURES,
