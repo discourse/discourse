@@ -55,6 +55,7 @@ export default Component.extend({
     return isGrantedPermission ? !notificationsDisabled : false;
   },
 
+  // TODO: (selase) getter should consistently return a boolean
   @discourseComputed
   isEnabledPush: {
     set(value) {
@@ -82,11 +83,25 @@ export default Component.extend({
 
   isEnabled: or("isEnabledDesktop", "isEnabledPush"),
 
-  isPushNotificationsPreferred() {
-    if (!this.site.mobileView) {
+  @discourseComputed("isEnabled", "isEnabledPush", "notificationsDisabled")
+  isSubscribed(isEnabled, isEnabledPush, notificationsDisabled) {
+    if (!isEnabled) {
       return false;
     }
-    return isPushNotificationsSupported();
+
+    if (this.isPushNotificationsPreferred()) {
+      return isEnabledPush === "subscribed";
+    } else {
+      return notificationsDisabled === "";
+    }
+  },
+
+  isPushNotificationsPreferred() {
+    return (
+      (this.site.mobileView ||
+        this.siteSettings.enable_desktop_push_notifications) &&
+      isPushNotificationsSupported()
+    );
   },
 
   actions: {

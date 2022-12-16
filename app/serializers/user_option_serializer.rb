@@ -31,6 +31,7 @@ class UserOptionSerializer < ApplicationSerializer
              :text_size,
              :text_size_seq,
              :title_count_mode,
+             :bookmark_auto_delete_preference,
              :timezone,
              :skip_new_user_tips,
              :default_calendar,
