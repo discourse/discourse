@@ -158,7 +158,7 @@ RSpec.describe UserAvatarsController do
       expect(response.status).to eq(200)
 
       # this image should be really old so when it is fixed various algorithms pick it up
-      expect(response.headers["Last-Modified"]).to eq(Time.new('1990-01-01').httpdate)
+      expect(response.headers["Last-Modified"]).to eq(Time.new(1990, 01, 01).httpdate)
     end
 
     it 'serves image even if size missing and its in local mode' do

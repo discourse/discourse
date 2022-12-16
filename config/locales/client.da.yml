@@ -228,7 +228,6 @@ da:
     conduct: "Adfærdskodeks"
     mobile_view: "Mobil visning"
     desktop_view: "Computervisning"
-    or: "eller"
     now: "lige nu"
     read_more: "læs mere"
     more: "Mere"
@@ -1642,15 +1641,18 @@ da:
       enabled: "Dette websted er i skrivebeskyttet tilstand lige nu. Fortsæt endelig med at kigge, men der kan ikke svares, sendes 'Synes godt om' eller andet indtil videre."
       login_disabled: "Login er deaktiveret, mens webstedet er i skrivebeskyttet tilstand."
       logout_disabled: "Log ud er deaktiveret mens webstedet er i skrivebeskyttet tilstand."
-    too_few_posts_notice_MF: >-
+    too_few_posts_notice_MF: |
       Lad os <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">starte diskussionen!</a> Der {currentPosts, plural, one {er <strong>#</strong> indlæg} other {er <strong>#</strong> indlæg}}. Besøgende har brug for mere at læse og svare på — vi anbefaler i det mindste {requiredPosts, plural, one {<strong>#</strong> indlæg} other {<strong>#</strong> indlæg}}. Kun administratorer kan se denne besked.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# fejl/minut} other {# fejl/minut}}</a> har overskredet webstedsindstillingsgrænsen på {limit, plural, one {# fejl / minut} other {# fejl/minut}}."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fejl/minut} other {# fejl/minut}}</a> har nået webstedets indstillingsgrænse på {limit, plural, one {# fejl/minut} other {# fejl/minut}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fejl/time} other {# fejl/time}}</a> har overskredet webstedets indstillingsgrænse på {limit, plural, one {# fejl/time} other {# fejl/time}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# fejl/minut} other {# fejl/minut}}</a> overskredet webstedsindstillingsgrænsen på {limit, plural, one {# fejl / minut} other {# fejl/minut}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# fejl/minut} other {# fejl/minut}}</a> har overskredet webstedsindstillingsgrænsen på {limit, plural, one {# fejl / minut} other {# fejl/minut}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fejl/minut} other {# fejl/minut}}</a> har nået webstedets indstillingsgrænse på {limit, plural, one {# fejl/minut} other {# fejl/minut}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fejl/time} other {# fejl/time}}</a> har overskredet webstedets indstillingsgrænse på {limit, plural, one {# fejl/time} other {# fejl/time}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# fejl/minut} other {# fejl/minut}}</a> overskredet webstedsindstillingsgrænsen på {limit, plural, one {# fejl / minut} other {# fejl/minut}}.
     learn_more: "lær mere..."
-    first_post: Første indlæg
     mute: Ignorer
     unmute: Unmute
     last_post: Sidste indlæg
@@ -1673,7 +1675,8 @@ da:
       description:
         one: "Der er <b>%{count}</b> svar."
         other: "Der er <b>%{count}</b> svar."
-      description_time_MF: "Der {replyCount, plural, one {er <b>#</b> svar} other {er <b>#</b> svar}} med en anslået læsetid på <b>{readingTime, plural, one {# minut} other {# minutter}}</b>."
+      description_time_MF: |
+        Der {replyCount, plural, one {er <b>#</b> svar} other {er <b>#</b> svar}} med en anslået læsetid på <b>{readingTime, plural, one {# minut} other {# minutter}}</b>.
       enable: "Opsummér dette emne"
       disable: "Vis alle indlæg"
     deleted_filter:
@@ -2391,9 +2394,6 @@ da:
       options: "Emneindstillinger"
       show_links: "vis links i dette emne"
       unread_indicator: "Intet medlem har læst det sidste indlæg i dette emne endnu."
-      browse_all_categories: Vis alle kategorier
-      browse_all_tags: Gennemse alle mærker
-      view_latest_topics: vis seneste emner
       suggest_create_topic: Klar til <a href>at starte en ny samtale?</a>
       jump_reply_up: hop til tidligere svar
       jump_reply_down: hop til senere svar
@@ -3108,7 +3108,8 @@ da:
       official_warning: "Officiel Advarsel"
       delete_spammer: "Slet Spammer"
       flag_for_review: "Kø Til Gennemgang"
-      delete_confirm_MF: "Du er ved at slette {POSTS, plural, one {<b>#</b> indlæg} other {<b>#</b> indlæg}} og {TOPICS, plural, one {<b>#</b> emne} other {<b>#</b> emner}}, fjerne deres konto, blokere tilmeldinger fra deres IP-adresse <b>{ip_address}</b>og føje deres e-mail-adresse <b>{email}</b> til en permanent blokeringsliste. Er du sikker på, at denne bruger virkelig er en spammer?"
+      delete_confirm_MF: |
+        Du er ved at slette {POSTS, plural, one {<b>#</b> indlæg} other {<b>#</b> indlæg}} og {TOPICS, plural, one {<b>#</b> emne} other {<b>#</b> emner}}, fjerne deres konto, blokere tilmeldinger fra deres IP-adresse <b>{ip_address}</b>og føje deres e-mail-adresse <b>{email}</b> til en permanent blokeringsliste. Er du sikker på, at denne bruger virkelig er en spammer?
       yes_delete_spammer: "Ja, slet spammer"
       ip_address_missing: "(I/T)"
       hidden_email_address: "(skjult)"
@@ -3281,7 +3282,6 @@ da:
         this_month: "Måned"
         this_week: "Uge"
         today: "I dag"
-        other_periods: "se top:"
     permission_types:
       full: "Opret / Besvar / Se"
       create_post: "Besvar / Se"
@@ -3892,9 +3892,8 @@ da:
         detailed_instruction: "En POST-forespørgsel vil blive sendt til den angivne URL når valgt event forekommer."
         new: "Ny Webhook"
         create: "Opret"
+        edit: "Redigér"
         save: "Gem"
-        destroy: "Slet"
-        description: "Beskrivelse"
         controls: "Kontrolfunktioner"
         go_back: "Tilbage til oversigt"
         payload_url: "Payload-URL"
@@ -3972,9 +3971,6 @@ da:
           headers: "Sidehoveder"
           payload: "Payload"
           body: "Brødtekst"
-          go_list: "Gå til oversigt"
-          go_details: "Redigér webhook"
-          go_events: "Gå til events"
           ping: "Ping"
           status: "Statuskode"
           event_id: "ID"
@@ -4706,7 +4702,8 @@ da:
         clear_penalty_history:
           title: "Ryd straffehistorie"
           description: "brugere med straffe kan ikke nå TL3"
-        delete_all_posts_confirm_MF: "Du er ved at slette {POSTS, plural, one {1 emne} other {# emner}} og {TOPICS, plural, one {1 indlæg} other {# indlæg}}. Er du sikker?"
+        delete_all_posts_confirm_MF: |
+          Du er ved at slette {POSTS, plural, one {1 emne} other {# emner}} og {TOPICS, plural, one {1 indlæg} other {# indlæg}}. Er du sikker?
         silence: "Mådehold (silence)"
         unsilence: "Fjern mådeholdenhed (unsilence)"
         silenced: "Mådeholdt (silenced)?"

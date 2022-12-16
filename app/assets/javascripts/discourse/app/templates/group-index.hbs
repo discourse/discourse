@@ -54,7 +54,11 @@
               {{/if}}
 
               <td class="avatar" colspan="2">
-                <UserInfo @user={{m}} @skipName={{this.skipName}} />
+                <UserInfo
+                  @user={{m}}
+                  @skipName={{this.skipName}}
+                  @showStatus={{true}}
+                  @showStatusTooltip={{true}}/>
               </td>
 
               <td class="group-owner">

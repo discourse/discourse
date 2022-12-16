@@ -253,7 +253,6 @@ hu:
     conduct: "Magatartási kódex"
     mobile_view: "Mobil nézet"
     desktop_view: "Asztali nézet"
-    or: "vagy"
     now: "épp most"
     read_more: "olvasás tovább"
     more: "Több"
@@ -1281,7 +1280,7 @@ hu:
         disable_confirm: "Biztos, hogy ki akarja kapcsolni a kétfaktoros hitelesítést?"
         delete: "Törlés"
         delete_confirm_header: "Ezek a token-alapú hitelesítők és fizikai biztonsági kulcsok törlődnek:"
-        delete_confirm_instruction: 'A megerősítéshez írja be <strong>%{confirm}</strong> az alábbi mezőbe.'
+        delete_confirm_instruction: "A megerősítéshez írja be <strong>%{confirm}</strong> az alábbi mezőbe."
         delete_single_confirm_title: "Hitelesítő törlése"
         delete_single_confirm_message: "%{name} törlése. Ez a művelet nem vonható vissza. Ha meggondolja magát, újra regisztrálnia kell ezt a hitelesítőt."
         delete_backup_codes_confirm_title: "Biztonsági kódok törlése"
@@ -1722,15 +1721,18 @@ hu:
       logout_disabled: "A kilépés le van tiltva, amíg az oldal írásvédett módban van."
     staff_writes_only_mode:
       enabled: "Ez az oldal csak a munkatársaknak van fenntartva. Továbbra is böngészheted, de a válaszadás és egyéb műveletek csak a munkatársak számára elérhetők."
-    too_few_posts_notice_MF: >-
+    too_few_posts_notice_MF: |
       <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">Kezdjük el a beszélgetést!</a> Jelenleg {currentPosts, plural, one {<strong>#</strong> bejegyzés} other {<strong>#</strong> bejegyzés}} található. A látogatóknak több olvasnivalóra van szükségük – azt javasoljuk, hogy legalább {requiredPosts, plural, one {<strong>#</strong> bejegyzés} other {<strong>#</strong> bejegyzés}} legyen. Csak a stáb láthatja ezt az üzenetet.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hiba/óra} other {# hiba/óra}}</a>, elérte az oldal beállításiban megadott {limit, plural, one {# hiba/órás} other {# hiba/órás}} korlátot."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hiba/perc} other {# hiba/perc}}</a>, elérte az oldal beállításiban megadott {limit, plural, one {# hiba/perces} other {# hiba/perces}} korlátot."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hiba/óra} other {# hiba/óra}}</a>, túllépte az oldal beállításiban megadott {limit, plural, one {# hiba/órás} other {# hiba/órás}} korlátot."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hiba/perc} other {# hiba/perc}}</a>, túllépte az oldal beállításiban megadott {limit, plural, one {# hiba/perces} other {# hiba/perces}} korlátot."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hiba/óra} other {# hiba/óra}}</a>, elérte az oldal beállításiban megadott {limit, plural, one {# hiba/órás} other {# hiba/órás}} korlátot.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hiba/perc} other {# hiba/perc}}</a>, elérte az oldal beállításiban megadott {limit, plural, one {# hiba/perces} other {# hiba/perces}} korlátot.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hiba/óra} other {# hiba/óra}}</a>, túllépte az oldal beállításiban megadott {limit, plural, one {# hiba/órás} other {# hiba/órás}} korlátot.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hiba/perc} other {# hiba/perc}}</a>, túllépte az oldal beállításiban megadott {limit, plural, one {# hiba/perces} other {# hiba/perces}} korlátot.
     learn_more: "tudjon meg többet…"
-    first_post: Első bejegyzés
     mute: Némítás
     unmute: Némítás feloldása
     last_post: Közzétett
@@ -1755,7 +1757,8 @@ hu:
       description:
         one: "<b>%{count}</b> válasz van."
         other: "<b>%{count}</b> válasz van."
-      description_time_MF: "{replyCount, plural, one {<b>#</b> válasz} other {<b>#</b> válasz}} található, a becsült olvasási idő <b>{readingTime, plural, one {# perc} other {# perc}}</b>."
+      description_time_MF: |
+        {replyCount, plural, one {<b>#</b> válasz} other {<b>#</b> válasz}} található, a becsült olvasási idő <b>{readingTime, plural, one {# perc} other {# perc}}</b>.
       enable: "Téma összefoglalása"
       disable: "Összes bejegyzés megjelenítése"
       short_label: "Összefoglalás"
@@ -2568,9 +2571,6 @@ hu:
       collapse_details: "téma részleteinek összecsukása"
       expand_details: "téma részleteinek kibontása"
       unread_indicator: "Egyetlen tag sem olvasta még a téma utolsó bejegyzését."
-      browse_all_categories: Összes kategória böngészése
-      browse_all_tags: Összes címke böngészése
-      view_latest_topics: legújabb témák megtekintése
       suggest_create_topic: Készen áll, hogy <a href>új beszélgetést kezdjen?</a>
       jump_reply_up: ugrás a korábbi válaszhoz
       jump_reply_down: ugrás a későbbi válaszhoz
@@ -3329,7 +3329,6 @@ hu:
         this_month: "Utolsó 30 nap"
         this_week: "Utolsó 7 nap"
         today: "Utolsó 24 óra"
-        other_periods: "a legkedveltebbek között:"
     permission_types:
       full: "Létrehozás / Válaszolás / Megtekintés"
       create_post: "Válaszolás / Megtekintés"
@@ -3899,9 +3898,8 @@ hu:
       web_hooks:
         title: "Webhooks"
         create: "Létrehoz"
+        edit: "Szerkesztés"
         save: "Mentés"
-        destroy: "Törlés"
-        description: "Leírás"
         controls: "Irányítás"
         go_back: "Vissza a listára"
         payload_url_placeholder: "https://example.com/postreceive"
@@ -3949,7 +3947,6 @@ hu:
           headers: "Fejlécek"
           payload: "Terhelés"
           body: "Törzs"
-          go_list: "Ugrás a listához"
           ping: "Ping"
           status: "Státusz kód"
           event_id: "ID"

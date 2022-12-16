@@ -2060,7 +2060,7 @@ developer:
 navigation:
   navigation_menu:
     client: true
-    default: "legacy"
+    default: "sidebar"
     type: enum
     enum: "NavigationMenuSiteSetting"
   default_sidebar_categories:

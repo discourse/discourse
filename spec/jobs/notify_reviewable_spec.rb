@@ -168,6 +168,7 @@ RSpec.describe Jobs::NotifyReviewable do
     end
 
     it "respects priority" do
+      SiteSetting.navigation_menu = "legacy"
       SiteSetting.enable_category_group_moderation = true
       Reviewable.set_priorities(medium: 2.0)
       SiteSetting.reviewable_default_visibility = 'medium'

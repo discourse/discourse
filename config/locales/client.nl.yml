@@ -253,7 +253,6 @@ nl:
     conduct: "Gedragscode"
     mobile_view: "Mobiele weergave"
     desktop_view: "Desktopweergave"
-    or: "of"
     now: "zojuist"
     read_more: "meer lezen"
     more: "Meer"
@@ -1724,12 +1723,15 @@ nl:
     staff_writes_only_mode:
       enabled: "Deze site is in de medewerkermodus. Ga door met bekijken, maar antwoorden, liken en andere acties zijn beperkt tot medewerkers."
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/uur} other {# fouten/uur}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/uur} other {# fouten/uur}} bereikt."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/minuut} other {# fouten/minuut}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/minuut} other {# fouten/minuut}} bereikt."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/uur} other {# fouten/uur}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/uur} other {# fouten/uur}} bereikt."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/minuut} other {# fouten/minuut}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/minuut} other {# fouten/minuut}} bereikt."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/uur} other {# fouten/uur}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/uur} other {# fouten/uur}} bereikt.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/minuut} other {# fouten/minuut}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/minuut} other {# fouten/minuut}} bereikt.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/uur} other {# fouten/uur}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/uur} other {# fouten/uur}} bereikt.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/minuut} other {# fouten/minuut}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/minuut} other {# fouten/minuut}} bereikt.
     learn_more: "meer informatie..."
-    first_post: Eerste bericht
     mute: Dempen
     unmute: Dempen opheffen
     last_post: Geplaatst
@@ -1754,7 +1756,8 @@ nl:
       description:
         one: "Er is <b>%{count}</b> antwoord."
         other: "Er zijn <b>%{count}</b> antwoorden."
-      description_time_MF: "Er {replyCount, plural, one {is <b>#</b> antwoord} other {zijn <b>#</b> antwoorden}} met een geschatte leestijd van <b>{readingTime, plural, one {# minuut} other {# minuten}}</b>."
+      description_time_MF: |
+        Er {replyCount, plural, one {is <b>#</b> antwoord} other {zijn <b>#</b> antwoorden}} met een geschatte leestijd van <b>{readingTime, plural, one {# minuut} other {# minuten}}</b>.
       enable: "Vat dit topic samen"
       disable: "Alle berichten weergeven"
       short_label: "Samenvatten"
@@ -2574,9 +2577,6 @@ nl:
       collapse_details: "topicdetails samenvouwen"
       expand_details: "topicdetails uitvouwen"
       unread_indicator: "Laatste bericht van dit topic is nog niet gelezen door een lid gelezen."
-      browse_all_categories: Alle categorieën bekijken
-      browse_all_tags: Alle tags bekijken
-      view_latest_topics: nieuwste topics weergeven
       suggest_create_topic: Klaar om <a href>een nieuw gesprek te beginnen?</a>
       jump_reply_up: naar eerder antwoord springen
       jump_reply_down: naar later antwoord springen
@@ -3333,7 +3333,8 @@ nl:
       official_warning: "Officiële waarschuwing"
       delete_spammer: "Spammer verwijderen"
       flag_for_review: "In wachtrij plaatsen voor beoordeling"
-      delete_confirm_MF: "Je staat op het punt {POSTS, plural, one {<b>#</b> bericht} other {<b>#</b> berichten}} en {TOPICS, plural, one {<b>#</b> topic} other {<b>#</b> topics}} van deze gebruiker te verwijderen, diens account te verwijderen, registraties vanaf diens IP-adres <b>{ip_address}</b> te blokkeren en diens e-mailadres <b>{email}</b> toe te voegen aan een permanente blokkeerlijst. Weet je het zeker?"
+      delete_confirm_MF: |
+        Je staat op het punt {POSTS, plural, one {<b>#</b> bericht} other {<b>#</b> berichten}} en {TOPICS, plural, one {<b>#</b> topic} other {<b>#</b> topics}} van deze gebruiker te verwijderen, diens account te verwijderen, registraties vanaf diens IP-adres <b>{ip_address}</b> te blokkeren en diens e-mailadres <b>{email}</b> toe te voegen aan een permanente blokkeerlijst. Weet je het zeker?
       yes_delete_spammer: "Ja, spammer verwijderen"
       ip_address_missing: "(N.v.t.)"
       hidden_email_address: "(verborgen)"
@@ -3512,7 +3513,6 @@ nl:
         this_month: "Maand"
         this_week: "Week"
         today: "Vandaag"
-        other_periods: "top weergeven:"
     browser_update: '<a href="https://www.discourse.org/faq/#browser">Je browser wordt niet ondersteund</a> helaas. <a href="https://browsehappy.com">Schakel over naar een ondersteunde browser</a> om rijke inhoud te bekijken, je aan te melden en te antwoorden.'
     safari_13_warning: Deze website verwijdert binnenkort de ondersteuning voor iOS- en Safari-versie 13 en lager. Er blijft een vereenvoudigde alleen-lezen versie beschikbaar. (<a href="https://meta.discourse.org/t/224747">Meer informatie</a>)
     permission_types:
@@ -4199,8 +4199,6 @@ nl:
         new: "Nieuwe webhook"
         create: "Maken"
         save: "Opslaan"
-        destroy: "Verwijderen"
-        description: "Beschrijving"
         controls: "Controlepaneel"
         go_back: "Terug naar lijst"
         payload_url: "Payload-URL"
@@ -4281,9 +4279,6 @@ nl:
           headers: "Headers"
           payload: "Payload"
           body: "Inhoud"
-          go_list: "Naar lijst"
-          go_details: "Webhook bewerken"
-          go_events: "Naar gebeurtenissen"
           ping: "Ping"
           status: "Statuscode"
           event_id: "ID"
@@ -5028,7 +5023,8 @@ nl:
         clear_penalty_history:
           title: "Minpuntengeschiedenis wissen"
           description: "gebruikers met minpunten kunnen geen TL3 bereiken"
-        delete_all_posts_confirm_MF: "Je staat op het punt {POSTS, plural, one {# bericht} other {# berichten}} en {TOPICS, plural, one {# topic} other {# topics}} te verwijderen. Weet je het zeker?"
+        delete_all_posts_confirm_MF: |
+          Je staat op het punt {POSTS, plural, one {# bericht} other {# berichten}} en {TOPICS, plural, one {# topic} other {# topics}} te verwijderen. Weet je het zeker?
         silence: "Dempen"
         unsilence: "Dempen opheffen"
         silenced: "Gedempt?"

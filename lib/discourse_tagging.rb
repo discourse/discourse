@@ -13,6 +13,10 @@ module DiscourseTagging
           ON tgm.tag_group_id = tg.id
   SQL
 
+  def self.term_types
+    @term_types ||= Enum.new(contains: 0, starts_with: 1)
+  end
+
   def self.tag_topic_by_names(topic, guardian, tag_names_arg, append: false)
     if guardian.can_tag?(topic)
       tag_names = DiscourseTagging.tags_for_saving(tag_names_arg, guardian) || []
@@ -262,6 +266,7 @@ module DiscourseTagging
 
   # Options:
   #   term: a search term to filter tags by name
+  #   term_type: whether to search by "starts_with" or "contains" with the term
   #   limit: max number of results
   #   category: a Category to which the object being tagged belongs
   #   for_input: result is for an input field, so only show permitted tags
@@ -355,9 +360,15 @@ module DiscourseTagging
     term = opts[:term]
     if term.present?
       term = term.gsub("_", "\\_").downcase
-      builder.where("LOWER(name) LIKE :term")
       builder_params[:cleaned_term] = term
-      builder_params[:term] = "%#{term}%"
+
+      if opts[:term_type] == DiscourseTagging.term_types[:starts_with]
+        builder_params[:term] = "#{term}%"
+      else
+        builder_params[:term] = "%#{term}%"
+      end
+
+      builder.where("LOWER(name) LIKE :term")
       sql.gsub!("/*and_name_like*/", "AND LOWER(t.name) LIKE :term")
     else
       sql.gsub!("/*and_name_like*/", "")

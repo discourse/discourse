@@ -313,7 +313,6 @@ uk:
     conduct: "Кодекс поведінки"
     mobile_view: "Мобільний вигляд"
     desktop_view: "Стаціонарний вигляд"
-    or: "або"
     now: "щойно"
     read_more: "читати далі"
     more: "Більше"
@@ -1863,15 +1862,18 @@ uk:
       logout_disabled: "Вихід вимкнено, поки сайт перебуває в режимі лише для читання."
     staff_writes_only_mode:
       enabled: "Сайт працює в режимі \"тільки для команди обслуговування\". Зараз ви можете продовжувати переглядати сайт, але інші дії доступні лише членам команди обслуговування."
-    too_few_posts_notice_MF: >-
+    too_few_posts_notice_MF: |
       Почнемо <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">старт дискусії!</a> Тут {currentPosts, plural, one {<strong>#</strong> допис} few {<strong>#</strong> дописи} many {<strong>#</strong> дописів} other {<strong>#</strong> дописів}}. Відвідувачам потрібно більше читати та відповідати – ми рекомендуємо {requiredPosts, plural, one {<strong>#</strong> допис} few {<strong>#</strong> дописи} many {<strong>#</strong> дописів} other {<strong>#</strong> дописів}}. Це повідомлення може бачити лише члени команди обслуговування.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# помилка/година} other {# помилок/година}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# помилка/година} other {# помилок/година}}."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# помилка/хвилина} other {# помилок/хвилина}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# помилка/хвилина} other {# помилок/хвилина}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# помилка/година} few {# помилки/година} many {# помилок/година} other {# помилок/година}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# помилка/година} few {# помилки/година} many {# помилок/година} other {# помилок/година}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# помилка/хвилина} few {# помилки/хвилина} many {# помилок/хвилина} other {# помилок/хвилина}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# помилка/хвилина} few {# помилки/хвилина} many {# помилок/хвилина} other {# помилок/хвилина}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# помилка/година} other {# помилок/година}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# помилка/година} other {# помилок/година}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# помилка/хвилина} other {# помилок/хвилина}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# помилка/хвилина} other {# помилок/хвилина}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# помилка/година} few {# помилки/година} many {# помилок/година} other {# помилок/година}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# помилка/година} few {# помилки/година} many {# помилок/година} other {# помилок/година}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# помилка/хвилина} few {# помилки/хвилина} many {# помилок/хвилина} other {# помилок/хвилина}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# помилка/хвилина} few {# помилки/хвилина} many {# помилок/хвилина} other {# помилок/хвилина}}.
     learn_more: "дізнатися більше…"
-    first_post: Перший допис
     mute: Приглушити
     unmute: Розблокувати
     last_post: Опубліковано
@@ -1900,7 +1902,8 @@ uk:
         few: "Тут <b>%{count}</b> відповіді."
         many: "Тут <b>%{count}</b> відповідей."
         other: "Тут <b>%{count}</b> відповідей."
-      description_time_MF: "Тут є {replyCount, plural, one {<b>#</b> відповідь} few {<b>#</b> відповіді} many {<b>#</b> відповідей} other {<b>#</b> відповідей}} з розрахунковим часом читання <b>{readingTime, plural, one {# хвилина} few {# хвилини} many {# хвилин} other {# хвилин}}</b>."
+      description_time_MF: |
+        Тут є {replyCount, plural, one {<b>#</b> відповідь} few {<b>#</b> відповіді} many {<b>#</b> відповідей} other {<b>#</b> відповідей}} з розрахунковим часом читання <b>{readingTime, plural, one {# хвилина} few {# хвилини} many {# хвилин} other {# хвилин}}</b>.
       enable: "Підсумки цієї теми"
       disable: "Показати всі дописи"
       short_label: "Підсумок"
@@ -2799,9 +2802,6 @@ uk:
       collapse_details: "згорнути детальну інформацію теми"
       expand_details: "розгорнути детальну інформацію"
       unread_indicator: "Поки що ніхто з учасників не прочитав останній допис цієї теми."
-      browse_all_categories: Переглянути всі розділи
-      browse_all_tags: Переглянути всі теґи
-      view_latest_topics: перегляньте останні теми
       suggest_create_topic: Готові <a href>почати нову розмову?</a>
       jump_reply_up: перейти до попередньої відповіді
       jump_reply_down: перейти до пізнішої відповіді
@@ -3624,7 +3624,8 @@ uk:
       official_warning: "Офіційне попередження"
       delete_spammer: "Видалити спамера"
       flag_for_review: "Черга рецензування"
-      delete_confirm_MF: "Ви збираєтеся видалити {POSTS, plural, one {<b>#</b> допис} few {<b>#</b> дописи} many {<b>#</b> дописів} other {<b>#</b> дописів}} та {TOPICS, plural, one {<b>#</b> тему} few {<b>#</b> теми} many {<b>#</b> тем} other {<b>#</b> теми}} цього користувача, а також видалити його обліковий запис, додати його IP адресу <b>{ip_address}</b> та його поштову адресу <b>{email}</b> в чорний список. Ви дійсно впевнені, що цей дописувач спамер?"
+      delete_confirm_MF: |
+        Ви збираєтеся видалити {POSTS, plural, one {<b>#</b> допис} few {<b>#</b> дописи} many {<b>#</b> дописів} other {<b>#</b> дописів}} та {TOPICS, plural, one {<b>#</b> тему} few {<b>#</b> теми} many {<b>#</b> тем} other {<b>#</b> теми}} цього користувача, а також видалити його обліковий запис, додати його IP адресу <b>{ip_address}</b> та його поштову адресу <b>{email}</b> в чорний список. Ви дійсно впевнені, що цей дописувач спамер?
       yes_delete_spammer: "Так, видалити спамера"
       ip_address_missing: "(не доступно)"
       hidden_email_address: "(приховано)"
@@ -3833,7 +3834,6 @@ uk:
         this_month: "Місяць"
         this_week: "Тиждень"
         today: "Today"
-        other_periods: "дивитися TOP:"
     browser_update: 'На жаль, <a href="https://www.discourse.org/faq/#browser">ваш браузер не підтримується</a>. Будь ласка, <a href="https://browsehappy.com">перейдіть на підтримуваний браузер</a> , щоб повноцінно переглянути вміст, увійти та відповісти.'
     safari_13_warning: Цей сайт незабаром перестане підтримувати версії iOS і Safari 13 і нижче. Спрощена версія "тільки для читання" залишиться доступною. (<a href="https://meta.discourse.org/t/224747">більше інформації</a>)
     permission_types:
@@ -4544,9 +4544,8 @@ uk:
         detailed_instruction: "При настанні обраної події, на відповідний URL буде відправлений POST-запит."
         new: "Новий вебгук"
         create: "Створити"
+        edit: "Редагувати"
         save: "Зберегти"
-        destroy: "Видалити"
-        description: "Опис"
         controls: "Управління"
         go_back: "Повернутися до списку"
         payload_url: "Посилання для відправки"
@@ -4631,9 +4630,6 @@ uk:
           headers: "Заголовки"
           payload: "Корисне навантаження"
           body: "Тіло"
-          go_list: "Перейти до списку"
-          go_details: " Редагувати вебгук"
-          go_events: "Перейти до подій"
           ping: "Пінг"
           status: "Код Стану"
           event_id: "ID"
@@ -5384,7 +5380,8 @@ uk:
         clear_penalty_history:
           title: "Очистити Історію Штрафів"
           description: "користувачі зі штрафами не можуть досягти TL3"
-        delete_all_posts_confirm_MF: "Ви збираєтеся видалити {POSTS, plural, one {# допис} few {# дописи}  many{# допісів} other {# дописів}} та {TOPICS, plural, one {# тему} few {# теми} many {# тем} other {# тем}}. Ви впевнені?"
+        delete_all_posts_confirm_MF: |
+          Ви збираєтеся видалити {POSTS, plural, one {# допис} few {# дописи}  many{# допісів} other {# дописів}} та {TOPICS, plural, one {# тему} few {# теми} many {# тем} other {# тем}}. Ви впевнені?
         silence: "Відключити"
         unsilence: "Підключити"
         silenced: "Відключений?"

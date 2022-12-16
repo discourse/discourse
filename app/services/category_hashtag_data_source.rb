@@ -34,13 +34,28 @@ class CategoryHashtagDataSource
       .map { |category| category_to_hashtag_item(category) }
   end
 
-  def self.search(guardian, term, limit)
-    Category
-      .secured(guardian)
-      .includes(:parent_category)
-      .where("LOWER(name) LIKE :term OR LOWER(slug) LIKE :term", term: "%#{term}%")
-      .take(limit)
-      .map { |category| category_to_hashtag_item(category) }
+  def self.search(
+    guardian,
+    term,
+    limit,
+    condition = HashtagAutocompleteService.search_conditions[:contains]
+  )
+    base_search =
+      Category
+        .secured(guardian)
+        .select(:id, :parent_category_id, :slug, :name, :description)
+        .includes(:parent_category)
+
+    if condition == HashtagAutocompleteService.search_conditions[:starts_with]
+      base_search = base_search.where("LOWER(slug) LIKE :term", term: "#{term}%")
+    elsif condition == HashtagAutocompleteService.search_conditions[:contains]
+      base_search =
+        base_search.where("LOWER(name) LIKE :term OR LOWER(slug) LIKE :term", term: "%#{term}%")
+    else
+      raise Discourse::InvalidParameters.new("Unknown search condition: #{condition}")
+    end
+
+    base_search.take(limit).map { |category| category_to_hashtag_item(category) }
   end
 
   def self.search_sort(search_results, term)

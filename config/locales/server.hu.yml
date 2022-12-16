@@ -956,7 +956,12 @@ hu:
     max_emojis_in_title: "A témacímekben lévő emodzsik legnagyobb száma"
     search_tokenize_chinese: "A keresés kényszerítése, hogy tokenizálja a kínait, még a nem kínai oldalakon is"
     search_tokenize_japanese: "A keresés kényszerítése, hogy tokenizálja a japánt, még a nem japán oldalakon is"
+    title: "Az oldal neve. Minden látogató számára látható, beleértve a névtelen felhasználókat is."
+    site_description: "Írja le ezt a helyszínt egy mondatban. Minden látogató számára látható, beleértve a névtelen felhasználókat is."
+    short_site_description: "Rövid leírás néhány szóban. Minden látogató számára látható, beleértve a névtelen felhasználókat is."
     notify_users_after_responses_deleted_on_flagged_post: "Ha egy bejegyzést jelentenek, majd eltávolítanak, akkor minden olyan felhasználó értesítést kap, aki válaszolt a bejegyzésre, és ezért a válaszait eltávolították."
+    max_image_width: "A bejegyzésben lévő képek indexképének maximális szélessége. A nagyobb szélességű képeket a rendszer átméretezi és dobozba helyezi."
+    max_image_height: "A képek miniatűrjének maximális magassága egy bejegyzésben. A nagyobb magasságú képeket átméretezi és dobozba helyezi."
     post_excerpt_maxlength: "A bejegyzés kivonatának / összefoglalójának maximális hossza."
     topic_excerpt_maxlength: "A témakör kivonatának / összefoglalójának maximális hossza a téma első bejegyzéséből generálva."
     blocked_onebox_domains: "Azok a domainek, amelyek soha nem kerülnek dobozba, például wikipedia.org\n(A * ? helyettesítő karakterek nem támogatottak)"
@@ -2131,6 +2136,8 @@ hu:
             placeholder: "Privát"
           must_approve_users:
             placeholder: "Jóváhagyást igényel"
+          chat_enabled:
+            placeholder: "Csevegés engedélyezése"
       ready:
         title: "A Discourse készen áll!"
       styling:

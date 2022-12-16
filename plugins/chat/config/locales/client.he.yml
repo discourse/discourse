@@ -136,12 +136,14 @@ he:
             two: "אזכורים אסורים בקבוצה ‎@%{group} ובקבוצה ‎@%{group_2}"
             many: "אזכורים אסורים בקבוצה ‎@%{group} ובקבוצה ‎@%{group_2}"
             other: "אזכורים אסורים בקבוצה ‎@%{group} ובקבוצה ‎@%{group_2}"
+          too_many_members_multiple: "%{count} קבוצות אלו חורגות מ%{notification_limit} של %{limit}"
           users_limit:
             one: "משתמש/ת %{count}"
             two: "%{count} משתמשים"
             many: "%{count} משתמשים"
             other: "%{count} משתמשים"
           notification_limit: "מגבלת התראה"
+        too_many_mentions: "הודעה זו חורגת מ%{notification_limit} של %{limit}"
         mentions_limit:
           one: "אזכור %{count}"
           two: "%{count} אזכורים"
@@ -310,6 +312,7 @@ he:
         mention: "רק אזכורים"
         always: "לכל פעילות"
       settings:
+        channel_wide_mentions_label: "לאפשר אזכורים של ‎@all (כולם) ו־‎@here (כאן)"
         auto_join_users_label: "להוסיף משתמשים אוטומטית"
         auto_join_users_info: "לבדוק כל שעה אילו משתמשים היו פעילים ב־3 החודשים האחרונים ואם יש להם גישה לקטגוריה %{category}, להוסיף אותם לערוץ הזה."
         enable_auto_join_users: "להוסיף אוטומטית את כל המשתמשים שהיו פעילים לאחרונה"

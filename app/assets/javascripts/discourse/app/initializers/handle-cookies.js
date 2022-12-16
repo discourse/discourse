@@ -1,5 +1,6 @@
 import { extendThemeCookie } from "discourse/lib/theme-selector";
 import { extendColorSchemeCookies } from "discourse/lib/color-scheme-picker";
+import { extendTextSizeCookie } from "discourse/models/user";
 import { later } from "@ember/runloop";
 import { isTesting } from "discourse-common/config/environment";
 
@@ -13,6 +14,7 @@ export default {
     later(() => {
       extendThemeCookie();
       extendColorSchemeCookies();
+      extendTextSizeCookie();
     }, DELAY);
   },
 };

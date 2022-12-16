@@ -104,7 +104,7 @@ function buildTopicCount(count) {
   )}">&times; ${count}</span>`;
 }
 
-function defaultCategoryLinkRenderer(category, opts) {
+export function defaultCategoryLinkRenderer(category, opts) {
   let descriptionText = get(category, "description_text");
   let restricted = get(category, "read_restricted");
   let url = opts.url

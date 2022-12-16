@@ -301,8 +301,8 @@ class GroupsController < ApplicationController
 
     users = users
       .includes(:primary_group)
-      .joins(:user_option)
-      .select('users.*, user_options.timezone, group_users.created_at as added_at')
+      .includes(:user_option)
+      .select('users.*, group_users.created_at as added_at')
       .order(order)
       .order(username_lower: dir)
 

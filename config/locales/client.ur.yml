@@ -232,7 +232,6 @@ ur:
     conduct: "ضابطہ اخلاق"
     mobile_view: "موبائل وِیو"
     desktop_view: "ڈیسک ٹاپ وِیو"
-    or: "یا"
     now: "ابھی ابھی"
     read_more: "مزید پڑھیں"
     more: "مزید"
@@ -1640,7 +1639,6 @@ ur:
       login_disabled: "جب تک سائٹ صرف پڑھنے کے مَوڈ میں ہے لاگ اِن غیر فعال رہے گا۔"
       logout_disabled: "جب تک سائٹ صرف پڑھنے کے مَوڈ میں ہے لاگ آؤٹ غیر فعال رہے گا۔"
     learn_more: "اورجانیے..."
-    first_post: پہلی پوسٹ
     mute: خاموش کریں
     unmute: آواز چالو کریں
     last_post: پوسٹ کیا
@@ -1663,7 +1661,8 @@ ur:
       description:
         one: "یہاں<b>%{count}</b> جواب ہے۔"
         other: "یہاں<b>%{count}</b> جوابات ہیں۔"
-      description_time_MF: "وہاں {replyCount, plural, one { <b>#</b> جواب ہے} other { <b>#</b> جوابات ہیں}} ایک متوقع مطالعہ <b>{readingTime, plural, one {# منٹ} other {# منٹ}}</b>۔"
+      description_time_MF: |
+        وہاں {replyCount, plural, one { <b>#</b> جواب ہے} other { <b>#</b> جوابات ہیں}} ایک متوقع مطالعہ <b>{readingTime, plural, one {# منٹ} other {# منٹ}}</b>۔
       enable: "اس ڑاپک کا خلاصہ کریں"
       disable: "تمام پوسٹیں دکھائیں"
       short_label: "خلاصہ"
@@ -2394,9 +2393,6 @@ ur:
       collapse_details: "موضوع کی تفصیلات کوسکیڑیں"
       expand_details: "موضوع کی تفصیلات کو پھیلائیں"
       unread_indicator: "کسی ممبر نے ابھی تک اِس ٹاپک کی آخری پوسٹ نہیں پڑھی ہے۔"
-      browse_all_categories: تمام زمرہ جات براؤز کریں
-      browse_all_tags: تمام ٹیگز براؤز کریں
-      view_latest_topics: تازہ ترین ٹاپک دیکھیے
       suggest_create_topic: <a href>نئی گفتگو شروع</a> کرنے کے لیے تیار ہیں؟
       jump_reply_up: اِس سے پرانے جواب پر جائیں
       jump_reply_down: اِس سے نئے جواب پر جائیں
@@ -3122,7 +3118,8 @@ ur:
       official_warning: "آفیشل انتباہ"
       delete_spammer: "اسپامر کو مٹائیں"
       flag_for_review: "جائزہ کے لیے قطار"
-      delete_confirm_MF: "آپ مٹانے والے ہیں {POSTS, plural, one {<b>#</b> پوسٹ} other {<b>#</b> پوسٹس}} اور {TOPICS, plural, one {<b>#</b> موضوع} other {<b>#</b> موضوعات}} اس صارف سے، ان کا اکاؤنٹ مٹائیں، ان کے IP ایڈریس <b>{ip_address}</b>سے سائن اپ بلاک کریں، اور ان کا ای میل ایڈریس <b>{email}</b> مستقل بلاک لسٹ میں شامل کریں۔ کیا آپ کو یقین ہے کہ یہ صارف واقعی اسپامر ہے؟"
+      delete_confirm_MF: |
+        آپ مٹانے والے ہیں {POSTS, plural, one {<b>#</b> پوسٹ} other {<b>#</b> پوسٹس}} اور {TOPICS, plural, one {<b>#</b> موضوع} other {<b>#</b> موضوعات}} اس صارف سے، ان کا اکاؤنٹ مٹائیں، ان کے IP ایڈریس <b>{ip_address}</b>سے سائن اپ بلاک کریں، اور ان کا ای میل ایڈریس <b>{email}</b> مستقل بلاک لسٹ میں شامل کریں۔ کیا آپ کو یقین ہے کہ یہ صارف واقعی اسپامر ہے؟
       yes_delete_spammer: "ہاں، اسپامر کو مٹائیں"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(مخفی)"
@@ -3301,7 +3298,6 @@ ur:
         this_month: "مہینہ"
         this_week: "ہفتہ"
         today: "آج"
-        other_periods: "اوپر دیکھیں:"
     permission_types:
       full: "بنائیں / جواب دیں / ملاحظہ کریں"
       create_post: "جواب دیں / ملاحظہ کریں"
@@ -3924,9 +3920,8 @@ ur:
         detailed_instruction: "جب منتخب کیا گیا واقعہ پیش آئے گا تو فراہم کیے گئے یو.آر.ایل. کو ایک POST ریکویسٹ بھیج دی جائے گی۔"
         new: "نیا وَیب ھُوک٘"
         create: "بنائیں"
+        edit: "ترمیم کریں"
         save: "محفوظ کریں"
-        destroy: "حذف کریں"
-        description: "تفصیل"
         controls: "کنٹرولز"
         go_back: "واپس فہرست پر"
         payload_url: "پَیلوڈ یو.آر.ایل."
@@ -4007,9 +4002,6 @@ ur:
           headers: "ہیڈرز"
           payload: "پَیلوڈ"
           body: "متن"
-          go_list: "فہرست پر جائیں"
-          go_details: "وَیب ھُوک٘ میں ترمیم کریں"
-          go_events: "واقعات پر جائیں"
           ping: "پِنگ"
           status: "سٹیٹس کوڈ"
           event_id: "ID"
@@ -4742,7 +4734,7 @@ ur:
         clear_penalty_history:
           title: "سزا ہِسٹری صاف کریں"
           description: "سزاوں والے صارفین TL3 تک نہیں پہنچ سکتے"
-        delete_all_posts_confirm_MF: "آپ مٹانے والے ہیں {POSTS, plural, one {#پوسٹ} other {# پوسٹس}} اور {TOPICS, plural, one {# موضوع} other {# موضوعات}}. کیا آپ پر \n یقین ہیں؟"
+        delete_all_posts_confirm_MF: "آپ مٹانے والے ہیں {POSTS, plural, one {#پوسٹ} other {# پوسٹس}} اور {TOPICS, plural, one {# موضوع} other {# موضوعات}}. کیا آپ پر \n یقین ہیں؟\n"
         silence: "خاموش کریں"
         unsilence: "خاموشی ختم کریں"
         silenced: "خاموش کیا ہوا؟"

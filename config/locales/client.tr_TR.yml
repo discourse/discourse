@@ -253,7 +253,6 @@ tr_TR:
     conduct: "Davranış Kuralları"
     mobile_view: "Mobil Görünüm"
     desktop_view: "Masaüstü Görünümü"
-    or: "veya"
     now: "hemen şimdi"
     read_more: "devamını oku"
     more: "Daha fazla"
@@ -1723,19 +1722,22 @@ tr_TR:
       logout_disabled: "Site salt okunur moddayken çıkış yapma devre dışı bırakılır."
     staff_writes_only_mode:
       enabled: "Bu site sadece personel modundadır. Lütfen göz atmaya devam edin, ancak yanıtlama, beğenme ve diğer işlemler yalnızca personel üyeleriyle sınırlıdır."
-    too_few_topics_and_posts_notice_MF: >-
+    too_few_topics_and_posts_notice_MF: |
       Hadi <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">tartışmayı başlatalım!</a> {currentTopics, plural, one { <strong>#</strong> konu} other { <strong>#</strong> konu}} ve {currentPosts, plural, one {<strong>#</strong> gönderi} other {<strong>#</strong> gönderi}} var. Ziyaretçilerin okumak ve yanıtlamak için daha fazlasına ihtiyacı var, en azından {requiredTopics, plural, one {<strong>#</strong> konu} other {<strong>#</strong> konu}} ve {requiredPosts, plural, one {<strong>#</strong> gönderi} other {<strong>#</strong> gönderi}} var. Bu mesajı sadece personel görebilir.
-    too_few_topics_notice_MF: >-
+    too_few_topics_notice_MF: |
       Hadi <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">tartışmayı başlatalım!</a> Şu an {currentTopics, plural, one { <strong>#</strong> konu} other { <strong>#</strong> konu}} var. Ziyaretçilerin okumak ve yanıtlamak için daha fazlasına ihtiyacı var, en azından {requiredTopics, plural, one {<strong>#</strong> konu} other {<strong>#</strong> konu}} olmasını tavsiye ediyoruz. Bu mesajı yalnızca personel görebilir.
-    too_few_posts_notice_MF: >-
+    too_few_posts_notice_MF: |
       Hadi <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">tartışma başlatalım!</a> Şu an {currentPosts, plural, one { <strong>#</strong> gönderi} other { <strong>#</strong> gönderi}} var. Ziyaretçilerin okumak ve yanıtlamak için daha fazlasına ihtiyacı var; en azından {requiredPosts, plural, one {<strong>#</strong> gönderi} other {<strong>#</strong> gönderi}} olmasını tavsiye ediyoruz. Bu mesajı yalnızca personel görebilir.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/saat}}</a> site limitlerine ulaştı {limit, plural, one {# hata/saat} other {# hata/saat}}."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/dakika}}</a> site limitlerine ulaştı {limit, plural, one {# hata/dakika} other {# hata/dakika}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/saat}}</a> site ayarlanmış limitini aştı {limit, plural, one {# hata/saat} other {# hata/saat}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/dakika}}</a> site ayarlanmış limitlerini aştı {limit, plural, one {# hata/dakika} other {# hata/dakika}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/saat}}</a> site limitlerine ulaştı {limit, plural, one {# hata/saat} other {# hata/saat}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/dakika}}</a> site limitlerine ulaştı {limit, plural, one {# hata/dakika} other {# hata/dakika}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/saat}}</a> site ayarlanmış limitini aştı {limit, plural, one {# hata/saat} other {# hata/saat}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/dakika}}</a> site ayarlanmış limitlerini aştı {limit, plural, one {# hata/dakika} other {# hata/dakika}}.
     learn_more: "daha fazla bilgi edinin..."
-    first_post: İlk gönderi
     mute: Sessize al
     unmute: Sesi aç
     last_post: Gönderildi
@@ -1760,7 +1762,8 @@ tr_TR:
       description:
         one: "<b>%{count}</b> yanıt var."
         other: "<b>%{count}</b> yanıt var."
-      description_time_MF: "Tahmini okuma süresi <b>{readingTime, plural, one {# dakika} other {# dakika}}</b> olan {replyCount, plural, one {<b># yanıt</b>} other {<b># yanıt</b>}} var."
+      description_time_MF: |
+        Tahmini okuma süresi <b>{readingTime, plural, one {# dakika} other {# dakika}}</b> olan {replyCount, plural, one {<b># yanıt</b>} other {<b># yanıt</b>}} var.
       enable: "Bu Konuyu Özetle"
       disable: "Tüm Gönderileri Göster"
       short_label: "Özetle"
@@ -2580,9 +2583,6 @@ tr_TR:
       collapse_details: "konu ayrıntılarını daralt"
       expand_details: "konu ayrıntılarını genişlet"
       unread_indicator: "Bu konunun son gönderisini henüz hiçbir üye okumadı."
-      browse_all_categories: Bütün kategorilere göz atın
-      browse_all_tags: Tüm etiketlere göz atın
-      view_latest_topics: en son konuları görüntüleyin
       suggest_create_topic: <a href>Yeni bir konuşma başlatmaya</a> hazır mısınız?
       jump_reply_up: önceki yanıta geç
       jump_reply_down: sonraki yanıta geç
@@ -3339,7 +3339,8 @@ tr_TR:
       official_warning: "Resmi Uyarı"
       delete_spammer: "Spam Yapanları Sil"
       flag_for_review: "İnceleme Kuyruğu"
-      delete_confirm_MF: "Bu kullanıcının {POSTS, plural, one {<b>#</b> gönderisini} other {<b>#</b> gönderisini}} ve {TOPICS, plural, one {<b>#</b> konusunu} other {<b>#</b> konusunu}} silmek, hesabını kaldırmak, IP adresinden <b>{ip_address}</b> yeni kayıtları engellemek ve e-posta adresini <b>{email}</b> kalıcı bir engelleme listesine eklemek üzeresiniz. Bu kullanıcının gerçekten spam yaptığından emin misiniz??"
+      delete_confirm_MF: |
+        Bu kullanıcının {POSTS, plural, one {<b>#</b> gönderisini} other {<b>#</b> gönderisini}} ve {TOPICS, plural, one {<b>#</b> konusunu} other {<b>#</b> konusunu}} silmek, hesabını kaldırmak, IP adresinden <b>{ip_address}</b> yeni kayıtları engellemek ve e-posta adresini <b>{email}</b> kalıcı bir engelleme listesine eklemek üzeresiniz. Bu kullanıcının gerçekten spam yaptığından emin misiniz??
       yes_delete_spammer: "Evet, Spam Yapanı Sil"
       ip_address_missing: "(Geçersiz)"
       hidden_email_address: "(gizli)"
@@ -3518,7 +3519,6 @@ tr_TR:
         this_month: "Ay"
         this_week: "Hafta"
         today: "Bugün"
-        other_periods: "popülerlere bakın:"
     browser_update: 'Ne yazık ki <a href="https://www.discourse.org/faq/#browser">tarayıcınız desteklenmiyor</a>. Lütfen zengin içeriği görüntülemek, giriş yapmak ve yanıtlamak için <a href="https://browsehappy.com">desteklenen bir tarayıcıya geçin.</a>'
     safari_13_warning: Bu site yakında iOS ve Safari sürüm 13 ve altını desteklemeyecek. Basitleştirilmiş ve salt okunur bir sürüm kullanılabilir olmaya devam edecek. (<a href="https://meta.discourse.org/t/224747">daha fazla bilgi</a>)
     permission_types:
@@ -4205,8 +4205,6 @@ tr_TR:
         new: "Yeni Web Kancası"
         create: "Oluştur"
         save: "Kaydet"
-        destroy: "Sil"
-        description: "Açıklama"
         controls: "Denetimler"
         go_back: "Listeye geri dön"
         payload_url: "Yük URL'si"
@@ -4287,9 +4285,6 @@ tr_TR:
           headers: "Başlıklar"
           payload: "Yük"
           body: "Gövde"
-          go_list: "Listeye git"
-          go_details: "Web kancasını düzenle"
-          go_events: "Olaylara git"
           ping: "Ping"
           status: "Durum Kodu"
           event_id: "Kimlik"
@@ -5034,7 +5029,8 @@ tr_TR:
         clear_penalty_history:
           title: "Ceza Geçmişini Temizle"
           description: "cezası olan kullanıcılar 3 TL'ye ulaşamaz"
-        delete_all_posts_confirm_MF: "{POSTS, plural, one {1 gönderi} other {# gönderi}} ve {TOPICS, plural, one {1 konu} other {# konu}} silmek üzeresiniz. Bunu yapmak istediğinizden emin misiniz?"
+        delete_all_posts_confirm_MF: |
+          {POSTS, plural, one {1 gönderi} other {# gönderi}} ve {TOPICS, plural, one {1 konu} other {# konu}} silmek üzeresiniz. Bunu yapmak istediğinizden emin misiniz?
         silence: "Sustur"
         unsilence: "Susturmayı kaldır"
         silenced: "Susturuldu mu?"

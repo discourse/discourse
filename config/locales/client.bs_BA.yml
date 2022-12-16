@@ -239,7 +239,6 @@ bs_BA:
     conduct: "Kodeks ponašanja"
     mobile_view: "Mobilni prikaz"
     desktop_view: "Desktop prikaz"
-    or: "ili"
     now: "upravo sada"
     read_more: "pročitaj više"
     more: "Više"
@@ -1445,7 +1444,6 @@ bs_BA:
       login_disabled: "Ulogovanje je isključeno jer je sajt u read only načinu rada."
       logout_disabled: "Odjava je isključena sve dok je sajt u read only tj. samo čitanje je dozvoljeno načinu rada."
     learn_more: "saznaj više..."
-    first_post: Prva objava
     mute: Utišaj
     unmute: Normalno
     last_post: Zadnja objava
@@ -2042,8 +2040,6 @@ bs_BA:
       back_to_list: "Vrati se na Listu Tema"
       options: "Opcije Teme"
       show_links: "pokaži linkove unutar ove teme"
-      browse_all_categories: Pregledaj sve kategorije
-      view_latest_topics: pogledaj najnovije teme
       jump_reply_up: jump to earlier reply
       jump_reply_down: jump to later reply
       deleted: "Ova tema je obrisana"
@@ -3297,9 +3293,8 @@ bs_BA:
         detailed_instruction: "POST zahtjev će biti poslan na navedenu URL adresu kada se dogodi odabrani događaj."
         new: "Novi Webhook"
         create: "napravi"
+        edit: "Edit"
         save: "Sačuvaj"
-        destroy: "Delete"
-        description: "Opis"
         controls: "Kontrole"
         go_back: "Nazad na listu"
         payload_url: "URL naslova"
@@ -3366,9 +3361,6 @@ bs_BA:
           headers: "Zaglavlja"
           payload: "Payload"
           body: "Tijelo"
-          go_list: "Idi na listu"
-          go_details: "Promjeni webhook"
-          go_events: "Idi na događaje"
           ping: "Ping"
           status: "Šifra statusa"
           event_id: "ID"

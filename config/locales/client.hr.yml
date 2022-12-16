@@ -281,7 +281,6 @@ hr:
     conduct: "Pravila ponašanja"
     mobile_view: "Mobilni prikaz"
     desktop_view: "Desktop prikaz"
-    or: "ili"
     now: "upravo"
     read_more: "pročitaj više"
     more: "Više"
@@ -1737,15 +1736,18 @@ hr:
       enabled: "Ova stranica je u načinu rada samo za čitanje. Nastavite pregledavati, ali odgovaranje, sviđanja i druge radnje su za sada onemogućene."
       login_disabled: "Prijava je onemogućena dok je stranica u modelu \"samo čitanje\","
       logout_disabled: "Odjava je onemogućena dok je forum u načinu rada samo za čitanje."
-    too_few_posts_notice_MF: >-
+    too_few_posts_notice_MF: |
       Hajde da <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">započnemo diskusiju!</a> Tamo {currentPosts, plural, one {je <strong>#</strong> tema} few {su <strong>#</strong> teme} other {su <strong>#</strong> teme}}. Posjetiteljima je potrebno više čitati i odgovoriti na — preporučujemo barem {requiredPosts, plural, one {<strong>#</strong> tema} few {<strong>#</strong> teme} other {<strong>#</strong> teme}}. Samo osoblje može vidjeti ovu poruku.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}</a> dosegao ograničenje za postavljanje stranice {limit, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}."
-      reached_minute_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}</a> dosegao ograničenje za postavljanje stranice {limit, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}</a> dosegao ograničenje za postavljanje stranice {limit, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}</a> premašio ograničenje za postavljanje stranice {limit, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}</a> dosegao ograničenje za postavljanje stranice {limit, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}</a> dosegao ograničenje za postavljanje stranice {limit, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}</a> dosegao ograničenje za postavljanje stranice {limit, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}</a> premašio ograničenje za postavljanje stranice {limit, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}.
     learn_more: "saznaj više..."
-    first_post: Prvi članak
     mute: Utišaj
     unmute: Poništi utišanje
     last_post: Objavljeno
@@ -1770,7 +1772,8 @@ hr:
         one: "Postoji <b>%{count}</b> odgovor."
         few: "Postoji <b>%{count}</b> odgovora."
         other: "Ima <b>%{count}</b> odgovora."
-      description_time_MF: "Tamo {replyCount, plural, one {je <b>#</b> odgovor} few {su <b>#</b> odgovora} other {su <b>#</b> odgovora}} s predviđenim vremenom čitanja <b>{readingTime, plural, one {# minuta} few {# minuta} other {# minuta}}</b>."
+      description_time_MF: |
+        Tamo {replyCount, plural, one {je <b>#</b> odgovor} few {su <b>#</b> odgovora} other {su <b>#</b> odgovora}} s predviđenim vremenom čitanja <b>{readingTime, plural, one {# minuta} few {# minuta} other {# minuta}}</b>.
       enable: "Sažmi ovu temu"
       disable: "Prikaži sve članke"
       short_label: "Rezimirati"
@@ -2551,9 +2554,6 @@ hr:
       collapse_details: "Sažmi detalje teme"
       expand_details: "proširite pojedinosti o temi"
       unread_indicator: "Još nijedan član nije pročitao zadnji post ove teme."
-      browse_all_categories: Pregledaj sve kategorije
-      browse_all_tags: Pregledajte sve oznake
-      view_latest_topics: pogledaj najnovije teme
       suggest_create_topic: Spremni za <a href>započeti novi razgovor?</a>
       jump_reply_up: skoči na raniji odgovor
       jump_reply_down: skoči na kasniji odgovor
@@ -3333,7 +3333,8 @@ hr:
       official_warning: "Službeno upozorenje"
       delete_spammer: "Obriši korisnika zbog nepoželjnih objava."
       flag_for_review: "Red čekanja za pregled"
-      delete_confirm_MF: "Spremate se izbrisati {POSTS, plural, one {<b>#</b> post} few {<b>#</b> postova} other {<b>#</b> postova}} i {TOPICS, plural, one {<b>#</b> tema} few {<b>#</b> tema} other {<b>#</b> tema}} od ovog korisnika, uklonite njegov račun, blokirajte prijave s njegove IP adrese <b>{ip_address}</b>i dodajte njegovu e-adresu <b>{email}</b> na trajni popis blokiranih. Jeste li sigurni da je ovaj korisnik doista neželjena pošta?"
+      delete_confirm_MF: |
+        Spremate se izbrisati {POSTS, plural, one {<b>#</b> post} few {<b>#</b> postova} other {<b>#</b> postova}} i {TOPICS, plural, one {<b>#</b> tema} few {<b>#</b> tema} other {<b>#</b> tema}} od ovog korisnika, uklonite njegov račun, blokirajte prijave s njegove IP adrese <b>{ip_address}</b>i dodajte njegovu e-adresu <b>{email}</b> na trajni popis blokiranih. Jeste li sigurni da je ovaj korisnik doista neželjena pošta?
       yes_delete_spammer: "Da, obriši korisnika."
       ip_address_missing: "(N/A)"
       hidden_email_address: "(skriveno)"
@@ -3527,7 +3528,6 @@ hr:
         this_month: "Mjesec"
         this_week: "Tjedan"
         today: "Danas"
-        other_periods: "vidi vrh:"
     permission_types:
       full: "Otvoriti / Odgovoriti / Vidjeti"
       create_post: "Odgovoriti / Vidjeti"
@@ -4181,9 +4181,8 @@ hr:
         detailed_instruction: "POST zahtjev će se poslati na navedeni URL kada se dogodi odabrani događaj."
         new: "Novi Webhook"
         create: "Kreiraj"
+        edit: "Uredi"
         save: "Spremi"
-        destroy: "Pobriši"
-        description: "Opis"
         controls: "Kontrole"
         go_back: "Povratak na popis"
         payload_url: "URL nosivosti"
@@ -4266,9 +4265,6 @@ hr:
           headers: "Zaglavlja"
           payload: "Teret"
           body: "Tijelo"
-          go_list: "Idi na popis"
-          go_details: "Uredi webhook"
-          go_events: "Idi na događaje"
           ping: "Ping"
           status: "Statusni kod"
           event_id: "ID"
@@ -5004,7 +5000,8 @@ hr:
         clear_penalty_history:
           title: "Obriši povijest kazne"
           description: "korisnici s kaznama ne mogu doseći TL3"
-        delete_all_posts_confirm_MF: "Uskoro ćete izbrisati {POSTS, plural, one {# post} few {# postova} other {# postova}} i {TOPICS, plural, one {# tema} few {# tema} other {# tema}}. Jesi li siguran?"
+        delete_all_posts_confirm_MF: |
+          Uskoro ćete izbrisati {POSTS, plural, one {# post} few {# postova} other {# postova}} i {TOPICS, plural, one {# tema} few {# tema} other {# tema}}. Jesi li siguran?
         silence: "Utišaj"
         unsilence: "Vrati šutnju"
         silenced: "Utišano?"

@@ -253,7 +253,6 @@ sv:
     conduct: "Uppförandekod"
     mobile_view: "Mobilvy"
     desktop_view: "Desktop-vy"
-    or: "eller"
     now: "nyss"
     read_more: "läs mer"
     more: "Mer"
@@ -1279,7 +1278,14 @@ sv:
         use: "Använd autentiseringsappen"
         enforced_notice: "Du måste aktivera tvåfaktorsautentisering innan du kan besöka denna sida."
         disable: "Inaktivera"
+        disable_confirm: "Är du säker på att du vill inaktivera tvåfaktorsautentisering?"
         delete: "Radera"
+        delete_confirm_header: "Dessa tokenbaserade autentiseringsenheter och fysiska säkerhetsnycklar kommer att raderas:"
+        delete_confirm_instruction: "Bekräfta genom att skriva <strong>%{confirm}</strong> i rutan nedan."
+        delete_single_confirm_title: "Radera en autentiseringsenhet"
+        delete_single_confirm_message: "Du raderar %{name}. Du kan inte ångra den här åtgärden. Om du ändrar dig måste du registrera den här autentiseringsenheten igen."
+        delete_backup_codes_confirm_title: "Radera reservkoder"
+        delete_backup_codes_confirm_message: "Du raderar reservkoder. Du kan inte ångra den här åtgärden. Om du ändrar dig måste du generera nya reservkoder."
         save: "Spara"
         edit: "Redigera"
         edit_title: "Redigera autentisering"
@@ -1724,19 +1730,22 @@ sv:
       logout_disabled: "Det går inte att logga ut medan webbplatsen är i skrivskyddat läge."
     staff_writes_only_mode:
       enabled: "Webbplatsen är i läget endast för personal. Du kan fortsätta bläddra på sidan, men att skriva inlägg, gilla och andra åtgärder är begränsat till personal."
-    too_few_topics_and_posts_notice_MF: >-
+    too_few_topics_and_posts_notice_MF: |
       Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">inleda diskussionen!</a> Det {currentTopics, plural, one {finns <strong>#</strong> ämne} other {finns <strong>#</strong> ämnen}} och {currentPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Besökare behöver mer att läsa och svara på – vi rekommenderar åtminstone {requiredTopics, plural, one {<strong>#</strong> ämne} other {<strong>#</strong> ämnen}} och {requiredPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Enbart personal kan se detta meddelande.
-    too_few_topics_notice_MF: >-
+    too_few_topics_notice_MF: |
       Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">inleda diskussionen!</a> Det {currentTopics, plural, one {finns <strong>#</strong> ämne} other {finns <strong>#</strong> ämnen}}. Besökare behöver mer att läsa och svara på – vi rekommenderar minst {requiredTopics, plural, one {<strong>#</strong> ämne} other {<strong>#</strong> ämnen}}. Enbart personal kan se detta meddelande.
-    too_few_posts_notice_MF: >-
+    too_few_posts_notice_MF: |
       Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">inleda diskussionen!</a> Det {currentPosts, plural, one {finns <strong>#</strong> inlägg} other {finns <strong>#</strong> inlägg}}. Besökare behöver mer att läsa och svara på – vi rekommenderar minst {requiredPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Enbart personal kan se detta meddelande.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# fel/timma} other  {# fel/timma}}</a> har uppnått webbplatsinställningarnas gräns som är {limit, plural, one {# fel/timma} other {# fel/timma}}."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fel/minut} other {# fel/minut}}</a> har uppnått webbplatsinställningarnas gräns som är {limit, plural, one {# fel/minut} other {# fel/minut}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fel/timma} other {# fel/timma}}</a> har överskridit webbplatsinställningarnas gräns som är {limit, plural, one {# fel/timma} other {# fel/timma}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fel/minut} other {# fel/minut}}</a> har överskridit webbplatsinställningarnas gräns som är {limit, plural, one {# fel/minut} other {# fel/minut}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# fel/timma} other  {# fel/timma}}</a> har uppnått webbplatsinställningarnas gräns som är {limit, plural, one {# fel/timma} other {# fel/timma}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fel/minut} other {# fel/minut}}</a> har uppnått webbplatsinställningarnas gräns som är {limit, plural, one {# fel/minut} other {# fel/minut}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fel/timma} other {# fel/timma}}</a> har överskridit webbplatsinställningarnas gräns som är {limit, plural, one {# fel/timma} other {# fel/timma}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fel/minut} other {# fel/minut}}</a> har överskridit webbplatsinställningarnas gräns som är {limit, plural, one {# fel/minut} other {# fel/minut}}.
     learn_more: "lär dig mer..."
-    first_post: Första inlägget
     mute: Tysta
     unmute: Avtysta
     last_post: Senaste
@@ -1761,7 +1770,8 @@ sv:
       description:
         one: "Det finns <b>%{count}</b> svar."
         other: "Det finns <b>%{count}</b> svar."
-      description_time_MF: "Det {replyCount, plural, one {finns <b>#</b> svar} other {finns <b>#</b> svar}} med en uppskattad lästid på <b>{readingTime, plural, one {# minut} other {# minuter}}</b>."
+      description_time_MF: |
+        Det {replyCount, plural, one {finns <b>#</b> svar} other {finns <b>#</b> svar}} med en uppskattad lästid på <b>{readingTime, plural, one {# minut} other {# minuter}}</b>.
       enable: "Sammanfatta detta ämne"
       disable: "Visa alla inlägg"
       short_label: "Sammanfatta"
@@ -2587,9 +2597,6 @@ sv:
       collapse_details: "komprimera ämnesdetaljer"
       expand_details: "expandera ämnesdetaljer"
       unread_indicator: "Ingen medlem har läst det senaste inlägget ännu."
-      browse_all_categories: Bläddra bland alla kategorier
-      browse_all_tags: Bläddra bland alla taggar
-      view_latest_topics: visa senaste ämnen
       suggest_create_topic: Redo att <a href>starta ett nytt samtal?</a>
       jump_reply_up: hoppa till tidigare svar
       jump_reply_down: hoppa till senare svar
@@ -3346,7 +3353,8 @@ sv:
       official_warning: "Officiell varning"
       delete_spammer: "Radera skräppostare"
       flag_for_review: "Sätt i kö för granskning"
-      delete_confirm_MF: "Du håller på att radera {POSTS, plural, one {<b>#</b> inlägg} other {<b>#</b> inlägg}} och {TOPICS, plural, one {<b>#</b> ämne} other {<b>#</b> ämnen}} från den här användaren, ta bort användarens konto, blockera registreringar från användarens IP-adress <b>{ip_address}</b>, och lägga till användarens e-postadress <b>{email}</b> till en permanent blockeringslista. Är du säker på att den här användaren verkligen är en skräppostare?"
+      delete_confirm_MF: |
+        Du håller på att radera {POSTS, plural, one {<b>#</b> inlägg} other {<b>#</b> inlägg}} och {TOPICS, plural, one {<b>#</b> ämne} other {<b>#</b> ämnen}} från den här användaren, ta bort användarens konto, blockera registreringar från användarens IP-adress <b>{ip_address}</b>, och lägga till användarens e-postadress <b>{email}</b> till en permanent blockeringslista. Är du säker på att den här användaren verkligen är en skräppostare?
       yes_delete_spammer: "Ja, radera skräppostare"
       ip_address_missing: "(---)"
       hidden_email_address: "(dold)"
@@ -3525,7 +3533,6 @@ sv:
         this_month: "Månad"
         this_week: "Vecka"
         today: "Idag"
-        other_periods: "se toppen för:"
     browser_update: 'Tyvärr stöds inte <a href="https://www.discourse.org/faq/#browser">din webbläsare</a>. Vänligen <a href="https://browsehappy.com">byt till en webbläsare som stöds</a> för att se innehåll, logga in och svara.'
     safari_13_warning: Webbplatsen har fullt stöd för redigering av innehåll med webbläsare på iOS 12.5 och 13 till januari 2023. Därefter krävs iOS 14 eller senare. Äldre versioner av iOS kan då endast läsa förenklat innehåll. (<a href="https://meta.discourse.org/t/224747">mer information</a>)
     permission_types:
@@ -4211,9 +4218,8 @@ sv:
         detailed_instruction: "En POST-begäran skickas till angiven URL när vald händelse sker."
         new: "Ny webhook"
         create: "Skapa"
+        edit: "Redigera"
         save: "Spara"
-        destroy: "Radera"
-        description: "Beskrivning"
         controls: "Kontroller"
         go_back: "Tillbaka till listan"
         payload_url: "Försändelse-URL"
@@ -4294,9 +4300,6 @@ sv:
           headers: "Sidhuvuden"
           payload: "Nyttolast"
           body: "Huvuddel"
-          go_list: "Gå till listan"
-          go_details: "Redigera webhook"
-          go_events: "Gå till händelser"
           ping: "Ping"
           status: "Statuskod"
           event_id: "ID"
@@ -4319,6 +4322,8 @@ sv:
         broken_route: "Det går inte att konfigurera länken till '%{name}'. Se till att annonsblockerare är inaktiverade och försök ladda om sidan."
       navigation_menu:
         sidebar: "Sidofält"
+        header_dropdown: "Rullgardinsmeny för rubrik"
+        legacy: "Äldre"
       backups:
         title: "Säkerhetskopior"
         menu:
@@ -5043,7 +5048,8 @@ sv:
         clear_penalty_history:
           title: "Rensa straffhistorik"
           description: "användare med straff kan inte nå FN3"
-        delete_all_posts_confirm_MF: "Du håller på att radera {POSTS, plural, one {# inlägg} other {# inlägg}} och {TOPICS, plural, one {# ämne} other {# ämnen}}. Är du säker?"
+        delete_all_posts_confirm_MF: |
+          Du håller på att radera {POSTS, plural, one {# inlägg} other {# inlägg}} och {TOPICS, plural, one {# ämne} other {# ämnen}}. Är du säker?
         silence: "Tysta"
         unsilence: "Otysta"
         silenced: "Tystad?"
@@ -5193,10 +5199,14 @@ sv:
         silenced_count: "Tystad"
         suspended_count: "Avstängd"
         last_six_months: "Senaste 6 månaderna"
+        other_matches:
+          one: "Det finns %{count} annan användare med samma IP-adress. Granska och välj de misstänkta som ska stängas av tillsammans med %{username}."
+          other: "Det finns %{count} andra användare med samma IP-adress. Granska och välj de misstänkta som ska stängas av tillsammans med %{username}."
         other_matches_list:
           username: "Användarnamn"
           trust_level: "Förtroendenivå"
           read_time: "Lästid"
+          topics_entered: "Besökta ämnen"
           posts: "Inlägg"
         tl3_requirements:
           title: "Krav för förtroendenivå 3"

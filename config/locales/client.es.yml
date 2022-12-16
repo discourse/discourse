@@ -253,7 +253,6 @@ es:
     conduct: "Código de conducta"
     mobile_view: "Versión móvil"
     desktop_view: "Versión de escritorio"
-    or: "o"
     now: "justo ahora"
     read_more: "leer más"
     more: "Más"
@@ -1719,12 +1718,15 @@ es:
     staff_writes_only_mode:
       enabled: "Este sitio está en modo solo para el personal. Sigue navegando, pero las respuestas, los «me gusta» y otras acciones están limitadas solo a los miembros del personal."
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errores/hora}}</a> alcanzó el límite de la configuración del sitio de {limit, plural, one {# error/hora} other {# errores/hora}}."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minuto} other {# errores/minuto}}</a> alcanzó el límite de la configuración del sitio de {limit, plural, one {# error/minuto} other {# errores/minuto}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errores/hora}}</a> excedió el límite de la configuración del sitio del {limit, plural, one {# error/hora} other {# errores/hora}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minuto} other {# errores/minuto}}</a> excedió el límite de la configuración del sitio de {limit, plural, one {# error/minuto} other {# errores/minuto}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errores/hora}}</a> alcanzó el límite de la configuración del sitio de {limit, plural, one {# error/hora} other {# errores/hora}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minuto} other {# errores/minuto}}</a> alcanzó el límite de la configuración del sitio de {limit, plural, one {# error/minuto} other {# errores/minuto}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errores/hora}}</a> excedió el límite de la configuración del sitio del {limit, plural, one {# error/hora} other {# errores/hora}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minuto} other {# errores/minuto}}</a> excedió el límite de la configuración del sitio de {limit, plural, one {# error/minuto} other {# errores/minuto}}.
     learn_more: "saber más..."
-    first_post: Primera publicación
     mute: Silenciar
     unmute: No silenciar
     last_post: Fecha de publicación
@@ -1749,7 +1751,8 @@ es:
       description:
         one: "Hay <b>%{count}</b> respuesta."
         other: "Hay <b>%{count}</b> respuestas."
-      description_time_MF: "Hay {replyCount, plural, one {Hay <b>#</b> respuesta} other {Hay <b>#</b> respuestas}} con un tiempo estimado de lectura de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>."
+      description_time_MF: |
+        Hay {replyCount, plural, one {Hay <b>#</b> respuesta} other {Hay <b>#</b> respuestas}} con un tiempo estimado de lectura de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>.
       enable: "Resumir este tema"
       disable: "Mostrar todas las publicaciones"
       short_label: "Resumir"
@@ -2559,9 +2562,6 @@ es:
       collapse_details: "ocultar detalles del tema"
       expand_details: "expandir detalles del tema"
       unread_indicator: "Ningún miembro ha leído todavía la última publicación de este tema."
-      browse_all_categories: Ver todas las categorías
-      browse_all_tags: Ver todas las etiquetas
-      view_latest_topics: ver los temas recientes
       suggest_create_topic: '¿Listo para <a href>iniciar una nueva conversación?</a>'
       jump_reply_up: saltar a la primera respuesta
       jump_reply_down: saltar a la última respuesta
@@ -3316,7 +3316,8 @@ es:
       official_warning: "Advertencia oficial"
       delete_spammer: "Eliminar spammer"
       flag_for_review: "Mandar a la cola de revisión"
-      delete_confirm_MF: "Estás a punto de eliminar {POSTS, plural, one {<b>#</b> publicación} other {<b>#</b> publicaciones}} y {TOPICS, plural, one {<b>#</b> tema} other {<b>#</b> temas}} de este usuario, también eliminarás su cuenta, bloquearás registros desde su dirección IP <b>{ip_address}</b>, y añadirás su correo electrónico <b>{email}</b> a una lista de bloqueos permanentes. ¿Seguro que el usuario es de verdad un spammer?"
+      delete_confirm_MF: |
+        Estás a punto de eliminar {POSTS, plural, one {<b>#</b> publicación} other {<b>#</b> publicaciones}} y {TOPICS, plural, one {<b>#</b> tema} other {<b>#</b> temas}} de este usuario, también eliminarás su cuenta, bloquearás registros desde su dirección IP <b>{ip_address}</b>, y añadirás su correo electrónico <b>{email}</b> a una lista de bloqueos permanentes. ¿Seguro que el usuario es de verdad un spammer?
       yes_delete_spammer: "Sí, eliminar spammer"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(oculto)"
@@ -3495,7 +3496,6 @@ es:
         this_month: "Mes"
         this_week: "Semana"
         today: "Hoy"
-        other_periods: "ver arriba:"
     browser_update: 'Por desgracia, <a href="https://www.discourse.org/faq/#browser">tu navegador no es compatible</a>. Por favor, <a href="https://browsehappy.com">usa otro navegador</a> para ver el contenido completo, iniciar sesión y responder.'
     safari_13_warning: Este sitio pronto dejará de ser compatible con las versiones 13 y anteriores de iOS y Safari. En su lugar, verás una versión simplificada y de solo lectura. (<a href="https://meta.discourse.org/t/224747">más información</a>)
     permission_types:
@@ -4170,8 +4170,6 @@ es:
         new: "Nuevo webhook"
         create: "Crear"
         save: "Guardar"
-        destroy: "Eliminar"
-        description: "Descripción"
         controls: "Controles"
         go_back: "Volver a la lista"
         payload_url: "URL a la que enviar el webhook"
@@ -4252,9 +4250,6 @@ es:
           headers: "Encabezados"
           payload: "Payload"
           body: "Cuerpo"
-          go_list: "Ir a la lista"
-          go_details: "Editar webhook"
-          go_events: "Ir a eventos"
           ping: "Ping"
           status: "Código de estado"
           event_id: "ID"
@@ -4999,7 +4994,8 @@ es:
         clear_penalty_history:
           title: "Eliminado historial de faltas"
           description: "usuarios con faltas no pueden alcanzar NC3"
-        delete_all_posts_confirm_MF: "Estás a punto de eliminar {POSTS, plural, one {# publicación} other {# publicaciones}} y {TOPICS, plural, one {# tema} other {# temas}}. ¿Estás seguro/a?"
+        delete_all_posts_confirm_MF: |
+          Estás a punto de eliminar {POSTS, plural, one {# publicación} other {# publicaciones}} y {TOPICS, plural, one {# tema} other {# temas}}. ¿Estás seguro/a?
         silence: "Silenciar"
         unsilence: "Dejar de silenciar"
         silenced: "¿Silenciado?"

@@ -373,7 +373,6 @@ ar:
     conduct: "قواعد السلوك"
     mobile_view: "العرض على الجوَّال"
     desktop_view: "العرض على كمبيوتر سطح المكتب"
-    or: "أو"
     now: "الآن"
     read_more: "قراءة المزيد"
     more: "المزيد"
@@ -2003,12 +2002,15 @@ ar:
     staff_writes_only_mode:
       enabled: "هذا الموقع في وضع القراءة فقط. يُرجى المتابعة للتصفح، لكن سيقتصر التصفح والرد وتسجيل الإعجاب والإجراءات الأخرى على الأعضاء في طاقم العمل فقط."
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – لقد بلغ معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}."
-      reached_minute_MF: "<b>{relativeAge}</b> – لقد بلغ معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – لقد تجاوز معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – لقد تجاوز معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – لقد بلغ معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – لقد بلغ معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – لقد تجاوز معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – لقد تجاوز معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الدقيقة} one {خطأ واحد (#)/الدقيقة} two {خطآن (#)/الدقيقة} few {# أخطاء/الدقيقة} many {# خطأ/الدقيقة} other {# خطأ/الدقيقة}}.
     learn_more: "معرفة المزيد..."
-    first_post: أول منشور
     mute: كتم
     unmute: إلغاء الكتم
     last_post: آخر منشور
@@ -2041,7 +2043,8 @@ ar:
         few: "هناك <b>%{count}</b> من الردود."
         many: "هناك <b>%{count}</b> من الردود."
         other: "هناك <b>%{count}</b> من الردود."
-      description_time_MF: "هناك {replyCount, plural, zero {<strong>#</strong> رد} one {رد واحد (<strong>#</strong>)} two {ردَّان (<strong>#</strong>)} few {<strong>#</strong> ردود} many {<strong>#</strong> ردًا} other {<strong>#</strong> رد}} والوقت المقدَّر للقراءة هو <b>{readingTime, plural, zero {<strong>#</strong> دقيقة} one {دقيقة واحدة (<strong>#</strong>)} two {دقيقتان (<strong>#</strong>)} few {<strong>#</strong> دقائق} many {<strong>#</strong> دقيقة} other {<strong>#</strong> دقيقة}}</b>"
+      description_time_MF: |
+        هناك {replyCount, plural, zero {<strong>#</strong> رد} one {رد واحد (<strong>#</strong>)} two {ردَّان (<strong>#</strong>)} few {<strong>#</strong> ردود} many {<strong>#</strong> ردًا} other {<strong>#</strong> رد}} والوقت المقدَّر للقراءة هو <b>{readingTime, plural, zero {<strong>#</strong> دقيقة} one {دقيقة واحدة (<strong>#</strong>)} two {دقيقتان (<strong>#</strong>)} few {<strong>#</strong> دقائق} many {<strong>#</strong> دقيقة} other {<strong>#</strong> دقيقة}}</b>
       enable: "تلخيص هذا الموضوع"
       disable: "عرض كل المنشورات"
       short_label: "تلخيص"
@@ -3027,9 +3030,6 @@ ar:
       collapse_details: "طي تفاصيل الموضوع"
       expand_details: "توسيع تفاصيل الموضوع"
       unread_indicator: "لم يقرأ أي عضو آخر منشور في هذا الموضوع بعد."
-      browse_all_categories: تصفُّح كل الفئات
-      browse_all_tags: تصفُّح كل الوسوم
-      view_latest_topics: عرض أحدث الموضوعات
       suggest_create_topic: هل أنت مستعد <a href>لبدء محادثة جديدة؟</a>
       jump_reply_up: الانتقال إلى الرد السابق
       jump_reply_down: الانتقال إلى الرد التالي
@@ -3920,7 +3920,8 @@ ar:
       official_warning: "تحذير رسمي"
       delete_spammer: "حذف صاحب الأسلوب غير المرغوب فيه"
       flag_for_review: "قائمة انتظار المراجعة"
-      delete_confirm_MF: "أنت على وشك حذف {POSTS, plural, zero {<b>#</b> منشور} one {منشور واحد (<b>#</b>)} two {منشوران (<b>#</b>)} few {<b>#</b> منشورات} many {<b>#</b> منشورًا} other {<b>#</b> منشور}} و{TOPICS, plural, zero {<b>#</b> موضوع} one {موضوع واحد (<b>#</b>)} two {موضوعان (<b>#</b>)} few {<b>#</b> موضوعات} many {<b>#</b> موضوعًا} other {<b>#</b> موضوع}} من هذا المستخدم، وإزالة حسابه، وحظر عمليات الاشتراك من عنوان IP الخاص به <b>{ip_address}</b>، وإضافة عنوان بريده الإلكتروني <b>{email}</b> إلى قائمة الحظر الدائمة. هل أنت متأكد من أن هذا المستخدم هو بالفعل صاحب الأسلوب غير المرغوب فيه؟"
+      delete_confirm_MF: |
+        أنت على وشك حذف {POSTS, plural, zero {<b>#</b> منشور} one {منشور واحد (<b>#</b>)} two {منشوران (<b>#</b>)} few {<b>#</b> منشورات} many {<b>#</b> منشورًا} other {<b>#</b> منشور}} و{TOPICS, plural, zero {<b>#</b> موضوع} one {موضوع واحد (<b>#</b>)} two {موضوعان (<b>#</b>)} few {<b>#</b> موضوعات} many {<b>#</b> موضوعًا} other {<b>#</b> موضوع}} من هذا المستخدم، وإزالة حسابه، وحظر عمليات الاشتراك من عنوان IP الخاص به <b>{ip_address}</b>، وإضافة عنوان بريده الإلكتروني <b>{email}</b> إلى قائمة الحظر الدائمة. هل أنت متأكد من أن هذا المستخدم هو بالفعل صاحب الأسلوب غير المرغوب فيه؟
       yes_delete_spammer: "نعم، حذف صاحب الأسلوب غير المرغوب فيه"
       ip_address_missing: "(لا يوجد)"
       hidden_email_address: "(مخفي)"
@@ -4159,7 +4160,6 @@ ar:
         this_month: "الشهر"
         this_week: "الأسبوع"
         today: "اليوم"
-        other_periods: "رؤية الأكثر نشاطًا:"
     browser_update: 'عذرًا، <a href="https://www.discourse.org/faq/#browser">متصفحك غير مدعوم</a>. يُرجى <a href="https://browsehappy.com">التبديل إلى متصفح مدعوم</a> لعرض المحتوى الغني، وتسجيل الدخول والرد.'
     safari_13_warning: سيزيل هذا الموقع الدعم لإصدارات 13 من iOS وSafari، والإصدارات الأقدم. ستظل هناك نسخة مبسَّطة متاحة للقراءة فقط. (<a href="https://meta.discourse.org/t/224747">المزيد من المعلومات</a>)
     permission_types:
@@ -4907,8 +4907,6 @@ ar:
         new: "خطاف ويب جديد"
         create: "إنشاء"
         save: "حفظ"
-        destroy: "حذف"
-        description: "الوصف"
         controls: "عناصر التحكم"
         go_back: "العودة إلي القائمة"
         payload_url: "عنوان URL للحمولة"
@@ -4997,9 +4995,6 @@ ar:
           headers: "الرؤوس"
           payload: "الحمولة"
           body: "النص الأساسي"
-          go_list: "الانتقال إلى القائمة"
-          go_details: "تعديل خطاف الويب"
-          go_events: "الانتقال إلى الأحداث"
           ping: "اختبار الاتصال"
           status: "رمز الحالة"
           event_id: "المعرِّف"
@@ -5752,7 +5747,8 @@ ar:
         clear_penalty_history:
           title: "مسح سجل العقوبات"
           description: "لا يمكن للمستخدمين الذين حصلوا على عقوبات الوصول إلى مستوى الثقة 3"
-        delete_all_posts_confirm_MF: "أنت على وشك حذف {POSTS, plural, zero {# منشور} one {منشور واحد (#)} two {منشوران (#)} few {# منشورات} many {# منشورًا} other {# منشور}} و{TOPICS, plural, zero {# موضوع} one {موضوع واحد (#)} two {موضوعان (#)} few {# موضوعات} many {# موضوعًا} other {# موضوع}}. هل أنت متأكد؟"
+        delete_all_posts_confirm_MF: |
+          أنت على وشك حذف {POSTS, plural, zero {# منشور} one {منشور واحد (#)} two {منشوران (#)} few {# منشورات} many {# منشورًا} other {# منشور}} و{TOPICS, plural, zero {# موضوع} one {موضوع واحد (#)} two {موضوعان (#)} few {# موضوعات} many {# موضوعًا} other {# موضوع}}. هل أنت متأكد؟
         silence: "كتم"
         unsilence: "إلغاء الكتم"
         silenced: "تم كتمه؟"
