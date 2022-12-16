@@ -92,7 +92,7 @@ RSpec.describe Chat::GuardianExtensions do
 
         before { channel.update(chatable: category) }
 
-        it "returns true if the user can create post in the category" do
+        it "returns true if the user can join the category" do
           guardian = Guardian.new(user)
 
           readonly_group = Fabricate(:group)
