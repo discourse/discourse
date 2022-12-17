@@ -30,6 +30,11 @@ export default Component.extend({
   },
 
   @discourseComputed("step.id")
+  backButtonLabel() {
+    return `wizard.back`;
+  },
+
+  @discourseComputed("step.id")
   nextButtonLabel(step) {
     return `wizard.${step === "ready" ? "configure_more" : "next"}`;
   },

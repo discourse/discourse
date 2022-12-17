@@ -434,26 +434,27 @@ body.wizard {
   }
 
   &__button.configure-more {
-    background-color: var(--primary-200);
-    color: var(--primary);
+    //background-color: var(--primary-200);
+    background-color: transparent;
+    color: var(--tertiary);
   }
 
   &__button.configure-more:hover {
-    background-color: var(--primary-300);
+    background-color: transparent;
     color: var(--primary);
   }
 
   &__button.jump-in {
-    background-color: var(--success);
+    background-color: var(--tertiary);
     color: var(--secondary);
     &:hover {
-      background-color: var(--success-hover);
+      background-color: var(--primary-300);
     }
   }
 
   &__button.finish {
     color: var(--tertiary);
-    padding: 0;
+    //padding: 0;
   }
 
   &__button.finish:hover {
