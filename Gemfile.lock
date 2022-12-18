@@ -425,7 +425,7 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
-    shoulda-matchers (5.2.0)
+    shoulda-matchers (5.3.0)
       activesupport (>= 5.2.0)
     sidekiq (6.5.8)
       connection_pool (>= 2.2.5, < 3)
