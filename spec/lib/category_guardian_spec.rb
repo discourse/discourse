@@ -4,33 +4,49 @@ RSpec.describe CategoryGuardian do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
   fab!(:can_create_user) { Fabricate(:user) }
-  fab!(:category) { Fabricate(:category) }
 
   describe "can_post_in_category?" do
-    it 'returns true for admin and regular user when not restricted category' do
-      expect(Guardian.new.can_post_in_category?(category)).to eq(false)
-      expect(Guardian.new(admin).can_post_in_category?(category)).to eq(true)
-      expect(Guardian.new(user).can_post_in_category?(category)).to eq(true)
+    fab!(:category) { Fabricate(:category) }
+    context "when not restricted category" do
+      it "returns false for anonymous user" do
+        expect(Guardian.new.can_post_in_category?(category)).to eq(false)
+      end
+      it "returns true for admin" do
+        expect(Guardian.new(admin).can_post_in_category?(category)).to eq(true)
+      end
+
+      it "returns true for regular user" do
+        expect(Guardian.new(user).can_post_in_category?(category)).to eq(true)
+      end
     end
 
-    it 'returns true for admin and members of priviliged groups for restricted category' do
-      category.update!(read_restricted: true)
-      group = Fabricate(:group)
-      GroupUser.create(group: group, user: user)
-      category_group = CategoryGroup.create(group: group, category: category, permission_type: CategoryGroup.permission_types[:readonly])
-      expect(Guardian.new.can_post_in_category?(category)).to eq(false)
-      expect(Guardian.new(user).can_post_in_category?(category)).to eq(false)
-      expect(Guardian.new(admin).can_post_in_category?(category)).to eq(true)
+    context "when restricted category" do
+      fab!(:category) { Fabricate(:category, read_restricted: true) }
+      fab!(:group) { Fabricate(:group) }
+      fab!(:group_user) { Fabricate(:group_user, group: group, user: user) }
+      fab!(:category_group) { Fabricate(:category_group, group: group, category: category, permission_type: CategoryGroup.permission_types[:readonly]) }
 
-      category_group.update!(permission_type: CategoryGroup.permission_types[:create_post])
-      expect(Guardian.new.can_post_in_category?(category)).to eq(false)
-      expect(Guardian.new(user).can_post_in_category?(category)).to eq(true)
-      expect(Guardian.new(admin).can_post_in_category?(category)).to eq(true)
+      it "returns false for anonymous user" do
+        expect(Guardian.new.can_post_in_category?(category)).to eq(false)
+      end
 
-      category_group.update!(permission_type: CategoryGroup.permission_types[:full])
-      expect(Guardian.new.can_post_in_category?(category)).to eq(false)
-      expect(Guardian.new(user).can_post_in_category?(category)).to eq(true)
-      expect(Guardian.new(admin).can_post_in_category?(category)).to eq(true)
+      it "returns false for member of group with readonly access" do
+        expect(Guardian.new(user).can_post_in_category?(category)).to eq(false)
+      end
+
+      it "returns true for admin" do
+        expect(Guardian.new(admin).can_post_in_category?(category)).to eq(true)
+      end
+
+      it "returns true for member of group with create_post access" do
+        category_group.update!(permission_type: CategoryGroup.permission_types[:create_post])
+        expect(Guardian.new(admin).can_post_in_category?(category)).to eq(true)
+      end
+
+      it "returns true for member of group with full access" do
+        category_group.update!(permission_type: CategoryGroup.permission_types[:full])
+        expect(Guardian.new(admin).can_post_in_category?(category)).to eq(true)
+      end
     end
   end
 end
