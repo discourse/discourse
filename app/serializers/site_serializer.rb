@@ -39,7 +39,8 @@ class SiteSerializer < ApplicationSerializer
     :hashtag_icons,
     :displayed_about_plugin_stat_groups,
     :show_welcome_topic_banner,
-    :anonymous_default_sidebar_tags
+    :anonymous_default_sidebar_tags,
+    :whispers_allowed_groups_names
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -244,6 +245,10 @@ class SiteSerializer < ApplicationSerializer
 
   def include_anonymous_default_sidebar_tags?
     scope.anonymous? && !SiteSetting.legacy_navigation_menu? && SiteSetting.tagging_enabled && SiteSetting.default_sidebar_tags.present?
+  end
+
+  def whispers_allowed_groups_names
+    SiteSetting.whispers_allowed_groups_map&.map { |id| Group::AUTO_GROUP_IDS[id] }
   end
 
   private
