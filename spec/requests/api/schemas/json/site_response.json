@@ -118,6 +118,15 @@
         },
         "question_answer_user_commented": {
           "type": "integer"
+        },
+        "following": {
+          "type": "integer"
+        },
+        "following_created_topic": {
+          "type": "integer"
+        },
+        "following_replied": {
+          "type": "integer"
         }
       },
       "required": [
