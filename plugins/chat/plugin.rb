@@ -416,13 +416,13 @@ after_initialize do
   add_to_serializer(:current_user, :needs_dm_retention_reminder) { true }
 
   add_to_serializer(:current_user, :has_joinable_public_channels) do
-    Chat::ChatChannelFetcher.secured_public_channels(
+    Chat::ChatChannelFetcher.secured_public_channel_search(
       self.scope,
-      Chat::ChatChannelMembershipManager.all_for_user(self.scope.user),
       following: false,
       limit: 1,
       status: :open,
-    ).present?
+      exclude_dm_channels: true
+    ).exists?
   end
 
   add_to_serializer(:current_user, :chat_channels) do
