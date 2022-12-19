@@ -3,6 +3,11 @@
 class HashtagAutocompleteService
   HASHTAGS_PER_REQUEST = 20
   SEARCH_MAX_LIMIT = 50
+  DEFAULT_DATA_SOURCES = [CategoryHashtagDataSource, TagHashtagDataSource]
+  DEFAULT_CONTEXTUAL_TYPE_PRIORITIES = [
+    { type: "category", context: "topic-composer", priority: 100 },
+    { type: "tag", context: "topic-composer", priority: 50 },
+  ]
 
   def self.search_conditions
     @search_conditions ||= Enum.new(contains: 0, starts_with: 1)
@@ -13,17 +18,16 @@ class HashtagAutocompleteService
   def self.data_sources
     # Category and Tag data sources are in core and always should be
     # included for searches and lookups.
-    [CategoryHashtagDataSource, TagHashtagDataSource] |
-      DiscoursePluginRegistry.hashtag_autocomplete_data_sources
+    Set.new(DEFAULT_DATA_SOURCES | DiscoursePluginRegistry.hashtag_autocomplete_data_sources)
   end
 
   def self.contextual_type_priorities
     # Category and Tag type priorities for the composer are default and
     # always are included.
-    [
-      { type: "category", context: "topic-composer", priority: 100 },
-      { type: "tag", context: "topic-composer", priority: 50 },
-    ] | DiscoursePluginRegistry.hashtag_autocomplete_contextual_type_priorities
+    Set.new(
+      DEFAULT_CONTEXTUAL_TYPE_PRIORITIES |
+        DiscoursePluginRegistry.hashtag_autocomplete_contextual_type_priorities,
+    )
   end
 
   def self.data_source_types
@@ -47,10 +51,7 @@ class HashtagAutocompleteService
   end
 
   def self.ordered_types_for_context(context)
-    return [] if find_priorities_for_context(context).blank?
-    find_priorities_for_context(context)
-      .sort_by { |ctp| -ctp[:priority] }
-      .map { |ctp| ctp[:type] }
+    find_priorities_for_context(context).sort_by { |ctp| -ctp[:priority] }.map { |ctp| ctp[:type] }
   end
 
   def self.contexts_with_ordered_types
