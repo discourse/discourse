@@ -1,21 +1,23 @@
-<div class="wizard-container__step-header">
+<div class="wizard-container__step-counter">
   <span class="wizard-container__step-text">{{bound-i18n "wizard.step-text"}}</span>
   <span class="wizard-container__step-count">{{bound-i18n "wizard.step" current=this.step.displayIndex total=this.wizard.totalSteps}}</span>
 </div>
 
 <div class="wizard-container">
   <div class="wizard-container__step-contents">
-    {{#if this.step.emoji}}
-      <div class="wizard-container__step-emoji">
-        {{emoji this.step.emoji}}
-      </div>
-    {{/if}}
-    {{#if this.step.title}}
-      <h1 class="wizard-container__step-title">{{this.step.title}}</h1>
-      {{#if this.step.description}}
-        <p class="wizard-container__step-description">{{html-safe this.step.description}}</p>
+    <div class="wizard-container__step-header">
+      {{#if this.step.emoji}}
+        <div class="wizard-container__step-header--emoji">
+          {{emoji this.step.emoji}}
+        </div>
       {{/if}}
-    {{/if}}
+      {{#if this.step.title}}
+        <h1 class="wizard-container__step-title">{{this.step.title}}</h1>
+        {{#if this.step.description}}
+          <p class="wizard-container__step-description">{{html-safe this.step.description}}</p>
+        {{/if}}
+      {{/if}}
+    </div>
 
     <div class="wizard-container__step-container">
       {{#if this.step.fields}}

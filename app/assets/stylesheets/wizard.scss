@@ -88,12 +88,22 @@ body.wizard {
     margin: 1.5em auto;
   }
 
+  &__step {
+    margin-top: 3em;
+  }
+
   &__fields {
     width: 100%;
     padding-right: 20%;
     @include breakpoint("large") {
       padding-right: 0;
     }
+  }
+
+  &__step-counter {
+    text-align: center;
+    font-weight: 700;
+    color: var(--primary-low-mid);
   }
 
   &__step-banner {
@@ -249,11 +259,22 @@ body.wizard {
     }
   }
 
+  &__step-header {
+    text-align: center;
+    margin-bottom: 3em;
+    
+    &--emoji img {
+      width: 30px;
+      height: 30px;
+      margin-bottom: 1em;
+    }
+  }
+
   &__step-title {
     font-size: 2.75em;
     color: var(--primary);
     line-height: var(--line-height-medium);
-    margin: 0 0 1.5em 0;
+    margin: 0 0 0.5em 0;
     @include breakpoint("medium") {
       font-size: var(--font-up-5);
     }
