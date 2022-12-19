@@ -348,6 +348,9 @@ basic:
   enable_desktop_push_notifications:
     default: true
     client: true
+  push_notification_time_window_mins:
+    default: 10
+    min: 0
   short_title:
     default: ""
     max: 12

@@ -1102,6 +1102,27 @@ RSpec.describe PostAlerter do
       expect(JSON.parse(body)).to eq(payload)
 
     end
+
+    context "with push subscriptions" do
+      before do
+        Fabricate(:push_subscription, user: evil_trout)
+        SiteSetting.push_notification_time_window_mins = 10
+      end
+
+      it "delays sending push notification for active online user" do
+        evil_trout.update!(last_seen_at: 5.minutes.ago)
+
+        expect { mention_post }.to change { Jobs::SendPushNotification.jobs.count }
+        expect(Jobs::SendPushNotification.jobs[0]["at"]).not_to be_nil
+      end
+
+      it "does not delay push notification for inactive offline user" do
+        evil_trout.update!(last_seen_at: 40.minutes.ago)
+
+        expect { mention_post }.to change { Jobs::SendPushNotification.jobs.count }
+        expect(Jobs::SendPushNotification.jobs[0]["at"]).to be_nil
+      end
+    end
   end
 
   describe ".create_notification_alert" do
