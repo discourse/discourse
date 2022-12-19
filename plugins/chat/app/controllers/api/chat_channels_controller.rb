@@ -61,7 +61,7 @@ class Chat::Api::ChatChannelsController < Chat::Api
 
   def find_chat_channel
     chat_channel = ChatChannel.find(params.require(:chat_channel_id))
-    guardian.ensure_can_see_chat_channel!(chat_channel)
+    guardian.ensure_can_join_chat_channel!(chat_channel)
     chat_channel
   end
 

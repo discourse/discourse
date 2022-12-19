@@ -13,9 +13,13 @@ describe Chat::Api::CategoryChatablesController do
       before { sign_in(admin) }
 
       it "returns a list with the group names that could access a chat channel" do
+        readonly_group = Fabricate(:group)
+        Fabricate(:category_group, category: private_category, group: readonly_group, permission_type: CategoryGroup.permission_types[:readonly])
+        create_post_group = Fabricate(:group)
+        create_post_category_group = Fabricate(:category_group, category: private_category, group: create_post_group, permission_type: CategoryGroup.permission_types[:create_post])
         get "/chat/api/category-chatables/#{private_category.id}/permissions.json"
 
-        expect(response.parsed_body["allowed_groups"]).to contain_exactly("@#{group.name}")
+        expect(response.parsed_body["allowed_groups"]).to contain_exactly("@#{group.name}", "@#{create_post_group.name}")
         expect(response.parsed_body["members_count"]).to eq(0)
         expect(response.parsed_body["private"]).to eq(true)
       end

@@ -28,7 +28,7 @@ module Chat::UserNotificationsExtension
     return if @messages.empty?
     @grouped_messages = @messages.group_by { |message| message.chat_channel }
     @grouped_messages =
-      @grouped_messages.select { |channel, _| guardian.can_see_chat_channel?(channel) }
+      @grouped_messages.select { |channel, _| guardian.can_join_chat_channel?(channel) }
     return if @grouped_messages.empty?
 
     @grouped_messages.each do |chat_channel, messages|

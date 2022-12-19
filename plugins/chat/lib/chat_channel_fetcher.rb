@@ -30,18 +30,10 @@ module Chat::ChatChannelFetcher
   end
 
   def self.generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: false)
-    category_channel_sql =
-      ChatChannel
-        .select(:id)
-        .joins(
-          "INNER JOIN categories ON categories.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'Category'",
-        )
-        .where(
-          "categories.id IN (:allowed_category_ids)",
-          allowed_category_ids: guardian.allowed_category_ids,
-        )
-        .to_sql
-
+    category_channel_sql = Category.post_create_allowed(guardian)
+      .joins("INNER JOIN chat_channels ON chat_channels.chatable_id = categories.id AND chat_channels.chatable_type = 'Category'")
+      .select("chat_channels.id")
+      .to_sql
     dm_channel_sql = ""
     if !exclude_dm_channels
       dm_channel_sql = <<~SQL
@@ -254,7 +246,7 @@ module Chat::ChatChannelFetcher
     end
 
     raise Discourse::NotFound if chat_channel.blank?
-    raise Discourse::InvalidAccess if !guardian.can_see_chat_channel?(chat_channel)
+    raise Discourse::InvalidAccess if !guardian.can_join_chat_channel?(chat_channel)
     chat_channel
   end
 end

@@ -271,7 +271,7 @@ after_initialize do
         next if !chat_channel
       end
 
-      next if !Guardian.new.can_see_chat_channel?(chat_channel)
+      next if !Guardian.new.can_preview_chat_channel?(chat_channel)
 
       name = (chat_channel.name if chat_channel.name.present?)
 
@@ -353,7 +353,7 @@ after_initialize do
           end
       end
 
-      next if !Guardian.new.can_see_chat_channel?(chat_channel)
+      next if !Guardian.new.can_preview_chat_channel?(chat_channel)
 
       { url: url, title: title }
     end

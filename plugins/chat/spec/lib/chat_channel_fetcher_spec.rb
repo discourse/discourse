@@ -136,6 +136,29 @@ describe Chat::ChatChannelFetcher do
         GroupUser.create!(group: private_category.groups.last, user: user1)
         expect(subject.all_secured_channel_ids(guardian)).to match_array([category_channel.id])
       end
+
+      context "when restricted category" do
+        fab!(:group) { Fabricate(:group) }
+        fab!(:category_group) { Fabricate(:category_group, category: private_category, group: group, permission_type: CategoryGroup.permission_types[:readonly]) }
+        fab!(:group_user) { Fabricate(:group_user, group: private_category.groups.last, user: user1) }
+        before do
+          category_channel.update!(chatable: private_category)
+        end
+
+        it "does not include the category channel for member of group with readonly access" do
+          expect(subject.all_secured_channel_ids(guardian)).to be_empty
+        end
+
+        it "includes the category channel for member of group with create_post access" do
+          category_group.update!(permission_type: CategoryGroup.permission_types[:create_post])
+          expect(subject.all_secured_channel_ids(guardian)).to match_array([category_channel.id])
+        end
+
+        it "includes the category channel for member of group with full access" do
+          category_group.update!(permission_type: CategoryGroup.permission_types[:full])
+          expect(subject.all_secured_channel_ids(guardian)).to match_array([category_channel.id])
+        end
+      end
     end
   end
 
