@@ -16,7 +16,6 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Discourse Presence Plugin", function (needs) {
   needs.user({ whisperer: true });
-  needs.settings({ enable_whispers: true });
 
   test("Doesn't break topic creation", async function (assert) {
     await visit("/");

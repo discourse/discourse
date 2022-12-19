@@ -168,8 +168,7 @@ RSpec.describe Topic do
     let(:types) { Post.types }
 
     before do
-      SiteSetting.enable_whispers = true
-      SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}|#{whisperers_group.id}"
     end
 
     it "returns the appropriate types for anonymous users" do

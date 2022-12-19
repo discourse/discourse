@@ -6,12 +6,24 @@ RSpec.describe Chat::Api::ChatChannelNotificationsSettingsController do
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
   end
 
+  fab!(:chat_channel) { Fabricate(:category_channel) }
+  fab!(:user) { Fabricate(:user) }
+
   describe "#update" do
     include_examples "channel access example", :put, "/notifications_settings.json"
 
+    it 'calls guardian ensure_can_join_chat_channel!' do
+      sign_in(user)
+      Guardian.any_instance.expects(:ensure_can_join_chat_channel!).once
+      put "/chat/api/chat_channels/#{chat_channel.id}/notifications_settings.json",
+        params: {
+          muted: true,
+          desktop_notification_level: "always",
+          mobile_notification_level: "never",
+        }
+    end
+
     context "when category channel has invalid params" do
-      fab!(:chat_channel) { Fabricate(:category_channel) }
-      fab!(:user) { Fabricate(:user) }
       fab!(:membership) do
         Fabricate(:user_chat_channel_membership, user: user, chat_channel: chat_channel)
       end
@@ -32,8 +44,6 @@ RSpec.describe Chat::Api::ChatChannelNotificationsSettingsController do
     end
 
     context "when category channel has valid params" do
-      fab!(:chat_channel) { Fabricate(:category_channel) }
-      fab!(:user) { Fabricate(:user) }
       fab!(:membership) do
         Fabricate(
           :user_chat_channel_membership,

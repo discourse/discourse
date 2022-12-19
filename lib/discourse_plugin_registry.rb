@@ -5,11 +5,16 @@
 #
 class DiscoursePluginRegistry
 
+  # Plugins often need to be able to register additional handlers, data, or
+  # classes that will be used by core classes. This should be used if you
+  # need to control which type the registry is, and if it doesn't need to
+  # be removed if the plugin is disabled.
+  #
   # Shortcut to create new register in the plugin registry
   #   - Register is created in a class variable using the specified name/type
   #   - Defines singleton method to access the register
   #   - Defines instance method as a shortcut to the singleton method
-  #   - Automatically deletes the register on ::clear!
+  #   - Automatically deletes the register on registry.reset!
   def self.define_register(register_name, type)
     @@register_names ||= Set.new
     @@register_names << register_name
@@ -24,11 +29,15 @@ class DiscoursePluginRegistry
     end
   end
 
+  # Plugins often need to add values to a list, and we need to filter those
+  # lists at runtime to ignore values from disabled plugins. Unlike define_register,
+  # the type of the register cannot be defined, and is always Array.
+  #
   # Create a new register (see `define_register`) with some additions:
   #   - Register is created in a class variable using the specified name/type
   #   - Defines singleton method to access the register
   #   - Defines instance method as a shortcut to the singleton method
-  #   - Automatically deletes the register on ::clear!
+  #   - Automatically deletes the register on registry.reset!
   def self.define_filtered_register(register_name)
     define_register(register_name, Array)
 
@@ -99,6 +108,9 @@ class DiscoursePluginRegistry
   define_filtered_register :email_unsubscribers
 
   define_filtered_register :user_destroyer_on_content_deletion_callbacks
+
+  define_filtered_register :hashtag_autocomplete_data_sources
+  define_filtered_register :hashtag_autocomplete_contextual_type_priorities
 
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider

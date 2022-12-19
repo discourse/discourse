@@ -647,7 +647,7 @@ RSpec.describe PostDestroyer do
 
   describe "deleting a post directly after a whisper" do
     before do
-      SiteSetting.enable_whispers = true
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
     end
 
     it 'should not set Topic#last_post_user_id to a whisperer' do

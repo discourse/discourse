@@ -54,6 +54,14 @@ module CategoryGuardian
     secure_category_ids.include?(category.id)
   end
 
+  def can_post_in_category?(category)
+    return false unless category
+    return false if is_anonymous?
+    return true if is_admin?
+    return true if !category.read_restricted
+    Category.post_create_allowed(self).exists?(id: category.id)
+  end
+
   def can_edit_category_description?(category)
     can_perform_action_available_to_group_moderators?(category.topic)
   end

@@ -234,6 +234,7 @@ describe ChatMessage do
       expect(cooked).to eq("<p><span class=\"mention\">@mention</span></p>")
     end
 
+    # TODO (martin) Remove this when enable_experimental_hashtag_autocomplete is default
     it "supports category-hashtag plugin" do
       category = Fabricate(:category)
 
@@ -241,6 +242,20 @@ describe ChatMessage do
 
       expect(cooked).to eq(
         "<p><a class=\"hashtag\" href=\"#{category.url}\">#<span>#{category.slug}</span></a></p>",
+      )
+    end
+
+    it "supports hashtag-autocomplete plugin" do
+      SiteSetting.chat_enabled = true
+      SiteSetting.enable_experimental_hashtag_autocomplete = true
+
+      category = Fabricate(:category)
+      user = Fabricate(:user)
+
+      cooked = ChatMessage.cook("##{category.slug}", user_id: user.id)
+
+      expect(cooked).to eq(
+        "<p><a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"#{category.slug}\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>#{category.name}</span></a></p>",
       )
     end
 
@@ -481,6 +496,36 @@ describe ChatMessage do
         message_1.destroy!
 
         expect { bookmark_1.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+  end
+
+  describe "#rebake!" do
+    fab!(:chat_message) { Fabricate(:chat_message) }
+
+    describe "hashtags" do
+      fab!(:category) { Fabricate(:category) }
+      fab!(:group) { Fabricate(:group) }
+      fab!(:secure_category) { Fabricate(:private_category, group: group) }
+
+      before do
+        SiteSetting.chat_enabled = true
+        SiteSetting.enable_experimental_hashtag_autocomplete = true
+        SiteSetting.suppress_secured_categories_from_admin = true
+      end
+
+      it "keeps the same hashtags the user has permission to after rebake" do
+        group.add(chat_message.user)
+        chat_message.update!(
+          message: "this is the message ##{category.slug} ##{secure_category.slug} ##{chat_message.chat_channel.slug}",
+        )
+        chat_message.cook
+        chat_message.save!
+
+        expect(chat_message.reload.cooked).to include(secure_category.name)
+
+        chat_message.rebake!
+        expect(chat_message.reload.cooked).to include(secure_category.name)
       end
     end
   end

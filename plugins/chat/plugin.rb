@@ -271,7 +271,7 @@ after_initialize do
         next if !chat_channel
       end
 
-      next if !Guardian.new.can_see_chat_channel?(chat_channel)
+      next if !Guardian.new.can_preview_chat_channel?(chat_channel)
 
       name = (chat_channel.name if chat_channel.name.present?)
 
@@ -353,7 +353,7 @@ after_initialize do
           end
       end
 
-      next if !Guardian.new.can_see_chat_channel?(chat_channel)
+      next if !Guardian.new.can_preview_chat_channel?(chat_channel)
 
       { url: url, title: title }
     end
@@ -416,13 +416,13 @@ after_initialize do
   add_to_serializer(:current_user, :needs_dm_retention_reminder) { true }
 
   add_to_serializer(:current_user, :has_joinable_public_channels) do
-    Chat::ChatChannelFetcher.secured_public_channels(
+    Chat::ChatChannelFetcher.secured_public_channel_search(
       self.scope,
-      Chat::ChatChannelMembershipManager.all_for_user(self.scope.user),
       following: false,
       limit: 1,
       status: :open,
-    ).present?
+      exclude_dm_channels: true
+    ).exists?
   end
 
   add_to_serializer(:current_user, :chat_channels) do
@@ -730,11 +730,11 @@ after_initialize do
   register_about_stat_group("chat_users") { Chat::Statistics.about_users }
 
   # Make sure to update spec/system/hashtag_autocomplete_spec.rb when changing this.
-  register_hashtag_data_source("channel", Chat::ChatChannelHashtagDataSource)
-  register_hashtag_type_in_context("channel", "chat-composer", 200)
-  register_hashtag_type_in_context("category", "chat-composer", 100)
-  register_hashtag_type_in_context("tag", "chat-composer", 50)
-  register_hashtag_type_in_context("channel", "topic-composer", 10)
+  register_hashtag_data_source(Chat::ChatChannelHashtagDataSource)
+  register_hashtag_type_priority_for_context("channel", "chat-composer", 200)
+  register_hashtag_type_priority_for_context("category", "chat-composer", 100)
+  register_hashtag_type_priority_for_context("tag", "chat-composer", 50)
+  register_hashtag_type_priority_for_context("channel", "topic-composer", 10)
 
   Site.markdown_additional_options["chat"] = {
     limited_pretty_text_features: ChatMessage::MARKDOWN_FEATURES,
