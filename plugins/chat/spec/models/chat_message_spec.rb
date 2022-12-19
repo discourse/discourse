@@ -5,18 +5,6 @@ require "rails_helper"
 describe ChatMessage do
   fab!(:message) { Fabricate(:chat_message, message: "hey friend, what's up?!") }
 
-  # TODO (martin) Remove this after https://github.com/discourse/discourse/pull/19491 is merged
-  def register_hashtag_contexts
-    # This is annoying, but we need to reset the hashtag data sources inbetween
-    # tests, and since this is normally done in plugin.rb with the plugin API
-    # there is not an easier way to do this.
-    HashtagAutocompleteService.register_data_source("channel", Chat::ChatChannelHashtagDataSource)
-    HashtagAutocompleteService.register_type_in_context("channel", "chat-composer", 200)
-    HashtagAutocompleteService.register_type_in_context("category", "chat-composer", 100)
-    HashtagAutocompleteService.register_type_in_context("tag", "chat-composer", 50)
-    HashtagAutocompleteService.register_type_in_context("channel", "topic-composer", 10)
-  end
-
   describe ".cook" do
     it "does not support HTML tags" do
       cooked = ChatMessage.cook("<h1>test</h1>")
@@ -258,7 +246,7 @@ describe ChatMessage do
     end
 
     it "supports hashtag-autocomplete plugin" do
-      register_hashtag_contexts
+      SiteSetting.chat_enabled = true
       SiteSetting.enable_experimental_hashtag_autocomplete = true
 
       category = Fabricate(:category)
@@ -521,7 +509,7 @@ describe ChatMessage do
       fab!(:secure_category) { Fabricate(:private_category, group: group) }
 
       before do
-        register_hashtag_contexts
+        SiteSetting.chat_enabled = true
         SiteSetting.enable_experimental_hashtag_autocomplete = true
         SiteSetting.suppress_secured_categories_from_admin = true
       end
