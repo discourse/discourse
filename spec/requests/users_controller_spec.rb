@@ -3656,17 +3656,18 @@ RSpec.describe UsersController do
       expect(user1.email_change_requests).to contain_exactly(request_1)
     end
 
-    it "can destroy associated email tokens" do
+    it "destroys associated email tokens and email change requests" do
       new_email = 'new.n.cool@example.com'
       updater = EmailUpdater.new(guardian: user1.guardian, user: user1)
+      updater.change_to(new_email)
 
-      expect { updater.change_to(new_email) }
-        .to change { user1.email_tokens.count }.by(1)
+      email_token = updater.change_req.new_email_token
+      expect(email_token).to be_present
 
-      expect { delete "/u/#{user1.username}/preferences/email.json", params: { email: new_email } }
-        .to change { user1.email_tokens.count }.by(-1)
+      delete "/u/#{user1.username}/preferences/email.json", params: { email: new_email }
 
-      expect(user1.email_tokens.first.email).to eq(user1.email)
+      expect(EmailToken.find_by(id: email_token.id)).to eq(nil)
+      expect(EmailChangeRequest.find_by(id: updater.change_req.id)).to eq(nil)
     end
   end
 
@@ -3922,8 +3923,7 @@ RSpec.describe UsersController do
         expect(user.email).to eq('updatedemail@example.com')
         expect(user.email_tokens.where(email: 'updatedemail@example.com', expired: false)).to be_present
 
-        token.reload
-        expect(token.expired?).to eq(true)
+        expect(EmailToken.find_by(id: token.id)).to eq(nil)
       end
 
       it 'tells the user to slow down after many requests' do
@@ -4013,8 +4013,7 @@ RSpec.describe UsersController do
         expect(user.email).to eq('updatedemail@example.com')
         expect(user.email_tokens.where(email: 'updatedemail@example.com', expired: false)).to be_present
 
-        token.reload
-        expect(token.expired?).to eq(true)
+        expect(EmailToken.find_by(id: token.id)).to eq(nil)
       end
 
       it 'tells the user to slow down after many requests' do
