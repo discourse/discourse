@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 module ChatPublisher
+  def self.new_messages_message_bus_channel(chat_channel_id)
+    "/chat/#{chat_channel_id}/new-messages"
+  end
+
   def self.publish_new!(chat_channel, chat_message, staged_id)
     content =
       ChatMessageSerializer.new(
@@ -10,9 +14,11 @@ module ChatPublisher
     content[:type] = :sent
     content[:stagedId] = staged_id
     permissions = permissions(chat_channel)
+
     MessageBus.publish("/chat/#{chat_channel.id}", content.as_json, permissions)
+
     MessageBus.publish(
-      "/chat/#{chat_channel.id}/new-messages",
+      self.new_messages_message_bus_channel(chat_channel.id),
       {
         message_id: chat_message.id,
         user_id: chat_message.user.id,
@@ -120,21 +126,31 @@ module ChatPublisher
     )
   end
 
+  def self.user_tracking_state_message_bus_channel(user_id)
+    "/chat/user-tracking-state/#{user_id}"
+  end
+
   def self.publish_user_tracking_state(user, chat_channel_id, chat_message_id)
     MessageBus.publish(
-      "/chat/user-tracking-state/#{user.id}",
+      self.user_tracking_state_message_bus_channel(user.id),
       { chat_channel_id: chat_channel_id, chat_message_id: chat_message_id.to_i }.as_json,
       user_ids: [user.id],
     )
   end
 
+  def self.new_mentions_message_bus_channel(chat_channel_id)
+    "/chat/#{chat_channel_id}/new-mentions"
+  end
+
   def self.publish_new_mention(user_id, chat_channel_id, chat_message_id)
     MessageBus.publish(
-      "/chat/#{chat_channel_id}/new-mentions",
+      self.new_mentions_message_bus_channel(chat_channel_id),
       { message_id: chat_message_id }.as_json,
       user_ids: [user_id],
     )
   end
+
+  NEW_CHANNEL_MESSAGE_BUS_CHANNEL = "/chat/new-channel"
 
   def self.publish_new_channel(chat_channel, users)
     users.each do |user|
@@ -145,7 +161,7 @@ module ChatPublisher
           root: :chat_channel,
           membership: chat_channel.membership_for(user),
         ).as_json
-      MessageBus.publish("/chat/new-channel", serialized_channel, user_ids: [user.id])
+      MessageBus.publish(NEW_CHANNEL_MESSAGE_BUS_CHANNEL, serialized_channel, user_ids: [user.id])
     end
   end
 
@@ -171,9 +187,11 @@ module ChatPublisher
     )
   end
 
+  CHANNEL_EDITS_MESSAGE_BUS_CHANNEL = "/chat/channel-edits"
+
   def self.publish_chat_channel_edit(chat_channel, acting_user)
     MessageBus.publish(
-      "/chat/channel-edits",
+      CHANNEL_EDITS_MESSAGE_BUS_CHANNEL,
       {
         chat_channel_id: chat_channel.id,
         name: chat_channel.title(acting_user),
@@ -183,17 +201,21 @@ module ChatPublisher
     )
   end
 
+  CHANNEL_STATUS_MESSAGE_BUS_CHANNEL = "/chat/channel-status"
+
   def self.publish_channel_status(chat_channel)
     MessageBus.publish(
-      "/chat/channel-status",
+      CHANNEL_STATUS_MESSAGE_BUS_CHANNEL,
       { chat_channel_id: chat_channel.id, status: chat_channel.status },
       permissions(chat_channel),
     )
   end
 
+  CHANNEL_METADATA_MESSAGE_BUS_CHANNEL = "/chat/channel-metadata"
+
   def self.publish_chat_channel_metadata(chat_channel)
     MessageBus.publish(
-      "/chat/channel-metadata",
+      CHANNEL_METADATA_MESSAGE_BUS_CHANNEL,
       { chat_channel_id: chat_channel.id, memberships_count: chat_channel.user_count },
       permissions(chat_channel),
     )

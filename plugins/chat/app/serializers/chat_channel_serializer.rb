@@ -24,6 +24,8 @@ class ChatChannelSerializer < ApplicationSerializer
 
   def initialize(object, opts)
     super(object, opts)
+
+    @opts = opts
     @current_user_membership = opts[:membership]
   end
 
@@ -98,8 +100,8 @@ class ChatChannelSerializer < ApplicationSerializer
 
   def message_bus_last_ids
     {
-      new_messages: MessageBus.last_id("/chat/#{object.id}/new-messages"),
-      new_mentions: MessageBus.last_id("/chat/#{object.id}/new-mentions"),
+      new_messages: @opts[:new_messages_message_bus_last_id] || MessageBus.last_id(ChatPublisher.new_messages_message_bus_channel(object.id)),
+      new_mentions: @opts[:new_mentions_message_bus_last_id] || MessageBus.last_id(ChatPublisher.new_mentions_message_bus_channel(object.id)),
     }
   end
 
