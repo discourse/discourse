@@ -34,7 +34,7 @@ export default Component.extend({
 
   @discourseComputed("step.id")
   backButtonLabel() {
-    return `wizard.back`;
+    return "wizard.back";
   },
 
   @discourseComputed("step.id")
