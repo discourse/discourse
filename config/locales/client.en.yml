@@ -5516,7 +5516,7 @@ en:
       user:
         suspend_failed: "Something went wrong suspending this user %{error}"
         unsuspend_failed: "Something went wrong unsuspending this user %{error}"
-        suspend_duration: "How long will the user be suspended for?"
+        suspend_duration: "Suspend user until:"
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
         suspend_reason_hidden_label: "Why are you suspending? This text will be shown to the user when they try to log in. Keep it short."
         suspend_reason: "Reason"
@@ -5540,7 +5540,9 @@ en:
         silence_message: "Email Message"
         silence_message_placeholder: "(leave blank to send default message)"
         suspended_until: "(until %{until})"
+        suspend_forever: "Suspend forever"
         cant_suspend: "This user cannot be suspended."
+        cant_silence: "This user cannot be silenced."
 
         delete_posts_failed: "There was a problem deleting the posts."
         post_edits: "Post Edits"
@@ -5551,7 +5553,19 @@ en:
         penalty_post_edit: "Edit the post"
         penalty_post_none: "Do nothing"
         penalty_count: "Penalty Count"
-        penalty_history: "Penalty History"
+
+        # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
+        penalty_history_MF: >-
+          In the past 6 months this user has been <b>suspended
+          { SUSPENDED, plural,
+                  one {# time}
+                other {# times}
+          }</b> and <b>silenced
+          { SILENCED, plural,
+                  one {# time}
+                other {# times}
+          }</b>.
+
         clear_penalty_history:
           title: "Clear Penalty History"
           description: "users with penalties cannot reach TL3"
@@ -5721,8 +5735,8 @@ en:
         suspended_count: "Suspended"
         last_six_months: "Last 6 months"
         other_matches:
-          one: "There is %{count} other user with the same IP address. Review and select the suspicious ones to suspend along with %{username}."
-          other: "There are %{count} other users with the same IP address. Review and select the suspicious ones to suspend along with %{username}."
+          one: "There is <b>%{count} other user</b> with the same IP address. Review and select the suspicious ones to penalize along with %{username}."
+          other: "There are <b>%{count} other users</b> with the same IP address. Review and select the suspicious ones to penalize along with %{username}."
         other_matches_list:
           username: "Username"
           trust_level: "Trust Level"
