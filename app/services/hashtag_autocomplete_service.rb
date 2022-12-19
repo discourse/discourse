@@ -49,8 +49,7 @@ class HashtagAutocompleteService
   def self.ordered_types_for_context(context)
     return [] if find_priorities_for_context(context).blank?
     find_priorities_for_context(context)
-      .sort_by { |ctp| ctp[:priority] }
-      .reverse
+      .sort_by { |ctp| -ctp[:priority] }
       .map { |ctp| ctp[:type] }
   end
 
