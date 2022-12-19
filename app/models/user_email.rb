@@ -18,6 +18,10 @@ class UserEmail < ActiveRecord::Base
 
   scope :secondary, -> { where(primary: false) }
 
+  before_save ->() { destroy_email_tokens(self.email_was) }, if: :will_save_change_to_email?
+
+  after_destroy { destroy_email_tokens(self.email) }
+
   def normalize_email
     self.normalized_email = if self.email.present?
       username, domain = self.email.split('@', 2)
@@ -61,6 +65,10 @@ class UserEmail < ActiveRecord::Base
         'active_record.errors.model.user_email.attributes.user_id.reassigning_primary_email')
       )
     end
+  end
+
+  def destroy_email_tokens(email)
+    EmailToken.where(email: email).destroy_all
   end
 end
 
