@@ -407,15 +407,6 @@ body.wizard {
     background-color: var(--primary-medium);
   }
 
-  &__button .d-icon-chevron-right {
-    margin-left: 0.25em;
-    font-size: 0.8em;
-  }
-  &__button .d-icon-chevron-left {
-    margin-right: 0.25em;
-    font-size: 0.8em;
-  }
-
   &__button.primary {
     background-color: var(--tertiary);
     color: var(--secondary);
@@ -447,6 +438,7 @@ body.wizard {
   &__button.jump-in {
     background-color: var(--tertiary);
     color: var(--secondary);
+    margin-left: 1em;
     &:hover {
       background-color: var(--primary-300);
     }
@@ -468,6 +460,7 @@ body.wizard {
 
   &__button.next {
     min-width: 70px;
+    margin-left: 1em;
   }
 
   &__button.danger {
@@ -536,10 +529,7 @@ body.wizard {
 
   &__label {
     font-weight: bold;
-    font-size: var(--font-up-2);
-    @media only screen and (max-device-width: 568px) {
-      font-size: var(--font-up-1);
-    }
+    font-size: var(--font-up-1);
   }
 
   &__step.styling .wizard-container__label {
