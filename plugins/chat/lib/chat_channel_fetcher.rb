@@ -63,6 +63,7 @@ module Chat::ChatChannelFetcher
 
   def self.secured_public_channel_slug_lookup(guardian, slugs)
     allowed_channel_ids = generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: true)
+
     ChatChannel
       .joins(
         "LEFT JOIN categories ON categories.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'Category'",
@@ -75,7 +76,7 @@ module Chat::ChatChannelFetcher
 
   def self.secured_public_channel_search(guardian, options = {})
     allowed_channel_ids =
-      generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: options[:exclude_dm_channels])
+      generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: true)
 
     channels = ChatChannel.includes(chatable: [:topic_only_relative_url])
     channels = channels.includes(:chat_channel_archive) if options[:include_archives]
@@ -143,6 +144,7 @@ module Chat::ChatChannelFetcher
         guardian,
         options.merge(include_archives: true, filter_on_category_name: true),
       )
+
     decorate_memberships_with_tracking_data(guardian, channels, memberships)
     channels = channels.to_a
     preload_custom_fields_for(channels)

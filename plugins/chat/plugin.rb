@@ -421,7 +421,6 @@ after_initialize do
       following: false,
       limit: 1,
       status: :open,
-      exclude_dm_channels: true
     ).exists?
   end
 
