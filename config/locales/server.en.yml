@@ -5031,7 +5031,7 @@ en:
           contact_email:
             label: "Point of contact"
             placeholder: "example@user.com"
-            description: "Person or group responsible for this community. Used for critical updates, and listed on <a href='%{base_path}/about' target='_blank'>your about page</a> for urgent contact."
+            description: "Email address of key contact responsible for this site. Used for critical notifications, and listed on your <a href='%{base_path}/about' target='_blank'>your about page</a> for urgent matters."
 
       invites:
         title: "Invite Staff"
