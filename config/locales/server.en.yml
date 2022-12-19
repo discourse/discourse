@@ -5003,10 +5003,10 @@ en:
         fields:
           logo:
             label: "Primary Logo"
-            description: "The logo at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1"
+            description: "Recommended size: 600 x 200."
           logo_small:
             label: "Square Logo"
-            description: "A square version of your logo. Shown at the top left when scrolling down, and when sharing on social platforms. Ideally at least 512x512."
+            description: "Recommended size: 512 x 512. Also used as the favicon and mobile home screen app icon."
 
       corporate:
         title: "Your Organization"
