@@ -67,17 +67,11 @@ body.wizard {
   background-color: var(--secondary);
   box-shadow: 0 4px 19px 6px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
-  margin: 1.5em auto;
+  margin: 1em auto;
   padding: 0;
   border: 1px solid var(--primary-low);
   border-radius: 8px;
   padding: 2em 3em;
-
-  @media screen and (max-height: 800px) {
-    .desktop-view & {
-      margin: 1em auto;
-    }
-  }
 
   @include breakpoint("mobile-extra-large") {
     padding: 2em 1.5em;
@@ -86,7 +80,7 @@ body.wizard {
   }
 
   &__step {
-    margin-top: 3em;
+    margin-top: 1em;
     max-width: 50%;
     min-width: 35%;
     width: 100%;
@@ -138,6 +132,13 @@ body.wizard {
     @include breakpoint("mobile-extra-large") {
       max-width: 100%;
     }
+  }
+
+  &__step.branding .wizard-container__preview {
+    background-color: var(--primary-very-low);
+    border-radius: 0.5em;
+    padding: 1em;
+    margin-bottom: 1em;
   }
 
   &__step.branding .wizard-container__preview canvas {
@@ -482,12 +483,18 @@ body.wizard {
   }
 
   &__button-upload {
-    background-color: var(--primary-low);
     display: block;
+    background-color: transparent;
+    margin-top: 1em;
+    border: 1px solid var(--tertiary-high);
+    text-align: center;
+    color: var(--tertiary-high);
   }
 
   &__button-upload:hover {
-    background-color: var(--primary-low-mid);
+    background-color: transparent;
+    border-color: var(--tertiary-hover);
+    color: var(--tertiary-hover);
   }
 
   &__button-upload svg {
@@ -518,13 +525,6 @@ body.wizard {
     flex-wrap: wrap;
     gap: 1em;
     align-items: center;
-  }
-
-  &__image-upload {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: baseline;
   }
 
   &__label {
