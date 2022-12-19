@@ -7,7 +7,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { extractError } from "discourse/lib/ajax-error";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import I18n from "I18n";
-import { Promise } from "rsvp";
 
 export default Controller.extend(ModalFunctionality, {
   dialog: service(),
@@ -122,7 +121,7 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   @action
-  penalizeUser() {
+  async penalizeUser() {
     if (this.submitDisabled) {
       return;
     }
@@ -130,40 +129,40 @@ export default Controller.extend(ModalFunctionality, {
     this.set("penalizing", true);
     this.set("confirmClose", true);
 
-    const promise = this.before ? this.before() : Promise.resolve();
-    return promise
-      .then(() => {
-        const opts = {
-          reason: this.reason,
-          message: this.message,
-          post_id: this.postId,
-          post_action: this.postAction,
-          post_edit: this.postEdit,
-          other_user_ids: this.otherUserIds,
-        };
+    if (this.before) {
+      this.before();
+    }
 
-        if (this.penaltyType === "suspend") {
-          opts.suspend_until = this.penalizeUntil;
-          return this.user.suspend(opts);
-        } else if (this.penaltyType === "silence") {
-          opts.silenced_till = this.penalizeUntil;
-          return this.user.silence(opts);
-        }
+    let result;
+    try {
+      const opts = {
+        reason: this.reason,
+        message: this.message,
+        post_id: this.postId,
+        post_action: this.postAction,
+        post_edit: this.postEdit,
+        other_user_ids: this.otherUserIds,
+      };
 
+      if (this.penaltyType === "suspend") {
+        opts.suspend_until = this.penalizeUntil;
+        result = await this.user.suspend(opts);
+      } else if (this.penaltyType === "silence") {
+        opts.silenced_till = this.penalizeUntil;
+        result = await this.user.silence(opts);
+      } else {
         // eslint-disable-next-line no-console
         console.error("Unknown penalty type:", this.penaltyType);
-      })
-      .then((result) => {
-        this.send("closeModal");
-        if (this.successCallback) {
-          return this.successCallback(result);
-        }
-      })
-      .catch((error) => {
-        this.set("errorMessage", extractError(error));
-      })
-      .finally(() => {
-        this.set("penalizing", false);
-      });
+      }
+
+      this.send("closeModal");
+      if (this.successCallback) {
+        await this.successCallback(result);
+      }
+    } catch {
+      this.set("errorMessage", extractError(result));
+    } finally {
+      this.set("penalizing", false);
+    }
   },
 });
