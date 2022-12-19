@@ -7,7 +7,7 @@ class TagHashtagDataSource
   def self.icon
     "tag"
   end
-  
+
   def self.type
     "tag"
   end
