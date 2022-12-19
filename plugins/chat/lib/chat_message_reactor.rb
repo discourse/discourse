@@ -12,7 +12,7 @@ class Chat::ChatMessageReactor
   end
 
   def react!(message_id:, react_action:, emoji:)
-    @guardian.ensure_can_see_chat_channel!(@chat_channel)
+    @guardian.ensure_can_join_chat_channel!(@chat_channel)
     @guardian.ensure_can_react!
     validate_channel_status!
     validate_reaction!(react_action, emoji)
