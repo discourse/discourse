@@ -94,17 +94,20 @@
 
                 {{#unless this.externalAuthsOnly}}
                   <div class="input password-input input-group">
-                    <PasswordField @value={{this.accountPassword}} @class={{value-entered this.accountPassword}} @type="password" @id="new-account-password" @capsLockOn={{this.capsLockOn}} />
+                    <PasswordField @value={{this.accountPassword}} @class={{value-entered this.accountPassword}} @type={{if this.maskPassword "password" "text"}} @id="new-account-password" @capsLockOn={{this.capsLockOn}} />
                     <label class="alt-placeholder" for="new-account-password">
                       {{i18n "invites.password_label"}}
                       <span class="required">*</span>
                     </label>
-                    <InputTip @validation={{this.passwordValidation}} />
-                    <div class="instructions">
-                      {{this.passwordInstructions}}
-                      <div class="caps-lock-warning {{unless this.capsLockOn " hidden"}}">
-                        {{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}
+                    <div class="create-account__password-info">
+                      <div class="create-account__password-tip-validation">
+                        <InputTip @validation={{this.passwordValidation}} @id="password-validation" />
+                        <span class="more-info">{{this.passwordInstructions}}</span>
+                        <div class="caps-lock-warning {{unless this.capsLockOn "hidden"}}">
+                          {{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}
+                        </div>
                       </div>
+                      <TogglePasswordMask @maskPassword={{this.maskPassword}} @togglePasswordMask={{this.togglePasswordMask}} @parentController={{"invites-show"}} />
                     </div>
                   </div>
                 {{/unless}}

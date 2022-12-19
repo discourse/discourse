@@ -339,6 +339,21 @@
   border: 0;
   padding: 0;
   color: var(--tertiary);
+  .discourse-no-touch & {
+    &:hover {
+      color: var(--tertiary);
+      background: transparent;
+    }
+  }
+  &:focus {
+    color: var(--tertiary);
+    background: transparent;
+  }
+  &:focus-visible {
+    color: var(--tertiary);
+    background: transparent;
+    @include default-focus;
+  }
 }
 
 .btn-mini-toggle {
