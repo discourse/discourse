@@ -5,6 +5,10 @@ class Chat::ChatChannelHashtagDataSource
     "comment"
   end
 
+  def self.type
+    "channel"
+  end
+
   def self.channel_to_hashtag_item(guardian, channel)
     HashtagAutocompleteService::HashtagItem.new.tap do |item|
       item.text = channel.title

@@ -9,64 +9,21 @@ RSpec.describe HashtagAutocompleteService do
 
   subject { described_class.new(guardian) }
 
-  before { Site.clear_cache }
-
-  class BookmarkDataSource
-    def self.icon
-      "bookmark"
-    end
-
-    def self.lookup(guardian_scoped, slugs)
-      guardian_scoped
-        .user
-        .bookmarks
-        .where("LOWER(name) IN (:slugs)", slugs: slugs)
-        .map do |bm|
-          HashtagAutocompleteService::HashtagItem.new.tap do |item|
-            item.text = bm.name
-            item.slug = bm.name.gsub(" ", "-")
-            item.icon = icon
-          end
-        end
-    end
-
-    def self.search(
-      guardian_scoped,
-      term,
-      limit,
-      condition = HashtagAutocompleteService.search_conditions[:starts_with]
-    )
-      query = guardian_scoped.user.bookmarks
-
-      if condition == HashtagAutocompleteService.search_conditions[:starts_with]
-        query = query.where("name ILIKE ?", "#{term}%")
-      else
-        query = query.where("name ILIKE ?", "%#{term}%")
-      end
-
-      query
-        .limit(limit)
-        .map do |bm|
-          HashtagAutocompleteService::HashtagItem.new.tap do |item|
-            item.text = bm.name
-            item.slug = bm.name.gsub(" ", "-")
-            item.icon = icon
-          end
-        end
-    end
-
-    def self.search_sort(search_results, _)
-      search_results.sort_by { |item| item.text.downcase }
-    end
-  end
+  after { DiscoursePluginRegistry.reset! }
 
   describe ".contexts_with_ordered_types" do
     it "returns a hash of all the registrered search contexts and their types in the defined priority order" do
       expect(HashtagAutocompleteService.contexts_with_ordered_types).to eq(
         { "topic-composer" => %w[category tag] },
       )
-      HashtagAutocompleteService.register_type_in_context("category", "awesome-composer", 50)
-      HashtagAutocompleteService.register_type_in_context("tag", "awesome-composer", 100)
+      DiscoursePluginRegistry.register_hashtag_autocomplete_contextual_type_priority(
+        { type: "category", context: "awesome-composer", priority: 50 },
+        stub(enabled?: true),
+      )
+      DiscoursePluginRegistry.register_hashtag_autocomplete_contextual_type_priority(
+        { type: "tag", context: "awesome-composer", priority: 100 },
+        stub(enabled?: true),
+      )
       expect(HashtagAutocompleteService.contexts_with_ordered_types).to eq(
         { "topic-composer" => %w[category tag], "awesome-composer" => %w[tag category] },
       )
@@ -148,7 +105,10 @@ RSpec.describe HashtagAutocompleteService do
       Fabricate(:bookmark, user: user, name: "cool rock song")
       guardian.user.reload
 
-      HashtagAutocompleteService.register_data_source("bookmark", BookmarkDataSource)
+      DiscoursePluginRegistry.register_hashtag_autocomplete_data_source(
+        FakeBookmarkHashtagDataSource,
+        stub(enabled?: true),
+      )
 
       expect(subject.search("book", %w[category tag bookmark]).map(&:text)).to eq(
         ["The Book Club", "great-books x 22", "read review of this fantasy book"],
@@ -173,7 +133,10 @@ RSpec.describe HashtagAutocompleteService do
       Fabricate(:bookmark, user: user, name: "book club")
       guardian.user.reload
 
-      HashtagAutocompleteService.register_data_source("bookmark", BookmarkDataSource)
+      DiscoursePluginRegistry.register_hashtag_autocomplete_data_source(
+        FakeBookmarkHashtagDataSource,
+        stub(enabled?: true),
+      )
 
       expect(subject.search("book", %w[category tag bookmark]).map(&:ref)).to eq(
         %w[book-club the-book-club great-books the-book-club::tag],
@@ -428,7 +391,10 @@ RSpec.describe HashtagAutocompleteService do
       Fabricate(:bookmark, user: user, name: "coolrock")
       guardian.user.reload
 
-      HashtagAutocompleteService.register_data_source("bookmark", BookmarkDataSource)
+      DiscoursePluginRegistry.register_hashtag_autocomplete_data_source(
+        FakeBookmarkHashtagDataSource,
+        stub(enabled?: true),
+      )
 
       result = subject.lookup(["coolrock"], %w[category tag bookmark])
       expect(result[:bookmark].map(&:slug)).to eq(["coolrock"])

@@ -3,48 +3,60 @@
 class HashtagAutocompleteService
   HASHTAGS_PER_REQUEST = 20
   SEARCH_MAX_LIMIT = 50
+  DEFAULT_DATA_SOURCES = [CategoryHashtagDataSource, TagHashtagDataSource]
+  DEFAULT_CONTEXTUAL_TYPE_PRIORITIES = [
+    { type: "category", context: "topic-composer", priority: 100 },
+    { type: "tag", context: "topic-composer", priority: 50 },
+  ]
 
   def self.search_conditions
     @search_conditions ||= Enum.new(contains: 0, starts_with: 1)
   end
 
   attr_reader :guardian
-  cattr_reader :data_sources, :contexts
 
-  def self.register_data_source(type, klass)
-    @@data_sources[type] = klass
+  def self.data_sources
+    # Category and Tag data sources are in core and always should be
+    # included for searches and lookups.
+    Set.new(DEFAULT_DATA_SOURCES | DiscoursePluginRegistry.hashtag_autocomplete_data_sources)
   end
 
-  def self.clear_registered
-    @@data_sources = {}
-    @@contexts = {}
-
-    register_data_source("category", CategoryHashtagDataSource)
-    register_data_source("tag", TagHashtagDataSource)
-
-    register_type_in_context("category", "topic-composer", 100)
-    register_type_in_context("tag", "topic-composer", 50)
+  def self.contextual_type_priorities
+    # Category and Tag type priorities for the composer are default and
+    # always are included.
+    Set.new(
+      DEFAULT_CONTEXTUAL_TYPE_PRIORITIES |
+        DiscoursePluginRegistry.hashtag_autocomplete_contextual_type_priorities,
+    )
   end
 
-  def self.register_type_in_context(type, context, priority)
-    @@contexts[context] = @@contexts[context] || {}
-    @@contexts[context][type] = priority
+  def self.data_source_types
+    data_sources.map(&:type)
   end
 
   def self.data_source_icons
-    @@data_sources.values.map(&:icon)
+    data_sources.map(&:icon)
+  end
+
+  def self.data_source_from_type(type)
+    data_sources.find { |ds| ds.type == type }
+  end
+
+  def self.find_priorities_for_context(context)
+    contextual_type_priorities.select { |ctp| ctp[:context] == context }
+  end
+
+  def self.unique_contexts
+    contextual_type_priorities.map { |ctp| ctp[:context] }.uniq
   end
 
   def self.ordered_types_for_context(context)
-    return [] if @@contexts[context].blank?
-    @@contexts[context].sort_by { |param, priority| priority }.reverse.map(&:first)
+    find_priorities_for_context(context).sort_by { |ctp| -ctp[:priority] }.map { |ctp| ctp[:type] }
   end
 
   def self.contexts_with_ordered_types
-    Hash[@@contexts.keys.map { |context| [context, ordered_types_for_context(context)] }]
+    Hash[unique_contexts.map { |context| [context, ordered_types_for_context(context)] }]
   end
-
-  clear_registered
 
   class HashtagItem
     # The text to display in the UI autocomplete menu for the item.
@@ -120,13 +132,15 @@ class HashtagAutocompleteService
     raise Discourse::InvalidParameters.new(:order) if !types_in_priority_order.is_a?(Array)
 
     types_in_priority_order =
-      types_in_priority_order.select { |type| @@data_sources.keys.include?(type) }
+      types_in_priority_order.select do |type|
+        HashtagAutocompleteService.data_source_types.include?(type)
+      end
     lookup_results = Hash[types_in_priority_order.collect { |type| [type.to_sym, []] }]
     limited_slugs = slugs[0..HashtagAutocompleteService::HASHTAGS_PER_REQUEST]
 
     slugs_without_suffixes =
       limited_slugs.reject do |slug|
-        @@data_sources.keys.any? { |type| slug.ends_with?("::#{type}") }
+        HashtagAutocompleteService.data_source_types.any? { |type| slug.ends_with?("::#{type}") }
       end
     slugs_with_suffixes = (limited_slugs - slugs_without_suffixes)
 
@@ -208,7 +222,9 @@ class HashtagAutocompleteService
     top_ranked_type = nil
     term = term.downcase
     types_in_priority_order =
-      types_in_priority_order.select { |type| @@data_sources.keys.include?(type) }
+      types_in_priority_order.select do |type|
+        HashtagAutocompleteService.data_source_types.include?(type)
+      end
 
     # Float exact matches by slug to the top of the list, any of these will be excluded
     # from further results.
@@ -318,7 +334,7 @@ class HashtagAutocompleteService
     return limited_results if search_results.empty?
 
     search_results =
-      @@data_sources[type].search_sort(
+      HashtagAutocompleteService.data_source_from_type(type).search_sort(
         search_results.reject do |item|
           limited_results.any? { |exact| exact.type == type && exact.slug === item.slug }
         end,
@@ -334,7 +350,12 @@ class HashtagAutocompleteService
 
     types_in_priority_order.each do |type|
       search_results =
-        filter_valid_data_items(@@data_sources[type].search_without_term(guardian, split_limit))
+        filter_valid_data_items(
+          HashtagAutocompleteService.data_source_from_type(type).search_without_term(
+            guardian,
+            split_limit,
+          ),
+        )
       next if search_results.empty?
 
       # This is purposefully unsorted as search_without_term should sort
@@ -369,7 +390,17 @@ class HashtagAutocompleteService
     condition = HashtagAutocompleteService.search_conditions[:contains]
   )
     filter_valid_data_items(
-      set_types(set_refs(@@data_sources[type].search(guardian, term, limit, condition)), type),
+      set_types(
+        set_refs(
+          HashtagAutocompleteService.data_source_from_type(type).search(
+            guardian,
+            term,
+            limit,
+            condition,
+          ),
+        ),
+        type,
+      ),
     )
   end
 
@@ -385,7 +416,10 @@ class HashtagAutocompleteService
   end
 
   def lookup_for_type(type, guardian, slugs)
-    set_types(set_refs(@@data_sources[type].lookup(guardian, slugs)), type)
+    set_types(
+      set_refs(HashtagAutocompleteService.data_source_from_type(type).lookup(guardian, slugs)),
+      type,
+    )
   end
 
   def append_types_to_conflicts(limited_results, top_ranked_type, limit)

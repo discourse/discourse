@@ -8,6 +8,10 @@ class TagHashtagDataSource
     "tag"
   end
 
+  def self.type
+    "tag"
+  end
+
   def self.tag_to_hashtag_item(tag, include_count: false)
     tag = Tag.new(tag.slice(:id, :name, :description).merge(topic_count: tag[:count])) if tag.is_a?(
       Hash,
