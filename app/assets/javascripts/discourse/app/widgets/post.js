@@ -308,7 +308,7 @@ createWidget("post-meta-data", {
         h(
           "div.post-info.whisper",
           {
-            attributes: { title: title },
+            attributes: { title },
           },
           iconNode("far-eye-slash")
         )
