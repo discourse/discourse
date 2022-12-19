@@ -104,6 +104,8 @@ import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
 import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
+import { registerCustomCountable as registerUserCategorySectionLinkCountable } from "discourse/lib/sidebar/user/categories-section/category-section-link";
+import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
 import DiscourseURL from "discourse/lib/url";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
@@ -1807,6 +1809,87 @@ class PluginApi {
    */
   addCommunitySectionLink(arg, secondary) {
     addCustomCommunitySectionLink(arg, secondary);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Registers a new countable for section links under Sidebar Categories section on top of the default countables of
+   * unread topics count and new topics count.
+   *
+   * ```
+   * api.registerUserCategorySectionLinkCountable({
+   *   badgeTextFunction: (count) => {
+   *     return I18n.t("custom.open_count", count: count");
+   *   },
+   *   route: "discovery.openCategory",
+   *   shouldRegister: ({ category } => {
+   *     return category.custom_fields.enable_open_topics_count;
+   *   }),
+   *   refreshCountFunction: ({ _topicTrackingState, category } => {
+   *     return category.open_topics_count;
+   *   }),
+   *   prioritizeDefaults: ({ currentUser, category } => {
+   *     return category.custom_fields.show_open_topics_count_first;
+   *   })
+   * })
+   * ```
+   *
+   * @callback badgeTextFunction
+   * @param {Integer} count - The count as given by the `refreshCountFunction`.
+   * @returns {String} - Text for the badge displayed in the section link.
+   *
+   * @callback shouldRegister
+   * @param {Object} arg
+   * @param {Category} arg.category - The category model for the sidebar section link.
+   * @returns {Boolean} - Whether the countable should be registered for the sidebar section link.
+   *
+   * @callback refreshCountFunction
+   * @param {Object} arg
+   * @param {Category} arg.category - The category model for the sidebar section link.
+   * @returns {integer} - The value used to set the property for the count.
+   *
+   * @callback prioritizeOverDefaults
+   * @param {Object} arg
+   * @param {Category} arg.category - The category model for the sidebar section link.
+   * @param {User} arg.currentUser - The user model for the current user.
+   * @returns {boolean} - Whether the countable should be prioritized over the defaults.
+   *
+   * @param {Object} arg - An object
+   * @param {string} arg.badgeTextFunction - Function used to generate the text for the badge displayed in the section link.
+   * @param {string} arg.route - The Ember route name to generate the href attribute for the link.
+   * @param {Object=} arg.routeQuery - Object representing the query params that should be appended to the route generated.
+   * @param {shouldRegister} arg.shouldRegister - Function used to determine if the countable should be registered for the category.
+   * @param {refreshCountFunction} arg.refreshCountFunction - Function used to calculate the value used to set the property for the count whenever the sidebar section link refreshes.
+   * @param {prioritizeOverDefaults} args.prioritizeOverDefaults - Function used to determine whether the countable should be prioritized over the default countables of unread/new.
+   */
+  registerUserCategorySectionLinkCountable({
+    badgeTextFunction,
+    route,
+    routeQuery,
+    shouldRegister,
+    refreshCountFunction,
+    prioritizeOverDefaults,
+  }) {
+    registerUserCategorySectionLinkCountable({
+      badgeTextFunction,
+      route,
+      routeQuery,
+      shouldRegister,
+      refreshCountFunction,
+      prioritizeOverDefaults,
+    });
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Triggers a refresh of the counts for all category section links under the categories section for a logged in user.
+   */
+  refreshUserSidebarCategoriesSectionCounts() {
+    const appEvents = this._lookupContainer("service:app-events");
+
+    appEvents?.trigger(
+      REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME
+    );
   }
 
   /**
