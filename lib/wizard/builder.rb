@@ -104,6 +104,7 @@ class Wizard
       end
 
       @wizard.append_step('branding') do |step|
+        step.emoji = "framed_picture"
         step.add_field(id: 'logo', type: 'image', value: SiteSetting.site_logo_url)
         step.add_field(id: 'logo_small', type: 'image', value: SiteSetting.site_logo_small_url)
 
@@ -117,6 +118,7 @@ class Wizard
       end
 
       @wizard.append_step('styling') do |step|
+        step.emoji = "art"
         default_theme = Theme.find_by(id: SiteSetting.default_theme_id)
         default_theme_override = SiteSetting.exists?(name: "default_theme_id")
 
@@ -222,6 +224,7 @@ class Wizard
       end
 
       @wizard.append_step('corporate') do |step|
+        step.emoji = "briefcase"
         step.description_vars = { base_path: Discourse.base_path }
         step.add_field(id: 'company_name', type: 'text', value: SiteSetting.company_name)
         step.add_field(id: 'governing_law', type: 'text', value: SiteSetting.governing_law)
