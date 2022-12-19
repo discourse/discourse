@@ -126,10 +126,8 @@ acceptance("Admin - Suspend User - timeframe choosing", function (needs) {
     await click(".future-date-input-selector-header");
 
     const options = Array.from(
-      queryAll(`ul.select-kit-collection li span.name`).map((_, x) =>
-        x.innerText.trim()
-      )
-    );
+      queryAll(`ul.select-kit-collection li span.name`)
+    ).map((el) => el.innerText.trim());
 
     const expected = [
       I18n.t("time_shortcut.later_today"),

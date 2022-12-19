@@ -54,7 +54,7 @@
 
 <div class="modal-footer">
   <DButton @class="btn-danger perform-penalize"
-           @action={{action "penalizeUser"}}
+           @action={{this.penalizeUser}}
            @disabled={{this.submitDisabled}}
            @icon="ban"
            @label={{this.buttonLabel}} />

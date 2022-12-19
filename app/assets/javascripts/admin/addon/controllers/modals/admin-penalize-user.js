@@ -52,11 +52,13 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   beforeClose() {
-    // prompt a confirmation if we have unsaved content
+    if (this.confirmClose) {
+      return true;
+    }
+
     if (
-      !this.confirmClose &&
-      ((this.reason && this.reason.length > 1) ||
-        (this.message && this.message.length > 1))
+      (this.reason && this.reason.length > 1) ||
+      (this.message && this.message.length > 1)
     ) {
       this.send("hideModal");
       this.dialog.confirm({
@@ -154,7 +156,7 @@ export default Controller.extend(ModalFunctionality, {
       .then((result) => {
         this.send("closeModal");
         if (this.successCallback) {
-          this.successCallback(result);
+          return this.successCallback(result);
         }
       })
       .catch((error) => {
