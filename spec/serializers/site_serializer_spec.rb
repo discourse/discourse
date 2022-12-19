@@ -234,4 +234,11 @@ RSpec.describe SiteSerializer do
       end
     end
   end
+
+  it "returns correct whispers allowed groups names" do
+    SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}|#{Group::AUTO_GROUPS[:trust_level_4]}"
+
+    serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+    expect(serialized[:whispers_allowed_groups_names]).to eq(["staff", "trust_level_4"])
+  end
 end

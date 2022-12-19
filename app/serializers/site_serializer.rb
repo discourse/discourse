@@ -248,7 +248,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def whispers_allowed_groups_names
-    SiteSetting.whispers_allowed_groups_map&.map { |id| Group::AUTO_GROUP_IDS[id] }
+    SiteSetting.whispers_allowed_groups_map&.map { |id| Group::AUTO_GROUP_IDS[id].to_s }
   end
 
   private
