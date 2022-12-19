@@ -242,6 +242,28 @@ RSpec.describe UsersEmailController do
         end
       end
     end
+
+    it "destroys email tokens associated with the old email after the new email is confirmed" do
+      SiteSetting.enable_secondary_emails = true
+
+      email_token = user.email_tokens.create!(email: user.email, scope: EmailToken.scopes[:password_reset])
+
+      updater = EmailUpdater.new(guardian: user.guardian, user: user)
+      updater.change_to('bubblegum@adventuretime.ooo')
+
+      sign_in(user)
+      put "/u/confirm-new-email", params: {
+        token: "#{updater.change_req.new_email_token.token}"
+      }
+
+      new_password = SecureRandom.hex
+      put "/u/password-reset/#{email_token.token}.json", params: {
+        password: new_password
+      }
+      expect(response.parsed_body["success"]).to eq(false)
+      expect(response.parsed_body["message"]).to eq(I18n.t("password_reset.no_token", base_url: Discourse.base_url))
+      expect(user.reload.confirm_password?(new_password)).to eq(false)
+    end
   end
 
   describe '#confirm-old-email' do
