@@ -228,15 +228,6 @@ class Wizard
         step.add_field(id: 'city_for_disputes', type: 'text', value: SiteSetting.city_for_disputes)
         step.add_field(id: 'contact_email', type: 'text', value: SiteSetting.contact_email)
 
-        username = SiteSetting.site_contact_username
-        username = Discourse.system_user.username if username.blank?
-        contact = step.add_field(id: 'site_contact', type: 'dropdown', value: username)
-
-        User.human_users.where(admin: true).pluck(:username).each do |c|
-          contact.add_choice(c) unless reserved_usernames.include?(c.downcase)
-        end
-        contact.add_choice(Discourse.system_user.username)
-
         step.on_update do |updater|
           update_tos do |raw|
             replace_setting_value(updater, raw, 'company_name')
@@ -246,7 +237,6 @@ class Wizard
 
           if updater.errors.blank?
             updater.apply_settings(:company_name, :governing_law, :city_for_disputes, :contact_url, :contact_email)
-            updater.update_setting(:site_contact_username, updater.fields[:site_contact])
           end
         end
       end
