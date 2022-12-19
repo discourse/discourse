@@ -4949,16 +4949,16 @@ en:
             placeholder: "Private"
             extra_description: "Only logged in users can access this community"
           invite_only:
-            placeholder: "Invite Only"
+            placeholder: "Invite only"
             extra_description: "Users must be invited by trusted users or staff, otherwise users can sign up on their own"
           must_approve_users:
-            placeholder: "Require Approval"
+            placeholder: "Require approval"
             extra_description: "Users must be approved by staff"
           chat_enabled:
-            placeholder: "Enable Chat"
+            placeholder: "Enable chat"
             extra_description: "Engage with your members in real time"
           enable_sidebar:
-            placeholder: "Enable Sidebar"
+            placeholder: "Enable sidebar"
             extra_description: "Access your favorite spaces with ease"
 
       ready:
@@ -5014,19 +5014,19 @@ en:
 
         fields:
           company_name:
-            label: "Company Name"
-            placeholder: "Example Organization"
+            label: "Company name"
+            placeholder: "Acme Organization"
           governing_law:
-            label: "Governing Law"
+            label: "Governing law"
             placeholder: "California law"
           contact_url:
-            label: "Web Page"
+            label: "Web page"
             placeholder: "https://www.example.com/contact-us"
           city_for_disputes:
-            label: "City for Disputes"
+            label: "City for disputes"
             placeholder: "San Francisco, California"
           site_contact:
-            label: "Automated Messages"
+            label: "Automated messages"
             description: "All automated Discourse personal messages will be sent from this user, such as flag warnings and backup completion notices."
           contact_email:
             label: "Point of contact"
