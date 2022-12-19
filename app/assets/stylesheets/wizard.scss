@@ -332,9 +332,6 @@ body.wizard {
     align-items: center;
     font-weight: bold;
     margin-right: -1.5em;
-    @media screen and (max-width: 767px) {
-      display: none;
-    }
 
     @include breakpoint("mobile-extra-large") {
       margin-bottom: 1em;
