@@ -62,6 +62,9 @@ class HashtagAutocompleteService
     # The text to display in the UI autocomplete menu for the item.
     attr_accessor :text
 
+    # Some items may want to display extra text in the UI styled differently, e.g. tag topic counts.
+    attr_accessor :secondary_text
+
     # The description text to display in the UI autocomplete menu on hover.
     # This will be things like e.g. category description.
     attr_accessor :description

@@ -12,17 +12,14 @@ class TagHashtagDataSource
     "tag"
   end
 
-  def self.tag_to_hashtag_item(tag, include_count: false)
+  def self.tag_to_hashtag_item(tag)
     tag = Tag.new(tag.slice(:id, :name, :description).merge(topic_count: tag[:count])) if tag.is_a?(
       Hash,
     )
 
     HashtagAutocompleteService::HashtagItem.new.tap do |item|
-      if include_count
-        item.text = "#{tag.name} x #{tag.topic_count}"
-      else
-        item.text = tag.name
-      end
+      item.text = tag.name
+      item.secondary_text = "x#{tag.topic_count}"
       item.description = tag.description
       item.slug = tag.name
       item.relative_url = tag.url
@@ -66,7 +63,7 @@ class TagHashtagDataSource
     TagsController
       .tag_counts_json(tags_with_counts)
       .take(limit)
-      .map { |tag| tag_to_hashtag_item(tag, include_count: true) }
+      .map { |tag| tag_to_hashtag_item(tag) }
   end
 
   def self.search_sort(search_results, _)
@@ -89,6 +86,6 @@ class TagHashtagDataSource
     TagsController
       .tag_counts_json(tags_with_counts)
       .take(limit)
-      .map { |tag| tag_to_hashtag_item(tag, include_count: true) }
+      .map { |tag| tag_to_hashtag_item(tag) }
   end
 end
