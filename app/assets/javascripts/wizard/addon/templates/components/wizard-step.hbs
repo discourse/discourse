@@ -52,20 +52,26 @@
 
     <div class="wizard-container__step-progress">
       {{#if this.showFinishButton}}
-        <button {{on "click" this.exitEarly}} disabled={{this.saving}} type="button" class="wizard-container__button jump-in">
+        <button {{on "click" this.exitEarly}} disabled={{this.saving}} type="button" class="one wizard-container__button jump-in">
           {{i18n "wizard.jump_in"}}
         </button>
       {{/if}}
 
-      {{#if this.showNextButton}}
-        <button {{on "click" this.nextStep}} disabled={{this.saving}} type="button" class="wizard-container__button primary {{this.nextButtonClass}}">
+      {{#if this.showConfigureMore}}
+        <button {{on "click" this.nextStep}} disabled={{this.saving}} type="button" class="three wizard-container__button primary {{this.nextButtonClass}}">
           {{i18n this.nextButtonLabel}}
         </button>
       {{/if}}
 
       {{#if this.showJumpInButton}}
-        <button {{on "click" this.quit}} disabled={{this.saving}} type="button" class="wizard-container__button {{this.jumpInButtonClass}}">
+        <button {{on "click" this.quit}} disabled={{this.saving}} type="button" class="two wizard-container__button {{this.jumpInButtonClass}}">
           {{i18n this.jumpInButtonLabel}}
+        </button>
+      {{/if}}
+
+      {{#if this.showNextButton}}
+        <button {{on "click" this.nextStep}} disabled={{this.saving}} type="button" class="three wizard-container__button primary {{this.nextButtonClass}}">
+          {{i18n this.nextButtonLabel}}
         </button>
       {{/if}}
 
