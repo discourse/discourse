@@ -899,7 +899,7 @@ Widget.triangulate(arg: "test")
     assert.equal(document.activeElement, composer);
 
     document.activeElement.blur();
-    await triggerKeyEvent(document.body, "keydown", 191); // 191 is `?`
+    await triggerKeyEvent(document.body, "keydown", "?", { shiftKey: true });
     assert.notEqual(
       document.activeElement,
       composer,
