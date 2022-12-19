@@ -75,7 +75,7 @@ RSpec.describe Jobs::CheckNewFeatures do
     expect(DiscourseUpdates.get_last_viewed_feature_date(admin1.id).iso8601).to eq(Time.zone.now.iso8601)
   end
 
-  it "notifies admins about new features that are available in the site's version" do
+  xit "notifies admins about new features that are available in the site's version" do
     Notification.destroy_all
 
     described_class.new.execute({})
@@ -90,7 +90,7 @@ RSpec.describe Jobs::CheckNewFeatures do
     ).count).to eq(1)
   end
 
-  it "consolidates new features notifications" do
+  xit "consolidates new features notifications" do
     Notification.destroy_all
 
     described_class.new.execute({})
