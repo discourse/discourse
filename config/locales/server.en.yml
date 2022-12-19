@@ -4938,10 +4938,6 @@ en:
           site_description:
             label: "Describe your community in a sentence"
             placeholder: "A place for Jane and her friends to discuss cool stuff"
-          contact_email:
-            label: "Point of contact"
-            placeholder: "example@user.com"
-            description: "Person or group responsible for this community. Used for critical updates, and listed on <a href='%{base_path}/about' target='_blank'>your about page</a> for urgent contact."
           default_locale:
             label: "Language"
 
@@ -5036,6 +5032,10 @@ en:
           site_contact:
             label: "Automated Messages"
             description: "All automated Discourse personal messages will be sent from this user, such as flag warnings and backup completion notices."
+          contact_email:
+            label: "Point of contact"
+            placeholder: "example@user.com"
+            description: "Person or group responsible for this community. Used for critical updates, and listed on <a href='%{base_path}/about' target='_blank'>your about page</a> for urgent contact."
 
       invites:
         title: "Invite Staff"

@@ -30,10 +30,6 @@ class Wizard
         step.on_update do |updater|
           updater.ensure_changed(:title)
 
-          if updater.errors.blank?
-            updater.apply_settings(:title, :site_description, :contact_email)
-          end
-
           old_locale = SiteSetting.default_locale
           updater.apply_setting(:default_locale)
 
@@ -230,7 +226,7 @@ class Wizard
         step.add_field(id: 'governing_law', type: 'text', value: SiteSetting.governing_law)
         step.add_field(id: 'contact_url', type: 'text', value: SiteSetting.contact_url)
         step.add_field(id: 'city_for_disputes', type: 'text', value: SiteSetting.city_for_disputes)
-        step.add_field(id: 'contact_email', type: 'text', required: true, value: SiteSetting.contact_email)
+        step.add_field(id: 'contact_email', type: 'text', value: SiteSetting.contact_email)
 
         username = SiteSetting.site_contact_username
         username = Discourse.system_user.username if username.blank?
@@ -248,8 +244,10 @@ class Wizard
             replace_setting_value(updater, raw, 'city_for_disputes')
           end
 
-          updater.apply_settings(:company_name, :governing_law, :city_for_disputes, :contact_url)
-          updater.update_setting(:site_contact_username, updater.fields[:site_contact])
+          if updater.errors.blank?
+            updater.apply_settings(:company_name, :governing_law, :city_for_disputes, :contact_url, :contact_email)
+            updater.update_setting(:site_contact_username, updater.fields[:site_contact])
+          end
         end
       end
 
