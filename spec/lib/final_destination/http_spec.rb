@@ -5,6 +5,7 @@ describe FinalDestination::HTTP do
     # We need to test low-level stuff, switch off WebMock for FinalDestination::HTTP
     WebMock.enable!(except: [:final_destination])
     Socket.stubs(:tcp).never
+    TCPSocket.stubs(:open).never
     Addrinfo.stubs(:getaddrinfo).never
   end
 
@@ -14,7 +15,7 @@ describe FinalDestination::HTTP do
 
   def expect_tcp_and_abort(stub_addr, &blk)
     success = Class.new(StandardError)
-    Socket.stubs(:tcp).with { |addr| stub_addr == addr }.once.raises(success)
+    TCPSocket.stubs(:open).with { |addr| stub_addr == addr }.once.raises(success)
     begin
       yield
     rescue success
@@ -26,7 +27,7 @@ describe FinalDestination::HTTP do
   end
 
   def stub_tcp_to_raise(stub_addr, exception)
-    Socket.stubs(:tcp).with { |addr| addr == stub_addr }.once.raises(exception)
+    TCPSocket.stubs(:open).with { |addr| addr == stub_addr }.once.raises(exception)
   end
 
   it "works through each IP address until success" do
@@ -99,9 +100,9 @@ describe FinalDestination::HTTP do
 
   it "stops iterating over DNS records once timeout reached" do
     stub_ip_lookup("example.com", %w[1.1.1.1 2.2.2.2 3.3.3.3 4.4.4.4])
-    Socket.stubs(:tcp).with { |addr| addr == "1.1.1.1" }.raises(Errno::ECONNREFUSED)
-    Socket.stubs(:tcp).with { |addr| addr == "2.2.2.2" }.raises(Errno::ECONNREFUSED)
-    Socket.stubs(:tcp).with { |*args, **kwargs| kwargs[:open_timeout] == 0 }.raises(Errno::ETIMEDOUT)
+    TCPSocket.stubs(:open).with { |addr| addr == "1.1.1.1" }.raises(Errno::ECONNREFUSED)
+    TCPSocket.stubs(:open).with { |addr| addr == "2.2.2.2" }.raises(Errno::ECONNREFUSED)
+    TCPSocket.stubs(:open).with { |*args, **kwargs| kwargs[:open_timeout] == 0 }.raises(Errno::ETIMEDOUT)
     FinalDestination::HTTP.any_instance.stubs(:current_time).returns(0, 1, 5)
     expect do
       FinalDestination::HTTP.start("example.com", 80, open_timeout: 5) {}
