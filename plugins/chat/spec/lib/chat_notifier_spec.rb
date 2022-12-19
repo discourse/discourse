@@ -275,6 +275,12 @@ describe Chat::ChatNotifier do
 
       include_examples "ensure only channel members are notified"
 
+      it 'calls guardian can_join_chat_channel?' do
+        Guardian.any_instance.expects(:can_join_chat_channel?).at_least_once
+        msg = build_cooked_msg("Hello @#{group.name} and @#{user_2.username}", user_1)
+        to_notify = described_class.new(msg, msg.created_at).notify_new
+      end
+
       it "establishes a far-left precedence among group mentions" do
         Fabricate(
           :user_chat_channel_membership,
