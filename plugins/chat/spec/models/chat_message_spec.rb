@@ -5,6 +5,18 @@ require "rails_helper"
 describe ChatMessage do
   fab!(:message) { Fabricate(:chat_message, message: "hey friend, what's up?!") }
 
+  # TODO (martin) Remove this after https://github.com/discourse/discourse/pull/19491 is merged
+  def register_hashtag_contexts
+    # This is annoying, but we need to reset the hashtag data sources inbetween
+    # tests, and since this is normally done in plugin.rb with the plugin API
+    # there is not an easier way to do this.
+    HashtagAutocompleteService.register_data_source("channel", Chat::ChatChannelHashtagDataSource)
+    HashtagAutocompleteService.register_type_in_context("channel", "chat-composer", 200)
+    HashtagAutocompleteService.register_type_in_context("category", "chat-composer", 100)
+    HashtagAutocompleteService.register_type_in_context("tag", "chat-composer", 50)
+    HashtagAutocompleteService.register_type_in_context("channel", "topic-composer", 10)
+  end
+
   describe ".cook" do
     it "does not support HTML tags" do
       cooked = ChatMessage.cook("<h1>test</h1>")
@@ -234,6 +246,7 @@ describe ChatMessage do
       expect(cooked).to eq("<p><span class=\"mention\">@mention</span></p>")
     end
 
+    # TODO (martin) Remove this when enable_experimental_hashtag_autocomplete is default
     it "supports category-hashtag plugin" do
       category = Fabricate(:category)
 
@@ -241,6 +254,20 @@ describe ChatMessage do
 
       expect(cooked).to eq(
         "<p><a class=\"hashtag\" href=\"#{category.url}\">#<span>#{category.slug}</span></a></p>",
+      )
+    end
+
+    it "supports hashtag-autocomplete plugin" do
+      register_hashtag_contexts
+      SiteSetting.enable_experimental_hashtag_autocomplete = true
+
+      category = Fabricate(:category)
+      user = Fabricate(:user)
+
+      cooked = ChatMessage.cook("##{category.slug}", user_id: user.id)
+
+      expect(cooked).to eq(
+        "<p><a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"#{category.slug}\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>#{category.name}</span></a></p>",
       )
     end
 
@@ -481,6 +508,36 @@ describe ChatMessage do
         message_1.destroy!
 
         expect { bookmark_1.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+  end
+
+  describe "#rebake!" do
+    fab!(:chat_message) { Fabricate(:chat_message) }
+
+    describe "hashtags" do
+      fab!(:category) { Fabricate(:category) }
+      fab!(:group) { Fabricate(:group) }
+      fab!(:secure_category) { Fabricate(:private_category, group: group) }
+
+      before do
+        register_hashtag_contexts
+        SiteSetting.enable_experimental_hashtag_autocomplete = true
+        SiteSetting.suppress_secured_categories_from_admin = true
+      end
+
+      it "keeps the same hashtags the user has permission to after rebake" do
+        group.add(chat_message.user)
+        chat_message.update!(
+          message: "this is the message ##{category.slug} ##{secure_category.slug} ##{chat_message.chat_channel.slug}",
+        )
+        chat_message.cook
+        chat_message.save!
+
+        expect(chat_message.reload.cooked).to include(secure_category.name)
+
+        chat_message.rebake!
+        expect(chat_message.reload.cooked).to include(secure_category.name)
       end
     end
   end

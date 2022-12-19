@@ -10,7 +10,7 @@ class Chat::ChatMessageProcessor
     @size_cache = {}
     @opts = {}
 
-    cooked = ChatMessage.cook(chat_message.message)
+    cooked = ChatMessage.cook(chat_message.message, user_id: chat_message.last_editor_id)
     @doc = Loofah.fragment(cooked)
   end
 
