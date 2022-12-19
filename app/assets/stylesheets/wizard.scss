@@ -153,10 +153,7 @@ body.wizard {
   }
 
   &__field.checkbox-field {
-    margin-bottom: 3.5em;
-    @media only screen and (max-device-width: 568px) {
-      margin-bottom: 1em;
-    }
+    margin-bottom: 1.5em;
   }
 
   &__field.invalid input {
