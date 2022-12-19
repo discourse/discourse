@@ -175,6 +175,7 @@ $float-height: 530px;
 .avatar {
   border: 1px solid transparent;
   padding: 0;
+  box-sizing: border-box;
 
   .is-online & {
     border: 1px solid var(--secondary);
