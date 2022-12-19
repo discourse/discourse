@@ -30,6 +30,10 @@ class Wizard
         step.on_update do |updater|
           updater.ensure_changed(:title)
 
+          if updater.errors.blank?
+            updater.apply_settings(:title, :site_description)
+          end
+
           old_locale = SiteSetting.default_locale
           updater.apply_setting(:default_locale)
 
