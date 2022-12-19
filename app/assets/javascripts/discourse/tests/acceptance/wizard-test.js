@@ -39,7 +39,7 @@ acceptance("Wizard", function (needs) {
       !exists(".invalid #full_name"),
       "don't show it as invalid until the user does something"
     );
-    assert.ok(!exists(".wizard-container__button.back"));
+    assert.ok(!exists(".wizard-container__button.btn-back"));
     assert.ok(!exists(".wizard-container__field .error"));
 
     // invalid data
@@ -85,7 +85,7 @@ acceptance("Wizard", function (needs) {
       "last step shows a jump in button"
     );
     assert.ok(
-      exists(".wizard-container__button.back"),
+      exists(".wizard-container__button.btn-back"),
       "shows the back button"
     );
     assert.ok(!exists(".wizard-container__step-title"));
@@ -98,7 +98,7 @@ acceptance("Wizard", function (needs) {
       "cannot finish on last step"
     );
 
-    await click(".wizard-container__button.back");
+    await click(".wizard-container__button.btn-back");
     assert.ok(exists(".wizard-container__step-title"), "shows the step title");
     assert.ok(
       exists(".wizard-container__button.next"),
