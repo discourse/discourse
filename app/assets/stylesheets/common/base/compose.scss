@@ -391,7 +391,7 @@ html.composer-open {
   z-index: z("composer", "dropdown") + 1;
   position: absolute;
   max-width: 300px;
-  width: 3000px;
+  width: 300px;
   background-color: var(--secondary);
   border: 1px solid var(--primary-low);
   box-shadow: shadow("dropdown-lite");
