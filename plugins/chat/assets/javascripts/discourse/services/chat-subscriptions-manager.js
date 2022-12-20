@@ -11,13 +11,13 @@ export default class ChatSubscriptionsManager extends Service {
   _channelSubscriptions = new Set();
 
   startChannelSubscription(channel) {
-    if (channel.currentUserMembership.muted) {
+    if (
+      channel.currentUserMembership.muted ||
+      this._channelSubscriptions.has(channel.id)
+    ) {
       return;
     }
 
-    if (this._channelSubscriptions.has(channel.id)) {
-      return;
-    }
     this._channelSubscriptions.add(channel.id);
 
     if (!channel.isDirectMessageChannel) {
