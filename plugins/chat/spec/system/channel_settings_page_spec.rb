@@ -58,6 +58,27 @@ RSpec.describe "Channel - Info - Settings page", type: :system, js: true do
     context "as a member" do
       before { channel_1.add(current_user) }
 
+      context "when visitng the settings of a recently joined channel" do
+        fab!(:channel_2) { Fabricate(:category_channel) }
+
+        it "is correctly populated" do
+          chat_page.visit_browse
+          find(
+            ".chat-channel-card[data-channel-id='#{channel_2.id}'] .toggle-channel-membership-button",
+          ).click
+
+          expect(
+            page.find(".chat-channel-card[data-channel-id='#{channel_2.id}']"),
+          ).to have_content(I18n.t("js.chat.joined").upcase)
+
+          find(
+            ".chat-channel-card[data-channel-id='#{channel_2.id}'] .chat-channel-card__setting",
+          ).click
+
+          expect(page).to have_content(I18n.t("js.chat.notification_levels.mention"))
+        end
+      end
+
       it "can mute channel" do
         chat_page.visit_channel_settings(channel_1)
         membership = channel_1.membership_for(current_user)

@@ -6,6 +6,7 @@
       (if @channel.isArchived "-archived")
     }}
     style={{border-color @channel.chatable.color}}
+    data-channel-id={{@channel.id}}
   >
     <div class="chat-channel-card__header">
       <LinkTo

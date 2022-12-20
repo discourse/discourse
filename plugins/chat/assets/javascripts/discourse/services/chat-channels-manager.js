@@ -40,7 +40,7 @@ export default class ChatChannelsManager extends Service {
 
     if (!model.currentUserMembership.following) {
       return this.chatApi.followChannel(model.id).then((membership) => {
-        model.currentUserMembership.following = membership.following;
+        model.currentUserMembership = membership;
         this.notifyPropertyChange("_cached");
         return model;
       });
