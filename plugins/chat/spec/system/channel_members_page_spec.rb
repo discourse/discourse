@@ -23,10 +23,12 @@ RSpec.describe "Channel - Info - Members page", type: :system, js: true do
 
   context "as authorized user" do
     context "with no members" do
-      it "shows an empty message" do
+      it "redirects to about page" do
         chat_page.visit_channel_members(channel_1)
 
-        expect(page).to have_content(I18n.t("js.chat.channel.no_memberships"))
+        expect(page).to have_current_path(
+          "/chat/channel/#{channel_1.id}/#{channel_1.slug}/info/about",
+        )
       end
     end
 
