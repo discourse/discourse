@@ -39,21 +39,20 @@ class Chat::Api::ChatChatablesController < Chat::Api
     users = users.limit(25).uniq
 
     direct_message_channels =
-      (
-        if users.count > 0
-          ChatChannel
-            .includes(chatable: :users)
-            .joins(direct_message: :direct_message_users)
-            .group(1)
-            .having(
-              "ARRAY[?] <@ ARRAY_AGG(user_id) AND ARRAY[?] && ARRAY_AGG(user_id)",
-              [current_user.id],
-              users.map(&:id),
-            )
-        else
-          []
-        end
-      )
+      if users.count > 0
+        # FIXME: investigate the cost of this query
+        ChatChannel
+          .includes(chatable: :users)
+          .joins(direct_message: :direct_message_users)
+          .group(1)
+          .having(
+            "ARRAY[?] <@ ARRAY_AGG(user_id) AND ARRAY[?] && ARRAY_AGG(user_id)",
+            [current_user.id],
+            users.map(&:id),
+          )
+      else
+        []
+      end
 
     user_ids_with_channel = []
     direct_message_channels.each do |dm_channel|
