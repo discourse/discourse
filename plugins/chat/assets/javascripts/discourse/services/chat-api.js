@@ -53,16 +53,10 @@ class Collection {
 
     this.loading = true;
 
-    const queryString = Object.keys(params)
-      .map((key) => {
-        if (params[key]) {
-          return `${encodeURIComponent(key)}=${encodeURIComponent(
-            params[key]
-          )}`;
-        }
-      })
-      .filter(Boolean)
-      .join("&");
+    const filteredQueryParams = Object.entries(params).filter(
+      ([, v]) => v !== undefined
+    );
+    const queryString = new URLSearchParams(filteredQueryParams).toString();
 
     const endpoint = this._resourceURL + (queryString ? `?${queryString}` : "");
     return this.#fetch(endpoint)
