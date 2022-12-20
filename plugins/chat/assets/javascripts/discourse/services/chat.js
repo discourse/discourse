@@ -102,8 +102,7 @@ export default class Chat extends Service {
     );
     this.presenceChannel.subscribe(channels.global_presence_channel_state);
 
-    (channels.public_channels || [])
-      .concat(channels.direct_message_channels || [])
+    [...channels.public_channels, ...channels.direct_message_channels]
       .forEach((channelObject) => {
         const channel = this.chatChannelsManager.store(channelObject);
         return this.chatChannelsManager.follow(channel);
