@@ -2,6 +2,7 @@ import Service, { inject as service } from "@ember/service";
 import Promise from "rsvp";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import { tracked } from "@glimmer/tracking";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 
 const DIRECT_MESSAGE_CHANNELS_LIMIT = 20;
 
@@ -9,7 +10,7 @@ export default class ChatChannelsManager extends Service {
   @service chatSubscriptionsManager;
   @service chatApi;
   @service currentUser;
-  @tracked _cached = {};
+  @tracked _cached = new TrackedObject();
 
   get channels() {
     return Object.values(this._cached);
@@ -47,11 +48,9 @@ export default class ChatChannelsManager extends Service {
         model.currentUserMembership.mobile_notification_level =
           membership.mobile_notification_level;
 
-        this.notifyPropertyChange("_cached");
         return model;
       });
     } else {
-      this.notifyPropertyChange("_cached");
       return Promise.resolve(model);
     }
   }
@@ -61,7 +60,7 @@ export default class ChatChannelsManager extends Service {
 
     return this.chatApi.unfollowChannel(model.id).then((membership) => {
       model.currentUserMembership = membership;
-      this.notifyPropertyChange("_cached");
+
       return model;
     });
   }
