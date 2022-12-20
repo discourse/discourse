@@ -198,12 +198,6 @@ RSpec.describe HashtagAutocompleteService do
         )
       end
 
-      it "orders correctly with lower limits" do
-        expect(subject.search("book", %w[category tag], limit: 5).map(&:ref)).to eq(
-          %w[book book::tag book-dome book-zone the-book-club],
-        )
-      end
-
       it "prioritises exact matches to the top of the list" do
         expect(subject.search("book", %w[category tag], limit: 10).map(&:ref)).to eq(
           %w[book book::tag book-dome book-zone the-book-club great-books mid-books terrible-books],
