@@ -71,14 +71,17 @@ class CategoryHashtagDataSource
   end
 
   def self.search_without_term(guardian, limit)
-    muted_category_ids = CategoryUser.muted_category_ids(guardian.user)
-    category_query = Category.includes(:parent_category).secured(guardian)
-
-    if muted_category_ids.any?
-      category_query = category_query.where("categories.id NOT IN (?)", muted_category_ids)
-    end
-
-    category_query
+    Category
+      .includes(:parent_category)
+      .secured(guardian)
+      .where(
+        "categories.id NOT IN (#{
+          CategoryUser
+            .muted_category_ids_query(guardian.user, include_direct: true)
+            .select("categories.id")
+            .to_sql
+        })",
+      )
       .order(topic_count: :desc)
       .take(limit)
       .map { |category| category_to_hashtag_item(category) }
