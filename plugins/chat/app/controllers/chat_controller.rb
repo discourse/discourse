@@ -110,7 +110,9 @@ class Chat::ChatController < Chat::ChatBaseController
 
     return render_json_error(chat_message_creator.error) if chat_message_creator.failed?
 
-    @user_chat_channel_membership.update(last_read_message_id: chat_message_creator.chat_message.id)
+    @user_chat_channel_membership.update!(
+      last_read_message_id: chat_message_creator.chat_message.id,
+    )
 
     if @chat_channel.direct_message_channel?
       # If any of the channel users is ignoring, muting, or preventing DMs from
@@ -123,14 +125,15 @@ class Chat::ChatController < Chat::ChatBaseController
         ).allowing_actor_communication
 
       if user_ids_allowing_communication.any?
-        @chat_channel
-          .user_chat_channel_memberships
-          .where(user_id: user_ids_allowing_communication)
-          .update_all(following: true)
         ChatPublisher.publish_new_channel(
           @chat_channel,
           @chat_channel.chatable.users.where(id: user_ids_allowing_communication),
         )
+
+        @chat_channel
+          .user_chat_channel_memberships
+          .where(user_id: user_ids_allowing_communication)
+          .update_all(following: true)
       end
     end
 
@@ -396,34 +399,6 @@ class Chat::ChatController < Chat::ChatBaseController
         messages_or_ids: message_ids,
       ).generate_markdown
     render json: success_json.merge(markdown: markdown)
-  end
-
-  def move_messages_to_channel
-    params.require(:message_ids)
-    params.require(:destination_channel_id)
-
-    raise Discourse::InvalidAccess if !guardian.can_move_chat_messages?(@chat_channel)
-    destination_channel =
-      Chat::ChatChannelFetcher.find_with_access_check(params[:destination_channel_id], guardian)
-
-    begin
-      message_ids = params[:message_ids].map(&:to_i)
-      moved_messages =
-        Chat::MessageMover.new(
-          acting_user: current_user,
-          source_channel: @chat_channel,
-          message_ids: message_ids,
-        ).move_to_channel(destination_channel)
-    rescue Chat::MessageMover::NoMessagesFound, Chat::MessageMover::InvalidChannel => err
-      return render_json_error(err.message)
-    end
-
-    render json:
-             success_json.merge(
-               destination_channel_id: destination_channel.id,
-               destination_channel_title: destination_channel.title(current_user),
-               first_moved_message_id: moved_messages.first.id,
-             )
   end
 
   def flag

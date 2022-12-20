@@ -1,24 +1,20 @@
-import { isEmpty } from "@ember/utils";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import ChatApi from "discourse/plugins/chat/discourse/lib/chat-api";
 import discourseDebounce from "discourse-common/lib/debounce";
-
-const LIMIT = 50;
+import { inject as service } from "@ember/service";
 
 export default class ChatChannelMembersView extends Component {
+  @service chatApi;
+
   tagName = "";
   channel = null;
-  members = null;
   isSearchFocused = false;
-  isFetchingMembers = false;
   onlineUsers = null;
-  offset = 0;
   filter = null;
   inputSelector = "channel-members-view__search-input";
-  canLoadMore = true;
+  membershipsCollection = null;
 
   didInsertElement() {
     this._super(...arguments);
@@ -28,14 +24,18 @@ export default class ChatChannelMembersView extends Component {
     }
 
     this._focusSearch();
-    this.set("members", []);
-    this.fetchMembers();
+    this.set(
+      "membershipsCollection",
+      this.chatApi.listChannelMemberships(this.channel.id)
+    );
+    this.membershipsCollection.load();
 
     this.appEvents.on("chat:refresh-channel-members", this, "onFilterMembers");
   }
 
   willDestroyElement() {
     this._super(...arguments);
+
     this.appEvents.off("chat:refresh-channel-members", this, "onFilterMembers");
   }
 
@@ -46,59 +46,18 @@ export default class ChatChannelMembersView extends Component {
   @action
   onFilterMembers(username) {
     this.set("filter", username);
-    this.set("offset", 0);
-    this.set("canLoadMore", true);
 
     discourseDebounce(
       this,
-      this.fetchMembers,
-      this.filter,
-      this.offset,
+      this.membershipsCollection.load,
+      { username: this.filter },
       INPUT_DELAY
     );
   }
 
   @action
   loadMore() {
-    if (!this.canLoadMore) {
-      return;
-    }
-
-    discourseDebounce(
-      this,
-      this.fetchMembers,
-      this.filter,
-      this.offset,
-      INPUT_DELAY
-    );
-  }
-
-  fetchMembersHandler(id, params = {}) {
-    return ChatApi.chatChannelMemberships(id, params);
-  }
-
-  fetchMembers(filter = null, offset = 0) {
-    this.set("isFetchingMembers", true);
-
-    return this.fetchMembersHandler(this.channel.id, {
-      username: filter,
-      offset,
-    })
-      .then((response) => {
-        if (this.offset === 0) {
-          this.set("members", []);
-        }
-
-        if (isEmpty(response)) {
-          this.set("canLoadMore", false);
-        } else {
-          this.set("offset", this.offset + LIMIT);
-          this.members.pushObjects(response);
-        }
-      })
-      .finally(() => {
-        this.set("isFetchingMembers", false);
-      });
+    discourseDebounce(this, this.membershipsCollection.loadMore, INPUT_DELAY);
   }
 
   _focusSearch() {

@@ -103,8 +103,30 @@ $float-height: 530px;
   }
 }
 
-.header-dropdown-toggle.open-chat {
+.header-dropdown-toggle.chat-header-icon {
   .icon {
+    .chat-channel-unread-indicator {
+      border: 2px solid var(--header_background);
+      position: absolute;
+      right: 2px;
+      bottom: 2px;
+      transition: border-color linear 0.15s;
+    }
+  }
+
+  span.icon {
+    cursor: auto;
+
+    &:hover {
+      .d-icon {
+        color: var(--header_primary-low-mid);
+      }
+
+      background: none;
+    }
+  }
+
+  a.icon {
     &.active {
       .d-icon-comment {
         color: var(--primary-medium);
@@ -115,14 +137,6 @@ $float-height: 530px;
       .chat-channel-unread-indicator {
         border-color: var(--primary-low);
       }
-    }
-
-    .chat-channel-unread-indicator {
-      border: 2px solid var(--header_background);
-      position: absolute;
-      right: 2px;
-      bottom: 2px;
-      transition: border-color linear 0.15s;
     }
   }
 }

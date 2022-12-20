@@ -12,15 +12,13 @@ export default {
   name: "chat-setup",
   initialize(container) {
     this.chatService = container.lookup("service:chat");
-
-    if (!this.chatService.userCanChat) {
-      return;
-    }
-
     this.siteSettings = container.lookup("service:site-settings");
     this.appEvents = container.lookup("service:appEvents");
     this.appEvents.on("discourse:focus-changed", this, "_handleFocusChanged");
 
+    if (!this.chatService.userCanChat) {
+      return;
+    }
     withPluginApi("0.12.1", (api) => {
       api.registerChatComposerButton({
         id: "chat-upload-btn",
@@ -99,8 +97,6 @@ export default {
       const currentUser = api.getCurrentUser();
       if (currentUser?.chat_channels) {
         this.chatService.setupWithPreloadedChannels(currentUser.chat_channels);
-      } else {
-        this.chatService.setupWithoutPreloadedChannels();
       }
 
       const chatNotificationManager = container.lookup(
@@ -115,19 +111,7 @@ export default {
 
       api.addCardClickListenerSelector(".chat-drawer-outlet");
 
-      api.dispatchWidgetAppEvent(
-        "site-header",
-        "header-chat-link",
-        "chat:rerender-header"
-      );
-
-      api.dispatchWidgetAppEvent(
-        "sidebar-header",
-        "header-chat-link",
-        "chat:rerender-header"
-      );
-
-      api.addToHeaderIcons("header-chat-link");
+      api.addToHeaderIcons("chat-header-icon");
 
       api.decorateChatMessage(function (chatMessage, chatChannel) {
         if (!this.currentUser) {
@@ -155,17 +139,22 @@ export default {
   },
 
   teardown() {
+    this.appEvents.off("discourse:focus-changed", this, "_handleFocusChanged");
+
     if (!this.chatService.userCanChat) {
       return;
     }
 
-    this.appEvents.off("discourse:focus-changed", this, "_handleFocusChanged");
     _lastForcedRefreshAt = null;
     clearChatComposerButtons();
   },
 
   @bind
   _handleFocusChanged(hasFocus) {
+    if (!this.chatService.userCanChat) {
+      return;
+    }
+
     if (!hasFocus) {
       _lastForcedRefreshAt = Date.now();
       return;
@@ -179,6 +168,5 @@ export default {
     }
 
     _lastForcedRefreshAt = Date.now();
-    this.chatService.refreshTrackingState();
   },
 };

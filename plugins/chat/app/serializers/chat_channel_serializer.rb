@@ -20,7 +20,7 @@ class ChatChannelSerializer < ApplicationSerializer
              :archive_topic_id,
              :memberships_count,
              :current_user_membership,
-             :message_bus_last_ids
+             :meta
 
   def initialize(object, opts)
     super(object, opts)
@@ -61,7 +61,7 @@ class ChatChannelSerializer < ApplicationSerializer
   end
 
   def include_archive_status?
-    scope.is_staff? && object.archived? && archive.present?
+    scope.is_staff? && (object.archived? || archive&.failed?) && archive.present?
   end
 
   def archive_completed
@@ -88,8 +88,11 @@ class ChatChannelSerializer < ApplicationSerializer
     scope.can_edit_chat_channel?
   end
 
+  def include_current_user_membership?
+    @current_user_membership.present?
+  end
+
   def current_user_membership
-    return if !@current_user_membership
     @current_user_membership.chat_channel = object
     UserChatChannelMembershipSerializer.new(
       @current_user_membership,
@@ -98,10 +101,17 @@ class ChatChannelSerializer < ApplicationSerializer
     ).as_json
   end
 
-  def message_bus_last_ids
+  def meta
     {
-      new_messages: @opts[:new_messages_message_bus_last_id] || MessageBus.last_id(ChatPublisher.new_messages_message_bus_channel(object.id)),
-      new_mentions: @opts[:new_mentions_message_bus_last_id] || MessageBus.last_id(ChatPublisher.new_mentions_message_bus_channel(object.id)),
+      message_bus_last_ids: {
+        new_messages:
+          @opts[:new_messages_message_bus_last_id] ||
+            MessageBus.last_id(ChatPublisher.new_messages_message_bus_channel(object.id)),
+        new_mentions:
+          @opts[:new_mentions_message_bus_last_id] ||
+            MessageBus.last_id(ChatPublisher.new_mentions_message_bus_channel(object.id)),
+        archive_status: MessageBus.last_id("/chat/channel-archive-status"),
+      },
     }
   end
 

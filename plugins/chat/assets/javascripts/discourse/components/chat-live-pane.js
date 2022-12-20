@@ -1,7 +1,5 @@
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
-import ChatApi from "discourse/plugins/chat/discourse/lib/chat-api";
 import { cloneJSON } from "discourse-common/lib/object";
-import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import Component from "@ember/component";
 import discourseComputed, {
@@ -83,10 +81,12 @@ export default Component.extend({
   _mentionWarningsSeen: null, // Hash
 
   chat: service(),
+  chatChannelsManager: service(),
   router: service(),
   chatEmojiPickerManager: service(),
   chatComposerPresenceManager: service(),
   chatStateManager: service(),
+  chatApi: service(),
 
   getCachedChannelDetails: null,
   clearCachedChannelDetails: null,
@@ -546,8 +546,7 @@ export default Component.extend({
   },
 
   _getLastReadId() {
-    return this.currentUser?.chat_channel_tracking_state?.[this.chatChannel.id]
-      ?.chat_message_id;
+    return this.chatChannel.currentUserMembership.chat_message_id;
   },
 
   _markLastReadMessage(opts = { reRender: false }) {
@@ -563,7 +562,6 @@ export default Component.extend({
       return;
     }
 
-    this.set("lastSendReadMessageId", lastReadId);
     const indexOfLastReadMessage =
       this.messages.findIndex((m) => m.id === lastReadId) || 0;
     let newestUnreadMessage = this.messages[indexOfLastReadMessage + 1];
@@ -1009,7 +1007,8 @@ export default Component.extend({
     // Start ajax request but don't return here, we want to stage the message instantly when all messages are loaded.
     // Otherwise, we'll fetch latest and scroll to the one we just created.
     // Return a resolved promise below.
-    const msgCreationPromise = ChatApi.sendMessage(this.chatChannel.id, data)
+    const msgCreationPromise = this.chatApi
+      .sendMessage(this.chatChannel.id, data)
       .catch((error) => {
         this._onSendError(data.staged_id, error);
       })
@@ -1047,33 +1046,25 @@ export default Component.extend({
   },
 
   async _upsertChannelWithMessage(channel, message, uploads) {
-    let promise;
+    let promise = Promise.resolve(channel);
 
     if (channel.isDirectMessageChannel || channel.isDraft) {
       promise = this.chat.upsertDmChannelForUsernames(
         channel.chatable.users.mapBy("username")
       );
-    } else {
-      promise = ChatApi.loading(channel.id).then(() => channel);
     }
 
-    return promise
-      .then((c) => {
-        c.current_user_membership.set("following", true);
-        return this.chat.startTrackingChannel(c);
+    return promise.then((c) =>
+      ajax(`/chat/${c.id}.json`, {
+        type: "POST",
+        data: {
+          message,
+          upload_ids: (uploads || []).mapBy("id"),
+        },
+      }).then(() => {
+        this.onSwitchChannel(c);
       })
-      .then((c) =>
-        ajax(`/chat/${c.id}.json`, {
-          type: "POST",
-          data: {
-            message,
-            upload_ids: (uploads || []).mapBy("id"),
-          },
-        }).then(() => {
-          this.chat.forceRefreshChannels();
-          this.onSwitchChannel(ChatChannel.create(c));
-        })
-      );
+    );
   },
 
   _onSendError(stagedId, error) {
@@ -1103,7 +1094,8 @@ export default Component.extend({
       staged_id: stagedMessage.stagedId,
     };
 
-    ChatApi.sendMessage(this.chatChannel.id, data)
+    this.chatApi
+      .sendMessage(this.chatChannel.id, data)
       .catch((error) => {
         this._onSendError(data.staged_id, error);
       })

@@ -139,11 +139,18 @@ describe Chat::ChatChannelFetcher do
 
       context "when restricted category" do
         fab!(:group) { Fabricate(:group) }
-        fab!(:category_group) { Fabricate(:category_group, category: private_category, group: group, permission_type: CategoryGroup.permission_types[:readonly]) }
-        fab!(:group_user) { Fabricate(:group_user, group: private_category.groups.last, user: user1) }
-        before do
-          category_channel.update!(chatable: private_category)
+        fab!(:category_group) do
+          Fabricate(
+            :category_group,
+            category: private_category,
+            group: group,
+            permission_type: CategoryGroup.permission_types[:readonly],
+          )
         end
+        fab!(:group_user) do
+          Fabricate(:group_user, group: private_category.groups.last, user: user1)
+        end
+        before { category_channel.update!(chatable: private_category) }
 
         it "does not include the category channel for member of group with readonly access" do
           expect(subject.all_secured_channel_ids(guardian)).to be_empty
@@ -195,22 +202,12 @@ describe Chat::ChatChannelFetcher do
 
     it "can filter by an array of slugs" do
       expect(
-        subject.secured_public_channels(
-          guardian,
-          memberships,
-          slugs: ["support"],
-        ).map(&:id),
+        subject.secured_public_channels(guardian, memberships, slugs: ["support"]).map(&:id),
       ).to match_array([category_channel.id])
     end
 
     it "returns nothing if the array of slugs is empty" do
-      expect(
-        subject.secured_public_channels(
-          guardian,
-          memberships,
-          slugs: [],
-        ).map(&:id),
-      ).to eq([])
+      expect(subject.secured_public_channels(guardian, memberships, slugs: []).map(&:id)).to eq([])
     end
 
     it "can filter by status" do

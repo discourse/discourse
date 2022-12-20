@@ -19,14 +19,15 @@ class Chat::ChatMessageReactor
     message = ensure_chat_message!(message_id)
     validate_max_reactions!(message, react_action, emoji)
 
+    reaction = nil
     ActiveRecord::Base.transaction do
       enforce_channel_membership!
-      create_reaction(message, react_action, emoji)
+      reaction = create_reaction(message, react_action, emoji)
     end
 
     publish_reaction(message, react_action, emoji)
 
-    message
+    reaction
   end
 
   private

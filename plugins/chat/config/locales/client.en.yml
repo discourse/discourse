@@ -116,10 +116,10 @@ en:
         without_membership:
           one: "%{username} has not joined this channel."
           other: "%{username} and %{others} have not joined this channel."
-        group_mentions_disabled: 
+        group_mentions_disabled:
           one: "%{group_name} doesn't allow mentions"
           other: "%{group_name} and %{others} doesn't allow mentions"
-        too_many_members: 
+        too_many_members:
           one: "%{group_name} has too many members. No one was notified"
           other: "%{group_name} and %{others} have too many members. No one was notified"
         warning_multiple:
