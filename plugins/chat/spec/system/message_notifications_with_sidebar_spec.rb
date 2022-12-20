@@ -117,69 +117,37 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
         fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, user_1]) }
         fab!(:dm_channel_2) { Fabricate(:direct_message_channel, users: [current_user, user_2]) }
 
-        context "when not following the channel" do
-          before { dm_channel_1.membership_for(current_user).update!(following: false) }
+        context "when a message is created" do
+          it "correctly renders notifications" do
+            visit("/")
+            create_message(channel: dm_channel_1, creator: user_1)
 
-          context "when a message is created" do
-            it "correctly renders notifications" do
-              visit("/")
-              create_message(channel: dm_channel_1, creator: user_1)
+            expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "1")
+            expect(page).to have_css(".sidebar-row.channel-#{dm_channel_1.id} .icon.urgent")
 
-              expect(page).to have_css(
-                ".chat-header-icon .chat-channel-unread-indicator",
-                text: "1",
-              )
-              expect(page).to have_css(".sidebar-row.channel-#{dm_channel_1.id} .icon.urgent")
+            create_message(channel: dm_channel_1, creator: user_1)
 
-              create_message(channel: dm_channel_1, creator: user_1)
-
-              expect(page).to have_css(
-                ".chat-header-icon .chat-channel-unread-indicator",
-                text: "2",
-              )
-            end
+            expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "2")
           end
-        end
 
-        context "when following the channel" do
-          context "when a message is created" do
-            it "correctly renders notifications" do
-              visit("/")
-              create_message(channel: dm_channel_1, creator: user_1)
+          it "reorders channels" do
+            visit("/chat")
 
-              expect(page).to have_css(
-                ".chat-header-icon .chat-channel-unread-indicator",
-                text: "1",
-              )
-              expect(page).to have_css(".sidebar-row.channel-#{dm_channel_1.id} .icon.urgent")
+            expect(page).to have_css(
+              "#sidebar-section-content-chat-dms .sidebar-section-link-wrapper:nth-child(1) .channel-#{dm_channel_1.id}",
+            )
+            expect(page).to have_css(
+              "#sidebar-section-content-chat-dms .sidebar-section-link-wrapper:nth-child(2) .channel-#{dm_channel_2.id}",
+            )
 
-              create_message(channel: dm_channel_1, creator: user_1)
+            create_message(channel: dm_channel_2, creator: user_2)
 
-              expect(page).to have_css(
-                ".chat-header-icon .chat-channel-unread-indicator",
-                text: "2",
-              )
-            end
-
-            it "reorders channels" do
-              visit("/chat")
-
-              expect(page).to have_css(
-                "#sidebar-section-content-chat-dms .sidebar-section-link-wrapper:nth-child(1) .channel-#{dm_channel_1.id}",
-              )
-              expect(page).to have_css(
-                "#sidebar-section-content-chat-dms .sidebar-section-link-wrapper:nth-child(2) .channel-#{dm_channel_2.id}",
-              )
-
-              create_message(channel: dm_channel_2, creator: user_2)
-
-              expect(page).to have_css(
-                "#sidebar-section-content-chat-dms .sidebar-section-link-wrapper:nth-child(1) .channel-#{dm_channel_2.id}",
-              )
-              expect(page).to have_css(
-                "#sidebar-section-content-chat-dms .sidebar-section-link-wrapper:nth-child(2) .channel-#{dm_channel_1.id}",
-              )
-            end
+            expect(page).to have_css(
+              "#sidebar-section-content-chat-dms .sidebar-section-link-wrapper:nth-child(1) .channel-#{dm_channel_2.id}",
+            )
+            expect(page).to have_css(
+              "#sidebar-section-content-chat-dms .sidebar-section-link-wrapper:nth-child(2) .channel-#{dm_channel_1.id}",
+            )
           end
         end
       end

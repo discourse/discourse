@@ -11,7 +11,7 @@ RSpec.describe "Channel selector modal", type: :system, js: true do
     sign_in(current_user)
   end
 
-  KEY_MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :ctrl
+  KEY_MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :control
 
   context "when used with public channel" do
     fab!(:channel_1) { Fabricate(:category_channel) }

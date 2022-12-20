@@ -19,14 +19,14 @@ RSpec.describe "List channels | no sidebar", type: :system, js: true do
 
         it "shows the channel in the correct section" do
           visit("/chat")
-          expect(page.find(".public-channels")).to have_content(category_channel_1.name)
+          expect(page.find(".public-channels")).to have_content(category_channel_1.title)
         end
       end
 
       context "when not member of the channel" do
         it "doesn’t show the channel" do
           visit("/chat")
-          expect(page.find(".public-channels")).to have_no_content(category_channel_1.name)
+          expect(page.find(".public-channels")).to have_no_content(category_channel_1.title)
         end
       end
     end

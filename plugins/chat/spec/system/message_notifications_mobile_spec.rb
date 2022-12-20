@@ -124,72 +124,38 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
         fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, user_1]) }
         fab!(:dm_channel_2) { Fabricate(:direct_message_channel, users: [current_user, user_2]) }
 
-        context "when not following the channel" do
-          before { dm_channel_1.membership_for(current_user).update!(following: false) }
+        context "when a message is created" do
+          it "correctly renders notifications" do
+            visit("/chat")
+            create_message(channel: dm_channel_1, creator: user_1)
 
-          context "when a message is created" do
-            it "correctly renders notifications" do
-              visit("/chat")
-              create_message(channel: dm_channel_1, creator: user_1)
+            expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "1")
+            expect(page).to have_css(
+              ".chat-channel-row[data-chat-channel-id=\"#{dm_channel_1.id}\"] .chat-channel-unread-indicator",
+            )
 
-              expect(page).to have_css(
-                ".chat-header-icon .chat-channel-unread-indicator",
-                text: "1",
-              )
-              expect(page).to have_css(
-                ".chat-channel-row[data-chat-channel-id=\"#{dm_channel_1.id}\"] .chat-channel-unread-indicator",
-              )
+            create_message(channel: dm_channel_1, creator: user_1)
 
-              create_message(channel: dm_channel_1, creator: user_1)
-
-              expect(page).to have_css(
-                ".chat-header-icon .chat-channel-unread-indicator",
-                text: "2",
-              )
-            end
+            expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "2")
           end
-        end
 
-        context "when following the channel" do
-          context "when a message is created" do
-            it "correctly renders notifications" do
-              visit("/chat")
-              create_message(channel: dm_channel_1, creator: user_1)
+          it "reorders channels" do
+            visit("/chat")
 
-              expect(page).to have_css(
-                ".chat-header-icon .chat-channel-unread-indicator",
-                text: "1",
-              )
-              expect(page).to have_css(
-                ".chat-channel-row[data-chat-channel-id=\"#{dm_channel_1.id}\"] .chat-channel-unread-indicator",
-              )
+            expect(page).to have_css(
+              ".chat-channel-row:nth-child(1)[data-chat-channel-id=\"#{dm_channel_1.id}\"]",
+            )
+            expect(page).to have_css(
+              ".chat-channel-row:nth-child(2)[data-chat-channel-id=\"#{dm_channel_2.id}\"]",
+            )
+            create_message(channel: dm_channel_2, creator: user_2)
 
-              create_message(channel: dm_channel_1, creator: user_1)
-
-              expect(page).to have_css(
-                ".chat-header-icon .chat-channel-unread-indicator",
-                text: "2",
-              )
-            end
-
-            it "reorders channels" do
-              visit("/chat")
-
-              expect(page).to have_css(
-                ".chat-channel-row:nth-child(1)[data-chat-channel-id=\"#{dm_channel_1.id}\"]",
-              )
-              expect(page).to have_css(
-                ".chat-channel-row:nth-child(2)[data-chat-channel-id=\"#{dm_channel_2.id}\"]",
-              )
-              create_message(channel: dm_channel_2, creator: user_2)
-
-              expect(page).to have_css(
-                ".chat-channel-row:nth-child(1)[data-chat-channel-id=\"#{dm_channel_2.id}\"]",
-              )
-              expect(page).to have_css(
-                ".chat-channel-row:nth-child(2)[data-chat-channel-id=\"#{dm_channel_1.id}\"]",
-              )
-            end
+            expect(page).to have_css(
+              ".chat-channel-row:nth-child(1)[data-chat-channel-id=\"#{dm_channel_2.id}\"]",
+            )
+            expect(page).to have_css(
+              ".chat-channel-row:nth-child(2)[data-chat-channel-id=\"#{dm_channel_1.id}\"]",
+            )
           end
         end
       end
