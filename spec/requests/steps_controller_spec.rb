@@ -37,16 +37,15 @@ RSpec.describe StepsController do
 
     it "updates properly if you are staff" do
       put "/wizard/steps/introduction.json", params: {
-        fields: { title: "FooBar", default_locale: SiteSetting.default_locale, contact_email: "eviltrout@example.com" }
+        fields: { title: "FooBar", default_locale: SiteSetting.default_locale }
       }
 
       expect(response.status).to eq(200)
-      expect(SiteSetting.contact_email).to eq("eviltrout@example.com")
     end
 
     it "returns errors if the field has them" do
       put "/wizard/steps/introduction.json", params: {
-        fields: { contact_email: "not-an-email" }
+        fields: { title: "" }
       }
 
       expect(response.status).to eq(422)

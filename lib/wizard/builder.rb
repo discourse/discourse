@@ -12,10 +12,11 @@ class Wizard
 
       @wizard.append_step('introduction') do |step|
         step.banner = "welcome-illustration"
+        step.emoji = "wave"
+        step.description_vars = { base_path: Discourse.base_path }
 
         step.add_field(id: 'title', type: 'text', required: true, value: SiteSetting.title == SiteSetting.defaults[:title] ? "" : SiteSetting.title)
         step.add_field(id: 'site_description', type: 'text', required: false, value: SiteSetting.site_description)
-        step.add_field(id: 'contact_email', type: 'text', required: true, value: SiteSetting.contact_email)
 
         languages = step.add_field(id: 'default_locale',
                                    type: 'dropdown',
@@ -30,7 +31,7 @@ class Wizard
           updater.ensure_changed(:title)
 
           if updater.errors.blank?
-            updater.apply_settings(:title, :site_description, :contact_email)
+            updater.apply_settings(:title, :site_description)
           end
 
           old_locale = SiteSetting.default_locale
@@ -49,6 +50,7 @@ class Wizard
 
       @wizard.append_step('privacy') do |step|
         step.banner = "members-illustration"
+        step.emoji = "hugs"
         step.add_field(
           id: 'login_required',
           type: 'checkbox',
@@ -98,9 +100,25 @@ class Wizard
       @wizard.append_step('ready') do |step|
         # no form on this page, just info.
         step.banner = "finished-illustration"
+        step.emoji = "rocket"
+      end
+
+      @wizard.append_step('branding') do |step|
+        step.emoji = "framed_picture"
+        step.add_field(id: 'logo', type: 'image', value: SiteSetting.site_logo_url)
+        step.add_field(id: 'logo_small', type: 'image', value: SiteSetting.site_logo_small_url)
+
+        step.on_update do |updater|
+          if SiteSetting.site_logo_url != updater.fields[:logo] ||
+            SiteSetting.site_logo_small_url != updater.fields[:logo_small]
+            updater.apply_settings(:logo, :logo_small)
+            updater.refresh_required = true
+          end
+        end
       end
 
       @wizard.append_step('styling') do |step|
+        step.emoji = "art"
         default_theme = Theme.find_by(id: SiteSetting.default_theme_id)
         default_theme_override = SiteSetting.exists?(name: "default_theme_id")
 
@@ -205,34 +223,14 @@ class Wizard
         end
       end
 
-      @wizard.append_step('branding') do |step|
-        step.add_field(id: 'logo', type: 'image', value: SiteSetting.site_logo_url)
-        step.add_field(id: 'logo_small', type: 'image', value: SiteSetting.site_logo_small_url)
-
-        step.on_update do |updater|
-          if SiteSetting.site_logo_url != updater.fields[:logo] ||
-            SiteSetting.site_logo_small_url != updater.fields[:logo_small]
-            updater.apply_settings(:logo, :logo_small)
-            updater.refresh_required = true
-          end
-        end
-      end
-
       @wizard.append_step('corporate') do |step|
+        step.emoji = "briefcase"
         step.description_vars = { base_path: Discourse.base_path }
         step.add_field(id: 'company_name', type: 'text', value: SiteSetting.company_name)
         step.add_field(id: 'governing_law', type: 'text', value: SiteSetting.governing_law)
         step.add_field(id: 'contact_url', type: 'text', value: SiteSetting.contact_url)
         step.add_field(id: 'city_for_disputes', type: 'text', value: SiteSetting.city_for_disputes)
-
-        username = SiteSetting.site_contact_username
-        username = Discourse.system_user.username if username.blank?
-        contact = step.add_field(id: 'site_contact', type: 'dropdown', value: username)
-
-        User.human_users.where(admin: true).pluck(:username).each do |c|
-          contact.add_choice(c) unless reserved_usernames.include?(c.downcase)
-        end
-        contact.add_choice(Discourse.system_user.username)
+        step.add_field(id: 'contact_email', type: 'text', value: SiteSetting.contact_email)
 
         step.on_update do |updater|
           update_tos do |raw|
@@ -241,8 +239,9 @@ class Wizard
             replace_setting_value(updater, raw, 'city_for_disputes')
           end
 
-          updater.apply_settings(:company_name, :governing_law, :city_for_disputes, :contact_url)
-          updater.update_setting(:site_contact_username, updater.fields[:site_contact])
+          if updater.errors.blank?
+            updater.apply_settings(:company_name, :governing_law, :city_for_disputes, :contact_url, :contact_email)
+          end
         end
       end
 

@@ -67,20 +67,11 @@ body.wizard {
   background-color: var(--secondary);
   box-shadow: 0 4px 19px 6px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
-  margin: 3em auto 1.5em auto;
+  margin: 1em auto;
   padding: 0;
-  max-width: 85%;
-  min-width: 35%;
-  width: 100%;
   border: 1px solid var(--primary-low);
   border-radius: 8px;
   padding: 2em 3em;
-
-  @media screen and (max-height: 800px) {
-    .desktop-view & {
-      margin: 1em auto;
-    }
-  }
 
   @include breakpoint("mobile-extra-large") {
     padding: 2em 1.5em;
@@ -88,17 +79,38 @@ body.wizard {
     margin: 1.5em auto;
   }
 
+  &__step {
+    margin-top: 1em;
+    max-width: 50%;
+    min-width: 35%;
+    width: 100%;
+
+    &.styling {
+      max-width: 85%;
+    }
+  }
+
   &__fields {
     width: 100%;
-    padding-right: 20%;
-    @include breakpoint("large") {
-      padding-right: 0;
-    }
+  }
+
+  &__step-counter {
+    text-align: center;
+    font-weight: 700;
+    color: var(--primary-medium);
   }
 
   &__step-banner {
     @include breakpoint("large") {
       display: none;
+    }
+  }
+
+  &__step-description {
+    font-size: var(--font-up-2);
+    flex: 1 0 40%;
+    @include breakpoint("tablet") {
+      font-size: var(--font-up-2);
     }
   }
 
@@ -122,11 +134,11 @@ body.wizard {
     }
   }
 
-  &__step.branding .wizard-container__description {
-    max-width: 25em;
-    @include breakpoint("mobile-extra-large") {
-      display: none;
-    }
+  &__step.branding .wizard-container__preview {
+    background-color: var(--primary-very-low);
+    border-radius: 0.5em;
+    padding: 1em;
+    margin-bottom: 1em;
   }
 
   &__step.branding .wizard-container__preview canvas {
@@ -136,27 +148,12 @@ body.wizard {
     }
   }
 
-  &__step.corporate .wizard-container__fields {
-    display: grid;
-    grid-template-columns: repeat(2, calc(50% - 1em));
-    grid-column-gap: 2em;
-    grid-template-rows: repeat(3, auto);
-    padding-right: 0;
-    @media only screen and (max-device-width: 568px) {
-      display: flex;
-      flex-wrap: wrap;
-    }
-  }
-
   &__field {
     margin-bottom: 1em;
   }
 
   &__field.checkbox-field {
-    margin-bottom: 3.5em;
-    @media only screen and (max-device-width: 568px) {
-      margin-bottom: 1em;
-    }
+    margin-bottom: 1.5em;
   }
 
   &__field.invalid input {
@@ -249,11 +246,22 @@ body.wizard {
     }
   }
 
+  &__step-header {
+    text-align: center;
+    margin-bottom: 3em;
+
+    &--emoji img {
+      width: 30px;
+      height: 30px;
+      margin-bottom: 1em;
+    }
+  }
+
   &__step-title {
     font-size: 2.75em;
     color: var(--primary);
     line-height: var(--line-height-medium);
-    margin: 0 0 1.5em 0;
+    margin: 0 0 0.5em 0;
     @include breakpoint("medium") {
       font-size: var(--font-up-5);
     }
@@ -299,13 +307,6 @@ body.wizard {
       flex: 1 0 100%;
       gap: 2em;
     }
-    .wizard-container__step-description {
-      font-size: var(--font-up-3);
-      flex: 1 0 40%;
-      @include breakpoint("tablet") {
-        font-size: var(--font-up-2);
-      }
-    }
     .wizard-container__step-banner-image {
       padding-top: 2em;
       flex: 0 1 40%;
@@ -329,9 +330,6 @@ body.wizard {
     align-items: center;
     font-weight: bold;
     margin-right: -1.5em;
-    @media screen and (max-width: 767px) {
-      display: none;
-    }
 
     @include breakpoint("mobile-extra-large") {
       margin-bottom: 1em;
@@ -407,15 +405,6 @@ body.wizard {
     background-color: var(--primary-medium);
   }
 
-  &__button .d-icon-chevron-right {
-    margin-left: 0.25em;
-    font-size: 0.8em;
-  }
-  &__button .d-icon-chevron-left {
-    margin-right: 0.25em;
-    font-size: 0.8em;
-  }
-
   &__button.primary {
     background-color: var(--tertiary);
     color: var(--secondary);
@@ -434,26 +423,27 @@ body.wizard {
   }
 
   &__button.configure-more {
-    background-color: var(--primary-200);
-    color: var(--primary);
+    //background-color: var(--primary-200);
+    background-color: transparent;
+    color: var(--tertiary);
   }
 
   &__button.configure-more:hover {
-    background-color: var(--primary-300);
+    background-color: transparent;
     color: var(--primary);
   }
 
   &__button.jump-in {
-    background-color: var(--success);
+    background-color: var(--tertiary);
     color: var(--secondary);
+    margin-left: 1em;
     &:hover {
-      background-color: var(--success-hover);
+      background-color: var(--primary-300);
     }
   }
 
   &__button.finish {
     color: var(--tertiary);
-    padding: 0;
   }
 
   &__button.finish:hover {
@@ -467,6 +457,7 @@ body.wizard {
 
   &__button.next {
     min-width: 70px;
+    margin-left: 1em;
   }
 
   &__button.danger {
@@ -488,12 +479,18 @@ body.wizard {
   }
 
   &__button-upload {
-    background-color: var(--primary-low);
     display: block;
+    background-color: transparent;
+    margin-top: 1em;
+    border: 1px solid var(--tertiary-high);
+    text-align: center;
+    color: var(--tertiary-high);
   }
 
   &__button-upload:hover {
-    background-color: var(--primary-low-mid);
+    background-color: transparent;
+    border-color: var(--tertiary-hover);
+    color: var(--tertiary-hover);
   }
 
   &__button-upload svg {
@@ -526,19 +523,9 @@ body.wizard {
     align-items: center;
   }
 
-  &__image-upload {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: baseline;
-  }
-
   &__label {
     font-weight: bold;
-    font-size: var(--font-up-2);
-    @media only screen and (max-device-width: 568px) {
-      font-size: var(--font-up-1);
-    }
+    font-size: var(--font-up-1);
   }
 
   &__step.styling .wizard-container__label {
@@ -568,7 +555,6 @@ body.wizard {
     color: var(--primary-high);
     font-size: var(--font-up-1);
     margin: 0.25em 0 0.5em 0;
-    max-width: 400px;
   }
 
   &__text-input {

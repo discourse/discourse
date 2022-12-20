@@ -4930,6 +4930,7 @@ en:
     step:
       introduction:
         title: "Tell us about your community"
+        description: "These will be shown on your login and any public pages. You can always change them later."
 
         fields:
           title:
@@ -4938,39 +4939,35 @@ en:
           site_description:
             label: "Describe your community in a sentence"
             placeholder: "A place for Jane and her friends to discuss cool stuff"
-          contact_email:
-            label: "Point of contact"
-            placeholder: "example@user.com"
-            description: "Person or group responsible for this community. Used for critical updates, and listed on <a href='%{base_path}/about' target='_blank'>your about page</a> for urgent contact."
           default_locale:
             label: "Language"
 
       privacy:
-        title: "Member Experience"
+        title: "Member experience"
 
         fields:
           login_required:
             placeholder: "Private"
             extra_description: "Only logged in users can access this community"
           invite_only:
-            placeholder: "Invite Only"
+            placeholder: "Invite only"
             extra_description: "Users must be invited by trusted users or staff, otherwise users can sign up on their own"
           must_approve_users:
-            placeholder: "Require Approval"
+            placeholder: "Require approval"
             extra_description: "Users must be approved by staff"
           chat_enabled:
-            placeholder: "Enable Chat"
+            placeholder: "Enable chat"
             extra_description: "Engage with your members in real time"
           enable_sidebar:
-            placeholder: "Enable Sidebar"
+            placeholder: "Enable sidebar"
             extra_description: "Access your favorite spaces with ease"
 
       ready:
-        title: "Your Discourse is Ready!"
+        title: "Your site is ready!"
         description: "That's it! You've done the basics to setup your community. Now you can jump in and have a look around, write a welcome topic, and send invites!<br><br>Have fun!"
 
       styling:
-        title: "Look & Feel"
+        title: "Look and feel"
         fields:
           color_scheme:
             label: "Color scheme"
@@ -5003,38 +5000,39 @@ en:
                 label: "Subcategories with Featured Topics"
 
       branding:
-        title: "Customize Logos"
+        title: "Community logo"
         fields:
           logo:
-            label: "Primary Logo"
-            description: "The logo at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1"
+            label: "Primary logo"
+            description: "Recommended size: 600 x 200"
           logo_small:
-            label: "Square Logo"
-            description: "A square version of your logo. Shown at the top left when scrolling down, and when sharing on social platforms. Ideally at least 512x512."
+            label: "Square logo"
+            description: "Recommended size: 512 x 512. Also used as the favicon and mobile home screen app icon."
 
       corporate:
-        title: "Your Organization"
+        title: "Your organization"
+        description: "The following information will be used in your Terms of Service and About pages. Feel free to skip if no company exists."
 
         fields:
           company_name:
-            label: "Company Name"
-            placeholder: "Example Organization"
-            description: "Entered in your Terms of Service page. Feel free to skip if no company exists."
+            label: "Company name"
+            placeholder: "Acme Organization"
           governing_law:
-            label: "Governing Law"
+            label: "Governing law"
             placeholder: "California law"
-            description: "Entered in your Terms of Service page. Feel free to skip if no company exists."
           contact_url:
-            label: "Web Page"
+            label: "Web page"
             placeholder: "https://www.example.com/contact-us"
-            description: "General contact web page for you or your organization. Will be displayed on <a href='%{base_path}/about' target='_blank'>your about page</a>."
           city_for_disputes:
-            label: "City for Disputes"
+            label: "City for disputes"
             placeholder: "San Francisco, California"
-            description: "Entered in your Terms of Service page. Feel free to skip if no company exists."
           site_contact:
-            label: "Automated Messages"
+            label: "Automated messages"
             description: "All automated Discourse personal messages will be sent from this user, such as flag warnings and backup completion notices."
+          contact_email:
+            label: "Point of contact"
+            placeholder: "example@user.com"
+            description: "Email address of key contact responsible for this site. Used for critical notifications, and listed on your <a href='%{base_path}/about' target='_blank'>your about page</a> for urgent matters."
 
       invites:
         title: "Invite Staff"
