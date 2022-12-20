@@ -14,7 +14,7 @@ export default class ChatChannelMembersView extends Component {
   onlineUsers = null;
   filter = null;
   inputSelector = "channel-members-view__search-input";
-  membershipsCollection = null;
+  members = null;
 
   didInsertElement() {
     this._super(...arguments);
@@ -24,11 +24,8 @@ export default class ChatChannelMembersView extends Component {
     }
 
     this._focusSearch();
-    this.set(
-      "membershipsCollection",
-      this.chatApi.listChannelMemberships(this.channel.id)
-    );
-    this.membershipsCollection.load();
+    this.set("members", this.chatApi.listChannelMemberships(this.channel.id));
+    this.members.load();
 
     this.appEvents.on("chat:refresh-channel-members", this, "onFilterMembers");
   }
@@ -49,7 +46,7 @@ export default class ChatChannelMembersView extends Component {
 
     discourseDebounce(
       this,
-      this.membershipsCollection.load,
+      this.members.load,
       { username: this.filter },
       INPUT_DELAY
     );
@@ -57,7 +54,7 @@ export default class ChatChannelMembersView extends Component {
 
   @action
   loadMore() {
-    discourseDebounce(this, this.membershipsCollection.loadMore, INPUT_DELAY);
+    discourseDebounce(this, this.members.loadMore, INPUT_DELAY);
   }
 
   _focusSearch() {

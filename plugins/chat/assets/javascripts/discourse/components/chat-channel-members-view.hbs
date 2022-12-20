@@ -1,6 +1,6 @@
 {{#if this.chatProgressBarContainer}}
   {{#in-element this.chatProgressBarContainer}}
-    <DProgressBar @key="members-view" @isLoading={{this.membershipsCollection.loading}} />
+    <DProgressBar @key="members-view" @isLoading={{this.members.loading}} />
   {{/in-element}}
 {{/if}}
 
@@ -22,7 +22,7 @@
     >
 
       <div role="list" class="channel-members-view__list">
-        {{#each this.membershipsCollection as |membership|}}
+        {{#each this.members as |membership|}}
           <a
             class="channel-members-view__list-item"
             href={{membership.user.userPath}}
