@@ -447,8 +447,6 @@ lv:
         fields:
           login_required:
             placeholder: "Privāts"
-          must_approve_users:
-            placeholder: "Pieprasīt apstiprinājumu"
       styling:
         fields:
           styling_preview:

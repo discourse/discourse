@@ -490,8 +490,6 @@ sr:
             placeholder: "Milenino mesto za bleju"
           site_description:
             placeholder: "Mesto gde Milena i njene prijateljice ćaskaju o kul stvarima"
-      ready:
-        title: "Vaš Discource je spreman!"
       finished:
         title: "Vaš Discource je spreman!"
   joined: "Pridružen"

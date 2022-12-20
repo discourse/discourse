@@ -1578,7 +1578,6 @@ nl:
     email_token_valid_hours: "Tokens voor Wachtwoord vergeten / Account activeren zijn (n) uur geldig."
     enable_badges: "Het badgesysteem inschakelen"
     max_favorite_badges: "Maximaal aantal badges dat een gebruiker kan selecteren"
-    enable_whispers: "Privécommunicatie van medewerkers binnen topics toestaan."
     whispers_allowed_groups: "Sta privécommunicatie binnen topics toe voor leden van bepaalde groepen."
     allow_index_in_robots_txt: "Geef in robots.txt op dat deze website door webzoekmachines mag worden geïndexeerd. In uitzonderlijke gevallen kun je <a href='%{base_path}/admin/customize/robots'>robots.txt</a> blijvend negeren."
     blocked_email_domains: "Een lijst gescheiden door pijpsymbolen van e-maildomeinen waarvan gebruikers geen accounts mogen registreren. Voorbeeld: mailinator.com|trashmail.net"
@@ -1988,7 +1987,6 @@ nl:
     display_name_on_posts: "Volledige naam van een gebruiker weergeven bij berichten, naast de @gebruikersnaam."
     show_time_gap_days: "Als twee berichten dit aantal dagen na elkaar zijn gemaakt, een tijdsgat in het topic weergeven."
     short_progress_text_threshold: "Als het aantal berichten in een topic hoger is dan dit getal, geeft de voortgangsbalk alleen het nummer van het huidige bericht weer. Als je de breedte van de voortgangsbalk wijzigt, moet je deze waarde mogelijk ook te wijzigen."
-    default_code_lang: "Standaard syntaxmarkering van programmeertaal toegepast op codeblokken (Automatisch, Geen markering, Ruby, Python enz.). Deze waarde moet ook aanwezig zijn in de website-instelling 'gemarkeerde talen'."
     warn_reviving_old_topic_age: "Wanneer iemand begint te antwoorden op een topic waarin het laatste antwoord ouder is dan dit aantal dagen, wordt een waarschuwing weergegeven. Schakel uit door dit op 0 te zetten."
     autohighlight_all_code: "Toepassen van codemarkering bij alle vooraf opgemaakte codeblokken afdwingen, zelfs als de codetaal niet expliciet is opgeven."
     highlighted_languages: "Opgenomen regels voor syntaxismarkering. (Waarschuwing: het opnemen van te veel talen kan prestaties beïnvloeden); bekijk <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> voor een demo."
@@ -4306,29 +4304,24 @@ nl:
           site_description:
             label: "Beschrijf je community in één zin"
             placeholder: "Een plek voor Jane en haar vrienden om coole dingen te bespreken"
-          contact_email:
-            label: "Contactpunt"
-            placeholder: "voorbeeld@gebruiker.com"
-            description: "Persoon of groep die verantwoordelijk is voor deze community. Wordt gebruikt voor kritieke updates en wordt vermeld op de pagina <a href='%{base_path}/about' target='_blank'>Over</a> voor dringend contact."
           default_locale:
             label: "Taal"
       privacy:
-        title: "Lidervaring"
         fields:
           login_required:
             placeholder: "Privé"
             extra_description: "Alleen aangemelde gebruikers hebben toegang tot deze community"
           invite_only:
-            placeholder: "Alleen op uitnodiging"
             extra_description: "Gebruikers moeten worden uitgenodigd door vertrouwde gebruikers of medewerkers, anders kunnen gebruikers zich zelf registreren"
           must_approve_users:
-            placeholder: "Goedkeuring vereisen"
             extra_description: "Gebruikers moeten worden goedgekeurd door medewerkers"
+          chat_enabled:
+            placeholder: "Chat inschakelen"
+          enable_sidebar:
+            placeholder: "Zijbalk inschakelen"
       ready:
-        title: "Je Discourse is gereed!"
         description: "Dat was het! Je hebt de basis van het opzetten van je community voltooid. Je kunt nu beginnen en rondkijken, een welkomsttopic schrijven en uitnodigingen sturen!<br><br>Veel plezier!"
       styling:
-        title: "Look & feel"
         fields:
           color_scheme:
             label: "Kleurenschema"
@@ -4359,37 +4352,19 @@ nl:
                 label: "Categorievakken met topics"
               subcategories_with_featured_topics:
                 label: "Subcategorieën met uitgelichte topics"
-      branding:
-        title: "Logo's aanpassen"
-        fields:
-          logo:
-            label: "Primair logo"
-            description: "Het logo linksboven op je website. Gebruik een brede rechthoekige afbeelding met een hoogte van 120 pixels en een beeldverhouding groter dan 3:1"
-          logo_small:
-            label: "Vierkant logo"
-            description: "Een vierkante versie van je logo. Wordt linksboven weergegeven bij omlaag scrollen en bij delen op sociale platformen. Idealiter minimaal 512x512."
       corporate:
-        title: "Je organisatie"
         fields:
-          company_name:
-            label: "Bedrijfsnaam"
-            placeholder: "Voorbeeldorganisatie"
-            description: "Ingevoerd op je Gebruiksvoorwaarden-pagina. Sla dit gerust over als er geen bedrijf is."
           governing_law:
-            label: "Toepasselijk recht"
             placeholder: "Californische wet"
-            description: "Ingevoerd op je Gebruiksvoorwaarden-pagina. Sla dit gerust over als er geen bedrijf is."
           contact_url:
-            label: "Webpagina"
             placeholder: "https://www.example.com/contact-us"
-            description: "Algemene contactpagina voor jou of je organisatie. Wordt weergegeven op de pagina <a href='%{base_path}/about' target='_blank'>Over</a>."
           city_for_disputes:
-            label: "Plaats voor geschillen"
             placeholder: "San Francisco, Californië"
-            description: "Ingevoerd op je Gebruiksvoorwaarden-pagina. Sla dit gerust over als er geen bedrijf is."
           site_contact:
-            label: "Geautomatiseerde berichten"
             description: "Alle geautomatiseerde persoonlijke berichten op Discourse worden verzonden door deze gebruiker, zoals markeringswaarschuwingen en back-upvoltooiingsmeldingen."
+          contact_email:
+            label: "Contactpunt"
+            placeholder: "voorbeeld@gebruiker.com"
       invites:
         title: "Medewerker uitnodigen"
         description: "Je bent bijna klaar! Nodig wat mensen uit om te helpen met het <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>opstarten van je discussies</a> met interessante topics en berichten om je community op te zetten."

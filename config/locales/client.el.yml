@@ -124,37 +124,36 @@ el:
       email: "Αποστολή μέσω email"
       url: "Αντιγραφή και κοινοποίηση διεύθυνσης URL"
     action_codes:
-      public_topic: "έκανε αυτό το θέμα δημόσιο στις %{when}"
-      private_topic: "έκανε αυτό το θέμα ένα προσωπικό μήνυμα στις %{when}"
-      split_topic: "διαχώρισε αυτό το θέμα στις %{when}"
-      invited_user: "προσκάλεσε τον/την %{who} στις %{when}"
-      invited_group: "προσκάλεσε την ομάδα %{who} στις %{when}"
+      public_topic: "Έκανε αυτό το θέμα δημόσιο στις %{when}"
+      private_topic: "Έκανε αυτό το θέμα ένα προσωπικό μήνυμα στις %{when}"
+      split_topic: "Διαχώρισε αυτό το θέμα στις %{when}"
+      invited_user: "Προσκάλεσε τον/την %{who} στις %{when}"
+      invited_group: "Προσκάλεσε τον/την %{who} στις %{when}"
       user_left: "%{who} αφαιρέθηκαν από αυτό το μήνυμα στις %{when}"
-      removed_user: "αφαίρεσε τον χρήστη %{who} στις %{when}"
-      removed_group: "αφαίρεσε την ομάδα %{who} στις %{when}"
-      autobumped: "ωθήθηκε αυτόματα στις %{when}"
+      removed_user: "Αφαίρεσε την ομάδα %{who} στις %{when}"
+      removed_group: "Αφαίρεσε την ομάδα %{who} στις %{when}"
+      autobumped: "Ωθήθηκε αυτόματα στις %{when}"
       autoclosed:
-        enabled: "έκλεισε στις %{when}"
-        disabled: "άνοιξε στις %{when}"
+        enabled: "Έκλεισε στις %{when}"
+        disabled: "Άνοιξε στις %{when}"
       closed:
-        enabled: "έκλεισε στις %{when}"
-        disabled: "άνοιξε στις %{when}"
+        enabled: "Έκλεισε στις %{when}"
+        disabled: "Άνοιξε στις %{when}"
       archived:
-        enabled: "αρχειοθετήθηκε στις %{when}"
-        disabled: "βγήκε από το αρχείο στις %{when}"
+        enabled: "Αρχειοθετήθηκε στις %{when}"
+        disabled: "Βγήκε από το αρχείο στις %{when}"
       pinned:
-        enabled: "καρφιτσώθηκε στις %{when}"
-        disabled: "ξεκαρφιτσώθηκε στις %{when}"
+        enabled: "Καρφιτσώθηκε στις %{when}"
+        disabled: "Ξεκαρφιτσώθηκε στις %{when}"
       pinned_globally:
-        enabled: "καρφιτσώθηκε καθολικά στις %{when}"
-        disabled: "ξεκαρφιτσώθηκε στις %{when}"
+        enabled: "Καρφιτσώθηκε καθολικά στις %{when}"
+        disabled: "Ξεκαρφιτσώθηκε στις %{when}"
       visible:
-        enabled: "ορατό στις %{when}"
-        disabled: "κρυφό στις %{when}"
+        enabled: "Ορατό στις %{when}"
+        disabled: "Κρυφό στις %{when}"
       banner:
-        enabled: "το έκανε ανακοίνωση στις %{when}. Θα εμφανίζεται στην κορυφή κάθε σελίδας μέχρι να απορριφθεί από τον χρήστη."
-        disabled: "το αφαίρεσε από ανακοίνωση στις %{when}. Δε θα εμφανίζεται πλέον στην κορυφή κάθε σελίδας."
-      forwarded: "προώθησε το παραπάνω email"
+        enabled: "Το έκανε ανακοίνωση στις %{when}. Θα εμφανίζεται στην κορυφή κάθε σελίδας μέχρι να απορριφθεί από Τον χρήστη."
+        disabled: "Το αφαίρεσε από ανακοίνωση στις %{when}. Δε θα εμφανίζεται πλέον στην κορυφή κάθε σελίδας."
     topic_admin_menu: "ρυθμίσεις θέματος"
     emails_are_disabled: "Όλα τα εξερχόμενα emails έχουν απενεργοποιηθεί καθολικά από κάποιον διαχειριστή. Δε θα σταλεί καμία ειδοποίηση email."
     software_update_prompt:
@@ -323,8 +322,6 @@ el:
     disable: "Απενεργοποίηση"
     continue: "Συνεχίστε"
     undo: "Αναίρεση"
-    revert: "Επαναφορά"
-    failed: "Απέτυχε"
     switch_to_anon: "Έναρξη Κατάστασης Ανωνυμίας"
     switch_from_anon: "Τερματισμός Κατάστασης Ανωνυμίας"
     banner:
@@ -1480,6 +1477,7 @@ el:
       subheader_title: "Συνδέσου στον λογαριασμό σου"
       username: "Όνομα Χρήστη"
       password: "Κωδικός Πρόσβασης"
+      show_password: "Εμφάνιση"
       second_factor_description: "Παρακαλώ εισαγάγετε τον κωδικό ελέγχου ταυτότητας από την εφαρμογή σας:"
       second_factor_backup: "Συνδεθείτε χρησιμοποιώντας έναν εφεδρικό κωδικό"
       second_factor_backup_description: "Παρακαλώ εισαγάγετε έναν από τους εφεδρικούς κωδικούς σας:"
@@ -1757,6 +1755,7 @@ el:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -1812,6 +1811,7 @@ el:
         invited_to_private_message: "προσκλήθηκε σε προσωπικό μήνυμα"
         invitee_accepted: "Η πρόσκληση έγινε αποδεκτή"
         posted: "νέα ανάρτηση"
+        watching_category_or_tag: "νέα ανάρτηση"
         moved_post: "η ανάρτηση μετακινήθηκε"
         linked: "συνέδεσε"
         bookmark_reminder: "υπενθύμιση σελιδοδείκτη"
@@ -3026,9 +3026,7 @@ el:
     safe_mode:
       enabled: "Η λειτουργία ασφαλείας είναι ενεργοποιημένη, για να εξέλθεις από τη λειτουργία ασφαλείας κλείσε το παράθυρο περιήγησης"
     image_removed: "(η εικόνα αφαιρέθηκε)"
-    do_not_disturb:
-      title: "Μην ενοχλείτε για ..."
-      label: "Μην ενοχλείτε"
+    pause_notifications:
       remaining: "%{remaining} απομένει"
       options:
         half_hour: "30 λεπτά"
@@ -3597,7 +3595,6 @@ el:
             error: "Αυτό το θέμα απενεργοποιήθηκε αυτόματα επειδή δεν είναι συμβατό με αυτήν την έκδοση του Discourse."
             minimum: "Απαιτείται έκδοση Discourse %{version} ή παραπάνω."
             maximum: "Απαιτείται έκδοση Discourse %{version} ή παρακάτω."
-          component_of: "Συστατικό του:"
           update_to_latest: "Ενημέρωση στην τελευταία έκδοση"
           check_for_updates: "Έλεγχος για ενημερώσεις"
           updating: "Ενημέρωση..."
@@ -4014,7 +4011,6 @@ el:
       user:
         suspend_failed: "Κάποιο λάθος εμφανίστηκε κατά την αποβολή αυτού του χρήστη %{error}"
         unsuspend_failed: "Κάτι πήγε στραβά κατά την αναίρεση της αποβολής αυτού του χρήστη %{error}"
-        suspend_duration: "Πόσο χρονικό διάστημα θα κρατήσει η αποβολή του χρήστη;"
         suspend_reason_label: "Γιατί αποβάλεις τον χρήστη; Αυτό το κείμενο <b>θα είναι ορατό σε όλους</b> στη σελίδα προφίλ αυτού του χρήστη και θα εμφανίζεται στο χρήστη όταν αυτός προσπαθήσει να συνδεθεί. Φρόντισε να είναι σύντομο."
         suspend_reason_hidden_label: "Ποιος είναι ο λόγος της αποβολής; Το κείμενο αυτό θα εμφανίζεται στον χρήστη όταν προσπαθήσει να συνδεθεί. Φροντίστε να είναι σύντομο."
         suspend_reason: "Αιτία"
@@ -4454,7 +4450,6 @@ el:
       next: "Επόμενο"
       step-text: "Βήμα"
       step: "%{current} από %{total}"
-      upload: "Ανέβασμα"
       uploading: "Ανεβαίνει..."
       upload_error: "Λυπούμαστε, παρουσιάστηκε σφάλμα κατά το ανέβασμα του αρχείου. Προσπάθησε πάλι."
       staff_count:

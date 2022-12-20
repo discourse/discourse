@@ -134,37 +134,36 @@ lv:
       email: "Sūtīt pa e -pastu"
       url: "Kopējiet un kopīgojiet URL"
     action_codes:
-      public_topic: "padarīja tēmu publisku %{when}"
-      private_topic: "padarīja šo tēmu par personisku ziņu %{when}"
-      split_topic: "sadalīja šo tēmu %{when}"
-      invited_user: "uzaicināja %{who} %{when}"
-      invited_group: "uzaicināja %{who} %{when}"
+      public_topic: "Padarīja tēmu publisku %{when}"
+      private_topic: "Padarīja šo tēmu par personisku ziņu %{when}"
+      split_topic: "Sadalīja šo tēmu %{when}"
+      invited_user: "Uzaicināja %{who} %{when}"
+      invited_group: "Uzaicināja %{who} %{when}"
       user_left: "%{who} noņēma sevi no šī ziņojuma %{when}"
-      removed_user: "izdzēsa %{who} %{when}"
-      removed_group: "izdzēsa %{who} %{when}"
-      autobumped: "automātiski bumped %{when}"
+      removed_user: "Izdzēsa %{who} %{when}"
+      removed_group: "Izdzēsa %{who} %{when}"
+      autobumped: "Automātiski bumped %{when}"
       autoclosed:
-        enabled: "slēdza %{when}"
-        disabled: "atvēra %{when}"
+        enabled: "Slēdza %{when}"
+        disabled: "Atvēra %{when}"
       closed:
-        enabled: "slēdza %{when}"
-        disabled: "atvēra %{when}"
+        enabled: "Slēdza %{when}"
+        disabled: "Atvēra %{when}"
       archived:
-        enabled: "pievienoja arhīvam %{when}"
-        disabled: "izņēma no arhīva %{when}"
+        enabled: "Pievienoja arhīvam %{when}"
+        disabled: "Izņēma no arhīva %{when}"
       pinned:
-        enabled: "piesprauda %{when}"
-        disabled: "atsprauda %{when}"
+        enabled: "Piesprauda %{when}"
+        disabled: "Atsprauda globāli %{when}"
       pinned_globally:
-        enabled: "piesprauda globāli %{when}"
-        disabled: "atsprauda globāli %{when}"
+        enabled: "Piesprauda globāli %{when}"
+        disabled: "Atsprauda globāli %{when}"
       visible:
-        enabled: "pievienoja uzskaitei %{when}"
-        disabled: "izņēma no uzskaites %{when}"
+        enabled: "Pievienoja uzskaitei %{when}"
+        disabled: "Izņēma no uzskaites %{when}"
       banner:
-        enabled: "padarīja šo par baneri %{when}. Tas parādīsies katras lapas augšā, līdz lietotājs to aizvērs."
-        disabled: "noņēma šo baneri %{when}. Tas vairs neparādīsies katras lapas augšā."
-      forwarded: "pārsūtīja iepriekš minēto e -pastu"
+        enabled: "Padarīja šo par baneri %{when}. Tas parādīsies katras lapas augšā, līdz lietotājs to aizvērs."
+        disabled: "Noņēma šo baneri %{when}. Tas vairs neparādīsies katras lapas augšā."
     topic_admin_menu: "tēmas darbības"
     emails_are_disabled: "Administrators ir globāli izslēdzis visus izejošos e-pastus. Netiks nosūtīti nekāda veida paziņojumi."
     software_update_prompt:
@@ -333,8 +332,6 @@ lv:
     disable: "Atslēgt"
     continue: "Turpināt"
     undo: "Atsaukt"
-    revert: "Atgriezt"
-    failed: "Neizdevās"
     switch_to_anon: "Ieiet anonīmajā režīmā"
     switch_from_anon: "Iziet no anonīmā režīma"
     banner:
@@ -894,7 +891,6 @@ lv:
       notification_schedule:
         title: "Paziņojumu grafiks"
         label: "Iespējot pielāgotu paziņojumu grafiku"
-        tip: "Ārpus šīm stundām jums tiks automātiski iestatīts režīms “netraucēt”."
         midnight: "Pusnakts"
         none: "Nav"
         monday: "Pirmdiena"
@@ -1580,6 +1576,7 @@ lv:
       title: "Pieslēgties"
       username: "Lietotājs"
       password: "Parole"
+      show_password: "Parādīt"
       second_factor_title: "Divu faktoru autentifikācija"
       second_factor_description: "Lūdzu, ievadiet lietotnes autentifikācijas kodu:"
       second_factor_backup: "Piesakieties, izmantojot rezerves kodu"
@@ -1792,6 +1789,7 @@ lv:
         invited_to_private_message: "aicināti uz privātu ziņu"
         invitee_accepted: "ielūgums apstiprināts"
         posted: "jauna ziņa"
+        watching_category_or_tag: "jauna ziņa"
         moved_post: "ziņa pārvietota"
         linked: "saistīts"
         bookmark_reminder: "atgādinājums par grāmatzīmēm"
@@ -2779,7 +2777,7 @@ lv:
       dismiss: "Nerādīt"
     safe_mode:
       enabled: "Ir ieslēgts drošais režīms; lai pamestu drošo režīmu, aizveriet šo pārlūkprogrammas logu"
-    do_not_disturb:
+    pause_notifications:
       remaining: "palicis %{remaining}"
     trust_levels:
       names:
@@ -3362,7 +3360,6 @@ lv:
       user:
         suspend_failed: "Kaut kas nenostrādāj apturot šo lietotāju %{error}"
         unsuspend_failed: "Kaut kas nenostrādāj atjaunojot šo lietotāju %{error}"
-        suspend_duration: "Uz cik ilgu laiku lietotājs tiks atstādināts?"
         suspend_reason_label: "Kādēļ apturēt? Šis texts <b>būt redzams visiem</b> šajā lietotāja profila lapā, un tiks rādīts visiem, kas \"ielogojas\"."
         suspend_reason: "Iemesls"
         suspended_by: "Apturēja"
@@ -3708,7 +3705,6 @@ lv:
       next: "Nākamais"
       step-text: "Solis"
       step: "%{current} no %{total}"
-      upload: "Augšupielādēt"
       uploading: "Notiek ielāde..."
       upload_error: "Atvainojiet, augšuplādējot šo failu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
       invites:

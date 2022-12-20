@@ -1045,8 +1045,6 @@ bs_BA:
         fields:
           login_required:
             placeholder: "Privatno"
-          must_approve_users:
-            placeholder: "Zahtjeva Dozvolu"
       styling:
         fields:
           styling_preview:

@@ -2134,12 +2134,10 @@ hu:
         fields:
           login_required:
             placeholder: "Privát"
-          must_approve_users:
-            placeholder: "Jóváhagyást igényel"
           chat_enabled:
             placeholder: "Csevegés engedélyezése"
-      ready:
-        title: "A Discourse készen áll!"
+          enable_sidebar:
+            placeholder: "Oldalsáv engedélyezése"
       styling:
         fields:
           color_scheme:
@@ -2163,22 +2161,10 @@ hu:
                 label: "Kategóriák és legutóbbi témák"
               categories_and_top_topics:
                 label: "Kategóriák és legfelső témák"
-      branding:
-        fields:
-          logo:
-            label: "Elsődleges logó"
-          logo_small:
-            label: "Négyzet alakú logó"
       corporate:
         fields:
-          company_name:
-            label: "Cégnév"
-            placeholder: "Példa szervezet"
           contact_url:
-            label: "Weboldal"
             placeholder: "https://www.example.com/contact-us"
-          site_contact:
-            label: "Automatikus üzenetek"
       invites:
         title: "Stáb meghívása"
       finished:

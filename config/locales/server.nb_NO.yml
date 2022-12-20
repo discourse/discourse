@@ -1404,8 +1404,6 @@ nb_NO:
         fields:
           login_required:
             placeholder: "Privat"
-          must_approve_users:
-            placeholder: "Krev godkjenning"
       styling:
         fields:
           styling_preview:
@@ -1422,16 +1420,6 @@ nb_NO:
                 label: "Kategorier og siste emner"
               categories_and_top_topics:
                 label: "Kategorier og toppemner"
-      branding:
-        fields:
-          logo:
-            label: "Primær logo"
-      corporate:
-        fields:
-          contact_url:
-            label: "Nettside"
-          site_contact:
-            label: "Automatiserte meldinger"
   joined: "Medlem fra"
   discourse_push_notifications:
     popup:

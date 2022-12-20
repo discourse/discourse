@@ -185,6 +185,9 @@ ar:
         many: "لديك رسائل دردشة جديدة"
         other: "لديك رسائل دردشة جديدة"
       from: "%{site_name}"
+      subject:
+        direct_message_from_1: "[%{email_prefix}] رسالة جديدة من %{username}"
+        chat_channel_1: "[%{email_prefix}] رسالة جديدة في %{channel}"
       unsubscribe: "يتم إرسال ملخص الدردشة هذا من %{site_link} عندما تكون غائبًا. غيِّر %{email_preferences_link} أو %{unsubscribe_link} لإلغاء الاشتراك."
       unsubscribe_no_link: "يتم إرسال ملخص الدردشة هذا من %{site_link} عندما تكون غائبًا. غيِّر %{email_preferences_link} لديك."
       view_messages:

@@ -167,37 +167,36 @@ cs:
       url: "Zkopírujte a sdílejte URL adresu."
     action_codes:
       public_topic: "Téma zveřejněno %{when}"
-      open_topic: "toto převedl na téma %{when}"
+      open_topic: "Toto převedl na téma %{when}"
       private_topic: "Téma změněno na osobní zprávu %{when}"
-      split_topic: "rozdělil toto téma %{when}"
-      invited_user: "%{who} pozván %{when}"
-      invited_group: "%{who} pozvána %{when}"
+      split_topic: "Rozdělil toto téma %{when}"
+      invited_user: "%{who} Pozvána %{when}"
+      invited_group: "%{who} Pozvána %{when}"
       user_left: "%{who} se odstranil z této zpráy %{when}"
-      removed_user: "%{who} smazán %{when}"
-      removed_group: "%{who} smazána %{when}"
-      autobumped: "automaticky bumped %{when}"
+      removed_user: "%{who} Smazána %{when}"
+      removed_group: "%{who} Smazána %{when}"
+      autobumped: "Automaticky bumped %{when}"
       autoclosed:
-        enabled: "uzavřeno %{when}"
-        disabled: "otevřeno %{when}"
+        enabled: "Uzavřeno %{when}"
+        disabled: "Otevřeno %{when}"
       closed:
-        enabled: "uzavřeno %{when}"
-        disabled: "otevřeno %{when}"
+        enabled: "Uzavřeno %{when}"
+        disabled: "Otevřeno %{when}"
       archived:
-        enabled: "archivováno %{when}"
-        disabled: "odarchivováno %{when}"
+        enabled: "Archivováno %{when}"
+        disabled: "Odarchivováno %{when}"
       pinned:
-        enabled: "připnuto %{when}"
-        disabled: "odepnuto %{when}"
+        enabled: "Připnuto %{when}"
+        disabled: "Odepnuto %{when}"
       pinned_globally:
-        enabled: "globálně připnuto %{when}"
-        disabled: "odepnuto %{when}"
+        enabled: "Globálně připnuto %{when}"
+        disabled: "Odepnuto %{when}"
       visible:
-        enabled: "uvedeno %{when}"
-        disabled: "neuvedeno %{when}"
+        enabled: "Uvedeno %{when}"
+        disabled: "Neuvedeno %{when}"
       banner:
-        enabled: "vytvořil(a) tento banner %{when}. Bude se zobrazovat nahoře na každé stránce, dokud nebude uživatelem odmítnut."
-        disabled: "odstranil(a) tento banner %{when}. Už se nebude zobrazovat na každé stránce nahoře."
-      forwarded: "přeposlat výše uvedený e-mail"
+        enabled: "Vytvořil(a) tento banner %{when}. Bude se zobrazovat nahoře na každé stránce, dokud nebude uživatelem odmítnut."
+        disabled: "Odstranil(a) tento banner %{when}. Už se nebude zobrazovat na každé stránce nahoře."
     topic_admin_menu: "Akce tématu."
     skip_to_main_content: "Přeskočit na hlavní obsah"
     emails_are_disabled: "Všechny odchozí emaily byly administrátorem vypnuty. Žádné odchozí emaily nebudou odeslány."
@@ -422,8 +421,6 @@ cs:
     disable: "Vypnout"
     continue: "Pokračovat"
     undo: "Zpět"
-    revert: "Vrátit"
-    failed: "Selhání"
     switch_to_anon: "Vstoupit do anonymního módu"
     switch_from_anon: "Opustit anonymní mód"
     banner:
@@ -1471,6 +1468,7 @@ cs:
     login:
       username: "Uživatel"
       password: "Heslo"
+      show_password: "Zobrazit"
       second_factor_title: "Dvoufaktorové ověření"
       second_factor_description: "Prosím zadejte autentikační kód z vaší aplikace:"
       second_factor_backup_description: "Prosíme zadejte jeden ze svých záložních kódů:"
@@ -1702,6 +1700,7 @@ cs:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2849,7 +2848,7 @@ cs:
       dismiss: "Označit jako přečtené"
     safe_mode:
       enabled: "Bezpečný režim je povolený, k jeho zakázání zavři toto okno prohlížeče"
-    do_not_disturb:
+    pause_notifications:
       remaining: "%{remaining} zbývá"
       options:
         custom: "Přizpůsobené"
@@ -3572,7 +3571,6 @@ cs:
       user:
         suspend_failed: "Nastala chyba při zakazování uživatele %{error}"
         unsuspend_failed: "Nastala chyba při povolování uživatele %{error}"
-        suspend_duration: "Jak dlouho má zákaz platit? (dny)"
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
         suspend_reason_hidden_label: "Důvod zablokování? Tento text se zobrazí uživateli ve chvíli, kdy se pokusí přihlásit. Udržuj ho krátký."
         suspend_reason: "Reason"
@@ -3952,7 +3950,6 @@ cs:
       next: "Další"
       step-text: "Krok"
       step: "%{current} z %{total}"
-      upload: "Nahrát"
       uploading: "Nahrává se..."
       upload_error: "Bohužel nastala chyba při nahrávání příspěvku. Prosím zkuste to znovu."
       staff_count:

@@ -182,8 +182,6 @@ te:
     enable: "చేతనం"
     disable: "అచేతనం"
     undo: "రద్దు"
-    revert: "తిద్దు"
-    failed: "విఫలం"
     banner:
       edit: "సవరించు"
     choose_topic:
@@ -686,6 +684,7 @@ te:
     login:
       username: "వాడుకరి"
       password: "సంకేతపదం"
+      show_password: "చూపు"
       caps_lock_warning: "క్యాప్స్ లాక్ ఆన్ అయి ఉంది"
       error: "తెలీని దోషం"
       blank_username_or_password: "దయచేసి మీ ఈమెయిల్ లేదా సభ్యనామం మరియు సంకేతపదం రాయండి"
@@ -1341,7 +1340,7 @@ te:
     footer_nav:
       back: "వెనుకకు"
       share: "పంచు"
-    do_not_disturb:
+    pause_notifications:
       options:
         custom: "అనురూప"
     trust_levels:
@@ -1791,7 +1790,6 @@ te:
       user:
         suspend_failed: "ఈ సభ్యుడిని సస్పెండ్ చేసేప్పుడు ఏదో తేడా జరిగింది. %{error}"
         unsuspend_failed: "ఈ వినియోగదారు వలన ఏదో తొలగింపబడని తప్పు జరిగింది %{error}"
-        suspend_duration: "వినియోగదారు ఎంతకాలం నిలిపివేయబడ్డాడు?"
         suspend_reason_label: "మీరు ఎందుకు తొలగించబడ్డారు? ఈ పాఠ్యం <b> వినియోగదారును ప్రొఫైల్ పుట మీద ప్రతివారికి </b> కనబడుతుంది, మరియు వినియోగదారుడు లాగిన్‌కు ప్రయత్నించినపుడు చూస్తారు.చిన్నదిగా ఉంచండి."
         suspend_reason: "కారణం"
         suspended_by: "సస్పెండు చేసినవారు"
@@ -2048,7 +2046,6 @@ te:
     wizard:
       back: "వెనుకకు"
       next: "తదుపరి"
-      upload: "ఎక్కించు"
       uploading: "ఎగుమతవుతోంది..."
       upload_error: "క్షమించాలి. దస్త్రం ఎగుమతించుటలో దోషం. దయచేసి మరలా ప్రయత్నించండి. "
       invites:

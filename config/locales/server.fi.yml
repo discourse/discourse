@@ -1093,6 +1093,11 @@ fi:
         editor: Muokkaaja
         author: Kirjoittaja
         edit_reason: Syy
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "Käyttäjä-API"
+      yaxis: "Päivä"
     dau_by_mau:
       title: "PAK/KAK"
       xaxis: "Päivä"
@@ -1567,7 +1572,6 @@ fi:
     email_token_valid_hours: "Unohtuneen salasanan / tilin aktivoinnin tunnukset ovat voimassa (n) tuntia."
     enable_badges: "Ota kunniamerkkijärjestelmä käyttöön"
     max_favorite_badges: "Enimmäismäärä kunniamerkkejä, jonka käyttäjä voi valita"
-    enable_whispers: "Salli henkilökunnan yksityiskeskustelu ketjujen sisällä."
     whispers_allowed_groups: "Salli tiettyjen ryhmien jäsenten yksityinen viestintä ketjuissa."
     allow_index_in_robots_txt: "Määritä robots.txt-tiedostossa, että hakurobotit saavat indeksoida tätä sivustoa. Poikkeuksellisissa tapauksissa voit <a href='%{base_path}/admin/customize/robots'>ohittaa robots.txt:n</a> pysyvästi."
     blocked_email_domains: "Pystyviivalla eroteltu luettelo sähköpostiverkkotunnuksista, joilla käyttäjät eivät voi luoda tiliä. Esimerkiksi mailinator.com|trashmail.net"
@@ -1927,6 +1931,7 @@ fi:
     enable_user_directory: "Näytä hakemisto käyttäjistä selattavaksi"
     enable_group_directory: "Näytä hakemisto ryhmistä selattavaksi"
     enable_category_group_moderation: "Salli ryhmien valvoa sisältöä tietyillä alueilla"
+    group_in_subject: "Aseta %%{optional_pm} sähköpostin aiheessa ensimmäisen ryhmän nimeksi yksityisviestissä, katso: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Customize subject format for standard emails</a>"
     allow_anonymous_posting: "Salli käyttäjien vaihtaa anonyymiin tilaan"
     anonymous_posting_min_trust_level: "Anonyymien viestien lähettämiseen vaadittava luottamustila"
     anonymous_account_duration_minutes: "Suojellaksesi anonymiteettiä, luo käyttäjälle uusi anonyymi tili N minuutin välein. Esimerkki: jos arvoksi asetetaan 600, kun 600 minuuttia tulee kuluneeksi edellisestä viestistä JA käyttäjä vaihtaa anonyymiin tilaan, luodaan uusi anonyymi tili."
@@ -1976,7 +1981,6 @@ fi:
     display_name_on_posts: "Näytä käyttäjän koko nimi viesteissä @käyttäjätunnuksen lisäksi."
     show_time_gap_days: "Jos kahden viestin välissä on kulunut näin monta päivää, näytä aikaväli ketjussa."
     short_progress_text_threshold: "Kuinka monen viestin jälkeen ketjun edistyspalkissa näytetään vain nykyisen viestin numero. Jos muutat palkin leveyttä, voit joutua muuttamaan tätä arvoa."
-    default_code_lang: "Oletusarvoinen ohjelmointikielen syntaksin korostus, jota käytetään koodilohkoissa (auto, nohighlight, ruby, python jne.). Tämä arvo täytyy esiintyä myös \"highlighted languages\" -sivustoasetuksessa."
     warn_reviving_old_topic_age: "Kun käyttäjä alkaa kirjoittamaan vastausta ketjuun, jonka uusin viesti on tätä vanhempi päivissä, näytetään varoitus. Poista käytöstä asettamalla arvoksi 0."
     autohighlight_all_code: "Pakota koodin korostus kaikkiin esimuotoiltuihin koodilohkoihin, vaikka käyttäjä ei määrittelisi kieltä."
     highlighted_languages: "Mitä syntaksikorostussääntöjä on käytössä. (Varoitus: liian monen kielen käyttöönotto voi vaikuttaa suorituskykyyn.) Ks. demo: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
@@ -4284,29 +4288,24 @@ fi:
           site_description:
             label: "Kuvaile yhteisöä yhdellä lauseella"
             placeholder: "Paikka, jossa Jenni ja hänen ystävänsä voivat keskustella kivoista jutuista"
-          contact_email:
-            label: "Yhteyshenkilö"
-            placeholder: "esimerkki@käyttäjä.com"
-            description: "Tästä yhteisöstä vastaava henkilö tai ryhmä. Käytetään kriittisiin päivityksiin, ja se on ilmoitettu <a href='%{base_path}/about' target='_blank'>tietoa-sivulla</a> kiireellisiä yhteydenottoja varten."
           default_locale:
             label: "Kieli"
       privacy:
-        title: "Jäsenkokemus"
         fields:
           login_required:
             placeholder: "Yksityinen"
             extra_description: "Vain kirjautuneilla käyttäjillä on pääsy yhteisöön"
           invite_only:
-            placeholder: "Vain kutsusta"
             extra_description: "Luotettujen käyttäjien tai henkilökunnan on kutsuttava käyttäjät, muutoin käyttäjät voivat rekisteröityä itse"
           must_approve_users:
-            placeholder: "Vaadi hyväksyntä"
             extra_description: "Henkilökunnan täytyy hyväksyä käyttäjät"
+          chat_enabled:
+            placeholder: "Ota chat käyttöön"
+          enable_sidebar:
+            placeholder: "Ota sivupalkki käyttöön"
       ready:
-        title: "Discourse-sivustosi on valmis!"
         description: "Olet nyt tehnyt perusasioat yhteisösi määrittämiseksi. Nyt voit alkaa tutustumaan paikkoihin, kirjoittaa tervetuloketjun ja lähettää kutsuja!<br><br>Pidä hauskaa!"
       styling:
-        title: "Ulkoasu ja tuntuma"
         fields:
           color_scheme:
             label: "Värimalli"
@@ -4337,37 +4336,19 @@ fi:
                 label: "Alueet laatikoissa, joissa ketjuja"
               subcategories_with_featured_topics:
                 label: "Ala-alueet, joissa on esiteltyjä ketjuja"
-      branding:
-        title: "Mukauta logoja"
-        fields:
-          logo:
-            label: "Ensisijainen logo"
-            description: "Sivuston vasemmassa yläkulmassa oleva logo. Käytä leveää suorakulmaista kuvaa, jonka korkeus on 120 ja kuvasuhde suurempi kuin 3:1"
-          logo_small:
-            label: "Neliölogo"
-            description: "Neliön muotoinen versio sivuston logosta. Näkyy vasemmassa yläkulmassa, kun vierität sivua alaspäin, sekä sosiaalisen median julkaisuissa. Mielellään vähintään 512x512."
       corporate:
-        title: "Organisaatiosi"
         fields:
-          company_name:
-            label: "Yrityksen nimi"
-            placeholder: "Esimerkkiorganisaatio"
-            description: "Lisätään käyttöehtosivullesi. Voit ohittaa tämän, jos sinulla ei ole yritystä."
           governing_law:
-            label: "Sovellettava lainsäädäntö"
             placeholder: "Kalifornian laki"
-            description: "Lisätään käyttöehtosivullesi. Voit ohittaa tämän, jos sinulla ei ole yritystä."
           contact_url:
-            label: "Verkkosivu"
             placeholder: "https://www.esimerkki.fi/ota-yhteytta"
-            description: "Sinun tai organisaatiosi yleinen yhteydenottosivu. Näkyy <a href='%{base_path}/about' target='_blank'>Tietoja</a>-sivulla."
           city_for_disputes:
-            label: "Kaupunki, jonka oikeudessa riidat ratkotaan"
             placeholder: "San Francisco, Kalifornia"
-            description: "Lisätään käyttöehtosivullesi. Voit ohittaa tämän, jos sinulla ei ole yritystä."
           site_contact:
-            label: "Automaattiset viestit"
             description: "Kaikki Discoursen automaattiset yksityisviestit lähetetään tältä käyttäjältä, kuten varoitukset merkinnöistä ja ilmoitukset valmistuneista varmuuskopioista."
+          contact_email:
+            label: "Yhteyshenkilö"
+            placeholder: "esimerkki@käyttäjä.com"
       invites:
         title: "Kutsu henkilökuntaa"
         description: "Melkein valmista! Kutsu vielä joitakin ihmisiä <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>pohjustamaan keskusteluita</a> mielenkiintoisilla aiheilla ja vastauksilla, jotta yhteisösi pääsee alkuun."

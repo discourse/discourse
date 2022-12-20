@@ -109,35 +109,35 @@ sw:
     share:
       close: "funga"
     action_codes:
-      public_topic: "ameifanya hii mada isiwe ya siri %{when}"
-      private_topic: "ameifanya hii mada ujumbe binafsi %{when}"
+      public_topic: "Ameifanya hii mada isiwe ya siri %{when}"
+      private_topic: "Ameifanya hii mada ujumbe binafsi %{when}"
       split_topic: "Gawanya hii mada %{when}"
-      invited_user: "amekaribisha %{who}%{when}"
-      invited_group: "amekaribisha %{who}%{when}"
+      invited_user: "Amekaribisha %{who}%{when}"
+      invited_group: "Amekaribisha %{who}%{when}"
       user_left: "%{who}amejitoa kwenye ujumbe%{when}"
-      removed_user: "amemtoa %{who} %{when}"
-      removed_group: "amemtoa %{who}%{when}"
+      removed_user: "Amemtoa %{who}%{when}"
+      removed_group: "Amemtoa %{who}%{when}"
       autoclosed:
         enabled: "Imefungwa %{when}"
         disabled: "Imefunguliwa %{when}"
       closed:
-        enabled: "Ilifungwa %{when}"
+        enabled: "Imefungwa %{when}"
         disabled: "Imefunguliwa %{when}"
       archived:
         enabled: "Hifadhiwa%{when}"
         disabled: "Imeondolewa kwenye hifadhi %{when}"
       pinned:
-        enabled: "imebandikwa%{when}"
-        disabled: "imetolewa %{when}"
+        enabled: "Imebandikwa%{when}"
+        disabled: "Imetolewa %{when}"
       pinned_globally:
-        enabled: "imebadikwa na itaonwa na umma %{when}"
-        disabled: "imetolewa %{when}"
+        enabled: "Imebadikwa na itaonwa na umma %{when}"
+        disabled: "Imetolewa %{when}"
       visible:
         enabled: "Orodheshwa %{when}"
         disabled: "Ondolewa katika orodha %{when}"
       banner:
-        enabled: "aligeuza hili kuwa bango %{when}. Itaonekana juu ya kila ukurasa mpaka itakapo ondolewa na mtumiaji."
-        disabled: "aliondoa hili bango %{when}. Halitaonekana tena juu ya kila ukurasa."
+        enabled: "Aligeuza hili kuwa bango %{when}. Itaonekana juu ya kila ukurasa mpaka itakapo ondolewa na mtumiaji."
+        disabled: "Aliondoa hili bango %{when}. Halitaonekana tena juu ya kila ukurasa."
     emails_are_disabled: "Utumaji wa barua pepe umezuiliwa na msimamizi. Hakuna taarifa za utumwaji wa barua pepe zitakazotumwa."
     software_update_prompt:
       dismiss: "Ondosha"
@@ -264,8 +264,6 @@ sw:
     disable: "Zuia"
     continue: "Endelea"
     undo: "Tendua"
-    revert: "Rudisha Nyuma"
-    failed: "Imeshindikana"
     switch_to_anon: "Ingia Hali-tumizi Isiyojulikana"
     switch_from_anon: "Ondoka kwenye Hali-tumizi Isiyojulikana"
     banner:
@@ -1094,6 +1092,7 @@ sw:
     login:
       username: "Mtumiaji"
       password: "Nywila"
+      show_password: "Onyesha"
       second_factor_description: "Tafadhali andika kodi ya uthibitisho kutoka kwenye app yako:"
       second_factor_backup_description: "Samahani, Ingiza mojawapo ya kodi yako ya backup"
       caps_lock_warning: "Caps Lock imewashwa"
@@ -2242,7 +2241,7 @@ sw:
       back: "Nyuma"
       share: "Shirikisha"
       dismiss: "Ondosha"
-    do_not_disturb:
+    pause_notifications:
       options:
         custom: "Binafsi"
     trust_levels:
@@ -2943,7 +2942,6 @@ sw:
       user:
         suspend_failed: "Hitilafu imetokea wakati wa kumsitisha mtumiaji %{hitilafu}"
         unsuspend_failed: "Hitilafu imetokea wakati wa kuruhusu mtumiaji aweze kujadiliana kwenye jamii %{hitilafu}"
-        suspend_duration: "Mtumiaji atasitishwa kwa mda gani?"
         suspend_reason_label: "Kwa nini umemsitisha kwa mda? Huu ujumbe <b>utaonyeshwa kwa kila mtumiaji</b> kwenye taarifa binafsi za huyo mtu na ataonyeshwa mtumiaji akijaribu kuingia. Andika ujumbe mfupi."
         suspend_reason_hidden_label: "Kwa nini umemsitisha kwa mda? Huu ujumbe utaonyeshwa kwa mtumiaji akijaribu kuingia. Andika ujumbe mfupi."
         suspend_reason: "Sababu"
@@ -3304,7 +3302,6 @@ sw:
       next: "Ijayo"
       step-text: "Hatua"
       step: "%{current} chini ya %{total}"
-      upload: "Ongeza"
       uploading: "Inaongezwa"
       upload_error: "Samahani, hitilafu imetokea wakati wa kupakia faili hilo. Tafadhali jaribu tena."
       invites:

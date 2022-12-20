@@ -1281,26 +1281,12 @@ bg:
         fields:
           login_required:
             placeholder: "Затворени"
-          must_approve_users:
-            placeholder: "Изисквай одобрение"
-      ready:
-        title: "Вашият Discourse е готов!"
       styling:
         fields:
           homepage_style:
             choices:
               latest:
                 label: "Последни теми"
-      branding:
-        fields:
-          logo:
-            label: "Главно лого"
-      corporate:
-        fields:
-          contact_url:
-            label: "Уеб страница"
-          site_contact:
-            label: "Автоматизирани съобщения"
       invites:
         title: "Поканете персонал"
       finished:

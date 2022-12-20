@@ -145,38 +145,37 @@ hu:
       email: "Küldés e-mailben"
       url: "URL másolása és megosztása"
     action_codes:
-      public_topic: "téma nyilvánossá téve: %{when}"
-      open_topic: "témává alakította %{when}"
-      private_topic: "téma privát üzenetté alakítva: %{when}"
-      split_topic: "felosztotta a témát ekkor: %{when}"
-      invited_user: "meghívva: %{who} %{when}"
-      invited_group: "meghívva: %{who} %{when}"
+      public_topic: "Téma nyilvánossá téve: %{when}"
+      open_topic: "Témává alakította %{when}"
+      private_topic: "Téma privát üzenetté alakítva: %{when}"
+      split_topic: "Felosztotta a témát ekkor: %{when}"
+      invited_user: "Meghívva: %{who} %{when}"
+      invited_group: "Meghívva: %{who} %{when}"
       user_left: "%{who} eltávolította magát ebből az üzenetből ekkor: %{when}"
-      removed_user: "törölve: %{who} %{when}"
-      removed_group: "törölve: %{who} %{when}"
-      autobumped: "automatikusan előrehozva: %{when}"
+      removed_user: "Törölve: %{who} %{when}"
+      removed_group: "Törölve: %{who} %{when}"
+      autobumped: "Automatikusan előrehozva: %{when}"
       autoclosed:
-        enabled: "lezárva: %{when}"
-        disabled: "megnyitva: %{when}"
+        enabled: "Lezárva: %{when}"
+        disabled: "Megnyitva: %{when}"
       closed:
-        enabled: "lezárva: %{when}"
-        disabled: "megnyitva: %{when}"
+        enabled: "Lezárva: %{when}"
+        disabled: "Megnyitva: %{when}"
       archived:
-        enabled: "archiválva: %{when}"
-        disabled: "visszahozva: %{when}"
+        enabled: "Archiválva: %{when}"
+        disabled: "Visszahozva: %{when}"
       pinned:
-        enabled: "kitűzve: %{when}"
-        disabled: "kitűzés megszüntetve: %{when}"
+        enabled: "Kitűzve: %{when}"
+        disabled: "Kitűzés megszüntetve: %{when}"
       pinned_globally:
-        enabled: "globálisan kitűzve: %{when}"
-        disabled: "kitűzés megszüntetve: %{when}"
+        enabled: "Globálisan kitűzve: %{when}"
+        disabled: "Kitűzés megszüntetve: %{when}"
       visible:
-        enabled: "listázva: %{when}"
-        disabled: "listázás megszüntetve: %{when}"
+        enabled: "Listázva: %{when}"
+        disabled: "Listázás megszüntetve: %{when}"
       banner:
-        enabled: "kiemelve ekkor: %{when}. Minden oldal tetején megjelenik, amíg a felhasználó nem törli."
-        disabled: "kiemelés eltávolítva ekkor: %{when}. Többé nem jelenik meg minden oldal tetején."
-      forwarded: "a fenti e-mail továbbítva"
+        enabled: "Kiemelve ekkor: %{when}. Minden oldal tetején megjelenik, amíg a felhasználó nem törli."
+        disabled: "Kiemelés eltávolítva ekkor: %{when}. Többé nem jelenik meg minden oldal tetején."
     topic_admin_menu: "témaműveletek"
     skip_to_main_content: "Ugrás a fő tartalomhoz"
     emails_are_disabled: "Egy adminisztrátor letiltotta a kimenő e-maileket. Semmilyen értesítő e-mail nem lesz elküldve."
@@ -387,8 +386,6 @@ hu:
     disable: "Letiltás"
     continue: "Folytatás"
     undo: "Visszavonás"
-    revert: "Visszaállítás"
-    failed: "Sikertelen"
     switch_to_anon: "Anonim módba lépés"
     switch_from_anon: "Kilépés az anonim módból"
     banner:
@@ -1011,7 +1008,6 @@ hu:
       notification_schedule:
         title: "Értesítési ütemterv"
         label: "Egyéni értesítési ütemterv engedélyezése"
-        tip: "Ezen időpontokon kívül automatikusan „ne zavarjanak” állapotba kerül."
         midnight: "Éjfél"
         none: "Egyik sem"
         monday: "Hétfő"
@@ -1449,6 +1445,8 @@ hu:
         title: "A háttéroldal címe a következők számát jeleníti meg:"
         notifications: "Új értesítések"
         contextual: "Új oldal tartalma"
+      bookmark_after_notification:
+        title: "A könyvjelzőre emlékeztető értesítés elküldése után:"
       like_notification_frequency:
         title: "Értesítés kedvelés esetén"
         always: "Mindig"
@@ -1673,6 +1671,7 @@ hu:
       save: "Mentés"
       set_custom_status: "Egyéni állapot beállítása"
       what_are_you_doing: "Mit csinál?"
+      pause_notifications: "Értesítések szüneteltetése"
       remove_status: "Állapot eltávolítása"
     user_tips:
       primary: "Értem!"
@@ -1829,6 +1828,7 @@ hu:
       title: "Bejelentkezés"
       username: "Felhasználó"
       password: "Jelszó"
+      show_password: "Megjelenítés"
       second_factor_title: "Kétfaktoros hitelesítés"
       second_factor_description: "Írja be a hitelesítési kódot az alkalmazásából:"
       second_factor_backup: "Bejelentkezés biztonsági kóddal"
@@ -2177,6 +2177,7 @@ hu:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2208,6 +2209,7 @@ hu:
       reaction: "<span>%{username}</span>%{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} – kész"
+      new_features: "Új funkciók érhetők el!"
       dismiss_confirmation:
         body:
           default:
@@ -2246,6 +2248,7 @@ hu:
         invited_to_private_message: "privát üzenetre meghívva"
         invitee_accepted: "meghívás elfogadva"
         posted: "új bejegyzés"
+        watching_category_or_tag: "új bejegyzés"
         moved_post: "bejegyzés áthelyezve"
         linked: "hivatkozva"
         bookmark_reminder: "könyvjelző-emlékeztető"
@@ -2261,6 +2264,7 @@ hu:
         membership_request_consolidated: "új tagsági kérés"
         reaction: "új reakció"
         votes_released: "A szavazat feloldásra került"
+        new_features: "új Discourse funkciók jelentek meg!"
     upload_selector:
       uploading: "Feltöltés"
       processing: "Feltöltés feldolgozása"
@@ -2571,6 +2575,9 @@ hu:
       collapse_details: "téma részleteinek összecsukása"
       expand_details: "téma részleteinek kibontása"
       unread_indicator: "Egyetlen tag sem olvasta még a téma utolsó bejegyzését."
+      bumped_at_title: |
+        Első bejegyzés: %{createdAtDate}
+        Elküldve: %{bumpedAtDate}
       suggest_create_topic: Készen áll, hogy <a href>új beszélgetést kezdjen?</a>
       jump_reply_up: ugrás a korábbi válaszhoz
       jump_reply_down: ugrás a későbbi válaszhoz
@@ -3549,9 +3556,7 @@ hu:
     safe_mode:
       enabled: "A biztonságos mód be van kapcsolva, hogy kilépj a biztonságos módból lépj ki ebből a keresési lapból"
     image_removed: "(kép eltávolítva)"
-    do_not_disturb:
-      title: "Ne zavarjanak..."
-      label: "Ne zavarjanak"
+    pause_notifications:
       remaining: "%{remaining} van hátra"
       options:
         half_hour: "30 percig"
@@ -4510,6 +4515,7 @@ hu:
           text: "Megjelenítés"
       user:
         suspend_failed: "Hiba történt %{error} felhasználó felfüggesztésekor"
+        suspend_duration: "Felhasználó felfüggesztése a következő időpontig:"
         suspend_reason_label: "Miért függeszti fel? Ez a <b>szöveg mindenki számára látható lesz</b> a felhasználó profiloldalán, és megjelenik a felhasználó számára is, ha megpróbál bejelentkezni. Fogalmazzon röviden."
         suspend_reason: "Ok"
         suspend_reason_title: "Felfüggesztés oka"
@@ -4530,7 +4536,9 @@ hu:
         silence_message: "E-mail üzenet"
         silence_message_placeholder: "(Hagyd üresen hogy az alapértelmezett üzenetet küldje el)"
         suspended_until: "(eddig: %{until})"
+        suspend_forever: "Örökre felfüggeszteni"
         cant_suspend: "Ez a felhasználó nem lett felfüggesztve"
+        cant_silence: "Ezt a felhasználót nem lehet elhallgattatni."
         delete_posts_failed: "Probléma volt a hozzászólások törlésével."
         penalty_post_actions: "Mit szeretnél csinálni ezzel az összekapcsolt bejegyzéssel?"
         penalty_post_delete: "Bejegyzés eltávolítása"
@@ -4822,7 +4830,6 @@ hu:
       next: "Tovább"
       step-text: "Lépés"
       step: "%{current} / %{total}"
-      upload: "Feltöltés"
       uploading: "Feltöltés…"
       upload_error: "Sajnáljuk, de hiba lépett fel a fájl feltöltése során. Próbálja újra."
       staff_count:

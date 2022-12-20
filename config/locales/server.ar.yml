@@ -265,6 +265,7 @@ ar:
       <p>بخلاف ذلك، يُرجى <a href="%{base_url}/password-reset">إعادة ضبط كلمة المرور</a>.</p>
     not_found_template_link: |
       <p>لم يعُد من الممكن استرداد هذه الدعوة إلى <a href="%{base_url}">%{site_name}</a>. يُرجى أن تطلب من الشخص الذي دعاك أن يُرسل إليك دعوة جديدة.</p>
+    existing_user_cannot_redeem: "لا يمكن استخدام هذه الدعوة. اطلب من الشخص الذي دعاك أن يُرسل إليك دعوة جديدة."
     user_exists: "ليست هناك حاجة لدعوة <b>%{email}</b>، فلديه حساب بالفعل!"
     invite_exists: "لقد أرسلت بالفعل دعوة إلى <b>%{email}</b>."
     invalid_email: "%{email} ليس عنوان بريد إلكتروني صالحًا."
@@ -978,6 +979,7 @@ ar:
     success: "لقد غيَّرت كلمة مرورك وسجَّلت الدخول بنجاح."
     success_unapproved: "لقد غيَّرت كلمة مرورك بنجاح."
   email_login:
+    invalid_token: 'عذرًا! لم يعُد الرابط الذي استخدمته يعمل. يمكنك <a href="%{base_url}/login">تسجيل الدخول</a> الآن. إذا نسيت كلمة مرورك، يمكنك <a href="%{base_url}/password-reset">طلب رابط</a> لإعادة تعيينها.'
     title: "تسجيل الدخول عبر البريد الإلكتروني"
   user_auth_tokens:
     browser:
@@ -1294,6 +1296,11 @@ ar:
         editor: المحرِّر
         author: المؤلف
         edit_reason: السبب
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "API للمستخدم"
+      yaxis: "اليوم"
     dau_by_mau:
       title: "المستخدمون النشطون يوميًا/المستخدمون النشطون شهريًا"
       xaxis: "اليوم"
@@ -1772,7 +1779,6 @@ ar:
     email_token_valid_hours: "نسيت كلمة المرور/الرموز المميزة لتفعيل الحساب صالحة لمدة (n) ساعة."
     enable_badges: "تفعيل نظام الشارات"
     max_favorite_badges: "الحد الأقصى لعدد الشارات التي يمكن للمستخدم تحديدها"
-    enable_whispers: "السماح بالاتصالات الخاصة بين فريق العمل داخل الموضوعات."
     whispers_allowed_groups: "السماح بالاتصالات الخاصة داخل الموضوعات لأعضاء المجموعات المحدَّدة."
     allow_index_in_robots_txt: "حدِّد في ملف robots.txt أن هذا الموقع يسمح لمحركات بحث الويب بفهرسته. وفي حالات استثنائية، يمكنك <a href='%{base_path}/admin/customize/robots'>تجاوز ملف robots.txt</a> بشكلٍ دائم."
     blocked_email_domains: "قائمة مفصولة بشرائط عمودية لنطاقات البريد الإلكتروني التي لا يتم السماح للمستخدمين بتسجيل حسابات عليها. مثال: mailinator.com|trashmail.net"
@@ -2132,6 +2138,7 @@ ar:
     enable_user_directory: "توفير دليل للمستخدمين للتصفُّح"
     enable_group_directory: "توفير دليل بالمجموعات للتصفُّح"
     enable_category_group_moderation: "السماح للمجموعات بالإشراف على المحتوى في فئات معيَّنة"
+    group_in_subject: "ضبط %%{optional_pm} في موضوع الرسالة الإلكترونية على اسم المجموعة الأولى في رسالة خاصة، راجع: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>تخصيص تنسيق الموضوع للرسائل الإلكترونية القياسية</a>"
     allow_anonymous_posting: "السماح للمستخدمين بالتبديل إلى الوضع المجهول"
     anonymous_posting_min_trust_level: "الحد الأدنى لمستوى الثقة المطلوب لتفعيل النشر المجهول"
     anonymous_account_duration_minutes: "لحماية إخفاء الهوية، أنشئ حسابًا مجهولًا جديدًا كل N دقيقة لكل مستخدم. مثال: إذا تم الضبط على 600، سيتم إنشاء حساب مجهول جديد بمجرد مرور 600 دقيقة على آخر منشور وتحوُّل المستخدم إلى مجهول."
@@ -2181,7 +2188,6 @@ ar:
     display_name_on_posts: "إظهار الاسم الكامل للمستخدم في منشوراته بالإضافة إلى اسم المستخدم الخاص به @username"
     show_time_gap_days: "عرض الفجوة الزمنية في الموضوع إذا تم إنشاء منشورين بفارق هذا العدد من الأيام"
     short_progress_text_threshold: "بعد أن يتجاوز عدد المنشورات في الموضوع هذا الرقم، سيعرض شريط التقدُّم رقم المنشور الحالي فقط. إذا غيَّرت عرض شريط التقدُّم، فقد تحتاج إلى تغيير هذه القيمة."
-    default_code_lang: "تمييز جملة لغة البرمجة الافتراضية المطبَّق على كتل الرموز البرمجية (auto، nohighlight، ruby، python، إلى آخره). يجب أن تكون القيمة حاضرة أيضًا في إعداد الموقع `highlighted languages`."
     warn_reviving_old_topic_age: "سيتم عرض تحذير عندما يبدأ شخص ما في الرد على موضوع يكون فيه الرد الأخير أقدم من هذا العدد من الأيام. يمكنك إيقاف هذا الإعداد عن طريق الضبط على 0."
     autohighlight_all_code: "فرض تمييز التعليمات البرمجية على جميع كتل التعليمات البرمجية مسبقة التنسيق حتى في حال عدم تحديد اللغة بشكلٍ صريح."
     highlighted_languages: "القواعد المضمَّنة لتمييز البنية. (تحذير: قد يؤثر تضمين عدد كبير جدًا من اللغات على الأداء) راجع: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> للحصول على عرض توضيحي"
@@ -4394,29 +4400,24 @@ ar:
           site_description:
             label: "صِف مجتمعك في جملة واحدة"
             placeholder: "مكان لجين وأصدقائها لمناقشة أشياء رائعة"
-          contact_email:
-            label: "نقطة الاتصال"
-            placeholder: "example@user.com"
-            description: "الشخص أو المجموعة المسؤولة عن هذا المجتمع. تُستخدَم للتحديثات المهمة، ومُدرَج في <a href='%{base_path}/about' target='_blank'>صفحة نبذة عنك</a> للتواصل العاجل."
           default_locale:
             label: "اللغة"
       privacy:
-        title: "تجربة العضو"
         fields:
           login_required:
             placeholder: "خاصة"
             extra_description: "يمكن للمستخدمين المسجَّلين فقط الوصول إلى هذا المجتمع"
           invite_only:
-            placeholder: "الدعوة فقط"
             extra_description: "يجب دعوة المستخدمين من قِبل المستخدمين الموثوقين أو فريق العمل، وإلا فسيتمكن المستخدمون من التسجيل بأنفسهم."
           must_approve_users:
-            placeholder: "طلب الموافقة"
             extra_description: "يجب الموافقة على المستخدمين من قِبل فريق العمل"
+          chat_enabled:
+            placeholder: "تفعيل الدردشة"
+          enable_sidebar:
+            placeholder: "تفعيل الشريط الجانبي"
       ready:
-        title: "تم إعداد Discourse!"
         description: "هذا كل شيء! لقد انتهيت من الخطوات الأساسية لإعداد مجتمعك. يمكنك البدء الآن وإلقاء نظرة، وكتابة موضوع ترحيبي، وإرسال الدعوات!<br><br>استمتع بوقتك!"
       styling:
-        title: "الشكل والمظهر"
         fields:
           color_scheme:
             label: "نظام الألوان"
@@ -4447,37 +4448,19 @@ ar:
                 label: "مربعات الفئات ذات الموضوعات"
               subcategories_with_featured_topics:
                 label: "الفئات الفرعية ذات الموضوعات المميزة"
-      branding:
-        title: "تخصيص الشعارات"
-        fields:
-          logo:
-            label: "الشعار الأساسي"
-            description: "الشعار في الجزء العلوي الأيمن من موقعك. استخدم صورة مستطيلة عريضة بارتفاع 120 ونسبة عرض إلى ارتفاع أكبر من 3:1"
-          logo_small:
-            label: "الشعار المربع"
-            description: "نسخة مربعة من شعارك. تظهر في الجزء العلوي الأيمن عند التمرير لأسفل، وعند المشاركة على المنصات الاجتماعية. يجب أن يكون الحجم المثالي 512×512 على الأقل."
       corporate:
-        title: "مؤسستك"
         fields:
-          company_name:
-            label: "اسم الشركة"
-            placeholder: "مثال لمؤسسة"
-            description: "يتم إدخاله في صفحة شروط الخدمة. لا تتردَّد في التخطي إذا لم تكن هناك شركة."
           governing_law:
-            label: "القانون المعمول به"
             placeholder: "قانون ولاية كاليفورنيا"
-            description: "يتم إدخاله في صفحة شروط الخدمة. لا تتردَّد في التخطي إذا لم تكن هناك شركة."
           contact_url:
-            label: "صفحة الويب"
             placeholder: "https://www.example.com/contact-us"
-            description: "صفحة الويب العامة للتواصل معك أو مع مؤسستك. سيتم عرضها في <a href='%{base_path}/about' target='_blank'>صفحة \"نبذة\" الخاصة بك</a>."
           city_for_disputes:
-            label: "مدينة النزاعات"
             placeholder: "سان فرانسيسكو، كاليفورنيا"
-            description: "يتم إدخاله في صفحة شروط الخدمة. لا تتردَّد في التخطي إذا لم تكن هناك شركة."
           site_contact:
-            label: "الرسائل التلقائية"
             description: "سيتم إرسال جميع رسائل Discourse التلقائية الخاصة من هذا المستخدم، مثل التحذيرات بشأن البلاغات وإشعارات إكمال النسخ الاحتياطي."
+          contact_email:
+            label: "نقطة الاتصال"
+            placeholder: "example@user.com"
       invites:
         title: "دعوة فريق العمل"
         description: "أنت على وشك الانتهاء! لندعو بعض الأشخاص للمساعدة في <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>تغذية مناقشاتك</a> بموضوعات وردود شيقة لبدء مجتمعك."

@@ -121,6 +121,14 @@ ar:
           many: "تم إرسال دعوات"
           other: "تم إرسال دعوات"
         invite: "دعوة إلى القناة"
+        groups:
+          users_limit:
+            zero: "%{count} مستخدمًا"
+            one: "مستخدم واحد (%{count})"
+            two: "مستخدمان (%{count})"
+            few: "%{count} مستخدمين"
+            many: "%{count} مستخدمًا"
+            other: "%{count} مستخدم"
       aria_roles:
         header: "رأس الدردشة"
         composer: "أداة إنشاء الدردشة"
@@ -292,6 +300,7 @@ ar:
         mention: "للإشارات فقط"
         always: "للنشاط بأكمله"
       settings:
+        enable_auto_join_users: "إضافة كل المستخدمين النشطين مؤخرًا تلقائيًا"
         auto_join_users_warning: "سينضم كل المستخدمين الذين ليسوا أعضاءً في هذه القناة ولديهم وصول إلى فئة %{category}. هل أنت متأكد؟"
         desktop_notification_level: "إشعارات سطح المكتب"
         follow: "الانضمام"
@@ -305,6 +314,7 @@ ar:
         save: "حفظ"
         saved: "تم الحفظ"
         unfollow: "مغادرة"
+        admin_title: "مسؤول"
       admin:
         title: "الدردشة"
       direct_messages:

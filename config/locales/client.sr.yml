@@ -156,37 +156,36 @@ sr:
       email: "Пошаљи е-поштом"
       url: "Копирај и подели линк"
     action_codes:
-      public_topic: "објављује ову тему %{when}"
-      private_topic: "претвара ову тему у приватну поруку %{when}"
-      split_topic: "раздваја ову тему %{when}"
-      invited_user: "позива корисника %{who} %{when}"
-      invited_group: "позива групу %{who} %{when}"
+      public_topic: "Објављује ову тему %{when}"
+      private_topic: "Претвара ову тему у приватну поруку %{when}"
+      split_topic: "Раздваја ову тему %{when}"
+      invited_user: "Позива групу %{who} %{when}"
+      invited_group: "Позива групу %{who} %{when}"
       user_left: "%{who} напушта овај разговор %{when}"
-      removed_user: "уклања корисника %{who} %{when}"
-      removed_group: "уклања групу %{who} %{when}"
-      autobumped: "аутоматски ставља на врх %{when}"
+      removed_user: "Уклања групу %{who} %{when}"
+      removed_group: "Уклања групу %{who} %{when}"
+      autobumped: "Аутоматски ставља на врх %{when}"
       autoclosed:
-        enabled: "затвара %{when}"
-        disabled: "отвара %{when}"
+        enabled: "Затвара %{when}"
+        disabled: "Отвара %{when}"
       closed:
-        enabled: "затвара %{when}"
-        disabled: "отвара %{when}"
+        enabled: "Затвара %{when}"
+        disabled: "Отвара %{when}"
       archived:
-        enabled: "архивира %{when}"
-        disabled: "деархивира %{when}"
+        enabled: "Архивира %{when}"
+        disabled: "Деархивира %{when}"
       pinned:
-        enabled: "закачи %{when}"
-        disabled: "откачи %{when}"
+        enabled: "Закачи %{when}"
+        disabled: "Откачи %{when}"
       pinned_globally:
-        enabled: "глобално закачи %{when}"
-        disabled: "откачи %{when}"
+        enabled: "Глобално закачи %{when}"
+        disabled: "Откачи %{when}"
       visible:
-        enabled: "укључује %{when}"
-        disabled: "искључује %{when}"
+        enabled: "Укључује %{when}"
+        disabled: "Искључује %{when}"
       banner:
-        enabled: "прави транспарент %{when}. Транспарент ће бити приказан на врху сваке странице док га корисник не одбаци."
-        disabled: "уклања овај транспарент %{when}. Транспарент више неће бити приказан на врху сваке странице."
-      forwarded: "прослеђује наведену е-поруку"
+        enabled: "Прави транспарент %{when}. Транспарент ће бити приказан на врху сваке странице док га корисник не одбаци."
+        disabled: "Уклања овај транспарент %{when}. Транспарент више неће бити приказан на врху сваке странице."
     topic_admin_menu: "радње око теме"
     emails_are_disabled: "Администратор је глобално онемогућио одлазну е-пошту. Ниједно обавештење неће бити послато."
     software_update_prompt:
@@ -372,8 +371,6 @@ sr:
     disable: "Onemogući"
     continue: "Nastavi"
     undo: "Vrati na prethodno"
-    revert: "Vrati nazad"
-    failed: "Neuspešno"
     switch_to_anon: "Uključi Anonimni režim"
     switch_from_anon: "Izađi iz Anonimnog režima"
     banner:
@@ -1044,6 +1041,7 @@ sr:
     login:
       username: "Korisnik"
       password: "Šifra"
+      show_password: "Pokaži"
       caps_lock_warning: "Caps Lock vam je uključen"
       error: "Nepoznata greška"
       rate_limit: "Molimo sačekajte pre nego pokušate opet da se prijavite."
@@ -1793,7 +1791,7 @@ sr:
     footer_nav:
       back: "Nazad"
       share: "Podeli"
-    do_not_disturb:
+    pause_notifications:
       options:
         custom: "Posebna"
     trust_levels:
@@ -2236,7 +2234,6 @@ sr:
       user:
         suspend_failed: "Nešto nije pošlo kako treba pri suspenziji ovog korisnika %{error}"
         unsuspend_failed: "Nešto nije u redu, pri ukidanju suspenzije ovog korisnika %{error}"
-        suspend_duration: "Koliko dugo će ovaj korisnik biti suspendovan?"
         suspend_reason_label: "Zažto ga suspendiraš? Ovaj tekst <b>će biti vidljiv svima</b> na korisničkom profilu korisnika, i biće prikazan korisniku kad se pokuša prijaviti. Neka bude kratak."
         suspend_reason: "Razlog"
         suspended_by: "Suspendovan od"
@@ -2514,7 +2511,6 @@ sr:
       next: "Dalje"
       step-text: "Korak"
       step: "%{current} od %{total}"
-      upload: "Upload"
       uploading: "Uploading..."
       upload_error: "Žao nam je, dogodila se greška pri učitavanju te datoteke. Molimo pokušajte ponovo."
       staff_count:
