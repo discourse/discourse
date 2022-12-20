@@ -1050,6 +1050,20 @@ RSpec.describe PostsController do
           parsed = response.parsed_body
           expect(parsed["action"]).not_to eq("enqueued")
         end
+
+        it "doesn't enqueue replies when the post is too long (including a html comment)" do
+          SiteSetting.max_post_length = 10
+          raw = "A post <!-- " + ("a" * 3000) + "-->"
+
+          post "/posts.json", params: {
+            raw: raw,
+            title: "this is the test title for the topic"
+          }
+
+          expect(response).not_to be_successful
+          parsed = response.parsed_body
+          expect(parsed["action"]).not_to eq("enqueued")
+        end
       end
 
       it 'silences correctly based on auto_silence_first_post_regex' do
