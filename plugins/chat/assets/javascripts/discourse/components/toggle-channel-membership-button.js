@@ -13,18 +13,16 @@ export default class ToggleChannelMembershipButton extends Component {
   constructor() {
     super(...arguments);
 
-    this.options = Object.assign(
-      {
-        labelType: "normal",
-        joinTitle: I18n.t("chat.channel_settings.join_channel"),
-        joinIcon: "",
-        joinClass: "",
-        leaveTitle: I18n.t("chat.channel_settings.leave_channel"),
-        leaveIcon: "",
-        leaveClass: "",
-      },
-      this.args.options || {}
-    );
+    this.options = {
+      labelType: "normal",
+      joinTitle: I18n.t("chat.channel_settings.join_channel"),
+      joinIcon: "",
+      joinClass: "",
+      leaveTitle: I18n.t("chat.channel_settings.leave_channel"),
+      leaveIcon: "",
+      leaveClass: "",
+      ...this.args.options
+    },
   }
 
   get label() {
