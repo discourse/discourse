@@ -1042,6 +1042,11 @@ zh_CN:
         editor: 编辑者
         author: 作者
         edit_reason: 原因
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "用户 API"
+      yaxis: "天"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "天"
@@ -1515,7 +1520,6 @@ zh_CN:
     email_token_valid_hours: "“忘记密码了”/“激活帐户”令牌的有效期为 (n) 小时。"
     enable_badges: "启用徽章系统"
     max_favorite_badges: "用户可以选择的最大徽章数"
-    enable_whispers: "允许管理人员在话题中进行不公开交流。"
     whispers_allowed_groups: "允许指定群组的成员在话题内进行不公开交流。"
     allow_index_in_robots_txt: "在 robots.txt 中指定此站点允许被网络搜索引擎索引。在特殊情况下，您可以永久<a href='%{base_path}/admin/customize/robots'>替换 robots.txt</a>。"
     blocked_email_domains: "不允许用户用于注册帐户的以 | 分隔的电子邮件网域列表。示例：mailinator.com|trashmail.net"
@@ -1875,6 +1879,7 @@ zh_CN:
     enable_user_directory: "提供用户目录以供浏览"
     enable_group_directory: "提供群组目录以供浏览"
     enable_category_group_moderation: "允许群组审核特定类别的内容"
+    group_in_subject: "在电子邮件主题中将 %%{optional_pm} 设置为 PM 中第一个群组的名称，请参阅：<a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>自定义标准电子邮件的主题格式</a>"
     allow_anonymous_posting: "允许用户切换至匿名模式"
     anonymous_posting_min_trust_level: "启用匿名发帖所需的最低信任级别"
     anonymous_account_duration_minutes: "为了保护匿名性，每 N 分钟为每个用户创建一个新的匿名帐户。示例：如果设置为 600，则在距离上次发帖 600 分钟且用户切换到匿名时，将创建一个新的匿名帐户。"
@@ -1924,7 +1929,6 @@ zh_CN:
     display_name_on_posts: "在帖子中显示用户的全名以及他们的用户名。"
     show_time_gap_days: "如果两个帖子间隔此天数，在话题中显示时间间隔。"
     short_progress_text_threshold: "当一个话题的帖子数量超过此数值后，进度条将只显示当前帖子数量。如果更改进度条的宽度，则可能需要更改此值。"
-    default_code_lang: "应用于代码块的默认编程语言语法突出显示（auto、nohighlight、ruby、python 等）。此值还必须存在于 `highlighted languages` 站点设置中。"
     warn_reviving_old_topic_age: "当有人开始回复上次回复时间超过此天数的话题时，将显示警告。设置为 0 将禁用。"
     autohighlight_all_code: "即使未显式声明语言，也强制向所有预格式化代码块应用代码高亮显示。"
     highlighted_languages: "包括语法高亮显示规则。（警告：包含太多语言可能会影响性能）请参阅：<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> 查看演示"
@@ -4200,29 +4204,24 @@ zh_CN:
           site_description:
             label: "用一句话描述您的社区"
             placeholder: "朱桦和她的朋友讨论新奇事物的地方"
-          contact_email:
-            label: "联系人"
-            placeholder: "example@user.com"
-            description: "负责此社区的个人或群组。用于重要动态，并在<a href='%{base_path}/about' target='_blank'>您的“关于”页面</a>上列出以供紧急联系。"
           default_locale:
             label: "语言"
       privacy:
-        title: "成员体验"
         fields:
           login_required:
             placeholder: "不公开"
             extra_description: "只有登录用户才能访问此社区"
           invite_only:
-            placeholder: "仅限邀请"
             extra_description: "用户必须由受信任的用户或管理人员邀请，否则用户可以自行注册"
           must_approve_users:
-            placeholder: "需要审批"
             extra_description: "用户必须得到管理人员的批准"
+          chat_enabled:
+            placeholder: "启用聊天"
+          enable_sidebar:
+            placeholder: "启用边栏"
       ready:
-        title: "您的 Discourse 已就绪！"
         description: "就是这样！您已经完成建立社区的基础工作。现在，您可以进去看一看，撰写一个欢迎话题，然后发送邀请！<br><br>玩得开心！"
       styling:
-        title: "外观"
         fields:
           color_scheme:
             label: "配色方案"
@@ -4253,37 +4252,19 @@ zh_CN:
                 label: "包含话题的类别框"
               subcategories_with_featured_topics:
                 label: "包含精选话题的子类别"
-      branding:
-        title: "自定义徽标"
-        fields:
-          logo:
-            label: "主要徽标"
-            description: "您的站点左上角的徽标。使用高度为 120 且宽高比大于 3:1 的宽矩形图片。"
-          logo_small:
-            label: "方形徽标"
-            description: "您徽标的方形版本。向下滚动时以及在社交平台上分享时显示在左上角。理想情况下至少为 512x512。"
       corporate:
-        title: "您的组织"
         fields:
-          company_name:
-            label: "公司名称"
-            placeholder: "示例组织"
-            description: "在您的“服务条款”页面中输入。如果没有公司，请随意跳过。"
           governing_law:
-            label: "适用法律"
             placeholder: "加州法律"
-            description: "在您的“服务条款”页面中输入。如果没有公司，请随意跳过。"
           contact_url:
-            label: "网页"
             placeholder: "https://www.example.com/contact-us"
-            description: "您或您的组织的一般联系网页。将显示在<a href='%{base_path}/about' target='_blank'>您的“关于”页面</a>上。"
           city_for_disputes:
-            label: "争议之城"
             placeholder: "加利福尼亚州旧金山"
-            description: "在您的“服务条款”页面中输入。如果没有公司，请随意跳过。"
           site_contact:
-            label: "自动消息"
             description: "所有自动 Discourse 个人消息都将从此用户发送，例如举报警告和备份完成通知。"
+          contact_email:
+            label: "联系人"
+            placeholder: "example@user.com"
       invites:
         title: "邀请管理人员"
         description: "即将完成！让我们邀请一些人来使用有趣的话题和回复帮助<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>培育您的讨论</a>以启动您的社区。"

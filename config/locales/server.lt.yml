@@ -2666,10 +2666,6 @@ lt:
           login_required:
             placeholder: "Privatu"
             extra_description: "Tik prisijungę vartotojai gali pasiekti šią bendruomenę"
-          must_approve_users:
-            placeholder: "Reikalauja patvirtinimo"
-      ready:
-        title: "Jūsų Discourse paruoštas!"
       styling:
         fields:
           color_scheme:
@@ -2691,27 +2687,14 @@ lt:
                 label: "Kategorijos su paskutinėmis temomis"
               categories_and_top_topics:
                 label: "Kategorijos ir Top temos"
-      branding:
-        fields:
-          logo:
-            label: "Pirminis logotipas"
-          logo_small:
-            label: "Kvadratinis logotipas"
       corporate:
         fields:
-          company_name:
-            label: "Įmonės pavadinimas"
-            placeholder: "Organizacijos pavyzdys"
           governing_law:
-            label: "Reglamentuojantys teisės aktai"
             placeholder: "Kalifornijos įstatymas"
           contact_url:
-            label: "Interneto svetainė"
             placeholder: "https://www.example.com/contact-us"
           city_for_disputes:
             placeholder: "San Franciskas, Kalifornija"
-          site_contact:
-            label: "Automatiniai pranešimai"
       invites:
         title: "Pakviesti valdytojus"
         description: "Beveik baigėte! Pakvieskime kelis žmones padėti <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>papildyti jūsų diskusijas</a> įdomiomis temomis ir atsakymais, kad jūsų bendruomenė pradėtų veikti."

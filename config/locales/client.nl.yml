@@ -145,38 +145,37 @@ nl:
       email: "Verzenden via e-mail"
       url: "URL kopiëren en delen"
     action_codes:
-      public_topic: "heeft dit topic %{when} openbaar gemaakt"
-      open_topic: "heeft dit %{when} omgezet naar een topic"
-      private_topic: "heeft dit topic %{when} een privébericht gemaakt"
-      split_topic: "heeft dit topic %{when} gesplitst"
-      invited_user: "heeft %{who} %{when} uitgenodigd"
-      invited_group: "heeft %{who} %{when} uitgenodigd"
+      public_topic: "Heeft dit topic %{when} openbaar gemaakt"
+      open_topic: "Heeft dit %{when} omgezet naar een topic"
+      private_topic: "Heeft dit topic %{when} een privébericht gemaakt"
+      split_topic: "Heeft dit topic %{when} gesplitst"
+      invited_user: "Heeft %{who} %{when} uitgenodigd"
+      invited_group: "Heeft %{who} %{when} uitgenodigd"
       user_left: "%{who} heeft zichzelf %{when} uit dit bericht verwijderd"
-      removed_user: "heeft %{who} %{when} verwijderd"
-      removed_group: "heeft %{who} %{when} verwijderd"
-      autobumped: "heeft %{when} automatisch gebumpt"
+      removed_user: "Heeft %{who} %{when} verwijderd"
+      removed_group: "Heeft %{who} %{when} verwijderd"
+      autobumped: "Heeft %{when} automatisch gebumpt"
       autoclosed:
-        enabled: "%{when} gesloten"
-        disabled: "%{when} geopend"
+        enabled: "%{when} Gesloten"
+        disabled: "%{when} Geopend"
       closed:
-        enabled: "%{when} gesloten"
-        disabled: "%{when} geopend"
+        enabled: "%{when} Gesloten"
+        disabled: "%{when} Geopend"
       archived:
-        enabled: "%{when} gearchiveerd"
-        disabled: "%{when} gedearchiveerd"
+        enabled: "%{when} Gearchiveerd"
+        disabled: "%{when} Gedearchiveerd"
       pinned:
-        enabled: "%{when} vastgemaakt"
-        disabled: "%{when} losgemaakt"
+        enabled: "%{when} Vastgemaakt"
+        disabled: "%{when} Losgemaakt"
       pinned_globally:
-        enabled: "%{when} globaal vastgemaakt"
-        disabled: "%{when} losgemaakt"
+        enabled: "%{when} Globaal vastgemaakt"
+        disabled: "%{when} Losgemaakt"
       visible:
-        enabled: "%{when} zichtbaar gemaakt"
-        disabled: "%{when} onzichtbaar gemaakt"
+        enabled: "%{when} Zichtbaar gemaakt"
+        disabled: "%{when} Onzichtbaar gemaakt"
       banner:
-        enabled: "heeft deze banner %{when} gemaakt. De banner wordt weergegeven bovenaan elke pagina, totdat de gebruiker deze sluit."
-        disabled: "heeft deze banner %{when} verwijderd. De banner wordt niet meer weergegeven bovenaan elke pagina."
-      forwarded: "heeft de bovenstaande e-mail doorgestuurd"
+        enabled: "Heeft deze banner %{when} gemaakt. De banner wordt weergegeven bovenaan elke pagina, totdat de gebruiker deze sluit."
+        disabled: "Heeft deze banner %{when} verwijderd. De banner wordt niet meer weergegeven bovenaan elke pagina."
     topic_admin_menu: "topicacties"
     skip_to_main_content: "Overslaan naar hoofdinhoud"
     emails_are_disabled: "Alle uitgaande e-mail is uitgeschakeld door een beheerder. Er wordt geen enkele e-mailmelding gestuurd."
@@ -387,8 +386,6 @@ nl:
     disable: "Uitschakelen"
     continue: "Doorgaan"
     undo: "Ongedaan maken"
-    revert: "Herstellen"
-    failed: "Mislukt"
     switch_to_anon: "Anonieme modus starten"
     switch_from_anon: "Anonieme modus verlaten"
     banner:
@@ -1011,7 +1008,6 @@ nl:
       notification_schedule:
         title: "Meldingsschema"
         label: "Aangepast meldingsschema inschakelen"
-        tip: "Buiten deze tijden word je automatisch op 'niet storen' gezet."
         midnight: "Middernacht"
         none: "Geen"
         monday: "Maandag"
@@ -1278,6 +1274,7 @@ nl:
         use: "Authenticator-app gebruiken"
         enforced_notice: "Je moet tweeledige verificatie inschakelen voordat je deze website bezoekt."
         disable: "Uitschakelen"
+        delete: "Verwijderen"
         save: "Opslaan"
         edit: "Bewerken"
         edit_title: "Authenticator bewerken"
@@ -1828,6 +1825,7 @@ nl:
       title: "Aanmelden"
       username: "Gebruiker"
       password: "Wachtwoord"
+      show_password: "Weergeven"
       second_factor_title: "Tweeledige verificatie"
       second_factor_description: "Voer de verificatiecode van je app in:"
       second_factor_backup: "Aanmelden met een back-upcode"
@@ -2183,6 +2181,7 @@ nl:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2252,6 +2251,7 @@ nl:
         invited_to_private_message: "uitgenodigd voor privébericht"
         invitee_accepted: "uitnodiging geaccepteerd"
         posted: "nieuw bericht"
+        watching_category_or_tag: "nieuw bericht"
         moved_post: "bericht verplaatst"
         linked: "gelinkt"
         bookmark_reminder: "bladwijzerherinnering"
@@ -3801,9 +3801,7 @@ nl:
     safe_mode:
       enabled: "Veilige modus is ingeschakeld; sluit dit browservenster om de veilige modus te verlaten"
     image_removed: "(afbeelding verwijderd)"
-    do_not_disturb:
-      title: "Niet storen voor..."
-      label: "Niet storen"
+    pause_notifications:
       remaining: "%{remaining} resterend"
       options:
         half_hour: "30 minuten"
@@ -4198,6 +4196,7 @@ nl:
         detailed_instruction: "Zodra de gekozen gebeurtenis plaatsvindt, wordt een POST-verzoek naar de opgegeven URL gestuurd."
         new: "Nieuwe webhook"
         create: "Maken"
+        edit: "Bewerken"
         save: "Opslaan"
         controls: "Controlepaneel"
         go_back: "Terug naar lijst"
@@ -4299,6 +4298,8 @@ nl:
         howto: "Hoe kan ik plug-ins installeren?"
         official: "Officiële plug-in"
         broken_route: "Kan link naar '%{name}' niet configureren. Zorg dat advertentieblockers zijn uitgeschakeld en probeer de pagina opnieuw te laden."
+      navigation_menu:
+        sidebar: "Zijbalk"
       backups:
         title: "Back-ups"
         menu:
@@ -4512,7 +4513,6 @@ nl:
             error: "Dit thema is automatisch uitgeschakeld, omdat het niet compatibel is met deze versie van Discourse."
             minimum: "Vereist Discourse-versie %{version} of hoger."
             maximum: "Vereist Discourse-versie %{version} of lager."
-          component_of: "Onderdeel van:"
           update_to_latest: "Bijwerken naar nieuwste"
           check_for_updates: "Controleren op updates"
           updating: "Bijwerken..."
@@ -4985,7 +4985,6 @@ nl:
       user:
         suspend_failed: "Er is iets misgegaan bij het schorsen van deze gebruiker: %{error}"
         unsuspend_failed: "Er is iets misgegaan bij het opheffen van de schorsing van deze gebruiker: %{error}"
-        suspend_duration: "Hoelang wordt de gebruiker geschorst?"
         suspend_reason_label: "Waarom schors je deze gebruiker? Deze tekst <b>is zichtbaar voor iedereen</b> op de profielpagina van deze gebruiker en wordt weergegeven aan de gebruiker wanneer deze zich probeert aan te melden. Houd het kort."
         suspend_reason_hidden_label: "Waarom schors je? Deze tekst wordt aan de gebruiker weergegeven wanneer deze zich probeert aan te melden. Houd het kort."
         suspend_reason: "Reden"
@@ -5019,7 +5018,6 @@ nl:
         penalty_post_edit: "Het bericht bewerken"
         penalty_post_none: "Niets doen"
         penalty_count: "Aantal minpunten"
-        penalty_history: "Strafgeschiedenis"
         clear_penalty_history:
           title: "Minpuntengeschiedenis wissen"
           description: "gebruikers met minpunten kunnen geen TL3 bereiken"
@@ -5174,6 +5172,11 @@ nl:
         silenced_count: "Gedempt"
         suspended_count: "Geschorst"
         last_six_months: "Afgelopen 6 maanden"
+        other_matches_list:
+          username: "Gebruikersnaam"
+          trust_level: "Vertrouwensniveau"
+          read_time: "Leestijd"
+          posts: "Berichten"
         tl3_requirements:
           title: "Vereisten voor vertrouwensniveau 3"
           table_title:
@@ -5318,6 +5321,7 @@ nl:
           search: "Zoeken"
           groups: "Groepen"
           dashboard: "Dashboard"
+          navigation: "Navigatie"
         secret_list:
           invalid_input: "Invoervelden mogen niet leeg zijn of verticale-streeptekens bevatten."
         default_categories:
@@ -5488,10 +5492,8 @@ nl:
       finish: "Configuratie afsluiten"
       back: "Terug"
       next: "Volgende"
-      configure_more: "Meer configureren..."
       step-text: "Stap"
       step: "%{current} van %{total}"
-      upload: "Uploaden"
       uploading: "Uploaden..."
       upload_error: "Sorry, er is een fout opgetreden bij het uploaden van het bestand. Probeer het opnieuw."
       staff_count:

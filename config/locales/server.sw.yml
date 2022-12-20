@@ -802,7 +802,6 @@ sw:
     top_page_default_timeframe: "Chaguo-msingi la mda wa fremu kwa ajili ya kurasa wa juu wa kuangalia."
     email_token_valid_hours: "Nimesahau nywila / tokens za kuanzisha akaunti zina kibali cha masaa (n)"
     enable_badges: "Ruhusu mfumo wa beji"
-    enable_whispers: "Ruhusu mawasiliano binafsi kati ya wasaidizi ndani ya mada."
     new_version_emails: "Tuma barua pepe kwa barua pepe_mawasiliano toleo jipya la Discourse likitolewa."
     invite_expiry_days: "Funguo za mualiko ni sahihi, kwa siku ngapi"
     min_password_length: "Kiwango cha chini cha urefu wa nywila"
@@ -2016,10 +2015,6 @@ sw:
         fields:
           login_required:
             placeholder: "Binafsi"
-          must_approve_users:
-            placeholder: "Inahitaji Uthibitisho"
-      ready:
-        title: "Discourse yako iko Tayari!"
       styling:
         fields:
           styling_preview:
@@ -2036,18 +2031,11 @@ sw:
                 label: "Kategoria na Mada za Hivi Karibuni"
               categories_and_top_topics:
                 label: "Kategoria na Mada za Juu"
-      branding:
-        fields:
-          logo:
-            label: "Nembo Msingi"
       corporate:
         fields:
           contact_url:
-            label: "Ukurasa wa Tovuti"
             placeholder: "https://www.example.com/contact-us"
-            description: "Ukurasa wa mawasiliano wa shirika lako. Utaonyeshwa kwenye <a href='%{base_path}/about' target='_blank'>kurasa wa kuhusu wewe</a>."
           site_contact:
-            label: "Ujumbe uliotomatiki"
             description: "Ujumbe wote wa kibinafsi utatumwa kutoka kwa mtumiaji huyu, kama ripoti za onyo na ilani ya umalizaji wa chelezo."
       invites:
         title: "Alika Wasaidizi"

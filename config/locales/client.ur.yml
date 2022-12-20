@@ -157,7 +157,6 @@ ur:
       banner:
         enabled: "اِس کو بینر بنا لیا %{when}۔ یہ ہر صفحے کے سب سے اوپر دکھایا جائے گا جب تک صارف اِسے برخاست نہیں کر دیتا۔"
         disabled: "اِس بینر کو ہٹا دیا %{when}۔ یہ اب ہر صفحے کے سب سے اوپر دکھایا نہیں جائے گا۔"
-      forwarded: "مندرجہ بالا ای میل بھیجیں"
     topic_admin_menu: "موضوع کے ایکشنز"
     skip_to_main_content: "مرکزی مواد پر جائیں"
     emails_are_disabled: "ای میل کو منتظم کی طرف سے غیر فعال کر دیا گیا ہے. کسی بھی قسم کی ای میل نہیں بھیجی جائیں گی۔"
@@ -362,8 +361,6 @@ ur:
     disable: "غیر فعال کریں"
     continue: "جاری رکھی"
     undo: "کالعدم کریں"
-    revert: "رِیوَرٹ"
-    failed: "عمل ناکام رہا"
     switch_to_anon: "گمنام موڈ میں داخل ہوں"
     switch_from_anon: "گمنام موڈ سے باہر نکلیں"
     banner:
@@ -978,7 +975,6 @@ ur:
       notification_schedule:
         title: "اطلاع کا نظام الاوقات"
         label: "حسب ضرورت نوٹیفکیشن نظام الاوقات کو فعال کریں"
-        tip: "ان گھنٹوں کے باہر آپ کو خود کار طریقے سے 'پریشان نہ کرنا' میں ڈال دیا جائے گا."
         midnight: "آدھی رات"
         none: "کوئی نہیں"
         monday: "پیر"
@@ -1732,6 +1728,7 @@ ur:
       title: "لاگ ان"
       username: "صارف"
       password: "پاسورڈ"
+      show_password: "دکھائیں"
       second_factor_title: "دو عنصری کی تصدیق"
       second_factor_description: "براہ مہربانی اپنی اَیپ میں سے توثیقی کَوڈ درج کریں:"
       second_factor_backup: "بیک اپ کوڈ کا استعمال کرتے ہوئے لاگ ان کریں"
@@ -2054,6 +2051,7 @@ ur:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2116,6 +2114,7 @@ ur:
         invited_to_private_message: "ذاتی پیغام کیلئے دعوت دی گئی"
         invitee_accepted: "دعوت قبول کر لی گئی"
         posted: "نئی پوسٹ"
+        watching_category_or_tag: "نئی پوسٹ"
         moved_post: "پوسٹ منتقل کر دی گئی"
         linked: "لنک کردہ"
         bookmark_reminder: "بک مارک یاد دہانی"
@@ -3577,9 +3576,7 @@ ur:
     safe_mode:
       enabled: "سیف موڈ فعال ہے، سیف موڈ سے باہر نکلنے کے لئے اِس براؤزر وِنڈو کو بند کریں"
     image_removed: "(تصویر ہٹا دی گئی)"
-    do_not_disturb:
-      title: "کے لئے پریشان مت کرو..."
-      label: "پریشان مت کرو"
+    pause_notifications:
       remaining: "%{remaining} باقی رہتا ہے..."
       options:
         half_hour: "30 منٹ"
@@ -4230,7 +4227,6 @@ ur:
             error: "یہ تِھیم خود کار طریقے سے غیر فعال کر دی گئی ہے کیونکہ یہ ڈِسکورس کے اِس ورژن کیلئے ناموافق ہے۔"
             minimum: "ڈِسکورس ورژن %{version} یا اُس سے اوپر ضروری ہے۔"
             maximum: "ڈِسکورس ورژن %{version} یا اُس سے نیچے ضروری ہے۔"
-          component_of: "جس کا کمپنَینٹ:"
           update_to_latest: "تازہ ترین ورژن تک اِپ ڈَیٹ کریں"
           check_for_updates: "اپ ڈیٹ کے لیے چیک کریں"
           updating: "اَپ ڈَیٹ کیا جا رہا ہے..."
@@ -4696,7 +4692,6 @@ ur:
       user:
         suspend_failed: "اِس صارف کو معطل کرتے ہوے کچھ غلط ہو گیا %{error}"
         unsuspend_failed: "اِس صارف کی معطلی ختم کرتے ہوے کچھ غلط ہو گیا %{error}"
-        suspend_duration: "صارف کب تک معطل رہے گا؟"
         suspend_reason_label: "آپ معطل کیوں کر رہے ہیں؟ یہ ٹَیکسٹ اِس صارف کے پروفائل پیج پر <b>ہر کسی کے لیے ظاہر ہو گا</b>، اور جب صارف لاگ اِن کرنے کی کوشش کریں گے تو اُنہیں دکھایا جائے گا۔ اِسے مختصر رکھیں۔"
         suspend_reason_hidden_label: "آپ کیوں معطل کر رہے ہیں؟ صارف جب لاگ اِن کرنے کی کوشش کرے گا تو اُسے یہ ٹیکسٹ دکھایا جائے گا۔ اِسے مختصر رکھیں۔"
         suspend_reason: "وجہ"
@@ -4730,7 +4725,6 @@ ur:
         penalty_post_edit: "پوسٹ میں ترمیم کریں"
         penalty_post_none: "کچھ نہ کریں"
         penalty_count: "سزا شمار"
-        penalty_history: "سزا کی تاریخ"
         clear_penalty_history:
           title: "سزا ہِسٹری صاف کریں"
           description: "سزاوں والے صارفین TL3 تک نہیں پہنچ سکتے"
@@ -5193,7 +5187,6 @@ ur:
       next: "اگلا"
       step-text: "قدم"
       step: "%{total} میں سے %{current}"
-      upload: "اَپ لوڈ"
       uploading: "اَپ لوڈ کیا جا رہا ہے..."
       upload_error: "معذرت، یہ فائل اَپ لوڈ کرنے میں ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی دوبارہ کوشش کریں۔"
       staff_count:

@@ -1450,6 +1450,8 @@ sv:
     edit_history_visible_to_public: "Tillåt att alla ser tidigare versioner av ett redigerat inlägg. Om detta inaktiveras kan endast personal se detta."
     delete_removed_posts_after: "Inlägg som tagits bort av författaren kommer automatiskt att raderas efter (n) timmar. Ange 0 för att omedelbart ta bort inlägg."
     notify_users_after_responses_deleted_on_flagged_post: "När ett inlägg flaggas och sedan tas bort kommer alla användare som har svarat på inlägget och fått sina svar borttagna att meddelas."
+    max_image_width: "Maximal miniatyrbildsbredd för bilder i ett inlägg. Bilder med större bredd kommer att ändras i storlek och \"lightboxas\"."
+    max_image_height: "Maximal miniatyrbildshöjd för bilder i ett inlägg. Bilder med högre höjd kommer att ändras i storlek och \"lightboxas\"."
     responsive_post_image_sizes: "Ändra storlek på förhandsgranskningsbilder i Lightbox för att möjliggöra höga DPI-skärmar med följande pixelkvot. Ta bort alla värden för att inaktivera responsiva bilder."
     fixed_category_positions: "Om detta aktiveras kommer du att kunna ordna kategorier i en bestämd ordning. Om detta inaktiveras sorteras kategorierna baserat på aktivitet."
     fixed_category_positions_on_create: "Kategoriordningen kommer att upprätthållas vid dialogrutan för skapandet av ämnen om den här bockas för (kräver fixed_category_positions)."
@@ -1585,7 +1587,6 @@ sv:
     email_token_valid_hours: "Länkarna Glömt lösenord/aktivera konto är giltiga i (n) timmar."
     enable_badges: "Aktivera utmärkelsesystemet"
     max_favorite_badges: "Maximalt antal utmärkelser som användaren kan välja"
-    enable_whispers: "Tiliåt privat kommunikation inom ämnena."
     whispers_allowed_groups: "Tillåt privat kommunikation inom ämnen för medlemmar i specificerade grupper."
     allow_index_in_robots_txt: "Ange i robots.txt att den här webbplatsen får indexeras av webbsökmotorer. I undantagsfall kan du permanent <a href='%{base_path}/admin/customize/robots'>åsidosätta robots.txt</a>."
     blocked_email_domains: "En textfil avgränsad med vertikalstreck med alla e-postdomäner som användare inte tillåts registrera konton med. Exempel: mailinator.com|trashmail.net"
@@ -1997,7 +1998,7 @@ sv:
     display_name_on_posts: "Visa en användares fullständiga namn på deras inlägg som tillägg till deras @användarnamn."
     show_time_gap_days: "Om två inlägg är gjorda med så här många dagar emellan, visa tidsskillnaden i ämnet."
     short_progress_text_threshold: "Efter att antalet inlägg i ett ämne överstiger den här siffran kommer förloppsmätaren endast att visa nuvarande antal inlägg. Om du ändrar förloppsmätarens bredd så kanske du behöver ändra det här värdet."
-    default_code_lang: "Standard programmeringsspråks syntax markering tillämpas på kodblock (auto, nohighlight, ruby, python etc). Detta värde måste också finnas i webbplatsinställningen `highlighted languages`."
+    default_code_lang: "Standardprogrammeringsspråkets syntaxmarkering tillämpas på kodblock (auto, text, ruby, python etc). Detta värde måste också finnas i webbplatsinställningen `highlighted languages`."
     warn_reviving_old_topic_age: "En varning visas när någon börjar skriva ett svar på ett ämne och senaste inlägget är äldre än så här många dagar. Ange 0 för att inaktivera."
     autohighlight_all_code: "Tvångstillämpa syntaxmarkering på alla förformatterade kodblock även när de inte uttryckligt har specificerat språket."
     highlighted_languages: "Inkluderade syntax-markeringsregler (Varning: att inkludera för många språk kan påverka prestanda). Demonstration: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
@@ -2114,6 +2115,8 @@ sv:
     shared_drafts_min_trust_level: "Tillåt användare att se och redigera delade utkast."
     push_notifications_prompt: "Visa användarens samtycke genast."
     push_notifications_icon: "Utmärkelseikonen som visas i aviseringshörnet. En svartvit 96 x 96 stor PNG med genomskinlighet rekommenderas."
+    enable_desktop_push_notifications: "Aktivera push-aviseringar på skrivbordet"
+    push_notification_time_window_mins: "Vänta (n) minuter innan du skickar en push-avisering. Bidrar till att förhindra att push-aviseringar skickas till en aktiv onlineanvändare."
     base_font: "Bastypsnitt att använda för de flesta texter på webbplatsen. Teman kan åsidosätta via CSS-anpassade egenskapen `--font-family`."
     heading_font: "Typsnitt som används för rubriker på webbplatsen. Teman kan åsidosätta via CSS-anpassade egenskapen `--heading-font-family`."
     enable_sitemap: "Skapa en webbplatskarta för din webbplats och inkludera den i filen robots.txt."
@@ -4294,6 +4297,7 @@ sv:
     step:
       introduction:
         title: "Berätta för oss om ditt forum"
+        description: "Dessa kommer att visas på din inloggningssida och eventuella offentliga sidor. Du kan alltid ändra dem senare."
         fields:
           title:
             label: "Forumets namn"
@@ -4301,14 +4305,10 @@ sv:
           site_description:
             label: "Beskriv ditt forum i en mening"
             placeholder: "Ett ställe där Jane och hennes vänner kan diskutera coola grejor"
-          contact_email:
-            label: "Kontaktpunkt"
-            placeholder: "exempel@användare.com"
-            description: "Person eller grupp som är ansvarig för detta forum. Används för kritiska uppdateringar, och listas på <a href='%{base_path}/about' target='_blank'>din Om-sida</a> för brådskande kontakt."
           default_locale:
             label: "Språk"
       privacy:
-        title: "Medlemmarnas erfarenhet"
+        title: "Medlemserfarenhet"
         fields:
           login_required:
             placeholder: "Privat"
@@ -4321,8 +4321,12 @@ sv:
             extra_description: "Användare måste godkännas av personalen"
           chat_enabled:
             placeholder: "Aktivera chatt"
+            extra_description: "Engagera dina medlemmar i realtid"
+          enable_sidebar:
+            placeholder: "Aktivera sidofältet"
+            extra_description: "Få enkelt tillgång till dina favoritutrymmen"
       ready:
-        title: "Din Discourse är redo!"
+        title: "Din webbplats är klar!"
         description: "Det var allt! Du har gjort det grundläggande för att konfigurera ditt forum. Nu kan du hoppa in och ta en titt, skriva ett välkomstämne och skicka inbjudningar!<br><br>Ha kul!"
       styling:
         title: "Utseende och känsla"
@@ -4357,36 +4361,37 @@ sv:
               subcategories_with_featured_topics:
                 label: "Underkategorier med utvalda ämnen"
       branding:
-        title: "Anpassa logotyper"
+        title: "Forumets logotyp"
         fields:
           logo:
-            label: "Primär logo"
-            description: "Logotypen i din hemsidas övre vänstra hörn. Använd en bred rektangulär bild med en höjd på 120 och ett storleksförhållande som är större än 3:1"
+            label: "Primär logotyp"
+            description: "Rekommenderad storlek: 600 x 200"
           logo_small:
-            label: "Fyrkantig logga"
-            description: "En fyrkantig version av din logga. Visas i övre vänstra hörnet när du scrollar ner, samt när du delar på sociala plattformar. Helst större än 512 x 512."
+            label: "Fyrkantig logotyp"
+            description: "Rekommenderad storlek: 512 x 512. Används även som favicon och appikon för mobil startskärm."
       corporate:
         title: "Din organisation"
+        description: "Följande information kommer att användas i dina användarvillkor och Om-sidor. Hoppa gärna över detta om det inte finns något företag."
         fields:
           company_name:
             label: "Företagsnamn"
-            placeholder: "Exempelorganisation"
-            description: "Anges på din sida med användarvillkor. Hoppa gärna över om inget företag finns."
+            placeholder: "Acme Organization"
           governing_law:
             label: "Gällande lag"
             placeholder: "Kalifornisk lag"
-            description: "Anges på din sida med användarvillkor. Hoppa gärna över om inget företag finns."
           contact_url:
             label: "Webbsida"
             placeholder: "https://www.exempel.se/kontakta-oss"
-            description: "Allmän kontaktsida för dig eller din organisation. Visas på din <a href='%{base_path}/about' target='_blank'>Om-sida</a>."
           city_for_disputes:
-            label: "Domstol vid tvist"
+            label: "Domstol vid tvister"
             placeholder: "San Francisco, Kalifornien"
-            description: "Anges på din sida med användarvillkor. Hoppa gärna över om inget företag finns."
           site_contact:
             label: "Automatiska meddelanden"
             description: "Alla automatiska personliga meddelanden från Discourse kommer att skickas från den här användaren, till exempel flaggvarningar eller meddelanden om säkerhetskopiering.\n "
+          contact_email:
+            label: "Kontaktpunkt"
+            placeholder: "exempel@användare.com"
+            description: "E-postadress till nyckelkontakt som är ansvarig för denna webbplats. Används för kritiska aviseringar, och visas även i listan på <a href='%{base_path}/about' target='_blank'>din Om-sida</a> för brådskande ärenden."
       invites:
         title: "Invitera personal"
         description: "Du är nästan klar! Låt oss bjuda in lite folk som kan hjälpa till med att <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>fylla dina diskussioner</a> med intressanta ämnen och svar för att komma igång med ditt forum."

@@ -1982,8 +1982,6 @@ sl:
         fields:
           login_required:
             placeholder: "Zasebno"
-          must_approve_users:
-            placeholder: "Zahtevaj odobritev"
       styling:
         fields:
           styling_preview:

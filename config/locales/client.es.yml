@@ -145,38 +145,37 @@ es:
       email: "Enviar por correo electrónico"
       url: "Copiar y compartir la URL"
     action_codes:
-      public_topic: "hizo este tema público %{when}"
-      open_topic: "convirtió esto en un tema %{when}"
-      private_topic: "hizo este tema un mensaje personal %{when}"
-      split_topic: "separó este tema %{when}"
-      invited_user: "invitó a %{who} %{when}"
-      invited_group: "invitó a %{who} %{when}"
+      public_topic: "Hizo este tema público %{when}"
+      open_topic: "Convirtió esto en un tema %{when}"
+      private_topic: "Hizo este tema un mensaje personal %{when}"
+      split_topic: "Separó este tema %{when}"
+      invited_user: "Invitó a %{who} %{when}"
+      invited_group: "Invitó a %{who} %{when}"
       user_left: "%{who} se eliminó a sí mismo de este mensaje %{when}"
-      removed_user: "eliminó a %{who} %{when}"
-      removed_group: "eliminó a %{who} %{when}"
-      autobumped: "reflotado automáticamente %{when}"
+      removed_user: "Eliminó a %{who} %{when}"
+      removed_group: "Eliminó a %{who} %{when}"
+      autobumped: "Reflotado automáticamente %{when}"
       autoclosed:
-        enabled: "cerrado %{when}"
-        disabled: "abierto %{when}"
+        enabled: "Cerrado %{when}"
+        disabled: "Abierto %{when}"
       closed:
-        enabled: "cerrado %{when}"
-        disabled: "abierto %{when}"
+        enabled: "Cerrado %{when}"
+        disabled: "Abierto %{when}"
       archived:
-        enabled: "archivado %{when}"
-        disabled: "desarchivado %{when}"
+        enabled: "Archivado %{when}"
+        disabled: "Desarchivado %{when}"
       pinned:
-        enabled: "anclado %{when}"
-        disabled: "desanclado %{when}"
+        enabled: "Anclado %{when}"
+        disabled: "Desanclado %{when}"
       pinned_globally:
-        enabled: "anclado globalmente %{when}"
-        disabled: "desanclado %{when}"
+        enabled: "Anclado globalmente %{when}"
+        disabled: "Desanclado %{when}"
       visible:
-        enabled: "listado %{when}"
-        disabled: "quitado de la lista %{when}"
+        enabled: "Listado %{when}"
+        disabled: "Quitado de la lista %{when}"
       banner:
-        enabled: "hizo esto un banner %{when}. Aparecerá en la parte superior de cada página hasta que el usuario lo descarte."
-        disabled: "quitó este banner %{when}. Ya no aparecerá en la parte superior de cada página."
-      forwarded: "reenvió el correo electrónico de arriba"
+        enabled: "Hizo esto un banner %{when}. Aparecerá en la parte superior de cada página hasta que el usuario lo descarte."
+        disabled: "Quitó este banner %{when}. Ya no aparecerá en la parte superior de cada página."
     topic_admin_menu: "acciones del tema"
     skip_to_main_content: "Saltar al contenido principal"
     emails_are_disabled: "Todos los correos electrónicos salientes han sido desactivados globalmente por un administrador. No se enviarán notificaciones por correo electrónico de ningún tipo."
@@ -387,8 +386,6 @@ es:
     disable: "Desactivar"
     continue: "Continuar"
     undo: "Deshacer"
-    revert: "Revertir"
-    failed: "Falló"
     switch_to_anon: "Entrar en modo anónimo"
     switch_from_anon: "Salir del modo anónimo"
     banner:
@@ -1011,7 +1008,6 @@ es:
       notification_schedule:
         title: "Horario de notificaciones"
         label: "Activar horario personalizado de notificaciones"
-        tip: "Fuera de estas horas, se activará el modo «no molestar» automáticamente."
         midnight: "Medianoche"
         none: "Ninguno"
         monday: "Lunes"
@@ -1217,6 +1213,7 @@ es:
         profile: "Perfil"
         emails: "Correos electrónicos"
         notifications: "Notificaciones"
+        tracking: "Seguir"
         categories: "Categorías"
         users: "Usuarios"
         tags: "Etiquetas"
@@ -1274,6 +1271,7 @@ es:
         use: "Utilizar la aplicación de autenticación"
         enforced_notice: "Es obligatorio que actives la autenticación de dos factores antes de acceder al sitio web."
         disable: "Desactivar"
+        delete: "Eliminar"
         save: "Guardar"
         edit: "Editar"
         edit_title: "Editar autenticador"
@@ -1469,6 +1467,7 @@ es:
       email_in_reply_to: "Incluir un extracto de la publicación que recibió una respuesta en los correo electrónicos"
       other_settings: "Otros"
       categories_settings: "Categorías"
+      topics_settings: "Temas"
       new_topic_duration:
         label: "Considerar que los temas son nuevos cuando"
         not_viewed: "No los he visto todavía"
@@ -1823,6 +1822,7 @@ es:
       title: "Iniciar sesión"
       username: "Usuario"
       password: "Contraseña"
+      show_password: "Mostrar"
       second_factor_title: "Autenticación de dos factores"
       second_factor_description: "Introduce el código de autenticación desde tu aplicación:"
       second_factor_backup: "Iniciar sesión utilizando un código de copia de seguridad"
@@ -2170,6 +2170,7 @@ es:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2239,6 +2240,7 @@ es:
         invited_to_private_message: "invitado a mensaje privado"
         invitee_accepted: "invitación aceptada"
         posted: "nueva publicación"
+        watching_category_or_tag: "nueva publicación"
         moved_post: "publicación movida"
         linked: "enlazado"
         bookmark_reminder: "recordatorio de marcador"
@@ -2277,6 +2279,7 @@ es:
         other: "<span>%{count}%{plus} resultados para</span><span class='term'>%{term}</span>"
       title: "Buscar"
       full_page_title: "Buscar"
+      results: "resultados"
       no_results: "No se encontró ningún resultado."
       no_more_results: "No se encontraron más resultados."
       post_format: "#%{post_number} de %{username}"
@@ -3784,9 +3787,7 @@ es:
     safe_mode:
       enabled: "El modo seguro está activado, para salir del modo seguro cierra esta ventana del navegador"
     image_removed: "(imagen eliminada)"
-    do_not_disturb:
-      title: "No molestar durante..."
-      label: "No molestar"
+    pause_notifications:
       remaining: "%{remaining} restante"
       options:
         half_hour: "30 minutos"
@@ -4169,6 +4170,7 @@ es:
         detailed_instruction: "Se enviará una petición POST a la URL proporcionada cuando suceda el evento elegido."
         new: "Nuevo webhook"
         create: "Crear"
+        edit: "Editar"
         save: "Guardar"
         controls: "Controles"
         go_back: "Volver a la lista"
@@ -4270,6 +4272,8 @@ es:
         howto: "¿Cómo instalo plugins?"
         official: "Plugin oficial"
         broken_route: "No se puede configurar el enlace a «%{name}». Asegúrate de que los bloqueadores de publicidad están desactivados e intenta recargar la página."
+      navigation_menu:
+        sidebar: "Barra lateral"
       backups:
         title: "Copias de seguridad"
         menu:
@@ -4483,7 +4487,6 @@ es:
             error: "Este tema se desactivó automáticamente porque no es compatible con esta versión de Discourse."
             minimum: "Necesita la versión de Discourse %{version} o superior."
             maximum: "Necesita la versión de Discourse %{version} o inferior."
-          component_of: "Componente de:"
           update_to_latest: "Actualizar a lo último"
           check_for_updates: "Buscar actualizaciones"
           updating: "Actualizando..."
@@ -4956,7 +4959,6 @@ es:
       user:
         suspend_failed: "Algo salió mal al suspender a este usuario %{error}"
         unsuspend_failed: "Algo salió mal al desbloquear a este usuario %{error}"
-        suspend_duration: "¿Durante cuánto tiempo estará suspendido este usuario?"
         suspend_reason_label: "¿Por qué se le suspende? Este texto <b>será visible para todos</b> en la página de perfil del usuario y se mostrará al usuario cuando intente iniciar sesión. Sé conciso."
         suspend_reason_hidden_label: "¿Por qué se le suspende? Este texto se mostrará al usuario cuando trate de iniciar sesión. Sé conciso."
         suspend_reason: "Motivo"
@@ -4990,7 +4992,6 @@ es:
         penalty_post_edit: "Editar la publicación"
         penalty_post_none: "No hacer nada"
         penalty_count: "Contador de faltas"
-        penalty_history: "Historial de sanciones"
         clear_penalty_history:
           title: "Eliminado historial de faltas"
           description: "usuarios con faltas no pueden alcanzar NC3"
@@ -5145,6 +5146,11 @@ es:
         silenced_count: "Silenciado"
         suspended_count: "Suspendido"
         last_six_months: "Últimos 6 meses"
+        other_matches_list:
+          username: "Nombre de usuario"
+          trust_level: "Nivel de confianza"
+          read_time: "Tiempo de lectura"
+          posts: "Publicaciones"
         tl3_requirements:
           title: "Requisitos para el nivel de confianza 3"
           table_title:
@@ -5289,6 +5295,7 @@ es:
           search: "Buscar"
           groups: "Grupos"
           dashboard: "Panel de control"
+          navigation: "Navegación"
         secret_list:
           invalid_input: "Los campos no pueden estar vacíos o contener el carácter de barra vertical."
         default_categories:
@@ -5459,10 +5466,8 @@ es:
       finish: "Salir del configurador"
       back: "Atrás"
       next: "Siguiente"
-      configure_more: "Configurar más..."
       step-text: "Intervalo"
       step: "%{current} de %{total}"
-      upload: "Subir"
       uploading: "Subiendo..."
       upload_error: "Lo sentimos, se ha producido un error al cargar este archivo. Inténtalo de nuevo."
       staff_count:

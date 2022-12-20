@@ -1571,7 +1571,6 @@ tr_TR:
     email_token_valid_hours: "Şifremi unuttum / hesabı etkinleştir belirteçleri (n) saat boyunca geçerlidir."
     enable_badges: "Rozet sistemini etkinleştirin"
     max_favorite_badges: "Kullanıcının seçebileceği maksimum rozet sayısı"
-    enable_whispers: "Konular dahilinde personelin özel iletişimine izin verin."
     whispers_allowed_groups: "Belirli grupların üyeleri için konular dahilinde özel iletişime izin verin."
     allow_index_in_robots_txt: "Robots.txt dosyasında bu sitenin web arama motorları tarafından dizine eklenmesine izin verildiğini belirtin. İstisnai durumlarda kalıcı olarak <a href='%{base_path}/admin/customize/robots'>robots.txt'i geçersiz kılabilirsiniz</a>."
     blocked_email_domains: "Kullanıcıların hesap açmasına izin verilmeyen e-posta alan adlarının boru ile sınırlandırılmış bir listesi. Örnek: mailinator.com|trashmail.net"
@@ -1981,7 +1980,6 @@ tr_TR:
     display_name_on_posts: "Bir kullanıcının @kullanıcı adına ek olarak gönderilerinde tam adını gösterin."
     show_time_gap_days: "Bu kadar gün arayla iki gönderi yapılmışsa aradaki zaman farkını konu içinde gösterin."
     short_progress_text_threshold: "Bir konudaki gönderi sayısı bu sayının üzerine çıktıktan sonra, ilerleme çubuğu yalnızca geçerli gönderi sayısını gösterecektir. İlerleme çubuğunun genişliğini değiştirirseniz bu değeri değiştirmeniz gerekebilir."
-    default_code_lang: "Kod bloklarına uygulanan varsayılan programlama dili sözdizimi vurgulaması (auto, nohighlight, ruby, python vb.). Bu değer aynı zamanda \"highlighted languages\" site ayarında da bulunmalıdır."
     warn_reviving_old_topic_age: "Biri son yanıtın şu kadar günden daha eski olduğu bir konuya yanıt vermeye başladığında, bir uyarı görüntülenir. 0'a ayarlayarak devre dışı bırakın."
     autohighlight_all_code: "Dili açıkça belirtmemiş olsalar bile önceden biçimlendirilmiş tüm kod bloklarına kod vurgulamayı zorla uygulayın."
     highlighted_languages: "Sözdizimi vurgulama kuralları dahil edildi. (Uyarı: Çok fazla dil eklemek performansı etkileyebilir) Demo için bkz: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
@@ -4256,29 +4254,24 @@ tr_TR:
           site_description:
             label: "Topluluğunuzu bir cümleyle tanımlayın"
             placeholder: "Aytaç ve arkadaşlarının harika şeyleri tartışabilecekleri bir yer"
-          contact_email:
-            label: "İrtibat kişisi"
-            placeholder: "ornek@kullanici.com"
-            description: "Bu topluluktan sorumlu kişi veya grup. Kritik güncellemeler için kullanılır ve acil iletişim için <a href='%{base_path}/about' target='_blank'>hakkında sayfanızda</a> listelenir."
           default_locale:
             label: "Dil"
       privacy:
-        title: "Üye Deneyimi"
         fields:
           login_required:
             placeholder: "Özel"
             extra_description: "Bu topluluğa yalnızca giriş yapmış kullanıcılar erişebilir"
           invite_only:
-            placeholder: "Yalnızca Davetle"
             extra_description: "Kullanıcılar, güvenilir kullanıcılar veya personel tarafından davet edilmelidir, aksi takdirde kullanıcılar kendi başlarına kaydolabilir"
           must_approve_users:
-            placeholder: "Onay Gerektir"
             extra_description: "Kullanıcılar personel tarafından onaylanmalı"
+          chat_enabled:
+            placeholder: "Sohbeti etkinleştir"
+          enable_sidebar:
+            placeholder: "Kenar çubuğunu etkinleştir"
       ready:
-        title: "Discourse'unuz Hazır!"
         description: "İşte bu kadar! Topluluğunuzu kurmak için temel işlemleri bitirdiniz. Şimdi içeri girip etrafa bir göz atabilir, bir karşılama konusu yazabilir ve davet gönderebilirsiniz!<br><br>İyi eğlenceler!"
       styling:
-        title: "Görünüm ve His"
         fields:
           color_scheme:
             label: "Renk şeması"
@@ -4309,37 +4302,19 @@ tr_TR:
                 label: "Konu içeren Kategoriler Kutuları"
               subcategories_with_featured_topics:
                 label: "Öne Çıkan Konular içeren Alt Kategoriler"
-      branding:
-        title: "Logoları Özelleştir"
-        fields:
-          logo:
-            label: "Birincil Logo"
-            description: "Sitenizin sol üst köşesindeki logo. Yüksekliği 120 ve en boy oranı 3:1'den büyük olan geniş dikdörtgen bir görüntü kullanın"
-          logo_small:
-            label: "Kare Logo"
-            description: "Logonuzun kare versiyonu. Aşağı kaydırırken ve sosyal platformlarda paylaşırken sol üstte gösterilir. İdeal olarak en az 512x512."
       corporate:
-        title: "Organizasyonunuz"
         fields:
-          company_name:
-            label: "Şirket Adı"
-            placeholder: "Örnek Organizasyon"
-            description: "Hizmet Şartları sayfanıza girilir. Şirket yoksa atlamaktan çekinmeyin."
           governing_law:
-            label: "Geçerli Kanun"
             placeholder: "Kaliforniya yasaları"
-            description: "Hizmet Şartları sayfanıza girilir. Şirket yoksa atlamaktan çekinmeyin."
           contact_url:
-            label: "Web Sayfası"
             placeholder: "https://www.ornek.com/iletisim"
-            description: "Sizin veya kuruluşunuz için genel iletişim web sayfası. <a href='%{base_path}/about' target='_blank'>hakkında sayfanızda</a> gösterilir."
           city_for_disputes:
-            label: "Anlaşmazlıklar Şehri"
             placeholder: "San Francisco, Kaliforniya"
-            description: "Hizmet Şartları sayfanıza girilir. Şirket yoksa atlamaktan çekinmeyin."
           site_contact:
-            label: "Otomatik Mesajlar"
             description: "Bayrak uyarıları ve yedekleme tamamlama bildirimleri gibi tüm otomatik Discourse kişisel mesajları bu kullanıcıdan gönderilecek."
+          contact_email:
+            label: "İrtibat kişisi"
+            placeholder: "ornek@kullanici.com"
       invites:
         title: "Personel Davet Edin"
         description: "Neredeyse bitti! Hadi topluluğunuzu başlatmak için <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>tartışmalarınızı</a> ilginç konu ve yanıtlarla tohumlamanıza yardımcı olacak birkaç kişi davet edelim."

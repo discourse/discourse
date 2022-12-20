@@ -124,37 +124,36 @@ gl:
       email: "Enviar por correo"
       url: "Copiar e compartir o URL"
     action_codes:
-      public_topic: "faga este tema público o %{when}"
-      private_topic: "faga deste tema unha mensaxe privada o %{when}"
-      split_topic: "divida tema %{when}"
-      invited_user: "convidou a %{who} %{when}"
-      invited_group: "convidou ao %{who} o %{when}"
+      public_topic: "Faga este tema público o %{when}"
+      private_topic: "Faga deste tema unha mensaxe privada o %{when}"
+      split_topic: "Divida tema %{when}"
+      invited_user: "Convidou ao %{who} o %{when}"
+      invited_group: "Convidou ao %{who} o %{when}"
       user_left: "%{who} retiráronse por si mesmos desta mensaxe %{when}"
-      removed_user: "retirou a %{who} %{when}"
-      removed_group: "retirou ao %{who} o %{when}"
-      autobumped: "promovido automaticamente %{when}"
+      removed_user: "Retirou ao %{who} o %{when}"
+      removed_group: "Retirou ao %{who} o %{when}"
+      autobumped: "Promovido automaticamente %{when}"
       autoclosed:
-        enabled: "pechado o %{when}"
-        disabled: "aberto o %{when}"
+        enabled: "Pechado o %{when}"
+        disabled: "Aberto o %{when}"
       closed:
-        enabled: "pechado o %{when}"
-        disabled: "aberto o %{when}"
+        enabled: "Pechado o %{when}"
+        disabled: "Aberto o %{when}"
       archived:
-        enabled: "arquivado o %{when}"
-        disabled: "desarquivado o %{when}"
+        enabled: "Arquivado o %{when}"
+        disabled: "Desarquivado o %{when}"
       pinned:
-        enabled: "fixado o %{when}"
-        disabled: "desprendido o %{when}"
+        enabled: "Fixado o %{when}"
+        disabled: "Desprendido o %{when}"
       pinned_globally:
-        enabled: "fixado globalmente o %{when}"
-        disabled: "desprendido o %{when}"
+        enabled: "Fixado globalmente o %{when}"
+        disabled: "Desprendido o %{when}"
       visible:
-        enabled: "listado o %{when}"
-        disabled: "retirado da lista o %{when}"
+        enabled: "Listado o %{when}"
+        disabled: "Retirado da lista o %{when}"
       banner:
-        enabled: "faga disto un báner %{when}. Aparecerá na banda superior de todas as páxinas ata que sexa desbotado polo usuario."
-        disabled: "eliminou este báner %{when}. Xa non aparecerá máis na banda superior de todas as páxinas."
-      forwarded: "reenviou a mensaxe de correo anterior"
+        enabled: "Faga disto un báner %{when}. Aparecerá na banda superior de todas as páxinas ata que sexa desbotado polo usuario."
+        disabled: "Eliminou este báner %{when}. Xa non aparecerá máis na banda superior de todas as páxinas."
     topic_admin_menu: "accións do tema"
     emails_are_disabled: "Todos as mensaxes de correo saíntes foron desactivadas globalmente por un administrador. Non se enviará ningún tipo de notificación por correo electrónico."
     software_update_prompt:
@@ -332,8 +331,6 @@ gl:
     disable: "Desactivar"
     continue: "Continuar"
     undo: "Desfacer"
-    revert: "Reverter"
-    failed: "Fallou"
     switch_to_anon: "Entrar no modo anónimo"
     switch_from_anon: "Saír do modo anónimo"
     banner:
@@ -914,7 +911,6 @@ gl:
       notification_schedule:
         title: "Calendario de notificacións"
         label: "Activar o calendario personalizado de notificacións"
-        tip: "Fóra destas horas, vostede terá posto automaticamente en «non molestar»"
         midnight: "Medianoite"
         none: "Ningunha"
         monday: "Luns"
@@ -1634,6 +1630,7 @@ gl:
       subheader_title: "Iniciar sesión na súa conta"
       username: "Usuario"
       password: "Contrasinal"
+      show_password: "Amosar"
       second_factor_title: "Autenticación de dobre paso"
       second_factor_description: "Escriba o código de autenticación da súa app:"
       second_factor_backup: "Iniciar sesión cun código de copia de seguranza"
@@ -1933,6 +1930,7 @@ gl:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -1991,6 +1989,7 @@ gl:
         invited_to_private_message: "convidado a unha mensaxe privada"
         invitee_accepted: "convite aceptado"
         posted: "nova publicación"
+        watching_category_or_tag: "nova publicación"
         moved_post: "publicación movida"
         linked: "ligado"
         bookmark_reminder: "recordatorio do marcador"
@@ -3315,9 +3314,7 @@ gl:
     safe_mode:
       enabled: "O modo seguro está activado; para saír do modo seguro peche esta xanela do navegador"
     image_removed: "(imaxe retirada)"
-    do_not_disturb:
-      title: "Non molestar durante..."
-      label: "Non molestar"
+    pause_notifications:
       remaining: "queda %{remaining}"
       options:
         half_hour: "30 minutos"
@@ -3907,7 +3904,6 @@ gl:
             error: "Este tema foi desactivado automaticamente porque non é compatíbel coa versión actual de Discourse."
             minimum: "Require a versión %{version} de Discourse ou unha superior."
             maximum: "Require a versión %{version} de Discourse ou unha inferior."
-          component_of: "Compoñente de:"
           update_to_latest: "Actualizar o tema"
           check_for_updates: "Buscar actualizacións"
           updating: "Actualizando..."
@@ -4357,7 +4353,6 @@ gl:
       user:
         suspend_failed: "Algo fallou ao suspender este usuario %{error}"
         unsuspend_failed: "Algo foi mal levantando a suspensión deste usuario %{error}"
-        suspend_duration: "Canto tempo estará suspendido o usuario?"
         suspend_reason_label: "Cal é o motivo da suspensión? Este texto <b>será visíbel para todo o mundo</b> na páxina do perfil deste usuario e amosaráselle ao usuario cando tente iniciar sesión. Procure ser breve."
         suspend_reason_hidden_label: "Cal é o motivo da suspensión? Este texto amosaráselle ao usuario cando tente iniciar sesión. Procure ser breve."
         suspend_reason: "Razón"
@@ -4829,7 +4824,6 @@ gl:
       next: "Seguinte"
       step-text: "Paso"
       step: "%{current} de %{total}"
-      upload: "Cargar"
       uploading: "Cargando..."
       upload_error: "Sentímolo pero produciuse un erro ao cargar ese ficheiro. Ténteo de novo."
       staff_count:

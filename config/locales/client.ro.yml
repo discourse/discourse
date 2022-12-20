@@ -151,37 +151,36 @@ ro:
       email: "Trimite prin e-mail"
       url: "Copiați și partajați URL-ul"
     action_codes:
-      public_topic: "a făcut acest subiect public %{when}"
-      private_topic: "fă acest subiect un mesaj personal %{when}"
-      split_topic: "desparte această discuție %{when}"
-      invited_user: "a invitat pe %{who} %{when}"
-      invited_group: "a invitat pe %{who} %{when}"
+      public_topic: "A făcut Acest subiect public %{when}"
+      private_topic: "Fă acest subiect un mesaj personal %{when}"
+      split_topic: "Desparte această discuție %{when}"
+      invited_user: "A invitAt pe %{who} %{when}"
+      invited_group: "A invitAt pe %{who} %{when}"
       user_left: "%{who} s-a îndepărtat de la acest mesaj %{when}"
-      removed_user: "a scos pe %{who} %{when}"
-      removed_group: "scos pe %{who} %{when}"
-      autobumped: "impuls automat %{when}"
+      removed_user: "Scos pe %{who} %{when}"
+      removed_group: "Scos pe %{who} %{when}"
+      autobumped: "Impuls automat %{when}"
       autoclosed:
-        enabled: "închis %{when}"
-        disabled: "deschis %{when}"
+        enabled: "Închis %{when}"
+        disabled: "Deschis %{when}"
       closed:
-        enabled: "închis %{when}"
-        disabled: "deschis %{when}"
+        enabled: "Închis %{when}"
+        disabled: "Deschis %{when}"
       archived:
-        enabled: "arhivat %{when}"
-        disabled: "dezarhivat %{when}"
+        enabled: "Arhivat %{when}"
+        disabled: "Dezarhivat %{when}"
       pinned:
-        enabled: "fixat %{when}"
-        disabled: "ne-fixat %{when}"
+        enabled: "Fixat %{when}"
+        disabled: "Ne-fixat %{when}"
       pinned_globally:
-        enabled: "fixat la nivel global %{when}"
-        disabled: "ne-fixat %{when}"
+        enabled: "Fixat la nivel global %{when}"
+        disabled: "Ne-fixat %{when}"
       visible:
-        enabled: "afișat %{when}"
-        disabled: "ascuns %{when}"
+        enabled: "Afișat %{when}"
+        disabled: "Ascuns %{when}"
       banner:
-        enabled: "a creat acest banner %{when}. Va apărea la începutul fiecărei pagini până când va fi ascuns de către utilizator."
-        disabled: "a îndepărtat acest banner %{when}. Nu va mai apărea la începutul fiecărei pagini."
-      forwarded: "a redirecționat e-mailul de mai sus"
+        enabled: "A creAt Acest bAnner %{when}. VA ApăreA lA începutul fiecărei pAgini până când vA fi Ascuns de către utilizAtor."
+        disabled: "A îndepărtAt Acest bAnner %{when}. Nu vA mAi ApăreA lA începutul fiecărei pAgini."
     topic_admin_menu: "acțiuni subiect"
     skip_to_main_content: "Treci la conținutul principal"
     emails_are_disabled: "Trimiterea de emailuri a fost dezactivată global de către un administrator. Nu vor fi trimise notificări email de nici un fel."
@@ -384,8 +383,6 @@ ro:
     disable: "Dezactivează"
     continue: "Continuă"
     undo: "Anulează acțiunea"
-    revert: "Revenire la starea inițială"
-    failed: "Eșuat"
     switch_to_anon: "Intrați în Modul anonim"
     switch_from_anon: "Ieșiți din Modul anonim"
     banner:
@@ -935,7 +932,6 @@ ro:
       notification_schedule:
         title: "Programul de notificări"
         label: "Activează programul de notificări personalizat"
-        tip: "În afara acestor ore vei fi pus în mod automat „nu deranja”."
         none: "Nimeni"
         monday: "Luni"
         tuesday: "Marţi"
@@ -1561,6 +1557,7 @@ ro:
       title: "Autentificare"
       username: "Utilizator"
       password: "Parolă"
+      show_password: "Arată"
       second_factor_title: "Autentificare în doi pași (2FA)"
       second_factor_description: "Introdu codul de autentificare din aplicația 2FA"
       second_factor_backup: "Autentifică-te folosind un cod de rezervă"
@@ -1774,6 +1771,7 @@ ro:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2897,9 +2895,7 @@ ro:
       dismiss: "Înlătură"
     safe_mode:
       enabled: "Modul sigur este activat, pentru a ieși din modul sigur închide această fereastră de browser"
-    do_not_disturb:
-      title: "Nu deranja pentru..."
-      label: "Nu deranja"
+    pause_notifications:
       remaining: "a mai rămas %{remaining} ..."
       options:
         half_hour: "30 de minute"
@@ -3589,7 +3585,6 @@ ro:
       user:
         suspend_failed: "Ceva nu a funcționat la suspendarea acestui utilizator %{error}"
         unsuspend_failed: "Ceva nu a funcționat la activarea acestui utilizator %{error}"
-        suspend_duration: "Pentru cât timp va fi suspendat utilizatorul?"
         suspend_reason_label: "Motivul suspendării? Acest text <b>va fi vizibil</b> pe pagina de profil a utilizatorului, și va fi arătat utilizatorului atunci când încearcă să se autentifice. Încearcă să fii succint."
         suspend_reason: "Motiv"
         suspend_message: "Mesaj email"
@@ -3947,7 +3942,6 @@ ro:
       next: "Următorul"
       step-text: "Pas"
       step: "%{current} din %{total}"
-      upload: "Încărcare"
       uploading: "Se încarcă..."
       upload_error: "Ne pare rău, a apărut o eroare la încărcarea fișierului. Te rugăm să încerci iar."
       staff_count:

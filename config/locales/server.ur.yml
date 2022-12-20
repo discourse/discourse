@@ -1500,7 +1500,6 @@ ur:
     enable_rich_text_paste: "کمپَوزر میں ٹیکسٹ پَیسٹ کرتے وقت خود کار طریقہ سے HTML سے مارکڈائون میں تبادلہ فعال کریں۔ (تجرباتی)"
     email_token_valid_hours: "پاسورڈ بھولنے / اکاؤنٹ چالو کرنے کے ٹوکن (ن) گھنٹوں کیلئے درست ہیں۔"
     enable_badges: "بَیج سِسٹم فعال کریں"
-    enable_whispers: "ٹاپک کے اندر سٹاف کے درمیان ذاتی مواصلات کی اجازت دیں۔"
     allow_index_in_robots_txt: "robots.txt فائل میں وضاحت کریں کہ یہ سائٹ وَیب سرچ اِنجنوں کی طرف سے انڈیکس کی جاسکتی ہے۔ غیر معمولی معاملات میں آپ مستقل طور پر <a href='%{base_path}/admin/customize/robots'>robots.txt کو اَووَررائڈ</a> کرسکتے ہیں۔"
     blocked_email_domains: "ای میل ڈومینز کی پائپ سے علیحدہ کردہ فہرست جن کے ساتھ صارفین کو اکاؤنٹس رجسٹر کرنے کی اجازت نہیں ہے۔ مثال: mailinator.com|trashmail.net"
     allowed_email_domains: "ای میل ڈومینز کی پائپ سے علیحدہ کردہ فہرست جن کے ساتھ صارفین کو اکاؤنٹس رجسٹر کرنا لاذمی ہے۔ انتباہ: اِس فہرست کے علاوہ ای میل ڈومینز والے صارفین کو روک دیا جائے گی!"
@@ -3520,10 +3519,6 @@ ur:
           login_required:
             placeholder: "ذاتی"
             extra_description: "صرف لاگ اِن کردہ صارفین اِس کمیونٹی تک رسائی حاصل کر سکتا ہے"
-          must_approve_users:
-            placeholder: "منظوری کی ضرورت ہے"
-      ready:
-        title: "آپ کا ڈِسکورس تیار ہے!"
       styling:
         fields:
           styling_preview:
@@ -3542,29 +3537,15 @@ ur:
                 label: "زمرہ جات اور ٹاپ ٹاپکس"
               subcategories_with_featured_topics:
                 label: "نمایاں عنوانات کے ساتھ ذیلی زمرہ جات"
-      branding:
-        fields:
-          logo:
-            label: "بنیادی لَوگَو"
-          logo_small:
-            label: "چکور لَوگَو"
       corporate:
         fields:
-          company_name:
-            label: "کمپنی نام"
-            placeholder: "مثال ادارہ"
           governing_law:
-            label: "گورننگ قانون"
             placeholder: "کَیلیفَورنیا کے قانون"
           contact_url:
-            label: "وِیب صفحہ"
             placeholder: "https://www.example.com/contact-us"
-            description: "آپ یا آپ کے ادارہ کیلئے عام رابطہ کیلئے وَیب صفحہ۔ <a href='%{base_path}/about' target='_blank'>آپ کے \"بارے میں\" والے صفحے</a> پر دکھایا جائے گا۔"
           city_for_disputes:
-            label: "تنازعات کیلئے شہر"
             placeholder: "سان فرانسِسکو، کَیلیفَورنیا"
           site_contact:
-            label: "خودکار پیغامات"
             description: "تمام خودکار ڈِسکورس ذاتی پیغامات اِس صارف کی طرف سے بھیجے جائیں گے جیسے کہ فلَیگ انتباہات اور بیک اَپ تکمیل نوٹس۔"
       invites:
         title: "سٹاف مدعو کریں"

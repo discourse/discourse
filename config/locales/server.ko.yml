@@ -1466,7 +1466,6 @@ ko:
     email_token_valid_hours: "비밀번호 찾기, 계정 활성화 토큰은 (n)시간 유효합니다."
     enable_badges: "배지 시스템 활성화"
     max_favorite_badges: "사용자가 선택할 수 있는 최대 배지 수"
-    enable_whispers: "주제 내 운영진 비공개 커뮤니케이션을 허용합니다."
     allow_index_in_robots_txt: "웹 검색 엔진에서 이 사이트의 색인을 생성할 수 있도록 robots.txt에 지정합니다. 예외적인 경우 영구적으로 <a href='%{base_path}/admin/customize/robots'>robots.txt를 오버라이드</a>할 수 있습니다."
     blocked_email_domains: "사용자가 계정을 등록할 수 없는 파이프(|)로 구분된 이메일 도메인 목록입니다. 예: mailinator.com|trashmail.net"
     allowed_email_domains: "사용자가 계정을 등록해야 하는 파이프(|)로 구분된 이메일 도메인 목록입니다. 경고: 나열된 것과 다른 이메일 도메인을 가진 사용자는 허용되지 않습니다!"
@@ -3833,19 +3832,15 @@ ko:
           default_locale:
             label: "언어"
       privacy:
-        title: "액세스"
         fields:
           login_required:
             placeholder: "비공개"
             extra_description: "로그인 한 사용자 만이 커뮤니티에 액세스 할 수 있습니다"
-          invite_only:
-            placeholder: "초대 전용"
-          must_approve_users:
-            placeholder: "승인 필요"
-      ready:
-        title: "당신의 Discourse가 준비되었습니다!"
+          chat_enabled:
+            placeholder: "채팅 활성화"
+          enable_sidebar:
+            placeholder: "사이드바 활성화"
       styling:
-        title: "스타일링"
         fields:
           color_scheme:
             label: "색상 구성표"
@@ -3874,30 +3869,15 @@ ko:
                 label: "글이 있는 카테고리 상자"
               subcategories_with_featured_topics:
                 label: "추천 글이 포함된 하위 카테고리"
-      branding:
-        fields:
-          logo:
-            label: "기본 로고"
-          logo_small:
-            label: "스퀘어 로고"
       corporate:
-        title: "소속"
         fields:
-          company_name:
-            label: "회사 이름"
-            placeholder: "조직 예시"
           governing_law:
-            label: "준거법"
             placeholder: "캘리포니아 법"
           contact_url:
-            label: "웹 페이지"
             placeholder: "https://www.example.com/contact-us"
-            description: "당신 또는 당신의 조직을 위한 Contact 웹페이지입니다. <a href='%{base_path}/about' target='_blank'>about 페이지</a>에 나타나게 됩니다."
           city_for_disputes:
-            label: "분쟁 도시"
             placeholder: "캘리포니아주 샌프란시스코"
           site_contact:
-            label: "자동화된 메시지"
             description: "신고 알림 및 백업 완료 알림과 같은 모든 자동화 된 Discourse 메시지가 이 사용자의 아이디로 전송됩니다."
       invites:
         title: "운영진 초대"

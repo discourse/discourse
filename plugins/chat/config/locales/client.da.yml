@@ -38,6 +38,9 @@ da:
       browse_all_channels: "Gennemse alle kanaler"
       move_to_channel:
         title: "Flyt beskeder til kanal"
+        instructions:
+          one: "Du flytter <strong>%{count}</strong> besked. Vælg en destinationskanal. En pladsholdermeddelelse vil blive oprettet i <strong>%{channelTitle}</strong>-kanalen for at angive, at denne besked er blevet flyttet."
+          other: "Du flytter <strong>%{count}</strong> beskeder. Vælg en destinationskanal. En pladsholdermeddelelse vil blive oprettet i <strong>%{channelTitle}</strong>-kanalen for at angive, at disse beskeder er blevet flyttet."
         confirm_move: "Flyt beskeder"
       channel_settings:
         title: "Kanal indstillinger"
@@ -63,6 +66,7 @@ da:
         confirm_channel_name: "Indtast kanalnavn"
       channels_list_popup:
         browse: "Gennemse kanaler"
+        create: "Ny kanal"
       click_to_join: "Klik her for at se tilgængelige kanaler."
       close: "Luk"
       delete: "Slet"

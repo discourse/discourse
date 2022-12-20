@@ -121,10 +121,10 @@ zh_TW:
       open_topic: "將此轉換為主題 %{when}"
       private_topic: "於 %{when} 私訊這個主題"
       split_topic: "於 %{when} 分割此主題"
-      invited_user: "於 %{when} 邀請 %{who}"
+      invited_user: "於 %{when} 邀請 %{who} "
       invited_group: "於 %{when} 邀請 %{who} "
       user_left: "%{who} 已於 %{when} 將自己從此訊息中移除"
-      removed_user: "已於 %{when} 刪除 %{who}"
+      removed_user: "刪除 %{who} %{when}"
       removed_group: "刪除 %{who} %{when}"
       autobumped: "將於%{when}自動浮上來"
       autoclosed:
@@ -148,7 +148,6 @@ zh_TW:
       banner:
         enabled: "已於 %{when} 將其作為橫幅主題。它將一直顯示直至使用者關閉它。"
         disabled: "已於 %{when} 移除該橫幅主題。將不再出現於任何頁面。"
-      forwarded: "轉寄上述電子郵件"
     topic_admin_menu: "話題動作"
     skip_to_main_content: "跳到主要內容"
     emails_are_disabled: "管理員已停用了全域的外部信件功能。將不再寄出任何類型的電子郵件。"
@@ -346,8 +345,6 @@ zh_TW:
     disable: "停用"
     continue: "繼續"
     undo: "復原"
-    revert: "恢復"
-    failed: "失敗"
     switch_to_anon: "進入匿名模式"
     switch_from_anon: "離開匿名模式"
     banner:
@@ -881,7 +878,6 @@ zh_TW:
       notification_schedule:
         title: "通知時程"
         label: "啟用自定義通知時程"
-        tip: "若在這些時間之外，自動進入勿擾模式。"
         midnight: "半夜"
         none: "無"
         monday: "星期一"
@@ -1485,6 +1481,7 @@ zh_TW:
     login:
       username: "使用者"
       password: "密碼"
+      show_password: "顯示"
       second_factor_description: "請輸入應用程式中的驗證碼："
       second_factor_backup_description: "請輸入一組您的備用碼"
       caps_lock_warning: "大寫鎖定中"
@@ -1730,6 +1727,7 @@ zh_TW:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}、%{username2}</span> %{description}"
@@ -2828,8 +2826,7 @@ zh_TW:
       dismiss: "忽略"
     safe_mode:
       enabled: "安全模式已經開啟，關閉該瀏覽器窗口以退出安全模式"
-    do_not_disturb:
-      label: "勿擾"
+    pause_notifications:
       remaining: "剩餘 %{remaining}"
       options:
         half_hour: "30 分鐘"
@@ -3347,7 +3344,6 @@ zh_TW:
             error: "由於佈景主題與此版本的 Discourse 不相容，此佈景主題已被自動停用。"
             minimum: "需要 Discourse%{version} 或更新的版本。"
             maximum: "需要 Discourse %{version} 或更舊的版本。"
-          component_of: "元件："
           update_to_latest: "更新至最新版本"
           check_for_updates: "檢查更新"
           updating: "更新中⋯⋯"
@@ -3721,7 +3717,6 @@ zh_TW:
       user:
         suspend_failed: "將此使用者停權時發生錯誤 %{error}"
         unsuspend_failed: "恢復此使用者的權限時發生錯誤 %{error}"
-        suspend_duration: "你想將此使用者停權多久?"
         suspend_reason_label: "你為什麼要將此使用者停權？你輸入的原因將在此使用者登入時顯示，及顯示在此使用者的基本資料頁面，且<b>任何人都可以看見</b>，請簡短說明原因。"
         suspend_reason_hidden_label: "您為何要將該使用者停權？使用者在登入時會看見這段文字，請簡短描述。"
         suspend_reason: "原因"
@@ -4122,7 +4117,6 @@ zh_TW:
       next: "下一步"
       step-text: "梯級"
       step: "%{current} / %{total}"
-      upload: "上傳"
       uploading: "上傳中..."
       upload_error: "抱歉，上傳檔案時發生錯誤，請再試一次。"
       staff_count:

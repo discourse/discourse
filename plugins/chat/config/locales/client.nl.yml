@@ -113,6 +113,10 @@ nl:
           one: "Uitnodiging gestuurd"
           other: "Uitnodigingen gestuurd"
         invite: "Uitnodigen voor kanaal"
+        groups:
+          users_limit:
+            one: "%{count} gebruiker"
+            other: "%{count} gebruikers"
       aria_roles:
         header: "Chatkop"
         composer: "Chateditor"

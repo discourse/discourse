@@ -168,37 +168,36 @@ sl:
       email: "Pošlji po e-pošti"
       url: "Kopiraj in deli URL"
     action_codes:
-      public_topic: "je naredil temo javno %{when}"
-      private_topic: "je spremenil temo v zasebno sporočilo %{when}"
-      split_topic: "je razdelil temo %{when}"
-      invited_user: "je povabil %{who} %{when}"
-      invited_group: "je povabil %{who} %{when}"
+      public_topic: "Je naredil temo javno %{when}"
+      private_topic: "Je spremenil temo v zasebno sporočilo %{when}"
+      split_topic: "Je razdelil temo %{when}"
+      invited_user: "Je povabil %{who} %{when}"
+      invited_group: "Je povabil %{who} %{when}"
       user_left: "%{who}se je odstranil s tega sporočila %{when}"
-      removed_user: "je odstranil %{who} %{when}"
-      removed_group: "je odstranil %{who} %{when}"
-      autobumped: "samodejno izpostavljeno %{when}"
+      removed_user: "Je odstranil %{who} %{when}"
+      removed_group: "Je odstranil %{who} %{when}"
+      autobumped: "Samodejno izpostavljeno %{when}"
       autoclosed:
-        enabled: "zaprto %{when}"
-        disabled: "odprto %{when}"
+        enabled: "Zaprto %{when}"
+        disabled: "Odprto %{when}"
       closed:
-        enabled: "zaprto %{when}"
-        disabled: "odprto %{when}"
+        enabled: "Zaprto %{when}"
+        disabled: "Odprto %{when}"
       archived:
-        enabled: "arhivirano %{when}"
-        disabled: "odarhivirano %{when}"
+        enabled: "Arhivirano %{when}"
+        disabled: "Odarhivirano %{when}"
       pinned:
-        enabled: "pripeto %{when}"
-        disabled: "odpeta %{when}"
+        enabled: "Pripeto %{when}"
+        disabled: "Odpeta %{when}"
       pinned_globally:
-        enabled: "globalno pripeto %{when}"
-        disabled: "odpeta %{when}"
+        enabled: "Globalno pripeto %{when}"
+        disabled: "Odpeta %{when}"
       visible:
-        enabled: "uvrščeno %{when}"
-        disabled: "izločeno %{when}"
+        enabled: "Uvrščeno %{when}"
+        disabled: "Izločeno %{when}"
       banner:
-        enabled: "je ustvaril ta oglasni trak %{when}. Pojavil se bo na vrhu vsake strani, dokler ga uporabnik ne opusti."
-        disabled: "je odstranil ta oglasni trak %{when}. Ne bo se več pojavljal na vrhu vsake strani."
-      forwarded: "zgoraj navedeno sporočilo je bilo posredovano"
+        enabled: "Je ustvaril ta oglasni trak %{when}. Pojavil se bo na vrhu vsake strani, dokler ga uporabnik ne opusti."
+        disabled: "Je odstranil ta oglasni trak %{when}. Ne bo se več pojavljal na vrhu vsake strani."
     topic_admin_menu: "dejanja teme"
     emails_are_disabled: "Vsa odhodna e-pošta je bila globalno onemogočena iz strani administratorja. E-poštna obvestila ne bodo poslana."
     software_update_prompt:
@@ -385,8 +384,6 @@ sl:
     disable: "Onemogoči"
     continue: "Nadaljuj"
     undo: "Razveljavi"
-    revert: "Povrni"
-    failed: "Spodletelo"
     switch_to_anon: "Vklopi anonimni način"
     switch_from_anon: "Izklopi anonimni način"
     banner:
@@ -943,7 +940,6 @@ sl:
       notification_schedule:
         title: "Razpored obveščanja"
         label: "Omogočite razpored obveščanja po meri"
-        tip: "Izven teh ur bo samodejno vključen način »ne moti«."
         midnight: "Opolnoči"
         none: "Brez"
         monday: "Ponedeljek"
@@ -1647,6 +1643,7 @@ sl:
       subheader_title: "Prijavite se v svoj račun"
       username: "Uporabnik"
       password: "Geslo"
+      show_password: "Pokaži"
       second_factor_title: "Preverjanje v dveh korakih"
       second_factor_description: "Vnesite potrditveno kodo iz vaše aplikacije:"
       second_factor_backup: "Prijavite se z nadomestno kodo"
@@ -1939,6 +1936,7 @@ sl:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2001,6 +1999,7 @@ sl:
         invited_to_private_message: "povabljen v zasebno sporočilo"
         invitee_accepted: "povabilo sprejeto"
         posted: "nov prispevek"
+        watching_category_or_tag: "nov prispevek"
         moved_post: "prispevek premaknjen"
         linked: "povezan"
         granted_badge: "značka podeljena"
@@ -3345,9 +3344,7 @@ sl:
     safe_mode:
       enabled: "Varni način je vklopljen, za izklop varnega načina zaprite okno brskalnika."
     image_removed: "(slika odstranjena)"
-    do_not_disturb:
-      title: "Ne moti za ..."
-      label: "Ne moti"
+    pause_notifications:
       remaining: "%{remaining} preostalo"
       options:
         half_hour: "30 minut"
@@ -3959,7 +3956,6 @@ sl:
       user:
         suspend_failed: "Nekaj je šlo narobe pri suspendiranju uporabnika %{error}"
         unsuspend_failed: "Nekaj je šlo narobe pri preklicu suspenza %{error}"
-        suspend_duration: "Za kako dolgo bo uporabnik suspendiran?"
         suspend_reason_label: "Zakaj je uporabnik suspendiran? To besedilo <b>bo vidno vsem</b> na uporabnikovem profilu in se bo prikazalo uporabniku, ko se bo poskusil prijaviti. Naj bo kratko."
         suspend_reason_hidden_label: "Zakaj je uporabnik suspendiran? To besedilo bo prikazano uporabniku, ko se bo poskušal vpisati. Naj bo kratko."
         suspend_reason: "Razlog"
@@ -4310,7 +4306,6 @@ sl:
       next: "Naprej"
       step-text: "Korak"
       step: "%{current} od %{total}"
-      upload: "Naloži"
       uploading: "Nalagam..."
       upload_error: "Prišlo je do napake med nalaganjem te datoteke. Poskusite ponovno."
       staff_count:

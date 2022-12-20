@@ -165,6 +165,9 @@ fi:
         one: "Sinulla on uusi chat-viesti"
         other: "Sinulla on uusia chat-viestejä"
       from: "%{site_name}"
+      subject:
+        direct_message_from_1: "[%{email_prefix}] Uusi viesti käyttäjältä %{username}"
+        chat_channel_1: "[%{email_prefix}] Uusi viesti kanavalta %{channel}"
       unsubscribe: "Tämä chat-yhteenveto lähetetään sivustolta %{site_link}, kun olet poissa. Määritä %{email_preferences_link} tai %{unsubscribe_link} peruuttaaksesi tilauksen."
       unsubscribe_no_link: "Tämä chat-yhteenveto lähetetään sivustolta %{site_link}, kun olet poissa. Määritä %{email_preferences_link}."
       view_messages:

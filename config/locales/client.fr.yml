@@ -145,38 +145,37 @@ fr:
       email: "Envoyer par e-mail"
       url: "Copier et partager l'URL"
     action_codes:
-      public_topic: "a rendu ce sujet public %{when}"
-      open_topic: "a converti ceci en sujet %{when}"
-      private_topic: "a fait de ce sujet un message direct %{when}"
-      split_topic: "a scindé ce sujet %{when}"
-      invited_user: "a invité %{who} %{when}"
-      invited_group: "a invité %{who} %{when}"
+      public_topic: "A rendu ce sujet public %{when}"
+      open_topic: "A converti ceci en sujet %{when}"
+      private_topic: "A fAit de ce sujet un messAge direct %{when}"
+      split_topic: "A scindé ce sujet %{when}"
+      invited_user: "A invité %{who} %{when}"
+      invited_group: "A invité %{who} %{when}"
       user_left: "%{who} a quitté cette conversation %{when}"
-      removed_user: "a retiré %{who} %{when}"
-      removed_group: "a retiré %{who} %{when}"
-      autobumped: "remonté automatiquement dans la liste %{when}"
+      removed_user: "A retiré %{who} %{when}"
+      removed_group: "A retiré %{who} %{when}"
+      autobumped: "Remonté automatiquement dans la liste %{when}"
       autoclosed:
-        enabled: "fermé automatiquement %{when}"
-        disabled: "ouvert automatiquement %{when}"
+        enabled: "A fermé ce sujet %{when}"
+        disabled: "A ouvert ce sujet %{when}"
       closed:
-        enabled: "a fermé ce sujet %{when}"
-        disabled: "a ouvert ce sujet %{when}"
+        enabled: "A fermé ce sujet %{when}"
+        disabled: "A ouvert ce sujet %{when}"
       archived:
-        enabled: "a archivé ce sujet %{when}"
-        disabled: "a désarchivé ce sujet %{when}"
+        enabled: "A Archivé ce sujet %{when}"
+        disabled: "A désArchivé ce sujet %{when}"
       pinned:
-        enabled: "a épinglé ce sujet %{when}"
-        disabled: "a désépinglé ce sujet %{when}"
+        enabled: "A épinglé ce sujet %{when}"
+        disabled: "A désépinglé ce sujet %{when}"
       pinned_globally:
-        enabled: "a épinglé ce sujet globalement %{when}"
-        disabled: "a désépinglé ce sujet %{when}"
+        enabled: "A épinglé ce sujet globAlement %{when}"
+        disabled: "A désépinglé ce sujet %{when}"
       visible:
-        enabled: "a rendu ce sujet visible %{when}"
-        disabled: "a rendu ce sujet invisible %{when}"
+        enabled: "A rendu ce sujet visible %{when}"
+        disabled: "A rendu ce sujet invisible %{when}"
       banner:
-        enabled: "a mis à la une %{when}. Il sera affiché en haut de chaque page jusqu'à ce qu'il soit ignoré par un utilisateur."
-        disabled: "a supprimé de la une %{when}. Il ne sera plus affiché en haut de chaque page."
-      forwarded: "a transmis l'e-mail ci-dessus"
+        enabled: "A mis à lA une %{when}. Il serA Affiché en hAut de chAque pAge jusqu'à ce qu'il soit ignoré pAr un utilisAteur."
+        disabled: "A supprimé de lA une %{when}. Il ne serA plus Affiché en hAut de chAque pAge."
     topic_admin_menu: "actions du sujet"
     skip_to_main_content: "Passer au contenu principal"
     emails_are_disabled: "L'e-mail sortant a été désactivé par un administrateur. Aucune notification par e-mail ne sera envoyée."
@@ -387,8 +386,6 @@ fr:
     disable: "Désactiver"
     continue: "Continuer"
     undo: "Annuler"
-    revert: "Rétablir"
-    failed: "Échec"
     switch_to_anon: "Activer le mode anonyme"
     switch_from_anon: "Quitter le mode anonyme"
     banner:
@@ -1011,7 +1008,6 @@ fr:
       notification_schedule:
         title: "Planification des notifications"
         label: "Activer la planification personnalisée des notifications"
-        tip: "Vous basculerez automatiquement en mode « Ne pas déranger » en-dehors de ces horaires."
         midnight: "Minuit"
         none: "Jamais"
         monday: "Lundi"
@@ -1217,6 +1213,7 @@ fr:
         profile: "Profil"
         emails: "E-mails"
         notifications: "Notifications"
+        tracking: "Suivre"
         categories: "Catégories"
         users: "Utilisateurs"
         tags: "Étiquettes"
@@ -1274,6 +1271,7 @@ fr:
         use: "Utiliser l'application Authenticator"
         enforced_notice: "Vous devez activer l'authentification à deux facteurs avant d'accéder à ce site."
         disable: "Désactiver"
+        delete: "Supprimer"
         save: "Enregistrer"
         edit: "Modifier"
         edit_title: "Gérer l'application d'authentification"
@@ -1469,6 +1467,7 @@ fr:
       email_in_reply_to: "En plus du message notifié par e-mail, inclure un extrait du message auquel il répond"
       other_settings: "Autre"
       categories_settings: "Catégories"
+      topics_settings: "Sujets"
       new_topic_duration:
         label: "Considérer les sujets comme nouveaux quand"
         not_viewed: "je ne les ai pas encore vus"
@@ -1823,6 +1822,7 @@ fr:
       title: "Se connecter"
       username: "Utilisateur"
       password: "Mot de passe"
+      show_password: "Afficher"
       second_factor_title: "Authentification à deux facteurs"
       second_factor_description: "Veuillez saisir le code d'authentification généré par votre application :"
       second_factor_backup: "Se connecter avec un code de secours"
@@ -2170,6 +2170,7 @@ fr:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2239,6 +2240,7 @@ fr:
         invited_to_private_message: "invité au message direct"
         invitee_accepted: "invitation acceptée"
         posted: "nouveau message"
+        watching_category_or_tag: "nouveau message"
         moved_post: "message déplacé"
         linked: "lien créé"
         bookmark_reminder: "rappel de signet"
@@ -2277,6 +2279,7 @@ fr:
         other: "<span>%{count}%{plus} résultats pour</span><span class='term'>%{term}</span>"
       title: "Recherche"
       full_page_title: "Recherche"
+      results: "résultats"
       no_results: "Aucun résultat."
       no_more_results: "Aucun résultat supplémentaire."
       post_format: "#%{post_number} par %{username}"
@@ -3784,9 +3787,7 @@ fr:
     safe_mode:
       enabled: "Le mode sans échec est activé ; fermez cette fenêtre de navigateur pour le quitter"
     image_removed: "(image supprimée)"
-    do_not_disturb:
-      title: "Ne pas déranger pendant…"
-      label: "Ne pas déranger"
+    pause_notifications:
       remaining: "Encore %{remaining}"
       options:
         half_hour: "30 minutes"
@@ -4170,6 +4171,7 @@ fr:
         detailed_instruction: "Une requête POST sera envoyée à l'URL fournie lorsque l'événement choisi se produira."
         new: "Nouveau Webhook"
         create: "Créer"
+        edit: "Modifier"
         save: "Enregistrer"
         controls: "Contrôles"
         go_back: "Retour à la liste"
@@ -4271,6 +4273,8 @@ fr:
         howto: "Comment installer des extensions ?"
         official: "Extension officielle"
         broken_route: "Impossible de configurer le lien vers « %{name} ». Assurez-vous que les bloqueurs de publicités sont désactivés et essayez de recharger la page."
+      navigation_menu:
+        sidebar: "Barre latérale"
       backups:
         title: "Sauvegardes"
         menu:
@@ -4484,7 +4488,6 @@ fr:
             error: "Ce thème a été désactivé automatiquement car il n'est pas compatible avec cette version de Discourse."
             minimum: "Nécessite la version %{version} ou supérieure de Discourse."
             maximum: "Nécessite la version %{version} ou inférieure de Discourse."
-          component_of: "Composant de :"
           update_to_latest: "Mettre à jour"
           check_for_updates: "Vérifier les mises à jour"
           updating: "Mise à jour…"
@@ -4957,7 +4960,6 @@ fr:
       user:
         suspend_failed: "Une erreur s'est produite lors de la suspension de cet utilisateur %{error}"
         unsuspend_failed: "Une erreur s'est produite lors de la réactivation de cet utilisateur %{error}"
-        suspend_duration: "Combien de temps l'utilisateur sera-t-il suspendu ?"
         suspend_reason_label: "Pourquoi suspendez-vous cet utilisateur ? Ce texte <b>sera visible par tout le monde</b> sur la page du profil de cet utilisateur et sera affiché à l'utilisateur quand il essaiera de se connecter. Tâchez d'être concis(e)."
         suspend_reason_hidden_label: "Pourquoi suspendez-vous cet utilisateur ? Ce texte sera affiché à l'utilisateur quand il essaiera de se connecter. Tâchez d'être concis(e)."
         suspend_reason: "Raison"
@@ -4991,7 +4993,6 @@ fr:
         penalty_post_edit: "Modifier le message"
         penalty_post_none: "Ne rien faire"
         penalty_count: "Nombre de pénalités"
-        penalty_history: "Historique des pénalités"
         clear_penalty_history:
           title: "Effacer l'historique des pénalités"
           description: "les utilisateurs ayant des pénalités ne peuvent pas atteindre le niveau de confiance 3"
@@ -5146,6 +5147,11 @@ fr:
         silenced_count: "En sourdine"
         suspended_count: "Suspendus"
         last_six_months: "6 derniers mois"
+        other_matches_list:
+          username: "Nom d'utilisateur"
+          trust_level: "Niveau de confiance"
+          read_time: "Temps de lecture"
+          posts: "Messages"
         tl3_requirements:
           title: "Prérequis pour le niveau de confiance 3"
           table_title:
@@ -5290,6 +5296,7 @@ fr:
           search: "Recherche"
           groups: "Groupes"
           dashboard: "Tableau de bord"
+          navigation: "Navigation"
         secret_list:
           invalid_input: "Les champs de saisie ne peuvent pas être vide ou contenir le caractère de la barre verticale"
         default_categories:
@@ -5460,10 +5467,8 @@ fr:
       finish: "Quitter la configuration"
       back: "Retour"
       next: "Suivant"
-      configure_more: "Configurer plus…"
       step-text: "Étape"
       step: "%{current} sur %{total}"
-      upload: "Envoi"
       uploading: "Envoi en cours…"
       upload_error: "Nous sommes désolés, une erreur est survenue lors de l'envoi de ce fichier. Veuillez réessayer."
       staff_count:

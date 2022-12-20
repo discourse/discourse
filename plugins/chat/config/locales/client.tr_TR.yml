@@ -113,6 +113,10 @@ tr_TR:
           one: "Davet gönderildi"
           other: "Davet gönderildi"
         invite: "Kanala davet et"
+        groups:
+          users_limit:
+            one: "%{count} kullanıcı"
+            other: "%{count} kullanıcı"
       aria_roles:
         header: "Sohbet başlığı"
         composer: "Sohbet oluşturucu"
