@@ -135,7 +135,7 @@ RSpec.describe UploadCreator do
       it 'should apply pngquant to optimized images' do
         upload = UploadCreator.new(file, filename,
           pasted: true,
-          force_optimize: true
+          force_optimize: false
         ).create_for(user.id)
 
         # no optimisation possible without losing details
