@@ -21,8 +21,8 @@ export default class ToggleChannelMembershipButton extends Component {
       leaveTitle: I18n.t("chat.channel_settings.leave_channel"),
       leaveIcon: "",
       leaveClass: "",
-      ...this.args.options
-    },
+      ...this.args.options,
+    };
   }
 
   get label() {
