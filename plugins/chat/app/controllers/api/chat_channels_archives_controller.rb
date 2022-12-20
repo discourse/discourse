@@ -17,13 +17,9 @@ class Chat::Api::ChatChannelsArchivesController < Chat::Api::ChatChannelsControl
             ca.permit(:title, :topic_id, :category_id, tags: [])
           end
 
-      if if archive_params[:type] == "new_topic"
-           archive_params[:title].blank?
-         else
-           archive_params[:topic_id].blank?
-         end
-        raise Discourse::InvalidParameters
-      end
+      new_topic = archive_params[:type] == "new_topic"
+      raise Discourse::InvalidParameters if new_topic && archive_params[:title].blank?
+      raise Discourse::InvalidParameters if !new_topic && archive_params[:topic_id].blank?
 
       if !guardian.can_change_channel_status?(channel_from_params, :read_only)
         raise Discourse::InvalidAccess.new(I18n.t("chat.errors.channel_cannot_be_archived"))
