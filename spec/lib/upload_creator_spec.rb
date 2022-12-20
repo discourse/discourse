@@ -139,7 +139,7 @@ RSpec.describe UploadCreator do
         ).create_for(user.id)
 
         # no optimisation possible without losing details
-        expect(upload.filesize).to eq(9558)
+        expect(upload.filesize).to eq(9202)
 
         thumbnail_size = upload.get_optimized_image(upload.width, upload.height, {}).filesize
 
