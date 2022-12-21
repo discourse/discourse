@@ -120,7 +120,6 @@ after_initialize do
        )
   load File.expand_path("../app/controllers/chat_base_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/chat_controller.rb", __FILE__)
-  load File.expand_path("../app/controllers/chat_channels_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/emojis_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/direct_messages_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/incoming_chat_webhooks_controller.rb", __FILE__)
@@ -207,13 +206,25 @@ after_initialize do
   load File.expand_path("../app/services/chat_message_destroyer.rb", __FILE__)
   load File.expand_path("../app/controllers/api_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/chat_channels_controller.rb", __FILE__)
-  load File.expand_path("../app/controllers/api/chat_channel_memberships_controller.rb", __FILE__)
+  load File.expand_path("../app/controllers/api/chat_current_user_channels_controller.rb", __FILE__)
   load File.expand_path(
-         "../app/controllers/api/chat_channel_notifications_settings_controller.rb",
+         "../app/controllers/api/chat_channels_current_user_membership_controller.rb",
+         __FILE__,
+       )
+  load File.expand_path("../app/controllers/api/chat_channels_memberships_controller.rb", __FILE__)
+  load File.expand_path(
+         "../app/controllers/api/chat_channels_messages_moves_controller.rb",
+         __FILE__,
+       )
+  load File.expand_path("../app/controllers/api/chat_channels_archives_controller.rb", __FILE__)
+  load File.expand_path("../app/controllers/api/chat_channels_status_controller.rb", __FILE__)
+  load File.expand_path(
+         "../app/controllers/api/chat_channels_current_user_notifications_settings_controller.rb",
          __FILE__,
        )
   load File.expand_path("../app/controllers/api/category_chatables_controller.rb", __FILE__)
   load File.expand_path("../app/controllers/api/hints_controller.rb", __FILE__)
+  load File.expand_path("../app/controllers/api/chat_chatables_controller.rb", __FILE__)
   load File.expand_path("../app/queries/chat_channel_memberships_query.rb", __FILE__)
 
   if Discourse.allow_dev_populate?
@@ -245,7 +256,6 @@ after_initialize do
     Category.prepend Chat::CategoryExtension
     User.prepend Chat::UserExtension
     Jobs::UserEmail.prepend Chat::UserEmailExtension
-
     Bookmark.register_bookmarkable(ChatMessageBookmarkable)
   end
 
@@ -579,12 +589,23 @@ after_initialize do
   end
 
   Chat::Engine.routes.draw do
-    namespace :api do
-      get "/chat_channels" => "chat_channels#index"
-      get "/chat_channels/:chat_channel_id/memberships" => "chat_channel_memberships#index"
-      put "/chat_channels/:chat_channel_id" => "chat_channels#update"
-      put "/chat_channels/:chat_channel_id/notifications_settings" =>
-            "chat_channel_notifications_settings#update"
+    namespace :api, defaults: { format: :json } do
+      get "/chatables" => "chat_chatables#index"
+      get "/channels" => "chat_channels#index"
+      get "/channels/me" => "chat_current_user_channels#index"
+      post "/channels" => "chat_channels#create"
+      delete "/channels/:channel_id" => "chat_channels#destroy"
+      put "/channels/:channel_id" => "chat_channels#update"
+      get "/channels/:channel_id" => "chat_channels#show"
+      put "/channels/:channel_id/status" => "chat_channels_status#update"
+      post "/channels/:channel_id/messages/moves" => "chat_channels_messages_moves#create"
+      post "/channels/:channel_id/archives" => "chat_channels_archives#create"
+      get "/channels/:channel_id/memberships" => "chat_channels_memberships#index"
+      delete "/channels/:channel_id/memberships/me" =>
+               "chat_channels_current_user_membership#destroy"
+      post "/channels/:channel_id/memberships/me" => "chat_channels_current_user_membership#create"
+      put "/channels/:channel_id/notifications-settings/me" =>
+            "chat_channels_current_user_notifications_settings#update"
 
       # Category chatables controller hints. Only used by staff members, we don't want to leak category permissions.
       get "/category-chatables/:id/permissions" => "category_chatables#permissions",
@@ -607,18 +628,9 @@ after_initialize do
 
     # chat_channel_controller routes
     get "/chat_channels" => "chat_channels#index"
-    put "/chat_channels" => "chat_channels#create"
-    get "/chat_channels/search" => "chat_channels#search"
-    post "/chat_channels/:chat_channel_id" => "chat_channels#edit"
     post "/chat_channels/:chat_channel_id/notification_settings" =>
            "chat_channels#notification_settings"
-    post "/chat_channels/:chat_channel_id/follow" => "chat_channels#follow"
-    post "/chat_channels/:chat_channel_id/unfollow" => "chat_channels#unfollow"
     get "/chat_channels/:chat_channel_id" => "chat_channels#show"
-    put "/chat_channels/:chat_channel_id/archive" => "chat_channels#archive"
-    put "/chat_channels/:chat_channel_id/retry_archive" => "chat_channels#retry_archive"
-    put "/chat_channels/:chat_channel_id/change_status" => "chat_channels#change_status"
-    delete "/chat_channels/:chat_channel_id" => "chat_channels#destroy"
 
     # chat_controller routes
     get "/" => "chat#respond"
@@ -645,7 +657,6 @@ after_initialize do
     put "/:chat_channel_id/:message_id/rebake" => "chat#rebake"
     post "/:chat_channel_id/:message_id/flag" => "chat#flag"
     post "/:chat_channel_id/quote" => "chat#quote_messages"
-    put "/:chat_channel_id/move_messages_to_channel" => "chat#move_messages_to_channel"
     put "/:chat_channel_id/restore/:message_id" => "chat#restore"
     get "/lookup/:message_id" => "chat#lookup_message"
     put "/:chat_channel_id/read/:message_id" => "chat#update_user_last_read"
@@ -742,7 +753,7 @@ after_initialize do
   }
 
   register_user_destroyer_on_content_deletion_callback(
-    Proc.new { |user| Jobs.enqueue(:delete_user_messages, user_id: user.id) }
+    Proc.new { |user| Jobs.enqueue(:delete_user_messages, user_id: user.id) },
   )
 end
 

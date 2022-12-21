@@ -13,7 +13,7 @@ class Chat::DirectMessagesController < Chat::ChatBaseController
       render_serialized(
         chat_channel,
         ChatChannelSerializer,
-        root: "chat_channel",
+        root: "channel",
         membership: chat_channel.membership_for(current_user),
       )
     rescue Chat::DirectMessageChannelCreator::NotAllowed => err
@@ -31,7 +31,7 @@ class Chat::DirectMessagesController < Chat::ChatBaseController
       render_serialized(
         chat_channel,
         ChatChannelSerializer,
-        root: "chat_channel",
+        root: "channel",
         membership: chat_channel.membership_for(current_user),
       )
     else

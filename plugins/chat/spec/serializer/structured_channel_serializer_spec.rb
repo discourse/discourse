@@ -7,8 +7,12 @@ RSpec.describe StructuredChannelSerializer do
   fab!(:user3) { Fabricate(:user) }
   fab!(:channel1) { Fabricate(:category_channel) }
   fab!(:channel2) { Fabricate(:category_channel) }
-  fab!(:channel3) { Fabricate(:direct_message_channel, users: [user1, user2]) }
-  fab!(:channel4) { Fabricate(:direct_message_channel, users: [user1, user3]) }
+  fab!(:channel3) do
+    Fabricate(:direct_message_channel, users: [user1, user2], with_membership: false)
+  end
+  fab!(:channel4) do
+    Fabricate(:direct_message_channel, users: [user1, user3], with_membership: false)
+  end
   fab!(:membership1) do
     Fabricate(:user_chat_channel_membership, user: user1, chat_channel: channel1)
   end
@@ -78,8 +82,9 @@ RSpec.describe StructuredChannelSerializer do
         .new(fetch_data, scope: Guardian.new)
         .public_channels
         .find { |channel| channel.id == channel1.id }
-        .current_user_membership
-        .as_json,
+        .as_json[
+        :current_user_membership
+      ],
     ).to eq(nil)
   end
 
@@ -88,13 +93,15 @@ RSpec.describe StructuredChannelSerializer do
     data[:memberships] = data[:memberships].reject do |membership|
       membership.chat_channel_id == channel1.id
     end
+
     expect(
       described_class
         .new(data, scope: guardian)
         .public_channels
         .find { |channel| channel.id == channel1.id }
-        .current_user_membership
-        .as_json,
+        .as_json[
+        :current_user_membership
+      ],
     ).to eq(nil)
   end
 end

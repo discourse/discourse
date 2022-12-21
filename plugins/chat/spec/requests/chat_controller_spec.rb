@@ -358,40 +358,19 @@ RSpec.describe Chat::ChatController do
       fab!(:chatable) { Fabricate(:direct_message, users: [user1, user2]) }
       fab!(:direct_message_channel) { Fabricate(:direct_message_channel, chatable: chatable) }
 
-      def create_memberships
-        UserChatChannelMembership.create!(
-          user: user1,
-          chat_channel: direct_message_channel,
-          following: true,
-          desktop_notification_level: UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
-          mobile_notification_level: UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
-        )
-        UserChatChannelMembership.create!(
-          user: user2,
-          chat_channel: direct_message_channel,
-          following: false,
-          desktop_notification_level: UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
-          mobile_notification_level: UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
-        )
-        Group.refresh_automatic_groups!
-      end
-
       it "forces users to follow the channel" do
-        create_memberships
-
-        expect(UserChatChannelMembership.find_by(user_id: user2.id).following).to be false
+        direct_message_channel.remove(user2)
 
         ChatPublisher.expects(:publish_new_channel).once
 
         sign_in(user1)
+
         post "/chat/#{direct_message_channel.id}.json", params: { message: message }
 
         expect(UserChatChannelMembership.find_by(user_id: user2.id).following).to be true
       end
 
       it "errors when the user is not part of the direct message channel" do
-        create_memberships
-
         DirectMessageUser.find_by(user: user1, direct_message: chatable).destroy!
         sign_in(user1)
         post "/chat/#{direct_message_channel.id}.json", params: { message: message }
@@ -405,7 +384,6 @@ RSpec.describe Chat::ChatController do
 
       context "when current user is silenced" do
         before do
-          create_memberships
           sign_in(user1)
           UserSilencer.new(user1).silence
         end
@@ -422,9 +400,7 @@ RSpec.describe Chat::ChatController do
         end
 
         it "does not force them to follow the channel or send a publish_new_channel message" do
-          create_memberships
-
-          expect(UserChatChannelMembership.find_by(user_id: user2.id).following).to be false
+          direct_message_channel.remove(user2)
 
           ChatPublisher.expects(:publish_new_channel).never
 
@@ -1374,107 +1350,6 @@ RSpec.describe Chat::ChatController do
         get "/chat/lookup/#{message.id}.json", params: { chat_channel_id: channel.id }
         expect(response.status).to eq(200)
         expect(response.parsed_body["chat_messages"][0]["id"]).to eq(message.id)
-      end
-    end
-  end
-
-  describe "#move_messages_to_channel" do
-    fab!(:message_to_move1) do
-      Fabricate(
-        :chat_message,
-        chat_channel: chat_channel,
-        message: "some cool message",
-        created_at: 2.minutes.ago,
-      )
-    end
-    fab!(:message_to_move2) do
-      Fabricate(
-        :chat_message,
-        chat_channel: chat_channel,
-        message: "and another thing",
-        created_at: 1.minute.ago,
-      )
-    end
-    fab!(:destination_channel) { Fabricate(:category_channel) }
-    let(:message_ids) { [message_to_move1.id, message_to_move2.id] }
-    let(:invalid_destination_channel) do
-      Fabricate(:direct_message_channel, users: [admin, Fabricate(:user)])
-    end
-
-    context "when the user is not admin" do
-      it "returns an access denied error" do
-        sign_in(user)
-        put "/chat/#{chat_channel.id}/move_messages_to_channel.json",
-            params: {
-              destination_channel_id: destination_channel.id,
-              message_ids: message_ids,
-            }
-        expect(response.status).to eq(403)
-      end
-    end
-
-    context "when the user is admin" do
-      before { sign_in(admin) }
-
-      it "shows an error if the source channel is not found" do
-        chat_channel.trash!
-        put "/chat/#{chat_channel.id}/move_messages_to_channel.json",
-            params: {
-              destination_channel_id: destination_channel.id,
-              message_ids: message_ids,
-            }
-        expect(response.status).to eq(404)
-      end
-
-      it "shows an error if the destination channel is not found" do
-        destination_channel.trash!
-        put "/chat/#{chat_channel.id}/move_messages_to_channel.json",
-            params: {
-              destination_channel_id: destination_channel.id,
-              message_ids: message_ids,
-            }
-        expect(response.status).to eq(404)
-      end
-
-      it "successfully moves the messages to the new channel" do
-        put "/chat/#{chat_channel.id}/move_messages_to_channel.json",
-            params: {
-              destination_channel_id: destination_channel.id,
-              message_ids: message_ids,
-            }
-        expect(response.status).to eq(200)
-        latest_destination_messages = destination_channel.chat_messages.last(2)
-        expect(latest_destination_messages.first.message).to eq("some cool message")
-        expect(latest_destination_messages.second.message).to eq("and another thing")
-        expect(message_to_move1.reload.deleted_at).not_to eq(nil)
-        expect(message_to_move2.reload.deleted_at).not_to eq(nil)
-      end
-
-      it "shows an error message when the destination channel is invalid" do
-        put "/chat/#{chat_channel.id}/move_messages_to_channel.json",
-            params: {
-              destination_channel_id: invalid_destination_channel.id,
-              message_ids: message_ids,
-            }
-        expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"]).to include(
-          I18n.t("chat.errors.message_move_invalid_channel"),
-        )
-      end
-
-      it "shows an error when none of the messages can be found" do
-        destroyed_message = Fabricate(:chat_message, chat_channel: chat_channel)
-        destroyed_message.trash!
-
-        put "/chat/#{chat_channel.id}/move_messages_to_channel.json",
-            params: {
-              destination_channel_id: destination_channel.id,
-              message_ids: [destroyed_message],
-            }
-        expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"]).to include(
-          I18n.t("chat.errors.message_move_no_messages_found"),
-        )
       end
     end
   end

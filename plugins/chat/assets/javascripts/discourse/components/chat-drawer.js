@@ -17,6 +17,7 @@ export default Component.extend({
   draftChannelView: equal("view", DRAFT_CHANNEL_VIEW),
   chat: service(),
   router: service(),
+  chatChannelsManager: service(),
   chatStateManager: service(),
   loading: false,
   showClose: true, // TODO - false when on same topic
@@ -40,7 +41,6 @@ export default Component.extend({
       this,
       "openChannelAtMessage"
     );
-    this.appEvents.on("chat:refresh-channels", this, "refreshChannels");
     this.appEvents.on("composer:closed", this, "_checkSize");
     this.appEvents.on("composer:opened", this, "_checkSize");
     this.appEvents.on("composer:resized", this, "_checkSize");
@@ -68,7 +68,6 @@ export default Component.extend({
         this,
         "openChannelAtMessage"
       );
-      this.appEvents.off("chat:refresh-channels", this, "refreshChannels");
       this.appEvents.off("composer:closed", this, "_checkSize");
       this.appEvents.off("composer:opened", this, "_checkSize");
       this.appEvents.off("composer:resized", this, "_checkSize");
@@ -198,12 +197,9 @@ export default Component.extend({
     }
   },
 
-  @discourseComputed(
-    "chat.activeChannel",
-    "currentUser.chat_channel_tracking_state"
-  )
-  unreadCount(activeChannel, trackingState) {
-    return trackingState[activeChannel.id]?.unread_count || 0;
+  @discourseComputed("chat.activeChannel.currentUserMembership.unread_count")
+  unreadCount(count) {
+    return count || 0;
   },
 
   @action
@@ -218,7 +214,6 @@ export default Component.extend({
     switch (route.name) {
       case "chat":
         this.set("view", LIST_VIEW);
-        this.refreshChannels();
         this.appEvents.trigger("chat:float-toggled", false);
         return;
       case "chat.draft-channel":
@@ -226,8 +221,8 @@ export default Component.extend({
         this.appEvents.trigger("chat:float-toggled", false);
         return;
       case "chat.channel":
-        return this.chat
-          .getChannelBy("id", route.params.channelId)
+        return this.chatChannelsManager
+          .find(route.params.channelId)
           .then((channel) => {
             this.chat.set("messageId", route.queryParams.messageId);
             this.chat.setActiveChannel(channel);
@@ -260,32 +255,6 @@ export default Component.extend({
     this.chatStateManager.didCloseDrawer();
     this.chat.setActiveChannel(null);
     this.appEvents.trigger("chat:float-toggled", true);
-  },
-
-  @action
-  refreshChannels() {
-    if (this.view === LIST_VIEW) {
-      this.fetchChannels();
-    }
-  },
-
-  @action
-  fetchChannels() {
-    this.set("loading", true);
-
-    this.chat.getChannels().then(() => {
-      if (this.isDestroying || this.isDestroyed) {
-        return;
-      }
-
-      this.setProperties({
-        loading: false,
-        view: LIST_VIEW,
-      });
-
-      this.chatStateManager.didExpandDrawer();
-      this.chat.setActiveChannel(null);
-    });
   },
 
   @action

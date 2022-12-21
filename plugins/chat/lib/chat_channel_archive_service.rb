@@ -45,6 +45,7 @@ class Chat::ChatChannelArchiveService
       :chat_channel_archive,
       chat_channel_archive_id: chat_channel.chat_channel_archive.id,
     )
+    chat_channel.chat_channel_archive
   end
 
   attr_reader :chat_channel_archive, :chat_channel, :chat_channel_title

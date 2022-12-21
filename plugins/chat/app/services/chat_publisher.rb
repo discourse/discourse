@@ -20,6 +20,7 @@ module ChatPublisher
     MessageBus.publish(
       self.new_messages_message_bus_channel(chat_channel.id),
       {
+        channel_id: chat_channel.id,
         message_id: chat_message.id,
         user_id: chat_message.user.id,
         username: chat_message.user.username,
@@ -145,7 +146,7 @@ module ChatPublisher
   def self.publish_new_mention(user_id, chat_channel_id, chat_message_id)
     MessageBus.publish(
       self.new_mentions_message_bus_channel(chat_channel_id),
-      { message_id: chat_message_id }.as_json,
+      { message_id: chat_message_id, channel_id: chat_channel_id }.as_json,
       user_ids: [user_id],
     )
   end
@@ -154,13 +155,20 @@ module ChatPublisher
 
   def self.publish_new_channel(chat_channel, users)
     users.each do |user|
+      # FIXME: This could generate a lot of queries depending on the amount of users
+      membership = chat_channel.membership_for(user)
+
+      # TODO: this event is problematic as some code will update the membership before calling it
+      # and other code will update it after calling it
+      # it means frontend must handle logic for both cases
       serialized_channel =
         ChatChannelSerializer.new(
           chat_channel,
           scope: Guardian.new(user), # We need a guardian here for direct messages
-          root: :chat_channel,
-          membership: chat_channel.membership_for(user),
+          root: :channel,
+          membership: membership,
         ).as_json
+
       MessageBus.publish(NEW_CHANNEL_MESSAGE_BUS_CHANNEL, serialized_channel, user_ids: [user.id])
     end
   end
@@ -179,9 +187,10 @@ module ChatPublisher
         type: :mention_warning,
         chat_message_id: chat_message.id,
         cannot_see: cannot_chat_users.map { |u| { username: u.username, id: u.id } }.as_json,
-        without_membership: without_membership.map { |u| { username: u.username, id: u.id } }.as_json,
+        without_membership:
+          without_membership.map { |u| { username: u.username, id: u.id } }.as_json,
         groups_with_too_many_members: too_many_members.map(&:name).as_json,
-        group_mentions_disabled: mentions_disabled.map(&:name).as_json
+        group_mentions_disabled: mentions_disabled.map(&:name).as_json,
       },
       user_ids: [user_id],
     )
