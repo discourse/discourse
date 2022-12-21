@@ -31,4 +31,18 @@ RSpec.describe "User chat preferences", type: :system, js: true do
 
     expect(page).to have_css("#user_chat_sounds .select-kit-header[data-value='bell']")
   end
+
+  context "as an admin on another user's preferences" do
+    fab!(:current_user) { Fabricate(:admin) }
+    fab!(:user_1) { Fabricate(:admin) }
+
+    before { sign_in(current_user) }
+
+    it "allows to change settings" do
+      visit("/u/#{user_1.username}/preferences")
+      find(".preferences-chat-link").click
+
+      expect(page).to have_current_path("/u/#{user_1.username}/preferences/chat")
+    end
+  end
 end
