@@ -3,6 +3,7 @@ import Promise from "rsvp";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import { tracked } from "@glimmer/tracking";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 const DIRECT_MESSAGE_CHANNELS_LIMIT = 20;
 
@@ -105,10 +106,13 @@ export default class ChatChannelsManager extends Service {
   }
 
   async #find(id) {
-    return this.chatApi.getChannel(id).then((channel) => {
-      this.#cache(channel);
-      return channel;
-    });
+    return this.chatApi
+      .getChannel(id)
+      .catch(popupAjaxError)
+      .then((channel) => {
+        this.#cache(channel);
+        return channel;
+      });
   }
 
   #cache(channel) {

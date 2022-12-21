@@ -60,27 +60,35 @@ RSpec.describe "Visit channel", type: :system, js: true do
       end
 
       context "when channel is not found" do
-        it "shows a not found page" do
+        it "shows an error" do
           visit("/chat/channel/999/-")
 
-          expect(page).to have_current_path("/404")
+          expect(page).to have_content("Not Found") # this is not a translated key
+        end
+      end
+
+      context "when loading a non existing message of a channel" do
+        it "shows an error" do
+          visit("/chat/channel/#{category_channel_1.id}/-?messageId=-999")
+
+          expect(page).to have_content(I18n.t("not_found"))
         end
       end
 
       context "when channel is not accessible" do
         context "when category channel" do
-          it "shows a forbidden page" do
+          it "shows an error" do
             chat.visit_channel(private_category_channel_1)
 
-            expect(page).to have_content(I18n.t("js.errors.reasons.forbidden"))
+            expect(page).to have_content(I18n.t("invalid_access"))
           end
         end
 
         context "when direct message channel" do
-          it "shows a forbidden page" do
+          it "shows an error" do
             chat.visit_channel(inaccessible_dm_channel_1)
 
-            expect(page).to have_content(I18n.t("js.errors.reasons.forbidden"))
+            expect(page).to have_content(I18n.t("invalid_access"))
           end
         end
       end
