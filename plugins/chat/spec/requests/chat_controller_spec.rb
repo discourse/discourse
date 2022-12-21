@@ -1329,14 +1329,14 @@ RSpec.describe Chat::ChatController do
 
     it "ensures message's channel can be seen" do
       Guardian.any_instance.expects(:can_join_chat_channel?).with(channel)
-      get "/chat/lookup/#{message.id}.json", { params: { chat_channel_id: channel.id } }
+      get "/chat/lookup/#{message.id}.json", params: { chat_channel_id: channel.id }
     end
 
     context "when the message doesn’t belong to the channel" do
       let!(:message) { Fabricate(:chat_message) }
 
       it "returns a 404" do
-        get "/chat/lookup/#{message.id}.json", { params: { chat_channel_id: channel.id } }
+        get "/chat/lookup/#{message.id}.json", params: { chat_channel_id: channel.id }
 
         expect(response.status).to eq(404)
       end
@@ -1346,18 +1346,18 @@ RSpec.describe Chat::ChatController do
       let(:channel) { Fabricate(:category_channel) }
 
       it "ensures the user can access that category" do
-        get "/chat/lookup/#{message.id}.json", { params: { chat_channel_id: channel.id } }
+        get "/chat/lookup/#{message.id}.json", params: { chat_channel_id: channel.id }
         expect(response.status).to eq(200)
         expect(response.parsed_body["chat_messages"][0]["id"]).to eq(message.id)
 
         group = Fabricate(:group)
         chatable.update!(read_restricted: true)
         Fabricate(:category_group, group: group, category: chatable)
-        get "/chat/lookup/#{message.id}.json", { params: { chat_channel_id: channel.id } }
+        get "/chat/lookup/#{message.id}.json", params: { chat_channel_id: channel.id }
         expect(response.status).to eq(403)
 
         GroupUser.create!(user: user, group: group)
-        get "/chat/lookup/#{message.id}.json", { params: { chat_channel_id: channel.id } }
+        get "/chat/lookup/#{message.id}.json", params: { chat_channel_id: channel.id }
         expect(response.status).to eq(200)
         expect(response.parsed_body["chat_messages"][0]["id"]).to eq(message.id)
       end
@@ -1367,11 +1367,11 @@ RSpec.describe Chat::ChatController do
       let(:channel) { Fabricate(:direct_message_channel) }
 
       it "ensures the user can access that direct message channel" do
-        get "/chat/lookup/#{message.id}.json", { params: { chat_channel_id: channel.id } }
+        get "/chat/lookup/#{message.id}.json", params: { chat_channel_id: channel.id }
         expect(response.status).to eq(403)
 
         DirectMessageUser.create!(user: user, direct_message: chatable)
-        get "/chat/lookup/#{message.id}.json", { params: { chat_channel_id: channel.id } }
+        get "/chat/lookup/#{message.id}.json", params: { chat_channel_id: channel.id }
         expect(response.status).to eq(200)
         expect(response.parsed_body["chat_messages"][0]["id"]).to eq(message.id)
       end

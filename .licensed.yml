@@ -14,6 +14,8 @@ ignored:
   bundler:
     - rchardet # Ruby terms
     - strscan # Ruby
+    - ruby2_keywords # BSD-2-Clause
+    - openssl # Ruby terms
 
 reviewed:
   bundler:
@@ -43,7 +45,6 @@ reviewed:
     - net-protocol # Ruby
     - net-smtp # Ruby
     - omniauth # MIT
-    - openssl # Ruby terms
     - pg # Ruby terms
     - r2 # Apache-2.0 (Twitter)
     - racc # Ruby terms

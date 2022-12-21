@@ -479,6 +479,7 @@ GEM
     webpush (1.1.0)
       hkdf (~> 0.2)
       jwt (~> 2.0)
+    webrick (1.7.0)
     websocket (1.2.9)
     xorcist (1.1.3)
     xpath (3.2.0)
@@ -625,6 +626,7 @@ DEPENDENCIES
   webdrivers
   webmock
   webpush
+  webrick
   xorcist
   yaml-lint
 

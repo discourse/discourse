@@ -169,6 +169,7 @@ group :test, :development do
   gem 'rswag-specs'
 
   gem 'annotate'
+  gem 'webrick', require: false
 end
 
 group :development do
