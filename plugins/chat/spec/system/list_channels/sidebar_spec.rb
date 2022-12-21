@@ -41,7 +41,7 @@ RSpec.describe "List channels | sidebar", type: :system, js: true do
       end
     end
 
-    context "when multiple category channels" do
+    context "when multiple category channels are present" do
       fab!(:channel_1) { Fabricate(:category_channel, name: "b channel") }
       fab!(:channel_2) { Fabricate(:category_channel, name: "a channel") }
 

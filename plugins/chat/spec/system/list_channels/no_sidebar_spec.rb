@@ -32,6 +32,23 @@ RSpec.describe "List channels | no sidebar", type: :system, js: true do
       end
     end
 
+    context "when multiple category channels are present" do
+      fab!(:channel_1) { Fabricate(:category_channel, name: "b channel") }
+      fab!(:channel_2) { Fabricate(:category_channel, name: "a channel") }
+
+      before do
+        channel_1.add(current_user)
+        channel_2.add(current_user)
+      end
+
+      it "sorts them alphabetically" do
+        visit("/chat")
+
+        expect(page.find("#public-channels a:nth-child(1)")["data-chat-channel-id"]).to eq(channel_2.id.to_s)
+        expect(page.find("#public-channels a:nth-child(2)")["data-chat-channel-id"]).to eq(channel_1.id.to_s)
+      end
+    end
+
     context "when direct message channels" do
       fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user]) }
       fab!(:inaccessible_dm_channel_1) { Fabricate(:direct_message_channel) }
