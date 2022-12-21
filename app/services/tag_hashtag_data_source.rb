@@ -56,7 +56,6 @@ class TagHashtagDataSource
           ),
         with_context: true,
         limit: limit,
-        for_input: true,
         order_search_results: true,
       )
 
@@ -78,7 +77,6 @@ class TagHashtagDataSource
         guardian,
         with_context: true,
         limit: limit,
-        for_input: true,
         order_popularity: true,
         excluded_tag_names: DiscourseTagging.muted_tags(guardian.user),
       )
