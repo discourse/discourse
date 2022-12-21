@@ -54,7 +54,7 @@ ENV["RAILS_ENV"] ||= 'test'
 
 # Enforcing hostname middleware conflicts with
 # Capybara's server set to run on localhost:31337
-ENV["SKIP_ENFORCE_HOSTNAME"] ||= "1"
+ENV["SKIP_ENFORCE_HOSTNAME"] ||= "1" if ARGV.any? { |s| s.include?('spec/system') }
 
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
