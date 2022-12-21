@@ -21,7 +21,9 @@ class UserLookup
   def primary_groups
     @primary_groups ||= users.values.each_with_object({}) do |user, hash|
       if user.primary_group_id
-        hash[user.id] = groups[user.primary_group_id]
+        group = groups[user.primary_group_id]
+        set_user_group_preload(user, group, :primary_group)
+        hash[user.id] = group
       end
     end
   end
@@ -29,12 +31,19 @@ class UserLookup
   def flair_groups
     @flair_groups ||= users.values.each_with_object({}) do |user, hash|
       if user.flair_group_id
-        hash[user.id] = groups[user.flair_group_id]
+        group = groups[user.flair_group_id]
+        set_user_group_preload(user, group, :flair_group)
+        hash[user.id] = group
       end
     end
   end
 
   private
+
+  def set_user_group_preload(user, group, group_association_name)
+    association = user.association(group_association_name)
+    association.target = group
+  end
 
   def users
     @users ||= User
