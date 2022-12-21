@@ -59,6 +59,5 @@ export default class ChatMessageVisibilityObserver extends Service {
 
   unobserve(element) {
     this.intersectionObserver.unobserve(element);
-    this.mutationObserver.disconnect();
   }
 }
