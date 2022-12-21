@@ -379,7 +379,7 @@ export class Tag {
         }
 
         if (cssClass?.includes("emoji")) {
-          if (cssClass?.includes("user-status")) {
+          if (cssClass.includes("user-status")) {
             return "";
           }
 
