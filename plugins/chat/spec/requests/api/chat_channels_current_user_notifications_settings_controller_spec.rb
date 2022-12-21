@@ -12,7 +12,7 @@ RSpec.describe Chat::Api::ChatChannelsCurrentUserNotificationsSettingsController
     include_examples "channel access example",
                      :put,
                      "/notifications-settings/me",
-                     params: {
+                    {
                        notifications_settings: {
                          muted: true,
                        },

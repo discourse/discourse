@@ -12,7 +12,7 @@ RSpec.describe Chat::Api::ChatChannelsStatusController do
   end
 
   def status(status)
-    { params: { status: status } }
+    { status: status }
   end
 
   describe "#update" do
@@ -20,7 +20,7 @@ RSpec.describe Chat::Api::ChatChannelsStatusController do
       before { sign_in(Fabricate(:user)) }
 
       it "returns an error" do
-        put "/chat/api/channels/#{channel_1.id}/status", status("closed")
+        put "/chat/api/channels/#{channel_1.id}/status", params: status("closed")
 
         expect(response.status).to eq(403)
       end
@@ -33,7 +33,7 @@ RSpec.describe Chat::Api::ChatChannelsStatusController do
         before { channel_1.destroy! }
 
         it "returns an error" do
-          put "/chat/api/channels/#{channel_1.id}/status", status("closed")
+          put "/chat/api/channels/#{channel_1.id}/status", params: status("closed")
 
           expect(response.status).to eq(404)
         end
@@ -43,7 +43,7 @@ RSpec.describe Chat::Api::ChatChannelsStatusController do
         before { channel_1.update!(status: "read_only") }
 
         it "returns an error" do
-          put "/chat/api/channels/#{channel_1.id}/status", status("closed")
+          put "/chat/api/channels/#{channel_1.id}/status", params: status("closed")
 
           expect(response.status).to eq(403)
         end
@@ -53,7 +53,7 @@ RSpec.describe Chat::Api::ChatChannelsStatusController do
         before { channel_1.update!(status: "archived") }
 
         it "returns an error" do
-          put "/chat/api/channels/#{channel_1.id}/status", status("closed")
+          put "/chat/api/channels/#{channel_1.id}/status", params: status("closed")
 
           expect(response.status).to eq(403)
         end
@@ -61,7 +61,7 @@ RSpec.describe Chat::Api::ChatChannelsStatusController do
 
       context "when changing from open to closed" do
         it "changes the status" do
-          expect { put "/chat/api/channels/#{channel_1.id}/status", status("closed") }.to change {
+          expect { put "/chat/api/channels/#{channel_1.id}/status", params: status("closed") }.to change {
             channel_1.reload.status
           }.to("closed").from("open")
 
@@ -75,7 +75,7 @@ RSpec.describe Chat::Api::ChatChannelsStatusController do
         before { channel_1.update!(status: "closed") }
 
         it "changes the status" do
-          expect { put "/chat/api/channels/#{channel_1.id}/status", status("open") }.to change {
+          expect { put "/chat/api/channels/#{channel_1.id}/status", params: status("open") }.to change {
             channel_1.reload.status
           }.to("open").from("closed")
 
