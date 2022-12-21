@@ -51,9 +51,9 @@ class WebhooksController < ActionController::Base
   def mailpace
     # see https://docs.mailpace.com/guide/webhooks#email-events
 
-    message_id = Email::MessageIdService.message_id_clean(params["message_id"])
-    to_address = params["to"]
-    status = params["status"]
+    message_id = Email::MessageIdService.message_id_clean(params[:payload][:message_id])
+    to_address = params[:payload][:to]
+    status = params[:payload][:status]
 
     case status
     when "bounced"
