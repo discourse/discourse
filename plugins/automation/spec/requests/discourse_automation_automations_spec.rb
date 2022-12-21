@@ -56,12 +56,11 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
         let(:api_key) { Fabricate(:api_key, user: admin) }
 
         it 'works' do
-          post "/automations/#{automation.id}/trigger.json", {
+          post "/automations/#{automation.id}/trigger.json",
             params: { context: { foo: :bar } },
             headers: {
               HTTP_API_KEY: api_key.key
             }
-          }
 
           expect(response.status).to eq(200)
         end
@@ -78,7 +77,7 @@ describe DiscourseAutomation::AdminDiscourseAutomationAutomationsController do
 
       it 'passes the params' do
         list = capture_contexts do
-          post "/automations/#{automation.id}/trigger.json", { params: { foo: '1', bar: '2' } }
+          post "/automations/#{automation.id}/trigger.json", params: { foo: '1', bar: '2' }
         end
 
         expect(list.length).to eq(1)

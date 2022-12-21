@@ -55,7 +55,7 @@ module DiscourseAutomation
         )
       else
         schema = SCHEMAS[component]
-        if !schema || !JSONSchemer.schema('type' => 'object', 'properties' => schema).valid?(metadata)
+        if !schema || !JSONSchemer.schema({ 'type' => 'object', 'properties' => schema }).valid?(metadata)
           errors.add(:base, I18n.t('discourse_automation.models.fields.invalid_metadata', component: component, field: name))
         end
       end
