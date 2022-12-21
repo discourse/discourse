@@ -213,28 +213,28 @@ export default class ChatApi extends Service {
   }
 
   #getRequest(endpoint, data = {}) {
-    return ajax(`${this.#basePath}/${endpoint}`, {
+    return ajax(`${this.#basePath}${endpoint}`, {
       type: "GET",
       data,
     });
   }
 
   #putRequest(endpoint, data = {}) {
-    return ajax(`${this.#basePath}/${endpoint}`, {
+    return ajax(`${this.#basePath}${endpoint}`, {
       type: "PUT",
       data,
     });
   }
 
   #postRequest(endpoint, data = {}) {
-    return ajax(`${this.#basePath}/${endpoint}`, {
+    return ajax(`${this.#basePath}${endpoint}`, {
       type: "POST",
       data,
     });
   }
 
   #deleteRequest(endpoint, data = {}) {
-    return ajax(`${this.#basePath}/${endpoint}`, {
+    return ajax(`${this.#basePath}${endpoint}`, {
       type: "DELETE",
       data,
     });
