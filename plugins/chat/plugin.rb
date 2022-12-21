@@ -145,6 +145,7 @@ after_initialize do
   load File.expand_path("../app/serializers/structured_channel_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/chat_webhook_event_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/chat_in_reply_to_serializer.rb", __FILE__)
+  load File.expand_path("../app/serializers/base_chat_channel_membership_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/user_chat_channel_membership_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/chat_message_serializer.rb", __FILE__)
   load File.expand_path("../app/serializers/chat_channel_serializer.rb", __FILE__)
