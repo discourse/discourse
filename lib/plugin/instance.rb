@@ -281,8 +281,8 @@ class Plugin::Instance
       hidden_method_name = :"#{attr}_without_enable_check"
       klass.public_send(:define_method, hidden_method_name, &block)
 
-      klass.public_send(:define_method, attr) do |*args|
-        public_send(hidden_method_name, *args) if plugin.enabled?
+      klass.public_send(:define_method, attr) do |*args, **kwargs|
+        public_send(hidden_method_name, *args, **kwargs) if plugin.enabled?
       end
     end
   end
@@ -295,8 +295,8 @@ class Plugin::Instance
       hidden_method_name = :"#{attr}_without_enable_check"
       klass.public_send(:define_singleton_method, hidden_method_name, &block)
 
-      klass.public_send(:define_singleton_method, attr) do |*args|
-        public_send(hidden_method_name, *args) if plugin.enabled?
+      klass.public_send(:define_singleton_method, attr) do |*args, **kwargs|
+        public_send(hidden_method_name, *args, **kwargs) if plugin.enabled?
       end
     end
   end
@@ -311,8 +311,8 @@ class Plugin::Instance
       hidden_method_name = :"#{method_name}_without_enable_check"
       klass.public_send(:define_method, hidden_method_name, &block)
 
-      klass.public_send(callback, **options) do |*args|
-        public_send(hidden_method_name, *args) if plugin.enabled?
+      klass.public_send(callback, **options) do |*args, **kwargs|
+        public_send(hidden_method_name, *args, **kwargs) if plugin.enabled?
       end
 
       hidden_method_name
@@ -462,8 +462,8 @@ class Plugin::Instance
 
   # A proxy to `DiscourseEvent.on` which does nothing if the plugin is disabled
   def on(event_name, &block)
-    DiscourseEvent.on(event_name) do |*args|
-      block.call(*args) if enabled?
+    DiscourseEvent.on(event_name) do |*args, **kwargs|
+      block.call(*args, **kwargs) if enabled?
     end
   end
 
@@ -580,8 +580,8 @@ class Plugin::Instance
 
   def register_html_builder(name, &block)
     plugin = self
-    DiscoursePluginRegistry.register_html_builder(name) do |*args|
-      block.call(*args) if plugin.enabled?
+    DiscoursePluginRegistry.register_html_builder(name) do |*args, **kwargs|
+      block.call(*args, **kwargs) if plugin.enabled?
     end
   end
 
