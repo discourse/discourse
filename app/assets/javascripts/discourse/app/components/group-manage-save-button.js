@@ -4,13 +4,13 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { popupAutomaticMembershipAlert } from "discourse/controllers/groups-new";
 import showModal from "discourse/lib/show-modal";
-import { inject as service } from "@ember/service";
+import { alias } from "@ember/object/computed";
 
 export default Component.extend({
-  dialog: service(),
   saving: null,
   disabled: false,
   updateExistingUsers: null,
+  buffer: alias("model.buffer"),
 
   didReceiveAttrs() {
     this._super(...arguments);
@@ -30,32 +30,63 @@ export default Component.extend({
     return saving ? I18n.t("saving") : I18n.t("save");
   },
 
-  popupPrivateGroupNameAlert() {
-    const model = this.model;
-    const buffer = model.buffer;
+  @discourseComputed("model.visibility_level", "buffer.visibilityLevel")
+  visibilityRestricted(visibilityLevel, bufferVisibilityLevel) {
+    return visibilityLevel !== 0 && bufferVisibilityLevel === 0;
+  },
 
-    if (model.visibility_level === 0) {
+  @discourseComputed(
+    "model.primary_group",
+    "visibilityRestricted",
+    "buffer.primaryGroup"
+  )
+  displayPrimaryGroupNotice(
+    isPrimaryGroup,
+    visibilityRestricted,
+    wasPrimaryGroup
+  ) {
+    return isPrimaryGroup && (visibilityRestricted || !wasPrimaryGroup);
+  },
+
+  @discourseComputed(
+    "model.flair_icon",
+    "model.flair_upload_id",
+    "visibilityRestricted",
+    "buffer.flairEmpty"
+  )
+  displayFlairGroupNotice(
+    flairIcon,
+    flairUploadId,
+    visibilityRestricted,
+    flairWasEmpty
+  ) {
+    return (
+      (flairIcon || flairUploadId) && (visibilityRestricted || flairWasEmpty)
+    );
+  },
+
+  @discourseComputed(
+    "model.visibility_level",
+    "displayPrimaryGroupNotice",
+    "displayFlairGroupNotice"
+  )
+  privateGroupNameNotice(
+    visibilityLevel,
+    displayPrimaryGroupNotice,
+    displayFlairGroupNotice
+  ) {
+    if (visibilityLevel === 0) {
       return;
     }
 
-    const visibilityRestricted =
-      model.visibility_level !== 0 && buffer.visibilityLevel === 0;
-
-    if (model.primary_group && (visibilityRestricted || !buffer.primaryGroup)) {
-      this.dialog.alert(
-        I18n.t("admin.groups.manage.alert.primary_group", {
-          group_name: model.name,
-        })
-      );
-    } else if (
-      (model.flair_icon || model.flair_upload_id) &&
-      (visibilityRestricted || buffer.flairEmpty)
-    ) {
-      this.dialog.alert(
-        I18n.t("admin.groups.manage.alert.flair_group", {
-          group_name: model.name,
-        })
-      );
+    if (displayPrimaryGroupNotice) {
+      return I18n.t("admin.groups.manage.alert.primary_group", {
+        group_name: this.model.name,
+      });
+    } else if (displayFlairGroupNotice) {
+      return I18n.t("admin.groups.manage.alert.flair_group", {
+        group_name: this.model.name,
+      });
     }
   },
 
@@ -72,7 +103,6 @@ export default Component.extend({
         group.id,
         group.automatic_membership_email_domains
       );
-      this.popupPrivateGroupNameAlert();
 
       const opts = {};
       if (this.updateExistingUsers !== null) {
