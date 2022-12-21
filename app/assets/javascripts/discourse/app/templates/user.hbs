@@ -39,8 +39,8 @@
             {{/if}}
             {{#if this.model.warnings_received_count}}
               <div>
-                <LinkTo @route="userPrivateMessages.warnings" @model={{this.model}}>
-                  <span class="warnings-received">{{this.model.warnings_received_count}}</span>{{i18n "user.staff_counters.warnings_received"}}
+                <LinkTo @route="userPrivateMessages.user.warnings" @model={{this.model}}>
+                  <span class="warnings-received">{{this.model.warnings_received_count}}</span> {{i18n "user.staff_counters.warnings_received"}}
                 </LinkTo>
               </div>
             {{/if}}

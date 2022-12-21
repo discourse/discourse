@@ -328,9 +328,6 @@ basic:
     default: 2
     min: 0
     max: 6
-  enable_whispers:
-    client: true
-    default: false
   whispers_allowed_groups:
     client: true
     type: group_list
@@ -348,6 +345,12 @@ basic:
   push_notifications_icon:
     default: ""
     type: upload
+  enable_desktop_push_notifications:
+    default: true
+    client: true
+  push_notification_time_window_mins:
+    default: 10
+    min: 0
   short_title:
     default: ""
     max: 12
@@ -2060,7 +2063,7 @@ developer:
 navigation:
   navigation_menu:
     client: true
-    default: "legacy"
+    default: "sidebar"
     type: enum
     enum: "NavigationMenuSiteSetting"
   default_sidebar_categories:

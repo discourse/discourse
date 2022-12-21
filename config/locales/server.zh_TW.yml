@@ -1094,9 +1094,6 @@ zh_TW:
     allow_duplicate_topic_titles: "允許話題有相同，重複的標題"
     unique_posts_mins: "使用者再次發表包含相同內容貼文的間隔時間"
     educate_until_posts: "當使用者開始鍵入他們的前幾個 (n) 新貼文時，在編輯器上顯示教育面板視窗。"
-    title: "網站名字，用於 title 標籤。"
-    site_description: "用一句話描述這個網站，用於 meta description 標籤。"
-    short_site_description: "簡短描述，用於網頁標題。"
     crawl_images: "允許從第三方 URL 取得圖片，來加入寬和高的數值"
     download_remote_images_threshold: "可用來下載外部圖片到本機最少的空間（百分比）"
     disabled_image_download_domains: "在此列表的網域名稱的遠端圖片將不會進行下載，用 | 分割多個域名"
@@ -1106,8 +1103,6 @@ zh_TW:
     staff_edit_locks_post: "如果版主編輯過貼文，貼文將被鎖定編輯"
     edit_history_visible_to_public: "允許任何人查看編輯過的貼文的舊版本。當禁用時，只有工作成員才能查看。"
     delete_removed_posts_after: "貼文被作者刪除，將在 (n) 小時後被自動刪除。如果設置為 0，貼文將被立即刪除。"
-    max_image_width: "貼文中最大的縮圖寬度"
-    max_image_height: "貼文中的允許圖片最大的縮圖高度"
     responsive_post_image_sizes: "調整燈箱預覽圖片的大小，此操作將允許像素高的 DPI 螢幕顯示。刪除所有值以禁用響應式圖片"
     fixed_category_positions: "若勾選，你將能調整並固定分類的順序。若不勾選，分類將會依照活躍程度來排序。"
     fixed_category_positions_on_create: "如果選擇了，目錄排序將會在話題創建對話框中被包含(要求固定目錄位置選項)"
@@ -1193,7 +1188,6 @@ zh_TW:
     enable_rich_text_paste: "自動啟用 HTML 轉換 Markdown 格式（實驗性功能）"
     email_token_valid_hours: "\"忘記密碼\" / \"重啟帳號\" token 有效的小時數 (n)"
     enable_badges: "啟用勳章系統"
-    enable_whispers: "允許工作人員在主題中私密交流。"
     blocked_email_domains: "不允許以豎線“|”分隔的電子郵件網域清單內的使用者註冊帳號。範例：mailinator.com|trashmail.net"
     allowed_email_domains: "用管道符“|”分隔的電子郵箱域名的列表，使用者必須使用這些郵箱域名註冊。警告：使用者使用不包含在這個列表裡的郵箱域名，將無法成功註冊。"
     log_out_strict: "登出時，登出使用者所有設備上的所有連線階段"
@@ -3018,13 +3012,10 @@ zh_TW:
           login_required:
             placeholder: "私密"
             extra_description: "使用者必須登入後才能訪問此社群"
-          invite_only:
-            placeholder: "僅限邀請"
           must_approve_users:
-            placeholder: "需要審核"
             extra_description: "使用者必須經過工作人員的批准"
-      ready:
-        title: "你的 Discourse 已經準備就緒！"
+          enable_sidebar:
+            placeholder: "啟用側選單"
       styling:
         fields:
           styling_preview:
@@ -3041,29 +3032,15 @@ zh_TW:
                 label: "分類和最新話題"
               categories_and_top_topics:
                 label: "分類與熱門話題"
-      branding:
-        fields:
-          logo:
-            label: "主要標誌"
-          logo_small:
-            label: "正方形 Logo"
       corporate:
         fields:
-          company_name:
-            label: "公司名稱"
-            placeholder: "組織範例"
           governing_law:
-            label: "適用於法律"
             placeholder: "加州法律"
           contact_url:
-            label: "網頁"
             placeholder: "https://www.example.com/contact-us"
-            description: "你或者你的組織平時用於聯絡的網頁。將被顯示在<a href='%{base_path}/about' target='_blank'>關於頁面</a>中。"
           city_for_disputes:
-            label: "爭議"
             placeholder: "舊金山，加洲（California）"
           site_contact:
-            label: "自動消息"
             description: "所有自動發送的消息將以該使用者的名義發送，比如投訴警告、備份完成通知。"
       invites:
         title: "邀請工作人員"

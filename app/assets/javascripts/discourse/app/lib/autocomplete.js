@@ -117,6 +117,33 @@ export default function (options) {
     discourseLater(() => me.trigger("keydown"), 50);
   }
 
+  function scrollAutocomplete() {
+    if (!div) {
+      return;
+    }
+
+    const divElement = div[0];
+    const selectedElement = getSelectedOptionElement();
+    const selectedElementTop = selectedElement.offsetTop;
+    const selectedElementBottom =
+      selectedElementTop + selectedElement.clientHeight;
+
+    // the top of the item is above the top of the div, so scroll UP
+    if (selectedElementTop <= divElement.scrollTop) {
+      divElement.scrollTo(0, selectedElementTop);
+
+      // the bottom of the item is below the bottom of the div, so scroll DOWN
+    } else if (
+      selectedElementBottom >=
+      divElement.scrollTop + divElement.clientHeight
+    ) {
+      divElement.scrollTo(
+        0,
+        divElement.scrollTop + selectedElement.clientHeight
+      );
+    }
+  }
+
   function closeAutocomplete() {
     _autoCompletePopper?.destroy();
 
@@ -288,9 +315,16 @@ export default function (options) {
   }
 
   function markSelected() {
-    const links = div.find("li a");
-    links.removeClass("selected");
-    return $(links[selectedOption]).addClass("selected");
+    getLinks().removeClass("selected");
+    return $(getSelectedOptionElement()).addClass("selected");
+  }
+
+  function getSelectedOptionElement() {
+    return getLinks()[selectedOption];
+  }
+
+  function getLinks() {
+    return div.find("li a");
   }
 
   // a sane spot below cursor
@@ -641,6 +675,7 @@ export default function (options) {
             selectedOption = 0;
           }
           markSelected();
+          scrollAutocomplete();
           e.preventDefault();
           return false;
         case keys.downArrow:
@@ -653,6 +688,7 @@ export default function (options) {
             selectedOption = 0;
           }
           markSelected();
+          scrollAutocomplete();
           e.preventDefault();
           return false;
         case keys.backSpace:

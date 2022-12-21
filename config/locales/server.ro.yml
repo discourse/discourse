@@ -829,16 +829,12 @@ ro:
     allow_duplicate_topic_titles: "Permite subiecte cu titluri duplicat sau identice."
     unique_posts_mins: "Câte minute până ce un utilizator poate posta din nou o postare cu același conținut"
     educate_until_posts: "Când utilizatorul începe să scrie primele (n) postări, arată panelul de instruire în spațiul pentru scris postarea."
-    title: "Titlul scurt al site-ului, folosit în tag-ul title."
-    site_description: "Descrie acest site într-o singură frază, așa cum se folosește în tagul meta-descriere."
     crawl_images: "Recuperează imaginile din URL-uri la distanță pentru a insera dimensiunile corecte de înălțime și lățime."
     download_remote_images_threshold: "Spațiul minim necesar pentru descărcarea imaginilor la distanță pe local (în procente)"
     disabled_image_download_domains: "Imaginile la distanță nu vor mai fi descărcate de pe aceste domenii. Listă delimitată de simbolul | (pipe)."
     editing_grace_period: "Pentru (n) secunde după postare, editarea nu va crea o versiune nouă în istoricul postării."
     edit_history_visible_to_public: "Permite tuturor să vadă versiunile precedente ale unei postări editate. Când e dezactivat, ele pot fi văzute doar de membrii echipei."
     delete_removed_posts_after: "Postările șterse de către autor vor fi automat șterse după (n) de ore. Dacă este setat la 0, postările vor fi șterse imediat."
-    max_image_width: "Maximul lățimii unui thumbnail într-o postare"
-    max_image_height: "Maximul înălțimii unui thumbnail într-o postare"
     fixed_category_positions: "Dacă e bifat, veți putea aranja categoriile într-o ordine fixă. Dacă e nebifat, categoriile sunt listate în ordinea activității."
     fixed_category_positions_on_create: "Dacă este bifat, ordonarea categoriilor va fi menținută în dialogul de creare a subiectelor (presupune fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'Adaugă atributul rel nofollow la toate conținuturile transmise de către utilizator, cu excepția link-urilor interne (includiv domeniile părinte). Dacă schimbi această setare, postările trebuie refăcute cu: "rake posts:rebake"'
@@ -885,7 +881,6 @@ ro:
     prioritize_username_in_ux: "Afișează întâi nume utilizator pe pagina utilizator, pe cardul utilizator și în postări (dacă e dezactivat, se afișează întâi numele)"
     email_token_valid_hours: "Tokenul uitat parolă / activează cont sunt valabili pentru (n) ore."
     enable_badges: "Activează sistemul de ecusoane"
-    enable_whispers: "Permite membrilor echipei să comunice privat în cadrul subiectelor."
     blocked_email_domains: "O listă de domenii de email separate cu simbolul | (pipe) ale căror utilizatori nu au permisiunea să înregistreze conturi. Exemplu: mailinator.com|trashmail.net"
     allowed_email_domains: "O listă de domenii de email (separate cu simbolul | (pipe)) cu care utilizatorii TREBUIE să se înregistreze. ATENȚIE: utilizatorii cu alte domenii de email decât cele listate nu vor avea permisiunea să se înregistreze."
     log_out_strict: "La ieșire, închide TOATE sesiunile pentru utilizator, pe toate dispozitivele."
@@ -2119,10 +2114,6 @@ ro:
         fields:
           login_required:
             placeholder: "Privat"
-          must_approve_users:
-            placeholder: "Necesită aprobare"
-      ready:
-        title: "Discourse-ul tău e gata!"
       styling:
         fields:
           styling_preview:
@@ -2139,18 +2130,10 @@ ro:
                 label: "Categorii și subiecte recente"
               categories_and_top_topics:
                 label: "Categorii și discuții în top"
-      branding:
-        fields:
-          logo:
-            label: "Logo-ul principal"
       corporate:
         fields:
           contact_url:
-            label: "Pagină web"
             placeholder: "https://www.example.com/contact-us"
-            description: "Pagina web generică cu date de contact pentru tine sau organizația ta. Se va afișa pe <a href='%{base_path}/about' target='_blank'>pagina despre noi</a>. "
-          site_contact:
-            label: "Mesaje automate"
       invites:
         title: "Invită membrii echipei"
         description: "Aproape ai încheiat ! Hai să invităm câțiva prieteni să te ajute <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>cu demararea comunității </a> prin discuții și răspunsuri interesante."

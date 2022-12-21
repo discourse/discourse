@@ -113,6 +113,10 @@ it:
           one: "Invito inviato"
           other: "Inviti inviati"
         invite: "Invita al canale"
+        groups:
+          users_limit:
+            one: "%{count} utente"
+            other: "%{count} utenti"
       aria_roles:
         header: "Intestazione della chat"
         composer: "Compositore di chat"
@@ -268,6 +272,7 @@ it:
         mention: "Solo per le menzioni"
         always: "Per tutte le attività"
       settings:
+        enable_auto_join_users: "Aggiungi automaticamente tutti gli utenti attivi di recente"
         auto_join_users_warning: "Tutti gli utenti che non sono membri di questo canale e hanno accesso alla categoria %{category} parteciperanno. Vuoi procedere?"
         desktop_notification_level: "Notifiche sul desktop"
         follow: "Partecipa"
@@ -281,6 +286,7 @@ it:
         save: "Salva"
         saved: "Salvato"
         unfollow: "Esci"
+        admin_title: "Amministrazione"
       admin:
         title: "Chat"
       direct_messages:

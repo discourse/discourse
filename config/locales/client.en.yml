@@ -162,38 +162,38 @@ en:
       url: "Copy and share URL"
 
     action_codes:
-      public_topic: "made this topic public %{when}"
-      open_topic: "converted this to a topic %{when}"
-      private_topic: "made this topic a personal message %{when}"
-      split_topic: "split this topic %{when}"
-      invited_user: "invited %{who} %{when}"
-      invited_group: "invited %{who} %{when}"
+      public_topic: "Made this topic public %{when}"
+      open_topic: "Converted this to a topic %{when}"
+      private_topic: "Made this topic a personal message %{when}"
+      split_topic: "Split this topic %{when}"
+      invited_user: "Invited %{who} %{when}"
+      invited_group: "Invited %{who} %{when}"
       user_left: "%{who} removed themselves from this message %{when}"
-      removed_user: "removed %{who} %{when}"
-      removed_group: "removed %{who} %{when}"
-      autobumped: "automatically bumped %{when}"
+      removed_user: "Removed %{who} %{when}"
+      removed_group: "Removed %{who} %{when}"
+      autobumped: "Automatically bumped %{when}"
       autoclosed:
-        enabled: "closed %{when}"
-        disabled: "opened %{when}"
+        enabled: "Closed %{when}"
+        disabled: "Opened %{when}"
       closed:
-        enabled: "closed %{when}"
-        disabled: "opened %{when}"
+        enabled: "Closed %{when}"
+        disabled: "Opened %{when}"
       archived:
-        enabled: "archived %{when}"
-        disabled: "unarchived %{when}"
+        enabled: "Archived %{when}"
+        disabled: "Unarchived %{when}"
       pinned:
-        enabled: "pinned %{when}"
-        disabled: "unpinned %{when}"
+        enabled: "Pinned %{when}"
+        disabled: "Unpinned %{when}"
       pinned_globally:
-        enabled: "pinned globally %{when}"
-        disabled: "unpinned %{when}"
+        enabled: "Pinned globally %{when}"
+        disabled: "Unpinned %{when}"
       visible:
-        enabled: "listed %{when}"
-        disabled: "unlisted %{when}"
+        enabled: "Listed %{when}"
+        disabled: "Unlisted %{when}"
       banner:
-        enabled: "made this a banner %{when}. It will appear at the top of every page until it is dismissed by the user."
-        disabled: "removed this banner %{when}. It will no longer appear at the top of every page."
-      forwarded: "forwarded the above email"
+        enabled: "Made this a banner %{when}. It will appear at the top of every page until it is dismissed by the user."
+        disabled: "Removed this banner %{when}. It will no longer appear at the top of every page."
+      forwarded: "Forwarded the above email"
 
     topic_admin_menu: "topic actions"
     skip_to_main_content: "Skip to main content"
@@ -430,8 +430,6 @@ en:
     disable: "Disable"
     continue: "Continue"
     undo: "Undo"
-    revert: "Revert"
-    failed: "Failed"
 
     switch_to_anon: "Enter Anonymous Mode"
     switch_from_anon: "Exit Anonymous Mode"
@@ -1080,7 +1078,7 @@ en:
       notification_schedule:
         title: "Notification Schedule"
         label: "Enable custom notification schedule"
-        tip: "Outside of these hours you will be put in 'do not disturb' automatically."
+        tip: "Outside of these hours your notifications will be paused."
         midnight: "Midnight"
         none: "None"
         monday: "Monday"
@@ -1303,25 +1301,25 @@ en:
             true {
               { UNREAD, plural,
                    =0 {}
-                  one { There is <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a> }
-                other { There are <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a> }
+                  one {There is <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a>}
+                other {There are <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a>}
               }
               { NEW, plural,
                    =0 {}
-                  one { and <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> message remaining, or browse other messages in {groupLink} }
-                other { and <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> messages remaining, or browse other messages in {groupLink} }
+                  one { and <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> message remaining, or browse other messages in {groupLink}}
+                other { and <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> messages remaining, or browse other messages in {groupLink}}
               }
             }
             false {
               { UNREAD, plural,
                    =0 {}
-                  one { There is <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a> message remaining, or browse other messages in {groupLink} }
-                other { There are <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a> messages remaining, or browse other messages in {groupLink} }
+                  one {There is <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a> message remaining, or browse other messages in {groupLink}}
+                other {There are <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># unread</a> messages remaining, or browse other messages in {groupLink}}
               }
               { NEW, plural,
                    =0 {}
-                  one { There is <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> message remaining, or browse other messages in {groupLink} }
-                other { There are <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> messages remaining, or browse other messages in {groupLink} }
+                  one {There is <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> message remaining, or browse other messages in {groupLink}}
+                other {There are <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># new</a> messages remaining, or browse other messages in {groupLink}}
               }
             }
             other {}
@@ -1334,29 +1332,29 @@ en:
         read_more_personal_pm_MF: |
           { HAS_UNREAD_AND_NEW, select,
             true {
-            { UNREAD, plural,
-                 =0 {}
-                one { There is <a href='{basePath}/u/{username}/messages/unread'># unread</a> }
-              other { There are <a href='{basePath}/u/{username}/messages/unread'># unread</a> }
+              { UNREAD, plural,
+                   =0 {}
+                  one {There is <a href='{basePath}/u/{username}/messages/unread'># unread</a>}
+                other {There are <a href='{basePath}/u/{username}/messages/unread'># unread</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { and <a href='{basePath}/u/{username}/messages/new'># new</a> message remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
+                other { and <a href='{basePath}/u/{username}/messages/new'># new</a> messages remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
+              }
             }
-            { NEW, plural,
-                 =0 {}
-                one { and <a href='{basePath}/u/{username}/messages/new'># new</a> message remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a> }
-              other { and <a href='{basePath}/u/{username}/messages/new'># new</a> messages remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a> }
-            }
-          }
             false {
-            { UNREAD, plural,
-                 =0 {}
-                one { There is <a href='{basePath}/u/{username}/messages/unread'># unread</a> message remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a> }
-              other { There are <a href='{basePath}/u/{username}/messages/unread'># unread</a> messages remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a> }
+              { UNREAD, plural,
+                   =0 {}
+                  one {There is <a href='{basePath}/u/{username}/messages/unread'># unread</a> message remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
+                other {There are <a href='{basePath}/u/{username}/messages/unread'># unread</a> messages remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {There is <a href='{basePath}/u/{username}/messages/new'># new</a> message remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
+                other {There are <a href='{basePath}/u/{username}/messages/new'># new</a> messages remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a>}
+              }
             }
-            { NEW, plural,
-                 =0 {}
-                one { There is <a href='{basePath}/u/{username}/messages/new'># new</a> message remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a> }
-              other { There are <a href='{basePath}/u/{username}/messages/new'># new</a> messages remaining, or browse other <a href='{basePath}/u/{username}/messages'>personal messages</a> }
-            }
-          }
             other {}
           }
 
@@ -1430,7 +1428,7 @@ en:
         disable_confirm: "Are you sure you want to disable two-factor authentication?"
         delete: "Delete"
         delete_confirm_header: "These Token-Based Authenticators and Physical Security Keys will be deleted:"
-        delete_confirm_instruction: 'To confirm, type <strong>%{confirm}</strong> in the box below.'
+        delete_confirm_instruction: "To confirm, type <strong>%{confirm}</strong> in the box below."
         delete_single_confirm_title: "Deleting an authenticator"
         delete_single_confirm_message: "You are deleting %{name}. You can't undo this action. If you change your mind, you have to register this authenticator again."
         delete_backup_codes_confirm_title: "Deleting backup codes"
@@ -1620,6 +1618,8 @@ en:
         title: "Background page title displays count of:"
         notifications: "New notifications"
         contextual: "New page content"
+      bookmark_after_notification:
+        title: "After a bookmark reminder notification is sent:"
 
       like_notification_frequency:
         title: "Notify when liked"
@@ -1868,6 +1868,7 @@ en:
       save: "Save"
       set_custom_status: "Set custom status"
       what_are_you_doing: "What are you doing?"
+      pause_notifications: "Pause notifications"
       remove_status: "Remove status"
 
     user_tips:
@@ -1930,97 +1931,78 @@ en:
       enabled: "This site is in staff only mode. Please continue to browse, but replying, likes, and other actions are limited to staff members only."
 
     # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-    too_few_topics_and_posts_notice_MF: >-
-      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">start the discussion!</a>
-      There
-      { currentTopics, plural,
+    too_few_topics_and_posts_notice_MF: |
+      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">start the discussion!</a> There { currentTopics, plural,
           one {is <strong>#</strong> topic}
         other {are <strong>#</strong> topics}
-      } and
-      { currentPosts, plural,
+      } and { currentPosts, plural,
           one {<strong>#</strong> post}
         other {<strong>#</strong> posts}
-      }. Visitors need more to read and reply to – we recommend at least
-      { requiredTopics, plural,
+      }. Visitors need more to read and reply to – we recommend at least { requiredTopics, plural,
           one {<strong>#</strong> topic}
         other {<strong>#</strong> topics}
-      } and
-      { requiredPosts, plural,
+      } and { requiredPosts, plural,
           one {<strong>#</strong> post}
         other {<strong>#</strong> posts}
       }. Only staff can see this message.
 
     # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-    too_few_topics_notice_MF: >-
-      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">start the discussion!</a>
-      There
-      { currentTopics, plural,
+    too_few_topics_notice_MF: |
+      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">start the discussion!</a> There { currentTopics, plural,
           one {is <strong>#</strong> topic}
         other {are <strong>#</strong> topics}
-      }. Visitors need more to read and reply to – we recommend at least
-      { requiredTopics, plural,
+      }. Visitors need more to read and reply to – we recommend at least { requiredTopics, plural,
           one {<strong>#</strong> topic}
         other {<strong>#</strong> topics}
       }. Only staff can see this message.
 
     # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-    too_few_posts_notice_MF: >-
-      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">start the discussion!</a>
-      There
-      { currentPosts, plural,
+    too_few_posts_notice_MF: |
+      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">start the discussion!</a> There { currentPosts, plural,
           one {is <strong>#</strong> post}
         other {are <strong>#</strong> posts}
-      }. Visitors need more to read and reply to – we recommend at least
-      { requiredPosts, plural,
+      }. Visitors need more to read and reply to – we recommend at least { requiredPosts, plural,
           one {<strong>#</strong> post}
         other {<strong>#</strong> posts}
       }. Only staff can see this message.
 
     logs_error_rate_notice:
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-      reached_hour_MF: >-
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>
-        { rate, plural,
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
             one {# error/hour}
           other {# errors/hour}
-        }</a> reached site setting limit of
-        { limit, plural,
-            one {# error/hour}
-          other {# errors/hour}
-        }.
-
-      # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-      reached_minute_MF: >-
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>
-        { rate, plural,
-            one {# error/minute}
-          other {# errors/minute}
-        }</a> reached site setting limit of
-        { limit, plural,
-            one {# error/minute}
-          other {# errors/minute}
-        }.
-
-      # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-      exceeded_hour_MF: >-
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>
-        { rate, plural,
-            one {# error/hour}
-          other {# errors/hour}
-        }</a> exceeded site setting limit of
-        { limit, plural,
+        }</a> reached site setting limit of {limit, plural,
             one {# error/hour}
           other {# errors/hour}
         }.
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-      exceeded_minute_MF: >-
-        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>
-        { rate, plural,
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
             one {# error/minute}
           other {# errors/minute}
-        }</a> exceeded site setting limit of
-        { limit, plural,
+        }</a> reached site setting limit of { limit, plural,
+            one {# error/minute}
+          other {# errors/minute}
+        }.
+
+      # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
+            one {# error/hour}
+          other {# errors/hour}
+        }</a> exceeded site setting limit of { limit, plural,
+            one {# error/hour}
+          other {# errors/hour}
+        }.
+
+      # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
+            one {# error/minute}
+          other {# errors/minute}
+        }</a> exceeded site setting limit of { limit, plural,
             one {# error/minute}
           other {# errors/minute}
         }.
@@ -2055,13 +2037,11 @@ en:
         other: "There are <b>%{count}</b> replies."
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-      description_time_MF: >-
-        There
-        { replyCount, plural,
+      description_time_MF: |
+        There { replyCount, plural,
             one {is <b>#</b> reply}
           other {are <b>#</b> replies}
-        } with an estimated read time of <b>
-        { readingTime, plural,
+        } with an estimated read time of <b>{ readingTime, plural,
             one {# minute}
           other {# minutes}
         }</b>.
@@ -2144,6 +2124,10 @@ en:
       title: "Log in"
       username: "User"
       password: "Password"
+      show_password: "Show"
+      hide_password: "Hide"
+      show_password_title: "Show password"
+      hide_password_title: "Hide password"
       second_factor_title: "Two-Factor Authentication"
       second_factor_description: "Please enter the authentication code from your app:"
       second_factor_backup: "Log in using a backup code"
@@ -2530,6 +2514,7 @@ en:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2561,6 +2546,7 @@ en:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completed"
+      new_features: "New features available!"
       dismiss_confirmation:
         body:
           default:
@@ -2602,6 +2588,7 @@ en:
         invited_to_private_message: "invited to private message"
         invitee_accepted: "invite accepted"
         posted: "new post"
+        watching_category_or_tag: "new post"
         moved_post: "post moved"
         linked: "linked"
         bookmark_reminder: "bookmark reminder"
@@ -2617,6 +2604,7 @@ en:
         membership_request_consolidated: "new membership requests"
         reaction: "new reaction"
         votes_released: "Vote was released"
+        new_features: "new Discourse features have been released!"
 
     upload_selector:
       uploading: "Uploading"
@@ -2937,6 +2925,8 @@ en:
       show_links: "show links within this topic"
       collapse_details: "collapse topic details"
       expand_details: "expand topic details"
+      read_more_in_category: "Want to read more? Browse other topics in %{categoryLink} or <a href='%{latestLink}'>view latest topics</a>."
+      read_more: "Want to read more? <a href='%{categoryLink}'>Browse all categories</a> or <a href='%{latestLink}'>view latest topics</a>."
       unread_indicator: "No member has read the last post of this topic yet."
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
@@ -2948,32 +2938,32 @@ en:
           true {
             { UNREAD, plural,
                  =0 {}
-                one { There is <a href="{basePath}/unread"># unread</a> }
-              other { There are <a href="{basePath}/unread"># unread</a> }
+                one {There is <a href="{basePath}/unread"># unread</a>}
+              other {There are <a href="{basePath}/unread"># unread</a>}
             }
             { NEW, plural,
                  =0 {}
-                one { and <a href="{basePath}/new"># new</a> topic remaining, }
-              other { and <a href="{basePath}/new"># new</a> topics remaining, }
+                one { and <a href="{basePath}/new"># new</a> topic remaining,}
+              other { and <a href="{basePath}/new"># new</a> topics remaining,}
             }
           }
           false {
             { UNREAD, plural,
                  =0 {}
-                one { There is <a href="{basePath}/unread"># unread</a> topic remaining, }
-              other { There are <a href="{basePath}/unread"># unread</a> topics remaining, }
+                one {There is <a href="{basePath}/unread"># unread</a> topic remaining,}
+              other {There are <a href="{basePath}/unread"># unread</a> topics remaining,}
             }
             { NEW, plural,
                  =0 {}
-                one { There is <a href="{basePath}/new"># new</a> topic remaining, }
-              other { There are <a href="{basePath}/new"># new</a> topics remaining, }
+                one {There is <a href="{basePath}/new"># new</a> topic remaining,}
+              other {There are <a href="{basePath}/new"># new</a> topics remaining,}
             }
           }
           other {}
         }
         { HAS_CATEGORY, select,
-          true { or browse other topics in {categoryLink} }
-          false { or <a href="{basePath}/latest">view latest topics</a> }
+          true { or browse other topics in {categoryLink}}
+          false { or <a href="{basePath}/latest">view latest topics</a>}
           other {}
         }
 
@@ -3796,13 +3786,11 @@ en:
       flag_for_review: "Queue For Review"
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-      delete_confirm_MF: >-
-        You are about to delete
-        { POSTS, plural,
+      delete_confirm_MF: |
+        You are about to delete { POSTS, plural,
             one {<b>#</b> post}
           other {<b>#</b> posts}
-        } and
-        { TOPICS, plural,
+        } and { TOPICS, plural,
             one {<b>#</b> topic}
           other {<b>#</b> topics}
         } from this user, remove their account, block signups from their IP address <b>{ip_address}</b>, and add their email address <b>{email}</b> to a permanent block list. Are you sure this user is really a spammer?
@@ -3881,13 +3869,11 @@ en:
       label_with_count: "Pending (%{count})"
 
     # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-    posts_likes_MF: >-
-      This topic has
-      { count, plural,
+    posts_likes_MF: |
+      This topic has { count, plural,
           one {# reply}
         other {# replies}
-      }
-      { ratio, select,
+      } { ratio, select,
           low {with a high like to post ratio}
           med {with a very high like to post ratio}
          high {with an extremely high like to post ratio}
@@ -4307,9 +4293,9 @@ en:
 
     image_removed: "(image removed)"
 
-    do_not_disturb:
-      title: "Do not disturb for..."
-      label: "Do not disturb"
+    pause_notifications:
+      title: "Pause notifications for..."
+      label: "Pause notifications"
       remaining: "%{remaining} remaining"
       options:
         half_hour: "30 minutes"
@@ -5050,7 +5036,6 @@ en:
             error: "This theme has been automatically disabled because it is not compatible with this version of Discourse."
             minimum: "Requires Discourse version %{version} or above."
             maximum: "Requires Discourse version %{version} or below."
-          component_of: "Component of:"
           update_to_latest: "Update to Latest"
           check_for_updates: "Check for Updates"
           updating: "Updating..."
@@ -5535,7 +5520,7 @@ en:
       user:
         suspend_failed: "Something went wrong suspending this user %{error}"
         unsuspend_failed: "Something went wrong unsuspending this user %{error}"
-        suspend_duration: "How long will the user be suspended for?"
+        suspend_duration: "Suspend user until:"
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
         suspend_reason_hidden_label: "Why are you suspending? This text will be shown to the user when they try to log in. Keep it short."
         suspend_reason: "Reason"
@@ -5559,7 +5544,9 @@ en:
         silence_message: "Email Message"
         silence_message_placeholder: "(leave blank to send default message)"
         suspended_until: "(until %{until})"
+        suspend_forever: "Suspend forever"
         cant_suspend: "This user cannot be suspended."
+        cant_silence: "This user cannot be silenced."
 
         delete_posts_failed: "There was a problem deleting the posts."
         post_edits: "Post Edits"
@@ -5570,19 +5557,29 @@ en:
         penalty_post_edit: "Edit the post"
         penalty_post_none: "Do nothing"
         penalty_count: "Penalty Count"
-        penalty_history: "Penalty History"
+
+        # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
+        penalty_history_MF: >-
+          In the past 6 months this user has been <b>suspended
+          { SUSPENDED, plural,
+                  one {# time}
+                other {# times}
+          }</b> and <b>silenced
+          { SILENCED, plural,
+                  one {# time}
+                other {# times}
+          }</b>.
+
         clear_penalty_history:
           title: "Clear Penalty History"
           description: "users with penalties cannot reach TL3"
 
         # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-        delete_all_posts_confirm_MF: >-
-          You are about to delete
-          { POSTS, plural,
+        delete_all_posts_confirm_MF: |
+          You are about to delete { POSTS, plural,
               one {# post}
             other {# posts}
-          } and
-          { TOPICS, plural,
+          } and { TOPICS, plural,
               one {# topic}
             other {# topics}
           }. Are you sure?
@@ -5742,8 +5739,8 @@ en:
         suspended_count: "Suspended"
         last_six_months: "Last 6 months"
         other_matches:
-          one: "There is %{count} other user with the same IP address. Review and select the suspicious ones to suspend along with %{username}."
-          other: "There are %{count} other users with the same IP address. Review and select the suspicious ones to suspend along with %{username}."
+          one: "There is <b>%{count} other user</b> with the same IP address. Review and select the suspicious ones to penalize along with %{username}."
+          other: "There are <b>%{count} other users</b> with the same IP address. Review and select the suspicious ones to penalize along with %{username}."
         other_matches_list:
           username: "Username"
           trust_level: "Trust Level"
@@ -6077,10 +6074,10 @@ en:
       finish: "Exit setup"
       back: "Back"
       next: "Next"
-      configure_more: "Configure More..."
+      configure_more: "Configure more..."
       step-text: "Step"
       step: "%{current} of %{total}"
-      upload: "Upload"
+      upload: "Upload file"
       uploading: "Uploading..."
       upload_error: "Sorry, there was an error uploading that file. Please try again."
 

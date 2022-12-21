@@ -116,6 +116,10 @@
     <label for="user-title-count-mode">{{i18n "user.title_count_mode.title"}}</label>
     <ComboBox @valueProperty="value" @content={{this.titleCountModes}} @value={{this.model.user_option.title_count_mode}} @id="user-title-count-mode" @onChange={{action (mut this.model.user_option.title_count_mode)}} />
   </div>
+  <div class="controls controls-dropdown pref-bookmark-after-notification">
+    <label for="bookmark-after-notification-mode">{{i18n "user.bookmark_after_notification.title"}}</label>
+    <ComboBox @valueProperty="value" @content={{this.bookmarkAfterNotificationModes}} @value={{this.model.user_option.bookmark_auto_delete_preference}} @id="boookmark-after-notification-mode" @onChange={{action (mut this.model.user_option.bookmark_auto_delete_preference)}} />
+  </div>
   <PreferenceCheckbox @labelKey="user.skip_new_user_tips.description" @checked={{this.model.user_option.skip_new_user_tips}} @class="pref-new-user-tips" />
   {{#if this.site.user_tips}}
     <DButton @class="pref-reset-seen-user-tips" @action={{action "resetSeenUserTips"}}>{{i18n "user.reset_seen_user_tips"}}</DButton>

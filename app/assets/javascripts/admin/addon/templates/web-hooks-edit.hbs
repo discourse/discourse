@@ -26,8 +26,13 @@
 
     <div class="control-group">
       <label>{{i18n "admin.web_hooks.event_chooser"}}</label>
-      <label>
-        <RadioButton @class="subscription-choice" @name="subscription-choice" @value="individual" @selection={{this.model.webHookType}} />
+
+      <label class="subscription-choice">
+        <RadioButton
+          @name="subscription-choice"
+          @value="individual"
+          @selection={{this.model.webhookType}}
+        />
         {{i18n "admin.web_hooks.individual_event"}}
         <InputTip @validation={{this.eventTypeValidation}} />
       </label>
@@ -35,13 +40,20 @@
       {{#unless this.model.wildcard_web_hook}}
         <div class="event-selector">
           {{#each this.eventTypes as |type|}}
-            <AdminWebHookEventChooser @type={{type}} @model={{this.model.web_hook_event_types}} />
+            <WebhookEventChooser
+              @type={{type}}
+              @eventTypes={{this.model.web_hook_event_types}}
+            />
           {{/each}}
         </div>
       {{/unless}}
 
-      <label>
-        <RadioButton @class="subscription-choice" @name="subscription-choice" @value="wildcard" @selection={{this.model.webHookType}} />
+      <label class="subscription-choice">
+        <RadioButton
+          @name="subscription-choice"
+          @value="wildcard"
+          @selection={{this.model.webhookType}}
+        />
         {{i18n "admin.web_hooks.wildcard_event"}}
       </label>
     </div>

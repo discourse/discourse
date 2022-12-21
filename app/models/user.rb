@@ -252,7 +252,7 @@ class User < ActiveRecord::Base
   end
 
   scope :filter_by_username_or_email, ->(filter) do
-    if filter =~ /.+@.+/
+    if filter.is_a?(String) && filter =~ /.+@.+/
       # probably an email so try the bypass
       if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pluck_first(:user_id)
         return where('users.id = ?', user_id)

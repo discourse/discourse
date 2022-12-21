@@ -14,14 +14,12 @@ RSpec.describe Wizard::StepUpdater do
       updater = wizard.create_updater('introduction',
         title: 'new forum title',
         site_description: 'neat place',
-        default_locale: locale,
-        contact_email: 'eviltrout@example.com')
+        default_locale: locale)
       updater.update
 
       expect(updater.success?).to eq(true)
       expect(SiteSetting.title).to eq("new forum title")
       expect(SiteSetting.site_description).to eq("neat place")
-      expect(SiteSetting.contact_email).to eq("eviltrout@example.com")
       expect(updater.refresh_required?).to eq(false)
       expect(wizard.completed_steps?('introduction')).to eq(true)
     end
@@ -257,6 +255,27 @@ RSpec.describe Wizard::StepUpdater do
         expect(SiteSetting.top_menu).to eq('latest|categories|new|top')
       end
 
+      it "updates style even when categories is first in top menu" do
+        SiteSetting.top_menu = "categories|new|latest"
+        updater = wizard.create_updater('styling',
+          body_font: 'arial',
+          heading_font: 'arial',
+          homepage_style: "categories_with_featured_topics"
+        )
+        updater.update
+        expect(updater).to be_success
+        expect(SiteSetting.desktop_category_page_style).to eq('categories_with_featured_topics')
+
+        updater = wizard.create_updater('styling',
+          body_font: 'arial',
+          heading_font: 'arial',
+          homepage_style: "subcategories_with_featured_topics"
+        )
+        updater.update
+        expect(updater).to be_success
+        expect(SiteSetting.desktop_category_page_style).to eq('subcategories_with_featured_topics')
+      end
+
       it "does not overwrite top_menu site setting" do
         SiteSetting.top_menu = "latest|unread|unseen|categories"
         updater = wizard.create_updater('styling',
@@ -310,13 +329,15 @@ RSpec.describe Wizard::StepUpdater do
                                       company_name: 'ACME, Inc.',
                                       governing_law: 'New Jersey law',
                                       contact_url: 'http://example.com/custom-contact-url',
-                                      city_for_disputes: 'Fairfield, New Jersey')
+                                      city_for_disputes: 'Fairfield, New Jersey',
+                                      contact_email: 'eviltrout@example.com')
       updater.update
       expect(updater).to be_success
       expect(SiteSetting.company_name).to eq("ACME, Inc.")
       expect(SiteSetting.governing_law).to eq("New Jersey law")
       expect(SiteSetting.contact_url).to eq("http://example.com/custom-contact-url")
       expect(SiteSetting.city_for_disputes).to eq("Fairfield, New Jersey")
+      expect(SiteSetting.contact_email).to eq("eviltrout@example.com")
 
       # Should update the TOS topic
       raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pluck_first(:raw)

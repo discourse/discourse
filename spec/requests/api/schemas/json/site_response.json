@@ -35,6 +35,12 @@
         "posted": {
           "type": "integer"
         },
+        "watching_category_or_tag": {
+          "type": "integer"
+        },
+        "new_features": {
+          "type": "integer"
+        },
         "moved_post": {
           "type": "integer"
         },
@@ -112,6 +118,15 @@
         },
         "question_answer_user_commented": {
           "type": "integer"
+        },
+        "following": {
+          "type": "integer"
+        },
+        "following_created_topic": {
+          "type": "integer"
+        },
+        "following_replied": {
+          "type": "integer"
         }
       },
       "required": [
@@ -124,6 +139,7 @@
         "invited_to_private_message",
         "invitee_accepted",
         "posted",
+        "watching_category_or_tag",
         "moved_post",
         "linked",
         "granted_badge",

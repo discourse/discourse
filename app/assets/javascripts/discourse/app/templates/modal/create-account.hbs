@@ -68,18 +68,25 @@
 
               <div class="input-group create-account__password">
                 {{#if this.passwordRequired}}
-                  <PasswordField @value={{this.accountPassword}} @class={{value-entered this.accountPassword}} @type="password" @id="new-account-password" @autocomplete="current-password" @capsLockOn={{this.capsLockOn}} @aria-describedby="password-validation" @aria-invalid={{this.passwordValidation.failed}} />
+                  <PasswordField @value={{this.accountPassword}} @class={{value-entered this.accountPassword}} @type={{if this.maskPassword "password" "text"}} id="new-account-password" @autocomplete="current-password" @capsLockOn={{this.capsLockOn}} @aria-describedby="password-validation" @aria-invalid={{this.passwordValidation.failed}}  />
                   <label class="alt-placeholder" for="new-account-password">
                     {{i18n "user.password.title"}}
                     {{~#if this.userFields~}}
                       <span class="required">*</span>
                     {{/if}}
                   </label>
-
-                  <InputTip @validation={{this.passwordValidation}} @id="password-validation" />
-                  <span class="more-info">{{this.passwordInstructions}}</span>
-                  <div class="caps-lock-warning {{unless this.capsLockOn "hidden"}}">
-                    {{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}
+                  <div class="create-account__password-info">
+                    <div class="create-account__password-tip-validation">
+                      <InputTip @validation={{this.passwordValidation}} @id="password-validation" />
+                      <span class="more-info">{{this.passwordInstructions}}</span>
+                      <div class="caps-lock-warning {{unless this.capsLockOn "hidden"}}">
+                        {{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}
+                      </div>
+                    </div>
+                    <TogglePasswordMask
+                      @maskPassword={{this.maskPassword}}
+                      @togglePasswordMask={{this.togglePasswordMask}}
+                    />
                   </div>
                 {{/if}}
 

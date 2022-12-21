@@ -28,8 +28,8 @@
         {{/if}}
 
         <ul>
-          {{#each this.events as |webHookEvent|}}
-            <AdminWebHookEvent @model={{webHookEvent}} />
+          {{#each this.events as |event|}}
+            <WebhookEvent @event={{event}} />
           {{/each}}
         </ul>
       </div>

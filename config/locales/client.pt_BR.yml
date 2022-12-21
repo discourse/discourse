@@ -145,38 +145,37 @@ pt_BR:
       email: "Enviar por e-mail"
       url: "Copiar e compartilhar a URL"
     action_codes:
-      public_topic: "tornou este tópico público em %{when}"
-      open_topic: "converteu isto em um tópico %{when}"
-      private_topic: "tornou este tópico em uma mensagem pessoal %{when}"
-      split_topic: "dividiu este tópico %{when}"
-      invited_user: "convidou %{who} %{when}"
-      invited_group: "convidou %{who} %{when}"
+      public_topic: "Tornou este tópico público em %{when}"
+      open_topic: "Converteu isto em um tópico %{when}"
+      private_topic: "Tornou este tópico em uma mensagem pessoal %{when}"
+      split_topic: "Dividiu este tópico %{when}"
+      invited_user: "Convidou %{who} %{when}"
+      invited_group: "Convidou %{who} %{when}"
       user_left: "%{who} se removeram desta mensagem %{when}"
-      removed_user: "%{who} foi removido(a) %{when} atrás"
-      removed_group: "removeu %{who} %{when}"
-      autobumped: "automaticamente promovido %{when}"
+      removed_user: "Removeu %{who} %{when}"
+      removed_group: "Removeu %{who} %{when}"
+      autobumped: "Automaticamente promovido %{when}"
       autoclosed:
-        enabled: "fechou %{when}"
-        disabled: "abriu %{when}"
+        enabled: "Fechou %{when}"
+        disabled: "Abriu %{when}"
       closed:
-        enabled: "fechou %{when}"
-        disabled: "abriu %{when}"
+        enabled: "Fechou %{when}"
+        disabled: "Abriu %{when}"
       archived:
-        enabled: "arquivou %{when}"
-        disabled: "desarquivou %{when}"
+        enabled: "Arquivou %{when}"
+        disabled: "Desarquivou %{when}"
       pinned:
-        enabled: "fixou %{when}"
-        disabled: "desafixou %{when}"
+        enabled: "Fixou %{when}"
+        disabled: "Desafixou %{when}"
       pinned_globally:
-        enabled: "fixou globalmente %{when}"
-        disabled: "desafixou %{when}"
+        enabled: "Fixou globalmente %{when}"
+        disabled: "Desafixou %{when}"
       visible:
-        enabled: "listou %{when} atrás"
-        disabled: "removeu da lista %{when} atrás"
+        enabled: "Listou %{when} atrás"
+        disabled: "Removeu da lista %{when} atrás"
       banner:
-        enabled: "tornou isto um banner %{when} atrás. Isso será mostrado no topo de todas as páginas até que seja descartado pelo(a) usuário(a)."
-        disabled: "removeu este banner %{when} atrás. Ele não irá mais aparecer no topo de todas as páginas."
-      forwarded: "encaminhou o e-mail acima"
+        enabled: "Tornou isto um banner %{when} atrás. Isso será mostrado no topo de todas as páginas até que seja descartado pelo(a) usuário(a)."
+        disabled: "Removeu este banner %{when} atrás. Ele não irá mais aparecer no topo de todas as páginas."
     topic_admin_menu: "ações de tópico"
     skip_to_main_content: "Ir para o conteúdo principal"
     emails_are_disabled: "Todos os envios de e-mail foram desabilitados globalmente por um administrador. Nenhuma notificação por e-mail de qualquer tipo será enviada."
@@ -253,7 +252,6 @@ pt_BR:
     conduct: "Código de Conduta"
     mobile_view: "VIsualização Móvel"
     desktop_view: "Visualização do Desktop"
-    or: "ou"
     now: "agora"
     read_more: "leia mais"
     more: "Mais"
@@ -388,8 +386,6 @@ pt_BR:
     disable: "Desativar"
     continue: "Continuar"
     undo: "Desfazer"
-    revert: "Reverter"
-    failed: "Falhou"
     switch_to_anon: "Entrar no Modo anônimo"
     switch_from_anon: "Sair do Modo anônimo"
     banner:
@@ -1012,7 +1008,6 @@ pt_BR:
       notification_schedule:
         title: "Agendamento de notificações"
         label: "Ativar agendamento de notificações personalizada"
-        tip: "Fora desses horários, você será colocado automaticamente \"não perturbe\"."
         midnight: "Meia-noite"
         none: "Nenhum"
         monday: "Segunda-feira"
@@ -1276,6 +1271,7 @@ pt_BR:
         use: "Usar app autenticador"
         enforced_notice: "Você precisa ativar a autenticação de dois fatores antes de acessar este site."
         disable: "Desativar"
+        delete: "Excluir"
         save: "Salvar"
         edit: "Editar"
         edit_title: "Editar autenticador"
@@ -1721,12 +1717,15 @@ pt_BR:
     staff_writes_only_mode:
       enabled: "Este site está no modo apenas para funcionários. Continue navegando, mas as respostas, curtidas e outras ações são limitadas apenas aos membros da equipe."
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>a quantidade de {rate, plural, one {# erro/hora} other {# erros/hora}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/hora} other {# erros/hora}}."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>a quantidade de {rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/minuto} other {# erros/minuto}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>a quantidade de {rate, plural, one {# erro/hora} other {# erros/hora}}</a> ultrapassou o limite de configuração do site de {limit, plural, one {# erro/hora} other {# erros/hora}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minutos}}</a> ultrapassou o limite de configuração do site de {limit, plural, one {# erro/minuto} other {# erro/minutos}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>a quantidade de {rate, plural, one {# erro/hora} other {# erros/hora}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/hora} other {# erros/hora}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>a quantidade de {rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/minuto} other {# erros/minuto}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>a quantidade de {rate, plural, one {# erro/hora} other {# erros/hora}}</a> ultrapassou o limite de configuração do site de {limit, plural, one {# erro/hora} other {# erros/hora}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minutos}}</a> ultrapassou o limite de configuração do site de {limit, plural, one {# erro/minuto} other {# erro/minutos}}.
     learn_more: "saiba mais..."
-    first_post: Primeira postagem
     mute: Silenciar
     unmute: Remover silêncio
     last_post: Postado
@@ -1751,7 +1750,8 @@ pt_BR:
       description:
         one: "Existe <b>%{count}</b> resposta."
         other: "Existem <b>%{count}</b> respostas."
-      description_time_MF: "Há {replyCount, plural, one {<b>#</b> resposta} other {<b>#</b> respostas}} com um tempo de leitura estimado de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>."
+      description_time_MF: |
+        Há {replyCount, plural, one {<b>#</b> resposta} other {<b>#</b> respostas}} com um tempo de leitura estimado de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>.
       enable: "Resumir este tópico"
       disable: "Exibir todas as postagens"
       short_label: "Resumir"
@@ -1822,6 +1822,7 @@ pt_BR:
       title: "Entrar"
       username: "Usuário(a)"
       password: "Senha"
+      show_password: "Exibir"
       second_factor_title: "Autenticação de dois fatores"
       second_factor_description: "Digite o código de autenticação do seu aplicativo:"
       second_factor_backup: "Entrar usando um código de backup"
@@ -2169,6 +2170,7 @@ pt_BR:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2238,6 +2240,7 @@ pt_BR:
         invited_to_private_message: "convidado(a) para mensagem privada"
         invitee_accepted: "convite aceito"
         posted: "nova postagem"
+        watching_category_or_tag: "nova postagem"
         moved_post: "postagem movida"
         linked: "vinculado(a)"
         bookmark_reminder: "lembrete de favorito"
@@ -2563,9 +2566,6 @@ pt_BR:
       collapse_details: "recolher detalhes do tópico"
       expand_details: "expandir detalhes do tópico"
       unread_indicator: "Nenhum membro leu a última postagem deste tópico ainda."
-      browse_all_categories: Ver todas as categorias
-      browse_all_tags: Procurar todas as etiquetas
-      view_latest_topics: ver últimos tópicos
       suggest_create_topic: Tudo pronto para <a href>começar uma nova conversa?</a>
       jump_reply_up: pular para a primeira resposta
       jump_reply_down: pular para a última resposta
@@ -3320,7 +3320,8 @@ pt_BR:
       official_warning: "Aviso oficial"
       delete_spammer: "Excluir remetente de spam"
       flag_for_review: "Fila para revisão"
-      delete_confirm_MF: "Você está prestes a excluir {POSTS, plural, one {<b>#</b> postagem} other {<b>#</b> postagens}} e {TOPICS, plural, one {<b>#</b> tópico} other {<b>#</b> tópicos}} deste(a) usuário(a), remover sua conta, bloquear cadastros a partir do seu endereço IP <b>{ip_address}</b> e adicionar seu endereço de e-mail <b>{email}</b> a uma lista de bloqueio permanente. Você tem certeza que este(a) usuário(a) é realmente remetente de spam?"
+      delete_confirm_MF: |
+        Você está prestes a excluir {POSTS, plural, one {<b>#</b> postagem} other {<b>#</b> postagens}} e {TOPICS, plural, one {<b>#</b> tópico} other {<b>#</b> tópicos}} deste(a) usuário(a), remover sua conta, bloquear cadastros a partir do seu endereço IP <b>{ip_address}</b> e adicionar seu endereço de e-mail <b>{email}</b> a uma lista de bloqueio permanente. Você tem certeza que este(a) usuário(a) é realmente remetente de spam?
       yes_delete_spammer: "Sim, excluir remetente de spam"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(oculto)"
@@ -3499,7 +3500,6 @@ pt_BR:
         this_month: "Mês"
         this_week: "Semana"
         today: "Hoje"
-        other_periods: "ver melhores:"
     browser_update: 'Infelizmente, <a href="https://www.discourse.org/faq/#browser">seu navegador não é compatível</a>. <a href="https://browsehappy.com">Use um navegador compatível</a> para visualizar um conteúdo interessante, entrar com a conta e responder.'
     safari_13_warning: Este site em breve removerá o suporte para iOS e Safari versões 13 e anteriores. Uma versão simplificada somente para leitura permanecerá disponível. (<a href="https://meta.discourse.org/t/224747">mais informações</a>)
     permission_types:
@@ -3788,9 +3788,7 @@ pt_BR:
     safe_mode:
       enabled: "O modo seguro está ativado. Para sair do modo seguro, feche a janela do navegador"
     image_removed: "(imagem removida)"
-    do_not_disturb:
-      title: "Não perturbe por..."
-      label: "Não perturbe"
+    pause_notifications:
       remaining: "%{remaining} restante(s)"
       options:
         half_hour: "30 minutos"
@@ -4174,9 +4172,8 @@ pt_BR:
         detailed_instruction: "Uma requisição POST será enviada à URL informada quando o evento escolhido acontecer."
         new: "Novo webhook"
         create: "Criar"
+        edit: "Editar"
         save: "Salvar"
-        destroy: "Excluir"
-        description: "Descrição"
         controls: "Controles"
         go_back: "Voltar para a lista"
         payload_url: "URL do conteúdo"
@@ -4257,9 +4254,6 @@ pt_BR:
           headers: "Cabeçalhos"
           payload: "Conteúdo"
           body: "Corpo"
-          go_list: "Ir para lista"
-          go_details: "Editar webhook"
-          go_events: "Ir para eventos"
           ping: "Latência"
           status: "Código de status"
           event_id: "ID"
@@ -4280,6 +4274,8 @@ pt_BR:
         howto: "Como instalo plug-ins?"
         official: "Plug-in oficial"
         broken_route: "Não foi possível configurar o link para \"%{name}\". Verifique se os bloqueadores de anúncios estão desativados e tente recarregar a página."
+      navigation_menu:
+        sidebar: "Barra Lateral"
       backups:
         title: "Backups"
         menu:
@@ -4493,7 +4489,6 @@ pt_BR:
             error: "Este tema foi desativado automaticamente porque não é compatível com esta versão do Discourse."
             minimum: "Requer versão do Discourse %{version} ou mais recente."
             maximum: "Requer versão do Discourse %{version} ou menos recente."
-          component_of: "Componente de:"
           update_to_latest: "Atualize para o mais recente"
           check_for_updates: "Verificar atualizações"
           updating: "Atualizando..."
@@ -4966,7 +4961,6 @@ pt_BR:
       user:
         suspend_failed: "Algo deu errado ao suspender este(a) usuário(a) %{error}"
         unsuspend_failed: "Algo deu errado ao reativar este(a) usuário(a) %{error}"
-        suspend_duration: "Por quanto tempo o usuário(a) deverá ser suspenso(a)?"
         suspend_reason_label: "Por que você está suspendendo? Este texto <b>será visível para todos</b> na página de perfil deste(a) usuário(a) e será mostrado ao(à) usuário(a) ao tentar entrar. Seja breve."
         suspend_reason_hidden_label: "Por que você está suspendendo? Este texto será exibido para o(a) usuário(a) quando tentar entrar. Seja breve."
         suspend_reason: "Motivo"
@@ -5000,11 +4994,11 @@ pt_BR:
         penalty_post_edit: "Editar a postagem"
         penalty_post_none: "Não fazer nada"
         penalty_count: "Contagem de penalidades"
-        penalty_history: "Histórico de penalidades"
         clear_penalty_history:
           title: "Limpar histórico de penalidades"
           description: "usuários(as) com penalidades não podem alcançar TL3"
-        delete_all_posts_confirm_MF: "Você está prestes a excluir {POSTS, plural, one {# postagem} other {# postagens}} e {TOPICS, plural, one {# tópico} other {# tópicos}}. Deseja prosseguir?"
+        delete_all_posts_confirm_MF: |
+          Você está prestes a excluir {POSTS, plural, one {# postagem} other {# postagens}} e {TOPICS, plural, one {# tópico} other {# tópicos}}. Deseja prosseguir?
         silence: "Silenciar"
         unsilence: "Ativar som"
         silenced: "Silenciado(a)?"
@@ -5154,6 +5148,11 @@ pt_BR:
         silenced_count: "Silenciado(a)"
         suspended_count: "Suspenso(a)"
         last_six_months: "Últimos seis meses"
+        other_matches_list:
+          username: "Nome de usuário(a)"
+          trust_level: "Nível de confiança"
+          read_time: "Tempo de leitura"
+          posts: "Postagens"
         tl3_requirements:
           title: "Requisitos para o nível de confiança 3"
           table_title:
@@ -5298,6 +5297,7 @@ pt_BR:
           search: "Pesquisar"
           groups: "Grupos"
           dashboard: "Painel de controle"
+          navigation: "Navegação"
         secret_list:
           invalid_input: "Os campos de entrada não podem estar vazios ou conter o caractere de barra vertical."
         default_categories:
@@ -5468,10 +5468,8 @@ pt_BR:
       finish: "Sair da configuração"
       back: "Voltar"
       next: "Próximo"
-      configure_more: "Configurar Mais..."
       step-text: "Intervalo"
       step: "%{current} de %{total}"
-      upload: "Enviar"
       uploading: "Enviando..."
       upload_error: "Desculpe, houve um erro ao enviar o arquivo. Tente novamente."
       staff_count:

@@ -67,10 +67,12 @@ pl_PL:
       modifier_values: "modyfikatory about.json zawierają nieprawidłowe wartości: %{errors}"
       git: "Podczas klonowania repozytorium git wystąpił błąd: dostęp jest zabroniony albo repozytorium nie istnieje"
       git_ref_not_found: "Nie można sprawdzić odwołania git: %{ref}"
+      git_unsupported_scheme: "Nie można sklonować repozytorium git: schemat nieobsługiwany"
       unpack_failed: "Błąd przy rozpakowywaniu pliku"
       file_too_big: "Nieskompresowany plik jest zbyt duży."
       unknown_file_type: "Przesłany plik nie spełnia wymagań poprawnego motywu Discourse."
       not_allowed_theme: "`%{repo}` nie jest na liście dozwolonych motywów (sprawdź globalne ustawienie `allowed_theme_repos`)."
+      ssh_key_gone: "Czekałeś zbyt długo, aby zainstalować motyw, a klucz SSH wygasł. Spróbuj ponownie."
     errors:
       component_no_user_selectable: "Komponenty motywu nie mogą być dobieralne przez użytkowników"
       component_no_default: "Komponenty motywu nie mogą być domyślnym motywem"
@@ -1521,9 +1523,8 @@ pl_PL:
     allow_duplicate_topic_titles_category: "Zezwalaj na tematy z identycznymi, zduplikowanymi tytułami, jeśli kategoria jest inna. allow_duplicate_topic_titles musi być wyłączone."
     unique_posts_mins: "Ile minut musi upłynąć zanim użytkownik będzie mógł/mogła ponownie zrobić wpis z tą samą treścią"
     educate_until_posts: "Wyświetlaj okno edukacyjne po rozpoczęciu pisania dopóki nowy użytkownik nie napisze tylu wpisów."
-    title: "Nazwa tej strony używana w tagu title."
-    site_description: "Opis strony w jednym zdaniu, wykorzystywany w meta tagu description."
-    short_site_description: "Krótki opis, użyty w tytule na stronie głównej."
+    site_description: "Opisz tę stronę w jednym zdaniu. Widoczne dla wszystkich odwiedzających, w tym użytkowników anonimowych."
+    short_site_description: "Krótki opis w kilku słowach. Widoczne dla wszystkich odwiedzających, w tym użytkowników anonimowych."
     contact_email: "Adres e-mail do kluczowego kontaktu do osoby odpowiedzialnej za tę witrynę. Używany do krytycznych powiadomień, a także wyświetlany na <a href='%{base_path}/about' target='_blank'>/about</a> w pilnych sprawach."
     contact_url: "Adres URL kontaktu dla tej witryny. Wyświetlany na stronie <a href='%{base_path}/about' target='_blank'>/about</a> dla pilnych spraw."
     crawl_images: "Pobieraj grafiki ze zdalnych URLi aby ustawić poprawną wysokość i szerokość w tagu img."
@@ -1540,8 +1541,6 @@ pl_PL:
     edit_history_visible_to_public: "Pozwól wszystkim zobaczyć poprzednie wersje edytowanego posta. Gdy wyłączone, tylko członkowie personelu mogą je przeglądać."
     delete_removed_posts_after: "Wpisy usunięte przez autora będą automatycznie zlikwidowane po (n) godzinach. Jeżeli liczba godzin będzie wynosić 0, to zostaną usunięte natychmiast. "
     notify_users_after_responses_deleted_on_flagged_post: "Gdy post zostanie oznaczony, a następnie usunięty, wszyscy użytkownicy, którzy na niego odpowiedzieli, a ich odpowiedzi zostały usunięte, zostaną powiadomieni."
-    max_image_width: "Maksymalna szerokość miniaturki grafiki we wpisie. "
-    max_image_height: "Maksymalna wysokość miniaturki grafiki we wpisie. "
     responsive_post_image_sizes: "Zmień rozmiar podglądu lightbox, aby umożliwić wyświetlanie ekranów o wysokiej rozdzielczości DPI o następujących proporcjach pikseli. Usuń wszystkie wartości, aby wyłączyć responsywne obrazy."
     fixed_category_positions: "Zaznacz, aby ręcznie ustawiać kolejność kategorii. Odznacz, aby kategorie były sortowane na podstawie aktywności. "
     fixed_category_positions_on_create: "Jeśli zaznaczone, kolejność kategorii będzie utrzymywana w oknie dialogowym tworzenia tematu (wymaga fixed_category_positions)."
@@ -1670,7 +1669,6 @@ pl_PL:
     email_token_valid_hours: "Tokeny resetujące hasło / aktywujące konto są ważne przez (n) godzin."
     enable_badges: "Włącz system odznak"
     max_favorite_badges: "Maksymalna liczba odznak, które użytkownik może wybrać"
-    enable_whispers: "Pozwalaj administracji na prywatną rozmowę w tematach."
     whispers_allowed_groups: "Zezwalaj na prywatną komunikację w ramach tematów członkom określonych grup."
     allow_index_in_robots_txt: "W pliku robots.txt określ, że ta witryna może być indeksowana przez wyszukiwarki internetowe. W wyjątkowych przypadkach możesz trwale <a href='%{base_path}/admin/customize/robots'>zastąpić plik robots.txt</a>."
     blocked_email_domains: "Lista domen poczty e-mail rozdzielonych pionową kreską, z których użytkownicy nie mogą rejestrować kont. Przykład: mailinator.com|trashmail.net"
@@ -2072,6 +2070,7 @@ pl_PL:
     display_name_on_posts: "Pokazuj imię i nazwisko użytkownika przy jego wpisach, a także jego @nazwę użytkownika."
     show_time_gap_days: "Jeśli dwa wpisy zostały dodane w dużej przerwie, wyświetl okres w temacie."
     short_progress_text_threshold: "Po tym jak liczba wpisów w tym temacie przekroczy ten numer, ten pasek postępu pokaże tylko bieżącą liczbę wpisów. Jeśli zmienisz szerokość paska postępu, możliwe, że będziesz musiał zmienić tą wartość."
+    default_code_lang: "Domyślne podświetlanie składni języka programowania stosowane do bloków kodu (auto, tekst, ruby, python itp.). Ta wartość musi być również obecna w ustawieniu witryny `highlighted languages`."
     warn_reviving_old_topic_age: "Kiedy ktoś rozpoczyna udziela odpowiedzi na dany temat, w którym ostatnia odpowiedź jest starsza niż tak wiele dni, wyświetlone zostanie ostrzeżenie. Wyłącz tą ustawienia ustawiając 0."
     autohighlight_all_code: "Narzuć dodawanie podświetlenia kodu do wszystkich bloków kodu, w przypadku gdy nie jest dokładnie określony język."
     highlighted_languages: "Dołączone reguły podświetlania składni. (Ostrzeżenie: dołączenie zbyt wielu języków może wpłynąć na wydajność) Zobacz: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>, aby zobaczyć wersję demonstracyjną"
@@ -2180,6 +2179,7 @@ pl_PL:
     shared_drafts_min_trust_level: "Zezwalaj użytkownikom na wyświetlanie i edycję wspólnych szkiców."
     push_notifications_prompt: "Wyświetl monit o zgodę użytkownika."
     push_notifications_icon: "Ikona odznaki pojawiająca się w rogu powiadomień. Zalecany jest monochromyczny PNG 96×96 z przezroczystym tłem."
+    push_notification_time_window_mins: "Poczekaj (n) minut przed wysłaniem powiadomienia push. Pomaga zapobiegać wysyłaniu powiadomień push do aktywnego użytkownika online."
     base_font: "Podstawowa czcionka używana dla większości tekstu w witrynie. Motywy można nadpisywać za pomocą niestandardowej właściwości CSS `--font-family`."
     heading_font: "Czcionka używana w nagłówkach witryny. Motywy można nadpisywać za pomocą niestandardowej właściwości CSS `--heading-font-family`."
     enable_sitemap: "Wygeneruj mapę witryny dla swojej strony i umieść ją w pliku robots.txt."
@@ -3134,6 +3134,8 @@ pl_PL:
 
         Jeśli uważasz, że to błąd, [skontaktuj się z nami](%{base_url}/about).
     email_reject_too_many_recipients:
+      title: "E-mail odrzucony -- Zbyt wielu odbiorców"
+      subject_template: "[%{email_prefix}] Problem z e-mailem -- Zbyt wielu odbiorców"
       text_body_template: |
         Przepraszamy, ale Twoja wiadomość e-mail do %{destination} (tytuł %{former_title}) nie została wysłana.
 
@@ -4401,29 +4403,25 @@ pl_PL:
           site_description:
             label: "Opisz swoja społeczność w jednym zdaniu."
             placeholder: "Miejsce dla Jane i jej przyjaciół na dyskusje o fajnych sprawach."
-          contact_email:
-            label: "Punkt kontaktu"
-            placeholder: "example@user.com"
-            description: "Osoba lub grupa odpowiedzialna za tę społeczność. Używane do krytycznych aktualizacji i wymienione na <a href='%{base_path}/about' target='_blank'>o stronie</a> w celu pilnego kontaktu."
           default_locale:
             label: "Język"
       privacy:
-        title: "Doświadczenie użytkownika"
         fields:
           login_required:
             placeholder: "Prywatne"
             extra_description: "Tylko zalogowani użytkownicy mają dostęp do społeczności"
           invite_only:
-            placeholder: "Tylko zaproszenia"
             extra_description: "Użytkownicy muszą zostać zaproszeni przez zaufanych użytkowników lub personel, w przeciwnym razie użytkownicy mogą zarejestrować się samodzielnie"
           must_approve_users:
-            placeholder: "Wymaga zatwierdzenia"
             extra_description: "Użytkownicy muszą być zatwierdzeni przez personel"
+          chat_enabled:
+            placeholder: "Włącz czat"
+          enable_sidebar:
+            placeholder: "Włącz pasek boczny"
+            extra_description: "Uzyskaj łatwy dostęp do ulubionych przestrzeni"
       ready:
-        title: "Twój Discourse jest Gotowy!"
         description: "Otóż to! Wykonałeś podstawowe czynności związane z utworzeniem swojej społeczności. Teraz możesz wejść i rozejrzeć się, napisać temat powitalny i wysłać zaproszenia!<br><br>Baw się dobrze!"
       styling:
-        title: "Wygląd i odczucia"
         fields:
           color_scheme:
             label: "Schemat kolorów"
@@ -4454,36 +4452,19 @@ pl_PL:
                 label: "Bloki kategorii z tematami"
               subcategories_with_featured_topics:
                 label: "Podkategorie z polecanymi tematami"
-      branding:
-        fields:
-          logo:
-            label: "Podstawowe logo"
-            description: "Logo w lewym górnym rogu Twojej witryny. Użyj szerokiego prostokątnego obrazu o wysokości 120 i współczynniku proporcji większym niż 3:1"
-          logo_small:
-            label: "Kwadratowe logo"
-            description: "Kwadratowa wersja Twojego logo. Wyświetlana w lewym górnym rogu podczas przewijania w dół i podczas udostępniania na platformach społecznościowych. Najlepiej w rozmiarze co najmniej 512x512."
       corporate:
-        title: "Twoja organizacja"
         fields:
-          company_name:
-            label: "Nazwa firmy"
-            placeholder: "Przykładowa organizacja"
-            description: "Podawana na stronie warunków korzystania z usługi. Możesz pominąć, jeśli żadna firma nie istnieje."
           governing_law:
-            label: "Obowiązujące prawo"
             placeholder: "Prawo kalifornijskie"
-            description: "Podawane na stronie warunków korzystania z usługi. Możesz pominąć, jeśli żadna firma nie istnieje."
           contact_url:
-            label: "Strona kontaktowa"
             placeholder: "https://www.example.com/contact-us"
-            description: "Ogólna strona kontaktowa do ciebie lub twojej organizacji. Będzie wyświetlana na <a href='%{base_path}/about' target='_blank'>stronie O Tobie</a>."
           city_for_disputes:
-            label: "Miasto sporów"
             placeholder: "Kalifornia, San Francisco"
-            description: "Podawane na stronie warunków korzystania z usługi. Możesz pominąć, jeśli żadna firma nie istnieje."
           site_contact:
-            label: "Automatyczne wiadomości"
             description: "Wszystkie automatyczne wiadomości prywatne Discourse będą wysyłane z tego użytkownika, jak na przykład ostrzeżenia o flagach i powiadomienia ukończenia backupu."
+          contact_email:
+            label: "Punkt kontaktu"
+            placeholder: "example@user.com"
       invites:
         title: "Zaproś administrację"
         description: "Już prawie koniec! Teraz zaprośmy trochę ludzi, aby rozwinąć twoją społeczność i pomóc <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>zasiać nowe dyskusje</a> poprzez interesujące tematy i odpowiedzi."

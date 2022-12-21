@@ -197,17 +197,6 @@
       </DSection>
     {{/unless}}
 
-    {{#if this.parentThemes}}
-      <div class="control-unit">
-        <div class="mini-title">{{i18n "admin.customize.theme.component_of"}}</div>
-        <ul>
-          {{#each this.parentThemes as |theme|}}
-            <li><LinkTo @route="adminCustomizeThemes.show" @model={{theme}} @replace={{true}}>{{theme.name}}</LinkTo></li>
-          {{/each}}
-        </ul>
-      </div>
-    {{/if}}
-
     {{#if this.model.component}}
       <DSection @class="form-horizontal theme settings control-unit">
         <div class="row setting">

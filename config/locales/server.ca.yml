@@ -1179,9 +1179,6 @@ ca:
     allow_duplicate_topic_titles: "Permet temes amb títols idèntics, duplicats."
     unique_posts_mins: "Quants minuts abans que un usuari pugui fer una publicació amb el mateix contingut una altra vegada"
     educate_until_posts: "Quan l'usuari comença a escriure les seves primeres (n) publicacions noves, mostra en l'editor la guia d'ús en menú emergent. "
-    title: "El nom d'aquest lloc web per a l'etiqueta de títol."
-    site_description: "Descriviu el lloc web amb una frase per a la metaetiqueta de descripció."
-    short_site_description: "Descripció breu per a l'etiqueta de títol de la pàgina d'inici."
     crawl_images: "Recupera imatges d'adreces URL remotes per a inserir-hi les dimensions correctes d'amplada i alçada."
     download_remote_images_threshold: "L'espai mínim necessari en el disc per a descarregar imatges remotes en local (percentatge)"
     disabled_image_download_domains: "Les imatges remotes no es descarregaran mai des d'aquests dominis. Llista delimitada amb barres verticals."
@@ -1193,8 +1190,6 @@ ca:
     tl2_post_edit_time_limit: "Un autor de nivell de confiança 2 pot editar la seva publicació durant (n) minuts després de publicar. Establiu el valor 0 perquè sigui per a sempre."
     edit_history_visible_to_public: "Permet que qualsevol miri les versions prèvies d'una publicació editada. Si està desactivat, només seran visibles per a membres de l'equip responsable."
     delete_removed_posts_after: "Les publicacions eliminades per l'autor se suprimiran automàticament al cap de (n) hores. Si es posa 0, se suprimiran immediatament."
-    max_image_width: "Amplada màxima de les miniatures d'imatges en una publicació"
-    max_image_height: "Alçada màxima de les miniatures d'imatges a una publicació"
     responsive_post_image_sizes: "Redimensiona les imatges de previsualització lightbox per a permetre pantalles de PPP (DPI) elevats de les següents relacions de píxels. Elimineu tots els valors per a inhabilitar les imatges responsives."
     fixed_category_positions: "Si és activat, podreu arranjar les categories en un ordre fix. Si no és activat, les categories es llisten segons l'ordre d'activitat."
     fixed_category_positions_on_create: "Si és activat, l'ordenació de categories es mantindrà en el diàleg de creació de temes (necessita fixed_category_positions)."
@@ -1284,7 +1279,6 @@ ca:
     enable_rich_text_paste: "Habilita la conversió automàtica d'HTML a Markdown quan s'enganxa text en el tauler de redacció (experimental)"
     email_token_valid_hours: "Els testimonis (tokens) de contrasenya oblidada i activació de compte són vàlids durant (n) hores."
     enable_badges: "Activa el sistema d'insígnies."
-    enable_whispers: "Permet la comunicació privada de l'equip responsable dins dels temes."
     allow_index_in_robots_txt: "Especifiqueu en robots.txt que els motors de cerca web poden indexar aquest lloc. En casos excepcionals, podeu <a href='%{base_path}/admin/customize/robots'>substituir robots.txt</a> de manera permanent."
     blocked_email_domains: "Llista de dominis de correu delimitada amb barres verticals amb els quals  els usuaris no poden registrar comptes. Exemple: mailinator.com|trashmail.net"
     allowed_email_domains: "Llista de dominis de correu delimitada amb barres verticals amb els quals els usuaris HAN DE registrar els comptes. ATENCIÓ: Els usuaris amb dominis de correu diferents dels llistats no són autoritzats!"
@@ -2951,10 +2945,6 @@ ca:
           login_required:
             placeholder: "Privat"
             extra_description: "Sols els usuaris que han iniciat la sessió poden accedir a aquesta comunitat"
-          must_approve_users:
-            placeholder: "Requereix aprovació"
-      ready:
-        title: "El vostre Discourse està a punt!"
       styling:
         fields:
           styling_preview:
@@ -2971,29 +2961,15 @@ ca:
                 label: "Categories i temes més recents"
               categories_and_top_topics:
                 label: "Categories i temes principals"
-      branding:
-        fields:
-          logo:
-            label: "Logo principal"
-          logo_small:
-            label: "Logotip quadrat"
       corporate:
         fields:
-          company_name:
-            label: "Nom de l'empresa"
-            placeholder: "Organització d'exemple"
           governing_law:
-            label: "Llei que regeix"
             placeholder: "Jurisdicció de Califòrnia"
           contact_url:
-            label: "Pàgina web"
             placeholder: "https://www.example.com/contact-us"
-            description: "Pàgina web general de contacte per a vós o la vostra organització. Es mostrarà en <a href='%{base_path}/about' target='_blank'>la vostra pàgina 'quant a'</a>."
           city_for_disputes:
-            label: "Ciutat per a les disputes"
             placeholder: "San Francisco, Califòrnia"
           site_contact:
-            label: "Missatges automàtics"
             description: "Tots els missatges personals automatitzats de Discourse s'enviaran des d'aquest usuari, com ara avisos de bandera i avisos de finalització de còpies de seguretat."
       invites:
         title: "Convida l'equip responsable"

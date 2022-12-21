@@ -58,6 +58,19 @@ export const SECOND_FACTOR_METHODS = {
   SECURITY_KEY: 3,
 };
 
+const TEXT_SIZE_COOKIE_NAME = "text_size";
+const COOKIE_EXPIRY_DAYS = 365;
+
+export function extendTextSizeCookie() {
+  const currentValue = cookie(TEXT_SIZE_COOKIE_NAME);
+  if (currentValue) {
+    cookie(TEXT_SIZE_COOKIE_NAME, currentValue, {
+      path: "/",
+      expires: COOKIE_EXPIRY_DAYS,
+    });
+  }
+}
+
 const isForever = (dt) => moment().diff(dt, "years") < -100;
 
 let userFields = [
@@ -1053,8 +1066,8 @@ const User = RestModel.extend({
 
   @discourseComputed("user_option.text_size_seq", "user_option.text_size")
   currentTextSize(serverSeq, serverSize) {
-    if (cookie("text_size")) {
-      const [cookieSize, cookieSeq] = cookie("text_size").split("|");
+    if (cookie(TEXT_SIZE_COOKIE_NAME)) {
+      const [cookieSize, cookieSeq] = cookie(TEXT_SIZE_COOKIE_NAME).split("|");
       if (cookieSeq >= serverSeq) {
         return cookieSize;
       }
@@ -1065,12 +1078,12 @@ const User = RestModel.extend({
   updateTextSizeCookie(newSize) {
     if (newSize) {
       const seq = this.get("user_option.text_size_seq");
-      cookie("text_size", `${newSize}|${seq}`, {
+      cookie(TEXT_SIZE_COOKIE_NAME, `${newSize}|${seq}`, {
         path: "/",
-        expires: 9999,
+        expires: COOKIE_EXPIRY_DAYS,
       });
     } else {
-      removeCookie("text_size", { path: "/", expires: 1 });
+      removeCookie(TEXT_SIZE_COOKIE_NAME, { path: "/" });
     }
   },
 

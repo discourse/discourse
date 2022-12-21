@@ -15,6 +15,10 @@ module SystemHelpers
     visit "/session/#{user.encoded_username}/become"
   end
 
+  def sign_out
+    delete "/session"
+  end
+
   def setup_system_test
     SiteSetting.login_required = false
     SiteSetting.content_security_policy = false
@@ -40,5 +44,17 @@ module SystemHelpers
     yield
   ensure
     page.driver.browser.manage.window.resize_to(original_size.width, original_size.height)
+  end
+
+  def using_browser_timezone(timezone, &example)
+    previous_browser_timezone = ENV["TZ"]
+
+    ENV["TZ"] = timezone
+
+    Capybara.using_session(timezone) do
+      freeze_time(&example)
+    end
+
+    ENV["TZ"] = previous_browser_timezone
   end
 end

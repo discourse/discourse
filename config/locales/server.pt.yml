@@ -978,16 +978,12 @@ pt:
     allow_duplicate_topic_titles: "Permitir tópicos com títulos idênticos e duplicados."
     unique_posts_mins: "Quantos minutos antes que um utilizador possa criar uma mensagem com o mesmo conteúdo outra vez?"
     educate_until_posts: "Quando um utilizador começar a escrever as primeiras (n) novas mensagens, mostrar o painel pop-up de educação do novo utilizador no editor."
-    title: "O nome deste sítio, tal como usado na etiqueta do título."
-    site_description: "Descrever este sítio em uma frase, tal como usado na etiqueta de descrição meta."
     crawl_images: "Recuperar imagens de URLs remotos para inserir o comprimento e largura corretos."
     download_remote_images_threshold: "Espaço mínimo necessário em disco para transferir as imagens remotas localmente (em percentagem)"
     disabled_image_download_domains: "As imagens remotas nunca serão transferidas destes domínios. Lista delimitada por canal."
     editing_grace_period: "Por (n) segundos após publicar, a edição não irá criar uma nova versão no histórico da mensagem."
     edit_history_visible_to_public: "Permitir que todos vejam versões anteriores de uma mensagem editada. Quando desativado, apenas membros do pessoal podem ver."
     delete_removed_posts_after: "Mensagens removidas pelo autor serão automaticamente eliminadas após um período de (n) horas. Se estiver definido a 0, as mensagens serão eliminadas imediatamente."
-    max_image_width: "Largura máxima de miniaturas de imagens numa mensagem."
-    max_image_height: "Altura máxima de miniaturas de imagens numa mensagem."
     fixed_category_positions: "Se estiver marcado, irá conseguir organizar as categorias por uma ordem fixa. Se não estiver marcado, as categorias são listadas por ordem de actividade."
     fixed_category_positions_on_create: "Se marcado, a ordenação de categorias irá ser mantida no diálogo de criação do tópico (requer fixed_category_positions)"
     add_rel_nofollow_to_user_content: 'Adicionar a etiqueta rel nofollow em todos os conteúdos submetidos pelo utilizador, excepto para hiperligações internas (incluindo domínios pai). Se mudar isto, terá que atualizar todas as suas mensagens com: "rake posts:rebake"'
@@ -1035,7 +1031,6 @@ pt:
     prioritize_username_in_ux: "Mostrar o nome de utilizador primeiro na página de utilizador, cartão de utilizador e publicações (quando o nome desactivado é mostrado primeiro)"
     email_token_valid_hours: "Os símbolos para palavra-passe esquecida /conta ativada são válidos por (n) horas."
     enable_badges: "Ativar o sistema de distintivos"
-    enable_whispers: "Permitir à equipa de apio comunicar de forma privada dentro de tópicos."
     blocked_email_domains: "Lista de domínios de email que os utilizadores não podem usar para registo de contas. Exemplo: mailinator.com|trashmail.net"
     allowed_email_domains: "Lista de domínios de email que os utilizadores DEVEM usar para registar contas. AVISO: Utilizadores com domínios de email diferentes dos listados não serão permitidos!"
     log_out_strict: "Ao terminar sessão, saia de TODAS as sessões do utilizador em todos dispositivos"
@@ -2180,8 +2175,6 @@ pt:
         fields:
           login_required:
             placeholder: "Privado"
-      ready:
-        title: "O seu Discourse está Pronto!"
       styling:
         fields:
           styling_preview:
@@ -2198,18 +2191,10 @@ pt:
                 label: "Categorias e Tópicos Recentes"
               categories_and_top_topics:
                 label: "Categorias e Melhores Tópicos"
-      branding:
-        fields:
-          logo:
-            label: "Logo Primário"
       corporate:
         fields:
           contact_url:
-            label: "Página da Internet"
             placeholder: "https://www.example.com/contact-us"
-            description: "Página da internet com informação geral sobre si ou a sua organização. Será mostrada na <a href='%{base_path}/about' target='_blank'>sua página de descrição</a>."
-          site_contact:
-            label: "Mensagens Automatizadas"
       invites:
         title: "Convidar Equipa de Apoio"
       finished:

@@ -19,15 +19,6 @@ describe "Using #hashtag autocompletion to search for and lookup channels",
   before do
     SiteSetting.enable_experimental_hashtag_autocomplete = true
 
-    # This is annoying, but we need to reset the hashtag data sources inbetween
-    # tests, and since this is normally done in plugin.rb with the plugin API
-    # there is not an easier way to do this.
-    HashtagAutocompleteService.register_data_source("channel", Chat::ChatChannelHashtagDataSource)
-    HashtagAutocompleteService.register_type_in_context("channel", "chat-composer", 200)
-    HashtagAutocompleteService.register_type_in_context("category", "chat-composer", 100)
-    HashtagAutocompleteService.register_type_in_context("tag", "chat-composer", 50)
-    HashtagAutocompleteService.register_type_in_context("channel", "topic-composer", 10)
-
     chat_system_bootstrap(user, [channel1, channel2])
     sign_in(user)
   end
@@ -41,7 +32,7 @@ describe "Using #hashtag autocompletion to search for and lookup channels",
       count: 3,
     )
     hashtag_results = page.all(".hashtag-autocomplete__link", count: 3)
-    expect(hashtag_results.map(&:text)).to eq(["Random", "Raspberry", "razed x 0"])
+    expect(hashtag_results.map(&:text).map { |r| r.gsub("\n", " ") }).to eq(["Random", "Raspberry", "razed (x0)"])
   end
 
   it "searches for channels as well with # in a topic composer and deprioritises them" do
@@ -53,7 +44,7 @@ describe "Using #hashtag autocompletion to search for and lookup channels",
       count: 3,
     )
     hashtag_results = page.all(".hashtag-autocomplete__link", count: 3)
-    expect(hashtag_results.map(&:text)).to eq(["Raspberry", "razed x 0", "Random"])
+    expect(hashtag_results.map(&:text).map { |r| r.gsub("\n", " ") }).to eq(["Raspberry", "razed (x0)", "Random"])
   end
 
   it "cooks the hashtags for channels, categories, and tags serverside when the chat message is saved to the database" do

@@ -672,6 +672,9 @@
             "external_links_in_new_tab": {
               "type": "boolean"
             },
+            "bookmark_auto_delete_preference": {
+              "type": "integer"
+            },
             "color_scheme_id": {
               "type": [
                 "string",

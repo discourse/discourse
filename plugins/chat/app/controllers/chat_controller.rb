@@ -32,7 +32,7 @@ class Chat::ChatController < Chat::ChatBaseController
   def enable_chat
     chat_channel = ChatChannel.with_deleted.find_by(chatable: @chatable)
 
-    guardian.ensure_can_see_chat_channel!(chat_channel) if chat_channel
+    guardian.ensure_can_join_chat_channel!(chat_channel) if chat_channel
 
     if chat_channel && chat_channel.trashed?
       chat_channel.recover!
@@ -40,7 +40,7 @@ class Chat::ChatController < Chat::ChatBaseController
       return render_json_error I18n.t("chat.already_enabled")
     else
       chat_channel = @chatable.chat_channel
-      guardian.ensure_can_see_chat_channel!(chat_channel)
+      guardian.ensure_can_join_chat_channel!(chat_channel)
     end
 
     success = chat_channel.save
@@ -61,7 +61,7 @@ class Chat::ChatController < Chat::ChatBaseController
 
   def disable_chat
     chat_channel = ChatChannel.with_deleted.find_by(chatable: @chatable)
-    guardian.ensure_can_see_chat_channel!(chat_channel)
+    guardian.ensure_can_join_chat_channel!(chat_channel)
     return render json: success_json if chat_channel.trashed?
     chat_channel.trash!(current_user)
 
@@ -346,7 +346,7 @@ class Chat::ChatController < Chat::ChatBaseController
         .where(id: params[:user_ids])
     users.each do |user|
       guardian = Guardian.new(user)
-      if guardian.can_chat? && guardian.can_see_chat_channel?(@chat_channel)
+      if guardian.can_chat? && guardian.can_join_chat_channel?(@chat_channel)
         data = {
           message: "chat.invitation_notification",
           chat_channel_id: @chat_channel.id,

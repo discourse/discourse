@@ -3,6 +3,8 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { resetPostSmallActionClassesCallbacks } from "discourse/widgets/post-small-action";
 
 module(
   "Integration | Component | Widget | post-small-action",
@@ -88,6 +90,42 @@ module(
         exists(".small-action-desc .small-action-recover"),
         "it adds the recover small action button"
       );
+    });
+
+    test("`addPostSmallActionClassesCallback` plugin api", async function (assert) {
+      try {
+        withPluginApi("1.6.0", (api) => {
+          api.addPostSmallActionClassesCallback((postAttrs) => {
+            if (postAttrs.canRecover) {
+              return ["abcde"];
+            }
+          });
+        });
+
+        this.set("args", { id: 123, canRecover: false });
+
+        await render(
+          hbs`<MountWidget @widget="post-small-action" @args={{this.args}} />`
+        );
+
+        assert.notOk(
+          exists(".abcde"),
+          "custom CSS class is not added when condition is not met"
+        );
+
+        this.set("args", { id: 123, canRecover: true });
+
+        await render(
+          hbs`<MountWidget @widget="post-small-action" @args={{this.args}} />`
+        );
+
+        assert.ok(
+          exists(".abcde"),
+          "it adds custom CSS class as registered from the plugin API"
+        );
+      } finally {
+        resetPostSmallActionClassesCallbacks();
+      }
     });
   }
 );

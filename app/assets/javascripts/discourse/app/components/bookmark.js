@@ -153,11 +153,6 @@ export default Component.extend({
       }
     }
 
-    this.currentUser.set(
-      "user_option.bookmark_auto_delete_preference",
-      this.autoDeletePreference
-    );
-
     const data = {
       reminder_at: reminderAtISO,
       name: this.model.name,

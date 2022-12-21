@@ -9,6 +9,7 @@ class Chat::Api::CategoryChatablesController < ApplicationController
         Group
           .joins(:category_groups)
           .where(category_groups: { category_id: category.id })
+          .where("category_groups.permission_type IN (?)", [CategoryGroup.permission_types[:full], CategoryGroup.permission_types[:create_post]])
           .joins("LEFT OUTER JOIN group_users ON groups.id = group_users.group_id")
           .group("groups.id", "groups.name")
           .pluck("groups.name", "COUNT(group_users.user_id)")

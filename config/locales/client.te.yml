@@ -130,7 +130,6 @@ te:
     tos: "సేవా నిబంధనలు"
     mobile_view: "చర సందర్శనం"
     desktop_view: "డెస్క్ టాప్ సందర్శనం"
-    or: "లేదా"
     now: "ఇప్పుడే"
     read_more: "మరింత చదువు"
     more: "మరింత"
@@ -183,8 +182,6 @@ te:
     enable: "చేతనం"
     disable: "అచేతనం"
     undo: "రద్దు"
-    revert: "తిద్దు"
-    failed: "విఫలం"
     banner:
       edit: "సవరించు"
     choose_topic:
@@ -644,7 +641,6 @@ te:
     read_only_mode:
       login_disabled: "సేటు కేవలం చదివే రీతిలో ఉన్నప్పుడు లాగిన్ వీలవదు."
     learn_more: "మరింత తెలుసుకోండి..."
-    first_post: తొలి టపా
     mute: నిశ్శబ్దం
     unmute: వినిశ్శబ్దం
     time_read: చదివిన
@@ -688,6 +684,7 @@ te:
     login:
       username: "వాడుకరి"
       password: "సంకేతపదం"
+      show_password: "చూపు"
       caps_lock_warning: "క్యాప్స్ లాక్ ఆన్ అయి ఉంది"
       error: "తెలీని దోషం"
       blank_username_or_password: "దయచేసి మీ ఈమెయిల్ లేదా సభ్యనామం మరియు సంకేతపదం రాయండి"
@@ -882,8 +879,6 @@ te:
       back_to_list: "విషయాల జాబితాకు మరలు"
       options: "విషయపు ఐచ్చికాలు"
       show_links: "ఈ విషయంలో లంకెలు చూపు"
-      browse_all_categories: అన్ని వర్గాలూ జల్లించు
-      view_latest_topics: తాజా విషయాలు చూడు
       jump_reply_up: పాత జవాబుకు వెళ్లు
       jump_reply_down: తరువాతి జవాబుకు వెళ్లు
       deleted: "ఈ విషయం తొలగించబడింది"
@@ -1345,7 +1340,7 @@ te:
     footer_nav:
       back: "వెనుకకు"
       share: "పంచు"
-    do_not_disturb:
+    pause_notifications:
       options:
         custom: "అనురూప"
     trust_levels:
@@ -1481,9 +1476,8 @@ te:
         scopes:
           action: చర్య
       web_hooks:
+        edit: "సవరణ"
         save: "భద్రపరచు"
-        destroy: "తొలగించు"
-        description: "వివరణ"
         active: "క్రియాశీల"
         delivery_status:
           failed: "విఫలం"
@@ -1796,7 +1790,6 @@ te:
       user:
         suspend_failed: "ఈ సభ్యుడిని సస్పెండ్ చేసేప్పుడు ఏదో తేడా జరిగింది. %{error}"
         unsuspend_failed: "ఈ వినియోగదారు వలన ఏదో తొలగింపబడని తప్పు జరిగింది %{error}"
-        suspend_duration: "వినియోగదారు ఎంతకాలం నిలిపివేయబడ్డాడు?"
         suspend_reason_label: "మీరు ఎందుకు తొలగించబడ్డారు? ఈ పాఠ్యం <b> వినియోగదారును ప్రొఫైల్ పుట మీద ప్రతివారికి </b> కనబడుతుంది, మరియు వినియోగదారుడు లాగిన్‌కు ప్రయత్నించినపుడు చూస్తారు.చిన్నదిగా ఉంచండి."
         suspend_reason: "కారణం"
         suspended_by: "సస్పెండు చేసినవారు"
@@ -2053,7 +2046,6 @@ te:
     wizard:
       back: "వెనుకకు"
       next: "తదుపరి"
-      upload: "ఎక్కించు"
       uploading: "ఎగుమతవుతోంది..."
       upload_error: "క్షమించాలి. దస్త్రం ఎగుమతించుటలో దోషం. దయచేసి మరలా ప్రయత్నించండి. "
       invites:

@@ -1,80 +1,83 @@
-<div class="wizard-container__step-contents">
-  {{#if this.step.title}}
-    <h1 class="wizard-container__step-title">{{this.step.title}}</h1>
-  {{/if}}
+<div class="wizard-container__step-counter">
+  <span class="wizard-container__step-text">{{bound-i18n "wizard.step-text"}}</span>
+  <span class="wizard-container__step-count">{{bound-i18n "wizard.step" current=this.step.displayIndex total=this.wizard.totalSteps}}</span>
+</div>
 
-  <div class="wizard-container__step-container">
-    {{#if this.step.fields}}
-      <WizardStepForm @step={{this.step}}>
-        {{#if this.includeSidebar}}
-          <div class="wizard-container__sidebar">
-            {{#each this.step.fields as |field|}}
-              {{#if field.show_in_sidebar}}
-                <WizardField @field={{field}} @step={{this.step}} @wizard={{this.wizard}} />
-              {{/if}}
-            {{/each}}
-          </div>
-        {{/if}}
-        <div class="wizard-container__fields">
-          {{#each this.step.fields as |field|}}
-            {{#unless field.show_in_sidebar}}
-              <WizardField @field={{field}} @step={{this.step}} @wizard={{this.wizard}} />
-            {{/unless}}
-          {{/each}}
+<div class="wizard-container">
+  <div class="wizard-container__step-contents">
+    <div class="wizard-container__step-header">
+      {{#if this.step.emoji}}
+        <div class="wizard-container__step-header--emoji">
+          {{emoji this.step.emoji}}
         </div>
-      </WizardStepForm>
-    {{/if}}
-    {{#if (or this.bannerImage this.step.description)}}
-      <div class={{this.bannerAndDescriptionClass}}>
+      {{/if}}
+      {{#if this.step.title}}
+        <h1 class="wizard-container__step-title">{{this.step.title}}</h1>
         {{#if this.step.description}}
           <p class="wizard-container__step-description">{{html-safe this.step.description}}</p>
         {{/if}}
-        {{#if this.bannerImage}}
-          <div class="wizard-container__step-banner-image">
-            {{#if (eq this.bannerImage "welcome-illustration")}}
-              <IllustrationWelcome />
-            {{else if (eq this.bannerImage "members-illustration")}}
-              <IllustrationMembers />
-            {{else if (eq this.bannerImage "finished-illustration")}}
-              <IllustrationFinished />
-            {{/if}}
+      {{/if}}
+    </div>
+
+    <div class="wizard-container__step-container">
+      {{#if this.step.fields}}
+        <WizardStepForm @step={{this.step}}>
+          {{#if this.includeSidebar}}
+            <div class="wizard-container__sidebar">
+              {{#each this.step.fields as |field|}}
+                {{#if field.show_in_sidebar}}
+                  <WizardField @field={{field}} @step={{this.step}} @wizard={{this.wizard}} />
+                {{/if}}
+              {{/each}}
+            </div>
+          {{/if}}
+          <div class="wizard-container__fields">
+            {{#each this.step.fields as |field|}}
+              {{#unless field.show_in_sidebar}}
+                <WizardField @field={{field}} @step={{this.step}} @wizard={{this.wizard}} />
+              {{/unless}}
+            {{/each}}
           </div>
-        {{/if}}
-      </div>
-    {{/if}}
-  </div>
-</div>
-
-<div class="wizard-container__step-footer">
-  <div class="wizard-container__buttons">
-
-    {{#if this.showNextButton}}
-      <button {{on "click" this.nextStep}} disabled={{this.saving}} type="button" class="wizard-container__button primary {{this.nextButtonClass}}">
-        {{i18n this.nextButtonLabel}}
-      </button>
-    {{/if}}
-
-    {{#if this.showFinishButton}}
-      <button {{on "click" this.exitEarly}} disabled={{this.saving}} type="button" class="wizard-container__button jump-in">
-        {{i18n "wizard.jump_in"}}
-      </button>
-    {{/if}}
-
-    {{#if this.showJumpInButton}}
-      <button {{on "click" this.quit}} disabled={{this.saving}} type="button" class="wizard-container__button {{this.jumpInButtonClass}}">
-        {{i18n this.jumpInButtonLabel}}
-      </button>
-    {{/if}}
+        </WizardStepForm>
+      {{/if}}
+    </div>
   </div>
 
-  <div class="wizard-container__step-progress">
-    <a href {{on "click" this.backStep}} class="wizard-container__link back {{unless this.showBackButton "inactive"}}">{{d-icon "chevron-left"}}</a>
+  <div class="wizard-container__step-footer">
+    <div class="wizard-container__buttons">
+      {{#if this.showBackButton}}
+        <button {{on "click" this.backStep}} disabled={{this.saving}} type="button" class="wizard-container__button btn-back">
+          {{i18n "wizard.back"}}
+        </button>
+      {{/if}}
+    </div>
 
-    <span class="wizard-container__step-text">{{bound-i18n "wizard.step-text"}}</span>
-    <span class="wizard-container__step-count">{{bound-i18n "wizard.step" current=this.step.displayIndex total=this.wizard.totalSteps}}</span>
+    <div class="wizard-container__step-progress">
+      {{#if this.showFinishButton}}
+        <button {{on "click" this.exitEarly}} disabled={{this.saving}} type="button" class="wizard-container__button jump-in">
+          {{i18n "wizard.jump_in"}}
+        </button>
+      {{/if}}
 
-    <a href {{on "click" this.nextStep}} class="wizard-container__link {{unless this.showNextButton "inactive"}}">{{d-icon "chevron-right"}}</a>
+      {{#if this.showConfigureMore}}
+        <button {{on "click" this.nextStep}} disabled={{this.saving}} type="button" class="wizard-container__button primary {{this.nextButtonClass}}">
+          {{i18n this.nextButtonLabel}}
+        </button>
+      {{/if}}
+
+      {{#if this.showJumpInButton}}
+        <button {{on "click" this.quit}} disabled={{this.saving}} type="button" class="wizard-container__button {{this.jumpInButtonClass}}">
+          {{i18n this.jumpInButtonLabel}}
+        </button>
+      {{/if}}
+
+      {{#if this.showNextButton}}
+        <button {{on "click" this.nextStep}} disabled={{this.saving}} type="button" class="wizard-container__button primary {{this.nextButtonClass}}">
+          {{i18n this.nextButtonLabel}}
+        </button>
+      {{/if}}
+
+    </div>
 
   </div>
-
 </div>

@@ -1,0 +1,39 @@
+<li>
+  <div class="col first status">
+    <span class={{this.statusColorClasses}}>{{@event.status}}</span>
+  </div>
+
+  <div class="col event-id">{{@event.id}}</div>
+
+  <div class="col timestamp">{{this.createdAt}}</div>
+
+  <div class="col completion">{{this.completion}}</div>
+
+  <div class="col actions">
+    <DButton
+      @icon={{this.expandRequestIcon}}
+      @action={{this.toggleRequest}}
+      @label="admin.web_hooks.events.request"
+    />
+    <DButton
+      @icon={{this.expandResponseIcon}}
+      @action={{this.toggleResponse}}
+      @label="admin.web_hooks.events.response"
+    />
+    <DButton
+      @icon="sync"
+      @action={{this.redeliver}}
+      @label="admin.web_hooks.events.redeliver"
+    />
+  </div>
+
+  {{#if this.expandDetails}}
+    <div class="details">
+      <h3>{{i18n "admin.web_hooks.events.headers"}}</h3>
+      <pre><code>{{this.headers}}</code></pre>
+
+      <h3>{{this.bodyLabel}}</h3>
+      <pre><code>{{this.body}}</code></pre>
+    </div>
+  {{/if}}
+</li>

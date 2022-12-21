@@ -260,8 +260,13 @@ table.api-keys {
   .instructions {
     margin-top: 5px;
   }
+
   .subscription-choice {
     margin-bottom: 10px;
+
+    label {
+      display: inline-block;
+    }
   }
 }
 

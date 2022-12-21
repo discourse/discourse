@@ -112,6 +112,9 @@ ru:
         single_user: "%{user}"
         multi_user: "%{users}"
         multi_user_truncated: "%{users} и ещё %{leftover}"
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "Содержит символы не в ascii-кодировке"
     bookmarkable:
       notification_title: "Сообщение в канале %{channel_name}"
     personal_chat: "личный чат"
@@ -164,6 +167,9 @@ ru:
         many: "У вас в чате есть новые сообщения"
         other: "У вас в чате есть новые сообщения"
       from: "%{site_name}"
+      subject:
+        direct_message_from_1: "[%{email_prefix}] Новое сообщение от %{username}"
+        chat_channel_1: "[%{email_prefix}] Новое сообщение в %{channel}"
       unsubscribe: "Этот дайджест чата рассылается с сайта %{site_link} в период вашего отсутствия на форуме. Для отмены подписки измените %{email_preferences_link} или %{unsubscribe_link}."
       unsubscribe_no_link: "Этот дайджест чата рассылается с сайта %{site_link} в период вашего отсутствия на форуме. Настройка рассылки: %{email_preferences_link}."
       view_messages:

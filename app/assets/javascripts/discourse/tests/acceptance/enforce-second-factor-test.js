@@ -25,6 +25,9 @@ acceptance("Enforce Second Factor", function (needs) {
       });
     });
   });
+  needs.settings({
+    navigation_menu: "legacy",
+  });
 
   test("as an admin", async function (assert) {
     await visit("/u/eviltrout/preferences/second-factor");

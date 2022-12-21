@@ -390,9 +390,12 @@ html.composer-open {
 .autocomplete {
   z-index: z("composer", "dropdown") + 1;
   position: absolute;
-  width: 240px;
+  max-width: 300px;
+  width: 300px;
   background-color: var(--secondary);
   border: 1px solid var(--primary-low);
+  box-shadow: shadow("dropdown-lite");
+  border-radius: 8px;
 
   ul {
     list-style: none;
@@ -400,16 +403,21 @@ html.composer-open {
     margin: 0;
 
     li {
-      &:not(:last-child) {
-        border-bottom: 1px solid var(--primary-low);
+      &:first-of-type a {
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
       }
-
+      &:last-of-type a {
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+      }
       a {
         @include ellipsis;
         align-items: center;
-        color: var(--primary-high);
+        color: var(--primary);
         display: flex;
-        padding: 5px;
+        gap: 0.25em;
+        padding: 0.3em 1em;
 
         @include hover {
           background-color: var(--highlight-low);
@@ -417,20 +425,28 @@ html.composer-open {
         }
 
         &.selected {
-          background-color: var(--tertiary-low);
+          background-color: var(--highlight);
+
+          .username,
+          .name,
+          .emoji-shortname {
+            font-weight: bold;
+          }
         }
 
-        span {
-          margin-left: 5px;
+        .avatar {
+          margin-right: 0.25em;
+        }
 
-          &.username {
-            color: var(--primary);
-            margin-right: 5px;
-          }
+        .name {
+          font-size: var(--font-down-1);
+          color: var(--primary-high);
+        }
 
-          &.name {
-            font-size: var(--font-down-1);
-          }
+        .status-description {
+          @include ellipsis;
+          font-size: var(--font-down-2);
+          color: var(--primary-high);
         }
 
         .relative-date {
@@ -442,6 +458,25 @@ html.composer-open {
         color: var(--primary-medium);
         padding: 0 2px;
       }
+    }
+  }
+
+  &.ac-user {
+    li a {
+      padding: 0.5em 1em;
+    }
+    .emoji {
+      height: 0.75em;
+      width: 0.75em;
+    }
+  }
+
+  &.ac-emoji {
+    li:last-of-type a {
+      color: var(--primary-high);
+    }
+    .emoji {
+      margin-right: 0.25em;
     }
   }
 }

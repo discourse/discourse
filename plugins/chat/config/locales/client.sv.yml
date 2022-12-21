@@ -109,14 +109,45 @@ sv:
       new_messages: "nya meddelanden"
       mention_warning:
         dismiss: "avfärda"
+        cannot_see:
+          one: "%{username} kan inte komma åt den här kanalen och har inte aviserats."
+          other: "%{username} och %{others} kan inte komma åt den här kanalen och har inte aviserats."
         invitations_sent:
           one: "Inbjudan skickad"
           other: "Inbjudningar skickade"
         invite: "Bjud in till kanal"
+        without_membership:
+          one: "%{username} har inte gått med i den här kanalen."
+          other: "%{username} och %{others} har inte gått med i den här kanalen."
+        group_mentions_disabled:
+          one: "%{group_name} tillåter inte omnämnanden"
+          other: "%{group_name} och %{others} tillåter inte omnämnanden"
+        too_many_members:
+          one: "%{group_name} har för många medlemmar. Ingen aviserades"
+          other: "%{group_name} och %{others} har för många medlemmar. Ingen aviserades"
+        warning_multiple:
+          one: "%{count} annan"
+          other: "%{count} andra"
         groups:
+          header:
+            some: "Vissa användare kommer inte att aviseras"
+            all: "Ingen kommer att aviseras"
+          unreachable:
+            one: "@%{group} tillåter inte omnämnanden"
+            other: "@%{group} och @%{group_2} tillåter inte omnämnanden"
+          unreachable_multiple: "@%{group} och ytterligare %{count} tillåter inte omnämnanden"
+          too_many_members:
+            one: "Att nämna @%{group} överstiger %{notification_limit} av %{limit}"
+            other: "Att nämna både @%{group} eller @%{group_2} överstiger %{notification_limit} av %{limit}"
+          too_many_members_multiple: "Dessa %{count} grupper överstiger %{notification_limit} av %{limit}"
           users_limit:
             one: "%{count} användare"
             other: "%{count} användare"
+          notification_limit: "aviseringsgräns"
+        too_many_mentions: "Detta meddelande överstiger %{notification_limit} av %{limit}"
+        mentions_limit:
+          one: "%{count} omnämnande"
+          other: "%{count} omnämnanden"
       aria_roles:
         header: "Chatthuvud"
         composer: "Chattkompositör"

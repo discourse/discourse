@@ -49,7 +49,8 @@ class UserUpdater
     :skip_new_user_tips,
     :seen_popups,
     :default_calendar,
-    :sidebar_list_destination
+    :sidebar_list_destination,
+    :bookmark_auto_delete_preference
   ]
 
   NOTIFICATION_SCHEDULE_ATTRS = -> {

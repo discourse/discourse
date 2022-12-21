@@ -8,6 +8,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import DoNotDisturb from "discourse/lib/do-not-disturb";
 
 acceptance("Do not disturb", function (needs) {
   needs.user();
@@ -98,6 +99,16 @@ acceptance("Do not disturb", function (needs) {
       !exists(".do-not-disturb-background"),
       "The active moon icons are removed"
     );
+  });
+
+  test("doesn't show the end date for eternal DnD", async function (assert) {
+    updateCurrentUser({ do_not_disturb_until: DoNotDisturb.forever });
+
+    await visit("/");
+    await click(".header-dropdown-toggle.current-user");
+    await click(".menu-links-row .user-preferences-link");
+
+    assert.dom(".do-not-disturb .relative-date").doesNotExist();
   });
 });
 
@@ -219,5 +230,15 @@ acceptance("Do not disturb - new user menu", function (needs) {
     await click("#quick-access-profile .do-not-disturb .btn");
 
     assert.notOk(exists(".user-menu"));
+  });
+
+  test("doesn't show the end date for eternal DnD", async function (assert) {
+    updateCurrentUser({ do_not_disturb_until: DoNotDisturb.forever });
+
+    await visit("/");
+    await click(".header-dropdown-toggle.current-user");
+    await click("#user-menu-button-profile");
+
+    assert.dom(".do-not-disturb .relative-date").doesNotExist();
   });
 });

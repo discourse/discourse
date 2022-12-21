@@ -640,6 +640,16 @@ RSpec.describe GroupsController do
       expect(response.status).to eq(200)
 
       body = response.parsed_body
+      expect(body["messageable"]).to eq(true)
+
+      group.update!(
+        messageable_level: Group::ALIAS_LEVELS[:only_admins],
+      )
+
+      get "/groups/#{group.name}/messageable.json"
+      expect(response.status).to eq(200)
+
+      body = response.parsed_body
       expect(body["messageable"]).to eq(false)
     end
   end

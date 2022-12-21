@@ -88,14 +88,11 @@ class DistributedMutex
       # Exponential backoff, max duration 1s
       interval = attempts < 10 ? (0.001 * 2**attempts) : 1
       sleep interval
+      attempts += 1
 
       # in readonly we will never be able to get a lock
-      if @using_global_redis && Discourse.recently_readonly?
-        attempts += 1
-
-        if attempts > CHECK_READONLY_ATTEMPTS
-          raise Discourse::ReadOnly
-        end
+      if @using_global_redis && Discourse.recently_readonly? && attempts > CHECK_READONLY_ATTEMPTS
+        raise Discourse::ReadOnly
       end
     end
   end

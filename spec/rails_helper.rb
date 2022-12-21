@@ -75,8 +75,7 @@ end
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
-require Rails.root.join("spec/system/page_objects/pages/base.rb")
-require Rails.root.join("spec/system/page_objects/modals/base.rb")
+Dir[Rails.root.join("spec/system/page_objects/**/base.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/system/page_objects/**/*.rb")].each { |f| require f }
 
 Dir[Rails.root.join("spec/fabricators/*.rb")].each { |f| require f }
@@ -154,9 +153,6 @@ module TestSetup
 
     # Make sure the default Post and Topic bookmarkables are registered
     Bookmark.reset_bookmarkables
-
-    # Make sure only the default category and tag hashtag data sources are registered.
-    HashtagAutocompleteService.clear_registered
 
     OmniAuth.config.test_mode = false
   end

@@ -5,6 +5,10 @@ class Chat::ChatChannelHashtagDataSource
     "comment"
   end
 
+  def self.type
+    "channel"
+  end
+
   def self.channel_to_hashtag_item(guardian, channel)
     HashtagAutocompleteService::HashtagItem.new.tap do |item|
       item.text = channel.title
@@ -27,7 +31,12 @@ class Chat::ChatChannelHashtagDataSource
     end
   end
 
-  def self.search(guardian, term, limit)
+  def self.search(
+    guardian,
+    term,
+    limit,
+    condition = HashtagAutocompleteService.search_conditions[:contains]
+  )
     if SiteSetting.enable_experimental_hashtag_autocomplete
       return [] if !guardian.can_chat?
       Chat::ChatChannelFetcher
@@ -36,6 +45,8 @@ class Chat::ChatChannelHashtagDataSource
           filter: term,
           limit: limit,
           exclude_dm_channels: true,
+          match_filter_on_starts_with:
+            condition == HashtagAutocompleteService.search_conditions[:starts_with],
         )
         .map { |channel| channel_to_hashtag_item(guardian, channel) }
     else

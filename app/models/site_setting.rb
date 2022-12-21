@@ -184,7 +184,7 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.whispers_allowed_group_ids
-    if SiteSetting.enable_whispers && SiteSetting.whispers_allowed_groups.present?
+    if SiteSetting.whispers_allowed_groups.present?
       SiteSetting.whispers_allowed_groups_map
     else
       []

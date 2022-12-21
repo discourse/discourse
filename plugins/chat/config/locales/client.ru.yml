@@ -7,6 +7,9 @@
 ru:
   js:
     admin:
+      site_settings:
+        categories:
+          chat: Чат
       logs:
         staff_actions:
           actions:
@@ -110,6 +113,12 @@ ru:
           many: "Приглашений отправлены"
           other: "Приглашений отправлены"
         invite: "Пригласить в канал"
+        groups:
+          users_limit:
+            one: "%{count} пользователь"
+            few: "%{count} пользователя"
+            many: "%{count} пользователей"
+            other: "%{count} пользователя"
       aria_roles:
         header: "Заголовок чата"
         composer: "Редактор чата"
@@ -177,6 +186,7 @@ ru:
         open_header: "Канал открыт"
         open: "Открыт"
       browse:
+        back: "Вернуться"
         title: Каналы
         filter_all: Все
         filter_open: Открытые
@@ -272,6 +282,7 @@ ru:
         mention: "Только для упоминаний"
         always: "Для всех действий"
       settings:
+        enable_auto_join_users: "Автоматически добавлять всех активных пользователей"
         auto_join_users_warning: "Любой пользователь, не являющийся участником этого канала, но имеющий доступ к разделу %{category}, будет автоматически подключён. Продолжить?"
         desktop_notification_level: "Уведомления на рабочем столе"
         follow: "Подписаться"
@@ -285,6 +296,7 @@ ru:
         save: "Сохранить"
         saved: "Сохранено"
         unfollow: "Отписаться"
+        admin_title: "Администрирование"
       admin:
         title: "Чат"
       direct_messages:
