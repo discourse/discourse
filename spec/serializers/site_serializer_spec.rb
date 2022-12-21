@@ -235,10 +235,23 @@ RSpec.describe SiteSerializer do
     end
   end
 
-  it "returns correct whispers allowed groups names" do
-    SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}|#{Group::AUTO_GROUPS[:trust_level_4]}"
+  describe '#whispers_allowed_groups_names' do
+    fab!(:group1) { Fabricate(:group, name: 'whisperers1') }
+    fab!(:group2) { Fabricate(:group, name: 'whisperers2') }
 
-    serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-    expect(serialized[:whispers_allowed_groups_names]).to eq(["staff", "trust_level_4"])
+    it "returns correct whispers allowed names for new created groups" do
+      SiteSetting.whispers_allowed_groups = "#{group1.id}|#{group2.id}"
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized[:whispers_allowed_groups_names]).to eq(["whisperers1", "whisperers2"])
+    end
+
+    it "returns correct whispers allowed names for automatic groups" do
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}|#{Group::AUTO_GROUPS[:trust_level_4]}"
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized[:whispers_allowed_groups_names]).to eq(["staff", "trust_level_4"])
+    end
+
   end
 end
