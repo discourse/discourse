@@ -17,6 +17,7 @@ permissions:
 
 jobs:
   build:
+    if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-fork')"
     name: ${{ matrix.target }} ${{ matrix.build_type }}
     runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
     container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}
@@ -203,6 +204,7 @@ jobs:
         timeout-minutes: 30
 
   core_frontend_tests:
+    if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-fork')"
     name: core frontend (${{ matrix.browser }})
     runs-on: ubuntu-20.04-8core
     container:
