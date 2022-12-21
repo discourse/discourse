@@ -53,6 +53,22 @@ RSpec.describe "Chat channel", type: :system, js: true do
     end
   end
 
+  context "when returning to a channel where last read is not last message" do
+    before do
+      channel_1.add(current_user)
+      sign_in(current_user)
+    end
+
+    it "jumps to the bottom of the channel" do
+      channel_1.membership_for(current_user).update!(last_read_message: message_1)
+      messages = 50.times.map { Fabricate(:chat_message, chat_channel: channel_1) }
+      chat.visit_channel(channel_1)
+
+      expect(page).to have_css("[data-id='#{messages.first.id}']")
+      expect(page).to have_no_css("[data-id='#{messages.last.id}']")
+    end
+  end
+
   context "when a new message is created" do
     fab!(:other_user) { Fabricate(:user) }
 
