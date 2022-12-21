@@ -432,9 +432,14 @@ export default class Chat extends Service {
       10
     );
 
+    const membership = channel.currentUserMembership;
     const hasUnreadMessages =
-      latestUnreadMsgId > channel.currentUserMembership.last_read_message_id;
-    if (hasUnreadMessages) {
+      latestUnreadMsgId > membership.last_read_message_id;
+    if (
+      hasUnreadMessages ||
+      membership.unread_count > 0 ||
+      membership.unread_mentions > 0
+    ) {
       channel.updateLastReadMessage(latestUnreadMsgId);
     }
   }
