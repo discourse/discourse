@@ -166,7 +166,7 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
         context "when messages are created" do
           it "correctly renders notifications" do
             visit("/")
-            create_message(channel: channel_1, creator: user_1)
+            using_session(:user_1) { create_message(channel: channel_1, creator: user_1) }
 
             expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "")
             expect(page).to have_css(".sidebar-row.channel-#{channel_1.id} .unread")

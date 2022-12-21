@@ -175,7 +175,7 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
         context "when messages are created" do
           it "correctly renders notifications" do
             visit("/chat")
-            create_message(channel: channel_1, creator: user_1)
+            using_session(:user_1) { create_message(channel: channel_1, creator: user_1) }
 
             expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "")
             expect(page).to have_css(
