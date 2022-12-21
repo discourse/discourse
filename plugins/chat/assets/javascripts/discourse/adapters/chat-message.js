@@ -1,8 +1,6 @@
 import RESTAdapter from "discourse/adapters/rest";
 
 export default class ChatMessage extends RESTAdapter {
-  jsonMode = true;
-
   pathFor(store, type, findArgs) {
     if (findArgs.targetMessageId) {
       return `/chat/lookup/${findArgs.targetMessageId}.json?chat_channel_id=${findArgs.channelId}`;
