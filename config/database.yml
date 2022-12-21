@@ -41,7 +41,6 @@ test:
   timeout: 5000
   host_names:
     - test.localhost
-    - localhost
 
 # profile db is used for benchmarking using the script/bench.rb script
 profile:

@@ -51,11 +51,6 @@ class RspecErrorTracker
 end
 
 ENV["RAILS_ENV"] ||= 'test'
-
-# Enforcing hostname middleware conflicts with
-# Capybara's server set to run on localhost:31337
-ENV["SKIP_ENFORCE_HOSTNAME"] ||= "1" if ARGV.any? { |s| s.include?('spec/system') }
-
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'shoulda-matchers'
@@ -257,7 +252,6 @@ RSpec.configure do |config|
     Capybara.configure do |capybara_config|
       capybara_config.server_host = "localhost"
       capybara_config.server_port = 31337
-      capybara_config.always_include_port = true
     end
 
     chrome_browser_options = Selenium::WebDriver::Chrome::Options.new(
