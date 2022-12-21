@@ -6,8 +6,6 @@ export default class UserChatChannelMembership extends RestModel {
   @tracked muted = false;
   @tracked unread_count = 0;
   @tracked unread_mentions = 0;
-  @tracked chat_message_id = null;
-  @tracked chat_channel_id = null;
   @tracked desktop_notification_level = null;
   @tracked mobile_notification_level = null;
   @tracked last_read_message_id = null;

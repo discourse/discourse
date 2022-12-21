@@ -546,7 +546,7 @@ export default Component.extend({
   },
 
   _getLastReadId() {
-    return this.chatChannel.currentUserMembership.chat_message_id;
+    return this.chatChannel.currentUserMembership.last_read_message_id;
   },
 
   _markLastReadMessage(opts = { reRender: false }) {

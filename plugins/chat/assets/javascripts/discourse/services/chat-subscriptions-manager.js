@@ -95,16 +95,17 @@ export default class ChatSubscriptionsManager extends Service {
     this.chatChannelsManager.find(busData.channel_id).then((channel) => {
       if (busData.user_id === this.currentUser.id) {
         // User sent message, update tracking state to no unread
-        channel.currentUserMembership.chat_message_id = busData.message_id;
+        channel.currentUserMembership.last_read_message_id = busData.message_id;
       } else {
         // Ignored user sent message, update tracking state to no unread
         if (this.currentUser.ignored_users.includes(busData.username)) {
-          channel.currentUserMembership.chat_message_id = busData.message_id;
+          channel.currentUserMembership.last_read_message_id =
+            busData.message_id;
         } else {
           // Message from other user. Increment trackings state
           if (
             busData.message_id >
-            (channel.currentUserMembership.chat_message_id || 0)
+            (channel.currentUserMembership.last_read_message_id || 0)
           ) {
             channel.currentUserMembership.unread_count =
               channel.currentUserMembership.unread_count + 1;
@@ -140,12 +141,14 @@ export default class ChatSubscriptionsManager extends Service {
   }
 
   @bind
-  _onUserTrackingStateUpdate(data) {
-    this.chatChannelsManager.find(data.chat_channel_id).then((channel) => {
+  _onUserTrackingStateUpdate(busData) {
+    this.chatChannelsManager.find(busData.chat_channel_id).then((channel) => {
       if (
-        channel?.currentUserMembership?.chat_message_id < data.chat_message_id
+        channel?.currentUserMembership?.last_read_message_id <
+        busData.chat_message_id
       ) {
-        channel.currentUserMembership.chat_message_id = data.chat_message_id;
+        channel.currentUserMembership.last_read_message_id =
+          busData.chat_message_id;
         channel.currentUserMembership.unread_count = 0;
         channel.currentUserMembership.unread_mentions = 0;
       }
