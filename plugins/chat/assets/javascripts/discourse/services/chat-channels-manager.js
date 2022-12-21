@@ -26,6 +26,10 @@ export default class ChatChannelsManager extends Service {
     }
   }
 
+  async findLocally(id) {
+    return Promise.resolve(this.#findStale(id));
+  }
+
   store(channelObject) {
     let model = this.#findStale(channelObject.id);
 
