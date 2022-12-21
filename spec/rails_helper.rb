@@ -52,6 +52,10 @@ end
 
 ENV["RAILS_ENV"] ||= 'test'
 
+# Enforcing hostname middleware conflicts with
+# Capybara's server set to run on localhost:31337
+ENV["SKIP_ENFORCE_HOSTNAME"] ||= "1"
+
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'shoulda-matchers'
@@ -365,8 +369,8 @@ RSpec.configure do |config|
   end
 
   # Match the request hostname to the value in `database.yml`
-  config.before(:all, type: [:request, :multisite, :system]) { host! "test.localhost" }
-  config.before(:each, type: [:request, :multisite, :system]) { host! "test.localhost" }
+  # config.before(:all, type: [:request, :multisite, :system]) { host! "test.localhost" }
+  # config.before(:each, type: [:request, :multisite, :system]) { host! "test.localhost" }
 
   last_driven_by = nil
   config.before(:each, type: :system) do |example|
