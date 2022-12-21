@@ -48,6 +48,7 @@ reviewed:
     - r2 # Apache-2.0 (Twitter)
     - racc # Ruby terms
     - raindrops # LGPL-2.1+
+    - ruby2_keywords # BSD-2-Clause
     - rubyzip # Ruby terms
     - sidekiq # LGPL (Sidekiq)
     - tilt
