@@ -85,8 +85,23 @@ body.wizard {
     min-width: 35%;
     width: 100%;
 
+    @include breakpoint("mobile-extra-large") {
+      max-width: 95%;
+    }
+
+    .wizard-container__button:not(.wizard-container__button-upload) {
+      @include breakpoint("mobile-extra-large") {
+        width: 100%;
+        margin: 0 0 0.5em;
+      }
+    }
+
     &.styling {
       max-width: 85%;
+
+      @include breakpoint("mobile-extra-large") {
+        max-width: 100%;
+      }
     }
   }
 
@@ -144,7 +159,7 @@ body.wizard {
   &__step.branding .wizard-container__preview canvas {
     @include breakpoint("mobile-extra-large") {
       max-width: 100%;
-      height: auto;
+      height: auto !important;
     }
   }
 
@@ -196,6 +211,10 @@ body.wizard {
       width: calc(100% - 170px);
       border-radius: 0.5em;
       margin-top: -1em;
+
+      @media only screen and (max-device-width: 568px) {
+        display: none;
+      }
     }
   }
 
@@ -332,7 +351,8 @@ body.wizard {
     margin-right: -1.5em;
 
     @include breakpoint("mobile-extra-large") {
-      margin-bottom: 1em;
+      margin-right: 0;
+      flex-direction: column;
     }
     .wizard-container__link {
       color: var(--primary-400);
@@ -426,6 +446,9 @@ body.wizard {
     //background-color: var(--primary-200);
     background-color: transparent;
     color: var(--tertiary);
+    @include breakpoint("mobile-extra-large") {
+      order: 2;
+    }
   }
 
   &__button.configure-more:hover {
@@ -437,6 +460,10 @@ body.wizard {
     background-color: var(--tertiary);
     color: var(--secondary);
     margin-left: 1em;
+    @include breakpoint("mobile-extra-large") {
+      order: 1;
+      margin-left: 0;
+    }
     &:hover {
       background-color: var(--primary-300);
     }
@@ -444,6 +471,9 @@ body.wizard {
 
   &__button.finish {
     color: var(--tertiary);
+    @include breakpoint("mobile-extra-large") {
+      order: 2;
+    }
   }
 
   &__button.finish:hover {
@@ -458,6 +488,10 @@ body.wizard {
   &__button.next {
     min-width: 70px;
     margin-left: 1em;
+    @include breakpoint("mobile-extra-large") {
+      order: 1;
+      margin-left: 0;
+    }
   }
 
   &__button.danger {
@@ -513,6 +547,7 @@ body.wizard {
     @media only screen and (max-device-width: 568px) {
       flex-direction: column;
       justify-content: center;
+      align-items: stretch;
     }
   }
 
@@ -521,6 +556,9 @@ body.wizard {
     flex-wrap: wrap;
     gap: 1em;
     align-items: center;
+    @include breakpoint("mobile-extra-large") {
+      order: 2;
+    }
   }
 
   &__label {
