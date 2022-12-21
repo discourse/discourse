@@ -12,22 +12,16 @@ export default Component.extend({
   disabled: false,
   updateExistingUsers: null,
 
-  buffer: null,
-  bufferId: null,
-
   didReceiveAttrs() {
     this._super(...arguments);
 
     const group = this.model;
-    if (group.id !== this.bufferId) {
-      this.setProperties({
-        bufferId: group.id,
-        buffer: {
-          visibilityLevel: group.visibility_level,
-          primaryGroup: group.primary_group,
-          flairEmpty: !(group.flair_icon || group.flair_upload_id),
-        },
-      });
+    if (!group.buffer) {
+      group.buffer = {
+        visibilityLevel: group.visibility_level,
+        primaryGroup: group.primary_group,
+        flairEmpty: !(group.flair_icon || group.flair_upload_id),
+      };
     }
   },
 
@@ -37,22 +31,28 @@ export default Component.extend({
   },
 
   popupPrivateGroupNameAlert() {
-    const { model, buffer } = this;
-    if (model.visibility_level === 0 || buffer.visibilityLevel !== 0) {
+    const model = this.model;
+    const buffer = model.buffer;
+
+    if (model.visibility_level === 0) {
       return;
     }
 
-    if (model.primary_group && !buffer.primary_group) {
+    const visibilityRestricted =
+      model.visibility_level !== 0 && buffer.visibilityLevel === 0;
+
+    if (model.primary_group && (visibilityRestricted || !buffer.primaryGroup)) {
       this.dialog.alert(
-        I18n.t("admin.groups.manage.primary_group_name_alert", {
+        I18n.t("admin.groups.manage.alert.primary_group", {
           group_name: model.name,
         })
       );
-    }
-
-    if (buffer.flairEmpty && (model.flair_icon || model.flair_upload_id)) {
+    } else if (
+      (model.flair_icon || model.flair_upload_id) &&
+      (visibilityRestricted || buffer.flairEmpty)
+    ) {
       this.dialog.alert(
-        I18n.t("admin.groups.manage.flair_group_name_alert", {
+        I18n.t("admin.groups.manage.alert.flair_group", {
           group_name: model.name,
         })
       );
@@ -85,6 +85,13 @@ export default Component.extend({
           this.setProperties({
             saved: true,
             updateExistingUsers: null,
+          });
+          group.setProperties({
+            buffer: {
+              visibilityLevel: group.visibility_level,
+              primaryGroup: group.primary_group,
+              flairEmpty: !(group.flair_icon || group.flair_upload_id),
+            },
           });
 
           if (this.afterSave) {
