@@ -148,7 +148,6 @@ zh_CN:
       banner:
         enabled: "%{when}将此设置为横幅。在用户忽略前，它将显示在每个页面的顶部。"
         disabled: "%{when}移除了此横幅。它将不再显示在每个页面的顶部。"
-      forwarded: "转发了上述电子邮件"
     topic_admin_menu: "话题操作"
     skip_to_main_content: "跳转到主要内容"
     emails_are_disabled: "所有外发电子邮件已被管理员全局禁用。任何类型的电子邮件通知都不会发出。"
@@ -350,8 +349,6 @@ zh_CN:
     disable: "禁用"
     continue: "继续"
     undo: "撤消"
-    revert: "还原"
-    failed: "失败"
     switch_to_anon: "进入匿名模式"
     switch_from_anon: "退出匿名模式"
     banner:
@@ -954,7 +951,6 @@ zh_CN:
       notification_schedule:
         title: "通知时间表"
         label: "启用自定义通知时间表"
-        tip: "在这些时间之外，您将自动进入“勿扰”模式。"
         midnight: "午夜"
         none: "无"
         monday: "星期一"
@@ -1214,6 +1210,7 @@ zh_CN:
         use: "使用身份验证器应用"
         enforced_notice: "在访问此站点之前，您需要启用双重身份验证。"
         disable: "禁用"
+        delete: "删除"
         save: "保存"
         edit: "编辑"
         edit_title: "编辑身份验证器"
@@ -1752,6 +1749,7 @@ zh_CN:
       title: "登录"
       username: "用户"
       password: "密码"
+      show_password: "显示"
       second_factor_title: "双重身份验证"
       second_factor_description: "请输入应用中的身份验证代码："
       second_factor_backup: "使用备份代码登录"
@@ -2083,6 +2081,7 @@ zh_CN:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username} </span>%{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}、%{username2}</span> %{description}"
@@ -2144,6 +2143,7 @@ zh_CN:
         invited_to_private_message: "被邀请加入私信"
         invitee_accepted: "邀请已被接受"
         posted: "新帖子"
+        watching_category_or_tag: "新帖子"
         moved_post: "帖子已被移动"
         linked: "被链接"
         bookmark_reminder: "书签提醒"
@@ -3609,9 +3609,7 @@ zh_CN:
     safe_mode:
       enabled: "安全模式已启用，要退出安全模式，请关闭此浏览器窗口"
     image_removed: "（图片被移除）"
-    do_not_disturb:
-      title: "勿扰时长…"
-      label: "勿扰"
+    pause_notifications:
       remaining: "剩余 %{remaining}"
       options:
         half_hour: "30 分钟"
@@ -3990,6 +3988,7 @@ zh_CN:
         detailed_instruction: "当选择的事件发生时，将向提供的 URL 发送一个 POST 请求。"
         new: "新网络钩子"
         create: "创建"
+        edit: "编辑"
         save: "保存"
         controls: "控件"
         go_back: "返回列表"
@@ -4089,6 +4088,8 @@ zh_CN:
         howto: "如何安装插件？"
         official: "官方插件"
         broken_route: "无法配置“%{name}”的链接。确保禁用广告拦截器并尝试重新加载页面。"
+      navigation_menu:
+        sidebar: "边栏"
       backups:
         title: "备份"
         menu:
@@ -4302,7 +4303,6 @@ zh_CN:
             error: "此主题已被自动禁用，因为它与此版本的 Discourse 不兼容。"
             minimum: "需要 Discourse 版本 %{version} 或更高版本。"
             maximum: "需要 Discourse 版本 %{version} 或更低版本。"
-          component_of: "组件所属对象："
           update_to_latest: "更新到最新"
           check_for_updates: "检查更新"
           updating: "正在更新…"
@@ -4773,7 +4773,6 @@ zh_CN:
       user:
         suspend_failed: "封禁此用户时出错 %{error}"
         unsuspend_failed: "取消封禁此用户时出错 %{error}"
-        suspend_duration: "该用户将被封禁多久？"
         suspend_reason_label: "您为什么封禁该用户？此文本将在用户的个人资料页面上<b>对所有人可见</b>，并且当用户尝试登录时，他们将看到此文本。尽量简洁。"
         suspend_reason_hidden_label: "您为什么封禁该用户？当用户尝试登录时将看到此文本。尽量简洁。"
         suspend_reason: "原因"
@@ -4807,7 +4806,6 @@ zh_CN:
         penalty_post_edit: "编辑帖子"
         penalty_post_none: "无操作"
         penalty_count: "处罚计数"
-        penalty_history: "处罚历史记录"
         clear_penalty_history:
           title: "清除处罚历史记录"
           description: "有处罚的用户无法达到信任级别 3"
@@ -4959,6 +4957,11 @@ zh_CN:
         silenced_count: "被禁言"
         suspended_count: "被封禁"
         last_six_months: "过去 6 个月"
+        other_matches_list:
+          username: "用户名"
+          trust_level: "信任级别"
+          read_time: "阅读时间"
+          posts: "帖子"
         tl3_requirements:
           title: "信任级别 3 的要求"
           table_title:
@@ -5102,6 +5105,7 @@ zh_CN:
           search: "搜索"
           groups: "群组"
           dashboard: "信息中心"
+          navigation: "导航"
         secret_list:
           invalid_input: "输入字段不能为空或包含竖线字符。"
         default_categories:
@@ -5271,10 +5275,8 @@ zh_CN:
       finish: "退出设置"
       back: "返回"
       next: "下一步"
-      configure_more: "配置更多…"
       step-text: "步骤"
       step: "%{current}/%{total}"
-      upload: "上传"
       uploading: "正在上传…"
       upload_error: "抱歉，上传该文件时出错。请重试。"
       staff_count:

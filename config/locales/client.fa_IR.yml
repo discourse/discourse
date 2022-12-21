@@ -144,7 +144,7 @@ fa_IR:
         disabled: "در %{when} باز شد "
       closed:
         enabled: "در %{when} بسته شد"
-        disabled: "در %{when} باز شد"
+        disabled: "در %{when} باز شد "
       archived:
         enabled: "در %{when} بایگانی شد"
         disabled: "در %{when} از بایگانی درآمد"
@@ -160,7 +160,6 @@ fa_IR:
       banner:
         enabled: "این در %{when} یک بنر شد، تا زمانی که کاربر آن را ببندد بالای صفحه خواهد ماند."
         disabled: "این بنر در %{when} حذف شده. و دیگر در بالای صفحات نمایش داده نمی‌شود."
-      forwarded: "ایمیل بالا را ارسال کرد"
     topic_admin_menu: "اقدامات موضوع"
     skip_to_main_content: "رفتن به محتوای اصلی"
     emails_are_disabled: "تمام ایمیل های خروجی بصورت کلی توسط مدیر قطع شده است. هیچگونه ایمیل اگاه سازی ارسال نخواهد شد."
@@ -358,8 +357,6 @@ fa_IR:
     disable: "ازکاراندازی"
     continue: "ادامه"
     undo: "بی‌اثر کردن"
-    revert: "برگشت"
-    failed: "ناموفق"
     switch_to_anon: "ورود به حالت ناشناس"
     switch_from_anon: "خروج از حالت ناشناس"
     banner:
@@ -950,6 +947,7 @@ fa_IR:
       notification_schedule:
         title: "زمان‌بندی آگاه‌سازی"
         label: "فعال سازی زمان‌بندی سفارشی آگاه‌سازی"
+        tip: "در خارج از این بازه ساعتی، آگاه‌سازی‌های شما موقتا متوقف می‌شوند."
         midnight: "نیمه شب"
         none: "هیچ کدام"
         monday: "دوشنبه"
@@ -1327,6 +1325,8 @@ fa_IR:
         title: "عنوان صفحه ی بک گراند تعداد زیر را نمایش دهد:"
         notifications: "آگاه‌سازی جدید"
         contextual: "محتوای تازه ی صفحه"
+      bookmark_after_notification:
+        title: "پس از ارسال آگاه‌سازی یادآوری نشانک:"
       like_notification_frequency:
         title: "وقتی پسندیده شد اعلام کن"
         always: "همیشه"
@@ -1547,6 +1547,7 @@ fa_IR:
       save: "ذخیره"
       set_custom_status: "تنظیم وضعیت سفارشی"
       what_are_you_doing: "داری چیکار می‌کنی؟"
+      pause_notifications: "مکث کردن آگاه‌سازی‌ها"
       remove_status: "حذف وضعیت"
     user_tips:
       primary: "فهمیدم!"
@@ -1696,6 +1697,10 @@ fa_IR:
       title: "ورود"
       username: "کاربر"
       password: "رمز‌عبور"
+      show_password: "نشان دادن"
+      hide_password: "پنهان کردن"
+      show_password_title: "نمایش رمز عبور"
+      hide_password_title: "پنهان کردن رمز عبور"
       second_factor_title: "ورود دو مرحله ای"
       second_factor_description: "لطفا کد احراز هویت از اپ را وارد کنید:"
       second_factor_backup: "ورود با استفاده از یک کد پشتیبان"
@@ -2006,6 +2011,7 @@ fa_IR:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}، %{username2}</span> %{description}"
@@ -2034,6 +2040,7 @@ fa_IR:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}، %{username2}</span> %{description}"
       votes_released: "%{description} - تکمیل شد"
+      new_features: "ویژگی‌های جدید در دسترس است!"
       dismiss_confirmation:
         body:
           default:
@@ -2072,6 +2079,7 @@ fa_IR:
         invited_to_private_message: "به پیام دعوت شده"
         invitee_accepted: "پذیرفتن دعوت"
         posted: "پاسخ جدید"
+        watching_category_or_tag: "نوشته جدید"
         moved_post: "نوشته جابجا شده"
         linked: "لینک شده"
         granted_badge: "اهدای نشان"
@@ -2083,6 +2091,7 @@ fa_IR:
         liked_consolidated: "پسندیده‌های جدید"
         post_approved: "نوشته تایید شده"
         reaction: "واکنش جدید"
+        new_features: "ویژگی‌های جدید دیسکورس منتشر شده است!"
     upload_selector:
       uploading: "در حال بروز‌رسانی "
       select_file: "انتخاب فایل"
@@ -2331,6 +2340,8 @@ fa_IR:
       back_to_list: "بازگشت به فهرست موضوعات"
       options: "گزینه‌های موضوع"
       show_links: "نمایش پیوندهای درون این موضوع"
+      read_more_in_category: "می‌خواهید بیشتر بخوانید؟ موضوعات دیگر را در %{categoryLink} مرور کنید یا <a href='%{latestLink}'>آخرین موضوعات را مشاهده کنید</a>."
+      read_more: "می‌خواهید بیشتر بخوانید؟ <a href='%{categoryLink}'>همه دسته‌‌بندی‌ها را مرور کنید</a> یا <a href='%{latestLink}'>آخرین موضوعات را مشاهده کنید</a>."
       unread_indicator: "هیچ کاربری آخرین فرستهٔ این مبحث را نخوانده است."
       suggest_create_topic: برای <a href>شروع یک موضوع جدید آماده‌اید؟</a>
       jump_reply_up: رفتن به جدید ترین پاسخ
@@ -3303,9 +3314,9 @@ fa_IR:
       dismiss: "نخواستیم"
     safe_mode:
       enabled: "حالت امن فعال شده، برای خروج از حالت امن این پنجره مرورگر را ببندید."
-    do_not_disturb:
-      title: "مزاحم نشود برای..."
-      label: "مزاحم نشوید"
+    pause_notifications:
+      title: "مکث آگاه‌سازی‌ها برای..."
+      label: "مکث کردن آگاه‌سازی‌ها"
       remaining: "%{remaining} باقی‌مانده"
       options:
         half_hour: "۳۰ دقیقه"
@@ -4146,7 +4157,7 @@ fa_IR:
       user:
         suspend_failed: "در جریان به تعلیق درآوردن این کاربر اشتباهی رخ داد. %{error}"
         unsuspend_failed: "در جریان خارج کردن این کاربر از تعلیق، اشتباهی رخ داد %{error}"
-        suspend_duration: "کاربر چه مدت در تعلیق خواهد بود؟"
+        suspend_duration: "کاربر را تعلیق کنید تا:"
         suspend_reason_label: "شما چرا معلق شده‌اید؟ این متن بر روی صفحه‌ی نمایه‌ی کاربر <b/>برای همه قابل مشاهده خواهد بود<b>، و در هنگام ورود به سیستم نیز به خود کاربر نشان داده خواهد شد. لطفاً خلاصه بنویسید."
         suspend_reason: "دلیل"
         suspend_reason_title: "دلیل تعلیق شدن"
@@ -4154,7 +4165,9 @@ fa_IR:
         suspended_by: "تعلیق شده توسط"
         silence_reason: "دلیل"
         suspended_until: "(تا %{until})"
+        suspend_forever: "تعلیق برای همیشه"
         cant_suspend: "این کاربر نمی‌تواند معلق شود."
+        cant_silence: "این کاربر را نمی‌توانید ساکت کنید."
         penalty_post_edit: "ویرایش فرسته"
         moderator: "مدیر؟ "
         admin: "مدیر ارشد؟"
@@ -4507,7 +4520,7 @@ fa_IR:
       configure_more: "پیکربندی بیشتر..."
       step-text: "مرحله"
       step: "%{current} از %{total}"
-      upload: "بارگذاری"
+      upload: "بارگذاری پرونده"
       uploading: "در حال بار گذاری..."
       upload_error: "متأسفیم، در بارگذاری آن پرونده خطایی روی داد. لطفاً دوباره تلاش کنید."
       staff_count:

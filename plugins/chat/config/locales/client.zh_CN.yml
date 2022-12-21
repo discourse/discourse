@@ -111,6 +111,11 @@ zh_CN:
         invitations_sent:
           other: "已发送邀请"
         invite: "邀请加入频道"
+        warning_multiple:
+          other: "其他 %{count} 个"
+        groups:
+          users_limit:
+            other: "%{count} 位用户"
       aria_roles:
         header: "聊天标题"
         composer: "聊天输入框"
@@ -264,6 +269,7 @@ zh_CN:
       settings:
         auto_join_users_label: "自动添加用户"
         auto_join_users_info: "每小时检查哪些用户在过去 3 个月内处于活跃状态，如果他们有权访问“%{category}”类别，则将他们添加到此频道。"
+        enable_auto_join_users: "自动添加所有最近活跃的用户"
         auto_join_users_warning: "所有不是此频道成员且有权访问“%{category}”类别的用户都将加入。确定吗？"
         desktop_notification_level: "桌面通知"
         follow: "加入"

@@ -166,37 +166,36 @@ lt:
       email: "Siųsti el. Paštu"
       url: "Nukopijuokite ir bendrinkite URL"
     action_codes:
-      public_topic: "nustatė diskusijas viešom %{when}"
-      private_topic: "pakeisti temą į asmeninę žinutę 1%{when}"
-      split_topic: "padalinti temą %{when}"
-      invited_user: "%{who} pakvietė %{when}"
-      invited_group: "pakvietė %{who} %{when}"
+      public_topic: "Nustatė diskusijas viešom %{when}"
+      private_topic: "Pakeisti temą į asmeninę žinutę 1%{when}"
+      split_topic: "Padalinti temą %{when}"
+      invited_user: "Pakvietė %{who} %{when}"
+      invited_group: "Pakvietė %{who} %{when}"
       user_left: "%{who} išėjo iš šio pokalbio %{when}"
-      removed_user: "%{who} panaikino %{when}"
-      removed_group: "pašalino %{who} %{when}"
-      autobumped: "automatiškai pakelti %{when}"
+      removed_user: "Pašalino %{who} %{when}"
+      removed_group: "Pašalino %{who} %{when}"
+      autobumped: "Automatiškai pakelti %{when}"
       autoclosed:
-        enabled: "uždaryta %{when}"
-        disabled: "atidaryta %{when}"
+        enabled: "Uždaryta %{when}"
+        disabled: "Atidaryta %{when}"
       closed:
-        enabled: "uždaryta %{when}"
-        disabled: "atidaryta %{when}"
+        enabled: "Uždaryta %{when}"
+        disabled: "Atidaryta %{when}"
       archived:
-        enabled: "archivuota %{when}"
-        disabled: "nearchivuota %{when}"
+        enabled: "Archivuota %{when}"
+        disabled: "Nearchivuota %{when}"
       pinned:
-        enabled: "prisegta %{when}"
-        disabled: "neprisegta %{when}"
+        enabled: "Prisegta %{when}"
+        disabled: "Neprisegta %{when}"
       pinned_globally:
-        enabled: "prisegta globaliai %{when}"
-        disabled: "neprisegta %{when}"
+        enabled: "Prisegta globaliai %{when}"
+        disabled: "Neprisegta %{when}"
       visible:
-        enabled: "įtraukta į sąrašą %{when}"
-        disabled: "neįtraukta į sąrašą %{when}"
+        enabled: "Įtraukta į sąrašą %{when}"
+        disabled: "Neįtraukta į sąrašą %{when}"
       banner:
-        enabled: "padarė šią reklamjuostę %{when}. Ji pasirodys kiekvieno puslapio viršuje, kol jos neišjungs vartotojas."
-        disabled: "pašalinta ši reklamjuostė %{when}. Ji nebebus rodomaa kiekvieno puslapio viršuje."
-      forwarded: "persiuntė minėtą el. laišką"
+        enabled: "Padarė šią reklamjuostę %{when}. Ji pasirodys kiekvieno puslapio viršuje, kol jos neišjungs vartotojas."
+        disabled: "Pašalinta ši reklamjuostė %{when}. Ji nebebus rodomaa kiekvieno puslapio viršuje."
     topic_admin_menu: "temos veiksmai"
     skip_to_main_content: "Pereiti prie pagrindinio turinio"
     emails_are_disabled: "Visos išeinančios elektroninės žinutės buvo uždraustos administratoriaus. Jokių papildų įspėjamųjų žinučių nebus išsiųsta"
@@ -394,8 +393,6 @@ lt:
     disable: "Išjungti"
     continue: "Tęsti"
     undo: "Anuliuoti"
-    revert: "Grąžinti"
-    failed: "Nepavyko"
     switch_to_anon: "Pasirinkti slaptumo būseną"
     switch_from_anon: "Išjunkti slaptumo būseną"
     banner:
@@ -968,7 +965,6 @@ lt:
       notification_schedule:
         title: "Pranešimų tvarkaraštis"
         label: "Įjungti pasirinktinį pranešimų tvarkaraštį"
-        tip: "Po šių valandų būsite automatiškai nukreipti į „netrukdyti“ režimą."
         midnight: "Vidurnakčio"
         none: "Nieko"
         monday: "Pirmadienis"
@@ -1681,6 +1677,7 @@ lt:
       title: "Prisijungti"
       username: "Vartotojas"
       password: "Slaptažodis"
+      show_password: "Rodyti"
       second_factor_title: "Dviejų veiksnių autentifikavimas"
       second_factor_description: "Prašome įvesti autentifikavimo kodą iš savo programos:"
       second_factor_backup: "Prisijunkite naudodami atsarginį kodą"
@@ -1974,6 +1971,7 @@ lt:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2038,6 +2036,7 @@ lt:
         invited_to_private_message: "pakviesti į privačią žinutę"
         invitee_accepted: "kvietimas priimtas"
         posted: "naujas įrašas"
+        watching_category_or_tag: "naujas įrašas"
         moved_post: "įrašas perkeltas"
         linked: "susietas"
         bookmark_reminder: "priminimas apie žymes"
@@ -3443,9 +3442,7 @@ lt:
     safe_mode:
       enabled: "Saugus režimas įjungtas, norėdami išeiti iš saugaus režimo uždarykite šį naršyklės langą"
     image_removed: "(vaizdas pašalintas)"
-    do_not_disturb:
-      title: "Netrukdyti..."
-      label: "Netrukdyti"
+    pause_notifications:
       remaining: "Liko %{remaining}"
       options:
         half_hour: "30 minučių"
@@ -4046,7 +4043,6 @@ lt:
           required_version:
             minimum: "Reikalinga Discourse %{version} arba naujesnė versija."
             maximum: "Reikalinga Discourse %{version} arba senesnė versija."
-          component_of: "Komponentas:"
           update_to_latest: "Atnaujinti iki paskutinės"
           check_for_updates: "Tikrinti atnaujinimus "
           updating: "Atnaujinama..."
@@ -4457,7 +4453,6 @@ lt:
       user:
         suspend_failed: "Įvyko klaida sustabdant vartotoją %{error}"
         unsuspend_failed: "Įvyko klaida atkuriant vartotoją %{error}"
-        suspend_duration: "Kuriam laikui vartotojas bus sustabdytas?"
         suspend_reason_label: "Kodėl sustabdote? Šis tekstas <b>bus matomas visiems</b> vartotojo profilyje ir vartotojui bandant prisijungti. Stenkitės aprašyti trumpai."
         suspend_reason: "Priežastis"
         suspend_reason_title: "Suspendavimo priežastis"
@@ -4486,7 +4481,6 @@ lt:
         penalty_post_edit: "Redaguoti įrašą"
         penalty_post_none: "Nieko nedaryti"
         penalty_count: "Baudų skaičiavimas"
-        penalty_history: "Bausmių istorija"
         clear_penalty_history:
           title: "Išvalyti baudų istoriją"
           description: "baudas turintys vartotojai negali pasiekti TL3"
@@ -4920,7 +4914,6 @@ lt:
       next: "Kitas"
       step-text: "Žingsnis"
       step: "%{current} iš %{total}"
-      upload: "Įkelti"
       uploading: "Įkeliama..."
       upload_error: "Atsiprašome, įvyko klaida įkeliant šį dokumentą. Prašome pamėginti dar kartą."
       invites:

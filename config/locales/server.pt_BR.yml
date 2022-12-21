@@ -1093,6 +1093,11 @@ pt_BR:
         editor: Editor
         author: Autor(a)
         edit_reason: Motivo
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "API de usuário(a)"
+      yaxis: "Dia"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Dia"
@@ -1567,7 +1572,6 @@ pt_BR:
     email_token_valid_hours: "Tokens de Esqueceu a senha/ativar conta são válidos por (n) h."
     enable_badges: "Ativar o sistema de emblemas"
     max_favorite_badges: "Quantidade máxima de emblemas que o(a) usuário(a) pode selecionar"
-    enable_whispers: "Permitir a comunicação pessoal da equipe nos tópicos."
     whispers_allowed_groups: "Permitir comunicação privada dentro de tópicos para membros de grupos especificados."
     allow_index_in_robots_txt: "Especifique em robots.txt que este site tem permissão para ser indexado por mecanismos de busca da web. Em casos excepcionais, é possível <a href='%{base_path}/admin/customize/robots'>substituir robots.txt</a>."
     blocked_email_domains: "Lista delimitada por barras de domínios de e-mail que não são permitidos para registrar contas. Por exemplo: mailinator.com|trashmail.net"
@@ -1927,6 +1931,7 @@ pt_BR:
     enable_user_directory: "Fornecer um diretório de usuários(as) para navegar"
     enable_group_directory: "Fornecer um diretório de grupos para navegação"
     enable_category_group_moderation: "Permitir que grupos moderem conteúdo em categorias específicas"
+    group_in_subject: "Definir %%{optional_pm} o assunto de e-mail como o nome do primeiro grupo em PM, consulte: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Personalizar formato de assunto para e-mails padrão</a>"
     allow_anonymous_posting: "Permitir que usuários(as) quem para modo anônimo(a)"
     anonymous_posting_min_trust_level: "Nível de confiança mínimo necessário para ativar mensagens anônimas"
     anonymous_account_duration_minutes: "Para proteger o anonimato, crie uma conta anônima a cada N minutos para cada usuário(a). Exemplo: se for configurado para 600, assim que passar 600 minutos a partir da última postagen E o(a) usuário(a) trocar para anônimo(a), uma nova conta anônima será criada."
@@ -1976,7 +1981,6 @@ pt_BR:
     display_name_on_posts: "Exibir o nome completo do(a) usuário(a) em suas postagens, além de seu(sua) @username."
     show_time_gap_days: "Se duas postagens forem feitas com tantos dias de intervalo, mostre o intervalo de tempo no tópico."
     short_progress_text_threshold: "Após a quantidade de mensagens em um tópico ultrapassar este número, a barra de progresso exibirá apenas o número da postagem atual. Se você alterar a largura da barra de progresso, talvez seja necessário alterar este valor."
-    default_code_lang: "Destaque a sintaxe de linguagem de programação padrão aplicado a blocos de código (auto, nohighlight, ruby, python etc.). Esse valor também deve estar presente na configuração do site 'idiomas destacados'."
     warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico anterior a esta quantidade de dias, um aviso será exibido. Desative ao definir como 0."
     autohighlight_all_code: "Aplicar código destacando todos os blocos de código pré-formatados, mesmo quando não especificarem o idioma"
     highlighted_languages: "Regras de destaque de sintaxe incluídas. (Atenção: incluir muitos idiomas pode afetar o desempenho) consulte: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> para ver uma demonstração"
@@ -4279,29 +4283,24 @@ pt_BR:
           site_description:
             label: "Descreva sua comunidade em uma frase curta."
             placeholder: "Um lugar para Jane e seus amigos discutirem coisas legais."
-          contact_email:
-            label: "Ponto de contato"
-            placeholder: "exemplo@user.com"
-            description: "Pessoa ou grupo responsável por esta comunidade. Usado para atualizações críticas e listado na <a href='%{base_path}/about' target='_blank'>sua página sobre</a> para contatos de emergências."
           default_locale:
             label: "Idioma"
       privacy:
-        title: "Experiência do Membro"
         fields:
           login_required:
             placeholder: "Privado(a)"
             extra_description: "Somente usuários(as) que entraram com a conta podem acessar esta comunidade"
           invite_only:
-            placeholder: "Apenas Convidados"
             extra_description: "Usuários(as) devem ser convidados(as) por usuários(as) confiáveis ou pela equipe. Caso contrário, poderão se cadastrar por conta própria"
           must_approve_users:
-            placeholder: "Requerer aprovação"
             extra_description: "Os usuários devem ser aprovados pela equipe"
+          chat_enabled:
+            placeholder: "Ativar chat"
+          enable_sidebar:
+            placeholder: "Habilitar barra lateral"
       ready:
-        title: "Seu Discourse está pronto!"
         description: "É isso! Você fez o básico para configurar sua comunidade. Agora você pode entrar, dar uma olhada, escrever um tópico de boas-vindas e enviar convites!<br><br>Divirta-se!"
       styling:
-        title: "Aparência e Comportamento"
         fields:
           color_scheme:
             label: "Esquema de cores"
@@ -4332,37 +4331,19 @@ pt_BR:
                 label: "Caixas de Categorias com Tópicos"
               subcategories_with_featured_topics:
                 label: "Subcategorias com tópicos em destaque"
-      branding:
-        title: "Personalizar logos"
-        fields:
-          logo:
-            label: "Logotipo primário"
-            description: "O logotipo no canto superior esquerdo do seu site. Utilize uma imagem retangular larga com pelo menos 120 de altura e uma proporção maior que 3:1"
-          logo_small:
-            label: "Logotipo quadrado"
-            description: "Uma versão quadrada da sua logo. Exibida no canto superior esquerdo da página quando rolado para baixo em um navegador e exibido ao compartilhar em redes sociais. Idealmente deve ter ao menos 512x512."
       corporate:
-        title: "Sua organização"
         fields:
-          company_name:
-            label: "Nome da empresa"
-            placeholder: "Exemplo de organização"
-            description: "Utilizado na sua página de Termos de Serviço. Sinta-se livre para avançar caso não exista nenhuma companhia."
           governing_law:
-            label: "Lei aplicável"
             placeholder: "Lei da Califórnia"
-            description: "Utilizado na sua página de Termos de Serviço. Sinta-se livre para avançar caso não exista nenhuma companhia."
           contact_url:
-            label: "Página da web"
             placeholder: "https://www.example.com/contact-us"
-            description: "Página de contato geral para você ou sua organização. Será exibida no <a href='%{base_path}/about' target='_blank'>sua página Sobre</a>."
           city_for_disputes:
-            label: "Cidade para disputas"
             placeholder: "São Francisco, Califórnia"
-            description: "Utilizado na sua página de Termos de Serviço. Sinta-se livre para avançar caso não exista nenhuma companhia."
           site_contact:
-            label: "Mensagens automáticas"
             description: "Todas as mensagens pessoais automáticas do Discourse serão enviadas a partir deste(a) usuário(a), como avisos de sinalizadores e de conclusão de cópia de segurança."
+          contact_email:
+            label: "Ponto de contato"
+            placeholder: "exemplo@user.com"
       invites:
         title: "Convidar equipe"
         description: "Você está quase pronto(as)! Vamos convidar algumas pessoas para ajudar a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>\ndivulgar as suas discussões</a> com tópicos e respostas interessantes para iniciar sua comunidade."

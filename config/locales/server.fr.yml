@@ -233,6 +233,7 @@ fr:
       <p>Sinon, veuillez <a href="%{base_url}/password-reset">réinitialiser votre mot de passe</a>.</p>
     not_found_template_link: |
       <p>La date d'expiration de cette invitation à <a href="%{base_url}">%{site_name}</a> est dépassée. Nous vous invitons à demander à la personne qui vous a invité(e) de vous faire parvenir une nouvelle invitation.</p>
+    existing_user_cannot_redeem: "Cette invitation ne peut pas être utilisée. Demandez à la personne qui vous a invité(e) de vous envoyer une nouvelle invitation."
     user_exists: "Inutile d'inviter <b>%{email}</b>, cette adresse est déjà associée à un compte !"
     invite_exists: "Vous avez déjà invité <b>%{email}</b>."
     invalid_email: "%{email} n'est pas une adresse e-mail valable."
@@ -774,6 +775,7 @@ fr:
     success: "Vous avez modifié votre mot de passe avec succès et vous êtes maintenant connecté(e)."
     success_unapproved: "Vous avez modifié votre mot de passe avec succès."
   email_login:
+    invalid_token: 'Oups ! Le lien que vous avez utilisé ne fonctionne plus. Vous pouvez vous <a href="%{base_url}/login">connecter</a> maintenant. Si vous avez oublié votre mot de passe, vous pouvez <a href="%{base_url}/password-reset">demander un lien</a> pour le réinitialiser.'
     title: "Connexion par e-mail"
   user_auth_tokens:
     browser:
@@ -1090,6 +1092,11 @@ fr:
         editor: Éditeur
         author: Auteur
         edit_reason: Raison
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "API utilisateur"
+      yaxis: "Jour"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Jour"
@@ -1564,7 +1571,6 @@ fr:
     email_token_valid_hours: "Les jetons (tokens) de mot de passe oublié/activation de compte sont valides (n) jours."
     enable_badges: "Activer le système de badges"
     max_favorite_badges: "Nombre maximal de badges que l'utilisateur peut sélectionner"
-    enable_whispers: "Autoriser les communications privées entre responsables au sein d'un sujet."
     whispers_allowed_groups: "Autoriser la communication privée au sein des sujets pour les membres de groupes spécifiques."
     allow_index_in_robots_txt: "Indiquer dans le fichier robots.txt que ce site peut être indexé par les moteurs de recherche Web. Dans des cas exceptionnels, vous pouvez remplacer définitivement le fichier <a href='%{base_path}/admin/customize/robots'>robots.txt</a>."
     blocked_email_domains: "Une liste de domaines de messageries, séparés par des barres verticales (caractère « | ») que les utilisateurs ne sont pas autorisés à utiliser pour s'inscrire. Exemple : mailinator.com|trashmail.net"
@@ -1924,6 +1930,7 @@ fr:
     enable_user_directory: "Activer l'annuaire des utilisateurs"
     enable_group_directory: "Activer l'annuaire des groupes"
     enable_category_group_moderation: "Autoriser les groupes à modérer le contenu dans des catégories spécifiques"
+    group_in_subject: "Mettre %%{optional_pm} dans le sujet de l'e-mail au nom du premier groupe du message direct. Voir : <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>personnaliser le format du sujet des e-mails standards</a>"
     allow_anonymous_posting: "Permettre aux utilisateurs de passer en mode anonyme"
     anonymous_posting_min_trust_level: "Le niveau de confiance minimal pour passer en mode anonyme."
     anonymous_account_duration_minutes: "Pour protéger l'anonymat, créer un nouveau compte anonyme toutes les N minutes pour chaque utilisateur. Exemple : si la valeur 600 est choisie, lorsque 600 minutes seront passées après le dernier message ET que l'utilisateur passera en mode anonyme, un nouveau compte anonyme lui sera créé."
@@ -1973,7 +1980,6 @@ fr:
     display_name_on_posts: "Afficher le nom complet de l'utilisateur dans ses messages en plus de son nom d'utilisateur."
     show_time_gap_days: "Si deux messages sont publiés avec ce nombre de jours d'écart, afficher cette durée dans le sujet."
     short_progress_text_threshold: "Si le nombre de messages dans un sujet dépasse cette valeur, la barre de progression affichera uniquement le nombre de messages actuel. Si vous modifiez la largeur de la barre de progression, vous devrez peut-être modifier cette valeur."
-    default_code_lang: "Langage de programmation par défaut de la coloration syntaxique appliquée aux blocs de code (auto, nohighlight, ruby, python, etc.). Cette valeur doit également être présente dans le paramètre du site « highlighted languages »."
     warn_reviving_old_topic_age: "Lorsque quelqu'un commence à répondre à un sujet dont la dernière réponse remonte à plusieurs jours, un avertissement sera affiché. Désactivez la fonctionnalité en indiquant 0."
     autohighlight_all_code: "Forcer la coloration syntaxique dans tous les blocs de codes, même si aucun langage de programmation n'est défini explicitement."
     highlighted_languages: "Règles de coloration syntaxique supportées. (Attention : supporter trop de langages peut impacter les performances.) Voir : <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo/</a> pour une démonstration."
@@ -4294,29 +4300,24 @@ fr:
           site_description:
             label: "Décrivez votre communauté en une phrase"
             placeholder: "Un lieu de discussion pour Jane et ses amis"
-          contact_email:
-            label: "Point de contact"
-            placeholder: "exemple@utilisateur.com"
-            description: "Personne ou groupe responsable de cette communauté. Utilisé pour les mises à jour critiques et répertorié sur <a href='%{base_path}/about' target='_blank'>votre page à propos</a> en cas de besoin de contact urgent."
           default_locale:
             label: "Langue "
       privacy:
-        title: "Expérience des membres"
         fields:
           login_required:
             placeholder: "Privé"
             extra_description: "Seuls les utilisateurs connectés peuvent accéder à cette communauté"
           invite_only:
-            placeholder: "Sur invitation uniquement"
             extra_description: "Les utilisateurs doivent être invités par des utilisateurs ou des responsables de confiance, autrement les utilisateurs peuvent s'inscrire par eux-mêmes"
           must_approve_users:
-            placeholder: "Nécessiter l'approbation"
             extra_description: "Les utilisateurs doivent être approuvés par un responsable"
+          chat_enabled:
+            placeholder: "Activer la discussion"
+          enable_sidebar:
+            placeholder: "Activer la barre latérale"
       ready:
-        title: "Votre Discourse est prêt !"
         description: "C'est ça ! Vous avez terminé les bases pour configurer votre communauté. Vous pouvez maintenant vous lancer et jeter un coup d'œil, écrire un sujet de bienvenue et envoyer des invitations !<br><br>Amusez-vous bien !"
       styling:
-        title: "Apparence et sensation"
         fields:
           color_scheme:
             label: "Jeu de couleurs"
@@ -4347,37 +4348,19 @@ fr:
                 label: "Boîtes de catégories avec sujets"
               subcategories_with_featured_topics:
                 label: "Sous-catégories avec sujets en vedette"
-      branding:
-        title: "Personnaliser les logos"
-        fields:
-          logo:
-            label: "Logo principal"
-            description: "Le logo en haut à gauche de votre site. Utilisez une image rectangulaire large d'une hauteur de 120 et d'un rapport hauteur/largeur supérieur à 3:1"
-          logo_small:
-            label: "Logo carré"
-            description: "Une version carrée de votre logo. Affiché en haut à gauche lors du défilement vers le bas et lors du partage sur les réseaux sociaux. Idéalement, au moins 512 x 512."
       corporate:
-        title: "Votre organisation"
         fields:
-          company_name:
-            label: "Nom de société"
-            placeholder: "Société exemple"
-            description: "Saisi dans votre page de Conditions d'utilisation. N'hésitez pas à ignorer si aucune entreprise n'existe."
           governing_law:
-            label: "Droit applicable"
             placeholder: "Loi californienne"
-            description: "Saisi dans votre page de Conditions d'utilisation. N'hésitez pas à ignorer si aucune entreprise n'existe."
           contact_url:
-            label: "Page Web"
             placeholder: "https://www.example.com/contact-us"
-            description: "Page Web permettant de vous contacter ou de contacter votre organisation. Elle sera affichée sur la page <a href='%{base_path}/about' target='_blank'>À propos</a>."
           city_for_disputes:
-            label: "Ville pour les litiges"
             placeholder: "San Francisco, Californie"
-            description: "Saisi dans votre page de Conditions d'utilisation. N'hésitez pas à ignorer si aucune entreprise n'existe."
           site_contact:
-            label: "Messages automatiques"
             description: "Tous les messages directs émis par Discourse, tels que les signalements ou les notifications de sauvegarde, seront envoyés par cet utilisateur."
+          contact_email:
+            label: "Point de contact"
+            placeholder: "exemple@utilisateur.com"
       invites:
         title: "Inviter des responsables"
         description: "Vous avez presque terminé ! Invitons quelques personnes pour <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>commencer des discussions</a> avec des sujets et réponses intéressantes pour lancer votre communauté."

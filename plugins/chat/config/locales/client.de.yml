@@ -113,6 +113,10 @@ de:
           one: "Einladung gesendet"
           other: "Einladungen gesendet"
         invite: "Zum Kanal einladen"
+        groups:
+          users_limit:
+            one: "%{count} Benutzer"
+            other: "%{count} Benutzer"
       aria_roles:
         header: "Chat-Kopfzeile"
         composer: "Chat-Composer"
@@ -270,6 +274,7 @@ de:
       settings:
         auto_join_users_label: "Benutzer automatisch hinzufügen"
         auto_join_users_info: "Stündlich prüfen, welche Benutzer in den letzten 3 Monaten aktiv waren, und zu diesem Kanal hinzufügen, falls sie Zugriff auf die Kategorie %{category} haben."
+        enable_auto_join_users: "Automatisch alle kürzlich aktiven Benutzer hinzufügen"
         auto_join_users_warning: "Jeder Benutzer, der kein Mitglied dieses Kanals ist und Zugriff auf die Kategorie %{category} hat, wird beitreten. Bist du dir sicher?"
         desktop_notification_level: "Desktop-Benachrichtigungen"
         follow: "Beitreten"

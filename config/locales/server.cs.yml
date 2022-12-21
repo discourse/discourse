@@ -1126,10 +1126,6 @@ cs:
         fields:
           login_required:
             placeholder: "Soukromé"
-          must_approve_users:
-            placeholder: "Vyžádat schválení"
-      ready:
-        title: "Váš Discourse je připraven!"
       styling:
         fields:
           styling_preview:
@@ -1146,10 +1142,6 @@ cs:
                 label: "Kategorie a nejnovější témata"
               categories_and_top_topics:
                 label: "Kategorie a populární témata"
-      branding:
-        fields:
-          logo:
-            label: "Primární loga"
       corporate:
         fields:
           contact_url:

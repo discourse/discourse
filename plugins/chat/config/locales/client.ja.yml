@@ -111,6 +111,11 @@ ja:
         invitations_sent:
           other: "招待状を送信しました"
         invite: "チャンネルに招待する"
+        warning_multiple:
+          other: "他 %{count} 件"
+        groups:
+          users_limit:
+            other: "ユーザー: %{count} 人"
       aria_roles:
         header: "チャットヘッダー"
         composer: "チャット作成ツール"
@@ -264,6 +269,7 @@ ja:
       settings:
         auto_join_users_label: "自動的にユーザーを追加する"
         auto_join_users_info: "過去 3 か月にアクティブだったユーザーを 1 時間ごとに確認し、それらのユーザーが %{category} カテゴリにアクセスできる場合はこのチャンネルに追加します。"
+        enable_auto_join_users: "最近アクティブなユーザーをすべて自動的に追加する"
         auto_join_users_warning: "このチャンネルのメンバーでなく、%{category} カテゴリにアクセスできるすべてのユーザーが参加します。よろしいですか？"
         desktop_notification_level: "デスクトップ通知"
         follow: "参加"

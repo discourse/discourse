@@ -148,7 +148,6 @@ ja:
       banner:
         enabled: "%{when}にこれをバナーにしました。ユーザーが閉じるまで各ページの上部に表示されます。"
         disabled: "%{when}にこのバナーを削除しました。今後ページの上部に表示されることはありません。"
-      forwarded: "上記のメールを転送しました"
     topic_admin_menu: "トピックの操作"
     skip_to_main_content: "メインコンテンツにスキップ"
     emails_are_disabled: "メールの送信は管理者によって無効化されています。メール通知は一切送信されません。"
@@ -350,8 +349,6 @@ ja:
     disable: "無効化"
     continue: "続行"
     undo: "元に戻す"
-    revert: "戻す"
-    failed: "失敗しました"
     switch_to_anon: "匿名モードを開始"
     switch_from_anon: "匿名モードを終了"
     banner:
@@ -954,7 +951,6 @@ ja:
       notification_schedule:
         title: "通知スケジュール"
         label: "カスタム通知スケジュールを有効にする"
-        tip: "これらの時間外は、自動的に「おやすみモード」に設定されます。"
         midnight: "深夜"
         none: "なし"
         monday: "月曜日"
@@ -1214,6 +1210,7 @@ ja:
         use: "認証アプリを使用する"
         enforced_notice: "このサイトにアクセスするには二要素認証を有効にする必要があります。"
         disable: "無効化"
+        delete: "削除"
         save: "保存"
         edit: "編集"
         edit_title: "認証アプリの編集"
@@ -1752,6 +1749,7 @@ ja:
       title: "ログイン"
       username: "ユーザー"
       password: "パスワード"
+      show_password: "表示"
       second_factor_title: "二要素認証"
       second_factor_description: "アプリから認証コードを入力してください:"
       second_factor_backup: "バックアップ コードを使用してログインする"
@@ -2083,6 +2081,7 @@ ja:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}、%{username2}</span> %{description}"
@@ -2144,6 +2143,7 @@ ja:
         invited_to_private_message: "個人メッセージに招待"
         invitee_accepted: "招待が承諾されました"
         posted: "新しい投稿"
+        watching_category_or_tag: "新しい投稿"
         moved_post: "投稿が移動されました"
         linked: "リンクされました"
         bookmark_reminder: "ブックマークのリマインダー"
@@ -3609,9 +3609,7 @@ ja:
     safe_mode:
       enabled: "セーフモードが有効になっています。セーフモードを終了するには、このブラウザウィンドウを閉じてください。"
     image_removed: "(画像は削除されました)"
-    do_not_disturb:
-      title: "おやすみモード..."
-      label: "おやすみモード"
+    pause_notifications:
       remaining: "残り %{remaining}"
       options:
         half_hour: "30 分"
@@ -3990,6 +3988,7 @@ ja:
         detailed_instruction: "選択したイベントが発生すると、指定した URL に POST リクエストが送信されます。"
         new: "新しい Webhook"
         create: "作成"
+        edit: "編集"
         save: "保存"
         controls: "コントロール"
         go_back: "リストに戻る"
@@ -4089,6 +4088,8 @@ ja:
         howto: "プラグインをインストールするには？"
         official: "公式プラグイン"
         broken_route: "'%{name}' へのリンクを構成できません。広告ブロッカーが無効になっていることを確認し、ページを再読み込みしてみてください。"
+      navigation_menu:
+        sidebar: "サイドバー"
       backups:
         title: "バックアップ"
         menu:
@@ -4302,7 +4303,6 @@ ja:
             error: "このテーマは、このバージョンの Discourse と互換性がないため、自動的に無効になりました。"
             minimum: "Discourse バージョン %{version} 以上が必要です。"
             maximum: "Discourse バージョン %{version} 以下が必要です。"
-          component_of: "次に属するコンポーネント:"
           update_to_latest: "最新に更新"
           check_for_updates: "アップデートを確認"
           updating: "アップデート中..."
@@ -4773,7 +4773,6 @@ ja:
       user:
         suspend_failed: "このユーザーを凍結中にエラーが発生しました: %{error}"
         unsuspend_failed: "このユーザーの凍結を解除中にエラーが発生しました: %{error}"
-        suspend_duration: "ユーザーをどれくらいの期間凍結しますか？"
         suspend_reason_label: "凍結する理由を説明してください。ここに書いた理由は、このユーザーのプロファイルページで<b>全員に閲覧可能</b>となります。またこのユーザーがログインを試みた際にも表示されます。手短に説明してください。"
         suspend_reason_hidden_label: "なぜ凍結していますか？このテキストはユーザーがログインしようとするときに表示されます。簡潔に説明してください。"
         suspend_reason: "理由"
@@ -4807,7 +4806,6 @@ ja:
         penalty_post_edit: "投稿を編集する"
         penalty_post_none: "何もしない"
         penalty_count: "ペナルティ数"
-        penalty_history: "ペナルティ履歴"
         clear_penalty_history:
           title: "ペナルティ履歴をクリア"
           description: "ペナルティのあるユーザーは TL3 に昇格されません"
@@ -4959,6 +4957,11 @@ ja:
         silenced_count: "投稿禁止"
         suspended_count: "凍結"
         last_six_months: "過去 6 か月"
+        other_matches_list:
+          username: "ユーザー名"
+          trust_level: "信頼レベル"
+          read_time: "閲覧時間"
+          posts: "投稿"
         tl3_requirements:
           title: "信頼レベル 3 の要件"
           table_title:
@@ -5102,6 +5105,7 @@ ja:
           search: "検索"
           groups: "グループ"
           dashboard: "ダッシュボード"
+          navigation: "ナビゲーション"
         secret_list:
           invalid_input: "入力フィールドを空にしたり、縦棒文字を含めることはできません。"
         default_categories:
@@ -5271,10 +5275,8 @@ ja:
       finish: "セットアップを終了"
       back: "戻る"
       next: "次へ"
-      configure_more: "さらに構成..."
       step-text: "手順"
       step: "%{current} / %{total}"
-      upload: "アップロード"
       uploading: "アップロード中..."
       upload_error: "ファイルのアップロード中にエラーが発生しました。もう一度お試しください。"
       staff_count:

@@ -1002,8 +1002,8 @@ hr:
         fields:
           login_required:
             placeholder: "Privatno"
-          must_approve_users:
-            placeholder: "Zahtijevati odobrenje"
+          chat_enabled:
+            placeholder: "Omogući chat"
       styling:
         fields:
           homepage_style:
@@ -1020,8 +1020,6 @@ hr:
                 label: "Potkategorije s istaknutim temama"
       corporate:
         fields:
-          company_name:
-            label: "Ime tvrtke"
           contact_url:
             placeholder: "https://www.example.com/contact-us"
   joined: "Prijavljen"

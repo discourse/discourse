@@ -262,7 +262,7 @@ module TurboTests
     end
 
     def fail_fast_met
-      !@fail_fast.nil? && @fail_fast >= @failure_count
+      !@fail_fast.nil? && @failure_count >= @fail_fast
     end
   end
 end

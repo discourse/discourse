@@ -120,37 +120,36 @@ hy:
       topic_html: 'Թեմա՝ <span class="topic-title">%{topicTitle}</span>'
       close: "փակել"
     action_codes:
-      public_topic: "այս թեման դարձրել է հրապարակային %{when}"
-      private_topic: "այս թեման դարձրել է անձնական նամակ %{when}"
-      split_topic: "բաժանել է այս թեման %{when}"
-      invited_user: "հրավիրված է %{who}-ին %{when}"
-      invited_group: "հրավիրված %{who}-ին %{when}"
+      public_topic: "Այս թեման դարձրել է հրապարակային %{when}"
+      private_topic: "Այս թեման դարձրել է անձնական նամակ %{when}"
+      split_topic: "Բաժանել է այս թեման %{when}"
+      invited_user: "Հրավիրված %{who}-ին %{when}"
+      invited_group: "Հրավիրված %{who}-ին %{when}"
       user_left: "%{who}-ը հեռացրել է իրեն այս հաղորդագրությունից %{when}"
-      removed_user: "հեռացրել է %{who}-ին %{when}"
-      removed_group: "հեռացրել է %{who}-ին %{when}"
-      autobumped: "ավտոմատ կերպով բարձրացված է %{when}"
+      removed_user: "Հեռացրել է %{who}-ին %{when}"
+      removed_group: "Հեռացրել է %{who}-ին %{when}"
+      autobumped: "Ավտոմատ կերպով բարձրացված է %{when}"
       autoclosed:
-        enabled: "փակվել է %{when}"
-        disabled: "բացվել է %{when}"
+        enabled: "Փակվել է %{when}"
+        disabled: "Բացվել է %{when}"
       closed:
-        enabled: "փակվել է %{when}"
-        disabled: "բացվել է %{when}"
+        enabled: "Փակվել է %{when}"
+        disabled: "Բացվել է %{when}"
       archived:
-        enabled: "արխիվացվել է %{when}"
-        disabled: "ապարխիվացվել է %{when}"
+        enabled: "Արխիվացվել է %{when}"
+        disabled: "Ապարխիվացվել է %{when}"
       pinned:
-        enabled: "ամրակցվել է %{when}"
-        disabled: "ապակցվել է %{when}"
+        enabled: "Ամրակցվել է %{when}"
+        disabled: "Ապակցվել է %{when}"
       pinned_globally:
-        enabled: "գլոբալ ամրակցվել է %{when}"
-        disabled: "ապակցվել է %{when}"
+        enabled: "Գլոբալ ամրակցվել է %{when}"
+        disabled: "Ապակցվել է %{when}"
       visible:
-        enabled: "ցուցակագրվել է %{when}"
-        disabled: "չցուցակագրված %{when}"
+        enabled: "Ցուցակագրվել է %{when}"
+        disabled: "Չցուցակագրված %{when}"
       banner:
-        enabled: "սա դարձրել է բաններ %{when}: Այն կհայտնվի յուրաքանչյուր էջի վերևում, մինչև չհեռացվի օգտատիրոջ կողմից:"
-        disabled: "հեռացրել է այս բանները %{when}: Այն այլևս չի հայտնվի յուրաքանչյուր էջի վերևում:"
-      forwarded: "վերահասցեագրել նշված նամակը"
+        enabled: "Սա դարձրել է բաններ %{when}: Այն կհայտնվի յուրաքանչյուր էջի վերևում, մինչև չհեռացվի օգտատիրոջ կողմից:"
+        disabled: "Հեռացրել է այս բանները %{when}: Այն այլևս չի հայտնվի յուրաքանչյուր էջի վերևում:"
     topic_admin_menu: "թեմայի ադմինի գործողություններ"
     emails_are_disabled: "Բոլոր ելքային էլ. նամակները անջատվել են ադմինիստրատորի կողմից: Էլ. փոստով ոչ մի տեսակի ծանուցում չի ուղարկվի:"
     software_update_prompt:
@@ -313,8 +312,6 @@ hy:
     disable: "Անջատել"
     continue: "Շարունակել"
     undo: "Ետարկել"
-    revert: "Հետադարձել"
-    failed: "Ձախողում"
     switch_to_anon: "Սկսել Անանուն Ռեժիմը"
     switch_from_anon: "Ավարտել Անանուն Ռեժիմը"
     banner:
@@ -1378,6 +1375,7 @@ hy:
     login:
       username: "Օգտատեր"
       password: "Գաղտնաբառ"
+      show_password: "Ցուցադրել"
       second_factor_description: "Խնդրում ենք Ձեր հավելվածից մուտքագրել վավերացման կոդը՝"
       second_factor_backup: "Մուտք գործել օգտագործելով պահուստային կոդը"
       second_factor_backup_description: "Խնդրում ենք մուտքագրել ձեր պահուստային կոդերից որևէ մեկը՝"
@@ -1631,6 +1629,7 @@ hy:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -1685,6 +1684,7 @@ hy:
         invited_to_private_message: "Հրավիրված է անձնական հաղորդագրության "
         invitee_accepted: "հրավերը ընդունված է"
         posted: "Նոր Գրառում"
+        watching_category_or_tag: "Նոր Գրառում"
         moved_post: "գրառումը տեղափոխված է"
         linked: "հղված է "
         bookmark_reminder: "էջանշանի հիշեցում"
@@ -2851,7 +2851,7 @@ hy:
       dismiss: "Չեղարկել"
     safe_mode:
       enabled: "Անվտանգ ռեժիմը միացված է, փակեք բրաուզերի այս պատուհանը՝ անվտանգ ռեժիմից դուրս գալու համար:"
-    do_not_disturb:
+    pause_notifications:
       remaining: "%{remaining}-ը մնում է"
       options:
         custom: "Մասնավոր"
@@ -3395,7 +3395,6 @@ hy:
             error: "Այս թեման ավտոմատ կերպով անջատվել է, քանի որ այն համատեղելի չէ Discourse-ի այս տարբերակի հետ:"
             minimum: "Պահանջում է Discourse-ի %{version} կամ ավելի բարձր տարբերակ:"
             maximum: "Պահանջում է Discourse-ի %{version} կամ ավելի ցածր տարբերակ:"
-          component_of: "Հետևյալի Բաղադրիչ՝ "
           update_to_latest: "Թարմացնել Վերջինով"
           check_for_updates: "Ստուգել Թարմացումները"
           updating: "Թարմացում..."
@@ -3797,7 +3796,6 @@ hy:
       user:
         suspend_failed: "Այս օգտատիրոջը սառեցնելիս ինչ-որ սխալ է տեղի ունեցել՝ %{error}"
         unsuspend_failed: "Այս օգտատիրոջը վերականգնելիս ինչ-որ սխալ է տեղի ունեցել՝ %{error}"
-        suspend_duration: "Որքա՞ն ժամանակ պետք է սառեցվի օգտատերը:"
         suspend_reason_label: "Ինչո՞ւ եք սառեցնում այս օգտատիրոջը: Այս տեքստը <b>տեսանելի կլինի բոլորին</b> այս օգտատիրոջ պրոֆիլի էջում և կցուցադրվի օգտատիրոջը, երբ նա փորձի մուտք գործել: Մուտքագրեք կարճ տեքստ:"
         suspend_reason_hidden_label: "Ինչո՞ւ եք սառեցնում այս օգտատիրոջը: Այս տեքստը կցուցադրվի օգտատիրոջը, երբ նա փորձի մուտք գործել: Մուտքագրեք կարճ տեքստ:"
         suspend_reason: "Պատճառ"
@@ -4233,7 +4231,6 @@ hy:
       next: "Հաջորդը"
       step-text: "Քայլը"
       step: "%{current} %{total}-ից"
-      upload: "Վերբեռնել"
       uploading: "Վերբեռնում..."
       upload_error: "Ներողություն, այդ ֆայլը վերբեռնելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
       staff_count:

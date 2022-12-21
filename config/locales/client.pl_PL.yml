@@ -202,37 +202,35 @@ pl_PL:
       url: "Skopiuj i udostępnij adres URL"
     action_codes:
       public_topic: "Upublicznij ten temat %{when}"
-      open_topic: "przekonwertowano to na temat %{when}"
-      private_topic: "przekształcił(a) ten temat w wiadomość prywatną %{when}"
-      split_topic: "podziel ten temat %{when}"
-      invited_user: "%{who} został zaproszony %{when}"
-      invited_group: "%{who} został zaproszony %{when}"
+      open_topic: "Przekonwertowano to na temat %{when}"
+      private_topic: "Przekształcił(a) ten temat w wiadomość prywatną %{when}"
+      split_topic: "Podziel ten temat %{when}"
+      invited_user: "%{who} Został zaproszony %{when}"
+      invited_group: "%{who} Został zaproszony %{when}"
       user_left: "%{who} usunął siebie z tej konwersacji %{when}"
-      removed_user: "%{who} został usunięty %{when}"
-      removed_group: "%{who} został usunięty %{when}"
-      autobumped: "automatycznie podbity %{when}"
+      removed_user: "%{who} Został usunięty %{when}"
+      removed_group: "%{who} Został usunięty %{when}"
+      autobumped: "Automatycznie podbity %{when}"
       autoclosed:
-        enabled: "zamknięcie %{when}"
-        disabled: "otworzenie %{when}"
+        enabled: "Zamknięcie %{when}"
+        disabled: "Otworzenie %{when}"
       closed:
-        enabled: "zamknięcie %{when}"
-        disabled: "otworzenie %{when}"
+        enabled: "Zamknięcie %{when}"
+        disabled: "Otworzenie %{when}"
       archived:
-        enabled: "archiwizacja %{when}"
-        disabled: "dearchiwizacja %{when}"
+        enabled: "Archiwizacja %{when}"
+        disabled: "Dearchiwizacja %{when}"
       pinned:
-        enabled: "przypięty %{when}"
-        disabled: "odpięcie %{when}"
+        enabled: "Przypięty %{when}"
+        disabled: "Odpięcie %{when}"
       pinned_globally:
-        enabled: "globalne przypięcie %{when}"
-        disabled: "globalne odpięcie %{when}"
+        enabled: "Globalne przypięcie %{when}"
+        disabled: "Odpięcie %{when}"
       visible:
-        enabled: "wylistowanie %{when}"
-        disabled: "odlistowanie %{when}"
+        enabled: "Wylistowanie %{when}"
+        disabled: "Odlistowanie %{when}"
       banner:
-        enabled: "ustawił ten baner %{when}. Będzie widoczny na górze każdej strony, póki nie zostanie ukryty przez użytkownika."
-        disabled: "Ten temat nie jest już banerem. Nie będzie dalej wyświetlany na górze każdej strony."
-      forwarded: "przekazano powyższy email"
+        enabled: "Ustawił ten baner %{when}. Będzie widoczny na górze każdej strony, póki nie zostanie ukryty przez użytkownika."
     topic_admin_menu: "akcje tematu"
     skip_to_main_content: "Przejdź do głównej zawartości"
     emails_are_disabled: "Wszystkie wychodzące wiadomości e-mail zostały globalnie wyłączone przez administratora. Żadne powiadomienia e-mail nie będą wysyłane."
@@ -461,8 +459,6 @@ pl_PL:
     disable: "Wyłącz"
     continue: "Kontynuuj"
     undo: "Cofnij"
-    revert: "Przywróć"
-    failed: "Niepowodzenie"
     switch_to_anon: "Włącz tryb anonimowy"
     switch_from_anon: "Zakończ tryb anonimowy"
     banner:
@@ -1125,7 +1121,6 @@ pl_PL:
       notification_schedule:
         title: "Harmonogram powiadomień"
         label: "Włącz niestandardowy harmonogram powiadomień"
-        tip: "Poza tymi godzinami automatycznie pojawi się opcja „nie przeszkadzać”."
         midnight: "Północ"
         none: "Brak"
         monday: "Poniedziałek"
@@ -1976,6 +1971,7 @@ pl_PL:
       title: "Zaloguj się"
       username: "Użytkownik"
       password: "Hasło"
+      show_password: "Pokaż"
       second_factor_title: "Uwierzytelnianie dwuskładnikowe"
       second_factor_description: "Podaj kod uwierzytelniający ze swojej aplikacji:"
       second_factor_backup: "Zaloguj się, używając kodu zapasowego"
@@ -2169,6 +2165,7 @@ pl_PL:
       drafts_offline: "szkice offline"
       edit_conflict: "edytuj konflikt"
       esc: "esc"
+      esc_label: "Kliknij lub naciśnij Esc, aby odrzucić"
       ok_proceed: "Ok, kontynuuj."
       group_mentioned_limit:
         one: "<b>Ostrzeżenie!</b> Wspomniałeś/łaś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{count}. Nikt nie zostanie powiadomiony."
@@ -2185,6 +2182,8 @@ pl_PL:
         private: "Wspomniano o @%{username}, lecz nie zostannie on powiadomiony, ponieważ nie może zobaczyć tej wiadomości osobistej. Będziesz musiał zaprosić go do tej wiadomości osobistej."
         muted_topic: "Wspomniałeś o @%{username}, lecz nie zostanie on powiadomiony, ponieważ wyciszył ten temat."
         not_allowed: "Wspomniałeś o @%{username}, lecz nie zostanie on powiadomiony, ponieważ nie został zaproszony do tego tematu."
+      cannot_see_group_mention:
+        not_mentionable: "Nie możesz wspomnieć o grupie @%{group}."
       here_mention:
         one: "Wspominając <b>@%{here}</b>, masz zamiar powiadomić %{count} użytkownika – czy jesteś pewien?"
         few: "Wspominając <b>@%{here}</b>, masz zamiar powiadomić %{count} użytkowników – czy jesteś pewien?"
@@ -2286,6 +2285,7 @@ pl_PL:
       slow_mode:
         error: "Ten temat jest w trybie powolnym. Opublikowałeś już niedawno post; możesz napisać kolejny za %{timeLeft}."
       user_not_seen_in_a_while:
+        single: "Osoba, do której piszesz, <b>%{usernames}</b>, nie była tu widziana od bardzo dawna – %{time_ago}. Może nie otrzymać Twojej wiadomości. Możesz poszukać alternatywnych metod kontaktu %{usernames}."
         multiple: "Następujące osoby, do których piszesz: <b>%{usernames}</b>, nie były tu widziane od bardzo dawna - %{time_ago}. Mogą one nie otrzymać Twojej wiadomości. Możesz poszukać innych metod kontaktu z nimi."
       admin_options_title: "Opcjonalne ustawienia zespołu dla tego tematu"
       composer_actions:
@@ -2338,6 +2338,11 @@ pl_PL:
           few: "%{count} nieprzeczytane powiadomienia o wysokim priorytecie"
           many: "%{count} nieprzeczytanych powiadomień o wysokim priorytecie"
           other: "%{count} nieprzeczytanych powiadomień o wysokim priorytecie"
+        new_message_notification:
+          one: "%{count} powiadomienie o nowej wiadomości"
+          few: "%{count} powiadomienia o nowej wiadomości"
+          many: "%{count} powiadomień o nowych wiadomościach"
+          other: "%{count} powiadomień o nowych wiadomościach"
       title: "powiadomienia o wywołanej @nazwie, odpowiedzi do twoich wpisów i tematów, prywatne wiadomości, itp"
       none: "Nie udało się załadować listy powiadomień."
       empty: "Nie znaleziono powiadomień."
@@ -2351,6 +2356,7 @@ pl_PL:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2436,6 +2442,7 @@ pl_PL:
         invited_to_private_message: "zaproszony na prywatną wiadomość"
         invitee_accepted: "zaproszenie przyjęte"
         posted: "nowy wpis"
+        watching_category_or_tag: "nowy wpis"
         moved_post: "wpis został przeniesiony"
         linked: "połączony"
         bookmark_reminder: "przypomnienie o zakładce"
@@ -2800,6 +2807,8 @@ pl_PL:
       show_links: "pokaż odnośniki z tego tematu"
       collapse_details: "zwiń szczegóły tematu"
       expand_details: "rozwiń szczegóły tematu"
+      read_more_in_category: "Chcesz przeczytać więcej? Przeglądaj inne tematy w %{categoryLink} lub <a href='%{latestLink}'>przeglądaj najnowsze tematy</a>."
+      read_more: "Chcesz przeczytać więcej? <a href='%{categoryLink}'>Przeglądaj wszystkie kategorie</a> lub <a href='%{latestLink}'>przeglądaj najnowsze tematy</a>."
       unread_indicator: "Nikt jeszcze nie czytał ostatniego postu w tym temacie."
       suggest_create_topic: Gotowy na <a href>rozpoczęcie nowej rozmowy?</a>
       jump_reply_up: skocz do wcześniejszej odpowiedzi
@@ -4145,9 +4154,7 @@ pl_PL:
     safe_mode:
       enabled: "Tryb bezpieczny jest włączony, aby z niego wyjść zamknij to okno przeglądrki"
     image_removed: "(obraz usunięty)"
-    do_not_disturb:
-      title: "Nie przeszkadzać przez..."
-      label: "Nie przeszkadzać"
+    pause_notifications:
       remaining: "%{remaining} pozostało"
       options:
         half_hour: "30 minut"
@@ -4872,7 +4879,6 @@ pl_PL:
             error: "Ten motyw został automatycznie wyłączony, ponieważ nie jest kompatybilny z tą wersją Discourse."
             minimum: "Wymaga wersji %{version} Discourse'a lub wyższej."
             maximum: "Wymaga wersji %{version} Discourse'a lub niższej."
-          component_of: "Składnik:"
           update_to_latest: "Zaktualizuj do najnowszej wersji"
           check_for_updates: "Sprawdź dostępność aktualizacji"
           updating: "Trwa proces aktualizacji..."
@@ -5345,7 +5351,6 @@ pl_PL:
       user:
         suspend_failed: "Coś poszło nie tak podczas zawieszania użytkownika %{error}"
         unsuspend_failed: "Coś poszło nie tak podczas odwieszania użytkownika %{error}"
-        suspend_duration: "Jak długo użytkownik ma być zawieszony?"
         suspend_reason_label: "Dlaczego zawieszasz? Ten tekst <b>będzie widoczny dla wszystkich</b> na stronie profilu użytkownika i będzie wyświetlany użytkownikowi gdy ten będzie próbował się zalogować. Zachowaj zwięzłość."
         suspend_reason_hidden_label: "Dlaczego zawieszasz użytkownika? Ten krótki tekst zostanie wyświetlony, gdy zawieszony użytkownik spróbuje się zalogować. "
         suspend_reason: "Powód"
@@ -5379,7 +5384,6 @@ pl_PL:
         penalty_post_edit: "Edytuj wpis"
         penalty_post_none: "Nic nie rób"
         penalty_count: "Liczba Przewinień"
-        penalty_history: "Historia kar"
         clear_penalty_history:
           title: "Wyczyść Historię Przewinień"
           description: "użytkownicy z karami nie mogą otrzymać TL3"
@@ -5864,10 +5868,8 @@ pl_PL:
       finish: "Zakończ konfigurację"
       back: "Poprzednia"
       next: "Następna"
-      configure_more: "Skonfiguruj więcej..."
       step-text: "Krok"
       step: "%{current} z %{total}"
-      upload: "Prześlij"
       uploading: "Przesyłanie…"
       upload_error: "Przepraszamy, wystąpił błąd podczas wysyłania tego pliku. Proszę spróbuj ponownie."
       staff_count:

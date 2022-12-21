@@ -724,6 +724,7 @@ he:
       many: "%{count} לייקים"
       other: "%{count} לייקים"
     cannot_permanently_delete:
+      many_posts: "בנושא יש פוסטים שלא נמחקו. נא למחוק אותם לצמיתות בטרם מחיקת נושא לצמיתות."
       wait_or_different_admin: "עליך להמתין %{time_left} בטרם מחיקת הפוסט הזה לצמיתות או שעל מנהל או מנהלת אחרים לעשות זאת."
   rate_limiter:
     slow_down: "ביצעת את הפעולה הזאת יותר מדי פעמים, נא לנסות שוב מאוחר יותר."
@@ -967,6 +968,7 @@ he:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "לא ראוי"
+      description: 'פוסט זה מכיל תוכן שלדעת אדם מן השורה נחשב לפוגעני, נצלני, שטוף שנאה או הפרה של <a href="%{base_path}/guidelines">הנחיות הקהילה שלנו</a>.'
       short_description: 'הפרה של <a href="%{base_path}/guidelines">הנחיות הקהילה שלנו</a>'
     notify_user:
       title: "שליחת הודעה ל־‎@%{username}"
@@ -1032,6 +1034,7 @@ he:
       short_description: "זו פרסומת"
     inappropriate:
       title: "לא ראוי"
+      description: 'נושא זה מכיל תוכן שלדעת אדם מן השורה נחשב לפוגעני, נצלני, שטוף שנאה או הפרה של <a href="%{base_path}/guidelines">הנחיות הקהילה שלנו</a>.'
       long_form: "דוגלל כלא ראוי"
       short_description: 'הפרה של <a href="%{base_path}/guidelines">הנחיות הקהילה שלנו</a>'
     notify_moderators:
@@ -1688,7 +1691,6 @@ he:
     email_token_valid_hours: "סיסמאות שכחת סיסמה / הפעלת חשבון תקפים במשך (n) שעות."
     enable_badges: "הפעלת מערכת העיטורים"
     max_favorite_badges: "מספר העיטורים המרבי שמשתמש יכול לבחור"
-    enable_whispers: "אפשרו לצוות לקיים תקשורת פרטית בתוך נושאים."
     whispers_allowed_groups: "לאפשר תקשורת פרטית בתוך נושאים לחברים מקבוצות מסוימות."
     allow_index_in_robots_txt: "יש לציין ב־robots.txt שמותר לאתר הזה להצטרף למאגר של מנועי החיפוש. במקרים יוצאי דופן, ניתן <a href='%{base_path}/admin/customize/robots'>לדרוס את robots.txt</a> באופן קבוע."
     blocked_email_domains: "רשימה מופרדת בקווים אנכיים (|) של שמות תחום דוא״ל שאסור להירשם דרכם. למשל: mailinator.com|trashmail.net"
@@ -1758,6 +1760,7 @@ he:
     discord_trusted_guilds: 'לאפשר רק למשתמש מגילדות ה־Discord האלה להיכנס באמצעות Discord. עליך להשתמש במזהה המספרי של הגילדה. למידע נוסף, יש לעיין בהנחיות ש<a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">כאן</a>. שדה ריק משמעו כל גילדה שהיא.'
     enable_backups: "לאפשר למנהלים ליצור גיבויים של הפורום"
     allow_restore: "לאפשר שחזור, מה שיכול להחליף את כל (!) המידע באתר! יש להשבית אלא אם כן בכוונתך לשחזר גיבוי"
+    maximum_backups: "המספר המקסימלי של גיבויים לשמירה. גיבויים ישנים יותר ימחקו אוטומטית"
     automatic_backups_enabled: "הרץ גיבויים אוטומטים כמו שמוגדר בתדירות הגיבויים"
     backup_frequency: "מספר הימים בין גיבויים."
     s3_backup_bucket: "הדלי המרוחק שבו לשמור גיבויים. אזהרה: שימו לב שהוא דלי פרטי."
@@ -2098,7 +2101,6 @@ he:
     display_name_on_posts: "הצגת שמם המלא של משתמשים בפוסטים שלהם, בנוסף ל@שם_המשתמש שלהם."
     show_time_gap_days: "אם שני פוסטים נוצרים בהפרש כזה של ימים זה מזה, להציג את הפרש הזמן בנושא."
     short_progress_text_threshold: "לאחר שמספר הפוסטים בנושא עוברים את המספר הזה, מד ההתקדמות יציג רק את המספר של הפוסט הנוכחי. אם תשנו את רוחב מד ההתקדמות, ייתכן שתצטרכו לשנות ערך זה."
-    default_code_lang: "שפת התכנות כברירת המחדל להדגשת תחביר שחלה על מקטעי קוד (auto,‏ nohighlight,‏ ruby,‏ python וכו׳). ערך זה חייב להיות גם בהגדרת האתר `highlighted languages` (שפות מודגשות)."
     warn_reviving_old_topic_age: "כשמשתמש מתחיל להגיב לנושא בו התגובה האחרונה נכתבה לפני למעלה מכמות זו של ימים, תופיע אזהרה. 0 להשבתה."
     autohighlight_all_code: "לחייב שימוש בקוד הדגשה לכל קוד מעוצב מראש (preformatted code blocks) אפילו אם הם אינם מציינים את השפה."
     highlighted_languages: "כללי הדגשת תחביר להכללה. (אזהרה: הכללה של שפות רבות מדי פוגעת בביצועים) להדגמה: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>"
@@ -2215,6 +2217,7 @@ he:
     shared_drafts_min_trust_level: "לאפשר למשתמשים לראות ולערוך טיוטות משותפות."
     push_notifications_prompt: "הצגת בקשה להסכמת המשתמש."
     push_notifications_icon: "סמל העיטור שמופיע בפינת ההתרעה. מומלץ PNG בצבעים אחידים עם שקיפות בגודל 96 × 96."
+    enable_desktop_push_notifications: "הפעלת התראות בדחיפה לשולחן העבודה"
     base_font: "גופן בסיס לשימוש רוב הטקסט באתר. ערכות עיצוב יכולות לדרוס אותו באמצעות מאפיין ה־CSS‏ ‎`--font-family`‎."
     heading_font: "גופן לשימוש כותרות באתר. ערכות עיצוב יכולות לדרוס אותו באמצעות המאפיין ‎`--heading-font-family`‎"
     enable_sitemap: "ליצור מפת אתר עבור האתר שלך ולכלול אותה בקובץ robots.txt."
@@ -2241,6 +2244,7 @@ he:
     default_sidebar_tags: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של סרגל הצד כברירת מחדל."
     enable_new_user_profile_nav_groups: "ניסיוני: משתמשים בקבוצות שנבחרו יופיעו בתפריט הניווט החדש של פרופיל המשתמש"
     enable_experimental_topic_timeline_groups: "ניסיוני: בפני המשתמשים בקבוצות שנבחרו יופיע ציר הזמן המחודש של הנושא"
+    enable_experimental_hashtag_autocomplete: "ניסיוני: ניתן להשתמש במערכת אוטומטית להשלמת #תגיות עבור קטגוריות ותגיות שמעבדת את הפריט הנבחר באופן שונה והחיפוש בה משופר"
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
       invalid_email: "כתובת דוא״ל שגויה."
@@ -4460,31 +4464,26 @@ he:
           site_description:
             label: "תיאור הקהילה שלך במשפט קצר"
             placeholder: "מקום לג׳יין וחבריה לשוחח על דברים מגניבים"
-          contact_email:
-            label: "נקודת קשר"
-            placeholder: "example@user.com"
-            description: "יחיד או קבוצה שאחראים על הקהילה הזאת. משמש לעדכונים משמעותיים ומופיע תחת <a href='%{base_path}/about' target='_blank'>עמוד ‚על אודות’</a> שלך כקשר למקרי חירום."
           default_locale:
             label: "שפה"
       privacy:
-        title: "חוויית החברים"
         fields:
           login_required:
             placeholder: "פרטי"
             extra_description: "רק משתמשים שנכנסו למערכת יכולים לגשת לקהילה הזו"
           invite_only:
-            placeholder: "הזמנה בלבד"
             extra_description: "משתמשים חייבים לקבל הזמנה ממשתמשים מהימנים או מהסגל, אחרת משתמשים יוכלו להירשם בעצמם"
           must_approve_users:
-            placeholder: "דרישת אישור"
             extra_description: "המשתמשים חייבים לעבור את אישור הסגל"
           chat_enabled:
             placeholder: "הפעלת צ׳אט"
+            extra_description: "יצירת חיבור מיידי לחבריך בזמן אמת"
+          enable_sidebar:
+            placeholder: "הפעלת סרגל צד"
+            extra_description: "גישה למרחבים המועדפים עליך בקלות"
       ready:
-        title: "ה־Discourse שלך מוכן!"
         description: "זהו זה! סיימת את ההגדרות הראשוניות של הקהילה שלך. עכשיו אפשר לצלול פנימה ולחקור קצת את המערכת, לכתוב נושא לקבלת פנים ולשלוח הזמנות!<br><br>שיהיה בכיף!"
       styling:
-        title: "מראה ותחושה"
         fields:
           color_scheme:
             label: "ערכת צבעים"
@@ -4515,37 +4514,19 @@ he:
                 label: "תיבות קטגוריות עם נושאים"
               subcategories_with_featured_topics:
                 label: "תת־קטגוריות עם נושאים מובילים"
-      branding:
-        title: "לוגואים משלך"
-        fields:
-          logo:
-            label: "לוגו ראשי"
-            description: "הלוגו בפינה הימנית העליונה של האתר שלך. יש להשתמש בתמונה מלבנית רחבה בגובה של 120 ויחס תצוגה שעולה על 3:1."
-          logo_small:
-            label: "לוגו ריבועי"
-            description: "גרסה ריבועית של הלוגו שלך. מופיע בפינה הימנית העליונה בעת גלילה כלפי מטה ובעת שיתוף ברשתות חברתיות. מומלץ שיהיה גדול מ־512×512."
       corporate:
-        title: "הארגון שלך"
         fields:
-          company_name:
-            label: "שם החברה"
-            placeholder: "ארגון לדוגמה"
-            description: "נוסף לעמוד תנאי השירות שלך. אפשר לדלג אם לא קיימת חברה."
           governing_law:
-            label: "החוק המחייב"
             placeholder: "החוקים של קליפורניה"
-            description: "נוסף לעמוד תנאי השירות שלך. אפשר לדלג אם לא קיימת חברה."
           contact_url:
-            label: "דף ווב"
             placeholder: "https://www.example.com/contact-us"
-            description: "דף יצירת קשר כללי איתכם או עם הארגון שלכם. יוצג ב<a href='%{base_path}/about' target='_blank'>דף האודות שלכם</a>."
           city_for_disputes:
-            label: "עיר המחלוקת"
             placeholder: "סן פרנסיסקו, קליפורניה"
-            description: "נוסף לעמוד תנאי השירות שלך. אפשר לדלג אם לא קיימת חברה."
           site_contact:
-            label: "הודעות אוטומטיות"
             description: "כל ההודעות האישיות האוטומטיות שנשלחות על ידי Discourse נשלחות מהמשתמש הזה, כגון אזהרות על סימוני דגלים והתראות על השלמת גיבוי."
+          contact_email:
+            label: "נקודת קשר"
+            placeholder: "example@user.com"
       invites:
         title: "הזמנת סגל"
         description: "כמעט סיימת! אולי נזמין כמה אנשים כדי <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>לעורר דיונים</a> עם נושאים מעניינים ותגובות שיניעו קדימה את הקהילה שלך."

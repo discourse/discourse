@@ -108,6 +108,11 @@ pl_PL:
           many: "Zaproszenia wysłane"
           other: "Zaproszenia wysłane"
         invite: "Zaproś do kanału"
+        without_membership:
+          one: "%{username} nie dołączył do tego kanału."
+          few: "%{username} i %{others} nie dołączyli do tego kanału."
+          many: "%{username} i %{others} nie dołączyli do tego kanału."
+          other: "%{username} i %{others} nie dołączyli do tego kanału."
         warning_multiple:
           one: "%{count} inny"
           few: "%{count} inni"
@@ -121,6 +126,11 @@ pl_PL:
             other: "%{count} użytkownicy"
           notification_limit: "limit powiadomień"
         too_many_mentions: "Ta wiadomość przekracza %{notification_limit} z %{limit}"
+        mentions_limit:
+          one: "%{count} wzmianka"
+          few: "%{count} wzmianki"
+          many: "%{count} wzmianek"
+          other: "%{count} wzmianek"
       aria_roles:
         header: "Nagłówek czatu"
         channels_list: "Lista kanałów czatu"
@@ -171,6 +181,7 @@ pl_PL:
         read_only: "Tylko do odczytu"
         archived_header: "Kanał został zarchiwizowany"
         archived: "Zarchiwizowany"
+        archive_failed: "Archiwizacja kanału nie powiodła się. %{completed}/%{total} wiadomości zostało zarchiwizowanych w <a target=\"_blank\" href=\"%{topic_url}\">temacie docelowym</a>. Naciśnij przycisk ponów, aby spróbować zakończyć archiwizację."
         closed_header: "Kanał jest zamknięty"
         closed: "Zamknięta"
         open_header: "Kanał jest otwarty"
@@ -203,9 +214,11 @@ pl_PL:
       channel_edit_title_modal:
         title: Edytuj tytuł
         input_placeholder: Dodaj tytuł
+        description: Nadaj swojemu kanałowi krótki opisowy tytuł
       channel_edit_description_modal:
         title: Edytuj opis
         input_placeholder: Dodaj opis
+        description: Powiedz innym, o czym jest ten kanał
       direct_message_creator:
         title: Nowa wiadomość
         prefix: "Do:"
@@ -254,6 +267,8 @@ pl_PL:
         mention: "Tylko dla wzmianek"
         always: "Dla całej aktywności"
       settings:
+        channel_wide_mentions_description: "Zezwalaj użytkownikom na powiadamianie wszystkich członków #%{channel} za pomocą @all lub tylko tych, którzy są aktywni w danym momencie za pomocą @here"
+        auto_join_users_label: "Automatycznie dodawaj użytkowników"
         enable_auto_join_users: "Automatycznie dodawaj wszystkich ostatnio aktywnych użytkowników"
         desktop_notification_level: "Powiadomienia na pulpicie"
         follow: "Dołącz"
@@ -272,6 +287,7 @@ pl_PL:
         title: "Czat osobisty"
         new: "Nowy osobisty czat"
         leave: "Opuść ten osobisty czat"
+        cannot_create: "Przepraszamy, nie możesz wysyłać bezpośrednich wiadomości."
       incoming_webhooks:
         back: "Poprzednia"
         channel_placeholder: "Wybierz kanał"
@@ -294,6 +310,7 @@ pl_PL:
         system: "system"
         title: "Przychodzące webhooki"
         url: "URL"
+        url_instructions: "Ten adres URL zawiera tajną wartość — zachowaj go w bezpiecznym miejscu."
         username: "Nazwa użytkownika"
         username_instructions: "Nazwa użytkownika bota, który publikuje na kanale. Domyślnie \"system\" gdy pozostanie puste."
       selection:
@@ -341,6 +358,9 @@ pl_PL:
           direct: 'wspomniał o Tobie w "%{channel}"'
         chat_message: "Nowa wiadomość na czacie"
         chat_quoted: "%{username} zacytował Twoją wiadomość na czacie"
+    action_codes:
+      chat:
+        disabled: "%{who} zamknął czat %{when}"
     discourse_automation:
       scriptables:
         send_chat_message:
@@ -362,6 +382,9 @@ pl_PL:
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Przełącz kanał"
           open_quick_channel_selector: "%{shortcut} Otwórz szybki selektor kanałów"
+    topic_statuses:
+      chat:
+        help: "Czat jest włączony dla tego tematu"
     user_menu:
       tabs:
         chat_notifications: "Powiadomienia czatu"

@@ -41,6 +41,14 @@ RSpec.describe TagHashtagDataSource do
       SiteSetting.tagging_enabled = false
       expect(described_class.search(guardian, "fact", 5)).to be_empty
     end
+
+    it "returns tags that are children of a TagGroup" do
+      parent_tag = Fabricate(:tag, name: "sidebar")
+      child_tag = Fabricate(:tag, name: "sidebar-v1")
+      tag_group = Fabricate(:tag_group, parent_tag: parent_tag, name: "Sidebar TG")
+      TagGroupMembership.create!(tag: child_tag, tag_group: tag_group)
+      expect(described_class.search(guardian, "sidebar-v", 5).map(&:slug)).to eq(%w[sidebar-v1])
+    end
   end
 
   describe "#search_without_term" do

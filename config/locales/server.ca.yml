@@ -1279,7 +1279,6 @@ ca:
     enable_rich_text_paste: "Habilita la conversió automàtica d'HTML a Markdown quan s'enganxa text en el tauler de redacció (experimental)"
     email_token_valid_hours: "Els testimonis (tokens) de contrasenya oblidada i activació de compte són vàlids durant (n) hores."
     enable_badges: "Activa el sistema d'insígnies."
-    enable_whispers: "Permet la comunicació privada de l'equip responsable dins dels temes."
     allow_index_in_robots_txt: "Especifiqueu en robots.txt que els motors de cerca web poden indexar aquest lloc. En casos excepcionals, podeu <a href='%{base_path}/admin/customize/robots'>substituir robots.txt</a> de manera permanent."
     blocked_email_domains: "Llista de dominis de correu delimitada amb barres verticals amb els quals  els usuaris no poden registrar comptes. Exemple: mailinator.com|trashmail.net"
     allowed_email_domains: "Llista de dominis de correu delimitada amb barres verticals amb els quals els usuaris HAN DE registrar els comptes. ATENCIÓ: Els usuaris amb dominis de correu diferents dels llistats no són autoritzats!"
@@ -2946,10 +2945,6 @@ ca:
           login_required:
             placeholder: "Privat"
             extra_description: "Sols els usuaris que han iniciat la sessió poden accedir a aquesta comunitat"
-          must_approve_users:
-            placeholder: "Requereix aprovació"
-      ready:
-        title: "El vostre Discourse està a punt!"
       styling:
         fields:
           styling_preview:
@@ -2966,29 +2961,15 @@ ca:
                 label: "Categories i temes més recents"
               categories_and_top_topics:
                 label: "Categories i temes principals"
-      branding:
-        fields:
-          logo:
-            label: "Logo principal"
-          logo_small:
-            label: "Logotip quadrat"
       corporate:
         fields:
-          company_name:
-            label: "Nom de l'empresa"
-            placeholder: "Organització d'exemple"
           governing_law:
-            label: "Llei que regeix"
             placeholder: "Jurisdicció de Califòrnia"
           contact_url:
-            label: "Pàgina web"
             placeholder: "https://www.example.com/contact-us"
-            description: "Pàgina web general de contacte per a vós o la vostra organització. Es mostrarà en <a href='%{base_path}/about' target='_blank'>la vostra pàgina 'quant a'</a>."
           city_for_disputes:
-            label: "Ciutat per a les disputes"
             placeholder: "San Francisco, Califòrnia"
           site_contact:
-            label: "Missatges automàtics"
             description: "Tots els missatges personals automatitzats de Discourse s'enviaran des d'aquest usuari, com ara avisos de bandera i avisos de finalització de còpies de seguretat."
       invites:
         title: "Convida l'equip responsable"
