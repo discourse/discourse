@@ -125,7 +125,7 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
             expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "1")
             expect(page).to have_css(".sidebar-row.channel-#{dm_channel_1.id} .icon.urgent")
 
-            create_message(channel: dm_channel_1, creator: user_1)
+            using_session(:user_1) { create_message(channel: dm_channel_1, creator: user_1) }
 
             expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "2")
           end

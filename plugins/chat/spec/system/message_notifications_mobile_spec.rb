@@ -134,7 +134,7 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
               ".chat-channel-row[data-chat-channel-id=\"#{dm_channel_1.id}\"] .chat-channel-unread-indicator",
             )
 
-            create_message(channel: dm_channel_1, creator: user_1)
+            using_session(:user_1) {  create_message(channel: dm_channel_1, creator: user_1) }
 
             expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "2")
           end
