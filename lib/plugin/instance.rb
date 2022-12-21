@@ -295,8 +295,8 @@ class Plugin::Instance
       hidden_method_name = :"#{attr}_without_enable_check"
       klass.public_send(:define_singleton_method, hidden_method_name, &block)
 
-      klass.public_send(:define_singleton_method, attr) do |*args|
-        public_send(hidden_method_name, *args) if plugin.enabled?
+      klass.public_send(:define_singleton_method, attr) do |*args, **kwargs|
+        public_send(hidden_method_name, *args, **kwargs) if plugin.enabled?
       end
     end
   end
