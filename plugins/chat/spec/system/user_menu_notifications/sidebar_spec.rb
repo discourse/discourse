@@ -175,11 +175,13 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
         find(".invite-link").click
       end
 
-      sign_in(other_user)
-      find(".header-dropdown-toggle.current-user").click
+      usin_session(:user_1) do
+        sign_in(other_user)
+        find(".header-dropdown-toggle.current-user").click
 
-      expect(find("#user-menu-button-chat-notifications")).to have_content(1)
-      expect(find("#quick-access-all-notifications")).to have_css(".chat-invitation.unread")
+        expect(find("#user-menu-button-chat-notifications")).to have_content(1)
+        expect(find("#quick-access-all-notifications")).to have_css(".chat-invitation.unread")
+      end
     end
   end
 end
