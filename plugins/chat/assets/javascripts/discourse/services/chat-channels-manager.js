@@ -86,10 +86,12 @@ export default class ChatChannelsManager extends Service {
   }
 
   get publicMessageChannels() {
-    return this.channels.filter(
-      (channel) =>
-        channel.isCategoryChannel && channel.currentUserMembership.following
-    );
+    return this.channels
+      .filter(
+        (channel) =>
+          channel.isCategoryChannel && channel.currentUserMembership.following
+      )
+      .sort((a, b) => a.title.localeCompare(b.title));
   }
 
   get directMessageChannels() {
