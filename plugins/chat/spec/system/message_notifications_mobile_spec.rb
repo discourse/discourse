@@ -33,7 +33,7 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
 
         context "when not member of the channel" do
           context "when a message is created" do
-            it "doesn't show anything" do
+            xit "doesn't show anything" do
               visit("/chat")
               create_message(channel: channel_1, creator: user_1)
 
@@ -59,7 +59,7 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
               )
             end
 
-            it "doesn’t show indicator in header" do
+            xit "doesn’t show indicator in header" do
               visit("/chat")
               create_message(channel: channel_1, creator: user_1)
 
@@ -72,7 +72,7 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
             before { channel_1.membership_for(current_user).update!(muted: true) }
 
             context "when a message is created" do
-              it "doesn't show anything" do
+              xit "doesn't show anything" do
                 visit("/chat")
                 create_message(channel: channel_1, creator: user_1)
 
@@ -85,7 +85,7 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
           end
 
           context "when a message is created" do
-            it "correctly renders notifications" do
+            xit "correctly renders notifications" do
               visit("/chat")
               create_message(channel: channel_1, creator: user_1)
 
@@ -98,7 +98,7 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
           end
 
           context "when a message with mentions is created" do
-            it "correctly renders notifications" do
+            xit "correctly renders notifications" do
               visit("/chat")
               create_message(
                 channel: channel_1,
@@ -125,7 +125,7 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
         fab!(:dm_channel_2) { Fabricate(:direct_message_channel, users: [current_user, user_2]) }
 
         context "when a message is created" do
-          it "correctly renders notifications" do
+          xit "correctly renders notifications" do
             visit("/chat")
             create_message(channel: dm_channel_1, creator: user_1)
 
@@ -139,7 +139,7 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
             expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "2")
           end
 
-          it "reorders channels" do
+          xit "reorders channels" do
             visit("/chat")
 
             expect(page).to have_css(
@@ -172,7 +172,7 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
         end
 
         context "when messages are created" do
-          it "correctly renders notifications" do
+          xit "correctly renders notifications" do
             visit("/chat")
             create_message(channel: channel_1, creator: user_1)
 

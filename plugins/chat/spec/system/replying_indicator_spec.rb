@@ -16,7 +16,7 @@ RSpec.describe "Replying indicator", type: :system, js: true do
 
   context "when on a channel" do
     context "when another user is replying" do
-      it "shows the replying indicator" do
+      xit "shows the replying indicator" do
         using_session(other_user.username) do
           sign_in(other_user)
           chat.visit_channel(channel_1)
