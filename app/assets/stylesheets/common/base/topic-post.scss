@@ -1248,6 +1248,12 @@ a.mention-group {
   @include mention;
 }
 
+.mention .emoji {
+  margin-left: 0.3em;
+  width: 15px;
+  height: 15px;
+}
+
 span.mention {
   // unlinked, invalid mention
   color: var(--primary-high);
