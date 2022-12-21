@@ -99,6 +99,46 @@ RSpec.describe ListController do
       expect(first_item.css('[itemprop="position"]')[0]['content']).to eq('1')
       expect(first_item.css('[itemprop="url"]')[0]['href']).to eq(topic.url)
     end
+
+    it 'does not N+1 queries when topic featured users have different primary groups' do
+      user.update!(primary_group: group)
+
+      # warm up
+      get "/latest.json"
+      expect(response.status).to eq(200)
+
+      initial_sql_queries_count = track_sql_queries do
+        get "/latest.json"
+
+        expect(response.status).to eq(200)
+
+        body = response.parsed_body
+
+        expect(body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(topic.id)
+        expect(body["topic_list"]["topics"][0]["posters"].map { |p| p["user_id"] }).to contain_exactly(user.id)
+      end.count
+
+      group2 = Fabricate(:group)
+      user2 = Fabricate(:user, primary_group: group2)
+      topic.update!(last_post_user_id: user2.id)
+
+      group3 = Fabricate(:group)
+      user3 = Fabricate(:user, flair_group: group3)
+      topic.update!(featured_user3_id: user3.id)
+
+      new_sql_queries_count = track_sql_queries do
+        get "/latest.json"
+
+        expect(response.status).to eq(200)
+
+        body = response.parsed_body
+
+        expect(body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(topic.id)
+        expect(body["topic_list"]["topics"][0]["posters"].map { |p| p["user_id"] }).to contain_exactly(user.id, user2.id, user3.id)
+      end.count
+
+      expect(new_sql_queries_count).to be <= initial_sql_queries_count
+    end
   end
 
   describe "categories and X" do
