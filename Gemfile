@@ -169,7 +169,6 @@ group :test, :development do
   gem 'rswag-specs'
 
   gem 'annotate'
-  gem 'webrick', require: false
 end
 
 group :development do
@@ -271,3 +270,5 @@ gem 'faraday-retry'
 # workaround for faraday-net_http, see
 # https://github.com/ruby/net-imap/issues/16#issuecomment-803086765
 gem 'net-http'
+
+gem 'webrick', require: false
