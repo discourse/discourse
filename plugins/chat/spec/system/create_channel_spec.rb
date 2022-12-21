@@ -67,7 +67,7 @@ RSpec.describe "Create channel", type: :system, js: true do
         find(".category-chooser").click
         find(".category-row[data-value=\"#{private_category_1.id}\"]").click
 
-        expect(find(".create-channel-hint")["innerHTML"]).to include(
+        expect(find(".create-channel-hint")["innerHTML"].strip).to include(
           "&lt;script&gt;e&lt;/script&gt;",
         )
       end
