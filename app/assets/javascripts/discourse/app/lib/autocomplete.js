@@ -94,6 +94,7 @@ export default function (options) {
   let completeEnd = null;
   let me = this;
   let div = null;
+  let fadeoutDiv = null;
   let prevTerm = null;
 
   // By default, when the autocomplete popup is rendered it has the
@@ -118,28 +119,28 @@ export default function (options) {
   }
 
   function scrollAutocomplete() {
-    if (!div) {
+    if (!fadeoutDiv) {
       return;
     }
 
-    const divElement = div[0];
+    const fadeoutDivElement = fadeoutDiv[0];
     const selectedElement = getSelectedOptionElement();
     const selectedElementTop = selectedElement.offsetTop;
     const selectedElementBottom =
       selectedElementTop + selectedElement.clientHeight;
 
-    // the top of the item is above the top of the div, so scroll UP
-    if (selectedElementTop <= divElement.scrollTop) {
-      divElement.scrollTo(0, selectedElementTop);
+    // the top of the item is above the top of the fadeoutDiv, so scroll UP
+    if (selectedElementTop <= fadeoutDivElement.scrollTop) {
+      fadeoutDivElement.scrollTo(0, selectedElementTop);
 
       // the bottom of the item is below the bottom of the div, so scroll DOWN
     } else if (
       selectedElementBottom >=
-      divElement.scrollTop + divElement.clientHeight
+      fadeoutDivElement.scrollTop + fadeoutDivElement.clientHeight
     ) {
-      divElement.scrollTo(
+      fadeoutDivElement.scrollTo(
         0,
-        divElement.scrollTop + selectedElement.clientHeight
+        fadeoutDivElement.scrollTop + selectedElement.clientHeight
       );
     }
   }
@@ -151,6 +152,7 @@ export default function (options) {
       div.hide().remove();
     }
     div = null;
+    fadeoutDiv = null;
     completeStart = null;
     autocompleteOptions = null;
     prevTerm = null;
@@ -448,6 +450,8 @@ export default function (options) {
       top: mePos.top + pos.top - vOffset + borderTop + "px",
       left: left + "px",
     });
+
+    fadeoutDiv = div.find(".hashtag-autocomplete__fadeout");
   }
 
   function dataSource(term, opts) {
