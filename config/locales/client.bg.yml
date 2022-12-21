@@ -126,37 +126,36 @@ bg:
       email: "Изпратете чрез имейл"
       url: "Копирайте и споделете линка"
     action_codes:
-      public_topic: "направи тази тема публична на %{when}"
-      private_topic: "направи тази тема персонално съобщение%{when}"
-      split_topic: "раздели тази тема %{when}"
-      invited_user: "покани %{who} %{when}"
-      invited_group: "покани %{who} на %{when}"
+      public_topic: "Направи тази тема публична на %{when}"
+      private_topic: "Направи тази тема персонално съобщение%{when}"
+      split_topic: "Раздели тази тема %{when}"
+      invited_user: "Покани %{who} на %{when}"
+      invited_group: "Покани %{who} на %{when}"
       user_left: "%{who}напусна чата %{when}"
-      removed_user: "изтри %{who} %{when}"
-      removed_group: "изтри %{who} на %{when}"
-      autobumped: "автоматично вдигната %{when}"
+      removed_user: "Изтри %{who} на %{when}"
+      removed_group: "Изтри %{who} на %{when}"
+      autobumped: "Автоматично вдигната %{when}"
       autoclosed:
-        enabled: "затворена %{when}"
-        disabled: "отворена %{when}"
+        enabled: "Затворена %{when}"
+        disabled: "Отворена %{when}"
       closed:
-        enabled: "затворена %{when}"
-        disabled: "отворена %{when}"
+        enabled: "Затворена %{when}"
+        disabled: "Отворена %{when}"
       archived:
-        enabled: "архивирана %{when}"
-        disabled: "разархивирана %{when}"
+        enabled: "Архивирана %{when}"
+        disabled: "Разархивирана %{when}"
       pinned:
-        enabled: "закована %{when}"
-        disabled: "откована %{when}"
+        enabled: "Закована %{when}"
+        disabled: "Откована %{when}"
       pinned_globally:
-        enabled: "закована глобално %{when}"
-        disabled: "откована %{when}"
+        enabled: "Закована глобално %{when}"
+        disabled: "Откована %{when}"
       visible:
-        enabled: "добавена в списъка %{when}"
-        disabled: "премахната от списъка %{when}"
+        enabled: "Добавена в списъка %{when}"
+        disabled: "Премахната от списъка %{when}"
       banner:
-        enabled: "направи темата банер на %{when}. Тя ще се появява най-отгоре на всяка страница докато не бъде премахната от потребителя. "
+        enabled: "Направи темата банер на %{when}. Тя ще се появява най-отгоре на всяка страница докато не бъде премахната от потребителя. "
         disabled: "Тази тема вече не е банер %{when} . Тя няма да се показва най-отгоре на всяка страница."
-      forwarded: "препрати горния имейл"
     topic_admin_menu: "действия по темата"
     skip_to_main_content: "Прескачане към основното съдържание"
     emails_are_disabled: "Всички изходящи имейли са изцяло забранени от администратора. Няма да бъдат изпращани никакви имейл известия."
@@ -343,8 +342,6 @@ bg:
     disable: "Деактивиране"
     continue: "Напред"
     undo: "Отмени"
-    revert: "Върни"
-    failed: "Провалени"
     switch_to_anon: "Влез в Анонимен режим. "
     switch_from_anon: "Излез от Анонимен режим."
     banner:
@@ -946,7 +943,6 @@ bg:
       notification_schedule:
         title: "График за уведомяване"
         label: "Активирайте персонализиран график за известия"
-        tip: "Извън тези часове автоматично ще бъдете въведени в режим „Не безпокойте“."
         midnight: "Полунощ"
         none: "Без"
         monday: "Понеделник"
@@ -1647,6 +1643,7 @@ bg:
       title: "Вход"
       username: "Потребител"
       password: "Парола"
+      show_password: "Покажи"
       second_factor_title: "Двуфакторна автентификация"
       second_factor_description: "Моля, въведете кода за удостоверяване от вашето приложение:"
       second_factor_backup: "Влезте с помощта на резервен код"
@@ -1934,6 +1931,7 @@ bg:
         invited_to_private_message: "поканени на лично съобщение"
         invitee_accepted: "поканата е приета"
         posted: "нова публикация"
+        watching_category_or_tag: "нова публикация"
         moved_post: "постът е преместен"
         linked: "свързани"
         bookmark_reminder: "напомняне за отметка"
@@ -2965,8 +2963,11 @@ bg:
       back: "Назад"
       share: "Споделяне"
       dismiss: "Отмени"
-    do_not_disturb:
+    pause_notifications:
       options:
+        half_hour: "30 минути"
+        one_hour: "1 час"
+        two_hours: "2 часа"
         custom: "По избор"
     trust_levels:
       names:
@@ -3520,7 +3521,6 @@ bg:
       user:
         suspend_failed: "Нещо се обърка при отстраняването на този потребител %{error}"
         unsuspend_failed: "Нещо се обърка при отстраняването на този потребител %{error} "
-        suspend_duration: "За колко време потребителят ще бъде отстранен?"
         suspend_reason_label: "Защо отстранявате? Този текст <b>ще бъде видим за всички</b> на профилната страница на потребителя и ще се показва на потребителя, когато направи опит да се логне. Бъдете кратки."
         suspend_reason: "Причина"
         suspended_by: "Отстранен от"
@@ -3848,7 +3848,6 @@ bg:
       back: "Назад"
       next: "Напред"
       step-text: "Стъпка"
-      upload: "Качване"
       uploading: "Качва се..."
       upload_error: "Съжаляваме, възникна грешка при качването на този файл. Моля, опитайте отново."
       invites:

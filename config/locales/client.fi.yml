@@ -145,38 +145,37 @@ fi:
       email: "Lähetä sähköpostitse"
       url: "Kopioi ja jaa URL"
     action_codes:
-      public_topic: "muutettu ketju julkiseksi %{when}"
-      open_topic: "muunsi tämän ketjuksi %{when}"
-      private_topic: "muutettu yksityseksi keskusteluksi %{when}"
-      split_topic: "ketju jaettu %{when}"
-      invited_user: "kutsui käyttäjän %{who} %{when}"
-      invited_group: "kutsuttu käyttäjä %{who} %{when}"
+      public_topic: "Muutettu ketju julkiseksi %{when}"
+      open_topic: "Muunsi tämän ketjuksi %{when}"
+      private_topic: "Muutettu yksityseksi keskusteluksi %{when}"
+      split_topic: "Ketju jaettu %{when}"
+      invited_user: "Kutsui käyttäjän %{who} %{when}"
+      invited_group: "Kutsui käyttäjän %{who} %{when}"
       user_left: "%{who} poisti itsensä tästä viestistä %{when}"
-      removed_user: "poistettu käyttäjä %{who} %{when}"
-      removed_group: "poistettu käyttäjä %{who} %{when}"
-      autobumped: "nostettu automaattisesti %{when}"
+      removed_user: "Poistettu käyttäjä %{who} %{when}"
+      removed_group: "Poistettu käyttäjä %{who} %{when}"
+      autobumped: "Nostettu automaattisesti %{when}"
       autoclosed:
-        enabled: "suljettu %{when}"
-        disabled: "avattu %{when}"
+        enabled: "Suljettu %{when}"
+        disabled: "Avattu %{when}"
       closed:
-        enabled: "suljettu %{when}"
-        disabled: "avattu %{when}"
+        enabled: "Suljettu %{when}"
+        disabled: "Avattu %{when}"
       archived:
-        enabled: "arkistoitu %{when}"
-        disabled: "palautettu arkistosta %{when}"
+        enabled: "Arkistoitu %{when}"
+        disabled: "Palautettu arkistosta %{when}"
       pinned:
-        enabled: "kiinnitetty %{when}"
-        disabled: "kiinnitys poistettu %{when}"
+        enabled: "Kiinnitetty %{when}"
+        disabled: "Kiinnitys poistettu %{when}"
       pinned_globally:
-        enabled: "kiinnitetty sivuston laajuisesti %{when}"
-        disabled: "kiinnitys poistettu %{when}"
+        enabled: "Kiinnitetty sivuston laajuisesti %{when}"
+        disabled: "Kiinnitys poistettu %{when}"
       visible:
-        enabled: "lisätty näkyville %{when}"
-        disabled: "poistettu näkyvistä %{when}"
+        enabled: "Lisätty näkyville %{when}"
+        disabled: "Poistettu näkyvistä %{when}"
       banner:
-        enabled: "asetettu banneriksi %{when}. Se näytetään jokaisen sivun ylälaidassa, kunnes käyttäjä kuittaa sen nähdyksi."
-        disabled: "poistettu banneri näkyvistä %{when}. Sitä ei enää näytetä jokaisen sivun ylälaidassa."
-      forwarded: "välitetty yllä oleva sähköposti"
+        enabled: "Asetettu banneriksi %{when}. Se näytetään jokaisen sivun ylälaidassa, kunnes käyttäjä kuittaa sen nähdyksi."
+        disabled: "Poistettu banneri näkyvistä %{when}. Sitä ei enää näytetä jokaisen sivun ylälaidassa."
     topic_admin_menu: "ketjun toiminnot"
     skip_to_main_content: "Siirry pääsisältöön"
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
@@ -387,8 +386,6 @@ fi:
     disable: "Poista käytöstä"
     continue: "Jatka"
     undo: "Kumoa"
-    revert: "Palauta"
-    failed: "Epäonnistui"
     switch_to_anon: "Siirry anonyymitilaan"
     switch_from_anon: "Poistu anonyymitilasta"
     banner:
@@ -1011,7 +1008,6 @@ fi:
       notification_schedule:
         title: "Ilmoitusten aikataulu"
         label: "Aseta mukautettu ilmoitusten aikataulu"
-        tip: "Näiden aikojen ulkopuolella sinut asetetaan automaattisesti Älä häiritse -tilaan."
         midnight: "Keskiyö"
         none: "Ei mitään"
         monday: "Maanantai"
@@ -1217,6 +1213,7 @@ fi:
         profile: "Profiili"
         emails: "Sähköpostit"
         notifications: "Ilmoitukset"
+        tracking: "Seuranta"
         categories: "Alueet"
         users: "Käyttäjät"
         tags: "Tunnisteet"
@@ -1274,6 +1271,7 @@ fi:
         use: "Käytä Authenticator-sovellusta"
         enforced_notice: "Kaksivaiheinen tunnistus täytyy ottaa käyttöön, jotta voit käyttää sivustoa."
         disable: "Poista käytöstä"
+        delete: "Poista"
         save: "Tallenna"
         edit: "Muokkaa"
         edit_title: "Muokkaa todentajaa"
@@ -1469,6 +1467,7 @@ fi:
       email_in_reply_to: "Sisällytä lyhennelmä vastattavasta viestistä sähköposteihin"
       other_settings: "Muut"
       categories_settings: "Alueet"
+      topics_settings: "Ketjut"
       new_topic_duration:
         label: "Tulkitse ketju uudeksi, jos"
         not_viewed: "en ole vielä katsonut sitä"
@@ -1823,6 +1822,7 @@ fi:
       title: "Kirjaudu"
       username: "Käyttäjä"
       password: "Salasana"
+      show_password: "Näytä"
       second_factor_title: "Kaksivaiheinen tunnistus"
       second_factor_description: "Syötä sovelluksen antama todennuskoodi:"
       second_factor_backup: "Kirjaudu käyttäen varakoodia"
@@ -2170,6 +2170,7 @@ fi:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2239,6 +2240,7 @@ fi:
         invited_to_private_message: "kutsuttiin yksityiskeskusteluun"
         invitee_accepted: "kutsu hyväksyttiin"
         posted: "uusi viesti"
+        watching_category_or_tag: "uusi viesti"
         moved_post: "viesti siirrettiin"
         linked: "linkitti"
         bookmark_reminder: "kirjanmerkkimuistutus"
@@ -3786,9 +3788,7 @@ fi:
     safe_mode:
       enabled: "Vikasietotila on käytössä, poistu vikasietotilasta sulkemalla selainikkuna"
     image_removed: "(kuva poistettu)"
-    do_not_disturb:
-      title: "Älä häiritse..."
-      label: "Älä häiritse"
+    pause_notifications:
       remaining: "%{remaining} jäljellä"
       options:
         half_hour: "30 minuuttiin"
@@ -4171,6 +4171,7 @@ fi:
         detailed_instruction: "POST-pyyntö lähetetään annettuun URL-osoitteeseen, kun valittu tapahtuma tapahtuu."
         new: "Uusi webhook"
         create: "Luo"
+        edit: "Muokkaa"
         save: "Tallenna"
         controls: "Hallinta"
         go_back: "Takaisin luetteloon"
@@ -4272,6 +4273,8 @@ fi:
         howto: "Kuinka asennan lisäosia?"
         official: "Virallinen lisäosa"
         broken_route: "Linkin määrittäminen kohteeseen %{name} ei onnistu. Varmista, että mainostenesto-ohjelmat on poistettu käytöstä, ja kokeile ladata sivu uudelleen."
+      navigation_menu:
+        sidebar: "Sivupalkki"
       backups:
         title: "Varmuuskopiot"
         menu:
@@ -4485,7 +4488,6 @@ fi:
             error: "Teema poistettiin automaattisesti käytöstä, koska se ei ole yhteensopiva tämän Discourse-version kanssa."
             minimum: "Vaatii Discourse-version %{version} tai uudemman."
             maximum: "Vaatii Discourse-version %{version} tai vanhemman."
-          component_of: "Teemojen komponentti:"
           update_to_latest: "Päivitä uusimpaan"
           check_for_updates: "Tarkista päivitykset"
           updating: "Päivitetään..."
@@ -4958,7 +4960,6 @@ fi:
       user:
         suspend_failed: "Jokin meni vikaan hyllytettäessä tätä käyttäjää: %{error}"
         unsuspend_failed: "Jokin meni vikaan peruttaessa tämän käyttäjän hyllytystä: %{error}"
-        suspend_duration: "Kuinka pitkäksi aikaa käyttäjä hyllytetään?"
         suspend_reason_label: "Miksi hyllytät käyttäjän? Tämä teksti <b>näkyy kaikille</b> käyttäjän profiilisivulla ja näytetään käyttäjälle, kun hän kirjautuu sisään. Pidä siis viesti lyhyenä."
         suspend_reason_hidden_label: "Miksi hyllytät käyttäjän? Tämä teksti näytetään käyttäjälle, kun hän yrittää kirjautua sisään. Pidä se lyhyenä."
         suspend_reason: "Syy"
@@ -4992,7 +4993,6 @@ fi:
         penalty_post_edit: "Muokkaa viestiä"
         penalty_post_none: "Älä tee mitään"
         penalty_count: "Rangaistusten määrä"
-        penalty_history: "Rangaistushistoria"
         clear_penalty_history:
           title: "Pyyhi rangaistushistoria"
           description: "käyttäjä, jota on rangaistu, ei voi nousta LT3:lle"
@@ -5147,6 +5147,11 @@ fi:
         silenced_count: "Hiljennetty"
         suspended_count: "Hyllytetyt"
         last_six_months: "Viimeiset 6 kuukautta"
+        other_matches_list:
+          username: "Käyttäjätunnus"
+          trust_level: "Luottamustaso"
+          read_time: "Lukuaika"
+          posts: "Viestit"
         tl3_requirements:
           title: "Luottamustason 3 vaatimukset"
           table_title:
@@ -5291,6 +5296,7 @@ fi:
           search: "Haku"
           groups: "Ryhmät"
           dashboard: "Hallintapaneeli"
+          navigation: "Navigointi"
         secret_list:
           invalid_input: "Tekstikentät eivät voi olla tyhjiä tai sisältää pystyviivamerkkiä."
         default_categories:
@@ -5461,10 +5467,8 @@ fi:
       finish: "Poistu määrityksestä"
       back: "Takaisin"
       next: "Seuraava"
-      configure_more: "Määritä lisää..."
       step-text: "Askelväli"
       step: "%{current}/%{total}"
-      upload: "Lataa"
       uploading: "Ladataan..."
       upload_error: "Tiedoston lataaminen epäonnistui. Yritä uudelleen."
       staff_count:

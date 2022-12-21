@@ -1161,7 +1161,6 @@ hy:
     enable_rich_text_paste: "Միացնել HTML -ի ավտոմատ փոխարկումը Markdown-ի՝ տեքստը կոմպոզեր տեղափոխելիս: (Փորձնական)"
     email_token_valid_hours: "Մոռացել եմ գաղտնաբառը / ակտիվացնել հաշիվը տոկենները վավեր են (n) ժամ: "
     enable_badges: "Միացնել կրծքանշանների համակարգը"
-    enable_whispers: "Թույլատրել անձնակազմի մասնավոր հաղորդակցությունը թեմաների ներսում:"
     blocked_email_domains: "Էլ. փոստի դոմենների ցանկ՝ բաժանված խողովակի սիմվոլով( | ), որոնցով օգտատերերին չի թույլատրվում գրանցել հաշիվ: Օրինակ՝ mailinator.com|trashmail.net"
     allowed_email_domains: "Էլ. փոստի դոմենների ցանկ՝ բաժանված խողովակի սիմվոլով( | ), որոնցով օգտատերերը ՊԵՏՔ Է գրանցեն հաշիվներ: ՈՒՇԱԴՐՈՒԹՅՈՒՆ՝ այս ցանկի դոմեններից տարբեր էլ. հասցեներ ունեցող օգտատերերին չի թույլատրվի!"
     log_out_strict: "Ելքագրվելիս դուրս գալ օգտատիրոջ ԲՈԼՈՐ գործընթացներից բոլոր սարքերի վրա:"
@@ -2960,10 +2959,6 @@ hy:
         fields:
           login_required:
             placeholder: "Մասնավոր"
-          must_approve_users:
-            placeholder: "Պահանջել Հաստատում"
-      ready:
-        title: "Ձեր Discourse -ը պատրաստ է!"
       styling:
         fields:
           styling_preview:
@@ -2980,27 +2975,15 @@ hy:
                 label: "Կատեգորիաները և Վերջին Թեմաները"
               categories_and_top_topics:
                 label: "Կատեգորիաները և Թոփ Թեմաները"
-      branding:
-        fields:
-          logo:
-            label: "Հիմնական Լոգո"
       corporate:
         fields:
-          company_name:
-            label: "Կազմակերպության Անվանում "
-            placeholder: "Օրինակ Կազմակերպություն"
           governing_law:
-            label: "Իշխող Օրենք"
             placeholder: "Կալիֆորնիայի օրենք"
           contact_url:
-            label: "Վեբ Էջ"
             placeholder: "https://www.example.com/contact-us"
-            description: "Ընդհանուր կապի էջ Ձեր կամ Ձեր կազմակերպության համար: Կցուցադրվի <a href='%{base_path}/about' target='_blank'>Ձեր մասին էջում</a>:"
           city_for_disputes:
-            label: "Վեճերի Քաղաք"
             placeholder: "Սան-Ֆրանցիսկո, Կալիֆորնիա"
           site_contact:
-            label: "Ավտոմատացված Նամակներ"
             description: "Բոլոր ավտոմատացված Discourse անձնական նամակները կուղարկվեն այս օգտատիրոջից, օրինակ՝ դրոշակավորված զգուշացումներ և պահուստային լրացւոմների նշումներ:"
       invites:
         title: "Հրավիրել Անձնակազմին"

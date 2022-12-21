@@ -27,6 +27,7 @@
     (if this.selectingMessages "selecting-messages")
   }}
   data-id={{or this.message.id this.message.stagedId}}
+  data-staged-id={{if this.message.staged this.message.stagedId}}
 >
   {{#if this.show}}
     {{#if this.selectingMessages}}

@@ -1436,7 +1436,6 @@ gl:
     send_old_credential_reminder_days: "Lembrar as credenciais antigas despois de días"
     email_token_valid_hours: "Os tokens para restabelecer o contrasinal ou activar a conta son válidos durante (n) horas."
     enable_badges: "Activar o sistema de insignias"
-    enable_whispers: "Permitir que os membros do equipo se comuniquen entre eles por privado dentro dos temas."
     allow_index_in_robots_txt: "Especificar en robots.txt que se permite que este sitio sexa indexado polos motores de busca en internet. En casos excepcionais, pode <a href='%{base_path}/admin/customize/robots'>sobrescribir robots.txt</a>permanentemente."
     blocked_email_domains: "Unha listaxe dominios de correo electrónico separados por barras verticais cos cales os usuarios non poden rexistrar contas. Exemplo: mailinator.com | trashmail.net"
     allowed_email_domains: "Unha listaxe de dominios de correo electrónico separados por barras verticais cos que os usuarios DEBEN rexistrar contas. AVISO: Non se permitirán usuarios con dominios de correo electrónico distintos aos da listaxe!"
@@ -3785,10 +3784,6 @@ gl:
           login_required:
             placeholder: "Privada"
             extra_description: "Só os usuarios rexistrados poden acceder á comunidade"
-          must_approve_users:
-            placeholder: "Requirir aprobación"
-      ready:
-        title: "O seu Discourse está listo!"
       styling:
         fields:
           body_font:
@@ -3809,29 +3804,15 @@ gl:
                 label: "Categorías e últimos temas"
               categories_and_top_topics:
                 label: "Categorías e temas destacados"
-      branding:
-        fields:
-          logo:
-            label: "Logotipo principal"
-          logo_small:
-            label: "Logotipo cadrado"
       corporate:
         fields:
-          company_name:
-            label: "Nome da empresa"
-            placeholder: "Organización de exemplo"
           governing_law:
-            label: "Lei que rexe"
             placeholder: "Lei de California"
           contact_url:
-            label: "Páxina web"
             placeholder: "https://www.exemplo.com/contactanos"
-            description: "Páxina de contacto xeral con vostede ou a súa organización. Amosarase na súa <a href='%{base_path}/about' target='_blank'>páxina Acerca de</a>."
           city_for_disputes:
-            label: "Cidade para disputas"
             placeholder: "San Francisco, California"
           site_contact:
-            label: "Mensaxes automáticas"
             description: "Todas as mensaxes privadas automáticas de Discourse serán enviadas deste este usuario, sexan advertencias de denuncias sexan apoios recibidos."
       invites:
         title: "Convidar o equipo"

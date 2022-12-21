@@ -16,19 +16,37 @@ Fabricator(:chat_channel) do
   end
   chatable { Fabricate(:category) }
   type do |attrs|
-    attrs[:chatable_type] == "Category" || attrs[:chatable]&.is_a?(Category) ? "CategoryChannel" : "DirectMessageChannel"
+    if attrs[:chatable_type] == "Category" || attrs[:chatable]&.is_a?(Category)
+      "CategoryChannel"
+    else
+      "DirectMessageChannel"
+    end
   end
   status { :open }
 end
 
 Fabricator(:category_channel, from: :chat_channel, class_name: :category_channel) {}
 
+Fabricator(:private_category_channel, from: :category_channel, class_name: :category_channel) do
+  transient :group
+  chatable { |attrs| Fabricate(:private_category, group: attrs[:group] || Group[:staff]) }
+end
+
 Fabricator(:direct_message_channel, from: :chat_channel, class_name: :direct_message_channel) do
-  transient :users
+  transient :users, following: true, with_membership: true
   chatable do |attrs|
     Fabricate(:direct_message, users: attrs[:users] || [Fabricate(:user), Fabricate(:user)])
   end
   status { :open }
+  name nil
+  after_create do |channel, attrs|
+    if attrs[:with_membership]
+      channel.chatable.users.each do |user|
+        membership = channel.add(user)
+        membership.update!(following: false) if attrs[:following] == false
+      end
+    end
+  end
 end
 
 Fabricator(:chat_message) do
@@ -37,6 +55,7 @@ Fabricator(:chat_message) do
   message "Beep boop"
   cooked { |attrs| ChatMessage.cook(attrs[:message]) }
   cooked_version ChatMessage::BAKED_VERSION
+  in_reply_to nil
 end
 
 Fabricator(:chat_mention) do
@@ -49,6 +68,9 @@ Fabricator(:chat_message_reaction) do
   chat_message { Fabricate(:chat_message) }
   user { Fabricate(:user) }
   emoji { %w[+1 tada heart joffrey_facepalm].sample }
+  after_build do |chat_message_reaction|
+    chat_message_reaction.chat_message.chat_channel.add(chat_message_reaction.user)
+  end
 end
 
 Fabricator(:chat_upload) do

@@ -1188,7 +1188,6 @@ zh_TW:
     enable_rich_text_paste: "自動啟用 HTML 轉換 Markdown 格式（實驗性功能）"
     email_token_valid_hours: "\"忘記密碼\" / \"重啟帳號\" token 有效的小時數 (n)"
     enable_badges: "啟用勳章系統"
-    enable_whispers: "允許工作人員在主題中私密交流。"
     blocked_email_domains: "不允許以豎線“|”分隔的電子郵件網域清單內的使用者註冊帳號。範例：mailinator.com|trashmail.net"
     allowed_email_domains: "用管道符“|”分隔的電子郵箱域名的列表，使用者必須使用這些郵箱域名註冊。警告：使用者使用不包含在這個列表裡的郵箱域名，將無法成功註冊。"
     log_out_strict: "登出時，登出使用者所有設備上的所有連線階段"
@@ -3013,13 +3012,10 @@ zh_TW:
           login_required:
             placeholder: "私密"
             extra_description: "使用者必須登入後才能訪問此社群"
-          invite_only:
-            placeholder: "僅限邀請"
           must_approve_users:
-            placeholder: "需要審核"
             extra_description: "使用者必須經過工作人員的批准"
-      ready:
-        title: "你的 Discourse 已經準備就緒！"
+          enable_sidebar:
+            placeholder: "啟用側選單"
       styling:
         fields:
           styling_preview:
@@ -3036,29 +3032,15 @@ zh_TW:
                 label: "分類和最新話題"
               categories_and_top_topics:
                 label: "分類與熱門話題"
-      branding:
-        fields:
-          logo:
-            label: "主要標誌"
-          logo_small:
-            label: "正方形 Logo"
       corporate:
         fields:
-          company_name:
-            label: "公司名稱"
-            placeholder: "組織範例"
           governing_law:
-            label: "適用於法律"
             placeholder: "加州法律"
           contact_url:
-            label: "網頁"
             placeholder: "https://www.example.com/contact-us"
-            description: "你或者你的組織平時用於聯絡的網頁。將被顯示在<a href='%{base_path}/about' target='_blank'>關於頁面</a>中。"
           city_for_disputes:
-            label: "爭議"
             placeholder: "舊金山，加洲（California）"
           site_contact:
-            label: "自動消息"
             description: "所有自動發送的消息將以該使用者的名義發送，比如投訴警告、備份完成通知。"
       invites:
         title: "邀請工作人員"

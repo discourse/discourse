@@ -50,10 +50,13 @@ pl_PL:
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "zawiera znaki inne niż ascii"
+        is_already_in_use: "jest już w użyciu"
     bookmarkable:
       notification_title: "wiadomość w %{channel_name}"
     personal_chat: "czat osobisty"
     onebox:
+      inline_to_channel: "Czat #%{chat_channel}"
+      inline_to_topic_channel: "Czat dla tematu %{topic_title}"
       x_members:
         one: "%{count} członek"
         few: "%{count} członków"
@@ -68,6 +71,7 @@ pl_PL:
     popup:
       chat_mention:
         direct: '%{username} wspomniał(a) o Tobie w "%{channel}"'
+        other_type: '%{username} wspomniał %{identifier} w "%{channel}"'
   discourse_automation:
     scriptables:
       send_chat_message:
@@ -93,8 +97,31 @@ pl_PL:
         many: "Masz nowe wiadomości na czacie"
         other: "Masz nowe wiadomości na czacie"
       from: "%{site_name}"
+      subject:
+        direct_message_from_1: "[%{email_prefix}] Nowa wiadomość od %{username}"
+        direct_message_from_2: "[%{email_prefix}] Nowa wiadomość od %{username1} i %{username2}"
+        direct_message_from_more:
+          one: "[%{email_prefix}] Nowa wiadomość od %{username} i %{count} innego"
+          few: "[%{email_prefix}] Nowa wiadomość od %{username} i %{count} innych"
+          many: "[%{email_prefix}] Nowa wiadomość od %{username} i %{count} innych"
+          other: "[%{email_prefix}] Nowa wiadomość od %{username} i %{count} innych"
+        chat_channel_1: "[%{email_prefix}] Nowa wiadomość w %{channel}"
+        chat_channel_2: "[%{email_prefix}] Nowa wiadomość w %{channel1} i %{channel2}"
+        chat_channel_more:
+          one: "[%{email_prefix}] Nowa wiadomość w %{channel} i %{count} innym"
+          few: "[%{email_prefix}] Nowa wiadomość w %{channel} i %{count} innych"
+          many: "[%{email_prefix}] Nowa wiadomość w %{channel} i %{count} innych"
+          other: "[%{email_prefix}] Nowa wiadomość w %{channel} i %{count} innych"
+        chat_channel_and_direct_message: "[%{email_prefix}] Nowa wiadomość w %{channel} i od %{username}"
+      unsubscribe: "To podsumowanie czatu jest wysyłane z %{site_link} kiedy cię nie ma. Zmień swoje %{email_preferences_link}, lub %{unsubscribe_link}, aby zrezygnować z subskrypcji."
+      unsubscribe_no_link: "To podsumowanie czatu jest wysyłane z %{site_link} kiedy cię nie ma. Zmień swoje %{email_preferences_link}."
       view_messages:
         one: "Zobacz wiadomość"
+        few: "Zobacz %{count} wiadomości"
+        many: "Zobacz %{count} wiadomości"
+        other: "Zobacz %{count} wiadomości"
+      view_more:
+        one: "Zobacz %{count} wiadomość"
         few: "Zobacz %{count} wiadomości"
         many: "Zobacz %{count} wiadomości"
         other: "Zobacz %{count} wiadomości"

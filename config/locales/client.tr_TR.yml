@@ -145,38 +145,37 @@ tr_TR:
       email: "E-posta ile gönder"
       url: "URL'yi kopyala ve paylaş"
     action_codes:
-      public_topic: "bu konuyu %{when} tarihinde herkese açık yaptı"
-      open_topic: "bunu %{when} tarihinde bir konuya dönüştürdü"
-      private_topic: "bu konuyu %{when} tarihinde bir kişisel mesaj yaptı"
-      split_topic: "bu konuyu %{when} tarihinde ayırdı"
-      invited_user: "%{when} tarihinde %{who} adlı kullanıcıyı davet etti"
-      invited_group: "%{when} tarihinde %{who} adlı kullanıcıyı davet etti"
+      public_topic: "Bu konuyu %{when} tarihinde herkese açık yaptı"
+      open_topic: "Bunu %{when} tarihinde bir konuya dönüştürdü"
+      private_topic: "Bu konuyu %{when} tarihinde bir kişisel mesaj yaptı"
+      split_topic: "Bu konuyu %{when} tarihinde ayırdı"
+      invited_user: "%{when} Tarihinde %{who} adlı kullanıcıyı davet etti"
+      invited_group: "%{when} Tarihinde %{who} adlı kullanıcıyı davet etti"
       user_left: "%{who}, %{when} tarihinde bu mesajdan kendini çıkardı"
-      removed_user: "%{who} adlı kişiyi %{when} tarihinde çıkardı"
-      removed_group: "%{who} adlı kişiyi %{when} tarihinde çıkardı"
-      autobumped: "%{when} tarihinde otomatik olarak üste sıçradı"
+      removed_user: "%{who} Adlı kişiyi %{when} tarihinde çıkardı"
+      removed_group: "%{who} Adlı kişiyi %{when} tarihinde çıkardı"
+      autobumped: "%{when} Tarihinde otomatik olarak üste sıçradı"
       autoclosed:
-        enabled: "%{when} tarihinde kapatıldı"
-        disabled: "%{when} tarihinde açıldı"
+        enabled: "%{when} Tarihinde kapattı"
+        disabled: "%{when} Tarihinde açtı"
       closed:
-        enabled: "%{when} tarihinde kapatıldı"
-        disabled: "%{when} tarihinde açıldı"
+        enabled: "%{when} Tarihinde kapattı"
+        disabled: "%{when} Tarihinde açtı"
       archived:
-        enabled: "%{when} tarihinde arşivlendi"
-        disabled: "%{when} tarihinde arşivden çıkarıldı"
+        enabled: "%{when} Tarihinde arşivlendi"
+        disabled: "%{when} Tarihinde arşivden çıkarıldı"
       pinned:
-        enabled: "%{when} tarihinde sabitlendi"
-        disabled: "%{when} tarihinde sabitlenmesi kaldırıldı"
+        enabled: "%{when} Tarihinde sabitlendi"
+        disabled: "%{when} Tarihinde sabitlenmesi kaldırıldı"
       pinned_globally:
-        enabled: "%{when} tarihinde küresel olarak sabitlendi"
-        disabled: "%{when} en yukarıda sabitlenmesi kaldırıldı"
+        enabled: "%{when} Tarihinde küresel olarak sabitlendi"
+        disabled: "%{when} Tarihinde sabitlenmesi kaldırıldı"
       visible:
-        enabled: "%{when} tarihinde listelendi"
-        disabled: "%{when} tarihinde listeden çıkarıldı"
+        enabled: "%{when} Tarihinde listelendi"
+        disabled: "%{when} Tarihinde listeden çıkarıldı"
       banner:
-        enabled: "%{when} tarihinde bunu bir banner yaptı. Kullanıcı tarafından kapatılana kadar her sayfanın en üstünde görünecek."
-        disabled: "%{when} tarihinde bu banner'ı kaldırdı. Bundan sonra her sayfanın en üstünde görünmeyecek."
-      forwarded: "yukarıdaki e-postayı iletti"
+        enabled: "%{when} Tarihinde bunu bir banner yaptı. Kullanıcı tarafından kapatılana kadar her sayfanın en üstünde görünecek."
+        disabled: "%{when} Tarihinde bu banner'ı kaldırdı. Bundan sonra her sayfanın en üstünde görünmeyecek."
     topic_admin_menu: "konu eylemleri"
     skip_to_main_content: "Ana içeriğe atla"
     emails_are_disabled: "Giden tüm e-postalar bir yönetici tarafından devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
@@ -387,8 +386,6 @@ tr_TR:
     disable: "Devre dışı bırak"
     continue: "Devam et"
     undo: "Geri Al"
-    revert: "Eski Haline Getir"
-    failed: "Başarısız"
     switch_to_anon: "Anonim Moda Gir"
     switch_from_anon: "Anonim Moddan Çık"
     banner:
@@ -1011,7 +1008,6 @@ tr_TR:
       notification_schedule:
         title: "Bildirim Zamanlaması"
         label: "Özel bildirim zamanlamasını etkinleştir"
-        tip: "Bu saatler dışında otomatik olarak \"rahatsız etmeyin\" durumuna alınacaksınız."
         midnight: "Gece yarısı"
         none: "Yok"
         monday: "Pazartesi"
@@ -1278,6 +1274,7 @@ tr_TR:
         use: "Authenticator uygulamasını kullan"
         enforced_notice: "Bu siteye erişmeden önce iki adımlı kimlik doğrulamayı etkinleştirmeniz gerekir."
         disable: "Devre dışı bırak"
+        delete: "Sil"
         save: "Kaydet"
         edit: "Düzenle"
         edit_title: "Authenticator'ı Düzenle"
@@ -1834,6 +1831,7 @@ tr_TR:
       title: "Giriş Yap"
       username: "Kullanıcı"
       password: "Şifre"
+      show_password: "Göster"
       second_factor_title: "İki Adımlı Kimlik Doğrulama"
       second_factor_description: "Lütfen uygulamanızdan kimlik doğrulama kodunu girin:"
       second_factor_backup: "Yedek kod kullanarak giriş yapın"
@@ -2189,6 +2187,7 @@ tr_TR:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2258,6 +2257,7 @@ tr_TR:
         invited_to_private_message: "özel mesaja davet edildi"
         invitee_accepted: "davet kabul edildi"
         posted: "yeni gönderi"
+        watching_category_or_tag: "yeni gönderi"
         moved_post: "gönderi taşındı"
         linked: "bağlantılı"
         bookmark_reminder: "yer imi anımsatıcısı"
@@ -3807,16 +3807,14 @@ tr_TR:
     safe_mode:
       enabled: "Güvenli mod etkin, güvenli moddan çıkmak için bu tarayıcı penceresini kapatın"
     image_removed: "(görüntü kaldırıldı)"
-    do_not_disturb:
-      title: "Rahatsız etmeyin..."
-      label: "Rahatsız etmeyin"
+    pause_notifications:
       remaining: "%{remaining} kaldı"
       options:
         half_hour: "30 dakika"
         one_hour: "1 saat"
         two_hours: "2 saat"
         tomorrow: "Yarına kadar"
-        custom: "Özel ayarlar"
+        custom: "Özel"
       set_schedule: "Bildirim zamanlaması ayarla"
     trust_levels:
       names:
@@ -4204,6 +4202,7 @@ tr_TR:
         detailed_instruction: "Seçilen olay gerçekleştiğinde sağlanan URL'ye bir POST isteği gönderilir."
         new: "Yeni Web Kancası"
         create: "Oluştur"
+        edit: "Düzenle"
         save: "Kaydet"
         controls: "Denetimler"
         go_back: "Listeye geri dön"
@@ -4305,6 +4304,8 @@ tr_TR:
         howto: "Eklentileri nasıl yüklerim?"
         official: "Resmi Eklenti"
         broken_route: "\"%{name}\" bağlantısı yapılandırılamıyor. Reklam engelleyicilerin devre dışı bırakıldığından emin olun ve sayfayı yeniden yüklemeyi deneyin."
+      navigation_menu:
+        sidebar: "Kenar çubuğu"
       backups:
         title: "Yedeklemeler"
         menu:
@@ -4518,7 +4519,6 @@ tr_TR:
             error: "Bu tema, Discourse'un bu sürümüyle uyumlu olmadığı için otomatik olarak devre dışı bırakıldı."
             minimum: "Dircourse sürüm %{version} veya üzerini gerektirir."
             maximum: "Discourse sürüm %{version} veya altı gerektirir."
-          component_of: "Şunun bileşeni:"
           update_to_latest: "En Sona Güncelle"
           check_for_updates: "Güncellemeleri kontrol et"
           updating: "Güncelleniyor..."
@@ -4991,7 +4991,6 @@ tr_TR:
       user:
         suspend_failed: "Bu kullanıcı askıya alınırken bir sorun oluştu %{error}"
         unsuspend_failed: "Bu kullanıcının askıya alınması kaldırılırken bir sorun oluştu %{error}"
-        suspend_duration: "Kullanıcı ne kadar süreyle askıya alınacak?"
         suspend_reason_label: "Neden askıya alıyorsunuz? Bu metin bu kullanıcının profil sayfasında <b>herkes tarafından görülebilecek</b> ve kullanıcı sisteme giriş yapmaya çalıştığında kullanıcıya gösterilecek. Metni kısa tutun."
         suspend_reason_hidden_label: "Neden askıya alıyorsunuz? Bu metin, kullanıcı oturum açmaya çalıştığında kullanıcıya gösterilecek. Kısa tutun."
         suspend_reason: "Neden"
@@ -5025,7 +5024,6 @@ tr_TR:
         penalty_post_edit: "Gönderiyi düzenleyin"
         penalty_post_none: "Hiçbir şey yapma"
         penalty_count: "Ceza Sayısı"
-        penalty_history: "Ceza Geçmişi"
         clear_penalty_history:
           title: "Ceza Geçmişini Temizle"
           description: "cezası olan kullanıcılar 3 TL'ye ulaşamaz"
@@ -5180,6 +5178,11 @@ tr_TR:
         silenced_count: "Susturuldu"
         suspended_count: "Askıya Alındı"
         last_six_months: "Son 6 ay"
+        other_matches_list:
+          username: "Kullanıcı adı"
+          trust_level: "Güven Seviyesi"
+          read_time: "Okuma Zamanı"
+          posts: "Gönderiler"
         tl3_requirements:
           title: "Güven Seviyesi 3 için Gereklilikler"
           table_title:
@@ -5324,6 +5327,7 @@ tr_TR:
           search: "Ara"
           groups: "Gruplar"
           dashboard: "Pano"
+          navigation: "Navigasyon"
         secret_list:
           invalid_input: "Girdi alanları boş olamaz veya dikey çubuk karakteri içeremez."
         default_categories:
@@ -5494,10 +5498,8 @@ tr_TR:
       finish: "Kurulumdan çık"
       back: "Geri"
       next: "İleri"
-      configure_more: "Daha Fazla Yapılandır..."
       step-text: "Adım"
       step: "%{current} / %{total}"
-      upload: "Yükle"
       uploading: "Yükleniyor..."
       upload_error: "Üzgünüz, bu dosyayı yüklerken bir hata oluştu. Lütfen yeniden deneyin."
       staff_count:

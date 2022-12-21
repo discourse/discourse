@@ -19,7 +19,11 @@ export default class ChatMessageVisibilityObserver extends Service {
     entries.forEach((entry) => {
       entry.target.dataset.visible = entry.isIntersecting;
 
-      if (entry.isIntersecting && !isTesting()) {
+      if (
+        !entry.target.dataset.stagedId &&
+        entry.isIntersecting &&
+        !isTesting()
+      ) {
         this.chat.updateLastReadMessage();
       }
     });

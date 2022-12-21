@@ -129,37 +129,36 @@ ca:
       email: "Envia per correu electrònic"
       url: "Copiar i compartir URL"
     action_codes:
-      public_topic: "tema fet públic %{when}"
-      private_topic: "s'ha convertit el tema en un missatge personal %{when}"
-      split_topic: "s'ha dividit el tema %{when}"
-      invited_user: "s'ha convidat %{who} %{when}"
-      invited_group: "s'ha convidat %{who} %{when}"
+      public_topic: "Tema fet públic %{when}"
+      private_topic: "S'ha convertit el tema en un miSSatge perSonal %{when}"
+      split_topic: "S'ha dividit el tema %{when}"
+      invited_user: "S'ha convidat %{who} %{when}"
+      invited_group: "S'ha convidat %{who} %{when}"
       user_left: "%{who} s'ha suprimit d'aquest missatge %{when}"
-      removed_user: "s'ha suprimit %{who} %{when}"
-      removed_group: "ha suprimit %{who} %{when}"
-      autobumped: "elevat automàticament %{when}"
+      removed_user: "Ha suprimit %{who} %{when}"
+      removed_group: "Ha suprimit %{who} %{when}"
+      autobumped: "Elevat automàticament %{when}"
       autoclosed:
-        enabled: "tancat %{when}"
-        disabled: "obert %{when}"
+        enabled: "Tancat %{when}"
+        disabled: "Obert %{when}"
       closed:
-        enabled: "tancat %{when}"
-        disabled: "obert %{when}"
+        enabled: "Tancat %{when}"
+        disabled: "Obert %{when}"
       archived:
-        enabled: "arxivat %{when}"
-        disabled: "desarxivat %{when}"
+        enabled: "Arxivat %{when}"
+        disabled: "Desarxivat %{when}"
       pinned:
-        enabled: "afixat %{when}"
-        disabled: "desafixat %{when}"
+        enabled: "Afixat %{when}"
+        disabled: "Desafixat %{when}"
       pinned_globally:
-        enabled: "afixat globalment %{when}"
-        disabled: "desclavat %{when}"
+        enabled: "Afixat globalment %{when}"
+        disabled: "Desafixat %{when}"
       visible:
-        enabled: "s'ha fet visible %{when}"
-        disabled: "s'ha fet invisible %{when}"
+        enabled: "S'ha fet viSible %{when}"
+        disabled: "S'ha fet inviSible %{when}"
       banner:
-        enabled: "convertit en bàner %{when}. Apareixerà a dalt de cada pàgina fins que sigui descartat per l'usuari."
-        disabled: "ha suprimit aquest bàner %{when}. No apareixerà més a dalt de cada pàgina."
-      forwarded: "el missatge de dalt s'ha reenviat"
+        enabled: "Convertit en bàner %{when}. Apareixerà a dalt de cada pàgina fins que sigui descartat per l'usuari."
+        disabled: "Ha suprimit aquest bàner %{when}. No apareixerà més a dalt de cada pàgina."
     topic_admin_menu: "accions del tema"
     skip_to_main_content: "Vés al contingut principal"
     emails_are_disabled: "Tots els correus sortints han estat globalment inhabilitats per un administrador. No s'enviarà cap notificació de cap mena per correu electrònic."
@@ -348,8 +347,6 @@ ca:
     disable: "Desactiva"
     continue: "Continua"
     undo: "Desfés"
-    revert: "Reverteix"
-    failed: "Ha fallat"
     switch_to_anon: "Entra en el mode anònim"
     switch_from_anon: "Surt del mode anònim"
     banner:
@@ -1463,6 +1460,7 @@ ca:
     login:
       username: "Usuari"
       password: "Contrasenya"
+      show_password: "Mostra"
       second_factor_description: "Introduïu el codi d'autenticació de la vostra aplicació:"
       second_factor_backup: "Inici de sessió amb codi de còpia de seguretat "
       second_factor_backup_description: "Introduïu un dels vostres codis de còpia de seguretat:"
@@ -1714,6 +1712,7 @@ ca:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -1768,6 +1767,7 @@ ca:
         invited_to_private_message: "convidat a missatge privat"
         invitee_accepted: "invitació acceptada"
         posted: "publicació nova"
+        watching_category_or_tag: "publicació nova"
         moved_post: "publicació moguda"
         linked: "enllaçat"
         granted_badge: "insígnia concedida"
@@ -2873,7 +2873,7 @@ ca:
       dismiss: "Descarta-ho"
     safe_mode:
       enabled: "El mode segur està activat. Per a sortir-ne tanqueu aquesta finestra del navegador."
-    do_not_disturb:
+    pause_notifications:
       remaining: "%{remaining} restant"
       options:
         custom: "Personalitzat"
@@ -3399,7 +3399,6 @@ ca:
             error: "Aquesta aparença s'ha desactivat automàticament perquè no és compatible amb aquesta versió de Discourse."
             minimum: "Requereix una versió de Discourse %{version} o superior."
             maximum: "Requereix una versió de Discourse %{version} o inferior."
-          component_of: "Component de:"
           update_to_latest: "Actualitza al més recent"
           check_for_updates: "Comprova si hi ha actualitzacions"
           updating: "Actualitzant"
@@ -3795,7 +3794,6 @@ ca:
       user:
         suspend_failed: "Ha fallat alguna cosa en suspendre aquest usuari: %{error}"
         unsuspend_failed: "Alguna cosa ha fallat en desfer la suspensió de l'usuari %{error}"
-        suspend_duration: "Quant de temps durarà la suspensió d'aquest usuari?"
         suspend_reason_label: "Per què suspeneu aquest usuari? Aquest text <b>serà visible per a tothom</b> en el perfil de l'usuari, i es mostrarà a l'usuari quan vulgui iniciar la sessió. Sigueu breu."
         suspend_reason_hidden_label: "Per què suspeneu aquest usuari? Aquest text es mostrarà a l'usuari quan intenti iniciar la sessió. Sigueu breu. "
         suspend_reason: "Motiu"
@@ -4201,7 +4199,6 @@ ca:
       next: "Següent"
       step-text: "Pas"
       step: "%{current} de %{total}"
-      upload: "Carrega"
       uploading: "Carregant..."
       upload_error: "S'ha produït un error en carregar aquest fitxer. Torneu-ho a provar."
       staff_count:

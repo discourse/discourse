@@ -1,11 +1,11 @@
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import ChatApi from "discourse/plugins/chat/discourse/lib/chat-api";
-
+import { inject as service } from "@ember/service";
 export default class ChatChannelEditTitleController extends Controller.extend(
   ModalFunctionality
 ) {
+  @service chatApi;
   editedTitle = "";
 
   @computed("model.title", "editedTitle")
@@ -27,11 +27,12 @@ export default class ChatChannelEditTitleController extends Controller.extend(
 
   @action
   onSaveChatChannelTitle() {
-    return ChatApi.modifyChatChannel(this.model.id, {
-      name: this.editedTitle,
-    })
-      .then((chatChannel) => {
-        this.model.set("title", chatChannel.title);
+    return this.chatApi
+      .updateChannel(this.model.id, {
+        name: this.editedTitle,
+      })
+      .then((result) => {
+        this.model.set("title", result.channel.title);
         this.send("closeModal");
       })
       .catch((event) => {

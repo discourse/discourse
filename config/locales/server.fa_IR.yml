@@ -976,7 +976,6 @@ fa_IR:
     prioritize_username_in_ux: "نام کاربری را در ابتدا در صفحه‌ی کاربر، کارت کاربر یا نوشته‌هایش نمایش بده(وقتی غیر‌فعال باشد نام در ابتدا نمایش داده می‌شود)"
     email_token_valid_hours: "رمز عبور فراموش شده/ حساب کاربری فعال تا (n) ساعت اعتبار دارد."
     enable_badges: "فعال سازی سیستم نشان‌دهی"
-    enable_whispers: "به همکاران اجازه ارتباط خوصی در موضوعات داده شود"
     blocked_email_domains: "لیست pipe-delimit دامنه های ایمیل که کاربران اجازه ندارند با آن حساب کاربری ثبت‌نام کنند. برای مثال: mailinator.com|trashmail.net"
     allowed_email_domains: "لیست pipe-delimit دامنه های ایمیل که کاربران اجازه باید با آن حساب کاربری ثبت نام کنند. اخطار: کاربرانی با دامنه‌های ایمیلی به غیر از آن‌هایی که در لیست هستند اجازه ندارند. "
     log_out_strict: "وقتی از سیستم خارج می شود، کاربر را از تمام session‌ها بر روی تمام دستگاه‌ها خارج کن "
@@ -2273,22 +2272,19 @@ fa_IR:
           site_description:
             label: "انجمن خود را در یک جمله توصیف کنید"
             placeholder: "محلی برای آموزش انواع زبان‌های برنامه نویسی"
-          contact_email:
-            placeholder: "example@user.com"
           default_locale:
             label: "زبان"
       privacy:
-        title: "تجربه اعضا"
         fields:
           login_required:
             placeholder: "خصوصی"
             extra_description: "فقط کاربرانی که در حسای‌کاربردی خود وارد شده‌اند، می‌توانند به این انجمن دسترسی داشته باشند"
-          must_approve_users:
-            placeholder: "نیازمند تصویب"
           chat_enabled:
             placeholder: "فعال کردن گفتگو"
+          enable_sidebar:
+            placeholder: "فعال کردن نوار کناری"
       ready:
-        title: "Discourse شما آماده‌ست!"
+        title: "سایت شما آماده است!"
       styling:
         fields:
           styling_preview:
@@ -2308,19 +2304,23 @@ fa_IR:
               categories_and_top_topics:
                 label: "دسته بندی ها و مباحث داغ"
       branding:
-        title: "سفارشی کردن لوگوها"
+        title: "لوگوی انجمن"
         fields:
           logo:
-            label: "لوگو اصلی"
+            label: "لوگوی اصلی"
+            description: "اندازه پیشنهادی: 600*200"
+          logo_small:
+            label: "لوگو مربع"
       corporate:
         title: "سازمان شما"
         fields:
+          company_name:
+            label: "نام شرکت"
           contact_url:
             label: "صفحه وب"
             placeholder: "https://www.example.com/contact-us"
-            description: "صفحه تماس عمومی شما در <a href='%{base_path}/about' target='_blank'>صفحه درباره ما</a> نمایش داده می‌شود."
-          site_contact:
-            label: "پیام‌های خودکار"
+          contact_email:
+            placeholder: "example@user.com"
       invites:
         title: "دعوت همکاران"
       finished:

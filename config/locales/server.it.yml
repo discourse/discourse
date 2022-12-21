@@ -233,6 +233,7 @@ it:
       <p>In caso contrario, <a href="%{base_url}/password-reset">reimposta la password</a>.</p>
     not_found_template_link: |
       <p>L'invito a <a href="%{base_url}">%{site_name}</a> non può più essere riscattato. Chiedi alla persona che ti ha invitato di inviarti un nuovo invito.</p>
+    existing_user_cannot_redeem: "Questo invito non può essere riscattato. Chiedi alla persona che ti ha invitato di inviarti un nuovo invito."
     user_exists: "Non c'è bisogno di invitare <b>%{email}</b>: ha già un account!"
     invite_exists: "Hai già invitato <b>%{email}</b>."
     invalid_email: "%{email} non è un indirizzo email valido."
@@ -774,6 +775,7 @@ it:
     success: "La tua password è stata cambiata con successo e ora sei connesso."
     success_unapproved: "La tua password è stata cambiata con successo."
   email_login:
+    invalid_token: 'Ops! Il link che hai utilizzato non funziona più. Puoi <a href="%{base_url}/login">Accedere</a> adesso. Se hai dimenticato la password, puoi <a href="%{base_url}/password-reset">richiedere un link</a> per reimpostarla.'
     title: "Accesso via Email"
   user_auth_tokens:
     browser:
@@ -1090,6 +1092,11 @@ it:
         editor: Redattore
         author: Autore
         edit_reason: Motivo
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "API Utente"
+      yaxis: "Giorno"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Giorno"
@@ -1564,7 +1571,6 @@ it:
     email_token_valid_hours: "I messaggi di password dimenticata / attivazione account sono validi per (n) ore."
     enable_badges: "Attiva il sistema a distintivi"
     max_favorite_badges: "Numero massimo di distintivi che l'utente può selezionare"
-    enable_whispers: "Consenti allo staff comunicazioni private all'interno degli argomenti."
     whispers_allowed_groups: "Consenti la comunicazione privata all'interno degli argomenti per i membri di gruppi specifici."
     allow_index_in_robots_txt: "Specifica in robots.txt che questo sito permette l'indicizzazione da parte dei motori di ricerca. In casi eccezionali puoi permanentemente <a href='%{base_path}/admin/customize/robots'>ignorare robots.txt</a>."
     blocked_email_domains: "Una lista di domini email separati dal carattere pipe \"|\" con cui gli utenti non possono registrare un account. Ad esempio: mailinator.com|trashmail.net"
@@ -1924,6 +1930,7 @@ it:
     enable_user_directory: "Fornire una directory degli utenti per la navigazione"
     enable_group_directory: "Fornire una directory dei gruppi per la navigazione"
     enable_category_group_moderation: "Consenti ai gruppi di moderare i contenuti in categorie specifiche"
+    group_in_subject: "Imposta %%{optional_pm} nell'oggetto dell'email con il nome del primo gruppo in Messaggio Privato, vedi: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Personalizza il formato oggetto per le e-mail standard</a>"
     allow_anonymous_posting: "Permetti agli utenti di passare alla modalità anonima"
     anonymous_posting_min_trust_level: "Livello di attendibilità minimo richiesto per abilitare la pubblicazione in modalità anonima"
     anonymous_account_duration_minutes: "Per proteggere l'anonimato creare un nuovo account anonimo ogni N minuti per ogni utente. Esempio: se impostato a 600, non appena passano 600 minuti dall'ultimo messaggio E l'utente passa in modalità anonima, viene creato un nuovo account anonimo."
@@ -1973,7 +1980,6 @@ it:
     display_name_on_posts: "Mostra il nome completo dell'utente sui messaggi oltre allo @username."
     show_time_gap_days: "Se due messaggi vengono creati dopo tale numero di giorni, mostrare l'intervallo di tempo nell'argomento."
     short_progress_text_threshold: "Quando il numero di messaggi di un argomento supera questo valore, la barra di avanzamento mostrerà solo il numero di messaggi attuale. Se modifichi l'ampiezza della barra di avanzamento, potresti dover cambiare questo valore."
-    default_code_lang: "La modalità predefinita per evidenziare la sintassi del linguaggio di programmazione applicata nei blocchi di codice (auto, non evidenziare, ruby, python ecc.). Questo valore deve essere presente anche nell'impostazione del sito `Lingue evidenziate`."
     warn_reviving_old_topic_age: "Quando qualcuno inizia a rispondere ad un argomento in cui l'ultima risposta è più vecchia di tale numero di giorni, verrà visualizzato un avviso. Disabilita impostando su 0."
     autohighlight_all_code: "Forza l'evidenziazione della sintassi del codice nei blocchi di testo preformattato, anche se non è stato specificato il linguaggio di programmazione. "
     highlighted_languages: "Regole di evidenziazione della sintassi incluse. (Attenzione: includere troppi linguaggi può influire sulle prestazioni) vedi: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> per una demo"
@@ -4045,29 +4051,24 @@ it:
           site_description:
             label: "Descrivi la tua community in una frase"
             placeholder: "Un posto per Jane e per i suoi amici dove discutere di cose forti"
-          contact_email:
-            label: "Punto di contatto"
-            placeholder: "esempio@utente.com"
-            description: "Persona o gruppo responsabile di questa community. Utilizzato per aggiornamenti critici e indicato nella <a href='%{base_path}/about' target='_blank'>tua pagina Informazioni</a> per contatti urgenti."
           default_locale:
             label: "Lingua"
       privacy:
-        title: "Esperienza dei membri"
         fields:
           login_required:
             placeholder: "Privato"
             extra_description: "Solo gli utenti registrati possono accedere a questa comunità"
           invite_only:
-            placeholder: "Solo su invito"
             extra_description: "Gli utenti devono essere invitati da utenti attendibili o dallo staff prima di potersi registrare."
           must_approve_users:
-            placeholder: "Richiede Approvazione"
             extra_description: "Gli utenti devono essere approvati dallo staff"
+          chat_enabled:
+            placeholder: "Abilita chat"
+          enable_sidebar:
+            placeholder: "Abilita barra laterale"
       ready:
-        title: "Il tuo Discourse è Pronto!"
         description: "Ecco fatto! Hai messo le basi per configurare la tua community Ora puoi entrare e dare un'occhiata in giro, scrivere un argomento di benvenuto e inviare inviti!<br><br>Buon divertimento!"
       styling:
-        title: "Aspetto e feeling"
         fields:
           color_scheme:
             label: "Schema colori"
@@ -4098,37 +4099,19 @@ it:
                 label: "Riquadri Categorie con Argomenti"
               subcategories_with_featured_topics:
                 label: "Sottocategorie con argomenti in evidenza"
-      branding:
-        title: "Loghi personalizzati"
-        fields:
-          logo:
-            label: "Logo Primario"
-            description: "L'immagine del logo nell'angolo in alto a sinistra del tuo sito. Usa un'ampia immagine rettangolare con un'altezza di 120 e una proporzione superiore a 3:1"
-          logo_small:
-            label: "Logo quadrato"
-            description: "Una versione quadrata del tuo logo. Mostrata nell'angolo in alto a sinistra quando scorri verso il basso e nelle condivisioni su social media. Idealmente più grande di 512x512."
       corporate:
-        title: "La tua organizzazione"
         fields:
-          company_name:
-            label: "Nome azienda"
-            placeholder: "Organizzazione d'esempio"
-            description: "Inserito nella pagina dei tuoi Termini di servizio. Sentiti libero di passare oltre se non esiste alcuna società."
           governing_law:
-            label: "Diritto applicabile"
             placeholder: "Legge della California"
-            description: "Inserito nella pagina dei tuoi Termini di servizio. Sentiti libero di passare oltre se non esiste alcuna società."
           contact_url:
-            label: "Sito Web"
             placeholder: "https://www.example.com/contact-us"
-            description: "Pagina web di contatto generale per te o per la tua organizzazione. Sarà visualizzato sulla tua pagina <a href='%{base_path}/about' target='_blank'>informazioni</a>."
           city_for_disputes:
-            label: "Sede per eventuali controversie"
             placeholder: "San Francisco, California"
-            description: "Inserito nella pagina dei tuoi Termini di servizio. Sentiti libero di passare oltre se non esiste alcuna società."
           site_contact:
-            label: "Messaggi Automatici"
             description: "Tutti i messaggi personali automatici di Discourse, come avvisi di segnalazione e notifiche di completamento dei backup, saranno inviati da questo utente."
+          contact_email:
+            label: "Punto di contatto"
+            placeholder: "esempio@utente.com"
       invites:
         title: "Invita lo Staff"
         description: "Hai quasi finito! Invita alcune persone a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>contribuire alle discussioni</a> con argomenti e risposte interessanti per avviare la tua comunità."

@@ -146,37 +146,36 @@ bs_BA:
       facebook: "Podijeli na Facebooku"
       email: "Pošalji putem e-maila"
     action_codes:
-      public_topic: "je učinio ovu temu javnom %{when}"
-      private_topic: "je učinio ovu temu privatnom porukom %{when}"
-      split_topic: "razdvoji ovu temu %{when}"
-      invited_user: "pozvan %{who} %{when}"
-      invited_group: "pozvan %{who} %{when}"
+      public_topic: "Je učinio ovu temu javnom %{when}"
+      private_topic: "Je učinio ovu temu privatnom porukom %{when}"
+      split_topic: "Razdvoji ovu temu %{when}"
+      invited_user: "Pozvan %{who} %{when}"
+      invited_group: "Pozvan %{who} %{when}"
       user_left: "%{who} je izašao iz ovog razgovora u %{when}"
-      removed_user: "uklonjen %{who} %{when}"
-      removed_group: "ukloljen %{who} %{when}"
-      autobumped: "automski drmnuli u %{when}"
+      removed_user: "Ukloljen %{who} %{when}"
+      removed_group: "Ukloljen %{who} %{when}"
+      autobumped: "Automski drmnuli u %{when}"
       autoclosed:
-        enabled: "zatvoren %{when}"
-        disabled: "otvoren %{when}"
+        enabled: "Zatvoren %{when}"
+        disabled: "Otvoren %{when}"
       closed:
-        enabled: "zatvoren %{when}"
-        disabled: "otvoren %{when}"
+        enabled: "Zatvoren %{when}"
+        disabled: "Otvoren %{when}"
       archived:
-        enabled: "arhiviran %{when}"
-        disabled: "dearhiviran %{when}"
+        enabled: "Arhiviran %{when}"
+        disabled: "Dearhiviran %{when}"
       pinned:
-        enabled: "zakačen %{when}"
-        disabled: "otkačen %{when}"
+        enabled: "Zakačen %{when}"
+        disabled: "Otkačen %{when}"
       pinned_globally:
-        enabled: "zakačen globalno %{when}"
-        disabled: "otkačen %{when}"
+        enabled: "Zakačen globalno %{when}"
+        disabled: "Otkačen %{when}"
       visible:
-        enabled: "izlistan %{when}"
-        disabled: "sklonjen %{when}"
+        enabled: "Izlistan %{when}"
+        disabled: "Sklonjen %{when}"
       banner:
-        enabled: "pretvoreno u banner %{when}. Banner će biti prikazan na vrhu svake stranice dok ga korisnik ne isključi."
-        disabled: "maknuo banner %{when}. Banner se više neće prikazivati na vrhu svake stranice."
-      forwarded: "gornji email proslijeđen"
+        enabled: "Pretvoreno u banner %{when}. Banner će biti prikazan na vrhu svake stranice dok ga korisnik ne isključi."
+        disabled: "Maknuo banner %{when}. Banner se više neće prikazivati na vrhu svake stranice."
     topic_admin_menu: "akcije u vezi teme"
     emails_are_disabled: "Sve odlazeće email poruke su globalno onemogućene od strane administratora. Ni jedna notifikacija bilo koje vrste neće biti poslana."
     software_update_prompt:
@@ -351,8 +350,6 @@ bs_BA:
     disable: "Onemogući"
     continue: "Nastavi"
     undo: "Vrati nazad"
-    revert: "Vrati nazad"
-    failed: "Neuspješno"
     switch_to_anon: "Uđi u privatni način rada"
     switch_from_anon: "Izađi iz privatnog načina rada"
     banner:
@@ -1521,6 +1518,7 @@ bs_BA:
     login:
       username: "Korisnik"
       password: "Lozinka"
+      show_password: "Show"
       second_factor_description: "Molimo da unesete kod za ovjeru autentičnosti sa vaše aplikacije:"
       second_factor_backup: "Loguj se koristeći backup kod"
       second_factor_backup_description: "Molim ukucajte jedan od vaši rezevni kodova"
@@ -1776,6 +1774,7 @@ bs_BA:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -1833,6 +1832,7 @@ bs_BA:
         invited_to_private_message: "pozvan u privatnu poruku"
         invitee_accepted: "poziv prihvaćen"
         posted: "novi post"
+        watching_category_or_tag: "novi post"
         moved_post: "post maknut"
         linked: "linked"
         granted_badge: "dodijeljena značka"
@@ -3039,7 +3039,7 @@ bs_BA:
     safe_mode:
       enabled: "Bezbedan režim je omogućen, da biste izašli iz bezbednog režima, zatvorite ovaj prozor pregledača"
     image_removed: "(slika uklonjena)"
-    do_not_disturb:
+    pause_notifications:
       remaining: "%{remaining} preostalo"
       options:
         custom: "Custom"
@@ -3567,7 +3567,6 @@ bs_BA:
             error: "Ova tema je automatski onemogućena jer nije kompatibilna sa ovom verzijom Diskursa."
             minimum: "Potrebna je diskursna verzija %{version} ili iznad."
             maximum: "Potrebna je diskursna verzija %{version} ili ispod."
-          component_of: "Komponenta:"
           update_to_latest: "Ažuriraj na zadnje"
           check_for_updates: "Potražite ažuriranja"
           updating: "Ažuriranje ..."
@@ -3960,7 +3959,6 @@ bs_BA:
       user:
         suspend_failed: "Something went wrong suspending this user %{error}"
         unsuspend_failed: "Something went wrong unsuspending this user %{error}"
-        suspend_duration: "How long will the user be suspended for?"
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
         suspend_reason_hidden_label: "Zašto suspendirate? Ovaj tekst će biti prikazan korisniku kada se pokušaju prijaviti."
         suspend_reason: "Reason"
@@ -4353,7 +4351,6 @@ bs_BA:
       next: "Iduće"
       step-text: "Korak"
       step: "%{current} od %{total}"
-      upload: "Učitaj"
       uploading: "Učitavanje..."
       upload_error: "Izvinite, doslo je greske prilikom uploada ovog fajla. Molimo pokusajte ponovo."
       invites:

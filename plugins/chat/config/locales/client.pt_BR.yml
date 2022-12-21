@@ -113,6 +113,10 @@ pt_BR:
           one: "Convite enviado"
           other: "Convites enviados"
         invite: "convidar para canal"
+        groups:
+          users_limit:
+            one: "%{count} usuário"
+            other: "%{count} usuários"
       aria_roles:
         header: "Cabeçalho do chat"
         composer: "Compositor de chat"
@@ -270,6 +274,7 @@ pt_BR:
       settings:
         auto_join_users_label: "Adicionar usuários(as) automaticamente"
         auto_join_users_info: "Verifique a cada hora quais usuários(as) estiveram ativos(as) nos últimos três meses e, se tiverem acesso à categria %{category}, adicione a este canal."
+        enable_auto_join_users: "Adicionar automaticamente todos os usuários ativos recentemente"
         auto_join_users_warning: "Todos(as) os(as) usuários(as) que não são membros deste canal e têm acesso à categoria %{category} participarão. Tem certeza?"
         desktop_notification_level: "Notificações do desktop"
         follow: "Participar"

@@ -119,36 +119,35 @@ et:
       email: "Jaga e-mailiga"
       url: "Kopeeri ja jaga link"
     action_codes:
-      public_topic: "muutsin selle teema avalikuks %{when}"
-      private_topic: "tegi selle teema %{when} isiklikuks sõnumiks"
-      split_topic: "poolita teema %{when} juurest"
-      invited_user: "kutsutud %{who} %{when}"
-      invited_group: "kutsusin %{who} %{when}"
+      public_topic: "Muutsin selle teema avalikuks %{when}"
+      private_topic: "Tegi selle teema %{when} isiklikuks sõnumiks"
+      split_topic: "Poolita teema %{when} juurest"
+      invited_user: "Kutsusin %{who} %{when}"
+      invited_group: "Kutsusin %{who} %{when}"
       user_left: "%{who} eemaldas ennast sellest sõnumist %{when}"
-      removed_user: "kõrvaldatud %{who} %{when}"
-      removed_group: "kõrvaldasin %{who} %{when}"
+      removed_user: "Kõrvaldasin %{who} %{when}"
+      removed_group: "Kõrvaldasin %{who} %{when}"
       autoclosed:
-        enabled: "suletud %{when}"
-        disabled: "avatud %{when}"
+        enabled: "Suletud %{when}"
+        disabled: "Avatud %{when}"
       closed:
-        enabled: "suletud %{when}"
-        disabled: "avatud %{when}"
+        enabled: "Suletud %{when}"
+        disabled: "Avatud %{when}"
       archived:
-        enabled: "arhiveeritud %{when}"
-        disabled: "lahti pakitud %{when}"
+        enabled: "Arhiveeritud %{when}"
+        disabled: "Lahti pakitud %{when}"
       pinned:
-        enabled: "esiletõstetud %{when}"
-        disabled: "esiletõstmine eemaldatud %{when}"
+        enabled: "Esiletõstetud %{when}"
+        disabled: "Esiletõstmine eemaldatud %{when}"
       pinned_globally:
-        enabled: "esiletõstetud igal pool %{when}"
-        disabled: "esiletõstmine eemaldatud %{when}"
+        enabled: "Esiletõstetud igal pool %{when}"
+        disabled: "Esiletõstmine eemaldatud %{when}"
       visible:
-        enabled: "lisatud %{when}"
-        disabled: "eemaldatud %{when}"
+        enabled: "Lisatud %{when}"
+        disabled: "Eemaldatud %{when}"
       banner:
-        enabled: "tegi sellest bänneri %{when}. See ilmub iga lehe ülaosas, kuni kasutaja selle eemaldab."
-        disabled: "eemaldas selle bänneri %{when}. Seda ei kuvata enam iga lehe ülaosas."
-      forwarded: "edastas ülaltoodud e-kirja"
+        enabled: "Tegi sellest bänneri %{when}. See ilmub iga lehe ülaosas, kuni kasutaja selle eemaldab."
+        disabled: "Eemaldas selle bänneri %{when}. Seda ei kuvata enam iga lehe ülaosas."
     topic_admin_menu: "teema toimingud"
     emails_are_disabled: "Kõik väljuvad meilid on administraatori poolt blokeeritud. Ühtegi teavitust meili teel ei saadeta."
     software_update_prompt:
@@ -307,8 +306,6 @@ et:
     disable: "Tõkesta"
     continue: "Jätka"
     undo: "Ennista"
-    revert: "Võta tagasi"
-    failed: "Ebaõnnestus"
     switch_to_anon: "Sisene anonüümsesse režiimi"
     switch_from_anon: "Välju anonüümsest režiimist"
     banner:
@@ -1255,6 +1252,7 @@ et:
     login:
       username: "Kasutaja"
       password: "Parool"
+      show_password: "Näita"
       caps_lock_warning: "Suurtäherežiim on sees"
       error: "Tundmatu viga"
       rate_limit: "Palun oota veidi enne järgmist sisselogimiskatset."
@@ -1440,6 +1438,7 @@ et:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2508,7 +2507,7 @@ et:
       dismiss: "Ignoreeri"
     safe_mode:
       enabled: "Kaitstud režiim on aktiivne, väljumiseks sulge see brauseri aken."
-    do_not_disturb:
+    pause_notifications:
       remaining: "%{remaining} jäänud"
       options:
         half_hour: "30 minutit"
@@ -3190,7 +3189,6 @@ et:
       user:
         suspend_failed: "Selle kasutaja peatamisel tekkis viga %{error}"
         unsuspend_failed: "Selle kasutaja taaslubamisel tekkis viga %{error}"
-        suspend_duration: "Kauaks see kasutaja peatatakse?"
         suspend_reason_label: "Peatamise põhjus? See tekst <b>on nähtav kõigile</b> selle kasutaja profiililehel, samuti kuvatakse kasutajale, kui ta üritab sisse logida. Tee lühidalt."
         suspend_reason: "Põhjus"
         suspend_reason_title: "Peatamise põhjus"
@@ -3540,7 +3538,6 @@ et:
       next: "Järgmine"
       step-text: "Samm"
       step: "%{current} %{total}st"
-      upload: "Lae üles"
       uploading: "Laen üles..."
       upload_error: "Vabandame, selle faili üleslaadimisel tekkis viga. Palun proovi uuesti."
       invites:

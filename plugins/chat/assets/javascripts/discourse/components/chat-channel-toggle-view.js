@@ -3,12 +3,12 @@ import { htmlSafe } from "@ember/template";
 import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";
 import I18n from "I18n";
 import { action, computed } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
 import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default class ChatChannelToggleView extends Component {
   @service chat;
+  @service chatApi;
   @service router;
   tagName = "";
   channel = null;
@@ -47,16 +47,11 @@ export default class ChatChannelToggleView extends Component {
       ? CHANNEL_STATUSES.open
       : CHANNEL_STATUSES.closed;
 
-    return ajax(`/chat/chat_channels/${this.channel.id}/change_status.json`, {
-      method: "PUT",
-      data: { status },
-    })
-      .then(() => {
-        this.channel.set("status", status);
-      })
-      .catch(popupAjaxError)
+    return this.chatApi
+      .updateChannelStatus(this.channel.id, status)
       .finally(() => {
         this.onStatusChange?.(this.channel);
-      });
+      })
+      .catch(popupAjaxError);
   }
 }

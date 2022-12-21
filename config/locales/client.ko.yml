@@ -117,21 +117,21 @@ ko:
       email: "이메일로 공유"
       url: "URL 복사 및 공유"
     action_codes:
-      public_topic: "%{when}에 이 주제가 공개됨"
+      public_topic: "이 글을 %{when}에 공개"
       open_topic: "%{when}에 주제로 변환됨"
-      private_topic: "%{when}에 이 주제가 개인 메시지로 설정됨"
-      split_topic: "%{when}에 이 주제가 분리됨"
-      invited_user: "%{when}에 %{who} 님이 초대됨"
-      invited_group: "%{when}에 %{who} 님이 초대됨"
+      private_topic: "이 글을 개인 메시지로 설정 %{when}"
+      split_topic: "이 글을 %{when}에 분리"
+      invited_user: "%{when}에 %{who}님이 초대됨"
+      invited_group: "%{when}에 %{who}님이 초대됨"
       user_left: "%{who} 님이 %{when}에 이 메시지에서 자신을 제거함"
-      removed_user: "%{when}에 %{who} 님이 제거됨"
-      removed_group: "%{when}에 %{who} 님이 제거됨"
-      autobumped: "%{when}에 자동으로 끌어 올림"
+      removed_user: "%{when}에 %{who}님이 삭제됨"
+      removed_group: "%{when}에 %{who}님이 삭제됨"
+      autobumped: "%{when}에 자동으로 끌어 올려짐"
       autoclosed:
-        enabled: "%{when}에 종료됨"
+        enabled: "%{when}에 닫힘"
         disabled: "%{when}에 열림"
       closed:
-        enabled: "%{when}에 종료됨"
+        enabled: "%{when}에 닫힘"
         disabled: "%{when}에 열림"
       archived:
         enabled: "%{when}에 보관됨"
@@ -143,12 +143,11 @@ ko:
         enabled: "%{when}에 전체적으로 고정됨"
         disabled: "%{when}에 고정 해제됨"
       visible:
-        enabled: "%{when}에 목록에 게시됨"
-        disabled: "%{when}에 목록에서 숨김"
+        enabled: "%{when}에 목록에 게시"
+        disabled: "%{when}에 목록에서 감춤"
       banner:
         enabled: "%{when}에 배너를 만들었습니다. 사용자가 닫을 때까지 모든 페이지의 상단에 나타납니다."
-        disabled: "%{when}에 이 배너를 제거했습니다. 이제 모든 페이지의 상단에 표시되지 않습니다."
-      forwarded: "위 이메일을 전달했습니다."
+        disabled: "%{when}에 이 배너를 제거했습니다. 더 이상 모든 페이지의 상단에 표시되지 않습니다."
     topic_admin_menu: "주제 관리"
     skip_to_main_content: "메인 콘텐츠로 건너뛰기"
     emails_are_disabled: "관리자에 의해 모든 이메일의 발신이 비활성화되었습니다. 어떤 종류의 이메일 알림도 전송되지 않습니다."
@@ -343,8 +342,6 @@ ko:
     disable: "비활성화"
     continue: "계속하기"
     undo: "실행 취소"
-    revert: "되돌리기"
-    failed: "실패"
     switch_to_anon: "익명 모드 시작"
     switch_from_anon: "익명 모드 종료"
     banner:
@@ -939,7 +936,6 @@ ko:
       notification_schedule:
         title: "알림 일정"
         label: "사용자 지정 알림 일정 활성화"
-        tip: "이 시간 이외에는 자동으로 '방해 금지' 상태가 됩니다."
         midnight: "자정"
         none: "없음"
         monday: "월요일"
@@ -1701,6 +1697,7 @@ ko:
       title: "로그인"
       username: "사용자"
       password: "비밀번호"
+      show_password: "보기"
       second_factor_title: "2단계 인증"
       second_factor_description: "앱의 인증 코드를 입력하세요."
       second_factor_backup: "백업 코드로 로그인"
@@ -2016,6 +2013,7 @@ ko:
       bookmark_reminder: "<span>%{username}</span> %{description} "
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description} "
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2074,6 +2072,7 @@ ko:
         invited_to_private_message: "비공개 메시지에 초대됨"
         invitee_accepted: "초대 수락됨"
         posted: "새 게시물"
+        watching_category_or_tag: "새 글"
         moved_post: "게시물 이동됨"
         linked: "링크됨"
         bookmark_reminder: "북마크 미리 알림"
@@ -3485,16 +3484,14 @@ ko:
     safe_mode:
       enabled: "안전 모드가 활성화되었습니다. 안전 모드를 종료하려면 이 브라우저 창을 닫으세요."
     image_removed: "(이미지 제거됨)"
-    do_not_disturb:
-      title: "다음 시간 동안 방해 금지..."
-      label: "방해 금지"
+    pause_notifications:
       remaining: "%{remaining} 남음"
       options:
         half_hour: "30분"
         one_hour: "1시간"
         two_hours: "2시간"
         tomorrow: "내일까지"
-        custom: "사용자 지정"
+        custom: "사용자 정의"
       set_schedule: "알림 일정 설정"
     trust_levels:
       names:
@@ -4148,7 +4145,6 @@ ko:
             error: "이 테마는이 버전의 Discourse와 호환되지 않기 때문에 자동으로 비활성화되었습니다."
             minimum: "Discourse 버전 %{version} 이상이 필요합니다."
             maximum: "Discourse 버전 %{version} 이하가 필요합니다."
-          component_of: "구성 요소:"
           update_to_latest: "최신으로 업데이트"
           check_for_updates: "업데이트 체크하기"
           updating: "업데이트 중..."
@@ -4618,7 +4614,6 @@ ko:
       user:
         suspend_failed: "이 사용자를 정지하는 중에 오류 발생 %{error}"
         unsuspend_failed: "이 사용자를 정지 해제하는 중에 오류 발생 %{error}"
-        suspend_duration: "이 사용자를 언제까지 정지할까요?"
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
         suspend_reason_hidden_label: "정지 이유는 무엇인가요? 이 텍스트는 해당 사용자가 로그인할 때 보입니다. 짧게 적어주세요."
         suspend_reason: "Reason"
@@ -4652,7 +4647,6 @@ ko:
         penalty_post_edit: "게시물 편집"
         penalty_post_none: "아무것도 안 함"
         penalty_count: "페널티 수"
-        penalty_history: "페널티 히스토리"
         clear_penalty_history:
           title: "페널티 히스토리 지우기"
           description: "페널티가 있는 사용자는 신뢰 레벨 3을 받을 수 없음"
@@ -5118,10 +5112,8 @@ ko:
       finish: "종료"
       back: "뒤로 가기"
       next: "다음"
-      configure_more: "추가 구성..."
       step-text: "단계"
       step: "%{current} / %{total}"
-      upload: "업로드"
       uploading: "업로드 중..."
       upload_error: "파일을 업로드하는 중에 오류가 발생했습니다. 다시 시도하세요."
       staff_count:

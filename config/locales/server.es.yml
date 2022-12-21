@@ -233,6 +233,7 @@ es:
       <p>Si no, <a href="%{base_url}/password-reset">restablece tu contraseña</a>.</p>
     not_found_template_link: |
       <p>Esta invitación a <a href="%{base_url}">%{site_name}</a> ya no se puede usar. Por favor, pídele a la persona que te invitó que te vuelva a enviar una nueva invitación.</p>
+    existing_user_cannot_redeem: "Esta invitación no se puede canjear. Pide a la persona que te invitó que te envíe una nueva invitación."
     user_exists: "No hace falta que invites a <b>%{email}</b>, ¡ya tienen una cuenta!"
     invite_exists: "Ya has invitado a <b>%{email}</b>."
     invalid_email: "%{email} no es un correo electrónico válido."
@@ -774,6 +775,7 @@ es:
     success: "Has cambiado tu contraseña correctamente y ahora has iniciado sesión."
     success_unapproved: "Has cambiado tu contraseña correctamente."
   email_login:
+    invalid_token: '¡Uy! El enlace que has utilizado ya no funciona. Ahora puedes <a href="%{base_url}/login">Iniciar sesión</a>. Si has olvidado tu contraseña, puedes <a href="%{base_url}/password-reset">solicitar un enlace</a> para restablecerla.'
     title: "Iniciar sesión con correo electrónico"
   user_auth_tokens:
     browser:
@@ -1090,6 +1092,11 @@ es:
         editor: Editor
         author: Autor
         edit_reason: Motivo
+    consolidated_api_requests:
+      xaxis:
+        api: "API"
+        user_api: "API de usuario"
+      yaxis: "Día"
     dau_by_mau:
       title: "UAD/UAM"
       xaxis: "Día"
@@ -1564,7 +1571,6 @@ es:
     email_token_valid_hours: "Los tokens para restablecer contraseña olvidada / activar cuenta son válidos durante (n) horas."
     enable_badges: "Activar el sistema de insignias"
     max_favorite_badges: "Número máximo de insignias que el usuario puede seleccionar"
-    enable_whispers: "Permitir que los miembros del equipo se comuniquen entre ellos en privado dentro de los temas."
     whispers_allowed_groups: "Permitir la comunicación privada dentro de los temas para los miembros de los grupos especificados."
     allow_index_in_robots_txt: "Especificar en robots.txt que se permite que este sitio sea indexado por los motores de búsqueda en Internet. En casos excepcionales, puedes <a href='%{base_path}/admin/customize/robots'>sobrescribir robots.txt</a> permanentemente."
     blocked_email_domains: "Lista de dominios de correo electrónico que no pueden ser utilizados para registrarse. Ejemplo: mailinator.com|trashmail.net"
@@ -1924,6 +1930,7 @@ es:
     enable_user_directory: "Proporcionar un directorio de usuarios que se pueda navegar"
     enable_group_directory: "Proporcionar un directorio de grupos que se pueda navegar"
     enable_category_group_moderation: "Permitir que los grupos moderen contenido en categorías específicas"
+    group_in_subject: "Configura %%{optional_pm} en el título del correo electrónico para nombrar el primer grupo en MP, consulta: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Personalizar el formato del asunto para correos electrónicos estándar</a>"
     allow_anonymous_posting: "Permitir a los usuarios cambiar a modo anónimo"
     anonymous_posting_min_trust_level: "Nivel de confianza mínimo requerido para permitir la publicación anónima"
     anonymous_account_duration_minutes: "Para proteger el anonimato, crear una nueva cuenta anónima cada N minutos para cada usuario. Ejemplo: si se establece en 600, tan pronto como pasen 600 minutos desde la última publicación Y el usuario cambie a anónimo, se creará una nueva cuenta anónima."
@@ -1973,7 +1980,6 @@ es:
     display_name_on_posts: "Mostrar el nombre completo de un usuario en sus publicaciones, además de su @usuario."
     show_time_gap_days: "Si entre dos publicaciones han pasado este número de días, mostrar el lapso de tiempo en el tema."
     short_progress_text_threshold: "Después de que el número de publicaciones en un tema alcance esta cifra, la barra de progreso solo mostrará el número de publicaciones actual. Si cambias la anchura de la barra de progreso, deberías revisar este valor."
-    default_code_lang: "Lenguaje de programación predeterminado para resaltado de sintaxis en bloques de código («auto» para intentar detectar, «nohighlight» para no resaltar, ruby, python, etc.) Este valor también debe estar presente en el ajuste «highlighted languages»."
     warn_reviving_old_topic_age: "Cuando alguien publica en un tema cuya última respuesta fue hace más tiempo que este número de días, se le mostrará un aviso para desalentar el hecho de revivir una antigua discusión. Establece el valor en 0 para desactivar."
     autohighlight_all_code: "Forzar el resaltado de código a los bloques de código preformateado cuando no se especifique el lenguaje del código."
     highlighted_languages: "Reglas de resaltado de sintaxis incluidas. (Aviso: incluir demasiados lenguajes puede afectar al rendimiento) Consulta: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> para un demo."
@@ -4287,29 +4293,24 @@ es:
           site_description:
             label: "Describe tu comunidad en una frase"
             placeholder: "Un sitio para que Juana y sus amigos discutan cosas interesantes"
-          contact_email:
-            label: "Detalles de contacto"
-            placeholder: "ejemplo@usuario.com"
-            description: "Persona o grupo responsable de esta comunidad. Se usa para avisar sobre actualizaciones críticas, y aparece en <a href='%{base_path}/about' target='_blank'>su página sobre</a> para el contacto urgente."
           default_locale:
             label: "Idioma"
       privacy:
-        title: "Experiencia del miembro"
         fields:
           login_required:
             placeholder: "Privada"
             extra_description: "Solo los usuarios con una sesión iniciada pueden acceder a esta comunidad"
           invite_only:
-            placeholder: "Solo por invitación"
             extra_description: "Los usuarios deben ser invitados por usuarios de confianza o el personal antes de que puedan registrarse."
           must_approve_users:
-            placeholder: "Requiere aprobación"
             extra_description: "Los usuarios deben ser aprobados por el personal"
+          chat_enabled:
+            placeholder: "Habilitar chat"
+          enable_sidebar:
+            placeholder: "Activar barra lateral"
       ready:
-        title: "¡Tu foro de Discourse está listo!"
         description: "Ya está. Has hecho lo básico para configurar tu comunidad. Ahora puedes entrar y echar un vistazo, escribir un tema de bienvenida y enviar invitaciones.<br><br>¡Disfrútala!"
       styling:
-        title: "Apariencia"
         fields:
           color_scheme:
             label: "Paleta de colores"
@@ -4340,37 +4341,19 @@ es:
                 label: "Cajas de categorías con temas"
               subcategories_with_featured_topics:
                 label: "Subcategorías con temas destacados"
-      branding:
-        title: "Personalizar logotipos"
-        fields:
-          logo:
-            label: "Logo principal"
-            description: "El logotipo en la parte superior izquierda de tu sitio. Usa una imagen rectangular ancha, con una altura de 120 píxeles y una relación de aspecto superior a 3:1"
-          logo_small:
-            label: "Logo cuadrado"
-            description: "Una versión cuadrada del logotipo. Estará en la parte superior izquierda al bajar en la página, y saldrá como icono cuando se comparta en las redes sociales. Lo ideal es que sea de al menos de 512x512 píxeles."
       corporate:
-        title: "Tu organización"
         fields:
-          company_name:
-            label: "Nombre de la compañía"
-            placeholder: "Organización de ejemplo"
-            description: "Introducido en tu página de Términos del servicio. Puedes omitirlo si no existe ninguna empresa."
           governing_law:
-            label: "Ley que rige"
             placeholder: "Ley de California"
-            description: "Introducido en tu página de Términos del servicio. Puedes omitirlo si no existe ninguna empresa."
           contact_url:
-            label: "Página web"
             placeholder: "https://ejemplo.com/contacto"
-            description: "Tu página de contacto general o la de tu organización. Se mostrará en la <a href='%{base_path}/about' target='_blank'>página de acerca de</a>."
           city_for_disputes:
-            label: "Ciudad para disputas"
             placeholder: "San Francisco, California"
-            description: "Introducido en tu página de Términos del servicio. Puedes omitirlo si no existe ninguna empresa."
           site_contact:
-            label: "Mensajes automatizados"
             description: "Todos los mensajes personales automatizados de Discourse serán enviados desde este usuario, tales como denuncias de advertencia y notificaciones de copias de seguridad exitosas."
+          contact_email:
+            label: "Detalles de contacto"
+            placeholder: "ejemplo@usuario.com"
       invites:
         title: "Invitar personal"
         description: "¡Ya casi estás listo! Vamos a invitar otras personas para que ayuden a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>iniciar discusiones</a> con temas interesantes y respuestas para que comience tu comunidad."

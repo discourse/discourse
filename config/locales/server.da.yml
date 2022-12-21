@@ -1407,7 +1407,6 @@ da:
     send_old_credential_reminder_days: "Påmind om gamle legitimationsoplysninger efter dage"
     email_token_valid_hours: "Glemte password / konto aktiverings muligheder er gyldige i (n) timer."
     enable_badges: "Aktiver emblem systemet"
-    enable_whispers: "Tillad at hjælperteamet har private samtaler i emner."
     allow_index_in_robots_txt: "Angiv i robots.txt, at dette websted må indekseres af websøgemaskiner. I undtagelsestilfælde kan du permanent <a href='%{base_path}/admin/customize/robots'>tilsidesætte robots.txt</a>."
     blocked_email_domains: "En liste, der er afgrænset via pipe (lodret steg), over e-mail-domæner, som brugere ikke har tilladelse til at registrere konti med. Eksempel: mailinator.com|trashmail.net"
     allowed_email_domains: "En pipesepareret liste over e-mail-domæner, som brugerne SKAL registrere konti med. ADVARSEL: Brugere med andre e-mail-domæner end dem, der er angivet, vil ikke være tilladt!"
@@ -3357,12 +3356,8 @@ da:
           login_required:
             placeholder: "Privat"
             extra_description: "Kun brugere, der er logget ind, har adgang til dette fællesskab"
-          must_approve_users:
-            placeholder: "Kræv godkendelse"
           chat_enabled:
-            placeholder: "Aktiver Chat"
-      ready:
-        title: "Discourse er gjort klar til dig!"
+            placeholder: "Aktiver chat"
       styling:
         fields:
           body_font:
@@ -3383,29 +3378,14 @@ da:
                 label: "Kategorier og Seneste Emner"
               categories_and_top_topics:
                 label: "Kategorier og top emner"
-      branding:
-        fields:
-          logo:
-            label: "Primært logo"
-          logo_small:
-            label: "Firkantet Logo"
       corporate:
         fields:
-          company_name:
-            label: "Virksomhedens Navn"
-            placeholder: "Eksempel Organisation"
           governing_law:
-            label: "Gældende Lov"
             placeholder: "Californiens lov"
           contact_url:
-            label: "Webside"
             placeholder: "https://www.example.dk/kontakt-os"
-            description: "Generel kontakt webside for dig eller din organisation. Vil blive vist på <a href='%{base_path}/about' target='_blank'>din om side</a>."
           city_for_disputes:
-            label: "By for tvister"
             placeholder: "San Francisco, Californien"
-          site_contact:
-            label: "Automatiske Meddelelser"
       invites:
         title: "Inviter hjælpere"
       finished:

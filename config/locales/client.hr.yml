@@ -173,38 +173,37 @@ hr:
       email: "Pošalji putem e-maila"
       url: "Kopiraj i podijeli URL"
     action_codes:
-      public_topic: "je učinio ovu temu javnom %{when}"
-      open_topic: "pretvorio ovo u temu %{when}"
-      private_topic: "je učinio ovu temu privatnom porukom %{when}"
-      split_topic: "je podijelio ovu temu %{when}"
-      invited_user: "je pozvao %{who} %{when}"
-      invited_group: "je pozvao %{who} %{when}"
+      public_topic: "Je učinio ovu temu javnom %{when}"
+      open_topic: "Pretvorio ovo u temu %{when}"
+      private_topic: "Je učinio ovu temu privatnom porukom %{when}"
+      split_topic: "Je podiJelio ovu temu %{when}"
+      invited_user: "Je pozvao %{who} %{when}"
+      invited_group: "Je pozvao %{who} %{when}"
       user_left: "%{who} se uklonio iz ove poruke %{when}"
-      removed_user: "je uklonio %{who} %{when}"
-      removed_group: "je uklonio %{who} %{when}"
-      autobumped: "automatski bumpirano %{when}"
+      removed_user: "Je uklonio %{who} %{when}"
+      removed_group: "Je uklonio %{who} %{when}"
+      autobumped: "Automatski bumpirano %{when}"
       autoclosed:
-        enabled: "zatvoren %{when}"
-        disabled: "otvoren %{when}"
+        enabled: "Zatvoren %{when}"
+        disabled: "Otvoren %{when}"
       closed:
-        enabled: "zatvoren %{when}"
-        disabled: "otvoren %{when}"
+        enabled: "Zatvoren %{when}"
+        disabled: "Otvoren %{when}"
       archived:
-        enabled: "pohranjen %{when}"
-        disabled: "%{when} ponovo otvoren"
+        enabled: "Pohranjen %{when}"
+        disabled: "%{when} Ponovo otvoren"
       pinned:
-        enabled: "zakvačeno %{when}"
-        disabled: "otkvačeno %{when}"
+        enabled: "Zakvačeno %{when}"
+        disabled: "Otkvačeno %{when}"
       pinned_globally:
         enabled: "Globalno zakvačeno %{when}"
-        disabled: "otkvačeno %{when}"
+        disabled: "Otkvačeno %{when}"
       visible:
-        enabled: "navedeno %{when}"
-        disabled: "nenavedeno %{when}"
+        enabled: "Navedeno %{when}"
+        disabled: "Nenavedeno %{when}"
       banner:
-        enabled: "pretvoreno u banner %{when}. Banner će biti prikazan na vrhu svake stranice dok ga korisnik ne isključi."
-        disabled: "maknuo banner %{when}. Banner se više neće prikazivati na vrhu svake stranice."
-      forwarded: "proslijedio je gore navedenu e-poštu"
+        enabled: "Pretvoreno u banner %{when}. Banner će biti prikazan na vrhu svake stranice dok ga korisnik ne isključi."
+        disabled: "Maknuo banner %{when}. Banner se više neće prikazivati na vrhu svake stranice."
     topic_admin_menu: "mogućnosti teme"
     skip_to_main_content: "Preskoči na glavni sadržaj"
     emails_are_disabled: "Svi emailovi prema van su blokirani od strane administratora. Ni jedna vrsta obavijesti putem emaila neće biti poslana."
@@ -421,8 +420,6 @@ hr:
     disable: "Onemogući"
     continue: "Nastavi"
     undo: "Vrati na prethodno"
-    revert: "Vrati nazad"
-    failed: "Neuspješno"
     switch_to_anon: "Uđi u anonimni mod"
     switch_from_anon: "Napusti neimenovani način"
     banner:
@@ -1058,7 +1055,6 @@ hr:
       notification_schedule:
         title: "Raspored obavijesti (notifikacije)"
         label: "Omogući prilagođeni raspored obavijesti"
-        tip: "Van ovih sati bit ćete automatski postavljeni na 'ne smetaj'."
         midnight: "Ponoć"
         none: "Ništa"
         monday: "ponedjeljak"
@@ -1311,7 +1307,10 @@ hr:
         use: "Korištenje aplikacije Authenticator"
         enforced_notice: "Prije pristupanja ovoj stranici morate omogućiti autentifikaciju dva faktora."
         disable: "Onemogući"
+        disable_confirm: "Jeste li sigurni da želite onemogućiti dvofaktorsku provjeru autentičnosti?"
         delete: "Izbriši"
+        delete_confirm_instruction: "Za potvrdu unesite <strong>%{confirm}</strong> u okvir ispod."
+        delete_single_confirm_title: "Brisanje autentifikatora"
         save: "Spremi"
         edit: "Izmijeni"
         edit_title: "Uredi autentifikator"
@@ -1704,6 +1703,7 @@ hr:
       save: "Spremi"
       set_custom_status: "Postavi prilagođeni status"
       what_are_you_doing: "Što radiš?"
+      pause_notifications: "Pauziraj obavijesti"
     loading: "Očitavanje..."
     errors:
       prev_page: "pri pokušaju očitanja"
@@ -1843,6 +1843,7 @@ hr:
       title: "Prijavite se"
       username: "Korisnik"
       password: "Zaporka"
+      show_password: "Pokaži"
       second_factor_title: "Dvofaktorska autentifikacija"
       second_factor_description: "Unesite kod za provjeru autentičnosti iz svoje aplikacije:"
       second_factor_backup: "Prijavite se pomoću rezervnog koda"
@@ -2193,6 +2194,7 @@ hr:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2227,6 +2229,7 @@ hr:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - dovršeno"
+      new_features: "Dostupne su nove značajke!"
       dismiss_confirmation:
         body:
           default:
@@ -2261,6 +2264,7 @@ hr:
         invited_to_private_message: "pozvan na privatnu poruku"
         invitee_accepted: "poziv prihvaćen"
         posted: "novi post"
+        watching_category_or_tag: "novi post"
         moved_post: "post premješten"
         linked: "povezan"
         bookmark_reminder: "podsjetnik na oznaku"
@@ -2276,6 +2280,7 @@ hr:
         membership_request_consolidated: "novi zahtjevi za članstvo"
         reaction: "nova reakcija"
         votes_released: "Glasanje je objavljeno"
+        new_features: "Objavljene su nove značajke za platformu Discourse!"
     upload_selector:
       uploading: "Učitavanje"
       processing: "Obrada prijenosa"
@@ -3824,9 +3829,7 @@ hr:
     safe_mode:
       enabled: "Omogućen je siguran način rada, da biste izašli iz sigurnog načina rada, zatvorite ovaj prozor preglednika"
     image_removed: "(slika uklonjena)"
-    do_not_disturb:
-      title: "Ne ometaj za ..."
-      label: "Ne smetaj"
+    pause_notifications:
       remaining: "%{remaining} preostalih"
       options:
         half_hour: "30 minuta"
@@ -4493,7 +4496,6 @@ hr:
             error: "Ova je tema automatski onemogućena jer nije kompatibilna s ovom verzijom Discoursa."
             minimum: "Zahtijeva verziju Discoursa %{version} ili noviju."
             maximum: "Zahtijeva verziju Discoursa %{version} ili nižu."
-          component_of: "Komponenta:"
           update_to_latest: "Ažurirajte na najnovije"
           check_for_updates: "Provjerite ima li ažuriranja"
           updating: "Ažuriranje..."
@@ -4962,7 +4964,6 @@ hr:
       user:
         suspend_failed: "Nešto je pošlo po krivu pri suspenziji ovog korisnika %{error}"
         unsuspend_failed: "Nešto je pošlo po krivu pri ukidanju suspenzije ovog korisnika %{error}"
-        suspend_duration: "Koliko dugo će ovaj korisnik biti suspendiran?"
         suspend_reason_label: "Zažto ga suspendiraš? Ovaj tekst <b>će biti vidljiv svima</b> na korisničkom profilu korisnika, i biti će prikazan korisniku kad se pokuša prijaviti. Neka je kratak."
         suspend_reason_hidden_label: "Zašto suspendiraš? Ovaj tekst će biti prikazan korisniku kada se pokuša prijaviti. Držite ga kratko."
         suspend_reason: "Razlog"
@@ -4996,7 +4997,6 @@ hr:
         penalty_post_edit: "Uredi post"
         penalty_post_none: "Ne radi ništa"
         penalty_count: "Broj kazni"
-        penalty_history: "Povijest kazni"
         clear_penalty_history:
           title: "Obriši povijest kazne"
           description: "korisnici s kaznama ne mogu doseći TL3"
@@ -5470,7 +5470,6 @@ hr:
       next: "Sljedeći"
       step-text: "Korak"
       step: "%{current} od %{total}"
-      upload: "Učitaj"
       uploading: "Učitavanje..."
       upload_error: "Žao nam je, dogodila se greška pri učitavanju te datoteke. Molimo pokušajte ponovo."
       staff_count:

@@ -145,38 +145,37 @@ de:
       email: "Per E-Mail senden"
       url: "URL kopieren und teilen"
     action_codes:
-      public_topic: "hat dieses Thema öffentlich gemacht, %{when}"
-      open_topic: "hat dies in ein Thema umgewandelt, %{when}"
-      private_topic: "hat dieses Thema in eine Nachricht umgewandelt, %{when}"
-      split_topic: "hat dieses Thema aufgeteilt, %{when}"
-      invited_user: "hat %{who} eingeladen, %{when}"
-      invited_group: "hat %{who} eingeladen, %{when}"
+      public_topic: "Hat dieses Thema öffentlich gemacht, %{when}"
+      open_topic: "Hat dies in ein Thema umgewandelt, %{when}"
+      private_topic: "Hat dieses Thema in eine Nachricht umgewandelt, %{when}"
+      split_topic: "Hat dieses Thema aufgeteilt, %{when}"
+      invited_user: "Hat %{who} eingeladen, %{when}"
+      invited_group: "Hat %{who} eingeladen, %{when}"
       user_left: "%{who} hat sich selbst von dieser Nachricht entfernt, %{when}"
-      removed_user: "hat %{who} entfernt, %{when}"
-      removed_group: "hat %{who} entfernt, %{when}"
+      removed_user: "Hat %{who} entfernt, %{when}"
+      removed_group: "Hat %{who} entfernt, %{when}"
       autobumped: "Thema wurde automatisch nach oben geschoben, %{when}"
       autoclosed:
-        enabled: "geschlossen, %{when}"
-        disabled: "geöffnet, %{when}"
+        enabled: "Geschlossen, %{when}"
+        disabled: "Geöffnet, %{when}"
       closed:
-        enabled: "geschlossen, %{when}"
-        disabled: "geöffnet, %{when}"
+        enabled: "Geschlossen, %{when}"
+        disabled: "Geöffnet, %{when}"
       archived:
-        enabled: "archiviert, %{when}"
-        disabled: "aus dem Archiv geholt, %{when}"
+        enabled: "Archiviert, %{when}"
+        disabled: "Aus dem Archiv geholt, %{when}"
       pinned:
-        enabled: "angeheftet, %{when}"
-        disabled: "losgelöst, %{when}"
+        enabled: "Angeheftet, %{when}"
+        disabled: "Losgelöst, %{when}"
       pinned_globally:
-        enabled: "global angeheftet, %{when}"
-        disabled: "losgelöst, %{when}"
+        enabled: "Global angeheftet, %{when}"
+        disabled: "Losgelöst, %{when}"
       visible:
-        enabled: "sichtbar gemacht, %{when}"
-        disabled: "unsichtbar gemacht, %{when}"
+        enabled: "Sichtbar gemacht, %{when}"
+        disabled: "Unsichtbar gemacht, %{when}"
       banner:
-        enabled: "hat dieses Banner erstellt, %{when}. Es wird oberhalb jeder Seite angezeigt, bis es vom Benutzer weggeklickt wird."
-        disabled: "hat dieses Banner entfernt, %{when}. Es wird nicht mehr oberhalb jeder Seite angezeigt."
-      forwarded: "hat die obige E-Mail weitergeleitet"
+        enabled: "Hat dieses Banner erstellt, %{when}. Es wird oberhalb jeder Seite angezeigt, bis es vom Benutzer weggeklickt wird."
+        disabled: "Hat dieses Banner entfernt, %{when}. Es wird nicht mehr oberhalb jeder Seite angezeigt."
     topic_admin_menu: "Themen-Administration"
     skip_to_main_content: "Zum Hauptinhalt springen"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
@@ -387,8 +386,6 @@ de:
     disable: "Deaktivieren"
     continue: "Weiter"
     undo: "Rückgängig machen"
-    revert: "Verwerfen"
-    failed: "Fehlgeschlagen"
     switch_to_anon: "Anonymen Modus aktivieren"
     switch_from_anon: "Anonymen Modus deaktivieren"
     banner:
@@ -1011,7 +1008,6 @@ de:
       notification_schedule:
         title: "Zeitplan für Benachrichtigungen"
         label: "Aktiviere den benutzerdefinierten Zeitplan für Benachrichtigungen"
-        tip: "Außerhalb dieser Zeiten wird automatisch der „Nicht stören“-Modus aktiviert."
         midnight: "Mitternacht"
         none: "Keine"
         monday: "Montag"
@@ -1217,6 +1213,7 @@ de:
         profile: "Profil"
         emails: "E-Mails"
         notifications: "Benachrichtigungen"
+        tracking: "Verfolgen"
         categories: "Kategorien"
         users: "Benutzer"
         tags: "Schlagwörter"
@@ -1274,6 +1271,7 @@ de:
         use: "Benutze die Authentifizierungs-App"
         enforced_notice: "Du musst die Zwei-Faktor-Authentifizierung aktivieren, um auf die Website zugreifen zu können."
         disable: "Deaktivieren"
+        delete: "Löschen"
         save: "Speichern"
         edit: "Bearbeiten"
         edit_title: "Authentifikator bearbeiten"
@@ -1469,6 +1467,7 @@ de:
       email_in_reply_to: "Einen Auszug aus dem beantworteten Beitrag in E-Mails einfügen."
       other_settings: "Andere"
       categories_settings: "Kategorien"
+      topics_settings: "Themen"
       new_topic_duration:
         label: "Themen als neu anzeigen, wenn"
         not_viewed: "ich diese noch nicht betrachtet habe"
@@ -1823,6 +1822,7 @@ de:
       title: "Anmelden"
       username: "Benutzername"
       password: "Passwort"
+      show_password: "Anzeigen"
       second_factor_title: "Zwei-Faktor-Authentifizierung"
       second_factor_description: "Bitte gib den Authentifizierungscode aus deiner App ein:"
       second_factor_backup: "Anmeldung mit einem Wiederherstellungscode"
@@ -2170,6 +2170,7 @@ de:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2239,6 +2240,7 @@ de:
         invited_to_private_message: "zu einer privaten Nachricht eingeladen"
         invitee_accepted: "Einladung angenommen"
         posted: "neuer Beitrag"
+        watching_category_or_tag: "neuer Beitrag"
         moved_post: "Beitrag verschoben"
         linked: "verknüpft"
         bookmark_reminder: "Erinnerung an Lesezeichen"
@@ -2277,6 +2279,7 @@ de:
         other: "<span>%{count}%{plus} Ergebnisse für </span><span class='term'>%{term}</span>"
       title: "Suche"
       full_page_title: "Suche"
+      results: "ergebnisse"
       no_results: "Keine Ergebnisse gefunden."
       no_more_results: "Es wurden keine weiteren Ergebnisse gefunden."
       post_format: "#%{post_number} von %{username}"
@@ -3403,7 +3406,7 @@ de:
     sr_replies: "Nach Antworten sortieren"
     views_long:
       one: "dieses Thema wurde %{count}-mal betrachtet"
-      other: "dieses Thema wurde %{number}-mal betrachtet"
+      other: "dieses Thema wurde %{count}-mal betrachtet"
     activity: "Aktivität"
     sr_activity: "Nach Aktivität sortieren"
     likes: "„Gefällt mir“"
@@ -3784,9 +3787,7 @@ de:
     safe_mode:
       enabled: "Der abgesicherte Modus ist aktiviert. Schließe das Browserfenster, um ihn zu verlassen."
     image_removed: "(Bild entfernt)"
-    do_not_disturb:
-      title: "Nicht stören für …"
-      label: "Nicht stören"
+    pause_notifications:
       remaining: "%{remaining} verbleibend"
       options:
         half_hour: "30 Minuten"
@@ -4170,6 +4171,7 @@ de:
         detailed_instruction: "Wenn das ausgewählte Ereignis eintritt, wird eine POST-Anfrage an die angegebene URL verschickt."
         new: "Neuer Webhook"
         create: "Erstellen"
+        edit: "Bearbeiten"
         save: "Speichern"
         controls: "Kontrollelemente"
         go_back: "Zurück zur Liste"
@@ -4271,6 +4273,8 @@ de:
         howto: "Wie installiere ich Plug-ins?"
         official: "Offizielles Plug-in"
         broken_route: "Link zu „%{name}“ kann nicht konfiguriert werden. Vergewissere dich, dass Werbeblocker deaktiviert sind, und versuche, die Seite neu zu laden."
+      navigation_menu:
+        sidebar: "Seitenleiste"
       backups:
         title: "Backups"
         menu:
@@ -4484,7 +4488,6 @@ de:
             error: "Dieses Theme wurde automatisch deaktiviert, weil es mit dieser Discourse-Version nicht kompatibel ist."
             minimum: "Erfordert Discourse-Version %{version} oder höher."
             maximum: "Erfordert Discourse-Version %{version} oder niedriger."
-          component_of: "Komponente von:"
           update_to_latest: "Aktualisieren auf neueste Version"
           check_for_updates: "Nach Aktualisierungen suchen"
           updating: "Wird aktualisiert …"
@@ -4957,7 +4960,6 @@ de:
       user:
         suspend_failed: "Beim Sperren dieses Benutzers ist etwas schiefgegangen %{error}"
         unsuspend_failed: "Beim Entsperren dieses Benutzers ist etwas schiefgegangen %{error}"
-        suspend_duration: "Wie lange soll dieser Benutzer gesperrt werden?"
         suspend_reason_label: "Was ist der Grund für die Sperre? Dieser Text ist auf der Profilseite des Benutzers <b>für jeden sichtbar</b> und wird dem Benutzer angezeigt, wenn sich dieser anmelden will. Fasse dich kurz."
         suspend_reason_hidden_label: "Was ist der Grund für die Sperre? Dieser Text wird dem Benutzer angezeigt, wenn er versucht, sich anzumelden. Fasse dich kurz."
         suspend_reason: "Grund"
@@ -4991,7 +4993,6 @@ de:
         penalty_post_edit: "Beitrag bearbeiten"
         penalty_post_none: "Nichts tun"
         penalty_count: "Anzahl der Strafen"
-        penalty_history: "Strafhistorie"
         clear_penalty_history:
           title: "Lösche die Strafenhistorie"
           description: "Benutzer mit Strafen können VS3 nicht erreichen"
@@ -5146,6 +5147,11 @@ de:
         silenced_count: "Stummgeschaltet"
         suspended_count: "Gesperrt"
         last_six_months: "Letzte 6 Monate"
+        other_matches_list:
+          username: "Benutzername"
+          trust_level: "Vertrauensstufe"
+          read_time: "Lesezeit"
+          posts: "Beiträge"
         tl3_requirements:
           title: "Anforderungen für Vertrauensstufe 3"
           table_title:
@@ -5290,6 +5296,7 @@ de:
           search: "Suche"
           groups: "Gruppen"
           dashboard: "Dashboard"
+          navigation: "Navigation"
         secret_list:
           invalid_input: "Eingabefelder können nicht leer sein oder vertikale Balkenzeichen enthalten."
         default_categories:
@@ -5460,10 +5467,8 @@ de:
       finish: "Installation verlassen"
       back: "Zurück"
       next: "Nächstes"
-      configure_more: "Mehr konfigurieren …"
       step-text: "Schritt"
       step: "%{current} von %{total}"
-      upload: "Hochladen"
       uploading: "Wird hochgeladen …"
       upload_error: "Entschuldige, es gab einen Fehler beim Hochladen der Datei. Bitte versuche es noch einmal."
       staff_count:

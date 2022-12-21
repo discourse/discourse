@@ -48,8 +48,8 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
   });
 
   test("Muted channel", async function (assert) {
-    this.channel.current_user_membership.set("muted", true);
-    this.channel.current_user_membership.set("following", true);
+    this.channel.currentUserMembership.muted = true;
+    this.channel.currentUserMembership.following = true;
     await render(hbs`{{chat-channel-card channel=channel}}`);
 
     assert.equal(
@@ -59,7 +59,7 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
   });
 
   test("Joined channel", async function (assert) {
-    this.channel.current_user_membership.set("following", true);
+    this.channel.currentUserMembership.set("following", true);
     await render(hbs`{{chat-channel-card channel=channel}}`);
 
     assert.equal(
@@ -77,7 +77,7 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
   });
 
   test("Memberships count", async function (assert) {
-    this.channel.set("memberships_count", 4);
+    this.channel.set("membershipsCount", 4);
     await render(hbs`{{chat-channel-card channel=channel}}`);
 
     assert.equal(

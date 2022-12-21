@@ -275,7 +275,7 @@ RSpec.describe Admin::UsersController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      shared_examples "suspension of active user possible"
+      include_examples "suspension of active user possible"
 
       it "checks if user is suspended" do
         put "/admin/users/#{user.id}/suspend.json", params: {

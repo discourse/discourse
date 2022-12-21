@@ -154,36 +154,36 @@ sk:
     share:
       close: "zatvoriť"
     action_codes:
-      public_topic: "téma je verejná%{when}"
-      private_topic: "urobil(a) z témy osobnú správu%{when}"
-      split_topic: "rozdeľ tému %{when}"
-      invited_user: "pozvaný %{who} %{when}"
-      invited_group: "pozvaný %{who} %{when}"
+      public_topic: "Téma je verejná%{when}"
+      private_topic: "Urobil(a) z témy osobnú správu%{when}"
+      split_topic: "Rozdeľ tému %{when}"
+      invited_user: "Pozvaný %{who} %{when}"
+      invited_group: "Pozvaný %{who} %{when}"
       user_left: "%{who}ktorí sa odobrali z tejto správy %{when}"
-      removed_user: "odstránený %{who} %{when}"
-      removed_group: "odstránený %{who} %{when}"
-      autobumped: "automaticky obnovené %{when}"
+      removed_user: "Odstránený %{who} %{when}"
+      removed_group: "Odstránený %{who} %{when}"
+      autobumped: "Automaticky obnovené %{when}"
       autoclosed:
-        enabled: "uzavreté %{when}"
-        disabled: "otvorené %{when}"
+        enabled: "Uzavreté %{when}"
+        disabled: "Otvorené %{when}"
       closed:
-        enabled: "uzavreté %{when}"
-        disabled: "otvorené %{when}"
+        enabled: "Uzavreté %{when}"
+        disabled: "Otvorené %{when}"
       archived:
-        enabled: "archivované %{when}"
-        disabled: "odarchivované %{when}"
+        enabled: "Archivované %{when}"
+        disabled: "Odarchivované %{when}"
       pinned:
-        enabled: "pripnuné %{when}"
-        disabled: "odopnuté %{when}"
+        enabled: "Pripnuné %{when}"
+        disabled: "Odopnuté %{when}"
       pinned_globally:
-        enabled: "globálne pripnuté %{when}"
-        disabled: "odopnuté %{when}"
+        enabled: "Globálne pripnuté %{when}"
+        disabled: "Odopnuté %{when}"
       visible:
-        enabled: "zverejnené %{when}"
-        disabled: "stiahnuté %{when}"
+        enabled: "Zverejnené %{when}"
+        disabled: "Stiahnuté %{when}"
       banner:
         enabled: "Téma je odteraz baner %{when} Bude sa zobrazovať navrchu každej stránky, pokiaľ ju používateľ nezavrie."
-        disabled: "odstránil(a) tento oznam %{when}. Už sa viac nebude zobrazovať navrchu každej stránky."
+        disabled: "Odstránil(a) tento oznam %{when}. Už sa viac nebude zobrazovať navrchu každej stránky."
     emails_are_disabled: "Odosielanie emailov bolo globálne vypnuté administrátorom. Žiadne emailové notifikácie nebudú odoslané."
     software_update_prompt:
       dismiss: "Zahodiť"
@@ -339,8 +339,6 @@ sk:
     disable: "Vypnúť"
     continue: "Pokračovať"
     undo: "Späť"
-    revert: "Vrátiť zmeny"
-    failed: "Nepodarilo sa"
     switch_to_anon: "Vstúpiť do anonymného režimu"
     switch_from_anon: "Opustiť anonymný režim"
     banner:
@@ -1205,6 +1203,7 @@ sk:
     login:
       username: "Používateľ"
       password: "Heslo"
+      show_password: "Zobraziť"
       second_factor_description: "Prosím zadajte autentifikačný kód z vašej aplikácie:"
       second_factor_backup_description: "Zadajte jeden zo záložných kódov:"
       caps_lock_warning: "Caps Lock je zapnutý"
@@ -2259,7 +2258,7 @@ sk:
       back: "Späť"
       share: "Zdieľať"
       dismiss: "Zahodiť"
-    do_not_disturb:
+    pause_notifications:
       remaining: "%{remaining} zostáva"
       options:
         custom: "Vlastné"
@@ -2838,7 +2837,6 @@ sk:
       user:
         suspend_failed: "Niečo sa pokazilo pri odoberaní práv tomuto používateľovi %{error}"
         unsuspend_failed: "Niečo sa pokazilo pri obnovovaní práv tomuto používateľovi %{error}"
-        suspend_duration: "Ako dlho budú používateľovi odobrate práva?"
         suspend_reason_label: "Prečo mu odoberáte práva? Tento text <b>sa zobrazí každému</b> na stránke profilu používateľa a bude zobrazený užívateľovi pri pokuse o prihlásenie. Buďte strucný."
         suspend_reason: "Dôvod"
         suspended_by: "Práva odobraté"
@@ -3166,7 +3164,6 @@ sk:
       next: "Ďalej"
       step-text: "Krok"
       step: "%{current} z %{total}"
-      upload: "Načítať"
       uploading: "Načítavam..."
       upload_error: "Ľutujeme, pri nahrávaní súboru nastala chyba. Prosím, skúste znovu."
       invites:

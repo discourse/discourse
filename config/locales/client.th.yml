@@ -119,7 +119,6 @@ th:
     action_codes:
       public_topic: "ทำให้กระทู้นี้เป็นสาธารณะ %{when} "
       open_topic: "แปลงเป็นหัวเรื่องเมื่อ %{when}"
-      private_topic: "ทำให้กระทู้นี้เป็นข้อความส่วนตัว"
       split_topic: "แบ่งกระทู้นี้เมื่อ %{when}"
       invited_user: "ได้เชิญ %{who} %{when}"
       invited_group: "ได้เชิญ %{who} %{when}"
@@ -147,7 +146,6 @@ th:
       banner:
         enabled: "ทำให้เป็นแบนเนอร์%{when} จะปรากฏที่ด้านบนสุดของทุกหน้าจนกว่าจะผู้ใช้งานจะกดลบ"
         disabled: "ลบแบนเนอร์นี้%{when} จะไม่ปรากฏที่ด้านบนของหน้าใดๆ"
-      forwarded: "ส่งต่ออีเมลข้างต้นแล้ว"
     topic_admin_menu: "การดำเนินการสำหรับหัวเรื่อง"
     skip_to_main_content: "ข้ามไปยังเนื้อหา"
     emails_are_disabled: "อีเมลขาออกทั้งหมดถูกปิดโดยผู้ดูแลระบบ จะไม่มีอีเมลแจ้งเตือนใดๆถูกส่งออกไป"
@@ -314,8 +312,6 @@ th:
     disable: "ปิดใช้งาน"
     continue: "ดำเนินการต่อ"
     undo: "เลิกทำ"
-    revert: "ย้อนกลับ"
-    failed: "ล้มเหลว"
     switch_to_anon: "เข้าสู่โหมดไม่ระบุชื่อ"
     switch_from_anon: "ออกจากโหมดไม่ระบุชื่อ"
     banner:
@@ -1251,6 +1247,7 @@ th:
     login:
       username: "ชื่อผู้ใช้"
       password: "รหัสผ่าน"
+      show_password: "แสดง"
       security_key_alternative: "ลองวิธีอื่น"
       caps_lock_warning: "เปิดแคปล็อคอยู่"
       error: "ข้อผิดพลาดไม่ทราบสาเหตุ"
@@ -1473,6 +1470,7 @@ th:
       bookmark_reminder: "<span>%{username}</span>%{description}"
       replied: "<span>%{username}</span>%{description}"
       posted: "<span>%{username}</span>%{description}"
+      watching_category_or_tag: "<span>%{username}</span>%{description}"
       edited: "<span>%{username}</span>%{description}"
       liked: "<span>%{username}</span>%{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span>%{description}"
@@ -1519,6 +1517,7 @@ th:
         invited_to_private_message: "ถูกเชิญไปยังข้อความส่วนตัว"
         invitee_accepted: "คำเชิญถูกยอมรับ"
         posted: "โพสต์ใหม่"
+        watching_category_or_tag: "โพสต์ใหม่"
         invited_to_topic: "ถูกเชิญไปยังกระทู้"
         group_message_summary: "ข้อความกลุ่มใหม่"
         watching_first_post: "กระทู้ใหม่"
@@ -2433,7 +2432,7 @@ th:
       forward: "ส่งต่อ"
       share: "แบ่งปัน"
       dismiss: "ซ่อน"
-    do_not_disturb:
+    pause_notifications:
       remaining: "เหลืออีก %{remaining}"
     trust_levels:
       names:
@@ -2916,7 +2915,6 @@ th:
       user:
         suspend_failed: "มีข้อผิดพลาดในการระงับผู้ใช้งานนี้ %{error}"
         unsuspend_failed: "มีข้อผิดพลาดในเปิดผู้ใช้งานนี้ %{error}"
-        suspend_duration: "ผู้ใช้งานนี้จะถูกระงับถึงเมื่อไร"
         suspend_reason: "เหตุผล"
         suspend_message: "ข้อความอีเมล"
         suspended_by: "ระงับการใช้งานโดย"
@@ -3179,7 +3177,6 @@ th:
     wizard:
       back: "กลับ"
       next: "ต่อไป"
-      upload: "อัปโหลด"
       uploading: "กำลังอัปโหลด..."
       upload_error: "ขออภัย เกิดความผิดพลาดขณะกำลังอัปโหลดไฟล์ กรุณาลองใหม่อีกครั้ง"
       staff_count:

@@ -117,38 +117,36 @@ id:
       email: "Kirim lewat email"
       url: "Salin dan bagikan URL"
     action_codes:
-      public_topic: "membuat topik ini umum %{when}"
-      open_topic: "diubah menjadi topik ini %{when}"
-      private_topic: "Jadikan topik ini sebagai pesan pribadi"
-      split_topic: "pisahkan topik ini %{when}"
-      invited_user: "mengundang %{who} %{when}"
-      invited_group: "diundang%{who}%{when}"
+      public_topic: "Membuat topik ini umum %{when}"
+      open_topic: "Diubah menjadi topik ini %{when}"
+      split_topic: "Pisahkan topik ini %{when}"
+      invited_user: "Diundang%{who}%{when}"
+      invited_group: "Diundang%{who}%{when}"
       user_left: "%{who}keluar dari percakapan ini%{when}"
-      removed_user: "menghapus %{who} %{when}"
-      removed_group: "%{who}dikeluarkan %{when}"
+      removed_user: "%{who}Dikeluarkan %{when}"
+      removed_group: "%{who}Dikeluarkan %{when}"
       autobumped: "Otomatis dibenturkan %{when}"
       autoclosed:
-        enabled: "ditutup %{when}"
-        disabled: "dibuka %{when}"
+        enabled: "Ditutup %{when}"
+        disabled: "Dibuka %{when}"
       closed:
-        enabled: "ditutup %{when}"
-        disabled: "dibuka %{when}"
+        enabled: "Ditutup %{when}"
+        disabled: "Dibuka %{when}"
       archived:
-        enabled: "diarsipkan %{when}"
-        disabled: "tidak diarsipkan %{when}"
+        enabled: "Diarsipkan %{when}"
+        disabled: "Tidak diarsipkan %{when}"
       pinned:
-        enabled: "disematkan %{when}"
-        disabled: "tidak disematkan %{when}"
+        enabled: "Disematkan %{when}"
+        disabled: "Tidak disematkan %{when}"
       pinned_globally:
-        enabled: "disematkan secara global %{when}"
-        disabled: "tidak disematkan %{when}"
+        enabled: "Disematkan secara global %{when}"
+        disabled: "Tidak disematkan %{when}"
       visible:
-        enabled: "terdaftar %{when}"
-        disabled: "tidak terdaftar %{when}"
+        enabled: "Terdaftar %{when}"
+        disabled: "Tidak terdaftar %{when}"
       banner:
         enabled: "Jadikan ini sebagai spanduk %{when}. Spanduk akan tampil di bagian atas di setiap halaman hingga diturunkan oleh pengguna."
         disabled: "Hilangkan spanduk ini %{when}. Spanduk tidak akan lagi tampil pada bagian teratas di tiap halaman."
-      forwarded: "meneruskan email di atas"
     topic_admin_menu: "tindakan topik"
     skip_to_main_content: "Lewati ke konten utama"
     emails_are_disabled: "Semua surel yang keluar telah dinonaktifkan oleh administrator. Tidak ada pemberitahuan email yang akan dikirimkan."
@@ -346,8 +344,6 @@ id:
     disable: "Nonaktifkan"
     continue: "Lanjutkan"
     undo: "Batalkan perintah"
-    revert: "Dibalik"
-    failed: "Gagal"
     switch_to_anon: "Masuki Mode Anonim"
     switch_from_anon: "Keluar Mode Anonim"
     banner:
@@ -1323,6 +1319,7 @@ id:
     login:
       username: "Pengguna"
       password: "Kata Sandi"
+      show_password: "Tunjukkan"
       caps_lock_warning: "Tombol \"Caps Lock\" menyala"
       error: "Galat yang tidak diketahui"
       blank_username: "Silakan masukkan email atau nama pengguna Anda."
@@ -1490,6 +1487,7 @@ id:
         liked: "suka baru"
         private_message: "pesan pribadi baru"
         posted: "tulisan baru"
+        watching_category_or_tag: "tulisan baru"
         moved_post: "tulisan dipindahkan"
         group_message_summary: "pesan grup baru"
         watching_first_post: "topik baru"
@@ -2120,7 +2118,6 @@ id:
   wizard_js:
     wizard:
       step-text: "Langkah"
-      upload: "Unggah"
       uploading: "Mengunggah..."
       invites:
         add_user: "menambahkan"

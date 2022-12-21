@@ -145,38 +145,38 @@ sv:
       email: "Skicka via e-post"
       url: "Kopiera och dela URL"
     action_codes:
-      public_topic: "gjorde det här ämnet publikt %{when}"
-      open_topic: "konverterade detta till ett ämne %{when}"
-      private_topic: "gjorde det här ämnet till ett personligt meddelande %{when}"
-      split_topic: "splitta det här ämnet %{when}"
-      invited_user: "bjöd in %{who} %{when}"
-      invited_group: "bjöd in %{who} %{when}"
+      public_topic: "Gjorde det här ämnet publikt %{when}"
+      open_topic: "Konverterade detta till ett ämne %{when}"
+      private_topic: "Gjorde det här ämnet till ett personligt meddelande %{when}"
+      split_topic: "Splitta det här ämnet %{when}"
+      invited_user: "Bjöd in %{who} %{when}"
+      invited_group: "Bjöd in %{who} %{when}"
       user_left: "%{who} tog bort sig själva från detta meddelande %{when}"
-      removed_user: "tog bort %{who} %{when}"
-      removed_group: "tog bort %{who} %{when}"
-      autobumped: "automatiskt positionerad %{when}"
+      removed_user: "Tog bort %{who} %{when}"
+      removed_group: "Tog bort %{who} %{when}"
+      autobumped: "Automatiskt positionerad %{when}"
       autoclosed:
-        enabled: "stängdes %{when}"
-        disabled: "öppnades %{when}"
+        enabled: "Stängdes %{when}"
+        disabled: "Öppnades %{when}"
       closed:
-        enabled: "stängdes %{when}"
-        disabled: "öppnades %{when}"
+        enabled: "Stängdes %{when}"
+        disabled: "Öppnades %{when}"
       archived:
-        enabled: "arkiverades %{when}"
-        disabled: "avarkiverades %{when}"
+        enabled: "Arkiverades %{when}"
+        disabled: "Avarkiverades %{when}"
       pinned:
-        enabled: "fästes %{when}"
-        disabled: "togs ner %{when}"
+        enabled: "Fästes %{when}"
+        disabled: "Togs ner %{when}"
       pinned_globally:
-        enabled: "globalt fäst %{when}"
-        disabled: "togs ner %{when}"
+        enabled: "Globalt fäst %{when}"
+        disabled: "Togs ner %{when}"
       visible:
-        enabled: "listades %{when}"
-        disabled: "avlistades %{when}"
+        enabled: "Listades %{when}"
+        disabled: "Avlistades %{when}"
       banner:
-        enabled: "gjorde detta till en banderoll %{when}. Den kommer att visas högst upp på varje sida tills den blir avfärdad av användaren."
-        disabled: "tog bort denna banderoll %{when}. Den kommer inte längre att visas högst upp på varje sida."
-      forwarded: "vidarebefordrade ovanstående e-post"
+        enabled: "Gjorde detta till en banderoll %{when}. Den kommer att visas högst upp på varje sida tills den blir avfärdad av användaren."
+        disabled: "Tog bort denna banderoll %{when}. Den kommer inte längre att visas högst upp på varje sida."
+      forwarded: "Vidarebefordrade ovanstående e-post"
     topic_admin_menu: "ämnesåtgärder"
     skip_to_main_content: "Hoppa till huvudinnehållet"
     emails_are_disabled: "All utgående e-post har blivit globalt inaktiverad av en administratör. Inga e-postaviseringar av något slag kommer att skickas ut."
@@ -387,8 +387,6 @@ sv:
     disable: "Inaktivera"
     continue: "Fortsätt"
     undo: "Ångra"
-    revert: "Återställ"
-    failed: "Misslyckades"
     switch_to_anon: "Starta anonymt läge"
     switch_from_anon: "Avsluta anonymt läge"
     banner:
@@ -1011,7 +1009,7 @@ sv:
       notification_schedule:
         title: "Aviseringsschema"
         label: "Aktivera anpassat aviseringsschema"
-        tip: "Utanför dessa timmar kommer du automatiskt att placeras i \"stör ej\"."
+        tip: "Utanför dessa tider pausas dina aviseringar."
         midnight: "Midnatt"
         none: "Ingen"
         monday: "Måndag"
@@ -1213,6 +1211,62 @@ sv:
         warnings: "Officiella varningar"
         read_more_in_group: "Vill du läsa mer? Bläddra bland andra meddelanden i %{groupLink}."
         read_more: "Vill du läsa mer? Bläddra bland andra meddelanden i <a href='%{basePath}/u/%{username}/messages'>personliga meddelanden</a>."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Det finns <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># oläst</a>}
+                other {Det finns <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># olästa</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { och <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nytt</a> meddelande kvar, eller bläddra bland andra meddelanden i {groupLink}}
+                other { och <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nya</a> meddelanden kvar, eller bläddra bland andra meddelanden i {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Det finns <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># oläst</a> meddelande kvar, eller bläddra bland andra meddelanden i {groupLink}}
+                other {Det finns <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># olästa</a> meddelanden kvar, eller bläddra bland andra meddelanden i {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Det finns <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nytt</a> meddelande kvar, eller bläddra bland andra meddelanden i {groupLink}}
+                other {Det finns <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># nya</a> meddelanden kvar, eller bläddra bland andra meddelanden i {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Det finns <a href='{basePath}/u/{username}/messages/unread'># oläst</a>}
+                other {Det finns <a href='{basePath}/u/{username}/messages/unread'># olästa</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { och <a href='{basePath}/u/{username}/messages/new'># new</a> meddelande kvar, eller bläddra bland andra <a href='{basePath}/u/{username}/messages'>personliga meddelanden</a>}
+                other { och <a href='{basePath}/u/{username}/messages/new'># new</a> meddelanden kvar, eller bläddra bland andra <a href='{basePath}/u/{username}/messages'>personliga meddelanden</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Det finns <a href='{basePath}/u/{username}/messages/unread'># oläst</a> meddelande kvar, eller bläddra bland andra <a href='{basePath}/u/{username}/messages'>personliga meddelanden <a href='{basePath}/u/{username}/messages'>personal messages</a>}
+                other {Det finns <a href='{basePath}/u/{username}/messages/unread'># olästa</a> meddelanden kvar, eller bläddra bland andra <a href='{basePath}/u/{username}/messages'>personliga meddelanden <a href='{basePath}/u/{username}/messages'>personal messages</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Det finns <a href='{basePath}/u/{username}/messages/new'># new</a> meddelande kvar, eller bläddra bland andra <a href='{basePath}/u/{username}/messages'>personliga meddelanden</a>}
+                other {Det finns <a href='{basePath}/u/{username}/messages/new'># new</a> meddelanden kvar, eller bläddra bland andra <a href='{basePath}/u/{username}/messages'>personliga meddelanden</a>}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "Konto"
         security: "Säkerhet"
@@ -1452,6 +1506,8 @@ sv:
         title: "Titel på bakgrundssidan visar antalet:"
         notifications: "Nya aviseringar"
         contextual: "Nytt sidinnehåll"
+      bookmark_after_notification:
+        title: "Efter att en bokmärkespåminnelse har skickats:"
       like_notification_frequency:
         title: "Avisera vid gillning"
         always: "Alltid"
@@ -1677,6 +1733,7 @@ sv:
       save: "Spara"
       set_custom_status: "Ställ in anpassad status"
       what_are_you_doing: "Vad gör du?"
+      pause_notifications: "Pausa aviseringar"
       remove_status: "Ta bort status"
     user_tips:
       primary: "Jag förstår!"
@@ -1842,6 +1899,10 @@ sv:
       title: "Logga in"
       username: "Användare"
       password: "Lösenord"
+      show_password: "Visa"
+      hide_password: "Dölj"
+      show_password_title: "Visa lösenord"
+      hide_password_title: "Dölj lösenord"
       second_factor_title: "Tvåfaktorsautentisering"
       second_factor_description: "Ange din autentiseringskod från din app:"
       second_factor_backup: "Logga in med reservkod"
@@ -2203,6 +2264,7 @@ sv:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username},%{username2}</span>%{description}"
@@ -2234,6 +2296,7 @@ sv:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span>%{description}"
       votes_released: "%{description} - slutförd"
+      new_features: "Nya funktioner tillgängliga!"
       dismiss_confirmation:
         body:
           default:
@@ -2272,6 +2335,7 @@ sv:
         invited_to_private_message: "inbjuden till privat meddelande"
         invitee_accepted: "inbjudan accepterad"
         posted: "nytt inlägg"
+        watching_category_or_tag: "nytt inlägg"
         moved_post: "inlägg flyttat"
         linked: "länkat"
         bookmark_reminder: "påminnelse för bokmärke"
@@ -2287,6 +2351,7 @@ sv:
         membership_request_consolidated: "ny begäran om medlemskap"
         reaction: "ny reaktion"
         votes_released: "Röstningen släpptes"
+        new_features: "nya Discourse-funktioner har släppts!"
     upload_selector:
       uploading: "Laddar upp"
       processing: "Bearbetar uppladdning"
@@ -2596,7 +2661,48 @@ sv:
       show_links: "visa länkar som finns i det här ämnet"
       collapse_details: "komprimera ämnesdetaljer"
       expand_details: "expandera ämnesdetaljer"
+      read_more_in_category: "Vill du läsa mer? Bläddra bland andra ämnen i %{categoryLink} eller <a href='%{latestLink}'>visa senaste ämnen</a>."
+      read_more: "Vill du läsa mer? <a href='%{categoryLink}'>Bläddra bland alla kategorier</a> eller <a href='%{latestLink}'>visa senaste ämnen</a>."
       unread_indicator: "Ingen medlem har läst det senaste inlägget ännu."
+      read_more_MF: |
+        { HAS_UNREAD_AND_NEW, select,
+          true {
+            { UNREAD, plural,
+                 =0 {}
+                one {Det finns <a href="{basePath}/unread"># oläst</a>}
+              other {Det finns <a href="{basePath}/unread"># olästa</a>}
+            }
+            { NEW, plural,
+                 =0 {}
+                one { och <a href="{basePath}/new"># nytt</a> ämne kvar,}
+              other { och <a href="{basePath}/new"># nya</a> ämnen kvar,}
+            }
+          }
+          false {
+            { UNREAD, plural,
+                 =0 {}
+                one {Det finns <a href="{basePath}/unread"># olästa</a> ämnen kvar,}
+              other {Det finns <a href="{basePath}/unread"># olästa</a> ämnen kvar,}
+            }
+            { NEW, plural,
+                 =0 {}
+                one {Det finns <a href="{basePath}/new"># nytt</a> ämne kvar,}
+              other {Det finns <a href="{basePath}/new"># nya</a> ämnen kvar,}
+            }
+          }
+          other {}
+        }
+        { HAS_CATEGORY, select,
+          true { eller bläddra i andra ämnen i {categoryLink}}
+          false { eller <a href="{basePath}/latest">visa senaste ämnen</a>}
+          other {}
+        }
+      bumped_at_title: |
+        Första inlägget: %{createdAtDate}
+        Upplagt: %{bumpedAtDate}
+      browse_all_categories_latest: "<a href='%{basePath}/categories'>Bläddra bland alla kategorier</a> eller <a href='%{basePath}/latest'>visa senaste ämnen</a>."
+      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Bläddra bland alla kategorier</a>, <a href='%{basePath}/latest'>visa senaste ämnen</a> eller se toppämnen:"
+      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Bläddra bland alla taggar</a> eller <a href='%{basePath}/latest'>visa senaste ämnen</a>."
       suggest_create_topic: Redo att <a href>starta ett nytt samtal?</a>
       jump_reply_up: hoppa till tidigare svar
       jump_reply_down: hoppa till senare svar
@@ -3821,9 +3927,9 @@ sv:
     safe_mode:
       enabled: "Säkert läge är aktiverat och för att lämna säkert läge stänger du detta webbläsarfönster"
     image_removed: "(bild borttagen)"
-    do_not_disturb:
-      title: "Stör ej för..."
-      label: "Stör ej"
+    pause_notifications:
+      title: "Pausa aviseringar för..."
+      label: "Pausa aviseringar"
       remaining: "%{remaining} kvar"
       options:
         half_hour: "30 minuter"
@@ -4220,6 +4326,7 @@ sv:
         create: "Skapa"
         edit: "Redigera"
         save: "Spara"
+        description_label: "Händelseutlösare"
         controls: "Kontroller"
         go_back: "Tillbaka till listan"
         payload_url: "Försändelse-URL"
@@ -4537,7 +4644,6 @@ sv:
             error: "Det här temat har automatiskt inaktiverats på grund av att det inte är kompatibelt med den här versionen av Discourse."
             minimum: "Kräver Discourse version %{version} eller högre."
             maximum: "Kräver Discourse version %{version} eller lägre."
-          component_of: "Komponent av:"
           update_to_latest: "Uppdatera till senaste"
           check_for_updates: "Sök efter uppdateringar"
           updating: "Uppdaterar..."
@@ -5010,7 +5116,7 @@ sv:
       user:
         suspend_failed: "Någonting gick fel under avstängningen av denna användare %{error}"
         unsuspend_failed: "Någonting gick fel under upplåsningen av denna användare %{error}"
-        suspend_duration: "Hur länge ska användaren vara avstängd?"
+        suspend_duration: "Stäng av användare tills:"
         suspend_reason_label: "Varför stänger du av användaren? Denna text <b>kommer att vara synlig för alla</b> på användarens profilsida, och kommer att visas för användaren när han/hon försöker logga in. Håll den kort."
         suspend_reason_hidden_label: "Varför stänger du av användaren? Denna text kommer att vara synlig för användaren när han/hon försöker logga in. Håll den kort."
         suspend_reason: "Anledning"
@@ -5034,7 +5140,9 @@ sv:
         silence_message: "E-postmeddelande"
         silence_message_placeholder: "(lämna tomt för att skicka standardmeddelande)"
         suspended_until: "(till %{until})"
+        suspend_forever: "Stäng av för alltid"
         cant_suspend: "Denna användare kan inte uteslutas."
+        cant_silence: "Denna användare kan inte tystas."
         delete_posts_failed: "Det uppstod ett problem vid radering av inläggen."
         post_edits: "Publicera redigeringar"
         view_edits: "Visa redigeringar"
@@ -5044,7 +5152,8 @@ sv:
         penalty_post_edit: "Ändra inlägget"
         penalty_post_none: "Gör ingenting"
         penalty_count: "Straffräkning"
-        penalty_history: "Straffhistorik"
+        penalty_history_MF: >-
+          Under de senaste sex månaderna har denna användare <b>stängts av { SUSPENDED, plural, one {# gång} other {# gånger} }</b> och <b>tystats { SILENCED, plural, one {# gång} other {# gånger} }</b>.
         clear_penalty_history:
           title: "Rensa straffhistorik"
           description: "användare med straff kan inte nå FN3"
@@ -5200,8 +5309,8 @@ sv:
         suspended_count: "Avstängd"
         last_six_months: "Senaste 6 månaderna"
         other_matches:
-          one: "Det finns %{count} annan användare med samma IP-adress. Granska och välj de misstänkta som ska stängas av tillsammans med %{username}."
-          other: "Det finns %{count} andra användare med samma IP-adress. Granska och välj de misstänkta som ska stängas av tillsammans med %{username}."
+          one: "Det finns <b>%{count} annan användare</b> med samma IP-adress. Granska och välj de misstänkta som ska bestraffas tillsammans med %{username}."
+          other: "Det finns <b>%{count} andra användare</b> med samma IP-adress. Granska och välj de misstänkta som ska bestraffas tillsammans med %{username}."
         other_matches_list:
           username: "Användarnamn"
           trust_level: "Förtroendenivå"
@@ -5526,7 +5635,7 @@ sv:
       configure_more: "Konfigurera mera..."
       step-text: "Steg"
       step: "%{current} av %{total}"
-      upload: "Ladda upp"
+      upload: "Ladda upp fil"
       uploading: "Laddar upp..."
       upload_error: "Tyvärr uppstod det ett fel under uppladdandet av den filen. Försök igen."
       staff_count:
