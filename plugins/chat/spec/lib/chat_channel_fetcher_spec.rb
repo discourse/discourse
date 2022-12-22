@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 describe Chat::ChatChannelFetcher do
-  fab!(:category) { Fabricate(:category, name: "support") }
+  fab!(:category) { Fabricate(:category) }
   fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
-  fab!(:category_channel) { Fabricate(:category_channel, chatable: category, slug: "support") }
+  fab!(:category_channel) { Fabricate(:category_channel, chatable: category) }
   fab!(:dm_channel1) { Fabricate(:direct_message) }
   fab!(:dm_channel2) { Fabricate(:direct_message) }
   fab!(:direct_message_channel1) { Fabricate(:direct_message_channel, chatable: dm_channel1) }
@@ -184,7 +184,7 @@ describe Chat::ChatChannelFetcher do
           guardian,
           memberships,
           following: following,
-          filter: "support",
+          filter: category_channel.title,
         ).map(&:id),
       ).to match_array([category_channel.id])
 
@@ -202,7 +202,7 @@ describe Chat::ChatChannelFetcher do
 
     it "can filter by an array of slugs" do
       expect(
-        subject.secured_public_channels(guardian, memberships, slugs: ["support"]).map(&:id),
+        subject.secured_public_channels(guardian, memberships, slugs: [category_channel.slug]).map(&:id),
       ).to match_array([category_channel.id])
     end
 
