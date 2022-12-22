@@ -581,7 +581,7 @@ export function cook(raw, opts) {
   // we still have to hoist html_raw nodes so they bypass the allowlister
   // this is the case for oneboxes and also certain plugins that require
   // raw HTML rendering within markdown bbcode rules
-  opts.discourse.hoisted = opts.discourse.hoisted ??= {};
+  opts.discourse.hoisted ??= {};
 
   const rendered = opts.engine.render(raw);
   let cooked = opts.discourse.sanitizer(rendered).trim();
