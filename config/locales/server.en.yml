@@ -4929,7 +4929,7 @@ en:
     title: "Discourse Setup"
     step:
       introduction:
-        title: "Tell us about your community"
+        title: "About your site"
         description: "These will be shown on your login and any public pages. You can always change them later."
 
         fields:
@@ -5000,7 +5000,7 @@ en:
                 label: "Subcategories with Featured Topics"
 
       branding:
-        title: "Community logo"
+        title: "Site logo"
         fields:
           logo:
             label: "Primary logo"
