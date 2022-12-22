@@ -344,6 +344,8 @@ RSpec.configure do |config|
     if SpecSecureRandom.value
       FileUtils.remove_dir(file_from_fixtures_tmp_folder, true)
     end
+
+    Faker::UniqueGenerator.clear
   end
 
   config.before :each, &TestSetup.method(:test_setup)

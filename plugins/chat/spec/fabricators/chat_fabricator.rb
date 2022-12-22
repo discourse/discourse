@@ -1,19 +1,7 @@
 # frozen_string_literal: true
 
 Fabricator(:chat_channel) do
-  name do
-    sequence(:name) do |n|
-      random_name = [
-        "Gaming Lounge",
-        "Music Lodge",
-        "Random",
-        "Politics",
-        "Sports Center",
-        "Kino Buffs",
-      ].sample
-      "#{random_name} #{n}"
-    end
-  end
+  name { Faker::Hobby.unique.activity }
   chatable { Fabricate(:category) }
   type do |attrs|
     if attrs[:chatable_type] == "Category" || attrs[:chatable]&.is_a?(Category)
@@ -52,7 +40,7 @@ end
 Fabricator(:chat_message) do
   chat_channel
   user
-  message "Beep boop"
+  message { Faker::Books::Dune.quote }
   cooked { |attrs| ChatMessage.cook(attrs[:message]) }
   cooked_version ChatMessage::BAKED_VERSION
   in_reply_to nil

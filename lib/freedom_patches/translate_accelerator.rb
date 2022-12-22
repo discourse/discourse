@@ -56,7 +56,7 @@ module I18n
         # load it
         I18n.backend.load_translations(I18n.load_path.grep(/\.#{Regexp.escape locale}\.yml$/))
 
-        if Discourse.allow_dev_populate?
+        if Discourse.allow_dev_populate? || Rails.env.test?
           I18n.backend.load_translations(I18n.load_path.grep(/.*faker.*\/#{Regexp.escape locale}\.yml$/))
           I18n.backend.load_translations(I18n.load_path.grep(/.*faker.*\/#{Regexp.escape locale}\/.*\.yml$/))
         end
