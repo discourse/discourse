@@ -154,6 +154,10 @@ RSpec.describe DiscourseUpdates do
       Discourse.redis.set('new_features', MultiJson.dump(sample_features))
     end
 
+    after do
+      Discourse.redis.del('new_features')
+    end
+
     it 'returns all items on the first run' do
       result = DiscourseUpdates.new_features
 
