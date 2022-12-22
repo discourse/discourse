@@ -404,6 +404,7 @@ RSpec.configure do |config|
         if !skip_js_errors
           puts "~~~~~~ JS ERRORS: ~~~~~~~"
           page.driver.browser.logs.get(:browser).each do |log|
+            next if log.level === "DEBUG"
             puts log.message
           end
         end
