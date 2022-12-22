@@ -211,4 +211,52 @@ martin</div>
   ensure
     InlineOneboxer.invalidate("https://en.wikipedia.org/wiki/Hyperlink")
   end
+
+  it "handles nested chat transcripts in posts" do
+    SiteSetting.external_system_avatars_enabled = false
+    freeze_time
+
+    channel = Fabricate(:chat_channel)
+    message1 = Fabricate(:chat_message, chat_channel: channel, user: post.user)
+    message2 = Fabricate(:chat_message, chat_channel: channel, user: post.user)
+    md = ChatTranscriptService.new(channel, message2.user, messages_or_ids: [message2.id]).generate_markdown
+    message1.update!(message: md)
+    md_for_post = ChatTranscriptService.new(channel, message1.user, messages_or_ids: [message1.id]).generate_markdown
+    post.update!(raw: md_for_post)
+    expect(post.cooked.chomp).to eq(<<~COOKED.chomp)
+<div class="chat-transcript" data-message-id="#{message1.id}" data-username="#{message1.user.username}" data-datetime="#{message1.created_at.iso8601}" data-channel-name="#{channel.name}" data-channel-id="#{channel.id}">
+<div class="chat-transcript-user">
+<div class="chat-transcript-user-avatar">
+<img loading="lazy" alt="" width="20" height="20" src="//test.localhost#{post.user.avatar_template.gsub("{size}", "40")}" class="avatar">
+</div>
+<div class="chat-transcript-username">
+#{message1.user.username}</div>
+<div class="chat-transcript-datetime">
+<a href="/chat/channel/#{channel.id}/-?messageId=#{message1.id}" title="#{message1.created_at.iso8601}"></a>
+</div>
+<a class="chat-transcript-channel" href="/chat/channel/#{channel.id}/-">
+##{channel.name}</a>
+</div>
+<div class="chat-transcript-messages">
+<div class="chat-transcript" data-message-id="#{message2.id}" data-username="#{message2.user.username}" data-datetime="#{message2.created_at.iso8601}" data-channel-name="#{channel.name}" data-channel-id="#{channel.id}">
+<div class="chat-transcript-user">
+<div class="chat-transcript-user-avatar">
+<img loading="lazy" alt="" width="20" height="20" src="//test.localhost#{post.user.avatar_template.gsub("{size}", "40")}" class="avatar">
+</div>
+<div class="chat-transcript-username">
+#{message2.user.username}</div>
+<div class="chat-transcript-datetime">
+<a href="/chat/channel/#{channel.id}/-?messageId=#{message2.id}" title="#{message1.created_at.iso8601}"></a>
+</div>
+<a class="chat-transcript-channel" href="/chat/channel/#{channel.id}/-">
+##{channel.name}</a>
+</div>
+<div class="chat-transcript-messages">
+<p>#{message2.message}</p>
+</div>
+</div>
+</div>
+</div>
+    COOKED
+  end
 end
