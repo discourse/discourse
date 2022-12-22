@@ -4,86 +4,34 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { popupAutomaticMembershipAlert } from "discourse/controllers/groups-new";
 import showModal from "discourse/lib/show-modal";
-import { alias } from "@ember/object/computed";
+import { and } from "@ember/object/computed";
 
 export default Component.extend({
   saving: null,
   disabled: false,
   updateExistingUsers: null,
-  buffer: alias("model.buffer"),
-
-  didReceiveAttrs() {
-    this._super(...arguments);
-
-    const group = this.model;
-    if (!group.buffer) {
-      group.buffer = {
-        visibilityLevel: group.visibility_level,
-        primaryGroup: group.primary_group,
-        flairEmpty: !(group.flair_icon || group.flair_upload_id),
-      };
-    }
-  },
+  hasFlair: and("model.flair_icon", "model.flair_upload_id"),
 
   @discourseComputed("saving")
   savingText(saving) {
     return saving ? I18n.t("saving") : I18n.t("save");
   },
 
-  @discourseComputed("model.visibility_level", "buffer.visibilityLevel")
-  visibilityRestricted(visibilityLevel, bufferVisibilityLevel) {
-    return visibilityLevel !== 0 && bufferVisibilityLevel === 0;
-  },
-
-  @discourseComputed(
-    "model.primary_group",
-    "visibilityRestricted",
-    "buffer.primaryGroup"
-  )
-  displayPrimaryGroupNotice(
-    isPrimaryGroup,
-    visibilityRestricted,
-    wasPrimaryGroup
-  ) {
-    return isPrimaryGroup && (visibilityRestricted || !wasPrimaryGroup);
-  },
-
-  @discourseComputed(
-    "model.flair_icon",
-    "model.flair_upload_id",
-    "visibilityRestricted",
-    "buffer.flairEmpty"
-  )
-  displayFlairGroupNotice(
-    flairIcon,
-    flairUploadId,
-    visibilityRestricted,
-    flairWasEmpty
-  ) {
-    return (
-      (flairIcon || flairUploadId) && (visibilityRestricted || flairWasEmpty)
-    );
-  },
-
   @discourseComputed(
     "model.visibility_level",
-    "displayPrimaryGroupNotice",
-    "displayFlairGroupNotice"
+    "model.primary_group",
+    "hasFlair"
   )
-  privateGroupNameNotice(
-    visibilityLevel,
-    displayPrimaryGroupNotice,
-    displayFlairGroupNotice
-  ) {
+  privateGroupNameNotice(visibilityLevel, isPrimaryGroup, hasFlair) {
     if (visibilityLevel === 0) {
       return;
     }
 
-    if (displayPrimaryGroupNotice) {
+    if (isPrimaryGroup) {
       return I18n.t("admin.groups.manage.alert.primary_group", {
         group_name: this.model.name,
       });
-    } else if (displayFlairGroupNotice) {
+    } else if (hasFlair) {
       return I18n.t("admin.groups.manage.alert.flair_group", {
         group_name: this.model.name,
       });
