@@ -37,6 +37,7 @@ RSpec.describe "JIT messages", type: :system, js: true do
     it "displays a mention warning" do
       chat.visit_channel(private_channel_1)
       find(".chat-composer-input").fill_in(with: "hi @#{other_user.username}")
+      find(".chat-composer-input").click
       find(".send-btn").click
 
       expect(page).to have_content(
