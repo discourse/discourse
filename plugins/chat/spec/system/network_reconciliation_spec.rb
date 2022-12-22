@@ -46,7 +46,7 @@ RSpec.describe "Network reconciliation", type: :system, js: true do
         # generally speaking sleep should be avoided in tests, but in this case
         # we need to wait for the client to reconnect and receive the message
         # right at the start the icon won't be there so checking for not will be true
-        # and checking for present could also be true as it might within capybara finder delay
+        # and checking for present could also be true as it might be within capybara finder delay
         # which is what we are testing here and want to avoid
         sleep 1
 
