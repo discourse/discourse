@@ -251,7 +251,7 @@ RSpec.configure do |config|
     end
 
     chrome_browser_options = Selenium::WebDriver::Chrome::Options.new(
-      logging_prefs: { "browser" => "ALL", "driver" => "ALL" }
+      logging_prefs: { "browser" => "INFO", "driver" => "ALL" }
     ).tap do |options|
       options.add_argument("--window-size=1400,1400")
       options.add_argument("--no-sandbox")
@@ -404,7 +404,6 @@ RSpec.configure do |config|
         if !skip_js_errors
           puts "~~~~~~ JS ERRORS: ~~~~~~~"
           page.driver.browser.logs.get(:browser).each do |log|
-            next if log.level === "DEBUG"
             puts log.message
           end
         end
