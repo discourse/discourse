@@ -45,16 +45,27 @@ a.hashtag-cooked {
     height: inherit;
     max-height: inherit;
     overflow-y: auto;
-    -webkit-mask: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 1) calc(100% - 1.5em),
-      rgba(255, 255, 255, 0) 100%
-    );
+
+    &:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 1.5em;
+      background: linear-gradient(
+        to bottom,
+        rgba(var(--secondary-rgb), 0),
+        rgba(var(--secondary-rgb), 100%)
+      );
+    }
   }
 
   &__option {
     &:last-of-type {
-      margin-bottom: 0.75em; //used to the fadeout doesn't overlap the last item
+      .hashtag-autocomplete__link {
+        position: relative;
+        z-index: 1;
+      }
     }
   }
 

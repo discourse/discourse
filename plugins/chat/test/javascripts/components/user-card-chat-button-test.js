@@ -15,7 +15,7 @@ module("Discourse Chat | Component | user-card-chat-button", function (hooks) {
 
     await render(hbs`<UserCardChatButton/>`);
 
-    assert.ok(exists(".user-card-chat-btn"), "it shows the chat button");
+    assert.true(exists(".user-card-chat-btn"), "it shows the chat button");
   });
 
   test("when current user can’t send direct messages", async function (assert) {
@@ -25,7 +25,7 @@ module("Discourse Chat | Component | user-card-chat-button", function (hooks) {
 
     await render(hbs`<UserCardChatButton/>`);
 
-    assert.notOk(
+    assert.false(
       exists(".user-card-chat-btn"),
       "it doesn’t show the chat button"
     );

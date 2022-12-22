@@ -272,3 +272,5 @@ gem 'faraday-retry'
 gem 'net-http'
 
 gem 'webrick', require: false
+
+gem "cgi", ">= 0.3.6", require: false

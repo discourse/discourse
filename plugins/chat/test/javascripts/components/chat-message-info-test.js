@@ -1,140 +1,111 @@
 import Bookmark from "discourse/models/bookmark";
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import hbs from "htmlbars-inline-precompile";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
-import { module } from "qunit";
+import { module, test } from "qunit";
 import User from "discourse/models/user";
+import { render } from "@ember/test-helpers";
 
 module("Discourse Chat | Component | chat-message-info", function (hooks) {
   setupRenderingTest(hooks);
 
-  componentTest("chat_webhook_event", {
-    template: hbs`{{chat-message-info message=message}}`,
+  test("chat_webhook_event", async function (assert) {
+    this.set("message", { chat_webhook_event: { username: "discobot" } });
 
-    beforeEach() {
-      this.set("message", { chat_webhook_event: { username: "discobot" } });
-    },
+    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
 
-    async test(assert) {
-      assert.equal(
-        query(".chat-message-info__username").innerText.trim(),
-        this.message.chat_webhook_event.username
-      );
-      assert.equal(
-        query(".chat-message-info__bot-indicator").textContent.trim(),
-        I18n.t("chat.bot")
-      );
-    },
+    assert.strictEqual(
+      query(".chat-message-info__username").innerText.trim(),
+      this.message.chat_webhook_event.username
+    );
+    assert.strictEqual(
+      query(".chat-message-info__bot-indicator").textContent.trim(),
+      I18n.t("chat.bot")
+    );
   });
 
-  componentTest("user", {
-    template: hbs`{{chat-message-info message=message}}`,
+  test("user", async function (assert) {
+    this.set("message", { user: { username: "discobot" } });
 
-    beforeEach() {
-      this.set("message", { user: { username: "discobot" } });
-    },
+    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
 
-    async test(assert) {
-      assert.equal(
-        query(".chat-message-info__username").innerText.trim(),
-        this.message.user.username
-      );
-    },
+    assert.strictEqual(
+      query(".chat-message-info__username").innerText.trim(),
+      this.message.user.username
+    );
   });
 
-  componentTest("date", {
-    template: hbs`{{chat-message-info message=message}}`,
+  test("date", async function (assert) {
+    this.set("message", {
+      user: { username: "discobot" },
+      created_at: moment(),
+    });
 
-    beforeEach() {
-      this.set("message", {
-        user: { username: "discobot" },
-        created_at: moment(),
-      });
-    },
+    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
 
-    async test(assert) {
-      assert.ok(exists(".chat-message-info__date"));
-    },
+    assert.true(exists(".chat-message-info__date"));
   });
 
-  componentTest("bookmark (with reminder)", {
-    template: hbs`{{chat-message-info message=message}}`,
+  test("bookmark (with reminder)", async function (assert) {
+    this.set("message", {
+      user: { username: "discobot" },
+      bookmark: Bookmark.create({
+        reminder_at: moment(),
+        name: "some name",
+      }),
+    });
 
-    beforeEach() {
-      this.set("message", {
-        user: { username: "discobot" },
-        bookmark: Bookmark.create({
-          reminder_at: moment(),
-          name: "some name",
-        }),
-      });
-    },
+    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
 
-    async test(assert) {
-      assert.ok(
-        exists(".chat-message-info__bookmark .d-icon-discourse-bookmark-clock")
-      );
-    },
+    assert.true(
+      exists(".chat-message-info__bookmark .d-icon-discourse-bookmark-clock")
+    );
   });
 
-  componentTest("bookmark (no reminder)", {
-    template: hbs`{{chat-message-info message=message}}`,
+  test("bookmark (no reminder)", async function (assert) {
+    this.set("message", {
+      user: { username: "discobot" },
+      bookmark: Bookmark.create({
+        name: "some name",
+      }),
+    });
 
-    beforeEach() {
-      this.set("message", {
-        user: { username: "discobot" },
-        bookmark: Bookmark.create({
-          name: "some name",
-        }),
-      });
-    },
+    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
 
-    async test(assert) {
-      assert.ok(exists(".chat-message-info__bookmark .d-icon-bookmark"));
-    },
+    assert.true(exists(".chat-message-info__bookmark .d-icon-bookmark"));
   });
 
-  componentTest("user status", {
-    template: hbs`{{chat-message-info message=message}}`,
+  test("user status", async function (assert) {
+    const status = { description: "off to dentist", emoji: "tooth" };
+    this.set("message", { user: User.create({ status }) });
 
-    beforeEach() {
-      const status = { description: "off to dentist", emoji: "tooth" };
-      this.set("message", { user: User.create({ status }) });
-    },
+    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
 
-    async test(assert) {
-      assert.ok(exists(".chat-message-info__status .user-status-message"));
-    },
+    assert.true(exists(".chat-message-info__status .user-status-message"));
   });
 
-  componentTest("reviewable", {
-    template: hbs`{{chat-message-info message=message}}`,
+  test("reviewable", async function (assert) {
+    this.set("message", {
+      user: { username: "discobot" },
+      user_flag_status: 0,
+    });
 
-    beforeEach() {
-      this.set("message", {
-        user: { username: "discobot" },
-        user_flag_status: 0,
-      });
-    },
+    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
 
-    async test(assert) {
-      assert.equal(
-        query(".chat-message-info__flag > .svg-icon-title").title,
-        I18n.t("chat.you_flagged")
-      );
+    assert.strictEqual(
+      query(".chat-message-info__flag > .svg-icon-title").title,
+      I18n.t("chat.you_flagged")
+    );
 
-      this.set("message", {
-        user: { username: "discobot" },
-        reviewable_id: 1,
-      });
+    this.set("message", {
+      user: { username: "discobot" },
+      reviewable_id: 1,
+    });
 
-      assert.equal(
-        query(".chat-message-info__flag a .svg-icon-title").title,
-        I18n.t("chat.flagged")
-      );
-    },
+    assert.strictEqual(
+      query(".chat-message-info__flag a .svg-icon-title").title,
+      I18n.t("chat.flagged")
+    );
   });
 });

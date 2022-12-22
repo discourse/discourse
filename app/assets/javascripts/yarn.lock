@@ -1062,10 +1062,10 @@
     ember-cli-babel "^7.26.11"
     ember-modifier-manager-polyfill "^1.2.0"
 
-"@ember/test-helpers@^2.9.1":
-  version "2.9.1"
-  resolved "https://registry.yarnpkg.com/@ember/test-helpers/-/test-helpers-2.9.1.tgz#142a8d5175fc79bb328b7af0cd36755c10181050"
-  integrity sha512-1ZFZCnNfkXcQOf6Vxep/vbZMwFLfD+8heiLiQ6LSB5SY9F3VCF1yNslfgtDqmyQZXhAbbhRTDhy+rHuzzpd+yA==
+"@ember/test-helpers@^2.9.3":
+  version "2.9.3"
+  resolved "https://registry.yarnpkg.com/@ember/test-helpers/-/test-helpers-2.9.3.tgz#c2a9d6ab1c367af92cf1a334f97eb19b8e06e6e1"
+  integrity sha512-ejVg4Dj+G/6zyLvQsYOvmGiOLU6AS94tY4ClaO1E2oVvjjtVJIRmVLFN61I+DuyBg9hS3cFoPjQRTZB9MRIbxQ==
   dependencies:
     "@ember/test-waiters" "^3.0.0"
     "@embroider/macros" "^1.10.0"

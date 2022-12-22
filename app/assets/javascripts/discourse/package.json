@@ -24,7 +24,7 @@
     "@ember/jquery": "^2.0.0",
     "@ember/optional-features": "^2.0.0",
     "@ember/render-modifiers": "^2.0.4",
-    "@ember/test-helpers": "^2.9.1",
+    "@ember/test-helpers": "^2.9.3",
     "@glimmer/component": "^1.1.2",
     "@glimmer/syntax": "^0.84.2",
     "@glimmer/tracking": "^1.1.2",

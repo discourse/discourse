@@ -83,21 +83,21 @@ module("Discourse Chat | Component | chat-emoji-picker", function (hooks) {
   test("When displaying navigation", async function (assert) {
     await render(hbs`<ChatEmojiPicker />`);
 
-    assert.ok(
+    assert.true(
       exists(
         `.chat-emoji-picker__section-btn.active[data-section="favorites"]`
       ),
       "it renders first section as active"
     );
-    assert.ok(
+    assert.true(
       exists(
         `.chat-emoji-picker__section-btn[data-section="smileys_&_emotion"]`
       )
     );
-    assert.ok(
+    assert.true(
       exists(`.chat-emoji-picker__section-btn[data-section="people_&_body"]`)
     );
-    assert.ok(
+    assert.true(
       exists(`.chat-emoji-picker__section-btn[data-section="objects"]`)
     );
   });
@@ -107,11 +107,11 @@ module("Discourse Chat | Component | chat-emoji-picker", function (hooks) {
     await click(".chat-emoji-picker__fitzpatrick-modifier-btn.current.t1");
     await click(".chat-emoji-picker__fitzpatrick-modifier-btn.t6");
 
-    assert.ok(
+    assert.true(
       exists(`img[src="/images/emoji/twitter/raised_hands/6.png"]`),
       "it applies the tone to emojis"
     );
-    assert.ok(
+    assert.true(
       exists(".chat-emoji-picker__fitzpatrick-modifier-btn.current.t6"),
       "it changes the current scale to t6"
     );
@@ -127,7 +127,7 @@ module("Discourse Chat | Component | chat-emoji-picker", function (hooks) {
 
     await click(`.chat-emoji-picker__section-btn[data-section="objects"]`);
 
-    assert.ok(
+    assert.true(
       document.querySelector("#ember-testing-container").scrollTop > 0,
       "it scrolls to the section"
     );
@@ -142,21 +142,21 @@ module("Discourse Chat | Component | chat-emoji-picker", function (hooks) {
       1,
       "it filters the emojis list"
     );
-    assert.ok(
+    assert.true(
       exists('.chat-emoji-picker__sections > img[alt="grinning"]'),
       "it filters the correct emoji"
     );
 
     await fillIn(".dc-filter-input", "Grinning");
 
-    assert.ok(
+    assert.true(
       exists('.chat-emoji-picker__sections > img[alt="grinning"]'),
       "it is case insensitive"
     );
 
     await fillIn(".dc-filter-input", "smiley_cat");
 
-    assert.ok(
+    assert.true(
       exists('.chat-emoji-picker__sections > img[alt="grinning"]'),
       "it filters the correct emoji using search alias"
     );
@@ -193,7 +193,7 @@ module("Discourse Chat | Component | chat-emoji-picker", function (hooks) {
   test("When opening the picker", async function (assert) {
     await render(hbs`<ChatEmojiPicker />`);
 
-    assert.ok(document.activeElement.classList.contains("dc-filter-input"));
+    assert.true(document.activeElement.classList.contains("dc-filter-input"));
   });
 
   test("When hovering an emoji", async function (assert) {
