@@ -19,7 +19,7 @@ UserChatChannelMembership.reopenClass({
   },
 
   _initUser(args) {
-    if (args.user instanceof User) {
+    if (!args.user || args.user instanceof User) {
       return;
     }
 
