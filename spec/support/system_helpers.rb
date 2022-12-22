@@ -22,7 +22,8 @@ module SystemHelpers
   def setup_system_test
     SiteSetting.login_required = false
     SiteSetting.content_security_policy = false
-    SiteSetting.force_hostname = "#{Capybara.server_host}:#{Capybara.server_port}"
+    SiteSetting.force_hostname = Capybara.server_host
+    SiteSetting.port = Capybara.server_port
     SiteSetting.external_system_avatars_enabled = false
   end
 
