@@ -12,7 +12,7 @@ module SystemHelpers
   end
 
   def sign_in(user)
-    visit "/session/#{user.encoded_username}/become"
+    visit "/session/#{user.encoded_username}/become.json?redirect=false"
   end
 
   def sign_out

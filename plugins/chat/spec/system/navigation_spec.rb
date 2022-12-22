@@ -19,6 +19,8 @@ RSpec.describe "Navigation", type: :system, js: true do
 
   context "when clicking chat icon and drawer is viewing channel" do
     it "navigates to index" do
+      visit("/")
+
       chat_page.open_from_header
       chat_drawer_page.open_channel(category_channel_2)
       chat_page.open_from_header

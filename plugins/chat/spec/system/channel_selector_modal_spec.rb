@@ -9,6 +9,7 @@ RSpec.describe "Channel selector modal", type: :system, js: true do
   before do
     chat_system_bootstrap
     sign_in(current_user)
+    visit("/")
   end
 
   KEY_MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :control
