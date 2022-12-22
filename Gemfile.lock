@@ -5,49 +5,62 @@ GIT
     mail (2.8.0.edge)
       mini_mime (>= 0.1.1)
 
-GEM
-  remote: https://rubygems.org/
+GIT
+  remote: https://github.com/rails/rails.git
+  revision: de40fc69ff42ff3b97affcc65fb3ae895b27a651
+  ref: de40fc69ff42ff3b97affcc65fb3ae895b27a651
   specs:
-    actionmailer (7.0.3.1)
-      actionpack (= 7.0.3.1)
-      actionview (= 7.0.3.1)
-      activejob (= 7.0.3.1)
-      activesupport (= 7.0.3.1)
+    actionmailer (7.1.0.alpha)
+      actionpack (= 7.1.0.alpha)
+      actionview (= 7.1.0.alpha)
+      activejob (= 7.1.0.alpha)
+      activesupport (= 7.1.0.alpha)
       mail (~> 2.5, >= 2.5.4)
       net-imap
       net-pop
       net-smtp
       rails-dom-testing (~> 2.0)
-    actionpack (7.0.3.1)
-      actionview (= 7.0.3.1)
-      activesupport (= 7.0.3.1)
-      rack (~> 2.0, >= 2.2.0)
+    actionpack (7.1.0.alpha)
+      actionview (= 7.1.0.alpha)
+      activesupport (= 7.1.0.alpha)
+      rack (~> 2.0, >= 2.2.4)
       rack-test (>= 0.6.3)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.2.0)
-    actionview (7.0.3.1)
-      activesupport (= 7.0.3.1)
+    actionview (7.1.0.alpha)
+      activesupport (= 7.1.0.alpha)
       builder (~> 3.1)
-      erubi (~> 1.4)
+      erubi (~> 1.11)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
+    activejob (7.1.0.alpha)
+      activesupport (= 7.1.0.alpha)
+      globalid (>= 0.3.6)
+    activemodel (7.1.0.alpha)
+      activesupport (= 7.1.0.alpha)
+    activerecord (7.1.0.alpha)
+      activemodel (= 7.1.0.alpha)
+      activesupport (= 7.1.0.alpha)
+    activesupport (7.1.0.alpha)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      connection_pool (>= 2.2.5)
+      i18n (>= 1.6, < 2)
+      minitest (>= 5.1)
+      tzinfo (~> 2.0)
+    railties (7.1.0.alpha)
+      actionpack (= 7.1.0.alpha)
+      activesupport (= 7.1.0.alpha)
+      rake (>= 12.2)
+      thor (~> 1.0)
+      zeitwerk (~> 2.6)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
     actionview_precompiler (0.2.3)
       actionview (>= 6.0.a)
     active_model_serializers (0.8.4)
       activemodel (>= 3.0)
-    activejob (7.0.3.1)
-      activesupport (= 7.0.3.1)
-      globalid (>= 0.3.6)
-    activemodel (7.0.3.1)
-      activesupport (= 7.0.3.1)
-    activerecord (7.0.3.1)
-      activemodel (= 7.0.3.1)
-      activesupport (= 7.0.3.1)
-    activesupport (7.0.3.1)
-      concurrent-ruby (~> 1.0, >= 1.0.2)
-      i18n (>= 1.6, < 2)
-      minitest (>= 5.1)
-      tzinfo (~> 2.0)
     addressable (2.8.1)
       public_suffix (>= 2.0.2, < 6.0)
     annotate (3.2.0)
@@ -323,13 +336,6 @@ GEM
     rails_multisite (4.0.1)
       activerecord (> 5.0, < 7.1)
       railties (> 5.0, < 7.1)
-    railties (7.0.3.1)
-      actionpack (= 7.0.3.1)
-      activesupport (= 7.0.3.1)
-      method_source
-      rake (>= 12.2)
-      thor (~> 1.0)
-      zeitwerk (~> 2.5)
     rainbow (3.1.1)
     raindrops (0.20.0)
     rake (13.0.6)
@@ -497,14 +503,14 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  actionmailer (= 7.0.3.1)
-  actionpack (= 7.0.3.1)
-  actionview (= 7.0.3.1)
+  actionmailer!
+  actionpack!
+  actionview!
   actionview_precompiler
   active_model_serializers (~> 0.8.3)
-  activemodel (= 7.0.3.1)
-  activerecord (= 7.0.3.1)
-  activesupport (= 7.0.3.1)
+  activemodel!
+  activerecord!
+  activesupport!
   addressable
   annotate
   aws-sdk-s3
@@ -588,7 +594,7 @@ DEPENDENCIES
   rack-protection
   rails_failover
   rails_multisite
-  railties (= 7.0.3.1)
+  railties!
   rake
   rb-fsevent
   rbtrace

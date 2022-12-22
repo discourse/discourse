@@ -18,7 +18,8 @@ else
   # this allows us to include the bits of rails we use without pieces we do not.
   #
   # To issue a rails update bump the version number here
-  rails_version = '7.0.3.1'
+  # rails_version = '7.0.3.1'
+  rails_version = { git: 'https://github.com/rails/rails.git', ref: 'de40fc69ff42ff3b97affcc65fb3ae895b27a651' }
   gem 'actionmailer', rails_version
   gem 'actionpack', rails_version
   gem 'actionview', rails_version
