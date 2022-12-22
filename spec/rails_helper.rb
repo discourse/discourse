@@ -251,7 +251,7 @@ RSpec.configure do |config|
     end
 
     chrome_browser_options = Selenium::WebDriver::Chrome::Options.new(
-      logging_prefs: { "browser" => "ALL", "driver" => "ALL" }
+      logging_prefs: { "browser" => "INFO", "driver" => "ALL" }
     ).tap do |options|
       options.add_argument("--window-size=1400,1400")
       options.add_argument("--no-sandbox")
@@ -279,7 +279,7 @@ RSpec.configure do |config|
 
     mobile_chrome_browser_options =
       Selenium::WebDriver::Chrome::Options
-        .new(logging_prefs: { "browser" => "ALL", "driver" => "ALL" })
+        .new(logging_prefs: { "browser" => "INFO", "driver" => "ALL" })
         .tap do |options|
           options.add_argument("--window-size=390,950")
           options.add_argument("--no-sandbox")
