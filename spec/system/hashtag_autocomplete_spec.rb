@@ -81,16 +81,13 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
     topic_page.type_in_composer("this is a #cool-cat category and a #cooltag tag")
     topic_page.send_reply
     expect(topic_page).to have_post_number(2)
+    cooked_hashtags = page.all(".hashtag-cooked", count: 2)
 
-    within topic_page.post_by_number(2) do
-      cooked_hashtags = page.all(".hashtag-cooked", count: 2)
-
-      expect(cooked_hashtags[0]["outerHTML"]).to eq(<<~HTML.chomp)
-      <a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"cool-cat\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>Cool Category</span></a>
-      HTML
-      expect(cooked_hashtags[1]["outerHTML"]).to eq(<<~HTML.chomp)
-      <a class=\"hashtag-cooked\" href=\"#{tag.url}\" data-type=\"tag\" data-slug=\"cooltag\"><svg class=\"fa d-icon d-icon-tag svg-icon svg-node\"><use href=\"#tag\"></use></svg><span>cooltag</span></a>
-      HTML
-    end
+    expect(cooked_hashtags[0]["outerHTML"]).to eq(<<~HTML.chomp)
+    <a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"cool-cat\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>Cool Category</span></a>
+    HTML
+    expect(cooked_hashtags[1]["outerHTML"]).to eq(<<~HTML.chomp)
+    <a class=\"hashtag-cooked\" href=\"#{tag.url}\" data-type=\"tag\" data-slug=\"cooltag\"><svg class=\"fa d-icon d-icon-tag svg-icon svg-node\"><use href=\"#tag\"></use></svg><span>cooltag</span></a>
+    HTML
   end
 end
