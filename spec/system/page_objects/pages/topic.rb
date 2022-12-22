@@ -89,7 +89,7 @@ module PageObjects
       end
 
       def send_reply
-        within("#reply-control") { find(".save-or-cancel .create").click }
+        find("#reply-control .save-or-cancel .create").click
       end
 
       private
