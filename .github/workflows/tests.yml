@@ -173,7 +173,7 @@ jobs:
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
-        run: SELENIUM_VERBOSE_DRIVER_LOGS=1 bin/rspec spec/system --format documentation --profile
+        run: SELENIUM_VERBOSE_DRIVER_LOGS=1 bin/rspec spec/system --format documentation --profile --seed=51620
 
 #       - name: Plugin System Tests
 #         if: matrix.build_type == 'system' && matrix.target == 'plugins'
