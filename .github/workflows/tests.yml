@@ -35,8 +35,8 @@ jobs:
       fail-fast: false
 
       matrix:
-        build_type: [system]
-        target: [core]
+        build_type: [backend, frontend, system, annotations]
+        target: [core, plugins]
         exclude:
           - build_type: annotations
             target: plugins
@@ -96,13 +96,13 @@ jobs:
       - name: Yarn install
         run: yarn install
 
-      # - name: Checkout official plugins
-      #   if: matrix.target == 'plugins'
-      #   run: bin/rake plugin:install_all_official
+      - name: Checkout official plugins
+        if: matrix.target == 'plugins'
+        run: bin/rake plugin:install_all_official
 
-      # - name: Pull compatible versions of plugins
-      #   if: matrix.target == 'plugins'
-      #   run: bin/rake plugin:pull_compatible_all
+      - name: Pull compatible versions of plugins
+        if: matrix.target == 'plugins'
+        run: bin/rake plugin:pull_compatible_all
 
       - name: Fetch app state cache
         uses: actions/cache@v3
@@ -130,13 +130,13 @@ jobs:
           bin/rake db:create
           bin/rake db:migrate
 
-      # - name: Create and migrate parallel databases
-      #   if: >-
-      #     env.USES_PARALLEL_DATABASES == 'true' &&
-      #     steps.app-cache.outputs.cache-hit != 'true'
-      #   run: |
-      #     bin/rake parallel:create
-      #     bin/rake parallel:migrate
+      - name: Create and migrate parallel databases
+        if: >-
+          env.USES_PARALLEL_DATABASES == 'true' &&
+          steps.app-cache.outputs.cache-hit != 'true'
+        run: |
+          bin/rake parallel:create
+          bin/rake parallel:migrate
 
       - name: Dump database for cache
         if: steps.app-cache.outputs.cache-hit != 'true'
@@ -154,18 +154,18 @@ jobs:
           path: tmp/turbo_rspec_runtime.log
           key: rspec-runtime-backend-core
 
-      # - name: Core RSpec
-      #   if: matrix.build_type == 'backend' && matrix.target == 'core'
-      #   run: bin/turbo_rspec --verbose
+      - name: Core RSpec
+        if: matrix.build_type == 'backend' && matrix.target == 'core'
+        run: bin/turbo_rspec --verbose
 
-      # - name: Plugin RSpec
-      #   if: matrix.build_type == 'backend' && matrix.target == 'plugins'
-      #   run: bin/rake plugin:turbo_spec
+      - name: Plugin RSpec
+        if: matrix.build_type == 'backend' && matrix.target == 'plugins'
+        run: bin/rake plugin:turbo_spec
 
-      # - name: Plugin QUnit
-      #   if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-      #   run: QUNIT_PARALLEL=3 bin/rake plugin:qunit['*','1200000']
-      #   timeout-minutes: 30
+      - name: Plugin QUnit
+        if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
+        run: QUNIT_PARALLEL=3 bin/rake plugin:qunit['*','1200000']
+        timeout-minutes: 30
 
       - name: Ember Build for System Tests
         if: matrix.build_type == 'system'
@@ -173,11 +173,11 @@ jobs:
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
-        run: SELENIUM_VERBOSE_DRIVER_LOGS=1 bin/rspec spec/system --format documentation --profile --seed=51620
+        run: bin/rspec spec/system --format documentation --profile
 
-#       - name: Plugin System Tests
-#         if: matrix.build_type == 'system' && matrix.target == 'plugins'
-#         run: LOAD_PLUGINS=1 bin/rspec plugins/*/spec/system --format documentation --profile
+      - name: Plugin System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'plugins'
+        run: LOAD_PLUGINS=1 bin/rspec plugins/*/spec/system --format documentation --profile
 
       - name: Upload failed system test screenshots
         uses: actions/upload-artifact@v3
@@ -186,82 +186,82 @@ jobs:
           name: failed-system-test-screenshots
           path: tmp/capybara/*.png
 
-#       - name: Check Annotations
-#         if: matrix.build_type == 'annotations'
-#         run: |
-#           bin/rake annotate:ensure_all_indexes
-#           bin/annotate --models --model-dir app/models
+      - name: Check Annotations
+        if: matrix.build_type == 'annotations'
+        run: |
+          bin/rake annotate:ensure_all_indexes
+          bin/annotate --models --model-dir app/models
 
-#           if [ ! -z "$(git status --porcelain app/models/)" ]; then
-#             echo "Core annotations are not up to date. To resolve, run:"
-#             echo "  bin/rake annotate:clean"
-#             echo
-#             echo "Or manually apply the diff printed below:"
-#             echo "---------------------------------------------"
-#             git -c color.ui=always diff app/models/
-#             exit 1
-#           fi
-#         timeout-minutes: 30
+          if [ ! -z "$(git status --porcelain app/models/)" ]; then
+            echo "Core annotations are not up to date. To resolve, run:"
+            echo "  bin/rake annotate:clean"
+            echo
+            echo "Or manually apply the diff printed below:"
+            echo "---------------------------------------------"
+            git -c color.ui=always diff app/models/
+            exit 1
+          fi
+        timeout-minutes: 30
 
-  # core_frontend_tests:
-  #   if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
-  #   name: core frontend (${{ matrix.browser }})
-  #   runs-on: ubuntu-20.04-8core
-  #   container:
-  #     image: discourse/discourse_test:slim-browsers
-  #     options: --user discourse
+  core_frontend_tests:
+    if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
+    name: core frontend (${{ matrix.browser }})
+    runs-on: ubuntu-20.04-8core
+    container:
+      image: discourse/discourse_test:slim-browsers
+      options: --user discourse
 
-  #   timeout-minutes: 35
+    timeout-minutes: 35
 
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       browser: ["Chrome", "Firefox ESR", "Firefox Evergreen"]
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: ["Chrome", "Firefox ESR", "Firefox Evergreen"]
 
-  #   env:
-  #     TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
-  #     TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
+    env:
+      TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
+      TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
 
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         fetch-depth: 1
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
 
-  #     - name: Setup Git
-  #       run: |
-  #         git config --global user.email "ci@ci.invalid"
-  #         git config --global user.name "Discourse CI"
+      - name: Setup Git
+        run: |
+          git config --global user.email "ci@ci.invalid"
+          git config --global user.name "Discourse CI"
 
-  #     - name: Get yarn cache directory
-  #       id: yarn-cache-dir
-  #       run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+      - name: Get yarn cache directory
+        id: yarn-cache-dir
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
-  #     - name: Yarn cache
-  #       uses: actions/cache@v3
-  #       id: yarn-cache
-  #       with:
-  #         path: ${{ steps.yarn-cache-dir.outputs.dir }}
-  #         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-  #         restore-keys: |
-  #           ${{ runner.os }}-yarn-
+      - name: Yarn cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
-  #     - name: Yarn install
-  #       working-directory: ./app/assets/javascripts/discourse
-  #       run: yarn install
+      - name: Yarn install
+        working-directory: ./app/assets/javascripts/discourse
+        run: yarn install
 
-  #     - name: Ember Build
-  #       working-directory: ./app/assets/javascripts/discourse
-  #       run: |
-  #         mkdir /tmp/emberbuild
-  #         yarn ember build --environment=test  -o /tmp/emberbuild
+      - name: Ember Build
+        working-directory: ./app/assets/javascripts/discourse
+        run: |
+          mkdir /tmp/emberbuild
+          yarn ember build --environment=test  -o /tmp/emberbuild
 
-  #     - name: Core QUnit
-  #       working-directory: ./app/assets/javascripts/discourse
-  #       run: yarn ember exam --path /tmp/emberbuild --load-balance --parallel=5  --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
-  #       timeout-minutes: 15
+      - name: Core QUnit
+        working-directory: ./app/assets/javascripts/discourse
+        run: yarn ember exam --path /tmp/emberbuild --load-balance --parallel=5  --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
+        timeout-minutes: 15
 
-  #     - uses: actions/upload-artifact@v3
-  #       if: ${{ always() }}
-  #       with:
-  #         name: ember-exam-execution-${{matrix.browser}}
-  #         path: ./app/assets/javascripts/discourse/test-execution-*.json
+      - uses: actions/upload-artifact@v3
+        if: ${{ always() }}
+        with:
+          name: ember-exam-execution-${{matrix.browser}}
+          path: ./app/assets/javascripts/discourse/test-execution-*.json
