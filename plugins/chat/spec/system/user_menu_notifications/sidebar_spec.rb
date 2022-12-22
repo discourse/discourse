@@ -175,6 +175,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
 
       using_session(:user_1) do
         sign_in(other_user)
+        visit("/")
         find(".header-dropdown-toggle.current-user").click
 
         expect(find("#user-menu-button-chat-notifications")).to have_content(1)

@@ -16,6 +16,7 @@ RSpec.describe "Unfollow dm channel", type: :system, js: true do
 
   context "when receiving a message after unfollowing" do
     it "correctly shows the channel" do
+      visit("/")
       find(".channel-#{dm_channel_1.id}").hover
       find(".channel-#{dm_channel_1.id} .sidebar-section-link-hover").click
 
