@@ -4,13 +4,13 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { popupAutomaticMembershipAlert } from "discourse/controllers/groups-new";
 import showModal from "discourse/lib/show-modal";
-import { and } from "@ember/object/computed";
+import { or } from "@ember/object/computed";
 
 export default Component.extend({
   saving: null,
   disabled: false,
   updateExistingUsers: null,
-  hasFlair: and("model.flair_icon", "model.flair_upload_id"),
+  hasFlair: or("model.flair_icon", "model.flair_upload_id"),
 
   @discourseComputed("saving")
   savingText(saving) {
