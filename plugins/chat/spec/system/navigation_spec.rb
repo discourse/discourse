@@ -28,8 +28,8 @@ RSpec.describe "Navigation", type: :system, js: true do
   end
 
   context "when clicking chat icon on mobile and is viewing channel" do
-    it "navigates to index" do
-      visit("/chat?mobile_view=1")
+    it "navigates to index", mobile: true do
+      visit("/chat")
       chat_page.visit_channel(category_channel_2)
       chat_page.open_from_header
 
@@ -152,9 +152,7 @@ RSpec.describe "Navigation", type: :system, js: true do
   end
 
   context "when sidebar is configured as the navigation menu" do
-    before do
-      SiteSetting.navigation_menu = "sidebar"
-    end
+    before { SiteSetting.navigation_menu = "sidebar" }
 
     context "when opening channel from sidebar with drawer preferred" do
       it "opens channel in drawer" do

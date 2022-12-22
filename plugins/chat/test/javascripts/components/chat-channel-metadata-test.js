@@ -28,9 +28,8 @@ module("Discourse Chat | Component | chat-channel-metadata", function (hooks) {
 
   test("unreadIndicator", async function (assert) {
     this.channel = fabricators.directMessageChatChannel();
-    this.currentUser.set("chat_channel_tracking_state", {
-      [this.channel.id]: { unread_count: 1 },
-    });
+    this.channel.currentUserMembership.unread_count = 1;
+
     this.unreadIndicator = true;
     await render(
       hbs`<ChatChannelMetadata @channel={{this.channel}} @unreadIndicator={{this.unreadIndicator}}/>`

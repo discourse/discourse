@@ -17,13 +17,13 @@ describe FinalDestination::Resolver do
     Addrinfo.stubs(:getaddrinfo).with { |addr| addr == "example.com" }.returns(mock_response)
 
     expect {
-      FinalDestination::Resolver.lookup("sleep.example.com", timeout: 0.001)
+      result = FinalDestination::Resolver.lookup("sleep.example.com", timeout: 0.001)
     }.to raise_error(Timeout::Error)
 
     start_thread_count = alive_thread_count
 
     expect {
-      FinalDestination::Resolver.lookup("sleep.example.com", timeout: 0.001)
+      result = FinalDestination::Resolver.lookup("sleep.example.com", timeout: 0.001)
     }.to raise_error(Timeout::Error)
 
     expect(alive_thread_count).to eq(start_thread_count)

@@ -86,6 +86,10 @@ export default class ChatStateManager extends Service {
     return this.router.currentRouteName?.startsWith("chat");
   }
 
+  get isActive() {
+    return this.isFullPageActive || this.isDrawerActive;
+  }
+
   storeAppURL(URL = null) {
     this._appURL = URL || this.router.currentURL;
   }

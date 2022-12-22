@@ -2,14 +2,15 @@ import Component from "@ember/component";
 import { htmlSafe } from "@ember/template";
 import I18n from "I18n";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse-common/lib/get-url";
 import { action } from "@ember/object";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
 
 export default Component.extend({
   channel: null,
   tagName: "",
+  chatApi: service(),
 
   @discourseComputed(
     "channel.status",
@@ -43,26 +44,32 @@ export default Component.extend({
 
   @action
   retryArchive() {
-    return ajax({
-      url: `/chat/chat_channels/${this.channel.id}/retry_archive.json`,
-      type: "PUT",
-    })
-      .then(() => {
-        this.channel.set("archive_failed", false);
-      })
+    return this.chatApi
+      .createChannelArchive(this.channel.id)
       .catch(popupAjaxError);
   },
 
   didInsertElement() {
     this._super(...arguments);
+
     if (this.currentUser.admin) {
-      this.messageBus.subscribe("/chat/channel-archive-status", this.onMessage);
+      this.messageBus.subscribe(
+        "/chat/channel-archive-status",
+        this.onMessage,
+        this.channel.meta.message_bus_last_ids.archive_status
+      );
     }
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    this.messageBus.unsubscribe("/chat/channel-archive-status", this.onMessage);
+
+    if (this.currentUser.admin) {
+      this.messageBus.unsubscribe(
+        "/chat/channel-archive-status",
+        this.onMessage
+      );
+    }
   },
 
   _getTopicUrl() {

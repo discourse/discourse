@@ -17,15 +17,15 @@
     </label>
   {{/if}}
 
-  <label class="create-channel-label">
+  <label for="channel-name" class="create-channel-label">
     {{i18n "chat.create_channel.name"}}
   </label>
-  <Input class="create-channel-name-input" @type="text" @value={{this.name}} />
+  <Input name="channel-name" class="create-channel-name-input" @type="text" @value={{this.name}} />
 
-  <label class="create-channel-label">
+  <label for="channel-description" class="create-channel-label">
     {{i18n "chat.create_channel.description"}}
   </label>
-  <Input class="create-channel-description-input" @type="textarea" @value={{this.description}} />
+  <Input name="channel-description" class="create-channel-description-input" @type="textarea" @value={{this.description}} />
 </DModalBody>
 
 <div class="modal-footer">

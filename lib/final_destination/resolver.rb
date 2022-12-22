@@ -8,11 +8,13 @@ class FinalDestination::Resolver
       @result = nil
 
       @queue ||= Queue.new
-      @queue << ""
       ensure_lookup_thread
 
       @lookup = addr
       @parent = Thread.current
+
+      # Wakeup the worker thread
+      @queue << ""
 
       # This sleep will be interrupted by the lookup thread
       # if completed within timeout

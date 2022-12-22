@@ -13,8 +13,8 @@ export default class ChatChannelByNameRoute extends DiscourseRoute {
       .then((response) => {
         this.transitionTo(
           "chat.channel",
-          response.chat_channel.id,
-          response.chat_channel.title
+          response.channel.id,
+          response.channel.title
         );
       })
       .catch(() => this.replaceWith("/404"));

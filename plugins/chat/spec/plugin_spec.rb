@@ -349,11 +349,6 @@ describe Chat do
       fab!(:user_2) { Fabricate(:user) }
       fab!(:channel) { Fabricate(:direct_message_channel, users: [user, user_2]) }
 
-      before do
-        Fabricate(:user_chat_channel_membership, user: user, chat_channel: channel, following: true)
-        Fabricate(:direct_message_channel, users: [user, user_2])
-      end
-
       it "returns them" do
         expect(serializer.chat_channels[:public_channels]).to eq([])
         expect(serializer.chat_channels[:direct_message_channels].count).to eq(1)

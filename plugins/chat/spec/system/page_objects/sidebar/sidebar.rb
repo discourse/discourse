@@ -14,6 +14,11 @@ module PageObjects
       def open_channel(channel)
         find(".sidebar-section-link[href='/chat/channel/#{channel.id}/#{channel.slug}']").click
       end
+
+      def find_channel(channel)
+        find(".sidebar-section-link[href='/chat/channel/#{channel.id}/#{channel.slug}']")
+        self
+      end
     end
   end
 end

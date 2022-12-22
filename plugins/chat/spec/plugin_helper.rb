@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module ChatSystemHelpers
-  def chat_system_bootstrap(user, channels_for_membership = [])
+  def chat_system_bootstrap(user = Fabricate(:admin), channels_for_membership = [])
     # ensures we have one valid registered admin/user
     user.activate
 
@@ -16,9 +16,10 @@ module ChatSystemHelpers
     end
 
     Group.refresh_automatic_groups!
+
+    # this is reset after each test
+    Bookmark.register_bookmarkable(ChatMessageBookmarkable)
   end
 end
 
-RSpec.configure do |config|
-  config.include ChatSystemHelpers, type: :system
-end
+RSpec.configure { |config| config.include ChatSystemHelpers, type: :system }

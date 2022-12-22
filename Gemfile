@@ -270,3 +270,5 @@ gem 'faraday-retry'
 # workaround for faraday-net_http, see
 # https://github.com/ruby/net-imap/issues/16#issuecomment-803086765
 gem 'net-http'
+
+gem 'webrick', require: false

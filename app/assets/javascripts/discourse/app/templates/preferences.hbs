@@ -61,7 +61,7 @@
         </LinkTo>
       </li>
 
-      {{#if (not (eq @siteSettings.navigation_menu "legacy"))}}
+      {{#if (not (eq this.siteSettings.navigation_menu "legacy"))}}
         <li class="indent nav-sidebar">
           <LinkTo @route="preferences.sidebar">
             {{i18n "user.preferences_nav.sidebar"}}

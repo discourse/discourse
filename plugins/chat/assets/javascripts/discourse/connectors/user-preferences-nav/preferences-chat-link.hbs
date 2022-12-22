@@ -1,4 +1,4 @@
-{{#if this.model.can_chat}}
+{{#if (or this.model.can_chat this.model.admin)}}
   <LinkTo @route="preferences.chat">
     {{i18n "chat.title_capitalized"}}
   </LinkTo>

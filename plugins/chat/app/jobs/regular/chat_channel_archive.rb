@@ -15,7 +15,19 @@ module Jobs
         return
       end
 
-      return if channel_archive.complete?
+      if channel_archive.complete?
+        channel_archive.chat_channel.update!(status: :archived)
+
+        ChatPublisher.publish_archive_status(
+          channel_archive.chat_channel,
+          archive_status: :success,
+          archived_messages: channel_archive.archived_messages,
+          archive_topic_id: channel_archive.destination_topic_id,
+          total_messages: channel_archive.total_messages,
+        )
+
+        return
+      end
 
       DistributedMutex.synchronize(
         "archive_chat_channel_#{channel_archive.chat_channel_id}",

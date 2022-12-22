@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe Chat::Api::ChatChannelsController do
+RSpec.describe Chat::Api::ChatChannelsController do
   before do
     SiteSetting.chat_enabled = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
@@ -10,72 +10,231 @@ describe Chat::Api::ChatChannelsController do
 
   describe "#index" do
     context "as anonymous user" do
-      it "returns a 403" do
-        get "/chat/api/chat_channels.json"
+      it "returns an error" do
+        get "/chat/api/channels"
+
         expect(response.status).to eq(403)
       end
     end
 
-    describe "params" do
-      fab!(:opened_channel) { Fabricate(:category_channel, name: "foo") }
-      fab!(:closed_channel) { Fabricate(:category_channel, name: "bar", status: :closed) }
+    context "as disallowed user" do
+      fab!(:current_user) { Fabricate(:user) }
+
+      before do
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
+        sign_in(current_user)
+      end
+
+      it "returns an error" do
+        get "/chat/api/channels"
+
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context "as allowed user" do
+      fab!(:current_user) { Fabricate(:user) }
+
+      before { sign_in(current_user) }
+
+      context "with category channels" do
+        context "when channel is public" do
+          fab!(:channel_1) { Fabricate(:category_channel) }
+
+          it "returns the channel" do
+            get "/chat/api/channels"
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["channels"].map { |channel| channel["id"] }).to eq(
+              [channel_1.id],
+            )
+          end
+
+          context "when chatable is destroyed" do
+            before { channel_1.chatable.destroy! }
+
+            it "returns nothing" do
+              get "/chat/api/channels"
+
+              expect(response.status).to eq(200)
+              expect(response.parsed_body["channels"]).to be_blank
+            end
+          end
+        end
+
+        context "when channel has limited access" do
+          fab!(:group_1) { Fabricate(:group) }
+          fab!(:channel_1) { Fabricate(:private_category_channel, group: group_1) }
+
+          context "when user has access" do
+            before { group_1.add(current_user) }
+
+            it "returns the channel" do
+              get "/chat/api/channels"
+
+              expect(response.status).to eq(200)
+              expect(response.parsed_body["channels"].map { |channel| channel["id"] }).to eq(
+                [channel_1.id],
+              )
+            end
+          end
+
+          context "when user has no access" do
+            it "returns nothing" do
+              get "/chat/api/channels"
+
+              expect(response.status).to eq(200)
+              expect(response.parsed_body["channels"]).to be_blank
+            end
+
+            context "when user is admin" do
+              before { sign_in(Fabricate(:admin)) }
+
+              it "returns the channels" do
+                get "/chat/api/channels"
+
+                expect(response.status).to eq(200)
+                expect(response.parsed_body["channels"].map { |channel| channel["id"] }).to eq(
+                  [channel_1.id],
+                )
+              end
+            end
+          end
+        end
+      end
+
+      context "with direct message channels" do
+        fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user]) }
+
+        it "doesnt return direct message channels" do
+          get "/chat/api/channels"
+          expect(response.parsed_body["channels"]).to be_blank
+        end
+      end
+    end
+  end
+
+  describe "#show" do
+    context "when anonymous" do
+      it "returns an error" do
+        get "/chat/api/channels/-999"
+
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context "when user cannot access channel" do
+      fab!(:channel_1) { Fabricate(:private_category_channel) }
 
       before { sign_in(Fabricate(:user)) }
 
-      it "returns all channels by default" do
-        get "/chat/api/chat_channels.json"
+      it "returns an error" do
+        get "/chat/api/channels/#{channel_1.id}"
 
-        expect(response.status).to eq(200)
-        expect(response.parsed_body.length).to eq(2)
+        expect(response.status).to eq(403)
       end
+    end
 
-      it "returns serialized channels " do
-        get "/chat/api/chat_channels.json"
+    context "when user can access channel" do
+      fab!(:current_user) { Fabricate(:user) }
 
-        expect(response.status).to eq(200)
-        response.parsed_body.each do |channel|
-          expect(channel).to match_response_schema("category_chat_channel")
+      before { sign_in(current_user) }
+
+      context "when channel doesn’t exist" do
+        it "returns an error" do
+          get "/chat/api/channels/-999"
+
+          expect(response.status).to eq(404)
         end
       end
 
-      describe "filter" do
-        it "returns channels filtered by name" do
-          get "/chat/api/chat_channels.json?filter=foo"
+      context "when channel exists" do
+        fab!(:channel_1) { Fabricate(:category_channel) }
+
+        it "can find channel by id" do
+          get "/chat/api/channels/#{channel_1.id}"
 
           expect(response.status).to eq(200)
-          results = response.parsed_body
-          expect(results.length).to eq(1)
-          expect(results[0]["title"]).to eq("foo")
+          expect(response.parsed_body["channel"]["id"]).to eq(channel_1.id)
+        end
+      end
+    end
+  end
+
+  describe "#destroy" do
+    fab!(:channel_1) { Fabricate(:category_channel) }
+
+    context "when user is not staff" do
+      fab!(:current_user) { Fabricate(:user) }
+
+      before { sign_in(current_user) }
+
+      it "returns an error" do
+        delete "/chat/api/channels/#{channel_1.id}",
+               params: {
+                 channel: {
+                   name_confirmation: channel_1.title(current_user),
+                 },
+               }
+
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context "when user is admin" do
+      fab!(:current_user) { Fabricate(:admin) }
+
+      before { sign_in(current_user) }
+
+      context "when the channel doesn’t exist" do
+        before { channel_1.destroy! }
+
+        it "returns an error" do
+          delete "/chat/api/channels/#{channel_1.id}",
+                 params: {
+                   channel: {
+                     name_confirmation: channel_1.title(current_user),
+                   },
+                 }
+
+          expect(response.status).to eq(404)
         end
       end
 
-      describe "status" do
-        it "returns channels with the status" do
-          get "/chat/api/chat_channels.json?status=closed"
+      context "when the confirmation doesn’t match the channel name" do
+        it "returns an error" do
+          delete "/chat/api/channels/#{channel_1.id}",
+                 params: {
+                   channel: {
+                     name_confirmation: channel_1.title(current_user) + "foo",
+                   },
+                 }
 
-          expect(response.status).to eq(200)
-          results = response.parsed_body
-          expect(results.length).to eq(1)
-          expect(results[0]["status"]).to eq("closed")
+          expect(response.status).to eq(400)
         end
       end
 
-      describe "limit" do
-        it "returns a number of channel equal to the limit" do
-          get "/chat/api/chat_channels.json?limit=1"
+      context "with valid params" do
+        it "properly destroys the channel" do
+          delete "/chat/api/channels/#{channel_1.id}",
+                 params: {
+                   channel: {
+                     name_confirmation: channel_1.title(current_user),
+                   },
+                 }
 
           expect(response.status).to eq(200)
-          results = response.parsed_body
-          expect(results.length).to eq(1)
-        end
-      end
-      describe "offset" do
-        it "returns channels from the offset" do
-          get "/chat/api/chat_channels.json?offset=2"
-
-          expect(response.status).to eq(200)
-          results = response.parsed_body
-          expect(results.length).to eq(0)
+          expect(channel_1.reload.trashed?).to eq(true)
+          expect(
+            job_enqueued?(job: :chat_channel_delete, args: { chat_channel_id: channel_1.id }),
+          ).to eq(true)
+          expect(
+            UserHistory.exists?(
+              acting_user_id: current_user.id,
+              action: UserHistory.actions[:custom_staff],
+              custom_type: "chat_channel_delete",
+            ),
+          ).to eq(true)
         end
       end
     end
@@ -87,28 +246,30 @@ describe Chat::Api::ChatChannelsController do
 
     let(:params) do
       {
-        type: category.class.name,
-        id: category.id,
-        name: "channel name",
-        description: "My new channel",
+        channel: {
+          type: category.class.name,
+          chatable_id: category.id,
+          name: "channel name",
+          description: "My new channel",
+        },
       }
     end
 
     before { sign_in(admin) }
 
     it "creates a channel associated to a category" do
-      put "/chat/chat_channels.json", params: params
+      post "/chat/api/channels", params: params
 
       new_channel = ChatChannel.last
 
-      expect(new_channel.name).to eq(params[:name])
-      expect(new_channel.description).to eq(params[:description])
+      expect(new_channel.name).to eq(params[:channel][:name])
+      expect(new_channel.description).to eq(params[:channel][:description])
       expect(new_channel.chatable_type).to eq(category.class.name)
       expect(new_channel.chatable_id).to eq(category.id)
     end
 
     it "creates a channel sets auto_join_users to false by default" do
-      put "/chat/chat_channels.json", params: params
+      post "/chat/api/channels", params: params
 
       new_channel = ChatChannel.last
 
@@ -116,7 +277,8 @@ describe Chat::Api::ChatChannelsController do
     end
 
     it "creates a channel with auto_join_users set to true" do
-      put "/chat/chat_channels.json", params: params.merge(auto_join_users: true)
+      params[:channel][:auto_join_users] = true
+      post "/chat/api/channels", params: params
 
       new_channel = ChatChannel.last
 
@@ -134,9 +296,10 @@ describe Chat::Api::ChatChannelsController do
       end
 
       it "joins the user when auto_join_users is true" do
-        put "/chat/chat_channels.json", params: params.merge(auto_join_users: true)
+        params[:channel][:auto_join_users] = true
+        post "/chat/api/channels", params: params
 
-        created_channel_id = response.parsed_body.dig("chat_channel", "id")
+        created_channel_id = response.parsed_body.dig("channel", "id")
         membership_exists =
           UserChatChannelMembership.find_by(
             user: user,
@@ -148,9 +311,10 @@ describe Chat::Api::ChatChannelsController do
       end
 
       it "doesn't join the user when auto_join_users is false" do
-        put "/chat/chat_channels.json", params: params.merge(auto_join_users: false)
+        params[:channel][:auto_join_users] = false
+        post "/chat/api/channels", params: params
 
-        created_channel_id = response.parsed_body.dig("chat_channel", "id")
+        created_channel_id = response.parsed_body.dig("channel", "id")
         membership_exists =
           UserChatChannelMembership.find_by(
             user: user,
@@ -167,79 +331,79 @@ describe Chat::Api::ChatChannelsController do
     include_examples "channel access example", :put
 
     context "when user can’t edit channel" do
-      fab!(:chat_channel) { Fabricate(:category_channel) }
+      fab!(:channel) { Fabricate(:category_channel) }
 
       before { sign_in(Fabricate(:user)) }
 
       it "returns a 403" do
-        put "/chat/api/chat_channels/#{chat_channel.id}.json"
+        put "/chat/api/channels/#{channel.id}"
 
         expect(response.status).to eq(403)
       end
     end
 
     context "when user provided invalid params" do
-      fab!(:chat_channel) { Fabricate(:category_channel, user_count: 10) }
+      fab!(:channel) { Fabricate(:category_channel, user_count: 10) }
 
       before { sign_in(Fabricate(:admin)) }
 
       it "doesn’t change invalid properties" do
-        put "/chat/api/chat_channels/#{chat_channel.id}.json", params: { user_count: 40 }
+        put "/chat/api/channels/#{channel.id}", params: { user_count: 40 }
 
-        expect(chat_channel.reload.user_count).to eq(10)
+        expect(channel.reload.user_count).to eq(10)
       end
     end
 
     context "when user provided an empty name" do
       fab!(:user) { Fabricate(:admin) }
-      fab!(:chat_channel) do
+      fab!(:channel) do
         Fabricate(:category_channel, name: "something", description: "something else")
       end
 
       before { sign_in(user) }
 
       it "nullifies the field and doesn’t store an empty string" do
-        put "/chat/api/chat_channels/#{chat_channel.id}.json", params: { name: "  " }
+        put "/chat/api/channels/#{channel.id}", params: { channel: { name: "  " } }
 
-        expect(chat_channel.reload.name).to be_nil
+        expect(channel.reload.name).to be_nil
       end
 
       it "doesn’t nullify the description" do
-        put "/chat/api/chat_channels/#{chat_channel.id}.json", params: { name: "  " }
+        put "/chat/api/channels/#{channel.id}", params: { channel: { name: "  " } }
 
-        expect(chat_channel.reload.description).to eq("something else")
+        expect(channel.reload.description).to eq("something else")
       end
     end
 
     context "when user provides an empty description" do
       fab!(:user) { Fabricate(:admin) }
-      fab!(:chat_channel) do
+      fab!(:channel) do
         Fabricate(:category_channel, name: "something else", description: "something")
       end
 
       before { sign_in(user) }
 
       it "nullifies the field and doesn’t store an empty string" do
-        put "/chat/api/chat_channels/#{chat_channel.id}.json", params: { description: "  " }
+        put "/chat/api/channels/#{channel.id}", params: { channel: { description: "  " } }
 
-        expect(chat_channel.reload.description).to be_nil
+        expect(channel.reload.description).to be_nil
       end
 
       it "doesn’t nullify the name" do
-        put "/chat/api/chat_channels/#{chat_channel.id}.json", params: { description: "  " }
+        put "/chat/api/channels/#{channel.id}", params: { channel: { description: "  " } }
 
-        expect(chat_channel.reload.name).to eq("something else")
+        expect(channel.reload.name).to eq("something else")
       end
     end
 
     context "when channel is a direct message channel" do
       fab!(:user) { Fabricate(:admin) }
-      fab!(:chat_channel) { Fabricate(:direct_message_channel) }
+      fab!(:channel) { Fabricate(:direct_message_channel) }
 
       before { sign_in(user) }
 
       it "raises a 403" do
-        put "/chat/api/chat_channels/#{chat_channel.id}.json"
+        put "/chat/api/channels/#{channel.id}"
 
         expect(response.status).to eq(403)
       end
@@ -247,60 +411,69 @@ describe Chat::Api::ChatChannelsController do
 
     context "when user provides valid params" do
       fab!(:user) { Fabricate(:admin) }
-      fab!(:chat_channel) { Fabricate(:category_channel) }
+      fab!(:channel) { Fabricate(:category_channel) }
 
       before { sign_in(user) }
 
       it "sets properties" do
-        put "/chat/api/chat_channels/#{chat_channel.id}.json",
+        put "/chat/api/channels/#{channel.id}",
             params: {
-              name: "joffrey",
-              description: "cat owner",
+              channel: {
+                name: "joffrey",
+                description: "cat owner",
+              },
             }
 
-        expect(chat_channel.reload.name).to eq("joffrey")
-        expect(chat_channel.reload.description).to eq("cat owner")
+        expect(channel.reload.name).to eq("joffrey")
+        expect(channel.reload.description).to eq("cat owner")
       end
 
       it "publishes an update" do
         messages =
           MessageBus.track_publish("/chat/channel-edits") do
-            put "/chat/api/chat_channels/#{chat_channel.id}.json"
+            put "/chat/api/channels/#{channel.id}",
+                params: {
+                  channel: {
+                    name: "A new cat overlord",
+                  },
+                }
           end
 
-        expect(messages[0].data[:chat_channel_id]).to eq(chat_channel.id)
+        expect(messages[0].data[:chat_channel_id]).to eq(channel.id)
       end
 
       it "returns a valid chat channel" do
-        put "/chat/api/chat_channels/#{chat_channel.id}.json"
+        put "/chat/api/channels/#{channel.id}", params: { channel: { name: "A new cat is born" } }
 
-        expect(response.parsed_body).to match_response_schema("category_chat_channel")
+        expect(response.parsed_body["channel"]).to match_response_schema("category_chat_channel")
       end
 
       describe "when updating allow_channel_wide_mentions" do
         it "sets the new value" do
-          put "/chat/api/chat_channels/#{chat_channel.id}.json",
+          put "/chat/api/channels/#{channel.id}",
               params: {
-                allow_channel_wide_mentions: false,
+                channel: {
+                  allow_channel_wide_mentions: false,
+                },
               }
 
-          expect(response.parsed_body["allow_channel_wide_mentions"]).to eq(false)
+          expect(response.parsed_body["channel"]["allow_channel_wide_mentions"]).to eq(false)
         end
       end
 
       describe "Updating a channel to add users automatically" do
         it "sets the channel to auto-update users automatically" do
-          put "/chat/api/chat_channels/#{chat_channel.id}.json", params: { auto_join_users: true }
+          put "/chat/api/channels/#{channel.id}", params: { channel: { auto_join_users: true } }
 
-          expect(response.parsed_body["auto_join_users"]).to eq(true)
+          expect(response.parsed_body["channel"]["auto_join_users"]).to eq(true)
         end
 
         it "tells staff members to slow down when toggling auto-update multiple times" do
           RateLimiter.enable
 
-          put "/chat/api/chat_channels/#{chat_channel.id}.json", params: { auto_join_users: true }
-          put "/chat/api/chat_channels/#{chat_channel.id}.json", params: { auto_join_users: false }
-          put "/chat/api/chat_channels/#{chat_channel.id}.json", params: { auto_join_users: true }
+          put "/chat/api/channels/#{channel.id}", params: { channel: { auto_join_users: true } }
+          put "/chat/api/channels/#{channel.id}", params: { channel: { auto_join_users: false } }
+          put "/chat/api/channels/#{channel.id}", params: { channel: { auto_join_users: true } }
 
           expect(response.status).to eq(429)
         end
@@ -311,14 +484,14 @@ describe Chat::Api::ChatChannelsController do
 
           before do
             Jobs.run_immediately!
-            Fabricate(:category_group, category: chat_channel.chatable, group: chatters_group)
+            Fabricate(:category_group, category: channel.chatable, group: chatters_group)
             chatters_group.add(another_user)
           end
 
           it "joins the user when auto_join_users is true" do
-            put "/chat/api/chat_channels/#{chat_channel.id}.json", params: { auto_join_users: true }
+            put "/chat/api/channels/#{channel.id}", params: { channel: { auto_join_users: true } }
 
-            created_channel_id = response.parsed_body["id"]
+            created_channel_id = response.parsed_body["channel"]["id"]
             membership_exists =
               UserChatChannelMembership.find_by(
                 user: another_user,
@@ -330,12 +503,12 @@ describe Chat::Api::ChatChannelsController do
           end
 
           it "doesn't join the user when auto_join_users is false" do
-            put "/chat/api/chat_channels/#{chat_channel.id}.json",
-                params: {
-                  auto_join_users: false,
-                }
+            put "/chat/api/channels/#{channel.id}", params: { channel: { auto_join_users: false } }
 
-            created_channel_id = response.parsed_body["id"]
+            created_channel_id = response.parsed_body["channel"]["id"]
+
+            expect(created_channel_id).to be_present
+
             membership_exists =
               UserChatChannelMembership.find_by(
                 user: another_user,
