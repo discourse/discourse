@@ -302,10 +302,12 @@ RSpec.describe CategoriesController do
       expect(category_response["subcategory_list"][0]["id"]).to eq(subcategory.id)
     end
 
-    it "does not n+1 with multiple topics" do
+    it "does not result in N+1 queries problem with multiple topics" do
       category1 = Fabricate(:category)
       category2 = Fabricate(:category)
+      upload = Fabricate(:upload)
       topic1 = Fabricate(:topic, category: category1)
+      topic2 = Fabricate(:topic, category: category1, image_upload: upload)
 
       CategoryFeaturedTopic.feature_topics
       SiteSetting.desktop_category_page_style = "categories_with_featured_topics"
@@ -320,9 +322,10 @@ RSpec.describe CategoriesController do
       end
 
       category_response = response.parsed_body["category_list"]["categories"].find { |c| c["id"] == category1.id }
-      expect(category_response["topics"].count).to eq(1)
+      expect(category_response["topics"].count).to eq(2)
 
-      topic2 = Fabricate(:topic, category: category2)
+      upload = Fabricate(:upload)
+      topic3 = Fabricate(:topic, category: category2, image_upload: upload)
       CategoryFeaturedTopic.feature_topics
 
       second_request_queries = track_sql_queries do
@@ -332,7 +335,7 @@ RSpec.describe CategoriesController do
 
       category1_response = response.parsed_body["category_list"]["categories"].find { |c| c["id"] == category1.id }
       category2_response = response.parsed_body["category_list"]["categories"].find { |c| c["id"] == category2.id }
-      expect(category1_response["topics"].size).to eq(1)
+      expect(category1_response["topics"].size).to eq(2)
       expect(category2_response["topics"].size).to eq(1)
 
       expect(first_request_queries.count).to eq(second_request_queries.count)

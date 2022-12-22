@@ -113,7 +113,12 @@ class SessionController < ApplicationController
       raise "User #{params[:session_id]} not found" if user.blank?
 
       log_on_user(user)
-      redirect_to path("/")
+
+      if params[:redirect] == "false"
+        render plain: "Signed in to #{params[:session_id]} successfully"
+      else
+        redirect_to path("/")
+      end
     end
   end
 

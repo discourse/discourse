@@ -60,18 +60,16 @@ describe "Using #hashtag autocompletion to search for and lookup channels",
     end
     expect(chat_channel_page).to have_message(id: message.id)
 
-    within chat_channel_page.message_by_id(message.id) do
-      cooked_hashtags = page.all(".hashtag-cooked", count: 3)
+    cooked_hashtags = page.all(".hashtag-cooked", count: 3)
 
-      expect(cooked_hashtags[0]["outerHTML"]).to eq(<<~HTML.chomp)
-      <a class=\"hashtag-cooked\" href=\"#{channel2.relative_url}\" data-type=\"channel\" data-slug=\"random\"><svg class=\"fa d-icon d-icon-comment svg-icon svg-node\"><use href=\"#comment\"></use></svg><span>Random</span></a>
-      HTML
-      expect(cooked_hashtags[1]["outerHTML"]).to eq(<<~HTML.chomp)
-      <a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"raspberry-beret\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>Raspberry</span></a>
-      HTML
-      expect(cooked_hashtags[2]["outerHTML"]).to eq(<<~HTML.chomp)
-      <a class=\"hashtag-cooked\" href=\"#{tag.url}\" data-type=\"tag\" data-slug=\"razed\"><svg class=\"fa d-icon d-icon-tag svg-icon svg-node\"><use href=\"#tag\"></use></svg><span>razed</span></a>
-      HTML
-    end
+    expect(cooked_hashtags[0]["outerHTML"]).to eq(<<~HTML.chomp)
+    <a class=\"hashtag-cooked\" href=\"#{channel2.relative_url}\" data-type=\"channel\" data-slug=\"random\"><svg class=\"fa d-icon d-icon-comment svg-icon svg-node\"><use href=\"#comment\"></use></svg><span>Random</span></a>
+    HTML
+    expect(cooked_hashtags[1]["outerHTML"]).to eq(<<~HTML.chomp)
+    <a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"raspberry-beret\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>Raspberry</span></a>
+    HTML
+    expect(cooked_hashtags[2]["outerHTML"]).to eq(<<~HTML.chomp)
+    <a class=\"hashtag-cooked\" href=\"#{tag.url}\" data-type=\"tag\" data-slug=\"razed\"><svg class=\"fa d-icon d-icon-tag svg-icon svg-node\"><use href=\"#tag\"></use></svg><span>razed</span></a>
+    HTML
   end
 end
