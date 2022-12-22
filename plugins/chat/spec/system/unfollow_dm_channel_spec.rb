@@ -14,23 +14,20 @@ RSpec.describe "Unfollow dm channel", type: :system, js: true do
     sign_in(current_user)
   end
 
-  def create_message(text: "this is fine", channel:, creator: Fabricate(:user))
-    using_session(creator.username) do
-      sign_in(creator)
-      chat_page.visit_channel(channel)
-      chat_channel_page.send_message(text)
-      expect(chat_channel_page).to have_message(text: text)
-    end
-  end
-
   context "when receiving a message after unfollowing" do
-    xit "correctly shows the channel" do
+    it "correctly shows the channel" do
       find(".channel-#{dm_channel_1.id}").hover
       find(".channel-#{dm_channel_1.id} .sidebar-section-link-hover").click
 
       expect(page).to have_no_css(".channel-#{dm_channel_1.id}")
 
-      create_message(channel: dm_channel_1, creator: other_user)
+      using_session(:user_1) do
+        text = "this is fine"
+        sign_in(other_user)
+        chat_page.visit_channel(dm_channel_1)
+        chat_channel_page.send_message(text)
+        expect(chat_channel_page).to have_message(text: text)
+      end
 
       expect(page).to have_css(".channel-#{dm_channel_1.id} .urgent")
     end

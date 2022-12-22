@@ -192,13 +192,11 @@ export default Component.extend({
 
     const trimmedFilter = filter.trim();
     const lowerCasedFilter = filter.toLowerCase();
-    const { activeChannel } = this;
 
     return sortedChannels.filter((channel) => {
       if (
         opts.excludeActiveChannel &&
-        activeChannel &&
-        activeChannel.id === channel.id
+        this.chat.activeChannel?.id === channel.id
       ) {
         return false;
       }

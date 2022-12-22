@@ -163,23 +163,23 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
     fab!(:other_user) { Fabricate(:user) }
 
     before do
-      other_user = Fabricate(:user)
       channel_1.add(current_user)
     end
 
     it "shows an invitation notification" do
       chat.visit_channel(channel_1)
       find(".chat-composer-input").fill_in(with: "this is fine @#{other_user.username}")
-      Sidekiq::Testing.inline! do
-        find(".send-btn").click
-        find(".invite-link").click
+      find(".send-btn").click
+      find(".chat-composer-input").click # ensures autocomplete is closed and not masking invite link
+      find(".invite-link", wait: 5).click
+
+      using_session(:user_1) do
+        sign_in(other_user)
+        find(".header-dropdown-toggle.current-user").click
+
+        expect(find("#user-menu-button-chat-notifications")).to have_content(1)
+        expect(find("#quick-access-all-notifications")).to have_css(".chat-invitation.unread")
       end
-
-      sign_in(other_user)
-      find(".header-dropdown-toggle.current-user").click
-
-      expect(find("#user-menu-button-chat-notifications")).to have_content(1)
-      expect(find("#quick-access-all-notifications")).to have_css(".chat-invitation.unread")
     end
   end
 end

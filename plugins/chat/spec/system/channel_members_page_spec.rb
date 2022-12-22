@@ -39,6 +39,7 @@ RSpec.describe "Channel - Info - Members page", type: :system, js: true do
         98.times { channel_1.add(Fabricate(:user)) }
 
         channel_1.update!(user_count_stale: true)
+        Jobs.run_immediately!
         Jobs::UpdateChannelUserCount.new.execute(chat_channel_id: channel_1.id)
       end
 

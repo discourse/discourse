@@ -58,7 +58,7 @@ RSpec.describe "Channel selector modal", type: :system, js: true do
     it "it doesn’t include current channel" do
       chat_page.visit_channel(channel_1)
       find("body").send_keys([KEY_MODIFIER, "k"])
-      find("#chat-channel-selector-input").fill_in(with: channel_1.title)
+      find("#chat-channel-selector-input").click
 
       expect(page).to have_no_css(".chat-channel-selection-row[data-id='#{channel_1.id}']")
     end

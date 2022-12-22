@@ -17,10 +17,10 @@ RSpec.describe "Edited message", type: :system, js: true do
   end
 
   context "when editing message" do
-    xit "shows as edited for all users" do
+    it "shows as edited for all users" do
       chat_page.visit_channel(channel_1)
 
-      using_session(editing_user.username) do
+      using_session(:user_1) do
         sign_in(editing_user)
         chat_page.visit_channel(channel_1)
         channel_page.edit_message(message_1, "a different message")
