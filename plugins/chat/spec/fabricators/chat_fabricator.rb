@@ -74,8 +74,14 @@ Fabricator(:chat_message_reaction) do
 end
 
 Fabricator(:chat_upload) do
-  chat_message { Fabricate(:chat_message) }
-  upload { Fabricate(:upload) }
+  transient :user
+
+  user do
+    Fabricate(:user)
+  end
+
+  chat_message { |attrs| Fabricate(:chat_message, user: attrs[:user]) }
+  upload { |attrs| Fabricate(:upload, user: attrs[:user]) }
 end
 
 Fabricator(:chat_message_revision) do
