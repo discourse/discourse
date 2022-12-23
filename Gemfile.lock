@@ -579,6 +579,7 @@ DEPENDENCIES
   omniauth-google-oauth2
   omniauth-oauth2
   omniauth-twitter
+  openssl
   parallel_tests
   pg
   pry-byebug
@@ -608,6 +609,7 @@ DEPENDENCIES
   rubocop-discourse
   ruby-prof
   ruby-readability
+  ruby2_keywords
   rubyzip
   sanitize
   sassc (= 2.0.1)
