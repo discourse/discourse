@@ -88,23 +88,23 @@ RSpec.describe Chat::GuardianExtensions do
       end
 
       context "for category channel" do
-        fab!(:category) { Fabricate(:category, read_restricted: true) }
-
-        before { channel.update(chatable: category) }
+        fab!(:group) { Fabricate(:group) }
+        fab!(:group_user) { Fabricate(:group_user, group: group, user: user) }
 
         it "returns true if the user can join the category" do
+          category = Fabricate(:private_category, group: group, permission_type: CategoryGroup.permission_types[:readonly])
+          channel.update(chatable: category)
           guardian = Guardian.new(user)
-
-          readonly_group = Fabricate(:group)
-          CategoryGroup.create(group: readonly_group, category: category, permission_type: CategoryGroup.permission_types[:readonly])
-          GroupUser.create(group: readonly_group, user: user)
-
-          create_post_group = Fabricate(:group)
-          CategoryGroup.create(group: create_post_group, category: category, permission_type: CategoryGroup.permission_types[:create_post])
-
           expect(guardian.can_join_chat_channel?(channel)).to eq(false)
 
-          GroupUser.create(group: create_post_group, user: user)
+          category = Fabricate(:private_category, group: group, permission_type: CategoryGroup.permission_types[:create_post])
+          channel.update(chatable: category)
+          guardian = Guardian.new(user)
+          expect(guardian.can_join_chat_channel?(channel)).to eq(true)
+
+          category = Fabricate(:private_category, group: group, permission_type: CategoryGroup.permission_types[:full])
+          channel.update(chatable: category)
+          guardian = Guardian.new(user)
           expect(guardian.can_join_chat_channel?(channel)).to eq(true)
         end
       end

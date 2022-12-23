@@ -21,10 +21,9 @@ RSpec.describe CategoryGuardian do
     end
 
     context "when restricted category" do
-      fab!(:category) { Fabricate(:category, read_restricted: true) }
       fab!(:group) { Fabricate(:group) }
+      fab!(:category) { Fabricate(:private_category, group: group, permission_type: CategoryGroup.permission_types[:readonly]) }
       fab!(:group_user) { Fabricate(:group_user, group: group, user: user) }
-      fab!(:category_group) { Fabricate(:category_group, group: group, category: category, permission_type: CategoryGroup.permission_types[:readonly]) }
 
       it "returns false for anonymous user" do
         expect(Guardian.new.can_post_in_category?(category)).to eq(false)
@@ -39,13 +38,13 @@ RSpec.describe CategoryGuardian do
       end
 
       it "returns true for member of group with create_post access" do
-        category_group.update!(permission_type: CategoryGroup.permission_types[:create_post])
-        expect(Guardian.new(admin).can_post_in_category?(category)).to eq(true)
+        category = Fabricate(:private_category, group: group, permission_type: CategoryGroup.permission_types[:create_post])
+        expect(Guardian.new(user).can_post_in_category?(category)).to eq(true)
       end
 
       it "returns true for member of group with full access" do
-        category_group.update!(permission_type: CategoryGroup.permission_types[:full])
-        expect(Guardian.new(admin).can_post_in_category?(category)).to eq(true)
+        category = Fabricate(:private_category, group: group, permission_type: CategoryGroup.permission_types[:full])
+        expect(Guardian.new(user).can_post_in_category?(category)).to eq(true)
       end
     end
   end
