@@ -4,7 +4,6 @@
   </span>
 
   <CharCounter
-    @max={{this.siteSettings.max_topic_title_length}}
     @value={{this.editedTitle}}>
     <textarea
       {{on "input" (action this.onChangeChatChannelTitle value="target.value")}}
