@@ -248,7 +248,11 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def whispers_allowed_groups_names
-    SiteSetting.whispers_allowed_groups_map&.map { |id| Group.where(id: id).pluck_first(:name) } if scope.can_see_whispers?
+    SiteSetting.whispers_allowed_groups_map&.map { |id| Group.where(id: id).pluck_first(:name) }
+  end
+
+  def include_whispers_allowed_groups_names?
+    scope.can_see_whispers?
   end
 
   private
