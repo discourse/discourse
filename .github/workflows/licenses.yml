@@ -39,6 +39,14 @@ jobs:
       #     restore-keys: |
       #       ${{ runner.os }}-gem-
 
+      - name: Before bundler
+        if: ${{ !cancelled() }}
+        run: |
+          gem info openssl
+          ls -Al /usr/local/lib/ruby/gems/3.1.0/gems/
+          echo "\n\nvendor:\n"
+          ls -Al vendor/bundle/ruby/3.1.0/gems/
+
       - name: Setup gems
         run: |
           bundle config --local path vendor/bundle
@@ -68,11 +76,11 @@ jobs:
         if: ${{ !cancelled() }}
         run: |
           gem info openssl
-          ls /usr/local/lib/ruby/gems/3.1.0/gems/
+          ls -Al /usr/local/lib/ruby/gems/3.1.0/gems/
           echo "\n\nvendor:\n"
-          ls vendor/bundle/ruby/3.1.0/gems/
-          echo "\n\nopenssl:\n"
-          ls /usr/local/lib/ruby/gems/3.1.0/gems/openssl-3.0.1/
+          ls -Al vendor/bundle/ruby/3.1.0/gems/
+          # echo "\n\nopenssl:\n"
+          # ls /usr/local/lib/ruby/gems/3.1.0/gems/openssl-3.0.1/
           # cat /usr/local/lib/ruby/gems/3.1.0/gems/openssl-3.0.1/LICENSE.txt
           licensed cache
           cat .licenses/bundler/openssl.dep.yml
