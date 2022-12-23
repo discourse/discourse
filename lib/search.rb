@@ -1168,28 +1168,18 @@ class Search
     self.class.default_ts_config
   end
 
-  def self.ts_query(term: , ts_config:  nil, joiner: nil, weight_filter: nil)
+  def self.ts_query(term:, ts_config: nil, joiner: nil, weight_filter: nil)
     to_tsquery(
       ts_config: ts_config,
       term: set_tsquery_weight_filter(term, weight_filter),
-      joiner: joiner
     )
   end
 
   def self.to_tsquery(ts_config: nil, term:, joiner: nil)
     ts_config = ActiveRecord::Base.connection.quote(ts_config) if ts_config
-
-    # unaccent can be used only when a joiner is present because the
-    # additional processing and the final conversion to tsquery does not
-    # work well with characters that are converted to quotes by unaccent.
-    if joiner
-      tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, '#{self.escape_string(term)}')"
-      tsquery = "REPLACE(#{tsquery}::text, '&', '#{self.escape_string(joiner)}')::tsquery"
-    else
-      escaped_term = Search.wrap_unaccent("'#{self.escape_string(term)}'")
-      tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, #{escaped_term})"
-    end
-
+    escaped_term = wrap_unaccent("'#{escape_string(term)}'")
+    tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, #{escaped_term})"
+    tsquery = "REPLACE(#{tsquery}::text, '&', '#{escape_string(joiner)}')::tsquery" if joiner
     tsquery
   end
 
@@ -1198,6 +1188,10 @@ class Search
   end
 
   def self.escape_string(term)
+    # HACK: The ’ has to be "unaccented" before it is escaped or the resulting
+    # tsqueries will be invalid
+    term = term.gsub("\u{2019}", "'") if SiteSetting.search_ignore_accents
+
     PG::Connection.escape_string(term).gsub('\\', '\\\\\\')
   end
 

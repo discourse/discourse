@@ -101,17 +101,15 @@ hu:
       join: "Belépés"
       new_messages: "új üzenetek"
       mention_warning:
-        cannot_see:
-          one: "%{usernames} nem fér hozzá ehhez a csatornához, és nem lett értesítve."
-          other: "%{usernames} nem fér hozzá ehhez a csatornához, és nem lettek értesítve."
         dismiss: "elvetés"
         invitations_sent:
           one: "Meghívó elküldve"
           other: "Meghívók elküldve"
         invite: "Meghívás a csatornára"
-        without_membership:
-          one: "%{usernames} nem csatlakozott ehhez a csatornához."
-          other: "%{usernames} nem csatlakozott ehhez a csatornához."
+        groups:
+          users_limit:
+            one: "%{count} felhasználó"
+            other: "%{count} felhasználó"
       aria_roles:
         header: "Csevegés fejléce"
         composer: "Csevegés szerkesztője"

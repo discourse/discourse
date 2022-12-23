@@ -115,6 +115,37 @@ RSpec.describe Search do
     end
   end
 
+  context "with apostrophes" do
+    fab!(:post_1) { Fabricate(:post, raw: "searching for: John's") }
+    fab!(:post_2) { Fabricate(:post, raw: "searching for: Johns") }
+
+    before do
+      SearchIndexer.enable
+    end
+
+    after do
+      SearchIndexer.disable
+    end
+
+    it "returns correct results" do
+      SiteSetting.search_ignore_accents = false
+      [post_1, post_2].each { |post| SearchIndexer.index(post.topic, force: true) }
+
+      expect(Search.execute("John's").posts).to contain_exactly(post_1, post_2)
+      expect(Search.execute("John’s").posts).to contain_exactly(post_1, post_2)
+      expect(Search.execute("Johns").posts).to contain_exactly(post_1, post_2)
+    end
+
+    it "returns correct results with accents" do
+      SiteSetting.search_ignore_accents = true
+      [post_1, post_2].each { |post| SearchIndexer.index(post.topic, force: true) }
+
+      expect(Search.execute("John's").posts).to contain_exactly(post_1, post_2)
+      expect(Search.execute("John’s").posts).to contain_exactly(post_1, post_2)
+      expect(Search.execute("Johns").posts).to contain_exactly(post_1, post_2)
+    end
+  end
+
   describe "custom_eager_load" do
     fab!(:topic) { Fabricate(:topic) }
     fab!(:post) { Fabricate(:post, topic: topic) }
@@ -914,8 +945,7 @@ RSpec.describe Search do
     it 'allows staff and members of whisperers group to search for whispers' do
       whisperers_group = Fabricate(:group)
       user = Fabricate(:user)
-      SiteSetting.enable_whispers = true
-      SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}|#{whisperers_group.id}"
 
       post.update!(post_type: Post.types[:whisper], raw: 'this is a tiger')
 

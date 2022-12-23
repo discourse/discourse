@@ -108,17 +108,15 @@ fi:
       join: "Liity"
       new_messages: "uusia viestejä"
       mention_warning:
-        cannot_see:
-          one: "%{usernames} ei voi käyttää tätä kanavaa, eikä hänelle ilmoitettu."
-          other: "%{usernames} eivät voi käyttää tätä kanavaa, eikä heille ilmoitettu."
         dismiss: "hylkää"
         invitations_sent:
           one: "Kutsu lähetetty"
           other: "Kutsut lähetettiin"
         invite: "Kutsu kanavalle"
-        without_membership:
-          one: "%{usernames} ei ole liittynyt tälle kanavalle."
-          other: "%{usernames} eivät ole liittyneet tälle kanavalle."
+        groups:
+          users_limit:
+            one: "%{count} käyttäjä"
+            other: "%{count} käyttäjää"
       aria_roles:
         header: "Chatin ylätunniste"
         composer: "Chatin tekstieditori"
@@ -276,6 +274,7 @@ fi:
       settings:
         auto_join_users_label: "Lisää käyttäjiä automaattisesti"
         auto_join_users_info: "Tarkista tunnin välein, ketkä käyttäjistä ovat olleet aktiivisia viimeisten kolmen kuukauden aikana, ja jos heillä on pääsy alueelle %{category}, lisää heidät tälle kanavalle."
+        enable_auto_join_users: "Lisää automaattisesti kaikki hiljattain aktiiviset käyttäjät"
         auto_join_users_warning: "Jokainen käyttäjä, joka ei ole tämän kanavan jäsen ja jolla on pääsy alueelle %{category}, liittyy. Oletko varma?"
         desktop_notification_level: "Työpöytäilmoitukset"
         follow: "Liity"

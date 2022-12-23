@@ -8,8 +8,7 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
   needs.user();
 
   needs.settings({
-    enable_experimental_sidebar_hamburger: true,
-    enable_sidebar: true,
+    navigation_menu: "sidebar",
   });
 
   test("wide sidebar is changed to cloak when resize to narrow screen", async function (assert) {

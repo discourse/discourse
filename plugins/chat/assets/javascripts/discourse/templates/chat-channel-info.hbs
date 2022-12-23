@@ -3,16 +3,17 @@
     <div class="chat-channel-header-details">
       <div class="chat-full-page-header__left-actions">
         {{#if this.chatChannelInfoRouteOriginManager.isBrowse}}
-          <LinkTo @route="chat.browse" class="chat-full-page-header__back-btn no-text btn-flat btn" title={{i18n "chat.channel_info.back_to_all_channel"}}>
+          <LinkTo
+            @route="chat.browse"
+            class="chat-full-page-header__back-btn no-text btn-flat btn"
+            title={{i18n "chat.channel_info.back_to_all_channel"}}
+          >
             {{d-icon "chevron-left"}}
           </LinkTo>
         {{else}}
           <LinkTo
             @route="chat.channel"
-            @models={{array
-              this.model.chatChannel.id
-              (slugify-channel this.model.chatChannel)
-            }}
+            @models={{array this.model.id (slugify-channel this.model)}}
             class="chat-full-page-header__back-btn no-text btn-flat btn"
             title={{i18n "chat.channel_info.back_to_channel"}}
           >
@@ -21,7 +22,7 @@
         {{/if}}
       </div>
 
-      <ChatChannelTitle @channel={{this.model.chatChannel}} />
+      <ChatChannelTitle @channel={{this.model}} />
     </div>
   </div>
 
@@ -35,16 +36,13 @@
         >
           <LinkTo
             @route={{concat "chat.channel.info." tab}}
-            @models={{array
-              this.model.chatChannel.id
-              (slugify-channel this.model.chatChannel)
-            }}
+            @models={{array this.model.id (slugify-channel this.model)}}
             class="chat-tabs-list__link"
           >
             <span>{{i18n (concat "chat.channel_info.tabs." tab)}}</span>
             {{#if (eq tab "members")}}
               <span class="chat-tabs__memberships-count">
-                ({{this.model.chatChannel.membershipsCount}})
+                ({{this.model.membershipsCount}})
               </span>
             {{/if}}
           </LinkTo>

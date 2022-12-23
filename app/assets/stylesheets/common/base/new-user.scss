@@ -102,9 +102,23 @@
       padding: 0.5em 1em;
     }
 
+    .user-nav-messages-dropdown {
+      // manage long group names
+      max-width: 20vw;
+      min-width: 7em;
+      .select-kit-selected-name,
+      .name {
+        @include ellipsis;
+      }
+      .name {
+        min-width: 0;
+      }
+    }
+
     .category-breadcrumb {
+      width: auto;
       padding-top: var(--navigation-secondary-padding-top);
-      @include breakpoint(large) {
+      @include breakpoint(extra-large) {
         font-size: var(--font-down-1);
       }
       > li {
@@ -115,7 +129,7 @@
     .navigation-controls {
       padding-top: var(--navigation-secondary-padding-top);
       flex-wrap: nowrap;
-      @include breakpoint(large) {
+      @include breakpoint(extra-large) {
         font-size: var(--font-down-1);
       }
     }

@@ -225,6 +225,12 @@ module PrettyText
 
       if opts[:user_id]
         buffer << "__optInput.userId = #{opts[:user_id].to_i};\n"
+
+        # NOTE: If using this for server-side cooking you will end up
+        # with a Hash once it is passed to a PrettyText::Helper. If
+        # you use that hash to instanciate a User model, you will want to do
+        # user.reload before accessing data on this parsed User, otherwise
+        # AR relations will not be loaded.
         buffer << "__optInput.currentUser = #{User.find(opts[:user_id]).to_json}\n"
       end
 

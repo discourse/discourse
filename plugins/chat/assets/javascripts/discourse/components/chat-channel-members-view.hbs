@@ -1,6 +1,6 @@
 {{#if this.chatProgressBarContainer}}
   {{#in-element this.chatProgressBarContainer}}
-    <DProgressBar @key="members-view" @isLoading={{this.isFetchingMembers}} />
+    <DProgressBar @key="members-view" @isLoading={{this.members.loading}} />
   {{/in-element}}
 {{/if}}
 
@@ -22,15 +22,15 @@
     >
 
       <div role="list" class="channel-members-view__list">
-        {{#each this.members as |member|}}
+        {{#each this.members as |membership|}}
           <a
             class="channel-members-view__list-item"
-            href={{member.user.userPath}}
-            data-user-card={{member.user.username}}
+            href={{membership.user.userPath}}
+            data-user-card={{membership.user.username}}
             tabindex="0"
           >
-            <ChatUserAvatar @user={{member.user}} @avatarSize="medium" />
-            <ChatUserDisplayName @user={{member.user}} />
+            <ChatUserAvatar @user={{membership.user}} @avatarSize="medium" />
+            <ChatUserDisplayName @user={{membership.user}} />
           </a>
         {{else}}
           {{#unless this.isFetchingMembers}}

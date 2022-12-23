@@ -25,6 +25,13 @@ describe UserNotifications do
         Chat::DirectMessageChannelCreator.create!(acting_user: sender, target_users: [sender, user])
       end
 
+      it 'calls guardian can_join_chat_channel?' do
+        Fabricate(:chat_message, user: sender, chat_channel: channel)
+        Guardian.any_instance.expects(:can_join_chat_channel?).once
+        email = described_class.chat_summary(user, {})
+        email.subject
+      end
+
       describe "email subject" do
         it "includes the sender username in the subject" do
           expected_subject = I18n.t(

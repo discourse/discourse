@@ -833,24 +833,4 @@ RSpec.describe SiteSettingExtension do
       end
     end
   end
-
-  describe 'sidebar category site settings' do
-    describe '.all_settings' do
-      before do
-        settings.setting(:test_setting, 88, category: :sidebar)
-      end
-
-      it 'does not include the sidebar category setting when enable_experimental_sidebar_hamburger site setting is disabled' do
-        SiteSetting.enable_experimental_sidebar_hamburger = false
-
-        expect(settings.all_settings.detect { |s| s[:setting] == :test_setting }).to eq(nil)
-      end
-
-      it 'includes the sidebar category setting when enable_experimental_sidebar_hamburger site setting is enabled' do
-        SiteSetting.enable_experimental_sidebar_hamburger = true
-
-        expect(settings.all_settings.detect { |s| s[:setting] == :test_setting }[:setting]).to eq(:test_setting)
-      end
-    end
-  end
 end

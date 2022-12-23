@@ -30,18 +30,10 @@ module Chat::ChatChannelFetcher
   end
 
   def self.generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: false)
-    category_channel_sql =
-      ChatChannel
-        .select(:id)
-        .joins(
-          "INNER JOIN categories ON categories.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'Category'",
-        )
-        .where(
-          "categories.id IN (:allowed_category_ids)",
-          allowed_category_ids: guardian.allowed_category_ids,
-        )
-        .to_sql
-
+    category_channel_sql = Category.post_create_allowed(guardian)
+      .joins("INNER JOIN chat_channels ON chat_channels.chatable_id = categories.id AND chat_channels.chatable_type = 'Category'")
+      .select("chat_channels.id")
+      .to_sql
     dm_channel_sql = ""
     if !exclude_dm_channels
       dm_channel_sql = <<~SQL
@@ -71,6 +63,7 @@ module Chat::ChatChannelFetcher
 
   def self.secured_public_channel_slug_lookup(guardian, slugs)
     allowed_channel_ids = generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: true)
+
     ChatChannel
       .joins(
         "LEFT JOIN categories ON categories.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'Category'",
@@ -83,7 +76,7 @@ module Chat::ChatChannelFetcher
 
   def self.secured_public_channel_search(guardian, options = {})
     allowed_channel_ids =
-      generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: options[:exclude_dm_channels])
+      generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: true)
 
     channels = ChatChannel.includes(chatable: [:topic_only_relative_url])
     channels = channels.includes(:chat_channel_archive) if options[:include_archives]
@@ -99,19 +92,19 @@ module Chat::ChatChannelFetcher
     channels = channels.where(status: options[:status]) if options[:status].present?
 
     if options[:filter].present?
-      category_filter = \
-        if options[:filter_on_category_name]
-          "OR categories.name ILIKE :filter"
-        else
-          ""
-        end
+      category_filter =
+        (options[:filter_on_category_name] ? "OR categories.name ILIKE :filter" : "")
 
       sql =
         "chat_channels.name ILIKE :filter OR chat_channels.slug ILIKE :filter #{category_filter}"
+      if options[:match_filter_on_starts_with]
+        filter_sql = "#{options[:filter].downcase}%"
+      else
+        filter_sql = "%#{options[:filter].downcase}%"
+      end
+
       channels =
-        channels.where(sql, filter: "%#{options[:filter].downcase}%").order(
-          "chat_channels.name ASC, categories.name ASC",
-        )
+        channels.where(sql, filter: filter_sql).order("chat_channels.name ASC, categories.name ASC")
     end
 
     if options.key?(:slugs)
@@ -151,6 +144,7 @@ module Chat::ChatChannelFetcher
         guardian,
         options.merge(include_archives: true, filter_on_category_name: true),
       )
+
     decorate_memberships_with_tracking_data(guardian, channels, memberships)
     channels = channels.to_a
     preload_custom_fields_for(channels)
@@ -254,7 +248,7 @@ module Chat::ChatChannelFetcher
     end
 
     raise Discourse::NotFound if chat_channel.blank?
-    raise Discourse::InvalidAccess if !guardian.can_see_chat_channel?(chat_channel)
+    raise Discourse::InvalidAccess if !guardian.can_join_chat_channel?(chat_channel)
     chat_channel
   end
 end

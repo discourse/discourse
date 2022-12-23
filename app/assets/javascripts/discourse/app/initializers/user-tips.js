@@ -1,29 +1,41 @@
+import { bind } from "discourse-common/utils/decorators";
+
 export default {
   name: "user-tips",
   after: "message-bus",
 
   initialize(container) {
-    const currentUser = container.lookup("service:current-user");
-    if (!currentUser) {
+    this.currentUser = container.lookup("service:current-user");
+    if (!this.currentUser) {
       return;
     }
 
-    const messageBus = container.lookup("service:message-bus");
-    const site = container.lookup("service:site");
+    this.messageBus = container.lookup("service:message-bus");
+    this.site = container.lookup("service:site");
 
-    messageBus.subscribe("/user-tips", function (seenUserTips) {
-      currentUser.set("seen_popups", seenUserTips);
-      if (!currentUser.user_option) {
-        currentUser.set("user_option", {});
-      }
-      currentUser.set("user_option.seen_popups", seenUserTips);
-      (seenUserTips || []).forEach((userTipId) => {
-        currentUser.hideUserTipForever(
-          Object.keys(site.user_tips).find(
-            (id) => site.user_tips[id] === userTipId
-          )
-        );
-      });
+    this.messageBus.subscribe("/user-tips", this.onMessage);
+  },
+
+  teardown() {
+    this.messageBus?.unsubscribe("/user-tips", this.onMessage);
+  },
+
+  @bind
+  onMessage(seenUserTips) {
+    this.currentUser.set("seen_popups", seenUserTips);
+
+    if (!this.currentUser.user_option) {
+      this.currentUser.set("user_option", {});
+    }
+
+    this.currentUser.set("user_option.seen_popups", seenUserTips);
+
+    (seenUserTips || []).forEach((userTipId) => {
+      this.currentUser.hideUserTipForever(
+        Object.keys(this.site.user_tips).find(
+          (id) => this.site.user_tips[id] === userTipId
+        )
+      );
     });
   },
 };

@@ -124,37 +124,36 @@ gl:
       email: "Enviar por correo"
       url: "Copiar e compartir o URL"
     action_codes:
-      public_topic: "faga este tema público o %{when}"
-      private_topic: "faga deste tema unha mensaxe privada o %{when}"
-      split_topic: "divida tema %{when}"
-      invited_user: "convidou a %{who} %{when}"
-      invited_group: "convidou ao %{who} o %{when}"
+      public_topic: "Faga este tema público o %{when}"
+      private_topic: "Faga deste tema unha mensaxe privada o %{when}"
+      split_topic: "Divida tema %{when}"
+      invited_user: "Convidou ao %{who} o %{when}"
+      invited_group: "Convidou ao %{who} o %{when}"
       user_left: "%{who} retiráronse por si mesmos desta mensaxe %{when}"
-      removed_user: "retirou a %{who} %{when}"
-      removed_group: "retirou ao %{who} o %{when}"
-      autobumped: "promovido automaticamente %{when}"
+      removed_user: "Retirou ao %{who} o %{when}"
+      removed_group: "Retirou ao %{who} o %{when}"
+      autobumped: "Promovido automaticamente %{when}"
       autoclosed:
-        enabled: "pechado o %{when}"
-        disabled: "aberto o %{when}"
+        enabled: "Pechado o %{when}"
+        disabled: "Aberto o %{when}"
       closed:
-        enabled: "pechado o %{when}"
-        disabled: "aberto o %{when}"
+        enabled: "Pechado o %{when}"
+        disabled: "Aberto o %{when}"
       archived:
-        enabled: "arquivado o %{when}"
-        disabled: "desarquivado o %{when}"
+        enabled: "Arquivado o %{when}"
+        disabled: "Desarquivado o %{when}"
       pinned:
-        enabled: "fixado o %{when}"
-        disabled: "desprendido o %{when}"
+        enabled: "Fixado o %{when}"
+        disabled: "Desprendido o %{when}"
       pinned_globally:
-        enabled: "fixado globalmente o %{when}"
-        disabled: "desprendido o %{when}"
+        enabled: "Fixado globalmente o %{when}"
+        disabled: "Desprendido o %{when}"
       visible:
-        enabled: "listado o %{when}"
-        disabled: "retirado da lista o %{when}"
+        enabled: "Listado o %{when}"
+        disabled: "Retirado da lista o %{when}"
       banner:
-        enabled: "faga disto un báner %{when}. Aparecerá na banda superior de todas as páxinas ata que sexa desbotado polo usuario."
-        disabled: "eliminou este báner %{when}. Xa non aparecerá máis na banda superior de todas as páxinas."
-      forwarded: "reenviou a mensaxe de correo anterior"
+        enabled: "Faga disto un báner %{when}. Aparecerá na banda superior de todas as páxinas ata que sexa desbotado polo usuario."
+        disabled: "Eliminou este báner %{when}. Xa non aparecerá máis na banda superior de todas as páxinas."
     topic_admin_menu: "accións do tema"
     emails_are_disabled: "Todos as mensaxes de correo saíntes foron desactivadas globalmente por un administrador. Non se enviará ningún tipo de notificación por correo electrónico."
     software_update_prompt:
@@ -221,7 +220,6 @@ gl:
     conduct: "Código de conduta"
     mobile_view: "Visualización móbil"
     desktop_view: "Visualización en escritorio"
-    or: "ou"
     now: "agora mesmiño"
     read_more: "ler máis"
     more: "Máis"
@@ -333,8 +331,6 @@ gl:
     disable: "Desactivar"
     continue: "Continuar"
     undo: "Desfacer"
-    revert: "Reverter"
-    failed: "Fallou"
     switch_to_anon: "Entrar no modo anónimo"
     switch_from_anon: "Saír do modo anónimo"
     banner:
@@ -915,7 +911,6 @@ gl:
       notification_schedule:
         title: "Calendario de notificacións"
         label: "Activar o calendario personalizado de notificacións"
-        tip: "Fóra destas horas, vostede terá posto automaticamente en «non molestar»"
         midnight: "Medianoite"
         none: "Ningunha"
         monday: "Luns"
@@ -1145,7 +1140,7 @@ gl:
         use: "Usar app de autenticador"
         enforced_notice: "Requírese activar a autenticación de dobre paso para acceder a este sitio."
         disable: "Desactivar"
-        disable_confirm: "Confirma que quere desactivar todos os métodos de dobre paso?"
+        delete: "Eliminar"
         save: "Gardar"
         edit: "Editar"
         edit_title: "Editar autenticador"
@@ -1224,7 +1219,6 @@ gl:
         invalid: "Introduza un enderezo de correo electrónico correcto"
         authenticated: "O seu enderezo de correo electrónico foi autenticado por %{provider}"
         invite_auth_email_invalid: "A súa mensaxe de convite non casa co enderezo de correo autenticado en %{provider}"
-        frequency_immediately: "Enviarémosllee unha mensaxe de correo axiña se non leu sobre o que lle estamos a enviar."
         frequency:
           one: "Só lle eviaremos un correo se non o vimos a vostede no último minuto."
           other: "Só lle eviaremos un correo se non o vimos a vostede nos últimos %{count} minutos."
@@ -1538,15 +1532,18 @@ gl:
       enabled: "Este sitio está en modo só-lectura. Continúe navegando pero responder, gustar e outras accións estarán desactivadas polo de agora."
       login_disabled: "Cando o sitio está no modo de só-lectura, desactívase o inicio de sesión."
       logout_disabled: "O peche de sesión desactívase mentres o sitio está en modo de só lectura."
-    too_few_posts_notice_MF: >-
+    too_few_posts_notice_MF: |
       Comecemos <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">a discusión!</a> E {currentPosts, plural, one {hai <strong>#</strong> publicación} other {hai <strong>#</strong> publicacións}}. Os visitantes necesitan máis para ler e responder – recomendamos que haxa cando menos {requiredPosts, plural, one {<strong>#</strong> publicación} other {<strong>#</strong> publicacións}}. Soamente o equipo pode ver esta mensaxe.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> acadou o límite configurado no sitio de {limit, plural, one {# erro/hora} other {# erros/hora}}."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> acadou o límite configurado no sitio de {limit, plural, one {# erro/minuto} other {# erros/minuto}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/hora} other {# erros/hora}}</a> excedeu o límite configurado do sitio de {limit, plural, one {# erro/hora} other {# erros/hora}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> excedeu o límite configurado do sitio de {limit, plural, one {# erro/minuto} other {# erros/minuto}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> acadou o límite configurado no sitio de {limit, plural, one {# erro/hora} other {# erros/hora}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> acadou o límite configurado no sitio de {limit, plural, one {# erro/minuto} other {# erros/minuto}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/hora} other {# erros/hora}}</a> excedeu o límite configurado do sitio de {limit, plural, one {# erro/hora} other {# erros/hora}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erro/minuto} other {# erros/minuto}}</a> excedeu o límite configurado do sitio de {limit, plural, one {# erro/minuto} other {# erros/minuto}}.
     learn_more: "saber máis..."
-    first_post: Publicación inicial
     mute: Silenciar
     unmute: Non silenciar
     last_post: Publicado
@@ -1568,7 +1565,8 @@ gl:
       description:
         one: "Hai <b>%{count}</b> resposta."
         other: "Hai <b>%{count}</b> respostas."
-      description_time_MF: "Hai {replyCount, plural, one {<b>#</b> resposta} other {<b>#</b> respostas}} que supoñen un tempo estimado de lectura de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>."
+      description_time_MF: |
+        Hai {replyCount, plural, one {<b>#</b> resposta} other {<b>#</b> respostas}} que supoñen un tempo estimado de lectura de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>.
       enable: "Resumir este tema"
       disable: "Amosar todas as publicacións"
     deleted_filter:
@@ -1632,6 +1630,7 @@ gl:
       subheader_title: "Iniciar sesión na súa conta"
       username: "Usuario"
       password: "Contrasinal"
+      show_password: "Amosar"
       second_factor_title: "Autenticación de dobre paso"
       second_factor_description: "Escriba o código de autenticación da súa app:"
       second_factor_backup: "Iniciar sesión cun código de copia de seguranza"
@@ -1931,6 +1930,7 @@ gl:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -1989,6 +1989,7 @@ gl:
         invited_to_private_message: "convidado a unha mensaxe privada"
         invitee_accepted: "convite aceptado"
         posted: "nova publicación"
+        watching_category_or_tag: "nova publicación"
         moved_post: "publicación movida"
         linked: "ligado"
         bookmark_reminder: "recordatorio do marcador"
@@ -2216,14 +2217,7 @@ gl:
       back_to_list: "Volver á listase de temas"
       options: "Opcións de temas"
       show_links: "amosar as ligazóns a este tema"
-      read_more_in_category: "Quere ler máis? explore outros temas en %{catLink} ou %{latestLink}."
-      read_more: "Quere ler máis? %{catLink} ou %{latestLink}."
       unread_indicator: "Ningún membro leu aínda a última publicación neste tema."
-      read_more_MF: "Hai { UNREAD, plural, =0 {} one { <a href='{basePath}/unread'># pendente de lectura</a> } other { <a href='{basePath}/unread'># pendentes de lectura</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='{basePath}/new'># novo</a> tema} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># novos</a> temas} } pendentes ou {CATEGORY, select, true {ver outros temas en {catLink}} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
-      browse_all_categories: Explorar todas as categorías
-      browse_all_tags: Explorar todas as etiquetas
-      view_latest_topics: ver os últimos temas
       jump_reply_up: ir a unha resposta anterior
       jump_reply_down: ir a unha resposta posterior
       deleted: "Eliminouse o tema"
@@ -2908,7 +2902,8 @@ gl:
       official_warning: "Aviso oficial"
       delete_spammer: "Eliminar remitente de lixo"
       flag_for_review: "Cola para revisión"
-      delete_confirm_MF: "Vai eliminar {POSTS, plural, one {<b>#</b> publicación} other {<b>#</b> publicacións}} e {TOPICS, plural, one {<b>#</b> tema} other {<b>#</b> temas}} deste usuario, retirar a súa conta, bloquear accesos desde o seu enderezo IP <b>{ip_address}</b>, e engadir o seu enderezo de correo <b>{email}</b> a unha listaxe de bloqueo permanente. Confirma que este usuario se dedica a enviar lixo?"
+      delete_confirm_MF: |
+        Vai eliminar {POSTS, plural, one {<b>#</b> publicación} other {<b>#</b> publicacións}} e {TOPICS, plural, one {<b>#</b> tema} other {<b>#</b> temas}} deste usuario, retirar a súa conta, bloquear accesos desde o seu enderezo IP <b>{ip_address}</b>, e engadir o seu enderezo de correo <b>{email}</b> a unha listaxe de bloqueo permanente. Confirma que este usuario se dedica a enviar lixo?
       yes_delete_spammer: "Si, eliminar o remitente de lixo"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(agochado)"
@@ -3076,7 +3071,6 @@ gl:
         this_month: "Mes"
         this_week: "Semana"
         today: "Hoxe"
-        other_periods: "ver arriba:"
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
@@ -3320,9 +3314,7 @@ gl:
     safe_mode:
       enabled: "O modo seguro está activado; para saír do modo seguro peche esta xanela do navegador"
     image_removed: "(imaxe retirada)"
-    do_not_disturb:
-      title: "Non molestar durante..."
-      label: "Non molestar"
+    pause_notifications:
       remaining: "queda %{remaining}"
       options:
         half_hour: "30 minutos"
@@ -3614,9 +3606,8 @@ gl:
         detailed_instruction: "Enviarase unha petición POST ao URL proporcionado se sucede o evento escollido."
         new: "Novo enganche de web"
         create: "Crear"
+        edit: "Editar"
         save: "Gardar"
-        destroy: "Eliminar"
-        description: "Descrición"
         controls: "Controis"
         go_back: "Volver á lista"
         payload_url: "URL que carga"
@@ -3687,9 +3678,6 @@ gl:
           headers: "Cabeceiras"
           payload: "Datos de carga"
           body: "Corpo"
-          go_list: "Ir á listaxe"
-          go_details: "Editar enganche de web "
-          go_events: "Ir a eventos"
           ping: "Ping"
           status: "Código de estado"
           event_id: "ID"
@@ -3916,7 +3904,6 @@ gl:
             error: "Este tema foi desactivado automaticamente porque non é compatíbel coa versión actual de Discourse."
             minimum: "Require a versión %{version} de Discourse ou unha superior."
             maximum: "Require a versión %{version} de Discourse ou unha inferior."
-          component_of: "Compoñente de:"
           update_to_latest: "Actualizar o tema"
           check_for_updates: "Buscar actualizacións"
           updating: "Actualizando..."
@@ -4366,7 +4353,6 @@ gl:
       user:
         suspend_failed: "Algo fallou ao suspender este usuario %{error}"
         unsuspend_failed: "Algo foi mal levantando a suspensión deste usuario %{error}"
-        suspend_duration: "Canto tempo estará suspendido o usuario?"
         suspend_reason_label: "Cal é o motivo da suspensión? Este texto <b>será visíbel para todo o mundo</b> na páxina do perfil deste usuario e amosaráselle ao usuario cando tente iniciar sesión. Procure ser breve."
         suspend_reason_hidden_label: "Cal é o motivo da suspensión? Este texto amosaráselle ao usuario cando tente iniciar sesión. Procure ser breve."
         suspend_reason: "Razón"
@@ -4401,7 +4387,8 @@ gl:
         clear_penalty_history:
           title: "Borrar o historial de penalizacións"
           description: "os usuarios con sancións non poden acadar TL3"
-        delete_all_posts_confirm_MF: "Vai eliminar {POSTS, plural, one {# publicación} other {# publicacións}} e {TOPICS, plural, one {# tema} other {# temas}}. Está seguro?"
+        delete_all_posts_confirm_MF: |
+          Vai eliminar {POSTS, plural, one {# publicación} other {# publicacións}} e {TOPICS, plural, one {# tema} other {# temas}}. Está seguro?
         silence: "Silenciar"
         unsilence: "Levantar silencio"
         silenced: "Silenciado?"
@@ -4534,6 +4521,11 @@ gl:
         unlock_trust_level: "Desbloquear o nivel de confianza"
         silenced_count: "Silenciado"
         suspended_count: "Suspendido"
+        other_matches_list:
+          username: "Nome de usuario"
+          trust_level: "Nivel de confianza"
+          read_time: "Tempo de lectura"
+          posts: "Publicacións"
         tl3_requirements:
           title: "Requirimentos para o nivel 3 de confianza"
           table_title:
@@ -4669,6 +4661,7 @@ gl:
           search: "Buscar"
           groups: "Grupos"
           dashboard: "Panel"
+          navigation: "Navegación"
         secret_list:
           invalid_input: "Os campos de entrada de datos non poden quedar baleiros nin conter a barra vertical."
         default_categories:
@@ -4831,7 +4824,6 @@ gl:
       next: "Seguinte"
       step-text: "Paso"
       step: "%{current} de %{total}"
-      upload: "Cargar"
       uploading: "Cargando..."
       upload_error: "Sentímolo pero produciuse un erro ao cargar ese ficheiro. Ténteo de novo."
       staff_count:

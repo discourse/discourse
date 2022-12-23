@@ -108,31 +108,18 @@ describe ChatChannelMembershipsQuery do
     end
 
     context "when chatable is direct channel" do
-      fab!(:channel_1) { Fabricate(:direct_message_channel, users: [user_1, user_2]) }
-
       context "when no memberships exists" do
+        fab!(:channel_1) do
+          Fabricate(:direct_message_channel, users: [user_1, user_2], with_membership: false)
+        end
+
         it "returns an empty array" do
           expect(described_class.call(channel_1)).to eq([])
         end
       end
 
       context "when memberships exist" do
-        before do
-          UserChatChannelMembership.create!(
-            user: user_1,
-            chat_channel: channel_1,
-            following: true,
-            desktop_notification_level: UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
-            mobile_notification_level: UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
-          )
-          UserChatChannelMembership.create!(
-            user: user_2,
-            chat_channel: channel_1,
-            following: true,
-            desktop_notification_level: UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
-            mobile_notification_level: UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
-          )
-        end
+        fab!(:channel_1) { Fabricate(:direct_message_channel, users: [user_1, user_2]) }
 
         it "returns the memberships" do
           memberships = described_class.call(channel_1)

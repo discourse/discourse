@@ -3,12 +3,14 @@ import { action, computed } from "@ember/object";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import ChatApi from "discourse/plugins/chat/discourse/lib/chat-api";
 import { tracked } from "@glimmer/tracking";
+import { inject as service } from "@ember/service";
 
 const DESCRIPTION_MAX_LENGTH = 280;
 
 export default class ChatChannelEditDescriptionController extends Controller.extend(
   ModalFunctionality
 ) {
+  @service chatApi;
   @tracked editedDescription = this.model.description || "";
 
   @computed("model.description", "editedDescription")
@@ -29,11 +31,12 @@ export default class ChatChannelEditDescriptionController extends Controller.ext
 
   @action
   onSaveChatChannelDescription() {
-    return ChatApi.modifyChatChannel(this.model.id, {
-      description: this.editedDescription,
-    })
-      .then((chatChannel) => {
-        this.model.set("description", chatChannel.description);
+    return this.chatApi
+      .updateChannel(this.model.id, {
+        description: this.editedDescription,
+      })
+      .then((result) => {
+        this.model.set("description", result.channel.description);
         this.send("closeModal");
       })
       .catch((event) => {

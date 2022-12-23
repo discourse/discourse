@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "channel access example" do |verb, endpoint|
+RSpec.shared_examples "channel access example" do |verb, endpoint, params|
   endpoint ||= ".json"
+  params ||= {}
 
   context "when channel is not found" do
     before { sign_in(Fabricate(:admin)) }
 
     it "returns a 404" do
-      public_send(verb, "/chat/api/chat_channels/-999#{endpoint}")
+      public_send(verb, "/chat/api/channels/-999#{endpoint}", params: params)
       expect(response.status).to eq(404)
     end
   end
@@ -16,7 +17,7 @@ RSpec.shared_examples "channel access example" do |verb, endpoint|
     fab!(:chat_channel) { Fabricate(:category_channel) }
 
     it "returns a 403" do
-      public_send(verb, "/chat/api/chat_channels/#{chat_channel.id}#{endpoint}")
+      public_send(verb, "/chat/api/channels/#{chat_channel.id}#{endpoint}", params: params)
       expect(response.status).to eq(403)
     end
   end
@@ -32,7 +33,7 @@ RSpec.shared_examples "channel access example" do |verb, endpoint|
     before { sign_in(user) }
 
     it "returns a 403" do
-      public_send(verb, "/chat/api/chat_channels/#{chat_channel.id}#{endpoint}")
+      public_send(verb, "/chat/api/channels/#{chat_channel.id}#{endpoint}", params: params)
       expect(response.status).to eq(403)
     end
   end

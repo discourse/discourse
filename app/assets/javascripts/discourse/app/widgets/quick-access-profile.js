@@ -44,7 +44,9 @@ createWidgetFrom(QuickAccessItem, "user-status-item", {
       modalClass: "user-status",
       model: {
         status: this.currentUser.status,
-        saveAction: (status) => this.userStatus.set(status),
+        pauseNotifications: this.currentUser.isInDoNotDisturb(),
+        saveAction: (status, pauseNotifications) =>
+          this.userStatus.set(status, pauseNotifications),
         deleteAction: () => this.userStatus.clear(),
       },
     });

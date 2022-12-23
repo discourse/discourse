@@ -69,7 +69,7 @@ RSpec.describe PrivateMessageTopicTrackingState do
     end
 
     it 'returns the right tracking state when topics contain whispers' do
-      SiteSetting.enable_whispers = true
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
       TopicUser.find_by(user: user_2, topic: private_message).update!(
         last_read_post_number: 1
       )

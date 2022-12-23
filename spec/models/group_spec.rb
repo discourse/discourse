@@ -445,6 +445,7 @@ RSpec.describe Group do
 
     DB.exec("UPDATE groups SET user_count = 0 WHERE id = #{Group::AUTO_GROUPS[:trust_level_2]}")
 
+    Group.delete_all
     Group.refresh_automatic_groups!
 
     groups = Group.includes(:users).to_a
@@ -964,6 +965,9 @@ RSpec.describe Group do
     end
 
     it 'should return the right groups' do
+      Group.delete_all
+      Group.refresh_automatic_groups!
+
       group_name = Fabricate(:group, name: 'tEsT_more_things', full_name: 'Abc something awesome').name
 
       expect(search_group_names('te')).to eq([group_name])

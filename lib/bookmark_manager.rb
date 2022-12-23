@@ -57,7 +57,6 @@ class BookmarkManager
     return add_errors_from(bookmark) if bookmark.errors.any?
 
     registered_bookmarkable.after_create(@guardian, bookmark, options)
-    update_user_option(bookmark, options)
 
     bookmark
   end
@@ -109,8 +108,6 @@ class BookmarkManager
       return add_errors_from(bookmark)
     end
 
-    update_user_option(bookmark, options)
-
     success
   end
 
@@ -140,15 +137,6 @@ class BookmarkManager
     # create a TopicUser in that case
     return if opts.key?(:auto_track) && !opts[:auto_track]
     TopicUser.change(@user.id, topic, bookmarked: Bookmark.for_user_in_topic(@user.id, topic.id).exists?)
-  end
-
-  def update_user_option(bookmark, options)
-    return if !options[:save_user_preferences]
-    return if options[:auto_delete_preference].blank?
-
-    @user.user_option.update!(
-      bookmark_auto_delete_preference: bookmark.auto_delete_preference
-    )
   end
 
   def bookmark_model_options_with_defaults(options)

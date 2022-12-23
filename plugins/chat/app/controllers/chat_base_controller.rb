@@ -8,7 +8,7 @@ class Chat::ChatBaseController < ::ApplicationController
 
   def ensure_can_chat
     raise Discourse::NotFound unless SiteSetting.chat_enabled
-    guardian.ensure_can_chat!(current_user)
+    guardian.ensure_can_chat!
   end
 
   def set_channel_and_chatable_with_access_check(chat_channel_id: nil)

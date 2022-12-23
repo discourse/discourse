@@ -24,6 +24,7 @@ module PageObjects
         find(
           "#{VISIBLE_DRAWER} .channels-list .chat-channel-row[data-chat-channel-id='#{channel.id}']",
         ).click
+        has_no_css?(".chat-skeleton")
       end
 
       def maximize

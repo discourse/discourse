@@ -364,7 +364,7 @@ createWidget("search-menu-results", {
       if (["topic"].includes(rt.type)) {
         const more = buildMoreNode(rt);
         if (more) {
-          resultNodeContents.push(h("div.show-more", more));
+          resultNodeContents.push(h("div.search-menu__show-more", more));
         }
       }
 

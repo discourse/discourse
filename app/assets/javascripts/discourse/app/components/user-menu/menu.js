@@ -49,19 +49,12 @@ const CORE_TOP_TABS = [
         this.getUnreadCountForType("mentioned") +
         this.getUnreadCountForType("posted") +
         this.getUnreadCountForType("quoted") +
-        this.getUnreadCountForType("replied") +
-        this.getUnreadCountForType("watching_first_post")
+        this.getUnreadCountForType("replied")
       );
     }
 
     get notificationTypes() {
-      return [
-        "mentioned",
-        "posted",
-        "quoted",
-        "replied",
-        "watching_first_post",
-      ];
+      return ["mentioned", "posted", "quoted", "replied"];
     }
 
     get linkWhenActive() {

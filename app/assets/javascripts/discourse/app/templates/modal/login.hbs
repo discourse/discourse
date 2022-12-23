@@ -20,9 +20,16 @@
               {{/if}}
             </div>
             <div class="input-group">
-              <PasswordField @value={{this.loginPassword}} @type="password" class={{value-entered this.loginPassword}} id="login-account-password" autocomplete="current-password" maxlength="200" @capsLockOn={{this.capsLockOn}} disabled={{this.disableLoginFields}} tabindex="1" />
+              <PasswordField @value={{this.loginPassword}} @type={{if this.maskPassword "password" "text"}} class={{value-entered this.loginPassword}} id="login-account-password" autocomplete="current-password" maxlength="200" @capsLockOn={{this.capsLockOn}} disabled={{this.disableLoginFields}} tabindex="1" />
               <label class="alt-placeholder" for="login-account-password">{{i18n "login.password"}}</label>
-              <a href id="forgot-password-link" tabindex="3" {{on "click" this.handleForgotPassword}}>{{i18n "forgot_password.action"}}</a>
+              <div class="login__password-links">
+                <a href id="forgot-password-link" tabindex="3" {{on "click" this.handleForgotPassword}}>{{i18n "forgot_password.action"}}</a>
+                <TogglePasswordMask
+                  @maskPassword={{this.maskPassword}}
+                  @togglePasswordMask={{this.togglePasswordMask}}
+                  tabindex="3"
+                />
+              </div>
               <div class="caps-lock-warning {{unless this.capsLockOn "hidden"}}">{{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}</div>
             </div>
           </div>

@@ -154,36 +154,36 @@ sk:
     share:
       close: "zatvoriť"
     action_codes:
-      public_topic: "téma je verejná%{when}"
-      private_topic: "urobil(a) z témy osobnú správu%{when}"
-      split_topic: "rozdeľ tému %{when}"
-      invited_user: "pozvaný %{who} %{when}"
-      invited_group: "pozvaný %{who} %{when}"
+      public_topic: "Téma je verejná%{when}"
+      private_topic: "Urobil(a) z témy osobnú správu%{when}"
+      split_topic: "Rozdeľ tému %{when}"
+      invited_user: "Pozvaný %{who} %{when}"
+      invited_group: "Pozvaný %{who} %{when}"
       user_left: "%{who}ktorí sa odobrali z tejto správy %{when}"
-      removed_user: "odstránený %{who} %{when}"
-      removed_group: "odstránený %{who} %{when}"
-      autobumped: "automaticky obnovené %{when}"
+      removed_user: "Odstránený %{who} %{when}"
+      removed_group: "Odstránený %{who} %{when}"
+      autobumped: "Automaticky obnovené %{when}"
       autoclosed:
-        enabled: "uzavreté %{when}"
-        disabled: "otvorené %{when}"
+        enabled: "Uzavreté %{when}"
+        disabled: "Otvorené %{when}"
       closed:
-        enabled: "uzavreté %{when}"
-        disabled: "otvorené %{when}"
+        enabled: "Uzavreté %{when}"
+        disabled: "Otvorené %{when}"
       archived:
-        enabled: "archivované %{when}"
-        disabled: "odarchivované %{when}"
+        enabled: "Archivované %{when}"
+        disabled: "Odarchivované %{when}"
       pinned:
-        enabled: "pripnuné %{when}"
-        disabled: "odopnuté %{when}"
+        enabled: "Pripnuné %{when}"
+        disabled: "Odopnuté %{when}"
       pinned_globally:
-        enabled: "globálne pripnuté %{when}"
-        disabled: "odopnuté %{when}"
+        enabled: "Globálne pripnuté %{when}"
+        disabled: "Odopnuté %{when}"
       visible:
-        enabled: "zverejnené %{when}"
-        disabled: "stiahnuté %{when}"
+        enabled: "Zverejnené %{when}"
+        disabled: "Stiahnuté %{when}"
       banner:
         enabled: "Téma je odteraz baner %{when} Bude sa zobrazovať navrchu každej stránky, pokiaľ ju používateľ nezavrie."
-        disabled: "odstránil(a) tento oznam %{when}. Už sa viac nebude zobrazovať navrchu každej stránky."
+        disabled: "Odstránil(a) tento oznam %{when}. Už sa viac nebude zobrazovať navrchu každej stránky."
     emails_are_disabled: "Odosielanie emailov bolo globálne vypnuté administrátorom. Žiadne emailové notifikácie nebudú odoslané."
     software_update_prompt:
       dismiss: "Zahodiť"
@@ -240,7 +240,6 @@ sk:
     rules: "Pravidlá"
     mobile_view: "Mobilná verzia"
     desktop_view: "Zobrazenie pre počítač"
-    or: "alebo"
     now: "práve teraz"
     read_more: "čítaj ďalej"
     more: "Viac"
@@ -340,8 +339,6 @@ sk:
     disable: "Vypnúť"
     continue: "Pokračovať"
     undo: "Späť"
-    revert: "Vrátiť zmeny"
-    failed: "Nepodarilo sa"
     switch_to_anon: "Vstúpiť do anonymného režimu"
     switch_from_anon: "Opustiť anonymný režim"
     banner:
@@ -856,6 +853,7 @@ sk:
         disable_description: "Prosím zadajte autentifikačný kód z vašej aplikácie"
         show_key_description: "Vložiť ručne"
         disable: "Zakázať"
+        delete: "Vymazať"
         save: "Uložiť"
         edit: "Upraviť"
         security_key:
@@ -896,7 +894,6 @@ sk:
         ok: "Pošleme vám email pre potvrdenie"
         invalid: "Zadajte prosím platný email"
         authenticated: "Váš email bude autentifikovaný pomocou %{provider}"
-        frequency_immediately: "Odošleme vám email ak ste neprečítali to, čo vám posielame emailom."
         frequency:
           one: "Odošleme vám email iba ak sme vás nevideli poslednú minútu"
           few: "Odošleme vám email iba ak sme vás nevideli posledné %{count} minúty."
@@ -1148,7 +1145,6 @@ sk:
       login_disabled: "Keď je zapnutý mód iba na čítanie, prihlásenie nie je možné."
       logout_disabled: "Odhlásenie nie je možné, kým je stránka v móde iba na čítanie."
     learn_more: "zistiť viac..."
-    first_post: Prvý príspevok
     mute: Ignorovať
     unmute: Prestať ignorovať
     last_post: Odoslané
@@ -1207,6 +1203,7 @@ sk:
     login:
       username: "Používateľ"
       password: "Heslo"
+      show_password: "Zobraziť"
       second_factor_description: "Prosím zadajte autentifikačný kód z vašej aplikácie:"
       second_factor_backup_description: "Zadajte jeden zo záložných kódov:"
       caps_lock_warning: "Caps Lock je zapnutý"
@@ -1525,10 +1522,6 @@ sk:
       back_to_list: "Naspäť na zoznam tém"
       options: "Možnosti tém"
       show_links: "zobrazovať odkazy v tejto téme"
-      read_more_in_category: "Chcete si prečítať viac? Prezrite si témy v %{catLink} alebo v %{latestLink}."
-      read_more: "Chcete si prečítať viac? %{catLink} alebo v %{latestLink}."
-      browse_all_categories: Prezrieť všetky kategórie
-      view_latest_topics: zobraziť najnošie témy
       jump_reply_up: prejsť na predchádzajúcu odpoveď
       jump_reply_down: prejsť na nasledujúcu odpoveď
       deleted: "Téma bola vymazaná"
@@ -2265,7 +2258,7 @@ sk:
       back: "Späť"
       share: "Zdieľať"
       dismiss: "Zahodiť"
-    do_not_disturb:
+    pause_notifications:
       remaining: "%{remaining} zostáva"
       options:
         custom: "Vlastné"
@@ -2446,9 +2439,8 @@ sk:
           action: Akcia
       web_hooks:
         create: "Vytvoriť"
+        edit: "Upraviť"
         save: "Uložiť"
-        destroy: "Vymazať"
-        description: "Popis"
         go_back: "Späť na zoznam"
         payload_url_placeholder: "https://example.com/postreceive"
         active: "Aktívny"
@@ -2845,7 +2837,6 @@ sk:
       user:
         suspend_failed: "Niečo sa pokazilo pri odoberaní práv tomuto používateľovi %{error}"
         unsuspend_failed: "Niečo sa pokazilo pri obnovovaní práv tomuto používateľovi %{error}"
-        suspend_duration: "Ako dlho budú používateľovi odobrate práva?"
         suspend_reason_label: "Prečo mu odoberáte práva? Tento text <b>sa zobrazí každému</b> na stránke profilu používateľa a bude zobrazený užívateľovi pri pokuse o prihlásenie. Buďte strucný."
         suspend_reason: "Dôvod"
         suspended_by: "Práva odobraté"
@@ -2938,6 +2929,11 @@ sk:
         lock_trust_level: "Zamknúť stupeň dôvery"
         unlock_trust_level: "Odomknúť stupeň dôvery"
         suspended_count: "Odobrate práva"
+        other_matches_list:
+          username: "Používateľské meno"
+          trust_level: "Stupeň dôvery"
+          read_time: "Doba Čítania"
+          posts: "Príspevky"
         tl3_requirements:
           title: "Požiadavky pre stupeň dôvery 3"
           value_heading: "Hodnota"
@@ -3048,6 +3044,7 @@ sk:
           search: "Hľadať"
           groups: "Skupiny"
           dashboard: "Ovládací panel"
+          navigation: "Navigácia"
         default_categories:
           modal_yes: "Áno"
       badges:
@@ -3167,7 +3164,6 @@ sk:
       next: "Ďalej"
       step-text: "Krok"
       step: "%{current} z %{total}"
-      upload: "Načítať"
       uploading: "Načítavam..."
       upload_error: "Ľutujeme, pri nahrávaní súboru nastala chyba. Prosím, skúste znovu."
       invites:

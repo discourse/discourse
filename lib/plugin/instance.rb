@@ -281,8 +281,8 @@ class Plugin::Instance
       hidden_method_name = :"#{attr}_without_enable_check"
       klass.public_send(:define_method, hidden_method_name, &block)
 
-      klass.public_send(:define_method, attr) do |*args|
-        public_send(hidden_method_name, *args) if plugin.enabled?
+      klass.public_send(:define_method, attr) do |*args, **kwargs|
+        public_send(hidden_method_name, *args, **kwargs) if plugin.enabled?
       end
     end
   end
@@ -295,8 +295,8 @@ class Plugin::Instance
       hidden_method_name = :"#{attr}_without_enable_check"
       klass.public_send(:define_singleton_method, hidden_method_name, &block)
 
-      klass.public_send(:define_singleton_method, attr) do |*args|
-        public_send(hidden_method_name, *args) if plugin.enabled?
+      klass.public_send(:define_singleton_method, attr) do |*args, **kwargs|
+        public_send(hidden_method_name, *args, **kwargs) if plugin.enabled?
       end
     end
   end
@@ -311,8 +311,8 @@ class Plugin::Instance
       hidden_method_name = :"#{method_name}_without_enable_check"
       klass.public_send(:define_method, hidden_method_name, &block)
 
-      klass.public_send(callback, **options) do |*args|
-        public_send(hidden_method_name, *args) if plugin.enabled?
+      klass.public_send(callback, **options) do |*args, **kwargs|
+        public_send(hidden_method_name, *args, **kwargs) if plugin.enabled?
       end
 
       hidden_method_name
@@ -462,8 +462,8 @@ class Plugin::Instance
 
   # A proxy to `DiscourseEvent.on` which does nothing if the plugin is disabled
   def on(event_name, &block)
-    DiscourseEvent.on(event_name) do |*args|
-      block.call(*args) if enabled?
+    DiscourseEvent.on(event_name) do |*args, **kwargs|
+      block.call(*args, **kwargs) if enabled?
     end
   end
 
@@ -580,8 +580,8 @@ class Plugin::Instance
 
   def register_html_builder(name, &block)
     plugin = self
-    DiscoursePluginRegistry.register_html_builder(name) do |*args|
-      block.call(*args) if plugin.enabled?
+    DiscoursePluginRegistry.register_html_builder(name) do |*args, **kwargs|
+      block.call(*args, **kwargs) if plugin.enabled?
     end
   end
 
@@ -1097,12 +1097,20 @@ class Plugin::Instance
   # Used to register data sources for HashtagAutocompleteService to look
   # up results based on a #hashtag string.
   #
-  # @param {String} type - Roughly corresponding to a model, this is used as a unique
-  #                        key for the datasource and is also used when allowing different
-  #                        contexts to search for and lookup these types. The `category`
-  #                        and `tag` types are registered by default.
   # @param {Class} klass - Must be a class that implements methods with the following
   # signatures:
+  #
+  #   Roughly corresponding to a model, this is used as a unique
+  #   key for the datasource and is also used when allowing different
+  #   contexts to search for and lookup these types. The `category`
+  #   and `tag` types are registered by default.
+  #   def self.type
+  #   end
+  #
+  #   The FontAwesome icon to use for the data source in the search results
+  #   and cooked markdown.
+  #   def self.icon
+  #   end
   #
   #   @param {Guardian} guardian - Current user's guardian, used for permission-based filtering
   #   @param {Array} slugs - An array of strings that represent slugs to search this type for,
@@ -1117,8 +1125,20 @@ class Plugin::Instance
   #   @returns {Array} An Array of HashtagAutocompleteService::HashtagItem
   #   def self.search(guardian, term, limit)
   #   end
-  def register_hashtag_data_source(type, klass)
-    HashtagAutocompleteService.register_data_source(type, klass)
+  #
+  #   @param {Array} search_results - An array of HashtagAutocompleteService::HashtagItem to sort
+  #   @param {String} term - The search term which was used, which may help with sorting.
+  #   @returns {Array} An Array of HashtagAutocompleteService::HashtagItem
+  #   def self.search_sort(search_results, term)
+  #   end
+  #
+  #   @param {Guardian} guardian - Current user's guardian, used for permission-based filtering
+  #   @param {Integer} limit - The number of search results that should be returned by the query
+  #   @returns {Array} An Array of HashtagAutocompleteService::HashtagItem
+  #   def self.search_without_term(guardian, limit)
+  #   end
+  def register_hashtag_data_source(klass)
+    DiscoursePluginRegistry.register_hashtag_autocomplete_data_source(klass, self)
   end
 
   ##
@@ -1134,8 +1154,10 @@ class Plugin::Instance
   #                           for certain types of hashtag result.
   # @param {Integer} priority - A number value for ordering type results when hashtag searches
   #                             or lookups occur. Priority is ordered by DESCENDING order.
-  def register_hashtag_type_in_context(type, context, priority)
-    HashtagAutocompleteService.register_type_in_context(type, context, priority)
+  def register_hashtag_type_priority_for_context(type, context, priority)
+    DiscoursePluginRegistry.register_hashtag_autocomplete_contextual_type_priority(
+      { type: type, context: context, priority: priority }, self
+    )
   end
 
   ##
@@ -1218,6 +1240,10 @@ class Plugin::Instance
     reloadable_patch do
       NewPostManager.add_plugin_payload_attribute(attribute_name)
     end
+  end
+
+  def register_topic_preloader_associations(fields)
+    DiscoursePluginRegistry.register_topic_preloader_association(fields, self)
   end
 
   private

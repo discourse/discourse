@@ -117,21 +117,21 @@ ko:
       email: "이메일로 공유"
       url: "URL 복사 및 공유"
     action_codes:
-      public_topic: "%{when}에 이 주제가 공개됨"
+      public_topic: "이 글을 %{when}에 공개"
       open_topic: "%{when}에 주제로 변환됨"
-      private_topic: "%{when}에 이 주제가 개인 메시지로 설정됨"
-      split_topic: "%{when}에 이 주제가 분리됨"
-      invited_user: "%{when}에 %{who} 님이 초대됨"
-      invited_group: "%{when}에 %{who} 님이 초대됨"
+      private_topic: "이 글을 개인 메시지로 설정 %{when}"
+      split_topic: "이 글을 %{when}에 분리"
+      invited_user: "%{when}에 %{who}님이 초대됨"
+      invited_group: "%{when}에 %{who}님이 초대됨"
       user_left: "%{who} 님이 %{when}에 이 메시지에서 자신을 제거함"
-      removed_user: "%{when}에 %{who} 님이 제거됨"
-      removed_group: "%{when}에 %{who} 님이 제거됨"
-      autobumped: "%{when}에 자동으로 끌어 올림"
+      removed_user: "%{when}에 %{who}님이 삭제됨"
+      removed_group: "%{when}에 %{who}님이 삭제됨"
+      autobumped: "%{when}에 자동으로 끌어 올려짐"
       autoclosed:
-        enabled: "%{when}에 종료됨"
+        enabled: "%{when}에 닫힘"
         disabled: "%{when}에 열림"
       closed:
-        enabled: "%{when}에 종료됨"
+        enabled: "%{when}에 닫힘"
         disabled: "%{when}에 열림"
       archived:
         enabled: "%{when}에 보관됨"
@@ -143,12 +143,11 @@ ko:
         enabled: "%{when}에 전체적으로 고정됨"
         disabled: "%{when}에 고정 해제됨"
       visible:
-        enabled: "%{when}에 목록에 게시됨"
-        disabled: "%{when}에 목록에서 숨김"
+        enabled: "%{when}에 목록에 게시"
+        disabled: "%{when}에 목록에서 감춤"
       banner:
         enabled: "%{when}에 배너를 만들었습니다. 사용자가 닫을 때까지 모든 페이지의 상단에 나타납니다."
-        disabled: "%{when}에 이 배너를 제거했습니다. 이제 모든 페이지의 상단에 표시되지 않습니다."
-      forwarded: "위 이메일을 전달했습니다."
+        disabled: "%{when}에 이 배너를 제거했습니다. 더 이상 모든 페이지의 상단에 표시되지 않습니다."
     topic_admin_menu: "주제 관리"
     skip_to_main_content: "메인 콘텐츠로 건너뛰기"
     emails_are_disabled: "관리자에 의해 모든 이메일의 발신이 비활성화되었습니다. 어떤 종류의 이메일 알림도 전송되지 않습니다."
@@ -219,7 +218,6 @@ ko:
     conduct: "준수 사항"
     mobile_view: "모바일 보기"
     desktop_view: "데스크톱 보기"
-    or: "또는"
     now: "방금"
     read_more: "더 보기"
     more: "더 보기"
@@ -344,8 +342,6 @@ ko:
     disable: "비활성화"
     continue: "계속하기"
     undo: "실행 취소"
-    revert: "되돌리기"
-    failed: "실패"
     switch_to_anon: "익명 모드 시작"
     switch_from_anon: "익명 모드 종료"
     banner:
@@ -940,7 +936,6 @@ ko:
       notification_schedule:
         title: "알림 일정"
         label: "사용자 지정 알림 일정 활성화"
-        tip: "이 시간 이외에는 자동으로 '방해 금지' 상태가 됩니다."
         midnight: "자정"
         none: "없음"
         monday: "월요일"
@@ -1191,7 +1186,7 @@ ko:
         use: "인증 앱 사용"
         enforced_notice: "이 사이트에 액세스하려면 2단계 인증을 활성화해야 합니다."
         disable: "비활성화"
-        disable_confirm: "모든 2단계 인증 방법을 비활성화할까요?"
+        delete: "삭제하기"
         save: "저장"
         edit: "편집"
         edit_title: "인증 편집"
@@ -1277,7 +1272,6 @@ ko:
         authenticated: "이메일이 %{provider}에 의해 인증되었습니다"
         invite_auth_email_invalid: "초대 이메일이 %{provider}에서 인증한 이메일과 일치하지 않습니다"
         authenticated_by_invite: "이메일이 초대 이메일로 인증되었습니다"
-        frequency_immediately: "만약 전송된 이메일을 읽지 않았을 경우, 즉시 이메일을 다시 보내드립니다."
         frequency:
           other: "최근 %{count}분 동안 접속하지 않을 경우에만 이메일이 전송됩니다."
       associated_accounts:
@@ -1601,15 +1595,18 @@ ko:
       enabled: "이 사이트는 현재 읽기 전용 모드입니다. 탐색은 가능하지만 댓글, 좋아요 및 기타 작업은 일시적으로 비활성화되었습니다."
       login_disabled: "사이트가 읽기 전용 모드인 동안에는 로그인이 비활성화됩니다."
       logout_disabled: "사이트가 읽기 전용 모드인 동안에는 로그아웃이 비활성화됩니다."
-    too_few_posts_notice_MF: >-
+    too_few_posts_notice_MF: |
       <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">토론을 시작</a> 합시다 <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">!</a> {currentPosts, plural, one {is <strong>#</strong> post} other {are <strong>#</strong> posts}}가 있습니다. 방문자는 더 읽고 답장해야합니다. – {requiredPosts, plural, one { <strong>#</strong> post} other { <strong>#</strong> posts}} 이상을 권장합니다. 직원 만이 메시지를 볼 수 있습니다.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/시간} other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/시간} other {#개의 오류/시간}}에 도달했습니다."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/분} other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/분} other {#개의 오류/분}}에 도달했습니다."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/시간} other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/시간} other {#개의 오류/시간}}을 초과했습니다."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/분} other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/분} other {#개의 오류/분}}을 초과했습니다."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/시간} other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/시간} other {#개의 오류/시간}}에 도달했습니다.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/분} other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/분} other {#개의 오류/분}}에 도달했습니다.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/시간} other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/시간} other {#개의 오류/시간}}을 초과했습니다.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/분} other {#개의 오류/분}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/분} other {#개의 오류/분}}을 초과했습니다.
     learn_more: "더 알아보기..."
-    first_post: 첫 게시물
     mute: 뮤트
     unmute: 뮤트 해제
     last_post: 게시됨
@@ -1700,6 +1697,7 @@ ko:
       title: "로그인"
       username: "사용자"
       password: "비밀번호"
+      show_password: "보기"
       second_factor_title: "2단계 인증"
       second_factor_description: "앱의 인증 코드를 입력하세요."
       second_factor_backup: "백업 코드로 로그인"
@@ -2015,6 +2013,7 @@ ko:
       bookmark_reminder: "<span>%{username}</span> %{description} "
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description} "
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2073,6 +2072,7 @@ ko:
         invited_to_private_message: "비공개 메시지에 초대됨"
         invitee_accepted: "초대 수락됨"
         posted: "새 게시물"
+        watching_category_or_tag: "새 글"
         moved_post: "게시물 이동됨"
         linked: "링크됨"
         bookmark_reminder: "북마크 미리 알림"
@@ -2356,13 +2356,7 @@ ko:
       show_links: "이 주제에 링크 표시"
       collapse_details: "주제 상세 정보 접기"
       expand_details: "주제 상세 정보 펼치기"
-      read_more_in_category: "더 읽고 싶으신가요? %{catLink} 또는 %{latestLink}에서 다른 주제를 찾아보세요."
-      read_more: "더 읽고 싶으신가요? %{catLink} 또는 %{latestLink}에서 확인하세요."
       unread_indicator: "아직 이 주제의 마지막 게시물을 읽은 회원이 없습니다."
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
-      browse_all_categories: 모든 카테고리 탐색
-      browse_all_tags: 모든 태그 탐색
-      view_latest_topics: 최근 글 보기
       suggest_create_topic: <a href>새 대화를 시작</a>할 준비가 되었나요?
       jump_reply_up: 이전 댓글로 이동
       jump_reply_down: 다음 댓글로 이동
@@ -3064,7 +3058,8 @@ ko:
       official_warning: "공식 경고"
       delete_spammer: "스팸 사용자 삭제"
       flag_for_review: "검토 대기열"
-      delete_confirm_MF: "이 사용자의 {POSTS, plural, one {<b>#</b>개의 게시물} other {<b>#</b>개의 게시물}} 및 {TOPICS, plural, one {<b>#</b>개의 주제} other {<b>#</b>개의 주제}}를 삭제하고, 사용자의 계정을 제거하고, 해당 IP 주소 <b>{ip_address}</b>의 가입을 차단하고, 해당 이메일 주소(<b>{email}</b>)를 영구 차단 목록에 추가하려 합니다. 이 사용자가 정말 스팸 사용자인가요?"
+      delete_confirm_MF: |
+        이 사용자의 {POSTS, plural, one {<b>#</b>개의 게시물} other {<b>#</b>개의 게시물}} 및 {TOPICS, plural, one {<b>#</b>개의 주제} other {<b>#</b>개의 주제}}를 삭제하고, 사용자의 계정을 제거하고, 해당 IP 주소 <b>{ip_address}</b>의 가입을 차단하고, 해당 이메일 주소(<b>{email}</b>)를 영구 차단 목록에 추가하려 합니다. 이 사용자가 정말 스팸 사용자인가요?
       yes_delete_spammer: "예, 스팸 사용자를 삭제합니다"
       ip_address_missing: "(해당 사항 없음)"
       hidden_email_address: "(숨김)"
@@ -3218,7 +3213,6 @@ ko:
         this_month: "월"
         this_week: "주"
         today: "오늘"
-        other_periods: "다음 주요 항목 보기:"
     browser_update: '<a href="https://www.discourse.org/faq/#browser">브라우저 버전이 너무 낮아 이 사이트에서 작동하지 않습니다</a>. <a href="https://browsehappy.com">브라우저를 업그레이드</a>하여 서식 있는 콘텐츠를 표시하고 로그인하여 댓글도 달아보세요.'
     safari_13_warning: 이 사이트는 곧 iOS 및 Safari 버전 13 이하에 대한 지원을 중단할 예정입니다. 단순화된 읽기 전용 버전은 계속 사용할 수 있습니다. (<a href="https://meta.discourse.org/t/224747">더 보기</a>)
     permission_types:
@@ -3490,16 +3484,14 @@ ko:
     safe_mode:
       enabled: "안전 모드가 활성화되었습니다. 안전 모드를 종료하려면 이 브라우저 창을 닫으세요."
     image_removed: "(이미지 제거됨)"
-    do_not_disturb:
-      title: "다음 시간 동안 방해 금지..."
-      label: "방해 금지"
+    pause_notifications:
       remaining: "%{remaining} 남음"
       options:
         half_hour: "30분"
         one_hour: "1시간"
         two_hours: "2시간"
         tomorrow: "내일까지"
-        custom: "사용자 지정"
+        custom: "사용자 정의"
       set_schedule: "알림 일정 설정"
     trust_levels:
       names:
@@ -3846,9 +3838,8 @@ ko:
         detailed_instruction: "선택된 이벤트가 발생할 경우 POST 요청이 제공된 URL로 전송됩니다."
         new: "새 Webhook"
         create: "생성"
+        edit: "수정"
         save: "저장하기"
-        destroy: "삭제하기"
-        description: "설명"
         controls: "컨트롤"
         go_back: "목록으로 돌아가기"
         payload_url: "Payload URL"
@@ -3924,9 +3915,6 @@ ko:
           headers: "헤더"
           payload: "페이로드"
           body: "본문"
-          go_list: "목록으로 가기"
-          go_details: "Webhook 편집"
-          go_events: "이벤트로 가기"
           ping: "Ping"
           status: "상태 코드"
           event_id: "ID"
@@ -3946,6 +3934,8 @@ ko:
         change_settings_short: "설정"
         howto: "플러그인은 어떻게 설치하나요?"
         official: "공식 플러그인"
+      navigation_menu:
+        sidebar: "사이드바"
       backups:
         title: "백업"
         menu:
@@ -4155,7 +4145,6 @@ ko:
             error: "이 테마는이 버전의 Discourse와 호환되지 않기 때문에 자동으로 비활성화되었습니다."
             minimum: "Discourse 버전 %{version} 이상이 필요합니다."
             maximum: "Discourse 버전 %{version} 이하가 필요합니다."
-          component_of: "구성 요소:"
           update_to_latest: "최신으로 업데이트"
           check_for_updates: "업데이트 체크하기"
           updating: "업데이트 중..."
@@ -4625,7 +4614,6 @@ ko:
       user:
         suspend_failed: "이 사용자를 정지하는 중에 오류 발생 %{error}"
         unsuspend_failed: "이 사용자를 정지 해제하는 중에 오류 발생 %{error}"
-        suspend_duration: "이 사용자를 언제까지 정지할까요?"
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
         suspend_reason_hidden_label: "정지 이유는 무엇인가요? 이 텍스트는 해당 사용자가 로그인할 때 보입니다. 짧게 적어주세요."
         suspend_reason: "Reason"
@@ -4659,11 +4647,11 @@ ko:
         penalty_post_edit: "게시물 편집"
         penalty_post_none: "아무것도 안 함"
         penalty_count: "페널티 수"
-        penalty_history: "페널티 히스토리"
         clear_penalty_history:
           title: "페널티 히스토리 지우기"
           description: "페널티가 있는 사용자는 신뢰 레벨 3을 받을 수 없음"
-        delete_all_posts_confirm_MF: "{POSTS, plural, one {#개의 댓글} other {#개의 댓글}} 및 {TOPICS, plural, one {#개의 주제} other {#개의 주제}}를 삭제하려고 합니다. 계속할까요?"
+        delete_all_posts_confirm_MF: |
+          {POSTS, plural, one {#개의 댓글} other {#개의 댓글}} 및 {TOPICS, plural, one {#개의 주제} other {#개의 주제}}를 삭제하려고 합니다. 계속할까요?
         silence: "차단"
         unsilence: "차단 해제"
         silenced: "차단되었나요?"
@@ -4809,6 +4797,11 @@ ko:
         silenced_count: "차단됨"
         suspended_count: "정지됨"
         last_six_months: "지난 6개월"
+        other_matches_list:
+          username: "아이디"
+          trust_level: "회원 레벨"
+          read_time: "읽은 시간"
+          posts: "글"
         tl3_requirements:
           title: "신뢰 레벨 3의 요구사항"
           table_title:
@@ -4952,7 +4945,7 @@ ko:
           search: "검색"
           groups: "그룹"
           dashboard: "대시보드"
-          sidebar: "사이드바"
+          navigation: "내비게이션"
         secret_list:
           invalid_input: "입력 필드는 비워 두거나 수직 막대 문자를 포함할 수 없습니다."
         default_categories:
@@ -5119,10 +5112,8 @@ ko:
       finish: "종료"
       back: "뒤로 가기"
       next: "다음"
-      configure_more: "추가 구성..."
       step-text: "단계"
       step: "%{current} / %{total}"
-      upload: "업로드"
       uploading: "업로드 중..."
       upload_error: "파일을 업로드하는 중에 오류가 발생했습니다. 다시 시도하세요."
       staff_count:

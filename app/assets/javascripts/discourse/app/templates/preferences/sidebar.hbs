@@ -40,7 +40,7 @@
 
   <div class="controls controls-dropdown">
     <label>{{i18n "user.experimental_sidebar.list_destination_instruction"}}</label>
-    <ComboBox @valueProperty="value" @content={{this.sidebarListDestinations}} @value={{this.newSidebarListDestination}} @onChange={{action (mut this.newSidebarListDestination)}} />
+    <ComboBox @class="preferences-sidebar-navigation__list-destination-selector" @valueProperty="value" @content={{this.sidebarListDestinations}} @value={{this.newSidebarListDestination}} @onChange={{action (mut this.newSidebarListDestination)}} />
   </div>
 </div>
 

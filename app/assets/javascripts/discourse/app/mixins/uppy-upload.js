@@ -449,7 +449,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
   },
 
   _reset() {
-    this._uppyInstance?.reset();
+    this._uppyInstance?.cancelAll();
     this.setProperties({
       uploading: false,
       processing: false,

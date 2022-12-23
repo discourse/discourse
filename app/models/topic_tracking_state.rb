@@ -276,7 +276,7 @@ class TopicTrackingState
   end
 
   def self.include_tags_in_report?
-    SiteSetting.tagging_enabled && (@include_tags_in_report || SiteSetting.enable_experimental_sidebar_hamburger)
+    SiteSetting.tagging_enabled && (@include_tags_in_report || !SiteSetting.legacy_navigation_menu?)
   end
 
   def self.include_tags_in_report=(v)

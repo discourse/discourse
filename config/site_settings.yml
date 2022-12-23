@@ -328,9 +328,6 @@ basic:
     default: 2
     min: 0
     max: 6
-  enable_whispers:
-    client: true
-    default: false
   whispers_allowed_groups:
     client: true
     type: group_list
@@ -348,6 +345,12 @@ basic:
   push_notifications_icon:
     default: ""
     type: upload
+  enable_desktop_push_notifications:
+    default: true
+    client: true
+  push_notification_time_window_mins:
+    default: 10
+    min: 0
   short_title:
     default: ""
     max: 12
@@ -2032,13 +2035,9 @@ developer:
   enable_safe_mode:
     default: true
     client: true
-  enable_experimental_sidebar_hamburger:
-    default: false
-    client: true
   enable_experimental_hashtag_autocomplete:
     default: false
     client: true
-    hidden: true
   experimental_hashtag_search_result_limit:
     default: 20
     client: true
@@ -2061,10 +2060,12 @@ developer:
     allow_any: false
     refresh: true
 
-sidebar:
-  enable_sidebar:
-    default: true
+navigation:
+  navigation_menu:
     client: true
+    default: "sidebar"
+    type: enum
+    enum: "NavigationMenuSiteSetting"
   default_sidebar_categories:
     type: category_list
     default: ""

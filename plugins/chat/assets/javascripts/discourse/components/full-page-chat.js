@@ -10,9 +10,6 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
-
-    this.appEvents.on("chat:refresh-channels", this, "refreshModel");
-    this.appEvents.on("chat:refresh-channel", this, "_refreshChannel");
   },
 
   didInsertElement() {
@@ -25,8 +22,6 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
 
-    this.appEvents.off("chat:refresh-channels", this, "refreshModel");
-    this.appEvents.off("chat:refresh-channel", this, "_refreshChannel");
     document.removeEventListener("keydown", this._autoFocusChatComposer);
   },
 
@@ -74,12 +69,6 @@ export default Component.extend({
     );
     if (sidebarScroll) {
       sidebarScroll.scrollTop = sidebarScroll.scrollHeight;
-    }
-  },
-
-  _refreshChannel(channelId) {
-    if (this.chat.activeChannel?.id === channelId) {
-      this.refreshModel(true);
     }
   },
 

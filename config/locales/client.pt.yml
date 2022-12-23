@@ -126,38 +126,37 @@ pt:
       email: "Enviar por e-mail"
       url: "Copiar e partilhar URL"
     action_codes:
-      public_topic: "tornei este tópico publico %{when}"
-      open_topic: "converteu isto em um tópico %{when}"
-      private_topic: "tornou este tópico numa mensagem privada %{when}"
-      split_topic: "dividir este tópico %{when}"
-      invited_user: "convidou %{who} %{when}"
-      invited_group: "convidou %{who} %{when}"
+      public_topic: "Tornei este tópico publico %{when}"
+      open_topic: "Converteu isto em um tópico %{when}"
+      private_topic: "Tornou este tópico numa mensagem privada %{when}"
+      split_topic: "Dividir este tópico %{when}"
+      invited_user: "Convidou %{who} %{when}"
+      invited_group: "Convidou %{who} %{when}"
       user_left: "%{who} removeram-se desta mensagem %{when}"
-      removed_user: "removeu %{who} %{when}"
-      removed_group: "removeu %{who} %{when}"
-      autobumped: "automaticamente colidido %{when}"
+      removed_user: "Removeu %{who} %{when}"
+      removed_group: "Removeu %{who} %{when}"
+      autobumped: "Automaticamente colidido %{when}"
       autoclosed:
-        enabled: "fechado %{when}"
-        disabled: "aberto %{when}"
+        enabled: "Fechado %{when}"
+        disabled: "Aberto %{when}"
       closed:
-        enabled: "fechado %{when}"
-        disabled: "aberto %{when}"
+        enabled: "Fechado %{when}"
+        disabled: "Aberto %{when}"
       archived:
-        enabled: "arquivado %{when}"
-        disabled: "removido do arquivo %{when}"
+        enabled: "Arquivado %{when}"
+        disabled: "Removido do arquivo %{when}"
       pinned:
-        enabled: "afixado %{when}"
-        disabled: "desafixado %{when}"
+        enabled: "Afixado %{when}"
+        disabled: "Desafixado %{when}"
       pinned_globally:
-        enabled: "afixado globalmente %{when}"
-        disabled: "desafixado %{when}"
+        enabled: "Afixado globalmente %{when}"
+        disabled: "Desafixado %{when}"
       visible:
-        enabled: "listado %{when}"
-        disabled: "removido da lista %{when}"
+        enabled: "Listado %{when}"
+        disabled: "Removido da lista %{when}"
       banner:
-        enabled: "tornou isto numa faixa %{when}. Esta irá aparecer no topo de cada página até que seja rejeitada pelo utilizador."
-        disabled: "removeu esta faixa %{when}. Esta não irá aparecer no topo de cada página."
-      forwarded: "encaminhou o e-mail acima"
+        enabled: "Tornou isto numa faixa %{when}. Esta irá aparecer no topo de cada página até que seja rejeitada pelo utilizador."
+        disabled: "Removeu esta faixa %{when}. Esta não irá aparecer no topo de cada página."
     topic_admin_menu: "ações do tópico"
     skip_to_main_content: "Saltar para o conteúdo principal"
     emails_are_disabled: "Todos os envios de e-mail foram globalmente desativados por um administrador. Nenhum e-mail de notificação será enviado."
@@ -229,7 +228,6 @@ pt:
     conduct: "Código de Conduta"
     mobile_view: "Visualização Mobile"
     desktop_view: "Visualização Desktop"
-    or: "ou"
     now: "ainda agora"
     read_more: "ler mais"
     more: "Mais"
@@ -352,8 +350,6 @@ pt:
     disable: "Desativar"
     continue: "Continuar"
     undo: "Desfazer"
-    revert: "Reverter"
-    failed: "Falhou"
     switch_to_anon: "Entrar em modo Anónimo"
     switch_from_anon: "Sair de modo Anónimo"
     banner:
@@ -962,7 +958,6 @@ pt:
       notification_schedule:
         title: "Agendamento de Notificações"
         label: "Activar agendamento de notificações personalizado"
-        tip: "Fora destas horas será automaticamente colocado no modo 'não incomodar'."
         midnight: "Meia-noite"
         none: "Nenhuma"
         monday: "Segunda-feira"
@@ -1206,7 +1201,7 @@ pt:
         use: "Utilizar a aplicação Authenticator"
         enforced_notice: "É necessário ativar a autenticação em dois passos para aceder a este site."
         disable: "Desativar"
-        disable_confirm: "Tem a certeza que deseja desativar todos os métodos de dois passos?"
+        delete: "Apagar"
         save: "Guardar"
         edit: "Editar"
         edit_title: "Editar Autenticador"
@@ -1285,7 +1280,6 @@ pt:
         authenticated: "O seu email foi autenticado por %{provider}"
         invite_auth_email_invalid: "O seu email de convite não coincide com o email autenticado por %{provider}"
         authenticated_by_invite: "Seu e-mail foi autenticado pelo convite"
-        frequency_immediately: "Enviar-lhe-emos um email imediatamente caso não leia o que lhe estamos a enviar."
         frequency:
           one: "Só iremos enviar-lhe um email se não o tivermos visto no último minuto."
           other: "Só iremos enviar-lhe um email se não o tivermos visto nos últimos %{count} minutos."
@@ -1605,7 +1599,6 @@ pt:
       login_disabled: "Enquanto o site se encontrar no modo só de leitura, a opção de iniciar a sessão está desativada."
       logout_disabled: "Enquanto o site se encontrar no modo só de leitura, a opção de terminar a sessão está desativada."
     learn_more: "saber mais..."
-    first_post: Primeira publicação
     mute: Silenciar
     unmute: Desativar silêncio
     last_post: Publicado
@@ -1692,6 +1685,7 @@ pt:
       title: "Efetuar login"
       username: "Utilizador"
       password: "Palavra-passe"
+      show_password: "Mostrar"
       second_factor_title: "Autenticação em Dois Passos"
       second_factor_description: "Por favor introduza um código de autenticação a partir da sua aplicação:"
       second_factor_backup: "Faça login usando um código de backup"
@@ -1989,6 +1983,7 @@ pt:
       bookmark_reminder: "<span>%{username}</span>%{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2047,6 +2042,7 @@ pt:
         invited_to_private_message: "convidado para mensagem particular"
         invitee_accepted: "convite aceito"
         posted: "novo post"
+        watching_category_or_tag: "novo post"
         moved_post: "post movido"
         linked: "linkado"
         bookmark_reminder: "lembrete de favorito"
@@ -2310,14 +2306,7 @@ pt:
       show_links: "mostrar hiperligações dentro deste tópico"
       collapse_details: "ocultar detalhes do tópico"
       expand_details: "expandir detalhes do tópico"
-      read_more_in_category: "Pretende ler mais? Navegue por outros tópicos em %{catLink} ou %{latestLink}."
-      read_more: "Pretende ler mais? %{catLink} ou %{latestLink}."
       unread_indicator: "Nenhum membro leu o último post deste tópico ainda."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { Existe <a href='{basePath}/unread'>1 não lido </a> } other { Existem <a href='{basePath}/unread'># não lidos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {existe } other{}} <a href='{basePath}/new'>1 novo</a> tópico} other { {BOTH, select, true{e } false {existem } other{}} <a href='{basePath}/new'># novos</a> tópicos} } restantes, ou {CATEGORY, select, true {navegue por outros tópicos em {catLink}} false {{latestLink}} other {}}"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
-      browse_all_categories: Pesquisar em todas as categorias
-      browse_all_tags: Procurar todas as tags
-      view_latest_topics: ver os tópicos mais recentes
       suggest_create_topic: Pronto para <a href>iniciar uma nova conversa?</a>
       jump_reply_up: avançar para resposta mais recente
       jump_reply_down: avançar para resposta mais antiga
@@ -3396,9 +3385,7 @@ pt:
     safe_mode:
       enabled: "O modo de segurança está activado, para sair do modo de segurança feche esta janela do navegador"
     image_removed: "(imagem removida)"
-    do_not_disturb:
-      title: "Não perturbe por..."
-      label: "Não perturbe"
+    pause_notifications:
       remaining: "%{remaining} restante"
       options:
         half_hour: "30 minutos"
@@ -3680,9 +3667,8 @@ pt:
         detailed_instruction: "Um pedido POST será enviado ao URL fornecido quando o evento escolhido acontecer."
         new: "Novo Webhook"
         create: "Criar"
+        edit: "Editar"
         save: "Guardar"
-        destroy: "Apagar"
-        description: "Descrição"
         controls: "Controlos"
         go_back: "Voltar à lista"
         payload_url: "URL de carga"
@@ -3731,9 +3717,6 @@ pt:
           headers: "Cabeçalhos"
           payload: "Carga"
           body: "Corpo"
-          go_list: "Ir para à lista"
-          go_details: "Editar webhook"
-          go_events: "Ir para eventos"
           ping: "Ping"
           status: "Código de Estado"
           event_id: "ID"
@@ -4279,7 +4262,6 @@ pt:
       user:
         suspend_failed: "Ocorreu um erro ao suspender este utilizador %{error}"
         unsuspend_failed: "Ocorreu um erro ao retirar a suspensão deste utilizador %{error}"
-        suspend_duration: "Durante quanto tempo o utilizador estará suspenso?"
         suspend_reason_label: "Qual é o motivo da sua suspensão? Este texto <b>estará visível para todos</b> na página do perfil deste utilizador, e será mostrada ao utilizador quando tentar iniciar sessão. Mantenha-o breve."
         suspend_reason: "Motivo"
         suspend_reason_title: "Motivo da Suspensão"
@@ -4385,6 +4367,11 @@ pt:
         unlock_trust_level: "Desbloquear Nível de Confiança"
         silenced_count: "Silenciado"
         suspended_count: "Suspenso"
+        other_matches_list:
+          username: "Nome de Utilizador"
+          trust_level: "Nível de Confiança"
+          read_time: "Tempo de leitura"
+          posts: "Mensagens"
         tl3_requirements:
           title: "Requisitos para o Nível de Confiança 3"
           table_title:
@@ -4504,6 +4491,7 @@ pt:
           search: "Pesquisar"
           groups: "Grupos"
           dashboard: "Painel de Administração"
+          navigation: "Navegação"
         default_categories:
           modal_yes: "Sim"
       badges:
@@ -4630,7 +4618,6 @@ pt:
       next: "Próximo"
       step-text: "Passo"
       step: "%{current} de %{total}"
-      upload: "Carregar"
       uploading: "A carregar…"
       upload_error: "Pedimos desculpa, ocorreu um erro ao carregar esse ficheiro. Por favor, tente novamente."
       invites:

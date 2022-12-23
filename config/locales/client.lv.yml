@@ -134,37 +134,36 @@ lv:
       email: "Sūtīt pa e -pastu"
       url: "Kopējiet un kopīgojiet URL"
     action_codes:
-      public_topic: "padarīja tēmu publisku %{when}"
-      private_topic: "padarīja šo tēmu par personisku ziņu %{when}"
-      split_topic: "sadalīja šo tēmu %{when}"
-      invited_user: "uzaicināja %{who} %{when}"
-      invited_group: "uzaicināja %{who} %{when}"
+      public_topic: "Padarīja tēmu publisku %{when}"
+      private_topic: "Padarīja šo tēmu par personisku ziņu %{when}"
+      split_topic: "Sadalīja šo tēmu %{when}"
+      invited_user: "Uzaicināja %{who} %{when}"
+      invited_group: "Uzaicināja %{who} %{when}"
       user_left: "%{who} noņēma sevi no šī ziņojuma %{when}"
-      removed_user: "izdzēsa %{who} %{when}"
-      removed_group: "izdzēsa %{who} %{when}"
-      autobumped: "automātiski bumped %{when}"
+      removed_user: "Izdzēsa %{who} %{when}"
+      removed_group: "Izdzēsa %{who} %{when}"
+      autobumped: "Automātiski bumped %{when}"
       autoclosed:
-        enabled: "slēdza %{when}"
-        disabled: "atvēra %{when}"
+        enabled: "Slēdza %{when}"
+        disabled: "Atvēra %{when}"
       closed:
-        enabled: "slēdza %{when}"
-        disabled: "atvēra %{when}"
+        enabled: "Slēdza %{when}"
+        disabled: "Atvēra %{when}"
       archived:
-        enabled: "pievienoja arhīvam %{when}"
-        disabled: "izņēma no arhīva %{when}"
+        enabled: "Pievienoja arhīvam %{when}"
+        disabled: "Izņēma no arhīva %{when}"
       pinned:
-        enabled: "piesprauda %{when}"
-        disabled: "atsprauda %{when}"
+        enabled: "Piesprauda %{when}"
+        disabled: "Atsprauda globāli %{when}"
       pinned_globally:
-        enabled: "piesprauda globāli %{when}"
-        disabled: "atsprauda globāli %{when}"
+        enabled: "Piesprauda globāli %{when}"
+        disabled: "Atsprauda globāli %{when}"
       visible:
-        enabled: "pievienoja uzskaitei %{when}"
-        disabled: "izņēma no uzskaites %{when}"
+        enabled: "Pievienoja uzskaitei %{when}"
+        disabled: "Izņēma no uzskaites %{when}"
       banner:
-        enabled: "padarīja šo par baneri %{when}. Tas parādīsies katras lapas augšā, līdz lietotājs to aizvērs."
-        disabled: "noņēma šo baneri %{when}. Tas vairs neparādīsies katras lapas augšā."
-      forwarded: "pārsūtīja iepriekš minēto e -pastu"
+        enabled: "Padarīja šo par baneri %{when}. Tas parādīsies katras lapas augšā, līdz lietotājs to aizvērs."
+        disabled: "Noņēma šo baneri %{when}. Tas vairs neparādīsies katras lapas augšā."
     topic_admin_menu: "tēmas darbības"
     emails_are_disabled: "Administrators ir globāli izslēdzis visus izejošos e-pastus. Netiks nosūtīti nekāda veida paziņojumi."
     software_update_prompt:
@@ -230,7 +229,6 @@ lv:
     conduct: "Rīcības kodekss"
     mobile_view: "Mobilais skats"
     desktop_view: "Datora skats"
-    or: "vai"
     now: "tikko"
     read_more: "lasīt vairāk"
     more: "Vairāk"
@@ -334,8 +332,6 @@ lv:
     disable: "Atslēgt"
     continue: "Turpināt"
     undo: "Atsaukt"
-    revert: "Atgriezt"
-    failed: "Neizdevās"
     switch_to_anon: "Ieiet anonīmajā režīmā"
     switch_from_anon: "Iziet no anonīmā režīma"
     banner:
@@ -895,7 +891,6 @@ lv:
       notification_schedule:
         title: "Paziņojumu grafiks"
         label: "Iespējot pielāgotu paziņojumu grafiku"
-        tip: "Ārpus šīm stundām jums tiks automātiski iestatīts režīms “netraucēt”."
         midnight: "Pusnakts"
         none: "Nav"
         monday: "Pirmdiena"
@@ -1130,7 +1125,7 @@ lv:
         use: "Izmantojiet lietotni Autentifikators"
         enforced_notice: "Pirms piekļuves šai vietnei jums ir jāiespējo divu faktoru autentifikācija."
         disable: "Atslēgt"
-        disable_confirm: "Vai tiešām vēlaties atspējot visas divu faktoru metodes?"
+        delete: "Dzēst"
         save: "Saglabāt"
         edit: "Labot"
         edit_title: "Rediģēt autentifikatoru"
@@ -1209,7 +1204,6 @@ lv:
         authenticated: "Jūsu e-pastu autentificēja %{provider}"
         invite_auth_email_invalid: "Jūsu ielūguma e -pasta adrese neatbilst e -pasta adresei, kuras autentificēts ar %{provider}"
         authenticated_by_invite: "Jūsu e -pasta adrese ir apstiprināta ar uzaicinājumu"
-        frequency_immediately: "Mēs nekavējoties sūtīsim jums epastu par jaunām neizlasītām ziņām."
         frequency:
           zero: "Mēs sūtīsim jums e-pastu tikai tad, ja nebūsim jūs redzējuši pēdējo %{count} minūšu laikā."
           one: "Mēs sūtīsim jums e-pastu tikai tad, ja nebūsim jūs redzējuši pēdējās minūtes laikā."
@@ -1497,7 +1491,6 @@ lv:
       login_disabled: "Pieslēgšanās ir atslēgta, kamēr vietne ir \"tikai lasīšanas\" režīmā."
       logout_disabled: "Iziešana ir atslēgta, kamēr vietne ir \"tikai lasīšanas\" režīmā."
     learn_more: "uzzināt vairāk..."
-    first_post: Pirmais ieraksts
     mute: Noklusināt
     unmute: Pārtraukt klusināšanu
     last_post: Ierakstīts
@@ -1583,6 +1576,7 @@ lv:
       title: "Pieslēgties"
       username: "Lietotājs"
       password: "Parole"
+      show_password: "Parādīt"
       second_factor_title: "Divu faktoru autentifikācija"
       second_factor_description: "Lūdzu, ievadiet lietotnes autentifikācijas kodu:"
       second_factor_backup: "Piesakieties, izmantojot rezerves kodu"
@@ -1795,6 +1789,7 @@ lv:
         invited_to_private_message: "aicināti uz privātu ziņu"
         invitee_accepted: "ielūgums apstiprināts"
         posted: "jauna ziņa"
+        watching_category_or_tag: "jauna ziņa"
         moved_post: "ziņa pārvietota"
         linked: "saistīts"
         bookmark_reminder: "atgādinājums par grāmatzīmēm"
@@ -2009,10 +2004,6 @@ lv:
       back_to_list: "Atpakaļ pie tēmu saraksta "
       options: "Tēmas iestatījumi "
       show_links: "rādīt saites šajā tēmā"
-      read_more_in_category: "Vēlies lasīt vēl? Pārlūko citas tēmas: %{catLink} vai %{latestLink}."
-      read_more: "Vēlies lasīt vēl? %{catLink} or %{latestLink}."
-      browse_all_categories: Pārlūkot visas sadaļas
-      view_latest_topics: Skatīt jaunākās tēmas
       jump_reply_up: pāriet uz agrāku atbildi
       jump_reply_down: pāriet uz vēlāku atbildi
       deleted: "Tēma ir dzēsta "
@@ -2786,7 +2777,7 @@ lv:
       dismiss: "Nerādīt"
     safe_mode:
       enabled: "Ir ieslēgts drošais režīms; lai pamestu drošo režīmu, aizveriet šo pārlūkprogrammas logu"
-    do_not_disturb:
+    pause_notifications:
       remaining: "palicis %{remaining}"
     trust_levels:
       names:
@@ -2955,9 +2946,8 @@ lv:
       web_hooks:
         detailed_instruction: "Ja būs signāls par izvēlēto notikumu, uz norādīto URL tiks nosūtīts POST pieprasījums."
         create: "Izveidot"
+        edit: "Rediģēt"
         save: "Saglabāt"
-        destroy: "Dzēst"
-        description: "Apraksts"
         controls: "Pārvaldīšana"
         go_back: "Atgriezties pie saraksta"
         secret_invalid: "Noslēpums nedrīkst saturēt tukšus simbolus."
@@ -2998,8 +2988,6 @@ lv:
           response: "Atbilde"
           headers: "Virsraksts"
           body: "Ķermenis"
-          go_list: "Doties uz sarakstu"
-          go_events: "Pāriet pie notikumiem"
           status: "Statusa kods"
           event_id: "ID"
           timestamp: "Izveidots"
@@ -3372,7 +3360,6 @@ lv:
       user:
         suspend_failed: "Kaut kas nenostrādāj apturot šo lietotāju %{error}"
         unsuspend_failed: "Kaut kas nenostrādāj atjaunojot šo lietotāju %{error}"
-        suspend_duration: "Uz cik ilgu laiku lietotājs tiks atstādināts?"
         suspend_reason_label: "Kādēļ apturēt? Šis texts <b>būt redzams visiem</b> šajā lietotāja profila lapā, un tiks rādīts visiem, kas \"ielogojas\"."
         suspend_reason: "Iemesls"
         suspended_by: "Apturēja"
@@ -3472,6 +3459,11 @@ lv:
         lock_trust_level: "Slēgt Uzticības līmeni"
         unlock_trust_level: "Atslēgt Uzticības līmeni"
         suspended_count: "Apturēts"
+        other_matches_list:
+          username: "Lietotājvārds"
+          trust_level: "Uzticības līmenis"
+          read_time: "Kopējais lasīšanas laiks"
+          posts: "Ieraksti"
         tl3_requirements:
           title: "Prasības uzticības 3. līmenim"
           table_title:
@@ -3591,6 +3583,7 @@ lv:
           search: "Meklēt"
           groups: "Grupas"
           dashboard: "Administrācijas panelis"
+          navigation: "Pārvietošanās"
         default_categories:
           modal_yes: "Jā"
       badges:
@@ -3712,7 +3705,6 @@ lv:
       next: "Nākamais"
       step-text: "Solis"
       step: "%{current} no %{total}"
-      upload: "Augšupielādēt"
       uploading: "Notiek ielāde..."
       upload_error: "Atvainojiet, augšuplādējot šo failu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
       invites:

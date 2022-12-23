@@ -395,7 +395,20 @@ export default Component.extend(TextareaTextManipulation, {
         treatAsTextarea: true,
         autoSelectFirstSuggestion: true,
         transformComplete: (v) => v.username || v.name,
-        dataSource: (term) => userSearch({ term, includeGroups: true }),
+        dataSource: (term) => {
+          return userSearch({ term, includeGroups: true }).then((result) => {
+            if (result?.users?.length > 0) {
+              const presentUserNames =
+                this.chat.presenceChannel.users?.mapBy("username");
+              result.users.forEach((user) => {
+                if (presentUserNames.includes(user.username)) {
+                  user.cssClasses = "mention-user-is-online";
+                }
+              });
+            }
+            return result;
+          });
+        },
         afterComplete: (text) => {
           this.set("value", text);
           this._focusTextArea();
@@ -410,9 +423,12 @@ export default Component.extend(TextareaTextManipulation, {
       this.site.hashtag_configurations["chat-composer"],
       $textarea,
       this.siteSettings,
-      (value) => {
-        this.set("value", value);
-        return this._focusTextArea();
+      {
+        treatAsTextarea: true,
+        afterComplete: (value) => {
+          this.set("value", value);
+          return this._focusTextArea();
+        },
       }
     );
   },

@@ -25,6 +25,10 @@ pt:
       join: "Entrar"
       mention_warning:
         dismiss: "marcar Visto"
+        groups:
+          users_limit:
+            one: "%{count} usuário"
+            other: "%{count} usuários"
       reply: "Responder"
       edit: "Editar"
       rebake_message: "Reconstruir HTML"

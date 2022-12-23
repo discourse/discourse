@@ -8,13 +8,13 @@ export default class ChatChannelInfoAboutController extends Controller.extend(
 ) {
   @action
   onEditChatChannelTitle() {
-    showModal("chat-channel-edit-title", { model: this.model?.chatChannel });
+    showModal("chat-channel-edit-title", { model: this.model });
   }
 
   @action
   onEditChatChannelDescription() {
     showModal("chat-channel-edit-description", {
-      model: this.model?.chatChannel,
+      model: this.model,
     });
   }
 }

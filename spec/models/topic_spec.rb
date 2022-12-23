@@ -168,8 +168,7 @@ RSpec.describe Topic do
     let(:types) { Post.types }
 
     before do
-      SiteSetting.enable_whispers = true
-      SiteSetting.whispers_allowed_groups = "#{whisperers_group.id}"
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}|#{whisperers_group.id}"
     end
 
     it "returns the appropriate types for anonymous users" do
@@ -697,6 +696,17 @@ RSpec.describe Topic do
         expect(Topic.similar_to("has evil trout made any topics?", "", user)).to eq([topic])
 
         CategoryUser.create!(category: topic.category, user: user, notification_level: CategoryUser.notification_levels[:muted])
+
+        expect(Topic.similar_to("has evil trout made any topics?", "", user)).to eq([])
+      end
+
+      it 'does not return topics from child categories where the user has muted the parent category' do
+        expect(Topic.similar_to("has evil trout made any topics?", "", user)).to eq([topic])
+
+        parent_category = topic.category
+        child_category = Fabricate(:category, parent_category: parent_category)
+        topic.update!(category: child_category)
+        CategoryUser.create!(category: parent_category, user: user, notification_level: CategoryUser.notification_levels[:muted])
 
         expect(Topic.similar_to("has evil trout made any topics?", "", user)).to eq([])
       end

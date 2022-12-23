@@ -32,9 +32,16 @@ task 'plugin:install_all_official' do
       repo += ".git"
     end
 
-    status = system("git clone #{repo} #{path}")
-    unless status
-      abort("Failed to clone #{repo}")
+    attempts = 0
+    begin
+      attempts += 1
+      system("git clone #{repo} #{path}", exception: true)
+    rescue StandardError
+      if attempts >= 3
+        abort("Failed to clone #{repo}")
+      end
+      STDERR.puts "Failed to clone #{repo}... trying again..."
+      retry
     end
   end
 end

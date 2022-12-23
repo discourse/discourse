@@ -1,10 +1,13 @@
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
+import { module, test } from "qunit";
 import EmberObject from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { setupTest } from "ember-qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
 
-discourseModule("Unit | Utility | plugin-api", function () {
+module("Unit | Utility | plugin-api", function (hooks) {
+  setupTest(hooks);
+
   test("modifyClass works with classic Ember objects", function (assert) {
     const TestThingy = EmberObject.extend({
       @discourseComputed
@@ -13,7 +16,7 @@ discourseModule("Unit | Utility | plugin-api", function () {
       },
     });
 
-    this.registry.register("test-thingy:main", TestThingy);
+    getOwner(this).register("test-thingy:main", TestThingy);
 
     withPluginApi("1.1.0", (api) => {
       api.modifyClass("test-thingy:main", {
@@ -26,7 +29,7 @@ discourseModule("Unit | Utility | plugin-api", function () {
       });
     });
 
-    const thingy = this.container.lookup("test-thingy:main");
+    const thingy = getOwner(this).lookup("test-thingy:main");
     assert.strictEqual(thingy.prop, "hello there");
   });
 
@@ -38,7 +41,7 @@ discourseModule("Unit | Utility | plugin-api", function () {
       }
     }
 
-    this.registry.register("native-test-thingy:main", NativeTestThingy);
+    getOwner(this).register("native-test-thingy:main", NativeTestThingy);
 
     withPluginApi("1.1.0", (api) => {
       api.modifyClass("native-test-thingy:main", {
@@ -51,7 +54,7 @@ discourseModule("Unit | Utility | plugin-api", function () {
       });
     });
 
-    const thingy = this.container.lookup("native-test-thingy:main");
+    const thingy = getOwner(this).lookup("native-test-thingy:main");
     assert.strictEqual(thingy.prop, "howdy partner");
   });
 
@@ -66,7 +69,7 @@ discourseModule("Unit | Utility | plugin-api", function () {
       }
     }
 
-    this.registry.register("class-test-thingy:main", new ClassTestThingy(), {
+    getOwner(this).register("class-test-thingy:main", new ClassTestThingy(), {
       instantiate: false,
     });
 
@@ -80,7 +83,7 @@ discourseModule("Unit | Utility | plugin-api", function () {
       });
     });
 
-    const thingy = this.container.lookup("class-test-thingy:main");
+    const thingy = getOwner(this).lookup("class-test-thingy:main");
     assert.strictEqual(thingy.keep, "hey!");
     assert.strictEqual(thingy.prop, "g'day");
   });

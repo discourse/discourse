@@ -3,7 +3,7 @@
 module Chat::UserNotificationsExtension
   def chat_summary(user, opts)
     guardian = Guardian.new(user)
-    return unless guardian.can_chat?(user)
+    return unless guardian.can_chat?
 
     @messages =
       ChatMessage
@@ -28,7 +28,7 @@ module Chat::UserNotificationsExtension
     return if @messages.empty?
     @grouped_messages = @messages.group_by { |message| message.chat_channel }
     @grouped_messages =
-      @grouped_messages.select { |channel, _| guardian.can_see_chat_channel?(channel) }
+      @grouped_messages.select { |channel, _| guardian.can_join_chat_channel?(channel) }
     return if @grouped_messages.empty?
 
     @grouped_messages.each do |chat_channel, messages|
@@ -63,7 +63,9 @@ module Chat::UserNotificationsExtension
     all_channels = grouped_messages.keys
     grouped_channels = all_channels.partition { |c| !c.direct_message_channel? }
     channels = grouped_channels.first
-    dm_users = grouped_channels.last.flat_map { |c| grouped_messages[c].map(&:user) }.uniq
+
+    dm_messages = grouped_channels.last.flat_map { |c| grouped_messages[c] }
+    dm_users = dm_messages.sort_by(&:created_at).uniq { |m| m.user_id }.map(&:user)
 
     # Prioritize messages from regular channels over direct messages
     if channels.any?

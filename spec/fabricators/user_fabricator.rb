@@ -54,6 +54,7 @@ Fabricator(:moderator, from: :user) do
 
   after_create do |user|
     user.group_users << Fabricate(:group_user, user: user, group: Group[:moderators])
+    user.group_users << Fabricate(:group_user, user: user, group: Group[:staff])
   end
 end
 
@@ -65,6 +66,7 @@ Fabricator(:admin, from: :user) do
 
   after_create do |user|
     user.group_users << Fabricate(:group_user, user: user, group: Group[:admins])
+    user.group_users << Fabricate(:group_user, user: user, group: Group[:staff])
   end
 end
 

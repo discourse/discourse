@@ -94,6 +94,7 @@ export default function (options) {
   let completeEnd = null;
   let me = this;
   let div = null;
+  let fadeoutDiv = null;
   let prevTerm = null;
 
   // By default, when the autocomplete popup is rendered it has the
@@ -117,6 +118,33 @@ export default function (options) {
     discourseLater(() => me.trigger("keydown"), 50);
   }
 
+  function scrollAutocomplete() {
+    if (!fadeoutDiv && !div) {
+      return;
+    }
+
+    const scrollingDivElement = fadeoutDiv?.length > 0 ? fadeoutDiv[0] : div[0];
+    const selectedElement = getSelectedOptionElement();
+    const selectedElementTop = selectedElement.offsetTop;
+    const selectedElementBottom =
+      selectedElementTop + selectedElement.clientHeight;
+
+    // the top of the item is above the top of the fadeoutDiv, so scroll UP
+    if (selectedElementTop <= scrollingDivElement.scrollTop) {
+      scrollingDivElement.scrollTo(0, selectedElementTop);
+
+      // the bottom of the item is below the bottom of the div, so scroll DOWN
+    } else if (
+      selectedElementBottom >=
+      scrollingDivElement.scrollTop + scrollingDivElement.clientHeight
+    ) {
+      scrollingDivElement.scrollTo(
+        0,
+        scrollingDivElement.scrollTop + selectedElement.clientHeight
+      );
+    }
+  }
+
   function closeAutocomplete() {
     _autoCompletePopper?.destroy();
 
@@ -124,6 +152,7 @@ export default function (options) {
       div.hide().remove();
     }
     div = null;
+    fadeoutDiv = null;
     completeStart = null;
     autocompleteOptions = null;
     prevTerm = null;
@@ -288,9 +317,16 @@ export default function (options) {
   }
 
   function markSelected() {
-    const links = div.find("li a");
-    links.removeClass("selected");
-    return $(links[selectedOption]).addClass("selected");
+    getLinks().removeClass("selected");
+    return $(getSelectedOptionElement()).addClass("selected");
+  }
+
+  function getSelectedOptionElement() {
+    return getLinks()[selectedOption];
+  }
+
+  function getLinks() {
+    return div.find("li a");
   }
 
   // a sane spot below cursor
@@ -340,6 +376,8 @@ export default function (options) {
     } else {
       me.parent().append(div);
     }
+
+    fadeoutDiv = div.find(".hashtag-autocomplete__fadeout");
 
     if (isInput || options.treatAsTextarea) {
       _autoCompletePopper && _autoCompletePopper.destroy();
@@ -641,6 +679,7 @@ export default function (options) {
             selectedOption = 0;
           }
           markSelected();
+          scrollAutocomplete();
           e.preventDefault();
           return false;
         case keys.downArrow:
@@ -653,6 +692,7 @@ export default function (options) {
             selectedOption = 0;
           }
           markSelected();
+          scrollAutocomplete();
           e.preventDefault();
           return false;
         case keys.backSpace:

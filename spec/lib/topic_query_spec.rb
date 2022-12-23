@@ -829,7 +829,7 @@ RSpec.describe TopicQuery do
 
     context 'with whispers' do
       before do
-        SiteSetting.enable_whispers = true
+        SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
       end
 
       it 'correctly shows up in unread for staff' do
@@ -916,6 +916,22 @@ RSpec.describe TopicQuery do
 
         # if we attempt to access non preloaded fields explode
         expect { new_topic.custom_fields["boom"] }.to raise_error(StandardError)
+      end
+    end
+
+    context 'when preloading associations' do
+      it "preloads associations" do
+        DiscoursePluginRegistry.register_topic_preloader_association(:first_post, Plugin::Instance.new)
+
+        topic = Fabricate(:topic)
+        Fabricate(:post, topic: topic)
+
+        new_topic = topic_query.list_new.topics.first
+        expect(new_topic.association(:image_upload).loaded?).to eq(true) # Preloaded by default
+        expect(new_topic.association(:first_post).loaded?).to eq(true)   # Testing a user-defined preloaded association
+        expect(new_topic.association(:user).loaded?).to eq(false)        # Testing the negative
+
+        DiscoursePluginRegistry.reset_register!(:topic_preloader_associations)
       end
     end
 
@@ -1063,13 +1079,8 @@ RSpec.describe TopicQuery do
   end
 
   describe '#list_related_for' do
-    let(:user) do
-      Fabricate(:admin)
-    end
-
-    let(:sender) do
-      Fabricate(:admin)
-    end
+    let(:user) { Fabricate(:user) }
+    let(:sender) { Fabricate(:user) }
 
     let(:group_with_user) do
       group = Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone])

@@ -12,6 +12,16 @@ export default Component.extend({
   includeLink: true,
   includeAvatar: true,
 
+  didInsertElement() {
+    this._super(...arguments);
+    this.user?.trackStatus?.();
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+    this.user?.stopTrackingStatus?.();
+  },
+
   @discourseComputed("user.username")
   userPath(username) {
     return userPath(username);

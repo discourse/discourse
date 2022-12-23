@@ -487,8 +487,6 @@ th:
         fields:
           login_required:
             placeholder: "ส่วนตัว"
-          must_approve_users:
-            placeholder: "ต้องได้รับการอนุมัติ"
       styling:
         fields:
           styling_preview:

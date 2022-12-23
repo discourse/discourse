@@ -54,11 +54,11 @@ function render(tokens, idx, options, env, slf, md) {
     md.options.discourse.acceptableCodeClasses || [];
 
   if (TEXT_CODE_CLASSES.includes(tag)) {
-    className = "lang-nohighlight";
+    className = "lang-plaintext";
   } else if (acceptableCodeClasses.includes(tag)) {
     className = `lang-${tag}`;
   } else {
-    className = "lang-nohighlight";
+    className = "lang-plaintext";
     attributes["wrap"] = tag;
   }
 
@@ -81,7 +81,7 @@ export function setup(helper) {
     opts.acceptableCodeClasses = (siteSettings.highlighted_languages || "")
       .split("|")
       .filter(Boolean)
-      .concat(["auto", "nohighlight"]);
+      .concat(["auto", "plaintext"]);
   });
 
   helper.allowList(["pre[data-code-*]"]);

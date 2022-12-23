@@ -111,31 +111,30 @@ sq:
     share:
       close: "mbylle"
     action_codes:
-      public_topic: "e bëri këtë temë publike %{when}"
-      split_topic: "ndaje këtë teme %{when}"
-      invited_user: "ka ftuar %{who} %{when}"
-      invited_group: "ka ftuar %{who} %{when}"
+      split_topic: "Ndaje këtë teme %{when}"
+      invited_user: "Ka ftuar %{who} %{when}"
+      invited_group: "Ka ftuar %{who} %{when}"
       user_left: "u larguan nga ky mesazh"
-      removed_user: "hequr %{who} %{when}"
-      removed_group: "hequr %{who} %{when}"
+      removed_user: "Hequr %{who} %{when}"
+      removed_group: "Hequr %{who} %{when}"
       autoclosed:
-        enabled: "mbylli %{when}"
-        disabled: "hapur %{when}"
+        enabled: "Mbylli %{when}"
+        disabled: "Hapur %{when}"
       closed:
-        enabled: "mbyllur %{when}"
-        disabled: "hapur %{when}"
+        enabled: "Mbylli %{when}"
+        disabled: "Hapur %{when}"
       archived:
-        enabled: "arkivoi %{when}"
-        disabled: "paarkivuar %{when}"
+        enabled: "Arkivoi %{when}"
+        disabled: "Paarkivuar %{when}"
       pinned:
-        enabled: "ngjitur %{when}"
-        disabled: "çngjitur %{when}"
+        enabled: "Ngjitur %{when}"
+        disabled: "Çngjitur %{when}"
       pinned_globally:
-        enabled: "ngjitur globalisht %{when}"
-        disabled: "çngjitur %{when}"
+        enabled: "Ngjitur globalisht %{when}"
+        disabled: "Çngjitur %{when}"
       visible:
-        enabled: "listuar %{when}"
-        disabled: "çlistuar %{when}"
+        enabled: "Listuar %{when}"
+        disabled: "Çlistuar %{when}"
     emails_are_disabled: "Emailat janë çaktivizuar globalisht nga administratori i faqes. Asnjë njoftim me email nuk do të dërgohet. "
     software_update_prompt:
       dismiss: "Hiqe"
@@ -184,7 +183,6 @@ sq:
     tos: "Kushtet e shërbimit"
     mobile_view: "Pamja për celular"
     desktop_view: "Pamja për desktop"
-    or: "ose"
     now: "tani"
     read_more: "lexo më shumë"
     more: "Më shumë"
@@ -242,8 +240,6 @@ sq:
     enable: "Aktivizo"
     disable: "Çaktivizo"
     undo: "Çbëj"
-    revert: "Rikthe"
-    failed: "Dështoi"
     switch_to_anon: "Filloni sesionin anonim"
     switch_from_anon: "Shkëputu nga sesioni anonim"
     banner:
@@ -647,6 +643,7 @@ sq:
       second_factor:
         name: "Emri"
         disable: "Çaktivizo"
+        delete: "Fshije"
         save: "Ruaj"
         edit: "Redakto"
         security_key:
@@ -684,7 +681,6 @@ sq:
         ok: "Do ju nisim emailin e konfirmimit"
         invalid: "Ju lutemi të vendosni një email të vlefshëm"
         authenticated: "Emaili juaj është verifikuar nga %{provider}"
-        frequency_immediately: "Do t'ju dërgojmë një email menjëherë nëse nuk e keni lexuar temën për të cilën po ju dërgojmë email."
         frequency:
           one: "Do t'ju dërgojmë një email vetëm nëse nuk të kemi parë në faqe në minutën e fundit."
           other: "Do t'ju dërgojmë një email vetëm nëse nuk të kemi parë në faqe në %{count} minutat e fundit."
@@ -903,7 +899,6 @@ sq:
       login_disabled: "Nuk mund të hyni në faqe sepse faqja është përkohësisht në formatin vetëm-lexim."
       logout_disabled: "Nuk mund të shkëputeni nga faqja sepse faqja është përkohësisht në formatin vetëm-lexim."
     learn_more: "mëso më shumë..."
-    first_post: Postimi i parë
     mute: Hesht
     unmute: Çaktivizo heshtjen
     time_read: Lexo
@@ -955,6 +950,7 @@ sq:
     login:
       username: "Anëtari"
       password: "Fjalëkalimi"
+      show_password: "Shfaq"
       caps_lock_warning: "Caps Lock është aktive"
       error: "Gabim i panjohur"
       rate_limit: "Ju lutemi të prisni para se të provoni të identifikoheni përsëri. "
@@ -1242,10 +1238,6 @@ sq:
       back_to_list: "Kthehu tek lista e temave"
       options: "Opsionet e temës"
       show_links: "trego lidhjet në këtë temë"
-      read_more_in_category: "Dëshironi të lexoni më shumë? Shfleto temat në %{catLink} ose %{latestLink}."
-      read_more: "Dëshironi të lexoni më shumë? %{catLink} ose %{latestLink}."
-      browse_all_categories: Shfleto kategoritë
-      view_latest_topics: shiko temat më të fundit
       jump_reply_up: hidhe tek përgjigja paraardhëse
       jump_reply_down: hidhu tek përgjigja pasardhëse
       deleted: "Tema është fshirë"
@@ -1927,7 +1919,7 @@ sq:
       back: "Kthehu mbrapa"
       share: "Shpërndaje"
       dismiss: "Hiqe"
-    do_not_disturb:
+    pause_notifications:
       remaining: "edhe %{remaining} gërmë"
       options:
         custom: "Grupet e krijuara"
@@ -2088,9 +2080,8 @@ sq:
           action: Veprimi
       web_hooks:
         title: "Webhooks"
+        edit: "Redakto"
         save: "Ruaj"
-        destroy: "Fshij"
-        description: "Përshkrimi"
         active: "Aktiv"
         delivery_status:
           failed: "Dështoi"
@@ -2460,7 +2451,6 @@ sq:
       user:
         suspend_failed: "Pati një problem gjatë pezullimit të anëtarit. %{error}"
         unsuspend_failed: "Pati një problem gjatë çpezullimit të anëtarit. %{error}"
-        suspend_duration: "Për sa kohë do të pezullohet anëtari?"
         suspend_reason_label: "Pse po e pezulloni? Ky tekst <b>do të shfaqet publikisht</b> në profilin e këtij anëtari, dhe do t'i shfaqet vetë anëtarit si mesazh kur ky i fundit do tentojë të futet në faqe. Shkruani shkurt."
         suspend_reason: "Arsye"
         suspended_by: "Përjashtuar nga:"
@@ -2545,6 +2535,11 @@ sq:
         lock_trust_level: "Kyç nivelin e besimit"
         unlock_trust_level: "Çkyç nivelin e besimit"
         suspended_count: "Të pezulluar"
+        other_matches_list:
+          username: "Emri i përdoruesit"
+          trust_level: "Niveli i besimit"
+          read_time: "Koha e Leximit"
+          posts: "Postime"
         tl3_requirements:
           title: "Kërkesat për përdorues me Nivel Besimi 3"
           table_title:
@@ -2662,6 +2657,7 @@ sq:
           search: "Kërko"
           groups: "Grupet"
           dashboard: "Paneli i kontrollit"
+          navigation: "Shfletimi"
         default_categories:
           modal_yes: "Po"
       badges:
@@ -2767,7 +2763,6 @@ sq:
       next: "Vazhdo përpara"
       step-text: "Hapi"
       step: "%{current} nga %{total}"
-      upload: "Ngarko"
       uploading: "Duke ngarkuar..."
       upload_error: "Na vjen keq, pati një gabim gjatë ngarkimit të skedarit. Provo përsëri. "
       invites:

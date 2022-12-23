@@ -145,38 +145,37 @@ tr_TR:
       email: "E-posta ile gönder"
       url: "URL'yi kopyala ve paylaş"
     action_codes:
-      public_topic: "bu konuyu %{when} tarihinde herkese açık yaptı"
-      open_topic: "bunu %{when} tarihinde bir konuya dönüştürdü"
-      private_topic: "bu konuyu %{when} tarihinde bir kişisel mesaj yaptı"
-      split_topic: "bu konuyu %{when} tarihinde ayırdı"
-      invited_user: "%{when} tarihinde %{who} adlı kullanıcıyı davet etti"
-      invited_group: "%{when} tarihinde %{who} adlı kullanıcıyı davet etti"
+      public_topic: "Bu konuyu %{when} tarihinde herkese açık yaptı"
+      open_topic: "Bunu %{when} tarihinde bir konuya dönüştürdü"
+      private_topic: "Bu konuyu %{when} tarihinde bir kişisel mesaj yaptı"
+      split_topic: "Bu konuyu %{when} tarihinde ayırdı"
+      invited_user: "%{when} Tarihinde %{who} adlı kullanıcıyı davet etti"
+      invited_group: "%{when} Tarihinde %{who} adlı kullanıcıyı davet etti"
       user_left: "%{who}, %{when} tarihinde bu mesajdan kendini çıkardı"
-      removed_user: "%{who} adlı kişiyi %{when} tarihinde çıkardı"
-      removed_group: "%{who} adlı kişiyi %{when} tarihinde çıkardı"
-      autobumped: "%{when} tarihinde otomatik olarak üste sıçradı"
+      removed_user: "%{who} Adlı kişiyi %{when} tarihinde çıkardı"
+      removed_group: "%{who} Adlı kişiyi %{when} tarihinde çıkardı"
+      autobumped: "%{when} Tarihinde otomatik olarak üste sıçradı"
       autoclosed:
-        enabled: "%{when} tarihinde kapatıldı"
-        disabled: "%{when} tarihinde açıldı"
+        enabled: "%{when} Tarihinde kapattı"
+        disabled: "%{when} Tarihinde açtı"
       closed:
-        enabled: "%{when} tarihinde kapatıldı"
-        disabled: "%{when} tarihinde açıldı"
+        enabled: "%{when} Tarihinde kapattı"
+        disabled: "%{when} Tarihinde açtı"
       archived:
-        enabled: "%{when} tarihinde arşivlendi"
-        disabled: "%{when} tarihinde arşivden çıkarıldı"
+        enabled: "%{when} Tarihinde arşivlendi"
+        disabled: "%{when} Tarihinde arşivden çıkarıldı"
       pinned:
-        enabled: "%{when} tarihinde sabitlendi"
-        disabled: "%{when} tarihinde sabitlenmesi kaldırıldı"
+        enabled: "%{when} Tarihinde sabitlendi"
+        disabled: "%{when} Tarihinde sabitlenmesi kaldırıldı"
       pinned_globally:
-        enabled: "%{when} tarihinde küresel olarak sabitlendi"
-        disabled: "%{when} en yukarıda sabitlenmesi kaldırıldı"
+        enabled: "%{when} Tarihinde küresel olarak sabitlendi"
+        disabled: "%{when} Tarihinde sabitlenmesi kaldırıldı"
       visible:
-        enabled: "%{when} tarihinde listelendi"
-        disabled: "%{when} tarihinde listeden çıkarıldı"
+        enabled: "%{when} Tarihinde listelendi"
+        disabled: "%{when} Tarihinde listeden çıkarıldı"
       banner:
-        enabled: "%{when} tarihinde bunu bir banner yaptı. Kullanıcı tarafından kapatılana kadar her sayfanın en üstünde görünecek."
-        disabled: "%{when} tarihinde bu banner'ı kaldırdı. Bundan sonra her sayfanın en üstünde görünmeyecek."
-      forwarded: "yukarıdaki e-postayı iletti"
+        enabled: "%{when} Tarihinde bunu bir banner yaptı. Kullanıcı tarafından kapatılana kadar her sayfanın en üstünde görünecek."
+        disabled: "%{when} Tarihinde bu banner'ı kaldırdı. Bundan sonra her sayfanın en üstünde görünmeyecek."
     topic_admin_menu: "konu eylemleri"
     skip_to_main_content: "Ana içeriğe atla"
     emails_are_disabled: "Giden tüm e-postalar bir yönetici tarafından devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
@@ -253,7 +252,6 @@ tr_TR:
     conduct: "Davranış Kuralları"
     mobile_view: "Mobil Görünüm"
     desktop_view: "Masaüstü Görünümü"
-    or: "veya"
     now: "hemen şimdi"
     read_more: "devamını oku"
     more: "Daha fazla"
@@ -388,8 +386,6 @@ tr_TR:
     disable: "Devre dışı bırak"
     continue: "Devam et"
     undo: "Geri Al"
-    revert: "Eski Haline Getir"
-    failed: "Başarısız"
     switch_to_anon: "Anonim Moda Gir"
     switch_from_anon: "Anonim Moddan Çık"
     banner:
@@ -1012,7 +1008,6 @@ tr_TR:
       notification_schedule:
         title: "Bildirim Zamanlaması"
         label: "Özel bildirim zamanlamasını etkinleştir"
-        tip: "Bu saatler dışında otomatik olarak \"rahatsız etmeyin\" durumuna alınacaksınız."
         midnight: "Gece yarısı"
         none: "Yok"
         monday: "Pazartesi"
@@ -1215,8 +1210,6 @@ tr_TR:
         warnings: "Resmi Uyarılar"
         read_more_in_group: "Daha fazla okumak ister misiniz? %{groupLink} bağlantısındaki diğer mesajlara göz atın."
         read_more: "Daha fazla okumak isterseniz <a href='%{basePath}/u/%{username}/messages'>kişisel mesajlardaki</a> diğer mesajlara göz atın."
-        read_more_group_pm_MF: "{ UNREAD, plural, =0 {} one {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># okunmamış</a> } other {<a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># okunmamış</a> } } var { NEW, plural, =0 {} one { {BOTH, select, true{ve } false {kalan } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># yeni</a> mesajı} other { {BOTH, select, true{ve } false { } other{}} <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># yeni</a> mesajı} } veya {groupLink} grubundaki diğer mesajlara göz atın"
-        read_more_personal_pm_MF: "{ UNREAD, plural, =0 {} one {<a href='{basePath}/u/{username}/messages/unread'># adet okunmamış</a>} other {<a href='{basePath}/u/{username}/messages/unread'># adet okunmamış</a> }} ileti { NEW, plural, =0 {} one { {BOTH, select, true{ve } false {var } other{}} <a href='{basePath}/u/{username}/messages/new'># adet yeni</a> ileti} other { {BOTH, select, true{ve } false {var } other{}} <a href='{basePath}/u/{username}/messages/new'># adet yeni</a> ileti} } var, ya da<a href='{basePath}/u/{username}/messages'>kişisel iletilere</a> göz atın"
       preferences_nav:
         account: "Hesap"
         security: "Güvenlik"
@@ -1281,7 +1274,7 @@ tr_TR:
         use: "Authenticator uygulamasını kullan"
         enforced_notice: "Bu siteye erişmeden önce iki adımlı kimlik doğrulamayı etkinleştirmeniz gerekir."
         disable: "Devre dışı bırak"
-        disable_confirm: "Tüm iki adımlı yöntemleri devre dışı bırakmak istediğinizden emin misiniz?"
+        delete: "Sil"
         save: "Kaydet"
         edit: "Düzenle"
         edit_title: "Authenticator'ı Düzenle"
@@ -1369,7 +1362,6 @@ tr_TR:
         authenticated: "E-postanız %{provider} tarafından doğrulandı"
         invite_auth_email_invalid: "Davet e-postanız %{provider} tarafından doğrulanan e-postayla eşleşmiyor."
         authenticated_by_invite: "E-postanız davetle doğrulandı"
-        frequency_immediately: "Gönderdiğimiz e-postayı okumadıysan sana hemen e-posta göndereceğiz."
         frequency:
           one: "Yalnızca sizi son dakika içinde görmemişsek e-posta göndeririz."
           other: "Yalnızca sizi son %{count} dakika içinde görmemişsek e-posta göndeririz."
@@ -1727,19 +1719,22 @@ tr_TR:
       logout_disabled: "Site salt okunur moddayken çıkış yapma devre dışı bırakılır."
     staff_writes_only_mode:
       enabled: "Bu site sadece personel modundadır. Lütfen göz atmaya devam edin, ancak yanıtlama, beğenme ve diğer işlemler yalnızca personel üyeleriyle sınırlıdır."
-    too_few_topics_and_posts_notice_MF: >-
+    too_few_topics_and_posts_notice_MF: |
       Hadi <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">tartışmayı başlatalım!</a> {currentTopics, plural, one { <strong>#</strong> konu} other { <strong>#</strong> konu}} ve {currentPosts, plural, one {<strong>#</strong> gönderi} other {<strong>#</strong> gönderi}} var. Ziyaretçilerin okumak ve yanıtlamak için daha fazlasına ihtiyacı var, en azından {requiredTopics, plural, one {<strong>#</strong> konu} other {<strong>#</strong> konu}} ve {requiredPosts, plural, one {<strong>#</strong> gönderi} other {<strong>#</strong> gönderi}} var. Bu mesajı sadece personel görebilir.
-    too_few_topics_notice_MF: >-
+    too_few_topics_notice_MF: |
       Hadi <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">tartışmayı başlatalım!</a> Şu an {currentTopics, plural, one { <strong>#</strong> konu} other { <strong>#</strong> konu}} var. Ziyaretçilerin okumak ve yanıtlamak için daha fazlasına ihtiyacı var, en azından {requiredTopics, plural, one {<strong>#</strong> konu} other {<strong>#</strong> konu}} olmasını tavsiye ediyoruz. Bu mesajı yalnızca personel görebilir.
-    too_few_posts_notice_MF: >-
+    too_few_posts_notice_MF: |
       Hadi <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">tartışma başlatalım!</a> Şu an {currentPosts, plural, one { <strong>#</strong> gönderi} other { <strong>#</strong> gönderi}} var. Ziyaretçilerin okumak ve yanıtlamak için daha fazlasına ihtiyacı var; en azından {requiredPosts, plural, one {<strong>#</strong> gönderi} other {<strong>#</strong> gönderi}} olmasını tavsiye ediyoruz. Bu mesajı yalnızca personel görebilir.
     logs_error_rate_notice:
-      reached_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/saat}}</a> site limitlerine ulaştı {limit, plural, one {# hata/saat} other {# hata/saat}}."
-      reached_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/dakika}}</a> site limitlerine ulaştı {limit, plural, one {# hata/dakika} other {# hata/dakika}}."
-      exceeded_hour_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/saat}}</a> site ayarlanmış limitini aştı {limit, plural, one {# hata/saat} other {# hata/saat}}."
-      exceeded_minute_MF: "<b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/dakika}}</a> site ayarlanmış limitlerini aştı {limit, plural, one {# hata/dakika} other {# hata/dakika}}."
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/saat}}</a> site limitlerine ulaştı {limit, plural, one {# hata/saat} other {# hata/saat}}.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/dakika}}</a> site limitlerine ulaştı {limit, plural, one {# hata/dakika} other {# hata/dakika}}.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/saat}}</a> site ayarlanmış limitini aştı {limit, plural, one {# hata/saat} other {# hata/saat}}.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/dakika}}</a> site ayarlanmış limitlerini aştı {limit, plural, one {# hata/dakika} other {# hata/dakika}}.
     learn_more: "daha fazla bilgi edinin..."
-    first_post: İlk gönderi
     mute: Sessize al
     unmute: Sesi aç
     last_post: Gönderildi
@@ -1764,7 +1759,8 @@ tr_TR:
       description:
         one: "<b>%{count}</b> yanıt var."
         other: "<b>%{count}</b> yanıt var."
-      description_time_MF: "Tahmini okuma süresi <b>{readingTime, plural, one {# dakika} other {# dakika}}</b> olan {replyCount, plural, one {<b># yanıt</b>} other {<b># yanıt</b>}} var."
+      description_time_MF: |
+        Tahmini okuma süresi <b>{readingTime, plural, one {# dakika} other {# dakika}}</b> olan {replyCount, plural, one {<b># yanıt</b>} other {<b># yanıt</b>}} var.
       enable: "Bu Konuyu Özetle"
       disable: "Tüm Gönderileri Göster"
       short_label: "Özetle"
@@ -1835,6 +1831,7 @@ tr_TR:
       title: "Giriş Yap"
       username: "Kullanıcı"
       password: "Şifre"
+      show_password: "Göster"
       second_factor_title: "İki Adımlı Kimlik Doğrulama"
       second_factor_description: "Lütfen uygulamanızdan kimlik doğrulama kodunu girin:"
       second_factor_backup: "Yedek kod kullanarak giriş yapın"
@@ -2190,6 +2187,7 @@ tr_TR:
       bookmark_reminder: "<span>%{username}</span> %{description}"
       replied: "<span>%{username}</span> %{description}"
       posted: "<span>%{username}</span> %{description}"
+      watching_category_or_tag: "<span>%{username}</span> %{description}"
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
@@ -2259,6 +2257,7 @@ tr_TR:
         invited_to_private_message: "özel mesaja davet edildi"
         invitee_accepted: "davet kabul edildi"
         posted: "yeni gönderi"
+        watching_category_or_tag: "yeni gönderi"
         moved_post: "gönderi taşındı"
         linked: "bağlantılı"
         bookmark_reminder: "yer imi anımsatıcısı"
@@ -2583,14 +2582,7 @@ tr_TR:
       show_links: "Bu konudaki bağlantıları göster"
       collapse_details: "konu ayrıntılarını daralt"
       expand_details: "konu ayrıntılarını genişlet"
-      read_more_in_category: "Daha fazla mı okumak istiyorsunuz? %{catLink} veya %{latestLink} bağlantılarındaki diğer konulara göz atın."
-      read_more: "Daha fazla mı okumak istiyorsunuz? %{catLink} veya %{latestLink}."
       unread_indicator: "Bu konunun son gönderisini henüz hiçbir üye okumadı."
-      read_more_MF: "{ UNREAD, plural, =0 {} one {<a href='{basePath}/unread'># okunmamış</a> } other { <a href='{basePath}/unread'># okunmamış</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {} other{}} <a href='{basePath}/new'># yeni</a> konu} other { {BOTH, select, true{and } false {are } other{}} <a href='{basePath}/new'># yeni</a> konu} } kaldı veya {CATEGORY, select, true {{catLink}} false {{latestLink}} other {}} adresindeki diğer konulara göz atın"
-      bumped_at_title_MF: "{FIRST_POST}: {CREATED_AT}\n{LAST_POST}: {BUMPED_AT}"
-      browse_all_categories: Bütün kategorilere göz atın
-      browse_all_tags: Tüm etiketlere göz atın
-      view_latest_topics: en son konuları görüntüleyin
       suggest_create_topic: <a href>Yeni bir konuşma başlatmaya</a> hazır mısınız?
       jump_reply_up: önceki yanıta geç
       jump_reply_down: sonraki yanıta geç
@@ -3347,7 +3339,8 @@ tr_TR:
       official_warning: "Resmi Uyarı"
       delete_spammer: "Spam Yapanları Sil"
       flag_for_review: "İnceleme Kuyruğu"
-      delete_confirm_MF: "Bu kullanıcının {POSTS, plural, one {<b>#</b> gönderisini} other {<b>#</b> gönderisini}} ve {TOPICS, plural, one {<b>#</b> konusunu} other {<b>#</b> konusunu}} silmek, hesabını kaldırmak, IP adresinden <b>{ip_address}</b> yeni kayıtları engellemek ve e-posta adresini <b>{email}</b> kalıcı bir engelleme listesine eklemek üzeresiniz. Bu kullanıcının gerçekten spam yaptığından emin misiniz??"
+      delete_confirm_MF: |
+        Bu kullanıcının {POSTS, plural, one {<b>#</b> gönderisini} other {<b>#</b> gönderisini}} ve {TOPICS, plural, one {<b>#</b> konusunu} other {<b>#</b> konusunu}} silmek, hesabını kaldırmak, IP adresinden <b>{ip_address}</b> yeni kayıtları engellemek ve e-posta adresini <b>{email}</b> kalıcı bir engelleme listesine eklemek üzeresiniz. Bu kullanıcının gerçekten spam yaptığından emin misiniz??
       yes_delete_spammer: "Evet, Spam Yapanı Sil"
       ip_address_missing: "(Geçersiz)"
       hidden_email_address: "(gizli)"
@@ -3526,7 +3519,6 @@ tr_TR:
         this_month: "Ay"
         this_week: "Hafta"
         today: "Bugün"
-        other_periods: "popülerlere bakın:"
     browser_update: 'Ne yazık ki <a href="https://www.discourse.org/faq/#browser">tarayıcınız desteklenmiyor</a>. Lütfen zengin içeriği görüntülemek, giriş yapmak ve yanıtlamak için <a href="https://browsehappy.com">desteklenen bir tarayıcıya geçin.</a>'
     safari_13_warning: Bu site yakında iOS ve Safari sürüm 13 ve altını desteklemeyecek. Basitleştirilmiş ve salt okunur bir sürüm kullanılabilir olmaya devam edecek. (<a href="https://meta.discourse.org/t/224747">daha fazla bilgi</a>)
     permission_types:
@@ -3815,16 +3807,14 @@ tr_TR:
     safe_mode:
       enabled: "Güvenli mod etkin, güvenli moddan çıkmak için bu tarayıcı penceresini kapatın"
     image_removed: "(görüntü kaldırıldı)"
-    do_not_disturb:
-      title: "Rahatsız etmeyin..."
-      label: "Rahatsız etmeyin"
+    pause_notifications:
       remaining: "%{remaining} kaldı"
       options:
         half_hour: "30 dakika"
         one_hour: "1 saat"
         two_hours: "2 saat"
         tomorrow: "Yarına kadar"
-        custom: "Özel ayarlar"
+        custom: "Özel"
       set_schedule: "Bildirim zamanlaması ayarla"
     trust_levels:
       names:
@@ -4212,9 +4202,8 @@ tr_TR:
         detailed_instruction: "Seçilen olay gerçekleştiğinde sağlanan URL'ye bir POST isteği gönderilir."
         new: "Yeni Web Kancası"
         create: "Oluştur"
+        edit: "Düzenle"
         save: "Kaydet"
-        destroy: "Sil"
-        description: "Açıklama"
         controls: "Denetimler"
         go_back: "Listeye geri dön"
         payload_url: "Yük URL'si"
@@ -4295,9 +4284,6 @@ tr_TR:
           headers: "Başlıklar"
           payload: "Yük"
           body: "Gövde"
-          go_list: "Listeye git"
-          go_details: "Web kancasını düzenle"
-          go_events: "Olaylara git"
           ping: "Ping"
           status: "Durum Kodu"
           event_id: "Kimlik"
@@ -4318,6 +4304,8 @@ tr_TR:
         howto: "Eklentileri nasıl yüklerim?"
         official: "Resmi Eklenti"
         broken_route: "\"%{name}\" bağlantısı yapılandırılamıyor. Reklam engelleyicilerin devre dışı bırakıldığından emin olun ve sayfayı yeniden yüklemeyi deneyin."
+      navigation_menu:
+        sidebar: "Kenar çubuğu"
       backups:
         title: "Yedeklemeler"
         menu:
@@ -4531,7 +4519,6 @@ tr_TR:
             error: "Bu tema, Discourse'un bu sürümüyle uyumlu olmadığı için otomatik olarak devre dışı bırakıldı."
             minimum: "Dircourse sürüm %{version} veya üzerini gerektirir."
             maximum: "Discourse sürüm %{version} veya altı gerektirir."
-          component_of: "Şunun bileşeni:"
           update_to_latest: "En Sona Güncelle"
           check_for_updates: "Güncellemeleri kontrol et"
           updating: "Güncelleniyor..."
@@ -5004,7 +4991,6 @@ tr_TR:
       user:
         suspend_failed: "Bu kullanıcı askıya alınırken bir sorun oluştu %{error}"
         unsuspend_failed: "Bu kullanıcının askıya alınması kaldırılırken bir sorun oluştu %{error}"
-        suspend_duration: "Kullanıcı ne kadar süreyle askıya alınacak?"
         suspend_reason_label: "Neden askıya alıyorsunuz? Bu metin bu kullanıcının profil sayfasında <b>herkes tarafından görülebilecek</b> ve kullanıcı sisteme giriş yapmaya çalıştığında kullanıcıya gösterilecek. Metni kısa tutun."
         suspend_reason_hidden_label: "Neden askıya alıyorsunuz? Bu metin, kullanıcı oturum açmaya çalıştığında kullanıcıya gösterilecek. Kısa tutun."
         suspend_reason: "Neden"
@@ -5038,11 +5024,11 @@ tr_TR:
         penalty_post_edit: "Gönderiyi düzenleyin"
         penalty_post_none: "Hiçbir şey yapma"
         penalty_count: "Ceza Sayısı"
-        penalty_history: "Ceza Geçmişi"
         clear_penalty_history:
           title: "Ceza Geçmişini Temizle"
           description: "cezası olan kullanıcılar 3 TL'ye ulaşamaz"
-        delete_all_posts_confirm_MF: "{POSTS, plural, one {1 gönderi} other {# gönderi}} ve {TOPICS, plural, one {1 konu} other {# konu}} silmek üzeresiniz. Bunu yapmak istediğinizden emin misiniz?"
+        delete_all_posts_confirm_MF: |
+          {POSTS, plural, one {1 gönderi} other {# gönderi}} ve {TOPICS, plural, one {1 konu} other {# konu}} silmek üzeresiniz. Bunu yapmak istediğinizden emin misiniz?
         silence: "Sustur"
         unsilence: "Susturmayı kaldır"
         silenced: "Susturuldu mu?"
@@ -5192,6 +5178,11 @@ tr_TR:
         silenced_count: "Susturuldu"
         suspended_count: "Askıya Alındı"
         last_six_months: "Son 6 ay"
+        other_matches_list:
+          username: "Kullanıcı adı"
+          trust_level: "Güven Seviyesi"
+          read_time: "Okuma Zamanı"
+          posts: "Gönderiler"
         tl3_requirements:
           title: "Güven Seviyesi 3 için Gereklilikler"
           table_title:
@@ -5336,7 +5327,7 @@ tr_TR:
           search: "Ara"
           groups: "Gruplar"
           dashboard: "Pano"
-          sidebar: "Kenar çubuğu"
+          navigation: "Navigasyon"
         secret_list:
           invalid_input: "Girdi alanları boş olamaz veya dikey çubuk karakteri içeremez."
         default_categories:
@@ -5507,10 +5498,8 @@ tr_TR:
       finish: "Kurulumdan çık"
       back: "Geri"
       next: "İleri"
-      configure_more: "Daha Fazla Yapılandır..."
       step-text: "Adım"
       step: "%{current} / %{total}"
-      upload: "Yükle"
       uploading: "Yükleniyor..."
       upload_error: "Üzgünüz, bu dosyayı yüklerken bir hata oluştu. Lütfen yeniden deneyin."
       staff_count:

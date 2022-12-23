@@ -6,7 +6,7 @@ require 'json_schemer'
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 68
+  BASE_COMPILER_VERSION = 69
 
   attr_accessor :child_components
 
@@ -759,7 +759,7 @@ class Theme < ActiveRecord::Base
   attr_accessor :theme_setting_requests_refresh
 
   def to_scss_variable(name, value)
-    escaped = SassC::Script::Value::String.quote(value, sass: true)
+    escaped = SassC::Script::Value::String.quote(value.to_s, sass: true)
     "$#{name}: unquote(#{escaped});"
   end
 
