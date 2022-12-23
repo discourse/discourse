@@ -245,6 +245,8 @@ RSpec.configure do |config|
       allow: [Webdrivers::Chromedriver.base_url]
     )
 
+    Capybara.disable_animation = true
+
     Capybara.configure do |capybara_config|
       capybara_config.server_host = "localhost"
       capybara_config.server_port = 31337

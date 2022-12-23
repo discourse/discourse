@@ -23,6 +23,10 @@ module PageObjects
         has_no_css?(".chat-skeleton")
       end
 
+      def has_selection_management?
+        has_css?(".chat-selection-management")
+      end
+
       def expand_message_actions(message)
         hover_message(message)
         click_more_buttons(message)

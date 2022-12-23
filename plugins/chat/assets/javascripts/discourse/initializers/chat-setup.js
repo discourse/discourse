@@ -83,6 +83,8 @@ export default {
                 I18n.t("dates.long_no_year")
               );
             }
+
+            dateTimeEl.dataset.dateFormatted = true;
           });
         },
         { id: "chat-transcript-datetime" }
