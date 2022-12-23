@@ -68,6 +68,7 @@ jobs:
         if: ${{ !cancelled() }}
         run: |
           licensed cache
+          cat .licenses/bundler/openssl.dep.yml
           licensed status
 
       - name: Yarn install
