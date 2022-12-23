@@ -51,18 +51,18 @@ jobs:
         run: |
           gem install licensed
 
-      - name: Get yarn cache directory
-        id: yarn-cache-dir
-        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+      # - name: Get yarn cache directory
+      #   id: yarn-cache-dir
+      #   run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
-      - name: Yarn cache
-        uses: actions/cache@v3
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+      # - name: Yarn cache
+      #   uses: actions/cache@v3
+      #   id: yarn-cache
+      #   with:
+      #     path: ${{ steps.yarn-cache-dir.outputs.dir }}
+      #     key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-yarn-
 
       - name: Check RubyGems Licenses
         if: ${{ !cancelled() }}
@@ -71,18 +71,18 @@ jobs:
           cat .licenses/bundler/openssl.dep.yml
           licensed status
 
-      - name: Yarn install
-        run: yarn install
+      # - name: Yarn install
+      #   run: yarn install
 
-      - name: Check Yarn Licenses
-        if: ${{ !cancelled() }}
-        run: |
-          yarn global add licensee
-          yarn global upgrade licensee
-          licensee --errors-only
+      # - name: Check Yarn Licenses
+      #   if: ${{ !cancelled() }}
+      #   run: |
+      #     yarn global add licensee
+      #     yarn global upgrade licensee
+      #     licensee --errors-only
 
-      - name: Check Ember CLI Workspace Licenses
-        if: ${{ !cancelled() }}
-        working-directory: ./app/assets/javascripts
-        run: |
-          licensee --errors-only
+      # - name: Check Ember CLI Workspace Licenses
+      #   if: ${{ !cancelled() }}
+      #   working-directory: ./app/assets/javascripts
+      #   run: |
+      #     licensee --errors-only
