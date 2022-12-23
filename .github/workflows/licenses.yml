@@ -67,8 +67,9 @@ jobs:
       - name: Check RubyGems Licenses
         if: ${{ !cancelled() }}
         run: |
+          gem info openssl
           ls /usr/local/lib/ruby/gems/3.1.0/gems/
-          ls vendor/bundle/ruby/gems/3.1.0/gems/
+          ls vendor/bundle/ruby
           # cat /usr/local/lib/ruby/gems/3.1.0/gems/openssl-3.0.1/LICENSE.txt
           licensed cache
           cat .licenses/bundler/openssl.dep.yml
