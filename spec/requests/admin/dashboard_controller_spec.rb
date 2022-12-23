@@ -172,12 +172,15 @@ RSpec.describe Admin::DashboardController do
   end
 
   describe '#new_features' do
+    after do
+      Discourse.redis.del "new_features_last_seen_user_#{admin.id}"
+      Discourse.redis.del "new_features"
+      Discourse.redis.del "last_viewed_feature_dates_for_users_hash"
+    end
+
     context "when logged in as an admin" do
       before do
         sign_in(admin)
-        Discourse.redis.del "new_features_last_seen_user_#{admin.id}"
-        Discourse.redis.del "new_features"
-        Discourse.redis.del "last_viewed_feature_dates_for_users_hash"
       end
 
       it 'is empty by default' do
@@ -284,6 +287,12 @@ RSpec.describe Admin::DashboardController do
   end
 
   describe '#mark_new_features_as_seen' do
+    after do
+      Discourse.redis.del "new_features_last_seen_user_#{admin.id}"
+      Discourse.redis.del "new_features"
+      Discourse.redis.del "last_viewed_feature_dates_for_users_hash"
+    end
+
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
