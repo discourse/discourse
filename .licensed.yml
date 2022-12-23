@@ -1,5 +1,6 @@
 sources:
   bundler: true
+
 allowed:
   - 0bsd
   - apache-2.0
@@ -12,14 +13,14 @@ allowed:
 
 ignored:
   bundler:
-    - rchardet # Ruby terms
-    - strscan # Ruby
-    - ruby2_keywords # BSD-2-Clause
     - openssl # Ruby terms
+    - rchardet # Ruby terms
+    - ruby2_keywords # BSD-2-Clause
 
 reviewed:
   bundler:
     - activerecord # MIT
+    - cgi # Ruby
     - coderay # MIT
     - concurrent-ruby # MIT
     - css_parser # MIT
@@ -28,8 +29,8 @@ reviewed:
     - faraday-em_synchrony # MIT
     - faraday-excon # MIT
     - faraday-httpclient # MIT
-    - faraday-patron # MIT
     - faraday-net_http # MIT
+    - faraday-patron # MIT
     - faraday-rack # MIT
     - highline # GPL-2.0 OR Ruby terms
     - htmlentities # MIT
@@ -51,8 +52,9 @@ reviewed:
     - raindrops # LGPL-2.1+
     - rubyzip # Ruby terms
     - sidekiq # LGPL (Sidekiq)
-    - tilt
+    - strscan # Ruby
+    - tilt # MIT
     - timeout # Ruby
     - unf # BSD-2-Clause
-    - unicorn
+    - unicorn # Ruby terms or GPLv2/GPLv3
     - uri # Ruby
