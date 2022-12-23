@@ -114,9 +114,11 @@ RSpec.describe "Archive channel", type: :system, js: true do
         it "can be retried" do
           chat.visit_channel(channel_1)
           click_button(I18n.t("js.chat.channel_archive.retry"))
-          visit(find(".chat-channel-archive-status a")["href"])
 
-          expect(page).to have_content(archive.destination_topic_title)
+          new_window = window_opened_by { find(".chat-channel-archive-status a").click }
+          within_window(new_window) do
+            expect(page).to have_content(archive.destination_topic_title)
+          end
         end
       end
     end
