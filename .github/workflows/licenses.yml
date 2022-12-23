@@ -64,6 +64,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
+      - name: Check RubyGems Licenses
+        if: ${{ !cancelled() }}
+        run: |
+          licensed cache
+          licensed status
+
       - name: Yarn install
         run: yarn install
 
