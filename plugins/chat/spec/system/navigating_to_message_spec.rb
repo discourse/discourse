@@ -17,6 +17,30 @@ RSpec.describe "Navigating to message", type: :system, js: true do
   end
 
   context "when in full page mode" do
+    before { chat_page.prefers_full_page }
+
+    context "when clicking a link containing a message id" do
+      fab!(:topic_1) { Fabricate(:topic) }
+
+      before do
+        Fabricate(
+          :post,
+          topic: topic_1,
+          raw:
+            "<a href=\"/chat/channel/#{channel_1.id}/-?messageId=#{first_message.id}\">#{link}</a>",
+        )
+      end
+
+      it "highlights the correct message" do
+        visit("/t/-/#{topic_1.id}")
+        click_link(link)
+
+        expect(page).to have_css(
+          ".chat-message-container.highlighted[data-id='#{first_message.id}']",
+        )
+      end
+    end
+
     context "when clicking a link to a message from the current channel" do
       before do
         Fabricate(:chat_message, chat_channel: channel_1, message: "[#{link}](/chat/channel/#{channel_1.id}/-?messageId=#{first_message.id})")
@@ -65,6 +89,28 @@ RSpec.describe "Navigating to message", type: :system, js: true do
   end
 
   context "when in drawer" do
+    context "when clicking a link containing a message id" do
+      fab!(:topic_1) { Fabricate(:topic) }
+
+      before do
+        Fabricate(
+          :post,
+          topic: topic_1,
+          raw:
+            "<a href=\"/chat/channel/#{channel_1.id}/-?messageId=#{first_message.id}\">#{link}</a>",
+        )
+      end
+
+      it "highlights correct message" do
+        visit("/t/-/#{topic_1.id}")
+        click_link(link)
+
+        expect(page).to have_css(
+          ".chat-drawer.is-expanded .chat-message-container.highlighted[data-id='#{first_message.id}']",
+        )
+      end
+    end
+
     context "when clicking a link to a message from the current channel" do
       before do
         Fabricate(:chat_message, chat_channel: channel_1, message: "[#{link}](/chat/channel/#{channel_1.id}/-?messageId=#{first_message.id})")
