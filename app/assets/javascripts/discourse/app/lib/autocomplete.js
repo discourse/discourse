@@ -377,6 +377,8 @@ export default function (options) {
       me.parent().append(div);
     }
 
+    fadeoutDiv = div.find(".hashtag-autocomplete__fadeout");
+
     if (isInput || options.treatAsTextarea) {
       _autoCompletePopper && _autoCompletePopper.destroy();
       _autoCompletePopper = createPopper(me[0], div[0], {
@@ -450,8 +452,6 @@ export default function (options) {
       top: mePos.top + pos.top - vOffset + borderTop + "px",
       left: left + "px",
     });
-
-    fadeoutDiv = div.find(".hashtag-autocomplete__fadeout");
   }
 
   function dataSource(term, opts) {
