@@ -186,6 +186,21 @@ module DiscourseUpdates
       Discourse.redis.hset(last_viewed_feature_dates_for_users_key, user_id.to_s, feature_date)
     end
 
+    def clean_state
+      Discourse.redis.del(
+        last_installed_version_key,
+        latest_version_key,
+        critical_updates_available_key,
+        missing_versions_count_key,
+        updated_at_key,
+        missing_versions_list_key,
+        new_features_key,
+        last_viewed_feature_dates_for_users_key,
+        *Discourse.redis.keys("#{missing_versions_key_prefix}*"),
+        *Discourse.redis.keys(new_features_last_seen_key("*")),
+      )
+    end
+
     private
 
     def last_installed_version_key

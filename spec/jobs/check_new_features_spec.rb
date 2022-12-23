@@ -60,8 +60,7 @@ RSpec.describe Jobs::CheckNewFeatures do
   end
 
   after do
-    Discourse.redis.del("new_features")
-    Discourse.redis.del("last_viewed_feature_dates_for_users_hash")
+    DiscourseUpdates.clean_state
   end
 
   it "backfills last viewed feature for admins who don't have last viewed feature" do

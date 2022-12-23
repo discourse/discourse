@@ -155,7 +155,7 @@ RSpec.describe DiscourseUpdates do
     end
 
     after do
-      Discourse.redis.del('new_features')
+      DiscourseUpdates.clean_state
     end
 
     it 'returns all items on the first run' do
