@@ -39,13 +39,13 @@ jobs:
       #     restore-keys: |
       #       ${{ runner.os }}-gem-
 
-      - name: Before bundler
-        if: ${{ !cancelled() }}
-        run: |
-          gem info openssl
-          ls -Al /usr/local/lib/ruby/gems/3.1.0/gems/
-          echo "\n\nvendor:\n"
-          ls -Al vendor/bundle/ruby/3.1.0/gems/
+      # - name: Before bundler
+      #   if: ${{ !cancelled() }}
+      #   run: |
+      #     gem info openssl
+      #     ls -Al /usr/local/lib/ruby/gems/3.1.0/gems/
+      #     echo "\n\nvendor:\n"
+      #     ls -Al vendor/bundle/ruby/3.1.0/gems/
 
       - name: Setup gems
         run: |
