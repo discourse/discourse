@@ -31,13 +31,13 @@ jobs:
           git config --global user.email "ci@ci.invalid"
           git config --global user.name "Discourse CI"
 
-      - name: Bundler cache
-        uses: actions/cache@v3
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gem-
+      # - name: Bundler cache
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: vendor/bundle
+      #     key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-gem-
 
       - name: Setup gems
         run: |
@@ -70,9 +70,9 @@ jobs:
           gem info openssl
           ls /usr/local/lib/ruby/gems/3.1.0/gems/
           echo "\n\nvendor:\n"
-          ls vendor/bundle/ruby/3.1.0/
+          ls vendor/bundle/ruby/3.1.0/gems/
           echo "\n\nopenssl:\n"
-          ls /usr/local/lib/ruby/gems/3.1.0/gems/openssl-3.0.1
+          ls /usr/local/lib/ruby/gems/3.1.0/gems/openssl-3.0.1/
           # cat /usr/local/lib/ruby/gems/3.1.0/gems/openssl-3.0.1/LICENSE.txt
           licensed cache
           cat .licenses/bundler/openssl.dep.yml
