@@ -2,7 +2,7 @@
 
 class UserSerializer < UserCardSerializer
   include UserTagNotificationsMixin
-  include UserSidebarTagsMixin
+  include UserSidebarMixin
 
   attributes :bio_raw,
              :bio_cooked,
@@ -64,7 +64,10 @@ class UserSerializer < UserCardSerializer
                      :user_auth_tokens,
                      :user_notification_schedule,
                      :use_logo_small_as_avatar,
-                     :sidebar_tags
+                     :sidebar_tags,
+                     :sidebar_category_ids,
+                     :sidebar_list_destination,
+                     :display_sidebar_tags
 
   untrusted_attributes :bio_raw,
                        :bio_cooked,

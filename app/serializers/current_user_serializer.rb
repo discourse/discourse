@@ -2,7 +2,7 @@
 
 class CurrentUserSerializer < BasicUserSerializer
   include UserTagNotificationsMixin
-  include UserSidebarTagsMixin
+  include UserSidebarMixin
 
   attributes :name,
              :unread_notifications,
@@ -62,12 +62,14 @@ class CurrentUserSerializer < BasicUserSerializer
              :draft_count,
              :pending_posts_count,
              :status,
-             :sidebar_category_ids,
              :grouped_unread_notifications,
              :redesigned_user_menu_enabled,
              :redesigned_user_page_nav_enabled,
-             :sidebar_list_destination,
-             :redesigned_topic_timeline_enabled
+             :redesigned_topic_timeline_enabled,
+             :display_sidebar_tags,
+             :sidebar_tags,
+             :sidebar_category_ids,
+             :sidebar_list_destination
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -98,10 +100,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_can_create_group?
     scope.can_create_group?
-  end
-
-  def sidebar_list_destination
-    object.user_option.sidebar_list_none_selected? ? SiteSetting.default_sidebar_list_destination : object.user_option.sidebar_list_destination
   end
 
   def can_send_private_email_messages
@@ -251,14 +249,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_has_topic_draft?
     Draft.has_topic_draft(object)
-  end
-
-  def sidebar_category_ids
-    object.category_sidebar_section_links.pluck(:linkable_id) & scope.allowed_category_ids
-  end
-
-  def include_sidebar_category_ids?
-    !SiteSetting.legacy_navigation_menu?
   end
 
   def include_status?
