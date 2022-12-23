@@ -31,21 +31,13 @@ jobs:
           git config --global user.email "ci@ci.invalid"
           git config --global user.name "Discourse CI"
 
-      # - name: Bundler cache
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: vendor/bundle
-      #     key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-gem-
-
-      # - name: Before bundler
-      #   if: ${{ !cancelled() }}
-      #   run: |
-      #     gem info openssl
-      #     ls -Al /usr/local/lib/ruby/gems/3.1.0/gems/
-      #     echo "\n\nvendor:\n"
-      #     ls -Al vendor/bundle/ruby/3.1.0/gems/
+      - name: Bundler cache
+        uses: actions/cache@v3
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gem-
 
       - name: Setup gems
         run: |
@@ -59,45 +51,31 @@ jobs:
         run: |
           gem install licensed
 
-      # - name: Get yarn cache directory
-      #   id: yarn-cache-dir
-      #   run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+      - name: Get yarn cache directory
+        id: yarn-cache-dir
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
-      # - name: Yarn cache
-      #   uses: actions/cache@v3
-      #   id: yarn-cache
-      #   with:
-      #     path: ${{ steps.yarn-cache-dir.outputs.dir }}
-      #     key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-yarn-
+      - name: Yarn cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
-      - name: Check RubyGems Licenses
+      - name: Yarn install
+        run: yarn install
+
+      - name: Check Yarn Licenses
         if: ${{ !cancelled() }}
         run: |
-          gem info openssl
-          ls -Al /usr/local/lib/ruby/gems/3.1.0/gems/
-          echo "\n\nvendor:\n"
-          ls -Al vendor/bundle/ruby/3.1.0/gems/
-          # echo "\n\nopenssl:\n"
-          # ls /usr/local/lib/ruby/gems/3.1.0/gems/openssl-3.0.1/
-          # cat /usr/local/lib/ruby/gems/3.1.0/gems/openssl-3.0.1/LICENSE.txt
-          licensed cache
-          cat .licenses/bundler/openssl.dep.yml
-          licensed status
+          yarn global add licensee
+          yarn global upgrade licensee
+          licensee --errors-only
 
-      # - name: Yarn install
-      #   run: yarn install
-
-      # - name: Check Yarn Licenses
-      #   if: ${{ !cancelled() }}
-      #   run: |
-      #     yarn global add licensee
-      #     yarn global upgrade licensee
-      #     licensee --errors-only
-
-      # - name: Check Ember CLI Workspace Licenses
-      #   if: ${{ !cancelled() }}
-      #   working-directory: ./app/assets/javascripts
-      #   run: |
-      #     licensee --errors-only
+      - name: Check Ember CLI Workspace Licenses
+        if: ${{ !cancelled() }}
+        working-directory: ./app/assets/javascripts
+        run: |
+          licensee --errors-only
