@@ -76,7 +76,7 @@ export default class ChatSubscriptionsManager extends Service {
   _onNewMentions(busData) {
     this.chatChannelsManager.find(busData.channel_id).then((channel) => {
       const membership = channel.currentUserMembership;
-      if (membership) {
+      if (busData.message_id > membership?.last_read_message_id) {
         membership.unread_mentions = (membership.unread_mentions || 0) + 1;
       }
     });
