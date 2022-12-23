@@ -53,8 +53,8 @@ reviewed:
     - rubyzip # Ruby terms
     - sidekiq # LGPL (Sidekiq)
     - strscan # Ruby
-    - tilt
+    - tilt # MIT
     - timeout # Ruby
     - unf # BSD-2-Clause
-    - unicorn
+    - unicorn # Ruby terms or GPLv2/GPLv3
     - uri # Ruby
