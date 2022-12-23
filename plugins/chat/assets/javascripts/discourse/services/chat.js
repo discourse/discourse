@@ -38,11 +38,10 @@ export default class Chat extends Service {
 
   activeChannel = null;
   cook = null;
-
-  messageId = null;
   presenceChannel = null;
   sidebarActive = false;
   isNetworkUnreliable = false;
+
   @and("currentUser.has_chat_enabled", "siteSettings.chat_enabled") userCanChat;
 
   @computed("currentUser.staff", "currentUser.groups.[]")

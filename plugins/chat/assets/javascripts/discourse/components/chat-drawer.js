@@ -224,10 +224,16 @@ export default Component.extend({
         return this.chatChannelsManager
           .find(route.params.channelId)
           .then((channel) => {
-            this.chat.set("messageId", route.queryParams.messageId);
             this.chat.setActiveChannel(channel);
             this.set("view", CHAT_VIEW);
             this.appEvents.trigger("chat:float-toggled", false);
+
+            if (route.queryParams.messageId) {
+              this.appEvents.trigger(
+                "chat-live-pane:highlight-message",
+                route.queryParams.messageId
+              );
+            }
           });
     }
   },
