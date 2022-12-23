@@ -1,15 +1,7 @@
 # frozen_string_literal: true
 
-# note, we require 2.5.2 and up cause 2.5.1 had some mail bugs we no longer
-# monkey patch, so this avoids people booting with this problem version
-begin
-  if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("2.5.2")
-    STDERR.puts "Discourse requires Ruby 2.5.2 or up"
-    exit 1
-  end
-rescue
-  # no String#match?
-  STDERR.puts "Discourse requires Ruby 2.5.2 or up"
+if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("2.7.0")
+  STDERR.puts "Discourse requires Ruby 2.7 or above"
   exit 1
 end
 
@@ -19,6 +11,13 @@ require 'action_controller/railtie'
 require 'action_view/railtie'
 require 'action_mailer/railtie'
 require 'sprockets/railtie'
+
+if !Rails.env.production?
+  recommended = File.read(".ruby-version.sample").strip
+  if Gem::Version.new(RUBY_VERSION) < Gem::Version.new(recommended)
+    STDERR.puts "[Warning] Discourse recommends developing using Ruby v#{recommended} or above. You are using v#{RUBY_VERSION}."
+  end
+end
 
 # Plugin related stuff
 require_relative '../lib/plugin'
