@@ -5,6 +5,7 @@ import Component from "@ember/component";
 import discourseComputed, {
   afterRender,
   bind,
+  debounce,
   observes,
 } from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -171,7 +172,6 @@ export default Component.extend({
     this._super(...arguments);
 
     this.currentUserTimezone = this.currentUser?.user_option.timezone;
-    this.set("targetMessageId", this.chat.messageId);
 
     if (
       this.chatChannel?.id &&
@@ -227,6 +227,7 @@ export default Component.extend({
     }
   },
 
+  @debounce(100)
   fetchMessages(channel, options = {}) {
     this.set("loading", true);
 
@@ -256,8 +257,9 @@ export default Component.extend({
           }
           this.setMessageProps(messages, fetchingFromLastRead);
 
-          if (this.targetMessageId) {
-            this.highlightOrFetchMessage(this.targetMessageId);
+          if (options.fetchFromLastMessage) {
+            this.set("stickyScroll", true);
+            this._stickScrollToBottom();
           }
 
           this._focusComposer();
@@ -268,7 +270,6 @@ export default Component.extend({
             return;
           }
 
-          this.chat.set("messageId", null);
           this.set("loading", false);
         });
     });
@@ -407,18 +408,19 @@ export default Component.extend({
 
   setMessageProps(messages, fetchingFromLastRead) {
     this._unloadedReplyIds = [];
+    this.messageLookup = {};
+    const meta = messages.resultSetMeta;
     this.setProperties({
       messages: this._prepareMessages(messages),
       details: {
         chat_channel_id: this.chatChannel.id,
         chatable_type: this.chatChannel.chatable_type,
-        can_delete_self: messages.resultSetMeta.can_delete_self,
-        can_delete_others: messages.resultSetMeta.can_delete_others,
-        can_flag: messages.resultSetMeta.can_flag,
-        user_silenced: messages.resultSetMeta.user_silenced,
-        can_moderate: messages.resultSetMeta.can_moderate,
-        channel_message_bus_last_id:
-          messages.resultSetMeta.channel_message_bus_last_id,
+        can_delete_self: meta.can_delete_self,
+        can_delete_others: meta.can_delete_others,
+        can_flag: meta.can_flag,
+        user_silenced: meta.user_silenced,
+        can_moderate: meta.can_moderate,
+        channel_message_bus_last_id: meta.channel_message_bus_last_id,
       },
       registeredChatChannelId: this.chatChannel.id,
     });
@@ -434,6 +436,7 @@ export default Component.extend({
           position: "top",
           autoExpand: true,
         });
+
         this.set("targetMessageId", null);
       } else if (fetchingFromLastRead) {
         this._markLastReadMessage();
@@ -566,7 +569,7 @@ export default Component.extend({
       this.messages.findIndex((m) => m.id === lastReadId) || 0;
     let newestUnreadMessage = this.messages[indexOfLastReadMessage + 1];
 
-    if (newestUnreadMessage) {
+    if (newestUnreadMessage && !this.targetMessageId) {
       newestUnreadMessage.set("newestMessage", true);
 
       next(() => this.scrollToMessage(newestUnreadMessage.id));
@@ -1522,13 +1525,6 @@ export default Component.extend({
   _fetchAndScrollToLatest() {
     return this.fetchMessages(this.chatChannel, {
       fetchFromLastMessage: true,
-    }).then(() => {
-      if (this._selfDeleted) {
-        return;
-      }
-
-      this.set("stickyScroll", true);
-      this._stickScrollToBottom();
     });
   },
 
