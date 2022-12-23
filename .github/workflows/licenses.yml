@@ -31,13 +31,13 @@ jobs:
           git config --global user.email "ci@ci.invalid"
           git config --global user.name "Discourse CI"
 
-      - name: Bundler cache
-        uses: actions/cache@v3
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gem-
+      # - name: Bundler cache
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: vendor/bundle
+      #     key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-gem-
 
       - name: Setup gems
         run: |
@@ -68,6 +68,7 @@ jobs:
         if: ${{ !cancelled() }}
         run: |
           licensed cache
+          gem info openssl
           cat .licenses/bundler/openssl.dep.yml
           licensed status
 
