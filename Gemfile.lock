@@ -281,9 +281,8 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    openssl (3.0.1)
-    openssl-signature_algorithm (1.2.1)
-      openssl (> 2.0, < 3.1)
+    openssl (3.1.0)
+    openssl-signature_algorithm (1.0.0)
     optimist (3.0.1)
     parallel (1.22.1)
     parallel_tests (4.0.0)
@@ -579,7 +578,7 @@ DEPENDENCIES
   omniauth-google-oauth2
   omniauth-oauth2
   omniauth-twitter
-  openssl
+  openssl (>= 3.1.0)
   parallel_tests
   pg
   pry-byebug
@@ -609,7 +608,7 @@ DEPENDENCIES
   rubocop-discourse
   ruby-prof
   ruby-readability
-  ruby2_keywords
+  ruby2_keywords (>= 0.0.5)
   rubyzip
   sanitize
   sassc (= 2.0.1)

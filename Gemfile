@@ -274,5 +274,5 @@ gem 'net-http'
 gem 'webrick', require: false
 
 gem "cgi", ">= 0.3.6", require: false
-gem "openssl"
-gem "ruby2_keywords"
+gem "openssl", ">= 3.1.0", require: false
+gem "ruby2_keywords", ">= 0.0.5"
