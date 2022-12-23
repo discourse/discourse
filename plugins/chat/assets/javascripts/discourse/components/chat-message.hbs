@@ -187,54 +187,12 @@
             </div>
           {{/if}}
 
-          {{#if this.mentionWarning}}
-            <div class="alert alert-info chat-message-mention-warning">
-              {{#if this.mentionWarning.invitationSent}}
-                {{d-icon "check"}}
-                <span>
-                  {{i18n
-                    "chat.mention_warning.invitations_sent"
-                    count=this.mentionWarning.without_membership.length
-                  }}
-                </span>
-              {{else}}
-                <FlatButton
-                  @class="dismiss-mention-warning"
-                  @title="chat.mention_warning.dismiss"
-                  @action={{this.dismissMentionWarning}}
-                  @icon="times"
-                />
-
-                {{#if this.mentionWarning.cannot_see}}
-                  <p class="warning-item cannot-see">
-                    {{this.mentionedCannotSeeText}}
-                  </p>
-                {{/if}}
-
-                {{#if this.mentionWarning.without_membership}}
-                  <p class="warning-item without-membership">
-                    <span>{{this.mentionedWithoutMembershipText}}</span>
-                    <a
-                      class="invite-link"
-                      href
-                      onclick={{this.inviteMentioned}}
-                    >
-                      {{i18n "chat.mention_warning.invite"}}
-                    </a>
-                  </p>
-                {{/if}}
-                {{#if this.mentionWarning.group_mentions_disabled}}
-                  <p class="warning-item">
-                    {{this.groupsWithDisabledMentions}}
-                  </p>
-                {{/if}}
-
-                {{#if this.mentionWarning.groups_with_too_many_members}}
-                  <p class="warning-item">{{this.groupsWithTooManyMembers}}</p>
-                {{/if}}
-              {{/if}}
-            </div>
-          {{/if}}
+          <PostSendMentionWarnings
+            @chatChannelId={{this.details.chat_channel_id}}
+            @warnings={{this.mentionWarnings}}
+            @messageId={{this.message.id}}
+            @dismiss={{this.dismissMentionWarnings}}
+          />
         </div>
       </div>
     {{/if}}

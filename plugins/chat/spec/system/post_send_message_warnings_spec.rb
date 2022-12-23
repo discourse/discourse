@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "JIT messages", type: :system, js: true do
+RSpec.describe "Post-send message warnings for mentions", type: :system, js: true do
   fab!(:channel_1) { Fabricate(:chat_channel) }
   fab!(:current_user) { Fabricate(:user) }
   fab!(:other_user) { Fabricate(:user) }

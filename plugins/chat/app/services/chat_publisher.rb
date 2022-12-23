@@ -174,25 +174,12 @@ module ChatPublisher
     end
   end
 
-  def self.publish_inaccessible_mentions(
-    user_id,
-    chat_message,
-    cannot_chat_users,
-    without_membership,
-    too_many_members,
-    mentions_disabled
-  )
+  def self.publish_inaccessible_mentions(user_id, chat_message, warnings)
     MessageBus.publish(
       "/chat/#{chat_message.chat_channel_id}",
-      {
-        type: :mention_warning,
-        chat_message_id: chat_message.id,
-        cannot_see: cannot_chat_users.map { |u| { username: u.username, id: u.id } }.as_json,
-        without_membership:
-          without_membership.map { |u| { username: u.username, id: u.id } }.as_json,
-        groups_with_too_many_members: too_many_members.map(&:name).as_json,
-        group_mentions_disabled: mentions_disabled.map(&:name).as_json,
-      },
+      type: :mention_warnings,
+      chat_message_id: chat_message.id,
+      warnings: warnings,
       user_ids: [user_id],
     )
   end

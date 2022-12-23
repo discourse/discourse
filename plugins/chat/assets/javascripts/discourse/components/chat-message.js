@@ -112,8 +112,6 @@ export default class ChatMessage extends Component {
       this,
       "_handleReactionMessage"
     );
-
-    cancel(this._invitationSentTimer);
   }
 
   @bind
@@ -404,75 +402,12 @@ export default class ChatMessage extends Component {
     );
   }
 
-  get mentionWarning() {
+  get mentionWarnings() {
     return this.args.message.get("mentionWarning");
   }
 
-  get mentionedCannotSeeText() {
-    return I18n.t("chat.mention_warning.cannot_see", {
-      username: this.mentionWarning?.cannot_see?.[0]?.username,
-      count: this.mentionWarning?.cannot_see?.length,
-      others: this._othersTranslation(
-        this.mentionWarning?.cannot_see?.length - 1
-      ),
-    });
-  }
-
-  get mentionedWithoutMembershipText() {
-    return I18n.t("chat.mention_warning.without_membership", {
-      username: this.mentionWarning?.without_membership?.[0]?.username,
-      count: this.mentionWarning?.without_membership?.length,
-      others: this._othersTranslation(
-        this.mentionWarning?.without_membership?.length - 1
-      ),
-    });
-  }
-
-  get groupsWithDisabledMentions() {
-    return I18n.t("chat.mention_warning.group_mentions_disabled", {
-      group_name: this.mentionWarning?.group_mentions_disabled?.[0],
-      count: this.mentionWarning?.group_mentions_disabled?.length,
-      others: this._othersTranslation(
-        this.mentionWarning?.group_mentions_disabled?.length - 1
-      ),
-    });
-  }
-
-  get groupsWithTooManyMembers() {
-    return I18n.t("chat.mention_warning.too_many_members", {
-      group_name: this.mentionWarning.groups_with_too_many_members?.[0],
-      count: this.mentionWarning.groups_with_too_many_members?.length,
-      others: this._othersTranslation(
-        this.mentionWarning.groups_with_too_many_members?.length - 1
-      ),
-    });
-  }
-
-  _othersTranslation(othersCount) {
-    return I18n.t("chat.mention_warning.warning_multiple", {
-      count: othersCount,
-    });
-  }
-
   @action
-  inviteMentioned() {
-    const userIds = this.mentionWarning.without_membership.mapBy("id");
-
-    ajax(`/chat/${this.args.message.chat_channel_id}/invite`, {
-      method: "PUT",
-      data: { user_ids: userIds, chat_message_id: this.args.message.id },
-    }).then(() => {
-      this.args.message.set("mentionWarning.invitationSent", true);
-      this._invitationSentTimer = discourseLater(() => {
-        this.args.message.set("mentionWarning", null);
-      }, 3000);
-    });
-
-    return false;
-  }
-
-  @action
-  dismissMentionWarning() {
+  dismissMentionWarnings() {
     this.args.message.set("mentionWarning", null);
   }
 

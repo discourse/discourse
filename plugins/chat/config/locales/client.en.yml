@@ -107,21 +107,21 @@ en:
       mention_warning:
         dismiss: "dismiss"
         cannot_see:
-          one: "%{username} cannot access this channel and was not notified."
-          other: "%{username} and %{others} cannot access this channel and were not notified."
+          one: "%{mention} cannot access this channel and was not notified."
+          other: "%{mention} and %{others} cannot access this channel and were not notified."
         invitations_sent:
           one: "Invitation sent"
           other: "Invitations sent"
         invite: "Invite to channel"
         without_membership:
-          one: "%{username} has not joined this channel."
-          other: "%{username} and %{others} have not joined this channel."
+          one: "%{mention} has not joined this channel."
+          other: "%{mention} and %{others} have not joined this channel."
         group_mentions_disabled:
-          one: "%{group_name} doesn't allow mentions"
-          other: "%{group_name} and %{others} doesn't allow mentions"
+          one: "%{mention} doesn't allow mentions"
+          other: "%{mention} and %{others} doesn't allow mentions"
         too_many_members:
-          one: "%{group_name} has too many members. No one was notified"
-          other: "%{group_name} and %{others} have too many members. No one was notified"
+          one: "%{mention} has too many members. No one was notified"
+          other: "%{mention} and %{others} have too many members. No one was notified"
         warning_multiple:
           one: "%{count} other"
           other: "%{count} others"

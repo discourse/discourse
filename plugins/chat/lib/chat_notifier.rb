@@ -293,23 +293,45 @@ class Chat::ChatNotifier
   end
 
   def notify_creator_of_inaccessible_mentions(to_notify)
-    inaccessible =
+    mentions =
       to_notify.extract!(
         :unreachable,
         :welcome_to_join,
         :too_many_members,
         :group_mentions_disabled,
       )
-    return if inaccessible.values.all?(&:blank?)
+    return if mentions.values.all?(&:blank?)
 
-    ChatPublisher.publish_inaccessible_mentions(
-      @user.id,
-      @chat_message,
-      inaccessible[:unreachable].to_a,
-      inaccessible[:welcome_to_join].to_a,
-      inaccessible[:too_many_members].to_a,
-      inaccessible[:group_mentions_disabled].to_a,
-    )
+    warnings = [
+      inaccessible_mention_payload(:cannot_see, mentions[:unreachable]) { |user| user.username },
+      inaccessible_mention_payload(
+        :without_membership,
+        mentions[:welcome_to_join],
+        include_ids: true,
+      ) { |user| user.username },
+      inaccessible_mention_payload(:too_many_members, mentions[:too_many_members]) do |group|
+        group.name
+      end,
+      inaccessible_mention_payload(
+        :group_mentions_disabled,
+        mentions[:group_mentions_disabled],
+      ) { |group| group.name },
+    ].compact
+
+    ChatPublisher.publish_inaccessible_mentions(@user.id, @chat_message, warnings)
+  end
+
+  def inaccessible_mention_payload(type, inaccessible_mentions, include_ids: false)
+    return if inaccessible_mentions.blank?
+    payload = { type: type, mentions: [] }
+
+    payload[:mention_target_ids] = [] if include_ids
+
+    inaccessible_mentions.reduce(payload) do |memo, target|
+      memo[:mentions] << yield(target)
+      memo[:mention_target_ids] << target.id if include_ids
+      memo
+    end
   end
 
   # Filters out users from global, here, group, and direct mentions that are

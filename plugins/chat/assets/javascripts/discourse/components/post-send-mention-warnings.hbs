@@ -1,0 +1,34 @@
+{{#if this.show}}
+  <div class="alert alert-info chat-message-mention-warning">
+    {{#if this.invitesSent}}
+      {{d-icon "check"}}
+      <span>{{i18n
+          "chat.mention_warning.invitations_sent"
+          count=this.invitesSentCount
+        }}</span>
+    {{else}}
+      <FlatButton
+        @class="dismiss-mention-warning"
+        @title="chat.mention_warning.dismiss"
+        @action={{action "dismiss"}}
+        @icon="times"
+      />
+      {{#each this.translatedWarnings as |warning|}}
+        <p class="warning-item {{dasherize warning.type}}">
+          {{#if warning.include_invite_link}}
+            <span>{{warning.translation}}</span>
+            <a
+              class="invite-link"
+              href
+              onclick={{action "inviteMentioned" warning}}
+            >
+              {{i18n "chat.mention_warning.invite"}}
+            </a>
+          {{else}}
+            {{warning.translation}}
+          {{/if}}
+        </p>
+      {{/each}}
+    {{/if}}
+  </div>
+{{/if}}
