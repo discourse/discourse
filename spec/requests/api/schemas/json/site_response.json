@@ -755,6 +755,9 @@
       "items": {
 
       }
+    },
+    "whispers_allowed_groups_names" : {
+      "type": "array"
     }
   },
   "required": [

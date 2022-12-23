@@ -3447,6 +3447,7 @@ en:
       via_email: "this post arrived via email"
       via_auto_generated_email: "this post arrived via an auto generated email"
       whisper: "this post is a private whisper for moderators"
+      whisper_groups: "this post is a private whisper only visible to %{groupNames}"
 
       wiki:
         about: "this post is a wiki"

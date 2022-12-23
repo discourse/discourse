@@ -293,11 +293,22 @@ createWidget("post-meta-data", {
     let postInfo = [];
 
     if (attrs.isWhisper) {
+      const groups = this.site.get("whispers_allowed_groups_names");
+      let title = "";
+
+      if (groups?.length > 0) {
+        title = I18n.t("post.whisper_groups", {
+          groupNames: groups.join(", "),
+        });
+      } else {
+        title = I18n.t("post.whisper");
+      }
+
       postInfo.push(
         h(
           "div.post-info.whisper",
           {
-            attributes: { title: I18n.t("post.whisper") },
+            attributes: { title },
           },
           iconNode("far-eye-slash")
         )

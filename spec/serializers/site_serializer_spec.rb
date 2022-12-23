@@ -234,4 +234,44 @@ RSpec.describe SiteSerializer do
       end
     end
   end
+
+  describe '#whispers_allowed_groups_names' do
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:allowed_user) { Fabricate(:user) }
+    fab!(:not_allowed_user) { Fabricate(:user) }
+    fab!(:group1) { Fabricate(:group, name: 'whisperers1', users: [allowed_user]) }
+    fab!(:group2) { Fabricate(:group, name: 'whisperers2', users: [allowed_user]) }
+
+    it "returns correct group names for created groups" do
+      admin_guardian = Guardian.new(admin)
+      SiteSetting.whispers_allowed_groups = "#{group1.id}|#{group2.id}"
+
+      serialized = described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
+      expect(serialized[:whispers_allowed_groups_names]).to eq(["whisperers1", "whisperers2"])
+    end
+
+    it "returns correct group names for automatic groups" do
+      admin_guardian = Guardian.new(admin)
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}|#{Group::AUTO_GROUPS[:trust_level_4]}"
+
+      serialized = described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
+      expect(serialized[:whispers_allowed_groups_names]).to eq(["staff", "trust_level_4"])
+    end
+
+    it "returns group names when user is allowed to whisper" do
+      user_guardian = Guardian.new(allowed_user)
+      SiteSetting.whispers_allowed_groups = "#{group1.id}|#{group2.id}"
+
+      serialized = described_class.new(Site.new(user_guardian), scope: user_guardian, root: false).as_json
+      expect(serialized[:whispers_allowed_groups_names]).to eq(["whisperers1", "whisperers2"])
+    end
+
+    it "returns nil when user is not allowed to whisper" do
+      user_guardian = Guardian.new(not_allowed_user)
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}|#{Group::AUTO_GROUPS[:trust_level_4]}"
+
+      serialized = described_class.new(Site.new(user_guardian), scope: user_guardian, root: false).as_json
+      expect(serialized[:whispers_allowed_groups_names]).to eq(nil)
+    end
+  end
 end
