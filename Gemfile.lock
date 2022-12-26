@@ -315,7 +315,6 @@ GEM
     public_suffix (5.0.1)
     puma (6.0.2)
       nio4r (~> 2.0)
-    r2 (0.2.7)
     racc (1.6.2)
     rack (2.2.6.2)
     rack-mini-profiler (3.0.0)
@@ -600,7 +599,6 @@ DEPENDENCIES
   pry-byebug
   pry-rails
   puma
-  r2
   rack
   rack-mini-profiler
   rack-protection

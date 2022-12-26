@@ -214,4 +214,41 @@ RSpec.describe Stylesheet::Compiler do
       expect(refs).to eq([])
     end
   end
+
+  describe ".rtlify_css" do
+    it "flips CSS correctly" do
+      flipped = described_class.rtlify_css(<<~CSS)
+        a {
+          right: 100px;
+          margin-left: 50px;
+          padding: 0.33rem calc(var(--d-sidebar-row-horizontal-padding) / 3);
+          background: linear-gradient(
+            to bottom,
+            rgba(var(--secondary-rgb), 0),
+            rgba(var(--secondary-rgb), 100%)
+          );
+        }
+      CSS
+      expect(flipped.strip).to eq(<<~CSS.strip)
+        a {
+          left: 100px;
+          margin-right: 50px;
+          padding: 0.33rem calc(var(--d-sidebar-row-horizontal-padding) / 3);
+          background: linear-gradient(
+            to bottom,
+            rgba(var(--secondary-rgb), 0),
+            rgba(var(--secondary-rgb), 100%)
+          );
+        }
+      CSS
+    end
+
+    it "returns nil for invalid CSS" do
+      flipped = described_class.rtlify_css(<<~CSS)
+        a {
+          right: 100px;
+      CSS
+      expect(flipped).to eq(nil)
+    end
+  end
 end
