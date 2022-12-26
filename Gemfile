@@ -258,7 +258,7 @@ if ENV["IMPORT"] == "1"
   gem 'parallel', require: false
 end
 
-gem 'webpush', require: false
+gem 'web-push', require: false, git: 'https://github.com/xfalcox/web-push', branch: 'openssl-3-compat'
 gem 'colored2', require: false
 gem 'maxminddb'
 
