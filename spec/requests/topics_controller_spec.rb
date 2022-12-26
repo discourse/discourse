@@ -2068,6 +2068,54 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
     end
 
+    it 'does not result in N+1 queries problem when multiple topic participants have primary or flair group configured' do
+      user2 = Fabricate(:user)
+      user3 = Fabricate(:user)
+      post2 = Fabricate(:post, topic: topic, user: user2)
+      post3 = Fabricate(:post, topic: topic, user: user3)
+      group = Fabricate(:group)
+      user2.update!(primary_group: group)
+      user3.update!(flair_group: group)
+
+      # warm up
+      get "/t/#{topic.id}.json"
+      expect(response.status).to eq(200)
+
+      first_request_queries = track_sql_queries do
+        get "/t/#{topic.id}.json"
+
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body["details"]["participants"].map { |u| u["id"] }).to contain_exactly(
+          post_author1.id,
+          user2.id,
+          user3.id
+        )
+      end
+
+      group2 = Fabricate(:group)
+      user4 = Fabricate(:user, flair_group: group2)
+      user5 = Fabricate(:user, primary_group: group2)
+      post4 = Fabricate(:post, topic: topic, user: user4)
+      post5 = Fabricate(:post, topic: topic, user: user5)
+
+      second_request_queries = track_sql_queries do
+        get "/t/#{topic.id}.json"
+
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body["details"]["participants"].map { |u| u["id"] }).to contain_exactly(
+          post_author1.id,
+          user2.id,
+          user3.id,
+          user4.id,
+          user5.id
+        )
+      end
+
+      expect(second_request_queries.count).to eq(first_request_queries.count)
+    end
+
     context 'when a topic with nil slug exists' do
       before do
         nil_slug_topic = Fabricate(:topic)
