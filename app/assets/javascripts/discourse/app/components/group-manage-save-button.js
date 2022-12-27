@@ -64,13 +64,6 @@ export default Component.extend({
             saved: true,
             updateExistingUsers: null,
           });
-          group.setProperties({
-            buffer: {
-              visibilityLevel: group.visibility_level,
-              primaryGroup: group.primary_group,
-              flairEmpty: !(group.flair_icon || group.flair_upload_id),
-            },
-          });
 
           if (this.afterSave) {
             this.afterSave();
