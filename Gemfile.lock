@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: https://github.com/xfalcox/web-push
-  revision: 9b1ab768d195908ce478c3a9d7cf05dabfc8ef8c
+  revision: 369df8f475a4cd4832a7679bec16576665f24d24
   branch: openssl-3-compat
   specs:
     web-push (2.1.0)
@@ -186,7 +186,7 @@ GEM
       hana (~> 1.3)
       regexp_parser (~> 2.0)
       uri_template (~> 0.7)
-    jwt (2.5.0)
+    jwt (2.6.0)
     kgio (2.11.4)
     libv8-node (16.10.0.0)
     libv8-node (16.10.0.0-aarch64-linux)
@@ -291,7 +291,7 @@ GEM
     omniauth-twitter (1.4.0)
       omniauth-oauth (~> 1.1)
       rack
-    openssl (3.0.1)
+    openssl (3.0.2)
     openssl-signature_algorithm (1.2.1)
       openssl (> 2.0, < 3.1)
     optimist (3.0.1)
