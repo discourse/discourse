@@ -3294,6 +3294,7 @@ he:
       via_email: "פוסט זה הגיע בדוא״ל"
       via_auto_generated_email: "פוסט זה הגיע דרך הודעת דוא״ל שנוצרה אוטומטית"
       whisper: "פוסט זה הוא לחישה פרטית למפקחים"
+      whisper_groups: "הפוסט הזה הוא לחישה פרטית שחשופה רק בפני %{groupNames}"
       wiki:
         about: "הפוסט הוא ויקי"
       few_likes_left: "תודה על כל האהבה! נותרו לך סימוני לייק מועטים להיום."
@@ -5366,6 +5367,7 @@ he:
       user:
         suspend_failed: "משהו נכשל בהשעיית המשתמש הזה %{error}"
         unsuspend_failed: "משהו נכשל בביטול השעיית המשתמש הזה %{error}"
+        suspend_duration: "להשעות את המשתמש עד:"
         suspend_reason_label: "מה סיבת ההשעייה? הטקסט הזה <b>יופיע לעיני כל</b> בעמוד המשתמש ויוצג למשתמש כשינסה להיכנס. עדיף מסר קצר."
         suspend_reason_hidden_label: "מה סיבת ההשעייה? הטקסט הזה יוצג למשתמש כשינסה להיכנס. עדיף מסר קצר."
         suspend_reason: "סיבה"
@@ -5389,7 +5391,9 @@ he:
         silence_message: "הודעה בדוא״ל"
         silence_message_placeholder: "(להשאיר ריק כדי לשלוח את הודעת בררת המחדל)"
         suspended_until: "(עד %{until})"
+        suspend_forever: "להשעות לעד"
         cant_suspend: "אי אפשר להשעות את המשתמש הזה."
+        cant_silence: "אי אפשר להשתיק את המשתמש הזה."
         delete_posts_failed: "אירעה תקלה בעת מחיקת הפוסטים."
         post_edits: "עריכות של פוסטים"
         view_edits: "הצגת עריכות"

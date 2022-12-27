@@ -1368,8 +1368,6 @@ ja:
     allow_duplicate_topic_titles_category: "カテゴリが異なる場合、同一の重複したタイトルを持つトピックを許可する。allow_duplicate_topic_titles は無効にする必要があります。"
     unique_posts_mins: "同じコンテンツを投稿できるまでの時間 (分)"
     educate_until_posts: "最初の (n) 件の新規投稿を入力し始めたときに、新規ユーザーチュートリアルのパネルをポップアップ表示します。"
-    contact_email: "このサイトの責任者の主要連絡先のメールアドレス。重要な通知に使用され、緊急事項の <a href='%{base_path}/about' target='_blank'>/about</a> にも表示されます。"
-    contact_url: "このサイトの連絡先 URL。緊急事項の <a href='%{base_path}/about' target='_blank'>/about</a> ページに表示されます。"
     crawl_images: "リモート URL から画像を取得して、正しい幅と高さの寸法を挿入する。"
     download_remote_images_to_local: "リモート (ホットリンク) 画像をダウンロードしてローカル画像に変換します。これにより、サイトから画像が削除された場合でも、コンテンツが保持されます。"
     download_remote_images_threshold: "リモート画像をダウンロードするために必要なディスクの最低空き容量 (パーセント表示)"
@@ -4183,7 +4181,6 @@ ja:
     title: "Discourse のセットアップ"
     step:
       introduction:
-        title: "コミュニティーについて教えてください"
         fields:
           title:
             label: "コミュニティー名"

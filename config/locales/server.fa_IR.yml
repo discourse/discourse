@@ -1896,10 +1896,10 @@ fa_IR:
     digest:
       why: "یک گزارش کوتاه از %{site_link} از آخرین باری که بازدید کردید در %{last_seen_at}"
       since_last_visit: "از آخرین بازدید شما"
-      new_topics: "موضوعات جدید"
+      new_topics: "موضوع جدید"
       unread_notifications: "اطلاعیه‌های خوانده نشده"
       liked_received: "پسند‌های دریافت شده"
-      new_users: "کاربران جدید"
+      new_users: "کاربر جدید"
       popular_topics: "موضوعات محبوب"
       follow_topic: "دنبال کردن موضوع"
       join_the_discussion: "بیشتر بخوانید"
@@ -2264,7 +2264,7 @@ fa_IR:
     title: "راه اندازی Discourse"
     step:
       introduction:
-        title: "در مورد انجمن خود به ما بگویید"
+        title: "درباره سایت شما"
         fields:
           title:
             label: "نام انجمن"
@@ -2304,7 +2304,7 @@ fa_IR:
               categories_and_top_topics:
                 label: "دسته بندی ها و مباحث داغ"
       branding:
-        title: "لوگوی انجمن"
+        title: "لوگوی سایت"
         fields:
           logo:
             label: "لوگوی اصلی"

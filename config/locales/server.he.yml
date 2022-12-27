@@ -1537,8 +1537,6 @@ he:
     title: "שם האתר הזה. גלוי לכלל המבקרים כולל משתמשים אלמוניים."
     site_description: "תיאור האתר הזה במשפט אחד. גלוי לכלל המבקרים כולל משתמשים אלמוניים."
     short_site_description: "תיאור קצר במספר מילים. גלוי לכלל המבקרים כולל משתמשים אלמוניים."
-    contact_email: "כתובת דוא״ל של איש קשר מוביל שאחראי על האתר הזה. משמש להתראות קריטיות, וגם יוצג ב־<a href='%{base_path}/about' target='_blank'>‎/about</a> לנושאים דחופים."
-    contact_url: "כתובת יצירת הקשר של האתר הזה. מופיעה בעמוד <a href='%{base_path}/about' target='_blank'>‎/about</a> לנושאים דחופים."
     crawl_images: "לקבל תמונות מכתובות מרוחקות כדי לציין את ממדי הרוחב והגובה הנכונים."
     download_remote_images_to_local: "המרת תמונות מרוחקות (בקישור חם) למקומיות על ידי הורדתן. פעולה זו משמרת את התוכן אפילו אם התמונות נמחקות מהאתר המרוחק בעתיד."
     download_remote_images_threshold: "שטח האחסון המזערי (באחוזים) הנדרש להורדת תמונות כדי לאחסן אותן מקומית"
@@ -4456,7 +4454,7 @@ he:
     title: "הקמת Discourse"
     step:
       introduction:
-        title: "נשמח לשמוע על הקהילה שלך"
+        title: "על האתר שלך"
         fields:
           title:
             label: "שם הקהילה"
@@ -4514,6 +4512,8 @@ he:
                 label: "תיבות קטגוריות עם נושאים"
               subcategories_with_featured_topics:
                 label: "תת־קטגוריות עם נושאים מובילים"
+      branding:
+        title: "לוגו האתר"
       corporate:
         fields:
           governing_law:

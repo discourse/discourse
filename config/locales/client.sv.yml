@@ -3135,6 +3135,7 @@ sv:
       via_email: "det här inlägget har gjorts via e-post"
       via_auto_generated_email: "det här inlägget kom i ett autogenererat e-postmeddelande"
       whisper: "det här inlägget är en privat viskning för moderatorer"
+      whisper_groups: "det här inlägget är en privat viskning som endast är synlig för %{groupNames}"
       wiki:
         about: "detta inlägg är en wiki"
       few_likes_left: "Tack för att du sprider kärleken! Du har bara några få gillningar kvar idag."

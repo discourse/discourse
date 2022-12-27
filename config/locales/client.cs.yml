@@ -197,6 +197,7 @@ cs:
       banner:
         enabled: "Vytvořil(a) tento banner %{when}. Bude se zobrazovat nahoře na každé stránce, dokud nebude uživatelem odmítnut."
         disabled: "Odstranil(a) tento banner %{when}. Už se nebude zobrazovat na každé stránce nahoře."
+      forwarded: "Výše uvedený e-mail přeposlán"
     topic_admin_menu: "Akce tématu."
     skip_to_main_content: "Přeskočit na hlavní obsah"
     emails_are_disabled: "Všechny odchozí emaily byly administrátorem vypnuty. Žádné odchozí emaily nebudou odeslány."
@@ -211,6 +212,7 @@ cs:
       other: "Aby se váš web jednodušeji rozjel, nachází se v režimu bootstrap. Všichni noví uživatelé začínají s důveryhodností 1 a mají povolené denní odesílání souhrnných emailů. Tento režim se automaticky vypne, jakmile se zaregistruje alespoň %{count} uživatelů."
     bootstrap_mode_disabled: "Režim bootstrap bude deaktivován v následujících 24 hodinách."
     bootstrap_invite_button_title: "Poslat pozvánky"
+    bootstrap_wizard_link_title: "Dokončete průvodce nastavením"
     themes:
       default_description: "Výchozí"
       broken_theme_alert: "Váš web nemusí fungovat, protože motiv/komponenta obsahuje chyby."
@@ -221,6 +223,7 @@ cs:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
         ap_northeast_2: "Asia Pacific (Soul)"
+        ap_east_1: "Asie a Tichomoří (Hong Kong)"
         ap_south_1: "Asia Pacific (Bombaj)"
         ap_southeast_1: "Asia Pacific (Singapur)"
         ap_southeast_2: "Asia Pacific (Sydney)"
@@ -252,6 +255,7 @@ cs:
     delete: "Smazat"
     generic_error: "Bohužel nastala chyba."
     generic_error_with_reason: "Nastala chyba: %{error}"
+    multiple_errors: "Vyskytlo se více chyb: %{errors}"
     sign_up: "Registrace"
     log_in: "Přihlásit se"
     age: "Věk"
@@ -318,6 +322,7 @@ cs:
       like_count: "Líbí se"
       topic_count: "Témata"
       post_count: "Příspěvky"
+      user_count: "Registrace"
       active_user_count: "Aktivní uživatelé"
       contact: "Kontaktujte nás"
       contact_info: "V případě kritické chyby nebo urgentní záležitosti ovlivňující tuto stránku nás prosím kontaktujte na %{contact_info}."
@@ -443,6 +448,8 @@ cs:
       date_filter: "Publikováno mezi"
       in_reply_to: "v odpovědi na"
       explain:
+        why: "vysvětlete, proč tato položka skončila ve frontě"
+        title: "Přezkoumatelné bodování"
         formula: "Vzorec"
         subtotal: "Mezisoučet"
         total: "Celkem"
@@ -450,6 +457,14 @@ cs:
         score_to_hide: "Skóre pro skrytí příspěvku"
         take_action_bonus:
           name: "podnikl akci"
+        user_accuracy_bonus:
+          name: "uživatelská přesnost"
+          title: "Uživatelé, jejichž vlajky byly historicky odsouhlaseny, dostávají bonus."
+        trust_level_bonus:
+          name: "věrohodnost"
+          title: "Kontrolovatelné položky vytvořené uživateli s vyšší důvěryhodností mají vyšší skóre."
+        type_bonus:
+          name: "bonus za psaní"
       delete: "Smazat"
       settings:
         saved: "Uloženo"
@@ -459,10 +474,14 @@ cs:
       topic: "Téma:"
       filtered_user: "Uživatel"
       filtered_reviewed_by: "Zkontroloval"
+      deleted_post: "(příspěvek smazán)"
+      deleted_user: "(uživatel smazán)"
       user:
+        website: "Webová stránka"
         username: "Uživatelské jméno"
         email: "Email"
         name: "Jméno"
+        fields: "Pole"
         reject_reason: "Reason"
       topics:
         topic: "Témata"
