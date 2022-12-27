@@ -13,21 +13,17 @@ export default class ChatChannelsManager extends Service {
   @service currentUser;
   @tracked _cached = new TrackedObject();
 
-  get channels() {
-    return Object.values(this._cached);
-  }
-
-  async find(id) {
+  async find(id, options = { fetchIfNotFound: true }) {
     const existingChannel = this.#findStale(id);
-    if (existingChannel) {
+    if (existingChannel || options.fetchIfNotFound === false) {
       return Promise.resolve(existingChannel);
     } else {
       return this.#find(id);
     }
   }
 
-  async findLocally(id) {
-    return Promise.resolve(this.#findStale(id));
+  get channels() {
+    return Object.values(this._cached);
   }
 
   store(channelObject) {
