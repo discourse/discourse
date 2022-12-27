@@ -477,7 +477,7 @@ class TopicView
   def participants
     @participants ||= begin
       participants = {}
-      User.where(id: post_counts_by_user.keys).includes(:primary_group).each { |u| participants[u.id] = u }
+      User.where(id: post_counts_by_user.keys).includes(:primary_group, :flair_group).each { |u| participants[u.id] = u }
       participants
     end
   end
@@ -774,7 +774,7 @@ class TopicView
   def filter_posts_by_ids(post_ids)
     @posts = Post.where(id: post_ids, topic_id: @topic.id)
       .includes(
-        { user: :primary_group },
+        { user: [:primary_group, :flair_group] },
         :reply_to_user,
         :deleted_by,
         :incoming_email,
