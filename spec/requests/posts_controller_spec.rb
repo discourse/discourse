@@ -1438,6 +1438,81 @@ RSpec.describe PostsController do
           end
         end
       end
+
+      context "with mentions" do
+        fab!(:user_to_mention) { Fabricate(:user) }
+
+        it "returns mentioned users" do
+          post "/posts.json", params: {
+            raw: "I am mentioning @#{user_to_mention.username}",
+            topic_id: topic.id,
+          }
+
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json["mentioned_users"].length).to be(1)
+
+          mentioned_user = json["mentioned_users"][0]
+          expect(mentioned_user["id"]).to be(user_to_mention.id)
+          expect(mentioned_user["name"]).to eq(user_to_mention.name)
+          expect(mentioned_user["username"]).to eq(user_to_mention.username)
+        end
+
+        it "returns an empty list of mentioned users if nobody was mentioned" do
+          post "/posts.json", params: {
+            raw: "No mentions here",
+            topic_id: topic.id,
+          }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["mentioned_users"].length).to be(0)
+        end
+
+        it "returns an empty list of mentioned users if an nonexistent user was mentioned" do
+          post "/posts.json", params: {
+            raw: "Mentioning a @stranger",
+            topic_id: topic.id,
+          }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["mentioned_users"].length).to be(0)
+        end
+
+        it "doesn't return user status on mentions by default" do
+          user_to_mention.set_status!("off to dentist", "tooth")
+
+          post "/posts.json", params: {
+            raw: "I am mentioning @#{user_to_mention.username}",
+            topic_id: topic.id,
+          }
+
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json["mentioned_users"].length).to be(1)
+
+          status = json["mentioned_users"][0]["status"]
+          expect(status).to be_nil
+        end
+
+        it "returns user status on mentions if status is enabled in site settings" do
+          SiteSetting.enable_user_status = true
+          user_to_mention.set_status!("off to dentist", "tooth")
+
+          post "/posts.json", params: {
+            raw: "I am mentioning @#{user_to_mention.username}",
+            topic_id: topic.id,
+          }
+
+          expect(response.status).to eq(200)
+          json = response.parsed_body
+          expect(json["mentioned_users"].length).to be(1)
+
+          status = json["mentioned_users"][0]["status"]
+          expect(status).to be_present
+          expect(status["emoji"]).to eq(user_to_mention.user_status.emoji)
+          expect(status["description"]).to eq(user_to_mention.user_status.description)
+        end
+      end
     end
 
     context "with topic unlisting" do
