@@ -90,6 +90,7 @@ describe Chat::Api::ChatCurrentUserChannelsController do
           expect(ids["channel_edits"]).not_to eq(nil)
           expect(ids["channel_status"]).not_to eq(nil)
           expect(ids["new_channel"]).not_to eq(nil)
+          expect(ids["archive_status"]).not_to eq(nil)
         end
 
         response.parsed_body["public_channels"][0]["meta"]["message_bus_last_ids"].tap do |ids|
