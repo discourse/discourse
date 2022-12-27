@@ -4587,6 +4587,9 @@ en:
               other: "%{count} users have the new email domains and will be added to the group."
             automatic_membership_associated_groups: "Users who are members of a group on a service listed here will be automatically added to this group when they log in with the service."
             primary_group: "Automatically set as primary group"
+          alert:
+            primary_group: "Since this is a primary group, the name '%{group_name}' will be used in CSS classes which can be viewed by anyone."
+            flair_group: "Since this group has flair for its members, the name '%{group_name}' will be visible to anyone."
         name_placeholder: "Group name, no spaces, same as username rule"
         primary: "Primary Group"
         no_primary: "(no primary group)"
