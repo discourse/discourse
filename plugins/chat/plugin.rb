@@ -627,12 +627,6 @@ after_initialize do
     # incoming_webhooks_controller routes
     post "/hooks/:key/slack" => "incoming_chat_webhooks#create_message_slack_compatible"
 
-    # chat_channel_controller routes
-    get "/chat_channels" => "chat_channels#index"
-    post "/chat_channels/:chat_channel_id/notification_settings" =>
-           "chat_channels#notification_settings"
-    get "/chat_channels/:chat_channel_id" => "chat_channels#show"
-
     # chat_controller routes
     get "/" => "chat#respond"
     get "/browse" => "chat#respond"
