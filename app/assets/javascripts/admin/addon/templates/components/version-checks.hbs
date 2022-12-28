@@ -6,7 +6,7 @@
 
 <div
   class="dashboard-stats version-check
-    {{if this.versionCheck.critical_updates "critical" "normal"}}"
+    {{if this.versionCheck.critical_updates 'critical' 'normal'}}"
 >
   <div class="version-number">
     <h4>
@@ -18,7 +18,11 @@
     {{#if this.versionCheck.gitLink}}
       <div class="sha-link">
         (
-        <a href={{this.versionCheck.gitLink}} rel="noopener noreferrer" target="_blank">
+        <a
+          href={{this.versionCheck.gitLink}}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
           {{this.versionCheck.shortSha}}
         </a>
         )
@@ -99,8 +103,8 @@
             class="icon
               {{if
                 this.versionCheck.critical_updates
-                "critical-updates-available"
-                "updates-available"
+                'critical-updates-available'
+                'updates-available'
               }}"
           >
             {{#if this.versionCheck.behindByOneVersion}}
@@ -126,5 +130,10 @@
       </div>
     </div>
   {{/if}}
-  <CustomHtml @name="upgrade-header" @versionCheck={{this.versionCheck}} @tagName="div" @classNames="upgrade-header" />
+  <CustomHtml
+    @name="upgrade-header"
+    @versionCheck={{this.versionCheck}}
+    @tagName="div"
+    @classNames="upgrade-header"
+  />
 </div>

@@ -29,5 +29,9 @@
 {{/each}}
 
 {{#if this.showTimeRead}}
-  <UserStat @value={{this.item.time_read}} @label="directory.time_read" @type="duration" />
+  <UserStat
+    @value={{this.item.time_read}}
+    @label="directory.time_read"
+    @type="duration"
+  />
 {{/if}}

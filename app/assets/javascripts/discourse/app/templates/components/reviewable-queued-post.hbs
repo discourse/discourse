@@ -16,7 +16,11 @@
   <ReviewableCreatedBy @user={{this.reviewable.created_by}} @tagName="" />
 
   <div class="post-contents">
-    <ReviewablePostHeader @reviewable={{this.reviewable}} @createdBy={{this.reviewable.created_by}} @tagName="" />
+    <ReviewablePostHeader
+      @reviewable={{this.reviewable}}
+      @createdBy={{this.reviewable.created_by}}
+      @tagName=""
+    />
 
     <CookText
       @rawText={{this.reviewable.payload.raw}}

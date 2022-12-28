@@ -1,3 +1,7 @@
 {{#if this.isDisplayed}}
-  <ChannelsList @onSelect={{action "switchChannel"}} @toggleSection={{this.toggleSection}} @inSidebar={{true}} />
+  <ChannelsList
+    @onSelect={{action "switchChannel"}}
+    @toggleSection={{this.toggleSection}}
+    @inSidebar={{true}}
+  />
 {{/if}}

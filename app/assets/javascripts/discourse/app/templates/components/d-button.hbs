@@ -1,7 +1,11 @@
 {{! template-lint-disable no-down-event-binding }}
 <button
   {{! For legacy compatibility. Prefer passing class as attributes. }}
-  class="{{@class}} {{if @isLoading "is-loading"}} {{if this.btnLink "btn-link" "btn"}} {{if this.noText "no-text"}} {{this.btnType}}"
+  class="{{@class}}
+    {{if @isLoading 'is-loading'}}
+    {{if this.btnLink 'btn-link' 'btn'}}
+    {{if this.noText 'no-text'}}
+    {{this.btnType}}"
   {{! For legacy compatibility. Prefer passing these as html attributes. }}
   id={{@id}}
   form={{@form}}
@@ -26,7 +30,9 @@
   {{/if}}
 
   {{~#if this.computedLabel~}}
-    <span class="d-button-label">{{html-safe this.computedLabel}}{{#if this.ellipsis}}&hellip;{{/if}}</span>
+    <span class="d-button-label">{{html-safe this.computedLabel}}{{#if
+        this.ellipsis
+      }}&hellip;{{/if}}</span>
   {{~else if (not (has-block))~}}
     &#8203;
     {{! Zero-width space character, so icon-only button height = regular button height }}

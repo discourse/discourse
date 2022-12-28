@@ -2,9 +2,23 @@
 
   <div class="controls">
     <div class="inline-form">
-      <DButton @action={{action "toggleMenu"}} @class="menu-toggle" @icon="bars" />
-      <TextField @id="setting-filter" @value={{this.filter}} @placeholderKey="type_to_filter" @class="no-blur" />
-      <DButton @class="btn-default" @id="clear-filter" @action={{action "clearFilter"}} @label="admin.site_settings.clear_filter" />
+      <DButton
+        @action={{action "toggleMenu"}}
+        @class="menu-toggle"
+        @icon="bars"
+      />
+      <TextField
+        @id="setting-filter"
+        @value={{this.filter}}
+        @placeholderKey="type_to_filter"
+        @class="no-blur"
+      />
+      <DButton
+        @class="btn-default"
+        @id="clear-filter"
+        @action={{action "clearFilter"}}
+        @label="admin.site_settings.clear_filter"
+      />
     </div>
   </div>
   <div class="search controls">
@@ -19,9 +33,15 @@
   <ul class="nav nav-stacked">
     {{#each this.visibleSiteSettings as |category|}}
       <li class={{category.nameKey}}>
-        <LinkTo @route="adminSiteSettingsCategory" @model={{category.nameKey}} class={{category.nameKey}}>
+        <LinkTo
+          @route="adminSiteSettingsCategory"
+          @model={{category.nameKey}}
+          class={{category.nameKey}}
+        >
           {{category.name}}
-          {{#if category.count}}<span class="count">({{category.count}})</span>{{/if}}
+          {{#if category.count}}<span
+              class="count"
+            >({{category.count}})</span>{{/if}}
         </LinkTo>
       </li>
     {{/each}}

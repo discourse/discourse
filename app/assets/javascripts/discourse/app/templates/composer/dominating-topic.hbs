@@ -1,9 +1,20 @@
-<a href {{on "click" (fn this.closeMessage this.message)}} class="close" aria-label={{i18n "composer.esc_label"}}>
-  {{i18n "composer.esc"}} {{d-icon "times"}}
+<a
+  href
+  {{on "click" (fn this.closeMessage this.message)}}
+  class="close"
+  aria-label={{i18n "composer.esc_label"}}
+>
+  {{i18n "composer.esc"}}
+  {{d-icon "times"}}
 </a>
 
 {{html-safe this.message.body}}
 
 {{#if this.currentUser.can_invite_to_forum}}
-  <DButton @class="btn-primary" @label="footer_nav.share" @icon="link" @action={{action this.shareModal}} />
+  <DButton
+    @class="btn-primary"
+    @label="footer_nav.share"
+    @icon="link"
+    @action={{action this.shareModal}}
+  />
 {{/if}}

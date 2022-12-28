@@ -1,6 +1,14 @@
 <div class="admin-title">
-  <PeriodChooser @period={{this.period}} @onChange={{action (mut this.period)}} />
-  <ComboBox @content={{this.searchTypeOptions}} @value={{this.searchType}} @class="search-logs-filter" @onChange={{action (mut this.searchType)}} />
+  <PeriodChooser
+    @period={{this.period}}
+    @onChange={{action (mut this.period)}}
+  />
+  <ComboBox
+    @content={{this.searchTypeOptions}}
+    @value={{this.searchType}}
+    @class="search-logs-filter"
+    @onChange={{action (mut this.searchType)}}
+  />
 </div>
 
 <ConditionalLoadingSpinner @condition={{this.loading}}>
@@ -10,18 +18,28 @@
       <thead>
         <th class="col heading term">{{i18n "admin.logs.search_logs.term"}}</th>
         <th class="col heading">{{i18n "admin.logs.search_logs.searches"}}</th>
-        <th class="col heading">{{i18n "admin.logs.search_logs.click_through_rate"}}</th>
+        <th class="col heading">{{i18n
+            "admin.logs.search_logs.click_through_rate"
+          }}</th>
       </thead>
       <tbody>
         {{#each this.model as |item|}}
           <tr class="admin-list-item">
             <td class="col term">
-              <LinkTo @route="adminSearchLogs.term" @query={{hash term=item.term period=this.period}} class="test">
+              <LinkTo
+                @route="adminSearchLogs.term"
+                @query={{hash term=item.term period=this.period}}
+                class="test"
+              >
                 {{item.term}}
               </LinkTo>
             </td>
-            <td class="col"><div class="label">{{i18n "admin.logs.search_logs.searches"}}</div>{{item.searches}}</td>
-            <td class="col"><div class="label">{{i18n "admin.logs.search_logs.click_through_rate"}}</div>{{item.ctr}}%</td>
+            <td class="col"><div class="label">{{i18n
+                  "admin.logs.search_logs.searches"
+                }}</div>{{item.searches}}</td>
+            <td class="col"><div class="label">{{i18n
+                  "admin.logs.search_logs.click_through_rate"
+                }}</div>{{item.ctr}}%</td>
           </tr>
         {{/each}}
       </tbody>

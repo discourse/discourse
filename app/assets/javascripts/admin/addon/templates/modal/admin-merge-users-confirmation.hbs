@@ -1,11 +1,32 @@
 <div>
-  <DModalBody @rawTitle={{i18n "admin.user.merge.confirmation.title" username=this.username}}>
-    <p>{{html-safe (i18n "admin.user.merge.confirmation.description" username=this.username targetUsername=this.targetUsername text=this.text)}}</p>
+  <DModalBody
+    @rawTitle={{i18n
+      "admin.user.merge.confirmation.title"
+      username=this.username
+    }}
+  >
+    <p>{{html-safe
+        (i18n
+          "admin.user.merge.confirmation.description"
+          username=this.username
+          targetUsername=this.targetUsername
+          text=this.text
+        )
+      }}</p>
     <Input @type="text" @value={{this.value}} />
   </DModalBody>
 
   <div class="modal-footer">
-    <DButton @class="btn-danger" @action={{action "confirm"}} @icon="trash-alt" @disabled={{this.mergeDisabled}} @translatedLabel={{this.mergeButtonText}} />
-    <DButton @action={{action "close"}} @label="admin.user.merge.confirmation.cancel" />
+    <DButton
+      @class="btn-danger"
+      @action={{action "confirm"}}
+      @icon="trash-alt"
+      @disabled={{this.mergeDisabled}}
+      @translatedLabel={{this.mergeButtonText}}
+    />
+    <DButton
+      @action={{action "close"}}
+      @label="admin.user.merge.confirmation.cancel"
+    />
   </div>
 </div>

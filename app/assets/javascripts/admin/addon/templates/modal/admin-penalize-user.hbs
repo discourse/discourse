@@ -7,17 +7,21 @@
     {{#if this.canPenalize}}
       <div class="penalty-duration-controls">
         {{#if (eq this.penaltyType "suspend")}}
-          <FutureDateInput @class="suspend-until"
-                           @label="admin.user.suspend_duration"
-                           @clearable={{false}}
-                           @input={{this.penalizeUntil}}
-                           @onChangeInput={{action (mut this.penalizeUntil)}} />
+          <FutureDateInput
+            @class="suspend-until"
+            @label="admin.user.suspend_duration"
+            @clearable={{false}}
+            @input={{this.penalizeUntil}}
+            @onChangeInput={{action (mut this.penalizeUntil)}}
+          />
         {{else if (eq this.penaltyType "silence")}}
-          <FutureDateInput @class="silence-until"
-                           @label="admin.user.silence_duration"
-                           @clearable={{false}}
-                           @input={{this.penalizeUntil}}
-                           @onChangeInput={{action (mut this.penalizeUntil)}} />
+          <FutureDateInput
+            @class="silence-until"
+            @label="admin.user.silence_duration"
+            @clearable={{false}}
+            @input={{this.penalizeUntil}}
+            @onChangeInput={{action (mut this.penalizeUntil)}}
+          />
         {{/if}}
       </div>
 
@@ -31,14 +35,26 @@
         </div>
       {{/if}}
 
-      <AdminPenaltyReason @penaltyType={{this.penaltyType}} @reason={{this.reason}} @message={{this.message}} />
+      <AdminPenaltyReason
+        @penaltyType={{this.penaltyType}}
+        @reason={{this.reason}}
+        @message={{this.message}}
+      />
 
       {{#if this.postId}}
-        <AdminPenaltyPostAction @postId={{this.postId}} @postAction={{this.postAction}} @postEdit={{this.postEdit}} />
+        <AdminPenaltyPostAction
+          @postId={{this.postId}}
+          @postAction={{this.postAction}}
+          @postEdit={{this.postEdit}}
+        />
       {{/if}}
 
       {{#if this.user.similar_users}}
-        <AdminPenaltySimilarUsers @penaltyType={{this.penaltyType}} @user={{this.user}} @selectedUserIds={{this.otherUserIds}} />
+        <AdminPenaltySimilarUsers
+          @penaltyType={{this.penaltyType}}
+          @user={{this.user}}
+          @selectedUserIds={{this.otherUserIds}}
+        />
       {{/if}}
 
       <div class="penalty-history">{{html-safe this.penaltyHistory}}</div>
@@ -53,11 +69,13 @@
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @class="btn-danger perform-penalize"
-           @action={{this.penalizeUser}}
-           @disabled={{this.submitDisabled}}
-           @icon="ban"
-           @label={{this.buttonLabel}} />
+  <DButton
+    @class="btn-danger perform-penalize"
+    @action={{this.penalizeUser}}
+    @disabled={{this.submitDisabled}}
+    @icon="ban"
+    @label={{this.buttonLabel}}
+  />
   <DModalCancel @close={{route-action "closeModal"}} />
   <ConditionalLoadingSpinner @condition={{this.loading}} @size="small" />
 </div>
