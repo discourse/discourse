@@ -11,19 +11,39 @@
 
   <AdminFormRow @label="admin.api.description">
     {{#if this.editingDescription}}
-      <Input @value={{this.buffered.description}} maxlength="255" placeholder={{i18n "admin.api.description_placeholder"}} />
+      <Input
+        @value={{this.buffered.description}}
+        maxlength="255"
+        placeholder={{i18n "admin.api.description_placeholder"}}
+      />
     {{else}}
       <span>
-        {{if this.model.description this.model.description (i18n "admin.api.no_description")}}
+        {{if
+          this.model.description
+          this.model.description
+          (i18n "admin.api.no_description")
+        }}
       </span>
     {{/if}}
 
     <div class="controls">
       {{#if this.editingDescription}}
-        <DButton @class="ok" @action={{action "saveDescription"}} @icon="check" />
-        <DButton @class="cancel" @action={{action "editDescription"}} @icon="times" />
+        <DButton
+          @class="ok"
+          @action={{action "saveDescription"}}
+          @icon="check"
+        />
+        <DButton
+          @class="cancel"
+          @action={{action "editDescription"}}
+          @icon="times"
+        />
       {{else}}
-        <DButton @class="btn-default" @action={{action "editDescription"}} @icon="pencil-alt" />
+        <DButton
+          @class="btn-default"
+          @action={{action "editDescription"}}
+          @icon="pencil-alt"
+        />
       {{/if}}
     </div>
   </AdminFormRow>
@@ -31,7 +51,8 @@
   <AdminFormRow @label="admin.api.user">
     {{#if this.model.user}}
       <LinkTo @route="adminUser" @model={{this.model.user}}>
-        {{avatar this.model.user imageSize="small"}} {{this.model.user.username}}
+        {{avatar this.model.user imageSize="small"}}
+        {{this.model.user.username}}
       </LinkTo>
     {{else}}
       {{i18n "admin.api.all_users"}}
@@ -62,10 +83,27 @@
     {{/if}}
     <div class="controls">
       {{#if this.model.revoked_at}}
-        <DButton @action={{action "undoRevokeKey"}} @actionParam={{this.model}} @icon="undo" @label="admin.api.undo_revoke" />
-        <DButton @action={{action "deleteKey"}} @actionParam={{this.model}} @icon="trash-alt" @label="admin.api.delete" @class="btn-danger" />
+        <DButton
+          @action={{action "undoRevokeKey"}}
+          @actionParam={{this.model}}
+          @icon="undo"
+          @label="admin.api.undo_revoke"
+        />
+        <DButton
+          @action={{action "deleteKey"}}
+          @actionParam={{this.model}}
+          @icon="trash-alt"
+          @label="admin.api.delete"
+          @class="btn-danger"
+        />
       {{else}}
-        <DButton @class="btn-danger" @action={{action "revokeKey"}} @actionParam={{this.model}} @icon="times" @label="admin.api.revoke" />
+        <DButton
+          @class="btn-danger"
+          @action={{action "revokeKey"}}
+          @actionParam={{this.model}}
+          @icon="times"
+          @label="admin.api.revoke"
+        />
       {{/if}}
     </div>
   </AdminFormRow>
@@ -90,12 +128,24 @@
               {{scope.action}}
               <span
                 class="scope-tooltip"
-                data-tooltip={{i18n (concat "admin.api.scopes.descriptions." scope.resource "." scope.key)}}>
+                data-tooltip={{i18n
+                  (concat
+                    "admin.api.scopes.descriptions."
+                    scope.resource
+                    "."
+                    scope.key
+                  )
+                }}
+              >
                 {{d-icon "question-circle"}}
               </span>
             </td>
             <td>
-              <DButton @icon="link" @action={{action "showURLs" scope.urls}} @class="btn-info" />
+              <DButton
+                @icon="link"
+                @action={{action "showURLs" scope.urls}}
+                @class="btn-info"
+              />
             </td>
             <td>
               {{#each scope.parameters as |p|}}

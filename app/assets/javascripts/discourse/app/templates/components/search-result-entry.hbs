@@ -7,10 +7,20 @@
 <div class="fps-topic">
   <div class="topic">
     {{#if this.bulkSelectEnabled}}
-      <TrackSelected @selectedList={{this.selected}} @selectedId={{this.post.topic}} @class="bulk-select" />
+      <TrackSelected
+        @selectedList={{this.selected}}
+        @selectedId={{this.post.topic}}
+        @class="bulk-select"
+      />
     {{/if}}
 
-    <a href={{this.post.url}} {{on "click" (fn this.logClick this.post.topic_id)}} class="search-link{{if this.post.topic.visited " visited"}}" role="heading" aria-level="2">
+    <a
+      href={{this.post.url}}
+      {{on "click" (fn this.logClick this.post.topic_id)}}
+      class="search-link{{if this.post.topic.visited ' visited'}}"
+      role="heading"
+      aria-level="2"
+    >
       {{raw "topic-status" topic=this.post.topic showPrivateMessageIcon=true}}
       <span class="topic-title">
         {{#if this.post.useTopicTitleHeadline}}
@@ -31,7 +41,12 @@
       {{#if this.post.topic}}
         {{discourse-tags this.post.topic}}
       {{/if}}
-      <PluginOutlet @name="full-page-search-category" @tagName="span" @connectorTagName="div" @args={{hash post=this.post}} />
+      <PluginOutlet
+        @name="full-page-search-category"
+        @tagName="span"
+        @connectorTagName="div"
+        @args={{hash post=this.post}}
+      />
     </div>
   </div>
 
@@ -57,7 +72,8 @@
   {{#if this.showLikeCount}}
     {{#if this.post.like_count}}
       <span class="like-count">
-        <span class="value">{{this.post.like_count}}</span> {{d-icon "heart"}}
+        <span class="value">{{this.post.like_count}}</span>
+        {{d-icon "heart"}}
       </span>
     {{/if}}
   {{/if}}

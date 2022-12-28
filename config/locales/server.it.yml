@@ -1419,8 +1419,6 @@ it:
     allow_duplicate_topic_titles_category: "Permetti argomenti con titoli identici e duplicati se la categoria è diversa. L'impostazione allow_duplicate_topic_titles deve essere disabilitata."
     unique_posts_mins: "Quanti minuti prima che un utente possa creare un altro messaggio con lo stesso contenuto"
     educate_until_posts: "Per i primi (n) messaggi di un utente, mostra la finestra a discesa con il pannello di istruzioni per nuovi utenti."
-    contact_email: "Indirizzo email di contatto del principale responsabile di questo sito. Utilizzato per notifiche cruciali, nonché visualizzato sul modulo di contatto <a href='%{base_path}/about' target='_blank'>/about</a> per questioni urgenti."
-    contact_url: "URL di contatto per questo sito. Visualizzato nella pagina <a href='%{base_path}/about' target='_blank'>/Informazioni</a> per contatti urgenti."
     crawl_images: "Recupera le immagini dagli URL remoti per inserire le dimensioni corrette di ampiezza e altezza nel tag."
     download_remote_images_to_local: "Converti immagini remote (linkate) in immagini locali scaricandole; ciò preserva il contenuto anche se le immagini vengono rimosse dal sito remoto in futuro."
     download_remote_images_threshold: "Minimo spazio su disco necessario per scaricare le immagini remote in locale (in percentuale)"
@@ -4043,7 +4041,6 @@ it:
     title: "Configurazione Discourse"
     step:
       introduction:
-        title: "Parlaci della tua community"
         fields:
           title:
             label: "Nome community"

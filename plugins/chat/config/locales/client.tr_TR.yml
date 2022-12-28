@@ -109,14 +109,45 @@ tr_TR:
       new_messages: "yeni mesajlar"
       mention_warning:
         dismiss: "kapat"
+        cannot_see:
+          one: "%{username} bu kanala erişemiyor ve bildirim almadı."
+          other: "%{username} ve %{others} bu kanala erişemiyor ve bildirim almadı."
         invitations_sent:
           one: "Davet gönderildi"
           other: "Davet gönderildi"
         invite: "Kanala davet et"
+        without_membership:
+          one: "%{username} bu kanala katılmadı."
+          other: "%{username} ve %{others} bu kanala katılmadı."
+        group_mentions_disabled:
+          one: "%{group_name} bahsetmeye izin vermiyor"
+          other: "%{group_name} ve %{others} bahsetmeye izin vermiyor"
+        too_many_members:
+          one: "%{group_name} çok fazla üyeye sahip. Kimseye bildirim gönderilmedi"
+          other: "%{group_name} ve %{others} çok fazla üyeye sahip. Kimseye bildirim gönderilmedi"
+        warning_multiple:
+          one: "%{count} tane daha"
+          other: "%{count} tane daha"
         groups:
+          header:
+            some: "Bazı kullanıcılara bildirim gönderilmeyecek"
+            all: "Kimseye bildirim gönderilmeyecek"
+          unreachable:
+            one: "@%{group} bahsetmeye izin vermiyor"
+            other: "@%{group} ve @%{group_2} bahsetmeye izin vermiyor"
+          unreachable_multiple: "@%{group} ve %{count} grup daha bahsetmeye izin vermiyor"
+          too_many_members:
+            one: "@%{group} adlı gruptan bahsetmek %{limit} %{notification_limit} değerini aşıyor"
+            other: "Hem @%{group} hem de @%{group_2} adlı gruplardan bahsetmek %{limit} %{notification_limit} değerini aşıyor"
+          too_many_members_multiple: "Bu %{count} grup %{limit} %{notification_limit} değerini aşıyor."
           users_limit:
             one: "%{count} kullanıcı"
             other: "%{count} kullanıcı"
+          notification_limit: "bildirim limiti"
+        too_many_mentions: "Bu mesaj, %{limit} %{notification_limit} değerini aşıyor"
+        mentions_limit:
+          one: "%{count} bahsetme"
+          other: "%{count} bahsetme"
       aria_roles:
         header: "Sohbet başlığı"
         composer: "Sohbet oluşturucu"
@@ -272,6 +303,8 @@ tr_TR:
         mention: "Sadece bahsetmeler için"
         always: "Tüm aktiviteler için"
       settings:
+        channel_wide_mentions_label: "@all ve @here bahsetmelerine izin ver"
+        channel_wide_mentions_description: "Kullanıcıların @all ile #%{channel} kanalının tüm üyelerine veya @here ile yalnızca o anda aktif olanlara bildirim göndermelerine izin verin"
         auto_join_users_label: "Kullanıcıları otomatik olarak ekle"
         auto_join_users_info: "Son 3 ayda hangi kullanıcıların aktif olduğunu saatlik olarak kontrol edin ve %{category} adlı kategoriye erişimleri varsa bu kanala ekleyin."
         enable_auto_join_users: "Son zamanlarda aktif olan tüm kullanıcıları otomatik olarak ekle"

@@ -1419,8 +1419,6 @@ de:
     allow_duplicate_topic_titles_category: "Themen mit identischen, doppelten Titeln zulassen, wenn die Kategorie unterschiedlich ist. allow_duplicate_topic_titles muss deaktiviert sein."
     unique_posts_mins: "Minuten, nach denen ein Benutzer denselben Inhalt noch einmal schreiben kann."
     educate_until_posts: "Zeige das Hilfe-Panel im Editor, wenn ein Benutzer einen seiner ersten (n) Beiträge zu schreiben beginnt."
-    contact_email: "E-Mail-Adresse einer verantwortlichen Person für diese Website. Wird verwendet für kritische Benachrichtigungen und unter <a href='%{base_path}/about' target='_blank'>/about</a> für dringende Anfragen angezeigt."
-    contact_url: "Kontakt-URL für diese Website. Wird auf der Seite <a href='%{base_path}/about' target='_blank'>/about</a> für dringende Anliegen angezeigt."
     crawl_images: "Lade Bilder von fremden URLs herunter, um ihre Höhe und Breite zu bestimmen."
     download_remote_images_to_local: "Externe (per Hotlink aufgerufene) Bilder in lokale Bilder konvertieren, indem sie heruntergeladen werden; so bleibt der Inhalt erhalten, auch wenn die Bilder in Zukunft von der externen Website entfernt werden."
     download_remote_images_threshold: "Minimal benötigter freier Festplattenspeicher, um externe Bilder lokal herunterzuladen (in Prozent)"
@@ -4455,7 +4453,6 @@ de:
     title: "Discourse einrichten"
     step:
       introduction:
-        title: "Erzähl uns von deiner Community"
         fields:
           title:
             label: "Name der Community"

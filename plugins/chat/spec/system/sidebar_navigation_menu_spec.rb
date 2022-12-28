@@ -158,6 +158,7 @@ RSpec.describe "Sidebar navigation menu", type: :system, js: true do
       end
 
       it "displays all participants names" do
+        visit("/")
         expect(
           page.find(
             ".sidebar-section-chat-dms a.sidebar-section-link:nth-child(1) .sidebar-section-link-content-text",

@@ -1,9 +1,17 @@
 {{#if this.replyToMsg}}
-  <ChatComposerMessageDetails @message={{this.replyToMsg}} @icon="reply" @action={{action "cancelReplyTo"}} />
+  <ChatComposerMessageDetails
+    @message={{this.replyToMsg}}
+    @icon="reply"
+    @action={{action "cancelReplyTo"}}
+  />
 {{/if}}
 
 {{#if this.editingMessage}}
-  <ChatComposerMessageDetails @message={{this.editingMessage}} @icon="pencil-alt" @action={{action "cancelEditing"}} />
+  <ChatComposerMessageDetails
+    @message={{this.editingMessage}}
+    @icon="pencil-alt"
+    @action={{action "cancelEditing"}}
+  />
 {{/if}}
 
 <div class="chat-composer-emoji-picker-anchor"></div>
@@ -11,7 +19,7 @@
 <div
   role="region"
   aria-label={{i18n "chat.aria_roles.composer"}}
-  class="chat-composer {{if this.disableComposer "is-disabled"}}"
+  class="chat-composer {{if this.disableComposer 'is-disabled'}}"
 >
   {{#if
     (and
@@ -19,14 +27,32 @@
       (eq this.chatEmojiPickerManager.context "chat-composer")
     )
   }}
-    <DButton @icon="times" @action={{this.chatEmojiPickerManager.close}} @class="chat-composer__close-emoji-picker-btn btn-flat" />
+    <DButton
+      @icon="times"
+      @action={{this.chatEmojiPickerManager.close}}
+      @class="chat-composer__close-emoji-picker-btn btn-flat"
+    />
   {{else}}
     {{#unless this.disableComposer}}
-      <ChatComposerDropdown @buttons={{this.dropdownButtons}} @isDisabled={{this.disableComposer}} />
+      <ChatComposerDropdown
+        @buttons={{this.dropdownButtons}}
+        @isDisabled={{this.disableComposer}}
+      />
     {{/unless}}
   {{/if}}
 
-  <DTextarea @value={{readonly this.value}} @input={{action "onTextareaInput" value="target.value"}} @type="text" @class="chat-composer-input" @disabled={{this.disableComposer}} @autocorrect="on" @autocapitalize="sentences" @placeholder={{this.placeholder}} @focus-in={{action "onTextareaFocusIn" value="target"}} @rows={{1}} />
+  <DTextarea
+    @value={{readonly this.value}}
+    @input={{action "onTextareaInput" value="target.value"}}
+    @type="text"
+    @class="chat-composer-input"
+    @disabled={{this.disableComposer}}
+    @autocorrect="on"
+    @autocapitalize="sentences"
+    @placeholder={{this.placeholder}}
+    @focus-in={{action "onTextareaFocusIn" value="target"}}
+    @rows={{1}}
+  />
 
   {{#if this.isNetworkUnreliable}}
     <span
@@ -37,7 +63,13 @@
     </span>
   {{/if}}
 
-  <FlatButton @action={{action "sendClicked"}} @icon="paper-plane" @class="icon-only send-btn chat-composer-inline-button" @title={{this.sendTitle}} @disabled={{this.sendDisabled}} />
+  <FlatButton
+    @action={{action "sendClicked"}}
+    @icon="paper-plane"
+    @class="icon-only send-btn chat-composer-inline-button"
+    @title={{this.sendTitle}}
+    @disabled={{this.sendDisabled}}
+  />
 
   {{#unless this.disableComposer}}
     <ChatComposerInlineButtons @buttons={{this.inlineButtons}} />
@@ -45,7 +77,10 @@
 </div>
 
 {{#if this.canAttachUploads}}
-  <ChatComposerUploads @fileUploadElementId={{this.fileUploadElementId}} @onUploadChanged={{action "uploadsChanged"}} />
+  <ChatComposerUploads
+    @fileUploadElementId={{this.fileUploadElementId}}
+    @onUploadChanged={{action "uploadsChanged"}}
+  />
 {{/if}}
 
 {{#unless this.chatChannel.isDraft}}

@@ -1,3 +1,10 @@
 <DModalBody @id="bookmark-reminder-modal">
-  <Bookmark @model={{this.model}} @afterSave={{this.afterSave}} @afterDelete={{this.afterDelete}} @onCloseWithoutSaving={{this.onCloseWithoutSaving}} @registerOnCloseHandler={{action "registerOnCloseHandler"}} @closeModal={{action "closeModal"}} />
+  <Bookmark
+    @model={{this.model}}
+    @afterSave={{this.afterSave}}
+    @afterDelete={{this.afterDelete}}
+    @onCloseWithoutSaving={{this.onCloseWithoutSaving}}
+    @registerOnCloseHandler={{action "registerOnCloseHandler"}}
+    @closeModal={{action "closeModal"}}
+  />
 </DModalBody>

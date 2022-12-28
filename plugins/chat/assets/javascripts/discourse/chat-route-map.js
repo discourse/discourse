@@ -20,6 +20,5 @@ export default function () {
       this.route("archived", { path: "/archived" });
     });
     this.route("message", { path: "/message/:messageId" });
-    this.route("channelByName", { path: "/chat_channels/:channelName" });
   });
 }

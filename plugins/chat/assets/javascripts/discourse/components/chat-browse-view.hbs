@@ -1,6 +1,9 @@
 {{#if this.chatProgressBarContainer}}
   {{#in-element this.chatProgressBarContainer}}
-    <DProgressBar @key="browse-list" @isLoading={{this.channelsCollection.loading}} />
+    <DProgressBar
+      @key="browse-list"
+      @isLoading={{this.channelsCollection.loading}}
+    />
   {{/in-element}}
 {{/if}}
 
@@ -56,7 +59,11 @@
     />
   </div>
 
-  {{#if (and (not this.channelsCollection.length) (not this.channelsCollection.loading))}}
+  {{#if
+    (and
+      (not this.channelsCollection.length) (not this.channelsCollection.loading)
+    )
+  }}
     <div class="empty-state">
       <span class="empty-state-title">{{i18n "chat.empty_state.title"}}</span>
       <div class="empty-state-body">

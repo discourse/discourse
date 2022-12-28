@@ -4,7 +4,9 @@
 
       <div class="control-group">
         <div class="controls">
-          <h3>{{i18n (if this.new "user.add_email.title" "user.change_email.title")}}</h3>
+          <h3>{{i18n
+              (if this.new "user.add_email.title" "user.change_email.title")
+            }}</h3>
         </div>
       </div>
 
@@ -12,7 +14,7 @@
         <div class="control-group">
           <div class="controls">
             <div class="instructions">
-              <p>{{ this.successMessage }}</p>
+              <p>{{this.successMessage}}</p>
             </div>
           </div>
         </div>
@@ -28,7 +30,12 @@
         <div class="control-group">
           <label class="control-label">{{i18n "user.email.title"}}</label>
           <div class="controls">
-            <TextField @value={{this.newEmail}} @id="change-email" @classNames="input-xxlarge" @autofocus="autofocus" />
+            <TextField
+              @value={{this.newEmail}}
+              @id="change-email"
+              @classNames="input-xxlarge"
+              @autofocus="autofocus"
+            />
             <InputTip @validation={{this.emailValidation}} />
           </div>
           <div class="controls">
@@ -44,7 +51,13 @@
 
         <div class="control-group">
           <div class="controls">
-            <DButton @class="btn-primary" @action={{action "saveEmail"}} @type="submit" @disabled={{this.saveDisabled}} @translatedLabel={{this.saveButtonText}} />
+            <DButton
+              @class="btn-primary"
+              @action={{action "saveEmail"}}
+              @type="submit"
+              @disabled={{this.saveDisabled}}
+              @translatedLabel={{this.saveButtonText}}
+            />
           </div>
         </div>
       {{/if}}

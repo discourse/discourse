@@ -9,12 +9,15 @@ import {
 } from "discourse/lib/computed";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { setPrefix } from "discourse-common/lib/get-url";
 import sinon from "sinon";
-import { test } from "qunit";
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
 
-discourseModule("Unit | Utility | computed", function (hooks) {
+module("Unit | Utility | computed", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     sinon.stub(I18n, "t").callsFake(function (scope) {
       return "%@ translated: " + scope;
@@ -26,20 +29,22 @@ discourseModule("Unit | Utility | computed", function (hooks) {
   });
 
   test("setting", function (assert) {
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+
     let t = EmberObject.extend({
-      siteSettings: this.siteSettings,
+      siteSettings,
       vehicle: setting("vehicle"),
       missingProp: setting("madeUpThing"),
     }).create();
 
-    this.siteSettings.vehicle = "airplane";
+    siteSettings.vehicle = "airplane";
     assert.strictEqual(
-      t.get("vehicle"),
+      t.vehicle,
       "airplane",
       "it has the value of the site setting"
     );
     assert.ok(
-      !t.get("missingProp"),
+      !t.missingProp,
       "it is falsy when the site setting is not defined"
     );
   });
@@ -52,9 +57,9 @@ discourseModule("Unit | Utility | computed", function (hooks) {
       biscuits: 10,
     });
 
-    assert.ok(t.get("same"), "it is true when the properties are the same");
+    assert.ok(t.same, "it is true when the properties are the same");
     t.set("biscuits", 9);
-    assert.ok(!t.get("same"), "it isn't true when one property is different");
+    assert.ok(!t.same, "it isn't true when one property is different");
   });
 
   test("propertyNotEqual", function (assert) {
@@ -65,9 +70,9 @@ discourseModule("Unit | Utility | computed", function (hooks) {
       biscuits: 10,
     });
 
-    assert.ok(!t.get("diff"), "it isn't true when the properties are the same");
+    assert.ok(!t.diff, "it isn't true when the properties are the same");
     t.set("biscuits", 9);
-    assert.ok(t.get("diff"), "it is true when one property is different");
+    assert.ok(t.diff, "it is true when one property is different");
   });
 
   test("fmt", function (assert) {
@@ -80,25 +85,25 @@ discourseModule("Unit | Utility | computed", function (hooks) {
     });
 
     assert.strictEqual(
-      t.get("exclaimyUsername"),
+      t.exclaimyUsername,
       "!!! eviltrout !!!",
       "it inserts the string"
     );
     assert.strictEqual(
-      t.get("multiple"),
+      t.multiple,
       "eviltrout is happy",
       "it inserts multiple strings"
     );
 
     t.set("username", "codinghorror");
     assert.strictEqual(
-      t.get("multiple"),
+      t.multiple,
       "codinghorror is happy",
       "it supports changing properties"
     );
     t.set("mood", "ecstatic");
     assert.strictEqual(
-      t.get("multiple"),
+      t.multiple,
       "codinghorror is ecstatic",
       "it supports changing another property"
     );
@@ -114,25 +119,25 @@ discourseModule("Unit | Utility | computed", function (hooks) {
     });
 
     assert.strictEqual(
-      t.get("exclaimyUsername"),
+      t.exclaimyUsername,
       "%@ translated: !!! eviltrout !!!",
       "it inserts the string and then translates"
     );
     assert.strictEqual(
-      t.get("multiple"),
+      t.multiple,
       "%@ translated: eviltrout is happy",
       "it inserts multiple strings and then translates"
     );
 
     t.set("username", "codinghorror");
     assert.strictEqual(
-      t.get("multiple"),
+      t.multiple,
       "%@ translated: codinghorror is happy",
       "it supports changing properties"
     );
     t.set("mood", "ecstatic");
     assert.strictEqual(
-      t.get("multiple"),
+      t.multiple,
       "%@ translated: codinghorror is ecstatic",
       "it supports changing another property"
     );
@@ -147,7 +152,7 @@ discourseModule("Unit | Utility | computed", function (hooks) {
 
     t = testClass.create({ username: "eviltrout" });
     assert.strictEqual(
-      t.get("userUrl"),
+      t.userUrl,
       "/u/eviltrout",
       "it supports urls without a prefix"
     );
@@ -155,7 +160,7 @@ discourseModule("Unit | Utility | computed", function (hooks) {
     setPrefix("/prefixed");
     t = testClass.create({ username: "eviltrout" });
     assert.strictEqual(
-      t.get("userUrl"),
+      t.userUrl,
       "/prefixed/u/eviltrout",
       "it supports urls with a prefix"
     );
@@ -167,6 +172,6 @@ discourseModule("Unit | Utility | computed", function (hooks) {
       desc: htmlSafe("cookies"),
     }).create({ cookies });
 
-    assert.strictEqual(t.get("desc").string, cookies);
+    assert.strictEqual(t.desc.string, cookies);
   });
 });

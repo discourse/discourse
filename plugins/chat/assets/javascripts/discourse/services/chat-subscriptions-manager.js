@@ -115,7 +115,7 @@ export default class ChatSubscriptionsManager extends Service {
   _onNewMentions(busData) {
     this.chatChannelsManager.find(busData.channel_id).then((channel) => {
       const membership = channel.currentUserMembership;
-      if (membership) {
+      if (busData.message_id > membership?.last_read_message_id) {
         membership.unread_mentions = (membership.unread_mentions || 0) + 1;
       }
     });
@@ -183,7 +183,7 @@ export default class ChatSubscriptionsManager extends Service {
   _onUserTrackingStateUpdate(busData) {
     this.chatChannelsManager.find(busData.chat_channel_id).then((channel) => {
       if (
-        channel?.currentUserMembership?.last_read_message_id <
+        channel?.currentUserMembership?.last_read_message_id <=
         busData.chat_message_id
       ) {
         channel.currentUserMembership.last_read_message_id =

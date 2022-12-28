@@ -23,6 +23,10 @@ module PageObjects
         has_no_css?(".chat-skeleton")
       end
 
+      def has_selection_management?
+        has_css?(".chat-selection-management")
+      end
+
       def expand_message_actions(message)
         hover_message(message)
         click_more_buttons(message)
@@ -53,15 +57,19 @@ module PageObjects
         find("[data-value='selectMessage']").click
       end
 
-      def edit_message(message, text = nil)
+      def open_edit_message(message)
         hover_message(message)
         click_more_buttons(message)
         find("[data-value='edit']").click
+      end
 
+      def edit_message(message, text = nil)
+        open_edit_message(message)
         send_message(text) if text
       end
 
       def send_message(text = nil)
+        find(".chat-composer-input").click # makes helper more reliable by ensuring focus is not lost
         find(".chat-composer-input").fill_in(with: text)
         click_send_message
       end
@@ -101,6 +109,14 @@ module PageObjects
 
       def click_reaction(message, reaction)
         find_reaction(message, reaction).click
+      end
+
+      def open_action_menu
+        find(".chat-composer-dropdown__trigger-btn").click
+      end
+
+      def click_action_button(action_button_class)
+        find(".chat-composer-dropdown__action-btn.#{action_button_class}").click
       end
 
       def has_message?(text: nil, id: nil)

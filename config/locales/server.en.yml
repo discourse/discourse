@@ -1516,8 +1516,8 @@ en:
     title: "The name of this site. Visible to all visitors including anonymous users."
     site_description: "Describe this site in one sentence. Visible to all visitors including anonymous users."
     short_site_description: "Short description in a few words. Visible to all visitors including anonymous users."
-    contact_email: "Email address of key contact responsible for this site. Used for critical notifications, and also displayed on <a href='%{base_path}/about' target='_blank'>/about</a> for urgent matters."
-    contact_url: "Contact URL for this site. Displayed on the <a href='%{base_path}/about' target='_blank'>/about</a> page for urgent matters."
+    contact_email: "Email address of key contact responsible for this site. Used for critical notifications, and also displayed on <a href='%{base_path}/about' target='_blank'>/about</a>. Visible to anonymous users on public sites."
+    contact_url: "Contact URL for this site. When present, replaces email address on <a href='%{base_path}/about' target='_blank'>/about</a> and visible to anonymous users on public sites."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_to_local: "Convert remote (hotlinked) images to local images by downloading them; This preserves content even if the images are removed from the remote site in future."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
@@ -4929,7 +4929,7 @@ en:
     title: "Discourse Setup"
     step:
       introduction:
-        title: "Tell us about your community"
+        title: "About your site"
         description: "These will be shown on your login and any public pages. You can always change them later."
 
         fields:
@@ -5000,7 +5000,7 @@ en:
                 label: "Subcategories with Featured Topics"
 
       branding:
-        title: "Community logo"
+        title: "Site logo"
         fields:
           logo:
             label: "Primary logo"

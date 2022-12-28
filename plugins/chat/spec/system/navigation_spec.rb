@@ -19,6 +19,8 @@ RSpec.describe "Navigation", type: :system, js: true do
 
   context "when clicking chat icon and drawer is viewing channel" do
     it "navigates to index" do
+      visit("/")
+
       chat_page.open_from_header
       chat_drawer_page.open_channel(category_channel_2)
       chat_page.open_from_header
@@ -121,33 +123,6 @@ RSpec.describe "Navigation", type: :system, js: true do
 
       expect(page).to have_current_path("/t/#{topic.slug}/#{topic.id}")
       expect(page).to have_css(".chat-message-container[data-id='#{message.id}']")
-    end
-  end
-
-  context "when opening full page with a link containing a message id" do
-    it "highlights correct message" do
-      visit("/chat/channel/#{category_channel.id}/#{category_channel.slug}?messageId=#{message.id}")
-
-      expect(page).to have_css(
-        ".full-page-chat .chat-message-container.highlighted[data-id='#{message.id}']",
-      )
-    end
-  end
-
-  context "when opening drawer with a link containing a message id" do
-    it "highlights correct message" do
-      Fabricate(
-        :post,
-        topic: topic,
-        raw:
-          "<a href=\"/chat/channel/#{category_channel.id}/#{category_channel.slug}?messageId=#{message.id}\">foo</a>",
-      )
-      visit("/t/-/#{topic.id}")
-      find("a", text: "foo").click
-
-      expect(page).to have_css(
-        ".chat-drawer.is-expanded .chat-message-container.highlighted[data-id='#{message.id}']",
-      )
     end
   end
 

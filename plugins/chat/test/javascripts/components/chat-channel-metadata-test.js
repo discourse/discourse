@@ -35,13 +35,13 @@ module("Discourse Chat | Component | chat-channel-metadata", function (hooks) {
       hbs`<ChatChannelMetadata @channel={{this.channel}} @unreadIndicator={{this.unreadIndicator}}/>`
     );
 
-    assert.ok(exists(".chat-channel-unread-indicator"));
+    assert.true(exists(".chat-channel-unread-indicator"));
 
     this.unreadIndicator = false;
     await render(
       hbs`<ChatChannelMetadata @channel={{this.channel}} @unreadIndicator={{this.unreadIndicator}}/>`
     );
 
-    assert.notOk(exists(".chat-channel-unread-indicator"));
+    assert.false(exists(".chat-channel-unread-indicator"));
   });
 });

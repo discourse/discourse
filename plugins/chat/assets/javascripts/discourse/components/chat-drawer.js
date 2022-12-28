@@ -7,7 +7,7 @@ import {
   LIST_VIEW,
 } from "discourse/plugins/chat/discourse/services/chat";
 import { equal } from "@ember/object/computed";
-import { cancel, next, throttle } from "@ember/runloop";
+import { cancel, next, schedule, throttle } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 
 export default Component.extend({
@@ -224,10 +224,18 @@ export default Component.extend({
         return this.chatChannelsManager
           .find(route.params.channelId)
           .then((channel) => {
-            this.chat.set("messageId", route.queryParams.messageId);
             this.chat.setActiveChannel(channel);
             this.set("view", CHAT_VIEW);
             this.appEvents.trigger("chat:float-toggled", false);
+
+            if (route.queryParams.messageId) {
+              schedule("afterRender", () => {
+                this.appEvents.trigger(
+                  "chat-live-pane:highlight-message",
+                  route.queryParams.messageId
+                );
+              });
+            }
           });
     }
   },

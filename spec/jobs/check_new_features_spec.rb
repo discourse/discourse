@@ -60,8 +60,7 @@ RSpec.describe Jobs::CheckNewFeatures do
   end
 
   after do
-    Discourse.redis.del("new_features")
-    Discourse.redis.del("last_viewed_feature_dates_for_users_hash")
+    DiscourseUpdates.clean_state
   end
 
   it "backfills last viewed feature for admins who don't have last viewed feature" do
@@ -75,7 +74,7 @@ RSpec.describe Jobs::CheckNewFeatures do
     expect(DiscourseUpdates.get_last_viewed_feature_date(admin1.id).iso8601).to eq(Time.zone.now.iso8601)
   end
 
-  xit "notifies admins about new features that are available in the site's version" do
+  it "notifies admins about new features that are available in the site's version" do
     Notification.destroy_all
 
     described_class.new.execute({})
@@ -90,7 +89,7 @@ RSpec.describe Jobs::CheckNewFeatures do
     ).count).to eq(1)
   end
 
-  xit "consolidates new features notifications" do
+  it "consolidates new features notifications" do
     Notification.destroy_all
 
     described_class.new.execute({})

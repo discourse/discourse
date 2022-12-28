@@ -12,7 +12,7 @@ module SystemHelpers
   end
 
   def sign_in(user)
-    visit "/session/#{user.encoded_username}/become"
+    visit "/session/#{user.encoded_username}/become.json?redirect=false"
   end
 
   def sign_out
@@ -22,8 +22,10 @@ module SystemHelpers
   def setup_system_test
     SiteSetting.login_required = false
     SiteSetting.content_security_policy = false
-    SiteSetting.force_hostname = "#{Capybara.server_host}:#{Capybara.server_port}"
+    SiteSetting.force_hostname = Capybara.server_host
+    SiteSetting.port = Capybara.server_port
     SiteSetting.external_system_avatars_enabled = false
+    SiteSetting.disable_avatar_education_message = true
   end
 
   def try_until_success(timeout: 2, frequency: 0.01)

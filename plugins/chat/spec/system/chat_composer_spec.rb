@@ -71,8 +71,8 @@ RSpec.describe "Chat composer", type: :system, js: true do
 
     it "adds the emoji to the composer" do
       chat.visit_channel(channel_1)
-      find(".chat-composer-dropdown__trigger-btn").click
-      find(".chat-composer-dropdown__action-btn.emoji").click
+      channel.open_action_menu
+      channel.click_action_button("emoji")
       find("[data-emoji='grimacing']").click(wait: 0.5)
 
       expect(find(".chat-composer-input").value).to eq(":grimacing:")

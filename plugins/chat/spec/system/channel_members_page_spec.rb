@@ -39,6 +39,7 @@ RSpec.describe "Channel - Info - Members page", type: :system, js: true do
         98.times { channel_1.add(Fabricate(:user)) }
 
         channel_1.update!(user_count_stale: true)
+        Jobs.run_immediately!
         Jobs::UpdateChannelUserCount.new.execute(chat_channel_id: channel_1.id)
       end
 
@@ -49,7 +50,7 @@ RSpec.describe "Channel - Info - Members page", type: :system, js: true do
 
         scroll_to(find(".channel-members-view__list-item:nth-child(50)"))
 
-        expect(page).to have_selector(".channel-members-view__list-item", count: 100)
+        expect(page).to have_selector(".channel-members-view__list-item", count: 100, wait: 5)
 
         scroll_to(find(".channel-members-view__list-item:nth-child(100)"))
 

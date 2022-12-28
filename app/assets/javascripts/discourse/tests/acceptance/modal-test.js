@@ -1,6 +1,5 @@
 import {
   acceptance,
-  controllerFor,
   count,
   exists,
   query,
@@ -11,6 +10,7 @@ import I18n from "I18n";
 import { hbs } from "ember-cli-htmlbars";
 import showModal from "discourse/lib/show-modal";
 import { registerTemporaryModule } from "../helpers/temporary-module-helper";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 acceptance("Modal", function (needs) {
   let _translations;
@@ -38,7 +38,7 @@ acceptance("Modal", function (needs) {
     await click(".login-button");
     assert.strictEqual(count(".d-modal:visible"), 1, "modal should appear");
 
-    let controller = controllerFor("modal");
+    const controller = getOwner(this).lookup("controller:modal");
     assert.strictEqual(controller.name, "login");
 
     await click(".modal-outer-container");

@@ -2315,8 +2315,8 @@ fa_IR:
       new: "موضوع جدید"
       unread: "خوانده نشده"
       new_topics:
-        one: "%{count} موضوعات جدید"
-        other: "%{count} موضوعات جدید"
+        one: "%{count} موضوع جدید"
+        other: "%{count} موضوع جدید"
       unread_topics:
         one: "%{count} موضوع خوانده نشده"
         other: "%{count} موضوع خوانده نشده"

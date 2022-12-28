@@ -1433,8 +1433,8 @@ sv:
     title: "Namnet på denna webbplats. Synligt för alla besökare, även anonyma användare."
     site_description: "Beskriv denna webbplats med en mening. Synligt för alla besökare, även anonyma användare."
     short_site_description: "Kort beskrivning med några få ord. Synlig för alla besökare, även anonyma användare."
-    contact_email: "E-postadress till nyckelkontakt som är ansvarig för denna webbplats. Används för kritiska aviseringar, och visas även på <a href='%{base_path}/about' target='_blank'>/about</a> för brådskande ärenden."
-    contact_url: "Kontakt-URL för denna webbplats. Visas på <a href='%{base_path}/about' target='_blank'>/about</a>-sidan för brådskande ärenden."
+    contact_email: "E-postadress till nyckelkontakt som är ansvarig för denna webbplats. Används för kritiska aviseringar, och visas även på <a href='%{base_path}/about' target='_blank'>/about</a>. Synliga för anonyma användare på offentliga webbplatser."
+    contact_url: "Kontakt-URL för denna webbplats. När den finns ersätter den e-postadressen på <a href='%{base_path}/about' target='_blank'>/about</a> och är synlig för anonyma användare på offentliga webbplatser."
     crawl_images: "Hämta bilder från tredjepartskällor för att infoga korrekta bredd- och höjddimensioner."
     download_remote_images_to_local: "Konvertera fjärrbilder (med aktiva länkar) till lokala bilder genom att ladda ner dem. Detta bevarar innehållet även om bilderna tas bort från den fjärranslutna webbplatsen i framtiden."
     download_remote_images_threshold: "Minimalt diskutrymme nödvändigt för att hämta hem externa bilder lokalt (i procent)"
@@ -4296,7 +4296,7 @@ sv:
     title: "Discourse-inställningar"
     step:
       introduction:
-        title: "Berätta för oss om ditt forum"
+        title: "Om din webbplats"
         description: "Dessa kommer att visas på din inloggningssida och eventuella offentliga sidor. Du kan alltid ändra dem senare."
         fields:
           title:
@@ -4361,7 +4361,7 @@ sv:
               subcategories_with_featured_topics:
                 label: "Underkategorier med utvalda ämnen"
       branding:
-        title: "Forumets logotyp"
+        title: "Webbplatsens logotyp"
         fields:
           logo:
             label: "Primär logotyp"

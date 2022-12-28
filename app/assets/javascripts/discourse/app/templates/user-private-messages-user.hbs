@@ -1,5 +1,7 @@
 {{#if this.showWarningsWarning}}
-  <div class="alert alert-info">{{html-safe (i18n "admin.user.warnings_list_warning")}}</div>
+  <div class="alert alert-info">{{html-safe
+      (i18n "admin.user.warnings_list_warning")
+    }}</div>
 {{/if}}
 
 <UserNav::MessagesSecondaryNav>
@@ -19,14 +21,22 @@
 
   {{#if this.viewingSelf}}
     <li class="messages-new">
-      <LinkTo @route="userPrivateMessages.user.new" @model={{this.model}} class="new">
+      <LinkTo
+        @route="userPrivateMessages.user.new"
+        @model={{this.model}}
+        class="new"
+      >
         {{d-icon "exclamation-circle"}}
         <span>{{this.newLinkText}}</span>
       </LinkTo>
     </li>
 
     <li class="messages-unread">
-      <LinkTo @route="userPrivateMessages.user.unread" @model={{this.model}} class="unread">
+      <LinkTo
+        @route="userPrivateMessages.user.unread"
+        @model={{this.model}}
+        class="unread"
+      >
         {{d-icon "plus-circle"}}
         <span>{{this.unreadLinkText}}</span>
       </LinkTo>

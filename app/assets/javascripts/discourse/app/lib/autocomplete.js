@@ -119,28 +119,28 @@ export default function (options) {
   }
 
   function scrollAutocomplete() {
-    if (!fadeoutDiv) {
+    if (!fadeoutDiv && !div) {
       return;
     }
 
-    const fadeoutDivElement = fadeoutDiv[0];
+    const scrollingDivElement = fadeoutDiv?.length > 0 ? fadeoutDiv[0] : div[0];
     const selectedElement = getSelectedOptionElement();
     const selectedElementTop = selectedElement.offsetTop;
     const selectedElementBottom =
       selectedElementTop + selectedElement.clientHeight;
 
     // the top of the item is above the top of the fadeoutDiv, so scroll UP
-    if (selectedElementTop <= fadeoutDivElement.scrollTop) {
-      fadeoutDivElement.scrollTo(0, selectedElementTop);
+    if (selectedElementTop <= scrollingDivElement.scrollTop) {
+      scrollingDivElement.scrollTo(0, selectedElementTop);
 
       // the bottom of the item is below the bottom of the div, so scroll DOWN
     } else if (
       selectedElementBottom >=
-      fadeoutDivElement.scrollTop + fadeoutDivElement.clientHeight
+      scrollingDivElement.scrollTop + scrollingDivElement.clientHeight
     ) {
-      fadeoutDivElement.scrollTo(
+      scrollingDivElement.scrollTo(
         0,
-        fadeoutDivElement.scrollTop + selectedElement.clientHeight
+        scrollingDivElement.scrollTop + selectedElement.clientHeight
       );
     }
   }
@@ -377,6 +377,8 @@ export default function (options) {
       me.parent().append(div);
     }
 
+    fadeoutDiv = div.find(".hashtag-autocomplete__fadeout");
+
     if (isInput || options.treatAsTextarea) {
       _autoCompletePopper && _autoCompletePopper.destroy();
       _autoCompletePopper = createPopper(me[0], div[0], {
@@ -450,8 +452,6 @@ export default function (options) {
       top: mePos.top + pos.top - vOffset + borderTop + "px",
       left: left + "px",
     });
-
-    fadeoutDiv = div.find(".hashtag-autocomplete__fadeout");
   }
 
   function dataSource(term, opts) {

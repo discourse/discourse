@@ -34,7 +34,7 @@ RSpec.describe "User chat preferences", type: :system, js: true do
 
   context "as an admin on another user's preferences" do
     fab!(:current_user) { Fabricate(:admin) }
-    fab!(:user_1) { Fabricate(:admin) }
+    fab!(:user_1) { Fabricate(:user) }
 
     before { sign_in(current_user) }
 

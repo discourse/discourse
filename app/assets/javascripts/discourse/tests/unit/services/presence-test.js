@@ -292,6 +292,39 @@ acceptance("Presence - Entering and Leaving", function (needs) {
     );
   });
 
+  test("join should be a no-op if already present", async function (assert) {
+    const presenceService = this.container.lookup("service:presence");
+    const channel = presenceService.getChannel("/test/ch1");
+
+    await channel.enter();
+    assert.strictEqual(requests.length, 1, "updated the server for enter");
+
+    await channel.enter();
+    assert.strictEqual(
+      requests.length,
+      1,
+      "does not update the server unnecessarily"
+    );
+  });
+
+  test("leave should be a no-op if not present", async function (assert) {
+    const presenceService = this.container.lookup("service:presence");
+    const channel = presenceService.getChannel("/test/ch1");
+
+    await channel.enter();
+    assert.strictEqual(requests.length, 1, "updated the server for enter");
+
+    await channel.leave();
+    assert.strictEqual(requests.length, 2, "updated the server for leave");
+
+    await channel.leave();
+    assert.strictEqual(
+      requests.length,
+      2,
+      "did not update the server unnecessarily"
+    );
+  });
+
   test("raises an error when entering a non-existent channel", async function (assert) {
     const presenceService = this.container.lookup("service:presence");
     const channel = presenceService.getChannel("/blah/does-not-exist");

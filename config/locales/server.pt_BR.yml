@@ -1420,8 +1420,6 @@ pt_BR:
     allow_duplicate_topic_titles_category: "Permita tópicos com títulos duplicados e idênticos se a categoria for diferente. É preciso desativar allow_duplicate_topic_titles."
     unique_posts_mins: "Com quantos minutos de antecedência um(a) usuário(a) pode criar uma postagem com o mesmo conteúdo outra vez"
     educate_until_posts: "Quando o(a) usuário(a) começa a digitar suas primeiras (n) postagens novas, exiba o pop-up com o painel instrutivo do novo(a) usuário(a) no compositor."
-    contact_email: "Endereço de e-mail do contato principal responsável por este site. É usado para notificações críticas e também em <a href='%{base_path}/about' target='_blank'>/about</a> para assuntos urgentes."
-    contact_url: "URL de contato deste site. Exibida na página <a href='%{base_path}/about' target='_blank'>/about</a> para assuntos urgentes."
     crawl_images: "Recupere imagens de URLs remotas para inserir as dimensões corretas de largura e altura."
     download_remote_images_to_local: "Converta imagens remotas (hotlinked) em locais baixando-as. Isso preserva o conteúdo mesmo que estas sejam removidas do site remoto no futuro."
     download_remote_images_threshold: "Espaço mínimo necessário em disco para baixar em modo local imagens remotas (em %)"
@@ -4275,7 +4273,6 @@ pt_BR:
     title: "Configuração do Discourse"
     step:
       introduction:
-        title: "Conte-nos sobre sua comunidade"
         fields:
           title:
             label: "Nome da comunidade"

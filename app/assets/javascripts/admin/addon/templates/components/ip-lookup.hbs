@@ -1,13 +1,28 @@
 {{#if this.ip}}
-  <DButton @class="btn-default" @action={{action "lookup"}} @icon="globe" @label="admin.user.ip_lookup" />
+  <DButton
+    @class="btn-default"
+    @action={{action "lookup"}}
+    @icon="globe"
+    @label="admin.user.ip_lookup"
+  />
 {{/if}}
 {{#if this.show}}
   <div class="location-box">
-    <a href class="close pull-right" {{on "click" this.hide}}>{{d-icon "times"}}</a>
+    <a href class="close pull-right" {{on "click" this.hide}}>{{d-icon
+        "times"
+      }}</a>
     {{#if this.copied}}
-      <DButton @class="btn-hover pull-right" @icon="copy" @label="ip_lookup.copied" />
+      <DButton
+        @class="btn-hover pull-right"
+        @icon="copy"
+        @label="ip_lookup.copied"
+      />
     {{else}}
-      <DButton @action={{action "copy"}} @class="pull-right no-text" @icon="copy" />
+      <DButton
+        @action={{action "copy"}}
+        @class="pull-right no-text"
+        @icon="copy"
+      />
     {{/if}}
     <h4>{{i18n "ip_lookup.title"}}</h4>
     <p class="powered-by">{{html-safe (i18n "ip_lookup.powered_by")}}</p>
@@ -21,7 +36,11 @@
         <dt>{{i18n "ip_lookup.location"}}</dt>
         <dd>
           {{#if this.location.location}}
-            <a href="https://maps.google.com/maps?q={{this.location.latitude}},{{this.location.longitude}}" rel="noopener noreferrer" target="_blank">
+            <a
+              href="https://maps.google.com/maps?q={{this.location.latitude}},{{this.location.longitude}}"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
               {{this.location.location}}
             </a>
           {{else}}
@@ -41,11 +60,22 @@
         {{i18n "ip_lookup.other_accounts"}}
         <strong>{{this.totalOthersWithSameIP}}</strong>
         {{#if this.other_accounts.length}}
-          <DButton @class="btn-danger pull-right" @action={{action "deleteOtherAccounts"}} @icon="exclamation-triangle" @translatedLabel={{i18n "ip_lookup.delete_other_accounts" count=this.otherAccountsToDelete}} />
+          <DButton
+            @class="btn-danger pull-right"
+            @action={{action "deleteOtherAccounts"}}
+            @icon="exclamation-triangle"
+            @translatedLabel={{i18n
+              "ip_lookup.delete_other_accounts"
+              count=this.otherAccountsToDelete
+            }}
+          />
         {{/if}}
       </dt>
 
-      <ConditionalLoadingSpinner @size="small" @condition={{this.otherAccountsLoading}}>
+      <ConditionalLoadingSpinner
+        @size="small"
+        @condition={{this.otherAccountsLoading}}
+      >
         {{#if this.other_accounts.length}}
           <dd class="other-accounts">
             <table class="table table-condensed table-hover">
@@ -63,7 +93,11 @@
                   <tr>
                     <td>
                       <LinkTo @route="adminUser" @model={{a}}>
-                        {{avatar a usernamePath="user.username" imageSize="small"}}
+                        {{avatar
+                          a
+                          usernamePath="user.username"
+                          imageSize="small"
+                        }}
                         &nbsp;
                         <span>{{a.username}}</span>
                       </LinkTo>

@@ -7,7 +7,18 @@
     </div>
   {{/if}}
   <Textarea @value={{this.buffered.robots_txt}} class="robots-txt-input" />
-  <SaveControls @model={{this}} @action={{action "save"}} @saved={{this.saved}} @saveDisabled={{this.saveDisabled}}>
-    <DButton @class="btn-default" @disabled={{this.resetDisabled}} @icon="undo" @action={{action "reset"}} @label="admin.settings.reset" />
+  <SaveControls
+    @model={{this}}
+    @action={{action "save"}}
+    @saved={{this.saved}}
+    @saveDisabled={{this.saveDisabled}}
+  >
+    <DButton
+      @class="btn-default"
+      @disabled={{this.resetDisabled}}
+      @icon="undo"
+      @action={{action "reset"}}
+      @label="admin.settings.reset"
+    />
   </SaveControls>
 </div>

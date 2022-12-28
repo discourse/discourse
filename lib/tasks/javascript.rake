@@ -58,6 +58,7 @@ def write_hbs_template(path, task_name, template)
   basename = File.basename(path)
   output_path = "#{Rails.root}/app/assets/javascripts/#{path}"
   File.write(output_path, "#{header}\n#{template}")
+  %x{yarn run prettier --write #{output_path}}
   puts "#{basename} created"
 end
 

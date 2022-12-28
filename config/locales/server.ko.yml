@@ -1327,8 +1327,6 @@ ko:
     allow_duplicate_topic_titles_category: "카테고리가 다른 경우 동일한 중복 제목을 가진 주제를 허용합니다. allow_duplicate_topic_titles를 비활성화해야 합니다."
     unique_posts_mins: "사용자가 동일한 콘텐츠로 다시 게시물을 작성하기 위해 필요한 시간(분)"
     educate_until_posts: "사용자가 첫 (n)개의 새 게시물을 작성하기 시작하면 작성기에 신규 사용자 교육 패널 팝업을 표시합니다."
-    contact_email: "이 사이트의 담당자 이메일 주소입니다. 중요 알림뿐만 아니라 긴급 상황에 대비하여 <a href='%{base_path}/about' target='_blank'>정보</a>에 표시됩니다."
-    contact_url: "이 사이트의 연락처 URL입니다. 긴급 상황에 대비하여 <a href='%{base_path}/about' target='_blank'>정보</a> 페이지에 표시됩니다."
     crawl_images: "원격 URL에서 이미지를 가져와 올바른 너비 및 높이 치수를 삽입합니다."
     download_remote_images_threshold: "원격 이미지를 로컬에 다운로드하기 위한 최소 디스크 공간(%)"
     disabled_image_download_domains: "이 도메인에서 원격 이미지를 다운로드하지 않습니다. 목록은 | 기호를 사용하여 구분하세요."
@@ -3822,7 +3820,6 @@ ko:
     title: "Discourse Setup"
     step:
       introduction:
-        title: "소개"
         fields:
           title:
             label: "커뮤니티 이름"

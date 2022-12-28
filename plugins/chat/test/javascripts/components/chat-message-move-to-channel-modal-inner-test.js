@@ -18,11 +18,15 @@ module(
       this.set("chat", { publicChannels: [this.channel] });
       this.set("selectedMessageIds", [1]);
 
-      await render(
-        hbs`{{chat-message-move-to-channel-modal-inner selectedMessageIds=selectedMessageIds sourceChannel=channel chat=chat}}`
-      );
+      await render(hbs`
+        <ChatMessageMoveToChannelModalInner
+          @selectedMessageIds={{this.selectedMessageIds}}
+          @sourceChannel={{this.channel}}
+          @chat={{this.chat}}
+        />
+      `);
 
-      assert.ok(
+      assert.true(
         query(".chat-message-move-to-channel-modal-inner").innerHTML.includes(
           "&lt;script&gt;someeviltitle&lt;/script&gt;"
         )

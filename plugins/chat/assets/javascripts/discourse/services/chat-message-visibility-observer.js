@@ -5,17 +5,26 @@ import { bind } from "discourse-common/utils/decorators";
 export default class ChatMessageVisibilityObserver extends Service {
   @service chat;
 
-  observer = new IntersectionObserver(this._observerCallback, {
+  intersectionObserver = new IntersectionObserver(
+    this._intersectionObserverCallback,
+    {
+      root: document,
+      rootMargin: "-10px",
+    }
+  );
+
+  mutationObserver = new MutationObserver(this._mutationObserverCallback, {
     root: document,
     rootMargin: "-10px",
   });
 
   willDestroy() {
-    this.observer.disconnect();
+    this.intersectionObserver.disconnect();
+    this.mutationObserver.disconnect();
   }
 
   @bind
-  _observerCallback(entries) {
+  _intersectionObserverCallback(entries) {
     entries.forEach((entry) => {
       entry.target.dataset.visible = entry.isIntersecting;
 
@@ -29,11 +38,26 @@ export default class ChatMessageVisibilityObserver extends Service {
     });
   }
 
+  @bind
+  _mutationObserverCallback(mutationList) {
+    mutationList.forEach((mutation) => {
+      const data = mutation.target.dataset;
+      if (data.id && data.visible && !data.stagedId) {
+        this.chat.updateLastReadMessage();
+      }
+    });
+  }
+
   observe(element) {
-    this.observer.observe(element);
+    this.intersectionObserver.observe(element);
+    this.mutationObserver.observe(element, {
+      attributes: true,
+      attributeOldValue: true,
+      attributeFilter: ["data-staged-id"],
+    });
   }
 
   unobserve(element) {
-    this.observer.unobserve(element);
+    this.intersectionObserver.unobserve(element);
   }
 }

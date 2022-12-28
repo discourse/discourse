@@ -71,12 +71,10 @@ body.wizard {
   padding: 0;
   border: 1px solid var(--primary-low);
   border-radius: 8px;
-  padding: 2em 3em;
+  padding: 2em;
 
-  @include breakpoint("mobile-extra-large") {
+  @include breakpoint("large") {
     padding: 2em 1.5em;
-    max-width: 99%;
-    margin: 1.5em auto;
   }
 
   &__step {
@@ -85,7 +83,7 @@ body.wizard {
     min-width: 35%;
     width: 100%;
 
-    @include breakpoint("mobile-extra-large") {
+    @include breakpoint("large") {
       max-width: 95%;
     }
 
@@ -126,20 +124,6 @@ body.wizard {
     flex: 1 0 40%;
     @include breakpoint("tablet") {
       font-size: var(--font-up-2);
-    }
-  }
-
-  &__step.branding .wizard-container__fields {
-    padding-right: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0 2em;
-
-    .wizard-container__field {
-      flex: 1 1 45%;
-      @include breakpoint("large") {
-        flex: 1 1 100%;
-      }
     }
   }
 
@@ -204,6 +188,12 @@ body.wizard {
     width: 170px;
     box-sizing: border-box;
     margin-right: 1em;
+
+    @media only screen and (max-device-width: 568px) {
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
     + .wizard-container__fields {
       padding: 1em;
@@ -348,7 +338,6 @@ body.wizard {
     display: flex;
     align-items: center;
     font-weight: bold;
-    margin-right: -1.5em;
 
     @include breakpoint("mobile-extra-large") {
       margin-right: 0;
@@ -544,7 +533,7 @@ body.wizard {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    @media only screen and (max-device-width: 568px) {
+    @include breakpoint("mobile-extra-large") {
       flex-direction: column;
       justify-content: center;
       align-items: stretch;
@@ -592,7 +581,10 @@ body.wizard {
   &__description.extra {
     color: var(--primary-high);
     font-size: var(--font-up-1);
-    margin: 0.25em 0 0.5em 0;
+    margin: 0.25em 0 0.5em 3.5em;
+    @media only screen and (max-device-width: 568px) {
+      margin-left: 2em;
+    }
   }
 
   &__text-input {
@@ -605,6 +597,10 @@ body.wizard {
     background-color: var(--secondary);
     border: 1px solid var(--primary-low-mid);
     transition: border-color 0.5s;
+  }
+
+  &__dropdown {
+    width: 100%;
   }
 
   &__dropdown .select-kit-header:not(.btn) {
@@ -628,8 +624,8 @@ body.wizard {
     display: inline-block;
     background: var(--primary-low-mid);
     border-radius: 16px;
-    width: 58px;
-    height: 32px;
+    width: 50px;
+    height: 28px;
     margin-right: 0.5em;
     position: relative;
     vertical-align: middle;
@@ -650,7 +646,7 @@ body.wizard {
     content: "\2713"; // checkmark
     color: var(--secondary);
     top: 4px;
-    left: 10px;
+    left: 9px;
     @media only screen and (max-device-width: 568px) {
       top: 3px;
       left: 5px;
@@ -661,8 +657,8 @@ body.wizard {
   &__checkbox-slider:before {
     background: var(--secondary);
     border-radius: 50%;
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     top: 4px;
     left: 4px;
     transition: left 0.25s;
@@ -681,7 +677,7 @@ body.wizard {
     background: var(--tertiary);
   }
   &__checkbox:checked + .wizard-container__checkbox-slider:before {
-    left: 30px;
+    left: 26px;
     @media only screen and (max-device-width: 568px) {
       left: 20px;
     }

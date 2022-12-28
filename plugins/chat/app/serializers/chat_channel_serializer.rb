@@ -94,7 +94,8 @@ class ChatChannelSerializer < ApplicationSerializer
 
   def current_user_membership
     @current_user_membership.chat_channel = object
-    UserChatChannelMembershipSerializer.new(
+
+    BaseChatChannelMembershipSerializer.new(
       @current_user_membership,
       scope: scope,
       root: false,

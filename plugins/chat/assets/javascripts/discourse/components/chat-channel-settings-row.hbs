@@ -4,7 +4,11 @@
 >
   <div class="chat-channel-info">
     <div class="channel-title-container">
-      <LinkTo @route="chat.channel" @models={{array this.channel.id this.channel.title}} class="channel-title">
+      <LinkTo
+        @route="chat.channel"
+        @models={{array this.channel.id this.channel.title}}
+        class="channel-title"
+      >
         <ChatChannelTitle @channel={{this.channel}} />
       </LinkTo>
     </div>
@@ -29,11 +33,20 @@
 
   <div class="btn-container">
     {{#unless this.channel.isFollowing}}
-      <DButton @class="chat-channel-preview" @action={{action "previewChannel"}} @disabled={{this.loading}} @label="chat.settings.preview" />
+      <DButton
+        @class="chat-channel-preview"
+        @action={{action "previewChannel"}}
+        @disabled={{this.loading}}
+        @label="chat.settings.preview"
+      />
     {{/unless}}
     <ToggleChannelMembershipButton
       @channel={{this.channel}}
-      @options={{hash joinClass="btn-primary" leaveClass="btn-danger" labelType="short"}}
+      @options={{hash
+        joinClass="btn-primary"
+        leaveClass="btn-danger"
+        labelType="short"
+      }}
     />
   </div>
 </div>

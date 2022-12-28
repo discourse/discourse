@@ -1829,6 +1829,8 @@ hu:
       username: "Felhasználó"
       password: "Jelszó"
       show_password: "Megjelenítés"
+      show_password_title: "Jelszó megjelenítése"
+      hide_password_title: "Jelszó elrejtése"
       second_factor_title: "Kétfaktoros hitelesítés"
       second_factor_description: "Írja be a hitelesítési kódot az alkalmazásából:"
       second_factor_backup: "Bejelentkezés biztonsági kóddal"
@@ -2846,6 +2848,9 @@ hu:
         title: "Oldal közzététele"
         publish: "Közzététel"
         public: "Nyilvános"
+        unpublish: "Közzététel visszavonása"
+        unpublished: "Az oldal közzététele vissza lett vonva, már nem érhető el."
+        publishing_settings: "Közzétételi beállítások"
       change_owner:
         title: "Tulajdonosváltás"
         action: "tulajdonjog módosítása"
@@ -2934,6 +2939,7 @@ hu:
       cancel_composer:
         discard: "Elvetés"
         save_draft: "Vázlat mentése későbbre"
+        keep_editing: "Szerkesztés tovább"
       via_email: "ez a válasz e-mailben érkezett"
       via_auto_generated_email: "ez a bejegyzés egy automatikusan előállított e-mailen keresztül érkezett"
       whisper: "ez a hozzászólás egy privát suttogás a moderátorok számára."
