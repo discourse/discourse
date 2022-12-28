@@ -339,6 +339,8 @@ class Post < ActiveRecord::Base
       end
     end
 
+    invalidate_mentions_cache
+
     new_cooked
   end
 
@@ -1129,7 +1131,13 @@ class Post < ActiveRecord::Base
   end
 
   def mentions
-    PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked))
+    if Discourse.redis.hexists("post_mentions", id)
+      Discourse.redis.hget("post_mentions", id).split(",")
+    else
+      extracted_mentions = PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked))
+      Discourse.redis.hset("post_mentions", id, extracted_mentions.join(","))
+      extracted_mentions
+    end
   end
 
   private
@@ -1157,6 +1165,10 @@ class Post < ActiveRecord::Base
         Post.where(id: post.id).update_all ['reply_count = reply_count + 1']
       end
     end
+  end
+
+  def invalidate_mentions_cache
+    Discourse.redis.hdel("post_mentions", id)
   end
 end
 

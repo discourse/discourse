@@ -526,6 +526,19 @@ RSpec.describe PostsController do
         put "/posts/#{first_post.id}.json", params: update_params
         expect(response).not_to be_successful
       end
+
+      it "updating post updates mentions in cache" do
+        user1 = Fabricate(:user)
+        user2 = Fabricate(:user)
+
+        put "/posts/#{post.id}.json", params: { post: { raw: "I am mentioning @#{user1.username}" } }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["post"]["mentioned_users"][0]["username"]).to eq(user1.username)
+
+        put "/posts/#{post.id}.json", params: { post: { raw: "I am mentioning @#{user2.username}" } }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["post"]["mentioned_users"][0]["username"]).to eq(user2.username)
+      end
     end
 
     describe "when logged in as staff" do

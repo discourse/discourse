@@ -532,7 +532,7 @@ RSpec.describe Post do
     end
   end
 
-  describe "@mentions" do
+  describe "#raw_mentions" do
     context 'with raw_mentions' do
       it "returns an empty array with no matches" do
         post = Fabricate.build(:post, post_args.merge(raw: "Hello Jake and Finn!"))
@@ -576,43 +576,60 @@ RSpec.describe Post do
         expect(post.raw_mentions).to eq(['org-board'])
       end
     end
+  end
 
-    context "with max mentions" do
-      fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
-      let(:post_with_one_mention) { post_with_body("@Jake is the person I'm mentioning", newuser) }
-      let(:post_with_two_mentions) { post_with_body("@Jake @Finn are the people I'm mentioning", newuser) }
+  context "with max mentions" do
+    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
+    let(:post_with_one_mention) { post_with_body("@Jake is the person I'm mentioning", newuser) }
+    let(:post_with_two_mentions) { post_with_body("@Jake @Finn are the people I'm mentioning", newuser) }
 
-      context 'with new user' do
-        before do
-          SiteSetting.newuser_max_mentions_per_post = 1
-          SiteSetting.max_mentions_per_post = 5
-        end
-
-        it "allows a new user to have newuser_max_mentions_per_post mentions" do
-          expect(post_with_one_mention).to be_valid
-        end
-
-        it "doesn't allow a new user to have more than newuser_max_mentions_per_post mentions" do
-          expect(post_with_two_mentions).not_to be_valid
-        end
+    context 'with new user' do
+      before do
+        SiteSetting.newuser_max_mentions_per_post = 1
+        SiteSetting.max_mentions_per_post = 5
       end
 
-      context "when not a new user" do
-        before do
-          SiteSetting.newuser_max_mentions_per_post = 0
-          SiteSetting.max_mentions_per_post = 1
-        end
-
-        it "allows vmax_mentions_per_post mentions" do
-          post_with_one_mention.user.trust_level = TrustLevel[1]
-          expect(post_with_one_mention).to be_valid
-        end
-
-        it "doesn't allow to have more than max_mentions_per_post mentions" do
-          post_with_two_mentions.user.trust_level = TrustLevel[1]
-          expect(post_with_two_mentions).not_to be_valid
-        end
+      it "allows a new user to have newuser_max_mentions_per_post mentions" do
+        expect(post_with_one_mention).to be_valid
       end
+
+      it "doesn't allow a new user to have more than newuser_max_mentions_per_post mentions" do
+        expect(post_with_two_mentions).not_to be_valid
+      end
+    end
+
+    context "when not a new user" do
+      before do
+        SiteSetting.newuser_max_mentions_per_post = 0
+        SiteSetting.max_mentions_per_post = 1
+      end
+
+      it "allows vmax_mentions_per_post mentions" do
+        post_with_one_mention.user.trust_level = TrustLevel[1]
+        expect(post_with_one_mention).to be_valid
+      end
+
+      it "doesn't allow to have more than max_mentions_per_post mentions" do
+        post_with_two_mentions.user.trust_level = TrustLevel[1]
+        expect(post_with_two_mentions).not_to be_valid
+      end
+    end
+  end
+
+  describe "#mentions" do
+    fab!(:user1) { Fabricate(:user) }
+    fab!(:user2) { Fabricate(:user) }
+
+    it "returns usernames of mentioned users" do
+      mention1 = cooked_mention(user1)
+      mention2 = cooked_mention(user2)
+      post = Fabricate.build(:post, cooked: "<p>I am mentioning #{mention1} and #{mention2}</p>")
+
+      expect(post.mentions).to eq([user1.username, user2.username])
+    end
+
+    def cooked_mention(user)
+      "<a class=\"mention\" href=\"/u/#{user.username}\">@#{user.username}</a>"
     end
   end
 
