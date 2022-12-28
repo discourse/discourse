@@ -2,16 +2,24 @@
   <div class="admin-controls">
     <nav>
       <ul class="nav nav-pills">
-        <li><LinkTo
+        <li>
+          <LinkTo
             @route="adminCustomizeEmailStyle.edit"
             @model="html"
             @replace={{true}}
-          >{{i18n "admin.customize.email_style.html"}}</LinkTo></li>
-        <li><LinkTo
+          >
+            {{i18n "admin.customize.email_style.html"}}
+          </LinkTo>
+        </li>
+        <li>
+          <LinkTo
             @route="adminCustomizeEmailStyle.edit"
             @model="css"
             @replace={{true}}
-          >{{i18n "admin.customize.email_style.css"}}</LinkTo></li>
+          >
+            {{i18n "admin.customize.email_style.css"}}
+          </LinkTo>
+        </li>
       </ul>
     </nav>
   </div>

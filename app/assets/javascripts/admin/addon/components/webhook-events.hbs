@@ -15,21 +15,21 @@
     <LoadMore @selector=".web-hook-events li" @action={{this.loadMore}}>
       <div class="web-hook-events content-list">
         <div class="heading-container">
-          <div class="col heading first status">{{i18n
-              "admin.web_hooks.events.status"
-            }}</div>
-          <div class="col heading event-id">{{i18n
-              "admin.web_hooks.events.event_id"
-            }}</div>
-          <div class="col heading timestamp">{{i18n
-              "admin.web_hooks.events.timestamp"
-            }}</div>
-          <div class="col heading completion">{{i18n
-              "admin.web_hooks.events.completion"
-            }}</div>
-          <div class="col heading actions">{{i18n
-              "admin.web_hooks.events.actions"
-            }}</div>
+          <div class="col heading first status">
+            {{i18n "admin.web_hooks.events.status"}}
+          </div>
+          <div class="col heading event-id">
+            {{i18n "admin.web_hooks.events.event_id"}}
+          </div>
+          <div class="col heading timestamp">
+            {{i18n "admin.web_hooks.events.timestamp"}}
+          </div>
+          <div class="col heading completion">
+            {{i18n "admin.web_hooks.events.completion"}}
+          </div>
+          <div class="col heading actions">
+            {{i18n "admin.web_hooks.events.actions"}}
+          </div>
         </div>
 
         {{#if this.hasIncoming}}

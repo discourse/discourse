@@ -50,18 +50,26 @@
     />
   </td>
 {{else}}
-  <td><div class="label">{{i18n
-        "admin.embedding.host"
-      }}</div>{{this.host.host}}</td>
-  <td><div class="label">{{i18n
-        "admin.embedding.class_name"
-      }}</div>{{this.host.class_name}}</td>
-  <td><div class="label">{{i18n
-        "admin.embedding.allowed_paths"
-      }}</div>{{this.host.allowed_paths}}</td>
-  <td><div class="label">{{i18n
-        "admin.embedding.category"
-      }}</div>{{category-badge this.host.category allowUncategorized=true}}</td>
+  <td>
+    <div class="label">{{i18n "admin.embedding.host"}}</div>
+    {{this.host.host}}
+  </td>
+  <td>
+    <div class="label">
+      {{i18n "admin.embedding.class_name"}}
+    </div>
+    {{this.host.class_name}}
+  </td>
+  <td>
+    <div class="label">
+      {{i18n "admin.embedding.allowed_paths"}}
+    </div>
+    {{this.host.allowed_paths}}
+  </td>
+  <td>
+    <div class="label">{{i18n "admin.embedding.category"}}</div>
+    {{category-badge this.host.category allowUncategorized=true}}
+  </td>
   <td class="controls">
     <DButton @icon="pencil-alt" @action={{action "edit"}} />
     <DButton
