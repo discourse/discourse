@@ -249,7 +249,7 @@ RSpec.configure do |config|
 
     Capybara.configure do |capybara_config|
       capybara_config.server_host = "localhost"
-      capybara_config.server_port = 31337
+      capybara_config.server_port = 31337 + ENV['TEST_ENV_NUMBER'].to_i
     end
 
     chrome_browser_options = Selenium::WebDriver::Chrome::Options.new(
