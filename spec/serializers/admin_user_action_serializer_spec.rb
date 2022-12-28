@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AdminUserActionSerializer do
+describe AdminUserActionSerializer do
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
   let(:guardian) { Guardian.new(admin) }
@@ -8,7 +8,7 @@ RSpec.describe AdminUserActionSerializer do
   fab!(:topic) { Fabricate(:topic) }
   fab!(:post) { Fabricate(:post, topic: topic) }
 
-  it "returns the post's deleted topic's slug" do
+  it "includes the slug/title/category ID for a post's deleted topic" do
     topic.trash!
 
     json = AdminUserActionSerializer.new(post, scope: guardian, root: false).as_json
