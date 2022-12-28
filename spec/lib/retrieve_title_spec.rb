@@ -162,7 +162,13 @@ RSpec.describe RetrieveTitle do
     it "it ignores Net::ReadTimeout errors" do
       stub_request(:get, "https://example.com").to_raise(Net::ReadTimeout)
 
-      expect { RetrieveTitle.crawl("https://example.com") }.not_to raise_error
+      expect(RetrieveTitle.crawl("https://example.com")).to eq(nil)
+    end
+
+    it "ignores SSRF lookup errors" do
+      subject.stubs(:fetch_title).raises(FinalDestination::SSRFDetector::LookupFailedError)
+
+      expect(RetrieveTitle.crawl("https://example.com")).to eq(nil)
     end
   end
 
