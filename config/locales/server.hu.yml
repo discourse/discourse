@@ -959,6 +959,8 @@ hu:
     title: "Az oldal neve. Minden látogató számára látható, beleértve a névtelen felhasználókat is."
     site_description: "Írja le ezt a helyszínt egy mondatban. Minden látogató számára látható, beleértve a névtelen felhasználókat is."
     short_site_description: "Rövid leírás néhány szóban. Minden látogató számára látható, beleértve a névtelen felhasználókat is."
+    contact_email: "Az oldalért felelős fő kapcsolattartó e-mail címe. Kritikus értesítésekhez használatos, és a <a href='%{base_path}/about' target='_blank'>/about</a> oldalon is megjelenik. Névtelen felhasználók számára látható a nyilvános webhelyeken."
+    contact_url: "A webhely elérhetőségi URL-címe. Ha meg van adva, helyettesíti az e-mail címet az <a href='%{base_path}/about' target='_blank'>/about</a> oldalon, és a nyilvános oldalakon az anonim felhasználók számára látható."
     notify_users_after_responses_deleted_on_flagged_post: "Ha egy bejegyzést jelentenek, majd eltávolítanak, akkor minden olyan felhasználó értesítést kap, aki válaszolt a bejegyzésre, és ezért a válaszait eltávolították."
     max_image_width: "A bejegyzésben lévő képek indexképének maximális szélessége. A nagyobb szélességű képeket a rendszer átméretezi és dobozba helyezi."
     max_image_height: "A képek miniatűrjének maximális magassága egy bejegyzésben. A nagyobb magasságú képeket átméretezi és dobozba helyezi."
@@ -2130,6 +2132,8 @@ hu:
       title: "Aktiváló e-mail újraküldése"
   wizard:
     step:
+      introduction:
+        title: "Az Ön webhelyéről"
       privacy:
         fields:
           login_required:
@@ -2161,6 +2165,8 @@ hu:
                 label: "Kategóriák és legutóbbi témák"
               categories_and_top_topics:
                 label: "Kategóriák és legfelső témák"
+      branding:
+        title: "Webhely logó"
       corporate:
         fields:
           contact_url:

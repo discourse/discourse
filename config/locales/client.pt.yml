@@ -77,15 +77,33 @@ pt:
         date_month: "DD MMM"
         date_year: "MMM 'YY"
       medium:
+        less_than_x_minutes:
+          one: "menos de %{count} minuto"
+          other: "menos de %{count} minutos"
         x_minutes:
           one: "%{count} minuto"
           other: "%{count} minutos"
         x_hours:
           one: "%{count} hora"
           other: "%{count} horas"
+        about_x_hours:
+          one: "a cerca de %{count} hora"
+          other: "a cerca de %{count} horas"
         x_days:
           one: "%{count} dia"
           other: "%{count} dias"
+        x_months:
+          one: "%{count} mês"
+          other: "%{count} meses"
+        about_x_years:
+          one: "a cerca de %{count} ano"
+          other: "a cerca de %{count} anos"
+        over_x_years:
+          one: "mais de %{count} ano"
+          other: "mais de %{count} anos"
+        almost_x_years:
+          one: "quase %{count} ano"
+          other: "quase %{count} anos"
         date_year: "DD MMM, 'YY"
       medium_with_ago:
         x_minutes:
@@ -120,6 +138,7 @@ pt:
       to_placeholder: "ir para data"
     share:
       topic_html: 'Tópico: <span class="topic-title">%{topicTitle}</span>'
+      post: "publicação #%{postNumber} de @%{username}"
       close: "fechar"
       twitter: "Partilhar no Twitter"
       facebook: "Partilhar no Facebook"
@@ -157,9 +176,11 @@ pt:
       banner:
         enabled: "Tornou isto numa faixa %{when}. Esta irá aparecer no topo de cada página até que seja rejeitada pelo utilizador."
         disabled: "Removeu esta faixa %{when}. Esta não irá aparecer no topo de cada página."
+      forwarded: "Encaminhou o e-mail acima"
     topic_admin_menu: "ações do tópico"
     skip_to_main_content: "Saltar para o conteúdo principal"
     emails_are_disabled: "Todos os envios de e-mail foram globalmente desativados por um administrador. Nenhum e-mail de notificação será enviado."
+    emails_are_disabled_non_staff: "O envio de e-mail foi desativado para usuários que não são da equipe."
     software_update_prompt:
       message: "Atualizámos este site, <span>por favor recarregue a página</span> ou poderá experienciar um comportamento inesperado."
       dismiss: "Marcar como visto"
@@ -168,9 +189,11 @@ pt:
       other: "Para que o início do teu Site seja o mais simples possível, estás agora em modo de inicialização simples. A todos os novos utilizadores será concedido o Nível de Confiança 1 e o resumo por e-mail enviado diariamente estará ativado. Isto será automaticamente desligado quando %{count} utilizadores se tiverem juntado ao fórum."
     bootstrap_mode_disabled: "O modo de inicialização simples será desactivado em 24 horas."
     bootstrap_invite_button_title: "Enviar Convites"
+    bootstrap_wizard_link_title: "Concluir assistente de configuração"
     themes:
       default_description: "Predefinição"
       broken_theme_alert: "Seu site pode não funcionar porque um tema ou componente têm erros."
+      error_caused_by: "Causado por '%{name}'. <a target='blank' href='%{path}'>Clique aqui</a> para atualizar, reconfigurar ou desabilitar."
       only_admins: "(esta mensagem é exibida apenas para administradores do site)"
     s3:
       regions:
@@ -548,7 +571,10 @@ pt:
       relative: "Relativo"
     time_shortcut:
       now: "Agora"
+      in_one_hour: "Em uma hora"
+      in_two_hours: "Em duas horas"
       later_today: "Hoje, mais tarde"
+      two_days: "Dois dias"
       next_business_day: "Próximo dia útil"
       tomorrow: "Amanhã"
       post_local_date: "Data no post"
@@ -613,6 +639,8 @@ pt:
         reset_to_default: "Restaurar ao padrão"
       group:
         all: "todos os grupos"
+      sort:
+        label: "Organizado por %{criteria}"
     group_histories:
       actions:
         change_group_setting: "Mudar configuração do grupo"
@@ -1150,6 +1178,7 @@ pt:
         tags: "Etiquetas"
         interface: "Interface"
         apps: "Aplicações"
+        sidebar: "Barra Lateral"
       change_password:
         success: "(email enviado)"
         in_progress: "(a enviar email)"
@@ -1201,7 +1230,9 @@ pt:
         use: "Utilizar a aplicação Authenticator"
         enforced_notice: "É necessário ativar a autenticação em dois passos para aceder a este site."
         disable: "Desativar"
+        disable_confirm: "Tem certeza que deseja desativar a autenticação de dois fatores?"
         delete: "Apagar"
+        delete_single_confirm_title: "Excluindo um autenticador"
         save: "Guardar"
         edit: "Editar"
         edit_title: "Editar Autenticador"
@@ -1214,6 +1245,8 @@ pt:
         security_key:
           register: "Registar"
           default_name: "Chave de Segurança Principal"
+          iphone_default_name: "iPhone"
+          android_default_name: "Android"
           not_allowed_error: "O processo de registo da chave de segurança atingiu o tempo limite ou foi cancelado."
           already_added_error: "Já registou esta chave de segurança. Não precisa de a registar novamente."
           save: "Guardar"
@@ -1497,7 +1530,9 @@ pt:
         title: "Resumo"
         stats: "Estatísticas"
         time_read: "tempo de leitura"
+        time_read_title: "%{duration} (todo o tempo)"
         recent_time_read: "tempo de leitura recente"
+        recent_time_read_title: "%{duration} (nos últimos 60 dias)"
         topic_count:
           one: "Tópico criado"
           other: "tópicos criados"
@@ -1554,6 +1589,9 @@ pt:
         none: "(nenhum)"
       flair:
         none: "(nenhum)"
+      status:
+        title: "Status customizado"
+        not_set: "Não definido"
       primary_group:
         title: "Grupo Primário"
         none: "(nenhum)"
@@ -1566,6 +1604,23 @@ pt:
         the_topic: "o tópico"
     user_status:
       save: "Guardar"
+      set_custom_status: "Definir status customizado"
+      what_are_you_doing: "O que está fazendo?"
+      pause_notifications: "Pausar notificações"
+      remove_status: "Remover status"
+    user_tips:
+      primary: "Entendi!"
+      secondary: "não me mostre essas dicas"
+      first_notification:
+        title: "Sua primeira notificação!"
+      topic_timeline:
+        title: "Linha do tempo do tópico"
+      post_menu:
+        title: "Menu de publicação"
+      topic_notification_levels:
+        title: "Agora você está acompanhando este tópico"
+      suggested_topics:
+        title: "Coninue lendo!"
     loading: "A carregar..."
     errors:
       prev_page: "enquanto tenta carregar"
@@ -1729,17 +1784,28 @@ pt:
         name: "Google"
       twitter:
         name: "Twitter"
+        title: "Cadastrar-se com o Twitter"
+        sr_title: "Cadastrar-se com o Twitter"
       instagram:
         name: "Instagram"
+        title: "Iniciar sessão com o Instagram"
+        sr_title: "Iniciar sessão com o Instagram"
       facebook:
         name: "Facebook"
+        title: "Iniciar sessão com o Facebook"
+        sr_title: "Iniciar sessão com o Facebook"
       github:
         name: "GitHub"
+        title: "Iniciar sessão com o GitHub"
+        sr_title: "Iniciar sessão com o GitHub"
       discord:
         name: "Discord"
+        title: "Iniciar sessão com o Discord"
+        sr_title: "Iniciar sessão com o Discord"
       second_factor_toggle:
         totp: "Use um aplicativo de autenticação"
         backup_code: "Use um código de backup"
+        security_key: "Em vez disso, usar uma chave de segurança"
     invites:
       accept_title: "Convite"
       emoji: "emoji de envelope"
@@ -1790,6 +1856,9 @@ pt:
       select_to_filter: "Selecione um valor para filtrar"
       default_header_text: Selecionar...
       no_content: Não foram encontradas correspondências
+      results_count:
+        one: "%{count} resultado"
+        other: "%{count} resultados"
       filter_placeholder: Pesquisar...
       filter_placeholder_with_any: Pesquisar ou criar...
       create: "Criar: '%{content}'"
@@ -1847,6 +1916,9 @@ pt:
       similar_topics: "O seu tópico é similar a..."
       drafts_offline: "rascunhos off-line"
       edit_conflict: "editar conflito"
+      esc: "esc"
+      esc_label: "Clique ou precione Esc para descartar"
+      ok_proceed: "Ok, continuar"
       group_mentioned:
         one: "Ao usar %{group}, estará a notificar <a href='%{group_link}'>%{count} pessoa</a> – tem a certeza?"
         other: "Ao mencionar %{group}, estará a notificar <a href='%{group_link}'>%{count} pessoas</a> – tem a certeza?"
@@ -1960,6 +2032,7 @@ pt:
       ignore: "Ignorar"
       image_alt_text:
         aria_label: Texto alternativo para a imagem
+      delete_image_button: Excluir Imagem
     notifications:
       tooltip:
         regular:
@@ -1971,6 +2044,9 @@ pt:
         high_priority:
           one: "%{count} notificação de alta prioridade não lida"
           other: "%{count} notificações de alta prioridade não lidas"
+        new_message_notification:
+          one: "%{count} nova notificação de mensagem"
+          other: "%{count} novas notificações de mensagem"
       title: "notificações de menções de @name, respostas às suas publicações e tópicos, mensagens, etc"
       none: "De momento, não é possível carregar as notificações."
       empty: "Não foram encontradas notificações."

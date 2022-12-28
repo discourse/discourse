@@ -176,6 +176,7 @@ tr_TR:
       banner:
         enabled: "%{when} Tarihinde bunu bir banner yaptı. Kullanıcı tarafından kapatılana kadar her sayfanın en üstünde görünecek."
         disabled: "%{when} Tarihinde bu banner'ı kaldırdı. Bundan sonra her sayfanın en üstünde görünmeyecek."
+      forwarded: "Yukarıdaki e-postayı iletti"
     topic_admin_menu: "konu eylemleri"
     skip_to_main_content: "Ana içeriğe atla"
     emails_are_disabled: "Giden tüm e-postalar bir yönetici tarafından devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
@@ -1008,6 +1009,7 @@ tr_TR:
       notification_schedule:
         title: "Bildirim Zamanlaması"
         label: "Özel bildirim zamanlamasını etkinleştir"
+        tip: "Bu saatler dışında bildirimleriniz duraklatılacaktır."
         midnight: "Gece yarısı"
         none: "Yok"
         monday: "Pazartesi"
@@ -1210,6 +1212,62 @@ tr_TR:
         warnings: "Resmi Uyarılar"
         read_more_in_group: "Daha fazla okumak ister misiniz? %{groupLink} bağlantısındaki diğer mesajlara göz atın."
         read_more: "Daha fazla okumak isterseniz <a href='%{basePath}/u/%{username}/messages'>kişisel mesajlardaki</a> diğer mesajlara göz atın."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># okunmamış</a>}
+                other { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># okunmamış</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { ve <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># yeni</a> mesaj kaldı veya {groupLink} içindeki diğer mesajlara göz atın}
+                other { ve <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># yeni</a> mesaj kaldı veya {groupLink} içindeki diğer mesajlara göz atın}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># okunmamış</a> mesaj kaldı veya {groupLink} içindeki diğer mesajlara göz atın!}
+                other { <a href='{basePath}/u/{username}/messages/group/{groupName}/unread'># okunmamış</a> mesaj kaldı veya {groupLink} içindeki diğer mesajlara göz atın}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># yeni</a> mesaj kaldı veya {groupLink} içindeki diğer mesajlara göz atın}
+                other { <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># yeni</a> mesaj kaldı veya {groupLink} içindeki diğer mesajlara göz atın}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one { <a href='{basePath}/u/{username}/messages/unread'># okunmamış</a>}
+                other { <a href='{basePath}/u/{username}/messages/unread'># okunmamış</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { ve <a href='{basePath}/u/{username}/messages/new'># yeni</a> mesaj kaldı veya diğer <a href='{basePath}/u/{username}/messages'>kişisel mesajlara</a> göz atın}
+                other { ve <a href='{basePath}/u/{username}/messages/new'># yeni</a> mesaj kaldı veya diğer <a href='{basePath}/u/{username}/messages'>kişisel mesajlara</a> göz atın}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one { <a href='{basePath}/u/{username}/messages/unread'># okunmamış</a> mesaj kaldı veya diğer <a href='{basePath}/u/{username}/messages'>kişisel mesajlarına</a> göz atın}
+                other { <a href='{basePath}/u/{username}/messages/unread'># okunmamış</a> mesaj kaldı veya diğer <a href='{basePath}/u/{username}/messages'>kişisel mesajlarına</a> göz atın}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { <a href='{basePath}/u/{username}/messages/new'># yeni</a> mesaj kaldı veya diğer <a href='{basePath}/u/{username}/messages'>kişisel mesajlarına</a> göz atın}
+                other { <a href='{basePath}/u/{username}/messages/new'># yeni</a> mesaj kaldı veya diğer <a href='{basePath}/u/{username}/messages'>kişisel mesajlarına</a> göz atın}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "Hesap"
         security: "Güvenlik"
@@ -1274,7 +1332,14 @@ tr_TR:
         use: "Authenticator uygulamasını kullan"
         enforced_notice: "Bu siteye erişmeden önce iki adımlı kimlik doğrulamayı etkinleştirmeniz gerekir."
         disable: "Devre dışı bırak"
+        disable_confirm: "İki adımlı kimlik doğrulamayı devre dışı bırakmak istediğinizden emin misiniz?"
         delete: "Sil"
+        delete_confirm_header: "Bu Token Tabanlı Kimlik Doğrulayıcılar ve Fiziksel Güvenlik Anahtarları silinecek:"
+        delete_confirm_instruction: "Onaylamak için aşağıdaki kutuya <strong>%{confirm}</strong> yazın."
+        delete_single_confirm_title: "Kimlik doğrulayıcıyı silme"
+        delete_single_confirm_message: "%{name} silinecek. Bu eylemi geri alamazsınız. Fikrinizi değiştirirseniz bu kimlik doğrulayıcıyı yeniden kaydetmeniz gerekiyor."
+        delete_backup_codes_confirm_title: "Yedekleme kodlarını silme"
+        delete_backup_codes_confirm_message: "Yedekleme kodlarını siliyorsunuz. Bu eylemi geri alamazsınız. Fikrinizi değiştirirseniz yedekleme kodları yeniden oluşturmanız gerekiyor."
         save: "Kaydet"
         edit: "Düzenle"
         edit_title: "Authenticator'ı Düzenle"
@@ -1441,6 +1506,8 @@ tr_TR:
         title: "Arka plan sayfası başlığı şunların sayısını gösterir:"
         notifications: "Yeni bildirimler"
         contextual: "Yeni sayfa içeriği"
+      bookmark_after_notification:
+        title: "Bir yer imi anımsatıcı bildirimi gönderildikten sonra:"
       like_notification_frequency:
         title: "Beğenildiğinde bildir"
         always: "Her zaman"
@@ -1666,6 +1733,7 @@ tr_TR:
       save: "Kaydet"
       set_custom_status: "Özel durum ayarla"
       what_are_you_doing: "Ne yapıyorsunuz?"
+      pause_notifications: "Bildirimleri duraklat"
       remove_status: "Durumu kaldır"
     user_tips:
       primary: "Anladım!"
@@ -1832,6 +1900,9 @@ tr_TR:
       username: "Kullanıcı"
       password: "Şifre"
       show_password: "Göster"
+      hide_password: "Gizle"
+      show_password_title: "Şifreyi göster"
+      hide_password_title: "Şifreyi gizle"
       second_factor_title: "İki Adımlı Kimlik Doğrulama"
       second_factor_description: "Lütfen uygulamanızdan kimlik doğrulama kodunu girin:"
       second_factor_backup: "Yedek kod kullanarak giriş yapın"
@@ -2028,6 +2099,12 @@ tr_TR:
         private: "@%{username} adlı kullanıcıdan bahsettiniz, ancak bildirim gönderilmeyecek çünkü kullanıcı bu kişisel mesajı göremiyor. Kullanıcıyı bu kişisel mesaja davet etmeniz gerekiyor."
         muted_topic: "@%{username} adlı kullanıcıdan bahsettiniz, ancak bu konuyu sessize aldığı için kullanıcıya bildirim gönderilmeyecek."
         not_allowed: "@%{username} adlı kullanıcıdan bahsettiniz, ancak bu konuyu sessize aldığı için kullanıcıya bildirim gönderilmeyecek."
+      cannot_see_group_mention:
+        not_mentionable: "%{group} adlı gruptan bahsedemezsiniz."
+        some_not_allowed:
+          one: "@%{group} adlı gruptan bahsettiniz, ancak diğer üyeler bu kişisel mesajı göremediği için yalnızca %{count} üyeye bildirim gönderilecek. Onları bu kişisel mesaja davet etmeniz gerekecek."
+          other: "@%{group} adlı gruptan bahsettiniz, ancak diğer üyeler bu kişisel mesajı göremediği için yalnızca %{count} üyeye bildirim gönderilecek. Onları bu kişisel mesaja davet etmeniz gerekecek."
+        not_allowed: "@%{group} adlı gruptan bahsettiniz, ancak bu kişisel mesajı göremedikleri için hiçbir üyeye bildirim gönderilmeyecek. Onları bu kişisel mesaja davet etmeniz gerekecek."
       here_mention:
         one: "<b>@%{here}</b> diyerek %{count} kullanıcıya bildirim göndermek üzeresiniz, emin misiniz?"
         other: "<b>@%{here}</b> diyerek %{count} kullanıcıya bildirim göndermek üzeresiniz, emin misiniz?"
@@ -2219,6 +2296,7 @@ tr_TR:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - tamamlandı"
+      new_features: "Yeni özellikler mevcut!"
       dismiss_confirmation:
         body:
           default:
@@ -2273,6 +2351,7 @@ tr_TR:
         membership_request_consolidated: "yeni üyelik talepleri"
         reaction: "yeni tepki"
         votes_released: "Oy verildi"
+        new_features: "yeni Discourse özellikleri yayınlandı!"
     upload_selector:
       uploading: "Yükleniyor"
       processing: "Yükleme İşleniyor"
@@ -2582,7 +2661,48 @@ tr_TR:
       show_links: "Bu konudaki bağlantıları göster"
       collapse_details: "konu ayrıntılarını daralt"
       expand_details: "konu ayrıntılarını genişlet"
+      read_more_in_category: "Daha fazla okumak ister misiniz? %{categoryLink} kategorisindeki diğer konulara göz atın veya <a href='%{latestLink}'>en son konuları görüntüleyin</a>."
+      read_more: "Daha fazla okumak ister misiniz? <a href='%{categoryLink}'>Tüm kategorilere göz atın</a> veya <a href='%{latestLink}'>en son konuları görüntüleyin</a>."
       unread_indicator: "Bu konunun son gönderisini henüz hiçbir üye okumadı."
+      read_more_MF: |
+        { HAS_UNREAD_AND_NEW, select,
+          true {
+            { UNREAD, plural,
+                 =0 {}
+                one { <a href="{basePath}/unread"># okunmamış</a>}
+              other { <a href="{basePath}/unread"># okunmamış</a>}
+            }
+            { NEW, plural,
+                 =0 {}
+                one { ve <a href="{basePath}/new"># yeni</a> konu kaldı}
+              other { ve <a href="{basePath}/new"># yeni</a> konu kaldı}
+            }
+          }
+          false {
+            { UNREAD, plural,
+                 =0 {}
+                one { <a href="{basePath}/unread"># okunmamış</a> konu kaldı}
+              other { <a href="{basePath}/unread"># okunmamış</a> konu kaldı}
+            }
+            { NEW, plural,
+                 =0 {}
+                one { <a href="{basePath}/new"># yeni</a> konu kaldı}
+              other { <a href="{basePath}/new"># yeni</a> konu kaldı}
+            }
+          }
+          other {}
+        }
+        { HAS_CATEGORY, select,
+          true { veya diğer konulara göz atın {categoryLink}}
+          false { veya <a href="{basePath}/latest">en son konuları görüntüleyin</a>}
+          other {}
+        }
+      bumped_at_title: |
+        Birinci gönderi: %{createdAtDate}
+        Gönderildi: %{bumpedAtDate}
+      browse_all_categories_latest: "<a href='%{basePath}/categories'>Tüm kategorilere göz atın</a> veya <a href='%{basePath}/latest'>en son konuları görüntüleyin</a>."
+      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Tüm kategorilere göz atın</a>, <a href='%{basePath}/latest'>en son konuları görüntüleyin</a> veya en üste bakın:"
+      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Tüm etiketlere göz atın</a> veya <a href='%{basePath}/latest'>en son konuları görüntüleyin</a>."
       suggest_create_topic: <a href>Yeni bir konuşma başlatmaya</a> hazır mısınız?
       jump_reply_up: önceki yanıta geç
       jump_reply_down: sonraki yanıta geç
@@ -3015,6 +3135,7 @@ tr_TR:
       via_email: "bu gönderi e-posta yoluyla geldi"
       via_auto_generated_email: "bu gönderi otomatik olarak oluşturulmuş bir e-posta yoluyla geldi"
       whisper: "bu gönderi yöneticiler için özel bir fısıltıdır"
+      whisper_groups: "bu gönderi sadece %{groupNames} tarafından görülebilen özel bir fısıltıdır"
       wiki:
         about: "bu gönderi bir wiki'dir"
       few_likes_left: "Beğendiğiniz için teşekkürler! Bugün için yalnızca birkaç beğeniniz kaldı."
@@ -3808,6 +3929,8 @@ tr_TR:
       enabled: "Güvenli mod etkin, güvenli moddan çıkmak için bu tarayıcı penceresini kapatın"
     image_removed: "(görüntü kaldırıldı)"
     pause_notifications:
+      title: "Şunlar için bildirimleri duraklat..."
+      label: "Bildirimleri duraklat"
       remaining: "%{remaining} kaldı"
       options:
         half_hour: "30 dakika"
@@ -4204,6 +4327,7 @@ tr_TR:
         create: "Oluştur"
         edit: "Düzenle"
         save: "Kaydet"
+        description_label: "Olay tetikleyicileri"
         controls: "Denetimler"
         go_back: "Listeye geri dön"
         payload_url: "Yük URL'si"
@@ -4306,6 +4430,8 @@ tr_TR:
         broken_route: "\"%{name}\" bağlantısı yapılandırılamıyor. Reklam engelleyicilerin devre dışı bırakıldığından emin olun ve sayfayı yeniden yüklemeyi deneyin."
       navigation_menu:
         sidebar: "Kenar çubuğu"
+        header_dropdown: "Başlık Açılır Menüsü"
+        legacy: "Eski"
       backups:
         title: "Yedeklemeler"
         menu:
@@ -4991,6 +5117,7 @@ tr_TR:
       user:
         suspend_failed: "Bu kullanıcı askıya alınırken bir sorun oluştu %{error}"
         unsuspend_failed: "Bu kullanıcının askıya alınması kaldırılırken bir sorun oluştu %{error}"
+        suspend_duration: "Kullanıcıyı şu tarihe kadar askıya al:"
         suspend_reason_label: "Neden askıya alıyorsunuz? Bu metin bu kullanıcının profil sayfasında <b>herkes tarafından görülebilecek</b> ve kullanıcı sisteme giriş yapmaya çalıştığında kullanıcıya gösterilecek. Metni kısa tutun."
         suspend_reason_hidden_label: "Neden askıya alıyorsunuz? Bu metin, kullanıcı oturum açmaya çalıştığında kullanıcıya gösterilecek. Kısa tutun."
         suspend_reason: "Neden"
@@ -5014,7 +5141,9 @@ tr_TR:
         silence_message: "E-posta Mesajı"
         silence_message_placeholder: "(varsayılan mesajı göndermek için boş bırakın)"
         suspended_until: "(şu zamana kadar: %{until})"
+        suspend_forever: "Sonsuza kadar askıya al"
         cant_suspend: "Bu kullanıcı askıya alınamaz."
+        cant_silence: "Bu kullanıcı susturulamaz."
         delete_posts_failed: "Gönderiler silinirken bir sorun oluştu."
         post_edits: "Gönderi Düzenlemeleri"
         view_edits: "Düzenlemeleri Görüntüle"
@@ -5024,6 +5153,8 @@ tr_TR:
         penalty_post_edit: "Gönderiyi düzenleyin"
         penalty_post_none: "Hiçbir şey yapma"
         penalty_count: "Ceza Sayısı"
+        penalty_history_MF: >-
+          Son 6 ay içinde bu kullanıcı <b>{ SUSPENDED, plural, one {# kez} other {# kez} } askıya alındı</b> ve <b>{ SILENCED, plural, one {# kez} other {# kez} } susturuldu</b>.
         clear_penalty_history:
           title: "Ceza Geçmişini Temizle"
           description: "cezası olan kullanıcılar 3 TL'ye ulaşamaz"
@@ -5178,10 +5309,14 @@ tr_TR:
         silenced_count: "Susturuldu"
         suspended_count: "Askıya Alındı"
         last_six_months: "Son 6 ay"
+        other_matches:
+          one: "Aynı IP adresine sahip <b>%{count} kullanıcı daha</b> var. %{username} ile birlikte inceleyin ve cezalandırmak için şüpheli olanları seçin."
+          other: "Aynı IP adresine sahip <b>%{count} kullanıcı daha</b> var. %{username} ile birlikte inceleyin ve cezalandırmak için şüpheli olanları seçin."
         other_matches_list:
           username: "Kullanıcı adı"
           trust_level: "Güven Seviyesi"
           read_time: "Okuma Zamanı"
+          topics_entered: "Girilen Konular"
           posts: "Gönderiler"
         tl3_requirements:
           title: "Güven Seviyesi 3 için Gereklilikler"
@@ -5498,8 +5633,10 @@ tr_TR:
       finish: "Kurulumdan çık"
       back: "Geri"
       next: "İleri"
+      configure_more: "Daha fazlasını yapılandırın..."
       step-text: "Adım"
       step: "%{current} / %{total}"
+      upload: "Dosya yükle"
       uploading: "Yükleniyor..."
       upload_error: "Üzgünüz, bu dosyayı yüklerken bir hata oluştu. Lütfen yeniden deneyin."
       staff_count:
