@@ -228,7 +228,7 @@ class Category < ActiveRecord::Base
         staged: guardian.is_staged?,
         permissions: permissions,
         user_id: guardian.user.id,
-        everyone: Group[:everyone].id)
+        everyone: Group::AUTO_GROUPS[:everyone])
     end
   end
 

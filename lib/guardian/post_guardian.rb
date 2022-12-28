@@ -102,14 +102,15 @@ module PostGuardian
       user.post_count <= SiteSetting.delete_all_posts_max.to_i))
   end
 
-  def can_create_post?(parent)
-    return false if !SiteSetting.enable_system_message_replies? && parent.try(:subtype) == "system_message"
+  def can_create_post?(topic)
+    return can_create_post_in_topic?(topic) if !topic
 
-    (!SpamRule::AutoSilence.prevent_posting?(@user) || (!!parent.try(:private_message?) && parent.allowed_users.include?(@user))) && (
-      !parent ||
-      !parent.category ||
-      Category.post_create_allowed(self).where(id: parent.category.id).count == 1
-    )
+    key = topic_memoize_key(topic)
+    @can_create_post ||= {}
+
+    @can_create_post.fetch(key) do
+      @can_create_post[key] = can_create_post_in_topic?(topic)
+    end
   end
 
   def can_edit_post?(post)
@@ -235,7 +236,7 @@ module PostGuardian
   def can_see_post?(post)
     return false if post.blank?
     return true if is_admin?
-    return false unless can_see_topic?(post.topic)
+    return false unless can_see_post_topic?(post)
     return false unless post.user == @user || Topic.visible_post_types(@user).include?(post.post_type)
     return true if is_moderator? || is_category_group_moderator?(post.topic.category)
     return true if post.deleted_at.blank? || (post.deleted_by_id == @user.id && @user.has_trust_level?(TrustLevel[4]))
@@ -302,5 +303,34 @@ module PostGuardian
 
   def can_skip_bump?
     is_staff? || @user.has_trust_level?(TrustLevel[4])
+  end
+
+  private
+
+  def can_create_post_in_topic?(topic)
+    return false if !SiteSetting.enable_system_message_replies? && topic.try(:subtype) == "system_message"
+
+    (!SpamRule::AutoSilence.prevent_posting?(@user) || (!!topic.try(:private_message?) && topic.allowed_users.include?(@user))) && (
+      !topic ||
+      !topic.category ||
+      Category.post_create_allowed(self).where(id: topic.category.id).count == 1
+    )
+  end
+
+  def topic_memoize_key(topic)
+    # Milliseconds precision on Topic#updated_at so that we don't use memoized results after topic has been updated.
+    "#{topic.id}-#{(topic.updated_at.to_f * 1000).to_i}"
+  end
+
+  def can_see_post_topic?(post)
+    topic = post.topic
+    return false if !topic
+
+    key = topic_memoize_key(topic)
+    @can_see_post_topic ||= {}
+
+    @can_see_post_topic.fetch(key) do
+      @can_see_post_topic[key] = can_see_topic?(topic)
+    end
   end
 end
