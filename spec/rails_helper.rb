@@ -379,14 +379,17 @@ RSpec.configure do |config|
   end
 
   config.after(:each, type: :system) do |example|
+    lines = RSpec.current_example.metadata[:extra_failure_lines]
+
     # This is disabled by default because it is super verbose,
     # if you really need to dig into how selenium is communicating
     # for system tests then enable it.
     if ENV["SELENIUM_VERBOSE_DRIVER_LOGS"]
-      puts "~~~~~~ DRIVER LOGS: ~~~~~~~"
+      lines << "~~~~~~~ DRIVER LOGS ~~~~~~~"
       page.driver.browser.logs.get(:driver).each do |log|
-        puts log.message
+        lines << log.message
       end
+      lines << "~~~~~ END DRIVER LOGS ~~~~~"
     end
 
     # Recommended that this is not disabled, since it makes debugging
@@ -394,20 +397,28 @@ RSpec.configure do |config|
     if ENV["SELENIUM_DISABLE_VERBOSE_JS_LOGS"].blank?
       if example.exception
         skip_js_errors = false
+
         if example.exception.kind_of?(RSpec::Core::MultipleExceptionError)
-          puts "~~~~~~ SYSTEM TEST ERRORS: ~~~~~~~"
+          lines << "~~~~~~~ SYSTEM TEST ERRORS ~~~~~~~"
           example.exception.all_exceptions.each do |ex|
-            puts ex.message
+            lines << ex.message
           end
+          lines << "~~~~~ END SYSTEM TEST ERRORS ~~~~~"
 
           skip_js_errors = true
         end
 
         if !skip_js_errors
-          puts "~~~~~~ JS ERRORS: ~~~~~~~"
-          page.driver.browser.logs.get(:browser).each do |log|
-            puts log.message
+          lines << "~~~~~~~ JS LOGS ~~~~~~~"
+          logs = page.driver.browser.logs.get(:browser)
+          if logs.empty?
+            lines << "(no logs)"
+          else
+            logs.each do |log|
+              lines << log.message
+            end
           end
+          lines << "~~~~~ END JS LOGS ~~~~~"
         end
       end
     end
