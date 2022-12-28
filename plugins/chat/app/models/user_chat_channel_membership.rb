@@ -13,6 +13,10 @@ class UserChatChannelMembership < ActiveRecord::Base
 
   attribute :unread_count, default: 0
   attribute :unread_mentions, default: 0
+
+  def has_seen_message?(chat_message)
+    (last_read_message_id || 0) >= chat_message.id
+  end
 end
 
 # == Schema Information

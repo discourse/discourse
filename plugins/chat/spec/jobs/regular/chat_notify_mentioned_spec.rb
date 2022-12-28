@@ -28,16 +28,14 @@ describe Jobs::ChatNotifyMentioned do
   def track_desktop_notification(
     user: user_2,
     message:,
-    to_notify_ids_map:,
-    already_notified_user_ids: []
+    to_notify_ids_map:
   )
     MessageBus
       .track_publish("/chat/notification-alert/#{user.id}") do
         subject.execute(
           chat_message_id: message.id,
           timestamp: message.created_at,
-          to_notify_ids_map: to_notify_ids_map,
-          already_notified_user_ids: already_notified_user_ids,
+          to_notify_ids_map: to_notify_ids_map
         )
       end
       .first
@@ -105,22 +103,33 @@ describe Jobs::ChatNotifyMentioned do
       expect(created_notification).to be_nil
     end
 
-    it "does nothing if user is included in the already_notified_user_ids" do
+    it "does nothing if we already created a mention for the user" do
       message = create_chat_message
+      Fabricate(:chat_mention, chat_message: message, user: user_2)
 
       PostAlerter.expects(:push_notification).never
 
       desktop_notification =
-        track_desktop_notification(
-          message: message,
-          to_notify_ids_map: to_notify_ids_map,
-          already_notified_user_ids: [user_2.id],
-        )
+        track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
       expect(desktop_notification).to be_nil
 
       created_notification =
         Notification.where(user: user_2, notification_type: Notification.types[:chat_mention]).last
       expect(created_notification).to be_nil
+    end
+
+    it "works if the mention belongs to a different message" do
+      message_1 = create_chat_message
+      message_2 = create_chat_message
+
+      Fabricate(:chat_mention, chat_message: message_1, user: user_2)
+
+      PostAlerter.expects(:push_notification).once
+
+      desktop_notification =
+        track_desktop_notification(message: message_2, to_notify_ids_map: to_notify_ids_map)
+
+      expect(desktop_notification).to be_present
     end
 
     it "does nothing if user is not participating in a private channel" do
@@ -196,6 +205,38 @@ describe Jobs::ChatNotifyMentioned do
         to_notify_ids_map: to_notify_ids_map,
       )
     end
+
+    context "when the user is muting the message sender" do
+      it "does not send notifications to the user who is muting the acting user" do
+        Fabricate(:muted_user, user: user_2, muted_user: user_1)
+        message = create_chat_message
+
+        PostAlerter.expects(:push_notification).never
+
+        desktop_notification =
+          track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+        expect(desktop_notification).to be_nil
+
+        created_notification =
+          Notification.where(user: user_2, notification_type: Notification.types[:chat_mention]).last
+        expect(created_notification).to be_nil
+      end
+
+      it "does not send notifications to the user who is ignoring the acting user" do
+        Fabricate(:ignored_user, user: user_2, ignored_user: user_1, expiring_at: 1.day.from_now)
+        message = create_chat_message
+
+        PostAlerter.expects(:push_notification).never
+
+        desktop_notification =
+          track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+        expect(desktop_notification).to be_nil
+
+        created_notification =
+          Notification.where(user: user_2, notification_type: Notification.types[:chat_mention]).last
+        expect(created_notification).to be_nil
+      end
+    end
   end
 
   shared_examples "creates different notifications with basic data" do
@@ -264,6 +305,23 @@ describe Jobs::ChatNotifyMentioned do
       chat_mention =
         ChatMention.where(notification: created_notification, user: user_2, chat_message: message)
       expect(chat_mention).to be_present
+    end
+
+    it "works for publishing new mention updates" do
+      message = create_chat_message
+
+      new_mention = MessageBus
+        .track_publish(ChatPublisher.new_mentions_message_bus_channel(message.chat_channel_id)) do
+          subject.execute(
+            chat_message_id: message.id,
+            timestamp: message.created_at,
+            to_notify_ids_map: to_notify_ids_map,
+          )
+        end.first
+
+      expect(new_mention).to be_present
+      expect(new_mention.data["message_id"]).to eq(message.id)
+      expect(new_mention.data["channel_id"]).to eq(message.chat_channel_id)
     end
   end
 

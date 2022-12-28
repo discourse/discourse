@@ -14,7 +14,6 @@ module Jobs
 
       @creator = @chat_message.user
       @chat_channel = @chat_message.chat_channel
-      @already_notified_user_ids = args[:already_notified_user_ids] || []
       user_ids_to_notify = args[:to_notify_ids_map] || {}
       user_ids_to_notify.each { |mention_type, ids| process_mentions(ids, mention_type.to_sym) }
     end
@@ -23,10 +22,18 @@ module Jobs
 
     def get_memberships(user_ids)
       query =
-        UserChatChannelMembership.includes(:user).where(
-          user_id: (user_ids - @already_notified_user_ids),
-          chat_channel_id: @chat_message.chat_channel_id,
-        )
+        UserChatChannelMembership.includes(:user)
+          .where(user_id: user_ids, chat_channel_id: @chat_message.chat_channel_id)
+          .joins(
+            <<~SQL
+              LEFT OUTER JOIN chat_mentions cm ON
+                (
+                  cm.user_id = user_chat_channel_memberships.user_id AND
+                  cm.chat_message_id = #{@chat_message.id}
+                )
+            SQL
+          )
+          .where('cm.user_id IS NULL')
       query = query.where(following: true) if @chat_channel.public_channel?
       query
     end
@@ -101,7 +108,7 @@ module Jobs
     end
 
     def create_notification!(membership, notification_data)
-      is_read = Chat::ChatNotifier.user_has_seen_message?(membership, @chat_message.id)
+      is_read = membership.has_seen_message?(@chat_message)
 
       notification =
         Notification.create!(
@@ -121,6 +128,12 @@ module Jobs
     def send_notifications(membership, notification_data, os_payload)
       create_notification!(membership, notification_data)
 
+      ChatPublisher.publish_new_mention(
+        membership.user_id,
+        @chat_channel.id,
+        @chat_message.id
+      )
+
       if !membership.desktop_notifications_never? && !membership.muted?
         MessageBus.publish(
           "/chat/notification-alert/#{membership.user_id}",
@@ -137,7 +150,10 @@ module Jobs
     def process_mentions(user_ids, mention_type)
       memberships = get_memberships(user_ids)
 
+      screener = UserCommScreener.new(acting_user: @chat_message.user, target_user_ids: memberships.map(&:user_id))
+
       memberships.each do |membership|
+        next if screener.ignoring_or_muting_actor?(membership.user_id)
         notification_data = build_data_for(membership, identifier_type: mention_type)
         payload = build_payload_for(membership, identifier_type: mention_type)
 

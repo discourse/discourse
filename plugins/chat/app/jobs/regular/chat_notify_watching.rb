@@ -13,20 +13,35 @@ module Jobs
 
       always_notification_level = UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
 
+      direct_mentioned_user_ids = args[:direct_mentioned_user_ids].to_a
+      global_mentions = args[:global_mentions].to_a
+      mentioned_group_ids = args[:mentioned_group_ids].to_a
+
       members =
         UserChatChannelMembership
           .includes(user: :groups)
           .joins(user: :user_option)
           .where(user_option: { chat_enabled: true })
-          .where.not(user_id: args[:except_user_ids])
           .where(chat_channel_id: @chat_channel.id)
-          .where(following: true)
+          .where(following: true, muted: false)
+          .where(
+            "COALESCE(user_chat_channel_memberships.last_read_message_id, 0) < ?",
+            @chat_message.id
+          )
+          .where.not(user_id: direct_mentioned_user_ids)
+          .where.not(groups: { id: mentioned_group_ids })
           .where(
             "desktop_notification_level = ? OR mobile_notification_level = ?",
             always_notification_level,
             always_notification_level,
           )
           .merge(User.not_suspended)
+
+      if global_mentions.include?("all")
+        members = members.where(user_option: { ignore_channel_wide_mention: true })
+      elsif global_mentions.include?("here")
+        members = members.where("last_seen_at < ?", 5.minutes.ago)
+      end
 
       if @is_direct_message_channel
         UserCommScreener
@@ -44,9 +59,22 @@ module Jobs
       user = membership.user
       guardian = Guardian.new(user)
       return unless guardian.can_chat? && guardian.can_join_chat_channel?(@chat_channel)
-      return if Chat::ChatNotifier.user_has_seen_message?(membership, @chat_message.id)
       return if online_user_ids.include?(user.id)
 
+      payload = build_watching_payload(user)
+
+      if membership.desktop_notifications_always?
+        MessageBus.publish("/chat/notification-alert/#{user.id}", payload, user_ids: [user.id])
+      end
+
+      PostAlerter.push_notification(user, payload) if membership.mobile_notifications_always?
+    end
+
+    def online_user_ids
+      @online_user_ids ||= PresenceChannel.new("/chat/online").user_ids
+    end
+
+    def build_watching_payload(user)
       translation_key =
         (
           if @is_direct_message_channel
@@ -59,7 +87,7 @@ module Jobs
       translation_args = { username: @creator.username }
       translation_args[:channel] = @chat_channel.title(user) unless @is_direct_message_channel
 
-      payload = {
+      {
         username: @creator.username,
         notification_type: Notification.types[:chat_message],
         post_url: @chat_channel.relative_url,
@@ -67,18 +95,6 @@ module Jobs
         tag: Chat::ChatNotifier.push_notification_tag(:message, @chat_channel.id),
         excerpt: @chat_message.push_notification_excerpt,
       }
-
-      if membership.desktop_notifications_always? && !membership.muted?
-        MessageBus.publish("/chat/notification-alert/#{user.id}", payload, user_ids: [user.id])
-      end
-
-      if membership.mobile_notifications_always? && !membership.muted?
-        PostAlerter.push_notification(user, payload)
-      end
-    end
-
-    def online_user_ids
-      @online_user_ids ||= PresenceChannel.new("/chat/online").user_ids
     end
   end
 end
