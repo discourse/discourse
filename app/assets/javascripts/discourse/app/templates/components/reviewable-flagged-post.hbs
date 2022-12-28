@@ -4,9 +4,16 @@
 </div>
 
 <div class="post-contents-wrapper">
-  <ReviewableCreatedBy @user={{this.reviewable.target_created_by}} @tagName="" />
+  <ReviewableCreatedBy
+    @user={{this.reviewable.target_created_by}}
+    @tagName=""
+  />
   <div class="post-contents">
-    <ReviewablePostHeader @reviewable={{this.reviewable}} @createdBy={{this.reviewable.target_created_by}} @tagName="" />
+    <ReviewablePostHeader
+      @reviewable={{this.reviewable}}
+      @createdBy={{this.reviewable.target_created_by}}
+      @tagName=""
+    />
     <div class="post-body">
       {{#if this.reviewable.blank_post}}
         <p>{{i18n "review.deleted_post"}}</p>
@@ -14,7 +21,12 @@
         {{html-safe this.reviewable.cooked}}
       {{/if}}
     </div>
-    <PluginOutlet @name="after-reviewable-flagged-post-body" @tagName="span" @connectorTagName="div" @args={{hash model=this.reviewable}} />
+    <PluginOutlet
+      @name="after-reviewable-flagged-post-body"
+      @tagName="span"
+      @connectorTagName="div"
+      @args={{hash model=this.reviewable}}
+    />
     {{yield}}
   </div>
 </div>

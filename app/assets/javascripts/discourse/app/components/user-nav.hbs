@@ -55,7 +55,8 @@
     <PluginOutlet
       @name="user-main-nav"
       @connectorTagName="li"
-      @args={{hash model=@user}} />
+      @args={{hash model=@user}}
+    />
 
     {{#if @user.can_edit}}
       <li class="preferences">
@@ -68,7 +69,7 @@
 
     {{#if (and this.site.mobileView this.currentUser.staff)}}
       <li class="admin">
-        <a href={{@user.adminPath}} >
+        <a href={{@user.adminPath}}>
           {{d-icon "wrench"}}
           <span>{{i18n "admin.user.manage_user"}}</span>
         </a>

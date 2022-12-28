@@ -1,6 +1,10 @@
 <label for="choose-message-title">{{i18n "choose_message.title.search"}}</label>
 
-<TextField @value={{this.messageTitle}} @placeholderKey="choose_message.title.placeholder" @id="choose-message-title" />
+<TextField
+  @value={{this.messageTitle}}
+  @placeholderKey="choose_message.title.placeholder"
+  @id="choose-message-title"
+/>
 
 {{#if this.loading}}
   <p>{{i18n "loading"}}</p>
@@ -11,7 +15,12 @@
     {{#each this.messages as |m|}}
       <div class="controls existing-message">
         <label class="radio">
-          <input id="choose-message-{{m.id}}" {{on "click" (fn this.chooseMessage m)}} type="radio" name="choose_message_id">
+          <input
+            id="choose-message-{{m.id}}"
+            {{on "click" (fn this.chooseMessage m)}}
+            type="radio"
+            name="choose_message_id"
+          />
           <span class="message-title">
             {{m.title}}
           </span>

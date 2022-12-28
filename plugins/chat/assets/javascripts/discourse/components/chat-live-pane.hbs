@@ -1,22 +1,35 @@
 {{#if (and this.chatStateManager.isFullPageActive this.includeHeader)}}
   <div
     class="chat-full-page-header
-      {{unless this.chatChannel.isFollowing "-not-following"}}"
+      {{unless this.chatChannel.isFollowing '-not-following'}}"
   >
     <div class="chat-channel-header-details">
       {{#if this.site.mobileView}}
         <div class="chat-full-page-header__left-actions">
-          <DButton @class="chat-full-page-header__back-btn no-text btn-flat" @icon="chevron-left" @action={{this.onBackClick}} />
+          <DButton
+            @class="chat-full-page-header__back-btn no-text btn-flat"
+            @icon="chevron-left"
+            @action={{this.onBackClick}}
+          />
         </div>
       {{/if}}
 
-      <LinkTo @route={{this.infoTabRoute}} @models={{array this.chatChannel.id (slugify-channel this.chatChannel)}} class="chat-channel-title-wrapper">
+      <LinkTo
+        @route={{this.infoTabRoute}}
+        @models={{array this.chatChannel.id (slugify-channel this.chatChannel)}}
+        class="chat-channel-title-wrapper"
+      >
         <ChatChannelTitle @channel={{this.chatChannel}} />
       </LinkTo>
 
       {{#if this.showCloseFullScreenBtn}}
         <div class="chat-full-page-header__right-actions">
-          <DButton @icon="discourse-compress" @title="chat.close_full_page" class="open-drawer-btn btn-flat no-text" @action={{action this.onCloseFullScreen}} />
+          <DButton
+            @icon="discourse-compress"
+            @title="chat.close_full_page"
+            class="open-drawer-btn btn-flat no-text"
+            @action={{action this.onCloseFullScreen}}
+          />
         </div>
       {{/if}}
     </div>
@@ -58,7 +71,25 @@
     {{/if}}
 
     {{#each this.messages as |message|}}
-      <ChatMessage @message={{message}} @canInteractWithChat={{this.canInteractWithChat}} @details={{this.details}} @chatChannel={{this.chatChannel}} @setReplyTo={{action "setReplyTo"}} @replyMessageClicked={{action "replyMessageClicked"}} @editButtonClicked={{action "editButtonClicked"}} @selectingMessages={{this.selectingMessages}} @onStartSelectingMessages={{this.onStartSelectingMessages}} @onSelectMessage={{this.onSelectMessage}} @bulkSelectMessages={{this.bulkSelectMessages}} @fullPage={{this.fullPage}} @afterReactionAdded={{action "reStickScrollIfNeeded"}} @isHovered={{eq message.id this.hoveredMessageId}} @onHoverMessage={{action "onHoverMessage"}} @onSwitchChannel={{this.onSwitchChannel}} @resendStagedMessage={{this.resendStagedMessage}} />
+      <ChatMessage
+        @message={{message}}
+        @canInteractWithChat={{this.canInteractWithChat}}
+        @details={{this.details}}
+        @chatChannel={{this.chatChannel}}
+        @setReplyTo={{action "setReplyTo"}}
+        @replyMessageClicked={{action "replyMessageClicked"}}
+        @editButtonClicked={{action "editButtonClicked"}}
+        @selectingMessages={{this.selectingMessages}}
+        @onStartSelectingMessages={{this.onStartSelectingMessages}}
+        @onSelectMessage={{this.onSelectMessage}}
+        @bulkSelectMessages={{this.bulkSelectMessages}}
+        @fullPage={{this.fullPage}}
+        @afterReactionAdded={{action "reStickScrollIfNeeded"}}
+        @isHovered={{eq message.id this.hoveredMessageId}}
+        @onHoverMessage={{action "onHoverMessage"}}
+        @onSwitchChannel={{this.onSwitchChannel}}
+        @resendStagedMessage={{this.resendStagedMessage}}
+      />
     {{/each}}
 
     {{#if this.loadingMoreFuture}}
@@ -95,7 +126,12 @@
 {{/if}}
 
 {{#if this.selectingMessages}}
-  <ChatSelectionManager @selectedMessageIds={{this.selectedMessageIds}} @chatChannel={{this.chatChannel}} @canModerate={{this.details.can_moderate}} @cancelSelecting={{action "cancelSelecting"}} />
+  <ChatSelectionManager
+    @selectedMessageIds={{this.selectedMessageIds}}
+    @chatChannel={{this.chatChannel}}
+    @canModerate={{this.details.can_moderate}}
+    @cancelSelecting={{action "cancelSelecting"}}
+  />
 {{else}}
   {{#if (or this.chatChannel.isDraft this.chatChannel.isFollowing)}}
     <ChatComposer

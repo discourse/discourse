@@ -1,12 +1,19 @@
 {{#each this.categoryBreadcrumbs as |breadcrumb|}}
   {{#if breadcrumb.hasOptions}}
     <li>
-      <CategoryDrop @category={{breadcrumb.category}} @categories={{breadcrumb.options}} @tagId={{this.tag.id}} @editingCategory={{this.editingCategory}} @editingCategoryTab={{this.editingCategoryTab}} @options={{hash
+      <CategoryDrop
+        @category={{breadcrumb.category}}
+        @categories={{breadcrumb.options}}
+        @tagId={{this.tag.id}}
+        @editingCategory={{this.editingCategory}}
+        @editingCategoryTab={{this.editingCategoryTab}}
+        @options={{hash
           parentCategory=breadcrumb.parentCategory
           subCategory=breadcrumb.isSubcategory
           noSubcategories=breadcrumb.noSubcategories
           autoFilterable=true
-        }} />
+        }}
+      />
     </li>
   {{/if}}
 {{/each}}
@@ -14,13 +21,20 @@
 {{#if this.showTagsSection}}
   {{#if this.additionalTags}}
     <li>
-      <TagsIntersectionChooser @currentCategory={{this.category}} @mainTag={{this.tag.id}} @additionalTags={{this.additionalTags}} @options={{hash
-          categoryId=this.category.id
-        }} />
+      <TagsIntersectionChooser
+        @currentCategory={{this.category}}
+        @mainTag={{this.tag.id}}
+        @additionalTags={{this.additionalTags}}
+        @options={{hash categoryId=this.category.id}}
+      />
     </li>
   {{else}}
     <li>
-      <TagDrop @currentCategory={{this.category}} @noSubcategories={{this.noSubcategories}} @tagId={{this.tag.id}} />
+      <TagDrop
+        @currentCategory={{this.category}}
+        @noSubcategories={{this.noSubcategories}}
+        @tagId={{this.tag.id}}
+      />
     </li>
   {{/if}}
 {{/if}}

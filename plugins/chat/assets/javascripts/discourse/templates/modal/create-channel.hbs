@@ -2,7 +2,11 @@
   <label class="create-channel-label">
     {{i18n "chat.create_channel.choose_category.label"}}
   </label>
-  <CategoryChooser @value={{this.categoryId}} @onChange={{action "onCategoryChange"}} @options={{hash none="chat.create_channel.choose_category.none"}} />
+  <CategoryChooser
+    @value={{this.categoryId}}
+    @onChange={{action "onCategoryChange"}}
+    @options={{hash none="chat.create_channel.choose_category.none"}}
+  />
 
   {{#if this.categoryPermissionsHint}}
     <div class="create-channel-hint">
@@ -20,14 +24,29 @@
   <label for="channel-name" class="create-channel-label">
     {{i18n "chat.create_channel.name"}}
   </label>
-  <Input name="channel-name" class="create-channel-name-input" @type="text" @value={{this.name}} />
+  <Input
+    name="channel-name"
+    class="create-channel-name-input"
+    @type="text"
+    @value={{this.name}}
+  />
 
   <label for="channel-description" class="create-channel-label">
     {{i18n "chat.create_channel.description"}}
   </label>
-  <Input name="channel-description" class="create-channel-description-input" @type="textarea" @value={{this.description}} />
+  <Input
+    name="channel-description"
+    class="create-channel-description-input"
+    @type="textarea"
+    @value={{this.description}}
+  />
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @class="btn-primary create" @action={{action "create"}} @label="chat.create_channel.create" @disabled={{this.createDisabled}} />
+  <DButton
+    @class="btn-primary create"
+    @action={{action "create"}}
+    @label="chat.create_channel.create"
+    @disabled={{this.createDisabled}}
+  />
 </div>

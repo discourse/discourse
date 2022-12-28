@@ -1,6 +1,11 @@
 <div class="penalty-similar-users">
   <p class="alert alert-warning">
-    {{html-safe (i18n "admin.user.other_matches" (hash count=this.user.similar_users_count username=this.user.username))}}
+    {{html-safe
+      (i18n
+        "admin.user.other_matches"
+        (hash count=this.user.similar_users_count username=this.user.username)
+      )
+    }}
   </p>
 
   <table class="table">
@@ -20,7 +25,11 @@
       {{#each this.user.similar_users as |user|}}
         <tr>
           <td>
-            <Input @type="checkbox" disabled={{not (get user this.penaltyField)}} {{on "click" (action "selectUserId" user.id)}} />
+            <Input
+              @type="checkbox"
+              disabled={{not (get user this.penaltyField)}}
+              {{on "click" (action "selectUserId" user.id)}}
+            />
           </td>
           <td>{{avatar user imageSize="small"}} {{user.username}}</td>
           <td>{{format-duration user.last_seen_age}}</td>

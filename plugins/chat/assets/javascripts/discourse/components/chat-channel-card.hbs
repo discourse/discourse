@@ -26,10 +26,7 @@
         {{#if @channel.currentUserMembership.muted}}
           <LinkTo
             @route="chat.channel.info.settings"
-            @models={{array
-              @channel.id
-              (slugify-channel @channel)
-            }}
+            @models={{array @channel.id (slugify-channel @channel)}}
             class="chat-channel-card__tag -muted"
             tabindex="-1"
           >

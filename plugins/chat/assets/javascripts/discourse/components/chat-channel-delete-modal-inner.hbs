@@ -3,18 +3,28 @@
     id="chat-channel-delete-modal-inner"
     class="chat-channel-delete-modal-inner"
   >
-    <p
-      class="chat-channel-delete-modal-instructions"
-    >
+    <p class="chat-channel-delete-modal-instructions">
       {{this.instructionsText}}
     </p>
   </div>
 
-  <TextField @value={{this.channelNameConfirmation}} @id="channel-delete-confirm-name" @placeholderKey="chat.channel_delete.confirm_channel_name" @autocorrect="off" @autocapitalize="off" />
+  <TextField
+    @value={{this.channelNameConfirmation}}
+    @id="channel-delete-confirm-name"
+    @placeholderKey="chat.channel_delete.confirm_channel_name"
+    @autocorrect="off"
+    @autocapitalize="off"
+  />
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @disabled={{this.buttonDisabled}} @class="btn-danger" @action={{action "deleteChannel"}} @label="chat.channel_delete.confirm" @id="chat-confirm-delete-channel" />
+  <DButton
+    @disabled={{this.buttonDisabled}}
+    @class="btn-danger"
+    @action={{action "deleteChannel"}}
+    @label="chat.channel_delete.confirm"
+    @id="chat-confirm-delete-channel"
+  />
 
   <DButton @label="cancel" @class="btn-flat" @action={{this.closeModal}} />
 </div>

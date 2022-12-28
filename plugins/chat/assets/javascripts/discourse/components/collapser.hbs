@@ -2,9 +2,17 @@
   {{this.header}}
 
   {{#if this.collapsed}}
-    <DButton @action={{action "open"}} @icon="caret-right" @class="chat-message-collapser-button chat-message-collapser-closed" />
+    <DButton
+      @action={{action "open"}}
+      @icon="caret-right"
+      @class="chat-message-collapser-button chat-message-collapser-closed"
+    />
   {{else}}
-    <DButton @action={{action "close"}} @icon="caret-down" @class="chat-message-collapser-button chat-message-collapser-opened" />
+    <DButton
+      @action={{action "close"}}
+      @icon="caret-down"
+      @class="chat-message-collapser-button chat-message-collapser-opened"
+    />
   {{/if}}
 </div>
 

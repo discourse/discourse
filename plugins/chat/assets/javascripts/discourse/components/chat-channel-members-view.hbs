@@ -12,7 +12,13 @@
         (if this.isSearchFocused " is-focused")
       }}
     >
-      <Input class={{this.inputSelector}} placeholder={{i18n "chat.members_view.filter_placeholder"}} {{on "input" (action "onFilterMembers" value="target.value")}} {{on "focusin" (action (mut this.isSearchFocused) true)}} {{on "focusout" (action (mut this.isSearchFocused) false)}} />
+      <Input
+        class={{this.inputSelector}}
+        placeholder={{i18n "chat.members_view.filter_placeholder"}}
+        {{on "input" (action "onFilterMembers" value="target.value")}}
+        {{on "focusin" (action (mut this.isSearchFocused) true)}}
+        {{on "focusout" (action (mut this.isSearchFocused) false)}}
+      />
       {{d-icon "search"}}
     </div>
 
