@@ -5,6 +5,8 @@ require "csv"
 require "yaml"
 require "optparse"
 require "fileutils"
+require "net/http"
+require "uri"
 
 @include_env = false
 @result_file = nil
@@ -51,6 +53,10 @@ opts = OptionParser.new do |o|
   end
   o.on("-s", "--skip-bundle-assets", "Skip bundling assets") do
     @skip_asset_bundle = true
+  end
+
+  o.on("-t", "--tests [STRING]", "List of tests to run. Example: '--tests topic,categories')") do |i|
+    @tests = i.split(",")
   end
 end
 opts.parse!
@@ -182,17 +188,23 @@ end
 puts "Populating Profile DB"
 run("bundle exec ruby script/profile_db_generator.rb")
 
-puts "Getting api key"
-api_key = `bundle exec rake api_key:create_master[bench]`.split("\n")[-1]
+puts "Getting admin api key"
+admin_api_key = `bundle exec rake api_key:create_master[bench]`.split("\n")[-1]
+raise "Failed to obtain a user API key" if admin_api_key.to_s.empty?
 
-def bench(path, name)
+puts "Getting user api key"
+user_api_key = `bundle exec rake user_api_key:create[user1]`.split("\n")[-1]
+raise "Failed to obtain a user API key" if user_api_key.to_s.empty?
+
+def bench(path, name, headers)
   puts "Running apache bench warmup"
   add = ""
   add = "-c #{@concurrency} " if @concurrency > 1
-  `ab #{add} -n 20 -l "http://127.0.0.1:#{@port}#{path}"`
+  header_string = headers&.map { |k, v| "-H \"#{k}:#{v}\"" }&.join(" ")
+  `ab #{add} #{header_string} -n 20 -l "http://127.0.0.1:#{@port}#{path}"`
 
   puts "Benchmarking #{name} @ #{path}"
-  `ab #{add} -n #{@iterations} -l -e tmp/ab.csv "http://127.0.0.1:#{@port}#{path}"`
+  `ab #{add} #{header_string} -n #{@iterations} -l -e tmp/ab.csv "http://127.0.0.1:#{@port}#{path}"`
 
   percentiles = Hash[*[50, 75, 90, 99].zip([]).flatten]
   CSV.foreach("tmp/ab.csv") do |percent, time|
@@ -214,7 +226,17 @@ begin
       ENV['UNICORN_PORT'] = @port.to_s
       ENV['UNICORN_WORKERS'] = @unicorn_workers.to_s
       FileUtils.mkdir_p(File.join('tmp', 'pids'))
-      spawn("bundle exec unicorn -c config/unicorn.conf.rb")
+      unicorn_pid = spawn("bundle exec unicorn -c config/unicorn.conf.rb")
+
+      while (unicorn_master_pid = `ps aux | grep "unicorn master" | grep -v "grep" | awk '{print $2}'`.strip.to_i) == 0
+        sleep 1
+      end
+
+      while `ps -f --ppid #{unicorn_master_pid} | grep worker | awk '{ print $2 }'`.split("\n").map(&:to_i).size != @unicorn_workers.to_i
+        sleep 1
+      end
+
+      unicorn_pid
     else
       spawn("bundle exec puma -p #{@port} -e production")
     end
@@ -224,8 +246,15 @@ begin
   end
 
   puts "Starting benchmark..."
-  headers = { 'Api-Key' => api_key,
-              'Api-Username' => "admin1" }
+
+  admin_headers = {
+    'Api-Key' => admin_api_key,
+    'Api-Username' => "admin1"
+  }
+
+  user_headers = {
+    'User-Api-Key' => user_api_key
+  }
 
   # asset precompilation is a dog, wget to force it
   run "curl -s -o /dev/null http://127.0.0.1:#{@port}/"
@@ -237,20 +266,38 @@ begin
 
   topic_url = redirect_response.match(/^location: .+(\/t\/i-am-a-topic-used-for-perf-tests\/.+)$/i)[1].strip
 
-  tests = [
+  all_tests = [
     ["categories", "/categories"],
     ["home", "/"],
-    ["topic", topic_url]
-    # ["user", "/u/admin1/activity"],
+    ["topic", topic_url],
+    ["topic.json", "#{topic_url}.json"],
+    ["user activity", "/u/admin1/activity"],
   ]
 
-  tests.concat(tests.map { |k, url| ["#{k}_admin", "#{url}", headers] })
+  @tests ||= %w{categories home topic}
 
-  tests.each do |_, path, headers_for_path|
-    header_string = headers_for_path&.map { |k, v| "-H \"#{k}: #{v}\"" }&.join(" ")
+  tests_to_run = all_tests.select do |test_name, path|
+    @tests.include?(test_name)
+  end
 
-    if `curl -s -I "http://127.0.0.1:#{@port}#{path}" #{header_string}` !~ /200 OK/
-      raise "#{path} returned non 200 response code"
+  tests_to_run.concat(
+    tests_to_run.map { |k, url| ["#{k} user", "#{url}", user_headers] },
+    tests_to_run.map { |k, url| ["#{k} admin", "#{url}", admin_headers] }
+  )
+
+  tests_to_run.each do |test_name, path, headers_for_path|
+    uri = URI.parse("http://127.0.0.1:#{@port}#{path}")
+    http = Net::HTTP.new(uri.host, uri.port)
+    request = Net::HTTP::Get.new(uri.request_uri)
+
+    headers_for_path&.each do |key, value|
+      request[key] = value
+    end
+
+    response = http.request(request)
+
+    if response.code != "200"
+      raise "#{test_name} #{path} returned non 200 response code"
     end
   end
 
@@ -265,8 +312,8 @@ begin
 
   results = {}
   @best_of.times do
-    tests.each do |name, url|
-      results[name] = best_of(bench(url, name), results[name])
+    tests_to_run.each do |name, url, headers|
+      results[name] = best_of(bench(url, name, headers), results[name])
     end
   end
 
@@ -303,7 +350,7 @@ begin
   mem = get_mem(pid)
 
   results = results.merge("timings" => @timings,
-                          "ruby-version" => "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}",
+                          "ruby-version" => "#{RUBY_DESCRIPTION}",
                           "rss_kb" => mem["rss_kb"],
                           "pss_kb" => mem["pss_kb"]).merge(facts)
 
