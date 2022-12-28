@@ -229,6 +229,10 @@ export default Component.extend({
 
   @debounce(100)
   fetchMessages(channel, options = {}) {
+    if (this._selfDeleted) {
+      return;
+    }
+
     this.set("loading", true);
 
     return this.chat.loadCookFunction(this.site.categories).then((cook) => {
