@@ -25,6 +25,8 @@ export default class ChatChannelsManager extends Service {
       return Promise.resolve(existingChannel);
     } else if (options.fetchIfNotFound) {
       return this.#find(id);
+    } else {
+      return Promise.resolve();
     }
   }
 

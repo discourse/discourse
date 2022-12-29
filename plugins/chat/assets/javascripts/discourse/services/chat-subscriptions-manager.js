@@ -99,8 +99,12 @@ export default class ChatSubscriptionsManager extends Service {
   _onChannelArchiveStatusUpdate(busData) {
     // we don't want to fetch a channel we don't have locally because archive status changed
     this.chatChannelsManager
-      .find(busData.chat_channel_id, { fetchIfNotFound: true })
+      .find(busData.chat_channel_id, { fetchIfNotFound: false })
       .then((channel) => {
+        if (!channel) {
+          return;
+        }
+
         channel.setProperties({
           archive_failed: busData.archive_failed,
           archive_completed: busData.archive_completed,
