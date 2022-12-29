@@ -62,10 +62,7 @@ RSpec.describe "Archive channel", type: :system, js: true do
           click_button(I18n.t("js.chat.channel_archive.title"))
 
           expect(page).to have_content(I18n.t("js.chat.channel_archive.process_started"))
-
-          chat.visit_channel(channel_1)
-
-          expect(page).to have_content(I18n.t("js.chat.channel_status.archived_header"))
+          expect(page).to have_css(".chat-channel-archive-status")
         end
 
         context "when archived channels had unreads" do
