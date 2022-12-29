@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Scriptable::GIFT_EXCHANGE = 'gift_exchange'
+DiscourseAutomation::Scriptable::GIFT_EXCHANGE = "gift_exchange"
 
 DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::GIFT_EXCHANGE) do
   placeholder :year
@@ -16,7 +16,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::GIFT_EXCHAN
 
   script do |_, fields, automation|
     now = Time.zone.now
-    group_id = fields.dig('gift_exchangers_group', 'value')
+    group_id = fields.dig("gift_exchangers_group", "value")
 
     unless group = Group.find_by(id: group_id)
       Rails.logger.warn "[discourse-automation] Couldn’t find group with id #{group_id}"
@@ -32,7 +32,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::GIFT_EXCHAN
     usernames = group.users.pluck(:username)
 
     if usernames.size < 3
-      Rails.logger.warn '[discourse-automation] Gift exchange needs at least 3 users in a group'
+      Rails.logger.warn "[discourse-automation] Gift exchange needs at least 3 users in a group"
       next
     end
 
@@ -43,35 +43,27 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::GIFT_EXCHAN
     pairs = usernames.each_cons(2).to_a.shuffle
 
     pairs.each do |gifter, giftee|
-      placeholders = {
-        year: now.year.to_s,
-        gifter_username: gifter,
-        giftee_username: giftee
-      }
+      placeholders = { year: now.year.to_s, gifter_username: gifter, giftee_username: giftee }
 
-      Array(fields.dig('giftee_assignment_messages', 'value')).each do |giftee_assignment_message|
-        if giftee_assignment_message['title'].blank?
-          Rails.logger.warn '[discourse-automation] Gift exchange requires a title for the PM'
+      Array(fields.dig("giftee_assignment_messages", "value")).each do |giftee_assignment_message|
+        if giftee_assignment_message["title"].blank?
+          Rails.logger.warn "[discourse-automation] Gift exchange requires a title for the PM"
           next
         end
 
-        if giftee_assignment_message['raw'].blank?
-          Rails.logger.warn '[discourse-automation] Gift exchange requires a raw for the PM'
+        if giftee_assignment_message["raw"].blank?
+          Rails.logger.warn "[discourse-automation] Gift exchange requires a raw for the PM"
           next
         end
 
-        raw = utils.apply_placeholders(giftee_assignment_message['raw'], placeholders)
-        title = utils.apply_placeholders(giftee_assignment_message['title'], placeholders)
+        raw = utils.apply_placeholders(giftee_assignment_message["raw"], placeholders)
+        title = utils.apply_placeholders(giftee_assignment_message["title"], placeholders)
 
         utils.send_pm(
-          {
-            target_usernames: Array(gifter),
-            title: title,
-            raw: raw,
-          },
-          delay: giftee_assignment_message['delay'],
-          encrypt: giftee_assignment_message['encrypt'],
-          automation_id: automation.id
+          { target_usernames: Array(gifter), title: title, raw: raw },
+          delay: giftee_assignment_message["delay"],
+          encrypt: giftee_assignment_message["encrypt"],
+          automation_id: automation.id,
         )
       end
     end

@@ -4,10 +4,13 @@ module DiscourseAutomation
   class AdminDiscourseAutomationController < ::ApplicationController
     before_action :ensure_logged_in
 
-    def index; end
+    def index
+    end
 
-    def new; end
+    def new
+    end
 
-    def edit; end
+    def edit
+    end
   end
 end

@@ -55,3 +55,12 @@ jobs:
       - name: Rubocop
         if: ${{ !cancelled() }}
         run: bundle exec rubocop .
+
+      - name: Syntax Tree
+        if: ${{ !cancelled() }}
+        run: |
+          if test -f .streerc; then
+            bundle exec stree check Gemfile $(git ls-files '*.rb') $(git ls-files '*.rake')
+          else
+            echo "Stree config not detected for this repository. Skipping."
+          fi

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative '../discourse_automation_helper'
+require_relative "../discourse_automation_helper"
 
-describe 'UserGlobalNotice' do
+describe "UserGlobalNotice" do
   fab!(:automation_1) do
     Fabricate(
       :automation,
@@ -16,47 +16,44 @@ describe 'UserGlobalNotice' do
   before do
     SiteSetting.discourse_automation_enabled = true
 
-    automation_1.upsert_field!('stalled_after', 'choices', { value: 'PT1H' }, target: 'trigger')
-    automation_1.upsert_field!('notice', 'message', { value: 'foo bar' }, target: 'script')
-    automation_1.upsert_field!('level', 'choices', { value: 'error' }, target: 'script')
+    automation_1.upsert_field!("stalled_after", "choices", { value: "PT1H" }, target: "trigger")
+    automation_1.upsert_field!("notice", "message", { value: "foo bar" }, target: "script")
+    automation_1.upsert_field!("level", "choices", { value: "error" }, target: "script")
   end
 
-  describe 'script' do
-    describe 'StalledTopic trigger' do
-      it 'creates a notice for the topic owner' do
+  describe "script" do
+    describe "StalledTopic trigger" do
+      it "creates a notice for the topic owner" do
         expect do
           automation_1.trigger!(
-            'kind' => DiscourseAutomation::Triggerable::STALLED_TOPIC,
-            'topic' => topic_1
+            "kind" => DiscourseAutomation::Triggerable::STALLED_TOPIC,
+            "topic" => topic_1,
           )
         end.to change { DiscourseAutomation::UserGlobalNotice.count }.by(1)
 
         user_notice = DiscourseAutomation::UserGlobalNotice.last
         expect(user_notice.user_id).to eq(topic_1.user_id)
-        expect(user_notice.level).to eq('error')
-        expect(user_notice.notice).to eq('foo bar')
+        expect(user_notice.level).to eq("error")
+        expect(user_notice.notice).to eq("foo bar")
       end
     end
   end
 
-  describe 'on_reset' do
+  describe "on_reset" do
     fab!(:automation_2) do
-      Fabricate(
-        :automation,
-        script: DiscourseAutomation::Scriptable::USER_GLOBAL_NOTICE
-      )
+      Fabricate(:automation, script: DiscourseAutomation::Scriptable::USER_GLOBAL_NOTICE)
     end
 
     before do
       [automation_1, automation_2].each do |automation|
         automation.trigger!(
-          'kind' => DiscourseAutomation::Triggerable::STALLED_TOPIC,
-          'topic' => topic_1
+          "kind" => DiscourseAutomation::Triggerable::STALLED_TOPIC,
+          "topic" => topic_1,
         )
       end
     end
 
-    it 'destroys all existing notices' do
+    it "destroys all existing notices" do
       klass = DiscourseAutomation::UserGlobalNotice
 
       expect(klass.exists?(identifier: automation_1.id)).to eq(true)
@@ -69,13 +66,15 @@ describe 'UserGlobalNotice' do
     end
   end
 
-  it 'creates and destroy global notices' do
+  it "creates and destroy global notices" do
     post = Fabricate(:post, created_at: 1.day.ago)
 
-    expect { Jobs::StalledTopicTracker.new.execute }
-      .to change { DiscourseAutomation::UserGlobalNotice.count }.by(1)
+    expect { Jobs::StalledTopicTracker.new.execute }.to change {
+      DiscourseAutomation::UserGlobalNotice.count
+    }.by(1)
 
-    expect { PostCreator.create!(post.user, topic_id: post.topic_id, raw: 'lorem ipsum dolor sit amet') }
-      .to change { DiscourseAutomation::UserGlobalNotice.count }.by(-1)
+    expect {
+      PostCreator.create!(post.user, topic_id: post.topic_id, raw: "lorem ipsum dolor sit amet")
+    }.to change { DiscourseAutomation::UserGlobalNotice.count }.by(-1)
   end
 end

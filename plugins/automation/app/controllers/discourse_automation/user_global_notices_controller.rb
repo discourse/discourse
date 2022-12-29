@@ -5,10 +5,8 @@ module DiscourseAutomation
     requires_login
 
     def destroy
-      notice = DiscourseAutomation::UserGlobalNotice.find_by(
-        user_id: current_user.id,
-        id: params[:id],
-      )
+      notice =
+        DiscourseAutomation::UserGlobalNotice.find_by(user_id: current_user.id, id: params[:id])
 
       raise Discourse::NotFound unless notice
 

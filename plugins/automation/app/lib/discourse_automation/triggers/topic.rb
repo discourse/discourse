@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Triggerable::TOPIC = 'topic'
+DiscourseAutomation::Triggerable::TOPIC = "topic"
 
 DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggerable::TOPIC) do
   field :restricted_topic, component: :text
 
   on_update do |automation, metadata, previous_metadata|
     ActiveRecord::Base.transaction do
-      previous_topic_id = previous_metadata.dig('restricted_topic', 'value')
-      topic_id = metadata.dig('restricted_topic', 'value')
+      previous_topic_id = previous_metadata.dig("restricted_topic", "value")
+      topic_id = metadata.dig("restricted_topic", "value")
 
       if previous_topic_id && previous_topic_id != topic_id
         previous_topic = Topic.find_by(id: previous_topic_id)
@@ -17,7 +17,7 @@ DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggerable::TOPIC) do
           TopicCustomField.where(
             topic_id: previous_topic_id,
             name: DiscourseAutomation::CUSTOM_FIELD,
-            value: automation.id
+            value: automation.id,
           ).delete_all
         end
       end

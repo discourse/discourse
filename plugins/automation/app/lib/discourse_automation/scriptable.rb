@@ -32,7 +32,7 @@ module DiscourseAutomation
     end
 
     def id
-      'script'
+      "script"
     end
 
     def scriptable?
@@ -109,10 +109,11 @@ module DiscourseAutomation
       @fields << {
         name: name,
         component: component,
-        extra: {},
+        extra: {
+        },
         accepts_placeholders: false,
         triggerable: nil,
-        required: false
+        required: false,
       }.merge(options || {})
     end
 
@@ -135,12 +136,14 @@ module DiscourseAutomation
         ordered_columns = report.labels.map { |l| l[:property] }
 
         table = +"\n"
-        table << '|' + report.labels.map { |l| l[:title] }.join('|') + "|\n"
-        table << '|' + report.labels.count.times.map { '-' }.join('|') + "|\n"
+        table << "|" + report.labels.map { |l| l[:title] }.join("|") + "|\n"
+        table << "|" + report.labels.count.times.map { "-" }.join("|") + "|\n"
         if report.data.count > 0
-          report.data.each { |data| table << "|#{ordered_columns.map { |col| data[col] }.join('|')}|\n" }
+          report.data.each do |data|
+            table << "|#{ordered_columns.map { |col| data[col] }.join("|")}|\n"
+          end
         else
-          table << '|' + report.labels.count.times.map { ' ' }.join('|') + "|\n"
+          table << "|" + report.labels.count.times.map { " " }.join("|") + "|\n"
         end
         table
       end
@@ -151,15 +154,13 @@ module DiscourseAutomation
 
         input = apply_report_placeholder(input)
 
-        map.each do |key, value|
-          input = input.gsub("%%#{key.upcase}%%", value.to_s)
-        end
+        map.each { |key, value| input = input.gsub("%%#{key.upcase}%%", value.to_s) }
 
         input
       end
 
       REPORT_REGEX = /%%REPORT=(.*?)%%/
-      def self.apply_report_placeholder(input = '')
+      def self.apply_report_placeholder(input = "")
         input.gsub(REPORT_REGEX) do |pattern|
           match = pattern.match(REPORT_REGEX)
           if match
@@ -167,22 +168,34 @@ module DiscourseAutomation
 
             args = { filters: {} }
             if params[2]
-              params[2].split(' ').each do |param|
-                key, value = param.split('=')
-                if ['start_date', 'end_date'].include?(key)
-                  args[key.to_sym] = Date.parse(value) rescue nil
-                else
-                  args[:filters][key.to_sym] = value
+              params[2]
+                .split(" ")
+                .each do |param|
+                  key, value = param.split("=")
+                  if %w[start_date end_date].include?(key)
+                    args[key.to_sym] = begin
+                      Date.parse(value)
+                    rescue StandardError
+                      nil
+                    end
+                  else
+                    args[:filters][key.to_sym] = value
+                  end
                 end
-              end
             end
 
-            fetch_report(params[1].downcase, args) || ''
+            fetch_report(params[1].downcase, args) || ""
           end
         end
       end
 
-      def self.send_pm(pm, sender: Discourse.system_user.username, delay: nil, automation_id: nil, encrypt: true)
+      def self.send_pm(
+        pm,
+        sender: Discourse.system_user.username,
+        delay: nil,
+        automation_id: nil,
+        encrypt: true
+      )
         pm = pm.symbolize_keys
 
         if delay && automation_id
@@ -196,13 +209,11 @@ module DiscourseAutomation
             pm = pm.merge(archetype: Archetype.private_message)
 
             if encrypt && defined?(EncryptedPostCreator)
-              pm[:target_usernames] = (pm[:target_usernames] || []).join(',')
+              pm[:target_usernames] = (pm[:target_usernames] || []).join(",")
               post_created = EncryptedPostCreator.new(sender, pm).create
             end
 
-            if !post_created
-              PostCreator.new(sender, pm).create
-            end
+            PostCreator.new(sender, pm).create if !post_created
           else
             Rails.logger.warn "[discourse-automation] Couldn’t send PM to user with username: `#{sender}`."
           end
@@ -216,9 +227,8 @@ module DiscourseAutomation
     end
 
     def self.all
-      @all_scriptables ||= DiscourseAutomation::Scriptable
-        .instance_methods(false)
-        .grep(/^__scriptable_/)
+      @all_scriptables ||=
+        DiscourseAutomation::Scriptable.instance_methods(false).grep(/^__scriptable_/)
     end
   end
 end

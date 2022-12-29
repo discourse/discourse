@@ -1,24 +1,19 @@
 # frozen_string_literal: true
 
-require_relative '../discourse_automation_helper'
+require_relative "../discourse_automation_helper"
 
-describe 'PinTopic' do
+describe "PinTopic" do
   fab!(:user) { Fabricate(:user) }
   fab!(:category) { Fabricate(:category, user: user) }
   fab!(:topic) { Fabricate(:topic, category: category) }
-  fab!(:automation) do
-    Fabricate(
-      :automation,
-      script: DiscourseAutomation::Scriptable::PIN_TOPIC
-    )
-  end
+  fab!(:automation) { Fabricate(:automation, script: DiscourseAutomation::Scriptable::PIN_TOPIC) }
 
   before do
-    automation.upsert_field!('pinnable_topic', 'text', { value: topic.id }, target: 'script')
+    automation.upsert_field!("pinnable_topic", "text", { value: topic.id }, target: "script")
   end
 
-  context 'when not pinned globally' do
-    it 'works' do
+  context "when not pinned globally" do
+    it "works" do
       expect(topic.pinned_at).to be_nil
 
       automation.trigger!
@@ -30,12 +25,10 @@ describe 'PinTopic' do
     end
   end
 
-  context 'when pinned globally' do
-    before do
-      automation.upsert_field!('pinned_globally', 'boolean', { value: true })
-    end
+  context "when pinned globally" do
+    before { automation.upsert_field!("pinned_globally", "boolean", { value: true }) }
 
-    it 'works' do
+    it "works" do
       expect(topic.pinned_at).to be_nil
 
       automation.trigger!
@@ -47,21 +40,21 @@ describe 'PinTopic' do
     end
   end
 
-  describe 'pinned until' do
+  describe "pinned until" do
     before do
       freeze_time
-      automation.upsert_field!('pinned_until', 'date_time', { value: 10.days.from_now })
+      automation.upsert_field!("pinned_until", "date_time", { value: 10.days.from_now })
     end
 
-    it 'works' do
+    it "works" do
       expect(topic.pinned_at).to be_nil
 
       automation.trigger!
 
       # expect_enqueued_with is sometimes failing with float precision
       job = Jobs::UnpinTopic.jobs.last
-      expect(job['args'][0]['topic_id']).to eq(topic.id)
-      expect(Time.at(job['at'])).to be_within_one_minute_of(10.days.from_now)
+      expect(job["args"][0]["topic_id"]).to eq(topic.id)
+      expect(Time.at(job["at"])).to be_within_one_minute_of(10.days.from_now)
 
       topic.reload
 

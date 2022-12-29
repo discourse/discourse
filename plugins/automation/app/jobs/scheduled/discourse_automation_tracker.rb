@@ -12,20 +12,20 @@ module Jobs
       DiscourseAutomation::PendingAutomation
         .includes(:automation)
         .limit(BATCH_LIMIT)
-        .where('execute_at < ?', Time.now)
+        .where("execute_at < ?", Time.now)
         .find_each { |pending_automation| run_pending_automation(pending_automation) }
 
       DiscourseAutomation::PendingPm
         .includes(:automation)
         .limit(BATCH_LIMIT)
-        .where('execute_at < ?', Time.now)
+        .where("execute_at < ?", Time.now)
         .find_each { |pending_pm| send_pending_pm(pending_pm) }
     end
 
     def send_pending_pm(pending_pm)
       DiscourseAutomation::Scriptable::Utils.send_pm(
-        pending_pm.attributes.slice('target_usernames', 'title', 'raw'),
-        sender: pending_pm.sender
+        pending_pm.attributes.slice("target_usernames", "title", "raw"),
+        sender: pending_pm.sender,
       )
 
       pending_pm.destroy!
@@ -33,8 +33,8 @@ module Jobs
 
     def run_pending_automation(pending_automation)
       pending_automation.automation.trigger!(
-        'kind' => pending_automation.automation.trigger,
-        'execute_at' => pending_automation.execute_at
+        "kind" => pending_automation.automation.trigger,
+        "execute_at" => pending_automation.execute_at,
       )
 
       pending_automation.destroy!

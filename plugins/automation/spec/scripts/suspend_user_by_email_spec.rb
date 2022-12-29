@@ -1,31 +1,26 @@
 # frozen_string_literal: true
 
-require_relative '../discourse_automation_helper'
+require_relative "../discourse_automation_helper"
 
-describe 'SuspendUserByEmail' do
+describe "SuspendUserByEmail" do
   let(:suspend_until) { 10.days.from_now }
-  let(:reason) { 'banned for spam' }
+  let(:reason) { "banned for spam" }
 
   fab!(:automation) do
-    Fabricate(
-      :automation,
-      script: DiscourseAutomation::Scriptable::SUSPEND_USER_BY_EMAIL
-    )
+    Fabricate(:automation, script: DiscourseAutomation::Scriptable::SUSPEND_USER_BY_EMAIL)
   end
   fab!(:user) { Fabricate(:user) }
 
   before do
-    automation.upsert_field!('suspend_until', 'date_time', { value: suspend_until })
-    automation.upsert_field!('reason', 'text', { value: reason })
+    automation.upsert_field!("suspend_until", "date_time", { value: suspend_until })
+    automation.upsert_field!("reason", "text", { value: reason })
   end
 
-  describe 'using fields' do
-    it 'suspends the user' do
+  describe "using fields" do
+    it "suspends the user" do
       expect(user.suspended?).to be(false)
 
-      expect {
-        automation.trigger!('email' => user.email)
-      }.to change { UserHistory.count }.by(1)
+      expect { automation.trigger!("email" => user.email) }.to change { UserHistory.count }.by(1)
 
       user.reload
 
@@ -38,15 +33,19 @@ describe 'SuspendUserByEmail' do
     end
   end
 
-  describe 'trigger override' do
-    let(:reason) { 'very bad behavior' }
+  describe "trigger override" do
+    let(:reason) { "very bad behavior" }
     let(:suspend_until) { 20.days.from_now }
 
-    it 'suspends the user' do
+    it "suspends the user" do
       expect(user.suspended?).to be(false)
 
       expect {
-        automation.trigger!('email' => user.email, 'reason' => reason, 'suspend_until' => suspend_until)
+        automation.trigger!(
+          "email" => user.email,
+          "reason" => reason,
+          "suspend_until" => suspend_until,
+        )
       }.to change { UserHistory.count }.by(1)
 
       user.reload

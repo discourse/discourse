@@ -80,7 +80,7 @@ jobs:
 
       - name: Get yarn cache directory
         id: yarn-cache-dir
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - name: Yarn cache
         uses: actions/cache@v3
@@ -130,7 +130,7 @@ jobs:
         shell: bash
         run: |
           if [ 0 -lt $(find plugins/${{ github.event.repository.name }}/spec -type f -name "*.rb" 2> /dev/null | wc -l) ]; then
-            echo "::set-output name=files_exist::true"
+            echo "files_exist=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Plugin RSpec
@@ -142,7 +142,7 @@ jobs:
         shell: bash
         run: |
           if [ 0 -lt $(find plugins/${{ github.event.repository.name }}/test/javascripts -type f \( -name "*.js" -or -name "*.es6" \) 2> /dev/null | wc -l) ]; then
-            echo "::set-output name=files_exist::true"
+            echo "files_exist=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Plugin QUnit

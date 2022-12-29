@@ -6,11 +6,9 @@ class MoveTriggersToFields < ActiveRecord::Migration[6.1]
 
     add_column :discourse_automation_fields, :target, :string, null: true
 
-    DB.exec(
-      <<~SQL
+    DB.exec(<<~SQL)
         UPDATE discourse_automation_fields
         SET target = 'script'
       SQL
-    )
   end
 end

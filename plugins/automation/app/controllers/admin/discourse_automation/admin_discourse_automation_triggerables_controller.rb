@@ -11,15 +11,16 @@ module DiscourseAutomation
         triggerables = DiscourseAutomation::Triggerable.all
       end
 
-      triggerables = triggerables.map do |s|
-        id = s.to_s.gsub(/^__triggerable_/, '')
-        {
-          id: id,
-          name: I18n.t("discourse_automation.triggerables.#{id}.title"),
-          description: I18n.t("discourse_automation.triggerables.#{id}.description", default: ''),
-          doc: I18n.t("discourse_automation.triggerables.#{id}.doc", default: ''),
-        }
-      end
+      triggerables =
+        triggerables.map do |s|
+          id = s.to_s.gsub(/^__triggerable_/, "")
+          {
+            id: id,
+            name: I18n.t("discourse_automation.triggerables.#{id}.title"),
+            description: I18n.t("discourse_automation.triggerables.#{id}.description", default: ""),
+            doc: I18n.t("discourse_automation.triggerables.#{id}.doc", default: ""),
+          }
+        end
 
       render_json_dump(triggerables: triggerables)
     end

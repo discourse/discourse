@@ -7,14 +7,12 @@ class StalledTopicFinder
       FROM topics t
     SQL
 
-    if tags
-      sql += <<~SQL
+    sql += <<~SQL if tags
         JOIN topic_tags ON topic_tags.topic_id = t.id
         JOIN tags
           ON tags.name IN (:tags)
           AND tags.id = topic_tags.tag_id
       SQL
-    end
 
     sql += <<~SQL
       WHERE t.deleted_at IS NULL
@@ -33,21 +31,14 @@ class StalledTopicFinder
       )
     SQL
 
-    if categories
-      sql += <<~SQL
+    sql += <<~SQL if categories
         AND t.category_id IN (:categories)
       SQL
-    end
 
     sql += <<~SQL
       LIMIT 250
     SQL
 
-    DB.query(
-      sql,
-      categories: categories,
-      tags: tags,
-      stalled_date: stalled_date,
-    )
+    DB.query(sql, categories: categories, tags: tags, stalled_date: stalled_date)
   end
 end

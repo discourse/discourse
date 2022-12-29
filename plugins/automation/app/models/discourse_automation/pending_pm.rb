@@ -2,8 +2,8 @@
 
 module DiscourseAutomation
   class PendingPm < ActiveRecord::Base
-    self.table_name = 'discourse_automation_pending_pms'
+    self.table_name = "discourse_automation_pending_pms"
 
-    belongs_to :automation, class_name: 'DiscourseAutomation::Automation'
+    belongs_to :automation, class_name: "DiscourseAutomation::Automation"
   end
 end

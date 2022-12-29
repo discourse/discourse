@@ -4,11 +4,12 @@ module DiscourseAutomation
   class AdminDiscourseAutomationAutomationsController < ::ApplicationController
     def index
       automations = DiscourseAutomation::Automation.order(:name).all
-      serializer = ActiveModel::ArraySerializer.new(
-        automations,
-        each_serializer: DiscourseAutomation::AutomationSerializer,
-        root: 'automations'
-      ).as_json
+      serializer =
+        ActiveModel::ArraySerializer.new(
+          automations,
+          each_serializer: DiscourseAutomation::AutomationSerializer,
+          root: "automations",
+        ).as_json
       render_json_dump(serializer)
     end
 
@@ -22,9 +23,10 @@ module DiscourseAutomation
 
       enforce_trigger!(automation_params)
 
-      automation = DiscourseAutomation::Automation.create!(
-        automation_params.merge(last_updated_by_id: current_user.id)
-      )
+      automation =
+        DiscourseAutomation::Automation.create!(
+          automation_params.merge(last_updated_by_id: current_user.id),
+        )
       render_serialized_automation(automation)
     end
 
@@ -35,10 +37,10 @@ module DiscourseAutomation
 
       enforce_trigger!(params[:automation])
 
-      attributes = request
-        .parameters[:automation]
-        .slice(:name, :id, :script, :trigger, :enabled)
-        .merge(last_updated_by_id: current_user.id)
+      attributes =
+        request.parameters[:automation].slice(:name, :id, :script, :trigger, :enabled).merge(
+          last_updated_by_id: current_user.id,
+        )
 
       if automation.trigger != params[:automation][:trigger]
         params[:automation][:fields] = []
@@ -53,9 +55,16 @@ module DiscourseAutomation
         automation.fields.destroy_all
         automation.tap { |r| r.assign_attributes(attributes) }.save!(validate: false)
       else
-        Array(params[:automation][:fields]).reject(&:empty?).each do |field|
-          automation.upsert_field!(field[:name], field[:component], field[:metadata], target: field[:target])
-        end
+        Array(params[:automation][:fields])
+          .reject(&:empty?)
+          .each do |field|
+            automation.upsert_field!(
+              field[:name],
+              field[:component],
+              field[:metadata],
+              target: field[:target],
+            )
+          end
 
         automation.tap { |r| r.assign_attributes(attributes) }.save!
       end
@@ -79,10 +88,8 @@ module DiscourseAutomation
     end
 
     def render_serialized_automation(automation)
-      serializer = DiscourseAutomation::AutomationSerializer.new(
-        automation,
-        root: 'automation'
-      ).as_json
+      serializer =
+        DiscourseAutomation::AutomationSerializer.new(automation, root: "automation").as_json
       render_json_dump(serializer)
     end
   end

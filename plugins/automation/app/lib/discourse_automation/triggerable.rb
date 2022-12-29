@@ -19,7 +19,7 @@ module DiscourseAutomation
     end
 
     def id
-      'trigger'
+      "trigger"
     end
 
     def scriptable?
@@ -42,9 +42,10 @@ module DiscourseAutomation
       @fields << {
         name: name,
         component: component,
-        extra: {},
+        extra: {
+        },
         accepts_placeholders: false,
-        required: false
+        required: false,
       }.merge(options || {})
     end
 
@@ -92,9 +93,8 @@ module DiscourseAutomation
     end
 
     def self.all
-      @all_triggers ||= DiscourseAutomation::Triggerable
-        .instance_methods(false)
-        .grep(/^__triggerable_/)
+      @all_triggers ||=
+        DiscourseAutomation::Triggerable.instance_methods(false).grep(/^__triggerable_/)
     end
   end
 end

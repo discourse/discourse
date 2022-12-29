@@ -6,6 +6,7 @@ GEM
     parallel (1.22.1)
     parser (3.1.2.1)
       ast (~> 2.4.1)
+    prettier_print (1.2.0)
     rainbow (3.1.1)
     regexp_parser (2.6.0)
     rexml (3.2.5)
@@ -27,6 +28,8 @@ GEM
     rubocop-rspec (2.13.2)
       rubocop (~> 1.33)
     ruby-progressbar (1.11.0)
+    syntax_tree (5.1.0)
+      prettier_print (>= 1.2.0)
     unicode-display_width (2.3.0)
 
 PLATFORMS
@@ -39,6 +42,7 @@ PLATFORMS
 
 DEPENDENCIES
   rubocop-discourse
+  syntax_tree
 
 BUNDLED WITH
    2.3.4

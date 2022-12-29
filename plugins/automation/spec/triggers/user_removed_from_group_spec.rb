@@ -5,12 +5,9 @@ require_relative "../discourse_automation_helper"
 describe "UserRemovedFromGroup" do
   fab!(:user) { Fabricate(:user) }
   fab!(:group) { Fabricate(:group) }
-  fab!(:automation) {
-    Fabricate(
-      :automation,
-      trigger: DiscourseAutomation::Triggerable::USER_REMOVED_FROM_GROUP
-    )
-  }
+  fab!(:automation) do
+    Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::USER_REMOVED_FROM_GROUP)
+  end
 
   before do
     SiteSetting.discourse_automation_enabled = true
@@ -23,9 +20,7 @@ describe "UserRemovedFromGroup" do
     end
 
     it "fires the trigger" do
-      list = capture_contexts do
-        group.remove(user)
-      end
+      list = capture_contexts { group.remove(user) }
 
       expect(list.length).to eq(1)
       expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggerable::USER_REMOVED_FROM_GROUP)
@@ -34,9 +29,7 @@ describe "UserRemovedFromGroup" do
 
   context "when group is not tracked" do
     it "doesn’t fire the trigger" do
-      list = capture_contexts do
-        group.remove(user)
-      end
+      list = capture_contexts { group.remove(user) }
 
       expect(list).to eq([])
     end

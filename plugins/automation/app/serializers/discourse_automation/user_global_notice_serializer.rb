@@ -5,7 +5,7 @@ module DiscourseAutomation
     attributes :id, :notice, :level, :created_at, :updated_at, :identifier
 
     def level
-      object.level || 'info'
+      object.level || "info"
     end
   end
 end

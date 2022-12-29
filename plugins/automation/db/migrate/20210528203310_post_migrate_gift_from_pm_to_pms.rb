@@ -2,7 +2,7 @@
 
 class PostMigrateGiftFromPmToPms < ActiveRecord::Migration[6.1]
   def up
-    query = DB.query(<<~SQL, name: 'giftee_assignment_message')
+    query = DB.query(<<~SQL, name: "giftee_assignment_message")
       SELECT id, metadata
       FROM discourse_automation_fields
       WHERE name = :name
@@ -17,19 +17,24 @@ class PostMigrateGiftFromPmToPms < ActiveRecord::Migration[6.1]
       metadata = {
         pms: [
           {
-            title: pm['title'],
-            raw: pm['body'],
-            delay: pm['delay'] || 0,
-            encrypt: pm['encrypt'] || true
-          }
-        ]
+            title: pm["title"],
+            raw: pm["body"],
+            delay: pm["delay"] || 0,
+            encrypt: pm["encrypt"] || true,
+          },
+        ],
       }
 
-      DB.exec(<<~SQL, field_id: field.id, name: 'giftee_assignment_messages', metadata: metadata.to_json)
+      DB.exec(
+        <<~SQL,
         UPDATE discourse_automation_fields
         SET name = :name, component = 'pms', metadata = :metadata
         WHERE id = :field_id
       SQL
+        field_id: field.id,
+        name: "giftee_assignment_messages",
+        metadata: metadata.to_json,
+      )
     end
   end
 end

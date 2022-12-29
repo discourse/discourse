@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-DiscourseAutomation::Scriptable::SUSPEND_USER_BY_EMAIL = 'suspend_user_by_email'
+DiscourseAutomation::Scriptable::SUSPEND_USER_BY_EMAIL = "suspend_user_by_email"
 
 DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::SUSPEND_USER_BY_EMAIL) do
   version 1
@@ -12,17 +12,20 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::SUSPEND_USE
   field :actor, component: :user
 
   script do |context, fields|
-    email = context['email']
+    email = context["email"]
     next unless target = UserEmail.find_by(email: email)&.user
 
     next if target.suspended?
 
-    next unless actor = User.find_by(username: fields.dig('actor', 'value') || Discourse.system_user.username)
+    unless actor =
+             User.find_by(username: fields.dig("actor", "value") || Discourse.system_user.username)
+      next
+    end
     guardian = Guardian.new(actor)
     guardian.ensure_can_suspend!(target)
 
-    suspend_until = context['suspend_until'].presence || fields.dig('suspend_until', 'value')
-    reason = context['reason'].presence || fields.dig('reason', 'value')
+    suspend_until = context["suspend_until"].presence || fields.dig("suspend_until", "value")
+    reason = context["reason"].presence || fields.dig("reason", "value")
 
     User.transaction do
       target.suspended_till = suspend_until

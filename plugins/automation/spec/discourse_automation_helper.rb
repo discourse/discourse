@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
 def capture_contexts(&blk)
   DiscourseAutomation::CapturedContext.capture(&blk)
@@ -23,11 +23,14 @@ module DiscourseAutomation::CapturedContext
   end
 end
 
-DiscourseAutomation::Scriptable.add('something_about_us') do
-  script { |context| DiscourseAutomation::CapturedContext.add(context); nil }
+DiscourseAutomation::Scriptable.add("something_about_us") do
+  script do |context|
+    DiscourseAutomation::CapturedContext.add(context)
+    nil
+  end
   triggerables [DiscourseAutomation::Triggerable::API_CALL]
 end
 
-DiscourseAutomation::Scriptable.add('nothing_about_us') do
+DiscourseAutomation::Scriptable.add("nothing_about_us") do
   triggerables [DiscourseAutomation::Triggerable::API_CALL]
 end

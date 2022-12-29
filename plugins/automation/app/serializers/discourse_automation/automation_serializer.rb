@@ -13,7 +13,10 @@ module DiscourseAutomation
     attributes :placeholders
 
     def last_updated_by
-      BasicUserSerializer.new(User.find_by(id: object.last_updated_by_id) || Discourse.system_user, root: false).as_json
+      BasicUserSerializer.new(
+        User.find_by(id: object.last_updated_by_id) || Discourse.system_user,
+        root: false,
+      ).as_json
     end
 
     def include_next_pending_automation_at?
@@ -29,7 +32,7 @@ module DiscourseAutomation
     end
 
     def script
-      key = 'discourse_automation.scriptables'
+      key = "discourse_automation.scriptables"
       doc_key = "#{key}.#{object.script}.doc"
       script_with_trigger_key = "#{key}.#{object.script}_with_#{object.trigger}.doc"
 
@@ -39,16 +42,22 @@ module DiscourseAutomation
         name: I18n.t("#{key}.#{object.script}.title"),
         description: I18n.t("#{key}.#{object.script}.description"),
         doc: I18n.exists?(doc_key, :en) ? I18n.t(doc_key) : nil,
-        with_trigger_doc: I18n.exists?(script_with_trigger_key, :en) ? I18n.t(script_with_trigger_key) : nil,
+        with_trigger_doc:
+          I18n.exists?(script_with_trigger_key, :en) ? I18n.t(script_with_trigger_key) : nil,
         forced_triggerable: scriptable.forced_triggerable,
         not_found: scriptable.not_found,
-        templates: process_templates(scriptable.fields.filter { |f| !f[:triggerable] || f[:triggerable].to_sym == object.trigger&.to_sym }),
-        fields: process_fields(object.fields.where(target: 'script'))
+        templates:
+          process_templates(
+            scriptable.fields.filter do |f|
+              !f[:triggerable] || f[:triggerable].to_sym == object.trigger&.to_sym
+            end,
+          ),
+        fields: process_fields(object.fields.where(target: "script")),
       }
     end
 
     def trigger
-      key = 'discourse_automation.triggerables'
+      key = "discourse_automation.triggerables"
       doc_key = "#{key}.#{object.trigger}.doc"
 
       {
@@ -58,8 +67,8 @@ module DiscourseAutomation
         doc: I18n.exists?(doc_key, :en) ? I18n.t(doc_key) : nil,
         not_found: triggerable.not_found,
         templates: process_templates(triggerable.fields),
-        fields: process_fields(object.fields.where(target: 'trigger')),
-        settings: triggerable.settings
+        fields: process_fields(object.fields.where(target: "trigger")),
+        settings: triggerable.settings,
       }
     end
 
@@ -67,15 +76,18 @@ module DiscourseAutomation
 
     def process_templates(fields)
       ActiveModel::ArraySerializer.new(
-          fields,
-          each_serializer: DiscourseAutomation::TemplateSerializer, scope: { automation: object }
-        ).as_json
+        fields,
+        each_serializer: DiscourseAutomation::TemplateSerializer,
+        scope: {
+          automation: object,
+        },
+      ).as_json
     end
 
     def process_fields(fields)
       ActiveModel::ArraySerializer.new(
         fields || [],
-        each_serializer: DiscourseAutomation::FieldSerializer
+        each_serializer: DiscourseAutomation::FieldSerializer,
       ).as_json || []
     end
 
