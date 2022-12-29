@@ -17,6 +17,8 @@ class RateLimiter
     @disabled = false
   end
 
+  disable if Rails.env.profile?
+
   # We don't observe rate limits in test mode
   def self.disabled?
     @disabled
