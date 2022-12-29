@@ -12,10 +12,21 @@ module Jobs
         return
       end
 
+      mention_type = args[:mention_type]&.to_sym
+      return if (
+        mention_type.blank? ||
+        (
+          !Chat::ChatNotifier::STATIC_MENTION_TYPES.include?(mention_type) &&
+          !Group.where("LOWER(name) = ?", mention_type).exists?
+        )
+      )
+
       @creator = @chat_message.user
       @chat_channel = @chat_message.chat_channel
-      user_ids_to_notify = args[:to_notify_ids_map] || {}
-      user_ids_to_notify.each { |mention_type, ids| process_mentions(ids, mention_type.to_sym) }
+
+      user_ids_to_notify = args[:user_ids].to_a
+
+      process_mentions(user_ids_to_notify, mention_type)
     end
 
     private

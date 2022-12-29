@@ -7,6 +7,8 @@ describe Jobs::ChatNotifyMentioned do
   fab!(:user_2) { Fabricate(:user) }
   fab!(:public_channel) { Fabricate(:category_channel) }
 
+  let(:user_ids) { [user_2.id] }
+
   before do
     Group.refresh_automatic_groups!
     user_1.reload
@@ -28,31 +30,34 @@ describe Jobs::ChatNotifyMentioned do
   def track_desktop_notification(
     user: user_2,
     message:,
-    to_notify_ids_map:
+    user_ids:,
+    mention_type:
   )
     MessageBus
       .track_publish("/chat/notification-alert/#{user.id}") do
         subject.execute(
           chat_message_id: message.id,
           timestamp: message.created_at,
-          to_notify_ids_map: to_notify_ids_map
+          user_ids: user_ids,
+          mention_type: mention_type
         )
       end
       .first
   end
 
-  def track_core_notification(user: user_2, message:, to_notify_ids_map:)
+  def track_core_notification(user: user_2, message:, user_ids:, mention_type:)
     subject.execute(
       chat_message_id: message.id,
       timestamp: message.created_at,
-      to_notify_ids_map: to_notify_ids_map,
+      user_ids: user_ids,
+      mention_type: mention_type
     )
 
     Notification.where(user: user, notification_type: Notification.types[:chat_mention]).last
   end
 
   describe "scenarios where we should skip sending notifications" do
-    let(:to_notify_ids_map) { { here_mentions: [user_2.id] } }
+    let(:mention_type) { Chat::ChatNotifier::HERE_MENTIONS }
 
     it "does nothing if there is a newer version of the message" do
       message = create_chat_message
@@ -61,7 +66,7 @@ describe Jobs::ChatNotifyMentioned do
       PostAlerter.expects(:push_notification).never
 
       desktop_notification =
-        track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+        track_desktop_notification(message: message, user_ids: user_ids, mention_type: mention_type)
       expect(desktop_notification).to be_nil
 
       created_notification =
@@ -79,7 +84,7 @@ describe Jobs::ChatNotifyMentioned do
       PostAlerter.expects(:push_notification).never
 
       desktop_notification =
-        track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+        track_desktop_notification(message: message, user_ids: user_ids, mention_type: mention_type)
       expect(desktop_notification).to be_nil
 
       created_notification =
@@ -95,7 +100,7 @@ describe Jobs::ChatNotifyMentioned do
       PostAlerter.expects(:push_notification).never
 
       desktop_notification =
-        track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+        track_desktop_notification(message: message, user_ids: user_ids, mention_type: mention_type)
       expect(desktop_notification).to be_nil
 
       created_notification =
@@ -110,7 +115,7 @@ describe Jobs::ChatNotifyMentioned do
       PostAlerter.expects(:push_notification).never
 
       desktop_notification =
-        track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+        track_desktop_notification(message: message, user_ids: user_ids, mention_type: mention_type)
       expect(desktop_notification).to be_nil
 
       created_notification =
@@ -127,7 +132,7 @@ describe Jobs::ChatNotifyMentioned do
       PostAlerter.expects(:push_notification).once
 
       desktop_notification =
-        track_desktop_notification(message: message_2, to_notify_ids_map: to_notify_ids_map)
+        track_desktop_notification(message: message_2, user_ids: user_ids, mention_type: mention_type)
 
       expect(desktop_notification).to be_present
     end
@@ -135,14 +140,14 @@ describe Jobs::ChatNotifyMentioned do
     it "does nothing if user is not participating in a private channel" do
       user_3 = Fabricate(:user)
       @chat_group.add(user_3)
-      to_notify_map = { direct_mentions: [user_3.id] }
-
       message = create_chat_message(channel: @personal_chat_channel)
 
       PostAlerter.expects(:push_notification).never
 
       desktop_notification =
-        track_desktop_notification(message: message, to_notify_ids_map: to_notify_map)
+        track_desktop_notification(
+          message: message, user_ids: [user_3.id], mention_type: Chat::ChatNotifier::HERE_MENTIONS
+        )
       expect(desktop_notification).to be_nil
 
       created_notification =
@@ -157,7 +162,7 @@ describe Jobs::ChatNotifyMentioned do
       )
 
       desktop_notification =
-        track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+        track_desktop_notification(message: message, user_ids: user_ids, mention_type: mention_type)
 
       expect(desktop_notification).to be_nil
     end
@@ -173,7 +178,8 @@ describe Jobs::ChatNotifyMentioned do
       subject.execute(
         chat_message_id: message.id,
         timestamp: message.created_at,
-        to_notify_ids_map: to_notify_ids_map,
+        user_ids: user_ids,
+        mention_type: mention_type
       )
     end
 
@@ -185,7 +191,7 @@ describe Jobs::ChatNotifyMentioned do
       )
 
       desktop_notification =
-        track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+        track_desktop_notification(message: message, user_ids: user_ids, mention_type: mention_type)
 
       expect(desktop_notification).to be_nil
     end
@@ -202,8 +208,23 @@ describe Jobs::ChatNotifyMentioned do
       subject.execute(
         chat_message_id: message.id,
         timestamp: message.created_at,
-        to_notify_ids_map: to_notify_ids_map,
+        user_ids: user_ids,
+        mention_type: mention_type
       )
+    end
+
+    it "does nothing when the mention type is invalid" do
+      message = create_chat_message
+
+      PostAlerter.expects(:push_notification).never
+
+      desktop_notification =
+        track_desktop_notification(message: message, user_ids: user_ids, mention_type: "invalid")
+      expect(desktop_notification).to be_nil
+
+      created_notification =
+        Notification.where(user: user_2, notification_type: Notification.types[:chat_mention]).last
+      expect(created_notification).to be_nil
     end
 
     context "when the user is muting the message sender" do
@@ -214,7 +235,7 @@ describe Jobs::ChatNotifyMentioned do
         PostAlerter.expects(:push_notification).never
 
         desktop_notification =
-          track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+          track_desktop_notification(message: message, user_ids: user_ids, mention_type: mention_type)
         expect(desktop_notification).to be_nil
 
         created_notification =
@@ -229,7 +250,7 @@ describe Jobs::ChatNotifyMentioned do
         PostAlerter.expects(:push_notification).never
 
         desktop_notification =
-          track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+          track_desktop_notification(message: message, user_ids: user_ids, mention_type: mention_type)
         expect(desktop_notification).to be_nil
 
         created_notification =
@@ -246,7 +267,7 @@ describe Jobs::ChatNotifyMentioned do
       message = create_chat_message
 
       desktop_notification =
-        track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+        track_desktop_notification(message: message, user_ids: user_ids, mention_type: mention_type)
 
       expect(desktop_notification).to be_present
       expect(desktop_notification.data[:notification_type]).to eq(Notification.types[:chat_mention])
@@ -279,7 +300,8 @@ describe Jobs::ChatNotifyMentioned do
       subject.execute(
         chat_message_id: message.id,
         timestamp: message.created_at,
-        to_notify_ids_map: to_notify_ids_map,
+        user_ids: user_ids,
+        mention_type: mention_type
       )
     end
 
@@ -287,7 +309,7 @@ describe Jobs::ChatNotifyMentioned do
       message = create_chat_message
 
       created_notification =
-        track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+        track_core_notification(message: message, user_ids: user_ids, mention_type: mention_type)
 
       expect(created_notification).to be_present
       expect(created_notification.high_priority).to eq(true)
@@ -315,7 +337,8 @@ describe Jobs::ChatNotifyMentioned do
           subject.execute(
             chat_message_id: message.id,
             timestamp: message.created_at,
-            to_notify_ids_map: to_notify_ids_map,
+            user_ids: user_ids,
+            mention_type: mention_type
           )
         end.first
 
@@ -327,7 +350,7 @@ describe Jobs::ChatNotifyMentioned do
 
   describe "#execute" do
     describe "global mention notifications" do
-      let(:to_notify_ids_map) { { global_mentions: [user_2.id] } }
+      let(:mention_type) { Chat::ChatNotifier::GLOBAL_MENTIONS }
 
       let(:payload_translated_title) do
         I18n.t(
@@ -344,7 +367,7 @@ describe Jobs::ChatNotifyMentioned do
         message = create_chat_message
 
         created_notification =
-          track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+          track_core_notification(message: message, user_ids: user_ids, mention_type: mention_type)
 
         data_hash = created_notification.data_hash
 
@@ -355,7 +378,7 @@ describe Jobs::ChatNotifyMentioned do
         message = create_chat_message
 
         desktop_notification =
-          track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+          track_desktop_notification(message: message, user_ids: user_ids, mention_type: mention_type)
 
         expect(desktop_notification.data[:translated_title]).to eq(payload_translated_title)
       end
@@ -365,7 +388,7 @@ describe Jobs::ChatNotifyMentioned do
           message = create_chat_message(channel: @personal_chat_channel)
 
           desktop_notification =
-            track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+            track_desktop_notification(message: message, user_ids: user_ids, mention_type: mention_type)
 
           expected_title =
             I18n.t(
@@ -380,7 +403,7 @@ describe Jobs::ChatNotifyMentioned do
     end
 
     describe "here mention notifications" do
-      let(:to_notify_ids_map) { { here_mentions: [user_2.id] } }
+      let(:mention_type) { Chat::ChatNotifier::HERE_MENTIONS }
 
       let(:payload_translated_title) do
         I18n.t(
@@ -397,7 +420,7 @@ describe Jobs::ChatNotifyMentioned do
         message = create_chat_message
 
         created_notification =
-          track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+          track_core_notification(message: message, user_ids: user_ids, mention_type: mention_type)
         data_hash = created_notification.data_hash
 
         expect(data_hash[:identifier]).to eq("here")
@@ -407,7 +430,7 @@ describe Jobs::ChatNotifyMentioned do
         message = create_chat_message
 
         desktop_notification =
-          track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+          track_desktop_notification(message: message, user_ids: user_ids, mention_type: mention_type)
 
         expect(desktop_notification.data[:translated_title]).to eq(payload_translated_title)
       end
@@ -417,7 +440,7 @@ describe Jobs::ChatNotifyMentioned do
           message = create_chat_message(channel: @personal_chat_channel)
 
           desktop_notification =
-            track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+            track_desktop_notification(message: message, user_ids: user_ids, mention_type: mention_type)
 
           expected_title =
             I18n.t(
@@ -432,7 +455,7 @@ describe Jobs::ChatNotifyMentioned do
     end
 
     describe "direct mention notifications" do
-      let(:to_notify_ids_map) { { direct_mentions: [user_2.id] } }
+      let(:mention_type) { Chat::ChatNotifier::DIRECT_MENTIONS }
 
       let(:payload_translated_title) do
         I18n.t(
@@ -449,7 +472,7 @@ describe Jobs::ChatNotifyMentioned do
         message = create_chat_message
 
         created_notification =
-          track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+          track_core_notification(message: message, user_ids: user_ids, mention_type: mention_type)
         data_hash = created_notification.data_hash
 
         expect(data_hash[:identifier]).to be_nil
@@ -459,7 +482,7 @@ describe Jobs::ChatNotifyMentioned do
         message = create_chat_message
 
         desktop_notification =
-          track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+          track_desktop_notification(message: message, user_ids: user_ids, mention_type: mention_type)
 
         expect(desktop_notification.data[:translated_title]).to eq(payload_translated_title)
       end
@@ -469,7 +492,7 @@ describe Jobs::ChatNotifyMentioned do
           message = create_chat_message(channel: @personal_chat_channel)
 
           desktop_notification =
-            track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+            track_desktop_notification(message: message, user_ids: user_ids, mention_type: mention_type)
 
           expected_title =
             I18n.t(
@@ -484,7 +507,7 @@ describe Jobs::ChatNotifyMentioned do
     end
 
     describe "group mentions" do
-      let(:to_notify_ids_map) { { @chat_group.name.to_sym => [user_2.id] } }
+      let(:mention_type) { @chat_group.name.to_sym }
 
       let(:payload_translated_title) do
         I18n.t(
@@ -501,7 +524,7 @@ describe Jobs::ChatNotifyMentioned do
         message = create_chat_message
 
         created_notification =
-          track_core_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+          track_core_notification(message: message, user_ids: user_ids, mention_type: mention_type)
         data_hash = created_notification.data_hash
 
         expect(data_hash[:identifier]).to eq(@chat_group.name)
@@ -512,7 +535,7 @@ describe Jobs::ChatNotifyMentioned do
         message = create_chat_message
 
         desktop_notification =
-          track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+          track_desktop_notification(message: message,  user_ids: user_ids, mention_type: mention_type)
 
         expect(desktop_notification.data[:translated_title]).to eq(payload_translated_title)
       end
@@ -522,7 +545,7 @@ describe Jobs::ChatNotifyMentioned do
           message = create_chat_message(channel: @personal_chat_channel)
 
           desktop_notification =
-            track_desktop_notification(message: message, to_notify_ids_map: to_notify_ids_map)
+            track_desktop_notification(message: message, user_ids: user_ids, mention_type: mention_type)
 
           expected_title =
             I18n.t(

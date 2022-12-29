@@ -27,6 +27,11 @@
 # The ignore/mute filtering is also applied via the ChatNotifyWatching job,
 # which prevents desktop / push notifications being sent.
 class Chat::ChatNotifier
+  DIRECT_MENTIONS = :direct_mentions
+  HERE_MENTIONS = :here_mentions
+  GLOBAL_MENTIONS = :global_mentions
+  STATIC_MENTION_TYPES = [DIRECT_MENTIONS, HERE_MENTIONS, GLOBAL_MENTIONS]
+
   class << self
     def push_notification_tag(type, chat_channel_id)
       "#{Discourse.current_hostname}-chat-#{type}-#{chat_channel_id}"
@@ -64,14 +69,17 @@ class Chat::ChatNotifier
     to_notify = list_users_to_notify
 
     notify_creator_of_inaccessible_mentions(to_notify)
-    notify_mentioned_users(to_notify)
+
+    to_notify.each do |mention_type, user_ids|
+      notify_mentioned_users(mention_type, user_ids)
+    end
 
     global_mentions = []
     global_mentions << "all" if typed_global_mention?
     global_mentions << "here" if typed_here_mention?
 
     notify_watching_users(
-      to_notify[:direct_mentions],
+      to_notify[DIRECT_MENTIONS],
       global_mentions,
       to_notify[:mentioned_group_ids]
     )
@@ -84,7 +92,10 @@ class Chat::ChatNotifier
 
     purge_outdated_mentions(to_notify)
     notify_creator_of_inaccessible_mentions(to_notify)
-    notify_mentioned_users(to_notify)
+
+    to_notify.each do |mention_type, user_ids|
+      notify_mentioned_users(mention_type, user_ids)
+    end
 
     to_notify
   end
@@ -130,10 +141,8 @@ class Chat::ChatNotifier
   end
 
   def chat_users
-    users =
-      User.includes(:user_chat_channel_memberships, :group_users)
-
-    users
+    User
+      .includes(:user_chat_channel_memberships, :group_users)
       .distinct
       .joins("LEFT OUTER JOIN user_chat_channel_memberships uccm ON uccm.user_id = users.id")
       .joins(:user_option)
@@ -145,7 +154,7 @@ class Chat::ChatNotifier
 
   def channel_members
     chat_users.where(
-      user_chat_channel_memberships: {
+      uccm: {
         following: true,
         chat_channel_id: @chat_channel.id,
       },
@@ -189,19 +198,19 @@ class Chat::ChatNotifier
           .where("last_seen_at < ?", 5.minutes.ago)
       end
 
-      to_notify[:global_mentions] = global_mentions.pluck(:id)
+      to_notify[GLOBAL_MENTIONS] = global_mentions.pluck(:id)
     else
-      to_notify[:global_mentions] = []
+      to_notify[GLOBAL_MENTIONS] = []
     end
   end
 
   def expand_here_mention(to_notify, skip)
     if typed_here_mention? && @chat_channel.allow_channel_wide_mentions && !skip
-      to_notify[:here_mentions] = channel_wide_mentions(to_notify[:mentioned_group_ids])
+      to_notify[HERE_MENTIONS] = channel_wide_mentions(to_notify[:mentioned_group_ids])
         .where("last_seen_at > ?", 5.minutes.ago)
         .pluck(:id)
     else
-      to_notify[:here_mentions] = []
+      to_notify[HERE_MENTIONS] = []
     end
   end
 
@@ -239,7 +248,7 @@ class Chat::ChatNotifier
 
     grouped = group_users_to_notify(direct_mentions)
 
-    to_notify[:direct_mentions] = grouped[:already_participating].map(&:id)
+    to_notify[DIRECT_MENTIONS] = grouped[:already_participating].map(&:id)
     to_notify[:welcome_to_join] = grouped[:welcome_to_join]
     to_notify[:unreachable] = grouped[:unreachable]
   end
@@ -331,12 +340,13 @@ class Chat::ChatNotifier
     end
   end
 
-  def notify_mentioned_users(to_notify)
+  def notify_mentioned_users(mention_type, user_ids)
     Jobs.enqueue(
       :chat_notify_mentioned,
       {
         chat_message_id: @chat_message.id,
-        to_notify_ids_map: to_notify.as_json,
+        user_ids: user_ids,
+        mention_type: mention_type,
         timestamp: @timestamp.iso8601(6),
       },
     )
