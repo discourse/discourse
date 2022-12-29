@@ -15,9 +15,9 @@ export default class ChatChannelsManager extends Service {
 
   async find(id, options = { fetchIfNotFound: true }) {
     const existingChannel = this.#findStale(id);
-    if (existingChannel || options.fetchIfNotFound === false) {
+    if (existingChannel) {
       return Promise.resolve(existingChannel);
-    } else {
+    } else if (options.fetchIfNotFound) {
       return this.#find(id);
     }
   }
