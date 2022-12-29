@@ -226,10 +226,16 @@ RSpec.describe TopicQuery do
 
   describe 'deleted filter' do
     it "filters deleted topics correctly" do
-      _topic = Fabricate(:topic, deleted_at: 1.year.ago)
+      SiteSetting.enable_category_group_moderation = true
+      group_moderator = Fabricate(:user)
+      group = Fabricate(:group)
+      group.add(group_moderator)
+      category = Fabricate(:category, reviewable_by_group: group)
+      topic = Fabricate(:topic, category: category, deleted_at: 1.year.ago)
 
       expect(TopicQuery.new(admin, status: 'deleted').list_latest.topics.size).to eq(1)
       expect(TopicQuery.new(moderator, status: 'deleted').list_latest.topics.size).to eq(1)
+      expect(TopicQuery.new(group_moderator, status: 'deleted', category: category.id).list_latest.topics.size).to eq(1)
       expect(TopicQuery.new(user, status: 'deleted').list_latest.topics.size).to eq(0)
       expect(TopicQuery.new(nil, status: 'deleted').list_latest.topics.size).to eq(0)
     end

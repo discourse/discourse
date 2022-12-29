@@ -799,8 +799,8 @@ class TopicQuery
       when 'unlisted'
         result = result.where('NOT topics.visible')
       when 'deleted'
-        guardian = @guardian
-        if guardian.is_staff?
+        category = Category.find_by(id: options[:category])
+        if @guardian.can_see_deleted_topics?(category)
           result = result.where('topics.deleted_at IS NOT NULL')
           require_deleted_clause = false
         end

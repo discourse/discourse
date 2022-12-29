@@ -467,7 +467,12 @@ const Topic = RestModel.extend({
           "details.can_permanently_delete":
             this.siteSettings.can_permanently_delete && deleted_by.admin,
         });
-        if (!deleted_by.staff) {
+        if (
+          !deleted_by.staff &&
+          !deleted_by.groups.some(
+            (group) => group.name === this.category.reviewable_by_group_name
+          )
+        ) {
           DiscourseURL.redirectTo("/");
         }
       })
