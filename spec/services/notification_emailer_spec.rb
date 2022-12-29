@@ -197,6 +197,15 @@ RSpec.describe NotificationEmailer do
       include_examples "enqueue_public"
     end
 
+    context 'with user_watching_category_or_tag' do
+      let(:no_delay) { no_delay }
+      let(:type) { :user_posted }
+      let(:delay) { SiteSetting.email_time_window_mins.minutes }
+      let!(:notification) { create_notification(:watching_category_or_tag) }
+
+      include_examples "enqueue_public"
+    end
+
     context 'with user_private_message' do
       let(:no_delay) { no_delay }
       let(:type) { :user_private_message }
@@ -249,6 +258,36 @@ RSpec.describe NotificationEmailer do
       let!(:notification) { create_notification(:post_approved) }
 
       include_examples "enqueue_public"
+    end
+  end
+
+  it "has translations for each sendable notification type" do
+    notification = create_notification(:mentioned)
+    email_user   = NotificationEmailer::EmailUser.new(notification, no_delay: true)
+    subkeys = ["title", "subject_template", "text_body_template"]
+
+    # some notification types need special handling
+    replace_keys = {
+      "post_approved" => ["post_approved"],
+      "private_message" => ["user_posted"],
+      "invited_to_private_message" => [
+        "user_invited_to_private_message_pm",
+        "user_invited_to_private_message_pm_group",
+        "user_invited_to_private_message_pm_staged"
+      ]
+    }
+
+    Notification.types.keys.each do |notification_type|
+      if email_user.respond_to?(notification_type)
+        type_keys = replace_keys[notification_type.to_s] || ["user_#{notification_type}"]
+
+        type_keys.each do |type_key|
+          subkeys.each do |subkey|
+            key = "user_notifications.#{type_key}.#{subkey}"
+            expect(I18n.exists?(key)).to eq(true), "missing translation: #{key}"
+          end
+        end
+      end
     end
   end
 end
