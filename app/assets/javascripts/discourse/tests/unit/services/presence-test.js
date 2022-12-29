@@ -32,7 +32,7 @@ function usersFixture() {
 
 acceptance("Presence - Subscribing", function (needs) {
   needs.pretender((server, helper) => {
-    server.get("/presence/get", (request) => {
+    server.get("/presence/get", async (request) => {
       const channels = request.queryParams.channels;
       const response = {};
 
@@ -245,10 +245,29 @@ acceptance("Presence - Subscribing", function (needs) {
 acceptance("Presence - Entering and Leaving", function (needs) {
   needs.user();
 
+  let responseStartPromise;
+  let resolveResponseStartPromise;
+  let responseWaitPromise;
+
   const requests = [];
-  needs.hooks.afterEach(() => requests.clear());
+
+  needs.hooks.beforeEach(() => {
+    responseStartPromise = new Promise(
+      (resolve) => (resolveResponseStartPromise = resolve)
+    );
+  });
+
+  needs.hooks.afterEach(() => {
+    requests.clear();
+    responseWaitPromise = null;
+    responseStartPromise = null;
+  });
+
   needs.pretender((server, helper) => {
-    server.post("/presence/update", (request) => {
+    server.post("/presence/update", async (request) => {
+      resolveResponseStartPromise();
+      await responseWaitPromise;
+
       const body = new URLSearchParams(request.requestBody);
       requests.push(body);
 
@@ -323,6 +342,35 @@ acceptance("Presence - Entering and Leaving", function (needs) {
       2,
       "did not update the server unnecessarily"
     );
+  });
+
+  test("interleaved join/leave calls work correctly", async function (assert) {
+    let resolveServerResponse;
+    responseWaitPromise = new Promise(
+      (resolve) => (resolveServerResponse = resolve)
+    );
+
+    const presenceService = this.container.lookup("service:presence");
+    const channel = presenceService.getChannel("/test/ch1");
+
+    const enterPromise = channel.enter();
+
+    await responseStartPromise;
+
+    const leavePromise = channel.leave();
+
+    resolveServerResponse();
+
+    await enterPromise;
+    await leavePromise;
+
+    assert.strictEqual(requests.length, 2, "server received two requests");
+
+    const presentChannels = requests.map((r) => r.getAll("present_channels[]"));
+    const leaveChannels = requests.map((r) => r.getAll("leave_channels[]"));
+
+    assert.deepEqual(presentChannels, [["/test/ch1"], []]);
+    assert.deepEqual(leaveChannels, [[], ["/test/ch1"]]);
   });
 
   test("raises an error when entering a non-existent channel", async function (assert) {
