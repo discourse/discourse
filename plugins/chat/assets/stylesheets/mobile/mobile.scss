@@ -16,23 +16,6 @@ body.has-full-page-chat {
   }
 }
 
-.chat-channel-settings-modal .modal-inner-container {
-  max-width: 90vw;
-  .chat-channel-settings-row {
-    max-width: 100%;
-
-    .chat-channel-preview {
-      display: none;
-    }
-    .chat-channel-title {
-      max-width: 80%;
-    }
-    .controls.save-container {
-      justify-content: end;
-    }
-  }
-}
-
 .full-page-chat {
   grid-template-columns: 100%;
   overflow-x: hidden;
@@ -79,15 +62,6 @@ body.has-full-page-chat {
 .create-channel-modal {
   .modal-inner-container {
     width: 95%;
-  }
-}
-
-.chat-browse {
-  .chat-channel-settings-row {
-    font-size: var(--font-down-1);
-    .chat-channel-title {
-      grid-template-columns: 15px 1fr;
-    }
   }
 }
 
