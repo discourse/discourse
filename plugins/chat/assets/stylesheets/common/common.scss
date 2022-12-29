@@ -664,8 +664,9 @@ body.has-full-page-chat {
 }
 
 .chat-channel-status {
-  padding-top: 1rem;
-  font-weight: 500;
+  background: var(--secondary);
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--primary-low);
 }
 
 html.has-full-page-chat {
