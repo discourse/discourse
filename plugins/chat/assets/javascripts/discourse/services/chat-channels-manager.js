@@ -7,6 +7,12 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 
 const DIRECT_MESSAGE_CHANNELS_LIMIT = 20;
 
+/*
+  The ChatChannelsManager service is responsible for managing the loaded chat channels.
+  It provides helpers to facilitate using and managing laoded channels instead of constantly
+  fetching them from the server.
+*/
+
 export default class ChatChannelsManager extends Service {
   @service chatSubscriptionsManager;
   @service chatApi;
