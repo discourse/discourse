@@ -66,12 +66,8 @@ class Chat::ChatNotifier
   ### Public API
 
   def notify_new
-    to_notify = list_users_to_notify
-
-    notify_creator_of_inaccessible_mentions(to_notify)
-
-    to_notify.each do |mention_type, user_ids|
-      notify_mentioned_users(mention_type, user_ids)
+    if (inaccessible_mentions = expand_mentions_and_notify)
+      notify_creator_of_inaccessible_mentions(inaccessible_mentions)
     end
 
     global_mentions = []
@@ -79,47 +75,32 @@ class Chat::ChatNotifier
     global_mentions << "here" if typed_here_mention?
 
     notify_watching_users(
-      to_notify[DIRECT_MENTIONS],
+      mentioned_channel_member_ids,
       global_mentions,
-      to_notify[:mentioned_group_ids]
+      mentionable_groups.map(&:id)
     )
-
-    to_notify
   end
 
   def notify_edit
-    to_notify = list_users_to_notify
+    purge_outdated_mentions
 
-    purge_outdated_mentions(to_notify)
-    notify_creator_of_inaccessible_mentions(to_notify)
-
-    to_notify.each do |mention_type, user_ids|
-      notify_mentioned_users(mention_type, user_ids)
+    if (inaccessible_mentions = expand_mentions_and_notify)
+      notify_creator_of_inaccessible_mentions(inaccessible_mentions)
     end
-
-    to_notify
   end
 
   private
 
-  def typed_global_mention?
-    direct_mentions_from_cooked.include?("@all")
-  end
-
-  def typed_here_mention?
-    direct_mentions_from_cooked.include?("@here")
-  end
-
-  def purge_outdated_mentions(to_notify)
+  def purge_outdated_mentions
     ChatMention
       .joins(user: :groups)
       .where(chat_message: @chat_message)
-      .where.not(user_id: to_notify[:direct_mentions])
-      .where.not(groups: { id: to_notify[:mentioned_group_ids] })
+      .where.not(user_id: mentioned_channel_member_ids)
+      .where.not(groups: { id: mentionable_groups.map(&:id) })
       .destroy_all
   end
 
-  def list_users_to_notify
+  def expand_mentions_and_notify
     direct_mentions_count = direct_mentions_from_cooked.length
     group_mentions_count = group_name_mentions.length
 
@@ -127,17 +108,182 @@ class Chat::ChatNotifier
       (direct_mentions_count + group_mentions_count) >
         SiteSetting.max_mentions_per_chat_message
 
-    {}.tap do |to_notify|
-      # The order of these methods is the precedence
-      # between different mention types.
+    inaccessible_mentions = {
+      welcome_to_join: [],
+      unreachable: [],
+      group_mentions_disabled: [],
+      too_many_members: []
+    }
 
-      expand_direct_mentions(to_notify, skip_notifications)
-      expand_group_mentions(to_notify, skip_notifications)
-      expand_here_mention(to_notify, skip_notifications)
-      expand_global_mention(to_notify, skip_notifications)
+    return inaccessible_mentions if skip_notifications
 
-      filter_invites_ignoring_or_muting_creator(to_notify)
+    send_direct_mentions(inaccessible_mentions)
+    send_group_mentions(inaccessible_mentions)
+    filter_invites_ignoring_or_muting_creator(inaccessible_mentions)
+
+    if @chat_channel.allow_channel_wide_mentions?
+      send_here_mentions if typed_here_mention?
+      send_global_mentions if typed_global_mention?
     end
+
+    inaccessible_mentions
+  end
+
+  def send_direct_mentions(inaccessible_mentions)
+    direct_mentions = chat_users.where(username_lower: usernames_mentioned)
+
+    grouped = group_users_to_notify(direct_mentions)
+    inaccessible_mentions[:welcome_to_join] = grouped[:welcome_to_join]
+    inaccessible_mentions[:unreachable] = grouped[:unreachable]
+
+    notify_mentioned_users(DIRECT_MENTIONS, grouped[:already_participating].map(&:id))
+  end
+
+  def send_group_mentions(inaccessible_mentions)
+    return if visible_groups.empty?
+
+    mentions_disabled = visible_groups - mentionable_groups
+
+    too_many_members, mentionable = mentionable_groups.partition do |group|
+      group.user_count > SiteSetting.max_users_notified_per_group_mention
+    end
+
+    inaccessible_mentions[:group_mentions_disabled] = mentions_disabled
+    inaccessible_mentions[:too_many_members] = too_many_members
+
+    reached_by_group = chat_users
+      .where.not(id: mentioned_channel_member_ids)
+      .joins(:groups)
+      .where(groups: { id: mentionable.map(&:id) })
+      .group('users.id')
+      .select("users.*", "ARRAY_AGG(LOWER(groups.name)) AS mentioned_group_names")
+
+    grouped = group_users_to_notify(reached_by_group)
+    ordered_group_names = group_name_mentions & mentionable.map { |mg| mg.name.downcase }
+
+    classified = grouped[:already_participating].reduce({}) do |memo, member|
+      first_mentioned_group = ordered_group_names.detect { |gn| member.mentioned_group_names.include?(gn) }
+
+      memo[first_mentioned_group] = memo[first_mentioned_group].to_a << member.id
+
+      memo
+    end
+
+    classified.each do |group_name, member_ids|
+      notify_mentioned_users(group_name, member_ids)
+    end
+
+    inaccessible_mentions[:welcome_to_join] = inaccessible_mentions[:welcome_to_join].concat(grouped[:welcome_to_join])
+    inaccessible_mentions[:unreachable] = inaccessible_mentions[:unreachable].concat(grouped[:unreachable])
+  end
+
+  def send_here_mentions
+    here_user_ids = channel_wide_mentions(mentionable_groups.map(&:id))
+      .where("last_seen_at > ?", 5.minutes.ago)
+      .pluck(:id)
+
+    notify_mentioned_users(HERE_MENTIONS, here_user_ids)
+  end
+
+  def send_global_mentions
+    global_mentions = channel_wide_mentions(mentionable_groups.map(&:id))
+
+    if typed_here_mention?
+      global_mentions = global_mentions
+        .where("last_seen_at < ?", 5.minutes.ago)
+    end
+
+    notify_mentioned_users(GLOBAL_MENTIONS, global_mentions.pluck(:id))
+  end
+
+  def group_users_to_notify(users)
+    potential_participants, unreachable =
+      users.partition do |user|
+        guardian = Guardian.new(user)
+        guardian.can_chat? && guardian.can_join_chat_channel?(@chat_channel)
+      end
+
+    participants, welcome_to_join =
+      potential_participants.partition do |participant|
+        participant.user_chat_channel_memberships.any? do |m|
+          predicate = m.chat_channel_id == @chat_channel.id
+          predicate = predicate && m.following == true if @chat_channel.public_channel?
+          predicate
+        end
+      end
+
+    {
+      already_participating: participants.to_a,
+      welcome_to_join: welcome_to_join.to_a,
+      unreachable: unreachable.to_a,
+    }
+  end
+
+  def notify_creator_of_inaccessible_mentions(inaccessible_mentions)
+    return if inaccessible_mentions.values.all?(&:blank?)
+
+    ChatPublisher.publish_inaccessible_mentions(
+      @user.id,
+      @chat_message,
+      inaccessible_mentions[:unreachable],
+      inaccessible_mentions[:welcome_to_join],
+      inaccessible_mentions[:too_many_members],
+      inaccessible_mentions[:group_mentions_disabled]
+    )
+  end
+
+  # Filters out users from global, here, group, and direct mentions that are
+  # ignoring or muting the creator of the message, so they will not receive
+  # a notification via the ChatNotifyMentioned job and are not prompted for
+  # invitation by the creator.
+  def filter_invites_ignoring_or_muting_creator(inaccessible_mentions)
+    screen_targets = inaccessible_mentions[:welcome_to_join].map(&:id)
+
+    return if screen_targets.blank?
+
+    screener = UserCommScreener.new(acting_user: @user, target_user_ids: screen_targets)
+
+    # :welcome_to_join contains users because it's serialized by MB.
+    inaccessible_mentions[:welcome_to_join] = inaccessible_mentions[:welcome_to_join].reject do |user|
+      screener.ignoring_or_muting_actor?(user.id)
+    end
+  end
+
+  # Query helpers
+
+  def mentioned_channel_member_ids
+    @mentioned_channel_member_ids ||= begin
+      where_params = { chat_channel_id: @chat_channel.id }
+      where_params[:following] = true if @chat_channel.public_channel?
+
+      chat_users.where(uccm: where_params).where(username_lower: usernames_mentioned).pluck(:id)
+    end
+  end
+
+  def visible_groups
+    @visible_groups ||=
+      Group
+        .where("LOWER(name) IN (?)", group_name_mentions)
+        .visible_groups(@user)
+  end
+
+  def mentionable_groups
+    @mentioned_groups ||= Group
+      .mentionable(@user, include_public: false)
+      .where(id: visible_groups.map(&:id))
+  end
+
+  def channel_wide_mentions(mentioned_group_ids)
+    query = members_accepting_channel_wide_notifications
+      .where.not(id: mentioned_channel_member_ids)
+
+    return query if mentioned_group_ids.blank?
+
+    query
+      .distinct
+      .joins(:group_users)
+      .group('users.id')
+      .having('bool_and(group_users.group_id NOT IN (?))', mentioned_group_ids)
   end
 
   def chat_users
@@ -165,182 +311,11 @@ class Chat::ChatNotifier
     channel_members.where(user_options: { ignore_channel_wide_mention: [false, nil] })
   end
 
-  def direct_mentions_from_cooked
-    @direct_mentions_from_cooked ||=
-      Nokogiri::HTML5.fragment(@chat_message.cooked).css(".mention").map(&:text)
-  end
-
-  def normalized_mentions(mentions)
-    mentions.reduce([]) do |memo, mention|
-      %w[@here @all].include?(mention.downcase) ? memo : (memo << mention[1..-1].downcase)
-    end
-  end
-
-  def channel_wide_mentions(mentioned_group_ids)
-    query = members_accepting_channel_wide_notifications
-      .where.not(username_lower: normalized_mentions(direct_mentions_from_cooked))
-
-    return query if mentioned_group_ids.blank?
-
-    query
-      .distinct
-      .joins(:group_users)
-      .group('users.id')
-      .having('bool_and(group_users.group_id NOT IN (?))', mentioned_group_ids)
-  end
-
-  def expand_global_mention(to_notify, skip)
-    if typed_global_mention? && @chat_channel.allow_channel_wide_mentions && !skip
-      global_mentions = channel_wide_mentions(to_notify[:mentioned_group_ids])
-
-      if typed_here_mention?
-        global_mentions = global_mentions
-          .where("last_seen_at < ?", 5.minutes.ago)
-      end
-
-      to_notify[GLOBAL_MENTIONS] = global_mentions.pluck(:id)
-    else
-      to_notify[GLOBAL_MENTIONS] = []
-    end
-  end
-
-  def expand_here_mention(to_notify, skip)
-    if typed_here_mention? && @chat_channel.allow_channel_wide_mentions && !skip
-      to_notify[HERE_MENTIONS] = channel_wide_mentions(to_notify[:mentioned_group_ids])
-        .where("last_seen_at > ?", 5.minutes.ago)
-        .pluck(:id)
-    else
-      to_notify[HERE_MENTIONS] = []
-    end
-  end
-
-  def group_users_to_notify(users)
-    potential_participants, unreachable =
-      users.partition do |user|
-        guardian = Guardian.new(user)
-        guardian.can_chat? && guardian.can_join_chat_channel?(@chat_channel)
-      end
-
-    participants, welcome_to_join =
-      potential_participants.partition do |participant|
-        participant.user_chat_channel_memberships.any? do |m|
-          predicate = m.chat_channel_id == @chat_channel.id
-          predicate = predicate && m.following == true if @chat_channel.public_channel?
-          predicate
-        end
-      end
-
-    {
-      already_participating: participants || [],
-      welcome_to_join: welcome_to_join || [],
-      unreachable: unreachable || [],
-    }
-  end
-
-  def expand_direct_mentions(to_notify, skip)
-    if skip
-      direct_mentions = []
-    else
-      direct_mentions =
-        chat_users
-          .where(username_lower: normalized_mentions(direct_mentions_from_cooked))
-    end
-
-    grouped = group_users_to_notify(direct_mentions)
-
-    to_notify[DIRECT_MENTIONS] = grouped[:already_participating].map(&:id)
-    to_notify[:welcome_to_join] = grouped[:welcome_to_join]
-    to_notify[:unreachable] = grouped[:unreachable]
-  end
-
-  def group_name_mentions
-    @group_mentions_from_cooked ||=
-      normalized_mentions(
-        Nokogiri::HTML5.fragment(@chat_message.cooked).css(".mention-group").map(&:text),
-      )
-  end
-
-  def visible_groups
-    @visible_groups ||=
-        Group
-          .where("LOWER(name) IN (?)", group_name_mentions)
-          .visible_groups(@user)
-  end
-
-  def expand_group_mentions(to_notify, skip)
-    return [] if skip || visible_groups.empty?
-
-    mentionable_groups = Group
-      .mentionable(@user, include_public: false)
-      .where(id: visible_groups.map(&:id))
-
-    mentions_disabled = visible_groups - mentionable_groups
-
-    too_many_members, mentionable = mentionable_groups.partition do |group|
-      group.user_count > SiteSetting.max_users_notified_per_group_mention
-    end
-
-    to_notify[:mentioned_group_ids] = mentionable.map(&:id)
-    to_notify[:group_mentions_disabled] = mentions_disabled
-    to_notify[:too_many_members] = too_many_members
-
-    mentionable.each { |g| to_notify[g.name.downcase] = [] }
-
-    reached_by_group =
-      chat_users
-        .where.not(username_lower: normalized_mentions(direct_mentions_from_cooked))
-        .joins(:group_users)
-        .group('users.id')
-        .having('bool_or(group_users.group_id IN (?))', to_notify[:mentioned_group_ids])
-
-    grouped = group_users_to_notify(reached_by_group)
-
-    grouped[:already_participating].each do |user|
-      # When a user is a member of multiple mentioned groups,
-      # the most far to the left should take precedence.
-      ordered_group_names = group_name_mentions & mentionable.map { |mg| mg.name.downcase }
-      user_group_names = user.groups.map { |ug| ug.name.downcase }
-      group_name = ordered_group_names.detect { |gn| user_group_names.include?(gn) }
-
-      to_notify[group_name] << user.id
-    end
-
-    to_notify[:welcome_to_join] = to_notify[:welcome_to_join].concat(grouped[:welcome_to_join])
-    to_notify[:unreachable] = to_notify[:unreachable].concat(grouped[:unreachable])
-  end
-
-  def notify_creator_of_inaccessible_mentions(to_notify)
-    inaccessible = to_notify.extract!(:unreachable, :welcome_to_join, :too_many_members, :group_mentions_disabled)
-    return if inaccessible.values.all?(&:blank?)
-
-    ChatPublisher.publish_inaccessible_mentions(
-      @user.id,
-      @chat_message,
-      inaccessible[:unreachable].to_a,
-      inaccessible[:welcome_to_join].to_a,
-      inaccessible[:too_many_members].to_a,
-      inaccessible[:group_mentions_disabled].to_a
-    )
-  end
-
-  # Filters out users from global, here, group, and direct mentions that are
-  # ignoring or muting the creator of the message, so they will not receive
-  # a notification via the ChatNotifyMentioned job and are not prompted for
-  # invitation by the creator.
-  def filter_invites_ignoring_or_muting_creator(to_notify)
-    screen_targets = to_notify[:welcome_to_join].map(&:id)
-
-    return if screen_targets.blank?
-
-    screener = UserCommScreener.new(acting_user: @user, target_user_ids: screen_targets)
-
-    # :welcome_to_join contains users because it's serialized by MB.
-    to_notify[:welcome_to_join] = to_notify[:welcome_to_join].reject do |user|
-      screener.ignoring_or_muting_actor?(user.id)
-    end
-  end
+  # Jobs to create notifications
 
   def notify_mentioned_users(mention_type, user_ids)
+    return if user_ids.blank?
+
     Jobs.enqueue(
       :chat_notify_mentioned,
       {
@@ -363,5 +338,38 @@ class Chat::ChatNotifier
         mentioned_group_ids: mentioned_group_ids
       },
     )
+  end
+
+  # Helper methods for capturing mentions
+
+  def group_name_mentions
+    @group_mentions_from_cooked ||=
+      normalized_mentions(
+        Nokogiri::HTML5.fragment(@chat_message.cooked).css(".mention-group").map(&:text),
+      )
+  end
+
+  def direct_mentions_from_cooked
+    @direct_mentions_from_cooked ||=
+      Nokogiri::HTML5.fragment(@chat_message.cooked)
+        .css(".mention").map { |node| node.text.downcase }
+  end
+
+  def usernames_mentioned
+    @usernames_mentioned ||= normalized_mentions(direct_mentions_from_cooked)
+  end
+
+  def normalized_mentions(mentions)
+    mentions.reduce([]) do |memo, mention|
+      %w[@here @all].include?(mention) ? memo : (memo << mention[1..-1])
+    end
+  end
+
+  def typed_global_mention?
+    direct_mentions_from_cooked.include?("@all")
+  end
+
+  def typed_here_mention?
+    direct_mentions_from_cooked.include?("@here")
   end
 end

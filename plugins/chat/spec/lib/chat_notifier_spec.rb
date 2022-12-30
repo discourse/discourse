@@ -20,9 +20,22 @@ describe Chat::ChatNotifier do
 
   before { SiteSetting.chat_allowed_groups = chat_group.id }
 
+  def assert_users_were_notifier_with_mention_type(mention_type, user_ids)
+    if user_ids.empty?
+      expect(
+        job_enqueued?(job: :chat_notify_mentioned, args: { mention_type: mention_type.to_s })
+      ).to eq(false)
+    else
+      expect(
+        job_enqueued?(job: :chat_notify_mentioned, args: { mention_type: mention_type.to_s, user_ids: user_ids })
+      ).to eq(true)
+    end
+  end
+
   describe "#notify_new" do
     def build_cooked_msg(message_body, user, chat_channel: channel)
       ChatMessage.new(
+        id: 1,
         chat_channel: chat_channel,
         user: user,
         message: message_body,
@@ -34,35 +47,35 @@ describe Chat::ChatNotifier do
       it "returns an empty list when the message doesn't include a channel mention" do
         msg = build_cooked_msg(mention.gsub("@", ""), user_1)
 
-        to_notify = described_class.new(msg, msg.created_at).notify_new
+        described_class.new(msg, msg.created_at).notify_new
 
-        expect(to_notify[list_key]).to be_empty
+        assert_users_were_notifier_with_mention_type(list_key, [])
       end
 
       it "will never include someone who is not accepting channel-wide notifications" do
         user_2.user_option.update!(ignore_channel_wide_mention: true)
         msg = build_cooked_msg(mention, user_1)
 
-        to_notify = described_class.new(msg, msg.created_at).notify_new
+        described_class.new(msg, msg.created_at).notify_new
 
-        expect(to_notify[list_key]).to be_empty
+        assert_users_were_notifier_with_mention_type(list_key, [])
       end
 
       it "will never mention when channel is not accepting channel wide mentions" do
         channel.update!(allow_channel_wide_mentions: false)
         msg = build_cooked_msg(mention, user_1)
 
-        to_notify = described_class.new(msg, msg.created_at).notify_new
+        described_class.new(msg, msg.created_at).notify_new
 
-        expect(to_notify[list_key]).to be_empty
+        assert_users_were_notifier_with_mention_type(list_key, [])
       end
 
       it "includes all members of a channel except the sender" do
         msg = build_cooked_msg(mention, user_1)
 
-        to_notify = described_class.new(msg, msg.created_at).notify_new
+        described_class.new(msg, msg.created_at).notify_new
 
-        expect(to_notify[list_key]).to contain_exactly(user_2.id)
+        assert_users_were_notifier_with_mention_type(list_key, [user_2.id])
       end
     end
 
@@ -74,9 +87,9 @@ describe Chat::ChatNotifier do
         Fabricate(:user_chat_channel_membership, chat_channel: another_channel, user: user3)
         msg = build_cooked_msg(mention, user_1)
 
-        to_notify = described_class.new(msg, msg.created_at).notify_new
+        described_class.new(msg, msg.created_at).notify_new
 
-        expect(to_notify[list_key]).to contain_exactly(user_2.id)
+        assert_users_were_notifier_with_mention_type(list_key, [user_2.id])
       end
 
       it "will never include someone not following the channel anymore" do
@@ -90,9 +103,9 @@ describe Chat::ChatNotifier do
         )
         msg = build_cooked_msg(mention, user_1)
 
-        to_notify = described_class.new(msg, msg.created_at).notify_new
+        described_class.new(msg, msg.created_at).notify_new
 
-        expect(to_notify[list_key]).to contain_exactly(user_2.id)
+        assert_users_were_notifier_with_mention_type(list_key, [user_2.id])
       end
 
       it "will never include someone who is suspended" do
@@ -107,9 +120,9 @@ describe Chat::ChatNotifier do
 
         msg = build_cooked_msg(mention, user_1)
 
-        to_notify = described_class.new(msg, msg.created_at).notify_new
+        described_class.new(msg, msg.created_at).notify_new
 
-        expect(to_notify[list_key]).to contain_exactly(user_2.id)
+        assert_users_were_notifier_with_mention_type(list_key, [user_2.id])
       end
     end
 
@@ -133,26 +146,26 @@ describe Chat::ChatNotifier do
       it "includes users seen less than 5 minutes ago" do
         msg = build_cooked_msg(mention, user_1)
 
-        to_notify = described_class.new(msg, msg.created_at).notify_new
+        described_class.new(msg, msg.created_at).notify_new
 
-        expect(to_notify[list_key]).to contain_exactly(user_2.id)
+        assert_users_were_notifier_with_mention_type(list_key, [user_2.id])
       end
 
       it "excludes users seen more than 5 minutes ago" do
         user_2.update!(last_seen_at: 6.minutes.ago)
         msg = build_cooked_msg(mention, user_1)
 
-        to_notify = described_class.new(msg, msg.created_at).notify_new
+        described_class.new(msg, msg.created_at).notify_new
 
-        expect(to_notify[list_key]).to be_empty
+        assert_users_were_notifier_with_mention_type(list_key, [])
       end
 
       it "excludes users mentioned directly" do
         msg = build_cooked_msg("hello @here @#{user_2.username}!", user_1)
 
-        to_notify = described_class.new(msg, msg.created_at).notify_new
+        described_class.new(msg, msg.created_at).notify_new
 
-        expect(to_notify[list_key]).to be_empty
+        assert_users_were_notifier_with_mention_type(list_key, [])
       end
     end
 
@@ -164,27 +177,27 @@ describe Chat::ChatNotifier do
         Fabricate(:user_chat_channel_membership, chat_channel: another_channel, user: user_3)
         msg = build_cooked_msg("Is @#{user_3.username} here? And @#{user_2.username}", user_1)
 
-        to_notify = described_class.new(msg, msg.created_at).notify_new
+        described_class.new(msg, msg.created_at).notify_new
 
-        expect(to_notify[:direct_mentions]).to contain_exactly(user_2.id)
+        assert_users_were_notifier_with_mention_type(:direct_mentions, [user_2.id])
       end
 
       it "include users as direct mentions even if there's a @here mention" do
         msg = build_cooked_msg("Hello @here and @#{user_2.username}", user_1)
 
-        to_notify = described_class.new(msg, msg.created_at).notify_new
+        described_class.new(msg, msg.created_at).notify_new
 
-        expect(to_notify[:here_mentions]).to be_empty
-        expect(to_notify[:direct_mentions]).to contain_exactly(user_2.id)
+        assert_users_were_notifier_with_mention_type(:here_mentions, [])
+        assert_users_were_notifier_with_mention_type(:direct_mentions, [user_2.id])
       end
 
       it "include users as direct mentions even if there's a @all mention" do
         msg = build_cooked_msg("Hello @all and @#{user_2.username}", user_1)
 
-        to_notify = described_class.new(msg, msg.created_at).notify_new
+        described_class.new(msg, msg.created_at).notify_new
 
-        expect(to_notify[:global_mentions]).to be_empty
-        expect(to_notify[:direct_mentions]).to contain_exactly(user_2.id)
+        assert_users_were_notifier_with_mention_type(:global_mentions, [])
+        assert_users_were_notifier_with_mention_type(:direct_mentions, [user_2.id])
       end
     end
 
@@ -209,7 +222,7 @@ describe Chat::ChatNotifier do
       it 'calls guardian can_join_chat_channel?' do
         Guardian.any_instance.expects(:can_join_chat_channel?).at_least_once
         msg = build_cooked_msg("Hello @#{group.name} and @#{user_2.username}", user_1)
-        to_notify = described_class.new(msg, msg.created_at).notify_new
+        described_class.new(msg, msg.created_at).notify_new
       end
 
       it "establishes a far-left precedence among group mentions" do
@@ -221,17 +234,18 @@ describe Chat::ChatNotifier do
         )
         msg = build_cooked_msg("Hello @#{chat_group.name} and @#{group.name}", user_1)
 
-        to_notify = described_class.new(msg, msg.created_at).notify_new
+        described_class.new(msg, msg.created_at).notify_new
 
-        expect(to_notify[chat_group.name]).to contain_exactly(user_2.id, user_3.id)
-        expect(to_notify[list_key]).to be_empty
+        assert_users_were_notifier_with_mention_type(chat_group.name, [user_2.id, user_3.id])
+        assert_users_were_notifier_with_mention_type(list_key, [])
 
+        Jobs::ChatNotifyMentioned.clear
         second_msg = build_cooked_msg("Hello @#{group.name} and @#{chat_group.name}", user_1)
 
         to_notify_2 = described_class.new(second_msg, second_msg.created_at).notify_new
 
-        expect(to_notify_2[list_key]).to contain_exactly(user_2.id, user_3.id)
-        expect(to_notify_2[chat_group.name]).to be_empty
+        assert_users_were_notifier_with_mention_type(list_key, [user_2.id, user_3.id])
+        assert_users_were_notifier_with_mention_type(chat_group.name, [])
       end
 
       it "skips groups with too many members" do
@@ -239,9 +253,9 @@ describe Chat::ChatNotifier do
 
         msg = build_cooked_msg("Hello @#{group.name}", user_1)
 
-        to_notify = described_class.new(msg, msg.created_at).notify_new
+        described_class.new(msg, msg.created_at).notify_new
 
-        expect(to_notify[group.name]).to be_nil
+        assert_users_were_notifier_with_mention_type(group.name, [])
       end
 
       it "respects the 'max_mentions_per_chat_message' setting and skips notifications" do
@@ -249,10 +263,10 @@ describe Chat::ChatNotifier do
 
         msg = build_cooked_msg("Hello @#{user_2.username} and @#{user_3.username}", user_1)
 
-        to_notify = described_class.new(msg, msg.created_at).notify_new
+        described_class.new(msg, msg.created_at).notify_new
 
-        expect(to_notify[:direct_mentions]).to be_empty
-        expect(to_notify[group.name]).to be_nil
+        assert_users_were_notifier_with_mention_type(:direct_mentions, [])
+        assert_users_were_notifier_with_mention_type(group.name, [])
       end
 
       it "respects the max mentions setting and skips notifications when mixing users and groups" do
@@ -260,10 +274,10 @@ describe Chat::ChatNotifier do
 
         msg = build_cooked_msg("Hello @#{user_2.username} and @#{group.name}", user_1)
 
-        to_notify = described_class.new(msg, msg.created_at).notify_new
+        described_class.new(msg, msg.created_at).notify_new
 
-        expect(to_notify[:direct_mentions]).to be_empty
-        expect(to_notify[group.name]).to be_nil
+        assert_users_were_notifier_with_mention_type(:direct_mentions, [])
+        assert_users_were_notifier_with_mention_type(group.name, [])
       end
     end
 
@@ -275,9 +289,9 @@ describe Chat::ChatNotifier do
 
         messages =
           MessageBus.track_publish("/chat/#{channel.id}") do
-            to_notify = described_class.new(msg, msg.created_at).notify_new
+            described_class.new(msg, msg.created_at).notify_new
 
-            expect(to_notify[:direct_mentions]).to be_empty
+            assert_users_were_notifier_with_mention_type(:direct_mentions, [])
           end
 
         unreachable_msg = messages.first
@@ -309,9 +323,9 @@ describe Chat::ChatNotifier do
 
           messages =
             MessageBus.track_publish("/chat/#{personal_chat_channel.id}") do
-              to_notify = described_class.new(msg, msg.created_at).notify_new
+              described_class.new(msg, msg.created_at).notify_new
 
-              expect(to_notify[:direct_mentions]).to be_empty
+              assert_users_were_notifier_with_mention_type(:direct_mentions, [])
             end
 
           unreachable_msg = messages.first
@@ -334,9 +348,9 @@ describe Chat::ChatNotifier do
 
           messages =
             MessageBus.track_publish("/chat/#{personal_chat_channel.id}") do
-              to_notify = described_class.new(msg, msg.created_at).notify_new
+              described_class.new(msg, msg.created_at).notify_new
 
-              expect(to_notify[group.name]).to contain_exactly(user_2.id)
+              assert_users_were_notifier_with_mention_type(group.name, [user_2.id])
             end
 
           unreachable_msg = messages.first
@@ -359,9 +373,9 @@ describe Chat::ChatNotifier do
 
         messages =
           MessageBus.track_publish("/chat/#{channel.id}") do
-            to_notify = described_class.new(msg, msg.created_at).notify_new
+            described_class.new(msg, msg.created_at).notify_new
 
-            expect(to_notify[:direct_mentions]).to be_empty
+            assert_users_were_notifier_with_mention_type(:direct_mentions, [])
           end
 
         not_participating_msg = messages.first
@@ -378,9 +392,9 @@ describe Chat::ChatNotifier do
 
         messages =
           MessageBus.track_publish("/chat/#{channel.id}") do
-            to_notify = described_class.new(msg, msg.created_at).notify_new
+            described_class.new(msg, msg.created_at).notify_new
 
-            expect(to_notify[:direct_mentions]).to be_empty
+            assert_users_were_notifier_with_mention_type(:direct_mentions, [])
           end
 
         expect(messages).to be_empty
@@ -392,9 +406,9 @@ describe Chat::ChatNotifier do
 
         messages =
           MessageBus.track_publish("/chat/#{channel.id}") do
-            to_notify = described_class.new(msg, msg.created_at).notify_new
+            described_class.new(msg, msg.created_at).notify_new
 
-            expect(to_notify[:direct_mentions]).to be_empty
+            assert_users_were_notifier_with_mention_type(:direct_mentions, [])
           end
 
         expect(messages).to be_empty
@@ -411,9 +425,9 @@ describe Chat::ChatNotifier do
 
         messages =
           MessageBus.track_publish("/chat/#{channel.id}") do
-            to_notify = described_class.new(msg, msg.created_at).notify_new
+            described_class.new(msg, msg.created_at).notify_new
 
-            expect(to_notify[:direct_mentions]).to be_empty
+            assert_users_were_notifier_with_mention_type(:direct_mentions, [])
           end
 
         not_participating_msg = messages.first
@@ -435,9 +449,9 @@ describe Chat::ChatNotifier do
 
         messages =
           MessageBus.track_publish("/chat/#{channel.id}") do
-            to_notify = described_class.new(msg, msg.created_at).notify_new
+            described_class.new(msg, msg.created_at).notify_new
 
-            expect(to_notify[:direct_mentions]).to be_empty
+            assert_users_were_notifier_with_mention_type(:direct_mentions, [])
           end
 
         not_participating_msg = messages.first
@@ -460,9 +474,9 @@ describe Chat::ChatNotifier do
 
         messages =
           MessageBus.track_publish("/chat/#{channel.id}") do
-            to_notify = described_class.new(msg, msg.created_at).notify_new
+            described_class.new(msg, msg.created_at).notify_new
 
-            expect(to_notify[:direct_mentions]).to be_empty
+            assert_users_were_notifier_with_mention_type(:direct_mentions, [])
           end
 
         expect(messages).to be_empty
@@ -480,9 +494,9 @@ describe Chat::ChatNotifier do
 
         messages =
           MessageBus.track_publish("/chat/#{channel.id}") do
-            to_notify = described_class.new(msg, msg.created_at).notify_new
+            described_class.new(msg, msg.created_at).notify_new
 
-            expect(to_notify[:direct_mentions]).to be_empty
+            assert_users_were_notifier_with_mention_type(:direct_mentions, [])
           end
 
         expect(messages).to be_empty
@@ -504,9 +518,9 @@ describe Chat::ChatNotifier do
         msg = build_cooked_msg("Hello @#{group.name}", user_1)
 
         messages = MessageBus.track_publish("/chat/#{channel.id}") do
-          to_notify = described_class.new(msg, msg.created_at).notify_new
+          described_class.new(msg, msg.created_at).notify_new
 
-          expect(to_notify[group.name]).to be_nil
+          assert_users_were_notifier_with_mention_type(group.name, [])
         end
 
         too_many_members_msg = messages.first
@@ -520,9 +534,9 @@ describe Chat::ChatNotifier do
         msg = build_cooked_msg("Hello @#{group.name}", user_1)
 
         messages = MessageBus.track_publish("/chat/#{channel.id}") do
-          to_notify = described_class.new(msg, msg.created_at).notify_new
+          described_class.new(msg, msg.created_at).notify_new
 
-          expect(to_notify[group.name]).to be_nil
+          assert_users_were_notifier_with_mention_type(group.name, [])
         end
 
         mentions_disabled_msg = messages.first
@@ -538,34 +552,34 @@ describe Chat::ChatNotifier do
       it "gives direct mentions the highest precedence" do
         msg = build_cooked_msg("@#{user_2.username} @#{chat_group.name} @here @all", user_1)
 
-        to_notify = described_class.new(msg, msg.created_at).notify_new
+        described_class.new(msg, msg.created_at).notify_new
 
-        expect(to_notify[:direct_mentions]).to contain_exactly(user_2.id)
-        expect(to_notify[chat_group.name]).to be_empty
-        expect(to_notify[:here_mentions]).to be_empty
-        expect(to_notify[:global_mentions]).to be_empty
+        assert_users_were_notifier_with_mention_type(:direct_mentions, [user_2.id])
+        assert_users_were_notifier_with_mention_type(chat_group.name, [])
+        assert_users_were_notifier_with_mention_type(:here_mentions, [])
+        assert_users_were_notifier_with_mention_type(:global_mentions, [])
       end
 
       it "gives group mentions the second highest precedence" do
         msg = build_cooked_msg("@#{chat_group.name} @here @all", user_1)
 
-        to_notify = described_class.new(msg, msg.created_at).notify_new
+        described_class.new(msg, msg.created_at).notify_new
 
-        expect(to_notify[:direct_mentions]).to be_empty
-        expect(to_notify[chat_group.name]).to contain_exactly(user_2.id)
-        expect(to_notify[:here_mentions]).to be_empty
-        expect(to_notify[:global_mentions]).to be_empty
+        assert_users_were_notifier_with_mention_type(:direct_mentions, [])
+        assert_users_were_notifier_with_mention_type(chat_group.name, [user_2.id])
+        assert_users_were_notifier_with_mention_type(:here_mentions, [])
+        assert_users_were_notifier_with_mention_type(:global_mentions, [])
       end
 
       it "gives here mentions the third highest precedence" do
         msg = build_cooked_msg("@here @all", user_1)
 
-        to_notify = described_class.new(msg, msg.created_at).notify_new
+        described_class.new(msg, msg.created_at).notify_new
 
-        expect(to_notify[:direct_mentions]).to be_empty
-        expect(to_notify[chat_group.name]).to be_nil
-        expect(to_notify[:here_mentions]).to contain_exactly(user_2.id)
-        expect(to_notify[:global_mentions]).to be_empty
+        assert_users_were_notifier_with_mention_type(:direct_mentions, [])
+        assert_users_were_notifier_with_mention_type(chat_group.name, [])
+        assert_users_were_notifier_with_mention_type(:here_mentions, [user_2.id])
+        assert_users_were_notifier_with_mention_type(:global_mentions, [])
       end
     end
   end
