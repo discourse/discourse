@@ -675,23 +675,6 @@ class TopicView
     @topic.published_page
   end
 
-  def parse_mentions
-    @mentions = @posts
-      .to_h { |p| [p.id, p.mentions] }
-      .reject { |_, v| v.empty? }
-  end
-
-  def load_mentioned_users
-    usernames = @mentions.values.flatten.uniq
-    mentioned_users = User.where(username: usernames)
-
-    if SiteSetting.enable_user_status
-      mentioned_users = mentioned_users.includes(:user_status)
-    end
-
-    @mentioned_users = mentioned_users.to_h { |u| [u.username, u] }
-  end
-
   protected
 
   def read_posts_set
@@ -711,6 +694,23 @@ class TopicView
   end
 
   private
+
+  def parse_mentions
+    @mentions = @posts
+      .to_h { |p| [p.id, p.mentions] }
+      .reject { |_, v| v.empty? }
+  end
+
+  def load_mentioned_users
+    usernames = @mentions.values.flatten.uniq
+    mentioned_users = User.where(username: usernames)
+
+    if SiteSetting.enable_user_status
+      mentioned_users = mentioned_users.includes(:user_status)
+    end
+
+    @mentioned_users = mentioned_users.to_h { |u| [u.username, u] }
+  end
 
   def calculate_page
     posts_count = is_mega_topic? ? @post_number : unfiltered_posts.where("post_number <= ?", @post_number).count
