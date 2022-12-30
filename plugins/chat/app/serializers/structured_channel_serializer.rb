@@ -45,7 +45,8 @@ class StructuredChannelSerializer < ApplicationSerializer
       channel_edits: chat_message_bus_last_ids[ChatPublisher::CHANNEL_EDITS_MESSAGE_BUS_CHANNEL],
       channel_status: chat_message_bus_last_ids[ChatPublisher::CHANNEL_STATUS_MESSAGE_BUS_CHANNEL],
       new_channel: chat_message_bus_last_ids[ChatPublisher::NEW_CHANNEL_MESSAGE_BUS_CHANNEL],
-      archive_status: chat_message_bus_last_ids[ChatPublisher::CHANNEL_ARCHIVE_STATUS_BUS_CHANNEL],
+      archive_status:
+        chat_message_bus_last_ids[ChatPublisher::CHANNEL_ARCHIVE_STATUS_MESSAGE_BUS_CHANNEL],
     }
 
     if id =
@@ -68,7 +69,7 @@ class StructuredChannelSerializer < ApplicationSerializer
           ChatPublisher::CHANNEL_EDITS_MESSAGE_BUS_CHANNEL,
           ChatPublisher::CHANNEL_STATUS_MESSAGE_BUS_CHANNEL,
           ChatPublisher::NEW_CHANNEL_MESSAGE_BUS_CHANNEL,
-          ChatPublisher::CHANNEL_ARCHIVE_STATUS_BUS_CHANNEL,
+          ChatPublisher::CHANNEL_ARCHIVE_STATUS_MESSAGE_BUS_CHANNEL,
         ]
 
         if !scope.anonymous?
