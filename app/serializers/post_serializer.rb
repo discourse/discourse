@@ -562,10 +562,8 @@ class PostSerializer < BasicPostSerializer
   end
 
   def mentioned_users
-    if @topic_view && (mentions = @topic_view.mentions[object.id])
-      users =  mentions
-        .map { |username| @topic_view.mentioned_users[username] }
-        .compact
+    if @topic_view
+      users = @topic_view.mentioned_users[object.id]
     else
       users = User.where(username: object.mentions)
     end

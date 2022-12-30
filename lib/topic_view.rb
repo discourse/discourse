@@ -147,7 +147,6 @@ class TopicView
       end
     end
 
-    parse_mentions
     load_mentioned_users
 
     TopicView.preload(self)
@@ -695,21 +694,20 @@ class TopicView
 
   private
 
-  def parse_mentions
-    @mentions = @posts
-      .to_h { |p| [p.id, p.mentions] }
-      .reject { |_, v| v.empty? }
-  end
-
   def load_mentioned_users
-    usernames = @mentions.values.flatten.uniq
-    mentioned_users = User.where(username: usernames)
+    mentions = @posts.to_h { |p| [p.id, p.mentions] }
 
+    uniq_usernames = mentions.values.flatten.uniq
+    users = User.where(username: uniq_usernames)
     if SiteSetting.enable_user_status
-      mentioned_users = mentioned_users.includes(:user_status)
+      users = users.includes(:user_status)
     end
+    users = users.to_h { |u| [u.username, u] }
 
-    @mentioned_users = mentioned_users.to_h { |u| [u.username, u] }
+    @mentioned_users = mentions.map do |post_id, usernames|
+      post_mentions = usernames.map { |u| users[u] }.compact
+      [post_id, post_mentions]
+    end.to_h
   end
 
   def calculate_page
