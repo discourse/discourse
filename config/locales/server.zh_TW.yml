@@ -2392,6 +2392,16 @@ zh_TW:
         %{context}
 
         %{respond_instructions}
+    user_watching_category_or_tag:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_watching_first_post:
       title: "使用者觀看第一個主題"
       subject_template: "[%{email_prefix}] %{topic_title}"

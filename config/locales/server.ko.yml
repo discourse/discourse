@@ -3129,6 +3129,17 @@ ko:
         %{context}
 
         %{respond_instructions}
+    user_watching_category_or_tag:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_watching_first_post:
       title: "사용자가 첫 게시물을 구독함"
       subject_template: "[%{email_prefix}] %{topic_title}"

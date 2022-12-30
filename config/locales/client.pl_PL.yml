@@ -231,6 +231,8 @@ pl_PL:
         disabled: "Odlistowanie %{when}"
       banner:
         enabled: "Ustawił ten baner %{when}. Będzie widoczny na górze każdej strony, póki nie zostanie ukryty przez użytkownika."
+        disabled: "Usunięto ten baner %{when}. Nie będzie już pojawiać się u góry każdej strony."
+      forwarded: "Przekazano powyższy email"
     topic_admin_menu: "akcje tematu"
     skip_to_main_content: "Przejdź do głównej zawartości"
     emails_are_disabled: "Wszystkie wychodzące wiadomości e-mail zostały globalnie wyłączone przez administratora. Żadne powiadomienia e-mail nie będą wysyłane."
@@ -1121,6 +1123,7 @@ pl_PL:
       notification_schedule:
         title: "Harmonogram powiadomień"
         label: "Włącz niestandardowy harmonogram powiadomień"
+        tip: "Poza tymi godzinami powiadomienia zostaną wstrzymane."
         midnight: "Północ"
         none: "Brak"
         monday: "Poniedziałek"
@@ -1222,6 +1225,7 @@ pl_PL:
         navigation_section: "Nawigacja"
         list_destination_instruction: "Gdy na pasku bocznym pojawi się nowa zawartość..."
         list_destination_default: "użyj linku domyślnego i pokaż odznakę dla nowych elementów"
+        list_destination_unread_new: "linkuj do nieprzeczytanych/nowych i pokaż liczbę nowych pozycji"
       change: "zmień"
       featured_topic: "Wyróżniony temat"
       moderator: "%{user} jest moderatorem"
@@ -1396,10 +1400,13 @@ pl_PL:
         delete: "Usuń"
         delete_confirm_instruction: "Aby potwierdzić, wpisz <strong>%{confirm}</strong> w polu poniżej."
         delete_backup_codes_confirm_title: "Usuwanie kodów zapasowych"
+        delete_backup_codes_confirm_message: "Usuwasz kody zapasowe. Tej czynności nie można cofnąć. Jeśli zmienisz zdanie, będziesz musiał ponownie wygenerować kody zapasowe."
         save: "Zapisz"
         edit: "Edytuj"
         edit_title: "Edytuj Authenticator"
         edit_description: "Nazwa Authenticator"
+        enable_security_key_description: |
+          Po przygotowaniu <a href="https://www.google.com/search?q=hardware+security+key" target="_blank">sprzętowego klucza bezpieczeństwa</a> lub kompatybilne urządzenie mobilne, naciśnij przycisk Zarejestruj poniżej.
         totp:
           title: "Uwierzytelnianie oparte na tokenach"
           add: "Dodaj Authenticator"
@@ -1562,6 +1569,8 @@ pl_PL:
         title: "Tytuł strony w tle wyświetla liczbę:"
         notifications: "Nowe powiadomienia"
         contextual: "Nowa zawartość strony"
+      bookmark_after_notification:
+        title: "Po wysłaniu przypomnienia o zakładce:"
       like_notification_frequency:
         title: "Powiadom o polubieniach"
         always: "Zawsze"
@@ -1805,6 +1814,7 @@ pl_PL:
       save: "Zapisz"
       set_custom_status: "Ustaw własny status"
       what_are_you_doing: "Co robisz?"
+      pause_notifications: "Wstrzymaj powiadomienia"
       remove_status: "Usuń status"
     user_tips:
       primary: "Zrozumiano!"
@@ -1823,6 +1833,7 @@ pl_PL:
         content: "Poszukaj tego dzwonka, aby dostosować preferencje powiadomień dla określonych tematów lub całych kategorii."
       suggested_topics:
         title: "Czytaj dalej!"
+        content: "Oto kilka tematów, które naszym zdaniem warto przeczytać w następnej kolejności."
     loading: "Wczytuję…"
     errors:
       prev_page: "podczas próby wczytania"
@@ -1972,6 +1983,9 @@ pl_PL:
       username: "Użytkownik"
       password: "Hasło"
       show_password: "Pokaż"
+      hide_password: "Ukryj"
+      show_password_title: "Pokaż hasło"
+      hide_password_title: "Ukryj hasło"
       second_factor_title: "Uwierzytelnianie dwuskładnikowe"
       second_factor_description: "Podaj kod uwierzytelniający ze swojej aplikacji:"
       second_factor_backup: "Zaloguj się, używając kodu zapasowego"
@@ -2396,6 +2410,7 @@ pl_PL:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - zakończone"
+      new_features: "Dostępne są nowe funkcje!"
       dismiss_confirmation:
         body:
           default:
@@ -2458,6 +2473,7 @@ pl_PL:
         membership_request_consolidated: "nowe wnioski o członkostwo"
         reaction: "nowa reakcja"
         votes_released: "Głos został zwolniony"
+        new_features: "nowe funkcje Discourse zostały udostępnione!"
     upload_selector:
       uploading: "Wgrywanie"
       processing: "Przetwarzanie przesłanego pliku"
@@ -4155,6 +4171,8 @@ pl_PL:
       enabled: "Tryb bezpieczny jest włączony, aby z niego wyjść zamknij to okno przeglądrki"
     image_removed: "(obraz usunięty)"
     pause_notifications:
+      title: "Wstrzymaj powiadomienia na..."
+      label: "Wstrzymaj powiadomienia"
       remaining: "%{remaining} pozostało"
       options:
         half_hour: "30 minut"
@@ -5351,6 +5369,7 @@ pl_PL:
       user:
         suspend_failed: "Coś poszło nie tak podczas zawieszania użytkownika %{error}"
         unsuspend_failed: "Coś poszło nie tak podczas odwieszania użytkownika %{error}"
+        suspend_duration: "Zawieś użytkownika do:"
         suspend_reason_label: "Dlaczego zawieszasz? Ten tekst <b>będzie widoczny dla wszystkich</b> na stronie profilu użytkownika i będzie wyświetlany użytkownikowi gdy ten będzie próbował się zalogować. Zachowaj zwięzłość."
         suspend_reason_hidden_label: "Dlaczego zawieszasz użytkownika? Ten krótki tekst zostanie wyświetlony, gdy zawieszony użytkownik spróbuje się zalogować. "
         suspend_reason: "Powód"
@@ -5374,7 +5393,9 @@ pl_PL:
         silence_message: "Wiadomość Email"
         silence_message_placeholder: "(zostaw puste aby wysłać domyślną wiadomość)"
         suspended_until: "(do %{until})"
+        suspend_forever: "Zawieś na zawsze"
         cant_suspend: "Nie można zawiesić tego użytkownika."
+        cant_silence: "Tego użytkownika nie można wyciszyć."
         delete_posts_failed: "Podczas usuwania wpisów wystąpił problem."
         post_edits: "Edycje wpisu"
         view_edits: "Wyświetl zmiany"
@@ -5384,6 +5405,8 @@ pl_PL:
         penalty_post_edit: "Edytuj wpis"
         penalty_post_none: "Nic nie rób"
         penalty_count: "Liczba Przewinień"
+        penalty_history_MF: >-
+          W ciągu ostatnich 6 miesięcy ten użytkownik został zawieszony <b>{ SUSPENDED, plural, one {# raz} few {# razy} many {# razy} other {# razy} }</b> i <b>wyciszony { SILENCED, plural, one {# raz} few {# razy} many {# razy} other {# razy} }</b>.
         clear_penalty_history:
           title: "Wyczyść Historię Przewinień"
           description: "użytkownicy z karami nie mogą otrzymać TL3"
@@ -5544,6 +5567,11 @@ pl_PL:
         silenced_count: "Wyciszony"
         suspended_count: "Zawieszeni"
         last_six_months: "Ostatnie 6 miesięcy"
+        other_matches:
+          one: "Jest <b>%{count} inny użytkownik</b> z tym samym adresem IP. Przejrzyj i wybierz podejrzanych, aby ukarać ich razem z %{username}."
+          few: "Są <b>%{count} inni użytkownicy</b> z tym samym adresem IP. Przejrzyj i wybierz podejrzanych, aby ukarać ich razem z %{username}."
+          many: "Jest <b>%{count} innych użytkowników</b> z tym samym adresem IP. Przejrzyj i wybierz podejrzanych, aby ukarać ich razem z %{username}."
+          other: "Jest <b>%{count} innych użytkowników</b> z tym samym adresem IP. Przejrzyj i wybierz podejrzanych, aby ukarać ich razem z %{username}."
         other_matches_list:
           username: "Nazwa użytkownika"
           trust_level: "Poziom zaufania"
@@ -5868,8 +5896,10 @@ pl_PL:
       finish: "Zakończ konfigurację"
       back: "Poprzednia"
       next: "Następna"
+      configure_more: "Skonfiguruj więcej..."
       step-text: "Krok"
       step: "%{current} z %{total}"
+      upload: "Prześlij plik"
       uploading: "Przesyłanie…"
       upload_error: "Przepraszamy, wystąpił błąd podczas wysyłania tego pliku. Proszę spróbuj ponownie."
       staff_count:

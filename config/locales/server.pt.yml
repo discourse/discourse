@@ -658,6 +658,7 @@ pt:
       long_form: "sinalizou isto como spam"
     inappropriate:
       title: "Inapropriado"
+      description: 'Este tópico contém conteúdo que uma pessoa razoável consideraria ofensivo, abusivo, uma conduta odiosa ou uma violação de <a href="%{base_path}/guidelines">nossas diretrizes da comunidade</a>.'
       long_form: "sinalizou isto como inapropriado"
     notify_moderators:
       title: "Algo Mais"
@@ -1755,6 +1756,16 @@ pt:
 
         %{respond_instructions}
     user_posted:
+      text_body_template: |2
+
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_watching_category_or_tag:
       text_body_template: |2
 
         %{header_instructions}

@@ -820,6 +820,8 @@ et:
       subject_template: "[%{email_prefix}] %{topic_title}"
     user_posted:
       subject_template: "[%{email_prefix}] %{topic_title}"
+    user_watching_category_or_tag:
+      subject_template: "[%{email_prefix}] %{topic_title}"
     user_watching_first_post:
       subject_template: "[%{email_prefix}] %{topic_title}"
     user_posted_pm_staged:
