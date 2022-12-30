@@ -133,7 +133,9 @@ class Chat::ChatNotifier
   end
 
   def send_direct_mentions(inaccessible_mentions)
-    direct_mentions = chat_users.where(username_lower: usernames_mentioned)
+    direct_mentions = chat_users
+      .includes(:user_chat_channel_memberships, :group_users)
+      .where(username_lower: usernames_mentioned)
 
     grouped = group_users_to_notify(direct_mentions)
     inaccessible_mentions[:welcome_to_join] = grouped[:welcome_to_join]
@@ -175,7 +177,7 @@ class Chat::ChatNotifier
   end
 
   def send_here_mentions
-    channel_wide_mentions(mentionable_groups.map(&:id))
+    channel_wide_mentions
       .where("last_seen_at > ?", 5.minutes.ago)
       .select(:id)
       .find_in_batches(batch_size: MENTION_BATCH_SIZE) do |here_users|
@@ -184,7 +186,7 @@ class Chat::ChatNotifier
   end
 
   def send_global_mentions
-    global_mentions = channel_wide_mentions(mentionable_groups.map(&:id))
+    global_mentions = channel_wide_mentions
 
     if typed_here_mention?
       global_mentions = global_mentions
@@ -253,6 +255,7 @@ class Chat::ChatNotifier
 
   def mentioned_by_group(mentionable_groups)
     chat_users
+      .includes(:user_chat_channel_memberships, :group_users)
       .where.not(id: mentioned_channel_member_ids)
       .joins(:groups)
       .where(groups: { id: mentionable_groups.map(&:id) })
@@ -282,22 +285,24 @@ class Chat::ChatNotifier
       .where(id: visible_groups.map(&:id))
   end
 
-  def channel_wide_mentions(mentioned_group_ids)
+  def channel_wide_mentions
     query = members_accepting_channel_wide_notifications
       .where.not(id: mentioned_channel_member_ids)
 
-    return query if mentioned_group_ids.blank?
+    return query if mentionable_groups.blank?
 
     query
       .distinct
       .joins(:group_users)
-      .group('users.id')
-      .having('bool_and(group_users.group_id NOT IN (?))', mentioned_group_ids)
+      .group("users.id")
+      .having("
+        bool_and(group_users.group_id NOT IN (?))",
+        mentionable_groups.map(&:id)
+      )
   end
 
   def chat_users
     User
-      .includes(:user_chat_channel_memberships, :group_users)
       .distinct
       .joins("LEFT OUTER JOIN user_chat_channel_memberships uccm ON uccm.user_id = users.id")
       .joins(:user_option)
@@ -331,7 +336,7 @@ class Chat::ChatNotifier
         chat_message_id: @chat_message.id,
         user_ids: user_ids,
         mention_type: mention_type,
-        timestamp: @timestamp.iso8601(6),
+        timestamp: @timestamp,
       },
     )
   end
@@ -341,7 +346,7 @@ class Chat::ChatNotifier
       :chat_notify_watching,
       {
         chat_message_id: @chat_message.id,
-        timestamp: @timestamp.iso8601(6),
+        timestamp: @timestamp,
         direct_mentioned_user_ids: direct_mentioned_user_ids,
         global_mentions: global_mentions,
         mentioned_group_ids: mentioned_group_ids
