@@ -233,6 +233,16 @@ export default function (options) {
         if (term) {
           let text = me.val();
 
+          // resync in case of drift (upload for example)
+          let pos = guessCompletePosition();
+
+          if (pos.completeStart && pos.completeEnd) {
+            completeStart = pos.completeStart;
+            completeEnd = pos.completeEnd;
+          } else {
+            completeStart = completeEnd = caretPosition(me[0]);
+          }
+
           text =
             text.substring(0, completeStart) +
             (options.preserveKey ? options.key || "" : "") +
@@ -560,8 +570,53 @@ export default function (options) {
     }
   }
 
+  function guessCompletePosition() {
+    let prev, stopFound, term;
+    let prevIsGood = true;
+    let element = me[0];
+    let c = caretPosition(element);
+
+    let start, end;
+
+    let letterRegex = /[a-zA-Z\.-]/;
+
+    while (
+      element.value[c] !== undefined &&
+      letterRegex.test(element.value[c])
+    ) {
+      c += 1;
+    }
+    let initial = c;
+
+    c -= 1;
+
+    while (prevIsGood && c >= 0) {
+      c -= 1;
+      prev = element.value[c];
+      stopFound = prev === options.key;
+
+      if (stopFound) {
+        prev = element.value[c - 1];
+
+        if (
+          checkTriggerRule({ backSpace: true }) &&
+          (!prev || allowedLettersRegex.test(prev))
+        ) {
+          start = c;
+          term = element.value.substring(c + 1, initial);
+          end = c + term.length;
+
+          break;
+        }
+      }
+      prevIsGood = letterRegex.test(prev);
+    }
+
+    return { completeStart: start, completeEnd: end, term };
+  }
+
   function handleKeyDown(e) {
-    let c, i, initial, prev, prevIsGood, stopFound, term, total, userToComplete;
+    let i, term, total, userToComplete;
     let cp;
 
     if (e.ctrlKey || e.altKey || e.metaKey) {
@@ -596,35 +651,13 @@ export default function (options) {
     }
 
     if (completeStart === null && e.which === keys.backSpace && options.key) {
-      c = caretPosition(me[0]);
-      c -= 1;
-      initial = c;
-      prevIsGood = true;
+      let position = guessCompletePosition();
+      completeStart = position.completeStart;
 
-      while (prevIsGood && c >= 0) {
-        c -= 1;
-        prev = me[0].value[c];
-        stopFound = prev === options.key;
-
-        if (stopFound) {
-          prev = me[0].value[c - 1];
-
-          if (
-            checkTriggerRule({ backSpace: true }) &&
-            (!prev || allowedLettersRegex.test(prev))
-          ) {
-            completeStart = c;
-            term = me[0].value.substring(c + 1, initial);
-
-            if (!completeEnd) {
-              completeEnd = c + term.length;
-            }
-
-            updateAutoComplete(dataSource(term, options));
-            return true;
-          }
-        }
-        prevIsGood = /[a-zA-Z\.-]/.test(prev);
+      if (position.completeEnd) {
+        completeEnd = position.completeEnd;
+        updateAutoComplete(dataSource(position.term, options));
+        return true;
       }
     }
 
@@ -685,6 +718,11 @@ export default function (options) {
           e.preventDefault();
           return false;
         case keys.downArrow:
+          if (!autocompleteOptions) {
+            closeAutocomplete();
+            return true;
+          }
+
           total = autocompleteOptions.length;
           selectedOption = selectedOption + 1;
           if (selectedOption >= total) {
