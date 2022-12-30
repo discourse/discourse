@@ -240,7 +240,7 @@ module ChatPublisher
     total_messages:
   )
     MessageBus.publish(
-      CHANNEL_ARCHIVE_STATUS_BUS_CHANNEL,
+      CHANNEL_ARCHIVE_STATUS_MESSAGE_BUS_CHANNEL,
       {
         chat_channel_id: chat_channel.id,
         archive_failed: archive_status == :failed,
