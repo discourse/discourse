@@ -230,7 +230,7 @@ module ChatPublisher
     )
   end
 
-  CHANNEL_ARCHIVE_STATUS_BUS_CHANNEL = "/chat/channel-archive-status"
+  CHANNEL_ARCHIVE_STATUS_MESSAGE_BUS_CHANNEL = "/chat/channel-archive-status"
 
   def self.publish_archive_status(
     chat_channel,
