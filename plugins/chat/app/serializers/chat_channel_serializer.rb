@@ -111,7 +111,6 @@ class ChatChannelSerializer < ApplicationSerializer
         new_mentions:
           @opts[:new_mentions_message_bus_last_id] ||
             MessageBus.last_id(ChatPublisher.new_mentions_message_bus_channel(object.id)),
-        archive_status: MessageBus.last_id("/chat/channel-archive-status"),
       },
     }
   end

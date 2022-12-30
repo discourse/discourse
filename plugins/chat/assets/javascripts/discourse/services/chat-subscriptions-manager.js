@@ -44,6 +44,7 @@ export default class ChatSubscriptionsManager extends Service {
 
   startChannelsSubscriptions(messageBusIds) {
     this._startNewChannelSubscription(messageBusIds.new_channel);
+    this._startChannelArchiveStatusSubscription(messageBusIds.archive_status);
     this._startUserTrackingStateSubscription(messageBusIds.user_tracking_state);
     this._startChannelsEditsSubscription(messageBusIds.channel_edits);
     this._startChannelsStatusChangesSubscription(messageBusIds.channel_status);
@@ -54,6 +55,7 @@ export default class ChatSubscriptionsManager extends Service {
 
   stopChannelsSubscriptions() {
     this._stopNewChannelSubscription();
+    this._stopChannelArchiveStatusSubscription();
     this._stopUserTrackingStateSubscription();
     this._stopChannelsEditsSubscription();
     this._stopChannelsStatusChangesSubscription();
@@ -64,12 +66,51 @@ export default class ChatSubscriptionsManager extends Service {
     });
   }
 
+  _startChannelArchiveStatusSubscription(lastId) {
+    if (this.currentUser.admin) {
+      this.messageBus.subscribe(
+        "/chat/channel-archive-status",
+        this._onChannelArchiveStatusUpdate,
+        lastId
+      );
+    }
+  }
+
+  _stopChannelArchiveStatusSubscription() {
+    if (this.currentUser.admin) {
+      this.messageBus.unsubscribe(
+        "/chat/channel-archive-status",
+        this._onChannelArchiveStatusUpdate
+      );
+    }
+  }
+
   _startChannelMentionsSubscription(channel) {
     this.messageBus.subscribe(
       `/chat/${channel.id}/new-mentions`,
       this._onNewMentions,
       channel.meta.message_bus_last_ids.new_mentions
     );
+  }
+
+  @bind
+  _onChannelArchiveStatusUpdate(busData) {
+    // we don't want to fetch a channel we don't have locally because archive status changed
+    this.chatChannelsManager
+      .find(busData.chat_channel_id, { fetchIfNotFound: false })
+      .then((channel) => {
+        if (!channel) {
+          return;
+        }
+
+        channel.setProperties({
+          archive_failed: busData.archive_failed,
+          archive_completed: busData.archive_completed,
+          archived_messages: busData.archived_messages,
+          archive_topic_id: busData.archive_topic_id,
+          total_messages: busData.total_messages,
+        });
+      });
   }
 
   @bind

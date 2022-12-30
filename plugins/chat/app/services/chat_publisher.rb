@@ -230,6 +230,8 @@ module ChatPublisher
     )
   end
 
+  CHANNEL_ARCHIVE_STATUS_MESSAGE_BUS_CHANNEL = "/chat/channel-archive-status"
+
   def self.publish_archive_status(
     chat_channel,
     archive_status:,
@@ -238,7 +240,7 @@ module ChatPublisher
     total_messages:
   )
     MessageBus.publish(
-      "/chat/channel-archive-status",
+      CHANNEL_ARCHIVE_STATUS_MESSAGE_BUS_CHANNEL,
       {
         chat_channel_id: chat_channel.id,
         archive_failed: archive_status == :failed,

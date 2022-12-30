@@ -7,23 +7,31 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 
 const DIRECT_MESSAGE_CHANNELS_LIMIT = 20;
 
+/*
+  The ChatChannelsManager service is responsible for managing the loaded chat channels.
+  It provides helpers to facilitate using and managing laoded channels instead of constantly
+  fetching them from the server.
+*/
+
 export default class ChatChannelsManager extends Service {
   @service chatSubscriptionsManager;
   @service chatApi;
   @service currentUser;
   @tracked _cached = new TrackedObject();
 
-  get channels() {
-    return Object.values(this._cached);
-  }
-
-  async find(id) {
+  async find(id, options = { fetchIfNotFound: true }) {
     const existingChannel = this.#findStale(id);
     if (existingChannel) {
       return Promise.resolve(existingChannel);
-    } else {
+    } else if (options.fetchIfNotFound) {
       return this.#find(id);
+    } else {
+      return Promise.resolve();
     }
+  }
+
+  get channels() {
+    return Object.values(this._cached);
   }
 
   store(channelObject) {
